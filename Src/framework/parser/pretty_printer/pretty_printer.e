@@ -232,13 +232,11 @@ feature {NONE} -- Output
 			print_string (indent)
 		end
 
-	safe_process_and_print (l_as: AST_EIFFEL; pre, post: READABLE_STRING_GENERAL)
+	safe_process_and_print (l_as: detachable AST_EIFFEL; pre, post: READABLE_STRING_GENERAL)
 			-- Process `l_as' safely while printing `pre' before and `post' after processing.
 		do
 			if l_as /= Void then
-				if l_as.first_token (match_list) /= Void then
-					process_leading_leaves (l_as.first_token (match_list).index)
-				end
+				process_leading_leaves_of_token (l_as.first_token (match_list))
 
 				if pre /= Void then
 					print_string (pre)
@@ -252,13 +250,11 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_on_new_line (a: AST_EIFFEL)
+	print_on_new_line (a: detachable AST_EIFFEL)
 			-- Output `a' (if present) on a new line with proper indent.
 		do
 			if attached a then
-				if attached a.first_token (match_list) as t then
-					process_leading_leaves (t.index)
-				end
+				process_leading_leaves_of_token (a.first_token (match_list))
 				if last_printed /= '%N' and last_printed /= '%T' then
 					print_new_line
 				end
@@ -269,7 +265,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_on_new_line_indented (a: AST_EIFFEL)
+	print_on_new_line_indented (a: detachable AST_EIFFEL)
 			-- Same as `print_on_new_line', but adds one indentation level.
 		do
 			if attached a then
@@ -279,13 +275,11 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_on_new_line_separated (a: AST_EIFFEL)
+	print_on_new_line_separated (a: detachable AST_EIFFEL)
 			-- Same as `print_on_new_line', but adds one blank line in front of `a' output.
 		do
 			if attached a then
-				if attached a.first_token (match_list) as t then
-					process_leading_leaves (t.index)
-				end
+				process_leading_leaves_of_token (a.first_token (match_list))
 				print_new_line
 				print_new_line
 				a.process (Current)
@@ -294,13 +288,13 @@ feature {NONE} -- Output
 
 feature {NONE} -- List processing
 
-	print_list_inline (l: EIFFEL_LIST [AST_EIFFEL])
+	print_list_inline (l: detachable EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items separated by associated separators and a space.
 		do
 			process_and_print_eiffel_list (l, list_separator_delimiting_space)
 		end
 
-	print_list_indented (l: EIFFEL_LIST [AST_EIFFEL])
+	print_list_indented (l: detachable EIFFEL_LIST [AST_EIFFEL])
 			-- Output `l' with items starting of new lines with indent increased by one level.
 		do
 			if attached l then
@@ -342,32 +336,24 @@ feature {NONE} -- List processing
 			n: INTEGER
 			m: INTEGER
 			a: AST_EIFFEL
-			l_token: LEAF_AS
 		do
 			if l_as /= Void then
 				n := l_as.count
 				if n > 0 then
-
-					l_token := l_as.first_token (match_list)
-					if l_token /= Void then
-						process_leading_leaves (l_token.index)
-					end
+					process_leading_leaves_of_token (l_as.first_token (match_list))
 
 					from
 						l_as.start
 						i := 1
-						if l_as.separator_list /= Void then
-							m := l_as.separator_list.count
+						if attached l_as.separator_list as s then
+							m := s.count
 						end
 					until
 						i > n
 					loop
 						a := l_as.i_th (i)
-						l_token := a.first_token (match_list)
 
-						if l_token /= Void then
-							process_leading_leaves (l_token.index)
-						end
+						process_leading_leaves_of_token (a.first_token (match_list))
 							-- Leading leaves may include optional delimiters such as semicolons,
 							-- so any separators should be printed after them.
 						inspect list_separator
@@ -395,14 +381,11 @@ feature {NONE} -- List processing
 							safe_process (l_as.separator_list_i_th (i, match_list))
 						end
 
-						l_token := a.last_token (match_list)
-						if l_token /= Void then
-							process_leading_leaves (l_token.index)
-						end
+						process_leading_leaves_of_token (a.last_token (match_list))
 
 						i := i + 1
 					end
-					process_leading_leaves (l_as.last_token (match_list).index)
+					process_leading_leaves_of_token (l_as.last_token (match_list))
 				end
 			end
 		end
@@ -412,20 +395,20 @@ feature {NONE} -- List processing
 		local
 			i, l_count: INTEGER
 			l_index: INTEGER
-			l_ids: CONSTRUCT_LIST [INTEGER]
+			l_ids: detachable CONSTRUCT_LIST [INTEGER]
 			l_id_as: ID_AS
 			l_leaf: LEAF_AS
 		do
 			if l_as /= Void then
 				l_ids := l_as.id_list
-				if l_ids /= Void and l_ids.count > 0 then
+				if l_ids /= Void and then l_ids.count > 0 then
 					from
 						l_ids.start
 						i := 1
 							-- Temporary/reused objects to print identifiers.
 						create l_id_as.initialize_from_id (1)
-						if l_as.separator_list /= Void then
-							l_count := l_as.separator_list.count
+						if attached l_as.separator_list as s then
+							l_count := s.count
 						end
 					until
 						l_ids.after
@@ -520,8 +503,16 @@ feature {NONE} -- List processing
 			end
 		end
 
-	process_leading_leaves (ind: INTEGER_32)
-			-- Process all not-processed leading leaves in `match_list' before index `ind'.
+	process_leading_leaves_of_token (t: detachable AST_EIFFEL)
+			-- Process all not-processed leading leaves in `match_list' before `t'.
+		do
+			if attached t then
+				process_leading_leaves (t.index)
+			end
+		end
+
+	process_leading_leaves (index: INTEGER_32)
+			-- Process all not-processed leading leaves in `match_list' before index `index'.
 		local
 			i: INTEGER
 		do
@@ -529,7 +520,7 @@ feature {NONE} -- List processing
 				from
 					i := last_index + 1
 				until
-					i >= ind
+					i >= index
 				loop
 					safe_process (match_list.i_th (i))
 					i := i + 1
@@ -957,8 +948,8 @@ feature {CLASS_AS} -- Creators
 			safe_process (l_as.create_creation_keyword (match_list))
 			safe_process_and_print (l_as.clients, " ", "")
 
-			if l_as.feature_list /= Void and then l_as.feature_list.first_token (match_list) /= Void then
-				process_leading_leaves (l_as.feature_list.first_token (match_list).index)
+			if attached l_as.feature_list as l then
+				process_leading_leaves_of_token (l.first_token (match_list))
 			end
 			if last_printed /= '%N' then
 				print_new_line
@@ -976,7 +967,7 @@ feature {CLASS_AS} -- Convertors
 			-- Process convertor feature list `l_as'.
 		do
 			safe_process (l_as.convert_keyword (match_list))
-			process_leading_leaves (l_as.i_th (1).first_token (match_list).index)
+			process_leading_leaves_of_token (l_as.i_th (1).first_token (match_list))
 			print_list_indented (l_as)
 		end
 
@@ -1239,7 +1230,7 @@ feature {CLASS_AS} -- Instructions
 	process_guard_as (l_as: GUARD_AS)
 			-- Process guard instruction `l_as'.
 		local
-			check_list: EIFFEL_LIST [TAGGED_AS]
+			check_list: detachable EIFFEL_LIST [TAGGED_AS]
 		do
 			print_on_new_line (l_as.check_keyword (match_list))
 			check_list := l_as.full_assertion_list
@@ -1332,7 +1323,6 @@ feature {CLASS_AS} -- Instructions
 	process_loop_as (l_as: LOOP_AS)
 			-- Process loop instruction `l_as'.
 		local
-			l_until: KEYWORD_AS
 			l_variant_processing_after: BOOLEAN
 		do
 			is_expr_iteration := False
@@ -1344,20 +1334,21 @@ feature {CLASS_AS} -- Instructions
 			print_on_new_line (l_as.invariant_keyword (match_list))
 			print_list_indented (l_as.full_invariant_list)
 
-				-- Special code to handle the old or new ordering of the `variant'
-				-- clause in a loop.
-			l_until := l_as.until_keyword (match_list)
-			if l_as.variant_part /= Void and l_until /= Void then
-				if l_as.variant_part.start_position > l_until.start_position then
-					l_variant_processing_after := True
+			if attached l_as.until_keyword (match_list) as l_until then
+					-- Special code to handle the old or new ordering of the `variant'
+					-- clause in a loop.
+				if attached l_as.variant_part as l_variant then
+					if l_variant.start_position > l_until.start_position then
+						l_variant_processing_after := True
+					else
+						print_on_new_line (l_as.variant_part)
+					end
 				else
 					print_on_new_line (l_as.variant_part)
 				end
-			else
-				print_on_new_line (l_as.variant_part)
+				print_on_new_line (l_until)
 			end
 
-			print_on_new_line (l_until)
 			print_on_new_line_indented (l_as.stop)
 
 			print_on_new_line (l_as.loop_keyword (match_list))
@@ -1389,7 +1380,9 @@ feature {CLASS_AS} -- Instructions
 	process_variant_as (l_as: VARIANT_AS)
 			-- Process variant `l_as'.
 		do
-			process_keyword_as (l_as.variant_keyword (match_list))
+			if attached l_as.variant_keyword (match_list) as t then
+				process_keyword_as (t)
+			end
 			if attached l_as.tag as t then
 				print_on_new_line_indented (t)
 				safe_process_and_print (l_as.colon_symbol (match_list), "", " ")
@@ -1403,9 +1396,7 @@ feature {CLASS_AS} -- Instructions
 			-- Process retry instruction `l_as'.
 		do
 			if attached a then
-				if attached a.first_token (match_list) as t then
-					process_leading_leaves (t.index)
-				end
+				process_leading_leaves_of_token (a.first_token (match_list))
 				if last_printed /= '%N' then
 					print_new_line
 				end
@@ -1482,9 +1473,9 @@ feature {AST_VISITOR} -- Expressions
 			-- Process agent expression `l_as'.
 		do
 			safe_process_and_print (l_as.agent_keyword (match_list), "", " ")
-			if l_as.target /= Void then
+			if attached l_as.target as t then
 				safe_process (l_as.lparan_symbol (match_list))
-				l_as.target.process (Current)
+				t.process (Current)
 				safe_process (l_as.rparan_symbol (match_list))
 				safe_process (l_as.dot_symbol (match_list))
 			end
@@ -1616,8 +1607,8 @@ feature {CLASS_AS} -- Calls
 			-- Process parameter list `l_as'.
 		do
 			safe_process (l_as.lparan_symbol (match_list))
-			if l_as.parameters /= Void and then l_as.parameters.first_token (match_list) /= Void then
-				last_index := l_as.parameters.first_token (match_list).index
+			if attached l_as.parameters.first_token (match_list) as t then
+				last_index := t.index
 			end
 			print_list_inline (l_as.parameters)
 			safe_process (l_as.rparan_symbol (match_list))

@@ -44,11 +44,11 @@ feature {NONE} -- Creation
 	make_standard_output
 			-- Associate output with standard output.
 		do
+			is_open_query := agent (io.output).is_open_write
 			output := agent (s: READABLE_STRING_GENERAL)
 				do
 					localized_print (s)
 				end
-			is_open_query := agent (io.output).is_open_write
 		end
 
 	make_string (s: STRING_32)

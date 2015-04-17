@@ -42,7 +42,7 @@ doc:<file name="req_grp.cpp" header="req_grp.hpp" version="$Id$" summary="Routin
 */
 
 #include "rt_msc_ver_mismatch.h"
-#include "req_grp.hpp"
+#include "rt_request_group.h"
 #include "processor.hpp"
 
 #include "rt_vector.h"

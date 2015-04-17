@@ -39,7 +39,7 @@
 #define _PROCESSOR_H
 
 #include "private_queue.hpp"
-#include "req_grp.hpp"
+#include "rt_request_group.h"
 #include "queue_cache.hpp"
 
 #include "rt_vector.h"

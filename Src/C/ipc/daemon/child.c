@@ -740,7 +740,10 @@ rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_
 
 				/* Working directory */
 			if (cwd) {
-				(void) chdir (cwd);
+				int error = chdir (cwd);
+				if (error) {
+					print_err_msg(stderr,"ERROR: could not change directory to '%s'", cwd);
+				}
 			}
 			envp = envstr_to_envp (envir);
 
@@ -762,7 +765,7 @@ rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_
 			}
 #endif
 
-			print_err_msg(stderr,"ERROR could not launch '%s'", exe_path);
+			print_err_msg(stderr,"ERROR: could not launch '%s'", exe_path);
 			if (envp != NULL) {
 				free(envp);
 				envp = NULL;

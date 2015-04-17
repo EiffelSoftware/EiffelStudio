@@ -129,7 +129,7 @@ RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SC
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 
 /* Setup and teardown. */
-rt_shared void rt_scoop_setup (void);
+rt_shared void rt_scoop_setup (int is_scoop_enabled);
 rt_shared void rt_scoop_reclaim (void);
 
 #ifdef __cplusplus

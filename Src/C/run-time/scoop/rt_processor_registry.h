@@ -34,7 +34,7 @@
 			Customer support http://support.eiffel.com
 		]"
 */
-/* TODO: Rename this file to rt_processor_registry.h */
+
 #ifndef _rt_processor_registry_h_
 #define _rt_processor_registry_h_
 

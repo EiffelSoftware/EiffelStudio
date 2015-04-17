@@ -35,8 +35,8 @@
 		]"
 */
 
-#ifndef _PROCESSOR_H
-#define _PROCESSOR_H
+#ifndef _rt_processor_h_
+#define _rt_processor_h_
 
 #include "rt_private_queue.h"
 #include "rt_request_group.h"
@@ -144,4 +144,4 @@ rt_shared void rt_processor_application_loop (processor* self);
 /* Utility functions. */
 int rt_processor_new_private_queue (processor* self, priv_queue** result);
 
-#endif
+#endif /* _rt_processor_h_ */

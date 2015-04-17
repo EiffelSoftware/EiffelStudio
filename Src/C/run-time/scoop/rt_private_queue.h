@@ -35,7 +35,6 @@
 		]"
 */
 
-/* TODO: Rename to rt_private_queue.h */
 #ifndef _rt_private_queue_h_
 #define _rt_private_queue_h_
 

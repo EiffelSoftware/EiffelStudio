@@ -340,10 +340,11 @@ rt_public void eif_system_asynchronous (EIF_NATIVE_CHAR *cmd)
 #else	/* (not) VMS */
 	status = system(cmd);				/* Run command via /bin/sh */
 
+	/* Exit with the status code of `system'. */
 #ifdef VXWORKS
-	exit(0);
+	exit(status);
 #else
-	_exit(0);							/* Child is exiting properly */
+	_exit(status);
 #endif
 #endif /* EIF_VMS */
 #endif /* EIF_WINDOWS */

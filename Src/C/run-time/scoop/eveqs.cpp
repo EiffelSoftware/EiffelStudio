@@ -289,6 +289,36 @@ rt_shared void rt_mark_all_processors (MARKER marking)
 	}
 }
 
+/*
+doc:	<routine name="rt_scoop_setup" return_type="void" export="shared">
+doc:		<summary> Initialize the SCOOP subsystem and mark the root thread as a processor with ID 0. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during program startup. </synchronization>
+doc:	</routine>
+*/
+rt_public void rt_scoop_setup (void)
+{
+	int error = rt_processor_registry_init ();
+	if (T_OK != error) {
+		eif_panic ("Could not initialize SCOOP subsystem.");
+	} else {
+			/* Record that the current thread is associated with a processor of a PID 0. */
+		eif_set_processor_id (0);
+	}
+}
+
+/*
+doc:	<routine name="rt_scoop_reclaim" return_type="void" export="shared">
+doc:		<summary> Reclaim all resources in the SCOOP subsystem. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during program termination. </synchronization>
+doc:	</routine>
+*/
+rt_public void rt_scoop_reclaim (void)
+{
+	rt_processor_registry_deinit();
+}
+
 
 #ifdef __cplusplus
 }

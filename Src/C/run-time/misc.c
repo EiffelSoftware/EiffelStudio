@@ -113,8 +113,8 @@ rt_public void init_scoop_root_thread (void)
 {
 	if (egc_is_scoop_capable)
 	{
-			/* Record that the current thread is associated with a processor of a PID 0. */
-		eif_set_processor_id (0);
+			/* Initialize the SCOOP subsystem. */
+		rt_scoop_setup ();
 	}
 }
 #endif /* EIF_THREADS */

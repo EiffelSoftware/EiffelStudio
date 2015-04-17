@@ -58,21 +58,12 @@ rt_shared void rt_processor_registry_quit_root_processor (void);
 /* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
 rt_shared void rt_scoop_gc_request (int* fingerprint);
 
-struct rt_processor_registry
-{
-public:
-	/* C++ leftovers */
-  rt_processor_registry () {
-	rt_processor_registry_init();
-  }
+struct rt_processor_registry {
 
-  ~rt_processor_registry () {
-	rt_processor_registry_deinit();
-  }
-
-  void request_gc (int * fingerprint) {
-	  rt_scoop_gc_request (fingerprint);
-  }
+		/* C++ leftovers */
+	void request_gc (int * fingerprint) {
+		rt_scoop_gc_request (fingerprint);
+	}
 
 	/*
 	 * Although the procs array is accessed by several threads,

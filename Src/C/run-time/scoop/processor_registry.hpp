@@ -58,13 +58,24 @@ rt_shared void rt_processor_registry_quit_root_processor (void);
 /* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
 rt_shared void rt_scoop_gc_request (int* fingerprint);
 
+
+/*
+doc:	<struct name="rt_processor_registry" export="shared">
+doc:		<summary> The processor registry struct is a singleton.
+doc:			It manages a processor's lifecycle, maintains a set of free
+doc:			processor identifiers, and manages a mapping from PID to
+doc:			processor objects.
+doc:		</summary>
+doc:		<field name="procs" type="struct rt_processor**"> The array used to map PIDs to processors. </field>
+doc:		<field name="processor_count" type="volatile EIF_INTEGER_32"> An atomic integer to keep track of currently alive processors. </field>
+doc:		<field name="free_pids" type="struct rt_identifier_set"> A set of free (unassigned) PIDs. </field>
+doc:		<field name="all_done" type="EIF_BOOLEAN"> A boolean value indicating whether there are no more alive processors. Used by the root thread for program termination. </field>
+doc:		<field name="all_done_mutex" type="EIF_MUTEX_TYPE*"> A mutex to protect the all_done field. </field>
+doc:		<field name="all_done_cv" type="EIF_COND_TYPE*"> A condition variable for the root thread to wait for the all_done field to become true. </field>
+doc:		<fixme> Could it be that all_done and processor_count==0 contain the same information? </fixme>
+doc:	</struct>
+*/
 struct rt_processor_registry {
-
-		/* C++ leftovers */
-	void request_gc (int * fingerprint) {
-		rt_scoop_gc_request (fingerprint);
-	}
-
 	/*
 	 * Although the procs array is accessed by several threads,
 	 * it is not necessary to synchronize the access. There are several
@@ -108,6 +119,11 @@ struct rt_processor_registry {
 };
 
 
+/*
+ * NOTE: This global variable is exported only for performance reasons
+ * (rt_get_processor and rt_lookup_processor can be inlined that way).
+ * Do not use it directly.
+ */
 extern struct rt_processor_registry registry;
 
 /*

@@ -774,23 +774,23 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 
 	EIF_GET_CONTEXT
 
-	int volatile is_process_once = 0;	/* Is once routine process-relative? */
 	static char buf[BUFSIZ];
 
 	BODY_INDEX b_index;
 	ONCE_INDEX o_index;
 	MTOT OResult = (MTOT) 0;				/* Item for once data */
 #ifdef EIF_THREADS
+	int volatile is_process_once = 0;	/* Is once routine process-relative? */
 	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
-#define GetOResult(o_index, is_process_once)	\
-		if (is_process_once) {								\
+#define GetOResult(o_index, a_is_process_once)	\
+		if (a_is_process_once) {							\
 			POResult = EIF_process_once_values + o_index;	\
 			OResult = &(POResult -> value);					\
-		} else 												\
-		OResult = MTOI(o_index);
+		} else { 											\
+			OResult = MTOI(o_index); \
+		}
 #else
-#define GetOResult(o_index, is_process_once)	\
-		OResult = MTOI(o_index);
+#define GetOResult(o_index, a_is_process_once)	 OResult = MTOI(o_index);
 #endif
 
 
@@ -801,9 +801,12 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 		is_process_once = (what->op_2 == OUT_ONCE_PER_PROCESS);
 		if (is_process_once) {
 			o_index = process_once_index (b_index);
-		} else
-#endif
+		} else  {
 			o_index = once_index (b_index);
+		}	
+#else
+		o_index = once_index (b_index);
+#endif
 		sprintf(buf, "%u", o_index);
 		app_twrite(buf, strlen(buf));
 		break;
@@ -817,7 +820,9 @@ rt_private void once_inspect(EIF_PSTREAM sp, Opaque *what)
 		}
 		break;
 	case OUT_DATA_PER_PROCESS:			/* Result of already called once function */
+#ifdef EIF_THREADS
 		is_process_once = 1;
+#endif
 	case OUT_DATA_PER_THREAD:
 		o_index = (ONCE_INDEX) what->op_3;
 		GetOResult(o_index, is_process_once);

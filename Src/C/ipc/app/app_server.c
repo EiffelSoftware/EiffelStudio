@@ -107,7 +107,10 @@ rt_private void sigtrap_handler (int sig)
 		file = fopen(filename,"rb");
 		if (file != NULL) {
 			interrupt_flag = 0;
-			(void) fread(&interrupt_flag, sizeof(unsigned char), 1, file);
+			if (fread(&interrupt_flag, sizeof(unsigned char), 1, file) != 1) {
+				/* We got a signal, and there was a file but it was empty.
+				 * We simply assume there was no interrupt requested. */
+			}
 			fclose(file);
 		}
 	}

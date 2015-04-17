@@ -1143,7 +1143,7 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(char rt_type, int (*char_r
 rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int))
 {
 	char rt_type = (char) 0;
-	EIF_REFERENCE result = NULL;
+	EIF_REFERENCE result;
 
 #if EIF_OS == EIF_OS_ALPHA
 		/* The conversion from a FILE pointer to a file descriptor

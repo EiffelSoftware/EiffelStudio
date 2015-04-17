@@ -42,7 +42,7 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 #include "rt_msc_ver_mismatch.h"
 #include "internal.hpp"
 
-#include "processor.hpp"
+#include "rt_processor.h"
 
 #include "eif_atomops.h"
 #include "eif_posix_threads.h"

@@ -42,7 +42,7 @@ doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" sum
 #include "rt_msc_ver_mismatch.h"
 #include "internal.hpp"
 #include "rt_private_queue.h"
-#include "processor.hpp"
+#include "rt_processor.h"
 
 /*
 doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">

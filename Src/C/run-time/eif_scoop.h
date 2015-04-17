@@ -40,6 +40,22 @@
 #pragma once
 #endif
 
+/* TODO: This file needs some cleanup...
+ * Some features don't need to be exported to public:
+ ** eif_set_processor_id
+ ** eif_unset_processor_id
+ ** rt_scoop_setup
+ ** rt_scoop_reclaim
+ ** eif_apply_wcall
+ *
+ * EIF_IS_SCOOP_CAPABLE is only needed in eif_built_in.h and can be moved there.
+ *
+ * The inclusion of eif_threads.h should be avoided if possible.
+ *
+ * There seems to be a big overlap between the request chain stack and the
+ * rt_request_group stacks in a processor object. Maybe the two can be merged somehow.
+ */
+
 #include "eif_threads.h"
 
 #if defined(EIF_HAS_MEMORY_BARRIER) && (EIF_OS != EIF_OS_SUNOS) && !defined (__SUNPRO_CC)
@@ -111,6 +127,10 @@ RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
+
+/* Setup and teardown. */
+rt_shared void rt_scoop_setup (void);
+rt_shared void rt_scoop_reclaim (void);
 
 #ifdef __cplusplus
 }

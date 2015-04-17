@@ -719,7 +719,7 @@ rt_public void eif_set_tracer (EIF_REFERENCE obj, EIF_POINTER fnptr)
 		/* Add new handler and its routine if not NULL. */
 	if (obj && fnptr) {
 		eif_tracing_handler = eif_protect (obj);
-		eif_tracing_routine = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, const char *, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN)) fnptr;
+		eif_tracing_routine = FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER, const char *, EIF_POINTER, EIF_INTEGER, EIF_BOOLEAN)) (rt_uint_ptr) fnptr;
 	} else {
 		eif_tracing_handler = NULL;
 		eif_tracing_routine = NULL;

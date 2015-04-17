@@ -572,10 +572,10 @@ rt_private void interpret(int flag, int where)
 	jmp_buf exenvo;							/* For exception during once evaluation */
 	EIF_REFERENCE volatile saved_except_for_old = NULL;	/* Saved exception object for old expression evaluation */
 	int ex_pos;								/* Exception object local position */
-	unsigned char *IC_O;						/* Backup IC for old evaluation */
+	unsigned char * volatile IC_O;			/* Backup IC for old evaluation */
 	long volatile offset_o;					/* Offset for jump to the next BC_OLD/BC_END_OLD_EVAL */
-	RTEX;									/* Routine's execution vector and debugger
-											   level depth */
+	struct ex_vect * volatile exvect;		/* Routine's execution vector */
+   	uint32 volatile db_cstack;				/* Debugger level depth */
 	EIF_TYPED_VALUE * volatile stop = NULL;	/* To save stack context */
 	struct stochunk * volatile scur = NULL;	/* Current chunk (stack context) */
 #ifdef ISE_GC
@@ -591,7 +591,7 @@ rt_private void interpret(int flag, int where)
 	uint32 volatile rtype = 0;				/* Result type */
 	MTOT volatile OResult = (MTOT) 0;		/* Item for once data */
 #ifdef EIF_THREADS
-	EIF_process_once_value_t * POResult = NULL;	/* Process-relative once data */
+	EIF_process_once_value_t * volatile POResult = NULL;	/* Process-relative once data */
 	int volatile is_process_once = 0;		/* Is once routine process-relative? */
 	uint32 volatile uarg = 0;			/* Number of uncontrolled arguments */
 	EIF_NATURAL_64 volatile usep = 0;                       /* Bit mask for uncontrolled separate arguments. */
@@ -5538,7 +5538,7 @@ rt_private void address(int32 aid)
 	last = iget();
 	last->type = SK_POINTER;
 
-	last->it_ptr = (EIF_POINTER) RTWPP(aid);
+	last->it_ptr = (EIF_POINTER) (rt_uint_ptr) RTWPP(aid);
 }
 
 rt_shared EIF_REFERENCE rt_melted_arg (int a_pos) {

@@ -508,7 +508,6 @@ rt_public STREAM *spawn_child(char* id, EIF_NATIVE_CHAR *a_exe_path, EIF_NATIVE_
 		/* Working directory */
 	if (cwd) {
 		(void) _wchdir (cwd);
-		free (startpath);
 		startpath = _wgetcwd (NULL, PATH_MAX);
 	} else if (!handle_meltpath) {
 		startpath = (EIF_NATIVE_CHAR *) malloc ((wcslen (exe_path) + 1) * sizeof (EIF_NATIVE_CHAR));

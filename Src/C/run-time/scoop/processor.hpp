@@ -38,7 +38,7 @@
 #ifndef _PROCESSOR_H
 #define _PROCESSOR_H
 
-#include "private_queue.hpp"
+#include "rt_private_queue.h"
 #include "rt_request_group.h"
 #include "queue_cache.hpp"
 

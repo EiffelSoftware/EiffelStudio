@@ -114,4 +114,4 @@ rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_m
 	self->message_type = a_message;
 }
 
-#endif
+#endif /* _rt_message_h_ */

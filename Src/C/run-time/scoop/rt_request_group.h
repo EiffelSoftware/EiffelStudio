@@ -35,8 +35,6 @@
 		]"
 */
 
-/* TODO: Rename this file to rt_request_group.h when the C conversion is completed. */
-
 #ifndef _rt_request_group_h_
 #define _rt_request_group_h_
 
@@ -110,4 +108,4 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self);
 rt_shared void rt_request_group_lock (struct rt_request_group* self);
 rt_shared void rt_request_group_unlock (struct rt_request_group* self);
 
-#endif
+#endif /* _rt_request_group_h_ */

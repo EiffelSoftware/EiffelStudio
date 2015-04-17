@@ -35,8 +35,6 @@
 		]"
 */
 
-
-/* TODO: Rename the file to rt_queue_cache.h */
 #ifndef _rt_queue_cache_h_
 #define _rt_queue_cache_h_
 

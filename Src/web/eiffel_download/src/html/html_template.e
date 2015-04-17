@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TEMPLATE_PAGE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -40,8 +40,6 @@ feature {NONE} --Initialization
 
 	make_resources (a_path: PATH)
 			-- Initialize `Current'.
-		local
-			l_url: URL_ENCODER
 		do
 			set_template_folder (a_path)
 			set_template_file_name ("email_video_resources.tpl")

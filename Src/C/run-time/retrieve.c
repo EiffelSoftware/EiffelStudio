@@ -1177,6 +1177,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		excatch(&exenv);	/* Record pseudo execution vector */
 		if (setjmp(exenv)) {
 			GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+			result = NULL;
 			ereturn(MTC_NOARG);				/* Propagate exception */
 		} else {
 			result = eif_unsafe_portable_retrieve(rt_type, char_read_function);

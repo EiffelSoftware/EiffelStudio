@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {HTML_NOT_ACTIVE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

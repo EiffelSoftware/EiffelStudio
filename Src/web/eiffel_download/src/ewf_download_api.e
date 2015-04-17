@@ -61,6 +61,10 @@ feature {NONE} -- Initialization
 
 			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.disable_index
+			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+				do
+					execute_default (ia_req, ia_res)
+				end)
 			router.handle_with_request_methods ("/", fhdl, router.methods_GET)
 
 		end
@@ -135,9 +139,9 @@ feature -- Workflow
 							l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
 							l_service.initialize_download (l_token, l_form)
 					end
-						-- If the title is Student or Porfessor, they will not receive an email.
+							-- If the title is Student or Porfessor, they will not receive an email.
 					if l_form.title.same_string ("student") or else l_form.title.same_string ("professor") then
-						-- Download a GPL version.
+							-- Download a GPL version.
 						process_gpl_download (req, res, l_form, l_token)
 					else
 						send_email (req, l_form, l_token, req.absolute_script_url (""))
@@ -145,18 +149,18 @@ feature -- Workflow
 							attached email_service as l_email_service and then
 							attached l_email_service.last_error as l_error
 						then
-							send_internal_server_error ("Database service unavailable")
+							send_mail_internal_server_error ("Database service unavailable")
 							internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 						else
 							compute_response_redirect (req, res, "https://www.eiffel.com/forms/thank_you")
 						end
 					end
 				else
-					send_internal_server_error ("Database service unavailable")
+					send_mail_internal_server_error ("Database service unavailable")
 					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
 			else
-				send_internal_server_error ("Uknown error")
+				send_mail_internal_server_error ("Uknown error")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -222,17 +226,17 @@ feature -- Workflow
 				else
 					if l_service.is_available then
 						log.write_debug (generator + ".process_workflow: The request was invalid " + req.request_uri)
-						send_bad_request (generator + ".process_workflow: The request was invalid " + req.request_uri)
+						send_mail_bad_request (generator + ".process_workflow: The request was invalid " + req.request_uri)
 						bad_request (req, res, "")
 					else
 						log.write_debug (generator + ".process_workflow The database service is unavailable")
-						send_internal_server_error ("Database service unavailable")
+						send_mail_internal_server_error ("Database service unavailable")
 						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 					end
 				end
 			else
 				log.write_debug (generator + ".process_workflow: The database service is unavailable")
-				send_internal_server_error ("Database service unavailable")
+				send_mail_internal_server_error ("Database service unavailable")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -281,7 +285,7 @@ feature -- {none} Implementation
 				not_active_request (req, res, "")
 			else
 				log.write_debug (generator + ".process_workflow The service unavailable")
-				send_internal_server_error ("Database service unavailable")
+				send_mail_internal_server_error ("Database service unavailable")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 			end
 		end
@@ -330,12 +334,12 @@ feature -- {none} Implementation
 					direct_download (req, res, l_link, l_filename, l_options.size.out )
 				else
 					log.write_debug (generator + ".process_gpl_download ")
-					send_internal_server_error ("Error processing: Student/Professor use case.")
+					send_mail_internal_server_error ("Error processing: Student/Professor use case.")
 					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
 			else
 				log.write_debug (generator + ".process_gpl_workflow: The database service is unavailable")
-				send_internal_server_error ("Database service unavailable")
+				send_mail_internal_server_error ("Database service unavailable")
 				internal_server_error (req, res, {HTTP_STATUS_CODE}.internal_server_error)
 			end
 		end
@@ -372,6 +376,7 @@ feature -- Response
 		end
 
 	bad_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
+			-- Send a bad request response with description `a_description'.
 		local
 			l_hp: HTML_400
 		do
@@ -384,6 +389,7 @@ feature -- Response
 		end
 
 	not_active_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
+			-- Send a not active request response with description `a_description'.
 		local
 			l_hp: HTML_NOT_ACTIVE
 		do
@@ -396,6 +402,7 @@ feature -- Response
 		end
 
 	internal_server_error (req: WSF_REQUEST; res: WSF_RESPONSE; a_status: INTEGER)
+			-- Send a internal server error response with status `a_status'
 		local
 			l_hp: HTML_500
 		do
@@ -473,7 +480,6 @@ feature -- Response
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_disposition ("attachment; filename=", output)
 			h.put_current_date
 			h.put_header_key_value ("Content-type", "application/octet-stream")
 			h.put_location (output)
@@ -567,6 +573,7 @@ feature -- Send Email
  			-- Send mail to start download with additional information.
 		local
 			l_hp: EMAIL_DOWNLOAD_OPTIONS
+			l_html: EMAIL_HTML_RESOURCE
 			e: EXECUTION_ENVIRONMENT
 		do
 
@@ -578,12 +585,11 @@ feature -- Send Email
 				if attached l_hp.representation as l_html_download_options then
 					l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
 
-
 						-- Wait 5 seconds before to send the video resource emails
 					create e
 					e.sleep (1_000_000_000 * 5)
-					create l_hp.make_resources (layout.html_template_path)
-					if attached l_hp.representation as l_html_resource then
+					create l_html.make (layout.html_template_path)
+					if attached l_html.representation as l_html_resource then
 						l_email_service.send_email_resources (a_form.email, l_html_resource)
 					else
 						l_email_service.send_email_internal_server_error ("Internal server error sending video resource email")
@@ -629,14 +635,16 @@ feature -- Send Email
 			end
 		end
 
-	send_internal_server_error (a_description: READABLE_STRING_32)
+	send_mail_internal_server_error (a_description: READABLE_STRING_32)
+			-- Send mail regarding to an internal server error
 		do
 			if attached email_service as l_email_service then
 				l_email_service.send_email_internal_server_error (a_description)
 			end
 		end
 
-	send_bad_request (a_description: READABLE_STRING_32)
+	send_mail_bad_request (a_description: READABLE_STRING_32)
+			-- Send mail regarding to a bad request.
 		do
 			if attached email_service as l_email_service then
 				l_email_service.send_email_bad_request_error (a_description)
@@ -690,6 +698,7 @@ feature {NONE} -- Implementation
 		end
 
 	selected_platform (a_downloads: detachable LIST[DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT_OPTIONS
+			-- Search information related to the selected platform by the user.
 		local
 			l_found: BOOLEAN
 		do
@@ -706,20 +715,6 @@ feature {NONE} -- Implementation
 					end
 					a_downloads.forth
 				end
-			end
-		end
-
-feature -- Read file
-
-	read_file (a_file: READABLE_STRING_32): detachable READABLE_STRING_32
-		local
-			f: RAW_FILE
-		do
-			create f.make_open_read ("www/" + a_file)
-			if f.exists and then f.is_readable then
-				f.read_stream (f.count)
-				f.close
-				Result := f.last_string
 			end
 		end
 end

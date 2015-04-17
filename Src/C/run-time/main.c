@@ -1009,7 +1009,11 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 #endif
 	initprf();						/* Initialize profiler. */
 	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
-	init_scoop_root_thread ();			/* Initialize SCOOP-specific data on the root thread. */
+
+#ifdef EIF_THREADS
+		/* Initialize the SCOOP module. */
+	rt_scoop_setup (egc_is_scoop_capable);
+#endif
 
 		/* Initialize our root class. */
 	eif_init_root();

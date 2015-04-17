@@ -100,25 +100,6 @@ rt_public EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2)
 	return ((n1 >= 0) ^ (n2 > 0)) ? n1 / n2: ((n1 % n2) ? n1 / n2 + 1: n1 / n2);
 }
 
-#ifdef EIF_THREADS
-/*
-doc:	<routine name="init_scoop_root_thread" export="public">
-doc:		<summary>Initialize SCOOP-specific data if required.</summary>
-doc:		<thread_safety>Unsafe</thread_safety>
-doc:		<synchronization>None required</synchronization>
-doc:	</routine>
-*/
-
-rt_public void init_scoop_root_thread (void)
-{
-	if (egc_is_scoop_capable)
-	{
-			/* Initialize the SCOOP subsystem. */
-		rt_scoop_setup ();
-	}
-}
-#endif /* EIF_THREADS */
-
 /*
 doc:	<routine name="eif_sleep" export="public">
 doc:		<summary>Suspend execution of current thread by interval `nanoseconds'. It uses the most precise sleep function available for a given platform.</summary>

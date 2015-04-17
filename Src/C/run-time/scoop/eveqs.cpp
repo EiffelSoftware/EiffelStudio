@@ -292,18 +292,25 @@ rt_shared void rt_mark_all_processors (MARKER marking)
 /*
 doc:	<routine name="rt_scoop_setup" return_type="void" export="shared">
 doc:		<summary> Initialize the SCOOP subsystem and mark the root thread as a processor with ID 0. </summary>
+doc:		<param name="is_scoop_enabled" type="int"> Whether SCOOP was enabled in the project settings. Depending on this value initialization may be partially skipped. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call during program startup. </synchronization>
 doc:	</routine>
 */
-rt_public void rt_scoop_setup (void)
+rt_public void rt_scoop_setup (int is_scoop_enabled)
 {
+		/* Note: We initialize the SCOOP processor_registry in any case,
+		 * because of a bug in the interpreter which may sometimes execute RTS_OU
+		 * even in non-SCOOP systems. */
 	int error = rt_processor_registry_init ();
-	if (T_OK != error) {
-		eif_panic ("Could not initialize SCOOP subsystem.");
-	} else {
+
+	if (T_OK == error && is_scoop_enabled) {
 			/* Record that the current thread is associated with a processor of a PID 0. */
 		eif_set_processor_id (0);
+	}
+
+	if (T_OK != error) {
+		eif_panic ("Could not initialize SCOOP subsystem.");
 	}
 }
 

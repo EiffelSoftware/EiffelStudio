@@ -41,7 +41,7 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 */
 
 #include "rt_msc_ver_mismatch.h"
-#include "processor_registry.hpp"
+#include "rt_processor_registry.h"
 #include "rt_processor.h"
 
 #include "rt_assert.h"

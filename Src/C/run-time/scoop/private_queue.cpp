@@ -190,7 +190,7 @@ doc:	</routine>
 rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call)
 {
 	EIF_SCP_PID l_sync_pid = call_data_sync_pid (call);
-	bool will_sync = l_sync_pid != NULL_PROCESSOR_ID;
+	EIF_BOOLEAN will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
 
 	if (rt_queue_cache_has_locks_of (&client->cache, self->supplier)) {

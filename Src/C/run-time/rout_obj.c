@@ -204,15 +204,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 {
 	EIF_GET_CONTEXT
 	jmp_buf exenv;
-	int i = 2;
-	int args_count = open_count + closed_count;
-	int next_open = 0xFFFF;
-	int open_idx = 1;
-	int closed_idx = 1;
 	volatile rt_uint_ptr nb_protected = 0;
-	rt_uint_ptr nb_pushed = 0;
-	EIF_TYPED_VALUE* first_arg = NULL;
-	EIF_INTEGER* open_positions = NULL;
 
 	REQUIRE("valid_closed_args", (closed_count == 0) || closed_args);
 	REQUIRE("valid_open_args", (open_count == 0) || open_args);
@@ -225,6 +217,15 @@ rt_public void rout_obj_call_procedure_dynamic (
 		}
 		ereturn ();
 	} else {
+		int i = 2;
+		int args_count = open_count + closed_count;
+		int next_open = 0xFFFF;
+		int open_idx = 1;
+		int closed_idx = 1;
+		rt_uint_ptr nb_pushed = 0;
+		EIF_TYPED_VALUE* first_arg = NULL;
+		EIF_INTEGER* open_positions = NULL;
+
 		if (closed_count > 0) {
 			RT_GC_PROTECT(closed_args); /* iget() may call GC */
 			nb_protected++;

@@ -81,7 +81,7 @@ rt_private int ise_printf (char *StrFmt, ...)
 }
 
 #define INTERNAL_CHECK(type, tag, exp) \
-	(!(exp) ? ise_printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", (type), (tag), __FILE__, __LINE__, #exp) : 0)
+	if (!(exp)) { ise_printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", (type), (tag), __FILE__, __LINE__, #exp); }
 
 	/* Precondition checking */
 #define REQUIRE(tag,exp)	INTERNAL_CHECK("Precondition", (tag), (exp))

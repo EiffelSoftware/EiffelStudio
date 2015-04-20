@@ -2605,7 +2605,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 
 		temp_buf = r_buffer;
 
-		if (4 != sscanf(r_buffer, "%d %s %ld %d",&read_dtype,vis_name,&size,&nb_gen)) {
+		if (4 != sscanf(r_buffer, "%d %s %ld %u",&read_dtype,vis_name,&size,&nb_gen)) {
 			eise_io("General retrieve: unable to read type description.");
 		}
 		CHECK("Valid dtype", (read_dtype >= 0) && (read_dtype <= MAX_DTYPE));
@@ -3294,7 +3294,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		xraise (EN_MEM);
 	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read OVERHEAD size.");
-	if (sscanf (r_buffer,"%d\n", &old_overhead) != 1)
+	if (sscanf (r_buffer,"%u\n", &old_overhead) != 1)
 		eise_io ("Independent retrieve: unable to read OVERHEAD size.");
 
 	/* Read the number of lines */
@@ -3476,7 +3476,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
-				if (sscanf (r_buffer," %lu %s", &att_type, vis_name) != 2) {
+				if (sscanf (r_buffer," %ld %s", &att_type, vis_name) != 2) {
 					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
@@ -4533,13 +4533,15 @@ rt_private EIF_REFERENCE object_rread_attributes (
 			case SK_EXP: {
 				uint32 store_flags;
 				uint16 hflags;
-				EIF_TYPE_INDEX hdtype, hdftype;
+				EIF_TYPE_INDEX hdtype;
 				EIF_REFERENCE old_vals = NULL;
 				EIF_REFERENCE l_buffer;
 				ridr_multi_any ((char *) &l_buffer, 1);
 				ridr_norm_int (&store_flags);
 				Split_flags_dtype(hflags,hdtype,store_flags);
-				hdftype = rt_id_read_cid (hdtype);	/* Read but not used. */
+				(void) rt_id_read_cid (hdtype);	/* Read the dynamic type but since it is expanded the target
+												 * system already knows about it we simply ignore the returned
+												 * value. */
 				if (object == NULL) {
 					old_vals = object_rread_attributes (NULL, hflags, hdtype, 0L);
 					CHECK ("No mismatches", old_vals == NULL);

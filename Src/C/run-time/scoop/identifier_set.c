@@ -185,7 +185,7 @@ doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> Done internally through 'self->lock'. </synchronization>
 doc:	</routine>
 */
-rt_shared rt_inline int rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
+rt_shared int rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
 {
 	int error = T_OK;
 
@@ -224,7 +224,7 @@ doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> Done internally through 'self->lock'. </synchronization>
 doc:	</routine>
 */
-rt_shared rt_inline EIF_BOOLEAN rt_identifier_set_try_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
+rt_shared EIF_BOOLEAN rt_identifier_set_try_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
 {
 	EIF_BOOLEAN success = EIF_FALSE;
 	int error = T_OK;

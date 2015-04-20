@@ -51,7 +51,7 @@ struct rt_processor;
 struct rt_private_queue;
 
 /* Declare an internal vector data structure. */
-RT_DECLARE_VECTOR (rt_vector_queue_cache, queue_cache*)
+RT_DECLARE_VECTOR (rt_vector_queue_cache, struct queue_cache *)
 
 /*
 doc:	<struct name="queue_cache" export="shared">

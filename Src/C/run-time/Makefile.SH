@@ -42,11 +42,9 @@ INSTALLDIR = $INSTALLDIR
 
 AR = ar rc
 CC = $cc
-CPP = $cpp $cppminus $cppflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
-JMTCPPFLAGS = \$(CPPFLAGS) $optimize $warning_level $mtcppflags $large
 JLKFLAGS = \$(LDFLAGS) $ccldflags
 LDSHAREDFLAGS = $ldsharedflags
 SHAREDLINK= $sharedlink
@@ -71,7 +69,7 @@ SED = $sed
 
 USRINC = $usrinc
 LSCRIPTS =  eif_size.h
-SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) \$(MTADD_CPP) x2c.c runtime_validation.c
+SOURCES =  \$(LSRC) \$(WADD) \$(MTADD) x2c.c runtime_validation.c
 OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) x2c.o offset.o runtime_validation.o offset.o
 
 ########################################################################
@@ -95,7 +93,6 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
-CPPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
 LIB_SHARED= $(TOP)/ipc/shared
@@ -123,19 +120,17 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 
 WADD = debug.c interp.c update.c wbench.c
 
-MTADD_CPP = \
-	eveqs.cpp \
-	processor_registry.cpp \
-	notify_token.cpp \
-	private_queue.cpp \
-	processor.cpp \
-	queue_cache.cpp \
-	message_channel.cpp \
-	req_grp.cpp
-
 MTADD = \
 	scoop.c \
-	scoop_gc.c
+	scoop_gc.c \
+	scoop_helpers.c \
+	processor_registry.c \
+	private_queue.c \
+	processor.c \
+	queue_cache.c \
+	message_channel.c \
+	request_group.c \
+	identifier_set.c
 
 WOBJ = \
 	$(IDRS_OBJ) \
@@ -249,14 +244,14 @@ MT_WOBJ = \
 	MTwbench.o \
 	MTwscoop.o \
 	MTwscoop_gc.o \
-	MTweveqs.o \
+	MTwscoop_helpers.o \
 	MTwprocessor_registry.o \
-	MTwnotify_token.o \
 	MTwprivate_queue.o \
 	MTwprocessor.o \
 	MTwqueue_cache.o \
 	MTwmessage_channel.o \
-	MTwreq_grp.o \
+	MTwrequest_group.o \
+	MTwidentifier_set.o \
 	MTwmalloc.o \
 	MTwgarcol.o \
 	MTwlocal.o \
@@ -307,14 +302,14 @@ MT_LOBJ = \
 	$(MTIDRS_OBJ) \
 	MTscoop.o \
 	MTscoop_gc.o \
-	MTeveqs.o \
+	MTscoop_helpers.o \
 	MTprocessor_registry.o \
-	MTnotify_token.o \
 	MTprivate_queue.o \
 	MTprocessor.o \
 	MTqueue_cache.o \
 	MTmessage_channel.o \
-	MTreq_grp.o \
+	MTrequest_group.o \
+	MTidentifier_set.o \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
@@ -801,6 +796,30 @@ MTwscoop.o: scoop/scoop.c
 MTwscoop_gc.o: scoop/scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
+MTwscoop_helpers.o: scoop/scoop_helpers.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwprocessor_registry.o: scoop/processor_registry.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwprivate_queue.o: scoop/private_queue.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwprocessor.o: scoop/processor.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwqueue_cache.o: scoop/queue_cache.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwmessage_channel.o: scoop/message_channel.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwrequest_group.o: scoop/request_group.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwidentifier_set.o: scoop/identifier_set.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 
 MTscoop.o: scoop/scoop.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
@@ -808,55 +827,29 @@ MTscoop.o: scoop/scoop.c
 MTscoop_gc.o: scoop/scoop_gc.c
 	$(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTscoop_helpers.o: scoop/scoop_helpers.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTweveqs.o: scoop/eveqs.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTprocessor_registry.o: scoop/processor_registry.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwprocessor_registry.o: scoop/processor_registry.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTprivate_queue.o: scoop/private_queue.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwnotify_token.o: scoop/notify_token.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTprocessor.o: scoop/processor.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwprivate_queue.o: scoop/private_queue.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTqueue_cache.o: scoop/queue_cache.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwprocessor.o: scoop/processor.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTmessage_channel.o: scoop/message_channel.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwqueue_cache.o: scoop/queue_cache.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
+MTrequest_group.o: scoop/request_group.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
-MTwmessage_channel.o: scoop/message_channel.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
-
-MTwreq_grp.o: scoop/req_grp.cpp
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
-
-
-MTeveqs.o: scoop/eveqs.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTprocessor_registry.o: scoop/processor_registry.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTnotify_token.o: scoop/notify_token.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTprivate_queue.o: scoop/private_queue.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTprocessor.o: scoop/processor.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTqueue_cache.o: scoop/queue_cache.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTmessage_channel.o: scoop/message_channel.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
-MTreq_grp.o: scoop/req_grp.cpp
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
+MTidentifier_set.o: scoop/identifier_set.c
+	$(CC) -c $(JMTCFLAGS) $? -o $@
 
 
 all:: eif_size.h

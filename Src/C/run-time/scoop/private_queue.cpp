@@ -53,7 +53,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_init (priv_queue* self, processor* a_supplier)
+rt_shared void rt_private_queue_init (struct rt_private_queue* self, processor* a_supplier)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", a_supplier);
@@ -74,7 +74,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_deinit (priv_queue* self)
+rt_shared void rt_private_queue_deinit (struct rt_private_queue* self)
 {
 	REQUIRE ("self_not_null", self);
 	rt_message_channel_deinit (&self->channel);
@@ -92,7 +92,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self)
+rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (struct rt_private_queue* self)
 {
 	REQUIRE ("self_not_null", self);
 	return self->synced;
@@ -107,7 +107,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self)
+rt_shared EIF_BOOLEAN rt_private_queue_is_locked (struct rt_private_queue* self)
 {
 	REQUIRE ("self_not_null", self);
 	return self->lock_depth > 0;
@@ -123,7 +123,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_lock (priv_queue* self, processor* client)
+rt_shared void rt_private_queue_lock (struct rt_private_queue* self, processor* client)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
@@ -143,7 +143,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_unlock (priv_queue* self)
+rt_shared void rt_private_queue_unlock (struct rt_private_queue* self)
 {
 	REQUIRE ("self_not_null", self);
 
@@ -166,7 +166,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_register_wait (priv_queue* self, processor* client)
+rt_shared void rt_private_queue_register_wait (struct rt_private_queue* self, processor* client)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
@@ -187,7 +187,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_log_call (priv_queue* self, processor* client, struct call_data* call)
+rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, processor* client, struct call_data* call)
 {
 	EIF_SCP_PID l_sync_pid = call_data_sync_pid (call);
 	EIF_BOOLEAN will_sync = l_sync_pid != NULL_PROCESSOR_ID;
@@ -259,7 +259,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_mark (priv_queue* self, MARKER marking)
+rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking)
 {
 	struct call_data* call = NULL;
 

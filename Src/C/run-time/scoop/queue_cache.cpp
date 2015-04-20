@@ -45,8 +45,8 @@ doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary
 #include "rt_processor.h"
 
 /*
-doc:	<routine name="rt_queue_cache_find_from_owned return_type="struct priv_queue*" export="private">
-doc:		<summary> Find a priv_queue from the set of queues owned by 'self'. </summary>
+doc:	<routine name="rt_queue_cache_find_from_owned return_type="struct rt_private_queue*" export="private">
+doc:		<summary> Find a private queue from the set of queues owned by 'self'. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
 doc:		<return> A private queue to the specified processor. The result may not be locked. If none can be found, the result is NULL. </return>
@@ -54,20 +54,20 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private priv_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, processor* const supplier)
+rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, processor* const supplier)
 {
-	priv_queue *l_result = NULL;
+	struct rt_private_queue *l_result = NULL;
 	struct htable* l_owned = NULL;
-	priv_queue** l_position = NULL;
+	struct rt_private_queue** l_position = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
 
 		/* Find the position in the owned_queues hash table. */
 	l_owned = &self->owned_queues;
-	l_position = (priv_queue**) ht_value (l_owned, supplier->pid);
+	l_position = (struct rt_private_queue**) ht_value (l_owned, supplier->pid);
 
-		/* If found, return the priv_queue* pointer. */
+		/* If found, return the private queue pointer. */
 	if (l_position) {
 		l_result = *l_position;
 	}
@@ -77,8 +77,8 @@ rt_private priv_queue* rt_queue_cache_find_from_owned (struct queue_cache* self,
 
 
 /*
-doc:	<routine name="rt_queue_cache_find_from_borrowed" return_type="struct priv_queue*" export="private">
-doc:		<summary> Find a locked priv_queue in the stack of borrowed queue caches. </summary>
+doc:	<routine name="rt_queue_cache_find_from_borrowed" return_type="struct rt_private_queue*" export="private">
+doc:		<summary> Find a locked private queue in the stack of borrowed queue caches. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
 doc:		<return> A private queue to the specified processor. If none can be found, the result is NULL. </return>
@@ -86,9 +86,9 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private priv_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, processor* const supplier)
+rt_private struct rt_private_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, processor* const supplier)
 {
-	priv_queue* l_result = NULL;
+	struct rt_private_queue* l_result = NULL;
 	struct rt_vector_queue_cache* l_borrowed = NULL;
 
 	REQUIRE ("self_not_null", self);
@@ -109,8 +109,8 @@ rt_private priv_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* se
 
 		for (size_t i=0; i < l_size && !l_result; ++i) {
 
-			queue_cache* l_item = rt_vector_queue_cache_item (l_borrowed, i);
-			priv_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
+			struct queue_cache* l_item = rt_vector_queue_cache_item (l_borrowed, i);
+			struct rt_private_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
 
 				/* Only return locked queues, ignore all others. */
 			if (l_queue && rt_private_queue_is_locked (l_queue)) {
@@ -148,7 +148,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, proces
 
 	} else {
 			/* Next, try our own cache. */
-		priv_queue* owned = rt_queue_cache_find_from_owned (self, supplier);
+		struct rt_private_queue* owned = rt_queue_cache_find_from_owned (self, supplier);
 
 			/* Within our own cache a private queue might not necessarily be locked. */
 		if (owned && rt_private_queue_is_locked (owned)) {
@@ -161,7 +161,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, proces
 /*
 doc:	<routine name="rt_queue_cache_push" return_type="void" export="shared">
 doc:		<summary> Pass all locks from 'giver' to 'self'.
-doc: 			The locks (priv_queues) from the other processor will be added to this cache.
+doc: 			The locks (private queues) from the other processor will be added to this cache.
 doc: 			This should be called in pairs with rt_queue_cache_pop(). </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache to receive the locks. Must not be NULL. </param>
 doc:		<param name="giver" type="struct queue_cache*"> The queue cache to give away the locks. Must not be NULL. </param>
@@ -295,9 +295,9 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, pro
 
 
 /*
-doc:	<routine name="rt_queue_cache_retrieve" return_type="struct priv_queue*" export="shared">
+doc:	<routine name="rt_queue_cache_retrieve" return_type="struct rt_private_queue*" export="shared">
 doc:		<summary> Retrieve a private queue for processor 'supplier' from this queue cache.
-doc:			A new <priv_queue> will be constructed if none already exists.
+doc:			A new private queue will be constructed if none already exists.
 doc:			This will also look to see if there are any private queues that were passed to this queue_cache during lock-passing.
 doc:			These passed-queues will already be locked and have priority over non-passed, possibly unlocked queues. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
@@ -307,9 +307,9 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared priv_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier)
+rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier)
 {
-	priv_queue* l_result = NULL;
+	struct rt_private_queue* l_result = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
@@ -348,14 +348,14 @@ rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
 {
 	size_t l_count = 0;
 	rt_uint_ptr* l_keys = NULL;
-	priv_queue** l_area = NULL;
+	struct rt_private_queue** l_area = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
 
 	l_count = self->owned_queues.h_size;
 	l_keys = self->owned_queues.h_keys;
-	l_area = (priv_queue**) self->owned_queues.h_values;
+	l_area = (struct rt_private_queue**) self->owned_queues.h_values;
 
 		/* It is not necessary to mark queues which are borrowed from other queue_aches.
 		* The GC will traverse them later. */

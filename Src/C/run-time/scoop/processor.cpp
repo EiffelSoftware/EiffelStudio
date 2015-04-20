@@ -79,9 +79,9 @@ RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (subscriber_list_t, processor*)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (subscriber_list_t, processor*)
 
 /* Declare necessary features for the private queue list. */
-RT_DECLARE_VECTOR_SIZE_FUNCTIONS (private_queue_list_t, priv_queue*)
-RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, priv_queue*)
-RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, priv_queue*)
+RT_DECLARE_VECTOR_SIZE_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
+RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
+RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
 
 
 
@@ -189,7 +189,7 @@ doc:	</routine>
 rt_shared void rt_processor_destroy (processor* self)
 {
 	size_t l_count = 0;
-	priv_queue** l_item = NULL;
+	struct rt_private_queue** l_item = NULL;
 
 	if (self) {
 
@@ -267,7 +267,7 @@ doc:	</routine>
 rt_shared void rt_processor_mark (processor* self, MARKER marking)
 {
 	size_t l_count = 0;
-	priv_queue* l_queue = NULL;
+	struct rt_private_queue* l_queue = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
@@ -415,12 +415,12 @@ rt_shared void rt_processor_execute_call (processor* self, processor* client, st
 doc:	<routine name="rt_processor_process_private_queue" return_type="void" export="private">
 doc:		<summary> Execute all calls in the private queue 'queue' until an unlock message has arrived. </summary>
 doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
-doc:		<param name="queue" type="priv_queue*"> The private queue to be worked on. Must not be NULL. </param>
+doc:		<param name="queue" type="struct rt_private_queue*"> The private queue to be worked on. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_process_private_queue (processor* self, priv_queue *queue)
+rt_private void rt_processor_process_private_queue (processor* self, struct rt_private_queue *queue)
 {
 	EIF_BOOLEAN is_stopped = EIF_FALSE;
 	enum scoop_message_type type = SCOOP_MESSAGE_INVALID;
@@ -579,21 +579,21 @@ rt_shared void rt_processor_shutdown (processor* self)
 doc:	<routine name="rt_processor_new_private_queue" return_type="int" export="shared">
 doc:		<summary> Create a new private queue whose supplier is this processor. </summary>
 doc:		<param name="self" type="processor*"> The processor object. Must not be NULL. </param>
-doc:		<param name="result" type="priv_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<param name="result" type="struct rt_private_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
 doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex locking error code on failure. </return>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-int rt_processor_new_private_queue (processor* self, priv_queue** result)
+int rt_processor_new_private_queue (processor* self, struct rt_private_queue** result)
 {
 	int error = T_OK;
-	priv_queue* l_queue = NULL;
+	struct rt_private_queue* l_queue = NULL;
 
 	REQUIRE ("self_not_nul", self);
 	REQUIRE ("result_not_null", result);
 
-	l_queue = (priv_queue*) malloc (sizeof (priv_queue));
+	l_queue = (struct rt_private_queue*) malloc (sizeof (struct rt_private_queue));
 
 	if (l_queue) {
 			/* TODO: Change rt_private_queue_init to return an error code instead of an exception. */

@@ -51,7 +51,7 @@ RT_DECLARE_VECTOR_BASE (request_group_stack_t, struct rt_request_group)
 RT_DECLARE_VECTOR_BASE (subscriber_list_t, struct rt_processor*)
 
 /* Define the vector to be used for keeping track of private queues of this processor. */
-RT_DECLARE_VECTOR_BASE (private_queue_list_t, priv_queue*)
+RT_DECLARE_VECTOR_BASE (private_queue_list_t, struct rt_private_queue*)
 
 /*
 doc:	<struct name="rt_processor" export="shared">
@@ -142,6 +142,6 @@ rt_shared void rt_processor_execute_call (processor* self, processor* client, st
 rt_shared void rt_processor_application_loop (processor* self);
 
 /* Utility functions. */
-int rt_processor_new_private_queue (processor* self, priv_queue** result);
+int rt_processor_new_private_queue (processor* self, struct rt_private_queue** result);
 
 #endif /* _rt_processor_h_ */

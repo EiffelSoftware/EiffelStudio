@@ -79,20 +79,18 @@ struct rt_private_queue {
 	EIF_BOOLEAN synced;
 };
 
-typedef struct rt_private_queue priv_queue; /* TODO: Get rid of this typedef.*/
-
 /* Declarations. */
-rt_shared void rt_private_queue_init (priv_queue* self, struct rt_processor* a_supplier);
-rt_shared void rt_private_queue_deinit (priv_queue* self);
-rt_shared void rt_private_queue_mark (priv_queue* self, MARKER marking);
+rt_shared void rt_private_queue_init (struct rt_private_queue* self, struct rt_processor* a_supplier);
+rt_shared void rt_private_queue_deinit (struct rt_private_queue* self);
+rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking);
 
-rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (priv_queue* self);
-rt_shared EIF_BOOLEAN rt_private_queue_is_locked (priv_queue* self);
+rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (struct rt_private_queue* self);
+rt_shared EIF_BOOLEAN rt_private_queue_is_locked (struct rt_private_queue* self);
 
-rt_shared void rt_private_queue_lock (priv_queue* self, struct rt_processor* client);
-rt_shared void rt_private_queue_unlock (priv_queue* self);
-rt_shared void rt_private_queue_register_wait (priv_queue* self, struct rt_processor* client);
+rt_shared void rt_private_queue_lock (struct rt_private_queue* self, struct rt_processor* client);
+rt_shared void rt_private_queue_unlock (struct rt_private_queue* self);
+rt_shared void rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client);
 
-rt_shared void rt_private_queue_log_call (priv_queue* self, struct rt_processor* client, struct call_data* call);
+rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call);
 
 #endif /* _rt_private_queue_h_ */

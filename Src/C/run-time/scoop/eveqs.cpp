@@ -175,7 +175,7 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 {
 	processor *client = rt_get_processor (client_pid);
 	processor *supplier = rt_get_processor (supplier_pid);
-	priv_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
+	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
 	REQUIRE("has data", data);
 
@@ -193,7 +193,7 @@ rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 {
 	processor *client = rt_get_processor (client_pid);
 	processor *supplier = rt_get_processor (supplier_pid);
-	priv_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
+	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
 	return rt_private_queue_is_synchronized (pq);
 }

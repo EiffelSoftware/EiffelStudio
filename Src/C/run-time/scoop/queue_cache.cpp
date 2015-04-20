@@ -54,7 +54,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, processor* const supplier)
+rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue_cache* self, struct rt_processor* const supplier)
 {
 	struct rt_private_queue *l_result = NULL;
 	struct htable* l_owned = NULL;
@@ -86,7 +86,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private struct rt_private_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, processor* const supplier)
+rt_private struct rt_private_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, struct rt_processor* const supplier)
 {
 	struct rt_private_queue* l_result = NULL;
 	struct rt_vector_queue_cache* l_borrowed = NULL;
@@ -134,7 +134,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, processor* supplier)
+rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct rt_processor* supplier)
 {
 	EIF_BOOLEAN l_result = EIF_FALSE;
 
@@ -264,7 +264,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, processor* const supplier)
+rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, struct rt_processor* const supplier)
 {
 	struct rt_vector_queue_cache* l_borrowed = NULL;
 	EIF_BOOLEAN l_result = EIF_FALSE;
@@ -307,7 +307,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, processor* const supplier)
+rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier)
 {
 	struct rt_private_queue* l_result = NULL;
 
@@ -334,7 +334,7 @@ rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* 
 	return l_result;
 }
 
-#if 0 /* Apparently the rt_queue_cache_mark feature was never used. GC traversal happens through processor::private_queue_cache. */
+#if 0 /* Apparently the rt_queue_cache_mark feature was never used. GC traversal happens through rt_processor->generated_private_queues. */
 /*
 doc:	<routine name="rt_queue_cache_mark" return_type="void" export="shared">
 doc:		<summary> Garbage Collection: Mark the calls that may be in the private queues handled by this cache. </summary>
@@ -376,7 +376,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_queue_cache_clear (struct queue_cache* self, processor *proc)
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, struct rt_processor *proc)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("proc_not_null", proc);

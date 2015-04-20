@@ -80,7 +80,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_request_group_add (struct rt_request_group* self, processor* supplier)
+rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier)
 {
 	struct rt_private_queue* pq = NULL;
 	int error = T_OK;
@@ -115,7 +115,7 @@ doc:	</routine>
 rt_shared void rt_request_group_wait (struct rt_request_group* self)
 {
 	size_t l_count = rt_request_group_count (self);
-	processor* l_client = self->client;
+	struct rt_processor* l_client = self->client;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("lock_called", self->is_sorted);
@@ -192,7 +192,7 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 		/* Temporarily lock the queue-of-queue of all suppliers. */
 	for (size_t i = 0; i < l_count; ++i) {
-		processor* l_supplier = rt_request_group_item (self, i)->supplier;
+		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
 		eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex);
 	}
 
@@ -203,7 +203,7 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 
 		/* Release the queue-of-queue locks. */
 	for (size_t i = 0; i < l_count; ++i) {
-		processor* l_supplier = rt_request_group_item (self, i)->supplier;
+		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
 		eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex);
 	}
 

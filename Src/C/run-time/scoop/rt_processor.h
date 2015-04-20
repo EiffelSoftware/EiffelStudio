@@ -118,30 +118,28 @@ struct rt_processor {
 	EIF_BOOLEAN is_dirty;
 };
 
-typedef struct rt_processor processor; /* TODO: Get rid of this typedef. */
-
 /* Creation and destruction. */
-rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, processor** result);
-rt_shared void rt_processor_destroy (processor* self);
-rt_shared void rt_processor_mark (processor* self, MARKER marking);
+rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_processor, struct rt_processor** result);
+rt_shared void rt_processor_destroy (struct rt_processor* self);
+rt_shared void rt_processor_mark (struct rt_processor* self, MARKER marking);
 
 /* Thread spawning and teardown. */
-rt_shared void rt_processor_shutdown (processor* self);
+rt_shared void rt_processor_shutdown (struct rt_processor* self);
 
 /* Wait condition subscription management. */
-rt_shared void rt_processor_subscribe_wait_condition (processor* self, processor* client);
-rt_shared void rt_processor_unsubscribe_wait_condition (processor* self, processor* dead_processor);
+rt_shared void rt_processor_subscribe_wait_condition (struct rt_processor* self, struct rt_processor* client);
+rt_shared void rt_processor_unsubscribe_wait_condition (struct rt_processor* self, struct rt_processor* dead_processor);
 
 /* Declarations for group stack manipulation. */
-rt_shared void rt_processor_request_group_stack_extend (processor* self);
-rt_shared struct rt_request_group* rt_processor_request_group_stack_last (processor* self);
-rt_shared void rt_processor_request_group_stack_remove_last (processor* self);
+rt_shared void rt_processor_request_group_stack_extend (struct rt_processor* self);
+rt_shared struct rt_request_group* rt_processor_request_group_stack_last (struct rt_processor* self);
+rt_shared void rt_processor_request_group_stack_remove_last (struct rt_processor* self);
 
 /* Features executed by the processor itself. */
-rt_shared void rt_processor_execute_call (processor* self, processor* client, struct call_data* call);
-rt_shared void rt_processor_application_loop (processor* self);
+rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct call_data* call);
+rt_shared void rt_processor_application_loop (struct rt_processor* self);
 
 /* Utility functions. */
-int rt_processor_new_private_queue (processor* self, struct rt_private_queue** result);
+int rt_processor_new_private_queue (struct rt_processor* self, struct rt_private_queue** result);
 
 #endif /* _rt_processor_h_ */

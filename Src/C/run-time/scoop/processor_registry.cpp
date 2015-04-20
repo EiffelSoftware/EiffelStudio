@@ -53,7 +53,7 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 struct rt_processor_registry registry;
 
 /* Private declarations. */
-rt_private void rt_processor_registry_destroy_region (processor* proc);
+rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc);
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid);
 
 /*
@@ -68,7 +68,7 @@ doc:	</routine>
 rt_shared int rt_processor_registry_init (void)
 {
 	struct rt_processor_registry* self = &registry;
-	processor* root_proc = NULL;
+	struct rt_processor* root_proc = NULL;
 	int error = T_OK;
 	
 	self->all_done_mutex = NULL;
@@ -181,7 +181,7 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
 {
 	EIF_SCP_PID pid = 0;
 	int error = T_OK;
-	processor* new_processor = NULL;
+	struct rt_processor* new_processor = NULL;
 	struct rt_processor_registry* self = &registry;
 
 	REQUIRE ("result_not_null", result);
@@ -220,7 +220,7 @@ doc:	</routine>
 */
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
-	processor *proc = rt_get_processor (pid);
+	struct rt_processor *proc = rt_get_processor (pid);
 
 		/* Record that the current thread is associated with a processor of a given ID. */
 	eif_set_processor_id (pid);
@@ -246,7 +246,7 @@ doc:	</routine>
 */
 rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
 {
-	processor* proc = rt_get_processor (pid);
+	struct rt_processor* proc = rt_get_processor (pid);
 
 		/* TODO: What happens when thread allocation fails? */
 	eif_thr_create_with_attr_new (
@@ -278,8 +278,8 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 		/* To avoid double free we check first to see if they're */
 		/* still active. */
 		/* Note that this mechanism doesn't avoid double shutdown messages. */
-	processor* to_be_removed = NULL;
-	processor* item = NULL;
+	struct rt_processor* to_be_removed = NULL;
+	struct rt_processor* item = NULL;
 	EIF_SCP_PID index = 0;
 
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
@@ -311,7 +311,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call from the thread belonging to processor 'proc'. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_registry_destroy_region (processor* proc)
+rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 {
 	EIF_INTEGER_32 l_count = 0;
 	EIF_SCP_PID pid = proc->pid;
@@ -355,7 +355,7 @@ doc:	</routine>
 rt_shared void rt_processor_registry_quit_root_processor (void)
 {
 	struct rt_processor_registry* self = &registry;
-	processor *root_proc = rt_get_processor (0);
+	struct rt_processor* root_proc = rt_get_processor (0);
 
 		/* First we have to enter a regular application loop, as some
 		 * clients may still have references to objects created by the root processor. */

@@ -55,14 +55,14 @@ extern "C" {
 /* RTS_RC (o) - create request group for o */
 rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
-	processor *client = rt_get_processor (client_pid);
+	struct rt_processor* client = rt_get_processor (client_pid);
 	rt_processor_request_group_stack_extend (client);
 }
 
 /* RTS_RD (o) - delete request group of o and release any locks */
 rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 {
-	processor *client = rt_get_processor (client_pid);
+	struct rt_processor* client = rt_get_processor (client_pid);
 
 		/* Unlock, deallocate and remove the request group. */
 	rt_processor_request_group_stack_remove_last (client);
@@ -71,7 +71,7 @@ rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
 /* RTS_RF (o) - wait condition fails */
 rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 {
-	processor *client = rt_get_processor (client_pid);
+	struct rt_processor* client = rt_get_processor (client_pid);
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
 	rt_request_group_wait (l_group);
 }
@@ -79,8 +79,8 @@ rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 /* RTS_RS (c, s) - add supplier s to current group for c */
 rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
-	processor *client = rt_get_processor (client_pid);
-	processor *supplier = rt_get_processor (supplier_pid);
+	struct rt_processor* client = rt_get_processor (client_pid);
+	struct rt_processor* supplier = rt_get_processor (supplier_pid);
 
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
 	rt_request_group_add (l_group, supplier);
@@ -89,7 +89,7 @@ rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF
 /* RTS_RW (o) - sort all suppliers in the group and get exclusive access */
 rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 {
-	processor *client = rt_get_processor (client_pid);
+	struct rt_processor* client = rt_get_processor (client_pid);
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
 	rt_request_group_lock (l_group);
 }
@@ -173,8 +173,8 @@ rt_public void eif_apply_wcall (call_data *data)
 
 rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data *data)
 {
-	processor *client = rt_get_processor (client_pid);
-	processor *supplier = rt_get_processor (supplier_pid);
+	struct rt_processor *client = rt_get_processor (client_pid);
+	struct rt_processor *supplier = rt_get_processor (supplier_pid);
 	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
 	REQUIRE("has data", data);
@@ -191,8 +191,8 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 
 rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
-	processor *client = rt_get_processor (client_pid);
-	processor *supplier = rt_get_processor (supplier_pid);
+	struct rt_processor *client = rt_get_processor (client_pid);
+	struct rt_processor *supplier = rt_get_processor (supplier_pid);
 	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
 
 	return rt_private_queue_is_synchronized (pq);
@@ -200,8 +200,8 @@ rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 
 int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
-	processor *client = rt_get_processor (client_pid);
-	processor *supplier = rt_get_processor (supplier_pid);
+	struct rt_processor *client = rt_get_processor (client_pid);
+	struct rt_processor *supplier = rt_get_processor (supplier_pid);
 	
 	/*
 	 * An object is only uncontrolled when all of the following apply:
@@ -233,7 +233,7 @@ doc:	</routine>
 */
 rt_shared void rt_enumerate_live_processors(void)
 {
-	processor* proc = NULL;
+	struct rt_processor* proc = NULL;
 	
 	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 		
@@ -264,7 +264,7 @@ doc:	</routine>
 rt_shared void rt_mark_all_processors (MARKER marking)
 {
 	static volatile EIF_INTEGER_32 rt_is_marking = 0;
-	processor* proc = NULL;
+	struct rt_processor* proc = NULL;
 
 	EIF_INTEGER_32 new_value = 1;
 	EIF_INTEGER_32 expected = 0;

@@ -10,7 +10,6 @@ OUTPUT_CMD = $output_cmd
 INPUT_CMD = $input_cmd
 JCFLAGS = $(CFLAGS) $ccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
-JMTCPPFLAGS = $(CPPFLAGS) $mtcppflags $optimize $(INPUT_CMD) $(OUTPUT_CMD)$@ -c
 LIB_EXE = $lib_exe
 MAKE = $make
 LINK32 = $link32
@@ -18,7 +17,6 @@ DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
 
 CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
-CPPFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)network.$lib
 MT_NETWORK = $(TOP)$(DIR)ipc$(DIR)app$(DIR)mtnetwork.$lib
 LIBNAME = ipc.$lib
@@ -182,14 +180,14 @@ MT_OBJECTS = \
 	$(INDIR)MTgarcol.$obj \
 	$(INDIR)MTscoop.$obj \
 	$(INDIR)MTscoop_gc.$obj \
-	$(INDIR)MTeveqs.$obj \
+	$(INDIR)MTscoop_helpers.$obj \
 	$(INDIR)MTprocessor_registry.$obj \
-	$(INDIR)MTnotify_token.$obj \
 	$(INDIR)MTprivate_queue.$obj \
 	$(INDIR)MTmessage_channel.$obj \
 	$(INDIR)MTprocessor.$obj \
 	$(INDIR)MTqueue_cache.$obj \
-	$(INDIR)MTreq_grp.$obj \
+	$(INDIR)MTrequest_group.$obj \
+	$(INDIR)MTidentifier_set.$obj \
 	$(INDIR)MTmain.$obj
 
 MT_WOBJECTS = \
@@ -245,14 +243,14 @@ MT_WOBJECTS = \
 	$(INDIR)MTinterp.$obj \
 	$(INDIR)MTwscoop.$obj \
 	$(INDIR)MTwscoop_gc.$obj \
-	$(INDIR)MTweveqs.$obj \
+	$(INDIR)MTwscoop_helpers.$obj \
 	$(INDIR)MTwprocessor_registry.$obj \
-	$(INDIR)MTwnotify_token.$obj \
 	$(INDIR)MTwprivate_queue.$obj \
 	$(INDIR)MTwmessage_channel.$obj \
 	$(INDIR)MTwprocessor.$obj \
 	$(INDIR)MTwqueue_cache.$obj \
-	$(INDIR)MTwreq_grp.$obj \
+	$(INDIR)MTwrequest_group.$obj \
+	$(INDIR)MTwidentifier_set.$obj \
 	$(INDIR)MTwmain.$obj \
 	$(MT_NETWORK)
 
@@ -691,29 +689,29 @@ $(INDIR)MTscoop.$obj: $(RTSRC)scoop$(DIR)scoop.c
 $(INDIR)MTscoop_gc.$obj: $(RTSRC)scoop$(DIR)scoop_gc.c
 	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTeveqs.$obj: $(RTSRC)scoop$(DIR)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTscoop_helpers.$obj: $(RTSRC)scoop$(DIR)scoop_helpers.c
+	$(CC) $(JMTCFLAGS) $?
 	
-$(INDIR)MTprocessor_registry.$obj: $(RTSRC)scoop$(DIR)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTprocessor_registry.$obj: $(RTSRC)scoop$(DIR)processor_registry.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTnotify_token.$obj: $(RTSRC)scoop$(DIR)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTprocessor.$obj: $(RTSRC)scoop$(DIR)processor.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTprocessor.$obj: $(RTSRC)scoop$(DIR)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTqueue_cache.$obj: $(RTSRC)scoop$(DIR)queue_cache.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTqueue_cache.$obj: $(RTSRC)scoop$(DIR)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTrequest_group.$obj: $(RTSRC)scoop$(DIR)request_group.c
+	$(CC) $(JMTCFLAGS) $?
 
-$(INDIR)MTreq_grp.$obj: $(RTSRC)scoop$(DIR)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) $?
+$(INDIR)MTidentifier_set.$obj: $(RTSRC)scoop$(DIR)identifier_set.c
+	$(CC) $(JMTCFLAGS) $?
 
 $(INDIR)MThash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)hash.c
@@ -856,29 +854,29 @@ $(INDIR)MTwscoop.$obj: $(RTSRC)scoop$(DIR)scoop.c
 $(INDIR)MTwscoop_gc.$obj: $(RTSRC)scoop$(DIR)scoop_gc.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTweveqs.$obj: $(RTSRC)scoop$(DIR)eveqs.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwscoop_helpers.$obj: $(RTSRC)scoop$(DIR)scoop_helpers.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwprocessor_registry.$obj: $(RTSRC)scoop$(DIR)processor_registry.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwprocessor_registry.$obj: $(RTSRC)scoop$(DIR)processor_registry.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwnotify_token.$obj: $(RTSRC)scoop$(DIR)notify_token.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwprivate_queue.$obj: $(RTSRC)scoop$(DIR)private_queue.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwmessage_channel.$obj: $(RTSRC)scoop$(DIR)message_channel.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwprocessor.$obj: $(RTSRC)scoop$(DIR)processor.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwprocessor.$obj: $(RTSRC)scoop$(DIR)processor.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwqueue_cache.$obj: $(RTSRC)scoop$(DIR)queue_cache.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwqueue_cache.$obj: $(RTSRC)scoop$(DIR)queue_cache.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwrequest_group.$obj: $(RTSRC)scoop$(DIR)request_group.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
-$(INDIR)MTwreq_grp.$obj: $(RTSRC)scoop$(DIR)req_grp.cpp
-	$(CPP) $(JMTCPPFLAGS) -DWORKBENCH $?
+$(INDIR)MTwidentifier_set.$obj: $(RTSRC)scoop$(DIR)identifier_set.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $?
 
 $(INDIR)MTwhash.$obj: $(RTSRC)hash.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)hash.c

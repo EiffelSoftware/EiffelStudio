@@ -135,7 +135,12 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 
 	parsing_store_append(&parsing_context, object, mid, nid);
 
-	write (f_desc, parsing_buffer, parsing_position);
+		/* Write `parsing_buffer' onto `f_desc'. If we cannot write `parsing_position' bytes
+		 * we have a failure. */
+	if (write (f_desc, parsing_buffer, parsing_position) != parsing_position) {
+		eio();
+	}
+
 	parsing_position = 0;
 
 	return file_position;

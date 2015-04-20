@@ -40,7 +40,6 @@ doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version=
 doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides a mapping from PIDs to processor objects.">
 */
 
-#include "rt_msc_ver_mismatch.h"
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
 

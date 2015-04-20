@@ -39,7 +39,6 @@
 doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
 */
 
-#include "rt_msc_ver_mismatch.h"
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
 #include "eif_interp.h"

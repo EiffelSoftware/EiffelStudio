@@ -39,7 +39,6 @@
 doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary="A cache for private queues.">
  */
 
-#include "rt_msc_ver_mismatch.h"
 #include "rt_queue_cache.h"
 #include "rt_private_queue.h"
 #include "rt_processor.h"

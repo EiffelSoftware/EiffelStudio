@@ -70,7 +70,6 @@ struct rt_identifier_set {
 extern int rt_identifier_set_init (struct rt_identifier_set* self, size_t a_capacity);
 extern void rt_identifier_set_deinit (struct rt_identifier_set* self);
 extern int rt_identifier_set_extend (struct rt_identifier_set* self, EIF_SCP_PID pid);
-//extern void rt_identifier_set_do_consume (struct rt_identifier_set* self, EIF_SCP_PID* result);
 extern int rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP_PID* result);
 extern EIF_BOOLEAN rt_identifier_set_try_consume (struct rt_identifier_set* self, EIF_SCP_PID* result);
 

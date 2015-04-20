@@ -172,7 +172,7 @@ rt_shared void rt_private_queue_register_wait (struct rt_private_queue* self, st
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("self_synchronized", self->synced);
 	rt_processor_subscribe_wait_condition (self->supplier, client);
-	self->synced = false;
+	self->synced = EIF_FALSE;
 }
 
 /*

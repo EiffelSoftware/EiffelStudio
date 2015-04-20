@@ -219,7 +219,7 @@ doc:	</routine>
 rt_shared void rt_queue_cache_pop (struct queue_cache* self)
 {
 	struct rt_vector_queue_cache *l_borrowed = NULL;
-	queue_cache* origin = NULL;
+	struct queue_cache* origin = NULL;
 
 	REQUIRE ("not_null", self);
 	REQUIRE ("has_lock_stack", self->borrowed_queues);

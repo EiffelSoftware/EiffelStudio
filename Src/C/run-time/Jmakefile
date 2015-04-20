@@ -5,7 +5,6 @@
 #include "../U/runtime.H"
 
 CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
-CPPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
 DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
 
 LIB_SHARED= $(TOP)/ipc/shared
@@ -42,19 +41,18 @@ WADD = debug.c interp.c update.c wbench.c
 /*
  * Files addedd only for multithreaded archive
  */
-MTADD_CPP = \
-	eveqs.cpp \
-	processor_registry.cpp \
-	notify_token.cpp \
-	private_queue.cpp \
-	processor.cpp \
-	queue_cache.cpp \
-	message_channel.cpp \
-	req_grp.cpp
 
 MTADD = \
 	scoop.c \
-	scoop_gc.c
+	scoop_gc.c \
+	scoop_helpers.c \
+	processor_registry.c \
+	private_queue.c \
+	processor.c \
+	queue_cache.c \
+	message_channel.c \
+	request_group.c \
+	identifier_set.c
 
 /*
  * Files for workbench have a 'w' pre-pended if they already exist for
@@ -94,9 +92,6 @@ MT_WOBJ = \
 |expand f!$(MTADD)!
 	MTw!f:\.c=.o \
 -expand
-|expand f!$(MTADD_CPP)!
-	MTw!f:\.cpp=.o \
--expand
 |expand f!$(LSRC)!
 	MTw!f:\.c=.o \
 -expand \\
@@ -108,9 +103,6 @@ MT_LOBJ = \
 	$(MTIDRS_OBJ) \
 |expand f!$(MTADD)!
 	MT!f:\.c=.o \
--expand
-|expand f!$(MTADD_CPP)!
-	MT!f:\.cpp=.o \
 -expand
 |expand f!$(LSRC)!
 	MT!f:\.c=.o \
@@ -162,22 +154,9 @@ MT!f:\.c=.o: scoop/!f
 
 -expand
 
-|expand f!$(MTADD_CPP)!
-MTw!f:\.cpp=.o: scoop/!f
-	$(CPP) -c $(JMTCPPFLAGS) -DWORKBENCH $? -o $@
-
--expand
-
-|expand f!$(MTADD_CPP)!
-MT!f:\.cpp=.o: scoop/!f
-	$(CPP) -c $(JMTCPPFLAGS) $? -o $@
-
--expand
-
-
 NormalObjectRule()
 ShellScriptLongTarget(eif_size_h,eif_size.h)
-AddSource($(LSRC) $(WADD) $(MTADD) $(MTADD_CPP))
+AddSource($(LSRC) $(WADD) $(MTADD))
 
 CustomLibraryTarget(mtfinalized,$(MT_LOBJ))
 CustomLibraryTarget(mtwkbench,$(MT_WOBJ))

@@ -48,6 +48,9 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP supp
 #include "rt_garcol.h"
 #include "rt_macros.h"
 
+#include "rt_processor_registry.h"
+#include "rt_processor.h"
+
 #ifndef EIF_THREADS
 #error "SCOOP is currenly supported only in multithreaded mode."
 #endif
@@ -59,7 +62,9 @@ rt_public void eif_call_const (call_data * a)
 	(void) a;
 }
 
-/* Request chain stack */
+/*
+ * Obsolete functions:
+ */
 
 /* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
 rt_public void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk)
@@ -143,6 +148,53 @@ rt_public void eif_unset_processor_id (void)
 	eif_synchronize_gc (rt_globals);
 	rt_globals -> eif_thr_context_cx -> is_processor = EIF_FALSE;
 	eif_unsynchronize_gc (rt_globals);
+}
+
+
+/*
+ * Functions to manipulate the request group stack:
+ */
+
+/* RTS_RC (o) - create request group for o */
+rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+	rt_processor_request_group_stack_extend (client);
+}
+
+/* RTS_RD (o) - delete request group of o and release any locks */
+rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+
+		/* Unlock, deallocate and remove the request group. */
+	rt_processor_request_group_stack_remove_last (client);
+}
+
+/* RTS_RF (o) - wait condition fails */
+rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_wait (l_group);
+}
+
+/* RTS_RS (c, s) - add supplier s to current group for c */
+rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+	struct rt_processor* supplier = rt_get_processor (supplier_pid);
+
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_add (l_group, supplier);
+}
+
+/* RTS_RW (o) - sort all suppliers in the group and get exclusive access */
+rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
+	rt_request_group_lock (l_group);
 }
 
 /*

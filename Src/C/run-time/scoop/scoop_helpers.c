@@ -50,48 +50,6 @@ doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP su
 extern "C" {
 #endif
 
-/* RTS_RC (o) - create request group for o */
-rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
-{
-	struct rt_processor* client = rt_get_processor (client_pid);
-	rt_processor_request_group_stack_extend (client);
-}
-
-/* RTS_RD (o) - delete request group of o and release any locks */
-rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
-{
-	struct rt_processor* client = rt_get_processor (client_pid);
-
-		/* Unlock, deallocate and remove the request group. */
-	rt_processor_request_group_stack_remove_last (client);
-}
-
-/* RTS_RF (o) - wait condition fails */
-rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
-{
-	struct rt_processor* client = rt_get_processor (client_pid);
-	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_wait (l_group);
-}
-
-/* RTS_RS (c, s) - add supplier s to current group for c */
-rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
-{
-	struct rt_processor* client = rt_get_processor (client_pid);
-	struct rt_processor* supplier = rt_get_processor (supplier_pid);
-
-	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_add (l_group, supplier);
-}
-
-/* RTS_RW (o) - sort all suppliers in the group and get exclusive access */
-rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
-{
-	struct rt_processor* client = rt_get_processor (client_pid);
-	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_lock (l_group);
-}
-
 /* Processor creation */
 /* RTS_PA */
 rt_public void eif_new_processor (EIF_REFERENCE obj)

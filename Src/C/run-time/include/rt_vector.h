@@ -38,6 +38,7 @@
 #define _rt_vector_h_
 
 #include "eif_portable.h"
+#include "rt_portable.h"
 #include "rt_assert.h"
 #include "eif_error.h"
 
@@ -45,7 +46,6 @@
 
 /* The initial capacity to be used when starting from an empty vector. */
 #define RT_VECTOR_FIRST_RESERVE 2
-
 
 
 /*
@@ -181,7 +181,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline size_t CAT2(_vector_name,_count) (struct _vector_name* self) \
+rt_unused rt_private rt_inline size_t CAT2(_vector_name,_count) (struct _vector_name* self) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	return self->count; \
@@ -221,7 +221,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline _vector_element_type CAT2 (_vector_name, _item) (struct _vector_name* self, size_t position) \
+rt_unused rt_private rt_inline _vector_element_type CAT2 (_vector_name, _item) (struct _vector_name* self, size_t position) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("within_bounds", position < self->count); \
@@ -239,7 +239,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline _vector_element_type* CAT2 (_vector_name, _item_pointer) (struct _vector_name* self, size_t position) \
+rt_unused rt_private rt_inline _vector_element_type* CAT2 (_vector_name, _item_pointer) (struct _vector_name* self, size_t position) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("within_bounds", position < self->count); \
@@ -257,7 +257,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline void CAT2(_vector_name,_put) (struct _vector_name* self, size_t position, _vector_element_type element) \
+rt_unused rt_private rt_inline void CAT2(_vector_name,_put) (struct _vector_name* self, size_t position, _vector_element_type element) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("within_bounds", position < self->count); \
@@ -297,7 +297,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline _vector_element_type CAT2(_vector_name,_last) (struct _vector_name* self) \
+rt_unused rt_private rt_inline _vector_element_type CAT2(_vector_name,_last) (struct _vector_name* self) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("not_empty", self->count > 0); \
@@ -314,7 +314,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline _vector_element_type* CAT2(_vector_name,_last_pointer) (struct _vector_name* self) \
+rt_unused rt_private rt_inline _vector_element_type* CAT2(_vector_name,_last_pointer) (struct _vector_name* self) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("not_empty", self->count > 0); \
@@ -331,7 +331,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline int CAT2(_vector_name,_extend) (struct _vector_name* self, _vector_element_type element) \
+rt_unused rt_private rt_inline int CAT2(_vector_name,_extend) (struct _vector_name* self, _vector_element_type element) \
 { \
 	int l_error = T_OK; \
 	size_t l_count = 0; \
@@ -365,7 +365,7 @@ doc:		<synchronization> None. </synchronization> \
 doc:		<fixme> If we add a resize function one day, we should ensure that elements are zero-initialized. This can be done either here or in resize. </fixme> \
 doc:	</routine> \
 */ \
-rt_private rt_inline void CAT2(_vector_name,_remove_last) (struct _vector_name* self) \
+rt_unused rt_private rt_inline void CAT2(_vector_name,_remove_last) (struct _vector_name* self) \
 { \
 	REQUIRE ("not_null", self != NULL); \
 	REQUIRE ("not_empty", self->count > 0); \
@@ -402,7 +402,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline struct _struct_name* CAT2(_struct_name,_create) (void) \
+rt_unused rt_private rt_inline struct _struct_name* CAT2(_struct_name,_create) (void) \
 { \
 	struct _struct_name* result = (struct _struct_name*) malloc (sizeof (struct _struct_name)); \
 	if (result) { \
@@ -419,7 +419,7 @@ doc:		<thread_safety> Not safe. </thread_safety> \
 doc:		<synchronization> None. </synchronization> \
 doc:	</routine> \
 */ \
-rt_private rt_inline void CAT2(_struct_name,_destroy) (struct _struct_name* self) \
+rt_unused rt_private rt_inline void CAT2(_struct_name,_destroy) (struct _struct_name* self) \
 { \
 	if (self) { \
 		CAT2(_struct_name,_deinit) (self); \

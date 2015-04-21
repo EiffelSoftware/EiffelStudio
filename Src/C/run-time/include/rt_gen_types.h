@@ -41,6 +41,7 @@
 #endif
 
 #include "eif_eiffel.h"
+#include "rt_portable.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -125,7 +126,7 @@ extern "C" {
 extern char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos);
 
 #ifdef EIF_ASSERTIONS
-rt_private int rt_valid_type_index(int dftype) {
+rt_unused rt_private int rt_valid_type_index(int dftype) {
 	if (dftype < (int) MAX_DTYPE) {
 		return 1;
 	} else {

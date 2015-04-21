@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"Helper functions used by the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
@@ -36,11 +36,14 @@
 */
 
 /*
-doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
+doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summary="Helper functions used by the SCOOP runtime.">
 */
 
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
+
+#include "rt_scoop_helpers.h"
+
 #include "eif_interp.h"
 #include "rt_wbench.h"
 #include "rt_struct.h"
@@ -54,7 +57,7 @@ extern "C" {
 /* Call logging */
 
 #ifdef WORKBENCH
-rt_public void eif_apply_wcall (call_data *data)
+rt_shared void rt_apply_wcall (call_data *data)
 {
 	uint32            pid = 0; /* Pattern id of the frozen feature */
 	EIF_NATURAL_32    i;

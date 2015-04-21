@@ -41,12 +41,6 @@
 #endif
 
 /* TODO: This file needs some cleanup...
- * Some features don't need to be exported to public:
- ** eif_set_processor_id
- ** eif_unset_processor_id
- ** rt_scoop_setup
- ** rt_scoop_reclaim
- ** eif_apply_wcall
  *
  * EIF_IS_SCOOP_CAPABLE is only needed in eif_built_in.h and can be moved there.
  *
@@ -98,11 +92,10 @@ RT_LNK void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);	/* Pus
 RT_LNK void eif_request_chain_pop (struct stack * stk);	/* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
 RT_LNK void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
 
-/* Scoop Macros */
-
+/* Scoop Macros
+ * TODO: Are these macros still in use somewhere? */
 #define set_boolean_return_value(a_boolean_typed_value,a_boolean) ((EIF_TYPED_VALUE *) a_boolean_typed_value)->item.b = a_boolean;
 #define set_integer_32_return_value(a_integer_32_typed_value,a_integer) ((EIF_TYPED_VALUE *) a_integer_32_typed_value)->item.i4 = a_integer;
-
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
 
 /* Processor properties */

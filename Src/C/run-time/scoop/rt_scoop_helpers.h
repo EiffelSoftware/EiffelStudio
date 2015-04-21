@@ -43,13 +43,11 @@
 /* Forward declaration */
 struct call_data;
 
-#ifdef WORKBENCH
-void rt_apply_wcall (struct call_data *data);
-#endif
-
 void rt_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
 void rt_unset_processor_id (void);	/* Dissociate processor from the current thread. */
 
 void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark references in a call_data struct with the MARKER function. */
+
+EIF_BOOLEAN rt_scoop_try_call (struct call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
 
 #endif /* _rt_scoop_helpers_h_ */

@@ -188,7 +188,7 @@ doc:	</routine>
 */
 rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call)
 {
-	EIF_SCP_PID l_sync_pid = call_data_sync_pid (call);
+	EIF_SCP_PID l_sync_pid = call->sync_pid;
 	EIF_BOOLEAN will_sync = l_sync_pid != NULL_PROCESSOR_ID;
 
 

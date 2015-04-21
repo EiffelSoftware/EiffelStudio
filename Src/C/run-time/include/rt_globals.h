@@ -46,6 +46,7 @@
 #include "idrs.h"
 #include "rt_constants.h"
 #include "rt_types.h"
+#include "rt_scoop.h"
 
 #ifdef __cplusplus
 extern "C" {

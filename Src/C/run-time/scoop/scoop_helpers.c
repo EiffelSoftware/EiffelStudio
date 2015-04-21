@@ -50,6 +50,7 @@ doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summ
 #include "rt_globals.h"
 #include "rt_garcol.h"
 #include "rt_macros.h"
+#include "rt_except.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,7 +60,7 @@ extern "C" {
 /* Call logging */
 
 #ifdef WORKBENCH
-rt_shared void rt_apply_wcall (call_data *data)
+rt_private void rt_apply_wcall (call_data *data)
 {
 	uint32            pid = 0; /* Pattern id of the frozen feature */
 	EIF_NATURAL_32    i;
@@ -101,6 +102,71 @@ rt_shared void rt_apply_wcall (call_data *data)
 	}
 }
 #endif
+
+
+/*
+doc:	<routine name="rt_scoop_try_call" return_type="EIF_BOOLEAN" export="shared">
+doc:		<summary> Try to apply the feature in 'call', and catch any exceptions that may occur. </summary>
+doc:		<param name="call" type="struct call_data*"> The feature to apply. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
+{
+		/* Switch this on to catch exceptions */
+		/* This section slows down some benchmarks by 2x. I believe */
+		/* this is due to either some locking in the allocation routines (again) */
+		/* or reloading the thread local variables often. */
+	EIF_GET_CONTEXT
+	EIF_BOOLEAN success;
+	EIF_REFERENCE EIF_VOLATILE saved_except = NULL;
+	EIF_OBJECT EIF_VOLATILE safe_saved_except = NULL;
+	jmp_buf exenv;
+	RTYL;
+
+	saved_except = RTLA;
+	if (saved_except) {
+		safe_saved_except = eif_protect(saved_except);
+	}
+		/* Record pseudo execution vector */
+	excatch(&exenv);
+
+#ifdef _MSC_VER
+/* Disable warning about C++ destructor not compatible with setjmp. It does not matter since
+ * we call C code. */
+#pragma warning (disable:4611)
+#endif
+	if (!setjmp(exenv)) {
+#ifdef _MSC_VER
+#pragma warning (default:4611)
+#endif
+#ifdef WORKBENCH
+		rt_apply_wcall (call);
+#else
+		call->pattern (call);
+#endif
+		success = EIF_TRUE;
+		if (safe_saved_except) {
+			set_last_exception (eif_access(safe_saved_except));
+		}
+	} else {
+		success = EIF_FALSE;
+	}
+
+	if (safe_saved_except) {
+		eif_wean(safe_saved_except);
+	}
+
+	RTXE;
+		/* Only when no exception occurred do we need to pop the stack. */
+    if (success) {
+			/* Pop pseudo vector */
+		expop(&eif_stack);
+	}
+	return success;
+}
+
 
 /*
 doc:	<routine name="rt_mark_ref" export="private">

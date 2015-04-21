@@ -45,7 +45,6 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 
 #include "eif_atomops.h"
 #include "eif_posix_threads.h"
-#include "rt_except.h"
 
 
 
@@ -286,70 +285,6 @@ rt_shared void rt_processor_mark (struct rt_processor* self, MARKER marking)
 }
 
 /*
-doc:	<routine name="rt_processor_try_call" return_type="EIF_BOOLEAN" export="private">
-doc:		<summary> Try to apply the feature in 'call', and catch any exceptions that may occur. </summary>
-doc:		<param name="call" type="struct call_data*"> The feature to apply. Must not be NULL. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None </synchronization>
-doc:		<fixme> This feature should be moved somewhere else. It doesn't need anything from the processor class, but pulls in a lot of dependencies. Maybe eveqs.cpp? </fixme>
-doc:	</routine>
-*/
-rt_private EIF_BOOLEAN rt_processor_try_call (call_data *call)
-{
-		/* Switch this on to catch exceptions */
-		/* This section slows down some benchmarks by 2x. I believe */
-		/* this is due to either some locking in the allocation routines (again) */
-		/* or reloading the thread local variables often. */
-	EIF_GET_CONTEXT
-	EIF_BOOLEAN success;
-	EIF_REFERENCE EIF_VOLATILE saved_except = NULL;
-	EIF_OBJECT EIF_VOLATILE safe_saved_except = NULL;
-	jmp_buf exenv;
-	RTYL;
-
-	saved_except = RTLA;
-	if (saved_except) {
-		safe_saved_except = eif_protect(saved_except);
-	}
-		/* Record pseudo execution vector */
-	excatch(&exenv);
-
-#ifdef _MSC_VER
-/* Disable warning about C++ destructor not compatible with setjmp. It does not matter since
- * we call C code. */
-#pragma warning (disable:4611)
-#endif
-	if (!setjmp(exenv)) {
-#ifdef _MSC_VER
-#pragma warning (default:4611)
-#endif
-#ifdef WORKBENCH
-		rt_apply_wcall (call);
-#else
-		call->pattern (call);
-#endif
-		success = EIF_TRUE;
-		if (safe_saved_except) {
-			set_last_exception (eif_access(safe_saved_except));
-		}
-	} else {
-		success = EIF_FALSE;
-	}
-
-	if (safe_saved_except) {
-		eif_wean(safe_saved_except);
-	}
-
-	RTXE;
-		/* Only when no exception occurred do we need to pop the stack. */
-    if (success) {
-			/* Pop pseudo vector */
-		expop(&eif_stack);
-	}
-	return success;
-}
-
-/*
 doc:	<routine name="rt_processor_execute_call" return_type="void" export="shared">
 doc:		<summary> Execute the call 'call' coming from processor 'client'. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that executes the call. Must not be NULL. </param>
@@ -368,7 +303,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("call_not_null", call);
 
-	is_synchronous = (call_data_sync_pid (call) != NULL_PROCESSOR_ID);
+	is_synchronous = (call->sync_pid != NULL_PROCESSOR_ID);
 
 		/* Only execute the call when the current processor region is clean. */
 	if (!self->is_dirty) {
@@ -379,7 +314,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 		}
 
 			/* Execute the call. */
-		is_successful = rt_processor_try_call (call);
+		is_successful = rt_scoop_try_call (call);
 
 			/* Mark the current region as dirty if the call fails. */
 		if (!is_successful) {

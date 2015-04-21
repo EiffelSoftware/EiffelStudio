@@ -1,5 +1,5 @@
 /*
-	description:	"Definitions for a set of EIF_SCP_PID identifiers."
+	description:	"A bounded queue for EIF_SCP_PID identifiers."
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 2014-2015, Eiffel Software."
@@ -34,11 +34,15 @@
 		]"
 */
 
+/*
+doc:<file name="identifier_set.c" header="identifier_set.h" version="$Id$" summary="A bounded queue for EIF_SCP_PID identifiers.">
+ */
+
 #include "eif_portable.h"
-#include "eif_posix_threads.h"
+#include "rt_identifier_set.h"
+
 #include "eif_error.h"
 #include "rt_assert.h"
-#include "rt_identifier_set.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,7 +60,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only called by the root thread during program startup. </synchronization>
 doc:	</routine>
 */
-rt_shared rt_inline int rt_identifier_set_init (struct rt_identifier_set* self, size_t a_capacity)
+rt_shared int rt_identifier_set_init (struct rt_identifier_set* self, size_t a_capacity)
 {
 	int error = T_OK;
 
@@ -105,7 +109,7 @@ doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only called by the root thread during program termination. </synchronization>
 doc:	</routine>
 */
-rt_shared rt_inline void rt_identifier_set_deinit (struct rt_identifier_set* self)
+rt_shared void rt_identifier_set_deinit (struct rt_identifier_set* self)
 {
 	REQUIRE ("self_not_null", self);
 
@@ -130,7 +134,7 @@ doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> Done internally through 'self->lock'. </synchronization>
 doc:	</routine>
 */
-rt_shared rt_inline int rt_identifier_set_extend (struct rt_identifier_set* self, EIF_SCP_PID pid)
+rt_shared int rt_identifier_set_extend (struct rt_identifier_set* self, EIF_SCP_PID pid)
 {
 	int error = T_OK;
 	size_t position = 0;
@@ -247,3 +251,7 @@ rt_shared EIF_BOOLEAN rt_identifier_set_try_consume (struct rt_identifier_set* s
 #ifdef __cplusplus
 }
 #endif
+
+/*
+doc:</file>
+*/

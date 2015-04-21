@@ -39,9 +39,8 @@
 doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SCOOP support.">
 */
 
-#include "internal.hpp"
-
 #include "rt_processor.h"
+#include "rt_scoop.h"
 
 #include "eif_atomops.h"
 #include "eif_posix_threads.h"

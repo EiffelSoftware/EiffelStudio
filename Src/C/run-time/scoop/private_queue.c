@@ -39,9 +39,9 @@
 doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" summary="SCOOP support.">
 */
 
-#include "internal.hpp"
 #include "rt_private_queue.h"
 #include "rt_processor.h"
+#include "rt_scoop.h"
 
 /*
 doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">

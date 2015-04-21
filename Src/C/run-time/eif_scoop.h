@@ -68,9 +68,6 @@
 extern "C" {
 #endif
 
-#define RT_MAX_SCOOP_PROCESSOR_COUNT 1024 /* Maximum number of SCOOP processors, including root. It should be power of 2 to satisfy current implementation of mpmc_bounded_queue. */
-
-
 /* Separate calls */
 
 typedef struct call_data {
@@ -128,13 +125,8 @@ RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 
-/* Setup and teardown. */
-rt_shared void rt_scoop_setup (int is_scoop_enabled);
-rt_shared void rt_scoop_reclaim (void);
-
 #ifdef __cplusplus
 }
-
 #endif
 
 #endif	/* _eif_scoop_h_ */

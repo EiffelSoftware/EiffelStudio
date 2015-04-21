@@ -202,40 +202,6 @@ rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk)
 	}
 }
 
-/* Processor properties */
-
-/*
-doc:	<routine name="eif_set_processor_id" export="public">
-doc:		<summary>Associate processor of ID `pid' with the current thread.</summary>
-doc:		<param name="pid" type="EIF_SCP_PID">ID of the processor.</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Not required because called before starting any threads.</synchronization>
-doc:	</routine>
-*/
-rt_public void eif_set_processor_id (EIF_SCP_PID pid)
-{
-	RT_GET_CONTEXT
-	rt_thr_context * c = rt_globals->eif_thr_context_cx;
-	c -> logical_id = pid;
-	c -> is_processor = EIF_TRUE;
-}
-
-/*
-doc:	<routine name="eif_unset_processor_id" export="public">
-doc:		<summary>Dissociate processor from the current thread.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Not required because changes a single integer value.</synchronization>
-doc:	</routine>
-*/
-rt_public void eif_unset_processor_id (void)
-{
-	RT_GET_CONTEXT
-	eif_synchronize_gc (rt_globals);
-	rt_globals -> eif_thr_context_cx -> is_processor = EIF_FALSE;
-	eif_unsynchronize_gc (rt_globals);
-}
-
-
 /*Functions to manipulate the request group stack */
 
 /* RTS_RC (o) - create request group for o */

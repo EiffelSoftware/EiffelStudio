@@ -39,9 +39,15 @@
 
 #include "eif_portable.h"
 
+/* Forward declaration of call_data. */
+struct call_data;
+
 #ifdef WORKBENCH
-RT_LNK void rt_apply_wcall (call_data *data);
+void rt_apply_wcall (struct call_data *data);
 #endif
+
+void rt_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
+void rt_unset_processor_id (void);	/* Dissociate processor from the current thread. */
 
 
 #endif /* _rt_scoop_helpers_h_ */

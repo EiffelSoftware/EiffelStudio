@@ -111,10 +111,6 @@ RT_LNK int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 RT_LNK int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_wait_for_all_processors(void);
 
-/* Garbage collection */
-RT_LNK void eif_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
-RT_LNK void eif_unset_processor_id (void);	/* Dissociate processor from the current thread. */
-
 /* Request chain operations */
 RT_LNK void eif_new_scoop_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid);

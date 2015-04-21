@@ -39,8 +39,6 @@
 
 #include "eif_portable.h"
 #include "eif_posix_threads.h"
-#include "eif_error.h"
-#include "rt_assert.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -90,9 +90,6 @@ typedef struct call_data {
 } call_data;
 
 RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data* data);
-#ifdef WORKBENCH
-RT_LNK void eif_apply_wcall (call_data *data);
-#endif
 RT_LNK void eif_call_const (call_data * a);
 
 /* Request chain stack */

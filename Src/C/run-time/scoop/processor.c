@@ -41,6 +41,7 @@ doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SC
 
 #include "rt_processor.h"
 #include "rt_scoop.h"
+#include "rt_scoop_helpers.h"
 
 #include "eif_atomops.h"
 #include "eif_posix_threads.h"
@@ -323,7 +324,7 @@ rt_private EIF_BOOLEAN rt_processor_try_call (call_data *call)
 #pragma warning (default:4611)
 #endif
 #ifdef WORKBENCH
-		eif_apply_wcall (call);
+		rt_apply_wcall (call);
 #else
 		call->pattern (call);
 #endif

@@ -306,27 +306,6 @@ rt_shared void rt_report_live_index (void)
 	/* RTS_TCB(scoop_task_update_statistics, 0, 0, 0); */
 }
 
-rt_private void rt_mark_ref (MARKER marking, EIF_REFERENCE *ref)
-{
-	REQUIRE("ref not null", ref);
-	*ref = marking (ref);
-}
-
-rt_shared void rt_mark_call_data(MARKER marking, call_data* call)
-{
-	size_t i;
-
-	REQUIRE("Cannot mark NULL calls", call);
-
-	rt_mark_ref (marking, &call->target);
-
-	for (i = 0; i < call->count; i++) {
-		if (call->argument[i].type == SK_REF) {
-			rt_mark_ref (marking, &call->argument[i].it_r);
-		}
-	}
-}
-
 /*
 doc:	<routine name="rt_mark_all_processors" return_type="void" export="shared">
 doc:		<summary> Mark all processors in the system. </summary>

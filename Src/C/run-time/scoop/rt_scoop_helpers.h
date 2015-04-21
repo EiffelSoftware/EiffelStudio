@@ -38,8 +38,9 @@
 #define _rt_scoop_helpers_h_
 
 #include "eif_portable.h"
+#include "rt_garcol.h" /* TODO: It would be nice if we wouldn't have to pull in as many dependencies for the definition of MARKER. */
 
-/* Forward declaration of call_data. */
+/* Forward declaration */
 struct call_data;
 
 #ifdef WORKBENCH
@@ -49,5 +50,6 @@ void rt_apply_wcall (struct call_data *data);
 void rt_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
 void rt_unset_processor_id (void);	/* Dissociate processor from the current thread. */
 
+void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark references in a call_data struct with the MARKER function. */
 
 #endif /* _rt_scoop_helpers_h_ */

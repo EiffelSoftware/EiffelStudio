@@ -102,6 +102,45 @@ rt_shared void rt_apply_wcall (call_data *data)
 }
 #endif
 
+/*
+doc:	<routine name="rt_mark_ref" export="private">
+doc:		<summary>Mark and update the reference at 'ref'.</summary>
+doc:		<param name="marking" type="MARKER">The marker function. Must not be NULL.</param>
+doc:		<param name="ref" type="EIF_REFERENCE*">A pointer to the Eiffel reference. Must not be NULL.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Only call during GC.</synchronization>
+doc:	</routine>
+*/
+rt_private void rt_mark_ref (MARKER marking, EIF_REFERENCE *ref)
+{
+	REQUIRE("marking_not_null", marking);
+	REQUIRE("ref_not_null", ref);
+	*ref = marking (ref);
+}
+/*
+doc:	<routine name="rt_mark_call_data" export="shared">
+doc:		<summary>Mark all references in the call_data struct 'call'.</summary>
+doc:		<param name="marking" type="MARKER">The marker function. Must not be NULL.</param>
+doc:		<param name="call" type="struct call_data*">The call_data struct. Must not be NULL.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Only call during GC.</synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_mark_call_data(MARKER marking, struct call_data* call)
+{
+	size_t i;
+
+	REQUIRE("Cannot mark NULL calls", call);
+
+	rt_mark_ref (marking, &call->target);
+
+	for (i = 0; i < call->count; i++) {
+		if (call->argument[i].type == SK_REF) {
+			rt_mark_ref (marking, &call->argument[i].it_r);
+		}
+	}
+}
+
 
 /*
 doc:	<routine name="rt_set_processor_id" export="shared">

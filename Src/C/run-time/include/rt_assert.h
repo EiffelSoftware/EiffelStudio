@@ -49,6 +49,7 @@
 
 #include "eif_config.h"
 #include "eif_confmagic.h"
+#include "rt_portable.h"
 #include <stdio.h>
 #ifdef EIF_ASSERTIONS
 #include <stdarg.h>
@@ -67,7 +68,7 @@ extern "C" {
 	 * when assertion violation is reported. To do so, we have created
 	 * `ise_printf' so that we can simply set a breakpoint in it.
 	 */
-rt_private int ise_printf (char *StrFmt, ...)
+rt_unused rt_private int ise_printf (char *StrFmt, ...)
 	/* To put a breakpoint when an assertion violation occurs. */
 {
 	va_list ap;

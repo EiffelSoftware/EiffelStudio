@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"Main functions of the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 2010-2015, Eiffel Software."

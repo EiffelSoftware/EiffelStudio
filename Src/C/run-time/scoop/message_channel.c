@@ -36,10 +36,10 @@
 */
 
 /*
-doc:<file name="message_channel.cpp" header="rt_message_channel.hpp" version="$Id$" summary="A channel for rt_message structs between processors.">
+doc:<file name="message_channel.c" header="rt_message_channel.h" version="$Id$" summary="A channel for rt_message structs between processors.">
 */
 
-#include "rt_message_channel.hpp"
+#include "rt_message_channel.h"
 #include "eif_error.h"
 
 /*

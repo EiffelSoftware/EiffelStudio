@@ -1,7 +1,7 @@
 /*
 	description:	"Declarations for the message channel struct."
-	date:		"$Date: 2015-03-19 18:13:44 +0100 (Thu, 19 Mar 2015) $"
-	revision:	"$Revision: 96880 $"
+	date:		"$Date$"
+	revision:	"$Revision$"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"

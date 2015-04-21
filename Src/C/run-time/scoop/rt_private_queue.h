@@ -39,7 +39,7 @@
 #define _rt_private_queue_h_
 
 #include "rt_message.h"
-#include "rt_message_channel.hpp"
+#include "rt_message_channel.h"
 
 struct rt_processor;
 

@@ -36,7 +36,7 @@
 */
 
 /*
-doc:<file name="queue_cache.cpp" header="queue_cache.hpp" version="$Id$" summary="A cache for private queues.">
+doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary="A cache for private queues.">
  */
 
 #include "rt_queue_cache.h"

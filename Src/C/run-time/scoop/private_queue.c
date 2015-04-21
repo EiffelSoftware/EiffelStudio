@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"A private message queue between a client and a supplier processor."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
@@ -36,7 +36,7 @@
 */
 
 /*
-doc:<file name="private_queue.cpp" header="private_queue.hpp" version="$Id$" summary="SCOOP support.">
+doc:<file name="private_queue.c" header="rt_private_queue.h" version="$Id$" summary="A private message queue between a client and a supplier processor.">
 */
 
 #include "rt_private_queue.h"

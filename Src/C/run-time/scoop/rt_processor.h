@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"Declarations for the rt_processor struct."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",

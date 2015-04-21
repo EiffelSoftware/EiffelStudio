@@ -36,7 +36,7 @@
 */
 
 /*
-doc:<file name="processor_registry.cpp" header="processor_registry.hpp" version="$Id$"
+doc:<file name="processor_registry.c" header="rt_processor_registry.h" version="$Id$"
 doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides a mapping from PIDs to processor objects.">
 */
 

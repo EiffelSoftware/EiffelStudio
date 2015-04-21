@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"Main functions of the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 2010-2015, Eiffel Software."
@@ -35,7 +35,7 @@
 */
 
 /*
-doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="SCOOP support.">
+doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="Main functions of the SCOOP runtime.">
 */
 
 #include "eif_portable.h"

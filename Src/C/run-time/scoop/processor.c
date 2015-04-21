@@ -1,5 +1,5 @@
 /*
-	description:	"SCOOP support."
+	description:	"Representation of a SCOOP processor."
 	date:		"$Date$"
 	revision:	"$Revision: 96304 $"
 	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
@@ -36,7 +36,7 @@
 */
 
 /*
-doc:<file name="processor.cpp" header="processor.hpp" version="$Id$" summary="SCOOP support.">
+doc:<file name="processor.c" header="rt_processor.h" version="$Id$" summary="Representation of a SCOOP processor.">
 */
 
 #include "rt_processor.h"

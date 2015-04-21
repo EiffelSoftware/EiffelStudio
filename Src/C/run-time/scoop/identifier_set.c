@@ -35,7 +35,7 @@
 */
 
 /*
-doc:<file name="identifier_set.c" header="identifier_set.h" version="$Id$" summary="A bounded queue for EIF_SCP_PID identifiers.">
+doc:<file name="identifier_set.c" header="rt_identifier_set.h" version="$Id$" summary="A bounded queue for EIF_SCP_PID identifiers.">
  */
 
 #include "eif_portable.h"

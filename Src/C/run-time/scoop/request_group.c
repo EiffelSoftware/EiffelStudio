@@ -35,10 +35,8 @@
 		]"
 */
 
-/* TODO: Rename this file to request_group.c when the C conversion is completed. */
-
 /*
-doc:<file name="req_grp.cpp" header="req_grp.hpp" version="$Id$" summary="Routines to manipulate SCOOP request groups, which are used to model separate arguments for routines.">
+doc:<file name="request_group.c" header="rt_request_group.h" version="$Id$" summary="Routines to manipulate SCOOP request groups, which are used to model separate arguments for routines.">
 */
 
 #include "rt_request_group.h"

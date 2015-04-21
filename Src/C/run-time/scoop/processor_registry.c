@@ -42,6 +42,7 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
+#include "rt_scoop_helpers.h"
 
 #include "rt_assert.h"
 #include "eif_macros.h"
@@ -222,7 +223,7 @@ rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 	struct rt_processor *proc = rt_get_processor (pid);
 
 		/* Record that the current thread is associated with a processor of a given ID. */
-	eif_set_processor_id (pid);
+	rt_set_processor_id (pid);
 
 		/* Send a message to the creator thread that we have succesfully spawned.
 		 * We recycle the RESULT_READY message here since the creator is not interested in the message anyway. */
@@ -319,7 +320,7 @@ rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 	REQUIRE ("processor_not_collected", rt_lookup_processor (pid));
 
 		/* Decouple processor ID from the current thread. */
-	eif_unset_processor_id ();
+	rt_unset_processor_id ();
 
 		/* Remove the processor from the bookkeeping structures in the processor registry. */
 	l_count = RTS_AD_I32 (&self->processor_count); /* Atomic pre-decrement */

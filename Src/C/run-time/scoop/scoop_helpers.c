@@ -39,15 +39,17 @@
 doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summary="Helper functions used by the SCOOP runtime.">
 */
 
-#include "rt_processor_registry.h"
-#include "rt_processor.h"
-
 #include "rt_scoop_helpers.h"
+#include "rt_processor_registry.h"
 
 #include "eif_interp.h"
 #include "rt_wbench.h"
 #include "rt_struct.h"
 #include "rt_assert.h"
+
+#include "rt_globals.h"
+#include "rt_garcol.h"
+#include "rt_macros.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,6 +102,39 @@ rt_shared void rt_apply_wcall (call_data *data)
 }
 #endif
 
+
+/*
+doc:	<routine name="rt_set_processor_id" export="shared">
+doc:		<summary>Associate processor of ID `pid' with the current thread.</summary>
+doc:		<param name="pid" type="EIF_SCP_PID">ID of the processor.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Not required because called before starting any threads.</synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_set_processor_id (EIF_SCP_PID pid)
+{
+	RT_GET_CONTEXT
+	rt_thr_context * c = rt_globals->eif_thr_context_cx;
+	c -> logical_id = pid;
+	c -> is_processor = EIF_TRUE;
+}
+
+/*
+doc:	<routine name="rt_unset_processor_id" export="shared">
+doc:		<summary>Dissociate processor from the current thread.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Not required because changes a single integer value.</synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_unset_processor_id (void)
+{
+	RT_GET_CONTEXT
+	eif_synchronize_gc (rt_globals);
+	rt_globals -> eif_thr_context_cx -> is_processor = EIF_FALSE;
+	eif_unsynchronize_gc (rt_globals);
+}
+
+
 /*
 doc:	<routine name="rt_scoop_setup" return_type="void" export="shared">
 doc:		<summary> Initialize the SCOOP subsystem and mark the root thread as a processor with ID 0. </summary>
@@ -117,7 +152,7 @@ rt_public void rt_scoop_setup (int is_scoop_enabled)
 
 	if (T_OK == error && is_scoop_enabled) {
 			/* Record that the current thread is associated with a processor of a PID 0. */
-		eif_set_processor_id (0);
+		rt_set_processor_id (0);
 	}
 
 	if (T_OK != error) {

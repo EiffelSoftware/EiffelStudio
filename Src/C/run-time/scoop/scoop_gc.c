@@ -45,6 +45,10 @@ doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP
 #include "rt_scoop_gc.h"
 #include "rt_threads.h"
 
+#include "rt_processor_registry.h"
+#include "rt_processor.h"
+#include "eif_atomops.h"
+
 #define PID_MAP_ITEM_TYPE uint32                       /* Type of items in `live_pid_map'. (It must be unsigned.) */
 #define PID_MAP_ITEM_SIZE (sizeof (PID_MAP_ITEM_TYPE)) /* Size of one element in `live_pid_map' in bytes. */
 #define PID_MAP_ITEM_BITS (PID_MAP_ITEM_SIZE*8)        /* Size of one element in `live_pid_map' in bits. */
@@ -119,6 +123,32 @@ doc:	</routine>
 rt_shared void rt_mark_live_pid (EIF_SCP_PID pid)
 {
 	RT_MARK_PID (pid);
+}
+
+/*
+doc:	<routine name="rt_enumerate_live_processors" return_type="void" export="private">
+doc:		<summary> Mark all processors that currently have a client as alive.
+doc:			Note: This is an approximation (i.e. a subset) of the truly alive processors.
+doc:			Some processors may not have a client at the moment, but some objects on them are still referenced. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_enumerate_live_processors(void)
+{
+	struct rt_processor* proc = NULL;
+
+	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+
+		proc = rt_lookup_processor (i);
+
+			/* We also mark processors as alive whose creation procedure has not been logged yet.
+			 * This avoids a potential problem that a processor is garbage collected after creation,
+			 * just before the RTS_PID() of its root feature has been set. */
+		if (proc && (proc->has_client || !proc->is_creation_procedure_logged)) {
+			rt_mark_live_pid (proc->pid);
+		}
+	}
 }
 
 /*
@@ -251,7 +281,6 @@ rt_shared void rt_complement_live_index (void)
 	}
 }
 
-
 /*
 doc:	<routine name="rt_report_live_index" export="shared">
 doc:		<summary>Notify SCOOP manager about live indexes.</summary>
@@ -268,8 +297,8 @@ rt_shared void rt_report_live_index (void)
 	/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
 	for (i = live_index_count; i < count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
-		/* Notify SCOOP manager that the processor is not used anymore. */
-		rt_unmark_processor(c->logical_id);
+			/* Notify SCOOP manager that the processor is not used anymore. */
+		rt_processor_registry_deactivate (c->logical_id);
 	}
 	/* Notify SCOOP manager that the GC cycle is over. */
 	/* Unused currently, don't want to come up with another replacement
@@ -298,6 +327,41 @@ rt_shared void rt_mark_call_data(MARKER marking, call_data* call)
 	}
 }
 
+/*
+doc:	<routine name="rt_mark_all_processors" return_type="void" export="shared">
+doc:		<summary> Mark all processors in the system. </summary>
+doc:		<param name="marking" type="MARKER"> The marker function. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_mark_all_processors (MARKER marking)
+{
+	static volatile EIF_INTEGER_32 rt_is_marking = 0;
+	struct rt_processor* proc = NULL;
+
+	EIF_INTEGER_32 new_value = 1;
+	EIF_INTEGER_32 expected = 0;
+
+	REQUIRE ("marking_not_null", marking);
+
+		/* Use compare-exchange to determine whether marking is necessary. */
+		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
+		 * operation is called exactly once and only by a single thread during GC... */
+	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
+
+	if (previous == expected) {
+		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+
+			proc = rt_lookup_processor (i);
+			if (proc) {
+				rt_processor_mark (proc, marking);
+			}
+		}
+			/* Reset rt_is_marking to zero. */
+		RTS_AS_I32 (&rt_is_marking, 0);
+	}
+}
 /*
 doc:</file>
 */

@@ -50,36 +50,6 @@ doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP su
 extern "C" {
 #endif
 
-/* Processor creation */
-/* RTS_PA */
-rt_public void eif_new_processor (EIF_REFERENCE obj)
-{
-	EIF_SCP_PID new_pid = 0;
-	int error = T_OK;
-
-		/* TODO: Return newly allocated PID instead of writing it to 'obj'
-		   so that the argument 'obj' can be removed. */
-	EIF_OBJECT object = eif_protect (obj);
-
-	error = rt_processor_registry_create_region (&new_pid);
-
-	switch (error) {
-		case T_OK:
-			obj = eif_access (object);
-			RTS_PID(obj) = new_pid;
-			eif_wean (object);
-			rt_processor_registry_activate (new_pid);
-			break;
-		case T_NO_MORE_MEMORY:
-			eif_wean (object);
-			enomem();
-			break;
-		default:
-			eif_wean (object);
-			esys();
-			break;
-	}
-}
 
 /* Call logging */
 
@@ -126,56 +96,6 @@ rt_public void eif_apply_wcall (call_data *data)
 	}
 }
 #endif
-
-rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data *data)
-{
-	struct rt_processor *client = rt_get_processor (client_pid);
-	struct rt_processor *supplier = rt_get_processor (supplier_pid);
-	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
-
-	REQUIRE("has data", data);
-
-	if (!supplier->is_creation_procedure_logged) {
-		rt_private_queue_lock (pq, client);
-		rt_private_queue_log_call(pq, client, data);
-		rt_private_queue_unlock (pq);
-		supplier->is_creation_procedure_logged = EIF_TRUE;
-	} else {
-		rt_private_queue_log_call(pq, client, data);
-	}
-}
-
-rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
-{
-	struct rt_processor *client = rt_get_processor (client_pid);
-	struct rt_processor *supplier = rt_get_processor (supplier_pid);
-	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
-
-	return rt_private_queue_is_synchronized (pq);
-}
-
-int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
-{
-	struct rt_processor *client = rt_get_processor (client_pid);
-	struct rt_processor *supplier = rt_get_processor (supplier_pid);
-	
-	/*
-	 * An object is only uncontrolled when all of the following apply:
-	 * - the handlers are different
-	 * - the client has no lock on the supplier yet
-	 * - the supplier has not passed its locks to the client in a previous call (separate callbacks).
-	 */
-
-	return client != supplier 
-		&& !rt_queue_cache_is_locked (&client->cache, supplier)
-		&& !rt_queue_cache_has_locks_of (&client->cache, supplier);
-}
-
-
-rt_public void eif_wait_for_all_processors(void)
-{
-	rt_processor_registry_quit_root_processor ();
-}
 
 /*
 doc:	<routine name="rt_scoop_setup" return_type="void" export="shared">

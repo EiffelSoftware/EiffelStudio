@@ -60,13 +60,10 @@ extern void rt_update_live_index (void);  /* Update live indexes by taking into 
 extern void rt_complement_live_index (void); /* Add indexes of dead processors at the end of the live index list. */
 extern void rt_report_live_index (void); /* Notify SCOOP manager about live indexes. */
 
-extern void rt_unmark_processor(EIF_SCP_PID pid);
-extern void rt_mark_all_processors (MARKER marking);
-extern void rt_enumerate_live_processors(void);
+extern void rt_mark_all_processors (MARKER marking); /* Mark all call_data structs in all processors. */
 
 #ifdef __cplusplus
 }
-
 #endif
 
 #endif	/* _rt_scoop_gc_h_ */

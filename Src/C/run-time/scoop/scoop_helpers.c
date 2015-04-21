@@ -42,7 +42,6 @@ doc:<file name="eveqs.cpp" header="eif_scoop.h" version="$Id$" summary="SCOOP su
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
 #include "eif_interp.h"
-#include "eif_atomops.h"
 #include "rt_wbench.h"
 #include "rt_struct.h"
 #include "rt_assert.h"
@@ -214,78 +213,10 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 		&& !rt_queue_cache_has_locks_of (&client->cache, supplier);
 }
 
-/* Callback from garbage collector to indicate that the */
-/* processor isn't used anymore. */
-rt_shared void rt_unmark_processor (EIF_SCP_PID pid)
-{
-	rt_processor_registry_deactivate (pid);
-}
-
-/*
-doc:	<routine name="rt_enumerate_live_processors" return_type="void" export="shared">
-doc:		<summary> Mark all processors that currently have a client as alive. 
-doc:			Note: This is an approximation (i.e. a subset) of the truly alive processors.
-doc:			Some processors may not have a client at the moment, but some objects on them are still referenced. </summary>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only call during GC. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_enumerate_live_processors(void)
-{
-	struct rt_processor* proc = NULL;
-	
-	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-		
-		proc = rt_lookup_processor (i);
-		
-			/* We also mark processors as alive whose creation procedure has not been logged yet.
-			 * This avoids a potential problem that a processor is garbage collected after creation,
-			 * just before the RTS_PID() of its root feature has been set. */
-		if (proc && (proc->has_client || !proc->is_creation_procedure_logged)) {
-			rt_mark_live_pid (proc->pid);
-		}
-	}
-}
 
 rt_public void eif_wait_for_all_processors(void)
 {
 	rt_processor_registry_quit_root_processor ();
-}
-
-/*
-doc:	<routine name="rt_mark_all_processors" return_type="void" export="shared">
-doc:		<summary> Mark all processors in the system. </summary>
-doc:		<param name="marking" type="MARKER"> The marker function. Must not be NULL. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only call during GC. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_mark_all_processors (MARKER marking)
-{
-	static volatile EIF_INTEGER_32 rt_is_marking = 0;
-	struct rt_processor* proc = NULL;
-
-	EIF_INTEGER_32 new_value = 1;
-	EIF_INTEGER_32 expected = 0;
-
-	REQUIRE ("marking_not_null", marking);
-
-		/* Use compare-exchange to determine whether marking is necessary. */
-		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
-		 * operation is called exactly once and only by a single thread during GC... */
-	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
-
-	if (previous == expected) {
-		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-
-			proc = rt_lookup_processor (i);
-			if (proc) {
-				rt_processor_mark (proc, marking);
-			}
-		}
-			/* Reset rt_is_marking to zero. */
-		RTS_AS_I32 (&rt_is_marking, 0);
-	}
 }
 
 /*

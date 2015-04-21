@@ -50,7 +50,6 @@ extern "C" {
 
 #ifdef EIF_THREADS
 extern void rt_mark_live_pid(EIF_SCP_PID pid);
-extern void rt_mark_call_data(MARKER mark, call_data* call);
 extern size_t live_index [];    /* Indexes of live threads. */
 extern size_t live_index_count; /* Total number of valid items in `live_index' starting from 0 index. */
 #endif

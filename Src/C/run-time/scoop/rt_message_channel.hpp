@@ -40,7 +40,7 @@
 
 #include "rt_message.h"
 #include "eif_posix_threads.h"
-#include "rt_scoop_gc.h"
+#include "rt_scoop_helpers.h"
 
 /* Cache line size on most modern processors in bytes. */
 #define CACHE_LINE_SIZE 64

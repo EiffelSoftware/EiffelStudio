@@ -19,6 +19,12 @@ feature -- Access
 			Result := 42
 		end
 
+	perform_callback (a_test: separate TEST): INTEGER
+			-- Perform a separate callback on a_test.
+		do
+			Result := a_test.perform_query
+		end
+
 feature {NONE} -- Implementation
 
 	sync_and_fail (a_proc: separate ANY)

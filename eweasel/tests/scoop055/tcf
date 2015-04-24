@@ -1,0 +1,10 @@
+test_name	 scoop-separate-instruction-fresh-id
+test_description Names used for arguments of an inline separate instruction should be fresh.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e  $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST FRESH_IDENTIFIER FRESH_IDENTIFIER FRESH_IDENTIFIER FRESH_IDENTIFIER FRESH_IDENTIFIER VUOT(1) VUOT(1) VUOT(1) VUOT(1)
+
+test_end

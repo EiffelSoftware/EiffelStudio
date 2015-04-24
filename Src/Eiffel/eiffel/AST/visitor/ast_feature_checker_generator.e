@@ -7853,8 +7853,85 @@ feature {NONE} -- Visitor
 
 	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
 			-- <Precursor>
+		local
+			l_is_byte_node_enabled: BOOLEAN
+			local_id: ID_AS
+			local_name_id: INTEGER
+			location: LOCATION_AS
+			e: EXPR_AS
+			s: INTEGER
+			old_error_level: like error_level
+			local_info: LOCAL_INFO
+			local_type: TYPE_A
+			arguments: ARRAYED_LIST [ID_AS]
 		do
-				-- TODO
+			l_is_byte_node_enabled := is_byte_node_enabled
+			old_error_level := error_level
+				-- Record current scope.
+			s := context.scope
+				-- Process arguments.
+			create arguments.make (a_as.arguments.count)
+			across
+				a_as.arguments as c
+			loop
+					-- Type check iteration expression.
+				e := c.item.expression
+				e.process (Current)
+				local_type := last_type
+				if not is_inherited and then attached local_type and then not local_type.is_separate then
+					if attached e.first_token (Void) as token then
+						location := token
+					else
+						location := c.item.name
+					end
+					error_handler.insert_error (create {V1SE}.make (local_type, context, location))
+					local_type := Void
+				end
+					-- Type check loop local name.
+				local_id := c.item.name
+				local_name_id := local_id.name_id
+				if not is_inherited then
+					if current_feature.has_argument_name (local_name_id) then
+							-- The local name is an argument name of the
+							-- current analyzed feature.
+						error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
+					elseif feature_table.has_id (local_name_id) then
+							-- The local name is a feature name of the
+							-- current analyzed class.
+						error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
+					end
+				end
+				if context.locals.has (local_name_id) then
+						-- The local name is a name of a feature local variable.
+					error_handler.insert_error (create {FRESH_IDENTIFIER_ERROR}.make (context, local_id))
+				end
+					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
+				local_info := context.unchecked_object_test_local (local_id)
+				if local_info = Void then
+					create local_info
+					local_info.set_type (local_type)
+					local_info.set_position (context.next_object_test_local_position)
+					context.add_object_test_local (local_info, local_id)
+					local_info.set_is_used (True)
+				end
+				if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as b then
+						-- TODO
+				end
+					-- Record local to ativate its scope for compound.
+				arguments.extend (local_id)
+					-- Reset scopes to original level to before computing next argument.
+				context.set_scope (s)
+			end
+				-- Activate scopes of argument names.
+			across
+				arguments as c
+			loop
+				context.add_object_test_instruction_scope (c.item)
+			end
+				-- Process compound.
+			safe_process (a_as.compound)
+				-- Remove arguments of the separate instruction.
+			context.remove_object_test_scopes (s)
 		end
 
 	process_external_as (l_as: EXTERNAL_AS)

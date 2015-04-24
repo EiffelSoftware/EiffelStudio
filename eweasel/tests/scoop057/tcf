@@ -1,0 +1,10 @@
+test_name	 scoop-separate-instruction-non-separate
+test_description Arguments of an inline separate instruction should be separate.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e  $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST V1SE
+
+test_end

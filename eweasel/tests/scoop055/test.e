@@ -8,16 +8,19 @@ feature {NONE} -- Creation
 	make
 			-- Run the test.
 		do
-			f (Current, Current)
+			test_outer_scopes (Current, Current)
+			test_inner_scopes (Current)
 		end
 
 feature -- Test
 
 	x1
+			-- A feature that is used to test name clashes.
 		do
 		end
 
-	f (x2: separate TEST; y: separate TEST)
+	test_outer_scopes (x2: separate TEST; y: separate TEST)
+			-- Test that separate instructions cannot name arguments with the same names as those used in outer scopes.
 		local
 			x3: detachable separate TEST
 		do
@@ -44,6 +47,21 @@ feature -- Test
 				separate y as x8 do end -- Clash with an inline separate argument name.
 			end
 			separate y as x9, y as x9 do end -- Clash with an inline separate argument name.
+		end
+
+	test_inner_scopes (y: separate TEST)
+			-- Test that constructs nested in a separate instruction cannot declare names of the separate instruction arguments.
+		do
+			separate y as x do
+				(agent (x: detachable separate TEST) -- Clash with an agent argument name.
+					local
+						x: detachable separate TEST -- Clash with an agent local name.
+					do
+					end
+				(Void)).do_nothing
+				if attached y as x then end -- Clash with an object test local name.
+				across out as x loop end -- Clash with a loop cursor name.
+			end
 		end
 
 end

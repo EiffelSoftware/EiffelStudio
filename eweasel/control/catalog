@@ -1436,6 +1436,7 @@ test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded dead
 test 	scoop-exceptions-unlock					scoop052 tcf manual scoop multithreaded exception deadlock
 test	scoop-exceptions-dispose			scoop053 tcf fail scoop multithreaded exception execution
 test	scoop-named-tuple-validity			scoop054 tcf fail scoop tuple validity
+test	scoop-separate-instruction-fresh-id		scoop055 tcf fail scoop validity
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

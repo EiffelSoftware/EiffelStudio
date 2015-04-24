@@ -9,27 +9,46 @@ feature {NONE} -- Creation
 	make
 			-- Run the test.
 		local
-			s: separate TEST
-			t: TEST
 		do
-			create s
-			t := s.tuple.t -- Error
+			test (create {TEST})
 		end
 
 feature -- Test
 
-	tuple: TUPLE [i: INTEGER; t: TEST]
+	test (s: separate TEST)
 		do
-			Result := [{INTEGER} 5, Current]
+			test_uncontrolled (s)
+			test_controlled (s.tuple)
 		end
 
-	test (t: separate like tuple)
+	test_uncontrolled (s: separate TEST)
+		local
+			t: separate like tuple
+			i: INTEGER
+			x: TEST
+		do
+			t := s.tuple
+			i := t.i -- Error
+			x := t.x -- Error
+			t.i := i -- Error
+			t.x := Current -- Error
+		end
+
+	test_controlled (t: separate like tuple)
 			-- Retrieve `t.t'.
 		local
-			v: TEST
+			i: INTEGER
+			x: TEST
 		do
-			v := t.t -- Error
-			t.t := Current -- Error
+			i := t.i -- OK
+			x := t.x -- Error
+			t.i := i -- OK
+			t.x := Current -- Error
+		end
+
+	tuple: TUPLE [i: INTEGER; x: TEST]
+		do
+			Result := [{INTEGER} 5, Current]
 		end
 
 end

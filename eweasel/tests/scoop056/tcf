@@ -1,0 +1,10 @@
+test_name	 scoop-separate-instruction-dependent-arguments
+test_description Arguments of an inline separate instruction should be independent.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e  $CLUSTER test.e
+
+compile_melted
+compile_result validity_error TEST VEEN VEEN VEEN VEEN
+
+test_end

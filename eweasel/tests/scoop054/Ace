@@ -3,7 +3,8 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option warning="false"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

@@ -2973,6 +2973,7 @@ feature {NONE} -- Visitor
 				else
 					l_local_info := context.object_test_local (l_as.feature_name.name_id)
 					if l_local_info /= Void then
+						is_controlled := l_local_info.is_controlled
 						l_local_info.set_is_used (True)
 						last_access_writable := False
 						l_has_vuar_error := l_as.parameters /= Void
@@ -7854,7 +7855,6 @@ feature {NONE} -- Visitor
 	process_separate_instruction_as (a_as: SEPARATE_INSTRUCTION_AS)
 			-- <Precursor>
 		local
-			l_is_byte_node_enabled: BOOLEAN
 			local_id: ID_AS
 			local_name_id: INTEGER
 			location: LOCATION_AS
@@ -7864,17 +7864,22 @@ feature {NONE} -- Visitor
 			local_info: LOCAL_INFO
 			local_type: TYPE_A
 			arguments: ARRAYED_LIST [ID_AS]
+			argument_code: detachable BYTE_LIST [ASSIGN_B]
+			assign_b: ASSIGN_B
 		do
-			l_is_byte_node_enabled := is_byte_node_enabled
 			old_error_level := error_level
 				-- Record current scope.
 			s := context.scope
 				-- Process arguments.
 			create arguments.make (a_as.arguments.count)
+			if is_byte_node_enabled then
+				create argument_code.make (a_as.arguments.count)
+			end
 			across
 				a_as.arguments as c
 			loop
 					-- Type check iteration expression.
+				last_byte_node := Void
 				e := c.item.expression
 				e.process (Current)
 				local_type := last_type
@@ -7885,9 +7890,12 @@ feature {NONE} -- Visitor
 						location := c.item.name
 					end
 					error_handler.insert_error (create {V1SE}.make (local_type, context, location))
-					local_type := Void
 				end
-					-- Type check loop local name.
+					-- Default to type "ANY" on error.
+				if not attached local_type then
+					local_type := system.any_type
+				end
+					-- Type check new local name.
 				local_id := c.item.name
 				local_name_id := local_id.name_id
 				if not is_inherited then
@@ -7907,17 +7915,23 @@ feature {NONE} -- Visitor
 				end
 					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
 				local_info := context.unchecked_object_test_local (local_id)
-				if local_info = Void then
+				if not attached local_info then
 					create local_info
 					local_info.set_type (local_type)
 					local_info.set_position (context.next_object_test_local_position)
 					context.add_object_test_local (local_info, local_id)
 					local_info.set_is_used (True)
+						-- Mark this variable as controlled.
+					local_info.set_is_controlled (True)
 				end
-				if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as b then
-						-- TODO
+				if attached argument_code and then attached {EXPR_B} last_byte_node as b then
+					create assign_b
+					assign_b.set_source (b)
+					assign_b.set_target (create {OBJECT_TEST_LOCAL_B}.make (local_info.position, current_feature.body_index, local_type))
+					assign_b.set_line_number (c.item.expression.start_location.line)
+					argument_code.extend (assign_b)
 				end
-					-- Record local to ativate its scope for compound.
+					-- Record local to activate its scope for compound.
 				arguments.extend (local_id)
 					-- Reset scopes to original level to before computing next argument.
 				context.set_scope (s)
@@ -7929,7 +7943,12 @@ feature {NONE} -- Visitor
 				context.add_object_test_instruction_scope (c.item)
 			end
 				-- Process compound.
-			safe_process (a_as.compound)
+			if attached a_as.compound as c then
+				process_compound (c)
+			end
+			if attached argument_code and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as b then
+				create {SEPARATE_INSTURCTION_B} last_byte_node.make (argument_code, b, a_as.end_location)
+			end
 				-- Remove arguments of the separate instruction.
 			context.remove_object_test_scopes (s)
 		end
@@ -8629,7 +8648,7 @@ feature {NONE} -- Visitor
 	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
 			-- <Precursor>
 		do
-				-- TODO: implement.
+				-- Processing is done by `process_separate_instruction_as'.
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)

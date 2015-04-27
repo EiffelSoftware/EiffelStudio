@@ -2956,6 +2956,7 @@ test	benchmark-scoop-synthetic-randmat			bench011 tcf pass benchmark scoop synth
 test	benchmark-scoop-synthetic-threadring			bench012 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-thresh			bench013 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-winnow			bench014 tcf pass benchmark scoop synthetic_benchmark
+test	benchmark-runtime-slow-allocation			bench015 tcf pass benchmark runtime
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

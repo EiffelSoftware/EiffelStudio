@@ -1,0 +1,20 @@
+test_name	 benchmark-runtime-slow-allocation
+test_description Benchmark for allocation/reallocation of strings that could be very slow due to a linear search in our free list.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f 1
+execute_result	ok
+
+execute_final	NONE exec_output_f 2
+execute_result	ok
+
+
+test_end

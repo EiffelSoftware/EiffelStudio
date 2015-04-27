@@ -1376,6 +1376,8 @@ feature {NONE} -- Agents
 						-- There is already an editor with `a_stone'. We simply switch to it if it
 						-- is not already our visible editor.
 					select_editor (l_editor, False)
+				elseif not a_editor.docking_content.has_focus then
+					a_editor.docking_content.set_focus
 				end
 
 					-- Now we are sure to have a valid editor, let's set the stone.

@@ -23,16 +23,23 @@ feature
 	f
 		local
 			retried: BOOLEAN
-			i: INTEGER
 		do
 			if not retried then
-				(1 // ( i - i)).do_nothing
+				(1 + query_throw_exception).do_nothing
 			else
 				io.put_string ("Got exception%N")
 			end
 		rescue
 			retried := True
 			retry
+		end
+
+	query_throw_exception: INTEGER
+		local
+			l_exception: DEVELOPER_EXCEPTION
+		do
+			create l_exception
+			l_exception.raise
 		end
 
 end

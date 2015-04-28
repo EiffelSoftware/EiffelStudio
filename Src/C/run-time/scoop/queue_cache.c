@@ -105,8 +105,9 @@ rt_private struct rt_private_queue* rt_queue_cache_find_from_borrowed (struct qu
 			*/
 
 		size_t l_size = rt_vector_queue_cache_count (l_borrowed);
+		size_t i;
 
-		for (size_t i=0; i < l_size && !l_result; ++i) {
+		for (i = 0; i < l_size && !l_result; ++i) {
 
 			struct queue_cache* l_item = rt_vector_queue_cache_item (l_borrowed, i);
 			struct rt_private_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
@@ -267,7 +268,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, str
 {
 	struct rt_vector_queue_cache* l_borrowed = NULL;
 	EIF_BOOLEAN l_result = EIF_FALSE;
-	size_t l_size = 0;
+	size_t l_size = 0, i;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
@@ -285,7 +286,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, str
 			/* Search through all borrowed queue caches if one of their owner matches 'supplier' */
 		l_size =  rt_vector_queue_cache_count(l_borrowed);
 
-		for (size_t i=0; i < l_size && !l_result; ++i) {
+		for (i = 0; i < l_size && !l_result; ++i) {
 			l_result = (rt_vector_queue_cache_item (l_borrowed, i)->owner == supplier);
 		}
 	}

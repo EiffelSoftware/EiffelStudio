@@ -53,10 +53,11 @@ RT_DECLARE_VECTOR_STACK_FUNCTIONS (rt_request_group, struct rt_private_queue*)
 rt_private rt_inline void bubble_sort (struct rt_private_queue** area, size_t count)
 {
 	int right_boundary = ((int) count)-1;
-	int swapped = 1;
+	int swapped = 1, i;
+
 	while (swapped == 1) {
 		swapped = 0;
-		for (int i=0; i < right_boundary; ++i) {
+		for (i = 0; i < right_boundary; ++i) {
 			if (area [i]->supplier->pid > area [i+1]->supplier->pid) {
 				struct rt_private_queue* tmp = area [i];
 				area [i] = area [i+1];
@@ -111,7 +112,7 @@ doc:	</routine>
 */
 rt_shared void rt_request_group_wait (struct rt_request_group* self)
 {
-	size_t l_count = rt_request_group_count (self);
+	size_t i, l_count = rt_request_group_count (self);
 	struct rt_processor* l_client = self->client;
 
 	REQUIRE ("self_not_null", self);
@@ -119,7 +120,7 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 
 		/* Register the current client with the suppliers, such that we
 		 * can later get a notification if a wait condition may have changed. */
-	for (size_t i = 0; i < l_count; ++i) {
+	for (i = 0; i < l_count; ++i) {
 		struct rt_private_queue* l_queue = rt_request_group_item (self, i);
 
 			/* We only register on queues which are currently synchronized.
@@ -172,7 +173,7 @@ doc:	</routine>
 */
 rt_shared void rt_request_group_lock (struct rt_request_group* self)
 {
-	size_t l_count = rt_request_group_count (self);
+	size_t i, l_count = rt_request_group_count (self);
 
 	REQUIRE ("self_not_null", self);
 
@@ -188,18 +189,18 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 	}
 
 		/* Temporarily lock the queue-of-queue of all suppliers. */
-	for (size_t i = 0; i < l_count; ++i) {
+	for (i = 0; i < l_count; ++i) {
 		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
 		eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex);
 	}
 
 		/* Add all private queues to the queue-of-queues */
-	for (size_t i = 0; i < l_count; ++i) {
+	for (i = 0; i < l_count; ++i) {
 		rt_private_queue_lock (rt_request_group_item (self, i), self->client);
 	}
 
 		/* Release the queue-of-queue locks. */
-	for (size_t i = 0; i < l_count; ++i) {
+	for (i = 0; i < l_count; ++i) {
 		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
 		eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex);
 	}
@@ -218,13 +219,13 @@ doc:	</routine>
 */
 rt_shared void rt_request_group_unlock (struct rt_request_group* self)
 {
-	int l_count = (int) rt_request_group_count (self);
+	int i, l_count = (int) rt_request_group_count (self);
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("lock_called", self->is_sorted);
 
 		/* Unlock in the opposite order that they were locked */
-	for (int i = l_count-1; i >= 0; --i) {
+	for (i = l_count-1; i >= 0; --i) {
 		rt_private_queue_unlock (rt_request_group_item (self, i));
 	}
 }

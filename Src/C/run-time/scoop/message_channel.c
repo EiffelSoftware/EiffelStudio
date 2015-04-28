@@ -105,6 +105,8 @@ rt_private rt_inline void store_release (struct mc_node** node_address, struct m
 		/* This is the correct position of the fence.
 		* The fence nesures that all the values written into the mc_node
 		* struct by this thread are visible by the other thread once it loads the pointer with load_consume. */
+	
+	struct mc_node* volatile* volatile_node_address;
 
 		/* Compiler fence */
 	EIF_MEMORY_BARRIER;
@@ -113,7 +115,7 @@ rt_private rt_inline void store_release (struct mc_node** node_address, struct m
 
 		/* Read this as a "pointer to a volatile pointer to an mc_node" */
 		/* RS: Is this to ensure that the memory lookup actually happens and isn't optimized away, i.e. to reduce latency? */
-	struct mc_node* volatile* volatile_node_address = (struct mc_node* volatile*) node_address;
+	volatile_node_address = (struct mc_node* volatile*) node_address;
 
 		/* Perform the store operation. */
 	*volatile_node_address = node;
@@ -290,11 +292,12 @@ doc:	</routine>
 rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)
 {
 	EIF_BOOLEAN success = EIF_FALSE;
+	size_t i;
 
 	REQUIRE ("self_not_null", self);
 
 		/* First try to dequeue in a non-blocking fashion. */
-	for (size_t i=0; i < self->spin && !success; ++i) {
+	for (i = 0; i < self->spin && !success; ++i) {
 		success = dequeue (self, message);
 	}
 

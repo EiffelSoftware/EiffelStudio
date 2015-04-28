@@ -139,9 +139,13 @@ doc:	</routine>
 */
 rt_private rt_inline struct rt_processor* rt_get_processor (EIF_SCP_PID pid)
 {
+	struct rt_processor *result;
+
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	REQUIRE ("processor_alive", registry.procs[pid]);
-	struct rt_processor *result = registry.procs [pid];
+
+	result = registry.procs [pid];
+
 	ENSURE("not_null", result);
 	return result;
 }

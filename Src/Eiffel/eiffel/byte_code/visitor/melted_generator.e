@@ -1920,6 +1920,37 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+			-- <Precursor>
+		do
+			generate_melted_debugger_hook
+				-- Generate evaluation of arguments.
+			a_node.arguments.process (Current)
+				-- Check if a compound needs to be generated.
+			if attached a_node.compound as c and then not c.is_empty then
+				if system.is_scoop then
+						-- Generate byte code to add a request group.
+						-- Push all arguments to the evaluation stack.
+					across
+						a_node.arguments as a
+					loop
+						check attached {OBJECT_TEST_LOCAL_B} a.item.target as argument then
+							argument.process (Current)
+						end
+					end
+						-- Create a request group.
+					ba.append (bc_start_separate)
+					ba.append_natural_16 (a_node.arguments.count.as_natural_16)
+				end
+					-- Generate byte code for the compound.
+				c.process (Current)
+				if system.is_scoop then
+						-- Generate byte code to remove a request group.
+					ba.append (bc_end_separate)
+				end
+			end
+		end
+
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		local
@@ -2571,7 +2602,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

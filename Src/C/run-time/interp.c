@@ -1901,6 +1901,7 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_NATURAL_16 argument_count = get_uint16(&IC); /* Number of arguments of the instruction. */
 
+#ifdef EIF_THREADS
 				/* Create request group. */
 			RTS_RC (icurrent->it_ref);
 				/* Add processors of uncontrolled separate arguments to the reuest group. */
@@ -1912,6 +1913,7 @@ rt_private void interpret(int flag, int where)
 			}
 				/* Wait to get control. */
 			RTS_RW (icurrent->it_ref);
+#endif
 		}
 		break;
 
@@ -1922,8 +1924,10 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_END_SEPARATE\n");
 #endif
+#ifdef EIF_THREADS
 			/* Release control of the request group. */
 		RTS_RD (icurrent->it_ref);
+#endif
 		break;
 
 	/*

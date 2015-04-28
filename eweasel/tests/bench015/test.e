@@ -1,9 +1,3 @@
-note
-	description: "[
-		Create processors without using them
-		by the main root processor.
-	]"
-
 class TEST
 
 inherit

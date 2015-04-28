@@ -2945,7 +2945,7 @@ test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc
 test	benchmark-scoop-gc-recursive-processor-creation		bench002 tcf pass benchmark scoop scoop_gc gc
-test	benchmark-scoop-gc-tree-processor-creation		bench003 tcf manual benchmark scoop scoop_gc gc
+test	benchmark-scoop-gc-tree-processor-creation		bench003 tcf pass benchmark scoop scoop_gc gc
 test	benchmark-scoop-synthetic-chain				bench004 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-chameneos			bench005 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-condition			bench006 tcf pass benchmark scoop synthetic_benchmark

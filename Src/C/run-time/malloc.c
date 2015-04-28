@@ -80,6 +80,11 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #endif
 #endif
 
+#ifdef ISE_GC
+/* Provides red-black tree implementation for free list management. */
+#include "sglib.h"
+#endif
+
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
 #define flush			fflush(stdout)
@@ -96,76 +101,108 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #endif
 
 #ifdef ISE_GC
+
 /*
-doc:	<description>
-doc:	The handling of the free list has changed over time. Initially, insertions to the free list through `connect_free_list' guaranteed that the blocks were inserted in increasing order of their address. It was thought that although this costs in case of insertions, it can drastically improve performances, because as the malloc routine uses a first fit in the free list, the objects won't get sparsed in the whole memory, and this should limit swapping overhead and enable the process to give memory back to the kernel. You get this behavior by defining EIF_SORTED_FREE_LIST. And removals of a block had to traverse the list to find the right block to remove.
+doc:<description>
+doc:We have 2 types of free lists: one for Eiffel allocated memory, one for C allocated memory. Both behaves the same way. When we talk about the size of a block in the free lists, we always ignore the size of the header. So it means that for a N-sized block, we actually use (ALIGNMAX + N) bytes. Also it is very important to know that N can only be a multiple of ALIGNMAX.
 doc:
-doc:	We found that it you have a lot of allocated memory and that the free list are quite full, this would kill the performance of the GC. This is why if EIF_SORTED_FREE_LIST is not defined we do not perform any sorting, thus `connect_free_list' always insert in first position in the free list. And the need for buffer cache is useless, and are not defined in that mode.
+doc:The free list is mostly a segregated free list. Mostly because for small sizes, we just have a list containing blocks of a given size. For all the other sizes, the head is the root of a red-black tree ordered by size, and for each node of the tree (i.e. matching a certain size) we have a list containing blocks of the size associated to the tree node.
 doc:
-doc:	Last remain the cost of removal in `disconnect_free_list'. We had the idea for blocks whose size is larger than the size of a pointer to allocate a pointer given us the location of the previous element. Making our free list a two way list. This only works for i > 0, for i == 0 we still have to do a linear search and hopefully this is rare to have 0-sized block.
+doc:The list for 0-sized blocks is a single linked list as we do not have enough space to store a back pointer in the header (a pointer is used for the next element, the remaining space for storing the size and flags of the memory block). All other lists are bi-linkable.
 doc:
-doc:	In the case EIF_SORTED_FREE_LIST is defined, the above two way list is also available, but we thought that by having the previous element we could make insertion possibly faster by going backwards from the buffer cache, rather than going from the beginning when the element we try to insert is less than the buffer cache. Our experiment on the compiler shows that it is actually a degradation. In case you want this behavior, simply define EIF_SORTED_FREE_LIST_BACKWARD_TRAVERSAL.
-doc:	</description>
+doc:All lists are LIFO for typical insertion/deletion thus a complexity of O(1). When coalescing free memory, we need to remove entries in the middle of the list. In this case, the complexity is O(N) for 0-sized block, and otherwise in O(1) since lists are bi-linkable.
+doc:
+doc:Searches in the free list are done using the Best-fit algorithm. That is to say if we have a list for blocks of a given size, we stop at the first free block. In the event there is no such block, we look for the list that contains blocks of the immediate larger size and we use that block and perform a split to not waste memory. The remaining part of the split block is stored back to the free list.
+doc:
+doc:In the average case, searches are in O(log N) complexity (sometime faster for smaller blocks not in the tree).
+doc:
+doc:Insertions in the free list are done via `rt_connect_free_list'. Deletion via `rt_disconnect_free_list'.
+doc:
+doc:To summarize the various lists behavior and structure:
+doc: * [c|e]_free_list [0] contains entries of 0 size, it is a single linked list.
+doc: * [c|e]_free_list [1] contains entries of ALIGNMAX size, it is a doubly linked list.
+doc: * [c|e]_free_list [2] contains entries of 2 * ALIGNMAX size, it is a doubly linked list.
+doc: * [c|e]_free_list [3] contains entries of sizes larger or equal to 3 * ALIGNMAX size, it is a red-black tree.
+doc:
+doc:We define the macro FREE_LIST_INDEX_LIMIT to be the highest entry index that is not a red-black tree.
+doc:
+doc:</description>
 */
 
-/* Give the type of an hlist, by doing pointer comparaison (classic).
- * Also give the address of the hlist of a given type and the address of
- * the buffer related to a free list.
+/*
+doc:	<struct name="rt_tree" export="private">
+doc:		<summary>Node of a red-black tree for blocks of size `nbytes'. The blocks are stored in a doubly-linked list whose head is `current'. It is also used to represent the root of the tree. By approximation, its size is smaller than 3 * ALIGNMAX: ALIGNMAX for `current', ALIGNMAX for `left' and `right', ALIGNMAX for `nbytes' and `color'. Note that the `nbytes' field is not strictly necessary but it is quite convenient.</summary>
+doc:		<field name="current" type="union overhead">Head of the list containing all blocks of size `nbytes'.</field>
+doc:		<field name="left" type="rt_tree *">Pointer to the left child. If NULL, the current element is the smallest element in the tree.</field>
+doc:		<field name="right" type="rt_tree *">Pointer to the right child. If NULL, the current element is the largest element in the tree.</field>
+doc:		<field name="nbytes" type="size_t">Size of blocks stored in `current'. The tree is ordered by `nbytes'.</field>
+doc:		<field name="color" type="int">Color of nodes. Used to maintain consistency of the red-black tree.</field>
+doc:	</struct>
+*/
+typedef struct _rt_tree {
+	union overhead current;
+	struct _rt_tree *left;
+	struct _rt_tree *right;
+	size_t nbytes;
+	int color;
+} rt_tree;
+
+#define FREE_LIST_INDEX_LIMIT	3
+
+/*
+doc:	<struct name="rt_free_list" export="private">
+doc:		<summary>Representation of a free list. For blocks strictly smaller than FREE_LIST_INDEX_LIMIT * ALIGNMAX, it is stored in `lists' (a segragated free list). Otherwise stored in `tree', a red-black tree.</summary>
+doc:		<field name="lists" type="union overhead *">Head of lists.</field>
+doc:		<field name="tree" type="rt_tree *">Head of red-black tree.</field>
+doc:	</struct>
+*/
+struct rt_free_list {
+	union overhead *lists [FREE_LIST_INDEX_LIMIT];
+	rt_tree *tree;
+};
+
+
+/* Give the type of a free list, by doing pointer comparaison (classic).
+ * Also give the address of the free list of a given type.
  */
-#define CHUNK_TYPE(c)		(((c) == c_hlist)? C_T : EIFFEL_T)
-#define FREE_LIST(t)		((t)? c_hlist : e_hlist)
-#ifdef EIF_SORTED_FREE_LIST
-#define BUFFER(c)			(((c) == c_hlist)? c_buffer : e_buffer)
-#endif
-#define NEXT(zone)			(zone)->ov_next
-#define PREVIOUS(zone)		(*(union overhead **) (zone + 1))
+#define FREE_LIST_TYPE(fl)	(((fl) == &c_free_list)? C_T : EIFFEL_T)
+#define FREE_LIST(zone)		(((zone)->ov_size & B_CTYPE)? &c_free_list : &e_free_list)
 
-/* Objects of tiny size 0, 4 are very expensive to manage in the free-list, thus we make them not small,
- * but large enough to hold a pointer to the previous block (see PREVIOUS for where it is used). */
-#define MIN_OBJECT_SIZE(n) ((n) > sizeof(union overhead *) ? (n) : sizeof(union overhead *))
+/* Macros to give the next and previous elements of a list. Note that NEXT is always available
+ * if `block' is not NULL. PREVIOUS is only available when `block' has a non-zero size. */
+#define NEXT(block)			(block)->ov_next
+#define PREVIOUS(block)		(*(union overhead **) (block + 1))
 
-/* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT - ALIGNMAX
- * with their own padding which is a multiple of ALIGNMAX
- * have their own entry in the `hlist'.
- *  E.g.: 0,  8, 16, ...., 504 in case where ALIGNMAX = 8
- *  E.g.: 0, 16, 32, ...., 1008 in case where ALIGNMAX = 16
+/*
+doc:	<routine name="rt_tree_node_comparator" return_type="int" export="private">
+doc:		<summary>Comparator for elements in the tree. We use `1' if x > y, 0 if x == y, and -1 otherwise.</summary>
+doc:		<param name="x" type="rt_tree *">Tree node</param>
+doc:		<param name="y" type="rt_tree *">Tree node</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline int rt_tree_node_comparator (rt_tree *x, rt_tree *y)
+{
+	REQUIRE("x not null", x);
+	REQUIRE("y not null", y);
 
- * Above or at `HLIST_SIZE_LIMIT', the corresponding entry `i' (i >= HLIST_INDEX_LIMIT) has
- * the sizes between 2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT) and
- * (2^(i - HLIST_INDEX_LIMIT + HLIST_DEFAULT_SHIFT + 1) - ALIGNMAX).
- * Explanation: Since we already occupy slots below HLIST_INDEX_LIMIT for sizes smaller
- *   than HLIST_SIZE_LIMIT, there will be non-used slots after slot HLIST_INDEX_LIMIT.
- *   Because we cannot use ALIGNMAX for testing in preprocessor macros, we are taking the minimum
- *   number of slots that we are guaranteed not to occupy when ALIGNAX is at its minimum value,
- *   this value is HLIST_DEFAULT_SHIFT (the minimum possible value for ALIGNMAX being 4, this gives
- *   a smallest greatest size for HLIST_SIZE_LIMIT of 256, i.e. 2^HLIST_DEFAULT_SHIFT).
- *   Note: on other platforms where ALIGNMAX is greater, we get some more unused slots and it would
- *     be great to dynamically compute HLIST_DEFAULT_SHIFT at compile time, but this is not
- *     yet possible.
- *
- * Because the maximum size we can allocate is either 2^27 or 2^59 (depending or not
- * you are running 64 bits) this gives us (27 - HLIST_DEFAULT_SHIFT) or (59 - HLIST_DEFAULT_SHIFT)
- * more possibilities in addition to the HLIST_INDEX_LIMIT possibilities, thus having the definition
- * below for NBLOCKS.
- */
+	if (y->nbytes > x->nbytes) {
+		return -1;
+	} else {
+			/* Remember that in C, comparison operators returns 0 (false) or 1 (true). */
+		return x->nbytes != y->nbytes;
+	}
+}
 
-#define HLIST_INDEX_LIMIT	64
-#define HLIST_DEFAULT_SHIFT 8
+/* We provide a definition for the red-black tree routines we are using. */
+SGLIB_DEFINE_RBTREE_PROTOTYPES(rt_tree, left, right, color, rt_tree_node_comparator)
+SGLIB_DEFINE_RBTREE_FUNCTIONS(rt_tree, left, right, color, rt_tree_node_comparator)
 
-#ifdef EIF_64_BITS
-#define NBLOCKS				HLIST_INDEX_LIMIT + 59 - HLIST_DEFAULT_SHIFT
-#else
-#define NBLOCKS				HLIST_INDEX_LIMIT + 27 - HLIST_DEFAULT_SHIFT
-#endif
-
-#define HLIST_SIZE_LIMIT	HLIST_INDEX_LIMIT * ALIGNMAX
-#define HLIST_INDEX(size)	(((size) < HLIST_SIZE_LIMIT)? \
-							 	(uint32) (size / ALIGNMAX) : compute_hlist_index (size))
-
-/* For eif_trace_types() */
-
-#define CHUNK_T     0           /* Scanning a chunk */
-#define ZONE_T      1           /* Scanning a generation scavenging zone */
+/* Objects of size smaller than ALIGNMAX are very expensive to manage in the free-list, thus by default
+ * we allocate always ALIGNMAX bytes. When freed they will be large enough to hold a pointer to the
+ * previous block. */
+#define MIN_OBJECT_SIZE(n) ((n) > ALIGNMAX ? (n) : ALIGNMAX)
 
 /* The main data-structures for eif_malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
@@ -243,51 +280,24 @@ rt_shared struct ck_list cklst = {
 };
 
 /*
-doc:	<attribute name="c_hlist" return_type="union overhead * [NBLOCKS]" export="private">
-doc:		<summary>Records all C blocks with roughly the same size. The entry at index 'i' is a block whose size is at least 2^i. All the blocks with same size are chained, and the head of each list is kept in the array. As an exception, index 0 holds block with a size of zero, and as there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.</summary>
+doc:	<attribute name="c_free_list" return_type="struct rt_free_list" export="private">
+doc:		<summary>Records all free C blocks. See description above.</summary>
 doc:		<access>Read/Write</access>
-doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
-
-rt_private union overhead *c_hlist[NBLOCKS];
+rt_private struct rt_free_list c_free_list;
 
 /*
-doc:	<attribute name="e_hlist" return_type="union overhead * [NBLOCKS]" export="private">
-doc:		<summary>Records all Eiffel blocks with roughly the same size. The entry at index 'i' is a block whose size is at least 2^i. All the blocks with same size are chained, and the head of each list is kept in the array.  As an exception, index 0 holds block with a size of zero, and as there cannot be blocks of size 1 (OVERHEAD > 1 anyway), it's ok--RAM.</summary>
+doc:	<attribute name="e_free_list" return_type="struct rt_free_list" export="private">
+doc:		<summary>Records all free Eiffel blocks. See description above.</summary>
 doc:		<access>Read/Write</access>
-doc:		<indexing>i for access to block of size 2^i</indexing>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_private union overhead *e_hlist[NBLOCKS];
-
-#ifdef EIF_SORTED_FREE_LIST
-/*
-doc:	<attribute name="c_buffer" return_type="union overhead * [NBLOCKS]" export="private">
-doc:		<summary>The following arrays act as a buffer cache for every operation in the C free list. They simply record the address of the last access. Whenever we wish to insert/find an element in the list, we first look at the buffer cache value to see if we can start the traversing from that point.</summary>
-doc:		<access>Read/Write</access>
-doc:		<indexing>i for access to block of size 2^i</indexing>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
-doc:	</attribute>
-*/
-rt_private union overhead *c_buffer[NBLOCKS];
-
-/*
-doc:	<attribute name="e_buffer" return_type="union overhead * [NBLOCKS]" export="private">
-doc:		<summary>The following arrays act as a buffer cache for every operation in the Eiffel free list. They simply record the address of the last access. Whenever we wish to insert/find an element in the list, we first look at the buffer cache value to see if we can start the traversing from that point.</summary>
-doc:		<access>Read/Write</access>
-doc:		<indexing>i for access to block of size 2^i</indexing>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
-doc:	</attribute>
-*/
-rt_private union overhead *e_buffer[NBLOCKS];
-#endif
+rt_private struct rt_free_list e_free_list;
 
 /*
 doc:	<attribute name="sc_from" return_type="struct sc_zone" export="shared">
@@ -393,17 +403,16 @@ rt_shared size_t eif_chunk_size;
 
 #ifdef ISE_GC
 /* Functions handling free list */
-rt_private uint32 compute_hlist_index (size_t size);
+rt_private rt_inline size_t rt_compute_free_list_index (size_t nbytes);
 rt_shared EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag);		/* General free-list allocation */
 rt_shared void rel_core(void);					/* Release core to kernel */
 rt_private union overhead *add_core(size_t nbytes, int type);		/* Get more core from kernel */
-rt_private void connect_free_list(union overhead *zone, rt_uint_ptr i);		/* Insert a block in free list */
-rt_private void disconnect_free_list(union overhead *next, rt_uint_ptr i);	/* Remove a block from free list */
+rt_private void rt_connect_free_list(union overhead * const zone);		/* Insert a block in free list */
+rt_private void rt_disconnect_free_list(union overhead * const zone);	/* Remove a block from free list */
 rt_private rt_uint_ptr coalesc(union overhead *zone);					/* Coalescing (return # of bytes) */
-rt_private EIF_REFERENCE malloc_free_list(size_t nbytes, union overhead **hlist, int type, int gc_flag);		/* Allocate block in one of the lists */
-rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, union overhead **hlist);		/* Allocate block from free list */
-rt_private union overhead * allocate_free_list_helper (size_t i, size_t nbytes, union overhead **hlist);
-rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist, int maximized);		/* Allocate block asking for core */
+rt_private EIF_REFERENCE rt_malloc_free_list(size_t nbytes, struct rt_free_list *a_free_list, int type, int gc_flag);		/* Allocate block in one of the lists */
+rt_private EIF_REFERENCE rt_allocate_from_free_list(size_t nbytes, struct rt_free_list *a_free_list);		/* Allocate block from free list */
+rt_private EIF_REFERENCE rt_allocate_from_core(size_t nbytes, struct rt_free_list *a_free_list, int maximized);		/* Allocate block asking for core */
 rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes);					/* Set up block before public usage */
 rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c);				/* Coalescing on a chunk */
 rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r);				/* Release block to the free list */
@@ -434,7 +443,7 @@ rt_shared void lxtract(union overhead *next);					/* Extract a block from free l
 rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes);			/* Wrapper to eif_rt_xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(void);		/* Get a free eiffel chunk from kernel */
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-rt_private void check_free_list (size_t nbytes, register union overhead **hlist);
+rt_private void rt_check_free_list (size_t nbytes, struct rt_free_list *a_free_list);
 #endif
 #endif
 
@@ -1568,14 +1577,14 @@ rt_shared EIF_REFERENCE malloc_from_eiffel_list_no_gc (rt_uint_ptr nbytes)
 	REQUIRE("nbytes not too big (less than 2^27)", !(nbytes & ~B_SIZE));
 
 		/* We try to find an empty spot in the free list. If not found, we
-		 * will try `malloc_free_list' which will either allocate more
+		 * will try `rt_malloc_free_list' which will either allocate more
 		 * memory or coalesc some zone of the free list to create a bigger
 		 * one that will be able to accommodate `nbytes'.
 		 */
-	result = allocate_free_list (nbytes, e_hlist);
+	result = rt_allocate_from_free_list (nbytes, &e_free_list);
 	if (!result) {
 		RT_GET_CONTEXT
-		result = malloc_free_list (nbytes, e_hlist, EIFFEL_T, GC_OFF);
+		result = rt_malloc_free_list (nbytes, &e_free_list, EIFFEL_T, GC_OFF);
 
 		GC_THREAD_PROTECT(EIFFEL_USAGE_MUTEX_LOCK);
 			/* Increment allocated bytes outside scavenge zone. */
@@ -1609,21 +1618,21 @@ rt_private EIF_REFERENCE malloc_from_eiffel_list (rt_uint_ptr nbytes)
 
 		/* Perform allocation in free list. If not successful, we try again
 		 * by trying a GC cycle. */
-	result = allocate_free_list(nbytes, e_hlist);
+	result = rt_allocate_from_free_list(nbytes, &e_free_list);
 
 	if (!result) {
 		if (trigger_gc_cycle()) {
-			result = allocate_free_list(nbytes, e_hlist);
+			result = rt_allocate_from_free_list(nbytes, &e_free_list);
 		}
 		if (!result) {
 				/* We try to put Eiffel blocks in Eiffel chunks
 				 * If the free list cannot hold the block, switch to the C chunks list.
 				 */
-			result = malloc_free_list(nbytes, e_hlist, EIFFEL_T, GC_ON);
+			result = rt_malloc_free_list(nbytes, &e_free_list, EIFFEL_T, GC_ON);
 			if (!result) {
-				result = allocate_free_list (nbytes, c_hlist);
+				result = rt_allocate_from_free_list (nbytes, &c_free_list);
 				if (!result) {
-					result = malloc_free_list(nbytes, c_hlist, C_T, GC_OFF);
+					result = rt_malloc_free_list(nbytes, &c_free_list, C_T, GC_OFF);
 				}
 			}
 		}
@@ -1658,7 +1667,7 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag)
 #ifdef ISE_GC
 	size_t mod;			/* Remainder for padding */
 	EIF_REFERENCE result;		/* Pointer to the free memory location we found */
-	union overhead **first_hlist, **second_hlist;
+	struct rt_free_list *first_free_list, *second_free_list;
 	int second_type;
 #ifdef EIF_ASSERTIONS
 	size_t old_nbytes = nbytes;
@@ -1693,28 +1702,28 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag)
 	 */
 
 	if (type == EIFFEL_T) {
-		first_hlist = e_hlist;
-		second_hlist = c_hlist;
+		first_free_list = &e_free_list;
+		second_free_list = &c_free_list;
 		second_type = C_T;
 	} else {
-		first_hlist = c_hlist;
-		second_hlist = e_hlist;
+		first_free_list = &c_free_list;
+		second_free_list = &e_free_list;
 		second_type = EIFFEL_T;
 	}
 
-	result = allocate_free_list (nbytes, first_hlist);
+	result = rt_allocate_from_free_list (nbytes, first_free_list);
 	if (!result) {
 		if (gc_flag && (type == EIFFEL_T)) {
 			if (trigger_gc_cycle()) {
-				result = allocate_free_list(nbytes, e_hlist);
+				result = rt_allocate_from_free_list(nbytes, &e_free_list);
 			}
 		}
 		if (!result) {
-			result = malloc_free_list (nbytes, first_hlist, type, gc_flag);
+			result = rt_malloc_free_list (nbytes, first_free_list, type, gc_flag);
 			if (result == (EIF_REFERENCE) 0 && gc_flag != GC_OFF) {
-				result = allocate_free_list (nbytes, second_hlist);
+				result = rt_allocate_from_free_list (nbytes, second_free_list);
 				if (!result) {
-					result = malloc_free_list(nbytes, second_hlist, second_type, GC_OFF);
+					result = rt_malloc_free_list(nbytes, second_free_list, second_type, GC_OFF);
 				}
 			}
 		}
@@ -1729,10 +1738,10 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag)
 
 #ifdef ISE_GC
 /*
-doc:	<routine name="malloc_free_list" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>We tried to find a free block in `hlist' before calling this routine but could not find any. Therefore here we will try to launch a GC cycle if permitted, or we will try to coalesc the memory so that bigger blocks of memory can be found in the free list.</summary>
+doc:	<routine name="rt_malloc_free_list" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>We tried to find a free block in free list before calling this routine but could not find any. Therefore here we will try to launch a GC cycle if permitted, or we will try to coalesc the memory so that bigger blocks of memory can be found in the free list.</summary>
 doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated, should be properly aligned.</param>
-doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block or allocated a new block.</param>
+doc:		<param name="a_free_list" type="struct rt_free_list *">List from which we try to find a free block or allocated a new block.</param>
 doc:		<param name="type" type="int">Type of list (EIFFEL_T or C_T).</param>
 doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
 doc:		<return>An aligned block of 'nbytes' bytes or null if no more memory is available.</return>
@@ -1741,13 +1750,13 @@ doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist, int type, int gc_flag)
+rt_private EIF_REFERENCE rt_malloc_free_list (size_t nbytes, struct rt_free_list *a_free_list, int type, int gc_flag)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result;					/* Location of the malloc'ed block */
 	unsigned int estimated_free_space;
 
-	REQUIRE("Valid list", CHUNK_TYPE(hlist) == type);
+	REQUIRE("Valid list", FREE_LIST_TYPE(a_free_list) == type);
 
 	if (cc_for_speed) {
 			/* They asked for speed (over memory, of course), so we first try
@@ -1755,7 +1764,7 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 			 * we try to do block coalescing before attempting a new allocation
 			 * from the free list if the coalescing brought a big enough bloc.
 			 */
-		result = allocate_from_core (nbytes, hlist, 0);	/* Ask for more core */
+		result = rt_allocate_from_core (nbytes, a_free_list, 0);	/* Ask for more core */
 		if (result) {
 			return result;				/* We got it */
 		}
@@ -1770,11 +1779,11 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 		RT_GET_CONTEXT
 		if ((gc_thread_status == EIF_THREAD_GC_RUNNING) || thread_can_launch_gc) {
 			plsc();						/* Call garbage collector */
-			return malloc_free_list (nbytes, hlist, type, GC_OFF);
+			return rt_malloc_free_list (nbytes, a_free_list, type, GC_OFF);
 		}
 #else
 		plsc();						/* Call garbage collector */
-		return malloc_free_list (nbytes, hlist, type, GC_OFF);
+		return rt_malloc_free_list (nbytes, a_free_list, type, GC_OFF);
 #endif
 	}
 
@@ -1797,230 +1806,295 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 #ifdef EIF_ASSERTIONS
 		EIF_REFERENCE result;
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-		result = allocate_free_list (nbytes, hlist);
+		result = rt_allocate_from_free_list (nbytes, a_free_list);
 		CHECK ("result not null", result);
 		return result;
 #else
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-		return allocate_free_list (nbytes, hlist);
+		return rt_allocate_from_free_list (nbytes, a_free_list);
 #endif
 	} else {
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 			/* No other choice but to request for more core */
-		return allocate_from_core (nbytes, hlist, 0);
+		return rt_allocate_from_core (nbytes, a_free_list, 0);
 	}
 }
 
 /*
-doc:	<routine name="allocate_free_list" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>Given a correctly padded size 'nbytes', we try to find a free block from the free list described in 'hlist'.</summary>
+doc:	<routine name="rt_list_remove_head" return_type="union overhead *" export="private">
+doc:		<summary>Given a list retrieve the first entry in the list, remove it and update the list.</summary>
+doc:		<param name="a_list" type="union overhead **">Pointer to a list on which removal will occurs.</param>
+doc:		<param name="a_is_zero_sized" type="int">Is the list for 0-sized blocks which don't have space for a back pointers?</param>
+doc:		<return>Return the first block if any, otherwise a null pointer.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
+doc:	</routine>
+*/
+rt_private union overhead *rt_list_remove_head (union overhead **a_list, int a_is_zero_sized)
+{
+	union overhead *result, *n;
+
+	REQUIRE("a_list not null", a_list);
+	REQUIRE("valid size", !*a_list || !a_is_zero_sized || ((*a_list)->ov_size & B_SIZE) == 0);
+
+	result = *a_list;
+	if (result) {
+			/* Retrieve the next element after `result'. */
+		n = NEXT(result);
+			/* Update head of list to point to the next element `n'. */
+		*a_list = n;
+			/* If there was a next element `n', we need to update its previous
+			 * pointer, but only if it is possible. */
+		if (n && !a_is_zero_sized) {
+			PREVIOUS(n) = NULL;
+		}
+	}
+	return result;
+}
+
+/*
+doc:	<routine name="rt_tree_remove" return_type="union overhead *" export="private">
+doc:		<summary>Given a tree `a_tree' and a node `a_node', remove a block from the list of available blocks associated with `a_node'. If `a_node' is the only block, remove it from the tree.</summary>
+doc:		<param name="a_tree" type="rt_tree *">Tree where `a_node' belongs to. It is required in case tree is rebalanced if `a_node' is actually removed.</param>
+doc:		<param name="a_node" type="rt_tree *">Node of `a_tree' where we are going to remove a block of size `a_node->nbytes'.</param>
+doc:		<return>If `a_node' has only one element in the list, remove `a_node' from `a_tree' and returns `&a_node->current'. Otherwise, returns the next element of the list whose head is `a_node->current' and update the list properly.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
+doc:	</routine>
+*/
+rt_private union overhead *rt_tree_remove (rt_tree **a_tree, rt_tree *a_node)
+{
+	union overhead *l_head, *l_result, *l_next;
+#ifdef EIF_ASSERTIONS
+	size_t l_nbytes = a_node->nbytes;
+#endif
+
+	REQUIRE("Tree pointer not null", a_tree);
+	REQUIRE("Has tree", *a_tree);
+	REQUIRE("Node not null", a_node);
+
+	l_head = &a_node->current;
+	l_result = NEXT(l_head);
+	if (l_result) {
+			/* Perform LIFO removal of `l_result', no change to the tree. */
+		l_next = NEXT(l_result);
+		NEXT(l_head) = l_next;
+		if (l_next) {
+			PREVIOUS(l_next) = l_head;
+			CHECK ("Same offset", l_head == (union overhead *) a_node);
+		}
+	} else {
+			/* The node of the tree is the only block of the requested size.
+			 * so we have to remove that node from the tree. */
+		l_result = l_head;
+		CHECK ("Same offset", l_head == (union overhead *) a_node);
+		sglib_rt_tree_delete (a_tree, a_node);
+	}
+
+	ENSURE("Result not null", l_result);
+	ENSURE("Result consistent", l_nbytes == (l_result->ov_size & B_SIZE));
+	return l_result;
+}
+
+/*
+doc:	<routine name="rt_tree_find_and_remove" return_type="union overhead *" export="private">
+doc:		<summary>Given a tree, search for a block of an exact size `nbytes' or the smallest block larger than `nbytes'.</summary>
+doc:		<param name="a_tree" type="rt_tree *">Tree where we are going to look for a block of the proper size.</param>
+doc:		<param name="nbytes" type="size_t">Size of the block we are looking for.</param>
+doc:		<return>Return the first block if any, otherwise a null pointer.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
+doc:	</routine>
+*/
+rt_private union overhead *rt_tree_find_and_remove (rt_tree **a_tree, size_t nbytes)
+{
+	union overhead *result;
+	rt_tree *l_parent_node = *a_tree;
+
+	REQUIRE("tree not null", a_tree);
+
+	if (l_parent_node) {
+		if (l_parent_node->nbytes == nbytes) {
+				/* Lucky, the root of the tree is our block. */
+			result = rt_tree_remove(a_tree, l_parent_node);
+		} else {
+			rt_tree *l_tree_node = l_parent_node;
+			result = NULL;
+				/* Perform a search for a block of `nbytes'. We always keep the parent
+				 * node as this will be used in the event where we cannot find an exact match,
+				 * as the parent node is the smallest block larger than `nbytes'. */
+			while (!result && l_tree_node) {
+				if (l_tree_node->nbytes == nbytes) {
+						/* We found our match. */
+					result = rt_tree_remove(a_tree, l_tree_node);
+				} else if (l_tree_node->nbytes > nbytes) {
+						/* We keep `l_parent_node' as our best fit node. */
+					l_parent_node = l_tree_node;
+					l_tree_node = l_tree_node->left;
+				} else {
+						/* Current node was too small, we continue on right. */
+					l_tree_node = l_tree_node->right;
+				}
+			}
+				/* We could not find a free block of the exact requested size `nbytes'.
+				 * Let's find out if the last node we traversed was big enough to hold `nbytes' (we
+				 * have to perform the check in the event we never went on a left branch during the loop.) */
+			if (!result && l_parent_node->nbytes >= nbytes) {
+				result = rt_tree_remove(a_tree, l_parent_node);
+			}
+		}
+	} else {
+		result = NULL;
+	}
+
+	ENSURE("Big enough if found", !result || ((result->ov_size & B_SIZE) >= nbytes));
+	return result;
+}
+
+/*
+doc:	<routine name="rt_allocate_from_free_list" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Given a correctly padded size 'nbytes', we try to find a free block from the free list `a_free_list'.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes requested.</param>
-doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block.</param>
+doc:		<param name="a_free_list" type="void **">List from which we try to find a free block.</param>
 doc:		<return>Return the address of the (splited) block if found, a null pointer otherwise.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'</synchronization>
 doc:	</routine>
 */
-
-rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhead **hlist)
+rt_private EIF_REFERENCE rt_allocate_from_free_list(size_t nbytes, struct rt_free_list *a_free_list)
 {
 	RT_GET_CONTEXT
-	size_t i;					/* Index in hlist */
+	size_t i;
 	union overhead *selected;
-#ifndef EIF_SORTED_FREE_LIST
-	union overhead *n;
-#endif
-	EIF_REFERENCE result;
+	EIF_REFERENCE result = NULL;
 
-#ifdef DEBUG
-	dprintf(4)("allocate_free_list: requesting %d bytes from %s list\n",
-		nbytes, (CHUNK_TYPE(hlist) == C_T) ? "C" : "Eiffel");
-	flush;
-#endif
+	REQUIRE("Aligned size", (nbytes % ALIGNMAX) == 0);
 
-		/* Quickly compute the index in the hlist array where we have a
+		/* Quickly compute the index in the free list array where we have a
 		 * chance to find the right block. */
-	i = HLIST_INDEX(nbytes);
+	i = rt_compute_free_list_index(nbytes);
 
-		/* Look in free list to find a suitable block. */
-
+		/* Enter critical section here. */
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
-
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	check_free_list (nbytes, hlist);
+	rt_check_free_list (nbytes, a_free_list);
 #endif
 
-	if (i >= HLIST_INDEX_LIMIT) {
-		selected = allocate_free_list_helper (i, nbytes, hlist);
-	} else {
-			/* We are below the limit `HLIST_INDEX_LIMIT', therefore if the entry of
-			 * `hlist' at index `i' is not NULL, then it means that we have `nbytes'
+	if (i < FREE_LIST_INDEX_LIMIT) {
+			/* We are below the limit `FREE_LIST_INDEX_LIMIT', therefore if the entry of
+			 * `a_free_list' at index `i' is not NULL, then it means that we have `nbytes'
 			 * available. No need to check the size here. If block is null, then we
-			 * go through all other blocks to find the first one available. */
-		selected = hlist[i];
-	  	if (selected) {
-#ifdef EIF_SORTED_FREE_LIST
-			disconnect_free_list (selected, i);
-#else
-				/* Remove `selected' from `hlist'. */
-			n = NEXT(selected);
-			hlist[i] = n;
-			if (n && (i != 0)) {
-				PREVIOUS(n) = NULL;
-			}
-#endif
-		} else {
-			selected = hlist[i + 1];
-			if (selected) {
-					/* We could find a free space in `i + 1' so we take that
-					 * space and we make `set_up'believe we were asking
-					 * for `nbytes + ALIGNAMX' to avoid creation of a 0-sized block. */
-				nbytes +=ALIGNMAX;
-				CHECK("Correct size", nbytes == (selected->ov_size & B_SIZE));
-#ifdef EIF_SORTED_FREE_LIST
-				disconnect_free_list (selected, i + 1);
-#else
-					/* Remove `selected' from `hlist'. */
-				n = NEXT(selected);
-				hlist[i + 1] = n;
-				if (n) {
-					PREVIOUS(n) = NULL;
-				}
-#endif
+			 * go through all other entries to find the first one available. */
+		selected = rt_list_remove_head(&a_free_list->lists[i], i == 0);
+		while (!selected && (i < FREE_LIST_INDEX_LIMIT)) {
+			i++;
+			if (i < FREE_LIST_INDEX_LIMIT) {
+				selected = rt_list_remove_head(&a_free_list->lists[i], 0);
 			} else {
-					/* Could not find in `i + 1', let's search above. Here no risk
-					 * of creating a 0-sized block.*/
-				selected = allocate_free_list_helper (i + 2, nbytes, hlist);
+					/* Search the tree for the smallest block that could hold `nbytes'. */
+				selected = rt_tree_find_and_remove(&a_free_list->tree, nbytes);
 			}
 		}
+	} else {
+			/* Search the tree for the smallest block that could hold `nbytes'. */
+		selected = rt_tree_find_and_remove(&a_free_list->tree, nbytes);
 	}
 
-		/* Now, either 'i' is NBLOCKS and 'selected' still holds a null
-		 * pointer or 'selected' holds the wanted address and 'i' is the
-		 * index in the hlist array.
-		 */
-	if (!selected) {		/* We did not find it */
-		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-		return NULL;	/* Failed */
+	if (selected) {
+		if ((selected->ov_size & B_SIZE) == nbytes + ALIGNMAX) {
+			/* In the likely event where `set_up' would need to split the block with a remaining
+			 * 0-sized block, we fool `set_up' by increasing `nbytes' so that no split occurs.
+			 */
+			nbytes += ALIGNMAX;
+			CHECK("Correct size", nbytes == (selected->ov_size & B_SIZE));
+		}
+
+			/* Block is ready to be set up for use of 'nbytes' (eventually after
+			 * having been split). Memory accounting is done in set_up(). */
+		result = set_up(selected, nbytes);
+	} else {
+		result = NULL;
 	}
 
-#ifdef DEBUG
-	dprintf(8)("allocate_free_list: got block from list #%d\n", i);
-	flush;
-#endif
-
-		/* Block is ready to be set up for use of 'nbytes' (eventually after
-		 * having been split). Memory accounting is done in set_up().
-		 */
-	result = set_up(selected, nbytes);
+		/* Leave critical section. */
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 	return result;
 }
 
-/*
-doc:	<routine name="allocate_free_list_helper" return_type="union overhead *" export="private">
-doc:		<summary>This is the heart of malloc: Look in the hlist array to see if there is already a block available. If so, we take the first one and we eventually split the block. If no block is available, we look for some bigger one. If none is found, then we fail.</summary>
-doc:		<param name="i" type="size_t">Index from where we start looking for a block of `nbytes' in `hlist'.</param>
-doc:		<param name="nbytes" type="size_t">Number of bytes requested to be found.</param>
-doc:		<param name="hlist" type="union overhead **">Free list where search will take place.</param>
-doc:		<return>Location of a zone that can hold `nbytes', null otherwise.</return>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
-doc:	</routine>
-*/
-
-rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, register union overhead **hlist)
-{
-	union overhead *selected;	/* The selected block */
-	union overhead *p;		/* To walk through free-list */
-
-	for (; i < NBLOCKS; i++) {
-		if ((selected = hlist[i]) == NULL)
-			continue;
-		else if ((selected->ov_size & B_SIZE) >= nbytes) {
-#ifdef EIF_SORTED_FREE_LIST
-			disconnect_free_list (selected, i);
-#else
-				/* Remove `selected' from `hlist'. */
-			p = NEXT(selected);
-			hlist[i] = p;
-			if (p && (i != 0)) {
-				PREVIOUS(p) = NULL;
-			}
-#endif
-			return selected;				/* Found it, selected points to it */
-		} else {
-			/* Walk through list, until we find a good block. This
-			 * is only done for the first 'i'. Afterwards, either the
-			 * first item will fit, or we'll have to report failure.
-			 */
-			for (
-				p = selected, selected = NEXT(p);
-				selected != NULL;
-				p = selected, selected = NEXT(p)
-			) {
-				if ((selected->ov_size & B_SIZE) >= nbytes) {
-					disconnect_free_list (selected, i);
-					return selected;		/* Found it, selected points to it */
-				}
-			}
-			CHECK ("Not found", selected == NULL);
-		}
-	}
-
-	return NULL;
-}
-
-
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 /*
-doc:	<routine name="check_free_list" return_type="void" export="private">
-doc:		<summary>Perform a sanity check of the free list to ensure that content of the X_data accounting match the actual content of the free list.</summary>
-doc:		<param name="nbytes" type="size_t">Number of bytes requested to be found.</param>
-doc:		<param name="hlist" type="union overhead **">Free list where search will take place.</param>
+doc:	<routine name="rt_check_list" return_type="void" export="private">
+doc:		<summary>Verify that the list whose head is `a_list' contains only blocks of size `element_size'. Updates `found' with the number of blocks of `a_list' can fit a block of size `requested_size' and the amount of free memory in `bytes_available'.</summary>
+doc:		<param name="requested_nbytes" type="size_t">Number of bytes requested to be found.</param>
+doc:		<param name="element_size" type="size_t">Size of the elements of `a_list'.</param>
+doc:		<param name="a_list" type="union overhead *">List where check will take place.</param>
+doc:		<param name="found" type="int *">Variable that will be increased by the number of blocks that will fit `requested_nbytes'.</param>
+doc:		<param name="bytes_available" type="size_t *">Variable that will be increased by the number of free memory available in `a_list'.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
+rt_private void rt_check_list (size_t requested_nbytes, size_t element_size, union overhead *a_list, int *found, size_t *bytes_available)
+{
+	union overhead *p, *selected = a_list;
+	size_t count = 0;
+	size_t list_bytes = 0;
+	for (
+		p = selected;
+		selected != NULL;
+		p = selected, selected = NEXT(p)
+	) {
+		CHECK("valid_previous", (requested_nbytes == 0) || ((p == selected) || (p == PREVIOUS(selected))));
+		CHECK("Valid size", (selected->ov_size & B_SIZE) == element_size);
 
-rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
+		if ((selected->ov_size & B_SIZE) >= requested_nbytes) {
+			(*found)++;
+		}
+		list_bytes += selected->ov_size & B_SIZE;
+		count++;
+	}
+#ifdef DEBUG
+	fprintf(stderr, "free_list [%d] has %d elements and %d free bytes.\n", j, count, list_bytes);
+#endif
+	*bytes_available += list_bytes;
+}
+
+/*
+doc:	<routine name="rt_check_free_list" return_type="void" export="private">
+doc:		<summary>Perform a sanity check of the free list to ensure that content of the X_data accounting match the actual content of the free list.</summary>
+doc:		<param name="requested_nbytes" type="size_t">Number of bytes requested to be found.</param>
+doc:		<param name="a_free_list" type="struct rt_free_list *">Free list where search will take place.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
+doc:	</routine>
+*/
+rt_private void rt_check_free_list (size_t requested_nbytes, struct rt_free_list *a_free_list)
 {
 	union overhead *selected;	/* The selected block */
-	union overhead *p;		/* To walk through free-list */
 	size_t bytes_available = 0;
 	int j, found = 0;
+	rt_tree *l_tree, *l_node;
+	struct sglib_rt_tree_iterator l_iterator;
 
-#ifdef DEBUG
-	fprintf(stderr, "\nallocate_free_list_helper: Requested %d\n", nbytes);
-#endif
-	for (j = 0; j < NBLOCKS; j++) {
-		selected = hlist [j];
+		/* Traverse our lists. */
+	for (j = 0; j < FREE_LIST_INDEX_LIMIT; j++) {
+		selected = a_free_list->lists [j];
 		if (selected) {
-			size_t count = 0;
-			size_t list_bytes = 0;
-			for (
-				p = selected;
-				selected != NULL;
-				p = selected, selected = NEXT(p)
-			) {
-				CHECK("valid_previous", (j== 0) || ((p == selected) || (p == PREVIOUS(selected))));
-
-				if ((selected->ov_size & B_SIZE) >= nbytes) {
-					found++;
-				}
-				list_bytes += selected->ov_size & B_SIZE;
-				count++;
-			}
-#ifdef DEBUG
-			fprintf(stderr, "hlist [%d] has %d elements and %d free bytes.\n", j, count, list_bytes);
-#endif
-			bytes_available += list_bytes;
+			rt_check_list (requested_nbytes, j * ALIGNMAX, selected, &found, &bytes_available);
 		} else {
-				/* Fee list empty. */
+				/* Free list empty. */
+		}
+	}
+		/* Traverse our tree. */
+	l_tree = a_free_list->tree;
+	if (l_tree) {
+		for (l_node = sglib_rt_tree_it_init_inorder(&l_iterator, l_tree); l_node != NULL; l_node = sglib_rt_tree_it_next(&l_iterator)) {
+			selected = &l_node->current;
+			rt_check_list(requested_nbytes, l_node->nbytes, selected, &found, &bytes_available);
 		}
 	}
 
-	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
+	if (FREE_LIST_TYPE(a_free_list) == EIFFEL_T) {
 		CHECK("Consistent", bytes_available == (rt_e_data.ml_total - rt_e_data.ml_over - rt_e_data.ml_used));
 	} else {
 		CHECK("Consistent", bytes_available == (rt_c_data.ml_total - rt_c_data.ml_over - rt_c_data.ml_used));
@@ -2028,10 +2102,10 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 
 #ifdef DEBUG
 	if (found) {
-		fprintf(stderr, "We found a possible %d block(s) of size greater than %d bytes.\n", found, nbytes);
+		fprintf(stderr, "We found a possible %d block(s) of size greater than %d bytes.\n", found, requested_nbytes);
 	}
 	fprintf(stderr, "Total available bytes is %d\n", bytes_available);
-	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
+	if (FREE_LIST_TYPE(a_free_list) == EIFFEL_T) {
 		fprintf(stderr, "Eiffel free list has %d bytes allocated, %d used and %d free.\n",
 			rt_e_data.ml_total, rt_e_data.ml_used, rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over);
 	} else {
@@ -2048,7 +2122,7 @@ doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared
 doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space. The chunk size is `eif_chunk_size', it is not relevant how big is the `from_space' as the partial scavenging handle the case where the `to_space' is smaller than the `from_space'.</summary>
 doc:		<return>New block if successful, otherwise a null pointer.</return>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Call to `allocate_from_core' is safe.</synchronization>
+doc:		<synchronization>Call to `rt_allocate_from_core' is safe.</synchronization>
 doc:	</routine>
 */
 
@@ -2056,11 +2130,11 @@ rt_shared EIF_REFERENCE get_to_from_core (void)
 {
 	EIF_REFERENCE Result;
 
-		/* We substract OVERHEAD and the size of a chunk, because in `allocate_from_core' which
+		/* We substract OVERHEAD and the size of a chunk, because in `rt_allocate_from_core' which
 		 * calls `add_core' we will add `OVERHEAD' and the size of a chunk to make sure we have indeed
 		 * the number of bytes allocated.
 		 */
-	Result = allocate_from_core (eif_chunk_size - OVERHEAD - sizeof(struct chunk), e_hlist, 1);
+	Result = rt_allocate_from_core (eif_chunk_size - OVERHEAD - sizeof(struct chunk), &e_free_list, 1);
 
 	ENSURE("block is indeed of the right size", !Result || ((eif_chunk_size - OVERHEAD) == (HEADER(Result)->ov_size & B_SIZE)));
 
@@ -2068,10 +2142,10 @@ rt_shared EIF_REFERENCE get_to_from_core (void)
 }
 
 /*
-doc:	<routine name="allocate_from_core" return_type="EIF_REFERENCE" export="private">
-doc:		<summary>Given a correctly padded size 'nbytes', we ask for some core to be able to make a chunk capable of holding 'nbytes'. The chunk will be placed in the specified `hlist'.</summary>
+doc:	<routine name="rt_allocate_from_core" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Given a correctly padded size 'nbytes', we ask for some core to be able to make a chunk capable of holding 'nbytes'. The chunk will be placed in the specified free list `a_free_list'.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes requested.</param>
-doc:		<param name="hlist" type="union overhead **">List in which we try to allocated a free block.</param>
+doc:		<param name="a_free_list" type="struct rt_free_list *">List in which we try to allocated a free block.</param>
 doc:		<param name="maximize" type="int">Even though we asked for `nbytes' should we perform the split in case more than `nbytes' were allocated? `0' means yes, '1' means no.</param>
 doc:		<return>Address of new block, or null if no more core is available.</return>
 doc:		<thread_safety>Safe</thread_safety>
@@ -2079,17 +2153,16 @@ doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlist, int maximize)
+rt_private EIF_REFERENCE rt_allocate_from_core(size_t nbytes, struct rt_free_list *a_free_list, int maximize)
 {
 	RT_GET_CONTEXT
 	union overhead *selected;		/* The selected block */
 	struct chunk *chkbase;		/* Base address of new chunk */
 	EIF_REFERENCE result;
-	int type = CHUNK_TYPE(hlist);
+	int type = FREE_LIST_TYPE(a_free_list);
 
 #ifdef DEBUG
-	dprintf(4)("allocate_from_core: requesting %d bytes from %s list\n",
-		nbytes, (type == C_T) ? "C" : "Eiffel");
+	dprintf(4)("rt_allocate_from_core: requesting %d bytes from %s list\n", nbytes, (type == C_T) ? "C" : "Eiffel");
 	flush;
 #endif
 
@@ -2149,8 +2222,7 @@ rt_private EIF_REFERENCE allocate_from_core(size_t nbytes, union overhead **hlis
 	SIGRESUME;			/* End of critical section */
 
 #ifdef DEBUG
-	dprintf(4)("allocate_from_core: %d user bytes chunk added to %s list\n",
-		chkbase->ck_length, (type == C_T) ? "C" : "Eiffel");
+	dprintf(4)("rt_allocate_from_core: %d user bytes chunk added to %s list\n", chkbase->ck_length, (type == C_T) ? "C" : "Eiffel");
 	flush;
 #endif
 
@@ -2189,7 +2261,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 	size_t asked = nbytes;	/* Bytes requested */
 
 		/* We want at least 'nbytes' bytes for use, so we must add the overhead
-		 * for each block and for each chunk.  */
+		 * for each block and for each chunk. */
 	asked += sizeof(struct chunk) + OVERHEAD;
 
 		/* Requesting less than CHUNK implies requesting CHUNK bytes, at least.
@@ -2214,7 +2286,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 
 		/* We check that we are not asking for more than the limit
 		 * the user has fixed:
-		 *   - eif_max_mem (total allocated memory)
+		 * - eif_max_mem (total allocated memory)
 		 * If the value of eif_max_mem is 0, there is no limit.
 		 */
 	if (eif_max_mem > 0) {
@@ -2348,7 +2420,7 @@ rt_private void free_chunk(struct chunk *a_chk)
 	SIGBLOCK;			/* Entering in critical section */
 
 	r = arena->ov_size & B_SIZE;
-	disconnect_free_list(arena, HLIST_INDEX(r));		/* Remove arena from free list */
+	rt_disconnect_free_list(arena);		/* Remove arena from free list */
 
 		/* The garbage collectors counts the amount of allocated 'to' zones. A limit
 		 * is fixed to avoid a nasty memory leak when all the zones used would be
@@ -2363,7 +2435,7 @@ rt_private void free_chunk(struct chunk *a_chk)
 	nbytes = a_chk->ck_length + sizeof(struct chunk);
 
 		/* It's now time to update the internal data structure which keep track of
-		 * the memory status.  */
+		 * the memory status. */
 	rt_m_data.ml_chunk--;
 	rt_m_data.ml_total -= nbytes;			/* Counts overhead */
 	rt_m_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
@@ -2475,18 +2547,18 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes
 	r = selected->ov_size;
 #ifdef EIF_TID
 #ifdef EIF_THREADS
-    selected->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
+	selected->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    selected->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
-#endif  /* EIF_THREADS */
-#endif  /* EIF_TID */
+	selected->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
+#endif /* EIF_THREADS */
+#endif /* EIF_TID */
 
 	selected->ov_size = r | B_NEW;
 	i = r & B_SIZE;						/* Keep only true size */
 	rt_m_data.ml_used += i;				/* Account for memory used */
-	if (r & B_CTYPE)
+	if (r & B_CTYPE) {
 		rt_c_data.ml_used += i;
-	else {
+	} else {
 		rt_e_data.ml_used += i;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (+%ld) %ld total (set_up)\n",
@@ -2529,9 +2601,10 @@ rt_public void eif_rt_xfree(register void * ptr)
 	RT_GET_CONTEXT
 	rt_uint_ptr r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
-	rt_uint_ptr i;					/* Index in hlist */
+	rt_uint_ptr nbytes;
 
 	REQUIRE("ptr not null", ptr);
+	REQUIRE("ptr aligned", ((rt_uint_ptr)ptr) % MEM_ALIGNBYTES == 0);
 
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
@@ -2551,15 +2624,15 @@ rt_public void eif_rt_xfree(register void * ptr)
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 
 	/* Memory accounting */
-	i = r & B_SIZE;				/* Amount of memory released */
-	rt_m_data.ml_used -= i;		/* At least this is free */
+	nbytes = r & B_SIZE;				/* Amount of memory released */
+	rt_m_data.ml_used -= nbytes;		/* At least this is free */
 	if (r & B_CTYPE) {
-		rt_c_data.ml_used -= i;
+		rt_c_data.ml_used -= nbytes;
 	} else {
-		rt_e_data.ml_used -= i;
+		rt_e_data.ml_used -= nbytes;
 #ifdef MEM_STAT
 	printf ("Eiffel: %ld used (-%ld), %ld total (eif_rt_xfree)\n",
-		rt_e_data.ml_used, i, rt_e_data.ml_total);
+		rt_e_data.ml_used, nbytes, rt_e_data.ml_total);
 #endif
 	}
 
@@ -2633,7 +2706,7 @@ doc:	</routine>
 rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 {
 	RT_GET_CONTEXT
-	rt_uint_ptr i;					/* Index in hlist */
+	rt_uint_ptr flags;
 #ifndef EIF_MALLOC_OPTIMIZATION
 	rt_uint_ptr size;				/* Size of the coalesced block */
 #endif
@@ -2659,12 +2732,11 @@ rt_private void xfreeblock(union overhead *zone, rt_uint_ptr r)
 	 * flags but B_LAST and put the block in the free list again.
 	 */
 
-	i = zone->ov_size & ~B_SIZE;	/* Save flags */
+	flags = zone->ov_size & ~B_SIZE;	/* Save flags */
 	r &= B_SIZE;					/* Clear all flags */
-	zone->ov_size = r | (i & (B_LAST | B_CTYPE));	/* Save size B_LAST & type */
+	zone->ov_size = r | (flags & (B_LAST | B_CTYPE));	/* Save size B_LAST & type */
 
-	i = HLIST_INDEX(r);
-	connect_free_list(zone, i);		/* Insert block in free list */
+	rt_connect_free_list(zone);		/* Insert block in free list */
 
 	SIGRESUME;					/* Critical section ends */
 }
@@ -2765,7 +2837,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		flush;
 #endif
 
-		r =  eif_rt_split_block(zone, nbytes);	/* Split block, r holds size */
+		r = eif_rt_split_block(zone, nbytes);	/* Split block, r holds size */
 		if (r == (rt_uint_ptr) -1) {			/* If we did not split it */
 			SIGRESUME;					/* Exiting from critical section */
 			GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
@@ -2773,9 +2845,9 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 		}
 
 		rt_m_data.ml_used -= r + OVERHEAD;	/* Data we lose in realloc */
-		if (zone->ov_size & B_CTYPE)
+		if (zone->ov_size & B_CTYPE) {
 			rt_c_data.ml_used -= r + OVERHEAD;
-		else {
+		} else {
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (-%ld), %ld total (xrealloc)\n",
 			rt_e_data.ml_used, r + OVERHEAD, rt_e_data.ml_total);
@@ -2982,60 +3054,55 @@ doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC
 doc:	</routine>
 */
 
-rt_shared rt_uint_ptr eif_rt_split_block(register union overhead *selected, register rt_uint_ptr nbytes)
+rt_shared rt_uint_ptr eif_rt_split_block(union overhead *selected, rt_uint_ptr nbytes)
 {
 	rt_uint_ptr flags;				/* Flags of original block */
-	rt_uint_ptr r;					/* For shifting purposes */
-	rt_uint_ptr i;					/* Index in free list */
+	rt_uint_ptr l_remaining_bytes;
 
 	REQUIRE("nbytes less than selected size", (selected->ov_size & B_SIZE) >= nbytes);
 
 	/* Compute residual bytes. The flags bits should remain clear */
-	i = selected->ov_size & B_SIZE;			/* Hope it will fit in an int */
-	r = (i - nbytes);				/* Actual usable bytes */
+	l_remaining_bytes = (selected->ov_size & B_SIZE) - nbytes;
 
 	/* Do the split only if possible.
 	 * Note: one could say that to avoid 0-sized block in the free list, we
-	 *       could have `r <= OVERHEAD', but the issue is that in `gscavenge'
-	 *       it would most likely cause a check violation because `gscavenge'
-	 *       assumes that reallocation does not change the size of objects.
+	 *	could have `l_remaining_bytes <= ALIGNMAX', but the issue is that in `gscavenge'
+	 *	it would most likely cause a check violation because `gscavenge'
+	 *	assumes that reallocation does not change the size of objects.
 	 */
-	if (r < OVERHEAD)
+	if (l_remaining_bytes < ALIGNMAX)
 		return (rt_uint_ptr) -1;				/* Not enough space to split */
 
 	/* Check wether the block we split was the last one in a
 	 * chunk. If so, then the remaining will be the last, but
 	 * the 'selected' block is no longer the last one anyway.
 	 */
-	flags = i = selected->ov_size;		/* Optimize for speed, phew !! */
-	i &= ~B_SIZE & ~B_LAST;				/* Keep flags but clear B_LAST */
-	selected->ov_size = i | nbytes;		/* Block has been split */
+	flags = selected->ov_size;		/* Optimize for speed, phew !! */
+		/* Split the block by keeping former flags, except B_LAST as now
+		 * we cannot be the last block. We clear the previous size as well. */
+	selected->ov_size = (flags & ~(B_SIZE | B_LAST)) | nbytes;		/* Block has been split */
 
 	/* Base address of new block (skip overhead and add nbytes) */
 	selected = (union overhead *) (((EIF_REFERENCE) (selected+1)) + nbytes);
 
-	r -= OVERHEAD;					/* This is the overhead for split block */
-	selected->ov_size = r;			/* Set the size of new block */
+	l_remaining_bytes -= OVERHEAD;				/* This is the overhead for split block */
 	rt_m_data.ml_over += OVERHEAD;		/* Added overhead */
-	if (i & B_CTYPE)				/* Holds flags (without B_LAST) */
+	if (flags & B_CTYPE) {				/* Holds flags (without B_LAST) */
 		rt_c_data.ml_over += OVERHEAD;
-	else
+		selected->ov_size = l_remaining_bytes | B_CTYPE; /* Propagate the information */
+	} else {
 		rt_e_data.ml_over += OVERHEAD;
-
-	/* Compute hash index */
-	i = HLIST_INDEX(r);
+		selected->ov_size = l_remaining_bytes;
+	}
 
 	/* If the block we split was the last one in the chunk, the new block is now
 	 * the last one. There is no need to clear the B_BUSY flag, as normally the
 	 * size fits in 27 bits, thus the upper 5 bits are clear--RAM.
 	 */
-	r = selected->ov_size;
-	if (flags & B_LAST)
-		r |= B_LAST;				/* Mark it last block */
-	if (flags & B_CTYPE)
-		r |= B_CTYPE;				/* Propagate the information */
-	selected->ov_size = r;
-	connect_free_list(selected, i);	/* Insert block in free list */
+	if (flags & B_LAST) {
+		selected->ov_size |=  B_LAST;				/* Mark it last block */
+	}
+	rt_connect_free_list(selected);	/* Insert block in free list */
 
 #ifdef DEBUG
 	dprintf(32)("eif_rt_split_block: split %s %s block starts at 0x%lx (%d bytes)\n",
@@ -3045,12 +3112,14 @@ rt_shared rt_uint_ptr eif_rt_split_block(register union overhead *selected, regi
 	flush;
 #endif
 
-	return r & B_SIZE;			/* Length of split block */
+	ENSURE("Valid size", (l_remaining_bytes & B_SIZE) == l_remaining_bytes);
+
+	return l_remaining_bytes;			/* Length of split block */
 }
 
 /*
 doc:	<routine name="coalesc" return_type="rt_uint_ptr" export="private">
-doc:		<summary>Given a zone to be freed, test whether we can do some coalescing with the next block, if it happens to be free. Overhead accounting is updated. It is up to the caller to put the coalesced block back to the free list (in case this is called by a free operation). It is up to the caller to issue a SIGBLOCK prior any call to this critical routine.</summary>
+doc:		<summary>Given a zone which is not in the free list, test whether we can do some coalescing with the next block, if it happens to be free. Overhead accounting is updated. It is up to the caller to put the coalesced block back to the free list (in case this is called by a free operation). It is up to the caller to issue a SIGBLOCK prior any call to this critical routine.</summary>
 doc:		<param name="zone" type="union overhead *">Starting block from which we are trying to coalesc next block to it, if next block is free.</param>
 doc:		<return>Number of new free bytes available (i.e. the size of the coalesced block plus the overhead) or 0 if no coalescing occurred.</return>
 doc:		<thread_safety>Not safe</thread_safety>
@@ -3061,8 +3130,9 @@ doc:	</routine>
 rt_private rt_uint_ptr coalesc(register union overhead *zone)
 {
 	rt_uint_ptr r;					/* For shifting purposes */
-	rt_uint_ptr i;					/* Index in hlist */
+	rt_uint_ptr i;					/* Index in free list */
 	union overhead *next;		/* Pointer to next block */
+
 
 	i = zone->ov_size;			/* Fetch size and flags */
 	if (i & B_LAST)
@@ -3095,15 +3165,16 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 	 */
 
 	/* First, compute the position in hash list */
-	i = HLIST_INDEX(r);
-	disconnect_free_list(next, i);		/* Remove block from free list */
+	rt_disconnect_free_list(next);		/* Remove block from free list */
 
 	/* Finally, we set the new coalesced block correctly, checking for last
 	 * position. The other flags were kept from the original block.
 	 */
 
-	if ((i = next->ov_size) & B_LAST)	/* Next block was the last one */
+	i = next->ov_size;
+	if (i & B_LAST) {	/* Next block was the last one */
 		zone->ov_size |= B_LAST;		/* So coalesced is now the last one */
+	}
 
 #ifdef DEBUG
 	dprintf(1)("coalesc: coalescing provided a %s %d bytes %s block at 0x%lx\n",
@@ -3117,231 +3188,151 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 }
 
 /*
-doc:	<routine name="connect_free_list" export="private">
+doc:	<routine name="rt_connect_free_list" export="private">
 doc:		<summary>The block 'zone' is inserted in the free list #i. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
 doc:		<param name="zone" type="union overhead *">Block to insert in free list #`i'.</param>
-doc:		<param name="i" type="rt_uint_ptr">Free list index to insert `zone'.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
-
-rt_private void connect_free_list(register union overhead *zone, register rt_uint_ptr i)
+rt_private void rt_connect_free_list(union overhead * const zone)
 {
-#ifndef EIF_SORTED_FREE_LIST
-	union overhead *p;	/* To walk along free list */
-	union overhead **hlist;		/* The free list */
+	union overhead *l_previous, *l_head, *l_next;
+	struct rt_free_list *l_free_list;
+	size_t i;
+	rt_tree *l_tree_node;
+	rt_tree l_node;
+	size_t l_nbytes = zone->ov_size & B_SIZE;
 
-	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
+		/* Quickly compute the index in the free list array where we have a
+		 * chance to find the right block. */
+	i = rt_compute_free_list_index(l_nbytes);
+	l_free_list = FREE_LIST(zone);		/* Get right list ptr */
 
-	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
-	p = hlist[i];
-	hlist[i] = zone;
-	NEXT(zone) = p;
-
-	if (i != 0) {
-		PREVIOUS(zone) = NULL;
-		if (p) {
-			PREVIOUS(p) = zone;
-		}
-	}
-#else
-	union overhead *p, *last;	/* To walk along free list */
-	union overhead **hlist;		/* The free list */
-	union overhead **blist;		/* Associated buffer cache. */
-
-	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
-
-	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
-	blist = BUFFER(hlist);							/* And associated cache. */
-
-	p = hlist[i];		/* Head of list */
-
-		/* If list is empty or if first element of list is greater than `zone',
-		 * we simply need to add `zone' as first element. */
-	if ((!p) || (zone < p)) {
-		hlist[i] = zone;
-		blist[i] = zone;
-		NEXT(zone) = p;
+	if (i < FREE_LIST_INDEX_LIMIT) {
+		l_previous = l_free_list->lists[i];
+		l_free_list->lists[i] = zone;
+		NEXT(zone) = l_previous;
+			/* Update previous if we have space for one. */
 		if (i != 0) {
 			PREVIOUS(zone) = NULL;
-			if (p) {
-				PREVIOUS(p) = zone;
+			if (l_previous) {
+				PREVIOUS(l_previous) = zone;
 			}
-		}
-		return;
-	}
-
-	CHECK("p not null", p);
-
-		/* We have to scan the list to find the right place for inserting our block.
-		 * With the help of the buffer cache, we may not have to scan all the list. */
-#ifndef EIF_SORTED_FREE_LIST_BACKWARD_TRAVERSAL
-	p = blist [i];
-	if (!p || (zone < p)) {
-			/* We have to start from beginning. We are not doing any backward traversing. */
-		p = hlist [i];
-	}
-	for (last = p, p = NEXT(p); p ; last = p, p = NEXT(p)) {
-		if (zone < p) {
-			NEXT(zone) = p;
-			NEXT(last) = zone;
-			if (i != 0) {
-				PREVIOUS(zone) = last;
-				PREVIOUS(p) = zone;
-			}
-			blist[i] = zone;
-			return;
-		}
-	}
-		/* We reached the last element, simply extend.
-		 * Do not change buffer location. */
-	NEXT(last) = zone;
-	NEXT(zone) = NULL;
-	if (i != 0) {
-		PREVIOUS(zone) = last;
-	}
-#else
-		/* Now perform forward traversal or backward traversal depending on position of `zone' to `blist [i]'.
-		 * `zone' cannot be inserted at the beginning of the list since it is already taken care of above. */
-	p = blist [i];
-	if ((zone > p) || (i == 0)) {
-		if (i == 0) {
-				/* It means that `zone < p' and thus we need to start
-				 * from the beginning. */
-			p = hlist [i];
-		}
-		for (last = p, p = NEXT(p); p ; last = p, p = NEXT(p)) {
-			if (zone < p) {
-				NEXT(zone) = p;
-				NEXT(last) = zone;
-				if (i != 0) {
-					PREVIOUS(zone) = last;
-					PREVIOUS(p) = zone;
-				}
-				blist[i] = zone;
-				return;
-			}
-		}
-			/* We reached the last element, simply extend.
-			 * Do not change buffer location. */
-		NEXT(last) = zone;
-		NEXT(zone) = NULL;
-		if (i != 0) {
-			PREVIOUS(zone) = last;
 		}
 	} else {
-			/* It looks like an infinite loop, but it is not because
-			 * the above code guarantees that `zone' cannot be inserted at
-			 * the beginning of the list. */
-		for (last = p, p = PREVIOUS(p); ; last = p, p = PREVIOUS(p)) {
-			if (zone > p) {
-				NEXT(zone) = last;
-				PREVIOUS(zone) = p;
-				NEXT(p) = zone;
-				PREVIOUS(last) = zone;
-				blist[i] = zone;
-				return;
+		l_node.nbytes = l_nbytes;
+		l_tree_node = sglib_rt_tree_find_member (l_free_list->tree, &l_node);
+		if (l_tree_node) {
+				/* We found an entry. We insert the item in pseudo-first position.
+				 * Pseudo because the tree node is the first item we add but will be
+				 * the last one to be removed. Other items are in LIFO order. */
+			l_head = &l_tree_node->current;
+			l_next = NEXT(l_head);
+			NEXT(l_head) = zone;
+			if (l_next) {
+				PREVIOUS(l_next) = zone;
 			}
+			NEXT(zone) = l_next;
+			PREVIOUS(zone) = l_head;
+			CHECK ("Same offset", l_head == (union overhead *) l_tree_node);
+		} else {
+			NEXT(zone) = NULL;
+			l_tree_node = (rt_tree *)zone;
+			CHECK("Same offset", zone == (union overhead *) l_tree_node);
+			CHECK("Same content", !memcmp(&l_tree_node->current, zone, OVERHEAD));
+			l_tree_node->nbytes = l_nbytes;
+			sglib_rt_tree_add (&l_free_list->tree, l_tree_node);
 		}
 	}
-#endif
-#endif
+
+	ENSURE("Size preserved zone", (zone->ov_size & B_SIZE) == l_nbytes);
 }
 
 /*
-doc:	<routine name="disconnect_free_list" export="private">
-doc:		<summary>Removes block pointed to by 'zone' from free list #i. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
-doc:		<param name="zone" type="union overhead *">Block to remove from free list #`i'.</param>
-doc:		<param name="i" type="rt_uint_ptr">Free list index to remove `zone'.</param>
+doc:	<routine name="rt_disconnect_free_list" export="private">
+doc:		<summary>Removes block pointed to by 'zone' from free list. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
+doc:		<param name="zone" type="union overhead * const">Block to remove from free list.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
-rt_private void disconnect_free_list(register union overhead *zone, register rt_uint_ptr i)
+rt_private void rt_disconnect_free_list(union overhead * const zone)
 {
-#ifndef EIF_SORTED_FREE_LIST
-	union overhead *p, *n;		/* To walk along free list */
+	union overhead *l_previous, *l_next;		/* To walk along free list */
+	struct rt_free_list *l_free_list;	/* The free list */
+	size_t i, nbytes;
+	rt_tree *l_tree, *l_tree_node;
+	rt_tree l_node;
 
-	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
+	REQUIRE("zone aligned", ((rt_uint_ptr)zone) % MEM_ALIGNBYTES == 0);
 
-	if (i != 0) {
-			/* Get previous element of the list. */
-		p = PREVIOUS(zone);
-		n = NEXT(zone);
-		if (p) {
-			NEXT(p) = n;
+		/* Quickly compute the index in the free list array where we have a
+		 * chance to find the right block. */
+	nbytes = zone->ov_size & B_SIZE;
+	i = rt_compute_free_list_index(nbytes);
+	l_free_list = FREE_LIST(zone);		/* Get right list ptr */
+
+	if (i < FREE_LIST_INDEX_LIMIT) {
+		CHECK("List not empty", l_free_list->lists[i]);
+		if (i != 0) {
+				/* Get previous element of the list. */
+			l_previous = PREVIOUS(zone);
+			l_next = NEXT(zone);
+			if (l_previous) {
+				NEXT(l_previous) = l_next;
+			} else {
+					/* There is no previous elements, so we need to update the head of the list. */
+				l_free_list->lists[i] = l_next;
+			}
+			if (l_next) {
+				PREVIOUS(l_next) = l_previous;
+			}
 		} else {
-				/* There is no previous elements, so we need to update the head of the list. */
-			FREE_LIST(zone->ov_size & B_CTYPE)[i] = n;
-		}
-		if (n) {
-			PREVIOUS(n) = p;
+				/* We have to perform a linear search because we do not
+				 * have enough space to store the back pointer. */
+			l_next = l_free_list->lists[0];
+			if (zone != l_next) {
+				for (; l_next; l_next = NEXT(l_next)) {
+					if (NEXT(l_next) == zone) {			/* Next block is ok */
+						NEXT(l_next) = NEXT(zone);		/* Remove from free list */
+						return;						/* Exit */
+					}
+				}
+			} else {
+					/* We got lucky, this was the first item. */
+				l_free_list->lists[0] = NEXT(l_next);
+			}
 		}
 	} else {
-		union overhead **hlist;	/* The free list */
-			/* We have to perform a linear search because we do not
-			 * have enough space to store the back pointer. */
-		hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
-		p = hlist[i];
-		if (zone != p) {
-			for (; p; p = NEXT(p)) {
-				if (NEXT(p) == zone) {			/* Next block is ok */
-					NEXT(p) = NEXT(zone);		/* Remove from free list */
-					return;						/* Exit */
-				}
+		l_node.nbytes = nbytes;
+		l_tree = sglib_rt_tree_find_member (l_free_list->tree, &l_node);
+		CHECK("has node", l_tree);
+		if (l_tree == (rt_tree *) zone) {
+				/* `zone' is the head of the list. */
+			l_next = NEXT(zone);
+				/* We need to remove the current tree node and make `l_next' the new one if it exists. */
+			sglib_rt_tree_delete (&l_free_list->tree, l_tree);
+			if (l_next) {
+				l_tree_node = (rt_tree *) l_next;
+				l_tree_node->nbytes = nbytes;
+					/* Fixme: maybe we could speed up this if we had a parent link, that way we would
+					 * just replace the parent pointer to link to `l_tree_node' instead of `l_tree'. */
+				sglib_rt_tree_add (&l_free_list->tree, l_tree_node);
 			}
 		} else {
-			hlist[i] = NEXT(p);
+				/* Use the same algorithm as normal list except that we are sure there is a previous
+				 * element. */
+			l_previous = PREVIOUS(zone);
+			l_next = NEXT(zone);
+			CHECK("has previous", l_previous);
+			NEXT(l_previous) = l_next;
+			if (l_next) {
+				PREVIOUS(l_next) = l_previous;
+			}
 		}
 	}
-#else
-	union overhead *p, *n;		/* To walk along free list */
-	union overhead **hlist;	/* The free list */
-	union overhead **blist;	/* Associated buffer cache. */
-
-	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union oveyrhead *)));
-
-	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
-	blist = BUFFER(hlist);							/* And associated cache. */
-
-	if (i != 0) {
-			/* Get previous element of the list. */
-		p = PREVIOUS(zone);
-		n = NEXT(zone);
-		if (p) {
-			NEXT(p) = n;
-			blist[i] = p;
-		} else {
-				/* There is no previous elements, so we need to update the head of the list. */
-			hlist [i] = n;
-			blist[i] = n;
-		}
-		if (n) {
-			PREVIOUS(n) = p;
-		}
-	} else {
-			/* We have to perform a linear search because we do not
-			 * have enough space to store the back pointer. */
-		if (zone != hlist[i]) {
-			p = blist[i];				/* Cached value = location of last op */
-			if ((!p) || (zone <=p)) {		/* Is it ok ? */
-				p = hlist[i];			/* No, it is before the cached location */
-			}
-			for (; p; p = NEXT(p)) {
-				if (NEXT(p) == zone) {			/* Next block is ok */
-					NEXT(p) = NEXT(zone);		/* Remove from free list */
-					blist[i] = p;					/* Last operation */
-					break;							/* Exit from loop */
-				}
-			}
-		} else {
-			hlist[i] = NEXT(hlist[i]);
-			blist[i] = hlist[i];
-		}
-	}
-#endif
 }
 
 
@@ -3356,12 +3347,7 @@ doc:	</routine>
 
 rt_shared void lxtract(union overhead *zone)
 {
-	rt_uint_ptr r;				/* For shifting purposes */
-	rt_uint_ptr i;				/* Index in H-list (free list) */
-
-	r = zone->ov_size & B_SIZE;		/* Pure size of block */
-	i = HLIST_INDEX(r);				/* Compute hash index */
-	disconnect_free_list(zone, i);	/* Remove from free list */
+	rt_disconnect_free_list(zone);	/* Remove from free list */
 }
 
 /*
@@ -3379,9 +3365,8 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c)
 	RT_GET_CONTEXT
 	union overhead *zone;	/* Malloc info zone */
 	rt_uint_ptr flags;			/* Malloc flags */
-	rt_uint_ptr i;				/* Index in free list */
-	rt_uint_ptr r;				/* For shifting purposes */
-	rt_uint_ptr old_i;			/* To save old index in free list */
+	size_t l_old_size;			/* Size of zone before coalescing. */
+	size_t l_new_size;			/* Size of zone after coalescing. */
 	rt_uint_ptr max_size = 0;		/* Size of biggest coalesced block */
 
 	SIGBLOCK;			/* Take no risks with signals */
@@ -3412,35 +3397,33 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c)
 		 * free list to which it belongs, so that we can remove it
 		 * if necessary (i.e. if its size changes).
 		 */
-		r = flags & B_SIZE;		/* Pure size */
-		i = HLIST_INDEX(r);
+		l_old_size = flags & B_SIZE;		/* Pure size */
+
+			/* Before performing the coalesc we need to remove `zone' from the free list. */
+		rt_disconnect_free_list(zone);
 
 		while (!(zone->ov_size & B_LAST)) {		/* Not last block */
 			if (0 == coalesc(zone))
 				break;					/* Could not merge block */
 		}
-		flags = zone->ov_size;			/* Possible coalesced block */
+
+			/* Add `zone' back to the free list. Hopefully coalescing occurred
+			 * otherwise we just lost time removing and adding the same block at
+			 * the same place. */
+		rt_connect_free_list(zone);	
+
+		flags = zone->ov_size;
 
 		/* Check whether coalescing occurred. If so, we have to remove
-		 * 'zone' from list #i and then put it back to a possible
+		 * 'zone' from free list and then put it back to a possible
 		 * different list. Also update the size of the biggest coalesced
 		 * block. This value should help malloc in its decisions--RAM.
 		 */
-		if (r != (flags & B_SIZE)) {			/* Size changed */
-
-			/* Compute new list number for coalesced block */
-			old_i = i;					/* Save old index */
-			r = flags & B_SIZE;			/* Size of coalesced block */
-			if (max_size < r)
-				max_size = r;			/* Update maximum size yielded */
-			i = HLIST_INDEX(r);
-
-			/* Do the update only if necessary */
-			if (old_i != i) {
-				disconnect_free_list(zone, old_i);	/* Remove (old list) */
-				connect_free_list(zone, i);			/* Add in new list */
-			}
+		l_new_size = flags & B_SIZE;			/* Size of coalesced block */
+		if (max_size < l_new_size) {
+			max_size = l_new_size;			/* Update maximum size yielded */
 		}
+
 
 		if (flags & B_LAST)				/* We reached last malloc block */
 			break;						/* Finished for that block */
@@ -3765,8 +3748,8 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	rt_uint_ptr size = 0;			/* Flags to bo OR'ed on each object */
 	EIF_REFERENCE top = sc->sc_top;	/* Top in scavenge space */
 	rt_uint_ptr new_objects_overhead = 0;	/* Overhead size corresponding to new objects
-											   which have now a life of their own outside
-											   the scavenge zone. */
+											 * which have now a life of their own outside
+											 * the scavenge zone. */
 
 	next = (union overhead *) sc->sc_arena;
 	if (next == (union overhead *) 0)
@@ -3774,8 +3757,9 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	zone = next - 1;
 	flags = zone->ov_size;
 
-	if (flags & B_CTYPE)				/* This is the usual case */
+	if (flags & B_CTYPE) {				/* This is the usual case */
 		size |= B_CTYPE;				/* Scavenge zone is in a C chunk */
+	}
 
 	size |= B_BUSY;						/* Every released object is busy */
 
@@ -3958,9 +3942,9 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 
 #ifdef EIF_TID
 #ifdef EIF_THREADS
-    zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
+	zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
+	zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
@@ -4045,9 +4029,9 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 
 #ifdef EIF_TID
 #ifdef EIF_THREADS
-    zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
+	zone->ovs_tid = (rt_uint_ptr) eif_thr_context->thread_id; /* tid from eif_thr_context */
 #else
-    zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
+	zone->ovs_tid = (rt_uint_ptr) 0; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
@@ -4158,26 +4142,27 @@ rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE object, struct stack *stk)
 }
 
 /*
-doc:	<routine name="compute_hlist_index" return_type="uint32" export="private">
-doc:		<summary>Quickly compute the index in the hlist array where we have a chance to find the right block. The idea is to do a right logical shift until the register is zero. The number of shifts done is the base 2 logarithm of 'nbytes'.</summary>
-doc:		<param name="size" type="size_t">Size of block from which we want to find its associated index in free list.</param>
-doc:		<return>Index of free list where block of size `size' will be found.</return>
+doc:	<routine name="rt_compute_free_list_index" return_type="size_t" export="private">
+doc:		<summary>Quickly compute the index in the free list where we have a chance to find the right block, otherwise FREE_LIST_INDEX_LIMIT.</summary>
+doc:		<param name="nbytes" type="size_t">Size of block from which we want to find its associated index in free list.</param>
+doc:		<return>Index of free list where block of size `nbytes' will be found.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None required</synchronization>
 doc:	</routine>
 */
 
-rt_private uint32 compute_hlist_index (size_t size)
+rt_private rt_inline size_t rt_compute_free_list_index (size_t nbytes)
 {
-	uint32 i = HLIST_INDEX_LIMIT;
+	size_t result;
 
-		/* When we call this routine it means that `size' was bigger or equal to HLIST_SIZE_LIMIT */
-	REQUIRE ("Not a precomputed index", size >= HLIST_SIZE_LIMIT);
+	REQUIRE("Aligned size", (nbytes % ALIGNMAX) == 0);
 
-	size >>= HLIST_DEFAULT_SHIFT;
-	while (size >>= 1)
-	  i++;
-	return i;
+	result = nbytes / ALIGNMAX;
+	if (result >= FREE_LIST_INDEX_LIMIT) {
+		return FREE_LIST_INDEX_LIMIT;
+	} else {
+		return result;
+	}
 }
 
 #endif

@@ -137,8 +137,9 @@ doc:	</routine>
 rt_private void rt_enumerate_live_processors(void)
 {
 	struct rt_processor* proc = NULL;
+	EIF_SCP_PID i;
 
-	for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+	for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 
 		proc = rt_lookup_processor (i);
 
@@ -321,16 +322,18 @@ rt_shared void rt_mark_all_processors (MARKER marking)
 
 	EIF_INTEGER_32 new_value = 1;
 	EIF_INTEGER_32 expected = 0;
+	EIF_INTEGER_32 previous;
 
 	REQUIRE ("marking_not_null", marking);
 
 		/* Use compare-exchange to determine whether marking is necessary. */
 		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
 		 * operation is called exactly once and only by a single thread during GC... */
-	EIF_INTEGER_32 previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
+	previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
 
 	if (previous == expected) {
-		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+		EIF_SCP_PID i;
+		for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 
 			proc = rt_lookup_processor (i);
 			if (proc) {

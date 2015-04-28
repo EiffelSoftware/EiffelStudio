@@ -93,9 +93,9 @@ rt_shared int rt_processor_registry_init (void)
 	}
 
 	if (T_OK == error) {
-		
+		EIF_SCP_PID i;	
 			/* Prepare the procs attribute. */
-		for (EIF_SCP_PID i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
+		for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
 			self->procs [i] = NULL;
 		}
 		

@@ -87,8 +87,9 @@ rt_shared int rt_identifier_set_init (struct rt_identifier_set* self, size_t a_c
 	}
 
 	if (T_OK == error) {
+		EIF_SCP_PID i;
 			/* Initialize the area array with all valid identifiers. */
-		for (EIF_SCP_PID i = 0; i < a_capacity; ++i) {
+		for (i = 0; i < a_capacity; ++i) {
 			self->area[i] = i;
 		}
 		self->capacity = a_capacity;

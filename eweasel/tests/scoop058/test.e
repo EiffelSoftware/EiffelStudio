@@ -35,7 +35,10 @@ feature {NONE} -- Creation
 				x.copy_from (y)
 			end
 			separate a as x, b as y do
-				y.copy_from (x)
+					-- Because `b' is now controlled the next instruction has no effect and both processors should be still controlled.
+				separate b as z do
+					z.copy_from (x)
+				end
 			end
 			separate a as x do
 				io.put_integer (x.item)
@@ -46,8 +49,8 @@ feature {NONE} -- Creation
 			separate a as x do
 				x.advance
 			end
-			separate a as x, b as y do
-				y.copy_from (x)
+			separate b as y do
+				y.copy_from (a)
 			end
 			separate b as x do
 				io.put_integer (x.item)

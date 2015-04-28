@@ -2752,6 +2752,7 @@ rt_private void full_sweep(void)
 			zone = (union overhead *) (((EIF_REFERENCE) zone) + (size & B_SIZE) + OVERHEAD)
 		) {
 			size = zone->ov_size;			/* Size and flags */
+			CHECK("size aligned", (size % ALIGNMAX) == 0);
 			if (!(size & B_BUSY)) {
 					/* Object belongs to the free list (not busy). */
 			} else if (size & B_C) {
@@ -2773,6 +2774,11 @@ rt_private void full_sweep(void)
 						 * reference)--RAM.
 						 */
 					gfree(zone);		/* Object is freed */
+						/* Now `zone' is free. Internally `gfree' could make `zone' bigger if it 
+						 * was coalesced to the following free block. This is why we have to 
+						 * recompute `size'. Otherwise we would access the area of memory that 
+						 * was coalesced and this can contain garbage now. See eweasel test#exec041. */
+					size = zone->ov_size & B_SIZE;
 #ifdef FULL_SWEEP_DEBUG
 				printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
 					(union overhead *) zone + 1,

@@ -536,7 +536,7 @@ rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REF
 		/* Register reference arguments. */
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
-		if ((last -> type & SK_HEAD) == SK_REF && RTS_OS(icurrent -> it_ref, last -> it_ref)) {
+		if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent -> it_ref, last -> it_ref)) {
 			RTS_RS(icurrent -> it_ref, last -> it_ref);
 		}
 	}
@@ -1888,6 +1888,42 @@ rt_private void interpret(int flag, int where)
 		if (!(~in_assertion & WASC(icur_dtype) & CK_LOOP))
 			/* Loop assertions are not checked */
 			IC += offset;
+		break;
+
+
+	/*
+	 * Start of inline separate.
+	 */
+	case BC_START_SEPARATE:
+#ifdef DEBUG
+		dprintf(2)("BC_START_SEPARATE\n");
+#endif
+		{
+			EIF_NATURAL_16 argument_count = get_uint16(&IC); /* Number of arguments of the instruction. */
+
+				/* Create request group. */
+			RTS_RC (icurrent->it_ref);
+				/* Add processors of uncontrolled separate arguments to the reuest group. */
+			for (; argument_count > 0; -- argument_count) {
+				last = opop ();
+				if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent->it_ref, last->it_ref)) {
+					RTS_RS (icurrent->it_ref, last->it_ref);
+				}
+			}
+				/* Wait to get control. */
+			RTS_RW (icurrent->it_ref);
+		}
+		break;
+
+	/*
+	 * End of inline separate.
+	 */
+	case BC_END_SEPARATE:
+#ifdef DEBUG
+		dprintf(2)("BC_END_SEPARATE\n");
+#endif
+			/* Release control of the request group. */
+		RTS_RD (icurrent->it_ref);
 		break;
 
 	/*

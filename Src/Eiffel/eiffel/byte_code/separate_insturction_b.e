@@ -123,26 +123,24 @@ feature -- Code generation
 				across
 					arguments as arg
 				loop
-					if not has_request_chain then
-							-- Arguments are attached to object-test-like locals.
-						check attached {OBJECT_TEST_LOCAL_B} arg.item.target as t then
-							if real_type (t.type).is_separate then
-								if not has_request_chain then
-									has_request_chain := True
-										-- Declare a variable that tells whether a request chain is required.
-									buf.put_new_line
-									buf.put_string ("int uarg;")
-								end
-									-- Declare a variable that tells whether this argument is uncontrolled.
+						-- Arguments are attached to object-test-like locals.
+					check attached {OBJECT_TEST_LOCAL_B} arg.item.target as t then
+						if real_type (t.type).is_separate then
+							if not has_request_chain then
+								has_request_chain := True
+									-- Declare a variable that tells whether a request chain is required.
 								buf.put_new_line
-								buf.put_string ("int uarg")
-								buf.put_integer (arg.target_index)
-								buf.put_three_character (' ', '=', ' ')
-								buf.put_string (" RTS_OU (Current, ")
-								buf.put_string (t.register_name)
-								buf.put_character (')')
-								buf.put_character (';')
+								buf.put_string ("int uarg;")
 							end
+								-- Declare a variable that tells whether this argument is uncontrolled.
+							buf.put_new_line
+							buf.put_string ("int uarg")
+							buf.put_integer (arg.target_index)
+							buf.put_three_character (' ', '=', ' ')
+							buf.put_string (" RTS_OU (Current, ")
+							buf.put_string (t.register_name)
+							buf.put_character (')')
+							buf.put_character (';')
 						end
 					end
 				end
@@ -213,7 +211,7 @@ feature -- Code generation
 				if has_request_chain then
 						-- Generate request chain removal.
 					buf.put_new_line
-					buf.put_string ("if (uarg) RTS_SRD;")
+					buf.put_string ("if (uarg) RTS_SRD  (Current);")
 				end
 					-- Close block.
 				buf.exdent

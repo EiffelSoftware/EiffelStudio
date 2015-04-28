@@ -188,7 +188,12 @@ rt_shared void rt_prepare_live_index ()
 				/* The thread is allocated for a processor. */
 				/* Liveness of processor will be reported by SCOOP manager and detected during GC. */
 				/* Record "PID->index" relation for future use. */
-			pid_index [c -> logical_id] = i;
+			if (c->logical_id != NULL_PROCESSOR_ID) {
+				pid_index [c -> logical_id] = i;
+			} else {
+				/* The processor has already been collected in the previous GC cycle and is about to destroy itself.
+				 * There's nothing we have to do here. */
+			}
 		} else {
 				/* This is a non-SCOOP thread. */
 				/* Add it to the live indexes. */
@@ -220,7 +225,10 @@ rt_shared void rt_update_live_index (void)
 	for (i = 0; i < live_index_count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
 		if (c -> is_processor) {
-			RT_UNMARK_PID (c -> logical_id);
+				/* A NULL_PROCESSOR_ID indicates that the processor is about to destroy itself because it has no more references.
+				 * If the GC thinks it's alive this is a bug. */
+			CHECK ("has_id", c->logical_id != NULL_PROCESSOR_ID);
+			RT_UNMARK_PID (c->logical_id);
 		}
 	}
 		/* Add indexes of processors that were not marked before. */
@@ -299,7 +307,11 @@ rt_shared void rt_report_live_index (void)
 	for (i = live_index_count; i < count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
 			/* Notify SCOOP manager that the processor is not used anymore. */
-		rt_processor_registry_deactivate (c->logical_id);
+			/* Note: Processors with a NULL_PROCESSOR_ID are about to destroy themselves.
+			 * No need to send the shutdown signal again. */
+		if (c->logical_id != NULL_PROCESSOR_ID) {
+			rt_processor_registry_deactivate (c->logical_id);
+		}
 	}
 	/* Notify SCOOP manager that the GC cycle is over. */
 	/* Unused currently, don't want to come up with another replacement

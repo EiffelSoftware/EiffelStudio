@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 				-- Store settings.
 			write_settings
 
-				-- We write some type description in case the dynamic types changes between to run of the same
+				-- We write some type description in case the dynamic types changes between two runs of the same
 				-- program.
 			l_ser := serializer
 			from
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

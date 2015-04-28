@@ -39,8 +39,8 @@ feature -- Access
 	Bc_lassign:			CHARACTER = '%/024/';
 	Bc_assign:			CHARACTER = '%/025/';
 	Bc_create:			CHARACTER = '%/026/';
-	Bc_not_used_27:		CHARACTER = '%/027/';
-	Bc_not_used_28:		CHARACTER = '%/028/';
+	Bc_start_separate:		CHARACTER = '%/027/';
+	Bc_end_separate:		CHARACTER = '%/028/';
 	Bc_not_used_29:		CHARACTER = '%/029/';
 	Bc_not_used_30:		CHARACTER = '%/030/';
 	Bc_create_type:		CHARACTER = '%/031/';
@@ -268,7 +268,7 @@ feature -- Access
 	Bc_postfail: CHARACTER = '%/177/';
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

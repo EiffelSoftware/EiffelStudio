@@ -21,10 +21,8 @@ objcflags='-ObjC'
 #
 # Standard runtime:
 #------------------
-mtcppflags='$mtccflags -EHs'
 mtccflags='$ccflags -DEIF_THREADS'
 ccflags='$warning_level $debug -nologo -MT -D_WIN32_WINNT=0x0500 -DWINVER=0x0500'
-
 output_libraries='standard mtstandard'
 #
 #-- DLL:

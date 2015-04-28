@@ -94,8 +94,8 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_LASSIGN			24
 #define BC_ASSIGN			25
 #define BC_CREATE			26
-#define BC_NOTUSED_27		27
-#define	BC_NOTUSED_28		28
+#define BC_START_SEPARATE		27
+#define	BC_END_SEPARATE		28
 #define BC_NOTUSED_29		29
 #define BC_NOTUSED_30		30
 #define BC_CREATE_TYPE		31

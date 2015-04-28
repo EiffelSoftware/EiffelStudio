@@ -73,8 +73,8 @@ static  char    *names [] = {
 "BC_LASSIGN" ,
 "BC_ASSIGN" ,
 "BC_CREATE" ,
-"BC_NOTUSED_27" ,
-"BC_NOTUSED_28" ,
+"BC_START_SEPARATE" ,
+"BC_END_SEPARATE" ,
 "BC_NOTUSED_29" ,
 "BC_NOTUSED_30" ,
 "BC_CREATE_TYPE" ,
@@ -834,6 +834,13 @@ static  void    print_instructions (void)
 			case  BC_ARRAY: /* Manifest array */
 					/* Routine id ('make') */
 				fprintf (ofp,"rid %d ", (int) get_int32(&ip));
+				break;
+
+			case BC_START_SEPARATE: /* Start of an inline separate instruction. */
+				fprintf (ofp,"%d args", (int) get_uint16(&ip));
+				break;
+
+			case  BC_END_SEPARATE: /* End of an inline separate instruction. */
 				break;
 
 			case BC_SPECIAL_EXTEND:

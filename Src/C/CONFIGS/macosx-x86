@@ -166,7 +166,7 @@ fi
 if [ -n "$CFLAGS" ]; then
 	ccflags=$CFLAGS
 else
-	ccflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC -std=c99'
+	ccflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC'
 fi
 ccldflags='-arch i386'
 if [ -n "$CPP" ]; then
@@ -177,7 +177,7 @@ fi
 if [ -n "$CPPFLAGS" ]; then
 	cppflags=$CPPFLAGS
 else
-	cppflags='-arch i386 -pipe -no-cpp-precomp -fno-common -fPIC =std=c++11"
+	cppflags="$ccflags"
 fi
 cpp_stuff='42'
 defvoidused='15'
@@ -197,7 +197,7 @@ mtcppflags="$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
 optimize="-O3"
 voidflags='15'
 #Check value for next 1
-warning_level='-Wall -Wextra -Wno-unused-parameter -pedantic'
+warning_level='-Wall -Wextra -Wno-unused-parameter -pedantic -std=c99'
 wkoptimize="-O0"
 
 #Makefiles
@@ -225,7 +225,7 @@ mkdep='\$(EIFFEL_SRC)/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -lpthread -lstdc++"
+mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
@@ -234,7 +234,7 @@ shared_prefix='lib'
 shared_suffix='.dylib'
 shared_rt_suffix='.dylib'
 sharedlibs='-lm'
-mtsharedlibs="$sharedlibs -lpthread -lstdc++"
+mtsharedlibs='-lm -lpthread'
 sharedlibversion='.15.05'
 sharedlink=$cc
 suffix='.a'

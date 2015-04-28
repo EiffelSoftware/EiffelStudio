@@ -21,7 +21,6 @@ objcflags='-ObjC'
 #
 # Standard runtime:
 #------------------
-mtcppflags='$mtccflags'
 mtccflags='$ccflags -DEIF_THREADS'
 ccflags='$warning_level $override_macros $debug -D_WIN32_WINNT=0x0500 -DWINVER=0x0500'
 output_libraries='standard mtstandard'

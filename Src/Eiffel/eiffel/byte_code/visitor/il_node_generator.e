@@ -3067,6 +3067,18 @@ feature {NONE} -- Visitors
 				l_set_rout_disp_feat.argument_count, l_set_rout_disp_feat.has_return_value, True)
 		end
 
+	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+			-- <Precursor>
+		do
+			a_node.arguments.process (Current)
+			if attached a_node.compound as c and then not c.is_empty then
+				if system.is_scoop then
+					debug ("to_implement") to_implement ("Support code generation for inline separate instruction") end
+				end
+				c.process (Current)
+			end
+		end
+
 	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		do
@@ -4901,7 +4913,7 @@ feature {NONE} -- Convenience
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

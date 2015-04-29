@@ -165,8 +165,7 @@ rt_private void parsing_store_append(struct rt_store_context *a_context, EIF_REF
 	(void) nomark(object);
 #endif
 	/* Do the traversal: mark and count the objects to store */
-	traversal_context.obj_nb = 0;
-	traversal_context.accounting = 0;
+	memset(&traversal_context, 0, sizeof(struct rt_traversal_context));
 	traversal_context.is_for_persistence = 1;
 	traversal(&traversal_context, object);
 

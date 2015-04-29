@@ -248,8 +248,13 @@ rt_private void internal_traversal(struct rt_traversal_context *a_context, EIF_R
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if (flags & EO_STORE)			/* Object is already marked? */
-		return;						/* Then we already dealt with it */
+	if (!a_context->is_unmarking) {
+		if (flags & EO_STORE)			/* Object is already marked? */
+			return;						/* Then we already dealt with it */
+	} else {
+		if (!(flags & EO_STORE))		/* Object is already unmarked? */
+			return;						/* Then we already dealt with it. */
+	}
 
 		/* Mark the object if it is not expanded, or if it is, it should be the top level object. */
 	if (is_first_level || !eif_is_nested_expanded(flags)) {
@@ -279,7 +284,11 @@ rt_private void internal_traversal(struct rt_traversal_context *a_context, EIF_R
 		 * release of the stack relies on an accurate object count.
 		 */
 
-		flags |= EO_STORE;			/* Object marked as traversed */
+		if (!a_context->is_unmarking) {
+			flags |= EO_STORE;			/* Object marked as traversed */
+		} else {
+			flags &= ~EO_STORE;
+		}
 		a_context->obj_nb++; 					/* Count the number of objects traversed */
 	}
 
@@ -296,7 +305,7 @@ rt_private void internal_traversal(struct rt_traversal_context *a_context, EIF_R
 	}
 #endif
 
-	zone->ov_flags = flags;			/* Mark the object */
+	zone->ov_flags = flags;			/* Update mark of the object */
 
 	/* Evaluation of the number of references of the object. It is really
 	 * important that we traverse the objects in the same way a deep clone

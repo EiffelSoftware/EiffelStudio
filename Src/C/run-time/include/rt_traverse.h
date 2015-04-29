@@ -75,9 +75,12 @@ extern EIF_CS_TYPE *eif_eo_store_mutex;
 /*
 doc:	<struct name="rt_traversal_context" export="public">
 doc:		<summary>Context used to configure or get results from a call to `traversal'.</summary>
+doc:		<field name="obj_nb" type="uint32">Number of objects found during traversal.</summary>
 doc:		<field name="accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, TR_STORE_ACCOUNT).</field>
-doc:		<field name="is_for_persistence" type="int">Is traversal for persistence purpose? If not it is for copy purpose.</field>
 doc:		<field name="account" type="struct rt_traversal_info *">Array of traversed dynamic types.</field>
+doc:		<field name="account_count" type="size_t">Size of `account' array. Used for proper resizing of `account'.</field>
+doc:		<field name="is_for_persistence" type="int">Is traversal for persistence purpose? If not it is for copy purpose.</field>
+doc:		<field name="is_unmarking" type="int">Is traversal going to unmark objects instead of marking them? Useful to unmark objects in the event of an exception.</field>
 doc:	</struct>
 */
 struct rt_traversal_context {
@@ -86,7 +89,8 @@ struct rt_traversal_context {
 	struct rt_traversal_info *account;	/* Array of traversed dyn types */
 	size_t account_count;
 		/* The members below are private and should only be used inside `traverse.c'. */
-	int is_for_persistence;			
+	int is_for_persistence;
+	int is_unmarking;
 };
 
 

@@ -1,0 +1,13 @@
+test_name	storable-failure-unstable-state
+test_description When storing an object tree using the C storable a write failure occurs, we do not unmark objects. This test is made to be ran manually by first running the program with no arguments (server) and running another with the argument "client".  Interrupt the client with Ctrl-C. Now run the client again. It will immediately fail (it if doesn't, one or two more cycles of interrupt/run will do it). See bug#16760.
+ 
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

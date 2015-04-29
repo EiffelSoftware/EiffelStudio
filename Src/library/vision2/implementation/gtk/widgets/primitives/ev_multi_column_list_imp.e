@@ -1166,7 +1166,7 @@ feature {NONE} -- Implementation
 				create a_tree_iter.make
 				item_imp.set_list_iter (a_tree_iter)
 				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-				update_child (item_imp, ev_children.count)
+				update_child (item_imp, i)
 
 				if item_imp.is_transport_enabled then
 					update_pnd_connection (True)

@@ -3365,7 +3365,6 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c)
 	RT_GET_CONTEXT
 	union overhead *zone;	/* Malloc info zone */
 	rt_uint_ptr flags;			/* Malloc flags */
-	size_t l_old_size;			/* Size of zone before coalescing. */
 	size_t l_new_size;			/* Size of zone after coalescing. */
 	rt_uint_ptr max_size = 0;		/* Size of biggest coalesced block */
 
@@ -3397,7 +3396,6 @@ rt_shared rt_uint_ptr chunk_coalesc(struct chunk *c)
 		 * free list to which it belongs, so that we can remove it
 		 * if necessary (i.e. if its size changes).
 		 */
-		l_old_size = flags & B_SIZE;		/* Pure size */
 
 			/* Before performing the coalesc we need to remove `zone' from the free list. */
 		rt_disconnect_free_list(zone);

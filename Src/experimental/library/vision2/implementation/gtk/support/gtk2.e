@@ -922,6 +922,11 @@ feature -- Externals
 			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <ev_gtk.h>"
 		end
 
+	frozen gdk_cursor_unref (a_cursor: POINTER)
+		external
+			"C signature (GdkCursor *) use <ev_gtk.h>"
+		end
+
 	frozen gtk_tool_item_set_tooltip (a_tool_item, a_tooltips, a_tip_text, a_tip_private: POINTER)
 		external
 			"C signature (GtkToolItem*, GtkTooltips*, gchar*, gchar*) use <ev_gtk.h>"
@@ -3006,7 +3011,7 @@ feature -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			t: TEST_EV_MODEL
 		do
 			create t
-			t.pixmap_with_clip_area
+			t.test_hidden_figure
 		end
 
 feature {NONE} -- Convenience
@@ -26,11 +26,17 @@ feature {NONE} -- Convenience
 		TEST_EV_BUTTON,
 		TEST_EV_COLOR,
 		TEST_EV_CONTAINER,
+		TEST_EV_DIALOG,
 		TEST_EV_DRAWING_AREA,
 		TEST_EV_FONT,
 		TEST_EV_GRID,
+		TEST_EV_MODEL,
+		TEST_EV_NOTEBOOK,
+		TEST_EV_PIXEL_BUFFER,
 		TEST_EV_PIXMAP,
 		TEST_EV_SCREEN,
+		TEST_EV_STANDARD_DIALOG,
+		TEST_EV_TEXT,
 		TEST_EV_TIMEOUT,
 		TEST_EV_TOOLBAR,
 		TEST_EV_VIEWPORT,
@@ -40,7 +46,7 @@ feature {NONE} -- Convenience
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

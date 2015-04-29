@@ -362,10 +362,9 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				editor_helper.remember_editors_state (a_config_data)
-				-- Editor related data prepared
-				a_after_editor_prepared.call (void)
-				Result := a_after_editor_prepared.last_result
-				-- We restore editor
+					-- Editor related data prepared
+				Result := a_after_editor_prepared.item (void)
+					-- We restore editor
 				editor_helper.restore_editor_state (a_config_data, Result)
 				if (not Result) or else (not editor_helper.is_editor_state_valid) then
 					cleaner.reset_all_to_default (editor_helper.is_top_container_recorded)
@@ -1067,7 +1066,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

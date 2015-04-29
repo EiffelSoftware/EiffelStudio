@@ -53,17 +53,15 @@ feature -- Status Setting
 	set_displayed_value (a_mapping: HASH_TABLE [STRING_32, READABLE_STRING_GENERAL])
 			-- Set values for display.
 			-- If values are not found, original ones are displayed.
-		local
-			ht: like value_mapping
 		do
 			if attached {like value_mapping} a_mapping as vmap then
 				value_mapping := vmap
 			else
-				create ht.make (a_mapping.count)
+				create value_mapping.make (a_mapping.count)
 				across
 					a_mapping as c
 				loop
-					ht.force (c.item, c.key.to_string_32)
+					value_mapping.force (c.item, c.key)
 				end
 			end
 			change_item_widget.set_item_strings (displayed_values)
@@ -216,12 +214,16 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	value_mapping: detachable HASH_TABLE [STRING_32, STRING_32];
+	value_mapping: detachable STRING_TABLE [STRING_32]
 			-- Key: values
 			-- Item: strings displayed
+		note
+			option: stable
+		attribute
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

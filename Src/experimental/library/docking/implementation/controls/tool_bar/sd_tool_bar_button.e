@@ -10,14 +10,17 @@ class
 
 inherit
 	SD_TOOL_BAR_ITEM
+		redefine
+			default_create
+		end
 
 create
-	make
+	make, default_create
 
 feature {NONE} -- Initlization
 
 	make
-			-- Creation method
+			-- Initialize Current.
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
 			is_sensitive_internal := True
@@ -27,6 +30,12 @@ feature {NONE} -- Initlization
 			create select_actions
 			create pointer_button_press_actions
 			create internal_shared
+		end
+
+	default_create
+			-- Creation method
+		do
+			make
 		end
 
 feature -- Properties
@@ -441,7 +450,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

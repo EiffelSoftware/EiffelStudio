@@ -132,23 +132,20 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Constant setting
-
+	
 	set_attributes_using_string_constants
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant
 		local
-			l_s: detachable READABLE_STRING_GENERAL
+			s: READABLE_STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
 			until
 				string_constant_set_procedures.off
 			loop
-				string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).call (Void)
-				l_s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).last_result
-				if l_s /= Void then
-					string_constant_set_procedures.item.call ([l_s])
-				end
+				s := string_constant_retrieval_functions.i_th (string_constant_set_procedures.index).item (Void)
+				string_constant_set_procedures.item.call ([s])
 				string_constant_set_procedures.forth
 			end
 		end
@@ -166,8 +163,7 @@ feature {NONE} -- Constant setting
 			until
 				integer_constant_set_procedures.off
 			loop
-				integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).call (Void)
-				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).last_result
+				i := integer_constant_retrieval_functions.i_th (integer_constant_set_procedures.index).item (Void)
 				integer_constant_set_procedures.item.call ([i])
 				integer_constant_set_procedures.forth
 			end
@@ -177,11 +173,9 @@ feature {NONE} -- Constant setting
 			until
 				integer_interval_constant_retrieval_functions.off
 			loop
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg1 := integer_interval_constant_retrieval_functions.item.last_result
+				arg1 := integer_interval_constant_retrieval_functions.item.item (Void)
 				integer_interval_constant_retrieval_functions.forth
-				integer_interval_constant_retrieval_functions.item.call (Void)
-				arg2 := integer_interval_constant_retrieval_functions.item.last_result
+				arg2 := integer_interval_constant_retrieval_functions.item.item (Void)
 				create int.make (arg1, arg2)
 				integer_interval_constant_set_procedures.item.call ([int])
 				integer_interval_constant_retrieval_functions.forth
@@ -193,18 +187,15 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant
 		local
-			l_p: detachable EV_PIXMAP
+			p: EV_PIXMAP
 		do
 			from
 				pixmap_constant_set_procedures.start
 			until
 				pixmap_constant_set_procedures.off
 			loop
-				pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).call (Void)
-				l_p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).last_result
-				if l_p /= Void then
-					pixmap_constant_set_procedures.item.call ([l_p])
-				end
+				p := pixmap_constant_retrieval_functions.i_th (pixmap_constant_set_procedures.index).item (Void)
+				pixmap_constant_set_procedures.item.call ([p])
 				pixmap_constant_set_procedures.forth
 			end
 		end
@@ -213,18 +204,15 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant
 		local
-			l_f: detachable EV_FONT
+			f: EV_FONT
 		do
 			from
 				font_constant_set_procedures.start
 			until
 				font_constant_set_procedures.off
 			loop
-				font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).call (Void)
-				l_f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
-				if l_f /= Void then
-					font_constant_set_procedures.item.call ([l_f])
-				end
+				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).item (Void)
+				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
 			end
 		end
@@ -233,18 +221,15 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant
 		local
-			l_c: detachable EV_COLOR
+			c: EV_COLOR
 		do
 			from
 				color_constant_set_procedures.start
 			until
 				color_constant_set_procedures.off
 			loop
-				color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).call (Void)
-				l_c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).last_result
-				if l_c /= Void then
-					color_constant_set_procedures.item.call ([l_c])
-				end
+				c := color_constant_retrieval_functions.i_th (color_constant_set_procedures.index).item (Void)
+				color_constant_set_procedures.item.call ([c])
 				color_constant_set_procedures.forth
 			end
 		end

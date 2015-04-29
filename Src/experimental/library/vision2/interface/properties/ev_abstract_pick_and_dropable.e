@@ -44,7 +44,7 @@ feature -- Access
 		deferred
 		end
 
-	accept_cursor: detachable EV_POINTER_STYLE
+	accept_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		deferred
@@ -52,7 +52,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	deny_cursor: detachable EV_POINTER_STYLE
+	deny_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		deferred
@@ -122,24 +122,20 @@ feature -- Status setting
 			target_data_function_assigned: target_data_function /= Void and then target_data_function.is_equal (a_function)
 		end
 
-	set_accept_cursor (a_cursor: like accept_cursor)
+	set_accept_cursor (a_cursor: detachable like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
-		require
-			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			accept_cursor_assigned: attached accept_cursor as l_accept_cursor and then l_accept_cursor ~ a_cursor
+			accept_cursor_assigned: attached a_cursor as l_accept_cursor implies l_accept_cursor ~ accept_cursor
 		end
 
-	set_deny_cursor (a_cursor: like deny_cursor)
+	set_deny_cursor (a_cursor: detachable like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
-		require
-			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
-			deny_cursor_assigned: attached deny_cursor as l_deny_cursor and then l_deny_cursor ~ a_cursor
+			deny_cursor_assigned: attached a_cursor as l_deny_cursor implies l_deny_cursor ~ deny_cursor
 		end
 
 feature -- User input events
@@ -206,7 +202,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

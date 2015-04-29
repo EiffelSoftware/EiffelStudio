@@ -83,51 +83,54 @@ feature {NONE} -- Implementation
 			--| `a_value' should be like "Fontname-r-regular-8-screen" ie "face-shape-weight-height-family" (shape is one letter: r or i )
 		local
 			s: STRING_32
-			i: INTEGER
+			i, j: INTEGER
 			l_value: detachable like value
 		do
 			s := a_value.to_string_32
-			if s.occurrences ('-') >= 4 then
+			if s.occurrences ('-') >= 5 then
 					-- The face has dash in the name: such as "DigitalSerial-Xbold-r-regular-8-screen"
-				i := s.last_index_of ('-', s.count)
+					-- so we analyze the string starting from the end.
+				j := s.count
+				i := s.last_index_of ('-', j)
 				check has_family_value: i > 0 end
-				set_family (s.substring (i + 1, s.count))
+				set_family (s.substring (i + 1, j))
+				j := i - 1
 
-				s.keep_head (i - 1)
-				i := s.last_index_of ('-', s.count)
+				i := s.last_index_of ('-', j)
 				check has_height_value: i > 0 end
-				set_height (s.substring (i + 1, s.count))
+				set_height (s.substring (i + 1, j))
+				j := i - 1
 
-				s.keep_head (i - 1)
-				i := s.last_index_of ('-', s.count)
+				i := s.last_index_of ('-', j)
 				check has_weight_value: i > 0 end
-				set_weight (s.substring (i + 1, s.count))
+				set_weight (s.substring (i + 1, j))
+				j := i - 1
 
-				s.keep_head (i - 1)
-				i := s.last_index_of ('-', s.count)
+				i := s.last_index_of ('-', j)
 				check has_shape_value: i > 0 end
-				set_shape (s.substring (i + 1, s.count))
+				set_shape (s.substring (i + 1, j))
+				j := i - 1
 
-				s.keep_head (i - 1)
 				check is_valid_face: s.is_whitespace end
-				set_face (s)
+				set_face (s.substring (1, j))
 				create l_value.make_with_values (family, weight, shape, height)
 			else
-				i := s.index_of('-', 1)
+				j := 1
+				i := s.index_of('-', j)
 				if i > 0 then
-					set_face (s.substring (1, i - 1))
-					s := s.substring (i + 1, s.count)
-					i := s.index_of ('-',1)
+					set_face (s.substring (j, i - 1))
+					j := i + 1
+					i := s.index_of ('-', j)
 					if i > 0 then
-						set_shape (s.substring (1, i - 1))
-						s := s.substring (i + 1, s.count)
-						i := s.index_of ('-',1)
+						set_shape (s.substring (j, i - 1))
+						j := i + 1
+						i := s.index_of ('-', j)
 						if i > 0 then
-							set_weight (s.substring (1, i - 1))
-							s := s.substring (i + 1, s.count)
-							i := s.index_of ('-',1)
+							set_weight (s.substring (j, i - 1))
+							j := i + 1
+							i := s.index_of ('-', j)
 							if i > 0 then
-								set_height (s.substring (1, i - 1))
+								set_height (s.substring (j, i - 1))
 								set_family (s.substring (i + 1, s.count))
 							end
 						end

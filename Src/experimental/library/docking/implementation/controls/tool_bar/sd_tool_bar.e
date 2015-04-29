@@ -44,7 +44,8 @@ inherit
 			update_for_pick_and_drop,
 			initialize,
 			destroy,
-			set_background_color
+			set_background_color,
+			create_interface_objects
 		end
 
 	SD_WIDGETS_LISTS
@@ -55,25 +56,25 @@ inherit
 		end
 
 create
-	make
+	make, default_create
 
 feature {NONE} -- Initlization
 
 	make
 			-- Creation method
 		do
-			create internal_shared
-			create internal_items.make (1)
-
 			default_create
-
-			add_tool_bar (Current)
-
-				-- Prevent mouse press from taking the focus.
-			disable_focus_on_press
 		end
 
 feature {SD_TOOL_BAR} -- Internal initlization
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create internal_shared
+			create internal_items.make (1)
+		end
 
 	initialize
 			-- Initlialize
@@ -96,6 +97,11 @@ feature {SD_TOOL_BAR} -- Internal initlization
 			set_pebble_function (agent on_pebble_function)
 
 			set_background_color (internal_shared.default_background_color)
+
+			add_tool_bar (Current)
+
+				-- Prevent mouse press from taking the focus.
+			disable_focus_on_press
 		end
 
 feature -- Command
@@ -787,24 +793,15 @@ feature {NONE} -- Agents
 			l_screen: EV_SCREEN
 			l_item: detachable like item_type
 			l_pointer_position: EV_COORDINATE
-			l_stock_pixmap: EV_STOCK_PIXMAPS
 		do
-			create l_screen
-			l_pointer_position := l_screen.pointer_position
-			if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
-				l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
-				if l_item /= Void and then l_item.is_sensitive then
-					Result := l_item.drop_actions.accepts_pebble (a_any)
-					create l_stock_pixmap
-					if attached l_item.accept_cursor as l_cursor then
-						set_accept_cursor (l_cursor)
-					else
-						set_accept_cursor (l_stock_pixmap.standard_cursor)
-					end
-					if attached l_item.deny_cursor as l_deny_cursor then
-						set_deny_cursor (l_deny_cursor)
-					else
-						set_deny_cursor (l_stock_pixmap.no_cursor)
+				-- We do not accept any stone if we are hidden.
+			if is_displayed then
+				create l_screen
+				l_pointer_position := l_screen.pointer_position
+				if is_item_position_valid (l_pointer_position.x, l_pointer_position.y)  then
+					l_item := item_at_position (l_pointer_position.x, l_pointer_position.y)
+					if l_item /= Void and then l_item.is_sensitive then
+						Result := l_item.drop_actions.accepts_pebble (a_any)
 					end
 				end
 			end
@@ -823,8 +820,13 @@ feature {NONE} -- Agents
 				l_item := item_at_position (l_position.x, l_position.y)
 			end
 			if l_item /= Void and then attached l_item.pebble_function as l_function then
-				l_function.call ([])
-				Result := l_function.last_result
+				Result := l_function.item ([l_position.x, l_position.y])
+				if Result /= Void then
+						-- We have a pebble, ensure we use the p&d cursors
+						-- set in `l_item' if any.
+					set_accept_cursor (l_item.accept_cursor)
+					set_deny_cursor (l_item.deny_cursor)
+				end
 			end
 		end
 
@@ -959,7 +961,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

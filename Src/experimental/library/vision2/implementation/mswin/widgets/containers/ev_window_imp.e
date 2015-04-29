@@ -958,7 +958,6 @@ feature {EV_ANY_I} -- Implementation
 			an_item_imp: detachable EV_ITEM_IMP
 			sensitive: detachable EV_SENSITIVE
 			combo_field: detachable EV_INTERNAL_COMBO_FIELD_IMP
-			l_pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -979,24 +978,21 @@ feature {EV_ANY_I} -- Implementation
 					if (button_pressed = 1 and widget_imp.mode_is_drag_and_drop) or
 						(button_pressed = 3 and widget_imp.mode_is_pick_and_drop) then
 						if application_imp.pick_and_drop_source = Void then
-							l_pebble_function := widget_imp.pebble_function
 							widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
 								wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
 						end
 						if widget_imp.pebble /= Void then
 							Result := widget_imp
 						end
-						if l_pebble_function /= Void then
-								-- We clear the result of the pebble function call, if any, to avoid side effects.
-							widget_imp.reset_pebble_function
-						end
+							-- We clear the result of the pebble function call (even if not actually made, it doesn't hurt
+							-- and simplify the code flow), if any, to avoid side effects.
+						widget_imp.reset_pebble_function
 						item_list_imp ?= widget_imp
 						if item_list_imp /= Void then
 							an_item_imp ?= item_list_imp.find_item_at_position (wel_point.x
 								- item_list_imp.screen_x, wel_point.y - item_list_imp.screen_y)
 							if an_item_imp /= Void then
 										--| FIXME we need to pass the relative coordinates to `query_pebble_function'.
-								l_pebble_function := an_item_imp.pebble_function
 								an_item_imp.call_pebble_function (0, 0, wel_point.x, wel_point.y)
 								if an_item_imp.pebble /= Void then
 										-- If the cursor is over an item and the item is a
@@ -1010,10 +1006,8 @@ feature {EV_ANY_I} -- Implementation
 										Result := an_item_imp
 									end
 								end
-								if l_pebble_function /= Void then
-										-- We clear the result of the pebble function call, if any, to avoid side effects.
-									an_item_imp.reset_pebble_function
-								end
+									-- We clear the result of the pebble function call, if any, to avoid side effects.
+								an_item_imp.reset_pebble_function
 							end
 						end
 					end
@@ -1550,7 +1544,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

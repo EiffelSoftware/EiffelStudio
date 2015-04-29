@@ -427,18 +427,26 @@ feature -- Element change
 			pointer_style_assigned: pointer_style = a_cursor
 		end
 
-	set_accept_cursor (a_cursor: EV_POINTER_STYLE)
+	set_accept_cursor (a_cursor: detachable like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
-			accept_cursor := a_cursor
+			if a_cursor /= Void then
+				accept_cursor := a_cursor
+			else
+				accept_cursor := default_accept_cursor
+			end
 		end
 
-	set_deny_cursor (a_cursor: EV_POINTER_STYLE)
+	set_deny_cursor (a_cursor: detachable like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
-			deny_cursor := a_cursor
+			if a_cursor /= Void then
+				deny_cursor := a_cursor
+			else
+				deny_cursor := default_deny_cursor
+			end
 		end
 
 feature -- Status Report

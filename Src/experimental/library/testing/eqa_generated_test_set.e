@@ -76,7 +76,7 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Basic operations
 
-	execute_safe (a_routine: ROUTINE [ANY, TUPLE])
+	execute_safe (a_routine: ROUTINE [detachable ANY, detachable TUPLE])
 			-- Call `a_agent'
 		require
 			a_routine_attached: a_routine /= Void
@@ -88,46 +88,44 @@ feature {NONE} -- Basic operations
 			if not l_rescued then
 				reset_results
 
-				l_empty := a_routine.empty_operands
-				check l_empty.count = 0 end
-				a_routine.call (l_empty)
-
 					-- We use `detachable' here for TUPLE and return type of function object
 					-- because this could be created at runtime.
 					-- We use `detachable' for target of function object, because if agent is
 					-- created by non-void safe code, the type will be detached.
 				if attached {FUNCTION [detachable ANY, detachable TUPLE, detachable ANY]} a_routine as l_func then
 					if attached {FUNCTION [detachable ANY, detachable TUPLE, BOOLEAN]} l_func as l_bool_func then
-						last_boolean := l_bool_func.last_result
+						last_boolean := l_bool_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, CHARACTER_8]} l_func as l_char8_func then
-						last_character_8 := l_char8_func.last_result
+						last_character_8 := l_char8_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, CHARACTER_32]} l_func as l_char32_func then
-						last_character_32 := l_char32_func.last_result
+						last_character_32 := l_char32_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, INTEGER_8]} l_func as l_int8_func then
-						last_integer_8 := l_int8_func.last_result
+						last_integer_8 := l_int8_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, INTEGER_16]} l_func as l_int16_func then
-						last_integer_16 := l_int16_func.last_result
+						last_integer_16 := l_int16_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, INTEGER_32]} l_func as l_int32_func then
-						last_integer_32 := l_int32_func.last_result
+						last_integer_32 := l_int32_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, INTEGER_64]} l_func as l_int64_func then
-						last_integer_64 := l_int64_func.last_result
+						last_integer_64 := l_int64_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, NATURAL_8]} l_func as l_nat8_func then
-						last_natural_8 := l_nat8_func.last_result
+						last_natural_8 := l_nat8_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, NATURAL_16]} l_func as l_nat16_func then
-						last_natural_16 := l_nat16_func.last_result
+						last_natural_16 := l_nat16_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, NATURAL_32]} l_func as l_nat32_func then
-						last_natural_32 := l_nat32_func.last_result
+						last_natural_32 := l_nat32_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, NATURAL_64]} l_func as l_nat64_func then
-						last_natural_64 := l_nat64_func.last_result
+						last_natural_64 := l_nat64_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, REAL_32]} l_func as l_real32_func then
-						last_real_32 := l_real32_func.last_result
+						last_real_32 := l_real32_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, REAL_64]} l_func as l_real64_func then
-						last_real_64 := l_real64_func.last_result
+						last_real_64 := l_real64_func.item (Void)
 					elseif attached {FUNCTION [detachable ANY, detachable TUPLE, POINTER]} l_func as l_pointer_func then
-						last_pointer := l_pointer_func.last_result
+						last_pointer := l_pointer_func.item (Void)
 					else
-						last_object := l_func.last_result
+						last_object := l_func.item (Void)
 					end
+				else
+					a_routine.call (Void)
 				end
 			end
 		rescue
@@ -160,7 +158,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -157,8 +157,7 @@ feature -- Menu
 			if l_agent /= Void then
 				l_content := a_notebook.selected_item
 				if l_content /= Void then
-					l_agent.call ([l_content])
-					if attached l_agent.last_result as l_result then
+					if attached l_agent.item ([l_content]) as l_result then
 						Result.append (l_result)
 					end
 				end
@@ -181,37 +180,24 @@ feature -- Menu
 			l_content: SD_CONTENT
 			l_shared: SD_SHARED
 			l_zone: detachable SD_ZONE
-			l_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
-			l_result: detachable like title_area_menu
 		do
+			create Result
 			create l_shared
-			l_agent := l_shared.title_bar_area_menu_items_agent
-			if l_agent /= Void then
+			if attached l_shared.title_bar_area_menu_items_agent as l_agent then
 				l_zone := zone_under_pointer_of_all_managers
 				if l_zone /= Void then
 					l_content := l_zone.content
-					l_agent.call ([l_content])
-				end
-
-				if attached l_agent.last_result as l_agent_last_result then
-					create l_result
-					l_result.append (l_agent_last_result)
-				else
-					check something_wrong_in_agent: False end -- Implied by design of `title_bar_area_menu_items_agent'
+					Result.append (l_agent.item ([l_content]))
 				end
 			elseif not title_bar_area_menu_items.is_empty then
-				create l_result
 				title_bar_area_menu_items.do_all (agent (a_item: EV_MENU_ITEM)
 														do
 															if attached a_item.parent as l_parent then
 																l_parent.prune (a_item)
 															end
 														end)
-				l_result.append (title_bar_area_menu_items)
+				Result.append (title_bar_area_menu_items)
 			end
-
-			check l_result /= Void end -- Implied by previous if clause
-			Result := l_result
 		end
 
 feature {NONE} -- Implementation
@@ -255,7 +241,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

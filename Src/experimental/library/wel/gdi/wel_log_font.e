@@ -693,11 +693,7 @@ feature -- Status setting
 	set_pitch (a_pitch: INTEGER)
 			-- Set `pitch' to `a_pitch'.
 		do
-			--|------------------------------------------------------------------
-			--| FIXME ARNAUD: If bitOperations are available from the compiler
-			--|               REPLACE the '+' with an OR
-			--|------------------------------------------------------------------
-			cwel_log_font_set_pitchandfamily (item, a_pitch + cwel_log_font_get_family (item))
+			cwel_log_font_set_pitchandfamily (item, a_pitch | cwel_log_font_get_family (item))
 		ensure
 			pitch_set: pitch = a_pitch
 		end
@@ -729,7 +725,7 @@ feature -- Status setting
 	set_family (a_family: INTEGER)
 			-- Set `family' to `a_family'.
 		do
-			cwel_log_font_set_pitchandfamily (item,	cwel_log_font_get_pitch (item) |  a_family)
+			cwel_log_font_set_pitchandfamily (item,	cwel_log_font_get_pitch (item) | a_family)
 		ensure
 			family_set: family = a_family
 		end
@@ -1013,7 +1009,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

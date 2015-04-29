@@ -127,12 +127,8 @@ feature -- Status setting
 
 	reset_pebble_function
 			-- Reset any values created by calling `pebble_function'.
-		local
-			l_pebble_function: like pebble_function
 		do
-			l_pebble_function := pebble_function
-			if l_pebble_function /= Void then
-				l_pebble_function.clear_last_result
+			if pebble_function /= Void then
 				pebble := Void
 			end
 		ensure
@@ -380,8 +376,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y])
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y])
 			end
 		end
 
@@ -460,7 +455,7 @@ invariant
 		attached pebble_function as l_pebble_function implies l_pebble_function.valid_operands ([1,1])
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

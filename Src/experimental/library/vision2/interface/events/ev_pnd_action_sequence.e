@@ -31,35 +31,34 @@ feature -- Basic operations
 			-- Stop at current point in list on `abort'.
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, detachable TUPLE [ANY]]]
-			l_is_accepting: BOOLEAN
 			l_tuple: TUPLE [ANY]
 		do
 			if attached a_pebble_tuple then
-				create snapshot.make (count)
-				snapshot.fill (Current)
 				inspect
 					state
 				when
 					Normal_state
 				then
-					from
-						is_aborted_stack.extend (False)
-						l_is_accepting := veto_pebble_function_result (a_pebble_tuple.pebble)
-						snapshot.start
-					until
-						snapshot.index > snapshot.count
-						or is_aborted_stack.item
-					loop
-						if snapshot.item.valid_operands (a_pebble_tuple) and l_is_accepting then
-							l_tuple := snapshot.item.empty_operands
-							l_tuple.put (a_pebble_tuple.item (1), 1)
-							snapshot.item.call (l_tuple)
+					if veto_pebble_function_result (a_pebble_tuple.pebble) then
+						from
+							create snapshot.make (count)
+							snapshot.fill (Current)
+							is_aborted_stack.extend (False)
+							snapshot.start
+						until
+							snapshot.index > snapshot.count or is_aborted_stack.item
+						loop
+							if snapshot.item.valid_operands (a_pebble_tuple) then
+								l_tuple := snapshot.item.empty_operands
+								l_tuple.put (a_pebble_tuple.item (1), 1)
+								snapshot.item.call (l_tuple)
+							end
+							snapshot.forth
+						variant
+							snapshot.count + 1 - snapshot.index
 						end
-						snapshot.forth
-					variant
-						snapshot.count + 1 - snapshot.index
+						is_aborted_stack.remove
 					end
-					is_aborted_stack.remove
 				when
 					Paused_state
 				then
@@ -89,20 +88,20 @@ feature -- Status report
 		local
 			cur: CURSOR
 			l_tuple: TUPLE [ANY]
-			l_is_accepting: BOOLEAN
 		do
-			from
-				l_is_accepting := veto_pebble_function_result (a_pebble)
-				l_tuple := [a_pebble]
-				cur := cursor
-				start
-			until
-				Result or else after
-			loop
-				Result := item.valid_operands (l_tuple) and l_is_accepting
-				forth
+			if veto_pebble_function_result (a_pebble) then
+				from
+					l_tuple := [a_pebble]
+					cur := cursor
+					start
+				until
+					Result or else after
+				loop
+					Result := item.valid_operands (l_tuple)
+					forth
+				end
+				go_to (cur)
 			end
-			go_to (cur)
 		end
 
 	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
@@ -141,7 +140,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

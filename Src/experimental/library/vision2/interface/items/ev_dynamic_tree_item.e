@@ -96,32 +96,6 @@ feature -- Access
 			subtree_function_timeout := a_timeout
 		end
 
-	subtree_function_call
-			-- Call `subtree_function' if it has not been called in the last
-			-- `subtree_function_timeout' milliseconds.
-		require
-			not_destroyed: not is_destroyed
-		local
-			now: INTEGER
-			l_subtree_function: like subtree_function
-		do
-			time_msec ($now)
-			check
-				linear_time: now >= last_subtree_function_call_time
-			end
-			if
-				now - last_subtree_function_call_time
-				>= subtree_function_timeout
-				or
-				last_subtree_function_call_time = 0
-			then
-				l_subtree_function := subtree_function
-				check l_subtree_function /= Void then end
-				l_subtree_function.call (Void)
-				last_subtree_function_call_time := now
-			end
-		end
-
 feature -- Contract support
 
 	is_expandable: BOOLEAN
@@ -159,22 +133,41 @@ feature {NONE} -- Implementation
 	last_subtree_function_call_time: INTEGER
 			-- Time in milliseconds at which `subtree_function' was last called.
 
+	subtree_function_item: detachable LINEAR [EV_TREE_NODE]
+			-- Call `subtree_function' if it is defined and has not been called in the last
+			-- `subtree_function_timeout' milliseconds.
+		require
+			not_destroyed: not is_destroyed
+		local
+			now: INTEGER
+		do
+			if attached subtree_function as l_subtree_function then
+				time_msec ($now)
+				check
+					linear_time: now >= last_subtree_function_call_time
+				end
+				if
+					now - last_subtree_function_call_time >= subtree_function_timeout or
+					last_subtree_function_call_time = 0
+				then
+					Result := l_subtree_function.item (Void)
+					last_subtree_function_call_time := now
+				end
+			end
+		end
+
 	fill_from_subtree_function
 			-- Put elements from `subtree_function' into tree.
 		local
 			linear: detachable LINEAR [EV_TREE_NODE]
 			cs: detachable CURSOR_STRUCTURE [EV_TREE_NODE]
 			c: detachable CURSOR
-			l_subtree_function: like subtree_function
 		do
 			from until implementation.count = 0 loop
 				implementation.start
 				implementation.remove
 			end
-			subtree_function_call
-			l_subtree_function := subtree_function
-			check l_subtree_function /= Void then end
-			linear := l_subtree_function.last_result
+			linear := subtree_function_item
 			if linear /= Void then
 				cs ?= linear
 				if cs /= Void then
@@ -230,7 +223,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

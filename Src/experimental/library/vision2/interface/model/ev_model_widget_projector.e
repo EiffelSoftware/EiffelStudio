@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 		do
 			make_with_drawable (a_drawable)
-				-- This is only for letting users who have defined their own figure to still be 
+				-- This is only for letting users who have defined their own figure to still be
 				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
@@ -234,6 +234,7 @@ feature {NONE} -- Event implementation
 		local
 			i: INTEGER
 			found_closed_figure: detachable EV_MODEL_CLOSED
+			l_model: EV_MODEL
 		do
 			if world.capture_figure /= Void then
 				Result := world.capture_figure
@@ -243,10 +244,11 @@ feature {NONE} -- Event implementation
 				until
 					Result /= Void or else i < 1
 				loop
-					if group [i].is_sensitive then
-						if group [i].position_on_figure (x, y) then
-							Result := group [i]
-						elseif attached {EV_MODEL_GROUP} group [i] as grp then
+					l_model := group [i]
+					if l_model.is_show_requested and l_model.is_sensitive then
+						if l_model.position_on_figure (x, y) then
+							Result := l_model
+						elseif attached {EV_MODEL_GROUP} l_model as grp then
 							Result := figure_on_position (grp, x, y)
 						end
 						if attached {EV_MODEL_CLOSED} Result as closed_figure and then closed_figure.background_color = Void then
@@ -287,7 +289,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_press_actions as l_actions then
+				if event_fig.is_show_requested and event_fig.is_sensitive and attached event_fig.internal_pointer_button_press_actions as l_actions then
 					l_actions.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
@@ -322,7 +324,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				if event_fig.is_sensitive and attached event_fig.internal_pointer_double_press_actions as l_actions then
+				if event_fig.is_show_requested and event_fig.is_sensitive and attached event_fig.internal_pointer_double_press_actions as l_actions then
 					l_actions.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
@@ -358,7 +360,7 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				if event_fig.is_sensitive and attached event_fig.internal_pointer_button_release_actions as l_actions then
+				if event_fig.is_show_requested and event_fig.is_sensitive and attached event_fig.internal_pointer_button_release_actions as l_actions then
 					l_actions.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
 					if event_fig.are_events_sent_to_group then
 						event_fig := event_fig.group
@@ -412,6 +414,7 @@ feature {NONE} -- Event implementation
 			if current_figure /= new_current_figure then
 				if
 					new_current_figure /= Void and then
+					new_current_figure.is_show_requested and then
 					new_current_figure.is_sensitive and then
 					attached new_current_figure.pointer_style as l_new_current_figure_pointer_style
 				then
@@ -428,7 +431,7 @@ feature {NONE} -- Event implementation
 						event_fig = Void or else has_focus (event_fig)
 					loop
 						action := event_fig.internal_pointer_leave_actions
-						if action /= Void and then event_fig.is_sensitive then
+						if action /= Void and event_fig.is_show_requested and event_fig.is_sensitive then
 							action.call (Void)
 							if event_fig.are_events_sent_to_group then
 								event_fig := event_fig.group
@@ -449,7 +452,7 @@ feature {NONE} -- Event implementation
 						event_fig = Void or else event_fig = same_fig
 					loop
 						action := event_fig.internal_pointer_enter_actions
-						if action /= Void and then event_fig.is_sensitive then
+						if action /= Void and event_fig.is_show_requested and event_fig.is_sensitive then
 							action.call (Void)
 							if event_fig.are_events_sent_to_group then
 								event_fig := event_fig.group
@@ -495,7 +498,7 @@ feature {NONE} -- Event implementation
 				until
 					event_fig = Void
 				loop
-					if event_fig.is_sensitive and attached event_fig.internal_pointer_motion_actions as l_actions then
+					if event_fig.is_show_requested and event_fig.is_sensitive and attached event_fig.internal_pointer_motion_actions as l_actions then
 						l_actions.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
 						p := p or else not event_fig.valid
 						if event_fig.are_events_sent_to_group then
@@ -528,7 +531,7 @@ feature {NONE} -- Event implementation
 			fig := current_figure
 			if fig = Void or else (attached {EV_APPLICATION} ev_application as l_app and then l_app.ctrl_pressed) then
 				Result := world.real_pebble (a_x, a_y)
-			elseif fig.is_sensitive then
+			elseif fig.is_show_requested and fig.is_sensitive then
 				from until Result /= Void or fig = Void loop
 					Result := fig.real_pebble (a_x, a_y)
 					if Result = Void then
@@ -536,16 +539,8 @@ feature {NONE} -- Event implementation
 					end
 				end
 				if Result /= Void and then fig /= Void then
-					if fig.accept_cursor /= Void then
-						widget.set_accept_cursor (fig.accept_cursor)
-					else
-						widget.set_accept_cursor (fig.default_accept_cursor)
-					end
-					if fig.deny_cursor /= Void then
-						widget.set_deny_cursor (fig.deny_cursor)
-					else
-						widget.set_deny_cursor (fig.default_deny_cursor)
-					end
+					widget.set_accept_cursor (fig.accept_cursor)
+					widget.set_deny_cursor (fig.deny_cursor)
 				end
 			end
 		end

@@ -338,7 +338,9 @@ feature -- Visitor
 			-- <Precursor>
 		do
 			across Current as ic_models loop
-				ic_models.item.project (a_projector)
+				if ic_models.item.is_show_requested then
+					ic_models.item.project (a_projector)
+				end
 			end
 		end
 

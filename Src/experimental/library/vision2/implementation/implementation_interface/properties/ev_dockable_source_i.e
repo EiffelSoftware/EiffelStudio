@@ -834,8 +834,7 @@ feature {NONE} -- Implementation
 						loop
 							counter := counter + 1
 							if attached target.veto_dock_function as l_veto_dock_function then
-								l_veto_dock_function.call ([l_widget_source_being_docked.attached_interface])
-								veto_result := l_veto_dock_function.last_result
+								veto_result := l_veto_dock_function.item ([l_widget_source_being_docked.attached_interface])
 								if veto_result then
 									target := get_next_target (container)
 								end
@@ -900,8 +899,8 @@ feature {NONE} -- Implementation
 					remove_insert_label
 				end
 			else
-				-- Add feedback for EV_TOOL_BAR_BUTTON here. And any other
-				-- items that may be supported later.
+					-- Add feedback for EV_TOOL_BAR_BUTTON here. And any other
+					-- items that may be supported later.
 				if attached target as l_target and then attached item_source_being_docked as l_item_source then
 					if attached l_target.veto_dock_function as l_veto_dock_function then
 						tool_bar_button ?= l_item_source.interface
@@ -909,14 +908,14 @@ feature {NONE} -- Implementation
 							we_only_support_tool_bar_buttons: tool_bar_button /= Void
 						end
 						if tool_bar_button /= Void then
-							l_veto_dock_function.call ([tool_bar_button])
+							if not l_veto_dock_function.item ([tool_bar_button]) then
+								tool_bar ?= l_target.implementation
+							end
 						end
-					end
-
-					if (attached l_target.veto_dock_function as l_veto_dock_function and then not l_veto_dock_function.last_result) or
-						l_target.veto_dock_function = Void then
+					else
 						tool_bar ?= l_target.implementation
 					end
+
 					if tool_bar /= Void then
 						insert_position := tool_bar.insertion_position
 						if insert_position /= -1 then
@@ -1081,7 +1080,7 @@ invariant
 	dock_executing: is_dock_executing implies widget_source_being_docked /= Void or item_source_being_docked /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

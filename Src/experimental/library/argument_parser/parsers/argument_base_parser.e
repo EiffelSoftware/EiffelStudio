@@ -535,7 +535,6 @@ feature {NONE} -- Query
 		ensure
 			result_attached: Result /= Void
 			result_contains_attached_items: assertions.sequence_contains_attached_items (Result)
-			not_result_is_empty: not Result.is_empty
 		end
 
 	options_values_of_name (a_name: READABLE_STRING_8): LIST [STRING]

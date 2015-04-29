@@ -141,23 +141,6 @@
 					</condition>
 				</file_rule>
 			</cluster>
-			<cluster name="scoop" location="ise\runtime\scoop\" recursive="true" hidden="true">
-				<condition>
-					<concurrency value="scoop"/>
-				</condition>
-				<file_rule>
-					<exclude>/dotnet$</exclude>
-					<condition>
-						<dotnet value="false"/>
-					</condition>
-				</file_rule>
-				<file_rule>
-					<exclude>/classic$</exclude>
-					<condition>
-						<dotnet value="true"/>
-					</condition>
-				</file_rule>
-			</cluster>
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">

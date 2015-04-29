@@ -140,25 +140,21 @@ feature -- Query
 			-- Windows native cursor
 
 	width: INTEGER
-			-- Width
-		local
-			l_icon_info: detachable WEL_ICON_INFO
+			-- <Precursor>
 		do
-			l_icon_info := wel_cursor.get_icon_info
-			check l_icon_info /= Void then end
-			Result := l_icon_info.width
-			l_icon_info.delete
+			if attached wel_cursor.get_icon_info as l_icon_info then
+				Result := l_icon_info.width
+				l_icon_info.delete
+			end
 		end
 
 	height: INTEGER
-			-- Height
-		local
-			l_icon_info: detachable WEL_ICON_INFO
+			-- <Precursor>
 		do
-			l_icon_info := wel_cursor.get_icon_info
-			check l_icon_info /= Void then end
-			Result := l_icon_info.height
-			l_icon_info.delete
+			if attached wel_cursor.get_icon_info as l_icon_info then
+				Result := l_icon_info.height
+				l_icon_info.delete
+			end
 		end
 
 	x_hotspot: INTEGER
@@ -353,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

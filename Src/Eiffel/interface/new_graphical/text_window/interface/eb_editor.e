@@ -294,6 +294,7 @@ feature -- Text Loading
 		local
 			l_question: ES_QUESTION_PROMPT
 			l_class_stone: CLASSI_STONE
+			l_class_name: STRING_8
 		do
 			is_checking_modifications := True
 
@@ -304,6 +305,7 @@ feature -- Text Loading
 				if not file_path.is_equal (l_class_stone.class_i.file_name) then
 					file_path := l_class_stone.class_i.file_name
 				end
+				l_class_name := l_class_stone.class_i.name
 			end
 
 			if not file_exists then
@@ -311,7 +313,11 @@ feature -- Text Loading
 			elseif not file_is_up_to_date then
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
-					create l_question.make_standard (interface_names.t_this_file_has_been_modified)
+					if l_class_name /= Void then
+						create l_question.make_standard (interface_names.t_class_has_been_modified (l_class_name))
+					else
+						create l_question.make_standard (interface_names.t_file_has_been_modified (file_path.name))
+					end
 					l_question.set_button_text (l_question.dialog_buttons.yes_button, interface_names.b_Reload)
 					l_question.set_button_action (l_question.dialog_buttons.yes_button, agent reload)
 					l_question.set_button_text (l_question.dialog_buttons.no_button, interface_names.b_Continue_anyway)

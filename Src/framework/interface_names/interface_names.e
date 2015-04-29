@@ -2339,7 +2339,14 @@ feature -- Title part
 	t_testing_experimental: STRING_32			do Result := locale.translation("Testing (experimental)")	end
 	t_testing_result: STRING_32					do Result := locale.translation("Testing Result")	end
 	t_test_runs_history: STRING_32				do Result := locale.translation("Test Runs History")	end
-	t_this_file_has_been_modified: STRING_32 	do Result := locale.translation ("This file has been modified by another editor.") end
+	t_file_has_been_modified (a_file_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("File %"$1%" has been modified by another editor."), [a_file_name])
+		end
+	t_class_has_been_modified (a_class_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Class %"$1%" has been modified by another editor."), [a_class_name])
+		end
 	t_Empty_development_window: STRING_32 		do Result := locale.translation("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_32				do Result := locale.translation("Auto-Complete")	end
 	t_Diagram_class_header: STRING_32			do Result := locale.translation("Class Header")	end

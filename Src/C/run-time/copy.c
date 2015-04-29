@@ -259,6 +259,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 		EIF_REFERENCE boot;					/* Anchor point for cloning process */
 	} anchor;
 	struct rt_traversal_context traversal_context;
+	int volatile is_locked;
 
 #ifdef DEBUG
 	int xobjs;
@@ -293,11 +294,28 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 		EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
 										   objects, we need to be sure we are the
 										   only one doing it. */
+		is_locked = 1;
+
 		excatch(&exenv);		/* Record pseudo-execution vector */
 		if (setjmp(exenv)) {
 			RTXSC;						/* Restore stack contexts */
 			map_reset(1);				/* Reset in emergency situation */
-			EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
+				/* If we locked the EO_STORE_MUTEX, then we need to unmark objects
+				 * and unlock it. */
+			if (is_locked) {
+					/* We are only concerned abount unmarking objects, so we do not perform any
+					 * accounting. */
+				CHECK ("Not accounting", traversal_context.accounting == 0);
+				CHECK ("Not unmarking", traversal_context.is_unmarking == 0);
+					/* First we mark again all objects. */
+				traversal_context.is_unmarking = 0;
+				traversal(&traversal_context, source);
+					/* Then we unmark them. */
+				traversal_context.is_unmarking = 1;
+				traversal(&traversal_context, source);
+					/* Now we can unlock our mutex. */
+				EIF_EO_STORE_UNLOCK;
+			}
 			ereturn(MTC_NOARG);					/* And propagate the exception */
 		}
 
@@ -306,9 +324,8 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 		 * cloning process.
 		 */
 
-		traversal_context.obj_nb = 0;
+		memset (&traversal_context, 0, sizeof(struct rt_traversal_context));
 		traversal_context.accounting = TR_MAP;
-		traversal_context.is_for_persistence = 0;
 		traversal(&traversal_context, source);		/* Object traversal, mark with EO_STORE */
 		hash_malloc(&hclone, traversal_context.obj_nb);	/* Hash table allocation */
 		map_start();					/* Restart at bottom of FIFO stack */
@@ -349,6 +366,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	}
 
 	EIF_EO_STORE_UNLOCK;		/* Free marking mutex */
+	is_locked = 0;
 
 	return anchor.boot;			/* The cloned object tree */
 }

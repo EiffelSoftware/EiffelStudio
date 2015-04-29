@@ -175,7 +175,7 @@ rt_private int s_fides;
 /*
  * Function declarations
  */
-rt_private void internal_store(struct rt_store_context *a_context, char *object);
+rt_private void internal_store(struct rt_store_context *a_context, char *object, char store_type);
 rt_private void st_store(struct rt_store_context *a_context, char *object);				/* Second pass of the store */
 rt_public void rmake_header(struct rt_store_context *a_context);
 rt_private void object_write (char *object, uint16, EIF_TYPE_INDEX);
@@ -321,7 +321,8 @@ rt_shared void rt_store_object(struct rt_store_context *a_context, EIF_REFERENCE
 	if ((store_type == BASIC_STORE) || (store_type == GENERAL_STORE)) {
 		allocate_gen_buffer();
 	} else if (store_type == INDEPENDENT_STORE) {
-			/* Initialize serialization streams for writting (1 stands for write) */
+			/* Initialize serialization streams for writting (1 stands for write).
+			 * Memory is freed in `internal_store'. */
 		run_idr_init (buffer_size, 1);
 		idr_temp_buf = (char *) eif_rt_xmalloc (48, C_T, GC_OFF);
 		if (!idr_temp_buf) {
@@ -329,19 +330,8 @@ rt_shared void rt_store_object(struct rt_store_context *a_context, EIF_REFERENCE
 		}
 	}
 
-	internal_store(a_context, object);
+	internal_store(a_context, object, store_type);
 
-	if (a_context->traversal_context.account) {
-		eif_rt_xfree(a_context->traversal_context.account);
-		a_context->traversal_context.account = NULL;
-		a_context->traversal_context.account_count = 0;
-	}
-
-	if (store_type == INDEPENDENT_STORE) {
-		run_idr_destroy ();
-		eif_rt_xfree (idr_temp_buf);
-		idr_temp_buf = NULL;
-	}
 }
 rt_shared void rt_setup_store (struct rt_store_context *a_context, char store_type)
 {
@@ -362,6 +352,7 @@ rt_shared void rt_setup_store (struct rt_store_context *a_context, char store_ty
 		a_context->header_function = NULL;
 	}
 	a_context->traversal_context.is_for_persistence = 1;
+	a_context->traversal_context.is_unmarking = 0;
 
 	store_write_func = a_context->write_buffer_function;
 	char_write_func = a_context->write_function;
@@ -511,7 +502,7 @@ rt_public void allocate_gen_buffer (void)
 	end_of_buffer = 0;
 }
 
-rt_private void internal_store(struct rt_store_context *a_context, char *object)
+rt_private void internal_store(struct rt_store_context *a_context, char *object, char store_type)
 {
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
@@ -522,12 +513,42 @@ rt_private void internal_store(struct rt_store_context *a_context, char *object)
 	char l_store_properties = 0;
 	jmp_buf exenv;
 	int l_failure;
+	int volatile is_locked = 0;
 	RTYD;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
-		EIF_EO_STORE_UNLOCK;	/* Unlock mutex which was locked in `internal_store'. */
+			/* If we locked the EO_STORE_MUTEX, then we need to unmark objects
+			 * and unlock it. */
+		if (is_locked) {
+				/* We are only concerned abount unmarking objects, so we do not perform any
+				 * accounting. This won't prevent `rt_store_objects' from feeing `account' if 
+				 * it was allocated. */
+			a_context->traversal_context.accounting = 0;
+				/* First we mark again all objects. */
+			a_context->traversal_context.is_unmarking = 0;
+			traversal(&a_context->traversal_context, object);
+				/* Then we unmark them. */
+			a_context->traversal_context.is_unmarking = 1;
+			traversal(&a_context->traversal_context, object);
+				/* Now we can unlock our mutex. */
+			EIF_EO_STORE_UNLOCK;
+		}
+
+			/* Free allocated memory. */
+		if (a_context->traversal_context.account) {
+			eif_rt_xfree(a_context->traversal_context.account);
+			a_context->traversal_context.account = NULL;
+			a_context->traversal_context.account_count = 0;
+		}
+
+		if (store_type == INDEPENDENT_STORE) {
+			run_idr_destroy ();
+			eif_rt_xfree (idr_temp_buf);
+			idr_temp_buf = NULL;
+		}
+
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -567,20 +588,19 @@ rt_private void internal_store(struct rt_store_context *a_context, char *object)
 		l_failure = (a_context->write_function(&l_store_properties, sizeof(char)) < 0);
 	}
 	if (l_failure) {
-		if (a_context->traversal_context.account) {
-			eif_rt_xfree(a_context->traversal_context.account);
-			a_context->traversal_context.account = NULL;
-		}
 		eise_io("Store: unable to write the kind of storable.");
 	} else {
 		EIF_EO_STORE_LOCK;
+		is_locked = 1;
 		a_context->traversal_context.obj_nb = 0;
+		a_context->traversal_context.is_unmarking = 0;
 		traversal(&a_context->traversal_context, object);
 
 		if (a_context->traversal_context.account) {
 			a_context->header_function (a_context);			/* Make header */
 			eif_rt_xfree(a_context->traversal_context.account);			/* Free accouting character array */
 			a_context->traversal_context.account = NULL;
+			a_context->traversal_context.account_count = 0;
 		}
 			/* Write the count of stored objects */
 		if (a_context->traversal_context.accounting) {
@@ -598,6 +618,7 @@ rt_private void internal_store(struct rt_store_context *a_context, char *object)
 		a_context->flush_buffer_function ();	/* flush the buffer */
 
 		EIF_EO_STORE_UNLOCK;
+		is_locked = 0;
 #if DEBUG & 3
 		printf ("\n");
 #endif
@@ -605,6 +626,13 @@ rt_private void internal_store(struct rt_store_context *a_context, char *object)
 		fflush (stdout);
 #endif
 		expop(&eif_stack);
+	}
+
+		/* Free allocated memory. */
+	if (store_type == INDEPENDENT_STORE) {
+		run_idr_destroy ();
+		eif_rt_xfree (idr_temp_buf);
+		idr_temp_buf = NULL;
 	}
 }
 

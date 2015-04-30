@@ -99,7 +99,7 @@ feature -- Hooks
 					l_string.append (ic.item)
 					l_string.append_character (' ')
 				end
-			log.write_debug (generator + ".block_list:" + l_string )
+			write_debug_log (generator + ".block_list:" + l_string )
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)

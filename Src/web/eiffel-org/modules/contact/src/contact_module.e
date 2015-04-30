@@ -123,8 +123,8 @@ feature -- Hooks
 			l_path_info := a_response.request.percent_encoded_path_info
 
 				-- "contact", "post_contact"
-			if 
-				a_block_id.is_case_insensitive_equal_general ("contact") and then 
+			if
+				a_block_id.is_case_insensitive_equal_general ("contact") and then
 				l_path_info.starts_with ("/contact") and then
 				a_response.request.is_get_request_method
 			then
@@ -134,7 +134,7 @@ feature -- Hooks
 					end
 
 					a_response.add_block (l_tpl_block, "content")
-					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -147,7 +147,7 @@ feature -- Hooks
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 --					l_tpl_block.set_value (a_response.values.item ("has_error"), "has_error")
 --					a_response.add_block (l_tpl_block, "content")
---					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+--					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -161,7 +161,7 @@ feature -- Hooks
 			r: CMS_RESPONSE
 		do
 				-- FIXME: we should use WSF_FORM, and integrate the recaptcha using the form alter hook.
-			log.write_debug (generator + ".handle_contact")
+			write_debug_log (generator + ".handle_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("contact", "contact")
 			r.execute
@@ -175,11 +175,11 @@ feature -- Hooks
 			um: STRING
 			l_captcha_passed: BOOLEAN
 		do
-			log.write_information (generator + ".handle_post_contact")
+			write_information_log (generator + ".handle_post_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force (False, "has_error")
 
-			log.write_debug (generator + ".handle_post_contact {Form Parameters:" + print_form_parameters (req) +"}")
+			write_debug_log (generator + ".handle_post_contact {Form Parameters:" + print_form_parameters (req) +"}")
 			if
 				attached {WSF_STRING} req.form_parameter ("name") as l_name and then
 				attached {WSF_STRING} req.form_parameter ("email") as l_email and then
@@ -202,18 +202,18 @@ feature -- Hooks
 
 				if l_captcha_passed then
 					create m.make_from_string (email_template ("email", r))
-					log.write_information (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message (r)))
+					write_information_log (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message (r)))
 					create es.make (create {CONTACT_EMAIL_SERVICE_PARAMETERS}.make (api))
-					log.write_debug (generator + ".handle_post_contact: send_contact_email")
+					write_debug_log (generator + ".handle_post_contact: send_contact_email")
 					es.send_contact_email (l_email.value, m)
 					create um.make_from_string (user_contact)
 					um.replace_substring_all ("$name", html_encoded (l_name.value))
 					um.replace_substring_all ("$email", html_encoded (l_email.value))
 					um.replace_substring_all ("$message", html_encoded (l_message.value))
-					log.write_debug (generator + ".handle_post_contact: send_internal_email")
+					write_debug_log (generator + ".handle_post_contact: send_internal_email")
 					es.send_internal_email (um)
 					if attached es.last_error then
-						log.write_error (generator + ".handle_post_contact: error message:["+ es.last_error_message +"]")
+						write_error_log (generator + ".handle_post_contact: error message:["+ es.last_error_message +"]")
 						r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 						r.values.force (True, "has_error")
 						if attached template_block (Current, "post_contact", r) as l_tpl_block then
@@ -250,7 +250,7 @@ feature -- Hooks
 				end
 			else
 					-- Internal server error
-				log.write_error (generator + ".handle_post_contact:  Internal Server error")
+				write_error_log (generator + ".handle_post_contact:  Internal Server error")
 				r.values.force (True, "has_error")
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 				if attached template_block (Current, "post_contact", r) as l_tpl_block then
@@ -299,22 +299,22 @@ feature {NONE} -- Contact Message
 			p: detachable PATH
 			l_block: CMS_SMARTY_TEMPLATE_BLOCK
 		do
-			log.write_debug (generator + ".email_template with template [" + a_template + " ]")
+			write_debug_log (generator + ".email_template with template [" + a_template + " ]")
 			create p.make_from_string ("templates")
 			p := p.extended ("email_").appended (a_template).appended_with_extension ("tpl")
 			p := a_response.module_resource_path (Current, p)
 			if p /= Void then
 				if attached p.entry as e then
 					create l_block.make (a_template, Void, p.parent, e)
-					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
+					write_debug_log (generator + ".email_template with template_block:" + l_block.out)
 				else
 					create l_block.make (a_template, Void, p.parent, p)
-					log.write_debug (generator + ".email_template with template_block:" + l_block.out)
+					write_debug_log (generator + ".email_template with template_block:" + l_block.out)
 				end
 				Result := l_block.to_html (a_response.theme)
 			else
 				Result := contact_message (a_response)
-				log.write_debug (generator + ".email_template without template_block:" + Result)
+				write_debug_log (generator + ".email_template without template_block:" + Result)
 			end
 		end
 
@@ -348,7 +348,7 @@ feature {NONE} -- Google recaptcha uri template
 			api: RECAPTCHA_API
 			l_errors: STRING
 		do
-			log.write_debug (generator + ".is_captcha_verified with response: [" + a_response + "]")
+			write_debug_log (generator + ".is_captcha_verified with response: [" + a_response + "]")
 			create api.make (a_secret, a_response)
 			Result := api.verify
 			if not Result and then attached api.errors as l_api_errors then
@@ -358,7 +358,7 @@ feature {NONE} -- Google recaptcha uri template
 					l_errors.append ( ic.item )
 					l_errors.append_character ('%N')
 				end
-				log.write_error (generator + ".is_captcha_verified api_errors [" + l_errors + "]")
+				write_error_log (generator + ".is_captcha_verified api_errors [" + l_errors + "]")
 			end
 		end
 

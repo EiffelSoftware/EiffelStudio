@@ -1899,7 +1899,10 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_START_SEPARATE\n");
 #endif
 		{
-			EIF_NATURAL_16 argument_count = get_uint16(&IC); /* Number of arguments of the instruction. */
+#ifdef EIF_THREADS
+			EIF_NATURAL_16 argument_count = 
+#endif
+			get_uint16(&IC); /* Number of arguments of the instruction. */
 
 #ifdef EIF_THREADS
 				/* Create request group. */

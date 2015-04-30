@@ -214,8 +214,8 @@ feature {NONE} -- Event handlers
 			Precursor
 			if attached widget_table as l_table then
 				across l_table as l_cursor loop
-					if attached l_cursor.item as l_widget then
-						l_widget.editor.handle_before_processing (True)
+					if attached l_cursor.item as l_widget and then attached l_widget.editor as l_editor then
+						l_editor.handle_before_processing (True)
 					end
 				end
 			end
@@ -252,7 +252,7 @@ invariant
 	not_name_is_empty: not name.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

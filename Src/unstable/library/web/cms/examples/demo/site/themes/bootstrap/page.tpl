@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- EWF CMS -->
 	<link rel="stylesheet" href="{$site_url/}/theme/css/style.css">
+	<link rel="stylesheet" href="{$site_url/}/theme/css/node.css">
+  <script src="{$site_url/}/theme/js/jquery-1.10.2.min.js"></script>
+  <script src="{$site_url/}/theme/js/roc_auth.js"></script>
+
 	<!-- bootstrap framework -->
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
@@ -70,8 +74,6 @@
 <!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-<!--
 {include file="debug.tpl"/}
--->
 </body>
 </html>

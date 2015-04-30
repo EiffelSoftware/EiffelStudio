@@ -10,9 +10,9 @@ deferred class
 	CMS_STORAGE
 
 inherit
-	CMS_USER_STORAGE
+	CMS_CORE_STORAGE_I
 
-	CMS_NODE_STORAGE
+	CMS_USER_STORAGE_I
 
 	SHARED_LOGGER
 
@@ -21,6 +21,11 @@ feature {NONE} -- Initialization
 	initialize
 		do
 		end
+
+feature -- Access
+
+	api: detachable CMS_API assign set_api
+			-- Associated CMS API.
 
 feature -- Status report
 
@@ -39,21 +44,12 @@ feature -- Error Handling
 	error_handler: ERROR_HANDLER
 			-- Error handler.
 
-feature -- Misc
+feature -- Element change
 
---	set_custom_value (a_name: READABLE_STRING_8; a_value: attached like custom_value; a_type: READABLE_STRING_8)
---			-- Save data `a_name:a_value' for type `a_type'
---		deferred
---		end
-
---	custom_value (a_name: READABLE_STRING_8; a_type: READABLE_STRING_8): detachable TABLE_ITERABLE [READABLE_STRING_8, STRING_8]
---			-- Data for name `a_name' and type `a_type'.
---		deferred
---		end
-
---	custom_value_names_where (a_where_key, a_where_value: READABLE_STRING_8; a_type: READABLE_STRING_8): detachable LIST [READABLE_STRING_8]
---			-- Names where custom value has item `a_where_key' same as `a_where_value' for  type `a_type'.
---		deferred
---		end
+	set_api (a_api: like api)
+			-- Set `api' to `a_api'.
+		do
+			api := a_api
+		end
 
 end

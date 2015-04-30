@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_FORMATS}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,21 +8,25 @@ class
 
 feature -- Access
 
-	format (a_name: like {CONTENT_FORMAT}.name): detachable CONTENT_FORMAT
+	item (a_name: detachable READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
 		do
-			across
-				all_formats as c
-			until
-				Result /= Void
-			loop
-				if c.item.name.same_string (a_name) then
-					Result := c.item
+			if a_name /= Void then
+				across
+					all_formats as c
+				until
+					Result /= Void
+				loop
+					if a_name.same_string (c.item.name) then
+						Result := c.item
+					end
 				end
 			end
 		end
 
 	all_formats: LIST [CONTENT_FORMAT]
 		once
+				-- Can we provide an external file to read the
+				-- supported formats?
 			create {ARRAYED_LIST [CONTENT_FORMAT]} Result.make (3)
 			Result.force (plain_text)
 			Result.force (full_html)

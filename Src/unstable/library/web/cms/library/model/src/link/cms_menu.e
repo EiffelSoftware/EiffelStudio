@@ -62,6 +62,7 @@ feature -- Status report
 		end
 
 	has (lnk: CMS_LINK): BOOLEAN
+			-- Has the current Menu a link `lnk'.
 		do
 			across
 				items as ic
@@ -87,6 +88,7 @@ feature -- Element change
 		end
 
 	set_title (t: like title)
+			-- Set `title' with `t'.
 		do
 			title := t
 		end

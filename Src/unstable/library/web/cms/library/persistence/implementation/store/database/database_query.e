@@ -19,8 +19,8 @@ feature {NONE} -- Intialization
 	data_reader (a_query: STRING; a_parameters: like parameters)
 			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
-			log.write_information (generator + ".data_reader" + " execute query: " + a_query)
-			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
+			write_information_log (generator + ".data_reader" + " execute query: " + a_query)
+			write_debug_log (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
 			query := a_query
 			parameters := a_parameters
 		ensure
@@ -43,7 +43,7 @@ feature -- Execution
 				a_base_selection.load_result
 				Result := a_base_selection.container
 			else
-				log.write_error (generator + "." + a_base_selection.error_message_32)
+				write_error_log (generator + "." + a_base_selection.error_message_32)
 			end
 			unset_map_name (a_base_selection)
 			a_base_selection.terminate

@@ -32,12 +32,28 @@ feature {NONE} -- Initialize
 
 	initialize
 				-- Initialize the persitent layer.
+		local
+			l_module: CMS_MODULE
 		do
-			to_implement ("Refactor database setup")
 			if attached setup.storage (error_handler) as l_storage then
 				storage := l_storage
 			else
 				create {CMS_STORAGE_NULL} storage
+			end
+			storage.set_api (Current)
+
+			across
+				setup.enabled_modules as ic
+			loop
+				l_module := ic.item
+					-- FIXME: should we initialize first, and then install
+					-- or the reverse, or merge installation and initialization
+					-- and leave the responsability to the module to know
+					-- if this is installed or not...
+				if not l_module.is_installed (Current) then
+					l_module.install (Current)
+				end
+				l_module.initialize (Current)
 			end
 		end
 
@@ -50,7 +66,21 @@ feature -- Access
 			-- Logger
 
 	storage: CMS_STORAGE
-			-- Persistence storage.				
+			-- Default persistence storage.	
+
+feature -- Formats
+
+	formats: CMS_FORMATS
+			-- Available content formats.
+		once
+			create Result
+		end
+
+	format (a_format_name: detachable READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
+			-- Content format name `a_format_name' if any.
+		do
+			Result := formats.item (a_format_name)
+		end
 
 feature -- Status Report
 
@@ -66,24 +96,97 @@ feature -- Status Report
 			Result := error_handler.as_string_representation
 		end
 
+feature -- Logging
+
+	log	(a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_level: INTEGER; a_link: detachable CMS_LINK)
+		local
+			l_log: CMS_LOG
+			m: STRING
+		do
+			create l_log.make (a_category, a_message, a_level, Void)
+			if a_link /= Void then
+				l_log.set_link (a_link)
+			end
+			storage.save_log (l_log)
+
+			create m.make_from_string ("[" + a_category + "] ")
+			m.append (a_message)
+			if a_link /= Void then
+				m.append (" [" + url_encoded (a_link.title) + "]("+ a_link.location +")")
+			end
+
+			inspect a_level
+				when {CMS_LOG}.level_emergency then
+					logger.put_alert (m, Void)
+				when {CMS_LOG}.level_alert then
+					logger.put_alert (m, Void)
+				when {CMS_LOG}.level_critical then
+					logger.put_critical (m, Void)
+				when {CMS_LOG}.level_error then
+					logger.put_error (m, Void)
+				when {CMS_LOG}.level_warning then
+					logger.put_warning (m, Void)
+				when {CMS_LOG}.level_notice then
+					logger.put_information (m, Void)
+				when {CMS_LOG}.level_info then
+					logger.put_information (m, Void)
+				when {CMS_LOG}.level_debug then
+					logger.put_debug (m, Void)
+				else
+					logger.put_debug (m, Void)
+			end
+		end
+
+feature -- Permissions system
+
+	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Anonymous or user `a_user' has permission for `a_permission'?
+			--| `a_permission' could be for instance "create page".
+		do
+			Result := user_api.user_has_permission (a_user, a_permission)
+		end
+
 feature -- Query: module
 
-	module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
+	module (a_type: TYPE [detachable CMS_MODULE]): detachable CMS_MODULE
 			-- Enabled module typed `a_type', if any.
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
+		local
+			t: STRING_8
+			l_type: TYPE [detachable CMS_MODULE]
 		do
+			t := a_type.name
+			if t.starts_with ("!") then
+				t.remove_head (1)
+			end
 			across
 				setup.modules as ic
 			until
 				Result /= Void
 			loop
 				Result := ic.item
-				if
-					not Result.is_enabled
-					or else Result.generating_type /~ a_type
-				then
+				if not Result.is_enabled then
 					Result := Void
+				else
+					l_type := Result.generating_type
+					if a_type ~ l_type then
+							-- Found
+					elseif t.same_string (l_type.name) then
+							-- Found
+					else
+						Result := Void
+					end
 				end
+			end
+		ensure
+			Result /= Void implies (Result.is_enabled) -- and a_type.is_conforming_to (Result.generating_type))
+		end
+
+	module_api (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE_API
+			-- Enabled module API associated with module typed `a_type'.
+		do
+			if attached module (a_type) as mod then
+				Result := mod.module_api
 			end
 		end
 
@@ -104,7 +207,15 @@ feature -- Query: module
 				end
 			end
 		ensure
-			Result /= Void implies Result.name.is_case_insensitive_equal_general (a_name)
+			Result /= Void implies (Result.is_enabled and Result.name.is_case_insensitive_equal_general (a_name))
+		end
+
+	module_api_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_MODULE_API
+			-- Enabled module API associated with module named `a_name'.
+		do
+			if attached module_by_name (a_name) as mod then
+				Result := mod.module_api
+			end
 		end
 
 feature -- Query: API
@@ -137,7 +248,7 @@ feature {NONE}-- Implemenation
 	internal_user_api: detachable like user_api
 			-- Cached value for `user_api'.
 
-feature -- Layout
+feature -- Environment
 
 	module_configuration (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
@@ -145,7 +256,7 @@ feature -- Layout
 			p, l_path: PATH
 			ut: FILE_UTILITIES
 		do
-			p := setup.layout.config_path.extended ("modules").extended (a_module_name)
+			p := setup.environment.config_path.extended ("modules").extended (a_module_name)
 			if a_name = Void then
 				p := p.extended (a_module_name)
 			else

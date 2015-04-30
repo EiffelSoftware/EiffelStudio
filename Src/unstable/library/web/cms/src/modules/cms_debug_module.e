@@ -12,7 +12,7 @@ inherit
 			register_hooks
 		end
 
---	CMS_HOOK_BLOCK
+	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -49,23 +49,30 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_response)
---			a_response.subscribe_to_block_hook (Current)
+			a_response.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hooks
 
---	block_list: ITERABLE [like {CMS_BLOCK}.name]
---		do
---			Result := <<"debug-info">>
---		end
+	block_list: ITERABLE [like {CMS_BLOCK}.name]
+		do
+			Result := <<"debug-info">>
+		end
 
---	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
---		local
---			b: CMS_CONTENT_BLOCK
---		do
---			create b.make ("debug-info", "Debug", "... ", a_response.formats.plain_text)
---			a_response.add_block (b, Void)
---		end
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+		local
+			b: CMS_CONTENT_BLOCK
+			dbg: WSF_DEBUG_INFORMATION
+			s: STRING
+		do
+			if a_response.theme.has_region ("debug") then
+				create dbg.make
+				create s.make_empty
+				dbg.append_information_to (a_response.request, a_response.response, s)
+				create b.make ("debug-info", "Debug", s, a_response.formats.plain_text)
+				a_response.add_block (b, "footer")
+			end
+		end
 
 feature -- Handler		
 
@@ -82,7 +89,7 @@ feature -- Handler
 				append_info_to ("Name", api.setup.site_name, r, s)
 				append_info_to ("Url", api.setup.site_url, r, s)
 
-				if attached api.setup.layout.cms_config_ini_path as l_loc then
+				if attached api.setup.environment.cms_config_ini_path as l_loc then
 					s.append ("<hr/>")
 					append_info_to ("Configuration file", l_loc.name, r, s)
 				end
@@ -93,10 +100,10 @@ feature -- Handler
 --				append_info_to ("Base url", cms.base_url, r, s)
 --				append_info_to ("Script url", cms.script_url, r, s)
 				s.append ("<hr/>")
-				append_info_to ("Site dir", api.setup.layout.path.utf_8_name, r, s)
-				append_info_to ("Www dir", api.setup.layout.www_path.utf_8_name, r, s)
-				append_info_to ("Assets dir", api.setup.layout.assets_path.utf_8_name, r, s)
-				append_info_to ("Config dir", api.setup.layout.config_path.utf_8_name, r, s)
+				append_info_to ("Site dir", api.setup.environment.path.utf_8_name, r, s)
+				append_info_to ("Www dir", api.setup.environment.www_path.utf_8_name, r, s)
+				append_info_to ("Assets dir", api.setup.environment.assets_path.utf_8_name, r, s)
+				append_info_to ("Config dir", api.setup.environment.config_path.utf_8_name, r, s)
 				s.append ("<hr/>")
 				append_info_to ("Theme", api.setup.theme_name, r, s)
 				append_info_to ("Theme location", api.setup.themes_location.utf_8_name, r, s)

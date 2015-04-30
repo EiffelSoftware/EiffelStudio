@@ -37,6 +37,16 @@ ul.horizontal li {
 #content {
   margin-left: 20px;
 }
+#content #highlighted {
+  position: relative;
+  border: solid 1px #ddd;
+  background-color: #ffc;
+  width: 70%;
+  left: 15%;
+  right: 15%;
+  padding: 5px;
+  font-style: italic;
+}
 
 .sidebar {
   padding: 5px;
@@ -50,4 +60,19 @@ ul.horizontal li {
 .sidebar#sidebar_second {
   width: 250px;
   float: right;
+}
+
+#primary-tabs ul.horizontal {
+  list-style-type: none;
+}
+#primary-tabs ul.horizontal li {
+  display: inline;
+  padding: 2px 5px;
+  border: solid 1px #ccf;
+}
+#primary-tabs ul.horizontal li.active {
+  border-color: #99f #99f #ddd;
+  border-style: solid solid none;
+  border-width: 2px 1px 0;
+  padding: 2px 7px 1px;
 }

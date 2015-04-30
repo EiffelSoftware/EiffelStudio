@@ -31,9 +31,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_horizontal: BOOLEAN
+	is_horizontal: BOOLEAN assign set_is_horizontal
+		-- Is horizontal layout for the menu?
 
-	is_raw: BOOLEAN = False
+	is_raw: BOOLEAN assign set_is_raw
 			-- <Precursor>
 
 feature -- Element change
@@ -52,11 +53,23 @@ feature -- Element change
 			title := a_title
 		end
 
+	set_is_horizontal (b: BOOLEAN)
+			-- Set `is_horizontal' to `b'.
+		do
+			is_horizontal := b
+		end
+
+	set_is_raw (b: BOOLEAN)
+			-- Set `is_raw' to `b'.
+		do
+			is_raw := b
+		end
+
 feature -- Conversion
 
 	to_html (a_theme: CMS_THEME): STRING_8
 		do
-			Result := a_theme.menu_html (menu, is_horizontal)
+			Result := a_theme.menu_html (menu, is_horizontal, html_options)
 		end
 
 end

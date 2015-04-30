@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="demo" uuid="3643E657-BCBE-46AA-931B-71EAEA877A18" library_target="demo">
+	<description>Example/demo for Eiffel ROC CMS library</description>
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
+		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
+		<library name="cms_app_env" location="..\..\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="cms_basic_auth_module" location="..\..\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
+		<library name="cms_blog_module" location="modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
-		<library name="layout" location="..\..\library\layout\layout-safe.ecf" readonly="false"/>
+		<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
+		<!--
 		<library name="persistence_mysql" location="..\..\library\persistence\mysql\persistence_mysql-safe.ecf" readonly="false"/>
+		-->
 		<library name="persistence_sqlite" location="..\..\library\persistence\sqlite\persistence_sqlite-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>

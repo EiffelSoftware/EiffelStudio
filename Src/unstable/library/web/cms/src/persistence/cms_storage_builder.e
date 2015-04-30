@@ -12,6 +12,7 @@ deferred class
 feature -- Factory
 
 	storage (a_setup: CMS_SETUP): detachable CMS_STORAGE
+			-- CMS Storage object based on CMS setup `a_setup'.
 		deferred
 		end
 

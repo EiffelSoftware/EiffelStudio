@@ -1,10 +1,13 @@
 {
 	"database": {
 		"datasource": {
-			"driver": "MySQL",
-			"environment": "development"
+			"driver": "sqlite",
+			"environment": "sqlite"
 		},
 		"environments": {
+			"sqlite": {
+				"connection_string":"Driver=SQLite3 ODBC Driver;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+			},
 			"test": {
                 "connection_string":"Server=localhost;Port=3306;Database=cms_dev;Uid=root;Pwd=;"
 			},

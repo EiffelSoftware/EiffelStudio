@@ -71,6 +71,11 @@ feature -- Access
 	last_login_date: detachable DATE_TIME
 			-- User last login.
 
+feature -- Roles
+
+	roles: detachable LIST [CMS_USER_ROLE]
+			-- If set, list of roles for current user.			
+
 feature -- Access: data			
 
 	data: detachable STRING_TABLE [detachable ANY]
@@ -189,6 +194,14 @@ feature -- Change element
 			set_last_login_date (create {DATE_TIME}.make_now_utc)
 		end
 
+feature -- Element change: roles
+
+	set_roles (lst: like roles)
+			-- Set `roles' to `lst'.
+		do
+			roles := lst
+		end
+
 feature -- Change element: data		
 
 	set_data_item (k: READABLE_STRING_GENERAL; d: like data_item)
@@ -217,6 +230,6 @@ invariant
 	id_or_name_set: id > 0 or else not name.is_whitespace
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

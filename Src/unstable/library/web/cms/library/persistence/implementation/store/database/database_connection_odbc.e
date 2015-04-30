@@ -42,7 +42,7 @@ feature -- Initialization
 		rescue
 			create db_control.make
 --			set_last_error_from_exception ("Connection execution")
---			log.write_critical (generator + ".make_common:" + last_error_message)
+--			write_critical_log (generator + ".make_common:" + last_error_message)
 			if is_connected then
 				disconnect
 			end
@@ -73,7 +73,7 @@ feature -- Initialization
 		rescue
 			create db_control.make
 --			set_last_error_from_exception ("Connection execution")
---			log.write_critical (generator + ".make_common:" + last_error_message)
+--			write_critical_log (generator + ".make_common:" + last_error_message)
 			if is_connected then
 				disconnect
 			end
@@ -103,20 +103,20 @@ feature -- Initialization
 	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'and immediately connect to database.
 		do
-			log.write_debug (generator +".login_with_connection_string")
+			write_debug_log (generator +".login_with_connection_string")
 			create db_application.login_with_connection_string (a_string)
 			create database_error_handler.make
 			db_application.set_base
 			create db_control.make
-			log.write_debug (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
+			write_debug_log (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
 			keep_connection := is_keep_connection
 			if keep_connection then
 				connect
 				if not db_control.is_ok then
-					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_code.out )
-					log.write_critical (generator +".login_with_connection_string:"+ db_control.error_message_32 )
+					write_critical_log (generator +".login_with_connection_string:"+ db_control.error_code.out )
+					write_critical_log (generator +".login_with_connection_string:"+ db_control.error_message_32 )
 				end
-				log.write_debug (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
+				write_debug_log (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
 			end
 		end
 

@@ -9,7 +9,11 @@ deferred class
 
 feature -- Logging
 
-	put_information (a_message: READABLE_STRING_8; a_data: detachable ANY)
+	put_critical (a_message: READABLE_STRING_8; a_data: detachable ANY)
+		deferred
+		end
+
+	put_alert (a_message: READABLE_STRING_8; a_data: detachable ANY)
 		deferred
 		end
 
@@ -21,11 +25,7 @@ feature -- Logging
 		deferred
 		end
 
-	put_critical (a_message: READABLE_STRING_8; a_data: detachable ANY)
-		deferred
-		end
-
-	put_alert (a_message: READABLE_STRING_8; a_data: detachable ANY)
+	put_information (a_message: READABLE_STRING_8; a_data: detachable ANY)
 		deferred
 		end
 

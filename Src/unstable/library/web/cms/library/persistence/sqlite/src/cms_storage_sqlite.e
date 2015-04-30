@@ -7,13 +7,11 @@ class
 	CMS_STORAGE_SQLITE
 
 inherit
-	CMS_STORAGE
-
 	CMS_STORAGE_STORE_SQL
 
-	CMS_USER_STORAGE_SQLITE
+	CMS_CORE_STORAGE_SQL_I
 
-	CMS_NODE_STORAGE_SQLITE
+	CMS_USER_STORAGE_SQL_I
 
 	REFACTORING_HELPER
 
@@ -27,5 +25,5 @@ feature -- Status report
 		do
 			Result := has_user
 		end
-		
+
 end

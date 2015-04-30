@@ -1,0 +1,30 @@
+note
+	description: "[
+			Interface defining a CMS content type.
+		]"
+	status: "draft"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class
+	CMS_NODE_TYPE [G -> CMS_NODE]
+
+inherit
+	CMS_CONTENT_TYPE
+
+feature -- Factory
+
+	new_node_with_title (a_title: READABLE_STRING_32; a_partial_node: detachable CMS_NODE): like new_node
+			-- New node with `a_title' and fill from partial `a_partial_node' if set.
+		deferred
+		end
+
+	new_node (a_partial_node: detachable CMS_NODE): G
+			-- New node based on partial `a_partial_node' if set.
+		deferred
+		end
+
+note
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+end

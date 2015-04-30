@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CMS_BLOCK_REGION}."
+	description: "[
+		Describe where the block should appear on a site.
+		]"
 	date: "$Date$"
 
 class
@@ -19,12 +21,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: READABLE_STRING_8
+		-- Block region name.
 
 	blocks: ARRAYED_LIST [CMS_BLOCK]
+		-- List of blocks.
+
 
 feature -- Element change
 
 	extend (b: CMS_BLOCK)
+			-- Add a block `b' to the list of `blocks'.
 		do
 			blocks.force (b)
 		end

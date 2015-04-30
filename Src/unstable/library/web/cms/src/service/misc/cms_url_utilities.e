@@ -39,6 +39,62 @@ feature -- Core
 			end
 		end
 
+feature -- Link
+
+	link (a_text: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+		do
+			create Result.make (32)
+			append_link_to_html (a_text, a_path, opts, Result)
+		end
+
+	link_with_raw_text (a_raw_text: detachable READABLE_STRING_8; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+		do
+			create Result.make (32)
+			append_link_with_raw_text_to_html (a_raw_text, a_path, opts, Result)
+		end
+
+	append_link_to_html (a_text: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS; a_html: STRING_8)
+		local
+			l_html: BOOLEAN
+			t: READABLE_STRING_GENERAL
+		do
+			l_html := True
+			if opts /= Void then
+				l_html := opts.boolean_item ("html", l_html)
+			end
+			a_html.append ("<a href=%"" + checked_url (url (a_path, opts)) + "%">")
+			if a_text = Void then
+				t := a_path
+			else
+				t := a_text
+			end
+			if l_html then
+				a_html.append (html_encoded (t))
+			else
+				a_html.append (checked_plain (t))
+			end
+			a_html.append ("</a>")
+		end
+
+	append_link_with_raw_text_to_html (a_raw_text: detachable READABLE_STRING_8; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS; a_html: STRING_8)
+		local
+			l_html: BOOLEAN
+			t: READABLE_STRING_8
+		do
+			l_html := True
+			if opts /= Void then
+				l_html := opts.boolean_item ("html", l_html)
+			end
+			a_html.append ("<a href=%"" + checked_url (url (a_path, opts)) + "%">")
+			if a_raw_text = Void then
+				t := a_path
+			else
+				t := a_raw_text
+			end
+			a_html.append (t)
+			a_html.append ("</a>")
+		end
+
 feature -- Url
 
 	absolute_url (a_path: STRING; opts: detachable CMS_API_OPTIONS): STRING
@@ -124,6 +180,11 @@ feature -- Url
 	checked_url (a_url: READABLE_STRING_8): READABLE_STRING_8
 		do
 			Result := a_url
+		end
+
+	checked_plain (a_text: READABLE_STRING_GENERAL): STRING_8
+		do
+			Result := html_encoded (a_text)
 		end
 
 end

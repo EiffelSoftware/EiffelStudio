@@ -10,7 +10,10 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks
+			register_hooks,
+			initialize,
+			is_installed,
+			install
 		end
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -28,6 +31,51 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Service to demonstrate and test cms system"
 			package := "demo"
+		end
+
+feature {CMS_API} -- Module Initialization			
+
+	initialize (api: CMS_API)
+			-- <Precursor>
+		do
+			Precursor (api)
+
+				-- Add support for CMS_PAGE, which requires a storage extension to store the optional "parent" id.
+				-- For now, we only have extension based on SQL statement.
+--			if attached {CMS_NODE_STORAGE_SQL} l_node_api.node_storage as l_sql_node_storage then
+--				l_sql_node_storage.register_node_storage_extension (create {CMS_NODE_STORAGE_SQL_PAGE_EXTENSION}.make (l_sql_node_storage))
+--			end
+		end
+
+feature {CMS_API} -- Module management
+
+	is_installed (api: CMS_API): BOOLEAN
+			-- Is Current module installed?
+		do
+			Result := attached api.storage.custom_value ("is_initialized", "module-" + name) as v and then v.is_case_insensitive_equal_general ("yes")
+		end
+
+	install (api: CMS_API)
+		local
+			sql: STRING
+		do
+				-- Schema
+			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
+				if not l_sql_storage.sql_table_exists ("tb_demo") then
+					sql := "[
+CREATE TABLE "tb_demo"(
+  "demo_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("demo_id">=0),
+  "name" VARCHAR(100) NOT NULL,
+  "value" TEXT
+);
+					]"
+					l_sql_storage.sql_execute_script (sql)
+					if l_sql_storage.has_error then
+						api.logger.put_error ("Could not initialize database for demo module", generating_type)
+					end
+				end
+				api.storage.set_custom_value ("is_initialized", "module-" + name, "yes")
+			end
 		end
 
 feature -- Access: router
@@ -84,37 +132,11 @@ feature -- Hooks
 
 feature -- Handler
 
-	initialize_module (a_api: CMS_API)
-		local
-			sql: STRING
-		do
-			if attached {CMS_STORAGE_SQL} a_api.storage as sql_db then
-				sql_db.sql_query ("select count(*) from tb_demo;", Void)
-				if sql_db.has_error then
-						-- Initialize db for demo module
-					sql := "[
-CREATE TABLE "tb_demo"(
-  "did" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("did">=0),
-  "name" VARCHAR(100) NOT NULL,
-  "value" TEXT
-);
-					]"
-					sql_db.reset_error
-					sql_db.sql_change (sql, Void)
-					if sql_db.has_error then
-						a_api.logger.put_error ("Could not initialize database for demo module", generating_type)
-					end
-				end
-			end
-		end
-
 	handle_demo,
 	handle_demo_entry (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: CMS_API)
 		local
 			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
 		do
-			initialize_module (a_api)
-
 			create r.make (req, res, a_api)
 			r.set_main_content ("NODE module does not yet implement %"" + req.path_info + "%" ...")
 			r.add_error_message ("NODE Module: not yet implemented")

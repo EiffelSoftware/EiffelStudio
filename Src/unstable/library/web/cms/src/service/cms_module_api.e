@@ -11,16 +11,22 @@ feature {NONE} -- Implementation
 
 	make (a_api: CMS_API)
 		do
-			api := a_api
+			cms_api := a_api
+			initialize
 		end
 
-feature {CMS_MODULE, CMS_API} -- Restricted access		
+	initialize
+			-- Initialize Current api.
+		do
+		end
 
-	api: CMS_API
+feature {CMS_API_ACCESS, CMS_MODULE, CMS_API} -- Restricted access		
+
+	cms_api: CMS_API
 
 	storage: CMS_STORAGE
 		do
-			Result := api.storage
+			Result := cms_api.storage
 		end
 
 end

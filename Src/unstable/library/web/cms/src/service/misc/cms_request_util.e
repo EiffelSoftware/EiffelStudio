@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_REQUEST_UTIL}."
-	author: ""
+	description: "Set of helper features related to CMS Request needs."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +28,7 @@ feature -- User
 		note
 			EIS: "eiffel:?class=AUTHENTICATION_FILTER&feature=execute"
 		do
-			if attached {CMS_USER} req.execution_variable ("_cms_active_user_") as l_user then
+			if attached {CMS_USER} req.execution_variable (current_user_execution_variable_name) as l_user then
 				Result := l_user
 			end
 		end
@@ -40,13 +39,26 @@ feature -- Change
 			-- Set `a_user' as `current_user'.
 		do
 			if a_user = Void then
-				req.unset_execution_variable ("_cms_active_user_")
+				req.unset_execution_variable (current_user_execution_variable_name)
 			else
-				req.set_execution_variable ("_cms_active_user_", a_user)
+				req.set_execution_variable (current_user_execution_variable_name, a_user)
 			end
 		ensure
 			user_set: current_user (req) ~ a_user
 		end
+
+	unset_current_user (req: WSF_REQUEST)
+			-- Unset current user.
+		do
+			req.unset_execution_variable (current_user_execution_variable_name)
+		ensure
+			user_unset: current_user (req) = Void
+		end
+
+feature {NONE} -- Implementation: current user
+
+	current_user_execution_variable_name: STRING = "_cms_active_user_"
+			-- Execution variable name used to keep current user data.
 
 feature -- Media Type
 

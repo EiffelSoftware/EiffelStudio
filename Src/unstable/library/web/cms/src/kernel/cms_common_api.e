@@ -29,19 +29,9 @@ feature -- Access
 			Result := link (u.name, "/user/" + u.id.out, Void)
 		end
 
-	node_link (n: CMS_NODE): like link
-		do
-			Result := link (n.title, "/node/" + n.id.out, Void)
-		end
-
 	user_url (u: CMS_USER): like url
 		do
 			Result := url ("/user/" + u.id.out, Void)
-		end
-
-	node_url (n: CMS_NODE): like url
-		do
-			Result := url ("/node/" + n.id.out, Void)
 		end
 
 feature -- Helper

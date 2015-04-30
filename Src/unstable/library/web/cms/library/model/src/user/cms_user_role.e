@@ -22,15 +22,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_id (a_id: like id; a_name: like name)
+	make_with_id (a_id: like id)
+			-- Create current role with role id `a_id'.
 		do
 			id := a_id
-			make (a_name)
+			name := {STRING_32} ""
+			initialize
 		end
 
 	make (a_name: like name)
+			-- Create current role with name `a_name'.
+		require
+			a_name_valid: not a_name.is_whitespace
 		do
 			name := a_name
+			initialize
+		end
+
+	initialize
+		do
 			create {ARRAYED_LIST [READABLE_STRING_8]} permissions.make (0)
 		end
 
@@ -42,10 +52,10 @@ feature -- Status report
 			Result := id > 0
 		end
 
-	has_permission (p: READABLE_STRING_8): BOOLEAN
+	has_permission (p: READABLE_STRING_GENERAL): BOOLEAN
 			-- Has permission `p'?
 		do
-			Result := across permissions as c some c.item.is_case_insensitive_equal (p) end
+			Result := across permissions as c some p.is_case_insensitive_equal (c.item) end
 		end
 
 feature -- Access
@@ -53,7 +63,7 @@ feature -- Access
 	id: INTEGER
 			-- Unique id associated with Current role.
 
-	name: READABLE_STRING_8
+	name: READABLE_STRING_32
 			-- Name of Current role.
 
 	permissions: LIST [READABLE_STRING_8]
@@ -115,6 +125,6 @@ feature -- Permission change
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

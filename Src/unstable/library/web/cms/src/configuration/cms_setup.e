@@ -1,5 +1,7 @@
 note
-	description: "Class that enable to set basic configuration, application layout, core modules and  themes."
+	description: "[
+		Class that enable to set basic configuration, application environment, core modules and themes.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,8 +13,15 @@ inherit
 
 feature -- Access
 
-	layout: CMS_LAYOUT
-			-- CMS layout.
+	environment: CMS_ENVIRONMENT
+			-- CMS environment.	
+
+	layout: CMS_ENVIRONMENT
+			-- CMS environment.
+		obsolete "use `environment' [april-2015]"
+		do
+			Result := environment
+		end
 
 	enabled_modules: CMS_MODULE_COLLECTION
 			-- List of enabled modules.
@@ -104,10 +113,15 @@ feature -- Access: Theme
 feature -- Access: storage
 
 	storage_drivers: STRING_TABLE [CMS_STORAGE_BUILDER]
+			-- Table of available storage drivers.
+			-- i.e: mysql, sqlite, ...
 		deferred
 		end
 
 	storage (a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE
+			-- CMS Storage object defined according to the configuration or default.
+			-- Use `a_error_handler' to get eventual error information occurred during the storage
+			-- initialization.
 		local
 			retried: BOOLEAN
 			l_message: STRING
@@ -115,14 +129,14 @@ feature -- Access: storage
 			if not retried then
 				to_implement ("Refactor database setup")
 				if
-					attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (layout.application_config_path) as l_database_config and then
+					attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config and then
 					attached storage_drivers.item (l_database_config.driver) as l_builder
 				then
 					Result := l_builder.storage (Current)
 				end
 			else
 				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
-					-- error hanling.
+					-- error handling.
 				create l_message.make (1024)
 				if attached ((create {EXCEPTION_MANAGER}).last_exception) as l_exception then
 					if attached l_exception.description as l_description then
@@ -146,20 +160,24 @@ feature -- Access: storage
 			retry
 		end
 
-feature -- Element change
+feature -- Status Report: Modules
 
 	module_registered (m: CMS_MODULE): BOOLEAN
+			-- Is the module `m' registered?
 		do
 			Result := modules.has (m)
 		end
 
 	module_with_same_type_registered (m: CMS_MODULE): BOOLEAN
+			-- Is there a module `m' already registered with the same type?
 		do
 			Result := modules.has_module_with_same_type (m)
 		end
 
+feature -- Element change
+
 	register_module (m: CMS_MODULE)
-			-- Add module `m' to `modules'
+			-- Add module `m' to `modules'.
 		require
 			module_not_registered: not module_registered (m)
 			no_module_with_same_type_registered: not module_with_same_type_registered (m)

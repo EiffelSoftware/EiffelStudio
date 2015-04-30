@@ -1,5 +1,8 @@
 note
-	description: "Generic CMS Response.It builds the content to get process to render the output"
+	description: "[
+			Generic CMS Response.
+			It builds the content to get process to render the output.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -56,15 +59,6 @@ feature -- Access
 
 	response: WSF_RESPONSE
 
-	api: CMS_API
-			-- Current CMS API.
-
-	setup: CMS_SETUP
-			-- Current setup
-		do
-			Result := api.setup
-		end
-
 	status_code: INTEGER
 
 	header: WSF_HEADER
@@ -78,6 +72,26 @@ feature -- Access
 
 	additional_page_head_lines: detachable LIST [READABLE_STRING_8]
 			-- HTML>head>...extra lines
+
+	redirection: detachable READABLE_STRING_8
+			-- Location for eventual redirection.
+
+feature -- API
+
+	api: CMS_API
+			-- Current CMS API.
+
+	setup: CMS_SETUP
+			-- Current setup
+		do
+			Result := api.setup
+		end
+
+	formats: CMS_FORMATS
+			-- Available content formats.
+		do
+			Result := api.formats
+		end
 
 feature -- Module
 
@@ -101,7 +115,7 @@ feature -- Module
 	module_assets_location (a_module: CMS_MODULE): PATH
 			-- Location for the assets associated with `a_module'.
 		do
-			Result := setup.layout.path.extended ("modules").extended (a_module.name)
+			Result := setup.environment.path.extended ("modules").extended (a_module.name)
 		end
 
 	module_assets_theme_location (a_module: CMS_MODULE): PATH
@@ -156,14 +170,26 @@ feature -- Access: CMS
 			-- Associated values indexed by string name.
 
 
+feature -- User access
+
+	user: detachable CMS_USER
+		do
+			Result := current_user (request)
+		end
 
 feature -- Permission
-		-- FIXME: to be implemented has_permissions and has_permission.
 
-feature -- Status		
-		-- FIXME: to be implemented	
-		-- is_from, is_module, has_js.
+	has_permission (a_permission: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does current user has permission `a_permission' ?
+		do
+			Result := user_has_permission (current_user (request), a_permission)
+		end
 
+	user_has_permission (a_user: detachable CMS_USER; a_permission: READABLE_STRING_GENERAL): BOOLEAN
+			-- Does `a_user' has permission `a_permission' ?
+		do
+			Result := api.user_has_permission (a_user, a_permission)
+		end
 
 feature -- Head customization
 
@@ -239,6 +265,11 @@ feature -- Element change
 			values.remove (k)
 		end
 
+	set_redirection (a_location: READABLE_STRING_8)
+			-- Set `redirection' to `a_location'.
+		do
+			redirection := a_location
+		end
 
 feature -- Logging
 
@@ -247,7 +278,7 @@ feature -- Logging
 --			l_log: CMS_LOG
 		do
 			debug
-				to_implement ("Add implemenatation")
+				to_implement ("Add implementation")
 			end
 --			create l_log.make (a_category, a_message, a_level, Void)
 --			if a_link /= Void then
@@ -255,13 +286,6 @@ feature -- Logging
 --			end
 --			l_log.set_info (request.http_user_agent)
 --			service.storage.save_log (l_log)
-		end
-
-feature -- Formats
-
-	formats: CMS_FORMATS
-		once
-			create Result
 		end
 
 feature -- Menu
@@ -431,6 +455,9 @@ feature -- Blocks
 		do
 			if attached primary_tabs as m and then not m.is_empty then
 				create Result.make (m)
+				Result.is_horizontal := True
+				Result.set_is_raw (True)
+				Result.add_css_class ("tabs")
 			end
 		end
 
@@ -448,7 +475,7 @@ feature -- Blocks
 			s: STRING
 			l_hb: STRING
 		do
-			create s.make_from_string (theme.menu_html (primary_menu, True))
+			create s.make_from_string (theme.menu_html (primary_menu, True, Void))
 			create l_hb.make_empty
 			create Result.make ("header", Void, l_hb, Void)
 			Result.set_is_raw (True)
@@ -458,7 +485,15 @@ feature -- Blocks
 		do
 			create Result.make_empty
 			Result.append ("<div id=%"menu-bar%">")
-			Result.append (theme.menu_html (primary_menu, True))
+			Result.append (theme.menu_html (primary_menu, True, Void))
+			Result.append ("</div>")
+		end
+
+	horizontal_primary_tabs_html: STRING
+		do
+			create Result.make_empty
+			Result.append ("<div id=%"tabs-bar%">")
+			Result.append (theme.menu_html (primary_tabs, True, Void))
 			Result.append ("</div>")
 		end
 
@@ -639,6 +674,11 @@ feature -- Menu: change
 	add_to_primary_menu (lnk: CMS_LINK)
 		do
 			add_to_menu (lnk, primary_menu)
+		end
+
+	add_to_primary_tabs (lnk: CMS_LINK)
+		do
+			add_to_menu (lnk, primary_tabs)
 		end
 
 	add_to_menu (lnk: CMS_LINK; m: CMS_MENU)
@@ -861,6 +901,7 @@ feature -- Generation
 
 				-- Menu...
 			page.register_variable (horizontal_primary_menu_html, "primary_nav")
+			page.register_variable (horizontal_primary_tabs_html, "primary_tabs")
 
 				-- Page related
 			if attached page_title as l_page_title then
@@ -964,8 +1005,7 @@ feature -- Generation
 feature -- Custom Variables
 
 	variables: detachable STRING_TABLE[ANY]
-		-- Custom variables to feed the templates.
-
+			-- Custom variables to feed the templates.
 
 feature -- Element change: Add custom variables.
 
@@ -980,7 +1020,6 @@ feature -- Element change: Add custom variables.
 			end
 			l_variables.force (a_element, a_key)
 		end
-
 
 feature -- Execution
 
@@ -1006,6 +1045,7 @@ feature {NONE} -- Execution
 			cms_page: CMS_HTML_PAGE
 			page: CMS_HTML_PAGE_RESPONSE
 			utf: UTF_CONVERTER
+			h: HTTP_HEADER
 		do
 			if attached {READABLE_STRING_GENERAL} values.item ("optional_content_type") as l_type then
 				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
@@ -1015,9 +1055,23 @@ feature {NONE} -- Execution
 			prepare (cms_page)
 			create page.make (theme.page_html (cms_page))
 			page.set_status_code (status_code)
-			page.header.put_content_length (page.html.count)
-			page.header.put_current_date
-			response.send (page)
+			h := page.header
+			h.put_content_length (page.html.count)
+			h.put_current_date
+			if attached redirection as l_location then
+					-- FIXME: find out if this is safe or not.
+				if l_location.has_substring ("://") then
+--					h.put_location (l_location)
+					response.redirect_now (l_location)
+				else
+--					h.put_location (request.absolute_script_url (l_location))
+					response.redirect_now (request.absolute_script_url (l_location))
+				end
+			else
+				h.put_header_object (header)
+
+				response.send (page)
+			end
 			on_terminated
 		end
 

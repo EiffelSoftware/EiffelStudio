@@ -37,16 +37,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: READABLE_STRING_8
+			-- <Precursor>
 
 	title: detachable READABLE_STRING_32
+			-- <Precursor>
 
 	content: READABLE_STRING_8
 
 	format: detachable CONTENT_FORMAT
+			--
 
 feature -- Status report
 
-	is_raw: BOOLEAN
+	is_raw: BOOLEAN assign set_is_raw
 			-- Is raw?
 			-- If True, do not get wrapped it with block specific div	
 

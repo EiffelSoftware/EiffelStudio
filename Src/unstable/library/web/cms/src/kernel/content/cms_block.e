@@ -20,6 +20,9 @@ feature -- Access
 		deferred
 		end
 
+	html_options: detachable CMS_HTML_OPTIONS
+			-- Optional addition html options.
+
 feature -- status report
 
 	is_enabled: BOOLEAN
@@ -29,6 +32,34 @@ feature -- status report
 			-- Is raw?
 			-- If True, do not get wrapped it with block specific div			
 		deferred
+		end
+
+feature -- Element change
+
+	add_css_class (a_class: READABLE_STRING_8)
+			-- Add css class `a_class'.
+		local
+			opts: like html_options
+		do
+			opts := html_options
+			if opts = Void then
+				create opts
+				html_options := opts
+			end
+			opts.add_css_class (a_class)
+		end
+
+	remove_css_class (a_class: READABLE_STRING_GENERAL)
+			-- Remove css class `a_class'.
+		local
+			opts: like html_options
+		do
+			opts := html_options
+			if opts = Void then
+				create opts
+				html_options := opts
+			end
+			opts.remove_css_class (a_class)
 		end
 
 feature -- Conversion

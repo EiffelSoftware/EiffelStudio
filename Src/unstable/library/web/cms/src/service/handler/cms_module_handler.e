@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_MODULE_HANDLER}."
-	author: ""
+	description: "CMS handler specific for a module api"
 	date: "$Date$"
 	revision: "$Revision$"
 

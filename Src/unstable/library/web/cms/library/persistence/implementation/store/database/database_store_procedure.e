@@ -20,8 +20,8 @@ feature -- Intialization
 		local
 			l_retried: BOOLEAN
 		do
-			log.write_information (generator + ".data_reader" + " execute store procedure: " + a_sp)
-			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
+			write_information_log (generator + ".data_reader" + " execute store procedure: " + a_sp)
+			write_debug_log (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
 		    if not l_retried then
 				stored_procedure := a_sp
 				parameters := a_parameters
@@ -33,14 +33,14 @@ feature -- Intialization
 				if proc.exists then
 					if proc.text_32 /= Void then
 						debug
-							log.write_debug ( generator + ".data_reader: " + proc.text_32)
+							write_debug_log ( generator + ".data_reader: " + proc.text_32)
 						end
 					end
 				else
 					has_error := True
 					error_message := proc.error_message_32
 					error_code := proc.error_code
-					log.write_error (generator + ".data_witer message:" + proc.error_message_32 + " code:" + proc.error_code.out)
+					write_error_log (generator + ".data_witer message:" + proc.error_message_32 + " code:" + proc.error_code.out)
 				end
 			else
 				stored_procedure := a_sp
@@ -49,7 +49,7 @@ feature -- Intialization
 			end
 		rescue
 			set_last_error_from_exception ("SQL execution")
-			log.write_critical (generator+ ".data_reader " + last_error_message)
+			write_critical_log (generator+ ".data_reader " + last_error_message)
 			l_retried := True
 			retry
 		end
@@ -59,8 +59,8 @@ feature -- Intialization
 		local
 			l_retried: BOOLEAN
 		do
-			log.write_information (generator + ".data_reader" + " execute store procedure: " + a_sp)
-			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
+			write_information_log (generator + ".data_reader" + " execute store procedure: " + a_sp)
+			write_debug_log (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
 			if not l_retried then
 				stored_procedure := a_sp
 				parameters := a_parameters
@@ -70,14 +70,14 @@ feature -- Intialization
 				if proc.exists then
 					if proc.text_32 /= Void then
 						debug
-							log.write_debug ( generator + ".data_writer: " + proc.text_32)
+							write_debug_log ( generator + ".data_writer: " + proc.text_32)
 						end
 					end
 				else
 					has_error := True
 					error_message := proc.error_message_32
 					error_code := proc.error_code
-					log.write_error (generator + ".data_witer message:" + proc.error_message_32 + " code:" + proc.error_code.out)
+					write_error_log (generator + ".data_witer message:" + proc.error_message_32 + " code:" + proc.error_code.out)
 				end
 			else
 				stored_procedure := a_sp
@@ -86,11 +86,10 @@ feature -- Intialization
 			end
 		rescue
 			set_last_error_from_exception ("SQL execution")
-			log.write_critical (generator+ ".data_reader " + last_error_message)
+			write_critical_log (generator+ ".data_reader " + last_error_message)
 			l_retried := True
 			retry
 		end
-
 
 	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
 			-- Execute the Current store procedure.

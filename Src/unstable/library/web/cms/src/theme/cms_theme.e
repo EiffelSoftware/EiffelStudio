@@ -33,14 +33,37 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status report
+
+	has_region (a_region_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Current theme has region `a_region_name' declared?
+		do
+			Result := across regions as ic some a_region_name.is_case_insensitive_equal (ic.item) end
+		end
+
 feature -- Conversion
 
-	menu_html (a_menu: CMS_MENU; is_horizontal: BOOLEAN): STRING_8
+	menu_html (a_menu: CMS_MENU; is_horizontal: BOOLEAN; a_options: detachable CMS_HTML_OPTIONS): STRING_8
+		local
+			cl: STRING
 		do
 			debug ("refactor_fixme")
 				fixme ("Refactor HTML code to use the new Bootstrap theme template")
 			end
-			create Result.make_from_string ("<div id=%""+ a_menu.name +"%" class=%"menu%">")
+			create cl.make_from_string ("menu")
+			if a_options /= Void and then attached a_options.css_classes as lst then
+				across
+					lst as ic
+				loop
+					cl.append_character (' ')
+					cl.append (ic.item)
+				end
+			end
+			create Result.make_from_string ("<div id=%"")
+			Result.append (a_menu.name)
+			Result.append ("%" class=%"")
+			Result.append (cl)
+			Result.append ("%">")
 			if is_horizontal then
 				Result.append ("<ul class=%"horizontal%" >%N")
 			else

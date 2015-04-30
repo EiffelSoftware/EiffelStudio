@@ -10,7 +10,7 @@ deferred class
 inherit
 	CMS_STORAGE
 
-	CMS_STORAGE_SQL
+	CMS_STORAGE_SQL_I
 
 feature {NONE} -- Initialization
 
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			is_connected: a_connection.is_connected
 		do
 			connection := a_connection
-			log.write_information (generator + ".make - is database connected?  "+ a_connection.is_connected.out )
+			write_information_log (generator + ".make - is database connected?  "+ a_connection.is_connected.out )
 
 			create {DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
 
@@ -50,26 +50,30 @@ feature -- Query
 		do
 			error_handler.append (db_handler.database_error_handler)
 			if error_handler.has_error then
-				log.write_critical (generator + ".post_execution " +  error_handler.as_string_representation)
+				write_critical_log (generator + ".post_execution " +  error_handler.as_string_representation)
 			end
 		end
 
 	sql_begin_transaction
+			-- <Precursor>
 		do
 			connection.begin_transaction
 		end
 
 	sql_rollback_transaction
+			-- <Precursor>
 		do
 			connection.rollback
 		end
 
 	sql_commit_transaction
+			-- <Precursor>
 		do
 			connection.commit
 		end
 
 	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute an sql query `a_sql_statement' with the params `a_params'.
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
@@ -78,6 +82,7 @@ feature -- Query
 		end
 
 	sql_change (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute an sql query change `a_sql_statement' with the params `a_params'.
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
@@ -107,6 +112,11 @@ feature -- Query
 			-- Fetch next row from last sql execution, if any.
 		do
 			db_handler.forth
+		end
+
+	sql_valid_item_index (a_index: INTEGER): BOOLEAN
+		do
+			Result := attached {DB_TUPLE} db_handler.item as l_item and then l_item.valid_index (a_index)
 		end
 
 	sql_item (a_index: INTEGER): detachable ANY

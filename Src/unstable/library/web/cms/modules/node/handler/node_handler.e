@@ -117,9 +117,9 @@ feature -- HTTP Methods
 			if req.path_info.ends_with_general ("/edit") then
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
---			elseif req.path_info.same_string_general ("/node/") then
---				create edit_response.make (req, res, api, node_api)
---				edit_response.execute
+			elseif req.path_info.starts_with_general ("/node/add/") then
+				create edit_response.make (req, res, api, node_api)
+				edit_response.execute
 			else
 				to_implement ("REST API")
 				send_not_implemented ("REST API not yet implemented", req, res)

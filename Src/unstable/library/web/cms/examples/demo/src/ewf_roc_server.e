@@ -157,7 +157,7 @@ feature -- CMS setup
 	setup_storage (a_setup: CMS_SETUP)
 			-- Setup storage by declaring storage builder.
 		do
-			a_setup.storage_drivers.force (create {CMS_STORAGE_MYSQL_BUILDER}.make, "mysql")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_MYSQL_BUILDER}.make, "mysql")
 			a_setup.storage_drivers.force (create {CMS_STORAGE_SQLITE_BUILDER}.make, "sqlite")
 		end
 

@@ -67,15 +67,10 @@ feature -- Access: CMS
 feature -- Implementation: CMS
 
 	initialize_cms (a_setup: CMS_SETUP)
-		local
-			cms: CMS_SERVICE
-			api: CMS_API
 		do
-			log.write_debug (generator + ".initialize_cms")
+			write_debug_log (generator + ".initialize_cms")
 			setup_modules (a_setup)
-			create api.make (a_setup)
-			create cms.make (api)
-			cms_service := cms
+			create cms_service.make (a_setup)
 		end
 
 	cms_setup (a_layout: CMS_LAYOUT): EIFFEL_COMMUNITY_SITE_CMS_SETUP

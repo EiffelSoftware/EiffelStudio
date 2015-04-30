@@ -73,9 +73,9 @@ feature -- Access: config
 	get_download_configuration (api: CMS_API)
 			-- Get `download_configuration' value.
 		do
-			log.write_debug (generator + ".get_download_configuration")
+			write_debug_log (generator + ".get_download_configuration")
 			if download_configuration = Void then
-				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.layout.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
+				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.environment.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
 			end
 		end
 
@@ -145,13 +145,13 @@ feature -- Hooks
 				l_string.append (ic.item)
 				l_string.append_character (' ')
 			end
-			log.write_debug (generator + ".block_list:" + l_string )
+			write_debug_log (generator + ".block_list:" + l_string )
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 				-- <Precursor>
 		do
-			log.write_debug (generator + ".get_block_view with block_id:`" + a_block_id + "'")
+			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 				-- Download header
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
 				if a_response.is_front then
@@ -181,7 +181,7 @@ feature {NONE} -- Block view implementation
 			p := p.extended ("block_download_area").appended_with_extension ("tpl")
 			p := a_response.module_resource_path (Current, p)
 			if p /= Void then
-				log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
 
 				if attached p.entry as e then
 					create l_tpl_block.make (a_block_id, Void, p.parent, e)
@@ -198,15 +198,15 @@ feature {NONE} -- Block view implementation
 				end
 
 				if l_tpl_block /= Void then
-					log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 				else
-					log.write_debug (generator + ".get_block_view with template_block: Void")
+					write_debug_log (generator + ".get_block_view with template_block: Void")
 				end
 				a_response.add_block (l_tpl_block, "header")
 
 			else
 				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-				log.write_warning ("Error with block [" + a_block_id + "]")
+				write_warning_log ("Error with block [" + a_block_id + "]")
 			end
 		end
 
@@ -224,7 +224,7 @@ feature {NONE} -- Block view implementation
 			p := a_response.module_resource_path (Current, p)
 
 			if p /= Void then
-				log.write_debug (generator + ".get_block_view with template_path:" + p.out)
+				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
 				if attached p.entry as e then
 					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
 				else
@@ -252,14 +252,14 @@ feature {NONE} -- Block view implementation
 						l_tpl_block.set_value (ic.item, ic.key)
 					end
 					if l_tpl_block /= Void then
-						log.write_debug (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
 					else
-						log.write_debug (generator + ".get_block_view with template_block: Void")
+						write_debug_log (generator + ".get_block_view with template_block: Void")
 					end
 					a_response.add_block (l_tpl_block, "content")
 				else
 					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					log.write_warning ("Error with block [" + a_block_id + "]")
+					write_warning_log ("Error with block [" + a_block_id + "]")
 				end
 			end
 		end
@@ -270,7 +270,7 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 		do
-			log.write_debug (generator + ".handle_download_options")
+			write_debug_log (generator + ".handle_download_options")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("download_options", "download_options")
 			r.execute
@@ -283,11 +283,11 @@ feature -- Handler
 			err: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			done: BOOLEAN
 		do
-			log.write_debug (generator + ".handle_download")
+			write_debug_log (generator + ".handle_download")
 			get_download_configuration (api)
 			if attached download_configuration as cfg then
 				create l_ua.make_from_string (req.http_user_agent)
-				log.write_debug (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
+				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
 
 				if attached retrieve_product_gpl (cfg) as l_product and then
 				   attached l_product.build as l_build and then
@@ -302,10 +302,10 @@ feature -- Handler
 				    l_link.append_character ('/')
 				    l_link.append (l_build)
 				    l_link.append_character ('/')
-				    log.write_debug (generator + ".handle_download [ Link: " + l_link  + " ]")
+				    write_debug_log (generator + ".handle_download [ Link: " + l_link  + " ]")
 					if attached selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then
 						if attached l_selected.filename as l_filename then
-							log.write_debug (generator + ".handle_download [ Filename: " + l_filename  + " ]")
+							write_debug_log (generator + ".handle_download [ Filename: " + l_filename  + " ]")
 							l_link.append (l_filename)
 							file_download (req, res, l_link)
 							done := True
@@ -373,7 +373,7 @@ feature {NONE}  -- Helper
 				--	<option value="win64" selected="">Windows 64-bit</option>
 				--	<option value="windows">Windows 32-bit</option>		
 		do
-			log.write_debug (generator + ".get_platform [ from " + a_user_agent.user_agent  + " ]")
+			write_debug_log (generator + ".get_platform [ from " + a_user_agent.user_agent  + " ]")
 			Result := "win64"
 			if a_user_agent.is_windows_os then
 				if a_user_agent.is_64bits then
@@ -390,7 +390,7 @@ feature {NONE}  -- Helper
 			elseif a_user_agent.is_mac_os then
 				Result := "macosx-x86-64"
 			end
-			log.write_debug (generator + ".get_platform [ platform inferred "+  Result  + " ]")
+			write_debug_log (generator + ".get_platform [ platform inferred "+  Result  + " ]")
 		end
 
 note

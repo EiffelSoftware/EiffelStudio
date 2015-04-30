@@ -62,7 +62,7 @@ feature -- Router
 		do
 				-- FIXME: this code could/should be retarded to when it is really needed
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
-			cfg := configuration (a_api.setup.layout.config_path)
+			cfg := configuration (a_api.setup.environment.config_path)
 			root_dir := cfg.root_dir
 			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir

@@ -63,7 +63,7 @@ feature -- Basic Operations
 			l_email: EMAIL
 			utf: UTF_CONVERTER
 		do
-			log.write_debug (generator + ".send_contact_email: [from:" + a_from_address + ", to:" + a_to_address + ", subject:" + a_subjet + ", content:" + a_content)
+			write_debug_log (generator + ".send_contact_email: [from:" + a_from_address + ", to:" + a_to_address + ", subject:" + a_subjet + ", content:" + a_content)
 			create l_email.make_with_entry (a_from_address, a_to_address)
 			l_email.set_message (utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
 			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet))
@@ -80,18 +80,18 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				log.write_information (generator + ".send_email Process send email.")
+				write_information_log (generator + ".send_email Process send email.")
 				smtp_protocol.initiate_protocol
 				smtp_protocol.transfer (a_email)
 				smtp_protocol.close_protocol
-				log.write_information (generator + ".send_email Email sent.")
+				write_information_log (generator + ".send_email Email sent.")
 				if smtp_protocol.error then
 					set_last_error ("smtp_protocol reported an error", generator + ".send_email")
 				else
 					set_successful
 				end
 			else
-				log.write_error (generator + ".send_email Email not send " + last_error_message )
+				write_error_log (generator + ".send_email Email not send " + last_error_message )
 			end
 		rescue
 			set_last_error_from_exception (generator + ".send_email")

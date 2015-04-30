@@ -726,29 +726,22 @@
 
 #define SGLIB___BIN_TREE_MAP_ON_ELEMENTS(type, tree, iteratedVariable, order, left, right, command) {\
   /* this is non-recursive implementation of tree traversal */\
-  /* it maintains the path to the current node in the array '_path_' */\
-  /* the _path_[0] contains the root of the tree; */\
-  /* the _path_[_pathi_] contains the _current_element_ */\
   /* the macro does not use the _current_element_ after execution of command */\
   /* command can destroy it, it can free the element for example */\
-  type *_path_[SGLIB_MAX_TREE_DEEP];\
   type *_right_[SGLIB_MAX_TREE_DEEP];\
   char _pass_[SGLIB_MAX_TREE_DEEP];\
   type *_cn_;\
   int _pathi_;\
   int _order = order; \
-  type *iteratedVariable;\
   _cn_ = (tree);\
   _pathi_ = 0;\
   while (_cn_!=NULL) {\
     /* push down to leftmost innermost element */\
     while(_cn_!=NULL) {\
-      _path_[_pathi_] = _cn_;\
       _right_[_pathi_] = _cn_->right;\
       _pass_[_pathi_] = 0;\
       _cn_ = _cn_->left;\
       if (_order == 0) {\
-        iteratedVariable = _path_[_pathi_];\
         {command;}\
       }\
       _pathi_ ++;\
@@ -758,7 +751,6 @@
       _pathi_ --;\
       if ((_order==1 && _pass_[_pathi_] == 0)\
           || (_order == 2 && (_pass_[_pathi_] == 1 || _right_[_pathi_]==NULL))) {\
-        iteratedVariable = _path_[_pathi_];\
         {command;}\
       }\
       _pass_[_pathi_] ++;\
@@ -1443,7 +1435,7 @@ http://web.cse.ohio-state.edu/~gurari/course/cis680/cis680Ch11.html
 */
 
 #define SGLIB___RBTREE_FIX_INSERTION_DISCREPANCY(type, tree, leftt, rightt, bits, RED, BLACK) {\
-  type *t, *tl, *a, *b, *c, *ar, *bl, *br, *cl, *cr;\
+  type *t, *tl, *a, *b, *c, *br, *cl, *cr;\
   t = *tree;\
   tl = t->leftt;\
   if (t->rightt!=NULL && SGLIB___GET_VALUE(t->rightt->bits)==RED) {\
@@ -1466,8 +1458,8 @@ http://web.cse.ohio-state.edu/~gurari/course/cis680/cis680Ch11.html
         SGLIB___SET_VALUE(b->bits,BLACK);\
         *tree = b;\
       } else if (tl->rightt!=NULL && SGLIB___GET_VALUE(tl->rightt->bits)==RED) {\
-        a = t; b = tl; ar=a->rightt;\
-        bl=b->leftt; c=b->rightt;\
+        a = t; b = tl;\
+        c=b->rightt;\
         cl=c->leftt; cr=c->rightt;\
         b->rightt = cl;\
         a->leftt = cr;\
@@ -1482,10 +1474,9 @@ http://web.cse.ohio-state.edu/~gurari/course/cis680/cis680Ch11.html
 }
 
 #define SGLIB___RBTREE_FIX_DELETION_DISCREPANCY(type, tree, leftt, rightt, bits, RED, BLACK, res) {\
-  type  *t, *a, *b, *c, *d, *ar, *bl, *br, *cl, *cr, *dl, *dr;\
+  type  *t, *a, *b, *c, *d, *bl, *br, *cl, *cr, *dl, *dr;\
   t = a = *tree;\
   assert(t!=NULL);\
-  ar = a->rightt;\
   b = t->leftt;\
   if (b==NULL) {\
     assert(SGLIB___GET_VALUE(t->bits)==RED);\

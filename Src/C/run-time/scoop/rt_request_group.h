@@ -54,6 +54,9 @@ doc:		<field name="capacity", type="size_t"> The currently reserved space in 'ar
 doc:		<field name="client", type="struct rt_processor*> The processor that wants to acquire the locks. </field>
 doc:		<field name="is_sorted", type="EIF_BOOLEAN"> A boolean to indicate whether the private queues within this request group are sorted.
 doc: 			It also indicates whether rt_request_group_lock() has been called in the past. </field>
+doc:		<field name="is_locked", type="EIF_BOOLEAN"> A boolean to indicate whether the request group is locked.
+doc:			FIXME: The field is currently necessary because the compiler deletes and recreates request groups during wait condition evaluations, which means that unlock requests
+doc:			sometimes happen on already unlocked request groups. Once the compiler is fixed, this attribute can be removed or turned into a ghost field for contract checking. </field>
 doc:		<fixme> A possible improvement might be to place the first few private queues into the request group struct itself, to avoid memory allocation on the heap. </fixme>
 doc:	</struct>
  */
@@ -65,6 +68,7 @@ struct rt_request_group
 	size_t count;
 	struct rt_processor* client;
 	EIF_BOOLEAN is_sorted;
+	EIF_BOOLEAN is_locked;
 };
 
 /*
@@ -83,6 +87,7 @@ rt_private rt_inline void rt_request_group_init (struct rt_request_group* self, 
 	self->capacity = 0;
 	self->count = 0;
 	self->is_sorted = 0;
+	self->is_locked = 0;
 	self->client = a_client;
 }
 
@@ -97,6 +102,7 @@ doc:	</routine>
 rt_private rt_inline void rt_request_group_deinit (struct rt_request_group* self)
 {
 	REQUIRE ("not_null", self);
+	REQUIRE ("not_locked", !self->is_locked);
 	free (self->area);
 	rt_request_group_init (self, NULL);
 }

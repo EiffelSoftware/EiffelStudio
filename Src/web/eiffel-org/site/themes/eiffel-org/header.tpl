@@ -2,8 +2,9 @@
 							<strong class="logo"><a href="{$site_url/}"><img src="/theme/images/logo.png" width="226" height="60" alt="Eiffel"></a></strong>
 							<nav id="nav">
 								<ul>
-									<li><a href="{$site_url/}/about">about</a></li>
+									<li><a href="{$site_url/}/welcome">welcome</a></li>
 									<li><a href="{$site_url/}/learn">learn</a></li>
+									<li><a href="{$site_url/}/resources">resources</a></li>
 									<li><a href="{$site_url/}/contribute">contribute</a></li>
 									<li><a href="{$site_url/}/download_options">download</a>
                                         {if condition = "False"}

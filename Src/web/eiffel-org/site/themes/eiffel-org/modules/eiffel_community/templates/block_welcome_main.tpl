@@ -11,7 +11,7 @@
 					</li>
 					<li>
 						<a href="{$site_url/}/news"><span class="ico"><img src="/theme/images/person277.png" width="52" height="52" alt="Image Description"></span>
-							<h2>News</h2>
+							<h2>What's new</h2>
 							<p>
 								From new libraries, functionalities, contributions ,
 								and events, check out the latest happenings within
@@ -20,21 +20,12 @@
 						</a>
 					</li>
 					<li>
-						<a href="{$site_url/}/articles"><span class="ico"><img src="/theme/images/notes1.png" width="52" height="52" alt="Image Description"></span>
-							<h2>Articles</h2>
+						<a href="{$site_url/}/updates"><span class="ico"><img src="/theme/images/navigation9.png" width="52" height="52" alt="Image Description"></span>
+							<h2>Recent Updates</h2>
 							<p>
-							The point of access to dive into technical issues
-							behind Eiffel such as how-tos, best practices, or
-							current events.
-							</p>
-						</a>
-					</li>
-					<li>
-						<a href="{$site_url/}/blogs"><span class="ico"><img src="/theme/images/blog1.png" width="52" height="52" alt="Image Description"></span>
-							<h2>Blogs</h2>
-							<p>
-							The place to find the latest opinions from users
-							throughout the globe on important Eiffel subjects. 
+								From new Videos, libraries, functionalities, contributions ,
+								and events, documentation, check out the latest happenings within
+								the Eiffel Community
 							</p>
 						</a>
 					</li>

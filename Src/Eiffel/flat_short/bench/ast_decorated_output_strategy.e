@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 			text_formatter_decorator := a_text_formatter
 			create locals_for_current_feature.make (10)
 			create object_test_locals_for_current_feature.make (0)
+			create separate_argument_locals_for_current_scope.make (0)
 			create error_message.make (5)
 		end
 
@@ -201,6 +202,7 @@ feature {AST_DECORATED_OUTPUT_STRATEGY} -- Access
 
 	locals_for_current_feature: HASH_TABLE [TYPE_A, STRING_32]
 	object_test_locals_for_current_feature: HASH_TABLE [TYPE_A, STRING_32]
+	separate_argument_locals_for_current_scope: HASH_TABLE [TYPE_A, STRING_32]
 
 	renamed_feature: E_FEATURE
 			-- Saved renamed feature for formal declaration renaming.
@@ -1019,6 +1021,8 @@ feature {NONE} -- Implementation
 			elseif l_as.is_object_test_local then
 				if object_test_locals_for_current_feature.has_key (l_as.access_name_32) then
 					last_type := object_test_locals_for_current_feature.found_item
+				elseif attached separate_argument_locals_for_current_scope.item (l_as.access_name_32) as l_separate_type then
+					last_type := l_separate_type
 				end
 			elseif l_as.is_tuple_access then
 				if not has_error_internal then
@@ -1289,6 +1293,7 @@ feature {NONE} -- Implementation
 
 			locals_for_current_feature.wipe_out
 			object_test_locals_for_current_feature.wipe_out
+			separate_argument_locals_for_current_scope.wipe_out
 			l_text_formatter_decorator.put_new_line
 			if not l_text_formatter_decorator.is_feature_short then
 				if l_as.obsolete_message /= Void then
@@ -1311,7 +1316,7 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
 				if current_feature.is_transient or current_feature.is_stable then
-						-- Transiant/stable attributes always have a body thus we can handle the transient/stable
+						-- Transient/stable attributes always have a body thus we can handle the transient/stable
 						-- property here by adding a `note' clause just after the comments.
 					l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
 					l_text_formatter_decorator.indent
@@ -4234,6 +4239,7 @@ feature {NONE} -- Implementation
 		local
 			t: like last_type
 		do
+			put_breakable
 			a_as.expression.process (Current)
 			t := last_type
 			if not expr_type_visiting then
@@ -4244,7 +4250,7 @@ feature {NONE} -- Implementation
 			a_as.name.process (Current)
 				-- Remember separate instruction argument.
 			if attached t then
-				object_test_locals_for_current_feature.force (t, a_as.name.name_32)
+				separate_argument_locals_for_current_scope.force (t, a_as.name.name_32)
 			end
 			last_type := Void
 		end
@@ -5259,6 +5265,7 @@ invariant
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 	locals_for_current_feature_not_void: locals_for_current_feature /= Void
 	object_test_locals_for_current_feature_not_void: object_test_locals_for_current_feature /= Void
+	separate_argument_locals_for_current_scope_not_void: separate_argument_locals_for_current_scope /= Void
 
 note
 	date: "$Date$"

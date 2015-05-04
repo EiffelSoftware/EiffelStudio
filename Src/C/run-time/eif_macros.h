@@ -1396,7 +1396,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
  */
 #define RTS_RC(p) eif_new_scoop_request_group(RTS_PID(p));
-#define RTS_RD(p) eif_delete_scoop_request_group(RTS_PID(p));
+#define RTS_RD(p) eif_delete_scoop_request_group(RTS_PID(p), 1);
 #define RTS_RF(p)   eif_scoop_wait_request_group (RTS_PID(p));
 #define RTS_RS(p,s) eif_scoop_add_supplier_request_group(RTS_PID(p), RTS_PID(s));
 #define RTS_RW(p) eif_scoop_lock_request_group(RTS_PID(p));

@@ -629,6 +629,21 @@ rt_shared void rt_processor_request_group_stack_extend (struct rt_processor* sel
 }
 
 /*
+doc:	<routine name="rt_processor_request_group_stack_count" return_type="size_t" export="shared">
+doc:		<summary> Return the number of elements in the request group stack of 'self'. </summary>
+doc:		<param name="self" type="struct rt_processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<return> The number of request groups in the stack. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared size_t rt_processor_request_group_stack_count (struct rt_processor* self)
+{
+	REQUIRE ("self_not_null", self);
+	return request_group_stack_t_count (&self->request_group_stack);
+}
+
+/*
 doc:	<routine name="rt_processor_request_group_stack_last" return_type="struct rt_request_group*" export="shared">
 doc:		<summary> Return a pointer to the last element in the group stack of 'self'. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that owns the group stack. Must not be NULL. </param>
@@ -645,24 +660,27 @@ rt_shared struct rt_request_group* rt_processor_request_group_stack_last (struct
 }
 
 /*
-doc:	<routine name="rt_processor_request_group_stack_remove_last" return_type="void" export="shared">
-doc:		<summary> Remove the last element from the group stack and free any resources. Note: This feature also performs an unlock operation. </summary>
+doc:	<routine name="rt_processor_request_group_stack_remove" return_type="void" export="shared">
+doc:		<summary> Remove the last 'count' elements from the group stack and free any resources. Note: This feature also performs an unlock operation. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<param name="count" type="size_t"> The number of elements to be removed. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_request_group_stack_remove_last (struct rt_processor* self)
+rt_shared void rt_processor_request_group_stack_remove (struct rt_processor* self, size_t count)
 {
 	struct rt_request_group* l_last = NULL;
 
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("not_empty", request_group_stack_t_count (&self->request_group_stack) > 0);
+	REQUIRE ("enough_elements", request_group_stack_t_count (&self->request_group_stack) >= count);
 
-	l_last = rt_processor_request_group_stack_last (self);
-	rt_request_group_unlock (l_last);
-	rt_request_group_deinit (l_last);
-	request_group_stack_t_remove_last (&self->request_group_stack);
+	for (size_t i = 0; i < count; ++i) {
+		l_last = rt_processor_request_group_stack_last (self);
+		rt_request_group_unlock (l_last);
+		rt_request_group_deinit (l_last);
+		request_group_stack_t_remove_last (&self->request_group_stack);
+	}
 }
 
 /*

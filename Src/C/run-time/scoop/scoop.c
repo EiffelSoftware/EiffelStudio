@@ -149,59 +149,6 @@ rt_public void eif_wait_for_all_processors(void)
 	rt_processor_registry_quit_root_processor ();
 }
 
-/* Obsolete functions */
-
-/* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
-rt_public void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk)
-{
-	epush (stk, c);
-}
-
-/* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
-rt_public void eif_request_chain_pop (struct stack * stk)
-{
-	EIF_REFERENCE * top = stk->st_top - 1;   /* Start from the current top. */
-
-	if (top >= stk->st_cur->sk_arena) {
-		stk->st_top = top;               /* We remain in current chunk. */
-	}
-	else {
-		struct stchunk * s;              /* Top is in the previous chunk. */
-
-		RT_GET_CONTEXT
-
-		SIGBLOCK;                        /* Entering critical section */
-
-		s = stk->st_cur->sk_prev;        /* Look at previous chunk */
-		CHECK("sep_stack underflow", s);
-		top = s->sk_end - 1;		 /* Top at the end of previous chunk */
-
-		stk->st_cur = s;                 /* Update stack structure */
-		stk->st_top = top;
-		stk->st_end = s->sk_end;
-
-		SIGRESUME;                       /* Leaving critical section */
-#ifdef WORKBENCH
-		if (d_cxt.pg_status == PG_RUN)   /* Program is running */
-#endif
-			st_truncate(stk);        /* Remove unused chunks */
-	}
-}
-
-/* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
-rt_public void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk)
-{
-	EIF_REFERENCE * top = stk->st_top;
-	if (!t) {
-		t = stk->st_hd->sk_arena; /* Use the beginning of the stack in case stack was empty. */
-	}
-	while (top != t) {
-		eif_request_chain_pop (stk); /* Pop one element. */
-		top = stk->st_top;
-		RTS_RD (*top);               /* Notify SCOOP manager about removed item. */
-	}
-}
-
 /*Functions to manipulate the request group stack */
 
 /* RTS_RC (o) - create request group for o */

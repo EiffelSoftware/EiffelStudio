@@ -697,7 +697,6 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 #endif
 	st_reset (&once_set);
 	st_reset (&oms_set);
-	st_reset (&sep_stack);
 	if (prof_stack) {
 		st_reset (prof_stack);
 	}
@@ -1119,7 +1118,6 @@ rt_private void eif_init_gc_stacks(rt_global_context_t *rt_globals)
 	load_stack_in_gc (&once_set_list, &once_set);
 	load_stack_in_gc (&oms_set_list, &oms_set);
 	load_stack_in_gc (&hec_stack_list, &hec_stack);
-	load_stack_in_gc (&sep_stack_list, &sep_stack);
 	load_stack_in_gc (&eif_stack_list, &eif_stack);
 	load_stack_in_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
@@ -1144,7 +1142,6 @@ rt_private void eif_free_gc_stacks(void)
 	eif_free (once_set_list.threads.data);
 	eif_free (oms_set_list.threads.data);
 	eif_free (hec_stack_list.threads.data);
-	eif_free (sep_stack_list.threads.data);
 	eif_free (eif_stack_list.threads.data);
 	eif_free (eif_trace_list.threads.data);
 #ifdef WORKBENCH
@@ -1170,7 +1167,6 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 	remove_data_from_gc (&once_set_list, &once_set);
 	remove_data_from_gc (&oms_set_list, &oms_set);
 	remove_data_from_gc (&hec_stack_list, &hec_stack);
-	remove_data_from_gc (&sep_stack_list, &sep_stack);
 	remove_data_from_gc (&eif_stack_list, &eif_stack);
 	remove_data_from_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
@@ -1181,7 +1177,6 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 	eif_stack_free (&once_set);
 	eif_stack_free (&oms_set);
 	eif_stack_free (&hec_stack);
-	eif_stack_free (&sep_stack);
 		/* The two stacks below are not properly cleaned up with `eif_stack_free'
 		 * as they have one more attribute than the `struct stack' structure, thus
 		 * the extra attribute is not reset. */
@@ -1562,7 +1557,6 @@ rt_shared pid_t eif_thread_fork(void) {
 		memset (&loc_set_list, 0, sizeof (struct stack_list));
 		memset (&once_set_list, 0, sizeof (struct stack_list));
 		memset (&hec_stack_list, 0, sizeof (struct stack_list));
-		memset (&sep_stack_list, 0, sizeof (struct stack_list));
 		memset (&eif_stack_list, 0, sizeof (struct stack_list));
 		memset (&eif_trace_list, 0, sizeof (struct stack_list));
 #ifdef WORKBENCH
@@ -1573,8 +1567,7 @@ rt_shared pid_t eif_thread_fork(void) {
 		load_stack_in_gc (&loc_stack_list, &loc_stack);
 		load_stack_in_gc (&loc_set_list, &loc_set);
 		load_stack_in_gc (&once_set_list, &once_set);
-		load_stack_in_gc (&hec_stack_list, &hec_stack);	
-		load_stack_in_gc (&sep_stack_list, &sep_stack);
+		load_stack_in_gc (&hec_stack_list, &hec_stack);
 		load_stack_in_gc (&eif_stack_list, &eif_stack);
 		load_stack_in_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH

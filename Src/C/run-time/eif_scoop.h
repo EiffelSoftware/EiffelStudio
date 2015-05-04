@@ -42,12 +42,8 @@
 
 /* TODO: This file needs some cleanup...
  *
- * EIF_IS_SCOOP_CAPABLE is only needed in eif_built_in.h and can be moved there.
- *
- * The inclusion of eif_threads.h should be avoided if possible.
- *
- * There seems to be a big overlap between the request chain stack and the
- * rt_request_group stacks in a processor object. Maybe the two can be merged somehow.
+ ** EIF_IS_SCOOP_CAPABLE is only needed in eif_built_in.h and can be moved there.
+ ** The inclusion of eif_threads.h should be avoided if possible.
  */
 
 #include "eif_threads.h"
@@ -85,12 +81,6 @@ typedef struct call_data {
 
 RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data* data);
 RT_LNK void eif_call_const (call_data * a);
-
-/* Request chain stack */
-
-RT_LNK void eif_request_chain_push (EIF_REFERENCE c, struct stack * stk);	/* Push client `c' on the request chain stack `stk' without notifying SCOOP mananger. */
-RT_LNK void eif_request_chain_pop (struct stack * stk);	/* Pop one element from the request chain stack `stk' without notifying SCOOP mananger. */
-RT_LNK void eif_request_chain_restore (EIF_REFERENCE * t, struct stack * stk); /* Restore request chain stack `stk' to have the top `t' notifying SCOOP manager about all removed request chains. */
 
 /* Scoop Macros
  * TODO: Are these macros still in use somewhere? */

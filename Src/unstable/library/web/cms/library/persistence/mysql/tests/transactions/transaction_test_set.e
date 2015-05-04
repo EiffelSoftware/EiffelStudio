@@ -75,11 +75,11 @@ feature -- Test routines
 			connection.begin_transaction
 			u.set_email ("test@example.com")
 			assert ("Has user:", storage.user_by_email ("test@example.com") /= Void)
-			storage.new_node (default_node)
-			assert ("Has one node:", storage.nodes_count = 1)
+--			storage.new_node (default_node)
+--			assert ("Has one node:", storage.nodes_count = 1)
 			connection.rollback
 			assert ("Not has user:", storage.user_by_email ("test@example.com") = Void)
-			assert ("Has no node:", storage.nodes_count = 0)
+--			assert ("Has no node:", storage.nodes_count = 0)
 		end
 
 end

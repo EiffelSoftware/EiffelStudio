@@ -29,13 +29,13 @@ feature {NONE} -- Initialization
 			storage.new_user (default_user)
 			storage.new_user (custom_user ("u2", "p2", "e2"))
 			l_node.set_author (storage.user_by_email (default_user.email))
-			storage.new_node (l_node)
-			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
-				storage.update_node_title (2,ll_node.id, "New Title")
-				check
-					attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary
-				end
-			end
+--			storage.new_node (l_node)
+--			if attached {CMS_NODE} storage.node_by_id (1) as ll_node then
+--				storage.update_node_title (2,ll_node.id, "New Title")
+--				check
+--					attached {CMS_NODE} storage.node_by_id (1) as u_node and then not (u_node.title ~ ll_node.title) and then u_node.content ~ ll_node.content and then u_node.summary ~ ll_node.summary
+--				end
+--			end
 		end
 
 
@@ -64,9 +64,10 @@ feature {NONE} -- Implementation
 			Result := custom_node ("Default content", "default summary", "Default")
 		end
 
-	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_NODE
+	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_PAGE
 		do
-			create Result.make (a_content, a_summary, a_title)
+			create Result.make (a_title)
+			Result.set_content (a_content, a_summary, Void)
 		end
 
 end

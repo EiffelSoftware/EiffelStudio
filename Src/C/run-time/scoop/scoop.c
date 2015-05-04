@@ -211,13 +211,20 @@ rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 	rt_processor_request_group_stack_extend (client);
 }
 
+/* Get current size of request group stack. */
+rt_public size_t eif_scoop_request_group_stack_count (EIF_SCP_PID client_pid)
+{
+	struct rt_processor* client = rt_get_processor (client_pid);
+	return rt_processor_request_group_stack_count (client);
+}
+
 /* RTS_RD (o) - delete request group of o and release any locks */
-rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid)
+rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid, size_t count)
 {
 	struct rt_processor* client = rt_get_processor (client_pid);
 
 		/* Unlock, deallocate and remove the request group. */
-	rt_processor_request_group_stack_remove_last (client);
+	rt_processor_request_group_stack_remove (client, count);
 }
 
 /* RTS_RF (o) - wait condition fails */

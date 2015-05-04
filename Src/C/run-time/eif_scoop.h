@@ -106,7 +106,8 @@ RT_LNK void eif_wait_for_all_processors(void);
 
 /* Request chain operations */
 RT_LNK void eif_new_scoop_request_group (EIF_SCP_PID client_pid);
-RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid);
+RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid, size_t count);
+RT_LNK size_t eif_scoop_request_group_stack_count (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);

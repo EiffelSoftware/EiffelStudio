@@ -133,7 +133,8 @@ rt_shared void rt_processor_unsubscribe_wait_condition (struct rt_processor* sel
 /* Declarations for group stack manipulation. */
 rt_shared void rt_processor_request_group_stack_extend (struct rt_processor* self);
 rt_shared struct rt_request_group* rt_processor_request_group_stack_last (struct rt_processor* self);
-rt_shared void rt_processor_request_group_stack_remove_last (struct rt_processor* self);
+rt_shared size_t rt_processor_request_group_stack_count (struct rt_processor* self);
+rt_shared void rt_processor_request_group_stack_remove (struct rt_processor* self, size_t count);
 
 /* Features executed by the processor itself. */
 rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct call_data* call);

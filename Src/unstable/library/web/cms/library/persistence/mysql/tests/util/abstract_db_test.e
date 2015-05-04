@@ -41,8 +41,9 @@ feature {NONE} -- Fixture Factories: Nodes
 			Result := custom_node ("Default content", "default summary", "Default")
 		end
 
-	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_NODE
+	custom_node (a_content, a_summary, a_title: READABLE_STRING_32): CMS_PAGE
 		do
-			create Result.make (a_content, a_summary, a_title)
+			create Result.make (a_title)
+			Result.set_content (a_content, a_summary, Void)
 		end
 end

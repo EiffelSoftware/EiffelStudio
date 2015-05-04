@@ -10,6 +10,7 @@
 		<library name="cms" location="..\..\..\..\cms-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
+		<library name="module_node" location="..\..\..\..\modules\node\node-safe.ecf"/>
 		<library name="persitence_sqlite" location="..\persistence_sqlite-safe.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
@@ -18,6 +19,7 @@
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/nodes$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

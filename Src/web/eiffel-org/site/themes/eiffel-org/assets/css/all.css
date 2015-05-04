@@ -1592,29 +1592,30 @@ input.placeholder-text, textarea.placeholder-text {
   margin-left: 10px;
   margin-right: 10px;
   width: 235px;
+  margin-left: 0px;
   padding: 11px 0 0;
 }
 
-/* line 247, all.scss */
+/* line 248, all.scss */
 .add-links {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 250, all.scss */
+/* line 251, all.scss */
 .add-links ul {
   text-align: right;
   font: 12px/18px "museo_sans500", Arial, Helvetica, sans-serif;
   margin: 0 -7px 0 0;
   text-transform: uppercase;
 }
-/* line 256, all.scss */
+/* line 257, all.scss */
 .add-links ul li {
   display: inline-block;
   vertical-align: top;
   position: relative;
   padding: 0 8px;
 }
-/* line 261, all.scss */
+/* line 262, all.scss */
 .add-links ul li:after {
   position: absolute;
   width: 1px;
@@ -1625,20 +1626,20 @@ input.placeholder-text, textarea.placeholder-text {
   margin: -6px 0 0;
   content: '';
 }
-/* line 271, all.scss */
+/* line 272, all.scss */
 .add-links ul li:first-child:after {
   display: none;
 }
-/* line 274, all.scss */
+/* line 275, all.scss */
 .add-links ul li a {
   color: #99cc33;
 }
-/* line 276, all.scss */
+/* line 277, all.scss */
 .add-links ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 284, all.scss */
+/* line 285, all.scss */
 .search-form {
   width: 181px;
   padding: 4px 5px 4px 21px;
@@ -1651,7 +1652,7 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 293, all.scss */
+/* line 294, all.scss */
 .search-form input[type="search"],
 .search-form input[type="text"] {
   border: 0;
@@ -1664,7 +1665,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 12px;
   line-height: 18px;
 }
-/* line 305, all.scss */
+/* line 306, all.scss */
 .search-form:after {
   background: url(../images/ico-search.png) no-repeat;
   width: 16px;
@@ -1675,25 +1676,25 @@ input.placeholder-text, textarea.placeholder-text {
   content: '';
 }
 
-/* line 315, all.scss */
+/* line 316, all.scss */
 .search-form.parent-focus {
   -webkit-box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* line 320, all.scss */
+/* line 321, all.scss */
 .promo-area {
   padding: 80px 0 20px;
   min-height: 300px;
   position: relative;
 }
-/* line 324, all.scss */
+/* line 325, all.scss */
 .promo-area .social-networks {
   position: absolute;
   top: 0;
-  right: 15px;
+  right: 0px;
 }
-/* line 329, all.scss */
+/* line 330, all.scss */
 .promo-area .holder {
   width: 575px;
   overflow: hidden;
@@ -1703,14 +1704,14 @@ input.placeholder-text, textarea.placeholder-text {
   clear: both;
   margin-bottom: 15px;
 }
-/* line 337, all.scss */
+/* line 338, all.scss */
 .promo-area .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #112935;
   margin: 0 0 35px;
   letter-spacing: 2px;
 }
-/* line 343, all.scss */
+/* line 344, all.scss */
 .promo-area .holder .btn-holder {
   width: 347px;
   border: 1px solid #98dcd4;
@@ -1718,7 +1719,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 0 2px;
   float: left;
 }
-/* line 349, all.scss */
+/* line 350, all.scss */
 .promo-area .holder .btn-holder .row {
   overflow: hidden;
   color: #112935;
@@ -1728,12 +1729,12 @@ input.placeholder-text, textarea.placeholder-text {
   text-transform: uppercase;
   border-bottom: 1px solid #98dcd4;
 }
-/* line 357, all.scss */
+/* line 358, all.scss */
 .promo-area .holder .btn-holder .row .release {
   float: left;
   padding: 0 8px;
 }
-/* line 361, all.scss */
+/* line 362, all.scss */
 .promo-area .holder .btn-holder .row .date {
   width: 96px;
   float: right;
@@ -1741,7 +1742,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-style: normal;
   border-left: 1px solid #98dcd4;
 }
-/* line 369, all.scss */
+/* line 370, all.scss */
 .promo-area .holder .btn-holder .btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -1762,7 +1763,7 @@ input.placeholder-text, textarea.placeholder-text {
   position: relative;
   padding: 0 57px 6px 0;
 }
-/* line 382, all.scss */
+/* line 383, all.scss */
 .promo-area .holder .btn-holder .btn-download:after {
   background: url(../images/ico-download.png) no-repeat;
   width: 37px;
@@ -1772,7 +1773,7 @@ input.placeholder-text, textarea.placeholder-text {
   top: 13px;
   content: '';
 }
-/* line 391, all.scss */
+/* line 392, all.scss */
 .promo-area .holder .btn-holder .btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -1782,32 +1783,32 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
 
-/* line 399, all.scss */
+/* line 400, all.scss */
 .promo-area .holder .btn-holder {
   padding: 0 0 0px;
 }
 
-/* line 403, all.scss */
+/* line 404, all.scss */
 #breadcrumb {
   margin-bottom: 10px;
   font-size: smaller;
 }
 
-/* line 408, all.scss */
+/* line 409, all.scss */
 #main {
   width: 100%;
   overflow: hidden;
   position: relative;
   padding: 28px 0;
 }
-/* line 411, all.scss */
+/* line 412, all.scss */
 #main:after, #main:before {
   position: absolute;
   width: 100%;
   height: 22px;
   content: '';
 }
-/* line 418, all.scss */
+/* line 419, all.scss */
 #main:after {
   top: 0;
   background-color: #f0f3f5;
@@ -1817,7 +1818,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #d1dae0, #f0f3f5);
   background-image: linear-gradient(top, #d1dae0, #f0f3f5);
 }
-/* line 422, all.scss */
+/* line 423, all.scss */
 #main:before {
   bottom: 1px;
   background-color: #d1dae0;
@@ -1828,19 +1829,19 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #f0f3f5, #d1dae0);
 }
 
-/* line 429, all.scss */
+/* line 430, all.scss */
 .home #main {
   background: #353637;
   padding: 50px 0 38px;
   border-bottom: 1px solid white;
   margin: 0 0 1px;
 }
-/* line 434, all.scss */
+/* line 435, all.scss */
 .home #main:after, .home #main:before {
   display: none;
 }
 
-/* line 441, all.scss */
+/* line 442, all.scss */
 .column {
   display: inline;
   float: left;
@@ -1848,7 +1849,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 443, all.scss */
+/* line 444, all.scss */
 .column h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -1856,40 +1857,40 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 449, all.scss */
+/* line 450, all.scss */
 .column h2 a {
   color: #99cc33;
 }
-/* line 451, all.scss */
+/* line 452, all.scss */
 .column h2 a:hover {
   color: white;
 }
-/* line 454, all.scss */
+/* line 455, all.scss */
 .column .news-holder,
 .column .blog-holder {
   overflow: hidden;
   width: 275px;
   color: #abc4d4;
 }
-/* line 459, all.scss */
+/* line 460, all.scss */
 .column .news-holder .holder,
 .column .blog-holder .holder {
   overflow: hidden;
 }
-/* line 464, all.scss */
+/* line 465, all.scss */
 .column .news-holder h2 {
   margin: 0 0 28px;
 }
-/* line 468, all.scss */
+/* line 469, all.scss */
 .column .news {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 471, all.scss */
+/* line 472, all.scss */
 .column .news p {
   margin: 0 0 12px;
 }
-/* line 475, all.scss */
+/* line 476, all.scss */
 .column .date {
   display: block;
   text-transform: uppercase;
@@ -1897,81 +1898,81 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 482, all.scss */
+/* line 483, all.scss */
 .column .blog-holder {
   margin: 0 0 0 27px;
 }
-/* line 484, all.scss */
+/* line 485, all.scss */
 .column .blog-holder .blog-post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 487, all.scss */
+/* line 488, all.scss */
 .column .blog-holder .blog-post p {
   margin: 0 0 10px;
 }
-/* line 491, all.scss */
+/* line 492, all.scss */
 .column .blog-holder h3 {
   color: white;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 495, all.scss */
+/* line 496, all.scss */
 .column .blog-holder h3 a {
   color: white;
 }
-/* line 497, all.scss */
+/* line 498, all.scss */
 .column .blog-holder h3 a:hover {
   color: #c7ec7e;
 }
-/* line 503, all.scss */
+/* line 504, all.scss */
 .column .libraries,
 .column .updates {
   width: 265px;
   overflow: hidden;
   margin: 0 0 34px 55px;
 }
-/* line 508, all.scss */
+/* line 509, all.scss */
 .column .libraries h2,
 .column .updates h2 {
   border-bottom: 1px solid #292626;
   margin: 0 0 16px;
 }
-/* line 512, all.scss */
+/* line 513, all.scss */
 .column .libraries ul,
 .column .updates ul {
   overflow: hidden;
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 516, all.scss */
+/* line 517, all.scss */
 .column .libraries ul li,
 .column .updates ul li {
   border-bottom: 1px solid #292626;
   padding: 16px 0 5px;
 }
-/* line 519, all.scss */
+/* line 520, all.scss */
 .column .libraries ul li:first-child,
 .column .updates ul li:first-child {
   padding-top: 0;
 }
-/* line 520, all.scss */
+/* line 521, all.scss */
 .column .libraries ul li .date,
 .column .updates ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 524, all.scss */
+/* line 525, all.scss */
 .column .libraries ul li a,
 .column .updates ul li a {
   color: #7FB514;
 }
-/* line 526, all.scss */
+/* line 527, all.scss */
 .column .libraries ul li a:hover,
 .column .updates ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 535, all.scss */
+/* line 536, all.scss */
 #footer {
   background: #4c6877;
   width: 100%;
@@ -1980,7 +1981,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   color: #6d8083;
 }
-/* line 540, all.scss */
+/* line 541, all.scss */
 #footer .copyrights {
   display: inline;
   float: left;
@@ -1991,17 +1992,17 @@ input.placeholder-text, textarea.placeholder-text {
   border-top: 1px solid #1a3d50;
   padding: 8px 0 0;
 }
-/* line 543, all.scss */
+/* line 544, all.scss */
 #footer .copyrights a {
   color: #abc4d4;
 }
-/* line 549, all.scss */
+/* line 550, all.scss */
 #footer .copyrights li {
   float: left;
   padding: 0 7px 0;
   position: relative;
 }
-/* line 553, all.scss */
+/* line 554, all.scss */
 #footer .copyrights li:after {
   background: url(../images/sep2.png) no-repeat;
   width: 2px;
@@ -2011,26 +2012,26 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: '';
 }
-/* line 561, all.scss */
+/* line 562, all.scss */
 #footer .copyrights li:after a {
   display: inline-block;
 }
-/* line 565, all.scss */
+/* line 566, all.scss */
 #footer .copyrights li:first-child {
   padding-left: 0;
 }
-/* line 567, all.scss */
+/* line 568, all.scss */
 #footer .copyrights li:first-child:after {
   display: none;
 }
 
-/* line 575, all.scss */
+/* line 576, all.scss */
 .footer-holder {
   overflow: hidden;
   padding: 44px 0 60px;
   min-height: 150px;
 }
-/* line 579, all.scss */
+/* line 580, all.scss */
 .footer-holder .btn-holder {
   display: inline;
   float: left;
@@ -2038,7 +2039,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 235px;
 }
-/* line 581, all.scss */
+/* line 582, all.scss */
 .footer-holder .btn-holder .btn {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2058,7 +2059,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 7px 42px 7px 14px;
   font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 593, all.scss */
+/* line 594, all.scss */
 .footer-holder .btn-holder .btn:after {
   width: 30px;
   height: 30px;
@@ -2067,7 +2068,7 @@ input.placeholder-text, textarea.placeholder-text {
   top: 8px;
   content: '';
 }
-/* line 602, all.scss */
+/* line 603, all.scss */
 .footer-holder .btn-holder .btn.btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2077,11 +2078,11 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #99cc33, #769830);
   color: white;
 }
-/* line 605, all.scss */
+/* line 606, all.scss */
 .footer-holder .btn-holder .btn.btn-download:after {
   background: url(../images/ico-download2.png) no-repeat;
 }
-/* line 608, all.scss */
+/* line 609, all.scss */
 .footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -2090,7 +2091,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
-/* line 612, all.scss */
+/* line 613, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
@@ -2100,7 +2101,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #2B4054, #12273A);
   color: white;
 }
-/* line 615, all.scss */
+/* line 616, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
@@ -2110,7 +2111,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #12273A, #12273A);
   background-image: linear-gradient(top, #12273A, #12273A);
 }
-/* line 622, all.scss */
+/* line 623, all.scss */
 .footer-holder .social-holder {
   display: inline;
   float: left;
@@ -2120,7 +2121,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 2px 0 0;
 }
 
-/* line 628, all.scss */
+/* line 629, all.scss */
 .footer-nav {
   display: inline;
   float: left;
@@ -2128,32 +2129,32 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 490px;
 }
-/* line 630, all.scss */
+/* line 631, all.scss */
 .footer-nav ul {
   overflow: hidden;
   text-transform: uppercase;
   font: 16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 635, all.scss */
+/* line 636, all.scss */
 .footer-nav ul li {
   width: 152px;
   float: left;
   padding: 0 10px 6px 0;
 }
-/* line 639, all.scss */
+/* line 640, all.scss */
 .footer-nav ul li:first-child {
   width: 135px;
 }
-/* line 642, all.scss */
+/* line 643, all.scss */
 .footer-nav ul li a {
   color: white;
   display: inline-block;
 }
-/* line 645, all.scss */
+/* line 646, all.scss */
 .footer-nav ul li a:hover {
   color: #abc4d4;
 }
-/* line 649, all.scss */
+/* line 650, all.scss */
 .footer-nav ul li ul {
   overflow: hidden;
   text-transform: capitalize;
@@ -2161,17 +2162,17 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   padding: 6px 0 0;
 }
-/* line 657, all.scss */
+/* line 658, all.scss */
 .footer-nav ul li ul li a {
   color: #abc4d4;
   display: inline-block;
 }
-/* line 660, all.scss */
+/* line 661, all.scss */
 .footer-nav ul li ul li a:hover {
   color: #fff;
 }
 
-/* line 670, all.scss */
+/* line 671, all.scss */
 #content {
   display: inline;
   float: left;
@@ -2180,14 +2181,14 @@ input.placeholder-text, textarea.placeholder-text {
   width: 1000px;
   overflow: hidden;
 }
-/* line 673, all.scss */
+/* line 674, all.scss */
 #content .holder {
   margin-left: 0px;
   margin-right: 0px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 679, all.scss */
+/* line 680, all.scss */
 #content.with-first-sidebar, #content.with-second-sidebar {
   display: inline;
   float: left;
@@ -2195,7 +2196,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 745px;
 }
-/* line 682, all.scss */
+/* line 683, all.scss */
 #content.with-first-sidebar.with-second-sidebar {
   display: inline;
   float: left;
@@ -2203,22 +2204,22 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 685, all.scss */
+/* line 686, all.scss */
 #content .head {
   overflow: hidden;
   color: #13a69a;
   padding: 0 50px 0 0;
   margin: 0 0 5px;
 }
-/* line 690, all.scss */
+/* line 691, all.scss */
 #content .head h1 {
   margin: 0 0 -1px;
 }
-/* line 693, all.scss */
+/* line 694, all.scss */
 #content .head p {
   margin: 0 0 10px;
 }
-/* line 697, all.scss */
+/* line 698, all.scss */
 #content .ico {
   display: inline-block;
   vertical-align: top;
@@ -2230,18 +2231,18 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 706, all.scss */
+/* line 707, all.scss */
 #content .ico img {
   vertical-align: top;
 }
-/* line 710, all.scss */
+/* line 711, all.scss */
 #content h1 {
   color: #1f3d4d;
   margin: 0 0 35px;
   letter-spacing: 2px;
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 715, all.scss */
+/* line 716, all.scss */
 #content h1 .ico {
   margin: 2px 10px 0 0;
   width: 21px;
@@ -2250,24 +2251,24 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 /* Content */
-/* line 726, all.scss */
+/* line 727, all.scss */
 #content .contribute-block, #content .about-block, #content .promo-block {
   overflow: hidden;
   padding: 8px 0 0;
   margin: 0 0 -46px;
 }
-/* line 730, all.scss */
+/* line 731, all.scss */
 #content .contribute-block ul, #content .about-block ul, #content .promo-block ul {
   margin: 0 0 0 -73px;
 }
-/* line 733, all.scss */
+/* line 734, all.scss */
 #content .contribute-block ul li, #content .about-block ul li, #content .promo-block ul li {
   width: 285px;
   height: 261px;
   float: left;
   margin: 0 0 54px 33px;
 }
-/* line 738, all.scss */
+/* line 739, all.scss */
 #content .contribute-block ul li a, #content .about-block ul li a, #content .promo-block ul li a {
   background: #e9eced;
   display: block;
@@ -2276,11 +2277,11 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 744, all.scss */
+/* line 745, all.scss */
 #content .contribute-block ul li a:hover, #content .about-block ul li a:hover, #content .promo-block ul li a:hover {
   background: #e3e7e8;
 }
-/* line 748, all.scss */
+/* line 749, all.scss */
 #content .contribute-block ul li .ico, #content .about-block ul li .ico, #content .promo-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2292,27 +2293,27 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 758, all.scss */
+/* line 759, all.scss */
 #content .contribute-block ul li h2, #content .about-block ul li h2, #content .promo-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 763, all.scss */
+/* line 764, all.scss */
 #content .contribute-block ul li p, #content .about-block ul li p, #content .promo-block ul li p {
   color: #0C0D0D;
 }
-/* line 771, all.scss */
+/* line 772, all.scss */
 #content .rss-block {
   overflow: hidden;
   padding: 8px 0 0 40px;
   margin: 0 0 -46px;
 }
-/* line 775, all.scss */
+/* line 776, all.scss */
 #content .rss-block ul {
   margin: 0 0 0 -70px;
 }
-/* line 778, all.scss */
+/* line 779, all.scss */
 #content .rss-block ul li {
   width: 450px;
   float: left;
@@ -2328,7 +2329,7 @@ input.placeholder-text, textarea.placeholder-text {
   	}
   }*/
 }
-/* line 792, all.scss */
+/* line 793, all.scss */
 #content .rss-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2340,50 +2341,50 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 802, all.scss */
+/* line 803, all.scss */
 #content .rss-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 807, all.scss */
+/* line 808, all.scss */
 #content .rss-block ul li p {
   color: #0C0D0D;
 }
-/* line 816, all.scss */
+/* line 817, all.scss */
 #content .about-block ul li, #content .promo-block ul li {
   height: 320px;
 }
-/* line 818, all.scss */
+/* line 819, all.scss */
 #content .about-block ul li h2, #content .promo-block ul li h2 {
   -webkit-border-radius: 7px;
   border-radius: 7px;
   /* background: #2B4054; */
   padding: 0;
 }
-/* line 827, all.scss */
+/* line 828, all.scss */
 #content .about-block ul {
   margin: 0 0 0 0px;
 }
-/* line 833, all.scss */
+/* line 834, all.scss */
 #content .contribute-block ul {
   margin: 0 0 0 0px;
 }
-/* line 835, all.scss */
+/* line 836, all.scss */
 #content .contribute-block ul li {
   margin-top: 10px;
 }
-/* line 841, all.scss */
+/* line 842, all.scss */
 #content .promo-area {
   padding: 0 0 0 0px;
   min-height: 0px;
 }
-/* line 846, all.scss */
+/* line 847, all.scss */
 #content .info-block {
   overflow: hidden;
   position: relative;
 }
-/* line 849, all.scss */
+/* line 850, all.scss */
 #content .info-block:after {
   background: url(../images/sep.png) no-repeat;
   width: 22px;
@@ -2393,7 +2394,7 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: "";
 }
-/* line 858, all.scss */
+/* line 859, all.scss */
 #content .info-block h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -2401,26 +2402,26 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 865, all.scss */
+/* line 866, all.scss */
 #content .info-block .post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 868, all.scss */
+/* line 869, all.scss */
 #content .info-block .post h3 {
   color: #0d4143;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 872, all.scss */
+/* line 873, all.scss */
 #content .info-block .post h3 a {
   color: #0d4143;
 }
-/* line 874, all.scss */
+/* line 875, all.scss */
 #content .info-block .post h3 a:hover {
   color: #4c6877;
 }
-/* line 879, all.scss */
+/* line 880, all.scss */
 #content .info-block .post .date {
   display: block;
   text-transform: uppercase;
@@ -2428,23 +2429,23 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 886, all.scss */
+/* line 887, all.scss */
 #content .info-block .post p {
   margin: 0 0 10px;
 }
-/* line 888, all.scss */
+/* line 889, all.scss */
 #content .info-block .post p a {
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #1f3d4d;
   text-transform: uppercase;
 }
-/* line 892, all.scss */
+/* line 893, all.scss */
 #content .info-block .post p a:hover {
   color: #4c6877;
 }
 
 /* #content */
-/* line 901, all.scss */
+/* line 902, all.scss */
 #sidebar {
   border: none;
   display: inline;
@@ -2457,11 +2458,11 @@ input.placeholder-text, textarea.placeholder-text {
   top: -12px;
   margin: 0px 2px 0 2px;
 }
-/* line 908, all.scss */
+/* line 909, all.scss */
 #sidebar .holder {
   padding: 0 5px 5px 5px;
 }
-/* line 911, all.scss */
+/* line 912, all.scss */
 #sidebar div.title, #sidebar h2 {
   color: #99cc33;
   margin: 0 0 17px;
@@ -2469,17 +2470,17 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #becbd3;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 917, all.scss */
+/* line 918, all.scss */
 #sidebar div.title a, #sidebar h2 a {
   color: #99cc33;
 }
-/* line 919, all.scss */
+/* line 920, all.scss */
 #sidebar div.title a:hover, #sidebar h2 a:hover {
   color: white;
 }
 
 /* Code elements */
-/* line 927, all.scss */
+/* line 928, all.scss */
 code {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -2493,7 +2494,7 @@ code {
   margin: 2px 0 2px 0;
 }
 
-/* line 939, all.scss */
+/* line 940, all.scss */
 code.inline {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -2504,29 +2505,29 @@ code.inline {
 }
 
 /* ... */
-/* line 949, all.scss */
+/* line 950, all.scss */
 .widget {
   overflow: hidden;
   margin: 0 0 34px;
 }
-/* line 952, all.scss */
+/* line 953, all.scss */
 .widget h2 {
   margin: 0 0 16px;
 }
-/* line 955, all.scss */
+/* line 956, all.scss */
 .widget ul {
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 958, all.scss */
+/* line 959, all.scss */
 .widget ul li {
   border-bottom: 1px solid #becbd3;
   padding: 16px 0 5px;
 }
-/* line 961, all.scss */
+/* line 962, all.scss */
 .widget ul li:first-child {
   padding-top: 0;
 }
-/* line 964, all.scss */
+/* line 965, all.scss */
 .widget ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
@@ -2534,25 +2535,25 @@ code.inline {
   color: #1da699;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 971, all.scss */
+/* line 972, all.scss */
 .widget ul li a {
   color: #4c6877;
 }
-/* line 973, all.scss */
+/* line 974, all.scss */
 .widget ul li a:hover {
   color: #1f3d4d;
 }
 
-/* line 982, all.scss */
+/* line 983, all.scss */
 .social-networks {
   float: right;
 }
-/* line 985, all.scss */
+/* line 986, all.scss */
 .social-networks li {
   float: left;
   margin: 0 0 0 10px;
 }
-/* line 988, all.scss */
+/* line 989, all.scss */
 .social-networks li a {
   display: block;
   width: 35px;
@@ -2561,74 +2562,74 @@ code.inline {
   overflow: hidden;
   text-indent: -9999px;
 }
-/* line 994, all.scss */
+/* line 995, all.scss */
 .social-networks li a:hover {
   background: url(../images/ico-social-h.png) no-repeat;
 }
-/* line 996, all.scss */
+/* line 997, all.scss */
 .social-networks li .facebook {
   width: 34px;
 }
-/* line 999, all.scss */
+/* line 1000, all.scss */
 .social-networks li .linkedin {
   background-position: -44px 0;
 }
-/* line 1001, all.scss */
+/* line 1002, all.scss */
 .social-networks li .linkedin:hover {
   background-position: -44px 0;
 }
-/* line 1003, all.scss */
+/* line 1004, all.scss */
 .social-networks li .youtube {
   background-position: -89px 0;
 }
-/* line 1005, all.scss */
+/* line 1006, all.scss */
 .social-networks li .youtube:hover {
   background-position: -89px 0;
 }
-/* line 1007, all.scss */
+/* line 1008, all.scss */
 .social-networks li .twitter {
   background-position: -134px 0;
 }
-/* line 1009, all.scss */
+/* line 1010, all.scss */
 .social-networks li .twitter:hover {
   background-position: -134px 0;
 }
-/* line 1011, all.scss */
+/* line 1012, all.scss */
 .social-networks li .googleplus {
   background-position: -179px 0;
   width: 34px;
 }
-/* line 1014, all.scss */
+/* line 1015, all.scss */
 .social-networks li .googleplus:hover {
   background-position: -179px 0;
 }
 
-/* line 1019, all.scss */
+/* line 1020, all.scss */
 .social-plugin {
   overflow: hidden;
   margin: 0 0 30px -2px;
 }
-/* line 1022, all.scss */
+/* line 1023, all.scss */
 .social-plugin img {
   vertical-align: top;
 }
 
-/* line 1027, all.scss */
+/* line 1028, all.scss */
 .popular {
   padding: 12px 0 0;
 }
-/* line 1029, all.scss */
+/* line 1030, all.scss */
 .popular li {
   padding-left: 37px !important;
   position: relative;
 }
-/* line 1032, all.scss */
+/* line 1033, all.scss */
 .popular li img {
   position: absolute;
   top: 10px;
   left: 0;
 }
-/* line 1038, all.scss */
+/* line 1039, all.scss */
 .popular li:first-child img {
   top: -5px;
 }

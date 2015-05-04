@@ -241,6 +241,7 @@
 
 .header-right{
 	@include grid(3);
+	margin-left:0px;
 	padding: 11px 0 0;
 }
 
@@ -324,7 +325,7 @@
 	.social-networks{
 		position: absolute;
 		top: 0;
-		right: 15px;
+		right: 0px;
 	}
 	.holder{
 		@include grid-width(7);

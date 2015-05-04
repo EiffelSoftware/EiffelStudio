@@ -4231,12 +4231,22 @@ feature {NONE} -- Implementation
 
 	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
 			-- <Precursor>
+		local
+			t: like last_type
 		do
 			a_as.expression.process (Current)
-			text_formatter_decorator.put_space
-			text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
-			text_formatter_decorator.put_space
+			t := last_type
+			if not expr_type_visiting then
+				text_formatter_decorator.put_space
+				text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				text_formatter_decorator.put_space
+			end
 			a_as.name.process (Current)
+				-- Remember separate instruction argument.
+			if attached t then
+				object_test_locals_for_current_feature.force (t, a_as.name.name_32)
+			end
+			last_type := Void
 		end
 
 	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)

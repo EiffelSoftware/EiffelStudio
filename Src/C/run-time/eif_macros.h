@@ -1406,43 +1406,37 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_SD - declare variables that are used to track request chain stack without rescue clause.
  * RTS_SDX - declare variables that are used to track request chain stack with rescue clause.
  * RTS_SDR - declare variables that are used to restore request chain stack with rescue clause.
+ *
+ * RTS_SDP(p) - declare a variable holding the PID 'p' of the currently executing thread.
+ * RTS_SDC - declare a variable used to keep track of the count of the request group stack for exception handling.
+ *
  * RTS_SRC(p) - create request chain for the processor identified by object p when there is no rescue clase.
  * RTS_SRCX(p) - create request chain for the processor identified by object p when there is a rescue clase.
  * RTS_SRF(p) - release request chain for the processor identified by object p when wait condition fails.
  * RTS_SRD(p) - release request chain for the processor identified by object p when routine exits normally.
  * RTS_SRR - release request chains (if any) when entering a rescue clause because of an exception.
  */
-#define RTS_SD \
-	EIF_REFERENCE * q = sep_stack.st_top;
-#define RTS_SDX \
-	EIF_REFERENCE * volatile q = sep_stack.st_top; \
-	EIF_REFERENCE * volatile qt = q;
-#define RTS_SDR \
-	EIF_REFERENCE * qt = sep_stack.st_top;
-#define RTS_SRC(p) \
-	{                                                       \
-		RTS_RC(p);                                      \
-		if (q && q < sep_stack.st_end) {                \
-			*q = p;                                 \
-			sep_stack.st_top = q + 1;               \
-		} else {                                          \
-			eif_request_chain_push (p, &sep_stack); \
-			q = (EIF_REFERENCE *) 0;                \
-		}                                               \
-	}
-#define RTS_SRCX(p) {RTS_SRC(p); qt = sep_stack.st_top;}
-#define RTS_SRP(p) \
-	if (q == (EIF_REFERENCE *) 0) {             \
-		eif_request_chain_pop (&sep_stack); \
-	} else {                                      \
-		sep_stack.st_top = q;               \
-	}
-#define RTS_SRF(p) {RTS_SRP (p); RTS_RF (p);}
-#define RTS_SRD(p) {RTS_SRP (p); RTS_RD (p);}
-#define RTS_SRR \
-	if (sep_stack.st_top != qt) {                       \
-		eif_request_chain_restore (qt, &sep_stack); \
-	}
+#define RTS_SD RTS_SDP(RTS_PID(Current));
+#define RTS_SDX RTS_SD; RTS_SDC;
+#define RTS_SDR RTS_SD; RTS_SDC;
+
+#define RTS_SDP(pid) \
+	EIF_SCP_PID scoop_current_pid = pid;
+#define RTS_SDC \
+	size_t request_group_stack_count = eif_scoop_request_group_stack_count (scoop_current_pid);
+
+#define RTS_SRC(p) RTS_RC(p);
+#define RTS_SRCX(p) RTS_SRC(p); request_group_stack_count = eif_scoop_request_group_stack_count (scoop_current_pid);
+#define RTS_SRP(p)
+
+/* TODO: As the request group is allocated again and again during precondition evaluation,
+ * we have to delete the request group here when a precondition fails to keep the stack
+ * balanced. It would be much better though if the request group could
+ * be initialized once and for all _before_ the wait condition evaluation loop starts.
+ */
+#define RTS_SRF(p) RTS_RF (p); RTS_RD(p);
+#define RTS_SRD(p) RTS_RD (p);
+#define RTS_SRR eif_delete_scoop_request_group (scoop_current_pid, eif_scoop_request_group_stack_count (scoop_current_pid) - request_group_stack_count);
 
 /*
  * Separate call, the first two arguments to them have a different meaning between workbench and finalized mode):

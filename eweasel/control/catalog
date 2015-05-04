@@ -1433,7 +1433,7 @@ test	scoop-exceptions-combinations			scoop048 tcf manual scoop multithreaded exc
 test	scoop-impersonation-lockpassing			scoop049 tcf manual scoop multithreaded deadlock lock_passing
 test	scoop-lockpassing-query					scoop050 tcf pass scoop multithreaded deadlock lock_passing
 test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded deadlock lock_passing
-test 	scoop-exceptions-unlock					scoop052 tcf manual scoop multithreaded exception deadlock
+test 	scoop-exceptions-unlock					scoop052 tcf pass scoop multithreaded exception deadlock
 test	scoop-exceptions-dispose			scoop053 tcf fail scoop multithreaded exception execution
 test	scoop-named-tuple-validity			scoop054 tcf fail scoop tuple validity
 test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop validity

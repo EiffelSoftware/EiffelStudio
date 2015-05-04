@@ -1,9 +1,12 @@
-							<div class="updates">
-								<h2><a href="#">Updates</a></h2>
-								<ul>
-									<li><time datetime="2014-09-12" class="date">12.09.2014</time> <a href="#">Eiffel Game Library</a></li>
-									<li><time datetime="2014-09-12" class="date">12.09.2014</time> <a href="#">HTML5 Microdata Parser</a></li>
-									<li><time datetime="2014-09-12" class="date">12.09.2014</time> <a href="#">Smarty Template Engine</a></li>
-									<li><time datetime="2014-09-12" class="date">12.09.2014</time> <a href="#">Wikitext</a></li>
-								</ul>
-							</div>
+<div id="breadcrumb">
+	<span class="ico"><img src="/theme/images/ico-document.png" width="21" height="21" alt="Image Description"></span>
+			  		<a href="{$site_url/}/welcome">Welcome</a>
+			  		:: Recent Updates
+</div>
+
+{include file="block_coming_soon.tpl"/}
+
+{if condition="false"}
+<p><a href="#"> Read all news ... </a></p>
+</p>
+{/if}

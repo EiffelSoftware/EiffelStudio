@@ -72,6 +72,7 @@
 		padding: 0 0 10px;
 		position: relative;
 		z-index: 5;
+		width: 1200px;
 	}
 }
 
@@ -96,6 +97,7 @@
 	font-size: $base-font-size + 3;
 	text-transform: uppercase;
 	padding: 54px 0 0;
+	width: 641px; 
 	ul{
 		@extend %clearfix;
 		@extend %listreset;
@@ -774,7 +776,7 @@
 			@extend %listreset;
 			margin: 0 0 0 -70px;
 			li{
-				width: 310px;
+				width: 450px;
 				float: left;
 				margin: 0 0 54px 33px;
 				/*a{

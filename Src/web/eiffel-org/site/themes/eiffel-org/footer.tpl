@@ -3,7 +3,7 @@
 						<div class="footer-holder">
 							<nav class="footer-nav">
 								<ul>
-									<li><a href="/about">ABOUT</a>
+									<li><a href="/welcome">Welcome</a>
 										<ul>
 											<li><a href="/purpose">Purpose</a></li>
 											<li><a href="/news">News</a></li>

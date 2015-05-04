@@ -1,6 +1,6 @@
 <div id="breadcrumb">
 	<span class="ico"><img src="/theme/images/ico-megaphone.png" width="21" height="21" alt="Image Description"></span>
-			  		<a href="{$site_url/}/about">About</a>
+			  		<a href="{$site_url/}/welcome">Welcome</a>
 			  		:: Purpose
 </div>
 <h1>Purpose</h1>

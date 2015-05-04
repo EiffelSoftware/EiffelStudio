@@ -1,7 +1,7 @@
 <div id="breadcrumb">
 	<span class="ico"><img src="/theme/images/ico-document.png" width="21" height="21" alt="Image Description"></span>
-			  		<a href="{$site_url/}/about">About</a>
-			  		:: News
+			  		<a href="{$site_url/}/welcome">Welcome</a>
+			  		:: What's New
 </div>
 
 <p>From new libraries, functionalities, contributions , and events, check out the latest happenings within the Eiffel

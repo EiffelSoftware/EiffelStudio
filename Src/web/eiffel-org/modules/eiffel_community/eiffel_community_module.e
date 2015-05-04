@@ -71,16 +71,17 @@ feature -- Router
 			-- Router configuration.
 		do
 			create Result.make (7)
-			Result.handle_with_request_methods ("/about", create {WSF_URI_AGENT_HANDLER}.make (agent handle_about (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/welcome", create {WSF_URI_AGENT_HANDLER}.make (agent handle_welcome (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/purpose", create {WSF_URI_AGENT_HANDLER}.make (agent handle_purpose (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/news", create {WSF_URI_AGENT_HANDLER}.make (agent handle_news (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/articles", create {WSF_URI_AGENT_HANDLER}.make (agent handle_articles (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/blogs", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (a_api, ?, ?)), Result.methods_head_get)
+			Result.handle_with_request_methods ("/updates", create {WSF_URI_AGENT_HANDLER}.make (agent handle_updates (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), Result.methods_head_get)
 
 			Result.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), Result.methods_head_get)
 			Result.handle_with_request_methods ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), Result.methods_head_get)
+
+			Result.handle_with_request_methods ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), Result.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -107,7 +108,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"front_header_welcome", "social_area", "eiffel_copyright", "about_main", "purpose", "news", "articles", "blogs", "social_buttons", "updates", "popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
+			Result := <<"front_header_welcome", "social_area", "eiffel_copyright", "welcome_main", "purpose", "news", "social_buttons", "updates", "sidebar_updates","popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -133,7 +134,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("about_main") and then l_path_info.starts_with ("/about") then
+			elseif a_block_id.is_case_insensitive_equal_general ("welcome_main") and then l_path_info.starts_with ("/welcome") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -160,16 +161,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("articles") and then l_path_info.starts_with ("/articles") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif a_block_id.is_case_insensitive_equal_general ("blogs") and then l_path_info.starts_with ("/blogs") then
+			elseif a_block_id.is_case_insensitive_equal_general ("updates") and then l_path_info.starts_with ("/updates") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -221,7 +213,7 @@ feature -- Hooks
 				else
 					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("updates") then
+			elseif a_block_id.is_case_insensitive_equal_general ("sidebar_updates") then
 				if a_response.is_front then
 					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
@@ -276,18 +268,18 @@ feature -- Hooks
 
 feature -- Request handling: About	
 
-	handle_about (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_welcome (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
-			write_debug_log (generator + ".handle_about")
+			write_debug_log (generator + ".handle_welcome")
 			if req.is_get_request_method then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			else
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
-			r.values.force ("about_main", "about_main")
+			r.values.force ("welcome_main", "welcome_main")
 			r.execute
 		end
 
@@ -305,29 +297,19 @@ feature -- Request handling: About
 		local
 			r: CMS_RESPONSE
 		do
-			write_debug_log (generator + ".handle_about")
+			write_debug_log (generator + ".handle_news")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("news", "news")
 			r.execute
 		end
 
-	handle_articles (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_updates (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
-			write_debug_log (generator + ".handle_articles")
+			write_debug_log (generator + ".handle_updates")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force ("articles", "articles")
-			r.execute
-		end
-
-	handle_blogs (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			write_debug_log (generator + ".handle_blogs")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force ("blogs", "blogs")
+			r.values.force ("updates", "updates")
 			r.execute
 		end
 
@@ -364,6 +346,24 @@ feature -- Request handling: About
 
 feature -- Request handling: Contribute
 
+	handle_resources (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			fixme ("Use CMS node and associated content for Resources link!")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("resources", "optional_content_type")
+			r.set_main_content ("")
+			if attached template_block (Current, "resources_page", r) as l_tpl_block then
+				r.add_block (l_tpl_block, "content")
+			else
+				debug ("cms")
+					r.add_warning_message ("Error with block [resources_page]")
+				end
+			end
+			r.execute
+		end
+
 	handle_contribute (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -371,7 +371,6 @@ feature -- Request handling: Contribute
 			fixme ("Use CMS node and associated content for Contribute link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("contribute", "optional_content_type")
---			r.set_title ("Contribute")
 			r.set_main_content ("")
 			if attached template_block (Current, "contribute_page", r) as l_tpl_block then
 				r.add_block (l_tpl_block, "content")
@@ -390,7 +389,6 @@ feature -- Request handling: Contribute
 			fixme ("Use CMS node and associated content for Contribute link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("contribute", "optional_content_type")
---			r.set_title ("Contribute")
 			r.set_main_content ("")
 			if attached template_block (Current, "contribute_description", r) as l_tpl_block then
 				r.add_block (l_tpl_block, "content")

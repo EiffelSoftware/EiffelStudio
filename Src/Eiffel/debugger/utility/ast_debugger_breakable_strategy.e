@@ -432,7 +432,8 @@ feature {NONE} -- Iteration
 
 	process_iteration_as (l_as: ITERATION_AS)
 		do
-			register_object_test_local (l_as.identifier, Void, Void)			Precursor (l_as)
+			register_object_test_local (l_as.identifier, Void, Void)
+			Precursor (l_as)
 		end
 
 	process_loop_as (l_as: LOOP_AS)
@@ -575,7 +576,7 @@ feature {NONE} -- Iteration
 		do
 			l_name := l_as.name
 			if l_name /= Void then
-				register_object_test_local (l_name, l_as.type, l_as.expression, False)
+				register_object_test_local (l_name, l_as.type, l_as.expression)
 			end
 			Precursor (l_as)
 		end

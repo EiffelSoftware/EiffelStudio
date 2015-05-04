@@ -522,17 +522,12 @@ rt_public void xinitint(void)
 /*
  * Create request chain wait until they are ready.
  */
-rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REFERENCE * volatile * qqt)
+rt_private void initialize_request_chain (void)
 {
 	/* Define indirect variable that is used to keep track of request chain stack. */
-#define q (*qq)
-#define qt (*qqt)
 	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 	uint32 n;
 
-		/* Create request chain. */
-	RTS_SRCX(icurrent -> it_ref);
 		/* Register reference arguments. */
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
@@ -542,8 +537,6 @@ rt_private void initialize_request_chain (EIF_REFERENCE * volatile * qq, EIF_REF
 	}
 		/* Wait for arguments to be locked. */
 	RTS_RW(icurrent -> it_ref);
-#undef q
-#undef qt
 }
 #endif /* EIF_THREADS */
 
@@ -598,7 +591,8 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile pre_start = 0;		/* Start of a precondition. */
 	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
 	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
-	RTS_SDX                                         /* Declarations for request chain */
+	RTS_SDP(rt_globals->eif_thr_context_cx->logical_id); /* Declarations for request chain */
+	RTS_SDC;
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int routine_id = 0;
@@ -862,7 +856,10 @@ rt_private void interpret(int flag, int where)
 		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (&q, &qt);
+			if (uarg) {
+				RTS_SRCX(icurrent -> it_ref);
+				initialize_request_chain ();
+			}
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -1016,7 +1013,10 @@ rt_private void interpret(int flag, int where)
 #endif
 #ifdef EIF_THREADS
 			/* Initialize request chain if required. */
-		if (uarg) initialize_request_chain (&q, &qt);
+		if (uarg) {
+			RTS_SRCX(icurrent -> it_ref);
+			initialize_request_chain ();
+		}
 			/* Record offset of a precondition block to repeat the check
 			   for failing wait conditions. */
 		pre_start = IC - 1;
@@ -1114,7 +1114,10 @@ rt_private void interpret(int flag, int where)
 		if (*IC != BC_PRECOND) {
 #ifdef EIF_THREADS
 				/* Initialize request chain if required. */
-			if (uarg) initialize_request_chain (&q, &qt);
+			if (uarg) {
+				RTS_SRCX(icurrent -> it_ref);
+				initialize_request_chain ();
+			}
 #endif
 			goto enter_body; /* Start execution of a routine body. */
 		}

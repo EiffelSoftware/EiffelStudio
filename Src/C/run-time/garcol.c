@@ -304,19 +304,6 @@ rt_public struct stack_list hec_stack_list = {
 #endif
 
 /*
-doc:	<attribute name="sep_stack_list" return_type="struct stack_list" export="public">
-doc:		<summary>List of all `sep_stack'. There is one per thread.</summary>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>eif_gc_mutex</synchronization>
-doc:	</attribute>
-*/
-rt_public struct stack_list sep_stack_list = {
-	(int) 0,	/* count */
-	(int) 0,	/* capacity */
-	{NULL}		/* threads_stack */
-};
-
-/*
 doc:	<attribute name="eif_stack_list" return_type="struct stack_list" export="public">
 doc:		<summary>List of all `eif_stack'. There is one per thread.</summary>
 doc:		<thread_safety>Safe</thread_safety>
@@ -1598,7 +1585,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 	CHECK ("Same stack count", loc_set_list.count == loc_stack_list.count);
 	CHECK ("Same stack count", loc_set_list.count == once_set_list.count);
 	CHECK ("Same stack count", loc_set_list.count == hec_stack_list.count);
-	CHECK ("Same stack count", loc_set_list.count == sep_stack_list.count);
 	CHECK ("Same stack count", loc_set_list.count == eif_stack_list.count);
 	CHECK ("Same stack count", loc_set_list.count == eif_trace_list.count);
 #ifdef WORKBENCH
@@ -1617,7 +1603,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 				mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
 				mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
 				mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
-				mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
 #ifdef WORKBENCH
 				mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 				mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
@@ -1656,7 +1641,6 @@ rt_private void internal_marking(MARKER marking, int moving)
 		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
 		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
 		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
-		mark_simple_stack(sep_stack_list.threads.sstack[i], marking, moving);
 #ifdef WORKBENCH
 		mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 		mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);

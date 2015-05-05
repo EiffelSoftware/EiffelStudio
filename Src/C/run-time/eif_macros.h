@@ -1365,7 +1365,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_OU(c,o) - tells if object o is uncontrolled by the processor associated with object c
  */
 
-#define EIF_IS_SYNCED_ON(c,s) eif_is_synced_on (RTS_PID(c), RTS_PID(s))
+#define EIF_IS_SYNCED_ON(c,s) 0
 #define EIF_IS_DIFFERENT_PROCESSOR(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)))
 #define EIF_IS_DIFFERENT_PROCESSOR_FOR_QUERY(o1,o2) ((RTS_PID (o1) != RTS_PID (o2)) && !(EIF_IS_SYNCED_ON(o1,o2)))
 

@@ -136,6 +136,9 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		}
 	}
 
+		/* Inform the GC that we're about to be blocked. */
+	EIF_ENTER_C;
+
 		/* Before we unlock the synchronized queues, we have to acquire the
 		 * lock to our condition variable mutex. This has to happen before
 		 * rt_request_group_unlock to avoid missed signals. */
@@ -159,6 +162,10 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		 * We're not interested in any further signals, as we re-register anyway if the
 		 * wait condition fails again. */
 	eif_pthread_mutex_unlock (l_client->wait_condition_mutex);
+
+		/* Synchronize with the GC again. */
+	EIF_EXIT_C;
+	RTGC;
 
 		 /* Note: We do not clean up the registrations here, because it would involve
 		 * unnecessary locking and a risk of deadlocks. Instead, the suppliers delete

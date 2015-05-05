@@ -1923,7 +1923,6 @@ feature {NONE} -- Visitors
 	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
 			-- <Precursor>
 		do
-			generate_melted_debugger_hook
 				-- Generate evaluation of arguments.
 			a_node.arguments.process (Current)
 				-- Check if a compound needs to be generated.

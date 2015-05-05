@@ -3201,7 +3201,6 @@ feature {NONE} -- Implementation
 	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
 			-- <Precursor>
 		do
-			put_breakable
 			text_formatter_decorator.process_keyword_text (ti_separate_keyword, Void)
 			text_formatter_decorator.set_separator (ti_comma)
 			if a.arguments.count = 1 then

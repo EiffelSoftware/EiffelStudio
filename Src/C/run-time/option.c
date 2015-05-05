@@ -542,9 +542,9 @@ rt_shared void exitprf(void)
 			f_values = (struct feat_table *) class_table->h_values;
 			index = 1;
 
-			for (i = 0; i < class_table->h_size; i++) {
+			for (i = 0; i < class_table->h_capacity; i++) {
 				if (keys[i] != 0) {
-					for (j = 0; j < f_values[i].htab->h_size; j++) {
+					for (j = 0; j < f_values[i].htab->h_capacity; j++) {
 						if (f_values[i].htab->h_keys[j] != 0) {
 							features = (struct prof_info *) f_values[i].htab->h_values;
 							

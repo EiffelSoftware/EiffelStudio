@@ -1,5 +1,17 @@
 /*
-	description: "Hash table handling (indexed by integer keys)."
+	description: "[
+		Hash table handling (indexed by integer keys compatible with the size of a pointer, i.e. we can also
+		index by pointers). For details on the implementation, look at the EiffelBase HASH_TABLE class.
+
+		The routines use eif_malloc and eif_free and not eif_rt_xcalloc,
+	   	eif_rt_xfree because we want to release the memory taken by the
+	   	hash table after retrieving a storable (from ~40k to a much more) so that
+	   	it will be reused by Eiffel objects.
+		The note above is only valid for Windows (and any other implementation
+		that does not redefine malloc and free. If they are redefined, the
+		blocks of memory will be managed the same way.)
+
+		]"
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
@@ -48,313 +60,398 @@ doc:<file name="hashin.c" header="rt_hashin.h" version="$Id$" summary="Hash tabl
 
 #include <string.h>		/* For memset(), bzero() */
 
-/* These routines use malloc and free and not eif_rt_xcalloc, eif_rt_xfree because we
- * want to release the memory taken by the hash table after retrieving
- * the precompiled project (~400k) so that it will be reused by Eiffel
- * objects.
- * The note above is only valid for Windows (and any other implementation
- * that does not redefine malloc and free. If they are redefined, the
- * blocks of memory will be managed the same way.
- * Xavier
- * Note: We renamed malloc/realloc/panic/calloc in eif_malloc, eif_realloc, eif_.. so that
- * to avoid any conflict of names. 
- * Manuelt.
- */
+rt_private int ht_resize(struct htable *ht, size_t new_size);
 
-rt_public int ht_create(struct htable *ht, size_t n, size_t sval)
+/*
+doc:	<routine name="ht_create" return_type="int" export="shared">
+doc:		<summary>Initializes a hash-table `ht' to hold `n' items of size `sval'. This is the C equivalent version of the EiffelBase HASH_TABLE class. We allocate the table so that it can hold at least (n + n // 2) entries.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="n" type="size_t">Number of elements `ht' must accomodate.</param>
+doc:		<param name="sval" type="size_t">Size of elements stored in `ht'.</param>
+doc:		<return>Returns 0 if initialization was done, -1 otherwise.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared int ht_create(struct htable *ht, size_t n, size_t sval)
 {
-	/* Creates an H table to hold 'n' items with descriptor held in 'ht'. The
-	 * size of the table is optimized to avoid conflicts and is of course a
-	 * prime number. We take the first prime after (5 * n / 4). The 'sval'
-	 * parameter gives the size of the structure used to store the value.
-	 * The function returns 0 if everything was ok, -1 otherwise.
-	 */
-
-	size_t hsize;		/* Size of created table */
+	size_t l_capacity;		/* Size of created table */
 	char *array;		/* For array creation (keys/values) */
+
+	REQUIRE("ht not null", ht);
 	
-	hsize = nprime((5 * n) / 4);	/* Table's size */
+	l_capacity = nprime(n + (n / 2));	/* Table's size */
 
-	array = (char *) eif_calloc(hsize, sizeof(rt_uint_ptr));	/* Mallocs array of keys */
-	if (array == (char *) 0)
-		return -1;					/* Malloc failed */
-	ht->h_keys = (rt_uint_ptr *) array;		/* Where array of keys is stored */
-
-	array = (char *) eif_calloc(hsize, sval);			/* Mallocs array of values */
-	if (array == (char *) 0) {
-		eif_free(ht->h_keys);			/* Free keys array */
+	array = (char *) eif_calloc(l_capacity, sizeof(rt_uint_ptr));	/* Mallocs array of keys */
+	if (!array) {
 		return -1;					/* Malloc failed */
 	}
-	ht->h_values = (EIF_POINTER) array;			/* Where array of keys is stored */
+	ht->h_keys = (rt_uint_ptr *) array;		/* Where array of keys is stored */
 
-	ht->h_size = hsize;				/* Size of hash table */
+	array = (char *) eif_calloc(l_capacity, sizeof(char));
+	if (!array) {
+		eif_free(ht->h_keys);
+		return -1;
+	}
+	ht->h_deleted = array;
+
+	array = (char *) eif_calloc(l_capacity, sval);			/* Mallocs array of values */
+	if (!array) {
+		eif_free(ht->h_keys);			/* Free keys array */
+		eif_free(ht->h_deleted);
+		return -1;					/* Malloc failed */
+	}
+	ht->h_values = (void *) array;			/* Where array of keys is stored */
+
+	ht->h_capacity = l_capacity;				/* Size of hash table */
 	ht->h_sval = sval;				/* Size of each stored item */
 
 	return 0;			/* Creation was ok */
 }
 
-rt_public void ht_zero(struct htable *ht)
+/*
+doc:	<routine name="ht_zero" export="shared">
+doc:		<summary>Reset the whole `ht' to its default initialization state.</summary>
+doc:		<param name="ht" type="struct htable *">Table to re-initialize.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void ht_zero(struct htable *ht)
 {
-	/* Initialize the hash table with zeros */
+	size_t l_capacity = ht->h_capacity;
 
-	size_t hsize = ht->h_size;
+	REQUIRE("ht not null", ht);
 
-	memset (ht->h_keys, 0, hsize * sizeof(rt_uint_ptr));
-	memset (ht->h_values, 0, hsize * ht->h_sval);
+	memset (ht->h_keys, 0, l_capacity * sizeof(rt_uint_ptr));
+	memset (ht->h_values, 0, l_capacity * ht->h_sval);
+	memset (ht->h_deleted, 0, l_capacity * sizeof(char));
 }
- 
-rt_public size_t ht_find (const struct htable *ht, rt_uint_ptr key)
+
+/*
+doc:	<routine name="ht_value" return_type="void *" export="shared">
+doc:		<summary>Search `key' in hash-table `ht' and returns the associated value address if found.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to find in `ht'.</param>
+doc:		<return>Returns address of value in `ht' if found, NULL otherwise.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void * ht_value(struct htable *ht, rt_uint_ptr key)
 {
-	/* Look for item associated with given key and returns its position.
-	 * Return a table size if item is not found.
-	 */
-	
 	size_t pos;		/* Position in H table */
-	size_t hsize;		/* Size of H table */
+	size_t l_capacity;		/* Size of H table */
 	rt_uint_ptr *hkeys;		/* Array of keys */
+	char *hdeleted;
 	size_t tmp_try = 0;	/* Count number of attempts */
 	size_t inc;		/* Loop increment */
+	rt_uint_ptr l_key;
 
-	/* Initializations */
-	hsize = ht->h_size;
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
+
+		/* Initializations */
+	l_capacity = ht->h_capacity;
 	hkeys = ht->h_keys;
+	hdeleted = ht->h_deleted;
 
 	/* Jump from one hashed position to another until we find the value or
-	 * go to an empty entry or reached the end of the table.
-	 */
-	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
-		if (hkeys[pos] == key)
-			return pos;
-		else if (hkeys[pos] == 0L)
-			break;
-	}
-
-	return hsize;			/* Item was not found */
-}
-
-rt_public EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key)
-{
-	/* Look for item associated with given key and returns a pointer to its
-	 * location in the value array. Return a null pointer if item is not found.
-	 */
-	
-	size_t pos;		/* Position in H table */
-	size_t hsize;		/* Size of H table */
-	rt_uint_ptr *hkeys;		/* Array of keys */
-	size_t tmp_try = 0;	/* Count number of attempts */
-	size_t inc;		/* Loop increment */
-
-	/* Initializations */
-	hsize = ht->h_size;
-	hkeys = ht->h_keys;
-
-	/* Jump from one hashed position to another until we find the value or
-	 * go to an empty entry or reached the end of the table.
-	 */
-	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
-		if (hkeys[pos] == key)
+	 * go to an empty entry or reached the end of the table. */
+	inc = 1 + (key % (l_capacity - 1));
+	for (pos = key % l_capacity; tmp_try < l_capacity; tmp_try++, pos = (pos + inc) % l_capacity) {
+		l_key = hkeys[pos];
+		if (l_key == key) {
 			return ((char *) ht->h_values) + (pos * ht->h_sval);
-		else if (hkeys[pos] == 0L)
-			break;
-	}
-
-	return (char *) 0;			/* Item was not found */
-}
-
-rt_public EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key)
-{
-	/* Retrun first available item address where key is present or should
-	 * be. In case there is no more room, return a null pointer.
-	 */
-
-	size_t pos;		/* Position in H table */
-	size_t hsize;	  	/* Size of H table */
-	rt_uint_ptr *hkeys;	 	/* Array of keys */
-	size_t tmp_try = 0;	/* Count number of attempts */
-	size_t inc;		/* Loop increment */
-	rt_uint_ptr other_key;
-
-	/* Initializations */
-	hsize = ht->h_size;
-	hkeys = ht->h_keys;
-
-	/* Jump from one hashed position to another until we find the value or
-	* go to an empty entry or reached the end of the table.
-	 */
-	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
-		other_key = hkeys[pos];
-		
-		if (other_key == key)
-			return ((char *) ht->h_values) + (pos * ht->h_sval);
-		else if (other_key == 0) {
-			hkeys[pos] = key;
-			return ((char *)ht->h_values) + (pos * ht->h_sval);
+		} else if ((l_key == 0L) && (!hdeleted[pos])) {
+				/* There is no key and it is not a deleted position, so
+				 * we can stop the search here! */
+			return NULL;
 		}
-
 	}
-
-	return (char *) 0;		  /* Item was not found */
+	return NULL;			/* Item was not found */
 }
 
-rt_public void ht_force(struct htable *ht, rt_uint_ptr key, EIF_POINTER val)
+/*
+doc:	<routine name="ht_first" return_type="void *" export="shared">
+doc:		<summary>WARNING!! It is a side effect query. If `key' is present it behaves exactly as `ht_value'. If `key' is not present, it inserts `key' at the first suitable location, if any, and returns the associated value address. If no suitable location is found, we return NULL.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to find in `ht'.</param>
+doc:		<return>Returns address of value in `ht' if possible, NULL otherwise.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void * ht_first(struct htable *ht, rt_uint_ptr key)
 {
-	/* Tries to put value held at 'val' tagged with key 'key' in H table
-	 * 'ht'. If the first put fails, the H table 'ht' is extended and
-	 * we try another put. If that fails we raise an exception.
-	 * When everything is alright, we return to the callee.
-	 */
+	size_t pos;		/* Position in H table */
+	size_t l_capacity;	  	/* Size of H table */
+	rt_uint_ptr *hkeys;	 	/* Array of keys */
+	char *hdeleted;
+	size_t tmp_try = 0;	/* Count number of attempts */
+	size_t inc;		/* Loop increment */
+	rt_uint_ptr l_key;
+	size_t l_available_pos = (size_t) -1;
 
-	if (!(ht_put(ht, key, val))) {		/* Insertion failed => H table full */
-			/* Extend the H table */
-		if (ht_xtend(ht)) {
-			eraise("Hashtable extension failure", EN_FATAL);
-		} else {
-				/* Something (...) was wrotten, don't know what */
-				/* Insertion failed again => Bailing out */
-			if (!(ht_put(ht, key, val))) {
-				eraise("Hash table insertion failure", EN_FATAL);
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
+
+		/* Initializations */
+	l_capacity = ht->h_capacity;
+	hkeys = ht->h_keys;
+	hdeleted = ht->h_deleted;
+
+		/* Jump from one hashed position to another until we find the value or
+		 * go to an empty entry or reached the end of the table. */
+	inc = 1 + (key % (l_capacity - 1));
+	for (pos = key % l_capacity; tmp_try < l_capacity; tmp_try++, pos = (pos + inc) % l_capacity) {
+		l_key = hkeys[pos];
+		if (l_key == key) {
+			return ((char *) ht->h_values) + (pos * ht->h_sval);
+		} else if (l_key == 0) {
+			if (!hdeleted[pos]) {
+					/* We found an empty slot that was not deleted, we can stop
+					 * the search here. If there was no former available position
+					 * that could have stored `key', we set `l_available_pos'
+					 * to `pos', otherwise we preserve the existing value of
+					 * `l_available_pos' and exit the loop. */
+				if (l_available_pos == (size_t) -1) {
+					l_available_pos = pos;
+				}
+				break;
+			} else if (l_available_pos == (size_t) -1) {
+					/* We found an empty slot that was deleted. We store that position
+					 * in `l_available_pos'. In the event we cannot find `key',
+					 * we will use `l_available_pos' position for computing our result. */
+				l_available_pos = pos;
 			}
 		}
 	}
+
+	if (l_available_pos != (size_t) -1) {
+		hkeys[l_available_pos] = key;
+		return ((char *) ht->h_values) + (l_available_pos * ht->h_sval);
+	} else {
+			/* Table is full and we could not find `key'. */
+		return NULL;
+	}
 }
 
-rt_public EIF_POINTER ht_put(struct htable *ht, rt_uint_ptr key, EIF_POINTER val)
+/*
+doc:	<routine name="ht_safe_force" return_type="int" export="shared">
+doc:		<summary>Put value `val' associated with key `key' in table `ht'. If `ht' is full, we will resize `ht' and try again. If `resizing' failed or if we cannot find a suitable position, a negative value is returned.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to insert in `ht'.</param>
+doc:		<param name="val" type="void *">Value to insert in `ht'.</param>
+doc:		<return>0 upon successful insertion, -1 if cannot resize, -2 if cannot insert.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared int ht_safe_force (struct htable *ht, rt_uint_ptr key, void * val)
 {
-	/* Puts value held at 'val' tagged with key 'key' in H table 'ht'. If
-	 * insertion was successful, the address of the value is returned and the
-	 * value is copied in the array. Otherwise, return a null pointer.
-	 */
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
 
-	size_t pos;		/* Position in H table */
-	size_t hsize;		/* Size of H table */
-	rt_uint_ptr *hkeys;		/* Array of keys */
-	size_t tmp_try = 0;	/* Records number of attempts */
-	size_t inc;		/* Loop increment */
-	EIF_POINTER l_val;	/* copied version of `val' when inserted. */
-
-	/* Initializations */
-	hsize = ht->h_size;
-	hkeys = ht->h_keys;
-
-	/* Jump from one hashed position to another until we find a eif_free entry or
-	 * we reached the end of the table.
-	 */
-	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
-#ifdef MAY_PANIC
-		if (hkeys[pos] == key)
-			eif_panic("H table key conflict");
-		else
-#endif
-		if (hkeys[pos] == 0) {			/* Found a free location */
-			hkeys[pos] = key;			/* Record item */
-			l_val = (((char *) ht->h_values) + (pos * ht->h_sval));
-			memcpy (l_val, val, ht->h_sval);
-			return hkeys;
+	if (!(ht_put(ht, key, val))) {		/* Insertion failed => H table full */
+			/* Resize the hash table */
+		if (ht_resize(ht, ht->h_capacity + (ht->h_capacity / 2))) {
+				/* Cannot resize. */
+			return -1;
+		} else {
+				/* Something (...) was rotten, don't know what */
+				/* Insertion failed again => Bailing out */
+			if (!(ht_put(ht, key, val))) {
+					/* Cannot insert. */
+				return -2;
+			}
 		}
 	}
-
-	return (char *) 0;		/* We were unable to insert item */
+		/* Success. */
+	return 0;
 }
 
-rt_public void ht_remove(struct htable *ht, rt_uint_ptr key)
+/*
+doc:	<routine name="ht_force" export="shared">
+doc:		<summary>Put value `val' associated with key `key' in table `ht'. If `ht' is full, we will resize `ht' and try again. If `resizing' failed or if we cannot find a suitable position, an exception is thrown. In other words, it is the same as `ht_safe_force' modulo an exception instead of an error code.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to insert in `ht'.</param>
+doc:		<param name="val" type="void *">Value to insert in `ht'.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void ht_force(struct htable *ht, rt_uint_ptr key, void * val)
 {
-	/* Remove item and key 'key' from H table 'ht'.
-	 * If 'key' does not exist, nothing will be done.
-	 * If 'key' does exist, both the 'h_keys' and the 'h_values' will be zero-d at the appropriate place.
-	 * NOTE: If one has a pointer in the structure, he/she is responsible for free-ing that
-	 *	 part of memory, by first using 'ht_value' and free the memory and thereafter 'ht_remove' the item from the
-	 *	 H table.
-	 *	 This means too that if 'ht_value' cannot find the value, you will not have to call 'ht_remove' (he he).
-	 *	 -- GLJ
-	 */
+	int l_error;
 
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
+
+	l_error = ht_safe_force (ht, key, val);
+	if (l_error != 0) {
+		if (l_error == -1) {
+			eraise ("Hash table resizing failure", EN_FATAL);
+		} else {
+			CHECK("valid error code", l_error == -2);
+			eraise ("Hash table insertion failure", EN_FATAL);
+		}
+	}
+}
+
+/*
+doc:	<routine name="ht_put" return_type="void *" export="shared">
+doc:		<summary>Put value `val' associated with key `key' in table `ht'. If `ht' is not full, we return the address of the associated value in `ht'.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to insert in `ht'.</param>
+doc:		<param name="val" type="void *">Value to insert in `ht'.</param>
+doc:		<return>Address of value in `ht' if inserted, NULL otherwise.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void * ht_put(struct htable *ht, rt_uint_ptr key, void * val)
+{
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
+
+	void *l_val = ht_first(ht, key);
+
+	if (l_val) {
+			/* We found a free position for `key' so let's copy `val' in it. */
+		memcpy (l_val, val, ht->h_sval);
+	}
+
+	return l_val;
+}
+
+/*
+doc:	<routine name="ht_remove" export="shared">
+doc:		<summary>Remove `key' if present from `ht'.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<param name="key" type="rt_uint_ptr">Key to remove from `ht'.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void ht_remove(struct htable *ht, rt_uint_ptr key)
+{
 	size_t pos;		/* Position in H table */
-	size_t hsize;		/* Size of H table */
+	size_t l_capacity;		/* Size of H table */
 	rt_uint_ptr *hkeys;		/* Array of keys */
+	char *hdeleted;
 	size_t tmp_try = 0;	/* Records number of attempts */
 	size_t inc;		/* Loop increment */
+	rt_uint_ptr l_key;
+
+	REQUIRE("ht not null", ht);
+	REQUIRE("key not null", key);
 
 	/* Initializations */
-	hsize = ht->h_size;
+	l_capacity = ht->h_capacity;
 	hkeys = ht->h_keys;
+	hdeleted = ht->h_deleted;
 
 	/* Jump from one hashed position to another until we find a free entry or
 	 * we reached the end of the table.
 	 */
-	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
-		if (hkeys[pos] == key) {
+	inc = 1 + (key % (l_capacity - 1));
+	for (pos = key % l_capacity; tmp_try < l_capacity; tmp_try++, pos = (pos + inc) % l_capacity) {
+		l_key = hkeys[pos];
+		if (l_key == key) {
 			hkeys[pos] = 0L;
-			memset (((char *) ht->h_values) + (pos * ht->h_sval), 0, ht->h_sval);
-		} else
-			if (hkeys[pos] == 0L)
-				break;
+			ht->h_deleted[pos] = (char) 1;
+			return;
+		} else if ((l_key == 0L) && (!hdeleted[pos])) {
+				/* There is no key and it is not a deleted position, so we can
+				 * stop our search here. */
+			return;
+		}
 	}
 }
 
-rt_public int ht_xtend(struct htable *ht)
+/*
+doc:	<routine name="ht_resize" return_type="int" export="private">
+doc:		<summary>Resize `ht' to accomodate `new_size' many elements.</summary>
+doc:		<param name="ht" type="struct htable *">Table to resize.</param>
+doc:		<param name="new_size" type="size_t">New size. If smaller than existing size, no resizing is done.</param>
+doc:		<return>0 if resizing was Ok, -1 otherwise.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_private int ht_resize(struct htable *ht, size_t new_size)
 {
-	/* The H table 'ht' is full and needs resizing. We add 100% of old size and
-	 * copy the old table in the new one, before freeing the old one. Note that
-	 * h_create multiplies the number we give by 5/4, so 5/4*3/2 yields ~2, i.e.
-	 * the final size will be the double of the previous one (modulo next prime
-	 * number).
-	 * Return 0 if extension was ok, -1 otherwise.
-	 */
-
-	size_t size;				/* Size of old H table */
+	size_t l_capacity;				/* Size of old H table */
 	size_t sval;				/* Size of an H table item */
 	rt_uint_ptr *key;			/* To loop over keys */
-	EIF_POINTER val;			/* To loop over values */
+	void * val, *l_value;		/* To loop over values */
 	struct htable new_ht;
 
-	size = ht->h_size;
+	REQUIRE("ht not null", ht);
+
+	l_capacity = ht->h_capacity;
+	if (l_capacity >= new_size) {
+		return -1;	/* Requested size is no bigger than what we have. */
+	}
 	sval = ht->h_sval;
-	if (-1 == ht_create(&new_ht, size * 2, sval))
+	if (-1 == ht_create(&new_ht, l_capacity * 2, sval)) {
 		return -1;		/* Extension of H table failed */
+	}
 
 	key = ht->h_keys;				/* Start of array of keys */
 	val = ht->h_values;				/* Start of array of values */
 
 	/* Now loop over the whole table, inserting each item in the new one */
-
-	for (; size > 0; size--, key++, val = (char *) val + sval)
-#ifdef MAY_PANIC
-		if ((char *) 0 == ht_put(&new_ht, *key, val)) {	/* Failed */
-			eif_free(new_ht.h_values);	/* Free new H table */
-			eif_free(new_ht.h_keys);
-			eif_panic("cannot extend H table");
+	for (; l_capacity > 0; l_capacity--, key++, val = (char *) val + sval) {
+		if (*key) {
+			l_value = ht_first(&new_ht, *key);
+			CHECK("Item found", l_value);
+			memcpy (l_value, val, sval);
 		}
-#else
-		(void) ht_put(&new_ht, *key, val);
-#endif
+	}
 
 	/* Free old H table and set H table descriptor */
-	eif_free(ht->h_values);			/* Free in allocation order */
-	eif_free(ht->h_keys);				/* To make free happy (coalescing) */
+	ht_release(ht);
 	memcpy (ht, &new_ht, sizeof(struct htable));
 
 	return 0;		/* Extension was ok */
 }
 
-rt_public void ht_release (struct htable *ht)
+/*
+doc:	<routine name="ht_release" export="shared">
+doc:		<summary>Free memory used internally by `ht'.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void ht_release (struct htable *ht)
 {
-	/* Free hash table arrays. */
+	REQUIRE("ht not null", ht);
 
+		/* Free hash table arrays. */
 	eif_free(ht->h_values);
 	eif_free(ht->h_keys);
+	eif_free(ht->h_deleted);
 	ht->h_values = NULL;
 	ht->h_keys = NULL;
+	ht->h_deleted = NULL;
 }
 
-rt_public void ht_free(struct htable *ht)
+/*
+doc:	<routine name="ht_free" export="shared">
+doc:		<summary>Free memory used internally by `ht' and `ht' itself assuming it was allocated by the runtime memory routines (i.e. not `eif_malloc' or `eif_calloc'.</summary>
+doc:		<param name="ht" type="struct htable *">Table to initialize.</param>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_shared void ht_free(struct htable *ht)
 {
-	/* Free hash table arrays and descriptor */
+	REQUIRE("ht not null", ht);
 
+		/* Free hash table arrays and descriptor */
 	ht_release (ht);
 	eif_rt_xfree((char *) ht);
 }

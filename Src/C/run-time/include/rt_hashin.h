@@ -50,25 +50,24 @@ extern "C" {
  * values, along with the table's size and the number of recorded elements.
  */
 struct htable {
-	size_t h_size;			/* Size of table (prime number) */
 	rt_uint_ptr *h_keys;	/* Array of keys (integers) */
+	void * h_values;	/* Array of values (pointer needs casting) */
+	char *h_deleted;		/* Array of deleted positions. */
+	size_t h_capacity;		/* Size of table (prime number) */
 	size_t h_sval;			/* Size of each value item, in bytes */
-	EIF_POINTER h_values;	/* Array of values (pointer needs casting) */
 };
 
 /* Function declaration */
 extern int ht_create(struct htable *ht, size_t n, size_t sval);				/* Create H table */
 extern void ht_release (struct htable *ht);						/* Release memory allocated by `ht_create'. */
-extern size_t ht_find (const struct htable *ht, rt_uint_ptr key);			/* Position of a key or table size if there is no such a key. */
-extern EIF_POINTER ht_value(struct htable *ht, rt_uint_ptr key);			/* Get value given some key */
-extern EIF_POINTER ht_first(struct htable *ht, rt_uint_ptr key);			/* Get item address */
-extern EIF_POINTER ht_put(struct htable *ht, rt_uint_ptr key, EIF_POINTER val);				/* Insert value in H table */
-extern void ht_force(struct htable *ht, rt_uint_ptr key, EIF_POINTER val);				/* Insert value in H table (extending
-									 * hash table if needed) */
+extern void * ht_value(struct htable *ht, rt_uint_ptr key);			/* Get value given some key */
+extern void * ht_first(struct htable *ht, rt_uint_ptr key);			/* Get item address */
+extern void * ht_put(struct htable *ht, rt_uint_ptr key, void * val);	/* Insert value in H table */
+extern void ht_force(struct htable *ht, rt_uint_ptr key, void * val);	/* Insert value in H table (extending hash table if needed) */
+extern int ht_safe_force(struct htable *ht, rt_uint_ptr key, void * val);	/* Insert value in H table (extending hash table if needed) */
 extern void ht_remove(struct htable *ht, rt_uint_ptr key);			/* Remove value in H table */
-extern int ht_xtend(struct htable *ht);				/* Extend size of full H table */
 extern void ht_zero(struct htable *ht);				/* Initialize H table to zero */
-RT_LNK void ht_free(struct htable *ht);				/* Free hash table */
+extern void ht_free(struct htable *ht);				/* Free hash table */
 
 #ifdef __cplusplus
 }

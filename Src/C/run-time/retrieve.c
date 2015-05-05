@@ -2124,7 +2124,7 @@ rt_private void rt_clean(void)
 
 	if (rt_table != (struct htable *) 0) {
 		struct rt_struct *rt_info = (struct rt_struct *) rt_table->h_values;
-		size_t count = rt_table->h_size;
+		size_t count = rt_table->h_capacity;
 
 		for (; count > 0; count--, rt_info++) {
 			if (rt_info->rt_status == UNSOLVED) {	/* Free cell list */

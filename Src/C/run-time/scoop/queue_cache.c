@@ -45,7 +45,7 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
 
 /* Function to convert the PID to a hash table key.
  * This is needed because the SCOOP pid 0 is not a valid key. */
-rt_inline rt_private rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
+rt_private rt_inline rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
 {
 	REQUIRE ("not_null_processor", pid != NULL_PROCESSOR_ID);
 	return pid + 1;

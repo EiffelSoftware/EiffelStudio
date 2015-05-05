@@ -1019,11 +1019,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 
 	/* Mark the object if not expanded */
 	if (!eif_is_nested_expanded(flags)) {
-		if (ht_put(tbl,key,object) == (char *) 0) {
-			ht_xtend(tbl);
-			if (ht_put(tbl,key,object) == (char *) 0)
-				eif_panic("insertion trouble");
-		}
+		ht_force(tbl,key,object);
 		object_count++;
 	}
 

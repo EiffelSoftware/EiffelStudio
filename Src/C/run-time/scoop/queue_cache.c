@@ -43,6 +43,14 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
 #include "rt_private_queue.h"
 #include "rt_processor.h"
 
+/* Function to convert the PID to a hash table key.
+ * This is needed because the SCOOP pid 0 is not a valid key. */
+rt_inline rt_private rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
+{
+	REQUIRE ("not_null_processor", pid != NULL_PROCESSOR_ID);
+	return ++pid;
+}
+
 /*
 doc:	<routine name="rt_queue_cache_find_from_owned return_type="struct rt_private_queue*" export="private">
 doc:		<summary> Find a private queue from the set of queues owned by 'self'. </summary>
@@ -64,7 +72,7 @@ rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue
 
 		/* Find the position in the owned_queues hash table. */
 	l_owned = &self->owned_queues;
-	l_position = (struct rt_private_queue**) ht_value (l_owned, supplier->pid);
+	l_position = (struct rt_private_queue**) ht_value (l_owned, pid_to_key (supplier->pid));
 
 		/* If found, return the private queue pointer. */
 	if (l_position) {
@@ -326,7 +334,7 @@ rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* 
 	if (NULL == l_result) {
 		/*TODO: Error handling...*/
 		int error = rt_processor_new_private_queue (supplier, &l_result);
-		ht_force (&self->owned_queues, supplier->pid, &l_result);
+		ht_force (&self->owned_queues, pid_to_key (supplier->pid), &l_result);
 	}
 
 	ENSURE ("result_available", l_result);
@@ -383,7 +391,7 @@ rt_shared void rt_queue_cache_clear (struct queue_cache* self, struct rt_process
 
 		/* It is not necessary to delete queues which are borrowed from other queue_aches.
 		* The algorithm in processor_registry will traverse them later. */
-	ht_remove (&self->owned_queues, proc->pid);
+	ht_remove (&self->owned_queues, pid_to_key (proc->pid));
 }
 
 /*

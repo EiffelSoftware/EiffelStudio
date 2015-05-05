@@ -48,7 +48,7 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
 rt_inline rt_private rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
 {
 	REQUIRE ("not_null_processor", pid != NULL_PROCESSOR_ID);
-	return ++pid;
+	return pid + 1;
 }
 
 /*

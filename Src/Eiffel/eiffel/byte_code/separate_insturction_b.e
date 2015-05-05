@@ -105,7 +105,6 @@ feature -- Code generation
 			is_first_argument: BOOLEAN
 		do
 			generate_line_info
-			generate_frozen_debugger_hook
 			arguments.generate
 			if attached compound as c then
 					-- Open a new block to declare variables that are used for separate calls chains.

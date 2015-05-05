@@ -471,7 +471,6 @@ feature {NONE} -- Iteration
 	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
 			-- <Precursor>
 		do
-			register_breakable (a)
 			a.arguments.process (Current)
 			safe_process (a.compound)
 		end

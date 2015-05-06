@@ -312,10 +312,12 @@ doc:	</routine>
 */
 rt_shared void * ht_put(struct htable *ht, rt_uint_ptr key, void * val)
 {
+	void *l_val;
+
 	REQUIRE("ht not null", ht);
 	REQUIRE("key not null", key);
 
-	void *l_val = ht_first(ht, key);
+	l_val = ht_first(ht, key);
 
 	if (l_val) {
 			/* We found a free position for `key' so let's copy `val' in it. */

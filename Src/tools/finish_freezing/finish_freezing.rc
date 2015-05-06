@@ -1,2 +1,9 @@
 #include <windows.h>
+
+// It should be 
+// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "finish_freezing.exe.manifest"
+// but on older version of VC or older version of the Platform SDK they
+// are not defined.
+1 24 "finish_freezing.exe.manifest"
+
 appl ICON appl.ico

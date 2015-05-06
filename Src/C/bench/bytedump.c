@@ -900,7 +900,12 @@ static  void    print_instructions (void)
 				/* Routine id */
 				fprintf (ofp,"rid %d ", get_int32(&ip));
 				/* Is precursor or static */
-				(void) get_int16(&ip);
+				{
+					int16 l_type = get_int16(&ip);
+					if (l_type != -1) {
+						fprintf(ofp, " call on type ID=%d", l_type);
+					}
+				}
 				break;
 
 			case  BC_ATTRIBUTE_INV :

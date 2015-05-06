@@ -679,11 +679,12 @@ doc:	</routine>
 rt_shared void rt_processor_request_group_stack_remove (struct rt_processor* self, size_t count)
 {
 	struct rt_request_group* l_last = NULL;
+	size_t i;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("enough_elements", request_group_stack_t_count (&self->request_group_stack) >= count);
 
-	for (size_t i = 0; i < count; ++i) {
+	for (i = 0; i < count; ++i) {
 		l_last = rt_processor_request_group_stack_last (self);
 		rt_request_group_unlock (l_last);
 		rt_request_group_deinit (l_last);

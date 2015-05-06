@@ -1417,13 +1417,13 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_SRR - release request chains (if any) when entering a rescue clause because of an exception.
  */
 #define RTS_SD RTS_SDP(RTS_PID(Current));
-#define RTS_SDX RTS_SD; RTS_SDC;
-#define RTS_SDR RTS_SD; RTS_SDC;
+#define RTS_SDX RTS_SD; RTS_SDC
+#define RTS_SDR RTS_SD; RTS_SDC
 
 #define RTS_SDP(pid) \
-	EIF_SCP_PID scoop_current_pid = pid;
+	EIF_SCP_PID scoop_current_pid = pid
 #define RTS_SDC \
-	size_t request_group_stack_count = eif_scoop_request_group_stack_count (scoop_current_pid);
+	size_t request_group_stack_count = eif_scoop_request_group_stack_count (scoop_current_pid)
 
 #define RTS_SRC(p) RTS_RC(p);
 #define RTS_SRCX(p) RTS_SRC(p); request_group_stack_count = eif_scoop_request_group_stack_count (scoop_current_pid);

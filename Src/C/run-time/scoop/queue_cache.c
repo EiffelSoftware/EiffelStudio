@@ -47,7 +47,7 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
  * This is needed because the SCOOP pid 0 is not a valid key. */
 rt_private rt_inline rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
 {
-	REQUIRE ("not_null_processor", pid != NULL_PROCESSOR_ID);
+	REQUIRE ("not_null_processor", pid != EIF_NULL_PROCESSOR);
 	return pid + 1;
 }
 

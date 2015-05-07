@@ -41,7 +41,7 @@ doc:<file name="private_queue.c" header="rt_private_queue.h" version="$Id$" summ
 
 #include "rt_private_queue.h"
 #include "rt_processor.h"
-#include "rt_scoop.h"
+#include "eif_scoop.h"
 
 /*
 doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">
@@ -189,7 +189,7 @@ doc:	</routine>
 rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call)
 {
 	EIF_SCP_PID l_sync_pid = call->sync_pid;
-	EIF_BOOLEAN will_sync = l_sync_pid != NULL_PROCESSOR_ID;
+	EIF_BOOLEAN will_sync = l_sync_pid != EIF_NULL_PROCESSOR;
 
 
 	if (rt_queue_cache_has_locks_of (&client->cache, self->supplier)) {

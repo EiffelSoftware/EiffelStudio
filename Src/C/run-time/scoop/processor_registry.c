@@ -99,7 +99,7 @@ rt_shared int rt_processor_registry_init (void)
 			self->procs [i] = NULL;
 		}
 		
-		CHECK ("has_client_set", root_proc->has_client);
+		CHECK ("processor_is_active", root_proc->is_active);
 		self->procs[0] = root_proc;
 		
 			/* Atomically increment processor_count (we start with 1 root processor). */

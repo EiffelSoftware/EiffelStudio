@@ -82,7 +82,8 @@ doc:		<field name="generated_private_queues_mutex" type="EIF_MUTEX_TYPE*"> The m
 
 doc:		<field name="current_msg" type="struct rt_message"> The call that this processor is currently working on. This will be traced during GC marking. </field>
 doc:		<field name="pid" type="EIF_SCP_PID"> The unique logical ID of the current processor. </field>
-doc:		<field name="has_client" type="EIF_BOOLEAN"> Stores whether the processor has a client. This is used to prevent that an active processor, that may not have any references to it, is collected during GC. </field>
+doc:		<field name="client" type="EIF_SCP_PID"> The PID of the processor that logged the private queue this processor is currently working on. May be NULL_PROCESSOR_ID. </field>
+doc:		<field name="is_active" type="EIF_BOOLEAN"> Indicates if the processor is executing. This is used to prevent that an active processor, that may not have any references to it, is collected during GC. </field>
 doc:		<field name="is_creation_procedure_logged" type="EIF_BOOLEAN"> Stores whether the creation procedure of the root object has already been logged. </field>
 doc:		<field name="is_dirty" type="EIF_BOOLEAN">  Stores whether the current processor is marked as dirty (i.e. if it has encountered an exception). </field>
 
@@ -113,7 +114,8 @@ struct rt_processor {
 
 	struct rt_message current_msg;
 	EIF_SCP_PID pid;
-	EIF_BOOLEAN has_client;
+	EIF_SCP_PID client;
+	EIF_BOOLEAN is_active;
 	volatile EIF_BOOLEAN is_creation_procedure_logged;
 	EIF_BOOLEAN is_dirty;
 };

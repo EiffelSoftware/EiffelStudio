@@ -14,14 +14,29 @@ feature {NONE} -- Initialization
 			-- Initialize the SSL Library.
 		do
 			if ssl_initialized.item = False then
-					-- FIXME: issue with concurrent call (not thread safe)
 				c_ssleay_add_ssl_algorithms
-				c_ssl_load_error_strings
+				process_exclusive_execution (exclusive_access)
 				ssl_initialized.put (True)
 			end
 		end
 
 feature {NONE} -- Attributes
+
+	process_exclusive_execution (a_access: like exclusive_access)
+		local
+			l_retry: BOOLEAN
+		do
+			if not l_retry then
+				a_access.enter
+	   			a_access.call(agent c_ssl_load_error_strings)
+				a_access.leave
+			else
+			end
+		rescue
+			l_retry := True
+			a_access.leave
+			retry
+		end
 
 	ssl_initialized: CELL [BOOLEAN]
 			-- Have the SSL Library initialization routines been called?
@@ -29,7 +44,12 @@ feature {NONE} -- Attributes
 			create Result.put (False)
 		end
 
-feature {NONE} -- Externals
+   exclusive_access: separate SSL_EXCLUSIVE_ACCESS
+   		once("PROCESS")
+   			create Result
+   		end
+
+feature {NONE} -- External
 
 	c_ssl_load_error_strings
 			-- External call to SSL_load_error_strings.
@@ -45,6 +65,14 @@ feature {NONE} -- Externals
 			"C use <openssl/ssl.h>"
 		alias
 			"SSLeay_add_ssl_algorithms"
+		end
+
+	c_ssl_get_ctx (a_ssl: POINTER): POINTER
+			-- External call to SSL_get_SSL_CTX.
+		external
+			"C use <openssl/ssl.h>"
+		alias
+			"SSL_get_SSL_CTX"
 		end
 
 note

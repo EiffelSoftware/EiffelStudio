@@ -196,33 +196,6 @@ feature -- Output
 			end
 		end
 
-feature -- Access
-
-	certificate_file_path: detachable PATH
-			-- Location of the file that holds the certificate.
-
-	key_file_path: detachable PATH
-			-- Location of the file that holds the private key.
-
-	certificate_file_name: detachable FILE_NAME
-			-- Name of the file that holds the certificate.
-		obsolete
-			"Use certificate_file_path [2015-mar-31]"
-		do
-			if attached certificate_file_path as p then
-				create Result.make_from_string (p.utf_8_name)
-			end
-		end
-
-	key_file_name: detachable FILE_NAME
-			-- Name of the file that holds the private key.
-		obsolete
-			"Use key_file_path [2015-mar-31]"
-		do
-			if attached key_file_path as p then
-				create Result.make_from_string (p.utf_8_name)
-			end
-		end
 
 feature -- Status Report
 
@@ -231,36 +204,11 @@ feature -- Status Report
 		do
 			if
 				attached context as l_context and then
-				attached l_context.last_ssl as l_ssl
+				attached l_context.last_ssl as l_ssl and then
+				l_ssl.was_error
 			then
 				Result := l_ssl.ssl_error_number
 			end
-		end
-
-feature -- Status setting
-
-	set_certificate_file_path (a_path: PATH)
-			-- Set `certificate_file_path' to `a_path'
-		do
-			certificate_file_path := a_path
-		end
-
-	set_certificate_file_name (a_file_name: READABLE_STRING_GENERAL)
-			-- Set `certificate_file_name' to `a_file_name'
-		do
-			set_certificate_file_path (create {PATH}.make_from_string (a_file_name))
-		end
-
-	set_key_file_path (a_path: PATH)
-			-- Set `key_file_path' to `a_path'
-		do
-			key_file_path := a_path
-		end
-
-	set_key_file_name (a_file_name: READABLE_STRING_GENERAL)
-			-- Set `key_file_name' to `a_file_name'
-		do
-			set_key_file_path (create {PATH}.make_from_string (a_file_name))
 		end
 
 feature {NONE} -- Implementation
@@ -285,6 +233,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor (other, a_address)
 			if other.is_created then
+				other.set_tls_protocol (tls_protocol)
 				other.initialize_server_ssl (certificate_file_path, key_file_path)
 			end
 		end

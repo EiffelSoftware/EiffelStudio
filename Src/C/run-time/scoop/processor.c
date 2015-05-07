@@ -40,7 +40,7 @@ doc:<file name="processor.c" header="rt_processor.h" version="$Id$" summary="Rep
 */
 
 #include "rt_processor.h"
-#include "rt_scoop.h"
+#include "eif_scoop.h"
 #include "rt_scoop_helpers.h"
 
 #include "eif_atomops.h"
@@ -101,7 +101,7 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 	struct rt_processor* self = NULL;
 
 	REQUIRE ("result_not_null", result);
-	REQUIRE ("valid_pid", a_pid != NULL_PROCESSOR_ID);
+	REQUIRE ("valid_pid", a_pid != EIF_NULL_PROCESSOR);
 		/* The valid_pid precondition may be dropped one day, but currently the SCOOP
 		 * runtime is not able to handle processors with this reserved ID. */
 
@@ -113,7 +113,7 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 			/* Initialize the data fields. */
 		self->pid = a_pid;
-		self->client = NULL_PROCESSOR_ID;
+		self->client = EIF_NULL_PROCESSOR;
 		self->is_active = EIF_TRUE;
 		self->is_dirty = EIF_FALSE;
 		rt_message_init (&self->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
@@ -305,7 +305,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("call_not_null", call);
 
-	is_synchronous = (call->sync_pid != NULL_PROCESSOR_ID);
+	is_synchronous = (call->sync_pid != EIF_NULL_PROCESSOR);
 
 		/* Only execute the call when the current processor region is clean. */
 	if (!self->is_dirty) {
@@ -494,7 +494,7 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 			rt_processor_publish_wait_condition (self, next_job.sender);
 
 			self->is_active = EIF_FALSE;
-			self->client = NULL_PROCESSOR_ID;
+			self->client = EIF_NULL_PROCESSOR;
 		} else {
 			CHECK ("shutdown_message", next_job.message_type == SCOOP_MESSAGE_SHUTDOWN);
 			is_stopped = EIF_TRUE;

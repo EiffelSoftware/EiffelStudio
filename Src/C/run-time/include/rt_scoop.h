@@ -44,9 +44,6 @@
 
 /* Maximum number of SCOOP processors, including root. */
 #define RT_MAX_SCOOP_PROCESSOR_COUNT 1024
-/* A reserved, invalid SCOOP processor identifier. */
-#define NULL_PROCESSOR_ID ((EIF_SCP_PID)-1)
-
 
 #ifdef __cplusplus
 extern "C" {

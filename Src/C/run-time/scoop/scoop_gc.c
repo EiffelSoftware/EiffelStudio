@@ -188,7 +188,7 @@ rt_shared void rt_prepare_live_index ()
 				/* The thread is allocated for a processor. */
 				/* Liveness of processor will be reported by SCOOP manager and detected during GC. */
 				/* Record "PID->index" relation for future use. */
-			if (c->logical_id != NULL_PROCESSOR_ID) {
+			if (c->logical_id != EIF_NULL_PROCESSOR) {
 				pid_index [c -> logical_id] = i;
 			} else {
 				/* The processor has already been collected in the previous GC cycle and is about to destroy itself.
@@ -225,9 +225,9 @@ rt_shared void rt_update_live_index (void)
 	for (i = 0; i < live_index_count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
 		if (c -> is_processor) {
-				/* A NULL_PROCESSOR_ID indicates that the processor is about to destroy itself because it has no more references.
+				/* A EIF_NULL_PROCESSOR indicates that the processor is about to destroy itself because it has no more references.
 				 * If the GC thinks it's alive this is a bug. */
-			CHECK ("has_id", c->logical_id != NULL_PROCESSOR_ID);
+			CHECK ("has_id", c->logical_id != EIF_NULL_PROCESSOR);
 			RT_UNMARK_PID (c->logical_id);
 		}
 	}
@@ -307,9 +307,9 @@ rt_shared void rt_report_live_index (void)
 	for (i = live_index_count; i < count; i++) {
 		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
 			/* Notify SCOOP manager that the processor is not used anymore. */
-			/* Note: Processors with a NULL_PROCESSOR_ID are about to destroy themselves.
+			/* Note: Processors with a EIF_NULL_PROCESSOR are about to destroy themselves.
 			 * No need to send the shutdown signal again. */
-		if (c->logical_id != NULL_PROCESSOR_ID) {
+		if (c->logical_id != EIF_NULL_PROCESSOR) {
 			rt_processor_registry_deactivate (c->logical_id);
 		}
 	}

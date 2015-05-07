@@ -54,6 +54,9 @@
 #	define EIF_IS_SCOOP_CAPABLE 0
 #endif
 
+/* A reserved, invalid SCOOP processor identifier. */
+#define EIF_NULL_PROCESSOR ((EIF_SCP_PID) -1)
+
 #ifdef __cplusplus
 extern "C" {
 #endif

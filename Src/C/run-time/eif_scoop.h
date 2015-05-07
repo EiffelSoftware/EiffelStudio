@@ -105,6 +105,9 @@ RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 
+/* Debugger extensions. */
+RT_LNK EIF_SCP_PID eif_scoop_client_of (EIF_SCP_PID supplier);
+
 #ifdef __cplusplus
 }
 #endif

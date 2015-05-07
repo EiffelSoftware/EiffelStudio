@@ -200,6 +200,24 @@ rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 	rt_request_group_lock (l_group);
 }
 
+/* Debugger extensions. */
+
+/*
+doc:	<routine name="eif_scoop_client_of" return_type="EIF_SCP_PID" export="public">
+doc:		<summary> Return the ID of the client processor that initially logged the private queue 'supplier' is currently working on. </summary>
+doc:		<param name="supplier" type="EIF_SCP_PID"> The supplier processor. </param>
+doc:		<return> The ID of the current client. If 'supplier' is not processing a private queue at the moment, the result is EIF_NULL_PROCESSOR. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call when 'supplier' is blocked (e.g. during debugging). </synchronization>
+doc:	</routine>
+*/
+rt_public EIF_SCP_PID eif_scoop_client_of (EIF_SCP_PID supplier)
+{
+	REQUIRE ("valid_id", supplier != EIF_NULL_PROCESSOR && supplier < RT_MAX_SCOOP_PROCESSOR_COUNT);
+	REQUIRE ("exists", rt_get_processor (supplier) != NULL);
+	return rt_get_processor (supplier) -> client;
+}
+
 /*
 doc:</file>
 */

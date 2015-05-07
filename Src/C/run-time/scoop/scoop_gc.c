@@ -146,7 +146,7 @@ rt_private void rt_enumerate_live_processors(void)
 			/* We also mark processors as alive whose creation procedure has not been logged yet.
 			 * This avoids a potential problem that a processor is garbage collected after creation,
 			 * just before the RTS_PID() of its root feature has been set. */
-		if (proc && (proc->has_client || !proc->is_creation_procedure_logged)) {
+		if (proc && (proc->is_active || !proc->is_creation_procedure_logged)) {
 			rt_mark_live_pid (proc->pid);
 		}
 	}

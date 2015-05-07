@@ -113,7 +113,8 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 			/* Initialize the data fields. */
 		self->pid = a_pid;
-		self->has_client = EIF_TRUE;
+		self->client = NULL_PROCESSOR_ID;
+		self->is_active = EIF_TRUE;
 		self->is_dirty = EIF_FALSE;
 		rt_message_init (&self->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 			/* Only the root processor's creation procedure is initially "logged". */
@@ -467,7 +468,7 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 
 	REQUIRE ("self_not_null", self);
 
-	self->has_client = EIF_FALSE;
+	self->is_active = EIF_FALSE;
 
 	while (!is_stopped) {
 		struct rt_message next_job;
@@ -486,12 +487,14 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 
 		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();
-			self->has_client = EIF_TRUE;
+			self->is_active = EIF_TRUE;
+			self->client = next_job.sender->pid;
 
 			rt_processor_process_private_queue (self, next_job.queue);
 			rt_processor_publish_wait_condition (self, next_job.sender);
 
-			self->has_client = EIF_FALSE;
+			self->is_active = EIF_FALSE;
+			self->client = NULL_PROCESSOR_ID;
 		} else {
 			CHECK ("shutdown_message", next_job.message_type == SCOOP_MESSAGE_SHUTDOWN);
 			is_stopped = EIF_TRUE;

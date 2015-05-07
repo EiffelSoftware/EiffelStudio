@@ -40,15 +40,13 @@
 #pragma once
 #endif
 
-/* TODO: This file needs some cleanup...
- *
- ** EIF_IS_SCOOP_CAPABLE is only needed in eif_built_in.h and can be moved there.
- ** The inclusion of eif_threads.h should be avoided if possible.
- */
+#include "eif_portable.h"
+#include "eif_config.h" /* for EIF_OS_SUNOS */
+#include "eif_types.h" /* for EIF_TYPED_VALUE */
+#include "eif_struct.h" /* for fnptr */
 
-#include "eif_threads.h"
-
-#if defined(EIF_HAS_MEMORY_BARRIER) && (EIF_OS != EIF_OS_SUNOS) && !defined (__SUNPRO_CC)
+/* TODO: This definition is only used in eif_build_in.h. Should it be moved there? */
+#if (EIF_OS != EIF_OS_SUNOS) && !defined (__SUNPRO_CC)
 #	define EIF_IS_SCOOP_CAPABLE 1
 #else
 #	define EIF_IS_SCOOP_CAPABLE 0

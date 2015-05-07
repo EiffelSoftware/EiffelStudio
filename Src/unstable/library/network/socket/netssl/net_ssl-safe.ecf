@@ -43,9 +43,36 @@
 		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf">
+			<condition>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</library>
 		<cluster name="abstract" location="abstract\" recursive="true"/>
 		<cluster name="network" location="network\" recursive="true"/>
-		<cluster name="ssl" location="ssl\" recursive="true"/>
+		<cluster name="ssl" location="ssl\" recursive="true">
+			<file_rule>
+				<exclude>/scoop$</exclude>
+				<exclude>/mt$</exclude>
+				<exclude>/none$</exclude>
+			</file_rule>
+			<cluster name="scoop" location="$|scoop\" recursive="true">
+				<condition>
+					<concurrency value="scoop"/>
+				</condition>
+			</cluster>
+			<cluster name="mt" location="$|mt\" recursive="true">
+				<condition>
+					<concurrency value="thread"/>
+				</condition>
+			</cluster>
+			<cluster name="none" location="$|scoop\" recursive="true">
+				<condition>
+					<concurrency value="none"/>
+				</condition>
+			</cluster>
+
+		</cluster>
+
 	</target>
 </system>

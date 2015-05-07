@@ -24,7 +24,8 @@ create
 	make_as_tlsv12_client,
 	make_as_tlsv12_server,
 	make_as_dtlsv1_client,
-	make_as_dtlsv1_server
+	make_as_dtlsv1_server,
+	make_from_context_pointer
 
 feature {NONE} -- Initialization
 
@@ -170,6 +171,14 @@ feature {NONE} -- Initialization
 			initialize_ssl
 			method_pointer := c_dtlsv1_server_method
 			ctx := c_ssl_ctx_new (method_pointer)
+		end
+
+	make_from_context_pointer (a_context_pointer: POINTER; a_ssl_pointer: POINTER)
+			-- Make a SSL context from a pointer `a_context_pointer' and set the
+			-- SSL structed represented by the pointer `a_ssl_pointer'.
+		do
+			ctx := a_context_pointer
+			create last_ssl.make_from_pointer (a_ssl_pointer)
 		end
 
 feature -- Access

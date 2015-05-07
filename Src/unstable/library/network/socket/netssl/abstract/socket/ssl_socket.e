@@ -73,9 +73,11 @@ feature -- SSL
 			context := l_context
 			if a_cert_file /= Void then
 				l_context.use_certificate_file (create {PATH}.make_from_separate (a_cert_file))
+				set_certificate_file_path (create {PATH}.make_from_separate (a_cert_file))
 			end
 			if a_key_file /= Void then
 				l_context.use_private_key_file (create {PATH}.make_from_separate (a_key_file))
+				set_key_file_path (create {PATH}.make_from_separate (a_key_file))
 			end
 			l_context.create_ssl
 
@@ -84,7 +86,7 @@ feature -- SSL
 				l_ssl.accept
 				if l_ssl.was_error then
 					socket_error := l_ssl.ssl_error
-				end				
+				end
 			end
 		end
 
@@ -93,13 +95,68 @@ feature -- Status report
 	error_number: INTEGER
 			-- <Precursor>
 		do
-			if 
-				attached context as l_context and then 
-				attached l_context.last_ssl as l_ssl 
+			if
+				attached context as l_context and then
+				attached l_context.last_ssl as l_ssl and then
+				l_ssl.was_error
 			then
 				Result := l_ssl.ssl_error_number
 			end
-		end			
+		end
+
+feature -- Access
+
+	certificate_file_path: detachable PATH
+			-- File location of certificate.
+
+	key_file_path: detachable PATH
+			-- File location of private key.
+
+	certificate_file_name: detachable FILE_NAME
+			-- Name of the file that holds the certificate.
+		obsolete
+			"Use certificate_file_path [2015-mar-31]"
+		do
+			if attached certificate_file_path as p then
+				create Result.make_from_string (p.utf_8_name)
+			end
+		end
+
+	key_file_name: detachable FILE_NAME
+			-- Name of the file that holds the private key.
+		obsolete
+			"Use key_file_path [2015-mar-31]"
+		do
+			if attached key_file_path as p then
+				create Result.make_from_string (p.utf_8_name)
+			end
+		end
+
+feature -- Change Element
+
+	set_certificate_file_path (a_path: PATH)
+			-- Set `certificate_file_path' to `a_path'
+		do
+			certificate_file_path := a_path
+		end
+
+	set_key_file_path (a_path: PATH)
+			-- Set `key_file_path' to `a_path'
+		do
+			key_file_path := a_path
+		end
+
+	set_certificate_file_name (a_file_name: READABLE_STRING_GENERAL)
+			-- Set `certificate_file_name' to `a_file_name'
+		do
+			set_certificate_file_path (create {PATH}.make_from_string (a_file_name))
+		end
+
+	set_key_file_name (a_file_name: READABLE_STRING_GENERAL)
+			-- Set `key_file_name' to `a_file_name'
+		do
+			set_key_file_path (create {PATH}.make_from_string (a_file_name))
+		end
 
 feature {NONE} -- Implementation
 

@@ -13,7 +13,8 @@ inherit
 	SSL_SHARED
 
 create
-	make_from_context
+	make_from_context,
+	make_from_pointer
 
 feature {NONE} -- Initialization
 
@@ -26,6 +27,17 @@ feature {NONE} -- Initialization
 				--| useful to initialize the SSL Library
 			initialize_ssl
 			ptr := c_ssl_new (a_ctx_ptr)
+		end
+
+	make_from_pointer (a_ptr: POINTER)
+			-- Create an SSL structure from the given `a_ptr' pointer.
+		require
+			a_ptr_valid: a_ptr /= default_pointer
+		do
+			ptr := a_ptr
+			connected := True
+		ensure
+			is_connected: connected
 		end
 
 feature -- Access
@@ -118,6 +130,13 @@ feature -- Access
 			c_ssl_shutdown (ptr)
 		end
 
+
+	context_pointer: POINTER
+			-- Get ssl context from the current ssl structure pointer
+		do
+			Result := c_ssl_get_ctx (ptr)
+		end
+
 feature -- Input
 
 	read (a_pointer: POINTER; nb_bytes: INTEGER): INTEGER
@@ -166,12 +185,12 @@ feature -- Status Report
 	ssl_error_number: INTEGER
 			-- Returned error number.
 
-feature {NONE} -- Implementation	 
+feature {NONE} -- Implementation	
 
 	ssl_socket_error: detachable STRING
 			-- Error description in case of an error.			
 
-feature {NONE} -- Attributes
+feature -- Attributes
 
 	ptr: POINTER
 			-- External SSL structure
@@ -259,7 +278,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

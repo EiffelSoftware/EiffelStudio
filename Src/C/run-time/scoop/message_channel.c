@@ -79,8 +79,10 @@ rt_private rt_inline struct mc_node* load_consume (struct mc_node*const* node_ad
 		 * The fence nesures that all the values written into the mc_node
 		 * struct by another thread are now visible by this thread. */
 
+#if defined EIF_HAS_MEMORY_BARRIER
 		/* Compiler fence */
 	EIF_MEMORY_BARRIER;
+#endif
 
 		/* Hardware fence is implicit on x86. */
 
@@ -108,8 +110,10 @@ rt_private rt_inline void store_release (struct mc_node** node_address, struct m
 	
 	struct mc_node* volatile* volatile_node_address;
 
+#if defined EIF_HAS_MEMORY_BARRIER
 		/* Compiler fence */
 	EIF_MEMORY_BARRIER;
+#endif
 
 		/* Hardware fence is implicit on x86. */
 
@@ -266,11 +270,20 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 	REQUIRE ("call_not_null", call || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
 	REQUIRE ("queue_not_null", queue || (message_type != SCOOP_MESSAGE_ADD_QUEUE));
 
+	/* TODO: Measure if there's any performance benefit at all by doing the enqueue operation outside the lock. */
+#if defined EIF_HAS_MEMORY_BARRIER
 		/* Perform the non-blocking enqueue operation. */
 	enqueue (self, message_type, sender, call, queue);
 
 		/* Lock the condition variable mutex. */
 	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+#else
+		/* Lock the condition variable mutex. */
+	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+
+			/* Perform the enqueue operation. */
+	enqueue (self, message_type, sender, call, queue);
+#endif
 
 		/* Wake up the receiver. */
 	eif_pthread_cond_signal (self->has_elements_condition);
@@ -296,10 +309,12 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 
 	REQUIRE ("self_not_null", self);
 
+#if defined EIF_HAS_MEMORY_BARRIER
 		/* First try to dequeue in a non-blocking fashion. */
 	for (i = 0; i < self->spin && !success; ++i) {
 		success = dequeue (self, message);
 	}
+#endif
 
 		/* If we didn't get an item so far, we wait on the condition variable. */
 	if (!success) {

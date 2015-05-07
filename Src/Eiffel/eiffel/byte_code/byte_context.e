@@ -926,14 +926,14 @@ feature -- C code generation: request chain
 				buffer.put_new_line
 				if has_rescue then
 						-- Generate declaration to use and restore request chain on exception.
-					buffer.put_string ("RTS_SDX")
+					buffer.put_string ("RTS_SDX;")
 				else
-					buffer.put_string ("RTS_SD")
+					buffer.put_string ("RTS_SD;")
 				end
 			elseif has_rescue and then system.is_scoop then
 					-- Generate declaration to restore request chain on exception.
 				buffer.put_new_line
-				buffer.put_string ("RTS_SDR")
+				buffer.put_string ("RTS_SDR;")
 			end
 		end
 

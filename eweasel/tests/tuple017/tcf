@@ -1,0 +1,14 @@
+test_name	 named-tuple-in-generic-constraint
+test_description Named tuple can be used in generic constraints to provide type-safe access to its elements while allowing for specific actual generic derivations.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+test_end

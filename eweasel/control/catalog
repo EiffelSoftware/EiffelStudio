@@ -2277,6 +2277,7 @@ test	wrong-label-in-generics			tuple013	tcf pass tuple
 test	wrong-manifest-tuple-type		tuple014	tcf pass tuple
 test	attached-tuple-element-validity	tuple015	tcf pass tuple
 test	tuple-basic-to-reference		tuple016 tcf pass tuple basic_types
+test	named-tuple-in-generic-constraint	tuple017 tcf fail tuple formal multiconstraint generic
 
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde

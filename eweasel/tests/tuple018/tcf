@@ -1,0 +1,14 @@
+test_name	 named-tuple-constraint-validity
+test_description Fields of a named tuple are subject to the same validity rules as feature names when used in multiple constraints.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+copy_raw 	d.e $CLUSTER d.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result validity_error A ??; B ??; C ??; D ??
+
+test_end

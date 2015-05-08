@@ -1498,6 +1498,10 @@ feature {NONE} -- Implementation
 								check
 									last_feature_name_correct: last_feature_name = l_feature_name.name
 								end
+									-- Restore previous value of `is_controlled'.
+								is_controlled := l_is_controlled
+									-- Adapt separateness and controlled status of the result to target type.
+								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
 								if l_needs_byte_node then
 									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
 									last_byte_node := l_tuple_access_b
@@ -1924,19 +1928,7 @@ feature {NONE} -- Implementation
 							is_controlled := l_is_controlled
 							if is_qualified and then attached last_type then
 									-- Adapt separateness and controlled status of the result to target type.
-								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name)
-									-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
-								if
-									error_level = l_error_level and then
-									a_type.is_separate and then
-									last_type.is_expanded and then
-									not last_type.is_processor_attachable_to (a_type)
-								then
-									error_handler.insert_error (create {VUER}.make (context, last_type, l_feature_name))
-								end
-							end
-
-							if is_qualified and then attached last_type then
+								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
 									-- If result type is declared frozen, then it keeps its status only if target is frozen.
 									-- Also if `last_type' is expanded or frozen or if the routine is frozen, we know for sure
 									-- there will not be any redeclaration so we can keep the `frozen' status of the query.
@@ -4612,7 +4604,7 @@ feature {NONE} -- Visitor
 					if not l_last_constrained.is_known then
 							-- Unknown feature in unknown class.
 							-- Use unknown type as a result type.
-						adapt_type_to_target (unknown_type, l_target_type, l_is_controlled, l_as)
+						adapt_type_to_target (unknown_type, l_target_type, l_is_controlled, l_as, 0, Void)
 					elseif l_prefix_feature = Void then
 							-- Error: not prefixed function found
 						create l_vwoe
@@ -4683,16 +4675,8 @@ feature {NONE} -- Visitor
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 							end
 
-							adapt_type_to_target (l_prefix_feature_type, l_target_type, l_is_controlled, l_as)
-								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
-							if
-								error_level = l_error_level and then
-								l_target_type.is_separate and then
-								last_type.is_expanded and then
-								not last_type.is_processor_attachable_to (l_target_type)
-							then
-								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
-							end
+							adapt_type_to_target (l_prefix_feature_type, l_target_type, l_is_controlled, l_as, l_error_level, l_as.operator_location)
+
 							if l_needs_byte_node then
 								l_access := l_prefix_feature.access (last_type, True, l_target_type.is_separate)
 									-- If we have something like `a.f' where `a' is predefined
@@ -5087,16 +5071,8 @@ feature {NONE} -- Visitor
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
-							adapt_type_to_target (l_infix_type, l_target_type, l_is_controlled, l_as)
-								-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
-							if
-								error_level = l_error_level and then
-								l_target_type.is_separate and then
-								last_type.is_expanded and then
-								not last_type.is_processor_attachable_to (l_target_type)
-							then
-								error_handler.insert_error (create {VUER}.make (context, last_type, l_as.operator_location))
-							end
+							adapt_type_to_target (l_infix_type, l_target_type, l_is_controlled, l_as, l_error_level, l_as.operator_location)
+
 							if l_needs_byte_node then
 								l_binary := byte_anchor.binary_node (l_as)
 								l_binary.set_left (l_left_expr)
@@ -10316,7 +10292,7 @@ feature {NONE} -- Agents
 			l_result_type := l_result_type.as_attached_in (context.current_class)
 
 				-- If a target type is separate, a type of the agent is separate.
-			adapt_type_to_target (l_result_type, a_target_type, is_controlled, an_agent)
+			adapt_type_to_target (l_result_type, a_target_type, is_controlled, an_agent, 0, Void)
 			l_result_type := last_type
 
 			if is_byte_node_enabled then
@@ -11675,24 +11651,40 @@ feature {NONE} -- Separateness
 			end
 		end
 
-	adapt_type_to_target (l: detachable TYPE_A; t: TYPE_A; c: BOOLEAN; n: AST_EIFFEL)
-			-- Adapt separateness status of the last message type `l' of the AST node `n'
-			-- to the target of type `t' which has a controlled status `c'
-			-- and update `is_controlled' accordingly.
+	adapt_type_to_target (non_adapted_type: detachable TYPE_A; target_type: TYPE_A; c: BOOLEAN; n: AST_EIFFEL; e: like error_level; error_location: detachable LOCATION_AS)
+			-- Adapt separateness status of the last message type `non_adapted_type' of the AST node `n'
+			-- to the target of type `target_type' which has a controlled status `c' and update `is_controlled' accordingly.
+			-- If `error_location' is attached and the target type is separate, check that the type `l' has no non-separate reference attributes
+			-- and report an error using if `e' is the same as `error_level'.
 		require
-			t_not_void: t /= Void
+			target_type_attached: attached target_type
+		local
+			result_type: TYPE_A
 		do
-			if
-				t.is_separate and then
-				l /= Void and then not l.is_separate
-			then
-					-- Separate call is controlled if target is controlled
-					-- and message type is not separate.
-				is_controlled := c
-				set_type (l.to_other_separateness (t), n)
+			if attached non_adapted_type then
+				if target_type.is_separate and then not non_adapted_type.is_separate then
+						-- Separate call is controlled if target is controlled
+						-- and message type is not separate.
+					is_controlled := c
+					result_type := non_adapted_type.to_other_separateness (target_type)
+				else
+					is_controlled := False
+					result_type := non_adapted_type
+				end
+				set_type (result_type, n)
+					-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
+				if
+					error_level = e and then
+					target_type.is_separate and then
+					result_type.is_expanded and then
+					not result_type.is_processor_attachable_to (target_type)
+				then
+					error_handler.insert_error (create {VUER}.make (context, result_type, error_location))
+				end
 			else
+					-- Set `last_type' to Void to indicate an error.
 				is_controlled := False
-				set_type (l, n)
+				set_type (Void, n)
 			end
 		end
 

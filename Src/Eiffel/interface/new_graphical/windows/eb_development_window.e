@@ -799,7 +799,7 @@ feature -- Stone process
 			end
 		ensure then
 			stone_set: not is_processing_stone implies stone = a_stone
-			editor_stone: not is_processing_stone implies editors_manager.current_editor.stone = a_stone
+			editor_stone: (not is_processing_stone and then attached a_stone) implies editors_manager.current_editor.stone = a_stone
 		end
 
 	refresh

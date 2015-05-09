@@ -135,8 +135,7 @@ feature -- Code generation
 							buf.put_new_line
 							buf.put_string ("int uarg")
 							buf.put_integer (arg.target_index)
-							buf.put_three_character (' ', '=', ' ')
-							buf.put_string (" RTS_OU (Current, ")
+							buf.put_string (" = RTS_OU (Current, ")
 							buf.put_string (t.register_name)
 							buf.put_character (')')
 							buf.put_character (';')
@@ -146,9 +145,9 @@ feature -- Code generation
 				if has_request_chain then
 						-- Declare
 					buf.put_new_line
-					buf.put_string ("RTS_SD")
+					buf.put_string ("RTS_SD;")
 					buf.put_new_line
-					buf.put_string ("uarg = ")
+					buf.put_string ("uarg =")
 					across
 						arguments as arg
 					from
@@ -210,7 +209,7 @@ feature -- Code generation
 				if has_request_chain then
 						-- Generate request chain removal.
 					buf.put_new_line
-					buf.put_string ("if (uarg) RTS_SRD  (Current);")
+					buf.put_string ("if (uarg) RTS_SRD (Current);")
 				end
 					-- Close block.
 				buf.exdent

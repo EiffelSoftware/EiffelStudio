@@ -541,7 +541,7 @@ test	bogus-vdrd2-error				valid267 tcf fail validity
 test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf fail used_to_pass validity
 test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
-test	spurious-vweq-warning			valid271 tcf pass validity
+test	spurious-vweq-warning			valid271 tcf fail validity
 test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
 test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
 test	duplicate-vfac1				valid274 tcf pass validity

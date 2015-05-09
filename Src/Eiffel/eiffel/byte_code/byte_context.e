@@ -981,19 +981,11 @@ feature {NONE} -- C code generation: request chain
 			-- Initialize macros to work with request chain.
 		do
 			if has_rescue then
-				request_chain_declaration := once "RTS_SDX"
 				request_chain_creation := once "RTS_SRCX"
 			else
-				request_chain_declaration := once "RTS_SD"
 				request_chain_creation := once "RTS_SRC"
 			end
 		end
-
-	request_chain_declaration: STRING
-			-- Macro to declare request chain.
-
-	request_chain_safety_declaration: STRING = "RTS_SDR"
-			-- Macro to declare request chain for saving in presence of rescue clause.
 
 	request_chain_creation: STRING
 			-- Macro to create request chain.
@@ -3034,7 +3026,7 @@ invariant
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1416,7 +1416,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_SRD(p) - release request chain for the processor identified by object p when routine exits normally.
  * RTS_SRR - release request chains (if any) when entering a rescue clause because of an exception.
  */
-#define RTS_SD RTS_SDP(RTS_PID(Current));
+#define RTS_SD RTS_SDP(RTS_PID(Current))
 #define RTS_SDX RTS_SD; RTS_SDC
 #define RTS_SDR RTS_SD; RTS_SDC
 

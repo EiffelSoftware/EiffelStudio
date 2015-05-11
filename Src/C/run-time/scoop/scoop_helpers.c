@@ -52,6 +52,8 @@ doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summ
 #include "rt_macros.h"
 #include "rt_except.h"
 
+#include "eif_atomops.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -242,6 +244,32 @@ rt_shared void rt_unset_processor_id (void)
 	eif_unsynchronize_gc (rt_globals);
 }
 
+/*
+doc:	<routine name="rt_scoop_gc_request" return_type="void" export="shared">
+doc:		<summary> Run a GC cycle when 'fingerprint' has not changed since the last call. </summary>
+doc:		<param name="fingerprint" type="int*"> The fingerprint value. </param>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required, done internally through atomic operations. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_scoop_gc_request (int* fingerprint)
+{
+	static volatile int gc_fingerprint = 0;
+	int previous_fingerprint = * fingerprint;
+	int current_fingerprint = RTS_ACAS_I32 (&gc_fingerprint, previous_fingerprint + 1, previous_fingerprint);
+
+	if (current_fingerprint == previous_fingerprint) {
+			/* The fingerprint is unchanged since last call, no GC was run, do it now. */
+			/* Record newly written fingerprint for the next time. */
+		* fingerprint = previous_fingerprint + 1;
+			/* Run GC. */
+		plsc();
+	}
+	else {
+			/* Record current fingerprint for the next time. */
+		* fingerprint = current_fingerprint;
+	}
+}
 
 /*
 doc:	<routine name="rt_scoop_setup" return_type="void" export="shared">

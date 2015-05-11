@@ -40,7 +40,7 @@ feature {NONE} -- Creation
 				i := i - 1
 				create t.full_collect
 			end
-			if a.argument (2) /~ bench_option then
+ 			if a.argument_count <= 1 or else a.argument (2) /~ bench_option then
 				io.put_integer_64 ((create {DATE_TIME}.make_now_utc).relative_duration (s).seconds_count)
 			end
 		end

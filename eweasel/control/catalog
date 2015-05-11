@@ -520,8 +520,8 @@ test	explicit-anchored-expanded-creation-type valid245 tcf fail used_to_pass val
 test	inherited-conversion-to-like-current	valid246 tcf fail used_to_pass validity
 test	undetected-vycq-error				valid247 tcf pass validity conversion
 test	infix-prefix-alias-compatibility	valid248 tcf pass validity
-test	assigner-validity-rules				valid249 tcf pass validity
-test	assigner-wrong-vbac					valid250 tcf pass validity
+test	assigner-validity-rules				valid249 tcf pass assigner validity
+test	assigner-wrong-vbac					valid250 tcf pass assigner validity
 test	bogus-veen-on-object-test-local		valid251 tcf fail used_to_pass validity
 test	undetected-vuot-error			valid252 tcf fail used_to_pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
@@ -544,9 +544,9 @@ test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
 test	spurious-vweq-warning			valid271 tcf fail validity
 test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
 test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
-test	duplicate-vfac1				valid274 tcf pass validity
+test	duplicate-vfac1				valid274 tcf pass validity assigner
 test	non-conforming-equality			valid275 tcf pass validity conformance equality warning
-test	missing-assigner-feature		valid276 tcf pass validity fixed
+test	missing-assigner-feature		valid276 tcf pass validity assigner fixed
 test	insufficiently-exported-assigner-feature valid277 tcf fail validity assigner
 test	invalid-static-inspect-constant	 	valid278 tcf pass validity
 test	wrong-tuple-type-in-descendants	valid279 tcf fail validity
@@ -571,7 +571,7 @@ test	precondition-vdpr-fail-to-check-body	multierr010 tcf pass multi-errors
 test	binary-op-fail-to-check-second-operand	multierr011 tcf fail used_to_pass multi-errors
 
 -- System validity tests
-test	svalid-infix-with-conversion	svalid001 tcf pass system-validity
+test	svalid-infix-with-conversion	svalid001 tcf pass system-validity assigner
 test	svalid-rename-constant-inspect	svalid002 tcf pass system-validity
 test	svalid-incremental-check		svalid003 tcf pass system-validity
 test	precursor-validity				svalid004 tcf fail used_to_pass system-validity
@@ -895,7 +895,7 @@ test	change-manifest-type-expr		incr247  tcf pass incrementality
 test	manifest-type-expr-none			incr248  tcf pass incrementality
 test	internal-incrementality			incr249  tcf pass incrementality
 test	move-implementation				incr250  tcf pass incrementality
-test	assigner-for-synonym		incr251  tcf pass incrementality
+test	assigner-for-synonym		incr251  tcf pass incrementality assigner
 test	add-unique						incr252  tcf pass incrementality
 test	remove-rename-class				incr253	 tcf pass incrementality
 test	add-generic-creation-specification	incr254	tcf pass incrementality
@@ -905,7 +905,7 @@ test	agent-add-arguments				incr257  tcf pass incrementality agents
 test	agent-add-derivation		incr258  tcf pass incrementality agents
 test	chg-class-with-inline-agent	incr259  tcf pass incrementality agents
 test	lazy-call-on-attribute-agent	incr260  tcf pass incrementality
-test	auto-properties-recompilation	incr261  tcf pass incrementality dotnet
+test	auto-properties-recompilation	incr261  tcf pass incrementality dotnet assigner
 test	detect-override					incr263	 tcf pass incrementality
 test	vtug-override					incr264  tcf pass incrementality
 test	add-remove-inline-agent			incr265 tcf pass incrementality agents
@@ -1332,7 +1332,7 @@ test	tight-loop-integer-constant-infinite-loop final117 tcf pass finalizing manu
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
 test	comparison-involving-allocation	final120 tcf fail finalizing
-test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression
+test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
 
 -- Runtime
@@ -1405,7 +1405,7 @@ test	scoop-separate-formal				scoop020 tcf pass scoop multithreaded formal gener
 test	scoop-object-test				scoop021 tcf fail used_to_pass scoop multithreaded formal generic conformance object_test execution
 test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity incrementality
 test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop multithreaded termination expanded generic
-test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution
+test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution assigner
 test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
 test	scoop-unnested-logging				scoop026 tcf fail used_to_pass scoop multithreaded execution
 test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop multithreaded execution lock_passing
@@ -1643,8 +1643,8 @@ test	once-manifest-string-in-once	exec209 tcf pass execution
 test	external-redeclared-to-attribute	exec210 tcf pass execution
 test	expanded-reattachment		exec211 tcf fail used_to_pass execution
 test	bad-invariant-code-in-expanded	exec212 tcf pass execution
-test	inherited-attribute-and-assigner	exec213 tcf pass execution
-test	attribute-and-assigner-coupling	exec214 tcf pass execution
+test	inherited-attribute-and-assigner	exec213 tcf pass execution assigner
+test	attribute-and-assigner-coupling	exec214 tcf pass execution assigner
 test	signed-unsigned-binary-operations exec215 tcf pass execution
 test	empty-once-function		exec216 tcf pass execution
 test	inherited-expanded-generic	exec217 tcf pass execution
@@ -1652,7 +1652,7 @@ test	any-expanded-agent			exec218 tcf fail used_to_pass execution agents
 test	to-character-32-truncated	exec219 tcf pass execution
 test	character-32-truncated		exec220 tcf pass execution
 test	melted-dispose-panic		exec221 tcf pass execution
-test	expanded-reverse-attachment	exec222 tcf pass execution expanded attachment
+test	expanded-reverse-attachment	exec222 tcf pass execution expanded attachment assigner
 test	extended-agent-test exec223 tcf pass execution agents
 test	named-tuple-test	exec224 tcf pass execution tuple
 test	expanded-generic-use	exec225 tcf pass execution expanded generic
@@ -1771,7 +1771,7 @@ test	gc-after-rescue-in-attribute		exec337 tcf pass execution attribute
 test	compare-generic-to-basic		exec338 tcf pass execution
 test	standard-twin-correctness		exec339 tcf pass execution
 test	plus-with-mixed-types			exec340 tcf fail used_to_pass execution
-test	static-assigner					exec341 tcf pass execution
+test	static-assigner					exec341 tcf pass execution assigner
 test	generating-type-on-typed-pointer	exec342 tcf fail used_to_pass execution expanded generic
 test	deep-twin-control-c				exec343 tcf pass execution manual
 test	wrong-argument-type-in-tuple	exec344 tcf pass execution tuple
@@ -2611,7 +2611,7 @@ test	multi-constraint-vtmc4							multicon036 tcf pass multiconstraint
 test	multi-constraint-tuples							multicon037 tcf pass multiconstraint tuple
 test	multi-constraint-tuples2						multicon038 tcf pass multiconstraint tuple
 test	multi-constraint-rename-alias					multicon039 tcf pass multiconstraint
-test	multi-constraint-assigner						multicon040 tcf pass multiconstraint
+test	multi-constraint-assigner						multicon040 tcf pass multiconstraint assigner
 test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
@@ -2762,7 +2762,7 @@ test	like-current-default-attachment		attach087 tcf pass attached_types void_saf
 test	none-attachment-mark			attach088 tcf pass attached_types void_safe validity
 test	none-to-reference-formal		attach089 tcf pass attached_types void_safe formal generic conformance validity
 test	like-current-attachment-redeclaration	attach090 tcf pass attached_types void_safe conformance validity
-test	stable-attribute-assigner		attach091 tcf pass attached_types void_safe conformance stable attribute validity
+test	stable-attribute-assigner		attach091 tcf pass attached_types void_safe conformance stable attribute assigner validity
 test	mutual-self-init-attribute		attach092 tcf pass attached_types void_safe self_init attribute validity
 test	indirect-self-init-attribute		attach093 tcf pass attached_types void_safe self_init attribute validity
 test	initialization-error-suppression	attach094 tcf pass attached_types void_safe stable attribute generic validity
@@ -2893,7 +2893,7 @@ test	qualified-anchor-expansion-4	anchor080 tcf pass anchored_type
 test	qualified-anchor-expansion-5	anchor081 tcf pass anchored_type
 test	qualified-anchor-expansion-6	anchor082 tcf pass anchored_type
 test	qualified-anchor-expansion-7	anchor083 tcf pass anchored_type
-test	qualified-anchor-expansion-8	anchor084 tcf pass anchored_type
+test	qualified-anchor-expansion-8	anchor084 tcf pass anchored_type assigner
 test	qualified-anchor-expansion-9	anchor085 tcf pass anchored_type
 test	qat-inference-crash		anchor086 tcf pass anchored_type inference
 test	qat-cycle-in-generic		anchor087 tcf manual anchored_type formal generic validity
@@ -2934,7 +2934,7 @@ test	pretty-check-instruction		pretty016 tcf pass pretty
 test	pretty-nested-comment			pretty017 tcf pass pretty
 test	pretty-assertion-clause			pretty018 tcf pass pretty
 test	pretty-feature-adaptation		pretty019 tcf pass pretty
-test	pretty-bracket-expression		pretty020 tcf pass pretty bracket_expression
+test	pretty-bracket-expression		pretty020 tcf pass pretty bracket_expression assigner
 test	pretty-attribute-comment		pretty021 tcf pass pretty
 test	pretty-expression-comment		pretty022 tcf pass pretty
 test	pretty-typed-character			pretty023 tcf pass pretty
@@ -2991,11 +2991,11 @@ if DOTNET test dotnet-value-type-initialization	dotnet021	tcf pass dotnet
 if DOTNET test custom-attribute-type-change	dotnet022	tcf pass dotnet incrementality custom_attributes
 if DOTNET test deferred-inherited-from-external	dotnet023	tcf pass dotnet
 if DOTNET test renamed-feature-from-interface	dotnet024	tcf pass dotnet
-if DOTNET test property-name-clash	dotnet025	tcf pass dotnet property
+if DOTNET test property-name-clash	dotnet025	tcf pass dotnet property assigner
 if DOTNET test enum-inspect-validity	dotnet026	tcf pass dotnet
-if DOTNET test property-assigner-generation	dotnet027	tcf pass dotnet property assign
-if DOTNET test field-assigner-generation	dotnet028	tcf pass dotnet
-test property-accessor-name-clash		dotnet029	tcf pass dotnet property
+if DOTNET test property-assigner-generation	dotnet027	tcf pass dotnet property assigner
+if DOTNET test field-assigner-generation	dotnet028	tcf pass dotnet assigner
+test property-accessor-name-clash		dotnet029	tcf pass dotnet property assigner
 test inline-agent-of-descendant dotnet030 tcf pass dotnet agents
 test deferred-class-inherit-dotnet dotnet031 tcf pass dotnet
 if DOTNET test single-inheritance-test dotnet032 tcf pass dotnet
@@ -3012,9 +3012,9 @@ if DOTNET test merged-typed-pointer-argument	dotnet042	tcf pass dotnet
 if DOTNET test correct-bound-property-assigner dotnet043	tcf pass dotnet
 if DOTNET test valid-dotnet-basic-typeof dotnet044	tcf pass dotnet
 if DOTNET test correct-override-on-multi-versioned-members dotnet045	tcf pass dotnet
-if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet property
-if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet property
-if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet property
+if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet property assigner
+if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet property assigner
+if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet property assigner
 if DOTNET test effecting-from-inherited-external	dotnet049	tcf pass dotnet
 test replicated-from-generic-type		dotnet050	tcf pass dotnet termination expanded replication
 test implicit-type-cause-crash-on-cast	dotnet051	tcf pass dotnet termination
@@ -3042,10 +3042,10 @@ if DOTNET test property-name-clash-single-named dotnet072	tcf pass dotnet proper
 if DOTNET test property-name-clash-named-inherited dotnet073	tcf pass dotnet property
 if DOTNET test properties-generated-on_eiffel-interface dotnet074	tcf pass dotnet property
 if DOTNET test illegal-routine-properties dotnet075	tcf pass dotnet property
-if DOTNET test property-reusing-parent-setter dotnet076	tcf fail dotnet property
-if DOTNET test deferred-property-function-on-single dotnet077	tcf fail dotnet property
-if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet property incrementality
-if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality
+if DOTNET test property-reusing-parent-setter dotnet076	tcf fail dotnet property assigner
+if DOTNET test deferred-property-function-on-single dotnet077	tcf fail dotnet property assigner
+if DOTNET test property-incremental-add-remove dotnet078	tcf pass dotnet property incrementality assigner
+if DOTNET test property-incremental-add-remove-single dotnet079	tcf pass dotnet property incrementality assigner
 if DOTNET test property-on-procedure dotnet080	tcf pass dotnet property
 if DOTNET test ctor-basic dotnet081	tcf fail dotnet constructor
 if DOTNET test ctor-basic-dynamic dotnet082	tcf pass dotnet constructor
@@ -3062,14 +3062,14 @@ if DOTNET test ca-use-of-non-native-attribute dotnet092	tcf fail dotnet custom_a
 if DOTNET test ca-incorrect-context-usage dotnet093	tcf fail dotnet custom_attributes
 if DOTNET test ca-peripheral-assembly-metadata dotnet094	tcf pass dotnet custom_attributes
 if DOTNET test ca-assembly-md-with-compile-all dotnet095	tcf fail dotnet custom_attributes
-if DOTNET test ca-correct-assignment dotnet096	tcf pass dotnet custom_attributes
+if DOTNET test ca-correct-assignment dotnet096	tcf pass dotnet custom_attributes assigner
 if DOTNET test ca-basic-custom-attribute dotnet097	tcf pass dotnet custom_attributes
-if DOTNET test ca-custom-attribute-with-property dotnet098	tcf fail dotnet custom_attributes property
+if DOTNET test ca-custom-attribute-with-property dotnet098	tcf fail dotnet custom_attributes property assigner
 if DOTNET test ca-custom-attribute-with-ctor dotnet099	tcf pass dotnet custom_attributes constructor
 if DOTNET test ca-custom-attribute-with-create dotnet100	tcf fail dotnet custom_attributes
 if DOTNET test application-optimizations-enabled dotnet101	tcf pass dotnet optimization
 if DOTNET test system-object-remapped-in-mscorlib-only dotnet102	tcf pass dotnet consumer
-if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes
+if DOTNET test consumable-attribute-usage-in-eiffel dotnet103	tcf fail dotnet consumer consumable custom_attributes assigner
 if DOTNET test generic-creation-with-external-ctor	dotnet104	tcf pass dotnet constructor generic external creation
 if DOTNET test overridden-cluster-namespace-preserved	dotnet105	tcf pass dotnet namespace
 if DOTNET test equal-on-dotnet-string-and-eiffel-string dotnet106	tcf pass dotnet
@@ -3077,7 +3077,7 @@ if DOTNET test renaming-native-dotnet-feature-with-redefine-default-create dotne
 test anchored-creation-crash		dotnet108 tcf pass dotnet
 test object-test-assertion-crash	dotnet109 tcf pass dotnet
 test dotnet-polymorphism			dotnet110 tcf fail used_to_pass dotnet
-if DOTNET test assigner-name-incrementality	dotnet111 tcf pass dotnet
+if DOTNET test assigner-name-incrementality	dotnet111 tcf pass dotnet assigner
 test dotnet-special-handling-crash	dotnet112 tcf pass dotnet special
 if DOTNET test  dotnet-object-test-basic-type	dotnet113 tcf pass dotnet attached_types
 if DOTNET test  dotnet-array-data-copy	dotnet114 tcf pass dotnet

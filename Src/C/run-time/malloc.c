@@ -1095,8 +1095,15 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 	}
 
 		/* Synchronization required to access `rt_type_set'. */
-	EIF_ENTER_C;
+
+		/* NOTE: For acquiring the lock, we quickly deregister with the GC to avoid
+		 * unnecessary waiting. The following code must not be executed while the
+		 * garbage collector runs however, so we synchronize again right afterwards.
+		 * See also test#scoop059. */
+ 	EIF_ENTER_C;
 	GC_THREAD_PROTECT(TYPE_SET_MUTEX_LOCK);
+ 	EIF_EXIT_C;
+ 	RTGC;
 
 	if (rt_type_set_count > l_array_index) {
 		result = rt_type_set [l_array_index];
@@ -1124,8 +1131,6 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
 	}
 
 	GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
-	EIF_EXIT_C;
-	RTGC;
 	return result;
 }
 

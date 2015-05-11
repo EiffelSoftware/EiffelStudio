@@ -1440,6 +1440,7 @@ test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop validity
 test	scoop-separate-instruction-dependent-arguments	scoop056 tcf pass scoop validity
 test	scoop-separate-instruction-non-separate		scoop057 tcf pass scoop validity
 test	scoop-separate-instruction-execution		scoop058 tcf pass scoop execution
+test	scoop-gc-stress-test					scoop059 tcf fail scoop execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

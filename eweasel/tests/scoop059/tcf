@@ -1,0 +1,16 @@
+test_name	 scoop-gc-stress-test
+test_description Stress test for processor creation and garbage collection (similar to bench001). The test serves as a regression test for a race condition, which usually only triggers during heavy load. You may need to start several instances of this test in parallel to trigger the bug.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 10000 -bench
+execute_result	ok
+
+compare exec_output_f output
+
+test_end

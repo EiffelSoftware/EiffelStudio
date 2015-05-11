@@ -761,6 +761,8 @@ feature {NONE} -- Implementation functions
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
 			l_description: STRING_32
+			n: INTEGER
+			l_is_void_safe: BOOLEAN
 		do
 			create l_format_context.make_for_case (current_editor.text_displayed)
 			current_editor.handle_before_processing (False)
@@ -831,8 +833,9 @@ feature {NONE} -- Implementation functions
 			l_format_context.add_group (a_group, a_group.name)
 			l_format_context.put_new_line
 
+
 				-- location
-			l_format_context.process_indexing_tag_text ("path")
+			l_format_context.process_indexing_tag_text ("location")
 			l_format_context.set_without_tabs
 			l_format_context.process_symbol_text (ti_colon)
 			l_format_context.put_space
@@ -849,11 +852,16 @@ feature {NONE} -- Implementation functions
 			end
 			l_format_context.put_new_line
 
-				-- Now try to get the description of the cluster, and if not
-				-- we take the one from its target.
+				-- Now try to get the description of the cluster/library/...
 			l_description := a_group.description
-			if l_description = Void then
-				l_description := a_group.target.description
+			if
+				l_description = Void and l_library /= Void and then
+				attached l_library.library_target as l_lib_target
+			then
+				l_description := l_lib_target.description
+				if l_description = Void and attached l_lib_target.system as l_system then
+					l_description := l_system.description
+				end
 			end
 			if l_description /= Void then
 				l_format_context.process_indexing_tag_text ("description")
@@ -886,26 +894,76 @@ feature {NONE} -- Implementation functions
 				l_format_context.put_new_line
 			end
 
-			if l_library /= Void and then attached l_library.library_target as l_lib_target then
-				if attached l_lib_target.system.uuid as l_uuid then
-					l_format_context.process_indexing_tag_text ("UUID: ")
-					l_format_context.put_manifest_string (l_uuid.out)
+				--| Options, uuid, ... and library specific data.
+			if l_library /= Void then
+					-- Use application options
+				if l_library.use_application_options then
+					l_format_context.process_indexing_tag_text ("use application options: ")
+					l_format_context.put_manifest_string (interface_names.b_yes)
 					l_format_context.put_new_line
 				end
-				if attached l_lib_target.internal_libraries as l_libs and then l_libs.count > 0 then
-					l_format_context.process_indexing_tag_text ("depends on: ")
-					from
-						l_libs.start
-					until
-						l_libs.after
-					loop
-						l_format_context.add_group (l_libs.item_for_iteration, l_libs.key_for_iteration)
-						l_libs.forth
-						if not l_libs.after then
-							l_format_context.put_manifest_string (", ")
+				if attached l_library.library_target as l_lib_target then
+					if attached l_lib_target.options as opts then
+						if
+							attached opts.void_safety as opt_void_safety and then
+							attached opt_void_safety.item as l_void_safety and then
+							not l_void_safety.is_whitespace
+						then
+							l_format_context.process_indexing_tag_text ("void-safety: ")
+							l_format_context.put_manifest_string (l_void_safety)
+							l_format_context.put_new_line
+							l_is_void_safe := opt_void_safety.index /= {CONF_OPTION}.void_safety_index_none
+						else
+							l_is_void_safe := False
+						end
+						if l_is_void_safe and then attached opts.is_attached_by_default_configured then
+							l_format_context.process_indexing_tag_text ("is attached by default: ")
+							if opts.is_attached_by_default then
+								l_format_context.put_manifest_string (interface_names.b_yes)
+							else
+								l_format_context.put_manifest_string (interface_names.b_no)
+							end
+							l_format_context.put_new_line
+						end
+						if
+							attached opts.syntax as opt_syntax and then
+							attached opt_syntax.item as l_syntax and then
+							not l_syntax.is_whitespace
+						then
+							l_format_context.process_indexing_tag_text ("syntax: ")
+							l_format_context.put_manifest_string (l_syntax)
+							l_format_context.put_new_line
 						end
 					end
-					l_format_context.put_new_line
+					if attached l_lib_target.internal_libraries as l_libs and then l_libs.count > 0 then
+						l_format_context.put_new_line
+						l_format_context.process_indexing_tag_text ("depends on: ")
+						if l_libs.count > 5 then
+							l_format_context.put_new_line
+							l_format_context.indent
+						end
+						from
+							n := 0
+							l_libs.start
+						until
+							l_libs.after
+						loop
+							if n > 0 and n \\ 5 = 0 then
+								l_format_context.put_new_line
+							end
+							n := n + 1
+
+							l_format_context.add_group (l_libs.item_for_iteration, l_libs.key_for_iteration)
+							l_libs.forth
+							if not l_libs.after then
+								l_format_context.put_manifest_string (", ")
+							end
+						end
+						if l_libs.count > 5 then
+							l_format_context.exdent
+						end
+						l_format_context.put_new_line
+					end
 				end
 			end
 
@@ -954,7 +1012,7 @@ feature {NONE} -- Implementation functions
 				l_format_context.exdent
 			end
 
-				-- classes
+				-- classes			
 			if not l_sorted_cluster.classes.is_empty then
 				l_classes := l_sorted_cluster.classes
 				from
@@ -1010,8 +1068,12 @@ feature {NONE} -- Implementation functions
 						l_format_context.process_symbol_text (ti_colon)
 						if l_assert_level.level = 0  then
 							l_format_context.put_space
-							l_format_context.process_comment_text (once "None", Void)
+							l_format_context.process_comment_text (once "no assertion", Void)
 						else
+							l_format_context.put_space
+							l_format_context.process_comment_text (once "assertions", Void)
+							l_format_context.put_space
+							l_format_context.process_symbol_text (ti_l_parenthesis)
 							if l_assert_level.is_precondition then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
@@ -1037,6 +1099,13 @@ feature {NONE} -- Implementation functions
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Invariant_keyword, Void)
 							end
+							if l_assert_level.is_supplier_precondition then
+								l_format_context.put_space
+								l_format_context.set_without_tabs
+								l_format_context.process_keyword_text ("supplier-precondition", Void)
+							end
+							l_format_context.put_space
+							l_format_context.process_symbol_text (ti_r_parenthesis)
 						end
 						l_format_context.put_new_line
 						l_in_classes.forth
@@ -1109,7 +1178,6 @@ feature {NONE} -- Implementation functions
 					l_format_context.put_new_line
 				end
 			end
-
 			l_format_context.exdent
 			l_format_context.put_new_line
 			current_editor.handle_after_processing

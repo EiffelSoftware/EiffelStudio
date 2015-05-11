@@ -9,9 +9,9 @@ class
 create
 	make
 feature
-	x : DOUBLE assign set_x
-	y : DOUBLE assign set_y
-	id : INTEGER assign set_id
+	x : DOUBLE
+	y : DOUBLE
+	id : INTEGER
 
 	make(i:INTEGER;px:DOUBLE; py:DOUBLE;)
 			-- Initialization for `Current'.
@@ -19,21 +19,6 @@ feature
 			id := i
 			x := (px)
 			y := (py)
-		end
-
-	set_x(px:DOUBLE)
-		do
-			x := px
-		end
-
-	set_y(py:DOUBLE)
-		do
-			y := py
-		end
-
-	set_id(i:INTEGER)
-		do
-			id := i
 		end
 
 	dummy(i:INTEGER):INTEGER

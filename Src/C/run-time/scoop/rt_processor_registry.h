@@ -57,10 +57,6 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
 /* Root thread entry point. */
 rt_shared void rt_processor_registry_quit_root_processor (void);
 
-/* GC support. TODO: Move this to some other file (maybe scoop_gc.c?). It doesn't really fit here. */
-rt_shared void rt_scoop_gc_request (int* fingerprint);
-
-
 /*
 doc:	<struct name="rt_processor_registry" export="shared">
 doc:		<summary> The processor registry struct is a singleton.

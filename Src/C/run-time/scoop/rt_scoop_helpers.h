@@ -50,4 +50,6 @@ void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark referenc
 
 EIF_BOOLEAN rt_scoop_try_call (struct call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
 
+rt_shared void rt_scoop_gc_request (int* fingerprint); /* Request a GC cycle if the fingerprint hasn't changed since last invocation. */
+
 #endif /* _rt_scoop_helpers_h_ */

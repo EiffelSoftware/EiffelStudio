@@ -75,6 +75,7 @@ extern "C" {
 * RTS_AS_PTR(dest, setter)          - exchange for pointers
 * RTS_AI_I32(dest)                  - increment-fetch
 * RTS_AD_I32(dest)                  - decrement-fetch
+* EIF_HAS_ATOMIC                    - Preprocessor guard. Defined if atomic operations are available.
 */
 
 #if defined(_WIN32)
@@ -82,11 +83,13 @@ extern "C" {
 #	define RTS_AS_I32(dest, setter)          InterlockedExchange ((long *) dest, setter)
 #	define RTS_AA_I32(dest, val)             (InterlockedExchangeAdd ((long *) dest, val) + val) // Add val to return new value.
 #	define RTS_AS_PTR(dest, setter)          InterlockedExchangePointer ((PVOID volatile *)dest, (PVOID) setter)
+#	define EIF_HAS_ATOMIC
 #elif defined (__EIF_GNUC_ATOMOPS__) || defined (__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4) || (defined (__clang__) && (defined (__x86_64__) || defined (__i386__)))
 #	define RTS_ACAS_I32(dest,setter,compare) __sync_val_compare_and_swap (dest, compare, setter)
 #	define RTS_AS_I32(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
 #	define RTS_AA_I32(dest, val)             __sync_add_and_fetch (dest, val)
 #	define RTS_AS_PTR(dest, setter)          __sync_val_compare_and_swap (dest, *dest, setter)
+#	define EIF_HAS_ATOMIC
 #elif (EIF_OS == EIF_OS_SUNOS && ((EIF_ARCH == EIF_ARCH_SPARC) || (EIF_ARCH == EIF_ARCH_SPARC_64))) || (EIF_OS == EIF_OS_LINUX && (defined (__SUNPRO_C) || defined (__SUNPRO_CC)))
 	/**
 	 * There are no C equivalents to the atomic operatons.
@@ -102,6 +105,7 @@ extern "C" {
 #	define RTS_AS_I32(dest, setter)          atomic_swap_32 ((volatile uint32_t*) dest, setter)
 #	define RTS_AA_I32(dest, val)             atomic_add_32_nv ((volatile uint32_t*) dest, val)
 #	define RTS_AS_PTR(dest, setter)          atomic_swap_ptr (dest, setter)
+#	define EIF_HAS_ATOMIC
 #else
 #	error "Missing atomic compare-exchange functionality."
 #endif

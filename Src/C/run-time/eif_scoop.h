@@ -41,12 +41,12 @@
 #endif
 
 #include "eif_portable.h"
-#include "eif_config.h" /* for EIF_OS_SUNOS */
+#include "eif_atomops.h" /* for EIF_HAS_ATOMIC */
 #include "eif_types.h" /* for EIF_TYPED_VALUE */
 #include "eif_struct.h" /* for fnptr */
 
 /* TODO: This definition is only used in eif_build_in.h. Should it be moved there? */
-#if (EIF_OS != EIF_OS_SUNOS) && !defined (__SUNPRO_CC)
+#if defined EIF_HAS_ATOMIC
 #	define EIF_IS_SCOOP_CAPABLE 1
 #else
 #	define EIF_IS_SCOOP_CAPABLE 0

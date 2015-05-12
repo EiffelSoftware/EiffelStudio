@@ -1435,13 +1435,14 @@ input.placeholder-text, textarea.placeholder-text {
   vertical-align: top;
   margin: 0 7px 0 5px;
   position: relative;
+  font-size: 15px;
 }
-/* line 112, all.scss */
+/* line 113, all.scss */
 #nav ul li a {
   color: white;
   padding: 2px;
 }
-/* line 116, all.scss */
+/* line 117, all.scss */
 #nav ul li:hover > a {
   color: black;
   -webkit-border-radius: 3px;
@@ -1451,37 +1452,37 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
   box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
 }
-/* line 125, all.scss */
+/* line 126, all.scss */
 #nav ul .active a {
   color: white;
 }
-/* line 129, all.scss */
+/* line 130, all.scss */
 #nav ul a {
   color: #112935;
   display: block;
 }
-/* line 132, all.scss */
+/* line 133, all.scss */
 #nav ul a:hover {
   color: white;
 }
-/* line 134, all.scss */
+/* line 135, all.scss */
 #nav ul .drop-slide-wrapper {
   width: 173px;
   left: 50% !important;
   top: 100%;
   margin: 0 0 0 -86px;
 }
-/* line 140, all.scss */
+/* line 141, all.scss */
 #nav ul .dropdown {
   width: 100%;
   text-align: left;
   padding: 16px 0 0;
 }
-/* line 145, all.scss */
+/* line 146, all.scss */
 #nav ul:hover .dropdown {
   display: block;
 }
-/* line 148, all.scss */
+/* line 149, all.scss */
 #nav ul ul {
   background: #4a6d82;
   border: 1px solid #abc4d4;
@@ -1494,7 +1495,7 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
   box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
 }
-/* line 158, all.scss */
+/* line 159, all.scss */
 #nav ul ul:after, #nav ul ul:before {
   bottom: 100%;
   left: 50%;
@@ -1505,32 +1506,32 @@ input.placeholder-text, textarea.placeholder-text {
   position: absolute;
   pointer-events: none;
 }
-/* line 169, all.scss */
+/* line 170, all.scss */
 #nav ul ul:after {
   border-color: rgba(74, 109, 130, 0);
   border-bottom-color: #4a6d82;
   border-width: 9px 6px;
   margin-left: -6px;
 }
-/* line 175, all.scss */
+/* line 176, all.scss */
 #nav ul ul:before {
   border-color: rgba(171, 196, 212, 0);
   border-bottom-color: #abc4d4;
   border-width: 10px 7px;
   margin-left: -7px;
 }
-/* line 181, all.scss */
+/* line 182, all.scss */
 #nav ul ul li {
   display: block;
   margin: 0;
 }
-/* line 185, all.scss */
+/* line 186, all.scss */
 #nav ul ul a {
   color: #abc4d4;
   padding: 3px 0 3px;
   position: relative;
 }
-/* line 189, all.scss */
+/* line 190, all.scss */
 #nav ul ul a:after, #nav ul ul a:before {
   width: 4px;
   height: 100%;
@@ -1541,51 +1542,51 @@ input.placeholder-text, textarea.placeholder-text {
   display: none;
   content: '';
 }
-/* line 200, all.scss */
+/* line 201, all.scss */
 #nav ul ul a:before {
   left: auto;
   right: -4px;
 }
-/* line 204, all.scss */
+/* line 205, all.scss */
 #nav ul ul a:hover {
   color: white;
   background: #1a3d50;
 }
-/* line 208, all.scss */
+/* line 209, all.scss */
 #nav ul ul a:hover:after, #nav ul ul a:hover:before {
   display: block;
 }
 
-/* line 218, all.scss */
+/* line 219, all.scss */
 .home #nav {
   font-size: 22px;
   padding: 56px 0 0;
 }
-/* line 221, all.scss */
+/* line 222, all.scss */
 .home #nav ul {
   margin: 0 -30px 0 -16px;
   text-align: left;
 }
-/* line 224, all.scss */
+/* line 225, all.scss */
 .home #nav ul li {
   margin: 0 7px;
 }
-/* line 227, all.scss */
+/* line 228, all.scss */
 .home #nav ul .dropdown {
   padding: 14px 0 0;
 }
-/* line 230, all.scss */
+/* line 231, all.scss */
 .home #nav ul ul {
   margin: 0;
   text-align: center;
 }
-/* line 233, all.scss */
+/* line 234, all.scss */
 .home #nav ul ul li {
   display: block;
   margin: 0;
 }
 
-/* line 242, all.scss */
+/* line 243, all.scss */
 .header-right {
   display: inline;
   float: left;
@@ -1596,26 +1597,26 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 11px 0 0;
 }
 
-/* line 248, all.scss */
+/* line 249, all.scss */
 .add-links {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 251, all.scss */
+/* line 252, all.scss */
 .add-links ul {
   text-align: right;
   font: 12px/18px "museo_sans500", Arial, Helvetica, sans-serif;
   margin: 0 -7px 0 0;
   text-transform: uppercase;
 }
-/* line 257, all.scss */
+/* line 258, all.scss */
 .add-links ul li {
   display: inline-block;
   vertical-align: top;
   position: relative;
   padding: 0 8px;
 }
-/* line 262, all.scss */
+/* line 263, all.scss */
 .add-links ul li:after {
   position: absolute;
   width: 1px;
@@ -1626,20 +1627,20 @@ input.placeholder-text, textarea.placeholder-text {
   margin: -6px 0 0;
   content: '';
 }
-/* line 272, all.scss */
+/* line 273, all.scss */
 .add-links ul li:first-child:after {
   display: none;
 }
-/* line 275, all.scss */
+/* line 276, all.scss */
 .add-links ul li a {
   color: #99cc33;
 }
-/* line 277, all.scss */
+/* line 278, all.scss */
 .add-links ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 285, all.scss */
+/* line 286, all.scss */
 .search-form {
   width: 181px;
   padding: 4px 5px 4px 21px;
@@ -1652,7 +1653,7 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 294, all.scss */
+/* line 295, all.scss */
 .search-form input[type="search"],
 .search-form input[type="text"] {
   border: 0;
@@ -1665,7 +1666,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 12px;
   line-height: 18px;
 }
-/* line 306, all.scss */
+/* line 307, all.scss */
 .search-form:after {
   background: url(../images/ico-search.png) no-repeat;
   width: 16px;
@@ -1676,25 +1677,25 @@ input.placeholder-text, textarea.placeholder-text {
   content: '';
 }
 
-/* line 316, all.scss */
+/* line 317, all.scss */
 .search-form.parent-focus {
   -webkit-box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* line 321, all.scss */
+/* line 322, all.scss */
 .promo-area {
   padding: 80px 0 20px;
   min-height: 300px;
   position: relative;
 }
-/* line 325, all.scss */
+/* line 326, all.scss */
 .promo-area .social-networks {
   position: absolute;
   top: 0;
   right: 0px;
 }
-/* line 330, all.scss */
+/* line 331, all.scss */
 .promo-area .holder {
   width: 575px;
   overflow: hidden;
@@ -1704,14 +1705,14 @@ input.placeholder-text, textarea.placeholder-text {
   clear: both;
   margin-bottom: 15px;
 }
-/* line 338, all.scss */
+/* line 339, all.scss */
 .promo-area .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #112935;
   margin: 0 0 35px;
   letter-spacing: 2px;
 }
-/* line 344, all.scss */
+/* line 345, all.scss */
 .promo-area .holder .btn-holder {
   width: 347px;
   border: 1px solid #98dcd4;
@@ -1719,7 +1720,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 0 2px;
   float: left;
 }
-/* line 350, all.scss */
+/* line 351, all.scss */
 .promo-area .holder .btn-holder .row {
   overflow: hidden;
   color: #112935;
@@ -1729,12 +1730,12 @@ input.placeholder-text, textarea.placeholder-text {
   text-transform: uppercase;
   border-bottom: 1px solid #98dcd4;
 }
-/* line 358, all.scss */
+/* line 359, all.scss */
 .promo-area .holder .btn-holder .row .release {
   float: left;
   padding: 0 8px;
 }
-/* line 362, all.scss */
+/* line 363, all.scss */
 .promo-area .holder .btn-holder .row .date {
   width: 96px;
   float: right;
@@ -1742,7 +1743,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-style: normal;
   border-left: 1px solid #98dcd4;
 }
-/* line 370, all.scss */
+/* line 371, all.scss */
 .promo-area .holder .btn-holder .btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -1763,7 +1764,7 @@ input.placeholder-text, textarea.placeholder-text {
   position: relative;
   padding: 0 57px 6px 0;
 }
-/* line 383, all.scss */
+/* line 384, all.scss */
 .promo-area .holder .btn-holder .btn-download:after {
   background: url(../images/ico-download.png) no-repeat;
   width: 37px;
@@ -1773,7 +1774,7 @@ input.placeholder-text, textarea.placeholder-text {
   top: 13px;
   content: '';
 }
-/* line 392, all.scss */
+/* line 393, all.scss */
 .promo-area .holder .btn-holder .btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -1783,32 +1784,32 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
 
-/* line 400, all.scss */
+/* line 401, all.scss */
 .promo-area .holder .btn-holder {
   padding: 0 0 0px;
 }
 
-/* line 404, all.scss */
+/* line 405, all.scss */
 #breadcrumb {
   margin-bottom: 10px;
   font-size: smaller;
 }
 
-/* line 409, all.scss */
+/* line 410, all.scss */
 #main {
   width: 100%;
   overflow: hidden;
   position: relative;
   padding: 28px 0;
 }
-/* line 412, all.scss */
+/* line 413, all.scss */
 #main:after, #main:before {
   position: absolute;
   width: 100%;
   height: 22px;
   content: '';
 }
-/* line 419, all.scss */
+/* line 420, all.scss */
 #main:after {
   top: 0;
   background-color: #f0f3f5;
@@ -1818,7 +1819,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #d1dae0, #f0f3f5);
   background-image: linear-gradient(top, #d1dae0, #f0f3f5);
 }
-/* line 423, all.scss */
+/* line 424, all.scss */
 #main:before {
   bottom: 1px;
   background-color: #d1dae0;
@@ -1829,19 +1830,19 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #f0f3f5, #d1dae0);
 }
 
-/* line 430, all.scss */
+/* line 431, all.scss */
 .home #main {
   background: #353637;
   padding: 50px 0 38px;
   border-bottom: 1px solid white;
   margin: 0 0 1px;
 }
-/* line 435, all.scss */
+/* line 436, all.scss */
 .home #main:after, .home #main:before {
   display: none;
 }
 
-/* line 442, all.scss */
+/* line 443, all.scss */
 .column {
   display: inline;
   float: left;
@@ -1849,7 +1850,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 444, all.scss */
+/* line 445, all.scss */
 .column h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -1857,40 +1858,40 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 450, all.scss */
+/* line 451, all.scss */
 .column h2 a {
   color: #99cc33;
 }
-/* line 452, all.scss */
+/* line 453, all.scss */
 .column h2 a:hover {
   color: white;
 }
-/* line 455, all.scss */
+/* line 456, all.scss */
 .column .news-holder,
 .column .blog-holder {
   overflow: hidden;
   width: 275px;
   color: #abc4d4;
 }
-/* line 460, all.scss */
+/* line 461, all.scss */
 .column .news-holder .holder,
 .column .blog-holder .holder {
   overflow: hidden;
 }
-/* line 465, all.scss */
+/* line 466, all.scss */
 .column .news-holder h2 {
   margin: 0 0 28px;
 }
-/* line 469, all.scss */
+/* line 470, all.scss */
 .column .news {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 472, all.scss */
+/* line 473, all.scss */
 .column .news p {
   margin: 0 0 12px;
 }
-/* line 476, all.scss */
+/* line 477, all.scss */
 .column .date {
   display: block;
   text-transform: uppercase;
@@ -1898,81 +1899,81 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 483, all.scss */
+/* line 484, all.scss */
 .column .blog-holder {
   margin: 0 0 0 27px;
 }
-/* line 485, all.scss */
+/* line 486, all.scss */
 .column .blog-holder .blog-post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 488, all.scss */
+/* line 489, all.scss */
 .column .blog-holder .blog-post p {
   margin: 0 0 10px;
 }
-/* line 492, all.scss */
+/* line 493, all.scss */
 .column .blog-holder h3 {
   color: white;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 496, all.scss */
+/* line 497, all.scss */
 .column .blog-holder h3 a {
   color: white;
 }
-/* line 498, all.scss */
+/* line 499, all.scss */
 .column .blog-holder h3 a:hover {
   color: #c7ec7e;
 }
-/* line 504, all.scss */
+/* line 505, all.scss */
 .column .libraries,
 .column .updates {
   width: 265px;
   overflow: hidden;
   margin: 0 0 34px 55px;
 }
-/* line 509, all.scss */
+/* line 510, all.scss */
 .column .libraries h2,
 .column .updates h2 {
   border-bottom: 1px solid #292626;
   margin: 0 0 16px;
 }
-/* line 513, all.scss */
+/* line 514, all.scss */
 .column .libraries ul,
 .column .updates ul {
   overflow: hidden;
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 517, all.scss */
+/* line 518, all.scss */
 .column .libraries ul li,
 .column .updates ul li {
   border-bottom: 1px solid #292626;
   padding: 16px 0 5px;
 }
-/* line 520, all.scss */
+/* line 521, all.scss */
 .column .libraries ul li:first-child,
 .column .updates ul li:first-child {
   padding-top: 0;
 }
-/* line 521, all.scss */
+/* line 522, all.scss */
 .column .libraries ul li .date,
 .column .updates ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 525, all.scss */
+/* line 526, all.scss */
 .column .libraries ul li a,
 .column .updates ul li a {
   color: #7FB514;
 }
-/* line 527, all.scss */
+/* line 528, all.scss */
 .column .libraries ul li a:hover,
 .column .updates ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 536, all.scss */
+/* line 537, all.scss */
 #footer {
   background: #4c6877;
   width: 100%;
@@ -1981,7 +1982,7 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   color: #6d8083;
 }
-/* line 541, all.scss */
+/* line 542, all.scss */
 #footer .copyrights {
   display: inline;
   float: left;
@@ -1992,17 +1993,17 @@ input.placeholder-text, textarea.placeholder-text {
   border-top: 1px solid #1a3d50;
   padding: 8px 0 0;
 }
-/* line 544, all.scss */
+/* line 545, all.scss */
 #footer .copyrights a {
   color: #abc4d4;
 }
-/* line 550, all.scss */
+/* line 551, all.scss */
 #footer .copyrights li {
   float: left;
   padding: 0 7px 0;
   position: relative;
 }
-/* line 554, all.scss */
+/* line 555, all.scss */
 #footer .copyrights li:after {
   background: url(../images/sep2.png) no-repeat;
   width: 2px;
@@ -2012,26 +2013,26 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: '';
 }
-/* line 562, all.scss */
+/* line 563, all.scss */
 #footer .copyrights li:after a {
   display: inline-block;
 }
-/* line 566, all.scss */
+/* line 567, all.scss */
 #footer .copyrights li:first-child {
   padding-left: 0;
 }
-/* line 568, all.scss */
+/* line 569, all.scss */
 #footer .copyrights li:first-child:after {
   display: none;
 }
 
-/* line 576, all.scss */
+/* line 577, all.scss */
 .footer-holder {
   overflow: hidden;
   padding: 44px 0 60px;
   min-height: 150px;
 }
-/* line 580, all.scss */
+/* line 581, all.scss */
 .footer-holder .btn-holder {
   display: inline;
   float: left;
@@ -2039,7 +2040,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 235px;
 }
-/* line 582, all.scss */
+/* line 583, all.scss */
 .footer-holder .btn-holder .btn {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2059,7 +2060,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 7px 42px 7px 14px;
   font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 594, all.scss */
+/* line 595, all.scss */
 .footer-holder .btn-holder .btn:after {
   width: 30px;
   height: 30px;
@@ -2068,7 +2069,7 @@ input.placeholder-text, textarea.placeholder-text {
   top: 8px;
   content: '';
 }
-/* line 603, all.scss */
+/* line 604, all.scss */
 .footer-holder .btn-holder .btn.btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2078,11 +2079,11 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #99cc33, #769830);
   color: white;
 }
-/* line 606, all.scss */
+/* line 607, all.scss */
 .footer-holder .btn-holder .btn.btn-download:after {
   background: url(../images/ico-download2.png) no-repeat;
 }
-/* line 609, all.scss */
+/* line 610, all.scss */
 .footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -2091,7 +2092,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
-/* line 613, all.scss */
+/* line 614, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
@@ -2101,7 +2102,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #2B4054, #12273A);
   color: white;
 }
-/* line 616, all.scss */
+/* line 617, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
@@ -2111,7 +2112,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #12273A, #12273A);
   background-image: linear-gradient(top, #12273A, #12273A);
 }
-/* line 623, all.scss */
+/* line 624, all.scss */
 .footer-holder .social-holder {
   display: inline;
   float: left;
@@ -2121,7 +2122,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 2px 0 0;
 }
 
-/* line 629, all.scss */
+/* line 630, all.scss */
 .footer-nav {
   display: inline;
   float: left;
@@ -2129,32 +2130,32 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 490px;
 }
-/* line 631, all.scss */
+/* line 632, all.scss */
 .footer-nav ul {
   overflow: hidden;
   text-transform: uppercase;
   font: 16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 636, all.scss */
+/* line 637, all.scss */
 .footer-nav ul li {
   width: 152px;
   float: left;
   padding: 0 10px 6px 0;
 }
-/* line 640, all.scss */
+/* line 641, all.scss */
 .footer-nav ul li:first-child {
   width: 135px;
 }
-/* line 643, all.scss */
+/* line 644, all.scss */
 .footer-nav ul li a {
   color: white;
   display: inline-block;
 }
-/* line 646, all.scss */
+/* line 647, all.scss */
 .footer-nav ul li a:hover {
   color: #abc4d4;
 }
-/* line 650, all.scss */
+/* line 651, all.scss */
 .footer-nav ul li ul {
   overflow: hidden;
   text-transform: capitalize;
@@ -2162,17 +2163,17 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   padding: 6px 0 0;
 }
-/* line 658, all.scss */
+/* line 659, all.scss */
 .footer-nav ul li ul li a {
   color: #abc4d4;
   display: inline-block;
 }
-/* line 661, all.scss */
+/* line 662, all.scss */
 .footer-nav ul li ul li a:hover {
   color: #fff;
 }
 
-/* line 671, all.scss */
+/* line 672, all.scss */
 #content {
   display: inline;
   float: left;
@@ -2181,14 +2182,14 @@ input.placeholder-text, textarea.placeholder-text {
   width: 1000px;
   overflow: hidden;
 }
-/* line 674, all.scss */
+/* line 675, all.scss */
 #content .holder {
   margin-left: 0px;
   margin-right: 0px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 680, all.scss */
+/* line 681, all.scss */
 #content.with-first-sidebar, #content.with-second-sidebar {
   display: inline;
   float: left;
@@ -2196,7 +2197,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 745px;
 }
-/* line 683, all.scss */
+/* line 684, all.scss */
 #content.with-first-sidebar.with-second-sidebar {
   display: inline;
   float: left;
@@ -2204,22 +2205,22 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 686, all.scss */
+/* line 687, all.scss */
 #content .head {
   overflow: hidden;
   color: #13a69a;
   padding: 0 50px 0 0;
   margin: 0 0 5px;
 }
-/* line 691, all.scss */
+/* line 692, all.scss */
 #content .head h1 {
   margin: 0 0 -1px;
 }
-/* line 694, all.scss */
+/* line 695, all.scss */
 #content .head p {
   margin: 0 0 10px;
 }
-/* line 698, all.scss */
+/* line 699, all.scss */
 #content .ico {
   display: inline-block;
   vertical-align: top;
@@ -2231,18 +2232,18 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 707, all.scss */
+/* line 708, all.scss */
 #content .ico img {
   vertical-align: top;
 }
-/* line 711, all.scss */
+/* line 712, all.scss */
 #content h1 {
   color: #1f3d4d;
   margin: 0 0 35px;
   letter-spacing: 2px;
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 716, all.scss */
+/* line 717, all.scss */
 #content h1 .ico {
   margin: 2px 10px 0 0;
   width: 21px;
@@ -2251,24 +2252,24 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 /* Content */
-/* line 727, all.scss */
+/* line 728, all.scss */
 #content .contribute-block, #content .about-block, #content .promo-block {
   overflow: hidden;
   padding: 8px 0 0;
   margin: 0 0 -46px;
 }
-/* line 731, all.scss */
+/* line 732, all.scss */
 #content .contribute-block ul, #content .about-block ul, #content .promo-block ul {
   margin: 0 0 0 -73px;
 }
-/* line 734, all.scss */
+/* line 735, all.scss */
 #content .contribute-block ul li, #content .about-block ul li, #content .promo-block ul li {
   width: 285px;
   height: 261px;
   float: left;
   margin: 0 0 54px 33px;
 }
-/* line 739, all.scss */
+/* line 740, all.scss */
 #content .contribute-block ul li a, #content .about-block ul li a, #content .promo-block ul li a {
   background: #e9eced;
   display: block;
@@ -2277,11 +2278,11 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 745, all.scss */
+/* line 746, all.scss */
 #content .contribute-block ul li a:hover, #content .about-block ul li a:hover, #content .promo-block ul li a:hover {
   background: #e3e7e8;
 }
-/* line 749, all.scss */
+/* line 750, all.scss */
 #content .contribute-block ul li .ico, #content .about-block ul li .ico, #content .promo-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2293,27 +2294,27 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 759, all.scss */
+/* line 760, all.scss */
 #content .contribute-block ul li h2, #content .about-block ul li h2, #content .promo-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 764, all.scss */
+/* line 765, all.scss */
 #content .contribute-block ul li p, #content .about-block ul li p, #content .promo-block ul li p {
   color: #0C0D0D;
 }
-/* line 772, all.scss */
+/* line 773, all.scss */
 #content .rss-block {
   overflow: hidden;
   padding: 8px 0 0 40px;
   margin: 0 0 -46px;
 }
-/* line 776, all.scss */
+/* line 777, all.scss */
 #content .rss-block ul {
   margin: 0 0 0 -70px;
 }
-/* line 779, all.scss */
+/* line 780, all.scss */
 #content .rss-block ul li {
   width: 450px;
   float: left;
@@ -2329,7 +2330,7 @@ input.placeholder-text, textarea.placeholder-text {
   	}
   }*/
 }
-/* line 793, all.scss */
+/* line 794, all.scss */
 #content .rss-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2341,50 +2342,50 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 803, all.scss */
+/* line 804, all.scss */
 #content .rss-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 808, all.scss */
+/* line 809, all.scss */
 #content .rss-block ul li p {
   color: #0C0D0D;
 }
-/* line 817, all.scss */
+/* line 818, all.scss */
 #content .about-block ul li, #content .promo-block ul li {
   height: 320px;
 }
-/* line 819, all.scss */
+/* line 820, all.scss */
 #content .about-block ul li h2, #content .promo-block ul li h2 {
   -webkit-border-radius: 7px;
   border-radius: 7px;
   /* background: #2B4054; */
   padding: 0;
 }
-/* line 828, all.scss */
+/* line 829, all.scss */
 #content .about-block ul {
   margin: 0 0 0 0px;
 }
-/* line 834, all.scss */
+/* line 835, all.scss */
 #content .contribute-block ul {
   margin: 0 0 0 0px;
 }
-/* line 836, all.scss */
+/* line 837, all.scss */
 #content .contribute-block ul li {
   margin-top: 10px;
 }
-/* line 842, all.scss */
+/* line 843, all.scss */
 #content .promo-area {
   padding: 0 0 0 0px;
   min-height: 0px;
 }
-/* line 847, all.scss */
+/* line 848, all.scss */
 #content .info-block {
   overflow: hidden;
   position: relative;
 }
-/* line 850, all.scss */
+/* line 851, all.scss */
 #content .info-block:after {
   background: url(../images/sep.png) no-repeat;
   width: 22px;
@@ -2394,7 +2395,7 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: "";
 }
-/* line 859, all.scss */
+/* line 860, all.scss */
 #content .info-block h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -2402,26 +2403,26 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 866, all.scss */
+/* line 867, all.scss */
 #content .info-block .post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 869, all.scss */
+/* line 870, all.scss */
 #content .info-block .post h3 {
   color: #0d4143;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 873, all.scss */
+/* line 874, all.scss */
 #content .info-block .post h3 a {
   color: #0d4143;
 }
-/* line 875, all.scss */
+/* line 876, all.scss */
 #content .info-block .post h3 a:hover {
   color: #4c6877;
 }
-/* line 880, all.scss */
+/* line 881, all.scss */
 #content .info-block .post .date {
   display: block;
   text-transform: uppercase;
@@ -2429,23 +2430,23 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 887, all.scss */
+/* line 888, all.scss */
 #content .info-block .post p {
   margin: 0 0 10px;
 }
-/* line 889, all.scss */
+/* line 890, all.scss */
 #content .info-block .post p a {
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #1f3d4d;
   text-transform: uppercase;
 }
-/* line 893, all.scss */
+/* line 894, all.scss */
 #content .info-block .post p a:hover {
   color: #4c6877;
 }
 
 /* #content */
-/* line 902, all.scss */
+/* line 903, all.scss */
 #sidebar {
   border: none;
   display: inline;
@@ -2458,11 +2459,11 @@ input.placeholder-text, textarea.placeholder-text {
   top: -12px;
   margin: 0px 2px 0 2px;
 }
-/* line 909, all.scss */
+/* line 910, all.scss */
 #sidebar .holder {
   padding: 0 5px 5px 5px;
 }
-/* line 912, all.scss */
+/* line 913, all.scss */
 #sidebar div.title, #sidebar h2 {
   color: #99cc33;
   margin: 0 0 17px;
@@ -2470,17 +2471,17 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #becbd3;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 918, all.scss */
+/* line 919, all.scss */
 #sidebar div.title a, #sidebar h2 a {
   color: #99cc33;
 }
-/* line 920, all.scss */
+/* line 921, all.scss */
 #sidebar div.title a:hover, #sidebar h2 a:hover {
   color: white;
 }
 
 /* Code elements */
-/* line 928, all.scss */
+/* line 929, all.scss */
 code {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -2494,7 +2495,7 @@ code {
   margin: 2px 0 2px 0;
 }
 
-/* line 940, all.scss */
+/* line 941, all.scss */
 code.inline {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -2505,29 +2506,29 @@ code.inline {
 }
 
 /* ... */
-/* line 950, all.scss */
+/* line 951, all.scss */
 .widget {
   overflow: hidden;
   margin: 0 0 34px;
 }
-/* line 953, all.scss */
+/* line 954, all.scss */
 .widget h2 {
   margin: 0 0 16px;
 }
-/* line 956, all.scss */
+/* line 957, all.scss */
 .widget ul {
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 959, all.scss */
+/* line 960, all.scss */
 .widget ul li {
   border-bottom: 1px solid #becbd3;
   padding: 16px 0 5px;
 }
-/* line 962, all.scss */
+/* line 963, all.scss */
 .widget ul li:first-child {
   padding-top: 0;
 }
-/* line 965, all.scss */
+/* line 966, all.scss */
 .widget ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
@@ -2535,25 +2536,25 @@ code.inline {
   color: #1da699;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 972, all.scss */
+/* line 973, all.scss */
 .widget ul li a {
   color: #4c6877;
 }
-/* line 974, all.scss */
+/* line 975, all.scss */
 .widget ul li a:hover {
   color: #1f3d4d;
 }
 
-/* line 983, all.scss */
+/* line 984, all.scss */
 .social-networks {
   float: right;
 }
-/* line 986, all.scss */
+/* line 987, all.scss */
 .social-networks li {
   float: left;
   margin: 0 0 0 10px;
 }
-/* line 989, all.scss */
+/* line 990, all.scss */
 .social-networks li a {
   display: block;
   width: 35px;
@@ -2562,74 +2563,74 @@ code.inline {
   overflow: hidden;
   text-indent: -9999px;
 }
-/* line 995, all.scss */
+/* line 996, all.scss */
 .social-networks li a:hover {
   background: url(../images/ico-social-h.png) no-repeat;
 }
-/* line 997, all.scss */
+/* line 998, all.scss */
 .social-networks li .facebook {
   width: 34px;
 }
-/* line 1000, all.scss */
+/* line 1001, all.scss */
 .social-networks li .linkedin {
   background-position: -44px 0;
 }
-/* line 1002, all.scss */
+/* line 1003, all.scss */
 .social-networks li .linkedin:hover {
   background-position: -44px 0;
 }
-/* line 1004, all.scss */
+/* line 1005, all.scss */
 .social-networks li .youtube {
   background-position: -89px 0;
 }
-/* line 1006, all.scss */
+/* line 1007, all.scss */
 .social-networks li .youtube:hover {
   background-position: -89px 0;
 }
-/* line 1008, all.scss */
+/* line 1009, all.scss */
 .social-networks li .twitter {
   background-position: -134px 0;
 }
-/* line 1010, all.scss */
+/* line 1011, all.scss */
 .social-networks li .twitter:hover {
   background-position: -134px 0;
 }
-/* line 1012, all.scss */
+/* line 1013, all.scss */
 .social-networks li .googleplus {
   background-position: -179px 0;
   width: 34px;
 }
-/* line 1015, all.scss */
+/* line 1016, all.scss */
 .social-networks li .googleplus:hover {
   background-position: -179px 0;
 }
 
-/* line 1020, all.scss */
+/* line 1021, all.scss */
 .social-plugin {
   overflow: hidden;
   margin: 0 0 30px -2px;
 }
-/* line 1023, all.scss */
+/* line 1024, all.scss */
 .social-plugin img {
   vertical-align: top;
 }
 
-/* line 1028, all.scss */
+/* line 1029, all.scss */
 .popular {
   padding: 12px 0 0;
 }
-/* line 1030, all.scss */
+/* line 1031, all.scss */
 .popular li {
   padding-left: 37px !important;
   position: relative;
 }
-/* line 1033, all.scss */
+/* line 1034, all.scss */
 .popular li img {
   position: absolute;
   top: 10px;
   left: 0;
 }
-/* line 1039, all.scss */
+/* line 1040, all.scss */
 .popular li:first-child img {
   top: -5px;
 }

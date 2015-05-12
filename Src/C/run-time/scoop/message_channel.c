@@ -331,13 +331,9 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 			 * where a sender thread waits for the mutex, a GC thread waits for the
 			 * sender, and this thread waits for GC to begin.
 			 *
-			 * And we have to hold the lock between the call to dequeue() and
+			 * And we have to hold the lock between a call to dequeue() and
 			 * eif_pthread_cond_wait, because otherwise we risk losing a signal
 			 * by the sender.
-			 *
-			 * NOTE: On systems with a memory barrier it might be possible to add
-			 * a short-circuit after RTGC, since dequeue() doesn't need to be
-			 * protected by a mutex.
 			 */
 
 			/* Lock the condition variable mutex. */
@@ -359,6 +355,15 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 				/* Inform the GC that we're no longer blocked, and synchronize for GC if it's currently running. */
 			EIF_EXIT_C;
 			RTGC;
+
+#if defined EIF_HAS_MEMORY_BARRIER
+				/* On systems with a memory barrier we can now do an early exit.
+				 * That way we can avoid acquiring and releasing the mutex, since
+				 * it isn't necessary for the dequeue operation. */
+			if (dequeue (self, message)) {
+				return;
+			}
+#endif
 
 				/* To perform the dequeue operation we should reacquire the lock. */
 			eif_pthread_mutex_lock (self->has_elements_condition_mutex);

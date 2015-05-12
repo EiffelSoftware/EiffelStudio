@@ -56,18 +56,20 @@ feature -- Status report
 
 feature -- Status
 
-	is_mapping (req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
-			-- Does `Current' accept `req' when using `a_router'?
+	is_mapping (a_path: READABLE_STRING_8; req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
+			-- Does `Current' accept path `a_path' and request `req' when using `a_router'?
 		require
+			a_path_attached: a_path /= Void
 			req_attached: req /= Void
 			a_router_attached: a_router /= Void
 		deferred
 		end
 
-	try (req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
-			-- Try using `Current' mapping and if it matches request `req'
+	try (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
+			-- Try using `Current' mapping and if it matches path `a_path' and request `req'
 			-- execute associated handler and set this handler in session `sess'.
 		require
+			a_path_attached: a_path /= Void
 			req_attached: req /= Void
 			res_attached: res /= Void
 			sess_attached: sess /= Void
@@ -75,20 +77,8 @@ feature -- Status
 		deferred
 		end
 
-feature -- Helper
-
-	path_from_request (req: WSF_REQUEST): READABLE_STRING_8
-			-- Path used by `Current' to check that mapping matches request `req'
-		require
-			req_attached: req /= Void
-		do
-			Result := req.percent_encoded_path_info
-		ensure
-			path_from_request_attached: Result /= Void
-		end
-
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

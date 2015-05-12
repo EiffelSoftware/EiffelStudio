@@ -1,0 +1,39 @@
+package wsf
+
+project
+	wsf = "wsf-safe.ecf"
+	wsf = "wsf.ecf"
+	wsf_extension = "wsf_extension-safe.ecf"
+	wsf_extension = "wsf_extension.ecf"
+	wsf_policy_driven = "wsf_policy_driven-safe.ecf"
+	wsf_policy_driven = "wsf_policy_driven.ecf"
+	wsf_router_context = "wsf_router_context-safe.ecf"
+	wsf_router_context = "wsf_router_context.ecf"
+	wsf_session = "wsf_session-safe.ecf"
+	wsf_session = "wsf_session.ecf"
+	wsf_all = "connector/all-safe.ecf"
+	wsf_cgi = "connector/cgi-safe.ecf"
+	wsf_cgi = "connector/cgi.ecf"
+	wsf_libfcgi = "connector/libfcgi-safe.ecf"
+	wsf_libfcgi = "connector/libfcgi.ecf"
+	wsf_nino = "connector/nino-safe.ecf"
+	wsf_nino = "connector/nino.ecf"
+	wsf_openshift = "connector/openshift-safe.ecf"
+	default_cgi = "default/cgi-safe.ecf"
+	default_cgi = "default/cgi.ecf"
+	default_libfcgi = "default/libfcgi-safe.ecf"
+	default_libfcgi = "default/libfcgi.ecf"
+	default_nino = "default/nino-safe.ecf"
+	default_nino = "default/nino.ecf"
+	default_openshift = "default/openshift-safe.ecf"
+
+note
+	title: Web Server Foundation
+	description: Core of the Eiffel Web Framework, used to build web server application.
+	tags: ewf,server,httpd,request,connector
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: https://github.com/EiffelWebFramework/EWF/blob/master/LICENSE
+	link[source]: "Github" https://github.com/EiffelWebFramework/EWF
+	link[doc]: "Documentation" http://eiffelwebframework.github.io/EWF/
+
+end

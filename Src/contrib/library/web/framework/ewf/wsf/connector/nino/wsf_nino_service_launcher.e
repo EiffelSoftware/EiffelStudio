@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 			Component to launch the service using the default connector
 
@@ -13,7 +13,7 @@
 
 			check WSF_SERVICE_LAUNCHER for more documentation
 		]"
-	date: "$Date: 2013-05-20 17:34:55 +0400$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -51,12 +51,6 @@ feature {NONE} -- Initialization
 					port_number := l_port
 				elseif
 					attached {READABLE_STRING_GENERAL} opts.option ("port") as l_port_str and then
-					l_port_str.is_integer
-				then
-					port_number := l_port_str.as_string_8.to_integer
-				elseif
-					attached opts.option ("port") as l_port_option and then
-					attached l_port_option.out as l_port_str and then
 					l_port_str.is_integer
 				then
 					port_number := l_port_str.as_string_8.to_integer

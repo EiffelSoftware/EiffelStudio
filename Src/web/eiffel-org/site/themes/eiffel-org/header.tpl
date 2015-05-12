@@ -3,7 +3,7 @@
 							<nav id="nav">
 								<ul>
 									<li><a href="{$site_url/}/welcome">welcome</a></li>
-									<li><a href="{$site_url/}/learn">learn</a></li>
+									<li><a href="{$site_url/}/documentation">documentation</a></li>
 									<li><a href="{$site_url/}/resources">resources</a></li>
 									<li><a href="{$site_url/}/contribute">contribute</a></li>
 									<li><a href="{$site_url/}/download_options">download</a>

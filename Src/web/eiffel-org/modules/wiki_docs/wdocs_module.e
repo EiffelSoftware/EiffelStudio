@@ -73,7 +73,7 @@ feature -- Router
 			create Result.make (5)
 
 			create h.make (agent handle_learn (a_api, ?, ?))
-			Result.handle_with_request_methods ("/learn", h, Result.methods_get)
+			Result.handle_with_request_methods ("/documentation", h, Result.methods_get)
 
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
 			Result.handle_with_request_methods ("/doc/uuid/{wikipage_uuid}", h, Result.methods_get)

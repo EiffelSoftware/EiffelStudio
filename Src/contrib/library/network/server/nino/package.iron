@@ -5,11 +5,10 @@ project
 	nino = "nino.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Eiffel Nino Web Server
+	description: Simple HTTPd server written in Eiffel
+	tags: web, httpd, server
+	license: Eiffel Forum v2
+	copyright: Javier Velilla, Jocelyn Fiat.
 
 end

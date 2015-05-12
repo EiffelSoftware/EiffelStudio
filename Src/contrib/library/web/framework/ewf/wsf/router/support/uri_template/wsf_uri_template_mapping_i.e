@@ -57,36 +57,32 @@ feature -- Documentation
 
 feature -- Status
 
-	is_mapping (req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
+	is_mapping (a_path: READABLE_STRING_8; req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
 			-- <Precursor>
 		local
 			tpl: URI_TEMPLATE
-			p: READABLE_STRING_8
 		do
-			p := path_from_request (req)
 			tpl := based_uri_template (template, a_router)
-			Result := tpl.match (p) /= Void
+			Result := tpl.match (a_path) /= Void
 		end
 
-	try (req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
+	try (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
 			-- <Precursor>
 		local
 			tpl: URI_TEMPLATE
-			p: READABLE_STRING_8
 			new_src: detachable WSF_REQUEST_PATH_PARAMETERS_PROVIDER
 		do
-			p := path_from_request (req)
 			tpl := based_uri_template (template, a_router)
-			if attached tpl.match (p) as tpl_res then
+			if attached tpl.match (a_path) as tpl_res then
 				sess.set_dispatched_handler (handler)
 				a_router.execute_before (Current)
-				--| Applied the context to the request
-				--| in practice, this will fill the {WSF_REQUEST}.path_parameters
+					--| Applied the context to the request
+					--| in practice, this will fill the {WSF_REQUEST}.path_parameters
 				create new_src.make (tpl_res.path_variables.count, tpl_res.path_variables)
 				new_src.apply (req)
 				execute_handler (handler, req, res)
-				--| Revert {WSF_REQUEST}.path_parameters_source to former value
-				--| In case the request object passed by other handler that alters its values.
+					--| Revert {WSF_REQUEST}.path_parameters_source to former value
+					--| In case the request object passed by other handler that alters its values.
 				new_src.revert (req)
 				a_router.execute_after (Current)
 			end
@@ -126,7 +122,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

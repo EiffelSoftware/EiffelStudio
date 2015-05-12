@@ -47,26 +47,22 @@ feature -- Documentation
 
 feature -- Status
 
-	is_mapping (req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
+	is_mapping (a_path: READABLE_STRING_8; req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
 			-- <Precursor>
 		local
-			p: READABLE_STRING_8
 			s: like based_uri
 		do
-			p := path_from_request (req)
 			s := based_uri (uri, a_router)
-			Result := p.starts_with (s)
+			Result := a_path.starts_with (s)
 		end
 
-	try (req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
+	try (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
 			-- <Precursor>
 		local
-			p: READABLE_STRING_8
 			s: like based_uri
 		do
-			p := path_from_request (req)
 			s := based_uri (uri, a_router)
-			if p.starts_with (s) then
+			if a_path.starts_with (s) then
 				sess.set_dispatched_handler (handler)
 				a_router.execute_before (Current)
 				execute_handler (handler, s, req, res)
@@ -113,7 +109,7 @@ invariant
 	uri_attached: uri /= Void
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

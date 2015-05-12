@@ -13,14 +13,11 @@ project
 	connector_nino = "connectors/nino/nino.ecf"
 	connector_null = "connectors/null/null-safe.ecf"
 	connector_null = "connectors/null/null.ecf"
-	hello_world = "examples/hello_world/hello-safe.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: EWSGI
+	description: EWSGI specification, and a few connectors.
+	tags: web, httpd, ewf
+	license: Eiffel Forum v2
 
 end

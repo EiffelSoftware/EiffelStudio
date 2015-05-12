@@ -50,13 +50,13 @@ feature -- Documentation
 
 feature -- Status
 
-	is_mapping (req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
+	is_mapping (a_path: READABLE_STRING_8; req: WSF_REQUEST; a_router: WSF_ROUTER): BOOLEAN
 			-- <Precursor>
 		local
 			p: READABLE_STRING_8
 			l_uri: like uri
 		do
-			p := path_from_request (req)
+			p := a_path
 			l_uri := based_uri (uri, a_router)
 			if l_uri.ends_with ("/") then
 				if not p.ends_with ("/") then
@@ -72,10 +72,10 @@ feature -- Status
 			end
 		end
 
-	try (req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
+	try (a_path: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION; a_router: WSF_ROUTER)
 			-- <Precursor>
 		do
-			if is_mapping (req, a_router) then
+			if is_mapping (a_path, req, a_router) then
 				sess.set_dispatched_handler (handler)
 				a_router.execute_before (Current)
 				execute_handler (handler, req, res)
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

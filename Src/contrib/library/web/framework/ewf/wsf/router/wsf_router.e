@@ -170,6 +170,20 @@ feature -- Basic operations
 			Result := sess.dispatched_handler
 		end
 
+feature {WSF_ROUTER_MAPPING} -- Dispatch helper
+
+	path_to_dispatch (req: WSF_REQUEST): READABLE_STRING_8
+			-- Path used by the router, to apply url dispatching of request `req'.
+			-- This can be redefined in descendant, to apply various url mapping, or aliasing
+			-- if needed, or for other purpose.
+		require
+			req_attached: req /= Void
+		do
+			Result := req.percent_encoded_path_info
+		ensure
+			path_from_request_attached: Result /= Void
+		end
+
 feature {NONE} -- Dispatch implementation
 
 	router_dispatch (req: WSF_REQUEST; res: WSF_RESPONSE; sess: WSF_ROUTER_SESSION)
@@ -203,7 +217,9 @@ feature {NONE} -- Dispatch implementation
 			a_request_method_attached: a_request_method /= Void
 		local
 			m: WSF_ROUTER_MAPPING
+			p: like path_to_dispatch
 		do
+			p := path_to_dispatch (req)
 			across
 				mappings as c
 			until
@@ -212,7 +228,7 @@ feature {NONE} -- Dispatch implementation
 				if attached c.item as l_info then
 					if is_matching_request_methods (a_request_method, l_info.request_methods) then
 						m := l_info.mapping
-						m.try (req, res, sess, Current)
+						m.try (p, req, res, sess, Current)
 					end
 				end
 			end
@@ -320,16 +336,17 @@ feature -- Status report
 		local
 			m: WSF_ROUTER_MAPPING
 			l_rqsmethods: detachable WSF_REQUEST_METHODS
+			p: like path_to_dispatch
 		do
 			create Result
-
+			p := path_to_dispatch (req)
 			across
 				mappings as c
 			loop
 				m := c.item.mapping
 				if attached {WSF_ROUTING_HANDLER} m.handler as l_routing then
 					l_rqsmethods := l_routing.router.allowed_methods_for_request (req)
-				elseif m.is_mapping (req, Current) then
+				elseif m.is_mapping (p, req, Current) then
 					l_rqsmethods := c.item.request_methods
 				else
 					l_rqsmethods := Void
@@ -576,7 +593,7 @@ invariant
 	pre_execution_actions_attached: pre_execution_actions /= Void
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

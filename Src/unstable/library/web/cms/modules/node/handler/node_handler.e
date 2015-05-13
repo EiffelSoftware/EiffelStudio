@@ -114,9 +114,17 @@ feature -- HTTP Methods
 		local
 			edit_response: NODE_FORM_RESPONSE
 		do
+			fixme ("Refactor code: extract methods: edit_node and add_node")
 			if req.path_info.ends_with_general ("/edit") then
-				create edit_response.make (req, res, api, node_api)
-				edit_response.execute
+				if
+					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
+					l_op.value.same_string ("Delete")
+				then
+					do_delete (req, res)
+				else
+					create edit_response.make (req, res, api, node_api)
+					edit_response.execute
+				end
 			elseif req.path_info.starts_with_general ("/node/add/") then
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
@@ -142,11 +150,12 @@ feature -- HTTP Methods
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if api.user_has_permission (l_user, "delete " + l_node.content_type) then
+						if node_api.has_permission_for_action_on_node ("delete", l_node, current_user (req)) then
 							node_api.delete_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
 							send_access_denied (req, res)
+								-- send_not_authorized ?
 						end
 					else
 						do_error (req, res, l_id)

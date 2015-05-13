@@ -232,6 +232,66 @@ feature -- Query: API
 			Result := l_api
 		end
 
+feature -- Path aliases	
+
+	set_path_alias (a_source, a_alias: READABLE_STRING_8; a_keep_previous: BOOLEAN)
+			-- Set `a_alias' as alias of `a_source',
+			-- and eventually unset previous alias if any.
+		local
+			l_continue: BOOLEAN
+		do
+			if attached storage.path_alias (a_source) as l_existing_alias then
+				if a_alias.same_string (l_existing_alias) then
+						-- Already aliased as expected
+				else
+						-- New alias
+					if a_keep_previous then
+						l_continue := True
+					else
+						storage.replace_path_alias (a_source, l_existing_alias, a_alias)
+					end
+				end
+			elseif a_alias.is_whitespace then
+					-- Ignore
+			elseif a_source.same_string (a_alias) then
+					-- No need for alias
+			else
+				l_continue := True
+			end
+			if l_continue then
+				storage.set_path_alias (a_source, a_alias)
+			end
+		end
+
+	unset_path_alias (a_source: READABLE_STRING_8; a_alias: READABLE_STRING_8)
+		do
+			storage.unset_path_alias (a_source, a_alias)
+		end
+
+	path_alias (a_source: READABLE_STRING_8): READABLE_STRING_8
+			-- Path alias associated with `a_source' or the source itself.
+		do
+			Result := a_source
+			if attached storage.path_alias (Result) as l_path then
+				Result := l_path
+			end
+		end
+
+	source_of_path_alias (a_alias: READABLE_STRING_8): READABLE_STRING_8
+			-- Resolved path for alias `a_alias'.
+			--| the CMS supports aliases for path, and then this function simply returns
+			--| the effective target path/url for this `a_alias'.
+			--| For instance: /articles/2015/may/this-is-an-article can be an alias to /node/123
+			--| This function will return "/node/123".
+			--| If the alias is bad (i.e does not alias real path), then this function
+			--| returns the alias itself.
+		do
+			Result := a_alias
+			if attached storage.source_of_path_alias (Result) as l_path then
+				Result := l_path
+			end
+		end
+
 feature -- Element Change: Error
 
 	reset_error

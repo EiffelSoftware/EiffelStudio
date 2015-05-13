@@ -107,6 +107,8 @@ feature -- Change: Node
 			no_id: not a_node.has_id
 			valid_user: attached a_node.author as l_author and then l_author.id > 0
 		deferred
+		ensure
+			has_id: a_node.has_id
 		end
 
 	update_node (a_node: CMS_NODE)

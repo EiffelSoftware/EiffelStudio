@@ -40,6 +40,7 @@ feature -- HTTP Methods
 			l_page: CMS_RESPONSE
 			s: STRING
 			n: CMS_NODE
+			lnk: CMS_LOCAL_LINK
 		do
 				-- At the moment the template is hardcoded, but we can
 				-- get them from the configuration file and load them into
@@ -57,8 +58,10 @@ feature -- HTTP Methods
 					lst as ic
 				loop
 					n := ic.item
+					lnk := node_api.node_link (n)
 					s.append ("<li class=%"cms_type_"+ n.content_type +"%">")
-					s.append (l_page.link (n.title + " (#" + n.id.out + ")", node_api.node_path (n), Void))
+					s.append (l_page.link (lnk.title, lnk.location, Void))
+--					s.append (l_page.link (n.title + " (#" + n.id.out + ")", node_api.node_path (n), Void))
 					s.append ("</li>%N")
 				end
 				s.append ("</ul>%N")

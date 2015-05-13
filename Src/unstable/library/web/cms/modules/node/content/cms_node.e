@@ -13,10 +13,6 @@ inherit
 
 	REFACTORING_HELPER
 
---create
---	make,
---	make_empty
-
 feature{NONE} -- Initialization
 
 	make_empty
@@ -35,10 +31,7 @@ feature{NONE} -- Initialization
 			set_creation_date (l_time)
 			set_modification_date (l_time)
 			set_publication_date (l_time)
-
-			debug ("refactor_fixme")
-				fixme ("Remove default harcoded format")
-			end
+			mark_not_published
 		ensure
 			title_set: title = a_title
 		end
@@ -60,6 +53,8 @@ feature -- Conversion
 						a_node.summary,
 						a_node.format
 					)
+			set_status (a_node.status)
+			set_link (a_node.link)
 		end
 
 feature -- Access
@@ -77,6 +72,12 @@ feature -- Access
 			-- Page, Article, Blog, News, etc.
 		deferred
 		end
+
+	status: INTEGER
+			-- Associated status for the current node.
+			-- default:	{CMS_NODE_API}.Not_Published}
+			--			{CMS_NODE_API}.Published
+			--			{CMS_NODE_API}.Trashed
 
 feature -- Access		
 
@@ -142,6 +143,11 @@ feature -- status report
 			Result := a_content_type.is_case_insensitive_equal (content_type)
 		end
 
+feature -- Access: menu		
+
+	link: detachable CMS_LOCAL_LINK
+			-- Associated menu link.
+
 feature -- Element change
 
 	set_content (a_content: like content; a_summary: like summary; a_format: like format)
@@ -158,6 +164,9 @@ feature -- Element change
 			-- Assign `title' with `a_title'.
 		do
 			title := a_title
+			if attached link as lnk then
+				lnk.set_title (a_title)
+			end
 		ensure
 			title_assigned: title = a_title
 		end
@@ -209,6 +218,48 @@ feature -- Element change
 			author := u
 		ensure
 			auther_set: author = u
+		end
+
+	set_link (a_link: like link)
+			-- Set `link' to `a_link'.
+		do
+			link := a_link
+		end
+
+feature -- Status change		
+
+	mark_not_published
+			-- Set status to not_published.
+		do
+			set_status ({CMS_NODE_API}.not_published)
+		ensure
+			status_not_published: status = {CMS_NODE_API}.not_published
+		end
+
+	mark_published
+			-- Set status to published.
+		do
+			set_status ({CMS_NODE_API}.published)
+		ensure
+			status_published: status = {CMS_NODE_API}.published
+		end
+
+	mark_trashed
+			-- Set status to trashed.
+		do
+			set_status ({CMS_NODE_API}.trashed)
+		ensure
+			status_trash: status = {CMS_NODE_API}.trashed
+		end
+
+feature {CMS_NODE_STORAGE_I} -- Access: status change.
+
+	set_status (a_status: like status)
+			-- Assign `status' with `a_status'.
+		do
+			status := a_status
+		ensure
+			status_set:  status = a_status
 		end
 
 note

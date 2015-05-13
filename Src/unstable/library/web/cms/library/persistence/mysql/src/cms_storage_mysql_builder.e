@@ -1,6 +1,6 @@
 note
 	description: "[
-			Objects that ...
+			Interface responsible to instantiate CMS_STORAGE_MYSQL object.
 		]"
 	author: "$Author$"
 	date: "$Date$"
@@ -10,7 +10,9 @@ class
 	CMS_STORAGE_MYSQL_BUILDER
 
 inherit
-	CMS_STORAGE_SQL_BUILDER
+	CMS_STORAGE_STORE_SQL_BUILDER
+
+	GLOBAL_SETTINGS
 
 create
 	make
@@ -32,6 +34,12 @@ feature -- Factory
 				create {DATABASE_CONNECTION_MYSQL} conn.login_with_connection_string (l_database_config.connection_string)
 				if conn.is_connected then
 					create Result.make (conn)
+					set_map_zero_null_value (False)	--| This way we map 0 to 0, instead of Null as default.
+					if Result.is_available then
+						if not Result.is_initialized then
+							initialize (a_setup, Result)
+						end
+					end
 				end
 			end
 		end

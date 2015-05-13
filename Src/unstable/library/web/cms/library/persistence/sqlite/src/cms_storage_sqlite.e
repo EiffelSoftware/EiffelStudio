@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {CMS_STORAGE_MYSQL}."
+	description: "Summary description for {CMS_STORAGE_SQLITE}."
 	date: "$Date$"
 	revision: "$Revision$"
 

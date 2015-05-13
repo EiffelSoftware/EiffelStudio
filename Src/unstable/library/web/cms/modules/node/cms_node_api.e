@@ -176,6 +176,14 @@ feature -- URL
 			end
 		end
 
+	node_link (a_node: CMS_NODE): CMS_LOCAL_LINK
+			-- CMS link for node `a_node'.
+		require
+			a_node.has_id
+		do
+			create Result.make (a_node.title, cms_api.path_alias (node_path (a_node)))
+		end
+
 	node_path (a_node: CMS_NODE): STRING
 			-- URI path for node `a_node'.
 			-- using the /node/{nid} url.
@@ -234,6 +242,11 @@ feature -- Access: Node
 				Result := a_node
 			end
 
+				-- Update link with aliasing.
+			if a_node /= Void and then a_node.has_id then
+				a_node.set_link (node_link (a_node))
+			end
+
 				-- Update partial user if needed.
 			if
 				Result /= Void and then
@@ -245,6 +258,30 @@ feature -- Access: Node
 					check
 						valid_author_id: False
 					end
+				end
+			end
+		end
+
+	is_author_of_node (u: CMS_USER; a_node: CMS_NODE): BOOLEAN
+			-- Is the user `u' owner of the node `n'.
+		do
+			if attached node_storage.node_author (a_node.id) as l_author then
+				Result := u.same_as (l_author)
+			end
+		end
+
+feature -- Permission Scope: Node
+
+	has_permission_for_action_on_node (a_action: READABLE_STRING_8; a_node: CMS_NODE; a_user: detachable CMS_USER; ): BOOLEAN
+			-- Has permission to execute action `a_action' on node `a_node', by eventual user `a_user'?
+		local
+			l_type_name: READABLE_STRING_8
+		do
+			l_type_name := a_node.content_type
+			Result := cms_api.user_has_permission (a_user, a_action + " any " + l_type_name)
+			if not Result and a_user /= Void then
+				if is_author_of_node (a_user, a_node) then
+					Result := cms_api.user_has_permission (a_user, a_action + " own " + l_type_name)
 				end
 			end
 		end
@@ -279,32 +316,16 @@ feature -- Change: Node
 			node_storage.update_node (a_node)
 		end
 
---	update_node_title (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
---			-- Update node title, with user identified by `a_id', with node id `a_node_id' and a new title `a_title'.
---		do
---			debug ("refactor_fixme")
---				fixme ("Check preconditions")
---			end
---			node_storage.update_node_title (a_user_id, a_node_id, a_title)
---		end
 
---	update_node_summary (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
---			-- Update node summary, with user identified by `a_user_id', with node id `a_node_id' and a new summary `a_summary'.
---		do
---			debug ("refactor_fixme")
---				fixme ("Check preconditions")
---			end
---			node_storage.update_node_summary (a_user_id, a_node_id, a_summary)
---		end
+feature -- Node status
 
---	update_node_content (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
---			-- Update node content, with user identified by `a_user_id', with node id `a_node_id' and a new content `a_content'.
---		do
---			debug ("refactor_fixme")
---				fixme ("Check preconditions")
---			end
---			node_storage.update_node_content (a_user_id, a_node_id, a_content)
---		end
+	Not_published: INTEGER = 0
+			-- The node is not published.
 
+	Published: INTEGER = 1
+			-- The node is published.
+
+	Trashed: INTEGER = -1
+			-- The node is trashed (soft delete), ready to be deleted/destroyed from storage.
 
 end

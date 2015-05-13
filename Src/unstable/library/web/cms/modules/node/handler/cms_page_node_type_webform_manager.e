@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_PAGE_NODE_TYPE_WEBFORM_MANAGER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

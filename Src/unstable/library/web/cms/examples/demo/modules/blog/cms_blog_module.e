@@ -84,11 +84,10 @@ CREATE TABLE "blog_post_nodes"(
 
 feature -- Access: router
 
-	router (a_api: CMS_API): WSF_ROUTER
-			-- Node router.
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- <Precursor>
 		do
-			create Result.make (1)
-			Result.handle_with_request_methods ("/blogs/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (?,?, a_api)), Result.methods_get)
+			a_router.handle_with_request_methods ("/blogs/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (?,?, a_api)), a_router.methods_get)
 		end
 
 feature -- Hooks

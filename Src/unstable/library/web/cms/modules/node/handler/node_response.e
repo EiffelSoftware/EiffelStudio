@@ -51,36 +51,48 @@ feature -- Helpers
 			end
 		end
 
-feature -- Helpers
+feature -- Helpers: cms link
 
-	user_local_link (u: CMS_USER): CMS_LINK
+	user_local_link (u: CMS_USER): CMS_LOCAL_LINK
 		do
-			create {CMS_LOCAL_LINK} Result.make (u.name, user_url (u))
+			create Result.make (u.name, user_url (u))
 		end
 
-	node_local_link (n: CMS_NODE): CMS_LINK
+	node_local_link (n: CMS_NODE): CMS_LOCAL_LINK
 		do
-			create {CMS_LOCAL_LINK} Result.make (n.title, node_url (n))
+			if attached n.link as lnk then
+				Result := lnk
+			else
+				Result := node_api.node_link (n)
+			end
 		end
 
-	user_link (u: CMS_USER): like link
+feature -- Helpers: html link
+
+	user_html_link (u: CMS_USER): like link
 		do
 			Result := link (u.name, "/user/" + u.id.out, Void)
 		end
 
-	node_link (n: CMS_NODE): like link
+	node_html_link (n: CMS_NODE): like link
 		do
 			Result := link (n.title, "/node/" + n.id.out, Void)
 		end
 
+feature -- Helpers: URL		
+
 	user_url (u: CMS_USER): like url
+		require
+			u_with_id: u.has_id
 		do
 			Result := url ("/user/" + u.id.out, Void)
 		end
 
 	node_url (n: CMS_NODE): like url
+		require
+			n_with_id: n.has_id
 		do
-			Result := url ("/node/" + n.id.out, Void)
+			Result := url (node_api.node_link (n).location, Void)
 		end
 
 end

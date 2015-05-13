@@ -37,7 +37,7 @@ feature -- Execution
 			-- Computed response message.
 		local
 			b: STRING_8
-			f: like edit_form
+			f: like new_edit_form
 			fd: detachable WSF_FORM_DATA
 			nid: INTEGER_64
 		do
@@ -48,43 +48,44 @@ feature -- Execution
 				attached node_api.node (nid) as l_node
 			then
 				if attached node_api.node_type_for (l_node) as l_type then
-					if has_permission ("edit " + l_type.name) then
-						f := edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+					if node_api.has_permission_for_action_on_node ("edit", l_node, current_user (request)) then
+						f := new_edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
 							f.submit_actions.extend (agent edit_form_submit (?, l_node, l_type, b))
 							f.process (Current)
 							fd := f.last_data
 						end
+						if l_node.has_id then
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "/node/" + l_node.id.out + "/edit"), primary_tabs)
+						end
 
 						if attached redirection as l_location then
 								-- FIXME: Hack for now
 							set_title (l_node.title)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("View", node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("Edit", "/node/" + l_node.id.out + "/edit"), primary_tabs)
-
 							b.append (html_encoded (l_type.title) + " saved")
 						else
-							set_title ("Edit " + html_encoded (l_type.title) + " #" + l_node.id.out)
-
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("View", node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("Edit", "/node/" + l_node.id.out + "/edit"), primary_tabs)
-
+							set_title (formatted_string (translation ("Edit $1 #$2", Void), [l_type.title, l_node.id]))
 							f.append_to_html (wsf_theme, b)
 						end
 					else
-						b.append ("<h1>Access denied</h1>")
+						b.append ("<h1>")
+						b.append (translation ("Access denied", Void))
+						b.append ("</h1>")
 					end
 				else
-					set_title ("Unknown node")
+					set_title (translation ("Unknown node", Void))
 				end
 			elseif
 				attached {WSF_STRING} request.path_parameter ("type") as p_type and then
 				attached node_api.node_type (p_type.value) as l_type
 			then
-				if has_permission ("create " + l_type.name) then
+				if has_permissions (<<"create any", "create " +  l_type.name>>) then
 					if attached l_type.new_node (Void) as l_node then
-						f := edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+						f := new_edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
 							f.submit_actions.extend (agent edit_form_submit (?, l_node, l_type, b))
@@ -94,25 +95,31 @@ feature -- Execution
 
 						set_title ("Edit " + html_encoded (l_type.title) + " #" + l_node.id.out)
 
-						add_to_menu (create {CMS_LOCAL_LINK}.make ("View", node_url (l_node)), primary_tabs)
-						add_to_menu (create {CMS_LOCAL_LINK}.make ("Edit", "/node/" + l_node.id.out + "/edit"), primary_tabs)
+						if l_node.has_id then
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "/node/" + l_node.id.out + "/edit"), primary_tabs)
+						end
 
 						f.append_to_html (wsf_theme, b)
 					else
-						b.append ("<h1>Server error</h1>")
+						b.append ("<h1>")
+						b.append (translation ("Server error", Void))
+						b.append ("</h1>")
 					end
 				else
-					b.append ("<h1>Access denied</h1>")
+					b.append ("<h1>")
+					b.append (translation ("Access denied", Void))
+					b.append ("</h1>")
 				end
 			else
-				set_title ("Create new content ...")
+				set_title (translation ("Create new content ...", Void))
 				b.append ("<ul id=%"content-types%">")
 				across
 					node_api.node_types as ic
 				loop
 					if
 						attached ic.item as l_node_type and then
-						(has_permission ("create any") or has_permission ("create " + l_node_type.name))
+						has_permissions (<<"create any", "create " + l_node_type.name>>)
 					then
 						b.append ("<li>" + link (l_node_type.name, "/node/add/" + l_node_type.name, Void))
 						if attached l_node_type.description as d then
@@ -191,16 +198,25 @@ feature -- Form
 				end
 				node_api.save_node (l_node)
 				if attached current_user (request) as u then
-					api.log ("node", "User %"" + user_link (u) + "%" " + s + " node " + link (a_type.name +" #" + l_node.id.out, "/node/" + l_node.id.out , Void), 0, node_local_link (l_node))
+					api.log ("node", "User %"" + user_html_link (u) + "%" " + s + " node " + link (a_type.name +" #" + l_node.id.out, "/node/" + l_node.id.out , Void), 0, node_local_link (l_node))
 				else
 					api.log ("node", "Anonymous " + s + " node " + a_type.name +" #" + l_node.id.out, 0, node_local_link (l_node))
 				end
 				add_success_message ("Node #" + l_node.id.out + " saved.")
+
+				if attached fd.string_item ("path_alias") as l_path_alias then
+					api.set_path_alias (node_api.node_path (l_node), l_path_alias, False)
+					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_path_alias))
+				else
+					l_node.set_link (node_api.node_link (l_node))
+				end
+
 				set_redirection (node_url (l_node))
 			end
 		end
 
-	edit_form (a_node: detachable CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
+	new_edit_form (a_node: detachable CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_node_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
+			-- Create a web form named `a_name' for node `a_node' (if set), using form action url `a_url', and for type of node `a_node_type'.
 		local
 			f: CMS_FORM
 			ts: WSF_FORM_SUBMIT_INPUT
@@ -216,8 +232,7 @@ feature -- Form
 			end
 			f.extend (th)
 
-			fill_edit_form (a_type, f, a_node)
-
+			populate_form (a_node_type, f, a_node)
 			f.extend_html_text ("<br/>")
 
 			create ts.make ("op")
@@ -228,11 +243,34 @@ feature -- Form
 			ts.set_default_value ("Preview")
 			f.extend (ts)
 
+			if
+				a_node /= Void and then
+				a_node.id > 0 and then
+				has_permission ("delete " + a_name)
+			then
+				create ts.make ("op")
+				ts.set_default_value ("Delete")
+				fixme ("[
+					ts.set_default_value (translation ("Delete"))
+					]")
+				f.extend (ts)
+			end
+
 			Result := f
 		end
 
+	populate_form (a_content_type: CMS_NODE_TYPE [CMS_NODE]; a_form: WSF_FORM; a_node: detachable CMS_NODE)
+			-- Fill the web form `a_form' with data from `a_node' if set,
+			-- and apply this to content type `a_content_type'.
+		do
+			if attached node_api.node_type_webform_manager (a_content_type) as wf then
+				wf.populate_form (Current, a_form, a_node)
+			end
+		end
+
 	new_node (a_content_type: CMS_NODE_TYPE [CMS_NODE]; a_form_data: WSF_FORM_DATA; a_node: detachable CMS_NODE): CMS_NODE
-			--
+			-- Node creation with form_data `a_form_data' for the given content type `a_content_type'
+			-- using optional `a_node' to get extra node data.
 		do
 			if attached node_api.node_type_webform_manager (a_content_type) as wf then
 				Result := wf.new_node (Current, a_form_data, a_node)
@@ -246,13 +284,6 @@ feature -- Form
 		do
 			if attached node_api.node_type_webform_manager (a_content_type) as wf then
 				wf.update_node (Current, a_form_data, a_node)
-			end
-		end
-
-	fill_edit_form (a_content_type: CMS_NODE_TYPE [CMS_NODE]; a_form: WSF_FORM; a_node: detachable CMS_NODE)
-		do
-			if attached node_api.node_type_webform_manager (a_content_type) as wf then
-				wf.populate_form (Current, a_form, a_node)
 			end
 		end
 

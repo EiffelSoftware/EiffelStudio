@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_STORAGE_STORE_SQL}."
-	author: ""
+	description: "Storage based on Eiffel Store component."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,9 +7,7 @@ deferred class
 	CMS_STORAGE_STORE_SQL
 
 inherit
-	CMS_STORAGE
-
-	CMS_STORAGE_SQL_I
+	CMS_STORAGE_SQL
 
 feature {NONE} -- Initialization
 
@@ -25,7 +22,6 @@ feature {NONE} -- Initialization
 			create {DATABASE_HANDLER_IMPL} db_handler.make (a_connection)
 
 			create error_handler.make
---			error_handler.add_synchronization (db_handler.database_error_handler)
 		end
 
 feature -- Status report

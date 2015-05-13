@@ -28,12 +28,8 @@ feature {NONE} -- Initialization
 	make (a_title: detachable like title; a_location: like location)
 			-- Create current local link with optional title `a_title' and location `a_location'.
 		do
-			if a_title /= Void then
-				title := a_title
-			else
-				title := a_location
-			end
 			location := a_location
+			set_title (a_title)
 		end
 
 feature -- Access
@@ -74,6 +70,16 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	set_title (a_title: detachable like title)
+			-- Set `title' to `a_title' or `location'.
+		do
+			if a_title /= Void then
+				title := a_title
+			else
+				title := location
+			end
+		end
 
 	add_link (lnk: CMS_LINK)
 			-- <Precursor>

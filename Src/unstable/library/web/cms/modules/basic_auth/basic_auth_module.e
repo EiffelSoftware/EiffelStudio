@@ -37,12 +37,11 @@ feature {NONE} -- Initialization
 
 feature -- Access: router
 
-	router (a_api: CMS_API): WSF_ROUTER
-			-- Node router.
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- <Precursor>
 		do
-			create Result.make (2)
-			configure_api_login (a_api, Result)
-			configure_api_logoff (a_api, Result)
+			configure_api_login (a_api, a_router)
+			configure_api_logoff (a_api, a_router)
 		end
 
 feature -- Access: filter

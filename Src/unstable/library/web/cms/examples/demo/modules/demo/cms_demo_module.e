@@ -80,12 +80,11 @@ CREATE TABLE "tb_demo"(
 
 feature -- Access: router
 
-	router (a_api: CMS_API): WSF_ROUTER
-			-- Node router.
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- <Precursor>
 		do
-			create Result.make (2)
-			map_uri_template_agent (Result, "/demo/", agent handle_demo (?,?,a_api))
-			map_uri_template_agent (Result, "/demo/{id}", agent handle_demo_entry (?,?,a_api))
+			map_uri_template_agent (a_router, "/demo/", agent handle_demo (?,?,a_api))
+			map_uri_template_agent (a_router, "/demo/{id}", agent handle_demo_entry (?,?,a_api))
 		end
 
 feature -- Hooks

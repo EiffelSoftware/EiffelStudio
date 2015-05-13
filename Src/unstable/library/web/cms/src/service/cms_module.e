@@ -66,10 +66,8 @@ feature {CMS_API} -- Module management
 
 feature -- Router
 
-	router (a_api: CMS_API): WSF_ROUTER
-			-- Router configuration.
-		require
-			is_enabled: is_enabled
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- Setup url dispatching for Current module.
 		deferred
 		end
 

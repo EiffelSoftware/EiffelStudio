@@ -108,8 +108,8 @@ feature -- Access
 			error_handler.reset
 			write_information_log (generator + ".node_author")
 			create l_parameters.make (1)
-			l_parameters.put (a_id, "node_id")
-			sql_query (select_node_author, l_parameters)
+			l_parameters.put (a_id, "nid")
+			sql_query (Select_user_author, l_parameters)
 			if sql_rows_count >= 1 then
 				Result := fetch_author
 			end
@@ -144,59 +144,18 @@ feature -- Change: Node
 			-- Remove node by id `a_id'.
 		local
 			l_parameters: STRING_TABLE [ANY]
+			l_time: DATE_TIME
 		do
+			create l_time.make_now_utc
 			write_information_log (generator + ".delete_node")
 
 			error_handler.reset
 			create l_parameters.make (1)
+			l_parameters.put (l_time, "changed")
+			l_parameters.put ({CMS_NODE_API}.trashed, "status")
 			l_parameters.put (a_id, "nid")
 			sql_change (sql_delete_node, l_parameters)
 		end
-
---	update_node_title (a_user_id: like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_title: READABLE_STRING_32)
---			-- <Precursor>
---		local
---			l_parameters: STRING_TABLE [detachable ANY]
---		do
---			-- FIXME: unused a_user_id !
---			error_handler.reset
---			write_information_log (generator + ".update_node_title")
---			create l_parameters.make (3)
---			l_parameters.put (a_title, "title")
---			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
---			l_parameters.put (a_node_id, "nid")
---			sql_change (sql_update_node_title, l_parameters)
---		end
-
---	update_node_summary (a_user_id: Like {CMS_USER}.id; a_node_id: like {CMS_NODE}.id; a_summary: READABLE_STRING_32)
---			-- <Precursor>
---		local
---			l_parameters: STRING_TABLE [detachable ANY]
---		do
---			-- FIXME: unused a_user_id !
---			error_handler.reset
---			write_information_log (generator + ".update_node_summary")
---			create l_parameters.make (3)
---			l_parameters.put (a_summary, "summary")
---			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
---			l_parameters.put (a_node_id, "nid")
---			sql_change (sql_update_node_summary, l_parameters)
---		end
-
---	update_node_content (a_user_id: Like {CMS_USER}.id;a_node_id: like {CMS_NODE}.id; a_content: READABLE_STRING_32)
---			-- <Precursor>
---		local
---			l_parameters: STRING_TABLE [detachable ANY]
---		do
---			-- FIXME: unused a_user_id !
---			error_handler.reset
---			write_information_log (generator + ".update_node_content")
---			create l_parameters.make (3)
---			l_parameters.put (a_content, "content")
---			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
---			l_parameters.put (a_node_id, "nid")
---			sql_change (sql_update_node_content, l_parameters)
---		end
 
 feature {NONE} -- Implementation
 
@@ -209,7 +168,7 @@ feature {NONE} -- Implementation
 			error_handler.reset
 
 			write_information_log (generator + ".store_node")
-			create l_parameters.make (8)
+			create l_parameters.make (9)
 			l_parameters.put (a_node.content_type, "type")
 			l_parameters.put (a_node.title, "title")
 			l_parameters.put (a_node.summary, "summary")
@@ -217,6 +176,7 @@ feature {NONE} -- Implementation
 			l_parameters.put (a_node.format, "format")
 			l_parameters.put (a_node.publication_date, "publish")
 			l_parameters.put (now, "changed")
+			l_parameters.put (a_node.status, "status")
 			if attached a_node.author as l_author then
 				check valid_author: l_author.has_id end
 				l_parameters.put (l_author.id, "author")
@@ -260,24 +220,28 @@ feature -- Helpers
 
 feature {NONE} -- Queries
 
-	sql_select_nodes_count: STRING = "SELECT count(*) from Nodes;"
+	sql_select_nodes_count: STRING = "SELECT count(*) FROM Nodes WHERE status != -1 ;"
+			-- Nodes count (Published and not Published)
+			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes: STRING = "SELECT * from Nodes;"
+	sql_select_nodes: STRING = "SELECT * FROM Nodes WHERE status != -1 ;"
 			-- SQL Query to retrieve all nodes.
+			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed FROM Nodes WHERE nid =:nid ORDER BY revision desc, publish desc LIMIT 1;"
+	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM Nodes WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed FROM Nodes ORDER BY nid desc, publish desc LIMIT :rows OFFSET :offset ;"
+	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM Nodes ORDER BY nid DESC, publish DESC LIMIT :rows OFFSET :offset ;"
 
-	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, author) VALUES (1, :type, :title, :summary, :content, :format, :publish, :created, :changed, :author);"
+	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author) VALUES (1, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author);"
 			-- SQL Insert to add a new node.
 
-	sql_update_node : STRING = "UPDATE nodes SET revision = revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, author=:author WHERE nid=:nid;"
+	sql_update_node : STRING = "UPDATE nodes SET revision = revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author WHERE nid=:nid;"
 -- FIXME: for now no revision inc.!
 --	sql_update_node : STRING = "UPDATE nodes SET revision = revision + 1, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, revision = revision + 1, author=:author WHERE nid=:nid;"
 			-- SQL node.
 
-	sql_delete_node: STRING = "DELETE FROM nodes WHERE nid=:nid;"
+	sql_delete_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
+			-- Soft deletion with free metadata.
 
 --	sql_update_node_author: STRING  = "UPDATE nodes SET author=:author WHERE nid=:nid;"
 
@@ -294,7 +258,7 @@ feature {NONE} -- Queries
 
 feature {NONE} -- Sql Queries: USER_ROLES collaborators, author
 
-	Select_user_author: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM Nodes INNER JOIN users ON nodes.author=users.uid AND users.uid = :uid;"
+	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM Nodes INNER JOIN users ON nodes.author=users.uid AND nodes.nid = :nid;"
 
 	Select_node_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed FROM users INNER JOIN nodes ON nodes.author=users.uid AND nodes.nid =:nid;"
 
@@ -334,6 +298,9 @@ feature {NONE} -- Implementation
 				end
 				if attached sql_read_date_time (11) as l_modif_date then
 					Result.set_modification_date (l_modif_date)
+				end
+				if attached sql_read_integer_32 (12) as l_status then
+					Result.set_status (l_status)
 				end
 			end
 		end

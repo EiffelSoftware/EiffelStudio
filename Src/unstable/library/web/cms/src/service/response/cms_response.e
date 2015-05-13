@@ -76,6 +76,26 @@ feature -- Access
 	redirection: detachable READABLE_STRING_8
 			-- Location for eventual redirection.
 
+feature -- Internationalization (i18n)
+
+	translation (a_text: READABLE_STRING_GENERAL; opts: detachable CMS_API_OPTIONS): STRING_32
+			-- Translated text `a_text' according to expected context (lang, ...)
+			-- and adapt according to options eventually set by `opts'.
+		do
+			to_implement ("Implement i18n support [2015-may]")
+			Result := a_text.as_string_32
+		end
+
+	formatted_string (a_text: READABLE_STRING_GENERAL; args: TUPLE): STRING_32
+			-- Format `a_text' using arguments `args'.
+			--| ex: formatted_string ("hello $1, see page $title.", ["bob", "contact"] -> "hello bob, see page contact"
+		local
+			l_formatter: CMS_STRING_FORMATTER
+		do
+			create l_formatter
+			Result := l_formatter.formatted_string (a_text, args)
+		end
+
 feature -- API
 
 	api: CMS_API
@@ -185,10 +205,28 @@ feature -- Permission
 			Result := user_has_permission (current_user (request), a_permission)
 		end
 
+	has_permissions (a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
+			-- Does current user has any of the permissions `a_permission_list' ?
+		do
+			Result := user_has_permissions (current_user (request), a_permission_list)
+		end
+
 	user_has_permission (a_user: detachable CMS_USER; a_permission: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does `a_user' has permission `a_permission' ?
 		do
 			Result := api.user_has_permission (a_user, a_permission)
+		end
+
+	user_has_permissions (a_user: detachable CMS_USER; a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
+			-- Does `a_user' has any of the permissions `a_permission_list' ?
+		do
+			across
+				a_permission_list as ic
+			until
+				Result
+			loop
+				Result := user_has_permission (a_user, ic.item)
+			end
 		end
 
 feature -- Head customization

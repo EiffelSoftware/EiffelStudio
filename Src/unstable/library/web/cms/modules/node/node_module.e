@@ -109,8 +109,8 @@ feature {CMS_API} -- Access: API
 
 feature -- Access: router
 
-	router (a_api: CMS_API): WSF_ROUTER
-			-- Node router.
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- <Precursor>
 		local
 			l_node_api: like node_api
 		do
@@ -119,8 +119,7 @@ feature -- Access: router
 				create l_node_api.make (a_api)
 				node_api := l_node_api
 			end
-			create Result.make (2)
-			configure_web (a_api, l_node_api, Result)
+			configure_web (a_api, l_node_api, a_router)
 		end
 
 	configure_web (a_api: CMS_API; a_node_api: CMS_NODE_API; a_router: WSF_ROUTER)

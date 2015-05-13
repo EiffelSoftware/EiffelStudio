@@ -16,7 +16,9 @@ inherit
 		undefine
 			requires_proxy
 		redefine
-			execute_default
+			execute_default,
+			create_router,
+			router
 		end
 
 	WSF_FILTERED_SERVICE
@@ -82,10 +84,17 @@ feature {NONE} -- Initialization
 
 feature -- Settings: router
 
+	router: CMS_ROUTER
+
+	create_router
+			-- Create `router'.
+		do
+			create router.make (api, 30)
+		end
+
 	setup_router
 			-- <Precursor>
 		local
-			l_module: CMS_MODULE
 			l_api: like api
 			l_router: like router
 		do
@@ -100,8 +109,7 @@ feature -- Settings: router
 			across
 				modules as ic
 			loop
-				l_module := ic.item
-				l_router.import (l_module.router (l_api))
+				ic.item.setup_router (l_router, l_api)
 			end
 				-- Configure files handler.
 			configure_api_file_handler (l_router)

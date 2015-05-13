@@ -65,6 +65,26 @@ feature -- Forms ...
 			fset.extend (tselect)
 
 			f.extend (fset)
+
+				-- Path aliase			
+			create ti.make ("path_alias")
+			ti.set_label ("Path")
+			ti.set_size (70)
+			if a_node /= Void and then a_node.has_id then
+				if attached a_node.link as lnk then
+					ti.set_text_value (lnk.location)
+				else
+					ti.set_text_value (response.api.path_alias (response.node_api.node_path (a_node)))
+				end
+			end
+			if
+				attached f.fields_by_name ("title") as l_title_fields and then
+				attached l_title_fields.first as l_title_field
+			then
+				f.insert_after (ti, l_title_field)
+			else
+				f.extend (ti)
+			end
 		end
 
 	update_node	(response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: CMS_NODE)
@@ -160,8 +180,9 @@ feature -- Output
 			node_api := a_response.node_api
 
 			a_response.add_variable (a_node, "node")
-			create lnk.make ("View", node_api.node_path (a_node))
+			create lnk.make (a_response.translation ("View", Void), a_response.node_local_link (a_node).location)
 			lnk.set_weight (1)
+
 			a_response.add_to_primary_tabs (lnk)
 			create lnk.make ("Edit", node_api.node_path (a_node) + "/edit")
 			lnk.set_weight (2)

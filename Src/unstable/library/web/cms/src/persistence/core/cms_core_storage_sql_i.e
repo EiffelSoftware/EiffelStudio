@@ -18,6 +18,123 @@ inherit
 
 	SHARED_LOGGER
 
+feature -- URL aliases
+
+	set_path_alias (a_source: READABLE_STRING_8; a_alias: READABLE_STRING_8)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (2)
+			l_parameters.put (a_source, "source")
+			l_parameters.put (a_alias, "alias")
+			if attached source_of_path_alias (a_alias) as l_path then
+				if a_source.same_string (l_path) then
+						-- already up to date
+				else
+					error_handler.add_custom_error (0, "alias exists", "Path alias %"" + a_alias + "%" already exists!")
+				end
+			else
+				sql_change (sql_insert_path_alias, l_parameters)
+			end
+		end
+
+	replace_path_alias (a_source: READABLE_STRING_8; a_previous_alias: detachable READABLE_STRING_8; a_alias: READABLE_STRING_8)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_previous_alias: detachable READABLE_STRING_8
+		do
+			error_handler.reset
+
+			if a_previous_alias = Void then
+				l_previous_alias := path_alias (a_source)
+			else
+				l_previous_alias := a_previous_alias
+			end
+			if
+				l_previous_alias /= Void and then
+				not a_alias.same_string (l_previous_alias)
+			then
+				create l_parameters.make (3)
+				l_parameters.put (a_source, "source")
+				l_parameters.put (l_previous_alias, "old")
+				l_parameters.put (a_alias, "alias")
+
+				sql_change (sql_update_path_alias, l_parameters)
+			end
+		end
+
+	unset_path_alias (a_source: READABLE_STRING_8; a_alias: READABLE_STRING_8)
+			-- <Precursor>	
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			if attached source_of_path_alias (a_alias) as l_path then
+				if a_source.same_string (l_path) then
+						-- Found
+					create l_parameters.make (1)
+					l_parameters.put (a_alias, "alias")
+					sql_change (sql_delete_path_alias, l_parameters)
+				else
+					error_handler.add_custom_error (0, "alias mismatch", "Path alias %"" + a_alias + "%" is not related to source %"" + a_source + "%"!")
+				end
+			else
+					-- No such alias
+			end
+		end
+
+	path_alias (a_source: READABLE_STRING_8): detachable READABLE_STRING_8
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			create l_parameters.make (1)
+			l_parameters.put (a_source, "source")
+			sql_query (sql_select_path_source, l_parameters)
+			if not has_error then
+				if sql_rows_count = 1 then
+					Result := sql_read_string (1)
+				end
+			end
+		end
+
+	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			create l_parameters.make (1)
+			l_parameters.put (a_alias, "alias")
+			sql_query (sql_select_path_alias, l_parameters)
+			if not has_error then
+				if sql_rows_count = 1 then
+					Result := sql_read_string (1)
+				end
+			end
+		end
+
+	sql_select_path_alias: STRING = "SELECT source FROM path_aliases WHERE alias=:alias ;"
+			-- SQL select path aliases.
+
+	sql_select_path_source: STRING = "SELECT alias FROM path_aliases WHERE source=:source ORDER BY pid DESC LIMIT 1;"
+			-- SQL select latest path aliasing :source.			
+
+	sql_insert_path_alias: STRING = "INSERT INTO path_aliases (source, alias) VALUES (:source, :alias);"
+			-- SQL insert path alias.			
+
+	sql_update_path_alias: STRING = "UPDATE path_aliases SET alias=:alias WHERE source=:source AND alias=:old ;"
+			-- SQL update path alias.
+
+	sql_delete_path_alias: STRING = "DELETE FROM path_aliases WHERE alias=:alias;"
+			-- SQL delete path alias			
+
 feature -- Logs
 
 	save_log (a_log: CMS_LOG)

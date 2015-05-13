@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Router
 
-	router (a_api: CMS_API): WSF_ROUTER
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		local
 --			fs: WSF_FILE_SYSTEM_HANDLER
@@ -70,43 +70,42 @@ feature -- Router
 			default_version_id := cfg.documentation_default_version
 
 				-- Router			
-			create Result.make (5)
 
 			create h.make (agent handle_learn (a_api, ?, ?))
-			Result.handle_with_request_methods ("/documentation", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/documentation", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
-			Result.handle_with_request_methods ("/doc/uuid/{wikipage_uuid}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}", h, Result.methods_get)
---			Result.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}/book/{bookid}", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
+--			a_router.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}/book/{bookid}", h, a_router.methods_get)
 
 			create h.make (agent handle_book (a_api, ?, ?))
-			Result.handle_with_request_methods ("/book/", h, Result.methods_get)
-			Result.handle_with_request_methods ("/book/{bookid}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/book/", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/book/", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/book/{bookid}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}", h, a_router.methods_get)
 
 
 			create h.make (agent handle_wikipage (a_api, ?, ?))
-			Result.handle_with_request_methods ("/book/{bookid}/{wikipageid}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/book/{bookid}/{wikipageid}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}", h, a_router.methods_get)
 
 			create h.make (agent handle_wiki_image (a_api, ?, ?))
-			Result.handle_with_request_methods ("/book/{bookid}/_images/{filename}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/_images/{filename}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/images/{image_id}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/images/{image_id}", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/book/{bookid}/_images/{filename}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/_images/{filename}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/images/{image_id}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/images/{image_id}", h, a_router.methods_get)
 
 			create h.make (agent handle_wiki_file (a_api, ?, ?))
-			Result.handle_with_request_methods ("/book/{bookid}/file/{filename}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/book/{bookid}/file/{filename}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/file/{filename}", h, Result.methods_get)
-			Result.handle_with_request_methods ("/version/{version_id}/file/{filename}", h, Result.methods_get)
+			a_router.handle_with_request_methods ("/book/{bookid}/file/{filename}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/file/{filename}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/file/{filename}", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/file/{filename}", h, a_router.methods_get)
 
 
 --			create fs.make_with_path (a_api.setup.theme_location.extended ("assets").extended ("images"))
 --			fs.disable_index
---			Result.handle_with_request_methods ("/theme/images", fs, Result.methods_get)
+--			a_router.handle_with_request_methods ("/theme/images", fs, a_router.methods_get)
 		end
 
 feature -- Hooks configuration

@@ -126,10 +126,8 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		subscriber_list_t_init (&self->wait_condition_subscribers);
 		private_queue_list_t_init (&self->generated_private_queues);
 
-			/* Initialize the queue_cache. We may get an allocation failure here.
-			 * TODO: Change rt_queue_cache_init to report failure with an error code. */
-		/* error = */
-		rt_queue_cache_init (&self->cache, self);
+			/* Initialize the queue_cache. We may get an allocation failure here. */
+		error = rt_queue_cache_init (&self->cache, self);
 
 			/* Next we need to initialize several message channels. */
 		if (T_OK == error) {

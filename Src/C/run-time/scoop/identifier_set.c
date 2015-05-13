@@ -43,6 +43,7 @@ doc:<file name="identifier_set.c" header="rt_identifier_set.h" version="$Id$" su
 
 #include "eif_error.h"
 #include "rt_assert.h"
+#include "eif_macros.h"
 
 #ifdef __cplusplus
 extern "C" {

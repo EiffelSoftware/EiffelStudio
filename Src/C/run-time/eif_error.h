@@ -40,7 +40,8 @@
 #pragma once
 #endif
 
-#include "eif_except.h"
+#include "eif_portable.h"
+
 #ifdef EIF_ASSERTIONS
 #include "rt_assert.h"
 #endif

@@ -17,22 +17,22 @@ feature
 			l_att_s := [sa]
 
 			if not l_det_s.valid_type_for_index (Void, 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 1%N")
 			end
 			if l_det_s.valid_type_for_index (create {TEST}, 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 2%N")
 			end
 			if not l_det_s.valid_type_for_index ("STRING", 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 3%N")
 			end
 			if l_att_s.valid_type_for_index (Void, 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 4%N")
 			end
 			if l_att_s.valid_type_for_index (create {TEST}, 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 5%N")
 			end
 			if not l_att_s.valid_type_for_index ("STRING", 1) then
-				io.put_string ("Not OK%N")
+				io.put_string ("Not OK 6%N")
 			end
 		end
 

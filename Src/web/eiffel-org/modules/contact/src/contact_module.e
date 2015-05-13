@@ -51,12 +51,11 @@ feature {NONE} -- Initialization
 
 feature -- Router
 
-	router (a_api: CMS_API): WSF_ROUTER
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			create Result.make (0)
-			Result.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), Result.methods_put_post)
+			a_router.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), a_router.methods_put_post)
 		end
 
 feature -- Recaptcha

@@ -47,12 +47,11 @@ feature {NONE} -- Initialization
 
 feature -- Router
 
-	router (a_api: CMS_API): WSF_ROUTER
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			create Result.make (3)
-			Result.handle_with_request_methods ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), Result.methods_head_get)
-			Result.handle_with_request_methods ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), Result.methods_head_get)
+			a_router.handle_with_request_methods ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle_with_request_methods ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration

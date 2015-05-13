@@ -88,15 +88,16 @@ struct queue_cache {
 };
 
 /*
-doc:	<routine name="rt_queue_cache_init" return_type="void" export="private">
+doc:	<routine name="rt_queue_cache_init" return_type="int" export="private">
 doc:		<summary> Initialize the queue_cache struct 'self' with owner 'a_owner' and reserve some memory in the internal hash table. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache to be initialized. Must not be NULL. </param>
 doc:		<param name="a_owner" type="struct rt_processor*"> The owner of the queue_cache. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, struct rt_processor* a_owner)
+rt_private rt_inline int rt_queue_cache_init (struct queue_cache* self, struct rt_processor* a_owner)
 {
 	int error = 0;
 
@@ -107,9 +108,17 @@ rt_private rt_inline void rt_queue_cache_init (struct queue_cache* self, struct 
 	self -> borrowed_queues = NULL;
 
 	error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (struct rt_private_queue*));
-	if (error != 0) {
-		enomem();
+
+		/* The function ht_create returns 0 on success and -1 in case of an error.
+		 * We have to convert this to our error representation. */
+	if (error == -1) {
+		error = T_NO_MORE_MEMORY;
+	} else {
+		CHECK ("zero_on_success", error == 0);
+		error = T_OK;
 	}
+
+	return error;
 }
 
 /*

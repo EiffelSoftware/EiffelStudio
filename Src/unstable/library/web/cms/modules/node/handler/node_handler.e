@@ -89,6 +89,14 @@ feature -- HTTP Methods
 				check valid_url: req.path_info.starts_with_general ("/node/") end
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
+			elseif req.path_info.ends_with_general ("/delete")  then
+				check valid_url: req.path_info.starts_with_general ("/node/") end
+				create edit_response.make (req, res, api, node_api)
+				edit_response.execute
+			elseif req.path_info.ends_with_general ("/trash")  then
+				check valid_url: req.path_info.starts_with_general ("/node/") end
+				create edit_response.make (req, res, api, node_api)
+				edit_response.execute
 			else
 					-- Display existing node
 				l_nid := node_id_path_parameter (req)
@@ -116,14 +124,26 @@ feature -- HTTP Methods
 		do
 			fixme ("Refactor code: extract methods: edit_node and add_node")
 			if req.path_info.ends_with_general ("/edit") then
+				create edit_response.make (req, res, api, node_api)
+				edit_response.execute
+			elseif req.path_info.ends_with_general ("/delete") then
 				if
 					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
 					l_op.value.same_string ("Delete")
 				then
 					do_delete (req, res)
-				else
-					create edit_response.make (req, res, api, node_api)
-					edit_response.execute
+				end
+			elseif req.path_info.ends_with_general ("/trash") then
+				if
+					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
+					l_op.value.same_string ("Trash")
+				then
+					do_trash (req, res)
+				elseif
+					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
+					l_op.value.same_string ("Restore")
+				then
+					do_restore (req, res)
 				end
 			elseif req.path_info.starts_with_general ("/node/add/") then
 				create edit_response.make (req, res, api, node_api)
@@ -172,6 +192,62 @@ feature -- HTTP Methods
 		do
 			to_implement ("REST API")
 			send_not_implemented ("REST API not yet implemented", req, res)
+		end
+
+feature {NONE} -- Trash:Restore
+
+	do_trash (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Trash a node from the database.
+		do
+			if attached current_user (req) as l_user then
+				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
+					if
+						l_id.is_integer and then
+						attached node_api.node (l_id.integer_value) as l_node
+					then
+						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
+							node_api.trash_node (l_node)
+							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
+						else
+							send_access_denied (req, res)
+								-- send_not_authorized ?
+						end
+					else
+						do_error (req, res, l_id)
+					end
+				else
+					(create {INTERNAL_SERVER_ERROR_CMS_RESPONSE}.make (req, res, api)).execute
+				end
+			else
+				send_access_denied (req, res)
+			end
+		end
+
+	do_restore (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Restore a node: From {CMS_NODE_API}.trashed to {CMS_NODE_API}.not_published.
+		do
+			if attached current_user (req) as l_user then
+				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
+					if
+						l_id.is_integer and then
+						attached node_api.node (l_id.integer_value) as l_node
+					then
+						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
+							node_api.restore_node (l_node)
+							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
+						else
+							send_access_denied (req, res)
+								-- send_not_authorized ?
+						end
+					else
+						do_error (req, res, l_id)
+					end
+				else
+					(create {INTERNAL_SERVER_ERROR_CMS_RESPONSE}.make (req, res, api)).execute
+				end
+			else
+				send_access_denied (req, res)
+			end
 		end
 
 feature -- Error

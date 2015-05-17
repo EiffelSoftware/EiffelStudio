@@ -182,11 +182,29 @@ feature -- Output
 			a_response.add_variable (a_node, "node")
 			create lnk.make (a_response.translation ("View", Void), a_response.node_local_link (a_node).location)
 			lnk.set_weight (1)
+			a_response.add_to_primary_tabs (lnk)
 
-			a_response.add_to_primary_tabs (lnk)
-			create lnk.make ("Edit", node_api.node_path (a_node) + "/edit")
-			lnk.set_weight (2)
-			a_response.add_to_primary_tabs (lnk)
+			if a_node.status = {CMS_NODE_API}.trashed then
+				create lnk.make ("Trash", node_api.node_path (a_node) + "/trash")
+				lnk.set_weight (2)
+				a_response.add_to_primary_tabs (lnk)
+			else
+					-- Node in {{CMS_NODE_API}.published} or {CMS_NODE_API}.not_published} status.
+				create lnk.make ("Edit", node_api.node_path (a_node) + "/edit")
+				lnk.set_weight (2)
+				a_response.add_to_primary_tabs (lnk)
+
+				if
+					a_node /= Void and then
+					a_node.id > 0 and then
+					attached node_api.node_type_for (a_node) as l_type and then
+					node_api.has_permission_for_action_on_node ("delete", a_node, a_response.current_user (a_response.request))
+				then
+					create lnk.make ("Delete", node_api.node_path (a_node) + "/delete")
+					lnk.set_weight (3)
+					a_response.add_to_primary_tabs (lnk)
+				end
+			end
 
 			create s.make_empty
 			s.append ("<div class=%"info%"> ")

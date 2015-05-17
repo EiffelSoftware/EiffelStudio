@@ -40,6 +40,10 @@ feature -- Initialization
 
 				--| Node			
 				-- FIXME: move that initialization to node module
+				-- TODO: should we move the initialization to an
+				--! external configuration file?
+				--! at the moment we only have 1 admin to the whole site.
+				--! is that ok?
 			l_anonymous_role.add_permission ("view any page")
 			a_storage.save_user_role (l_anonymous_role)
 
@@ -47,9 +51,11 @@ feature -- Initialization
 			l_authenticated_role.add_permission ("view any page")
 			l_authenticated_role.add_permission ("edit any page")
 			l_authenticated_role.add_permission ("delete page")
+			l_authenticated_role.add_permission ("trash page")
 			l_authenticated_role.add_permission ("view own page")
 			l_authenticated_role.add_permission ("edit own page")
 			l_authenticated_role.add_permission ("delete own page")
+			l_authenticated_role.add_permission ("trash own page")
 			a_storage.save_user_role (l_authenticated_role)
 
 

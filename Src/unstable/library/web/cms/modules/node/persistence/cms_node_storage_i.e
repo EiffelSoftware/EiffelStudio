@@ -70,6 +70,11 @@ feature -- Access
 		deferred
 		end
 
+	trashed_nodes (a_user_id: INTEGER_64): LIST [CMS_NODE]
+			-- List of nodes by user `a_user_id'.
+		deferred
+		end
+
 	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
 			-- List of recent `a_count' nodes with an offset of `lower'.
 		deferred
@@ -130,6 +135,36 @@ feature -- Change: Node
 
 	delete_node_by_id (a_id: INTEGER_64)
 			-- Remove node by id `a_id'.
+		require
+			valid_node_id: a_id > 0
+		deferred
+		end
+
+	trash_node (a_node: CMS_NODE)
+			-- Trash `a_node'.
+		do
+			if a_node.has_id then
+				trash_node_by_id (a_node.id)
+			end
+		end
+
+	restore_node (a_node: CMS_NODE)
+			-- Restore `a_node'.
+		do
+			if a_node.has_id then
+				restore_node_by_id (a_node.id)
+			end
+		end
+
+	trash_node_by_id (a_id: INTEGER_64)
+			-- Trash node by id `a_id'.
+		require
+			valid_node_id: a_id > 0
+		deferred
+		end
+
+	restore_node_by_id (a_id: INTEGER_64)
+			-- Restore node by id `a_id'.
 		require
 			valid_node_id: a_id > 0
 		deferred

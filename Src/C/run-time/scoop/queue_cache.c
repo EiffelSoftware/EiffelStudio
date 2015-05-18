@@ -169,17 +169,18 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct
 }
 
 /*
-doc:	<routine name="rt_queue_cache_push" return_type="void" export="shared">
+doc:	<routine name="rt_queue_cache_push" return_type="int" export="shared">
 doc:		<summary> Pass all locks from 'giver' to 'self'.
 doc: 			The locks (private queues) from the other processor will be added to this cache.
 doc: 			This should be called in pairs with rt_queue_cache_pop(). </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache to receive the locks. Must not be NULL. </param>
 doc:		<param name="giver" type="struct queue_cache*"> The queue cache to give away the locks. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY if a memory allocation failure happened. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver)
+rt_shared int rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver)
 {
 	struct rt_vector_queue_cache *l_borrowed = NULL;
 	int error = T_OK;
@@ -191,31 +192,30 @@ rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache
 		/* Try to get any borrowed locks from 'giver'. */
 	l_borrowed = giver->borrowed_queues;
 
-		/* If 'giver' does not yet have such locks, create a new vector. */
-		/* FIXME: To save time doing memory allocations, these vectors could be embedded within the queue_cache struct. */
-	if (NULL == l_borrowed) {
-		l_borrowed = rt_vector_queue_cache_create ();
+		/* If 'giver' does not yet have such locks, we have to initialize a new vector
+		 * containing the queue_caches of processors that passed their locks.
+		 * We can use our own 'storage' vector to avoid any memory allocation. */
 
-			/* Report memory allocation failure. */
-		if (NULL == l_borrowed) {
-			enomem();
-		}
+		/* NOTE: This works as long as a processor cannot pass his locks multiple times to different
+		 * processors, without getting them back first. Historically, this has not always been the
+		 * case (i.e. when separate callbacks were executed asynchronously). */
+	if (NULL == l_borrowed) {
+		CHECK ("storage_not_used", rt_vector_queue_cache_count (&self->storage) == 0);
+		l_borrowed = &self->storage;
 	}
 
 		/* Add 'giver' at the end of the vector. */
 	error = rt_vector_queue_cache_extend (l_borrowed, giver);
 
-			/* Report memory allocation failure. */
-	if (error != T_OK) {
-		rt_vector_queue_cache_destroy (l_borrowed);
-		enomem();
+	if (error == T_OK) {
+			/* Update the state in both queue caches. */
+		giver->borrowed_queues = NULL;
+		self->borrowed_queues = l_borrowed;
+
+		ENSURE ("locks_passed", !giver->borrowed_queues && self->borrowed_queues);
 	}
 
-		/* Update the state in both queue caches. */
-	giver->borrowed_queues = NULL;
-	self->borrowed_queues = l_borrowed;
-
-	ENSURE ("locks_passed", !giver->borrowed_queues && self->borrowed_queues);
+	return error;
 }
 
 /*
@@ -246,17 +246,17 @@ rt_shared void rt_queue_cache_pop (struct queue_cache* self)
 	origin = rt_vector_queue_cache_last (l_borrowed);
 	rt_vector_queue_cache_remove_last (l_borrowed);
 
-		/*
-		* If empty, free the vector struct, as it's not needed any more.
-		* FIXME: Avoid allocation in the first place by caching a vector
-		* struct in each queue_cache.
-		*/
-	if (rt_vector_queue_cache_count(l_borrowed) == 0) {
-		rt_vector_queue_cache_destroy (l_borrowed);
 
-	} else {
+	if (rt_vector_queue_cache_count (l_borrowed) > 0 ) {
 			/* Return the locks to its original owner. */
 		origin->borrowed_queues = l_borrowed;
+
+	} else {
+			/* If 'origin' was the last element in the vector,
+			 * it means that the current queue_cache created
+			 * the vector initially. In that case we don't have
+			 * to return anything. */
+		CHECK ("my_storage", l_borrowed == &self->storage);
 	}
 
 	ENSURE ("locks_returned", !self->borrowed_queues);

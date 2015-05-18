@@ -76,6 +76,8 @@ doc:		</summary>
 doc:		<field name="owner" type="struct rt_processor*"> The owner of this queue_cache. </field>
 doc:		<field name="owned_queues" type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
 doc:		<field name="borrowed_queues" type="struct rt_vector_queue_cache*"> The locks passed from other processors. May be NULL. </field>
+doc:		<field name="storage" type="struct rt_vector_queue_cache"> A pre-made vector that can be used for borrowed_queues.
+doc:			This field is only present to avoid memory allocation during lock passing. </field>
 doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
 doc: 			In the future we may need to change the implementation e.g. by not extending the borrowed_queues stack if we detect that the queue_cache to be inserted
 doc:			is already in the stack. This probably needs some more data structures though to ensure correct behaviour on pop(). </fixme>
@@ -85,6 +87,7 @@ struct queue_cache {
 	struct rt_processor *owner;
 	struct rt_vector_queue_cache *borrowed_queues;
 	struct htable owned_queues;
+	struct rt_vector_queue_cache storage;
 };
 
 /*
@@ -104,9 +107,13 @@ rt_private rt_inline int rt_queue_cache_init (struct queue_cache* self, struct r
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("owner_not_null", a_owner);
 
-	self -> owner = a_owner;
-	self -> borrowed_queues = NULL;
+	self->owner = a_owner;
+	self->borrowed_queues = NULL;
 
+		/* Initialize the storage vector. */
+	rt_vector_queue_cache_init (&self->storage);
+
+		/* Initialize and allocate the hash table used to track owned private queues. */
 	error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (struct rt_private_queue*));
 
 		/* The function ht_create returns 0 on success and -1 in case of an error.
@@ -140,13 +147,17 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 		/* Delete the hash table used to hold the queues owned by this processor.
 		 * The queues themselves will be deleted by the processor which is supplier of the queue. */
 	ht_release (&self->owned_queues);
+
+		/* Free any internal memory in the storage vector. */
+	CHECK ("storage_not_used", rt_vector_queue_cache_count (&self->storage) == 0);
+	rt_vector_queue_cache_deinit (&self->storage);
 }
 
 
 /* Declarations */
 rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier);
 rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct rt_processor* supplier);
-rt_shared void rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
+rt_shared int rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);
 rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, struct rt_processor* const supplier);
 /* rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking); */

@@ -310,7 +310,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 
 		if (is_synchronous) {
 				/* Grab all locks held by the client. */
-			rt_queue_cache_push (&self->cache, &client->cache);
+			RT_TRACE (rt_queue_cache_push (&self->cache, &client->cache)); /* TODO: Handle error.*/
 		}
 			/* Remember the size of the request group stack. */
 		l_count = rt_processor_request_group_stack_count (self);

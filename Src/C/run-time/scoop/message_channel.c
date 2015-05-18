@@ -163,8 +163,17 @@ rt_private rt_inline struct mc_node* allocate_node (struct rt_message_channel* s
 			/* We need to allocate a new node on the heap. */
 		 result = (struct mc_node*) malloc (sizeof (struct mc_node));
 		 if (!result) {
-				/* Report allocation failure. */
-			enomem();
+				/* NOTE: A memory allocation failure here is a pretty fatal error,
+				 * especially for UNLOCK, SHUTDOWN RESULT_READY and DIRTY messages.
+				 * The reason is that the recipient may be blocked infinitely with
+				 * no way to unblock it. Instead of letting this silent inconsistency
+				 * sneak into our program we bail out and panic. */
+				/* TODO: There might be a way to avoid a panic by making sure that
+				 * nodes for the above messages are always pre-allocated. This makes
+				 * the send operation unfailing, but clients would have to
+				 * ensure that an "emergency" node is available prior to sending
+				 * a critical message.*/
+			eif_panic ("Could not allocate a message node in rt_message_channel_send.");
 		 }
 	}
 

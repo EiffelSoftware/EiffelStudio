@@ -160,23 +160,28 @@ rt_shared void rt_private_queue_unlock (struct rt_private_queue* self)
 }
 
 /*
-doc:	<routine name="rt_private_queue_register_wait" return_type="void" export="shared">
+doc:	<routine name="rt_private_queue_register_wait" return_type="int" export="shared">
 doc:		<summary> Register a wait operation at the supplier.
 doc:			The supplier will contact the client when it has executed some
 doc:			other calls, and thus may have changed a wait condition. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
 doc:		<param name="self" type="struct rt_processor*"> The client that wants to register for a wait condition change notification. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client)
+rt_shared int rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client)
 {
+	int error = T_OK;
+
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("self_synchronized", self->synced);
-	rt_processor_subscribe_wait_condition (self->supplier, client);
+
+	error = rt_processor_subscribe_wait_condition (self->supplier, client);
 	self->synced = EIF_FALSE;
+	return error;
 }
 
 /*

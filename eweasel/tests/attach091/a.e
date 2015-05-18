@@ -20,7 +20,7 @@ feature {NONE} -- Creation
 
 feature {TEST} -- Tests
 
-	x: G assign set_x -- VFAC(3)
+	x: G $MASK_ATTACHED $MASK_DETACHABLE assign set_x -- stable, unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -40,7 +40,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	z: G assign set_z -- VFAC(3)
+	z: G $MASK_UNSTABLE_ATTACHED $MASK_UNSTABLE_DETACHABLE assign set_z -- unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -50,7 +50,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	ax: attached G assign set_ax -- VFAC(3)
+	ax: attached G $MASK_ATTACHED $MASK_DETACHABLE assign set_ax -- stable, unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -60,7 +60,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	ay: attached G assign set_ay -- VFAC(3)
+	ay: attached G $MASK_ATTACHED $MASK_DETACHABLE assign set_ay -- stable, unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -90,7 +90,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dy: detachable G assign set_dy -- VFAC(3)
+	dy: detachable G $MASK_UNSTABLE_ATTACHED $MASK_UNSTABLE_DETACHABLE assign set_dy -- unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -100,7 +100,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dz: detachable G assign set_dz -- VFAC(3)
+	dz: detachable G $MASK_UNSTABLE_ATTACHED $MASK_UNSTABLE_DETACHABLE assign set_dz -- unstable: VFAC(3)
 		note
 			$STABLE
 		attribute

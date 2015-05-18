@@ -2,7 +2,7 @@ class B
 
 feature {TEST} -- Tests
 
-	x: like Current assign set_x -- VFAC(3)
+	x: like Current $MASK_ATTACHED $MASK_DETACHABLE assign set_x -- stable, unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -35,7 +35,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	ax: attached like Current assign set_ax -- VFAC(3)
+	ax: attached like Current $MASK_ATTACHED $MASK_DETACHABLE assign set_ax -- stable, unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -78,7 +78,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dy: detachable like Current assign set_dy -- VFAC(3)
+	dy: detachable like Current $MASK_UNSTABLE_ATTACHED $MASK_UNSTABLE_DETACHABLE assign set_dy -- unstable: VFAC(3)
 		note
 			$STABLE
 		attribute
@@ -88,7 +88,7 @@ feature {TEST} -- Tests
 		do
 		end
 
-	dz: detachable like Current assign set_dz -- VFAC(3)
+	dz: detachable like Current $MASK_UNSTABLE_ATTACHED $MASK_UNSTABLE_DETACHABLE assign set_dz -- unstable: VFAC(3)
 		note
 			$STABLE
 		attribute

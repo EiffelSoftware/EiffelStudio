@@ -593,8 +593,8 @@ feature {NONE} -- Implementation: State
 	last_assignment_target: detachable FEATURE_I
 			-- Target of assignment or assigner command.
 
-	is_assigner_call: BOOLEAN
-			-- Is an assigner call being processed?
+	assigner_source: detachable EXPR_AS
+			-- Source of a current assigner command (if any).
 
 	is_qualified_call: BOOLEAN
 			-- Is a qualified call being processed?
@@ -1233,6 +1233,7 @@ feature {NONE} -- Implementation
 			l_formal_arg_type: TYPE_A
 			l_like_argument: LIKE_ARGUMENT
 			l_feature: FEATURE_I
+			l_found_feature: FEATURE_I
 			l_seed: FEATURE_I
 			i, l_actual_count, l_formal_count: INTEGER
 				-- Id of the class type on the stack
@@ -1256,6 +1257,7 @@ feature {NONE} -- Implementation
 			l_feature_name: ID_AS
 			l_parameters: EIFFEL_LIST [EXPR_AS]
 			l_wrapped_actuals: EIFFEL_LIST [EXPR_AS]
+			l_argument: EXPR_AS
 			l_needs_byte_node: BOOLEAN
 			l_conv_info: CONVERSION_INFO
 			l_expr: EXPR_B
@@ -1268,15 +1270,15 @@ feature {NONE} -- Implementation
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
 			l_is_separate: BOOLEAN
-			l_is_assigner_call, l_is_last_access_tuple_access: BOOLEAN
-			l_named_tuple: NAMED_TUPLE_TYPE_A
-			l_label_pos: INTEGER
+			old_assigner_source: like assigner_source
+			l_is_last_access_tuple_access: BOOLEAN
 			l_formal: FORMAL_A
 			l_last_feature_table: FEATURE_TABLE
 			l_is_multiple_constraint_case: BOOLEAN
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			l_last_original_feature_name_id: INTEGER
 			l_tuple_access_b: TUPLE_ACCESS_B
+			vbac2: VBAC2
 			l_vtmc1: VTMC1
 			l_error_level: NATURAL_32
 			l_is_in_assignment: BOOLEAN
@@ -1309,8 +1311,8 @@ feature {NONE} -- Implementation
 			is_last_access_tuple_access := False
 
 				-- Reset assigner call flag
-			l_is_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 
 				-- `a_name' can be void for inline agents
 			if a_name /= Void then
@@ -1480,44 +1482,143 @@ feature {NONE} -- Implementation
 				end
 
 				if error_level = l_error_level then
-						-- No feature was found, so if the target of the call is a named tuple
-						-- then it might be a call on one of its label.
-						--| This we only check in the case of single cosntraint formals.
-						--| It does not make any sense to check it for multi constraints as
-						--| one is not allowed to inherit from `TUPLE'.
 					if l_feature = Void then
-						l_named_tuple ?= l_last_type
-						if l_named_tuple /= Void then
-							l_label_pos := l_named_tuple.label_position_by_id (l_feature_name.name_id)
-							if l_label_pos > 0 then
-								set_type (l_named_tuple.generics.i_th (l_label_pos), a_name)
-								l_is_last_access_tuple_access := True
-								last_feature_name_id := l_feature_name.name_id
-									-- No renaming possible (from RENAMED_TYPE_A), they are the same
-								last_original_feature_name_id := last_feature_name_id
-								check
-									last_feature_name_correct: last_feature_name = l_feature_name.name
+							-- If no feature was found, so the target of the call may be a named tuple
+							-- then it may be a call on one of its label.
+							--| This we only check in the case of single cosntraint formals.
+							--| It does not make any sense to check it for multi constraints as
+							--| one is not allowed to inherit from `TUPLE'.
+						if
+							attached {NAMED_TUPLE_TYPE_A} l_last_type as l_named_tuple and then
+							attached l_named_tuple.label_position_by_id (l_feature_name.name_id) as l_label_pos and then
+							l_label_pos > 0
+						then
+							set_type (l_named_tuple.generics.i_th (l_label_pos), a_name)
+							l_is_last_access_tuple_access := True
+							last_feature_name_id := l_feature_name.name_id
+								-- No renaming possible (from RENAMED_TYPE_A), they are the same
+							last_original_feature_name_id := last_feature_name_id
+							check
+								last_feature_name_correct: last_feature_name = l_feature_name.name
+							end
+								-- Restore previous value of `is_controlled'.
+							is_controlled := l_is_controlled
+								-- Adapt separateness and controlled status of the result to target type.
+							adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
+							if l_needs_byte_node then
+								create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
+								last_byte_node := l_tuple_access_b
+								last_byte_node.set_line_number (l_feature_name.line)
+							end
+						elseif not is_target_known then
+								-- No feature is found and this is not a tuple access.
+								-- Unknown target case: do not report an error.
+								-- Lookup for a feature in a set of possible types.
+							if attached {LOCAL_TYPE_A} a_type.actual_type as t and then
+								attached t.feature_call (a_name.name_id, context.current_class) as f
+							then
+									-- For the use of `f.site.class_id' see test#anchor086.
+								l_result_type := f.descriptor.type.recomputed_in
+									(f.target.as_implicitly_detachable,
+									l_context_current_class.class_id,
+									f.site.as_implicitly_detachable,
+									f.site.class_id)
+								if attached l_arg_types then
+									l_result_type := l_result_type.actual_argument_type (l_arg_types)
 								end
-									-- Restore previous value of `is_controlled'.
-								is_controlled := l_is_controlled
-									-- Adapt separateness and controlled status of the result to target type.
-								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
-								if l_needs_byte_node then
-									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
-									last_byte_node := l_tuple_access_b
-									last_byte_node.set_line_number (l_feature_name.line)
+								set_type (l_result_type, a_name)
+								last_calls_target_type := f.site
+								last_access_writable := f.descriptor.is_attribute
+								last_feature_name_id := f.descriptor.feature_name_id
+								last_routine_id_set := f.descriptor.rout_id_set
+							else
+									-- Propagate information that the result type is unknown.
+								set_type (unknown_type, a_name)
+							end
+						elseif l_is_multiple_constraint_case then
+								-- No feature is found and this is not a tuple access.
+								-- Multiple constraints case: report VTMC1 error instead of a VEEN.
+							create l_vtmc1
+							context.init_error (l_vtmc1)
+							l_vtmc1.set_feature_call_name (l_feature_name.name)
+							l_vtmc1.set_location (l_feature_name)
+							l_vtmc1.set_type_set (l_last_type_set)
+							l_vtmc1.set_location (l_feature_name)
+							error_handler.insert_error (l_vtmc1)
+								-- We have an error, so we need to reset the types.
+							reset_types
+						else
+								-- No feature is found and this is not a tuple access.
+								-- Single constraint case: report that a feature name is not found.
+							create l_veen
+							context.init_error (l_veen)
+							l_veen.set_identifier (l_feature_name.name)
+							l_veen.set_target_type (l_last_type)
+							if system.il_generation then
+								l_veen.set_parameter_count (l_actual_count)
+							end
+							l_veen.set_location (l_feature_name)
+							error_handler.insert_error (l_veen)
+								-- We have an error, so we need to reset the types.
+							reset_types
+						end
+					else
+							-- A feature is found.
+						l_found_feature := l_feature
+						if is_static and then not (l_last_class.is_ephemeral or l_feature.has_static_access) then
+								-- Not a valid feature for static access.	
+							create l_vsta2
+							context.init_error (l_vsta2)
+							l_vsta2.set_non_static_feature (l_feature)
+							l_vsta2.set_location (l_feature_name)
+							error_handler.insert_error (l_vsta2)
+							reset_types
+						elseif attached old_assigner_source then
+								-- Transform a query into an assigner command call if necessary.
+							process_assigner_command (l_last_type, l_last_constrained, l_feature)
+							if not attached last_assigner_command as target_assigner then
+									-- No assigner command is found.
+								create vbac2
+								context.init_error (vbac2)
+								if attached a_name then
+									vbac2.set_location (a_name.start_location)
+								end
+								error_handler.insert_error (vbac2)
+							else
+									-- Replace an assigner instruction with a call to an assigner command.
+								l_feature := target_assigner
+							end
+							if error_level = l_error_level then
+									-- Put source expression of the assigner instruction as a first actual argument.
+								if attached l_parameters then
+									l_parameters.start
+									l_parameters := l_parameters.duplicate (l_actual_count)
+								else
+									create l_parameters.make (1)
+								end
+								l_parameters.put_front (old_assigner_source)
+								l_actual_count := l_actual_count + 1
+								if attached l_arg_types then
+										-- Query arguments have been processed, process the assigner command argument now.
+									reset_for_unqualified_call_checking
+									old_assigner_source.process (Current)
+									if attached last_type as t then
+										l_arg_types.put_front (t)
+									end
+									if attached l_arg_nodes and then attached {EXPR_B} last_byte_node as e then
+										l_arg_nodes.put_front (e)
+									end
 								end
 							end
 						end
-					elseif not system.il_generation then
-						if l_feature.is_inline_agent then
-							l_seed := l_feature
-						else
-							l_seed := system.seed_of_routine_id (l_feature.rout_id_set.first)
-						end
-					end
-					if not l_is_last_access_tuple_access then
-						if l_feature /= Void and then (not is_static or else (l_last_class.is_ephemeral or l_feature.has_static_access)) then
+						if error_level = l_error_level then
+							if not system.il_generation then
+								if l_feature.is_inline_agent then
+									l_seed := l_feature
+								else
+									l_seed := system.seed_of_routine_id (l_feature.rout_id_set.first)
+								end
+							end
 								-- Attachments type check
 							l_formal_count := l_feature.argument_count
 							if is_agent and l_actual_count = 0 and l_formal_count > 0 then
@@ -1705,8 +1806,13 @@ feature {NONE} -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
-													l_parameters.put_i_th (l_parameters.i_th (i).converted_expression (
-														create {PARENT_CONVERSION_INFO}.make (l_conv_info)), i)
+													l_argument := l_parameters.i_th (i).converted_expression (
+														create {PARENT_CONVERSION_INFO}.make (l_conv_info))
+													l_parameters.put_i_th (l_argument, i)
+													if attached old_assigner_source then
+															-- Make sure the source of the assigner instruction is updated.
+														assigner_source := l_argument
+													end
 												end
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
@@ -1873,10 +1979,6 @@ feature {NONE} -- Implementation
 								end
 							end
 
-							if l_is_assigner_call then
-								process_assigner_command (l_last_type, l_last_constrained, l_feature)
-							end
-
 								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
 								-- if no error occurred during the normal checking and only for non-inherited feature, since the
 								-- type checking has already been done in the class where it was written.
@@ -1904,11 +2006,13 @@ feature {NONE} -- Implementation
 							end
 							last_calls_target_type := l_last_constrained
 							last_access_writable := l_feature.is_attribute
-							last_feature_name_id := l_feature.feature_name_id
+								-- Use feature name and routine IDs before any transformation.
+								-- (E.g., before replacing an assigner query with an assigner command.)
+							last_feature_name_id := l_found_feature.feature_name_id
 							check
-								last_feature_name_correct: last_feature_name = l_feature.feature_name
+								last_feature_name_correct: last_feature_name = l_found_feature.feature_name
 							end
-							last_routine_id_set := l_feature.rout_id_set
+							last_routine_id_set := l_found_feature.rout_id_set
 							if not is_qualified and then last_access_writable and then l_feature.is_stable then
 								if l_is_in_assignment or else l_is_target_of_creation_instruction then
 										-- The attribute might change its attachment status.
@@ -1979,69 +2083,6 @@ feature {NONE} -- Implementation
 								end
 								l_access.set_parameters (l_parameter_list)
 								last_byte_node := l_access
-							end
-						else
-								-- `l_feature' was not valid for current, report
-								-- corresponding error.
-							if l_feature = Void then
-									-- Feature is not found.
-								if not is_target_known then
-										-- Unknown target.
-										-- Lookup for a feature in a set of possible types.
-									if attached {LOCAL_TYPE_A} a_type.actual_type as t and then
-										attached t.feature_call (a_name.name_id, context.current_class) as f
-									then
-											-- For the use of `f.site.class_id' see test#anchor086.
-										l_result_type := f.descriptor.type.recomputed_in
-											(f.target.as_implicitly_detachable,
-											l_context_current_class.class_id,
-											f.site.as_implicitly_detachable,
-											f.site.class_id)
-										if attached l_arg_types then
-											l_result_type := l_result_type.actual_argument_type (l_arg_types)
-										end
-										set_type (l_result_type, a_name)
-										last_calls_target_type := f.site
-										last_access_writable := f.descriptor.is_attribute
-										last_feature_name_id := f.descriptor.feature_name_id
-										last_routine_id_set := f.descriptor.rout_id_set
-									else
-											-- Propagate information that the result type is unknown.
-										set_type (unknown_type, a_name)
-									end
-								elseif l_is_multiple_constraint_case then
-										-- In case of a multi constraint we throw a VTMC1 error instead of a VEEN.
-									create l_vtmc1
-									context.init_error (l_vtmc1)
-									l_vtmc1.set_feature_call_name (l_feature_name.name)
-									l_vtmc1.set_location (l_feature_name)
-									l_vtmc1.set_type_set (l_last_type_set)
-									l_vtmc1.set_location (l_feature_name)
-									error_handler.insert_error (l_vtmc1)
-										-- We have an error, so we need to reset the types.
-									reset_types
-								else
-										-- Feature name is not found.
-									create l_veen
-									context.init_error (l_veen)
-									l_veen.set_identifier (l_feature_name.name)
-									l_veen.set_target_type (l_last_type)
-									if system.il_generation then
-										l_veen.set_parameter_count (l_actual_count)
-									end
-									l_veen.set_location (l_feature_name)
-									error_handler.insert_error (l_veen)
-										-- We have an error, so we need to reset the types.
-									reset_types
-								end
-							elseif is_static then
-									-- Not a valid feature for static access.	
-								create l_vsta2
-								context.init_error (l_vsta2)
-								l_vsta2.set_non_static_feature (l_feature)
-								l_vsta2.set_location (l_feature_name)
-								error_handler.insert_error (l_vsta2)
-								reset_types
 							end
 						end
 					end
@@ -2680,7 +2721,7 @@ feature {NONE} -- Visitor
 						if attached {TUPLE_TYPE_A} l_last_type.actual_type as l_tuple_type then
 							l_is_not_call := True
 							is_last_access_tuple_access := True
-							is_assigner_call := False
+							assigner_source := Void
 							set_type (l_tuple_type.generics.i_th (l_as.label_position), l_as)
 						else
 							check
@@ -3296,19 +3337,19 @@ feature {NONE} -- Visitor
 			l_nested: NESTED_B
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
-			l_is_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 		do
 				-- Type check the target, but we reset the
 				-- assigner flag syntax, because it is only pertinent
 				-- to the message, not the target.
-			l_is_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 			l_as.target.process (Current)
 
 			l_target_type := last_type
 			if l_target_type /= Void then
-					-- Restore assigner call flag for nested call
-				is_assigner_call := l_is_assigner_call
+					-- Restore assigner source for nested call.
+				assigner_source := old_assigner_source
 					-- Make sure separate call is valid.
 				if l_target_type.is_separate then
 					validate_separate_target (l_as.target)
@@ -3349,19 +3390,19 @@ feature {NONE} -- Visitor
 			l_call: CALL_B
 			l_nested: NESTED_B
 			l_intermediate_nested: NESTED_B
-			l_is_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 			l_is_qualified_call: BOOLEAN
 			l_error_level: NATURAL_32
 		do
 			if attached last_type as c then
 					-- Mask out assigner call flag for target of the call.
-				l_is_assigner_call := is_assigner_call
-				is_assigner_call := False
+				old_assigner_source := assigner_source
+				assigner_source := Void
 					-- Type check the target
 				l_as.target.process (Current)
 				if attached last_type as t then
-						-- Restore assigner call flag for nested call
-					is_assigner_call := l_is_assigner_call
+						-- Restore assigner source for nested call.
+					assigner_source := old_assigner_source
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
 					if is_byte_node_enabled then
@@ -3984,10 +4025,12 @@ feature {NONE} -- Visitor
 		local
 			l_vkcn3: VKCN3
 			l_list: LEAF_AS_LIST
+			is_assigner_call: BOOLEAN
 		do
+			is_assigner_call := attached assigner_source
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
-			if last_type /= Void and then last_type.is_void then
+			if last_type /= Void and then last_type.is_void and then not is_assigner_call then
 				create l_vkcn3
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
@@ -4457,7 +4500,7 @@ feature {NONE} -- Visitor
 			l_expr: EXPR_B
 			l_access: ACCESS_B
 			l_unary: UNARY_B
-			l_is_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 			l_formal: FORMAL_A
 			l_is_multi_constrained: BOOLEAN
 			l_type_set: TYPE_SET_A
@@ -4474,8 +4517,8 @@ feature {NONE} -- Visitor
 			l_needs_byte_node := is_byte_node_enabled
 
 				-- Reset assigner call flag
-			l_is_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 			l_context_current_class := context.current_class
 				-- Check operand
 			l_as.expr.process (Current)
@@ -4671,7 +4714,7 @@ feature {NONE} -- Visitor
 									l_last_constrained.as_implicitly_detachable,
 									l_last_class.class_id).actual_type
 							end
-							if l_is_assigner_call then
+							if attached old_assigner_source then
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 							end
 
@@ -4807,7 +4850,7 @@ feature {NONE} -- Visitor
 			l_needs_byte_node: BOOLEAN
 			l_binary: BINARY_B
 			l_call_access: CALL_ACCESS_B
-			l_is_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 			l_is_left_multi_constrained, l_is_right_multi_constrained: BOOLEAN
 			l_class: CLASS_C
 			l_context_current_class: CLASS_C
@@ -4825,8 +4868,8 @@ feature {NONE} -- Visitor
 			l_context_current_class := context.current_class
 
 				-- Reset assigner call
-			l_is_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 
 			l_error_level := error_level
 
@@ -5067,7 +5110,7 @@ feature {NONE} -- Visitor
 							end
 							l_infix_type := l_infix_type.actual_type
 
-							if l_is_assigner_call then
+							if attached old_assigner_source then
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
@@ -5355,7 +5398,7 @@ feature {NONE} -- Visitor
 
 	process_bracket_as (l_as: BRACKET_AS)
 		local
-			was_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 			constrained_target_type: TYPE_A
 			target_expr: EXPR_B
 			target_access: ACCESS_EXPR_B
@@ -5371,8 +5414,8 @@ feature {NONE} -- Visitor
 			l_error_level: NATURAL_32
 		do
 				-- Clean assigner call flag for bracket target
-			was_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 			l_context_current_class := context.current_class
 
 			l_error_level := error_level
@@ -5403,8 +5446,8 @@ feature {NONE} -- Visitor
 						location := l_as.left_bracket_location
 						id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
 							location.character_column, location.character_position, location.character_count)
-							-- Restore assigner call flag
-						is_assigner_call := was_assigner_call
+							-- Restore assigner source.
+						assigner_source := old_assigner_source
 						constrained_target_type := last_calls_target_type
 							-- Process call to bracket feature
 						l_is_qualified_call := is_qualified_call
@@ -5798,24 +5841,11 @@ feature {NONE} -- Visitor
 			target_type: like last_type
 			target_assigner: like last_assigner_command
 			target_query: like last_assignment_target
-			source_byte_node: EXPR_B
 			source_type: like last_type
 			vbac1: VBAC1
-			vbac2: VBAC2
 			outer_nested_b: NESTED_B
-			inner_nested_b: NESTED_B
-			access_b: ACCESS_B
-			binary_b: BINARY_B
-			unary_b: UNARY_B
-			call_b: CALL_B
-			external_b: EXTERNAL_B
-			arguments: BYTE_LIST [PARAMETER_B]
 			argument: PARAMETER_B
-			assigner_arguments: BYTE_LIST [PARAMETER_B]
-			l_instr: INSTR_CALL_B
-			l_tuple_access_b: TUPLE_ACCESS_B
 			l_is_tuple_access: BOOLEAN
-			l_multi_constraint_static: TYPE_A
 			l_warning_count: INTEGER
 		do
 			break_point_slot_count := break_point_slot_count + 1
@@ -5823,26 +5853,22 @@ feature {NONE} -- Visitor
 			last_assigner_command := Void
 			last_assignment_target := Void
 				-- Set assigner call flag for target expression
-			is_assigner_call := True
+			assigner_source := l_as.source
 			l_as.target.process (Current)
 			l_is_tuple_access := is_last_access_tuple_access
 			is_last_access_tuple_access := False
+			if attached assigner_source as s and then s /= l_as.source then
+					-- The source might have been updated to change conversion into account.
+					-- Save these changes for future use.
+				l_as.set_source (s)
+			end
+			assigner_source := Void
 			target_byte_node := last_byte_node
 			target_type := last_type
 			if target_type /= Void then
-				check
-					assigner_command_computed: not is_assigner_call
-				end
 				target_assigner := last_assigner_command
 				target_query := last_assignment_target
-				if target_assigner = Void and then not l_is_tuple_access then
-						-- If we have no `target_assigner' and the last access is not a tuple access
-						-- then we have an error.
-					create vbac2
-					context.init_error (vbac2)
-					vbac2.set_location (l_as.start_location)
-					error_handler.insert_error (vbac2)
-				else
+				if l_is_tuple_access then
 					l_as.source.process (Current)
 					if last_type /= Void then
 						l_warning_count := error_handler.warning_list.count
@@ -5882,124 +5908,31 @@ feature {NONE} -- Visitor
 
 							if is_byte_node_enabled then
 									-- Preserve source byte node
-								source_byte_node ?= last_byte_node
-
-									-- Discriminate over expression kind:
-									-- it should be either a qualified call,
-									-- a binary or an unary
-								outer_nested_b ?= target_byte_node
-								binary_b ?= target_byte_node
-								unary_b ?= target_byte_node
-								external_b ?= target_byte_node
-								if external_b /= Void then
-									--| Do nothing (for external static calls)
-								elseif outer_nested_b /= Void then
-									call_b := outer_nested_b
-										-- Find end of call chain
+								check
+									is_expression: attached {EXPR_B} last_byte_node as source_byte_node
+									is_nested: attached {NESTED_B} target_byte_node as nested_b
+								then
+									outer_nested_b := nested_b
+										-- Find end of a call chain.
 									from
-										inner_nested_b ?= outer_nested_b.message
 									until
-										inner_nested_b = Void
+										not attached {NESTED_B} outer_nested_b.message as inner_nested_b
 									loop
 										outer_nested_b := inner_nested_b
-										inner_nested_b ?= outer_nested_b.message
 									end
-										-- Evaluate assigner command arguments
-									access_b ?= outer_nested_b.message
-									check
-										access_b_not_void: access_b /= Void
-									end
-										-- Get the multi_constrait_static if one exists
-									l_multi_constraint_static := access_b.multi_constraint_static
-									arguments := access_b.parameters
-								elseif binary_b /= Void then
-										-- Create call chain
-									outer_nested_b := binary_b.nested_b
-									call_b := outer_nested_b
-										-- Evaluate assigner command arguments
-									create arguments.make (1)
-									create argument
-									argument.set_expression (binary_b.right)
-									argument.set_attachment_type (binary_b.attachment)
-									if not system.il_generation then
-										-- It is pretty important that we use `actual_type.is_formal' and not
-										-- just `is_formal' because otherwise if you have `like x' and `x: G'
-										-- then we would fail to detect that.
-										argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-									end
-									arguments.extend (argument)
-								else
-									check
-										unary_b_not_void: unary_b /= Void
-									end
-										-- Create call chain
-									outer_nested_b := unary_b.nested_b
-									call_b := outer_nested_b
-										-- There are no arguments in unary expression
-								end
-
-								if l_is_tuple_access then
 										-- When assigning to a tuple, we simply transform the tuple
 										-- access by giving a source.
-									l_tuple_access_b ?= access_b
-									check l_tuple_access_not_void: l_tuple_access_b /= Void end
-									l_tuple_access_b.set_line_number (l_as.start_location.line)
-									create argument
-									argument.set_expression (source_byte_node)
-									argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
-									argument.set_is_for_tuple_access (True)
-									l_tuple_access_b.set_source (argument)
-									last_byte_node := target_byte_node
-								else
-										-- Evaluate assigner command arguments:
-										--   first is a source of an assigner command
-										--   next are those from target call
-									if arguments = Void then
-										create assigner_arguments.make (1)
-									else
-										create assigner_arguments.make (arguments.count + 1)
+									check
+										is_tuple_access: attached {TUPLE_ACCESS_B} outer_nested_b.message as l_tuple_access_b
+									then
+										l_tuple_access_b.set_line_number (l_as.start_location.line)
+										create argument
+										argument.set_expression (source_byte_node)
+										argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
+										argument.set_is_for_tuple_access (True)
+										l_tuple_access_b.set_source (argument)
+										last_byte_node := target_byte_node
 									end
-									create argument
-									argument.set_expression (source_byte_node)
-									argument.set_attachment_type (target_type)
-									if not system.il_generation then
-										-- It is pretty important that we use `actual_type.is_formal' and not
-										-- just `is_formal' because otherwise if you have `like x' and `x: G'
-										-- then we would fail to detect that.
-										argument.set_is_formal (system.seed_of_routine_id (target_assigner.rout_id_set.first).arguments.i_th (1).actual_type.is_formal)
-									end
-									assigner_arguments.extend (argument)
-									if arguments /= Void then
-										assigner_arguments.append (arguments)
-									end
-										-- Evaluate assigner command byte node
-									if external_b /= Void and then external_b.static_class_type /= Void then
-										access_b := target_assigner.access_for_feature (void_type, external_b.static_class_type, True, target_type.is_separate)
-									else
-										access_b := target_assigner.access (void_type, True, target_type.is_separate)
-									end
-									access_b.set_parameters (assigner_arguments)
-
-									if l_multi_constraint_static /= Void then
-											-- We are in the multi constraint case, set the multi constraint static
-										access_b.set_multi_constraint_static (l_multi_constraint_static)
-									end
-
-									if external_b = Void then
-											-- Replace end of call chain with an assigner command
-										access_b.set_parent (outer_nested_b)
-										outer_nested_b.set_message (access_b)
-									else
-											-- Set external static assigner
-										check call_b_unattached: call_b = Void end
-										call_b := access_b
-										if external_b.is_static_call and attached {EXTERNAL_B} call_b as l_ext_b then
-											l_ext_b.enable_static_call
-										end
-									end
-									create l_instr.make (call_b, l_as.start_location.line)
-									l_instr.set_line_pragma (l_as.line_pragma)
-									last_byte_node := l_instr
 								end
 							end
 						end
@@ -8807,7 +8740,7 @@ feature {NONE} -- Parenthesis alias
 		require
 			p_attached: attached p
 		local
-			was_assigner_call: BOOLEAN
+			old_assigner_source: like assigner_source
 			constrained_target_type: TYPE_A
 			target_access_expr: ACCESS_EXPR_B
 			id_feature_name: ID_AS
@@ -8826,8 +8759,8 @@ feature {NONE} -- Parenthesis alias
 				-- If something goes wrong, an original error is reported rather then related to parenthesis alias.
 			l_report_error :=  True
 				-- Clean assigner call flag for bracket target
-			was_assigner_call := is_assigner_call
-			is_assigner_call := False
+			old_assigner_source := assigner_source
+			assigner_source := Void
 
 			l_error_level := error_level
 
@@ -8864,31 +8797,37 @@ feature {NONE} -- Parenthesis alias
 					location := p.start_location
 					id_feature_name.set_position (location.line, location.column, location.position, location.location_count,
 						location.character_column, location.character_position, location.character_count)
-						-- Restore assigner call flag
-					is_assigner_call := was_assigner_call
+						-- Restore assigner source.
+					assigner_source := old_assigner_source
 					constrained_target_type := last_calls_target_type
 						-- Process call to bracket feature
 					l_is_qualified_call := is_qualified_call
 					is_qualified_call := True
 					process_call (constrained_target_type, Void, id_feature_name, alias_feature, p.parameters, False, False, True, False, False)
 					is_qualified_call := l_is_qualified_call
-					if error_level = l_error_level and then attached nested_b then
-						if l_is_multi_constraint then
-							l_access_b ?= last_byte_node
-								-- Last generated bytenode is from `process_call'.
-							check is_access_b: l_access_b /= Void end
-							l_access_b.set_multi_constraint_static (constrained_target_type)
-							call_b := l_access_b
-						else
-							call_b ?= last_byte_node
+					if error_level = l_error_level then
+							-- Record feature ID for future use.
+						if not is_inherited then
+							p.set_routine_ids (last_routine_id_set)
 						end
+						if attached nested_b then
+							if l_is_multi_constraint then
+								l_access_b ?= last_byte_node
+									-- Last generated bytenode is from `process_call'.
+								check is_access_b: l_access_b /= Void end
+								l_access_b.set_multi_constraint_static (constrained_target_type)
+								call_b := l_access_b
+							else
+								call_b ?= last_byte_node
+							end
 
-						check
-							call_b_not_void: call_b /= Void
+							check
+								call_b_not_void: call_b /= Void
+							end
+							call_b.set_parent (nested_b)
+							nested_b.set_message (call_b)
+							last_byte_node := nested_b
 						end
-						call_b.set_parent (nested_b)
-						nested_b.set_message (call_b)
-						last_byte_node := nested_b
 					end
 				else
 						-- Parenthesis alias cannot be found for unknown type.

@@ -481,7 +481,7 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 			plsc();
 		}
 
-		rt_message_channel_receive (&self->queue_of_queues, &next_job);
+		rt_message_channel_receive_with_gc (&self->queue_of_queues, &next_job);
 
 		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();

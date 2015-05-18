@@ -1,4 +1,3 @@
-
 test_name 	 insufficiently-exported-assigner-feature
 test_description Compiler should not accept an assigner feature that is not exported at least as widely as the feature to which it assigns
 
@@ -7,6 +6,6 @@ copy_raw test.e $CLUSTER test.e
 copy_raw test1.e $CLUSTER test1.e
 
 compile_melted
-compile_result	validity_error TEST1 V???
+compile_result	validity_error TEST VUEX(2)
 
 test_end

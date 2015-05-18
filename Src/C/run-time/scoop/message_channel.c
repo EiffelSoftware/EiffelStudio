@@ -42,6 +42,10 @@ doc:<file name="message_channel.c" header="rt_message_channel.h" version="$Id$" 
 #include "rt_message_channel.h"
 #include "eif_error.h"
 
+/* Variables to tweak the frequency of garbage collector runs. */
+#define RT_GC_TIMEOUT_START 100
+#define RT_GC_TIMEOUT_STEP 2
+
 /*
 doc:	<struct name="mc_node", export="private">
 doc:		<summary> A message channel node which forms a linked list. </summary>
@@ -294,18 +298,26 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 }
 
 /*
-doc:	<routine name="rt_message_channel_receive" return_type="void" export="shared">
-doc:		<summary> Receive a message on channel 'self' and store the result in 'message'. </summary>
-doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. May be NULL. </param>
-doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. Must not be NULL. </param>
+doc:	<routine name="rt_message_channel_receive_impl" return_type="void" export="private">
+doc:		<summary> Implementation of rt_message_channel_receive and rt_message_channel_receive_with_gc.
+doc:			Garbage collection runs can be triggered with the command line argument 'is_with_gc'. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. Must not be NULL. </param>
+doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. May be NULL. </param>
+doc:		<param name="is_with_gc" type="EIF_BOOLEAN"> Whether the garbage collector shall be called periodically. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)
+rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_channel* self, struct rt_message* message, const EIF_BOOLEAN is_with_gc)
 {
 	EIF_BOOLEAN success = EIF_FALSE;
-	size_t i;
+	size_t i = 0;
+	int error = T_OK;
+
+		/* Variables for the GC-specific receive. Note: Thanks to inlining most compilers will
+		 *  optimize away the dead code paths and unused variables. */
+	int gc_fingerprint = 0;
+	rt_uint_ptr wait_timeout = RT_GC_TIMEOUT_START;
 
 	REQUIRE ("self_not_null", self);
 
@@ -346,7 +358,11 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 			EIF_ENTER_C;
 
 				/* Wait on the condition variable for a producer to signal availability of new messages. */
-			eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+			if (is_with_gc) {
+				error = eif_pthread_cond_wait_with_timeout (self->has_elements_condition, self->has_elements_condition_mutex, wait_timeout);
+			} else {
+				eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+			}
 
 				/* Now we need to synchronize for GC. Since the previous wait reacquired the lock,
 				 * and we're not allowed to hold a lock during GC, we have to release it now. */
@@ -365,6 +381,13 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 			}
 #endif
 
+				/* If invoked with GC enabled, we have to request it here, before re-acquiring the lock. */
+			if (is_with_gc && error == T_TIMEDOUT) {
+				rt_uint_ptr new_timeout = RT_GC_TIMEOUT_STEP * wait_timeout;
+				wait_timeout = (new_timeout > wait_timeout) ? new_timeout : wait_timeout; /* Overflow protection */
+				rt_scoop_gc_request (&gc_fingerprint);
+			}
+
 				/* To perform the dequeue operation we should reacquire the lock. */
 			eif_pthread_mutex_lock (self->has_elements_condition_mutex);
 		}
@@ -373,6 +396,36 @@ rt_shared void rt_message_channel_receive (struct rt_message_channel* self, stru
 		eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
 	}
 }
+
+/*
+doc:	<routine name="rt_message_channel_receive" return_type="void" export="shared">
+doc:		<summary> Receive a message on channel 'self' and store the result in 'message'. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. Must not be NULL. </param>
+doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. May be NULL. </param>
+doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_message_channel_receive (struct rt_message_channel* self, struct rt_message* message)
+{
+	rt_message_channel_receive_impl (self, message, 0);
+}
+
+/*
+doc:	<routine name="rt_message_channel_receive" return_type="void" export="shared">
+doc:		<summary> Receive a message on channel 'self' and store the result in 'message'.
+doc:			If no message is available, trigger the garbage collector in regular intervals in between. </summary>
+doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to receive the message. Must not be NULL. </param>
+doc:		<param name="message" type="struct rt_message*"> A pointer to a rt_message struct where the result shall be stored. May be NULL. </param>
+doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_message_channel_receive_with_gc (struct rt_message_channel* self, struct rt_message* message)
+{
+	rt_message_channel_receive_impl (self, message, 1);
+}
+
 
 /*
 doc:	<routine name="rt_message_channel_is_empty" return_type="EIF_BOOLEAN" export="shared">

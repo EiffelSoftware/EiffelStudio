@@ -3,14 +3,18 @@ test_description Assigner of stable attributes has special treatment for attachm
 
 copy_raw	test.e $CLUSTER test.e
 
-define STABLE "option: stable"
-copy_sub	a.e $CLUSTER a.e
-copy_sub	b.e $CLUSTER b.e
-copy_sub	c.e $CLUSTER c.e
-
 define ATTACHED_BY_DEFAULT "false"
 define VOID_SAFETY "none"
 copy_sub	Ace $TEST Ace
+
+define STABLE "option: stable"
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
 
 compile_melted
 compile_result	ok
@@ -19,15 +23,48 @@ define VOID_SAFETY "all"
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_error TEST VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3)
+compile_result	validity_error A VFAC(3) VFAC(3) VFAC(3); B VFAC(3) VFAC(3); C VFAC(3) VFAC(3)
+
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          "--"
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
+
+resume_compile
+compile_result	validity_error TEST VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
 
 define ATTACHED_BY_DEFAULT "true"
 copy_sub	Ace $TEST Ace
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
 
 resume_compile
-compile_result	validity_error TEST VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(1) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3) VBAC(3)
+compile_result	validity_error A VFAC(3) VFAC(3) VFAC(3); B VFAC(3) VFAC(3); C VFAC(3) VFAC(3)
+
+define MASK_ATTACHED            "--"
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
+
+resume_compile
+compile_result	validity_error TEST VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
 
 define STABLE ""
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
 copy_sub	a.e $CLUSTER a.e
 copy_sub	b.e $CLUSTER b.e
 copy_sub	c.e $CLUSTER c.e
@@ -35,14 +72,52 @@ copy_sub	c.e $CLUSTER c.e
 resume_compile
 compile_result	validity_error A VFAC(3) VFAC(3) VFAC(3) VFAC(3) VFAC(3) VFAC(3); B VFAC(3) VFAC(3) VFAC(3) VFAC(3); C VFAC(3) VFAC(3) VFAC(3) VFAC(3)
 
+define MASK_ATTACHED            "--"
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   "--"
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
+
+resume_compile
+compile_result	validity_error TEST VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
+
 define ATTACHED_BY_DEFAULT "false"
 copy_sub	Ace $TEST Ace
+
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
 
 resume_compile
 compile_result	validity_error A VFAC(3) VFAC(3) VFAC(3) VFAC(3) VFAC(3) VFAC(3); B VFAC(3) VFAC(3) VFAC(3) VFAC(3); C VFAC(3) VFAC(3) VFAC(3) VFAC(3)
 
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          "--"
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE "--"
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
+
+resume_compile
+compile_result	validity_error TEST VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VBAC(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2) VUAR(2)
+
 define VOID_SAFETY "none"
 copy_sub	Ace $TEST Ace
+
+define MASK_ATTACHED            ""
+define MASK_DETACHABLE          ""
+define MASK_UNSTABLE_ATTACHED   ""
+define MASK_UNSTABLE_DETACHABLE ""
+copy_sub	a.e $CLUSTER a.e
+copy_sub	b.e $CLUSTER b.e
+copy_sub	c.e $CLUSTER c.e
 
 resume_compile
 compile_result	ok

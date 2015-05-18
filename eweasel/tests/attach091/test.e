@@ -15,69 +15,69 @@ feature {NONE} -- Creation
 		do
 			create a.make (Current)
 				-- Valid cases.
-			a.x := Current
-			a.y := Current
-			a.z := Current
-			a.ax := Current
-			a.ay := Current
+			a.x  := Current -- VBAC(2)
+			a.y  := Current
+			a.z  := Current -- unstable: VBAC(2)
+			a.ax := Current -- VBAC(2)
+			a.ay := Current -- VBAC(2)
 			a.az := Current
 			a.dx := Current
-			a.dy := Current
-			a.dz := Current
+			a.dy := Current -- unstable: VBAC(2)
+			a.dz := Current -- unstable: VBAC(2)
 				-- Invalid cases.
-			a.x := Void  -- VBAC(1/3)
-			a.y := Void  -- VBAC(1/3)
-			a.z := Void  -- VBAC(1/3)
-			a.ax := Void -- VBAC(1)
-			a.ay := Void -- VBAC(1)
-			a.az := Void -- VBAC(1)
-			a.dx := Void -- VBAC(3)
-			a.dy := Void -- VBAC(3)
-			a.dz := Void -- VBAC(3)
+			a.x  := Void -- VBAC(2)
+			a.y  := Void -- VUAR(2) (attached)
+			a.z  := Void -- stable: VUAR(2) unstable: VBAC(2)
+			a.ax := Void -- VBAC(2)
+			a.ay := Void -- VBAC(2)
+			a.az := Void -- VUAR(2)
+			a.dx := Void
+			a.dy := Void -- stable: VUAR(2) unstable: VBAC(2)
+			a.dz := Void -- stable: VUAR(2) unstable: VBAC(2)
 
 			create b
 				-- Valid cases.
-			b.x := b
-			b.y := b
-			b.z := b
-			b.ax := b
+			b.x  := b -- VBAC(2)
+			b.y  := b
+			b.z  := b
+			b.ax := b -- VBAC(2)
 			b.ay := b
 			b.az := b
 			b.dx := b
-			b.dy := b
-			b.dz := b
+			b.dy := b -- unstable: VBAC(2)
+			b.dz := b -- unstable: VBAC(2)
 				-- Invalid cases.
-			b.x := Void  -- VBAC(1)
-			b.y := Void  -- VBAC(1)
-			b.z := Void  -- VBAC(1)
-			b.ax := Void -- VBAC(1)  
-			b.ay := Void -- VBAC(1)  
-			b.az := Void -- VBAC(1)  
-			b.dx := Void -- VBAC(3)  
-			b.dy := Void -- VBAC(3)  
-			b.dz := Void -- VBAC(3)  
+			b.x  := Void -- VBAC(2)
+			b.y  := Void -- VUAR(2)
+			b.z  := Void -- VUAR(2)
+			b.ax := Void -- VBAC(2)
+			b.ay := Void -- VUAR(2)
+			b.az := Void -- VUAR(2)
+			b.dx := Void
+			b.dy := Void -- stable: VUAR(2) unstable: VBAC(2)
+			b.dz := Void -- stable: VUAR(2) unstable: VBAC(2)
 
 			create c.make (Current)
 				-- Valid cases.
-			c.x := Current
-			c.y := Current
-			c.z := Current
-			c.ax := Current
-			c.ay := Current
+			c.x  := Current -- VBAC(2) (attached)
+			c.y  := Current
+			c.z  := Current -- unstable: VBAC(2) (detachable)
+			c.ax := Current -- VBAC(2)
+			c.ay := Current -- VBAC(2) (detachable)
 			c.az := Current
 			c.dx := Current
-			c.dy := Current
-			c.dz := Current
+			c.dy := Current -- unstable: VBAC(2) (attached)
+			c.dz := Current -- unstable: VBAC(2)
 				-- Invalid cases.
-			c.x := Void  -- VBAC(1/3)
-			c.y := Void  -- VBAC(1/3)
-			c.z := Void  -- VBAC(1/3)
-			c.ax := Void -- VBAC(1)  
-			c.ay := Void -- VBAC(1)  
-			c.az := Void -- VBAC(1)  
-			c.dx := Void -- VBAC(3)  
-			c.dy := Void -- VBAC(3)  
-			c.dz := Void -- VBAC(3)  
+			c.x  := Void -- VBAC(2) (attached)
+			c.y  := Void -- VUAR(2) (attached)
+			c.z  := Void -- stable: VUAR(2) unstable: VUAR(2) (attached) VBAC(2) (detachable)
+			c.ax := Void -- VBAC(2)
+			c.ay := Void -- VUAR(2) (attached) VBAC(2) (detachable)
+			c.az := Void -- VUAR(2)
+			c.dx := Void
+			c.dy := Void -- stable: VUAR(2) (attached) unstable: VBAC(2) (attached)
+			c.dz := Void -- stable: VUAR(2) unstable: VBAC(2)
 		end
 
 end

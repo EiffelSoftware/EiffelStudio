@@ -2923,9 +2923,12 @@ end
 			elseif assigner.argument_count /= argument_count + 1 then
 				create {VFAC2} vfac.make (system.current_class, Current)
 			elseif
+					-- Types may be differ for stable queries in their attachment status, so that an argument type is assignable to a query type.
 				(is_stable and then
-				not assigner.arguments.first.actual_type.as_attachment_mark_free.same_as
-					(type.actual_type.as_attachment_mark_free)) or else
+				not (assigner.arguments.first.actual_type.as_attachment_mark_free.same_as
+					(type.actual_type.as_attachment_mark_free) and then
+					assigner.arguments.first.actual_type.conform_to (system.current_class, type.actual_type))) or else
+					-- Types should be the same for non-stable queries.
 				(not is_stable and then
 				not assigner.arguments.first.actual_type.is_safe_equivalent (type.actual_type))
 			then

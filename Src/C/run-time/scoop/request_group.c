@@ -70,15 +70,16 @@ rt_private rt_inline void bubble_sort (struct rt_private_queue** area, size_t co
 }
 
 /*
-doc:	<routine name="rt_request_group_add" return_type="void" export="shared">
+doc:	<routine name="rt_request_group_add" return_type="int" export="shared">
 doc:		<summary> Add a new supplier to the request group. This feature cannot be called any more after the first lock operation. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
 doc:		<param name="a_client" type="struct rt_processor*"> The supplier processor to be added to this request group. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier)
+rt_shared int rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier)
 {
 	struct rt_private_queue* pq = NULL;
 	int error = T_OK;
@@ -93,30 +94,29 @@ rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_pr
 		error = rt_request_group_extend (self, pq);
 	}
 
-		/* If memory allocation failed, we need to throw an exception */
-	if (error != T_OK) {
-		enomem();
-	}
+	return error;
 }
 
 /*
-doc:	<routine name="rt_request_group_wait" return_type="void" export="shared">
+doc:	<routine name="rt_request_group_wait" return_type="int" export="shared">
 doc:		<summary>
 doc:			Release all locks and wait for a change notification from any processor in the group.
 doc:			This feature is usually called after a wait condition fails.
 doc:			It can only be called when the request group is locked.
 doc:			Note: The wait() operation is blocking! </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY if memory allocation fails, in which case the request group remains locked. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:		<fixme> Instead of unlocking normally after the wait condition, we could have a special 'unlock-after-wait-condition-failure'.
 doc:			That way we can avoid sending unnecessary notifications after the evaluation of a wait condition. </fixme>
 doc:	</routine>
 */
-rt_shared void rt_request_group_wait (struct rt_request_group* self)
+rt_shared int rt_request_group_wait (struct rt_request_group* self)
 {
 	size_t i, l_count = rt_request_group_count (self);
 	struct rt_processor* l_client = self->client;
+	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("sorted", self->is_sorted);
@@ -134,7 +134,12 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 			 * know that they cannot access their notification queue at the
 			 * moment, so we can safely modify the list from this thread. */
 		if (rt_private_queue_is_synchronized (l_queue)) {
-			rt_private_queue_register_wait (l_queue, l_client);
+			error = rt_private_queue_register_wait (l_queue, l_client);
+
+				/* We bail out if we can't register for a wait condition change. */
+			if (error != T_OK) {
+				return error;
+			}
 		}
 	}
 
@@ -144,7 +149,7 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		/* Before we unlock the synchronized queues, we have to acquire the
 		 * lock to our condition variable mutex. This has to happen before
 		 * rt_request_group_unlock to avoid missed signals. */
-	eif_pthread_mutex_lock (l_client->wait_condition_mutex);
+	RT_TRACE (eif_pthread_mutex_lock (l_client->wait_condition_mutex));
 
 		/* Release the locks on the suppliers. After this statement they can
 		 * execute calls from other processors and signal back a wait condition
@@ -158,12 +163,12 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		 * Note: Usually these wait operations are performed inside a loop that checks whether
 		 * the wait condition became true. Our loop is compiler-generated however,
 		 * that's why we don't see it here. */
-	eif_pthread_cond_wait (l_client->wait_condition, l_client->wait_condition_mutex);
+	RT_TRACE (eif_pthread_cond_wait (l_client->wait_condition, l_client->wait_condition_mutex));
 
 		/* After the wakeup signal, we can release the mutex.
 		 * We're not interested in any further signals, as we re-register anyway if the
 		 * wait condition fails again. */
-	eif_pthread_mutex_unlock (l_client->wait_condition_mutex);
+	RT_TRACE (eif_pthread_mutex_unlock (l_client->wait_condition_mutex));
 
 		/* Synchronize with the GC again. */
 	EIF_EXIT_C;
@@ -173,6 +178,7 @@ rt_shared void rt_request_group_wait (struct rt_request_group* self)
 		 * unnecessary locking and a risk of deadlocks. Instead, the suppliers delete
 		 * our registration during notification, and the GC will clean up any leftover registrations. */
 	ENSURE ("not_locked", !self->is_locked);
+	return error;
 }
 
 /*
@@ -204,7 +210,7 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 		/* Temporarily lock the queue-of-queue of all suppliers. */
 	for (i = 0; i < l_count; ++i) {
 		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
-		eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex);
+		RT_TRACE (eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex));
 	}
 
 		/* Add all private queues to the queue-of-queues */
@@ -215,7 +221,7 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 		/* Release the queue-of-queue locks. */
 	for (i = 0; i < l_count; ++i) {
 		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
-		eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex);
+		RT_TRACE (eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex));
 	}
 
 	self->is_locked = 1;

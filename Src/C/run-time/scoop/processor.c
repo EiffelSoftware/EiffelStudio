@@ -431,7 +431,7 @@ rt_private void rt_processor_publish_wait_condition (struct rt_processor* self, 
 			if (item) {
 
 					/* Lock the registered processor's condition variable mutex. */
-				RT_TRACE (eif_pthread_mutex_lock (item->wait_condition_mutex)); /* TODO: Return an error code? */
+				RT_TRACE (eif_pthread_mutex_lock (item->wait_condition_mutex));
 
 					/* Send a signal. */
 				RT_TRACE (eif_pthread_cond_signal (item->wait_condition));
@@ -564,7 +564,7 @@ int rt_processor_new_private_queue (struct rt_processor* self, struct rt_private
 }
 
 /*
-doc:	<routine name="rt_processor_subscribe_wait_condition" return_type="void" export="shared">
+doc:	<routine name="rt_processor_subscribe_wait_condition" return_type="int" export="shared">
 doc:		<summary> Register for a notification when the heap protected by processor 'self' may have changed.
 doc:			This is used to implement wait condition change signalling.
 doc:			The registration is only valid for a single notification and will be deleted by 'self' afterwards.
@@ -572,11 +572,12 @@ doc:			Note: This feature is executed by the 'client' processor (i.e. thread), a
 doc:			supplier 'self' is synchronized with the client. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that will send the notification in the future. Must not be NULL. </param>
 doc:		<param name="client" type="struct rt_processor*"> The processor interested in wait condition changes. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call when 'self' is synchronized with 'client'. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_subscribe_wait_condition (struct rt_processor* self, struct rt_processor* client)
+rt_shared int rt_processor_subscribe_wait_condition (struct rt_processor* self, struct rt_processor* client)
 {
 #ifdef EIF_ASSERTIONS
 	struct rt_private_queue* pq = NULL; /* For assertion checking. */
@@ -586,8 +587,7 @@ rt_shared void rt_processor_subscribe_wait_condition (struct rt_processor* self,
 	REQUIRE ("queue_available", T_OK == rt_queue_cache_retrieve (&client->cache, self, &pq));
 	REQUIRE ("synchronized", rt_private_queue_is_synchronized (pq));
 
-		/* TODO: error handling?*/
-	subscriber_list_t_extend (&self->wait_condition_subscribers, client);
+	return subscriber_list_t_extend (&self->wait_condition_subscribers, client);
 }
 
 
@@ -619,14 +619,15 @@ rt_shared void rt_processor_unsubscribe_wait_condition (struct rt_processor* sel
 }
 
 /*
-doc:	<routine name="rt_processor_request_group_stack_extend" return_type="void" export="shared">
+doc:	<routine name="rt_processor_request_group_stack_extend" return_type="int" export="shared">
 doc:		<summary> Create a new request group and put it at the end of the request group stack. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that owns the group stack. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_request_group_stack_extend (struct rt_processor* self)
+rt_shared int rt_processor_request_group_stack_extend (struct rt_processor* self)
 {
 	int error = T_OK;
 	struct rt_request_group l_group; /* stack-allocated */
@@ -635,9 +636,7 @@ rt_shared void rt_processor_request_group_stack_extend (struct rt_processor* sel
 
 	rt_request_group_init (&l_group, self);
 	error = request_group_stack_t_extend (&self->request_group_stack, l_group);
-	if (error == T_NO_MORE_MEMORY) {
-		enomem();
-	}
+	return error;
 }
 
 /*

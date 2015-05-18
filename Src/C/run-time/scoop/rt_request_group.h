@@ -109,8 +109,8 @@ rt_private rt_inline void rt_request_group_deinit (struct rt_request_group* self
 
 
 /* Declarations */
-rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier);
-rt_shared void rt_request_group_wait (struct rt_request_group* self);
+rt_shared int rt_request_group_add (struct rt_request_group* self, struct rt_processor* supplier);
+rt_shared int rt_request_group_wait (struct rt_request_group* self);
 rt_shared void rt_request_group_lock (struct rt_request_group* self);
 rt_shared void rt_request_group_unlock (struct rt_request_group* self);
 

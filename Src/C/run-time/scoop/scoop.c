@@ -164,7 +164,10 @@ rt_public void eif_wait_for_all_processors(void)
 rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
 {
 	struct rt_processor* client = rt_get_processor (client_pid);
-	rt_processor_request_group_stack_extend (client);
+	int error = rt_processor_request_group_stack_extend (client);
+	if (error != T_OK) {
+		enomem();
+	}
 }
 
 /* Get current size of request group stack. */
@@ -188,7 +191,12 @@ rt_public void eif_scoop_wait_request_group (EIF_SCP_PID client_pid)
 {
 	struct rt_processor* client = rt_get_processor (client_pid);
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_wait (l_group);
+	int error = rt_request_group_wait (l_group);
+		/* Raise an error if we get a memory allocation failure.
+		 * Note: The request group will be unlocked sometime later while handling the exception. */
+	if (error != T_OK) {
+		enomem();
+	}
 }
 
 /* RTS_RS (c, s) - add supplier s to current group for c */
@@ -198,7 +206,12 @@ rt_public void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF
 	struct rt_processor* supplier = rt_get_processor (supplier_pid);
 
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
-	rt_request_group_add (l_group, supplier);
+	int error = rt_request_group_add (l_group, supplier);
+
+		/* Raise an exception if we get a memory allocation failure. */
+	if (error != T_OK) {
+		enomem();
+	}
 }
 
 /* RTS_RW (o) - sort all suppliers in the group and get exclusive access */

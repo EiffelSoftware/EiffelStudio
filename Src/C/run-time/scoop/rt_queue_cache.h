@@ -155,7 +155,7 @@ rt_private rt_inline void rt_queue_cache_deinit (struct queue_cache* self)
 
 
 /* Declarations */
-rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier);
+rt_shared int rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier, struct rt_private_queue** result);
 rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct rt_processor* supplier);
 rt_shared int rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver);
 rt_shared void rt_queue_cache_pop (struct queue_cache* self);

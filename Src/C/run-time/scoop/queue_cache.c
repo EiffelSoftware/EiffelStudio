@@ -43,8 +43,6 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
 #include "rt_private_queue.h"
 #include "rt_processor.h"
 
-#include "eif_except.h" /* TODO: Remove when no longer needed. */
-
 /* Function to convert the PID to a hash table key.
  * This is needed because the SCOOP pid 0 is not a valid key. */
 rt_private rt_inline rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
@@ -305,24 +303,27 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, str
 
 
 /*
-doc:	<routine name="rt_queue_cache_retrieve" return_type="struct rt_private_queue*" export="shared">
+doc:	<routine name="rt_queue_cache_retrieve" return_type="int" export="shared">
 doc:		<summary> Retrieve a private queue for processor 'supplier' from this queue cache.
 doc:			A new private queue will be constructed if none already exists.
 doc:			This will also look to see if there are any private queues that were passed to this queue_cache during lock-passing.
 doc:			These passed-queues will already be locked and have priority over non-passed, possibly unlocked queues. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
-doc:		<return> A private queue to the specified processor. </return>
+doc:		<param name="result" type="struct rt_private_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY if a memory allocation failure happened. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier)
+rt_shared int rt_queue_cache_retrieve (struct queue_cache* self, struct rt_processor* const supplier, struct rt_private_queue** result)
 {
 	struct rt_private_queue* l_result = NULL;
+	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
+	REQUIRE ("result_not_null", result);
 
 		/* We first need to search any borrowed queues. */
 	l_result = rt_queue_cache_find_from_borrowed (self, supplier);
@@ -334,14 +335,32 @@ rt_shared struct rt_private_queue* rt_queue_cache_retrieve (struct queue_cache* 
 
 		/* If we still don't have a queue, we need to create a new one. */
 	if (NULL == l_result) {
-		/*TODO: Error handling...*/
-		int error = rt_processor_new_private_queue (supplier, &l_result);
-		ht_force (&self->owned_queues, pid_to_key (supplier->pid), &l_result);
+		error = rt_processor_new_private_queue (supplier, &l_result);
+
+			/* Add the new queue to 'owned_queues'. */
+		if (T_OK == error) {
+			int ht_error = ht_safe_force (&self->owned_queues, pid_to_key (supplier->pid), &l_result);
+
+				/* Convert the error code from ht_safe_force to our own representation. */
+			if (ht_error != 0) {
+				error = T_NO_MORE_MEMORY;
+					/* NOTE: We don't delete the generated private queue if
+					 * hash table extension failed. It will be done at some
+					 * later point when the supplier processor dies. */
+			}
+		}
 	}
 
-	ENSURE ("result_available", l_result);
+		/* Update the result parameter when everything went well. */
+	if (T_OK == error) {
+		CHECK ("l_result_not_null", l_result);
+		*result = l_result;
+	} else {
+		*result = NULL;
+	}
 
-	return l_result;
+	ENSURE ("result_available", error != T_OK || *result);
+	return error;
 }
 
 #if 0 /* Apparently the rt_queue_cache_mark feature was never used. GC traversal happens through rt_processor->generated_private_queues. */

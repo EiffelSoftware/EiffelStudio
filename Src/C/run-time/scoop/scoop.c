@@ -61,9 +61,15 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 {
 	struct rt_processor *client = rt_get_processor (client_pid);
 	struct rt_processor *supplier = rt_get_processor (supplier_pid);
-	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
+	struct rt_private_queue *pq = NULL;
+	int error = T_OK;
 
 	REQUIRE("has data", data);
+
+	error = rt_queue_cache_retrieve (&client->cache, supplier, &pq);
+	if (error != T_OK) {
+		enomem();
+	}
 
 	if (!supplier->is_creation_procedure_logged) {
 		rt_private_queue_lock (pq, client);
@@ -118,11 +124,14 @@ rt_public void eif_new_processor (EIF_REFERENCE obj)
 
 rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 {
-	struct rt_processor *client = rt_get_processor (client_pid);
-	struct rt_processor *supplier = rt_get_processor (supplier_pid);
-	struct rt_private_queue *pq = rt_queue_cache_retrieve (&client->cache, supplier);
+	struct rt_private_queue* pq = NULL;
+	int error = T_OK;
+	struct rt_processor* client = rt_get_processor (client_pid);
+	struct rt_processor* supplier = rt_get_processor (supplier_pid);
 
-	return rt_private_queue_is_synchronized (pq);
+	error = rt_queue_cache_retrieve (&client->cache, supplier, &pq);
+
+	return (error == T_OK) && rt_private_queue_is_synchronized (pq);
 }
 
 int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)

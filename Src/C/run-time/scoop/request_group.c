@@ -88,11 +88,13 @@ rt_shared void rt_request_group_add (struct rt_request_group* self, struct rt_pr
 	REQUIRE ("not_sorted", !self->is_sorted);
 	REQUIRE ("not_locked", !self->is_locked);
 
-	pq = rt_queue_cache_retrieve (&(self->client->cache), supplier);
-	error = rt_request_group_extend (self, pq);
+	error = rt_queue_cache_retrieve (&(self->client->cache), supplier, &pq);
+	if (T_OK == error) {
+		error = rt_request_group_extend (self, pq);
+	}
 
 		/* If memory allocation failed, we need to throw an exception */
-	if (error == T_NO_MORE_MEMORY) {
+	if (error != T_OK) {
 		enomem();
 	}
 }

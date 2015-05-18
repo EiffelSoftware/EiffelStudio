@@ -578,7 +578,9 @@ doc:	</routine>
 */
 rt_shared void rt_processor_subscribe_wait_condition (struct rt_processor* self, struct rt_processor* client)
 {
+#ifdef EIF_ASSERTIONS
 	struct rt_private_queue* pq = NULL; /* For assertion checking. */
+#endif
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("queue_available", T_OK == rt_queue_cache_retrieve (&client->cache, self, &pq));

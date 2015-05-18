@@ -38,7 +38,7 @@ define FORMAL_TYPE "TEST1"
 copy_sub	test.e $CLUSTER test.e
 
 resume_compile
-compile_result 	validity_error TEST VBAC(1)
+compile_result 	validity_error TEST VUAR(2)
 
 -- Testing argument checking of source.
 define ACTUAL_TYPE "TEST1"

@@ -311,7 +311,7 @@ doc:			These passed-queues will already be locked and have priority over non-pas
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
 doc:		<param name="result" type="struct rt_private_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<return> T_OK on success. T_NO_MORE_MEMORY if a memory allocation failure happened. </return>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex creation error code when a resource could not be allocated. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>

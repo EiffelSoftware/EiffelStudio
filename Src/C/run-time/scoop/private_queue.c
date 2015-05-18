@@ -44,16 +44,19 @@ doc:<file name="private_queue.c" header="rt_private_queue.h" version="$Id$" summ
 #include "eif_scoop.h"
 
 /*
-doc:	<routine name="rt_private_queue_init" return_type="void" export="shared">
+doc:	<routine name="rt_private_queue_init" return_type="int" export="shared">
 doc:		<summary> Initialize the private queue 'self' with supplier 'a_supplier'. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be initialized. Must not be NULL. </param>
 doc:		<param name="a_supplier" type="struct rt_processor*"> The supplier processor. This is where all requests will be sent to. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex creation error code when a resource could not be allocated. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_init (struct rt_private_queue* self, struct rt_processor* a_supplier)
+rt_shared int rt_private_queue_init (struct rt_private_queue* self, struct rt_processor* a_supplier)
 {
+	int error = T_OK;
+
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", a_supplier);
 
@@ -61,8 +64,10 @@ rt_shared void rt_private_queue_init (struct rt_private_queue* self, struct rt_p
 	self->synced = EIF_FALSE;
 	self->lock_depth = 0;
 
-	rt_message_channel_init (&self->channel, 512);
 	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+	error = rt_message_channel_init (&self->channel, 512);
+
+	return error;
 }
 
 /*

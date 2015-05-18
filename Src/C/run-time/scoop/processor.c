@@ -131,14 +131,13 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 
 			/* Next we need to initialize several message channels. */
 		if (T_OK == error) {
-				/* TODO: Change rt_message_channel_init to return an error code instead of an exception. */
-			rt_message_channel_init (&self->result_notify, 64);
+			error = rt_message_channel_init (&self->result_notify, 64);
 		}
 		if (T_OK == error) {
-			rt_message_channel_init (&self->startup_notify, 64);
+			error = rt_message_channel_init (&self->startup_notify, 64);
 		}
 		if (T_OK == error) {
-			rt_message_channel_init (&self->queue_of_queues, 128);
+			error = rt_message_channel_init (&self->queue_of_queues, 128);
 		}
 
 
@@ -523,7 +522,7 @@ doc:	<routine name="rt_processor_new_private_queue" return_type="int" export="sh
 doc:		<summary> Create a new private queue whose supplier is this processor. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor object. Must not be NULL. </param>
 doc:		<param name="result" type="struct rt_private_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex locking error code on failure. </return>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex creation error code when a resource could not be allocated. </return>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
@@ -539,16 +538,14 @@ int rt_processor_new_private_queue (struct rt_processor* self, struct rt_private
 	l_queue = (struct rt_private_queue*) malloc (sizeof (struct rt_private_queue));
 
 	if (l_queue) {
-			/* TODO: Change rt_private_queue_init to return an error code instead of an exception. */
-		/*error=*/rt_private_queue_init (l_queue, self);
+		error = rt_private_queue_init (l_queue, self);
 
 		if (T_OK == error) {
-			error = eif_pthread_mutex_lock (self->generated_private_queues_mutex);
 
-			if (T_OK == error) {
-				error = private_queue_list_t_extend (&self->generated_private_queues, l_queue);
-			}
-				/* An error during unlock is an indication of a bug. */
+			RT_TRACE (eif_pthread_mutex_lock (self->generated_private_queues_mutex));
+
+			error = private_queue_list_t_extend (&self->generated_private_queues, l_queue);
+
 			RT_TRACE (eif_pthread_mutex_unlock (self->generated_private_queues_mutex));
 		}
 
@@ -587,6 +584,7 @@ rt_shared void rt_processor_subscribe_wait_condition (struct rt_processor* self,
 	REQUIRE ("queue_available", T_OK == rt_queue_cache_retrieve (&client->cache, self, &pq));
 	REQUIRE ("synchronized", rt_private_queue_is_synchronized (pq));
 
+		/* TODO: error handling?*/
 	subscriber_list_t_extend (&self->wait_condition_subscribers, client);
 }
 

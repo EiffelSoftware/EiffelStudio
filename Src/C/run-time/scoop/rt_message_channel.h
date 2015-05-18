@@ -129,7 +129,7 @@ rt_shared void rt_message_channel_receive_with_gc (struct rt_message_channel* se
 rt_shared EIF_BOOLEAN rt_message_channel_is_empty (struct rt_message_channel* self);
 
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking);
-rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin);
+rt_shared int rt_message_channel_init (struct rt_message_channel* self, size_t default_spin);
 rt_shared void rt_message_channel_deinit (struct rt_message_channel* self);
 
 #endif /* _rt_message_channel_h_ */

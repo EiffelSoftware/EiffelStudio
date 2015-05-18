@@ -477,15 +477,16 @@ rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER 
 }
 
 /*
-doc:	<routine name="rt_message_channel_init" return_type="void" export="shared">
+doc:	<routine name="rt_message_channel_init" return_type="int" export="shared">
 doc:		<summary> Initialize the rt_message_channel struct 'self' and allocate some initial memory. </summary>
 doc:		<param name="self" type="struct rt_message_channel*"> The channel to be initialized. Must not be NULL. </param>
 doc:		<param name="default_spin" type="size_t"> The number of times a thread should spin on receive before waiting on a condition variable. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY or a mutex creation error code when a resource could not be allocated. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t default_spin)
+rt_shared int rt_message_channel_init (struct rt_message_channel* self, size_t default_spin)
 {
 	int error = T_OK;
 	struct mc_node* l_node = NULL;
@@ -493,7 +494,7 @@ rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t 
 	REQUIRE ("self_not_null", self);
 
 		/* Ensure that the struct is in a consistent state
-		 * for de-initialization if some allocation fails. */
+		 * to call rt_message_channel_deinit() if some allocation fails. */
 	self->first = NULL;
 	self->has_elements_condition = NULL;
 	self->has_elements_condition_mutex = NULL;
@@ -501,36 +502,36 @@ rt_shared void rt_message_channel_init (struct rt_message_channel* self, size_t 
 
 		/* Allocate the guard node. */
 	l_node = (struct mc_node*) malloc (sizeof (struct mc_node));
+
 	if (!l_node) {
-			/* Report allocation failure. */
-		enomem();
+			/* Set the correct error code if malloc failed to allocate memory. */
+		error = T_NO_MORE_MEMORY;
+	} else {
+
+			/* Initialize the node to a consistent state. */
+		l_node->next = NULL;
+		rt_message_init (&l_node->value, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+
+			/* In the beginning, all pointers point to the guard node. */
+		self->head = l_node;
+		self->tail = l_node;
+		self->first = l_node;
+		self->tail_copy = l_node;
+
+			/* Create the mutex for blocking wait. */
+		error = eif_pthread_mutex_create (&self->has_elements_condition_mutex);
+
+			/* Create the condition variable for blocking wait. */
+		if (T_OK == error) {
+			error = eif_pthread_cond_create (&self->has_elements_condition);
+		}
 	}
 
-		/* Initialize the node to a consistent state. */
-	l_node->next = NULL;
-	rt_message_init (&l_node->value, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
-
-		/* In the beginning, all pointers point to the guard node. */
-	self->head = l_node;
-	self->tail = l_node;
-	self->first = l_node;
-	self->tail_copy = l_node;
-
-		/* Create the mutex for blocking wait. */
-	error = eif_pthread_mutex_create (&self->has_elements_condition_mutex);
+		/* Free any allocataed resources in case of an error. */
 	if (error != T_OK) {
-			/* Free resources and report failure. */
 		rt_message_channel_deinit (self);
-		esys();
 	}
-
-		/* Create the condition variable for blocking wait. */
-	error = eif_pthread_cond_create (&self->has_elements_condition);
-	if (error != T_OK) {
-			/* Free resources and report failure. */
-		rt_message_channel_deinit (self);
-		esys ();
-	}
+	return error;
 }
 
 /*

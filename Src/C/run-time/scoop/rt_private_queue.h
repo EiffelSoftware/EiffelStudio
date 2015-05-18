@@ -80,7 +80,7 @@ struct rt_private_queue {
 };
 
 /* Declarations. */
-rt_shared void rt_private_queue_init (struct rt_private_queue* self, struct rt_processor* a_supplier);
+rt_shared int rt_private_queue_init (struct rt_private_queue* self, struct rt_processor* a_supplier);
 rt_shared void rt_private_queue_deinit (struct rt_private_queue* self);
 rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking);
 

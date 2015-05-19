@@ -15,7 +15,7 @@ inherit
 
 feature -- Properties
 
-	called_feature: E_FEATURE
+	called_feature: detachable E_FEATURE
 
 	code: STRING = "VUAR"
 
@@ -34,12 +34,14 @@ feature -- Output
 		local
 			a_class: CLASS_C
 		do
-			a_class := called_feature.written_class
-			a_text_formatter.add ("Called feature: ")
-			called_feature.append_signature (a_text_formatter)
-			a_text_formatter.add (" from ")
-			a_class.append_name (a_text_formatter)
-			a_text_formatter.add_new_line
+			if attached called_feature as f then
+				a_class := called_feature.written_class
+				a_text_formatter.add ("Called feature: ")
+				called_feature.append_signature (a_text_formatter)
+				a_text_formatter.add (" from ")
+				a_class.append_name (a_text_formatter)
+				a_text_formatter.add_new_line
+			end
 		end
 
 feature -- Setting
@@ -55,7 +57,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

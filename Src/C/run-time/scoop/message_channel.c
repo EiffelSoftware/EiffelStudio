@@ -289,20 +289,20 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 	enqueue (self, message_type, sender, call, queue);
 
 		/* Lock the condition variable mutex. */
-	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+	RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
 #else
 		/* Lock the condition variable mutex. */
-	eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+	RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
 
 			/* Perform the enqueue operation. */
 	enqueue (self, message_type, sender, call, queue);
 #endif
 
 		/* Wake up the receiver. */
-	eif_pthread_cond_signal (self->has_elements_condition);
+	RT_TRACE (eif_pthread_cond_signal (self->has_elements_condition));
 
 		/* Release the condition variable mutex. */
-	eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+	RT_TRACE (eif_pthread_mutex_unlock (self->has_elements_condition_mutex));
 
 }
 
@@ -358,7 +358,7 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 			 */
 
 			/* Lock the condition variable mutex. */
-		eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+		RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
 
 			/* Try to receive a message. */
 		while (!dequeue (self, message)) {
@@ -370,12 +370,12 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 			if (is_with_gc) {
 				error = eif_pthread_cond_wait_with_timeout (self->has_elements_condition, self->has_elements_condition_mutex, wait_timeout);
 			} else {
-				eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex);
+				RT_TRACE (eif_pthread_cond_wait (self->has_elements_condition, self->has_elements_condition_mutex));
 			}
 
 				/* Now we need to synchronize for GC. Since the previous wait reacquired the lock,
 				 * and we're not allowed to hold a lock during GC, we have to release it now. */
-			eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+			RT_TRACE (eif_pthread_mutex_unlock (self->has_elements_condition_mutex));
 
 				/* Inform the GC that we're no longer blocked, and synchronize for GC if it's currently running. */
 			EIF_EXIT_C;
@@ -398,11 +398,11 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 			}
 
 				/* To perform the dequeue operation we should reacquire the lock. */
-			eif_pthread_mutex_lock (self->has_elements_condition_mutex);
+			RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
 		}
 
 			/* Finally, release the previously acquired lock. */
-		eif_pthread_mutex_unlock (self->has_elements_condition_mutex);
+		RT_TRACE (eif_pthread_mutex_unlock (self->has_elements_condition_mutex));
 	}
 }
 
@@ -572,12 +572,12 @@ rt_shared void rt_message_channel_deinit (struct rt_message_channel* self)
 
 		/* Free the mutex and condition variables. */
 	if (self->has_elements_condition) {
-		eif_pthread_cond_destroy (self->has_elements_condition);
+		RT_TRACE (eif_pthread_cond_destroy (self->has_elements_condition));
 		self->has_elements_condition = NULL;
 	}
 
 	if (self->has_elements_condition_mutex) {
-		eif_pthread_mutex_destroy (self->has_elements_condition_mutex);
+		RT_TRACE (eif_pthread_mutex_destroy (self->has_elements_condition_mutex));
 		self->has_elements_condition_mutex = NULL;
 	}
 }

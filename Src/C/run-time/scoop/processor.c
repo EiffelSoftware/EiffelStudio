@@ -297,6 +297,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 	EIF_BOOLEAN is_synchronous;
 	EIF_BOOLEAN is_successful;
 	size_t l_count = 0;
+	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("client_not_null", client);
@@ -309,27 +310,34 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 
 		if (is_synchronous) {
 				/* Grab all locks held by the client. */
-			RT_TRACE (rt_queue_cache_push (&self->cache, &client->cache)); /* TODO: Handle error.*/
+			error = rt_queue_cache_push (&self->cache, &client->cache);
 		}
-			/* Remember the size of the request group stack. */
-		l_count = rt_processor_request_group_stack_count (self);
 
-			/* Execute the call. */
-		is_successful = rt_scoop_try_call (call);
-
-			/* Mark the current region as dirty if the call fails. */
-		if (!is_successful) {
+		if (error != T_OK) {
+				/* Lock passing failed. Treat the call as not successful. */
 			self->is_dirty = EIF_TRUE;
-				/* Unlock any request groups that may have been locked during this call. */
-			rt_processor_request_group_stack_remove (self, rt_processor_request_group_stack_count (self) - l_count);
-		}
+		} else {
 
-			/* The request group stack should be the same after this call. */
-		CHECK ("same_stack_size", rt_processor_request_group_stack_count(self) == l_count);
+				/* Remember the size of the request group stack. */
+			l_count = rt_processor_request_group_stack_count (self);
 
-		if (is_synchronous) {
-				/* Return the previously acquired locks. */
-			rt_queue_cache_pop (&self->cache);
+				/* Execute the call. */
+			is_successful = rt_scoop_try_call (call);
+
+				/* Mark the current region as dirty if the call fails. */
+			if (!is_successful) {
+				self->is_dirty = EIF_TRUE;
+					/* Unlock any request groups that may have been locked during this call. */
+				rt_processor_request_group_stack_remove (self, rt_processor_request_group_stack_count (self) - l_count);
+			}
+
+				/* The request group stack should be the same after this call. */
+			CHECK ("same_stack_size", rt_processor_request_group_stack_count(self) == l_count);
+
+			if (is_synchronous) {
+					/* Return the previously acquired locks. */
+				rt_queue_cache_pop (&self->cache);
+			}
 		}
 	}
 

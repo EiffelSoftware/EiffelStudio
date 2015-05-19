@@ -127,37 +127,31 @@ rt_shared void rt_identifier_set_deinit (struct rt_identifier_set* self)
 
 
 /*
-doc:	<routine name="rt_identifier_set_extend" return_type="int" export="shared">
+doc:	<routine name="rt_identifier_set_extend" return_type="void" export="shared">
 doc:		<summary> Add the processor identifier 'pid' to the queue 'self' and inform any waiting thread that a new element has been inserted. </summary>
 doc:		<param name="self" type="struct rt_identifier_set*"> The rt_identifier_set struct. Must not be NULL. </param>
 doc:		<param name="pid" type="EIF_SCP_PID"> The PID to be inserted. </param>
-doc:		<return> T_OK on success. If acquiring the mutex fails, an error code is returned. </return>
 doc:		<thread_safety> Safe </thread_safety>
 doc:		<synchronization> Done internally through 'self->lock'. </synchronization>
 doc:	</routine>
 */
-rt_shared int rt_identifier_set_extend (struct rt_identifier_set* self, EIF_SCP_PID pid)
+rt_shared void rt_identifier_set_extend (struct rt_identifier_set* self, EIF_SCP_PID pid)
 {
-	int error = T_OK;
 	size_t position = 0;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("not_full", self->count < self->capacity);
 
-	error = eif_pthread_mutex_lock (self->lock);
+	RT_TRACE (eif_pthread_mutex_lock (self->lock));
 
-	if (T_OK == error) {
+		/* Perform the actual enqueue operation. */
+	position = (self->start + self->count) % self->capacity;
+	self->area [position] = pid;
+	self->count = self->count + 1;
 
-			/* Perform the actual enqueue operation. */
-		position = (self->start + self->count) % self->capacity;
-		self->area [position] = pid;
-		self->count = self->count + 1;
-
-			/* Send a signal to potentially waiting threads and release the lock. */
-		RT_TRACE (eif_pthread_cond_signal (self->is_empty_condition));
-		RT_TRACE (eif_pthread_mutex_unlock (self->lock));
-	}
-	return error;
+		/* Send a signal to potentially waiting threads and release the lock. */
+	RT_TRACE (eif_pthread_cond_signal (self->is_empty_condition));
+	RT_TRACE (eif_pthread_mutex_unlock (self->lock));
 }
 
 /*
@@ -181,19 +175,17 @@ rt_private rt_inline void rt_identifier_set_do_consume (struct rt_identifier_set
 }
 
 /*
-doc:	<routine name="rt_identifier_set_consume" return_type="int" export="shared">
+doc:	<routine name="rt_identifier_set_consume" return_type="void" export="shared">
 doc:		<summary> Remove and return an element from the queue 'self'. This feature waits on 'self->is_empty_condition' when no item is available.
 doc:			This feature should be called after rt_identifier_set_try_consume fails, as it introduces some overhead for compatibility with the GC. </summary>
 doc:		<param name="self" type="struct rt_identifier_set*"> The rt_identifier_set struct. Must not be NULL. </param>
 doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<return> T_OK on success. If acquiring the mutex fails, an error code is returned. </return>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> Done internally through 'self->lock'. </synchronization>
 doc:	</routine>
 */
-rt_shared int rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
+rt_shared void rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
 {
-	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("pid_not_null", result);
@@ -201,23 +193,19 @@ rt_shared int rt_identifier_set_consume (struct rt_identifier_set* self, EIF_SCP
 		/* We need to wait for a new PID. This might take some time...
 		 * Allow the garbage collector to run in the meantime. */
 	EIF_ENTER_C;
-	error = eif_pthread_mutex_lock (self->lock);
+	RT_TRACE (eif_pthread_mutex_lock (self->lock));
 
-	if (T_OK == error) {
-
-			/* Wait for the queue to become non-empty. */
-		while (self->count == 0) {
-			RT_TRACE (eif_pthread_cond_wait (self->is_empty_condition, self->lock));
-		}
-
-			/* Perform the actual dequeue operation and release the lock. */
-		rt_identifier_set_do_consume (self, result);
-		RT_TRACE (eif_pthread_mutex_unlock (self->lock));
+		/* Wait for the queue to become non-empty. */
+	while (self->count == 0) {
+		RT_TRACE (eif_pthread_cond_wait (self->is_empty_condition, self->lock));
 	}
 
+		/* Perform the actual dequeue operation and release the lock. */
+	rt_identifier_set_do_consume (self, result);
+
+	RT_TRACE (eif_pthread_mutex_unlock (self->lock));
 	EIF_EXIT_C;
 	RTGC;
-	return error;
 }
 
 /*
@@ -233,20 +221,18 @@ doc:	</routine>
 rt_shared EIF_BOOLEAN rt_identifier_set_try_consume (struct rt_identifier_set* self, EIF_SCP_PID* result)
 {
 	EIF_BOOLEAN success = EIF_FALSE;
-	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("pid_not_null", result);
 
-	error = eif_pthread_mutex_lock (self->lock);
+	RT_TRACE (eif_pthread_mutex_lock (self->lock));
 
-	if (T_OK == error) {
-		if (self->count > 0) {
-			rt_identifier_set_do_consume (self, result);
-			success = EIF_TRUE;
-		}
-		RT_TRACE (eif_pthread_mutex_unlock (self->lock));
+	if (self->count > 0) {
+		rt_identifier_set_do_consume (self, result);
+		success = EIF_TRUE;
 	}
+	RT_TRACE (eif_pthread_mutex_unlock (self->lock));
+
 	return success;
 }
 

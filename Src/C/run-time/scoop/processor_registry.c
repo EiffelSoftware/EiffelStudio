@@ -143,7 +143,7 @@ doc:	<routine name="rt_processor_registry_new_identifier" return_type="int" expo
 doc:		<summary> Acquire a new unique region identifier and store it in 'result'.
 doc:			If none is currently available, a GC cycle is triggered and the feature blocks until it gets a free ID. </summary>
 doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<return> T_OK on success. If acquiring the mutex fails, an error code is returned. </return>
+doc:		<return> T_OK on success. </return>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
@@ -162,8 +162,9 @@ rt_private int rt_processor_registry_new_identifier (EIF_SCP_PID* result)
 		/* If none is available, we have to run the garbage collector and then wait. */
 	if (!success) {
 		plsc();
-		error = rt_identifier_set_consume (&self->free_pids, result);
+		rt_identifier_set_consume (&self->free_pids, result);
 	}
+		/* TODO: Can we remove this error code? */
 	return error;
 }
 
@@ -200,7 +201,7 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
 			*result = pid;
 		} else {
 				/* Processor allocation failed. Return the PID. */
-			RT_TRACE (rt_identifier_set_extend (&self->free_pids, pid));
+			rt_identifier_set_extend (&self->free_pids, pid);
 		}
 	}
 	return error;
@@ -341,7 +342,7 @@ rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 		/* Add the identifier back to the list of free PIDs.
 		 * Note that PID 0 is special, so we don't recycle that one. */
 	if (pid != 0) {
-		RT_TRACE (rt_identifier_set_extend (&self->free_pids, pid));
+		rt_identifier_set_extend (&self->free_pids, pid);
 	}
 }
 

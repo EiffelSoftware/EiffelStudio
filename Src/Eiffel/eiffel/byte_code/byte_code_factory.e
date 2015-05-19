@@ -174,7 +174,7 @@ feature {NONE} -- Implementation: Byte node
 			a_expr_not_void: a_expr /= Void
 		local
 			l_access_expr: ACCESS_EXPR_B
-			l_access: CALL_ACCESS_B
+			l_access: ACCESS_B
 		do
 				-- Initialize nested call `a_expr.a_feat'
 			create Result
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_target (l_access_expr)
 
 				-- Create message.
-			l_access ?= a_feat.access (a_target_type, True, a_target_type.is_separate)
+			l_access := a_feat.access (a_target_type, True, a_target_type.is_separate)
 			l_access.set_parent (Result)
 			Result.set_message (l_access)
 		end

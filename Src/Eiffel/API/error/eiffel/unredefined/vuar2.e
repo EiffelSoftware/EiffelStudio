@@ -1,7 +1,5 @@
-note
-
-	description:
-		"Error for a feature call: type mismatch on one argument."
+﻿note
+	description: "Error for a feature call: type mismatch on one argument."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -16,6 +14,8 @@ inherit
 			build_explain, is_defined, subcode
 		end
 
+	SHARED_NAMES_HEAP
+
 feature -- Properties
 
 	subcode: INTEGER
@@ -23,15 +23,15 @@ feature -- Properties
 			Result := 2
 		end
 
-	argument_name: STRING;
+	argument_name: STRING
 			-- Name of the involved argument
 
-	argument_position: INTEGER;
+	argument_position: INTEGER
 
-	formal_type: TYPE_A;
+	formal_type: TYPE_A
 			-- Formal type of the argument
 
-	actual_type: TYPE_A;
+	actual_type: TYPE_A
 			-- Actual type of the call
 
 feature -- Status report
@@ -39,7 +39,7 @@ feature -- Status report
 	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
-			Result := Precursor and then
+			Result := is_class_defined and then
 				argument_name /= Void and then formal_type /= Void and then actual_type /= Void
 		end
 
@@ -52,71 +52,90 @@ feature -- Output
 			l_actual_type: CL_TYPE_A
 			l_formal_type: CL_TYPE_A
 			l_same_class_name: BOOLEAN
+			argument_name_title: STRING
+			argument_position_title: STRING
+			formal_argument_type_title: STRING
+			actual_argument_type_title: STRING
 		do
 				-- Find out if we should also show the group corresponding to the type
 				-- involved when they have the same name (which would be confusion to the user).
 				--| Note: The same code is present in VJAR.
-			l_actual_type ?= actual_type
-			l_formal_type ?= formal_type
-			if l_actual_type /= Void and then l_formal_type /= Void then
+			if attached {CL_TYPE_A} actual_type as at and then attached {CL_TYPE_A} formal_type as ft then
+				l_actual_type := at
+				l_formal_type := ft
 				l_same_class_name := l_actual_type.class_id /= l_formal_type.class_id and then
 					l_actual_type.base_class.name.is_equal (l_formal_type.base_class.name)
 			end
 
-			print_called_feature (a_text_formatter);
-			a_text_formatter.add ("Argument name: ");
-			a_text_formatter.add (argument_name);
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Argument position: ");
-			a_text_formatter.add_int (argument_position);
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Formal argument type: ");
-			formal_type.append_to (a_text_formatter);
-			if l_same_class_name then
-				a_text_formatter.add (" (from ")
-				a_text_formatter.add_group (l_formal_type.base_class.lace_class.group,
-					l_formal_type.base_class.lace_class.target.name)
-				a_text_formatter.add (")")
+			if attached called_feature then
+				print_called_feature (a_text_formatter)
+				argument_name_title := "Argument name: "
+				argument_position_title := "Argument position: "
+				formal_argument_type_title := "Formal argument type: "
+				actual_argument_type_title := "Actual argument type: "
+			else
+				argument_name_title := "Tuple field name: "
+				argument_position_title := "Tuple field position: "
+				formal_argument_type_title := "Tuple field type: "
+				actual_argument_type_title := "Source expression type: "
 			end
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Actual argument type: ");
-			actual_type.append_to (a_text_formatter);
+			a_text_formatter.add (argument_name_title)
+			a_text_formatter.add (argument_name)
+			a_text_formatter.add_new_line
+			a_text_formatter.add (argument_position_title)
+			a_text_formatter.add_int (argument_position)
+			a_text_formatter.add_new_line
+			a_text_formatter.add (formal_argument_type_title)
+			formal_type.append_to (a_text_formatter)
 			if l_same_class_name then
-				a_text_formatter.add (" (from ")
-				a_text_formatter.add_group (l_actual_type.base_class.lace_class.group,
-					l_actual_type.base_class.lace_class.target.name)
-				a_text_formatter.add (")")
+				check attached l_formal_type then
+					a_text_formatter.add (" (from ")
+					a_text_formatter.add_group (l_formal_type.base_class.lace_class.group,
+						l_formal_type.base_class.lace_class.target.name)
+					a_text_formatter.add (")")
+				end
 			end
-			a_text_formatter.add_new_line;
-		end;
+			a_text_formatter.add_new_line
+			a_text_formatter.add (actual_argument_type_title)
+			actual_type.append_to (a_text_formatter)
+			if l_same_class_name then
+				check attached l_actual_type then
+					a_text_formatter.add (" (from ")
+					a_text_formatter.add_group (l_actual_type.base_class.lace_class.group,
+						l_actual_type.base_class.lace_class.target.name)
+					a_text_formatter.add (")")
+				end
+			end
+			a_text_formatter.add_new_line
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_argument_name (n: STRING)
 			-- Assign `n' to `argument_name'.
 		do
-			argument_name := n;
-		end;
+			argument_name := n
+		end
 
 	set_argument_position (i: INTEGER)
 		do
 			argument_position := i
-		end;
+		end
 
 	set_formal_type (t: TYPE_A)
 			-- Assign `t' to `formal_type'.
 		do
-			formal_type := t;
-		end;
+			formal_type := t
+		end
 
 	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `actual_type'.
 		do
-			actual_type := a;
-		end;
+			actual_type := a
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

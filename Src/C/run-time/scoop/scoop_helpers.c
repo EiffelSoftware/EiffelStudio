@@ -2,7 +2,7 @@
 	description:	"Helper functions used by the SCOOP runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2012, Eiffel Software.",
+	copyright:	"Copyright (c) 2010-2015, Eiffel Software.",
 				"Copyright (c) 2014 Scott West <scott.gregory.west@gmail.com>"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -77,9 +77,6 @@ rt_private void rt_apply_wcall (call_data *data)
 	for (n = data->count, i = 0; i < n; i++) {
 		v = iget ();
 		* v = data->argument [i];
-		if ((v->it_r) && (v->type & SK_HEAD) == SK_REF) {
-			v->it_r = v->it_r;
-		}
 	}
 		/* Push current to the evaluation stack */
 	v = iget ();

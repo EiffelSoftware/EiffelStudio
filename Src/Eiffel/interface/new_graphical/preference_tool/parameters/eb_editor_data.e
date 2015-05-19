@@ -992,7 +992,7 @@ feature {NONE} -- Auto-complete
 			Result.force ([" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$"], "all")
 
 						-- separate
-			Result.force ([" $cursor$ as  do%N$indent$%T%N$indent$end", "%N$indent$%T$cursor$ as %N$indent$do%N$indent$%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$ as ,"], "separate")
+			Result.force ([" $cursor$", "%N$indent$%T$cursor$ as %N$indent$do%N$indent$%T%N$indent$end", " $cursor$", "%N$indent$%T$cursor$ as ,"], "separate")
 		end
 
 feature {NONE} -- Keys

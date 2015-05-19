@@ -1792,7 +1792,7 @@ test	parenthesis-alias-tuple-convention	exec357 tcf pass execution expression pa
 test	conditional-expression-constant		exec358 tcf pass execution conditional expression conformance
 test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias conversion tuple conformance
 test	expanded-hash-table				exec360 tcf pass execution expanded
-test	conversion-in-assigner-command		exec361 tcf pass execution assigner conversion parenthesis_alias
+test	conversion-in-assigner-command		exec361 tcf pass execution assigner conversion
 
 -- Once specific
 

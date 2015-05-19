@@ -1435,7 +1435,7 @@ test	scoop-lockpassing-query					scoop050 tcf pass scoop multithreaded deadlock 
 test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded deadlock lock_passing
 test 	scoop-exceptions-unlock					scoop052 tcf pass scoop multithreaded exception deadlock
 test	scoop-exceptions-dispose			scoop053 tcf fail scoop multithreaded exception execution
-test	scoop-named-tuple-validity			scoop054 tcf fail scoop tuple validity
+test	scoop-named-tuple-validity			scoop054 tcf pass scoop tuple validity
 test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop validity
 test	scoop-separate-instruction-dependent-arguments	scoop056 tcf pass scoop validity
 test	scoop-separate-instruction-non-separate		scoop057 tcf pass scoop validity

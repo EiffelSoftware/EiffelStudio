@@ -100,6 +100,10 @@ feature -- Access
 
 	Sm_dbcsenabled: INTEGER = 42
 
+	Sm_cxmenucheck: INTEGER = 71
+
+	Sm_cymenucheck: INTEGER = 72
+
 	Sm_mousewheelpresent: INTEGER = 75
 
 	Sm_cmetrics: INTEGER = 76
@@ -119,7 +123,7 @@ feature -- Access
 	Sm_remotesession: INTEGER = 0x1000;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

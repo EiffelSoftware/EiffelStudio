@@ -1,0 +1,15 @@
+test_name	 scoop-named-tuple-execution
+test_description Named items of a separate tuple should be treated as separate.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	e.e  $CLUSTER e.e
+copy_raw 	flag.e  $CLUSTER flag.e
+copy_raw 	test.e  $CLUSTER test.e
+
+compile_melted
+compile_result ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+test_end

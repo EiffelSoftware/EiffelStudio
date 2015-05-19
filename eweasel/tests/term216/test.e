@@ -13,6 +13,8 @@ feature {NONE} -- Creation
 			x: INTEGER
 		do
 			x := Current
+			io.put_integer (x)
+			io.put_new_line
 		end
 
 feature -- Access

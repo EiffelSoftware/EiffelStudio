@@ -587,9 +587,6 @@ feature {NONE} -- Implementation: State
 	last_assigner_command: detachable FEATURE_I
 			-- Last assigner command associated with a feature.
 
-	last_assigner_type: detachable TYPE_A
-			-- Type of the expected type for source of assigner call.
-
 	last_assignment_target: detachable FEATURE_I
 			-- Target of assignment or assigner command.
 
@@ -709,7 +706,6 @@ feature {NONE} -- Settings
 			last_calls_target_type := Void
 			is_type_compatible := [False, l_conv_info]
 			last_assigner_command := Void
-			last_assigner_type := Void
 			last_assignment_target := Void
 			set_is_inherited (False)
 			inline_agent_byte_codes := Void
@@ -1493,7 +1489,8 @@ feature {NONE} -- Implementation
 							attached l_named_tuple.label_position_by_id (l_feature_name.name_id) as l_label_pos and then
 							l_label_pos > 0
 						then
-							set_type (l_named_tuple.generics.i_th (l_label_pos), a_name)
+							l_formal_arg_type := l_named_tuple.generics.i_th (l_label_pos)
+							set_type (l_formal_arg_type, a_name)
 							l_is_last_access_tuple_access := True
 							last_feature_name_id := l_feature_name.name_id
 								-- No renaming possible (from RENAMED_TYPE_A), they are the same
@@ -1503,12 +1500,68 @@ feature {NONE} -- Implementation
 							end
 								-- Restore previous value of `is_controlled'.
 							is_controlled := l_is_controlled
-								-- Adapt separateness and controlled status of the result to target type.
-							adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
-							if l_needs_byte_node then
-								create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
-								last_byte_node := l_tuple_access_b
-								last_byte_node.set_line_number (l_feature_name.line)
+							if attached old_assigner_source then
+									-- Assignment to a tuple field.
+								old_assigner_source.process (Current)
+								l_arg_type := last_type
+								if attached l_arg_type then
+									if attached argument_compatibility_error (l_named_tuple, l_named_tuple, l_arg_type, l_label_pos, l_named_tuple.generics, Void, l_feature_name, l_feature_name) as e then
+										error_handler.insert_error (e)
+									else
+										l_warning_count := error_handler.warning_list.count
+										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
+											if
+												(not is_inherited and then
+												l_arg_type.convert_to (l_context_current_class, l_formal_arg_type.deep_actual_type))
+											then
+												l_conv_info := context.last_conversion_info
+												if l_conv_info.has_depend_unit then
+													context.supplier_ids.extend (l_conv_info.depend_unit)
+													l_argument := old_assigner_source.converted_expression (
+														create {PARENT_CONVERSION_INFO}.make (l_conv_info))
+														-- Make sure the source of the assigner instruction is updated.
+													assigner_source := l_argument
+												end
+													-- Generate conversion byte node only if we are not checking
+													-- a custom attribute. Indeed in that case, we do not want those
+													-- conversion routines, we will use the attachment type to figure
+													-- out how the custom attribute will be generated.
+												if l_needs_byte_node and not is_checking_cas and then attached {EXPR_B} last_byte_node as e then
+													last_byte_node := l_conv_info.byte_node (e)
+												end
+													-- Update `l_arg_type' with the converted type.
+												l_arg_type := l_formal_arg_type
+											end
+										elseif l_warning_count /= error_handler.warning_list.count then
+											error_handler.warning_list.last.set_location (l_feature_name)
+										end
+										if l_needs_byte_node then
+												-- Preserve source byte node
+											check
+												is_expression: attached {EXPR_B} last_byte_node as source_byte_node
+											then
+													-- When assigning to a tuple, we simply transform the tuple
+													-- access by giving a source.
+												create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
+												l_tuple_access_b.set_line_number (l_feature_name.line)
+												create l_parameter
+												l_parameter.set_expression (source_byte_node)
+												l_parameter.set_attachment_type (l_tuple_access_b.tuple_element_type)
+												l_parameter.set_is_for_tuple_access (True)
+												l_tuple_access_b.set_source (l_parameter)
+												last_byte_node := l_tuple_access_b
+											end
+										end
+									end
+								end
+							else
+									-- Adapt separateness and controlled status of the result to target type.
+								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
+								if l_needs_byte_node then
+									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
+									last_byte_node := l_tuple_access_b
+									last_byte_node.set_line_number (l_feature_name.line)
+								end
 							end
 						elseif not is_target_known then
 								-- No feature is found and this is not a tuple access.
@@ -1733,7 +1786,7 @@ feature {NONE} -- Implementation
 										-- Conformance checking of arguments.
 										-- Check if an actual type of the last actual argument is compatible with a formal type of that argument.
 									if
-										attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) and then
+										attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [l_actual_count], l_actual_count, l_arg_types, l_feature, Void, l_parameters [l_actual_count].start_location) and then
 										l_feature.arguments.i_th (l_formal_count).recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
 									then
 											-- Actual and formal types of the last argument are not compatible.
@@ -1747,7 +1800,7 @@ feature {NONE} -- Implementation
 										;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
 										l_arg_types [l_actual_count] := last_type
 											-- Check if now actual and formal types of the last argument are compatible
-										if attached argument_compatibility_error (a_type, l_last_constrained, l_actual_count, l_arg_types, l_feature, l_parameters [l_actual_count].start_location) then
+										if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [l_actual_count], l_actual_count, l_arg_types, l_feature, Void, l_parameters [l_actual_count].start_location) then
 												-- Revert changes back.
 											l_arg_types [l_actual_count] := l_arg_type
 										elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
@@ -1763,7 +1816,7 @@ feature {NONE} -- Implementation
 										i > l_actual_count
 									loop
 											-- Report type compatibility issues if any.
-										if attached argument_compatibility_error (a_type, l_last_constrained, i, l_arg_types, l_feature, l_parameters [i].start_location) as e then
+										if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [i], i, l_arg_types, l_feature, Void, l_parameters [i].start_location) as e then
 											error_handler.insert_error (e)
 										end
 
@@ -1809,7 +1862,7 @@ feature {NONE} -- Implementation
 													l_argument := l_parameters.i_th (i).converted_expression (
 														create {PARENT_CONVERSION_INFO}.make (l_conv_info))
 													l_parameters.put_i_th (l_argument, i)
-													if attached old_assigner_source then
+													if attached old_assigner_source and then i = 1 then
 															-- Make sure the source of the assigner instruction is updated.
 														assigner_source := l_argument
 													end
@@ -2110,11 +2163,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type checks
 
-	argument_compatibility_error (target_type: TYPE_A; target_base_type: TYPE_A; argument_number: INTEGER; actual_types: ARRAYED_LIST [TYPE_A]; callee: FEATURE_I; location: LOCATION_AS): detachable ERROR
+	argument_compatibility_error (target_type: TYPE_A; target_base_type: TYPE_A; expression_type: TYPE_A; argument_number: INTEGER; actual_types: ARRAYED_LIST [TYPE_A]; callee: detachable FEATURE_I; name: detachable ID_AS; location: LOCATION_AS): detachable ERROR
 			-- Error describing validity violation in case actual an argument type `a' is not compatible with a formal argument type `f'.
+		require
+			feature_or_tuple_attached: attached callee or attached name
 		local
 			actual_target_type: TYPE_A
-			actual_type: TYPE_A
 			current_class: CLASS_C
 			formal_type: TYPE_A
 			like_argument_type: TYPE_A
@@ -2122,8 +2176,13 @@ feature {NONE} -- Type checks
 			target_base_class_id: INTEGER
 			warning_count: INTEGER
 		do
-			actual_type := actual_types [argument_number]
-			formal_type := callee.arguments [argument_number]
+			if attached callee then
+					-- Regular feature calll.
+				formal_type := callee.arguments [argument_number]
+			else
+					-- Tuple access.
+				formal_type := actual_types [argument_number]
+			end
 			actual_target_type := target_type.actual_type
 			target_base_class := target_base_type.base_class
 			target_base_class_id := target_base_class.class_id
@@ -2132,44 +2191,44 @@ feature {NONE} -- Type checks
 				like_argument_type := formal_type.instantiation_in
 					(actual_target_type.as_implicitly_detachable, target_base_class_id).actual_argument_type
 					(actual_types).actual_type
-					-- Check that `actual_type' is compatible to its `like argument'.
+					-- Check that `expression_type' is compatible to its `like argument'.
 					-- Once this is done, then type checking is done on the real
 					-- type of the routine, not the anchor.
 				warning_count := error_handler.warning_list.count
 				if
-					not actual_type.conform_to (current_class, like_argument_type) and then
-					(is_inherited or else not actual_type.convert_to (current_class, like_argument_type.deep_actual_type))
+					not expression_type.conform_to (current_class, like_argument_type) and then
+					(is_inherited or else not expression_type.convert_to (current_class, like_argument_type.deep_actual_type))
 				then
-					Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, like_argument_type, location)
+					Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, like_argument_type, location)
 				end
 				if warning_count /= error_handler.warning_list.count then
 					error_handler.warning_list.last.set_location (location)
 				end
-			elseif target_type.is_separate and then actual_type.is_reference and then not formal_type.is_separate then
-				create {VUAR3} Result.make (context, callee, target_base_class, argument_number, formal_type, actual_type, location)
-			elseif actual_type.is_expanded and then not actual_type.is_processor_attachable_to (target_type) then
-				create {VUAR4} Result.make (context, callee, target_base_class, argument_number, formal_type, actual_type, location)
+			elseif target_type.is_separate and then expression_type.is_reference and then not formal_type.is_separate then
+				create {VUAR3} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
+			elseif expression_type.is_expanded and then not expression_type.is_processor_attachable_to (target_type) then
+				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			end
 
 				-- Adapted formal type of a feature argument.
 			formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
 
 			warning_count := error_handler.warning_list.count
-			if not formal_type.backward_conform_to (current_class, actual_type) then
+			if not formal_type.backward_conform_to (current_class, expression_type) then
 				if
 					(not is_inherited and then
-					is_frozen_type_compatible (actual_type, formal_type, True) and then
-					actual_type.convert_to (current_class, formal_type.deep_actual_type))
+					is_frozen_type_compatible (expression_type, formal_type, True) and then
+					expression_type.convert_to (current_class, formal_type.deep_actual_type))
 				then
 				elseif
-					actual_type.is_expanded and then formal_type.is_external and then
-					actual_type.is_conformant_to (current_class, formal_type)
+					expression_type.is_expanded and then formal_type.is_external and then
+					expression_type.is_conformant_to (current_class, formal_type)
 				then
 				else
-					Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, formal_type, location)
+					Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, formal_type, location)
 				end
-			elseif not is_frozen_type_compatible (actual_type, formal_type, False) then
-				Result := vuar2_error (callee, target_base_class_id, argument_number, actual_type, formal_type, location)
+			elseif not is_frozen_type_compatible (expression_type, formal_type, False) then
+				Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, formal_type, location)
 			elseif warning_count /= error_handler.warning_list.count then
 				error_handler.warning_list.last.set_location (location)
 			end
@@ -5836,17 +5895,6 @@ feature {NONE} -- Visitor
 		end
 
 	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
-		local
-			target_byte_node: like last_byte_node
-			target_type: like last_type
-			target_assigner: like last_assigner_command
-			target_query: like last_assignment_target
-			source_type: like last_type
-			vbac1: VBAC1
-			outer_nested_b: NESTED_B
-			argument: PARAMETER_B
-			l_is_tuple_access: BOOLEAN
-			l_warning_count: INTEGER
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5855,7 +5903,6 @@ feature {NONE} -- Visitor
 				-- Set assigner call flag for target expression
 			assigner_source := l_as.source
 			l_as.target.process (Current)
-			l_is_tuple_access := is_last_access_tuple_access
 			is_last_access_tuple_access := False
 			if attached assigner_source as s and then s /= l_as.source then
 					-- The source might have been updated to change conversion into account.
@@ -5863,82 +5910,6 @@ feature {NONE} -- Visitor
 				l_as.set_source (s)
 			end
 			assigner_source := Void
-			target_byte_node := last_byte_node
-			target_type := last_type
-			if target_type /= Void then
-				target_assigner := last_assigner_command
-				target_query := last_assignment_target
-				if l_is_tuple_access then
-					l_as.source.process (Current)
-					if last_type /= Void then
-						l_warning_count := error_handler.warning_list.count
-							-- Now we check that if there is an assigner, that the type of the `source'
-							-- matches the type of the first argument of the assigner.
-						process_type_compatibility (target_type)
-						source_type := last_type
-						if not is_type_compatible.is_compatible then
-							create vbac1
-							context.init_error (vbac1)
-							vbac1.set_source_type (source_type)
-							vbac1.set_target_type (target_type)
-							vbac1.set_location (l_as.start_location)
-							error_handler.insert_error (vbac1)
-						elseif
-							attached target_query and then
-							target_query.is_stable and then
-							not source_type.is_implicitly_attached and then
-							context.current_class.lace_class.is_void_safe_conformance
-						then
-							error_handler.insert_error
-								(create {VBAC3}.make (source_type, target_query, l_as.start_location, context))
-						else
-							if l_warning_count /= error_handler.warning_list.count then
-								error_handler.warning_list.last.set_location (l_as.start_location)
-							end
-							if
-								not is_inherited and then
-								is_type_compatible.conversion_info /= Void and then
-								is_type_compatible.conversion_info.has_depend_unit
-							then
-									-- No need to record the depend_unit from `is_type_compatible.conversion_info'
-									-- because it was already saved in `process_type_compatibility'.
-								l_as.set_source (l_as.source.converted_expression (
-									create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
-							end
-
-							if is_byte_node_enabled then
-									-- Preserve source byte node
-								check
-									is_expression: attached {EXPR_B} last_byte_node as source_byte_node
-									is_nested: attached {NESTED_B} target_byte_node as nested_b
-								then
-									outer_nested_b := nested_b
-										-- Find end of a call chain.
-									from
-									until
-										not attached {NESTED_B} outer_nested_b.message as inner_nested_b
-									loop
-										outer_nested_b := inner_nested_b
-									end
-										-- When assigning to a tuple, we simply transform the tuple
-										-- access by giving a source.
-									check
-										is_tuple_access: attached {TUPLE_ACCESS_B} outer_nested_b.message as l_tuple_access_b
-									then
-										l_tuple_access_b.set_line_number (l_as.start_location.line)
-										create argument
-										argument.set_expression (source_byte_node)
-										argument.set_attachment_type (l_tuple_access_b.tuple_element_type)
-										argument.set_is_for_tuple_access (True)
-										l_tuple_access_b.set_source (argument)
-										last_byte_node := target_byte_node
-									end
-								end
-							end
-						end
-					end
-				end
-			end
 		end
 
 	process_reverse_as (l_as: REVERSE_AS)
@@ -9341,10 +9312,10 @@ feature {NONE} -- Implementation
 					-- Left operand is of a separate type, so the right operand is subject to SCOOP argument rules.
 				if a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
 						-- If the right operand is of a reference type then formal feature argument must be separate.
-					create {VUAR3} last_alias_error.make (context, l_infix, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+					create {VUAR3} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
 				elseif a_right_type.is_expanded and then not a_right_type.is_processor_attachable_to (a_left_type) then
 						-- If the right operand is of an expanded type then it should not have non-separate reference fields.
-					create {VUAR4} last_alias_error.make (context, l_infix, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
+					create {VUAR4} last_alias_error.make (context, l_infix, Void, l_class, 1, l_infix.arguments.i_th (1).actual_type, a_left_type, location)
 				end
 			end
 			if last_alias_error /= Void then
@@ -9599,7 +9570,6 @@ feature {NONE} -- Implementation
 			l_assigner_name := target_query.assigner_name
 			if l_assigner_name = Void then
 				last_assigner_command := Void
-				last_assigner_type := Void
 			else
 				l_assigner_command := target_query.written_class.feature_named (l_assigner_name)
 				if l_assigner_command /= Void then
@@ -9622,7 +9592,6 @@ feature {NONE} -- Implementation
 						l_target_class_id).actual_type
 				end
 				last_assigner_command := l_assigner_command
-				last_assigner_type := l_type
 			end
 		end
 

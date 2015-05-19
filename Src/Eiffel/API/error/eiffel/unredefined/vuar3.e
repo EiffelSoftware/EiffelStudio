@@ -23,20 +23,24 @@ create
 
 feature {NONE} -- Creation
 
-	make (context: AST_CONTEXT; f: FEATURE_I; c: CLASS_C; i: INTEGER; t, a: TYPE_A; l: LOCATION_AS)
+	make (context: AST_CONTEXT; f: detachable FEATURE_I; u: detachable ID_AS; c: CLASS_C; i: INTEGER; t, a: TYPE_A; l: LOCATION_AS)
 			-- Initialize an error object in context `context' with feature `f' called on class `c'
 			-- with argument position `i' of formal type `t' and actual type `a' at location `l'.
 		require
-			f_attached: attached f
+			f_or_u_attached: attached f or attached u
 			c_attached: attached c
-			valid_i: 0 < i and i <= f.argument_count
+			valid_i: attached f implies 0 < i and i <= f.argument_count
 			a_attached: attached a
 			t_attached: attached t
 			l_attached: attached l
 		do
-			set_called_feature (f, c.class_id)
+			if attached f then
+				set_called_feature (f, c.class_id)
+				set_argument_name (f.arguments.item_name (i))
+			elseif attached u then
+				set_argument_name (u.name_32)
+			end
 			set_argument_position (i)
-			set_argument_name (f.arguments.item_name (i))
 			set_actual_type (a)
 			set_formal_type (t)
 			set_location (l)
@@ -52,7 +56,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

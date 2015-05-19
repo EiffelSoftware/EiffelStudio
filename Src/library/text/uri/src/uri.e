@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 		note
 			EIS: "name=Syntax Components", "protocol=URI", "src=http://tools.ietf.org/html/rfc3986#section-3"
 		local
-			p,q,qq: INTEGER
+			p,q,r,qq: INTEGER
 			s, t: STRING_8
 		do
 			is_valid := True
@@ -66,14 +66,17 @@ feature {NONE} -- Initialization
 						--| Starts by scheme://
 						--| waiting for hierarchical part username:password@hostname:port
 					p := p + 2
+					r := a_string.index_of ('/', p + 1)
 					q := a_string.index_of ('@', p + 1)
-					if q > 0 then
+					if q > 0 and (r = 0 or q < r) then
 							--| found user:passwd
 						t := a_string.substring (p + 1, q - 1)
 						set_userinfo (t)
 						p := q
+						q := a_string.index_of ('/', p + 1)
+					else
+						q := r
 					end
-					q := a_string.index_of ('/', p + 1)
 					qq := a_string.index_of ('?', p + 1)
 					if qq > 0 and (q = 0 or qq < q) then
 						q := qq
@@ -686,7 +689,7 @@ feature -- Element Change
 	set_path (a_path: READABLE_STRING_8)
 			-- Set `path' to `a_path'	
 		require
-			is_valid_path (a_path)
+			is_valid_path: is_valid_path (a_path)
 		do
 			create path.make_from_string (a_path)
 		ensure
@@ -1146,7 +1149,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

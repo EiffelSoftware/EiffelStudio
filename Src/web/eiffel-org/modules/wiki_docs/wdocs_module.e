@@ -455,7 +455,7 @@ feature -- Hooks
 									check has_wp: False end
 								end
 							else
-								create ln.make ({STRING_32} "Book %"" +wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
+								create ln.make ({STRING_32} "Book %"" + wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
 								ln.set_expandable (True)
 								Result.extend (ln)
 
@@ -1113,11 +1113,13 @@ feature {NONE} -- implementation: wiki docs
 	wdocs_book_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): STRING
 		do
 			if a_version_id /= Void then
-				create Result.make_from_string ("/version/" + percent_encoder.percent_encoded_string (a_version_id))
+				create Result.make_from_string ("version/")
+				Result.append (percent_encoder.percent_encoded_string (a_version_id))
+				Result.append_character ('/')
 			else
 				create Result.make_empty
 			end
-			Result.append ("/book/")
+			Result.append ("book/")
 			Result.append (percent_encoder.percent_encoded_string (a_book_name))
 		end
 

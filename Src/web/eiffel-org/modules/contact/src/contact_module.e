@@ -106,7 +106,7 @@ feature -- Hooks
 			-- for related response `a_response'.
 		do
 			debug ("refactor_fixme")
-				fixme ("add /contact to menu")
+				fixme ("add contact to menu")
 			end
 		end
 

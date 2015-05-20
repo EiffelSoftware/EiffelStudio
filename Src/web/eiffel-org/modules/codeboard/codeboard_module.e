@@ -84,7 +84,7 @@ feature -- Hooks
 			-- for related response `a_response'.
 		do
 			debug ("refactor_fixme")
-				fixme ("add /about and /contribute to primary menu")
+				fixme ("add about and contribute to primary menu")
 			end
 		end
 

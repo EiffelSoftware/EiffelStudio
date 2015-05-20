@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	initialize
 		do
 			Precursor
-			create {WSF_CMS_THEME} wsf_theme.make (Current, theme)
+			create {CMS_TO_WSF_THEME} wsf_theme.make (Current, theme)
 		end
 
 	wsf_theme: WSF_THEME
@@ -62,9 +62,9 @@ feature -- Execution
 							fd := f.last_data
 						end
 						if l_node.has_id then
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "/node/" + l_node.id.out + "/edit"), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", "/node/" + l_node.id.out + "/delete"), primary_tabs)
+							add_to_menu (node_local_link (l_node, translation ("View", Void)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (l_node) + "/edit"), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", node_api.node_path (l_node) + "/delete"), primary_tabs)
 						end
 
 						if attached redirection as l_location then
@@ -86,9 +86,9 @@ feature -- Execution
 							fd := f.last_data
 						end
 						if l_node.has_id then
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "/node/" + l_node.id.out + "/edit"), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", "/node/" + l_node.id.out + "/delete"), primary_tabs)
+							add_to_menu (node_local_link (l_node, translation ("View", Void)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (l_node) + "/edit"), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", node_api.node_path (l_node) + "/delete"), primary_tabs)
 						end
 
 						if attached redirection as l_location then
@@ -110,8 +110,8 @@ feature -- Execution
 							fd := f.last_data
 						end
 						if l_node.has_id then
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make ("Trash", "/node/" + l_node.id.out + "/trash"), primary_tabs)
+							add_to_menu (node_local_link (l_node, translation ("View", Void)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make ("Trash", node_api.node_path (l_node) + "/Trash"), primary_tabs)
 						end
 
 						if attached redirection as l_location then
@@ -148,8 +148,8 @@ feature -- Execution
 						set_title ("Edit " + html_encoded (l_type.title) + " #" + l_node.id.out)
 
 						if l_node.has_id then
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("View", Void), node_url (l_node)), primary_tabs)
-							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), "/node/" + l_node.id.out + "/edit"), primary_tabs)
+							add_to_menu (node_local_link (l_node, translation ("View", Void)), primary_tabs)
+							add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (l_node) + "/edit"), primary_tabs)
 						end
 
 						f.append_to_html (wsf_theme, b)
@@ -173,7 +173,7 @@ feature -- Execution
 						attached ic.item as l_node_type and then
 						has_permissions (<<"create any", "create " + l_node_type.name>>)
 					then
-						b.append ("<li>" + link (l_node_type.name, "/node/add/" + l_node_type.name, Void))
+						b.append ("<li>" + link (l_node_type.name, "node/add/" + l_node_type.name, Void))
 						if attached l_node_type.description as d then
 							b.append ("<div class=%"description%">" + d + "</div>")
 						end
@@ -219,6 +219,7 @@ feature -- Form
 			l_preview: BOOLEAN
 			l_node: detachable CMS_NODE
 			s: STRING
+			l_path_alias: detachable READABLE_STRING_8
 		do
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
 			if not l_preview then
@@ -250,20 +251,29 @@ feature -- Form
 				end
 				node_api.save_node (l_node)
 				if attached current_user (request) as u then
-					api.log ("node", "User %"" + user_html_link (u) + "%" " + s + " node " + link (a_type.name +" #" + l_node.id.out, "/node/" + l_node.id.out , Void), 0, node_local_link (l_node))
+					api.log ("node",
+							"User %"" + user_html_link (u) + "%" " + s + " node " + node_html_link (l_node, a_type.name + " #" + l_node.id.out),
+							0, node_local_link (l_node, Void)
+						)
 				else
-					api.log ("node", "Anonymous " + s + " node " + a_type.name +" #" + l_node.id.out, 0, node_local_link (l_node))
+					api.log ("node", "Anonymous " + s + " node " + a_type.name +" #" + l_node.id.out, 0, node_local_link (l_node, Void))
 				end
 				add_success_message ("Node #" + l_node.id.out + " saved.")
 
-				if attached fd.string_item ("path_alias") as l_path_alias then
+				if
+					attached fd.string_item ("path_alias") as f_path_alias and then
+					not f_path_alias.is_empty
+				then
+					l_path_alias := percent_encoder.partial_encoded_string (f_path_alias, <<'/'>>)
+						-- Path alias, are always from the root of the cms.
 					api.set_path_alias (node_api.node_path (l_node), l_path_alias, False)
 					l_node.set_link (create {CMS_LOCAL_LINK}.make (l_node.title, l_path_alias))
 				else
 					l_node.set_link (node_api.node_link (l_node))
 				end
-
-				set_redirection (node_url (l_node))
+				if attached l_node.link as lnk then
+					set_redirection (lnk.location)
+				end
 			end
 		end
 
@@ -365,8 +375,6 @@ feature -- Form
 			end
 			Result := f
 		end
-
-
 
 
 	populate_form (a_content_type: CMS_NODE_TYPE [CMS_NODE]; a_form: WSF_FORM; a_node: detachable CMS_NODE)

@@ -25,8 +25,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_title: detachable like title; a_location: like location)
+	make (a_title: detachable READABLE_STRING_GENERAL; a_location: like location)
 			-- Create current local link with optional title `a_title' and location `a_location'.
+		require
+			is_valid_local_location_argument: not a_location.starts_with_general ("/")
 		do
 			location := a_location
 			set_title (a_title)
@@ -71,13 +73,13 @@ feature -- Status report
 
 feature -- Element change
 
-	set_title (a_title: detachable like title)
+	set_title (a_title: detachable READABLE_STRING_GENERAL)
 			-- Set `title' to `a_title' or `location'.
 		do
 			if a_title /= Void then
-				title := a_title
+				title := a_title.as_string_32
 			else
-				title := location
+				title := location.as_string_32
 			end
 		end
 

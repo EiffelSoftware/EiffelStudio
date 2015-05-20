@@ -29,11 +29,33 @@ feature {NONE} -- Initialization
 
 	initialize
 		do
+			initialize_site_url
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
 			create hook_subscribers.make (0)
 			register_hooks
+		end
+
+	initialize_site_url
+				-- Initialize site and base url.
+		local
+			l_url: detachable READABLE_STRING_8
+			i,j: INTEGER
+		do
+				--| WARNING: do not use `absolute_url' and `url', since it relies on site_url and base_url.
+			l_url := setup.site_url
+			if l_url = Void then
+				l_url := request.absolute_script_url ("/")
+			end
+			site_url := l_url
+			i := l_url.substring_index ("://", 1)
+			if i > 0 then
+				j := l_url.index_of ('/', i + 3)
+				if j > 0 then
+					base_url := l_url.substring (j, l_url.count)
+				end
+			end
 		end
 
 	register_hooks
@@ -164,15 +186,12 @@ feature -- URL utilities
 		end
 
 	site_url: READABLE_STRING_8
-		do
-			Result := absolute_host (request, "")
-		end
+			-- Absolute site url.
 
 	base_url: detachable READABLE_STRING_8
 			-- Base url if any.
 			--| Usually it is Void, but it could be
 			--|  /project/demo/
-			--| FIXME: for now, no way to change that. Always at the root "/"
 
 feature -- Access: CMS
 
@@ -183,7 +202,7 @@ feature -- Access: CMS
 
 	front_page_url: READABLE_STRING_8
 		do
-			Result := request.absolute_script_url ("/")
+			Result := absolute_url ("/", Void)
 		end
 
 	values: CMS_VALUE_TABLE
@@ -806,9 +825,9 @@ feature -- Theme
 				create l_info.make_default
 			end
 			if l_info.engine.is_case_insensitive_equal_general ("smarty") then
-				create {SMARTY_CMS_THEME} theme.make (setup, l_info)
+				create {SMARTY_CMS_THEME} theme.make (setup, l_info, site_url)
 			else
-				create {MISSING_CMS_THEME} theme.make (setup)
+				create {MISSING_CMS_THEME} theme.make (setup, l_info, site_url)
 				status_code := {HTTP_STATUS_CODE}.service_unavailable
 				to_implement ("Check how to add the Retry-after, http://tools.ietf.org/html/rfc7231#section-6.6.4 and http://tools.ietf.org/html/rfc7231#section-7.1.3")
 			end
@@ -834,7 +853,7 @@ feature -- Generation
 			lnk: CMS_LINK
 		do
 				-- Menu
-			create {CMS_LOCAL_LINK} lnk.make ("Home", "/")
+			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
 			lnk.set_weight (-10)
 			add_to_primary_menu (lnk)
 			invoke_menu_system_alter (menu_system)
@@ -920,8 +939,8 @@ feature -- Generation
 			end
 
 				-- Variables
-			page.register_variable (request.absolute_script_url (""), "site_url")
-			page.register_variable (request.absolute_script_url (""), "host") -- Same as `site_url'.
+			page.register_variable (absolute_url ("", Void), "site_url")
+			page.register_variable (absolute_url ("", Void), "host") -- Same as `site_url'.
 			page.register_variable (request.is_https, "is_https")
 			if attached current_user_name (request) as l_user then
 				page.register_variable (l_user, "user")
@@ -1102,8 +1121,8 @@ feature {NONE} -- Execution
 --					h.put_location (l_location)
 					response.redirect_now (l_location)
 				else
---					h.put_location (request.absolute_script_url (l_location))
-					response.redirect_now (request.absolute_script_url (l_location))
+--					h.put_location (request.absolute_url (l_location, Void))
+					response.redirect_now (absolute_url (l_location, Void))
 				end
 			else
 				h.put_header_object (header)

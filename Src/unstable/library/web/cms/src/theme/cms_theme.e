@@ -9,12 +9,20 @@ deferred class
 inherit
 	CMS_ENCODERS
 
+	CMS_URL_UTILITIES
+
 	REFACTORING_HELPER
 
 
 feature {NONE} -- Access
 
 	setup:  CMS_SETUP
+
+	site_url: READABLE_STRING_8 assign set_site_url
+			-- Absolute URL for Current CMS site.
+
+	base_url: detachable READABLE_STRING_8
+			-- Optional base url of current CMS site.
 
 feature -- Access
 
@@ -39,6 +47,30 @@ feature -- Status report
 			-- Current theme has region `a_region_name' declared?
 		do
 			Result := across regions as ic some a_region_name.is_case_insensitive_equal (ic.item) end
+		end
+
+feature -- Element change
+
+	set_site_url (a_url: READABLE_STRING_8)
+			-- Set `site_url' to `a_url'.
+		require
+			a_url.ends_with_general ("/")
+		local
+			i,j: INTEGER
+		do
+			base_url := Void
+			if a_url[a_url.count] = '/' then
+				site_url := a_url
+			else
+				site_url := a_url + "/"
+			end
+			i := a_url.substring_index ("://", 1)
+			if i > 0 then
+				j := a_url.index_of ('/', i + 3)
+				if j > 0 then
+					base_url := a_url.substring (j, a_url.count)
+				end
+			end
 		end
 
 feature -- Conversion
@@ -133,7 +165,11 @@ feature {NONE} -- Implementation
 			else
 				s.append ("<li class=%""+ cl + "%">")
 			end
-			s.append ("<a href=%"" +  (lnk.location) + "%">" + html_encoded (lnk.title) + "</a>")
+			s.append ("<a href=%"")
+			s.append (url (lnk.location, Void))
+			s.append ("%">")
+			s.append (html_encoded (lnk.title))
+			s.append ("</a>")
 			if
 				(lnk.is_expanded or lnk.is_collapsed) and then
 				attached lnk.children as l_children

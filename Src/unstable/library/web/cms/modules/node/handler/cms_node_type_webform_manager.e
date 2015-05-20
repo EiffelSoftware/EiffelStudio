@@ -9,6 +9,8 @@ deferred class
 inherit
 	CMS_NODE_TYPE_WEBFORM_MANAGER_I [G]
 
+	SHARED_WSF_PERCENT_ENCODER
+
 feature -- Forms ...		
 
 	populate_form (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
@@ -18,6 +20,7 @@ feature -- Forms ...
 			ta: WSF_FORM_TEXTAREA
 			tselect: WSF_FORM_SELECT
 			opt: WSF_FORM_SELECT_OPTION
+			l_uri: detachable READABLE_STRING_8
 		do
 			create ti.make ("title")
 			ti.set_label ("Title")
@@ -66,16 +69,37 @@ feature -- Forms ...
 
 			f.extend (fset)
 
-				-- Path aliase			
+				-- Path alias
 			create ti.make ("path_alias")
 			ti.set_label ("Path")
 			ti.set_size (70)
 			if a_node /= Void and then a_node.has_id then
 				if attached a_node.link as lnk then
-					ti.set_text_value (lnk.location)
+					l_uri := lnk.location
 				else
-					ti.set_text_value (response.api.path_alias (response.node_api.node_path (a_node)))
+					l_uri := percent_encoder.percent_decoded_string (response.api.path_alias (response.node_api.node_path (a_node)))
 				end
+				ti.set_text_value (l_uri)
+				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
+				ti.set_validation_action (agent (fd: WSF_FORM_DATA; a_response: CMS_RESPONSE)
+						do
+							if
+								attached fd.string_item ("path_alias") as f_path_alias
+							then
+								if a_response.api.is_valid_path_alias (f_path_alias) then
+										-- Ok.
+								elseif f_path_alias.is_empty then
+										-- Ok
+								elseif f_path_alias.starts_with_general ("/") then
+									fd.report_invalid_field ("path_alias", "Path alias should not start with a slash '/' .")
+								elseif f_path_alias.has_substring ("://") then
+									fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
+								else
+										-- TODO: implement full path alias validation
+								end
+							end
+						end(?, response)
+					)
 			end
 			if
 				attached f.fields_by_name ("title") as l_title_fields and then
@@ -180,7 +204,7 @@ feature -- Output
 			node_api := a_response.node_api
 
 			a_response.add_variable (a_node, "node")
-			create lnk.make (a_response.translation ("View", Void), a_response.node_local_link (a_node).location)
+			lnk := a_response.node_local_link (a_node, a_response.translation ("View", Void))
 			lnk.set_weight (1)
 			a_response.add_to_primary_tabs (lnk)
 

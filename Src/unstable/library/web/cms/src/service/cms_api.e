@@ -234,9 +234,16 @@ feature -- Query: API
 
 feature -- Path aliases	
 
+	is_valid_path_alias (a_alias: READABLE_STRING_8): BOOLEAN
+		do
+			Result := a_alias.is_empty or else not a_alias.starts_with_general ("/")
+		end
+
 	set_path_alias (a_source, a_alias: READABLE_STRING_8; a_keep_previous: BOOLEAN)
 			-- Set `a_alias' as alias of `a_source',
 			-- and eventually unset previous alias if any.
+		require
+			valid_alias: is_valid_path_alias (a_alias)
 		local
 			l_continue: BOOLEAN
 		do
@@ -281,8 +288,8 @@ feature -- Path aliases
 			-- Resolved path for alias `a_alias'.
 			--| the CMS supports aliases for path, and then this function simply returns
 			--| the effective target path/url for this `a_alias'.
-			--| For instance: /articles/2015/may/this-is-an-article can be an alias to /node/123
-			--| This function will return "/node/123".
+			--| For instance: articles/2015/may/this-is-an-article can be an alias to node/123
+			--| This function will return "node/123".
 			--| If the alias is bad (i.e does not alias real path), then this function
 			--| returns the alias itself.
 		do

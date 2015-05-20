@@ -19,15 +19,17 @@ feature -- Basic operations
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter
+		local
+			utf: UTF_CONVERTER
 		do
 			fixme ("Check if it's ok to add new fetures CMS_API.has_error:BOOLEAN and CMS_API.error_description.")
 			if not api.has_error then
 				api.logger.put_information (generator + ".execute with req: " + req.debug_output, Void)
 				if attached req.raw_header_data as l_header_data  then
-					api.logger.put_debug (generator + ".execute with req header: " + l_header_data, Void)
+					api.logger.put_debug (generator + ".execute with req header: " + utf.escaped_utf_32_string_to_utf_8_string_8 (l_header_data), Void)
 				end
 				if attached req.raw_input_data as l_input_data  then
-					api.logger.put_debug (generator + ".execute with req input: " + l_input_data, Void)
+					api.logger.put_debug (generator + ".execute with req input: " + utf.escaped_utf_32_string_to_utf_8_string_8 (l_input_data), Void)
 				end
 				execute_next (req, res)
 			else

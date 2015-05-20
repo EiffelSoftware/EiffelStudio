@@ -15,7 +15,7 @@ CREATE TABLE "logs"(
 CREATE TABLE "custom_values"(
   "type" VARCHAR(255) NOT NULL,
   "name" VARCHAR(255) NOT NULL,
-  "value" VARCHAR(255) NOT NULL
+  "value" TEXT
 );
 
 CREATE TABLE "path_aliases"(

@@ -31,8 +31,22 @@ feature {WSF_ROUTER_MAPPING} -- Dispatch helper
 
 	path_to_dispatch (req: WSF_REQUEST): READABLE_STRING_8
 			-- Path used by the router, to apply url dispatching of request `req'.
+		local
+			l_path: STRING_8
 		do
-			Result := api.source_of_path_alias (Precursor (req))
+			create l_path.make_from_string (Precursor (req))
+			if not l_path.is_empty and l_path [1] = '/' then
+				l_path.remove_head (1)
+			end
+			Result := api.source_of_path_alias (l_path)
+			if Result.is_empty then
+				Result := "/"
+			elseif Result [1] /= '/' then
+				create l_path.make (Result.count + 1)
+				l_path.append_character ('/')
+				l_path.append (Result)
+				Result := l_path
+			end
 		end
 
 end

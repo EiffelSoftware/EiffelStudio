@@ -170,9 +170,9 @@ feature -- URL
 			-- or URI of path for selection of new content possibilities if ct is Void.
 		do
 			if ct /= Void then
-				Result := "/node/add/" + ct.name
+				Result := "node/add/" + ct.name
 			else
-				Result := "/node/"
+				Result := "node/"
 			end
 		end
 
@@ -190,13 +190,13 @@ feature -- URL
 		require
 			a_node.has_id
 		do
-			Result := "/node/" + a_node.id.out
+			Result := "node/" + a_node.id.out
 		end
 
 	nodes_path: STRING
 			-- URI path for list of nodes.
 		do
-			Result := "/nodes"
+			Result := "nodes"
 		end
 
 feature -- Access: Node

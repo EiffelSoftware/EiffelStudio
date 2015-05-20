@@ -183,13 +183,13 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 --			perms: detachable ARRAYED_LIST [READABLE_STRING_8]
 		do
-			create lnk.make ("List of nodes", a_response.url ("/nodes", Void))
+			create lnk.make ("List of nodes", "nodes")
 			a_menu_system.primary_menu.extend (lnk)
 
-			create lnk.make ("Trash nodes", a_response.url ("/trash", Void))
+			create lnk.make ("Trash", "trash")
 			a_menu_system.primary_menu.extend (lnk)
 
-			create lnk.make ("Create ..", a_response.url ("/node/", Void))
+			create lnk.make ("Create ..", "node/")
 			a_menu_system.primary_menu.extend (lnk)
 		end
 

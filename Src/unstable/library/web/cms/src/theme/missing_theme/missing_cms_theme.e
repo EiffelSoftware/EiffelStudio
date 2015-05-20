@@ -18,14 +18,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setup: like setup)
+	make (a_setup: like setup; a_info: like information; abs_site_url: READABLE_STRING_8)
 		do
 			setup := a_setup
+			information := a_info
+			set_site_url (abs_site_url)
 		ensure
 			setup_set: setup = a_setup
 		end
 
 feature -- Access
+
+	information: CMS_THEME_INFORMATION
 
 	name: STRING = "missing theme"
 

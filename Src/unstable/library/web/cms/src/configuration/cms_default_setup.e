@@ -39,17 +39,21 @@ feature {NONE} -- Initialization
 		end
 
 	configure
+		local
+			l_url: like site_url
 		do
 				--| Site id, used to identified a site, this could be set to a uuid, or else
 			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
 
 				-- Site url: optional, but ending with a slash
-			site_url := string_8_item ("site_url")
-			if attached site_url as l_url and then not l_url.is_empty then
-				if l_url[l_url.count] /= '/' then
-					site_url := l_url + "/"
+			l_url := string_8_item ("site_url")
+			if l_url /= Void and then not l_url.is_empty then
+				if l_url [l_url.count] /= '/' then
+					l_url := l_url + "/"
 				end
 			end
+			site_url := l_url
+
 				-- Site name
 			site_name := text_item_or_default ("site.name", "EWF::CMS")
 

@@ -70,14 +70,4 @@ feature -- Media Type
 			end
 		end
 
-feature -- Absolute Host
-
-	absolute_host (req: WSF_REQUEST; a_path:STRING): STRING
-		do
-			Result := req.absolute_script_url (a_path)
-			if Result.last_index_of ('/', Result.count) = Result.count then
-				Result.remove_tail (1)
-			end
-		end
-
 end

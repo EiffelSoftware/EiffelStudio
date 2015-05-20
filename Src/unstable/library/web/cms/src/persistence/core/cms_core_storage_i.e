@@ -1,6 +1,6 @@
 note
 	description: "[
-			Objects that ...
+			CMS Storage for core functionalities.
 		]"
 	author: "$Author$"
 	date: "$Date$"

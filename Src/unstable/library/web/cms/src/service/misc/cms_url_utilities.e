@@ -13,6 +13,7 @@ inherit
 feature -- Core
 
 	site_url: READABLE_STRING_8
+			-- Absolute site URL of Current CMS site.
 		deferred
 		end
 

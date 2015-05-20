@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	initialize
 		do
 			Precursor
-			create {WSF_CMS_THEME} wsf_theme.make (Current, theme)
+			create {CMS_TO_WSF_THEME} wsf_theme.make (Current, theme)
 		end
 
 	wsf_theme: WSF_THEME

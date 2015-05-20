@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {WSF_CMS_THEME}."
+	description: "Theme from the EWF framework, but dedicated for the CMS."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WSF_CMS_THEME
+	CMS_TO_WSF_THEME
 
 inherit
 	WSF_THEME
@@ -25,13 +25,14 @@ feature -- Access
 
 	request: WSF_REQUEST
 
-	response: detachable CMS_RESPONSE
+	response: CMS_RESPONSE
 
 	cms_theme: CMS_THEME
 
 feature -- Element change
 
 	set_response (a_response: CMS_RESPONSE)
+			-- Set `response' to `a_response'.
 		do
 			response := a_response
 		end
@@ -39,20 +40,15 @@ feature -- Element change
 feature -- Core
 
 	site_url: READABLE_STRING_8
+			-- CMS site url.
 		do
-			if attached response as r then
-				Result := r.site_url
-			else
-				Result := request.absolute_script_url ("")
-			end
+			Result := response.site_url
 		end
 
 	base_url: detachable READABLE_STRING_8
 			-- Base url if any.
 		do
-			if attached response as r then
-				Result := r.base_url
-			end
+			Result := response.base_url
 		end
 
 end

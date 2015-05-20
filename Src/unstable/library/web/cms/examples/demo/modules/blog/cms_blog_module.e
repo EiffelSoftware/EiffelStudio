@@ -101,7 +101,7 @@ feature -- Hooks
 		local
 			lnk: CMS_LOCAL_LINK
 		do
-			create lnk.make ("Blogs", "/blogs/")
+			create lnk.make ("Blogs", "blogs/")
 			a_menu_system.primary_menu.extend (lnk)
 		end
 

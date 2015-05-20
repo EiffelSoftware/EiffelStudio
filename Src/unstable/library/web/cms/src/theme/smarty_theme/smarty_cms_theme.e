@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setup: like setup; a_info: like information;)
+	make (a_setup: like setup; a_info: like information; abs_site_url: READABLE_STRING_8)
 		do
 			setup := a_setup
 			information := a_info
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			else
 				templates_directory := a_setup.theme_location
 			end
+			set_site_url (abs_site_url)
 		ensure
 			setup_set: setup = a_setup
 			information_set: information = a_info

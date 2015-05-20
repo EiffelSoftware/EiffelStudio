@@ -110,9 +110,9 @@ feature -- Hooks
 			if a_block_id.is_case_insensitive_equal_general ("demo-info") then
 				if a_response.request.request_uri.starts_with ("/demo/") then
 					create m.make_with_title (a_block_id, "Demo", 2)
-					create lnk.make ("/demo/abc", a_response.url ("/demo/abc", Void))
+					create lnk.make ("demo: abc", "demo/abc")
 					m.extend (lnk)
-					create lnk.make ("/demo/123", a_response.url ("/demo/123", Void))
+					create lnk.make ("demo: 123", "demo/123")
 					m.extend (lnk)
 					create mb.make (m)
 					a_response.add_block (mb, "sidebar_second")
@@ -125,7 +125,7 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 --			perms: detachable ARRAYED_LIST [READABLE_STRING_8]
 		do
-			create lnk.make ("Demo", "/demo/")
+			create lnk.make ("Demo", "demo/")
 			a_menu_system.primary_menu.extend (lnk)
 		end
 
@@ -137,8 +137,8 @@ feature -- Handler
 			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
 		do
 			create r.make (req, res, a_api)
-			r.set_main_content ("NODE module does not yet implement %"" + req.path_info + "%" ...")
-			r.add_error_message ("NODE Module: not yet implemented")
+			r.set_main_content ("DEMO module does not yet implement %"" + req.path_info + "%" ...")
+			r.add_error_message ("DEMO Module: not yet implemented")
 			r.execute
 		end
 

@@ -62,7 +62,7 @@ feature -- Access: Site
 			-- Mainly used for internal notification.
 
 	site_url: detachable READABLE_STRING_8
-			-- Optional base url of the site.
+			-- Optional url of current CMS site.
 
 	front_page_path: detachable READABLE_STRING_8
 			-- Optional path defining the front page.

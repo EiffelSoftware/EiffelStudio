@@ -109,9 +109,9 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 		do
 			if attached a_response.current_user (a_response.request) as u then
-				create lnk.make (u.name +  " (Logout)", "/basic_auth_logoff?destination=" + a_response.request.request_uri)
+				create lnk.make (u.name +  " (Logout)", "basic_auth_logoff?destination=" + a_response.request.request_uri)
 			else
-				create lnk.make ("Login", "/basic_auth_login?destination=" + a_response.request.request_uri)
+				create lnk.make ("Login", "basic_auth_login?destination=" + a_response.request.request_uri)
 			end
 --			if not a_menu_system.primary_menu.has (lnk) then
 				lnk.set_weight (99)

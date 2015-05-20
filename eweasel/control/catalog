@@ -1407,18 +1407,18 @@ test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity inc
 test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop multithreaded termination expanded generic
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution assigner
 test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
-test	scoop-unnested-logging				scoop026 tcf fail used_to_pass scoop multithreaded execution
+test	scoop-unnested-logging				scoop026 tcf pass scoop multithreaded execution
 test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop multithreaded execution lock_passing
 test	scoop-sequential-processor-creation		scoop028 tcf pass scoop multithreaded execution
 test	scoop-recursive-processor-creation		scoop029 tcf pass scoop multithreaded execution
 test	scoop-agent-validity				scoop030 tcf pass scoop multithreaded validity expanded agents conformance
 test	scoop-agent-call				scoop031 tcf pass scoop multithreaded agents execution
-test	scoop-corrupted-string				scoop032 tcf fail used_to_pass scoop multithreaded execution
+test	scoop-corrupted-string				scoop032 tcf pass scoop multithreaded execution
 test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded execution lock_passing
 test	scoop-corrupted-polymorphic-call		scoop034 tcf fail used_to_pass scoop multithreaded execution
 test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
 test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
-test	scoop-run-time-crash				scoop037 tcf fail scoop multithreaded execution
+test	scoop-run-time-crash				scoop037 tcf pass scoop multithreaded execution
 test	scoop-agent-creation-rule			scoop038 tcf pass scoop multithreaded agents
 test	scoop-agent-expression-uncontrolled		scoop039 tcf pass scoop multithreaded agents
 test	scoop-agent-expression-controlled		scoop040 tcf pass scoop multithreaded agents
@@ -1440,7 +1440,7 @@ test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop multithreaded 
 test	scoop-separate-instruction-dependent-arguments	scoop056 tcf pass scoop multithreaded validity
 test	scoop-separate-instruction-non-separate		scoop057 tcf pass scoop multithreaded validity
 test	scoop-separate-instruction-execution		scoop058 tcf pass scoop multithreaded execution
-test	scoop-gc-stress-test				scoop059 tcf fail scoop multithreaded execution
+test	scoop-gc-stress-test				scoop059 tcf pass scoop multithreaded execution
 test	scoop-assigner-command-validity			scoop060 tcf pass scoop multithreaded assigner validity
 test	scoop-named-tuple-execution			scoop061 tcf fail scoop multithreaded tuple assigner execution
 

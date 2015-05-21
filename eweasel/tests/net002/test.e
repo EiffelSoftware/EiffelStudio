@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 				-- Active wait until thread is fully launched
 			from
 			until
-				port /= 0
+				is_launched
 			loop
 				sleep (1_000_000_000)
 			end
@@ -52,6 +52,8 @@ feature -- Access
 
 	port: INTEGER
 
+	is_launched: BOOLEAN
+
 feature {NONE} -- Implementation
 
 	server
@@ -61,6 +63,7 @@ feature {NONE} -- Implementation
 			create s.make_server_by_port (0)
 			port := s.port
 			s.listen(1)
+			is_launched := True
 			s.accept
 				-- We do not close the socket as we don't want to have the recipient getting
 				-- such a notification.

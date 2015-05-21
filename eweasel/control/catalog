@@ -547,7 +547,7 @@ test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
 test	duplicate-vfac1				valid274 tcf pass validity assigner
 test	non-conforming-equality			valid275 tcf pass validity conformance equality warning
 test	missing-assigner-feature		valid276 tcf pass validity assigner fixed
-test	insufficiently-exported-assigner-feature valid277 tcf fail validity assigner
+test	insufficiently-exported-assigner-feature valid277 tcf pass validity assigner
 test	invalid-static-inspect-constant	 	valid278 tcf pass validity
 test	wrong-tuple-type-in-descendants	valid279 tcf fail validity
 test	bogus-vjar-error			valid280 tcf pass validity anchored_type

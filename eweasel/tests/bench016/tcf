@@ -25,7 +25,7 @@ compile_result ok
 c_compile_final
 c_compile_result ok
 
-execute_work NONE exec_output_f
+execute_final NONE exec_output_f
 execute_result	ok
 compare exec_output_f output
 

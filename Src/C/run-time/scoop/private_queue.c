@@ -43,6 +43,13 @@ doc:<file name="private_queue.c" header="rt_private_queue.h" version="$Id$" summ
 #include "rt_processor.h"
 #include "eif_scoop.h"
 
+/* Macro used to remember the result in workbench mode. Has no effect in finalized mode. */
+#ifdef WORKBENCH
+#	define rt_macro_set_saved_result(self,x) (self)->saved_result = (x)
+#else
+#	define rt_macro_set_saved_result(self,x) (void) 0
+#endif
+
 /*
 doc:	<routine name="rt_private_queue_init" return_type="int" export="shared">
 doc:		<summary> Initialize the private queue 'self' with supplier 'a_supplier'. </summary>
@@ -63,6 +70,7 @@ rt_shared int rt_private_queue_init (struct rt_private_queue* self, struct rt_pr
 	self->supplier = a_supplier;
 	self->synced = EIF_FALSE;
 	self->lock_depth = 0;
+	rt_macro_set_saved_result (self, NULL);
 
 	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
 	error = rt_message_channel_init (&self->channel, 512);
@@ -200,6 +208,9 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 {
 	EIF_SCP_PID l_sync_pid = call->sync_pid;
 	EIF_BOOLEAN will_sync = l_sync_pid != EIF_NULL_PROCESSOR;
+#ifdef WORKBENCH
+	EIF_TYPED_VALUE* l_result = call->result;
+#endif
 
 
 	if (rt_queue_cache_has_locks_of (&client->cache, self->supplier)) {
@@ -236,17 +247,39 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 
 		struct rt_message* l_message = &self->call_stack_msg;
 
+			/* In workbench mode, we have to keep track of the EIF_TYPED_VALUE for the result
+			 * and make sure the reference is updated during GC (see also test#bench016).
+			 * The critical section starts here, when the supplier may have finished the call but
+			 * before the client (i.e. the thread executing this feature) wakes up again. */
+		rt_macro_set_saved_result (self, l_result);
+
 			/* Wait on our own result notifier for a message by the other processor. */
 		rt_message_channel_receive (&client->result_notify, l_message);
 
-		for (;
-			l_message->message_type == SCOOP_MESSAGE_CALLBACK;
-			rt_message_channel_receive (&client->result_notify, l_message))
-		{
-				/*NOTE: The thread executing this feature is the one behind 'client'. */
+		while (l_message->message_type == SCOOP_MESSAGE_CALLBACK) {
+				/* A separate callback arrived. We need to execute it right away
+				 * and send back our result to the supplier. */
+
+				/* Clear the saved_result. The supplier won't set the value
+				 * while the client executes a callback, but the client may log
+				 * further calls, in which case saved_result should be NULL. */
+			rt_macro_set_saved_result (self, NULL);
+
+				/* Execute the separate callback on this thread (i.e. the one behind 'client'). */
 			rt_processor_execute_call (client, l_message->sender, l_message->call);
 			l_message->call = NULL;
+
+				/* During the next receive we may get the answer to our query,
+				 * so we need to set saved_result again. */
+			rt_macro_set_saved_result (self, l_result);
+
+				/* Again, wait on our result notification channel for a new message. */
+			rt_message_channel_receive (&client->result_notify, l_message);
 		}
+
+			/* The critical part is over, as the current thread is awake
+			 * again and synchronized with the GC. */
+		rt_macro_set_saved_result (self, NULL);
 
 		if (l_message->message_type == SCOOP_MESSAGE_DIRTY) {
 			eraise ((const char *) "EVE/Qs dirty processor exception", 32);
@@ -281,6 +314,15 @@ rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER mark
 	if (call) {
 		rt_mark_call_data (marking, call);
 	}
+
+#ifdef WORKBENCH
+		/* Mark saved_result, if it is a reference. */
+	if (self->saved_result && ((self->saved_result->type) & SK_HEAD) == SK_REF) {
+		EIF_REFERENCE* ref = &(self->saved_result->it_ref);
+		*ref = marking (ref);
+	}
+#endif
+
 }
 
 /*

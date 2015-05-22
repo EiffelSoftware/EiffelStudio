@@ -18,10 +18,10 @@ feature {NONE} -- Access
 
 	setup:  CMS_SETUP
 
-	site_url: READABLE_STRING_8 assign set_site_url
+	site_url: IMMUTABLE_STRING_8
 			-- Absolute URL for Current CMS site.
 
-	base_url: detachable READABLE_STRING_8
+	base_url: detachable IMMUTABLE_STRING_8
 			-- Optional base url of current CMS site.
 
 feature -- Access
@@ -59,16 +59,17 @@ feature -- Element change
 			i,j: INTEGER
 		do
 			base_url := Void
-			if a_url[a_url.count] = '/' then
-				site_url := a_url
+			if a_url [a_url.count] = '/' then
+				create site_url.make_from_string (a_url)
 			else
-				site_url := a_url + "/"
+				create site_url.make_from_string (a_url + "/")
 			end
+
 			i := a_url.substring_index ("://", 1)
 			if i > 0 then
 				j := a_url.index_of ('/', i + 3)
 				if j > 0 then
-					base_url := a_url.substring (j, a_url.count)
+					create base_url.make_from_string (a_url.substring (j, a_url.count))
 				end
 			end
 		end

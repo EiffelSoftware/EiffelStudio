@@ -40,13 +40,18 @@ feature {NONE} -- Initialization
 	initialize_site_url
 				-- Initialize site and base url.
 		local
-			l_url: detachable READABLE_STRING_8
+			l_url: detachable STRING_8
 			i,j: INTEGER
 		do
 				--| WARNING: do not use `absolute_url' and `url', since it relies on site_url and base_url.
-			l_url := setup.site_url
-			if l_url = Void then
+			if attached setup.site_url as l_site_url and then not l_site_url.is_empty then
+				create l_url.make_from_string (l_site_url)
+			else
 				l_url := request.absolute_script_url ("/")
+			end
+			check is_not_empty: not l_url.is_empty end
+			if l_url [l_url.count] /= '/' then
+				l_url.append_character ('/')
 			end
 			site_url := l_url
 			i := l_url.substring_index ("://", 1)
@@ -56,6 +61,9 @@ feature {NONE} -- Initialization
 					base_url := l_url.substring (j, l_url.count)
 				end
 			end
+		ensure
+			site_url_set: site_url /= Void
+			site_url_ends_with_slash: site_url.ends_with_general ("/")
 		end
 
 	register_hooks
@@ -97,6 +105,15 @@ feature -- Access
 
 	redirection: detachable READABLE_STRING_8
 			-- Location for eventual redirection.
+
+	location: STRING_8
+			-- Associated cms local location.
+		do
+			create Result.make_from_string (request.percent_encoded_path_info)
+			if not Result.is_empty and then Result[1] = '/' then
+				Result.remove_head (1)
+			end
+		end
 
 feature -- Internationalization (i18n)
 
@@ -185,10 +202,10 @@ feature -- URL utilities
 			end
 		end
 
-	site_url: READABLE_STRING_8
+	site_url: IMMUTABLE_STRING_8
 			-- Absolute site url.
 
-	base_url: detachable READABLE_STRING_8
+	base_url: detachable IMMUTABLE_STRING_8
 			-- Base url if any.
 			--| Usually it is Void, but it could be
 			--|  /project/demo/

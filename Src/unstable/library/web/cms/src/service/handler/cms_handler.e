@@ -42,6 +42,18 @@ feature -- Response helpers
 			res.send (create {CMS_FORBIDDEN_RESPONSE_MESSAGE}.make)
 		end
 
+	send_bad_request_message (res: WSF_RESPONSE)
+			-- Send via `res' a bad request response.
+		do
+			res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
+		end
+
+	send_not_found_message (res: WSF_RESPONSE)
+			-- Send via `res' a bad request response.
+		do
+			res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.not_found))
+		end
+
 	send_access_denied (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Forbidden response.
 		local

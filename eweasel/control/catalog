@@ -1979,7 +1979,7 @@ test	self-init-attribute-returning-current	term169	tcf pass termination self_ini
 test	self-init-attribute-crash	term170	tcf pass termination attribute
 test	keyword-in-multi-constraint-generic-crash	term171	tcf pass termination
 test	catcall-crash-is-covariant-to	term172	tcf fail termination catcall
-test	conversion-query-constant-attribute	term173	tcf fail termination convert
+test	conversion-query-constant-attribute	term173	tcf pass termination convert
 test	create-generic-constrained-by-none	term174	tcf fail termination
 test	create-constrained-generic-crash	term175	tcf pass termination
 test	remove-syntax-error-crash		term176	tcf pass termination

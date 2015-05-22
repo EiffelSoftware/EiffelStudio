@@ -17,7 +17,7 @@
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="cms_layout" location="$ISE_LIBRARY\unstable\library\web\cms\library\layout\layout-safe.ecf" readonly="false"/>
+		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

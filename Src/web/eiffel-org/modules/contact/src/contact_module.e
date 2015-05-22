@@ -12,8 +12,14 @@ class
 inherit
 
 	CMS_MODULE
+		rename
+			module_api as contact_api
 		redefine
-			register_hooks
+			register_hooks,
+			is_installed,
+			install,
+			initialize,
+			contact_api
 		end
 
 	SHARED_HTML_ENCODER
@@ -48,6 +54,65 @@ feature {NONE} -- Initialization
 			description := "Contact form module"
 			package := "messaging"
 		end
+
+feature {CMS_API} -- Module Initialization			
+
+	initialize (api: CMS_API)
+			-- <Precursor>
+		local
+			l_contact_api: like contact_api
+			ut: FILE_UTILITIES
+			p: PATH
+			contact_storage: CONTACT_STORAGE_I
+		do
+			Precursor (api)
+			p := file_system_storage_path (api)
+			if ut.directory_path_exists (p) then
+				create {CONTACT_STORAGE_FS} contact_storage.make (p, api)
+--			elseif attached {CMS_STORAGE_SQL_I} storage as l_storage_sql then
+--				create {CONTACT_STORAGE_SQL} contact_storage.make (l_storage_sql)
+			else
+				create {CONTACT_STORAGE_NULL} contact_storage.make
+			end
+
+			create l_contact_api.make (api, contact_storage)
+			contact_api := l_contact_api
+		end
+
+feature {CMS_API} -- Module management
+
+	is_installed (api: CMS_API): BOOLEAN
+			-- Is Current module installed?
+		local
+			ut: FILE_UTILITIES
+		do
+			Result := ut.directory_path_exists (file_system_storage_path (api))
+		end
+
+	install (api: CMS_API)
+		local
+			retried: BOOLEAN
+			p: PATH
+			d: DIRECTORY
+		do
+			if not retried then
+				create d.make_with_path (file_system_storage_path (api))
+				d.recursive_create_dir
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	file_system_storage_path (api: CMS_API): PATH
+			-- Location of eventual file system based storage for contact messages.
+		do
+			Result := api.setup.environment.path.extended ("db").extended ("contact_messages")
+		end
+
+feature {CMS_API} -- Access: API
+
+	contact_api: detachable CONTACT_API
 
 feature -- Router
 
@@ -173,6 +238,7 @@ feature -- Hooks
 			m: STRING
 			um: STRING
 			l_captcha_passed: BOOLEAN
+			msg: CONTACT_MESSAGE
 		do
 			write_information_log (generator + ".handle_post_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -200,17 +266,26 @@ feature -- Hooks
 				end
 
 				if l_captcha_passed then
+					if attached contact_api as l_contact_api then
+						create msg.make (l_name.value, l_message.value)
+						msg.set_email (l_email.value.as_string_8)
+
+						l_contact_api.save_contact_message (msg)
+					end
+
 					create m.make_from_string (email_template ("email", r))
 					write_information_log (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message (r)))
 					create es.make (create {CONTACT_EMAIL_SERVICE_PARAMETERS}.make (api))
 					write_debug_log (generator + ".handle_post_contact: send_contact_email")
 					es.send_contact_email (l_email.value, m)
+
 					create um.make_from_string (user_contact)
 					um.replace_substring_all ("$name", html_encoded (l_name.value))
 					um.replace_substring_all ("$email", html_encoded (l_email.value))
 					um.replace_substring_all ("$message", html_encoded (l_message.value))
 					write_debug_log (generator + ".handle_post_contact: send_internal_email")
 					es.send_internal_email (um)
+
 					if attached es.last_error then
 						write_error_log (generator + ".handle_post_contact: error message:["+ es.last_error_message +"]")
 						r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)

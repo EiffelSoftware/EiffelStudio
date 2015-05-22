@@ -63,6 +63,7 @@ doc:		<field name="channel" type="struct rt_message_channel"> The message channe
 doc:		<field name="supplier" type="struct rt_processor*"> The supplier to whom messages will be sent. This field is constant. Accessed only by the client. </field>
 doc:		<field name="lock_depth" type="int"> The current lock depth (for recursive locking). Accessed only by the client. </field>
 doc:		<field name="synced" type="EIF_BOOLEAN"> Whether the supplier is synchronized with the client. Accessed only by the client. </field>
+doc:		<field name="saved_result" type="EIF_TYPED_VALUE*"> The typed Eiffel value where the result of a query gets stored. This is only needed in workbench mode to update a reference during GC. </field>
 doc:		<fixme> It may be possible to improve performance slightly with some careful alignment to cache lines (also within rt_message_channel) </fixme>
 doc:	</struct>
 */
@@ -77,6 +78,9 @@ struct rt_private_queue {
 	struct rt_processor *supplier;
 	int lock_depth;
 	EIF_BOOLEAN synced;
+#ifdef WORKBENCH
+	EIF_TYPED_VALUE* saved_result;
+#endif
 };
 
 /* Declarations. */

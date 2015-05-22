@@ -1,12 +1,12 @@
 						<div class="container header-holder">
-							<strong class="logo"><a href="{$site_url/}"><img src="/theme/images/logo.png" width="226" height="60" alt="Eiffel"></a></strong>
+							<strong class="logo"><a href="{$site_url/}"><img src="{$site_url/}theme/images/logo.png" width="226" height="60" alt="Eiffel"></a></strong>
 							<nav id="nav">
 								<ul>
-									<li><a href="{$site_url/}/welcome">welcome</a></li>
-									<li><a href="{$site_url/}/documentation">documentation</a></li>
-									<li><a href="{$site_url/}/resources">resources</a></li>
-									<li><a href="{$site_url/}/contribute">contribute</a></li>
-									<li><a href="{$site_url/}/download_options">download</a>
+									<li><a href="{$site_url/}welcome">welcome</a></li>
+									<li><a href="{$site_url/}documentation">documentation</a></li>
+									<li><a href="{$site_url/}resources">resources</a></li>
+									<li><a href="{$site_url/}contribute">contribute</a></li>
+									<li><a href="{$site_url/}download_options">download</a>
                                         {if condition = "False"}
 										<div class="dropdown">
 											<ul>
@@ -28,12 +28,12 @@
 									<ul> <li></li>
 							{if condition = "False"}
 										{if isset="$user"}
-											<li><a href="{$site_url/}/user">My-Account</a></li>
-											<li><a href="{$site_url/}/user/logout">LOG OUT</a></li>
+											<li><a href="{$site_url/}user">My-Account</a></li>
+											<li><a href="{$site_url/}user/logout">LOG OUT</a></li>
 										{/if}
 										{unless isset="$user"}
-											<li><a href="{$site_url/}/user/register">register</a></li>
-											<li><a href="{$site_url/}/user">LOG IN</a></li>
+											<li><a href="{$site_url/}user/register">register</a></li>
+											<li><a href="{$site_url/}user">LOG IN</a></li>
 										{/unless}
 							{/if}
 									</ul>

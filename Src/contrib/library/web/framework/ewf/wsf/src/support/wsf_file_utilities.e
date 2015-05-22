@@ -1,7 +1,9 @@
 note
 	description: "[
-				This class is used to get a safe temporary file
-				in a specific directory, for an optional prefix, and an optional expected filename.
+				Collection of file system utilities.
+
+				Such as getting safe temporary file	in a specific directory, 
+					for an optional prefix, and an optional expected filename.
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,32 +13,15 @@ class
 
 feature -- Factory
 
-	new_temporary_file (d: DIRECTORY; a_prefix: detachable READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable G
-			-- New temporary file open for writing inside directory `d', with prefix `a_prefix' is set, and based on name `a_name' is set.
-			-- If it is unable to create such file opened for writing, then return Void.
-		require
-			d_valid: d.exists and then d.is_writable
+	new_file (p: PATH): detachable G
+			-- New temporary file open for writing at location `p' or appended with integer suffix if already exists.
 		local
 			f: G
-			fn: PATH
-			bn, tmp: STRING_32
-			dn: PATH
+			bn: STRING_32
 			n: INTEGER
 		do
 			from
-				if a_prefix /= Void then
-					create tmp.make_from_string_general (a_prefix)
-				else
-					create tmp.make_from_string_general ("tmp")
-				end
-				dn := d.path
-				if a_name /= Void then
-					tmp.append_character ('-')
-					tmp.append_string_general (safe_filename (a_name))
-				end
-
-				fn := dn.extended (tmp)
-				create f.make_with_path (fn)
+				create f.make_with_path (p)
 				Result := new_file_opened_for_writing (f)
 				n := 0
 			until
@@ -44,13 +29,39 @@ feature -- Factory
 				or else n > 1_000
 			loop
 				n := n + 1
-				create bn.make_from_string (tmp)
+				create bn.make (2 + n // 10)
 				bn.append_character ('-')
 				bn.append_integer (n)
-				fn := dn.extended (bn)
-				f.make_with_path (fn)
+				f.make_with_path (p.appended (bn))
 				Result := new_file_opened_for_writing (f)
 			end
+		ensure
+			result_opened_for_writing_if_set: Result /= Void implies Result.is_open_write
+		end
+
+	new_temporary_file (d: DIRECTORY; a_prefix: detachable READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable G
+			-- New temporary file open for writing inside directory `d', with prefix `a_prefix' is set, and based on name `a_name' is set.
+			-- If it is unable to create such file opened for writing, then return Void.
+		require
+			d_valid: d.exists and then d.is_writable
+		local
+			fn: PATH
+			tmp: STRING_32
+			dn: PATH
+		do
+			if a_prefix /= Void then
+				create tmp.make_from_string_general (a_prefix)
+			else
+				create tmp.make_from_string_general ("tmp")
+			end
+			dn := d.path
+			if a_name /= Void then
+				tmp.append_character ('-')
+				tmp.append_string_general (safe_filename (a_name))
+			end
+
+			fn := dn.extended (tmp)
+			Result := new_file (fn)
 		ensure
 			result_opened_for_writing_if_set: Result /= Void implies Result.is_open_write
 		end

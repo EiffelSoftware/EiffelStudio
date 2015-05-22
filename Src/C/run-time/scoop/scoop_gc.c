@@ -284,6 +284,7 @@ rt_shared void rt_complement_live_index (void)
 		if ((c -> is_processor) && RT_IS_LIVE_PID (i)) {
 				/* The index is marked. So, the index is not in the list of live ones. */
 				/* Add it to the end of the list. */
+			CHECK ("in_range", n < RT_MAX_SCOOP_PROCESSOR_COUNT);
 			live_index [n] = i;
 			n++;
 		}

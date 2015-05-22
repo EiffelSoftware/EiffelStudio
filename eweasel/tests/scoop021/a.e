@@ -12,8 +12,8 @@ feature {NONE} -- Creation
 		do
 				-- Object test.
 			assert (attached a, i)
-			assert (attached {T} a, i + 1)
-			assert (b = attached {separate T} a, i + 2)
+			assert (b = attached {T} a, i + 1)
+			assert (attached {separate T} a, i + 2)
 			assert (attached a as x, i + 3)
 			assert (b = attached {T} a as x, i + 4)
 			assert (attached {separate T} a as x, i + 5)

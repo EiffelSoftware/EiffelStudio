@@ -17,6 +17,7 @@ http://www.codeproject.com/KB/COM/cwebpage.aspx
 extern void UnEmbedBrowserObject(HWND hwnd);
 extern long EmbedBrowserObject(HWND hwnd);
 extern long DisplayHTMLPage(HWND hwnd, LPTSTR webPageName);
+extern long DisplayHTMLStr(HWND hwnd, LPTSTR string);
 extern void DoPageAction(HWND hwnd, DWORD action);
 extern void ResizeBrowser(HWND hwnd, DWORD width, DWORD height);
 

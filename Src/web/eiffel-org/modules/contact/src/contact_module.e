@@ -92,7 +92,6 @@ feature {CMS_API} -- Module management
 	install (api: CMS_API)
 		local
 			retried: BOOLEAN
-			p: PATH
 			d: DIRECTORY
 		do
 			if not retried then

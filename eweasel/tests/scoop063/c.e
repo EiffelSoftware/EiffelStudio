@@ -1,4 +1,4 @@
-class TEST
+class C [G]
 
 create
 	make
@@ -7,20 +7,14 @@ feature {NONE} -- Creation
 
 	make
 		local
-			a1: A [ANY, ANY, ANY]
-			a2: A [separate ANY, ANY, ANY]
-			a3: A [ANY, separate ANY, ANY]
-			a4: A [separate ANY, separate ANY, ANY]
-			a5: A [ANY, ANY, separate ANY]
-			a6: A [separate ANY, ANY, separate ANY]
-			a7: A [ANY, separate ANY, separate ANY]
-			a8: A [separate ANY, separate ANY, separate ANY]
-			
-			b1: B [ANY]
-			b2: B [STRING]
-
-			c1: C [ANY]
-			c2: C [STRING]
+			a1: A [G, G, G]
+			a2: A [separate G, G, G]
+			a3: A [G, separate G, G]
+			a4: A [separate G, separate G, G]
+			a5: A [G, G, separate G]
+			a6: A [separate G, G, separate G]
+			a7: A [G, separate G, separate G]
+			a8: A [separate G, separate G, separate G]
 		do
 			create a1
 			create a2
@@ -109,7 +103,7 @@ feature {NONE} -- Creation
 			-- Report whether test `i' is successful according to `b'.
 		do
 			if not b then
-				io.put_string ("Test in class TEST #")
+				io.put_string ("Test in class C #")
 				io.put_integer (counter.item)
 				io.put_string (": ")
 				io.put_string ("FAILED")

@@ -57,6 +57,7 @@ RT_LNK uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype);
 /* Full type name of an object as STRING object */
 RT_LNK EIF_REFERENCE eif_gen_typename_of_type (EIF_TYPE_INDEX current_dftype);
 RT_LNK char * eif_typename (EIF_TYPE_INDEX current_dftype);
+#define eif_typename_id(dftype)	eif_typename(dftype)
 #define eif_gen_typename(obj)	((obj) ? eif_gen_typename_of_type (Dftype (obj)) : eif_gen_typename_of_type (0))
 
 /* Conformance test */

@@ -1,1 +1,0 @@
-This library was inspired by GoboEiffel's xml library (http://www.gobosoft.com/)

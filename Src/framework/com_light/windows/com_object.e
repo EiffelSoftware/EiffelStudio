@@ -283,15 +283,14 @@ feature {NONE} -- Disposal
 			-- we are entering `dispose', else we are leaving it.
 			-- `a_ptr' is the item being freed in current object `an_obj'.
 		external
-			"C inline use <stdio.h>"
+			"C inline use <stdio.h>, %"eif_gen_conf.h%""
 		alias
 			"[
 #ifndef EIF_IL_DLL
 				if ($type == 1) {
-					extern char *eif_typename(int16);
-					printf ("\nEntering dispose of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
+					printf ("\nEntering dispose of %s with item value 0x" EIF_POINTER_DISPLAY "\n", eif_typename_id(Dftype($an_obj)), (rt_uint_ptr) $a_ptr);
 				} else {
-					printf ("Quitting dispose with item value 0x%lX nb_ref[%d]\n", $a_ptr, $a_nb_ref);
+					printf ("Quitting dispose with item value 0x" EIF_POINTER_DISPLAY " nb_ref[%d]\n", (rt_uint_ptr) $a_ptr, $a_nb_ref);
 				}
 #endif
 			]"

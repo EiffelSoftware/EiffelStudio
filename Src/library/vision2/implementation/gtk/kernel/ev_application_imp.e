@@ -1119,7 +1119,7 @@ feature -- Status setting
 			end
 		end
 
-feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
+feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Pick and drop
 
 	set_docking_source (a_source: detachable EV_DOCKABLE_SOURCE_IMP)
 			-- Set `docking_source' to `a_source'.

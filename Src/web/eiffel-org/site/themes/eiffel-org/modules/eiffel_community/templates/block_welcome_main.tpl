@@ -3,11 +3,12 @@
 					<li>
 						<a href="{$site_url/}/purpose"><span class="ico"><img src="/theme/images/small36.png" width="52" height="52" alt="Image Description"></span>
 							<h2>Purpose</h2>
+						
 							<p>The Eiffel Programming Language is a forum that bring together Eiffel developers 
 								around the world to build libraries, share experiences, help 
 								each other on all matters related to open-source Eiffel. 
 							</p>
-						</a>
+						</a>		
 					</li>
 					<li>
 						<a href="{$site_url/}/news"><span class="ico"><img src="/theme/images/person277.png" width="52" height="52" alt="Image Description"></span>

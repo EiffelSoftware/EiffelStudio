@@ -22,11 +22,14 @@
 										</a>
 									</li>
 									<li>
-										<a href="{$site_url/}/contribute_description">
+										<div>
 											<span class="ico"><img src="/theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
 											<h2>Follow us</h2>
-											<p><a href="https://www.facebook.com/eiffelsoftware">Facebook</a>, <a href="https://twitter.com/eiffel_software">Twitter</a>, <a href="https://plus.google.com/117564431713099800122/posts">Google+</a>, <a href="http://www.youtube.com/user/EiffelLanguage">Youtube</a> </p>
-										</a>
+											<a href="https://www.facebook.com/eiffelsoftware">Facebook</a>
+											<a href="https://twitter.com/eiffel_software">Twitter</a>
+											<a href="https://plus.google.com/117564431713099800122/posts">Google+</a>
+											<a href="http://www.youtube.com/user/EiffelLanguage">Youtube</a> 
+										</div>										
 									</li>
 								</ul>
 							</section>

@@ -194,7 +194,7 @@ rt_public uint32 wattr_inv (int routine_id, char *name, EIF_REFERENCE object)
 }
 
 /*
-doc:	<routine name="wtype_gen" return_type="EIF_TYPE_INDEX" export="public">
+doc:	<routine name="wtype_gen" return_type="EIF_TYPE" export="public">
 doc:		<summary>Type of a generic feature of routine ID `routine_id' applied to an object of dynamic type `dtype' and full dynamic type `dftype'.</summary>
 doc:		<param name="routine_id" type="int">Routine ID of generic feature for which we need to know the type in the context of `dftype'.</param>
 doc:		<param name="dtype" type="EIF_TYPE_INDEX">Dynamic type ID of generic feature where type will be looked up.</param>
@@ -204,9 +204,10 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Uses per thread data.</synchronization>
 doc:	</routine>
 */
-rt_public EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
+rt_public EIF_TYPE wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype)
 {
 	struct rout_info info;
+	EIF_TYPE result;
 	const struct desc_info *desc;
 
 	CHECK("Not called by non-GC thread", rt_is_call_allowed());
@@ -215,7 +216,9 @@ rt_public EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYP
 	if (desc->type.non_generic & 0x1) {
 			/* We have an encoded pointer that only stores the type. 
 			 * We shift the pointer value and get the actual type. */
-		return (EIF_TYPE_INDEX) ((desc->type.non_generic) >> 1);
+		result.id = (EIF_TYPE_INDEX) ((desc->type.non_generic) >> 1);
+		result.annotations = 0;
+		return result;
 	} else {
 			/* Case of a generic type. */
 		return eif_compound_id (dftype, desc->type.generic);

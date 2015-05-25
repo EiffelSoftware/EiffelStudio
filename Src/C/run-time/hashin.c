@@ -60,8 +60,6 @@ doc:<file name="hashin.c" header="rt_hashin.h" version="$Id$" summary="Hash tabl
 
 #include <string.h>		/* For memset(), bzero() */
 
-rt_private int ht_resize(struct htable *ht, size_t new_size);
-
 /*
 doc:	<routine name="ht_create" return_type="int" export="shared">
 doc:		<summary>Initializes a hash-table `ht' to hold `n' items of size `sval'. This is the C equivalent version of the EiffelBase HASH_TABLE class. We allocate the table so that it can hold at least (n + n // 2) entries.</summary>
@@ -373,7 +371,7 @@ rt_shared void ht_remove(struct htable *ht, rt_uint_ptr key)
 }
 
 /*
-doc:	<routine name="ht_resize" return_type="int" export="private">
+doc:	<routine name="ht_resize" return_type="int" export="shared">
 doc:		<summary>Resize `ht' to accomodate `new_size' many elements.</summary>
 doc:		<param name="ht" type="struct htable *">Table to resize.</param>
 doc:		<param name="new_size" type="size_t">New size. If smaller than existing size, no resizing is done.</param>
@@ -382,7 +380,7 @@ doc:		<thread_safety>Not Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private int ht_resize(struct htable *ht, size_t new_size)
+rt_shared int ht_resize(struct htable *ht, size_t new_size)
 {
 	size_t l_capacity;				/* Size of old H table */
 	size_t sval;				/* Size of an H table item */

@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -53,16 +53,19 @@ extern void eif_gen_conf_init (EIF_TYPE_INDEX);
 /* Clean up module. */
 extern void eif_gen_conf_cleanup (void);
 
-extern EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types);
+extern EIF_TYPE rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types);
 
 /* Is current tuple made of basic types? */
 extern int eif_tuple_is_atomic (EIF_REFERENCE tuple);
 
 /* Type of ARRAY [type] */
-extern EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX type);
+extern EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE type);
+
+/* Type of TYPE [dftype] */
+extern EIF_TYPE_INDEX rt_typeof_type_of (EIF_TYPE type);
 
 /* CID which creates a given type */
-extern EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype);
+extern EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE dftype, int use_old_annotations);
 
 /* Generic id list from external sources (retrieve) */
 extern  EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
@@ -87,6 +90,8 @@ extern EIF_CS_TYPE *eif_gen_mutex;
 #endif
 extern void eif_gen_conf_thread_init (void);
 extern void eif_gen_conf_thread_cleanup (void);
+
+rt_shared EIF_TYPE_INDEX rt_merged_annotation (EIF_TYPE_INDEX first_annotation, EIF_TYPE_INDEX second_annotation);
 
 /* Maximum nr. of entries in a compound typeid array */
 #define MAX_CID_SIZE    2048

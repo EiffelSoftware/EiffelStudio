@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -49,6 +49,7 @@ doc:<file name="gen_conf.c" header="eif_gen_conf.h" version="$Id$" summary="Gene
 #include "rt_garcol.h"
 #include "rt_cecil.h"
 #include "rt_assert.h"
+#include "rt_hashin.h"
 #include <ctype.h>
 #include <string.h>
 #ifdef WORKBENCH
@@ -132,20 +133,19 @@ rt_private EIF_TYPE_INDEX tuple_static_type = INVALID_DTYPE;
 /*----------------------------------------------*/
 
 typedef struct eif_gen_der {
-	uint32              size;       /* Size of type array */
-	EIF_TYPE_INDEX      hcode;      /* Hash code to speedup search */
-	EIF_TYPE_INDEX      *types;     /* Array of types (cid) */
+	struct eif_gen_der  *next;      /* Next derivation */
+	EIF_TYPE			*types;     /* Array of types (cid) */
 	EIF_TYPE_INDEX      *gen_seq;   /* Id sequence which generates this type */
 	EIF_TYPE_INDEX      *ptypes;    /* Parent types */
+	uint32              size;       /* Size of type array. */
+	uint32			    hcode;      /* Hash code to speedup search */
 	EIF_TYPE_INDEX      dftype;     /* Run-time generated id */
 	EIF_TYPE_INDEX      dtype;      /* Compiler generated (base) id */
 	EIF_TYPE_INDEX      base_dtype; /* Base compiler generated (base) id of current type. */
-	EIF_TYPE_INDEX		annotation; /* Annotation flag for that type. */
-	char                *name;      /* Full type name */
 	char                is_expanded;/* Is it an expanded type? */
 	char                is_tuple;   /* Is it a TUPLE type? */
-	struct eif_gen_der  *next;      /* Next derivation */
 } EIF_GEN_DER;
+
 /*------------------------------------------------------------------*/
 /* Structure for conformance information. The `lower' ids are the   */
 /* usual compiler generated ids. The others are generated here.     */
@@ -207,26 +207,27 @@ doc:	</attribute>
 rt_private EIF_CONF_TAB **eif_conf_tab = NULL;
 rt_private EIF_GEN_DER **eif_derivations = NULL;
 
+/*
+doc:	<attribute name="eif_type_names" return_type="struct htable" export="private">
+doc:		<summary>Table containings all the type names in the system.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>Encoded type id</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_gen_mutex</synchronization>
+doc:	</attribute>
+*/
+rt_private struct htable eif_type_names;
+
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="cid_array" return_type="EIF_TYPE_INDEX [3]" export="private">
+doc:	<attribute name="cid_array" return_type="EIF_TYPE_INDEX [4]" export="private">
 doc:		<summary>Static array used by `eif_gen_cid' for `dftype' that are not generics.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private EIF_TYPE_INDEX cid_array [3];
-
-/*
-doc:	<attribute name="non_generic_type_names" return_type="char **" export="private">
-doc:		<summary>Array indexed by non generic type id which contains their associated type name.</summary>
-doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
-doc:	</attribute>
-*/
-rt_private char ** non_generic_type_names = NULL;
+rt_private EIF_TYPE_INDEX cid_array [4];
 #endif
 
 /*------------------------------------------------------------------*/
@@ -246,18 +247,17 @@ doc:	</attribute>
 */
 rt_shared EIF_CS_TYPE *eif_gen_mutex = NULL;
 
-rt_private EIF_TYPE_INDEX rt_thd_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX, const EIF_TYPE_INDEX *);
-rt_public EIF_TYPE_INDEX eif_thd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
-rt_shared uint32 eif_thd_gen_count_with_dftype (EIF_TYPE_INDEX );
-rt_shared char eif_thd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
-rt_public EIF_TYPE_INDEX eif_thd_gen_param_id (EIF_TYPE_INDEX , uint32);
-rt_public EIF_REFERENCE eif_thd_gen_create (EIF_REFERENCE , uint32);
-rt_shared EIF_TYPE_INDEX eif_thd_typeof_array_of (EIF_TYPE_INDEX);
-rt_shared EIF_TYPE_INDEX eif_thd_typeof_type_of (EIF_TYPE_INDEX);
-rt_public char *eif_thd_gen_typename (EIF_REFERENCE );
-rt_shared EIF_TYPE_INDEX *eif_thd_gen_cid (EIF_TYPE_INDEX);
-rt_shared EIF_TYPE_INDEX eif_thd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
-rt_public int eif_thd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
+rt_private EIF_TYPE rt_thd_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX, const EIF_TYPE_INDEX *);
+rt_private EIF_TYPE rt_thd_final_id (EIF_TYPE_INDEX *, EIF_TYPE_INDEX **, EIF_TYPE_INDEX, int );
+rt_private char rt_thd_gen_typecode_with_dftype (EIF_TYPE_INDEX , uint32);
+rt_private EIF_TYPE rt_thd_gen_param (EIF_TYPE_INDEX , uint32);
+rt_private EIF_TYPE_INDEX rt_thd_typeof_array_of (EIF_TYPE);
+rt_private EIF_TYPE_INDEX rt_thd_typeof_type_of (EIF_TYPE);
+rt_private EIF_TYPE_INDEX *rt_thd_gen_cid (EIF_TYPE, int);
+rt_private EIF_TYPE_INDEX rt_thd_gen_id_from_cid (EIF_TYPE_INDEX *, EIF_TYPE_INDEX *, int);
+rt_private int rt_thd_gen_conf2 (EIF_TYPE, EIF_TYPE);
+rt_private char *rt_thd_typename(EIF_TYPE);
+rt_private EIF_REFERENCE rt_thd_typename_of_type(EIF_TYPE);
 
 #define EIFMTX_LOCK \
 	{\
@@ -275,23 +275,23 @@ rt_public int eif_thd_gen_conf (EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 #endif
 /*------------------------------------------------------------------*/
 
-rt_private size_t rt_typename_len (EIF_TYPE_INDEX dftype);
-rt_private void rt_internal_typename (EIF_TYPE_INDEX, char*);
-rt_private EIF_GEN_DER *rt_new_gen_der(uint32, EIF_TYPE_INDEX*, EIF_TYPE_INDEX, char, char, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
+rt_private size_t rt_typename_len (EIF_TYPE, int);
+rt_private void rt_typename (EIF_TYPE, char*, int);
+rt_private EIF_GEN_DER *rt_new_gen_der(uint32, EIF_TYPE*, EIF_TYPE_INDEX, char, char, uint32);
 rt_private void rt_expand_tables(int);
-rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX**, EIF_TYPE_INDEX**, EIF_TYPE_INDEX);
+rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX**, EIF_TYPE**, EIF_TYPE_INDEX);
 rt_private void rt_compute_ctab (EIF_TYPE_INDEX);
 rt_private EIF_CONF_TAB *rt_new_conf_tab (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void rt_enlarge_conf_tab (EIF_CONF_TAB *, EIF_TYPE_INDEX);
-rt_private uint16 rt_gen_seq_len (EIF_TYPE_INDEX);
-rt_private void rt_put_gen_seq (EIF_TYPE_INDEX, EIF_TYPE_INDEX*, EIF_TYPE_INDEX*);
+rt_private uint16 rt_gen_seq_len (EIF_TYPE);
+rt_private void rt_put_gen_seq (EIF_TYPE, EIF_TYPE_INDEX*, EIF_TYPE_INDEX*, int);
 
 /*------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------*/
 
 /*
-doc:	<routine name="eif_compound_id" return_type="EIF_TYPE_INDEX" export="public">
+doc:	<routine name="eif_compound_id" return_type="EIF_TYPE" export="public">
 doc:		<summary>Given a current dynamic type `dftype' and a sequence of dtypes, compute the corresponding dynamic type.</summary>
 doc:		<param name="current_dftype" type="EIF_TYPE_INDEX">Context in which dynamic type is computed.</param>
 doc:		<param name="types" type="EIF_TYPE_INDEX *">Arrays of dtypes representing a dynamic type.</param>
@@ -300,7 +300,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None required, done internally.</synchronization>
 doc:	</routine>
 */
-rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE eif_compound_id (EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
 {
 	return rt_compound_id_with_context (NULL, current_dftype, types);
 }
@@ -311,9 +311,9 @@ rt_public EIF_TYPE_INDEX eif_compound_id (EIF_TYPE_INDEX current_dftype, const E
 /*------------------------------------------------------------------*/
 /* Public features protected with a MUTEX.                          */
 /*------------------------------------------------------------------*/
-rt_shared EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
+rt_shared EIF_TYPE rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
 {
-	EIF_TYPE_INDEX   result;
+	EIF_TYPE   result;
 
 	EIFMTX_LOCK;
 	result = rt_thd_compound_id_with_context (a_context, current_dftype, types);
@@ -323,24 +323,12 @@ rt_shared EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a
 }
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset)
+rt_public EIF_TYPE eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset)
 {
-	EIF_TYPE_INDEX   result;
+	EIF_TYPE   result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_final_id (ttable, gttable, dftype, offset);
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-rt_shared uint32 eif_gen_count_with_dftype (EIF_TYPE_INDEX dftype)
-{
-	uint32 result;
-
-	EIFMTX_LOCK;
-	result = eif_thd_gen_count_with_dftype (dftype);
+	result = rt_thd_final_id (ttable, gttable, dftype, offset);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -352,55 +340,55 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 	char    result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_gen_typecode_with_dftype (dftype, pos);
+	result = rt_thd_gen_typecode_with_dftype (dftype, pos);
 	EIFMTX_UNLOCK;
 
 	return result;
 }
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
+rt_public EIF_TYPE eif_gen_param (EIF_TYPE_INDEX dftype, uint32 pos)
+{
+	EIF_TYPE result;
+
+	EIFMTX_LOCK;
+	result = rt_thd_gen_param (dftype, pos);
+	EIFMTX_UNLOCK;
+
+	return result;
+}
+/*------------------------------------------------------------------*/
+
+rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE dtype)
 {
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_gen_param_id (dftype, pos);
+	result = rt_thd_typeof_array_of (dtype);
 	EIFMTX_UNLOCK;
 
 	return result;
 }
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dtype)
+rt_shared EIF_TYPE_INDEX rt_typeof_type_of (EIF_TYPE ftype)
 {
-	EIF_TYPE_INDEX   result;
+	EIF_TYPE_INDEX result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_typeof_array_of (dtype);
+	result = rt_thd_typeof_type_of (ftype);
 	EIFMTX_UNLOCK;
 
 	return result;
 }
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dtype)
-{
-	EIF_TYPE_INDEX   result;
-
-	EIFMTX_LOCK;
-	result = eif_thd_typeof_type_of (dtype);
-	EIFMTX_UNLOCK;
-
-	return result;
-}
-/*------------------------------------------------------------------*/
-
-rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
+rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE a_dftype, int use_old_annotations)
 {
 	EIF_TYPE_INDEX   *result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_gen_cid (dftype);
+	result = rt_thd_gen_cid (a_dftype, use_old_annotations);
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -412,37 +400,65 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 	EIF_TYPE_INDEX   result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_gen_id_from_cid (a_cidarr, dtype_map, count);
+	result = rt_thd_gen_id_from_cid (a_cidarr, dtype_map, count);
 	EIFMTX_UNLOCK;
 
 	return result;
 }
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_conf (EIF_TYPE_INDEX source_type, EIF_TYPE_INDEX target_type)
+rt_public int eif_gen_conf2 (EIF_TYPE source_type, EIF_TYPE target_type)
 {
 	int result;
 
 	EIFMTX_LOCK;
-	result = eif_thd_gen_conf (source_type, target_type);
+	result = rt_thd_gen_conf2 (source_type, target_type);
 	EIFMTX_UNLOCK;
 
 	return result;
 }
+
+/*------------------------------------------------------------------*/
+
+rt_public char * eif_typename (EIF_TYPE ftype)
+{
+	char * result;
+
+	EIFMTX_LOCK;
+	result = rt_thd_typename (ftype);
+	EIFMTX_UNLOCK;
+
+	return result;
+}
+
+/*------------------------------------------------------------------*/
+
+rt_public char * eif_typename_of_type (EIF_TYPE ftype)
+{
+	char * result;
+
+	EIFMTX_LOCK;
+	result = rt_thd_typename_of_type (ftype);
+	EIFMTX_UNLOCK;
+
+	return result;
+}
+
 /*------------------------------------------------------------------*/
 /* Rename public features if EIF_THREADS is on.                     */
 /*------------------------------------------------------------------*/
 
 #define rt_compound_id_with_context rt_thd_compound_id_with_context
-#define eif_final_id              eif_thd_final_id
-#define eif_gen_count_with_dftype eif_thd_gen_count_with_dftype
-#define eif_gen_typecode_with_dftype  eif_thd_gen_typecode_with_dftype
-#define eif_gen_param_id          eif_thd_gen_param_id
-#define eif_typeof_array_of       eif_thd_typeof_array_of
-#define eif_typeof_type_of        eif_thd_typeof_type_of
-#define eif_gen_cid               eif_thd_gen_cid
-#define eif_gen_id_from_cid       eif_thd_gen_id_from_cid
-#define eif_gen_conf              eif_thd_gen_conf
+#define eif_final_id              rt_thd_final_id
+#define eif_gen_typecode_with_dftype  rt_thd_gen_typecode_with_dftype
+#define eif_gen_param             rt_thd_gen_param
+#define eif_typeof_array_of       rt_thd_typeof_array_of
+#define rt_typeof_type_of        rt_thd_typeof_type_of
+#define eif_gen_cid               rt_thd_gen_cid
+#define eif_gen_id_from_cid       rt_thd_gen_id_from_cid
+#define eif_gen_conf2             rt_thd_gen_conf2
+#define eif_typename              rt_thd_typename
+#define eif_typename_of_type      rt_thd_typename_of_type
 
 #endif
 
@@ -458,7 +474,7 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 	struct eif_par_types **pt;
 
 #ifdef EIF_THREADS
-		/* Since we want to avoid any locks to happen on the access on 
+		/* Since we want to avoid any locks to happen on the access on
 		 * eif_cid_map, we make sure that `eif_cid_map' can't be resized
 		 * by giving the maximum size it can have, ie 0x0000FFFF */
 	eif_cid_size = 65535;
@@ -484,6 +500,10 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 
 	if (eif_derivations == NULL)
 		enomem();
+
+		/* Create hash-table containing all the type names. */
+	memset(&eif_type_names, 0, sizeof(struct htable));
+	ht_create (&eif_type_names, eif_cid_size, sizeof(char *));
 
 	eif_conf_tab = (EIF_CONF_TAB **) cmalloc(eif_cid_size * sizeof (EIF_CONF_TAB*));
 
@@ -519,11 +539,6 @@ rt_shared void eif_gen_conf_init (EIF_TYPE_INDEX max_dtype)
 		}
 	}
 
-		/* Initialize `non_generic_type_names' for root thread now that `eif_first_gen_id' is
-		 * properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
-		 * before `eif_first_gen_id' is initialized and therefore does not allocate anything
-		 * since `eif_first_gen_id' is zero. The second call will do things properly.
-		 */
 	eif_gen_conf_thread_init();
 }
 
@@ -538,35 +553,20 @@ rt_shared void eif_gen_conf_thread_init (void) {
 	RT_GET_CONTEXT
 
 	/* Initialize `cid_array' */
-	cid_array [0] = 1;  /* count */
-	cid_array [1] = 0;  /* id */
-	cid_array [2] = TERMINATOR; /* Terminator */
-
-	if (eif_first_gen_id > 0) {
-		non_generic_type_names = (char **) eif_rt_xcalloc (eif_first_gen_id, sizeof (char *));
-	}
+	cid_array [0] = 2;  /* count */
+	cid_array [1] = 0;  /* annotations if any */
+	cid_array [2] = 0;  /* id */
+	cid_array [3] = TERMINATOR; /* Terminator */
 }
 
 /*
 doc:	<routine name="eif_gen_conf_thread_cleanup" return_type="void" export="shared">
-doc:		<summary>Initialize per thread data used for generic conformance.</summary>
+doc:		<summary>Free per thread data used for generic conformance.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 rt_shared void eif_gen_conf_thread_cleanup (void) {
-	RT_GET_CONTEXT
-	char *l_name;
-	int i = 0;
-
-	for (; i < eif_first_gen_id; i++) {
-		l_name = non_generic_type_names [i];
-		if (l_name) {
-			eif_rt_xfree (l_name);
-		}
-	}
-	eif_rt_xfree (non_generic_type_names);
-	non_generic_type_names = NULL;
 }
 
 /*------------------------------------------------------------------*/
@@ -574,11 +574,12 @@ rt_shared void eif_gen_conf_thread_cleanup (void) {
 /* Called from reclaim, and free all global variables allocated     */
 /* for the Generic Conformance.                                     */
 /*------------------------------------------------------------------*/
-rt_shared void eif_gen_conf_cleanup (void) 
+rt_shared void eif_gen_conf_cleanup (void)
 {
 	/* Free in reverse order of allocation. */
 
 	int i, j;
+	size_t k;
 
 	REQUIRE ("eif_conf_tab not null", eif_conf_tab);
 	REQUIRE ("eif_derivations not null", eif_derivations);
@@ -586,7 +587,7 @@ rt_shared void eif_gen_conf_cleanup (void)
 
 	/* Recursively free eif_conf_tab */
 	for (i = 0; i < eif_cid_size; i++) {
-		EIF_CONF_TAB *tmp = eif_conf_tab [i];	
+		EIF_CONF_TAB *tmp = eif_conf_tab [i];
 
 		if (tmp == NULL)
 			continue;
@@ -621,7 +622,7 @@ rt_shared void eif_gen_conf_cleanup (void)
 		}
 		eif_rt_xfree (tmp);
 	}
-	eif_rt_xfree (eif_conf_tab);	
+	eif_rt_xfree (eif_conf_tab);
 
 	/* Recursively free eif_derivations. */
 	for (i = 0; i < eif_cid_size; i++) {
@@ -650,17 +651,25 @@ rt_shared void eif_gen_conf_cleanup (void)
 			CHECK ("", !(is_in_lm (tmp->ptypes)));
 #endif	/* LMALLOC_CHECK */
 		}
-		if (tmp->name) {
-			eif_rt_xfree (tmp->name);			/* char * */
-		}
 		for (j = i + 1; j < eif_cid_size; j++) {
-			if (eif_derivations [j] == tmp)	
+			if (eif_derivations [j] == tmp)
 				eif_derivations[j] = NULL;
-				
+
 		}
 		eif_rt_xfree (tmp);
 	}
-	eif_rt_xfree (eif_derivations);	
+	eif_rt_xfree (eif_derivations);
+
+		/* Free any allocated strings used to store type names and
+		 * then the table itself. */
+	for (k = 0 ; k < eif_type_names.h_capacity; k++) {
+		char **l_name = (char **) (((char *) eif_type_names.h_values) + (k * sizeof(char *)));
+		if (*l_name) {
+			eif_rt_xfree (*l_name);
+		}
+	}
+	ht_release(&eif_type_names);
+	memset(&eif_type_names, 0, sizeof(struct htable));
 
 	eif_rt_xfree (eif_cid_map);
 #ifndef EIF_THREADS
@@ -676,9 +685,9 @@ rt_shared void eif_gen_conf_cleanup (void)
 /* Result  : Resulting id;                                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
+rt_public EIF_TYPE rt_compound_id_with_context (struct rt_id_of_context *a_context, EIF_TYPE_INDEX current_dftype, const EIF_TYPE_INDEX *types)
 {
-	EIF_TYPE_INDEX   outtab [256], *outtable;
+	EIF_TYPE outtab [256], *outtable;
 
 	REQUIRE("types not NULL", types);
 	REQUIRE("types not empty", types [0] != TERMINATOR);
@@ -693,10 +702,11 @@ rt_public EIF_TYPE_INDEX rt_compound_id_with_context (struct rt_id_of_context *a
 /* mode).                                                           */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset)
+rt_public EIF_TYPE eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **gttable, EIF_TYPE_INDEX dftype, int offset)
 {
 	EIF_TYPE_INDEX *gtp;
 	EIF_TYPE_INDEX dtype = To_dtype(dftype);
+	EIF_TYPE non_generic_type;
 	int	table_index = dtype - offset;
 
 	REQUIRE("gttable not NULL", gttable);
@@ -708,7 +718,9 @@ rt_public EIF_TYPE_INDEX eif_final_id (EIF_TYPE_INDEX *ttable, EIF_TYPE_INDEX **
 		return eif_compound_id (dftype, gtp);
 	} else {
 			/* Optimization for non-generic type. */
-		return ttable[table_index];
+		non_generic_type.id = ttable[table_index];
+		non_generic_type.annotations = 0;
+		return non_generic_type;
 	}
 }
 
@@ -747,7 +759,7 @@ rt_shared int eif_tuple_is_atomic (EIF_REFERENCE obj)
 {
 	EIF_VALUE *l_item = (EIF_VALUE *) obj;
 	unsigned int count;
-	
+
 	if (obj == NULL) {
 			/* This is atomic */
 		return 1;
@@ -804,9 +816,9 @@ rt_shared char eif_gen_typecode_with_dftype (EIF_TYPE_INDEX dftype, uint32 pos)
 	CHECK ("Valid generic position min", pos > 0);
 	CHECK ("Valid generic position max", pos <= gdp->size);
 
-	gtype = gdp->types [pos-1];
+	gtype = gdp->types [pos-1].id;
 
-	if (RT_IS_NONE_TYPE(gtype)) {
+	if (RT_CONF_IS_NONE_TYPE(gtype)) {
 		return EIF_REFERENCE_CODE;
 	}
 
@@ -841,10 +853,10 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	CHECK ("Not a routine object", gdp->size > 1);
 
 		/* Type of call target */
-	gtype = gdp->types [0];
+	gtype = gdp->types [0].id;
 
 		/* Now treat the arguments.  This is necessarily a TUPLE */
-	dftype = gdp->types [1];
+	dftype = gdp->types [1].id;
 
 	CHECK ("Valid dftype", dftype < eif_next_gen_id);
 	CHECK ("Routines implies we have tuples", tuple_static_type < MAX_DTYPE);
@@ -874,8 +886,8 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	strp++;
 
 	for (pos = 0; pos < gdp->size; pos++, strp++) {
-		gtype = gdp->types [pos];
-		if (RT_IS_NONE_TYPE(gtype)) {
+		gtype = gdp->types [pos].id;
+		if (RT_CONF_IS_NONE_TYPE(gtype)) {
 			*strp = EIF_REFERENCE_CODE;
 		} else {
 			*strp = EIF_TUPLE_CODE(System(eif_cid_map[gtype]));
@@ -884,14 +896,14 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	RT_GC_WEAN(ret);			/* Remove protection */
 
-	return ret;	
+	return ret;
 }
 
 /*------------------------------------------------------------------*/
-/* Type of generic parameter in `obj' at position `pos'.            */
+/* Annotated type of generic parameter in `obj' at position `pos'.  */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
+rt_public EIF_TYPE eif_gen_param (EIF_TYPE_INDEX dftype, uint32 pos)
 
 {
 	EIF_GEN_DER *gdp;
@@ -906,52 +918,57 @@ rt_public EIF_TYPE_INDEX eif_gen_param_id (EIF_TYPE_INDEX dftype, uint32 pos)
 
 	return gdp->types [pos-1];
 }
+
 /*------------------------------------------------------------------*/
-/* Type id for ARRAY [something], where 'something' is a reference  */
-/* type.                                                            */
-/* dftype : full type id;                                            */
+/* Type id for allocation ARRAY [something], where 'something' is a */
+/* reference type.                                                  */
+/* dftype : full type id;                                           */
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE_INDEX dftype)
+rt_shared EIF_TYPE_INDEX eif_typeof_array_of (EIF_TYPE type)
 {
-	EIF_TYPE_INDEX l_types [3], result;
+	EIF_TYPE_INDEX l_types [4], result;
 
-	REQUIRE("Valid ARRAY generic type", dftype <= MAX_DTYPE);
+	REQUIRE("Valid ARRAY generic type", type.id <= MAX_DTYPE);
 	REQUIRE("Valid ARRAY reference type", egc_arr_dtype <= MAX_DTYPE);
+	REQUIRE("Valid annotations", RT_CONF_IS_VALID_ANNOTATION(type.annotations));
 
 	l_types [0] = egc_arr_dtype;	/* Base type of ARRAY     */
-	l_types [1] = dftype;			/* Parameter type */
-	l_types [2] = TERMINATOR;
+		/* We add the 0xFF00 because we have the annotations in the type array
+		 * which enables us to differentiate them from normal type IDs. */
+	l_types [1] = type.annotations | 0xFF00;	/* Parameter type's annotations */
+	l_types [2] = type.id;		/* Parameter type */
+	l_types [3] = TERMINATOR;
 
-	result = eif_compound_id (0, l_types);
+	result = eif_compound_id (0, l_types).id;
 	return result;
 }
 
 /*------------------------------------------------------------------*/
-/* Type id for TYPE [dftype]                                        */
-/* dftype : full type id;                                           */
+/* Type id for TYPE [a_type]                                        */
+/* a_type : full type id with annotations;                          */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
+rt_shared EIF_TYPE_INDEX rt_typeof_type_of (EIF_TYPE a_type)
 {
-	EIF_TYPE_INDEX   l_types [3], result, l_type;
+	EIF_TYPE_INDEX l_types [4], result, l_type;
 	struct cecil_info *cecil_type;
-	uint32 sk_type;			/* Generic information for dftype */
+	uint32 sk_type;			/* Generic information for a_type */
 	uint32 *t;				/* To walk through the patterns array */
 	int matched = 0;
 	size_t index = 0;
 
-	REQUIRE("Valid actual generic type", (dftype <= MAX_DTYPE) || (RT_IS_NONE_TYPE(dftype)));
+	REQUIRE("Valid actual generic type", (a_type.id <= MAX_DTYPE) || (RT_CONF_IS_NONE_TYPE(a_type.id)));
 
 		/* Get the CECIL description for TYPE. */
 	cecil_type = (struct cecil_info *) ct_value (&egc_ce_type, "TYPE");
 
 		/* Get the SK_type for X in TYPE [X] were are trying to build. */
-	if (RT_IS_NONE_TYPE(dftype)) {
+	if (RT_CONF_IS_NONE_TYPE(a_type.id)) {
 			/* For NONE we use the reference generic derivation of TYPE. */
 		sk_type = SK_REF;
 	} else {
-		l_type = To_dtype(dftype);
+		l_type = To_dtype(a_type.id);
 		sk_type = eif_dtype_to_sk_type (l_type);
 	}
 
@@ -964,10 +981,18 @@ rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 
 	if (matched == 1) {
 		l_types [0] = cecil_type->dynamic_types[index - 1];		/* Base type of TYPE */
-		l_types [1] = dftype;			/* Parameter type */
-		l_types [2] = TERMINATOR;
+		if (a_type.annotations) {
+				/* We add the 0xFF00 because we have the annotations in the type array
+				 * which enables us to differentiate them from normal type IDs. */
+			l_types[1] = a_type.annotations | 0xFF00;
+			l_types[2] = a_type.id;			/* Parameter type */
+			l_types[3] = TERMINATOR;
+		} else {
+			l_types[1] = a_type.id;			/* Parameter type */
+			l_types[2] = TERMINATOR;
+		}
 
-		result = eif_compound_id (0, l_types);
+		result = eif_compound_id (0, l_types).id;
 	} else {
 		result = INVALID_DTYPE;
 	}
@@ -976,22 +1001,6 @@ rt_public EIF_TYPE_INDEX eif_typeof_type_of (EIF_TYPE_INDEX dftype)
 }
 
 /*------------------------------------------------------------------*/
-/* Full type name of `obj' as STRING object.                        */
-/*------------------------------------------------------------------*/
-
-rt_public EIF_REFERENCE eif_gen_typename_of_type (EIF_TYPE_INDEX current_dftype)
-{
-	char    *name;
-	EIF_REFERENCE ret;	/* Return value. */
-
-	EIFMTX_LOCK;
-	name = eif_typename (current_dftype);
-	EIFMTX_UNLOCK;
-
-	ret = makestr(name, strlen(name));
-	return ret;
-}
-/*------------------------------------------------------------------*/
 /* CID which generates `dftype'. First entry is the length of the   */
 /* compound id.                                                     */
 /*                                                                  */
@@ -999,28 +1008,41 @@ rt_public EIF_REFERENCE eif_gen_typename_of_type (EIF_TYPE_INDEX current_dftype)
 /* Result : base ids;                                               */
 /*------------------------------------------------------------------*/
 
-rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
+rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE a_dftype, int use_old_annotations)
 {
 	RT_GET_CONTEXT
 	uint16 len;
 	EIF_GEN_DER *gdp;
+	EIF_TYPE_INDEX l_dftype;
 
-	if ((RT_IS_NONE_TYPE(dftype)) || (dftype < eif_first_gen_id)) {
-		CHECK("valid_cid_array", (cid_array[0] == 1) && (cid_array[2] == TERMINATOR));
-		cid_array [1] = dftype;
+	l_dftype = a_dftype.id;
+
+	if ((RT_CONF_IS_NONE_TYPE(l_dftype)) || (l_dftype < eif_first_gen_id)) {
+		CHECK("valid_cid_array", (cid_array[0] == 2) && (cid_array[3] == TERMINATOR));
+			/* We add the 0xFF00 because we have the annotations in the type array
+			 * which enables us to differentiate them from normal type IDs. */
+		cid_array [1] = a_dftype.annotations | 0xFF00;
+		if (use_old_annotations) {
+				/* For backward compatibility for C storable we annotations used
+				 * to be 0xFF1x we add the UNUSABLE_FLAG so that old systems can
+				 * still retrieve void-safe data generated by a newer version of
+				 * the runtime. */
+			cid_array [1] |= UNUSABLE_FLAG;
+		}
+		cid_array [2] = l_dftype;
 		return cid_array;
 	}
 
 	/* It's a run-time generated id */
 
-	gdp = eif_derivations [dftype];
+	gdp = eif_derivations [l_dftype];
 
 	if (gdp->gen_seq) {
 		return gdp->gen_seq;        /* already computed */
 	}
 	/* Compute size of array */
 
-	len = rt_gen_seq_len (dftype);
+	len = rt_gen_seq_len (a_dftype);
 	gdp->gen_seq = (EIF_TYPE_INDEX *) cmalloc ((len+2)*sizeof(EIF_TYPE_INDEX));
 	if (!gdp->gen_seq) {
 		enomem();
@@ -1033,7 +1055,7 @@ rt_shared EIF_TYPE_INDEX *eif_gen_cid (EIF_TYPE_INDEX dftype)
 
 	len = 1;
 
-	rt_put_gen_seq (dftype, gdp->gen_seq, &len);
+	rt_put_gen_seq (a_dftype, gdp->gen_seq, &len, use_old_annotations);
 
 	return gdp->gen_seq;
 }
@@ -1059,7 +1081,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 			dtype = a_cidarr [i];
 
 				/* Read annotation if any. */
-			while (RT_HAS_ANNOTATION_TYPE(dtype)) {
+			while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dtype)) {
 				i++;
 				dtype = a_cidarr [i];
 			}
@@ -1078,7 +1100,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 			}
 		}
 	}
-	return eif_compound_id (0, a_cidarr);
+	return eif_compound_id (0, a_cidarr).id;
 }
 
 /*------------------------------------------------------------------*/
@@ -1089,7 +1111,7 @@ rt_shared EIF_TYPE_INDEX eif_gen_id_from_cid (EIF_TYPE_INDEX *a_cidarr, EIF_TYPE
 /* Target_type : full type id;                                      */
 /*------------------------------------------------------------------*/
 
-rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
+rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 {
 	EIF_CONF_TAB *stab;
 	EIF_GEN_DER *sgdp, *tgdp;
@@ -1098,49 +1120,56 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 	int result;
 	unsigned char mask;
 
-	if (ttype > MAX_DTYPE) {
-			/* Target is NONE (attached/detachable). */
-		CHECK("NONE type", RT_IS_NONE_TYPE(ttype));
-		if (ttype == DETACHABLE_NONE_TYPE) {
-				/* Target is detachable so we can accept any other NONE types. */
-			return RT_IS_NONE_TYPE(stype);
-		} else {
-				/* Target is attached NONE, so we can only accept attached NONE. */
-			return stype == ttype;
-		}
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[stype.id]))) {
+			/* Source is expanded, we force the attachment mark, otherwise
+			 * eweasel test#conform001 will say that A [INTEGER] does not 
+			 * conform to A [attached ANY] which is clearly not the case. Note 
+			 * that this is because in `rt_id_of' we clear the annotations when
+			 * type is expanded. We clear it to maintain as much backward compatibility
+			 * with existing code. */
+		CHECK("no attachment marks", !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
+		stype.annotations |= ATTACHED_FLAG;
+	}
+		/* If `nnotations are not compatible, the types are not conforming. */
+	if (!rt_is_conforming_annotation(stype, ttype)) {
+		return 0;
 	}
 
-	if (stype == ttype) {
+		/* If types are identical, then they conform. */
+	if (stype.id == ttype.id) {
 		return 1;
 	}
 
-	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ttype]))) {
-		/* Expanded target no conformance because types are different */
+	CHECK("Type are differents", ttype.id != stype.id);
+
+	if (ttype.id > MAX_DTYPE) {
+			/* Target is NONE so we can only accept NONE but `stype' is not the same as `ttype' per assertions. */
+		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(ttype.id));
 		return 0;
-	} else if (stype > MAX_DTYPE) {
-			/* Target is not expanded and source is NONE, then there is conformance if compatible. */
-		CHECK("NONE type", RT_IS_NONE_TYPE(stype));
-		if (eif_is_attached_type(ttype)) {
-				/* Target is attached, so we can only accept attached NONE. */
-			return stype == ATTACHED_NONE_TYPE;
-		} else {
-				/* Target is detachable so we can accept anything. */
-			return 1;
-		}
 	}
 
-	stab = eif_conf_tab[stype];
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ttype.id]))) {
+			/* Expanded target no conformance because types are different */
+		return 0;
+	} else if (stype.id > MAX_DTYPE) {
+			/* Target is not expanded and not NONE, but source is NONE.
+			 * It only conforms if target is detachable. */
+		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(stype.id));
+		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(ttype.annotations);
+	}
+
+	stab = eif_conf_tab[stype.id];
 
 	if (stab == NULL) {
-		rt_compute_ctab (stype);
-		stab = eif_conf_tab[stype];
+		rt_compute_ctab (stype.id);
+		stab = eif_conf_tab[stype.id];
 	}
 
-	if (ttype < eif_first_gen_id) {
+	if (ttype.id < eif_first_gen_id) {
 		/* Lower id */
 
-		if ((ttype >= stab->min_low_id) && (ttype <= stab->max_low_id)) {
-			idx = ttype-stab->min_low_id;
+		if ((ttype.id >= stab->min_low_id) && (ttype.id <= stab->max_low_id)) {
+			idx = ttype.id - stab->min_low_id;
 			mask = (unsigned char) (1 << (idx % 8));
 
 			return (mask == ((stab->low_tab)[idx/8] & mask)) ? 1 : 0;
@@ -1148,17 +1177,17 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 	} else {
 		/* High id */
 
-		if ((ttype < stab->min_high_id) || (ttype > stab->max_high_id)) {
+		if ((ttype.id < stab->min_high_id) || (ttype.id > stab->max_high_id)) {
 				/* We need to enlarge the table */
-			rt_enlarge_conf_tab (stab, ttype);
+			rt_enlarge_conf_tab (stab, ttype.id);
 		}
 
 		/* Now ttype is in the table range */
 
-		idx  = (ttype - stab->min_high_id);
+		idx  = (ttype.id - stab->min_high_id);
 		mask = (unsigned char) (1 << (idx % 8));
 
-		/* If we have computed it already, return result 
+		/* If we have computed it already, return result
 		 * We check first if the computed value is '1', if so, it means both that we already
 		 * computed it and that is True.
 		 * If the computed value is '0' we check if we compute a value, if so we return 0
@@ -1172,41 +1201,36 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 
 		/* We have to compute it now (once!) */
 
-		sgdp = eif_derivations [stype];
-		tgdp = eif_derivations [ttype];
+		sgdp = eif_derivations [stype.id];
+		tgdp = eif_derivations [ttype.id];
 		result = 0;
 
-		if
-			(RT_IS_ATTACHED_TYPE(tgdp->annotation) &&
-			(!RT_IS_ATTACHED_TYPE(sgdp->annotation) && !(sgdp->is_expanded))
-		) {
-				/* If target is attached but source is not, we can clearly dismiss this. */
-			goto done;
-		}
+		/* Check annotations. */
 
-		if (stype >= eif_first_gen_id) {
+		if (stype.id >= eif_first_gen_id) {
 				/* Both ids generated here */
 			if (sgdp->base_dtype == tgdp->base_dtype) {
-				/* Both have the same base class */
+				/* Both have the same base class, so we can simply check that the
+				 * adapted parents are the same.*/
 
-				/* Same base class. If nr. of generics
-				   differs, both are TUPLEs.
-				*/
-
+					/* Same base class. If nr. of generics differs, both are TUPLEs. */
 				if (tgdp->size > sgdp->size) {
-					/* Source and target are TUPLES but
-					   source has fewer parameters */
+						/* Source and target are TUPLES but source has fewer parameters
+						 * is not conforming. */
+					CHECK("result is false", !result);
 					goto done;
 				}
 
 				for (i = 0; i < tgdp->size; ++i) {
-					stype = (sgdp->types) [i];
-					ttype = (tgdp->types) [i];
+					stype = sgdp->types[i];
+					ttype = tgdp->types[i];
 
-					if (stype == ttype)
-						continue; /* Same types - avoid recursion */
-
-					if (!eif_gen_conf (stype, ttype)) {
+					if ((stype.id == ttype.id) && (stype.annotations == ttype.annotations)) {
+							/* Trivially the same type, so we can skip it and thus avoiding recursion. */
+						continue;
+					} else if (!eif_gen_conf2 (stype, ttype)) {
+							/* Not conforming. */
+						CHECK("result is false", !result);
 						goto done;
 					}
 				}
@@ -1216,17 +1240,18 @@ rt_public int eif_gen_conf (EIF_TYPE_INDEX stype, EIF_TYPE_INDEX ttype)
 			}
 		}
 
-		/* Target is generic.
+		/* Target is generic. But source is not.
 		   We need to check every parent of the source
 		   against the target */
 
 		ptypes = sgdp->ptypes;
-
 		result = 0;
-
-		while (!result && (*ptypes != TERMINATOR))
-		{
-			result = eif_gen_conf (*ptypes, ttype);
+			/* Annotations are now irrelevant, we are clearing them. */
+		ttype.annotations = 0;
+		stype.annotations = 0;
+		while (!result && (*ptypes != TERMINATOR)) {
+			stype.id = *ptypes;
+			result = eif_gen_conf2 (stype, ttype);
 			++ptypes;
 		}
 
@@ -1255,50 +1280,145 @@ done:
 /*              formal generic by an actual generic of the object.  */
 /* annotation : Annotation of type if any (see ANNOTATION_TYPE_MASK)*/
 /*------------------------------------------------------------------*/
+/*
+doc:	<routine name="rt_annotations_from_generated_id" return_type="EIF_TYPE_INDEX" export="private">
+doc:		<summary>Given a generated ID which is an annotation, get the corresponding flag for {EIF_TYPE}.annotations.</summary>
+doc:		<param name="annotation" type="EIF_TYPE_INDEX">A compiler generated annotation ID to be converted.</param>
+doc:		<return>The annotation for an EIF_TYPE instance.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>none</synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline EIF_TYPE_INDEX rt_annotations_from_generated_id (EIF_TYPE_INDEX annotation) {
+	EIF_TYPE_INDEX result;
 
-rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX **intab, EIF_TYPE_INDEX **outtab, EIF_TYPE_INDEX obj_type)
+	REQUIRE("Is annotation", RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(annotation));
+
+		/* Note that compiler generated IDs have the 0x0010 bit set when they have
+		 * an attachment mark (for backward compatibility) but since we never use that
+		 * bit in {EIF_TYPE}.annotations we can safely leave it there. */
+	result = annotation & 0x00FF;
+
+	ENSURE("valid_annotation", RT_CONF_IS_VALID_ANNOTATION(result));
+
+	return result;
+}
+
+/*
+doc:	<routine name="rt_merged_annotation" return_type="EIF_TYPE_INDEX" export="shared">
+doc:		<summary>Given two consecutives annotation, compute the resulting one. For example, if the first annotation is ATTACHED_FLAG and the second one is DETACHABLE_FLAG, then the resulting is just ATTACHED_FLAG. If they are DETACHABLE_FLAG and SEPARATE_FLAG, then the resulting is a combination of both.</summary>
+doc:		<param name="first_annotation" type="EIF_TYPE_INDEX">First annotation.</param>
+doc:		<param name="second_annotation" type="EIF_TYPE_INDEX">Second annotation to be merged into `first_annotation'.</param>
+doc:		<return>The combined annotation.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>none</synchronization>
+doc:	</routine>
+*/
+rt_shared EIF_TYPE_INDEX rt_merged_annotation (EIF_TYPE_INDEX first_annotation, EIF_TYPE_INDEX second_annotation)
 {
-	EIF_TYPE_INDEX   dftype, gcount = 0, i, hcode, nb;
-	EIF_TYPE_INDEX   *save_outtab, type_annotation;
-	int     mcmp, require_detachable = 0;
-	uint32	pos;
+	EIF_TYPE_INDEX result = 0;
+	EIF_TYPE_INDEX l_annotation;
+
+	REQUIRE("Is first annotation?", RT_CONF_IS_VALID_ANNOTATION(first_annotation));
+	REQUIRE("Is second annotation?", RT_CONF_IS_VALID_ANNOTATION(second_annotation));
+
+	if (!first_annotation) {
+			/* Simple case where there is no annotation. Currently this is only possible when we encounter a
+			 * formal generic parameter that needs to be evaluated in a context, in that case we take whatever
+			 * annotations from the context. In other words in a type LIST [separate A], the annotation of
+			 * G is separate. */
+		result = second_annotation;
+	} else if (!second_annotation) {
+			/* Simple case where there is no annotation. Note this is for efficiency
+			 * since the code below in the `else' clause would handled this properly. */
+		result = first_annotation;
+	} else {
+			/* 1. Merge attachment marks. */
+		l_annotation = (first_annotation & (ATTACHED_FLAG | DETACHABLE_FLAG));
+		if (l_annotation) {
+				/* First annotation has an attachment mark, we will use it as it overrides
+				 * whatever is coming next. */
+			result |= l_annotation;
+		} else {
+				/* No attachment mark specified, we use the one from `second_annotation'. */
+			result |= (second_annotation & (ATTACHED_FLAG | DETACHABLE_FLAG));
+		}
+
+			/* 2. Merge separate status. */
+		l_annotation = (first_annotation & SEPARATE_FLAG);
+		if (l_annotation) {
+			result |= l_annotation;
+		} else {
+			result |= (second_annotation & SEPARATE_FLAG);
+		}
+
+			/* 3. Merge variance status. */
+		l_annotation = (first_annotation & (VARIANT_FLAG | FROZEN_FLAG | POLY_FLAG));
+		if (l_annotation) {
+			result |= l_annotation;
+		} else {
+			result |= (second_annotation & (VARIANT_FLAG | FROZEN_FLAG | POLY_FLAG));
+		}
+	}
+	return result;
+}
+
+
+/*
+doc:	<routine name="rt_id_of" return_type="EIF_TYPE" export="private">
+doc:		<summary>Given a set of compiler generated IDs in `intab' we evaluate them in the context of `obj_type' to compute a type with its annotations. If it has some actual generic parameters, their computed type is stored in the type sequence `outtab'.</summary>
+doc:		<param name="a_context" type="struct rt_id_of_context *">State context used during computation. If present we can state if the evaluation of the compiler generated IDs required the `ojb_type'. Mostly used for the C store/retrieve to see if we have qualified anchored type.</param>
+doc:		<param name="intab" type="const EIF_TYPE_INDEX **">Compiler generated IDs. They include both annotations and type IDs.</param>
+doc:		<param name="outtab" type="EIF_TYPE **">Set of type forming the computed type actual generic parameters. For example LIST [A], would create the following array [{A, ATTACHED_FLAG}] (ATTACHED_FLAG since by default types are attached).</param>
+doc:		<return>The computed type ID with its annotations.</return>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:		<synchronization>Through `eif_gen_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX **intab, EIF_TYPE **outtab, EIF_TYPE_INDEX obj_type)
+{
+	EIF_TYPE_INDEX l_type_entry, gcount = 0, i, nb;
+	EIF_TYPE *save_outtab, result, l_type;
+	int     mcmp;
+	uint32	pos, hcode;
 	int l_routine_id, l_just_computed = 0;
 	char    is_expanded, is_tuple;
 	EIF_GEN_DER *gdp, *prev;
+
+		/* Setup result to an invalid type to begine with. */
+	result.id = INVALID_DTYPE;
+	result.annotations = 0;
 
 	if (a_context && a_context->is_invalid) {
 			/* Previous computation was broek, so here we just return a dummy dynamic type.
 			 * Callers should check that `is_invalid' is not set to `1' before accessing
 			 * the computed type. */
-		return 0;
+		return result;
 	}
 
 		/* Get full type */
-	dftype = **intab;
+	l_type_entry = **intab;
 
-	CHECK("Not terminator", dftype != TERMINATOR);
+	CHECK("Not terminator", l_type_entry != TERMINATOR);
 
-		/* Read possible annotations. */
-	if (RT_HAS_ANNOTATION_TYPE(dftype)) {
-		if (RT_IS_DETACHABLE_TYPE(dftype)) {
-				/* We compute the type normally, but then we make sure the type is detachable at the end. */
-			require_detachable = 1;
-			type_annotation = 0;
-		} else {
-			type_annotation = dftype;
-		}
-		while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+		/* Read possible annotations. They can be more in the case we are trying to resolve
+		 * a type such as `attached like x' where `x' is defined as `separate detachable X',
+		 * the resulting type is actually `attached separate X'. */
+	if (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(l_type_entry)) {
+		result.annotations = rt_annotations_from_generated_id (l_type_entry);
+		(*intab)++;
+		l_type_entry = **intab;
+		while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(l_type_entry)) {
+			result.annotations = rt_merged_annotation (result.annotations, rt_annotations_from_generated_id (l_type_entry));
 			(*intab)++;
-			dftype = **intab;
+			l_type_entry = **intab;
 		}
-	} else {
-		type_annotation = 0;
 	}
 
-	if (dftype <= MAX_DTYPE) {
-		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]))) {
+	if (l_type_entry <= MAX_DTYPE) {
+		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[l_type_entry]))) {
 			is_expanded = '1';
-			type_annotation = 0;
+			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG);
 		} else {
 			is_expanded = (char) 0;
 		}
@@ -1307,40 +1427,33 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 	}
 
 		/* Check if type is NONE. */
-	if (RT_IS_NONE_TYPE(dftype)) {
+	if (RT_CONF_IS_NONE_TYPE(l_type_entry)) {
 		(*intab)++;
-		if (RT_IS_ATTACHED_TYPE(type_annotation)) {
-				/* Requested attached, so we use our special value for attached NONE. */
-			dftype = ATTACHED_NONE_TYPE;
-		} else if (require_detachable) {
-				/* An explicit request was made to be detachable. */
-			dftype = DETACHABLE_NONE_TYPE;
+		result.id = l_type_entry;
+		if (RT_CONF_IS_DETACHABLE_FLAG(result.annotations)) {
+				/* We clear the detachable flag as otherwise we could end up with 2
+				 * types if one is declared as `A [detachable C]' which will be generated as A [C]
+				 * and the other as `A [detachable like x]' which will have the detachable mark.
+				 * See eweasel test#conform001, test#reflection005. */
+			result.annotations &= ~DETACHABLE_FLAG;
 		}
-		**outtab = dftype;
+		**outtab = result;
 		(*outtab)++;
-		return dftype;
+		return result;
 	}
 
 		/* Check whether it's a TUPLE Type */
-	if (dftype == TUPLE_TYPE) {
+	if (l_type_entry == TUPLE_TYPE) {
 		(*intab)++;
 		gcount = **intab;       /* Number of generic params */
 		(*intab)++;
-		dftype = **intab;       /* Base id for TUPLE */
-
-			/* Can we really have a TUPLE that is expanded? I guess so for now. */
-		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[dftype]))) {
-			is_expanded = '1';
-			type_annotation = 0;
-		} else {
-			is_expanded = (char) 0;
-		}
+		l_type_entry = **intab;       /* Base id for TUPLE */
 		is_tuple = '1';
 	} else {
 		is_tuple = (char) 0;
 	}
 
-	if (dftype == FORMAL_TYPE) {
+	if (l_type_entry == FORMAL_TYPE) {
 			/* formal generic */
 		(*intab)++;
 		pos = **intab;	/* Position of formal generic */
@@ -1351,15 +1464,16 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 				 * `obj_type' was provided. We flag `a_context' and return
 				 * a dummy dynamic type. */
 			a_context->is_invalid = 1;
-			dftype = 0;
+			result.id = 0;
 		} else {
 			gdp = eif_derivations [obj_type];
 			CHECK("Valid generic parameter position", pos <= gdp->size);
-			dftype = gdp->types [pos-1];
+			result.annotations = rt_merged_annotation (result.annotations, gdp->types [pos - 1].annotations);
+			result.id = gdp->types [pos-1].id;
 		}
 		l_just_computed = 1;
 
-	} else if (dftype == QUALIFIED_FEATURE_TYPE) {
+	} else if (l_type_entry == QUALIFIED_FEATURE_TYPE) {
 			/* Qualified anchor type: #routine_IDs, qualifier type, rid_1, rid_2, ... */
 		(*intab)++;
 		nb = **intab; /* Length of the chain not including the qualifier. */
@@ -1370,7 +1484,7 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 			 * just going to use the return value to calculate
 			 * the dynamic type by processing the chain of routine IDs. */
 		save_outtab = *outtab;
-		dftype = rt_id_of (a_context, intab, outtab, obj_type);
+		l_type = rt_id_of (a_context, intab, outtab, obj_type);
 		*outtab = save_outtab;
 		if (a_context && a_context->is_invalid) {
 				/* Context is invalid, so we just read all the routine IDs before
@@ -1384,9 +1498,9 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 				}
 				(*intab)++;
 			}
-			dftype = 0;
+			result.id = 0;
 		} else {
-				/* Using `dftype' as a starting point, compute the type
+				/* Using the computed dynamic type as a starting point, compute the type
 				 * for each element in the chain. */
 			for (i = nb; i; --i) {
 				l_routine_id = (int) **intab;
@@ -1396,34 +1510,38 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 					l_routine_id = ((l_routine_id & 0x7FFF) << 16) | (int) **intab;
 				}
 #ifdef WORKBENCH
-				dftype = wtype_gen(l_routine_id, To_dtype(dftype), dftype);
+				l_type = wtype_gen(l_routine_id, To_dtype(l_type.id), l_type.id);
 #else
-				dftype = eif_final_id (egc_routines_types [l_routine_id],
-					egc_routines_gen_types [l_routine_id], dftype,
-					egc_routines_offset [l_routine_id]);	
+				l_type = eif_final_id (egc_routines_types [l_routine_id],
+					egc_routines_gen_types [l_routine_id], l_type.id,
+					egc_routines_offset [l_routine_id]);
 #endif
 				(*intab)++;
 			}
+				/* Now that the chain has been computed, we construct the result
+				 * in particular the annotations that needs to be merged. */
+			result.id = l_type.id;
+			result.annotations = rt_merged_annotation (result.annotations, l_type.annotations);
 		}
 		l_just_computed = 1;
 
 	/* This is only for melted mode only. For frozen and finalized mode we do not use this
 	 * Instead we do this via code generation through `generate_cid_array' and `generate_cid_init'. */
 #ifdef WORKBENCH
-	} else if (dftype == LIKE_CURRENT_TYPE) {
+	} else if (l_type_entry == LIKE_CURRENT_TYPE) {
 		(*intab)++;
 		if (a_context && a_context->has_no_context) {
 				/* We cannot compute the proper type since no valid
 				 * `obj_type' was provided. We flag `a_context' and return
 				 * a dummy dynamic type. */
 			a_context->is_invalid = 1;
-			dftype = 0;
+			result.id = 0;
 		} else {
-			dftype = obj_type;
+			result.id = obj_type;
 		}
 		l_just_computed = 1;
 
-	} else if (dftype == LIKE_FEATURE_TYPE) {
+	} else if (l_type_entry == LIKE_FEATURE_TYPE) {
 		(*intab)++;
 		l_routine_id = (int) **intab;
 		if (l_routine_id & 0x8000) {
@@ -1437,13 +1555,15 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 				 * `obj_type' was provided. We flag `a_context' and return
 				 * a dummy dynamic type. */
 			a_context->is_invalid = 1;
-			dftype = 0;
+			result.id = 0;
 		} else {
-			dftype = RTWCT(l_routine_id, To_dtype(obj_type), obj_type);
+			l_type = wtype_gen(l_routine_id, To_dtype(obj_type), obj_type);
+			result.id = l_type.id;
+			result.annotations = rt_merged_annotation(result.annotations, l_type.annotations);
 		}
 		l_just_computed = 1;
 
-	} else if (dftype == LIKE_ARG_TYPE) {
+	} else if (l_type_entry == LIKE_ARG_TYPE) {
 		(*intab)++;
 		pos = (int) **intab;
 		(*intab)++;
@@ -1452,69 +1572,81 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 			 * just going to use the return value to calculate
 			 * the dynamic type by processing the chain of routine IDs. */
 		save_outtab = *outtab;
-		dftype = rt_id_of (a_context, intab, outtab, obj_type);
+		l_type = rt_id_of (a_context, intab, outtab, obj_type);
 		*outtab = save_outtab;
 		if (a_context && a_context->is_invalid) {
 				/* Here we return a dummy dynamic type. If this is part of a more complex
 				 * type, it won't stop that computation, but it won't be a correct type.
 				 * Callers should check that `is_invalid' is not set to `1' before accessing
 				 * the computed type. */
-			dftype = 0;
+			result.id = 0;
 		} else {
-			dftype = RTCA(rt_melted_arg(pos), dftype);
+			EIF_REFERENCE l_ref = rt_melted_arg(pos);
+			if (l_ref) {
+				if (egc_is_experimental) {
+					l_type = eif_new_type(Dftype(l_ref), ATTACHED_FLAG);
+				} else {
+					l_type = eif_new_type(Dftype(l_ref), 0);
+				}
+			}
+			result.id = l_type.id;
+			result.annotations = rt_merged_annotation (result.annotations, l_type.annotations);
 		}
 		l_just_computed = 1;
 #endif
-	} else if (dftype >= eif_first_gen_id) {
+	} else if (l_type_entry >= eif_first_gen_id) {
 			/* This is either an already computed type in the type array. */
 		(*intab)++;
+		result.id = l_type_entry;
 		l_just_computed = 1;
 	}
 
-	if (l_just_computed) {
-			 /* computed it above. Simply progress the `intab' and return the adapted
-			 * type with attachement marks. */
-		if (RT_IS_ATTACHED_TYPE(type_annotation)) {
-			dftype = eif_attached_type (dftype);
-		} else if (require_detachable) {
-			dftype = eif_non_attached_type (dftype);
-		}
-	} else {
+	if (!l_just_computed) {
 			/* It's an ordinary id generated by the compiler */
 
 		if (!is_tuple) {
-			gcount = par_info(dftype)->nb_generics;
+			gcount = par_info(l_type_entry)->nb_generics;
 		}
 
-		if (!is_tuple && (gcount == 0) && !type_annotation) {
+		if (!is_tuple && (gcount == 0)) {
 			/* Neither a generic type nor a TUPLE type without annotation.*/
 			(*intab)++;
 
-			dftype = (require_detachable ? eif_non_attached_type (dftype) : dftype);
-			**outtab = dftype;
+			result.id = l_type_entry;
+			if (RT_CONF_IS_DETACHABLE_FLAG(result.annotations)) {
+				/* We clear the detachable flag as otherwise we could end up with 2
+				* types if one is declared as `A [detachable C]' which will be generated as A [C]
+				* and the other as `A [detachable like x]' which will have the detachable mark.
+				* See eweasel test#conform001, test#reflection005. */
+				result.annotations &= ~DETACHABLE_FLAG;
+			}
+			**outtab = result;
 			(*outtab)++;
 
-			return dftype;
+			return result;
 		}
 
 		save_outtab = *outtab;
 		(*intab)++;
 
-		for (hcode = 0, i = gcount; i; --i) {
-			hcode = hcode + rt_id_of (a_context, intab, outtab, obj_type);
+			/* Compute types of actual generic parameters and the corresponding
+			 * hashcode using the FNV hash (http://www.isthe.com/chongo/tech/comp/fnv/). */
+		for (hcode = 2166136261, i = gcount; i; --i) {
+			l_type = rt_id_of(a_context, intab, outtab, obj_type);
+			hcode = (hcode * 16777619) ^ eif_encoded_type(l_type);
 		}
 
 			/* Only continue if context is valid. */
 		if (!a_context || !a_context->is_invalid) {
-				/* Search all the generic derivations associated to the base class `dftype' */
-			gdp  = eif_derivations [dftype];
+				/* Search all the generic derivations associated to the base class `l_type_entry' */
+			gdp  = eif_derivations [l_type_entry];
 			prev = NULL;
 
 			while (gdp != NULL) {
-				if (
-					(hcode == gdp->hcode) && (is_expanded == gdp->is_expanded) &&
-					(gcount == gdp->size) && (type_annotation == gdp->annotation))
-				{
+					/* We do not pay attention to the annotation if any at the first level, because they
+					 * actually do not control the dynamic type of the result.
+					 * This fixes eweasel test#attach069. */
+				if ((hcode == gdp->hcode) && (is_expanded == gdp->is_expanded) && (gcount == gdp->size)) {
 					mcmp = 0;
 					if (gcount > 0) {
 						mcmp = memcmp((char*)save_outtab, (char*)(gdp->types),gcount*sizeof(EIF_TYPE_INDEX));
@@ -1533,22 +1665,22 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 						/* This is a non-generic type which is used with some annotation.
 						   First we generate the ID without annotation and then compute the
 						   type with the annotation. */
-					CHECK ("has annotation", type_annotation);
+					//CHECK ("has annotation", type_annotation);
 					CHECK ("is not tuple", is_tuple == (char) 0);
 					if (prev == NULL) {
-						prev = rt_new_gen_der (0, NULL, dftype, is_expanded, (char) 0, 0, 0);
-						eif_derivations[dftype] = prev;
+						prev = rt_new_gen_der (0, NULL, l_type_entry, is_expanded, (char) 0, 0);
+						eif_derivations[l_type_entry] = prev;
 						if (is_expanded) {
 							gdp = prev;
 						}
 					}
 					if (!gdp) {
-						gdp = rt_new_gen_der(gcount, save_outtab, dftype, is_expanded, (char) 0, hcode, type_annotation);
+						gdp = rt_new_gen_der(gcount, save_outtab, l_type_entry, is_expanded, (char) 0, hcode);
 					}
 				} else {
-					gdp = rt_new_gen_der(gcount, save_outtab, dftype, is_expanded, is_tuple, hcode, type_annotation);
+					gdp = rt_new_gen_der(gcount, save_outtab, l_type_entry, is_expanded, is_tuple, hcode);
 					if (prev == NULL) {
-						eif_derivations [dftype] = gdp;
+						eif_derivations [l_type_entry] = gdp;
 					}
 				}
 				if (prev) {
@@ -1559,19 +1691,34 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 
 			/* Put full id */
 			*outtab = save_outtab;
-			dftype = gdp->dftype;
-			dftype = (require_detachable ? eif_non_attached_type (dftype) : dftype);
+			result.id = gdp->dftype;
+		}
+	} else {
+			/* Type was computed we just make sure that if it is expanded, it does not 
+			 * carry the attachment mark. See eweasel test#reflection005 when processing
+			 * A [C [STRING], ANY]. */
+		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[result.id]))) {
+			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG);
 		}
 	}
 
-	**outtab = dftype;
+	if (RT_CONF_IS_DETACHABLE_FLAG(result.annotations)) {
+			/* We clear the detachable flag as otherwise we could end up with 2
+			 * types if one is declared as `A [detachable C]' which will be generated as A [C]
+			 * and the other as `A [detachable like x]' which will have the detachable mark.
+			 * See eweasel test#conform001, test#reflection005. */
+		result.annotations &= ~DETACHABLE_FLAG;
+	}
+
+	**outtab = result;
 	(*outtab)++;
 
 		/* If caller requested the next entry in the `intab' array, we simply return it. */
 	if (a_context && a_context->next_address_requested) {
 		a_context->next_address = *intab;
 	}
-	return dftype;
+
+	return result;
 }
 /*------------------------------------------------------------------*/
 /* Create a new generic derivation. Actually we create one for every*/
@@ -1586,10 +1733,11 @@ rt_private EIF_TYPE_INDEX rt_id_of (struct rt_id_of_context *a_context, const EI
 /* hcode    : Hash code for faster search                           */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_GEN_DER *rt_new_gen_der(uint32 size, EIF_TYPE_INDEX *a_types, EIF_TYPE_INDEX base_id, char is_exp, char is_tuple, EIF_TYPE_INDEX hcode, EIF_TYPE_INDEX annotation)
+rt_private EIF_GEN_DER *rt_new_gen_der(uint32 size, EIF_TYPE *a_types, EIF_TYPE_INDEX base_id, char is_exp, char is_tuple, uint32 hcode)
 {
 	EIF_GEN_DER *result;
-	EIF_TYPE_INDEX *tp, dt;
+	EIF_TYPE *tp;
+	EIF_TYPE_INDEX dt;
 	const char *cname;
 	struct eif_par_types **pt;
 
@@ -1598,86 +1746,59 @@ rt_private EIF_GEN_DER *rt_new_gen_der(uint32 size, EIF_TYPE_INDEX *a_types, EIF
 	if (result == NULL)
 		enomem();
 
-	if (a_types == NULL) {
-		/* It's not a generic type. */
-
-		result->size = size;
-		result->hcode = hcode;
-		result->types = NULL;
-		result->gen_seq = NULL;	/* Generated on request only */
-		result->ptypes = NULL;	/* Generated on request only */
-		result->dftype = ((size > 0) ? eif_next_gen_id++ : base_id);
-		result->dtype = base_id;
-		result->base_dtype = INVALID_DTYPE;
-		result->annotation = annotation;
-		result->is_expanded = is_exp;
-		result->is_tuple = is_tuple;
-		result->name = NULL;	/* Generated on request only */
-				/* `name' must be allocated dynamically. */
-		result->next = (EIF_GEN_DER *)0;
-
-		if (size > 0)
-			goto finish;
-
-		/* Just a simple, compiler generated id */
-
-		goto finish_simple;
-	}
-
-		/* Large array */
-	tp = (EIF_TYPE_INDEX *) cmalloc((size + 1)*sizeof(EIF_TYPE_INDEX));
-	if (tp == NULL)
-		enomem();
-
-	tp[size]=TERMINATOR;
-
-	if (size > 0) {
-		memcpy (tp, a_types, size*sizeof(EIF_TYPE_INDEX));
-	}
-
 	result->size = size;
 	result->hcode = hcode;
-	result->types = tp;
-	result->gen_seq = NULL;	/* Generated on request only */
-	result->ptypes = NULL;	/* Generated on request only */
-	result->dftype = eif_next_gen_id++;
-	result->dtype = base_id;
-	result->base_dtype = INVALID_DTYPE;
-	result->annotation = annotation;
+	result->gen_seq = NULL;
+	result->ptypes = NULL;
 	result->is_expanded = is_exp;
 	result->is_tuple = is_tuple;
-	result->name = NULL;	/* Generated on request only */
-				/* `name' must be allocated dynamically. */
-	result->next = (EIF_GEN_DER *)0;
+	result->dtype = base_id;
+	result->base_dtype = base_id;	/* Type is not generic, there is only one entry in parent table. */
+	result->next = NULL;
 
-finish:
+	if (a_types == NULL) {
+			/* Just a simple, compiler generated id */
+		CHECK("Not generic type", size == 0);
+		result->types = NULL;
+		result->dftype = base_id;
+		return result;
+	} else {
+		CHECK("Generic type or tuple", (size > 0) || is_tuple);
 
-	/* Expand tables if necessary */
+		tp = (EIF_TYPE *) cmalloc((size + 1)*sizeof(EIF_TYPE));
+		if (!tp) {
+			enomem();
+		} else {
+			tp[size].id = TERMINATOR;
+			tp[size].annotations = 0;
+			memcpy (tp, a_types, size*sizeof(EIF_TYPE));
 
-	if (eif_next_gen_id >= eif_cid_size)
-		rt_expand_tables (eif_next_gen_id + 32);
+			result->types       = tp;
+			result->dftype      = eif_next_gen_id++;
 
-	eif_cid_map [result->dftype] = base_id;
+				/* Expand tables if necessary */
+			if (eif_next_gen_id >= eif_cid_size)
+				rt_expand_tables (eif_next_gen_id + 32);
 
-finish_simple:
+			eif_cid_map [result->dftype] = base_id;
 
-	/* Now find first entry in parent table
-	   which has the same class name as `base_id'.
-	*/
-
-	cname = System ((par_info(base_id))->dtype).cn_generator;
-
-	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt) {
-		if (*pt == (struct eif_par_types *)0)
-			continue;
-
-		if (strcmp (cname,System((*pt)->dtype).cn_generator) == 0) {
-			result->base_dtype = dt;
-			break;
+				/* Now find first entry in parent table
+				   which has the same class name as `base_id'.
+				   We stop when reaching currently found `base_id'.
+				*/
+			CHECK("Type is generic, base_id > 0", base_id > 0);
+			cname = System ((par_info(base_id))->dtype).cn_generator;
+			for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt) {
+				if (*pt && (strcmp (cname,System((*pt)->dtype).cn_generator) == 0)) {
+					result->base_dtype = dt;
+					break;
+				}
+			}
+				/* Lowest dtype we found should be smaller than the one associated to `dftype'. */
+			CHECK("valid base_dtype", result->base_dtype <= result->dtype);
 		}
+		return result;
 	}
-
-	return result;
 }
 /*------------------------------------------------------------------*/
 /* Create new conformance table.                                    */
@@ -1915,76 +2036,86 @@ rt_private void rt_expand_tables(int new_size)
 /*                                                                  */
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
-rt_private char *rt_attached_none_name_type = "!NONE";
-rt_private char *rt_detachable_none_name_type = "NONE";
+rt_private char *rt_none_name_type = "NONE";
 
-rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
+/*
+doc:	<routine name="eif_typename_of_type" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Given a type ID with annotations, returns the Eiffel string representation of that type.</summary>
+doc:		<param name="ftype" type="EIF_TYPE">Dynamic type.</param>
+doc:		<return>Returns type name of `dftype'.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_REFERENCE eif_typename_of_type (EIF_TYPE ftype)
 {
-	EIF_GEN_DER *gdp;
-	char    *result;
-			
-	REQUIRE("Valid type", (dftype < eif_next_gen_id) || (RT_IS_NONE_TYPE(dftype)));
+	char    *name;
+	EIF_REFERENCE ret;	/* Return value. */
 
-	if (RT_IS_NONE_TYPE (dftype)) {
-		if (dftype == DETACHABLE_NONE_TYPE) {
-			result = rt_detachable_none_name_type;
-		} else {
-			CHECK("attached NONE", dftype == ATTACHED_NONE_TYPE);
-			result = rt_attached_none_name_type;
-		}
-	} else if (dftype < eif_first_gen_id) {
-		RT_GET_CONTEXT
-		result = non_generic_type_names [dftype];
-		if (result == NULL) {
-			const char *l_class_name = System(par_info(dftype)->dtype).cn_generator;
+	name = eif_typename (ftype);
 
-			if (EIF_NEEDS_EXPANDED_KEYWORD(System (dftype))) {
-				result = cmalloc (10 + strlen (l_class_name));
-				if (!result) {
-					enomem();
-				} else {
-					result [0] = '\0';
-					strcat (result, "expanded ");
-				}
-			} else if (EIF_NEEDS_REFERENCE_KEYWORD(System (dftype))) {
-				result = cmalloc (11 + strlen (l_class_name));
-				if (!result) {
-					enomem();
-				} else {
-					result [0] = '\0';
-					strcat (result, "reference ");
-				}
-			} else {
-				result = cmalloc (strlen (l_class_name) + 1);
-				if (!result) {
-					enomem();
-				} else {
-					result [0] = '\0';
-				}
-			}
-			strcat (result, l_class_name);
-			non_generic_type_names[dftype] = result;
-		}
-	} else {
-		gdp = eif_derivations [dftype];
-		CHECK("gdp_computed", gdp);
-		if (gdp->name != NULL) {    /* Already computed */
-			result = gdp->name;	/* Allocated dynamically! */
+	ret = makestr(name, strlen(name));
+	return ret;
+}
+
+rt_public char *rt_typename_id (EIF_TYPE_INDEX dftype)
+{
+	return eif_typename_id(dftype);
+}
+
+/*
+doc:	<routine name="eif_typename" return_type="char *" export="shared">
+doc:		<summary>Given a type ID with annotations, returns the string representation of that type. Internally we cache those strings in `eif_type_names'.</summary>
+doc:		<param name="dftype" type="EIF_TYPE_INDEX">Dynamic type.</param>
+doc:		<return>Returns type name of `dftype'.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</routine>
+*/
+rt_public char *eif_typename (EIF_TYPE ftype)
+{
+	char **l_table_entry;
+	char *l_result;
+	rt_uint_ptr l_array_index;
+
+	REQUIRE("Valid type", (ftype.id < eif_next_gen_id) || (RT_CONF_IS_NONE_TYPE(ftype.id)));
+
+		/* We use the encoded version of the type to build the search key in `eif_type_names'.
+		 * We add +1 because our hash-table implementation does not handle 0 for the key. */
+	l_array_index = eif_encoded_type (ftype) + 1;
+	l_table_entry = ht_first(&eif_type_names, l_array_index);
+	if (!l_table_entry) {
+			/* Per documentation, the table is full and we could not find the key `l_array_index'. */
+		if (ht_resize (&eif_type_names, eif_type_names.h_capacity + eif_type_names.h_capacity / 2)) {
+			enomem();
 		} else {
-				/* Create dynamic buffer for string */
-			result = cmalloc (rt_typename_len (dftype) + 1);
-			if (result == NULL) {
-				enomem(); 
-			} else {
-				*result = '\0';
-				rt_internal_typename (dftype, result);
-				CHECK ("Not computed", !(gdp->name));
-				gdp->name = result;
-			}
+				/* We reiterate the lookup in the resized table. */
+			l_table_entry = (EIF_REFERENCE *) ht_first (&eif_type_names, l_array_index);
+			CHECK("has_result", l_table_entry);
 		}
 	}
+	CHECK("has_result", l_table_entry);
+	if (!*l_table_entry) {
+			/* The type name was not yet computed. We compute it and store it immediately
+			 * in location pointed by `l_table_entry'. This is the beauty of using `ht_first' as we 
+			 * avoid a second lookup. */
 
-	return result;
+		size_t len = rt_typename_len (ftype, 0) + 1;
+				/* Create dynamic buffer for string */
+		l_result = cmalloc (len);
+		if (l_result == NULL) {
+			enomem();
+		} else {
+			*l_result = '\0';
+			rt_typename (ftype, l_result, 0);
+				/* Store computed result in `eif_type_names'. */
+			*l_table_entry = l_result;
+		}
+	} else {
+			/* Get previously computed value. */
+		l_result = *l_table_entry;
+	}
+	return l_result;
 }
 /*------------------------------------------------------------------*/
 /* Produce full type name of `dftype' in `result'.                  */
@@ -1992,45 +2123,91 @@ rt_public char *eif_typename (EIF_TYPE_INDEX dftype)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private void rt_internal_typename (EIF_TYPE_INDEX dftype, char *result)
+rt_private void rt_typename (EIF_TYPE a_type, char *result, int a_level)
 {
 	EIF_GEN_DER *gdp;
-	EIF_TYPE_INDEX       *gp, dtype, i;
+	EIF_TYPE *gp;
+	EIF_TYPE_INDEX i;
 	int	needs_expanded = 0, needs_reference = 0;
+	rt_uint_ptr l_array_index;
+	char **l_table_entry;
 
-	if (dftype > MAX_DTYPE) {
-		CHECK("NONE type", RT_IS_NONE_TYPE(dftype));
-		if (dftype == DETACHABLE_NONE_TYPE) {
-			strcat(result, rt_detachable_none_name_type);
+	if (!a_type.annotations) {
+			/* This is a type with no explicit annotations, so it is
+			 * by default detachable. */
+		if (a_level != 0) {
+				/* It is also an actual generic parameter, so it is poly too. */ 
+			a_type.annotations |= (DETACHABLE_FLAG | POLY_FLAG);
 		} else {
-			CHECK("attached NONE", dftype == ATTACHED_NONE_TYPE);
-			strcat(result, rt_attached_none_name_type);
+			a_type.annotations |= DETACHABLE_FLAG;
 		}
-	} else {
-		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
-		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
+	}
+	if (a_type.annotations) {
+			/* There are some annotations, let's process them. First variance,
+			 * and if is RT_CONF_IS_POLY_TYPE then no need to print anything as this
+			 * is the default. */
+		if (RT_CONF_IS_FROZEN_FLAG(a_type.annotations)) {
+			/* We ignore them for now:
+			strcat (result, "frozen ");
+			*/
+		} else if (RT_CONF_IS_POLY_FLAG(a_type.annotations)) {
+		} else {
+			CHECK("has variant or no variance mark", RT_CONF_IS_VARIANT_FLAG(a_type.annotations) || !RT_CONF_HAS_VARIANT_MARK_FLAG(a_type.annotations));
+			/* We ignore them for now: 
+			strcat (result, "variant ");
+			*/
+		}
 
-		if (dftype < eif_first_gen_id) {
+		if (egc_is_experimental) {
+				/* If it is detachable and not expanded, we print the detachable mark.
+				 * Otherwise nothing as attached is default. */
+			if (!RT_CONF_IS_ATTACHED_FLAG(a_type.annotations)) {
+				if (!EIF_IS_EXPANDED_TYPE(System (eif_cid_map[a_type.id]))) {
+					strcat(result, "detachable ");
+				}
+			}
+		} else {
+			if (RT_CONF_IS_ATTACHED_FLAG(a_type.annotations)) {
+					/* If it is attached, we print the attached mark. */
+				strcat(result, "!");
+			}
+		}
+
+		if (RT_CONF_IS_SEPARATE_FLAG(a_type.annotations)) {
+			strcat (result, "separate ");
+		}
+	}
+
+	if (a_type.id > MAX_DTYPE) {
+		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(a_type.id));
+		strcat(result, rt_none_name_type);
+	} else {
+		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[a_type.id]));
+		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[a_type.id]));
+
+		if (a_type.id < eif_first_gen_id) {
 			if (needs_expanded) {
 				strcat (result, "expanded ");
 			} else if (needs_reference) {
 				strcat (result, "reference ");
 			}
 				/* Compiler generated id */
-			strcat (result, System(par_info(dftype)->dtype).cn_generator);
+			strcat (result, System(par_info(a_type.id)->dtype).cn_generator);
 		} else {
-				/* We have created this id */
-			gdp = eif_derivations [dftype];
-			if (gdp->name != NULL) {    /* Already computed */
-				strcat (result, gdp->name);
+				/* We have created this id. First see if we have computed its name yet.
+				 * It is important that we do not recursively call `eif_typename' here
+				 * as we do not expect the table to resize which could happen if `a_type'
+				 * had not yet been computed. */
+
+				/* We use the encoded version of the type to build the search key in `eif_type_names'.
+				 * We add +1 because our hash-table implementation does not handle 0 for the key. */
+			l_array_index = eif_encoded_type(a_type) + 1;
+			l_table_entry = ht_first(&eif_type_names, l_array_index);
+			if (l_table_entry && *l_table_entry) {	/* Already computed */
+				strcat (result, *l_table_entry);
 			} else {
-/*				if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
-					strcat (result, "variant ");
-				} */
-				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
-					strcat (result, "!");
-				}
 					/* Generic case */
+				gdp = eif_derivations [a_type.id];
 				i = (EIF_TYPE_INDEX) gdp->size;
 
 				if (needs_expanded) {
@@ -2045,8 +2222,7 @@ rt_private void rt_internal_typename (EIF_TYPE_INDEX dftype, char *result)
 					strcat (result, " [");
 					gp = gdp->types;
 					while (i--) {
-						dtype = *gp;
-						rt_internal_typename (dtype, result);
+						rt_typename (*gp, result, a_level + 1);
 						++gp;
 						if (i) {
 							strcat (result, ", ");
@@ -2064,47 +2240,88 @@ rt_private void rt_internal_typename (EIF_TYPE_INDEX dftype, char *result)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private size_t rt_typename_len (EIF_TYPE_INDEX dftype)
+rt_private size_t rt_typename_len (EIF_TYPE a_type, int a_level)
 {
 	EIF_GEN_DER *gdp;
-	EIF_TYPE_INDEX *gp, l_dftype;
+	EIF_TYPE *gp;
 	uint32 i;
 	size_t len = 0;
 	int	needs_expanded, needs_reference;
+	rt_uint_ptr l_array_index;
+	char **l_table_entry;
 
-	if (dftype > MAX_DTYPE) {
-		CHECK ("NONE type", RT_IS_NONE_TYPE(dftype));
-		if (dftype == DETACHABLE_NONE_TYPE) {
-			len += 4;
+	if (!a_type.annotations) {
+			/* This is a type with no explicit annotations, so it is
+			 * by default detachable. */
+		if (a_level != 0) {
+				/* It is also an actual generic parameter, so it is poly too. */ 
+			a_type.annotations |= (DETACHABLE_FLAG | POLY_FLAG);
 		} else {
-			CHECK("attached NONE", dftype == ATTACHED_NONE_TYPE);
-			len += 5;
+			a_type.annotations |= DETACHABLE_FLAG;
 		}
-	} else {
-		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[dftype]));
-		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[dftype]));
+	}
+	if (a_type.annotations) {
+			/* There are some annotations, let's process them. First variance,
+			 * and if is RT_CONF_IS_POLY_TYPE then no need to print anything as this
+			 * is the default. */
+		if (RT_CONF_IS_FROZEN_FLAG(a_type.annotations)) {
+			//len += 7;	/* for frozen followed by space */
+		} else if (RT_CONF_IS_POLY_FLAG(a_type.annotations)) {
+		} else {
+			CHECK("has variant or no variance mark", RT_CONF_IS_VARIANT_FLAG(a_type.annotations) || !RT_CONF_HAS_VARIANT_MARK_FLAG(a_type.annotations));
+			//len += 8;	/* for variant followed by space */
+		}
 
-		if (dftype < eif_first_gen_id) {
+		if (egc_is_experimental) {
+				/* If it is detachable and not expanded, we print the detachable mark.
+				 * Otherwise nothing as attached is default. */
+			if (!RT_CONF_IS_ATTACHED_FLAG(a_type.annotations)) {
+				if (!EIF_IS_EXPANDED_TYPE(System (eif_cid_map[a_type.id]))) {
+					len += 11;
+				}
+			}
+		} else {
+			if (RT_CONF_IS_ATTACHED_FLAG(a_type.annotations)) {
+					/* If it is attached, we print the attached mark. */
+				len +=1;
+			}
+		}
+
+		if (RT_CONF_IS_SEPARATE_FLAG(a_type.annotations)) {
+			len += 9;	/* for separate followed by space */
+		}
+	}
+
+	if (a_type.id > MAX_DTYPE) {
+		CHECK ("NONE type", RT_CONF_IS_NONE_TYPE(a_type.id));
+		len += 4;
+	} else {
+		needs_expanded = EIF_NEEDS_EXPANDED_KEYWORD(System(eif_cid_map[a_type.id]));
+		needs_reference = EIF_NEEDS_REFERENCE_KEYWORD(System(eif_cid_map[a_type.id]));
+
+		if (a_type.id < eif_first_gen_id) {
 			if (needs_expanded) {
 				len += 9; /* for expanded followed by space */
 			} else if (needs_reference) {
 				len += 10; /* for reference followed by space */
 			}
 				/* Compiler generated id */
-			len += strlen (System(par_info(dftype)->dtype).cn_generator);
+			len += strlen (System(par_info(a_type.id)->dtype).cn_generator);
 		} else {
-				/* We have created this id */
-			gdp = eif_derivations [dftype];
-			if (gdp->name != NULL) {    /* Already computed */
-				len += strlen (gdp->name);
+				/* We have created this id. First see if we have computed its name yet.
+				 * It is important that we do not recursively call `eif_typename' here
+				 * as we do not expect the table to resize which could happen if `a_type'
+				 * had not yet been computed. */
+
+				/* We use the encoded version of the type to build the search key in `eif_type_names'.
+				 * We add +1 because our hash-table implementation does not handle 0 for the key. */
+			l_array_index = eif_encoded_type(a_type) + 1;
+			l_table_entry = ht_first(&eif_type_names, l_array_index);
+			if (l_table_entry && *l_table_entry) {	/* Already computed */
+				len += strlen (*l_table_entry);
 			} else {
-/*				if (!RT_IS_FROZEN_TYPE(gdp->annotation)) {
-					len += 7 + 1; *//* for variant followed by a space */
-/*				} */
-				if (RT_IS_ATTACHED_TYPE(gdp->annotation)) {
-					len += 1;	/* for ! */
-				}
 					/* Generic case */
+				gdp = eif_derivations[a_type.id];
 				i = gdp->size;
 				len += strlen (System(par_info(gdp->dtype)->dtype).cn_generator);
 
@@ -2119,8 +2336,7 @@ rt_private size_t rt_typename_len (EIF_TYPE_INDEX dftype)
 					len += 3 + (i-1)*2;
 					gp = gdp->types;
 					while (i--) {
-						l_dftype = *gp;
-						len += rt_typename_len (l_dftype);
+						len += rt_typename_len (*gp, a_level + 1);
 						++gp;
 					}
 				}
@@ -2136,30 +2352,30 @@ rt_private size_t rt_typename_len (EIF_TYPE_INDEX dftype)
 /* dftype : full type id                                            */
 /*------------------------------------------------------------------*/
 
-rt_private uint16 rt_gen_seq_len (EIF_TYPE_INDEX dftype)
+rt_private uint16 rt_gen_seq_len (EIF_TYPE a_type)
 {
 	EIF_GEN_DER *gdp;
 	uint32 i;
 	uint16 len;
 
-	REQUIRE ("dftype is not an annotation", !RT_HAS_ANNOTATION_TYPE(dftype));
-	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
-	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
-	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
+	REQUIRE ("annotations is not an annotation", RT_CONF_IS_VALID_ANNOTATION(a_type.annotations));
+	REQUIRE ("dftype is not an annotation", !RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(a_type.id));
+	REQUIRE ("dftype is not a formal generic parameter", a_type.id != FORMAL_TYPE);
+	REQUIRE ("dftype is not a tuple", a_type.id != TUPLE_TYPE);
+	REQUIRE ("dftype is not a terminator", a_type.id != TERMINATOR);
 
-		/* Simple id */
-	if ((RT_IS_NONE_TYPE(dftype)) || (dftype < eif_first_gen_id)) {
+	if (a_type.annotations != 0) {
+			/* There is an annotation, we need to make room for it. */
 		len = 1;
 	} else {
+		len = 0;
+	}
+		/* Simple id */
+	if ((RT_CONF_IS_NONE_TYPE(a_type.id)) || (a_type.id < eif_first_gen_id)) {
+		len++;
+	} else {
 			/* It's a generic type */
-		gdp = eif_derivations[dftype];
-
-			/* If there is an annotation, then we should increase by one. */
-		if (gdp->annotation) {
-			len = 1;
-		} else {
-			len = 0;
-		}
+		gdp = eif_derivations[a_type.id];
 
 			/* Is it a TUPLE? */
 		if (gdp->is_tuple) {
@@ -2171,7 +2387,7 @@ rt_private uint16 rt_gen_seq_len (EIF_TYPE_INDEX dftype)
 
 		i = gdp->size;
 			/* Add 1 for the base ID. */
-		len = len + 1; 
+		len = len + 1;
 		while (i) {
 			i--;
 			len = len + rt_gen_seq_len (gdp->types [i]);
@@ -2188,30 +2404,39 @@ rt_private uint16 rt_gen_seq_len (EIF_TYPE_INDEX dftype)
 /* idx       : index where to put id                                */
 /*------------------------------------------------------------------*/
 
-rt_private void rt_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *a_types, EIF_TYPE_INDEX *idx)
+rt_private void rt_put_gen_seq (EIF_TYPE a_type, EIF_TYPE_INDEX *a_types, EIF_TYPE_INDEX *idx, int use_old_annotations)
 {
 	EIF_GEN_DER *gdp;
 	uint32 i, len;
 
-	REQUIRE ("dftype is not an annotation", !RT_HAS_ANNOTATION_TYPE(dftype));
-	REQUIRE ("dftype is not a formal generic parameter", dftype != FORMAL_TYPE);
-	REQUIRE ("dftype is not a tuple", dftype != TUPLE_TYPE);
-	REQUIRE ("dftype is not a terminator", dftype != TERMINATOR);
+	REQUIRE ("annotations is not an annotation", RT_CONF_IS_VALID_ANNOTATION(a_type.annotations));
+	REQUIRE ("dftype is not an annotation", !RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(a_type.id));
+	REQUIRE ("dftype is not a formal generic parameter", a_type.id != FORMAL_TYPE);
+	REQUIRE ("dftype is not a tuple", a_type.id != TUPLE_TYPE);
+	REQUIRE ("dftype is not a terminator", a_type.id != TERMINATOR);
+
+	if (a_type.annotations != 0) {
+			/* We add the 0xFF00 because we have the annotations in the type array
+			 * which enables us to differentiate them from normal type IDs. */
+		a_types [*idx] = a_type.annotations | 0xFF00;
+		if (use_old_annotations) {
+				/* For backward compatibility for C storable we annotations used
+				 * to be 0xFF1x we add the UNUSABLE_FLAG so that old systems can
+				 * still retrieve void-safe data generated by a newer version of
+				 * the runtime. */
+			a_types [*idx] |= UNUSABLE_FLAG;
+		}
+		(*idx)++;
+	}
 
 	/* Simple id */
 
-	if ((RT_IS_NONE_TYPE(dftype)) || (dftype < eif_first_gen_id)) {
-		a_types [*idx] = dftype;
+	if ((RT_CONF_IS_NONE_TYPE(a_type.id)) || (a_type.id < eif_first_gen_id)) {
+		a_types [*idx] = a_type.id;
 		(*idx)++;
 	} else {
-
 			/* It's a generic type */
-		gdp = eif_derivations[dftype];
-
-		if (gdp->annotation) {
-			a_types [*idx] = gdp->annotation;
-			(*idx)++;
-		}
+		gdp = eif_derivations[a_type.id];
 
 			/* Is it a TUPLE type? */
 		if (gdp->is_tuple) {
@@ -2228,24 +2453,18 @@ rt_private void rt_put_gen_seq (EIF_TYPE_INDEX dftype, EIF_TYPE_INDEX *a_types, 
 		len = gdp->size;
 
 		for (i = 0; i < len; ++i) {
-			rt_put_gen_seq (gdp->types [i], a_types, idx);
+			rt_put_gen_seq (gdp->types [i], a_types, idx, use_old_annotations);
 		}
 	}
 }
 
 /*------------------------------------------------------------------*/
-/* Compute if `dftype' is attached or not.                          */
+/* Compute if `ftype' is attached or not.                           */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_BOOLEAN eif_is_attached_type (EIF_TYPE_INDEX dftype)
+rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype)
 {
-	if (RT_IS_NONE_TYPE(dftype)) {
-		return EIF_TEST(dftype == ATTACHED_NONE_TYPE);
-	} else {
-		EIF_GEN_DER *gdp = eif_derivations [dftype];
-
-		return EIF_TEST(gdp && RT_IS_ATTACHED_TYPE(gdp->annotation)); 
-	}
+	return EIF_TEST(RT_CONF_IS_ATTACHED_FLAG(ftype.annotations)); 
 }
 
 /*------------------------------------------------------------------*/
@@ -2253,14 +2472,12 @@ rt_public EIF_BOOLEAN eif_is_attached_type (EIF_TYPE_INDEX dftype)
 /* reference type or expanded type.                                 */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE_INDEX dftype)
+rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE ftype)
 {
-	if (RT_IS_NONE_TYPE(dftype)) {
-		return EIF_TEST(dftype == DETACHABLE_NONE_TYPE);
+	if (!RT_CONF_IS_ATTACHED_FLAG(ftype.annotations)) {
+		return EIF_TRUE;
 	} else {
-		EIF_GEN_DER *gdp = eif_derivations [dftype];
-
-		return EIF_TEST(!gdp || !RT_IS_ATTACHED_TYPE(gdp->annotation) || gdp->is_expanded); 
+		return eif_gen_is_expanded(ftype.id);
 	}
 }
 
@@ -2271,7 +2488,7 @@ rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE_INDEX dftype)
 
 rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype)
 {
-	if (RT_IS_NONE_TYPE(dftype)) {
+	if (RT_CONF_IS_NONE_TYPE(dftype)) {
 		return EIF_FALSE;
 	} else {
 		EIF_GEN_DER *gdp = eif_derivations [dftype];
@@ -2285,137 +2502,29 @@ rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype)
 	}
 }
 
-
 /*------------------------------------------------------------------*/
-/* Compute the associated detachable type of `dftype' if any,       */
-/* otherwise `dftype'.                                              */
+/* Compute the associated detachable type of `ftype' if any,       */
+/* otherwise `ftype'.                                              */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_non_attached_type (EIF_TYPE_INDEX dftype)
+rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype)
 {
-	EIF_GEN_DER *gdp;
-	EIF_TYPE_INDEX l_result;
-	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
-	const EIF_TYPE_INDEX * l_intable;
-	uint32 nb, tuple_added_size;
-
-	if (RT_IS_NONE_TYPE(dftype)) {
-		l_result = DETACHABLE_NONE_TYPE;
-	} else {
-		gdp = eif_derivations [dftype];
-
-		if (gdp && (RT_IS_ATTACHED_TYPE(gdp->annotation))) {
-			nb = gdp->size;
-			if (nb || (gdp->is_tuple)) {
-				if (gdp->is_tuple) {
-					tuple_added_size = 2;
-				} else {
-					tuple_added_size = 0;
-				} 
-					/* Case of a generic class. */
-				outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + 2 + tuple_added_size));
-				if (!outtable) {
-					enomem();
-				}
-				intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + 2 + tuple_added_size));
-				if (!intable) {
-					eif_rt_xfree(outtable);
-					enomem();
-				}
-				saved_out = outtable;
-				saved_in = intable;
-				if (tuple_added_size) {
-					intable[0] = TUPLE_TYPE;
-					CHECK("valid cound", nb < 0xFFFF);
-					intable[1] = (EIF_TYPE_INDEX) nb;
-				}
-				intable[tuple_added_size] = To_dtype(dftype);
-				memcpy (intable + (tuple_added_size + 1), gdp->types, sizeof(EIF_TYPE_INDEX) * nb);
-				intable[nb + tuple_added_size + 1] = TERMINATOR;
-					/* Ensure proper usage of const qualifier without introducing a cast that will be damaging
-					 * to type safety in C. */
-				l_intable = intable;
-				l_result = rt_id_of (NULL, &l_intable, &outtable, dftype);
-
-				eif_rt_xfree(saved_out);
-				eif_rt_xfree(saved_in);
-			} else {
-					/* Case of a non-generic class, simply takes the Dtype. */
-				l_result = To_dtype(dftype);
-			}
-		} else {
-			l_result = dftype;
-		}
-	}
-	return l_result;
+		/* Since types are by default detachable, we simply remove
+		 * all attachment marks. */
+	ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+	return ftype;
 }
 
 /*------------------------------------------------------------------*/
-/* Compute the associated attached type of `dftype' if any,         */
-/* otherwise `dftype'.                                              */
+/* Compute the associated attached type of `ftype' if any,         */
+/* otherwise `ftype'.                                              */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
+rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype)
 {
-	EIF_GEN_DER *gdp;
-	EIF_TYPE_INDEX l_result;
-	EIF_TYPE_INDEX *saved_out, *outtable, *saved_in, *intable;
-	const EIF_TYPE_INDEX * l_intable;
-	uint32 nb, tuple_added_size;
-
-	if (RT_IS_NONE_TYPE(dftype)) {
-		l_result = ATTACHED_NONE_TYPE;
-	} else {
-		gdp = eif_derivations [dftype];
-
-		if (!gdp || (!RT_IS_ATTACHED_TYPE(gdp->annotation))) {
-			tuple_added_size = 0;
-			if (gdp) {
-				nb = gdp->size;
-				if (gdp->is_tuple) {
-						/* + 2 because we need to store TUPLE_TYPE followed by
-						* the actual generic parameter count. */
-					tuple_added_size = 2;
-				}
-			} else {
-				nb = 0;
-			}
-				/* + 3 because we need additional space for the attached mark, the dtype and the terminator. */
-			outtable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + tuple_added_size + 3));
-			if (!outtable) {
-				enomem();
-			}
-				/* + 3 because we need additional space for the attached mark, the dtype and the terminator. */
-			intable = (EIF_TYPE_INDEX *) cmalloc (sizeof(EIF_TYPE_INDEX) * (nb + tuple_added_size + 3));
-			if (!intable) {
-				eif_rt_xfree(outtable);
-				enomem();
-			}
-			saved_out = outtable;
-			saved_in = intable;
-			intable[0] = ATTACHED_TYPE;
-			intable[tuple_added_size + 1] = To_dtype(dftype);
-			if (gdp) {
-				if (tuple_added_size) {
-					intable[1] = TUPLE_TYPE;
-					CHECK("valid cound", nb < 0xFFFF);
-					intable[2] = (EIF_TYPE_INDEX) nb;
-				}
-				memcpy (intable + (tuple_added_size + 2), gdp->types, sizeof(EIF_TYPE_INDEX) * nb);
-			}
-			intable[nb + tuple_added_size + 2] = TERMINATOR;
-				/* Ensure proper usage of const qualifier without introducing a cast that will be damaging
-				 * to type safety in C. */
-			l_intable = intable;
-			l_result = rt_id_of (NULL, &l_intable, &outtable, dftype);
-
-			eif_rt_xfree(saved_out);
-			eif_rt_xfree(saved_in);
-		} else {
-			l_result = dftype;
-		}
-	}
-	return l_result;
+	ftype.annotations &= ~DETACHABLE_FLAG;
+	ftype.annotations |= ATTACHED_FLAG;
+	return ftype;
 }
 
 /*------------------------------------------------------------------*/
@@ -2425,13 +2534,12 @@ rt_public EIF_TYPE_INDEX eif_attached_type (EIF_TYPE_INDEX dftype)
 /*------------------------------------------------------------------*/
 
 rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
-
 {
-	EIF_TYPE_INDEX outtab [256], *outtable, *intable;
-	const EIF_TYPE_INDEX * l_intable;
-	EIF_TYPE_INDEX min_low, max_low, min_high, max_high, pftype, dtype, *ptypes, type_annotation;
+	EIF_TYPE outtab [256], *outtable;
+	EIF_TYPE_INDEX *intable;
+	const EIF_TYPE_INDEX *l_intable;
+	EIF_TYPE_INDEX min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
 	int i, count, offset, pcount;
-	int repeat_parent_iteration, add_non_attached_parent;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
 	char is_expanded;
 	struct eif_par_types *pt;
@@ -2441,13 +2549,14 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 		/* Get parent table */
 	dtype = To_dtype(dftype);
 	gdp = eif_derivations [dftype];
+
 		/* `gdp' might be NULL in the case of non-generic classes, thus we build a very simple entry. */
 	if (gdp == NULL) {
 		CHECK("same type", dftype == dtype);
 		if (EIF_IS_EXPANDED_TYPE(System(dtype))) {
-			gdp = rt_new_gen_der (0, NULL, dtype, '1', (char) 0, 0, 0);
+			gdp = rt_new_gen_der (0, NULL, dtype, '1', (char) 0, 0);
 		} else {
-			gdp = rt_new_gen_der (0, NULL, dtype, (char) 0, (char) 0, 0, 0);
+			gdp = rt_new_gen_der (0, NULL, dtype, (char) 0, (char) 0, 0);
 		}
 		eif_derivations [dftype] = gdp;
 	}
@@ -2462,26 +2571,6 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 		/* Let's compute the number of parent types. */
 	pcount = pt->nb_parents;
 	intable = pt->parents;
-
-	if (gdp->annotation) {
-			/* If type is attached, then we need to register the conformance
-			 * to the detachable version as well. That is to say !A should conform to ?A */
-		type_annotation = gdp->annotation;
-		pcount++;
-		repeat_parent_iteration = 0;
-		add_non_attached_parent = 1;
-	} else if (gdp->is_expanded) {
-			/* An expanded type conforms to all the attached version of its parents
-			 * and the non-attached ones. */
-		type_annotation = ATTACHED_TYPE;
-		pcount *= 2; /* We double the number of parents for the non-attached ones. */
-		repeat_parent_iteration = 1;
-		add_non_attached_parent = 0;
-	} else {
-		type_annotation = 0;
-		repeat_parent_iteration = 0;
-		add_non_attached_parent = 0;
-	}
 
 				/* Compute the ranges of the bit tables */
 	min_low = eif_next_gen_id;
@@ -2503,24 +2592,10 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 
 	gdp->ptypes = ptypes;
 	if (pcount) {
-		if (add_non_attached_parent) {
-				/* We are processing an attached type, which naturally conforms to its
-				 * detachable version. */
-			pftype = eif_non_attached_type (dftype);
-			CHECK ("Cannot be the same type", dftype != pftype);
-			*(ptypes++) = pftype;
-		}
-
-non_attached_parents:
-		intable = pt->parents;
-
 		outtable = outtab;
 		l_intable = intable;
 		while (*l_intable != TERMINATOR) {
-			pftype = rt_id_of (NULL, &l_intable, &outtable, dftype);
-			if (type_annotation) {
-				pftype = eif_attached_type(pftype);
-			}
+			pftype = rt_id_of (NULL, &l_intable, &outtable, dftype).id;
 			if (*l_intable == PARENT_TYPE_SEPARATOR) {
 				l_intable++;
 			} else {
@@ -2529,13 +2604,6 @@ non_attached_parents:
 
 				/* Register parent type */
 			*(ptypes++) = pftype;
-		}
-		if (repeat_parent_iteration) {
-				/* We are processing an expanded type, and we need to conform to all the detachable
-				 * parents. */
-			repeat_parent_iteration = 0;
-			type_annotation = 0;
-			goto non_attached_parents;
 		}
 		*ptypes = TERMINATOR;
 
@@ -2597,7 +2665,7 @@ non_attached_parents:
 					   computed for which conformance holds
 					   because we may conform to something
 					   to which the parent does not! */
-					   
+
 					*(dest_comp) |= ((*src) & (*src_comp));
 					++dest;
 					++src;
@@ -2627,7 +2695,7 @@ non_attached_parents:
 					   computed for which conformance holds
 					   because we may conform to something
 					   to which the parent does not! */
-					   
+
 					*(dest_comp) |= ((*src) & (*src_comp));
 					++dest;
 					++src;

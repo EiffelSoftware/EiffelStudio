@@ -70,10 +70,10 @@ feature -- Generic conformance
 			if is_attached and not is_expanded then
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
 			end
--- To uncomment when variant/frozen proposal for generics is supported at runtime
---			if is_frozen then
---				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
---			end
+
+			if is_separate then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
+			end
 		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
@@ -173,7 +173,7 @@ feature -- Generic conformance
 
 feature {NONE} -- Generic conformance
 
-	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER)
+	generate_cid_prefix (buffer: detachable GENERATION_BUFFER; idx_cnt: COUNTER)
 			-- Generate prefix to a type specification if `buffer' specified.
 			-- Increment `idx_cnt' accordingly if specified.
 		local
@@ -2004,7 +2004,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

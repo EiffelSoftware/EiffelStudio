@@ -1026,7 +1026,7 @@ feature {NONE} -- Catcall warning access
 		require
 			reason_is_catcall: debugger_manager.application_status.reason_is_catcall
 		local
-			rtcc: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
+			rtcc: TUPLE [pos, expected_id, expected_annotations, actual_id, actual_annotations: INTEGER]
 			l_fdtype: INTEGER
 			l_max_type_id: INTEGER
 			ct: CLASS_TYPE
@@ -1038,6 +1038,8 @@ feature {NONE} -- Catcall warning access
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			l_status: APPLICATION_STATUS
 		do
+				-- Make sure we display annotations too, not just the dynamic type.
+			check implemented: False end
 			if not retried then
 				l_status := debugger_manager.application_status
 				rtcc := l_status.catcall_data
@@ -1079,12 +1081,9 @@ feature {NONE} -- Catcall warning access
 					Result.append (": expected ")
 					ct := Void
 
-					l_fdtype := rtcc.expected
+					l_fdtype := rtcc.expected_id
 						-- We do `l_fdtype - 1' because `rtcc' always contains the runtime type_id's + 1.
-					if
-						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.attached_none_type or
-						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.detachable_none_type
-					then
+					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then
 						argtypename := "Void"
 					elseif l_fdtype <= l_max_type_id then
 							--| Try with compiler data						
@@ -1114,13 +1113,10 @@ feature {NONE} -- Catcall warning access
 					argtypename := Void
 
 					Result.append (" but got ")
-					l_fdtype := rtcc.actual
+					l_fdtype := rtcc.actual_id
 						--| Try with compiler data
 						-- We do `l_fdtype - 1' because `rtcc' always contains the runtime type_id's + 1.
-					if
-						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.attached_none_type or
-						l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.detachable_none_type
-					then
+					if l_fdtype - 1 = {SHARED_GEN_CONF_LEVEL}.none_type then
 						argtypename := "Void"
 
 					elseif l_fdtype <= l_max_type_id then
@@ -2443,7 +2439,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

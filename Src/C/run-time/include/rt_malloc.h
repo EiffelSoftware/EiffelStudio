@@ -160,6 +160,8 @@ extern EIF_CS_TYPE *eif_type_set_mutex;
 
 #endif
 
+extern struct htable rt_type_set;
+
 extern EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag);	/* Low level allocation routine */
 extern EIF_REFERENCE eif_rt_xcalloc(size_t nelem, size_t elsize);		/* Calloc */
 extern void eif_rt_xfree(register void * ptr);				/* Free */

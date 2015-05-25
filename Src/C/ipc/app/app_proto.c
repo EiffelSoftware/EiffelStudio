@@ -270,11 +270,13 @@ static int curr_modify = NO_CURRMODIF;
 		/* return last RTCC information */
 		{
 			EIF_GET_CONTEXT
-			if (d_data.rtdata.rtcc.pos > 0) {
-				app_send_integer(sp, 3);
-				app_send_integer(sp, d_data.rtdata.rtcc.pos);
-				app_send_integer(sp, d_data.rtdata.rtcc.expect);
-				app_send_integer(sp, d_data.rtdata.rtcc.actual);
+			if (d_data.rtcc_pos > 0) {
+				app_send_integer(sp, 1);
+				app_send_integer(sp, d_data.rtcc_pos);
+				app_send_integer(sp, d_data.rtcc_expect.id);
+				app_send_integer(sp, d_data.rtcc_expect.annotations);
+				app_send_integer(sp, d_data.rtcc_actual.id);
+				app_send_integer(sp, d_data.rtcc_actual.annotations);
 			} else {
 				app_send_integer(sp, 0);
 			}

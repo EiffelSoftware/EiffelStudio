@@ -67,14 +67,19 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id.
 		do
 			if attached {GEN_TYPE_A} type then
 				buffer.put_string ("typres")
 				buffer.put_natural_32 (a_level)
 			else
+				buffer.put_string ("eif_new_type(")
 				buffer.put_integer (type.generated_id (final_mode, context.context_class_type.type))
+				buffer.put_two_character (',', ' ')
+					-- Discard the upper bits as `eif_new_type' only accepts the lower part.
+				buffer.put_hex_natural_16 (type.annotation_flags & 0x00FF)
+				buffer.put_character (')')
 			end
 		end
 
@@ -181,7 +186,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

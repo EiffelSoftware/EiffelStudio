@@ -356,7 +356,6 @@ doc:		<thread_safety>Safe set once in initialization.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-
 rt_public int egc_has_old_copy_semantic = 1;
 
 /*
@@ -367,8 +366,17 @@ doc:		<thread_safety>Safe set once in initialization.</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</attribute>
 */
-
 rt_public int egc_has_ieee_semantic = 0;
+
+/*
+doc:	<attribute name="egc_is_experimental" return_type="int" export="public">
+doc:		<summary>Is the runtime used against the experimental version of the compiler?</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Safe set once in initialization.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:	</attribute>
+*/
+rt_public int egc_is_experimental = 0;
 
 
 rt_public EIF_TYPE_INDEX egc_str_dtype;

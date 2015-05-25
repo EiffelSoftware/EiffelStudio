@@ -13,7 +13,7 @@ inherit
 		export
 			{FORMAL_A} make
 		redefine
-			generate, generate_type_id, generate_gen_type_conversion,
+			generate, generate_type, generate_type_id, generate_type_annotations, generate_gen_type_conversion,
 			generate_cid, generate_cid_init, generate_cid_array, type_to_create,
 			analyze, generate_il, type, is_explicit, make_type_byte_code,
 			make_byte_code
@@ -40,10 +40,22 @@ feature -- C code generation
 			associated_create_feat.generate
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL)
 			-- Generate formal creation type id
 		do
+			associated_create_feat.generate_type (buffer, final_mode, a_level)
+		end
+
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL)
+			-- <Precursor>
+		do
 			associated_create_feat.generate_type_id (buffer, final_mode, a_level)
+		end
+
+	generate_type_annotations (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_level: NATURAL)
+			-- <Precursor>
+		do
+			associated_create_feat.generate_type_annotations (buffer, final_mode, a_level)
 		end
 
 feature -- IL code generation
@@ -139,7 +151,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

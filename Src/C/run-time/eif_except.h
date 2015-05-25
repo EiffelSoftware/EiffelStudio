@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -51,7 +51,7 @@
 extern "C" {
 #endif
 
-	
+
 #ifndef EIF_THREADS
 	/* Exported data structures (used by the generated C code) */
 RT_LNK struct xstack eif_stack;	/* Stack of all the Eiffel calls */
@@ -165,7 +165,7 @@ RT_LNK void enomem(void);										/* Raises "Out of memory" exception */
 #endif
 
 RT_LNK EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE);
-RT_LNK void eif_check_catcall_at_runtime (EIF_REFERENCE, EIF_TYPE_INDEX, char *, int, EIF_TYPE_INDEX);
+RT_LNK void eif_check_catcall (EIF_REFERENCE, EIF_TYPE_INDEX, const char *, int, EIF_TYPE, EIF_TYPE_INDEX);
 
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
 RT_LNK struct ex_vect *exret(EIF_CONTEXT struct ex_vect *rout_vect);	/* Retries execution of routine */
@@ -208,7 +208,7 @@ RT_LNK void chk_old(EIF_REFERENCE ex);							/* Check if ex is NULL, if not rais
 RT_LNK struct ex_vect *exold(void);								/* Push excution stack at entrance of old expression evaluation */
 RT_LNK void init_emnger (void);									/* Initialize once object and preallocate trace string */
 RT_LNK void ereturn(EIF_CONTEXT_NOARG);							/* Return to lastly recorded rescue entry */
-RT_LNK EIF_BOOLEAN eif_is_in_rescue (void);							/* Is current execution during rescue */ 
+RT_LNK EIF_BOOLEAN eif_is_in_rescue (void);							/* Is current execution during rescue */
 
 #ifdef __cplusplus
 }

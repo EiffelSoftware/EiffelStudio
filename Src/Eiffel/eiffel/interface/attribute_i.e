@@ -359,7 +359,7 @@ feature -- Element Change
 						create_info.generate_gen_type_conversion (0)
 						buffer.put_new_line
 						buffer.put_string ("if (RTAT(")
-						create_info.generate_type_id (buffer, byte_context.final_mode, 0)
+						create_info.generate_type (buffer, byte_context.final_mode, 0)
 						buffer.put_string (")) {")
 						buffer.indent
 					end
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

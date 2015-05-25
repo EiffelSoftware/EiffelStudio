@@ -2020,14 +2020,6 @@ feature {NONE} -- Implementation
 			-- Internal storage to help us reconstruct names of classes and features
 			-- from a precompiled library.
 
-	create_current: CREATE_CURRENT
-			-- Byte code information for "like Current" type creation.
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
-
 	type_number_int: INTEGER
 		-- used to chache the type number
 
@@ -2039,7 +2031,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

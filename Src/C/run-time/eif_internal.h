@@ -47,28 +47,30 @@ extern "C" {
 #endif
 
 /* Returns the number of logical fields in `object'. */
-#define ei_count_field_of_type(type_id)		(System(To_dtype(type_id)).cn_nbattr)
+#define ei_count_field_of_type(enc_ftype)		(System(To_dtype(eif_decoded_type(enc_ftype).id)).cn_nbattr)
 
 /* Returns name of the i_th logical field of `object'. */
-#define ei_field_name_of_type(i,type_id)	(System(To_dtype(type_id)).cn_names[i])
+#define ei_field_name_of_type(i,enc_ftype)	(System(To_dtype(eif_decoded_type(enc_ftype).id)).cn_names[i])
 
 RT_LNK char *ei_field (long i, EIF_REFERENCE object);
 RT_LNK long ei_eif_type(uint32 field_type);
-rt_private rt_inline long ei_field_type_of_type(long i, EIF_INTEGER type_id)
+rt_private rt_inline long ei_field_type_of_type(long i, EIF_ENCODED_TYPE enc_ftype)
 	/* Returns type of i-th logical field of `object'. */
 	/* Look at `eif_cecil.h' for constants definitions */
 {
-	uint32 field_type = System(To_dtype(type_id)).cn_types[i];
+	EIF_TYPE ftype = eif_decoded_type(enc_ftype);
+	uint32 field_type = System(To_dtype(ftype.id)).cn_types[i];
 	return ei_eif_type (field_type);
 }
 
-rt_private rt_inline long ei_field_static_type_of_type(long i, EIF_INTEGER type_id)
-	/* Returns dynamic type of i-th logical field of `type_id' as
-	 * declared in associated class of `type_id'. */
+rt_private rt_inline EIF_TYPE ei_field_static_type_of_type(long i, EIF_ENCODED_TYPE enc_ftype)
+	/* Returns type of i-th logical field of `enc_ftype' as
+	 * declared in associated class of `enc_ftype'. */
 {
 	const EIF_TYPE_INDEX *typearr;
-	typearr = System(To_dtype(type_id)).cn_gtypes[i];
-	return eif_compound_id ((EIF_TYPE_INDEX) type_id, typearr);
+	EIF_TYPE ftype = eif_decoded_type(enc_ftype);
+	typearr = System(To_dtype(ftype.id)).cn_gtypes[i];
+	return eif_compound_id (ftype.id, typearr);
 }
 
 #ifdef WORKBENCH
@@ -95,13 +97,14 @@ rt_private rt_inline rt_uint_ptr ei_size(EIF_REFERENCE object)
 	return (OVERHEAD + (HEADER(object)->ov_size & B_SIZE));
 }
 
-rt_private rt_inline void eif_set_dynamic_type (EIF_REFERENCE object, EIF_INTEGER dftype)
+rt_private rt_inline void eif_set_dynamic_type (EIF_REFERENCE object, EIF_ENCODED_TYPE dftype)
 	/* Set object type to be `dftype'. To be used very carefully as one might
 	 * mess up object structure.
 	 */
 {
-	Dftype(object)=(EIF_TYPE_INDEX) dftype;
-	Dtype(object)=To_dtype(dftype);
+	EIF_TYPE ftype = eif_decoded_type(dftype);
+	Dftype(object)= ftype.id;
+	Dtype(object)=To_dtype(ftype.id);
 }
 
 rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
@@ -141,10 +144,10 @@ rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 #endif
 
 #ifdef WORKBENCH
-RT_LNK long ei_offset_of_type(long i, EIF_TYPE_INDEX type_id);
+RT_LNK long ei_offset_of_type(long i, EIF_ENCODED_TYPE enc_ftype);
 #else
-	/* Returns the memory address of the i-th field of objects of type `type_id'. */
-#define ei_offset_of_type(i,type_id)	(EIF_INTEGER) (System(To_dtype(type_id)).cn_offsets[i - 1])
+	/* Returns the memory address of the i-th field of objects of type `enc_ftype'. */
+#define ei_offset_of_type(i,enc_ftype)	(EIF_INTEGER) (System(To_dtype(eif_decoded_type(enc_ftype).id)).cn_offsets[i - 1])
 #endif
 
 /* Attribute access */

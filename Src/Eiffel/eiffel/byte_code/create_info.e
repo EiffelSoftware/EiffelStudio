@@ -61,12 +61,34 @@ feature -- C code generation
 			buffer.put_character (')')
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
-			-- Generate creation type id.
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+			-- Generate type with annotations.
 		require
 			buffer_not_void: buffer /= Void
 			context_valid: context.context_class_type.type /= Void
 		deferred
+		end
+
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+			-- Generate type id.
+		require
+			buffer_not_void: buffer /= Void
+			context_valid: context.context_class_type.type /= Void
+		do
+			generate_type (buffer, final_mode, a_level)
+			buffer.put_string (".id")
+		end
+
+	generate_type_annotations (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+			-- Generate type annotations.
+		require
+			buffer_not_void: buffer /= Void
+			context_valid: context.context_class_type.type /= Void
+		do
+			generate_type (buffer, final_mode, a_level)
+				-- We add 0xFF00 as they are what the typearr expects for
+				-- annotations to distinguish them from normal type ID entries.
+			buffer.put_string (".annotations | 0xFF00")
 		end
 
 feature -- IL code generation
@@ -183,8 +205,44 @@ feature -- Generic conformance
 			Result := attached {GEN_TYPE_A} type_to_create
 		end
 
+feature {NONE} -- Helpers
+
+	frozen generate_entry_inititalization (buffer : GENERATION_BUFFER; final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
+			-- Generate the typarr initialization.
+		local
+			dummy : INTEGER
+		do
+			buffer.generate_block_open
+
+			buffer.put_new_line
+			buffer.put_string ("EIF_TYPE l_type;")
+			generate_gen_type_conversion (a_level + 1)
+			buffer.put_new_line
+			buffer.put_string ("l_type = ")
+			generate_type (buffer, final_mode, a_level + 1)
+			buffer.put_character (';')
+			buffer.put_new_line
+			buffer.put_string ("typarr")
+			buffer.put_natural_32 (a_level)
+			buffer.put_character ('[')
+			buffer.put_integer (idx_cnt.value)
+				-- We add 0xFF00 as they are what the typearr expects for
+				-- annotations to distinguish them from normal type ID entries.
+			buffer.put_string ("] = l_type.annotations | 0xFF00;")
+			dummy := idx_cnt.next
+			buffer.put_new_line
+			buffer.put_string ("typarr")
+			buffer.put_natural_32 (a_level)
+			buffer.put_character ('[')
+			buffer.put_integer (idx_cnt.value)
+			buffer.put_string ("] = l_type.id;")
+			dummy := idx_cnt.next
+
+			buffer.generate_block_close
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

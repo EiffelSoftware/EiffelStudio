@@ -261,6 +261,26 @@ typedef void *			EIF_POINTER;
 /* C type for underlying integer type identifying object's dynamic type. */
 typedef uint16		EIF_TYPE_INDEX;
 
+/*
+doc:	<struct name="EIF_TYPE" export="public">
+doc:		<summary>Abstraction representing an Eiffel type. It is made of a compiler type ID or full dynamic type ID depending on the usage, and of some annotations (attached/detachable/separate/variant/frozen).</summary>
+doc:		<field name="id" type="EIF_TYPE_INDEX">ID for the type (compiler type ID or full dynamic type ID).</field>
+doc:		<field name="annotations" type="EIF_TYPE_INDEX">Annotations for the type (ATTACHED_FLAG, DETACHABLE_FLAG, SEPARATE_FLAG, (see rt_gen_types.h for a complete list).</field>
+doc:	</struct>
+*/
+typedef struct eif_type {
+	EIF_TYPE_INDEX id;
+	EIF_TYPE_INDEX annotations;
+} EIF_TYPE;
+
+/*
+doc:	<struct name="EIF_ENCODED_TYPE" export="public">
+doc:		<summary>Since EIF_TYPE and EIF_ENCODED_TYPE have the same size, the encoded version is basically a memcpy version of the EIF_TYPE representation. It is used to provide backward compatibility to most Eiffel and C APIs manipulating types as an INTEGER. The only difference with previous IDs is that once in a while values are larger than we previously had (i.e. used to just be in the range 0 .. 65535).</summary>
+doc:	</struct>
+*/
+typedef int32	EIF_ENCODED_TYPE;
+typedef EIF_ENCODED_TYPE	EIF_TYPE_ID;
+
 /* C type for underlying integer type identifying object's SCOOP Processor ID. */
 typedef uint16		EIF_SCP_PID;
 

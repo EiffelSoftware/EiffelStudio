@@ -143,7 +143,7 @@ typedef struct tag_rt_globals
 #endif
 
 		/* gen_conf.c */
-	EIF_TYPE_INDEX cid_array_cx[3];
+	EIF_TYPE_INDEX cid_array_cx[4];
 	char **non_generic_type_names_cx;
 	struct rt_id_of_context rt_context_cx;
 

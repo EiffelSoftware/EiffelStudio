@@ -226,7 +226,7 @@ feature -- Access
 	Bc_end_catcall:		CHARACTER = '%/158/';
 
 		-- Type test
-	Bc_is_attached:		CHARACTER = '%/159/';
+	Bc_is_attached_attribute:		CHARACTER = '%/159/';
 
 		-- Special extend
 	bc_special_extend:	CHARACTER = '%/160/'

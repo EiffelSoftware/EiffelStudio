@@ -666,7 +666,9 @@ feature -- Setting
 			current_class := a_class
 			create current_class_type.make (a_type)
 				-- Current is always attached.
-			current_class_type := current_class_type.as_attached_in (current_class)
+			if current_class.lace_class.is_void_safe_conformance then
+				current_class_type.set_attached_mark
+			end
 			set_written_class (Void)
 			from
 				s := a_class.skeleton
@@ -968,7 +970,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -300,8 +300,9 @@ struct c_opstack {
  * are linked by size when they are free. This link field is used
  * by Eiffel objects to store some flags. One bit is used to indicate
  * C objects, so the garbage collector will skip them. Another field
- * is used to store the size of the block. Only the lowest 27 bits are
- * used (thus limiting the size of an object to 2^27 bytes). The upper
+ * is used to store the size of the block. On 32-bit platforms, 
+ * only the lowest 27 bits are used (thus limiting the size of an
+ * object to 2^27 bytes, and 2^59 on 64-bit). The upper
  * 5 bits are used to store the status of the blocks. See below.
  */
 union overhead {
@@ -428,14 +429,9 @@ struct dbinfo {
                                         /* and after the end of the root creation. it avoids the    	*/
                                         /* application to stop after its end when garbage collector 	*/
                                         /* destroys objects                                         	*/
-	struct {
-		struct {
-			int pos;
-			EIF_TYPE_INDEX expect;
-			EIF_TYPE_INDEX actual;
-		} rtcc;							/* RunTime CatCall detection data 	*/
-	} rtdata;
-
+	int rtcc_pos;
+	EIF_TYPE rtcc_expect;
+	EIF_TYPE rtcc_actual;
 };
 
 /* List of offset. It tells where the breakpoint inside a feature are */

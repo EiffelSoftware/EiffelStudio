@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -190,7 +190,7 @@ rt_public EIF_INTEGER eif_system (EIF_NATIVE_CHAR *s)
 {
 	EIF_INTEGER result;
 
-#ifdef EIF_VMS_V6_ONLY	
+#ifdef EIF_VMS_V6_ONLY
 	/* if s contains any VMS filespec delimiters, prepend 'RUN ' command */
 	{ /* if it contains a '[' before a space (ie. no verb), prepend "run " */
 		/* ***VMS FIXME*** revisit this for long filenames - may contain space in filename */
@@ -332,7 +332,7 @@ rt_public void eif_system_asynchronous (EIF_NATIVE_CHAR *cmd)
 	if (status) {	/* command failed */
 		const char *pgmname = eifrt_vms_get_progname (NULL,0);
 		fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
-			"-- failed cmd: \"%s\" -- %s\n", 
+			"-- failed cmd: \"%s\" -- %s\n",
 			pgmname, __FILE__, errno, cmd, strerror(errno));
 	}
 	return;		/* skip send ack packet, Fred says not done anymore */
@@ -374,7 +374,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
 	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));
- 
+
 	old_count = RT_SPECIAL_COUNT(area);
 	elem_size = RT_SPECIAL_ELEM_SIZE(area);
 
@@ -395,7 +395,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 
 	/* If the new area is full of references and remembered,
 	 * the information in the special table
-	 * may be completely obsolete. Thus, we remove its entry 
+	 * may be completely obsolete. Thus, we remove its entry
 	 * and relaunch the remembering process. */
 
 	CHECK ("Must be special", HEADER (new_area)->ov_flags & EO_SPEC);
@@ -413,7 +413,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 	 * OVERHEAD bytes in the computation of 'dtype'--RAM.
 	 */
 
-	exp_dftype = eif_gen_param_id (Dftype(new_area), 1);
+	exp_dftype = eif_gen_param (Dftype(new_area), 1).id;
 
 #ifndef WORKBENCH
 	if (References(To_dtype(exp_dftype)) > 0) {
@@ -432,7 +432,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER k)
 #ifndef WORKBENCH
 	}
 #endif
-	
+
 		/* Intialize remaining objects from k to (i - 1) */
 	new_area = sp_init(new_area, exp_dftype, k, i - 1);
 

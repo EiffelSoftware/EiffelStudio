@@ -212,10 +212,10 @@ rt_public void * ei_oref(long i, EIF_REFERENCE object)
 	return object + offset;
 }
 
-rt_public long ei_offset_of_type(long i, EIF_TYPE_INDEX type_id)
-	/* Returns the memory address of the i-th field of objects of type `type_id'. */
+rt_public long ei_offset_of_type(long i, EIF_ENCODED_TYPE enc_ftype)
+	/* Returns the memory address of the i-th field of objects of type `enc_ftype'. */
 {
-	EIF_TYPE_INDEX dtype = To_dtype(type_id);
+	EIF_TYPE_INDEX dtype = To_dtype(eif_decoded_type(enc_ftype).id);
 	uint32 offset;
 	offset = wattr(System(dtype).cn_attr[i - 1], dtype);
 	return offset;

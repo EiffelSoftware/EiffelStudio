@@ -167,7 +167,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNS(x,y,z) allocates a new routine object of dftype 'x', dtype 'y' and size 'z'
  *  RTLNT(x) allocates a new tuple object of dftype 'x'
  *  RTLNTS(x,n,a) allocates a new tuple object of dftype 'x', with 'n' elements and is_atomic 'a'
- *  RTLNTY(x) allocates a new TYPE [like x] instance of dftype 'x'
+ *  RTLNTY(x) allocates a new TYPE [like x] instance using the encoded ftype 'x'
+ *  RTLNTY2(x, a) allocates a new TYPE [like x] instance of ftype 'x'
  *  RTLNSMART(x) allocates a new object of dftype 'x'
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
  *  RTLNC(x) creates a new non-initialized instance of 'x'.
@@ -182,7 +183,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNS(x,y,z)		emalloc_size(x,y,z)
 #define RTLNT(x)			tuple_malloc(x)
 #define RTLNTS(x,n,a)		tuple_malloc_specific(x,n,a)
-#define RTLNTY(x)			eif_type_malloc(x)
+#define RTLNTY(x)			eif_type_malloc(eif_decoded_type(x), 0)
+#define RTLNTY2(x,a)		eif_type_malloc(x, a)
 #define RTLNSMART(x)		smart_emalloc(x)
 #define RTLNRW(a,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
@@ -218,7 +220,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 /* Macro used for object creation to get the proper creation type:
  *  RTCA(x,y) returns the dynamic type of 'x' if not void, otherwise 'y'
  */
-#define RTCA(x,y) ((x) == (EIF_REFERENCE) 0 ? (y) : Dftype(x))
+#define RTCA(x,y) ((x) == (EIF_REFERENCE) 0 ? (y) : eif_object_type(x))
 
 
 
@@ -244,26 +246,26 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* Macros used by reverse assignments:
  *  RTRC(x,y)       is true if type 'y' conforms to type 'x'
- *  RTRA(x,y)       calls RTRC(x, Dftype(y)) if 'y' is not void
- *  RTRB(x,y,z,t)   assigns value of basic type 't' of 'y' to 'z' if 'y' conforms to type 'x'
- *  RTRE(x,y,z)     copies 'y' to 'z' if 'y' conforms to type 'x'
- *  RTRV(x,y)       returns 'y' if it conforms to type 'x', void otherwise
- *  RTOB(t,x,y,z,v) assigns value of basic type 't' of 'y' to 'z' if 'y' conforms to type 'x' and sets boolean value to `v' accordingly
- *  RTOE(x,y,z,v)   copies 'y' to 'z' if 'y' conforms to type 'x' and sets boolean value to `v' accordingly
+ *  RTRA(x,obj)     calls RTRC(x, eif_object_type(obj)) if 'obj' is not void
+ *  RTRB(x,obj,z,t)   assigns value of basic type 't' of 'obj' to 'z' if 'obj' conforms to type 'x'
+ *  RTRE(x,obj,z)     copies 'obj' to 'z' if 'obj' conforms to type 'x'
+ *  RTRV(x,obj)       returns 'obj' if it conforms to type 'x', void otherwise
+ *  RTOB(t,x,obj,z,v) assigns value of basic type 't' of 'obj' to 'z' if 'obj' conforms to type 'x' and sets boolean value to `v' accordingly
+ *  RTOE(x,obj,z,v)   copies 'obj' to 'z' if 'obj' conforms to type 'x' and sets boolean value to `v' accordingly
  */
-#define RTRC(x,y)		eif_gen_conf ((y), (x))
-#define RTRA(x,y)		((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
-#define RTRB(x,y,z,t)		{ if (RTRA((x),(y))) { z = t (y); } }
-#define RTRE(x,y,z)		{ if (RTRA((x),(y))) { RTXA ((y), z); } }
-#define RTRV(x,y)		(RTRA((x),(y)) ? (y) : (EIF_REFERENCE) 0)
-#define RTOB(t,x,y,z,v)		{ if (RTRA((x),(y))) { z = t (y); v = EIF_TRUE; } else { v = EIF_FALSE; } }
-#define RTOE(x,y,z,v)		{ if (RTRA((x),(y))) { RTXA ((y), z); v = EIF_TRUE; } else { v = EIF_FALSE; } }
+#define RTRC(x,y)			eif_gen_conf2((y), (x))
+#define RTRA(x,obj)			((obj) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),eif_new_type(Dftype(obj), 0x1)))
+#define RTRB(x,obj,z,t)		{ if (RTRA((x),(obj))) { z = t (obj); } }
+#define RTRE(x,obj,z)		{ if (RTRA((x),(obj))) { RTXA ((obj), z); } }
+#define RTRV(x,obj)			(RTRA((x),(obj)) ? (obj) : (EIF_REFERENCE) 0)
+#define RTOB(t,x,obj,z,v)	{ if (RTRA((x),(obj))) { z = t (obj); v = EIF_TRUE; } else { v = EIF_FALSE; } }
+#define RTOE(x,obj,z,v)		{ if (RTRA((x),(obj))) { RTXA ((obj), z); v = EIF_TRUE; } else { v = EIF_FALSE; } }
 
 
 /* Macros used for variable initialization:
  * RTAT(x)  true if type 'x' is attached
  */
-#define RTAT(x) (eif_is_attached_type(x))
+#define RTAT(x) (eif_is_attached_type2(x))
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses
@@ -935,8 +937,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #endif
 
 /* Detect catcall at runtime for argument 'o' at position 'i' for feature 'f' in dtype 'd'
- * and expected dftype 't'. */
-#define RTCC(o,d,f,i,t) eif_check_catcall_at_runtime(o,d,f,i,t)
+ * and ftype 't' with annotations 'a' if any. */
+#define RTCC(o,d,f,i,t,a) eif_check_catcall(o,d,f,i,t,a)
 
 
 /* Macros for assertion checking:
@@ -1257,7 +1259,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		eif_xcopy(x, y)
 #define RTEQ(x,y)		eif_xequal((x),(y))
-#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf(Dftype(x), Dftype(y)))? eif_xequal((x),(y)): (x)==(y))
+#define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags)) ? eif_xequal((x),(y)) : (x)==(y))
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x)			((x) - RTOF(x))
 

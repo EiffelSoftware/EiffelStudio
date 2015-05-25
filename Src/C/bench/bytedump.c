@@ -205,7 +205,7 @@ static  char    *names [] = {
 "BC_CATCALL" ,
 "BC_START_CATCALL" ,
 "BC_END_CATCALL" ,
-"BC_IS_ATTACHED" ,
+"BC_IS_ATTACHED_ATTRIBUTE" ,
 "BC_SPECIAL_EXTEND" ,
 "BC_NOTUSED_161" ,
 "BC_NOTUSED_162" ,
@@ -615,6 +615,7 @@ static  void    print_instructions (void)
 {
 	unsigned char   cval; /* !!! */
 	uint32            lval;
+	int16 l_type;
 
 	advance (4);
 
@@ -692,10 +693,6 @@ static  void    print_instructions (void)
 				break;
 			case BC_CATCALL :
 				print_cid();
-					/* Get rid of modifiers */
-				if (get_bool(&ip)) {
-					(void) get_bool(&ip);
-				}
 					/* Static type of class */
 				print_ctype (get_int16(&ip));
 				fprintf (ofp, ".%s", get_string8(&ip, get_int32(&ip)));
@@ -768,10 +765,10 @@ static  void    print_instructions (void)
 				/* Static type of target */
 				print_cid();
 				break;
-			case  BC_IS_ATTACHED :
-				/* Test if a type is attached */
-				/* Static type of target */
-				print_cid();
+			case  BC_IS_ATTACHED_ATTRIBUTE :
+				/* Test if attribute of `routine_id' is attached in current. */
+				/* Routine id */
+				fprintf (ofp,"rid %d ", get_int32(&ip));
 				break;
 /* Creation */
 			case  BC_RCREATE:
@@ -804,15 +801,8 @@ static  void    print_instructions (void)
 					print_cid ();
 
 					if (is_type_creation) {
-						if (get_bool(&ip)) {
-								/* Type has an attachment mark */
-							if (get_bool(&ip)) {
-								/* Type is attached. */
-							} else {
-								/* Type is detachable */
-							}
-						} else {
-						}
+						EIF_TYPE_INDEX l_annotations = get_int16(&ip);
+						fprintf (ofp, " with annotations %d", (int) l_annotations);
 					}
 				}
 				break;
@@ -899,12 +889,10 @@ static  void    print_instructions (void)
 			case  BC_CREATION :
 				/* Routine id */
 				fprintf (ofp,"rid %d ", get_int32(&ip));
-				/* Is precursor or static */
-				{
-					int16 l_type = get_int16(&ip);
-					if (l_type != -1) {
-						fprintf(ofp, " call on type ID=%d", l_type);
-					}
+					/* Is precursor or static */
+				l_type = get_int16(&ip);
+				if (l_type != -1) {
+					fprintf (ofp, " on target %d ", l_type);
 				}
 				break;
 

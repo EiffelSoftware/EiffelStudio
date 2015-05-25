@@ -177,17 +177,18 @@ feature -- Property
 			-- <Precursor>
 		do
 				-- Unlike {TYPE_A}, we actually need to know if the formal is declared with
-				-- an attachment mark and if it is which one. When there are no attachment mark
-				-- at runtime, we will use the attachment mark of the actual generic parameter.
+				-- a mark and if it is which one. When there are no mark at runtime, we will
+				-- use the mark of the actual generic parameter.
+
 			if has_attached_mark then
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
 			elseif has_detachable_mark then
 				Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
 			end
--- To uncomment when variant/frozen proposal for generics is supported.
---			if is_frozen then
---				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
---			end
+
+			if has_separate_mark then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
+			end
 		end
 
 feature -- IL code generation
@@ -670,7 +671,7 @@ feature -- Access
 	create_info: CREATE_FORMAL_TYPE
 			-- Create formal type info.
 		do
-			create Result.make (as_attachment_mark_free)
+			create Result.make (Current)
 		end
 
 	shared_create_info: CREATE_FORMAL_TYPE
@@ -763,7 +764,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

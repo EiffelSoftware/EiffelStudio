@@ -46,7 +46,7 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 #include "rt_malloc.h"
 #include "rt_globals_access.h"
 
-rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type) 
+rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_TYPE result_type) 
 	/* All once objects held by the system */
 {
 	RT_GET_CONTEXT
@@ -166,8 +166,8 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER result_type)
 	Result = spmalloc (l_found.count, sizeof (EIF_REFERENCE), EIF_FALSE);
 	zone = HEADER (Result);
 	zone->ov_flags |= EO_REF;
-	zone->ov_dftype = (EIF_TYPE_INDEX) result_type;
-	zone->ov_dtype = To_dtype((EIF_TYPE_INDEX) result_type);
+	zone->ov_dftype = result_type.id;
+	zone->ov_dtype = To_dtype(result_type.id);
 	RT_SPECIAL_COUNT(Result) = l_found.count;
 	RT_SPECIAL_ELEM_SIZE(Result) = sizeof(EIF_REFERENCE);
 	RT_SPECIAL_CAPACITY(Result) = l_found.count;

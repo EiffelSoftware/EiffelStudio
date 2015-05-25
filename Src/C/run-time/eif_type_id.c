@@ -1,5 +1,12 @@
 /*
-	description: "Computation of dynamic type corresponding to a written type in a C string."
+	description: "[
+			Computation of dynamic type corresponding to a written type in a C string.
+			Originally types were detachable by default (it preserves backward compatibility
+			for existing software compiled in non-void-safe mode), but this is the opposite
+			of what the standard says. To provide a smooth transition for software written in
+			void-safe mode, we still keep detachable by default unless `egc_is_experimental' is
+			set in which case, types will be considered attached by default.
+			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
 	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
@@ -59,9 +66,9 @@ struct rt_type {
 	char *type_name;
 	struct rt_type **generics;
 	EIF_TYPE_INDEX count;
+	EIF_TYPE_INDEX annotations;
 	int is_expanded;
 	int is_reference;
-	int is_attached;
 };
 
 /*
@@ -92,32 +99,52 @@ rt_private int eif_pre_ecma_mapping_status = 1;
 	
 /* Prototypes */
 /* String analysis */
-rt_private struct rt_type * eif_decompose_type (char *type_string);
+rt_private struct rt_type * eif_decompose_type (const char *type_string);
 rt_private struct rt_type ** eif_decompose_parameters (char *params, EIF_TYPE_INDEX *a_count);
 rt_private void eif_free_type_array (struct rt_type *a_type, int free_a_type);
 rt_private void eif_remove_surrounding_white_spaces (char *str);
-rt_private void update_entry (struct rt_type *);
+rt_private int update_entry (struct rt_type *);
 
 /* Dynamic type computation. */
 rt_private int is_generic (struct cecil_info *type, struct rt_type *type_entry);
 rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry);
-rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type);
+rt_private EIF_TYPE compute_eif_type_id (struct rt_type *a_type);
 rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data *data);
 rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type, struct rt_global_data *data);
 
 /*
 doc:	<routine name="eif_type_id" return_type="EIF_TYPE_ID" export="public">
-doc:		<summary>Compute dynamic type corresponding to the C string type `type_string'.</summary>
+doc:		<summary>Compute dynamic type corresponding to the C string type `type_string' including attachments.</summary>
+doc:		<param name="type_string" type="char *">Type whose dynamic type we want to find.</param>
+doc:		<return>EIF_NO_TYPE if type could not be found, a positive value otherwise.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>This is obsolete, use `eif_type_id2' instead.</fixme>
+doc:	</routine>
+*/
+rt_public EIF_TYPE_ID eif_type_id (char *type_string)
+{
+	EIF_TYPE result = eif_type_id2(type_string);
+
+	return (result.id == INVALID_DTYPE ? EIF_NO_TYPE : eif_encoded_type(result));
+}
+/*
+doc:	<routine name="eif_type_id2" return_type="EIF_TYPE" export="public">
+doc:		<summary>Compute dynamic type corresponding to the C string type `type_string' including attachments.</summary>
 doc:		<param name="type_string" type="char *">Type whose dynamic type we want to find.</param>
 doc:		<return>EIF_NO_TYPE if type could not be found, a positive value otherwise.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_public EIF_TYPE_ID eif_type_id (char *type_string)
+rt_public EIF_TYPE eif_type_id2 (char *type_string)
 {
 	struct rt_type *l_type = NULL;
-	EIF_TYPE_INDEX result;
+	EIF_TYPE result;
+
+		/* Initalize `result' to be invalid by default. */
+	result.id = INVALID_DTYPE;
+	result.annotations = 0;
 
 	if (type_string != NULL) {
 			/* Analyze `type_string' and decompose it in type elements. */
@@ -130,13 +157,13 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 				/* Free allocated memory for `l_type'. */
 			eif_free_type_array (l_type, 1);
 		} else {
-			result = INVALID_DTYPE;
+				/* Error */
 		}
 	} else {
 			/* Cannot process current string */
-		result = INVALID_DTYPE;
 	}
-	return (result == INVALID_DTYPE ? EIF_NO_TYPE : result);
+
+	return result;
 }
 
 /*
@@ -231,13 +258,13 @@ rt_shared char * eif_pre_ecma_mapped_type (char *v)
 /*
 doc:	<routine name="eif_decompose_type" return_type="struct rt_type *" export="private">
 doc:		<summary>Decompose `type_string' in logical elements to represent a type.</summary>
-doc:		<param name="type_string" type="char *">Type we will decompose.</param>
+doc:		<param name="type_string" type="const char *">Type we will decompose.</param>
 doc:		<return>null if `type_string' is not valid or if there is not enough memory for internal allocation, otherwise the corresponding data.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private struct rt_type * eif_decompose_type (char *type_string)
+rt_private struct rt_type * eif_decompose_type (const char *type_string)
 {
 	char *l_class_type_name, *l_type_name;
 	char *lsquare;
@@ -300,7 +327,15 @@ rt_private struct rt_type * eif_decompose_type (char *type_string)
 						l_type->count = 0;
 					}
 					if (l_type) {
-						update_entry (l_type);
+						if (update_entry (l_type) != T_OK) {
+								/* There was an error trying to update the entry, the type is invalid.
+								 * We free the allocated memory. */
+							eif_free(l_type);
+								/* We free the `type_name'. It can either be `l_class_type_name' if the type is not
+								 * generic, or `l_type_name' when it is. */
+							eif_free(l_type->type_name);
+							l_type = NULL;
+						}
 					}
 				}
 			}
@@ -506,50 +541,119 @@ rt_private void eif_remove_surrounding_white_spaces (char * str)
 }
 
 /*
-doc:	<routine name="update_entry" export="private">
-doc:		<summary>Check if `type_entry->type_name' contains `reference' or `expanded'. If it does, then it removes it from `type_entry->type_name' and set `is_reference' or `is_expanded' from `type_entry' accordingly..</summary>
+doc:	<routine name="update_entry" return_type="int" export="private">
+doc:		<summary>Check if `type_entry->type_name' contains `reference' or `expanded', or any other annotations. If it does, then it removes it from `type_entry->type_name' and set `is_reference', `is_expanded' or `annotations' from `type_entry' accordingly. In the event we end up with 2 entries that are contradictory (e.g. "expanded reference A", or "attached detachable X", we reject it.</summary>
 doc:		<param name="type_entry" type="struct rt_type *">Type being analyzed.</param>
+doc:		<return>T_OK if annotations are correct, otherwise T_INVALID_ANNOTATIONS.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private void update_entry (struct rt_type *type_entry)
+rt_private int update_entry (struct rt_type *type_entry)
 {
 	char *l_str;
 	size_t l_count;
+	int l_result = T_OK;
+	int l_done = 0;
 
 	REQUIRE("Valid type entry", type_entry);
 	REQUIRE("Has type name", type_entry->type_name);
 
 	type_entry->is_reference = 0;
 	type_entry->is_expanded = 0;
-	type_entry->is_attached = 0;
+	type_entry->annotations = 0;
 	l_str = type_entry->type_name;
-	l_count = strlen(l_str);
 
-	if ((l_count >= 8) &&  (strncmp ("expanded", l_str, 8) == 0)) {
-		memset(type_entry->type_name, (int) ' ', 8);
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
-		type_entry->is_expanded = 1;
-	} else if ((l_count >= 9) && (strncmp ("reference", l_str, 9) == 0)) {
-		memset(type_entry->type_name, (int) ' ', 9);
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
-		type_entry->is_reference = 1;
-	} else if ((l_count >= 2) && (l_str[0] == '!')) {
-		l_str[0] = ' ';
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
-		type_entry->is_attached = 1;
-	} else if ((l_count >= 8) && (strncmp ("attached", l_str, 8) == 0)) {
-		memset(type_entry->type_name, (int) ' ', 8);
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
-		type_entry->is_attached = 1;
-	} else if ((l_count >=2) && (l_str[0] == '?')) {
-		l_str[0] = ' ';
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
-	} else if ((l_count >= 10) && (strncmp ("detachable", l_str, 10) == 0)) {
-		memset(type_entry->type_name, (int) ' ', 10);
-		eif_remove_surrounding_white_spaces (type_entry->type_name);
+	while (!l_done) {
+		l_count = strlen(l_str);
+		if ((l_count >= 8) &&  (strncmp ("expanded", l_str, 8) == 0)) {
+			if (!type_entry->is_reference) {
+				memset(type_entry->type_name, (int) ' ', 8);
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+				type_entry->is_expanded = 1;
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >= 9) && (strncmp ("reference", l_str, 9) == 0)) {
+			if (!type_entry->is_expanded) {
+				memset(type_entry->type_name, (int) ' ', 9);
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+				type_entry->is_reference = 1;
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >= 2) && (l_str[0] == '!')) {
+			if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(type_entry->annotations)) {
+				l_str[0] = ' ';
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+				type_entry->annotations |= ATTACHED_FLAG;
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >= 8) && (strncmp ("attached", l_str, 8) == 0)) {
+			if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(type_entry->annotations)) {
+				memset(type_entry->type_name, (int) ' ', 8);
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+				type_entry->annotations |= ATTACHED_FLAG;
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >=2) && (l_str[0] == '?')) {
+			if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(type_entry->annotations)) {
+				l_str[0] = ' ';
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+					/* No need to update `annotations' since by default types are detachable
+					 * in the type array. */
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >= 10) && (strncmp ("detachable", l_str, 10) == 0)) {
+			if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(type_entry->annotations)) {
+				memset(type_entry->type_name, (int) ' ', 10);
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+					/* No need to update `annotations' since by default types are detachable
+					 * in the type array. */
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else if ((l_count >= 8) && (strncmp ("separate", l_str, 10) == 0)) {
+			if (!RT_CONF_IS_SEPARATE_FLAG(type_entry->annotations)) {
+				memset(type_entry->type_name, (int) ' ', 8);
+				eif_remove_surrounding_white_spaces (type_entry->type_name);
+				type_entry->annotations |= SEPARATE_FLAG;
+			} else {
+				l_result = T_INVALID_ANNOTATIONS;
+			}
+		} else {
+				/* No more special mark, we can stop the loop. */
+			l_done = 1;
+		}
+			/* If we encountered an error, we exit the loop. */
+		if (l_result != T_OK) {
+			l_done = 1;
+		}
 	}
+
+	if (l_result == T_OK) {
+		if (!RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(type_entry->annotations)) {
+				/* No attachment mark was found. */
+			if (egc_is_experimental) {
+					/* In experimental mode, the absence of annotations means attached. */
+				type_entry->annotations |= ATTACHED_FLAG;
+			} else {
+					/* In normal mode, the absence of annotations in the type array already
+					 * means detachable, so no need to add any annotations. */
+			}
+		}
+
+			/* We normalize annotations, if any, so that we can insert them directly in the type array
+			 * as the above was made using the _FLAG macros which cannot be used in the type array. */
+		if (type_entry->annotations) {
+			type_entry->annotations |= 0xFF00;
+		}
+	}
+
+	return l_result;
 }
 
 /*
@@ -698,7 +802,7 @@ rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry)
 	if (!value) {
 			/* Type not found or possibly NONE. */
 		if (strcmp(type_entry->type_name, "NONE") == 0) {
-			return DETACHABLE_NONE_TYPE;
+			return NONE_TYPE;
 		} else {
 			return INVALID_DTYPE;
 		}
@@ -712,21 +816,26 @@ rt_private EIF_TYPE_INDEX eifcid(struct rt_type *type_entry)
 }
 
 /*
-doc:	<routine name="compute_eif_type_id" return_type="EIF_TYPE_INDEX" export="private">
-doc:		<summary>Given a `type_entry' find out its associated dynamic type ID.</summary>
+doc:	<routine name="compute_eif_type_id" return_type="EIF_TYPE" export="private">
+doc:		<summary>Given a `type_entry' find out its associated type.</summary>
 doc:		<param name="type_entry" type="struct rt_type *">Type being analyzed.</param>
-doc:		<return>If `a_type' is valid and exists in universe, returns its dynamic type id, otherwise EIF_NO_TYPE.</return>
+doc:		<return>If `a_type' is valid and exists in universe, returns its dynamic type id, otherwise a type with an invalid ID.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
-rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
+rt_private EIF_TYPE compute_eif_type_id (struct rt_type *a_type)
 {
 	struct cecil_info l_cecil_type;
-	EIF_TYPE_INDEX result = 0, l_cecil_id;
+	EIF_TYPE result;
+	EIF_TYPE_INDEX l_cecil_id;
 	struct rt_global_data sdata, *data;
 
 	REQUIRE("valid type", a_type);
+
+		/* Initalize `result' to be invalid by default. */
+	result.id = INVALID_DTYPE;
+	result.annotations = 0;
 
 		/* Reset `data'. */
 	data = &sdata;
@@ -739,7 +848,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 			 * the number of actual generic parameter
 			 * 1 for the terminator
 			 */
-		sdata.count = (a_type->is_attached ? 1 : 0) + 1 + l_cecil_type.nb_param + 1;
+		sdata.count = (a_type->annotations ? 1 : 0) + 1 + l_cecil_type.nb_param + 1;
 
 			/* Allocate the typearr structures and do the basic
 			 * initialization, the first element is set to `INVALID_DTYPE' since
@@ -748,8 +857,8 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 			 */
 		sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 		if (sdata.typearr) {
-			if (a_type->is_attached) {
-				sdata.typearr [0] = ATTACHED_TYPE;
+			if (a_type->annotations) {
+				sdata.typearr [0] = a_type->annotations;
 				sdata.position = 1;
 			} else {
 				sdata.position = 0;
@@ -776,7 +885,7 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 			 * 1 for the terminator
 			 */
 
-		sdata.count = (a_type->is_attached ? 1 : 0) + TUPLE_OFFSET + 1 + a_type->count + 1;
+		sdata.count = (a_type->annotations ? 1 : 0) + TUPLE_OFFSET + 1 + a_type->count + 1;
 
 		l_cecil_id = eifcid(a_type);
 		if (l_cecil_id == INVALID_DTYPE) {
@@ -790,8 +899,8 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 				 */
 			sdata.typearr = (EIF_TYPE_INDEX *) eif_malloc (sdata.count * sizeof (EIF_TYPE_INDEX));
 			if (sdata.typearr) {
-				if (a_type->is_attached) {
-					sdata.typearr [0] = ATTACHED_TYPE;
+				if (a_type->annotations) {
+					sdata.typearr [0] = a_type->annotations;
 					sdata.position = 1;
 				} else {
 					sdata.position = 0;
@@ -814,17 +923,12 @@ rt_private EIF_TYPE_INDEX compute_eif_type_id (struct rt_type *a_type)
 			}
 		}
 	} else {
-		result = eifcid(a_type);
-		if (a_type->is_attached) {
-			result = eif_attached_type (result);
-		}
+		result.id = eifcid(a_type);
+			/* Annotations from `a_type' are for type arrays, so we need to keep the lower part. */
+		result.annotations = a_type->annotations & 0x00FF;
 	}
 
-	if (sdata.has_error == 0) {
-		return result;
-	} else {
-		return INVALID_DTYPE;
-	}
+	return result;
 }
 
 /*
@@ -857,20 +961,20 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 			l_type = a_type->generics [i];
 
 			if (is_generic (&l_cecil_type, l_type) == 1) {
-				data->count = data->count + l_type->count + (l_type->is_attached ? 1 : 0);
+				data->count = data->count + l_type->count + (l_type->annotations ? 1 : 0);
 				data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 				if (data->typearr == NULL) {
 					data->has_error = 1;
 				} else {
 					data->typearr [data->count - 1] = TERMINATOR;
-					if (l_type->is_attached) {
-						data->typearr [data->position] = ATTACHED_TYPE;
+					if (l_type->annotations) {
+						data->typearr [data->position] = l_type->annotations;
 						data->position++;
 					}
 					eif_gen_type_id (&l_cecil_type, l_type, data);
 				}
 			} else if (is_tuple (l_type)) {
-				data->count += TUPLE_OFFSET + l_type->count + (l_type->is_attached ? 1 : 0);
+				data->count += TUPLE_OFFSET + l_type->count + (l_type->annotations ? 1 : 0);
 				l_cecil_id = eifcid(l_type);
 				if (l_cecil_id == INVALID_DTYPE) {
 						/* Could not find type. This is an error. */
@@ -880,8 +984,8 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
-						if (l_type->is_attached) {
-							data->typearr [data->position] = ATTACHED_TYPE;
+						if (l_type->annotations) {
+							data->typearr [data->position] = l_type->annotations;
 							data->position++;
 						}
 						data->typearr [data->position] = TUPLE_TYPE;
@@ -898,13 +1002,13 @@ rt_private void eif_tuple_type_id (struct rt_type *a_type, struct rt_global_data
 						/* Could not find type. This is an error. */
 					data->has_error = 1;
 				} else {
-					if (l_type->is_attached) {
+					if (l_type->annotations) {
 						data->count++;
 						data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 						if (data->typearr == NULL) {
 							data->has_error = 1;
 						} else {
-							data->typearr [data->position] = ATTACHED_TYPE;
+							data->typearr [data->position] = l_type->annotations;
 							data->typearr [data->count - 1] = TERMINATOR;
 							data->position++;
 						}
@@ -971,14 +1075,14 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 			for (i = 0; (i < l_generic_count) && (data->has_error == 0); i++) {
 				l_type = a_type->generics [i];
 				if ((is_generic (&l_cecil_type, l_type) == 1)) {
-					data->count = data->count + l_type->count + (l_type->is_attached ? 1 : 0);
+					data->count = data->count + l_type->count + (l_type->annotations ? 1 : 0);
 					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
 					} else {
 						data->typearr [data->count - 1] = TERMINATOR;
-						if (l_type->is_attached) {
-							data->typearr [data->position] = ATTACHED_TYPE;
+						if (l_type->annotations) {
+							data->typearr [data->position] = l_type->annotations;
 							data->position++;
 						}
 						l_previous_pos = data->position;
@@ -987,7 +1091,7 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 						gtype [i] = eif_dtype_to_sk_type (data->typearr [l_previous_pos]);
 					}
 				} else if (is_tuple (l_type)) {
-					data->count += TUPLE_OFFSET + l_type->count + (l_type->is_attached ? 1 : 0);
+					data->count += TUPLE_OFFSET + l_type->count + (l_type->annotations ? 1 : 0);
 					data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 					if (data->typearr == NULL) {
 						data->has_error = 1;
@@ -1000,8 +1104,8 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 							gtype [i] = eif_dtype_to_sk_type (l_cecil_id);
 							CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
 
-							if (l_type->is_attached) {
-								data->typearr [data->position] = ATTACHED_TYPE;
+							if (l_type->annotations) {
+								data->typearr [data->position] = l_type->annotations;
 								data->position++;
 							}
 							data->typearr [data->position] = TUPLE_TYPE;
@@ -1020,13 +1124,13 @@ rt_private void eif_gen_type_id (struct cecil_info *type, struct rt_type *a_type
 					} else {
 						gtype [i]  = eif_dtype_to_sk_type (l_cecil_id);
 						CHECK("valid type id", (l_cecil_id & SK_DTYPE) == l_cecil_id);
-						if (l_type->is_attached) {
+						if (l_type->annotations) {
 							data->count++;
 							data->typearr = (EIF_TYPE_INDEX *) eif_realloc (data->typearr, data->count * sizeof(EIF_TYPE_INDEX));
 							if (data->typearr == NULL) {
 								data->has_error = 1;
 							} else {
-								data->typearr [data->position] = ATTACHED_TYPE;
+								data->typearr [data->position] = l_type->annotations;
 								data->typearr [data->count - 1] = TERMINATOR;
 								data->position++;
 							}

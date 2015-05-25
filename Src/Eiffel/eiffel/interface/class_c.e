@@ -2176,7 +2176,7 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 				end
 				a := create_generic_type (t)
 			end
-				-- Associated actual type is always attached.
+				-- Associated actual type is always attached in a Void-safe class.
 			actual_type := a.as_attached_in (Current)
 		end
 
@@ -5107,7 +5107,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

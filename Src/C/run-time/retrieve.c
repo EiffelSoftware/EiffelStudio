@@ -803,7 +803,7 @@ rt_private void set_mismatch_information (
 	mismatch_information_initialize (eif_access (mismatch_information_object));
 
 	/* Store class name in table */
-	mismatch_information_add (eif_access (mismatch_information_object), eif_gen_typename_of_type (new_dftype), "_type_name");
+	mismatch_information_add (eif_access (mismatch_information_object), eif_typename_of_type (eif_decoded_type(new_dftype)), "_type_name");
 
 	/* Store the storable versions */
 	l_old_version = conv->version;
@@ -2762,7 +2762,7 @@ rt_shared char *name_of_attribute_type (EIF_TYPE_INDEX **type)
 	buffer[0] = (char) 0;
 
 		/* Skip all the annotations. */
-	while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+	while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dftype)) {
 		*type += 1;
 		dftype = **type;
 		sprintf (buffer, "%x ", dftype);
@@ -2804,7 +2804,7 @@ rt_private char *name_of_old_attribute_type (EIF_TYPE_INDEX **type)
 	buffer[0] = (char) 0;
 
 		/* Skip all the annotations. */
-	while (RT_HAS_ANNOTATION_TYPE(dftype)) {
+	while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dftype)) {
 		*type += 1;
 		dftype = **type;
 		sprintf (buffer, "%x ", dftype);
@@ -3045,9 +3045,9 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 	EIF_TYPE_INDEX dftype = **gtype;
 	EIF_TYPE_INDEX aftype = **atype;
 
-	while (result && RT_HAS_ANNOTATION_TYPE(dftype)) {
-		if (RT_HAS_ANNOTATION_TYPE(aftype)) {
-			if (RT_IS_ATTACHED_TYPE(dftype) && RT_IS_DETACHABLE_TYPE(aftype)) {
+	while (result && RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(dftype)) {
+		if (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(aftype)) {
+			if (RT_CONF_IS_ATTACHED_TYPE_IN_ARRAY(dftype) && RT_CONF_IS_DETACHABLE_TYPE_IN_ARRAY(aftype)) {
 				if (level == 0) {
 						/* This is not a mismatch, but we flag it to check later that all attributes
 						 * we retrieve are indeed attached. */
@@ -3058,7 +3058,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 			}
 			*atype += 1;
 			aftype = **atype;
-		} else if (RT_IS_ATTACHED_TYPE(dftype)) {
+		} else if (RT_CONF_IS_ATTACHED_TYPE_IN_ARRAY(dftype)) {
 			if (level == 0) {
 					/* This is not a mismatch, but we flag it to check later that all attributes
 					 * we retrieve are indeed attached. */
@@ -3075,7 +3075,7 @@ rt_private int attribute_type_matched (type_descriptor *context_type, rt_uint_pt
 			/* There we know that `dftype' has no annotation. So we can currently
 			 * safely consumes all annotations of `aftype' since anything conforms to
 			 * a detachable type. */
-		while (RT_HAS_ANNOTATION_TYPE(aftype)) {
+		while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(aftype)) {
 			*atype += 1;
 			aftype = **atype;
 		}
@@ -3175,7 +3175,8 @@ rt_private int attribute_types_matched (type_descriptor *context_type, rt_uint_p
 	EIF_TYPE_INDEX atype = atypes[0];
 	if (type_defined (atype) && type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		EIF_TYPE_INDEX dftype;
-		dftype = eif_compound_id (0, gtypes);
+		/* FIXME: Shouldn't we also compare annotations? */
+		dftype = eif_compound_id (0, gtypes).id;
 		result = (dftype == type_description (atype)->new_dftype);
 	} else {
 		int level = 0;

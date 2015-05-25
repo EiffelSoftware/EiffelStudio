@@ -107,9 +107,9 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.put_string ("RTLNSMART(eif_non_attached_type(")
+			buffer.put_string ("RTLNSMART(")
 			generate_type_id (buffer, context.final_mode, 0)
-			buffer.put_two_character (')', ')')
+			buffer.put_character (')')
 		end
 
 	analyze
@@ -138,7 +138,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate the creation type id of the feature.
 		local
 			table: POLY_TABLE [ENTRY]
@@ -154,7 +154,7 @@ feature -- C code generation
 					-- version anywhere.
 					-- Create anything - cannot be called anyway
 
-					buffer.put_integer (0)
+					buffer.put_string ("eif_new_type(INVALID_DTYPE, 0)")
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
 					l_type := table.first.type.deep_actual_type
@@ -163,13 +163,18 @@ feature -- C code generation
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
 					elseif attached {FORMAL_A} l_type as l_formal then
-						buffer.put_string ("eif_gen_param_id(")
+						buffer.put_string ("eif_gen_param(")
 						context.generate_current_dftype
 						buffer.put_two_character (',', ' ')
 						buffer.put_integer (l_formal.position)
 						buffer.put_character (')')
 					else
+						buffer.put_string ("eif_new_type(")
 						buffer.put_type_id (table.first.feature_type_id)
+						buffer.put_two_character (',', ' ')
+							-- Discard the upper bits as `eif_new_type' only accepts the lower part.
+						buffer.put_natural_16 (table.first.type.annotation_flags & 0x00FF)
+						buffer.put_character (')')
 					end
 				else
 						-- Attribute is polymorphic
@@ -346,11 +351,11 @@ feature -- Genericity
 						dummy := idx_cnt.next
 					end
 				else
-					buffer.put_string ("0,")
+					buffer.put_string ("0,0,")
 					dummy := idx_cnt.next
 				end
 			else
-				buffer.put_string ("0,")
+				buffer.put_string ("0,0,")
 				dummy := idx_cnt.next
 			end
 		end
@@ -360,7 +365,6 @@ feature -- Genericity
 		local
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
-			table_name: STRING
 			l_type: TYPE_A
 		do
 			if context.final_mode then
@@ -381,46 +385,10 @@ feature -- Genericity
 						dummy := idx_cnt.next
 					end
 				else
-						-- Attribute is polymorphic
-					table_name := Encoder.type_table_name (routine_id)
-					buffer.put_new_line
-					buffer.put_string ("typarr")
-					buffer.put_natural_32 (a_level)
-					buffer.put_character ('[')
-					buffer.put_integer (idx_cnt.value)
-					buffer.put_string ("] = eif_final_id(")
-					buffer.put_string (table_name)
-					buffer.put_character (',')
-					buffer.put_string (table_name)
-					buffer.put_string ("_gen_type")
-					buffer.put_character (',')
-					context.generate_current_dftype
-					buffer.put_character (',')
-					buffer.put_type_id (table.min_type_id)
-					buffer.put_string (");")
-					dummy := idx_cnt.next
-
-						-- Side effect. This is not nice but
-						-- unavoidable.
-						-- Mark routine id used
-					Eiffel_table.mark_used_for_type (routine_id)
-						-- Remember extern declaration
-					Extern_declarations.add_type_table (table_name)
+					generate_entry_inititalization (buffer, final_mode, idx_cnt, a_level)
 				end
 			else
-				buffer.put_new_line
-				buffer.put_string ("typarr")
-				buffer.put_natural_32 (a_level)
-				buffer.put_character ('[')
-				buffer.put_integer (idx_cnt.value)
-				buffer.put_string ("] = RTWCT(")
-				buffer.put_integer (routine_id)
-				buffer.put_string ({C_CONST}.comma_space)
-				context.generate_current_dtype
-				buffer.put_string ({C_CONST}.comma_space)
-				context.generate_current_dftype
-				buffer.put_two_character (')', ';')
-				dummy := idx_cnt.next
+				generate_entry_inititalization (buffer, final_mode, idx_cnt, a_level)
 			end
 		end
 
@@ -445,7 +413,7 @@ feature -- Genericity
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

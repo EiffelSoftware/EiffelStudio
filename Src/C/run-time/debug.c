@@ -133,7 +133,9 @@ rt_public struct dbinfo d_data = {
 	0,				/* db_callstack_depth_stop */
 	0,				/* db_stepinto_mode */
 	0,				/* db_discard_breakpoints */
-	{{0, 0, 0}}		/* rtdata */
+	0,				/* rtcc_pos */
+	{0, 0},			/* rtcc_expected */
+	{0, 0}			/* rtcc_actual */
 };	/* Global debugger information */
 
 /*
@@ -716,22 +718,23 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index, uint32 n
 * CATCALL handling.
 *************************************************************************************************************************/
 #ifdef WORKBENCH
-rt_shared void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype)
+rt_shared void dcatcall(int a_arg_position, EIF_TYPE a_expected_ftype, EIF_TYPE a_actual_ftype)
 {
 	REQUIRE("catcall detection debugger enabled", catcall_detection_debugger_enabled);
 	if (debug_mode) {
 		RT_GET_CONTEXT
 		EIF_GET_CONTEXT
 
+		EIF_TYPE l_invalid_ftype = {INVALID_DTYPE, 0};
 
 		DBGMTX_LOCK;	/* Enter critical section */
-		d_data.rtdata.rtcc.pos = a_arg_position;
-		d_data.rtdata.rtcc.expect = a_expected_dftype;
-		d_data.rtdata.rtcc.actual = a_actual_dftype;
+		d_data.rtcc_pos = a_arg_position;
+		d_data.rtcc_expect = a_expected_ftype;
+		d_data.rtcc_actual = a_actual_ftype;
 		safe_dbreak(PG_CATCALL);
-		d_data.rtdata.rtcc.pos = 0;
-		d_data.rtdata.rtcc.expect = 0;
-		d_data.rtdata.rtcc.actual = 0;
+		d_data.rtcc_pos = 0;
+		d_data.rtcc_expect = l_invalid_ftype;
+		d_data.rtcc_actual = l_invalid_ftype;
 		DBGMTX_UNLOCK; /* Leave critical section */
 	} else {
 		/* If not in debugging mode */

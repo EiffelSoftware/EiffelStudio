@@ -68,6 +68,7 @@ extern int ht_safe_force(struct htable *ht, rt_uint_ptr key, void * val);	/* Ins
 extern void ht_remove(struct htable *ht, rt_uint_ptr key);			/* Remove value in H table */
 extern void ht_zero(struct htable *ht);				/* Initialize H table to zero */
 extern void ht_free(struct htable *ht);				/* Free hash table */
+extern int ht_resize(struct htable *ht, size_t new_size);
 
 #ifdef __cplusplus
 }

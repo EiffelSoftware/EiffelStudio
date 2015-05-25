@@ -210,7 +210,7 @@ feature
 						-- Attachment to entity of basic type.
 					buf.put_new_line
 					buf.put_string ("RTRB(")
-					info.generate_type_id (buf, l_context.final_mode, 0)
+					info.generate_type (buf, l_context.final_mode, 0)
 					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
 					buf.put_string ({C_CONST}.comma_space)
@@ -223,7 +223,7 @@ feature
 						-- Attachment to entity of non-basic expanded type.
 					buf.put_new_line
 					buf.put_string ("RTRE(")
-					info.generate_type_id (buf, l_context.final_mode, 0)
+					info.generate_type (buf, l_context.final_mode, 0)
 					buf.put_string ({C_CONST}.comma_space)
 					source_print_register
 					buf.put_string ({C_CONST}.comma_space)
@@ -239,7 +239,7 @@ feature
 					target.print_register
 					buf.put_string (" = ")
 					buf.put_string ("RTRV(")
-					info.generate_type_id (buf, l_context.final_mode, 0)
+					info.generate_type (buf, l_context.final_mode, 0)
 					buf.put_string ({C_CONST}.comma_space)
 					print_register
 					buf.put_character (')')
@@ -255,9 +255,8 @@ feature
 					end
 				end
 			else
-				buf.put_string ("RTRV(eif_non_attached_type(")
-				info.generate_type_id (buf, l_context.final_mode, 0)
-				buf.put_character (')')
+				buf.put_string ("RTRV(")
+				info.generate_type (buf, l_context.final_mode, 0)
 				buf.put_string ({C_CONST}.comma_space)
 				source_print_register
 				buf.put_character (')')
@@ -280,7 +279,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

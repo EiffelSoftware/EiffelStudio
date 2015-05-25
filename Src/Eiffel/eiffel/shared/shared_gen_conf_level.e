@@ -12,6 +12,7 @@ feature -- Generic conformance access
 
 	Terminator_type, invalid_dtype: NATURAL_16 = 0xFFFF
 
+	none_type: NATURAL_16 = 0xFFFE
 	Like_arg_type: NATURAL_16 = 0xFFFD
 	Like_current_type: NATURAL_16 = 0xFFFC
 	--not_used: NATURAL_16 = 0xFFFB
@@ -21,21 +22,27 @@ feature -- Generic conformance access
 	parent_type_separator: NATURAL_16 = 0xFFF7
 	--not_used: NATURAL_16 = 0xFFF6
 	qualified_feature_type: NATURAL_16 = 0xFFF5
+	unused_special_type_1: NATURAL_16 = 0xFFF4
+	unused_special_type_2: NATURAL_16 = 0xFFF3
+	unused_special_type_3: NATURAL_16 = 0xFFF2
+	unused_special_type_4: NATURAL_16 = 0xFFF1
+	unused_special_type_5: NATURAL_16 = 0xFFF0
 
-	attached_type: NATURAL_16 = 0xFF11
-	detachable_type: NATURAL_16 = 0xFF12
-	frozen_type: NATURAL_16 = 0xFF14
-
-	detachable_none_type: NATURAL_16 = 0xFFFE
-		-- Because of storable we cannot change the value of this constant
-		-- to be 0xFF21 (see below) as it will force us to change the C revision
-		-- format of storable.
-		-- However if there is a reason for bumping the C revision format, then
-		-- we should use this value as it will make the runtime slightly more
---	detachable_none_type: NATURAL_16 = 0xFF21
-	attached_none_type: NATURAL_16 = 0xFF22
+	attached_type: NATURAL_16 = 0xFF01
+	detachable_type: NATURAL_16 = 0xFF02
+	separate_type: NATURAL_16 = 0xFF04
+	variant_type: NATURAL_16 = 0xFF08
+	frozen_type: NATURAL_16 = 0xFF20
+	poly_type: NATURAL_16 = 0xFF40
 
 	Max_dtype: NATURAL_16 = 0xFF00
+
+	attached_flag: NATURAL_16 = 0x0001
+	detachable_flag: NATURAL_16 = 0x0002
+	separate_flag: NATURAL_16 = 0x0004
+	variant_flag: NATURAL_16 = 0x0008
+	frozen_flag: NATURAL_16 = 0x0020
+	poly_flag: NATURAL_16 = 0x0040
 
 feature -- TUPLE code
 
@@ -60,7 +67,7 @@ feature -- TUPLE code
 			-- Code used to identify special type, used in metainformation only: non-basic expanded type
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

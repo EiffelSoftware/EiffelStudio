@@ -107,9 +107,9 @@ feature
 			print_register
 			buf.put_string (once " = ")
 			if wb_mode then
-				buf.put_string (once "RTLNRW(typres0, ")
+				buf.put_string (once "RTLNRW(typres0.id, ")
 			else
-				buf.put_string (once "RTLNRF(typres0, ")
+				buf.put_string (once "RTLNRF(typres0.id, ")
 			end
 				-- now the parameters for set_rout_disp:
 				-- rout_disp

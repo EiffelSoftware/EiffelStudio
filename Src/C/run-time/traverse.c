@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -172,7 +172,7 @@ rt_private void account_type (struct rt_traversal_context *a_context, EIF_TYPE_I
 			uint32 i, l_nb_gen = eif_gen_count_with_dftype(dftype);
 			for (i = 0; i < l_nb_gen; i++) {
 					/* + 1 here because it is 1-based. */
-				account_type (a_context, eif_gen_param_id (dftype, i + 1));
+				account_type (a_context, eif_gen_param(dftype, i + 1).id);
 			}
 		}
 	}
@@ -206,7 +206,7 @@ rt_private void account_type_with_attributes (struct rt_traversal_context *a_con
 				/* Resolve type of attributes in context of `dftype'.
 				 * Which means that if the attributes involves some formal generic parameters
 				 * they are fully resolved with the actual generic parameter held via `dftype'. */
-			account_type (a_context, eif_compound_id (dftype, System (dtype).cn_gtypes[i]));
+			account_type (a_context, eif_compound_id (dftype, System (dtype).cn_gtypes[i]).id);
 		}
 	}
 }
@@ -402,7 +402,7 @@ rt_shared EIF_OBJECT map_next(void)
 	struct stchunk *cur;	/* New current chunk */
 
 	REQUIRE ("Not at the end of the stack", map_stack.st_bot != map_stack.st_top);
-	
+
 	item = (EIF_OBJECT *) map_stack.st_bot++;		/* Make a guess */
 	if (item >= (EIF_OBJECT *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
 		RT_GET_CONTEXT
@@ -421,7 +421,7 @@ rt_shared EIF_OBJECT map_next(void)
 	}
 
 	ENSURE ("Object found before end of stack", item != (EIF_OBJECT *) map_stack.st_top);
-	
+
 	return *item;
 }
 
@@ -442,7 +442,7 @@ rt_shared void map_reset(int emergency)
 	struct stchunk *cur;	/* Current chunk in stack list */
 
 	REQUIRE ("", emergency || map_stack.st_bot == map_stack.st_top);
-	
+
 	/* If we get here because of an emergency, we free all the chunks held
 	 * in the stack until the end. Otherwise, we only need to free the current
 	 * (and last) chunk.
@@ -474,30 +474,31 @@ doc:	</attribute>
 rt_private EIF_REFERENCE referers_target = NULL;
 
 /*
-doc:	<attribute name="instance_type" return_type="EIF_INTEGER" export="private">
+doc:	<attribute name="instance_type" return_type="EIF_TYPE" export="private">
 doc:		<summary>Dynamic type used to track all objects of this particular dynamic type in `find_instance_of'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</attribute>
 */
-rt_private EIF_INTEGER instance_type = 0;
+rt_private EIF_TYPE instance_type;
 
 /*
 doc:	<routine name="find_referers" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>Find all objects that refers to `target' and return a SPECIAL object.</summary>
 doc:		<param name="target" type="EIF_REFERENCE">Object from which we want to find all objects that refer to it.</param>
-doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL [ANY].</param>
+doc:		<param name="result_type" type="EIF_ENCODED_TYPE">Full dynamic type of SPECIAL [ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
+rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_ENCODED_TYPE result_type)
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+	EIF_TYPE ftype = eif_decoded_type(result_type);
 #ifdef ISE_GC
 		/* Fixed eweasel test#thread008 where if a GC cycle happen, while we wait for the
 		 * synchronization, then `target' might not be valid anymore. */
@@ -505,12 +506,12 @@ rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	RT_GC_WEAN(target);
 	referers_target = target;
-	result = matching (internal_find_referers, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_referers, ftype.id);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
 	referers_target = target;
-	result = matching (internal_find_referers, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_referers, ftype.id);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -519,26 +520,25 @@ rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_
 /*
 doc:	<routine name="find_instance_of" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>Find all object that have `type' as dynamic type and return a SPECIAL object containing them all.</summary>
-doc:		<param name="type" type="EIF_INTEGER">Dynamic type of objects we are looking for.</param>
-doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
+doc:		<param name="type" type="EIF_ENCODED_TYPE">Dynamic type of objects we are looking for.</param>
+doc:		<param name="result_type" type="EIF_ENCODED_TYPE">Full dynamic type of SPECIAL[ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_type)
+rt_public EIF_REFERENCE find_instance_of (EIF_ENCODED_TYPE type, EIF_ENCODED_TYPE result_type)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
+	instance_type = eif_decoded_type(type);
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
-	instance_type = type;
-	result = matching (internal_find_instance_of, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_instance_of, eif_decoded_type(result_type).id);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
-	instance_type = type;
-	result = matching (internal_find_instance_of, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_instance_of, eif_decoded_type(result_type).id);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -547,23 +547,23 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 /*
 doc:	<routine name="find_all_instances" return_type="EIF_REFERENCE" export="shared">
 doc:		<summary>Find all objects in system and return a SPECIAL object containing them all.</summary>
-doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
+doc:		<param name="result_type" type="EIF_ENCODED_TYPE">Full dynamic type of SPECIAL[ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE find_all_instances (EIF_INTEGER result_type)
+rt_public EIF_REFERENCE find_all_instances (EIF_ENCODED_TYPE result_type)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
 #ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
-	result = matching (internal_find_all_instances, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_all_instances, eif_decoded_type(result_type).id);
 	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 #else
 	EIF_EO_STORE_LOCK;
-	result = matching (internal_find_all_instances, (EIF_TYPE_INDEX) result_type);
+	result = matching (internal_find_all_instances, eif_decoded_type(result_type).id);
 	EIF_EO_STORE_UNLOCK;
 #endif
 	return result;
@@ -628,7 +628,7 @@ rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENC
 {
 	if
 		((enclosing == compare_to) &&
-		((EIF_INTEGER) (HEADER(enclosing)->ov_dftype) == instance_type ? 1 : 0) &&
+		((EIF_INTEGER) (HEADER(enclosing)->ov_dftype) == instance_type.id ? 1 : 0) &&
 		(!((HEADER(enclosing)->ov_flags) & EO_STORE)))
 	{
 		obj_array_extend (enclosing, found_collection);
@@ -689,7 +689,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	struct obj_array l_found, l_marked;
 	union overhead *zone;
 	EIF_REFERENCE Result;
-	
+
 		/* Initialize structure that will hold found objects */
 	l_found.count = 0;
 	l_found.capacity = 64;
@@ -771,7 +771,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Now, populate `Result' with content of `l_found'. Since we just
 		 * created a new Eiffel objects. */
 	for (i = 0 ; i < l_found.count ; i++) {
-		
+
 			/* Store object in `Result'. */
 		*((EIF_REFERENCE*) Result + i) = l_found.area [i];
 		RTAR(Result, l_found.area [i]);
@@ -791,7 +791,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	if (!gc_stopped) eif_gc_run();
 
 	return Result;
-} 
+}
 
 /*
 doc:	<routine name="match_simple_stack" export="private">
@@ -1044,7 +1044,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 				if (eif_item_sk_type(object, i) == SK_REF) {
 					reference = eif_reference_item(object, i);
 					if (reference) {
-						object_count = chknomark(reference, tbl, object_count);	
+						object_count = chknomark(reference, tbl, object_count);
 					}
 				}
 			}
@@ -1055,7 +1055,7 @@ rt_private uint32 chknomark(char *object, struct htable *tbl, uint32 object_coun
 				reference = *(char **)object;
 				if (0 != reference)
 					/* Non void reference */
-					object_count = chknomark(reference,tbl,object_count);					
+					object_count = chknomark(reference,tbl,object_count);
 			}
 		} else {
 			/* Special object filled with expanded objects which are

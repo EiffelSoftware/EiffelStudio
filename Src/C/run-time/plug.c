@@ -127,12 +127,15 @@ rt_public EIF_REFERENCE eif_arg_array (void)
 	EIF_TYPE_INDEX typres;
 	int i;
 	int argc = eif_arg_count();
+	EIF_TYPE str_type;
 
 	/*
 	 * Create the array
 	 */
 
-	typres = eif_typeof_array_of (eif_attached_type (egc_str_dtype));
+	str_type.annotations = ATTACHED_FLAG;
+	str_type.id = egc_str_dtype;
+	typres = eif_typeof_array_of (str_type);
 	array = emalloc(typres);		/* If we return, it succeeded */
 		/* We perform a hack here by letting the Eiffel code believe
 		 * we are using an ARRAY [detachable STRING_8]. We will restore
@@ -140,7 +143,8 @@ rt_public EIF_REFERENCE eif_arg_array (void)
 		 * is to prevent the precondition violation in {ARRAY}.make
 		 * which expects the actual generic type to be detachable
 		 * for calling `make' as otherwise a default value is requested. */
-	Dftype(array) = eif_typeof_array_of (egc_str_dtype);
+	str_type.annotations = DETACHABLE_FLAG;
+	Dftype(array) = eif_typeof_array_of (str_type);
 	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 #ifdef WORKBENCH
@@ -180,7 +184,7 @@ rt_public EIF_REFERENCE eif_arg_array (void)
 			eif_free(l_str);
 		} else {
 			enomem();
-		}	
+		}
 #else
 		((EIF_REFERENCE *) sp)[i] = makestr(l_src, rt_nstrlen(l_src));
 #endif
@@ -229,6 +233,7 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 	const uint32 *types;
 	long offset_bis = 0;					/* offset already taken :-) */
 	EIF_TYPE_INDEX   typres;
+	EIF_TYPE any_type;
 #ifdef WORKBENCH
 	EIF_TYPE_INDEX curr_dtype;
 
@@ -255,7 +260,9 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 
 	stripped_nbr = nbr_attr - nbr;
 
-	typres = eif_typeof_array_of(egc_any_dtype);
+	any_type.annotations = DETACHABLE_FLAG;
+	any_type.id = egc_any_dtype;
+	typres = eif_typeof_array_of(any_type);
 	array = emalloc(typres);	/* If we return, it succeeded */
 	nstcall = 0;
 #ifdef WORKBENCH
@@ -643,6 +650,7 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 	while (p_type != TERMINATOR) {
 			/* Call to potential parent invariant */
 		recursive_chkinv(p_type, obj, where);
+
 			/* Iterate `cn_parents' until we reach the next parent or the end. */
 		while ((p_type != PARENT_TYPE_SEPARATOR) && (p_type != TERMINATOR)) {
 			p_type = *cn_parents++;
@@ -809,7 +817,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			cid = cn_gtypes [i];
 
 			if (cid && (cid [0] != TERMINATOR)) {
-				dftype = eif_compound_id (Dftype (obj), cid);
+				dftype = eif_compound_id (Dftype (obj), cid).id;
 				exp_dtype = To_dtype(dftype);
 			} else {
 					/* Non-generic expanded type. */

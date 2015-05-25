@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -141,7 +141,7 @@ rt_public struct eif_exception exdata = {
 	(char *) 0,		/* ex_tag */
 	(char *) 0,		/* ex_rt */
 	0,				/* ex_class */
-	0,				/* ex_retry */
+	0,				/* ex_entry */
 	0,				/* ex_error_handled */
 	0,				/* ex_panic_handled */
 };
@@ -216,7 +216,7 @@ rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool); /* Set if ig
 rt_private struct ex_vect *top_n_call(struct xstack *stk, int n);	/* Get the n-th topest call vector from the stack */
 rt_private struct ex_vect *draise_recipient_call (struct xstack *stk); /* Get the second topest call vector from the stack, used by `draise' */
 rt_private int is_ex_ignored (int ex_code);				/* Check exception of `ex_code' should be ignored or not */
-rt_private void make_exception (long except_code, int signal_code, int eno, const char *t_name, char *reci_name, 
+rt_private void make_exception (long except_code, int signal_code, int eno, const char *t_name, char *reci_name,
 								const char *eclass, char *rf_routine, const char *rf_class, int line_num, int is_inva_entry, int new_obj); /* Notify the EXCEPTION_MANAGER to create exception object if `new_obj', or update current exception object with necessary info when not `new_obj' */
 rt_private int is_ex_assert (int ex_code);				/* Is exception of `ex_code' an assertion violation? */
 rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj);					/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
@@ -411,7 +411,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector);			/* Dump an exe
 #endif
 
 /* Preallocated size for trace printing buffer.
- * The value is larger enough than the number of 
+ * The value is larger enough than the number of
  * characters of a line we allow */
 #define TRACE_BUF_SZ	512
 
@@ -603,7 +603,7 @@ rt_public struct ex_vect *exret(struct ex_vect *rout_vect)
 	expop(&eif_trace);					/* Remove EN_ILVL */
 	echlvl--;							/* And decrease exception level */
 		/* Unwind the trace stack, to forget last exception */
-	unwind_trace();						
+	unwind_trace();
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
@@ -659,7 +659,7 @@ rt_public void exasrt(char *tag, int type)
 		return;								/* Exception may be ignored */
 	}
 	/* Copy from enclosing vector. Reset if `top' is empty */
-	memcpy (vector, top, sizeof(struct ex_vect)); 
+	memcpy (vector, top, sizeof(struct ex_vect));
 
 	/* The ex_where field for EX_PRE is set only during backtracking */
 
@@ -693,7 +693,7 @@ rt_shared void excatch(jmp_buf *jmp)
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
-	
+
 	vector = exget(&eif_stack);				/* Get an execution vector */
 	if (vector == (struct ex_vect *) 0) {	/* No more memory */
 		echmem |= MEM_FULL;					/* Exception stack incomplete */
@@ -785,7 +785,7 @@ rt_public struct ex_vect * extrl(void)
 
 		/* Save routine execution vector. */
 	v = *vector;
-	
+
 	SIGBLOCK;	/* Critical section, protected against signals */
 
 		/* Remove item from the top. */
@@ -1068,10 +1068,24 @@ rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE Current) {
 	}
 }
 
-rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX dtype, char *a_feature_name, int a_pos, EIF_TYPE_INDEX expected_dftype)
+
+/*
+doc:	<routine name="eif_check_catcall" export="public">
+doc:		<summary>Give an object `a_object' at an expected (argument or tuple insertion) position `a_pos' we check if it has the proper type `expected_ftype'. If not and depending on the runtime setting, it will either do nothing, print a message on the console or stop the execution in EiffelStudio</summary>
+doc:		<param name="a_object" type="EIF_REFERENCE">Object passed at position `a_pos'.</param>
+doc:		<param name="a_dtype" type="EIF_TYPE_INDEX">Design type where code checking for a catcall is written.</param>
+doc:		<param name="a_feature_name" type="const char *">Name of the routine in the type where the code checking for a catcall is written.</param>
+doc:		<param name="a_pos" type="int">Position of the argument or tuple insertion where the code checking for a catcall is performed.</param>
+doc:		<param name="a_expected_ftype" type="EIF_TYPE">Type expected at runtime to which `a_object' should conform to.</param>
+doc:		<param name="a_annotations" type="EIF_TYPE_INDEX">Annotations if any in the class where `a_expected_dftype' is declared.</param>
+doc:		<thread_safety>safe</thread_safety>
+doc:		<synchronization>per thread data.</synchronization>
+doc:	</routine>
+*/
+rt_public void eif_check_catcall (EIF_REFERENCE a_object, EIF_TYPE_INDEX a_dtype, const char *a_feature_name, int a_pos, EIF_TYPE a_expected_ftype, EIF_TYPE_INDEX a_annotations)
 {
-	EIF_TYPE_INDEX dftype;
-	
+	EIF_TYPE l_ftype;
+
 	REQUIRE("a_location_not_null", a_feature_name);
 	REQUIRE("a_pos positive", a_pos > 0);
 
@@ -1081,40 +1095,65 @@ rt_public void eif_check_catcall_at_runtime (EIF_REFERENCE arg, EIF_TYPE_INDEX d
 #ifdef WORKBENCH
 	if (catcall_detection_enabled) {
 #endif
-		if (arg) {
-			dftype = Dftype(arg);
-			expected_dftype = eif_non_attached_type(expected_dftype);
-			if (!RTRC(expected_dftype, dftype)) {
+			/* `a_expected_ftype' has some annotations of its own, but it might be declared in a class that
+			 * already has some annotations `a_annotations', so we need to compute the resulting annotation. */
+		a_expected_ftype.annotations = rt_merged_annotation(a_annotations, a_expected_ftype.annotations);
+		if (a_object) {
+			l_ftype = eif_new_type(Dftype(a_object), ATTACHED_FLAG);
+			if (!RTRC(a_expected_ftype, l_ftype)) {
 					/* Types do not conform. */
+				if (egc_is_experimental) {
+						/* We make sure that annotations to display the error message is always attached,
+						 * so instead of saying expected ?X but got Y, we simply say expected X but got Y. */
+					a_expected_ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+					a_expected_ftype.annotations |= ATTACHED_FLAG;
+						/* No need to update `l_ftype' since it is already attached by nature. */
+				} else {
+						/* We make sure that annotations to display the error message is always detachable,
+						 * so instead of saying expected !X but got !Y, we simply say expected X but got Y. */
+					a_expected_ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+					l_ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+				}
 #ifdef WORKBENCH
 				if (catcall_detection_console_enabled) {
 					print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-						System(dtype).cn_generator,
-						a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+						System(a_dtype).cn_generator,
+						a_feature_name, a_pos, eif_typename (a_expected_ftype), eif_typename (l_ftype));
 				}
 				if (catcall_detection_debugger_enabled) {
-					dcatcall(a_pos, expected_dftype, dftype);
+					dcatcall(a_pos, a_expected_ftype, l_ftype);
 				}
 #else
 				print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got %s\n",
-					System(dtype).cn_generator,
-					a_feature_name, a_pos, eif_typename (expected_dftype), eif_typename (dftype));
+					System(a_dtype).cn_generator,
+					a_feature_name, a_pos, eif_typename (a_expected_ftype), eif_typename (l_ftype));
 #endif
 			}
-		} else if (eif_is_attached_type(expected_dftype)) {
+		} else if (a_expected_ftype.annotations && RT_CONF_IS_ATTACHED_FLAG(a_expected_ftype.annotations)) {
 				/* Case of where we get a Void object where a non-Void object was expected. */
-			expected_dftype = eif_non_attached_type(expected_dftype);
+			if (egc_is_experimental) {
+					/* We make sure that annotations to display the error message is always attached,
+					 * so instead of saying expected ?X but got Y, we simply say expected X but got Y. */
+				a_expected_ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+				a_expected_ftype.annotations |= ATTACHED_FLAG;
+			} else {
+					/* We make sure that annotations to display the error message is always detachable,
+					 * so instead of saying expected !X but got !Y, we simply say expected X but got Y. */
+				a_expected_ftype.annotations &= ~(ATTACHED_FLAG | DETACHABLE_FLAG);
+			}
 #ifdef WORKBENCH
 			if (catcall_detection_console_enabled) {
 				print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",
-					System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
+					System(a_dtype).cn_generator, a_feature_name, a_pos, eif_typename (a_expected_ftype));
 			}
 			if (catcall_detection_debugger_enabled) {
-				dcatcall(a_pos, expected_dftype, DETACHABLE_NONE_TYPE);
+				l_ftype.id = NONE_TYPE;
+				l_ftype.annotations = 0;
+				dcatcall(a_pos, a_expected_ftype, l_ftype);
 			}
 #else
 			print_err_msg(stderr, "Catcall detected in {%s}.%s for arg#%d: expected %s but got Void\n",
-				System(dtype).cn_generator, a_feature_name, a_pos, eif_typename (expected_dftype));
+				System(a_dtype).cn_generator, a_feature_name, a_pos, eif_typename (a_expected_ftype));
 #endif
 		}
 #ifdef WORKBENCH
@@ -1240,8 +1279,8 @@ rt_public void eraise(const char *tag, long num)
 			reci_name = vector_call->ex_rout;
 		}
 		/* Here we use "&&" because `eraise' is never called by the developer or
-		 * the once exception raising routine. So it is more strict to take 
-		 * the exception as assertion violation when both `in_assertion' and 
+		 * the once exception raising routine. So it is more strict to take
+		 * the exception as assertion violation when both `in_assertion' and
 		 * is assertion violation code. */
 		if (in_assertion && is_ex_assert (num)) {
 			tg = vector->ex_name;
@@ -1291,8 +1330,8 @@ rt_public void eraise(const char *tag, long num)
 
 	if (trace) {
 		/* Here we use "&&" because `eraise' is never called by the developer or
-		 * the once exception raising routine. So it is more strict to take 
-		 * the exception as assertion violation when both `in_assertion' and 
+		 * the once exception raising routine. So it is more strict to take
+		 * the exception as assertion violation when both `in_assertion' and
 		 * is assertion violation code. */
 		if (in_assertion && is_ex_assert (num)) {
 			trace->ex_where = echrt;			/* Save routine in trace for exorig */
@@ -1490,7 +1529,7 @@ rt_public void eviol(void)
 	/* An assertion violation occurred, or the routine reached the end of its
 	 * rescue clause with no 'retry'. Set the exception code matching the
 	 * execution vector at the top of the stack and start backtracking, unless
-	 * we have to ignore the exception. `is_entry' tells if it is entry or exit when 
+	 * we have to ignore the exception. `is_entry' tells if it is entry or exit when
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
@@ -1577,7 +1616,7 @@ rt_public void eviol(void)
 #ifndef NOHOOK
 	exception(PG_VIOL);		/* Debugger hook -- implicitely raised exception */
 #endif
-	
+
 	if (!is_ignore_contract_violation_once)
 		{
 			ereturn();				/* Go back to last recorded rescue entry */
@@ -1747,7 +1786,7 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 	/* Traverse `from_stack' from top to build the trace stack.
 	 * Return the stopping vector.
 	 * If `for_full' is non zero, ignore any backtracking points until reaching the root feature
-	 * and return NULL. 
+	 * and return NULL.
 	 * NOTE: `from_stack' will be changed. `eif_trace' could be changed. `echlvl' could be changed if `for_full'.
 	 */
 {
@@ -1779,7 +1818,7 @@ rt_private struct ex_vect *traverse_for_trace (struct xstack *from_stack, int fo
 		}
 		expop_helper (from_stack, 0);			/* Vector no longer needed on stack */
 
-		/* Now analyze the contents of the topmost exception vector. 
+		/* Now analyze the contents of the topmost exception vector.
 		 * Updating of the tracing stack is done on the fly. Note that even
 		 * though there is no execution stack produced in final mode, we need
 		 * to build the trace stack, as it is also a track of the pending
@@ -2519,7 +2558,7 @@ rt_private void ds_stderr (char *line)
 	RT_GET_CONTEXT
 	int res;
 	DWORD dw;
-	
+
 	int cp = GetConsoleOutputCP();
 	if (cp == CP_UTF8) {
 		/* Output directly as the line is expected in UTF-8 */
@@ -2537,7 +2576,7 @@ rt_private void ds_stderr (char *line)
 				res = MultiByteToWideChar (CP_UTF8, (DWORD) 0, line, -1, (LPWSTR) ex_buffer_1.area, (int) ex_buffer_1.size / sizeof (WCHAR));
 			}
 		}
-		
+
 		if (res == 0) {
 			/* Cannot convert to wide char, print UTF-8 directly */
 			print_err_msg(stderr, "%s", line);
@@ -2645,7 +2684,7 @@ rt_public EIF_REFERENCE stack_trace_string (void)
 		 * 2. Build full trace into the stack and construct trace string.
 		 * 3. Resume the recorded stack.
 		 *
-		 * By doing this, we can build incomplete traces for inner levels (full trace is not needed) 
+		 * By doing this, we can build incomplete traces for inner levels (full trace is not needed)
 		 * before building the full one for the most outer level.
 		 */
 	RT_GET_CONTEXT
@@ -2658,14 +2697,14 @@ rt_public EIF_REFERENCE stack_trace_string (void)
 	build_full_trace_from(backtrack_point);
 		/* Build trace into string */
 	l_trace = stack_trace_str();
-		
+
 	SIGBLOCK;
 		/* Retrieve trace stack */
 	memcpy (&eif_trace, &saved, sizeof(struct xstack));
 	SIGRESUME;
 
 		/* Pass a pointer into RTMS, rather than the call,
-		 * because RTMS is a macro which may cause trace building 
+		 * because RTMS is a macro which may cause trace building
 		 * more than once */
     return (EIF_REFERENCE) RTMS(l_trace);
 }
@@ -2697,20 +2736,20 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	}
 
 	/* Print header of history table */
-	
+
 #ifdef EIF_THREADS
 	/* At first, if we are in the MT mode, print the thread id */
 	sprintf(buffer, "%s\n", RT_THREAD_ENTER_MSG);
 	append_trace(buffer);
-	
+
 	if (!(eif_thr_is_root())) {
-		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
+		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread",
 				"Child thread", (rt_uint_ptr) eif_thr_context->thread_id, "(thread id)");
 	} else {
-		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread", 
+		sprintf (buffer,"%-19.19s %-22.22s 0x%" EIF_POINTER_DISPLAY " %s\n", "In thread",
 				"Root thread", (rt_uint_ptr) 0, "(thread id)");
 	}
-		
+
 	append_trace(buffer);
 	sprintf(buffer, "%s\n", RT_THREAD_FAILED_MSG);
 	append_trace(buffer);
@@ -2838,9 +2877,9 @@ rt_private void print_class_feature_tag (
 		 * Note that the C format `%width[.precision]s' means that we will display `width'
 		 * characters on the screen and only `precision' characters from `s' will be displayed,
 		 * meaning that if `precision' is smaller than `width' the text is right aligned.
-		 * 
+		 *
 		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
-		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended 
+		 * writting more than `buffer' can hold. And for `sprintf', a null character is appended
 		 * after the last character written, which should be taken into account.
 		 */
 	l_class_count = (int) strlen(a_class_name);
@@ -2905,10 +2944,10 @@ rt_private void print_class_feature_tag (
 			}
 		} else {
 			if (l_tag_count > 208) {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.208s...\n",	
+				sprintf(buffer, "%-19.19s %-22.22s %-29.208s...\n",
 					a_class_name, a_feature_name, a_tag_name);
 			} else {
-				sprintf(buffer, "%-19.19s %-22.22s %-29.211s\n",	
+				sprintf(buffer, "%-19.19s %-22.22s %-29.211s\n",
 					a_class_name, a_feature_name, a_tag_name);
 			}
 			append_trace(buffer);
@@ -2939,7 +2978,7 @@ rt_private void print_object_location_reason_effect (
 		 * Note that the C format `%width[.precision]s' means that we will display `width'
 		 * characters on the screen and only `precision' characters from `s' will be displayed,
 		 * meaning that if `precision' is smaller than `width' the text is right aligned.
-		 * 
+		 *
 		 * Note: because `buffer' has a fixed size of 256, we need to use `precision' to avoid
 		 * writting more than `buffer' can hold.
 		 */
@@ -2949,7 +2988,7 @@ rt_private void print_object_location_reason_effect (
 	l_effect_count = (int) strlen(a_effect);
 
 		/* 1 - precision of 211 = 254 - 43, 43 being number of characters written
-			   for `a_object_addr' and `a_location'. 
+			   for `a_object_addr' and `a_location'.
 		 * 2 - precision of 181 = 254 - 73, 73 being number of characters written
 			   for `a_object_addr', `a_location' and `a_reason'.
 		 * 3 - 22, number of characters written for `a_location'
@@ -3021,7 +3060,7 @@ rt_private void print_top(void (*append_trace)(char *))
 	line_number = (eif_trace.st_bot)->ex_linenum;
 
 	/* create the 'routine_name@line_number' string. We limit ourself to the first 192
-	 * characters of `routine_name' otherwise we will do a buffer overflow. 
+	 * characters of `routine_name' otherwise we will do a buffer overflow.
 	 * 189 = 192 - 3, 3 being characters of "..." */
 	if (line_number > 0) { /* FIXME:jfiat bpnested_index? */
 		/* the line number seems valid, so we are going to print it */
@@ -3158,7 +3197,7 @@ rt_private void print_top(void (*append_trace)(char *))
 			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		} else {
 			/* We used to print `Pass' here, but once there is an exception raised,
-			 * it appears no reason to do so. We should instead print `Fail' 
+			 * it appears no reason to do so. We should instead print `Fail'
 			 * as a general effect. */
 			sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 		}
@@ -3358,10 +3397,10 @@ rt_shared void xstack_reset(struct xstack *stk)
 
 /*
 doc:	<routine name="expop" export="public">
-doc:		<summary>Remove an element of `stk' and perform shrinking of stack if necessary.</summary>
-doc:		<param name="stk" type="struct xstacl *">Stack in which an element will be removed.</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Per thread data.</synchronization>
+doc:		<summary>remove an element of `stk' and perform shrinking of stack if necessary.</summary>
+doc:		<param name="stk" type="struct xstacl *">stack in which an element will be removed.</param>
+doc:		<thread_safety>safe</thread_safety>
+doc:		<synchronization>per thread data.</synchronization>
 doc:	</routine>
 */
 rt_public void expop(struct xstack *stk) {
@@ -3536,7 +3575,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 	if (!(DEBUG & 1)) {
 		return;
 	}
-		
+
 	printf("%s (at 0x%lx):\n", msg, vector);
 	if (vector == (struct ex_vect *) 0) {
 		return;
@@ -3622,7 +3661,7 @@ rt_private struct ex_vect *top_n_call(struct xstack *stk, int n)
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
 			if (	top->ex_type == EX_CALL ||
-					top->ex_type == EX_RETY || 
+					top->ex_type == EX_RETY ||
 					top->ex_type == EX_RESC 	)
 			{
 				if (top->ex_is_invariant == 0) {
@@ -3636,7 +3675,7 @@ rt_private struct ex_vect *top_n_call(struct xstack *stk, int n)
 			if (cur){ /* There is a previous chunk. */
 				top = cur->sk_end - 1;
 				if (	top->ex_type == EX_CALL ||
-						top->ex_type == EX_RETY || 
+						top->ex_type == EX_RETY ||
 						top->ex_type == EX_RESC		)
 				{
 					if (top->ex_is_invariant == 0) {
@@ -3659,7 +3698,7 @@ rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 	 * If not found, return 0. `n' should be greater than zero.
 	 * Calls from EXCEPTION_MANAGER are ignored. And if {EXCEPTION}.raise is,
 	 * enclosing, also ignore it.
-	 * Only used by `draise', since `draise' ensures the call is from 
+	 * Only used by `draise', since `draise' ensures the call is from
 	 * EXCEPTION_MANAGER.raise.
 	 */
 	struct ex_vect *top = stk->st_top;	/* Top of stack */
@@ -3671,8 +3710,8 @@ rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 	cur = stk->st_cur;
 	while (top--){
 		if (top >= cur->sk_arena){ /* We are still in current chunk */
-			if (	top->ex_type == EX_CALL 
-				 || top->ex_type == EX_RETY 
+			if (	top->ex_type == EX_CALL
+				 || top->ex_type == EX_RETY
 				 || top->ex_type == EX_RESC
 				 )
 			{
@@ -3684,9 +3723,9 @@ rt_private struct ex_vect *draise_recipient_call (struct xstack *stk)
 			cur = cur->sk_prev;
 			if (cur) { /* There is a previous chunk. */
 				top = cur->sk_end - 1;
-				if (	top->ex_type == EX_CALL 
-					 || top->ex_type == EX_RETY 
-					 || top->ex_type == EX_RESC		
+				if (	top->ex_type == EX_CALL
+					 || top->ex_type == EX_RETY
+					 || top->ex_type == EX_RESC
 					 )
 				{
 					if ((top->ex_orig != egc_except_emnger_dtype) && (top->ex_orig != egc_exception_dtype || strcmp (top->ex_rout, "raise"))) {
@@ -3797,7 +3836,7 @@ rt_public void draise(long code, char *meaning, char *message)
 			eclass = vector_call->ex_orig;
 			reci_name = vector_call->ex_rout;
 		}
-		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
+		/* `is_ex_assert' is needed here, because `oraise' finally call this routine
 		 * to raise once exceptions, when `in_assertion' has already been reset.
 		 * Here we use "||" because when ever it is an assertion "draise" take it as assertion violation,
 		 * regarding `in_assertion' context.*/
@@ -3841,7 +3880,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	}
 
 	if (trace) {
-		/* `is_ex_assert' is needed here, because `oraise' finally call this routine 
+		/* `is_ex_assert' is needed here, because `oraise' finally call this routine
 		 * to raise once exceptions, when `in_assertion' has already been reset. */
 		if (in_assertion || is_ex_assert (code)) {
 			trace->ex_where = echrt;			/* Save routine in trace for exorig */
@@ -3853,8 +3892,8 @@ rt_public void draise(long code, char *meaning, char *message)
 		trace->ex_linenum = line_number;		/* Save line number in trace */
 		trace->ex_bpnested = bpnested_index;	/* Save breakable nested index in trace */
 	}
-	SIGRESUME;			/* End of critical section, dispatch queued signals */	
-	
+	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
 	make_exception (code, -1, -1, echtg, reci_name, Origin(eclass), "", "", -1, 0, 0);
 
 #ifndef NOHOOK
@@ -3865,7 +3904,7 @@ rt_public void draise(long code, char *meaning, char *message)
 	/* NOTREACHED */
 }
 
-rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool) 
+rt_public void ignore_contract_violation_once (EIF_BOOLEAN a_bool)
 /* Set if ignore contract violation? called by EXCEPTION_MANAGER */
 {
 	is_ignore_contract_violation_once = a_bool;
@@ -3883,7 +3922,7 @@ rt_private void make_exception (long except_code, int signal_code, int eno, cons
 #ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
-	
+
 	{
 				/* Make the dynamic type of exception here */
 		EIF_REFERENCE _reci, _tag, _eclass, _rf_routine, _rf_class, _trace;
@@ -4147,24 +4186,24 @@ rt_private int is_ex_ignored (int ex_code)
 rt_private int is_ex_assert (int ex_code)
 	/* Is exception of `ex_code' an assertion violation */
 {
-	return ((ex_code == EN_PRE)		|| 
-			(ex_code == EN_POST)	|| 
-			(ex_code == EN_CINV)	|| 
-			(ex_code == EN_CHECK)	|| 
+	return ((ex_code == EN_PRE)		||
+			(ex_code == EN_POST)	||
+			(ex_code == EN_CINV)	||
+			(ex_code == EN_CHECK)	||
 			(ex_code == EN_LINV));
 }
 
 rt_public void init_emnger (void)
 	/* Initialize once objects referred by the exception manager
-	 * Preallocate the string for trace in case it goes into critical session in which 
+	 * Preallocate the string for trace in case it goes into critical session in which
 	 * memory is not possibly allocated any more.
 	 */
 {
 	RT_GET_CONTEXT
 	EIF_BOOLEAN tr_status = eif_is_tracing_enabled();
-	
+
 		/* No need to create the global instance, when it has already been created by one thread. */
-	if (!except_mnger){	
+	if (!except_mnger){
 		except_mnger = RTLNSMART(egc_except_emnger_dtype);
 	}
 	ALLOC_SMART_STRING(ex_string,TRACE_SZ);
@@ -4172,7 +4211,7 @@ rt_public void init_emnger (void)
 	ALLOC_SMART_STRING(ex_buffer_1,TRACE_BUF_SZ);
 	ALLOC_SMART_STRING(ex_buffer_2,TRACE_BUF_SZ);
 #endif
-	
+
 #ifndef ENABLE_STEP_THROUGH
 	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
 #endif
@@ -4187,7 +4226,7 @@ rt_public void init_emnger (void)
 #endif
 }
 
-rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj) 
+rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj)
 	/* Dtype of `obj', with C level rescue to protect from second crash at trace printing. */
 {
 	EIF_GET_CONTEXT
@@ -4198,7 +4237,7 @@ rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj)
 
 	/* Do not print trace when trace print is possible to fail,
 	 * since once Dtype fails, trace printing always fails. */
-	print_history_table = 0; 
+	print_history_table = 0;
 
 	/* Recoding a pseudo execution vector in the Eiffel execution stack gives
 	 * us a hook for bactracking: the exception mechanism will honor the
@@ -4224,7 +4263,7 @@ rt_private EIF_TYPE_INDEX safe_Dtype (EIF_REFERENCE obj)
 	return result;
 }
 
-rt_public EIF_BOOLEAN eif_is_in_rescue (void)							
+rt_public EIF_BOOLEAN eif_is_in_rescue (void)
 	/* Is current execution during rescue?
 	 * We traverse the execution stack to find if there is a EX_RESC vector. */
 {

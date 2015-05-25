@@ -106,7 +106,6 @@ rt_shared void eif_cecil_init (void);
 #endif	/* EIF_THREADS */
 
 /* Function declarations */
-rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
 rt_public int eiflocate (EIF_OBJECT object, char *name);
 
@@ -142,22 +141,23 @@ rt_public void eifuvisex (void) {
  * Type checking
  */
 
-rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
-	/* Return type of `routine' defined in class of type `cid' */
-
+rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID ftype)
+	/* Return type of `routine' defined in class of type `ftype' */
+{
 	const struct cnode *sk;	/* Skeleton entry in system */
 	const char **n;	/* Pointer in cn_names array */
 	int nb_attr;	/* Number of attributes */
 	int i;
 	uint32 field_type;	/* for scanning type */
 	int l_result = EIF_NO_TYPE;
+	EIF_TYPE l_ftype = eif_decoded_type(ftype);
 
 	REQUIRE("attr_name not null", attr_name);
 
-	if (cid == EIF_NO_TYPE) {
+	if (l_ftype.id == INVALID_DTYPE) {
 		eif_panic ("Unknown dynamic type\n");	/* Check if dynamic exists */
 	} else {
-		sk = &System(To_dtype(cid_to_dftype(cid)));	/* Fetch skeleton entry */
+		sk = &System(To_dtype(l_ftype.id));	/* Fetch skeleton entry */
 		nb_attr = sk->cn_nbattr;	/* Number of attributes */
 
 
@@ -276,55 +276,58 @@ rt_shared EIF_TYPE_INDEX eif_sk_type_to_dtype (uint32 sk_type)
  * Object creation
  */
 
-rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
+rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID ftype)
 {
-	/* Create an instance of class 'cid', but does not call any creation
+	/* Create an instance of class 'ftype', but does not call any creation
 	 * routine. Return the address in the indirection table (access to the
 	 * real object done via a macro (objects are moving). Exceptions will
 	 * occur if the object cannot be created for some reason.
 	 */
 
 	EIF_REFERENCE object;					/* Eiffel object's physical address */
-	EIF_TYPE_INDEX dtype;						/* Dynamic type associated with class ID */
+	EIF_TYPE l_ftype = eif_decoded_type(ftype);
 
-	dtype = cid_to_dftype(cid);		/* Convert class ID to dynamic type */
-	if (dtype == INVALID_DTYPE)/* Was not a valid reference type */
+	if (l_ftype.id == INVALID_DTYPE) {
+			/* Was not a valid reference type */
 		return (EIF_OBJECT) 0;			/* No creation, return null pointer */
-
-	object = emalloc(dtype);		/* Create object */
-
-	return eif_protect(object);			/* Return the indirection pointer */
+	} else {
+		object = emalloc(l_ftype.id);		/* Create object */
+		return eif_protect(object);			/* Return the indirection pointer */
+	}
 }
 
 /*
  * Function pointers handling
  */
 
-rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID ftype)
 {
-	/* Look for the routine named 'routine' in the type 'cid'.
+	/* Look for the routine named 'routine' in the type 'ftype'.
 	 * Return a pointer to the routine if found, or the
 	 * null pointer if the routine does not exist.
 	 */
 
-	EIF_TYPE_INDEX dtype = To_dtype(cid_to_dftype(cid));		/* Compute dynamic type from class ID */
+	EIF_TYPE l_ftype;
 	const struct ctable *ptr_table;			/* H table holding function pointers */
 	EIF_REFERENCE_FUNCTION *ref;
 
-	if (cid == EIF_NO_TYPE)	/* No type id */
+	l_ftype = eif_decoded_type(ftype);
+	if (l_ftype.id == INVALID_DTYPE) {
+			/* No type id */
 		return (EIF_REFERENCE_FUNCTION) 0;
-
-	ptr_table = &Cecil(dtype);			/* Get associated H table */
-
-	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
-		/* If function is not found and visible exceptions are enabled, raise an exception. */
-	if (!ref) {
-		if (!eif_visible_is_off) {
-			eraise ("Unknown routine (visible?)", EN_PROG);
-		}
-		return NULL;
 	} else {
-		return *ref;	/* Return address of function. */
+		ptr_table = &Cecil(To_dtype(l_ftype.id));			/* Get associated H table */
+
+		ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
+			/* If function is not found and visible exceptions are enabled, raise an exception. */
+		if (!ref) {
+			if (!eif_visible_is_off) {
+				eraise ("Unknown routine (visible?)", EN_PROG);
+			}
+			return NULL;
+		} else {
+			return *ref;	/* Return address of function. */
+		}
 	}
 }
 
@@ -334,8 +337,13 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 
 rt_public EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object)
 {
-	/* Return type id of the direct reference "object" */
-	return Dftype (object);
+		/* Return type id of the direct reference "object" */
+	if (egc_is_experimental) {
+		return eif_encoded_type(eif_new_type(Dftype(object), ATTACHED_FLAG));
+	} else {
+		CHECK("Same type", Dftype(object) == eif_encoded_type(eif_new_type(Dftype(object), 0)));
+		return Dftype(object);
+	}
 }
 
 rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
@@ -344,36 +352,17 @@ rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 	 * Return the Type id of the specified object.
  	 */
 
-	return Dftype(eif_access(object));
+	return eif_type_by_reference(eif_access(object));
 }
 
-rt_public const char *eifname(EIF_TYPE_ID cid)
+rt_public const char *eifname(EIF_TYPE_ID ftype)
 {
-	/* Return the name of the class whose ID is cid. It is a pointer to
-	 * static data. For generic types, only the base name of the class
-	 * is returned.
-	 */
-
-
-	EIF_TYPE_INDEX dtype = To_dtype(cid_to_dftype(cid));		/* Convert to dynamic type */
-
-	if ((dtype == INVALID_DTYPE) || (cid == EIF_NO_TYPE))						/* Not a reference type */
-		return (char *) 0;
-
-	return System(dtype).cn_generator;	/* Pointer to static data */
-}
-
-rt_private EIF_TYPE_INDEX cid_to_dftype(EIF_TYPE_ID cid)
-{
-	/* Converts a class ID to a dynamic type. Returns -1 if the class ID is not
-	 * that of a reference type. Expanded types are ignored, of course, for the
-	 * purpose of dynamic type computation.
-	 */
-
-	if ((uint32) cid & SK_SIMPLE)		/* Type is a simple type */
-		return INVALID_DTYPE;						/* No valid dynamic type */
-
-	return (EIF_TYPE_INDEX) (cid & SK_DTYPE);		/* Return the dynamic type part */
+	EIF_TYPE l_ftype = eif_decoded_type(ftype);
+	if (l_ftype.id == INVALID_DTYPE) {
+		return NULL;
+	} else {
+		return eif_typename(l_ftype);
+	}
 }
 
 /*

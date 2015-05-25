@@ -394,20 +394,20 @@ feature -- Code generation
 			l_buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			l_buffer.put_string ("};")
 			l_buffer.put_new_line
-			l_buffer.put_string ("EIF_TYPE_INDEX typres")
+			l_buffer.put_string ("EIF_TYPE typres")
 			l_buffer.put_natural_32 (a_level)
 			l_buffer.put_character (';')
 			if l_can_save_result then
 				l_buffer.put_new_line
 				l_cache_name := "typcache";
 				l_cache_name.append_natural_32 (a_level)
-				l_buffer.put_string ("static EIF_TYPE_INDEX ")
+				l_buffer.put_string ("static EIF_TYPE ")
 				l_buffer.put_string (l_cache_name)
-				l_buffer.put_string (" = INVALID_DTYPE;")
+				l_buffer.put_string (" = {INVALID_DTYPE, 0};")
 			end
 
 			if use_init then
-				-- Reset counter
+					-- Reset counter
 				idx_cnt.set_value (0)
 				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, context_class_type.type, a_level)
 			end
@@ -419,8 +419,7 @@ feature -- Code generation
 			if l_can_save_result then
 				l_buffer.put_four_character (' ', '=', ' ', '(')
 				l_buffer.put_string (l_cache_name)
-				l_buffer.put_four_character (' ', '!', '=', ' ')
-				l_buffer.put_string ("INVALID_DTYPE ? ")
+				l_buffer.put_string (".id != INVALID_DTYPE ? ")
 				l_buffer.put_string (l_cache_name)
 				l_buffer.put_four_character (' ', ':', ' ', '(')
 				l_buffer.put_string (l_cache_name)
@@ -2173,30 +2172,17 @@ feature -- Access
 				buf.put_integer (a_pos)
 				buf.put_two_character (',', ' ')
 				if l_optimized then
-					if a_type.is_attached then
-						buf.put_string ("eif_attached_type(")
-						byte_code.feature_origin (buf)
-						buf.put_character (')')
-					elseif a_type.has_detachable_mark then
-						buf.put_string ("eif_non_attached_type(")
-						byte_code.feature_origin (buf)
-						buf.put_character (')')
-					else
-						byte_code.feature_origin (buf)
-					end
-					buf.put_two_character (')', ';')
+					buf.put_string ("eif_new_type(")
+					byte_code.feature_origin (buf)
+					buf.put_two_character (',', ' ')
+						-- Discard the upper bits as `eif_new_type' only accepts the lower part.				
+					buf.put_hex_natural_16 (a_type.annotation_flags & 0x00FF)
+					buf.put_five_character (')', ',', '0', ')', ';')
 				else
-					if a_type.is_attached then
-						buf.put_string ("eif_attached_type(")
-						l_info.generate_type_id (buf, final_mode, 0)
-						buf.put_character (')')
-					elseif a_type.has_detachable_mark then
-						buf.put_string ("eif_non_attached_type(")
-						l_info.generate_type_id (buf, final_mode, 0)
-						buf.put_character (')')
-					else
-						l_info.generate_type_id (buf, final_mode, 0)
-					end
+					l_info.generate_type (buf, final_mode, 0)
+					buf.put_two_character (',', ' ')
+							-- Discard the upper bits as `RTCC' only accepts the lower part.				
+					buf.put_hex_natural_16 (a_type.annotation_flags & 0x00FF)
 					buf.put_two_character (')', ';')
 					l_info.generate_end (buf)
 				end
@@ -2233,11 +2219,11 @@ feature -- Access
 			buf.put_two_character (',', ' ')
 			buf.put_integer (a_pos)
 			buf.put_two_character (',', ' ')
-			buf.put_string ("eif_gen_param_id(Dftype(")
+			buf.put_string ("eif_gen_param(Dftype(")
 			a_tuple_register.print_register
 			buf.put_three_character (')', ',', ' ')
 			buf.put_integer (a_pos)
-			buf.put_three_character (')', ')', ';')
+			buf.put_five_character (')', ',', '0', ')', ';')
 		end
 
 	make_catcall_check (ba: BYTE_ARRAY; a_type: TYPE_A; a_pos: INTEGER; a_like_current_optimization_ok: BOOLEAN)
@@ -2266,19 +2252,8 @@ feature -- Access
 				end
 				ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
-					-- We sometime need to convert a type to either it associated attached/non-attached
-					-- version. First boolean is to figure out if there is an action to be taken, the
-					-- second which action.
-				if a_type.is_attached then
-					ba.append_boolean (True)
-					ba.append_boolean (True)
-				elseif a_type.has_detachable_mark then
-					ba.append_boolean (True)
-					ba.append_boolean (False)
-				else
-					ba.append_boolean (False)
-				end
-
+					-- Generate annotations.
+				ba.append_natural_16 (a_type.annotation_flags & 0x00FF)
 				ba.append_type_id (class_type.static_type_id)
 				l_name := current_feature.feature_name
 				ba.append_integer (l_name.count)
@@ -2691,7 +2666,7 @@ feature -- External features
 				i.generate_gen_type_conversion (0)
 				b.put_new_line
 				b.put_string ("if (RTAT(")
-				i.generate_type_id (b, final_mode, 0)
+				i.generate_type (b, final_mode, 0)
 				b.put_string (")) {RTEC(EN_FAIL);}")
 				i.generate_end (b)
 				b.generate_block_close

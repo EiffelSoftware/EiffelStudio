@@ -52,8 +52,8 @@ extern "C" {
  * Function declarations 
  */
 
-RT_LNK EIF_REFERENCE  c_generator_of_type(EIF_INTEGER dftype); /* Called by `generator' from ANY */
-#define c_generator(obj)	c_generator_of_type (Dftype (obj))
+RT_LNK EIF_REFERENCE  c_generator_of_type(EIF_TYPE ftype); /* Called by `generator' from ANY */
+#define c_generator(obj)	c_generator_of_type (eif_object_type(obj))
 
 RT_LNK EIF_REFERENCE c_tagged_out(EIF_REFERENCE object);			/* Called by `tagged_out' from ANY */
 RT_LNK char *eif_out(EIF_REFERENCE object);		/* Build the output of an EIF_REFERENCE */

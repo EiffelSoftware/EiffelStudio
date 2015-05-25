@@ -225,7 +225,7 @@ feature -- Values
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
 
-	catcall_data: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER] assign set_catcall_data
+	catcall_data: TUPLE [pos, expected_id, expected_annotations, actual_id, actual_annotations: INTEGER]
 			-- Information related to last catcall warning
 
 	exception_occurred: BOOLEAN
@@ -829,7 +829,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

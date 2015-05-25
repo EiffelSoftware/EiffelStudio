@@ -77,7 +77,7 @@ feature -- Generic conformance
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
 			-- Id of a `like xxx'.
 		do
-			Result := {SHARED_GEN_CONF_LEVEL}.detachable_none_type
+			Result := {SHARED_GEN_CONF_LEVEL}.none_type
 		end
 
 feature -- IL code generation
@@ -94,7 +94,7 @@ feature {COMPILER_EXPORTER}
 	create_info: CREATE_TYPE
 			-- Byte code information for entity type creation
 		do
-			create Result.make (as_attachment_mark_free)
+			create Result.make (Current)
 		end
 
 	c_type: REFERENCE_I
@@ -132,7 +132,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

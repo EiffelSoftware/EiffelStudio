@@ -166,9 +166,9 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
-			buffer.put_string ("RTLNSMART(eif_non_attached_type(")
+			buffer.put_string ("RTLNSMART(")
 			generate_type_id (buffer, context.final_mode, 0)
-			buffer.put_two_character (')', ')')
+			buffer.put_character (')')
 		end
 
 	analyze
@@ -177,7 +177,7 @@ feature -- C code generation
 			qualifier_creation.analyze
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate the creation type id of the feature.
 		local
 			table: POLY_TABLE [ENTRY]
@@ -193,7 +193,7 @@ feature -- C code generation
 					-- version anywhere.
 					-- Create anything - cannot be called anyway
 
-					buffer.put_integer (0)
+					buffer.put_string ("eif_new_type(INVALID_DTYPE, 0)")
 				elseif table.has_one_type then
 						-- There is a table, but with only one type
 					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
@@ -202,13 +202,18 @@ feature -- C code generation
 						buffer.put_string ("typres")
 						buffer.put_natural_32 (a_level)
 					elseif attached {FORMAL_A} l_type as l_formal then
-						buffer.put_string ("eif_gen_param_id(")
+						buffer.put_string ("eif_gen_param(")
 						qualifier_creation.generate_type_id (buffer, final_mode, a_level + 1)
 						buffer.put_two_character (',', ' ')
 						buffer.put_integer (l_formal.position)
 						buffer.put_character (')')
 					else
+						buffer.put_string ("eif_new_type(")
 						buffer.put_type_id (table.first.feature_type_id)
+						buffer.put_two_character (',', ' ')
+							-- Discard the upper bits as `eif_new_type' only accepts the lower part.
+						buffer.put_natural_16 (table.first.type.annotation_flags & 0x00FF)
+						buffer.put_character (')')
 					end
 				else
 						-- Attribute is polymorphic
@@ -435,11 +440,11 @@ feature -- Genericity
 						dummy := idx_cnt.next
 					end
 				else
-					buffer.put_string ("0,")
+					buffer.put_string ("0,0,")
 					dummy := idx_cnt.next
 				end
 			else
-				buffer.put_string ("0,")
+				buffer.put_string ("0,0,")
 				dummy := idx_cnt.next
 			end
 		end
@@ -451,7 +456,6 @@ feature -- Genericity
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
 			l_type: TYPE_A
-			is_optimized: BOOLEAN
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
@@ -462,7 +466,6 @@ feature -- Genericity
 						-- Create anything - cannot be called anyway
 					dummy := idx_cnt.next
 					dummy := idx_cnt.next
-					is_optimized := True
 				elseif table.has_one_type then
 					l_type := table.first.type.instantiated_in (qualifier).deep_actual_type
 					if l_type.has_generics or else l_type.is_formal then
@@ -470,22 +473,11 @@ feature -- Genericity
 					else
 						dummy := idx_cnt.next
 					end
-					is_optimized := True
+				else
+					generate_entry_inititalization (buffer, final_mode, idx_cnt, a_level)
 				end
-			end
-			if not is_optimized then
-				generate_start (buffer)
-				generate_gen_type_conversion (a_level + 1)
-				buffer.put_new_line
-				buffer.put_string ("typarr")
-				buffer.put_natural_32 (a_level)
-				buffer.put_character ('[')
-				buffer.put_integer (idx_cnt.value)
-				buffer.put_string ("] = ")
-				generate_type_id (buffer, final_mode, a_level + 1)
-				buffer.put_character (';')
-				generate_end (buffer)
-				dummy := idx_cnt.next
+			else
+				generate_entry_inititalization (buffer, final_mode, idx_cnt, a_level)
 			end
 		end
 
@@ -528,7 +520,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

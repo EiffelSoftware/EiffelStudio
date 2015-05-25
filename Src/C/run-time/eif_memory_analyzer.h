@@ -46,7 +46,7 @@
 extern "C" {
 #endif
 
-RT_LNK EIF_REFERENCE eif_once_objects_of_result_type(EIF_INTEGER); /* Special of all once objects held by the system */
+RT_LNK EIF_REFERENCE eif_once_objects_of_result_type(EIF_TYPE); /* Special of all once objects held by the system */
 
 #ifdef __cplusplus
 }

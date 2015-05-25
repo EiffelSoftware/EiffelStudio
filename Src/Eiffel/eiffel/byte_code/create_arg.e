@@ -52,14 +52,14 @@ feature -- C code generation
 			associated_create_info.analyze
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type. Take the dynamic type of the argument
 			-- if possible, otherwise take its static type.
 		do
 			buffer.put_string ("RTCA(arg")
 			buffer.put_integer (position)
 			buffer.put_string ({C_CONST}.comma_space)
-			associated_create_info.generate_type_id (buffer, final_mode, a_level)
+			associated_create_info.generate_type (buffer, final_mode, a_level)
 			buffer.put_character (')')
 		end
 
@@ -134,6 +134,8 @@ feature -- Generic conformance
 				-- If we are here, it means that it is known that the type cannot have
 				-- sublevel, thus the value of `0'. This is usually the case when describing
 				-- an attribute type in eskelet.c
+			generate_type_annotations (buffer, final_mode, 0)
+			buffer.put_character (',')
 			generate_type_id (buffer, final_mode, 0)
 			buffer.put_character (',')
 		end
@@ -151,26 +153,15 @@ feature -- Generic conformance
 		local
 			dummy : INTEGER
 		do
-			buffer.put_string ("0,")
+				-- Placeholder for annotations and id.
+			buffer.put_string ("0,0,")
+			dummy := idx_cnt.next
 			dummy := idx_cnt.next
 		end
 
 	generate_cid_init (buffer : GENERATION_BUFFER; final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
-		local
-			dummy : INTEGER
 		do
-			generate_start (buffer)
-			generate_gen_type_conversion (a_level + 1)
-			buffer.put_new_line
-			buffer.put_string ("typarr")
-			buffer.put_natural_32 (a_level)
-			buffer.put_character ('[')
-			buffer.put_integer (idx_cnt.value)
-			buffer.put_four_character (']', ' ', '=', ' ')
-			generate_type_id (buffer, final_mode, a_level + 1)
-			buffer.put_character (';')
-			generate_end (buffer)
-			dummy := idx_cnt.next
+			generate_entry_inititalization (buffer, final_mode, idx_cnt, a_level)
 		end
 
 feature -- Type information
@@ -194,11 +185,7 @@ feature -- Type information
 		do
 			l_type := argument_type
 			if l_type.is_like then
-				if l_type.is_like_current then
-					create {CREATE_CURRENT} Result
-				else
-					Result := l_type.create_info
-				end
+				Result := l_type.create_info
 			elseif attached {FORMAL_A} l_type as l_formal then
 				create {CREATE_FORMAL_TYPE} Result.make (l_formal)
 			else
@@ -209,7 +196,7 @@ feature -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

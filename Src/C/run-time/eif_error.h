@@ -91,6 +91,8 @@ extern "C" {
 #define	T_CANNOT_YIELD							0x10bL
 #define T_NO_THREAD_WITH_ID						0x10cL
 
+#define T_INVALID_ANNOTATIONS					0x201L
+
 /* As a special case, an I/O error is raised when a system call which is
  * I/O bound fails.
  * Obsolete: use `eraise (NULL, EN_IO)' instead

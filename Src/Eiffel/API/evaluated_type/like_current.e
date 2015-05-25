@@ -26,7 +26,7 @@ inherit
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
 			is_class_valid, skeleton_adapted_in, good_generics, has_like_current,
-			set_frozen_mark
+			set_frozen_mark, initialize_info, annotation_flags
 		end
 
 create
@@ -309,6 +309,22 @@ feature -- IL code generation
 		end
 
 feature -- Generic conformance
+
+	annotation_flags: NATURAL_16
+			-- <Precursor>
+			--| Unlike `{LIKE_TYPE_A}.annotation_flags', the attachment mark is held by the
+			--| type itself.
+		do
+				-- Only if a type is not expanded do we need to generate the
+				-- attached annotation since by default expanded implies attached.
+			if is_attached and not is_expanded then
+				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+			end
+
+			if is_separate then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
+			end
+		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
 			-- Id of a `like xxx'.
@@ -630,10 +646,22 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	create_info, shared_create_info: CREATE_CURRENT
-			-- Byte code information for entity type creation
+	create_info: CREATE_CURRENT
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
+	shared_create_info: CREATE_CURRENT
+			-- <Precursor>
 		once
-			create Result
+			create Result.make (Current)
+		end
+
+	initialize_info (an_info: like shared_create_info)
+			-- Initialize `an_info' using current data.
+		do
+			an_info.make (Current)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
@@ -654,7 +682,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

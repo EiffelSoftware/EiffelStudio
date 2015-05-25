@@ -2079,19 +2079,11 @@ feature {NONE} -- Visitors
 			l_type_creator.make_byte_code (ba)
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
-				-- Because `l_type_creator' discards the attachment mark if any, we need
-				-- to take it into account to create the proper type.
-				-- First boolean is to figure out if there is an action to be taken, the
-				-- second which action.
-			if l_type_type.is_attached then
-				ba.append_boolean (True)
-				ba.append_boolean (True)
-			elseif l_type_type.has_detachable_mark then
-				ba.append_boolean (True)
-				ba.append_boolean (False)
-			else
-				ba.append_boolean (False)
-			end
+				-- Add annotations, if any, of the declaration of the manifest type.
+				-- For example, we could have `detachable like x', the above code only
+				-- generates the type of `like x' and does not include the attachment mark.
+				-- Discard the upper bits as `RTLNTY2' only accepts the lower part.
+			ba.append_natural_16 (l_type_type.annotation_flags & 0x00FF)
 		end
 
 	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])

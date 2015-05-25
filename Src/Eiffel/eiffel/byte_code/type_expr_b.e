@@ -154,24 +154,14 @@ feature -- C code generation
 			l_type_creator.generate_gen_type_conversion (0)
 			buf.put_new_line
 			register.print_register
-			buf.put_string (" = RTLNTY(")
-				-- Because `l_type_creator' discards the attachment mark if any, we need
-				-- to take it into account to create the proper type.
-			if not l_type_type.is_expanded then
-				if l_type_type.is_attached then
-					buf.put_string ("eif_attached_type(")
-					l_type_creator.generate_type_id (buf, context.final_mode, 0)
-					buf.put_character (')')
-				elseif l_type_type.has_detachable_mark then
-					buf.put_string ("eif_non_attached_type(")
-					l_type_creator.generate_type_id (buf, context.final_mode, 0)
-					buf.put_character (')')
-				else
-					l_type_creator.generate_type_id (buf, context.final_mode, 0)
-				end
-			else
-				l_type_creator.generate_type_id (buf, context.final_mode, 0)
-			end
+			buf.put_string (" = RTLNTY2(")
+			l_type_creator.generate_type (buf, context.final_mode, 0)
+			buf.put_two_character (',', ' ');
+				-- Add annotations, if any, of the declaration of the manifest type.
+				-- For example, we could have `detachable like x', the above code only
+				-- generates the type of `like x' and does not include the attachment mark.
+				-- Discard the upper bits as `RTLNTY2' only accepts the lower part.
+			buf.put_hex_natural_16 (l_type_type.annotation_flags & 0x00FF)
 			buf.put_two_character (')', ';')
 			l_type_creator.generate_end (buf)
 		end
@@ -199,7 +189,7 @@ invariant
 	type_data_generics_count: type_data.generics.count = 1
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

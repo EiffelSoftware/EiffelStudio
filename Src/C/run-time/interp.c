@@ -220,9 +220,10 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);		/* Get a compound type id */
+rt_private EIF_TYPE rt_get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
+rt_private EIF_TYPE get_creation_type(void);		/* Get a creation type id */
 rt_shared EIF_REFERENCE rt_melted_arg (int a_pos);
-rt_private EIF_TYPE_INDEX get_creation_type(int for_creation);		/* Get a creation type id */
 
 /* Interpreter interface */
 rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
@@ -557,6 +558,7 @@ rt_private void interpret(int flag, int where)
 	long volatile offset_n = 0;		/* Nested Offset for jumps and al */
 	unsigned char * volatile string;		/* Strings for assertions tag */
 	EIF_TYPE_INDEX volatile type;			/* Often used to hold type values */
+	EIF_TYPE volatile l_creation_type;		/* To hold creation type. */
 	uint32 sk_type;
 	int volatile saved_assertion;
 	EIF_NATURAL_32 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
@@ -1063,27 +1065,18 @@ rt_private void interpret(int flag, int where)
 
 	case BC_CATCALL:
 		{
-			EIF_TYPE_INDEX l_expected_dftype;
-			EIF_TYPE_INDEX l_written_dtype;
+			EIF_TYPE_INDEX l_written_dtype, l_annotations;
 			int l_pos;
 
-			l_expected_dftype = get_creation_type(0);
-				/* Possibly adapt type to match the actual argument signature since the
-				 * above `get_creation_type' has been generated and discard the attachment mark. */
-			if (*IC++) {
-				if (*IC++) {
-					l_expected_dftype = eif_attached_type (l_expected_dftype);
-				} else {
-					l_expected_dftype = eif_non_attached_type (l_expected_dftype);
-				}
-			}
+			l_creation_type = get_creation_type();
+			l_annotations = get_int16(&IC);
 			l_written_dtype = get_int16(&IC);
 			string = get_string8(&IC, get_int32(&IC));
 			l_pos = get_int32(&IC);
 
 			last = otop();
 			CHECK("last not null", last);
-			RTCC(otop()->it_ref, l_written_dtype, (char *) string, l_pos, l_expected_dftype);
+			RTCC(otop()->it_ref, l_written_dtype, (char *) string, l_pos, l_creation_type, l_annotations);
 		}
 		break;
 
@@ -1091,6 +1084,7 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_TYPED_VALUE *l_elem;
 			EIF_TYPE_INDEX l_written_dtype;
+			EIF_TYPE l_dftype;
 			int l_pos;
 
 				/* Get the routine were the TUPLE assignment is done and at which position. */
@@ -1106,7 +1100,8 @@ rt_private void interpret(int flag, int where)
 			opush (l_elem);
 			CHECK("last not null", last);
 
-			RTCC(l_elem->it_ref, l_written_dtype, (char *) string, l_pos, eif_gen_param_id(Dftype(last->it_ref), l_pos));
+			l_dftype = eif_gen_param(Dftype(last->it_ref), l_pos);
+			RTCC(l_elem->it_ref, l_written_dtype, (char *) string, l_pos, l_dftype, 0);
 		}
 		break;
 
@@ -1680,12 +1675,13 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RREVERSE\n");
 #endif
-		type = get_creation_type(1);			/* Get the reverse type */
+		l_creation_type = get_creation_type();			/* Get the reverse type */
 		last = otop();
 
-		if (!RTRA(type, last->it_ref))
-			last->it_ref = (EIF_REFERENCE) 0;
-		reverse_local (iresult, type);
+		if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
+			last->it_ref = NULL;
+		}
+		reverse_local (iresult, l_creation_type.id);
 
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
@@ -1705,13 +1701,14 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LREVERSE\n");
 #endif
 		code = get_int16(&IC);			/* Get local number */
-		type = get_creation_type (1);
+		l_creation_type = get_creation_type ();
 		last = otop();
 		CHECK("last not null", last);
 
-		if (!RTRA(type, last->it_ref))
-			last->it_ref = (EIF_REFERENCE) 0;
-		reverse_local (loc(code), type);
+		if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
+			last->it_ref = NULL;
+		}
+		reverse_local (loc(code), l_creation_type.id);
 		break;
 
 	/*
@@ -1723,17 +1720,15 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			uint32 meta;
-			EIF_REFERENCE l_ref;
 
 			routine_id = get_int32(&IC);		/* Get the routine ID */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
-			type = get_creation_type (1);
+			l_creation_type = get_creation_type ();
 			last = otop();
 			CHECK("last not null", last);
-			l_ref = last->it_ref;
 
-			if (!RTRA(type, l_ref)) {
-				last->it_ref = (EIF_REFERENCE) 0;
+			if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
+				last->it_ref = NULL;
 			}
 			reverse_attribute (RTWA(routine_id, icur_dtype), meta);
 		}
@@ -1747,19 +1742,18 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_OBJECT_TEST\n");
 #endif
 		code = get_int16(&IC);			/* Get local number */
-		type = get_creation_type (1);
+		l_creation_type = get_creation_type ();
 		last = otop();
 		CHECK("last not null", last);
 
-		if (RTRA(type, last->it_ref)) {
+		if ((last->it_ref) && eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
 				/* Perform reattachment. */
-			reverse_local (loc(code), type);
+			reverse_local (loc(code), l_creation_type.id);
 				/* Put True on the stack. */
 			last = iget();
 			last->type = SK_BOOL;
 			last->it_char = EIF_TRUE;
-		}
-		else {
+		} else {
 				/* Replace expression value with False. */
 			last->type = SK_BOOL;
 			last->it_char = EIF_FALSE;
@@ -1767,24 +1761,17 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	/*
-	 * Object test to an object test local.
+	 * Find out if an attribute type is declared attached at runtime.
 	 */
-	case BC_IS_ATTACHED:
-#ifdef DEBUG
-		dprintf(2)("BC_IS_ATTACHED\n");
-#endif
-		type = get_creation_type (0);
+	case BC_IS_ATTACHED_ATTRIBUTE:
+
+			/* Continue with attribute access based on the routine ID. */
+		routine_id = get_int32(&IC);				/* Get the routine ID */
+
 		last = iget();
 		last->type = SK_BOOL;
 
-		if (RTAT(type)) {
-				/* Put True on the stack. */
-			last->it_char = EIF_TRUE;
-		}
-		else {
-				/* Put True on the stack. */
-			last->it_char = EIF_FALSE;
-		}
+		last->it_char = eif_is_attached_type2(wtype_gen (routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref)));
 		break;
 
 	/*
@@ -2231,7 +2218,7 @@ rt_private void interpret(int flag, int where)
 			char need_push = *IC++;		/* If there is a creation routine to call
 							   we need to push twice the created object */
 
-		type = get_creation_type (1);
+		l_creation_type = get_creation_type ();
 
 		/* Creation of a new object. We know there will be no call to a
 		 * creation routine, so it's useless to resynchronize registers--RAM.
@@ -2243,17 +2230,10 @@ rt_private void interpret(int flag, int where)
 			stagval = tagval;
 			if (is_type_creation) {
 					/* Create the proper type instance. */
-				if (*IC++) {
-					if (*IC++) {
-						new_obj = RTLNTY(eif_attached_type (type));
-					} else {
-						new_obj = RTLNTY(eif_non_attached_type (type));
-					}
-				} else {
-					new_obj = RTLNTY(type);
-				}
+				EIF_TYPE_INDEX l_annotations = get_int16(&IC);
+				new_obj = RTLNTY2(l_creation_type, l_annotations);
 			} else {
-				new_obj = RTLNSMART(type);	/* Create new object */
+				new_obj = RTLNSMART(l_creation_type.id);	/* Create new object */
 			}
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
@@ -2291,7 +2271,7 @@ rt_private void interpret(int flag, int where)
 
 			is_make_filled = EIF_TEST(*IC++);
 			is_make_empty = EIF_TEST(*IC++);
-			type = get_creation_type (1);
+			l_creation_type = get_creation_type ();
 
 			is_expanded = EIF_TEST(*IC++);
 
@@ -2339,7 +2319,7 @@ rt_private void interpret(int flag, int where)
 				 * the interpreter. */
 			stagval = tagval;
 			OLD_IC = IC;
-			new_obj = special_malloc (flags, type, nb, elem_size, is_basic); /* Create new object */
+			new_obj = special_malloc (flags, l_creation_type.id, nb, elem_size, is_basic); /* Create new object */
 
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
@@ -4083,6 +4063,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 	while (p_type != TERMINATOR) {
 			/* Call to potential parent invariant */
 		irecursive_chkinv(p_type, obj, scur, stop, where);
+
 			/* Iterate `cn_parents' until we reach the next parent or the end. */
 		while ((p_type != PARENT_TYPE_SEPARATOR) && (p_type != TERMINATOR)) {
 			p_type = *cn_parents++;
@@ -5592,7 +5573,7 @@ rt_shared EIF_REFERENCE rt_melted_arg (int a_pos) {
 	return arg(a_pos)->it_ref;
 }
 
-rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
+rt_private EIF_TYPE rt_get_compound_id (EIF_REFERENCE Current)
 	/* Get array of short ints and convert it to a compound id. */
 {
 	EIF_GET_CONTEXT
@@ -5610,23 +5591,28 @@ rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
 
 		/* If not generic then return dtype */
 	if (cnt <= 1) {
+		EIF_TYPE result;
 			/* Optimization type is in the first entry of `gen_types'. */
-		return gen_types [0];
+		result.id = gen_types[0];
+		result.annotations = 0;
+		return result;
 	} else {
 		return eif_compound_id (Dftype (Current), gen_types);
 	}
 }
 
-rt_private EIF_TYPE_INDEX get_creation_type (int for_creation)
+rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE Current)
+	/* Get array of short ints and convert it to a compound id. */
+{
+	return rt_get_compound_id(Current).id;
+}
+
+rt_private EIF_TYPE get_creation_type (void)
 {
 	RT_GET_CONTEXT
-	EIF_TYPE_INDEX type;
-	type = get_compound_id (icurrent->it_ref);
-	if (for_creation) {
-		return eif_non_attached_type(type);
-	} else {
-		return type;
-	}
+	EIF_TYPE type;
+	type = rt_get_compound_id (icurrent->it_ref);
+	return type;
 }
 
 /*

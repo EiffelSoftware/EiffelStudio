@@ -65,6 +65,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_globals.h"
 #include "rt_globals_access.h"
 #include "rt_struct.h"
+#include "rt_hashin.h"
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "rt_object_id.h"	/* For the object id and separate stacks */
 #endif
@@ -1023,7 +1024,7 @@ rt_public EIF_REFERENCE special_malloc (uint16 flags, EIF_TYPE_INDEX dftype, EIF
 	if (flags & EO_COMP) {
 			/* It is a composite object, that is to say a special of expanded,
 			 * we need to initialize every entry properly. */
-		result = sp_init (result, eif_gen_param_id(dftype, 1), 0, nb - 1);
+		result = sp_init (result, eif_gen_param(dftype, 1).id, 0, nb - 1);
 	}
 	return result;
 }
@@ -1066,7 +1067,8 @@ rt_public EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype)
 /*
 doc:	<routine name="eif_type_malloc" return_type="EIF_REFERENCE" export="public">
 doc:		<summary>Create a new TYPE [like ftype] instance for type `ftype' if it was not yet created, otherwise return an already existing one. Objects are created as old object since once allocated they cannot be garbage collected.</summary>
-doc:		<param name="ftype" type="EIF_TYPE_INDEX">Dynamic type of the type for which we want to create the `TYPE [like ftype]' instance to return.</param>
+doc:		<param name="ftype" type="EIF_TYPE">Dynamic type of the type for which we want to create the `TYPE [like ftype]' instance to return.</param>
+doc:		<param name="annotations" type="EIF_TYPE_INDEX">Annotations if in front of `ftype'. Used for declaring something like "detachable like x", then "like x" is described by `ftype' and "detachable" by annotations.</param>
 doc:		<return>A TYPE instance for `ftype' if successful, otherwise throw an exception.</return>
 doc:		<exception>"No more memory" when it fails</exception>
 doc:		<thread_safety>Safe</thread_safety>
@@ -1074,25 +1076,18 @@ doc:		<synchronization>Through `eif_type_set_mutex'</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
+rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE ftype, EIF_TYPE_INDEX annotations)
 {
 	RT_GET_CONTEXT
-	EIF_REFERENCE result;
+	EIF_REFERENCE *result;
 	rt_uint_ptr l_array_index;
 
-	REQUIRE("Valid actual generic type", (ftype <= MAX_DTYPE) || (RT_IS_NONE_TYPE(ftype)));
+	REQUIRE("Valid actual generic type", (ftype.id <= MAX_DTYPE) || (RT_CONF_IS_NONE_TYPE(ftype.id)));
 
-		/* The actual offset in the `rt_type_set' array is increased by '2' so that
-		 * we can store TYPE [detachable NONE] and TYPE [attached NONE] at index `0' and `1'. */
-	if (!RT_IS_NONE_TYPE(ftype)) {
-		l_array_index = ftype + 2;
-	} else {
-		if (ftype == DETACHABLE_NONE_TYPE) {
-			l_array_index = 0;
-		} else {
-			l_array_index = 1;
-		}
-	}
+		/* We use the encoded version of the type to build the search key in `rt_type_set'.
+		 * We add +1 because our hash-table implementation does not handle 0 for the key. */
+	ftype.annotations = rt_merged_annotation (annotations, ftype.annotations);
+	l_array_index = eif_encoded_type (ftype) + 1;
 
 		/* Synchronization required to access `rt_type_set'. */
 
@@ -1105,33 +1100,29 @@ rt_public EIF_REFERENCE eif_type_malloc (EIF_TYPE_INDEX ftype)
  	EIF_EXIT_C;
  	RTGC;
 
-	if (rt_type_set_count > l_array_index) {
-		result = rt_type_set [l_array_index];
-		if (!result) {
-			result = emalloc_as_old(eif_typeof_type_of (ftype));
-			CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) || (result > sc_from.sc_top));
-			CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) || (result > sc_to.sc_top));
-			rt_type_set [l_array_index] = result;
-		}
-	} else {
-		rt_uint_ptr old_count = rt_type_set_count;
-			/* Ensures we allocate at least 2 entries. */
-		rt_uint_ptr new_count = (l_array_index == 0 ? 2 : l_array_index * 2);
-		if (rt_type_set) {
-			rt_type_set = (EIF_REFERENCE *) crealloc(rt_type_set, sizeof(EIF_REFERENCE) * new_count);
+	result = (EIF_REFERENCE *) ht_first (&rt_type_set, l_array_index);
+	if (!result) {
+			/* Per documentation, the table is full and we could not find the key `l_array_index'. */
+		if (ht_resize (&rt_type_set, rt_type_set.h_capacity + rt_type_set.h_capacity / 2)) {
+			enomem();
 		} else {
-			rt_type_set = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * new_count);
+				/* We reiterate the lookup in the resized table. */
+			result = (EIF_REFERENCE *) ht_first (&rt_type_set, l_array_index);
+			CHECK("has_result", result);
 		}
-		memset(rt_type_set + old_count, 0, sizeof(EIF_REFERENCE) * (new_count - old_count));
-		result = emalloc_as_old(eif_typeof_type_of (ftype));
-		CHECK("Not in scavenge `from' zone", (result < sc_from.sc_arena) || (result > sc_from.sc_top));
-		CHECK("Not in scavenge `to' zone", (result < sc_to.sc_arena) || (result > sc_to.sc_top));
-		rt_type_set [l_array_index] = result;
-		rt_type_set_count = new_count;
+	}
+	CHECK("has_result", result);
+	if (!*result) {
+			/* TYPE instance was not yet computed. We compute it and store it immediately
+			 * in location pointed by `result'. This is the beauty of using `ht_first' as we 
+			 * avoid a second lookup. */
+		*result = emalloc_as_old(rt_typeof_type_of (ftype));
+		CHECK("Not in scavenge `from' zone", (*result < sc_from.sc_arena) || (*result > sc_from.sc_top));
+		CHECK("Not in scavenge `to' zone", (*result < sc_to.sc_arena) || (*result > sc_to.sc_top));
 	}
 
 	GC_THREAD_PROTECT(TYPE_SET_MUTEX_UNLOCK);
-	return result;
+	return *result;
 }
 
 /*
@@ -1499,7 +1490,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 	if (need_expanded_initialization) {
 	   		/* Case of a special object of expanded structures. */
 			/* Initialize remaining items. */
-		object = sp_init(object, eif_gen_param_id (Dftype(object), 1), count, nbitems - 1);
+		object = sp_init(object, eif_gen_param (Dftype(object), 1).id, count, nbitems - 1);
 	}
 
 #ifdef ISE_GC
@@ -1546,7 +1537,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 
 /*
 doc:	<routine name="cmalloc" return_type="void *" export="public">
-doc:		<summary>Memory allocation for a C object. This is the same as the traditional malloc routine, excepted that the memory management is done by the Eiffel run time, so Eiffel keeps a kind of control over this memory. Memory is `zeroed'.</summary>
+doc:		<summary>Memory allocation for a C object. This is the same as the traditional malloc routine, excepted that the memory management is done by the Eiffel run time, so Eiffel keeps a kind of control over this memory.</summary>
 doc:		<param name="nbytes" type="size_t">Number of bytes to allocated.</param>
 doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
 doc:		<thread_safety>Safe</thread_safety>

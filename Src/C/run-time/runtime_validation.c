@@ -126,9 +126,16 @@ static struct desc_info desc_35[] = {
 int main(int argc, char **argv)
 {
 	struct eif_ex_type t3;
+	int val;
+
+	val = (sizeof(EIF_TYPE) != sizeof(EIF_ENCODED_TYPE));
+	if (val) {
+			/* Runtime cannot be compiled as we made that strong assumption. Manual handling
+			 * is required. */
+		exit (1);
+	}
 
 	print_info();
-
 
 	double_alignment_speed_test ();
 

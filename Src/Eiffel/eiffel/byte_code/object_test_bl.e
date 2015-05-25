@@ -223,7 +223,7 @@ feature -- C code generation
 								-- Attachment to entity of non-basic expanded type.
 							buf.put_string ("RTOE(")
 						end
-						info.generate_type_id (buf, context.final_mode, 0)
+						info.generate_type (buf, context.final_mode, 0)
 						buf.put_string ({C_CONST}.comma_space)
 						expression_print_register
 						buf.put_string ({C_CONST}.comma_space)
@@ -276,9 +276,9 @@ feature -- C code generation
 							info.generate_gen_type_conversion (0)
 							buf.put_new_line
 							target.print_register
-							buf.put_string (" = RTRV(eif_non_attached_type(")
-							info.generate_type_id (buf, context.final_mode, 0)
-							buf.put_two_character (')', ',')
+							buf.put_string (" = RTRV(")
+							info.generate_type (buf, context.final_mode, 0)
+							buf.put_character (',')
 							if source_type.is_expanded then
 								register.print_register
 							else

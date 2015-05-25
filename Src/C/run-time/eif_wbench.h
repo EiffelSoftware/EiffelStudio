@@ -52,7 +52,7 @@ RT_LNK EIF_REFERENCE_FUNCTION wfeat(int routine_id, EIF_TYPE_INDEX dtype); /* Fe
 RT_LNK EIF_REFERENCE_FUNCTION wfeat_inv(int routine_id, char *name, EIF_REFERENCE object); /* Nested feature call */
 RT_LNK uint32 wattr(int routine_id, EIF_TYPE_INDEX dtype);					/* Attribute access */
 RT_LNK uint32 wattr_inv(int routine_id, char *name, EIF_REFERENCE object);	/* Nested attribute access */
-RT_LNK EIF_TYPE_INDEX wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
+RT_LNK EIF_TYPE wtype_gen(int routine_id, EIF_TYPE_INDEX dtype, EIF_TYPE_INDEX dftype);		/* Creation type (generic) */
 
 RT_LNK EIF_REFERENCE_FUNCTION wdisp(EIF_TYPE_INDEX dyn_type); /* Feature call for dispose routine */ 
 RT_LNK EIF_REFERENCE_FUNCTION wcopy(EIF_TYPE_INDEX dyn_type); /* Feature call for copy routine */ 

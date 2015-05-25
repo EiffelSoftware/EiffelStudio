@@ -306,9 +306,7 @@ feature {NONE} -- Implementation
 		require
 			catcall_occurred: app.status.reason_is_catcall
 		local
-			i, nb: INTEGER
-			l_integer: INTEGER
-			t: TUPLE [pos: INTEGER; expected: INTEGER; actual: INTEGER]
+			t: TUPLE [pos, expected_id, expected_annotations, actual_id, actual_annotations: INTEGER]
 		do
 			if app.debugger_manager.exceptions_handler.catcall_debugger_warning_disabled then
 				debugger_manager.update_catcall_detection_mode
@@ -318,29 +316,14 @@ feature {NONE} -- Implementation
 
 					--| Request information
 				Cont_request.send_rqst_0 (Rqst_last_rtcc_info)
-				nb := to_integer_32 (c_tread)
-				if nb > 0 then
-					from
-						i := 1
-						t := [0, 0, 0]
-					until
-						i > nb
-					loop
-						l_integer := to_integer_32 (c_tread)
-						inspect i
-						when 1 then
-							t.pos := l_integer
-						when 2 then
-							--| +1 : because in the runtime the id starts at 0
-							t.expected := l_integer + 1
-						when 3 then
-							--| +1 : because in the runtime the id starts at 0
-							t.actual := l_integer + 1
-						else
-							--| unexpected value!
-						end
-						i := i + 1
-					end
+				if to_integer_32 (c_tread) /= 0 then
+					t.pos := to_integer_32 (c_tread)
+						--| +1 : because in the runtime the id starts at 0
+					t.expected_id := to_integer_32 (c_tread) + 1
+					t.expected_annotations := to_integer_32 (c_tread)
+						--| +1 : because in the runtime the id starts at 0
+					t.actual_id := to_integer_32 (c_tread) + 1
+					t.actual_annotations := to_integer_32 (c_tread)
 				end
 				app.status.set_catcall_data (t)
 			end
@@ -436,7 +419,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

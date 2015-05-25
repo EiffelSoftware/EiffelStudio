@@ -6,6 +6,7 @@
 				* REQUIRE: precondition of a C routine
 				* ENSURE: postcondition of a C routine
 				* CHECK: check in C routine body
+				* CHECK_IN_EXPR: check in C expression
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
@@ -92,6 +93,9 @@ rt_unused rt_private int ise_printf (char *StrFmt, ...)
 
 	/* Check statement */
 #define CHECK(tag, exp)		INTERNAL_CHECK("Check", (tag), (exp))
+
+#define CHECK_IN_EXPR(tag, exp)	\
+	(!(exp) ? ise_printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", "Check", (tag), __FILE__, __LINE__, #exp) : 0)
 
 #else
 #define COMPILE_CHECK(tag, exp)

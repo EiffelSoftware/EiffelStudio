@@ -64,7 +64,6 @@ typedef EIF_REFERENCE*	EIF_OBJECT;			/* Eiffel object: safe indirection to an Ei
 #else
 typedef EIF_REFERENCE	EIF_OBJECT;			/* Eiffel object: safe indirection to an Eiffel reference */
 #endif
-typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 
 /* Types defined for easier reference when dealing with function pointers.
  * Their use is not compulsory it's only a matter of "convenience".
@@ -95,20 +94,20 @@ typedef EIF_POINTER (*EIF_POINTER_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an E
  * enabled
  */
 
-#define eif_procedure(rout,cid)				(EIF_PROCEDURE) eifref(rout,cid)
-#define eif_integer_8_function(rout,cid)	(EIF_INTEGER_8_FUNCTION) eifref(rout,cid)
-#define eif_integer_16_function(rout,cid)	(EIF_INTEGER_16_FUNCTION) eifref(rout,cid)
-#define eif_integer_32_function(rout,cid)	(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
-#define eif_integer_function(rout,cid)		(EIF_INTEGER_32_FUNCTION) eifref(rout,cid)
-#define eif_integer_64_function(rout,cid)	(EIF_INTEGER_64_FUNCTION) eifref(rout,cid)
+#define eif_procedure(rout,ftype)				(EIF_PROCEDURE) eifref(rout,ftype)
+#define eif_integer_8_function(rout,ftype)	(EIF_INTEGER_8_FUNCTION) eifref(rout,ftype)
+#define eif_integer_16_function(rout,ftype)	(EIF_INTEGER_16_FUNCTION) eifref(rout,ftype)
+#define eif_integer_32_function(rout,ftype)	(EIF_INTEGER_32_FUNCTION) eifref(rout,ftype)
+#define eif_integer_function(rout,ftype)		(EIF_INTEGER_32_FUNCTION) eifref(rout,ftype)
+#define eif_integer_64_function(rout,ftype)	(EIF_INTEGER_64_FUNCTION) eifref(rout,ftype)
 #define eif_character_function				eif_character_8_function
-#define eif_character_8_function(rout,cid)	(EIF_CHARACTER_8_FUNCTION) eifref(rout,cid)
-#define eif_character_32_function(rout,cid)	(EIF_CHARACTER_32_FUNCTION) eifref(rout,cid)
-#define eif_real_32_function(rout,cid)		(EIF_REAL_32_FUNCTION) eifref(rout,cid)
-#define eif_real_64_function(rout,cid)		(EIF_REAL_64_FUNCTION) eifref(rout,cid)
-#define eif_reference_function(rout,cid)	(EIF_REFERENCE_FUNCTION) eifref(rout,cid)
-#define eif_boolean_function(rout,cid)		(EIF_BOOLEAN_FUNCTION) eifref(rout,cid)
-#define eif_pointer_function(rout,cid)		(EIF_POINTER_FUNCTION) eifref(rout,cid)
+#define eif_character_8_function(rout,ftype)	(EIF_CHARACTER_8_FUNCTION) eifref(rout,ftype)
+#define eif_character_32_function(rout,ftype)	(EIF_CHARACTER_32_FUNCTION) eifref(rout,ftype)
+#define eif_real_32_function(rout,ftype)		(EIF_REAL_32_FUNCTION) eifref(rout,ftype)
+#define eif_real_64_function(rout,ftype)		(EIF_REAL_64_FUNCTION) eifref(rout,ftype)
+#define eif_reference_function(rout,ftype)	(EIF_REFERENCE_FUNCTION) eifref(rout,ftype)
+#define eif_boolean_function(rout,ftype)		(EIF_BOOLEAN_FUNCTION) eifref(rout,ftype)
+#define eif_pointer_function(rout,ftype)		(EIF_POINTER_FUNCTION) eifref(rout,ftype)
 
 /*
  * Miscellaneous Macros
@@ -283,22 +282,24 @@ extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 RT_LNK unsigned char eif_visible_is_off;
 RT_LNK void eifvisex (void);          /* Enable the visible exception (in current thread) */
 RT_LNK void eifuvisex (void);          /* Disable visible exception (in current thread) */
-RT_LNK int eifattrtype (char *attr_name, EIF_TYPE_ID cid);
-										/* Type of `attr_name' from class id `cid' */
-RT_LNK EIF_OBJECT eifcreate(EIF_TYPE_ID cid);				/* Object creation */
+RT_LNK int eifattrtype (char *attr_name, EIF_TYPE_ID ftype);
+										/* Type of `attr_name' from class id `ftype' */
+RT_LNK EIF_OBJECT eifcreate(EIF_TYPE_ID ftype);				/* Object creation */
 
-RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
+RT_LNK EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID ftype);				/* Eiffel function returning ANY */
 
 RT_LNK EIF_TYPE_ID eiftype(EIF_OBJECT object);			/* Give dynamic type of EIF_OBJECT. Obsolete, use "eif_type_by_object". */
 RT_LNK EIF_TYPE_ID eif_type_by_reference (EIF_REFERENCE object);
 #define eif_type_by_object(obj)	eiftype(obj)			/* Give dynamic type of EIF_OBJECT */
-RT_LNK const char *eifname(EIF_TYPE_ID cid);			/* Give class name from class ID */
+
+RT_LNK const char *eifname(EIF_TYPE_ID ftype);			/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by a cast to the proper type, e.g. *(EIF_INTEGER_32 *) when type of attribute is an INTEGER_32. */
 
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK EIF_INTEGER eifaddr_offset(EIF_REFERENCE, char *name, int * const ret);	/* Compute offset to `object' of attribute `name' */
 
 /* Dynamic Type id of an object of type `type_string' */
+RT_LNK EIF_TYPE eif_type_id2 (char *type_string);
 RT_LNK EIF_TYPE_ID eif_type_id (char *type_string);
 RT_LNK int eif_pre_ecma_mapping (void);
 RT_LNK void eif_set_pre_ecma_mapping(int);

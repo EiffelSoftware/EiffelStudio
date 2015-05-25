@@ -1052,7 +1052,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						case SK_CHAR8: widr_multi_char ((EIF_CHARACTER_8 *) object, count); break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE(object);
-							exp_dftype = eif_gen_param_id(dftype, 1);
+							exp_dftype = eif_gen_param(dftype, 1).id;
 							store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 							widr_norm_int(&store_flags);
 							ist_write_cid (exp_dftype);
@@ -1076,7 +1076,7 @@ rt_private void object_write(char *object, uint16 flags, EIF_TYPE_INDEX dftype)
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE(object);
-						exp_dftype = eif_gen_param_id(dftype, 1);
+						exp_dftype = eif_gen_param(dftype, 1).id;
 						store_flags = Merged_flags_dtype(EO_EXP,To_dtype(exp_dftype));
 						widr_norm_int(&store_flags);
 						ist_write_cid (exp_dftype);
@@ -1128,7 +1128,8 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 	int l_done = 0;
 	int16 l_num_gtypes;
 	size_t i;
-	EIF_TYPE_INDEX gtype, l_attr_type;
+	EIF_TYPE_INDEX gtype;
+	EIF_TYPE l_attr_type;
 	struct rt_id_of_context gen_conf_context;
 
 	while (!l_done) {
@@ -1141,7 +1142,7 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 				/* If we are storing for INDEPENDENT_STORE_6_6 then we
 				 * should remove all attachment marks. */
 			if (is_discarding_attachment_marks) {
-				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+				while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(gtype)) {
 					i++;
 					gtype = gtypes [i];
 				}
@@ -1152,7 +1153,7 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 					l_num_gtypes += TUPLE_OFFSET;
 					break;
 				case FORMAL_TYPE:
-						/* Formal + position */	
+						/* Formal + position */
 					l_num_gtypes += 2;
 					i += 1;
 					break;
@@ -1167,7 +1168,7 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 					if (gen_conf_context.is_invalid) {
 						return NULL;
 					} else {
-							/* We have to repeat the whole thing, but this time we 
+							/* We have to repeat the whole thing, but this time we
 							 * will be using the decoded type. */
 						l_done = 0;
 						i += (gen_conf_context.next_address - &gtypes[i]) - 1;
@@ -1191,7 +1192,7 @@ rt_shared const EIF_TYPE_INDEX *rt_canonical_types (const EIF_TYPE_INDEX *gtypes
 				 * but this time we remove the qualified anchored type and resolve
 				 * the attribute type into a type array sequence. */
 			l_attr_type = eif_compound_id (0, gtypes);
-			gtypes = eif_gen_cid (l_attr_type);
+			gtypes = eif_gen_cid (l_attr_type, 0);
 				/* In the above array, the first entry contains the count. */
 			gtypes++;
 		} else if (num_gtypes) {
@@ -1218,7 +1219,7 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		/* Old INDEPENDENT_STORE_6_6 format. */
 
 		/* Compute the actual type of the attribute and then extract its decomposition
-		 * which will we store. 
+		 * which will we store.
 		 * We cannot store its original typearr because it may involve qualified
 		 * anchored types (see test#store040).
 		 */
@@ -1237,12 +1238,12 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 		for (i=0; gtypes[i] != TERMINATOR; i++) {
 			gtype = gtypes[i];
 			if (eif_is_discarding_attachment_marks) {
-				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+				while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY (gtype)) {
 					i++;
 					gtype = gtypes [i];
 				}
 			} else {
-				while (RT_HAS_ANNOTATION_TYPE (gtype)) {
+				while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY (gtype)) {
 						/* Write annotation mark. */
 					widr_multi_uint16 (&gtype, 1);
 					i++;
@@ -1504,8 +1505,12 @@ rt_private void st_write_cid (EIF_TYPE_INDEX dftype)
 
 {
 	EIF_TYPE_INDEX *l_cidarr, count;
+	EIF_TYPE l_dftype;
+	
+	l_dftype.id = dftype;
+	l_dftype.annotations = 0;
 
-	l_cidarr = eif_gen_cid (dftype);
+	l_cidarr = eif_gen_cid (l_dftype, 0);
 	count  = *l_cidarr;
 
 	buffer_write ((char *) (&count), sizeof (EIF_TYPE_INDEX));
@@ -1523,15 +1528,18 @@ rt_private void ist_write_cid (EIF_TYPE_INDEX dftype)
 	EIF_TYPE_INDEX *l_cidarr;
 	uint32 count, i, val;
 	int is_discarding = eif_is_discarding_attachment_marks;
-
-	l_cidarr = eif_gen_cid (dftype);
+	EIF_TYPE l_dftype;
+	
+	l_dftype.id = dftype;
+	l_dftype.annotations = 0;
+	l_cidarr = eif_gen_cid (l_dftype, 1);
 	count = *l_cidarr;
 	++l_cidarr;
 
 	if (is_discarding) {
 		val = 0;
 		for (i=0; i < count; i++) {
-			while (RT_HAS_ANNOTATION_TYPE (l_cidarr[i])) {
+			while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY (l_cidarr[i])) {
 				i++;
 			}
 			val++;
@@ -1547,7 +1555,7 @@ rt_private void ist_write_cid (EIF_TYPE_INDEX dftype)
 		for (i = 0; i < count; ++i, ++l_cidarr) {
 			val = *l_cidarr;
 			if (is_discarding) {
-				while (RT_HAS_ANNOTATION_TYPE(val)) {
+				while (RT_CONF_HAS_ANNOTATION_TYPE_IN_ARRAY(val)) {
 					++l_cidarr;
 					val = *l_cidarr;
 				}

@@ -60,7 +60,7 @@ extern EIF_THR_TYPE dbg_thread_id;		/* Current Thread identifier for debugging s
 #define REGISTER_DBG_THREAD_ID(t)	dbg_thread_id = t
 #define IS_REGISTERED_DBG_THREAD_ID(t)	(dbg_thread_id == 0 || dbg_thread_id == t)
 #endif
-extern void dcatcall(int a_arg_position, EIF_TYPE_INDEX a_expected_dftype, EIF_TYPE_INDEX a_actual_dftype);
+extern void dcatcall(int a_arg_position, EIF_TYPE a_expected_dftype, EIF_TYPE a_actual_dftype);
 extern void c_opstack_reset(struct c_opstack *stk);
 #endif
 

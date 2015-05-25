@@ -166,7 +166,7 @@ feature -- Code generation
 			uint32_dtype, uint64_dtype, int8_dtype, int16_dtype,
 			int32_dtype, int64_dtype, wchar_dtype,
 			real32_dtype, real64_dtype,
-			pointer_dtype, boolean_dtype, ref_dtype: INTEGER
+			pointer_dtype, boolean_dtype, ref_dtype: NATURAL_16
 		do
 			from
 				char_dtype := {SHARED_GEN_CONF_LEVEL}.invalid_dtype
@@ -189,7 +189,8 @@ feature -- Code generation
 				types.after
 			loop
 				class_type := types.item
-				dtype := class_type.type_id - 1
+				check valid_type: class_type.type_id > 0 and class_type.type_id <= {NATURAL_16}.max_value end
+				dtype := (class_type.type_id - 1).as_natural_16
 				gen_type ?= class_type.type
 				gen_param := gen_type.generics.first
 				if gen_param.is_character then
@@ -227,36 +228,36 @@ feature -- Code generation
 				end
 				types.forth
 			end
-			buffer.put_string ("%N%Tegc_sp_char = (EIF_TYPE_INDEX)")
-			buffer.put_integer (char_dtype)
-			buffer.put_string (";%N%Tegc_sp_wchar = (EIF_TYPE_INDEX)")
-			buffer.put_integer (wchar_dtype)
-			buffer.put_string (";%N%Tegc_sp_bool = (EIF_TYPE_INDEX)")
-			buffer.put_integer (boolean_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint8 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (uint8_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint16 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (uint16_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint32 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (uint32_dtype)
-			buffer.put_string (";%N%Tegc_sp_uint64 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (uint64_dtype)
-			buffer.put_string (";%N%Tegc_sp_int8 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (int8_dtype)
-			buffer.put_string (";%N%Tegc_sp_int16 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (int16_dtype)
-			buffer.put_string (";%N%Tegc_sp_int32 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (int32_dtype)
-			buffer.put_string (";%N%Tegc_sp_int64 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (int64_dtype)
-			buffer.put_string (";%N%Tegc_sp_real32 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (real32_dtype)
-			buffer.put_string (";%N%Tegc_sp_real64 = (EIF_TYPE_INDEX)")
-			buffer.put_integer (real64_dtype)
-			buffer.put_string (";%N%Tegc_sp_pointer = (EIF_TYPE_INDEX)")
-			buffer.put_integer (pointer_dtype)
-			buffer.put_string (";%N%Tegc_sp_ref = (EIF_TYPE_INDEX)")
-			buffer.put_integer (ref_dtype)
+			buffer.put_string ("%N%Tegc_sp_char = ")
+			buffer.put_hex_natural_16 (char_dtype)
+			buffer.put_string (";%N%Tegc_sp_wchar = ")
+			buffer.put_hex_natural_16 (wchar_dtype)
+			buffer.put_string (";%N%Tegc_sp_bool = ")
+			buffer.put_hex_natural_16 (boolean_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint8 = ")
+			buffer.put_hex_natural_16 (uint8_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint16 = ")
+			buffer.put_hex_natural_16 (uint16_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint32 = ")
+			buffer.put_hex_natural_16 (uint32_dtype)
+			buffer.put_string (";%N%Tegc_sp_uint64 = ")
+			buffer.put_hex_natural_16 (uint64_dtype)
+			buffer.put_string (";%N%Tegc_sp_int8 = ")
+			buffer.put_hex_natural_16 (int8_dtype)
+			buffer.put_string (";%N%Tegc_sp_int16 = ")
+			buffer.put_hex_natural_16 (int16_dtype)
+			buffer.put_string (";%N%Tegc_sp_int32 = ")
+			buffer.put_hex_natural_16 (int32_dtype)
+			buffer.put_string (";%N%Tegc_sp_int64 = ")
+			buffer.put_hex_natural_16 (int64_dtype)
+			buffer.put_string (";%N%Tegc_sp_real32 = ")
+			buffer.put_hex_natural_16 (real32_dtype)
+			buffer.put_string (";%N%Tegc_sp_real64 = ")
+			buffer.put_hex_natural_16 (real64_dtype)
+			buffer.put_string (";%N%Tegc_sp_pointer = ")
+			buffer.put_hex_natural_16 (pointer_dtype)
+			buffer.put_string (";%N%Tegc_sp_ref = ")
+			buffer.put_hex_natural_16 (ref_dtype)
 			buffer.put_string (";%N")
 		end
 
@@ -398,7 +399,7 @@ feature {NONE} -- Implementation
 			put_signature_not_void: Result /= Void
 		end
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -85,7 +85,7 @@ feature -- Generic conformance
 
 feature {NONE} -- Generic conformance
 
-	generate_cid_prefix (buffer: GENERATION_BUFFER; idx_cnt: COUNTER)
+	generate_cid_prefix (buffer: detachable GENERATION_BUFFER; idx_cnt: COUNTER)
 			-- <Precursor>
 		local
 			l_dummy: INTEGER
@@ -269,7 +269,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

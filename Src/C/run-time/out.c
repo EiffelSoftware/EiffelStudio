@@ -122,13 +122,13 @@ rt_shared char *build_out(EIF_REFERENCE object);		/* Build `tagged_out' string *
  * Routine for printing representation
  */
 
-rt_public EIF_REFERENCE c_generator_of_type (EIF_INTEGER dftype)
+rt_public EIF_REFERENCE c_generator_of_type (EIF_TYPE ftype)
 	/* Class name associated with dynamic type `dftype'.
 	 * Return a reference on an Eiffel instance of STRING.
 	 */
 {
 	const char *generator;
-	generator = System (To_dtype(dftype)).cn_generator;
+	generator = System (To_dtype(ftype.id)).cn_generator;
 	return makestr (generator, strlen (generator));
 }
 
@@ -166,7 +166,7 @@ rt_shared char *build_out(EIF_REFERENCE object)
 	flags = HEADER(object)->ov_flags;
 
 		/* Print instance type name */
-	write_string (eif_typename(Dftype(object)));
+	write_string (eif_typename_id(Dftype(object)));
 	sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) object);
 	write_string(buffero);
 		/* Print recursively in `tagged_out' */
@@ -326,7 +326,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 		case SK_EXP:
 			/* Expanded attribute */
 			write_string("expanded ");
-			write_string(eif_typename(Dftype(o_ref)));
+			write_string(eif_typename_id(Dftype(o_ref)));
 			write_char ('\n');
 			write_tab (tab + 2);
 			sprintf(buffero, "-- begin sub-object --\n");
@@ -343,7 +343,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			reference = *(EIF_REFERENCE *)o_ref;
 			if (reference) {
 				ref_flags = HEADER(reference)->ov_flags;
-				write_string(eif_typename(Dftype(reference)));
+				write_string(eif_typename_id(Dftype(reference)));
 				sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
 				write_string(buffero);
 				if (ref_flags & EO_SPEC) {
@@ -404,7 +404,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: expanded ", (long) (old_count - count));
 				write_string(buffero);
-				write_string(eif_typename(Dftype(o_ref)));
+				write_string(eif_typename_id(Dftype(o_ref)));
 				write_char('\n');
 				write_tab(tab + 2);
 				sprintf(buffero, "-- begin sub-object --\n");
@@ -488,7 +488,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			if (!reference) {
 				sprintf(buffero, "Void\n");
 			} else {
-				write_string (eif_typename(Dftype(reference)));
+				write_string (eif_typename_id(Dftype(reference)));
 				sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) reference);
 			}
 			write_string(buffero);
@@ -545,7 +545,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "Void\n");
 					write_string(buffero);
 				} else {
-					write_string(eif_typename(Dftype(eif_reference_item(object, i))));
+					write_string(eif_typename_id(Dftype(eif_reference_item(object, i))));
 					sprintf(buffero, " [0x%" EIF_POINTER_DISPLAY "]\n", (rt_uint_ptr) eif_reference_item(object,i));
 					write_string(buffero);
 				}

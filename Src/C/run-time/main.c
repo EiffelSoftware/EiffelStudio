@@ -51,6 +51,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_sig.h"
 #include "rt_gen_conf.h"
 #include "rt_struct.h"
+#include "rt_hashin.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"		/* %%ss added for create_desc */
@@ -1004,6 +1005,11 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 #endif
 	eif_environ = envp;				/* Save pointer to environment variable storage */
 	once_init();
+
+		/* Initialize table storing TYPE instances. */
+	memset(&rt_type_set, 0, sizeof(struct htable));
+	ht_create(&rt_type_set, eif_par_table_size, sizeof(EIF_REFERENCE));
+
 #if defined(EIF_THREADS) && defined(WORKBENCH)
 	notify_root_thread();
 #endif

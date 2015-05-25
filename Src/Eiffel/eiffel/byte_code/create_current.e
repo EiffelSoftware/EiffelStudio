@@ -13,13 +13,32 @@ inherit
 		redefine
 			generate_cid, make_type_byte_code,
 			generate_cid_array, generate_cid_init,
-			generate_gen_type_conversion
+			generate_gen_type_conversion,
+			generate_type_id, generate_type_annotations
 		end
 
 	SHARED_GENERATION
 		export
 			{NONE} all
 		end
+
+create
+	make
+
+feature -- Initialization
+
+	make (a_type: LIKE_CURRENT)
+			-- Initialize Current with `a_type'.
+		do
+			type := a_type
+		ensure
+			type_set: type = a_type
+		end
+
+feature -- Access
+
+	type: LIKE_CURRENT
+			-- Type on which is based current. Useful to keep track of attachment marks.
 
 feature -- Update
 
@@ -39,10 +58,28 @@ feature -- C code generation
 			context.add_dftype_current
 		end
 
-	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
+	generate_type (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL)
 			-- Generate creation type id (dynamic type) of current	
 		do
+			buffer.put_string ("eif_new_type(")
 			context.generate_current_dftype
+			buffer.put_two_character (',', ' ')
+				-- Discard the upper bits as `eif_new_type' only accepts the lower part.
+			buffer.put_natural_16 (type.annotation_flags & 0x00FF)
+			buffer.put_character (')')
+		end
+
+	generate_type_id (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL_32)
+			-- <Precursor>
+		do
+			context.generate_current_dftype
+		end
+
+	generate_type_annotations  (buffer: GENERATION_BUFFER; final_mode: BOOLEAN; a_level: NATURAL_32)
+			-- <Precursor>
+		do
+				-- Discard the upper bits as `eif_new_type' only accepts the lower part.
+			buffer.put_natural_16 (type.annotation_flags & 0x00FF)
 		end
 
 feature -- Il code generation
@@ -125,7 +162,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

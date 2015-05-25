@@ -702,10 +702,8 @@ feature -- Byte code generation
 				ba.append (bc_jmp_f)
 				ba.mark_forward3
 				if not l_type.is_attached then
-					ba.append (bc_is_attached)
-					create create_info.make (feat.feature_id, r_id)
-					create_info.make_byte_code (ba)
-					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+					ba.append (bc_is_attached_attribute)
+					ba.append_integer (r_id)
 					ba.append (bc_jmp_f)
 					ba.mark_forward3
 				end
@@ -731,11 +729,12 @@ feature -- Byte code generation
 			generate_melted_end_debugger_hook (ba)
 
 			if feat.is_attribute then
+				check r_id_unchanged: r_id = feat.rout_id_set.first end
 					--    <attribute> := Result
 				ba.append (bc_result)
 				ba.append (bc_assign)
 					-- Routine id
-				ba.append_integer (feat.rout_id_set.first)
+				ba.append_integer (r_id)
 					-- Attribute meta-type
 				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (bc_jmp)
@@ -748,7 +747,7 @@ feature -- Byte code generation
 				ba.append (Bc_current)
 				ba.append (Bc_attribute)
 					-- Routine id
-				ba.append_integer (feat.rout_id_set.first)
+				ba.append_integer (r_id)
 					-- Attribute meta-type
 				ba.append_natural_32 (l_type.sk_value (context.context_class_type.type))
 				ba.append (Bc_rassign)
@@ -1027,7 +1026,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

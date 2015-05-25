@@ -81,9 +81,9 @@
 			<Directory Id="Dir.Core.library" Name="library">
 				<Directory Id="Dir.Core.library.gobo" Name="gobo"/>
 			</Directory>
-			<Directory Id="Dir.Core.compatible" Name="compatible">
-				<Directory Id="Dir.Core.compatible.library" Name="library">
-					<Directory Id="Dir.Core.compatible.library.gobo" Name="gobo"/>
+			<Directory Id="Dir.Core.experimental" Name="experimental">
+				<Directory Id="Dir.Core.experimental.library" Name="library">
+					<Directory Id="Dir.Core.experimental.library.gobo" Name="gobo"/>
 				</Directory>
 			</Directory>
 			<!-- To comment when building complete delivery -->
@@ -155,10 +155,10 @@
 					Description="EiffelStudio development environment" Show="normal" Directory="EiffelStudio"
 					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe"
 					/>
-				<Shortcut Id="estudio.exe1" Name="$(var.Product) $(var.ProductVersion) (Compatible mode)"
+				<Shortcut Id="estudio.exe1" Name="$(var.Product) $(var.ProductVersion) (Experimental mode)"
 					Description="EiffelStudio development environment using compatibility facilities of EiffelStudio" Show="normal"
 					Target="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe" Directory="EiffelStudio"
-					Arguments="-compat"
+					Arguments="-experiment"
 					/>
 				<Shortcut Id="esvars.bat" Name="$(var.Product) $(var.ProductVersion) Command Prompt"
 					Description="EiffelStudio Command Prompt" Show="normal" Directory="EiffelStudio"
@@ -220,12 +220,12 @@
 				<ComponentGroupRef Id="Core.library.gobo"/>
 			</Feature>
 
-			<Feature Id="Compatible_feature" Title="Compatible" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.compatible.library"/>
+			<Feature Id="Experimental_feature" Title="Experimental" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.experimental.library"/>
 			</Feature>
 
-			<Feature Id="Gobo_compatible_feature" Title="Gobo Compatible" TypicalDefault="install" Level="1" Display="hidden">
-				<ComponentGroupRef Id="Core.compatible.library.gobo"/>
+			<Feature Id="Gobo_experimental_feature" Title="Gobo Experimental" TypicalDefault="install" Level="1" Display="hidden">
+				<ComponentGroupRef Id="Core.experimental.library.gobo"/>
 			</Feature>
 
 			<Feature Id="gdiplus_feature" Title="GDI+" TypicalDefault="install" Level="1" Display="hidden">

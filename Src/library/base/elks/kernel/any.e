@@ -31,8 +31,8 @@ feature -- Access
 	generating_type: TYPE [detachable like Current]
 			-- Type of current object
 			-- (type of which it is a direct instance)
-		do
-			Result := {detachable like Current}
+		external
+			"built_in"
  		ensure
  			generating_type_not_void: Result /= Void
  		end

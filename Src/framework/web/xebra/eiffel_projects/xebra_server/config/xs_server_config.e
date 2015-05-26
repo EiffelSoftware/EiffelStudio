@@ -34,7 +34,7 @@ feature -- Access
 			-- Contains info that is read from config file
 
 
-feature {XCC_LOAD_CONFIG} -- Status setting
+feature -- Status setting
 
 	set_args (a_args: like args)
 			-- Sets args.
@@ -61,7 +61,7 @@ invariant
 	file_attached: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

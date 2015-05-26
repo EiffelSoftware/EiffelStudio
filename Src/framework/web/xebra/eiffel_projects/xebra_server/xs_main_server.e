@@ -400,6 +400,7 @@ feature {XS_SERVER_MODULE} -- Status setting
 			Result := create {XCCR_CONFIG_ERROR}
 			create l_config_reader
 			if attached {XS_FILE_CONFIG} l_config_reader.process_file (config.args.config_filename) as l_config then
+				config.set_file (l_config)
 				config.file := l_config
 				if handle_errors then
 					Result := create {XCCR_OK}
@@ -527,7 +528,7 @@ feature -- From EIFFEL_ENV
 invariant
 		modules_attached: modules /= Void
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

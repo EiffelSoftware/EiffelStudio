@@ -580,6 +580,9 @@
 	min-height: 150px;
 	.btn-holder{
 		@include grid(3);
+		margin-left: 0px;
+  		margin-right: 0px;
+  		width: initial;
 		.btn {
 			@include linear-gradient(#99cc33, #769830);
 			@include border-radius(4px);
@@ -629,6 +632,9 @@
 
 .footer-nav{
 	@include grid(6);
+	margin-right: 0px;
+	margin-left: 0px; 
+	width: 640px;
 	ul{
 		@extend %listreset;
 		overflow: hidden;

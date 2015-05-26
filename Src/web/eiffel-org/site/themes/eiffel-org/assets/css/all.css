@@ -2039,8 +2039,11 @@ input.placeholder-text, textarea.placeholder-text {
   margin-left: 10px;
   margin-right: 10px;
   width: 235px;
+  margin-left: 0px;
+  margin-right: 0px;
+  width: initial;
 }
-/* line 583, all.scss */
+/* line 586, all.scss */
 .footer-holder .btn-holder .btn {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2060,7 +2063,7 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 7px 42px 7px 14px;
   font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 595, all.scss */
+/* line 598, all.scss */
 .footer-holder .btn-holder .btn:after {
   width: 30px;
   height: 30px;
@@ -2069,7 +2072,7 @@ input.placeholder-text, textarea.placeholder-text {
   top: 8px;
   content: '';
 }
-/* line 604, all.scss */
+/* line 607, all.scss */
 .footer-holder .btn-holder .btn.btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2079,11 +2082,11 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #99cc33, #769830);
   color: white;
 }
-/* line 607, all.scss */
+/* line 610, all.scss */
 .footer-holder .btn-holder .btn.btn-download:after {
   background: url(../images/ico-download2.png) no-repeat;
 }
-/* line 610, all.scss */
+/* line 613, all.scss */
 .footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -2092,7 +2095,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
-/* line 614, all.scss */
+/* line 617, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
@@ -2102,7 +2105,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #2B4054, #12273A);
   color: white;
 }
-/* line 617, all.scss */
+/* line 620, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
@@ -2112,7 +2115,7 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #12273A, #12273A);
   background-image: linear-gradient(top, #12273A, #12273A);
 }
-/* line 624, all.scss */
+/* line 627, all.scss */
 .footer-holder .social-holder {
   display: inline;
   float: left;
@@ -2122,40 +2125,43 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 2px 0 0;
 }
 
-/* line 630, all.scss */
+/* line 633, all.scss */
 .footer-nav {
   display: inline;
   float: left;
   margin-left: 10px;
   margin-right: 10px;
   width: 490px;
+  margin-right: 0px;
+  margin-left: 0px;
+  width: 640px;
 }
-/* line 632, all.scss */
+/* line 638, all.scss */
 .footer-nav ul {
   overflow: hidden;
   text-transform: uppercase;
   font: 16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 637, all.scss */
+/* line 643, all.scss */
 .footer-nav ul li {
   width: 152px;
   float: left;
   padding: 0 10px 6px 0;
 }
-/* line 641, all.scss */
+/* line 647, all.scss */
 .footer-nav ul li:first-child {
   width: 135px;
 }
-/* line 644, all.scss */
+/* line 650, all.scss */
 .footer-nav ul li a {
   color: white;
   display: inline-block;
 }
-/* line 647, all.scss */
+/* line 653, all.scss */
 .footer-nav ul li a:hover {
   color: #abc4d4;
 }
-/* line 651, all.scss */
+/* line 657, all.scss */
 .footer-nav ul li ul {
   overflow: hidden;
   text-transform: capitalize;
@@ -2163,17 +2169,17 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   padding: 6px 0 0;
 }
-/* line 659, all.scss */
+/* line 665, all.scss */
 .footer-nav ul li ul li a {
   color: #abc4d4;
   display: inline-block;
 }
-/* line 662, all.scss */
+/* line 668, all.scss */
 .footer-nav ul li ul li a:hover {
   color: #fff;
 }
 
-/* line 672, all.scss */
+/* line 678, all.scss */
 #content {
   display: inline;
   float: left;
@@ -2182,14 +2188,14 @@ input.placeholder-text, textarea.placeholder-text {
   width: 1000px;
   overflow: hidden;
 }
-/* line 675, all.scss */
+/* line 681, all.scss */
 #content .holder {
   margin-left: 0px;
   margin-right: 0px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 681, all.scss */
+/* line 687, all.scss */
 #content.with-first-sidebar, #content.with-second-sidebar {
   display: inline;
   float: left;
@@ -2197,7 +2203,7 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 745px;
 }
-/* line 684, all.scss */
+/* line 690, all.scss */
 #content.with-first-sidebar.with-second-sidebar {
   display: inline;
   float: left;
@@ -2205,22 +2211,22 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 687, all.scss */
+/* line 693, all.scss */
 #content .head {
   overflow: hidden;
   color: #13a69a;
   padding: 0 50px 0 0;
   margin: 0 0 5px;
 }
-/* line 692, all.scss */
+/* line 698, all.scss */
 #content .head h1 {
   margin: 0 0 -1px;
 }
-/* line 695, all.scss */
+/* line 701, all.scss */
 #content .head p {
   margin: 0 0 10px;
 }
-/* line 699, all.scss */
+/* line 705, all.scss */
 #content .ico {
   display: inline-block;
   vertical-align: top;
@@ -2232,18 +2238,18 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 708, all.scss */
+/* line 714, all.scss */
 #content .ico img {
   vertical-align: top;
 }
-/* line 712, all.scss */
+/* line 718, all.scss */
 #content h1 {
   color: #1f3d4d;
   margin: 0 0 35px;
   letter-spacing: 2px;
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 717, all.scss */
+/* line 723, all.scss */
 #content h1 .ico {
   margin: 2px 10px 0 0;
   width: 21px;
@@ -2252,17 +2258,17 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 /* Content */
-/* line 728, all.scss */
+/* line 734, all.scss */
 #content .contribute-block, #content .about-block, #content .promo-block {
   overflow: hidden;
   padding: 8px 25px 0;
   margin: 0 65px -46px;
 }
-/* line 732, all.scss */
+/* line 738, all.scss */
 #content .contribute-block ul, #content .about-block ul, #content .promo-block ul {
   margin: 0 0 0 -73px;
 }
-/* line 735, all.scss */
+/* line 741, all.scss */
 #content .contribute-block ul li, #content .about-block ul li, #content .promo-block ul li {
   background: #e9eced;
   width: 325px;
@@ -2272,17 +2278,17 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 742, all.scss */
+/* line 748, all.scss */
 #content .contribute-block ul li:hover, #content .about-block ul li:hover, #content .promo-block ul li:hover {
   background: #e3e7e8;
 }
-/* line 745, all.scss */
+/* line 751, all.scss */
 #content .contribute-block ul li a, #content .about-block ul li a, #content .promo-block ul li a {
   display: block;
   text-align: center;
   padding: 20px 5px;
 }
-/* line 750, all.scss */
+/* line 756, all.scss */
 #content .contribute-block ul li .ico, #content .about-block ul li .ico, #content .promo-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2294,17 +2300,17 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 760, all.scss */
+/* line 766, all.scss */
 #content .contribute-block ul li h2, #content .about-block ul li h2, #content .promo-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 765, all.scss */
+/* line 771, all.scss */
 #content .contribute-block ul li p, #content .about-block ul li p, #content .promo-block ul li p {
   color: #0C0D0D;
 }
-/* line 768, all.scss */
+/* line 774, all.scss */
 #content .contribute-block ul li div, #content .about-block ul li div, #content .promo-block ul li div {
   background: #e9eced;
   display: block;
@@ -2313,25 +2319,25 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 774, all.scss */
+/* line 780, all.scss */
 #content .contribute-block ul li div:hover, #content .about-block ul li div:hover, #content .promo-block ul li div:hover {
   background: #e3e7e8;
 }
-/* line 777, all.scss */
+/* line 783, all.scss */
 #content .contribute-block ul li div a, #content .about-block ul li div a, #content .promo-block ul li div a {
   display: inline-block;
 }
-/* line 786, all.scss */
+/* line 792, all.scss */
 #content .rss-block {
   overflow: hidden;
   padding: 8px 0 0 40px;
   margin: 0 0 -46px;
 }
-/* line 790, all.scss */
+/* line 796, all.scss */
 #content .rss-block ul {
   margin: 0 0 0 -70px;
 }
-/* line 793, all.scss */
+/* line 799, all.scss */
 #content .rss-block ul li {
   width: 450px;
   float: left;
@@ -2347,7 +2353,7 @@ input.placeholder-text, textarea.placeholder-text {
   	}
   }*/
 }
-/* line 807, all.scss */
+/* line 813, all.scss */
 #content .rss-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2359,42 +2365,42 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 817, all.scss */
+/* line 823, all.scss */
 #content .rss-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 822, all.scss */
+/* line 828, all.scss */
 #content .rss-block ul li p {
   color: #0C0D0D;
 }
-/* line 831, all.scss */
+/* line 837, all.scss */
 #content .about-block ul li, #content .promo-block ul li, #content .contribute-block ul li {
   /*height: 320px;*/
 }
-/* line 833, all.scss */
+/* line 839, all.scss */
 #content .about-block ul li h2, #content .promo-block ul li h2, #content .contribute-block ul li h2 {
   -webkit-border-radius: 7px;
   border-radius: 7px;
   /* background: #2B4054; */
   padding: 0;
 }
-/* line 842, all.scss */
+/* line 848, all.scss */
 #content .about-block ul, #content .contribute-block ul {
   margin: 0 0 0 0px;
 }
-/* line 847, all.scss */
+/* line 853, all.scss */
 #content .promo-area {
   padding: 0 0 0 0px;
   min-height: 0px;
 }
-/* line 852, all.scss */
+/* line 858, all.scss */
 #content .info-block {
   overflow: hidden;
   position: relative;
 }
-/* line 855, all.scss */
+/* line 861, all.scss */
 #content .info-block:after {
   background: url(../images/sep.png) no-repeat;
   width: 22px;
@@ -2404,7 +2410,7 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: "";
 }
-/* line 864, all.scss */
+/* line 870, all.scss */
 #content .info-block h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -2412,26 +2418,26 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 871, all.scss */
+/* line 877, all.scss */
 #content .info-block .post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 874, all.scss */
+/* line 880, all.scss */
 #content .info-block .post h3 {
   color: #0d4143;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 878, all.scss */
+/* line 884, all.scss */
 #content .info-block .post h3 a {
   color: #0d4143;
 }
-/* line 880, all.scss */
+/* line 886, all.scss */
 #content .info-block .post h3 a:hover {
   color: #4c6877;
 }
-/* line 885, all.scss */
+/* line 891, all.scss */
 #content .info-block .post .date {
   display: block;
   text-transform: uppercase;
@@ -2439,23 +2445,23 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 892, all.scss */
+/* line 898, all.scss */
 #content .info-block .post p {
   margin: 0 0 10px;
 }
-/* line 894, all.scss */
+/* line 900, all.scss */
 #content .info-block .post p a {
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #1f3d4d;
   text-transform: uppercase;
 }
-/* line 898, all.scss */
+/* line 904, all.scss */
 #content .info-block .post p a:hover {
   color: #4c6877;
 }
 
 /* #content */
-/* line 907, all.scss */
+/* line 913, all.scss */
 #sidebar {
   border: none;
   display: inline;
@@ -2468,11 +2474,11 @@ input.placeholder-text, textarea.placeholder-text {
   top: -12px;
   margin: 0px 2px 0 2px;
 }
-/* line 914, all.scss */
+/* line 920, all.scss */
 #sidebar .holder {
   padding: 0 5px 5px 5px;
 }
-/* line 917, all.scss */
+/* line 923, all.scss */
 #sidebar div.title, #sidebar h2 {
   color: #99cc33;
   margin: 0 0 17px;
@@ -2480,17 +2486,17 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #becbd3;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 923, all.scss */
+/* line 929, all.scss */
 #sidebar div.title a, #sidebar h2 a {
   color: #99cc33;
 }
-/* line 925, all.scss */
+/* line 931, all.scss */
 #sidebar div.title a:hover, #sidebar h2 a:hover {
   color: white;
 }
 
 /* Code elements */
-/* line 933, all.scss */
+/* line 939, all.scss */
 code {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -2504,7 +2510,7 @@ code {
   margin: 2px 0 2px 0;
 }
 
-/* line 945, all.scss */
+/* line 951, all.scss */
 code.inline {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -2515,29 +2521,29 @@ code.inline {
 }
 
 /* ... */
-/* line 955, all.scss */
+/* line 961, all.scss */
 .widget {
   overflow: hidden;
   margin: 0 0 34px;
 }
-/* line 958, all.scss */
+/* line 964, all.scss */
 .widget h2 {
   margin: 0 0 16px;
 }
-/* line 961, all.scss */
+/* line 967, all.scss */
 .widget ul {
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 964, all.scss */
+/* line 970, all.scss */
 .widget ul li {
   border-bottom: 1px solid #becbd3;
   padding: 16px 0 5px;
 }
-/* line 967, all.scss */
+/* line 973, all.scss */
 .widget ul li:first-child {
   padding-top: 0;
 }
-/* line 970, all.scss */
+/* line 976, all.scss */
 .widget ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
@@ -2545,25 +2551,25 @@ code.inline {
   color: #1da699;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 977, all.scss */
+/* line 983, all.scss */
 .widget ul li a {
   color: #4c6877;
 }
-/* line 979, all.scss */
+/* line 985, all.scss */
 .widget ul li a:hover {
   color: #1f3d4d;
 }
 
-/* line 988, all.scss */
+/* line 994, all.scss */
 .social-networks {
   float: right;
 }
-/* line 991, all.scss */
+/* line 997, all.scss */
 .social-networks li {
   float: left;
   margin: 0 0 0 10px;
 }
-/* line 994, all.scss */
+/* line 1000, all.scss */
 .social-networks li a {
   display: block;
   width: 35px;
@@ -2572,74 +2578,74 @@ code.inline {
   overflow: hidden;
   text-indent: -9999px;
 }
-/* line 1000, all.scss */
+/* line 1006, all.scss */
 .social-networks li a:hover {
   background: url(../images/ico-social-h.png) no-repeat;
 }
-/* line 1002, all.scss */
+/* line 1008, all.scss */
 .social-networks li .facebook {
   width: 34px;
 }
-/* line 1005, all.scss */
+/* line 1011, all.scss */
 .social-networks li .linkedin {
   background-position: -44px 0;
 }
-/* line 1007, all.scss */
+/* line 1013, all.scss */
 .social-networks li .linkedin:hover {
   background-position: -44px 0;
 }
-/* line 1009, all.scss */
+/* line 1015, all.scss */
 .social-networks li .youtube {
   background-position: -89px 0;
 }
-/* line 1011, all.scss */
+/* line 1017, all.scss */
 .social-networks li .youtube:hover {
   background-position: -89px 0;
 }
-/* line 1013, all.scss */
+/* line 1019, all.scss */
 .social-networks li .twitter {
   background-position: -134px 0;
 }
-/* line 1015, all.scss */
+/* line 1021, all.scss */
 .social-networks li .twitter:hover {
   background-position: -134px 0;
 }
-/* line 1017, all.scss */
+/* line 1023, all.scss */
 .social-networks li .googleplus {
   background-position: -179px 0;
   width: 34px;
 }
-/* line 1020, all.scss */
+/* line 1026, all.scss */
 .social-networks li .googleplus:hover {
   background-position: -179px 0;
 }
 
-/* line 1025, all.scss */
+/* line 1031, all.scss */
 .social-plugin {
   overflow: hidden;
   margin: 0 0 30px -2px;
 }
-/* line 1028, all.scss */
+/* line 1034, all.scss */
 .social-plugin img {
   vertical-align: top;
 }
 
-/* line 1033, all.scss */
+/* line 1039, all.scss */
 .popular {
   padding: 12px 0 0;
 }
-/* line 1035, all.scss */
+/* line 1041, all.scss */
 .popular li {
   padding-left: 37px !important;
   position: relative;
 }
-/* line 1038, all.scss */
+/* line 1044, all.scss */
 .popular li img {
   position: absolute;
   top: 10px;
   left: 0;
 }
-/* line 1044, all.scss */
+/* line 1050, all.scss */
 .popular li:first-child img {
   top: -5px;
 }

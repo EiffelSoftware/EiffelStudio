@@ -6,12 +6,12 @@
 									<li><a href="/welcome">Welcome</a>
 										<ul>
 											<li><a href="/purpose">Purpose</a></li>
-											<li><a href="/news">News</a></li>
-											<li><a href="/articles">Articles</a></li>
+											<li><a href="/news">What's new</a></li>
+											<li><a href="/updates">Recent updates</a></li>
 											<li><a href="/contact">Contact</a></li>
 										</ul>
 									</li>
-									<li><a href="#">LEARN</a>
+									<li><a href="/documentation">Documentation</a>
 										<ul>
 											<li><a href="#">Documentation</a></li>
 											<li><a href="#">Tutorials</a></li>
@@ -19,14 +19,15 @@
 											<li><a href="#">FAQs</a></li>
 										</ul>	
 									</li>
-									<li><a href="#">Contribute</a>
+									<li><a href="/resources">Resources</a>
 										<ul>
 											<li><a href="{$site_url/}/contribute_description">Libraries</a></li>
 											<li><a href="{$site_url/}/contribute_description">Projects</a></li>
-											<li><a href="{$site_url/}/contribute_description">Tools</a></li>
-											<li><a href="{$site_url/}/contribute_description">Feature Requests</a></li>
-											<li><a href="{$site_url/}/contribute_description">Forum</a></li>
+											<li><a href="{$site_url/}/contribute_description">Videos</a></li>
+											<li><a href="{$site_url/}/contribute_description">Follow us</a></li>
 										</ul>
+									</li>
+									<li><a href="/contribute">Contribute</a>
 									</li>
 						
 								</ul>

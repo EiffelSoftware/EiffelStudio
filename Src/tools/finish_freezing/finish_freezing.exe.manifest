@@ -2,7 +2,7 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"> 
 	<assemblyIdentity version="1.0.0.0" name="EiffelSoftware.Eiffel.finish_freezing" type="win32" /> 
 	<description>finish_freezing</description>
-	<trustInfo xmlns:ms_asmv2="urn:schemas-microsoft-com:asm.v2">
+	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
 		<security>
 			<requestedPrivileges>
 				<requestedExecutionLevel level="asInvoker">

@@ -317,6 +317,7 @@ feature {NONE} -- Implementation
 					--| Request information
 				Cont_request.send_rqst_0 (Rqst_last_rtcc_info)
 				if to_integer_32 (c_tread) /= 0 then
+					t := [0, 0, 0, 0, 0]
 					t.pos := to_integer_32 (c_tread)
 						--| +1 : because in the runtime the id starts at 0
 					t.expected_id := to_integer_32 (c_tread) + 1

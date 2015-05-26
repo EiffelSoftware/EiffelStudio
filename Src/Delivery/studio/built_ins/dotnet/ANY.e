@@ -14,15 +14,11 @@ feature -- Access
 			end
 		end
 
- 	generating_type: STRING
+ 	generating_type: TYPE [detachable like Current]
 			-- Name of current object's generating type
 			-- (type of which it is a direct instance)
 		do
-			if attached {ISE_RUNTIME}.generating_type (Current) as l_string then
-				Result := l_string
-			else
-				Result := "Unable to get type name"
-			end
+			Result := {detachable like Current}
  		end
 
 feature -- Status report

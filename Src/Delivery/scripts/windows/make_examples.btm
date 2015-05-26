@@ -1,0 +1,5 @@
+remtrace Compile examples
+iff not defined NO_COMPILE then
+	cd %1\examples\base\beep\Clib
+	all_makes
+endiff

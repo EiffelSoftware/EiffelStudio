@@ -130,9 +130,6 @@ iff not defined NO_COMPILE then
 	cd %1\library\wel\clib
 	all_makes
 	fullrf %1\library\wel\clib\make.log
-	remtrace beep example
-	cd %1\examples\base\beep\Clib
-	all_makes
 else
 	quick_move /s library\com\spec
 	fullrd %1\library\com\Clib

@@ -206,6 +206,10 @@ remtrace Build the normal libraries
 cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR library
 
+remtrace Build the examples
+cdd %INIT_DIR
+call make_examples %STUDIO_DIR
+
 remtrace build the experimental libraries
 cdd %INIT_DIR
 call make_libraries.btm %STUDIO_DIR\experimental experimental/library

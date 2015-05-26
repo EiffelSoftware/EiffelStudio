@@ -208,11 +208,12 @@ feature -- C code generation
 						buffer.put_integer (l_formal.position)
 						buffer.put_character (')')
 					else
+						check has_no_formals: not l_type.has_formal_generic end
 						buffer.put_string ("eif_new_type(")
-						buffer.put_type_id (table.first.feature_type_id)
+						buffer.put_type_id (l_type.type_id (Void))
 						buffer.put_two_character (',', ' ')
 							-- Discard the upper bits as `eif_new_type' only accepts the lower part.
-						buffer.put_natural_16 (table.first.type.annotation_flags & 0x00FF)
+						buffer.put_natural_16 (l_type.annotation_flags & 0x00FF)
 						buffer.put_character (')')
 					end
 				else
@@ -371,7 +372,8 @@ feature -- Genericity
 					if l_type.has_generics or l_type.is_formal then
 						l_type.generate_cid (buffer, final_mode, False, context.context_class_type.type)
 					else
-						buffer.put_type_id (table.first.feature_type_id)
+						check has_no_formals: not l_type.has_formal_generic end
+						buffer.put_type_id (l_type.type_id (Void))
 						buffer.put_character (',')
 					end
 				else
@@ -435,7 +437,8 @@ feature -- Genericity
 						l_type.generate_cid_array (buffer,
 												final_mode, False, idx_cnt, context.context_class_type.type)
 					else
-						buffer.put_type_id (table.first.feature_type_id)
+						check has_no_formals: not l_type.has_formal_generic end
+						buffer.put_type_id (l_type.type_id (Void))
 						buffer.put_character (',')
 						dummy := idx_cnt.next
 					end

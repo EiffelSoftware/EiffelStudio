@@ -541,7 +541,7 @@ test	bogus-vdrd2-error				valid267 tcf fail validity
 test	crash-on-veen2a					valid268 tcf pass validity
 test	bogus-vsrp3-with-require-else-false	valid269 tcf fail used_to_pass validity
 test	spurious-vuot-in-assertion		valid270 tcf pass validity object_test
-test	spurious-vweq-warning			valid271 tcf fail validity
+test	spurious-vweq-warning			valid271 tcf pass validity
 test	non-conforming-missing-vmss3		valid272 tcf fail validity non-conforming
 test	spurious-vtgc3-with-vmfn		valid273 tcf fail validity
 test	duplicate-vfac1				valid274 tcf pass validity assigner
@@ -1307,7 +1307,7 @@ test	finalize-c-code-redeclared-identifier	final092 tcf fail finalizing
 test	finalize-create-expanded-generic	final093 tcf pass finalizing
 test	finalize-static-access-multicon-formal	final094 tcf pass finalizing multiconstraint
 test	finalize-generic-once-per-object	final095 tcf fail finalizing once
-test	finalize-qat-object-test-2		final096 tcf fail finalizing anchored_type
+test	finalize-qat-object-test-2		final096 tcf pass finalizing anchored_type
 test	inline-deferred-with-one-implementation	final097 tcf pass finalizing inlining
 test	inline-with-generic-argument	final098 tcf pass finalizing inlining
 test	finalize-inline-merged-routine-2	final099 tcf pass finalizing inlining
@@ -1444,7 +1444,7 @@ test	scoop-gc-stress-test				scoop059 tcf pass scoop multithreaded execution
 test	scoop-assigner-command-validity			scoop060 tcf pass scoop multithreaded assigner validity
 test	scoop-named-tuple-execution			scoop061 tcf fail scoop multithreaded tuple assigner execution
 test	scoop-generating-type-deadlock		scoop062 tcf manual scoop multithreaded
-test	scoop-conformance				scoop063 tcf fail scoop multithreaded generic conformance object_test execution
+test	scoop-conformance				scoop063 tcf pass scoop multithreaded generic conformance object_test execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock
@@ -2874,7 +2874,7 @@ test	qat-static-type-id-crash-2		anchor055 tcf pass anchored_type formal generic
 test	qat-generic-constrained-by-self		anchor056 tcf pass anchored_type formal generic
 test	qat-multi-constraint-type		anchor057 tcf pass anchored_type multiconstraint formal generic renaming creation
 test	qat-invalid-vffd-2			anchor058 tcf pass anchored_type
-test	qat-using-generic-feature-finalized	anchor059 tcf fail anchored_type
+test	qat-using-generic-feature-finalized	anchor059 tcf pass anchored_type
 test	qat-in-creation-procedure	anchor060 tcf pass anchored_type finalizing
 test	qat-generic-with-rename		anchor061 tcf pass anchored_type
 test	qat-generic-inheritance		anchor062 tcf pass anchored_type

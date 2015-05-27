@@ -233,12 +233,10 @@ doc:	</routine>
 rt_shared void rt_unset_processor_id (void)
 {
 	RT_GET_CONTEXT
-	eif_synchronize_gc (rt_globals);
 		/* We use the EIF_NULL_PROCESSOR to indicate that this thread is
 		 * a SCOOP processor that is about to be destroyed.
 		 * Otherwise the GC might think that it's dealing with a regular thread. */
 	rt_globals -> eif_thr_context_cx -> logical_id = EIF_NULL_PROCESSOR;
-	eif_unsynchronize_gc (rt_globals);
 }
 
 /*

@@ -38,6 +38,24 @@
 doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP processor garbage collector.">
 */
 
+/* TODO: This code can be simplified:
+ *
+ * The thread_index array should be transformed to a set of
+ * yet-to-be-marked threads with a single public feature next().
+ *
+ * rt_mark_live_pid should then check whether a processor
+ * is already marked, and if not, add it to thread_index.
+ *
+ * rt_update_live_index currently adds all live threads found
+ * since the last call to it to the end of thread_index array.
+ * By doing an eager update to thread_index, it can the be removed completely.
+ *
+ * rt_complement_live_index and rt_set_all_threads_live are kind of complements
+ * to each other. Both fill the thread_array with not-yet-marked threads for
+ * the last phase of GC (the difference is that during a full cycle those threads
+ * are already known to be dead).
+ */
+
 #include <stddef.h>
 #include <memory.h>
 #include "rt_types.h"
@@ -93,24 +111,35 @@ rt_private size_t pid_index [RT_MAX_SCOOP_PROCESSOR_COUNT];
 #define INVALID_INDEX (~ (size_t) 0)
 
 /*
-doc:	<attribute name="live_index" return_type="site_t *" export="shared">
-doc:		<summary>Indexes of live threads (`live_index_count' in total).</summary>
+doc:	<attribute name="thread_index" return_type="site_t *" export="private">
+doc:		<summary> A container for indices of all threads. The threads in range (0 <= x < live_index_count) are found to be alive by the GC.
+doc:			Threads in the range (live_index_count <= x < rt_global_data.count) are added by rt_complement_live_index() and are considered dead.</summary>
 doc:		<access>Read</access>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared size_t live_index [RT_MAX_SCOOP_PROCESSOR_COUNT];
+rt_private size_t* thread_index = NULL;
 
 /*
-doc:	<attribute name="live_index_count" return_type="size_t" export="shared">
-doc:		<summary>Total number of valid items in `live_index' starting from 0 index.</summary>
+doc:	<attribute name="thread_index_capacity" return_type="site_t" export="private">
+doc:		<summary>The current capacity of 'thread_index'.</summary>
 doc:		<access>Read</access>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared size_t live_index_count;
+rt_private size_t thread_index_capacity = 0;
+
+/*
+doc:	<attribute name="live_index_count" return_type="size_t" export="private">
+doc:		<summary>Total number of live items `thread_index' starting from 0 index.</summary>
+doc:		<access>Read</access>
+doc:		<thread_safety>Unsafe</thread_safety>
+doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
+doc:	</attribute>
+*/
+rt_private size_t live_index_count;
 
 /*
 doc:	<routine name="rt_mark_live_pid" export="shared">
@@ -122,7 +151,54 @@ doc:	</routine>
 */
 rt_shared void rt_mark_live_pid (EIF_SCP_PID pid)
 {
+	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 	RT_MARK_PID (pid);
+}
+
+
+/*
+doc:	<routine name="rt_live_thread_item" return_type="size_t" export="shared">
+doc:		<summary>Return an index of the thread at position 'position'. The return value is an index to the rt_globals_list structure.</summary>
+doc:		<param name="position" type="size_t">The position of the thread in the 'thread_index' array.</param>
+doc:		<return> A valid index to a thread in the 'rt_globals_list' structure. </return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_shared size_t rt_thread_item (size_t position)
+{
+	REQUIRE ("in_bounds", position < rt_globals_list.count);
+	ENSURE ("valid", thread_index [position] < rt_globals_list.count);
+	return thread_index [position];
+}
+
+
+/*
+doc:	<routine name="rt_live_thread_count" return_type="size_t" export="shared">
+doc:		<summary>Return the total number of live threads in the 'thread_index' array.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_shared size_t rt_live_thread_count (void)
+{
+	return live_index_count;
+}
+
+/*
+doc:	<routine name="rt_set_all_threads_live" return_type="size_t" export="shared">
+doc:		<summary>Complement the 'thread_index' array such that all threads will be traversed for partial garbage collection.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_set_all_threads_live (void)
+{
+	size_t j = 0;
+	size_t count = rt_globals_list.count;
+	for (; j < count; j++) {
+		thread_index [j] = j;
+	}
 }
 
 /*
@@ -154,7 +230,7 @@ rt_private void rt_enumerate_live_processors(void)
 
 /*
 doc:	<routine name="rt_prepare_live_index" export="shared">
-doc:		<summary>Prepare `live_index' and `live_index_count' to track live indexes during GC.</summary>
+doc:		<summary>Prepare `thread_index' and `live_index_count' to track live indexes during GC.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>To be done while already pocessing the `eif_gc_mutex' lock. (i.e: encapsulated in eif_synchronize_gc and eif_unsynchronize_gc</synchronization>
 doc:	</routine>
@@ -172,8 +248,24 @@ rt_shared void rt_prepare_live_index ()
 			/* Use -1 to indicate that no thread index is allocated for the processor yet. */
 		pid_index[i] = INVALID_INDEX;
 	}
-		/* Clean live indexes. */
-	memset (live_index, 0, sizeof (live_index));
+		/* Clean live indexes and make sure we have enough space. */
+	if (thread_index_capacity < count) {
+		size_t* new_thread_index = NULL;
+		size_t new_capacity = 1;
+			/* Double capacity until we have enough space. */
+		while (new_capacity < count) {
+			 new_capacity <<= 1;
+		}
+			/* Allocate the new array. */
+		new_thread_index = malloc (new_capacity * sizeof (size_t));
+		if (!new_thread_index) {
+			eif_panic ("Could not increase thread_index array during garbage collection.\n");
+		}
+		free (thread_index);
+		thread_index = new_thread_index;
+		thread_index_capacity = new_capacity;
+	}
+	memset (thread_index, -1, count * sizeof (size_t));
 	live_index_count = 0;
 
 	/* The precondition is commented out because some threads may execute
@@ -197,7 +289,7 @@ rt_shared void rt_prepare_live_index ()
 		} else {
 				/* This is a non-SCOOP thread. */
 				/* Add it to the live indexes. */
-			live_index [live_index_count] = i;
+			thread_index [live_index_count] = i;
 			live_index_count++;
 		}
 	}
@@ -209,7 +301,7 @@ rt_shared void rt_prepare_live_index ()
 
 /*
 doc:	<routine name="rt_update_live_index" export="shared">
-doc:		<summary>Update (already initialized) `live_index', `live_index_count'
+doc:		<summary>Update (already initialized) `thread_index', `live_index_count'
 doc:                     to include live indexes between `0' and `live_index_count - 1'.
 doc:                     Add all remaining indexes to the end if no new live indexes are found
 doc:                     leaving `live_index_count' without a change.</summary>
@@ -223,7 +315,7 @@ rt_shared void rt_update_live_index (void)
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
 	for (i = 0; i < live_index_count; i++) {
-		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
+		rt_thr_context * c = t [thread_index [i]] -> eif_thr_context_cx;
 		if (c -> is_processor) {
 				/* A EIF_NULL_PROCESSOR indicates that the processor is about to destroy itself because it has no more references.
 				 * If the GC thinks it's alive this is a bug. */
@@ -245,7 +337,7 @@ rt_shared void rt_update_live_index (void)
 					size_t p = pid_index [j];
 					if (p != INVALID_INDEX) {
 							/* Add live index to the list. */
-						live_index [live_index_count] = p;
+						thread_index [live_index_count] = p;
 						live_index_count++;
 					}
 				}
@@ -273,19 +365,19 @@ rt_shared void rt_complement_live_index (void)
 	memset (live_pid_map, 0xFF, sizeof (live_pid_map));
 		/* Unmark live indexes. */
 	for (i = 0; i < live_index_count; i++) {
-		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
+		rt_thr_context * c = t [thread_index [i]] -> eif_thr_context_cx;
 		if (c -> is_processor) {
-			RT_UNMARK_PID (live_index [i]);
+			RT_UNMARK_PID (thread_index [i]);
 		}
 	}
 		/* Iterate over all indexes and add dead ones to the end of the list. */
 	for (i = 0; i < count; i++) {
 		rt_thr_context * c = t [i] -> eif_thr_context_cx;
-		if ((c -> is_processor) && RT_IS_LIVE_PID (i)) {
+		if ((c-> is_processor) && RT_IS_LIVE_PID (i)) {
 				/* The index is marked. So, the index is not in the list of live ones. */
 				/* Add it to the end of the list. */
-			CHECK ("in_range", n < RT_MAX_SCOOP_PROCESSOR_COUNT);
-			live_index [n] = i;
+			CHECK ("in_range", n < count);
+			thread_index [n] = i;
 			n++;
 		}
 	}
@@ -306,7 +398,7 @@ rt_shared void rt_report_live_index (void)
 
 	/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
 	for (i = live_index_count; i < count; i++) {
-		rt_thr_context * c = t [live_index [i]] -> eif_thr_context_cx;
+		rt_thr_context * c = t [thread_index [i]] -> eif_thr_context_cx;
 			/* Notify SCOOP manager that the processor is not used anymore. */
 			/* Note: Processors with a EIF_NULL_PROCESSOR are about to destroy themselves.
 			 * No need to send the shutdown signal again. */

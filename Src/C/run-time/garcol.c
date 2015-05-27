@@ -1471,7 +1471,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* This should be done before any marking. */
 	rt_prepare_live_index ();
 	rt_mark_all_processors(MARK_SWITCH);
-	if (!live_index_count) {
+	if (rt_live_thread_count() == 0) {
 		rt_update_live_index();
 	}
 #endif
@@ -1583,11 +1583,11 @@ rt_private void internal_marking(MARKER marking, int moving)
 
 	if (rt_g_data.status & (GC_PART | GC_GEN)) {
 			/* Full GC: mark only live processors. */
-		for (j = 0; j < live_index_count;) {
+		for (j = 0; j < rt_live_thread_count ();) {
 				/* Iterate over known live indexes. */
-			for (n = live_index_count; j < n; j++) {
+			for (n = rt_live_thread_count (); j < n; j++) {
 					/* Use only live indexes. */
-				i = live_index [j];
+				i = rt_thread_item (j);
 				CHECK ("Valid index", i < loc_set_list.count);
 				mark_stack(loc_set_list.threads.sstack[i], marking, moving);
 				mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
@@ -1615,17 +1615,15 @@ rt_private void internal_marking(MARKER marking, int moving)
 		rt_complement_live_index ();
 	} else {
 			/* Partical GC: duplicate indexes to mark all processors. */
-		j = 0;
-		for (n = loc_set_list.count; j < n; j++) {
-			live_index [j] = j;
-		}
+		CHECK ("same_count", loc_set_list.count == rt_globals_list.count);
+		rt_set_all_threads_live ();
 		j = 0;
 	}
 	for (n = loc_set_list.count; j < n; j++) {
 			/* Use `live_index' to figure out what else has to be marked.
 			 * It includes unmarked indexes when doing full GC and
 			 * all indexes when doing partial GC. */
-		i = live_index [j];
+		i = rt_thread_item (j);
 		CHECK ("Valid index", i < loc_set_list.count);
 		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
 		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
@@ -3939,7 +3937,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 		/* This should be done before any marking. */
 	rt_prepare_live_index ();
 	rt_mark_all_processors(GEN_SWITCH);
-	if (!live_index_count) {
+	if (rt_live_thread_count() == 0) {
 		rt_update_live_index();
 	}
 #endif

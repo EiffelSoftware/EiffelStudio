@@ -213,7 +213,7 @@ rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_m
 
 		/* Enqueue the message. The store_release guarantees that the receiver
 		 * will see a consistent view of the node (i.e. with all fields initialized
-		 * as in rt_message_init). This store_release pairs with the load_consume in enqueue().*/
+		 * as in rt_message_init). This store_release pairs with the load_consume in dequeue().*/
 	store_release ( &(self->head->next), node);
 
 		/* Update the head pointer (note that this pointer is only accessed by the producer). */
@@ -240,7 +240,7 @@ rt_private rt_inline EIF_BOOLEAN dequeue (struct rt_message_channel* self, struc
 		/* Check if there's a message to be dequeued.
 		 * The load_consume ensures that we get a consistent view
 		 * if the producer just enqueued a new item.
-		 * This load_consume pairs with the store_release in dequeue(). */
+		 * This load_consume pairs with the store_release in enqueue(). */
 	item = load_consume ( &(self->tail->next));
 
 	if (item) {

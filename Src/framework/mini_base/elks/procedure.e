@@ -19,8 +19,17 @@ class
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]
 
+feature
+
+	call alias "()" (args: detachable separate OPEN_ARGS)
+		do
+			if attached {detachable separate OPEN_ARGS} default then
+				
+			end
+		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -40,8 +40,6 @@
 #pragma once
 #endif
 
-#include "eif_macros.h"
-#include "eif_scoop.h"
 #include "rt_garcol.h"
 
 #ifdef __cplusplus
@@ -50,8 +48,10 @@ extern "C" {
 
 #ifdef EIF_THREADS
 extern void rt_mark_live_pid(EIF_SCP_PID pid);
-extern size_t live_index [];    /* Indexes of live threads. */
-extern size_t live_index_count; /* Total number of valid items in `live_index' starting from 0 index. */
+
+extern size_t rt_thread_item (size_t position); /* Get thread at 'position' (0 <= position < rt_globals_list.count) */
+extern size_t rt_live_thread_count (void); /* The number of alive threads. */
+extern void rt_set_all_threads_live (void); /* Mark all threads in the runtime as alive. */
 #endif
 
 extern void rt_prepare_live_index (void); /* Initialize live indexes. */

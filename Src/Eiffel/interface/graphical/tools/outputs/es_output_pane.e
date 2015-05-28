@@ -69,6 +69,7 @@ feature {NONE} -- Clean up
 					end
 					l_table.forth
 				end
+				l_table.wipe_out
 			end
 		ensure then
 			widget_table_is_empty: widget_table.is_empty
@@ -413,7 +414,7 @@ invariant
 	notifier_formatter_attached: notifier_formatter /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

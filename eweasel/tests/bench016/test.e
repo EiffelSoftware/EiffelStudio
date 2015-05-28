@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 			task_queues: ARRAYED_LIST [separate TASK_QUEUE]
 			specialization: INTEGER
 			task_count: INTEGER
+			i: INTEGER
 		do
 			create random.make_time
 			create task_queues.make (worker_group_count)
@@ -68,12 +69,15 @@ feature {NONE} -- Initialization
 			end
 
 				-- Create the tasks
-			task_count := get_task_count
-			across
-				1 |..| task_count as task_cursor
+			from
+				i := 0
+				task_count := get_task_count
+			until
+				i > task_count
 			loop
-				queue := task_queues [task_cursor.item \\ worker_group_count + 1]
+				queue := task_queues [i \\ worker_group_count + 1]
 				add_task (queue)
+				i := i + 1
 			end
 
 				-- Signal the queues that no more tasks will be inserted.

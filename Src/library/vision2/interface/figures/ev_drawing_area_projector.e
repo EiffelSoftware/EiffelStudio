@@ -11,6 +11,9 @@ note
 class
 	EV_DRAWING_AREA_PROJECTOR
 
+obsolete
+	"Use EV_MODEL_DRAWING_AREA_PROJECTOR instead."
+
 inherit
 	EV_WIDGET_PROJECTOR
 

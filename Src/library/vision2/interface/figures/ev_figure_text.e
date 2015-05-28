@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_TEXT
 
+obsolete
+	"Use EV_MODEL_TEXT instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		redefine

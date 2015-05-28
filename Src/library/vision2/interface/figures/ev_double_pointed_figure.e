@@ -10,6 +10,9 @@ note
 deferred class
 	EV_DOUBLE_POINTED_FIGURE
 
+obsolete
+	"EV_MODEL_DOUBLE_POINTED instead."
+
 inherit
 	EV_SINGLE_POINTED_FIGURE
 		rename

@@ -10,6 +10,9 @@ note
 class
 	EV_PRINT_PROJECTOR_IMP
 
+obsolete
+	"Use EV_MODEL_PRINT_PROJECTOR_IMP instead."
+
 inherit
 
 	EV_ANY_IMP

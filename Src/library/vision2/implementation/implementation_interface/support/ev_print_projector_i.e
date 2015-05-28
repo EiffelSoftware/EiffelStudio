@@ -10,6 +10,9 @@ note
 deferred class
 	EV_PRINT_PROJECTOR_I
 
+obsolete
+	"Use EV_MODEL_PRINT_PROJECTOR_I instead."
+
 inherit
 
 	EV_ANY_I

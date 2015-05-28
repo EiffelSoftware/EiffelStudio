@@ -11,6 +11,9 @@ note
 class
 	EV_MOVE_HANDLE
 
+obsolete
+	"Use EV_MODEL_MOVE_HANDLE instead."
+
 inherit
 	EV_FIGURE_GROUP
 		redefine

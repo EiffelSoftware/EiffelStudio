@@ -10,6 +10,9 @@ note
 deferred class
 	EV_ARROWED_FIGURE
 
+obsolete
+	"Use EV_MODEL_ARROWED instead."
+
 inherit
 	ANY
 

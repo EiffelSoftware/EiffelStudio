@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_POLYGON
 
+obsolete
+	"Use EV_MODEL_POLYGON instead."
+
 inherit
 	EV_CLOSED_FIGURE
 

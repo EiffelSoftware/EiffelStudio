@@ -11,6 +11,9 @@ note
 class
 	EV_FIGURE_ARC
 
+obsolete
+	"Use EV_MODEL_ARC instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		export

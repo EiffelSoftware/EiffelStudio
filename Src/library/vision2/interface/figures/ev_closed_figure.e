@@ -10,6 +10,9 @@ note
 deferred class
 	EV_CLOSED_FIGURE
 
+obsolete
+	"Use EV_MODEL_CLOSED instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 

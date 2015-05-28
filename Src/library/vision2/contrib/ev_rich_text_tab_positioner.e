@@ -12,6 +12,9 @@ note
 class
 	EV_RICH_TEXT_TAB_POSITIONER
 
+obsolete
+	"No supported anymore."
+
 inherit
 	EV_DRAWING_AREA
 		redefine

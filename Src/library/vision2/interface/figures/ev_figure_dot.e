@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_DOT
 
+obsolete
+	"Use EV_MODEL_DOT instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		redefine

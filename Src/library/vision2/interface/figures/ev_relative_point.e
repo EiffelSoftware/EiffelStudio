@@ -21,6 +21,9 @@ note
 class
 	EV_RELATIVE_POINT
 
+obsolete
+	"Not needed in EV_MODEL."
+
 inherit
 	EV_FIGURE_MATH
 		export

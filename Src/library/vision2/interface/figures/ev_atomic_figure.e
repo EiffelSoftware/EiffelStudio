@@ -10,6 +10,9 @@ note
 deferred class
 	EV_ATOMIC_FIGURE
 
+obsolete
+	"Use EV_MODEL_ATOMIC instead."
+
 inherit
 	EV_FIGURE
 		redefine

@@ -10,6 +10,9 @@ note
 class
 	EV_PIXMAP_PROJECTOR
 
+obsolete
+	"Use EV_MODEL_PIXMAP_PROJECTOR instead."
+
 inherit
 	EV_WIDGET_PROJECTOR
 		redefine

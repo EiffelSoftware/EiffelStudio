@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_PICTURE
 
+obsolete
+	"Use EV_MODEL_PICTURE instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		redefine

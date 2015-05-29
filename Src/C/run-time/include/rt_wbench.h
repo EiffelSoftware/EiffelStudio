@@ -68,6 +68,9 @@ extern "C" {
 
 extern void rt_wexp(int routine_id, EIF_TYPE_INDEX dyn_type, EIF_REFERENCE object);		/* Creation call for expanded types */
 
+extern void eif_tuple_access (EIF_REFERENCE target, int32 position, EIF_TYPED_VALUE * result);
+extern void eif_tuple_assign (EIF_REFERENCE target, int32 position, EIF_TYPED_VALUE * source);
+
 #ifdef __cplusplus
 }
 #endif

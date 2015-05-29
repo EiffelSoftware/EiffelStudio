@@ -516,6 +516,48 @@ rt_public void eif_invoke_test_routine (EIF_REFERENCE obj, int body_id)
 	(FUNCTION_CAST(void, (EIF_REFERENCE)) rout)(obj);
 }
 
+rt_shared void eif_tuple_access (EIF_REFERENCE target, int32 position, EIF_TYPED_VALUE * result)
+{
+	switch (result->type & SK_HEAD) {
+		case SK_BOOL:    result->it_char   = eif_boolean_item        (target, position); break;
+		case SK_CHAR8:   result->it_char   = eif_character_item      (target, position); break;
+		case SK_CHAR32:  result->it_wchar  = eif_wide_character_item (target, position); break;
+		case SK_UINT8:   result->it_uint8  = eif_natural_8_item      (target, position); break;
+		case SK_UINT16:  result->it_uint16 = eif_natural_16_item     (target, position); break;
+		case SK_UINT32:  result->it_uint32 = eif_natural_32_item     (target, position); break;
+		case SK_UINT64:  result->it_uint64 = eif_natural_64_item     (target, position); break;
+		case SK_INT8:    result->it_int8   = eif_integer_8_item      (target, position); break;
+		case SK_INT16:   result->it_int16  = eif_integer_16_item     (target, position); break;
+		case SK_INT32:   result->it_int32  = eif_integer_32_item     (target, position); break;
+		case SK_INT64:   result->it_int64  = eif_integer_64_item     (target, position); break;
+		case SK_REAL32:  result->it_real32 = eif_real_32_item        (target, position); break;
+		case SK_REAL64:  result->it_real64 = eif_real_64_item        (target, position); break;
+		case SK_POINTER: result->it_ptr    = eif_pointer_item        (target, position); break;
+		default:         result->it_ref    = eif_boxed_item          (target, position);
+	}
+}
+
+
+rt_shared void eif_tuple_assign (EIF_REFERENCE target, int32 position, EIF_TYPED_VALUE * source)
+{
+	switch (source->type & SK_HEAD) {
+		case SK_BOOL:    eif_put_boolean_item        (target, position, source->it_char);   break;
+		case SK_CHAR8:   eif_put_character_item      (target, position, source->it_char);   break;
+		case SK_CHAR32:  eif_put_wide_character_item (target, position, source->it_wchar);  break;
+		case SK_UINT8:   eif_put_natural_8_item      (target, position, source->it_uint8);  break;
+		case SK_UINT16:  eif_put_natural_16_item     (target, position, source->it_uint16); break;
+		case SK_UINT32:  eif_put_natural_32_item     (target, position, source->it_uint32); break;
+		case SK_UINT64:  eif_put_natural_64_item     (target, position, source->it_uint64); break;
+		case SK_INT8:    eif_put_integer_8_item      (target, position, source->it_int8);   break;
+		case SK_INT16:   eif_put_integer_16_item     (target, position, source->it_int16);  break;
+		case SK_INT32:   eif_put_integer_32_item     (target, position, source->it_int32);  break;
+		case SK_INT64:   eif_put_integer_64_item     (target, position, source->it_int64);  break;
+		case SK_REAL32:  eif_put_real_32_item        (target, position, source->it_real32); break;
+		case SK_REAL64:  eif_put_real_64_item        (target, position, source->it_real64); break;
+		case SK_POINTER: eif_put_pointer_item        (target, position, source->it_ptr);    break;
+		default:         eif_put_reference_item      (target, position, source->it_ref);
+	}
+}
 
 #endif
 

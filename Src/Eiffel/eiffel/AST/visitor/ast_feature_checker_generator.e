@@ -2210,8 +2210,10 @@ feature {NONE} -- Type checks
 				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			end
 
-				-- Adapted formal type of a feature argument.
-			formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+			if attached callee then
+					-- Adapt formal type of a feature argument.
+				formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+			end
 
 			warning_count := error_handler.warning_list.count
 			if not formal_type.backward_conform_to (current_class, expression_type) then

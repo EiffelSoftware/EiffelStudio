@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tuple access for C code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,17 @@ class
 inherit
 	TUPLE_ACCESS_B
 		redefine
-			register, set_register,
-			analyze, unanalyze, propagate,
-			generate_on, generate_access
+			analyze,
+			free_register,
+			generate_access,
+			generate_on,
+			generate_separate_call,
+			parameters,
+			propagate,
+			register,
+			set_register,
+			set_source,
+			unanalyze
 		end
 
 create
@@ -24,7 +32,17 @@ feature -- Access
 	register: REGISTRABLE
 			-- Where value of TUPLE access is saved.
 
+	parameters: detachable BYTE_LIST [PARAMETER_B]
+			-- Arguments used for separate call.
+
 feature -- Settings
+
+	set_source (s: like source)
+		do
+			Precursor (s)
+			create parameters.make (1)
+			parameters.extend (s)
+		end
 
 	set_register (r: REGISTRABLE)
 			-- <Precursor>
@@ -39,16 +57,25 @@ feature -- C Code generation
 	analyze
 			-- Analyze current byte code.
 		do
-			if source /= Void then
-				source.analyze
+			if context_type.is_separate then
+				if attached source as s then
+					s.set_is_for_tuple_access (False)
+					s.analyze
+				elseif context.final_mode then
+					get_register
+				else
+					register := context.get_argument_register (tuple_element_type.c_type)
+				end
+			elseif attached source as s then
+				s.analyze
 			end
 		end
 
 	unanalyze
 			-- <Precursor>
 		do
-			if source /= Void then
-				source.unanalyze
+			if attached source as s then
+				s.unanalyze
 			end
 			set_register (Void)
 		end
@@ -56,10 +83,28 @@ feature -- C Code generation
 	propagate (r: REGISTRABLE)
 			-- Propagate `r'
 		do
-			if not context.propagated then
+			if context_type.is_separate then
+				if attached source as s then
+					s.propagate (r)
+				elseif r /= No_register and then r.c_type.is_reference then
+					register := r
+				end
+			elseif not context.propagated then
 				if r = No_register or r.c_type.same_class_type (c_type) then
 					register := r
 					context.set_propagated
+				end
+			end
+		end
+
+	free_register
+			-- <Precursor>
+		do
+			if context_type.is_separate then
+				if attached source as s then
+					s.free_register
+				else
+					register.free_register
 				end
 			end
 		end
@@ -71,26 +116,35 @@ feature -- C Code generation
 			l_target_type: TYPE_A
 		do
 			buf := buffer
-			if source /= Void then
+			if attached source as s then
 				generate_line_info
 				generate_frozen_debugger_hook
-				source.generate
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
 					l_target_type := real_type (tuple_element_type)
 					if l_target_type.c_type.is_reference then
-						context.generate_tuple_catcall_check (a_register, source, position)
+						if context_type.is_separate then
+							s.set_is_for_tuple_access (True)
+							context.generate_tuple_catcall_check (a_register, s, position)
+							s.set_is_for_tuple_access (False)
+						else
+							context.generate_tuple_catcall_check (a_register, s, position)
+						end
 					end
 				end
 					-- Make sure to call RTCV to verify that TUPLE is not Void.				
 				buf.put_new_line
-				buf.put_string (once "eif_put_")
-				buf.put_string (tuple_element_name)
-				buf.put_string ("_item(RTCV(")
+				real_type (tuple_element_type).c_type.generate_tuple_put (buffer)
+				buf.put_string ("(RTCV(")
 				a_register.print_register
 				buf.put_two_character (')', ',')
 				buf.put_integer (position)
 				buf.put_character (',')
-				source.print_register
+				if context_type.is_separate and then attached s.register as r then
+						-- Avoid printing argument register.
+					r.print_register
+				else
+					s.print_register
+				end
 				buf.put_character (')')
 			else
 				generate_internal (a_register)
@@ -125,6 +179,62 @@ feature -- C Code generation
 			buf.put_character (')')
 		end
 
+	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- <Precursor>
+		local
+			buf: like buffer
+		do
+			check attached {CL_TYPE_A} context_type as c then
+				buf := buffer
+				if attached r then
+						-- Read operation.
+					buf.put_new_line
+					buf.put_string ("RTS_CTR (")
+					buf.put_integer (position)
+					buf.put_two_character (',', ' ')
+					if context.final_mode then
+							-- Generate pattern.
+						system.separate_patterns.put_tuple_access (Current)
+					else
+							-- Generate SK type.
+						r.c_type.generate_sk_value (buf)
+					end
+					buf.put_two_character (',', ' ')
+					s.print_register
+					buf.put_two_character (',', ' ')
+					check attached {REGISTER} register as ar then
+						if context.final_mode then
+							ar.print_register
+						else
+							context.print_argument_register (ar, buf)
+						end
+					end
+					buf.put_two_character (')', ';')
+					buf.put_new_line
+					r.print_register
+					buf.put_three_character (' ', '=', ' ')
+					register.print_register
+				else
+						-- Write operation.
+					check attached source as a then
+							-- Generate call.
+						buf.put_new_line
+						buf.put_string ("RTS_CTW (")
+						buf.put_integer (position)
+						buf.put_two_character (',', ' ')
+						if context.final_mode then
+								-- Generate pattern.
+							system.separate_patterns.put_tuple_access (Current)
+							buf.put_two_character (',', ' ')
+						end
+						s.print_register
+						buf.put_character (')')
+					end
+				end
+				buf.put_character (';')
+			end
+		end
+
 	tuple_element_name: STRING
 			-- String representation of TUPLE element type.
 		do
@@ -152,7 +262,7 @@ feature -- C Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

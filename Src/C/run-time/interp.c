@@ -2485,6 +2485,83 @@ rt_private void interpret(int flag, int where)
 					/* Avoid further processing related to separate status. */
 				target = NULL;
 			}
+			else if (code == BC_TUPLE_ACCESS) {
+					/* Check that this is not an access on void target. */
+				(void) RTCV (target -> it_ref);
+					/* Proceed normally if the access is not separate. */
+				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
+						/* This is a separate access. */
+					int pos;
+					uint32 type;
+					unsigned long stagval;
+					unsigned char * OLD_IC;
+					call_data * a;
+						/* Retrieve tuple access data. */
+					IC++;
+					pos = get_int32(&IC);            /* Position of access. */
+					type = get_uint32(&IC);	         /* SK_XX value of access. */
+						/* Perform separate access to tuple. */
+					stagval = tagval;                /* Save tag value. */
+					OLD_IC  = IC;                    /* Save IC. */
+
+					RTS_AC (0, target -> it_ref, a); /* Create call structure. */
+					last = target;                   /* Reuse target cell for result. */
+					RTS_CTR (pos, type, a, *last);   /* Make separate access to a tuple. */
+					if (tagval != stagval)           /* Interpreted function was called. */
+						sync_registers(MTC scur, stop);
+					IC = OLD_IC;
+				}
+					/* Avoid further processing related to separate status. */
+				target = NULL;
+			}
+			else if (code == BC_TUPLE_ASSIGN) {
+					/* Check that this is not an access on void target. */
+				(void) RTCV (target -> it_ref);
+					/* Proceed normally if the access is not separate. */
+				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
+						/* This is a separate access. */
+					int pos;
+					uint32 type;
+					unsigned long stagval;
+					unsigned char * OLD_IC;
+					call_data * a;
+					EIF_TYPED_VALUE *source;
+						/* Retrieve tuple access data. */
+					IC++;
+					pos = get_int32(&IC);            /* Position of access. */
+					type = get_uint32(&IC);	         /* SK_XX value of access. */
+						/* Perform separate access to tuple. */
+					stagval = tagval;                /* Save tag value. */
+					OLD_IC  = IC;                    /* Save IC. */
+
+					RTS_AC (1, target -> it_ref, a); /* Create call structure. */
+
+					(void) opop ();                  /* Remove target from the evaluation stack. */
+					source = opop();                 /* Get source value. */
+					if ((source -> type & SK_HEAD) == SK_REF) {
+						RTS_AS(*source, it_r, source->type, 1, a); /* Record a possibly separate argument. */
+					} else {
+							/* We use `0' for the second argument because the macro does not actually use it
+							 * in workbench mode. */
+						RTS_AA(*source, 0, source -> type, 1, a); /* Record a non-separate argument. */
+					}
+					RTS_CTW (pos, a);                /* Make separate access to a tuple. */
+					if (tagval != stagval)           /* Interpreted function was called. */
+						sync_registers(MTC scur, stop);
+					IC = OLD_IC;
+				}
+				else {
+						/* Revert changes performed by BC_ROTATE that swapped target and source. */
+					EIF_TYPED_VALUE v;
+					(void) opop ();
+					last = otop ();
+					v = *last;
+					*last = *target;
+					opush (&v);
+				}
+					/* Avoid further processing related to separate status. */
+				target = NULL;
+			}
 			else {
 				if (target -> it_ref == (EIF_REFERENCE) 0) {
 						/* Called on a void reference? */
@@ -3235,62 +3312,28 @@ rt_private void interpret(int flag, int where)
 
 	case BC_TUPLE_ACCESS:
 		{
-			int pos = get_int32(&IC);		/* Position of access. */
-			uint32 type = get_uint32(&IC);	/* SK_XX value of access. */
+			int pos = get_int32(&IC);      /* Position of access. */
+			uint32 type = get_uint32(&IC); /* SK_XX value of access. */
 			EIF_TYPED_VALUE *last;
 
 			last = otop();
 			CHECK("last not null", last);
-			(void) RTCV(last->it_ref);	/* Check that TUPLE is not Void. */
-			last->type = type;	/* Stored type of accessed tuple element. */
-			switch (type & SK_HEAD) {
-				case SK_BOOL: last->it_char = eif_boolean_item (last->it_ref, pos); break;
-				case SK_CHAR8: last->it_char = eif_character_item (last->it_ref, pos); break;
-				case SK_CHAR32: last->it_wchar = eif_wide_character_item (last->it_ref, pos); break;
-				case SK_UINT8: last->it_uint8 = eif_natural_8_item (last->it_ref, pos); break;
-				case SK_UINT16: last->it_uint16 = eif_natural_16_item (last->it_ref, pos); break;
-				case SK_UINT32: last->it_uint32 = eif_natural_32_item (last->it_ref, pos); break;
-				case SK_UINT64: last->it_uint64 = eif_natural_64_item (last->it_ref, pos); break;
-				case SK_INT8: last->it_int8 = eif_integer_8_item (last->it_ref, pos); break;
-				case SK_INT16: last->it_int16 = eif_integer_16_item (last->it_ref, pos); break;
-				case SK_INT32: last->it_int32 = eif_integer_32_item (last->it_ref, pos); break;
-				case SK_INT64: last->it_int64 = eif_integer_64_item (last->it_ref, pos); break;
-				case SK_REAL32: last->it_real32 = eif_real_32_item (last->it_ref, pos); break;
-				case SK_REAL64: last->it_real64 = eif_real_64_item (last->it_ref, pos); break;
-				case SK_POINTER: last->it_ptr = eif_pointer_item (last->it_ref, pos); break;
-				default:
-					last->it_ref = eif_boxed_item (last->it_ref, pos);
-			}
+			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
+			last->type = type;         /* Stored type of accessed tuple element. */
+			eif_tuple_access (last->it_ref, pos, last);
 		}
 		break;
 
 	case BC_TUPLE_ASSIGN:
 		{
-			int pos = get_int32(&IC);		/* Position of access. */
-			uint32 type = get_uint32(&IC);	/* SK_XX value of access. */
-			EIF_TYPED_VALUE *source, *tuple;
+			EIF_TYPED_VALUE *source;
+			int pos = get_int32(&IC);      /* Position of access. */
+			(void) get_uint32(&IC);        /* SK_XX value of access. (unused) */
 
 			source = opop();
-			tuple = opop();
-			(void) RTCV(tuple->it_ref);	/* Check that TUPLE is not Void. */
-			switch (type & SK_HEAD) {
-				case SK_BOOL: eif_put_boolean_item (tuple->it_ref, pos, source->it_char); break;
-				case SK_CHAR8: eif_put_character_item (tuple->it_ref, pos, source->it_char); break;
-				case SK_CHAR32: eif_put_wide_character_item (tuple->it_ref, pos, source->it_wchar); break;
-				case SK_UINT8: eif_put_natural_8_item (tuple->it_ref, pos, source->it_uint8); break;
-				case SK_UINT16: eif_put_natural_16_item (tuple->it_ref, pos, source->it_uint16); break;
-				case SK_UINT32: eif_put_natural_32_item (tuple->it_ref, pos, source->it_uint32); break;
-				case SK_UINT64: eif_put_natural_64_item (tuple->it_ref, pos, source->it_uint64); break;
-				case SK_INT8: eif_put_integer_8_item (tuple->it_ref, pos, source->it_int8); break;
-				case SK_INT16: eif_put_integer_16_item (tuple->it_ref, pos, source->it_int16); break;
-				case SK_INT32: eif_put_integer_32_item (tuple->it_ref, pos, source->it_int32); break;
-				case SK_INT64: eif_put_integer_64_item (tuple->it_ref, pos, source->it_int64); break;
-				case SK_REAL32: eif_put_real_32_item (tuple->it_ref, pos, source->it_real32); break;
-				case SK_REAL64: eif_put_real_64_item (tuple->it_ref, pos, source->it_real64); break;
-				case SK_POINTER: eif_put_pointer_item (tuple->it_ref, pos, source->it_ptr); break;
-				default:
-					eif_put_reference_item (tuple->it_ref, pos, source->it_ref);
-			}
+			last = opop();
+			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
+			eif_tuple_assign (last->it_ref, pos, source);
 		}
 
 		break;

@@ -768,8 +768,8 @@ feature {NONE} -- Text Loading
 		do
 				-- First abort our previous actions.
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
-			if attached internal_search_tool then
-				internal_search_tool.force_new_search
+			if attached search_tool as l_tool then
+				l_tool.force_new_search
 			end
 			after_reading_text_actions.wipe_out
 		end
@@ -985,7 +985,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

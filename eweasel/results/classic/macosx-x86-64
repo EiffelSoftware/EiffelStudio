@@ -1206,6 +1206,7 @@ Test once-followed-by-static-call (syntax068): failed
 		Final status:  completed 
 
 Test syntax-obsolete-typed-string (syntax069): passed
+Test inline-separate-instruction-syntax (syntax070): passed
 Test bad-class-end-comment (valid001): passed
 Test bad-infix-feature (valid002): passed
 Test class-not-in-universe (valid003): passed
@@ -1995,13 +1996,7 @@ Test bogus-vsrp3-with-require-else-false (valid269): failed
 		Final status:  paused 
 
 Test spurious-vuot-in-assertion (valid270): passed
-Test spurious-vweq-warning (valid271): failed
-	Description: A comparison {G} ~ {TYPE} yields a spurious VWEQ warning.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/valid271/tcf at line 13
-	Original text:    compare exec_output_1 output
-	Substituted text: compare exec_output_1 output
-	Reason: files being compared do not have identical contents
-
+Test spurious-vweq-warning (valid271): passed
 Test non-conforming-missing-vmss3 (valid272): failed
 	Description: Compiler should report a VMSS(3) error (select clause not needed) on a class that inherits from a parent class via both conforming and non-conforming inheritance and renames a feature and selects the feature in the conforming inheritance clause
 	Execution error in file /Users/manus/local/eweasel/eweasel/tests/valid272/tcf at line 9
@@ -2031,18 +2026,7 @@ Test spurious-vtgc3-with-vmfn (valid273): failed
 Test duplicate-vfac1 (valid274): passed
 Test non-conforming-equality (valid275): passed
 Test missing-assigner-feature (valid276): passed
-Test insufficiently-exported-assigner-feature (valid277): failed
-	Description: Compiler should not accept an assigner feature that is not exported at least as widely as the feature to which it assigns
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/valid277/tcf at line 10
-	Original text:    compile_result validity_error TEST1 V???
-	Substituted text: compile_result validity_error TEST1 V???
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  completed 
-	Expected result:
-		Validity error in class TEST1 code V???
-		Final status:  paused 
-
+Test insufficiently-exported-assigner-feature (valid277): passed
 Test invalid-static-inspect-constant (valid278): passed
 Test wrong-tuple-type-in-descendants (valid279): failed
 	Description: If you have a manifest tuple [t.item] where t is declared at `A [like foo]' the compiler will forget about the anchor `like foo' when instantiated a formal, thus creating the wrong type at runtime.
@@ -2861,7 +2845,7 @@ Test precompile-again (incr226): failed
 		Final status:  unknown	
 	Raw compiler output:
 	Eiffel Compilation Manager
-	Version 15.01.9.6506 Enterprise Edition - macosx-x86-64
+	Version 15.05.0.0 GPL Edition - macosx-x86-64
 	
 	There is already a project compiled in "/Users/manus/local/eweasel/test_dir/incr226"
 	It needs to be deleted before a precompilation.
@@ -3934,17 +3918,7 @@ Test finalize-generic-once-per-object (final095): failed
 	Expected result:
 		Final status:  completed 
 
-Test finalize-qat-object-test-2 (final096): failed
-	Description: Finalizing a system with an object test with a QAT that references a feature whose type is a formal generic causes system execution to seg fault.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/final096/tcf at line 24
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test finalize-qat-object-test-2 (final096): passed
 Test inline-deferred-with-one-implementation (final097): passed
 Test inline-with-generic-argument (final098): passed
 Test finalize-inline-merged-routine-2 (final099): passed
@@ -3952,13 +3926,7 @@ Test inline-deferred-with-generic-descendant (final100): passed
 Test inline-deferred-with-generic-descendant-2 (final101): passed
 Test inline-inherited-routine-with-less-generics (final102): passed
 Test inline-inherited-routine-with-less-generics-2 (final103): passed
-Test finalize-wrong-generating-type (final104): failed
-	Description: An expanded class TEST which creates an object of type `like Current' via several levels of anchoring incorrectly displays the generating type as "reference TEST" if system is finalized
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/final104/tcf at line 33
-	Original text:    compare exec_output_f output
-	Substituted text: compare exec_output_f output
-	Reason: files being compared do not have identical contents
-
+Test finalize-wrong-generating-type (final104): passed
 Test inlining-parent-with-less-formals (final105): passed
 Test inlining-in-parent-with-child-with-less-formals (final106): passed
 Test finalize-argument-anchors-formal (final107): failed
@@ -3999,7 +3967,7 @@ Test finalize-inline-across-loop (final114): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  silent_failure illegal_instruction 
+		Final status:  system_failed had_panic 
 	Expected result:
 		Final status:  completed 
 
@@ -4054,6 +4022,7 @@ Test comparison-involving-allocation (final120): failed
 	Reason: files being compared do not have identical contents
 
 Test bracket-wrong-dispatch (final121): passed
+Test wrong-boolean-branch-optimization (final122): passed
 Test gc-tracking-001 (runtime001): passed
 Test gc-tracking-002 (runtime002): passed
 Test gc-expanded-in-special (runtime003): passed
@@ -4066,7 +4035,7 @@ Test gc-expanded-allocating-memory-in-special-2 (runtime006): failed
 	Substituted text: execute_result ok
 	Reason: actual execution result does not match expected result
 	Actual result:
-		Final status:  system_failed 
+		Final status:  system_failed had_panic 
 	Expected result:
 		Final status:  completed 
 
@@ -4189,10 +4158,58 @@ Test scoop-agent-validity (scoop030): passed
 Test scoop-agent-call (scoop031): passed
 Test scoop-corrupted-string (scoop032): passed
 Test scoop-lock-passing-same-target (scoop033): passed
-Test scoop-corrupted-polymorphic-call (scoop034): passed
+Test scoop-corrupted-polymorphic-call (scoop034): failed
+	Description: Show a bug where a polymorphic call in a generic class that have both a reference and expanded derivation is wrong.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop034/tcf at line 16
+	Original text:    compare exec_output_f output
+	Substituted text: compare exec_output_f output
+	Reason: files being compared do not have identical contents
+
 Test scoop-null-reference-call (scoop035): passed
 Test scoop-nested-chain-uncontrolled-check (scoop036): passed
 Test scoop-run-time-crash (scoop037): passed
+Test scoop-agent-creation-rule (scoop038): passed
+Test scoop-agent-expression-uncontrolled (scoop039): passed
+Test scoop-agent-expression-controlled (scoop040): passed
+Test scoop-wait-condition-controlled (scoop041): manual
+Test scoop-exceptions-precondition (scoop042): passed
+Test scoop-exceptions-control-flow (scoop043): passed
+Test scoop-exceptions-separate-callback (scoop044): passed
+Test scoop-exceptions-accountability-handover (scoop045): passed
+Test scoop-exceptions-small-tests (scoop046): passed
+Test scoop-exceptions-import (scoop047): failed
+	Description: Test if exception objects are correctly imported.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop047/tcf at line 15
+	Original text:    compare exec_output_m output
+	Substituted text: compare exec_output_m output
+	Reason: files being compared do not have identical contents
+
+Test scoop-exceptions-combinations (scoop048): passed
+Test scoop-impersonation-lockpassing (scoop049): passed
+Test scoop-lockpassing-query (scoop050): passed
+Test scoop-nested-separate-callback (scoop051): passed
+Test scoop-exceptions-unlock (scoop052): passed
+Test scoop-exceptions-dispose (scoop053): failed
+	Description: Exceptions in dispose should be caught in SCOOP mode by run-time and suppressed.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/scoop053/tcf at line 11
+	Original text:    execute_result ok
+	Substituted text: execute_result ok
+	Reason: actual execution result does not match expected result
+	Actual result:
+		Final status:  system_failed had_panic 
+	Expected result:
+		Final status:  completed 
+
+Test scoop-named-tuple-validity (scoop054): passed
+Test scoop-separate-instruction-fresh-id (scoop055): passed
+Test scoop-separate-instruction-dependent-arguments (scoop056): passed
+Test scoop-separate-instruction-non-separate (scoop057): passed
+Test scoop-separate-instruction-execution (scoop058): passed
+Test scoop-gc-stress-test (scoop059): passed
+Test scoop-assigner-command-validity (scoop060): passed
+Test scoop-named-tuple-execution (scoop061): passed
+Test scoop-generating-type-deadlock (scoop062): manual
+Test scoop-conformance (scoop063): passed
 Test deadlock-simple-symmetric-cycle (deadlock001): manual
 Test deadlock-simple-asymmetric-cycle (deadlock002): manual
 Test deadlock-synchronous-2-cycle (deadlock003): manual
@@ -4954,6 +4971,7 @@ Test parenthesis-alias-tuple-convention (exec357): passed
 Test conditional-expression-constant (exec358): passed
 Test invalid-conversion-to-tuple (exec359): passed
 Test expanded-hash-table (exec360): passed
+Test conversion-in-assigner-command (exec361): passed
 Test once-per-object-exec (once001): passed
 Test once-per-object-exec-with-exception (once002): passed
 Test once-per-object-redefinition (once003): passed
@@ -5384,17 +5402,7 @@ Test catcall-crash-is-covariant-to (term172): failed
 		Validity error in class TEST code VUAR(2)
 		Final status:  paused 
 
-Test conversion-query-constant-attribute (term173): failed
-	Description: A conversion query that converts to an INTEGER and is implemented as a constant INTEGER attribute crashes the compiler with a call on Void target in {BYTE_CODE_FACTORY}.to_type_byte_code
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/term173/tcf at line 10
-	Original text:    compile_result ok
-	Substituted text: compile_result ok
-	Reason: actual compilation result does not match expected result
-	Actual result:
-		Final status:  aborted had_exception (Segmentation fault) 
-	Expected result:
-		Final status:  completed 
-
+Test conversion-query-constant-attribute (term173): passed
 Test create-generic-constrained-by-none (term174): failed
 	Description: A generic class whose formal generic parameter G is constrained by NONE does `create Result' in a function of type G.  This causes the compiler to crash in {AST_FEATURE_CHECKER_GENERATOR}.process_abstract_creation due to a call on Void target.
 	Execution error in file /Users/manus/local/eweasel/eweasel/tests/term174/tcf at line 10
@@ -5540,6 +5548,7 @@ Test bad-library-class (term212): failed
 Test across-on-tuple (term213): passed
 Test qat-greater-number-of-formal (term214): passed
 Test large-integer-64-crash (term215): passed
+Test conversion-by-constant-attribute (term216): passed
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -5898,6 +5907,7 @@ Test storable-performance-testing (store038): passed
 Test storable-with-long-nested-generics (store039): passed
 Test storable-with-qualified-anchors (store040): passed
 Test storable-with-qualified-anchors-reject (store041): passed
+Test storable-failure-unstable-state (store042): passed
 Test basic-unix-path-operations (path001): passed
 Test unix-file-start-precond-error (lib001): passed
 Test string-copy-valid-count (lib002): passed
@@ -5975,6 +5985,44 @@ Test wrong-label-in-generics (tuple013): passed
 Test wrong-manifest-tuple-type (tuple014): passed
 Test attached-tuple-element-validity (tuple015): passed
 Test tuple-basic-to-reference (tuple016): passed
+Test named-tuple-in-generic-constraint (tuple017): failed
+	Description: Named tuple can be used in generic constraints to provide type-safe access to its elements while allowing for specific actual generic derivations.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/tuple017/tcf at line 12
+	Original text:    compile_result ok
+	Substituted text: compile_result ok
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class A code VEEN
+		Validity error in class B code VTMC(1)
+		Validity error in class B code VTMC(1)
+		Validity error in class C code VEEN
+		Validity error in class D code VTMC(1)
+		Validity error in class D code VTMC(1)
+		Final status:  paused 
+	Expected result:
+		Final status:  completed 
+
+Test named-tuple-constraint-validity (tuple018): failed
+	Description: Fields of a named tuple are subject to the same validity rules as feature names when used in multiple constraints.
+	Execution error in file /Users/manus/local/eweasel/eweasel/tests/tuple018/tcf at line 12
+	Original text:    compile_result validity_error A ??; B ??; C ??; D ??
+	Substituted text: compile_result validity_error A ??; B ??; C ??; D ??
+	Reason: actual compilation result does not match expected result
+	Actual result:
+		Validity error in class A code VJAR
+		Validity error in class B code VTMC(1)
+		Validity error in class B code VTMC(1)
+		Validity error in class C code VJAR
+		Validity error in class C code VJAR
+		Validity error in class D code VJAR
+		Final status:  paused 
+	Expected result:
+		Validity error in class A code ??
+		Validity error in class B code ??
+		Validity error in class C code ??
+		Validity error in class D code ??
+		Final status:  paused 
+
 Test tilde-on-basic-type (tilde001): passed
 Test tilde-on-expanded-type (tilde002): passed
 Test tilde-on-formal-type (tilde003): passed
@@ -6497,7 +6545,6 @@ Test bogus-vevi-when-inherit-expanded (attach055): failed
 	Reason: actual compilation result does not match expected result
 	Actual result:
 		Validity error in class TEST2 code VEVI
-		Validity error in class TEST2 code VJAR
 		Final status:  paused 
 	Expected result:
 		Final status:  completed 
@@ -6570,6 +6617,7 @@ Test object-test-local-in-conditional (attach109): passed
 Test initialization-in-conditional (attach110): passed
 Test targeted-in-structure-classes (attach111): passed
 Test iteration-loop-target-attachment (attach112): passed
+Test conversion-with-wrong-target-type (attach113): passed
 Test basic-conformance (conform001): passed
 Test formal-conformance (conform002): passed
 Test catcall-checking-conformance (conform003): passed
@@ -6684,17 +6732,7 @@ Test qat-static-type-id-crash-2 (anchor055): passed
 Test qat-generic-constrained-by-self (anchor056): passed
 Test qat-multi-constraint-type (anchor057): passed
 Test qat-invalid-vffd-2 (anchor058): passed
-Test qat-using-generic-feature-finalized (anchor059): failed
-	Description: Calling a function of type `like {TEST2 [TEST3]}.y' where `y: G' (formal generic of TEST2) and trying to print the generating type results in an execution-time segmentation fault if the system is finalized.
-	Execution error in file /Users/manus/local/eweasel/eweasel/tests/anchor059/tcf at line 34
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test qat-using-generic-feature-finalized (anchor059): passed
 Test qat-in-creation-procedure (anchor060): passed
 Test qat-generic-with-rename (anchor061): passed
 Test qat-generic-inheritance (anchor062): passed
@@ -6863,6 +6901,23 @@ Test pretty-constant-attribute-comment (pretty026): passed
 Test pretty-feature-call-comment (pretty027): passed
 Test pretty-comments-between-features (pretty028): passed
 Test pretty-loop-invariant (pretty029): passed
+Test pretty-inline-separate-instruction (pretty030): passed
+Test benchmark-scoop-gc-sequential-processor-creation (bench001): passed
+Test benchmark-scoop-gc-recursive-processor-creation (bench002): passed
+Test benchmark-scoop-gc-tree-processor-creation (bench003): passed
+Test benchmark-scoop-synthetic-chain (bench004): passed
+Test benchmark-scoop-synthetic-chameneos (bench005): passed
+Test benchmark-scoop-synthetic-condition (bench006): passed
+Test benchmark-scoop-synthetic-mutex (bench007): passed
+Test benchmark-scoop-synthetic-outer (bench008): passed
+Test benchmark-scoop-synthetic-prodcons (bench009): passed
+Test benchmark-scoop-synthetic-product (bench010): passed
+Test benchmark-scoop-synthetic-randmat (bench011): passed
+Test benchmark-scoop-synthetic-threadring (bench012): passed
+Test benchmark-scoop-synthetic-thresh (bench013): passed
+Test benchmark-scoop-synthetic-winnow (bench014): passed
+Test benchmark-runtime-slow-allocation (bench015): passed
+Test benchmark-scoop-memory-stress-test (bench016): passed
 Test testing-with-error (testing001): passed
 Test tuple-insertions-assertions (dotnet002): passed
 Test copy-infinite-recursion (dotnet003): passed
@@ -6896,8 +6951,8 @@ Test dotnet-polymorphism (dotnet110): failed
 Test dotnet-special-handling-crash (dotnet112): passed
 Test dotnet-static-access-on-deferred (dotnet115): passed
 
-Passed:  2362 / 2750  (86%)
-Failed:  363 / 2750  (14%)
-Manual:  19 / 2750  (1%)
-Skipped:  6 / 2750  (1%)
+Passed:  2412 / 2801  (87%)
+Failed:  362 / 2801  (13%)
+Manual:  21 / 2801  (1%)
+Skipped:  6 / 2801  (1%)
 

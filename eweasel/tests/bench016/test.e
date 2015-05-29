@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 				i > task_count
 			loop
 				queue := task_queues [i \\ worker_group_count + 1]
-				add_task (queue)
+				add_task (queue, new_task)
 				i := i + 1
 			end
 
@@ -98,16 +98,20 @@ feature {NONE} -- Implementation
 
 	random: SIMPLE_RANDOM
 
-	add_task (queue: separate TASK_QUEUE)
-			-- Add a new task to `queue'.
-		require
-			not_full: queue.count < maximum_queue_count
+	new_task: separate TASK
+			-- Create a new task with random matrix size.
 		local
-			task: separate TASK
 			size: INTEGER
 		do
 			size := (random.new_integer \\ (maximum_matrix_size-minimum_matrix_size)) + minimum_matrix_size
-			create task.make (operation_count, size)
+			create Result.make (operation_count, size)
+		end
+
+	add_task (queue: separate TASK_QUEUE; task: separate TASK)
+			-- Add a new task to `queue'.
+		require
+			not_full: queue.count < maximum_queue_count
+		do
 			queue.extend (task)
 			queue.increment_task_count
 		end

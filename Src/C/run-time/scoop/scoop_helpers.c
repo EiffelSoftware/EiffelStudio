@@ -78,26 +78,42 @@ rt_private void rt_apply_wcall (call_data *data)
 		v = iget ();
 		* v = data->argument [i];
 	}
-		/* Push current to the evaluation stack */
-	v = iget ();
-	v->it_r = data->target;
-	v->type = SK_REF;
-		/* Make a call */
-	CBodyId(body_id, data->routine_id,Dtype(data->target));
-	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
-		pid = (uint32) FPatId(body_id);
-		(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
-	} else {
-		/* The proper way to start the interpretation of a melted feature is to call `xinterp'
-		 * in order to initialize the calling context (which is not done by `interpret').
-		 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
-		 */
-		xinterp(MTC melt[body_id], 0);
+	if (data->routine_id >= 0) {
+			/* Regular feature call. */
+			/* Push current to the evaluation stack */
+		v = iget ();
+		v->it_r = data->target;
+		v->type = SK_REF;
+			/* Make a feature call. */
+		CBodyId(body_id, data->routine_id,Dtype(data->target));
+		if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
+			pid = (uint32) FPatId(body_id);
+			(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
+		} else {
+			/* The proper way to start the interpretation of a melted feature is to call `xinterp'
+			 * in order to initialize the calling context (which is not done by `interpret').
+			 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
+			 */
+			xinterp(MTC melt[body_id], 0);
+		}
+			/* Save result of a call if any. */
+		v = data->result;
+		if (v) {
+			* v = * opop ();
+		}
 	}
-		/* Save result of a call if any. */
-	v = data->result;
-	if (v) {
-		* v = * opop ();
+	else {
+			/* Tuple access. */
+		if (n == 0) {
+				/* Access to a tuple field. */
+			v = data->result;
+			eif_tuple_access (data->target, - data->routine_id, v);
+		}
+		else {
+				/* Assignment to a tuple field. */
+			v = opop ();
+			eif_tuple_assign (data->target, - data->routine_id, v);
+		}
 	}
 }
 #endif

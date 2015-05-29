@@ -238,8 +238,58 @@ feature -- C code generation
 		deferred
 		end
 
+	generate_tuple_item (buffer: GENERATION_BUFFER)
+			-- Generate a name of a macro to access a tuple element of this type.
+		require
+			buffer_attached: attached buffer
+		do
+			inspect sk_value
+			when {SK_CONST}.sk_bool then buffer.put_string (once "eif_boolean_item")
+			when {SK_CONST}.sk_char8 then buffer.put_string (once "eif_character_8_item")
+			when {SK_CONST}.sk_char32 then buffer.put_string (once "eif_character_32_item")
+			when {SK_CONST}.sk_real32 then buffer.put_string (once "eif_real_32_item")
+			when {SK_CONST}.sk_real64 then buffer.put_string (once "eif_real_64_item")
+			when {SK_CONST}.sk_uint8 then buffer.put_string (once "eif_natural_8_item")
+			when {SK_CONST}.sk_uint16 then buffer.put_string (once "eif_natural_16_item")
+			when {SK_CONST}.sk_uint32 then buffer.put_string (once "eif_natural_32_item")
+			when {SK_CONST}.sk_uint64 then buffer.put_string (once "eif_natural_64_item")
+			when {SK_CONST}.sk_int8 then buffer.put_string (once "eif_integer_8_item")
+			when {SK_CONST}.sk_int16 then buffer.put_string (once "eif_integer_16_item")
+			when {SK_CONST}.sk_int32 then buffer.put_string (once "eif_integer_32_item")
+			when {SK_CONST}.sk_int64 then buffer.put_string (once "eif_integer_64_item")
+			when {SK_CONST}.sk_pointer then buffer.put_string (once "eif_pointer_item")
+			else
+				buffer.put_string (once "eif_reference_item")
+			end
+		end
+
+	generate_tuple_put (buffer: GENERATION_BUFFER)
+			-- Generate a name of a macro to change a tuple element of this type.
+		require
+			buffer_attached: attached buffer
+		do
+			inspect sk_value
+			when {SK_CONST}.sk_bool then buffer.put_string (once "eif_put_boolean_item")
+			when {SK_CONST}.sk_char8 then buffer.put_string (once "eif_put_character_8_item")
+			when {SK_CONST}.sk_char32 then buffer.put_string (once "eif_put_character_32_item")
+			when {SK_CONST}.sk_real32 then buffer.put_string (once "eif_put_real_32_item")
+			when {SK_CONST}.sk_real64 then buffer.put_string (once "eif_put_real_64_item")
+			when {SK_CONST}.sk_uint8 then buffer.put_string (once "eif_put_natural_8_item")
+			when {SK_CONST}.sk_uint16 then buffer.put_string (once "eif_put_natural_16_item")
+			when {SK_CONST}.sk_uint32 then buffer.put_string (once "eif_put_natural_32_item")
+			when {SK_CONST}.sk_uint64 then buffer.put_string (once "eif_put_natural_64_item")
+			when {SK_CONST}.sk_int8 then buffer.put_string (once "eif_put_integer_8_item")
+			when {SK_CONST}.sk_int16 then buffer.put_string (once "eif_put_integer_16_item")
+			when {SK_CONST}.sk_int32 then buffer.put_string (once "eif_put_integer_32_item")
+			when {SK_CONST}.sk_int64 then buffer.put_string (once "eif_put_integer_64_item")
+			when {SK_CONST}.sk_pointer then buffer.put_string (once "eif_put_pointer_item")
+			else
+				buffer.put_string (once "eif_put_reference_item")
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

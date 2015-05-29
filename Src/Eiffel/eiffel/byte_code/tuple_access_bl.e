@@ -159,18 +159,19 @@ feature -- C Code generation
 	generate_internal (a_register: REGISTRABLE)
 		local
 			buf: like buffer
+			t: TYPE_C
 		do
 			buf := buffer
-			if real_type (tuple_element_type).c_type.is_reference then
+			t := real_type (tuple_element_type).c_type
+			if t.is_reference then
 					-- It's possible that the actual item is of a basic type, it should be boxed before use then.
 					-- The check that  TUPLE is not Void is included in "eif_boxed_item" macro, so RTCV is not generated.
 				buf.put_string ("eif_boxed_item(")
 				a_register.print_register
 			else
 					-- Make sure to call RTCV to verify that TUPLE is not Void.
-				buf.put_string (once "eif_")
-				buf.put_string (tuple_element_name)
-				buf.put_string ("_item(RTCV(")
+				t.generate_tuple_item (buf)
+				buf.put_string ("(RTCV(")
 				a_register.print_register
 				buf.put_character (')')
 			end
@@ -233,32 +234,6 @@ feature -- C Code generation
 				end
 				buf.put_character (';')
 			end
-		end
-
-	tuple_element_name: STRING
-			-- String representation of TUPLE element type.
-		do
-			inspect
-				real_type (tuple_element_type).c_type.sk_value
-			when {SK_CONST}.sk_bool then Result := once "boolean"
-			when {SK_CONST}.sk_char8 then Result := once "character_8"
-			when {SK_CONST}.sk_char32 then Result := once "character_32"
-			when {SK_CONST}.sk_real32 then Result := once "real_32"
-			when {SK_CONST}.sk_real64 then Result := once "real_64"
-			when {SK_CONST}.sk_uint8 then Result := once "natural_8"
-			when {SK_CONST}.sk_uint16 then Result := once "natural_16"
-			when {SK_CONST}.sk_uint32 then Result := once "natural_32"
-			when {SK_CONST}.sk_uint64 then Result := once "natural_64"
-			when {SK_CONST}.sk_int8 then Result := once "integer_8"
-			when {SK_CONST}.sk_int16 then Result := once "integer_16"
-			when {SK_CONST}.sk_int32 then Result := once "integer_32"
-			when {SK_CONST}.sk_int64 then Result := once "integer_64"
-			when {SK_CONST}.sk_pointer then Result := once "pointer"
-			else
-				Result := once "reference"
-			end
-		ensure
-			tuple_element_name_not_void: Result /= Void
 		end
 
 note

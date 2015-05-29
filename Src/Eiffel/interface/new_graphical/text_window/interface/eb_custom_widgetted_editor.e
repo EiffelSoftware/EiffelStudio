@@ -82,12 +82,8 @@ feature -- Access
 	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 			-- Current search tool.
 		do
-			if attached internal_search_tool as l_result then
-				Result := l_result
-			else
-				if dev_window /= Void and then dev_window.shell_tools.is_interface_usable then
-					Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
-				end
+			if dev_window /= Void and then dev_window.shell_tools.is_interface_usable then
+				Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
 			end
 		end
 
@@ -636,9 +632,9 @@ feature {NONE} -- Implementation
 			if dev_window /= Void then
 				dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)
 			end
-			if internal_search_tool /= Void then
-				internal_search_tool.first_result_reached_actions.prune_all (first_result_reached_action)
-				internal_search_tool.bottom_reached_actions.prune_all (bottom_reached_action)
+			if attached search_tool as l_tool then
+				l_tool.first_result_reached_actions.prune_all (first_result_reached_action)
+				l_tool.bottom_reached_actions.prune_all (bottom_reached_action)
 			end
 			if search_bar /= Void then
 				search_bar.destroy
@@ -790,10 +786,6 @@ feature {NONE} -- Internal implentation cache
 
 	internal_token_handler: like token_handler
 			-- Cached version of `token_handler'
-			-- Note: Do not use directly!
-
-	internal_search_tool: like search_tool
-			-- Cached version of `search_tool'
 			-- Note: Do not use directly!
 
 ;note

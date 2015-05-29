@@ -503,13 +503,12 @@ feature -- C generation
 					-- Now if there is a result for the call and the result
 					-- has to be stored in a real register, do generate the
 					-- assignment.
-				buf.put_new_line
-
 				if not attached r then
 						-- Call to a procedure.
 					generate_on (t)
 				elseif not attached {AGENT_CALL_B} Current then
 						-- Call to a simple function.
+					buf.put_new_line
 					r.print_register
 					buf.put_three_character (' ', '=', ' ')
 					generate_on (t)
@@ -526,8 +525,6 @@ feature -- C generation
 				buf.put_new_line
 				if attached s then
 					buf.put_string ("RTS_IMPERSONATE (RTS_PID(Current));")
-					buf.put_new_line
-
 						-- Close else part of a separate conditional.
 					buf.exdent
 					buf.put_new_line

@@ -1447,12 +1447,14 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_CC(rid,d,a)     - call a creation procedure (asynchronous) on a routine ID id on a target of dynamic type d and arguments a
  * RTS_CA(o,p,t,a,r)   - call an attribute at offset o using pattern p on target t with arguments a and result r
  * RTS_CS(t,a)         - call a constant on target t with call structure a
+ * RTS_CTR(o,s,a,r)    - read access to a tuple field at position o of SK type s (a pattern in finalized mode) with call data a and result r
+ * RTS_CTW(o,p,a)      - write access to a tuple field at position o and pattern p (finalized mode only) with call data a
  */
 
 #ifdef WORKBENCH
 #define RTS_CF(rid,n,t,a,r) \
 	{                                                         \
-		((call_data*)(a)) -> routine_id = rid;               \
+		((call_data*)(a)) -> routine_id = rid;            \
 		((call_data*)(a)) -> result = &(r);               \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 		eif_log_call (((call_data *)(a))->sync_pid, RTS_PID(t), (call_data*) a); \
@@ -1461,8 +1463,20 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> routine_id = rid; \
 		eif_log_call (RTS_PID(Current), RTS_PID(t), (call_data*) a); \
 	}
-
 #define RTS_CC(rid,t,a) RTS_CP(rid,NULL,((call_data*)a)->target,a)
+#define RTS_CTR(p,s,a,r) \
+	{                                                         \
+		((call_data*)(a)) -> routine_id = -p;             \
+		(r).type = s;                                     \
+		(r).it_r = 0;                                     \
+		((call_data*)(a)) -> result = &(r);               \
+		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+		eif_log_call (((call_data *)(a))->sync_pid, RTS_PID(((call_data*)a)->target), (call_data*) a); \
+	}
+#define RTS_CTW(p,a) {\
+		((call_data*)(a)) -> routine_id = -p; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)a)->target), (call_data*) a); \
+	}
 #else /* WORKBENCH */
 #define RTS_CF(fptr,p,t,a,r) \
 	{                                                         \
@@ -1492,6 +1506,19 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> pattern = eif_call_const;    \
 		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
+	}
+#define RTS_CTR(o,p,a,r) \
+	{                                                         \
+		((call_data*)(a)) -> feature.offset = o;          \
+		((call_data*)(a)) -> pattern = p;                 \
+		((call_data*)(a)) -> result = &(r);               \
+		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*)(a)); \
+	}
+#define RTS_CTW(o,p,a) {\
+		((call_data*)(a)) -> feature.offset = o;          \
+		((call_data*)(a)) -> pattern = p;                 \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*)(a)); \
 	}
 #endif /* WORKBENCH */
 

@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				create l_a
-				l_a.many_types (800).do_nothing
+				l_a.many_types (1000).do_nothing
 				create l_file.make_create_read_write (storage_file_name)
 				l_file.independent_store (create {A [TUPLE [STRING, INTEGER]]}) 
 				l_file.close

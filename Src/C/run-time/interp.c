@@ -221,7 +221,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 
 /* Getting constants */
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);		/* Get a compound type id */
-rt_private EIF_TYPE rt_get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
+rt_shared EIF_TYPE rt_get_compound_id(EIF_REFERENCE obj);			/* Get a compound type id */
 rt_private EIF_TYPE get_creation_type(void);		/* Get a creation type id */
 rt_shared EIF_REFERENCE rt_melted_arg (int a_pos);
 
@@ -5616,7 +5616,7 @@ rt_shared EIF_REFERENCE rt_melted_arg (int a_pos) {
 	return arg(a_pos)->it_ref;
 }
 
-rt_private EIF_TYPE rt_get_compound_id (EIF_REFERENCE Current)
+rt_shared EIF_TYPE rt_get_compound_id (EIF_REFERENCE Current)
 	/* Get array of short ints and convert it to a compound id. */
 {
 	EIF_GET_CONTEXT

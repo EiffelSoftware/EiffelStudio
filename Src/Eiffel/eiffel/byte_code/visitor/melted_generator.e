@@ -1995,7 +1995,6 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_tuple_type: TYPE_A
-			op: like bc_tuple_assign
 		do
 			l_tuple_type := context.real_type (a_node.tuple_element_type)
 				-- It is guaranteed that the TUPLE object is on the stack because
@@ -2015,30 +2014,31 @@ feature {NONE} -- Visitors
 				if l_tuple_type.c_type.is_reference then
 					context.make_tuple_catcall_check (ba, a_node.position)
 				end
-				op := bc_tuple_assign
-			else
-					-- Access to tuple entry.
-				op := bc_tuple_access
-			end
-			if a_node.context_type.is_separate then
-					-- Perform separate tuple access if required.
-				ba.append (bc_separate)
-				if op = bc_tuple_assign then
+				if a_node.context_type.is_separate then
+						-- Perform separate tuple access if required.
+					ba.append (bc_separate)
 						-- There is one argument and the access is not synchronized.
 					ba.append_argument_count (1)
 					ba.append_boolean (False)
 						-- Make sure that target is at the top.
 					ba.append (bc_rotate)
 					ba.append_short_integer (2)
-				else
+				end
+				ba.append (bc_tuple_assign)
+				ba.append_integer_32 (a_node.position)
+			else
+					-- Access to tuple field.
+				if a_node.context_type.is_separate then
+						-- Perform separate tuple access if required.
+					ba.append (bc_separate)
 						-- There are no arguments and the access is synchronized.
 					ba.append_argument_count (0)
 					ba.append_boolean (True)
 				end
+				ba.append (bc_tuple_access)
+				ba.append_integer_32 (a_node.position)
+				ba.append_natural_32 (l_tuple_type.sk_value (context.context_class_type.type))
 			end
-			ba.append (op)
-			ba.append_integer_32 (a_node.position)
-			ba.append_natural_32 (l_tuple_type.sk_value (context.context_class_type.type))
 		end
 
 	process_tuple_const_b (a_node: TUPLE_CONST_B)

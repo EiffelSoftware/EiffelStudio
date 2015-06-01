@@ -90,9 +90,11 @@ fullrd studio/wizards/new_projects/dotnet
 fullrf studio/wizards/new_projects/dotnet.dsc
 fullrd studio/wizards/new_projects/wel
 fullrf studio/wizards/new_projects/wel.dsc
+fullrd studio/wizards/new_projects/ewf
+fullrf studio/wizards/new_projects/ewf.dsc
 remtrace studio ewf wizard
-exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir studio/wizards/ewf
-move studio/wizards/ewf/ewf.dsc studio/wizards/ewf.dsc
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir studio/wizards/new_projects/ewf
+move studio/wizards/new_projects/ewf/ewf.dsc studio/wizards/new_projects/ewf.dsc
 
 remtrace eweasel
 exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel eweasel

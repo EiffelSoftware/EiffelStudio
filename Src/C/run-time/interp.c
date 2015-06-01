@@ -2521,7 +2521,6 @@ rt_private void interpret(int flag, int where)
 				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
 						/* This is a separate access. */
 					int pos;
-					uint32 type;
 					unsigned long stagval;
 					unsigned char * OLD_IC;
 					call_data * a;
@@ -2529,7 +2528,6 @@ rt_private void interpret(int flag, int where)
 						/* Retrieve tuple access data. */
 					IC++;
 					pos = get_int32(&IC);            /* Position of access. */
-					type = get_uint32(&IC);	         /* SK_XX value of access. */
 						/* Perform separate access to tuple. */
 					stagval = tagval;                /* Save tag value. */
 					OLD_IC  = IC;                    /* Save IC. */
@@ -3328,7 +3326,6 @@ rt_private void interpret(int flag, int where)
 		{
 			EIF_TYPED_VALUE *source;
 			int pos = get_int32(&IC);      /* Position of access. */
-			(void) get_uint32(&IC);        /* SK_XX value of access. (unused) */
 
 			source = opop();
 			last = opop();

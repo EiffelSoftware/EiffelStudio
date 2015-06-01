@@ -838,11 +838,15 @@ static  void    print_instructions (void)
 				break;
 
 			case BC_TUPLE_ACCESS:
-			case BC_TUPLE_ASSIGN:
 					/* Position of access/assign in TUPLE. */
 				fprintf (ofp, "[%d] ", get_int32(&ip));
 					/* Type of access/assign in TUPLE. */
 				print_dtype(0, get_uint32(&ip));
+				break;
+
+			case BC_TUPLE_ASSIGN:
+					/* Position of access/assign in TUPLE. */
+				fprintf (ofp, "[%d] ", get_int32(&ip));
 				break;
 
 			case BC_TUPLE:

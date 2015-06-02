@@ -41,6 +41,7 @@ doc:<file name="message_channel.c" header="rt_message_channel.h" version="$Id$" 
 
 #include "rt_message_channel.h"
 #include "eif_error.h"
+#include "eif_threads.h"
 
 /* Variables to tweak the frequency of garbage collector runs. */
 #define RT_GC_TIMEOUT_START 100

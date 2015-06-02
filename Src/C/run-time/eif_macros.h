@@ -1348,17 +1348,10 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define eif_scoop_access(x) (x)
 
 /* 
- * SCOOP processor ID swapping.
- *
- * `eif_globals' should be reloaded after the restoration.
+ * TODO: This is an obsolete macro which was used for Scott's
+ * impersonation mechanism, but is still emitted by the compiler.
  */
-#define RTS_IMPERSONATE(pid)						\
-{                                                                     \
-	EIF_ENTER_C;							\
-	eif_globals = (eif_global_context_t*) eif_thr_impersonate(pid);	\
-	EIF_EXIT_C;								\
-	RTGC;								\
-}
+#define RTS_IMPERSONATE(pid) (void) 0
 
 /*
  * Object status:

@@ -22,13 +22,18 @@ feature
 		do
 			create supplier
 			pass_locks (supplier)
-			print (passed_string)
 		end
 
 	pass_locks (a_supplier: separate SUPPLIER)
 			-- Pass on our locks to `a_supplier'.
 		do
 			a_supplier.perform_callback (Current)
+			print (passed_string)
+				-- Extra challenge: Does SCOOP behave correctly
+				-- on separate callbacks when impersonation kicks
+				-- in during a second synchronous call?
+			a_supplier.perform_callback (Current)
+			print (passed_string)
 		end
 
 	callback (a_string: separate STRING)

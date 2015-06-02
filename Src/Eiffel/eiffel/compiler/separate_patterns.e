@@ -22,6 +22,7 @@ feature {NONE} -- Creation
 			-- Initialize table.
 		do
 			create patterns.make (0)
+			create optimized_patterns.make (0)
 			create tuple_patterns.make (0)
 		end
 
@@ -31,6 +32,7 @@ feature -- Modification
 			-- Remove all items from the table.
 		do
 			patterns.wipe_out
+			optimized_patterns.wipe_out
 			tuple_patterns.wipe_out
 		end
 
@@ -70,6 +72,39 @@ feature -- Modification
 				generate_pattern_signature (p, k, buffer)
 				buffer.put_character (';')
 				generate_pattern_name (p, k, context.buffer)
+			end
+		end
+
+	put_optimized (f: CALL_ACCESS_B)
+			-- Register a stub to call `f' with an optimized result, add its declaration to a header file and generate its name to the current generation buffer.
+		require
+			f_attached: attached f
+		local
+			a: detachable SPECIAL [TYPE_C]
+			i: C_PATTERN_INFO
+			buffer: GENERATION_BUFFER
+		do
+			if attached f.parameters as p then
+				create a.make_empty (p.count)
+				from
+					p.start
+				until
+					p.after
+				loop
+					a.extend (p.item.c_type)
+					p.forth
+				end
+			end
+			create i.make (create {C_PATTERN}.make (f.c_type, a))
+			i.set_c_pattern_id (optimized_patterns.count + 1)
+			optimized_patterns.put (i)
+			check attached optimized_patterns.item (i) as p then
+				buffer := context.header_buffer
+				buffer.put_new_line
+				buffer.put_string ("extern ")
+				generate_pattern_signature (p, pattern_kind_optimized, buffer)
+				buffer.put_character (';')
+				generate_pattern_name (p, pattern_kind_optimized, context.buffer)
 			end
 		end
 
@@ -195,7 +230,61 @@ feature -- Generation
 				t.forth
 			end
 
-				-- Generate stubs.
+				-- Generate stubs for optimized result values.
+			t := optimized_patterns
+			from
+				t.start
+			until
+				t.after
+			loop
+				i := t.item_for_iteration
+				p := i.pattern
+				buffer.put_new_line
+				buffer.put_new_line
+				generate_pattern_signature (i, pattern_kind_optimized, buffer)
+				buffer.generate_block_open
+				buffer.put_gtcx
+				buffer.put_new_line
+				buffer.put_string ({C_CONST}.eif_optimize_return)
+				buffer.put_five_character (' ', '=', ' ', '1', ';')
+				buffer.put_new_line
+				if not p.result_type.is_void then
+					buffer.put_character ('*')
+					p.result_type.generate_access_cast (buffer)
+					buffer.put_string ("(a -> result) = ")
+				end
+				buffer.put_character ('*')
+				p.result_type.generate_access_cast (buffer)
+				buffer.put_character ('(')
+				reference_c_type.generate_function_cast (buffer, p.argument_type_array, False)
+				buffer.put_string ("(a -> feature.address)) (eif_scoop_access (a -> target)")
+				if attached p.argument_types as a then
+					across
+						a as x
+					loop
+						buffer.put_two_character (',', ' ')
+						value := x.item
+						is_reference := value.is_reference
+						if is_reference then
+								-- Use RTS_EIF_ACCESS as this checks whether argument is null before calling `eif_access'.
+							buffer.put_string ("RTS_EIF_ACCESS (")
+						end
+						buffer.put_string ("a -> argument [")
+							-- `x' is a SPECIAL so it is already zero-indexed.
+						buffer.put_integer (x.target_index)
+						buffer.put_two_character (']', '.')
+						value.generate_typed_field (buffer)
+						if is_reference then
+							buffer.put_character (')')
+						end
+					end
+				end
+				buffer.put_two_character (')', ';')
+				buffer.generate_block_close
+				t.forth
+			end
+
+				-- Generate stubs for tuple access.
 			t := tuple_patterns
 			from
 				t.start
@@ -253,6 +342,9 @@ feature {NONE} -- Access
 	patterns: SEARCH_TABLE [C_PATTERN_INFO]
 			-- Registered stubs to perform separate feature calls.
 
+	optimized_patterns: SEARCH_TABLE [C_PATTERN_INFO]
+			-- Registered stubs to perform separate feature calls with optimized return value.
+
 	tuple_patterns: SEARCH_TABLE [C_PATTERN_INFO]
 			-- Registered stuns to perform separate access to tuples.
 
@@ -264,7 +356,10 @@ feature {NONE} -- Generation
 	pattern_kind_routine: NATURAL_8 = 2
 			-- Pattern for a routine.
 
-	pattern_kind_tuple: NATURAL_8 = 3
+	pattern_kind_optimized: NATURAL_8 = 3
+			-- Pattern for an optimized function call.
+
+	pattern_kind_tuple: NATURAL_8 = 4
 			-- Pattern for a tuple.
 
 	generate_pattern_name (info: C_PATTERN_INFO; pattern_kind: NATURAL_8; buffer: GENERATION_BUFFER)
@@ -273,7 +368,11 @@ feature {NONE} -- Generation
 		require
 			info_attached: attached info
 			buffer_attached: attached buffer
-			valid_pattern_kind: pattern_kind = pattern_kind_attribute or pattern_kind = pattern_kind_routine or pattern_kind = pattern_kind_tuple
+			valid_pattern_kind:
+				pattern_kind = pattern_kind_attribute or
+				pattern_kind = pattern_kind_routine or
+				pattern_kind = pattern_kind_tuple or
+				pattern_kind = pattern_kind_optimized
 		do
 			buffer.put_string ("eif_sc")
 			inspect pattern_kind
@@ -281,6 +380,8 @@ feature {NONE} -- Generation
 				buffer.put_character ('a')
 			when pattern_kind_routine then
 				buffer.put_character ('r')
+			when pattern_kind_optimized then
+				buffer.put_character ('o')
 			else
 				buffer.put_character ('t')
 			end
@@ -293,7 +394,11 @@ feature {NONE} -- Generation
 		require
 			i_attached: attached info
 			b_attached: attached buffer
-			valid_pattern_kind: pattern_kind = pattern_kind_attribute or pattern_kind = pattern_kind_routine or pattern_kind = pattern_kind_tuple
+			valid_pattern_kind:
+				pattern_kind = pattern_kind_attribute or
+				pattern_kind = pattern_kind_routine or
+				pattern_kind = pattern_kind_tuple or
+				pattern_kind = pattern_kind_optimized
 		do
 			buffer.put_string ("void ")
 			generate_pattern_name (info, pattern_kind, buffer)

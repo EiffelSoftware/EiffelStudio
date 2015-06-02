@@ -552,6 +552,7 @@ feature {NONE} -- Separate call
 			target_type: TYPE_A
 			rout_table: ROUT_TABLE
 			name: STRING
+			is_optimized_result: BOOLEAN
 		do
 			buf := buffer
 			buf.put_new_line
@@ -571,9 +572,17 @@ feature {NONE} -- Separate call
 			elseif precursor_type = Void and then array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table.
-				name := Encoder.routine_table_name (routine_id)
+					-- Feature may return a reference that needs to be used as a basic one.
+					-- It is pretty important that we use `actual_type.is_formal' and not
+					-- just `is_formal' because otherwise if you have `like x' and `x: G'
+					-- then we would fail to detect that.
+				is_optimized_result :=
+					attached r and then
+					system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then
+					real_type (type).is_basic and then not has_one_signature
 					-- Generate following dispatch:
 					-- table [Actual_offset - base_offset]
+				name := Encoder.routine_table_name (routine_id)
 				buf.put_string (name)
 				buf.put_character ('[')
 				buf.put_string ({C_CONST}.dtype);
@@ -608,7 +617,11 @@ feature {NONE} -- Separate call
 				end
 			end
 			buf.put_two_character (',', ' ')
-			system.separate_patterns.put (Current)
+			if is_optimized_result then
+				system.separate_patterns.put_optimized (Current)
+			else
+				system.separate_patterns.put (Current)
+			end
 			buf.put_two_character (',', ' ')
 			t.print_register
 			buf.put_two_character (',', ' ')

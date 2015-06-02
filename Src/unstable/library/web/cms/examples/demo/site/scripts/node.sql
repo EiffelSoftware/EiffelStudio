@@ -6,7 +6,7 @@ CREATE TABLE "nodes" (
 	"type"	TEXT NOT NULL,
 	"title"	VARCHAR(255) NOT NULL,
 	"summary"	TEXT,
-	"content"	TEXT NOT NULL,
+	"content"	TEXT,
 	"format"	VARCHAR(128),
 	"author"	INTEGER,
 	"publish"	DATETIME,

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CMS_MODULE_API}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

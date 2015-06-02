@@ -1415,7 +1415,7 @@ test	scoop-agent-validity				scoop030 tcf pass scoop multithreaded validity expa
 test	scoop-agent-call				scoop031 tcf pass scoop multithreaded agents execution
 test	scoop-corrupted-string				scoop032 tcf pass scoop multithreaded execution
 test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded execution lock_passing
-test	scoop-corrupted-polymorphic-call		scoop034 tcf fail used_to_pass scoop multithreaded execution
+test	scoop-corrupted-polymorphic-call		scoop034 tcf pass scoop multithreaded execution
 test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
 test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
 test	scoop-run-time-crash				scoop037 tcf pass scoop multithreaded execution

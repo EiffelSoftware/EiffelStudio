@@ -1065,6 +1065,9 @@ feature -- Generation
 			l_is_active: BOOLEAN
 		do
 			create qs.make_from_string (request.percent_encoded_path_info)
+			if qs.starts_with ("/") then
+				qs.remove_head (1)
+			end
 			l_is_active := qs.same_string (a_lnk.location)
 			if not l_is_active then
 				if attached request.query_string as l_query_string and then not l_query_string.is_empty then

@@ -1,0 +1,31 @@
+package ROC_cms
+
+project
+	cms = "cms-safe.ecf"
+	cms = "cms.ecf"
+	app_env = "library/app_env/app_env-safe.ecf"
+	app_env = "library/app_env/app_env.ecf"
+	config = "library/configuration/config-safe.ecf"
+	config = "library/configuration/config.ecf"
+	app_env = "library/layout/layout-safe.ecf"
+	app_env = "library/layout/layout.ecf"
+	cms_model = "library/model/cms_model-safe.ecf"
+	cms_model = "library/model/cms_model.ecf"
+	persistence_mysql = "library/persistence/mysql/persistence_mysql-safe.ecf"
+	persistence_mysql = "library/persistence/mysql/persistence_mysql.ecf"
+	persistence_sqlite = "library/persistence/sqlite/persistence_sqlite-safe.ecf"
+	persistence_sqlite = "library/persistence/sqlite/persistence_sqlite.ecf"
+	basic_auth = "modules/basic_auth/basic_auth-safe.ecf"
+	basic_auth = "modules/basic_auth/basic_auth.ecf"
+	node = "modules/node/node-safe.ecf"
+	node = "modules/node/node.ecf"
+
+note
+	title: ROC CMS
+	description: CMS written with Eiffel
+	tags: cms, web, rest, api
+	license: Eiffel Forum v2
+	copyright: Jocelyn Fiat, Javier Velilla, Eiffel Software
+	link[source]: "Github" https://github.com/EiffelWebFramework/ROC.git
+
+end

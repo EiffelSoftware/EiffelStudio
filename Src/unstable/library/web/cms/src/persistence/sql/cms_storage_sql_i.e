@@ -217,6 +217,21 @@ feature -- Access
 		deferred
 		end
 
+	sql_read_natural_64 (a_index: INTEGER): NATURAL_64
+			-- Retrieved value at `a_index' position in `item'.
+		local
+			l_item: like sql_item
+		do
+			l_item := sql_item (a_index)
+			if attached {NATURAL_64} l_item as i then
+				Result := i
+			elseif attached {NATURAL_64_REF} l_item as l_value then
+				Result := l_value.item
+			else
+				Result := sql_read_integer_64 (a_index).to_natural_64
+			end
+		end
+
 	sql_read_integer_64 (a_index: INTEGER): INTEGER_64
 			-- Retrieved value at `a_index' position in `item'.
 		local

@@ -148,17 +148,15 @@ feature -- Permissions system
 
 feature -- Query: module
 
-	module (a_type: TYPE [detachable CMS_MODULE]): detachable CMS_MODULE
+	module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
 			-- Enabled module typed `a_type', if any.
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
 		local
-			t: STRING_8
+--			t: STRING_8
 			l_type: TYPE [detachable CMS_MODULE]
 		do
-			t := a_type.name
-			if t.starts_with ("!") then
-				t.remove_head (1)
-			end
+--			t := type_name_without_annotation (a_type)
+
 			across
 				setup.modules as ic
 			until
@@ -171,8 +169,12 @@ feature -- Query: module
 					l_type := Result.generating_type
 					if a_type ~ l_type then
 							-- Found
-					elseif t.same_string (l_type.name) then
+					elseif
+						attached a_type.attempt (Result) and then attached l_type.generating_type.attempt (a_type)
+					then
 							-- Found
+--					elseif t.same_string (type_name_without_annotation (l_type)) then
+--							-- Found
 					else
 						Result := Void
 					end
@@ -186,7 +188,12 @@ feature -- Query: module
 			-- Enabled module API associated with module typed `a_type'.
 		do
 			if attached module (a_type) as mod then
-				Result := mod.module_api
+				if mod.is_enabled then
+					if not mod.is_initialized then
+						mod.initialize (Current)
+					end
+					Result := mod.module_api
+				end
 			end
 		end
 
@@ -314,6 +321,41 @@ feature {NONE}-- Implemenation
 
 	internal_user_api: detachable like user_api
 			-- Cached value for `user_api'.
+
+	type_name_without_annotation (a_type: TYPE [detachable ANY]): STRING
+			-- Type name for `a_type, without any annotation.
+			-- Used by `module' to search by type.
+		local
+			i,j,n: INTEGER
+			c: CHARACTER
+		do
+			create Result.make_from_string (a_type.name)
+			from
+				i := 1
+				n := Result.count
+			until
+				i > n
+			loop
+				c := Result[i]
+				if c = '!' or c = '?' then
+					Result.remove (i)
+					n := n - 1
+				elseif c.is_lower then
+					j := Result.index_of (' ', i + 1)
+					if j > 0 then
+						Result.remove_substring (i, j)
+						n := n - (j - i)
+					end
+				else
+					i := i + 1
+				end
+			end
+			if Result.starts_with ("!") or Result.starts_with ("?") then
+				Result.remove_head (1)
+			elseif Result.starts_with ("detachable ") then
+				Result.remove_head (11)
+			end
+		end
 
 feature -- Environment
 

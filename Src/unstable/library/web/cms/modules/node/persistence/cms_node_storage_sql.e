@@ -22,14 +22,14 @@ create
 
 feature -- Access	
 
-	nodes_count: INTEGER_64
+	nodes_count: NATURAL_64
 			-- Number of items nodes.
 		do
 			error_handler.reset
 			write_information_log (generator + ".nodes_count")
 			sql_query (sql_select_nodes_count, Void)
 			if sql_rows_count = 1 then
-				Result := sql_read_integer_64 (1)
+				Result := sql_read_natural_64 (1)
 			end
 		end
 
@@ -267,8 +267,14 @@ feature {NONE} -- Implementation
 					a_node.set_revision (1) -- New object.
 				end
 			end
-			extended_store (a_node)
-			sql_commit_transaction
+			if not error_handler.has_error then
+				extended_store (a_node)
+			end
+			if error_handler.has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
 		end
 
 feature -- Helpers

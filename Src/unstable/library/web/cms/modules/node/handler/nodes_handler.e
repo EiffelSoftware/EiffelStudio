@@ -37,22 +37,40 @@ feature -- HTTP Methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		local
-			l_page: CMS_RESPONSE
+			l_response: CMS_RESPONSE
 			s: STRING
 			n: CMS_NODE
 			lnk: CMS_LOCAL_LINK
+			l_page_helper: CMS_PAGINATION_GENERATOR
+			s_pager: STRING
+			l_count: NATURAL_64
 		do
-				-- At the moment the template is hardcoded, but we can
+				-- At the moment the template are hardcoded, but we can
 				-- get them from the configuration file and load them into
 				-- the setup class.
 
-			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-			l_page.add_variable (node_api.nodes, "nodes")
+			l_count := node_api.nodes_count
 
+			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 
-				-- NOTE: for development purposes we have the following hardcode output.
-			create s.make_from_string ("<p>Nodes:</p>")
-			if attached node_api.nodes as lst then
+			create s.make_empty
+			if l_count > 1 then
+				l_response.set_title ("Listing " + l_count.out + " nodes")
+			else
+				l_response.set_title ("Listing " + l_count.out + " node")
+			end
+
+			create s_pager.make_empty
+			create l_page_helper.make ("nodes/?page={page}&size={size}", node_api.nodes_count, 25) -- FIXME: Make this default page size a global CMS settings
+			l_page_helper.get_setting_from_request (req)
+			if l_page_helper.pages_count > 1 then
+				l_page_helper.append_to_html (l_response, s_pager)
+				if l_page_helper.page_size > 25 then
+					s.append (s_pager)
+				end
+			end
+
+			if attached node_api.recent_nodes (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size)) as lst then
 				s.append ("<ul class=%"cms-nodes%">%N")
 				across
 					lst as ic
@@ -60,16 +78,23 @@ feature -- HTTP Methods
 					n := ic.item
 					lnk := node_api.node_link (n)
 					s.append ("<li class=%"cms_type_"+ n.content_type +"%">")
-					s.append (l_page.link (lnk.title, lnk.location, Void))
---					s.append (l_page.link (n.title + " (#" + n.id.out + ")", node_api.node_path (n), Void))
+					s.append (l_response.link (lnk.title, lnk.location, Void))
+					debug
+						if attached node_api.content_type (n.content_type) as ct then
+							s.append ("<span class=%"description%">")
+							s.append (html_encoded (ct.title))
+							s.append ("</span>")
+						end
+					end
 					s.append ("</li>%N")
 				end
 				s.append ("</ul>%N")
 			end
+				-- Again the pager at the bottom, if needed
+			s.append (s_pager)
 
-			l_page.set_main_content (s)
-			l_page.add_block (create {CMS_CONTENT_BLOCK}.make ("nodes_warning", Void, "/nodes/ is not yet fully implemented<br/>", Void), "highlighted")
-			l_page.execute
+			l_response.set_main_content (s)
+			l_response.execute
 		end
 
 end

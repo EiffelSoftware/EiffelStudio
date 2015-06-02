@@ -30,7 +30,7 @@ feature -- Error Handling
 
 feature -- Access: node
 
-	nodes_count: INTEGER_64
+	nodes_count: NATURAL_64
 			-- Count of nodes.
 		do
 		end

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_MODULE_COLLECTION}."
-	author: ""
+	description: "Collection of CMS modules."
 	date: "$Date$"
 	revision: "$Revision$"
 

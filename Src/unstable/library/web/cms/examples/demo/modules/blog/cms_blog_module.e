@@ -11,7 +11,6 @@ inherit
 		redefine
 			register_hooks,
 			initialize,
-			is_installed,
 			install
 		end
 
@@ -53,12 +52,6 @@ feature {CMS_API} -- Module Initialization
 
 feature {CMS_API} -- Module management
 
-	is_installed (api: CMS_API): BOOLEAN
-			-- Is Current module installed?
-		do
-			Result := attached api.storage.custom_value ("is_initialized", "module-" + name) as v and then v.is_case_insensitive_equal_general ("yes")
-		end
-
 	install (api: CMS_API)
 		local
 			sql: STRING
@@ -78,7 +71,7 @@ CREATE TABLE "blog_post_nodes"(
 						api.logger.put_error ("Could not initialize database for blog module", generating_type)
 					end
 				end
-				api.storage.set_custom_value ("is_initialized", "module-" + name, "yes")
+				Precursor (api)
 			end
 		end
 

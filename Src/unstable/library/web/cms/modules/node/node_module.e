@@ -9,14 +9,12 @@ class
 inherit
 
 	CMS_MODULE
-		rename
-			module_api as node_api
 		redefine
 			register_hooks,
 			initialize,
 			is_installed,
 			install,
-			node_api
+			module_api
 		end
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -43,15 +41,26 @@ feature {NONE} -- Initialization
 
 feature {CMS_API} -- Module Initialization			
 
-	initialize (api: CMS_API)
+	initialize (a_api: CMS_API)
 			-- <Precursor>
 		local
 			p1,p2: CMS_PAGE
 			ct: CMS_PAGE_NODE_TYPE
 			l_node_api: like node_api
+			l_node_storage: CMS_NODE_STORAGE_I
 		do
-			Precursor (api)
-			create l_node_api.make (api)
+			Precursor (a_api)
+
+				-- Storage initialization
+			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_storage_sql then
+				create {CMS_NODE_STORAGE_SQL} l_node_storage.make (l_storage_sql)
+			else
+				-- FIXME: in case of NULL storage, should Current be disabled?
+				create {CMS_NODE_STORAGE_NULL} l_node_storage.make
+			end
+
+				-- Node API initialization
+			create l_node_api.make_with_storage (a_api, l_node_storage)
 			node_api := l_node_api
 
 				-- Add support for CMS_PAGE, which requires a storage extension to store the optional "parent" id.
@@ -61,7 +70,7 @@ feature {CMS_API} -- Module Initialization
 
 					-- FIXME: the following code is mostly for test purpose/initialization, remove later
 				if l_sql_node_storage.sql_table_items_count ("page_nodes") = 0 then
-					if attached api.user_api.user_by_id (1) as u then
+					if attached a_api.user_api.user_by_id (1) as u then
 						create ct
 						p1 := ct.new_node (Void)
 						p1.set_title ("Welcome")
@@ -81,28 +90,41 @@ feature {CMS_API} -- Module Initialization
 					-- FIXME: maybe provide a default solution based on file system, when no SQL storage is available.
 					-- IDEA: we could also have generic extension to node system, that handle generic addition field.
 			end
+		ensure then
+			node_api_set: node_api /= Void
 		end
 
 feature {CMS_API} -- Module management
 
-	is_installed (api: CMS_API): BOOLEAN
+	is_installed (a_api: CMS_API): BOOLEAN
 			-- Is Current module installed?
 		do
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
+			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_sql_storage then
 				Result := l_sql_storage.sql_table_exists ("nodes") and
 					l_sql_storage.sql_table_exists ("page_nodes")
 			end
 		end
 
-	install (api: CMS_API)
+	install (a_api: CMS_API)
 		do
 				-- Schema
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.setup.environment.path.extended ("scripts").extended (name).appended_with_extension ("sql"))
+			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_sql_storage then
+				l_sql_storage.sql_execute_file_script (a_api.setup.environment.path.extended ("scripts").extended (name).appended_with_extension ("sql"))
 			end
 		end
 
 feature {CMS_API} -- Access: API
+
+	module_api: detachable CMS_MODULE_API
+			-- <Precursor>
+		do
+			if attached node_api as l_api then
+				Result := l_api
+			else
+					-- Current is initialized, so node_api should be set.
+				check has_node_api: False end
+			end
+		end
 
 	node_api: detachable CMS_NODE_API
 			-- <Precursor>
@@ -111,15 +133,10 @@ feature -- Access: router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
-		local
-			l_node_api: like node_api
 		do
-			l_node_api := node_api
-			if l_node_api = Void then
-				create l_node_api.make (a_api)
-				node_api := l_node_api
+			if attached node_api as l_node_api then
+				configure_web (a_api, l_node_api, a_router)
 			end
-			configure_web (a_api, l_node_api, a_router)
 		end
 
 	configure_web (a_api: CMS_API; a_node_api: CMS_NODE_API; a_router: WSF_ROUTER)
@@ -189,7 +206,7 @@ feature -- Hooks
 			create lnk.make ("Trash", "trash")
 			a_menu_system.primary_menu.extend (lnk)
 
-			create lnk.make ("Create ..", "node/")
+			create lnk.make ("Create ..", "node")
 			a_menu_system.primary_menu.extend (lnk)
 		end
 

@@ -47,6 +47,13 @@ doc:<file name="message_channel.c" header="rt_message_channel.h" version="$Id$" 
 #define RT_GC_TIMEOUT_START 100
 #define RT_GC_TIMEOUT_STEP 2
 
+/* TODO: The message_channel version that doesn't use locking probably has a bug
+ * where a message gets lost sometimes. The bug is extremely rare and hard to
+ * reproduce, but so far it didn't happen when everything is protected by locks.
+ * Therefore we use the approach with locks for the moment, which may be a bit slower
+ * but at least works correctly. */
+#undef EIF_HAS_MEMORY_BARRIER
+
 /*
 doc:	<struct name="mc_node", export="private">
 doc:		<summary> A message channel node which forms a linked list. </summary>

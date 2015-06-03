@@ -172,6 +172,12 @@ feature -- Element change
 			weight := a_weight
 		end
 
+	set_text (a_text: like text)
+			-- Set `text' to `a_text'.
+		do
+			text := a_text
+		end
+
 	extend (a_page: attached like page)
 		require
 			not_current: a_page /= Current
@@ -301,7 +307,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

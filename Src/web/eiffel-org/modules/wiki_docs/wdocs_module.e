@@ -71,15 +71,16 @@ feature -- Router
 
 				-- Router			
 
-			create h.make (agent handle_learn (a_api, ?, ?))
+			create h.make (agent handle_documentation (a_api, ?, ?))
 			a_router.handle_with_request_methods ("/documentation", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
 			a_router.handle_with_request_methods ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
 			a_router.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
+
 --			a_router.handle_with_request_methods ("/version/{version_id}/doc/uuid/{wikipage_uuid}/book/{bookid}", h, a_router.methods_get)
 
-			create h.make (agent handle_book (a_api, ?, ?))
+			create h.make (agent handle_documentation (a_api, ?, ?))
 			a_router.handle_with_request_methods ("/book/", h, a_router.methods_get)
 			a_router.handle_with_request_methods ("/book/{bookid}", h, a_router.methods_get)
 			a_router.handle_with_request_methods ("/version/{version_id}/book/", h, a_router.methods_get)
@@ -89,6 +90,18 @@ feature -- Router
 			create h.make (agent handle_wikipage (a_api, ?, ?))
 			a_router.handle_with_request_methods ("/book/{bookid}/{wikipageid}", h, a_router.methods_get)
 			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}", h, a_router.methods_get)
+
+			create h.make (agent handle_wikipage_source (a_api, ?, ?))
+			a_router.handle_with_request_methods ("/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
+
+			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
+			a_router.handle_with_request_methods ("/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+
+			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
+			a_router.handle_with_request_methods ("/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
+			a_router.handle_with_request_methods ("/version/{version_id}/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 
 			create h.make (agent handle_wiki_image (a_api, ?, ?))
 			a_router.handle_with_request_methods ("/book/{bookid}/_images/{filename}", h, a_router.methods_get)
@@ -548,12 +561,7 @@ feature -- Hooks
 
 feature -- Handler		
 
-	handle_learn (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		do
-			handle_book (api, req, res)
-		end
-
-	handle_book (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_documentation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			b: STRING
@@ -612,132 +620,173 @@ feature -- Handler
 			r.execute
 		end
 
-	send_wikipage (pg: detachable like {WDOCS_MANAGER}.page;
-					a_manager: WDOCS_MANAGER;
-					a_bookid: detachable READABLE_STRING_32;
-					api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			s: STRING
-			l_title: detachable READABLE_STRING_8
-		do
-			debug ("refactor_fixme")
-				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
-			end
-
-			if req.is_get_request_method then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			else
-				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-
---			r.set_optional_content_type ("doc")
-			r.set_value ("doc", "optional_content_type")
-			r.values.force (a_manager.version_id, "wiki_version_id")
-			if a_bookid /= Void then
-				r.values.force (a_bookid, "wiki_book_name")
-			end
-
-			if pg /= Void then
-				create s.make_empty
-
-				if
-					attached a_manager.page_metadata (pg, <<"title", "uuid">>) as md and then
-					attached md.item ("title") as l_md_title and then
-					not l_md_title.is_whitespace
-				then
-					l_title := l_md_title
-					if attached md.item ("uuid") as l_uuid then
-						r.values.force (l_uuid, "wiki_uuid")
-					end
-				else
-					l_title := pg.title
-				end
-				r.set_title (Void)
-				r.values.force (l_title, "wiki_page_name")
-				append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
-
-
-				if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
-					s.append ("<hr/>")
-					if attached pg.path as l_path then
-						s.append ("File: ")
-						s.append (html_encoded (l_path.absolute_path.canonical_path.name))
-						s.append ("<br/>")
-						if attached wiki_text (l_path) as l_wiki_text then
-							s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
-							s.append (l_wiki_text)
-							s.append ("%N</pre>")
-						end
-					end
-					s.append ("HTML rendering:<pre style=%"border: solid 1px #000; background-color: #afa; white-space: pre-wrap;%">%N")
-					s.append (html_encoded (s))
-					s.append ("</pre>")
-				end
-			else
-				r.set_title ("Wiki page not found!")
-				create s.make_from_string ("Page not found")
-			end
-
-			debug ("wdocs")
-				append_navigation_to (req, s)
-			end
-
-			r.set_main_content (s)
-			r.execute
-		end
-
 	handle_wikipage_by_uuid	(api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			l_version_id, l_bookid, l_wiki_uuid: detachable READABLE_STRING_32
-			mnger: WDOCS_MANAGER
-			pg: detachable like {WDOCS_MANAGER}.page
+			r: CMS_RESPONSE
 		do
-			l_wiki_uuid := wikipage_uuid (req, Void)
-			l_version_id := version_id (req, Void)
-			l_bookid := book_id (req, Void)
-			mnger := manager (l_version_id)
-
-			if l_wiki_uuid /= Void then
-				pg := mnger.page_by_uuid (l_wiki_uuid, l_bookid)
+			if req.is_get_request_method then
+				if attached wikipage_data_from_request (req) as pg_info then
+					if attached wdocs_page_link_location (pg_info.manager.version_id, pg_info.bookid, pg_info.page.title) as l_url then
+						res.redirect_now (req.absolute_script_url ("/" + l_url))
+					else
+						send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
+					end
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					r.set_main_content ("Page not found")
+					r.set_title ("Wiki page not found!")
+					r.execute
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				r.execute
 			end
-
-			send_wikipage (pg, mnger, l_bookid, api, req, res)
 		end
 
 	handle_wikipage (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			l_version_id, l_bookid, l_wiki_id: detachable READABLE_STRING_32
-			mnger: WDOCS_MANAGER
-			pg: detachable like {WDOCS_MANAGER}.page
+			r: CMS_RESPONSE
 		do
-			l_wiki_id := wikipage_id (req, Void)
-			l_version_id := version_id (req, Void)
-			l_bookid := book_id (req, Void)
-			mnger := manager (l_version_id)
-
-			if l_bookid /= Void then
-				pg := mnger.page (l_wiki_id, l_bookid)
-				if pg = Void and l_wiki_id /= Void then
-					if l_wiki_id.is_case_insensitive_equal_general ("index") then
-						pg := mnger.page (l_bookid, l_bookid)
-					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
-						pg := mnger.page ("index", l_bookid)
-					end
-					if pg = Void then
-						pg := mnger.page_by_title (l_wiki_id, l_bookid)
-					end
-					if pg = Void then
-						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
-					end
-					if pg = Void then
-						pg := mnger.page_by_uuid (l_wiki_id , l_bookid)
-					end
-
+			if req.is_get_request_method then
+				if attached wikipage_data_from_request (req) as pg_info then
+					send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					r.set_main_content ("Page not found")
+					r.set_title ("Wiki page not found!")
+					r.execute
 				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				r.execute
 			end
+		end
 
-			send_wikipage (pg, mnger, l_bookid, api, req, res)
+	handle_wikipage_editing (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			loc: STRING
+			wf: CMS_FORM
+			tf: WSF_FORM_TEXTAREA
+			bt_preview: WSF_FORM_SUBMIT_INPUT
+			s: STRING
+			wsf_theme: CMS_TO_WSF_THEME
+		do
+			if req.is_get_request_method then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				if
+					attached wikipage_data_from_request (req) as pg_info and then
+					attached pg_info.page as pg and then
+					attached pg.path as l_path and then
+					attached wiki_text (l_path) as l_wiki_text
+				then
+					if r.has_permission ("edit wdocs page") then
+
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						r.set_title (pg.title)
+						loc := r.location
+						if loc.ends_with ("/edit") then
+							loc.remove_tail (5)
+						end
+						r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("View", loc))
+
+						create wf.make (r.url (loc + "/preview", Void), "wdoc_edit")
+						wf.set_method_post
+
+						create tf.make ("source")
+						tf.set_cols (100)
+						tf.set_rows (25)
+						tf.set_text_value (l_wiki_text)
+						tf.set_description ("Use wikitext formatting to provide the content.")
+						tf.set_description_collapsible (True)
+						tf.set_label ("Content")
+						wf.extend (tf)
+						create bt_preview.make_with_text ("preview", "Preview")
+						wf.extend (bt_preview)
+
+							-- Render webform
+						create s.make (l_wiki_text.count * 2)
+						create wsf_theme.make (r, r.theme)
+						wf.append_to_html (wsf_theme, s)
+
+						r.set_main_content (s)
+					else
+						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					end
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.execute
+		end
+
+	handle_wikipage_html_preview (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			l_xhtml: STRING
+			l_preview_pg: like manager.new_wiki_page
+			l_field: READABLE_STRING_GENERAL
+			utf: UTF_CONVERTER
+			wvis: WDOCS_WIKI_XHTML_GENERATOR
+		do
+			if req.is_post_request_method then
+				if attached {WSF_STRING} req.query_parameter ("source_field") as s then
+					l_field := s.value
+				else
+					l_field := "source"
+				end
+				if
+					attached {WSF_STRING} req.form_parameter (l_field) as p_source and then
+					attached wikipage_data_from_request (req) as pg_info and then
+					attached pg_info.manager as l_manager and then
+					attached pg_info.page as pg and then
+					attached pg.path as l_path --and then
+--					attached wiki_text (l_path) as l_wiki_text
+				then
+					l_preview_pg := l_manager.new_wiki_page (pg.title, pg.parent_key)
+					l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (utf.utf_32_string_to_utf_8_string_8 (p_source.value)))
+
+					create l_xhtml.make_empty
+					create wvis.make (l_xhtml)
+					wvis.set_link_resolver (l_manager)
+					wvis.set_image_resolver (l_manager)
+					wvis.set_template_resolver (l_manager)
+					wvis.set_file_resolver (l_manager)
+					wvis.visit_page (l_preview_pg)
+
+					res.header.put_content_type_text_html
+					res.header.put_content_length (l_xhtml.count)
+					res.put_string (l_xhtml)
+				else
+					res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
+				end
+			else
+				res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
+			end
+		end
+
+	handle_wikipage_source (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			if req.is_get_request_method then
+				if
+					attached wikipage_data_from_request (req) as pg_info and then
+					attached pg_info.page as pg and then
+					attached pg.path as l_path and then
+					attached wiki_text (l_path) as l_wiki_text
+				then
+					res.header.put_header_key_value ("X-WDOCS-file-location", l_path.utf_8_name)
+					res.header.put_content_type_utf_8_text_plain
+					res.header.put_content_length (l_wiki_text.count)
+					res.header.put_utc_date (file_date (l_path))
+					res.put_string (l_wiki_text)
+				else
+					res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.not_found))
+				end
+			else
+				res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
+			end
 		end
 
 	handle_wiki_file (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -873,6 +922,145 @@ feature -- Handler
 			end
 		end
 
+feature {NONE} -- Implementation: request and response.
+
+	send_wikipage (pg: attached like {WDOCS_MANAGER}.page;
+					a_manager: WDOCS_MANAGER;
+					a_bookid: detachable READABLE_STRING_32;
+					api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			s: STRING
+			l_title: detachable READABLE_STRING_8
+		do
+			debug ("refactor_fixme")
+				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
+			end
+
+			if req.is_get_request_method then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			else
+				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+
+			if r.has_permission ("edit wdocs page") then -- FIXME: remove hack "True"!!!!
+				r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("Edit", r.location + "/edit"))
+			end
+
+--			r.set_optional_content_type ("doc")
+			r.set_value ("doc", "optional_content_type")
+			r.values.force (a_manager.version_id, "wiki_version_id")
+			if a_bookid /= Void then
+				r.values.force (a_bookid, "wiki_book_name")
+			end
+
+			if pg /= Void then
+				create s.make_empty
+
+				if
+					attached a_manager.page_metadata (pg, <<"title", "uuid">>) as md and then
+					attached md.item ("title") as l_md_title and then
+					not l_md_title.is_whitespace
+				then
+					l_title := l_md_title
+					if attached md.item ("uuid") as l_uuid then
+						r.values.force (l_uuid, "wiki_uuid")
+					end
+				else
+					l_title := pg.title
+				end
+				r.set_title (Void)
+				r.values.force (l_title, "wiki_page_name")
+				if attached {WSF_STRING} req.query_parameter ("source") as s_source and then not s_source.is_case_insensitive_equal ("no") then
+					if attached pg.path as l_path then
+						s.append ("File: ")
+						s.append (html_encoded (l_path.absolute_path.canonical_path.name))
+						s.append ("<br/>")
+						if attached wiki_text (l_path) as l_wiki_text then
+							s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
+							s.append (l_wiki_text)
+							s.append ("%N</pre>")
+						end
+					end
+--					s.append ("HTML rendering:<pre style=%"border: solid 1px #000; background-color: #afa; white-space: pre-wrap;%">%N")
+--					s.append (html_encoded (s))
+--					s.append ("</pre>")
+				else
+					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
+
+
+					if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
+						s.append ("<hr/>")
+						if attached pg.path as l_path then
+							s.append ("File: ")
+							s.append (html_encoded (l_path.absolute_path.canonical_path.name))
+							s.append ("<br/>")
+							if attached wiki_text (l_path) as l_wiki_text then
+								s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
+								s.append (l_wiki_text)
+								s.append ("%N</pre>")
+							end
+						end
+						s.append ("HTML rendering:<pre style=%"border: solid 1px #000; background-color: #afa; white-space: pre-wrap;%">%N")
+						s.append (html_encoded (s))
+						s.append ("</pre>")
+					end
+				end
+			else
+				r.set_title ("Wiki page not found!")
+				create s.make_from_string ("Page not found")
+			end
+
+
+			debug ("wdocs")
+				append_navigation_to (req, s)
+			end
+
+			r.set_main_content (s)
+			r.execute
+		end
+
+	wikipage_data_from_request (req: WSF_REQUEST): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page; bookid: READABLE_STRING_32; manager: WDOCS_MANAGER]
+		local
+			l_version_id, l_bookid, l_wiki_id, l_wiki_uuid: detachable READABLE_STRING_32
+			mnger: WDOCS_MANAGER
+			pg: detachable like {WDOCS_MANAGER}.page
+		do
+			l_wiki_id := wikipage_id (req, Void)
+			l_version_id := version_id (req, Void)
+			l_bookid := book_id (req, Void)
+
+			l_wiki_uuid := wikipage_uuid (req, Void)
+
+			mnger := manager (l_version_id)
+
+			if l_bookid /= Void then
+				pg := mnger.page (l_wiki_id, l_bookid)
+				if pg = Void and l_wiki_id /= Void then
+					if l_wiki_id.is_case_insensitive_equal_general ("index") then
+						pg := mnger.page (l_bookid, l_bookid)
+					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
+						pg := mnger.page ("index", l_bookid)
+					end
+					if pg = Void then
+						pg := mnger.page_by_title (l_wiki_id, l_bookid)
+					end
+					if pg = Void then
+						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
+					end
+					if pg = Void then
+						pg := mnger.page_by_uuid (l_wiki_id , l_bookid)
+					end
+				end
+				if pg = Void and l_wiki_uuid /= Void then
+					pg := mnger.page_by_uuid (l_wiki_uuid, l_bookid)
+				end
+				if pg /= Void then
+					Result := [pg, l_bookid, mnger]
+				end
+			end
+		end
+
 feature {NONE} -- Implementation: wiki render	
 
 
@@ -979,7 +1167,7 @@ feature {NONE} -- Implementation: wiki render
 				wvis.set_template_resolver (a_manager)
 				wvis.set_file_resolver (a_manager)
 
-				if a_page_title /= Void and then a_page_title.same_string_general (a_wiki_page.title) then
+				if a_page_title /= Void and then not a_page_title.same_string_general (a_wiki_page.title) then
 					wvis.visit_page_with_title (a_wiki_page, html_encoded (a_page_title))
 				else
 					wvis.visit_page (a_wiki_page)
@@ -1068,7 +1256,6 @@ feature {NONE} -- implementation: wiki docs
 	append_wiki_page_link (req: WSF_REQUEST; a_version_id, a_book_id: detachable READABLE_STRING_GENERAL; a_page: WIKI_BOOK_PAGE; is_recursive: BOOLEAN; a_manager: WDOCS_MANAGER; a_output: STRING)
 		local
 			l_pages: detachable LIST [WIKI_BOOK_PAGE]
-			loc: STRING
 		do
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
@@ -1080,10 +1267,9 @@ feature {NONE} -- implementation: wiki docs
 			end
 
 			if a_book_id /= Void then
-				loc := wdocs_page_link_location (a_version_id, a_book_id, last_segment (a_page.src))
-				a_output.append ("<a href=%""+ req.script_url (loc) + "%"")
+				a_output.append ("<a href=%""+ req.script_url ("/" + wdocs_page_link_location (a_version_id, a_book_id, a_page.title)) + "%"")
 			else
-				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (last_segment (a_page.src)) + "%"")
+				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (a_page.title) + "%"")
 			end
 			if l_pages /= Void then
 				a_output.append (" class=%"wdocs-folder%"")

@@ -189,6 +189,10 @@ feature -- Access
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do
 			Result := storage.page_by_title (a_page_title, a_bookid)
+			if Result = Void and a_bookid /= Void then
+					-- Find in other books.
+				Result := page_by_title (a_page_title, Void)
+			end
 		end
 
 	page_by_link_title (a_page_link_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
@@ -200,6 +204,9 @@ feature -- Access
 	page_by_metadata (a_metadataname, a_metadata_value: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL; is_caseless: BOOLEAN): detachable like new_wiki_page
 		do
 			Result := storage.page_by_metadata (a_metadataname, a_metadata_value, a_bookid, is_caseless)
+			if Result = Void and a_bookid /= Void then
+				Result := page_by_metadata (a_metadataname, a_metadata_value, Void, True)
+			end
 		end
 
 	page_by_uuid (a_page_uuid: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page

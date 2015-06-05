@@ -341,7 +341,7 @@ typedef struct tag_EIF_process_once_value_t {
 
 /* Macros for once routines:
  *  MTOT - type of an element that is used to access once value
- *  MTOI(n) - get item used to store result of a once routinewith index "n"
+ *  MTOI(n) - get item used to store result of a once routine with index "n"
  *  MTOD(i) - tell whether once routine was ever executed
  *  MTOR(t,i) - retrieve result of type "t" for a once routine "i"
  *  MTOP(t,i,v) - put result value of type "t" for a once routine "i"

@@ -46,7 +46,7 @@
 extern "C" {
 #endif
 
-extern EIF_INTEGER hashcode(const char *s, register EIF_INTEGER count);
+extern rt_uint_ptr rt_hashcode(const char *s, rt_uint_ptr count);
 extern size_t nprime(size_t n);				/* Find first prime above a given number */
 extern size_t prime(size_t n);					/* Test whether a number is prime or not */
 

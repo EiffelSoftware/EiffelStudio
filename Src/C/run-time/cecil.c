@@ -501,12 +501,12 @@ rt_shared char *ct_value(const struct ctable *ct, const char *key)
 	 * location in the value array. Return a null pointer if item is not found.
 	 */
 
-	long pos;		/* Position in H table */
-	int32 hsize;		/* Size of H table */
+	rt_uint_ptr pos;		/* Position in H table */
+	rt_uint_ptr hsize;		/* Size of H table */
 	char **hkeys;		/* Array of keys */
 
-	int32 tryv = (int32) 0;	/* Count number of attempts */
-	long inc;		/* Loop increment */
+	rt_uint_ptr tryv = 0;	/* Count number of attempts */
+	rt_uint_ptr inc;		/* Loop increment */
 
 	/* Initializations */
 	hsize = ct->h_size;
@@ -518,7 +518,7 @@ rt_shared char *ct_value(const struct ctable *ct, const char *key)
 	/* Jump from one hashed position to another until we find the value or
 	 * go to an empty entry or reached the end of the table.
 	 */
-	inc = hashcode(key, (long) strlen(key));
+	inc = rt_hashcode(key, strlen(key));
 	for (
 		pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
 		tryv < hsize;

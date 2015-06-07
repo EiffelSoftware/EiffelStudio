@@ -41,7 +41,7 @@ doc:<file name="tools.c" header="eif_tools.h" version="$Id$" summary="General pu
 #include "rt_tools.h"
 #include <stddef.h>					/* For size_t typedef. */
 
-rt_public EIF_INTEGER hashcode(const char *s, register EIF_INTEGER count)
+rt_shared rt_uint_ptr rt_hashcode(const char *s, rt_uint_ptr count)
 {
 	/* Compute the hash code associated with given string s. The magic number
 	 * below is the greatest prime lower than 2^23 so that this magic number
@@ -53,20 +53,20 @@ rt_public EIF_INTEGER hashcode(const char *s, register EIF_INTEGER count)
 	 * alternatives:
 	 *
 	 *	djb2 algorithm
-	 *	size_t hashval = 5381;
+	 *	rt_uint_ptr hashval = 5381;
 			
 	 *	while (count--)
 	 *		hashval = ((hashval << 5) + hashval) + c; *//* hashval * 33 + c *//*
 	 */
 
-	size_t hashval = 0;
-	int magic = 8388593;
+	rt_uint_ptr hashval = 0;
+	rt_uint_ptr magic = 8388593;
 
-	while (count--)
-		hashval = ((hashval % magic) << 8) + (size_t) *s++;
-
+	while (count--) {
+		hashval = ((hashval % magic) << 8) + (rt_uint_ptr) *s++;
+	}
 	
-	return (EIF_INTEGER) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
+	return hashval;
 }
 
 rt_shared size_t nprime(size_t n)

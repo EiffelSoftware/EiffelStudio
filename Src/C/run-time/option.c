@@ -604,7 +604,7 @@ rt_public void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX d
 			new_item->dtype = dtype;
 			new_item->origin = origin;
 			CHECK("valid_length", strlen(name) <= 0x7FFFFFFF);
-			new_item->feature_hcode = (rt_uint_ptr) hashcode(name, (EIF_INTEGER) strlen(name));
+			new_item->feature_hcode = rt_hashcode(name, strlen(name));
 				/* Record time value */
 			new_item->this_total_time = process_time(); 
 				/* Zero values */

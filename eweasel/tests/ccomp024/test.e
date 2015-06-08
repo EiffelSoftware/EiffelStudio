@@ -22,7 +22,7 @@ feature
 		external "C [macro %"$MACRO_INCLUDE%"] (EIF_POINTER, EIF_INTEGER): EIF_INTEGER %
 			% | %"$WEASEL_INCLUDE%"	,	%"$WIMP_INCLUDE%""
 		alias 
-			"hashcode"
+			"rt_hashcode"
       		end;
      
 end

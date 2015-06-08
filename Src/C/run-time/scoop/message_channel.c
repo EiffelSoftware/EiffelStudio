@@ -328,7 +328,9 @@ doc:	</routine>
 rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_channel* self, struct rt_message* message, const EIF_BOOLEAN is_with_gc)
 {
 	EIF_BOOLEAN success = EIF_FALSE;
-	size_t i = 0;
+#ifdef EIF_HAS_MEMORY_BARRIER
+	size_t i;
+#endif
 	int error = T_OK;
 
 		/* Variables for the GC-specific receive. Note: Thanks to inlining most compilers will
@@ -338,7 +340,7 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 
 	REQUIRE ("self_not_null", self);
 
-#if defined EIF_HAS_MEMORY_BARRIER
+#ifdef EIF_HAS_MEMORY_BARRIER
 		/* First try to dequeue in a non-blocking fashion. */
 	for (i = 0; i < self->spin && !success; ++i) {
 		success = dequeue (self, message);

@@ -208,6 +208,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 {
 	EIF_SCP_PID l_sync_pid = call->sync_pid;
 	EIF_BOOLEAN will_sync = l_sync_pid != EIF_NULL_PROCESSOR;
+	struct rt_message_channel* l_result_notify = client->result_notify_proxy;
 #ifdef WORKBENCH
 	EIF_TYPED_VALUE* l_result = call->result;
 #endif
@@ -230,7 +231,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		call -> sync_pid = client -> pid;
 		will_sync = EIF_TRUE;
 
-		rt_message_channel_send (&self->supplier->result_notify, SCOOP_MESSAGE_CALLBACK, client, call, NULL);
+		rt_message_channel_send (self->supplier->result_notify_proxy, SCOOP_MESSAGE_CALLBACK, client, call, NULL);
 
 	} else {
 		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_EXECUTE, client, call, NULL);
@@ -254,7 +255,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		rt_macro_set_saved_result (self, l_result);
 
 			/* Wait on our own result notifier for a message by the other processor. */
-		rt_message_channel_receive (&client->result_notify, l_message);
+		rt_message_channel_receive (l_result_notify, l_message);
 
 		while (l_message->message_type == SCOOP_MESSAGE_CALLBACK) {
 				/* A separate callback arrived. We need to execute it right away
@@ -274,7 +275,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 			rt_macro_set_saved_result (self, l_result);
 
 				/* Again, wait on our result notification channel for a new message. */
-			rt_message_channel_receive (&client->result_notify, l_message);
+			rt_message_channel_receive (l_result_notify, l_message);
 		}
 
 			/* The critical part is over, as the current thread is awake
@@ -282,7 +283,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		rt_macro_set_saved_result (self, NULL);
 
 		if (l_message->message_type == SCOOP_MESSAGE_DIRTY) {
-			eraise ((const char *) "EVE/Qs dirty processor exception", 32);
+			eraise ((const char *) "EVE/Qs dirty processor exception", EN_DIRTY);
 		}
 	}
 

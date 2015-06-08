@@ -145,6 +145,7 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define EN_RT_CHECK	29			/* Runtime check error such as out-of-bound array access */
 #define EN_OLD		30			/* Old violation */
 #define EN_SEL		31			/* Serialization failure */
+#define EN_DIRTY	32			/* SCOOP processor dirty exception. */
 
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */

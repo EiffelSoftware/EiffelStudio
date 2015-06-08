@@ -2105,6 +2105,12 @@ feature -- Access
 					position := position + 1
 					l_table.forth
 				end
+				
+					-- Now we validate the space made for `x' addresses.
+				buf.put_new_line
+				buf.put_string (once "RTLIE(")
+				buf.put_integer (nb_refs)
+				buf.put_two_character (')', ';')
 			end
 		end
 

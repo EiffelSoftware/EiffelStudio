@@ -269,6 +269,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* Macros used for local variable management:
  *  RTLI(x) makes room on the stack for 'x' addresses
+ *  RTLIE(x) validate the space allocated by RTLI/RTXI for `x' addresses. Currently does nothing.
  *  RTLE restore the previous stack context
  *  RTLD declares the variable used by RTLI/RTLE
  *  RTLR(x,y) register `y' on the stack at position `x'
@@ -292,6 +293,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 			l = eget(x); \
 		} \
 	}
+#define RTLIE(x)
 #define RTLE \
 	{ \
 		if (ol == (EIF_REFERENCE *) 0) { \
@@ -336,6 +338,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #else
 #define RTLI(x) 
+#define RTLIE(x)
 #define RTLE
 #define RTLD	\
 	EIF_REFERENCE ol

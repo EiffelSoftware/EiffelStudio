@@ -106,6 +106,13 @@ RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 /* Debugger extensions. */
 RT_LNK EIF_SCP_PID eif_scoop_client_of (EIF_SCP_PID supplier);
 
+/* Externals to EiffelBase */
+#if defined EIF_THREADS
+RT_LNK void eif_scoop_set_is_impersonation_allowed (EIF_SCP_PID pid, EIF_BOOLEAN status);
+#else
+#define eif_scoop_set_is_impersonation_allowed(pid,status)
+#endif
+
 #ifdef __cplusplus
 }
 #endif

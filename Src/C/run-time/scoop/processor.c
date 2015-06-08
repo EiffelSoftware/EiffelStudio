@@ -116,7 +116,10 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		self->client = EIF_NULL_PROCESSOR;
 		self->is_active = EIF_TRUE;
 		self->is_dirty = EIF_FALSE;
+		self->is_impersonation_allowed = EIF_TRUE;
 		rt_message_init (&self->current_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+		self->current_impersonated_call = NULL;
+		self->result_notify_proxy = &self->result_notify;
 			/* Only the root processor's creation procedure is initially "logged". */
 		self->is_creation_procedure_logged = is_root_processor;
 
@@ -268,6 +271,11 @@ rt_shared void rt_processor_mark (struct rt_processor* self, MARKER marking)
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
 
+		/* Mark the call_data of the impersonated call being executed right now. */
+	if (self->current_impersonated_call) {
+		rt_mark_call_data (marking, self->current_impersonated_call);
+	}
+
 		/* Also mark the call that may be executed right now. */
 	if (self->current_msg.call) {
 		rt_mark_call_data (marking, self->current_msg.call);
@@ -346,11 +354,11 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 		if (self->is_dirty) {
 			self->is_dirty = EIF_FALSE;
 				/* Propagate exceptions on a synchronous call. */
-			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_DIRTY, NULL, NULL, NULL);
+			rt_message_channel_send (client->result_notify_proxy, SCOOP_MESSAGE_DIRTY, NULL, NULL, NULL);
 
 		} else {
 				/* Inform the client that we finished executing his call. */
-			rt_message_channel_send (&client->result_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
+			rt_message_channel_send (client->result_notify_proxy, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 		}
 	}
 

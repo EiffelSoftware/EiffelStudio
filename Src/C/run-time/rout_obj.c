@@ -203,87 +203,58 @@ rt_public void rout_obj_call_procedure_dynamic (
 	EIF_REFERENCE open_map)
 {
 	EIF_GET_CONTEXT
-	jmp_buf exenv;
-	volatile rt_uint_ptr nb_protected = 0;
+	int i = 2;
+	int args_count = open_count + closed_count;
+	int next_open = 0xFFFF;
+	int open_idx = 1;
+	int closed_idx = 1;
+	rt_uint_ptr nb_pushed = 0;
+	EIF_TYPED_VALUE* first_arg = NULL;
+	EIF_INTEGER* open_positions = NULL;
 
 	REQUIRE("valid_closed_args", (closed_count == 0) || closed_args);
 	REQUIRE("valid_open_args", (open_count == 0) || open_args);
 
-	excatch(&exenv);	/* Record pseudo execution vector */
-	if (setjmp(exenv)) {
-			/* Unprotect protected locals. */
-		if (nb_protected) {
-			RT_GC_WEAN_N(nb_protected);
-		}
-		ereturn ();
-	} else {
-		int i = 2;
-		int args_count = open_count + closed_count;
-		int next_open = 0xFFFF;
-		int open_idx = 1;
-		int closed_idx = 1;
-		rt_uint_ptr nb_pushed = 0;
-		EIF_TYPED_VALUE* first_arg = NULL;
-		EIF_INTEGER* open_positions = NULL;
-
-		if (closed_count > 0) {
-			RT_GC_PROTECT(closed_args); /* iget() may call GC */
-			nb_protected++;
-		}
-
-		if (open_count > 0) {
-			open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map);
-			RT_GC_PROTECT(open_args);
-			nb_protected++;
-			RT_GC_PROTECT(open_map);
-			nb_protected++;
-			if (open_positions [0] == 1) {
-				first_arg = &(open_args [1]);
-				RT_GC_PROTECT (first_arg);
-				nb_protected++;
-				open_idx = 2;
-				if (open_count > 1) {
-					next_open = open_positions [1];
-				}
-			} else  {
-				next_open = open_positions [0];
+	if (open_count > 0) {
+		open_positions = (EIF_INTEGER*)(*(EIF_REFERENCE*)open_map);
+		if (open_positions [0] == 1) {
+			first_arg = &(open_args [1]);
+			open_idx = 2;
+			if (open_count > 1) {
+				next_open = open_positions [1];
 			}
+		} else  {
+			next_open = open_positions [0];
 		}
-		if (first_arg == NULL) {
-			first_arg = &(closed_args [1]);
-			RT_GC_PROTECT (first_arg);
-			nb_protected++;
-			closed_idx = 2;
-		}
-		while (i <= args_count) {
-			if (i == next_open) {
-				fill_it (iget(), &(open_args [open_idx]));
-				nb_pushed++;
-				if (open_idx < open_count) {
-					next_open = open_positions [open_idx];
-					open_idx++;
-				} else {
-					next_open = 0xFFFF;
-				}
-			} else {
-				fill_it (iget(), &(closed_args [closed_idx]));
-				nb_pushed++;
-				closed_idx++;
-			}
-			i = i + 1;
-		}
-		fill_it (iget(), first_arg);
-		nb_pushed++;
-
-		RT_GC_WEAN_N(nb_protected);
-		nb_protected = 0;
-
-			/* We are calling a feature through an agent, in this case, we consider all calls
-			 * as qualified so that the invariant is checked. */
-		nstcall = 1;
-		dynamic_eval (routine_id, written_type_id_inline_agent, is_basic_type, nb_pushed);
-		expop(&eif_stack);
 	}
+	if (first_arg == NULL) {
+		first_arg = &(closed_args [1]);
+		closed_idx = 2;
+	}
+	while (i <= args_count) {
+		if (i == next_open) {
+			fill_it (iget(), &(open_args [open_idx]));
+			nb_pushed++;
+			if (open_idx < open_count) {
+				next_open = open_positions [open_idx];
+				open_idx++;
+			} else {
+				next_open = 0xFFFF;
+			}
+		} else {
+			fill_it (iget(), &(closed_args [closed_idx]));
+			nb_pushed++;
+			closed_idx++;
+		}
+		i = i + 1;
+	}
+	fill_it (iget(), first_arg);
+	nb_pushed++;
+
+		/* We are calling a feature through an agent, in this case, we consider all calls
+		 * as qualified so that the invariant is checked. */
+	nstcall = 1;
+	dynamic_eval (routine_id, written_type_id_inline_agent, is_basic_type, nb_pushed);
 }
 
 void fill_it (EIF_TYPED_VALUE* it, EIF_TYPED_VALUE* te)

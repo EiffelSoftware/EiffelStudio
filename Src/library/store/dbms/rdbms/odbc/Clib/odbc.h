@@ -56,7 +56,7 @@ extern "C" {
 #define EIF_C_DECIMAL_TYPE		12
 
 /* the following are some lengthes' definitions */
-#define MAX_DESCRIPTOR        10  /* Max descriptor available simultaneously */
+#define MAX_DESCRIPTOR        100  /* Max descriptor available simultaneously */
 
 #define NO_MORE_ROWS          100 /* No more row is fetched by FETCH operation */
 

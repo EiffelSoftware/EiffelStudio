@@ -84,7 +84,7 @@ feature {NONE} -- Benchmarking
 				if {PLATFORM}.is_windows then
 					adjusted_command := {STRING_32} "cmd /c start /w /affinity "
 				elseif {PLATFORM}.is_unix then
-					adjusted_command := {STRING_32} "taskset "
+					adjusted_command := {STRING_32} "/usr/bin/taskset "
 				end
 				if attached adjusted_command then
 					processor_count := p.value.to_integer

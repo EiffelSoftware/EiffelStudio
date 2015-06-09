@@ -71,5 +71,5 @@ $(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE):
 	set EWEASEL_OUTPUT=$(EWEASEL_OUTPUT)
 	"$(EWEASEL)$(DIRSEP)bin$(DIRSEP)run_eweasel_filter" $(TEST)
 
-"$(ELAPSED_TIME)": "$(ELAPSED_TIME_DIR)/elapsed_time.e" "$(ELAPSED_TIME_DIR)/elapsed_time.ecf"
+$(ELAPSED_TIME): $(ELAPSED_TIME_DIR)/elapsed_time.e $(ELAPSED_TIME_DIR)/elapsed_time.ecf
 	$(EC) -finalize -clean -config "$(ELAPSED_TIME_DIR)/elapsed_time.ecf" -project_path "$(ELAPSED_TIME_DIR)" -c_compile

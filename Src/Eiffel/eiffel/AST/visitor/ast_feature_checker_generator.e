@@ -1835,7 +1835,7 @@ feature {NONE} -- Implementation
 										if
 											not is_inherited and then is_qualified and then
 											not l_last_type.is_like_current and then
-											context.current_class.is_cat_call_detection and then
+											context.current_class.is_catcall_detection_enabled and then
 											l_formal_arg_type.is_variant
 										then
 											if l_tcat = Void then
@@ -2037,7 +2037,7 @@ feature {NONE} -- Implementation
 								-- type checking has already been done in the class where it was written.
 							if
 								error_level = l_error_level and then l_tcat = Void and then not is_inherited and then
-								is_qualified and then context.current_class.is_cat_call_detection
+								is_qualified and then context.current_class.is_catcall_detection_enabled
 							then
 									-- Feature without arguments don't need to be checked.
 									-- Inline agents have no descendants, so they don't need to be checked anyway
@@ -5130,7 +5130,7 @@ feature {NONE} -- Visitor
 									-- Set type informations
 								set_routine_ids (last_alias_feature.rout_id_set, l_as)
 								l_as.set_class_id (l_left_id)
-								if context.current_class.is_cat_call_detection then
+								if context.current_class.is_catcall_detection_enabled then
 									create l_arg_types.make (1)
 									l_arg_types.extend (l_right_type)
 									create l_parameters.make (1)

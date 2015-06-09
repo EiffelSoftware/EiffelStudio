@@ -911,8 +911,8 @@ feature {NONE} -- Implementation
 				if an_options.is_full_class_checking_configured then
 					append_text (" full_class_checking=%""+an_options.is_full_class_checking.out.as_lower+"%"")
 				end
-				if an_options.is_cat_call_detection_configured then
-					append_text (" cat_call_detection=%""+an_options.is_cat_call_detection.out.as_lower+"%"")
+				if an_options.catcall_detection.is_set then
+					append_text (" cat_call_detection=%""+an_options.catcall_detection.out+"%"")
 				end
 				if an_options.is_attached_by_default_configured then
 					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
@@ -1288,7 +1288,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

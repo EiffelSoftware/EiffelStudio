@@ -2115,10 +2115,10 @@ feature -- Convenience features
 			Result := lace_class.is_full_class_checking or else not lace_class.is_void_unsafe
 		end
 
-	is_cat_call_detection: BOOLEAN
-			-- Do we perform cat-call detection on all feature calls?
+	is_catcall_detection_enabled: BOOLEAN
+			-- Do we perform catcall detection on all feature calls?
 		do
-			Result := lace_class.is_cat_call_detection
+			Result := lace_class.is_catcall_safe
 		end
 
 feature -- Actual class type

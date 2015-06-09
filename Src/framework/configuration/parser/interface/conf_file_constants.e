@@ -130,16 +130,25 @@ feature {NONE} -- Constants
 			Result := namespace_1_13_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd"
 		end
 
+	namespace_1_14_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-14-0"
+			-- Namespace of the 14.05 release.
+
+	schema_1_14_0: STRING_32
+			-- Schema of the 14.05 release.
+		once
+			Result := namespace_1_14_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd"
+		end
+
 	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
-			Result := namespace_1_13_0
+			Result := namespace_1_14_0
 		end
 
 	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
-			Result := schema_1_13_0
+			Result := schema_1_14_0
 		end
 
 feature -- Status report
@@ -175,6 +184,7 @@ feature -- Normalization
 			elseif n.same_string (namespace_1_11_0) then Result := namespace_1_11_0
 			elseif n.same_string (namespace_1_12_0) then Result := namespace_1_12_0
 			elseif n.same_string (namespace_1_13_0) then Result := namespace_1_13_0
+			elseif n.same_string (namespace_1_14_0) then Result := namespace_1_14_0
 			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
 					-- Unknown namespace.
@@ -232,10 +242,11 @@ feature {NONE} -- Ordering
 			Result.extend (11, namespace_1_11_0)
 			Result.extend (12, namespace_1_12_0)
 			Result.extend (13, namespace_1_13_0)
+			Result.extend (13, namespace_1_14_0)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

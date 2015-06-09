@@ -572,7 +572,7 @@ feature {TYPE_A} -- Helpers
 						end
 					end
 				else
-					if a_in_generic then
+					if a_in_generic and then a_context_class.lace_class.is_catcall_conformance then
 						if other.is_frozen then
 							Result := is_frozen and then base_class = other_class_type.base_class
 						elseif not other.is_variant then
@@ -582,6 +582,12 @@ feature {TYPE_A} -- Helpers
 							Result := base_class.conform_to (other_class_type.base_class)
 						end
 					else
+							-- Note for the reader who wonder why we allow any descendants of X to conform to frozen X.
+							-- This is because we want to allow redefinition of routines such as `f (a: frozen A)' to
+							-- `f (a: frozen B)'
+							-- It is only in expression conformance that we check that an expression of type `frozen A'
+							-- is used as actual argument to `f' when using the `frozen A' version above.
+							-- See commit rev#95174 for when that change occurred.
 						Result := base_class.conform_to (other_class_type.base_class)
 					end
 					Result := Result and then other_class_type.valid_generic (a_context_class, Current, a_in_generic)

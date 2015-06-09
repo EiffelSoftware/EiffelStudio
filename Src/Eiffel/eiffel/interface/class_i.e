@@ -230,10 +230,22 @@ feature -- Access
 			Result := options.is_full_class_checking or else system.compiler_profile.is_full_class_checking_mode
 		end
 
-	is_cat_call_detection: BOOLEAN
-			-- Is cat-call detection enabled, i.e. all feature calls are checked for potential cat-calls?
+	is_catcall_unsafe: BOOLEAN
+			-- Is current class compiled without catcall detection enabled?
 		do
-			Result := options.is_cat_call_detection
+			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_none
+		end
+
+	is_catcall_conformance: BOOLEAN
+			-- Should frozen/variant annotation be taken into account when checking for conformance.
+		do
+			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_conformance
+		end
+
+	is_catcall_safe: BOOLEAN
+			-- Is catcall detection enabled, i.e. all feature calls are checked for potential catcalls?
+		do
+			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_all
 		end
 
 	is_attached_by_default: BOOLEAN
@@ -661,7 +673,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -126,27 +126,21 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 				-- Cat call detection
-			l_bool_prop := new_boolean_property (conf_interface_names.option_cat_call_detection_name, an_inherited_options.is_cat_call_detection)
-			l_bool_prop.set_description (conf_interface_names.option_cat_call_detection_description)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_cat_call_detection)
 			if a_inherits then
-				l_bool_prop.set_refresh_action (agent an_inherited_options.is_cat_call_detection)
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_cat_call_detection)
-				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-
-				if an_options.is_cat_call_detection_configured then
-					l_bool_prop.enable_overriden
-				else
-					l_bool_prop.enable_inherited
-				end
+				c := an_inherited_options.catcall_detection
+			else
+				c := Void
 			end
-			if a_check_non_client_option and then is_non_client_option (at_cat_call_detection) then
-				l_bool_prop.enable_readonly
+			add_choice_property (
+				conf_interface_names.option_catcall_detection_name,
+				conf_interface_names.option_catcall_detection_description,
+				conf_interface_names.option_catcall_detection_value,
+				an_options.catcall_detection,
+				c
+			)
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_catcall_detection) then
+				l_prop.enable_readonly
 			end
-			properties.add_property (l_bool_prop)
 
 				-- Void safety
 			if a_inherits then
@@ -706,7 +700,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

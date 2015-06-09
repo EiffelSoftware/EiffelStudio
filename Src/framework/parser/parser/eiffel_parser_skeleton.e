@@ -219,9 +219,6 @@ feature -- Status report
 	is_frozen_variant_mark_supported: BOOLEAN
 			-- Are type interval supported?
 		do
--- Code commented for the time being while waiting for full implementation of type intervals.
-				-- For the time being we accept type intervals only if `provisional syntax'
-				-- has been selected.
 			Result := syntax_version = provisional_syntax
 		end
 
@@ -1140,7 +1137,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

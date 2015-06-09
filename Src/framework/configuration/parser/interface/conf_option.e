@@ -44,6 +44,7 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_obsolete)
 			create void_safety.make (void_safety_name, void_safety_index_none)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 		end
 
 	make_6_4
@@ -51,6 +52,7 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_transitional)
 			create void_safety.make (void_safety_name, void_safety_index_none)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 		end
 
 	make_7_0
@@ -58,6 +60,7 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_none)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
 		end
 
@@ -66,6 +69,7 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_transitional)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
 			is_full_class_checking := True
 		end
@@ -75,6 +79,7 @@ feature {NONE} -- Creation
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_all)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
 			is_full_class_checking := True
 		end
@@ -102,9 +107,6 @@ feature -- Status
 	is_full_class_checking_configured: BOOLEAN
 			-- Is `is_full_class_checking' configued?
 
-	is_cat_call_detection_configured: BOOLEAN
-			-- Is `is_cat_call_detection' configured?
-
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
 
@@ -119,7 +121,7 @@ feature -- Status
 				is_warning_configured or
 				is_msil_application_optimize_configured or
 				is_full_class_checking_configured or
-				is_cat_call_detection_configured or
+				catcall_detection.is_set or
 				is_attached_by_default_configured or
 				void_safety.is_set or
 				assertions /= Void or
@@ -180,13 +182,6 @@ feature -- Status update
 			is_full_class_checking := False
 		end
 
-	unset_cat_call_detection
-			-- Unset cat call detection.
-		do
-			is_cat_call_detection_configured := False
-			is_cat_call_detection := False
-		end
-
 	unset_is_attached_by_default
 			-- Unset `is_attached_by_default'.
 		do
@@ -226,9 +221,6 @@ feature -- Access, stored in configuration file
 	is_full_class_checking: BOOLEAN
 			-- Do we perform a full class checking?
 
-	is_cat_call_detection: BOOLEAN
-			-- Do we perform cat-call detection on all feature calls?
-
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
 
@@ -258,6 +250,30 @@ feature {NONE} -- Access: syntax
 			-- Available values for `syntax' option
 		once
 			Result := <<{STRING_32} "obsolete", {STRING_32} "transitional", {STRING_32} "standard", {STRING_32} "provisional">>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Access: catcall
+
+	catcall_detection: CONF_VALUE_CHOICE
+			-- Various levels of catcall prevention: none, conformance, complete.
+
+	catcall_detection_index_none: NATURAL_8 = 1
+			-- Option index for no catcall check.
+
+	catcall_detection_index_conformance: NATURAL_8 = 2
+			-- Option index for conformance checks for frozen/variant annotations.
+
+	catcall_detection_index_all: NATURAL_8 = 3
+			-- Option index for catcall checks.
+
+feature {NONE} -- Access: catcall detection
+
+	catcall_detection_values: ARRAY [READABLE_STRING_32]
+			-- Available values for `catcall_detection' option.
+		once
+			Result := <<{STRING_32} "none", {STRING_32} "conformance", {STRING_32} "all">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -456,16 +472,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_full_class_checking_configured: is_full_class_checking_configured
 		end
 
-	set_cat_call_detection (a_enabled: BOOLEAN)
-			-- Set `is_cat_call_detection' to `a_enabled'.
-		do
-			is_cat_call_detection_configured := True
-			is_cat_call_detection := a_enabled
-		ensure
-			is_cat_call_detection_set: is_cat_call_detection = a_enabled
-			is_cat_call_detection_configured: is_cat_call_detection_configured
-		end
-
 	set_is_attached_by_default (v: BOOLEAN)
 			-- Set `is_attached_by_default' to `v'.
 		do
@@ -508,6 +514,7 @@ feature -- Duplication
 					namespace := n.twin
 				end
 				void_safety := other.void_safety.twin
+				catcall_detection := other.catcall_detection.twin
 				syntax := other.syntax.twin
 				if attached other.warnings as w then
 					warnings := w.twin
@@ -524,8 +531,7 @@ feature -- Comparison
 			and then equal (description, other.description)
 			and then is_attached_by_default = other.is_attached_by_default
 			and then is_attached_by_default_configured = other.is_attached_by_default_configured
-			and then is_cat_call_detection = other.is_cat_call_detection
-			and then is_cat_call_detection_configured = other.is_cat_call_detection_configured
+			and then catcall_detection.is_equal (other.catcall_detection)
 			and then is_debug = other.is_debug
 			and then is_debug_configured = other.is_debug_configured
 			and then is_full_class_checking = other.is_full_class_checking
@@ -558,7 +564,7 @@ feature -- Comparison
 				is_optimize = other.is_optimize and
 				is_profile = other.is_profile and
 				is_full_class_checking = other.is_full_class_checking and
-				is_cat_call_detection = other.is_cat_call_detection and
+				catcall_detection.index = other.catcall_detection.index and
 				is_attached_by_default = other.is_attached_by_default and
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
@@ -698,10 +704,7 @@ feature -- Merging
 					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
 					is_full_class_checking := other.is_full_class_checking
 				end
-				if not is_cat_call_detection_configured then
-					is_cat_call_detection_configured := other.is_cat_call_detection_configured or else is_cat_call_detection /~ other.is_cat_call_detection
-					is_cat_call_detection := other.is_cat_call_detection
-				end
+				catcall_detection.set_safely (other.catcall_detection)
 				if not is_attached_by_default_configured then
 					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
 					is_attached_by_default := other.is_attached_by_default
@@ -719,7 +722,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

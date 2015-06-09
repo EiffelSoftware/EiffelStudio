@@ -8,6 +8,10 @@ ifndef EWEASEL_OUTPUT
 EWEASEL_OUTPUT=$(CWD)/../output
 endif
 
+ifndef PROCESSORS
+PROCESSORS=0
+endif
+
 
 ECHO_S=echo "
 ECHO_E="
@@ -31,6 +35,7 @@ all:
 	$(ECHO_S)$(ECHO_E)
 	$(ECHO_S)Available settings:$(ECHO_E)
 	$(ECHO_S)$(ECHO_E)
+	$(ECHO_S)	   PROCESSORS=count - maximum number of processors that can be used (default: '0', i.e. all available)$(ECHO_E)
 	$(ECHO_S)	   OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')$(ECHO_E)
 	$(ECHO_S)	   EWEASEL_OUTPUT=dir_name - directory for benchmarks (default: '$(DEFAULT_EWEASEL_OUTPUT)')$(ECHO_E)
 

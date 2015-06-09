@@ -114,7 +114,8 @@ feature -- Query
 
 	dummy_call_stack_element: CALL_STACK_ELEMENT_CLASSIC
 		do
-			create Result.dummy_make (e_feature, 1, True, break_index, break_nested_index, object_address, dynamic_type, dynamic_class, origin_class)
+			create Result.dummy_make (e_feature, 1, True, break_index, break_nested_index,
+					object_address, active_thread_id, dynamic_type, dynamic_class, origin_class)
 		end
 
 feature -- Values
@@ -144,7 +145,7 @@ feature -- Threads related access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

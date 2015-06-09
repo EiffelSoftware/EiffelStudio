@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; a_bp, a_bp_nested: INTEGER; addr: DBG_ADDRESS;
+	dummy_make (fe: E_FEATURE; lvl: INTEGER; mlt: BOOLEAN; a_bp, a_bp_nested: INTEGER; addr: DBG_ADDRESS; tid: POINTER;
 				a_type: like dynamic_type; a_class: like dynamic_class; a_origin: like written_class)
 			-- Initialize `Current' with no calls to the run-time.
 		require
@@ -113,6 +113,7 @@ feature {NONE} -- Initialization
 				routine_name := "Unknown..."
 				routine_name_for_display := routine_name
 			end
+
 			level_in_stack := lvl
 			is_melted := mlt
 			break_index := a_bp
@@ -134,7 +135,7 @@ feature {NONE} -- Initialization
 			written_class := a_origin
 
 				--| Address and other
-
+			thread_id := tid
 			object_address := addr
 			object_address_to_string := object_address.output
 				-- set the private body index to a fake value
@@ -640,7 +641,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision $"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

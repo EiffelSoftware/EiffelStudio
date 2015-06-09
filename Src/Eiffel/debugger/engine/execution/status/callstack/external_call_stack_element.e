@@ -19,7 +19,7 @@ create
 
 feature -- Change
 
-	set_info (a_oa: DBG_ADDRESS; a_cn, a_fn: STRING; a_bp, a_bp_nested: INTEGER; a_info: STRING)
+	set_info (a_oa: DBG_ADDRESS; tid: POINTER; a_cn, a_fn: STRING; a_bp, a_bp_nested: INTEGER; a_info: STRING)
 		require
 			object_address_not_void: a_oa /= Void
 			class_name_not_void: a_cn /= Void
@@ -31,6 +31,7 @@ feature -- Change
 			routine_name_for_display := encoding_converter.utf8_to_utf32 (a_fn)
 			break_index := a_bp
 			break_nested_index := a_bp_nested
+			thread_id := tid
 			object_address := a_oa
 			info := a_info
 		end
@@ -57,7 +58,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

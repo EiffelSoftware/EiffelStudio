@@ -269,6 +269,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 												end
 												external_cse.set_info (
 														addr,
+														thread_id,
 														l_module.md_type_name (l_class_token),
 														l_module.md_member_name (l_feature_token),
 														l_il_offset, 0, -- FIXME: find a way to provide a nested index
@@ -325,7 +326,7 @@ feature -- cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

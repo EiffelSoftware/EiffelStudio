@@ -1124,27 +1124,25 @@ feature -- Helpers
 
 	current_debugging_feature: E_FEATURE
 			-- Debugging feature.
-		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 		do
-			if safe_application_is_stopped and then not application.current_call_stack_is_empty then
-				ecse ?= application_status.current_call_stack_element
-				if ecse /= Void then
-					Result := ecse.routine
-				end
+			if
+				safe_application_is_stopped and then
+			 	not application.current_call_stack_is_empty and then
+				attached {EIFFEL_CALL_STACK_ELEMENT} application_status.current_call_stack_element as ecse
+			then
+				Result := ecse.routine
 			end
 		end
 
 	current_debugging_class_c: CLASS_C
 			-- Debugging feature.
-		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 		do
-			if safe_application_is_stopped and not application.current_call_stack_is_empty then
-				ecse ?= application_status.current_call_stack_element
-				if ecse /= Void then
-					Result := ecse.dynamic_class
-				end
+			if
+				safe_application_is_stopped and then
+				not application.current_call_stack_is_empty and then
+				attached {EIFFEL_CALL_STACK_ELEMENT} application_status.current_call_stack_element as ecse
+			then
+				Result := ecse.dynamic_class
 			end
 		end
 
@@ -1763,7 +1761,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

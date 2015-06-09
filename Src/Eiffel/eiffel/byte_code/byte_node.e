@@ -180,35 +180,9 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_frozen_debugger_hook
+	frozen generate_frozen_debugger_hook
 			-- Generate the hook for the C debugger for the
-			-- line number `lnr' (line number means breakpoint slot)
-		local
-			lnr: INTEGER
-			l_buffer: like buffer
-			ctx: like context
-		do
-			ctx := context
-			if not ctx.is_inside_hidden_code then
-				if not ctx.final_mode or else System.exception_stack_managed then
-					if attached ctx.current_feature as cf and then cf.supports_step_in then
-						lnr := ctx.get_next_breakpoint_slot
-						check
-							lnr > 0
-						end
-						l_buffer := ctx.buffer
-						l_buffer.put_new_line
-						l_buffer.put_string(RTHOOK_OPEN)
-						l_buffer.put_integer(lnr)
-						l_buffer.put_two_character (')', ';')
-					end
-				end
-			end
-		end
-
-	generate_frozen_end_debugger_hook
-			-- Generate the hook for the C debugger corresponding
-			-- to the end of the feature.
+			-- current context breakpoint slot.
 		local
 			l_buffer: like buffer
 			lnr: INTEGER
@@ -232,7 +206,7 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_frozen_debugger_hook_nested
+	frozen generate_frozen_debugger_hook_nested
 			-- Generate the hook for the C debugger for the
 			-- line number `lnr' (line number means breakpoint slot)
 		local
@@ -281,24 +255,6 @@ feature -- Eiffel source line information
 							l_buffer.put_two_character (')', ';')
 						end
 					end
-				end
-			end
-		end
-
-	generate_melted_end_debugger_hook (ba: BYTE_ARRAY)
-			-- Record the breakable point corresponding to the end of the feature.
-		local
-			lnr: INTEGER
-			ctx: like context
-		do
-			ctx := context
-			if not ctx.is_inside_hidden_code then
-				if attached ctx.current_feature as cf and then cf.supports_step_in then
-					lnr := ctx.get_next_breakpoint_slot
-					check
-						valid_line: lnr > 0
-					end
-					ba.generate_melted_debugger_hook (lnr)
 				end
 			end
 		end
@@ -436,7 +392,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

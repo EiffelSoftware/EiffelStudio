@@ -1705,7 +1705,7 @@ end
 			-- Generate the end of the compound routine
 		do
 				-- Generate the hook corresponding to the end of the feature ("end;")
-			generate_frozen_end_debugger_hook
+			generate_frozen_debugger_hook
 
 			generate_rtdbgd_leave
 
@@ -2116,7 +2116,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

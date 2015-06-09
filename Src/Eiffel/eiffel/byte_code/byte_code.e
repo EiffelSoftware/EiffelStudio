@@ -726,7 +726,7 @@ feature -- Byte code generation
 			end
 
 				-- Generate the hook corresponding to the final end.
-			generate_melted_end_debugger_hook (ba)
+			melted_generator.generate_melted_debugger_hook (ba)
 
 			if feat.is_attribute then
 				check r_id_unchanged: r_id = feat.rout_id_set.first end

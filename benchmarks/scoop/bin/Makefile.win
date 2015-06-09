@@ -8,6 +8,10 @@ OUTPUT=$(DEFAULT_OUTPUT)
 EWEASEL_OUTPUT=$(MAKEDIR)\..\output
 !ENDIF
 
+!IFNDEF PROCESSORS
+PROCESSORS=0
+!ENDIF
+
 DO_MAKE=$(MAKE) -nologo -f Makefile.win
 
 EXE=.exe
@@ -27,6 +31,7 @@ all:
 	"echo".
 	"echo" Available settings:
 	"echo".
+	"echo"	^ ^ ^ PROCESSORS=count - maximum number of processors that can be used (default: '0', i.e. all available)
 	"echo"	^ ^ ^ OUTPUT=file_name - output file name for benchmarks (default: '$(DEFAULT_OUTPUT)')
 	"echo"	^ ^ ^ EWEASEL_OUTPUT=dir_name - directory for benchmarks (default: '$(DEFAULT_EWEASEL_OUTPUT)')
 

@@ -4,10 +4,10 @@ TOP=..
 
 ELAPSED_TIME_DIR=$(TOP)/../tool/elapsed_time
 ELAPSED_TIME=$(ELAPSED_TIME_DIR)/EIFGENs/elapsed_time/F_code/elapsed_time$(EXE)
-MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c
+MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c -p $(PROCESSORS)
 
 benchmark benchmark_1::
-	$(DO_MAKE) action.echo "MESSAGE=Name,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"
+	$(DO_MAKE) action.echo "MESSAGE=Name,Processors,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"
 
 benchmark benchmark_1 build clean::
 	$(DO_MAKE) ACTION=$@ chain
@@ -23,7 +23,7 @@ benchmark benchmark_1 build clean::
 	$(DO_MAKE) ACTION=$@ winnow
 	
 chain:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench004 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench004/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench004 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench004/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 22"
 
 chameneos:
 	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench005 ARGUMENT="300000" "REPEAT=-c 22"
@@ -35,25 +35,25 @@ mutex:
 	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench007 ARGUMENT="500000 64" "REPEAT=-c 19"
 
 outer:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench008 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench008/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench008 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench008/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 22"
 
 prodcons:
 	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench009 ARGUMENT="33000 32" "REPEAT=-c 18"
 
 product:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench010 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench010/test.in -bench" "REPEAT=-c 25"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench010 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench010/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 25"
 
 randmat:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench011 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench011/test.in -bench" "REPEAT=-c 22"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench011 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench011/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 22"
 
 threadring:
 	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench012 ARGUMENT="2100000 64" "REPEAT=-c 19"
 
 thresh:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench013 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench013/test.in -bench" "REPEAT=-c 20"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench013 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench013/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 20"
 
 winnow:
-	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench014 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench014/test.in -bench" "REPEAT=-c 18"
+	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench014 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench014/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 18"
 
 action.benchmark: $(ELAPSED_TIME) action.build
 	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) $(REPEAT) "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"

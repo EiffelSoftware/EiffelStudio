@@ -37,6 +37,8 @@ feature {NONE} -- Benchmarking
 			sorter: SORTER [INTEGER_64]
 			skip_first_count: INTEGER
 			skip_maximum_count: INTEGER
+			processor_count: INTEGER
+			adjusted_command: detachable STRING_32
 			mean: INTEGER_64
 			total_square_differences, total_differences: INTEGER_64
 			deviation: INTEGER_64
@@ -77,15 +79,35 @@ feature {NONE} -- Benchmarking
 					-- Do not skip runs with maximum time.
 				skip_maximum_count := 0
 			end
+			if attached option_of_name (processor_count_switch) as p and then p.value.to_integer > 0 then
+					-- Limit processor usage to the given number of processors.
+				if {PLATFORM}.is_windows then
+					adjusted_command := {STRING_32} "cmd /c start /w /affinity "
+				elseif {PLATFORM}.is_unix then
+					adjusted_command := {STRING_32} "taskset "
+				end
+				if attached adjusted_command then
+					processor_count := p.value.to_integer
+					adjusted_command.append_string_general (((1 |<< processor_count) - 1).to_hex_string)
+					adjusted_command.append_character (' ')
+				end
+			else
+					-- Do not limit processor usage.
+			end
 			check
 				from_initialization: attached values [1] as command
 			then
+				if attached adjusted_command then
+					adjusted_command.append_string (command)
+				else
+					adjusted_command := command
+				end
 				from
 					create time.make (n.as_integer_32)
 				until
 					n = 0
 				loop
-					process := (create {PROCESS_FACTORY}).process_launcher_with_command_line (command, directory)
+					process := (create {PROCESS_FACTORY}).process_launcher_with_command_line (adjusted_command, directory)
 					process.redirect_output_to_agent (agent (s: STRING_8) do end)
 					process.set_on_fail_launch_handler (
 						agent (c: STRING_32)
@@ -95,7 +117,7 @@ feature {NONE} -- Benchmarking
 								io.error.put_string ("%".")
 								io.error.put_new_line
 							end
-						(command)
+						(adjusted_command)
 					)
 					create start_time.make_now_utc
 					process.launch
@@ -169,6 +191,7 @@ feature {NONE} -- Benchmarking
 						-- Report execution times.
 					report (<<
 						[{STRING_32} "Name", test_name],
+						[{STRING_32} "Processors", processor_count],
 						[{STRING_32} "Count", count],
 						[{STRING_32} "Minimum (ms)", minimum],
 						[{STRING_32} "Maximum (ms)", maximum],
@@ -266,13 +289,13 @@ feature {NONE} -- Usage
 	version: READABLE_STRING_GENERAL
 			-- <Precursor>
 		do
-			Result :=  "1.0"
+			Result :=  "1.1"
 		end
 
 	copyright: READABLE_STRING_GENERAL
 			-- <Precursor>
 		do
-			Result :=  "Copyright (c) 2014, Eiffel Software. All Rights Reserved."
+			Result :=  "Copyright (c) 2014-2015, Eiffel Software. All Rights Reserved."
 		end
 
 feature {NONE} -- Switches
@@ -313,6 +336,9 @@ feature {NONE} -- Switches
 	skip_first_switch: STRING = "skip_first"
 			-- A switch to skip the first run.
 
+	processor_count_switch: STRING = "p"
+			-- A switch to specify maximum number of logical processors that can be used.
+
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- <Precursor>
 		local
@@ -326,6 +352,7 @@ feature {NONE} -- Switches
 				create {ARGUMENT_NATURAL_SWITCH}.make_with_range (count_switch, "Repeat count", True, False, "count", "Number of runs to be included in the results", False, 0, {INTEGER}.max_value.as_natural_64),
 				create {ARGUMENT_NATURAL_SWITCH}.make_with_range (skip_first_switch, "Skip the first runs", True, False, "count", "Number of runs to drop from results", False, 0, 5),
 				create {ARGUMENT_NATURAL_SWITCH}.make_with_range (skip_maximum_switch, "Skip runs with maximum time", True, False, "count", "Number of runs to drop from results", False, 0, 5),
+				create {ARGUMENT_NATURAL_SWITCH}.make_with_range (processor_count_switch, "Restrict the number of processors that can be used", True, False, "count", "Number of logical processors", False, 0, 64),
 				create {ARGUMENT_FLAG_SWITCH}.make (format_switch, "Output format", True, False, "kind", "Kind of a format to be used", False, format, True),
 				create {ARGUMENT_DIRECTORY_SWITCH}.make (directory_switch, "Working directory", True, False, "dir", "Directory path (current directory by default)", False),
 				create {ARGUMENT_SWITCH}.make (header_switch, "Generate headers", True, False)

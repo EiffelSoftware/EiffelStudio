@@ -242,7 +242,8 @@ feature {NONE} -- Ordering
 			Result.extend (11, namespace_1_11_0)
 			Result.extend (12, namespace_1_12_0)
 			Result.extend (13, namespace_1_13_0)
-			Result.extend (13, namespace_1_14_0)
+			Result.extend (14, namespace_1_14_0)
+				-- When adding a new namespace, do not forget to increment the counter index too!
 		end
 
 note

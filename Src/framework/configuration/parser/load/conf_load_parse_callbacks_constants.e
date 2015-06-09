@@ -16,7 +16,7 @@ feature {NONE} -- Access
 				<<
 					at_namespace,
 					at_full_class_checking,
-					at_cat_call_detection,
+					at_catcall_detection,
 					at_is_attached_by_default,
 					at_is_void_safe,
 					at_void_safety,
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation constants
 	at_msil_application_optimize: INTEGER = 1056
 	at_use_application_options: INTEGER = 1057
 	at_full_class_checking: INTEGER = 1058
-	at_cat_call_detection: INTEGER = 1059
+	at_catcall_detection: INTEGER = 1059
 	at_is_attached_by_default: INTEGER = 1060
 	at_is_void_safe: INTEGER = 1061
 	at_void_safety: INTEGER = 1062
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation constants
 			-- Name of the attribute "enabled".
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

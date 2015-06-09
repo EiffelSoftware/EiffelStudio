@@ -324,6 +324,21 @@ feature -- Generic conformance
 			if is_separate then
 				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
 			end
+
+				-- The code below will not generate annotation when
+				-- `{COMPILER_PROFILE}.is_frozen_variant_supported' is not set
+				-- as to not break existing code, since `is_frozen' will always be
+				-- False, is_variant always True.
+			check consistent: not compiler_profile.is_frozen_variant_supported implies (not is_frozen and is_variant) end
+			if is_frozen then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+			elseif is_variant then
+				-- Nothing to do because due to backward compatibility with
+				-- old storables, nothing means variant.
+			else
+				check frozen_variant_supported: compiler_profile.is_frozen_variant_supported end
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.poly_type
+			end
 		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16

@@ -162,7 +162,13 @@ feature -- Status report
 	is_experimental_mode: BOOLEAN
 			-- Is the compiler being run in experimental mode?
 		do
-				-- Starting in the 7.3 release, experimental support type interval.
+			Result := flags & experimental_mode_flag = experimental_mode_flag
+		end
+
+	is_frozen_variant_supported: BOOLEAN
+			-- Is `frozen' or `variant' fully supported?
+		do
+				-- Only when experimental mode is enabled for the time being.
 			Result := flags & experimental_mode_flag = experimental_mode_flag
 		end
 
@@ -336,7 +342,7 @@ feature {NONE}
 			-- Platform target flags.
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

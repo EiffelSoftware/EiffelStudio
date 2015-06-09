@@ -1550,11 +1550,23 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("full_class_checking"))
 				end
 			end
-			if attached current_attributes.item (at_cat_call_detection) as l_cat_call_detection then
-				if l_cat_call_detection.is_boolean then
-					l_current_option.set_cat_call_detection (l_cat_call_detection.to_boolean)
+			if attached current_attributes.item (at_catcall_detection) as l_catcall_detection then
+				if includes_this_or_after (namespace_1_14_0) then
+					if l_current_option.catcall_detection.is_valid_item (l_catcall_detection) then
+						l_current_option.catcall_detection.put (l_catcall_detection)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+					if l_catcall_detection.is_boolean then
+						if l_catcall_detection.to_boolean then
+							l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_all)
+						else
+							l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_none)
+						end
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+					end
 				end
 			end
 			if attached current_attributes.item (at_is_attached_by_default) as l_is_attached_by_default then
@@ -2193,6 +2205,7 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					a_namespace.same_string (namespace_1_14_0) or
 					a_namespace.same_string (namespace_1_13_0)
 				then
 						-- Use the defaults of ES 14.05.
@@ -2747,7 +2760,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_msil_application_optimize, "msil_application_optimize")
 			l_attr.force (at_namespace, "namespace")
 			l_attr.force (at_full_class_checking, "full_class_checking")
-			l_attr.force (at_cat_call_detection, "cat_call_detection")
+			l_attr.force (at_catcall_detection, "cat_call_detection")
 			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
 			l_attr.force (at_is_void_safe, "is_void_safe")
 			l_attr.force (at_void_safety, "void_safety")
@@ -3012,7 +3025,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

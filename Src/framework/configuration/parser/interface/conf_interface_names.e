@@ -333,8 +333,25 @@ feature -- Option names and descriptions
 	option_warnings_name: STRING_32 do Result := locale.translation ("Enabled")	end
 	option_warnings_description: STRING_32 do Result := locale.translation ("Are warnings enabled?")	end
 
-	option_cat_call_detection_name: STRING_32 do Result := locale.translation ("Cat call detection (experimental)") end
-	option_cat_call_detection_description: STRING_32 do Result := locale.translation ("Are all feature calls checked if they are a potential cat-call?") end
+	option_catcall_detection_name: STRING_32 do Result := locale.translation ("Catcall detection") end
+	option_catcall_detection_description: STRING_32 do Result := locale.translation ("Catcall detection level the source code provides:%N%
+		%No - Catcall detection is disabled, frozen and variant annotations are not taken into account for conformance.%N%
+		%Conformance - Catcall detection is disabled but frozen and variant annotations are respected in type conformance checks.%N%
+		%Complete - Catcall detection is enabled and frozen and variant annotations are respected in type conformance checks.") end
+	option_catcall_detection_value: ARRAYED_LIST [STRING_32]
+			-- Name of a catcall detection option value indexed by the corresponding option index.
+		once
+			create Result.make_from_array (<<
+				locale.translation ("No"),
+				locale.translation ("Conformance"),
+				locale.translation ("Complete")
+			>>)
+		ensure
+			valid_index:
+				Result.valid_index ({CONF_OPTION}.catcall_detection_index_none) and
+				Result.valid_index ({CONF_OPTION}.catcall_detection_index_conformance) and
+				Result.valid_index ({CONF_OPTION}.catcall_detection_index_all)
+		end
 
 	option_is_attached_by_default_name: STRING_32 do Result := locale.translation ("Are types attached by default?") end
 	option_is_attached_by_default_description: STRING_32 do Result := locale.translation ("Are types without explicit attachment mark considered attached?") end
@@ -1054,7 +1071,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

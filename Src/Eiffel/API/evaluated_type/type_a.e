@@ -74,6 +74,21 @@ feature -- Generic conformance
 			if is_separate then
 				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
 			end
+
+				-- The code below will not generate annotation when
+				-- `{COMPILER_PROFILE}.is_frozen_variant_supported' is not set
+				-- as to not break existing code, since `is_frozen' will always be
+				-- False, is_variant always True.
+			check consistent: not compiler_profile.is_frozen_variant_supported implies (not is_frozen and is_variant) end
+			if is_frozen then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+			elseif is_variant then
+				-- Nothing to do because due to backward compatibility with
+				-- old storables, nothing means variant.
+			else
+				check frozen_variant_supported: compiler_profile.is_frozen_variant_supported end
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.poly_type
+			end
 		end
 
 	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
@@ -334,7 +349,9 @@ feature -- Properties
 	is_frozen: BOOLEAN
 			-- Is type frozen?
 		do
-			Result := has_frozen_mark or else is_implicitly_frozen
+			if compiler_profile.is_frozen_variant_supported then
+				Result := has_frozen_mark or else is_implicitly_frozen
+			end
 		end
 
 	is_implicitly_frozen: BOOLEAN
@@ -348,7 +365,7 @@ feature -- Properties
 			-- Is type marked `variant'.
 		do
 				-- Either we have the variant mark or we are in traditional mode.
-			Result := has_variant_mark or else not compiler_profile.is_experimental_mode
+			Result := has_variant_mark or else not compiler_profile.is_frozen_variant_supported
 		end
 
 	is_valid_generic_derivation: BOOLEAN
@@ -740,21 +757,23 @@ feature -- Annotations: modification
 	set_frozen_mark
 			-- Mark type declaration as having an explicit `frozen' mark.
 		do
-				-- Frozen variant is only understood in experimental mode
-				-- for the time being.
-			if compiler_profile.is_experimental_mode then
+				-- Frozen variant is only understood if enabled in the compiler.
+			if compiler_profile.is_frozen_variant_supported then
 				variant_bits := has_frozen_mark_mask
 			end
 		ensure
-			has_frozen_mark: compiler_profile.is_experimental_mode implies has_frozen_mark
+			has_frozen_mark_set: compiler_profile.is_frozen_variant_supported implies has_frozen_mark
 		end
 
 	set_variant_mark
 			-- Mark type declaration as having an explicit `variant' mark.
 		do
-			variant_bits := has_variant_mark_mask
+				-- Frozen variant is only understood if enabled in the compiler.
+			if compiler_profile.is_frozen_variant_supported then
+				variant_bits := has_variant_mark_mask
+			end
 		ensure
-			has_variant_mark: has_variant_mark
+			has_variant_mark_set: compiler_profile.is_frozen_variant_supported implies has_variant_mark
 		end
 
 	set_is_attached
@@ -1241,8 +1260,8 @@ feature -- Duplication
 			l_other_is_frozen: BOOLEAN
 		do
 			Result := Current
-				-- Only do something in experimental mode.
-			if other /= Result and then compiler_profile.is_experimental_mode then
+				-- Only do something if supported.
+			if other /= Result and then compiler_profile.is_frozen_variant_supported then
 				if other.is_like_current then
 					l_other_is_frozen := other.has_frozen_mark or else other.conformance_type.is_frozen
 				else

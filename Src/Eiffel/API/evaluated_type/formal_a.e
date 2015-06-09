@@ -189,6 +189,17 @@ feature -- Property
 			if has_separate_mark then
 				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
 			end
+
+				-- The code below will not generate annotation when
+				-- `{COMPILER_PROFILE}.is_frozen_variant_supported' is not set
+				-- as to not break existing code, since `has_frozen_mark' and
+				-- `has_variant_mark' will always be False.
+			check consistent: not compiler_profile.is_frozen_variant_supported implies (not has_frozen_mark and not has_variant_mark) end
+			if has_frozen_mark then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+			elseif has_variant_mark then
+				Result := Result | {SHARED_GEN_CONF_LEVEL}.variant_type
+			end
 		end
 
 feature -- IL code generation

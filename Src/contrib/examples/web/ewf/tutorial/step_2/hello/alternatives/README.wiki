@@ -1,11 +1,11 @@
 This folder contains 2 alternatives code
 
-1) "execute" using the WSF_SERVICE interface, i.e
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+1) "message" using the WSF_MESSAGE_EXECUTION interface, i.e
+	message: WSF_RESPONSE_MESSAGE
 		do
 			...
 		end
 
 
-2) "launcher" using the WSF_RESPONSE_SERVICE interface, but it uses a launcher to start the service, instead of inheriting from WSF_DEFAULT_SERVICE or WSF_DEFAULT_RESPONSE_SERVICE
+2) "launcher" using the WSF_RESPONSE_SERVICE interface, but it uses a launcher to start the service, instead of inheriting from WSF_DEFAULT_SERVICE
 

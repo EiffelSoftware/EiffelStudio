@@ -1,6 +1,8 @@
 note
-	description: "Summary description for {WSF_REQUES_UTILITY_PROXY}."
-	author: ""
+	description: "[
+			Proxy interface on WSF_REQUEST_UTILITY interface.
+			Used to factorize code.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

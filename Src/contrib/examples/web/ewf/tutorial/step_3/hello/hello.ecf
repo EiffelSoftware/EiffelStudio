@@ -12,9 +12,10 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
+		<precompile name="precomp_wsf-mt" location="../../../../ewf_precomp/wsf-mt-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
-		<library name="default_nino" location="../../../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
+		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<cluster name="src" location=".\src" recursive="true"/>
 	</target>
 

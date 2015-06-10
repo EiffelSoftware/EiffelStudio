@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_LOGGER_RESPONSE}."
+	description: "Filter response used to log response sending."
 	date: "$Date$"
 	revision: "$Revision$"
 

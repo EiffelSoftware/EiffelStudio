@@ -7,7 +7,6 @@ class
 	WSF_COOKIE
 
 inherit
-
 	HTTP_COOKIE
 
 create

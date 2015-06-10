@@ -1,5 +1,5 @@
 note
-	description: "Summary description for WGI_NULL_FILE_INPUT_STREAM."
+	description: "Null Input stream based on FILE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

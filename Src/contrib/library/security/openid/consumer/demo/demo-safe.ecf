@@ -16,8 +16,8 @@
 		<library name="ewsgi_nino_connector" location="../../../../web/framework/ewf/ewsgi/connectors/nino/nino-safe.ecf" readonly="false"/>
 		<library name="http" location="..\..\..\..\network\protocol\http\http-safe.ecf"/>
 		<library name="openid" location="..\openid-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../web/framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>
-		<library name="wsf_nino_connector" location="../../../../web/framework/ewf/wsf/connector/nino-safe.ecf" readonly="false"/>
+		<library name="wsf" location="../../../../web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false"/>
+		<library name="wsf_nino_connector" location="../../../../web/framework/ewf/obsolete/v0/wsf/connector/nino-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

@@ -11,12 +11,12 @@ or go to [[step_4.wiki|step 4]]
 
 == "hello" project ==
 * Let's start from the "hello_custom" project
-* you will learn how to use the req: WSF_REQUEST argument
+* you will learn how to use the request: WSF_REQUEST argument
 * See the hello project from [[step_3|step #3]] folder
 
 * You can find code in [[step_3]] folder :
 
- response (req: WSF_REQUEST): WSF_HTML_PAGE_RESPONSE
+ message: WSF_HTML_PAGE_RESPONSE
          -- Computed response message.
      do
          --| It is now returning a WSF_HTML_PAGE_RESPONSE
@@ -25,7 +25,7 @@ or go to [[step_4.wiki|step 4]]
          Result.set_title ("EWF tutorial / Hello World!")
          --| Check if the request contains a parameter named "user"
          --| this could be a query, or a form parameter
-         if attached req.string_item ("user") as l_user then
+         if attached request.string_item ("user") as l_user then
              --| If yes, say hello world #name
              Result.set_body ("Hello " + l_user + "!")
              --| We should html encode this name
@@ -43,8 +43,8 @@ or go to [[step_4.wiki|step 4]]
          end
          --| note:
          --| 1) Source of the parameter, we could have used
-         --|         req.query_parameter ("user") to search only in the query string
-         --|         req.form_parameter ("user") to search only in the form parameters
+         --|         request.query_parameter ("user") to search only in the query string
+         --|         request.form_parameter ("user") to search only in the form parameters
          --| 2) response type
          --|     it could also have used WSF_PAGE_REPONSE, and build the html in the code
          --|

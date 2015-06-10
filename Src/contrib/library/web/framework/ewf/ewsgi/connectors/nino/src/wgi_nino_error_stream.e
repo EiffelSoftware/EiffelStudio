@@ -1,5 +1,5 @@
 note
-	description: "Summary description for WGI_CGI_ERROR_STREAM."
+	description: "Error stream for Nino connector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

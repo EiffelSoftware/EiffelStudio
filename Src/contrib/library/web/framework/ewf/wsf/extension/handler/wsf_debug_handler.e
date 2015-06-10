@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {WSF_DEBUG_HANDLER}."
-	author: ""
+	description: "Handler returning debug information."
+
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -67,7 +67,11 @@ feature -- Access
 
 
 			create p.make_with_body (s)
-			if {PLATFORM}.is_windows and req.wgi_connector.name.is_case_insensitive_equal ("cgi") then
+			if
+				{PLATFORM}.is_windows and then
+				attached req.wgi_connector as conn and then
+				is_cgi_connector (conn)
+			then
 					--| FIXME: the CGI connector add %R for any single %N character, so update the Content-Length accordingly.
 					-- Dirty hack to handle correctly CGI on Windows, since it seems "abc%N" will be sent as "abc%R%N"
 				l_len := 0
@@ -96,9 +100,17 @@ feature -- Access
 			res.send (p)
 		end
 
+	is_cgi_connector (conn: separate WGI_CONNECTOR): BOOLEAN
+		local
+			s: STRING
+		do
+			create s.make_from_separate (conn.name)
+			Result := s.is_case_insensitive_equal_general ("cgi")
+		end
+
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

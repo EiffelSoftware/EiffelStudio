@@ -6,16 +6,14 @@ note
 	revision: "$Revision$"
 
 class
-	WSF_DEFAULT_SERVICE_LAUNCHER
+	WSF_DEFAULT_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_NINO_SERVICE_LAUNCHER
+	WSF_NINO_SERVICE_LAUNCHER [G]
 
 create
 	make,
-	make_and_launch,
-	make_callback,
-	make_callback_and_launch
+	make_and_launch
 
 note
 	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

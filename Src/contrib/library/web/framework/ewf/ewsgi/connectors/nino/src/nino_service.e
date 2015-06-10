@@ -4,50 +4,31 @@ note
 	revision: "$Revision$"
 
 class
-	NINO_SERVICE
+	NINO_SERVICE [G -> WGI_EXECUTION create make end]
 
 create
 	make,
-	make_custom,
-	make_with_callback,
-	make_custom_with_callback
+	make_custom
 
 feature {NONE} -- Implementation
 
-	make (a_service: WGI_SERVICE)
+	make
 			-- Initialize `Current'.
 		do
-			make_custom (a_service, Void)
+			make_custom (Void)
 		end
 
-	make_custom (a_service: WGI_SERVICE; a_base_url: detachable STRING)
+	make_custom (a_base_url: detachable STRING)
 			-- Initialize `Current'.
 		require
 			base_url_starts_with_slash: (a_base_url /= Void and then not a_base_url.is_empty) implies a_base_url.starts_with ("/")
 		do
-			create connector.make_with_base (a_service, a_base_url)
-		end
-
-	make_with_callback (a_callback: PROCEDURE [ANY, TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]])
-			-- Initialize `Current'.
-		do
-			make_custom_with_callback (a_callback, Void)
-		end
-
-	make_custom_with_callback (a_callback: PROCEDURE [ANY, TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]]; a_base_url: detachable STRING)
-			-- Initialize `Current'.
-		require
-			base_url_starts_with_slash: (a_base_url /= Void and then not a_base_url.is_empty) implies a_base_url.starts_with ("/")
-		local
-			app: WGI_AGENT_SERVICE
-		do
-			create app.make (a_callback)
-			make_custom (app, a_base_url)
+			create connector.make_with_base (a_base_url)
 		end
 
 feature -- Access
 
-	connector: WGI_NINO_CONNECTOR
+	connector: WGI_NINO_CONNECTOR [G]
 			-- Web server connector
 
 feature -- Status report
@@ -104,7 +85,7 @@ feature -- Server
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

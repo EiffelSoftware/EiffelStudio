@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {HTTP_DATE_TIME_UTILITIES}."
+	description: "[
+			Utilities routines to manipulate date
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

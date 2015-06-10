@@ -5,7 +5,7 @@ note
 	revision    : "$Revision$"
 
 class
-	WGI_NINO_HANDLER
+	WGI_NINO_HANDLER [G -> WGI_EXECUTION create make end]
 
 inherit
 	HTTP_CONNECTION_HANDLER
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			callback := a_callback
 		end
 
-	callback: WGI_NINO_CONNECTOR
+	callback: WGI_NINO_CONNECTOR [G]
 
 feature -- Access
 

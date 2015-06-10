@@ -17,14 +17,9 @@ inherit
 			on_clean
 		end
 
-	TEST_SERVICE
-		undefine
-			default_create
-		end
-
 feature {NONE} -- Events
 
-	web_app: detachable NINO_SERVICE
+	web_app: detachable NINO_SERVICE [TEST_EXECUTION]
 
 	port_number: INTEGER
 	base_url: detachable STRING
@@ -32,7 +27,7 @@ feature {NONE} -- Events
 	on_prepare
 			-- <Precursor>
 		local
-			app: NINO_SERVICE
+			app: NINO_SERVICE [TEST_EXECUTION]
 			wt: WORKER_THREAD
 			e: EXECUTION_ENVIRONMENT
 		do
@@ -43,7 +38,7 @@ feature {NONE} -- Events
 
 				port_number := 0
 				base_url := "/test/"
-				create app.make_custom (to_wgi_service, base_url)
+				create app.make_custom (base_url)
 				web_app := app
 
 				create wt.make (agent app.listen (port_number))

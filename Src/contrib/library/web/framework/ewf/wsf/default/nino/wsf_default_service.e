@@ -1,13 +1,13 @@
 note
-	description: "Summary description for {WSF_DEFAULT_SERVICE}."
+	description: "Service using default connector launcher: Nino"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	WSF_DEFAULT_SERVICE
+	WSF_DEFAULT_SERVICE [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_DEFAULT_SERVICE_I [WSF_DEFAULT_SERVICE_LAUNCHER]
+	WSF_DEFAULT_SERVICE_I [WSF_DEFAULT_SERVICE_LAUNCHER [G]]	
 
 note
 	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

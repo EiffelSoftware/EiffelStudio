@@ -157,7 +157,7 @@ feature -- Eiffel WGI access
 		deferred
 		end
 
-	wgi_connector: WGI_CONNECTOR
+	wgi_connector: detachable separate WGI_CONNECTOR
 			-- Associated Eiffel WGI connector
 		deferred
 		end
@@ -685,7 +685,7 @@ invariant
 	path_info_identical: path_info ~ meta_string_variable ({WGI_META_NAMES}.path_info)
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

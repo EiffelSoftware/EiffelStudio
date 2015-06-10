@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {WSF_REQUEST_UTILITY}."
-	author: ""
+	description: "Collection of utilities routines for WSF_REQUEST."
 	date: "$Date$"
 	revision: "$Revision$"
 

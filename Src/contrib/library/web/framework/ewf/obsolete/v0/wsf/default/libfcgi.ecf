@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="default_libfcgi" uuid="B853CC3A-D173-4DA4-9832-6D0148C8F01F" library_target="default_libfcgi">
+	<target name="default_libfcgi">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" void_safety="none" syntax="provisional">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wsf" location="..\wsf.ecf"/>
+		<library name="wsf_libfcgi" location="..\connector\libfcgi.ecf"/>
+		<cluster name="default_libfcgi" location=".\libfcgi\" recursive="true"/>
+	</target>
+</system>

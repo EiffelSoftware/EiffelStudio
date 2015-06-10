@@ -4,18 +4,18 @@ note
 	revision: "$Revision$"
 
 deferred class
-	WSF_DEFAULT_SERVICE_I [G -> WSF_SERVICE_LAUNCHER create make_and_launch end]
+	WSF_DEFAULT_SERVICE_I [G -> WSF_SERVICE_LAUNCHER [WSF_EXECUTION] create make_and_launch end]
 
 inherit
 	WSF_LAUNCHABLE_SERVICE
 
 feature {NONE} -- Initialization
 
-	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
 			l_launcher: G
 		do
-			create l_launcher.make_and_launch (a_service, opts)
+			create l_launcher.make_and_launch (opts)
 		end
 
 note

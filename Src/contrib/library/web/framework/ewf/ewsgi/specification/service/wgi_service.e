@@ -11,20 +11,6 @@ note
 deferred class
 	WGI_SERVICE
 
-feature {WGI_CONNECTOR} -- Execution
-
-	execute (req: WGI_REQUEST; res: WGI_RESPONSE)
-			-- Execute the request
-			-- See `req.input' for input stream
-    		--     `req.meta_variables' for the CGI meta variable
-			-- and `res' for output buffer
-		require
-			res_status_unset: not res.status_is_set
-		deferred
-		ensure
-			res_status_set: res.status_is_set
-		end
-
 note
 	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

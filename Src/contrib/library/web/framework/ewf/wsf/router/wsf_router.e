@@ -64,20 +64,24 @@ feature {NONE} -- Initialization
 
 feature -- Mapping
 
-	map (a_mapping: WSF_ROUTER_MAPPING)
-			-- Map `a_mapping'.
+	map (a_mapping: WSF_ROUTER_MAPPING; rqst_methods: detachable WSF_REQUEST_METHODS)
+			-- Map `a_mapping',
+			-- if `rqst_methods' is set, accept only request method in `rqst_methods'.
+			-- if `rqst_method' is Void, accept any request methods.
 		require
 			a_mapping_attached: a_mapping /= Void
 		do
-			map_with_request_methods (a_mapping, Void)
+			extend (create {WSF_ROUTER_ITEM}.make (a_mapping, rqst_methods))
 		end
 
 	map_with_request_methods (a_mapping: WSF_ROUTER_MAPPING; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `a_mapping' for request methods `rqst_methods'.
+		obsolete
+			"Use directly `map' [June/2015]"
 		require
 			a_mapping_attached: a_mapping /= Void
 		do
-			extend (create {WSF_ROUTER_ITEM}.make_with_request_methods (a_mapping, rqst_methods))
+			map (a_mapping, rqst_methods)
 		end
 
 	import (a_mapping_items: ITERABLE [WSF_ROUTER_ITEM])
@@ -116,23 +120,27 @@ feature {WSF_ROUTER} -- Mapping
 
 feature -- Mapping handler
 
-	handle (a_resource: READABLE_STRING_8; f: WSF_ROUTER_MAPPING_FACTORY)
+	handle (a_resource: READABLE_STRING_8; f: WSF_ROUTER_MAPPING_FACTORY; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map the mapping created by factory `f' for resource `a_resource'.
+			-- if `rqst_methods' is set, accept only request method in `rqst_methods'.
+			-- if `rqst_method' is Void, accept any request methods.
 		require
 			a_resource_attached: a_resource /= Void
 			f_attached: f /= Void
 		do
-			handle_with_request_methods (a_resource, f, Void)
+			map (f.new_mapping (a_resource), rqst_methods)
 		end
 
 	handle_with_request_methods (a_resource: READABLE_STRING_8; f: WSF_ROUTER_MAPPING_FACTORY; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map the mapping created by factory `f' for resource `a_resource'	
 			-- and only for request methods `rqst_methods'
+		obsolete
+			"Use directly `handle' [June/2015]"
 		require
 			a_resource_attached: a_resource /= Void
 			f_attached: f /= Void
 		do
-			map_with_request_methods (f.new_mapping (a_resource), rqst_methods)
+			handle (a_resource, f, rqst_methods)
 		end
 
 feature -- Basic operations

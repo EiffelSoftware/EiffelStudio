@@ -48,18 +48,31 @@ feature {NONE} -- Implementation
 			-- Handle forbidden.
 		local
 			h: HTTP_HEADER
+			s: STRING
 		do
 			create h.make
 			h.put_content_type_text_plain
 			h.put_content_length (a_description.count)
 			h.put_current_date
-			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, "Basic realm=%"User%"")
+			s := "Basic realm=%"For this demo, use any of: "
+			across
+				db_access.users as ic
+			loop
+				s.append_character ('(')
+				s.append (ic.item.name)
+				s.append_character (':')
+				s.append (ic.item.password)
+				s.append_character (')')
+				s.append_character (' ')
+			end
+			s.append_character ('"')
+			h.put_header_key_value ({HTTP_HEADER_NAMES}.header_www_authenticate, s)
 			res.set_status_code ({HTTP_STATUS_CODE}.unauthorized)
 			res.put_header_text (h.string)
 			res.put_string (a_description)
 		end
 
 note
-	copyright: "2011-2014, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2015, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

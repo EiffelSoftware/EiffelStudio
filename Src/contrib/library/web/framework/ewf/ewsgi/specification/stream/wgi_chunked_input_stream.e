@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_CHUNKED_INPUT_STREAM}."
+	description: "Input stream for chunked encoding request."
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=Chunked Transfer Coding", "protocol=URI", "src=http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.6.1"

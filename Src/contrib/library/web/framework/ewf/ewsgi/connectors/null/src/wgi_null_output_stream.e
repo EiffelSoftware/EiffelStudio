@@ -1,5 +1,5 @@
 note
-	description: "Summary description for WGI_NULL_OUTPUT_STREAM."
+	description: "Output stream for NULL connector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -70,8 +70,13 @@ feature -- Status writing
 			end
 		end
 
+feature -- Status report
+
+	is_available: BOOLEAN = True
+			-- <Precursor>		
+
 note
-	copyright: "2011-2011, Eiffel Software and others"
+	copyright: "2011-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

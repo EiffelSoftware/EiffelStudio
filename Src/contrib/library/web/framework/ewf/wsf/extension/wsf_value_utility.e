@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {WSF_VALUE_UTILITY}."
+	description: "[
+			Collection of utilities routines to factorize code related to WSF_VALUE manipulation.
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

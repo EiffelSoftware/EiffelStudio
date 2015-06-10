@@ -7,18 +7,20 @@ class
 	SERVICE_FILE
 
 inherit
-	WSF_DEFAULT_SERVICE
+	WSF_DEFAULT_SERVICE [SERVICE_FILE_EXECUTION]
+		redefine
+			initialize
+		end
 
 create
 	make_and_launch
 
 feature {NONE} -- Initialization
 
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			f: WSF_FILE_RESPONSE
+	initialize
 		do
-			create f.make_html ("home.html")
-			res.send (f)
+			Precursor
+			set_service_option ("port", 9090)
 		end
+
 end

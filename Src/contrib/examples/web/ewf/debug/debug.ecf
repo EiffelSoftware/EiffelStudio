@@ -13,32 +13,41 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="encoder" location="../../../../library/web/framework/ewf/text/encoder/encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>
-		<library name="wsf_extension" location="../../../../library/web/framework/ewf/wsf/wsf_extension-safe.ecf" readonly="false"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false"/>
+		<library name="wsf_extension" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_extension-safe.ecf" readonly="false"/>
 	</target>
 	<target name="debug_any" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
 		<library name="cgi" location="../../../../library/web/framework/ewf/wsf/connector/cgi-safe.ecf" readonly="false"/>
-		<library name="libfcgi" location="../../../../library/web/framework/ewf/wsf/connector/libfcgi-safe.ecf"/>
-		<library name="nino" location="../../../../library/web/framework/ewf/wsf/connector/nino-safe.ecf"/>
+		<library name="libfcgi" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/connector/libfcgi-safe.ecf" readonly="false"/>
+		<library name="nino" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/connector/nino-safe.ecf" readonly="false"/>
+		<library name="standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone-safe.ecf" readonly="false"/>
 		<cluster name="launcher" location=".\launcher\any\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="debug_standalone" extends="common">
+		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="debug_nino" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
+		<library name="default_nino" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="debug_cgi" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<library name="default_cgi" location="../../../../library/web/framework/ewf/wsf/default/cgi-safe.ecf"/>
+		<library name="default_cgi" location="../../../../library/web/framework/ewf/wsf/default/cgi-safe.ecf" readonly="false"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="debug_libfcgi" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>

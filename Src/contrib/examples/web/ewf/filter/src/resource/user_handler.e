@@ -41,7 +41,7 @@ feature -- Basic operations
 		local
 			id :  STRING
 		do
-			if attached req.orig_path_info as orig_path then
+			if attached req.path_info as orig_path then
 				id := get_user_id_from_path (orig_path)
 				if attached retrieve_user (id) as l_user then
 					if l_user ~ req.execution_variable ("user") then
@@ -86,12 +86,14 @@ feature {NONE} -- Implementation
 	retrieve_user (id: STRING) : detachable USER
 			-- Retrieve the user by id if it exist, in other case, Void
 		do
-			if id.is_integer and then Db_access.users.has (id.to_integer) then
-				Result := db_access.users.item (id.to_integer)
+			if id.is_integer then
+				Result := db_access.user_by_id (id.to_integer)
+			else
+				Result := db_access.user_by_name (id)
 			end
 		end
 
 note
-	copyright: "2011-2013, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2015, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

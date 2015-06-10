@@ -24,26 +24,33 @@ feature -- Initialization
 
 feature -- Access
 
+	user_by_id (a_id: INTEGER): detachable USER
+		do
+			Result := users.item (a_id)
+		end
+
+	user_by_name (a_name: READABLE_STRING_GENERAL): detachable USER
+		do
+			across
+				users as c
+			until
+				Result /= Void
+			loop
+				if attached c.item as u and then a_name.same_string (u.name) then
+					Result := u
+				end
+			end
+		end
+
 	user (a_id: INTEGER; a_name: detachable READABLE_STRING_GENERAL): detachable USER
 			-- User with id `a_id' or name `a_name'.
 		require
 			a_id > 0 xor a_name /= Void
-		local
-			n: like {USER}.name
 		do
 			if a_id > 0 then
-				Result := users.item (a_id)
+				Result := user_by_id (a_id)
 			elseif a_name /= Void then
-				n := a_name.as_string_8
-				across
-					users as c
-				until
-					Result /= Void
-				loop
-					if attached c.item as u and then u.name.same_string (n) then
-						Result := u
-					end
-				end
+				Result := user_by_name (a_name)
 			end
 		ensure
 			Result /= Void implies ((a_id > 0 and then Result.id = a_id) xor (a_name /= Void and then Result.name.same_string_general (a_name)))
@@ -52,6 +59,6 @@ feature -- Access
 	users: HASH_TABLE [USER, INTEGER]
 
 ;note
-	copyright: "2011-2012, Olivier Ligot, Jocelyn Fiat and others"
+	copyright: "2011-2015, Olivier Ligot, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

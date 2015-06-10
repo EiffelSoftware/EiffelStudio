@@ -24,18 +24,17 @@ feature {NONE} -- Initialization
 			-- then launch the application.
 		local
 			l_win: like main_window
-			l_embeded_services: APP_EMBEDDED_WEB_SERVICE
+			l_embedded_service: APP_EMBEDDED_WEB_SERVICE
 		do
 			default_create
 			create l_win.make
 			main_window := l_win
 			l_win.show
-			create l_embeded_services.make
-			l_embeded_services.set_port_number (0) -- Use first available port number
+			create l_embedded_service.make
+			l_embedded_service.set_port_number (0) -- Use first available port number
 
-			l_embeded_services.on_launched_actions.force (agent on_web_service_launched (l_win))
-			l_embeded_services.request_exit_operation_actions.force (agent on_quit)
-			l_embeded_services.launch
+			l_embedded_service.on_launched_actions.force (agent on_web_service_launched (l_win, l_embedded_service))
+			l_embedded_service.launch
 			launch
 		end
 
@@ -46,9 +45,42 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	on_web_service_launched (a_win: attached like main_window)
+	on_web_service_launched (a_win: attached like main_window; s: APP_EMBEDDED_WEB_SERVICE)
 		do
+			add_idle_action_kamikaze (agent wait_for_termination (s, Void))
 			add_idle_action_kamikaze (agent a_win.open_link)
+		end
+
+	wait_for_termination (s: APP_EMBEDDED_WEB_SERVICE; a_timeout: detachable EV_TIMEOUT)
+		local
+			t: detachable EV_TIMEOUT
+		do
+			t := a_timeout
+			if t /= Void then
+				t.set_interval (0)
+			end
+			if
+				attached s.observer as obs and then
+				observer_has_terminaded (obs)
+			then
+				if t /= Void then
+					t.destroy
+				end
+				on_quit
+			else
+				if t = Void then
+					create t
+					t.actions.extend (agent wait_for_termination (s, t))
+				else
+					t.set_interval (1_000)
+				end
+				t.set_interval (1_000)
+			end
+		end
+
+	observer_has_terminaded (obs: separate WGI_STANDALONE_SERVER_OBSERVER): BOOLEAN
+		do
+			Result := obs.terminated
 		end
 
 feature {NONE} -- Implementation

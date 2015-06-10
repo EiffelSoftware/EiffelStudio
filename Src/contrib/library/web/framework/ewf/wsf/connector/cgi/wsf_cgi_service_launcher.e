@@ -18,40 +18,36 @@ note
 	revision: "$Revision$"
 
 class
-	WSF_CGI_SERVICE_LAUNCHER
+	WSF_CGI_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_SERVICE_LAUNCHER
+	WSF_SERVICE_LAUNCHER [G]
 
 create
 	make,
-	make_and_launch,
-	make_callback,
-	make_callback_and_launch
-	
+	make_and_launch
+
 feature {NONE} -- Initialization
 
 	initialize
 		do
-			create connector.make (Current)
+			create connector
 		end
 
 feature -- Execution
 
 	launch
 		do
-			if attached connector as conn then
-				conn.launch
-			end
+			connector.launch
 		end
 
 feature -- Status report
 
-	connector: detachable WGI_CGI_CONNECTOR
+	connector: WGI_CGI_CONNECTOR [G]
 			-- Default service name
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

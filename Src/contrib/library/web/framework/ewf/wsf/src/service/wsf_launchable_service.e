@@ -14,7 +14,7 @@ feature {NONE} -- Initialization
 	frozen make_and_launch
 		do
 			initialize
-			launch (Current, service_options)
+			launch (service_options)
 		end
 
 	initialize
@@ -23,13 +23,29 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	service_options: detachable WSF_SERVICE_LAUNCHER_OPTIONS
+feature -- Access
 
-	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	service_options: detachable WSF_SERVICE_LAUNCHER_OPTIONS
+			-- Optional service options used to configure associated WSF_SERVICE_LAUNCHER.
+
+feature -- Basic operation
+
+	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+			-- Launch service with optional options `opts'.
 		deferred
 		end
 
 feature -- Default service options
+
+	import_service_options (opts: WSF_SERVICE_LAUNCHER_OPTIONS)
+			-- Import service options `opts' into `service_options'.
+		do
+			if attached service_options as l_opts then
+				l_opts.append_options (opts)
+			else
+				service_options := opts
+			end
+		end
 
 	set_service_option (a_name: READABLE_STRING_GENERAL; a_value: detachable ANY)
 			-- Set options related to WSF_SERVICE_LAUNCHER
@@ -47,7 +63,7 @@ feature -- Default service options
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -41,7 +41,7 @@ inherit
 			{NONE} all
 		end
 
-create {WSF_TO_WGI_SERVICE}
+create {WSF_EXECUTION, WGI_EXPORTER}
 	make_from_wgi
 
 convert
@@ -426,7 +426,7 @@ feature -- Eiffel WGI access
 			Result := wgi_request.wgi_implementation
 		end
 
-	wgi_connector: WGI_CONNECTOR
+	wgi_connector: detachable separate WGI_CONNECTOR
 			-- Associated Eiffel WGI connector
 		do
 			Result := wgi_request.wgi_connector
@@ -2173,7 +2173,7 @@ invariant
 	wgi_request.content_type /= Void implies content_type /= Void
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

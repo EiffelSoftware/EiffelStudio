@@ -11,30 +11,31 @@ class
 	HELLO_APPLICATION
 
 inherit
-	WSF_RESPONSE_SERVICE
+	WSF_LAUNCHABLE_SERVICE
+		redefine
+			initialize
+		end
 
 create
 	make_and_launch
 
 feature {NONE} -- Initialization
 
-	make_and_launch
+	initialize
 		local
-			launcher: WSF_DEFAULT_SERVICE_LAUNCHER
 			opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS
 		do
-			--| Uncomment the following line, to read options from "ewf.ini" configuration file
-			--	create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} opts.make_from_file ("ewf.ini")
-
-			create launcher.make_and_launch (Current, opts)
+			Precursor
+				--| Uncomment the following 2 lines, to read options from "ewf.ini" configuration file
+--			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} opts.make_from_file ("ewf.ini")
+--			import_service_options (opts)
 		end
 
-feature {NONE} -- Initialization
-
-	response (req: WSF_REQUEST): WSF_PAGE_RESPONSE
+	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+		local
+			launcher: WSF_DEFAULT_SERVICE_LAUNCHER [HELLO_EXECUTION]
 		do
-			create Result.make
-			Result.put_string ("Hello World")
+			create launcher.make_and_launch (opts)
 		end
 
 end

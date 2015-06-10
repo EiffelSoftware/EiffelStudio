@@ -22,13 +22,13 @@ feature {NONE} -- Initialization
 		local
 			utf: UTF_CONVERTER
 		do
-			auth_type := req.auth_type
 			content_length := req.content_length
 			if attached req.content_type as ct then
 				content_type := ct.string
 			else
 				content_type := Void
 			end
+			auth_type := req.auth_type
 			gateway_interface := req.gateway_interface
 			path_info := req.path_info
 			path_translated := req.path_translated

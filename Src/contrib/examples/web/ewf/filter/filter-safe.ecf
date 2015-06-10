@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="filter" uuid="52FF4B77-0614-4D8B-9B96-C07EC852793E" library_target="filter">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="filter" uuid="52FF4B77-0614-4D8B-9B96-C07EC852793E" library_target="filter">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="provisional">
 			<debug name="nino" enabled="true"/>
 			<assertions precondition="true" postcondition="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="true"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="true"/>
-		<library name="json" location="../../../../library/text/parser/json/library/json-safe.ecf" readonly="true"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="true"/>
-		<library name="wsf_router_context" location="../../../../library/web/framework/ewf/wsf/wsf_router_context-safe.ecf" readonly="true"/>
-		<library name="wsf_extension" location="../../../../library/web/framework/ewf/wsf/wsf_extension-safe.ecf" readonly="true"/>
 		<library name="http_authorization" location="../../../../library/network/authentication/http_authorization/http_authorization-safe.ecf" readonly="true"/>
+		<library name="json" location="../../../../library/text/parser/json/library/json-safe.ecf" readonly="true"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="true"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false"/>
+		<library name="wsf_extension" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_extension-safe.ecf" readonly="true"/>
+		<library name="wsf_router_context" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_router_context-safe.ecf" readonly="true"/>
 	</target>
 	<target name="filter_nino" extends="common">
 		<root class="FILTER_SERVER" feature="make"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="true"/>
+		<library name="default_nino" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf" readonly="true"/>
+		<cluster name="filter" location="src\" recursive="true"/>
+	</target>
+	<target name="filter_standalone" extends="common">
+		<root class="FILTER_SERVER" feature="make"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="true"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
 	<target name="filter_fcgi" extends="common">
 		<root class="FILTER_SERVER" feature="make"/>
-		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
 	<target name="filter" extends="filter_nino">

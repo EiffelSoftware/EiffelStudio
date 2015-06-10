@@ -2,30 +2,20 @@ note
 	description: "[
 				This class implements the `Hello World' service.
 
-				It inherits from WSF_DEFAULT_RESPONSE_SERVICE to get default EWF connector ready
-				only `response' needs to be implemented.
-				In this example, it is redefined and specialized to be WSF_PAGE_RESPONSE
+				It inherits from WSF_DEFAULT_SERVICE to get default EWF connector ready.
+				And implement HELLO_EXECUTION.
 
-				`initialize' can be redefine to provide custom options if needed.
-
+				`initialize' can be redefine to provide custom options if needed, 
+				such as specific port number.
 			]"
 
 class
 	HELLO_APPLICATION
 
 inherit
-	WSF_DEFAULT_RESPONSE_SERVICE
+	WSF_DEFAULT_SERVICE [HELLO_EXECUTION]
 
 create
 	make_and_launch
-
-feature {NONE} -- Initialization
-
-	response (req: WSF_REQUEST): WSF_PAGE_RESPONSE
-			-- Computed response message.
-		do
-			create Result.make
-			Result.put_string ("Hello World")
-		end
 
 end

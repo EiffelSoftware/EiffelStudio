@@ -12,8 +12,8 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="wsf" location="../../../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
-		<library name="default_nino" location="../../../../../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
+		<library name="wsf" location="../../../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="default_nino" location="../../../../../../../../library/web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf"/>
 		<cluster name="src" location=".\"/>
 	</target>
 

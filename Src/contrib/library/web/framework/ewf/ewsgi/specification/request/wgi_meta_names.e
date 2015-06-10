@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_META_NAMES}."
+	description: "Common CGI and meta variable names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

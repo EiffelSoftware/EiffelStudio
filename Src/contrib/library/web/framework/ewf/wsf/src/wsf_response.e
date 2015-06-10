@@ -19,7 +19,7 @@ note
 class
 	WSF_RESPONSE
 
-create {WSF_TO_WGI_SERVICE}
+create {WSF_EXECUTION, WGI_EXPORTER}
 	make_from_wgi
 
 create {WSF_RESPONSE}

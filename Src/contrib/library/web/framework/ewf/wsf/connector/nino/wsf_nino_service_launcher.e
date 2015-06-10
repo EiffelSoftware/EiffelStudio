@@ -17,19 +17,17 @@ note
 	revision: "$Revision$"
 
 class
-	WSF_NINO_SERVICE_LAUNCHER
+	WSF_NINO_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_SERVICE_LAUNCHER
+	WSF_SERVICE_LAUNCHER [G]
 		redefine
 			launchable
 		end
 
 create
 	make,
-	make_and_launch,
-	make_callback,
-	make_callback_and_launch
+	make_and_launch
 
 feature {NONE} -- Initialization
 
@@ -69,10 +67,11 @@ feature {NONE} -- Initialization
 					verbose := l_verbose_str.as_lower.same_string ("true")
 				end
 			end
-			create conn.make (Current)
+			create conn.make --(Current)
+			connector := conn
+
 			conn.on_launched_actions.extend (agent on_launched)
 			conn.on_stopped_actions.extend (agent on_stopped)
-			connector := conn
 			conn.set_base (base_url)
 			if single_threaded then
 				conn.configuration.set_force_single_threaded (True)
@@ -85,29 +84,30 @@ feature -- Execution
 	launch
 			-- <Precursor/>
 			-- using `port_number', `base_url', `verbose' and `single_threaded'
+		local
+			conn: like connector
 		do
-			if attached connector as conn then
-				conn.set_base (base_url)
-				if single_threaded then
-					conn.configuration.set_force_single_threaded (True)
-				end
-				conn.configuration.set_is_verbose (verbose)
-				debug ("nino")
-					if verbose then
-						io.error.put_string ("Launching Nino web server on port " + port_number.out)
-						if attached server_name as l_name then
-							io.error.put_string ("%N http://" + l_name + ":" + port_number.out + "/" + base_url + "%N")
-						else
-							io.error.put_string ("%N http://localhost:" + port_number.out + "/" + base_url + "%N")
-						end
+			conn := connector
+			conn.set_base (base_url)
+			if single_threaded then
+				conn.configuration.set_force_single_threaded (True)
+			end
+			conn.configuration.set_is_verbose (verbose)
+			debug ("nino")
+				if verbose then
+					io.error.put_string ("Launching Nino web server on port " + port_number.out)
+					if attached server_name as l_name then
+						io.error.put_string ("%N http://" + l_name + ":" + port_number.out + "/" + base_url + "%N")
+					else
+						io.error.put_string ("%N http://localhost:" + port_number.out + "/" + base_url + "%N")
 					end
 				end
-				if attached server_name as l_server_name then
-					conn.configuration.set_http_server_name (l_server_name)
-				end
-				conn.configuration.http_server_port := port_number
-				conn.launch
 			end
+			if attached server_name as l_server_name then
+				conn.configuration.set_http_server_name (l_server_name)
+			end
+			conn.configuration.http_server_port := port_number
+			conn.launch
 		end
 
 feature -- Callback
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	connector: detachable WGI_NINO_CONNECTOR
+	connector: WGI_NINO_CONNECTOR [G]
 			-- Default connector
 
 	launchable: BOOLEAN

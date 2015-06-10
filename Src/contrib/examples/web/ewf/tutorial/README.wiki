@@ -8,10 +8,11 @@ To write once and run on any web server, on any platforms thanks to the notion o
 == What is a connector? ==
 
 A connector is the layer between the underlying httpd server, and your application based on EWF.
-Currently, 3 connectors are available within EWF (but others are available outside).
+Currently, 4 connectors are available within EWF (but others are available outside).
 *­ CGI: the common CGI application (apache, iis, ...)
 * FastCGI: on any server supporting libfcgi handling (apache, iis, ...)
-* Nino: using the standalone Eiffel Web Nino server, you can run anywhere easily, and debug simply with EiffelStudio's debugger
+* Standalone: a standalone Eiffel Web server, it can be run anywhere easily, and debug simply with EiffelStudio's debugger. It supports all concurrency modes, and require EiffelStudio >= 15.05.
+* Nino: similar to the "standalone" connectors, but lack good concurrency support.
 
 Supporting a new connector is fairly simple, it just has to support the simple EWSGI specification which is really small. Then EWF will bring the power on top of it.
 

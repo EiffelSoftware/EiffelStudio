@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="test_connector_standalone" uuid="BA1C9760-8ECD-4182-8354-5D880F2FC81B" library_target="test_connector_standalone">
+	<target name="test_standalone_scoop">
+		<root class="TEST_STANDALONE_CONNECTOR" feature="make"/>
+		<option debug="true" syntax="standard">
+			<debug name="dbglog" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+		</option>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="connector_standalone" location="standalone-safe.ecf" readonly="false"/>
+		<library name="ewsgi" location="..\..\ewsgi-safe.ecf" readonly="false"/>
+		<library name="httpd_edit" location="src\httpd\httpd-safe.ecf" readonly="false">
+			<option debug="true">
+				<debug name="dbglog" enabled="true"/>
+			</option>
+		</library>
+		<library name="net_ssl_edit" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl-safe.ecf" readonly="false"/>
+		<library name="wsf" location="..\..\..\wsf\wsf-safe.ecf" readonly="false"/>
+		<cluster name="tests" location="tests\" recursive="true"/>
+	</target>
+	<target name="test_standalone_thread" extends="test_standalone_scoop">
+		<setting name="concurrency" value="thread"/>
+	</target>
+	<target name="test_standalone_none" extends="test_standalone_scoop">
+		<setting name="concurrency" value="none"/>
+	</target>
+	<target name="test_connector_standalone" extends="test_standalone_scoop">
+	</target>
+</system>

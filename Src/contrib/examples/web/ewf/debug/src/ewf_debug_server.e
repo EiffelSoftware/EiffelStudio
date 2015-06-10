@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	APPLICATION_LAUNCHER
+	APPLICATION_LAUNCHER [EWF_DEBUG_EXECUTION]
 
 create
 	make_and_launch
@@ -30,14 +30,14 @@ feature {NONE} -- Initialization
 --			set_service_option ("base", "/www-debug/debug_service.fcgi/")
 		end
 
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			dbg: WSF_DEBUG_HANDLER
-		do
-			res.put_error ("DEBUG" + req.request_uri + "%N")
-			create dbg.make
-			dbg.execute_starts_with ("", req, res)
-		end
+--	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
+--		local
+--			dbg: WSF_DEBUG_HANDLER
+--		do
+--			res.put_error ("OH NO uri=" + req.request_uri + "%N")
+--			create dbg.make
+--			dbg.execute_starts_with ("", req, res)
+--		end
 
 end
 

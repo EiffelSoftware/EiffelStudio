@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {HTTP_FORMAT_CONSTANTS}."
+	description: "Various constants implied in http format."
 	date: "$Date$"
 	revision: "$Revision$"
 

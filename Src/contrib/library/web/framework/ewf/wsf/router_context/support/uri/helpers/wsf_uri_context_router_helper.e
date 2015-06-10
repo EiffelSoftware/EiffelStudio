@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {WSF_URI_CONTEXT_ROUTER_HELPER}."
-	author: ""
+	description: "Helper for exection based on router, and uri mapping context."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,42 +14,46 @@ feature -- Access
 
 feature -- Mapping helper: uri
 
-	map_uri (a_uri: READABLE_STRING_8; h: WSF_URI_CONTEXT_HANDLER [C])
+	map_uri (a_uri: READABLE_STRING_8; h: WSF_URI_CONTEXT_HANDLER [C]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		require
 			a_uri_attached: a_uri /= Void
 			h_attached: h /= Void
 		do
-			map_uri_with_request_methods (a_uri, h, Void)
+			router.map (create {WSF_URI_CONTEXT_MAPPING [C]}.make (a_uri, h), rqst_methods)
 		end
 
 	map_uri_with_request_methods (a_uri: READABLE_STRING_8; h: WSF_URI_CONTEXT_HANDLER [C]; rqst_methods: detachable WSF_REQUEST_METHODS)
+		obsolete
+			"Use directly `map_uri' [June-2015]"
 		require
 			a_uri_attached: a_uri /= Void
 			h_attached: h /= Void
 		do
-			router.map_with_request_methods (create {WSF_URI_CONTEXT_MAPPING [C]}.make (a_uri, h), rqst_methods)
+			map_uri (a_uri, h, rqst_methods)
 		end
 
 feature -- Mapping helper: uri agent		
 
-	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]])
+	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		require
 			a_uri_attached: a_uri /= Void
 			proc_attached: proc /= Void
 		do
-			map_uri_agent_with_request_methods (a_uri, proc, Void)
+			map_uri (a_uri, create {WSF_URI_AGENT_CONTEXT_HANDLER [C] }.make (proc), rqst_methods)
 		end
 
 	map_uri_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+		obsolete
+			"Use directly `map_uri_agent' [June-2015]"
 		require
 			a_uri_attached: a_uri /= Void
 			proc_attached: proc /= Void
 		do
-			map_uri_with_request_methods (a_uri, create {WSF_URI_AGENT_CONTEXT_HANDLER [C] }.make (proc), rqst_methods)
+			map_uri_agent (a_uri, proc, rqst_methods)
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

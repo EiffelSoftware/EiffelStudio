@@ -1,23 +1,23 @@
 note
 	description: "[
-	This class represents the value of a HTTP cookie, transferred in a request.
-	The class has features to build an HTTP cookie.
-			
-	Following a newer RFC standard for Cookies http://tools.ietf.org/html/rfc6265 
-			
-	Domain
-	* WARNING: Some existing user agents treat an absent Domain attribute as if the Domain attribute were present and contained the current host name.  
-	* For example, if example.com returns a Set-Cookie header without a Domain attribute, these user agents will erroneously send the cookie to www.example.com as well.
-			
-	Max-Age, Expires
-	* If a cookie has both the Max-Age and the Expires attribute, the Max-Age attribute has precedence and controls the expiration date of the cookie. 
-	* If a cookie has neither the Max-Age nor the Expires attribute, the user agent will retain the cookie until "the current session is over" (as defined by the user agent).
-	* You will need to call the feature
-			
-	HttpOnly, Secure
-	* Note that the HttpOnly attribute is independent of the Secure attribute: a cookie can have both the HttpOnly and the Secure attribute.
+		This class represents the value of a HTTP cookie, transferred in a request.
+		The class has features to build an HTTP cookie.
+				
+		Following a newer RFC standard for Cookies http://tools.ietf.org/html/rfc6265 
+				
+		Domain
+		* WARNING: Some existing user agents treat an absent Domain attribute as if the Domain attribute were present and contained the current host name.  
+		* For example, if example.com returns a Set-Cookie header without a Domain attribute, these user agents will erroneously send the cookie to www.example.com as well.
+				
+		Max-Age, Expires
+		* If a cookie has both the Max-Age and the Expires attribute, the Max-Age attribute has precedence and controls the expiration date of the cookie. 
+		* If a cookie has neither the Max-Age nor the Expires attribute, the user agent will retain the cookie until "the current session is over" (as defined by the user agent).
+		* You will need to call the feature
+				
+		HttpOnly, Secure
+		* Note that the HttpOnly attribute is independent of the Secure attribute: a cookie can have both the HttpOnly and the Secure attribute.
 
-]"
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=HTTP Cookie specification", "src=http://tools.ietf.org/html/rfc6265", "protocol=uri"
@@ -48,38 +48,38 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING_8
-		-- name of the cookie.
+			-- name of the cookie.
 
 	value: STRING_8
-		-- value of the cookie.
+			-- value of the cookie.
 
 	expiration: detachable STRING_8
-		-- Value of the Expires attribute.
+			-- Value of the Expires attribute.
 
 	path: detachable STRING_8
-		-- Value of the Path attribute.
-		-- Path to which the cookie applies.
-		--| The path "/", specify a cookie that apply to all URLs in your site.
+			-- Value of the Path attribute.
+			-- Path to which the cookie applies.
+			--| The path "/", specify a cookie that apply to all URLs in your site.
 
 	domain: detachable STRING_8
-		-- Value of the Domain attribute.
-		-- Domain to which the cookies apply.
+			-- Value of the Domain attribute.
+			-- Domain to which the cookies apply.
 
 	secure: BOOLEAN
-		-- Value of the Secure attribute.
-		-- By default False.
-		--| Indicate if the cookie should only be sent over secured(encrypted connections, for example SSL).
+			-- Value of the Secure attribute.
+			-- By default False.
+			--| Indicate if the cookie should only be sent over secured(encrypted connections, for example SSL).
 
 	http_only: BOOLEAN
-		-- Value of the http_only attribute.
-		-- By default false.
-		--| Limits the scope of the cookie to HTTP requests.
+			-- Value of the http_only attribute.
+			-- By default false.
+			--| Limits the scope of the cookie to HTTP requests.
 
 	max_age: INTEGER
-		-- Value of the Max-Age attribute.
-		--| How much time in seconds should elapsed before the cookie expires.
-		--| By default max_age < 0 indicate a cookie will last only for the current user-agent (Browser, etc) session.
-		--|	A value of 0 instructs the user-agent to delete the cookie.
+			-- Value of the Max-Age attribute.
+			--| How much time in seconds should elapsed before the cookie expires.
+			--| By default max_age < 0 indicate a cookie will last only for the current user-agent (Browser, etc) session.
+			--|	A value of 0 instructs the user-agent to delete the cookie.
 
 	has_valid_characters (a_name: READABLE_STRING_8):BOOLEAN
 			-- Has `a_name' valid characters for cookies?
@@ -102,12 +102,12 @@ feature -- Access
 		end
 
 	include_max_age: BOOLEAN
-		-- Does the Set-Cookie header include Max-Age attribute?
-		--|By default will include both.
+			-- Does the Set-Cookie header include Max-Age attribute?
+			--|By default will include both.
 
 	include_expires: BOOLEAN
-		-- Does the Set-Cookie header include Expires attribute?
-		--|By default will include both.	
+			-- Does the Set-Cookie header include Expires attribute?
+			--|By default will include both.	
 
 
 	is_valid_rfc1123_date (a_string: READABLE_STRING_8): BOOLEAN
@@ -118,7 +118,7 @@ feature -- Access
 			create d.make_from_string (a_string)
 			Result := not d.has_error and then d.rfc1123_string.same_string (a_string)
 		end
-		
+
 feature -- Change Element
 
 	set_name (a_name: READABLE_STRING_8)
@@ -323,20 +323,20 @@ feature {NONE} -- Constants
 			-- 0x2D-3A: -./0123456789:
 			-- 0x3C-5B: <=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[
 			-- 0x5D-7E: ]^_`abcdefghijklmnopqrstuvwxyz{|}~
-			note
-				EIS: "name=valid-characters", "src=http://tools.ietf.org/html/rfc6265#section-4.1.1", "protocol=uri"
-			do
-				Result := True
-				inspect c
-				when 0x21 then
-				when 0x23 .. 0x2B then
-				when 0x2D .. 0x3A then
-				when 0x3C .. 0x5B then
-				when 0x5D .. 0x7E then
-				else
-					Result := False
-				end
+		note
+			EIS: "name=valid-characters", "src=http://tools.ietf.org/html/rfc6265#section-4.1.1", "protocol=uri"
+		do
+			Result := True
+			inspect c
+			when 0x21 then
+			when 0x23 .. 0x2B then
+			when 0x2D .. 0x3A then
+			when 0x3C .. 0x5B then
+			when 0x5D .. 0x7E then
+			else
+				Result := False
 			end
+		end
 
 note
 	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"

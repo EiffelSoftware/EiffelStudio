@@ -16,10 +16,10 @@ note
 	revision: "$Revision$"
 
 class
-	WSF_OPENSHIFT_SERVICE_LAUNCHER
+	WSF_OPENSHIFT_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_NINO_SERVICE_LAUNCHER
+	WSF_NINO_SERVICE_LAUNCHER [G]
 		redefine
 			initialize
 		end
@@ -31,9 +31,7 @@ inherit
 
 create
 	make,
-	make_and_launch,
-	make_callback,
-	make_callback_and_launch
+	make_and_launch
 
 feature {NONE} -- Initialization
 
@@ -86,7 +84,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

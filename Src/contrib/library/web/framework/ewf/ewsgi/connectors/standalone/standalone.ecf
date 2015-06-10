@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="connector_standalone" uuid="49C99A6E-CCC1-4015-81F6-D7C43B592034" library_target="connector_standalone">
+	<target name="connector_standalone">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" void_safety="none" syntax="transitional">
+			<assertions precondition="true"/>
+		</option>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder.ecf"/>
+		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
+		<library name="http" location="../../../../../../network/protocol/http/http.ecf"/>
+		<library name="httpd" location="src\httpd\httpd.ecf" readonly="false"/>
+		<cluster name="src" location=".\src\">
+			<cluster name="implementation" location="$|implementation\" hidden="true"/>
+		</cluster>
+	</target>
+</system>

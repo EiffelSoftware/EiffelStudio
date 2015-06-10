@@ -1,13 +1,15 @@
 note
-	description: "Summary description for {WGI_NINO_CONNECTOR}."
+	description: "Standalone Eiffel Web nino server connector."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WGI_NINO_CONNECTOR
+	WGI_NINO_CONNECTOR [G -> WGI_EXECUTION create make end]
 
 inherit
 	WGI_CONNECTOR
+
+	SHARED_HTML_ENCODER
 
 create
 	make,
@@ -15,12 +17,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_service: like service)
+	make
 		local
 			cfg: HTTP_SERVER_CONFIGURATION
 		do
-			service := a_service
-
 			create cfg.make
 			create server.make (cfg)
 
@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 			create on_stopped_actions
 		end
 
-	make_with_base (a_service: like service; a_base: like base)
+	make_with_base (a_base: like base)
 		require
 			a_base_starts_with_slash: (a_base /= Void and then not a_base.is_empty) implies a_base.starts_with ("/")
 		do
-			make (a_service)
+			make -- (a_service)
 			set_base (a_base)
 		end
 
@@ -44,11 +44,6 @@ feature -- Access
 
 	version: STRING_8 = "0.1"
 			-- Version of Current connector
-
-feature {NONE} -- Access
-
-	service: WGI_SERVICE
-			-- Gateway Service		
 
 feature -- Access
 
@@ -118,7 +113,7 @@ feature -- Server
 		do
 			launched := False
 			port := 0
-			create {WGI_NINO_HANDLER} l_http_handler.make_with_callback (server, Current)
+			create {WGI_NINO_HANDLER [G]} l_http_handler.make_with_callback (server, Current)
 			if configuration.is_verbose then
 				if attached base as l_base then
 					io.error.put_string ("Base=" + l_base + "%N")
@@ -128,17 +123,27 @@ feature -- Server
 		end
 
 	process_request (env: STRING_TABLE [READABLE_STRING_8]; a_headers_text: STRING; a_socket: TCP_STREAM_SOCKET)
+			-- Process request ...
 		local
 			req: WGI_REQUEST_FROM_TABLE
 			res: detachable WGI_NINO_RESPONSE_STREAM
+			exec: detachable WGI_EXECUTION
 			retried: BOOLEAN
 		do
 			if not retried then
 				create req.make (env, create {WGI_NINO_INPUT_STREAM}.make (a_socket), Current)
 				create res.make (create {WGI_NINO_OUTPUT_STREAM}.make (a_socket), create {WGI_NINO_ERROR_STREAM}.make_stderr (a_socket.descriptor.out))
 				req.set_meta_string_variable ("RAW_HEADER_DATA", a_headers_text)
-				service.execute (req, res)
+
+				create {G} exec.make (req, res)
+				exec.execute
 				res.push
+				exec.clean
+			else
+				process_rescue (res)
+				if exec /= Void then
+					exec.clean
+				end
 			end
 		rescue
 			if not retried then
@@ -147,8 +152,25 @@ feature -- Server
 			end
 		end
 
+	process_rescue (res: detachable WGI_RESPONSE)
+		do
+			if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.trace as l_trace then
+				if res /= Void then
+					if not res.status_is_set then
+						res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
+					end
+					if res.message_writable then
+						res.put_string ("<pre>")
+						res.put_string (html_encoder.encoded_string (l_trace))
+						res.put_string ("</pre>")
+					end
+					res.push
+				end
+			end
+		end		
+
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

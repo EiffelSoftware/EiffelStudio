@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	WSF_WIDGET_AGENT_TABLE [G]
+	WSF_WIDGET_AGENT_TABLE [G -> detachable ANY]
 
 inherit
 	WSF_WIDGET

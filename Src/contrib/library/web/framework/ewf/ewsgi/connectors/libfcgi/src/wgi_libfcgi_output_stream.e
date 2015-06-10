@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_LIBFCGI_OUTPUT_STREAM}."
+	description: "Output stream for libFCGI connector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -37,6 +37,11 @@ feature -- Status report
 		do
 			Result := True
 		end
+
+feature -- Status report
+
+	is_available: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Status writing
 
@@ -100,7 +105,7 @@ invariant
 	fcgi_attached: fcgi /= Void
 
 note
-	copyright: "2011-2011, Eiffel Software and others"
+	copyright: "2011-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

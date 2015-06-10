@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {NOTIFICATION_CHAIN_MAILER}."
-	author: ""
+	description: "[
+			Node of a notification mailer chain
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

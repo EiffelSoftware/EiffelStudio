@@ -13,6 +13,7 @@
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
 		<library name="libfcgi" location="..\..\..\libfcgi\libfcgi.ecf" />
 		<library name="http" location="../../../../../../network/protocol/http/http.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

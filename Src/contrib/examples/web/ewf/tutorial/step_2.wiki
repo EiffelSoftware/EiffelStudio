@@ -13,14 +13,14 @@ or go to [[step_3.wiki|step 3]]
 == "hello" project ==
 * using the "wsf" library:
 ** It provides service, request, response, ...
-* using the "default_nino" library
-** This is used to build the application in a portable manner, but for this compilation, it uses Eiffel Web Nino as connector.
-** We use Eiffel Web Nino for this tutorial, because there is no need to configure any apache, iis, and so on. And it is convenient to execute inside EiffelStudio
+* using the "default_standalone" library
+** This is used to build the application in a portable manner, but for this compilation, it uses the standalone web server as connector.
+** We use that standalone connection this tutorial, because there is no need to configure any apache, iis, and so on. And it is convenient to execute with EiffelStudio debugger.
 
 * To see the result, you should open http://localhost/ on your web browser. Note if the application is using another port such as 9999, you should open http://localhost:9999/
 
 * You will find inside [[step_2]] the "hello" project
-** target "hello" provides a very simple implementation (But by default, it is using port 80 with Eiffel Web Nino, which might already be busy by other application)
+** target "hello" provides a very simple implementation (But by default, it is using port 80 with standalone web server, which might already be busy by other application)
 ** target "hello_custom" which uses almost the same code, but in addition, you can use the ewf.ini file to precise the port number (9999 for this example)
 
 * To see the result, open http://localhost/ in a web browser.
@@ -28,25 +28,38 @@ or go to [[step_3.wiki|step 3]]
 
 * Eiffel code
  class
-     HELLO_APPLICATION
- 
+ 	HELLO_APPLICATION
+
  inherit
-     WSF_DEFAULT_RESPONSE_SERVICE
- 
+ 	WSF_DEFAULT_SERVICE [HELLO_EXECUTION]
+
  create
-     make_and_launch
- 
- feature {NONE} -- Initialization
- 
-     response (req: WSF_REQUEST): WSF_PAGE_RESPONSE
-             -- Computed response message.
-         do
-             create Result.make
-             Result.put_string ("Hello World")
-         end
+ 	make_and_launch
  
  end
 
+ class
+     HELLO_EXECUTION
+ 
+ inherit
+     WSF_EXECUTION
+ 
+ create
+     make
+
+ feature -- Execution
+
+ 	execute
+ 		local
+ 			msg: WSF_PAGE_RESPONSE
+		do
+ 			create msg.make_with_body ("Hello World")
+ 			response.send (msg)
+ 		end
+ 
+ end
+
+Note: we could also declare the root class as being "WSF_DEFAULT_SERVICE [HELLO_EXECUTION]" to avoid this HELLO_APPLICATION class.
 
 ----
 

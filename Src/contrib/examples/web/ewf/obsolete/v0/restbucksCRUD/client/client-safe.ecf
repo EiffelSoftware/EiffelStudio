@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="client" uuid="D0059CEB-5F5C-4D21-8C71-842BD0F88468" library_target="client">
+	<target name="client">
+		<root class="RESTBUCK_CLIENT" feature="make"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		</option>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="http_client" location="../../../../../../../library/network/http_client/http_client-safe.ecf" readonly="false"/>
+		<library name="json" location="../../../../../../../library/text/parser/json/library/json-safe.ecf" readonly="false"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+</system>

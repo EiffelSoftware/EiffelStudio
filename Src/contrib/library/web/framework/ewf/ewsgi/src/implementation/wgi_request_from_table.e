@@ -57,7 +57,7 @@ feature -- EWSGI access
 
 	wgi_implementation: STRING = "Eiffel Web Framework 0.1"
 
-	wgi_connector: WGI_CONNECTOR
+	wgi_connector: detachable separate WGI_CONNECTOR
 
 feature -- Access: CGI meta parameters
 
@@ -289,7 +289,7 @@ feature -- Access: HTTP_* CGI meta parameters - 1.1
 		do
 			Result := meta_string_variable ({WGI_META_NAMES}.http_range)
 		end
-	
+
 	http_content_range: detachable READABLE_STRING_8
 			-- Partial range of selected representation enclosed in message payload
 		do
@@ -301,8 +301,8 @@ feature -- Access: HTTP_* CGI meta parameters - 1.1
 		do
 			Result := meta_string_variable ({WGI_META_NAMES}.http_content_encoding)
 		end
-	
-	
+
+
 feature -- Access: Extension to CGI meta parameters - 1.1
 
 	request_uri: READABLE_STRING_8
@@ -507,7 +507,7 @@ invariant
 	empty_string_unchanged: empty_string.is_empty
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

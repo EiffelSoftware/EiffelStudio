@@ -32,45 +32,28 @@ note
 	revision: "$Revision$"
 
 deferred class
-	WSF_SERVICE_LAUNCHER
-
-inherit
-	WSF_TO_WGI_SERVICE
+	WSF_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 feature {NONE} -- Initialization
 
-	frozen make (a_service: like service; a_options: like options)
+	frozen make (a_options: like options)
 		do
-			make_from_service (a_service)
 			options := a_options
 			initialize
 		ensure
-			service_set: service = a_service
 			options_set: options = a_options
 			launchable: launchable
 		end
 
-	frozen make_and_launch (a_service: like service; a_options: like options)
+	frozen make_and_launch (a_options: like options)
 		do
-			make (a_service, a_options)
+			make (a_options)
 			launch
-		end
-
-	frozen make_callback (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
-		do
-			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
-		end
-
-	frozen make_callback_and_launch (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
-		do
-			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
 		end
 
 	initialize
 			-- Initialize Current using `options' if attached
 			-- and build the connector
-		require
-			service_set: service /= Void
 		deferred
 		ensure
 			connector_attached: connector /= Void
@@ -120,7 +103,7 @@ invariant
 	connector_attached: connector /= Void
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

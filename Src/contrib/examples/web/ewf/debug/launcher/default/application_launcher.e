@@ -8,10 +8,10 @@ note
 	revision: "$Revision$"
 
 class
-	APPLICATION_LAUNCHER
+	APPLICATION_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	APPLICATION_LAUNCHER_I
+	APPLICATION_LAUNCHER_I [G]
 
 feature -- Custom
 

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {WGI_CONNECTOR}."
-	specification: "Eiffel WGI/connector specification https://github.com/Eiffel-World/Eiffel-Web-Framework/wiki/WGI-specification"
+	description: "Common interface for all EWSGI connectors."
+	specification: "Eiffel WGI/connector specification https://github.com/EiffelWebFramework/EWF/wiki/WGI-specification"
 	date: "$Date$"
 	revision: "$Revision$"
 

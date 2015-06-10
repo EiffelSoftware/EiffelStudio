@@ -10,6 +10,8 @@ deferred class
 inherit
 	WSF_FORM_FIELD
 
+	WSF_FORM_INPUT_WITH_HTML5
+
 feature {NONE} -- Initialization
 
 	make (a_name: like name)
@@ -86,6 +88,7 @@ feature -- Conversion
 			append_css_class_to (a_html, Void)
 			append_css_id_to (a_html)
 			append_css_style_to (a_html)
+			append_html5_input_attributes_to (a_theme, a_html)
 
 			if is_readonly then
 				a_html.append (" readonly=%"readonly%"")
@@ -131,6 +134,7 @@ feature {NONE} -- Implementation
 			-- Specific input attributes if any.	
 			--| To redefine if needed
 		do
+			-- TODO: should we consider to use theme?
 		end
 
 end

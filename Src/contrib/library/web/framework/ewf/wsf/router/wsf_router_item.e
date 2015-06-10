@@ -16,19 +16,13 @@ inherit
 	DEBUG_OUTPUT
 
 create
-	make,
-	make_with_request_methods
+	make
 
 feature {NONE} -- Initialization
 
-	make (m: like mapping)
+	make (m: like mapping; r: like request_methods)
 		do
 			mapping := m
-		end
-
-	make_with_request_methods (m: like mapping; r: like request_methods)
-		do
-			make (m)
 			set_request_methods (r)
 		end
 
@@ -71,7 +65,7 @@ invariant
 	mapping_attached: mapping /= Void
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

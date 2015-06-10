@@ -11,30 +11,30 @@ or go to the [[README.wiki|index]]
 
 == "hello" project ==
 * Let's start from the "hello" project
-* you will learn how to use the req: WSF_ROUTER component
+* you will learn how to use the WSF_ROUTER component
 * See the hello project from [[step_4|step #4]] folder
 
 * You can find code in [[step_4]] folder :
 
- To get a routed service based on URI Template, your service application class should inherit from WSF_URI_TEMPLATE_ROUTED_SERVICE
- then you need to implement "setup_router", the following code is from the step_4 example
+ To get a routed execution based on URI Template, your execution class should inherit from WSF_URI_TEMPLATE_ROUTED_EXECUTION
+ then you need to implement "setup_router". In addition you can inherit from WSF_ROUTED_URI_HELPER and WSF_ROUTED_URI_TEMPLATE_HELPER, in order to call user-friendly routine provided to work easily with uri, or uri-template mapping. the following code is from the step_4 example
 
    setup_router
  		do
- 			router.map_agent ("/hello", agent execute_hello)
+ 			map_uri_agent ("/hello", agent execute_hello, Void)
  
  
- 			router.map_with_request_methods ("/users/{user}/message/{mesgid}", create {USER_MESSAGE_HANDLER}, <<"GET", "POST">>)
- 			router.map_with_request_methods ("/users/{user}/message/", create {USER_MESSAGE_HANDLER}, <<"GET", "POST">>)
+ 			map_uri_template ("/users/{user}/message/{mesgid}", create {USER_MESSAGE_HANDLER}, <<"GET", "POST">>)
+ 			map_uri_template ("/users/{user}/message/", create {USER_MESSAGE_HANDLER}, <<"GET", "POST">>)
  
- 			router.map_agent_response_with_request_methods ("/users/{user}/{?op}", agent response_user, <<"GET">>)
+ 			map_uri_template_response_agent ("/users/{user}/{?op}", agent response_user, <<"GET">>)
  		end 
 
 * map_agent is used to handle the url /hello with the feature "execute_hello"
-* map_agent_response_with_request_methods is  similar but you precise the accepted request methods
-* map and map_with_request_method are similar to previous "agent" variant, but it is using a descendant of WSF_HANDLER to handle the related url.
+* map_agent_response is  similar but you precise the accepted request methods
+* map is similar to previous "agent" variant, but it is using a descendant of WSF_HANDLER to handle the related request.
 
-* In this example, we use the URI Template router, this allows to define the route using resource like /user/{user} , and then you get access to the "user" data from the WSF_REQUEST.path_parameter or using the context argument passed for the execute or response handler.
+* In this example, we use the URI-Template router, this allows to define the route using resource like /user/{user} , and then you get access to the "user" data from the WSF_REQUEST.path_parameter or using the context argument passed for the execute or response handler.
 
 * The example also includes basic notions of url, html encoding, check the hello.ecf to see the added libraries  (http to get easy access to the http status code, encoder for simple encoding components)
 ----

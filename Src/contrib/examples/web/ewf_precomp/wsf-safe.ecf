@@ -5,6 +5,6 @@
 		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
-		<library name="wsf" location="../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
 	</target>
 </system>

@@ -7,12 +7,12 @@ or go to [[step_2.wiki|step 2]]
 
 == Get EWF package ==
 === From the archive ===
-* Get recent archive from https://github.com/EiffelWebFramework/EWF/downloads
+* Get recent archive of version v1 from https://github.com/EiffelWebFramework/EWF/releases
 
 === From the source ===
 * '''Requirement''': install [http://www.git-scm.org/ git] on your machine
 	
- $ git clone --recursive https://github.com/EiffelWebFramework/EWF.git ewf
+ $ git clone -b v1 --recursive https://github.com/EiffelWebFramework/EWF.git ewf
 
 == Install EWF ==
 For now, there is nothing specific to do.

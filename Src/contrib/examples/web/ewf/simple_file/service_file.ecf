@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="service_file" uuid="C28C4F53-9963-46C0-A080-8F13E94E7486">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="service_file" uuid="C28C4F53-9963-46C0-A080-8F13E94E7486">
 	<target name="service_file">
 		<root class="SERVICE_FILE" feature="make_and_launch"/>
-		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="connector_nino" location="../../../../library/web/framework/ewf/ewsgi/connectors/nino/nino-safe.ecf"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
+		<library name="connector_standalone" location="../../../../library/web/framework/ewf/ewsgi/connectors/standalone/standalone-safe.ecf"/>
+		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
 		<cluster name="service_file" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

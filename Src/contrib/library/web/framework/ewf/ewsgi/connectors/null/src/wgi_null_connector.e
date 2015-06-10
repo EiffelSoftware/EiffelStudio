@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_NULL_CONNECTOR}."
+	description: "NULL connector, mainly used for void-safety purpose or testing"
 	date: "$Date$"
 	revision: "$Revision$"
 

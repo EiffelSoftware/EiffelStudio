@@ -1,23 +1,20 @@
 note
-	description: "Summary description for {WSF_DEFAULT_SERVICE_LAUNCHER}."
-	author: ""
+	description: "Launcher for default connector: CGI"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WSF_DEFAULT_SERVICE_LAUNCHER
+	WSF_DEFAULT_SERVICE_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	WSF_CGI_SERVICE_LAUNCHER
+	WSF_CGI_SERVICE_LAUNCHER [G]
 
 create
 	make,
-	make_and_launch,
-	make_callback,
-	make_callback_and_launch
+	make_and_launch
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {WGI_NINO_OUTPUT_STREAM}."
+	description: "Output stream for Nino connector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -79,6 +79,15 @@ feature -- Status report
 			Result := target.is_open_write
 		end
 
+feature -- Status report
+
+	is_available: BOOLEAN
+			-- <Precursor>
+			-- FIXME: see how "standalone" connection is doing that.
+		do
+			Result := target.is_open_read
+		end
+
 feature -- Basic operations
 
 	flush
@@ -86,7 +95,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

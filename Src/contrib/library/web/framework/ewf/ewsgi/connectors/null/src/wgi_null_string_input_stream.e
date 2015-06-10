@@ -1,5 +1,5 @@
 note
-	description: "Summary description for WGI_NULL_STRING_INPUT_STREAM."
+	description: "Input stream for NULL connector based on string body (in memory)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

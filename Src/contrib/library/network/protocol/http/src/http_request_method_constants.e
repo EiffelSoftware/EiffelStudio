@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {HTTP_REQUEST_METHOD_CONSTANTS}."
+	description: "[
+			Constants related to HTTP request method identification
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 

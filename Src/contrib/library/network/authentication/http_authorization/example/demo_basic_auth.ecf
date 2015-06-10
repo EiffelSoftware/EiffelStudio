@@ -14,8 +14,8 @@
 		<library name="http" location="../../../protocol/http/http-safe.ecf"/>
 		<library name="http_auth" location="..\http_authorization-safe.ecf"/>
 		<library name="encoders" location="../../../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
-		<library name="wsf" location="../../../../web/framework/ewf/wsf/wsf-safe.ecf"/>
-		<library name="default_nino" location="../../../../web/framework/ewf/wsf/default/nino-safe.ecf"/>
+		<library name="wsf" location="../../../../web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="default_nino" location="../../../../web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

@@ -11,15 +11,25 @@ feature	-- Access
 
 	port_number: INTEGER
 		do
-			Result := port_number_cell.item
+			Result := separate_port_number (port_number_cell)
 		end
 
 	set_port_number (a_port: like port_number)
 		do
-			port_number_cell.replace (a_port)
+			separate_set_port_number (port_number_cell, a_port)
 		end
 
-	port_number_cell: CELL [INTEGER]
+	separate_port_number (cl: like port_number_cell): like port_number
+		do
+			Result := cl.item
+		end
+
+	separate_set_port_number (cl: like port_number_cell; a_port: like port_number)
+		do
+			cl.replace (a_port)
+		end
+
+	port_number_cell: separate CELL [INTEGER]
 		once ("process")
 			create Result.put (0)
 		end

@@ -12,6 +12,8 @@ inherit
 		redefine
 			specific_input_attributes_string
 		end
+	WSF_FORM_WITH_ALTERNATIVE_ACTIONS
+
 
 create
 	make
@@ -51,6 +53,7 @@ feature {NONE} -- Implementation
 			if attached alt as l_alt then
 				Result.append (" alt=%"" + l_alt + "%"")
 			end
+			append_submit_image_input_attributes_to (Result)
 		end
 
 invariant

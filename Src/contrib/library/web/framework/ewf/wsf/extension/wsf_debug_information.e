@@ -61,10 +61,30 @@ feature -- Execution
 			a_output.append (" version=")
 			a_output.append (req.wgi_version)
 			a_output.append (" connector=%"")
-			a_output.append (req.wgi_connector.name)
-			a_output.append (" connector-version=")
-			a_output.append (req.wgi_connector.version)
+			if attached req.wgi_connector as conn then
+				append_connector_name_to (conn, a_output)
+				a_output.append ("%" connector-version=")
+				append_connector_version_to (conn, a_output)
+			else
+				a_output.append ("none")
+			end
 			a_output.append (eol)
+		end
+
+	append_connector_name_to (conn: separate WGI_CONNECTOR; a_output: STRING)
+		local
+			s: STRING
+		do
+			create s.make_from_separate (conn.name)
+			a_output.append (s)
+		end
+
+	append_connector_version_to (conn: separate WGI_CONNECTOR; a_output: STRING)
+		local
+			s: STRING
+		do
+			create s.make_from_separate (conn.version)
+			a_output.append (s)
 		end
 
 	append_cgi_variables_to (req: WSF_REQUEST; res: WSF_RESPONSE; a_output: STRING)
@@ -385,7 +405,7 @@ feature -- Constants
 invariant
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

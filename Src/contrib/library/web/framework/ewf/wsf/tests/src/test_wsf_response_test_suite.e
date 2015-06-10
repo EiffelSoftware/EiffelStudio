@@ -7,15 +7,13 @@ class
 	TEST_WSF_RESPONSE_TEST_SUITE
 
 inherit
-	WSF_TO_WGI_SERVICE
-		rename
-			default_create as df_wgi,
-			execute as execute_wgi
-		end
 	EQA_TEST_SET
 		redefine
 			on_prepare
-		select
+		end
+
+	WGI_EXPORTER
+		undefine
 			default_create
 		end
 
@@ -23,7 +21,6 @@ feature {NONE} -- Events
 
 	on_prepare
 		do
-			make_from_service (create {WSF_SERVICE_NULL})
 		end
 
 feature -- Test Cases
@@ -96,7 +93,7 @@ feature -- Test Cases
 		end
 
 
-		test_add_multiple_cookie_with_similar_cookie_name_2
+	test_add_multiple_cookie_with_similar_cookie_name_2
 		local
 			w_res: WSF_RESPONSE
 			l_cookie: WSF_COOKIE

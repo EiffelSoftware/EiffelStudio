@@ -1,14 +1,14 @@
 note
-	description: "Summary description for {APP_CMS_LAYOUT}."
+	description: "Summary description for {APP_CMS_ENVIRONMENT}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	APP_CMS_LAYOUT
+	APP_CMS_ENVIRONMENT
 
 inherit
-	CMS_LAYOUT
+	CMS_ENVIRONMENT
 		redefine
 			cms_config_ini_name
 		end

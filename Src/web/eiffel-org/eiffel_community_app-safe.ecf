@@ -18,8 +18,8 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms-safe.ecf" readonly="false"/>
-		<library name="cms_layout" location="$ISE_LIBRARY\unstable\library\web\cms\library\layout\layout-safe.ecf" readonly="false"/>
-		<library name="connector_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino-safe.ecf"/>
+		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="connector_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\standalone\standalone-safe.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
 		<library name="ewsgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\ewsgi-safe.ecf"/>
@@ -43,7 +43,7 @@
 		</library>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf" readonly="false"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="wsf_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<library name="wsf_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/launcher$</exclude>

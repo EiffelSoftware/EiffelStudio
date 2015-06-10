@@ -1054,3 +1054,19 @@ code.inline {
 	}
 }
 
+#primary-tabs {
+	ul.horizontal {
+		list-style-type: none;
+		li {
+			display: inline;
+			padding: 2px 5px;
+			border: solid 1px #ccf;
+		}
+		li.active {
+			border-color: #99f #99f #ddd;
+			border-style: solid solid none;
+			border-width: 2px 1px 0;
+			padding: 2px 7px 1px;
+		}
+	}
+}

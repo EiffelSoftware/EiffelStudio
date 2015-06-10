@@ -7,76 +7,29 @@ deferred class
 	EIFFEL_COMMUNITY_SITE_SERVICE
 
 inherit
-	WSF_SERVICE
-
-	SHARED_LOGGER
-
-	REFACTORING_HELPER
-
-feature	-- Initialization
-
-	initialize_application
-		local
-			l_layout: like new_layout
-		do
-			l_layout := new_layout
-
-				-- Initialize logging facility
-			initialize_logger (l_layout)
-			layout := l_layout
-			initialize_cms (cms_setup (l_layout))
-		end
-
-	new_layout: like layout
-		local
-			args: ARGUMENTS_32
-			l_dir: detachable READABLE_STRING_32
-			i,n: INTEGER
-		do
-				--| Arguments
-			args := execution_environment.arguments
-			from
-				i := 1
-				n := args.argument_count
-			until
-				i > n or l_dir /= Void
-			loop
-				if attached args.argument (i) as s then
-					if s.same_string_general ("--directory") or s.same_string_general ("-d") then
-						if i < n then
-							l_dir := args.argument (i + 1)
-						end
-					end
-				end
-				i := i + 1
-			end
-
-			if l_dir = Void then
-				create Result.make_default
-			else
-				create Result.make_with_path (create {PATH}.make_from_string (l_dir))
-			end
-		end
-
-feature -- Access: CMS
-
-	cms_service: CMS_SERVICE
-
-	layout: CMS_LAYOUT
-
+	SHARED_EXECUTION_ENVIRONMENT
+	
 feature -- Implementation: CMS
 
-	initialize_cms (a_setup: CMS_SETUP)
+	initial_cms_setup: EIFFEL_COMMUNITY_SITE_CMS_SETUP
+			-- CMS setup.
+		local
+			l_env: CMS_ENVIRONMENT
 		do
-			write_debug_log (generator + ".initialize_cms")
-			setup_modules (a_setup)
-			create cms_service.make (a_setup)
+			if attached execution_environment.arguments.separate_character_option_value ('d') as l_dir then
+				create l_env.make_with_directory_name (l_dir)
+			else
+				create l_env.make_default
+			end
+			create Result.make (l_env)
 		end
 
-	cms_setup (a_layout: CMS_LAYOUT): EIFFEL_COMMUNITY_SITE_CMS_SETUP
+feature -- CMS setup
+
+	setup_storage (a_setup: CMS_SETUP)
 		do
-			create Result.make (a_layout)
-			setup_storage (Result)
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_MYSQL_BUILDER}.make, "mysql")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_SQLITE_BUILDER}.make, "sqlite")
 		end
 
 	setup_modules (a_setup: CMS_SETUP)
@@ -110,22 +63,5 @@ feature -- Implementation: CMS
 			end
 		end
 
-	setup_storage (a_setup: CMS_SETUP)
-		do
-			debug ("refactor_fixme")
-				fixme ("To implement custom storage")
-			end
-		end
-
-feature	-- Execution
-
-	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Execute the request
-			-- See `req.input' for input stream
-    		--     `req.meta_variables' for the CGI meta variable
-			-- and `res' for output buffer
-		do
-			cms_service.execute (req, res)
-		end
 
 end

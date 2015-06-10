@@ -10,6 +10,9 @@ note
 deferred class
 	EV_MULTI_POINTED_FIGURE
 
+obsolete
+	"Use EV_MODEL_MULTI_POINTED instead."
+
 feature -- Access
 
 	point_count: INTEGER

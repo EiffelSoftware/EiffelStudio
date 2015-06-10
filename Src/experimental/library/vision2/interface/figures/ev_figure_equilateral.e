@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_EQUILATERAL
 
+obsolete
+	"Use EV_MODEL_EQUILATERAL instead."
+
 inherit
 	EV_CLOSED_FIGURE
 		redefine

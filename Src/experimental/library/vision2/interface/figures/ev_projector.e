@@ -9,6 +9,9 @@ note
 
 deferred class
 	EV_PROJECTOR
+
+obsolete
+	"Use EV_MODEL_PROJECTOR instead."
 	
 inherit
 	ANY

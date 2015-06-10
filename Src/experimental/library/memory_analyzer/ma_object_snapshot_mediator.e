@@ -808,7 +808,7 @@ feature {NONE} -- Internal
 			spec: SPECIAL [ANY]
 			l_inte: INTERNAL
 		once
-			create a.make (0, 0)
+			create a.make_empty
 			spec := a.area
 			create l_inte
 			Result := l_inte.dynamic_type (spec)

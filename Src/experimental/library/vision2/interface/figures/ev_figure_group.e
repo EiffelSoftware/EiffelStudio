@@ -11,6 +11,9 @@ note
 class
 	EV_FIGURE_GROUP
 
+obsolete
+	"Use EV_MODEL_GROUP instead."
+
 inherit
 	EV_FIGURE
 		redefine

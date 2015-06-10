@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_POLYLINE
 
+obsolete
+	"Use EV_MODEL_POLYLINE instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 

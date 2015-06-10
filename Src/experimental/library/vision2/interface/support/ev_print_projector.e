@@ -10,6 +10,9 @@ note
 class
 	EV_PRINT_PROJECTOR
 
+obsolete
+	"Use EV_MODEL_PRINT_PROJECTOR instead."
+
 inherit
 
 	EV_ANY

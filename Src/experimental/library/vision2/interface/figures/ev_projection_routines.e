@@ -10,6 +10,9 @@ note
 deferred class
 	EV_PROJECTION_ROUTINES
 
+obsolete
+	"Use EV_MODEL_PROJECTION_ROUTINES instead."
+
 inherit
 	EV_FIGURE_DRAWING_ROUTINES
 

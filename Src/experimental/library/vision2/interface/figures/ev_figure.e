@@ -10,6 +10,9 @@ note
 deferred class
 	EV_FIGURE
 
+obsolete
+	"Use EV_MODEL instead."
+
 inherit
 	EV_FIGURE_MATH
 		export

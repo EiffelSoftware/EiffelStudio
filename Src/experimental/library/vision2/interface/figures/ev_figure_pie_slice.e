@@ -11,6 +11,9 @@ note
 class
 	EV_FIGURE_PIE_SLICE
 
+obsolete
+	"Use EV_MODEL_PIE_SLICE instead."
+
 inherit
 	EV_CLOSED_FIGURE
 		export

@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_LINE
 
+obsolete
+	"Use EV_MODEL_LINE instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		redefine

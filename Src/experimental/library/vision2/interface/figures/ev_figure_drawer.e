@@ -10,6 +10,9 @@ note
 deferred class
 	EV_FIGURE_DRAWER
 
+obsolete
+	"Use EV_MODEL_DRAWER instead."
+
 inherit
 	EV_FIGURE_DRAWING_ROUTINES
 

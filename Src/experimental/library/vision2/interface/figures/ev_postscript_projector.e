@@ -10,6 +10,9 @@ note
 class
 	EV_POSTSCRIPT_PROJECTOR
 
+obsolete
+	"Use EV_MODEL_POSTSCRIPT_PROJECTOR instead."
+
 inherit
 	EV_PROJECTOR
 

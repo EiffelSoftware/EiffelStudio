@@ -13,6 +13,9 @@ note
 class
 	EV_FIGURE_WORLD
 
+obsolete
+	"Use EV_MODEL_WORLD instead."
+
 inherit
 	EV_FIGURE_GROUP
 		redefine

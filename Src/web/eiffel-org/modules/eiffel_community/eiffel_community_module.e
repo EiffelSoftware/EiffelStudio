@@ -70,17 +70,17 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle_with_request_methods ("/welcome", create {WSF_URI_AGENT_HANDLER}.make (agent handle_welcome (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/purpose", create {WSF_URI_AGENT_HANDLER}.make (agent handle_purpose (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/news", create {WSF_URI_AGENT_HANDLER}.make (agent handle_news (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/updates", create {WSF_URI_AGENT_HANDLER}.make (agent handle_updates (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/welcome", create {WSF_URI_AGENT_HANDLER}.make (agent handle_welcome (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/purpose", create {WSF_URI_AGENT_HANDLER}.make (agent handle_purpose (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/news", create {WSF_URI_AGENT_HANDLER}.make (agent handle_news (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/updates", create {WSF_URI_AGENT_HANDLER}.make (agent handle_updates (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), a_router.methods_head_get)
 
-			a_router.handle_with_request_methods ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), a_router.methods_head_get)
 
-			a_router.handle_with_request_methods ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration

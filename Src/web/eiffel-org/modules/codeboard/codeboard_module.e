@@ -64,8 +64,8 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle_with_request_methods ("/try_eiffel", create {WSF_URI_AGENT_HANDLER}.make (agent handle_try_eiffel (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/launch_codeboard", create {WSF_URI_AGENT_HANDLER}.make (agent handle_launch_codeboard (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/try_eiffel", create {WSF_URI_AGENT_HANDLER}.make (agent handle_try_eiffel (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/launch_codeboard", create {WSF_URI_AGENT_HANDLER}.make (agent handle_launch_codeboard (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration

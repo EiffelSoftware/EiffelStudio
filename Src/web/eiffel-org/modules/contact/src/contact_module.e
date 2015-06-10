@@ -118,8 +118,8 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), a_router.methods_put_post)
+			a_router.handle ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contact (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/contact", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_contact (a_api, ?, ?)), a_router.methods_put_post)
 		end
 
 feature -- Recaptcha

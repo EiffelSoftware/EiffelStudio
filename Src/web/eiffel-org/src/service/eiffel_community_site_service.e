@@ -8,20 +8,22 @@ deferred class
 
 inherit
 	SHARED_EXECUTION_ENVIRONMENT
-	
+
 feature -- Implementation: CMS
 
 	initial_cms_setup: EIFFEL_COMMUNITY_SITE_CMS_SETUP
 			-- CMS setup.
-		local
-			l_env: CMS_ENVIRONMENT
 		do
-			if attached execution_environment.arguments.separate_character_option_value ('d') as l_dir then
-				create l_env.make_with_directory_name (l_dir)
-			else
-				create l_env.make_default
-			end
-			create Result.make (l_env)
+			create Result.make (new_cms_environment)
+		end
+
+	new_cms_environment: CMS_ENVIRONMENT
+		deferred
+--			if attached execution_environment.arguments.separate_character_option_value ('d') as l_dir then
+--				create Result.make_with_directory_name (l_dir)
+--			else
+--				create Result.make_default
+--			end
 		end
 
 feature -- CMS setup

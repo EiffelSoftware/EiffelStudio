@@ -50,8 +50,8 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle_with_request_methods ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle_with_request_methods ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration

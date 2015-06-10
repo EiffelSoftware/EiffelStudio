@@ -47,9 +47,8 @@ feature -- HTTP Methods
 				-- get them from the configuration file and load them into
 				-- the setup class.
 
-			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-
 			if attached current_user (req) as l_user then
+				create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
 
 				l_page.add_variable (node_api.trashed_nodes (l_user), "nodes")
 
@@ -71,6 +70,9 @@ feature -- HTTP Methods
 
 				l_page.set_main_content (s)
 				-- l_page.add_block (create {CMS_CONTENT_BLOCK}.make ("nodes_warning", Void, "/nodes/ is not yet fully implemented<br/>", Void), "highlighted")
+				l_page.execute
+			else
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} l_page.make (req, res, api)
 				l_page.execute
 			end
 		end

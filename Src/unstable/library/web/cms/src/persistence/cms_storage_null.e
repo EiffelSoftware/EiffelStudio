@@ -45,6 +45,13 @@ feature -- Status report
 			Result := True
 		end
 
+feature -- Basic operation
+
+	close
+			-- <Precursor>
+		do
+		end
+
 feature -- URL aliases
 
 	set_path_alias (a_source: READABLE_STRING_8; a_alias: READABLE_STRING_8)

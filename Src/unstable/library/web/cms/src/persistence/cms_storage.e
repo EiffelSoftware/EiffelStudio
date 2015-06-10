@@ -39,6 +39,13 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Basic operation
+
+	close
+			-- Close/disconnect current storage.
+		deferred
+		end
+
 feature -- Error Handling
 
 	error_handler: ERROR_HANDLER

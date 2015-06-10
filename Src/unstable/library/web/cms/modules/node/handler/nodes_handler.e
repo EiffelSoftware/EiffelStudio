@@ -63,7 +63,7 @@ feature -- HTTP Methods
 			create s_pager.make_empty
 			create l_page_helper.make ("nodes/?page={page}&size={size}", node_api.nodes_count, 25) -- FIXME: Make this default page size a global CMS settings
 			l_page_helper.get_setting_from_request (req)
-			if l_page_helper.pages_count > 1 then
+			if l_page_helper.has_upper_limit and then l_page_helper.pages_count > 1 then
 				l_page_helper.append_to_html (l_response, s_pager)
 				if l_page_helper.page_size > 25 then
 					s.append (s_pager)

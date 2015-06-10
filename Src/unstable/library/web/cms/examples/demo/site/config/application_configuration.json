@@ -23,7 +23,8 @@
 		"server": "localhost"
 		},
 	"logger": { 
-			"level":"debug",
+			"level":"error",
+			"type":"stderr",
 			"backup_count":"4"
 		},
 	"server": { 

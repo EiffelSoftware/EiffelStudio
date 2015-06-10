@@ -32,6 +32,15 @@ feature -- Status report
 			Result := connection.is_connected
 		end
 
+feature -- Basic operation
+
+	close
+			-- <Precursor>
+			-- Disconnect from SQL database.
+		do
+			connection.disconnect
+		end
+
 feature {NONE} -- Implementation	
 
 	db_handler: DATABASE_HANDLER

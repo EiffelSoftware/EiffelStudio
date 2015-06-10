@@ -22,12 +22,13 @@ feature -- Basic operations
 			-- Execute the filter.
 		local
 			l_auth: HTTP_AUTHORIZATION
-			utf: UTF_CONVERTER
 		do
 			api.logger.put_debug (generator + ".execute ", Void)
 			create l_auth.make (req.http_authorization)
-			if attached req.raw_header_data as l_raw_data then
-			   api.logger.put_debug (generator + ".execute " + utf.escaped_utf_32_string_to_utf_8_string_8 (l_raw_data), Void)
+			debug
+				if attached req.raw_header_data as l_raw_data then
+				   api.logger.put_debug (generator + ".execute " + (create {UTF_CONVERTER}).escaped_utf_32_string_to_utf_8_string_8 (l_raw_data), Void)
+				end
 			end
 				-- A valid user
 			if

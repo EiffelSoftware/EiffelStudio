@@ -11,6 +11,9 @@ note
 class
 	EV_FIGURE_ELLIPSE
 
+obsolete
+	"Use EV_MODEL_ELLIPSE instead."
+
 inherit
 	EV_CLOSED_FIGURE
 

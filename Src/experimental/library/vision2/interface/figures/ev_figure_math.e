@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_MATH
 
+obsolete
+	"Use EV_MODEL_MATH instead."
+
 inherit
 	DOUBLE_MATH
 

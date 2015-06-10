@@ -10,6 +10,9 @@ note
 deferred class
 	EV_SINGLE_POINTED_FIGURE
 
+obsolete
+	"Use EV_MODEL_SINGLE_POINTED instead."
+
 feature {NONE} -- Initialization
 
 	make_with_point (a_point: EV_RELATIVE_POINT)

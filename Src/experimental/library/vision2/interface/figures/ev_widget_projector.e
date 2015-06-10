@@ -10,6 +10,9 @@ note
 deferred class
 	EV_WIDGET_PROJECTOR
 
+obsolete
+	"Use EV_MODEL_WIDGET_PROJECTOR instead."
+
 inherit
 	EV_PROJECTOR
 

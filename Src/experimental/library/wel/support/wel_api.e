@@ -578,6 +578,16 @@ feature -- Code pages
 			"return EIF_TEST (SetConsoleOutputCP ((UINT) $cp));"
 		end
 
+feature -- Metrics
+
+	get_system_metrics (value: INTEGER): INTEGER
+			-- SDK GetSystemMetrics
+		external
+			"C inline use <windows.h>"
+		alias
+			"return GetSystemMetrics ((int) $value);"
+		end
+
 feature -- Scrolling
 
 	set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER

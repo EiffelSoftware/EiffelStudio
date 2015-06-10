@@ -11,6 +11,9 @@ note
 class
 	EV_FIGURE_STAR
 
+obsolete
+	"Use EV_MODEL_STAR instead."
+
 inherit
 	EV_ATOMIC_FIGURE
 		redefine

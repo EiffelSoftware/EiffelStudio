@@ -10,6 +10,9 @@ note
 class
 	EV_FIGURE_RECTANGLE
 
+obsolete
+	"Use EV_MODEL_RECTANGLE instead."
+
 inherit
 	EV_CLOSED_FIGURE
 		redefine

@@ -404,6 +404,18 @@ feature -- Tests
 
 		end
 
+	test_nuts
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://example.com/:@-._~!$&'()*+,=;:@-._~!$&'()*+,=:@-._~!$&'()*+,==?/?:@-._~!$%%27()*+,;=/?:@-._~!$%%27()*+,;==#/?:@-._~!$&'()*+,;=")
+			assert ("scheme", uri.scheme.is_case_insensitive_equal_general ("http"))
+			assert ("host", attached uri.host as h and then h.same_string_general ("example.com"))
+			assert ("path", uri.path.same_string_general ("/:@-._~!$&'()*+,=;:@-._~!$&'()*+,=:@-._~!$&'()*+,=="))
+			assert ("query", attached uri.query as q and then q.same_string_general ("/?:@-._~!$%%27()*+,;=/?:@-._~!$%%27()*+,;=="))
+			assert ("fragment", attached uri.fragment as f and then f.same_string_general ("/?:@-._~!$&'()*+,;="))
+		end
+
 feature {NONE} -- Implementation
 
 	uri_split_to_string (uri: URI): STRING

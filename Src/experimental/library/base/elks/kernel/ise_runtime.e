@@ -18,9 +18,9 @@ feature -- Feature specific to ISE runtime.
 	frozen generator_of_type (a_type_id: INTEGER): STRING
 			-- Name of the generating class of current object
 		external
-			"C use %"eif_out.h%""
+			"C inline use %"eif_out.h%""
 		alias
-			"c_generator_of_type"
+			"return c_generator_of_type(eif_decoded_type($a_type_id));"
 		end
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN
@@ -50,19 +50,19 @@ feature -- Feature specific to ISE runtime.
 			-- Once objects initialized in current system.
 			-- `a_result_type_id' is the dynamic type of `SPECIAL [ANY]'.
 		external
-			"C signature (EIF_INTEGER): EIF_REFERENCE use %"eif_memory_analyzer.h%""
+			"C inline use %"eif_memory_analyzer.h%""
 		alias
-			"eif_once_objects_of_result_type"
+			"return eif_once_objects_of_result_type(eif_decoded_type($a_result_type_id));"
 		end
 
 feature -- Internal C routines
 
-	frozen type_conforms_to (type1, type2: INTEGER): BOOLEAN
-			-- Does `type1' conform to `type2'?
+	frozen type_conforms_to (a_type_id_1, a_type_id_2: INTEGER): BOOLEAN
+			-- Does `a_type_id_1' conform to `a_type_id_2'?
 		external
-			"C signature (int16, int16): EIF_BOOLEAN use %"eif_gen_conf.h%""
+			"C inline use %"eif_gen_conf.h%""
 		alias
-			"eif_gen_conf"
+			"return eif_gen_conf($a_type_id_1, $a_type_id_2);"
 		end
 
 	frozen type_id_from_name (s: POINTER): INTEGER
@@ -100,7 +100,7 @@ feature -- Internal C routines
 		external
 			"C inline  use %"eif_gen_conf.h%""
 		alias
-			"return eif_is_attached_type((EIF_TYPE_INDEX) $a_type_id)"
+			"return eif_is_attached_type($a_type_id)"
 		end
 
 	frozen detachable_type (a_type_id: INTEGER): INTEGER
@@ -108,7 +108,7 @@ feature -- Internal C routines
 		external
 			"C inline  use %"eif_gen_conf.h%""
 		alias
-			"return eif_non_attached_type((EIF_TYPE_INDEX) $a_type_id)"
+			"return eif_non_attached_type($a_type_id)"
 		end
 
 	frozen attached_type (a_type_id: INTEGER): INTEGER
@@ -116,7 +116,7 @@ feature -- Internal C routines
 		external
 			"C inline use %"eif_gen_conf.h%""
 		alias
-			"return eif_attached_type((EIF_TYPE_INDEX) $a_type_id)"
+			"return eif_attached_type($a_type_id)"
 		end
 
 	frozen is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -124,7 +124,7 @@ feature -- Internal C routines
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"return EIF_IS_TRANSIENT_ATTRIBUTE(System(To_dtype($a_type_id)), $i - 1);"
+			"return EIF_IS_TRANSIENT_ATTRIBUTE(System(To_dtype(eif_decoded_type($a_type_id).id)), $i - 1);"
 		end
 
 	frozen is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -132,7 +132,7 @@ feature -- Internal C routines
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"return ((System(To_dtype($a_type_id)).cn_types[$i - 1] & SK_HEAD) == SK_EXP);"
+			"return ((System(To_dtype(eif_decoded_type($a_type_id).id)).cn_types[$i - 1] & SK_HEAD) == SK_EXP);"
 		end
 
 	frozen persistent_field_count_of_type (a_type_id: INTEGER): INTEGER
@@ -140,7 +140,7 @@ feature -- Internal C routines
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"return (System(To_dtype($a_type_id)).cn_persistent_nbattr);"
+			"return (System(To_dtype(eif_decoded_type($a_type_id).id)).cn_persistent_nbattr);"
 		end
 
 	frozen storable_version_of_type (a_type_id: INTEGER): detachable STRING
@@ -148,7 +148,7 @@ feature -- Internal C routines
 			"C inline use %"eif_eiffel.h%""
 		alias
 			"[
-				const char *l_version = System(To_dtype($a_type_id)).cn_version;
+				const char *l_version = System(To_dtype(eif_decoded_type($a_type_id).id)).cn_version;
 				if (l_version && (l_version[0] != (char) 0)) {
 					return RTMS(l_version);
 				} else {
@@ -204,7 +204,7 @@ feature -- Internal support
 			"ei_count_field_of_type"
 		end
 
-	frozen field_offset_of_type (i: INTEGER; a_type: INTEGER): INTEGER
+	frozen field_offset_of_type (i: INTEGER; a_type_id: INTEGER): INTEGER
 			-- Physical offset of the `i'-th field for an object of dynamic type `a_type'.
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -601,15 +601,17 @@ feature -- Internal support
 	frozen generic_parameter_count (a_type_id: INTEGER): INTEGER
 			-- Number of generic parameters for object of dynamic type `a_type_id'.
 		external
-			"C signature (int16): int use %"eif_gen_conf.h%""
+			"C inline use %"eif_gen_conf.h%""
 		alias
-			"eif_gen_count_with_dftype"
+			"return eif_gen_count_with_dftype(eif_decoded_type($a_type_id).id);"
 		end
 
-	frozen eif_gen_param_id (dftype: INTEGER; i: INTEGER): INTEGER
+	frozen eif_gen_param_id (a_type_id: INTEGER; i: INTEGER): INTEGER
 			-- Type of `i'-th generic parameter for object of dynamic type `a_type_id'.
 		external
-			"C signature (EIF_TYPE_INDEX, int): EIF_INTEGER use %"eif_gen_conf.h%""
+			"C inline use %"eif_gen_conf.h%""
+		alias
+			"return eif_gen_param_id($a_type_id, $i);"
 		end
 
 feature -- Object marking

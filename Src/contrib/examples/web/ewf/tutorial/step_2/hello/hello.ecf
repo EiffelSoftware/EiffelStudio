@@ -13,7 +13,7 @@
 		<precompile name="precomp_wsf" location="../../../../ewf_precomp/wsf-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
-		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="hello_mt">
@@ -30,7 +30,7 @@
 		<precompile name="precomp_wsf-mt" location="../../../../ewf_precomp/wsf-mt-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
-		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 	<target name="hello_custom" extends="hello">

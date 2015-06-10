@@ -6,6 +6,6 @@
 			<assertions precondition="true"/>
 		</option>
 		<setting name="concurrency" value="scoop"/>
-		<library name="wsf" location="../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 	</target>
 </system>

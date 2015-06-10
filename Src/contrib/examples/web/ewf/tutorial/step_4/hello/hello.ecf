@@ -14,7 +14,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<library name="encoder" location="../../../../../../library/web/framework/ewf/text/encoder/encoder-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false"/>
+		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../../../library/network/protocol/http/http-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>

@@ -13,7 +13,7 @@
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
 		<library name="web_browser" location="$ISE_LIBRARY\library\web_browser\web_browser-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<library name="wsf_standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone-safe.ecf"/>
 		<library name="wsf_standalone_connector" location="../../../../library/web/framework/ewf/ewsgi/connectors/standalone/standalone-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">

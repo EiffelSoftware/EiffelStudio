@@ -10,7 +10,7 @@
 		<library name="connector_standalone" location="../../../../library/web/framework/ewf/ewsgi/connectors/standalone/standalone-safe.ecf"/>
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<cluster name="service_file" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

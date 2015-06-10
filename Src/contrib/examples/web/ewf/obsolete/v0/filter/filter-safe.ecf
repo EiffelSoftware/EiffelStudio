@@ -15,19 +15,19 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="true"/>
 		<library name="http" location="../../../../../../library/network/protocol/http/http-safe.ecf" readonly="true"/>
 		<library name="json" location="../../../../../../library/text/parser/json/library/json-safe.ecf" readonly="true"/>
-		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="true"/>
-		<library name="wsf_router_context" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_router_context-safe.ecf" readonly="true"/>
-		<library name="wsf_extension" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_extension-safe.ecf" readonly="true"/>
+		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="true"/>
+		<library name="wsf_router_context" location="../../../../../../library/web/framework/ewf/wsf/wsf_router_context-safe.ecf" readonly="true"/>
+		<library name="wsf_extension" location="../../../../../../library/web/framework/ewf/wsf/wsf_extension-safe.ecf" readonly="true"/>
 		<library name="http_authorization" location="../../../../../../library/network/authentication/http_authorization/http_authorization-safe.ecf" readonly="true"/>
 	</target>
 	<target name="filter_nino" extends="common">
 		<root class="FILTER_SERVER" feature="make"/>
-		<library name="default_nino" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf" readonly="true"/>
+		<library name="default_nino" location="../../../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="true"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
 	<target name="filter_fcgi" extends="common">
 		<root class="FILTER_SERVER" feature="make"/>
-		<library name="default_libfcgi" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/default/libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="../../../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
 	<target name="filter" extends="filter_nino">

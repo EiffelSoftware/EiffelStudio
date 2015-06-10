@@ -23,7 +23,7 @@
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<library name="uri_template" location="../../../../library/text/parser/uri_template/uri_template-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>
 </system>

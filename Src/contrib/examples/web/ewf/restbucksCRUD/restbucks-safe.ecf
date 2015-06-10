@@ -24,8 +24,8 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
 		<library name="uri_template" location="../../../../library/text/parser/uri_template/uri_template-safe.ecf" readonly="false"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="false"/>
-		<library name="wsf_extension" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_extension-safe.ecf" readonly="false"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>
+		<library name="wsf_extension" location="../../../../library/web/framework/ewf/wsf/wsf_extension-safe.ecf" readonly="false"/>
 	</target>
 	<target name="restbucks" extends="restbucks_common">
 		<root class="RESTBUCKS_SERVER" feature="make"/>
@@ -45,7 +45,7 @@
 			<debug name="standalone" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="wsf_policy_driven" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_policy_driven-safe.ecf" readonly="false"/>
+		<library name="wsf_policy_driven" location="../../../../library/web/framework/ewf/wsf/wsf_policy_driven-safe.ecf" readonly="false"/>
 		<cluster name="src" location="src\" recursive="true">
 			<file_rule>
 				<exclude>/resource$</exclude>

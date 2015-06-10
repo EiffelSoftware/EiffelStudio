@@ -11,7 +11,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
-		<library name="wsf" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 	</target>
 	<target name="simple_standalone" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
@@ -27,7 +27,7 @@
 		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/nino-safe.ecf"/>
+		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>
 	</target>
 	<target name="simple_cgi" extends="common">
@@ -43,7 +43,7 @@
 		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/obsolete/v0/wsf/default/libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>
 	</target>
 	<target name="simple" extends="simple_standalone">

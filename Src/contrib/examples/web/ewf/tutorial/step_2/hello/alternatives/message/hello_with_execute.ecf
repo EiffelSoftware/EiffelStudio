@@ -13,7 +13,7 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="wsf" location="../../../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf"/>
+		<library name="wsf" location="../../../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<cluster name="src" location=".\" />
 	</target>

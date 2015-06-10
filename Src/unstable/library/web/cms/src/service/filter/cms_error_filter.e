@@ -22,7 +22,9 @@ feature -- Basic operations
 		local
 			utf: UTF_CONVERTER
 		do
-			fixme ("Check if it's ok to add new fetures CMS_API.has_error:BOOLEAN and CMS_API.error_description.")
+			debug ("refactor_fixme")
+				fixme ("Check if it's ok to add new features CMS_API.has_error:BOOLEAN and CMS_API.error_description.")
+			end
 			if not api.has_error then
 				api.logger.put_information (generator + ".execute with req: " + req.debug_output, Void)
 				if attached req.raw_header_data as l_header_data  then

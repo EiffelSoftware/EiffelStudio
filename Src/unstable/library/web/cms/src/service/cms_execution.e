@@ -6,56 +6,56 @@ note
 				even for a specific handler.
 			]"
 
-class
-	CMS_SERVICE
+deferred class
+	CMS_EXECUTION
 
 inherit
-	WSF_ROUTED_SKELETON_SERVICE
-		rename
-			execute as execute_service
+	WSF_FILTERED_ROUTED_SKELETON_EXECUTION
 		undefine
 			requires_proxy
 		redefine
+			create_router, router,
 			execute_default,
-			create_router,
-			router
-		end
-
-	WSF_FILTERED_SERVICE
-
-	WSF_FILTER
-		rename
-			execute as execute_filter
+			filter_execute,
+			initialize
 		end
 
 	WSF_NO_PROXY_POLICY
 
-	WSF_URI_HELPER_FOR_ROUTED_SERVICE
+	WSF_URI_HELPER_FOR_ROUTED_EXECUTION
 
-	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
+	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_EXECUTION
 
 	REFACTORING_HELPER
 
 	SHARED_LOGGER
 
-create
-	make
+--create
+--	make
 
 feature {NONE} -- Initialization
 
-	make (a_setup: CMS_SETUP)
+	initialize
 			-- Build a CMS service with `a_api'
+		local
+			l_setup: CMS_SETUP
 		do
-			create api.make (a_setup)
-			initialize
+			l_setup := initial_cms_setup
+			setup_storage (l_setup)
+			setup_modules (l_setup)
+			create api.make (l_setup)
+			modules := setup.enabled_modules
+
+			initialize_cms
+			Precursor
 		end
 
-	initialize
-			-- Initialize various parts of the CMS service.
+	initialize_cms
 		do
-			initialize_modules
-			initialize_users
-			initialize_mailer
+			write_debug_log (generator + ".initialize_cms")
+
+				-- CMS Initialization
+
 				-- initialize_router
 				-- initialize_filter: expanded here, for void-safety concern.
 			create_filter
@@ -71,20 +71,41 @@ feature {NONE} -- Initialization
 			only_enabled_modules: across modules as ic all ic.item.is_enabled end
 		end
 
-	initialize_users
-			-- Initialize users.
-		do
+feature -- Factory
+
+	initial_cms_setup: CMS_SETUP
+		deferred
 		end
 
-	initialize_mailer
-			-- Initialize mailer engine.
+feature -- Access	
+
+	api: CMS_API
+			-- API service.
+
+	setup: CMS_SETUP
+			-- CMS Setup.
 		do
-			to_implement ("To Implement mailer")
+			Result := api.setup
+		end
+
+	modules: CMS_MODULE_COLLECTION
+			-- Configurator of possible modules.		
+
+feature -- CMS setup
+
+	setup_modules (a_setup: CMS_SETUP)
+			-- Setup additional modules.
+		deferred
+		end
+
+	setup_storage (a_setup: CMS_SETUP)
+		deferred
 		end
 
 feature -- Settings: router
 
 	router: CMS_ROUTER
+			-- <Precursor>
 
 	create_router
 			-- Create `router'.
@@ -137,7 +158,7 @@ feature -- Settings: router
 
 			create fhdl.make_hidden_with_path (setup.theme_assets_location)
 			fhdl.disable_index
-			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
 					execute_default (ia_req, ia_res)
 				end)
@@ -155,12 +176,12 @@ feature -- Settings: router
 
 feature -- Execute Filter
 
-	execute_filter (req: WSF_REQUEST; res: WSF_RESPONSE)
+	filter_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter.
 		do
 			res.put_header_line ("Date: " + (create {HTTP_DATE}.make_now_utc).string)
 			res.put_header_line ("X-EWF-Server: CMS_v1.0")
-			execute_service (req, res)
+			Precursor (req, res)
 		end
 
 feature -- Filters
@@ -180,10 +201,10 @@ feature -- Filters
 			f.set_next (l_filter)
 			l_filter := f
 
-			 	-- Error Filter
-			create {CMS_ERROR_FILTER} f.make (api)
-			f.set_next (l_filter)
-			l_filter := f
+--			 	-- Error Filter
+--			create {CMS_ERROR_FILTER} f.make (api)
+--			f.set_next (l_filter)
+--			l_filter := f
 
 				-- Include filters from modules
 			l_api := api
@@ -222,20 +243,6 @@ feature -- Filters
 			end
 			f.set_next (Current)
 		end
-
-feature -- Access	
-
-	api: CMS_API
-			-- API service.
-
-	setup:  CMS_SETUP
-			-- CMS setup.
-		do
-			Result := api.setup
-		end
-
-	modules: CMS_MODULE_COLLECTION
-			-- Configurator of possible modules.
 
 feature -- Execution
 

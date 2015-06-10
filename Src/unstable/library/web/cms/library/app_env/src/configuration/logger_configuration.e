@@ -30,6 +30,7 @@ feature -- Initialization
 			backup_count := 4
 			level := Log_debug
 			location := Void
+			type := {STRING_32} "null"
 		ensure then
 			backup_count_set: backup_count = 4
 			level_set: level = Log_debug
@@ -48,6 +49,9 @@ feature -- Access
 	level: INTEGER
 			-- Logger level.
 
+	type: IMMUTABLE_STRING_32
+			-- Type of logging.
+
 feature -- Element Change
 
 	set_location (a_location: detachable PATH)
@@ -63,6 +67,15 @@ feature -- Element Change
 			a_location /= Void and then not a_location.is_whitespace
 		do
 			set_location (create {PATH}.make_from_string (a_location))
+		end
+
+	set_type_with_string (a_type: detachable READABLE_STRING_GENERAL)
+		do
+			if a_type /= Void and then not a_type.is_whitespace then
+				create type.make_from_string_general (a_type)
+			else
+				create type.make_from_string_general ("null")
+			end
 		end
 
 	set_backup_count (a_backup: NATURAL)

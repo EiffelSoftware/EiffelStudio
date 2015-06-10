@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create log.make
 		end
 
-	make_with_environment (app: APPLICATION_ENVIRONMENT)
+	make_with_environment (app: separate APPLICATION_ENVIRONMENT)
 			-- Initialize a logger object with an application environment `app'.
 		do
 			make
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Change
 
-	apply_environment (app: APPLICATION_ENVIRONMENT)
+	apply_environment (app: separate APPLICATION_ENVIRONMENT)
 		do
 			initialize_logger (app, log)
 		end
@@ -58,75 +58,107 @@ feature {NONE} -- Internal
 
 	log: LOGGING_FACILITY
 
+feature -- Settings
+
+	level: INTEGER
+
 feature -- Logging
+
+	put_debug (a_message: separate READABLE_STRING_8)
+			-- Put message `a_message' to the log at debug level.
+		do
+			if level >= log_debug then
+				log.write_debug (create {STRING}.make_from_separate (a_message))
+			end
+		end
 
 	put_information (a_message: separate READABLE_STRING_8)
 			-- Put message `a_message' to the log at information level.
 		do
-			log.write_information (create {STRING}.make_from_separate (a_message))
-		end
-
-	put_error (a_message: separate READABLE_STRING_8)
-			-- Put message `a_message' to the log at error level.
-		do
-			log.write_error (create {STRING}.make_from_separate (a_message))
+			if level >= log_information  then
+				log.write_information (create {STRING}.make_from_separate (a_message))
+			end
 		end
 
 	put_warning (a_message: separate READABLE_STRING_8)
 			-- Put message `a_message' to the log at warning level.
 		do
-			log.write_warning (create {STRING}.make_from_separate (a_message))
+			if level >= log_warning then
+				log.write_warning (create {STRING}.make_from_separate (a_message))
+			end
+		end
+
+	put_error (a_message: separate READABLE_STRING_8)
+			-- Put message `a_message' to the log at error level.
+		do
+			if level >= log_error then
+				log.write_error (create {STRING}.make_from_separate (a_message))
+			end
 		end
 
 	put_critical (a_message: separate READABLE_STRING_8)
 			-- Put message `a_message' to the log at critical level.
 		do
-			log.write_critical (create {STRING}.make_from_separate (a_message))
+			if level >= log_critical then
+				log.write_critical (create {STRING}.make_from_separate (a_message))
+			end
 		end
 
 	put_alert (a_message: separate READABLE_STRING_8)
 			-- Put message `a_message' to the log at alert level.
 		do
-			log.write_alert (create {STRING}.make_from_separate (a_message))
-		end
-
-	put_debug (a_message: separate READABLE_STRING_8)
-			-- Put message `a_message' to the log at debug level.
-		do
-			log.write_debug (create {STRING}.make_from_separate (a_message))
+			if level >= log_alert then
+				log.write_alert (create {STRING}.make_from_separate (a_message))
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	initialize_logger (app: APPLICATION_ENVIRONMENT; a_log: like log)
+	initialize_logger (app: separate APPLICATION_ENVIRONMENT; a_log: like log)
 		local
 			l_log_writer_file: LOG_ROLLING_WRITER_FILE
-			l_log_writer: LOG_WRITER
+			l_log_writer: detachable LOG_WRITER
 			l_logs_path: detachable PATH
 			l_logger_config: LOGGER_CONFIGURATION
 			ut: FILE_UTILITIES
+			p: PATH
+			l_name: IMMUTABLE_STRING_32
 		do
-			l_logger_config := new_logger_level_configuration (app.application_config_path)
-			l_logs_path := l_logger_config.location
-			if l_logs_path = Void then
-				l_logs_path := app.logs_path
+			create l_name.make_from_separate (app.name)
+			create p.make_from_separate (app.application_config_path)
+--			l_name := app.name
+--			p := app.application_config_path
+
+			l_logger_config := new_logger_level_configuration (p)
+			if l_logger_config.type.is_case_insensitive_equal_general ("file") then
+				l_logs_path := l_logger_config.location
+				if l_logs_path = Void then
+					create  l_logs_path.make_from_separate (app.logs_path)
+				end
+				if ut.directory_path_exists (l_logs_path) then
+					create l_log_writer_file.make_at_location (l_logs_path.extended (l_name).appended_with_extension ("log"))
+					l_log_writer_file.set_max_file_size ({NATURAL_64} 1024 * 1204)
+					l_log_writer_file.set_max_backup_count (l_logger_config.backup_count)
+					l_log_writer := l_log_writer_file
+				else
+						-- Should we create the directory anyway ?
+				end
+			elseif l_logger_config.type.is_case_insensitive_equal_general ("stderr") then
+				create {LOG_WRITER_STDERR} l_log_writer
 			end
-			if ut.directory_path_exists (l_logs_path) then
-				create l_log_writer_file.make_at_location (l_logs_path.extended (app.name).appended_with_extension ("log"))
-				l_log_writer_file.set_max_file_size ({NATURAL_64} 1024 * 1204)
-				l_log_writer_file.set_max_backup_count (l_logger_config.backup_count)
-				l_log_writer := l_log_writer_file
-			else
-					-- Should we create the directory anyway ?
+			if l_log_writer = Void then
 				create {LOG_WRITER_NULL} l_log_writer
+				set_logger_level (l_log_writer, log_notice)
+			else
+				set_logger_level (l_log_writer, 0) -- None
 			end
-			set_logger_level (l_log_writer, l_logger_config.level)
 			a_log.register_log_writer (l_log_writer)
 		end
 
 	set_logger_level (a_log_writer: LOG_WRITER; a_priority: INTEGER)
 			-- Setup the logger level based on `a_priority'
 		do
+			level := a_priority
 			if a_priority = log_debug then
 				a_log_writer.enable_debug_log_level
 			elseif a_priority = Log_emergency then
@@ -167,6 +199,9 @@ feature {NONE} -- Implementation
 					attached l_parser.parsed_json_object as jv and then
 					attached {JSON_OBJECT} jv.item ("logger") as l_logger
 				then
+					if attached {JSON_STRING} l_logger.item ("type") as l_type then
+						Result.set_type_with_string (l_type.item)
+					end
 					if attached {JSON_STRING} l_logger.item ("location") as l_location then
 						Result.set_location_with_string (l_location.item)
 					end

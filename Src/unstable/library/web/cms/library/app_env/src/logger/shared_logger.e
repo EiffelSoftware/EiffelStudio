@@ -35,72 +35,113 @@ feature -- Logging
 
 	write_debug_log (m: READABLE_STRING_8)
 		do
-			write_debug_log_to (m, logger)
+--			write_debug_log_to (m, logger)
 		end
 
 	write_information_log (m: READABLE_STRING_8)
 		do
-			write_information_log_to (m, logger)
+--			write_information_log_to (m, logger)
 		end
 
 	write_warning_log (m: READABLE_STRING_8)
 		do
-			write_warning_log_to (m, logger)
+--			write_warning_log_to (m, logger)
 		end
 
 	write_error_log (m: READABLE_STRING_8)
 		do
-			write_error_log_to (m, logger)
+--			write_error_log_to (m, logger)
 		end
 
 	write_critical_log (m: READABLE_STRING_8)
 		do
-			write_critical_log_to (m, logger)
+--			write_critical_log_to (m, logger)
 		end
 
 	write_alert_log (m: READABLE_STRING_8)
 		do
-			write_alert_log_to (m, logger)
+--			write_alert_log_to (m, logger)
 		end
 
 feature {NONE} -- Logger: separate implementation			
 
 	write_debug_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_debug (m)
+			if not retried then
+				a_log.put_debug (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	write_information_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_information (m)
+			if not retried then
+				a_log.put_information (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	write_warning_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_warning (m)
+			if not retried then
+				a_log.put_warning (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	write_error_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_error (m)
+			if not retried then
+				a_log.put_error (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	write_critical_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_critical (m)
+			if not retried then
+				a_log.put_critical (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	write_alert_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
 		do
-			a_log.put_alert (m)
+			if not retried then
+				a_log.put_alert (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
-
 
 feature {NONE} -- Implementation
 
 	initialize_logger (app: APPLICATION_ENVIRONMENT)
 		local
-			l_logger: LOGGER
+			l_logger: separate LOGGER
 		do
 			create l_logger.make_with_environment (app)
 			set_logger_to (l_logger, logger_cell)

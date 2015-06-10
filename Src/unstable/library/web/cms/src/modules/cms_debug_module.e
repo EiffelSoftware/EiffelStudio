@@ -39,7 +39,7 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			a_router.handle ("/debug/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_debug (a_api, ?, ?)))
+			a_router.handle ("/debug/", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_debug (a_api, ?, ?)), Void)
 		end
 
 feature -- Hooks configuration

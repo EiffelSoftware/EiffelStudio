@@ -145,9 +145,9 @@ feature -- Settings: router
 			create l_root_handler.make (api)
 			create l_methods
 			l_methods.enable_get
-			a_router.handle_with_request_methods ("/", l_root_handler, l_methods)
-			a_router.handle_with_request_methods ("", l_root_handler, l_methods)
-			map_uri_agent_with_request_methods ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
+			a_router.handle ("/", l_root_handler, l_methods)
+			a_router.handle ("", l_root_handler, l_methods)
+			map_uri_agent ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
 		end
 
 	configure_api_file_handler (a_router: WSF_ROUTER)
@@ -162,7 +162,7 @@ feature -- Settings: router
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle_with_request_methods ("/theme/", fhdl, router.methods_GET)
+			a_router.handle ("/theme/", fhdl, router.methods_GET)
 
 
 			create fhdl.make_hidden_with_path (setup.environment.www_path)
@@ -171,7 +171,7 @@ feature -- Settings: router
 				do
 					execute_default (ia_req, ia_res)
 				end)
-			a_router.handle_with_request_methods ("/", fhdl, router.methods_GET)
+			a_router.handle ("/", fhdl, router.methods_GET)
 		end
 
 feature -- Execute Filter

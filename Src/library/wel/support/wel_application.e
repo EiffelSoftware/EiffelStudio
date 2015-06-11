@@ -28,9 +28,17 @@ feature {NONE} -- Initialization
 			-- Create the application's dispatcher,
 			-- set the application's main window and run
 			-- the application.
+		local
+			scoop_support: ISE_SCOOP_RUNTIME
 		do
 			set_application (Current)
 				-- Initialize dispatcher by evaluating the `once'.
+
+				-- Make sure that WEL_APPLICATION, which contains the GUI elements
+				-- and the event dispatching thread, is only accessed by one specific thread.
+			create scoop_support
+			scoop_support.pin_to_thread
+
 			dispatcher.do_nothing
 			init_instance
 			init_application

@@ -356,10 +356,11 @@ feature -- Events
 		local
 		do
 			if
-				ev_application.ctrl_pressed and then
-				not ev_application.shift_pressed
+				attached {EV_APPLICATION} ev_application as l_app and then
+				l_app.ctrl_pressed and then
+				not l_app.shift_pressed
 			then
-				if ev_application.alt_pressed then
+				if l_app.alt_pressed then
 					if a_key.code = {EV_KEY_CONSTANTS}.key_L then
 						on_insert_wiki_link_menu_event
 					elseif a_key.code = {EV_KEY_CONSTANTS}.key_I then

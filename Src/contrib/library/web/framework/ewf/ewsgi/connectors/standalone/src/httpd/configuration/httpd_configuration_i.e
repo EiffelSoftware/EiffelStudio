@@ -200,43 +200,31 @@ feature -- SSL Helpers
 	set_ssl_protocol_to_ssl_2_or_3
 			-- Set `ssl_protocol' with `Ssl_23'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Ssl_23
 		end
 
 	set_ssl_protocol_to_ssl_3
 			-- Set `ssl_protocol' with `Ssl_3'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Ssl_3
 		end
 
 	set_ssl_protocol_to_tls_1_0
 			-- Set `ssl_protocol' with `Tls_1_0'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Tls_1_0
 		end
 
 	set_ssl_protocol_to_tls_1_1
 			-- Set `ssl_protocol' with `Tls_1_1'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Tls_1_1
 		end
 
 	set_ssl_protocol_to_tls_1_2
 			-- Set `ssl_protocol' with `Tls_1_2'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Tls_1_2
 		end
 
 	set_ssl_protocol_to_dtls_1_0
 			-- Set `ssl_protocol' with `Dtls_1_0'.
 		deferred
-		ensure
-			ssl_protocol_set: ssl_protocol = {SSL_PROTOCOL}.Dtls_1_0
 		end
 
 note

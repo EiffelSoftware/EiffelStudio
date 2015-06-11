@@ -29,7 +29,14 @@ feature {NONE} -- Initialization is
 
 	initialize
 			-- Mark `Current' as initialized.
+		local
+			scoop_support: ISE_SCOOP_RUNTIME
 		do
+				-- Make sure that EV_APPLICATION, which contains the GUI elements
+				-- and the event dispatching thread, is only accessed by one specific thread.
+			create scoop_support
+			scoop_support.pin_to_thread
+
 			set_tooltip_delay (default_tooltip_delay)
 			Precursor
 				-- We need to create implementation here

@@ -31,7 +31,7 @@
 	</target>
 	<target name="eiffel_community_site_any" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
-		<variable name="httpd_ssl_disabled" value="false"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
 		<setting name="concurrency" value="thread"/><!-- for now, due to temp issue with generating_type and scoop -->
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>

@@ -160,9 +160,11 @@ feature -- Module
 			rp: PATH
 			ut: FILE_UTILITIES
 		do
+				-- Check first in selected theme folder.
 			rp := module_assets_theme_location (a_module)
 			Result := rp.extended_path (a_resource)
 			if not ut.file_path_exists (Result) then
+					-- And if not found, look into site/modules/$a_module.name/.... folders.
 				rp := module_assets_location (a_module)
 				Result := rp.extended_path (a_resource)
 				if not ut.file_path_exists (Result) then

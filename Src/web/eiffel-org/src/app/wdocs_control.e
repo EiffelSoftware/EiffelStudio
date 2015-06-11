@@ -312,7 +312,9 @@ feature -- Basic operation
 								if not wdocs_manager.is_version_id (ia_version) then
 									create l_manager.make (wdocs_manager.wiki_database_path.parent.extended (ia_version), ia_version, wdocs_manager.tmp_dir)
 									ia_lab.set_text ({STRING_32} "Wiki #" + ia_version)
-									ev_application.add_idle_action_kamikaze (agent set_wdocs_manager (l_manager))
+									if attached {EV_APPLICATION} ev_application as l_app then
+										l_app.add_idle_action_kamikaze (agent set_wdocs_manager (l_manager))
+									end
 								end
 							end(a_lab, v)
 							)

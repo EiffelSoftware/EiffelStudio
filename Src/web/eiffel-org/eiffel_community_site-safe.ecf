@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
 	<target name="eiffel_community_site_common">
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -31,10 +31,26 @@
 	</target>
 	<target name="eiffel_community_site_any" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
+		<variable name="httpd_ssl_disabled" value="false"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<setting name="concurrency" value="thread"/><!-- for now, due to temp issue with generating_type and scoop -->
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\any\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/web/launcher$</exclude>
+				<exclude>/app$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="eiffel_community_site_standalone" extends="eiffel_community_site_common">
+		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
+		<variable name="httpd_ssl_disabled" value="false"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<setting name="concurrency" value="thread"/><!-- for now, due to temp issue with generating_type and scoop -->
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/web/launcher$</exclude>
@@ -75,6 +91,6 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_community_site" extends="eiffel_community_site_nino">
+	<target name="eiffel_community_site" extends="eiffel_community_site_standalone">
 	</target>
 </system>

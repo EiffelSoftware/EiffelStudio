@@ -1,0 +1,9 @@
+OK: failing_query.
+OK: test_propagation_query.
+OK: failing_command.
+OK: test_propagation_command.
+OK: failing_callback_query.
+OK: test_callback_propagation_query.
+OK: failing_callback_command.
+OK: test_callback_propagation_command.
+Execution completed

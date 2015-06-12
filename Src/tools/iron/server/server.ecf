@@ -29,24 +29,23 @@
 	<target name="server" extends="common">
 		<root class="IRON_NODE_SERVICE_APPLICATION" feature="make_and_launch"/>
 		<setting name="executable_name" value="irond"/>
-		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
-		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
+		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\default\nino-safe.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
-		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
+		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\connector\libfcgi-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">
 			<option>
 				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf" readonly="false"/>
-		<library name="wgi_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\ewsgi\connectors\nino\nino-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf" readonly="false">
+		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\connector\nino-safe.ecf" readonly="false"/>
+		<library name="wgi_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\ewsgi\connectors\nino\nino-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\wsf-safe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 			</option>
 		</library>
-		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
-		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html-safe.ecf" readonly="false"/>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\wsf_extension-safe.ecf" readonly="false"/>
+		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf_html\wsf_html-safe.ecf" readonly="false"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>

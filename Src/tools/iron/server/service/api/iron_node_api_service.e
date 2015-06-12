@@ -31,7 +31,7 @@ feature -- Initialization
 			l_layout := l_iron.layout
 
 				--| Documentation
-			router.handle (l_iron.api_resource ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (router))
+			router.handle (l_iron.api_resource ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (router), Void)
 
 				--| Access
 			create h_access.make (l_iron)

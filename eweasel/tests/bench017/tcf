@@ -1,0 +1,32 @@
+test_name	benchmark-scoop-passive-memory-stress-test
+test_description	A stress test for SCOOP with passive processors, mostly aimed at memory allocation.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e		$CLUSTER test.e
+copy_raw	helper.e	$CLUSTER helper.e
+copy_raw	worker.e	$CLUSTER worker.e
+copy_raw	task.e		$CLUSTER task.e
+copy_raw	task_queue.e	$CLUSTER task_queue.e
+copy_raw	simple_random.e	$CLUSTER simple_random.e
+copy_raw	square_matrix.e	$CLUSTER square_matrix.e
+
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_w 10000
+execute_result	ok
+compare exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+
+execute_final NONE exec_output_f 10000
+execute_result	ok
+compare exec_output_f output
+
+test_end

@@ -2973,7 +2973,8 @@ test	benchmark-scoop-synthetic-threadring			bench012 tcf pass benchmark scoop sy
 test	benchmark-scoop-synthetic-thresh			bench013 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-scoop-synthetic-winnow			bench014 tcf pass benchmark scoop synthetic_benchmark
 test	benchmark-runtime-slow-allocation			bench015 tcf pass benchmark runtime
-test	benchmark-scoop-memory-stress-test			bench016 tcf pass scoop multithreaded
+test	benchmark-scoop-memory-stress-test			bench016 tcf pass benchmark scoop multithreaded
+test	benchmark-scoop-passive-memory-stress-test	bench017 tcf fail benchmark scoop multithreaded
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

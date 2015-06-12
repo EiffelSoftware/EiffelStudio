@@ -23,7 +23,6 @@ feature {TEMPLATE_ROUTINES}
 			-- If not handled by this inspector, return Void
 		local
 			l_fn: STRING
-			utf: UTF_CONVERTER
 		do
 			if attached {WIZARD_DATA} obj as wiz then
 				l_fn := field_name.as_lower

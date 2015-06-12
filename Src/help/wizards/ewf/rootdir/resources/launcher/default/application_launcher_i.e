@@ -10,21 +10,21 @@ note
 	revision: "$Revision$"
 
 deferred class
-	APPLICATION_LAUNCHER_I
+	APPLICATION_LAUNCHER_I [G -> WSF_EXECUTION create make end]
 
 feature -- Execution
 
-	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 			-- Launch Web Server Application using `a_service' and optionals `opts'.
 		local
-			launcher: WSF_SERVICE_LAUNCHER
+			launcher: WSF_SERVICE_LAUNCHER [G]
 		do
 {literal}
-			create {WSF_DEFAULT_SERVICE_LAUNCHER} launcher.make_and_launch (a_service, opts){/literal}
+			create {WSF_DEFAULT_SERVICE_LAUNCHER [G]} launcher.make_and_launch (opts){/literal}
 		end
 
 	launcher_id: detachable READABLE_STRING_GENERAL
-		do
+		once
 			-- Not used for default connector selection.
 		end
 

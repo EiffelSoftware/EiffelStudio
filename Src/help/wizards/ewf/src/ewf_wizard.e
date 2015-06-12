@@ -24,7 +24,7 @@ feature -- Factory
 			create Result.make (Current)
 		end
 
-feature -- Pages		
+feature -- Pages
 
 	first_page: WIZARD_PAGE
 		once
@@ -83,11 +83,13 @@ Web application runs on top of connectors
 
 Select connectors you want to support:
 	]")
-			Result.add_boolean_question ("Standalone", "use_standalone", "Using the Eiffel Web nino server")
+			Result.add_boolean_question ("Standalone", "use_standalone", "Using the standalone Eiffel Web server")
+			Result.add_boolean_question ("Nino", "use_nino", "Using the Eiffel Web nino server")
 			Result.add_boolean_question ("CGI", "use_cgi", "Require a httpd server")
 			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require a httpd server")
 
 			Result.data.force ("yes", "use_standalone")
+			Result.data.force ("no", "use_nino")
 			Result.data.force ("yes", "use_cgi")
 			Result.data.force ("yes", "use_libfcgi")
 		end
@@ -95,7 +97,7 @@ Select connectors you want to support:
 	standalone_connector_page: WIZARD_PAGE
 		once
 			Result := new_page ("standalone_connector")
-			Result.set_title ("Standalone (nino) connector")
+			Result.set_title ("Standalone (or nino) connector")
 			Result.set_subtitle ("Set options .")
 			Result.add_integer_question ("Port number", "port", "It happens port 80 is already taken, thus choose another one.")
 			Result.add_boolean_question ("Verbose", "verbose", "Verbose output")
@@ -115,6 +117,19 @@ Use the router component to easily map URL patterns to handlers:
 			Result.add_boolean_question ("use the router component", "use_router", "Check generated code to see how to configure it.")
 
 			Result.data.force ("yes", "use_router")
+		end
+
+	filters_page: WIZARD_PAGE
+		once
+			Result := new_page ("filters")
+			Result.set_title ("Use Filter (chain filter)")
+			Result.set_subtitle ("Use the filter component.")
+			Result.add_text ("[
+Use the filter component:
+	]")
+			Result.add_boolean_question ("use the filter component", "use_filter", "Check generated code to see how to configure it.")
+
+			Result.data.force ("yes", "use_filter")
 		end
 
 	final_page: WIZARD_PAGE
@@ -160,6 +175,12 @@ Use the router component to easily map URL patterns to handlers:
 						end
 						sv.append ("standalone")
 					end
+					if connectors_page.boolean_field_value ("use_nino") then
+						if not sv.is_empty then
+							sv.append (", ")
+						end
+						sv.append ("nino")
+					end
 					if connectors_page.boolean_field_value ("use_cgi") then
 						if not sv.is_empty then
 							sv.append (", ")
@@ -178,6 +199,9 @@ Use the router component to easily map URL patterns to handlers:
 					if routers_page.boolean_field_value ("use_router") then
 						l_settings.force (["Use Router", "yes"])
 					end
+					if routers_page.boolean_field_value ("use_filter") then
+						l_settings.force (["Use Filter", "yes"])
+					end
 
 					a_txt2.set_text (formatted_title_value_items (l_settings))
 				end(Result, txt1, txt2))
@@ -195,7 +219,10 @@ feature -- Events
 			elseif a_current_page = project_page then
 				Result := connectors_page
 			elseif a_current_page = connectors_page then
-				if connectors_page.boolean_field_value ("use_standalone") then
+				if
+					connectors_page.boolean_field_value ("use_standalone")
+					or connectors_page.boolean_field_value ("use_nino")
+				then
 					Result := standalone_connector_page
 				else
 					Result := routers_page
@@ -203,6 +230,8 @@ feature -- Events
 			elseif a_current_page = standalone_connector_page then
 				Result := routers_page
 			elseif a_current_page = routers_page then
+				Result := filters_page
+			elseif a_current_page = filters_page then
 				Result := final_page
 			end
 		end

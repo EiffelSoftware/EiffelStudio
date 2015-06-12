@@ -1,0 +1,9 @@
+Executed simple query.
+Executed simple command.
+Executed regular lockpassing query.
+Executed passive lockpassing query.
+Executed passive lockpassing command.
+Executed separate callback query.
+Executed separate callback command.
+OK: No deadlock occurred.
+Execution completed

@@ -10,7 +10,6 @@
 		<option warning="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<precompile name="precomp_wsf" location="../../../../ewf_precomp/wsf-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
@@ -27,7 +26,6 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
-		<precompile name="precomp_wsf-mt" location="../../../../ewf_precomp/wsf-mt-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="default_standalone" location="../../../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<library name="wsf" location="../../../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>

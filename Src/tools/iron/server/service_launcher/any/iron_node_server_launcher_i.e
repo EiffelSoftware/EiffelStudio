@@ -29,9 +29,9 @@ feature {NONE} -- Initialization
 				if ext.same_string (nature_nino) then
 					Result := nature_nino
 				end
-				if ext.same_string (nature_cgi) then
-					Result := nature_cgi
-				end
+--				if ext.same_string (nature_cgi) then
+--					Result := nature_cgi
+--				end
 				if ext.same_string (nature_libfcgi) or else ext.same_string ("fcgi") then
 					Result := nature_libfcgi
 				end
@@ -51,14 +51,14 @@ feature {NONE} -- nino
 
 feature {NONE} -- cgi
 
-	nature_cgi: STRING = "cgi"
+--	nature_cgi: STRING = "cgi"
 
-	launch_cgi (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
-		local
-			launcher: WSF_CGI_SERVICE_LAUNCHER
-		do
-			create {WSF_CGI_SERVICE_LAUNCHER} launcher.make_and_launch (a_service, opts)
-		end
+--	launch_cgi (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+--		local
+--			launcher: WSF_CGI_SERVICE_LAUNCHER
+--		do
+--			create {WSF_CGI_SERVICE_LAUNCHER} launcher.make_and_launch (a_service, opts)
+--		end
 
 feature {NONE} -- libfcgi
 
@@ -80,8 +80,8 @@ feature {WSF_SERVICE} -- Launcher
 			nature := launcher_nature
 			if nature = Void or else nature = nature_nino then
 				launch_nino (a_service, opts)
-			elseif nature = nature_cgi then
-				launch_cgi (a_service, opts)
+--			elseif nature = nature_cgi then
+--				launch_cgi (a_service, opts)
 			elseif nature = nature_libfcgi then
 				launch_libfcgi (a_service, opts)
 			else
@@ -91,7 +91,7 @@ feature {WSF_SERVICE} -- Launcher
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

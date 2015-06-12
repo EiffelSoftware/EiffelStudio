@@ -32,38 +32,38 @@ feature -- Initialization
 			l_iron: like iron
 		do
 				--| Optional
-			router.handle ("/debug/", create {WSF_DEBUG_HANDLER}.make_hidden)
+			router.handle ("/debug/", create {WSF_DEBUG_HANDLER}.make_hidden, Void)
 
 			l_iron := iron
 			l_layout := l_iron.layout
 
 			debug ("iron")
-				router.handle (l_iron.cms_page ("/db/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.repo_path.name))
+				router.handle (l_iron.cms_page ("/db/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.repo_path.name), router.methods_get)
 			end
-			router.handle (l_iron.cms_page ("/html/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.www_path.name))
+			router.handle (l_iron.cms_page ("/html/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.www_path.name), router.methods_get)
 			if l_iron.is_documentation_available then
-				router.handle (l_iron.cms_page ("/doc/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.documentation_path.name))
+				router.handle (l_iron.cms_page ("/doc/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.documentation_path.name), router.methods_get)
 			end
-			map_uri_with_request_methods ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (l_iron)), router.methods_get) --  Shutdown server
+			map_uri ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (l_iron)), router.methods_get) --  Shutdown server
 
 				--| Documentation
-			router.handle (l_iron.cms_page ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (server.api_service.router))
+			router.handle (l_iron.cms_page ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (server.api_service.router), Void)
 
 				--| User
 			create h_user.make (l_iron)
-			map_uri_with_request_methods (l_iron.cms_page ("/user"), new_auth_uri_handler (h_user), router.methods_get) -- User::home
-			map_uri_with_request_methods (l_iron.cms_page ("/user/"), new_auth_uri_handler (h_user), router.methods_get) -- User::home
-			map_uri_template_with_request_methods (l_iron.cms_page ("/user/{uid}"), new_auth_uri_template_handler (h_user), router.methods_get) -- User::home
+			map_uri (l_iron.cms_page ("/user"), new_auth_uri_handler (h_user), router.methods_get) -- User::home
+			map_uri (l_iron.cms_page ("/user/"), new_auth_uri_handler (h_user), router.methods_get) -- User::home
+			map_uri_template (l_iron.cms_page ("/user/{uid}"), new_auth_uri_template_handler (h_user), router.methods_get) -- User::home
 
 				--| Account
 			create h_account.make (l_iron)
-			map_uri_with_request_methods (l_iron.cms_page ("/account/"), h_account, router.methods_get + router.methods_post) -- Account::home
-			map_uri_template_with_request_methods (l_iron.cms_page ("/account/{uid}/"), h_account, router.methods_get  + router.methods_post) -- Activate ...
+			map_uri (l_iron.cms_page ("/account/"), h_account, router.methods_get_post) -- Account::home
+			map_uri_template (l_iron.cms_page ("/account/{uid}/"), h_account, router.methods_get_post) -- Activate ...
 
 				--| Access
 			create h_access.make (l_iron)
-			map_uri_with_request_methods (l_iron.cms_page ("/"), h_access, router.methods_get) -- Admin::home
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/"), h_access, router.methods_get) -- Admin::home
+			map_uri (l_iron.cms_page ("/"), h_access, router.methods_get) -- Admin::home
+			map_uri_template (l_iron.cms_page ("/{version}/"), h_access, router.methods_get) -- Admin::home
 
 			create h_create.make (l_iron)
 			create h_archive_package.make (l_iron)
@@ -73,39 +73,39 @@ feature -- Initialization
 			create h_package_map.make (l_iron)
 
 				-- Pure website/html pages
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/create/"), new_auth_uri_template_handler (h_create), router.methods_get) -- Create
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/edit/"), new_auth_uri_template_handler (h_edit), router.methods_get) -- Edit
+			map_uri_template (l_iron.cms_page ("/{version}/package/create/"), new_auth_uri_template_handler (h_create), router.methods_get) -- Create
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/edit/"), new_auth_uri_template_handler (h_edit), router.methods_get) -- Edit
 
 				-- Cms
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/"), new_auth_uri_template_handler (h_package), router.methods_post) -- Create
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}"), h_package, router.methods_get) --  Get package data
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}"), new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/archive"), h_archive_package, router.methods_get) --  Get archive package data
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/archive"), new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_put + router.methods_delete) --  Get archive package data
+			map_uri_template (l_iron.cms_page ("/{version}/package/"), new_auth_uri_template_handler (h_package), router.methods_post) -- Create
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}"), h_package, router.methods_get) --  Get package data
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}"), new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/archive"), h_archive_package, router.methods_get) --  Get archive package data
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/archive"), new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_put + router.methods_delete) --  Get archive package data
 
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/map"), h_package_map, router.methods_get) --  Get map
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/map{/map}"), h_package_map, router.methods_get) --  Get map and allow ?method= .. hack
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/map"), h_package_map, router.methods_post) --  Create new map
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/{id}/map{/map}"), new_auth_uri_template_handler (h_package_map), router.methods_delete + router.methods_post) -- Create/Delete mapping
-			map_uri_template_with_request_methods (l_iron.cms_page ("/{version}/package/"), h_search, router.methods_get) -- Search
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/map"), h_package_map, router.methods_get) --  Get map
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/map{/map}"), h_package_map, router.methods_get) --  Get map and allow ?method= .. hack
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/map"), h_package_map, router.methods_post) --  Create new map
+			map_uri_template (l_iron.cms_page ("/{version}/package/{id}/map{/map}"), new_auth_uri_template_handler (h_package_map), router.methods_delete + router.methods_post) -- Create/Delete mapping
+			map_uri_template (l_iron.cms_page ("/{version}/package/"), h_search, router.methods_get) -- Search
 
-			router.handle (l_iron.cms_page (""), create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home))
+			router.handle (l_iron.cms_page (""), create {WSF_STARTS_WITH_AGENT_HANDLER}.make (agent redirect_to_home), router.methods_get)
 
 				--| Misc access
-			router.handle ("/favicon.ico", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make_hidden (agent handle_favicon))
+			router.handle ("/favicon.ico", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make_hidden (agent handle_favicon), router.methods_get)
 			router.handle ("/", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make (agent handle_home("/", ?, ?), agent  (ia_m: WSF_ROUTER_MAPPING; ia_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
 				do
 					create Result.make (ia_m)
 					Result.add_description ("Home page")
-				end))
+				end), router.methods_get)
 
 				--| Package access
 			create h_package_fetcher.make (l_iron)
-			map_uri_template_with_request_methods ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
-			map_uri_template_with_request_methods ("/{version}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template ("/{version}", h_package_fetcher, router.methods_get) --  Get package info
 
 				--| Misc/default
-			router.handle ("/", create {WSF_SELF_DOCUMENTED_STARTS_WITH_AGENT_HANDLER}.make_with_descriptions (agent handle_home, <<"Redirect to home page">>))
+			router.handle ("/", create {WSF_SELF_DOCUMENTED_STARTS_WITH_AGENT_HANDLER}.make_with_descriptions (agent handle_home, <<"Redirect to home page">>), router.methods_get)
 			debug ("iron")
 				router.pre_execution_actions.extend (agent  (ia_map: WSF_ROUTER_MAPPING)
 					do
@@ -171,7 +171,7 @@ feature -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

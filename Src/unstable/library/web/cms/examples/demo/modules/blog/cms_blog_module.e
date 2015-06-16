@@ -1,17 +1,21 @@
 note
-	description: "Summary description for {CMS_BLOG_MODULE}."
+	description: "Displays all posts (pages with type blog). It's possible to list posts by user."
+	author: "Dario Bösch <daboesch@student.ethz.ch>"
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision 96616$"
 
 class
 	CMS_BLOG_MODULE
 
 inherit
 	CMS_MODULE
+		rename
+			module_api as blog_api
 		redefine
 			register_hooks,
 			initialize,
-			install
+			install,
+			blog_api
 		end
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -39,6 +43,10 @@ feature {CMS_API} -- Module Initialization
 			Precursor (api)
 
 			if attached {CMS_NODE_API} api.module_api ({NODE_MODULE}) as l_node_api then
+				create blog_api.make (api, l_node_api)
+
+				node_api := l_node_api
+					-- Depends on {NODE_MODULE}
 				create ct
 				l_node_api.add_content_type (ct)
 				l_node_api.add_content_type_webform_manager (create {CMS_BLOG_NODE_TYPE_WEBFORM_MANAGER}.make (ct))
@@ -75,12 +83,53 @@ CREATE TABLE "blog_post_nodes"(
 			end
 		end
 
+feature {CMS_API} -- Access: API
+
+	blog_api: detachable CMS_BLOG_API
+			-- <Precursor>
+
+	node_api: detachable CMS_NODE_API
+
 feature -- Access: router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			a_router.handle_with_request_methods ("/blogs/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_blogs (?,?, a_api)), a_router.methods_get)
+			if attached blog_api as l_blog_api then
+				configure_web (a_api, l_blog_api, a_router)
+			else
+					-- Issue with api/dependencies,
+					-- thus Current module should not be used!
+					-- thus no url mapping
+			end
+		end
+
+	configure_web (a_api: CMS_API; a_blog_api: CMS_BLOG_API; a_router: WSF_ROUTER)
+			-- Configure router mapping for web interface.
+		local
+			l_blog_handler: BLOG_HANDLER
+			l_blog_user_handler: BLOG_USER_HANDLER
+			l_uri_mapping: WSF_URI_MAPPING
+		do
+				-- TODO: for now, focused only on web interface, add REST api later. [2015-May-18]
+			create l_blog_handler.make (a_api, a_blog_api)
+			create l_blog_user_handler.make (a_api, a_blog_api)
+
+				-- Let the class BLOG_HANDLER handle the requests on "/blogs"
+			create l_uri_mapping.make_trailing_slash_ignored ("/blogs", l_blog_handler)
+			a_router.map_with_request_methods (l_uri_mapping, a_router.methods_get)
+
+				-- We can add a page number after /blogs/ to get older posts
+			a_router.handle_with_request_methods ("/blogs/page/{page}", l_blog_handler, a_router.methods_get)
+
+				-- If a user id is given route with blog user handler
+				--| FIXME: maybe /user/{user}/blogs/  would be better.
+			a_router.handle_with_request_methods ("/blogs/user/{user}", l_blog_user_handler, a_router.methods_get)
+
+				-- If a user id is given we also want to allow different pages
+				--| FIXME: what about /user/{user}/blogs/?page={page} ?
+			a_router.handle_with_request_methods ("/blogs/user/{user}/page/{page}", l_blog_user_handler, a_router.methods_get)
+
 		end
 
 feature -- Hooks
@@ -94,19 +143,8 @@ feature -- Hooks
 		local
 			lnk: CMS_LOCAL_LINK
 		do
+				-- Add the link to the blog to the main menu
 			create lnk.make ("Blogs", "blogs/")
 			a_menu_system.primary_menu.extend (lnk)
 		end
-
-feature -- Handler
-
-	handle_blogs (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: CMS_API)
-		local
-			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
-		do
-			create r.make (req, res, a_api)
-			r.set_main_content ("Blog module is in development ...")
-			r.execute
-		end
-
 end

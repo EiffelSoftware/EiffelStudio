@@ -3,13 +3,15 @@ ul.cms-nodes {
   padding: 3px 3px 3px 3px;
   border: solid 1px #ccc;
 }
-
-li.cms_type_page {
+ul.cms-nodes li {
   border-top: dotted 1px #ccc;
 }
-li.cms_type_page a::before {
+ul.cms-nodes li:first-child {
+  border-top: none;
+}
+ul.cms-nodes li.cms_type_page a::before {
   content: "[page] ";
 }
-li.cms_type_page:first-child {
-  border-top: none;
+ul.cms-nodes li.cms_type_blog a::before {
+  content: "[blog] ";
 }

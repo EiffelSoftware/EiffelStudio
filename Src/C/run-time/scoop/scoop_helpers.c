@@ -135,45 +135,31 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 		/* or reloading the thread local variables often. */
 	EIF_GET_CONTEXT
 	EIF_BOOLEAN success;
-	EIF_REFERENCE EIF_VOLATILE saved_except = NULL;
-	EIF_OBJECT EIF_VOLATILE safe_saved_except = NULL;
 	jmp_buf exenv;
-	RTYL;
+	RTYD;
 
-	saved_except = RTLA;
-	if (saved_except) {
-		safe_saved_except = eif_protect(saved_except);
-	}
+		/* TODO: We used to keep track of last_exception in this function,
+		 * which caused a call into Eiffel code. Therefore it was necessary
+		 * register the call_data struct somewhere for GC traversal.
+		 * This is no longer the case now, which means some client code
+		 * can be simplified. */
+
 		/* Record pseudo execution vector */
 	excatch(&exenv);
 
-#ifdef _MSC_VER
-/* Disable warning about C++ destructor not compatible with setjmp. It does not matter since
- * we call C code. */
-#pragma warning (disable:4611)
-#endif
 	if (!setjmp(exenv)) {
-#ifdef _MSC_VER
-#pragma warning (default:4611)
-#endif
+			/* Execute the Eiffel function. */
 #ifdef WORKBENCH
 		rt_apply_wcall (call);
 #else
 		call->pattern (call);
 #endif
 		success = EIF_TRUE;
-		if (safe_saved_except) {
-			set_last_exception (eif_access(safe_saved_except));
-		}
 	} else {
 		success = EIF_FALSE;
 	}
 
-	if (safe_saved_except) {
-		eif_wean(safe_saved_except);
-	}
-
-	RTXE;
+	RTXSC;
 		/* Only when no exception occurred do we need to pop the stack. */
     if (success) {
 			/* Pop pseudo vector */

@@ -155,16 +155,14 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 		call->pattern (call);
 #endif
 		success = EIF_TRUE;
+
+		expop(&eif_stack);
 	} else {
+		RTXSC;
+
 		success = EIF_FALSE;
 	}
 
-	RTXSC;
-		/* Only when no exception occurred do we need to pop the stack. */
-    if (success) {
-			/* Pop pseudo vector */
-		expop(&eif_stack);
-	}
 	return success;
 }
 

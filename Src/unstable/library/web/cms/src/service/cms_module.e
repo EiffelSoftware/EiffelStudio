@@ -43,7 +43,7 @@ feature {CMS_API} -- Module Initialization
 feature -- Status		
 
 	is_initialized: BOOLEAN
-			-- Is Current module initialized?
+			-- Is Current module initialized?		
 
 feature {CMS_API} -- Access: API
 

@@ -31,7 +31,13 @@ feature -- Conversion
 		do
 			Precursor (a_node)
 			if attached {CMS_BLOG} a_node as l_blog then
---				l_blog
+				if attached l_blog.tags as l_tags then
+					across
+						l_tags as ic
+					loop
+						add_tag (ic.item)
+					end
+				end
 			end
 		end
 
@@ -42,7 +48,7 @@ feature -- Access
 			Result := {CMS_BLOG_NODE_TYPE}.name
 		end
 
-feature -- Access: content
+feature -- Access: node
 
 	summary: detachable READABLE_STRING_8
 			-- A short summary of the node.
@@ -54,10 +60,12 @@ feature -- Access: content
 			-- Format associated with `content' and `summary'.
 			-- For example: text, mediawiki, html, etc
 
+feature -- Access: blog
+
 	tags: detachable ARRAYED_LIST [READABLE_STRING_32]
 			-- Optional tags
 
-feature -- Element change
+feature -- Element change: node
 
 	set_content (a_content: like content; a_summary: like summary; a_format: like format)
 		do
@@ -65,6 +73,8 @@ feature -- Element change
 			summary := a_summary
 			format := a_format
 		end
+
+feature -- Element change: blog		
 
 	add_tag (a_tag: READABLE_STRING_32)
 			-- Set `parent' to `a_page'

@@ -287,7 +287,7 @@ feature -- Path aliases
 		do
 			Result := a_source
 			if attached storage.path_alias (Result) as l_path then
-				Result := l_path
+				Result := "/" + l_path
 			end
 		end
 

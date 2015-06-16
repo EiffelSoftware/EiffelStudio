@@ -17,11 +17,14 @@ feature -- Forms ...
 		local
 			ti: WSF_FORM_TEXT_INPUT
 			fset: WSF_FORM_FIELD_SET
-			ta: WSF_FORM_TEXTAREA
+			ta, sum: CMS_FORM_TEXTAREA
 			tselect: WSF_FORM_SELECT
 			opt: WSF_FORM_SELECT_OPTION
+			cms_format: CMS_EDITOR_CONTENT_FORMAT
 			l_uri: detachable READABLE_STRING_8
 		do
+			create cms_format
+
 			create ti.make ("title")
 			ti.set_label ("Title")
 			ti.set_size (70)
@@ -33,25 +36,47 @@ feature -- Forms ...
 
 			f.extend_html_text ("<br/>")
 
-			create ta.make ("body")
-			ta.set_rows (10)
-			ta.set_cols (70)
-			if a_node /= Void then
-				ta.set_text_value (a_node.content)
-			end
---			ta.set_label ("Body")
-			ta.set_description ("This is the main content")
-			ta.set_is_required (False)
-
-			create fset.make
-			fset.set_legend ("Body")
-			fset.extend (ta)
-
-			fset.extend_html_text ("<br/>")
-
+				-- Select field has to be initialized before textareas are replaced, because they depend on the selection of the field
 			create tselect.make ("format")
 			tselect.set_label ("Body's format")
 			tselect.set_is_required (True)
+
+				-- Main Content
+			create ta.make ("body")
+			ta.set_rows (10)
+			ta.set_cols (70)
+			ta.show_as_editor_if_selected (tselect, cms_format.name)
+			if a_node /= Void then
+				ta.set_text_value (a_node.content)
+			end
+			ta.set_label ("Content")
+			ta.set_description ("This is the main content")
+			ta.set_is_required (False)
+
+				-- Summary
+			create sum.make ("summary")
+			sum.set_rows (3)
+			sum.set_cols (70)
+				-- if cms_html is selected
+			sum.show_as_editor_if_selected (tselect, cms_format.name)
+			if a_node /= Void then
+				sum.set_text_value (a_node.summary)
+			end
+			sum.set_label ("Summary")
+			sum.set_description ("This is the summary")
+			sum.set_is_required (False)
+
+			create fset.make
+			fset.set_legend ("Body")
+
+				-- Add summary
+			fset.extend (sum)
+			fset.extend_html_text("<br />")
+
+				-- Add content (body)
+			fset.extend (ta)
+			fset.extend_html_text ("<br/>")
+
 			across
 				 content_type.available_formats as c
 			loop
@@ -69,7 +94,7 @@ feature -- Forms ...
 
 			f.extend (fset)
 
-				-- Path alias
+				-- Path alias		
 			create ti.make ("path_alias")
 			ti.set_label ("Path")
 			ti.set_size (70)
@@ -113,7 +138,7 @@ feature -- Forms ...
 
 	update_node	(response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: CMS_NODE)
 		local
-			b: detachable READABLE_STRING_8
+			b,s: detachable READABLE_STRING_8
 			f: detachable CONTENT_FORMAT
 		do
 			if attached fd.integer_item ("id") as l_id and then l_id > 0 then
@@ -126,6 +151,12 @@ feature -- Forms ...
 			if attached fd.string_item ("body") as l_body then
 				b := l_body
 			end
+
+			-- Read out the summary field from the form data
+			if attached fd.string_item ("summary") as l_summary then
+				s := l_summary
+			end
+
 			if attached fd.string_item ("format") as s_format and then attached response.api.format (s_format) as f_format then
 				f := f_format
 			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
@@ -133,15 +164,19 @@ feature -- Forms ...
 			else
 				f := response.formats.default_format
 			end
+
+			-- Update node with summary and body content
 			if b /= Void then
-				a_node.set_content (b, Void, f.name) -- FIXME: summary
+				a_node.set_content (b, s, f.name)
 			end
+
+
 		end
 
 	new_node (response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: detachable CMS_NODE): G
 			-- <Precursor>
 		local
-			b: detachable READABLE_STRING_8
+			b,s: detachable READABLE_STRING_8
 			f: detachable CONTENT_FORMAT
 			l_node: detachable like new_node
 		do
@@ -175,9 +210,16 @@ feature -- Forms ...
 			end
 			l_node.set_author (response.user)
 
+			--Summary
+			if attached fd.string_item ("summary") as l_summary then
+				s := l_summary
+			end
+
+			--Content
 			if attached fd.string_item ("body") as l_body then
 				b := l_body
 			end
+
 			if attached fd.string_item ("format") as s_format and then attached response.api.format (s_format) as f_format then
 				f := f_format
 			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
@@ -185,8 +227,10 @@ feature -- Forms ...
 			else
 				f := response.formats.default_format
 			end
+
+			-- Update node with summary and content
 			if b /= Void then
-				l_node.set_content (b, Void, f.name)
+				l_node.set_content (b, s, f.name)
 			end
 			Result := l_node
 		end
@@ -243,6 +287,23 @@ feature -- Output
 				s.append (")")
 			end
 			s.append ("</div>")
+
+
+			-- We don't show the summary on the detail page, since its just a short view of the full content. Otherwise we would write the same thing twice.
+			-- The usage of the summary is to give a short overview in the list of nodes or for the meta tag "description"
+
+--			if attached a_node.summary as l_summary then
+--				s.append ("<p class=%"summary%">")
+--				if attached node_api.cms_api.format (a_node.format) as f then
+--					s.append (f.formatted_output (l_summary))
+--				else
+--					s.append (a_response.formats.default_format.formatted_output (l_summary))
+--				end
+
+--				s.append ("</p>")
+
+--			end
+
 			if attached a_node.content as l_content then
 				s.append ("<p class=%"content%">")
 				if attached node_api.cms_api.format (a_node.format) as f then

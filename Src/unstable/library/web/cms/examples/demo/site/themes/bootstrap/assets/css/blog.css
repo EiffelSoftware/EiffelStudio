@@ -1,0 +1,25 @@
+ul.cms_blog_nodes {
+  padding: 0;
+  margin: 0;
+}
+ul.cms_blog_nodes li.cms_type_blog {
+  list-style: none;
+  display: block;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dotted black;
+}
+ul.cms_blog_nodes li.cms_type_blog .blog_title a {
+  color: black;
+  font-size: 18px;
+  text-decoration: none;
+  display: block;
+  margin: 6px 0;
+}
+ul.cms_blog_nodes li.cms_type_blog .blog_title a:hover {
+  color: #999;
+}
+ul.cms_blog_nodes li.cms_type_blog .blog_list_summary a {
+  margin-top: 20px;
+  display: block;
+}

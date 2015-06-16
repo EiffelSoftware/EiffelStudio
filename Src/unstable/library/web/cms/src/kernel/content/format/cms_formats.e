@@ -27,10 +27,11 @@ feature -- Access
 		once
 				-- Can we provide an external file to read the
 				-- supported formats?
-			create {ARRAYED_LIST [CONTENT_FORMAT]} Result.make (3)
+			create {ARRAYED_LIST [CONTENT_FORMAT]} Result.make (4)
 			Result.force (plain_text)
 			Result.force (full_html)
 			Result.force (filtered_html)
+			Result.force (cms_html)
 		end
 
 	default_format: CONTENT_FORMAT
@@ -39,6 +40,11 @@ feature -- Access
 		end
 
 	plain_text: PLAIN_TEXT_CONTENT_FORMAT
+		once
+			create Result
+		end
+
+	cms_html: CMS_EDITOR_CONTENT_FORMAT
 		once
 			create Result
 		end
@@ -52,7 +58,6 @@ feature -- Access
 		once
 			create Result
 		end
-
 
 note
 	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"

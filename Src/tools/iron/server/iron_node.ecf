@@ -12,9 +12,6 @@
 			<debug name="iron" enabled="true"/>
 			<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 		</option>
-		<setting name="console_application" value="true"/>
-		<setting name="executable_name" value="ironctl"/>
-		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria-safe.ecf" readonly="false"/>
@@ -29,7 +26,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\wsf-safe.ecf" readonly="false">
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
 			</option>

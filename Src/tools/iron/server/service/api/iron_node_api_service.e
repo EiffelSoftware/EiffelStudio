@@ -31,12 +31,12 @@ feature -- Initialization
 			l_layout := l_iron.layout
 
 				--| Documentation
-			router.handle (l_iron.api_resource ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (router), Void)
+			router.handle (l_iron.api_resource ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (router), router.methods_get)
 
 				--| Access
 			create h_access.make (l_iron)
-			map_uri_with_request_methods (l_iron.api_resource ("/"), h_access, router.methods_get) -- Admin::home
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/"), h_access, router.methods_get) -- Admin::home
+			map_uri (l_iron.api_resource ("/"), h_access, router.methods_get) -- Admin::home
+			map_uri_template (l_iron.api_resource ("/{version}/"), h_access, router.methods_get) -- Admin::home
 
 			create h_archive_package.make (l_iron)
 			create h_search.make (l_iron)
@@ -44,28 +44,28 @@ feature -- Initialization
 			create h_package_map.make (l_iron)
 
 				-- REST: access
-			map_uri_template_with_request_methods (l_iron.api_resource ("/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
+			map_uri_template (l_iron.api_resource ("/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
 
 				-- REST: access by version
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/archive"), h_archive_package, router.methods_get) --  Get archive package data i.e download archive...
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}"), h_package, router.methods_get) --  Get package data for `id'
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/archive"), h_archive_package, router.methods_get) --  Get archive package data i.e download archive...
 
 				-- REST: manager
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/"), new_auth_uri_template_handler (h_package), router.methods_post) -- Create new package version
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}"), new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package version
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/archive"), new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_put + router.methods_delete) --  Update archive package data
+			map_uri_template (l_iron.api_resource ("/{version}/package/"), new_auth_uri_template_handler (h_package), router.methods_post) -- Create new package version
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}"), new_auth_uri_template_handler (h_package), router.methods_put_post + router.methods_delete) --  Update package version
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/archive"), new_auth_uri_template_handler (h_archive_package), router.methods_post + router.methods_put + router.methods_delete) --  Update archive package data
 
 				-- REST: access map
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/map"), h_package_map, router.methods_get) --  Get maps
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/map{/map}"), h_package_map, router.methods_get) -- Get specific maps
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/map"), h_package_map, router.methods_get) --  Get maps
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/map{/map}"), h_package_map, router.methods_get) -- Get specific maps
 				-- FIXME: Get map and allow ?method= .. hack for website. Will be removed soon.
 
 				-- REST: manage map
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/map"), new_auth_uri_template_handler (h_package_map), router.methods_post) --  Create new map
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/{id}/map{/map}"), new_auth_uri_template_handler (h_package_map), router.methods_delete + router.methods_post) -- Create/Delete mapping
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/map"), new_auth_uri_template_handler (h_package_map), router.methods_post) --  Create new map
+			map_uri_template (l_iron.api_resource ("/{version}/package/{id}/map{/map}"), new_auth_uri_template_handler (h_package_map), router.methods_delete + router.methods_post) -- Create/Delete mapping
 
 				-- REST: search ...
-			map_uri_template_with_request_methods (l_iron.api_resource ("/{version}/package/"), h_search, router.methods_get) -- Search
+			map_uri_template (l_iron.api_resource ("/{version}/package/"), h_search, router.methods_get) -- Search
 
 --				--| Misc access
 --			router.handle ("/", create {WSF_SELF_DOCUMENTED_URI_AGENT_HANDLER}.make (agent handle_home("/", ?, ?), agent  (ia_m: WSF_ROUTER_MAPPING; ia_request_methods: detachable WSF_REQUEST_METHODS): WSF_ROUTER_MAPPING_DOCUMENTATION
@@ -76,8 +76,9 @@ feature -- Initialization
 
 				--| Package access
 			create h_package_fetcher.make (l_iron)
-			map_uri_template_with_request_methods ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
-			map_uri_template_with_request_methods ("/{version}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template ("/{version}{/vars}", h_package_fetcher, router.methods_get) --  Get package info
+			map_uri_template ("/{version}", h_package_fetcher, router.methods_get) --  Get package info
+
 
 				--| Misc/default
 			debug ("iron")

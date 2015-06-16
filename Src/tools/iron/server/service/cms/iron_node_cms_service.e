@@ -44,10 +44,6 @@ feature -- Initialization
 			if l_iron.is_documentation_available then
 				router.handle (l_iron.cms_page ("/doc/"), create {WSF_FILE_SYSTEM_HANDLER}.make_hidden (l_layout.documentation_path.name), router.methods_get)
 			end
-			map_uri ("/_shutdown_/", new_auth_uri_handler (create {SHUTDOWN_HANDLER}.make (l_iron)), router.methods_get) --  Shutdown server
-
-				--| Documentation
-			router.handle (l_iron.cms_page ("/api/"), create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make_hidden (server.api_service.router), Void)
 
 				--| User
 			create h_user.make (l_iron)

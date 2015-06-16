@@ -24,9 +24,7 @@ feature {NONE} -- Initialization
 			i,n: INTEGER
 			op: detachable IRON_NODE_CONTROLLER_TASK
 		do
-			if argument_count = 0 then
-				create {IRON_NODE_CONTROLLER_SERVER_TASK} op.make
-			else
+			if argument_count > 0 then
 				from
 					i := 1
 					n := argument_count
@@ -37,10 +35,7 @@ feature {NONE} -- Initialization
 						if arg.starts_with ("-") then
 							-- options
 						elseif op = Void then
-							if arg.is_case_insensitive_equal_general ("server") then
-								create {IRON_NODE_CONTROLLER_SERVER_TASK} op.make_with_arguments (sub_argument_array (i + 1, n))
---								i := n -- exit loop
-							elseif arg.is_case_insensitive_equal_general ("system") then
+							if arg.is_case_insensitive_equal_general ("system") then
 								create {IRON_NODE_CONTROLLER_SYSTEM_TASK} op.make_with_arguments (sub_argument_array (i + 1, n))
 --								i := n -- exit loop
 							elseif arg.is_case_insensitive_equal_general ("user") then
@@ -63,8 +58,7 @@ feature {NONE} -- Initialization
 				print ("Command: " + argument (0) + "%N")
 				print ("IRON version: " + version)
 				print ("%N")
-				print ("usage: ironctl {server|system|user}%N")
-				print ("%Tserver: launch the server.%N")
+				print ("usage: ironctl {system|user}%N")
 				print ("%Tsystem: various configuration operations (database, ...) .%N")
 				print ("%Tuser: user management.%N")
 			end
@@ -102,10 +96,6 @@ feature -- Database
 
 	initialize_iron
 		local
-			p: PATH
-			db: IRON_NODE_DATABASE
-			mailer: NOTIFICATION_MAILER
-			ext_mailer: NOTIFICATION_EXTERNAL_MAILER
 			fac: IRON_NODE_FACTORY
 		do
 			create fac
@@ -120,7 +110,7 @@ invariant
 
 note
 
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

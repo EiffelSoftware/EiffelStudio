@@ -8,31 +8,33 @@ deferred class
 	IRON_NODE_SERVICE_I
 
 inherit
-	WSF_ROUTED_SKELETON_SERVICE
+	WSF_ROUTED_SKELETON_EXECUTION
+		rename
+			make as make_execution
 		undefine
 			requires_proxy
 		end
 
 	WSF_NO_PROXY_POLICY
 
-	WSF_URI_HELPER_FOR_ROUTED_SERVICE
+	WSF_ROUTED_URI_HELPER
 
-	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
+	WSF_ROUTED_URI_TEMPLATE_HELPER
 
 feature {NONE} -- Initialization
 
-	make (a_iron: IRON_NODE; a_server: IRON_NODE_SERVER)
+	make (a_iron: IRON_NODE; a_server: IRON_NODE_SERVICE_EXECUTION)
 		do
 			iron := a_iron
 			server := a_server
-			initialize_router
+			make_from_execution (a_server)
 		end
 
 feature -- Iron
 
 	iron: IRON_NODE
 
-	server: IRON_NODE_SERVER
+	server: IRON_NODE_SERVICE_EXECUTION
 
 feature -- Router setup
 
@@ -60,7 +62,7 @@ feature -- Handler
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

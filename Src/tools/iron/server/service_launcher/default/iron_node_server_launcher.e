@@ -5,10 +5,10 @@ note
 	revision: "$Revision$"
 
 class
-	IRON_NODE_SERVER_LAUNCHER
+	IRON_NODE_SERVER_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	IRON_NODE_SERVER_LAUNCHER_I
+	IRON_NODE_SERVER_LAUNCHER_I [G]
 
 feature -- Status report
 

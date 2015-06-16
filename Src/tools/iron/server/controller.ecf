@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="controller" uuid="3E1DB93D-007B-4D3F-B239-D371009539B6" library_target="controller">
+	<target name="controller">
+		<root class="IRON_NODE_CONTROLLER" feature="make"/>
+		<setting name="executable_name" value="ironctl"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+			<debug name="iron" enabled="true"/>
+			<debug name="no_cache" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="iron_node" location="iron_node.ecf" readonly="false"/>
+		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf" readonly="false"/>
+		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html-safe.ecf" readonly="false"/>
+		<cluster name="controller" location=".\controller\" recursive="true"/>
+	</target>
+</system>

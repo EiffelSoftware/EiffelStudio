@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="controller" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="common">
 	<target name="common" abstract="true">
+		<root class="IRON_NODE_SERVICE_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -13,49 +14,72 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="thread"/>
+		<setting name="executable_name" value="irond"/>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="conneg" location="$ISE_LIBRARY\contrib\library\network\protocol\content_negotiation\conneg-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
 		<library name="iron_node" location="iron_node.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="notification_email" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf" readonly="false"/>
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf" readonly="false"/>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
+		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html-safe.ecf" readonly="false"/>
 	</target>
-	<target name="server" extends="common">
-		<root class="IRON_NODE_SERVICE_APPLICATION" feature="make_and_launch"/>
-		<setting name="executable_name" value="irond"/>
-		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\default\nino-safe.ecf"/>
-		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
-		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\connector\libfcgi-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">
-			<option>
-				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
-			</option>
-		</library>
-		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\connector\nino-safe.ecf" readonly="false"/>
-		<library name="wgi_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\ewsgi\connectors\nino\nino-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\wsf-safe.ecf" readonly="false">
-			<option>
-				<assertions precondition="true" postcondition="true" supplier_precondition="true"/>
-			</option>
-		</library>
-		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf\wsf_extension-safe.ecf" readonly="false"/>
-		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\obsolete\v0\wsf_html\wsf_html-safe.ecf" readonly="false"/>
+	<target name="server_libfcgi" extends="common">
+		<setting name="concurrency" value="none"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="service_launcher" location=".\service_launcher\any\" recursive="true"/>
 	</target>
-	<target name="controller" extends="server">
-		<root class="IRON_NODE_CONTROLLER" feature="make"/>
-		<setting name="executable_name" value="ironctl"/>
-		<cluster name="controller" location=".\controller\" recursive="true"/>
+	<target name="server_cgi" extends="common">
+		<setting name="concurrency" value="none"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
+		<cluster name="service" location=".\service\" recursive="true">
+			<file_rule>
+				<exclude>/REMOVED$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="server_standalone" extends="common">
+		<setting name="concurrency" value="scoop"/>
+		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
+		<cluster name="service" location=".\service\" recursive="true">
+			<file_rule>
+				<exclude>/REMOVED$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="server_any" extends="common">
+		<setting name="concurrency" value="thread"/>
+		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
+		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
+		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
+
+		<cluster name="service_launcher" location=".\service_launcher\any\" recursive="true"/>
+		<cluster name="service" location=".\service\" recursive="true">
+			<file_rule>
+				<exclude>/REMOVED$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="server" extends="server_libfcgi">
 	</target>
 </system>

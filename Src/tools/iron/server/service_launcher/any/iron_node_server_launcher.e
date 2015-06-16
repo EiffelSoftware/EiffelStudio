@@ -5,20 +5,20 @@ note
 	revision: "$Revision$"
 
 class
-	IRON_NODE_SERVER_LAUNCHER
+	IRON_NODE_SERVER_LAUNCHER [G -> WSF_EXECUTION create make end]
 
 inherit
-	IRON_NODE_SERVER_LAUNCHER_I
+	IRON_NODE_SERVER_LAUNCHER_I [G]
 
 feature -- Status report
 
 	is_console_output_supported: BOOLEAN
 		do
-			Result := launcher_nature = nature_nino
+			Result := launcher_nature = nature_standalone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

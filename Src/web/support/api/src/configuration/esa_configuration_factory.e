@@ -21,7 +21,7 @@ feature -- Factory
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
 			l_retried: BOOLEAN
-		do
+		once ("PROCESS")
 			if not l_retried then
 				if attached a_dir then
 					create l_layout.make_with_path (create {PATH}.make_from_string (a_dir))

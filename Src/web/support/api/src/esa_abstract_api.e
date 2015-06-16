@@ -7,7 +7,9 @@ deferred class
 	ESA_ABSTRACT_API
 
 inherit
-	WSF_ROUTED_SKELETON_SERVICE
+	WSF_ROUTED_SKELETON_EXECUTION
+		rename
+			make as make_execution
 		undefine
 			requires_proxy
 		redefine
@@ -16,9 +18,9 @@ inherit
 
 	WSF_NO_PROXY_POLICY
 
-	WSF_URI_HELPER_FOR_ROUTED_SERVICE
+	WSF_URI_HELPER_FOR_ROUTED_EXECUTION
 
-	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_SERVICE
+	WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_EXECUTION
 
 	SHARED_CONNEG_HELPER
 
@@ -26,11 +28,11 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_esa_config: ESA_CONFIG; a_server: ESA_SERVER)
+	make (a_esa_config: ESA_CONFIG; a_server: ESA_SERVICE_EXECUTION)
 		do
 			esa_config := a_esa_config
 			server := a_server
-			initialize_router
+			make_from_execution  (a_server)
 		end
 
 feature -- ESA
@@ -38,7 +40,7 @@ feature -- ESA
 	esa_config: ESA_CONFIG
 		-- Configuration
 
-	server: ESA_SERVER
+	server: ESA_SERVICE_EXECUTION
 		-- Server
 
 feature -- Router setup

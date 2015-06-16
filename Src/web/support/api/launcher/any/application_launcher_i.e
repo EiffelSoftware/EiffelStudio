@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	APPLICATION_LAUNCHER_I
+	APPLICATION_LAUNCHER_I [G -> WSF_EXECUTION create make end]
 
 inherit
 
@@ -18,7 +18,7 @@ inherit
 
 feature -- Execution
 
-	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch ( opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
 --			nature: like launcher_nature
 		do
@@ -28,7 +28,7 @@ feature -- Execution
 --			elseif nature = nature_cgi then
 --				launch_cgi (a_service, opts)
 --			elseif nature = nature_libfcgi then
-				launch_libfcgi (a_service, opts)
+				launch_libfcgi (opts)
 --			else
 --				-- bye bye
 --				(create {EXCEPTIONS}).die (-1)
@@ -67,33 +67,33 @@ feature {NONE} -- nino
 
 	nature_nino: STRING = "nino"
 
-	launch_nino (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch_nino (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			launcher: WSF_NINO_SERVICE_LAUNCHER
+			launcher: WSF_NINO_SERVICE_LAUNCHER [G]
 		do
-			create launcher.make_and_launch (a_service, opts)
+			create launcher.make_and_launch (opts)
 		end
 
 feature {NONE} -- cgi
 
 	nature_cgi: STRING = "cgi"
 
-	launch_cgi (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch_cgi ( opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			launcher: WSF_CGI_SERVICE_LAUNCHER
+			launcher: WSF_CGI_SERVICE_LAUNCHER [G]
 		do
-			create launcher.make_and_launch (a_service, opts)
+			create launcher.make_and_launch (opts)
 		end
 
 feature {NONE} -- libfcgi
 
 	nature_libfcgi: STRING = "libfcgi"
 
-	launch_libfcgi (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch_libfcgi (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			launcher: WSF_LIBFCGI_SERVICE_LAUNCHER
+			launcher: WSF_LIBFCGI_SERVICE_LAUNCHER [G]
 		do
-			create launcher.make_and_launch (a_service, opts)
+			create launcher.make_and_launch (opts)
 		end
 
 

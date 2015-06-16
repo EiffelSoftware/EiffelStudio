@@ -18,6 +18,13 @@ feature {NONE} -- Initialization
 			response := res
 		end
 
+	frozen make_from_execution (a_execution: WGI_EXECUTION)
+			-- Create current execution from `a_execution'.
+		do
+			request := a_execution.request
+			response := a_execution.response
+		end
+
 feature {WGI_EXECUTION} -- Access
 
 	request: WGI_REQUEST

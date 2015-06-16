@@ -10,7 +10,8 @@ inherit
 	WGI_EXECUTION
 		rename
 			request as wgi_request,
-			response as wgi_response
+			response as wgi_response,
+			make_from_execution as make_from_wgi_execution
 		redefine
 			make,
 			execute,
@@ -23,12 +24,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (req: WGI_REQUEST; res: WGI_RESPONSE)
+	frozen make (req: WGI_REQUEST; res: WGI_RESPONSE)
 			-- Create Current execution with request `req' and response `res'.
 		do
 			Precursor (req, res)
 			create request.make_from_wgi (wgi_request)
 			create response.make_from_wgi (wgi_response)
+			initialize
+		end
+
+	frozen make_from_execution (a_execution: WSF_EXECUTION)
+			-- Create current execution from `a_execution'.
+		do
+			make_from_wgi_execution (a_execution)
+			request := a_execution.request
+			response := a_execution.response
 			initialize
 		end
 

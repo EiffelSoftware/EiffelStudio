@@ -15,7 +15,7 @@
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
 			<condition>
-				<custom name="httpd_ssl_disabled" excluded_value="true"/>
+				<custom name="httpd_ssl_enabled" value="true"/>
 			</condition>
 		</library>
 		
@@ -34,12 +34,12 @@
 			</file_rule>
 			<cluster name="no_ssl" location="$|no_ssl" recursive="true">
 				<condition>
-					<custom name="httpd_ssl_disabled" value="true"/>
+					<custom name="httpd_ssl_enabled" excluded_value="true"/>
 				</condition>
 			</cluster>
 			<cluster name="ssl" location="$|ssl" recursive="true">
 				<condition>
-					<custom name="httpd_ssl_disabled" excluded_value="true"/>
+					<custom name="httpd_ssl_enabled" value="true"/>
 				</condition>
 			</cluster>
 			<cluster name="concurrency_none" location="$|concurrency\none\" recursive="true">

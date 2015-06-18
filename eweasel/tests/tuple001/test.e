@@ -23,18 +23,18 @@ feature
 			t  := [False, 342, "Bzttt!"]
 			check t.count = 3 end
 
-			check equal (t.item(1), False) end
+			check attached {ANY} t.item(1) as x and then equal (x, False) end
 			check t.item (1).is_equal (False) end
 			check t.is_boolean_item (1) end
 			check t.boolean_item (1) = False end
 
-			check equal (t @ 2, 342) end
+			check attached {ANY} (t @ 2) as x and then equal (x, 342) end
 			check (t @ 2).is_equal(342) end
 			check t.is_integer_item (2) end
 			check t.integer_item (2) = 342 end
 			check (t @ 2) = 342 end
 
-			check equal (t @ 3, "Bzttt!") end
+			check attached {ANY} (t @ 3) as x and then equal (x, "Bzttt!") end
 			check (t @ 3).is_equal("Bzttt!") end
 		end
 

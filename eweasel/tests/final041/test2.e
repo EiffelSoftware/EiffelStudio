@@ -8,7 +8,7 @@ inherit
 
 feature
 
-	new_tuple: TUPLE [INTEGER, STRING] is
+	new_tuple: TUPLE [INTEGER, STRING]
 		require else
 			test (once "Test 2: OK") or else True
 		do

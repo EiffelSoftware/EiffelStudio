@@ -1,4 +1,4 @@
-deferred class A [G]
+deferred class A [G -> ANY]
 
 feature
 

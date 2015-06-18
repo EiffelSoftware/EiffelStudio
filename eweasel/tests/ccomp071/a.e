@@ -4,11 +4,11 @@ expanded class
 feature -- Access
 
 	a: INTEGER
-	s: STRING
+	s: separate STRING
 
 feature -- Settings
 
-	set (i: like a; a_s: like s) is
+	set (i: like a; a_s: like s)
 		do
 			a := i
 			s := a_s

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="examples" uuid="533DEB07-C4A6-4EEE-8EC1-4F09DC203A26">
+	<target name="oauth_examples">
+		<option warning="true" void_safety="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
+		<library name="apis" location="..\apis\apis.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL-safe.ecf"/>
+		<library name="cypress_consumer" location="..\..\consumer-safe.ecf" readonly="false"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
+		<cluster name="examples" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="foursquare_example" extends="oauth_examples">
+		<root class="FOURSQUARE_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="box_example" extends="oauth_examples">
+		<root class="BOX_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="campaing_example" extends="oauth_examples">
+		<root class="CAMPAING_MONITOR_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="geoloqi_example" extends="oauth_examples">
+		<root class="GEOLOQUI_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="google_example" extends="oauth_examples">
+		<root class="GOOGLE_OAUTH_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="asana_example" extends="oauth_examples">
+		<root class="ASANA_OAUTH_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="strava_example" extends="oauth_examples">
+		<root class="STRAVA_OAUTH_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="paypal_example" extends="oauth_examples">
+		<root class="PAYPAL_OAUTH_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="github_example" extends="oauth_examples">
+		<root class="GITHUB_OAUTH_20_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="twitter_example" extends="oauth_examples">
+		<root class="TWITTER_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="flickr_example" extends="oauth_examples">
+		<root class="FLICKR_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="yahoo_example" extends="oauth_examples">
+		<root class="YAHOO_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="dropbox_example" extends="oauth_examples">
+		<root class="DROPBOX_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="bitbucket_example" extends="oauth_examples">
+		<root class="BITBUCKET_10_API_EXAMPLE" feature="make"/>
+		<option debug="true">
+			<debug name="__unnamed_debug__" enabled="true"/>
+			<debug name="curl" enabled="true"/>
+			<debug name="proxy8888" enabled="true"/>
+		</option>
+	</target>
+	<target name="vimeo_example" extends="oauth_examples">
+		<root class="VIMEO_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="tumblr_example" extends="oauth_examples">
+		<root class="TUMBLR_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="linkedin_example" extends="oauth_examples">
+		<root class="LINKEDIN_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="yelp_example" extends="oauth_examples">
+		<root class="YELP_10_API_EXAMPLE" feature="make"/>
+	</target>
+	<target name="facebook_example" extends="oauth_examples">
+		<root class="FACEBOOK_EXAMPLE" feature="make"/>
+	</target>
+</system>

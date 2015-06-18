@@ -5,7 +5,7 @@ feature
 
 	apply (a_agent: PROCEDURE [ANY, TUPLE[G]]; a_arguments : H)
 		local
-			l_array : ARRAY [detachable ANY]
+			l_array : ARRAY [detachable separate ANY]
 		do
 			create l_array.make_filled (Void,1,a_arguments.count)
 			across a_arguments as ic_arguments loop

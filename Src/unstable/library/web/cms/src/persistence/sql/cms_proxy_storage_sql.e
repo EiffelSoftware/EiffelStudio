@@ -109,4 +109,12 @@ feature -- Access
 			Result:= sql_storage.sql_item (a_index)
 		end
 
+feature -- Conversion
+
+	sql_statement (a_statement: STRING): STRING
+			-- <Precursor>
+		do
+			Result := sql_storage.sql_statement (a_statement)
+		end
+
 end

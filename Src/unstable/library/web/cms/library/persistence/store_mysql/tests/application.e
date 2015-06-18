@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 			(create {CLEAN_DB}).clean_db(connection)
 
-			create {CMS_STORAGE_MYSQL} storage.make (connection)
+			create {CMS_STORAGE_STORE_MYSQL} storage.make (connection)
 			l_node := custom_node ("Content", "Summary", "Title")
 			storage.new_user (default_user)
 			storage.new_user (custom_user ("u2", "p2", "e2"))

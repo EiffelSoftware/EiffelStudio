@@ -63,10 +63,10 @@ feature {CMS_API} -- Module management
 			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
 				if not l_sql_storage.sql_table_exists ("tb_demo") then
 					sql := "[
-CREATE TABLE "tb_demo"(
-  "demo_id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("demo_id">=0),
-  "name" VARCHAR(100) NOT NULL,
-  "value" TEXT
+CREATE TABLE tb_demo(
+  `demo_id` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL CHECK("demo_id">=0),
+  `name` VARCHAR(100) NOT NULL,
+  `value` TEXT
 );
 					]"
 					l_sql_storage.sql_execute_script (sql)

@@ -150,22 +150,42 @@ feature -- Helper
 	sql_execute_script (a_sql_script: STRING)
 			-- Execute SQL script.
 			-- i.e: multiple SQL statements.
+		local
+			i: INTEGER
+			err: BOOLEAN
 		do
 			reset_error
---			sql_begin_transaction
-			sql_change (a_sql_script, Void)
---			sql_commit_transaction
+			sql_begin_transaction
+-- Issue on MySQL with multiple statements
+--			sql_change (a_sql_script, Void)
+			from
+				i := 1
+			until
+				i > a_sql_script.count or err
+			loop
+				if attached next_sql_statement (a_sql_script, i) as s then
+					if not s.is_whitespace then
+						sql_change (sql_statement (s), Void)
+						err := err or has_error
+						reset_error
+					end
+					i := i + s.count
+				else
+					i := a_sql_script.count + 1
+				end
+			end
+			if err then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
 		end
 
 	sql_table_exists (a_table_name: READABLE_STRING_8): BOOLEAN
 			-- Does table `a_table_name' exists?
-		local
-			l_params: STRING_TABLE [detachable ANY]
 		do
 			reset_error
-			create l_params.make (1)
-			l_params.force (a_table_name, "tbname")
-			sql_query ("SELECT count(*) FROM :tbname ;", l_params)
+			sql_query ("SELECT count(*) FROM " + a_table_name + " ;", Void)
 			Result := not has_error
 				-- FIXME: find better solution
 			reset_error
@@ -173,13 +193,9 @@ feature -- Helper
 
 	sql_table_items_count (a_table_name: READABLE_STRING_8): INTEGER_64
 			-- Number of items in table `a_table_name'?
-		local
-			l_params: STRING_TABLE [detachable ANY]
 		do
 			reset_error
-			create l_params.make (1)
-			l_params.force (a_table_name, "tbname")
-			sql_query ("SELECT count(*) FROM :tbname ;", l_params)
+			sql_query ("SELECT count(*) FROM " + a_table_name + " ;", Void)
 			if not has_error then
 				Result := sql_read_integer_64 (1)
 			end
@@ -322,6 +338,59 @@ feature -- Access
 				Result := l_boolean_ref.item
 			else
 				check is_boolean: False end
+			end
+		end
+
+feature -- Conversion
+
+	sql_statement (a_statement: STRING): STRING
+			-- Statement normalized for underlying SQL database.
+		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	next_sql_statement (a_script: STRING; a_start_index: INTEGER): detachable STRING
+		local
+			i,j,n: INTEGER
+			c: CHARACTER
+			l_end: INTEGER
+		do
+			from
+				i := a_start_index
+				n := a_script.count
+			until
+				i > n or a_script[i] = ';'
+			loop
+				c := a_script[i]
+				inspect c
+				when '`', '"', '%'' then
+					from
+						j := i
+						l_end := 0
+					until
+						l_end > 0 or j > n
+					loop
+						j := a_script.index_of (c, i + 1)
+						if j > i then
+							if a_script [j - 1] /= '\' then
+								l_end := j
+							end
+						end
+					end
+					if l_end > 0 then
+						i := l_end
+					else
+						i := j
+					end
+				else
+
+				end
+				i := i + 1
+			end
+			i := a_script.index_of (';', a_start_index)
+			if i > a_start_index then
+				Result := a_script.substring (a_start_index, i)
 			end
 		end
 

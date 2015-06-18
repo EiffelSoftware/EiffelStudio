@@ -5,7 +5,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			b: BOOLEAN
 			a1, a2: A
@@ -18,7 +18,9 @@ feature
 			a2 := ({A}).attempt (a1)
 			io.put_integer (a2.a)
 			io.put_new_line
-			io.put_string (a2.s)
+			check attached {STRING} a2.s as s then
+				io.put_string (s)
+			end
 			io.put_new_line
 		end
 

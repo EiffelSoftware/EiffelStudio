@@ -12,18 +12,22 @@ feature
 		local
 			l_array: ARRAY [INTEGER]
 		do
+			global_counter := 0
 			create l_array.make_filled(0, 1, 10)
 			user_initialization
 		end
 
 	user_initialization is
 		do
-			if update_windows_in_progress
-			then
-				request_update_windows := True
-			else
-				update_windows_in_progress := True
-				xyzzy
+			if global_counter < 100 then
+				global_counter := global_counter + 1
+				if update_windows_in_progress
+				then
+					request_update_windows := True
+				else
+					update_windows_in_progress := True
+					xyzzy
+				end
 			end
 		rescue
 			update_windows_in_progress := False
@@ -58,5 +62,7 @@ feature
 	request_update_windows: BOOLEAN
 
 	update_windows_in_progress: BOOLEAN
+
+	global_counter: INTEGER
 
 end

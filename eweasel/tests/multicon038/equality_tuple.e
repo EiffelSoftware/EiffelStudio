@@ -18,7 +18,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Does table contain the same information as `other'?
 		local
-			l_other: ANY
+			l_other: separate ANY
 			i: INTEGER
 		do
 			l_other := other.g [i]

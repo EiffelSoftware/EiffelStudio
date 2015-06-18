@@ -31,7 +31,9 @@ feature
 					io.put_string (", ")
 				end
 				i := i + 1
-				print (t [i])
+				if attached {ANY} t [i] as x then
+					print (x)
+				end
 			end
 			io.put_new_line
 		end

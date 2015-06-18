@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {CMS_STORAGE_MYSQL}."
+	description: "Summary description for {CMS_STORAGE_STORE_MYSQL}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_STORAGE_MYSQL
+	CMS_STORAGE_STORE_MYSQL
 
 inherit
 	CMS_STORAGE_STORE_SQL
@@ -24,6 +24,14 @@ feature -- Status report
 			-- Is storage initialized?
 		do
 			Result := has_user
+		end
+
+feature -- Conversion
+
+	sql_statement (a_statement: STRING): STRING
+			-- <Precursor>
+		do
+			Result := a_statement
 		end
 
 end

@@ -12,27 +12,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_common
-			-- Create a database handler with common settings.
-		deferred
-		ensure
-			db_application_not_void: db_application /= Void
-			db_control_not_void: db_control /= Void
-		end
-
-	make_basic ( a_database_name: STRING)
-			-- Create a database handler with common settings and
- 			-- set database_name with `a_database_name'.
-		require
-			database_name_not_void: a_database_name /= Void
-			database_name_not_empty: not a_database_name.is_empty
-		deferred
-		ensure
-			db_application_not_void: db_application /= Void
-			db_control_not_void: db_control /= Void
-		end
-
-	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
+	login (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
 			-- Create a database handler with user `a_username', password `a_password',
 			-- host `a_hostname', database_name `a_database_name', and keep_connection `connection'.
@@ -53,6 +33,26 @@ feature {NONE} -- Initialization
 	login_with_connection_string (a_connection_string: STRING)
 			-- Login with `a_connection_string'
 			-- and immediately connect to database.
+		deferred
+		ensure
+			db_application_not_void: db_application /= Void
+			db_control_not_void: db_control /= Void
+		end
+
+	login_with_default
+			-- Create a database handler with common settings.
+		deferred
+		ensure
+			db_application_not_void: db_application /= Void
+			db_control_not_void: db_control /= Void
+		end
+
+	login_with_database_name ( a_database_name: STRING)
+			-- Create a database handler with common settings and
+ 			-- set database_name with `a_database_name'.
+		require
+			database_name_not_void: a_database_name /= Void
+			database_name_not_empty: not a_database_name.is_empty
 		deferred
 		ensure
 			db_application_not_void: db_application /= Void
@@ -168,7 +168,7 @@ feature -- Error Handling
 
 	database_error_handler: DATABASE_ERROR_HANDLER
 			-- Error handler.
-	
+
 feature -- Status Report
 
 	has_error: BOOLEAN
@@ -179,11 +179,11 @@ feature -- Status Report
 
 feature -- Helper
 
-	exception_as_error (a_e: like {EXCEPTION_MANAGER}.last_exception)
-			-- Record exception as an error.
+	exception_as_error (a_exception: like {EXCEPTION_MANAGER}.last_exception)
+			-- Record exception `a_exception' as an error.
 		do
-			if attached a_e as l_e and then attached l_e.trace as l_trace then
-				database_error_handler.add_error_details (l_e.code, once "Exception", l_trace.as_string_32)
+			if a_exception /= Void and then attached a_exception.trace as l_trace then
+				database_error_handler.add_error_details (a_exception.code, once "Exception", l_trace)
 			end
 		end
 

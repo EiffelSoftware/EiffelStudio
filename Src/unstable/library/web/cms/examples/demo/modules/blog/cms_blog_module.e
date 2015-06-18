@@ -68,10 +68,10 @@ feature {CMS_API} -- Module management
 			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
 				if not l_sql_storage.sql_table_exists ("blog_post_nodes") then
 					sql := "[
-CREATE TABLE "blog_post_nodes"(
-  "nid" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL CHECK("nid">=0),
-  "revision" INTEGER,
-  "tags" VARCHAR(255)
+CREATE TABLE blog_post_nodes(
+  `nid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL CHECK("nid">=0),
+  `revision` INTEGER,
+  `tags` VARCHAR(255)
 );
 					]"
 					l_sql_storage.sql_execute_script (sql)

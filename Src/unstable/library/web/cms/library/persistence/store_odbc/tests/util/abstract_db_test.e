@@ -12,8 +12,8 @@ feature -- Database connection
 	connection: DATABASE_CONNECTION_ODBC
 			-- odbc database connection
 		once
-			create Result.login_with_connection_string ("Driver=SQLite3 ODBC Driver;Database=cms_lite.db;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;")
---			create Result.make_basic ("cms_lite.db")
+			create Result.login_with_connection_string ("Driver=SQLite3 ODBC Driver;Database=test_roc.db;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;")
+--			create Result.make_basic ("test_roc.db")
 		end
 
 feature {NONE} -- Implementation
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	storage: CMS_STORAGE
 			-- node provider.
 		once
-			create {CMS_STORAGE_SQLITE} Result.make (connection)
+			create {CMS_STORAGE_STORE_ODBC} Result.make_with_driver (connection, "sqlite3")
 		end
 
 feature {NONE} -- Fixture Factory: Users

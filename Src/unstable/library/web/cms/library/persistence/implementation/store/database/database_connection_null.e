@@ -15,11 +15,11 @@ inherit
 		end
 
 create
-	make, make_common, make_basic
+	login, login_with_default, login_with_database_name
 
 feature -- Initialization
 
-	make_common
+	login_with_default
 			-- Create a database handler for ODBC with common settings.
 		do
 			create database_error_handler.make
@@ -30,18 +30,18 @@ feature -- Initialization
 			create db_control.make
 		end
 
-	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
+	login (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
 
 			-- Create a database handler for ODBC.
 		do
-			make_common
+			login_with_default
 		end
 
-	make_basic (a_database_name: STRING)
+	login_with_database_name (a_database_name: STRING)
 
 			-- Create a database handler for ODBC.
 		do
-			make_common
+			login_with_default
 		end
 
 
@@ -49,7 +49,7 @@ feature -- Initialization
 			-- Login with `a_connection_string'
 			-- and immediately connect to database.
 		do
-			make_common
+			login_with_default
 		end
 
 

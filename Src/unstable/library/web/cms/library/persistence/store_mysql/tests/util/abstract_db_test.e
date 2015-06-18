@@ -15,7 +15,7 @@ feature -- Database connection
 			create Result.login_with_schema ("cms_dev", "root", "")
 		end
 
-	storage: CMS_STORAGE_MYSQL
+	storage: CMS_STORAGE_STORE_MYSQL
 		once
 			create Result.make (connection)
 		end

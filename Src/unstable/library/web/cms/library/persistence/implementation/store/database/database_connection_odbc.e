@@ -7,117 +7,97 @@ class
 	DATABASE_CONNECTION_ODBC
 
 inherit
-
 	DATABASE_CONNECTION
 		redefine
 			db_application
 		end
 
-	SHARED_LOGGER
-
 create
-	make, make_common, make_basic, login_with_connection_string
+	login, login_with_default, login_with_database_name, login_with_connection_string
 
 feature -- Initialization
 
-	make_common
-			-- Create a database handler for ODBC with common settings.
-		local
-			l_retried: BOOLEAN
-		do
-			create db_application.login (username, password)
-			create database_error_handler.make
-			if not l_retried then
-				db_application.set_hostname (hostname)
-				db_application.set_data_source (database_name)
-				db_application.set_base
-				create db_control.make
-				keep_connection := is_keep_connection
-				if keep_connection then
-					connect
-				end
-			else
-				create db_control.make
-			end
-		rescue
-			create db_control.make
---			set_last_error_from_exception ("Connection execution")
---			write_critical_log (generator + ".make_common:" + last_error_message)
-			if is_connected then
-				disconnect
-			end
-			l_retried := True
-			retry
-		end
-
-	make_basic (a_database_name: STRING)
-			-- Create a database handler and
-			-- set database_name to `a_database_name'.
-		local
-			l_retried: BOOLEAN
-		do
-			create db_application.login (username, password)
-			create database_error_handler.make
-			if not l_retried then
-				db_application.set_hostname (hostname)
-				db_application.set_data_source (a_database_name)
-				db_application.set_base
-				create db_control.make
-				keep_connection := is_keep_connection
-				if keep_connection then
-					connect
-				end
-			else
-				create db_control.make
-			end
-		rescue
-			create db_control.make
---			set_last_error_from_exception ("Connection execution")
---			write_critical_log (generator + ".make_common:" + last_error_message)
-			if is_connected then
-				disconnect
-			end
-			l_retried := True
-			retry
-		end
-
-	make (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; connection: BOOLEAN)
+	login (a_username: STRING; a_password: STRING; a_hostname: STRING; a_database_name: STRING; a_keep_connection: BOOLEAN)
 
 			-- Create a database handler for ODBC and set `username' to `a_username',
 			-- `password' to `a_password'
 			-- `database_name' to `a_database_name'
-			-- `connection' to `a_connection'
+			-- `keep_connection' to `a_keep_connection'
+		local
+			retried: BOOLEAN
+			l_database_error_handler: detachable like database_error_handler
 		do
-			create database_error_handler.make
+			create l_database_error_handler.make
+			database_error_handler := l_database_error_handler
 			create db_application.login (a_username, a_password)
-			db_application.set_hostname (a_hostname)
-			db_application.set_data_source (a_database_name)
-			db_application.set_base
-			create db_control.make
-			keep_connection := connection
-			if keep_connection then
-				connect
+			if not retried then
+				db_application.set_hostname (a_hostname)
+				db_application.set_data_source (a_database_name)
+				db_application.set_base
+				create db_control.make
+				keep_connection := a_keep_connection
+				if keep_connection then
+					connect
+				end
+			else
+				create db_control.make
+				if is_connected then
+					disconnect
+				end
 			end
+		rescue
+			if l_database_error_handler = Void then
+				create l_database_error_handler.make
+			end
+			database_error_handler := l_database_error_handler
+			exception_as_error ((create {EXCEPTION_MANAGER}).last_exception)
+			retried := True
+			retry
+		end
+
+	login_with_default
+			-- Create a database handler for ODBC with common settings.
+		do
+			login_with_database_name (default_database_name)
+		end
+
+	login_with_database_name (a_database_name: STRING)
+			-- Create a database handler and
+			-- set database_name to `a_database_name'.
+		do
+			login (default_username, default_password, default_hostname, default_database_name, is_keep_connection)
 		end
 
 	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'and immediately connect to database.
+		local
+			retried: BOOLEAN
+			l_database_error_handler: detachable like database_error_handler
 		do
-			write_debug_log (generator +".login_with_connection_string")
+			create l_database_error_handler.make
+			database_error_handler := l_database_error_handler
 			create db_application.login_with_connection_string (a_string)
-			create database_error_handler.make
-			db_application.set_base
-			create db_control.make
-			write_debug_log (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
-			keep_connection := is_keep_connection
-			if keep_connection then
-				connect
-				if not db_control.is_ok then
-					write_critical_log (generator +".login_with_connection_string:"+ db_control.error_code.out )
-					write_critical_log (generator +".login_with_connection_string:"+ db_control.error_message_32 )
+			if not retried then
+				db_application.set_base
+				create db_control.make
+				keep_connection := is_keep_connection
+				if keep_connection then
+					connect
 				end
-				write_debug_log (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
+			else
+				create db_control.make
+				if is_connected then
+					disconnect
+				end
 			end
+		rescue
+			if l_database_error_handler = Void then
+				create l_database_error_handler.make
+			end
+			database_error_handler := l_database_error_handler
+			exception_as_error ((create {EXCEPTION_MANAGER}).last_exception)
+			retried := True
+			retry
 		end
 
 feature -- Databse Connection

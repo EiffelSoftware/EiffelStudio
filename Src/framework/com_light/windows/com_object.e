@@ -149,7 +149,7 @@ feature -- Status report
 			-- Is `a_args' valid as arguments of OLE method call?
 		local
 			i: INTEGER
-			l_item: detachable ANY
+			l_item: detachable separate ANY
 		do
 			if attached a_args as l_args then
 				from

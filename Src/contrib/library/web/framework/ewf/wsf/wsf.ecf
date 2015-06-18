@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="wsf" uuid="A37CE5AA-4D2A-4441-BC6A-0A1D7EC49647" library_target="wsf">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wsf" uuid="A37CE5AA-4D2A-4441-BC6A-0A1D7EC49647" library_target="wsf">
 	<target name="wsf">
 		<root all_classes="true"/>
 		<file_rule>
@@ -9,23 +9,23 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="provisional">
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
+		<mapping old_name="WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_TEMPLATE_HELPER"/>
+		<mapping old_name="WSF_URI_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_HELPER"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="error" location="../../../../utility/general/error/error.ecf"/>
-		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
 		<library name="conneg" location="../../../../network/protocol/content_negotiation/conneg.ecf"/>
-		<library name="uri_template"
-			 location="../../../../text/parser/uri_template/uri_template.ecf"/>
-		<library name="encoder"
-			 location="../text/encoder/encoder.ecf"/>
-		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf" readonly="true"/>
-		<cluster name="src" location=".\src" recursive="true"/>
-		<cluster name="router" location=".\router" recursive="true">
+		<library name="encoder" location="../text/encoder/encoder.ecf"/>
+		<library name="error" location="../../../../utility/general/error/error.ecf"/>
+		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
+		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<library name="uri_template" location="../../../../text/parser/uri_template/uri_template.ecf"/>
+		<cluster name="router" location=".\router\" recursive="true">
 			<file_rule>
 				<exclude>/policy_driven$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

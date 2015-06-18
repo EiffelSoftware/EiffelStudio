@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			request := a_execution.request
 			response := a_execution.response
-		end
+		end		
 
 feature {WGI_EXECUTION} -- Access
 

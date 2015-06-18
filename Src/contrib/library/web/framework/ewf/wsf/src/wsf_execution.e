@@ -11,7 +11,7 @@ inherit
 		rename
 			request as wgi_request,
 			response as wgi_response,
-			make_from_execution as make_from_wgi_execution
+			make_from_execution as make_from_wgi_execution			
 		redefine
 			make,
 			execute,

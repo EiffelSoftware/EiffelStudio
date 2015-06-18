@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wsf" uuid="FB2987AA-926E-4F5D-A04A-407E0415A3FD" library_target="wsf">
-	<target name="wsf">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wsf_v0" uuid="FB2987AA-926E-4F5D-A04A-407E0415A3FD" library_target="wsf_v0">
+	<target name="wsf_v0">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="cp_tests" uuid="8102010C-20BD-41EE-BF7A-2DEBD3408AF4">
+	<target name="cp_tests">
+		<root class="EXAMPLES" feature="make"/>
+		<option warning="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="examples" location="..\examples\all_examples.ecf" readonly="false" />
+		<library name="scoop_patterns" location="..\library\scoop_patterns.ecf" readonly="false"/>
+		<cluster name="cp_tests" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

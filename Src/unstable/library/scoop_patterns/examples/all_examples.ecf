@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="all_examples" uuid="3CA0CDB0-5A89-42C8-891B-A9AC085BC262" library_target="all_examples">
+	<target name="all_examples">
+		<root class="EXAMPLES" feature="make"/>
+		<option warning="true" void_safety="all" syntax="standard">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="scoop_patterns" location="..\library\scoop_patterns.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
+		<cluster name="all_examples" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

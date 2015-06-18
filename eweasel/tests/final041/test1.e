@@ -2,14 +2,14 @@ class TEST1 [G]
 
 feature
 
-	new_tuple: TUPLE [INTEGER] is
+	new_tuple: TUPLE [INTEGER]
 		require
 			test (once "Test 1: OK")
 		do
 			print (once "Test: Failed")
 		end
 
-	test (s: STRING): BOOLEAN is
+	test (s: STRING): BOOLEAN
 		require
 			s_attached: s /= Void
 		do

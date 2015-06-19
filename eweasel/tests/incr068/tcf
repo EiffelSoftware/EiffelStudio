@@ -19,7 +19,7 @@ compile_melted
 compile_result 	 ok
 
 define		 BODY ""
-define		 REST "x: TEST1 [expanded TEST1 [TEST]];"
+define		 REST "x: TEST1 [expanded TEST1 [separate TEST]];"
 copy_sub 	 test.e  $CLUSTER test.e
 define		 CLASS "class TEST1 [G] feature x: G to_reference: TEST1 [G] is do create Result end end"
 copy_sub 	 test1.e  $CLUSTER test1.e

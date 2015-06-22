@@ -23,25 +23,23 @@ feature -- Access
 	template: STRING
 			-- Template used to compute `authorization_url'
 
-	authorization_url (config: OAUTH_CONFIG): detachable READABLE_STRING_GENERAL
+	authorization_url (config: OAUTH_CONFIG): detachable STRING_8
 		local
 			tpl: like template
-			l_result: STRING_8
 		do
 			tpl := template
-			create l_result.make_from_string (template)
-			l_result.replace_substring_all ("$CLIENT_ID", config.api_key.as_string_8)
+			create Result.make_from_string (template)
+			Result.replace_substring_all ("$CLIENT_ID", config.api_key)
 			if attached config.callback as l_callback then
-				l_result.replace_substring_all ("$REDIRECT_URI", (create {OAUTH_ENCODER}).encoded_string (l_callback.as_string_32))
+				Result.replace_substring_all ("$REDIRECT_URI", oauth_encoder.encoded_string (l_callback))
 			end
 			if attached config.scope as l_scope then
-				l_result.replace_substring_all ("$SCOPE", (create {OAUTH_ENCODER}).encoded_string (l_scope.as_string_32))
+				Result.replace_substring_all ("$SCOPE", oauth_encoder.encoded_string (l_scope))
 			end
-			Result := l_result
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

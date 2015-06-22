@@ -12,19 +12,26 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_value: like value)
+	make (a_value: READABLE_STRING_GENERAL)
+		local
+			utf: UTF_CONVERTER
 		do
-			value := a_value
+			if a_value.is_valid_as_string_8 then
+				value := a_value.to_string_8
+			else
+				-- TODO: check if a_value could really be unicode.
+				value := utf.utf_32_string_to_utf_8_string_8 (a_value)
+			end
 		ensure
 			value_set: value = a_value
 		end
 
 feature -- Access
 
-	value: READABLE_STRING_GENERAL
+	value: READABLE_STRING_8
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

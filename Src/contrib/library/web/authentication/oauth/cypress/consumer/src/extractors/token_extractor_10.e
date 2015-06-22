@@ -6,41 +6,42 @@ note
 
 class
 	TOKEN_EXTRACTOR_10
-inherit
 
+inherit
 	ACCESS_TOKEN_EXTRACTOR
+
+	OAUTH_SHARED_ENCODER
 
 feature -- Access
 
-	extract (response: READABLE_STRING_GENERAL): detachable OAUTH_TOKEN
+	extract (response: READABLE_STRING_8): detachable OAUTH_TOKEN
 			-- Extracts the access token from the contents of an Http Response
 		local
 			l_token_index: INTEGER
 			l_param_index: INTEGER
 			l_extract: STRING_8
-			l_decoded: STRING_32
 		do
-			--Extract token definition
+				-- Extract token definition
 			if response.has_substring (Token_definition) then
 				l_token_index := response.substring_index (Token_definition, 1)
-				l_extract := response.substring (token_definition.count + l_token_index, response.count).as_string_8
+				l_extract := response.substring (token_definition.count + l_token_index, response.count)
 				l_param_index := l_extract.index_of (parameter_separator, 1)
 				if l_param_index /= 0 then
 					l_extract := l_extract.substring (1 , l_param_index - 1)
 				end
-				l_decoded := (create {OAUTH_ENCODER}).decoded_string (l_extract)
-				create Result.make_token_secret_response (l_decoded, empty_secret, response.as_string_8)
+					-- FIXME: can token be unicode??
+				create Result.make_token_secret_response (l_extract, empty_secret, response)
 
-				-- Extract Secret token definition
+					-- Extract Secret token definition
 				if response.has_substring (Secret_token_definition) then
 					l_token_index := response.substring_index (Secret_token_definition, 1)
-					l_extract := response.substring (Secret_token_definition.count + l_token_index, response.count).as_string_8
+					l_extract := response.substring (Secret_token_definition.count + l_token_index, response.count)
 					l_param_index := l_extract.index_of (parameter_separator, 1)
 					if l_param_index /= 0  then
 						l_extract := l_extract.substring (1 , l_param_index - 1)
 					end
-					l_decoded := (create {OAUTH_ENCODER}).decoded_string (l_extract)
-					Result.set_secret (l_decoded)
+						-- FIXME: can token be unicode??
+					Result.set_secret (l_extract)
 				else
 					Result := Void
 				end
@@ -60,7 +61,7 @@ feature {NONE} -- Implementation
 	Parameter_separator: CHARACTER = '&'
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

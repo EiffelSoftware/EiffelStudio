@@ -18,22 +18,25 @@ feature {NONE} -- Events
 
 	on_prepare
 		do
-			create parameters
+			create parameters.make (5)
 		end
 
 feature -- Tests
 
 	not_append_to_query_string_with_empty_map()
  		local
- 			l_uri : STRING
+ 			l_uri : STRING_8
+ 			l_uri_expected: STRING_8
  		do
  			l_uri := "http://www.eiffelroom.com"
- 			assert("Expected same string",l_uri.same_string (parameters.append_to (l_uri.as_string_32).as_string_32))
+ 			l_uri_expected := "http://www.eiffelroom.com"
+ 			parameters.append_to_url (l_uri)
+ 			assert("Expected same string",l_uri.same_string (l_uri_expected))
  		end
 
 	append_parameters_to_simple_url
 		local
-	 			l_uri,l_uri_expected : STRING_32
+	 			l_uri,l_uri_expected : STRING_8
 	 		do
 	 		  l_uri := "http://www.example.com"
    			  l_uri_expected := "http://www.example.com?param1=value1&param2=value%%20with%%20spaces"
@@ -42,14 +45,14 @@ feature -- Tests
    			  parameters.add_parameter ("param1", "value1")
    			  parameters.add_parameter ("param2", "value with spaces")
 
-			  l_uri := parameters.append_to (l_uri).as_string_32
+			  parameters.append_to_url (l_uri)
   			  assert("Expected same uri", l_uri.same_string (l_uri_expected))
 	 		end
 
 
 	 append_parameters_to_url_with_query_strings
 		local
-	 			l_uri,l_uri_expected : STRING_32
+	 			l_uri,l_uri_expected : STRING_8
 	 		do
 	 		  l_uri := "http://www.example.com?already=present"
    			  l_uri_expected := "http://www.example.com?already=present&param1=value1&param2=value%%20with%%20spaces"
@@ -58,7 +61,7 @@ feature -- Tests
    			  parameters.add_parameter ("param1", "value1")
    			  parameters.add_parameter ("param2", "value with spaces")
 
-			  l_uri := parameters.append_to (l_uri).as_string_32
+			  parameters.append_to_url (l_uri)
   			  assert("Expected same uri", l_uri.same_string (l_uri_expected))
 	 		end
 
@@ -86,7 +89,7 @@ feature {NONE} -- Implementation
 	parameters: OAUTH_PARAMETER_LIST
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

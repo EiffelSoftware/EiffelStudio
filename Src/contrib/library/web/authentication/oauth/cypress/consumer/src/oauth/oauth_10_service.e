@@ -78,7 +78,7 @@ feature -- Access
 			append_signature (a_req)
 		end
 
-	authorization_url (a_request_token: detachable OAUTH_TOKEN): detachable READABLE_STRING_GENERAL
+	authorization_url (a_request_token: detachable OAUTH_TOKEN): detachable STRING_8
 			-- URL where you should redirect your users to authenticate
 			-- your application.
 			-- a request token needed to authorize
@@ -110,9 +110,9 @@ feature {NONE} -- Implementation
 		do
 			a_request.add_parameter ({OAUTH_CONSTANTS}.timestamp, api.timestamp_service.timestamp_in_seconds)
 			a_request.add_parameter ({OAUTH_CONSTANTS}.nonce, api.timestamp_service.nonce)
-			a_request.add_parameter ({OAUTH_CONSTANTS}.consumer_key,config.api_key)
-			a_request.add_parameter ({OAUTH_CONSTANTS}.sign_method,api.signature_service.signature_method)
-			a_request.add_parameter ({OAUTH_CONSTANTS}.version,version)
+			a_request.add_parameter ({OAUTH_CONSTANTS}.consumer_key, config.api_key)
+			a_request.add_parameter ({OAUTH_CONSTANTS}.sign_method, api.signature_service.signature_method)
+			a_request.add_parameter ({OAUTH_CONSTANTS}.version, version)
 
 			if config.has_scope and then attached config.scope as l_scope then
 				a_request.add_parameter ({OAUTH_CONSTANTS}.scope, l_scope)
@@ -126,16 +126,13 @@ feature {NONE} -- Implementation
 		do
 			if attached config.signature_type as l_signature then
 				if l_signature.is_header then
-					l_oauth_header := api.header_extractor.extract (a_request).as_string_8
+					l_oauth_header := api.header_extractor.extract (a_request)
 					a_request.add_header ({OAUTH_CONSTANTS}.header, l_oauth_header)
 				elseif l_signature.is_query_string then
-					from
-						a_request.outh_parameters.start
-					until
-						a_request.outh_parameters.after
+					across
+						a_request.oauth_parameters as ic
 					loop
-						a_request.add_query_string_parameter (a_request.outh_parameters.key_for_iteration, a_request.outh_parameters.item_for_iteration)
-						a_request.outh_parameters.forth
+						a_request.add_query_string_parameter (ic.key, ic.item)
 					end
 				end
 			end
@@ -148,7 +145,7 @@ feature {NONE} -- Implementation
 			--|Not implemented
 		end
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

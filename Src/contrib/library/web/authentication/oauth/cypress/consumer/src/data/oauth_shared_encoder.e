@@ -1,28 +1,28 @@
 note
-	description: "Encoding facilities for OAUTH purpose."
+	description: "Shared encoder for OAUTH purpose."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	OAUTH_ENCODER
+	OAUTH_SHARED_ENCODER
 
 feature -- Encode
 
-	encoded_string (s: READABLE_STRING_GENERAL): STRING_8
+	oauth_encoded_string (s: READABLE_STRING_GENERAL): STRING_8
 		do
-			Result := url_encoder.general_encoded_string (s)
+			Result := oauth_encoder.encoded_string (s)
 		end
 
 feature -- Decode
 
-	decoded_string (s: READABLE_STRING_GENERAL): STRING_32
+	oauth_decoded_string (s: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := url_encoder.general_decoded_string (s)
+			Result := oauth_encoder.decoded_string (s)
 		end
+	
+feature -- Access
 
-feature {NONE} -- Implementation
-
-	url_encoder: URL_ENCODER
+	oauth_encoder: OAUTH_ENCODER
 		once
 			create Result
 		end

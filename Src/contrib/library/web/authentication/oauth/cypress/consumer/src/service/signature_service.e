@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	signature (base_string: READABLE_STRING_GENERAL; api_secret: READABLE_STRING_GENERAL; token_secret: READABLE_STRING_GENERAL): STRING_32
+	signature (base_string: READABLE_STRING_8; api_secret: READABLE_STRING_GENERAL; token_secret: READABLE_STRING_GENERAL): STRING_8
 			-- Return a signature
 			-- `base_string' url-encoded string to sign
 			-- `api_secret' api secret for your app
@@ -20,12 +20,12 @@ feature -- Access
 		deferred
 		end
 
-	signature_method: STRING_32
+	signature_method: STRING_8
 			-- Return the signature algorithm
 		deferred
 		end
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

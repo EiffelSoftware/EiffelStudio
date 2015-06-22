@@ -15,15 +15,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_method: READABLE_STRING_GENERAL; a_uri: READABLE_STRING_GENERAL)
+	make (a_method: READABLE_STRING_8; a_uri: READABLE_STRING_8)
 		require
 			valid_http_method: is_http_method (a_method)
 			valid_uri: is_valid_uri (a_uri)
 		do
 			verb := a_method
 			uri := a_uri
-			create query_string_parameters.default_create
-			create body_parameters.default_create
+			create query_string_parameters.make (5)
+			create body_parameters.make (5)
 			create headers.make (5)
 			add_query_parameters
 		ensure
@@ -37,26 +37,28 @@ feature -- Status Report
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (a_uri.as_string_8)
-			Result := l_uri.is_valid
+			if a_uri.is_valid_as_string_8 then
+				create l_uri.make_from_string (a_uri.to_string_8)
+				Result := l_uri.is_valid
+			end
 		end
 
-	query_string: detachable READABLE_STRING_GENERAL
+	query_string: detachable READABLE_STRING_8
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (uri.as_string_8)
+			create l_uri.make_from_string (uri)
 			Result := l_uri.query
 		end
 
-	sanitized_url: STRING_32
+	sanitized_url: STRING_8
 			-- Returns the URL without the query string part	
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (uri.as_string_8)
+			create l_uri.make_from_string (uri)
 			l_uri.remove_query
-			Result := l_uri.debug_output
+			Result := l_uri.string
 		ensure
 			sanitized: not as_uri (Result).has_query
 		end
@@ -86,9 +88,9 @@ feature -- Status Report
 
 feature -- Constants
 
-	content_type_header_name: STRING_32 = "Content-Type";
+	content_type_header_name: STRING_8 = "Content-Type"
 
-	content_length: STRING_32 = "Content-Length"
+	content_length: STRING_8 = "Content-Length"
 
 	default_content_type: STRING
 		once
@@ -97,15 +99,15 @@ feature -- Constants
 
 feature -- Access
 
-	uri: READABLE_STRING_GENERAL
+	uri: READABLE_STRING_8
 
-	verb: READABLE_STRING_GENERAL
+	verb: READABLE_STRING_8
 
 	query_string_parameters: OAUTH_PARAMETER_LIST
 
 	body_parameters: OAUTH_PARAMETER_LIST
 
-	headers: STRING_TABLE [STRING]
+	headers: HASH_TABLE [STRING_8, STRING_8]
 
 	payload: detachable STRING
 
@@ -113,9 +115,9 @@ feature -- Access
 
 feature -- Change Element
 
-	add_body_parameter (a_key: READABLE_STRING_GENERAL; a_value: READABLE_STRING_GENERAL)
+	add_body_parameter (a_key: READABLE_STRING_8; a_value: READABLE_STRING_8)
 		do
-			body_parameters.add_parameter (a_key.as_string_32, a_value.as_string_32)
+			body_parameters.add_parameter (a_key, a_value)
 		end
 
 	add_payload (a_payload: like payload)
@@ -125,17 +127,17 @@ feature -- Change Element
 			payload_set: attached payload as l_payload implies l_payload = a_payload
 		end
 
-	add_query_string_parameter (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
+	add_query_string_parameter (key: READABLE_STRING_8; value: READABLE_STRING_8)
 			-- Add a query string parameter
 		do
-			query_string_parameters.add_parameter (key.as_string_8, value.as_string_8)
+			query_string_parameters.add_parameter (key, value)
 		ensure
 			one_more_parameter: old query_string_parameters.count + 1 = query_string_parameters.count
 		end
 
-	add_header (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
+	add_header (key: READABLE_STRING_8; value: READABLE_STRING_8)
 		do
-			headers.force (value.as_string_32, key)
+			headers.force (value, key)
 		end
 
 feature -- Execute
@@ -147,8 +149,12 @@ feature -- Execute
 		end
 
 	initialize_executor
+		local
+			l_uri: STRING
 		do
-			create executor.make (query_string_parameters.append_to (uri).as_string_32, verb)
+			create l_uri.make_from_string (uri)
+			query_string_parameters.append_to_url (l_uri)
+			create executor.make (l_uri, verb)
 		end
 
 feature {NONE} -- Implementation
@@ -175,17 +181,14 @@ feature {NONE} -- Implementation
 
 	add_headers (a_executor: REQUEST_EXECUTOR)
 		do
-			from
-				headers.start
-			until
-				headers.after
+			across
+				headers as ic
 			loop
-				a_executor.context_executor.add_header (headers.key_for_iteration.as_string_32, headers.item_for_iteration.as_string_32)
-				headers.forth
+				a_executor.context_executor.add_header (ic.key, ic.item)
 			end
 		end
 
-	body_contents: READABLE_STRING_GENERAL
+	body_contents: READABLE_STRING_8
 		do
 			if attached payload as l_payload then
 				Result := l_payload
@@ -201,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	as_uri (a_string: READABLE_STRING_GENERAL) : URI
+	as_uri (a_string: READABLE_STRING_GENERAL): URI
 		require
 			is_valid_uri : is_valid_uri (a_string)
 		do
@@ -209,7 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2013-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

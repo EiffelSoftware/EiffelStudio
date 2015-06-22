@@ -11,52 +11,52 @@ class
 
 feature -- Access
 
-	Timestamp: STRING = "oauth_timestamp";
+	Timestamp: STRING = "oauth_timestamp"
 
-	Sign_method: STRING = "oauth_signature_method";
+	Sign_method: STRING = "oauth_signature_method"
 
-	Signature: STRING = "oauth_signature";
+	Signature: STRING = "oauth_signature"
 
-	Consumer_secret: STRING = "oauth_consumer_secret";
+	Consumer_secret: STRING = "oauth_consumer_secret"
 
-	Consumer_key: STRING = "oauth_consumer_key";
+	Consumer_key: STRING = "oauth_consumer_key"
 
-	Callback: STRING = "oauth_callback";
+	Callback: STRING = "oauth_callback"
 
-	Version: STRING = "oauth_version";
+	Version: STRING = "oauth_version"
 
-	Nonce: STRING = "oauth_nonce";
+	Nonce: STRING = "oauth_nonce"
 
-	Param_prefix: STRING = "oauth_";
+	Param_prefix: STRING = "oauth_"
 
-	Token: STRING = "oauth_token";
+	Token: STRING = "oauth_token"
 
-	Token_secret: STRING = "oauth_token_secret";
+	Token_secret: STRING = "oauth_token_secret"
 
-	Out_of_band: STRING = "oob";
+	Out_of_band: STRING = "oob"
 
-	Verifier: STRING = "oauth_verifier";
+	Verifier: STRING = "oauth_verifier"
 
-	Header: STRING = "Authorization";
+	Header: STRING = "Authorization"
 
 	Empty_token: OAUTH_TOKEN
 		do
 			create Result.make_empty
 		end
 
-	Scope: STRING = "scope";
+	Scope: STRING = "scope"
 
 feature -- OAuth2.0
 
-	Access_token: STRING = "access_token";
+	Access_token: STRING = "access_token"
 
-	Client_id: STRING = "client_id";
+	Client_id: STRING = "client_id"
 
-	Client_secret: STRING = "client_secret";
+	Client_secret: STRING = "client_secret"
 
-	Redirect_uri: STRING = "redirect_uri";
+	Redirect_uri: STRING = "redirect_uri"
 
-	Code: STRING = "code";
+	Code: STRING = "code"
 
 	Grant_type: STRING = "grant_type"
 

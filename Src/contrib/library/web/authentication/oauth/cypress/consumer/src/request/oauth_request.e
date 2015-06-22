@@ -18,18 +18,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (http_method: READABLE_STRING_GENERAL; url: READABLE_STRING_GENERAL)
+	make (a_http_method: READABLE_STRING_8; a_url: READABLE_STRING_8)
 		do
-			make_request (http_method, url)
-			create outh_parameters.make (0)
+			make_request (a_http_method, a_url)
+			create oauth_parameters.make (0)
 		ensure
-			parameters_set: outh_parameters.is_empty
+			parameters_set: oauth_parameters.is_empty
 		end
 
 feature -- Access
 
-	outh_parameters: STRING_TABLE [STRING]
-			-- Oauth outh_parameters
+	oauth_parameters: HASH_TABLE [STRING_8, STRING_8]
+			-- Oauth oauth_parameters
 
 	is_valid_key (key: READABLE_STRING_GENERAL): BOOLEAN
 			-- is the key a valid OAuth key parameter?
@@ -37,21 +37,21 @@ feature -- Access
 			if key.starts_with (oauth_prefix) or else key.same_string (({OAUTH_CONSTANTS}.scope)) then
 				Result := True
 			else
-					--OAuth outh_parameters must start with `oauth' or it should be `scope'
+					--OAuth oauth_parameters must start with `oauth' or it should be `scope'
 					--| we need logging or report this as an ERROR
 			end
 		end
 
 feature -- Add Parameters
 
-	add_parameter (key: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL)
+	add_parameter (key: READABLE_STRING_8; value: READABLE_STRING_8)
 			-- Add an OAuth parameter with value `value' and key `key'
 		require
 			-- valid_key
 		do
-			outh_parameters.force (value.as_string_32, key)
+			oauth_parameters.force (value, key)
 		ensure
-			parameter_added: outh_parameters.has (key)
+			parameter_added: oauth_parameters.has (key)
 		end
 
 feature {NONE} -- Implementation
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	Oauth_prefix: STRING = "oauth_"
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

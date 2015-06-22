@@ -31,10 +31,10 @@ feature -- Access
 		deferred
 		end
 
-	version: READABLE_STRING_GENERAL
+	version: STRING_8
 			-- OAuth version of the service
 
-	authorization_url (a_request_token: detachable OAUTH_TOKEN): detachable READABLE_STRING_GENERAL
+	authorization_url (a_request_token: detachable OAUTH_TOKEN): detachable STRING_8
 			-- URL where you should redirect your users to authenticate
 			-- your application.
 			-- a request token needed to authorize
@@ -42,7 +42,7 @@ feature -- Access
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

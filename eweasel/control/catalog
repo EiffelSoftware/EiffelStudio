@@ -1449,6 +1449,7 @@ test	scoop-agent-with-reference-argument		scoop064 tcf manual scoop multithreade
 test	scoop-impersonation-tests				scoop065 tcf manual scoop multithreaded execution
 test	scoop-passive-processors				scoop066 tcf fail scoop multithreaded
 test	scoop-passive-processor-exception		scoop067 tcf fail scoop multithreaded exception
+test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

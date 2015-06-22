@@ -1,0 +1,29 @@
+test_name	scoop-estring_crash
+test_description Test for a crash during garbage collection when dealing with ESTRING.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+copy_raw	earea.e	$CLUSTER earea.e
+copy_raw	estring_8.e	$CLUSTER estring_8.e
+copy_raw	memory_manager.e	$CLUSTER memory_manager.e
+copy_raw	memory_manager_access.e	$CLUSTER memory_manager_access.e
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output_w
+execute_result	ok
+compare exec_output_w output
+
+--compile_final
+--compile_result ok
+--c_compile_final
+--c_compile_result ok
+
+--execute_final NONE exec_output_f
+--execute_result	ok
+--compare exec_output_f output
+
+test_end

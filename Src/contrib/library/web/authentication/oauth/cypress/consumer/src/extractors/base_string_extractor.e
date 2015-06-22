@@ -8,16 +8,15 @@ note
 deferred class
 	BASE_STRING_EXTRACTOR
 
-
 feature -- Extract
 
-	extract (a_request: OAUTH_REQUEST): STRING_32
+	extract (a_request: OAUTH_REQUEST): STRING_8
 			-- Extract an url-encoded base string from the `a_request'
 		deferred
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

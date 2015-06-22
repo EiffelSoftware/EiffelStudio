@@ -37,11 +37,11 @@ feature -- Access
 	api_secret: STRING
 	api_key: STRING
 	scope: detachable STRING
-	api : OAUTH_API
+	api: OAUTH_API
 
 feature -- Fluent API
 
-	with_callback (a_callback: READABLE_STRING_GENERAL): API_BUILDER
+	with_callback (a_callback: READABLE_STRING_8): API_BUILDER
 		do
 			set_callback (a_callback)
 			Result := Current
@@ -49,15 +49,15 @@ feature -- Fluent API
 			callback_set: Result.callback = a_callback
 		end
 
-	with_sigature (a_signture_type: like signature_type) : API_BUILDER
+	with_signature (a_signature_type: like signature_type): API_BUILDER
 		do
-			set_signature_type (a_signture_type)
+			set_signature_type (a_signature_type)
 			Result := Current
 		ensure
-		 	signature_set: Result.signature_type = a_signture_type
+		 	signature_set: Result.signature_type = a_signature_type
 		end
 
-	with_api_key (a_key : READABLE_STRING_GENERAL): API_BUILDER
+	with_api_key (a_key: READABLE_STRING_8): API_BUILDER
 		do
 			set_api_key (a_key)
 			Result := Current
@@ -65,7 +65,7 @@ feature -- Fluent API
 			api_key_set: Result.api_key = a_key
 		end
 
-	with_api_secret (a_secret : READABLE_STRING_GENERAL): API_BUILDER
+	with_api_secret (a_secret: READABLE_STRING_8): API_BUILDER
 		do
 			set_api_secret (a_secret)
 			Result := Current
@@ -73,13 +73,13 @@ feature -- Fluent API
 			api_secret_set: Result.api_secret = a_secret
 		end
 
-	with_scope (a_scope: READABLE_STRING_GENERAL): API_BUILDER
+	with_scope (a_scope: READABLE_STRING_8): API_BUILDER
 		do
 			set_scope (a_scope)
 			Result := Current
 		end
 
-	with_api (a_api : like api) : API_BUILDER
+	with_api (a_api: like api) : API_BUILDER
 		do
 			api := a_api
 			Result := current
@@ -103,10 +103,10 @@ feature -- Build Service
 
 feature {NONE} -- Element Change
 
-	set_callback (a_callback: READABLE_STRING_GENERAL)
+	set_callback (a_callback: READABLE_STRING_8)
 			-- Set `callback' with a callback	
 		do
-			callback := a_callback.as_string_8
+			callback := a_callback
 		ensure
 			callback_set: callback = a_callback
 		end
@@ -119,32 +119,32 @@ feature {NONE} -- Element Change
 			signature_type_set: signature_type = a_signature_type
 		end
 
-	set_api_secret (a_api_secret: READABLE_STRING_GENERAL)
+	set_api_secret (a_api_secret: READABLE_STRING_8)
 			-- Set `api_secret'	with `a_api_secret'
 		do
-			api_secret := a_api_secret.as_string_8
+			api_secret := a_api_secret
 		ensure
 			api_secret_set: api_secret = a_api_secret
 		end
 
-	set_api_key (a_api_key: READABLE_STRING_GENERAL)
+	set_api_key (a_api_key: READABLE_STRING_8)
 			-- Set `api_key' with `a_api_key'
 		do
-			api_key := a_api_key.as_string_8
+			api_key := a_api_key
 		ensure
 			api_key_set: api_key = a_api_key
 		end
 
-	set_scope (a_scope: READABLE_STRING_GENERAL)
+	set_scope (a_scope: READABLE_STRING_8)
 			-- Set `scope' with `a_scope'
 		do
-			scope := a_scope.as_string_8
+			scope := a_scope
 		ensure
 			scope_set: attached scope as l_scope implies l_scope = a_scope
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

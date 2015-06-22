@@ -8,52 +8,39 @@ class
 	HEADER_EXTRACTOR_10
 
 inherit
-
 	HEADER_EXTRACTOR
+
+	OAUTH_SHARED_ENCODER
 
 feature -- Extractor
 
-	extract (request: OAUTH_REQUEST): READABLE_STRING_GENERAL
+	extract (request: OAUTH_REQUEST): STRING_8
 			-- Generates an OAuth 'Authorization' Http header to include in requests as the signature.
 		require else
-			has_oauth_parameters: not request.outh_parameters.is_empty
+			has_oauth_parameters: not request.oauth_parameters.is_empty
 		local
-			l_parameters : STRING_TABLE[STRING]
-			header: STRING_32
-			l_element : STRING_32
-			l_encoder : OAUTH_ENCODER
-			l_keys : ARRAY [READABLE_STRING_GENERAL]
+			l_parameters: HASH_TABLE [STRING_8, STRING_8]
+			l_element: STRING_8
+			l_encoder: OAUTH_ENCODER
 		do
-			l_parameters := request.outh_parameters
-			l_keys := sort (l_parameters.current_keys)
+			l_parameters := request.oauth_parameters
 
-			create l_encoder
-			create header.make (l_parameters.count * Estimated_param_length)
-			header.append (Preamble)
-			from
---				l_index := 1
-				l_parameters.start
-			until
---				l_index > l_keys.count
-				l_parameters.after
+			l_encoder := oauth_encoder
+			create Result.make (l_parameters.count * Estimated_param_length)
+			Result.append (Preamble)
+			across
+				l_parameters as ic
 			loop
-				if header.count > Preamble.count then
-					header.append (Param_separator)
+				if Result.count > Preamble.count then
+					Result.append (Param_separator)
 				end
 				create l_element.make_from_string (Header_template)
-				l_element.replace_substring_all ("$KEY", l_parameters.key_for_iteration.as_string_8)
-				l_element.replace_substring_all ("$VALUE", l_encoder.encoded_string (l_parameters.item_for_iteration.as_string_8))
---				l_element.replace_substring_all ("$KEY", l_keys[l_index].as_string_8)
---				if attached {STRING_8} l_parameters.at (l_keys[l_index].as_string_8) as l_value then
---					l_element.replace_substring_all ("$VALUE", l_encoder.encoded_string (l_value.as_string_8))
---				end
-				header.append (l_element)
+				l_element.replace_substring_all ("$KEY", ic.key)
+				l_element.replace_substring_all ("$VALUE", l_encoder.encoded_string (ic.item))
+				Result.append (l_element)
 				l_parameters.forth
---				l_index := l_index + 1
 			end
-			Result := header
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -64,18 +51,6 @@ feature {NONE} -- Implementation
 	Estimated_param_length: INTEGER = 20
 
 	Header_template: STRING = "$KEY=%"$VALUE%""
-
-
-	sort (keys : ARRAY [READABLE_STRING_GENERAL]): ARRAY [READABLE_STRING_GENERAL]
-		local
-			l_sort: QUICK_SORTER [READABLE_STRING_GENERAL]
-			l_comp: COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]
-		do
-			Result := keys.twin
-			create l_comp
-			create l_sort.make (l_comp)
-			l_sort.sort (Result)
-		end
 
 note
 	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

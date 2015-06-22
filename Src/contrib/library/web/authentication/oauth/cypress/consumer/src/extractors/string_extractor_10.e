@@ -8,42 +8,41 @@ class
 	STRING_EXTRACTOR_10
 
 inherit
-
 	BASE_STRING_EXTRACTOR
+
+	OAUTH_SHARED_ENCODER
 
 feature -- Extractor
 
-	extract (a_request: OAUTH_REQUEST): STRING_32
+	extract (a_request: OAUTH_REQUEST): STRING_8
 			-- Extract an url-encoded base string from the `a_request'
 		require else
-			has_oauth_parameters: not a_request.outh_parameters.is_empty
+			has_oauth_parameters: not a_request.oauth_parameters.is_empty
 		local
-			l_encoder: OAUTH_ENCODER
 			l_verb: STRING
 			l_url: STRING
 			l_params: STRING
 		do
-			create l_encoder
-			l_verb := l_encoder.encoded_string (a_request.verb.as_string_8)
-			l_url := l_encoder.encoded_string (a_request.sanitized_url)
-			l_params := sorted_and_encoded_params(a_request)
+			l_verb := oauth_encoded_string (a_request.verb)
+			l_url := oauth_encoded_string (a_request.sanitized_url)
+			l_params := sorted_and_encoded_params (a_request)
 			create Result.make_from_string (Ampersand_separated_string)
-			Result.replace_substring_all ("$VERB",l_verb)
-			Result.replace_substring_all ("$URL",l_url)
-			Result.replace_substring_all ("$PARAM",l_params)
+			Result.replace_substring_all ("$VERB", l_verb)
+			Result.replace_substring_all ("$URL", l_url)
+			Result.replace_substring_all ("$PARAM", l_params)
 		end
 
 feature {NONE} -- Implementation
 
 	sorted_and_encoded_params (a_request: OAUTH_REQUEST): STRING
 		local
-			l_params : OAUTH_PARAMETER_LIST
+			l_params: OAUTH_PARAMETER_LIST
 		do
-			create l_params.default_create
+			create l_params.make (6)
 			l_params.add_all (a_request.query_string_parameters)
 			l_params.add_all (a_request.body_parameters)
 			l_params.add_all (build_oauth_parameters(a_request))
-			Result := l_params.sort.as_oauht_base_string.as_string_8
+			Result := l_params.sort.as_oauth_base_string
 		end
 
 feature {NONE}-- Implementation
@@ -52,18 +51,15 @@ feature {NONE}-- Implementation
 
 	 build_oauth_parameters (a_request: OAUTH_REQUEST): OAUTH_PARAMETER_LIST
 	 	do
-	 		create Result
-	 		from
-	 			a_request.outh_parameters.start
-	 		until
-	 			a_request.outh_parameters.after
+	 		create Result.make (a_request.oauth_parameters.count)
+	 		across
+	 			a_request.oauth_parameters as ic
 	 		loop
-	 			Result.add_parameter (a_request.outh_parameters.key_for_iteration.as_string_8, a_request.outh_parameters.item_for_iteration)
-	 			a_request.outh_parameters.forth
+	 			Result.add_parameter (ic.key, ic.item)
 	 		end
 	 	end
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

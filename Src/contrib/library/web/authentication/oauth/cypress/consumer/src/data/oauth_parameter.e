@@ -1,6 +1,5 @@
 note
 	description: "Objects that represent an OAuth Parameter"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +7,12 @@ class
 	OAUTH_PARAMETER
 
 inherit
-
 	COMPARABLE
+
+	OAUTH_SHARED_ENCODER
+		undefine
+			is_equal
+		end
 
 create
 	make
@@ -32,12 +35,12 @@ feature -- Conversion
 
 	as_url_encoded: STRING_8
 		local
-			l_outh_encoder: OAUTH_ENCODER
+			l_encoder: OAUTH_ENCODER
 		do
-			create l_outh_encoder
-			Result := l_outh_encoder.encoded_string (key)
-			Result.append ("=")
-			Result.append (l_outh_encoder.encoded_string (value))
+			l_encoder := oauth_encoder
+			Result := l_encoder.encoded_string (key)
+			Result.append_character ('=')
+			Result.append (l_encoder.encoded_string (value))
 		end
 
 feature -- Comparision
@@ -45,15 +48,15 @@ feature -- Comparision
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
-			if key.is_less (other.key) then
+			if key < other.key then
 				Result := True
-			elseif key.is_equal (other.key) and then value.is_less (other.value) then
+			elseif key ~ other.key and then value < other.value then
 				Result := True
 			end
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

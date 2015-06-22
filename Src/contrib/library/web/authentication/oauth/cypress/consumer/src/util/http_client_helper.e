@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- HTTP client helpers
 
-	execute_get (command_name: STRING_32): detachable HTTP_CLIENT_RESPONSE
+	execute_get (command_name: READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -47,7 +47,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_post (command_name: STRING_32; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
+	execute_post (command_name: READABLE_STRING_8; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -55,7 +55,7 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_delete (command_name: STRING_32): detachable HTTP_CLIENT_RESPONSE
+	execute_delete (command_name: READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
@@ -63,15 +63,13 @@ feature -- HTTP client helpers
 			end
 		end
 
-	execute_put (command_name: STRING_32; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
+	execute_put (command_name: READABLE_STRING_8; data: detachable READABLE_STRING_8): detachable HTTP_CLIENT_RESPONSE
 		do
 			get_http_session
 			if attached http_session as sess then
 				Result := sess.put (command_name, context_executor, data)
 			end
 		end
-
-
 
 feature -- Context Executor
 
@@ -82,7 +80,7 @@ feature -- Context Executor
 			-- URL
 
 ;note
-	copyright: "2013-2014, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

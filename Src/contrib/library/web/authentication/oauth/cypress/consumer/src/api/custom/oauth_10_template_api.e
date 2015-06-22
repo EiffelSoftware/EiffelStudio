@@ -19,16 +19,13 @@ feature -- Access
 			Result := Access_token_endpoint_url
 		end
 
-	authorization_url (a_token: detachable OAUTH_TOKEN) : STRING_8
+	authorization_url (a_token: detachable OAUTH_TOKEN): STRING_8
 			-- <Precursor>
-		local
-			l_result : STRING
 		do
-			l_result := Authorize_url
+			create Result.make_from_string (Authorize_url)
 			if a_token /= Void then
-				l_result.append(a_token.token.as_string_8)
+				Result.append (a_token.token)
 			end
-			Result := l_result
 		end
 
 	request_token_endpoint: STRING_8

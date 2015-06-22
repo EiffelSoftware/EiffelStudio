@@ -12,20 +12,20 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_description: like description)
+	make (a_description: READABLE_STRING_GENERAL)
 		do
-			description := a_description
+			description := a_description.as_string_32
 		ensure
-			description_set: description = a_description
+			description_set: a_description.same_string (description)
 		end
 
 feature -- Access
 
-	description: READABLE_STRING_GENERAL
+	description: READABLE_STRING_32
 			-- Error description
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

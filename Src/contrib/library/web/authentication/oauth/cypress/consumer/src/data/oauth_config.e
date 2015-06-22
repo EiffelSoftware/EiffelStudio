@@ -12,17 +12,17 @@ create
 
 feature {NONE} -- Initializaton
 
-	make (a_key: like api_key; a_secret: like api_secret; a_callback: like callback; a_signature: like signature_type; a_scope: like scope; a_stream: like debug_stream)
+	make (a_key: READABLE_STRING_8; a_secret: READABLE_STRING_8; a_callback: like callback; a_signature: like signature_type; a_scope: like scope; a_stream: like debug_stream)
 		do
-			api_key := a_key
-			api_secret := a_secret
+			create api_key.make_from_string (a_key)
+			create api_secret.make_from_string (a_secret)
 			callback := a_callback
 			signature_type := a_signature
 			scope := a_scope
 			debug_stream := a_stream
 		ensure
-			key_set: api_key = a_key
-			secret_Set: api_secret = a_secret
+			key_set: api_key.same_string (a_key)
+			secret_Set: api_secret.same_string (a_secret)
 			callback_set: attached callback as l_callback implies l_callback = a_callback
 			signature_type_set: attached signature_type as l_signature implies l_signature = a_signature
 			scope_set: attached scope implies has_scope
@@ -39,26 +39,27 @@ feature {NONE} -- Initializaton
 
 feature -- Access
 
-	api_key: READABLE_STRING_GENERAL
-		-- The client identifier issued to the client during the registration process.
-		-- TODO fix and use STRING_32 or STRING_8
+	api_key: IMMUTABLE_STRING_8
+			-- The client identifier issued to the client during the registration process.
+			-- TODO fix and use STRING_32 or STRING_8
 
-	api_secret: READABLE_STRING_GENERAL
-		-- The client MAY omit the parameter if the client secret is an empty string.	
+	api_secret: IMMUTABLE_STRING_8
+			-- The client MAY omit the parameter if the client secret is an empty string.	
 
-	callback: detachable READABLE_STRING_GENERAL
-		--  Url redirecting the user-agent back to the client.
+	callback: detachable STRING_8
+			--  Url redirecting the user-agent back to the client.
 
 	signature_type: detachable OAUTH_SIGNATURE_TYPE
 
-	scope: detachable READABLE_STRING_GENERAL
-		-- scope of the access request.	
+	scope: detachable STRING
+			-- scope of the access request.	
+			-- TODO: check if scope can be unicode encoded.
 
 	debug_stream: detachable STRING
 
 	grant_type: detachable STRING
-		--  The authorization code grant type is used to obtain both access tokens and refresh tokens and is optimized for confidential clients.
-		--  OAuth defines four grant types: authorization code, implicit, resource owner password credentials, and client credentials.
+			--  The authorization code grant type is used to obtain both access tokens and refresh tokens and is optimized for confidential clients.
+			--  OAuth defines four grant types: authorization code, implicit, resource owner password credentials, and client credentials.
 
 	state: detachable STRING
 			-- An opaque value used by the client to maintain state between the request and callback.
@@ -80,7 +81,7 @@ feature -- Change Element
 			callback_set: attached callback as l_callback implies l_callback = a_callback
 		end
 
-	set_scope (a_scope: READABLE_STRING_GENERAL)
+	set_scope (a_scope: READABLE_STRING_8)
 			-- Set scope with `a_scope'
 		do
 			scope := a_scope
@@ -88,10 +89,10 @@ feature -- Change Element
 			scope_set: attached scope as l_scope implies l_scope.same_string (a_scope)
 		end
 
-	set_grant_type (a_type: READABLE_STRING_GENERAL)
+	set_grant_type (a_type: READABLE_STRING_8)
 			-- Set grant_type with `a_type'
 		do
-			grant_type := a_type.as_string_32
+			grant_type := a_type
 		ensure
 			grant_type_set: attached grant_type as l_grant_type implies l_grant_type.same_string_general (a_type)
 		end
@@ -104,12 +105,12 @@ feature -- Change Element
 			signature_type_set: attached signature_type as l_signature_type implies l_signature_type = a_signature
 		end
 
-	set_state (a_state: READABLE_STRING_GENERAL)
+	set_state (a_state: READABLE_STRING_8)
 			-- Set `state' with `a_state'
 		do
-			state := a_state.as_string_32
+			state := a_state
 		ensure
-			state_set: attached state as l_state implies l_state.same_string_general (a_state)
+			state_set: attached state as l_state implies l_state.same_string (a_state)
 		end
 
 note

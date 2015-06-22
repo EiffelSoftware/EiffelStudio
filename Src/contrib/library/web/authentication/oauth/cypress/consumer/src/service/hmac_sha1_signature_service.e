@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	signature (base_string: READABLE_STRING_GENERAL; api_secret: READABLE_STRING_GENERAL; token_secret: READABLE_STRING_GENERAL): STRING_32
+	signature (base_string: READABLE_STRING_8; api_secret: READABLE_STRING_GENERAL; token_secret: READABLE_STRING_GENERAL): STRING_8
 			-- Return a signature
 			-- `base_string' url-encoded string to sign
 			-- `api_secret' api secret for your app
@@ -22,44 +22,34 @@ feature -- Access
 		local
 			l_encoder: OAUTH_ENCODER
 		do
-			create l_encoder
-			Result := do_sign (base_string, l_encoder.encoded_string (api_secret.as_string_8) + "&" + l_encoder.encoded_string (token_secret.as_string_8))
+			l_encoder := oauth_encoder
+			Result := do_sign (base_string, l_encoder.encoded_string (api_secret) + "&" + l_encoder.encoded_string (token_secret))
 		end
 
-	signature_method: STRING_32
-			-- Return the signature algorithm
-		once
-			Result := Method
-		ensure then
-			method_hmac_sha1: Result = Method
-		end
-
+  	signature_method: STRING = "HMAC-SHA1"
+			-- Algorithm used for the signature.
 
 feature {NONE} --Implementation
 
  	Empty_string: STRING = "";
 
-  	Carriage_return: STRING = "%R";
+  	Carriage_return: STRING = "%R"
 
-  	Utf8: STRING = "UTF-8";
+  	Utf8: STRING = "UTF-8"
 
-  	Method: STRING = "HMAC-SHA1";
-
-	do_sign (to_sing: READABLE_STRING_GENERAL; key: READABLE_STRING_GENERAL): STRING
+	do_sign (to_sign: READABLE_STRING_8; key: READABLE_STRING_8): STRING
 		local
 			l_hmac_sha1: HMAC_SHA1
 		do
-			create l_hmac_sha1.make_ascii_key (key.as_string_8)
-			l_hmac_sha1.update_from_string (to_sing.as_string_8)
+			create l_hmac_sha1.make_ascii_key (key)
+			l_hmac_sha1.update_from_string (to_sign)
 			Result := encode_base_64(byte_array (l_hmac_sha1.digest))
 			Result.replace_substring_all (Carriage_return, Empty_string)
 		end
 
-
-
 feature {NONE} -- Encoding Byte Array Implementation		
 
-	byte_array (a_bytes: SPECIAL[NATURAL_8]) : SPECIAL[INTEGER_8]
+	byte_array (a_bytes: SPECIAL [NATURAL_8]) : SPECIAL [INTEGER_8]
 		local
 			i: INTEGER
 		do

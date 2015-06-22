@@ -8,12 +8,13 @@ class
 	TOKEN_EXTRACTOR_20
 
 inherit
-
 	ACCESS_TOKEN_EXTRACTOR
+
+	OAUTH_SHARED_ENCODER
 
 feature -- Access
 
-	extract (response: READABLE_STRING_GENERAL): detachable OAUTH_TOKEN
+	extract (response: READABLE_STRING_8): detachable OAUTH_TOKEN
 			-- Extracts the access token from the contents of an Http Response
 		local
 			l_token_index: INTEGER
@@ -23,21 +24,21 @@ feature -- Access
 		do
 			if response.has_substring (Token_definition) then
 				l_token_index := response.substring_index (Token_definition, 1)
-				l_extract := response.substring (token_definition.count + 1, response.count).as_string_8
+				l_extract := response.substring (token_definition.count + 1, response.count)
 				l_param_index := l_extract.index_of (parameter_separator, 1)
 				if l_param_index /= 0 then
 					l_extract := l_extract.substring (1, l_param_index - 1)
 				end
-				l_decoded := (create {OAUTH_ENCODER}).decoded_string (l_extract)
-				create Result.make_token_secret_response (l_decoded, empty_secret, response.as_string_8)
+					-- FIXME: can token be unicode encoded?
+				create Result.make_token_secret_response (oauth_decoded_string (l_extract), empty_secret, response)
 				if response.has_substring (Token_expires) then
 					l_token_index := response.substring_index (Token_expires, 1)
-					l_extract := response.substring (l_token_index +Token_expires.count + 1, response.count).as_string_8
+					l_extract := response.substring (l_token_index + Token_expires.count + 1, response.count)
 					l_param_index := l_extract.index_of (parameter_separator, l_token_index)
 					if l_param_index /= 0 then
 						l_extract := l_extract.substring (l_param_index + 1, response.count)
 					end
-					l_decoded := (create {OAUTH_ENCODER}).decoded_string (l_extract)
+					l_decoded := oauth_decoded_string (l_extract)
 					Result.set_expires_in (l_decoded.to_integer)
 				end
 			end

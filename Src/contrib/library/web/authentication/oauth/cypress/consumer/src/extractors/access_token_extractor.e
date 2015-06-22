@@ -9,7 +9,7 @@ deferred class
 
 feature -- Extractor
 
-	extract (response: READABLE_STRING_GENERAL): detachable OAUTH_TOKEN
+	extract (response: READABLE_STRING_8): detachable OAUTH_TOKEN
 			-- Extracts the access token from the contents of an Http Response
 		require
 			not_empty: not response.is_empty
@@ -17,7 +17,7 @@ feature -- Extractor
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

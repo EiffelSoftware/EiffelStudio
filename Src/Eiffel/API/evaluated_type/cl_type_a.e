@@ -189,7 +189,7 @@ feature -- Comparison
 			if Precursor (other) then
 					-- If `other' is not separate, the checks done by `Precursor' are sufficient.
 				Result := True
-				if other.is_separate and then is_expanded and then attached base_class.skeleton as s then
+				if other.is_separate and then is_expanded and then system.is_scoop and then attached base_class.skeleton as s then
 						-- `other' is separate and current type is expanded,
 						-- all attributes of the current type must be runnable in the context of `other' processor.
 					across

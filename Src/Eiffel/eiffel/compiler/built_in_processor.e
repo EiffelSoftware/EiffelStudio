@@ -144,7 +144,6 @@ feature {NONE} -- Implementation
 					if attached {CLASS_C} current_class as l_class then
 						set_is_ignoring_attachment_marks (l_class.lace_class.is_void_unsafe)
 					end
-					ignore_separate_mark (not system.is_scoop)
 					l_file.read_string (l_count)
 					l_str := l_file.last_string
 						-- No need to put the class, it seems that encoding by built-in classes have no need to be controlled by .ecf.
@@ -198,7 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

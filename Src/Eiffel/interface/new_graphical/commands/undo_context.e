@@ -204,7 +204,7 @@ feature -- Event handling
 
 feature -- Implementation
 
-	conforms (object: ANY; type: STRING): BOOLEAN
+	conforms (object: separate ANY; type: STRING): BOOLEAN
 			-- Does `object' conform to `type'?
 		local
 			i: INTERNAL
@@ -220,7 +220,7 @@ feature -- Implementation
 			end
 		end
 
-	conforms_to_array_of (object: ANY; type: STRING): BOOLEAN
+	conforms_to_array_of (object: separate ANY; type: STRING): BOOLEAN
 			-- Does `object' conform to ARRAY [`type']?
 		local
 			a: ARRAY [ANY]

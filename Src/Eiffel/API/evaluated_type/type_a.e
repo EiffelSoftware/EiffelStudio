@@ -911,7 +911,7 @@ feature -- Comparison
 	is_processor_attachable_to (other: TYPE_A): BOOLEAN
 			-- May processor of current type be used as a processor of type `other'?
 		do
-			Result := is_separate implies other.is_separate
+			Result := (is_separate and system.is_scoop) implies other.is_separate
 		end
 
 	has_same_marks (other: TYPE_A): BOOLEAN

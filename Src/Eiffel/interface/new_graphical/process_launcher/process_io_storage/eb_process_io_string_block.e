@@ -36,7 +36,7 @@ feature{NONE} -- Initialization
 
 feature  -- Status reporting
 
-	data: ANY
+	data: STRING
 			--
 		do
 			Result := string_buffer

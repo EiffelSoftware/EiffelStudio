@@ -319,8 +319,8 @@ feature -- Header output operation: helpers
 feature -- Header add cookie
 
 	add_cookie (a_cookie: WSF_COOKIE)
-			-- Add a Set-Cookie header field to the response, iff there is not exist
-			-- a Set-Cookie header field with the same cookie-name.
+			-- Add a Set-Cookie header field to the response, 
+			-- if no Set-Cookie header field already use same cookie-name.
 			--| Servers SHOULD NOT include more than one Set-Cookie header field in
   			--| the same response with the same cookie-name.
 		local
@@ -328,7 +328,8 @@ feature -- Header add cookie
 		do
 			across
 				internal_header.headers as ic
-			until l_same_cookie_name
+			until 
+				l_same_cookie_name
 			loop
 				if ic.item.starts_with ("Set-Cookie:") then
 					l_same_cookie_name := has_cookie_name (ic.item, a_cookie.name)
@@ -544,24 +545,29 @@ feature -- Error reporting
 
 feature {NONE} -- Implemenation
 
-	has_cookie_name (a_cookie_line, a_cookie_name: READABLE_STRING_32 ): BOOLEAN
- 			-- Has the cookie line `a_cookie_line', the cookie name `a_cookie_name'?
- 		local
- 			i,j: INTEGER
- 		do
- 			Result := False
- 			i := a_cookie_line.index_of ('=', 1)
+	has_cookie_name (a_cookie_line, a_cookie_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has the cookie line `a_cookie_line', the cookie name `a_cookie_name'?
+		local
+			i,j,n: INTEGER
+		do
 			j := a_cookie_line.index_of (':', 1)
-
-			if i > j and j > 0 then
-			   i := i - 1
-			   j := j + 1
-			   from until not a_cookie_line[j].is_space loop
-			     j := j + 1
-			   end
-			   if a_cookie_name.same_characters (a_cookie_line, j, i, 1) then
-			      Result := True
-			   end
+			if j > 0 then
+				i := a_cookie_line.index_of ('=', 1)
+				if i > j then
+					i := i - 1
+					j := j + 1
+						-- Skip spaces.
+					from
+						n := a_cookie_line.count
+					until
+						j > n or not a_cookie_line[j].is_space
+					loop
+						j := j + 1
+					end
+					if j > n then
+						Result := a_cookie_name.same_characters (a_cookie_line, j, i, 1)
+					end
+				end
 			end
 		end
 

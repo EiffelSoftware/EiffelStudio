@@ -2204,9 +2204,9 @@ feature {NONE} -- Type checks
 				if warning_count /= error_handler.warning_list.count then
 					error_handler.warning_list.last.set_location (location)
 				end
-			elseif target_type.is_separate and then expression_type.is_reference and then not formal_type.is_separate then
+			elseif system.is_scoop and then target_type.is_separate and then expression_type.is_reference and then not formal_type.is_separate then
 				create {VUAR3} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
-			elseif expression_type.is_expanded and then not expression_type.is_processor_attachable_to (target_type) then
+			elseif system.is_scoop and then expression_type.is_expanded and then not expression_type.is_processor_attachable_to (target_type) then
 				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			end
 
@@ -4413,7 +4413,7 @@ feature {NONE} -- Visitor
 						end
   					end
 						-- Insert an error if the target type is separate and open.
-					if l_target_type.is_separate and then l_as.target.is_open then
+					if system.is_scoop and then l_target_type.is_separate and then l_as.target.is_open then
 							-- TODO: It might be a better idea to create a new error class.
 						Error_handler.insert_error (create {VUTA3}.make (context, last_type, l_as.target.start_location))
 					end
@@ -7829,7 +7829,7 @@ feature {NONE} -- Visitor
 				process_compound (c)
 			end
 			if attached argument_code and then attached {BYTE_LIST [BYTE_NODE]} last_byte_node as b then
-				create {SEPARATE_INSTURCTION_B} last_byte_node.make (argument_code, b, a_as.end_location)
+				create {SEPARATE_INSTRUCTION_B} last_byte_node.make (argument_code, b, a_as.end_location)
 			end
 				-- Remove arguments of the separate instruction.
 			context.remove_object_test_scopes (s)
@@ -9310,7 +9310,7 @@ feature {NONE} -- Implementation
 			else
 				last_alias_error := l_vtmc_error
 			end
-			if last_alias_error = Void and then a_left_type.is_separate then
+			if last_alias_error = Void and then a_left_type.is_separate and then system.is_scoop then
 					-- Left operand is of a separate type, so the right operand is subject to SCOOP argument rules.
 				if a_right_type.is_reference and then not l_infix.arguments.i_th (1).is_separate then
 						-- If the right operand is of a reference type then formal feature argument must be separate.
@@ -11556,7 +11556,7 @@ feature {NONE} -- Separateness
 			a_attached: attached a
 			is_last_type_separate: attached last_type as t and then t.is_separate
 		do
-			if not is_controlled then
+			if system.is_scoop and then not is_controlled then
 				error_handler.insert_error (create {VUTA3}.make (context, last_type, a.start_location))
 			end
 		end

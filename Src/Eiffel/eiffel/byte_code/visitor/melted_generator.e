@@ -1920,7 +1920,7 @@ feature {NONE} -- Visitors
 			end
 		end
 
-	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+	process_separate_b (a_node: SEPARATE_INSTRUCTION_B)
 			-- <Precursor>
 		do
 				-- Generate evaluation of arguments.

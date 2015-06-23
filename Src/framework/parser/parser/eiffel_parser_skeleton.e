@@ -638,14 +638,6 @@ feature -- Settings
 			is_ignoring_attachment_marks_set: is_ignoring_attachment_marks = v
 		end
 
-	ignore_separate_mark (v: BOOLEAN)
-			-- Ignore separate marks if `v' is `True' and respect them otherwise.
-		do
-			is_ignoring_separate_mark := v
-		ensure
-			is_ignoring_separate_mark_set: is_ignoring_separate_mark = v
-		end
-
 feature -- Modification
 
 	insert_supplier (name: STRING; location: detachable LOCATION_AS)

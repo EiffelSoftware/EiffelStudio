@@ -19,7 +19,7 @@ feature
 			io.putstring ("In TEST2 creation procedure%N");
 		end;
 
-	x: TEST
+	x: separate TEST
 
 	to_reference: ANY is
 		do

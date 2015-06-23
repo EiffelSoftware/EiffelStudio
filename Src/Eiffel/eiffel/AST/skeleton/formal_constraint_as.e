@@ -275,9 +275,7 @@ feature {NONE} -- Access
 				-- Default constraint class type is detachable separate.
 			create t.make (System.any_id)
 			t.set_detachable_mark
-			if system.is_scoop then
-				t.set_separate_mark
-			end
+			t.set_separate_mark
 			create Result.make (t, Void)
 		end
 
@@ -680,7 +678,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

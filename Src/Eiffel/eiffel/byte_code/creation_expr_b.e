@@ -129,7 +129,7 @@ feature -- Analyze
 			else
 				create {REGISTER} register.make (l_type.c_type)
 			end
-			if real_type (type).is_separate then
+			if system.is_scoop and then real_type (type).is_separate then
 					-- Allocate a register for a container that stores arguments
 					-- to be passed to the scheduler.
 				create separate_register.make (pointer_c_type)
@@ -366,7 +366,7 @@ feature -- Generation
 				l_generate_call := True
 			end
 
-			if t.is_separate then
+			if system.is_scoop and then t.is_separate then
 					-- Attach new object to a new processor
 				buf.put_new_line
 				buf.put_string ("RTS_PA (")

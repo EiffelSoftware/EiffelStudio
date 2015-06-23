@@ -215,21 +215,15 @@ feature -- Comparison
 	is_equivalent (other: FORMAL_A): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		do
-			Result := is_equivalent_excluding_status (other) and then
+			Result :=
+				other.position = position and then
+				other.is_reference = is_reference and then
+				other.is_expanded = is_expanded and then
+				other.is_separate = is_separate and then
 				other.is_attached = is_attached and then
 				other.has_attached_mark = has_attached_mark and then
 				other.has_detachable_mark = has_detachable_mark and then
 				other.has_separate_mark = has_separate_mark
-		end
-
-	is_equivalent_excluding_status (other: FORMAL_A): BOOLEAN
-			-- Is `other' equivalent to the current object without
-			-- taking attachment and separateness status into account?
-		do
-			Result := position = other.position and then
-				is_reference = other.is_reference and then
-				is_expanded = other.is_expanded and then
-				is_separate = other.is_separate
 		end
 
 feature -- Access

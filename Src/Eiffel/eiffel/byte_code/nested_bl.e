@@ -296,7 +296,7 @@ feature
 					-- We are not the last call on the chain.
 				message.analyze
 			end
-			if real_type (target.type).is_separate then
+			if system.is_scoop and then real_type (target.type).is_separate then
 					-- Allocate a register for a container that stores arguments
 					-- to be passed to the scheduler.
 				create separate_register.make (pointer_c_type)

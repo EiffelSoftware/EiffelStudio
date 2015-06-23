@@ -3067,7 +3067,7 @@ feature {NONE} -- Visitors
 				l_set_rout_disp_feat.argument_count, l_set_rout_disp_feat.has_return_value, True)
 		end
 
-	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+	process_separate_b (a_node: SEPARATE_INSTRUCTION_B)
 			-- <Precursor>
 		do
 			a_node.arguments.process (Current)

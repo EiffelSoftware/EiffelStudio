@@ -739,7 +739,7 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
-	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+	process_separate_b (a_node: SEPARATE_INSTRUCTION_B)
 			-- <Precursor>
 		do
 			preorder_process (a_node)

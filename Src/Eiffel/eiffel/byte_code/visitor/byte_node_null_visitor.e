@@ -426,7 +426,7 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
-	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+	process_separate_b (a_node: SEPARATE_INSTRUCTION_B)
 			-- <Precursor>
 		do
 		end

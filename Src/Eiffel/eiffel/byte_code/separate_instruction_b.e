@@ -5,7 +5,7 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class SEPARATE_INSTURCTION_B
+class SEPARATE_INSTRUCTION_B
 
 inherit
 	INSTR_B
@@ -107,43 +107,45 @@ feature -- Code generation
 			generate_line_info
 			arguments.generate
 			if attached compound as c then
-					-- Open a new block to declare variables that are used for separate calls chains.
 				buf:= buffer
-				buf.put_new_line
-				buf.put_character ('{')
-				buf.indent
-					-- Generate computation of whether a request chain is required in the form
-					--		int uarg;
-					--		int uarg1 = RTS_OU (Current, loc1);
-					--		...
-					--		int uargN = RTS_OU (Current, locN);
-					--		RTS_SD
-					--		uarg = uarg1 || uarg2 || ... || uargN;
-				across
-					arguments as arg
-				loop
-						-- Arguments are attached to object-test-like locals.
-					check attached {OBJECT_TEST_LOCAL_B} arg.item.target as t then
-						if real_type (t.type).is_separate then
-							if not has_request_chain then
-								has_request_chain := True
-									-- Declare a variable that tells whether a request chain is required.
+				if system.is_scoop then
+						-- Generate computation of whether a request chain is required in the form
+						--		int uarg;
+						--		int uarg1 = RTS_OU (Current, loc1);
+						--		...
+						--		int uargN = RTS_OU (Current, locN);
+						--		RTS_SD
+						--		uarg = uarg1 || uarg2 || ... || uargN;
+					across
+						arguments as arg
+					loop
+							-- Arguments are attached to object-test-like locals.
+						check attached {OBJECT_TEST_LOCAL_B} arg.item.target as t then
+							if real_type (t.type).is_separate then
+								if not has_request_chain then
+									has_request_chain := True
+										-- Open a new block to declare variables that are used for separate calls chains.
+									buf.put_new_line
+									buf.put_character ('{')
+									buf.indent
+										-- Declare a variable that tells whether a request chain is required.
+									buf.put_new_line
+									buf.put_string ("int uarg;")
+								end
+									-- Declare a variable that tells whether this argument is uncontrolled.
 								buf.put_new_line
-								buf.put_string ("int uarg;")
+								buf.put_string ("int uarg")
+								buf.put_integer (arg.target_index)
+								buf.put_string (" = RTS_OU (Current, ")
+								buf.put_string (t.register_name)
+								buf.put_character (')')
+								buf.put_character (';')
 							end
-								-- Declare a variable that tells whether this argument is uncontrolled.
-							buf.put_new_line
-							buf.put_string ("int uarg")
-							buf.put_integer (arg.target_index)
-							buf.put_string (" = RTS_OU (Current, ")
-							buf.put_string (t.register_name)
-							buf.put_character (')')
-							buf.put_character (';')
 						end
 					end
 				end
 				if has_request_chain then
-						-- Declare
+						-- Initialize variables.
 					buf.put_new_line
 					buf.put_string ("RTS_SD;")
 					buf.put_new_line
@@ -210,11 +212,11 @@ feature -- Code generation
 						-- Generate request chain removal.
 					buf.put_new_line
 					buf.put_string ("if (uarg) RTS_SRD (Current);")
+						-- Close block.
+					buf.exdent
+					buf.put_new_line
+					buf.put_character ('}')
 				end
-					-- Close block.
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
 			end
 		end
 

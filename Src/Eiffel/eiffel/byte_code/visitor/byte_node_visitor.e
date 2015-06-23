@@ -780,7 +780,7 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
-	process_separate_b (a_node: SEPARATE_INSTURCTION_B)
+	process_separate_b (a_node: SEPARATE_INSTRUCTION_B)
 			-- Process `a_node'.
 		require
 			is_valid: is_valid

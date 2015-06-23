@@ -563,9 +563,8 @@ feature {NONE} -- Implementation
 					until
 						i > l_tuple.upper
 					loop
-						l_referee := l_tuple.item (i)
-						if l_referee /= Void then
-							l_reference_table.extend (l_index, l_object_table.index (l_referee), l_field_name)
+						if attached l_tuple.item (i) as r then
+							l_reference_table.extend (l_index, l_object_table.index (r), l_field_name)
 						end
 						i := i + 1
 					end

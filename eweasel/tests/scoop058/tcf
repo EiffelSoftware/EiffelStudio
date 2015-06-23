@@ -27,5 +27,32 @@ execute_final 	NONE 	exec_output_f
 execute_result 	ok
 compare		exec_output_f output
 
+cleanup_compile
+
+copy_sub 	Ace-non_scoop $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m1
+execute_result 	ok
+compare		exec_output_m1 output
+
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+execute_work 	NONE 	exec_output_w1
+execute_result 	ok
+compare		exec_output_w1 output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result	ok
+execute_final 	NONE 	exec_output_f1
+execute_result 	ok
+compare		exec_output_f1 output
+
+cleanup_compile
 
 test_end

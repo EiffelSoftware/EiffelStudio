@@ -69,7 +69,7 @@ feature -- Formatting
 			not_a_args_is_empty: not a_args.is_empty
 		local
 			l_str: STRING_32
-			l_arg: detachable ANY
+			l_arg: detachable separate ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN
@@ -271,7 +271,7 @@ feature {NONE} -- Symbols
 			-- Index close character
 
 ;note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -295,11 +295,11 @@ feature {NONE} -- Symbols
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class {STRING_FORMATTER}

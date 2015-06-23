@@ -9507,7 +9507,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9532,7 +9532,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9558,7 +9558,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9639,7 +9639,7 @@ end
 				if attached yyval81 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9668,7 +9668,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9698,7 +9698,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9779,7 +9779,7 @@ end
 				if attached yyval81 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9808,7 +9808,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -9838,7 +9838,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10029,7 +10029,7 @@ debug ("GEYACC")
 end
 
 				yyval81 := yyvs81.item (yyvsp81)
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10054,7 +10054,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10080,7 +10080,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10161,7 +10161,7 @@ end
 				if attached yyval81 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10190,7 +10190,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10220,7 +10220,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10301,7 +10301,7 @@ end
 				if attached yyval81 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10330,7 +10330,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			
@@ -10360,7 +10360,7 @@ end
 				if not is_ignoring_attachment_marks and then attached yyval81 as l_type then
 					l_type.set_attachment_mark (extract_keyword (yyvs13.item (yyvsp13)), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached yyval81 as l_type then
+				if attached yyval81 as l_type then
 					l_type.set_separate_mark (yyvs12.item (yyvsp12))
 				end
 			

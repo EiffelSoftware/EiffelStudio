@@ -1684,7 +1684,7 @@ Class_or_tuple_type:
 	| TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($1)
 				end
 			}
@@ -1694,7 +1694,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1704,7 +1704,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1737,7 +1737,7 @@ Class_or_tuple_type:
 				if attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1751,7 +1751,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1765,7 +1765,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1798,7 +1798,7 @@ Class_or_tuple_type:
 				if attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1812,7 +1812,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1826,7 +1826,7 @@ Class_or_tuple_type:
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1878,7 +1878,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $2
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($1)
 				end
 			}
@@ -1888,7 +1888,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($1), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1898,7 +1898,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($1), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1931,7 +1931,7 @@ Anchored_type:	Unmarked_anchored_type
 				if attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -1945,7 +1945,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1959,7 +1959,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -1992,7 +1992,7 @@ Anchored_type:	Unmarked_anchored_type
 				if attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($2)
 				end
 			}
@@ -2006,7 +2006,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), True, False)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}
@@ -2020,7 +2020,7 @@ Anchored_type:	Unmarked_anchored_type
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
 					l_type.set_attachment_mark (extract_keyword ($2), False, True)
 				end
-				if not is_ignoring_separate_mark and then attached $$ as l_type then
+				if attached $$ as l_type then
 					l_type.set_separate_mark ($3)
 				end
 			}

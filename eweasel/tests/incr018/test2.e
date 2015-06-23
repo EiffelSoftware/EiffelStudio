@@ -4,7 +4,7 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
-class TEST2 [G]
+class TEST2 [G -> ANY]
 
 feature
 	z: G

@@ -55,21 +55,7 @@ feature -- SSL
 		local
 			l_context: like context
 		do
-			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
-				create l_context.make_as_sslv23_server
-			elseif tls_protocol = {SSL_PROTOCOL}.ssl_3 then
-				create l_context.make_as_sslv3_server
-			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
-				create l_context.make_as_tlsv10_server
-			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_1 then
-				create l_context.make_as_tlsv11_server
-			elseif tls_protocol = {SSL_PROTOCOL}.dtls_1_0 then
-				create l_context.make_as_dtlsv1_server
-			else
-					--| By default tlsv1.2
-				create l_context.make_as_tlsv12_server
-			end
-
+			l_context := get_server_context
 			context := l_context
 			if a_cert_file /= Void then
 				l_context.use_certificate_file (create {PATH}.make_from_separate (a_cert_file))
@@ -90,6 +76,52 @@ feature -- SSL
 			end
 		end
 
+	initialize_server_ssl_with_string (a_certificate_x509_string, a_private_rsa_key_string : detachable separate IMMUTABLE_STRING_8)
+			-- Initialize the server SSL stuff for an accepted socket with manifest strings certificate and key.
+		local
+			l_context: like context
+		do
+			l_context := get_server_context
+			context := l_context
+
+			if a_certificate_x509_string /= Void then
+				l_context.use_certificate (create {STRING}.make_from_separate (a_certificate_x509_string))
+				set_certificate_x509_string (create {STRING}.make_from_separate (a_certificate_x509_string))
+			end
+			if a_private_rsa_key_string /= Void then
+				l_context.use_private_key(create {STRING}.make_from_separate (a_private_rsa_key_string))
+				set_private_rsa_key_string (create {STRING}.make_from_separate (a_private_rsa_key_string))
+			end
+
+			l_context.create_ssl
+
+			if attached l_context.last_ssl as l_ssl then
+				l_ssl.set_fd (descriptor)
+				l_ssl.accept
+				if l_ssl.was_error then
+					socket_error := l_ssl.ssl_error
+				end
+			end
+		end
+
+	get_server_context: SSL_CONTEXT
+			--Server SSL context.
+		do
+			inspect tls_protocol
+			when {SSL_PROTOCOL}.ssl_23  then
+				create Result.make_as_sslv23_server
+			when {SSL_PROTOCOL}.ssl_3 then
+				create Result.make_as_sslv3_server
+			when {SSL_PROTOCOL}.tls_1_0 then
+				create Result.make_as_tlsv10_server
+			when {SSL_PROTOCOL}.dtls_1_0 then
+				create Result.make_as_dtlsv1_server
+			else
+					--| By default tlsv1.2
+				create Result.make_as_tlsv12_server
+			end
+		end
+
 feature -- Status report		
 
 	error_number: INTEGER
@@ -105,6 +137,12 @@ feature -- Status report
 		end
 
 feature -- Access
+
+	certificate_x509_string: detachable IMMUTABLE_STRING_8
+			-- X09 certificate manifest string.
+
+	private_rsa_key_string: detachable IMMUTABLE_STRING_8
+			-- rsa key manifest string.
 
 	certificate_file_path: detachable PATH
 			-- File location of certificate.
@@ -133,6 +171,22 @@ feature -- Access
 		end
 
 feature -- Change Element
+
+	set_certificate_x509_string (a_x509: STRING_8)
+			-- X09 certificate manifest string.
+		do
+			certificate_x509_string := a_x509
+		ensure
+			certificate_x509_string_set: attached certificate_x509_string as l_509 implies l_509.same_string (a_x509)
+		end
+
+	set_private_rsa_key_string ( a_rsa_key: STRING_8)
+			-- rsa key manifest string.
+		do
+			private_rsa_key_string := a_rsa_key
+		ensure
+			private_rsa_key_string_set: attached private_rsa_key_string as l_rsa_key implies l_rsa_key.same_string (a_rsa_key)
+		end
 
 	set_certificate_file_path (a_path: PATH)
 			-- Set `certificate_file_path' to `a_path'

@@ -195,6 +195,44 @@ feature -- Access
 			c_ssl_ctx_free (ctx)
 		end
 
+	use_certificate (a_certificate: STRING)
+			-- Import the PEM certificate in `a_certificate' into this context.
+		local
+			c_string: C_STRING
+			err: INTEGER
+			l_exception: DEVELOPER_EXCEPTION
+		do
+			create c_string.make (a_certificate)
+			err := c_ssl_ctx_use_certificate (ctx, c_string.item)
+			if err <= 0 then
+				create l_exception
+				l_exception.set_description ("Cannot load certificate from memory " + a_certificate)
+				l_exception.raise
+			end
+		end
+
+	use_private_key (a_private_key: STRING)
+			-- Import the PEM private key in `a_private_key' into this context.
+		local
+			c_string: C_STRING
+			err: INTEGER
+			l_exception: DEVELOPER_EXCEPTION
+		do
+			create c_string.make (a_private_key)
+			err := c_ssl_ctx_use_rsaprivatekey (ctx, c_string.item)
+			if err <= 0 then
+				create l_exception
+				l_exception.set_description ("Cannot load private key from memory " + a_private_key)
+				l_exception.raise
+			end
+			err := c_ssl_ctx_check_private_key (ctx)
+			if err = 0 then
+				create l_exception
+				l_exception.set_description ("Private key does not match public key in certificate!")
+				l_exception.raise
+			end
+		end
+
 	use_certificate_file (a_file_name: PATH)
 			-- Import the PEM certificate in `a_file_name' into this context.
 		local
@@ -269,6 +307,37 @@ feature {NONE} -- Externals
 			"C use <openssl/ssl.h>"
 		alias
 			"SSL_CTX_new"
+		end
+
+	c_ssl_ctx_use_certificate(a_ctx_ptr, a_cert_buffer: POINTER ): INTEGER
+			-- Call external c_ssl_ctx_use_certificate.
+		external
+			"C inline use <eif_openssl.h>"
+		alias
+			"{
+				X509 *cert = NULL;
+				BIO *cbio;
+			
+				cbio = BIO_new_mem_buf((void*)(const char *)$a_cert_buffer, -1);
+				cert = PEM_read_bio_X509(cbio, NULL, 0, NULL);
+				return (EIF_INTEGER_32) SSL_CTX_use_certificate((SSL_CTX *)$a_ctx_ptr, cert);
+			}"
+		end
+
+
+	c_ssl_ctx_use_rsaprivatekey	(a_ctx_ptr, a_key_buffer: POINTER): INTEGER
+			-- Call external c_ssl_ctx_use_rsaprivatekey
+		external
+			"C inline use <eif_openssl.h>"
+		alias
+		 "{
+			BIO *kbio;
+			RSA *rsa = NULL;
+	
+			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+			rsa = PEM_read_bio_RSAPrivateKey(kbio, NULL, 0, NULL);
+			return (EIF_INTEGER_32) SSL_CTX_use_RSAPrivateKey((SSL_CTX *)$a_ctx_ptr, rsa);
+		  }"
 		end
 
 	c_ssl_ctx_use_certificate_file (a_ctx_ptr, file: POINTER; type: INTEGER): INTEGER

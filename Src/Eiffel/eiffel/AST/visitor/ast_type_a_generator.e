@@ -161,10 +161,8 @@ feature {NONE} -- Visitor implementation
 		do
 			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
 			last_type := f
-			if system.is_scoop then
-					-- The formal generic is separate by default.
-				s := True
-			end
+				-- The formal generic is separate by default.
+			s := True
 			if l_as.has_frozen_mark then
 				f.set_frozen_mark
 			elseif l_as.has_variant_mark then
@@ -480,7 +478,7 @@ feature {NONE} -- Type marks
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

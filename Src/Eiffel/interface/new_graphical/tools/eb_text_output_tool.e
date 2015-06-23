@@ -175,14 +175,18 @@ feature{NONE} -- Implementation
 
 feature -- Process
 
-	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK)
+	process_block_text (text_block: separate EB_PROCESS_IO_STRING_BLOCK)
 			-- Print `text_block' on `console'.
 		local
 			str: STRING
 			str_general: STRING_GENERAL
 		do
-			str ?= text_block.data
-			if str /= Void then
+			if attached text_block.data as s then
+				if attached {STRING} s as ss then
+					str := ss
+				else
+					create str.make_from_separate (s)
+				end
 				if source_encoding /= Void then
 					str_general := console_encoding_to_utf32 (source_encoding, str)
 				end

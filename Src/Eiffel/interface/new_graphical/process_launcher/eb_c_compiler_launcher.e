@@ -331,7 +331,7 @@ feature{NONE}  -- Actions
 
 feature {NONE} -- Implementation
 
-	data_storage: EB_PROCESS_IO_STORAGE
+	data_storage: separate EB_PROCESS_IO_STORAGE
 			-- <Precursor>
 		do
 			if is_for_finalization then

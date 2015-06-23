@@ -88,7 +88,7 @@ feature -- Printing
 			-- Print freezing output.
 		local
 			l_encoding: detachable ENCODING
-			l_data_block: EB_PROCESS_IO_DATA_BLOCK
+			l_data_block: separate EB_PROCESS_IO_STRING_BLOCK
 		do
 			if not is_printing_finalizing and freezing_storage.has_new_block then
 				if
@@ -121,7 +121,7 @@ feature -- Printing
 			-- Print finaizing output.
 		local
 			l_encoding: detachable ENCODING
-			l_data_block: EB_PROCESS_IO_DATA_BLOCK
+			l_data_block: separate EB_PROCESS_IO_STRING_BLOCK
 		do
 			if not is_printing_freezing and finalizing_storage.has_new_block then
 				if
@@ -153,7 +153,7 @@ feature -- Printing
 	print_external
 			-- Print output and error if any, of external command which is running.
 		local
-			b: EB_PROCESS_IO_DATA_BLOCK
+			b: separate EB_PROCESS_IO_STRING_BLOCK
 		do
 			if external_storage.has_new_block then
 				b := external_storage.all_blocks (True)
@@ -167,15 +167,21 @@ feature -- Printing
 
 feature -- Process
 
-	process_block_text (a_block: EB_PROCESS_IO_DATA_BLOCK; a_formatter: TEXT_FORMATTER; a_encoding: detachable ENCODING)
+	process_block_text (a_block: separate EB_PROCESS_IO_STRING_BLOCK; a_formatter: TEXT_FORMATTER; a_encoding: detachable ENCODING)
 			-- Print `text_block' on `console'.
 		require
 			a_block_attached: a_block /= Void
 			a_formatter_attached: a_formatter /= Void
 		local
+			l_str: STRING
 			l_lines: LIST [STRING_32]
 		do
-			if attached {READABLE_STRING_GENERAL} a_block.data as l_str then
+			if attached a_block.data as s then
+				if attached {STRING} s as ss then
+					l_str := ss
+				else
+					create l_str.make_from_separate (s)
+				end
 				l_lines := l_str.as_string_32.split ('%N')
 				from l_lines.start until l_lines.after loop
 					if attached l_lines.item as l_line then

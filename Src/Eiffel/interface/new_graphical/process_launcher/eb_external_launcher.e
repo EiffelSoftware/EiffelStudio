@@ -200,7 +200,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Process data storage
 
-	data_storage: EB_PROCESS_IO_STORAGE
+	data_storage: separate EB_PROCESS_IO_STORAGE
 			-- Data storage used to store output and error that come from the launched process
 		do
 			Result := external_storage

@@ -234,7 +234,22 @@ feature {NONE} -- Implementation
 			Precursor (other, a_address)
 			if other.is_created then
 				other.set_tls_protocol (tls_protocol)
-				other.initialize_server_ssl (certificate_file_path, key_file_path)
+
+				if
+					attached certificate_x509_string and then
+					attached private_rsa_key_string
+				then
+					other.initialize_server_ssl_with_string (certificate_x509_string, private_rsa_key_string)
+				elseif
+					attached certificate_file_path and then
+					attached key_file_path
+				then
+					other.initialize_server_ssl (certificate_file_path, key_file_path)
+				else
+					socket_error := "Certificate not found"
+				end
+
+
 			end
 		end
 

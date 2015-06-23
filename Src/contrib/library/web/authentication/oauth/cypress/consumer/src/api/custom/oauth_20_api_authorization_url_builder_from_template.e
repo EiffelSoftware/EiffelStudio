@@ -7,6 +7,10 @@ note
 class
 	OAUTH_20_API_AUTHORIZATION_URL_BUILDER_FROM_TEMPLATE
 
+inherit
+
+	OAUTH_SHARED_ENCODER
+
 create
 	make
 

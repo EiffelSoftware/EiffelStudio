@@ -11,6 +11,7 @@ inherit
 
 	SIGNATURE_SERVICE
 
+	OAUTH_SHARED_ENCODER
 
 feature -- Access
 

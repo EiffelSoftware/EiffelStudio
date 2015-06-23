@@ -7,4 +7,11 @@ copy_raw 	test.e  $CLUSTER test.e
 compile_melted
 compile_result validity_error TEST V1SE
 
+copy_sub 	Ace-non_scoop $TEST Ace
+
+abort_compile
+
+compile_melted
+compile_result validity_error TEST V1SE
+
 test_end

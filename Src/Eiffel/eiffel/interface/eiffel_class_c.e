@@ -279,7 +279,6 @@ feature -- Action
 					parser.set_syntax_version ({EIFFEL_SCANNER}.ecma_syntax)
 				end
 				parser.set_is_ignoring_attachment_marks (lace_class.is_void_unsafe)
-				parser.ignore_separate_mark (not system.is_scoop)
 				Inst_context.set_group (cluster)
 				parser.parse_class_from_file (file, Current, Void)
 				if l_error_level = error_handler.error_level then
@@ -2161,7 +2160,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

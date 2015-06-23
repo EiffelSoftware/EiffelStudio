@@ -77,7 +77,7 @@ feature	-- Basic operations
 			mutex.unlock
 		end
 
-	all_blocks (block_to_be_removed: BOOLEAN) : EB_PROCESS_IO_DATA_BLOCK
+	all_blocks (block_to_be_removed: BOOLEAN) : EB_PROCESS_IO_STRING_BLOCK
 			-- All blocks from current storage.
 			-- If `block_to_be_removed' is True, returned blocks will be removed from current storage.
 		local
@@ -131,7 +131,7 @@ feature	-- Basic operations
 				end
 				mutex.unlock
 			end
-			create {EB_PROCESS_IO_STRING_BLOCK} Result.make (s, False, is_end)
+			create Result.make (s, False, is_end)
 		end
 
 	wipe_out

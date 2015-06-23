@@ -144,7 +144,7 @@ feature -- Basic Operations
 			end
 		end
 
-	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK)
+	process_block_text (text: separate EB_PROCESS_IO_STRING_BLOCK)
 			-- Print `text' on `target_development_window'.
 		local
 			eo: ES_CONSOLE_TOOL_PANEL

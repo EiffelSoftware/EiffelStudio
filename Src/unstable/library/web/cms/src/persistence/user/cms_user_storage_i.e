@@ -56,6 +56,20 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
+	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User with activation token `a_token', if any.
+		deferred
+		ensure
+			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
+		end
+
+	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User with password token `a_token', if any.
+		deferred
+		ensure
+			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
+		end
+
 	is_valid_credential (a_u, a_p: READABLE_STRING_32): BOOLEAN
 			-- Does account with username `a_username' and password `a_password' exist?
 		deferred
@@ -138,6 +152,30 @@ feature -- Change: roles and permissions
 
 	save_user_role (a_user_role: CMS_USER_ROLE)
 			-- Save user role `a_user_role'
+		deferred
+		end
+
+feature -- Change: User activation
+
+	save_activation (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>.
+		deferred
+		end
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- <Precursor>.
+		deferred
+		end
+
+feature -- Change: User password recovery
+
+	save_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>.
+		deferred
+		end
+
+	remove_password (a_token: READABLE_STRING_32)
+			-- <Precursor>.
 		deferred
 		end
 

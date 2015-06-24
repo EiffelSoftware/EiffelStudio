@@ -18,8 +18,11 @@
 	<library name="cms_blog_module" location="modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
 	<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 	<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
+	<library name="cms_auth_module" location="..\..\modules\auth\auth-safe.ecf" readonly="false"/>
 	<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
+	<!--
 	<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
+	-->
 	<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
 	<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 	<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			initialize
 		ensure
 			name_set: name = a_name
+			status_not_active: status = not_active
 		end
 
 	make_with_id (a_id: INTEGER_64)
@@ -38,11 +39,13 @@ feature {NONE} -- Initialization
 			initialize
 		ensure
 			id_set: id = a_id
+			status_not_active: status = not_active
 		end
 
 	initialize
 		do
 			create creation_date.make_now_utc
+			mark_not_active
 		end
 
 feature -- Access
@@ -70,6 +73,13 @@ feature -- Access
 
 	last_login_date: detachable DATE_TIME
 			-- User last login.
+
+	status: INTEGER
+			-- Associated status for the current user.
+			-- default:	not_active
+			--			active
+			--			trashed
+
 
 feature -- Roles
 
@@ -116,6 +126,12 @@ feature -- Status report
 			-- Is Current same as `other'?
 		do
 			Result := other /= Void and then id = other.id
+		end
+
+	is_active: BOOLEAN
+			-- is the current user active?
+		do
+			Result := status = {CMS_USER}.active
 		end
 
 feature -- Change element
@@ -224,6 +240,52 @@ feature -- Change element: data
 				l_data.remove (k)
 			end
 		end
+
+feature -- Status change		
+
+	mark_not_active
+			-- Set status to not_active
+		do
+			set_status (not_active)
+		ensure
+			status_not_active: status = not_active
+		end
+
+	mark_active
+			-- Set status to active.
+		do
+			set_status (active)
+		ensure
+			status_active: status = active
+		end
+
+	mark_trashed
+			-- Set status to trashed.
+		do
+			set_status (trashed)
+		ensure
+			status_trash: status = trashed
+		end
+
+	set_status (a_status: like status)
+			-- Assign `status' with `a_status'.
+		do
+			status := a_status
+		ensure
+			status_set:  status = a_status
+		end
+
+
+feature -- User status
+
+	not_active: INTEGER = 0
+			-- The user is not active.
+
+	active: INTEGER = 1
+			-- The user is active
+
+	Trashed: INTEGER = -1
+			-- The user is trashed (soft delete), ready to be deleted/destroyed from storage.
 
 invariant
 

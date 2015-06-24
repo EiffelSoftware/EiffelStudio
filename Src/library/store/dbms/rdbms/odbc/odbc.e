@@ -620,7 +620,6 @@ feature -- External
 			l_area: MANAGED_POINTER
 			i: INTEGER
 			l_data, l_null: POINTER
-			l_str_area: SPECIAL [CHARACTER_8]
 		do
 			Result := odbc_put_data (con_context_pointer, no_descriptor, index, $l_data)
 			ar.grow (Result)
@@ -628,16 +627,7 @@ feature -- External
 			if Result > 0 then
 				l_area := temporary_reusable_managed_pointer
 				l_area.set_from_pointer (l_data, Result)
-
-				l_str_area := ar.area
-				from
-					i := 0
-				until
-					i = Result
-				loop
-					l_str_area [i] := l_area.read_integer_8 (i).to_character_8
-					i := i + 1
-				end
+				l_area.read_into_special_character_8 (ar.area, 0, 0, Result)
 			end
 			if l_data /= l_null then
 					-- `odbc_put_data' allocate some memory, we need to free it.
@@ -1464,7 +1454,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

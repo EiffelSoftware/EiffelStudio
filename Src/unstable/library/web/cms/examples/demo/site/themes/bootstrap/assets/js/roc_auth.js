@@ -1,7 +1,8 @@
 var ROC_AUTH = ROC_AUTH || { };
 
-var loginURL = "/login";
-var logoutURL = "/logoff";
+var loginURL = "/basic_auth_login";
+var logoutURL = "/basic_auth_logoff";
+
 var userAgent = navigator.userAgent.toLowerCase();
 var firstLogIn = true;
  
@@ -305,3 +306,16 @@ ROC_AUTH.create_form = function() {
 };
 
 
+var password = document.getElementById("password")
+  , confirm_password = document.getElementById("confirm_password");
+
+ROC_AUTH.validatePassword =function(){
+  if(password.value != confirm_password.value) {
+    confirm_password.setCustomValidity("Passwords Don't Match");
+  } else {
+    confirm_password.setCustomValidity('');
+  }
+}
+
+password.onchange = ROC_AUTH.validatePassword();
+confirm_password.onkeyup = ROC_AUTH.validatePassword;

@@ -30,3 +30,19 @@ CREATE TABLE `role_permissions`(
   `module` VARCHAR(255)
 );
 
+CREATE TABLE `users_activations` (
+  `aid` INTEGER  PRIMARY KEY AUTO_INCREMENT NOT NULL CHECK (`aid` >= 0),
+  `token` VARCHAR(255) NOT NULL,
+  `uid` INTEGER NOT NULL CHECK (`uid` >= 0),
+  `created` DATETIME NOT NULL,
+  CONSTRAINT `token` UNIQUE  (`token`)
+);
+
+CREATE TABLE `users_password_recovery` (
+  `aid` INTEGER  PRIMARY KEY AUTO_INCREMENT NOT NULL CHECK (`aid` >= 0),
+  `token` VARCHAR(255) NOT NULL,
+  `uid` INTEGER NOT NULL CHECK (`uid` >= 0),
+  `created` DATETIME NOT NULL,
+  CONSTRAINT `token` UNIQUE  (`token`)
+);
+

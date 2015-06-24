@@ -921,13 +921,19 @@ feature -- Generation
 				across
 					reg_ic.item.blocks as ic
 				loop
---					if attached {CMS_SMARTY_CONTENT_BLOCK} ic.item as l_tpl_block then
---						across
---							page.variables as var_ic
---						loop
---							l_tpl_block.set_value (var_ic.item, var_ic.key)
---						end
---					end
+					if attached {CMS_SMARTY_TEMPLATE_BLOCK} ic.item as l_tpl_block then
+							-- Apply page variables to smarty block.
+							-- FIXME: maybe add notion of values at the CMS_BLOCK level
+							--        or consider a CMS_BLOCK_WITH_VALUES ...
+						across
+							page.variables as var_ic
+						loop
+							if not l_tpl_block.values.has (var_ic.key) then
+									-- Do not overwrite if has key.
+								l_tpl_block.set_value (var_ic.item, var_ic.key)
+							end
+						end
+					end
 					page.add_to_region (theme.block_html (ic.item), reg_ic.item.name)
 				end
 			end

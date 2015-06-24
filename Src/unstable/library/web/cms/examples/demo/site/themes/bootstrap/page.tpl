@@ -61,7 +61,7 @@
           <!-- Main Content Section -->
 		  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
           {$page.region_content/}   
-        </div>
+          </div>
 
 
       </div>

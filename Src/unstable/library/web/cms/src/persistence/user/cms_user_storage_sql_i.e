@@ -62,7 +62,7 @@ feature -- Access: user
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".user")
+			write_information_log (generator + ".user_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "uid")
 			sql_query (select_user_by_id, l_parameters)
@@ -100,6 +100,40 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
 			sql_query (select_user_by_email, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_user
+			else
+				check no_more_than_one: sql_rows_count = 0 end
+			end
+		end
+
+	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User for the given activation token `a_token', if any.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".user_by_activation_token")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_query (select_user_by_activation_token, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_user
+			else
+				check no_more_than_one: sql_rows_count = 0 end
+			end
+		end
+
+	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User for the given password token `a_token', if any.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".user_by_password_token")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_query (select_user_by_password_token, l_parameters)
 			if sql_rows_count = 1 then
 				Result := fetch_user
 			else
@@ -155,6 +189,7 @@ feature -- Change: user
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
+				l_parameters.put (a_user.status, "status")
 
 				sql_change (sql_insert_user, l_parameters)
 				if not error_handler.has_error then
@@ -197,6 +232,7 @@ feature -- Change: user
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
+				l_parameters.put (a_user.status, "status")
 
 				sql_change (sql_update_user, l_parameters)
 			else
@@ -441,6 +477,107 @@ feature -- Change: roles and permissions
 			end
 		end
 
+
+feature -- Access: User activation
+
+	activation_elapsed_time (a_token: READABLE_STRING_32): INTEGER_32
+			-- amount of time that has passed in days since the token `a_token' was saved.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".activation_elapsed_time")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_query (sql_select_activation_expiration, l_parameters)
+			if sql_rows_count = 1 then
+				Result := sql_read_integer_32 (1)
+			end
+		end
+
+	user_id_by_activation (a_token: READABLE_STRING_32): INTEGER_64
+			-- User id associatied with a token `a_token', if any.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".user_id_by_actication")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_query (sql_select_userid_activation, l_parameters)
+			if sql_rows_count = 1 then
+				Result := sql_read_integer_32 (1)
+			end
+		end
+
+feature -- Change: User activation
+
+	save_activation (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_utc_date: DATE_TIME
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".save_activation")
+			create l_utc_date.make_now_utc
+			create l_parameters.make (2)
+			l_parameters.put (a_token, "token")
+			l_parameters.put (a_id, "uid")
+			l_parameters.put (l_utc_date, "utc_date")
+			sql_change (sql_insert_activation, l_parameters)
+			sql_commit_transaction
+		end
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".remove_activation")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_change (sql_remove_activation, l_parameters)
+			sql_commit_transaction
+		end
+
+feature -- Change: User password recovery
+
+	save_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_utc_date: DATE_TIME
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".save_password")
+			create l_utc_date.make_now_utc
+			create l_parameters.make (2)
+			l_parameters.put (a_token, "token")
+			l_parameters.put (a_id, "uid")
+			l_parameters.put (l_utc_date, "utc_date")
+			sql_change (sql_insert_password, l_parameters)
+			sql_commit_transaction
+		end
+
+	remove_password (a_token: READABLE_STRING_32)
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".remove_password")
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "token")
+			sql_change (sql_remove_password, l_parameters)
+			sql_commit_transaction
+		end
+
 feature {NONE} -- Implementation: User
 
 	user_salt (a_username: READABLE_STRING_32): detachable READABLE_STRING_8
@@ -488,6 +625,9 @@ feature {NONE} -- Implementation: User
 				end
 				if attached sql_read_string (5) as l_email then
 					Result.set_email (l_email)
+				end
+				if attached sql_read_integer_32 (6) as l_status then
+					Result.set_status (l_status)
 				end
 			else
 				check expected_valid_user: False end
@@ -551,10 +691,11 @@ feature {NONE} -- Sql Queries: USER
 	Select_salt_by_username: STRING = "SELECT salt FROM Users WHERE name =:name;"
 			-- Retrieve salt by username if exists.
 
-	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created) VALUES (:name, :password, :salt, :email, :created);"
-			-- SQL Insert to add a new node.
+	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status) VALUES (:name, :password, :salt, :email, :created, :status);"
+			-- SQL Insert to add a new user.
 
-	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email WHERE uid=:uid;"
+	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status WHERE uid=:uid;"
+			-- SQL update to update an existing user.
 
 feature {NONE} -- Sql Queries: USER ROLE
 
@@ -583,5 +724,33 @@ feature {NONE} -- Sql Queries: USER ROLE
 
 	select_role_permissions_by_role_id: STRING = "SELECT permission, module FROM role_permissions WHERE rid=:rid;"
 			-- User role permissions for role id :rid;
+
+feature {NONE} -- Sql Queries: USER ACTIVATION
+
+	sql_insert_activation: STRING = "INSERT INTO users_activations (token, uid, created) VALUES (:token, :uid, :utc_date);"
+			-- SQL insert a new activation :token.
+
+	sql_select_activation_expiration: STRING = "SELECT DATEDIFF(day,created,UTC_DATE()) FROM users_activations where token = :token;"
+			-- elapsed time that has passed in days since the token `a_token' was saved.
+
+	sql_select_userid_activation: STRING = "SELECT uid FROM users_activations where token = :token;"
+			-- Retrieve userid given the activation token.
+
+	Select_user_by_activation_token: STRING = "SELECT u.* FROM users as u JOIN users_activations as ua ON ua.uid = u.uid and ua.token = :token;"
+			-- Retrieve user by activation token if exist.
+
+	Sql_remove_activation: STRING = "DELETE FROM users_activations WHERE token = :token;"
+			-- Remove activation token.
+
+feature {NONE} -- User Password Recovery
+
+	sql_insert_password: STRING = "INSERT INTO users_password_recovery (token, uid, created) VALUES (:token, :uid, :utc_date);"
+			-- SQL insert a new password recovery :token.
+
+	Sql_remove_password: STRING = "DELETE FROM users_password_recovery WHERE token = :token;"
+			-- Retrieve password if exist.
+
+	Select_user_by_password_token: STRING = "SELECT u.* FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
+			-- Retrieve user by password token if exist.
 
 end

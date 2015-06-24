@@ -29,6 +29,24 @@ feature -- Access
 			Result := storage.user_by_name (a_username)
 		end
 
+	user_by_email (a_email: READABLE_STRING_32): detachable CMS_USER
+			-- User by email `a_email', if any.
+		do
+			Result := storage.user_by_email (a_email)
+		end
+
+	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User by activation token `a_token'.
+		do
+			Result := storage.user_by_activation_token (a_token)
+		end
+
+	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User by password token `a_token'.
+		do
+			Result := storage.user_by_password_token (a_token)
+		end
+
 feature -- Status report
 
 	is_valid_credential (a_auth_login, a_auth_password: READABLE_STRING_32): BOOLEAN
@@ -132,5 +150,44 @@ feature -- Change User
 		do
 			storage.update_user (a_user)
 		end
+
+feature -- User Activation
+
+	new_activation (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- Save activation token `a_token', for the user with the id `a_id'.
+		do
+			storage.save_activation (a_token, a_id)
+		end
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- Remove activation token `a_token', from the storage.
+		do
+			storage.remove_activation (a_token)
+		end
+
+feature -- User Password Recovery
+
+	new_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- Save password token `a_token', for the user with the id `a_id'.
+		do
+			storage.save_password (a_token, a_id)
+		end
+
+	remove_password (a_token: READABLE_STRING_32)
+			-- Remove password token `a_token', from the storage.
+		do
+			storage.remove_password (a_token)
+		end
+
+feature -- User status
+
+	not_active: INTEGER = 0
+			-- The user is not active.
+
+	active: INTEGER = 1
+			-- The user is active
+
+	Trashed: INTEGER = -1
+			-- The user is trashed (soft delete), ready to be deleted/destroyed from storage.
 
 end

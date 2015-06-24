@@ -55,21 +55,62 @@ feature -- HTTP Methods
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
 				unset_current_user (req)
-				l_page.set_status_code ({HTTP_STATUS_CODE}.found) -- Note: can not use {HTTP_STATUS_CODE}.unauthorized for redirection
-				if attached {WSF_STRING} req.query_parameter ("destination") as l_uri then
-					l_url := req.absolute_script_url (l_uri.url_encoded_value)
-				else
-					l_url := req.absolute_script_url ("")
-				end
+				l_page.set_status_code ({HTTP_STATUS_CODE}.unauthorized) -- Note: can not use {HTTP_STATUS_CODE}.unauthorized for redirection
+				l_url := req.absolute_script_url ("")
 				i := l_url.substring_index ("://", 1)
 				if i > 0 then
 						-- Note: this is a hack to have the logout effective on various browser
 						-- (firefox requires this).
 					l_url.replace_substring ("://_logout_basic_auth_@", i, i + 2)
 				end
-				l_page.set_redirection (l_url)
+				if
+					attached req.http_user_agent as l_user_agent and then
+					browser_name (l_user_agent).is_case_insensitive_equal_general ("Firefox")
+				then
+					-- Set status to refirect
+					-- and redirect to the host page.
+					l_page.set_status_code ({HTTP_STATUS_CODE}.found)
+					l_page.set_redirection (l_url)
+				end
 				l_page.execute
 			end
 		end
+
+
+	browser_name (a_user_agent: READABLE_STRING_8): READABLE_STRING_32
+            -- Browser name.
+            --                      Must contain    Must not contain
+            --  Firefox             Firefox/xyz     Seamonkey/xyz
+            --  Seamonkey           Seamonkey/xyz
+            --  Chrome              Chrome/xyz      Chromium/xyz
+            --  Chromium            Chromium/xyz
+            --  Safari              Safari/xyz      Chrome/xyz
+            --                                      Chromium/xyz
+            --  Opera               OPR/xyz [1]
+            --                      Opera/xyz [2]
+            --  Internet Explorer   ;MSIE xyz;      Internet Explorer doesn't put its name in the BrowserName/VersionNumber format
+
+        do
+            if
+                a_user_agent.has_substring ("Firefox") and then
+                not a_user_agent.has_substring ("Seamonkey")
+            then
+                Result := "Firefox"
+            elseif a_user_agent.has_substring ("Seamonkey") then
+                Result := "Seamonkey"
+            elseif a_user_agent.has_substring ("Chrome") and then not a_user_agent.has_substring ("Chromium")then
+                Result := "Chrome"
+            elseif a_user_agent.has_substring ("Chromium") then
+                Result := "Chromiun"
+            elseif a_user_agent.has_substring ("Safari") and then not (a_user_agent.has_substring ("Chrome") or else a_user_agent.has_substring ("Chromium"))  then
+                Result := "Safari"
+            elseif a_user_agent.has_substring ("OPR") or else  a_user_agent.has_substring ("Opera") then
+                Result := "Opera"
+            elseif a_user_agent.has_substring ("MSIE") or else a_user_agent.has_substring ("Trident")then
+                Result := "Internet Explorer"
+            else
+                Result := "Unknown"
+            end
+        end
 
 end

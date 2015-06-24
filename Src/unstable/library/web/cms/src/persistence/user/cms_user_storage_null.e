@@ -34,6 +34,14 @@ feature -- Access: user
 		do
 		end
 
+	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+		do
+		end
+
+	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
+		do
+		end
+
 	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
 		do
 		end
@@ -73,6 +81,30 @@ feature -- Access: roles and permissions
 feature -- Change: roles and permissions		
 
 	save_user_role (a_user_role: CMS_USER_ROLE)
+		do
+		end
+
+feature -- Change: User activation
+
+	save_activation (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>.
+		do
+		end
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- <Precursor>.
+		do
+		end
+
+feature -- Change: User password recovery
+
+	save_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
+			-- <Precursor>.
+		do
+		end
+
+	remove_password (a_token: READABLE_STRING_32)
+			-- <Precursor>.
 		do
 		end
 

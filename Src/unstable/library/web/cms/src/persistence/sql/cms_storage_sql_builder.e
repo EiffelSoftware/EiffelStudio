@@ -36,6 +36,7 @@ feature -- Initialization
 			create u.make ("admin")
 			u.set_password ("istrator#")
 			u.set_email (a_setup.site_email)
+			u.set_status ({CMS_USER}.active)
 			a_storage.new_user (u)
 
 				--| Node			
@@ -74,16 +75,19 @@ feature -- Initialization
 			create u.make ("auth")
 			u.set_password ("enticated#")
 			u.set_email (a_setup.site_email)
+			u.set_status ({CMS_USER}.active)
 			a_storage.new_user (u)
 
 			create u.make ("test")
 			u.set_password ("test#")
 			u.set_email (a_setup.site_email)
+			u.set_status ({CMS_USER}.active)
 			a_storage.new_user (u)
 
 			create u.make ("view")
 			u.set_password ("only#")
 			u.set_email (a_setup.site_email)
+			u.set_status ({CMS_USER}.active)
 			u.set_roles (l_roles)
 			a_storage.new_user (u)
 		end

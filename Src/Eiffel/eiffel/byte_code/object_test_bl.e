@@ -288,7 +288,7 @@ feature -- C code generation
 							buf.put_two_character (')', ';')
 							info.generate_end (buf)
 						end
-						if not l_target_solved_type.is_separate and then source_type.is_separate then
+						if system.is_scoop and then not l_target_solved_type.is_separate and then source_type.is_separate then
 								-- Check if expression object belongs to the current processor.
 							buf.put_new_line
 							buf.put_string ("if ((")
@@ -362,7 +362,7 @@ feature {NONE} -- Object test value
 			-- Expression value is stored in a target register
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

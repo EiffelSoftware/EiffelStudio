@@ -23,9 +23,9 @@ feature -- Initialization
 			-- Create a database handler for ODBC with common settings.
 		do
 			create database_error_handler.make
-			create db_application.login (username, password)
-			db_application.set_hostname (hostname)
-			db_application.set_data_source (database_name)
+			create db_application.login (default_username, default_password)
+			db_application.set_hostname (default_username)
+			db_application.set_data_source (default_database_name)
 			db_application.set_base
 			create db_control.make
 		end

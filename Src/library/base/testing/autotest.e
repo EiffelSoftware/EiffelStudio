@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {AUTOTEST}."
-	author: ""
+	description: "Root class of testing system. Put failing test cases here to make it much easier to debug them."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,17 +12,9 @@ create
 feature {NONE} -- Initialization
 
 	make
-		local
-			t: TEST_UTF_CONVERTER
 		do
 				-- Use this as a place holder to manually run some tests outside of
 				-- EiffelStudio.
-			create t
-			t.test_invalid_utf_8
-			t.test_invalid_utf_16
-			t.test_utf_16_with_escape_character
-			t.test_utf_32_with_escape_character_for_utf_16
-			t.test_utf_32_with_escape_character_for_utf_8
 		end
 
 note

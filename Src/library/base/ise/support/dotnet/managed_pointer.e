@@ -7,8 +7,9 @@ note
 		MANAGED_POINTER does by allocating in fact a 1 byte sized pointer for
 		this particular case.
 		]"
-	legal: "See notice at end of class."
+	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,11 +37,13 @@ feature {NONE} -- Initialization
 		require
 			n_non_negative: n >= 0
 		do
-			item := item.memory_calloc (1, n.max (1))
+			increment_counter
+			item := item.memory_calloc (n.max (1), 1)
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			count := n
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
@@ -53,12 +56,14 @@ feature {NONE} -- Initialization
 		require
 			data_not_void: data /= Void
 		do
+			increment_counter
 			count := data.count
 			item := item.memory_alloc (count.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			put_array (data, 0)
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = data.count
@@ -71,12 +76,14 @@ feature {NONE} -- Initialization
 			a_ptr_not_null: a_ptr /= default_pointer
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := item.memory_alloc (n.max (1))
 			if item = default_pointer then
 				(create {EXCEPTIONS}).raise ("No more memory")
 			end
 			item.memory_copy (a_ptr, n)
 			count := n
+			is_shared := False
 		ensure
 			item_set: item /= default_pointer
 			count_set: count = n
@@ -89,6 +96,7 @@ feature {NONE} -- Initialization
 			a_ptr_valid: a_ptr = default_pointer implies n = 0
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := a_ptr
 			count := n
 			is_shared := True
@@ -101,10 +109,13 @@ feature {NONE} -- Initialization
 	own_from_pointer (a_ptr: POINTER; n: INTEGER)
 			-- Use directly `a_ptr' with count `n' to hold current data and free
 			-- its associated C memory when Current is collected.
+			-- It assumes that `a_ptr' was allocated using the C-`malloc' routine and thus
+			-- will be freed by calling the C-`free' routine.
 		require
-			a_ptr_valid: a_ptr = default_pointer implies n = 0
+			a_ptr_valid: a_ptr /= default_pointer
 			n_non_negative: n >= 0
 		do
+			increment_counter
 			item := a_ptr
 			count := n
 			is_shared := False
@@ -133,7 +144,7 @@ feature -- Settings
 
 feature -- Access
 
-	item: POINTER
+	item: POINTER note option: transient attribute end
 			-- Access to allocated memory.
 
 	count: INTEGER
@@ -147,7 +158,9 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered equal to current object?
 		do
-			Result := count = other.count and then item.memory_compare (other.item, count)
+			if count = other.count then
+				Result := (item = other.item) or else item.memory_compare (other.item, count)
+			end
 		end
 
 feature -- Duplication
@@ -158,16 +171,13 @@ feature -- Duplication
 			-- and current is not large enough to hold `other' create
 			-- a new pointer area and `is_shared' is set to `False'.
 		do
-			if count >= other.count then
-					-- No need to reallocate, it is safe to just copy.
-				item.memory_copy (other.item, other.count)
-			else
-					-- We need to reallocate memory here
-				if is_shared then
-						-- Before `item' was shared, so we simply allocate
+			if other /= Current then
+				if item = other.item or is_shared then
+						-- Copy was most likely called via `twin' but even
+						-- if it is not, it makes sense to duplicate the memory.
+						-- Or before `item' was shared, so we simply allocate
 						-- a new memory area from `other' and reset
 						-- the `is_shared' flag.
-					is_shared := False
 					make_from_pointer (other.item, other.count)
 				else
 						-- Simply resize Current and copy data.
@@ -176,8 +186,8 @@ feature -- Duplication
 				end
 			end
 		ensure then
-			sharing_status_not_preserved:
-				(old is_shared and not is_shared) implies (other.count > old count)
+			sharing_status_not_preserved: (other /= Current) implies (old is_shared implies not is_shared)
+			count_preserved: count = other.count
 		end
 
 feature -- Access: Platform specific
@@ -341,19 +351,78 @@ feature -- Access: Platform specific
 			count_positive: a_count > 0
 			valid_position: (pos + a_count) <= count
 		local
-			i: INTEGER
+			l_area: SPECIAL [NATURAL_8]
 		do
-			from
-				create Result.make_filled (0, 1, a_count)
-			until
-				i >= a_count
-			loop
-				Result.put (read_natural_8 (pos + i), i + 1)
-				i := i + 1
-			end
+			create l_area.make_filled (0, a_count)
+			read_into_special_natural_8 (l_area, pos, 0, a_count)
+			create Result.make_from_special (l_area)
 		ensure
 			read_array_not_void: Result /= Void
 			read_array_valid_count: Result.count = a_count
+		end
+
+	read_special_natural_8 (source_index, n: INTEGER): SPECIAL [NATURAL_8]
+			-- Read `n' bytes of Current from position `source_index'.
+		require
+			source_index_non_negative: source_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+		do
+			create Result.make_filled (0, n)
+			read_into_special_natural_8 (Result, source_index, 0, n)
+		end
+
+	read_special_character_8 (source_index, n: INTEGER): SPECIAL [CHARACTER_8]
+			-- Read `n' bytes of Current from position `source_index'.
+		require
+			source_index_non_negative: source_index >= 0
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+		do
+			create Result.make_filled ('%U', n)
+			read_into_special_character_8 (Result, source_index, 0, n)
+		end
+
+	read_into_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; source_index, destination_index, n: INTEGER)
+			-- Read `n' bytes of Current from position `source_index' and store them in `a_spec' at `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= a_spec.count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= a_spec.count
+		do
+			{MARSHAL}.copy (item + source_index, a_spec.native_array, destination_index, n)
+		end
+
+	read_into_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; source_index, destination_index, n: INTEGER)
+			-- Read `n' bytes of Current from position `source_index' and store them in `a_spec' at `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= a_spec.count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= count
+			n_is_small_enough_for_destination: destination_index + n <= a_spec.count
+		local
+			i, j, nb: INTEGER
+		do
+				--| Note for reader. We do not use {MARSHAL}.copy because the current mapping of CHARACTER_8 is onto
+				--| System.Char which is not 8 bits.
+			from
+				i := source_index
+				j := destination_index
+				nb := source_index + n
+			until
+				i = nb
+			loop
+				a_spec.put (read_natural_8 (i).to_character_8, j)
+				i := i + 1
+				j := j + 1
+			end
 		end
 
 feature -- Element change: Platform specific
@@ -550,7 +619,53 @@ feature -- Element change: Platform specific
 		do
 			{MARSHAL}.copy (data.to_cil, 0, item + pos, data.count)
 		ensure
-			inserted: data.is_equal (read_array (pos, data.count))
+			inserted: read_array (pos, data.count) ~ data
+		end
+
+	put_special_natural_8 (a_spec: SPECIAL [NATURAL_8]; source_index, destination_index, n: INTEGER)
+			-- Write `n' bytes of `a_spec' from position `source_index' to Current at position `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= a_spec.count
+			n_is_small_enough_for_destination: destination_index + n <= count
+		do
+			{MARSHAL}.copy (a_spec.native_array, source_index, item + destination_index, n)
+		ensure
+			inserted: a_spec.same_items (read_special_natural_8 (destination_index, n), 0, source_index, n)
+		end
+
+	put_special_character_8 (a_spec: SPECIAL [CHARACTER_8]; source_index, destination_index, n: INTEGER)
+			-- Write `n' bytes of `a_spec' from position `source_index' to Current at position `destination_index'.
+		require
+			a_spec_not_void: a_spec /= Void
+			source_index_non_negative: source_index >= 0
+			destination_index_non_negative: destination_index >= 0
+			destination_index_in_bound: destination_index <= count
+			n_non_negative: n >= 0
+			n_is_small_enough_for_source: source_index + n <= a_spec.count
+			n_is_small_enough_for_destination: destination_index + n <= count
+		local
+			i, j, nb: INTEGER
+		do
+				--| Note for reader. We do not use {MARSHAL}.copy because the current mapping of CHARACTER_8 is onto
+				--| System.Char which is not 8 bits.
+			from
+				i := source_index
+				j := destination_index
+				nb := source_index + n
+			until
+				i = nb
+			loop
+				put_character (a_spec.item (i), j)
+				i := i + 1
+				j := j + 1
+			end
+		ensure
+			inserted: a_spec.same_items (read_special_character_8 (destination_index, n), 0, source_index, n)
 		end
 
 feature -- Access: Little-endian format
@@ -1137,25 +1252,45 @@ feature {NONE} -- Disposal
 
 	dispose
 			-- Release memory pointed by `item'.
+		local
+			null: POINTER
 		do
 			if not is_shared then
 				item.memory_free
 			end
+			item := null
 			is_shared := False
-					-- We do not reset `item' to `default_pointer'
-					-- because the only way to get there is that current
-					-- instance is not reachable anymore.
 		ensure then
 			shared_reset: not is_shared
 		end
+
+feature {NONE} -- Debugging
+
+	allocation_counter: CELL [NATURAL_64]
+			-- Store current number of allocation being made.
+		once
+			create Result.put (0)
+		end
+
+	counter: NATURAL_64 note option: transient attribute end
+			-- Allocation number associated to Current.
+
+	increment_counter
+			-- Set `counter' with a new allocation number.
+		do
+			debug ("MANAGED_POINTER_allocation")
+				counter := allocation_counter.item + 1
+				allocation_counter.put (counter)
+			end
+		end
+
 
 invariant
 	item_not_null: item = default_pointer implies (count = 0 and is_shared)
 	valid_count: count >= 0
 
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1165,5 +1300,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MANAGED_POINTER
+end

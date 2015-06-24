@@ -159,6 +159,6 @@ feature -- Conversion
 		end
 
 invariant
-		-- NOTE: The test only fails when this invariant is active.
+		-- NOTE: The test usually fails when this invariant is active.
 	irreflexive_comparison: not (Current < Current)
 end

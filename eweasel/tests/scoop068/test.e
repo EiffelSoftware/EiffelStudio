@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			l_test: separate TEST
 		do
 			from
-				count := 10
+				count := 1000
 				i := 1
 			until
 				i > count
@@ -75,6 +75,9 @@ feature
 			until
 				i > count
 			loop
+					-- The test may also fail when this statement is active.
+					-- It looks like the problem has something to do with a nested expanded.
+				full_collect
 				list [i].out.do_nothing
 				i := i + 1
 			end

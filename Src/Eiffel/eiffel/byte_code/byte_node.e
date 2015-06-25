@@ -106,10 +106,10 @@ feature -- Eiffel source line information
 			then
 				buf := buffer
 				l_sk_type := context.real_type (a_target.type).sk_value (context.context_class_type.type)
-				buf.put_new_line
 				if a_target.is_attribute then
 					--| Note: cf {MELTED_ASSIGNMENT_GENERATOR}.process_attribute_b ...
 					if attached {ATTRIBUTE_B} a_target as attb then
+						buf.put_new_line
 						buf.put_string ("RTDBGAA")
 						buf.put_character ('(')
 						context.current_register.print_register
@@ -133,6 +133,7 @@ feature -- Eiffel source line information
 					end
 				elseif a_target.is_local then
 					if attached {LOCAL_B} a_target as locb then
+						buf.put_new_line
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
 						buf.put_string ({C_CONST}.comma_space)
@@ -154,6 +155,7 @@ feature -- Eiffel source line information
 					end
 				elseif a_target.is_result then
 					if attached {RESULT_B} a_target as resb then
+						buf.put_new_line
 						buf.put_string ("RTDBGAL(")
 						context.current_register.print_register
 						buf.put_string ({C_CONST}.comma_space)
@@ -176,7 +178,6 @@ feature -- Eiffel source line information
 --						buf.put_string ("/* RTDBGA CURRENT .. */")
 --					end
 				end
-				buf.put_new_line
 			end
 		end
 

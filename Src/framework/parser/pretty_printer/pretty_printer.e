@@ -286,6 +286,14 @@ feature {NONE} -- Output
 			end
 		end
 
+	print_space_separator
+			-- Print a space character if there is currently none white space character printed before.
+		do
+			if not white_space_chars.has (last_printed) then
+				print_string (" ")
+			end
+		end
+
 feature {NONE} -- List processing
 
 	print_list_inline (l: detachable EIFFEL_LIST [AST_EIFFEL])
@@ -367,12 +375,10 @@ feature {NONE} -- List processing
 							end
 							print_indent
 						when list_separator_leading_space then
-							if not white_space_chars.has (last_printed) then
-								print_string (" ")
-							end
+							print_space_separator
 						when list_separator_delimiting_space then
-							if i > 1 and then not white_space_chars.has (last_printed) then
-								print_string (" ")
+							if i > 1 then
+								print_space_separator
 							end
 						end
 
@@ -453,10 +459,7 @@ feature {NONE} -- List processing
 		do
 			if attached t then
 				prepare_inline_indented (t.first_token (match_list))
-				if not white_space_chars.has (last_printed) then
-						-- Add a leading white space.
-					print_string (" ")
-				end
+				print_space_separator
 				t.process (Current)
 			end
 		end
@@ -467,10 +470,7 @@ feature {NONE} -- List processing
 		do
 			if attached t then
 				prepare_inline (t.first_token (match_list))
-				if not white_space_chars.has (last_printed) then
-						-- Add a leading white space.
-					print_string (" ")
-				end
+				print_space_separator
 				t.process (Current)
 			end
 		end
@@ -592,9 +592,7 @@ feature {CLASS_AS} -- Process leafs
 		do
 			print_inline (l_as.type)
 			prepare_inline_indented (l_as)
-			if not white_space_chars.has (last_printed) then
-				print_string (" ")
-			end
+			print_space_separator
 			last_index := l_as.index
 			print_string (l_as.character_text (match_list))
 		end
@@ -1212,9 +1210,16 @@ feature {CLASS_AS} -- Instructions
 			-- Process create creation instruction `l_as'.
 		do
 			print_on_new_line (l_as.create_keyword (match_list))
+			if attached l_as.type as t then
+				print_string (" ")
+				process_leading_leaves_of_token (t.first_token (match_list))
+				print_space_separator
+				t.process (Current)
+			end
 			print_string (" ")
-			safe_process_and_print (l_as.type, "", " ")
-			safe_process (l_as.target)
+			process_leading_leaves_of_token (l_as.target.first_token (match_list))
+			print_space_separator
+			l_as.target.process (Current)
 			safe_process (l_as.call)
 		end
 
@@ -1659,7 +1664,9 @@ feature {CLASS_AS} -- Calls
 			-- Process create creation expression `l_as'.
 		do
 			safe_process_and_print (l_as.create_keyword (match_list), "", " ")
-			safe_process (l_as.type)
+			process_leading_leaves_of_token (l_as.type.first_token (match_list))
+			print_space_separator
+			l_as.type.process (Current)
 			safe_process (l_as.call)
 		end
 

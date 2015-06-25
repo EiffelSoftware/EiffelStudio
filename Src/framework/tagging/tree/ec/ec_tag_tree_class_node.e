@@ -32,10 +32,13 @@ feature {NONE} -- Implementation
 				l_group := l_parent.item (a_project)
 			end
 			Result := a_project.class_from_name (name.as_string_8, l_group)
+			if Result /= Void then
+				Result := Result.actual_class
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

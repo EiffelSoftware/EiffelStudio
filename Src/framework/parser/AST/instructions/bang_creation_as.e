@@ -25,7 +25,7 @@ feature{NONE} -- Initialization
 		require
 			tg_not_void: tg /= Void
 		do
-			initialize (tp, tg, c)
+			initialize (False, tp, tg, c)
 			lbang_symbol := l_as
 			rbang_symbol := r_as
 		ensure
@@ -79,7 +79,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

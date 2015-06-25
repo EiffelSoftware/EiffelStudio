@@ -166,11 +166,11 @@ feature -- Access
 			end
 		end
 
-	new_create_creation_as (tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
+	new_create_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
 			-- New CREATE_CREATION AST node.
 		do
 			if tg /= Void then
-				create Result.make (tp, tg, c, k_as)
+				create Result.make (is_active, tp, tg, c, k_as)
 			end
 		end
 
@@ -182,11 +182,11 @@ feature -- Access
 			end
 		end
 
-	new_create_creation_expr_as (t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
+	new_create_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 			if t /= Void then
-				create Result.make (t, c, k_as)
+				create Result.make (is_active, t, c, k_as)
 			end
 		end
 

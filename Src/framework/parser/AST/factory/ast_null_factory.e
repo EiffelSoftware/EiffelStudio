@@ -132,7 +132,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_create_creation_as (tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
+	new_create_creation_as (is_active: BOOLEAN; tp: detachable TYPE_AS; tg: detachable ACCESS_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_AS
 			-- New CREATE_CREATION AST node.
 		do
 		end
@@ -142,7 +142,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_create_creation_expr_as (t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
+	new_create_creation_expr_as (is_active: BOOLEAN; t: detachable TYPE_AS; c: detachable ACCESS_INV_AS; k_as: detachable KEYWORD_AS): detachable CREATE_CREATION_EXPR_AS
 			-- New creation expression AST node
 		do
 		end

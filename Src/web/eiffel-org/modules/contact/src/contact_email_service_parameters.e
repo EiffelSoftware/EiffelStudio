@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 				admin_email := l_site_name + " <" + admin_email +">"
 			end
 
-			if attached {CONFIG_READER} a_cms_api.module_configuration ("contact", Void) as cfg then
+			if attached {CONFIG_READER} a_cms_api.module_configuration_by_name ("contact", Void) as cfg then
 				if attached cfg.text_item ("smtp") as l_smtp then
 						-- Overwrite global smtp setting if any.
 					smtp_server := utf.utf_32_string_to_utf_8_string_8 (l_smtp)

@@ -74,7 +74,7 @@ feature -- Access: config
 		do
 			write_debug_log (generator + ".get_download_configuration")
 			if download_configuration = Void then
-				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.setup.environment.config_path.extended ("modules").extended (name).extended ("downloads_configuration.json"))
+				download_configuration := (create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (api.module_resource_location (Current, create {PATH}.make_from_string ("downloads_configuration.json")))
 			end
 		end
 
@@ -171,14 +171,13 @@ feature {NONE} -- Block view implementation
 		local
 			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
 			vals: CMS_VALUE_TABLE
+			res: PATH
 			p: detachable PATH
 		do
-			-- FIXME: this relies on theme location, where it should rely on module assets location.
-			-- TODO
-			create p.make_from_string ("templates")
+			create res.make_from_string ("templates")
 				-- Note: template name harcoded.
-			p := p.extended ("block_download_area").appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
+			res := res.extended ("block_download_area").appended_with_extension ("tpl")
+			p := a_response.api.module_theme_resource_location (Current, res)
 			if p /= Void then
 				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
 
@@ -215,12 +214,13 @@ feature {NONE} -- Block view implementation
 		local
 			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
 			vals: CMS_VALUE_TABLE
+			res: PATH
 			p: detachable PATH
 		do
-			create p.make_from_string ("templates")
+			create res.make_from_string ("templates")
 				-- Note: template name harcoded.
-			p := p.extended ("block_download_options").appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
+			res := res.extended ("block_download_options").appended_with_extension ("tpl")
+			p := a_response.api.module_theme_resource_location (Current, res)
 
 			if p /= Void then
 				write_debug_log (generator + ".get_block_view with template_path:" + p.out)

@@ -3,15 +3,15 @@
 						<div class="footer-holder">
 							<nav class="footer-nav">
 								<ul>
-									<li><a href="/welcome">Welcome</a>
+									<li><a href="{$site_url/}welcome">Welcome</a>
 										<ul>
-											<li><a href="/purpose">Purpose</a></li>
-											<li><a href="/news">What's new</a></li>
-											<li><a href="/updates">Recent updates</a></li>
-											<li><a href="/contact">Contact</a></li>
+											<li><a href="{$site_url/}purpose">Purpose</a></li>
+											<li><a href="{$site_url/}news">What's new</a></li>
+											<li><a href="{$site_url/}updates">Recent updates</a></li>
+											<li><a href="{$site_url/}contact">Contact</a></li>
 										</ul>
 									</li>
-									<li><a href="/documentation">Documentation</a>
+									<li><a href="{$site_url/}documentation">Documentation</a>
 										<ul>
 											<li><a href="#">Documentation</a></li>
 											<li><a href="#">Tutorials</a></li>
@@ -19,22 +19,22 @@
 											<li><a href="#">FAQs</a></li>
 										</ul>	
 									</li>
-									<li><a href="/resources">Resources</a>
+									<li><a href="{$site_url/}resources">Resources</a>
 										<ul>
-											<li><a href="{$site_url/}/contribute_description">Libraries</a></li>
-											<li><a href="{$site_url/}/contribute_description">Projects</a></li>
-											<li><a href="{$site_url/}/contribute_description">Videos</a></li>
-											<li><a href="{$site_url/}/contribute_description">Follow us</a></li>
+											<li><a href="{$site_url/}contribute_description">Libraries</a></li>
+											<li><a href="{$site_url/}contribute_description">Projects</a></li>
+											<li><a href="{$site_url/}contribute_description">Videos</a></li>
+											<li><a href="{$site_url/}contribute_description">Follow us</a></li>
 										</ul>
 									</li>
-									<li><a href="/contribute">Contribute</a>
+									<li><a href="{$site_url/}contribute">Contribute</a>
 									</li>
 						
 								</ul>
 							</nav>
 							<div class="btn-holder">
-								<a class="btn btn-download" href="{$site_url/}/download_options">Download Now</a>
-								<a class="btn btn-tryonline" href="{$site_url/}/try_eiffel">Try Eiffel Online</a>
+								<a class="btn btn-download" href="{$site_url/}download_options">Download Now</a>
+								<a class="btn btn-tryonline" href="{$site_url/}try_eiffel">Try Eiffel Online</a>
 							</div>
 							<div class="social-holder">
 								<ul class="social-networks">

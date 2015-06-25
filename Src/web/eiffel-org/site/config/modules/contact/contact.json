@@ -1,9 +1,0 @@
-{
-	"email": "webmaster@example.com",
-	"subjet": "Thank you for contacting us",
-	"smtp": "localhost",
-    "recaptcha": {
-     		"site_key": "",
-     		"secret_key": ""
-     }	
-}

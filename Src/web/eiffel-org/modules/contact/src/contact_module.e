@@ -129,7 +129,7 @@ feature -- Recaptcha
 		local
 			utf: UTF_CONVERTER
 		do
-			if attached api.module_configuration (name, Void) as cfg then
+			if attached api.module_configuration (Current, Void) as cfg then
 				if
 					attached cfg.text_item ("recaptcha.secret_key") as l_recaptcha_key and then
 					not l_recaptcha_key.is_empty
@@ -144,7 +144,7 @@ feature -- Recaptcha
 		local
 			utf: UTF_CONVERTER
 		do
-			if attached api.module_configuration (name, Void) as cfg then
+			if attached api.module_configuration (Current, Void) as cfg then
 				if
 					attached cfg.text_item ("recaptcha.site_key") as l_recaptcha_key and then
 					not l_recaptcha_key.is_empty
@@ -369,13 +369,14 @@ feature {NONE} -- Contact Message
 	email_template (a_template: READABLE_STRING_8; a_response: CMS_RESPONSE): STRING
 			-- Smarty email template.
 		local
+			res: PATH
 			p: detachable PATH
 			l_block: CMS_SMARTY_TEMPLATE_BLOCK
 		do
 			write_debug_log (generator + ".email_template with template [" + a_template + " ]")
-			create p.make_from_string ("templates")
-			p := p.extended ("email_").appended (a_template).appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
+			create res.make_from_string ("templates")
+			res := res.extended ("email_").appended (a_template).appended_with_extension ("tpl")
+			p := a_response.api.module_theme_resource_location (Current, res)
 			if p /= Void then
 				if attached p.entry as e then
 					create l_block.make (a_template, Void, p.parent, e)

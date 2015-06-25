@@ -184,7 +184,6 @@ feature -- Byte code generation
 						-- checking routine.
 					basic_type.metamorphose (basic_register, reg, buf)
 					buf.put_character (';')
-					buf.put_new_line
 				end
 			end
 		end

@@ -74,21 +74,14 @@ feature {NONE} -- Analysis
 
 	detect_request_chain
 			-- Detect if request chain is required and set `context.has_request_chain'.
-		local
-			exit: BOOLEAN
 		do
-			if system.is_scoop and then attached arguments as a then
-				across
-					a as argument
-				until
-					exit
-				loop
-					if real_type (argument.item).is_separate then
-							-- Record that a request chain is required to lock arguments.
-						context.set_has_request_chain
-						exit := True
-					end
-				end
+			if
+				system.is_scoop and then
+				attached arguments as a and then
+				across a as argument some real_type (argument.item).is_separate end
+			then
+					-- Record that a request chain is required to lock arguments.
+				context.set_has_request_chain
 			end
 		end
 
@@ -800,7 +793,7 @@ end
 						l_buf.put_string (".data")
 						l_buf.put_character (';')
 						l_buf.put_new_line
-					elseif t.is_separate then
+					elseif context.has_request_chain and then t.is_separate then
 							-- Declare a variable that tells whether an argument is uncontrolled.
 						l_buf.put_new_line
 						l_buf.put_string ("EIF_BOOLEAN uarg")

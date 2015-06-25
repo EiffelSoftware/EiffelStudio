@@ -22,8 +22,8 @@ feature -- Initialization
 			l_roles: LIST [CMS_USER_ROLE]
 		do
 				--| Schema
-			a_storage.sql_execute_file_script (a_setup.environment.path.extended ("scripts").extended ("core.sql"))
-			a_storage.sql_execute_file_script (a_setup.environment.path.extended ("scripts").extended ("user.sql"))
+			a_storage.sql_execute_file_script (a_setup.environment.site_path.extended ("scripts").extended ("core.sql"), Void)
+			a_storage.sql_execute_file_script (a_setup.environment.site_path.extended ("scripts").extended ("user.sql"), Void)
 
 				--| Roles
 			create l_anonymous_role.make ("anonymous")

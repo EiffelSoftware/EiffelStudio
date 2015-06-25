@@ -1,5 +1,5 @@
 
-CREATE TABLE `oauth2_consumers`(
+CREATE TABLE oauth2_consumers(
    `cid` INTEGER PRIMARY KEY NOT NULL CHECK(`cid`>=0),
    `name` VARCHAR(255) NOT NULL,
    `api_secret` TEXT  NOT NULL,

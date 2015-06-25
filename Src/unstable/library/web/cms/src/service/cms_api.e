@@ -152,11 +152,8 @@ feature -- Query: module
 			-- Enabled module typed `a_type', if any.
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
 		local
---			t: STRING_8
 			l_type: TYPE [detachable CMS_MODULE]
 		do
---			t := type_name_without_annotation (a_type)
-
 			across
 				setup.modules as ic
 			until
@@ -173,8 +170,6 @@ feature -- Query: module
 						attached a_type.attempt (Result) and then attached l_type.generating_type.attempt (a_type)
 					then
 							-- Found
---					elseif t.same_string (type_name_without_annotation (l_type)) then
---							-- Found
 					else
 						Result := Void
 					end
@@ -322,55 +317,41 @@ feature {NONE}-- Implemenation
 	internal_user_api: detachable like user_api
 			-- Cached value for `user_api'.
 
-	type_name_without_annotation (a_type: TYPE [detachable ANY]): STRING
-			-- Type name for `a_type, without any annotation.
-			-- Used by `module' to search by type.
-		local
-			i,j,n: INTEGER
-			c: CHARACTER
+feature -- Environment/ theme
+
+	theme_location: PATH
+			-- Active theme location.
 		do
-			create Result.make_from_string (a_type.name)
-			from
-				i := 1
-				n := Result.count
-			until
-				i > n
-			loop
-				c := Result[i]
-				if c = '!' or c = '?' then
-					Result.remove (i)
-					n := n - 1
-				elseif c.is_lower then
-					j := Result.index_of (' ', i + 1)
-					if j > 0 then
-						Result.remove_substring (i, j)
-						n := n - (j - i)
-					end
-				else
-					i := i + 1
-				end
-			end
-			if Result.starts_with ("!") or Result.starts_with ("?") then
-				Result.remove_head (1)
-			elseif Result.starts_with ("detachable ") then
-				Result.remove_head (11)
-			end
+			Result := setup.theme_location
 		end
 
-feature -- Environment
+	theme_assets_location: PATH
+			-- assets (js, css, images, etc).
+		do
+			debug ("refactor_fixme")
+				fixme ("Check if we really need it")
+			end
+				-- Check how to get this path from the CMS_THEME information.
+			Result := theme_location.extended ("assets")
+		end
 
-	module_configuration (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
+feature -- Environment/ module		
+
+	module_configuration_by_name (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
 		local
-			p, l_path: PATH
+			p, l_path: detachable PATH
+			l_name: READABLE_STRING_GENERAL
 			ut: FILE_UTILITIES
 		do
-			p := setup.environment.config_path.extended ("modules").extended (a_module_name)
 			if a_name = Void then
-				p := p.extended (a_module_name)
+				l_name := a_module_name
 			else
-				p := p.extended (a_name)
+				l_name := a_name
 			end
+
+			p := module_location_by_name (a_module_name).extended ("config").extended (l_name)
+
 			l_path := p.appended_with_extension ("json")
 			if ut.file_path_exists (l_path) then
 				create {JSON_CONFIG} Result.make_from_file (l_path)
@@ -382,12 +363,71 @@ feature -- Environment
 			end
 			if Result = Void and a_name /= Void then
 					-- Use sub config from default?
-				if attached {CONFIG_READER} module_configuration (a_module_name, Void) as cfg then
+				if attached {CONFIG_READER} module_configuration_by_name (a_module_name, Void) as cfg then
 					Result := cfg.sub_config (a_name)
 				else
-					-- Maybe try to use the global cms.ini ?	
+					-- Maybe try to use the global cms.ini ?
 				end
 			end
+		end
+
+	modules_location: PATH
+			-- Directory containing cms modules.
+		do
+			Result := setup.modules_location
+		end
+
+	module_location (a_module: CMS_MODULE): PATH
+			-- Location associated with `a_module'.
+		do
+			Result := module_location_by_name (a_module.name)
+		end
+
+	module_location_by_name (a_module_name: READABLE_STRING_GENERAL): PATH
+			-- Location associated with `a_module_name'.
+		do
+			Result := modules_location.extended (a_module_name)
+		end
+
+	module_resource_location (a_module: CMS_MODULE; a_resource: PATH): PATH
+			-- Location of resource `a_resource' for `a_module'.
+		do
+				--| site/modules/$modname/$a_name.json
+			Result := module_location (a_module).extended_path (a_resource)
+		end
+
+feature -- Environment/ modules and theme
+
+	module_theme_resource_location (a_module: CMS_MODULE; a_resource: PATH): detachable PATH
+			-- Theme resource location of `a_resource' for module `a_module', if exists.
+			-- By default, located under the module location folder, but could be overriden
+			-- from files located under modules subfolder of active `theme_location'.
+			--| First search in themes/$theme/modules/$a_module.name/$a_resource,
+			--| and if not found then search in
+			--| modules/$a_module_name/$a_resource.
+		local
+			ut: FILE_UTILITIES
+		do
+				-- Check first in selected theme folder.
+			Result := module_theme_location (a_module).extended_path (a_resource)
+			if not ut.file_path_exists (Result) then
+					-- And if not found, look into site/modules/$a_module.name/.... folders.
+				Result := module_resource_location (a_module, a_resource)
+				if not ut.file_path_exists (Result) then
+					Result := Void
+				end
+			end
+		end
+
+	module_theme_location (a_module: CMS_MODULE): PATH
+			-- Location for overriden files associated with `a_module_name'.
+		do
+			Result := theme_location.extended ("modules").extended (a_module.name)
+		end
+
+	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
+		do
+			Result := module_configuration_by_name (a_module.name, a_name)
 		end
 
 end

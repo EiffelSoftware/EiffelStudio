@@ -90,16 +90,16 @@ feature -- Query
 		deferred
 		end
 
-feature -- Access: Theme	
+feature -- Access: Theme
+
+	modules_location: PATH
+			-- Path to modules.	
 
 	themes_location: PATH
 			-- Path to themes.
 
 	theme_location: PATH
 			-- Path to a active theme.
-
-	theme_assets_location: PATH
-			-- Path to a active theme assets folder.
 
 	theme_information_location: PATH
 			-- Active theme informations.

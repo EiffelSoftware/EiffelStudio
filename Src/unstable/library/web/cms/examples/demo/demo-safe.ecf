@@ -1,83 +1,84 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="demo" uuid="3643E657-BCBE-46AA-931B-71EAEA877A18" library_target="demo">
-<description>Example/demo for Eiffel ROC CMS library</description>
-<target name="common" abstract="true">
-	<file_rule>
-		<exclude>/EIFGENs$</exclude>
-		<exclude>/CVS$</exclude>
-		<exclude>/.svn$</exclude>
-	</file_rule>
-	<option debug="true" warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="all" syntax="transitional">
-		<debug name="dbglog" enabled="true"/>
-	</option>
-	<setting name="concurrency" value="thread"/>
-	<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-	<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
-	<library name="cms_app_env" location="..\..\library\app_env\app_env-safe.ecf" readonly="false"/>
-	<library name="cms_basic_auth_module" location="..\..\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
-	<library name="cms_blog_module" location="modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
-	<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
-	<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
-	<library name="cms_auth_module" location="..\..\modules\auth\auth-safe.ecf" readonly="false"/>
-	<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
-	<!--
-	<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
-	-->
-	<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
-	<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
-	<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
-</target>
-<target name="demo_any" extends="common">
-	<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
-	<setting name="concurrency" value="thread"/>
-	<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
-	<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
-	<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
-	<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
-	<cluster name="launcher" location=".\launcher\any\" recursive="true"/>
-	<cluster name="src" location=".\src\" recursive="true"/>
-</target>
-<target name="demo_standalone" extends="common">
-	<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
-	<option debug="true">
-		<debug name="dbglog" enabled="true"/>
-	</option>
-	<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
-	<setting name="concurrency" value="thread"/>
-	<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
-	<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
-	<cluster name="src" location=".\src\" recursive="true"/>
-</target>
-<target name="demo_standalone_none" extends="demo_standalone">
-	<setting name="concurrency" value="none"/>
-</target>
-<target name="demo_standalone_mt" extends="demo_standalone">
-	<setting name="concurrency" value="thread"/>
-</target>
-<target name="demo_standalone_scoop" extends="demo_standalone">
-	<setting name="concurrency" value="scoop"/>
-</target>
-<target name="demo_nino" extends="common">
-	<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
-	<setting name="concurrency" value="none"/>
-	<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
-	<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
-	<cluster name="src" location=".\src\" recursive="true"/>
-</target>
-<target name="demo_cgi" extends="common">
-	<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
-	<setting name="concurrency" value="none"/>
-	<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
-	<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
-	<cluster name="src" location=".\src\" recursive="true"/>
-</target>
-<target name="demo_libfcgi" extends="common">
-	<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
-	<setting name="concurrency" value="none"/>
-	<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
-	<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
-	<cluster name="src" location=".\src\" recursive="true"/>
-</target>
-<target name="demo" extends="demo_standalone">
-</target>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="demo" uuid="3643E657-BCBE-46AA-931B-71EAEA877A18" library_target="demo">
+	<description>Example/demo for Eiffel ROC CMS library</description>
+	<target name="common" abstract="true">
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option debug="true" warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="all" syntax="transitional">
+			<debug name="dbglog" enabled="true"/>
+		</option>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
+		<library name="cms_app_env" location="..\..\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="cms_auth_module" location="..\..\modules\auth\auth-safe.ecf" readonly="false"/>
+		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20-safe.ecf" readonly="false"/>
+		<library name="cms_basic_auth_module" location="..\..\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
+		<library name="cms_blog_module" location="modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
+		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
+		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
+		<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
+		<!--
+		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
+		-->
+		<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
+	</target>
+	<target name="demo_any" extends="common">
+		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
+		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
+		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>
+		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\any\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_standalone" extends="common">
+		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<option debug="true">
+			<debug name="dbglog" enabled="true"/>
+		</option>
+		<setting name="concurrency" value="thread"/>
+		<variable name="httpd_ssl_disabled" value="true"/>
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_standalone_none" extends="demo_standalone">
+		<setting name="concurrency" value="none"/>
+	</target>
+	<target name="demo_standalone_mt" extends="demo_standalone">
+		<setting name="concurrency" value="thread"/>
+	</target>
+	<target name="demo_standalone_scoop" extends="demo_standalone">
+		<setting name="concurrency" value="scoop"/>
+	</target>
+	<target name="demo_nino" extends="common">
+		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="none"/>
+		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_cgi" extends="common">
+		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="none"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo_libfcgi" extends="common">
+		<root class="EWF_ROC_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="none"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true"/>
+	</target>
+	<target name="demo" extends="demo_standalone">
+	</target>
 </system>

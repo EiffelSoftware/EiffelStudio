@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}."
+	description: "Summary description for {CMS_OAUTH_20_EMAIL_SERVICE_PARAMETERS}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS
+	CMS_OAUTH_20_EMAIL_SERVICE_PARAMETERS
 
 inherit
 	EMAIL_SERVICE_PARAMETERS
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			s: detachable READABLE_STRING_32
 			l_contact_email, l_subject_register, l_subject_activate, l_subject_password, l_subject_oauth: detachable READABLE_STRING_8
 		do
-			cms_api := a_cms_api
+			setup := a_cms_api.setup
 				-- Use global smtp setting if any, otherwise "localhost"
 			smtp_server := utf.escaped_utf_32_string_to_utf_8_string_8 (a_cms_api.setup.text_item_or_default ("smtp", "localhost"))
 			l_site_name := utf.escaped_utf_32_string_to_utf_8_string_8 (a_cms_api.setup.site_name)
@@ -92,8 +92,6 @@ feature {NONE} -- Initialization
 
 feature	-- Access
 
-	cms_api: CMS_API
-
 	smtp_server: IMMUTABLE_STRING_8
 
 	admin_email: IMMUTABLE_STRING_8
@@ -134,11 +132,8 @@ feature {NONE} -- Implementation: Template
 
 	template_path (a_name: READABLE_STRING_GENERAL): PATH
 			-- Location of template named `a_name'.
-		local
-			p: PATH
 		do
-			create p.make_from_string (a_name)
-			Result := cms_api.module_location_by_name ("login").extended ("mail_templates").extended (a_name)
+			Result := setup.environment.config_path.extended ("modules").extended ("login").extended (a_name)
 		end
 
 	template_string (a_name: READABLE_STRING_GENERAL; a_default: STRING): STRING
@@ -155,6 +150,8 @@ feature {NONE} -- Implementation: Template
 		end
 
 feature {NONE} -- Implementation
+
+	setup: CMS_SETUP
 
 	read_template_file (a_path: PATH): detachable STRING
 			-- Read the content of the file at path `a_path'.

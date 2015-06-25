@@ -156,7 +156,7 @@ feature -- Settings: router
 		do
 			api.logger.put_information (generator + ".configure_api_file_handler", Void)
 
-			create fhdl.make_hidden_with_path (setup.theme_assets_location)
+			create fhdl.make_hidden_with_path (api.theme_assets_location)
 			fhdl.disable_index
 			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
 				do
@@ -253,7 +253,7 @@ feature -- Execution
 			r: NOT_FOUND_ERROR_CMS_RESPONSE
 			f: WSF_FILE_RESPONSE
 		do
-			p := api.setup.theme_assets_location.extended ("favicon.ico")
+			p := api.theme_assets_location.extended ("favicon.ico")
 			if ut.file_path_exists (p) then
 				create f.make_with_path (p)
 				res.send (f)

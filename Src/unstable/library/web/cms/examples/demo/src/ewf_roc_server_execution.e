@@ -69,6 +69,10 @@ feature -- CMS setup
 				a_setup.register_module (m)
 			end
 
+			create {CMS_OAUTH_20_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 			create {CMS_DEBUG_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)

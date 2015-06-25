@@ -74,7 +74,7 @@ CREATE TABLE blog_post_nodes(
   `tags` VARCHAR(255)
 );
 					]"
-					l_sql_storage.sql_execute_script (sql)
+					l_sql_storage.sql_execute_script (sql, Void)
 					if l_sql_storage.has_error then
 						api.logger.put_error ("Could not initialize database for blog module", generating_type)
 					end
@@ -117,18 +117,18 @@ feature -- Access: router
 
 				-- Let the class BLOG_HANDLER handle the requests on "/blogs"
 			create l_uri_mapping.make_trailing_slash_ignored ("/blogs", l_blog_handler)
-			a_router.map_with_request_methods (l_uri_mapping, a_router.methods_get)
+			a_router.map (l_uri_mapping, a_router.methods_get)
 
 				-- We can add a page number after /blogs/ to get older posts
-			a_router.handle_with_request_methods ("/blogs/page/{page}", l_blog_handler, a_router.methods_get)
+			a_router.handle ("/blogs/page/{page}", l_blog_handler, a_router.methods_get)
 
 				-- If a user id is given route with blog user handler
 				--| FIXME: maybe /user/{user}/blogs/  would be better.
-			a_router.handle_with_request_methods ("/blogs/user/{user}", l_blog_user_handler, a_router.methods_get)
+			a_router.handle ("/blogs/user/{user}", l_blog_user_handler, a_router.methods_get)
 
 				-- If a user id is given we also want to allow different pages
 				--| FIXME: what about /user/{user}/blogs/?page={page} ?
-			a_router.handle_with_request_methods ("/blogs/user/{user}/page/{page}", l_blog_user_handler, a_router.methods_get)
+			a_router.handle ("/blogs/user/{user}/page/{page}", l_blog_user_handler, a_router.methods_get)
 
 		end
 

@@ -69,7 +69,7 @@ CREATE TABLE tb_demo(
   `value` TEXT
 );
 					]"
-					l_sql_storage.sql_execute_script (sql)
+					l_sql_storage.sql_execute_script (sql, Void)
 					if l_sql_storage.has_error then
 						api.logger.put_error ("Could not initialize database for demo module", generating_type)
 					end
@@ -83,8 +83,8 @@ feature -- Access: router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			map_uri_template_agent (a_router, "/demo/", agent handle_demo (?,?,a_api))
-			map_uri_template_agent (a_router, "/demo/{id}", agent handle_demo_entry (?,?,a_api))
+			map_uri_template_agent (a_router, "/demo/", agent handle_demo (?,?,a_api), Void)
+			map_uri_template_agent (a_router, "/demo/{id}", agent handle_demo_entry (?,?,a_api), Void)
 		end
 
 feature -- Hooks
@@ -144,42 +144,24 @@ feature -- Handler
 
 feature -- Mapping helper: uri template
 
-	map_uri_template (a_router: WSF_ROUTER; a_tpl: STRING; h: WSF_URI_TEMPLATE_HANDLER)
-			-- Map `h' as handler for `a_tpl'
-		require
-			a_tpl_attached: a_tpl /= Void
-			h_attached: h /= Void
-		do
-			map_uri_template_with_request_methods (a_router, a_tpl, h, Void)
-		end
-
-	map_uri_template_with_request_methods (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; h: WSF_URI_TEMPLATE_HANDLER; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; h: WSF_URI_TEMPLATE_HANDLER; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `h' as handler for `a_tpl' for request methods `rqst_methods'.
 		require
 			a_tpl_attached: a_tpl /= Void
 			h_attached: h /= Void
 		do
-			a_router.map_with_request_methods (create {WSF_URI_TEMPLATE_MAPPING}.make (a_tpl, h), rqst_methods)
+			a_router.map (create {WSF_URI_TEMPLATE_MAPPING}.make (a_tpl, h), rqst_methods)
 		end
 
 feature -- Mapping helper: uri template agent
 
-	map_uri_template_agent (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]])
-			-- Map `proc' as handler for `a_tpl'
-		require
-			a_tpl_attached: a_tpl /= Void
-			proc_attached: proc /= Void
-		do
-			map_uri_template_agent_with_request_methods (a_router, a_tpl, proc, Void)
-		end
-
-	map_uri_template_agent_with_request_methods (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template_agent (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_tpl' for request methods `rqst_methods'.
 		require
 			a_tpl_attached: a_tpl /= Void
 			proc_attached: proc /= Void
 		do
-			map_uri_template_with_request_methods (a_router, a_tpl, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (proc), rqst_methods)
+			map_uri_template (a_router, a_tpl, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (proc), rqst_methods)
 		end
 
 end

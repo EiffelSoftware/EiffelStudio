@@ -13,7 +13,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create {CMS_AUTHENTICATION_MODULE}
+create {CMS_OAUTH_20_MODULE}
 	make_with_storage
 
 feature {NONE} -- Initialization

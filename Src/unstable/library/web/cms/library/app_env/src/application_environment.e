@@ -109,7 +109,7 @@ feature -- Access: internal
 		do
 			p := internal_application_config_path
 			if p = Void then
-				p := config_path.extended ("application_configuration.json")
+				p := config_path.extended (name + ".json")
 				internal_application_config_path := p
 			end
 			Result := p

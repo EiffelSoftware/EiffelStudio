@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CMS_OAUTH_20_FILTER}."
+	description: "[
+		Extracts an OAuth2 token from the incoming request (cookie) and uses it to populate the user (or cms user context) 
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,7 +38,7 @@ feature -- Basic operations
 			api.logger.put_debug (generator + ".execute ", Void)
 				-- A valid user
 			if
-				attached {WSF_STRING} req.cookie ({CMS_AUTHENTICATION_CONSTANTS}.oauth_session) as l_roc_auth_session_token
+				attached {WSF_STRING} req.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session) as l_roc_auth_session_token
 			then
 				if attached user_oauth_api.user_oauth2_without_consumer_by_token (l_roc_auth_session_token.value) as l_user then
 					set_current_user (req, l_user)

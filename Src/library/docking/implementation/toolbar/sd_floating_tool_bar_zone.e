@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} destroy, screen_x, screen_y, has_recursive, is_destroyed, prune, set_position, set_size, prunable
-			{ANY} lock_update, unlock_update
+			{ANY} lock_update, unlock_update, ev_application, shared_environment
 			{SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR} minimum_width, minimum_height, resize_actions
 			{SD_TOOL_BAR_MANAGER, SD_TOOL_BAR_CONTENT} hide, is_displayed
 		end
@@ -513,7 +513,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

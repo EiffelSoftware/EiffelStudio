@@ -20,12 +20,12 @@ create
 
 feature{NONE} -- Initialization
 
-	make (tp: like type; tg: like target; c: like call; k_as: like create_keyword)
+	make (a: BOOLEAN; tp: like type; tg: like target; c: like call; k_as: like create_keyword)
 			-- Create new CREATE_CREATION AST node.
 		require
 			tg_not_void: tg /= Void
 		do
-			initialize (tp, tg, c)
+			initialize (a, tp, tg, c)
 			if k_as /= Void then
 				create_keyword_index := k_as.index
 			end
@@ -83,7 +83,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

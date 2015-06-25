@@ -22,7 +22,7 @@ feature{NONE} -- Initialization
 	make (t: like type; c: like call; l_as, r_as: like lbang_symbol)
 			-- new CREATE_CREATION_EXPR AST node.
 		do
-			initialize (t, c)
+			initialize (False, t, c)
 			lbang_symbol := l_as
 			rbang_symbol := r_as
 		ensure
@@ -80,7 +80,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

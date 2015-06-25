@@ -16,14 +16,16 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (t: like type; c: like call)
+	initialize (a: BOOLEAN; t: like type; c: like call)
 			-- Create a new CREATION_EXPR AST node.
 		require
 			t_not_void: t /= Void
 		do
+			is_active := a
 			type := t
 			call := c
 		ensure
+			is_active_set: is_active = a
 			type_set: type = t
 			call_set: call = c
 		end
@@ -38,6 +40,9 @@ feature -- Visitor
 
 feature -- Access
 
+	is_active: BOOLEAN
+			-- Is creation region active (for separate types)?
+
 	type: TYPE_AS
 			-- Creation Type.
 
@@ -51,7 +56,9 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (call, other.call) and then
+			Result :=
+				is_active = other.is_active and then
+				equivalent (call, other.call) and then
 				equivalent (type, other.type)
 		end
 
@@ -60,7 +67,7 @@ invariant
 	type_exists: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

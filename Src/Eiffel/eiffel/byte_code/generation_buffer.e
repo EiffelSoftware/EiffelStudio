@@ -617,6 +617,16 @@ feature -- Automatically indented output
 			tabs_set: tabs = old tabs + 1
 		end
 
+	generate_construct_block_open
+			-- Open a new C block for a C construct such as `if', `while' and indent code.
+			-- This will append to the current line, i.e. no new line is generated.
+		do
+			put_character ('{')
+			indent
+		ensure
+			tabs_set: tabs = old tabs + 1
+		end
+
 	generate_block_close
 			-- Close C block.
 		do
@@ -941,7 +951,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

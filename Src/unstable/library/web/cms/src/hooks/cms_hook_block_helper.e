@@ -17,7 +17,7 @@ feature -- Factory
 		do
 			create res.make_from_string ("templates")
 			res := res.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.module_resource_path (a_module, res)
+			p := a_response.api.module_theme_resource_location (a_module, res)
 			if p /= Void then
 				if attached p.entry as e then
 					create Result.make (a_block_id, Void, p.parent, e)

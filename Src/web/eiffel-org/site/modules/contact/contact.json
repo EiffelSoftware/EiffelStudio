@@ -1,0 +1,11 @@
+{
+	"email": "webmaster@eiffel.org",
+	"subjet": "Thank you for contacting us",
+	"smtp": "localhost",
+    "recaptcha": {
+     		"site_key":"6LfkJAETAAAAADCHzHAjGtap9OyLxN1cbZ6M-FNc",
+     		"secret_key":"6LfkJAETAAAAAI4Hn8GcD2s-aNwKS59wWi0Mpt9U",
+     		"-site_key":"6LeHdwATAAAAAJVhjJ_V3N0jV-p49t8IBDZJgG_G",
+     		"-secret_key":"6LeHdwATAAAAAIy4mhnSoTeP9qJMW5FR6qwM4j1A"
+     }	
+}

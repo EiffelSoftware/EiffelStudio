@@ -251,8 +251,7 @@ feature -- Generation
 			local_inliner.set_inlined_feature (Current);
 
 			buf := buffer
-			buf.put_new_line;
-			buf.put_character ('{');
+			buf.generate_block_open
 			buf.put_new_line;
 			buf.put_string ("/* INLINED CODE (");
 			buf.put_string (feature_name);
@@ -323,10 +322,6 @@ feature -- Generation
 
 				gen_reg.print_register
 				buf.put_character (';')
-				buf.put_new_line
-
-				buf.put_new_line
-
 				Context.change_class_type_context (context_class_type, context_cl_type,
 					written_class_type, written_cl_type)
 				Context.set_inlined_current_register (current_reg)
@@ -381,8 +376,7 @@ feature -- Generation
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */");
 
-			buf.put_new_line;
-			buf.put_character ('}');
+			buf.generate_block_close
 
 			Context.restore_class_type_context
 			Context.set_inlined_current_register (Void)
@@ -619,7 +613,7 @@ feature -- Code to inline
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

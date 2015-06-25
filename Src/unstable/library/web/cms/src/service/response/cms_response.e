@@ -152,39 +152,6 @@ feature -- API
 			Result := api.formats
 		end
 
-feature -- Module
-
-	module_resource_path (a_module: CMS_MODULE; a_resource: PATH): detachable PATH
-			-- Resource path of `a_resource' for module `a_module', if resource exists.
-		local
-			rp: PATH
-			ut: FILE_UTILITIES
-		do
-				-- Check first in selected theme folder.
-			rp := module_assets_theme_location (a_module)
-			Result := rp.extended_path (a_resource)
-			if not ut.file_path_exists (Result) then
-					-- And if not found, look into site/modules/$a_module.name/.... folders.
-				rp := module_assets_location (a_module)
-				Result := rp.extended_path (a_resource)
-				if not ut.file_path_exists (Result) then
-					Result := Void
-				end
-			end
-		end
-
-	module_assets_location (a_module: CMS_MODULE): PATH
-			-- Location for the assets associated with `a_module'.
-		do
-			Result := setup.environment.path.extended ("modules").extended (a_module.name)
-		end
-
-	module_assets_theme_location (a_module: CMS_MODULE): PATH
-			-- Location for the assets associated with `a_module'.
-		do
-			Result := setup.theme_location.extended ("modules").extended (a_module.name)
-		end
-
 feature -- URL utilities
 
 	is_front: BOOLEAN

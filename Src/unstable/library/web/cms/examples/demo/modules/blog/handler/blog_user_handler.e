@@ -86,8 +86,6 @@ feature -- Query
 			-- User id from path /blogs/{user}.
 			-- Unsigned integer since negative ids are not allowed.
 			-- If no valid id can be read it returns -1
-		local
-			s: STRING
 		do
 			Result := -1
 			if attached {WSF_STRING} req.path_parameter ("user") as l_user_id then

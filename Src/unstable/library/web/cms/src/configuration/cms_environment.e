@@ -23,15 +23,35 @@ create
 
 feature -- Access
 
-	theme_path: PATH
+	site_path: PATH
+			-- Directory containing the site.
+			--| For now, an alias for `path'.
+		do
+			Result := path
+		end
+
+	modules_path: PATH
 			-- Directory for templates (HTML, etc).
 		local
 			p: detachable PATH
 		do
-			p := internal_theme_path
+			p := internal_modules_path
 			if p = Void then
-				p := www_path.extended ("theme")
-				internal_theme_path := p
+				p := site_path.extended ("modules")
+				internal_modules_path := p
+			end
+			Result := p
+		end
+
+	themes_path: PATH
+			-- Directory for cms themes.
+		local
+			p: detachable PATH
+		do
+			p := internal_themes_path
+			if p = Void then
+				p := site_path.extended ("themes")
+				internal_themes_path := p
 			end
 			Result := p
 		end
@@ -58,7 +78,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_theme_path: detachable like theme_path
+	internal_modules_path: detachable like modules_path
+
+	internal_themes_path: detachable like themes_path
 
 	internal_cms_config_ini_path: detachable like cms_config_ini_path
 

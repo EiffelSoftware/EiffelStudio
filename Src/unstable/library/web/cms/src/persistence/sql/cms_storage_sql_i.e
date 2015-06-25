@@ -130,15 +130,15 @@ feature -- Operation
 
 feature -- Helper
 
-	sql_execute_file_script_with_params (a_path: PATH; a_params: detachable STRING_TABLE [detachable ANY])
-			-- Execute SQL script from `a_path' and with params `a_params'.
+	sql_script_content (a_path: PATH): detachable STRING
+			-- Content of sql script located at `a_path'.
 		local
 			f: PLAIN_TEXT_FILE
 			sql: STRING
 		do
 			create f.make_with_path (a_path)
 			if f.exists and then f.is_access_readable then
-				create sql.make (f.count)
+				create Result.make (f.count)
 				f.open_read
 				from
 					f.start
@@ -146,38 +146,21 @@ feature -- Helper
 					f.exhausted or f.end_of_file
 				loop
 					f.read_stream_thread_aware (1_024)
-					sql.append (f.last_string)
+					Result.append (f.last_string)
 				end
 				f.close
-				sql_execute_script_with_params (sql, a_params)
 			end
 		end
 
-
-	sql_execute_file_script (a_path: PATH)
-			-- Execute SQL script from `a_path'.
-		local
-			f: PLAIN_TEXT_FILE
-			sql: STRING
+	sql_execute_file_script (a_path: PATH; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute SQL script from `a_path' and with optional parameters `a_params'.
 		do
-			create f.make_with_path (a_path)
-			if f.exists and then f.is_access_readable then
-				create sql.make (f.count)
-				f.open_read
-				from
-					f.start
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_stream_thread_aware (1_024)
-					sql.append (f.last_string)
-				end
-				f.close
-				sql_execute_script (sql)
+			if attached sql_script_content (a_path) as sql then
+				sql_execute_script (sql, a_params)
 			end
 		end
 
-	sql_execute_script (a_sql_script: STRING)
+	sql_execute_script (a_sql_script: STRING; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute SQL script.
 			-- i.e: multiple SQL statements.
 		local
@@ -197,7 +180,7 @@ feature -- Helper
 			loop
 				if attached next_sql_statement (a_sql_script, i, cl) as s then
 					if not s.is_whitespace then
-						sql_change (sql_statement (s), Void)
+						sql_change (sql_statement (s), a_params)
 						err := err or has_error
 						reset_error
 					end
@@ -211,14 +194,6 @@ feature -- Helper
 			else
 				sql_commit_transaction
 			end
-		end
-
-	sql_execute_script_with_params (a_sql_script: STRING; a_params: detachable STRING_TABLE [detachable ANY])
-			-- Execute SQL script.
-			-- i.e: multiple SQL statements.
-		do
-			reset_error
-			sql_change (a_sql_script, a_params)
 		end
 
 	sql_table_exists (a_table_name: READABLE_STRING_8): BOOLEAN

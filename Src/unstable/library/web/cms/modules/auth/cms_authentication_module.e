@@ -1,5 +1,5 @@
 ﻿note
-	description: "Module Logging supporting different authentication strategies"
+	description: "Module Auth"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,15 +8,9 @@ class
 
 inherit
 	CMS_MODULE
-		rename
-			module_api as user_oauth_api
+
 		redefine
-			filters,
-			register_hooks,
-			initialize,
-			is_installed,
-			install,
-			user_oauth_api
+			register_hooks
 		end
 
 
@@ -57,104 +51,6 @@ feature {NONE} -- Initialization
 			cache_duration := 0
 		end
 
-feature {CMS_API} -- Module Initialization			
-
-	initialize (a_api: CMS_API)
-			-- <Precursor>
-		local
-			l_user_auth_api: like user_oauth_api
-			l_user_auth_storage: CMS_OAUTH_20_STORAGE_I
-		do
-			Precursor (a_api)
-
-				-- Storage initialization
-			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_storage_sql then
-				create {CMS_OAUTH_20_STORAGE_SQL} l_user_auth_storage.make (l_storage_sql)
-			else
-				-- FIXME: in case of NULL storage, should Current be disabled?
-				create {CMS_OAUTH_20_STORAGE_NULL} l_user_auth_storage
-			end
-
-				-- Node API initialization
-			create l_user_auth_api.make_with_storage (a_api, l_user_auth_storage)
-			user_oauth_api := l_user_auth_api
-		ensure then
-			user_oauth_api_set: user_oauth_api /= Void
-		end
-
-feature {CMS_API} -- Module management
-
-	is_installed (api: CMS_API): BOOLEAN
-			-- Is Current module installed?
-		do
-			Result := attached api.storage.custom_value ("is_initialized", "module-" + name) as v and then v.is_case_insensitive_equal_general ("yes")
-		end
-
-	install (api: CMS_API)
-		local
-			l_setup: CMS_SETUP
-			l_params: detachable STRING_TABLE [detachable ANY]
-			l_consumers: LIST [STRING]
-		do
-			l_setup := api.setup
-
-				-- Schema
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
-				if not l_sql_storage.sql_table_exists ("oauth2_consumers") then
-					--| Schema
-					l_sql_storage.sql_execute_file_script (l_setup.environment.path.extended ("scripts").extended ("oauth2_consumers.sql"))
-
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for blog module", generating_type)
-					end
-						-- TODO workaround.
-					l_sql_storage.sql_execute_file_script (l_setup.environment.path.extended ("scripts").extended ("oauth2_consumers_initialize.sql"))
-				end
-
-					-- TODO workaround, until we have an admin module
-				l_sql_storage.sql_query ("SELECT name FROM oauth2_consumers;", Void)
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for differnent consumerns", generating_type)
-				else
-					from
-						l_sql_storage.sql_start
-						create {ARRAYED_LIST[STRING]} l_consumers.make (2)
-					until
-						l_sql_storage.sql_after
-					loop
-						if attached l_sql_storage.sql_read_string (1) as l_name then
-							l_consumers.force ("oauth2_"+l_name)
-						end
-						l_sql_storage.sql_forth
-					end
-					across l_consumers as ic  loop
-						if not l_sql_storage.sql_table_exists (ic.item) then
-							create l_params.make (1)
-							l_params.force (ic.item, "table_name")
-							l_sql_storage.sql_execute_file_script_with_params (l_setup.environment.path.extended ("scripts").extended ("oauth2_template.sql"), l_params)
-						end
-					end
-				end
-				api.storage.set_custom_value ("is_initialized", "module-" + name, "yes")
-			end
-		end
-
-feature {CMS_API} -- Access: API
-
-	user_oauth_api: detachable CMS_OAUTH_20_API
-			-- <Precursor>		
-
-feature -- Filters
-
-	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
-			-- Possibly list of Filter's module.
-		do
-			create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
-			if attached user_oauth_api as l_user_oauth_api then
-				Result.extend (create {CMS_OAUTH_20_FILTER}.make (a_api, l_user_oauth_api))
-			end
-		end
-
 feature -- Access: docs
 
 	root_dir: PATH
@@ -172,29 +68,23 @@ feature -- Access: docs
 
 feature -- Router
 
-
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			if attached user_oauth_api as l_user_oauth_api then
-				configure_web (a_api, l_user_oauth_api, a_router)
-			end
+			configure_web (a_api, a_router)
 		end
 
-
-	configure_web (a_api: CMS_API; a_user_oauth_api: CMS_OAUTH_20_API; a_router: WSF_ROUTER)
+	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
 		do
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/account/roc-basic-auth", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login_basic_auth (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/activate/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_activation (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/login-with-oauth/{callback}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_oauth (a_api,a_user_oauth_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/{callback}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_callback_oauth (a_api, a_user_oauth_api, ?, ?)), a_router.methods_get_post)
 		end
-
 
 feature -- Hooks configuration
 
@@ -229,6 +119,11 @@ feature -- Hooks
 			end
 			a_menu_system.primary_menu.extend (lnk)
 			lnk.set_weight (98)
+			if a_response.location.starts_with ("account/roc-login") then
+				create lnk.make ("Basic Auth", "account/roc-basic-auth")
+				lnk.set_expandable (True)
+				a_response.add_to_primary_tabs (lnk)
+			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
@@ -236,19 +131,23 @@ feature -- Hooks
 			l_string: STRING
 		do
 			Result := <<"login", "register", "reactivate", "new_password", "reset_password">>
-			create l_string.make_empty
-			across Result as ic loop
+			debug ("roc")
+				create l_string.make_empty
+				across
+					Result as ic
+				loop
 					l_string.append (ic.item)
 					l_string.append_character (' ')
 				end
-			write_debug_log (generator + ".block_list:" + l_string )
+				write_debug_log (generator + ".block_list:" + l_string )
+			end
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if
 				a_block_id.is_case_insensitive_equal_general ("login") and then
-				a_response.location.starts_with ("account/roc-login")
+				a_response.location.starts_with ("account/roc-basic-auth")
 			then
 				get_block_view_login (a_block_id, a_response)
 			elseif
@@ -277,9 +176,20 @@ feature -- Hooks
 	handle_login (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			link: CMS_LINK
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("Login", "optional_content_type")
+			r.execute
+		end
+
+	handle_login_basic_auth (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			link: CMS_LINK
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("Basic Auth", "optional_content_type")
 			r.execute
 		end
 
@@ -289,27 +199,11 @@ feature -- Hooks
 			l_url: STRING
 			l_cookie: WSF_COOKIE
 		do
-			if
-				attached {WSF_STRING} req.cookie ({CMS_AUTHENTICATION_CONSTANTS}.oauth_session) as l_cookie_token and then
-				attached {CMS_USER} current_user (req) as l_user
-			then
-					-- Logout gmail
-				create l_cookie.make ({CMS_AUTHENTICATION_CONSTANTS}.oauth_session, l_cookie_token.value)
-				l_cookie.set_path ("/")
-				l_cookie.set_max_age (-1)
-				res.add_cookie (l_cookie)
-				unset_current_user (req)
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				r.set_status_code ({HTTP_CONSTANTS}.found)
-				r.set_redirection (req.absolute_script_url (""))
-				r.execute
-			else
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				r.set_status_code ({HTTP_CONSTANTS}.found)
-				l_url := req.absolute_script_url ("/basic_auth_logoff")
-				r.set_redirection (l_url)
-				r.execute
-			end
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_status_code ({HTTP_CONSTANTS}.found)
+			l_url := req.absolute_script_url ("/basic_auth_logoff")
+			r.set_redirection (l_url)
+			r.execute
 		end
 
 	handle_register (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -529,7 +423,8 @@ feature {NONE} -- Helpers
 		do
 			create p.make_from_string ("templates")
 			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.module_resource_path (Current, p)
+
+			p := a_response.api.module_theme_resource_location (Current, p)
 			if p /= Void then
 				if attached p.entry as e then
 					create Result.make (a_block_id, Void, p.parent, e)
@@ -554,13 +449,6 @@ feature {NONE} -- Block views
 				loop
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
-				if
-					attached user_oauth_api as l_auth_api and then
-					attached l_auth_api.oauth2_consumers as l_list
-				then
-					l_tpl_block.set_value (l_list, "oauth_consumers")
-				end
-
 				a_response.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
@@ -708,110 +596,6 @@ feature {NONE} -- Block views
 			end
 		end
 
-feature -- OAuth2 Login with google.
-
-	handle_login_with_oauth (api: CMS_API; a_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			l_oauth: CMS_OAUTH_20_WORKFLOW
-		do
-			if
-				attached {WSF_STRING} req.path_parameter ("callback") as p_consumer and then
-				attached {CMS_OAUTH_20_CONSUMER} a_oauth_api.oauth_consumer_by_name (p_consumer.value) as l_consumer
-			then
-				create l_oauth.make (req.server_url, l_consumer)
-				if attached l_oauth.authorization_url as l_authorization_url then
-					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					r.set_redirection (l_authorization_url)
-					r.execute
-				else
-					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					r.set_main_content ("Bad request")
-					r.execute
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				r.set_main_content ("Bad request")
-				r.execute
-			end
-		end
-
-	handle_callback_oauth (api: CMS_API; a_user_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			l_auth: CMS_OAUTH_20_WORKFLOW
-			l_user_api: CMS_USER_API
-			l_user: CMS_USER
-			l_roles: LIST [CMS_USER_ROLE]
-			l_cookie: WSF_COOKIE
-			es: CMS_AUTHENTICATON_EMAIL_SERVICE
-		do
-			if  attached {WSF_STRING} req.path_parameter ("callback") as l_callback and then
-			    attached {CMS_OAUTH_20_CONSUMER} a_user_oauth_api.oauth_consumer_by_callback (l_callback.value) as l_consumer and then
-				attached {WSF_STRING} req.query_parameter ("code") as l_code
-			then
-				create l_auth.make (req.server_url, l_consumer)
-				l_auth.sign_request (l_code.value)
-				if
-					attached l_auth.access_token as l_access_token and then
-					attached l_auth.user_profile as l_user_profile
-				then
-					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-						-- extract user email
-						-- check if the user exist
-					l_user_api := api.user_api
-						-- 1 if the user exit put it in the context
-					if
-						attached l_auth.user_email as l_email
-					then
-						if attached l_user_api.user_by_email (l_email) as p_user then
-								-- User with email exist
-							if	attached a_user_oauth_api.user_oauth2_by_id (p_user.id, l_consumer.name)	then
-									-- Update oauth entry
-								a_user_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
-							else
-									-- create a oauth entry
-								a_user_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
-							end
-							create l_cookie.make ({CMS_AUTHENTICATION_CONSTANTS}.oauth_session, l_access_token.token)
-							l_cookie.set_max_age (l_access_token.expires_in)
-							l_cookie.set_path ("/")
-							res.add_cookie (l_cookie)
-						else
-
-							create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (1)
-							l_roles.force (l_user_api.authenticated_user_role)
-
-								-- Create a new user and oauth entry
-							create l_user.make (l_email)
-							l_user.set_email (l_email)
-							l_user.set_password (new_token) -- generate a random password.
-							l_user.set_roles (l_roles)
-							l_user.mark_active
-							l_user_api.new_user (l_user)
-
-								-- Add oauth entry
-							a_user_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, l_user, l_consumer.name )
-							create l_cookie.make ({CMS_AUTHENTICATION_CONSTANTS}.oauth_session, l_access_token.token)
-							l_cookie.set_max_age (l_access_token.expires_in)
-							l_cookie.set_path ("/")
-							res.add_cookie (l_cookie)
-							set_current_user (req, l_user)
-
-
-									-- Send Email
-							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-							write_debug_log (generator + ".handle register: send_contact_welcome_email")
-							es.send_contact_welcome_email (l_email, "")
-						end
-					end
-					r.set_redirection (r.front_page_url)
-					r.execute
-				end
-
-			end
-
-		end
 
 feature {NONE} -- Token Generation
 
@@ -833,6 +617,7 @@ feature {NONE} -- Token Generation
 			end
 			Result := l_token
 		end
+
 
 feature {NONE} -- Implementation: date and time
 

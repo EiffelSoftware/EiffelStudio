@@ -61,11 +61,18 @@ feature {NONE} -- Initialization
 				-- Can be also used to precise the "From:" value for email.
 			site_email := text_item_or_default ("site.email", "webmaster")
 
-				-- Location for theme folders.
+				-- Location for modules folders.
+			if attached text_item ("modules-dir") as s then
+				create modules_location.make_from_string (s)
+			else
+				modules_location := environment.modules_path
+			end
+
+				-- Location for themes folders.
 			if attached text_item ("themes-dir") as s then
 				create themes_location.make_from_string (s)
 			else
-				themes_location := environment.www_path.extended ("themes")
+				themes_location := environment.themes_path
 			end
 
 				-- Selected theme's name
@@ -76,7 +83,6 @@ feature {NONE} -- Initialization
 			end
 
 			compute_theme_location
-			compute_theme_assets_location
 		end
 
 	initialize_storages
@@ -161,17 +167,6 @@ feature -- Theme: Compute location
 	compute_theme_location
 		do
 			theme_location := themes_location.extended (theme_name)
-		end
-
-	compute_theme_assets_location
-			-- assets (js, css, images, etc)
-			-- Not used at the moment.
-		do
-			debug ("refactor_fixme")
-				fixme ("Check if we really need it")
-			end
-				-- Check how to get this path from the CMS_THEME information.
-			theme_assets_location := theme_location.extended ("assets")
 		end
 
 end

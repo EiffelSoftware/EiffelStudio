@@ -240,7 +240,7 @@ feature -- Element change
 				until
 					l_classes.after
 				loop
-					if attached {EIFFEL_CLASS_I} l_classes.item_for_iteration.original_class as l_eclassi then
+					if attached {EIFFEL_CLASS_I} l_classes.item_for_iteration.lace_class as l_eclassi then
 						synchronize_test_class (l_eclassi)
 					end
 					l_classes.forth
@@ -283,85 +283,6 @@ feature {NONE} -- Implementation
 			not_retrieving: not is_retrieving
 		end
 
-
-
--- Not necessary soon...
-
-
---	force_test_class_compilation
---			-- If test classes have changed since last time `udpate_root_class' has been called, write
---			-- new class referencing all test classes and register it as root clas in system.
---		local
---			l_class_map: like class_map
---			l_list: ARRAYED_LIST [EIFFEL_CLASS_I]
---			l_class: EIFFEL_CLASS_I
---		do
---			if (is_etest_session_running or has_class_map_changed) and project_access.is_initialized then
---				has_class_map_changed := False
---				l_class_map := class_map
---				create l_list.make (l_class_map.count)
---				from
---					l_class_map.start
---				until
---					l_class_map.after
---				loop
---					l_class := l_class_map.item_for_iteration.eiffel_class
---					if file_system.file_exists (l_class.file_name) then
---						l_list.force (l_class)
---					end
---					l_class_map.forth
---				end
---				write_evaluator_root_class (l_list, True)
---			end
---		end
-
---	write_evaluator_root_class (a_list: LIST [EIFFEL_CLASS_I]; a_create: BOOLEAN)
---			-- Write anchor root class with classes in given list.
---			--
---			-- `a_list': A list containing class names to be referenced in root class.
---			-- `a_create': True if creation of root class should be forced, otherwise it is only created
---			--             if the file already existed.
---		require
---			a_list_attached: a_list /= Void
---			project_initialized: project_access.is_initialized
---		local
---			l_class_writer: ETEST_EVALUATOR_ROOT_WRITER
---			l_dir_name: DIRECTORY_NAME
---			l_file_name: FILE_NAME
---			l_file: KL_TEXT_OUTPUT_FILE
---			l_system: SYSTEM_I
---		do
---			create l_class_writer
---			l_system := project_access.project.system.system
---			l_dir_name := l_system.project_location.eifgens_cluster_path
---			create l_file_name.make_from_string (l_dir_name)
---			l_file_name.extend (l_class_writer.class_name.as_lower)
---			l_file_name.add_extension ("e")
---			create l_file.make (l_file_name)
---			if l_file.exists then
---				l_file.open_write
---			elseif a_create then
---				if not file_system.directory_exists (l_dir_name) then
---					file_system.recursive_create_directory (l_dir_name)
---				end
---				l_file.open_write
---				l_system.force_rebuild
---			end
---			if l_file.is_open_write then
---				l_class_writer.write_source (l_file, a_list)
---				l_file.close
---				if l_system.is_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name) then
---					if a_list.is_empty then
---						l_system.remove_explicit_root (l_class_writer.class_name, l_class_writer.root_feature_name)
---					end
---				else
---					if not a_list.is_empty then
---						l_system.add_explicit_root (Void, l_class_writer.class_name, l_class_writer.root_feature_name)
---					end
---				end
---			end
---		end
-
 feature {NONE} -- Factory
 
 	new_class_map: like class_map
@@ -371,7 +292,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

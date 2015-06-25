@@ -4445,7 +4445,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 						if Result then
 							Result := not a_key.is_arrow and then
 								(is_item_tab_navigation_enabled implies (
-									(attached {EV_APPLICATION} ev_application as l_app and then l_app.ctrl_pressed) or
+									ev_application.ctrl_pressed or
 										-- Ctrl+Tab performs regular tab navigation from within the grid.
 									attached selected_items as l_sel_items and then
 										(l_sel_items.count > 0 implies
@@ -5106,9 +5106,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					selected_item /= Void and then not selected_item.is_destroyed and then
 					selected_item.is_selected and then
 					((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected) and then
-					attached {EV_APPLICATION} ev_application as l_app and then
-					l_app.ctrl_pressed and then
-					not l_app.shift_pressed
+					attached ev_application as l_app and then
+					l_app.ctrl_pressed and then not l_app.shift_pressed
 				then
 						-- Handle Ctrl-clicking to deselect items
 					selected_item.disable_select
@@ -5597,7 +5596,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_sel_item: detachable EV_GRID_ITEM
 			l_row_index, l_column_index: INTEGER
 		do
-			l_look_left := (a_key.code = {EV_KEY_CONSTANTS}.key_tab and (attached {EV_APPLICATION} ev_application as l_app and then l_app.shift_pressed)) or a_key.code = {EV_KEY_CONSTANTS}.key_home
+			l_look_left := (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home
 			l_row_index := a_starting_item.row.index
 			l_column_index := a_starting_item.column.index
 			l_sel_item := find_next_item (a_starting_item.row.index, a_starting_item.column.index, l_look_left, True)
@@ -5631,10 +5630,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_shift_key_start_item: like shift_key_start_item
 			l_dynamic_content_function: like dynamic_content_function
 		do
-			if attached {EV_APPLICATION} ev_application as l_app then
-				is_ctrl_pressed := l_app.ctrl_pressed
-				is_shift_pressed := l_app.shift_pressed
-			end
+			is_ctrl_pressed := ev_application.ctrl_pressed
+			is_shift_pressed := ev_application.shift_pressed
 
 			l_last_selected_item := last_selected_item
 			l_last_selected_row := last_selected_row
@@ -6068,7 +6065,7 @@ feature -- Implementation
 
 				if is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key])) then
 					l_key_code := a_key.code
-					l_shift_pressed := attached {EV_APPLICATION} ev_application as l_app and then l_app.shift_pressed
+					l_shift_pressed := ev_application.shift_pressed
 
 						-- Call key actions.
 					if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
@@ -6189,8 +6186,7 @@ feature -- Implementation
 							then
 									-- We need to handle tab, home and end navigation correctly.
 								a_sel_item := find_next_item (l_prev_sel_item.row.index, l_prev_sel_item.column.index,
-									a_key.code = {EV_KEY_CONSTANTS}.key_tab and
-									(attached {EV_APPLICATION} ev_application as l_app and then l_app.shift_pressed) or
+									(a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or
 									a_key.code = {EV_KEY_CONSTANTS}.key_home, True)
 								if a_sel_item = l_prev_sel_item then
 										-- If the same item is returned then there no selection can take place.
@@ -6250,12 +6246,12 @@ feature -- Implementation
 						-- Do nothing
 					end
 
-					if a_sel_item /= Void and then not (attached {EV_APPLICATION} ev_application as l_app and then l_app.alt_pressed) then
+					if a_sel_item /= Void and then not ev_application.alt_pressed then
 							-- 'Alt' should have no effect on selection handling.
 						if
 							a_sel_item.is_selected and then
 							attached last_selected_item as l_last_selected_item and then
-							not (attached {EV_APPLICATION} ev_application as l_app and then l_app.shift_pressed) and then
+							not ev_application.shift_pressed and then
 							l_last_selected_item /= a_sel_item.implementation
 						then
 							l_last_selected_item.disable_select
@@ -6792,7 +6788,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

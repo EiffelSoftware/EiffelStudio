@@ -31,30 +31,30 @@ feature -- Status setting
 			-- `Current' will accept docking from a
 			-- compatible EV_DOCKABLE_SOURCE.
 		require
-			application_exists: attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application
+			application_exists: attached (create {EV_ENVIRONMENT}).application
 		do
 			is_docking_enabled := True
-			if attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application then
+			if attached (create {EV_ENVIRONMENT}).application as l_application then
 				l_application.implementation.dockable_targets.extend (attached_interface.object_id)
 			end
 		ensure
 			is_dockable: is_docking_enabled
-			id_stored_in_application: attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.implementation.dockable_targets.has (attached_interface.object_id)
+			id_stored_in_application: attached (create {EV_ENVIRONMENT}).application as l_application and then l_application.implementation.dockable_targets.has (attached_interface.object_id)
 		end
 
 	disable_docking
 			-- Ensure `is_docking_enabled' is False.
 			-- `Current' will not accept docking.
 		require
-			application_exists: attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application
+			application_exists: attached (create {EV_ENVIRONMENT}).application
 		do
 			is_docking_enabled := False
-			if attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application then
+			if attached (create {EV_ENVIRONMENT}).application as l_application then
 				l_application.implementation.dockable_targets.prune_all (attached_interface.object_id)
 			end
 		ensure
 			not_dockable: not is_docking_enabled
-			id_not_stored_in_application:  attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then not l_application.implementation.dockable_targets.has (attached_interface.object_id)
+			id_not_stored_in_application:  attached (create {EV_ENVIRONMENT}).application as l_application and then not l_application.implementation.dockable_targets.has (attached_interface.object_id)
 		end
 
 	set_veto_dock_function (a_function: detachable FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
@@ -72,7 +72,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DOCKABLE_TARGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

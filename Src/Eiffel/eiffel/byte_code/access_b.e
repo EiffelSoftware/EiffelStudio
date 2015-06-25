@@ -503,12 +503,12 @@ feature -- C generation
 					-- Now if there is a result for the call and the result
 					-- has to be stored in a real register, do generate the
 					-- assignment.
+				buf.put_new_line
 				if not attached r then
 						-- Call to a procedure.
 					generate_on (t)
 				elseif not attached {AGENT_CALL_B} Current then
 						-- Call to a simple function.
-					buf.put_new_line
 					r.print_register
 					buf.put_three_character (' ', '=', ' ')
 					generate_on (t)
@@ -522,8 +522,8 @@ feature -- C generation
 					register.print_register
 				end
 				buf.put_character (';')
-				buf.put_new_line
 				if attached s then
+					buf.put_new_line
 					buf.put_string ("RTS_IMPERSONATE (RTS_PID(Current));")
 						-- Close else part of a separate conditional.
 					buf.exdent
@@ -692,7 +692,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

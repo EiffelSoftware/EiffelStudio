@@ -1075,6 +1075,7 @@ test	config-remove-library-indirectly	incr428 tcf fail incrementality config
 test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
 test	qat-vwce-sneak			incr430	tcf fail incrementality anchored_type conditional expression
 test	unique-recompile-crash	incr431	tcf fail incrementality
+test	infinite-recursion-scoop-recompile	incr432	tcf fail incrementality scoop
 
 
 -- Melting

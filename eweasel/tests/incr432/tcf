@@ -1,0 +1,17 @@
+test_name	infinite-recursion-scoop-recompile
+test_description After initial compilation, a class is simply changed causing the compiler to go into an infinite recursion in {TYPE_LIST}.clean at the end of degree 3.
+
+define VALUE "10"
+copy_sub	Ace $TEST Ace
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+define VALUE "11"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

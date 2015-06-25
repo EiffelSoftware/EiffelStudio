@@ -1237,6 +1237,12 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 				l_text_formatter_decorator.process_symbol_text (ti_space)
+				if not l_as.is_active then
+					l_text_formatter_decorator.process_symbol_text (ti_less_than)
+					l_text_formatter_decorator.process_basic_text (ti_none_class)
+					l_text_formatter_decorator.process_symbol_text (ti_greater_than)
+					l_text_formatter_decorator.put_space
+				end
 				l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 			end
 			l_as.type.process (Current)
@@ -2810,6 +2816,12 @@ feature {NONE} -- Implementation
 				put_breakable
 				l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 				l_text_formatter_decorator.put_space
+				if not l_as.is_active then
+					l_text_formatter_decorator.process_symbol_text (ti_less_than)
+					l_text_formatter_decorator.process_basic_text (ti_none_class)
+					l_text_formatter_decorator.process_symbol_text (ti_greater_than)
+					l_text_formatter_decorator.put_space
+				end
 			end
 			if l_as.type /= Void then
 				if not expr_type_visiting then

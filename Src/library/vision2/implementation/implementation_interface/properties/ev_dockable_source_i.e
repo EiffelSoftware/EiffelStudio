@@ -423,7 +423,7 @@ feature -- Basic operations
 					-- and the rest of this section of code being executed.	
 				tool_bar ?= dockable_target
 				if not (tool_bar /= Void and l_widget_source_being_docked /= Void) then
-					locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+					locked_in_here := attached (create {EV_ENVIRONMENT}).application as l_app and then l_app.locked_window = Void
 					check l_widget_source_being_docked /= Void then end
 					if locked_in_here and l_widget_source_being_docked.top_level_window /= Void then
 						check container /= Void then end
@@ -573,8 +573,8 @@ feature -- Basic operations
 			source_being_docked := Void
 
 				-- Ensure that the locked window is unlocked, if set in this feature.
-			if locked_in_here and then attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application then
-				locked_in_here_window := l_application.locked_window
+			if locked_in_here and then attached (create {EV_ENVIRONMENT}).application as l_app then
+				locked_in_here_window := l_app.locked_window
 				if locked_in_here_window /= Void then
 					locked_in_here_window.unlock_update
 				end

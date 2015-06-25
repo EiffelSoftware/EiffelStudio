@@ -21,14 +21,22 @@ create
 
 feature -- Access
 
-	application: detachable separate EV_APPLICATION
+	application: detachable EV_APPLICATION
 			-- Single application object for system.
 		require
-			not_destroyed: not is_destroyed
+			same_processor_as_application: is_application_processor
 		do
 			Result := implementation.application
 		ensure
 			bridge_ok: Result = implementation.application
+		end
+
+	separate_application: detachable separate EV_APPLICATION
+			-- Single application object for system.
+		do
+			Result := implementation.separate_application
+		ensure
+			bridge_ok: Result = implementation.separate_application
 		end
 
 	supported_image_formats: LINEAR [STRING_32]
@@ -108,6 +116,8 @@ feature -- Access
 			Result := implementation.default_pointer_style_height
 		end
 
+feature -- Status report
+
 	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
@@ -117,17 +127,10 @@ feature -- Access
 			Result := implementation.has_printer
 		end
 
-feature -- Object Factory
-
-	new_object_from_type (a_type: TYPE [EV_ANY]): separate EV_ANY
+	is_application_processor: BOOLEAN
+			-- Is current processor running on the same processor as `application'?
 		do
-			Result := implementation.new_object_from_type (a_type)
-		end
-
-	separate_string_from_string (a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
-			-- Create a new string on the same processor as EV_APPLICATION object.
-		do
-			Result := implementation.separate_string_from_string (a_string)
+			Result := implementation.is_application_processor
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Implementation
@@ -155,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -155,8 +155,8 @@ feature -- Element change
 				move_buffer
 			elseif area_centered then
 				area_centered := False
-				if attached {EV_APPLICATION} ev_application as l_app and then attached recenter_agent then
-					l_app.do_once_on_idle (recenter_agent)
+				if attached recenter_agent then
+					ev_application.do_once_on_idle (recenter_agent)
 				end
 			end
 			update
@@ -319,7 +319,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

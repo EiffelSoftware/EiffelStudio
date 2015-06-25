@@ -511,8 +511,8 @@ feature {NONE} -- Event implementation
 					end
 				end
 				if p or else not world.valid then
-					if attached {EV_APPLICATION} ev_application as l_app and then project_agent /= Void then
-						l_app.do_once_on_idle (project_agent)
+					if project_agent /= Void then
+						ev_application.do_once_on_idle (project_agent)
 					end
 				end
 			end
@@ -529,7 +529,7 @@ feature {NONE} -- Event implementation
 		do
 			mouse_move (a_x, a_y, 0.0, 0.0, 0.0, 0, 0)
 			fig := current_figure
-			if fig = Void or else (attached {EV_APPLICATION} ev_application as l_app and then l_app.ctrl_pressed) then
+			if fig = Void or else ev_application.ctrl_pressed then
 				Result := world.real_pebble (a_x, a_y)
 			elseif fig.is_show_requested and fig.is_sensitive then
 				from until Result /= Void or fig = Void loop

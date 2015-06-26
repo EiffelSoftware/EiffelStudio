@@ -42,6 +42,7 @@
 
 #include "eif_macros.h"
 #include "eif_types.h"
+#include "eif_stack.h"
 #include "rt_wbench.h"
 
 #ifdef __cplusplus
@@ -112,14 +113,41 @@ extern "C" {
 /* RT_GC_WEAN_N(n)	pop `n' items from `loc_stack'. */
 
 #ifdef ISE_GC
-#define RT_GC_PROTECT(a)	epush(&loc_stack,(EIF_REFERENCE) &a)
-#define RT_GC_WEAN(a)		epop(&loc_stack,1)
-#define RT_GC_WEAN_N(n)		epop(&loc_stack,n)
+#define RT_GC_PROTECT(a)	eif_oastack_push(&loc_stack,&a)
+#define RT_GC_WEAN(a)		eif_oastack_npop(&loc_stack,1)
+#define RT_GC_WEAN_N(n)		eif_oastack_npop(&loc_stack,n)
 #else
 #define RT_GC_PROTECT(a)
 #define RT_GC_WEAN(a)
 #define RT_GC_WEAN_N(n)
 #endif
+
+/* Hector protection for external calls:
+ *  RTXH saves hector's stack context in case an exception occurs
+ *  RTHS resynchronizes the hector stack by restoring saved context
+ */
+#ifdef ISE_GC
+#define RTXH \
+	struct stochunk * volatile hc = hec_stack.st_cur; \
+	EIF_REFERENCE * volatile ht = (hc ? hc->sk_top : NULL)
+#define RTHS \
+	if (hc) { \
+		hec_stack.st_cur = hc; \
+		hc->sk_top = ht; \
+	} else if (hec_stack.st_cur) { /* There was no chunk allocated when saving, but allocated at execution in between */ \
+		hec_stack.st_cur = hec_stack.st_head; \
+		hec_stack.st_cur->sk_top = hec_stack.st_cur->sk_arena; \
+	}
+#else
+#define RTXH
+#define RTHS
+#endif
+
+/* Macro for protecting/restoring stack at runtime */
+#define RTXSCH	RTXE; RTHS; RTLS
+/* RTXD is for the generated code while RTXDR is for the runtime when you do not use the RTLI/RTLR macros. */
+#define RTXDRH	RTXLR; RTXH; RTXLS
+
 
 /* Macro used to get info about SPECIAL objects.
  * RT_SPECIAL_AREA returns address where special data starts.

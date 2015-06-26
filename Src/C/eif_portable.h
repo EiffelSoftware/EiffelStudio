@@ -297,9 +297,12 @@ typedef EIF_INTEGER_64	rt_int64;
 /* Native strings */
 #ifdef EIF_WINDOWS
 typedef wchar_t EIF_NATIVE_CHAR;
+typedef wchar_t * EIF_FILENAME;
 #else
 typedef char EIF_NATIVE_CHAR;
+typedef char * EIF_FILENAME;
 #endif
+
 
 	/* previously in eif_globals.h */
 #define MTC_NOARG           

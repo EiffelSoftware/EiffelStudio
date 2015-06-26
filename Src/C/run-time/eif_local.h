@@ -44,10 +44,9 @@
 extern "C" {
 #endif
 
-RT_LNK void epop(struct stack *stk, rt_uint_ptr nb_items);			/* Pops values off the local stack */
 #ifdef ISE_GC
-RT_LNK char **eget(register size_t num);		/* Get another chunk for local variables */
-RT_LNK void eback(register char **top);		/* Get back to the previous stack chunk */
+RT_LNK EIF_REFERENCE **eget(size_t num);		/* Get another chunk for local variables */
+RT_LNK void eback(EIF_REFERENCE **top);		/* Get back to the previous stack chunk */
 #endif
 RT_LNK void initstk(void);		/* Initialize local stacks */
 

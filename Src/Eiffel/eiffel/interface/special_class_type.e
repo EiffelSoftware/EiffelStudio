@@ -876,6 +876,10 @@ feature {NONE} -- C code generation
 				buffer.put_string ("RTLI(2);")
 				buffer.put_current_registration (0)
 				buffer.put_local_registration (1, "loc1")
+					-- Now we validate the space made for Current and `loc1'.
+				buffer.put_new_line
+				buffer.put_string ("RTLIU(2);")
+
 				buffer.put_new_line
 				buffer.put_string ("memset (&sloc1.overhead, 0, OVERHEAD + ")
 				if final_mode then
@@ -1038,6 +1042,10 @@ feature {NONE} -- C code generation
 						buffer.put_string ("RTLI(1);")
 						buffer.put_new_line
 						buffer.put_current_registration (0)
+							-- Now we validate the space made for Current.
+						buffer.put_new_line
+						buffer.put_string ("RTLIU(1);")
+
 							-- Create expanded type based on the actual generic parameter, and not
 							-- on the recorded derivation (as it would not work if `gen_param' is
 							-- generic. (See eweasel test#exec282 nd test#exec283 for an example where
@@ -1709,7 +1717,7 @@ feature -- IL code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

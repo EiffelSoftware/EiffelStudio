@@ -54,14 +54,12 @@ extern struct dbstack db_stack;		/* Calling context stack */
 extern void dnotify_create_thread(EIF_THR_TYPE); 					/* Notify the debuggeR a new Eiffel thread was created */
 extern void dnotify_exit_thread(EIF_THR_TYPE); 						/* Notify the debuggeR an Eiffel thread exited */
 extern void dnotify_register_scoop_processor(EIF_THR_TYPE,uint32);  /* Notify the debuggeR a SCOOP processor was registered on thread id */
-extern void dbstack_reset(struct dbstack *stk);
 
 extern EIF_THR_TYPE dbg_thread_id;		/* Current Thread identifier for debugging session. */
 #define REGISTER_DBG_THREAD_ID(t)	dbg_thread_id = t
 #define IS_REGISTERED_DBG_THREAD_ID(t)	(dbg_thread_id == 0 || dbg_thread_id == t)
 #endif
 extern void dcatcall(int a_arg_position, EIF_TYPE a_expected_dftype, EIF_TYPE a_actual_dftype);
-extern void c_opstack_reset(struct c_opstack *stk);
 #endif
 
 extern uint32 critical_stack_depth;
@@ -81,10 +79,10 @@ extern void safe_dbreak(int why);	/* Program execution stopped. Before calling t
 
 #define clocnum exvect->ex_locnum
 #define cargnum exvect->ex_argnum
-#define cresult c_oitem(start + clocnum + cargnum + 1)
-#define cloc(x) c_oitem(start + clocnum - (x))
-#define carg(x) c_oitem(start + clocnum + cargnum + 1 - (x))
-#define ccurrent c_oitem(start + clocnum)
+#define cresult eif_c_opstack_i_th(&cop_stack, start + clocnum + cargnum + 1)
+#define cloc(x) eif_c_opstack_i_th(&cop_stack, start + clocnum - (x))
+#define carg(x) eif_c_opstack_i_th(&cop_stack, start + clocnum + cargnum + 1 - (x))
+#define ccurrent eif_c_opstack_i_th(&cop_stack, start + clocnum)
 
 #ifdef __cplusplus
 }

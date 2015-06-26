@@ -899,6 +899,12 @@ feature {NONE} -- Generation
 							end
 							i := i - 1
 						end
+							-- Now we validate the space made for `x' addresses.
+						buffer.put_new_line
+						buffer.put_string (once "RTLIU(")
+						buffer.put_integer (reference_arg_count + 1)
+						buffer.put_two_character (')', ';')
+
 						from
 							i := args_count
 						until

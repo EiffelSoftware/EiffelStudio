@@ -74,12 +74,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef EIF_WINDOWS
-typedef wchar_t * EIF_FILENAME;
-#else
-typedef char * EIF_FILENAME;
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif

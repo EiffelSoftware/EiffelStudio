@@ -867,7 +867,7 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 #ifdef ISE_GC
 	char gc_status;							/* Saved GC status */
 #endif
-	RTYD;									/* Save stack contexts */
+	RTXDR;									/* Save stack contexts */
 
 	/* There is no need to protect against signals here, as this routine can
 	 * only be called via the signal handler, which takes care of blocking

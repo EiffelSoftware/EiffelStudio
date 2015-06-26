@@ -322,9 +322,9 @@ typedef struct tag_EIF_once_value_t {
 		EIF_POINTER      EIF_POINTER_result;
 	} result;                  /* Result of a once function (if any) */
 	EIF_REFERENCE   *exception;    /* Associated exception object (if any) */
-	EIF_BOOLEAN     done;      /* Can result be used?                */
+	int     done;      /* Can result be used?                */
 #ifndef WORKBENCH
-	EIF_BOOLEAN     succeeded; /* Is feature succesfully evaluated?  */
+	int     succeeded; /* Is feature succesfully evaluated?  */
 #endif
 } EIF_once_value_t;
 
@@ -335,7 +335,7 @@ typedef struct tag_EIF_process_once_value_t {
 	EIF_REFERENCE exception; /* Exception (if any) */
 	EIF_MUTEX_TYPE * mutex;  /* Mutex to synchronize access to data */
 	EIF_POINTER thread_id;   /* ID of a thread that owns a mutex */
-	EIF_BOOLEAN completed;   /* Has execution been completed? */
+	int completed;   /* Has execution been completed? */
 } EIF_process_once_value_t;
 #endif
 

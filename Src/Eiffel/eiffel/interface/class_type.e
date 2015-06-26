@@ -1138,6 +1138,10 @@ feature -- Generation
 			buffer.put_string ("RTLI(2);")
 			buffer.put_current_registration (0)
 			buffer.put_local_registration (1, "parent")
+				-- Now we validate the space made for Current and parent.
+			buffer.put_new_line
+			buffer.put_string ("RTLIU(2);")
+
 				-- Separation for formatting
 			buffer.put_new_line
 				-- Current class type is composite

@@ -1,0 +1,103 @@
+/*
+	description: "[
+		To use it, you need to define the following EIF_STACK_TYPE_NAME, EIF_STACK_TYPE before
+		including this header. You also need to define EIF_STACK_IS_STRUCT_ELEMENT when defining the
+		implementation (i.e. including rt_stack.implementation).
+
+		* EIF_STACK_TYPE_NAME is the prefix that will be given to the stack type name
+		* EIF_STACK_TYPE is the type of the elements in the stack
+		* EIF_STACK_IS_STRUCT_ELEMENT must be defined if EIF_STACK_TYPE represents a C struct.
+
+		For example, a stack of int could be using the following definition
+		
+		#define EIF_STACK_TYPE_NAME	int_
+		#define EIF_STACK_TYPE	int
+		#undef EIF_STACK_IS_STRUCT_ELEMENT
+
+		which will yield a new stack structure whose name is `int_stack' and using `int' as types
+		of the elements.
+		]"
+	date:		"$Date$"
+	revision:	"$Revision$"
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="eif_stack_decl.h"  version="$Id$" summary="Stack representation and manipulations">
+*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* We need a level of indirection otherwise the macro expansion does not do what we want. See
+ * http://stackoverflow.com/questions/1489932/c-preprocessor-and-token-concatenation 
+ * for an explanation. */
+#define XX_CAT2(x,y)	CAT2(x,y)
+#define XX_CAT3(x,y,z)	CAT3(x,y,z)
+
+#define	XX_EIF_STACK_TYPE		struct XX_CAT2(EIF_STACK_TYPE_NAME,stack)
+#define XX_EIF_STACK_CHUNK_TYPE	struct XX_CAT3(st,EIF_STACK_TYPE_NAME,chunk)
+#define XX_EIF_STACK_CURSOR_TYPE	struct XX_CAT2(EIF_STACK_TYPE_NAME,cursor)
+#define XX_EIF_STACK_ELEM_TYPE	EIF_STACK_TYPE
+#define XX_EIF_STACK_FUNC(name)	XX_CAT3(XX_CAT2(eif_,EIF_STACK_TYPE_NAME),stack_,name)
+
+XX_EIF_STACK_CHUNK_TYPE {
+	XX_EIF_STACK_CHUNK_TYPE *sk_next;
+	XX_EIF_STACK_CHUNK_TYPE *sk_prev;
+	XX_EIF_STACK_ELEM_TYPE *sk_arena;
+	XX_EIF_STACK_ELEM_TYPE *sk_top;
+	XX_EIF_STACK_ELEM_TYPE *sk_end;
+};
+
+XX_EIF_STACK_TYPE {
+	XX_EIF_STACK_CHUNK_TYPE *st_head;
+	XX_EIF_STACK_CHUNK_TYPE *st_tail;
+	XX_EIF_STACK_CHUNK_TYPE *st_cur;
+};
+
+XX_EIF_STACK_CURSOR_TYPE {
+	XX_EIF_STACK_CHUNK_TYPE *sc_chunk;
+	XX_EIF_STACK_ELEM_TYPE *sc_item;
+};
+
+#ifdef __cplusplus
+}
+#endif
+
+/*
+doc:</file>
+*/
+
+/*
+vim: ft=c
+*/

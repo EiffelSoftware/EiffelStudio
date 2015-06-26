@@ -29,6 +29,7 @@ FINAL_OBJECTS = \
 	$(INDIR)garcol.$obj \
 	$(INDIR)local.$obj \
 	$(INDIR)except.$obj \
+	$(INDIR)stack.$obj \
 	$(INDIR)store.$obj \
 	$(INDIR)retrieve.$obj \
 	$(INDIR)hash.$obj \
@@ -81,6 +82,7 @@ WORKBENCH_OBJECTS = \
 	$(INDIR)wgarcol.$obj \
 	$(INDIR)wlocal.$obj \
 	$(INDIR)wexcept.$obj \
+	$(INDIR)wstack.$obj \
 	$(INDIR)wstore.$obj \
 	$(INDIR)wretrieve.$obj \
 	$(INDIR)whash.$obj \
@@ -136,6 +138,7 @@ MT_OBJECTS = \
 	$(INDIR)offset.$obj \
 	$(INDIR)MTlocal.$obj \
 	$(INDIR)MTexcept.$obj \
+	$(INDIR)MTstack.$obj \
 	$(INDIR)MTstore.$obj \
 	$(INDIR)MTretrieve.$obj \
 	$(INDIR)MThash.$obj \
@@ -196,6 +199,7 @@ MT_WOBJECTS = \
 	$(INDIR)offset.$obj \
 	$(INDIR)MTwlocal.$obj \
 	$(INDIR)MTwexcept.$obj \
+	$(INDIR)MTwstack.$obj \
 	$(INDIR)MTwstore.$obj \
 	$(INDIR)MTwretrieve.$obj \
 	$(INDIR)MTwhash.$obj \
@@ -463,6 +467,9 @@ $(INDIR)search.$obj: $(RTSRC)search.c
 $(INDIR)sig.$obj: $(RTSRC)sig.c
 	$(CC) $(JCFLAGS) $(RTSRC)sig.c
 
+$(INDIR)stack.$obj: $(RTSRC)stack.c
+	$(CC) $(JCFLAGS) $(RTSRC)stack.c
+
 $(INDIR)store.$obj: $(RTSRC)store.c
 	$(CC) $(JCFLAGS) $(RTSRC)store.c
 
@@ -600,6 +607,9 @@ $(INDIR)wsearch.$obj: $(RTSRC)search.c
 
 $(INDIR)wsig.$obj: $(RTSRC)sig.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)sig.c
+
+$(INDIR)wstack.$obj: $(RTSRC)stack.c
+	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)stack.c
 
 $(INDIR)wstore.$obj: $(RTSRC)store.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(RTSRC)store.c
@@ -770,6 +780,9 @@ $(INDIR)MTsearch.$obj: $(RTSRC)search.c
 $(INDIR)MTsig.$obj: $(RTSRC)sig.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)sig.c
 
+$(INDIR)MTstack.$obj: $(RTSRC)stack.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)stack.c
+
 $(INDIR)MTstore.$obj: $(RTSRC)store.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)store.c
 
@@ -938,6 +951,9 @@ $(INDIR)MTwsearch.$obj: $(RTSRC)search.c
 $(INDIR)MTwsig.$obj: $(RTSRC)sig.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)sig.c
 
+$(INDIR)MTwstack.$obj: $(RTSRC)stack.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)stack.c
+
 $(INDIR)MTwstore.$obj: $(RTSRC)store.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)store.c
 
@@ -1102,3 +1118,8 @@ $(INDIR)posix_threads.$obj : eif_posix_threads.h
 $(INDIR)weif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
 $(INDIR)MTweif_threads.$obj : eif_threads.h eif_posix_threads.h include/rt_threads.h
 $(INDIR)MTposix_threads.$obj : eif_posix_threads.h
+
+$(INDIR)stack.$obj : eif_stack.decl eif_stack.h eif_stack.interface include\rt_stack.implementation
+$(INDIR)wstack.$obj : eif_stack.decl eif_stack.h eif_stack.interface include\rt_stack.implementation
+$(INDIR)MTstack.$obj : eif_stack.decl eif_stack.h eif_stack.interface include\rt_stack.implementation
+$(INDIR)MTwstack.$obj : eif_stack.decl eif_stack.h eif_stack.interface include\rt_stack.implementation

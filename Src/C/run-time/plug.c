@@ -681,7 +681,7 @@ rt_private void recursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, int wh
 				  	(obj, where);
 			} else {
 				/* Melted invariant */
-				last = iget();
+				last = eif_opstack_push_empty(&op_stack);
 				last->type = SK_REF;
 				last->it_ref = obj;
 				IC = melt[body_id];
@@ -783,6 +783,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	RTLI(2);
 	RTLR(0,obj);
 	RTLR(1,parent);
+	RTLIU(2);
 
 	dtype = Dtype(obj);
 	desc = &System(dtype);

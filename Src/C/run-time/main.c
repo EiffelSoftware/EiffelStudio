@@ -1014,7 +1014,15 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 	notify_root_thread();
 #endif
 	initprf();						/* Initialize profiler. */
-	init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
+	if (egc_prof_enabled) {
+			/* If profiler is enabled we have to disable it during the initialization as it makes no sense to measure this time. */
+		EIF_INTEGER_32 l_old_val = egc_prof_enabled;
+		egc_prof_enabled = 0;
+		init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
+		egc_prof_enabled = l_old_val;
+	} else {
+		init_emnger();					/* Initialize ISE_EXCEPTION_MANAGER */
+	}
 
 #ifdef EIF_THREADS
 		/* Initialize the SCOOP module. */
@@ -1048,8 +1056,8 @@ rt_public void failure(void)
 		 * management expect `loc_set' to have at least one chunk.
 		 */
 #ifdef ISE_GC
-	st_reset (&loc_set);
-	st_alloc (&loc_set, eif_stack_chunk);
+	eif_oastack_reset (&loc_set);
+	eif_oastack_allocate (&loc_set, eif_stack_chunk);
 #endif
 
 	trapsig(emergency);					/* Weird signals are trapped */

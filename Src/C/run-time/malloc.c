@@ -66,6 +66,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "rt_globals_access.h"
 #include "rt_struct.h"
 #include "rt_hashin.h"
+#include "eif_stack.h"
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
 #include "rt_object_id.h"	/* For the object id and separate stacks */
 #endif
@@ -436,7 +437,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef ISE_GC
 rt_private int trigger_gc_cycle (void);
 rt_private int trigger_smart_gc_cycle (void);
-rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE, struct stack *);
+rt_private EIF_REFERENCE add_to_stack (struct ostack *, EIF_REFERENCE);
 rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE);
 
 /* Also used by the garbage collector */
@@ -1508,7 +1509,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, unsigned int nbitems)
 		}
 
 		if (HEADER(ptr)->ov_flags & EO_NEW) {	/* Original was new, ie not allocated in GSZ. */
-			object = add_to_stack (object, &moved_set);
+			object = add_to_stack (&moved_set, object);
 		}
 	}
 #endif
@@ -2040,7 +2041,7 @@ rt_private void rt_check_list (size_t requested_nbytes, size_t element_size, uni
 		selected != NULL;
 		p = selected, selected = NEXT(p)
 	) {
-		CHECK("valid_previous", (requested_nbytes == 0) || ((p == selected) || (p == PREVIOUS(selected))));
+		CHECK("valid_previous", (requested_nbytes == 0) || ((p == selected) || (element_size == 0) || (p == PREVIOUS(selected))));
 		CHECK("Valid size", (selected->ov_size & B_SIZE) == element_size);
 
 		if ((selected->ov_size & B_SIZE) >= requested_nbytes) {
@@ -3778,7 +3779,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		 * been released before exploding the 'from' space, thus leaving
 		 * room for stack growth.
 		 */
-		if (-1 == epush(&moved_set, (EIF_REFERENCE) (zone + 1)))
+		if (eif_ostack_push(&moved_set, (EIF_REFERENCE) (zone + 1)) != T_OK)
 			enomem(MTC_NOARG);					/* Critical exception */
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
 		new_objects_overhead += OVERHEAD;
@@ -3866,7 +3867,7 @@ rt_shared void sc_stop(void)
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
 	eif_rt_xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
-	st_reset (&memory_set);
+	eif_ostack_reset (&memory_set);
 		/* Reset values to their default value */
 	memset (&sc_to, 0, sizeof(struct sc_zone));
 	memset (&sc_from, 0, sizeof(struct sc_zone));
@@ -3963,7 +3964,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 	if (Disp_rout(dtype)) {
 			/* Special marking of MEMORY object allocated in scavenge zone */
 		if (!(flags & EO_NEW)) {
-			object = add_to_stack (object, &memory_set);
+			object = add_to_stack (&memory_set, object);
 		}
 		zone->ov_flags |= EO_DISP;
 	}
@@ -3994,7 +3995,7 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 #endif
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	CHECK ("Cannot be in object ID stack", !st_has (&object_id_stack, object));
+	CHECK ("Cannot be in object ID stack", !eif_ostack_has(&object_id_stack, object));
 #endif
 
 	return object;
@@ -4053,7 +4054,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #endif
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	CHECK ("Cannot be in object ID stack", !st_has (&object_id_stack, object));
+	CHECK ("Cannot be in object ID stack", !eif_ostack_has(&object_id_stack, object));
 #endif
 
 	return object;
@@ -4082,8 +4083,8 @@ rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE object)
 
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 		/* Check that we can actually add something to the stack. */
-	if ((moved_set.st_top == NULL) || (moved_set.st_end != moved_set.st_top)) {
-		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+	if ((moved_set.st_cur == NULL) || (moved_set.st_cur->sk_top < moved_set.st_cur->sk_end)) {
+		if (eif_ostack_push(&moved_set, object) != T_OK) {		/* Cannot record object */
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 				/* We don't bother, we simply remove the EO_NEW flag from the object
 				 * and mark it old. */
@@ -4107,23 +4108,23 @@ rt_private EIF_REFERENCE add_to_moved_set (EIF_REFERENCE object)
 /*
 doc:	<routine name="add_to_stack" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Add `object' into `stk'.</summary>
+doc:		<param name="stk" type="struct ostack *">Stack in which we wish to add `object'.</param>
 doc:		<param name="object" type="EIF_REFERENCE">Object to add in `memory_set'.</param>
-doc:		<param name="stk" type="struct stack *">Stack in which we wish to add `object'.</param>
 doc:		<return>Location of `object' as it might have moved.</return>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_gc_set_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_private EIF_REFERENCE add_to_stack (EIF_REFERENCE object, struct stack *stk)
+rt_private EIF_REFERENCE add_to_stack (struct ostack *stk, EIF_REFERENCE object)
 {
 	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-	if (-1 == epush(stk, object)) {		/* Cannot record object */
+	if (eif_ostack_push(stk, object) != T_OK) {		/* Cannot record object */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		urgent_plsc(&object);					/* Full collection */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		if (-1 == epush(stk, object)) {	/* Still failed */
+		if (eif_ostack_push(stk, object) != T_OK) {	/* Still failed */
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			enomem(MTC_NOARG);							/* Critical exception */
 		} else {

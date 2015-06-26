@@ -209,8 +209,8 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case METAMORPHOSE:					/* Converts the top-level item on the operational stack to a reference type */
 		{
-			RT_GET_CONTEXT
-			metamorphose_top(op_stack.st_cur, op_stack.st_top);
+			EIF_GET_CONTEXT
+			metamorphose_top(op_stack.st_cur, op_stack.st_cur->sk_top);
 		}
 		break;
 	case CHANGE_THREAD:					/* Thread id used to precise current thread in debugger */
@@ -1743,6 +1743,7 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, EIF
 
 rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 {
+	EIF_GET_CONTEXT
 	switch (item->type & SK_HEAD) {
 		case SK_REF:
 			if (item->it_ref) {
@@ -1759,12 +1760,12 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 			/* do nothing. leave the item as it is */
 			break;
 	}
-	opush(item);
+	eif_opstack_push_address(&op_stack, item);
 	if (previous_otop == NULL) {
 			/* First call in pushing arguments for a debugger evaluation, record top of stack
 			 * prior the push. We do not do it before the call to `opush' in the event that
-			 * the stack has not yet been created in which case `otop' would be NULL. */
-		previous_otop = otop();
+			 * the stack has not yet been created in which case top would be NULL. */
+		previous_otop = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("has_top", previous_otop);
 		previous_otop--;
 	}
@@ -1772,8 +1773,9 @@ rt_private void opush_dmpitem(EIF_TYPED_VALUE *item, int a_info)
 }
 
 rt_private void opush_ref_offset_item(rt_uint_ptr a_addr, int a_offset)
+		/* Used for items of SPECIAL [expanded] */
 {
-	/* Used for items of SPECIAL [expanded] */
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE item;
 	EIF_REFERENCE obj;
 
@@ -1786,12 +1788,12 @@ rt_private void opush_ref_offset_item(rt_uint_ptr a_addr, int a_offset)
 	item.type = SK_REF|SK_EXP;
 	item.it_r = rt_boxed_expanded_item_at_index (obj, a_offset - 1);
 
-	opush(&item);
+	eif_opstack_push_address(&op_stack, &item);
 	if (previous_otop == NULL) {
 			/* First call in pushing arguments for a debugger evaluation, record top of stack
 			 * prior the push. We do not do it before the call to `opush' in the event that
-			 * the stack has not yet been created in which case `otop' would be NULL. */
-		previous_otop = otop();
+			 * the stack has not yet been created in which case top would be NULL. */
+		previous_otop = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("has_top", previous_otop);
 		previous_otop--;
 	}
@@ -1905,7 +1907,7 @@ rt_private void dynamic_evaluation (EIF_PSTREAM sp, int routine_id, int static_d
 		}
 	}
 
-	/* reset info concerning otop */
+	/* reset info concerning top */
 	previous_otop = NULL;
 	nb_pushed = 0;
 

@@ -49,6 +49,7 @@
 #include "eif_garcol.h"
 #include "eif_malloc.h"
 #include "stack.h"
+#include "eif_stack.h"
 #include "com.h"
 #include "request.h"
 #include "eif_macros.h"
@@ -89,9 +90,6 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type,
                                      uint32 loc_number, EIF_TYPED_VALUE *new_value); /* modify a local value */
 rt_public void			send_stack_variables(EIF_PSTREAM s, uint32 where);	/* Dump the locals and arguments of a feature */
 rt_public void 			send_once_result(EIF_PSTREAM s, MTOT OResult, uint32 otype); /* dump the results of onces feature */
-
-/* extern Routines used */
-extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
 
 /*-------------------------
  - Routine implementation -
@@ -246,6 +244,7 @@ rt_private void restore_stacks(void)
 rt_private struct dump *get_next_execution_vector(void)
 {
 	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	struct ex_vect *top;		/* Exception vector */
 	static struct ex_vect copy;	/* copy of the exception vector */
@@ -289,7 +288,7 @@ rt_private struct dump *get_next_execution_vector(void)
 	if (dc != NULL && (dc->dc_exec == top)) { /* We've reached a melted feature */
 		init_var_dump(dc);		/* Make this feature "active" */
 		dumped.dmp_type = DMP_MELTED;	/* Structure contains melted feature */
-		dpop();
+		eif_dbstack_pop_address(&db_stack);
 	} else {
 		dumped.dmp_type = DMP_VECT;	/* Structure contains frozen feature */
 	}
@@ -315,11 +314,11 @@ rt_private struct dump *get_next_execution_vector(void)
 rt_private struct dcall *safe_dtop(void)
 {
 	RT_GET_CONTEXT
-	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena) {
+	if (eif_dbstack_is_empty (&db_stack)) {
 		return NULL;
+	} else {
+		return EIF_STACK_TOP_ADDRESS(db_stack);
 	}
-
-	return dtop();		/* Stack is not empty */
 }
 
 /*
@@ -356,6 +355,7 @@ rt_private void init_var_dump(struct dcall *call)
 rt_private uint32 go_ith_stack_level(uint32 level)
 {
 	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 
 	struct ex_vect *top;		/* Exception vector */
 	struct ex_vect copy;		/* copy of the exception vector */
@@ -403,7 +403,7 @@ rt_private uint32 go_ith_stack_level(uint32 level)
 		if (dc != NULL && (dc->dc_exec == top)) {	/* We've reached a melted feature */
 			init_var_dump(dc);		/* Make this feature "active" */
 			if (i!=level-1) {
-				dpop();
+				eif_dbstack_pop_address(&db_stack);
 			}
 		} else {
 			copy = *top;

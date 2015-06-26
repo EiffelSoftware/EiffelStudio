@@ -50,7 +50,7 @@ extern "C" {
 
 #ifndef EIF_THREADS
 #ifdef ISE_GC
-RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
+RT_LNK struct ostack hec_stack;	/* Indirection table "hector" */
 #endif
 #endif
 
@@ -67,11 +67,6 @@ RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
 #endif
 
 /* Declaration of hector routines */
-#ifdef DEBUG2
-extern int stck_nb_items (const struct stack stk);
-extern int stck_nb_items_free_stack (void);
-#endif
-
 #if defined(ISE_GC) && !defined(EIF_IL_DLL)
 RT_LNK EIF_REFERENCE eif_freeze(EIF_OBJECT object);	/* Freeze object's address (no more move) */
 RT_LNK EIF_OBJECT eif_adopt(EIF_OBJECT object);		/* The C wants to keep the reference */

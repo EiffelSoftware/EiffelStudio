@@ -268,86 +268,80 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTAT(x) (eif_is_attached_type2(x))
 
 /* Macros used for local variable management:
- *  RTLI(x) makes room on the stack for 'x' addresses
- *  RTLIE(x) validate the space allocated by RTLI/RTXI for `x' addresses. Currently does nothing.
- *  RTLE restore the previous stack context
  *  RTLD declares the variable used by RTLI/RTLE
- *  RTLR(x,y) register `y' on the stack at position `x'
- *  RTLRC(x) clear stack at position `x'
- *  RTXI(x) makes room on the stack for 'x' addresses when feature has rescue
- *  RTXE restores the current chunk, in case an exception was raised
  *  RTXL saves the current local chunk in case exception is raised
- *  RTYL same as RTXL except that RTXI cannot be applied
+ *  RTLI(x) check if there is enough room on the stack for 'x' addresses, if not, allocate a new chunk.
+ *  RTXI(x) same as RTXI except for a routine with a rescue clause.
+ *  RTLR(x,y) register `y' on the stack at position `x'
+ *  RTLIU(x) Update the stack pointer to the new top after registering all variables via RTLR.
+ *  RTLE restore the previous stack context
+ *  RTXE restores the current chunk, in case an exception was raised
  *  RTLXE restores the current local variables chunk, in case an exception was raised
  *  RTLXL saves the current local variables chunk in case exception is raised
  *  RTLXD declares the current local variables chunk in case exception is raised
  */
 
 #ifdef ISE_GC
-#define RTLI(x) \
-	{ \
-		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) { \
-			loc_set.st_top += (x); \
-		} else { \
-			ol = l; \
-			l = eget(x); \
-		} \
-	}
-#define RTLIE(x)
-#define RTLE \
-	{ \
-		if (ol == (EIF_REFERENCE *) 0) { \
-			loc_set.st_top = l; \
-		} else { \
-			eback(ol); \
-		} \
-	}
-#define RTLD \
-	EIF_REFERENCE *l = loc_set.st_top; \
-	EIF_REFERENCE *ol = (EIF_REFERENCE *) 0
-
-#define RTLR(x,y) l[(x)] = (EIF_REFERENCE) &y
-#define RTLRC(x)  l[(x)] = (EIF_REFERENCE) 0;
-
-#define RTXI(x) \
-	{ \
-		if (l >= loc_set.st_top && l + (x) <= loc_set.st_end) { \
-			loc_set.st_top += (x); \
-		} else { \
-			l = eget(x); \
-		} \
-	}
-#define RTXE \
-	loc_set.st_cur = lc; \
-	if (lc) loc_set.st_end = lc->sk_end; \
-	loc_set.st_top = lt
-#define RTYL \
-	EIF_REFERENCE * volatile lt = loc_set.st_top; \
-	struct stchunk * volatile lc = loc_set.st_cur
 #define RTXL \
-	EIF_REFERENCE * volatile l = loc_set.st_top; \
-	RTYL
-#define RTLXD \
-	EIF_TYPED_ADDRESS * EIF_VOLATILE lv
-#define RTLXL \
-	lv = cop_stack.st_top
+	struct stoachunk * EIF_VOLATILE xlc ; \
+	EIF_REFERENCE ** EIF_VOLATILE xol
+
+#define RTXLR \
+	struct stoachunk * EIF_VOLATILE xlc = loc_set.st_cur; \
+	EIF_REFERENCE ** EIF_VOLATILE xol = xlc->sk_top
+
+#define RTLD \
+	struct stoachunk * EIF_VOLATILE lc = loc_set.st_cur; \
+	EIF_REFERENCE ** EIF_VOLATILE ol = lc->sk_top; \
+	EIF_REFERENCE ** EIF_VOLATILE l
+
+#define RTLXD	EIF_TYPED_ADDRESS * EIF_VOLATILE lv
+
+#define RTLI(x) \
+		if (ol + (x) <= lc->sk_end) { \
+			l = ol; \
+		} else { \
+			l = eget(x); \
+		}
+
+#define RTXI(x)
+
+#define RTLIU(x)	loc_set.st_cur->sk_top += (x);
+#define RTXSLS		xlc = loc_set.st_cur; xol = xlc->sk_top
+#define RTLXL		lv = cop_stack.st_cur->sk_top
+
+#ifdef EIF_VOLATILE
+/* We do a cast to avoid a possible C compiler warnings as `y' will be of type `EIF_REFERENCE EIF_VOLATILE'. */
+#define RTLR(x,y) l[x] = (EIF_REFERENCE *) &y
+#else
+#define RTLR(x,y) l[x] = &y
+#endif
+
+
+#define RTLE \
+	loc_set.st_cur = lc; \
+	lc->sk_top = ol
+
+#define RTXE \
+	loc_set.st_cur = xlc; \
+	xlc->sk_top = xol	
+
 #define RTLXE \
-	while (cop_stack.st_top != lv) { \
+	while (cop_stack.st_cur->sk_top != lv) { \
 		RTLO(1); \
 	}
 
 #else
 #define RTLI(x) 
-#define RTLIE(x)
+#define RTLIU(x) 
 #define RTLE
-#define RTLD	\
-	EIF_REFERENCE ol
+#define RTLD
 #define RTLR(x,y)
-#define RTXI(x)
 #define RTXE 
-#define RTYL  EIF_REFERENCE lt
-#define RTXL  EIF_REFERENCE l
+#define RTXL
+#define RTXLR
 #define RTLXD
+#define RTXSLS
 #define RTLXL
 #define RTLXE
 #endif
@@ -358,8 +352,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTOC calls onceset to record the address of Result (static variable)
  */
 #define RTOC(x)			onceset()
-#define RTOC_NEW(x)		new_onceset((EIF_REFERENCE) &x);
-#define RTOC_GLOBAL(x)	globalonceset((EIF_REFERENCE) &x);
+#define RTOC_NEW(x)		new_onceset(&x);
+#define RTOC_GLOBAL(x)	globalonceset(&x);
 
 /* Macros for optimized access to once feature:
  * RTO_CP - access to once procedure
@@ -380,7 +374,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		struct ex_vect * exvecto;                                    \
 		jmp_buf exenvo;                                              \
 			/* Save stack contexts. */                           \
-		RTYD;                                                        \
+		RTXDR;                                                        \
 			/* Record execution vector to catch exception. */    \
 		exvecto = extre ();                                          \
 		if (!setjmp(exenvo)) {                                       \
@@ -989,10 +983,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTER retries the routine
  *  RTEU enters in rescue clause
  *  RTEF ends the rescue clause
- *  RTXD declares the variables used to save the run-time stacks context
- *  RTYD same as RTXD except that RTXI cannot be used
+ *  RTXDR declares the variables used to save the run-time stacks context
  *  RTXSC resynchronizes the run-time stacks in a pseudo rescue clause in C
- *  RTXS(x) resynchronizes the run-time stacks in a rescue clause
  *  RTEOK ends a routine with a rescue clause by cleaning the trace stack
  *  RTMD(x) Stops monitoring (profile or tracing) for routine context 'y' (i.e. normal vs external)
  *	RTLA Last exception from EXCEPTION_MANAGER
@@ -1028,7 +1020,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTEOK		d_data.db_callstack_depth = --db_cstack; exok ()
 
 #define RTEJ		current_call_level = trace_call_level; \
-					if (prof_stack) saved_prof_top = prof_stack->st_top; \
+					saved_prof_chunk = prof_stack.st_cur;\
+					l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL); \
 					start: exvect->ex_jbuf = &exenv; RTES
 
 #define RTEU 		d_data.db_callstack_depth = db_cstack; exresc(MTC exvect);	\
@@ -1036,7 +1029,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTE_T \
 	current_call_level = trace_call_level; \
-	if (prof_stack) saved_prof_top = prof_stack->st_top; \
+	saved_prof_chunk = prof_stack.st_cur;\
+	l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL); \
 	saved_except = RTLA; \
 	start: exvect->ex_jbuf = &exenv; \
 	if (!setjmp(exenv)) {
@@ -1062,10 +1056,10 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTER		in_assertion = saved_assertion; \
 					exvect = exret(exvect); goto start
 #define RTEF		exfail()
-#define RTXS(x)		RTXSC; RTXI(x)
-#define RTXSC		RTXE; RTHS; RTLS
-#define RTXD		RTXL; RTXH; RTXLS
-#define RTYD		RTYL; RTXH; RTXLS
+#define RTXSC		RTXE; RTLS
+/* RTXD is for the generated code while RTXDR is for the runtime when you do not use the RTLI/RTLR macros. */
+#define RTXD		RTXL; RTXLS
+#define RTXDR		RTXLR; RTXLS
 
 #define RTE_E \
 	} else { \
@@ -1108,35 +1102,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTE_OP \
 					expop(&eif_stack)
 
-/* Hector protection for external calls:
- *  RTHP(x) protects 'x' returns Hector indirection pointer
- *  RTHF(x) removes 'x' topmost entries from Hector stack
- *  RTXH saves hector's stack context in case an exception occurs
- *  RTHS resynchronizes the hector stack by restoring saved context
- */
-#ifdef ISE_GC
-#define RTHP(x) hrecord(x)
-#define RTHF(x) epop(&hec_stack, x)
-#define RTXH \
-	EIF_REFERENCE * volatile ht = hec_stack.st_top; \
-	struct stchunk * volatile hc = hec_stack.st_cur
-#define RTHS \
-	if (ht){ \
-		hec_stack.st_cur = hc; \
-		if (hc) hec_stack.st_end = hc->sk_end; \
-		hec_stack.st_top = ht; \
-	} else if (hec_stack.st_top) { \
-		hec_stack.st_cur = hec_stack.st_hd; \
-		hec_stack.st_top = hec_stack.st_cur->sk_arena; \
-		hec_stack.st_end = hec_stack.st_cur->sk_end; \
-	}
-#else
-#define RTHP(x) (x)
-#define RTHF(x)
-#define RTXH \
-	EIF_REFERENCE ht
-#define RTHS
-#endif
 
 /* Loc stack protection:
  * RTXLS saves loc_stack context in case an exception occurs
@@ -1144,17 +1109,15 @@ RT_LNK void eif_exit_eiffel_code(void);
  */
 #ifdef ISE_GC
 #define RTXLS \
-	EIF_REFERENCE * volatile lst = loc_stack.st_top; \
-	struct stchunk * volatile lsc = loc_stack.st_cur
+	struct stoachunk * volatile lsc = loc_stack.st_cur; \
+	EIF_REFERENCE ** volatile lst = (lsc ? lsc->sk_top : NULL)
 #define RTLS \
-	if (lst){ \
+	if (lsc){ \
 		loc_stack.st_cur = lsc; \
-		if (lsc) loc_stack.st_end = lsc->sk_end; \
-		loc_stack.st_top = lst; \
-	} else if (loc_stack.st_top) { \
-		loc_stack.st_cur = loc_stack.st_hd; \
-		loc_stack.st_top = loc_stack.st_cur->sk_arena; \
-		loc_stack.st_end = loc_stack.st_cur->sk_end; \
+		lsc->sk_top = lst; \
+	} else if (loc_stack.st_cur) { /* There was no chunk allocated when saving, but allocated at execution in between */ \
+		loc_stack.st_cur = loc_stack.st_head; \
+		loc_stack.st_cur->sk_top = loc_stack.st_cur->sk_arena; \
 	}
 #else
 #define RTXLS \
@@ -1603,7 +1566,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTDT \
 		int EIF_VOLATILE current_call_level; \
-		char ** EIF_VOLATILE saved_prof_top    /* Declare saved trace and profile */
+		struct stpchunk * EIF_VOLATILE saved_prof_chunk;    /* Declare saved trace and profile */ \
+		struct prof_info * EIF_VOLATILE l_saved_prof_top
 #else
 /* In final mode, an Eiffel call to a deferred feature without any actual
  * implementation could be generated anyway because of the statical dead code
@@ -1624,10 +1588,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTPR(x,y,z)	start_profile(x,y,z)				/* Start measurement of feature */
 #define RTXP		stop_profile()						/* Stop measurement of feature */
 #define RTLT		int EIF_VOLATILE current_call_level	/* Declare local trave variable */
-#define RTLP		char ** EIF_VOLATILE saved_prof_top	/* Declare local profiler variable */
-#define RTPI		saved_prof_top = prof_stack->st_top	/* Create local profile stack
-														 * during rescue clause
-														 */
+#define RTLP \
+		struct stpchunk * EIF_VOLATILE saved_prof_chunk;	/* Declare local profiler variable */ \
+		struct prof_info * EIF_VOLATILE l_saved_prof_top;
+
+#define RTPI \
+		saved_prof_chunk = prof_stack.st_cur;	/* Create local profile stack during rescue clause */ \
+		l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL);
+
 #define RTTI		current_call_level = trace_call_level	/* Save the tracer call level */
 #endif
 
@@ -1636,9 +1604,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 /* Macros needed for profile stack and trace clean up */
 
 #ifdef WORKBENCH
-#define RTPS		if (prof_stack) prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
+#define RTPS		if (saved_prof_chunk) prof_stack_rewind(l_saved_prof_top)		/* Clean up profiler stack */
 #else
-#define RTPS		prof_stack_rewind(saved_prof_top)		/* Clean up profiler stack */
+#define RTPS		prof_stack_rewind(l_saved_prof_top)		/* Clean up profiler stack */
 #endif
 #define RTTS		trace_call_level = current_call_level	/* Clean up trace levels */
 

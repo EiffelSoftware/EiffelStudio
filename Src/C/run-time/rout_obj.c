@@ -106,6 +106,7 @@ rt_public EIF_REFERENCE rout_obj_create_wb ( EIF_TYPE_INDEX dftype, EIF_POINTER 
 	RTLR (2, open_map);
 	RTLR (3, u_open_map.it_r);
 	RTLR (4, u_closed_operands.it_r);
+	RTLIU(5);
 
 		/* Create ROUTINE object */
 	result = emalloc(dftype);
@@ -144,6 +145,7 @@ rt_public EIF_REFERENCE rout_obj_create_fl (EIF_TYPE_INDEX dftype, EIF_POINTER r
  	RTLI(2);
 	RTLR (0, result);
 	RTLR (1, closed_operands);
+	RTLIU(2);
 
 		/* Create ROUTINE object */
 	result = emalloc(dftype);
@@ -233,7 +235,7 @@ rt_public void rout_obj_call_procedure_dynamic (
 	}
 	while (i <= args_count) {
 		if (i == next_open) {
-			fill_it (iget(), &(open_args [open_idx]));
+			fill_it (eif_opstack_push_empty(&op_stack), &(open_args [open_idx]));
 			nb_pushed++;
 			if (open_idx < open_count) {
 				next_open = open_positions [open_idx];
@@ -242,13 +244,13 @@ rt_public void rout_obj_call_procedure_dynamic (
 				next_open = 0xFFFF;
 			}
 		} else {
-			fill_it (iget(), &(closed_args [closed_idx]));
+			fill_it (eif_opstack_push_empty(&op_stack), &(closed_args [closed_idx]));
 			nb_pushed++;
 			closed_idx++;
 		}
 		i = i + 1;
 	}
-	fill_it (iget(), first_arg);
+	fill_it (eif_opstack_push_empty(&op_stack), first_arg);
 	nb_pushed++;
 
 		/* We are calling a feature through an agent, in this case, we consider all calls
@@ -271,12 +273,13 @@ rt_public void rout_obj_call_function_dynamic (
 	EIF_TYPED_VALUE* open_args, int open_count,
 	EIF_REFERENCE open_map, void* res)
 {
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE* it = NULL;
 
 	rout_obj_call_procedure_dynamic (routine_id, is_basic_type, written_type_id_inline_agent,
 									 closed_args, closed_count, open_args, open_count, open_map);
 
-	it = opop();
+	it = eif_opstack_pop_address(&op_stack);
 
 	switch (it->type)
 	{

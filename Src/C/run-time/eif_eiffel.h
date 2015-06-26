@@ -56,8 +56,8 @@
 #include "eif_out.h"
 #include <stdio.h>				/* For FILE routines */
 #include <sys/types.h>			/* Needed for directory entries */
-#include "eif_dir.h"				/* Directory routines */
 #include "eif_file.h"				/* %%ss moved from 3 lines above */
+#include "eif_dir.h"				/* Directory routines */
 
 #include "eif_macros.h"
 

@@ -961,6 +961,7 @@ feature -- C code generation: request chain
 		require
 			has_request_chain
 		do
+			buffer.put_new_line
 			buffer.put_string (request_chain_removal)
 			buffer.put_string (" (Current);")
 		end
@@ -2080,11 +2081,7 @@ feature -- Access
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				buf.put_new_line
-				if compound_or_post or else byte_code.rescue_clause = Void then
-					buf.put_string (once "RTLI(")
-				else
-					buf.put_string (once "RTXI(")
-				end
+				buf.put_string (once "RTLI(")
 				buf.put_integer (nb_refs)
 				buf.put_two_character (')', ';')
 				from
@@ -2105,12 +2102,18 @@ feature -- Access
 					position := position + 1
 					l_table.forth
 				end
-				
+
 					-- Now we validate the space made for `x' addresses.
 				buf.put_new_line
-				buf.put_string (once "RTLIE(")
+				buf.put_string (once "RTLIU(")
 				buf.put_integer (nb_refs)
 				buf.put_two_character (')', ';')
+
+				if has_rescue then
+						-- Generate saving of `loc_set' state in case of exception.
+					buf.put_new_line
+					buf.put_string (once "RTXSLS;")
+				end
 			end
 		end
 
@@ -2327,11 +2330,7 @@ feature -- Access
 			vars := ref_var_used
 			if vars > 0 then
 				buf.put_new_line
-				if byte_code.rescue_clause /= Void then
-					buf.put_string ("RTXE;")
-				else
-					buf.put_string ("RTLE;")
-				end
+				buf.put_string ("RTLE;")
 			end
 		end
 

@@ -1,0 +1,92 @@
+/*
+	description: "[
+		Declaration of operations on stack. See `eif_stack.decl' on how to use this properly.
+		]"
+	date:		"$Date: 2015-05-25 22:50:35 +0200 (Mon, 25 May 2015) $"
+	revision:	"$Revision: 97361 $"
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="eif_stack.interface"  version="$Id: stack.c 97361 2015-05-25 20:50:35Z manus $" summary="Stack representation and manipulations">
+*/
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Memory management routines */
+RT_LNK XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(allocate) (XX_EIF_STACK_TYPE *stk, size_t nb_items);
+RT_LNK XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(extend) (XX_EIF_STACK_TYPE *stk, size_t nb_items);
+RT_LNK void XX_EIF_STACK_FUNC(truncate) (XX_EIF_STACK_TYPE *stk);
+RT_LNK void XX_EIF_STACK_FUNC(reset) (XX_EIF_STACK_TYPE *stk);
+
+/* Status report */
+#ifndef EIF_STACK_IS_STRUCT_ELEMENT
+RT_LNK int XX_EIF_STACK_FUNC(has) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE data);
+#endif
+RT_LNK int XX_EIF_STACK_FUNC(is_address_in_stack) (XX_EIF_STACK_TYPE *stk, void *address);
+RT_LNK size_t XX_EIF_STACK_FUNC(count) (XX_EIF_STACK_TYPE *stk);
+RT_LNK int XX_EIF_STACK_FUNC(is_empty) (XX_EIF_STACK_TYPE *stk);
+
+/* Cursor */
+RT_LNK void XX_EIF_STACK_FUNC(save_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur);
+RT_LNK void XX_EIF_STACK_FUNC(restore_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur);
+
+/* Stack manipulation */
+#ifndef EIF_STACK_IS_STRUCT_ELEMENT
+RT_LNK int XX_EIF_STACK_FUNC(push) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE value);
+#endif
+RT_LNK XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(push_empty) (XX_EIF_STACK_TYPE *stk);
+RT_LNK int XX_EIF_STACK_FUNC(push_address) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE *value);
+RT_LNK void XX_EIF_STACK_FUNC(npop) (XX_EIF_STACK_TYPE *stk, rt_uint_ptr nb_items);
+#ifndef EIF_STACK_IS_STRUCT_ELEMENT
+RT_LNK XX_EIF_STACK_ELEM_TYPE XX_EIF_STACK_FUNC(pop) (XX_EIF_STACK_TYPE *stk);
+#endif
+RT_LNK XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(pop_address) (XX_EIF_STACK_TYPE *stk);
+
+/* Traversal */
+RT_LNK void XX_EIF_STACK_FUNC(back) (XX_EIF_STACK_CURSOR_TYPE *cur);
+RT_LNK void XX_EIF_STACK_FUNC(forth) (XX_EIF_STACK_CURSOR_TYPE *cur);
+RT_LNK XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(i_th) (XX_EIF_STACK_TYPE *stk, size_t n);
+
+#ifdef __cplusplus
+}
+#endif
+
+/*
+doc:</file>
+*/
+
+/*
+vim: ft=c
+*/

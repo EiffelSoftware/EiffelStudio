@@ -49,16 +49,17 @@ doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Ob
 #include "rt_globals.h"
 #include "rt_malloc.h"
 #include "rt_globals_access.h"
+#include "eif_stack.h"
 
 
 /*#define DEBUG 2 */		/* Debug level */
 
 #define dprintf(n)	if (DEBUG & (n)) printf
 
-rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr);
-rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
-rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
-rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
+rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct ostack *st, EIF_INTEGER *max_value_ptr);
+rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct ostack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free);
+rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct ostack *st, EIF_INTEGER max_value);
+rt_private void private_object_id_free(EIF_INTEGER id, struct ostack *st, EIF_INTEGER max_value);
 
 #ifdef EIF_THREADS
 /*
@@ -78,7 +79,7 @@ rt_shared EIF_CS_TYPE *eif_object_id_stack_mutex = NULL;
 
 
 /*
-doc:	<attribute name="object_id_stack" return_type="struct stack" export="shared">
+doc:	<attribute name="object_id_stack" return_type="struct ostack" export="shared">
 doc:		<summary>The following stack records the addresses of objects for which `object_id' has been called.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Not safe</thread_safety>
@@ -87,12 +88,10 @@ doc:		<eiffel_classes>IDENTIFIED, WEL_IDENTIFIED</eiffel_classes>
 doc:		<fixme>Need a mutex to protect its access.</fixme>
 doc:	</attribute>
 */
-rt_shared struct stack object_id_stack = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+rt_shared struct ostack object_id_stack = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 
@@ -121,7 +120,7 @@ rt_public EIF_INTEGER eif_reference_id (EIF_REFERENCE object)
 		 * because otherwise when the object is disposed only
 		 * one entry will be deleted, not the other one
 		 * and therefore corrupting GC memory */
-	REQUIRE ("Not in Object ID stack", !st_has (&object_id_stack, object));
+	REQUIRE ("Not in Object ID stack", !eif_ostack_has (&object_id_stack, object));
 	id = private_object_id(object, &object_id_stack, &max_object_id);
 	EIF_OBJECT_ID_UNLOCK;
 
@@ -154,7 +153,7 @@ rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
 	ref = private_id_object (id, &object_id_stack, max_object_id);
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	ENSURE ("Object found", (!ref) || (ref && st_has(&object_id_stack, ref)));
+	ENSURE ("Object found", (!ref) || (ref && eif_ostack_has(&object_id_stack, ref)));
 #endif
 
 	EIF_OBJECT_ID_UNLOCK;
@@ -178,7 +177,7 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 
 	ENSURE ("Object of id must be free", private_id_object(id, &object_id_stack, max_object_id) == NULL);
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	ENSURE ("Object of id is not in Object ID stack", !st_has(&object_id_stack, ref));
+	ENSURE ("Object of id is not in Object ID stack", !eif_ostack_has(&object_id_stack, ref));
 #endif
 
 	EIF_OBJECT_ID_UNLOCK;
@@ -193,11 +192,11 @@ rt_public EIF_INTEGER eif_object_id_stack_size (void)
 {
 #ifdef ISE_GC
 	EIF_INTEGER result = 0;
-	struct stack *st = &object_id_stack;
-	struct stchunk *c, *cn;
+	struct ostack *st = &object_id_stack;
+	struct stochunk *c, *cn;
 
 	EIF_OBJECT_ID_LOCK;
-	for (c = st->st_hd; c != (struct stchunk *) 0; c = cn) {
+	for (c = st->st_head; c != (struct stochunk *) 0; c = cn) {
 			/* count the number of chunks in stack */
 		cn = c->sk_next;
 		result++;
@@ -214,34 +213,31 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
-	struct stack *st = &object_id_stack;
+	struct ostack *st = &object_id_stack;
 	char **top;
-	struct stchunk * current;
+	struct stochunk * current;
 	char **end;
 
 	EIF_OBJECT_ID_LOCK;
-	if (st->st_top == (char **) 0) {
-		top = st_alloc(st, eif_stack_chunk);	/* Create stack */
-		if (top == (char **) 0) {
+	if (!st->st_cur) {
+		top = eif_ostack_allocate(st, eif_stack_chunk);	/* Create stack */
+		if (!top) {
 			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
 		}
-				/* No memory */
-		st->st_top = top; /* Update new top */
 	} 
-	current = st->st_cur;	/* save previous current stchunk */
-	top = st->st_top;		/* save previous top of stack */
-	end = st->st_end;		/*save previous st_end of stack */ 
+	current = st->st_cur;	/* save previous current chunk */
+	top = current->sk_top;		/* save previous top of stack */
+	end = current->sk_end;		/*save previous st_end of stack */ 
 	SIGBLOCK;		/* Critical section */
 	while (--nb_chunks) {
-		if (-1 == st_extend(st, eif_stack_chunk)) {
+		if (!eif_ostack_extend(st, eif_stack_chunk)) {
 			EIF_OBJECT_ID_UNLOCK;
 			eraise ("Couldn't allocate object id stack", EN_MEM);
 		}
 	}	
 	st->st_cur = current;	/* keep previous Current */
-	st->st_top = top;		/* keep previous top */
-	st->st_end = end;
+	current->sk_top = top;		/* keep previous top */
 	
 	SIGRESUME;		/* End of critical section */
 
@@ -253,22 +249,22 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 
 #define STACK_SIZE eif_stack_chunk
 
-rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr)
+rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct ostack *st, EIF_INTEGER *max_value_ptr)
 {
 	register unsigned int stack_number = 0;
-	register struct stchunk *end;
+	register struct stochunk *end;
 	register EIF_INTEGER Result;
 	char *address;
 
-	if (-1 == epush(st, object)) {	/* Cannot record object */
+	if (eif_ostack_push(st, object) != T_OK) {	/* Cannot record object */
 		eraise("object id", EN_MEM);			/* No more memory */
 		return (EIF_INTEGER) 0;					/* They ignored it */
-		}
-	address = (char *) (st->st_top - 1);	/* Was allocated here */
+	}
+	address = (char *) (st->st_cur->sk_top - 1);	/* Was allocated here */
 	eif_access(address) = object;		/* Record object's physical address */
 
 		/* Get the stack number */
-	for(end = st->st_hd;
+	for(end = st->st_head;
 		end != st->st_cur;
 		stack_number++)
 		end = end->sk_next;
@@ -284,7 +280,7 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st,
 	return Result;
 }
 
-rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free)
+rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct ostack *st, EIF_INTEGER *max_value_ptr, EIF_BOOLEAN reuse_free)
 {
 		/* Returns a unique identifier for any object, looking in the
 		 * stack to see if a value has already been allocated for the object:
@@ -292,25 +288,22 @@ rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct st
 		 * Free locations (ids) may be reused
 		 */
 
-	register struct stchunk *current_chunk;
+	register struct stochunk *current_chunk;
 	register unsigned int stack_number = 0;
 	register char **address;
 	register char **free_location = (char**) 0;
 	register EIF_INTEGER free_id = -1;
 
 		/* Loop through all the chunks */
-	for (current_chunk = st->st_hd;
-		 current_chunk != (struct stchunk *)0;
+	for (current_chunk = st->st_head;
+		 current_chunk != (struct stochunk *)0;
 		 stack_number++, current_chunk = current_chunk->sk_next){
 			/* Inspect each chunk */
 
 			/* Starting address is end of chunk for full chunks and
 			 * current insertion position for the last one
 			 */
-		if (current_chunk == st->st_cur)
-			address = st->st_top - 1;
-		else
-			address = current_chunk->sk_end - 1;
+		address = current_chunk->sk_top - 1;
 		for (;
 			 address >= current_chunk->sk_arena;
 			 address--) {
@@ -334,10 +327,10 @@ rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct st
 		return private_object_id(object, st, max_value_ptr);
 }
 
-rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value)
+rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct ostack *st, EIF_INTEGER max_value)
 {
 	register size_t stack_number, i = 0;
-	register struct stchunk *end;
+	register struct stochunk *end;
 
 	register char *address;
 
@@ -347,7 +340,7 @@ rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF
 	if (id>max_value)
 		return (EIF_REFERENCE) 0;
 
-	if ((end = st->st_hd) == (struct stchunk *) 0)	/* No stack */
+	if ((end = st->st_head) == (struct stochunk *) 0)	/* No stack */
 		return (EIF_REFERENCE) 0;
 
 	id --;
@@ -355,7 +348,7 @@ rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF
 	stack_number = id / STACK_SIZE;		/* Get the chunk number */
 
 	for (;stack_number != i; i++)
-		if ((end = end->sk_next) == (struct stchunk *) 0)
+		if ((end = end->sk_next) == (struct stochunk *) 0)
 			return (EIF_REFERENCE) 0;		/* Not that many chunks */
 
 		/* add offset to the end of chunk */
@@ -374,12 +367,12 @@ rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF
 	return (EIF_REFERENCE) 0;
 }
 
-rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value)
+rt_private void private_object_id_free(EIF_INTEGER id, struct ostack *st, EIF_INTEGER max_value)
 {
 	/* Free the entry in the table */
 
 	register size_t stack_number, i = 0;
-	register struct stchunk *end;
+	register struct stochunk *end;
 	
 	if (id==0)							/* No object associated with 0 */
 		return;
@@ -387,7 +380,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 	if (id>max_value)
 		return;
 
-	if ((end = st->st_hd) == (struct stchunk *) 0)	/* No stack */
+	if ((end = st->st_head) == (struct stochunk *) 0)	/* No stack */
 		return;
 
 	id--;
@@ -395,7 +388,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 	stack_number = id / STACK_SIZE;		/* Get the chunk number */
 
 	for (;stack_number != i; i++)
-		if ((end = end->sk_next) == (struct stchunk *) 0)
+		if ((end = end->sk_next) == (struct stochunk *) 0)
 			return;		/* Not that many chunks */
 
 		/* add offset to the end of chunk */

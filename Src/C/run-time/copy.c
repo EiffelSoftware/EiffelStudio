@@ -60,6 +60,7 @@ doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various obje
 #include "rt_assert.h"
 #include "rt_interp.h"		/* For routine call_copy */
 #include "rt_malloc.h"
+#include "eif_stack.h"
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
@@ -290,7 +291,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	 */
 
 	{
-		RTYD;							/* Save stack contexts */
+		RTXDRH;							/* Save stack contexts */
 		EIF_EO_STORE_LOCK;				/* Because we perform a traversal that marks
 										   objects, we need to be sure we are the
 										   only one doing it. */
@@ -298,7 +299,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 
 		excatch(&exenv);		/* Record pseudo-execution vector */
 		if (setjmp(exenv)) {
-			RTXSC;						/* Restore stack contexts */
+			RTXSCH;						/* Restore stack contexts */
 			map_reset(1);				/* Reset in emergency situation */
 				/* If we locked the EO_STORE_MUTEX, then we need to unmark objects
 				 * and unlock it. */
@@ -352,7 +353,8 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 		map_reset(0);							/* And eif_free maping table */
 			/* Release all the hector pointers asked for during the map table
 			 * construction (obj_nb exactly) */
-		epop(&hec_stack, traversal_context.obj_nb);
+		CHECK("Has objects", traversal_context.obj_nb > 0);
+		eif_ostack_npop(&hec_stack, traversal_context.obj_nb);
 
 #ifdef DEBUG
 		xobjs= nomark(source);

@@ -1028,10 +1028,10 @@ end
 			i := context.ref_var_used
 			if i > 0 then
 				buf.put_new_line
+				buf.put_string ("RTLD;")
 				if has_rescue then
+					buf.put_new_line
 					buf.put_string ("RTXD;")
-				else
-					buf.put_string ("RTLD;")
 				end
 			end
 
@@ -1222,8 +1222,8 @@ end
 					--       RTS_RW (Current);       // Wait until all arguments are locked.
 					--    }
 				buf.put_new_line
-				buf.put_string ("if (uarg) {")
-				buf.indent
+				buf.put_string ("if (uarg) ")
+				buf.generate_construct_block_open
 				context.generate_request_chain_creation
 				from
 					i := a.count
@@ -1241,9 +1241,7 @@ end
 				end
 				buf.put_new_line
 				buf.put_string ("RTS_RW (Current);");
-				buf.exdent
-				buf.put_new_line
-				buf.put_character ('}')
+				buf.generate_block_close
 			end
 			workbench_mode := context.workbench_mode
 				-- Preconditions are always generated in workbench mode.
@@ -1425,12 +1423,8 @@ end
 				end
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used
-				if nb_refs > 0 then
-					buf.put_new_line
-					buf.put_string ("RTXS(")
-					buf.put_integer (nb_refs)
-					buf.put_two_character (')', ';')
-				end
+				buf.put_new_line
+				buf.put_string ("RTXSC;")
 				context.generate_request_chain_restore
 				rescue_clause.generate
 				generate_monitoring_stop
@@ -1781,7 +1775,9 @@ feature {NONE} -- C code generation
 			if context.has_request_chain then
 				buffer.put_new_line
 				buffer.put_string ("if (uarg) ")
+				buffer.generate_construct_block_open
 				context.generate_request_chain_removal
+				buffer.generate_block_close
 			end
 		end
 

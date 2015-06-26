@@ -23,9 +23,13 @@ create
 feature {NONE} -- Initialization
 
 	make (a_compound: like compound; a_rescue: like rescue_clause)
+			-- Initialize rescue clause with `a_compound', `a_rescue_clause' and `a_is_once'.
 		do
 			compound := a_compound
 			rescue_clause := a_rescue
+		ensure
+			compount_set: compound = a_compound
+			rescue_clause_set: rescue_clause = a_rescue
 		end
 
 feature -- Visitor
@@ -215,12 +219,8 @@ feature -- Settings
 				end
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used
-				if nb_refs > 0 then
-					buf.put_new_line
-					buf.put_string ("RTXS(")
-					buf.put_integer (nb_refs)
-					buf.put_two_character (')', ';')
-				end
+				buf.put_new_line
+				buf.put_string ("RTXSC;")
 				r.generate
 				generate_profile_stop
 				buf.put_new_line
@@ -300,7 +300,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

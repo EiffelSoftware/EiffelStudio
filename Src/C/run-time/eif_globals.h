@@ -45,6 +45,7 @@
 #include "eif_threads.h"
 #include "eif_main.h"
 #include "eif_macros.h"
+#include "eif_option.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -87,12 +88,17 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int in_assertion_cx ;    /* Is an assertion evaluated? */
 
 		/* garcol.c */
-	struct stack once_set_cx;	/* Once functions */
-	struct stack oms_set_cx;	/* Once manifest strings */
+#ifdef WORKBENCH
+	struct ostack once_set_cx;	/* Once functions */
+#else
+	struct oastack once_set_cx;	/* Once functions */
+#endif
+
+	struct oastack oms_set_cx;	/* Once manifest strings */
 
 		/* option.c */
 	int trace_call_level_cx;
-	struct stack *prof_stack_cx;
+	struct pstack prof_stack_cx;
 
 		/* storable.c from EiffelNet */
 	int socket_fides_cx;
@@ -104,6 +110,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* interp.c */
 	unsigned char *IC_cx;				/* Interpreter Counter (like PC on a CPU) */
+	struct opstack op_stack_cx;
 
 		/* related to RT_... Eiffel class */
 	int is_inside_rt_eiffel_code_cx;
@@ -112,11 +119,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* garcol.c */
 #ifdef ISE_GC
-	struct stack loc_stack_cx;			/* Local indirection stack */
-	struct stack loc_set_cx;	/* Local variable stack */
+	struct oastack loc_stack_cx;			/* Local indirection stack */
+	struct oastack loc_set_cx;	/* Local variable stack */
 
 		/* hector.c */
-	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
+	struct ostack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
 #endif
 	EIF_NATURAL_32 caller_assertion_level_cx;	/* Assertion level of the caller */
 
@@ -201,6 +208,7 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 
 #ifdef WORKBENCH
 #define IC							(eif_globals->IC_cx)			/* rt_public */
+#define op_stack					(eif_globals->op_stack_cx)
 #endif
 
 #define caller_assertion_level (eif_globals->caller_assertion_level_cx)	/* rt_public*/

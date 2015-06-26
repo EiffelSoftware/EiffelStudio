@@ -62,14 +62,6 @@ doc:<file name="store.c" header="eif_store.h" version="$Id$" summary="Storing me
 #include "rt_globals_access.h"
 #include "rt_assert.h"
 
-#ifdef DARREN		/* for doing in-editor compilation for errors */
-# define RECOVERABLE_DEBUG
-# undef RTXD
-# define RTXD ;
-# undef RTXSC
-# define RTXSC ;
-# define lint
-#endif
 #ifdef RECOVERABLE_DEBUG
 #ifndef EIF_THREADS
 /*
@@ -514,7 +506,7 @@ rt_private void internal_store(struct rt_store_context *a_context, char *object,
 	jmp_buf exenv;
 	int l_failure;
 	int volatile is_locked = 0;
-	RTYD;
+	RTXDR;
 
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {

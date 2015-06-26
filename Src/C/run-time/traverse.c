@@ -62,6 +62,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
 #include "rt_globals_access.h"
+#include "eif_stack.h"
 
 #define ACCOUNT_TYPE        0x01	/* accounted for type as seen */
 #define ACCOUNT_ATTRIBUTES  0x04	/* accounted for types of attributes */
@@ -100,8 +101,8 @@ rt_private uint32 chknomark(char *, struct htable *, long);
 rt_private void internal_traversal(struct rt_traversal_context *a_context, EIF_REFERENCE object, int is_first_level); /* Traversal of objects */
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), EIF_TYPE_INDEX result_type);
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
-rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
-rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
+rt_private void match_simple_stack (struct ostack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
+rt_private void match_stack (struct oastack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 #ifdef WORKBENCH
 rt_private void match_op_stack(struct opstack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE));
 #endif
@@ -268,12 +269,12 @@ rt_private void internal_traversal(struct rt_traversal_context *a_context, EIF_R
 		 */
 
 		if (a_context->accounting & TR_MAP) {
-			struct mstack *l_stack = &map_stack;
 			RT_GC_PROTECT(object);		/* Protection against GC */
 			new = eclone(object);
 			mapped = hrecord(new);
-			if (-1 == epush((struct stack *) l_stack, (char *) mapped))
+			if (eif_oastack_push(&map_stack.stack, mapped) != T_OK) {
 				eraise("map table recording", EN_MEM);
+			}
 			zone = HEADER(object);			/* Object may have moved */
 			flags = zone->ov_flags;			/* Flags may have changed */
 			mapped_object = 1;				/* Maping occurred */
@@ -383,9 +384,8 @@ doc:	</routine>
 
 rt_shared void map_start(void)
 {
-	map_stack.st_bot = map_stack.st_hd->sk_arena;	/* First item */
-	map_stack.st_cur = map_stack.st_hd;
-	map_stack.st_end = map_stack.st_cur->sk_end;
+	map_stack.bottom.sc_chunk = map_stack.stack.st_head;
+	map_stack.bottom.sc_item = map_stack.stack.st_head->sk_arena - 1;
 }
 
 /*
@@ -398,31 +398,8 @@ doc:	</routine>
 
 rt_shared EIF_OBJECT map_next(void)
 {
-	EIF_OBJECT *item;		/* Item we shall return */
-	struct stchunk *cur;	/* New current chunk */
-
-	REQUIRE ("Not at the end of the stack", map_stack.st_bot != map_stack.st_top);
-
-	item = (EIF_OBJECT *) map_stack.st_bot++;		/* Make a guess */
-	if (item >= (EIF_OBJECT *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
-		RT_GET_CONTEXT
-		cur = map_stack.st_cur->sk_next;		/* Advance one chunk */
-
-		CHECK ("We should have a chunk", cur);
-
-		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
-		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
-		item = (EIF_OBJECT *) map_stack.st_bot++;	/* Next item in stack */
-		SIGBLOCK;
-		eif_rt_xfree((char *) (map_stack.st_cur));				/* Free previous chunk */
-		map_stack.st_cur = cur;					/* It's the new first chunk */
-		map_stack.st_hd = cur;					/* In case of emergency */
-		SIGRESUME;
-	}
-
-	ENSURE ("Object found before end of stack", item != (EIF_OBJECT *) map_stack.st_top);
-
-	return *item;
+	eif_oastack_forth (&map_stack.bottom);
+	return *map_stack.bottom.sc_item;
 }
 
 /*
@@ -435,32 +412,9 @@ doc:	</routine>
 */
 
 rt_shared void map_reset(int emergency)
-			  		/* Need to reset due to emergency (exception) */
 {
-	RT_GET_CONTEXT
-	struct stchunk *next;	/* Next chunk in stack list */
-	struct stchunk *cur;	/* Current chunk in stack list */
-
-	REQUIRE ("", emergency || map_stack.st_bot == map_stack.st_top);
-
-	/* If we get here because of an emergency, we free all the chunks held
-	 * in the stack until the end. Otherwise, we only need to free the current
-	 * (and last) chunk.
-	 */
-
-	SIGBLOCK;
-	if (emergency) {
-		for (next = map_stack.st_hd; next != NULL; /*empty */) {
-			cur = next;						/* Current chunk to be freed */
-			next = next->sk_next;			/* Compute next chunk... */
-			eif_rt_xfree((char *) cur);			/* ...before freeing it */
-		}
-	} else {
-		eif_rt_xfree((char *) (map_stack.st_cur));	/* Free last chunk in stack */
-	}
-
-	memset (&map_stack, 0, sizeof(map_stack));	/* Reset an empty stack */
-	SIGRESUME;
+	eif_oastack_reset (&map_stack.stack);
+	memset(&map_stack, 0, sizeof(struct mstack));
 }
 
 /*
@@ -736,16 +690,16 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 #else
 #ifdef ISE_GC
 	for (i = 0; i < hec_stack_list.count; i++)
-		match_simple_stack(hec_stack_list.threads.sstack[i], action_fnptr);
+		match_simple_stack(hec_stack_list.threads.ostack[i], action_fnptr);
 
 	for (i = 0; i < loc_set_list.count; i++)
-		match_stack(loc_set_list.threads.sstack[i], action_fnptr);
+		match_stack(loc_set_list.threads.oastack[i], action_fnptr);
 	for (i = 0; i < loc_stack_list.count; i++)
-		match_stack(loc_stack_list.threads.sstack[i], action_fnptr);
+		match_stack(loc_stack_list.threads.oastack[i], action_fnptr);
 	match_stack(&global_once_set, action_fnptr);
 
 	for (i = 0; i < once_set_list.count; i++)
-		match_simple_stack(once_set_list.threads.sstack[i], action_fnptr);
+		match_simple_stack(once_set_list.threads.ostack[i], action_fnptr);
 
 #ifdef WORKBENCH
 	for (i = 0; i < opstack_list.count; i++)
@@ -796,28 +750,25 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 /*
 doc:	<routine name="match_simple_stack" export="private">
 doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in simple stacks.</summary>
-doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
+doc:		<param name="stk" type="struct ostack *">Stack in which we are searching.</param>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
+rt_private void match_simple_stack (struct ostack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
 {
-	struct stchunk* s;
+	struct stochunk *s, *current_chunk;
 	EIF_REFERENCE *object, o_ref;
-	int done = 0;
 	rt_uint_ptr n;
+	int done = 0;
 
-	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
 		object = s->sk_arena;
-		if (s != stk->st_cur) {
-			n = s->sk_end -  object;
-		} else {
-			n = stk->st_top -object;
-			done = 1;
-		}
+		n = s->sk_top - object;
 		for ( ; n > 0 ; n--, object++) {
 			o_ref = *object;
 			if (o_ref) {
@@ -830,30 +781,27 @@ rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF
 /*
 doc:	<routine name="match_stack" export="private">
 doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in stacks.</summary>
-doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
+doc:		<param name="stk" type="struct oastack *">Stack in which we are searching.</param>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
 doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
-rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
+rt_private void match_stack (struct oastack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
 {
-	struct stchunk* s;
-	EIF_REFERENCE *object, o_ref;
-	int done = 0;
+	struct stoachunk *s, *current_chunk;
+	EIF_REFERENCE **object, o_ref;
 	rt_uint_ptr n;
+	int done = 0;
 
-	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
 		object = s->sk_arena;
-		if (s != stk->st_cur) {
-			n = s->sk_end -  object;
-		} else {
-			n = stk->st_top -object;
-			done = 1;
-		}
+		n = s->sk_top - object;
 		for ( ; n > 0 ; n--, object++) {
-			o_ref = *(EIF_REFERENCE *) *object;
+			o_ref = **object;
 			if (o_ref) {
 				match_object (o_ref, action_fnptr);
 			}
@@ -880,20 +828,17 @@ rt_private void match_op_stack(struct opstack *stk, void (*action_fnptr) (EIF_RE
 
 	EIF_TYPED_VALUE *last;	/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stochunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stopchunk *s, *current_chunk;	/* To walk through each stack's chunk */
+	int done = 0;
 
 	REQUIRE ("stk not null", stk);
 	REQUIRE ("action_fnptr not null", action_fnptr);
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
 		last = s->sk_arena;						/* Start of stack */
-		if (s != stk->st_cur)				/* Before current pos? */
-			roots = s->sk_end - last;			/* The whole chunk */
-		else {
-			roots = stk->st_top - last;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+		roots = s->sk_top - last;			/* The whole chunk */
 
 		for (; roots > 0; roots--, last++)		/* Objects may be moved */
 			switch (last->type & SK_HEAD) {		/* Type in stack */

@@ -50,6 +50,7 @@
 #include "rt_globals.h"
 #include "rt_globals_access.h"
 #include "rt_assert.h"
+#include "eif_stack.h"
 #include "minilzo.h"
 #include <string.h>
 
@@ -110,7 +111,10 @@ rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
 #ifdef ISE_GC
-    epop(&hec_stack, nb_recorded);      /* Pop hector records */
+	if (nb_recorded) {
+    	eif_ostack_npop(&hec_stack, nb_recorded);      /* Pop hector records */
+		nb_recorded = 0;
+	}
 #endif
 
 	return result;
@@ -138,7 +142,10 @@ rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */
 #ifdef ISE_GC
-    epop(&hec_stack, nb_recorded);      /* Pop hector records */
+	if (nb_recorded) {
+    	eif_ostack_npop(&hec_stack, nb_recorded);      /* Pop hector records */
+		nb_recorded = 0;
+	}
 #endif
 
 	return result;

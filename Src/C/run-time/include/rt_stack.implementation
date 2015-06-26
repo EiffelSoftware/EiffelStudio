@@ -1,0 +1,720 @@
+/*
+	description: "[
+		Implementation of stacks.  See `eif_stack.decl' on how to use this properly.
+		]"
+	implementation_details: "[
+		The stack is implemented in chunks. Usually the chunks are capable of holding `eif_stack_chunk' items
+		but users can override this when allocating or extending the stack. 
+		
+		Each chunk has an `arena' where data is stored, a `top' which records the next position for insertion,
+		a `end' which record the end of `arena'. They are called respectively: sk_arena, sk_top, sk_end.
+		In addition each chunk as a next and previous chunk.
+
+		The stack has 2 sentinelles: a head and a tail. We barely use the tail, so it might make sense to
+		remove it to avoid useless updates. In addition it uses the notion of the current chunk.
+		This is the chunk where `top' is.
+
+		A key invariant of the stack is that the `top' pointer of a non-empty stack is always strictly
+		greater than the arena. It enables an important optimization when we simply want to look at the top
+		element. See `top' and `top_address' for the implementation.
+		]"
+	date:		"$Date$"
+	revision:	"$Revision$"
+	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+doc:<file name="rt_stack.implementation"  version="$Id$" summary="Stack representation and manipulations">
+*/
+
+/* Private helpers. */
+rt_private rt_inline void XX_EIF_STACK_FUNC(free_next_chunks) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CHUNK_TYPE *chunk);
+
+/*
+doc:	<routine name="allocate" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Given a stack `stk' which was not yet allocated, initialize it with a chunk of size `nb_items'. Note that the `sk_arena' field of the chunk is part of the memory allocated fo the chunk. This avoids 2 allocations: one for the chunk structure, and one for the items.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be allocated.</param>
+doc:		<param name="nb_items" type="size_t">Number of items allocated in `stk'.</param>
+doc:		<return>NULL if `stk' cannot be initialized, otherwise the address of the first free location.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(allocate) (XX_EIF_STACK_TYPE *stk, size_t nb_items)
+{
+	XX_EIF_STACK_ELEM_TYPE *arena;	/* Address for the arena */
+	XX_EIF_STACK_CHUNK_TYPE *chunk;	/* Address of the chunk */
+	size_t size;
+
+	REQUIRE("stack not null", stk);
+
+		/* We allocate enough space for the struct of the chunk and for the space after which will hold
+		 * the items of the struct. */
+	size = sizeof(XX_EIF_STACK_CHUNK_TYPE) + nb_items * sizeof(XX_EIF_STACK_ELEM_TYPE);
+	chunk = (XX_EIF_STACK_CHUNK_TYPE *) cmalloc(size);
+	if (!chunk) {
+		return NULL;		/* Malloc failed for some reason */
+	} else {
+			/* Setup chunk. */
+		arena = (XX_EIF_STACK_ELEM_TYPE *) (chunk + 1);	/* Make arena starts after the end of chunk */
+		chunk->sk_arena = arena;					/* Where items are stored */
+		chunk->sk_top = arena;						/* Top of stack */
+		chunk->sk_end = (XX_EIF_STACK_ELEM_TYPE *) ((char *) chunk + size);	/* End of chunk */
+		chunk->sk_next = NULL;
+		chunk->sk_prev = NULL;
+
+			/* Initialize stack. */
+		stk->st_head = chunk;		/* New stack (head of list) */
+		stk->st_tail = chunk;		/* One chunk for now */
+		stk->st_cur = chunk;		/* Current chunk */
+
+		return arena;			/* Stack allocated */
+	}
+}
+
+/*
+doc:	<routine name="extend" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Given a stack `stk' extend it by a chunk capable of holding `nb_items'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be extended.</param>
+doc:		<param name="nb_items" type="size_t">Number of items allocated in `stk'.</param>
+doc:		<return>NULL if `stk' cannot be extended, otherwise address of the first free location in new chunk.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(extend) (XX_EIF_STACK_TYPE *stk, size_t nb_items)
+{
+	RT_GET_CONTEXT		/* For SIGBLOCK/SIGRESUME */
+
+	XX_EIF_STACK_ELEM_TYPE *arena;	/* Address for the arena */
+	XX_EIF_STACK_CHUNK_TYPE *chunk;		/* Address of the chunk */
+	size_t size = nb_items * sizeof(XX_EIF_STACK_ELEM_TYPE);
+
+	REQUIRE("stack not null", stk);
+
+	size += sizeof(XX_EIF_STACK_CHUNK_TYPE);
+	chunk = (XX_EIF_STACK_CHUNK_TYPE *) cmalloc(size);
+	if (!chunk) {
+		return NULL;		/* Malloc failed for some reason */
+	} else {
+		SIGBLOCK;	/* Critical section */
+
+			/* Setup chunk. */
+		arena = (XX_EIF_STACK_ELEM_TYPE *) (chunk + 1);	/* Make arena starts after the end of chunk */
+		chunk->sk_arena = arena;					/* Where items are stored */
+		chunk->sk_top = arena;						/* Top of stack */
+		chunk->sk_end = (XX_EIF_STACK_ELEM_TYPE *) ((char *) chunk + size);		/* End of chunk */
+		chunk->sk_next = NULL;				/* Last chunk in list */
+		chunk->sk_prev = stk->st_tail;		/* Preceded by the old tail */
+
+			/* Update stack. */
+		stk->st_tail->sk_next = chunk;		/* Tail of stack has now `chunk' as next element. */
+		stk->st_tail = chunk;				/* New tail */
+		stk->st_cur = chunk;				/* New current chunk */
+
+		SIGRESUME;	/* End of critical section */
+
+		return arena;			/* Everything is ok */
+	}
+}
+
+/*
+doc:	<routine name="truncate" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Free unused chunks in the stack. If the current chunk has at least MIN_FREE locations, then we may free all the chunks starting with the next one. Otherwise, we skip the next chunk and free the remainder. This is to avoid having to reallocate a new chunk soon after truncating a stack.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be truncated.</param>
+doc:		<param name="nb_items" type="size_t">Number of items allocated in `stk'.</param>
+doc:		<return>NULL if `stk' cannot be extended, otherwise address of the first free location in new chunk.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(truncate) (XX_EIF_STACK_TYPE *stk)
+{
+	XX_EIF_STACK_CHUNK_TYPE *chunk, *next;
+
+	REQUIRE("stack not null", stk);
+
+	chunk = stk->st_cur;
+
+	if (chunk) {
+		if ((chunk->sk_end - chunk->sk_top) > MIN_FREE) {
+				/* Enough locations left */
+			XX_EIF_STACK_FUNC(free_next_chunks)(stk, chunk);		/* Free starting at next chunk */
+		} else {
+				/* Current chunk is nearly full */
+			next = chunk->sk_next;		/* We are followed by 'next' */
+			if (next) {
+					/* There is indeed a next chunk */
+				XX_EIF_STACK_FUNC(free_next_chunks)(stk, next);		/* Skip it, wipe out remainder */
+			}
+		}
+	}
+}
+
+/*
+doc:	<routine name="free_next_chunks" export="private">
+doc:		<summary>Given a stack chunk, free all chunks after it and update the stack accordingly.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be updated.</param>
+doc:		<param name="chunk" type="XX_EIF_STACK_CHUNK_TYPE *">Base chunk to use to free all chunks after it.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_private rt_inline void XX_EIF_STACK_FUNC(free_next_chunks) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CHUNK_TYPE *chunk)
+{
+	XX_EIF_STACK_CHUNK_TYPE *k;	/* To walk through the list */
+	XX_EIF_STACK_CHUNK_TYPE *n;	/* Save next before freeing chunk */
+
+	REQUIRE("stack not null", stk);
+	REQUIRE("chunk not null", chunk);
+
+		/* Update `stk' to use `chunk' as the last chunk. */
+	stk->st_tail = chunk;
+	k = chunk->sk_next;
+	if (k) {
+			/* We have a next chunk to free, so free it and any remaining ones after. */
+		chunk->sk_next = NULL;
+		for (; k; k = n) {
+			n = k->sk_next;
+			eif_rt_xfree(k);
+		}
+	}
+}
+
+/*
+doc:	<routine name="reset" export="public">
+doc:		<summary>Given a stack, free all chunks and reset the content to `stk'. Further usage of `stk' requires a call to `allocate'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be updated.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(reset)(XX_EIF_STACK_TYPE *stk)
+{
+	XX_EIF_STACK_CHUNK_TYPE *k;	/* To walk through the list */
+	XX_EIF_STACK_CHUNK_TYPE *n;	/* Save next before freeing chunk */
+
+	REQUIRE("stack not null", stk);
+
+	for (k = stk->st_head; k; k = n) {
+		n = k->sk_next;
+		eif_rt_xfree(k);	/* But how do I know implementation won't change? */
+	}
+
+		/* Reset everything to their default state. */
+	memset (stk, 0, sizeof(XX_EIF_STACK_TYPE));
+}
+
+
+/*
+doc:	<routine name="has" return_type="int" export="public">
+doc:		<summary>Search if `data' is present in `stk' up to the current chunk. Chunk after the current one are not looked up.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are looking for `data'.</param>
+doc:		<param name="data" type="XX_EIF_STACK_ELEM_TYPE">Data being looked for in `stk'.</param>
+doc:		<return>1 if found, 0 otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public int XX_EIF_STACK_FUNC(has) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE data)
+{
+	XX_EIF_STACK_CHUNK_TYPE *chunk, *current_chunk;
+	XX_EIF_STACK_ELEM_TYPE *address;
+	XX_EIF_STACK_ELEM_TYPE *top;
+	int done = 0;
+
+	REQUIRE("stack not null", stk);
+
+	if (stk->st_cur) { /* Stack created. */
+			/* Loop through all the chunks, of course only when the stack has been created. */
+		for (chunk = stk->st_head, current_chunk = stk->st_cur; chunk && !done; chunk = chunk->sk_next) {
+				/* Do not process any further chunks beyond the current chunk. */
+			done = (chunk == current_chunk);
+			address = chunk->sk_arena;
+			top = chunk->sk_top;
+
+			CHECK("arena not null", address);
+			CHECK("top not null", top);
+
+			for (; address < top; address++) {
+#ifdef EIF_STACK_IS_STRUCT_ELEMENT
+				if (memcmp(address, &data, sizeof(XX_EIF_STACK_ELEM_TYPE)) == 0) {
+#else
+				if (*address == data) {
+#endif
+						/* We found our `data'. */
+					return 1;
+				}
+			}
+		}
+	}
+		/* Nothing was found. */
+	return 0;
+}
+
+/*
+doc:	<routine name="is_address_in_stack" return_type="int" export="public">
+doc:		<summary>Search if `address' is indeed an address from the various arenas of `stk'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are looking for `address'.</param>
+doc:		<param name="address" type="void *">Address being looked for in `stk'.</param>
+doc:		<return>1 if addresss is in bound, 0 otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public int XX_EIF_STACK_FUNC(is_address_in_stack) (XX_EIF_STACK_TYPE *stk, void *address)
+{
+	XX_EIF_STACK_CHUNK_TYPE *ck;
+
+		/* Loop through all the chunks */
+	for (ck = stk->st_head; ck != NULL; ck = ck->sk_next){
+			/* Perform bounds check on address. */
+		if
+			(((rt_uint_ptr) ck->sk_arena <= (rt_uint_ptr) address) &&
+			((rt_uint_ptr) ck->sk_top > (rt_uint_ptr) address))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/*
+doc:	<routine name="count" return_type="size_t" export="public">
+doc:		<summary>Total number of items in stack `stk'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack on which we will count the number of items.</param>
+doc:		<return>Number of items in `stk'.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public size_t XX_EIF_STACK_FUNC(count) (XX_EIF_STACK_TYPE *stk)
+{
+	XX_EIF_STACK_CHUNK_TYPE *chunk, *current_chunk;	/* To walk through the list */
+	size_t n = 0;			/* Number of items */
+	int done = 0;
+
+	REQUIRE("stack not null", stk);
+
+	for (chunk = stk->st_head, current_chunk = stk->st_cur; chunk && !done; chunk = chunk->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (chunk == current_chunk);
+		n += chunk->sk_top - chunk->sk_arena;		/* Stop at the top */
+	}
+
+	return n;		/* Number of objects held in stack */
+}
+
+/*
+doc:	<routine name="is_empty" return_type="int" export="public">
+doc:		<summary>Is stack `stk' empty?</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to query for emptiness.</param>
+doc:		<return>1 if is empty, 0 otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public int XX_EIF_STACK_FUNC(is_empty) (XX_EIF_STACK_TYPE *stk)
+{
+	REQUIRE("stack not null", stk);
+
+	return !stk->st_cur || (stk->st_cur->sk_top == stk->st_cur->sk_arena);
+}
+
+/*
+doc:	<routine name="save_cursor" export="public">
+doc:		<summary>Save stack `stk''s state in `cur'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack on which cursor will be saved.</param>
+doc:		<param name="cur" type="XX_EIF_STACK_CURSOR_TYPE *">Cursor where stack data will be saved.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(save_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur)
+{
+	REQUIRE("stack not null", stk);
+	REQUIRE("cursor not null", cur);
+
+	cur->sc_chunk = stk->st_cur;
+	cur->sc_item = stk->st_cur->sk_top;
+}
+
+/*
+doc:	<routine name="restore_cursor" export="public">
+doc:		<summary>Save stack `stk''s state in `cur'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack on which cursor will be saved.</param>
+doc:		<param name="cur" type="XX_EIF_STACK_CURSOR_TYPE *">Cursor where stack data will be saved.</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(restore_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur)
+{
+	REQUIRE("stack not null", stk);
+	REQUIRE("cursor not null", cur);
+
+	stk->st_cur = cur->sc_chunk;
+	stk->st_cur->sk_top = cur->sc_item;
+}
+
+/*
+doc:	<routine name="push_empty" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Similar to `push' except that no value is pushed, we are just returning the address of where the value would have been stored if we had pushed. If stack was not yet allocated, it will allocate it. If stack is full, we will allocate a new chunk.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are going to reserve space for a value.</param>
+doc:		<return>Address in the stack where an item would be if we had added it. NULL if no more memory is available.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(push_empty) (XX_EIF_STACK_TYPE *stk)
+{
+	XX_EIF_STACK_ELEM_TYPE *top;		/* Current top of stack */
+	XX_EIF_STACK_CHUNK_TYPE *chunk;
+
+	chunk = stk->st_cur;
+	if (chunk) {
+		top = chunk->sk_top;		/* Current top of stack */
+		if (chunk->sk_end == top) {
+				/* The end of the current stack chunk has been reached. If there is
+				 * a chunk allocated after the current one, use it, otherwise create
+				 * a new one and insert it in the list.
+				 */
+			if (chunk == stk->st_tail) {	/* Reached last chunk */
+				top = XX_EIF_STACK_FUNC(extend)(stk, eif_stack_chunk);
+				if (!top) {
+					return NULL;			/* Could not extend stack */
+				}
+				chunk = stk->st_cur;
+			} else {
+					/* Update the new stack context (main structure) */
+				chunk = chunk->sk_next;
+				top = chunk->sk_top;
+				CHECK("Chunk is already at bottom", chunk->sk_top == chunk->sk_arena);
+				stk->st_cur = chunk;
+			}
+		}
+
+			/* Increase the current chunk's top to make room for one item and
+			 * that it points to the next free location. */
+		chunk->sk_top = top + 1;
+		return top;		/* Address of where a new item would have been added. */
+	} else {
+			/* Stack hasn't been allocated yet, we will allocate it. */
+		top = XX_EIF_STACK_FUNC(allocate) (stk, eif_stack_chunk);		/* Create one */
+		if (!top) {
+			return NULL;
+		} else {
+				/* We update the new current chunk with the new top. */
+			stk->st_cur->sk_top = top + 1;
+			return top;
+		}
+	}
+}
+
+/*
+doc:	<routine name="push" return_type="int" export="public">
+doc:		<summary>Push `value' on top of stack `stk'.If stack was not yet allocated, it will allocate it. If stack is full, we will allocate a new chunk.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are going to push `value'.</param>
+doc:		<param name="value" type="XX_EIF_STACK_ELEM_TYPE">Address being looked for in `stk'.</param>
+doc:		<return>T_OK if `value' is added to `stk', T_NO_MORE_MEMORY otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public int XX_EIF_STACK_FUNC(push) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE value)
+{
+	XX_EIF_STACK_ELEM_TYPE *top;		/* Current top of stack */
+
+	top = XX_EIF_STACK_FUNC(push_empty) (stk);
+	if (top) {
+		*top = value;
+		return T_OK;		/* Value was successfully pushed on the stack */
+	} else {
+		return T_NO_MORE_MEMORY; /* Could not allocate memory to hold `value'. */
+	}
+}
+
+/*
+doc:	<routine name="push_address" return_type="int" export="public">
+doc:		<summary>Push content pointed by `value' on top of stack `stk' if not NULL. In any case it returns the location where the element is if it had been inserted in the stack. If stack was not yet allocated, it will allocate it. If stack is full, it will allocate a new chunk.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are going to push `value'.</param>
+doc:		<param name="value" type="XX_EIF_STACK_ELEM_TYPE *">Address being looked for in `stk'.</param>
+doc:		<return>T_OK if `value' is added to `stk', T_NO_MORE_MEMORY otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public int XX_EIF_STACK_FUNC(push_address) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_ELEM_TYPE *value)
+{
+	XX_EIF_STACK_ELEM_TYPE *top;
+
+	top = XX_EIF_STACK_FUNC(push_empty) (stk);
+	if (top) {
+		*top = *value;
+		return T_OK;	/* Value was successfully pushed on the stack. */
+	} else {
+		return T_NO_MORE_MEMORY; /* Could not allocate memory to hold `value'. */
+	}
+}
+
+/*
+doc:	<routine name="npop" export="public">
+doc:		<summary>Pop `nb_items' from top of stack `stk. If the new top of the stack is at the beginning of the current chunk, we will set update the current stack to use the previous chunk if any. The scenario is the following, you called push but current chunk was full, thus you need to create a new chunk and add the element. Now if you pop the element and remain in the same chunk, the you do not end up with the same stack as before the push.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are going to push `value'.</param>
+doc:		<param name="nb_items" type="rt_uint_ptr">Address being looked for in `stk'.</param>
+doc:		<return>T_OK if `value' is added to `stk', T_NO_MORE_MEMORY otherwise.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(npop) (XX_EIF_STACK_TYPE *stk, size_t nb_items)
+{
+	XX_EIF_STACK_CHUNK_TYPE *chunk;
+	XX_EIF_STACK_ELEM_TYPE *top;
+	int nb;
+
+	REQUIRE("stack not null", stk);
+	REQUIRE("stack allocated", stk->st_cur);
+	REQUIRE("valid stack", stk->st_cur->sk_top > stk->st_cur->sk_arena);
+	REQUIRE("stack is large enough", XX_EIF_STACK_FUNC(count)(stk) >= nb_items);
+	REQUIRE("Removing one at least", nb_items >= 1);
+	
+	chunk = stk->st_cur;
+	top = chunk->sk_top;		/* Current top of the stack */
+
+		/* Optimization: try to update the top, hoping it will remain in the
+		 * same chunk. This avoids pointer manipulation (walking along the stack)
+		 * which may induce swapping, who knows?
+		 */
+	if (top >= (chunk->sk_arena + nb_items)) {
+		top -= nb_items;
+		chunk->sk_top = top; /* Update current chunk to the new top. */
+		if ((top == chunk->sk_arena) && (chunk->sk_prev)) {
+				/* We are at the bottom of the current chunk, which means that before pushing the elements
+				 * we are removing, the current chunk of the stack was the previous one.
+				 * No need to update `sk_top' in the previous chunk as it should be properly set. */
+			stk->st_cur = chunk->sk_prev;
+		}
+	} else {
+		XX_EIF_STACK_ELEM_TYPE *arena;					/* Base address of current chunk */
+
+			/* Count how many chunks we have to go back. */
+		nb = 0;
+		for (; nb_items > 0; /* empty */) {
+			arena = chunk->sk_arena;
+			CHECK("top greater than arena", top >= arena);
+			if (top >= arena + nb_items) {
+					/* We found our chunk, let's update `top' accordingly. */
+				top -= nb_items;
+				break;
+			} else {
+				nb_items -= (top - arena);
+				chunk->sk_top = chunk->sk_arena;
+			}
+			chunk = chunk->sk_prev;				/* Look at previous chunk */
+			CHECK("not null", chunk);		/* Per precondition, we will never go beyond the head of the stack. */
+			top = chunk->sk_top;			/* Use top of previous chunk */
+			nb++;
+		}
+
+		CHECK("not null", chunk);		/* Per precondition, we will never go beyond the head of the stack. */
+
+			/* Update stack structure */
+		stk->st_cur = chunk;
+		chunk->sk_top = top;
+
+		if (nb > 1) {
+				/* Since now we have a free chunk on our hands, let's truncate the stack. */
+			XX_EIF_STACK_FUNC(truncate)(stk);
+		}
+	}
+}
+
+/*
+doc:	<routine name="pop_address" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Pop the address of the last added element of the stack `stk'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack where to look for a free entry</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(pop_address) (XX_EIF_STACK_TYPE *stk)
+{
+	XX_EIF_STACK_ELEM_TYPE *top;
+	XX_EIF_STACK_CHUNK_TYPE *chunk;
+
+	REQUIRE("stack not null", stk);
+	REQUIRE("stack allocated", stk->st_cur);
+	REQUIRE("valid stack", stk->st_cur->sk_top > stk->st_cur->sk_arena);
+	REQUIRE("Not empty", !XX_EIF_STACK_FUNC(is_empty)(stk));
+
+	chunk = stk->st_cur;
+	top = chunk->sk_top - 1;
+	chunk->sk_top = top;
+	if ((top == chunk->sk_arena) && (chunk->sk_prev)) {
+			/* We are at the bottom of the current chunk, which means that before pushing the elements
+			 * we are removing, the current chunk of the stack was the previous one.
+			 * No need to update `sk_top' in the previous chunk as it should be properly set. */
+		stk->st_cur = chunk->sk_prev;
+	}
+	return top;
+}
+
+/*
+doc:	<routine name="pop" return_type="XX_EIF_STACK_ELEM_TYPE" export="public">
+doc:		<summary>Pop the last added element of the stack `stk'.</summary>
+doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack where to look for a free entry</param>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE XX_EIF_STACK_FUNC(pop) (XX_EIF_STACK_TYPE *stk)
+{
+	return *XX_EIF_STACK_FUNC(pop_address) (stk);
+}
+
+/*
+doc:	<routine name="back" export="public">
+doc:		<summary>Given a cursor object `cur' go back one item. If before we reset cursor to a zeroed state.</summary>
+doc:		<param name="cur" type="XX_EIF_STACK_CURSOR_TYPE *">Cursor storing position in a stack.</summary>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(back) (XX_EIF_STACK_CURSOR_TYPE *cur)
+{
+	REQUIRE("cur not null", cur);
+	REQUIRE("valid cursor", (cur->sc_item >= cur->sc_chunk->sk_arena) && (cur->sc_item <= cur->sc_chunk->sk_top));
+	REQUIRE("cur is set", cur->sc_chunk && cur->sc_item);
+	REQUIRE("has item", (cur->sc_item > cur->sc_chunk->sk_arena) || (cur->sc_chunk->sk_prev));
+
+	if (cur->sc_item > cur->sc_chunk->sk_arena) {
+		cur->sc_item--;
+	} else {
+		CHECK ("cur at bottom", cur->sc_item == cur->sc_chunk->sk_arena);
+		cur->sc_chunk = cur->sc_chunk->sk_prev;
+		if (!cur->sc_chunk) {
+				/* We are past the first item of the stack, we invalidate the cursor. */
+			cur->sc_item = NULL;
+		} else {
+			cur->sc_item = cur->sc_chunk->sk_top - 1;
+		}
+	}
+}
+
+/*
+doc:	<routine name="forth" export="public">
+doc:		<summary>Given a cursor object `cur' go forth one item. If after we reset cursor to a zeroed state.</summary>
+doc:		<param name="cur" type="XX_EIF_STACK_CURSOR_TYPE *">Cursor storing position in a stack.</summary>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public void XX_EIF_STACK_FUNC(forth) (XX_EIF_STACK_CURSOR_TYPE *cur)
+{
+	REQUIRE("cur not null", cur);
+	REQUIRE("valid cursor", (cur->sc_item >= cur->sc_chunk->sk_arena - 1) && (cur->sc_item <= cur->sc_chunk->sk_top));
+	REQUIRE("cur is set", cur->sc_chunk && cur->sc_item);
+	REQUIRE("has item", (cur->sc_item < cur->sc_chunk->sk_top - 1) || (cur->sc_chunk->sk_next));
+
+	if (cur->sc_item < cur->sc_chunk->sk_top - 1) {
+		cur->sc_item++;
+	} else {
+		CHECK ("cur at top", cur->sc_item == cur->sc_chunk->sk_top - 1);
+		cur->sc_chunk = cur->sc_chunk->sk_next;
+		if (!cur->sc_chunk) {
+				/* We are past the last item of the stack, we invalidate the cursor. */
+			cur->sc_item = NULL;
+		} else {
+			cur->sc_item = cur->sc_chunk->sk_arena;
+		}
+	}
+}
+
+/*
+doc:	<routine name="i_th" return_type="XX_EIF_STACK_ELEM_TYPE *" export="public">
+doc:		<summary>Address of `n'-th element starting from the last one. So if `n' is 0, it means the last one. Stack is unchanged. Implementation is based on the `npop' stack routine.</summary>
+doc:		<param name="stk" type="struct c_opstack *">Stack in which we are going to push `value'.</param>
+doc:		<param name="n" type="size_t">Position of item we want to retrieve.</param>
+doc:		<return>NULL if `stk' cannot be initialized, otherwise the address of the first free location.</return>
+doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
+doc:		<synchronization>Requires safe access to `stk'.</synchronization>
+doc:	</routine>
+*/
+rt_public XX_EIF_STACK_ELEM_TYPE * XX_EIF_STACK_FUNC(i_th) (XX_EIF_STACK_TYPE *stk, size_t n)
+{
+	XX_EIF_STACK_CHUNK_TYPE *s;			/* Current chunk in stack */
+	XX_EIF_STACK_ELEM_TYPE *top;
+
+	REQUIRE("stack allocated", stk->st_cur);
+	REQUIRE("stack big enough", XX_EIF_STACK_FUNC(count) (stk) >= n + 1);
+
+		/* We increment by `one' because `0' means the last inserted element. */
+	n++;
+
+	s = stk->st_cur;
+	top = s->sk_top;
+		/* Check if the item we are looking for is in the same chunk. */
+	if (top >= (s->sk_arena + n)) {
+		top -=n;
+		return top;
+	} else {
+			/* It seems the item is at the left edge of a chunk. Look for previous chunk then... */
+		XX_EIF_STACK_ELEM_TYPE *arena;
+		do {
+			arena = s->sk_arena;
+			CHECK("top greater than arena", top >= arena);
+			if (top >= arena + n) {
+					/* We found our chunk. */
+				top -= n;
+				return top;
+			} else {
+				n -= (top - arena);
+			}
+			s = s->sk_prev;				/* Look at previous chunk */
+			CHECK("not null", s);		/* Per precondition, we will never go beyond the head of the stack. */
+			top = s->sk_top;			/* Use top of previous chunk */
+		} while (n > 0);
+
+			/* This statement is never reached. */
+		return NULL;
+	}
+}
+
+
+/*
+doc:</file>
+*/
+
+/*
+vim: ft=c
+*/

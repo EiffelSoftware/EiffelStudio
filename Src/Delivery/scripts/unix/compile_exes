@@ -129,6 +129,8 @@ mac_ranlib $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libwkbench.a
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 fullrf $EXPORT_DIR/runtimes/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+cp C/run-time/eif_stack.decl $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
+cp C/run-time/eif_stack.interface $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
 

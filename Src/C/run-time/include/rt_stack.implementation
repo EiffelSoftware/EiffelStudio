@@ -16,7 +16,7 @@
 
 		A key invariant of the stack is that the `top' pointer of a non-empty stack is always strictly
 		greater than the arena. It enables an important optimization when we simply want to look at the top
-		element. See `top' and `top_address' for the implementation.
+		element. See the EIF_STACK_TOP and EIF_STACK_TOP_ADDRESS macros.
 		]"
 	date:		"$Date$"
 	revision:	"$Revision$"

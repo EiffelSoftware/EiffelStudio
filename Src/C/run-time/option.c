@@ -678,7 +678,7 @@ rt_public void stop_profile(void)
 
 /*
 doc:	<routine name="eif_is_tracing_enabled" return="EIF_BOOLEAN" export="public">
-doc:		<summary>Enable tracing for current thread.</summary>
+doc:		<summary>Is tracing enabled for current thread.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None required</synchronization>
 doc:	</routine>
@@ -686,7 +686,7 @@ doc:	</routine>
 rt_public EIF_BOOLEAN eif_is_tracing_enabled (void) 
 {
 	RT_GET_CONTEXT
-	return EIF_TEST(eif_trace_disabled = 0);
+	return EIF_TEST(eif_trace_disabled == 0);
 }
 
 /*

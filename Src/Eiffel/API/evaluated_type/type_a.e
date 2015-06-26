@@ -71,7 +71,7 @@ feature -- Generic conformance
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
 			end
 
-			if is_separate then
+			if system.is_scoop and then is_separate then
 				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
 			end
 

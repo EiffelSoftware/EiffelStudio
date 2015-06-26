@@ -186,7 +186,7 @@ feature -- Property
 				Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
 			end
 
-			if has_separate_mark then
+			if system.is_scoop and then has_separate_mark then
 				Result := Result | {SHARED_GEN_CONF_LEVEL}.separate_type
 			end
 

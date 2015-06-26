@@ -47,7 +47,7 @@
 extern "C" {
 #endif
 
-extern struct stack object_id_stack;	/* Stack where objects referenced through `object_id' are stored
+extern struct ostack object_id_stack;	/* Stack where objects referenced through `object_id' are stored
 										 * See class IDENTIFIED */	
 
 #ifdef EIF_THREADS

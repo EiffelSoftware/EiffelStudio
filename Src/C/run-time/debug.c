@@ -112,11 +112,9 @@ doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_shared struct dbstack db_stack = {
-	(struct stdchunk *) 0,		/* st_hd */
-	(struct stdchunk *) 0,		/* st_tl */
-	(struct stdchunk *) 0,		/* st_cur */
-	(struct dcall *) 0,			/* st_top */
-	(struct dcall *) 0,			/* st_end */
+	NULL,		/* st_head */
+	NULL,		/* st_tail */
+	NULL		/* st_cur */
 };
 
 /*
@@ -155,11 +153,9 @@ doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
 rt_public struct c_opstack cop_stack = {
-	(struct c_stochunk *) 0,	/* st_hd */
-	(struct c_stochunk *) 0,	/* st_tl */
-	(struct c_stochunk *) 0,	/* st_cur */
-	(EIF_TYPED_ADDRESS *) 0,	/* st_top */
-	(EIF_TYPED_ADDRESS *) 0,	/* st_end */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 #endif /* !EIF_THREADS */
 /*
@@ -239,15 +235,6 @@ rt_private void set_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private void remove_breakpoint_in_table(BODY_INDEX body_id, uint32 offset);
 rt_private int is_dbreak_set(BODY_INDEX body_id, uint32 offset);
 rt_private int should_be_interrupted(void);
-
-/* Debugging stack handling routines */
-rt_public struct dcall *dpush(register struct dcall *val);			/* Push value on stack */
-rt_public struct dcall *dpop(void);			/* Pop value off stack */
-rt_public struct dcall *dtop(void);			/* Current top value */
-rt_private struct dcall *dbstack_allocate(register size_t size);	/* Allocate first chunk */
-rt_private int dbstack_extend(register size_t size);				/* Extend stack size */
-rt_private void npop(register int nb_items);					/* Pop 'n' items */
-rt_private int nb_calls(void);					/* Number of calls registered */
 
 /* Program context */
 rt_shared void escontext(EIF_CONTEXT int why);				/* Save program context */
@@ -396,11 +383,8 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	 */
 
 	d_data.db_status = DX_CONT;				/* Default execution status */
-	if (
-		db_stack.st_top != (struct dcall *) 0 &&		/* Stack allocated */
-		db_stack.st_top != db_stack.st_hd->sk_arena		/* Not empty */
-	) {
-		context = dtop();					/* Context from previous routine */
+	if (!eif_dbstack_is_empty(&db_stack)) {
+		context = EIF_STACK_TOP_ADDRESS(db_stack);					/* Context from previous routine */
 		CHECK("context not null", context);
 		if (context->dc_status == DX_STEP)	/* Step by step execution? */
 			d_data.db_status = DX_STEP;		/* This one propagates */
@@ -409,17 +393,15 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	/* Attempt to get a new context and raise an exception which will transfer
 	 * control outside of the current routine.
 	 */
-	context = dget();					/* Get new calling context */
+	context = eif_dbstack_push_empty(&db_stack);					/* Get new calling context */
 	if (context) {
 			/* Initialize the calling context with the current IC value (which is the
 			 * start of the byte code for the current feature), and save the context
 			 * of the operational stack. Leave the control table alone, as there is
 			 * no way to tell this is a debugging byte code at this point.
 			 */
+		memset(context, 0, sizeof(struct dcall));
 		context->dc_start = IC;				/* Current interpreter counter */
-		context->dc_cur = (struct stochunk *) 0;
-		context->dc_top = (EIF_TYPED_ADDRESS *) 0;
-		context->dc_exec = (struct ex_vect *) 0;
 	} else {
 			/* No more memory */
 		enomem();						/* Critical exception */
@@ -436,7 +418,8 @@ rt_public void dexset(struct ex_vect *exvect)
 	 * stack, this will identify melted features.
 	 */
 
-	struct dcall *context = dtop();
+	RT_GET_CONTEXT
+	struct dcall *context = EIF_STACK_TOP_ADDRESS(db_stack);
 	CHECK("context not null", context);
 	context->dc_exec = exvect;		/* Associate context with Eiffel stack */
 }
@@ -449,9 +432,8 @@ rt_public void drun(BODY_INDEX body_id)
 	 * entrance into the feature's debugable byte code.
 	 */
 
-	struct dcall *context;			/* The calling context */
-
-	context = dtop();				/* Active execution context */
+	RT_GET_CONTEXT
+	struct dcall *context = EIF_STACK_TOP_ADDRESS(db_stack);				/* Active execution context */
 	CHECK("context not null", context);
 	context->dc_body_id = body_id;	/* Make sure we know who this is */
 
@@ -465,13 +447,14 @@ rt_public void dostk(EIF_CONTEXT_NOARG)
 	 * interpreter on any melted feature and get local and argument values.
 	 */
 
+	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	struct dcall *context;		/* Current calling context */
 
-	context = dtop();
+	context = EIF_STACK_TOP_ADDRESS(db_stack);
 	CHECK("context not null", context);
 	context->dc_cur = op_stack.st_cur;	/* Value suitable for sync_registers */
-	context->dc_top = op_stack.st_top;
+	context->dc_top = op_stack.st_cur->sk_top;
 }
 
 rt_public void dsync(void)
@@ -481,16 +464,17 @@ rt_public void dsync(void)
 	 * initialize cached data.
 	 */
 
+	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	struct dcall *context;		/* Current calling context */
 
-	EIF_GET_CONTEXT
 	/* Reset execution status. It is important to restore that information, even
 	 * if we are in a non-debuggable feature because the DX_STEP status must be
 	 * propagated and the first time we will enter a debuggable feature, we'll
 	 * stop thanks to the propagation work done in dstart()--RAM.
 	 */
 
-	context = dtop();
+	context = EIF_STACK_TOP_ADDRESS(db_stack);
 	CHECK("context not null", context);
 	d_data.db_status = context->dc_status;	/* Execution status */
 	d_data.db_start = context->dc_start;	/* Used to compute offsets in BC */
@@ -1207,6 +1191,7 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
+	size_t nb;
 
 	memcpy (&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
 	memcpy (&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
@@ -1215,17 +1200,19 @@ rt_shared void escontext(EIF_CONTEXT int why)
 
 	d_cxt.pg_status = why;			/* Why did we stop? */
 	d_cxt.pg_IC = IC;				/* Save interpreter counter */
-	d_cxt.pg_calls = nb_calls();	/* Number of calls currently recorded */
+	nb = eif_dbstack_count (&db_stack);	/* Number of calls currently recorded */
+	CHECK("not too many", (size_t) ((int) nb) == nb);
+	d_cxt.pg_calls = (int) nb;
 
 	/* Compute active routine. If debugging stack is empty, there is none.
 	 * Otherwise, we take the last calling context recorded on the stack.
 	 */
 
-	if (db_stack.st_top == db_stack.st_cur->sk_arena) {
+	if (db_stack.st_cur->sk_top == db_stack.st_cur->sk_arena) {
 		d_cxt.pg_active = (struct dcall *) 0;	/* No active routine */
 		d_cxt.pg_index = -1;					/* No index */
 	} else {
-		d_cxt.pg_active = dtop();				/* Last recorded routine */
+		d_cxt.pg_active = EIF_STACK_TOP_ADDRESS(db_stack);				/* Last recorded routine */
 		d_cxt.pg_index = d_cxt.pg_calls;		/* Its index within stack */
 	}
 }
@@ -1241,13 +1228,13 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
-	if (!d_cxt.pg_interp.st_top) {
-		/* if st_top is not NULL, there might be a memory leak
+	if (!d_cxt.pg_interp.st_cur) {
+		/* if st_cur is not NULL, there might be a memory leak
 		 * indeed, the op_stack might have allocated more than one chunk
 		 */
 
 		/* we clean the stack allocated in interp.c:opush(..) */
-		opstack_reset (&op_stack);
+		eif_opstack_reset (&op_stack);
 	}
 
 	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
@@ -1264,8 +1251,8 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	 * server mode--RAM).
 	 */
 
-	if (db_stack.st_top != db_stack.st_cur->sk_arena) {	/* Stack not empty */
-		context = dtop();
+	if (db_stack.st_cur->sk_top != db_stack.st_cur->sk_arena) {	/* Stack not empty */
+		context = EIF_STACK_TOP_ADDRESS(db_stack);
 		CHECK("context not null", context);
 		context->dc_status = d_data.db_status;
 	} else {
@@ -1289,297 +1276,14 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
  * Context stack handling.
  */
 
-rt_private struct dcall *dbstack_allocate(register size_t size)
-                   					/* Initial size */
-{
-	/* The debugging stack is created, with size 'size'.
-	 * Return the arena value (bottom of stack).
-	 */
-
-	RT_GET_CONTEXT
-	struct dcall *arena;		/* Address for the arena */
-	struct stdchunk *chunk;	/* Address of the chunk */
-
-	size *= CALL_SZ;
-	size += sizeof(*chunk);
-	SIGBLOCK;
-	chunk = (struct stdchunk *) cmalloc(size);
-	SIGRESUME;
-	if (chunk == (struct stdchunk *) 0)
-		return (struct dcall *) 0;		/* Malloc failed for some reason */
-
-	SIGBLOCK;
-	db_stack.st_hd = chunk;						/* New stack (head of list) */
-	db_stack.st_tl = chunk;						/* One chunk for now */
-	db_stack.st_cur = chunk;					/* Current chunk */
-	arena = (struct dcall *) (chunk + 1);		/* Header of chunk */
-	db_stack.st_top = arena;					/* Empty stack */
-	chunk->sk_arena = arena;					/* Base address */
-	db_stack.st_end = chunk->sk_end = (struct dcall *)
-		((char *) chunk + size);		/* First free location beyond stack */
-	chunk->sk_next = (struct stdchunk *) 0;
-	chunk->sk_prev = (struct stdchunk *) 0;
-	SIGRESUME;
-
-	return arena;			/* Stack allocated */
-}
-
-#ifdef EIF_THREADS
-rt_shared void dbstack_reset(struct dbstack *stk)
-{
-	/* Reset the stack 'stk' to its minimal state and disgard all its
-	 * contents. Walking through the list of chunks, we free them and
-	 * clear the 'stk' structure.
-	 */
-
-	struct stdchunk *k;	/* To walk through the list */
-	struct stdchunk *n;	/* Save next before freeing chunk */
-
-	for (k = stk->st_hd; k; k = n) {
-		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
-		eif_rt_xfree((EIF_REFERENCE) k);
-	}
-
-	memset (stk, 0, sizeof(struct dbstack));
-}
-#endif
-
-
-
-/* Stack handling routine. The following code has been cut/paste from the one
- * found in garcol.c and local.c as of this day. Hence the similarities and the
- * possible differences. What changes basically is that instead of storing
- * (char *) elements, we now store (struct dcall) ones.
- */
-
-rt_public struct dcall *dpush(register struct dcall *val)
-{
-	/* Push value 'val' on top of the debugging stack. If it fails, raise
-	 * an "Out of memory" exception. If 'val' is a null pointer, simply
-	 * get a new cell at the top of the stack.
-	 */
-
-	RT_GET_CONTEXT
-	struct dcall *top = db_stack.st_top;	/* Top of stack */
-
-	/* Stack created at initialization time via initdb */
-
-	if (db_stack.st_end == top) {
-		/* The end of the current stack chunk has been reached. If there is
-		 * a chunk allocated after the current one, use it, otherwise create
-		 * a new one and insert it in the list.
-		 */
-		SIGBLOCK;
-		if (db_stack.st_cur == db_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == dbstack_extend(eif_stack_chunk))
-				enomem();
-			top = db_stack.st_top;					/* New top */
-		} else {
-			struct stdchunk *current;		/* New current chunk */
-
-			/* Update the new stack context (main structure) */
-			current = db_stack.st_cur = db_stack.st_cur->sk_next;
-			top = db_stack.st_top = current->sk_arena;
-			db_stack.st_end = current->sk_end;
-		}
-		SIGRESUME;
-	}
-
-	db_stack.st_top = top + 1;			/* Points to next free location */
-	if (val != (struct dcall *) 0){		/* If value was provided */
-		memcpy (top, val, CALL_SZ);		/* Push it on the stack */
-	} else {
-		memset (top, 0, CALL_SZ);
-	}
-
-	return top;				/* Address of allocated item */
-}
-
-rt_private int dbstack_extend(register size_t size)
-                   					/* Size of new chunk to be added */
-{
-	/* The debugging stack is extended and the stack structure is updated.
-	 * 0 is returned in case of success. Otherwise, -1 is returned.
-	 */
-
-	RT_GET_CONTEXT
-	struct dcall *arena;		/* Address for the arena */
-	struct stdchunk *chunk;	/* Address of the chunk */
-
-	size *= CALL_SZ;
-	size += sizeof(*chunk);
-	chunk = (struct stdchunk *) cmalloc(size);
-	if (chunk == (struct stdchunk *) 0)
-		return -1;		/* Malloc failed for some reason */
-
-	SIGBLOCK;
-	arena = (struct dcall *) (chunk + 1);		/* Header of chunk */
-	chunk->sk_next = (struct stdchunk *) 0;		/* Last chunk in list */
-	chunk->sk_prev = db_stack.st_tl;			/* Preceded by the old tail */
-	db_stack.st_tl->sk_next = chunk;			/* Maintain link w/previous */
-	db_stack.st_tl = chunk;						/* New tail */
-	chunk->sk_arena = arena;					/* Where items are stored */
-	chunk->sk_end = (struct dcall *)
-		((char *) chunk + size);				/* First item beyond chunk */
-	db_stack.st_top = arena;					/* New top */
-	db_stack.st_end = chunk->sk_end;			/* End of current chunk */
-	db_stack.st_cur = chunk;					/* New current chunk */
-	SIGRESUME;
-
-	return 0;			/* Everything is ok */
-}
-
-rt_public struct dcall *dpop(void)
-{
-	/* Removes one item from the debugging stack and return a pointer to
-	 * the removed item, which also happens to be the first free location.
-	 */
-
-	RT_GET_CONTEXT
-	struct dcall *top = db_stack.st_top;	/* Top of the stack */
-	struct stdchunk *s;			/* To walk through stack chunks */
-	struct dcall *arena;			/* Base address of current chunk */
-
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. This avoids pointer manipulation (walking along the stack)
-	 * which may induce swapping, who knows?
-	 */
-
-	arena = db_stack.st_cur->sk_arena;
-	if (--top >= arena) {			/* Hopefully, we remain in current chunk */
-		db_stack.st_top = top;		/* Yes! Update top */
-		return top;					/* Done, we're lucky */
-	}
-
-	/* Unusual case: top is just in the first place of next chunk */
-
-	SIGBLOCK;
-	s = db_stack.st_cur = db_stack.st_cur->sk_prev;
-
-#ifdef MAY_PANIC
-	if (s == (struct stdchunk *) 0)
-		eif_panic("debugging stack underflow");
-#endif
-
-	top = db_stack.st_end = s->sk_end;
-	db_stack.st_top = --top;
-	SIGRESUME;
-
-	return db_stack.st_top;
-}
-
-rt_private void npop(register int nb_items)
-{
-	/* Removes 'nb_items' from the debugging stack */
-
-	RT_GET_CONTEXT
-	struct dcall *top;		/* Current top of debugging stack */
-	struct stdchunk *s;		/* To walk through stack chunks */
-	struct dcall *arena;		/* Base address of current chunk */
-	rt_int_ptr nb = nb_items;
-
-		/* Optimization: try to update the top, hoping it will remain in the
-		 * same chunk. That would indeed make popping very efficient.
-		 */
-	arena = db_stack.st_cur->sk_arena;
-	top = db_stack.st_top;
-	if (((rt_uint_ptr) top > (nb * sizeof(struct dcall))) && ((top - nb) >= arena)) {
-		db_stack.st_top = top - nb;		/* Yes! Update top */
-		return;						/* Done, how lucky we were! */
-	} else {
-			/* Normal case (which should be reasonably rare): we have to pop more
-			 * than the number of items in the current chunk. Loop until we popped
-			 * enough items (one iteration should be the norm).
-			 */
-		SIGBLOCK;				/* Critical section begins */
-		for (s = db_stack.st_cur; nb > 0; /* empty */) {
-			arena = s->sk_arena;
-			nb -= top - arena;
-			if (nb <= 0) {			/* Have we gone too far? */
-				top = arena - nb;		/* Yes, reset top correctly */
-				break;						/* Done */
-			}
-			s = s->sk_prev;					/* Look at previous chunk */
-			if (s)
-				top = s->sk_end;			/* Top at the end of previous chunk */
-			else
-				break;						/* We reached the bottom */
-		}
-
-		CHECK("s not null", s);
-
-			/* Update the stack structure */
-		db_stack.st_cur = s;
-		db_stack.st_top = top;
-		db_stack.st_end = s->sk_end;
-
-		SIGRESUME;				/* End of critical section */
-	}
-}
-
-rt_public struct dcall *dtop(void)
-{
-
-	/* Returns a pointer to the top of the stack or a NULL pointer if
-	 * stack is empty. I assume a value has already been pushed (i.e. the
-	 * stack has been created).
-	 */
-
-	struct dcall *last_item;		/* Address of last item stored */
-	struct stdchunk *prev;		/* Previous chunk in stack */
-
-	RT_GET_CONTEXT
-	last_item = db_stack.st_top - 1;
-	if (last_item >= db_stack.st_cur->sk_arena)
-		return last_item;
-
-	/* It seems the current top of the stack (i.e. the next free location)
-	 * is at the left edge of a chunk. Look for previous chunk then...
-	 */
-	prev = db_stack.st_cur->sk_prev;
-
-	if (prev == (struct stdchunk *) 0)		/* The stack is empty */
-		return (struct dcall *) 0;
-
-#ifdef MAY_PANIC
-	if (prev == (struct stdchunk *) 0)
-		eif_panic("debugging stack is empty");
-#endif
-
-	return prev->sk_end - 1;			/* Last item of previous chunk */
-}
-
 rt_public void initdb(void)
 {
 	/* Initialize debugger stack and once list */
 
-	struct dcall *top;			/* Arena for first stack chunk */
-
-	top = dbstack_allocate(eif_stack_chunk);		/* Create one */
+	RT_GET_CONTEXT
+	struct dcall *top = eif_dbstack_allocate(&db_stack, eif_stack_chunk);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
-}
-
-rt_private int nb_calls(void)
-{
-	/* Gives the number of calling records on the stack */
-
-	struct stdchunk *s;	/* To walk through the list */
-	size_t n = 0;			/* Number of items */
-	int done = 0;			/* Top of stack not reached yet */
-
-	RT_GET_CONTEXT
-	for (s = db_stack.st_hd; s && !done; s = s->sk_next) {
-		if (s != db_stack.st_cur)
-			n += s->sk_end - s->sk_arena;			/* The whole chunk */
-		else {
-			n += db_stack.st_top - s->sk_arena;		/* Stop at the top */
-			done = 1;								/* Reached end of stack */
-		}
-	}
-
-	ENSURE("n not too big", n <= 0x7FFFFFFF);
-	return (int) n;		/* Number of objects held in stack */
 }
 
 /*
@@ -1596,6 +1300,7 @@ rt_public void dmove(int offset)
 	 * are re-synchronized.
 	 */
 
+	RT_GET_CONTEXT
 	struct dcall *active;		/* Active routine's context */
 
 	if (offset > 0)
@@ -1603,7 +1308,7 @@ rt_public void dmove(int offset)
 	else
 		call_down(-offset);
 
-	active = dtop();
+	active = EIF_STACK_TOP_ADDRESS(db_stack);
 	CHECK("active not null", active);
 	sync_registers(active->dc_cur, active->dc_top);
 }
@@ -1613,7 +1318,7 @@ rt_private void call_down(int level)
 {
 	/* Artificially decrease the top of the calling stack context to move the
 	 * active routine "cursor" downwards. Primitive range checking is done,
-	 * because npop() will panic if we give it too much to pop.
+	 * because removing too many items in `db_stack' will cause a panic.
 	 */
 
 	RT_GET_CONTEXT
@@ -1623,7 +1328,7 @@ rt_private void call_down(int level)
 
 	d_cxt.pg_index -= level;
 
-	npop(level);				/* It will do the work for us */
+	eif_dbstack_npop(&db_stack, level);				/* It will do the work for us */
 }
 
 rt_private void call_up(int level)
@@ -1635,7 +1340,7 @@ rt_private void call_up(int level)
 	 */
 
 	struct dcall *top;			/* Current top op operational stack */
-	struct stdchunk *s;			/* To walk trhough stack chunks */
+	struct stdbchunk *s;			/* To walk trhough stack chunks */
 	struct dcall *end;			/* Once cell above end of current chunk */
 	rt_int_ptr l_level;
 
@@ -1651,10 +1356,10 @@ rt_private void call_up(int level)
 	 */
 
 	end = db_stack.st_cur->sk_end;
-	top = db_stack.st_top;
+	top = db_stack.st_cur->sk_top;
 	top += l_level;				/* Hopefully, we remain in current chunk */
 	if (top < end) {			/* Still within chunk boundaries */
-		db_stack.st_top = top;	/* Yes! Update top */
+		db_stack.st_cur->sk_top = top;	/* Yes! Update top */
 		return;
 	}
 
@@ -1662,7 +1367,7 @@ rt_private void call_up(int level)
 	 * in the current chunk. Look until we pushed enough items.
 	 */
 
-	top = db_stack.st_top;
+	top = db_stack.st_cur->sk_top;
 	for (s = db_stack.st_cur; l_level > 0; /* empty */) {
 		end = s->sk_end;
 		CHECK("end - top not too big", (end - top) <= 0x7FFFFFFF);
@@ -1682,8 +1387,7 @@ rt_private void call_up(int level)
 
 		/* Update the stack structure */
 	db_stack.st_cur = s;
-	db_stack.st_top = top;
-	db_stack.st_end = s->sk_end;
+	s->sk_top = top;
 }
 
 /*
@@ -1801,8 +1505,9 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 	uint32 pid;					/* Pattern id of the frozen feature */
 	int i;
 
-	for (i = 0; i <= arg_num ; i++)		/* Push arg_num + 1 null items */
-		iget();							/* on the operational stack */
+	for (i = 0; i <= arg_num ; i++) {	/* Push arg_num + 1 null items */
+		eif_opstack_push_empty(&op_stack);							/* on the operational stack */
+	}
 
 	OLD_IC = IC;				/* IC back up */
 	if (egc_frozen [body_id]) {
@@ -1814,389 +1519,30 @@ rt_public EIF_TYPED_VALUE *docall(EIF_CONTEXT register BODY_INDEX body_id, regis
 	}
 	IC = OLD_IC;				/* Restore IC back-up */
 
-	return opop();				/* Return the result of the once function */
+	return eif_opstack_pop_address(&op_stack);				/* Return the result of the once function */
 								/* and remove it from the operational stack */
-}
-
-/************************************************************************
- * FILE:    newdebug.c
- * PURPOSE: functions to handle local variables and arguments recording
- *          and displaying
- * AUTHOR:  Jerome BOUAZIZ - Arnaud PICHERY
- ************************************************************************/
-
-rt_public EIF_TYPED_ADDRESS *c_stack_allocate(EIF_CONTEXT register size_t size)
-				   					/* Initial size */
-{
-	/* The operational stack is created, with size 'size'.
-	 * Return the arena value (bottom of stack).
-	 */
-
-	EIF_GET_CONTEXT
-	RT_GET_CONTEXT
-	EIF_TYPED_ADDRESS *arena;		/* Address for the arena */
-	struct c_stochunk *chunk;	/* Address of the chunk */
-
-	size *= ITEM_SZ;
-	size += sizeof(*chunk);
-	SIGBLOCK;
-	chunk = (struct c_stochunk *) cmalloc(size);
-	SIGRESUME;
-	if (chunk == (struct c_stochunk *) 0)
-		return (EIF_TYPED_ADDRESS *) 0;		/* Malloc failed for some reason */
-
-	SIGBLOCK;
-	cop_stack.st_hd = chunk;						/* New stack (head of list) */
-	cop_stack.st_tl = chunk;						/* One chunk for now */
-	cop_stack.st_cur = chunk;					/* Current chunk */
-	arena = (EIF_TYPED_ADDRESS *) (chunk + 1);		/* Header of chunk */
-	cop_stack.st_top = arena;					/* Empty stack */
-	chunk->sk_arena = arena;					/* Base address */
-	cop_stack.st_end = chunk->sk_end = (EIF_TYPED_ADDRESS *)
-		((char *) chunk + size);		/* First free location beyond stack */
-	chunk->sk_next = (struct c_stochunk *) 0;
-	chunk->sk_prev = (struct c_stochunk *) 0;
-	SIGRESUME;
-
-	return arena;			/* Stack allocated */
 }
 
 rt_public void insert_local_var (uint32 type, void *ptr)
 {
+	EIF_GET_CONTEXT
 	EIF_TYPED_ADDRESS *new_local;
 
-	/* insert new local variable/argument on the stack */
-	new_local = c_opush((EIF_TYPED_ADDRESS *)0);
-	new_local->type = type;
-	new_local->it_addr = ptr;
-}
-
-/* Stack handling routine. The following code has been cut/paste from the one
- * found in garcol.c and local.c as of this day. Hence the similarities and the
- * possible differences. What changes basically is that instead of storing
- * (char *) elements, we now store (EIF_TYPED_ADDRESS) ones.
- */
-
-rt_public EIF_TYPED_ADDRESS *c_opush(EIF_CONTEXT register EIF_TYPED_ADDRESS *val)
-{
-	/* Push value 'val' on top of the operational stack. If it fails, raise
-	 * an "Out of memory" exception. If 'val' is a null pointer, simply
-	 * get a new cell at the top of the stack.
-	 */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *top = cop_stack.st_top;	/* Top of stack */
-
-	if (top == (EIF_TYPED_ADDRESS *) 0)	{			/* No stack yet? */
-		top = c_stack_allocate(eif_stack_chunk);	/* Create one */
-		if (top == (EIF_TYPED_ADDRESS *) 0)	 		/* Could not create stack */
-			enomem(MTC_NOARG);					/* No more memory */
+		/* insert new local variable/argument on the stack */
+	new_local = eif_c_opstack_push_empty (&cop_stack);
+	if (new_local) {
+		new_local->it_addr = ptr;
+		new_local->type = type;
+	} else {
+			/* We could not allocate an element on the stack, we have to fail. */
+		enomem();
 	}
-
-	if (cop_stack.st_end == top) {
-		/* The end of the current stack chunk has been reached. If there is
-		 * a chunk allocated after the current one, use it, otherwise create
-		 * a new one and insert it in the list.
-		 */
-		SIGBLOCK;									/* Critical section */
-		if (cop_stack.st_cur == cop_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == c_stack_extend(eif_stack_chunk))
-				enomem(MTC_NOARG);
-			top = cop_stack.st_top;					/* New top */
-		} else {
-			struct c_stochunk *current;		/* New current chunk */
-
-			/* Update the new stack context (main structure) */
-			current = cop_stack.st_cur = cop_stack.st_cur->sk_next;
-			top = cop_stack.st_top = current->sk_arena;
-			cop_stack.st_end = current->sk_end;
-		}
-		SIGRESUME;				/* Restore signal handling */
-	}
-
-	cop_stack.st_top = top + 1;			/* Points to next free location */
-	if (val != (EIF_TYPED_ADDRESS *) 0)		/* If value was provided */
-		memcpy(top, val, ITEM_SZ);		/* Push it on the stack */
-
-	return top;				/* Address of allocated item */
-}
-
-rt_public int c_stack_extend(EIF_CONTEXT register size_t size)
-				   					/* Size of new chunk to be added */
-{
-	/* The operational stack is extended and the stack structure is updated.
-	 * 0 is returned in case of success. Otherwise, -1 is returned.
-	 */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *arena;		/* Address for the arena */
-	struct c_stochunk *chunk;	/* Address of the chunk */
-
-	size *= ITEM_SZ;
-	size += sizeof(*chunk);
-	chunk = (struct c_stochunk *) cmalloc(size);
-	if (chunk == (struct c_stochunk *) 0)
-		return -1;		/* Malloc failed for some reason */
-
-	SIGBLOCK;									/* Critical section */
-	arena = (EIF_TYPED_ADDRESS *) (chunk + 1);		/* Header of chunk */
-	chunk->sk_next = (struct c_stochunk *) 0;		/* Last chunk in list */
-	chunk->sk_prev = cop_stack.st_tl;			/* Preceded by the old tail */
-	cop_stack.st_tl->sk_next = chunk;			/* Maintain link w/previous */
-	cop_stack.st_tl = chunk;						/* New tail */
-	chunk->sk_arena = arena;					/* Where items are stored */
-	chunk->sk_end = (EIF_TYPED_ADDRESS *)
-		((char *) chunk + size);				/* First item beyond chunk */
-	cop_stack.st_top = arena;					/* New top */
-	cop_stack.st_end = chunk->sk_end;			/* End of current chunk */
-	cop_stack.st_cur = chunk;					/* New current chunk */
-	SIGRESUME;									/* Restore signal handling */
-
-	return 0;			/* Everything is ok */
 }
 
 rt_public void clean_local_vars (int n)
 {
-	c_npop(n);
-}
-
-rt_public EIF_TYPED_ADDRESS *c_opop(void)
-{
-	/* Removes one item from the operational stack and return a pointer to
-	 * the removed item, which also happens to be the first free location.
-	 */
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *top = cop_stack.st_top;	/* Top of the stack */
-	struct c_stochunk *s;			/* To walk through stack chunks */
-	EIF_TYPED_ADDRESS *arena;			/* Base address of current chunk */
-
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. This avoids pointer manipulation (walking along the stack)
-	 * which may induce swapping, who knows?
-	 */
-
-	arena = cop_stack.st_cur->sk_arena;
-	if (--top >= arena) {			/* Hopefully, we remain in current chunk */
-		cop_stack.st_top = top;		/* Yes! Update top */
-		return top;					/* Done, we're lucky */
-	}
-
-	/* Unusual case: top is just in the first place of next chunk */
-
-	SIGBLOCK;
-	s = cop_stack.st_cur = cop_stack.st_cur->sk_prev;
-
-#ifdef MAY_PANIC
-	if (s == (struct c_stochunk *) 0)
-		eif_panic("operational stack underflow");
-#endif
-
-	top = cop_stack.st_end = s->sk_end;
-	cop_stack.st_top = --top;
-	SIGRESUME;
-
-	return cop_stack.st_top;
-}
-
-rt_public void c_npop(register int nb_items)
-{
-	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
-	 * try to truncate the unused chunks from the tail of the stack. We do
-	 * not do that in c_opop() because that would create an overhead...
-	 */
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *top;			/* Current top of operational stack */
-	struct c_stochunk *s;		/* To walk through stack chunks */
-	EIF_TYPED_ADDRESS *arena;		/* Base address of current chunk */
-	rt_int_ptr nb = nb_items;
-
-		/* Optimization: try to update the top, hoping it will remain in the
-		 * same chunk. That would indeed make popping very efficient.
-		 */
-	arena = cop_stack.st_cur->sk_arena;
-	top = cop_stack.st_top;
-	if (((rt_uint_ptr) top > (nb * sizeof(EIF_TYPED_ADDRESS))) && ((top - nb) >= arena)) {
-		top -= nb;
-			/* If `top' is at the bottom of the current chunk, we need
-			 * to update current top to points to the top of previous
-			 * chunk if any. */
-		if ((top == arena) && (cop_stack.st_cur->sk_prev)) {
-				/* We need to change chunk here */
-			s = cop_stack.st_cur->sk_prev;
-			cop_stack.st_cur = s;
-			cop_stack.st_top = s->sk_end;
-			cop_stack.st_end = s->sk_end;
-			if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-				c_stack_truncate();
-		} else {
-			cop_stack.st_top = top;		/* Yes! Update top */
-		}
-		return;						/* Done, how lucky we were! */
-	} else {
-			/* Normal case (which should be reasonably rare): we have to pop more
-			 * than the number of items in the current chunk. Loop until we popped
-			 * enough items (one iteration should be the norm).
-			 */
-		SIGBLOCK;			/* Entering protected section */
-		for (s = cop_stack.st_cur; nb > 0; /* empty */) {
-			arena = s->sk_arena;
-			nb -= top - arena;
-			if (nb <= 0) {			/* Have we gone too far? */
-				top = arena - nb;		/* Yes, reset top correctly */
-				break;						/* Done */
-			}
-			s = s->sk_prev;					/* Look at previous chunk */
-			if (s)
-				top = s->sk_end;			/* Top at the end of previous chunk */
-			else
-				break;						/* We reached the bottom */
-		}
-
-		CHECK("s not null", s);
-
-		/* Update the stack structure */
-		cop_stack.st_cur = s;
-		cop_stack.st_top = top;
-		cop_stack.st_end = s->sk_end;
-
-		SIGRESUME;						/* End of protected section */
-
-		/* There is not much overhead calling c_stack_truncate(), because this is
-		 * only done when we are popping at a chunk edge. We have to make sure the
-		 * program is running though, as popping done in debugging mode is only
-		 * temporary--RAM.
-		 */
-
-		if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-			c_stack_truncate();			/* Eventually remove unused chunks */
-	}
-}
-
-rt_public EIF_TYPED_ADDRESS *c_otop(EIF_CONTEXT_NOARG)
-{
-	/* Returns a pointer to the top of the stack or a NULL pointer if
-	 * stack is empty. I assume a value has already been pushed (i.e. the
-	 * stack has been created).
-	 */
-
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *last_item;		/* Address of last item stored */
-	struct c_stochunk *prev;		/* Previous chunk in stack */
-
-	last_item = cop_stack.st_top - 1;
-	if (last_item >= cop_stack.st_cur->sk_arena)
-		return last_item;
-
-	/* It seems the current top of the stack (i.e. the next free location)
-	 * is at the left edge of a chunk. Look for previous chunk then...
-	 */
-	prev = cop_stack.st_cur->sk_prev;
-
-#ifdef MAY_PANIC
-	if (prev == (struct c_stochunk *) 0)
-		eif_panic("operational stack is empty");
-#endif
-
-	return prev->sk_end - 1;			/* Last item of previous chunk */
-}
-
-rt_public EIF_TYPED_ADDRESS *c_oitem(uint32 n)
-	{
-	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */
-	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS		*access_item;	/* Address of item we try to access */
-	struct c_stochunk	*prev;			/* Previous chunk in stack */
-	struct c_stochunk	*curr;			/* Current chunk in stack */
-
-	access_item = (cop_stack.st_top - 1 - n);
-	if (access_item >= (cop_stack.st_cur->sk_arena))
-		return access_item;
-
-	/* It seems the item is at the left edge of a chunk. Look for previous chunk then... */
-	prev = cop_stack.st_cur;
-
-	do
-		{
-		/* Item is not in the current chunk. Let's see if it's not in the previous one */
-		curr = prev;
-		prev = prev->sk_prev;
-
-		if (prev == NULL)
-			return NULL; /* operational stack is empty, we return NULL */
-		access_item = prev->sk_end - (curr->sk_arena - access_item);
-		}
-	while (access_item < prev->sk_arena);
-
-	return access_item;
-	}
-
-rt_public void c_stack_truncate(EIF_CONTEXT_NOARG)
-{
-	/* Free unused chunks in the stack. If the current chunk has at least
-	 * MIN_FREE locations, then we may free all the chunks starting with the
-	 * next one. Otherwise, we skip the next chunk and free the remainder.
-	 */
-
-	EIF_GET_CONTEXT
-	EIF_TYPED_ADDRESS *top;		/* The current top of the stack */
-	struct c_stochunk *next;			/* Address of next chunk */
-
-	/* We know the program is running, because this function is only called
-	 * via c_npop(), and c_npop() cannot be called by the debugger--RAM.
-	 */
-
-	top = cop_stack.st_top;					/* The first free location */
-	if (cop_stack.st_end - top > MIN_FREE) {	/* Enough locations left */
-		cop_stack.st_tl = cop_stack.st_cur;	/* Last chunk from now on */
-		c_wipe_out(cop_stack.st_cur->sk_next);	/* Free starting at next chunk */
-	} else {								/* Current chunk is nearly full */
-		next = cop_stack.st_cur->sk_next;	/* We are followed by 'next' */
-		if (next != (struct c_stochunk *) 0) {/* There is indeed a next chunk */
-			cop_stack.st_tl = next;			/* New tail chunk */
-			c_wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
-		}
-	}
-}
-
-rt_shared void c_opstack_reset(struct c_opstack *stk)
-{
-	/* Reset the stack 'stk' to its minimal state and disgard all its
-	 * contents. Walking through the list of chunks, we free them and
-	 * clear the 'stk' structure.
-	 */
-
-	struct c_stochunk *k;	/* To walk through the list */
-	struct c_stochunk *n;	/* Save next before freeing chunk */
-
-	for (k = stk->st_hd; k; k = n) {
-		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
-		eif_rt_xfree((EIF_REFERENCE) k);
-	}
-
-	memset (stk, 0, sizeof(struct c_opstack));
-}
-
-rt_public void c_wipe_out(register struct c_stochunk *chunk)
-									/* First chunk to be freed */
-{
-	/* Free all the chunks after 'chunk' */
-
-	struct c_stochunk *next;	/* Address of next chunk */
-
-	if (chunk == (struct c_stochunk *) 0)	/* No chunk */
-		return;							/* Nothing to be done */
-
-	chunk->sk_prev->sk_next = (struct c_stochunk *) 0;	/* Previous is last */
-
-	for (
-		next = chunk->sk_next;
-		chunk != (struct c_stochunk *) 0;
-		chunk = next, next = chunk ? chunk->sk_next : chunk
-	)
-		eif_rt_xfree((char *) chunk);
+	eif_c_opstack_npop(&cop_stack, n);
 }
 
 /*

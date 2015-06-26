@@ -47,88 +47,79 @@ doc:<file name="hector.c" header="eif_hector.h" version="$Id$" summary="Handling
 #include "rt_hector.h"
 #include "rt_assert.h"
 #include "rt_globals_access.h"
+#include "eif_stack.h"
 
 #ifdef ISE_GC
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="hec_stack" return_type="struct stack" export="public">
+doc:	<attribute name="hec_stack" return_type="struct ostack" export="public">
 doc:		<summary>Indirection table `hector'. The following stack records the addresses of objects which were given to the C at some time. When Eiffel gives C an indirection pointer, it is an address in the hec_stack structure (type EIF_OBJECT as defined in cecil.h).  The C may obtain the true address of the object by dereferencing this indirection pointer through eif_access.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data and `eif_gc_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack hec_stack = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+rt_public struct ostack hec_stack = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 #endif /* !EIF_THREADS */
 
 /*
-doc:	<attribute name="eif_hec_saved" return_type="struct stack" export="shared">
+doc:	<attribute name="eif_hec_saved" return_type="struct ostack" export="shared">
 doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `eif_free_hec_stack' stack records those holes.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct stack eif_hec_saved = {
-	NULL,	/* st_hd */
-	NULL,	/* st_tl */
-	NULL,	/* st_cur */
-	NULL,			/* st_top */
-	NULL,			/* st_end */
+rt_shared struct ostack eif_hec_saved = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="eif_free_hec_stack" return_type="struct stack" export="private">
+doc:	<attribute name="eif_free_hec_stack" return_type="struct oastack" export="private">
 doc:		<summary>Due to the way the hector stack is managed, there can be "holes" in it, when an object in the middle of the stack is released by the C. To avoid having an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we record free locations in the following stack.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack eif_free_hec_stack = {			/* Entries free in hector */
-	NULL,	/* st_hd */
-	NULL,	/* st_tl */
-	NULL,	/* st_cur */
-	NULL,	/* st_top */
-	NULL,	/* st_end */
+rt_private struct oastack eif_free_hec_stack = {			/* Entries free in hector */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="eif_weak_references" return_type="struct stack" export="shared">
+doc:	<attribute name="eif_weak_references" return_type="struct ostack" export="shared">
 doc:		<summary>This stack records the saved references. Entries in this stack are obtained either via eif_freeze() or eif_adopt(). Hence the stack structure is not completely appropriate and holes may appear. The `eif_free_weak_references' stack records those holes.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct stack eif_weak_references = {
-	NULL,	/* st_hd */
-	NULL,	/* st_tl */
-	NULL,	/* st_cur */
-	NULL,			/* st_top */
-	NULL,			/* st_end */
+rt_shared struct ostack eif_weak_references = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="eif_free_weak_references" return_type="struct stack" export="private">
+doc:	<attribute name="eif_free_weak_references" return_type="struct oastack" export="private">
 doc:		<summary>Due to the way the hector stack is managed, there can be "holes" in it, when an object in the middle of the stack is released by the C. To avoid having an eternal growing bunch (EGB -- an Eternal Golden Braid :-) of chunks, we record free locations in the following stack.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Under `eif_hec_saved_mutex'.</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack eif_free_weak_references = {			/* Entries free in hector */
-	NULL,	/* st_hd */
-	NULL,	/* st_tl */
-	NULL,	/* st_cur */
-	NULL,	/* st_top */
-	NULL,	/* st_end */
+rt_private struct oastack eif_free_weak_references = {			/* Entries free in hector */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 #ifdef EIF_THREADS
@@ -275,7 +266,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
 doc:	</routine>
 */
-rt_private EIF_REFERENCE rt_unsafe_wean(EIF_OBJECT object, struct stack *stack, struct stack *free_stack)
+rt_private EIF_REFERENCE rt_unsafe_wean(EIF_OBJECT object, struct ostack *stack, struct oastack *free_stack)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE ret;
@@ -283,13 +274,13 @@ rt_private EIF_REFERENCE rt_unsafe_wean(EIF_OBJECT object, struct stack *stack, 
 	EIFMTX_LOCK;
 		/* We need to ensure that `object' is indeed coming from an object protected via eif_protect.
 		 * If this is not the case then we can have some memory corruption later one. */
-	REQUIRE("object in stack", st_address_in_stack (stack, object));
-	REQUIRE("Object not in free stack", !st_has(free_stack, object));
-	if (-1 == epush(free_stack, object)) {	/* Record free entry in the stack */
+	REQUIRE("object in stack", eif_ostack_is_address_in_stack (stack, object));
+	REQUIRE("Object not in free stack", !eif_oastack_has(free_stack, object));
+	if (eif_oastack_push(free_stack, object) != T_OK) {	/* Record free entry in the stack */
 		EIFMTX_UNLOCK;
 		plsc();									/* Run GC cycle */
 		EIFMTX_LOCK;
-		if (-1 == epush(free_stack, object)) {	/* Again, we can't */
+		if (eif_oastack_push(free_stack, object) != T_OK) {	/* Again, we can't */
 			EIFMTX_UNLOCK;
 			eraise("hector weaning", EN_MEM);	/* No more memory */
 		}
@@ -311,7 +302,7 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Via `eif_hec_saved_mutex'.</synchronization>
 doc:	</routine>
 */
-rt_private EIF_REFERENCE rt_wean(EIF_OBJECT object, struct stack *stack, struct stack *free_stack)
+rt_private EIF_REFERENCE rt_wean(EIF_OBJECT object, struct ostack *stack, struct oastack *free_stack)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE ret;
@@ -319,13 +310,13 @@ rt_private EIF_REFERENCE rt_wean(EIF_OBJECT object, struct stack *stack, struct 
 	EIFMTX_LOCK;
 		/* We need to ensure that `object' is indeed coming from an object protected via eif_protect.
 		 * If this is not the case then we can have some memory corruption later one. */
-	REQUIRE("object in stack", st_address_in_stack (stack, object));
-	if (!st_has(free_stack, object)) {
-		if (-1 == epush(free_stack, object)) {	/* Record free entry in the stack */
+	REQUIRE("object in stack", eif_ostack_is_address_in_stack (stack, object));
+	if (!eif_oastack_has(free_stack, object)) {
+		if (eif_oastack_push(free_stack, object) != T_OK) {	/* Record free entry in the stack */
 			EIFMTX_UNLOCK;
 			plsc();									/* Run GC cycle */
 			EIFMTX_LOCK;
-			if (-1 == epush(free_stack, object)) {	/* Again, we can't */
+			if (eif_oastack_push(free_stack, object) != T_OK) {	/* Again, we can't */
 				EIFMTX_UNLOCK;
 				eraise("hector weaning", EN_MEM);	/* No more memory */
 			}
@@ -393,53 +384,17 @@ rt_public EIF_OBJECT hrecord(EIF_REFERENCE object)
 	EIF_GET_CONTEXT
 	EIF_OBJECT address;					/* Address in hector */
 
-	if (-1 == epush(&hec_stack, object)) {		/* Cannot record object */
+	if (eif_ostack_push(&hec_stack, object) != T_OK) {		/* Cannot record object */
 		urgent_plsc(&object);					/* Safe GC cycle */
-		if (-1 == epush(&hec_stack, object))	/* Cannot really do it */
+		if (eif_ostack_push(&hec_stack, object) != T_OK)	/* Cannot really do it */
 			eraise("hector recording", EN_MEM);	/* No more memory */
 	}
-	address = (EIF_OBJECT) (hec_stack.st_top - 1);	/* Was allocated here */
+	address = (EIF_OBJECT) (hec_stack.st_cur->sk_top - 1);	/* Was allocated here */
 	eif_access(address) = object;		/* Record object's physical address */
 
 	return address;			/* Address in hector stack */
 }
 
-/*
-doc:	<routine name="hpop" return_type="EIF_OBJECT" export="private">
-doc:		<summary>Pop an address of the free stack `stack'. If the stack is empty, return a null pointer. Otherwise the address points directly to a free entry in hector's table.</summary>
-doc:		<param name="stack" type="struct stack *">Stack where to look for a free entry</param>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>Only if caller holds the `eif_hec_saved_mutex'.</synchronization>
-doc:	</routine>
-*/
-rt_private EIF_OBJECT hpop(struct stack *stack)
-{
-	EIF_REFERENCE *top;
-	EIF_REFERENCE result = NULL;
-	struct stchunk *s;
-
-	top = stack->st_top;
-	if (top) {
-			/* Optimization: try to update the top first, hoping that it will remain
-			 * in the same chunk (this should be true more than 99% of the time). */
-		if (--top >= stack->st_cur->sk_arena) {
-			stack->st_top = top;			/* We remained in the same chunk */
-			result = *top;
-		} else {
-				/* Unusual case: top is just in the first place of next chunk */
-			s = stack->st_cur->sk_prev;			/* Backup one chunk */
-			if (s) {								/* Was already at first chunk */
-				stack->st_cur = s;				/* Update current chunk */
-				top = stack->st_end = s->sk_end;/* The end of the chunk */
-				stack->st_top = --top;			/* Backup one location */
-				result = *top;
-				st_truncate (stack);
-			}
-		}
-	}
-	ENSURE("Removed", !st_has(stack, result));
-	return (EIF_OBJECT) result;
-}
 
 /*
 doc:	<routine name="eif_protect" return_type="EIF_OBJECT" export="public">
@@ -453,19 +408,20 @@ doc:	</routine>
 rt_public EIF_OBJECT eif_protect(EIF_REFERENCE object)
 {
 	RT_GET_CONTEXT
-	EIF_OBJECT address;						/* Address in hector */
+		EIF_OBJECT address;						/* Address in hector */
 
 	REQUIRE("Not on stack", !object || ((HEADER(object)->ov_flags & EO_STACK) != EO_STACK));
 
 	EIFMTX_LOCK;
-	address = hpop(&eif_free_hec_stack);					/* Check for an already free location */
-	if (!address) {									/* No such luck */
-		if (-1 == epush(&eif_hec_saved, object)) {		/* Cannot record object */
+	if (!eif_oastack_is_empty(&eif_free_hec_stack)) {
+		address = eif_oastack_pop(&eif_free_hec_stack);					/* Check for an already free location */
+	} else {
+		if (eif_ostack_push(&eif_hec_saved, object) != T_OK) {		/* Cannot record object */
 			EIFMTX_UNLOCK;
 			eraise("hector remembering", EN_MEM);	/* No more memory */
 			return NULL;							/* They ignored it */
 		}
-		address = (EIF_OBJECT) (eif_hec_saved.st_top - 1);	/* Was allocated here */
+		address = eif_hec_saved.st_cur->sk_top - 1;	/* Was allocated here */
 	}
 	eif_access(address) = object;		/* Record object's physical address */
 
@@ -488,14 +444,15 @@ rt_public EIF_OBJECT eif_create_weak_reference(EIF_REFERENCE object)
 	EIF_OBJECT address;						/* Address in hector */
 
 	EIFMTX_LOCK;
-	address = hpop(&eif_free_weak_references);		/* Check for an already free location */
-	if (!address) {									/* No such luck */
-		if (-1 == epush(&eif_weak_references, object)) {		/* Cannot record object */
+	if (!eif_oastack_is_empty(&eif_free_weak_references)) {
+		address = eif_oastack_pop(&eif_free_weak_references);		/* Check for an already free location */
+	} else {
+		if (eif_ostack_push(&eif_weak_references, object) != T_OK) {		/* Cannot record object */
 			EIFMTX_UNLOCK;
-			eraise("hector remembering", EN_MEM);	/* No more memory */
+			eraise("weak reference remembering", EN_MEM);	/* No more memory */
 			return NULL;							/* They ignored it */
 		}
-		address = (EIF_OBJECT) (eif_weak_references.st_top - 1);	/* Was allocated here */
+		address = eif_weak_references.st_cur->sk_top - 1;	/* Was allocated here */
 	}
 	eif_access(address) = object;		/* Record object's physical address */
 

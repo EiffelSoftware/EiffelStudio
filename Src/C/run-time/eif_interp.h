@@ -44,6 +44,7 @@
 #include <stdio.h>		/* %%zs added: for FILE definition line 91 */
 #include "eif_portable.h"
 #include "eif_struct.h"
+#include "eif_stack.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,7 +52,9 @@ extern "C" {
 
 #ifndef EIF_THREADS
 #ifdef WORKBENCH
-RT_LNK struct c_opstack cop_stack;	/* Operational stack */
+/* Operational stacks. */
+RT_LNK struct c_opstack cop_stack;
+RT_LNK struct opstack op_stack;
 RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #endif
 #endif
@@ -76,13 +79,10 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 /* Interpreter interface to outside world */
 RT_LNK void xinitint(void);										/* Initialize the interpreter */
 RT_LNK void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed);					/* Compound from a given address */
-RT_LNK EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);			/* Push value on operational stack */
-RT_LNK EIF_TYPED_VALUE *opop(void);									/* Remove value from operational stack */
 RT_LNK void eif_override_byte_code_of_body (int body_id, int pattern_id, unsigned char *bc, int count); /* Update byte-code for feature */
 
-
-/* Macro used to prepare a cell on top of the stack */
-#define iget()	opush((EIF_TYPED_VALUE *) 0)	/* Push empty cell on stack */
+#define iget()	eif_opstack_push_empty(&op_stack)
+#define opop()	eif_opstack_pop_address(&op_stack)
 
 #ifdef __cplusplus
 }

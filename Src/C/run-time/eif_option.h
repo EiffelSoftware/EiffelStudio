@@ -41,7 +41,6 @@
 #endif
 
 #include "eif_portable.h"
-#include "eif_globals.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,6 +62,30 @@ struct eif_opt {
 	int16 profile_level;			/* Profiling level */
 	struct dbg_opt debug_level;	  	/* Debug level */
 };
+
+/* Undefine any possible definition of stack defining #define to avoid C compilation warnings. */
+#ifdef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE_NAME
+#endif
+#ifdef EIF_STACK_TYPE
+#undef EIF_STACK_TYPE
+#endif
+#ifdef EIF_STACK_IS_STRUCT_ELEMENT
+#undef EIF_STACK_IS_STRUCT_ELEMENT
+#endif
+
+/* Let's define our profiler stack  */
+/* Forward reference of `profinfo'. */
+struct prof_info;
+
+#define EIF_STACK_TYPE_NAME p
+#define EIF_STACK_TYPE	struct prof_info
+#define EIF_STACK_IS_STRUCT_ELEMENT
+#include "eif_stack.decl"
+#include "eif_stack.interface"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
+#undef EIF_STACK_IS_STRUCT_ELEMENT
 
 /* Assertion flags for tests */
 #define CK_REQUIRE		0x00000001
@@ -92,7 +115,7 @@ RT_LNK int eif_is_debug(int st_type, char *key);		/* Debug level query */
 
 #ifndef EIF_THREADS
 RT_LNK int trace_call_level;			/* Call level to report at E-TRACE output */
-RT_LNK struct stack *prof_stack;		/* Stack that maintains profile information */
+RT_LNK struct pstack prof_stack;		/* Stack that maintains profile information */
 #endif
 
 RT_LNK void check_options_start(struct eif_opt *opt, EIF_TYPE_INDEX dtype, int is_external);			/* Dispatches to start_profile and start_trace */
@@ -106,7 +129,7 @@ RT_LNK void initprf(void);				/* Generates table for profiling */
 RT_LNK void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtype);			/* Starts profiling of a certain feature */
 RT_LNK void stop_profile(void);			/* Stops profiling of a certain feature */
 
-RT_LNK void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
+rt_public void prof_stack_rewind(struct prof_info *old_top); /* Stops all timer counts in
 						 * the stack items,
 						 * updates the table, and
 						 * pops the items from the stack

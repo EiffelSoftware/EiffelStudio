@@ -310,7 +310,7 @@ typedef struct tag_EIF_DEBUG_VALUE {
 } EIF_DEBUG_VALUE;
 
 
-extern void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile stop); /* Converts the top-level item on the operational stack from a basic type to a reference type */
+extern void metamorphose_top(struct stopchunk * scur, EIF_TYPED_VALUE * volatile stop); /* Converts the top-level item on the operational stack from a basic type to a reference type */
 
 extern void call_disp(EIF_TYPE_INDEX dtype, char *object);	/* Function to call dispose routines */
 extern void call_copy (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, EIF_REFERENCE other); /* Function to call copy routines */
@@ -318,10 +318,9 @@ extern EIF_BOOLEAN call_is_equal (EIF_TYPE_INDEX dtype, EIF_REFERENCE Current, E
 extern void xiinv(unsigned char *icval, int where);			/* Invariant interpreter */
 extern EIF_TYPED_VALUE *otop(void);									/* Top of the stack */
 extern void ivalue(EIF_DEBUG_VALUE * value, int code, uint32 num, uint32 start);	/* Value request from current routine */
-extern void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top);		/* Resynchronize registers on routine */
+extern void sync_registers(struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top);		/* Resynchronize registers on routine */
 
 extern void idump(FILE *fd, char *start);
-extern void opstack_reset(struct opstack *stk);
 
 extern void dynamic_eval(int routine_id, int static_dtype, int is_basic_type, rt_uint_ptr nb_pushed);	/* Dynamic evaluation of a feature */
 extern void dynamic_eval_dbg(int routine_id, int static_dtype, int is_basic_type, EIF_TYPED_VALUE* previous_otop, rt_uint_ptr nb_pushed, int* exception_occurred, EIF_TYPED_VALUE *result);

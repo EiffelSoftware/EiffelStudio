@@ -64,6 +64,7 @@ extern "C" {
 #ifdef WORKBENCH
 rt_private void rt_apply_wcall (call_data *data)
 {
+	EIF_GET_CONTEXT
 	uint32            pid = 0; /* Pattern id of the frozen feature */
 	EIF_NATURAL_32    i;
 	EIF_NATURAL_32    n;
@@ -75,13 +76,13 @@ rt_private void rt_apply_wcall (call_data *data)
 
 		/* Push arguments to the evaluation stack */
 	for (n = data->count, i = 0; i < n; i++) {
-		v = iget ();
+		v = eif_opstack_push_empty(&op_stack);
 		* v = data->argument [i];
 	}
 	if (data->routine_id >= 0) {
 			/* Regular feature call. */
 			/* Push current to the evaluation stack */
-		v = iget ();
+		v = eif_opstack_push_empty(&op_stack);
 		v->it_r = data->target;
 		v->type = SK_REF;
 			/* Make a feature call. */
@@ -99,7 +100,7 @@ rt_private void rt_apply_wcall (call_data *data)
 			/* Save result of a call if any. */
 		v = data->result;
 		if (v) {
-			* v = * opop ();
+			* v = * eif_opstack_pop_address(&op_stack);
 		}
 	}
 	else {
@@ -111,7 +112,7 @@ rt_private void rt_apply_wcall (call_data *data)
 		}
 		else {
 				/* Assignment to a tuple field. */
-			v = opop ();
+			v = eif_opstack_pop_address(&op_stack);
 			eif_tuple_assign (data->target, - data->routine_id, v);
 		}
 	}
@@ -136,7 +137,11 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 	EIF_GET_CONTEXT
 	EIF_BOOLEAN success;
 	jmp_buf exenv;
-	RTYD;
+	RTXDR;
+#ifdef WORKBENCH
+	RTLXD;
+	RTLXL;
+#endif
 
 		/* TODO: We used to keep track of last_exception in this function,
 		 * which caused a call into Eiffel code. Therefore it was necessary
@@ -158,8 +163,10 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 
 		expop(&eif_stack);
 	} else {
+#ifdef WORKBENCH
+		RTLXE;
+#endif
 		RTXSC;
-
 		success = EIF_FALSE;
 	}
 

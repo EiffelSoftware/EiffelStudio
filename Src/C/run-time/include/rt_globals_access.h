@@ -80,7 +80,6 @@ extern "C" {
 
 	/* interp.c - debug.c */
 #ifdef WORKBENCH
-#define op_stack			(rt_globals->op_stack_cx)		/* rt_shared */
 #define iregs				(rt_globals->iregs_cx)			/* rt_private */
 #define iregsz				(rt_globals->iregsz_cx)		/* rt_private */
 #define argnum				(rt_globals->argnum_cx)		/* rt_private */

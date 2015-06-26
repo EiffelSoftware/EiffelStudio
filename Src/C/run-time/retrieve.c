@@ -60,6 +60,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_globals.h"
 #include "rt_globals_access.h"
 #include "rt_struct.h"
+#include "eif_stack.h"
 #include "rt_compress.h"
 #ifdef VXWORKS
 #include <unistd.h>	/* For read () */
@@ -941,7 +942,7 @@ rt_private EIF_REFERENCE correct_mismatches (EIF_OBJECT retrieved_i)
 	mismatch_table *mm = mismatches;
 	type_table *conversions = type_conversions;
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	REQUIRE ("retrieved_i_not_null", retrieved_i);
 
@@ -957,7 +958,7 @@ rt_private EIF_REFERENCE correct_mismatches (EIF_OBJECT retrieved_i)
 	if (setjmp(exenv)) {
 		eif_wean (retrieved_i);
 		rt_clean();				/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 		return NULL;	/* Not reached */
 	} else {
@@ -1112,9 +1113,9 @@ rt_private EIF_REFERENCE eif_unsafe_portable_retrieve(char rt_type, int (*char_r
 		rt_table = NULL;
 	}
 #ifdef ISE_GC
-	epop(&hec_stack, nb_recorded);		/* Pop hector records */
-#endif
+	eif_ostack_npop(&hec_stack, nb_recorded);		/* Pop hector records */
 	nb_recorded = 0;
+#endif
 	switch (rt_kind) {
 		case GENERAL_STORE:
 			free_sorted_attributes();
@@ -1239,7 +1240,7 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 	ht_free(rt_table);					/* Free hash table descriptor */
 	rt_table = NULL;
 #ifdef ISE_GC
-	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+	eif_ostack_npop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
 	nb_recorded = 0;
 	rt_reset_retrieve();
@@ -1560,7 +1561,7 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 	volatile char g_status = rt_g_data.status;
 #endif
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	REQUIRE ("Positive count", objectCount > 0);
 
@@ -1572,7 +1573,7 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 #ifdef ISE_GC
 		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC,
 										 * we need to make sure to restore the status
@@ -1742,7 +1743,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	volatile char g_status = rt_g_data.status;
 #endif
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	REQUIRE ("Positive count", objectCount > 0);
 
@@ -1754,7 +1755,7 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 #ifdef ISE_GC
 		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC,
 										 * we need to make sure to restore the status
@@ -1928,7 +1929,7 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 #ifdef ISE_GC
 	volatile char g_status = rt_g_data.status;
 #endif
-	RTYD;
+	RTXDRH;
 
 	REQUIRE ("Positive count", objectCount > 0);
 
@@ -1940,7 +1941,7 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 	excatch (&exenv);	/* Record pseudo execution vector */
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 #ifdef ISE_GC
 		rt_g_data.status = g_status;	/* If a crash occurs, since we disable the GC,
 										 * we need to make sure to restore the status
@@ -2155,9 +2156,11 @@ rt_private void rt_clean(void)
 		r_buffer = (char *) 0;
 	}
 #ifdef ISE_GC
-	epop(&hec_stack, nb_recorded);				/* Pop hector records */
+	if (nb_recorded) {
+		eif_ostack_npop(&hec_stack, nb_recorded);				/* Pop hector records */
+		nb_recorded = 0;
+	}
 #endif
-	nb_recorded = 0;
 	if (rt_kind == INDEPENDENT_STORE || rt_kind == RECOVERABLE_STORE) {
 		independent_retrieve_reset ();
 	}
@@ -2556,7 +2559,7 @@ rt_private void read_header(void)
    	const char *l_new_storable_version;
 	char * temp_buf;
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	REQUIRE("general store", rt_kind == GENERAL_STORE);
 	errno = 0;
@@ -2564,7 +2567,7 @@ rt_private void read_header(void)
 	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 	r_buffer = (char*) eif_rt_xmalloc (bsize * sizeof (char), C_T, GC_OFF);
@@ -3251,14 +3254,14 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	int read_count, read_lines;
 	int bsize = 1024;
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	errno = 0;
 
 	excatch (&exenv);	/* Record pseudo execution vector */
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 
@@ -3887,14 +3890,14 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	EIF_TYPE_INDEX ohead, old_max_types, type_count, i;
 	jmp_buf exenv;
-	RTYD;
+	RTXDRH;
 
 	errno = 0;
 
 	excatch (&exenv);	/* Record pseudo execution vector */
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
-		RTXSC;					/* Restore stack contexts */
+		RTXSCH;					/* Restore stack contexts */
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 

@@ -105,9 +105,6 @@ extern void dstatus(int dx);								/* Update execution status (RESUME request) 
 
 /* Debugging stack handling */
 extern void initdb(void);								/* Create debugger stack and once list */
-extern struct dcall *dpush(register struct dcall *val);	/* Push value on stack */
-extern struct dcall *dpop(void);						/* Pop value off stack */
-extern struct dcall *dtop(void);						/* Current top value */
 extern void dmove(int offset);							/* Move active routine cursor */
 
 #ifdef WORKBENCH
@@ -195,20 +192,8 @@ extern void drecord_bc(BODY_INDEX body_idx, BODY_INDEX body_id, unsigned char *a
 extern void ewhere(struct where *where);
 
 /* frozen stack (used to record local variables address) */ 
-extern EIF_TYPED_ADDRESS	*c_stack_allocate(register size_t size);
-extern EIF_TYPED_ADDRESS	*c_opush(register EIF_TYPED_ADDRESS *val);
-extern EIF_TYPED_ADDRESS	*c_opop(void);
-extern EIF_TYPED_ADDRESS	*c_otop(void);
-extern EIF_TYPED_ADDRESS 	*c_oitem(uint32 n);
-extern int			c_stack_extend(register size_t size);
-extern void 		c_npop(register int nb_items);
-extern void			c_wipe_out(register struct c_stochunk *chunk);
-extern void 		c_stack_truncate(void);
 RT_LNK void 		clean_local_vars (int n);
 RT_LNK void 		insert_local_var (uint32 type, void *ptr);
-
-/* Macro used to get a calling context on top of the stack */
-#define dget()	dpush((struct dcall *) 0)
 
 #endif
 /* End of workbench-specific features */

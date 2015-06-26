@@ -24,7 +24,7 @@ MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 /*
  * Main source files for run-time archive
  */
-LSRC = malloc.c garcol.c local.c store.c retrieve.c \
+LSRC = malloc.c garcol.c local.c stack.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c file.c dir.c misc.c \

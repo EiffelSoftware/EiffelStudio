@@ -253,6 +253,7 @@ feature -- C code generation
 			l_need_protection := has_hector_variables
 			if l_need_protection then
 				context.set_is_argument_protected (True)
+				buf.generate_block_open
 				generate_hector_variables
 			end
 
@@ -273,8 +274,8 @@ feature -- C code generation
 			end
 
 			if l_need_protection then
-				release_hector_variables
 				context.set_is_argument_protected (False)
+				buf.generate_block_close
 			end
 		end
 
@@ -369,9 +370,6 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 		do
 			l_buf := context.buffer
-			l_buf.put_character ('{')
-			l_buf.indent
-
 			from
 				i := arguments.lower
 				nb := arguments.upper
@@ -380,63 +378,31 @@ feature {NONE} -- Implementation
 			loop
 				l_buf.put_new_line
 				if real_type (arguments.item (i)).c_type.is_reference then
+						-- Historically we were storing arguments in the hec_stack C structure,
+						-- but this was useless and expensive since the arg is already stored in the loc_set
+						-- structure. So here just providing the address of the `arg' is enough to give us
+						-- the EIF_OBJECT the C external expects.
 					l_buf.put_string ("EIF_OBJECT larg")
 					l_buf.put_integer (i)
-					l_buf.put_string (" = RTHP(")
-					l_buf.put_string ("arg")
-					l_buf.put_integer (i)
-					l_buf.put_string (");")
+					l_buf.put_string (" = &arg")
 				else
 					l_buf.put_string (argument_types.item (i))
 					l_buf.put_string (" larg")
 					l_buf.put_integer (i)
 					l_buf.put_string (" = arg")
-					l_buf.put_integer (i)
-					l_buf.put_character (';')
 				end
+				l_buf.put_integer (i)
+				l_buf.put_character (';')
 				i := i + 1
 			end
 
-		end
-
-	release_hector_variables
-			-- Release protection of arguments.
-		local
-			l_buf: GENERATION_BUFFER
-		do
-			l_buf := context.buffer
-			l_buf.put_new_line
-			l_buf.put_string ("RTHF(")
-			l_buf.put_integer (number_of_hector_variables)
-			l_buf.put_string (");")
-			l_buf.exdent
-			l_buf.put_new_line
-			l_buf.put_character ('}')
-		end
-
-	number_of_hector_variables: INTEGER
-			-- Number of arguments to protect?
-		local
-			i, nb: INTEGER
-		do
-			from
-				i := arguments.lower
-				nb := arguments.upper
-			until
-				i > nb
-			loop
-				if real_type (arguments.item (i)).c_type.is_reference then
-					Result := Result + 1
-				end
-				i := i + 1
-			end
 		end
 
 invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -56,7 +56,7 @@ extern "C" {
 #else
 #define STACK_CHUNK		10000	/* Size of a stack chunk */
 #endif
-#define MIN_FREE		STACK_CHUNK / 10		/* Below that, chunk is nearly full */
+#define MIN_FREE		(STACK_CHUNK >> 2)	/* If 25% or less of the original size remains, chunk is nearly full */
 #define TH_ALLOC		786432	/* Allocation threshold (768 K)*/
 #define TH_ALLOC_MIN	8192	/* Minimal allocation threshold (8 K).*/
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
@@ -115,8 +115,8 @@ extern struct gacinfo rt_g_data;			/* Garbage collection status */
 extern struct gacstat rt_g_stat[GST_NBR];	/* Collection statistics */
 
 /* Exported data-structure declarations */
-extern struct stack memory_set;	/* Memory set stack.	*/
-extern struct stack moved_set;	/* Describes the new generation */
+extern struct ostack memory_set;	/* Memory set stack.	*/
+extern struct ostack moved_set;	/* Describes the new generation */
 extern long plsc_per;			/* Period of plsc() in acollect() */
 extern long force_plsc;
 
@@ -142,7 +142,7 @@ extern struct stack_list oms_set_list;		/* List of all `oms_set' allocated in ea
 extern struct stack_list hec_stack_list;	/* List of all `hec_stack' allocted in each thread */
 extern struct stack_list eif_stack_list;	/* List of all `eif_stack' allocted in each thread */
 extern struct stack_list eif_trace_list;	/* List of all `eif_trace' allocted in each thread */
-extern struct stack global_once_set;		/* Global once functions. */
+extern struct oastack global_once_set;		/* Global once functions. */
 #ifdef WORKBENCH
 extern struct stack_list opstack_list;	/* List of all `opstack' allocated in each thread */
 #endif
@@ -158,16 +158,6 @@ extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
 extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 #endif /* ISE_GC */
-
-RT_LNK int epush(register struct stack *stk, register void *value);	/* Push an addess on a run-time stack */
-
-extern EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size);	/* Creates an empty stack */
-extern int st_extend(register struct stack *stk, register size_t size);	/* Extends a stack */
-extern void st_truncate(register struct stack *stk);	/* Truncate stack if necessary */
-extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
-extern void st_reset(register struct stack *stk);/* Clean stack */
-extern int st_has(register struct stack *stk, register void * data);
-extern int st_address_in_stack (struct stack *st, void *address);
 
 /* Once indexes:
  * 	ALLOC_ONCE_INDEXES allocates array of once indexes

@@ -111,12 +111,8 @@ extern long nomark(char *obj);
  * added field to make a FIFO stack--RAM.
  */
 struct mstack {
-	struct stchunk *st_hd;	/* Head of chunk list */
-	struct stchunk *st_tl;	/* Tail of chunk list */
-	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
-	char **st_top;			/* Top in chunk (pointer to next free location) */
-	char **st_end;			/* Pointer to first element beyond current chunk */
-	char **st_bot;			/* ADDED FIELD for FIFO stack implementation */
+	struct oastack stack;
+	struct oacursor bottom;
 };
 
 struct obj_array {

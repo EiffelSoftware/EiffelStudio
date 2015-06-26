@@ -118,7 +118,8 @@ struct stack_list {
 	size_t capacity;					/* Number of possible stacks in Current */
 	union {
 		void ** volatile data;				/* Array of data */
-		struct stack ** volatile sstack;		/* Typed array of stack - GC stack */
+		struct oastack ** volatile oastack;		/* Typed array of stack - GC stack */
+		struct ostack ** volatile ostack;		/* Typed array of stack - GC stack */
 		struct xstack ** volatile xstack;		/* Typed array of xtack - exception stack */
 #ifdef WORKBENCH
 		struct opstack ** volatile opstack;	/* Typed array of opstack - interpreter */

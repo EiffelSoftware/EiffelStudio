@@ -107,7 +107,6 @@ rt_private void eif_init_gc_stacks(rt_global_context_t *);
 rt_private void eif_free_gc_stacks (void);
 rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_data_from_gc (struct stack_list *, void *);
-rt_private void eif_stack_free (void *stack);
 
 rt_shared rt_global_context_t *global_ctxs[RT_MAX_SCOOP_PROCESSOR_COUNT];
 
@@ -691,19 +690,20 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 
 		/* Free allocated stacks in eif_globals. */
 #ifdef ISE_GC
-	st_reset (&loc_stack);
-	st_reset (&loc_set);
-	st_reset (&hec_stack);
+	eif_oastack_reset (&loc_stack);
+	eif_oastack_reset (&loc_set);
+	eif_ostack_reset (&hec_stack);
 #endif
-	st_reset (&once_set);
-	st_reset (&oms_set);
-	if (prof_stack) {
-		st_reset (prof_stack);
-	}
-	xstack_reset (&eif_stack);
 #ifdef WORKBENCH
-	c_opstack_reset (&cop_stack);
+	eif_opstack_reset(&op_stack);
+	eif_c_opstack_reset (&cop_stack);
+	eif_ostack_reset (&once_set);
+#else
+	eif_oastack_reset (&once_set);
 #endif
+	eif_oastack_reset (&oms_set);
+	eif_pstack_reset (&prof_stack);
+	xstack_reset (&eif_stack);
 
 		/* Free public per thread data */
 	eif_free (eif_globals);
@@ -744,8 +744,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 	}
 
 #ifdef WORKBENCH
-	opstack_reset (&op_stack);
-	dbstack_reset (&db_stack);
+	eif_dbstack_reset (&db_stack);
 	if (iregs) {
 		eif_rt_xfree (iregs);
 	}
@@ -1172,21 +1171,19 @@ rt_private void eif_remove_gc_stacks(rt_global_context_t *rt_globals)
 #ifdef WORKBENCH
 	remove_data_from_gc (&opstack_list, &op_stack);
 #endif
-	eif_stack_free (&loc_stack);
-	eif_stack_free (&loc_set);
-	eif_stack_free (&once_set);
-	eif_stack_free (&oms_set);
-	eif_stack_free (&hec_stack);
-		/* The two stacks below are not properly cleaned up with `eif_stack_free'
-		 * as they have one more attribute than the `struct stack' structure, thus
-		 * the extra attribute is not reset. */
-	eif_stack_free (&eif_stack);
-	eif_stack_free (&eif_trace);
+	eif_oastack_reset(&loc_stack);
+	eif_oastack_reset(&loc_set);
 #ifdef WORKBENCH
-		/* Although the stack below is made of 5 pointers like `struct stack' it
-		 * is not exactly the same structure, but the call to `eif_stack_free'
-		 * should do the job properly. */
-	eif_stack_free (&op_stack);
+	eif_ostack_reset(&once_set);
+#else
+	eif_oastack_reset(&once_set);
+#endif
+	eif_oastack_reset(&oms_set);
+	eif_ostack_reset(&hec_stack);
+	xstack_reset(&eif_stack);
+	xstack_reset(&eif_trace);
+#ifdef WORKBENCH
+	eif_opstack_reset(&op_stack);
 #endif
 #endif
 }
@@ -1206,8 +1203,7 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 	st_list->count = count;
 	if (st_list->capacity < count) {
 		void **stack;
-		stack = (void **) eif_realloc (st_list->threads.data,
-			count * sizeof(struct stack **));
+		stack = (void **) eif_realloc (st_list->threads.data, count * sizeof(void *));
 		if (!stack) {
 			enomem();
 		} else {
@@ -1252,29 +1248,6 @@ rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 	stack [i] = stack [count -1];
 		/* Reset last element to NULL. */
 	stack [count - 1] = NULL;
-}
-
-/**************************************************************************/
-/* NAME: eif_stack_free                                                   */
-/* ARGS: st: thread specific stack.                                       */
-/*------------------------------------------------------------------------*/
-/* Free memory used by `st'.                                              */
-/**************************************************************************/
-
-rt_private void eif_stack_free (void *stack){
-	struct stack *st = (struct stack *) stack;
-	struct stchunk *c, *cn;
-
-	for (c = st->st_hd; c != (struct stchunk *) 0; c = cn) {
-		cn = c->sk_next;
-		eif_rt_xfree ((EIF_REFERENCE) c);
-	}
-
-	st->st_hd = NULL;
-	st->st_tl = NULL;
-	st->st_cur = NULL;
-	st->st_top = NULL;
-	st->st_end = NULL;
 }
 
 #ifdef ISE_GC

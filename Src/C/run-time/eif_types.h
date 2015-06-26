@@ -187,25 +187,27 @@ struct gacstat {
 	double sys_total_time;	/* Total CPU time since beginning of application */
 };
 
-/*
- * Stack used by local variables, remembered set, etc... It is implemented
- * with small chunks linked together.
- */
-struct stack {
-	struct stchunk *st_hd;	/* Head of chunk list */
-	struct stchunk *st_tl;	/* Tail of chunk list */
-	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
-	char **st_top;			/* Top in chunk (pointer to next free location) */
-	char **st_end;			/* Pointer to first element beyond current chunk */
-};
+/* Undefine any possible definition of EIF_STACK_TYPE_NAME and EIF_STACK_TYPE to avoid C compiler issue. */
+#ifdef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE_NAME
+#endif
+#ifdef EIF_STACK_TYPE
+#undef EIF_STACK_TYPE
+#endif
 
-struct stchunk {
-	struct stchunk *sk_next;	/* Next chunk in stack */
-	struct stchunk *sk_prev;	/* Previous chunk in stack */
-	char **sk_arena;			/* Arena where objects are stored */
-	char **sk_end;				/* Pointer to first element beyond the chunk */
-};
+/* Let's define our simple stack of Eiffel objects: rem_set, ... */
+#define EIF_STACK_TYPE_NAME o
+#define EIF_STACK_TYPE	EIF_REFERENCE
+#include "eif_stack.decl"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
 
+/* Let's define our stack of addressed of Eiffel objects: loc_set, ... */
+#define EIF_STACK_TYPE_NAME oa
+#define EIF_STACK_TYPE	EIF_REFERENCE *
+#include "eif_stack.decl"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
 
 	/*---------------------*/
 	/*	interp.h & debug.h */
@@ -259,37 +261,21 @@ typedef struct tag_EIF_TYPED_ADDRESS {
 } EIF_TYPED_ADDRESS;
 
 
-	/* Stack used by the interpreter (byte code operational stack) */
-struct stochunk {
-	struct stochunk *sk_next;	/* Next chunk in stack */
-	struct stochunk *sk_prev;	/* Previous chunk in stack */
-	EIF_TYPED_VALUE *sk_arena;	/* Arena where objects are stored */
-	EIF_TYPED_VALUE *sk_end;	/* Pointer to first element beyond the chunk */
-};
+/* Stack used by the interpreter (C code operational stack) */
+#define EIF_STACK_TYPE_NAME c_op
+#define EIF_STACK_TYPE	EIF_TYPED_ADDRESS 
+#include "eif_stack.decl"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
 
-struct opstack {
-	struct stochunk *st_hd;		/* Head of chunk list */
-	struct stochunk *st_tl;		/* Tail of chunk list */
-	struct stochunk *st_cur;	/* Current chunk in use (where top is) */
-	EIF_TYPED_VALUE *st_top;	/* Top (pointer to next free location) */
-	EIF_TYPED_VALUE *st_end;	/* First element beyond current chunk */
-};
+/* Stack used by the interpreter (byte code operational stack) */
+#define EIF_STACK_TYPE_NAME op
+#define EIF_STACK_TYPE	EIF_TYPED_VALUE 
+#include "eif_stack.decl"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
 
-	/* Stack used by the interpreter (C code operational stack) */
-struct c_stochunk {
-	struct c_stochunk *sk_next;	/* Next chunk in stack */
-	struct c_stochunk *sk_prev;	/* Previous chunk in stack */
-	EIF_TYPED_ADDRESS *sk_arena;	/* Arena where objects are stored */
-	EIF_TYPED_ADDRESS *sk_end;	/* Pointer to first element beyond the chunk */
-};
 
-struct c_opstack {
-	struct c_stochunk *st_hd;		/* Head of chunk list */
-	struct c_stochunk *st_tl;		/* Tail of chunk list */
-	struct c_stochunk *st_cur;	/* Current chunk in use (where top is) */
-	EIF_TYPED_ADDRESS *st_top;	/* Top (pointer to next free location) */
-	EIF_TYPED_ADDRESS *st_end;	/* First element beyond current chunk */
-};
 
 
 	/*------------*/
@@ -387,32 +373,20 @@ struct s_stack {
  */
 struct dcall {					/* Debug context call */
 	unsigned char *dc_start;	/* Start of current byte code */
-	void *dc_cur;				/* Current operational stack chunk (struct c_opchunk for frozen features) */
-	void *dc_top;				/* Current operational stack top (type is struct i_item for melted feature,
+	struct stopchunk *dc_cur;				/* Current operational stack chunk (struct c_opchunk for frozen features) */
+	EIF_TYPED_VALUE *dc_top;				/* Current operational stack top (type is struct i_item for melted feature,
 								 * and struct c_item for frozen feature) */
 	struct ex_vect *dc_exec;	/* Execution vector on Eiffel stack */
 	int dc_status;				/* Execution status for this routine */
 	BODY_INDEX dc_body_id;		/* Body ID of current feature */
 };
 
-/*
- * Stack used by the debugger (context stack)
- */
-
-struct stdchunk {
-	struct stdchunk *sk_next;	/* Next chunk in stack */
-	struct stdchunk *sk_prev;	/* Previous chunk in stack */
-	struct dcall *sk_arena;		/* Arena where objects are stored */
-	struct dcall *sk_end;		/* Pointer to first element beyond the chunk */
-};
-
-struct dbstack {
-	struct stdchunk *st_hd;		/* Head of chunk list */
-	struct stdchunk *st_tl;		/* Tail of chunk list */
-	struct stdchunk *st_cur;	/* Current chunk in use (where top is) */
-	struct dcall *st_top;		/* Top (pointer to next free location) */
-	struct dcall *st_end;		/* First element beyond current chunk */
-};
+/* Stack used by the debugger (context stack) */
+#define EIF_STACK_TYPE_NAME db
+#define EIF_STACK_TYPE	struct dcall 
+#include "eif_stack.decl"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
 
 /* For fastest reference, the debugging informations for the current routine
  * are held in the debugger status structure.

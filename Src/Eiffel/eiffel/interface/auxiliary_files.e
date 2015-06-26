@@ -295,6 +295,10 @@ feature -- Dynamic Library file
 
 										-- CALCULATE THE MAIN OBJECT.
 									buffer.put_local_registration (0, "main_obj")
+									buffer.put_new_line
+									buffer.put_string ("RTLIU(")
+									buffer.put_integer(nb_ref + 1)
+									buffer.put_two_character (')', ';')
 									buffer.put_string ("%N%Tmain_obj = RTLN(")
 
 									if Context.workbench_mode then

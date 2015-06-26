@@ -46,6 +46,74 @@ doc:<file name="memory_analyzer.c" header="eif_memory_analyzer.h" version="$Id$"
 #include "rt_malloc.h"
 #include "rt_globals_access.h"
 
+rt_private void rt_obj_array_extend (struct obj_array *l_found, EIF_REFERENCE obj);
+rt_shared void rt_ostack_lookup (struct obj_array *l_found, struct ostack *stk);
+rt_shared void rt_oastack_lookup (struct obj_array *l_foun, struct oastack *stkd);
+
+rt_private void rt_obj_array_extend (struct obj_array *l_found, EIF_REFERENCE obj)
+{
+	EIF_REFERENCE *l_area;
+
+	if (l_found->count >= l_found->capacity) {
+		l_found->capacity = l_found->capacity * 2;
+		l_area = realloc (l_found->area, sizeof (EIF_REFERENCE) * (l_found->capacity));
+		if (!l_area) {
+			free(l_found->area);
+			enomem();
+		} else {
+			l_found->area = l_area;
+		}
+	}
+	l_found->area [l_found->count] = obj;
+	l_found->count = l_found->count + 1;
+}
+
+rt_shared void rt_ostack_lookup (struct obj_array *l_found, struct ostack *stk)
+{
+	struct stochunk *s, *current_chunk;
+	EIF_REFERENCE *object;
+	rt_uint_ptr n;
+	EIF_REFERENCE o_ref;
+	int done = 0;
+
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;
+		n = s->sk_top - object;
+
+		for ( ; n > 0 ; n--, object++) {
+			o_ref = *object;
+			if (o_ref) {
+				rt_obj_array_extend(l_found, o_ref);
+			}
+		}
+	}
+}
+
+rt_shared void rt_oastack_lookup (struct obj_array *l_found, struct oastack *stk)
+{
+	struct stoachunk *s, *current_chunk;
+	EIF_REFERENCE **object;
+	rt_uint_ptr n;
+	EIF_REFERENCE o_ref;
+	int done = 0;
+
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;
+		n = s->sk_top - object;
+
+		for ( ; n > 0 ; n--, object++) {
+			o_ref = **object;
+			if (o_ref) {
+				rt_obj_array_extend(l_found, o_ref);
+			}
+		}
+	}
+}
+
 rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_TYPE result_type) 
 	/* All once objects held by the system */
 {
@@ -53,35 +121,16 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_TYPE result_type)
 	EIF_REFERENCE Result;
 	union overhead *zone;
 	struct obj_array l_found;
-	EIF_REFERENCE *l_area;
-	struct stack *l_once_set;
 
-	struct stchunk* s;
-	EIF_REFERENCE *object, o_ref;
-	int done = 0;
-	size_t i = 0;
+	size_t i; 
 #if defined(EIF_THREADS) && defined(ISE_GC)
-	size_t j = 0;
-	size_t l_threads_count = 0;
-	int l_thread_once_set = 0;
+	size_t l_threads_count;
 #endif
-	rt_uint_ptr n;
 	char gc_stopped;
 
 	/* Lock global once mutex. */
 #ifdef EIF_THREADS
 	EIF_ASYNC_SAFE_CS_LOCK(eif_global_once_set_mutex);
-#endif
-
-#ifndef EIF_THREADS
-	l_once_set = &once_set;
-#else
-#ifdef ISE_GC
-	l_threads_count = once_set_list.count;
-	l_once_set = &global_once_set;
-#else
-	l_once_set = NULL;
-#endif
 #endif
 
 		/* Initialize structure that will hold found objects */
@@ -92,65 +141,23 @@ rt_public EIF_REFERENCE eif_once_objects_of_result_type(EIF_TYPE result_type)
 		enomem();
 	}
 
-	while (l_once_set) {
-		for (s = l_once_set->st_hd, done = 0; s && !done; s = s->sk_next) {
-			object = s->sk_arena;
-			if (s != l_once_set->st_cur) {
-				n = s->sk_end - object;
-			} else {
-				n = l_once_set->st_top - object;
-				done = 1;
-			}
-
-			for ( ; n > 0 ; n--, object++) {
 #ifndef EIF_THREADS
 #ifdef WORKBENCH
-				o_ref = *object;
+	rt_ostack_lookup (&l_found, &once_set);
 #else
-				o_ref = *(EIF_REFERENCE *) *object;
+	rt_oastack_lookup (&l_found, &once_set);
 #endif
 #else
+	rt_oastack_lookup(&l_found, &global_once_set);
 #ifdef ISE_GC
-				if (l_thread_once_set){
-					o_ref = *object;
-				} else {
-					o_ref = *(EIF_REFERENCE *) *object;
-				}
-#endif
-#endif
-				if (o_ref) {
-
-					if (l_found.count >= l_found.capacity) {
-						l_found.capacity = l_found.capacity * 2;
-						l_area = realloc (l_found.area, sizeof (EIF_REFERENCE) * (l_found.capacity));
-						if (!l_area) {
-							free(l_found.area);
-							enomem();
-						} else {
-							l_found.area = l_area;
-						}
-					}
-					l_found.area [l_found.count] = o_ref;
-					l_found.count = l_found.count + 1;
-				}
-			}
-		}
-
-#ifndef EIF_THREADS
-		l_once_set = NULL;
-#else
-#ifdef ISE_GC
-		if (j < l_threads_count) {
-			l_once_set = once_set_list.threads.sstack[j++];
-			l_thread_once_set = 1;
-		} else {
-			l_once_set = NULL;
-		}
-#else
-		l_once_set = NULL;
-#endif
-#endif
+	l_threads_count = once_set_list.count;
+	i = 0;
+	while (i < l_threads_count) {
+		rt_ostack_lookup (&l_found, once_set_list.threads.ostack[i++]);
+		i++;
 	}
+#endif
+#endif
 
 	/* Unlock global once mutex */
 #ifdef EIF_THREADS

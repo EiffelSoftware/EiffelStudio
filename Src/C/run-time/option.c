@@ -73,19 +73,42 @@ doc:<file name="option.c" header="eif_option.h" version="$Id$" summary="Option q
 #endif
 #endif
 
+#include "eif_globals.h"
 #include "rt_globals_access.h"
 
 struct prof_info {
 	char			*featurename;		/* Name of feature */
-	EIF_TYPE_INDEX	dtype;				/* DTYPE of feature */
-	EIF_TYPE_INDEX	origin;				/* ORIGIN of feature */
 	rt_uint_ptr		feature_hcode;		/* Hash code */
 	rt_uint64		number_of_calls;	/* # calls to feature */
 	rt_uint64		this_total_time;
 	rt_uint64		all_total_time;
 	rt_uint64		descendent_time;
 	int				is_running;			/* Is the feature running? */
+	EIF_TYPE_INDEX	dtype;				/* DTYPE of feature */
+	EIF_TYPE_INDEX	origin;				/* ORIGIN of feature */
 };
+
+/* Undefine any possible definition of EIF_STACK_TYPE_NAME and EIF_STACK_TYPE to avoid C compiler issue. */
+#ifdef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE_NAME
+#endif
+#ifdef EIF_STACK_TYPE
+#undef EIF_STACK_TYPE
+#endif
+#ifdef EIF_STACK_IS_STRUCT_ELEMENT
+#undef EIF_STACK_IS_STRUCT_ELEMENT
+#endif
+
+/* Profiler stack. */
+#define EIF_STACK_TYPE_NAME p
+#define EIF_STACK_TYPE	struct prof_info
+#define EIF_STACK_IS_STRUCT_ELEMENT
+#include "rt_stack.implementation"
+#undef EIF_STACK_TYPE_NAME
+#undef EIF_STACK_TYPE
+#undef EIF_STACK_IS_STRUCT_ELEMENT
+
+
 
 #ifndef EIF_THREADS
 
@@ -133,7 +156,10 @@ doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack *prof_stack;
+rt_public struct pstack prof_stack = {
+	NULL,
+	NULL,
+	NULL};
 
 /* INTERNAL TRACE VARIABLES */
 
@@ -303,11 +329,6 @@ rt_private struct htable *class_table;		/* The H table that contains all info */
 /* INTERNAL PROFILE FUNCTIONS */
 
 rt_public void update_class_table(struct prof_info *item);				/* Update H table */
-rt_public void prof_stack_push(struct prof_info *new_item);					/* Push item on staack */
-rt_public void prof_stack_free(void);					/* Free profile stack memory */
-rt_public void prof_stack_init(void);					/* Initialize stack */
-struct prof_info* prof_stack_top(void);		/* Top the stack */
-struct prof_info* prof_stack_pop(void);		/* Pop top off stack */
 
 
 /* Computation of the percentage, it returns a number between 0 and 1 */
@@ -437,7 +458,10 @@ rt_public void initprf(void)
 	 */
 
 	if (egc_prof_enabled) {
+		EIF_GET_CONTEXT
 		RT_GET_CONTEXT
+		struct prof_info * top;
+
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)
@@ -448,7 +472,10 @@ rt_public void initprf(void)
 			eraise("Hash table creation failure", EN_FATAL);
 		}
 
-		prof_stack_init();		/* Initialize stack */
+		top = eif_pstack_allocate(&prof_stack, eif_stack_chunk);
+		if (!top) {
+			enomem(MTC_NOARG);	/* Bad Luck! */
+		}
 
 #ifdef EIF_WINDOWS
 #elif defined(HAS_GETRUSAGE)
@@ -483,8 +510,9 @@ rt_shared void exitprf(void)
 	 * might not be called if user disabled profiling in the Ace file and 
 	 * enabled it through the PROFILING_SETTING class. */
 
-	RT_GET_CONTEXT
 	if (egc_prof_enabled) {
+		RT_GET_CONTEXT
+		EIF_GET_CONTEXT
 		rt_uint64 execution_time;
 		rt_uint_ptr *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
@@ -568,7 +596,7 @@ rt_shared void exitprf(void)
 			fclose(prof_output);		/* Close the file */
 				/* No need to `eif_rt_xfree' the struct: is done by `ht_free()' */
 			ht_free(class_table);		/* Free memory */
-			prof_stack_free();			/* Deallocate stack */
+			eif_pstack_reset(&prof_stack);
 
 #ifdef EIF_THREADS
 			if (eif_thr_is_root())
@@ -590,10 +618,11 @@ rt_public void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX d
 	/* Initialize timer and push `name' on `prof_stack'. */
 
 	if(prof_recording) {
+		EIF_GET_CONTEXT
 		struct prof_info *new_item;	/* New item for `name' */
 
-			/* Allocate `new_item' */
-		new_item = (struct prof_info *) cmalloc (sizeof(struct prof_info));
+			/* Push new item on stack. */
+		new_item = eif_pstack_push_empty (&prof_stack);
 		if (!new_item) {
 				/* Bad Luck! */
 			enomem();
@@ -612,8 +641,6 @@ rt_public void start_profile(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX d
 			new_item->descendent_time = RTU64C(0);
 				/* Mark running */
 			new_item->is_running = 1;
-
-			prof_stack_push(new_item);
 		}
 	}
 }
@@ -625,31 +652,25 @@ rt_public void stop_profile(void)
 	 */
 
 	if(prof_recording) {
-		struct prof_info *item;	/* The information to change */
+		EIF_GET_CONTEXT
+		struct prof_info *current_item;	/* The information to change */
+		struct prof_info *caller_item;
 
-		item = prof_stack_pop();
-		if (item) {	/* Testing against NULL */
-				/* `prof_stack' doesn't contain the finishing
-				 * feature anymore. This makes live easier.
-				 */
-			struct prof_info *stk_item;
+		current_item = eif_pstack_pop_address(&prof_stack);
+		CHECK("current_item not void", current_item);
 
-			item->all_total_time = process_time(); 
-			item->all_total_time -= item->this_total_time;
-			item->is_running = 0; /* Mark feature is not running */
+		current_item->all_total_time = process_time(); 
+		current_item->all_total_time -= current_item->this_total_time;
+		current_item->is_running = 0; /* Mark feature is not running */
 
-			stk_item = prof_stack_top();
-			if (stk_item) {
-					/* There is still a callee, so update it. */
-				stk_item->all_total_time -= item->all_total_time;
-				stk_item->descendent_time += item->all_total_time;
-			}
-
-			update_class_table(item);		/* Record times */
-		} else {
-				/* Bad Luck! (Profile stack corrupted) */
-			eif_panic(MTC "Profile stack corrupted");
+		if (!eif_pstack_is_empty(&prof_stack)) {
+				/* There is still a callee, so update it. */
+			caller_item = EIF_STACK_TOP_ADDRESS(prof_stack);
+			caller_item->all_total_time -= current_item->all_total_time;
+			caller_item->descendent_time += current_item->all_total_time;
 		}
+
+		update_class_table(current_item);		/* Record times */
 	}
 }
 
@@ -820,125 +841,6 @@ rt_public void stop_trace(char *name, EIF_TYPE_INDEX origin, EIF_TYPE_INDEX dtyp
 	}
 }
 
-struct prof_info* prof_stack_pop(void)
-{
-	/* Pop the top off `prof_stack'.
-	 * Return NULL if there is no top item to pop.
-	 */
-
-	if(prof_recording) {
-		EIF_GET_CONTEXT
-		struct prof_info *stk_item;	/* Top item of stack */
-
-		stk_item = prof_stack_top();
-		if (stk_item) {
-				/* Okay, data structure still intact */
-			prof_stack->st_top -= 1;	/* Reset top */
-			if(prof_stack->st_top < prof_stack->st_cur->sk_arena) {
-					/* Oops, current chunk is empty */
-				prof_stack->st_cur = prof_stack->st_cur->sk_prev;
-				prof_stack->st_end = prof_stack->st_cur->sk_end;
-				prof_stack->st_top = prof_stack->st_end - 1;
-			}
-			return stk_item;
-		} else {
-				/* Bad Luck! */
-			return NULL;
-		}
-	} else {
-		return NULL;
-	}
-}
-
-struct prof_info* prof_stack_top(void)
-{
-	/* Return top of `prof_stack'.
-	 * NULL if no item is available on `prof_stack'
-	 */
-
-	if(prof_recording) {
-		EIF_GET_CONTEXT
-		char **top;
-
-		top = prof_stack->st_top;	/* Next eif_free location */
-		top -= 1;
-		if(top < prof_stack->st_cur->sk_arena) {
-				/* Oops, stack chunk ends here. Let's see if there is
-				 * more in this stack or not...
-				 */
-			if(prof_stack->st_cur->sk_prev) {
-					/* There seems to be more: We're Lucky (for now).
-					 * Get the last valid value in previous chunk:
-					 * stk->st_cur->st_prev->sk_end is a boundary, thus
-					 * (pointer decrement) - 1 should yield valid pointer.
-					 */
-				top = prof_stack->st_cur->sk_prev->sk_end - 1;
-			} else {
-					/* Bad Luck! */
-				return NULL;
-			}
-		}
-
-		return (struct prof_info *) (*top);
-	} else
-		return NULL;
-}
-
-rt_public void prof_stack_init(void)
-{
-	/* Initialize `prof_stack' by allocating memory for the
-	 * stack-structure and then calling st_alloc() in `garcol.c'.
-	 *
-	 * We use one stack for all profiled features. This is because of
-	 * a few reasons:
-	 * A) the previous version was bogus and needed to be optimized
-	 * B) less memory is used.
-	 * C) RAM implemented stack manipulation, so why bother and do it
-	 *    again?
-	 */
-
-	if(egc_prof_enabled) {
-		EIF_GET_CONTEXT
-			/* Allocate profile stack */
-		prof_stack = (struct stack *) cmalloc(sizeof(struct stack));
-		if(!prof_stack) {
-			enomem(MTC_NOARG);	/* Bad Luck! */
-		} else {
-				/* Allocate arena and chunk for memory problem */
-			if(!st_alloc(prof_stack, eif_stack_chunk)) {
-				enomem(MTC_NOARG);	/* Bad Luck! */
-			}
-		}
-	}
-}
-
-rt_public void prof_stack_free(void)
-{
-	/* Free the memory allocated for `prof_stack'. */
-
-	if(egc_prof_enabled) {
-		EIF_GET_CONTEXT
-		st_reset (prof_stack);						/* Free memory used by chunks */
-		eif_rt_xfree((char *)prof_stack);			/* Free memory used by stack */
-		prof_stack = NULL;							/* Mark `prof_stack' as clean. */
-	}
-}
-
-rt_public void prof_stack_push(struct prof_info *new_item)
-{
-	/* Push `new_item' on `prof_stack'.
-	 * Painc if not possible.
-	 */
-
-	if(prof_recording) {
-		EIF_GET_CONTEXT
-		if(epush(prof_stack, (char *) new_item) == -1) {
-				/* Bad Luck! */
-			eif_panic(MTC "Push profile info failed.");
-		}
-	}
-}
-
 rt_public void update_class_table(struct prof_info *item)
 {
 	/* The `class_table' is a H table containing H tables. This is
@@ -1003,8 +905,8 @@ rt_public void update_class_table(struct prof_info *item)
 		if(!p_i) {
 			ht_force(f_t->htab, f_hcode, (char *) item);
 		} else {
-			register struct stchunk *current_chunk;
-			char **address = NULL;
+			struct stpchunk *current_chunk;
+			struct prof_info *address = NULL;
 			int found = 0;
 
 			p_i->number_of_calls += item->number_of_calls;
@@ -1012,26 +914,21 @@ rt_public void update_class_table(struct prof_info *item)
 			p_i->descendent_time += item->descendent_time;
 
 				/* Traversal in search of recursive `item' */
-			for(current_chunk = prof_stack->st_cur;
-					current_chunk != (struct stchunk *) 0 && !found;
+			for(current_chunk = prof_stack.st_cur;
+					current_chunk && !found;
 					current_chunk = current_chunk->sk_prev) {
 				/* Inspect each chunk */
 
-				/* Starting address is end of chunk for
+				/* Starting address is top of chunk for
 				 * full chunks and current insertion position
 				 * for the last one
 				 */
-				if(current_chunk == prof_stack->st_cur) {
-					address = prof_stack->st_top - 1;
-				} else {
-					address = current_chunk->sk_end - 1;
-				}
+				address = current_chunk->sk_top - 1;
 				for( ; address >= current_chunk->sk_arena; address--) {
 					if
-						(*address &&
-					   	((struct prof_info *)*address)->dtype == p_i->dtype &&
-						((struct prof_info *)*address)->origin == p_i->origin &&
-						((struct prof_info *)*address)->feature_hcode == p_i->feature_hcode)
+					   	(address->dtype == p_i->dtype &&
+						address->origin == p_i->origin &&
+						address->feature_hcode == p_i->feature_hcode)
 					{
 								/* Found item looking for */
 						found = 1;
@@ -1043,7 +940,7 @@ rt_public void update_class_table(struct prof_info *item)
 				/* Did we find one? */
 			if(found) {
 					/* Update it */
-				((struct prof_info *)*address)->all_total_time += p_i->all_total_time;
+				address->all_total_time += p_i->all_total_time;
 			}
 
 			eif_rt_xfree(item);
@@ -1051,7 +948,7 @@ rt_public void update_class_table(struct prof_info *item)
 	}
 }
 
-rt_public void prof_stack_rewind(char **old_top)
+rt_public void prof_stack_rewind(struct prof_info *old_top)
                		/* Old top. Just to know where to stop rewinding. */
 {
 	/* Rewinds part of 'prof_stack' and thus updates all features in
@@ -1060,7 +957,7 @@ rt_public void prof_stack_rewind(char **old_top)
  	* is "rescued" and then the feature is "retried". We can simple
  	* rewind `prof_stack' until we hit `old_top'.
  	*
- 	* Thus we must declare char**, and store 'prof_stack->st_top'
+ 	* Thus we must declare char**, and store 'prof_stack.st_cur->sk_top'
  	* in it, every time a feature has a rescue-clause. Then we must
  	* rewind the new part of `prof_stack' with this function while
  	* passing down the stored top.
@@ -1072,14 +969,14 @@ rt_public void prof_stack_rewind(char **old_top)
  	* do a 'exitprf' in 'reclaim'. -- GLJ
  	*/
 
-	if(prof_recording) {
+	if (prof_recording) {
 		EIF_GET_CONTEXT
 			/* Traverse the stack to a certain point */
-		while(prof_stack->st_top > old_top) {
+		while(prof_stack.st_cur->sk_top != old_top) {
 				/* Stop profiling top item */
 			stop_profile();
 
-				/* Check where we are right now in the stack. If st_top is
+				/* Check where we are right now in the stack. If sk_top is
 				 * bottom line of the current chunk right here, reset it
 				 * to the end of the previous chunk.
 				 * Will there always be a previous chunk here? In other
@@ -1087,14 +984,13 @@ rt_public void prof_stack_rewind(char **old_top)
 				 * stopped profiling the creation routine of the system?
 				 * Well, no... (hopefully). If it is possible OTOH, please
 				 * update the next code block to have a guard for a
-				 * prof_stack->st_cur->sk_prev != NULL.
+				 * prof_stack.st_cur->sk_prev != NULL.
 				 */
 
-			if(prof_stack->st_top <= prof_stack->st_cur->sk_arena) {
+			if(prof_stack.st_cur->sk_top <= prof_stack.st_cur->sk_arena) {
 					/* Oops, current chunk is empty */
-				prof_stack->st_cur = prof_stack->st_cur->sk_prev;
-				prof_stack->st_end = prof_stack->st_cur->sk_end;
-				prof_stack->st_top = prof_stack->st_end;
+				prof_stack.st_cur = prof_stack.st_cur->sk_prev;
+				prof_stack.st_cur->sk_top = prof_stack.st_cur->sk_end;
 			}
 		}
 	}

@@ -374,6 +374,9 @@ feature -- Element Change
 					buffer.put_string ("RTLI(1);")
 					buffer.put_new_line
 					buffer.put_string ("RTLR(0,Current);")
+						-- Now we validate the space made for Current.
+					buffer.put_new_line
+					buffer.put_string ("RTLIU(1);")
 					buffer.put_new_line
 					buffer.put_character ('r')
 					buffer.put_string (typed_field)

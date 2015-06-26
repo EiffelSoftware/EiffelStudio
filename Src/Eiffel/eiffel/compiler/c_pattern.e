@@ -293,6 +293,7 @@ feature -- Pattern generation
 			buffer.generate_function_signature (once "void", f_name, False, buffer,
 					<<once "ptr">>, <<once "fnptr">>)
 			buffer.generate_block_open
+			buffer.put_gtcx
 			buffer.put_new_line
 			buffer.put_string (once "EIF_REFERENCE Current;")
 			if not result_type.is_void then
@@ -491,7 +492,7 @@ invariant
 	result_type_exists: result_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

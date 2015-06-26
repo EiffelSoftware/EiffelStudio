@@ -81,6 +81,7 @@ doc:<file name="garcol.c" header="eif_garcol.h" version="$Id$" summary="Garbage 
 #include "rt_debug.h"
 #include "rt_main.h"
 #include "rt_hashin.h"
+#include "eif_stack.h"
 
 #include "rt_scoop_gc.h"
 
@@ -162,77 +163,71 @@ rt_shared struct gacstat rt_g_stat[GST_NBR] = {	/* Run-time statistics */
 #ifndef EIF_THREADS
 #ifdef ISE_GC
 /*
-doc:	<attribute name="loc_stack" return_type="struct stack" export="public">
+doc:	<attribute name="loc_stack" return_type="struct oastack" export="public">
 doc:		<summary>To protect EIF_REFERENCE in C routines through RT_GC_PROTECT/RT_GC_WEAN macros. Used internally by runtime. Content points to objects which may be moved by garbage collector or memory management routines.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack loc_stack = {			/* Local indirection stack */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+rt_public struct oastack loc_stack = {			/* Local indirection stack */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="loc_set" return_type="struct stack" export="public">
+doc:	<attribute name="loc_set" return_type="struct oastack" export="public">
 doc:		<summary>To protect Eiffel objects in C generated code. Same purpose as `loc_stack' but only used for C generated code.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack loc_set = {				/* Local variable stack */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+rt_public struct oastack loc_set = {				/* Local variable stack */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 #endif
 /*
-doc:	<attribute name="once_set" return_type="struct stack" export="public">
+doc:	<attribute name="once_set" return_type="struct oastack" export="public">
 doc:		<summary>Keep safe references of once function results which are computed per thread (default behavior).</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack once_set = {			/* Once functions */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+#ifdef WORKBENCH
+rt_public struct ostack once_set = {			/* Once functions */
+#else
+rt_public struct oastack once_set = {			/* Once functions */
+#endif
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 /*
-doc:	<attribute name="oms_set" return_type="struct stack" export="public">
+doc:	<attribute name="oms_set" return_type="struct oastack" export="public">
 doc:		<summary>Keep safe references of once manifest strings which are computed per thread.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack oms_set = {			/* Once manifest strings */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+rt_public struct oastack oms_set = {			/* Once manifest strings */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 #else
 /*
-doc:	<attribute name="global_once_set" return_type="struct stack" export="public">
+doc:	<attribute name="global_once_set" return_type="struct oastack" export="public">
 doc:		<summary>Same as `once_set' but for results that are computed per process.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack global_once_set = {			/* Once functions */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
+rt_public struct oastack global_once_set = {			/* Once functions */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 
@@ -349,64 +344,56 @@ rt_public struct stack_list opstack_list = {
 
 #ifdef ISE_GC
 /*
-doc:	<attribute name="rem_set" return_type="struct stack" export="private">
+doc:	<attribute name="rem_set" return_type="struct ostack" export="private">
 doc:		<summary>Remembered set. Remembers all old objects pointing on new ones.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack rem_set = {			/* Remembered set */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+rt_private struct ostack rem_set = {			/* Remembered set */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="moved_set" return_type="struct stack" export="shared">
+doc:	<attribute name="moved_set" return_type="struct ostack" export="shared">
 doc:		<summary>Moved objets set. Track all objects allocated outside the scavenge zone.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex</synchronization>
 doc:	</attribute>
 */
-rt_shared struct stack moved_set = {			/* Moved objects set */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+rt_shared struct ostack moved_set = {			/* Moved objects set */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="memory_set" return_type="struct stack" export="public">
+doc:	<attribute name="memory_set" return_type="struct ostack" export="public">
 doc:		<summary>Memory set. Track all objects allocated in the scavenge zone which have a `dispose' routine.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_set_mutex for insertion, eif_gc_mutex for manipulating it.</synchronization>
 doc:	</attribute>
 */
-rt_public struct stack memory_set =
+rt_public struct ostack memory_set =
 {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
-doc:	<attribute name="overflow_stack_set" return_type="struct stack" export="private">
+doc:	<attribute name="overflow_stack_set" return_type="struct oastack" export="private">
 doc:		<summary>Stack containing objects that are not yet traversed because it could generate a stack overflow during a GC cycle.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack overflow_stack_set = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+rt_private struct oastack overflow_stack_set = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 /*
@@ -437,18 +424,16 @@ doc:	</attribute>
 rt_shared uint32 overflow_stack_limit = 0;
 
 /*
-doc:	<attribute name="c_stack_object_set" return_type="struct stack" export="private">
+doc:	<attribute name="c_stack_object_set" return_type="struct ostack" export="private">
 doc:		<summary>Stack containing all objects whose memory is allocated on the stack. They are added during marking and unmarked at the end of a GC cycle.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>eif_gc_mutex</synchronization>
 doc:	</attribute>
 */
-rt_private struct stack c_stack_object_set = {
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,	/* st_top */
-	(EIF_REFERENCE *) 0,	/* st_end */
+rt_private struct ostack c_stack_object_set = {
+	NULL,	/* st_head */
+	NULL,	/* st_tail */
+	NULL	/* st_cur */
 };
 
 #endif
@@ -642,9 +627,6 @@ rt_private EIF_BOOLEAN has_reclaim_been_called = 0;
 
 #ifdef ISE_GC
 
-#ifdef DEBUG
-rt_private int nb_items(struct stack *);	/* Number of items held in a stack */
-#endif
 /* Automatic invokations of GC */
 rt_shared int acollect(void);				/* Collection based on threshold */
 rt_shared int scollect(int (*gc_func) (void), int i);				/* Collect with statistics */
@@ -664,8 +646,8 @@ rt_private void run_collector(void);		/* Wrapper for full collections */
 rt_private void unmark_c_stack_objects (void);
 
 /* Stack markers */
-rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move);	/* Marks a collector's stack */
-rt_private void mark_stack(struct stack *stk, MARKER marker, int move);			/* Marks a collector's stack */
+rt_private void mark_simple_stack(struct ostack *stk, MARKER marker, int move);	/* Marks a collector's stack */
+rt_private void mark_stack(struct oastack *stk, MARKER marker, int move);			/* Marks a collector's stack */
 rt_private void mark_overflow_stack(MARKER marker, int move);
 rt_private void mark_array(EIF_REFERENCE *arr, rt_uint_ptr arr_count, MARKER marker, int move);
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
@@ -708,13 +690,6 @@ rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
 rt_shared void gfree(register union overhead *zone);				/* Free object, eventually call dispose */
 
 #endif
-/* Stack handling routines */
-rt_shared int epush(register struct stack *stk, register void *value);				/* Push value on stack */
-rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size);		/* Creates an empty stack */
-rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
-rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
-rt_shared int st_extend(register struct stack *stk, register size_t size);			/* Extends size of stack */
-rt_shared int st_has (register struct stack *stck, register void *);
 #ifdef ISE_GC
 
 /* Marking algorithm */
@@ -1499,7 +1474,7 @@ rt_private void full_mark (EIF_CONTEXT_NOARG)
 		/* Mark both live and dead indexes, because it's up to SCOOP manager
 		 * to delete a thread and to reclaim once manifest strings. */
 	for (i = 0; i < oms_set_list.count; i++)
-		mark_stack(oms_set_list.threads.sstack[i], MARK_SWITCH, moving);
+		mark_stack(oms_set_list.threads.oastack[i], MARK_SWITCH, moving);
 #endif
 }
 
@@ -1589,10 +1564,10 @@ rt_private void internal_marking(MARKER marking, int moving)
 					/* Use only live indexes. */
 				i = rt_thread_item (j);
 				CHECK ("Valid index", i < loc_set_list.count);
-				mark_stack(loc_set_list.threads.sstack[i], marking, moving);
-				mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
-				mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
-				mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
+				mark_stack(loc_set_list.threads.oastack[i], marking, moving);
+				mark_stack(loc_stack_list.threads.oastack[i], marking, moving);
+				mark_simple_stack(once_set_list.threads.ostack[i], marking, moving);
+				mark_simple_stack(hec_stack_list.threads.ostack[i], marking, moving);
 #ifdef WORKBENCH
 				mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 				mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
@@ -1625,10 +1600,10 @@ rt_private void internal_marking(MARKER marking, int moving)
 			 * all indexes when doing partial GC. */
 		i = rt_thread_item (j);
 		CHECK ("Valid index", i < loc_set_list.count);
-		mark_stack(loc_set_list.threads.sstack[i], marking, moving);
-		mark_stack(loc_stack_list.threads.sstack[i], marking, moving);
-		mark_simple_stack(once_set_list.threads.sstack[i], marking, moving);
-		mark_simple_stack(hec_stack_list.threads.sstack[i], marking, moving);
+		mark_stack(loc_set_list.threads.oastack[i], marking, moving);
+		mark_stack(loc_stack_list.threads.oastack[i], marking, moving);
+		mark_simple_stack(once_set_list.threads.ostack[i], marking, moving);
+		mark_simple_stack(hec_stack_list.threads.ostack[i], marking, moving);
 #ifdef WORKBENCH
 		mark_op_stack(opstack_list.threads.opstack[i], marking, moving);
 		mark_ex_stack(eif_stack_list.threads.xstack[i], marking, moving);
@@ -1654,7 +1629,7 @@ rt_private void internal_marking(MARKER marking, int moving)
 #endif
 }
 
-rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move)
+rt_private void mark_simple_stack(struct ostack *stk, MARKER marker, int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
@@ -1670,8 +1645,8 @@ rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move)
 
 	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stochunk *s, *current_chunk;	/* To walk through each stack's chunk */
+	int done = 0;
 
 #ifdef DEBUG
 	int saved_roots; EIF_REFERENCE *saved_object;
@@ -1681,21 +1656,18 @@ rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move)
 	flush;
 #endif
 
-	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
+	if (!stk->st_cur)	/* Stack is not created yet */
 		return;
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		object = s->sk_arena;					/* Start of stack */
-		if (s != stk->st_cur)					/* Before current pos? */
-			roots = s->sk_end - object;			/* The whole chunk */
-		else {
-			roots = stk->st_top - object;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;				/* Start of stack. */
+		roots = s->sk_top - object;			/* The used part of chunk. */
 
 #ifdef DEBUG
 		dprintf(2)("mark_simple_stack: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
@@ -1726,7 +1698,7 @@ rt_private void mark_simple_stack(struct stack *stk, MARKER marker, int move)
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
 		dprintf(2)("mark_simple_stack: after GC: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
@@ -1746,12 +1718,12 @@ rt_private void update_object_id_stack(void)
 	 * for the GC.
 	 */
 
-	struct stack *stk = &object_id_stack;
+	struct ostack *stk = &object_id_stack;
 
 	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stochunk *s, *current_chunk;	/* To walk through each stack's chunk */
+	int done = 0;
 
 #ifdef DEBUG
 	int saved_roots; EIF_REFERENCE *saved_object;
@@ -1759,21 +1731,18 @@ rt_private void update_object_id_stack(void)
 	flush;
 #endif
 
-	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
+	if (!stk->st_cur)	/* Stack is not created yet */
 		return;
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		object = s->sk_arena;					/* Start of stack */
-		if (s != stk->st_cur)					/* Before current pos? */
-			roots = s->sk_end - object;			/* The whole chunk */
-		else {
-			roots = stk->st_top - object;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;				/* Start of stack */
+		roots = s->sk_top - object;			/* The whole chunk */
 
 #ifdef DEBUG
 		dprintf(2)("mark_object_id_stack: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
@@ -1783,24 +1752,24 @@ rt_private void update_object_id_stack(void)
 		flush;
 #endif
 
-		for (; roots > 0; roots--, object++)
-			{
+		for (; roots > 0; roots--, object++) {
 			register char* root;
 			register union overhead *zone;
 
 			root = *object;
-			if (root != (EIF_REFERENCE)0){
+			if (root){
 				zone = HEADER(root);
 					/* If the object has moved, update the stack */
-				if (zone->ov_size & B_FWD)
+				if (zone->ov_size & B_FWD) {
 					*object = zone->ov_fwd;
 				}
 			}
+		}
 
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
 		dprintf(2)("mark_object_id_stack: after GC: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
@@ -1827,28 +1796,25 @@ rt_private void update_weak_references(void)
 	 * for the GC.
 	 */
 
-	struct stack *stk = &eif_weak_references;
+	struct ostack *stk = &eif_weak_references;
 
 	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;			/* To walk through each stack's chunk */
-	int done = 0;				/* Top of stack not reached yet */
+	struct stochunk *s, *current_chunk;			/* To walk through each stack's chunk */
 	int generational;				/* Are we in a generational cycle? */
 	union overhead *zone;
+	int done = 0;
 
-	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
+	if (!stk->st_cur) 	/* Stack is not created yet */
 		return;
 
 	generational = rt_g_data.status & GC_FAST;
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		object = s->sk_arena;					/* Start of stack */
-		if (s != stk->st_cur)					/* Before current pos? */
-			roots = s->sk_end - object;			/* The whole chunk */
-		else {
-			roots = stk->st_top - object;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;				/* Start of stack */
+		roots = s->sk_top - object;			/* The whole chunk */
 
 		for (; roots > 0; roots--, object++) {
 			if (*object) {
@@ -1870,7 +1836,7 @@ rt_private void update_weak_references(void)
 	}
 }
 
-rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
+rt_private void mark_stack(struct oastack *stk, MARKER marker, int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				 					/* Are the objects expected to move? */
@@ -1883,34 +1849,31 @@ rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
 #ifdef DEBUG
 	EIF_GET_CONTEXT
 #endif
-	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
+	EIF_REFERENCE **object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stoachunk *s, *current_chunk;	/* To walk through each stack's chunk */
+	int done = 0;
 
 #ifdef DEBUG
-	int saved_roots; EIF_REFERENCE *saved_object;
+	int saved_roots; EIF_REFERENCE **saved_object;
 	dprintf(1)("mark_stack: scanning %s stack for %s collector\n",
-		stk == &loc_stack ? "local (indirect)" : "once",
+		stk == &loc_set ? "local (indirect)" : "once",
 		marker == GEN_SWITCH ? "generation" : "traditional");
 	flush;
 #endif
 
-	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
+	if (!stk->st_cur)	/* Stack is not created yet */
 		return;
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		object = s->sk_arena;					/* Start of stack */
-		if (s != stk->st_cur)					/* Before current pos? */
-			roots = s->sk_end - object;			/* The whole chunk */
-		else {
-			roots = stk->st_top - object;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
+		object = s->sk_arena;				/* Start of stack */
+		roots = s->sk_top - object;			/* The whole chunk */
 
 #ifdef DEBUG
 		dprintf(2)("mark_stack: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
@@ -1922,13 +1885,13 @@ rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
 
 		if (move) {
 			for (; roots > 0; roots--, object++) {
-				if (*object) {
-					*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+				if (**object) {
+					**object = mark_expanded(**object, marker);
 				}
 			}
 		} else {
 			for (; roots > 0; roots--, object++) {
-				if (*object) {
+				if (* (EIF_REFERENCE *) *object) {
 					(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
 				}
 			}
@@ -1937,7 +1900,7 @@ rt_private void mark_stack(struct stack *stk, MARKER marker, int move)
 #ifdef DEBUG
 		roots = saved_roots; object = saved_object;
 		dprintf(2)("mark_stack: after GC: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
@@ -2006,8 +1969,8 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 
 	EIF_TYPED_VALUE *last;	/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stochunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stopchunk *s, *current_chunk;	/* To walk through each stack's chunk */
+	int done = 0;
 
 #ifdef DEBUG
 	int saved_roots; EIF_TYPED_VALUE *saved_last;
@@ -2020,18 +1983,15 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 	 * we know it has already been created.
 	 */
 
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
+	for (s = stk->st_head, current_chunk = stk->st_cur; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == current_chunk);
 		last = s->sk_arena;						/* Start of stack */
-		if (s != stk->st_cur)				/* Before current pos? */
-			roots = s->sk_end - last;			/* The whole chunk */
-		else {
-			roots = stk->st_top - last;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
+		roots = s->sk_top - last;			/* The whole chunk */
 
 #ifdef DEBUG
 		dprintf(2)("mark_op_stack: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
+			roots, s == stk->st_cur ? "last" : "current");
 		saved_roots = roots; saved_last = last;
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_TYPED_VALUE *lst = last;
@@ -2237,48 +2197,45 @@ rt_private void mark_overflow_stack(MARKER marker, int move)
 	 * objects are expected to move or not (to avoid useless writing
 	 * indirections). Stack holds indirect references to objects.
 	 */
-	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
+	EIF_REFERENCE **object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	struct stack stk;				/* Copy of current `overflow_stack_set' */
-	int done;						/* Top of stack not reached yet */
+	struct stoachunk *s;	/* To walk through each stack's chunk */
+	struct oastack stk;				/* Copy of current `overflow_stack_set' */
+	int done;
 
 	while (overflow_stack_count > 0) {
 			/* Copy `overflow_stack' to `stk', as we will iterate through `stk'.
 			 * We do this process as long as `overflow_stack_count' is not null. */
-		memcpy(&stk, &overflow_stack_set, sizeof(struct stack));
-		memset(&overflow_stack_set, 0, sizeof(struct stack));
+		memcpy(&stk, &overflow_stack_set, sizeof(struct oastack));
+		memset(&overflow_stack_set, 0, sizeof(struct oastack));
 		overflow_stack_count = 0;
 		done = 0;
 
-		CHECK("Stack created", stk.st_top != NULL);	/* Stack should be created since count > 0 */
+		CHECK("Stack created", stk.st_cur != NULL);	/* Stack should be created since count > 0 */
 
-		for (s = stk.st_hd; s && !done; s = s->sk_next) {
-			object = s->sk_arena;					/* Start of stack */
-			if (s != stk.st_cur)					/* Before current pos? */
-				roots = s->sk_end - object;			/* The whole chunk */
-			else {
-				roots = stk.st_top - object;		/* Stop at the top */
-				done = 1;							/* Reached end of stack */
-			}
+		for (s = stk.st_head; s && !done; s = s->sk_next) {
+				/* Do not process any further chunks beyond the current chunk. */
+			done = (s == stk.st_cur);
+			object = s->sk_arena;				/* Start of stack */
+			roots = s->sk_top - object;			/* The whole chunk */
 
 			if (move) {
 				for (; roots > 0; roots--, object++) {
-					if (*object) {
-						*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
+					if (**object) {
+						**object = mark_expanded(**object, marker);
 					}
 				}
 			} else {
 				for (; roots > 0; roots--, object++) {
-					if (*object) {
-						(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
+					if (**object) {
+						(void) mark_expanded(**object, marker);
 					}
 				}
 			}
 		}
 
 			/* Free memory used by stack as we don't need it anymore */
-		st_reset(&stk);
+		eif_oastack_reset(&stk);
 	}
 
 	ENSURE ("Overflow stack empty", overflow_stack_count == 0);
@@ -2330,20 +2287,13 @@ rt_private void unmark_c_stack_objects (void)
 {
 	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stchunk *s;			/* To walk through each stack's chunk */
-	int done;					/* Top of stack not reached yet */
+	struct stochunk *s;			/* To walk through each stack's chunk */
 
 		/* Only do some processing if the stack was created. */
-	if (c_stack_object_set.st_top) {
-		done = 0;
-		for (s = c_stack_object_set.st_hd; s && !done; s = s->sk_next) {
-			object = s->sk_arena;					/* Start of stack */
-			if (s != c_stack_object_set.st_cur)		/* Before current pos? */
-				roots = s->sk_end - object;			/* The whole chunk */
-			else {
-				roots = c_stack_object_set.st_top - object;		/* Stop at the top */
-				done = 1;							/* Reached end of stack */
-			}
+	if (c_stack_object_set.st_cur) {
+		for (s = c_stack_object_set.st_head; s && (s != c_stack_object_set.st_cur); s = s->sk_next) {
+			object = s->sk_arena;				/* Start of stack */
+			roots = s->sk_top - object;			/* The whole chunk */
 			for (; roots > 0; roots--, object++) {
 				CHECK("Object is marked", HEADER(*object)->ov_flags & EO_MARK);
 				CHECK("Object is on C stack", HEADER(*object)->ov_flags & EO_STACK);
@@ -2353,7 +2303,7 @@ rt_private void unmark_c_stack_objects (void)
 
 			/* Reset the content of the stack. This is not great for performance since
 			 * we will most likely reallocate the stack at the next GC cycle. */
-		st_reset(&c_stack_object_set);
+		eif_ostack_reset(&c_stack_object_set);
 	}
 }
 
@@ -2387,7 +2337,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 	if (overflow_stack_depth > overflow_stack_limit) {
 			/* If we can add to the stack overflow recursion, then we do it, otherwise
 			 * we hope we will have enough stack to complete the GC cycle. */
-		if (epush(&overflow_stack_set, a_root) != -1) {
+		if (eif_oastack_push(&overflow_stack_set, a_root) == T_OK) {
 			overflow_stack_count++;
 			overflow_stack_depth--;
 			return root;
@@ -2512,8 +2462,8 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE *a_root)
 		if (!eif_is_nested_expanded(flags)) {
 			if (flags & EO_STACK) {
 					/* Object is on the C stack, so we need to record it to unmark it later. */
-					/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-				epush(&c_stack_object_set, current);
+					/* FIXME: Manu 2009/04/29: Code is not safe if `eif_ostack_push' returns T_NO_MORE_MEMORY. */
+				eif_ostack_push(&c_stack_object_set, current);
 			}
 			flags |= EO_MARK;
 			zone->ov_flags = flags;
@@ -3224,7 +3174,7 @@ rt_private int sweep_from_space(void)
 				}
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
-					!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
+					!eif_ostack_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 			}
 		} else {
@@ -3296,7 +3246,7 @@ rt_private int sweep_from_space(void)
 					}
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 					CHECK ("Cannot be in object ID stack",
-						!st_has (&object_id_stack, (EIF_REFERENCE) next + 1));
+						!eif_ostack_has (&object_id_stack, (EIF_REFERENCE) next + 1));
 #endif
 
 					rt_m_data.ml_over -= OVERHEAD;		/* Memory accounting */
@@ -3960,6 +3910,9 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	internal_marking(GEN_SWITCH, moving);
 }
 
+static rt_uint_ptr dcounter = 0;
+static rt_uint_ptr othercounter = 0;
+
 rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 {
 	/* Mark all the objects referenced by the root object.
@@ -3991,7 +3944,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 	if (overflow_stack_depth > overflow_stack_limit) {
 			/* If we can add to the stack overflow recursion, then we do it, otherwise
 			 * we hope we will have enough stack to complete the GC cycle. */
-		if (epush(&overflow_stack_set, a_root) != -1) {
+		if (eif_oastack_push(&overflow_stack_set, a_root) == T_OK) {
 			overflow_stack_count++;
 			overflow_stack_depth--;
 			return root;
@@ -4037,6 +3990,10 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 		 * in the remembered list).
 		 */
 
+		dcounter++;
+		if (dcounter == othercounter) {
+			CHECK("dcounter", dcounter > 10);
+		}
 		if (zone->ov_size & B_FWD) {	/* Object was forwarded (scavenged) */
 			if(prev)
 				*prev = zone->ov_fwd;	/* Update with its new location */
@@ -4056,8 +4013,8 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 
 		if (flags & EO_STACK) {
 				/* Object is on the C stack, so we need to record it to unmark it later. */
-				/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-			epush(&c_stack_object_set, current);
+				/* FIXME: Manu 2009/04/29: Code is not safe if `eif_ostack_push' returns T_NO_MORE_MEMORY. */
+			eif_ostack_push(&c_stack_object_set, current);
 			zone->ov_flags = flags | EO_MARK;
 		}
 
@@ -4226,7 +4183,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	EIF_TYPE_INDEX dftype, dtype;
 	EIF_REFERENCE new;							/* Address of new object (tenured) */
 	rt_uint_ptr size;							/* Size of scavenged object */
-	int ret;							/* status returned by "epush" */
+	int ret;							/* status returned by "eif_ostack_push" */
 
 	zone = HEADER(root);				/* Info header */
 	flags = zone->ov_flags;				/* Eiffel flags */
@@ -4268,8 +4225,8 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * be remembered, it remains in the new generation.
 			 */
 
-			ret = epush (&rem_set, root);
-			if (-1 != ret) {	/* We could record it */
+			ret = eif_ostack_push (&rem_set, root);
+			if (T_NO_MORE_MEMORY != ret) {	/* We could record it */
 
 				/* Mark the object as being old, but do not remove the EO_MARK
 				 * mark. See comment about GC_FAST in update_moved_set()--RAM.
@@ -4313,8 +4270,8 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * be removed--object does not reference any young ones any more).
 			 */
 
-			ret = epush (&rem_set, new);
-			if (ret == -1) {	/* Cannot record it */
+			ret = eif_ostack_push (&rem_set, new);
+			if (ret == T_NO_MORE_MEMORY) {	/* Cannot record it */
 				gen_scavenge |= GS_STOP;		/* Mark failure */
 				eif_rt_xfree(new);						/* Back where we found it */
 				return scavenge(root, &sc_to.sc_top);	/* Simple scavenge */
@@ -4403,7 +4360,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 
 rt_private void update_moved_set(void)
 {
-	/* Update the moved set. This routine is called to throw away from the moved
+	/* Update the moved set in place. This routine is called to throw away from the moved
 	 * set all the dead objects.
 	 * Generation collection has its own treatment for that, as we need to
 	 * eventually collect the dead objects. If partial collection has been done
@@ -4417,21 +4374,34 @@ rt_private void update_moved_set(void)
 	EIF_REFERENCE *obj;			/* Pointer to objects held in a stack */
 	rt_uint_ptr i;				/* Number of items in stack chunk */
 	union overhead *zone;	/* Referenced object's header */
-	struct stchunk *s;	/* To walk through each stack's chunk */
+	struct stochunk *s, *new_stack_cur;	/* To walk through each stack's chunk */
+	EIF_REFERENCE *new_stack_top;
 	uint32 flags;			/* Used only if GC_FAST */
-	struct stack new_stack;			/* The new stack built from the old one */
-	int done = 0;					/* Top of stack not reached yet */
+	int done = 0;
 
-	memcpy (&new_stack, &moved_set, sizeof(struct stack));
-	s = new_stack.st_cur = moved_set.st_hd;		/* New empty stack */
-	if (s) {
-		new_stack.st_top = s->sk_arena;			/* Lowest possible top */
-		new_stack.st_end = s->sk_end;			/* End of first chunk */
+	s = moved_set.st_head;		/* New empty stack */
+	if (!s) {
+			/* Moved set is empty, we can skip it. */
+		return;
 	}
+
+		/* This is the `new_stack_top' of the new stack. This is how we are going to add in-place
+		 * elements of `moved_set'. */
+	new_stack_cur = s;
+	new_stack_top = s->sk_arena;
+
+	/* Addition in place of `obj' in `new_stack_cur'. If `new_stack_top' is at the end of the chunk,
+	 * we go to the next one which exists since we are merely moving items from `moved_set' to `itself'. */
+#define XX_INSERT_IN_PLACE(obj)  \
+	if (new_stack_top == new_stack_cur->sk_end) { \
+		new_stack_cur = new_stack_cur->sk_next; \
+		new_stack_top = new_stack_cur->sk_arena; \
+	} \
+	*new_stack_top++ = (obj) 
 
 #ifdef DEBUG
 	dprintf(1)("update_moved_set: %d objects to be studied\n",
-		nb_items(&moved_set));
+		eif_ostack_count(&moved_set));
 	flush;
 #endif
 
@@ -4446,41 +4416,34 @@ rt_private void update_moved_set(void)
 
 	if (rt_g_data.status & GC_PART) {			/* Partial collection */
 		for (; s && !done; s = s->sk_next) {
+				/* Do not process any further chunks beyond the current chunk. */
+			done = (s == moved_set.st_cur);
 			obj = s->sk_arena;					/* Start of stack */
-			if (s != moved_set.st_cur)			/* Top is before after 's' */
-				i = s->sk_end - obj;			/* Look at the whole chunk */
-			else {
-				i = moved_set.st_top - obj;		/* Stop at the top */
-				done = 1;						/* Reached end of stack */
-			}
+			i = s->sk_top - obj;			/* Look at the whole chunk */
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
-					if (zone->ov_flags & EO_NEW)	/* It's a new one */
-							/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-						epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Update reference */
-				} else if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-					epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Remain as is */
+					if (zone->ov_flags & EO_NEW) {	/* It's a new one */
+						XX_INSERT_IN_PLACE((EIF_REFERENCE) (zone + 1));
+					}
+				} else if (EO_MOVED == (zone->ov_flags & EO_MOVED)) {
+					XX_INSERT_IN_PLACE((EIF_REFERENCE) (zone + 1));
+				}
 			}
 		}
 	} else if (rt_g_data.status & GC_FAST) {	/* Generation collection */
 		for (; s && !done; s = s->sk_next) {
+				/* Do not process any further chunks beyond the current chunk. */
+			done = (s == moved_set.st_cur);
 			obj = s->sk_arena;					/* Start of stack */
-			if (s != moved_set.st_cur)			/* Top is before after 's' */
-				i = s->sk_end - obj;			/* Look at the whole chunk */
-			else {
-				i = moved_set.st_top - obj;		/* Stop at the top */
-				done = 1;						/* Reached end of stack */
-			}
+			i = s->sk_top - obj;			/* Look at the whole chunk */
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
-							/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-						epush(&new_stack, (EIF_REFERENCE)(zone+1));		/* Remains "as is" */
+						XX_INSERT_IN_PLACE((EIF_REFERENCE) (zone + 1));
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
 					} else if (!(flags & EO_REM))		/* Not remembered */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
@@ -4490,35 +4453,39 @@ rt_private void update_moved_set(void)
 		}
 	} else {								/* Mark and sweep */
 		for (; s && !done; s = s->sk_next) {
+				/* Do not process any further chunks beyond the current chunk. */
+			done = (s == moved_set.st_cur);
 			obj = s->sk_arena;					/* Start of stack */
-			if (s != moved_set.st_cur)			/* Top is before after 's' */
-				i = s->sk_end - obj;			/* Look at the whole chunk */
-			else {
-				i = moved_set.st_top - obj;		/* Stop at the top */
-				done = 1;						/* Reached end of stack */
-			}
+			i = s->sk_top - obj;			/* Look at the whole chunk */
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
-				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-					epush(&new_stack,(EIF_REFERENCE)(zone+1));	/* Remains "as is" */
+				if (EO_MOVED == (zone->ov_flags & EO_MOVED)) {
+					XX_INSERT_IN_PLACE((EIF_REFERENCE) (zone + 1));
+				}
 			}
 		}
 	}
 
+	s = moved_set.st_cur = new_stack_cur;
+	s->sk_top = new_stack_top;
+
+	for (s = s->sk_next; s ; s = s->sk_next) {
+			/* We have to reset the top of each unused chunk past the current one. */
+		s->sk_top = s->sk_arena;
+	}
+
 #ifdef DEBUG
 	dprintf(1)("update_moved_set: %d objects remaining\n",
-		nb_items(&new_stack));
+		eif_stack_count(&moved_set));
 	flush;
 #endif
 
-	memcpy (&moved_set, &new_stack, sizeof(struct stack));
+		/* As for the remembered set (see comment in update_rem_set), we release the
+		 * spurious chunks used by the moved set stack.
+		 */
+	eif_ostack_truncate(&moved_set);
 
-	/* As for the remembered set (see comment in update_rem_set), we release the
-	 * spurious chunks used by the moved set stack.
-	 */
-
-	st_truncate(&moved_set);
+#undef XX_INSERT_IN_PLACE
 }
 
 rt_private void update_rem_set(void)
@@ -4534,20 +4501,32 @@ rt_private void update_rem_set(void)
 
 	EIF_REFERENCE *object;					/* Current inspected object */
 	rt_uint_ptr n;							/* Number of objects to be dealt with */
-	struct stack new_stack;			/* The new stack built from the old one */
 	EIF_REFERENCE current;		/* Address of inspected object */
 	char moving;			/* May GC move objects around? */
 	union overhead *zone;	/* Malloc info zone */
-	struct stchunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	struct stochunk *s, *new_stack_cur;	/* To walk through each stack's chunk */
+	EIF_REFERENCE *new_stack_top;
 	int generational;				/* Are we in a generational cycle? */
+	int done = 0;
 
-	memcpy (&new_stack, &rem_set, sizeof(struct stack));
-	s = new_stack.st_cur = rem_set.st_hd;		/* New empty stack */
-	if (s) {
-		new_stack.st_top = s->sk_arena;			/* Lowest possible top */
-		new_stack.st_end = s->sk_end;			/* End of first chunk */
+	s = rem_set.st_head;		/* New empty stack */
+	if (!s) {
+		return;
 	}
+
+		/* This is the `new_stack_top' of the new stack. This is how we are going to add in-place
+		 * elements of `moved_set'. */
+	new_stack_cur = s;
+	new_stack_top = s->sk_arena;
+
+	/* Addition in place of `obj' in `new_stack_cur'. If `new_stack_top' is at the end of the chunk,
+	 * we go to the next one which exists since we are merely moving items from `moved_set' to `itself'. */
+#define XX_INSERT_IN_PLACE(obj)  \
+	if (new_stack_top == new_stack_cur->sk_end) { \
+		new_stack_cur = new_stack_cur->sk_next; \
+		new_stack_top = new_stack_cur->sk_arena; \
+	} \
+	*new_stack_top++ = (obj) 
 
 	moving = rt_g_data.status;				/* Garbage collector's state */
 	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
@@ -4555,18 +4534,15 @@ rt_private void update_rem_set(void)
 
 #ifdef DEBUG
 	dprintf(1)("update_rem_set: %d objects to be studied\n",
-		nb_items(&rem_set));
+		eif_stack_count(&rem_set));
 	flush;
 #endif
 
 	for (; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == rem_set.st_cur);
 		object = s->sk_arena;				/* Start of stack */
-		if (s != rem_set.st_cur)			/* Top is before after 's' */
-			n = s->sk_end - object;			/* Look at the whole chunk */
-		else {
-			n = rem_set.st_top - object;	/* Stop at the top */
-			done = 1;						/* Reached end of stack */
-		}
+		n = s->sk_top - object;			/* Look at the whole chunk */
 
 		for (; n > 0; n--, object++) {
 			current = *object;				/* Save that for later perusal */
@@ -4616,11 +4592,11 @@ rt_private void update_rem_set(void)
 			 * remembered set.
 			 */
 
-			if (refers_new_object(current))	/* Object deserves remembering? */
-					/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-				epush(&new_stack, current);	/* Save it for posterity */
-			else
+			if (refers_new_object(current)) {	/* Object deserves remembering? */
+				XX_INSERT_IN_PLACE(current);
+			} else {
 				HEADER(current)->ov_flags &= ~EO_REM;	/* Not remembered */
+			}
 
 #ifdef DEBUG
 			dprintf(4)("update_rem_set: %s object %lx (type %d, %d bytes) %s\n",
@@ -4631,21 +4607,21 @@ rt_private void update_rem_set(void)
 				HEADER(current)->ov_flags & EO_REM ? "remembered":"forgotten");
 			flush;
 #endif
-
 		}
 	}
 
+	s = rem_set.st_cur = new_stack_cur;
+	s->sk_top = new_stack_top;
+
+	for (s = s->sk_next; s ; s = s->sk_next) {
+			/* We have to reset the top of each unused chunk past the current one. */
+		s->sk_top = s->sk_arena;
+	}
+
 #ifdef DEBUG
-	dprintf(1)("update_rem_set: %d objects remaining\n",
-		nb_items(&new_stack));
+	dprintf(1)("update_rem_set: %d objects remaining\n", eif_ostack_count(&rem_set));
 	flush;
 #endif
-
-	/* Objects remembered have been pushed on stack "new_stack". Now reset the
-	 * remembered set correctly by making "rem_set" refer to the new stack.
-	 */
-
-	memcpy (&rem_set, &new_stack, sizeof(struct stack));
 
 	/* Usually, the remembered set shrinks after a collection. The unused chunks
 	 * in the stack are freed. Yet, we'll have to call malloc() again to extend
@@ -4653,7 +4629,9 @@ rt_private void update_rem_set(void)
 	 * process size--RAM.
 	 */
 
-	st_truncate(&rem_set);
+	eif_ostack_truncate(&rem_set);
+
+#undef XX_INSERT_IN_PLACE
 }
 
 rt_private void update_memory_set (void)
@@ -4668,45 +4646,50 @@ rt_private void update_memory_set (void)
 
 	EIF_REFERENCE *object;					/* Current inspected object */
 	rt_uint_ptr n;							/* Number of objects to be dealt with */
-	struct stack new_stack;			/* The new stack built from the old one */
 	EIF_REFERENCE current;		/* Address of inspected object */
 	union overhead *zone;	/* Malloc info zone */
-	struct stchunk *s;	/* To walk through each stack's chunk */
+	struct stochunk *s, *new_stack_cur;	/* To walk through each stack's chunk */
+	EIF_REFERENCE *new_stack_top;
 	int saved_in_assertion;			/* Saved assertion level.	*/
 	char gc_status;					/* Saved GC status.	*/
 	EIF_TYPE_INDEX dtype;			/* Dynamic type of Current object.	*/
-	int done = 0;					/* Top of stack not reached yet */
+	int done = 0;
 
 	REQUIRE ("GC is not stopped", !(rt_g_data.status & GC_STOP));
 
-	/************************* End of postconditions. **********************/
-
-	memcpy (&new_stack, &memory_set, sizeof(struct stack));
-	s = new_stack.st_cur = memory_set.st_hd;		/* New empty stack */
-	if (s) {
-		new_stack.st_top = s->sk_arena;				/* Lowest possible top */
-		new_stack.st_end = s->sk_end;				/* End of first chunk */
+	s = memory_set.st_head;		/* New empty stack */
+	if (!s) {
+		return;
 	}
+
+		/* This is the `new_stack_top' of the new stack. This is how we are going to add in-place
+		 * elements of `moved_set'. */
+	new_stack_cur = s;
+	new_stack_top = s->sk_arena;
+
+	/* Addition in place of `obj' in `new_stack_cur'. If `new_stack_top' is at the end of the chunk,
+	 * we go to the next one which exists since we are merely moving items from `moved_set' to `itself'. */
+#define XX_INSERT_IN_PLACE(obj)  \
+	if (new_stack_top == new_stack_cur->sk_end) { \
+		new_stack_cur = new_stack_cur->sk_next; \
+		new_stack_top = new_stack_cur->sk_arena; \
+	} \
+	*new_stack_top++ = (obj) 
+
 
 #ifdef DEBUG_UPDATE_MEMORY_SET
 	printf("update_memory_set: %d objects to be studied\n",
-		nb_items(&memory_set));
+		eif_stack_count(&memory_set));
 #endif
 
 	/* Traverse stack.	*/
-	for (; s && !done; s = s->sk_next)
-	{
+	for (; s && !done; s = s->sk_next) {
+			/* Do not process any further chunks beyond the current chunk. */
+		done = (s == memory_set.st_cur);
 		object = s->sk_arena;				/* Start of stack */
-		if (s != memory_set.st_cur)			/* Top is before after 's' */
-			n = s->sk_end - object;			/* Look at the whole chunk */
-		else
-		{
-			n = memory_set.st_top - object;	/* Stop at the top */
-			done = 1;						/* Reached end of stack */
-		}
+		n = s->sk_top - object;			/* Look at the whole chunk */
 
-		for (; n > 0; n--, object++)
-		{
+		for (; n > 0; n--, object++) {
 			current = *object;				/* Save that for later perusal */
 			zone = HEADER(current);			/* Object's header */
 
@@ -4735,10 +4718,10 @@ rt_private void update_memory_set (void)
 				CHECK ("Has dispose routine", Disp_rout (Dtype (HEADER (current) + 1)));
 				CHECK ("Not forwarded twice", !(HEADER (current)->ov_size & B_FWD));
 
-				if (!(HEADER (current)->ov_flags & (EO_OLD | EO_NEW)))
-										/* Forwarded object is still in GSZ. */
-						/* FIXME: Manu 2009/04/29: Code is not safe if `epush' returns -1. */
-					epush(&new_stack, current);		/* Save it in the stack. */
+				if (!(HEADER (current)->ov_flags & (EO_OLD | EO_NEW))) {
+						/* Forwarded object is still in GSZ. */
+					XX_INSERT_IN_PLACE(current);
+				}
 			} else {
 					/* Object is dead, we call dispose routine.*/
 				CHECK ("Objects not in GSZ", !(zone->ov_flags & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));
@@ -4760,7 +4743,7 @@ rt_private void update_memory_set (void)
 				rt_g_data.status = gc_status;		/* Restore previous GC status.*/
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 				CHECK ("Cannot be in object ID stack",
-					!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
+					!eif_ostack_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 			}
 
@@ -4774,23 +4757,26 @@ rt_private void update_memory_set (void)
 		}	/* for ... */
 	}	/* for ... */
 
+	s = memory_set.st_cur = new_stack_cur;
+	s->sk_top = new_stack_top;
+
+	for (s = s->sk_next; s ; s = s->sk_next) {
+			/* We have to reset the top of each unused chunk past the current one. */
+		s->sk_top = s->sk_arena;
+	}
+
 #ifdef DEBUG_UPDATE_MEMORY_SET
 	printf("update_memory_set: %d objects remaining\n",
-		nb_items(&new_stack));
+		eif_ostack_count(&memory_set));
 #endif	/* DEBUG_UPDATE_MEMORY_SET	*/
-
-	/* Memory objects have been pushed on stack "new_stack". Now reset the
-	 * the memory set correctly by making "memory_set" refer to the new stack.
-	 */
-
-	memcpy (&memory_set, &new_stack, sizeof(struct stack));
 
 	/* Usually, the memory set shrinks after a collection. The unused chunks
 	 * in the stack are freed.
 	 */
 
-	st_truncate(&memory_set);
+	eif_ostack_truncate(&memory_set);
 
+#undef XX_INSERT_IN_PLACE
 }	/* update_memory_set() */
 
 
@@ -4923,11 +4909,11 @@ rt_public void eremb(EIF_REFERENCE obj)
 
 	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
+	if (T_NO_MORE_MEMORY == eif_ostack_push(&rem_set, obj)) {		/* Low on memory */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		urgent_plsc(&obj);					/* Compacting garbage collection */
 		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-		if (-1 == epush(&rem_set, obj)) {	/* Still low on memory */
+		if (T_NO_MORE_MEMORY == eif_ostack_push(&rem_set, obj)) {	/* Still low on memory */
 			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			enomem(MTC_NOARG);						/* Critical exception */
 		} else {
@@ -4959,15 +4945,15 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 */
 
 	RT_GET_CONTEXT
+	int ret;
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
-	if (-1 == epush(&rem_set, obj)) {		/* Cannot record object */
-		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+	ret = eif_ostack_push(&rem_set, obj);
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+	if (ret != T_OK) {		/* Cannot record object */
 		enomem(MTC_NOARG);						/* Critical exception */
 	} else {
-		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+		HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 	}
-
-	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 }
 
 /*
@@ -5055,7 +5041,7 @@ rt_shared void gfree(register union overhead *zone)
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 	CHECK ("Cannot be in object ID stack",
-		!st_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
+		!eif_ostack_has (&object_id_stack, (EIF_REFERENCE) zone + 1));
 #endif
 
 #ifdef DEBUG
@@ -5081,18 +5067,24 @@ rt_public EIF_REFERENCE * onceset(void)
 	 */
 
 	EIF_GET_CONTEXT
-#ifdef DEBUG
-	dprintf(32)("onceset");
-	flush;
+	EIF_REFERENCE *top;
+	
+#ifdef WORKBENCH
+	top = eif_ostack_push_empty(&once_set);
+	*top = NULL;
+#else
+	top = (EIF_REFERENCE *) eif_oastack_push_empty(&once_set);
+	*top = NULL;
 #endif
 
-	if (-1 == epush(&once_set, (EIF_REFERENCE) 0 ))
+	if (!top) {
 		eraise("once function recording", EN_MEM);
+	}
 
-	return once_set.st_top - 1;
+	return top;
 }
 
-rt_public void new_onceset(EIF_REFERENCE address)
+rt_public void new_onceset(EIF_REFERENCE *address)
 {
 	/* Record result of once functions onto the once_set stack, so that the
 	 * run-time may update the address should the result be moved around by
@@ -5100,8 +5092,13 @@ rt_public void new_onceset(EIF_REFERENCE address)
 	 */
 
 	EIF_GET_CONTEXT
-	if (-1 == epush(&once_set, (EIF_REFERENCE) address))
+#ifdef WORKBENCH
+	if (eif_ostack_push(&once_set, (EIF_REFERENCE) address) != T_OK) {
+#else
+	if (eif_oastack_push(&once_set, address) != T_OK) {
+#endif
 		eraise("once function recording", EN_MEM);
+	}
 }
 
 /*
@@ -5118,7 +5115,7 @@ doc:	</routine>
 rt_public void register_oms (EIF_REFERENCE *address)
 {
 	EIF_GET_CONTEXT
-	if (-1 == epush(&oms_set, address)) {
+	if (eif_oastack_push(&oms_set, address) != T_OK) {
 		eraise("once manifest string recording", EN_MEM);
 	}
 }
@@ -5241,277 +5238,23 @@ rt_public ONCE_INDEX process_once_index (BODY_INDEX code_id)
 /*
 doc:	<routine name="globalonceset" export="public">
 doc:		<summary>Insert a global once result `address' which is an EIF_REFERENCE into `global_once_set' so that GC can update `address' and track objects references by `address' during a collection.</summary>
-doc:		<param name="address" type="EIF_REFERENCE">Address that needs to be tracked/protected.</param>
+doc:		<param name="address" type="EIF_REFERENCE *">Address that needs to be tracked/protected.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_global_once_set_mutex'</synchronization>
 doc:	</routine>
 */
 
-rt_public void globalonceset(EIF_REFERENCE address)
+rt_public void globalonceset(EIF_REFERENCE *address)
 {
 	RT_GET_CONTEXT
 	EIF_ASYNC_SAFE_CS_LOCK(eif_global_once_set_mutex);
-	if (-1 == epush(&global_once_set, address)) {
+	if (eif_oastack_push(&global_once_set, address) != T_OK) {
 		EIF_ASYNC_SAFE_CS_UNLOCK(eif_global_once_set_mutex);
 		eraise("once function recording", EN_MEM);
 	}
 	EIF_ASYNC_SAFE_CS_UNLOCK(eif_global_once_set_mutex);
 }
 #endif
-
-/*
- * Stack handling routines. Each of these require the address of the
- * associated stack structure as a parameter. This avoids code duplication
- * at the cost of an additional parameter--RAM.
- * A stack is a collection of some small chunks, linked together. The main
- * structure 'stack' describes the whole data structure completely.
- */
-
-rt_shared int epush(register struct stack *stk, register void *value)
-									/* The stack */
-									/* Value to be pushed */
-{
-	/* Push 'value' on top of the given stack 'stk'. If the stack is
-	 * full, we try to allocate a new chunk. If this fails, nothing is done,
-	 * and -1 is returned to signal failure. Otherwise 0 is returned.
-	 */
-	RT_GET_CONTEXT
-	EIF_REFERENCE *top = stk->st_top;		/* Current top of stack */
-
-	if (top == (EIF_REFERENCE *) 0)	{					/* No stack yet? */
-		top = st_alloc(stk, eif_stack_chunk);		/* Create one */
-		if (top == (EIF_REFERENCE *) 0)
-			return -1;				/* Could not create stack */
-	}
-
-#ifdef DEBUG
-	dprintf(32)("epush: value 0x%lx on stack 0x%lx\n", value, stk);
-	flush;
-#endif
-
-	if (stk->st_end == top) {
-		/* The end of the current stack chunk has been reached. If there is
-		 * a chunk allocated after the current one, use it, otherwise create
-		 * a new one and insert it in the list.
-		 */
-		SIGBLOCK;							/* Critical section */
-		if (stk->st_cur == stk->st_tl) {	/* Reached last chunk */
-			if (-1 == st_extend(stk, eif_stack_chunk)) {
-				SIGRESUME;
-				return -1;			/* Could not extend stack */
-			}
-			top = stk->st_top;		/* New top */
-		} else {
-			struct stchunk *current;		/* New current chunk */
-
-			/* Update the new stack context (main structure) */
-			current = stk->st_cur = stk->st_cur->sk_next;
-			top = stk->st_top = current->sk_arena;
-			stk->st_end = current->sk_end;
-		}
-		SIGRESUME;		/* End of critical section */
-	}
-
-	*top++ = value;			/* Push value on top of the stack */
-	stk->st_top = top;		/* Points to next free location */
-
-	return 0;		/* Value was successfully pushed on the stack */
-}
-
-rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register size_t size)
-									/* The stack */
-				 					/* Initial size */
-{
-	/* The stack 'stk' is created, with size 'size'. Return the arena value */
-	RT_GET_CONTEXT
-	EIF_REFERENCE *arena;				/* Address for the arena */
-	struct stchunk *chunk;	/* Address of the chunk */
-	rt_uint_ptr l_size = size * REFSIZ + sizeof(struct stchunk);
-
-	SIGBLOCK;							/* Critical section */
-	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
-	SIGRESUME;							/* End of critical section */
-	if (chunk == (struct stchunk *) 0)
-		return (EIF_REFERENCE *) 0;		/* Malloc failed for some reason */
-
-	SIGBLOCK;							/* Critical section */
-	stk->st_hd = chunk;					/* New stack (head of list) */
-	stk->st_tl = chunk;					/* One chunk for now */
-	stk->st_cur = chunk;				/* Current chunk */
-	arena = (EIF_REFERENCE *) (chunk + 1);		/* Header of chunk */
-	stk->st_top = arena;				/* Empty stack */
-	chunk->sk_arena = arena;			/* Base address */
-	stk->st_end = chunk->sk_end =
-		(EIF_REFERENCE *) ((char *) chunk + l_size);	/* First free location beyond stack */
-	chunk->sk_next = (struct stchunk *) 0;
-	chunk->sk_prev = (struct stchunk *) 0;
-	SIGRESUME;							/* End of critical section */
-
-	return arena;			/* Stack allocated */
-}
-
-rt_shared int st_extend(register struct stack *stk, register size_t size)
-									/* The stack */
-				 					/* Size of new chunk to be added */
-{
-	/* The stack 'stk' is extended and the 'stk' structure updated.
-	 * 0 is returned in case of success. Otherwise, -1 is returned.
-	 */
-	RT_GET_CONTEXT
-	EIF_REFERENCE *arena;				/* Address for the arena */
-	struct stchunk *chunk;	/* Address of the chunk */
-	rt_uint_ptr l_size = size * REFSIZ + sizeof(struct stchunk);
-
-	chunk = (struct stchunk *) eif_rt_xmalloc(l_size, C_T, GC_OFF);
-	if (chunk == (struct stchunk *) 0)
-		return -1;		/* Malloc failed for some reason */
-
-	SIGBLOCK;								/* Critical section */
-	arena = (EIF_REFERENCE *) (chunk + 1);			/* Header of chunk */
-	chunk->sk_next = (struct stchunk *) 0;	/* Last chunk in list */
-	chunk->sk_prev = stk->st_tl;			/* Preceded by the old tail */
-	stk->st_tl->sk_next = chunk;			/* Maintain link w/previous */
-	stk->st_tl = chunk;						/* New tail */
-	chunk->sk_arena = arena;				/* Where items are stored */
-	chunk->sk_end =
-		(EIF_REFERENCE *) ((char *) chunk + l_size);	/* First item beyond chunk */
-	stk->st_top = arena;					/* New top */
-	stk->st_end = chunk->sk_end;			/* End of current chunk */
-	stk->st_cur = chunk;					/* New current chunk */
-	SIGRESUME;								/* End of critical section */
-
-	return 0;			/* Everything is ok */
-}
-
-/*
-doc:	<routine name="st_address_in_stack" return_type="int" export="shared">
-doc:		<summary>Search if `address' is indeed an address from the various arenas of `st'.</summary>
-doc:		<param name="st" type="struct stack *">Stack in which we are looking for `address'.</param>
-doc:		<param name="address" type="void *">Address being looked for in `st'.</param>
-doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
-doc:		<synchronization>Requires safe access to `st'.</synchronization>
-doc:	</routine>
-*/
-rt_shared int st_address_in_stack (struct stack *st, void *address)
-{
-	struct stchunk *ck;
-
-		/* Loop through all the chunks */
-	for (ck = st->st_hd; ck != NULL; ck = ck->sk_next){
-			/* Perform bounds check on address. */
-		if
-			(((rt_uint_ptr) ck->sk_arena <= (rt_uint_ptr) address) &&
-			((rt_uint_ptr) ck->sk_end > (rt_uint_ptr) address))
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-
-/*
-doc:	<routine name="st_has" return_type="int" export="shared">
-doc:		<summary>Search if `data' is present in `st'.</summary>
-doc:		<param name="st" type="struct stack *">Stack in which we are looking for `data'.</param>
-doc:		<param name="data" type="void *">Data being looked for in `st'.</param>
-doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
-doc:		<synchronization>Requires safe access to `st'.</synchronization>
-doc:	</routine>
-*/
-rt_shared int st_has (struct stack *st, void *data)
-{
-	struct stchunk *ck;
-	char **address;
-	int done = 0;
-
-	if (st->st_top) {
-			/* Loop through all the chunks, of course only when the stack has been created. */
-		for (ck = st->st_hd; ck != NULL && !done; ck = ck->sk_next){
-				/* Starting address is end of chunk for full chunks and
-				 * current insertion position for the last one */
-			if (ck == st->st_cur) {
-				address = st->st_top - 1;
-				done = 1;
-			} else {
-				address = ck->sk_end - 1;
-			}
-
-			CHECK("arena not null", ck->sk_arena);
-			for (; address >= ck->sk_arena; address--) {
-				if (*address == data)
-						/* Object is in the stack. We exit the loop. */
-					return 1;
-			}
-		}
-	}
-	return 0;
-}
-
-rt_shared void st_truncate(register struct stack *stk)
-									/* The stack to be truncated */
-{
-	/* Free unused chunks in the stack. If the current chunk has at least
-	 * MIN_FREE locations, then we may free all the chunks starting with the
-	 * next one. Otherwise, we skip the next chunk and free the remainder.
-	 */
-
-	EIF_REFERENCE *top;			/* The current top of the stack */
-	struct stchunk *next;			/* Address of next chunk */
-
-	top = stk->st_top;						/* The first free location */
-	if (top == (EIF_REFERENCE *) 0)					/* Not allocated yet */
-		return;
-
-	if (stk->st_end - top > MIN_FREE) {		/* Enough locations left */
-		stk->st_tl = stk->st_cur;			/* Last chunk from now on */
-		st_wipe_out(stk->st_cur->sk_next);	/* Free starting at next chunk */
-	} else {								/* Current chunk is nearly full */
-		next = stk->st_cur->sk_next;		/* We are followed by 'next' */
-		if (next != (struct stchunk *) 0) {	/* There is indeed a next chunk */
-			stk->st_tl = next;				/* New tail chunk */
-			st_wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
-		}
-	}
-}
-
-rt_shared void st_wipe_out(register struct stchunk *chunk)
-							 		/* First chunk to be freed */
-{
-	/* Free all the chunks after 'chunk' */
-
-	struct stchunk *next;		/* Address of next chunk */
-
-	if (chunk == (struct stchunk *) 0)	/* No chunk */
-		return;							/* Nothing to be done */
-
-	chunk->sk_prev->sk_next = (struct stchunk *) 0;	/* Nothing after previous */
-
-	for (
-		next = chunk->sk_next;
-		chunk != (struct stchunk *) 0;
-		chunk = next, next = chunk ? chunk->sk_next : chunk
-	)
-		eif_rt_xfree((EIF_REFERENCE) chunk);
-}
-
-rt_public void st_reset(struct stack *stk)
-		/* The stack */
-{
-	/* Reset the stack 'stk' to its minimal state and disgard all its
-	 * contents. Walking through the list of chunks, we free them and
-	 * clear the 'stk' structure.
-	 */
-
-	struct stchunk *k;	/* To walk through the list */
-	struct stchunk *n;	/* Save next before freeing chunk */
-
-	for (k = stk->st_hd; k; k = n) {
-		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
-		eif_rt_xfree((EIF_REFERENCE) k);	/* But how do I know implementation won't change? */
-	}
-
-	memset (stk, 0, sizeof(struct stack));
-}
 
 #ifdef ISE_GC
 #ifdef DEBUG
@@ -5569,27 +5312,6 @@ rt_private void scavenge_statistics (struct sc_zone *to)
 		}
 	}
 	dprintf(1) ("\n");
-}
-
-rt_private int nb_items(struct stack *stk)
-		/* The stack */
-{
-	/* Gives the number of items held in the stack */
-
-	struct stchunk *s;	/* To walk through the list */
-	int n = 0;			/* Number of items */
-	int done = 0;			/* Top of stack not reached yet */
-
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		if (s != stk->st_cur)
-			n += s->sk_end - s->sk_arena;		/* The whole chunk */
-		else {
-			n += stk->st_top - s->sk_arena;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
-	}
-
-	return n;		/* Number of objects held in stack */
 }
 #endif	/* !NDEBUG */
 

@@ -70,6 +70,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_rout_obj.h"
 #include "eif_built_in.h"
 #include "eif_macros.h"
+#include "eif_stack.h"
 
 /*#define SEP_DEBUG */  /**/
 /*#define DEBUG 6 */ 	/**/
@@ -122,11 +123,9 @@ doc:		<synchronization>Private per thread data and `eif_gc_mutex'</synchronizati
 doc:	</attribute>
 */
 rt_shared struct opstack op_stack = { /* %%ss mt */
-	(struct stochunk *) 0,		/* st_hd */
-	(struct stochunk *) 0,		/* st_tl */
-	(struct stochunk *) 0,		/* st_cur */
-	(EIF_TYPED_VALUE *) 0,			/* st_top */
-	(EIF_TYPED_VALUE *) 0,			/* st_end */
+	(struct stopchunk *) 0,		/* st_hd */
+	(struct stopchunk *) 0,		/* st_tl */
+	(struct stopchunk *) 0		/* st_cur */
 };
 
 /*
@@ -209,15 +208,15 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s);			/* == 
 rt_private void eif_three_way_comparison (void);	/* Execute `three_way_comparison'. */
 rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
 														   on value of `type' */
-rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the name of the basic type */
+rt_private void eif_interp_generator (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top);	/* generate the name of the basic type */
 rt_private void eif_interp_offset (void);	/* execute `offset' on character and pointer type */
 rt_private void eif_interp_bit_operations (void);	/* execute bit operations on integers */
-rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
-rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
+rt_private void eif_interp_builtins (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
+rt_private void eif_interp_basic_operations (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* execute basic operations on basic types */
 
 /* Assertion checking */
-rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);				/* Invariant check */
-rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
+rt_private void icheck_inv(EIF_REFERENCE obj, struct stopchunk *scur, EIF_TYPED_VALUE *stop, int where);				/* Invariant check */
+rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stopchunk *scur, EIF_TYPED_VALUE *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
 rt_shared EIF_TYPE_INDEX get_compound_id(EIF_REFERENCE obj);		/* Get a compound type id */
@@ -241,7 +240,7 @@ rt_private void address(int32 aid);													/* Address of a routine */
 rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 rt_private void reverse_attribute(long offset, uint32 type);						/* Reverse assignment to attribute */
 rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type);						/* Reverse assignment to local or result*/
-rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stochunk *scur, EIF_TYPED_VALUE *stop);
+rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stopchunk *scur, EIF_TYPED_VALUE *stop);
 
 /* Calling protocol */
 rt_private void put_once_result (EIF_TYPED_VALUE * ptr, uint32 rtype, MTOT OResult); /* Save local result to permanent once storage */
@@ -250,20 +249,11 @@ rt_private void get_once_result (MTOT OResult, uint32 rtype, EIF_TYPED_VALUE *pt
 rt_private void init_var(EIF_TYPED_VALUE *ptr, uint32 type, EIF_REFERENCE current_ref); /* Initialize to 0 a variable entity */
 rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
-rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* Resynchronize the register array */
+rt_shared void sync_registers(struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* Resynchronize the register array */
 rt_private void pop_registers(void);						/* Remove local vars and arguments */
-rt_private void create_expanded_locals (struct stochunk * scur, EIF_TYPED_VALUE * stop, int create_result); /* Initialize expanded locals and result (if required) */
+rt_private void create_expanded_locals (struct stopchunk * scur, EIF_TYPED_VALUE * stop, int create_result); /* Initialize expanded locals and result (if required) */
 
 /* Operational stack handling routines */
-rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val);	/* Push one value on op stack */
-rt_public EIF_TYPED_VALUE *opop(void);							/* Pop last item */
-rt_private EIF_TYPED_VALUE *stack_allocate(register size_t size);	/* Allocates first chunk */
-rt_private int stack_extend(register size_t size);				/* Extend stack's size */
-rt_private void npop(rt_uint_ptr nb);				/* Pop 'nb' items */
-rt_public EIF_TYPED_VALUE *otop(void);							/* Pointer to value at the top */
-rt_private EIF_TYPED_VALUE *oitem(uint32 n);					/* Pointer to value at position `n' down the stack */
-rt_private void stack_truncate(void);						/* Truncate stack if necessary */
-rt_private void wipe_out(register struct stochunk *chunk);	/* Remove unneeded chunk from stack */
 #ifdef DEBUG
 rt_private void dump_stack(void);							/* Dumps the operational stack */
 rt_public void idump(FILE *, char *);						/* Byte code dumping */
@@ -283,30 +273,28 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
  */
 #define STACK_PRESERVE \
 	struct dcall * volatile dtop;				\
-	struct stdchunk * volatile dcur;			\
+	struct stdbchunk * volatile dcur;			\
 	EIF_TYPED_VALUE * volatile stop;				\
-	struct stochunk * volatile scur
+	struct stopchunk * volatile scur
 
 #define STACK_PRESERVE_FOR_OLD \
 	struct dcall * volatile dtop_o;				\
-	struct stdchunk * volatile dcur_o;			\
+	struct stdbchunk * volatile dcur_o;			\
 	EIF_TYPED_VALUE * volatile stop_o;				\
-	struct stochunk * volatile scur_o
+	struct stopchunk * volatile scur_o
 
 
 #define SAVE(stack,cur,top) \
 	(cur) = (stack).st_cur;			\
-	(top) = (stack).st_top;
+	(top) = ((stack).st_cur ? (stack).st_cur->sk_top : NULL);
 
 #define RESTORE(stack,cur,top) \
-	if (top) {								\
+	if (cur) {								\
 		(stack).st_cur = (cur);			\
-		(stack).st_top = (top);			\
-		if (cur) { (stack).st_end = (cur)->sk_end; }	\
+		(cur)->sk_top = (top);			\
 	} else { /* There was no chunk allocated when saving, but allocated at execution in between */ \
-		(stack).st_cur = (stack).st_hd; \
-		(stack).st_top = (stack).st_cur->sk_arena; \
-		(stack).st_end = (stack).st_cur->sk_end; \
+		(stack).st_cur = (stack).st_head; \
+		(stack).st_cur->sk_top = (stack).st_cur->sk_arena;  \
 	}
 
 /* Macros to handle exceptions in routine body:
@@ -327,20 +315,20 @@ rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumpin
 		}                                                             \
 	}
 
-rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volatile stop)
+rt_public void metamorphose_top(struct stopchunk * scur, EIF_TYPED_VALUE * volatile stop)
 {
 	RT_GET_CONTEXT
-
+	EIF_GET_CONTEXT
 	EIF_REFERENCE new_obj = NULL;
 	uint32 head_type;
 	EIF_TYPED_VALUE * last;	/* Last pushed value */
 	unsigned long stagval;
 
-	last = otop();
+	last = EIF_STACK_TOP_ADDRESS(op_stack);
 	CHECK("last not null", last);
 	if ((last->type & SK_HEAD) == SK_EXP)
 		return; /* Leave an expanded object as is. */
-	last = opop();
+	last = eif_opstack_pop_address(&op_stack);
 	stagval = tagval;
 	head_type = last->type & SK_HEAD;
 	switch (head_type) {
@@ -364,7 +352,7 @@ rt_public void metamorphose_top(struct stochunk * scur, EIF_TYPED_VALUE * volati
 	default:
 		eif_panic("illegal metamorphose type");
 	}
-	last = iget();
+	last = eif_opstack_push_empty(&op_stack);
 	last->type = SK_REF;
 	last->it_ref = new_obj;
 	if (tagval != stagval)				/* If G.C calls melted dispose */
@@ -382,9 +370,9 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
-	RTYD;					/* Store stack contexts */
 	EIF_OBJECT volatile se = NULL;	/* Protected existing exception object */
 	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
+	RTXDR;					/* Store stack contexts */
 
 	/* Protect the existing exception object if any */
 	la = RTLA;
@@ -423,11 +411,13 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 		RTXSC;							/* Restore stack contexts */
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
-		npop (nb_pushed);				/* Removed the pushed arguments. */
+		if (nb_pushed) {
+			eif_opstack_npop(&op_stack, nb_pushed);				/* Removed the pushed arguments. */
+		}
 		if (se){						/* Release exception object */
 			eif_wean (se);
 		}
-		dpop();							/* Pop off our own record */
+		eif_dbstack_pop_address(&db_stack);							/* Pop off our own record */
 		ereturn(MTC_NOARG);						/* Propagate exception */
 	}
 
@@ -454,7 +444,7 @@ rt_public void xinterp(unsigned char *icval, rt_uint_ptr nb_pushed)
 	}
 
 	expop(&eif_stack);					/* Pop pseudo vector */
-	dpop();								/* Remove calling context */
+	eif_dbstack_pop_address(&db_stack);								/* Remove calling context */
 }
 
 rt_public void xiinv(unsigned char *icval, int where)
@@ -465,10 +455,10 @@ rt_public void xiinv(unsigned char *icval, int where)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
-	RTYD;					/* Save stack contexts */
 	STACK_PRESERVE;			/* Stack contextual informations */
 	EIF_OBJECT volatile se = NULL;	/* Protected existing exception object */
 	EIF_REFERENCE la = NULL;/* Last exception object, used to save RTLA */
+	RTXDR;					/* Save stack contexts */
 
 	/* Protect the existing exception object if any */
 	la = RTLA;
@@ -490,7 +480,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 		if (se){						/* Release exception object */
 			eif_wean (se);
 		}
-		dpop();							/* Remove calling context */
+		eif_dbstack_pop_address(&db_stack);							/* Remove calling context */
 		ereturn(MTC_NOARG);						/* Propagate exception */
 	}
 
@@ -505,7 +495,7 @@ rt_public void xiinv(unsigned char *icval, int where)
 	}
 
 	expop(&eif_stack);					/* Pop pseudo vector */
-	dpop();								/* Remove calling context */
+	eif_dbstack_pop_address(&db_stack);								/* Remove calling context */
 }
 
 rt_public void xinitint(void)
@@ -572,14 +562,12 @@ rt_private void interpret(int flag, int where)
 	struct ex_vect * volatile exvect;		/* Routine's execution vector */
    	uint32 volatile db_cstack;				/* Debugger level depth */
 	EIF_TYPED_VALUE * volatile stop = NULL;	/* To save stack context */
-	struct stochunk * volatile scur = NULL;	/* Current chunk (stack context) */
+	struct stopchunk * volatile scur = NULL;	/* Current chunk (stack context) */
 #ifdef ISE_GC
-	char ** volatile l_top = NULL;			/* Local top */
-	struct stchunk * volatile l_cur = NULL;	/* Current local chunk */
-	char ** volatile ls_top = NULL;			/* loc_stack top */
-	struct stchunk * volatile ls_cur = NULL;/* Current loc_stack chunk */
-	char ** volatile h_top = NULL;			/* Hector stack top */
-	struct stchunk * volatile h_cur = NULL;	/* Current hector stack chunk */
+	EIF_REFERENCE ** volatile l_top = NULL;			/* Local top */
+	struct stoachunk * volatile l_cur = NULL;	/* Current local chunk */
+	EIF_REFERENCE ** volatile ls_top = NULL;			/* loc_stack top */
+	struct stoachunk * volatile ls_cur = NULL;/* Current loc_stack chunk */
 #endif
 	int volatile assert_type = 0;			/* Assertion type */
 	char volatile pre_success = (char) 0;	/* Flag for precondition success */
@@ -599,7 +587,9 @@ rt_private void interpret(int flag, int where)
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int routine_id = 0;
 	int volatile current_trace_level = 0;	/* Saved call level for trace, only needed when routine is retried */
-	char ** volatile saved_prof_top = NULL;	/* Saved top of `prof_stack' */
+	struct stpchunk * volatile saved_prof_chunk = NULL;	/* Saved top of `prof_stack' */
+	struct prof_info * volatile l_saved_prof_top = NULL;
+
 	long volatile once_key = 0;				/* Index in once table */
 	uint32 volatile once_end_break_index = 0;				/* Index in once table */
 	int  volatile is_process_or_thread_relative_once = 0;	/* Is it a process or thread relative once routine? */
@@ -848,10 +838,10 @@ rt_private void interpret(int flag, int where)
 #ifdef ISE_GC
 				SAVE(loc_set, l_cur, l_top);		/* Save C local stack */
 				SAVE(loc_stack, ls_cur, ls_top);	/* Save loc_stack */
-				SAVE(hec_stack, h_cur, h_top);		/* Save hector stack */
 #endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
-				if (prof_stack) saved_prof_top = prof_stack->st_top;
+				saved_prof_chunk = prof_stack.st_cur;
+				l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL);
 			}
 
 		}
@@ -947,10 +937,10 @@ rt_private void interpret(int flag, int where)
 #ifdef ISE_GC
 					SAVE(loc_set, l_cur, l_top);		/* Save C local stack */
 					SAVE(loc_stack, ls_cur, ls_top);	/* Save loc_stack */
-					SAVE(hec_stack, h_cur, h_top);		/* Save hector stack */
 #endif
 					current_trace_level = trace_call_level;	/* Save trace call level */
-					if (prof_stack) saved_prof_top = prof_stack->st_top;
+					saved_prof_chunk = prof_stack.st_cur;
+					l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL);
 				}
 			}
 
@@ -977,7 +967,6 @@ rt_private void interpret(int flag, int where)
 #ifdef ISE_GC
 		RESTORE(loc_set, l_cur, l_top);
 		RESTORE(loc_stack, ls_cur, ls_top);
-		RESTORE(hec_stack, h_cur, h_top);
 #endif
 #ifdef EIF_THREADS
 		RTS_SRR;
@@ -995,7 +984,9 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RETRY\n");
 #endif
 		trace_call_level = current_trace_level;
-		if (prof_stack) prof_stack_rewind(saved_prof_top);
+		if (saved_prof_chunk) {
+			prof_stack_rewind(l_saved_prof_top);
+		}
 		in_assertion = saved_assertion;		/* restore saved assertion checking because
 											 * we might have reached this code from
 											 * an assertion checking code. */
@@ -1074,9 +1065,9 @@ rt_private void interpret(int flag, int where)
 			string = get_string8(&IC, get_int32(&IC));
 			l_pos = get_int32(&IC);
 
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
-			RTCC(otop()->it_ref, l_written_dtype, (char *) string, l_pos, l_creation_type, l_annotations);
+			RTCC(last->it_ref, l_written_dtype, (char *) string, l_pos, l_creation_type, l_annotations);
 		}
 		break;
 
@@ -1093,11 +1084,11 @@ rt_private void interpret(int flag, int where)
 			l_pos = get_int32(&IC);
 
 				/* Pop the element we want to insert to get to the TUPLE object. */
-			l_elem = opop();
+			l_elem = eif_opstack_pop_address(&op_stack);
 				/* The TUPLE object. */
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 				/* We put back the element on the stack. */
-			opush (l_elem);
+			eif_opstack_push_address(&op_stack, l_elem);
 			CHECK("last not null", last);
 
 			l_dftype = eif_gen_param(Dftype(last->it_ref), l_pos);
@@ -1124,7 +1115,7 @@ rt_private void interpret(int flag, int where)
 
 	case BC_CAST_NATURAL:
 		offset = get_int32(&IC);	/* Get natural size */
-		last = otop ();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_BOOL:
 				switch (offset) {
@@ -1286,7 +1277,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_CAST_INTEGER\n");
 #endif
 		offset = get_int32(&IC);	/* Get integer size */
-		last = otop ();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_BOOL:
 				switch (offset) {
@@ -1450,7 +1441,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CAST_REAL_32\n");
 #endif
-		last = otop ();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_UINT8: last->it_real32 = (EIF_REAL_32) last->it_uint8; break;
 			case SK_UINT16: last->it_real32 = (EIF_REAL_32) last->it_uint16; break;
@@ -1476,7 +1467,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CAST_REAL_64\n");
 #endif
-		last = otop ();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_UINT8: last->it_real64 = (EIF_REAL_64) last->it_uint8; break;
 			case SK_UINT16: last->it_real64 = (EIF_REAL_64) last->it_uint16; break;
@@ -1499,7 +1490,7 @@ rt_private void interpret(int flag, int where)
 	 */
 
 	case BC_CAST_CHAR8:
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_UINT8: last->it_char = (EIF_CHARACTER_8) last->it_uint8; break;
 			case SK_UINT16: last->it_char = (EIF_CHARACTER_8) last->it_uint16; break;
@@ -1520,7 +1511,7 @@ rt_private void interpret(int flag, int where)
 	 */
 
 	case BC_CAST_CHAR32:
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		switch (last->type & SK_HEAD) {
 			case SK_UINT8: last->it_wchar = (EIF_CHARACTER_32) last->it_uint8; break;
 			case SK_UINT16: last->it_wchar = (EIF_CHARACTER_32) last->it_uint16; break;
@@ -1547,7 +1538,7 @@ rt_private void interpret(int flag, int where)
 #endif
 
 		RTDBGA_LOCAL(icurrent->it_ref,0,rtype,0,1);
-		memcpy (iresult, opop(), ITEM_SZ);
+		memcpy (iresult, eif_opstack_pop_address(&op_stack), ITEM_SZ);
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
 		 * feature which is going to call this once feature again.
@@ -1565,7 +1556,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_REXP_ASSIGN\n");
 #endif
-		{	EIF_REFERENCE ref = opop()->it_ref;
+		{	EIF_REFERENCE ref = eif_opstack_pop_address(&op_stack)->it_ref;
 
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
@@ -1595,7 +1586,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
 		RTDBGA_LOCAL(icurrent->it_ref,code,loc (code)->type,0,1);
-		memcpy (loc (code) , opop(), ITEM_SZ);
+		memcpy (loc (code) , eif_opstack_pop_address(&op_stack), ITEM_SZ);
 		break;
 
 	/*
@@ -1605,7 +1596,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LEXP_ASSIGN\n");
 #endif
-		{	EIF_REFERENCE ref = opop()->it_ref;
+		{	EIF_REFERENCE ref = eif_opstack_pop_address(&op_stack)->it_ref;
 
 			if (ref == NULL) {
 				xraise(EN_VEXP);	/* Void assigned to expanded */
@@ -1646,7 +1637,7 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE ref;
 			long att_offset;
 
-			ref = opop()->it_ref;		/* Expression type */
+			ref = eif_opstack_pop_address(&op_stack)->it_ref;		/* Expression type */
 			if (ref == (EIF_REFERENCE) 0) {
 				xraise(EN_VEXP);		/* Void assigned to expanded */
 			}
@@ -1665,7 +1656,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NONE_ASSIGN\n");
 #endif
-		(void) opop();
+		(void) eif_opstack_pop_address(&op_stack);
 		break;
 
 	/*
@@ -1676,7 +1667,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RREVERSE\n");
 #endif
 		l_creation_type = get_creation_type();			/* Get the reverse type */
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 
 		if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
 			last->it_ref = NULL;
@@ -1702,7 +1693,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		code = get_int16(&IC);			/* Get local number */
 		l_creation_type = get_creation_type ();
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 
 		if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
@@ -1724,7 +1715,7 @@ rt_private void interpret(int flag, int where)
 			routine_id = get_int32(&IC);		/* Get the routine ID */
 			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			l_creation_type = get_creation_type ();
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 
 			if ((last->it_ref) && !eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
@@ -1743,14 +1734,14 @@ rt_private void interpret(int flag, int where)
 #endif
 		code = get_int16(&IC);			/* Get local number */
 		l_creation_type = get_creation_type ();
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 
 		if ((last->it_ref) && eif_gen_conf2(eif_new_type(Dftype(last->it_ref), ATTACHED_FLAG), l_creation_type)) {
 				/* Perform reattachment. */
 			reverse_local (loc(code), l_creation_type.id);
 				/* Put True on the stack. */
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_BOOL;
 			last->it_char = EIF_TRUE;
 		} else {
@@ -1768,7 +1759,7 @@ rt_private void interpret(int flag, int where)
 			/* Continue with attribute access based on the routine ID. */
 		routine_id = get_int32(&IC);				/* Get the routine ID */
 
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_BOOL;
 
 		last->it_char = eif_is_attached_type2(wtype_gen (routine_id, Dtype(icurrent->it_ref), Dftype(icurrent->it_ref)));
@@ -1783,7 +1774,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		{	EIF_REFERENCE ref;
 
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			ref = last->it_ref;
 			if (ref) {
@@ -1815,7 +1806,7 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 
 			stagval = tagval;
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			ref = last->it_ref;
 			if (ref && eif_is_boxed_expanded(HEADER(ref)->ov_flags)) {
@@ -1848,7 +1839,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 			dprintf(2)("BC_VOID\n");
 #endif
-			last = iget ();
+			last = eif_opstack_push_empty(&op_stack);
 			last->it_ref = NULL;
 			last->type = SK_REF;
 		}
@@ -1899,7 +1890,7 @@ rt_private void interpret(int flag, int where)
 			RTS_RC (icurrent->it_ref);
 				/* Add processors of uncontrolled separate arguments to the reuest group. */
 			for (; argument_count > 0; -- argument_count) {
-				last = opop ();
+				last = eif_opstack_pop_address(&op_stack);
 				if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent->it_ref, last->it_ref)) {
 					RTS_RS (icurrent->it_ref, last->it_ref);
 				}
@@ -1975,7 +1966,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_END_ASSERT\n");
 #endif
-		code = (int) opop()->it_char;	/* Get the assertion
+		code = (int) eif_opstack_pop_address(&op_stack)->it_char;	/* Get the assertion
 										 * boolean result
 										 */
 		if (*IC++) {
@@ -2004,7 +1995,7 @@ rt_private void interpret(int flag, int where)
 		offset = get_int32(&IC);		/* get the offset to the precondition
 									 * block's corresponding "BC_GOTO_BODY"
 									*/
-		code = (int) opop()->it_char;
+		code = (int) eif_opstack_pop_address(&op_stack)->it_char;
 									/* Get the assertion boolean result */
 		if (!code) {
 			pre_success = '\0';
@@ -2091,7 +2082,7 @@ rt_private void interpret(int flag, int where)
 
 			code = get_int16(&IC);		/* Get the local variant index */
 			last = loc(code);
-			offset = opop()->it_int32;	/* Get the new variant value */
+			offset = eif_opstack_pop_address(&op_stack)->it_int32;	/* Get the new variant value */
 			old_val = last->it_int32;	/* Get the old variant value */
 			last->it_int32 = offset;		/* Save the new variant value */
 			if ((old_val == -1L || old_val > offset) && offset >= 0) {
@@ -2164,11 +2155,11 @@ rt_private void interpret(int flag, int where)
 			open_count = get_int32(&IC);
 
 			if (open_count > 0) {
-				aopen_map = opop();
+				aopen_map = eif_opstack_pop_address(&op_stack);
 				open_map = (EIF_REFERENCE) (aopen_map->it_ref);
 			}
 			if (has_closed) {
-				aclosed_operands = opop();
+				aclosed_operands = eif_opstack_pop_address(&op_stack);
 				closed_operands = (EIF_REFERENCE) (aclosed_operands->it_ref);
 #ifdef EIF_THREADS
 		 		if (is_target_closed) {
@@ -2185,7 +2176,7 @@ rt_private void interpret(int flag, int where)
 							 is_basic, is_target_closed, written_type_id_inline_agent, closed_operands, open_count);
 
 			IC = OLD_IC;
-			last = iget();				/* Push a new value onto the stack */
+			last = eif_opstack_push_empty(&op_stack);				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 #ifdef EIF_THREADS
@@ -2235,11 +2226,11 @@ rt_private void interpret(int flag, int where)
 			} else {
 				new_obj = RTLNSMART(l_creation_type.id);	/* Create new object */
 			}
-			last = iget();				/* Push a new value onto the stack */
+			last = eif_opstack_push_empty(&op_stack);				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 			if (need_push == (char) 1)
-				opush (last);			/* If there is a creation procedure, we need to push
+				eif_opstack_push_address(&op_stack, last);			/* If there is a creation procedure, we need to push
 										   object on stack to call creation procedure */
 			if (tagval != stagval)		/* If type is expanded we may
 										 * need to sync the registers if it
@@ -2301,9 +2292,9 @@ rt_private void interpret(int flag, int where)
 				}
 			}
 
-			memcpy(&nb_item, opop(), ITEM_SZ);
+			memcpy(&nb_item, eif_opstack_pop_address(&op_stack), ITEM_SZ);
 			if (is_make_filled) {
-				memcpy(&default_item, opop(), ITEM_SZ);
+				memcpy(&default_item, eif_opstack_pop_address(&op_stack), ITEM_SZ);
 			} else {
 				memset(&default_item, 0, ITEM_SZ);
 			}
@@ -2321,7 +2312,7 @@ rt_private void interpret(int flag, int where)
 			OLD_IC = IC;
 			new_obj = special_malloc (flags, l_creation_type.id, nb, elem_size, is_basic); /* Create new object */
 
-			last = iget();				/* Push a new value onto the stack */
+			last = eif_opstack_push_empty(&op_stack);				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 
@@ -2338,9 +2329,9 @@ rt_private void interpret(int flag, int where)
 			if (is_make_filled) {
 					/* Prepare the call to `make_filled'. By pushing the computed arguments starting
 					 * with the created object. */
-				opush(last);
-				opush(&default_item);
-				opush(&nb_item);
+				eif_opstack_push_address(&op_stack, last);
+				eif_opstack_push_address(&op_stack, &default_item);
+				eif_opstack_push_address(&op_stack, &nb_item);
 			} else if (is_make_empty) {
 				RT_SPECIAL_COUNT(new_obj) = 0;
 			}
@@ -2358,9 +2349,9 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *lower, *upper;
 			unsigned char *OLD_IC;			/* IC back-up */
 
-			upper = opop();				/* Get the upper bound */
-			lower = opop();				/* Get the lower bound */
-			last = otop();				/* Get the inspect expression value */
+			upper = eif_opstack_pop_address(&op_stack);				/* Get the upper bound */
+			lower = eif_opstack_pop_address(&op_stack);				/* Get the lower bound */
+			last = EIF_STACK_TOP_ADDRESS(op_stack);				/* Get the inspect expression value */
 			CHECK("last not null", last);
 			offset = get_int32(&IC);		/* Get the jump value */
 			OLD_IC = IC;
@@ -2382,7 +2373,7 @@ rt_private void interpret(int flag, int where)
 				/* We have a match for the inspect value, simply pop the expression value
 				 * since we won't use it ever. */
 			if (OLD_IC != IC) {
-				(void) opop();
+				(void) eif_opstack_pop_address(&op_stack);
 			}
 		}
 		break;
@@ -2395,7 +2386,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_INSPECT_EXCEP\n");
 #endif
 			/* There was no match, let's remove the inspect expression value. */
-		(void) opop();
+		(void) eif_opstack_pop_address(&op_stack);
 		xraise(EN_WHEN);
 		break;
 
@@ -2423,10 +2414,10 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE new_obj;		/* New object */
 			unsigned long stagval;
 
-			last = opop();
+			last = eif_opstack_pop_address(&op_stack);
 			stagval = tagval;
 			new_obj = RTLNSMART(type);	/* Create new object */
-			last = iget();			/* Push a new value onto the stack */
+			last = eif_opstack_push_empty(&op_stack);			/* Push a new value onto the stack */
 			last->type = SK_REF | SK_EXP;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
 			if (tagval != stagval)		/* If GC calls melted dispose */
@@ -2454,27 +2445,27 @@ rt_private void interpret(int flag, int where)
 				EIF_TYPED_VALUE old;			/* Save old value before copying */
 				EIF_TYPED_VALUE prev;			/* Previous value to be copied */
 				EIF_TYPED_VALUE *new;			/* Where value is to be copied */
-				struct opstack op_context;  /* To save stack's context */
+				struct opcursor op_context;  /* To save stack's context */
 
 #ifdef DEBUG
 				dprintf(2)("BC_ROTATE\n");
 #endif
 				IC++;
 				code = get_int16(&IC) - 1;
-				new = opop();
+				new = eif_opstack_pop_address(&op_stack);
 				memcpy (&prev, new, ITEM_SZ);
-				memcpy (&op_context, &op_stack, sizeof(struct opstack));
+				eif_opstack_save_cursor(&op_stack, &op_context);
 				while (code-- > 0) {
-					new = opop();
+					new = eif_opstack_pop_address(&op_stack);
 					memcpy (&old, new, ITEM_SZ);
 					memcpy (new, &prev, ITEM_SZ);
 					memcpy (&prev, &old,ITEM_SZ);
 				}
-				memcpy (&op_stack, &op_context, sizeof(struct opstack));
-				opush(&prev);
+				eif_opstack_restore_cursor(&op_stack, &op_context);
+				eif_opstack_push_address(&op_stack, &prev);
 			}
 #ifdef EIF_THREADS
-			target = otop ();
+			target = EIF_STACK_TOP_ADDRESS(op_stack);
 #define Current (icurrent -> it_ref)
 			code = *IC;
 			if (code == BC_OBJECT_TEST) {
@@ -2534,8 +2525,8 @@ rt_private void interpret(int flag, int where)
 
 					RTS_AC (1, target -> it_ref, a); /* Create call structure. */
 
-					(void) opop ();                  /* Remove target from the evaluation stack. */
-					source = opop();                 /* Get source value. */
+					(void) eif_opstack_pop_address(&op_stack);                  /* Remove target from the evaluation stack. */
+					source = eif_opstack_pop_address(&op_stack);                 /* Get source value. */
 					if ((source -> type & SK_HEAD) == SK_REF) {
 						RTS_AS(*source, it_r, source->type, 1, a); /* Record a possibly separate argument. */
 					} else {
@@ -2551,11 +2542,11 @@ rt_private void interpret(int flag, int where)
 				else {
 						/* Revert changes performed by BC_ROTATE that swapped target and source. */
 					EIF_TYPED_VALUE v;
-					(void) opop ();
-					last = otop ();
+					(void) eif_opstack_pop_address(&op_stack);
+					last = EIF_STACK_TOP_ADDRESS(op_stack);
 					v = *last;
 					*last = *target;
-					opush (&v);
+					eif_opstack_push_address(&op_stack, &v);
 				}
 					/* Avoid further processing related to separate status. */
 				target = NULL;
@@ -2582,9 +2573,9 @@ rt_private void interpret(int flag, int where)
 				call_data *     a = NULL;                /* Call structure */
 
 				RTS_AC (n, target -> it_ref, a); /* Create call structure. */
-				opop ();                /* Remove target of a call. */
+				eif_opstack_pop_address(&op_stack);                /* Remove target of a call. */
 				while (n > 0) {         /* Record arguments of a call. */
-					EIF_TYPED_VALUE * p = opop ();
+					EIF_TYPED_VALUE * p = eif_opstack_pop_address(&op_stack);
 					if ((p -> type & SK_HEAD) == SK_REF) {
 						RTS_AS(*p, it_r, p->type, n, a); /* Record a possibly separate argument. */
 					} else {
@@ -2603,7 +2594,7 @@ rt_private void interpret(int flag, int where)
 					GET_PTYPE;                     /* Get precursor type. */
 					OLD_IC = IC;
 					if (q) {
-						last = iget ();                             /* Allocate a cell to store result of a call. */
+						last = eif_opstack_push_empty(&op_stack);                             /* Allocate a cell to store result of a call. */
 						last -> type = SK_POINTER;                  /* Avoid GC on result until it is ready.      */
 						RTS_CF (routine_id, string, target->it_ref, a, *last); /* Make a separate call to a function. */
 					} else {
@@ -2648,7 +2639,7 @@ rt_private void interpret(int flag, int where)
 	case BC_EXTERN_INV:
 	case BC_FEATURE_INV:
 		string = get_string8(&IC, -1);	/* Get the feature name. */
-		if (otop()->it_ref == (char *) 0)	/* Called on a void reference? */
+		if (EIF_STACK_TOP_ADDRESS(op_stack)->it_ref == (char *) 0)	/* Called on a void reference? */
 			eraise((char *) string, EN_VOID);		/* Yes, raise exception */
 		routine_id = get_int32(&IC);				/* Get the routine ID */
 
@@ -2674,7 +2665,7 @@ rt_private void interpret(int flag, int where)
 	case BC_ATTRIBUTE_INV:
 			/* Qualified access, we verify target is attached. */
 		string = get_string8(&IC, -1);	/* Get the attribute name */
-		if (otop()->it_ref == (char *) 0) {
+		if (EIF_STACK_TOP_ADDRESS(op_stack)->it_ref == (char *) 0) {
 			eraise((char *) string, EN_VOID);
 		}
 	case BC_ATTRIBUTE:
@@ -2694,23 +2685,23 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE old;			/* Save old value before copying */
 			EIF_TYPED_VALUE prev;			/* Previous value to be copied */
 			EIF_TYPED_VALUE *new;			/* Where value is to be copied */
-			struct opstack op_context;  /* To save stack's context */
+			struct opcursor op_context;  /* To save stack's context */
 
 			code = get_int16(&IC) - 1;
-			new = opop();
+			new = eif_opstack_pop_address(&op_stack);
 			memcpy (&prev, new, ITEM_SZ);
 
-			memcpy (&op_context, &op_stack, sizeof(struct opstack));
+			eif_opstack_save_cursor (&op_stack, &op_context);
 			while (code-- > 0) {
-				new = opop();
+				new = eif_opstack_pop_address(&op_stack);
 				memcpy (&old, new, ITEM_SZ);
 				memcpy (new, &prev, ITEM_SZ);
 				memcpy (&prev, &old,ITEM_SZ);
 			}
 
-			memcpy (&op_stack, &op_context, sizeof(struct opstack));
+			eif_opstack_restore_cursor (&op_stack, &op_context);
 
-			opush(&prev);
+			eif_opstack_push_address(&op_stack, &prev);
 		}
 		break;
 
@@ -2721,7 +2712,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CURRENT\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_REF;
 		last->it_ref = icurrent->it_ref;
 		break;
@@ -2733,7 +2724,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CHAR\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_CHAR8;
 		last->it_char = *IC++;
 		break;
@@ -2742,7 +2733,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_WCHAR\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_CHAR32;
 		last->it_wchar = (EIF_CHARACTER_32) get_int32(&IC);
 		break;
@@ -2754,7 +2745,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_BOOL\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_BOOL;
 		last->it_char = *IC++;
 		break;
@@ -2763,25 +2754,25 @@ rt_private void interpret(int flag, int where)
 	 * Natural constant.
 	 */
 	case BC_UINT8:
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_UINT8;
 		last->it_uint8 = get_uint8 (&IC);
 		break;
 
 	case BC_UINT16:
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_UINT16;
 		last->it_uint16 = get_uint16 (&IC);
 		break;
 
 	case BC_UINT32:
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_UINT32;
 		last->it_uint32 = get_uint32(&IC);
 		break;
 
 	case BC_UINT64:
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_UINT64;
 		last->it_uint64 = get_uint64(&IC);
 		break;
@@ -2793,7 +2784,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INT8\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_INT8;
 		last->it_int8 = (EIF_INTEGER_8) (*IC++);
 		break;
@@ -2802,7 +2793,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INT16\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_INT16;
 		last->it_int16 = (EIF_INTEGER_16) get_int16(&IC);
 		break;
@@ -2811,7 +2802,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INT32\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_INT32;
 		last->it_int32 = (EIF_INTEGER_32) get_int32(&IC);
 		break;
@@ -2820,7 +2811,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INT64\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_INT64;
 		last->it_int64 = get_int64(&IC);
 		break;
@@ -2832,7 +2823,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_FLOAT\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_REAL32;
 		last->it_real32 = (EIF_REAL_32) get_real64(&IC);
 		break;
@@ -2844,7 +2835,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_DOUBLE\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_REAL64;
 		last->it_real64 = get_real64(&IC);
 		break;
@@ -2856,7 +2847,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NULL_POINTER\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_POINTER;
 		last->it_ptr = (char *) 0;
 		break;
@@ -2868,7 +2859,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RESULT\n");
 #endif
-		(void) opush(iresult);
+		eif_opstack_push_address(&op_stack, iresult);
 		break;
 
 	/*
@@ -2879,7 +2870,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LOCAL\n");
 #endif
 		code = get_int16(&IC);				/* Get number (from 1 to locnum) */
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		memcpy (last, loc(code), ITEM_SZ);
 		break;
 
@@ -2891,7 +2882,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_ARG\n");
 #endif
 		code = get_int16(&IC);				/* Get number (from 1 to argnum) */
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		memcpy (last, arg(code), ITEM_SZ);
 		break;
 
@@ -2919,7 +2910,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_AND_THEN\n");
 #endif
 		offset = get_int32(&IC);
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		if (!last->it_char)
 			IC += offset;
@@ -2933,7 +2924,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_OR_ELSE\n");
 #endif
 		offset = get_int32(&IC);
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		if (last->it_char)
 			IC += offset;
@@ -2993,14 +2984,14 @@ rt_private void interpret(int flag, int where)
 
 	/* Real operations: ceil and floor */
 	case BC_CEIL:
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		CHECK("double_type", last->type == SK_REAL64);
 		last->it_double = ceil(last->it_double);
 		break;
 
 	case BC_FLOOR:
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		CHECK("double_type", last->type == SK_REAL64);
 		last->it_double = floor(last->it_double);
@@ -3017,8 +3008,8 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval = tagval;	/* Save tag value */
 			unsigned char *OLD_IC;			/* IC back-up */
 
-			ref = opop()->it_ref;
-			last = otop();
+			ref = eif_opstack_pop_address(&op_stack)->it_ref;
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			OLD_IC = IC;
 			last->it_char = (char) RTEQ(ref, last->it_ref);
@@ -3042,8 +3033,8 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval = tagval;	/* Save tag value */
 			unsigned char *OLD_IC;			/* IC back-up */
 
-			ref = opop()->it_ref;
-			last = otop();
+			ref = eif_opstack_pop_address(&op_stack)->it_ref;
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			OLD_IC = IC;
 			last->it_char = (char) RTCEQ(ref, last->it_ref);
@@ -3063,8 +3054,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 	dprintf(2)("BC_TRUE_COMPAR\n");
 #endif
-		(void) opop();
-		last = otop();
+		(void) eif_opstack_pop_address(&op_stack);
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		last->type = SK_BOOL;
 		last->it_char = '\01';
@@ -3077,8 +3068,8 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 	dprintf(2)("BC_FALSE_COMPAR\n");
 #endif
-		(void) opop();
-		last = otop();
+		(void) eif_opstack_pop_address(&op_stack);
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		last->type = SK_BOOL;
 		last->it_char = '\0';
@@ -3101,7 +3092,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RESERVE\n");
 #endif
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_POINTER;
 		last->it_ptr = NULL;
 		break;
@@ -3141,7 +3132,7 @@ rt_private void interpret(int flag, int where)
 					eif_panic(MTC "illegal access to Current");
 				}
 
-				last = oitem(value_offset);
+				last = eif_opstack_i_th (&op_stack, value_offset);
 				last->type = SK_POINTER;
 				last->it_ref = (EIF_REFERENCE) (icurrent->it_ref+offset);
 				break;
@@ -3149,7 +3140,7 @@ rt_private void interpret(int flag, int where)
 				eif_panic(MTC "illegal address access");
 			}
 			if (is_attribute == EIF_FALSE){
-				last = oitem(value_offset);
+				last = eif_opstack_i_th (&op_stack, value_offset);
 				last->type = SK_POINTER;
 
 				switch (pointed_object->type & SK_HEAD) {
@@ -3188,9 +3179,9 @@ rt_private void interpret(int flag, int where)
 		ptr_pos = get_uint32(&IC);
 		value_pos = get_uint32(&IC);
 
-		pointed_object = oitem(value_pos);
+		pointed_object = eif_opstack_i_th (&op_stack, value_pos);
 		CHECK("pointed_object_not_null", pointed_object);
-		last = oitem(ptr_pos);
+		last = eif_opstack_i_th (&op_stack, ptr_pos);
 		CHECK("last not null", last);
 		last->type = SK_POINTER;
 
@@ -3225,7 +3216,7 @@ rt_private void interpret(int flag, int where)
 		{
 		uint32 i, nb_uint32 = get_uint32(&IC);
 		for (i = 0; i < nb_uint32; i++)
-			(void) opop();
+			(void) eif_opstack_pop_address(&op_stack);
 		}
 		break;
 
@@ -3241,7 +3232,7 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 
 				/* Pop SPECIAL from stack. */
-			sp_area = opop()->it_ref;
+			sp_area = eif_opstack_pop_address(&op_stack)->it_ref;
 			routine_id = get_int32(&IC);		  	/* Get the routine ID */
 
 			stagval = tagval;
@@ -3251,7 +3242,7 @@ rt_private void interpret(int flag, int where)
 			if (tagval != stagval) {
 				sync_registers(MTC scur, stop); /* If calls melted make of array */
 			}
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_REF;
 			last->it_ref = new_obj.it_r;
 			break;
@@ -3267,9 +3258,9 @@ rt_private void interpret(int flag, int where)
 			CHECK ("Index non-negative", l_index >= 0);
 
 				/* Get the expression value. */
-			it = opop();
+			it = eif_opstack_pop_address(&op_stack);
 				/* Get the special but we leave it on top of stack. */
-			sp_area = otop()->it_ref;
+			sp_area = EIF_STACK_TOP_ADDRESS(op_stack)->it_ref;
 
 			CHECK("valid_index_for_old", (!egc_has_old_special_semantic) || (l_index < RT_SPECIAL_COUNT(sp_area)));
 			CHECK("valid_index_for_new", (egc_has_old_special_semantic) || (l_index <= RT_SPECIAL_COUNT(sp_area)));
@@ -3314,7 +3305,7 @@ rt_private void interpret(int flag, int where)
 			uint32 type = get_uint32(&IC); /* SK_XX value of access. */
 			EIF_TYPED_VALUE *last;
 
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
 			last->type = type;         /* Stored type of accessed tuple element. */
@@ -3327,8 +3318,8 @@ rt_private void interpret(int flag, int where)
 			EIF_TYPED_VALUE *source;
 			int pos = get_int32(&IC);      /* Position of access. */
 
-			source = opop();
-			last = opop();
+			source = eif_opstack_pop_address(&op_stack);
+			last = eif_opstack_pop_address(&op_stack);
 			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
 			eif_tuple_assign (last->it_ref, pos, source);
 		}
@@ -3367,7 +3358,7 @@ rt_private void interpret(int flag, int where)
 			while (curr_pos < nbr_of_items) {
 				/* Fill the tuple with the expressions for the manifest tuple. */
 
-				it = opop();		/* Pop expression off stack */
+				it = eif_opstack_pop_address(&op_stack);		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL: eif_put_boolean_item(new_obj, curr_pos, it->it_char); break;
 					case SK_CHAR8: eif_put_character_item(new_obj, curr_pos, it->it_char); break;
@@ -3391,7 +3382,7 @@ rt_private void interpret(int flag, int where)
 				curr_pos++;
 			}
 			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_REF;
 			last->it_ref = new_obj;
 			break;
@@ -3407,7 +3398,7 @@ rt_private void interpret(int flag, int where)
 		code = get_int16(&IC);             /* Get number (from 1 to locnum) */
 		ex_pos = get_int16(&IC);			/* Get exception local position */
 		RTCO(loc(ex_pos)->it_r);
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		memcpy (last, loc(code), ITEM_SZ);
 		break;
 
@@ -3465,7 +3456,7 @@ rt_private void interpret(int flag, int where)
 			/* If there was an exception, op_stack was not pushed the old value */
 			/* Only read the position forward in IC */
 		{
-			last = opop();
+			last = eif_opstack_pop_address(&op_stack);
 			code = get_int16(&IC);     /* Get the local number (from 1 to locnum) */
 			if ((last->type & SK_HEAD) == SK_EXP) {
 					/* Case of an expanded, then we need to copy its original value. */
@@ -3512,7 +3503,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_ADD_STRIP\n");
 #endif
 		string = get_string8(&IC, -1);
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		last->type = SK_REF;
 		last->it_ref = (EIF_REFERENCE) string;
 		break;
@@ -3538,14 +3529,14 @@ rt_private void interpret(int flag, int where)
 			if (stripped == NULL)
 				enomem(MTC_NOARG);
 			while (nbr_of_items--) {
-				last = opop();
+				last = eif_opstack_pop_address(&op_stack);
 				stripped[nbr_of_items] = last->it_ref;
 			}
 			array = striparr(icurrent->it_ref, d_type, stripped, temp);
 			if (tagval != stagval)
 				sync_registers(MTC scur, stop); /* If G.C calls melted dispose */
 			eif_rt_xfree ((EIF_REFERENCE) stripped);
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_REF;
 			last->it_ref = array;
 			break;
@@ -3571,7 +3562,7 @@ rt_private void interpret(int flag, int where)
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
 
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_REF;
 
 			OLD_IC = IC;
@@ -3604,7 +3595,7 @@ rt_private void interpret(int flag, int where)
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
 
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_REF;
 
 			OLD_IC = IC;
@@ -3657,7 +3648,7 @@ rt_private void interpret(int flag, int where)
 
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_INT32;		/* Protect empty cell from GC */
 
 			/* We have to use the str_obj temporary variable instead of doing
@@ -3693,7 +3684,7 @@ rt_private void interpret(int flag, int where)
 
 			length = get_int32(&IC);
 			string = get_string8(&IC, length);	/* Get string of specified length. */
-			last = iget();
+			last = eif_opstack_push_empty(&op_stack);
 			last->type = SK_INT32;		/* Protect empty cell from GC */
 
 			/* We have to use the str_obj temporary variable instead of doing
@@ -3720,7 +3711,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_JMP_F\n");
 #endif
 		offset = get_int32(&IC);	/* Get jump offset */
-		code = (int) opop()->it_char;
+		code = (int) eif_opstack_pop_address(&op_stack)->it_char;
 		if (!code)
 			IC += offset;		/* Jump */
 		break;
@@ -3733,7 +3724,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_JMP_T\n");
 #endif
 		offset = get_int32(&IC);	/* Get jump offset */
-		code = (int) opop()->it_char;
+		code = (int) eif_opstack_pop_address(&op_stack)->it_char;
 		if (code)
 			IC += offset;		/* Jump */
 		break;
@@ -3757,7 +3748,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_HOOK\n");
 #endif
 		offset = get_int32(&IC);		/* retrieve the parameter of BC_HOOK: line number */
-		dstop(dtop()->dc_exec,offset);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
+		dstop(EIF_STACK_TOP_ADDRESS(db_stack)->dc_exec,offset);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
 		break;
 
 	/*
@@ -3771,7 +3762,7 @@ rt_private void interpret(int flag, int where)
 			struct dcall *call;
 			offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
 			offset_n = get_int32(&IC);	/* retrieve the 2nd parameter of BC_NHOOK: line number */
-			call = dtop();
+			call = EIF_STACK_TOP_ADDRESS(db_stack);
 			CHECK("call not void", call);
 			dstop_nested(call->dc_exec,offset,offset_n);	/* Debugger hook - stop point reached */ /* FIXME */
 		}
@@ -3786,7 +3777,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_REF_TO_PTR\n");
 #endif
 		{
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			last->type = SK_POINTER;
 				/* References and pointers are store as char * so no type
@@ -3877,7 +3868,7 @@ rt_private void interpret(int flag, int where)
 		/* Setup data on entering routine body */
 enter_body:
 	if (is_process_or_thread_relative_once) {
-		EIF_BOOLEAN was_executed = EIF_FALSE;
+		int was_executed = EIF_FALSE;
 #ifdef EIF_THREADS
 		if (is_process_once) {
 			CHECK("POResult not null", POResult);
@@ -3923,7 +3914,7 @@ enter_body:
 			/* Check if once routine was executed earlier. */
 		if (was_executed) {
 
-			dstop(dtop()->dc_exec,once_end_break_index);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
+			dstop(EIF_STACK_TOP_ADDRESS(db_stack)->dc_exec,once_end_break_index);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
 
 				/* Yes, it was executed.      */
 			if (is_process_or_thread_relative_once) {
@@ -4042,7 +4033,7 @@ enter_body:
 	/* NOTREACHED */
 }
 
-rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
+rt_private void icheck_inv(EIF_REFERENCE obj, struct stopchunk *scur, EIF_TYPED_VALUE *stop, int where)
 					  		/* Current chunk (stack context) */
 							/* To save stack context */
 		  					/* Invariant after or before */
@@ -4069,7 +4060,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_V
 	}
 }
 
-rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stochunk *scur, EIF_TYPED_VALUE *stop, int where)
+rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struct stopchunk *scur, EIF_TYPED_VALUE *stop, int where)
 
 
 					  		/* Current chunk (stack context) */
@@ -4130,7 +4121,7 @@ rt_private void irecursive_chkinv(EIF_TYPE_INDEX dtype, EIF_REFERENCE obj, struc
 
 			} else
 			{				/* Melted invariant */
-				last = iget();					/* Push `obj' */
+				last = eif_opstack_push_empty(&op_stack);					/* Push `obj' */
 				last->type = SK_REF;
 				last->it_ref = obj;
 					/* The proper way to start the interpretation of a melted
@@ -4158,9 +4149,10 @@ rt_private void monadic_op(int code)
 {
 	/* Apply the operation 'code' to the value on top of the stack */
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *first;			/* First operand */
 
-	first = otop();				/* Item will get modified */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* Item will get modified */
 	CHECK("first not null", first);
 
 	switch (code) {				/* Execute operation */
@@ -4223,14 +4215,15 @@ rt_private void diadic_op(int code)
 	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
 
 #define f first
 #define s second
 
-	s = opop();			/* Fetch second operand */
-	f = otop();			/* First operand will be replace by result */
+	s = eif_opstack_pop_address(&op_stack);			/* Fetch second operand */
+	f = EIF_STACK_TOP_ADDRESS(op_stack);			/* First operand will be replace by result */
 	CHECK("first not null", f);
 
 	switch (code) {				/* Execute operation */
@@ -4611,7 +4604,7 @@ rt_private void eif_interp_eq (EIF_TYPED_VALUE *f, EIF_TYPED_VALUE *s) {
 	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
-rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+rt_private void eif_interp_generator (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 {
 	/* Execute the `generator' or `generating_type' function call for basic types
 	 * in melted code
@@ -4624,7 +4617,7 @@ rt_private void eif_interp_generator (struct stochunk *stack_cur, EIF_TYPED_VALU
 
 	OLD_IC = IC;
 
-	first = otop();				/* First operand will be replace by result */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* First operand will be replace by result */
 	CHECK("first not null", first);
 	switch (first->type & SK_HEAD) {
 		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
@@ -4665,11 +4658,12 @@ rt_private void eif_interp_min_max (int code)
 #define EIF_MIN(a,b) ((a)<(b)? (a) : (b))
 #define EIF_MIN_REAL(a,b) (((a) != (a)) || ((a) < (b)) ? (a) : (b))
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
 
-	second = opop();			/* Fetch second operand */
-	first = otop();				/* First operand will be replace by result */
+	second = eif_opstack_pop_address(&op_stack);			/* Fetch second operand */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* First operand will be replace by result */
 	CHECK("first not null", first);
 
 	switch (code) {				/* Execute operation */
@@ -4748,11 +4742,12 @@ rt_private void eif_three_way_comparison (void)
 {
 #define EIF_THREE_WAY_COMPARISON(a,b) ((a)<(b)? -1 : ((b)<(a) ? 1 : 0))
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
 
-	second = opop();			/* Fetch second operand */
-	first = otop();				/* First operand will be replace by result */
+	second = eif_opstack_pop_address(&op_stack);			/* Fetch second operand */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* First operand will be replace by result */
 	CHECK("first not null", first);
 
 	REQUIRE("Same type", (first->type & SK_HEAD) == (second->type & SK_HEAD));
@@ -4802,11 +4797,12 @@ rt_private void eif_interp_offset(void)
 	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *second;		/* Second operand */
 	EIF_TYPED_VALUE *first;			/* First operand */
 
-	second = opop();			/* Fetch second operand */
-	first = otop();				/* First operand will be replace by result */
+	second = eif_opstack_pop_address(&op_stack);			/* Fetch second operand */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);				/* First operand will be replace by result */
 	CHECK("first not null", first);
 	switch(first->type & SK_HEAD) {
 		case SK_CHAR8:
@@ -4819,7 +4815,7 @@ rt_private void eif_interp_offset(void)
 	}
 }
 
-rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+rt_private void eif_interp_builtins (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 	/* Execute builtin operations and set result if any. */
 {
 	RT_GET_CONTEXT
@@ -4885,7 +4881,7 @@ rt_private void eif_interp_builtins (struct stochunk *stack_cur, EIF_TYPED_VALUE
 }
 
 
-rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+rt_private void eif_interp_basic_operations (struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 	/* execute basic operations on basic types and put the result back on the
 	 * stack.
 	 */
@@ -4918,7 +4914,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 
 			/* Call to `zero' */
 		case BC_ZERO:
-			first = otop();	/* First operand will be replace by result */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replace by result */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 0; break;
@@ -4937,7 +4933,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 
 			/* Call to `one' */
 		case BC_ONE:
-			first = otop();	/* First operand will be replace by result */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replace by result */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_UINT8: first->it_uint8 = (EIF_NATURAL_8) 1; break;
@@ -4955,7 +4951,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_NAN:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_real32 = eif_real_32_nan; break;
@@ -4965,7 +4961,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_NEGATIVE_INFINITY:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_real32 = eif_real_32_negative_infinity; break;
@@ -4975,7 +4971,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_POSITIVE_INFINITY:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_real32 = eif_real_32_positive_infinity; break;
@@ -4985,7 +4981,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_IS_NAN:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 != first->it_real32); break;
@@ -4996,7 +4992,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_IS_NEGATIVE_INFINITY:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 == eif_real_32_negative_infinity); break;
@@ -5007,7 +5003,7 @@ rt_private void eif_interp_basic_operations (struct stochunk *stack_cur, EIF_TYP
 			break;
 
 		case BC_IS_POSITIVE_INFINITY:
-			first = otop();	/* First operand will be replaced by result. */
+			first = EIF_STACK_TOP_ADDRESS(op_stack);	/* First operand will be replaced by result. */
 			CHECK("first not null", first);
 			switch(first->type & SK_HEAD) {
 				case SK_REAL32: first->it_char = EIF_TEST(first->it_real32 == eif_real_32_positive_infinity); break;
@@ -5037,12 +5033,12 @@ rt_private void eif_interp_bit_operations (void)
 	EIF_TYPED_VALUE *first = (EIF_TYPED_VALUE *) 0;
 
 	if (code == BC_INT_SET_BIT || code == BC_INT_SET_BIT_WITH_MASK) {
-		third = opop();		/* Fetch third operand */
+		third = eif_opstack_pop_address(&op_stack);		/* Fetch third operand */
 	}
 	if (code != BC_INT_BIT_NOT) {
-		second = opop();	/* Fetch second operand if required */
+		second = eif_opstack_pop_address(&op_stack);	/* Fetch second operand if required */
 	}
-	first = otop ();		/* First operand, it will be replaced by result */
+	first = EIF_STACK_TOP_ADDRESS(op_stack);		/* First operand, it will be replaced by result */
 	CHECK("first not null", first);
 
 	switch (code) {
@@ -5196,9 +5192,9 @@ rt_shared void dynamic_eval_dbg(int routine_id, int static_dtype, int is_basic_t
 		exclear ();
 	} else {
 		dynamic_eval (routine_id, static_dtype, is_basic_type, nb_pushed);
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		if (last != NULL && last != previous_otop) { /* a result has been pushed on the stack */
-			memcpy(result, opop(), sizeof(EIF_TYPED_VALUE));
+			memcpy(result, eif_opstack_pop_address(&op_stack), sizeof(EIF_TYPED_VALUE));
 			type = result->type & SK_HEAD;
 			if ((type == SK_EXP || type == SK_REF) && (result->it_ref != NULL)) {
 				result->type = type | Dtype(result->it_ref);
@@ -5231,7 +5227,7 @@ rt_shared void dynamic_eval(int routine_id, int static_dtype, int is_basic_type,
 	uint32 db_cstack;
 	EIF_TYPED_VALUE *last;
 	STACK_PRESERVE;
-	RTYD; /* declares the variables used to save the run-time stacks context */
+	RTXDR; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
 	RTLXL;
@@ -5244,13 +5240,13 @@ rt_shared void dynamic_eval(int routine_id, int static_dtype, int is_basic_type,
 	if (setjmp(exenv)) {
 		RESTORE(op_stack,scur,stop);
 		RESTORE(db_stack,dcur,dtop);
-		dpop();
+		eif_dbstack_pop_address(&db_stack);
 		RTLXE;
 		d_data.db_callstack_depth = db_cstack;
 		RTXSC;
 		IC = OLD_IC;					/* Restore IC back-up */
 		in_assertion = saved_assertion; /* Corresponds to RTED */
-		npop (nb_pushed);				/* Removed the pushed arguments. */
+		eif_opstack_npop(&op_stack, nb_pushed);				/* Removed the pushed arguments. */
 		ereturn(MTC_NOARG);
 	} else {
 		if (is_basic_type) {
@@ -5263,7 +5259,7 @@ rt_shared void dynamic_eval(int routine_id, int static_dtype, int is_basic_type,
 				 * the type declaring the inline agent or the type target of the static call. */
 			CBodyId(body_id,routine_id,static_dtype);
 		} else {
-			last = otop();
+			last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", last);
 			CBodyId(body_id,routine_id,Dtype(last->it_ref));
 		}
@@ -5279,7 +5275,7 @@ rt_shared void dynamic_eval(int routine_id, int static_dtype, int is_basic_type,
 		}
 		IC = OLD_IC;					/* Restore IC back-up */
 
-		dpop();
+		eif_dbstack_pop_address(&db_stack);
 		d_data.db_callstack_depth = db_cstack;
 		expop(&eif_stack);
 	}
@@ -5310,7 +5306,7 @@ rt_private int icall(int routine_id, int ptype)
 	if (ptype == -1) {
 			/* Call is dynamic, we fetch the dynamic type of object at the top
 			 * to find out which version we need to call. */
-		last = otop();
+		last = EIF_STACK_TOP_ADDRESS(op_stack);
 		CHECK("last not null", last);
 		ptype = Dtype(last->it_ref);
 	}
@@ -5337,7 +5333,7 @@ rt_private int icall(int routine_id, int ptype)
 	return result;
 }
 
-rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stochunk *scur, EIF_TYPED_VALUE *stop)
+rt_private void interp_check_options_start (struct eif_opt *opt, EIF_TYPE_INDEX dtype, struct stopchunk *scur, EIF_TYPED_VALUE *stop)
 {
 	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
@@ -5363,12 +5359,13 @@ rt_private void rt_attribute_access(int routine_id, uint32 type)
 	 * attribute replace it on the stack.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_REFERENCE current;							/* Current object */
 	/* struct ac_info *attrinfo;*/ /* Call info for attribute */ /* %%ss removed */
 	EIF_TYPED_VALUE *last;						/* Value on top of the stack */
 	long offset;							/* Attribute offset */
 
-	last = otop();
+	last = EIF_STACK_TOP_ADDRESS(op_stack);
 	CHECK("last not null", last);
 	current = last->it_ref;
 	offset = RTWA(routine_id, Dtype(current));
@@ -5404,11 +5401,12 @@ rt_private void assign(long offset, uint32 type)
 	/* Assign the value on top of the stack to the attribute described by its
 	 * offset. */
 
+	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Value on top of the stack */
 	EIF_REFERENCE ref;
 
-	last = opop();					/* Value to be assigned */
+	last = eif_opstack_pop_address(&op_stack);					/* Value to be assigned */
 
 	CHECK("Target same type as source",
 			((last->type & SK_HEAD) == (type & SK_HEAD)));
@@ -5457,11 +5455,12 @@ rt_private void reverse_attribute(long offset, uint32 type)
 	/* Assign the value on top of the stack to the attribute described by its
 	 * offset. */
 
+	EIF_GET_CONTEXT
 	RT_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Value on top of the stack */
 	EIF_REFERENCE ref;
 
-	last = opop();					/* Value to be assigned */
+	last = eif_opstack_pop_address(&op_stack);					/* Value to be assigned */
 
 	if (last->it_ref == (EIF_REFERENCE) 0) {
 			/* Source does not conform to target or is Void */
@@ -5514,9 +5513,10 @@ rt_private void reverse_local(EIF_TYPED_VALUE * it, EIF_TYPE_INDEX type) {
 			/* pointer to local to assign to
 			 * type of object
 			 */
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Value on top of the stack */
 
-	last = opop();					/* Value to be assigned */
+	last = eif_opstack_pop_address(&op_stack);					/* Value to be assigned */
 	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[type]))) {
 		if (last->it_ref != (EIF_REFERENCE) 0) {
 			switch (it->type & SK_HEAD) {
@@ -5600,9 +5600,10 @@ rt_private void address(int32 aid)
 	 * stack. The value of Current is removed and replaced with the address.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_TYPED_VALUE *last;				/* Built melted routine address */
 
-	last = iget();
+	last = eif_opstack_push_empty(&op_stack);
 	last->type = SK_POINTER;
 
 	last->it_ptr = (EIF_POINTER) (rt_uint_ptr) RTWPP(aid);
@@ -5764,12 +5765,12 @@ rt_private void init_registers(void)
 	uint32 n;				/* # of locals/arguments to be fetched */
 	EIF_TYPED_VALUE **reg;	/* Pointer in register array */
 	EIF_TYPED_VALUE *last;	/* Initialization of stack frame */
-	struct opstack op_context;		/* To save stack's context */
+	struct opcursor op_context;		/* To save stack's context */
 	EIF_REFERENCE current;					/* Saved value of current */
 
 	allocate_registers(MTC);			/* Make sure array is big enough */
 
-	current = opop()->it_ref;		/* Save value of current */
+	current = eif_opstack_pop_address(&op_stack)->it_ref;		/* Save value of current */
 
 	/* Upon entry in the routine, all the arguments were pushed in reverse
 	 * order, followed by the value of Current. In order to initialize the
@@ -5777,13 +5778,14 @@ rt_private void init_registers(void)
 	 * after having saved the stack context.
 	 */
 
-	memcpy (&op_context, &op_stack, sizeof(struct opstack));
+	op_context.sc_chunk = op_stack.st_cur;
+	op_context.sc_item = op_stack.st_cur->sk_top;
 
 	reg = iregs + SPECIAL_REG + locnum + argnum - 1; /* Start of arguments */
-	for (n = 0; n < argnum; n++, reg--)		/* Pushed in reverse order */
-		*reg = opop();						/* Get its address */
-
-	memcpy (&op_stack, &op_context, sizeof(struct opstack));
+	for (n = 0; n < argnum; n++, reg--) {		/* Pushed in reverse order */
+		eif_opstack_back(&op_context);		/* Get its address */
+		*reg = op_context.sc_item;
+	}
 
 	/* Now loop and fetch the local variables type directly from the byte
 	 * code. Put them on the stack and record the address of each of them in
@@ -5792,7 +5794,7 @@ rt_private void init_registers(void)
 
 	reg = iregs + SPECIAL_REG;				/* Start of locals */
 	for (n = 0; n < locnum; n++, reg++) {	/* Pushed in order */
-		last = iget();
+		last = eif_opstack_push_empty(&op_stack);
 		init_var(last, get_uint32(&IC), current);			/* Initialize to zero */
 		*reg = last;						/* Save pointer in stack */
 	}
@@ -5804,18 +5806,18 @@ rt_private void init_registers(void)
 	 * type yet anyway), then the number of locals and arguments.
 	 */
 
-	icurrent = last = iget(); 		/* Get room for Current */
+	icurrent = last = eif_opstack_push_empty(&op_stack); 		/* Get room for Current */
 	last->type = SK_REF;			/* Current is a reference */
 	last->it_ref = current;			/* Restore saved value */
 
-	iresult = last = iget();		/* Get room for Result */
+	iresult = last = eif_opstack_push_empty(&op_stack);		/* Get room for Result */
 	last->type = SK_INT32;			/* By default, avoid GC traversal */
 
-	ilocnum = last= iget();			/* Push # of locals */
+	ilocnum = last= eif_opstack_push_empty(&op_stack);			/* Push # of locals */
 	last->type = SK_UINT32;			/* Initializes record */
 	last->it_uint32 = locnum;			/* Got this from byte code */
 
-	iargnum = last = iget();		/* Push # of arguments */
+	iargnum = last = eif_opstack_push_empty(&op_stack);		/* Push # of arguments */
 	last->type = SK_UINT32;			/* Initializes record */
 	last->it_uint32 = argnum;			/* Got this from byte code */
 }
@@ -5860,36 +5862,31 @@ rt_private void allocate_registers(void)
 	}
 }
 
-rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack_top)
+rt_shared void sync_registers(struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top)
 						   		/* Saved current chunk of op stack */
 					   			/* Saved top of op stack */
 {
 	/* Whenever an interpreted function is called, the register array is
 	 * reset to match registers for the new function. When we regain control
 	 * in the original function, we have to re-synchronize the array.
-	 * This is rather a slow routine, because it makes lots ot otop() and
-	 * opop() calls--RAM.
+	 * This is rather a slow routine, because it makes lots ot EIF_STACK_TOP_ADDRESS(op_stack) and
+	 * eif_opstack_pop_address(&op_stack) calls--RAM.
 	 */
 
 	RT_GET_CONTEXT
 	uint32 n;				/* Loop index */
 	EIF_TYPED_VALUE **reg;	/* Address in register's array */
-	struct opstack op_context;		/* To save stack's context */
+	struct opcursor op_context;		/* To save stack's context */
 
-	memcpy (&op_context, &op_stack, sizeof(struct opstack));
-
-	/* Restore the context the stack was in just after we had initialized the
-	 * registers upon routine entrance (calling protocol).
-	 */
-	op_stack.st_cur = stack_cur;			/* Restore stack context */
-	op_stack.st_top = stack_top;			/* Saved top */
-	op_stack.st_end = stack_cur->sk_end;	/* End of current chunk */
+	op_context.sc_chunk = stack_cur;
+	op_context.sc_item = stack_top;
 
 	/* The stack is now in the state it had right after the initial settings.
 	 * Start by filling in the special registers (appear in reverse order).
 	 */
 	for (n = 0, reg = iregs + SPECIAL_REG - 1; n < SPECIAL_REG; n++, reg--) {
-		*reg = opop();
+		eif_opstack_back (&op_context);
+		*reg = op_context.sc_item;
 	}
 
 	locnum = ilocnum->it_uint32;		/* # of local variables */
@@ -5898,15 +5895,15 @@ rt_shared void sync_registers(struct stochunk *stack_cur, EIF_TYPED_VALUE *stack
 
 	/* Local variables also appear in reverse order */
 	for (n = 0, reg = iregs+locnum+SPECIAL_REG-1; n < locnum; n++, reg--) {
-		*reg = opop();
+		eif_opstack_back (&op_context);
+		*reg = op_context.sc_item;
 	}
 
 	/* Finally, arguments appear in reverse order */
 	for (n = 0, reg = iregs+locnum+SPECIAL_REG+argnum-1; n < argnum; n++, reg--) {
-		*reg = opop();
+		eif_opstack_back (&op_context);
+		*reg = op_context.sc_item;
 	}
-
-	memcpy (&op_stack, &op_context, sizeof(struct opstack));
 
 	/* Finally, we must not forget the debugging hooks. Running this routine
 	 * certainly means we have called another interpreted feature and the
@@ -5929,35 +5926,26 @@ rt_private void pop_registers(void)
 	 */
 
 	RT_GET_CONTEXT
-	rt_uint_ptr nb_locals, nb_args;			/* Number of registers to be popped off */
-	EIF_TYPED_VALUE *result;			/* To save the result */
-	EIF_TYPED_VALUE saved_result;		/* Save value pointed to by iresult */
+	EIF_GET_CONTEXT
+	rt_uint_ptr nb_locals, nb_args, n;			/* Number of registers to be popped off */
 
 		/* Pop the special registers */
-	nb_args = opop()->it_uint32;		/* This is the nummber of arguments */
-	nb_locals = opop()->it_uint32;	/* Add the number of locals */
-	(void) opop(); /* Remove Result */
-	(void) opop(); /* Remove Current */
+	nb_args = eif_opstack_pop_address(&op_stack)->it_uint32;		/* This is the nummber of arguments */
+	nb_locals = eif_opstack_pop_address(&op_stack)->it_uint32;	/* Add the number of locals */
+		/* We have pushed args, locals, result and Current. */
+	n = nb_args + nb_locals + 2;
 
-	/* Using npop() may truncate the unused chunks at the tail of the stack,
-	 * which may free the chunk where results is stored if there where a lot
-	 * of local variables, for instance. This means we must save the possible
-	 * register value before popping items.
-	 */
-	memcpy (&saved_result, iresult, ITEM_SZ);
+	eif_opstack_npop(&op_stack, n);	/* Remove items and eventually shrink stack */
 
-	npop(nb_locals + nb_args);			/* Remove items and eventually shrink stack */
-
-	if (saved_result.type != SK_VOID) {	/* If Result is needed */
-		result = iget();				/* Get a new result record */
-		memcpy (result, &saved_result, ITEM_SZ);
+	if (iresult->type != SK_VOID) {	/* If Result is needed */
+		memcpy (eif_opstack_push_empty(&op_stack), iresult, ITEM_SZ);
 	}
 }
 
 
 /* Initialize expanded locals and result (if required) */
 rt_private void create_expanded_locals (
-	struct stochunk * scur,		/* Current chunk (stack context) */
+	struct stopchunk * scur,		/* Current chunk (stack context) */
 	EIF_TYPED_VALUE * stop,			/* To save stack context */
 	int create_result		/* Should result be created? */
 )
@@ -6002,357 +5990,6 @@ rt_private void create_expanded_locals (
 	}
 }
 
-
-/*
- * Operational stack handling.
- */
-
-rt_private EIF_TYPED_VALUE *stack_allocate(register size_t size)
-				   					/* Initial size */
-{
-	/* The operational stack is created, with size 'size'.
-	 * Return the arena value (bottom of stack).
-	 */
-
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *arena;		/* Address for the arena */
-	struct stochunk *chunk;	/* Address of the chunk */
-
-	size *= ITEM_SZ;
-	size += sizeof(*chunk);
-	SIGBLOCK;							/* Critical section */
-	chunk = (struct stochunk *) cmalloc(size);
-	SIGRESUME;
-	if (chunk == (struct stochunk *) 0)
-		return (EIF_TYPED_VALUE *) 0;		/* Malloc failed for some reason */
-
-	SIGBLOCK;							/* Critical section */
-	op_stack.st_hd = chunk;						/* New stack (head of list) */
-	op_stack.st_tl = chunk;						/* One chunk for now */
-	op_stack.st_cur = chunk;					/* Current chunk */
-	arena = (EIF_TYPED_VALUE *) (chunk + 1);		/* Header of chunk */
-	op_stack.st_top = arena;					/* Empty stack */
-	chunk->sk_arena = arena;					/* Base address */
-	op_stack.st_end = chunk->sk_end = (EIF_TYPED_VALUE *)
-		((char *) chunk + size);		/* First free location beyond stack */
-	chunk->sk_next = (struct stochunk *) 0;
-	chunk->sk_prev = (struct stochunk *) 0;
-	SIGRESUME;							/* End of critical section */
-
-	return arena;			/* Stack allocated */
-}
-
-/* Stack handling routine. The following code has been cut/paste from the one
- * found in garcol.c and local.c as of this day. Hence the similarities and the
- * possible differences. What changes basically is that instead of storing
- * (char *) elements, we now store (EIF_TYPED_VALUE) ones.
- */
-
-rt_public EIF_TYPED_VALUE *opush(register EIF_TYPED_VALUE *val)
-{
-	/* Push value 'val' on top of the operational stack. If it fails, raise
-	 * an "Out of memory" exception. If 'val' is a null pointer, simply
-	 * get a new cell at the top of the stack.
-	 */
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *top = op_stack.st_top;	/* Top of stack */
-
-	if (top == (EIF_TYPED_VALUE *) 0)	{			/* No stack yet? */
-		top = stack_allocate (eif_stack_chunk);		/* Create one */
-		if (top == (EIF_TYPED_VALUE *) 0) {	 		/* Could not create stack */
-			enomem(MTC_NOARG);						/* No more memory */
-		}
-	}
-
-	if (op_stack.st_end == top) {
-		/* The end of the current stack chunk has been reached. If there is
-		 * a chunk allocated after the current one, use it, otherwise create
-		 * a new one and insert it in the list.
-		 */
-		SIGBLOCK;									/* Critical section */
-		if (op_stack.st_cur == op_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(eif_stack_chunk))
-				enomem(MTC_NOARG);
-			top = op_stack.st_top;					/* New top */
-		} else {
-			struct stochunk *current;		/* New current chunk */
-
-			/* Update the new stack context (main structure) */
-			current = op_stack.st_cur = op_stack.st_cur->sk_next;
-			top = op_stack.st_top = current->sk_arena;
-			op_stack.st_end = current->sk_end;
-		}
-		SIGRESUME;				/* Restore signal handling */
-	}
-
-	op_stack.st_top = top + 1;			/* Points to next free location */
-	if (val != (EIF_TYPED_VALUE *) 0)		/* If value was provided */
-		memcpy (top, val, ITEM_SZ);		/* Push it on the stack */
-
-	return top;				/* Address of allocated item */
-}
-
-rt_private int stack_extend(register size_t size)
-				   					/* Size of new chunk to be added */
-{
-	/* The operational stack is extended and the stack structure is updated.
-	 * 0 is returned in case of success. Otherwise, -1 is returned.
-	 */
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *arena;		/* Address for the arena */
-	struct stochunk *chunk;	/* Address of the chunk */
-
-	size *= ITEM_SZ;
-	size += sizeof(*chunk);
-	chunk = (struct stochunk *) cmalloc(size);
-	if (chunk == (struct stochunk *) 0)
-		return -1;		/* Malloc failed for some reason */
-
-	SIGBLOCK;									/* Critical section */
-	arena = (EIF_TYPED_VALUE *) (chunk + 1);		/* Header of chunk */
-	chunk->sk_next = (struct stochunk *) 0;		/* Last chunk in list */
-	chunk->sk_prev = op_stack.st_tl;			/* Preceded by the old tail */
-	op_stack.st_tl->sk_next = chunk;			/* Maintain link w/previous */
-	op_stack.st_tl = chunk;						/* New tail */
-	chunk->sk_arena = arena;					/* Where items are stored */
-	chunk->sk_end = (EIF_TYPED_VALUE *)
-		((char *) chunk + size);				/* First item beyond chunk */
-	op_stack.st_top = arena;					/* New top */
-	op_stack.st_end = chunk->sk_end;			/* End of current chunk */
-	op_stack.st_cur = chunk;					/* New current chunk */
-	SIGRESUME;									/* Restore signal handling */
-
-	return 0;			/* Everything is ok */
-}
-
-rt_public EIF_TYPED_VALUE *opop(void)
-{
-	/* Removes one item from the operational stack and return a pointer to
-	 * the removed item, which also happens to be the first free location.
-	 */
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *top = op_stack.st_top;	/* Top of the stack */
-	struct stochunk *s;			/* To walk through stack chunks */
-	EIF_TYPED_VALUE *arena;			/* Base address of current chunk */
-
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. This avoids pointer manipulation (walking along the stack)
-	 * which may induce swapping, who knows?
-	 */
-
-	arena = op_stack.st_cur->sk_arena;
-	if (--top >= arena) {			/* Hopefully, we remain in current chunk */
-		op_stack.st_top = top;		/* Yes! Update top */
-		return top;					/* Done, we're lucky */
-	}
-
-	/* Unusual case: top is just in the first place of next chunk */
-
-	SIGBLOCK;
-	s = op_stack.st_cur = op_stack.st_cur->sk_prev;
-
-	CHECK("s not null", s);
-
-	top = op_stack.st_end = s->sk_end;
-	op_stack.st_top = --top;
-	SIGRESUME;
-
-	return op_stack.st_top;
-}
-
-rt_private void npop(rt_uint_ptr nb)
-{
-	/* Removes 'nb' from the operational stack. Occasionaly, we also
-	 * try to truncate the unused chunks from the tail of the stack. We do
-	 * not do that in opop() because that would create an overhead...
-	 */
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *top;			/* Current top of operational stack */
-	struct stochunk *s;		/* To walk through stack chunks */
-	EIF_TYPED_VALUE *arena;		/* Base address of current chunk */
-
-	/* Optimization: try to update the top, hoping it will remain in the
-	 * same chunk. That would indeed make popping very efficient.
-	 */
-
-	arena = op_stack.st_cur->sk_arena;
-	top = op_stack.st_top;
-	top -= nb;				/* Hopefully, we remain in current chunk */
-	if (top >= arena) {
-		op_stack.st_top = top;		/* Yes! Update top */
-		return;						/* Done, how lucky we were! */
-	}
-
-	/* Normal case (which should be reasonably rare): we have to pop more
-	 * than the number of items in the current chunk. Loop until we popped
-	 * enough items (one iteration should be the norm).
-	 */
-
-	SIGBLOCK;			/* Entering protected section */
-
-	top = op_stack.st_top;
-	for (s = op_stack.st_cur; nb > 0; /* empty */) {
-		arena = s->sk_arena;
-			/* Are we in the same chunk? */
-		if (nb <= (rt_uint_ptr) (top - arena)) {
-			top -= nb;
-			break;
-		} else {
-			nb -= top - arena;
-			s = s->sk_prev;					/* Look at previous chunk */
-			if (s) {
-				top = s->sk_end;			/* Top at the end of previous chunk */
-			} else {
-				break;						/* We reached the bottom */
-			}
-		}
-	}
-
-	CHECK("s not null", s);
-
-	/* Update the stack structure */
-	op_stack.st_cur = s;
-	op_stack.st_top = top;
-	op_stack.st_end = s->sk_end;
-
-	SIGRESUME;						/* End of protected section */
-
-	/* There is not much overhead calling stack_truncate(), because this is
-	 * only done when we are popping at a chunk edge. We have to make sure the
-	 * program is running though, as popping done in debugging mode is only
-	 * temporary--RAM.
-	 */
-
-	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
-		stack_truncate();			/* Eventually remove unused chunks */
-}
-
-rt_public EIF_TYPED_VALUE *otop(void)
-	{
-	/* Returns a pointer to the top of the stack or a NULL pointer if
-	 * stack is empty. I assume a value has already been pushed (i.e. the
-	 * stack has been created).
-	 */
-
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *last_item;		/* Address of last item stored */
-	struct stochunk *prev;		/* Previous chunk in stack */
-
-	if (op_stack.st_top==NULL)
-		return NULL;
-
-	last_item = op_stack.st_top - 1;
-	if (last_item >= op_stack.st_cur->sk_arena)
-		return last_item;
-
-	/* It seems the current top of the stack (i.e. the next free location)
-	 * is at the left edge of a chunk. Look for previous chunk then...
-	 */
-	prev = op_stack.st_cur->sk_prev;
-
-	if (prev == NULL)
-		return NULL;
-	else
-		return prev->sk_end - 1;			/* Last item of previous chunk */
-	}
-
-rt_private EIF_TYPED_VALUE *oitem(uint32 n)
-	{
-	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */
-	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE	*access_item;	/* Address of item we try to access */
-	struct stochunk	*prev;			/* Previous chunk in stack */
-	struct stochunk	*curr;			/* Current chunk in stack */
-
-	access_item = (op_stack.st_top - 1 - n);
-	if (access_item >= (op_stack.st_cur->sk_arena))
-		return access_item;
-
-	/* It seems the item is at the left edge of a chunk. Look for previous chunk then... */
-	prev = op_stack.st_cur;
-
-	do
-		{
-		/* Item is not in the current chunk. Let's see if it's not in the previous one */
-		curr = prev;
-		prev = prev->sk_prev;
-
-		if (prev == NULL)
-			return NULL; /* operational stack is empty, we return NULL */
-		access_item = prev->sk_end - (curr->sk_arena - access_item);
-		}
-	while (access_item < prev->sk_arena);
-
-	return access_item;
-	}
-
-rt_private void stack_truncate(void)
-	{
-	/* Free unused chunks in the stack. If the current chunk has at least
-	 * MIN_FREE locations, then we may free all the chunks starting with the
-	 * next one. Otherwise, we skip the next chunk and free the remainder.
-	 */
-
-	RT_GET_CONTEXT
-	EIF_TYPED_VALUE *top;		/* The current top of the stack */
-	struct stochunk *next;			/* Address of next chunk */
-
-	/* We know the program is running, because this function is only called
-	 * via npop(), and npop() cannot be called by the debugger--RAM.
-	 */
-
-	top = op_stack.st_top;						/* The first free location */
-	if (op_stack.st_end - top > MIN_FREE) {		/* Enough locations left */
-		op_stack.st_tl = op_stack.st_cur;		/* Last chunk from now on */
-		wipe_out(op_stack.st_cur->sk_next);		/* Free starting at next chunk */
-	} else {									/* Current chunk is nearly full */
-		next = op_stack.st_cur->sk_next;		/* We are followed by 'next' */
-		if (next != (struct stochunk *) 0) {	/* There is indeed a next chunk */
-			op_stack.st_tl = next;			/* New tail chunk */
-			wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
-		}
-	}
-
-	}
-
-rt_private void wipe_out(register struct stochunk *chunk)
-			/* First chunk to be freed */
-	{
-	/* Free all the chunks after 'chunk' */
-
-	struct stochunk *next;	/* Address of next chunk */
-
-	if (chunk == (struct stochunk *) 0)	/* No chunk */
-		return;							/* Nothing to be done */
-
-	chunk->sk_prev->sk_next = (struct stochunk *) 0;	/* Previous is last */
-
-	for (
-			next = chunk->sk_next;
-			chunk != (struct stochunk *) 0;
-			chunk = next, next = chunk ? chunk->sk_next : chunk
-	)
-		eif_rt_xfree((EIF_REFERENCE) chunk);
-	}
-
-rt_shared void opstack_reset(struct opstack *stk)
-{
-	/* Reset the stack 'stk' to its minimal state and disgard all its
-	 * contents. Walking through the list of chunks, we free them and
-	 * clear the 'stk' structure.
-	 */
-
-	struct stochunk *k;	/* To walk through the list */
-	struct stochunk *n;	/* Save next before freeing chunk */
-
-	for (k = stk->st_hd; k; k = n) {
-		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
-		eif_rt_xfree((EIF_REFERENCE) k);
-	}
-
-	memset (stk, 0, sizeof(struct opstack));
-}
 
 /*
  * For debugger: getting values of locals, arguments, Result and Current.

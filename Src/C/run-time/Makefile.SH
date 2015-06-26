@@ -109,7 +109,7 @@ MTIDRS_OBJ = $(TOP)/idrs/MTidrs.o
 NETWORK_OBJ = $(TOP)/ipc/app/network.o
 MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 
-LSRC = malloc.c garcol.c local.c store.c retrieve.c \
+LSRC = malloc.c garcol.c local.c stack.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c file.c dir.c misc.c \
@@ -143,6 +143,7 @@ WOBJ = \
 	wmalloc.o \
 	wgarcol.o \
 	wlocal.o \
+	wstack.o \
 	wstore.o \
 	wretrieve.o \
 	whash.o \
@@ -191,6 +192,7 @@ LOBJ = \
 	malloc.o \
 	garcol.o \
 	local.o \
+	stack.o \
 	store.o \
 	retrieve.o \
 	hash.o \
@@ -255,6 +257,7 @@ MT_WOBJ = \
 	MTwmalloc.o \
 	MTwgarcol.o \
 	MTwlocal.o \
+	MTwstack.o \
 	MTwstore.o \
 	MTwretrieve.o \
 	MTwhash.o \
@@ -313,6 +316,7 @@ MT_LOBJ = \
 	MTmalloc.o \
 	MTgarcol.o \
 	MTlocal.o \
+	MTstack.o \
 	MTstore.o \
 	MTretrieve.o \
 	MThash.o \
@@ -363,6 +367,9 @@ wgarcol.o: garcol.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wlocal.o: local.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+wstack.o: stack.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wstore.o: store.c
@@ -501,6 +508,9 @@ MTgarcol.o: garcol.c
 MTlocal.o: local.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
+MTstack.o: stack.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
 MTstore.o: store.c
 	       $(CC) -c $(JMTCFLAGS) $? -o $@
 
@@ -635,6 +645,9 @@ MTwgarcol.o: garcol.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwlocal.o: local.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwstack.o: stack.c
 	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwstore.o: store.c

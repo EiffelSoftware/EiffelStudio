@@ -1,0 +1,12 @@
+test_name 	 object-test-with-operators
+test_description Syntax test for an object test whose expression is an binary operation.
+
+copy_sub 	Ace $TEST Ace
+
+copy_raw 	test.e  $CLUSTER test.e
+copy_raw 	test1.e  $CLUSTER test1.e
+
+compile_melted
+compile_result  ok
+
+test_end

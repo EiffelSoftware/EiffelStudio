@@ -274,6 +274,7 @@ test	empty-array-tuple-wrong-error-line	syntax067 tcf pass syntax
 test	once-followed-by-static-call	syntax068 tcf fail syntax
 test	syntax-obsolete-typed-string	syntax069 tcf pass syntax
 test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
+test	object-test-with-operators	syntax071 tcf fail syntax attached_types void-safe
 
 
 -- Validity tests

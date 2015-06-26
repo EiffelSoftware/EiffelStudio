@@ -74,6 +74,8 @@ endiff
 
 remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
+copy %EIFFEL_SRC\C\run-time\eif_stack.decl %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
+copy %EIFFEL_SRC\C\run-time\eif_stack.interface %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace Copy the configuration file

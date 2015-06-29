@@ -10,8 +10,8 @@ note
 inherit
 	ESA_SERVER
 		redefine
-			launch,
-			setup_config
+			launch
+--			setup_config
 		end
 
 create
@@ -29,10 +29,9 @@ create
 
 
 feature -- Launch
-	launch (a_service: WSF_SERVICE; opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			l_launcher: WSF_DEFAULT_SERVICE_LAUNCHER
-			app: NINO_SERVICE
+			app: NINO_SERVICE[ESA_SERVICE_EXECUTION]
 			wt: WORKER_THREAD
 			e: EXECUTION_ENVIRONMENT
 		do
@@ -44,7 +43,7 @@ feature -- Launch
 --				end
 --			end
 			port_number := 5050
-			create app.make_custom (a_service.to_wgi_service, "")
+			create app.make_custom ("")
 			web_app := app
 
 			create wt.make (agent app.listen (port_number))
@@ -69,6 +68,7 @@ feature -- Element Change
 	port_number: INTEGER
 
 feature -- Shutdown
+
 	shutdown
 		do
 			if attached web_app as app then
@@ -77,34 +77,13 @@ feature -- Shutdown
 		end
 
 feature -- Access
-	web_app: detachable NINO_SERVICE
 
+	web_app: detachable NINO_SERVICE[ESA_SERVICE_EXECUTION]
 
-feature -- ESA configuration
+	server_name: STRING = ""
 
- 	setup_config
- 		do
- 			esa_config := (create {ESA_CONFIGURATION_FACTORY}).esa_config_test (separate_character_option_value ('d'))
-		end
+	database_name: STRING = ""
 
-	server_name: STRING = "JVELILLA\SQLEXPRESS"
-		-- Server Name.
-
-	database_name: STRING = "EiffelDBIntegration"
-		-- Database Name.
-
-	schema : STRING = "eiffeldbintegration"
-	 	-- Database schema.
-
-
-	db_connection: DATABASE_CONNECTION
-		do
-			if attached esa_config as l_config then
-				Result := l_config.database
-			else
-				check False then end
-			end
-		end
-
+	schema: STRING=""
 
 end

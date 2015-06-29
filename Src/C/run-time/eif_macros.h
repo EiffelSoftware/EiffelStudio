@@ -1321,8 +1321,10 @@ RT_LNK void eif_exit_eiffel_code(void);
 /*
  * Processor:
  * RTS_PA(o) - associate a fresh processor with an object o
+ * RTS_PP(o) - create a new passive region for object o
  */
-#define RTS_PA(o) eif_new_processor (o);
+#define RTS_PA(o) eif_new_processor (o, EIF_FALSE);
+#define RTS_PP(o) eif_new_processor (o, EIF_TRUE);
 
 /*
  * Request chain:

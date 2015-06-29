@@ -224,6 +224,15 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 		RT_TRACE (eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex));
 	}
 
+		/* Synchronize with all passive processors. */
+	for (i=0; i < l_count; ++i) {
+		struct rt_private_queue* l_queue = rt_request_group_item (self, i);
+		if (l_queue->supplier->is_passive_region) {
+			rt_private_queue_synchronize (l_queue, self->client);
+		}
+
+	}
+
 	self->is_locked = 1;
 
 	ENSURE ("sorted", self->is_sorted);

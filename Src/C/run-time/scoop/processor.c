@@ -400,6 +400,10 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 				/* Forget dirtiness upon unlock */
 			self->is_dirty = EIF_FALSE;
 			is_stopped = EIF_TRUE;
+		} else if (type == SCOOP_MESSAGE_SYNC) {
+				/* We're a passive processor that got a lock request. */
+			CHECK ("is_passive", self->is_passive_region);
+			rt_message_channel_send (self->current_msg.sender->result_notify_proxy, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 		} else {
 
 			rt_processor_execute_call (self, self->current_msg.sender, self->current_msg.call);

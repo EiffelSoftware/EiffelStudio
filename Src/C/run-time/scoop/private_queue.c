@@ -290,6 +290,29 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 	self->synced = will_sync;
 }
 
+
+/*
+doc:	<routine name="rt_private_queue_synchronize" return_type="void" export="shared">
+doc:		<summary> Synchronize with the supplier. This is used to lock a passive processor. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<param name="client" type="struct rt_processor*"> The (active) client that wants to synchronize. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_synchronize (struct rt_private_queue* self, struct rt_processor* client)
+{
+	struct rt_message_channel* l_result_notify = client->result_notify_proxy;
+	struct rt_message l_message;
+
+	rt_message_channel_send (&self->channel, SCOOP_MESSAGE_SYNC, client, NULL, NULL);
+
+	rt_message_channel_receive (l_result_notify, &l_message);
+	CHECK ("correct_message", l_message.message_type == SCOOP_MESSAGE_RESULT_READY);
+
+	self->synced = EIF_TRUE;
+}
+
 /*
 doc:	<routine name="rt_private_queue_mark" return_type="void" export="shared">
 doc:		<summary> Mark the call_data structs within this private queue.

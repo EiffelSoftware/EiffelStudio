@@ -178,7 +178,7 @@ doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
+rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result, EIF_BOOLEAN a_is_passive)
 {
 	EIF_SCP_PID pid = 0;
 	int error = T_OK;
@@ -197,6 +197,7 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result)
 		if (T_OK == error) {
 				/* Update the internal bookkeeping structures. */
 			self->procs [pid] = new_processor;
+			new_processor->is_passive_region = a_is_passive;
 			RTS_AI_I32 (&self->processor_count); /* Atomic increment */
 			*result = pid;
 		} else {

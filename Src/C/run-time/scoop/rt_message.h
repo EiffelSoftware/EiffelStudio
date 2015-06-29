@@ -71,7 +71,10 @@ enum scoop_message_type {
 	SCOOP_MESSAGE_ADD_QUEUE,
 
 		/* Shutdown the processor. This is used by the garbage collector to instruct a dead processor to terminate itself. */
-	SCOOP_MESSAGE_SHUTDOWN
+	SCOOP_MESSAGE_SHUTDOWN,
+
+		/* Synchronize with a passive processor. */
+	SCOOP_MESSAGE_SYNC
 };
 
 /*
@@ -104,7 +107,7 @@ doc:	</routine>
 rt_private rt_inline void rt_message_init (struct rt_message* self, enum scoop_message_type a_message, struct rt_processor* a_sender, struct call_data* a_call, struct rt_private_queue* a_queue)
 {
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));
+	REQUIRE ("sender_not_null", a_sender || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK && a_message != SCOOP_MESSAGE_SYNC));
 	REQUIRE ("call_not_null", a_call || (a_message != SCOOP_MESSAGE_EXECUTE && a_message != SCOOP_MESSAGE_CALLBACK));
 	REQUIRE ("queue_not_null", a_queue || (a_message != SCOOP_MESSAGE_ADD_QUEUE));
 

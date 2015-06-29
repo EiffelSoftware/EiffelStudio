@@ -90,7 +90,7 @@ RT_LNK void eif_call_const (call_data * a);
 #define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
 
 /* Processor properties */
-RT_LNK void eif_new_processor(EIF_REFERENCE obj);
+RT_LNK void eif_new_processor(EIF_REFERENCE obj, EIF_BOOLEAN is_passive);
 RT_LNK int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_wait_for_all_processors(void);

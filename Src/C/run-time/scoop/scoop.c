@@ -195,14 +195,21 @@ rt_private rt_inline EIF_BOOLEAN rt_scoop_is_impersonation_allowed (struct rt_pr
 		/* First of all, both client and supplier have to agree that they can handle impersonation.
 		 * NOTE: In theory this only depends on the supplier, but we may run into problems with
 		 * separate callbacks if we don't consider both processors. */
+		/* NOTE: This restriction is also true for passive processors!
+		 * As long as there's still a thread, and until we find a better solution, we just
+		 * let the other thread execute the call. This undermines the semantics of passive
+		 * regions, but at least we don't run into a deadlock. */
 	result = client->is_impersonation_allowed && supplier->is_impersonation_allowed;
 
 	if (result) {
 
+			/* A call to a passive region is always impersonated. */
+		result = supplier->is_passive_region;
+
 			/* If we're currently synchronized with the supplier (i.e. we already sent
 			 * 'supplier' a synchronous call), and the next call is also synchronous,
 			 * we can apply impersonation. */
-		result = call->sync_pid != EIF_NULL_PROCESSOR &&  rt_private_queue_is_synchronized (queue);
+		result = result || (call->sync_pid != EIF_NULL_PROCESSOR &&  rt_private_queue_is_synchronized (queue));
 
 			/* A separate callback is always synchronous, so we can impersonate it. */
 		result = result || rt_queue_cache_has_locks_of (&client->cache, supplier);
@@ -229,9 +236,13 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 
 	if (!supplier->is_creation_procedure_logged) {
 			/* Log a creation procedure. */
-		rt_private_queue_lock (pq, client);
-		rt_private_queue_log_call(pq, client, data);
-		rt_private_queue_unlock (pq);
+		if (client->is_passive_region && rt_scoop_is_impersonation_allowed (client, supplier, pq, data)) {
+			rt_scoop_impersonated_call (client, supplier, data);
+		} else {
+			rt_private_queue_lock (pq, client);
+			rt_private_queue_log_call(pq, client, data);
+			rt_private_queue_unlock (pq);
+		}
 		supplier->is_creation_procedure_logged = EIF_TRUE;
 
 	} else if (rt_scoop_is_impersonation_allowed (client, supplier, pq, data)) {
@@ -253,7 +264,7 @@ rt_public void eif_call_const (call_data * a)
 /* Processor creation */
 
 /* RTS_PA */
-rt_public void eif_new_processor (EIF_REFERENCE obj)
+rt_public void eif_new_processor (EIF_REFERENCE obj, EIF_BOOLEAN is_passive)
 {
 	EIF_SCP_PID new_pid = 0;
 	int error = T_OK;
@@ -262,7 +273,7 @@ rt_public void eif_new_processor (EIF_REFERENCE obj)
 		   so that the argument 'obj' can be removed. */
 	EIF_OBJECT object = eif_protect (obj);
 
-	error = rt_processor_registry_create_region (&new_pid);
+	error = rt_processor_registry_create_region (&new_pid, is_passive);
 
 	switch (error) {
 		case T_OK:

@@ -90,6 +90,7 @@ doc:		<field name="client" type="EIF_SCP_PID"> The PID of the processor that log
 doc:		<field name="is_active" type="EIF_BOOLEAN"> Indicates if the processor is executing. This is used to prevent that an active processor, that may not have any references to it, is collected during GC. </field>
 doc:		<field name="is_creation_procedure_logged" type="EIF_BOOLEAN"> Stores whether the creation procedure of the root object has already been logged. </field>
 doc:		<field name="is_dirty" type="EIF_BOOLEAN">  Stores whether the current processor is marked as dirty (i.e. if it has encountered an exception). </field>
+doc:		<field name="is_passive_region" type="EIF_BOOLEAN">  Indicates whether the processor is a passive region. </field>
 
 doc:		<fixme> There are several items to be fixed:
 doc:			* For passive processors, it would make sense to split rt_processor into two structs for regions and processors.
@@ -125,6 +126,7 @@ struct rt_processor {
 	volatile EIF_BOOLEAN is_creation_procedure_logged;
 	EIF_BOOLEAN is_dirty;
 	volatile EIF_BOOLEAN is_impersonation_allowed;
+	EIF_BOOLEAN is_passive_region;
 };
 
 /* Creation and destruction. */

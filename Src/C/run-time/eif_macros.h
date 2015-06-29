@@ -1287,28 +1287,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 #endif
 #endif
 
-
-#define RTS_PROCESSOR_SPIN_LOOP(x) EIF_ENTER_C; {volatile int i; for (i = 0; i < x; i++) {}}; EIF_EXIT_C; RTGC; 
-
-#define scoop_task_assign_processor 1
-#define	scoop_task_free_processor 2
-#define scoop_task_enumerate_live_processors 3
-#define scoop_task_signify_start_of_new_chain 4
-#define scoop_task_signify_end_of_new_chain 5
-#define scoop_task_add_supplier_to_request_chain 6
-#define scoop_task_wait_for_supplier_processor_locks 7
-#define scoop_task_add_call 8
-#define scoop_task_add_synchronous_call 9
-#define scoop_task_wait_for_processor_redundancy 10
-#define scoop_task_check_uncontrolled 11
-#define scoop_task_update_statistics 12
-#define scoop_task_set_active 13
-#define scoop_task_set_passive 14
-#define scoop_task_is_passive 15
-#define scoop_task_is_synced_on 16
-#define scoop_task_set_synced_on 17
-#define scoop_task_set_not_synced_on 18
-
 #define RTS_PID(o) HEADER(o)->ov_pid
 
 #define eif_scoop_access(x) (x)

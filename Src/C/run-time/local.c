@@ -92,7 +92,7 @@ rt_public EIF_REFERENCE **eget(register size_t num)
 	EIF_REFERENCE **top;	/* The top of the stack */
 
 	REQUIRE("loc_set allocated", loc_set.st_cur);
-	REQUIRE("current is too small", (loc_set.st_cur->sk_end - loc_set.st_cur->sk_top) < num);
+	REQUIRE("current is too small", loc_set.st_cur->sk_end < (loc_set.st_cur->sk_top + num));
 
 	next = s->sk_next;	/* Pointer to next chunk */
 	if (!next) {					/* No next chunk */

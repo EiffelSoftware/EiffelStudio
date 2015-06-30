@@ -9,6 +9,7 @@ copy_raw	task.e		$CLUSTER task.e
 copy_raw	task_queue.e	$CLUSTER task_queue.e
 copy_raw	simple_random.e	$CLUSTER simple_random.e
 copy_raw	square_matrix.e	$CLUSTER square_matrix.e
+copy_raw	validator.e		$CLUSTER validator.e
 
 
 compile_frozen

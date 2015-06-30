@@ -693,6 +693,8 @@ static  void    print_instructions (void)
 				break;
 			case BC_CATCALL :
 				print_cid();
+					/* Annotations. */
+				fprintf (ofp, " with annotations 0x%X", (int) get_int16(&ip));
 					/* Static type of class */
 				print_ctype (get_int16(&ip));
 				fprintf (ofp, ".%s", get_string8(&ip, get_int32(&ip)));

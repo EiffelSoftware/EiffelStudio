@@ -2439,7 +2439,7 @@ rt_private void interpret(int flag, int where)
 #ifdef EIF_THREADS
 	 		EIF_BOOLEAN q =
 #endif
-	 			get_bool (&IC); /* Indicator of a query. */
+	 			get_bool (&IC); /* Indicator of a query or of an active region creation. */
 
 			if (*IC == BC_ROTATE) {
 				EIF_TYPED_VALUE old;			/* Save old value before copying */
@@ -2558,8 +2558,16 @@ rt_private void interpret(int flag, int where)
 				}
 					/* Check if this is indeed a separate call. */
 				if (code == BC_CREATION) {
-						/* Associate new processor with the target of a call. */
-					RTS_PA (target -> it_ref);
+						/* Associate new region with the target of a call. */
+					if (q) {
+							/* Create a new active region. */
+						RTS_PA (target -> it_ref);
+					}
+					else {
+							/* Create a new passive region. */
+						RTS_PP (target -> it_ref);
+					}
+
 				}
 				else if (!RTS_OS (icurrent->it_ref, target->it_ref)) {
 						/* The call is not separate, reset target to NULL */

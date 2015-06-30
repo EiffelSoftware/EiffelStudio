@@ -870,9 +870,9 @@ static  void    print_instructions (void)
 				/* Separate feature call prefix */
 				fprintf (ofp, "%d args ", get_uint16(&ip));
 				if (get_bool(&ip))
-					fprintf (ofp, "(wait)");
+					fprintf (ofp, "(query/active)");
 				else
-					fprintf (ofp, "(nowait)");
+					fprintf (ofp, "(command/passive)");
 				break;
 			case  BC_EXTERN_INV :
 				/* External with invariant check */

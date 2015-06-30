@@ -16,23 +16,29 @@ inherit
 		end
 
 create
-	default_create
+	default_create,
+	make_with_location
 
 feature {NONE} -- Initialization
+
+	make_with_location (a_path: READABLE_STRING_GENERAL)
+		do
+			make (a_path, <<"-t">>)
+			set_stdin_mode (True, "%N.%N%N")
+		end
 
 	default_create
 		do
 			Precursor
-			make ("/usr/sbin/sendmail", <<"-t">>)
+			make_with_location ("/usr/sbin/sendmail")
 			if not is_available then
-				make ("/usr/bin/sendmail", <<"-t">>)
+				make_with_location ("/usr/bin/sendmail")
 			end
-			set_stdin_mode (True, "%N.%N%N")
 		end
 
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

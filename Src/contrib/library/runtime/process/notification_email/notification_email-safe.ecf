@@ -19,9 +19,7 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="src" location=".\" >
-			<file_rule>
-				<exclude>/smtp$</exclude>
-			</file_rule>
+			<cluster name="storage" location="$|storage"/>
 			<cluster name="smtp" location="$|smtp">
 				<condition>
 					<custom name="smtp_notification_email_disabled" excluded_value="true"/>

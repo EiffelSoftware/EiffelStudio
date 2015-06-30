@@ -11,7 +11,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="http" location="..\..\..\network\protocol\http\http.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf">
 			<condition>
 				<custom name="smtp_notification_email_disabled" excluded_value="true"/>
 			</condition>
@@ -19,9 +19,7 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="src" location=".">
-			<file_rule>
-				<exclude>/smtp$</exclude>
-			</file_rule>
+			<cluster name="storage" location="$|storage"/>
 			<cluster name="smtp" location="$|smtp">
 				<condition>
 					<custom name="smtp_notification_email_disabled" excluded_value="true"/>

@@ -64,9 +64,7 @@ feature {NONE} -- Initialization
 			scrollable_area_extend (cell)
 			resize_actions.extend (agent on_resize)
 			mouse_wheel_actions.extend (agent on_mouse_wheel)
-			if attached {EV_APPLICATION} ev_application as l_app then
-				l_app.add_idle_action (agent on_refresh)
-			end
+			ev_application.add_idle_action (agent on_refresh)
 		end
 
 feature -- Access
@@ -309,7 +307,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

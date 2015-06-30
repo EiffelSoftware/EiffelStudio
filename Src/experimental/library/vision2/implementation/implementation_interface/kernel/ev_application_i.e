@@ -258,9 +258,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 	call_separate_action (a_action: separate PROCEDURE [ANY, TUPLE])
 			-- Execute `call' on 'a_action'.
 		do
-			--| FIXME: Remove use of `apply' when standard allows passing of `Void' to separate targets.
---			a_action.call (Void)
-			a_action.apply
+			a_action.call (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -1210,7 +1208,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

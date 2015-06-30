@@ -196,35 +196,32 @@ feature {EV_DIALOG} -- Implementation
 	dialog_key_press_action (a_key: EV_KEY)
 		local
 			a_key_code: INTEGER
-			l_app_i: detachable EV_APPLICATION_I
+			l_app_i: EV_APPLICATION_I
 		do
 				-- EV_KEY's may be void.
 				--| If this behaviour is modified, then make sure to update
 				--| the description in EV_DIALOG.
-			check attached {EV_APPLICATION} ev_application as l_app then
-				l_app_i := l_app.implementation
-				check l_app_i_not_void: l_app_i /= Void end
-				if a_key /= Void and l_app_i.captured_widget = Void and l_app_i.pick_and_drop_source = Void then
-					a_key_code := a_key.code
+			l_app_i := ev_application.implementation
+			if a_key /= Void and l_app_i.captured_widget = Void and l_app_i.pick_and_drop_source = Void then
+				a_key_code := a_key.code
 
-					if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then
-						attached default_cancel_button as l_default_cancel_button then
-							-- We now check if `default_cancel_button' is sensitive
-							-- as we only call its select_actions if it is sensitive.
-						if l_default_cancel_button.is_sensitive then
-								-- Escape key pressed and `default_cancel_button' is
-								-- sensitive so simulate a press.
-							l_default_cancel_button.select_actions.call (Void)
-						end
+				if a_key_code = {EV_KEY_CONSTANTS}.Key_escape and then
+					attached default_cancel_button as l_default_cancel_button then
+						-- We now check if `default_cancel_button' is sensitive
+						-- as we only call its select_actions if it is sensitive.
+					if l_default_cancel_button.is_sensitive then
+							-- Escape key pressed and `default_cancel_button' is
+							-- sensitive so simulate a press.
+						l_default_cancel_button.select_actions.call (Void)
+					end
 
-					elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
-						attached current_push_button as l_current_push_button then
-						if l_current_push_button.is_sensitive and not l_current_push_button.has_focus then
-								-- Enter key pressed and `current_push_button' is
-								-- sensitive so simulate a press, make sure it does not have focus as otherwise
-								-- `select_actions' would be called twice.
-							l_current_push_button.select_actions.call (Void)
-						end
+				elseif a_key_code = {EV_KEY_CONSTANTS}.Key_enter and then
+					attached current_push_button as l_current_push_button then
+					if l_current_push_button.is_sensitive and not l_current_push_button.has_focus then
+							-- Enter key pressed and `current_push_button' is
+							-- sensitive so simulate a press, make sure it does not have focus as otherwise
+							-- `select_actions' would be called twice.
+						l_current_push_button.select_actions.call (Void)
 					end
 				end
 			end

@@ -20,6 +20,13 @@ inherit
 			copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make_with_tool
 
@@ -355,7 +362,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			end
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
-			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := ev_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -445,7 +452,7 @@ feature {NONE} -- Implementation
 			l_data: detachable ANY
 		do
 			original_position := parent_area.linear_representation.index_of (tool, 1)
-			locked_in_here := attached {EV_APPLICATION} (create {EV_ENVIRONMENT}).application as l_application and then l_application.locked_window = Void
+			locked_in_here := ev_application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
 				if original_parent_window /= Void then
@@ -722,7 +729,7 @@ invariant
 	minimum_size_cell_empty: minimum_size_cell.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

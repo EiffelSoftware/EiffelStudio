@@ -17,21 +17,38 @@ inherit
 			interface
 		end
 
-feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Status report
+feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER, EV_ABSTRACT_PICK_AND_DROPABLE} -- Access
 
-	application: detachable separate EV_APPLICATION
-			-- Single application object for system.
+	application: detachable EV_APPLICATION
+			-- Single application object for system in processor that created it.
 		require
-			not_destroyed: not is_destroyed
+			same_processor_as_application: is_application_processor
 		do
-			Result := application_internal (environment_handler)
+			if attached {EV_APPLICATION_I} application_cell_item (application_cell) as l_application_i then
+				Result := l_application_i.interface
+			end
+		end
+
+	separate_application: detachable separate EV_APPLICATION
+			-- Single application object for system.
+		do
+			if attached application_cell_item (application_cell) as l_application_i then
+				Result := application_interface (l_application_i)
+			end
 		end
 
 	application_i: EV_APPLICATION_I
 			-- Single application implementation object for system.
+			-- If it does not yet exist or if it was destroyed it will create it.
+			-- If it is separate to the current processor, throws an exception.
+			-- Otherwise returns the existing instance.
+		require
+			same_processor_as_application: is_application_processor
 		do
-			check attached {EV_APPLICATION_I} application_i_internal (environment_handler) as l_result then
-				Result := l_result
+			if attached {EV_APPLICATION_I} application_cell_item (application_cell) as l_application_i and then not l_application_i.is_destroyed then
+				Result := l_application_i
+			else
+				Result := new_application_i (application_cell)
 			end
 		end
 
@@ -70,95 +87,74 @@ feature {EV_ANY, EV_ANY_I, EV_ENVIRONMENT, EV_SHARED_TRANSPORT_I, EV_ANY_HANDLER
 		deferred
 		end
 
+feature -- Status report
+
 	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		deferred
 		end
 
-feature {EV_ANY} -- Separate Object Factory
-
-	new_object_from_type (a_type: TYPE [EV_ANY]): separate EV_ANY
+	is_application_processor: BOOLEAN
+			-- Is current instance of EV_ENVIRONMENT on the same processor as EV_APPLICATION?
+			-- True if this is the same processor, or if EV_APPLICATION has not been created yet.
 		do
-			Result := new_object_from_type_id_internal (environment_handler, a_type.type_id)
+			Result := not attached application_cell_item (application_cell) as l_result or else attached {EV_APPLICATION_I} l_result
 		end
-
-	separate_string_from_string (a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
-			-- Create a new string on the same processor as EV_APPLICATION object.
-		do
-			Result := separate_string_from_string_internal (environment_handler, a_string)
-		end
-
-	string_from_separate_string (a_string: separate READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
-			-- Return a representation of `a_string' on the same processor as `Current'.
-		local
-			i, l_count: INTEGER
-			l_string: STRING_GENERAL
-			l_code: NATURAL_32
-		do
-			if attached {READABLE_STRING_GENERAL} a_string as l_result then
-					-- String is on the same processor so it may be safely returned.
-				Result := l_result
-			else
-				l_count := a_string.count
-				if a_string.is_string_8 then
-						-- If `a_string' contains CHARACTER_8 values then make `Result' a STRING_8 to save memory.
-					create {STRING_8} l_string.make_filled ('%U', l_count)
-				else
-					create {STRING_32} l_string.make_filled ('%U', l_count)
-				end
-				from
-					i := 1
-				until
-					i > l_count
-				loop
-					l_code := a_string.code (i)
-					l_string.put_code (l_code, i)
-					i := i + 1
-				end
-				Result := l_string
-			end
-		end
-
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_ENVIRONMENT note option: stable attribute end
-            -- Provides a common user interface to platform dependent
-            -- functionality implemented by `Current'
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
-feature {EV_APPLICATION} -- Implementation
+feature {NONE} -- Implementation
 
-	environment_handler: separate EV_ENVIRONMENT_HANDLER
+	application_cell: separate CELL [detachable separate EV_APPLICATION_I]
 			-- A global cell where `item' is the single application object for
 			-- the system.
 		require
 			not_destroyed: not is_destroyed
 		once ("PROCESS")
-			create {EV_ENVIRONMENT_HANDLER} Result.make
+			create Result.put (Void)
 		end
 
-feature {NONE} -- Implementation
-
-	application_internal (a_environment_handler: like environment_handler): detachable separate EV_APPLICATION
+	application_interface (a_separate_application: separate EV_APPLICATION_I): detachable separate EV_APPLICATION
+			-- SCOOP wrapper to get `interface' of `a_separate_application'.
 		do
-			Result := a_environment_handler.application
+			Result := a_separate_application.interface
 		end
 
-	application_i_internal (a_environment_handler: like environment_handler): detachable separate EV_APPLICATION_I
+	application_cell_item (a_cell: like application_cell): detachable separate EV_APPLICATION_I
+			-- SCOOP wrapper to get the content of `application_cell'.
 		do
-			Result := a_environment_handler.application_i
+			Result := a_cell.item
 		end
 
-	new_object_from_type_id_internal (a_environment_handler: like environment_handler; a_type_id: INTEGER): separate EV_ANY
+	new_application_i (a_cell: like application_cell): EV_APPLICATION_I
+			-- If `a_cell''s content has been set, use it if not destroyed, otherwise
+			-- create a new instance of EV_APPLICATION_IMP on the current processor and
+			-- set `a_cell' with that new instance.
+		require
+			same_processor_as_application: not attached a_cell.item as l_result or else attached {EV_APPLICATION_I} l_result
 		do
-			Result := a_environment_handler.new_object_from_type_id (a_type_id)
-		end
-
-	separate_string_from_string_internal (a_environment_handler: like environment_handler; a_string: READABLE_STRING_GENERAL): separate READABLE_STRING_GENERAL
-			-- Create a new string on the same processor as EV_APPLICATION object.
-		do
-			Result := a_environment_handler.string_from_separate_string (a_string)
+				-- If EV_APPLICATION_IMP has not been created yet we create a fresh one.
+			if not attached a_cell.item as l_application_i then
+				create {EV_APPLICATION_IMP} Result.make
+				a_cell.put (Result)
+			elseif attached {EV_APPLICATION_I} l_application_i as l_result then
+					-- We already have an instance on the same processor.
+				if l_result.is_destroyed then
+						-- Application was destroyed, we recreate a fresh one.
+					create {EV_APPLICATION_IMP} Result.make
+					a_cell.put (Result)
+				else
+						-- We return the one we currently have.
+					Result := l_result
+				end
+			else
+				check is_same_processor: False then end	-- It is not on the same processor, precondition states this should not happen.
+			end
 		end
 
 feature -- Command
@@ -170,7 +166,7 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -179,9 +175,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class EV_ENVIRONMENT_I
 

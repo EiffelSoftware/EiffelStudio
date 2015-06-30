@@ -11,12 +11,23 @@ class
 
 feature -- Access
 
-	ev_application: separate EV_APPLICATION
+	ev_application: EV_APPLICATION
+			-- Current application if created yet.
+		require
+			application_exists: attached shared_environment.application
+			same_processor_as_application: shared_environment.is_application_processor
+		do
+			check attached shared_environment.application as l_app then
+				Result := l_app
+			end
+		end
+
+	ev_separate_application: separate EV_APPLICATION
 			-- Current application if created yet.
 		require
 			application_exists: attached shared_environment.application
 		do
-			check attached shared_environment.application as l_app then
+			check attached shared_environment.separate_application as l_app then
 				Result := l_app
 			end
 		end
@@ -26,9 +37,7 @@ feature -- Access
 			"Call ev_application.process_events instead"
 			-- Call `process_events'.
 		do
-			check attached {EV_APPLICATION} ev_application as l_application then
-				l_application.process_events
-			end
+			ev_application.process_events
 				-- Idle actions are called when all events are processed.
 		end
 
@@ -39,7 +48,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

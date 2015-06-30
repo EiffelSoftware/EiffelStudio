@@ -54,9 +54,13 @@ feature -- Element change
 			a_text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has_code (('%R').natural_32_code)
 		do
-			implementation.set_text (environment_i.string_from_separate_string (a_text))
+			if attached {READABLE_STRING_GENERAL} a_text as l_text then
+				implementation.set_text (l_text)
+			else
+				implementation.set_text (create {STRING_32}.make_from_separate (a_text))
+			end
 		ensure
-			text_cloned: text.same_string_general (environment_i.string_from_separate_string (a_text)) and then text /= a_text
+			text_cloned: text.same_string_general (create {STRING_32}.make_from_separate (a_text)) and then text /= a_text
 		end
 
 	remove_text
@@ -85,7 +89,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

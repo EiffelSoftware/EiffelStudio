@@ -29,7 +29,14 @@ feature {NONE} -- Initialization is
 
 	initialize
 			-- Mark `Current' as initialized.
+		local
+			scoop_support: ISE_SCOOP_RUNTIME
 		do
+				-- Make sure that EV_APPLICATION, which contains the GUI elements
+				-- and the event dispatching thread, is only accessed by one specific thread.
+			create scoop_support
+			scoop_support.pin_to_thread
+
 			set_tooltip_delay (default_tooltip_delay)
 			Precursor
 				-- We need to create implementation here
@@ -158,9 +165,13 @@ feature -- Basic operation
 		require
 			not_destroyed: not is_destroyed
 			not_already_launched: not is_launched
+		local
+			l_handler: like application_handler
 		do
 			is_launched := True
-			internal_launch_application (application_handler)
+			create l_handler.make (Current)
+			application_handler := l_handler
+			internal_launch_application (l_handler)
 		ensure
 			is_launched: is_launched
 		rescue
@@ -383,25 +394,20 @@ feature {NONE} -- Implementation
 	internal_launch_application (a_handler: separate EV_APPLICATION_HANDLER)
 			-- Call launch on `a_handler'
 		do
-			a_handler.set_application (implementation)
 			implementation.call_post_launch_actions
 			a_handler.launch
 		end
 
-	application_handler: separate EV_APPLICATION_HANDLER
-			-- A global cell where `item' is the single application object for
-			-- the system.
-		require
-			not_destroyed: not is_destroyed
-		once ("PROCESS")
-			create Result
-		end
+	application_handler: detachable separate EV_APPLICATION_HANDLER
+			-- A processor that will log calls to the current processor to process graphical events.
+			-- This is required so that the main GUI processor can logged calls (i.e. its main creation
+			-- procedure has exited).
 
 invariant
 	tooltip_delay_not_negative: tooltip_delay >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

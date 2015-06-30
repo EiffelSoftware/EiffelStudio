@@ -213,9 +213,7 @@ feature {NONE} -- Implementation
 			-- Setup the action sequences when the item is shown.
 		do
 			if attached text_field as l_text_field then
-				if attached {EV_APPLICATION} ev_application as l_app then
-					l_text_field.focus_out_actions.extend (agent l_app.do_once_on_idle (agent deactivate))
-				end
+				l_text_field.focus_out_actions.extend (agent ev_application.do_once_on_idle (agent deactivate))
 				l_text_field.set_focus
 				l_text_field.set_caret_position (l_text_field.text_length + 1)
 				user_cancelled_activation := False
@@ -227,7 +225,7 @@ invariant
 	text_field_parented_during_activation: attached text_field as l_field implies l_field.has_parent
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

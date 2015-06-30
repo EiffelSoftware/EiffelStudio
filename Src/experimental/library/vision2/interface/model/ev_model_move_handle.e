@@ -18,6 +18,11 @@ inherit
 			create_interface_objects
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create
+		end
+
 create
 	default_create
 
@@ -366,8 +371,7 @@ feature {NONE} -- Events
 			-- User pressed pointer button on `Current'.
 		do
 			if attached world as l_world and then l_world.capture_figure = Void then
-				if ev_application = Void or else (attached {EV_APPLICATION} ev_application as l_ev_app and then not l_ev_app.ctrl_pressed) then
-
+				if ev_application.ctrl_pressed then
 					if b = move_button and is_moving then
 						-- move
 						enable_capture
@@ -501,23 +505,8 @@ feature {NONE} -- Events
 			is_move := False
 		end
 
-	ev_application: detachable separate EV_APPLICATION
-			-- The application `Current' is part of.
-		do
-			Result := ev_environment.application
-		end
-
-feature {NONE} -- Implementation
-
-	ev_environment: EV_ENVIRONMENT
-			-- The application `Current' is part of.
-		once
-			create Result
-		end
-
-
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

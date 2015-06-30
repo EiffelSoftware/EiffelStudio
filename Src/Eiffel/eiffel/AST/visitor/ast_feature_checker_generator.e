@@ -6477,6 +6477,7 @@ feature {NONE} -- Visitor
 		end
 
 	generate_creation (
+			l_is_active: BOOLEAN;
 			l_access: ACCESS_B;
 			l_call_access: CALL_ACCESS_B;
 			l_creation_type: TYPE_A;
@@ -6523,6 +6524,7 @@ feature {NONE} -- Visitor
 			end
 
 			create l_creation_expr
+			l_creation_expr.set_is_active (l_is_active)
 			l_creation_expr.set_info (l_create_info)
 				-- When this is not `default_create'.
 			if l_call_access /= Void then
@@ -6653,7 +6655,7 @@ feature {NONE} -- Visitor
 
 							if l_needs_byte_node then
 								l_call_access ?= last_byte_node
-								generate_creation (l_access, l_call_access, l_creation_type, l_explicit_type,
+								generate_creation (l_as.is_active, l_access, l_call_access, l_creation_type, l_explicit_type,
 									l_as.target.start_location)
 									-- Set line information for instruction.
 								l_assign ?= last_byte_node
@@ -6728,6 +6730,7 @@ feature {NONE} -- Visitor
 						l_create_info := l_creation_type.create_info
 
 						create l_creation_expr
+						l_creation_expr.set_is_active (l_as.is_active)
 						l_creation_expr.set_call (l_call_access)
 						l_creation_expr.set_info (l_create_info)
 						l_creation_expr.set_type (l_creation_type)

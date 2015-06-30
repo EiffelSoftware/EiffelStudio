@@ -86,6 +86,9 @@ feature -- Access
 	is_in_creation_call: BOOLEAN
 			-- Is current call a creation instruction?
 
+	is_active_region: BOOLEAN
+			-- Should a separate region be active when it is created?
+
 feature {NONE} -- Status report
 
 	is_initialization: BOOLEAN
@@ -692,7 +695,7 @@ feature {NONE} -- Visitors
 						l_nested.set_target (a_node)
 						l_nested.set_message (l_call)
 						l_call.set_parent (l_nested)
-						make_call_access_b (l_call, bc_feature, bc_feature_inv, True)
+						make_call_access_b (l_call, bc_feature, bc_feature_inv, True, a_node.is_active)
 						l_call.set_parent (Void)
 					end
 				else
@@ -713,7 +716,9 @@ feature {NONE} -- Visitors
 						l_nested.set_message (l_call)
 						l_call.set_parent (l_nested)
 						is_in_creation_call := True
+						is_active_region := a_node.is_active
 						l_call.process (Current)
+						is_active_region := False
 						is_in_creation_call := False
 						l_call.set_parent (Void)
 					end
@@ -832,9 +837,12 @@ feature {NONE} -- Visitors
 			l_nb_expr_address: INTEGER
 			l_pos: INTEGER
 			l_is_in_creation_call: like is_in_creation_call
+			l_is_active_region: like is_active_region
 		do
 			l_is_in_creation_call := is_in_creation_call
 			is_in_creation_call := False
+			l_is_active_region := is_active_region
+			is_active_region := False
 			if a_node.parameters /= Void then
 					-- Generate the expression address byte code
 				from
@@ -897,7 +905,7 @@ feature {NONE} -- Visitors
 				ba.append_integer (a_node.routine_id)
 				make_precursor_byte_code (a_node)
 			else
-				make_call_access_b (a_node, bc_extern, bc_extern_inv, l_is_in_creation_call)
+				make_call_access_b (a_node, bc_extern, bc_extern_inv, l_is_in_creation_call, l_is_active_region)
 			end
 
 			if l_nb_expr_address > 0 then
@@ -921,9 +929,12 @@ feature {NONE} -- Visitors
 			l_expr_address_b: EXPR_ADDRESS_B
 			l_access_expression_b: ACCESS_EXPR_B
 			l_is_in_creation_call: like is_in_creation_call
+			l_is_active_region: like is_active_region
 		do
 			l_is_in_creation_call := is_in_creation_call
 			is_in_creation_call := False
+			l_is_active_region := is_active_region
+			is_active_region := False
 			if a_node.parameters /= Void then
 					-- Generate the expression address byte code
 				from
@@ -1009,7 +1020,7 @@ feature {NONE} -- Visitors
 				end
 			end
 
-			make_call_access_b (a_node, bc_feature, bc_feature_inv, l_is_in_creation_call)
+			make_call_access_b (a_node, bc_feature, bc_feature_inv, l_is_in_creation_call, l_is_active_region)
 
 			if l_nb_expr_address > 0 then
 				ba.append (Bc_pop)
@@ -2445,10 +2456,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next: CHARACTER; is_creation: BOOLEAN)
+	make_call_access_b (a_node: CALL_ACCESS_B; code_first, code_next: CHARACTER; is_creation: BOOLEAN; is_active: BOOLEAN)
 			-- Generate call to EXTERNAL_B/FEATURE_B.
 			-- Generate byte code for a feature call.
-			-- `is_creation' indicates if this is a call to a creation procedure.
+			-- `is_creation' indicates if this is a call to a creation procedure and `is_active' tells that an active region is to be created in case of a separate target type.
 			-- if `meta', metamorphose the feature call.
 			-- Doesn't process the parameters
 		require
@@ -2468,9 +2479,8 @@ feature {NONE} -- Implementation
 				else
 					ba.append_argument_count (0)
 				end
-					-- Indicate if this is a query or procedure call:
-					-- True is used for a query, False - for a procedure.
-				ba.append_boolean (not a_node.type.is_void)
+					-- Indicate if this is a query or procedure call and in case of separate creation whether the target region is active.
+				ba.append_boolean (not a_node.type.is_void or else is_active)
 			end
 				-- Note: Manu 08/08/2002: if `a_node.precursor_type' is not Void, it can only means
 				-- that we are currently performing a static access call on a feature

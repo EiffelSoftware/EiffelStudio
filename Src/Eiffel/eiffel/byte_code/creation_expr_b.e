@@ -66,6 +66,7 @@ feature -- C code generation
 			l_type: CL_TYPE_A
 		do
 			create Result
+			Result.set_is_active (is_active)
 			Result.set_info (info)
 			Result.set_type (type)
 			if call /= Void then
@@ -223,6 +224,9 @@ feature -- Status report
 
 feature -- Access
 
+	is_active: BOOLEAN
+			-- Shall an active region be created if the creation type is separate?
+
 	info: CREATE_INFO
 			-- Creation info for creation the right type
 
@@ -244,6 +248,14 @@ feature -- Access
 		end
 
 feature -- Settings
+
+	set_is_active (v: BOOLEAN)
+			-- Set `is_active' to `v'.
+		do
+			is_active := v
+		ensure
+			is_active_set: is_active = v
+		end
 
 	set_info (i: like info)
 			-- Assign `i' to `info'.
@@ -367,9 +379,13 @@ feature -- Generation
 			end
 
 			if system.is_scoop and then t.is_separate then
-					-- Attach new object to a new processor
+					-- Attach new object to a new region.
 				buf.put_new_line
-				buf.put_string ("RTS_PA (")
+				if is_active then
+					buf.put_string ("RTS_PA (")
+				else
+					buf.put_string ("RTS_PP (")
+				end
 				register.print_register
 				buf.put_two_character (')', ';')
 			end

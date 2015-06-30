@@ -45,8 +45,40 @@ feature -- Basic operation
 		deferred
 		end
 
+feature -- Error
+
+	has_error: BOOLEAN
+			-- Previous operation reported error?
+			-- Use `reset_errors', to reset this state.
+		do
+			Result := attached last_errors as lst and then not lst.is_empty
+		end
+
+	reset_errors
+			-- Reset last errors.
+		do
+			last_errors := Void
+		end
+
+	last_errors: detachable ARRAYED_LIST [READABLE_STRING_32]
+			-- Last reported errors since previous `reset_errors' call.
+
+	report_error (a_msg: READABLE_STRING_GENERAL)
+			-- Report error message `a_msg'.
+		local
+			lst: like last_errors
+		do
+			lst := last_errors
+			if lst = Void then
+				create lst.make (1)
+				last_errors := lst
+			end
+			lst.force (a_msg.to_string_32)
+		end
+
+
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

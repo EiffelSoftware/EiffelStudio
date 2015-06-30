@@ -13,7 +13,7 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<pre_compile_action working_directory=".\parser_v1311\" command="make" succeed="true">
+		<pre_compile_action working_directory=".\parser\" command="make" succeed="true">
 			<description>Generate Parser Files</description>
 		</pre_compile_action>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
@@ -23,6 +23,6 @@
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="root_cluster" location=".\"/>
-		<override name="parser_v1311" location="parser_v1311\"/>
+		<override name="syntax_parser" location="parser\"/>
 	</target>
 </system>

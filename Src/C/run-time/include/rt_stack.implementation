@@ -361,11 +361,18 @@ doc:	</routine>
 */
 rt_public void XX_EIF_STACK_FUNC(save_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur)
 {
+	XX_EIF_STACK_CHUNK_TYPE *l_cur;
+
 	REQUIRE("stack not null", stk);
 	REQUIRE("cursor not null", cur);
 
-	cur->sc_chunk = stk->st_cur;
-	cur->sc_item = stk->st_cur->sk_top;
+	l_cur = cur->sc_chunk = stk->st_cur;
+	if (l_cur) {
+		CHECK("sk_top set", l_cur->sk_top);
+		cur->sc_item = l_cur->sk_top;
+	} else {
+		cur->sc_item = NULL;
+	}
 }
 
 /*
@@ -379,11 +386,24 @@ doc:	</routine>
 */
 rt_public void XX_EIF_STACK_FUNC(restore_cursor) (XX_EIF_STACK_TYPE *stk, XX_EIF_STACK_CURSOR_TYPE *cur)
 {
+	XX_EIF_STACK_CHUNK_TYPE *l_cur;
+
 	REQUIRE("stack not null", stk);
 	REQUIRE("cursor not null", cur);
 
-	stk->st_cur = cur->sc_chunk;
-	stk->st_cur->sk_top = cur->sc_item;
+	l_cur = cur->sc_chunk;
+	if (l_cur) {
+		CHECK("sc_item not null", cur->sc_item);
+		stk->st_cur = l_cur;
+		l_cur->sk_top = cur->sc_item;
+	} else {
+			/* Stack was previously not allocated. */
+		l_cur = stk->st_cur = stk->st_head;
+		if (l_cur) {
+				/* If now the stack is allocated, we set `sk_top' to the bottom of the stack. */
+			l_cur->sk_top = l_cur->sk_arena;
+		}	
+	}
 }
 
 /*

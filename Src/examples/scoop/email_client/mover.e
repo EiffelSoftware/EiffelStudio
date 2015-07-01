@@ -12,10 +12,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_messages: like messages)
+	make (a_messages: like messages; a_controller: like controller)
 			-- Initialization for `Current'.
 		do
 			messages := a_messages
+			controller := a_controller
 		end
 
 feature -- Access
@@ -28,6 +29,9 @@ feature -- Access
 
 	messages: separate LINKED_LIST[separate STRING]
 			-- The list of emails whose size should be watched over.
+
+	controller: separate CONTROLLER
+			-- A separate controller which indicates when to stop execution.
 
 feature -- Status report
 

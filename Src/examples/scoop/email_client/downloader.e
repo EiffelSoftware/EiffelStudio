@@ -12,11 +12,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_messages: like messages)
+	make (a_messages: like messages; a_controller: like controller)
 			-- Initialization for `Current'.
 		do
 			messages := a_messages
-			create controller
+			controller := a_controller
 		end
 
 feature -- Access

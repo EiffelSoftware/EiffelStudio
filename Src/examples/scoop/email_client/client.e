@@ -17,9 +17,9 @@ feature {NONE} -- Initialization
 		do
 			create messages.make
 			create controller
-			create downloader.make (messages)
-			create viewer.make (messages)
-			create mover.make (messages)
+			create downloader.make (messages, controller)
+			create viewer.make (messages, controller)
+			create mover.make (messages, controller)
 		end
 
 feature -- Access

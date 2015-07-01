@@ -72,17 +72,6 @@ feature -- Basic operations.
 			record_one (fetch_message, messages)
 		end
 
-	fetch_message: separate STRING
-			-- Download a new message.
-		local
-			l_downloaded: STRING
-		do
-			count := count + 1
-			l_downloaded := "Message" + count.out
-			print ("Adding message: " + l_downloaded + "%N")
-			create <NONE> Result.make_from_separate (l_downloaded)
-		end
-
 	live
 			-- Get messages and add them to the client message list.
 		do
@@ -115,6 +104,17 @@ feature {NONE} -- Implementation
 			-- Store message `m' at the end of list `ml'.
 		do
 			ml.extend (m)
+		end
+
+	fetch_message: separate STRING
+			-- Download a new message.
+		local
+			l_downloaded: STRING
+		do
+			count := count + 1
+			l_downloaded := "Message" + count.out
+			print ("Adding message: " + l_downloaded + "%N")
+			create <NONE> Result.make_from_separate (l_downloaded)
 		end
 
 end

@@ -17,88 +17,98 @@ feature {NONE} -- Initialization
 		do
 			messages := a_messages
 			create controller
-			D_temporization := 1
 		end
 
-feature
+feature -- Access
+
 	messages: separate LINKED_LIST[separate STRING]
+			-- The list of emails where new messages should be added.
 
-feature
+	controller: separate CONTROLLER
+			-- A separate controller which indicates when to stop execution.
 
-	download_one(ml:separate LINKED_LIST[separate STRING])
-		-- Read one message and record it
+	count: INTEGER
+			-- Number of downloaded messages.
 
-		local
-			latest: STRING
-			exported_message: separate STRING
+	D_temporization: INTEGER = 1
+			-- The wait time in seconds between downloading two messages.
+
+	computed_count: INTEGER
+			-- Number of messages in client's message list.
 		do
-			count := count + 1
-			create latest.make_empty
-			latest := "Message" + count.out
-			print("%NAdding message: " + latest)
-			create exported_message.make_from_separate (latest)
-			record_one(exported_message, ml)
-		end
-
-feature
-	record_one(m: separate STRING; list: separate LINKED_LIST[separate STRING])
-		-- Store message m at the end of list
-		do
-			list.extend (m)
-		end
-
-feature
-	live
-		do
-			from
-
-			until
-				is_over
-			loop
-				download_one(messages)
-				wait(D_temporization)
+			separate messages as m do
+				Result := m.count
 			end
 		end
 
-feature
-	count: INTEGER
+feature -- Status report
+
 	is_over: BOOLEAN
-	D_temporization: INTEGER
-	controller: separate CONTROLLER
-
-feature
-	stop
-		do
-			is_over := true
-		end
-
-feature
-	computed_count: INTEGER
-			-- Number of messages in client's message list
-		do
-			Result := wrapped_feature_for_computed_count(messages)
-		end
-
-feature
-		--wrapper
-	wrapped_feature_for_computed_count(msg: separate LINKED_LIST[separate STRING]): INTEGER
-		do
-			Result := msg.count
-		end
-
-feature
-	wait(s: INTEGER_64)
-		do
-			(create {EXECUTION_ENVIRONMENT}).sleep (s * 1_000_000_000)
-		end
+			-- Shall `Current' stop its operation?
 
 ----------------------------------------------- INLINE SEPARATE PART FOR THIRD PARTY CONTROL, PAGE 24 -----------------------------------------------
---feature
+
 --	is_over: BOOLEAN
---			-- Has operation termination ben requested
+--			-- Shall `Current' stop its operation?
 --		do
 --			separate controller as c do
 --				Result := c.is_downloader_over
 --			end
 --		end
+
+feature -- Basic operations.
+
+	download_one (ml: separate LINKED_LIST [separate STRING])
+			-- Read one message and record it in `ml'.
+			-- Note: In a real application, downloading may take some time.
+			-- You probably do not want to do this while having exclusive access over the shared `ml' object.
+		do
+			ml.extend (fetch_message)
+		end
+
+	fetch_message: separate STRING
+			-- Download a new message.
+		local
+			l_downloaded: STRING
+		do
+			count := count + 1
+			l_downloaded := "Message" + count.out
+			print ("Adding message: " + l_downloaded + "%N")
+			create <NONE> Result.make_from_separate (l_downloaded)
+		end
+
+	live
+			-- Get messages and add them to the client message list.
+		do
+			from until is_over loop
+				record_one (fetch_message, messages)
+				wait(D_temporization)
+			end
+		end
+
+	stop
+			-- Set `is_over' to True.
+			-- Note: It isn't possible to stop a SCOOP processor like this, as the client will never get exclusive
+			-- access while `Current' is executing {DOWNLOADER}.live.
+		do
+			is_over := true
+		end
+
+feature {NONE} -- Implementation
+
+	wait (sec: INTEGER_64)
+			-- Sleep for `sec' seconds.
+		local
+			environment: EXECUTION_ENVIRONMENT
+		do
+			create environment
+			environment.sleep (sec * 1_000_000_000)
+		end
+
+	record_one(m: separate STRING; ml: separate LINKED_LIST[separate STRING])
+			-- Store message `m' at the end of list `ml'.
+		do
+			ml.extend (m)
+		end
+
 end

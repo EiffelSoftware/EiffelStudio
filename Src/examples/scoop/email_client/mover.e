@@ -65,7 +65,7 @@ feature -- Basic operations
 			loop
 				ml.remove
 			end
-			print("%Nsize after trimming:" + ml.count.out)
+			print("Size after trimming: " + ml.count.out + "%N")
 		end
 
 invariant

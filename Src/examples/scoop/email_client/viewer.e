@@ -51,24 +51,45 @@ feature -- Basic operations
 			-- Simulate a user viewing a message once in a while.
 		do
 			from until is_over loop
-				view_one (messages)
+				view_one_fixed
 				wait (V_temporization)
 			end
 		end
 
-	view_one (ml: separate LINKED_LIST[separate STRING])
-			-- Simulate viewing: if there are messages, display one, chosen randomly.
-			-- TODO: This feature should be splitted as well, just like download_one.
+	select_message: detachable STRING
+			-- Get a new message to be displayed from the client.
 		local
 			s_message: separate STRING
-			l_message: STRING
 		do
-			if not ml.is_empty then
-				s_message := ml [random (1, ml.count)]
-				create l_message.make_from_separate (s_message)
+			separate messages as ml do
+				if not ml.is_empty then
+					s_message := ml [random (1, ml.count)]
+					create Result.make_from_separate (s_message)
+				end
+			end
+		end
+
+	view_one_fixed
+			-- Simulate viewing: if there are messages, display one, chosen randomly.
+		do
+			if attached select_message as l_message then
 				print("Viewing message: " +  l_message + "%N")
 			end
 		end
+
+--	view_one (ml: separate LINKED_LIST[separate STRING])
+--			-- Simulate viewing: if there are messages, display one, chosen randomly.
+--			-- TODO: This feature should be splitted as well, just like download_one.
+--		local
+--			s_message: separate STRING
+--			l_message: STRING
+--		do
+--			if not ml.is_empty then
+--				s_message := ml [random (1, ml.count)]
+--				create l_message.make_from_separate (s_message)
+--				print("Viewing message: " +  l_message + "%N")
+--			end
+--		end
 
 
 feature {NONE} -- Implementation

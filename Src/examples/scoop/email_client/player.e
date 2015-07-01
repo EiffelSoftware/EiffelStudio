@@ -9,227 +9,184 @@ class
 
 inherit
 	ARGUMENTS
+
 create
 	make
 
-feature
+feature {NONE} -- Initialization
+
 	make
 		local
-			str: STRING_8
+			tutorial: INTEGER
 		do
-			create client.make
-			wrap_downloader_viewer_mover(client)
+			create <NONE> client.make
 
-			if
-				argument_count = 1
-			then
-				str := argument(1)
-				inspect str.to_integer
-					when 1 then play1
-					when 2 then play2
-					when 3 then play3
-					when 4 then play4
-					when 5 then play5
-					when 10 then play10
+			separate client as c do
+				downloader := c.downloader
+				viewer := c.viewer
+				mover := c.mover
+				messages := c.messages
+			end
+
+			if argument_count = 1 then
+				tutorial := argument (1).to_integer
+				inspect tutorial
+				when 1 then
+					play1
+				when 2 then
+					play2
+				when 3 then
+					play3
+				when 4 then
+					play4
+				when 5 then
+					play5
+				when 10 then
+					play10
+				else
+					print ("Invalid number.%N")
 				end
 			else
 				play1
 			end
 		end
 
-feature
-		--wrapper
-	wrap_downloader_viewer_mover(c: separate CLIENT)
-		do
-			downloader := c.downloader
-			viewer := c.viewer
-			mover := c.mover
-			messages := c.messages
-		end
+feature -- Access
 
-feature
+	client: separate CLIENT
+			-- The email downloader client managing the list of messages.
+
+	downloader: separate DOWNLOADER
+			-- The download engine.
+
+	viewer: separate VIEWER
+			-- The viewer engine.
+
+	mover: separate MOVER
+			-- The mover engine.
+
+	messages: separate LINKED_LIST[separate STRING]
+			-- To be removed...
+
+feature -- Tutorial: Main execution feature.
+
 	play1
+			-- Start the downloader, viewer and mover concurrently.
 		do
-			live_all(downloader, viewer, mover)
+			live_all (downloader, viewer, mover)
 		end
 
-feature
-	play2
-		do
-			download_two(downloader, messages)
-		end
-
-feature
-	play3
-		do
-			download_one_view_one(downloader, viewer, messages)
-		end
-
-feature
-	play4
-		do
-			count_downloads_first_type(downloader, messages)
-		end
-
-feature
-	play5
-		do
-			count_downloads_second_type(downloader, messages)
-		end
-
-feature
-	play7(c: CLIENT)
-		do
-
-		end
-
-
-feature
-	play10
-		do
-			first_message_printer (client)
-		end
-
-feature
-		--wrapper
 	live_all(d: separate DOWNLOADER; v: separate VIEWER; m: separate MOVER)
+			-- Run d, v, and m concurrently.
 		do
 			d.live
-			m.live
 			v.live
-
+			m.live
 		end
 
-feature
-		--wrapper
-	download_two(d: separate DOWNLOADER; msg: separate LINKED_LIST[separate STRING])
+
+feature -- Tutorial: Order preservation and synchronization.
+
+	play2
+			-- Download two messages.
 		do
-			d.download_one (msg)
-			d.download_one (msg)
+			separate downloader as d do
+				d.download_one_fixed
+				d.download_one_fixed
+			end
 		end
 
-feature
-		--wrapper
-	download_one_view_one(d: separate DOWNLOADER; v: separate VIEWER; msg: separate LINKED_LIST[separate STRING])
+	play3
+			-- Download a message, view a message.
 		do
-			d.download_one(msg)
-			v.view_one(msg)
+			separate downloader as d, viewer as v do
+				d.download_one_fixed
+				v.view_one (messages)
+			end
 		end
-feature
-		--wrapper
-	count_downloads_first_type(d: separate DOWNLOADER; msg: separate LINKED_LIST[separate STRING])
+
+	play4
+			-- Download two messages, find out how many were downloaded.
 		local
 			n: INTEGER
 		do
-			d.download_one (msg)
-			d.download_one (msg)
-			n := d.count
-			print(n)
+			separate downloader as d do
+				d.download_one_fixed
+				d.download_one_fixed
+				n := d.count
+				print (n)
+			end
 		end
 
-feature
-		--wrapper
-	count_downloads_second_type(d: separate DOWNLOADER; msg: separate LINKED_LIST[separate STRING])
+	play5
+			-- Download two messages, find out how many are in the list.
 		local
 			n: INTEGER
 		do
-			d.download_one (msg)
-			d.download_one (msg)
-			n := d.computed_count
-			print(n)
+			separate downloader as d do
+				d.download_one_fixed
+				d.download_one_fixed
+				n := d.computed_count
+				print (n)
+			end
 		end
 
-feature
-		--wrapper
-	first_message_printer(c: separate CLIENT)
+feature -- Tutorial: Type system
+
+	play6
+			-- Show characteristics of the SCOOP typesystem.
 		local
-			str: STRING
+			c: CLIENT
 		do
-			create str.make_from_separate (c.first)
-			io.put_string (str)
-		end
-
-feature
-	client: separate CLIENT
-	downloader: separate DOWNLOADER
-	viewer: separate VIEWER
-	mover: separate MOVER
-	messages: separate LINKED_LIST[separate STRING]
-
-
-------------------------------------------------- TRAITOR EXAMPLE --------------------------------------------------------------------
---feature
---	close_friend: PLAYER
---	remote_friend: separate PLAYER
-
---feature
---	set_close_friend(p: PLAYER)
---		do
---			close_friend := p
---		end
-
---feature
---	play9
---		do
---			create remote_friend.make
---			remote_friend.set_close_friend(current)
---		end
-
-------------------------------------COMPILATION ERROR EXAMPLE ILLUSTRATING THE SCOOP TYPE SYSTEM ---------------------------------------
---feature
---	play6
---		local
---			c: CLIENT
---		do
+				-- Uncomment to get a compiler error.
 --			c := client
---		end
---feature
---	play8
---		do
---			play7(client)
---		end
+		end
 
---------------------------------------------- PARTS OF THE TUTORIAL WITH INLINE SEPARATE --------------------------------------
---feature
---	play2
---		do
---			separate downloader as d do
---				d.download_one (messages)
---				d.download_one (messages)
---			end
+	play7(c: CLIENT)
+			-- Show characteristics of the SCOOP typesystem.
+		do
+				-- Empty body OK, the signature is enough.
+		end
 
---		end
+	play8
+			-- Show characteristics of the SCOOP typesystem.
+		do
+				-- Uncomment to get a compiler error.
+--			play7 (client)
+		end
 
---feature
---	play3
---		do
---			separate downloader as d, viewer as v do
---				d.download_one(messages)
---				v.view_one(messages)
---			end
---		end
+feature -- Tutorial: Traitors
 
---feature
---	play4
---		local
---			n: INTEGER
---		do
---			separate downloader as d do
---				d.download_one (messages)
---				d.download_one (messages)
---				n := d.count
---				print(n)
---			end
---		end
+	close_friend: detachable PLAYER
 
---feature
---	play10
---		do
---			separate client as c do
---				io.put_new_line(c.first)
---			end
---		end
+	set_close_friend (p: PLAYER)
+			-- Set `close_friend' to `p'.
+		do
+			close_friend := p
+		end
 
+	play9
+			-- Show characteristics of the SCOOP typesystem.
+		local
+			remote_friend: separate PLAYER
+		do
+			create remote_friend.make
+			separate remote_friend as l_friend do
+					-- Uncomment to get a compiler error.
+--				l_friend.set_close_friend (Current)
+			end
+		end
+
+feature -- Tutorial: automatic conversion
+
+	play10
+			-- Print first client message if any.
+		do
+			separate client as c do
+					-- Note: Automatic string conversion isn't implemented yet.
+--				io.put_string (c.first)
+			end
+		end
 
 end
 

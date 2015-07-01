@@ -66,6 +66,12 @@ feature -- Basic operations.
 			ml.extend (fetch_message)
 		end
 
+	download_one_fixed
+			-- Read one message and record it in `messages'.
+		do
+			record_one (fetch_message, messages)
+		end
+
 	fetch_message: separate STRING
 			-- Download a new message.
 		local

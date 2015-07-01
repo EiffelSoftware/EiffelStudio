@@ -10,22 +10,14 @@ class
 create
 	make
 
+feature {NONE} -- Initialization
 
-feature
-	make
-		-- Initialize viewer
+	make (a_messages: like messages)
+			-- Initialize the {VIEWER} object with `messages'.
 		do
-			create messages.make
+			messages := a_messages
 			create controller
 			V_temporization := 1
-
-		end
-
-feature
-		--wrapper
-	wrap_mail_file_allocation (c: separate CLIENT)
-		do
-			messages := c.messages
 		end
 
 feature

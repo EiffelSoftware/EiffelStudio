@@ -10,21 +10,15 @@ class
 create
 	make
 
+feature {NONE} -- Initialization
 
-feature
-	make
+	make (a_messages: like messages)
+			-- Initialization for `Current'.
 		do
-			create messages.make
+			messages := a_messages
 			Max := 10000
 			Min := 1000
 		end
-
-feature --wrapper function
-	wrap_mail_file_allocation (c: separate CLIENT)
-		do
-			messages := c.messages
-		end
-
 
 feature
 	live

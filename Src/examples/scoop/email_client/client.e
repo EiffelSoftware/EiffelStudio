@@ -10,6 +10,18 @@ class
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make
+			-- Initialization for `Current'.
+		do
+			create messages.make
+			create controller
+			create downloader.make (messages)
+			create viewer.make (messages)
+			create mover.make (messages)
+		end
+
 feature
 	messages: LINKED_LIST[STRING]
 	downloader: separate DOWNLOADER
@@ -23,28 +35,6 @@ feature
 		do
 			Result := ""
 			if not messages.is_empty then Result := messages [1] end
-		end
-
-feature
-	make
-		--Initialization
-		do
-			create messages.make
-			create downloader.make
-			create viewer.make
-			create mover.make
-			create controller
-			wrap_mail_file_allocation(downloader, viewer, mover)
-		end
-
-
-feature
-		--wrapper	
-	wrap_mail_file_allocation(d: separate DOWNLOADER; v: separate VIEWER; m: separate MOVER)
-		do
-			d.wrap_mail_file_allocation (current)
-			v.wrap_mail_file_allocation (current)
-			m.wrap_mail_file_allocation (current)
 		end
 
 

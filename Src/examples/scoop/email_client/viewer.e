@@ -58,6 +58,7 @@ feature -- Basic operations
 
 	view_one (ml: separate LINKED_LIST[separate STRING])
 			-- Simulate viewing: if there are messages, display one, chosen randomly.
+			-- TODO: This feature should be splitted as well, just like download_one.
 		local
 			s_message: separate STRING
 			l_message: STRING

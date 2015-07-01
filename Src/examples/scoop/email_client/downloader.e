@@ -58,13 +58,13 @@ feature -- Status report
 
 feature -- Basic operations.
 
-	download_one (ml: separate LINKED_LIST [separate STRING])
-			-- Read one message and record it in `ml'.
-			-- Note: In a real application, downloading may take some time.
-			-- You probably do not want to do this while having exclusive access over the shared `ml' object.
-		do
-			ml.extend (fetch_message)
-		end
+--	download_one (ml: separate LINKED_LIST [separate STRING])
+--			-- Read one message and record it in `ml'.
+--			-- Note: In a real application, downloading may take some time.
+--			-- You probably do not want to do this while having exclusive access over the shared `ml' object.
+--		do
+--			ml.extend (fetch_message)
+--		end
 
 	download_one_fixed
 			-- Read one message and record it in `messages'.

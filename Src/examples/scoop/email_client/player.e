@@ -25,12 +25,12 @@ feature {NONE} -- Initialization
 				downloader := c.downloader
 				viewer := c.viewer
 				mover := c.mover
-				messages := c.messages
 			end
 
 			if argument_count = 1 then
 				tutorial := argument (1).to_integer
-				inspect tutorial
+				inspect
+					tutorial
 				when 1 then
 					play1
 				when 2 then
@@ -65,9 +65,6 @@ feature -- Access
 	mover: separate MOVER
 			-- The mover engine.
 
-	messages: separate LINKED_LIST[separate STRING]
-			-- To be removed...
-
 feature -- Tutorial: Main execution feature.
 
 	play1
@@ -101,7 +98,7 @@ feature -- Tutorial: Order preservation and synchronization.
 		do
 			separate downloader as d, viewer as v do
 				d.download_one_fixed
-				v.view_one (messages)
+				v.view_one_fixed
 			end
 		end
 

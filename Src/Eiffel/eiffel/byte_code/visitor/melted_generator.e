@@ -1734,7 +1734,7 @@ feature {NONE} -- Visitors
 				end
 			else
 					-- Target is a reference, source is a reference, or both
-				if not l_target_type.is_separate and then l_source_type.is_separate then
+				if system.is_scoop and then not l_target_type.is_separate and then l_source_type.is_separate then
 						-- Check if expression object belongs to the current processor.
 					ba.append (bc_separate)
 						-- Placeholders not used in this instruction sequence.
@@ -2025,7 +2025,7 @@ feature {NONE} -- Visitors
 				if l_tuple_type.c_type.is_reference then
 					context.make_tuple_catcall_check (ba, a_node.position)
 				end
-				if a_node.context_type.is_separate then
+				if system.is_scoop and then a_node.context_type.is_separate then
 						-- Perform separate tuple access if required.
 					ba.append (bc_separate)
 						-- There is one argument and the access is not synchronized.
@@ -2039,7 +2039,7 @@ feature {NONE} -- Visitors
 				ba.append_integer_32 (a_node.position)
 			else
 					-- Access to tuple field.
-				if a_node.context_type.is_separate then
+				if system.is_scoop and then a_node.context_type.is_separate then
 						-- Perform separate tuple access if required.
 					ba.append (bc_separate)
 						-- There are no arguments and the access is synchronized.
@@ -2470,7 +2470,7 @@ feature {NONE} -- Implementation
 			l_finish_byte_code: BOOLEAN
 		do
 			l_inst_cont_type := a_node.context_type
-			if l_inst_cont_type.is_separate then
+			if system.is_scoop and then l_inst_cont_type.is_separate then
 					-- The call may be separate.
 				ba.append (bc_separate)
 					-- Arguments need to be passed together with feature information.

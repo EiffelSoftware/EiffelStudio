@@ -22,19 +22,33 @@ feature {NONE} -- Initialization
 			create mover.make (messages)
 		end
 
-feature
-	messages: LINKED_LIST[STRING]
-	downloader: separate DOWNLOADER
-	viewer: separate VIEWER
-	mover: separate MOVER
-	controller: separate CONTROLLER
+feature -- Access
 
-feature
-	first: STRING
+	messages: LINKED_LIST [separate STRING]
+			-- Email messages received.
+			-- Note: The generic argument must be separate!
+
+	downloader: separate DOWNLOADER
+			-- Downloading engine.
+
+	viewer: separate VIEWER
+			-- Viewing engine.
+
+	mover: separate MOVER
+			-- Archiving engine.
+
+	controller: separate CONTROLLER
+			-- A shared controller to signal a stop message.
+
+feature -- Access
+
+	first: separate STRING
 			-- First message if any, otherwise empty.	
 		do
 			Result := ""
-			if not messages.is_empty then Result := messages [1] end
+			if not messages.is_empty then
+				Result := messages [1]
+			end
 		end
 
 

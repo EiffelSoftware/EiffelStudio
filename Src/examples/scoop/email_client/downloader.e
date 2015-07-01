@@ -10,21 +10,14 @@ class
 create
 	make
 
-feature
-	make
-		--Initialization
+feature {NONE} -- Initialization
 
+	make (a_messages: like messages)
+			-- Initialization for `Current'.
 		do
-			create messages.make
+			messages := a_messages
 			create controller
 			D_temporization := 1
-		end
-
-feature
-		--wrapper
-	wrap_mail_file_allocation (c: separate CLIENT)
-		do
-			messages := c.messages
 		end
 
 feature

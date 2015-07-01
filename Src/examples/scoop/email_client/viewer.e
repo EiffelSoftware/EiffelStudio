@@ -17,72 +17,88 @@ feature {NONE} -- Initialization
 		do
 			messages := a_messages
 			create controller
-			V_temporization := 1
 		end
 
-feature
-	view_one(ml: separate LINKED_LIST[separate STRING])
-		-- Simulate viewing: if there are messages, display one, chosen randomly.
-		local
-			rand: RANDOM
-			index: INTEGER
-			st: STRING
-		do
-			if
-				not ml.is_empty
-			then
-				create rand.make
-				index := rand.item \\ ml.count
-				if
-					index = 0
-				then
-					create st.make_from_separate (ml[index + 1])
-				else
-					create st.make_from_separate(ml[index])
-				end
-				print("%NViewing message: " +  st.out)
-			end
-		end
+feature -- Access
 
-
-feature
-	live
-		do
-			from
-
-			until
-				is_over
-			loop
-				view_one(messages)
-				wait(V_temporization)
-			end
-		end
-
-feature
 	messages: separate LINKED_LIST[separate STRING]
-	is_over: BOOLEAN
-	V_temporization: INTEGER
+			-- The list of email messages to be displayed.
+
 	controller: separate CONTROLLER
+			-- A separate controller which indicates when to stop execution.
 
-feature
-	stop
-		do
-			is_over := true
-		end
+	V_temporization: INTEGER_64 = 1
+			-- The wait time in seconds between displaying two messages.
 
-feature
-	wait(s: INTEGER_64)
-		do
-			(create {EXECUTION_ENVIRONMENT}).sleep (s * 1_000_000_000)
-		end
+feature -- Status report
+
+	is_over: BOOLEAN
+			-- Shall `Current' stop displaying messages?
 
 ----------------------------------------------- INLINE SEPARATE PART FOR THIRD PARTY CONTROL, PAGE 24 -----------------------------------------------
---feature
 --	is_over: BOOLEAN
---			-- Has operation termination ben requested
+--			-- Shall `Current' stop displaying messages?
 --		do
 --			separate controller as c do
 --				Result := c.is_viewer_over
 --			end
---		end		
+--		end	
+
+
+feature -- Basic operations
+
+	live
+			-- Simulate a user viewing a message once in a while.
+		do
+			from until is_over loop
+				view_one (messages)
+				wait (V_temporization)
+			end
+		end
+
+	view_one (ml: separate LINKED_LIST[separate STRING])
+			-- Simulate viewing: if there are messages, display one, chosen randomly.
+		local
+			s_message: separate STRING
+			l_message: STRING
+		do
+			if not ml.is_empty then
+				s_message := ml [random (1, ml.count)]
+				create l_message.make_from_separate (s_message)
+				print("%NViewing message: " +  l_message)
+			end
+		end
+
+
+feature {NONE} -- Implementation
+
+	wait (sec: INTEGER_64)
+			-- Sleep for `sec' seconds.
+		local
+			environment: EXECUTION_ENVIRONMENT
+		do
+			create environment
+			environment.sleep (sec * 1_000_000_000)
+		end
+
+	random (a, b: INTEGER): INTEGER
+			-- Generate a pseudo-random number in the interval [a,b].
+		require
+			valid_interval: a <= b
+		do
+			if a = b then
+				Result := a
+			else
+				Result := random_generator.item
+				random_generator.forth
+				Result := (Result \\ (b-a)) + a
+			end
+		end
+
+	random_generator: RANDOM
+			-- A pseudo-random number generator.
+		attribute
+			create Result.make
+		end
+
 end

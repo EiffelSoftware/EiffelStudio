@@ -65,7 +65,7 @@ feature -- Basic operations
 			if not ml.is_empty then
 				s_message := ml [random (1, ml.count)]
 				create l_message.make_from_separate (s_message)
-				print("%NViewing message: " +  l_message)
+				print("Viewing message: " +  l_message + "%N")
 			end
 		end
 

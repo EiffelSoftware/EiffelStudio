@@ -56,19 +56,6 @@ feature -- Basic operations
 			end
 		end
 
-	select_message: detachable STRING
-			-- Get a new message to be displayed from the client.
-		local
-			s_message: separate STRING
-		do
-			separate messages as ml do
-				if not ml.is_empty then
-					s_message := ml [random (1, ml.count)]
-					create Result.make_from_separate (s_message)
-				end
-			end
-		end
-
 	view_one_fixed
 			-- Simulate viewing: if there are messages, display one, chosen randomly.
 		do
@@ -93,6 +80,19 @@ feature -- Basic operations
 
 
 feature {NONE} -- Implementation
+
+	select_message: detachable STRING
+			-- Get a new message to be displayed from the client.
+		local
+			s_message: separate STRING
+		do
+			separate messages as ml do
+				if not ml.is_empty then
+					s_message := ml [random (1, ml.count)]
+					create Result.make_from_separate (s_message)
+				end
+			end
+		end
 
 	wait (sec: INTEGER_64)
 			-- Sleep for `sec' seconds.

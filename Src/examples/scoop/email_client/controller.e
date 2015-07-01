@@ -7,22 +7,26 @@ note
 class
 	CONTROLLER
 
-feature
-	is_downloader_over: BOOLEAN
-	is_viewer_over: BOOLEAN
+feature -- Status report
 
-feature
+	is_downloader_over: BOOLEAN
+			-- Should the downloader stop its execution?
+
+	is_viewer_over: BOOLEAN
+			-- Should the viewer stop its execution?
+
+feature -- Basic operations
+
 	stop_downloader
-			-- Record request to stop downloader operation	
+			-- Record request to stop the downloader.
 		do
 			is_downloader_over := True
 		end
 
-
-feature
 	stop_viewer
-			-- Record request to stop viewer operation	
+			-- Record request to stop the viewer.	
 		do
 			is_viewer_over := True
 		end
+
 end

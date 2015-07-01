@@ -431,11 +431,10 @@ struct dbglobalinfo {
 
 /* Program status (saved when breakpoint reached, restored upon continuation). */
 struct pgcontext {				/* Program context */
-	struct dbstack pg_debugger;	/* Debugger's context stack */
-	struct opstack pg_interp;	/* Interpreter's operational stack */
+	struct dbcursor pg_debugger;	/* Debugger's context stack */
+	struct opcursor pg_interp;	/* Interpreter's operational stack */
 	struct xstack pg_stack;		/* Calling stack */
 	struct xstack pg_trace;		/* Pending exceptions */
-	struct dcall *pg_active;	/* Active routine */
 	unsigned char *pg_IC;		/* Current IC value */
 	int pg_status;				/* Cause of suspension */
 	int pg_calls;				/* Amount of calling contexts in stack */

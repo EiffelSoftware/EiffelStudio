@@ -69,8 +69,8 @@
  * We have a provision here for all the possible stack we may inspect.
  */
 rt_private struct xstack xstk_context;	/* Saved exception stack context */
-rt_private struct dbstack dstk_context;	/* Saved calling stack context */
-rt_private struct opstack istk_context;	/* Operational stack (interpreter) */
+rt_private struct dbcursor dstk_context;	/* Saved calling stack context */
+rt_private struct opcursor istk_context;	/* Operational stack (interpreter) */
 
 /* Private Routines declarations */
 rt_private void 		send_dump(EIF_PSTREAM s, struct dump *dp);	/* Send XDR'ed dumped item to ewb */
@@ -210,8 +210,8 @@ rt_private void save_stacks(void)
 	/* Save the appropriate stack context, depending on the operations to
 	 * be performed... */
 	memcpy (&xstk_context, &eif_stack, sizeof(struct xstack));
-	memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
-	memcpy (&istk_context, &op_stack, sizeof(struct opstack));
+	eif_dbstack_save_cursor(&db_stack, &dstk_context);
+	eif_opstack_save_cursor(&op_stack, &istk_context);
 }
 
 /**************************************************************************
@@ -226,8 +226,8 @@ rt_private void restore_stacks(void)
 
 	/* Restore context of all the stack we had to modify/inspect */
 	memcpy (&eif_stack, &xstk_context, sizeof(struct xstack));
-	memcpy (&db_stack, &dstk_context, sizeof(struct dbstack));
-	memcpy (&op_stack, &istk_context, sizeof(struct opstack));
+	eif_dbstack_restore_cursor(&db_stack, &dstk_context);
+	eif_opstack_restore_cursor(&op_stack, &istk_context);
 }
 
 /**************************************************************************

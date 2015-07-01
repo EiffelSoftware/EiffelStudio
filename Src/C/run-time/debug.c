@@ -1193,8 +1193,8 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	EIF_GET_CONTEXT
 	size_t nb;
 
-	memcpy (&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
-	memcpy (&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
+	eif_dbstack_save_cursor(&db_stack, &d_cxt.pg_debugger);
+	eif_opstack_save_cursor(&op_stack, &d_cxt.pg_interp);
 	memcpy (&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
 	memcpy (&d_cxt.pg_trace, &eif_trace, sizeof(struct xstack));
 
@@ -1209,10 +1209,8 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	 */
 
 	if (db_stack.st_cur->sk_top == db_stack.st_cur->sk_arena) {
-		d_cxt.pg_active = (struct dcall *) 0;	/* No active routine */
 		d_cxt.pg_index = -1;					/* No index */
 	} else {
-		d_cxt.pg_active = EIF_STACK_TOP_ADDRESS(db_stack);				/* Last recorded routine */
 		d_cxt.pg_index = d_cxt.pg_calls;		/* Its index within stack */
 	}
 }
@@ -1228,17 +1226,17 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	struct dcall *context;			/* Current calling context */
 
-	if (!d_cxt.pg_interp.st_cur) {
-		/* if st_cur is not NULL, there might be a memory leak
-		 * indeed, the op_stack might have allocated more than one chunk
+	if (!d_cxt.pg_interp.sc_chunk) {
+		/* if `op_stack' was not allocated before and we pushed a few items
+		 * during the debugging, we need to clean up the extra chunks otherwise
+		 * we might have a memory leak.
+		 * See bug#16195 where conditional breakpoints would exhaust memory.
 		 */
-
-		/* we clean the stack allocated in interp.c:opush(..) */
 		eif_opstack_reset (&op_stack);
 	}
 
-	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
-	memcpy (&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
+	eif_dbstack_restore_cursor(&db_stack, &d_cxt.pg_debugger);
+	eif_opstack_restore_cursor(&op_stack, &d_cxt.pg_interp);
 	memcpy (&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));
 	memcpy (&eif_trace, &d_cxt.pg_trace, sizeof(struct xstack));
 

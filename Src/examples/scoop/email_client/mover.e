@@ -16,62 +16,58 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			messages := a_messages
-			Max := 10000
-			Min := 1000
 		end
 
-feature
-	live
-			--keep watching for client's mailbox to reach Max messages,
-			--and when it does, remove all messages except last Min ones.
-		do
-			from
+feature -- Access
 
-			until
-				is_over
-			loop
-				trim (messages)
-			end
-		end
+	Min: INTEGER = 100
+			-- The number of items which should be left in the message list after archiving.
 
-feature
+	Max: INTEGER = 1000
+			-- The maximum number of items in the message list before archiving should be triggered.
+
+	messages: separate LINKED_LIST[separate STRING]
+			-- The list of emails whose size should be watched over.
+
+feature -- Status report
+
+	is_over: BOOLEAN
+			-- Shall `Current' stop its operation?
+
 	is_ready(ml: separate LINKED_LIST[separate STRING]): BOOLEAN
-			-- Has the size of ml reached Max messages?
+			-- Has the size of `ml' reached `Max' messages?
 		do
 			Result := (ml.count >= Max)
 		end
 
-feature
+feature -- Basic operations
+
+	live
+			--Keep watching for client's mailbox to reach Max messages,
+			--and when it does, remove all messages except the last Min ones.
+		do
+			from until is_over loop
+				trim (messages)
+			end
+		end
+
 	trim (ml: separate LINKED_LIST[separate STRING])
+			-- Remove all messages from `ml' except the last Min ones.
 		require
 			ml.count >= Max
-		local
-			t: INTEGER
 		do
-			across
-				1 |..| Min as i
-			loop
-				ml[i.item] := ml[ml.count-Min+i.item]
-			end
-
-			ml.go_i_th (Min + 1)
-
+				-- There's no feature to remove a sequence from a list,
+				-- so we have to do it manually.
 			from
-				t := Min + 1
+				ml.start
 			until
-				t > Max
+				ml.count = Min
 			loop
 				ml.remove
-				t := t + 1
 			end
-
 			print("%Nsize after trimming:" + ml.count.out)
 		end
 
-feature
-	messages: separate LINKED_LIST[separate STRING]
-	is_over: BOOLEAN
-
-feature
-	Max, Min: INTEGER
+invariant
+	correct_constants: Min < Max
 end

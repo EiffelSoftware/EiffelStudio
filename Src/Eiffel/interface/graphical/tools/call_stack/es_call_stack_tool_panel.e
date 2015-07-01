@@ -1038,8 +1038,6 @@ feature {NONE} -- Catcall warning access
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			l_status: APPLICATION_STATUS
 		do
-				-- Make sure we display annotations too, not just the dynamic type.
-			check implemented: False end
 			if not retried then
 				l_status := debugger_manager.application_status
 				rtcc := l_status.catcall_data

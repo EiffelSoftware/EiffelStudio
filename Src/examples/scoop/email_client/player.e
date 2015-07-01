@@ -1,6 +1,6 @@
 note
-	description : "project application root class"
-	author: ""
+	description : "The SCOOP email downloader tutorial root class."
+	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
 

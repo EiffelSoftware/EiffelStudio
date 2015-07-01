@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {PLAYER}."
-	author: ""
+	description: "An email client that concurrently downloads and displays messages."
+	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
 

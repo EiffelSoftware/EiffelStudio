@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {VIEWER}."
-	author: ""
+	description: "Displays email messages from a separate email client."
+	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
 

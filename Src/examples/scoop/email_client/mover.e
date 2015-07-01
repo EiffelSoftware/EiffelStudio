@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {MOVER}."
+	description: "Moves email messages from the inbox to an archive file (in this case: /dev/null)."
 	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {MERGER}."
-	author: ""
+	description: "Merges two lists of email messages."
+	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
 

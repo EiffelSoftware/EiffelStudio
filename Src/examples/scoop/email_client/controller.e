@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {CONTROLLER}."
-	author: ""
+	description: "Third-party controller used to signal a stop message."
+	author: "Chandrakana Nandi"
 	date: "$Date$"
 	revision: "$Revision$"
 

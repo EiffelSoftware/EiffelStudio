@@ -9,7 +9,6 @@ class
 inherit
 	WGI_FILTER_RESPONSE
 		redefine
-			set_status_code,
 			commit,
 			put_character,
 			put_string,
@@ -73,19 +72,6 @@ feature {NONE} -- Implementation
 			wsf_response.set_wgi_response (wgi_response)
 		ensure
 			header_committed: header_committed
-		end
-
-feature -- Status setting
-
-	set_status_code (a_code: INTEGER; a_reason_phrase: detachable READABLE_STRING_8)
-			-- Set response status code with custom `a_reason_phrase' if precised
-			-- Should be done before sending any data back to the client
-		do
-			if a_reason_phrase /= Void then
-				wsf_response.set_status_code_with_reason_phrase (a_code, a_reason_phrase)
-			else
-				wsf_response.set_status_code (a_code)
-			end
 		end
 
 feature -- Status report	

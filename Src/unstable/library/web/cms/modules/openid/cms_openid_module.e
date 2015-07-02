@@ -381,7 +381,7 @@ feature -- Openid Login
 			l_user: CMS_USER
 			l_roles: LIST [CMS_USER_ROLE]
 			l_cookie: WSF_COOKIE
-			es: CMS_OPENID_EMAIL_SERVICE
+			es: CMS_AUTHENTICATON_EMAIL_SERVICE
 			b: STRING
 			o: OPENID_CONSUMER
 			v: OPENID_CONSUMER_VALIDATION
@@ -431,9 +431,8 @@ feature -- Openid Login
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
 
-
 									-- Send Email
-							create es.make (create {CMS_OPENID_EMAIL_SERVICE_PARAMETERS}.make (api))
+							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
 							write_debug_log (generator + ".handle_callback_openid: send_contact_welcome_email")
 							es.send_contact_welcome_email (l_email, "")
 						end

@@ -12,13 +12,14 @@ inherit
 			register_hooks
 		end
 
-	CMS_HOOK_BLOCK
 
 	CMS_HOOK_AUTO_REGISTER
 
-	CMS_HOOK_MENU_SYSTEM_ALTER
-
 	CMS_HOOK_VALUE_TABLE_ALTER
+
+	CMS_HOOK_BLOCK
+
+	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	SHARED_EXECUTION_ENVIRONMENT
 		export
@@ -77,13 +78,13 @@ feature -- Router
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
 		do
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/account/roc-basic-auth", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login_basic_auth (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/activate/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_activation (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_get_post)
+
 		end
 
 feature -- Hooks configuration
@@ -96,8 +97,6 @@ feature -- Hooks configuration
 			a_response.subscribe_to_value_table_alter_hook (Current)
 		end
 
-feature -- Hooks
-
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
@@ -105,6 +104,7 @@ feature -- Hooks
 				a_value.force (l_user, "user")
 			end
 		end
+
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
@@ -120,61 +120,10 @@ feature -- Hooks
 				create lnk.make ("Login", "account/roc-login")
 				lnk.set_weight (98)
 				a_menu_system.primary_menu.extend (lnk)
-				if a_response.location.starts_with ("account/") then
-					create lnk.make ("Basic Auth", "account/roc-basic-auth")
-					lnk.set_expandable (True)
-					a_response.add_to_primary_tabs (lnk)
-				end
 			end
 		end
 
-	block_list: ITERABLE [like {CMS_BLOCK}.name]
-		local
-			l_string: STRING
-		do
-			Result := <<"login", "register", "reactivate", "new_password", "reset_password">>
-			debug ("roc")
-				create l_string.make_empty
-				across
-					Result as ic
-				loop
-					l_string.append (ic.item)
-					l_string.append_character (' ')
-				end
-				write_debug_log (generator + ".block_list:" + l_string )
-			end
-		end
-
-	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-		do
-			if
-				a_block_id.is_case_insensitive_equal_general ("login") and then
-				a_response.location.starts_with ("account/roc-basic-auth")
-			then
-				a_response.add_javascript_url (a_response.url ("module/" + name + "/files/js/roc_auth.js", Void))
-				get_block_view_login (a_block_id, a_response)
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("register") and then
-				a_response.location.starts_with ("account/roc-register")
-			then
-				get_block_view_register (a_block_id, a_response)
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("reactivate") and then
-				a_response.location.starts_with ("account/reactivate")
-			then
-				get_block_view_reactivate (a_block_id, a_response)
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("new_password") and then
-				a_response.location.starts_with ("account/new-password")
-			then
-				get_block_view_new_password (a_block_id, a_response)
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("reset_password") and then
-				a_response.location.starts_with ("account/reset-password")
-			then
-				get_block_view_reset_password (a_block_id, a_response)
-			end
-		end
+feature -- Handler
 
 	handle_login (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -192,26 +141,16 @@ feature -- Hooks
 			end
 		end
 
-	handle_login_basic_auth (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Basic Auth", "optional_content_type")
-			r.execute
-		end
-
 	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_url: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_status_code ({HTTP_CONSTANTS}.found)
-			l_url := req.absolute_script_url ("/basic_auth_logoff")
-			r.set_redirection (l_url)
+			r.set_redirection (r.absolute_url ("", Void))
 			r.execute
 		end
+
+
 
 	handle_register (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -421,6 +360,70 @@ feature -- Hooks
 			r.execute
 		end
 
+	block_list: ITERABLE [like {CMS_BLOCK}.name]
+		local
+			l_string: STRING
+		do
+			Result := <<"register", "reactivate", "new_password", "reset_password">>
+			debug ("roc")
+				create l_string.make_empty
+				across
+					Result as ic
+				loop
+					l_string.append (ic.item)
+					l_string.append_character (' ')
+				end
+				write_debug_log (generator + ".block_list:" + l_string )
+			end
+		end
+
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+		do
+			if
+				a_block_id.is_case_insensitive_equal_general ("register") and then
+				a_response.location.starts_with ("account/roc-register")
+			then
+				get_block_view_register (a_block_id, a_response)
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("reactivate") and then
+				a_response.location.starts_with ("account/reactivate")
+			then
+				get_block_view_reactivate (a_block_id, a_response)
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("new_password") and then
+				a_response.location.starts_with ("account/new-password")
+			then
+				get_block_view_new_password (a_block_id, a_response)
+			elseif
+				a_block_id.is_case_insensitive_equal_general ("reset_password") and then
+				a_response.location.starts_with ("account/reset-password")
+			then
+				get_block_view_reset_password (a_block_id, a_response)
+			end
+		end
+
+
+feature {NONE} -- Token Generation
+
+	new_token: STRING
+			-- Generate a new token activation token
+		local
+			l_token: STRING
+			l_security: SECURITY_PROVIDER
+			l_encode: URL_ENCODER
+		do
+			create l_security
+			l_token := l_security.token
+			create l_encode
+			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
+				-- Loop ensure that we have a security token that does not contain characters that need encoding.
+			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
+				-- but the user will need to use an unencoded token if activation has to be done manually.
+				l_token := l_security.token
+			end
+			Result := l_token
+		end
+
 feature {NONE} -- Helpers
 
 	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
@@ -602,60 +605,6 @@ feature {NONE} -- Block views
 				end
 			end
 		end
-
-
-feature {NONE} -- Token Generation
-
-	new_token: STRING
-			-- Generate a new token activation token
-		local
-			l_token: STRING
-			l_security: SECURITY_PROVIDER
-			l_encode: URL_ENCODER
-		do
-			create l_security
-			l_token := l_security.token
-			create l_encode
-			from until l_token.same_string (l_encode.encoded_string (l_token)) loop
-				-- Loop ensure that we have a security token that does not contain characters that need encoding.
-			    -- We cannot simply to an encode-decode because the email sent to the user will contain an encoded token
-				-- but the user will need to use an unencoded token if activation has to be done manually.
-				l_token := l_security.token
-			end
-			Result := l_token
-		end
-
-
-feature {NONE} -- Implementation: date and time
-
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_string (s)
-			if not d.has_error then
-				Result := d.date_time
-			end
-		end
-
-	file_date (p: PATH): DATE_TIME
-		require
-			path_exists: (create {FILE_UTILITIES}).file_path_exists (p)
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (p)
-			Result := timestamp_to_date (f.date)
-		end
-
-	timestamp_to_date (n: INTEGER): DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_timestamp (n)
-			Result := d.date_time
-		end
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

@@ -12,6 +12,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf"/>
+		<library name="cms_auth_module" location="..\..\modules\auth\auth.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization.ecf" readonly="false"/>

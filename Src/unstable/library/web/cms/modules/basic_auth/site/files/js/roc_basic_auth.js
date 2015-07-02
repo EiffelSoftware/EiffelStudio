@@ -39,7 +39,7 @@ ROC_AUTH.login = function() {
              if (request.readyState == 4) {
                  if (request.status==200) {
                         delete form;
-                        window.location=origin;
+                        window.location=window.location.origin;
                 }
                 else{
                   if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       
@@ -306,16 +306,20 @@ ROC_AUTH.create_form = function() {
 };
 
 
-var password = document.getElementById("password")
-  , confirm_password = document.getElementById("confirm_password");
+var password = document.getElementById("password");
+var confirm_password = document.getElementById("confirm_password");
 
 ROC_AUTH.validatePassword =function(){
-  if(password.value != confirm_password.value) {
-    confirm_password.setCustomValidity("Passwords Don't Match");
-  } else {
-    confirm_password.setCustomValidity('');
-  }
+  if ((password != null) && (confirm_password != null)) {
+    if(password.value != confirm_password.value) {
+      confirm_password.setCustomValidity("Passwords Don't Match");
+    } else {
+      confirm_password.setCustomValidity('');
+    }
+   } 
 }
 
-password.onchange = ROC_AUTH.validatePassword();
-confirm_password.onkeyup = ROC_AUTH.validatePassword;
+if ((password != null) && (confirm_password != null)) {
+  password.onchange = ROC_AUTH.validatePassword();
+  confirm_password.onkeyup = ROC_AUTH.validatePassword;
+}

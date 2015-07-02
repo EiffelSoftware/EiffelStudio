@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			last_target_call_succeed := True
 		end
 
-feature {WGI_STANDALONE_CONNECTOR, WGI_SERVICE} -- Nino
+feature {WGI_STANDALONE_CONNECTOR, WGI_SERVICE} -- Server
 
 	set_target (o: like target)
 		do
@@ -100,7 +100,7 @@ feature -- Status report
 			-- <Precursor>
 			-- for instance IO failure due to socket disconnection.
 		do
-			Result := not last_target_call_succeed
+			Result := last_target_call_succeed
 		end
 
 	is_open_write: BOOLEAN

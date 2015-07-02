@@ -32,7 +32,6 @@ feature {NONE} -- Basic operation
 			l_start_token: EDITOR_TOKEN
 			l_start_line: EDITOR_LINE
 			l_end_token: detachable EDITOR_TOKEN
-			l_end_line: detachable EDITOR_LINE
 			l_next_state: ES_EDITOR_ANALYZER_COMPOUND_STATE
 			l_next: like next_token
 		do
@@ -43,7 +42,6 @@ feature {NONE} -- Basic operation
 			if attached next_token (l_start_token, l_start_line, True, a_end_token, agent is_across_closure (?, ?)) as l_across_closure then
 					-- A until/loop/some/all keyword was found, use it as the terminating token when looking for the iterator construct.
 				l_end_token := l_across_closure.token
-				l_end_line := l_across_closure.line
 			else
 					-- No token, so use the previous set end token.
 				l_end_token := a_end_token

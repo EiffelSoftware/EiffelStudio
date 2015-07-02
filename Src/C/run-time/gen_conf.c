@@ -1122,30 +1122,15 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 	int result;
 	unsigned char mask;
 
-	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[stype.id]))) {
-			/* Source is expanded, we force the attachment mark, otherwise
-			 * eweasel test#conform001 will say that A [INTEGER] does not 
-			 * conform to A [attached ANY] which is clearly not the case. Note 
-			 * that this is because in `rt_id_of' we clear the annotations when
-			 * type is expanded. We clear it to maintain as much backward compatibility
-			 * with existing code. */
-		CHECK("no attachment marks", !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
-		stype.annotations |= ATTACHED_FLAG;
-	}
-		/* If `nnotations are not compatible, the types are not conforming. */
-	if (!rt_is_conforming_annotation(stype, ttype)) {
-		return 0;
-	}
-
-		/* If types are identical, then they conform. */
+		/* If types are identical, then they conform if they have the same annotations. */
 	if (stype.id == ttype.id) {
-		return 1;
+		return rt_is_conforming_annotation(stype, ttype);
 	}
 
 	CHECK("Type are differents", ttype.id != stype.id);
 
 	if (ttype.id > MAX_DTYPE) {
-			/* Target is NONE so we can only accept NONE but `stype' is not the same as `ttype' per assertions. */
+			/* Target is NONE so we can only accept NONE but `stype' is not the same as `ttype'. */
 		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(ttype.id));
 		return 0;
 	}
@@ -1158,6 +1143,21 @@ rt_public int eif_gen_conf2 (EIF_TYPE stype, EIF_TYPE ttype)
 			 * It only conforms if target is detachable. */
 		CHECK("NONE type", RT_CONF_IS_NONE_TYPE(stype.id));
 		return RT_CONF_IS_DETACHABLE_FLAG(ttype.annotations) || !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(ttype.annotations);
+	} else {
+		if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[stype.id]))) {
+				/* Source is expanded, we force the attachment mark, otherwise
+				* eweasel test#conform001 will say that A [INTEGER] does not
+				* conform to A [attached ANY] which is clearly not the case. Note
+				* that this is because in `rt_id_of' we clear the annotations when
+				* type is expanded. We clear it to maintain as much backward compatibility
+				* with existing code. */
+			CHECK("no attachment marks", !RT_CONF_HAS_ATTACHEMENT_MARK_FLAG(stype.annotations) || RT_CONF_IS_ATTACHED_FLAG(stype.annotations));
+			stype.annotations |= ATTACHED_FLAG;
+		}
+			/* If `nnotations are not compatible, the types are not conforming. */
+		if (!rt_is_conforming_annotation(stype, ttype)) {
+			return 0;
+		}
 	}
 
 	stab = eif_conf_tab[stype.id];

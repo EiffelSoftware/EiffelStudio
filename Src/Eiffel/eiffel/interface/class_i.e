@@ -239,7 +239,7 @@ feature -- Access
 	is_catcall_conformance: BOOLEAN
 			-- Should frozen/variant annotation be taken into account when checking for conformance.
 		do
-			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_conformance
+			Result := options.catcall_detection.index /= {CONF_OPTION}.catcall_detection_index_none
 		end
 
 	is_catcall_safe: BOOLEAN

@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 		local
 			l_url: like site_url
 		do
+			site_location := environment.path
+
 				--| Site id, used to identified a site, this could be set to a uuid, or else
 			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
 
@@ -60,6 +62,14 @@ feature {NONE} -- Initialization
 				-- Site email for any internal notification
 				-- Can be also used to precise the "From:" value for email.
 			site_email := text_item_or_default ("site.email", "webmaster")
+
+
+				-- Location for public files
+			if attached text_item ("files-dir") as s then
+				create files_location.make_from_string (s)
+			else
+				files_location := site_location.extended ("files")
+			end
 
 				-- Location for modules folders.
 			if attached text_item ("modules-dir") as s then
@@ -145,9 +155,44 @@ feature -- Access
 		end
 
 	build_mailer
+		local
+			retried: BOOLEAN
+			f: FILE
 		do
-			to_implement ("Not implemented mailer")
+			if not retried then
+				if attached text_item ("mailer.smtp") as l_smtp then
+					create {NOTIFICATION_SMTP_MAILER} mailer.make (l_smtp)
+				elseif attached text_item ("mailer.sendmail") as l_sendmail then
+					create {NOTIFICATION_SENDMAIL_MAILER} mailer.make_with_location (l_sendmail)
+				elseif attached text_item ("mailer.output") as l_output then
+					if l_output.is_case_insensitive_equal ("@stderr") then
+						f := io.error
+					elseif l_output.is_case_insensitive_equal ("@stdout") then
+						f := io.output
+					else
+						create {RAW_FILE} f.make_with_name (l_output)
+						if not f.exists then
+							f.create_read_write
+							f.close
+						end
+					end
+					create {NOTIFICATION_STORAGE_MAILER} mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
+				else
+					create {NOTIFICATION_STORAGE_MAILER} mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.error))
+				end
+			else
+				check valid_mailer: False end
+					-- FIXME: should we report persistent error message? If yes, see how.
+				create {NOTIFICATION_NULL_MAILER} mailer
+			end
+		rescue
+			retried := True
+			retry
 		end
+
+feature -- Access
+
+	mailer: NOTIFICATION_MAILER
 
 feature -- Access: storage
 
@@ -159,6 +204,22 @@ feature -- Element change
 	register_module (m: CMS_MODULE)
 			-- <Precursor>
 		do
+			debug ("roc")
+				if module_registered (m) or module_with_same_type_registered (m) then
+						-- FIXME: report error
+						-- The assertions specify this is bad,
+						-- but here we still handle the case
+						--| Ignored.
+					if attached (create {DEVELOPER_EXCEPTION}) as e then
+						if module_registered (m) then
+							e.set_description ("Module '" + m.name + "' is already registered.")
+						else
+							e.set_description ("A module of type '" + m.name + "' is already registered.")
+						end
+						e.raise
+					end
+				end
+			end
 			modules.extend (m)
 		end
 
@@ -169,4 +230,7 @@ feature -- Theme: Compute location
 			theme_location := themes_location.extended (theme_name)
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

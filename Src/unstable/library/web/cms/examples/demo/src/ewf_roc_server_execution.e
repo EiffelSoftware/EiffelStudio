@@ -55,21 +55,27 @@ feature -- CMS setup
 		local
 			m: CMS_MODULE
 		do
-			create {NODE_MODULE} m.make (a_setup)
-			m.enable
-			a_setup.register_module (m)
-
 			create {CMS_AUTHENTICATION_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
 			create {BASIC_AUTH_MODULE} m.make
-			if not a_setup.module_with_same_type_registered (m) then
-				m.enable
-				a_setup.register_module (m)
-			end
+			m.enable
+			a_setup.register_module (m)
 
 			create {CMS_OAUTH_20_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
+			create {CMS_OPENID_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
+			create {CMS_NODE_MODULE} m.make (a_setup)
+			m.enable
+			a_setup.register_module (m)
+
+			create {CMS_BLOG_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
@@ -81,9 +87,6 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
-			create {CMS_BLOG_MODULE} m.make
-			m.enable
-			a_setup.register_module (m)
 		end
 
 end

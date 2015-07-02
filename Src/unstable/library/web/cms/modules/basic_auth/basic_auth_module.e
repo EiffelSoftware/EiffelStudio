@@ -29,11 +29,14 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			name := "basic auth"
 			version := "1.0"
 			description := "Service to manage basic authentication"
 			package := "core"
 		end
+
+feature -- Access
+
+	name: STRING = "basic_auth"
 
 feature -- Access: router
 
@@ -64,7 +67,7 @@ feature {NONE} -- Implementation: routes
 			create l_bal_handler.make (api)
 			create l_methods
 			l_methods.enable_get
-			a_router.handle_with_request_methods ("/basic_auth_login", l_bal_handler, l_methods)
+			a_router.handle ("/basic_auth_login", l_bal_handler, l_methods)
 		end
 
 	configure_api_logoff (api: CMS_API; a_router: WSF_ROUTER)
@@ -75,7 +78,7 @@ feature {NONE} -- Implementation: routes
 			create l_bal_handler.make (api)
 			create l_methods
 			l_methods.enable_get
-			a_router.handle_with_request_methods ("/basic_auth_logoff", l_bal_handler, l_methods)
+			a_router.handle ("/basic_auth_logoff", l_bal_handler, l_methods)
 		end
 
 feature -- Hooks configuration
@@ -106,7 +109,7 @@ feature -- Hooks
 			-- Hook execution on collection of menu contained by `a_menu_system'
 			-- for related response `a_response'.
 		local
-			lnk: CMS_LOCAL_LINK
+--			lnk: CMS_LOCAL_LINK
 		do
 --			if attached a_response.current_user (a_response.request) as u then
 --				create lnk.make (u.name +  " (Logout)", "basic_auth_logoff?destination=" + a_response.request.request_uri)

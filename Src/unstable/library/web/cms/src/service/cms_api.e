@@ -137,6 +137,28 @@ feature -- Logging
 			end
 		end
 
+feature -- Emails
+
+	process_email (e: CMS_EMAIL)
+			-- Process email `e'.
+		do
+			reset_error
+			setup.mailer.safe_process_email (e)
+			if setup.mailer.has_error then
+				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing email.")
+			end
+		end
+
+	process_emails (lst: ITERABLE [CMS_EMAIL])
+			-- Process collection of email `lst'.	
+		do
+			reset_error
+			setup.mailer.process_emails (lst)
+			if setup.mailer.has_error then
+				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing emails.")
+			end
+		end
+
 feature -- Permissions system
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
@@ -319,6 +341,18 @@ feature {NONE}-- Implemenation
 
 feature -- Environment/ theme
 
+	site_location: PATH
+			-- CMS site location.
+		do
+			Result := setup.site_location
+		end
+
+	files_location: PATH
+			-- CMS public files location.
+		do
+			Result := setup.files_location
+		end
+
 	theme_location: PATH
 			-- Active theme location.
 		do
@@ -349,7 +383,6 @@ feature -- Environment/ module
 			else
 				l_name := a_name
 			end
-
 			p := module_location_by_name (a_module_name).extended ("config").extended (l_name)
 
 			l_path := p.appended_with_extension ("json")
@@ -393,7 +426,14 @@ feature -- Environment/ module
 			-- Location of resource `a_resource' for `a_module'.
 		do
 				--| site/modules/$modname/$a_name.json
-			Result := module_location (a_module).extended_path (a_resource)
+			Result := module_resource_location_by_name (a_module.name, a_resource)
+		end
+
+	module_resource_location_by_name (a_module_name: READABLE_STRING_GENERAL; a_resource: PATH): PATH
+			-- Location of resource `a_resource' for `a_module'.
+		do
+				--| site/modules/$modname/$a_name.json
+			Result := module_location_by_name (a_module_name).extended_path (a_resource)
 		end
 
 feature -- Environment/ modules and theme
@@ -419,10 +459,37 @@ feature -- Environment/ modules and theme
 			end
 		end
 
+	module_theme_resource_location_by_name (a_module_name: READABLE_STRING_GENERAL; a_resource: PATH): detachable PATH
+			-- Theme resource location of `a_resource' for module named `a_module_name', if exists.
+			-- By default, located under the module location folder, but could be overriden
+			-- from files located under modules subfolder of active `theme_location'.
+			--| First search in themes/$theme/modules/$a_module.name/$a_resource,
+			--| and if not found then search in
+			--| modules/$a_module_name/$a_resource.
+		local
+			ut: FILE_UTILITIES
+		do
+				-- Check first in selected theme folder.
+			Result := module_theme_location_by_name (a_module_name).extended_path (a_resource)
+			if not ut.file_path_exists (Result) then
+					-- And if not found, look into site/modules/$a_module.name/.... folders.
+				Result := module_resource_location_by_name (a_module_name, a_resource)
+				if not ut.file_path_exists (Result) then
+					Result := Void
+				end
+			end
+		end
+
 	module_theme_location (a_module: CMS_MODULE): PATH
 			-- Location for overriden files associated with `a_module_name'.
 		do
-			Result := theme_location.extended ("modules").extended (a_module.name)
+			Result := module_theme_location_by_name (a_module.name)
+		end
+
+	module_theme_location_by_name (a_module_name: READABLE_STRING_GENERAL): PATH
+			-- Location for overriden files associated with `a_module_name'.
+		do
+			Result := theme_location.extended ("modules").extended (a_module_name)
 		end
 
 	module_configuration (a_module: CMS_MODULE; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
@@ -430,5 +497,8 @@ feature -- Environment/ modules and theme
 			Result := module_configuration_by_name (a_module.name, a_name)
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

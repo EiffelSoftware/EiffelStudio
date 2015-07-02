@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 				admin_email := l_site_name + " <" + admin_email +">"
 			end
 
-			if attached {CONFIG_READER} a_cms_api.module_configuration_by_name ("login", Void) as cfg then
+			if attached {CONFIG_READER} a_cms_api.module_configuration_by_name ({CMS_AUTHENTICATION_MODULE}.name, Void) as cfg then
 				if attached cfg.text_item ("smtp") as l_smtp then
 						-- Overwrite global smtp setting if any.
 					smtp_server := utf.utf_32_string_to_utf_8_string_8 (l_smtp)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation: Template
 			p: PATH
 		do
 			create p.make_from_string (a_name)
-			Result := cms_api.module_location_by_name ("login").extended ("mail_templates").extended (a_name)
+			Result := cms_api.module_location_by_name ({CMS_AUTHENTICATION_MODULE}.name).extended ("mail_templates").extended (a_name)
 		end
 
 	template_string (a_name: READABLE_STRING_GENERAL; a_default: STRING): STRING

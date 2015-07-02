@@ -164,7 +164,19 @@ feature -- Settings: router
 				end)
 			a_router.handle ("/theme/", fhdl, router.methods_GET)
 
+				-- "/files/.."
+			create fhdl.make_hidden_with_path (api.files_location)
+			fhdl.disable_index
+			fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+				do
+					execute_default (ia_req, ia_res)
+				end)
+			a_router.handle ("/files/", fhdl, router.methods_GET)
 
+				-- files folder from specific module.
+			a_router.handle ("/module/{modname}/files{/vars}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_module_files), a_router.methods_get)
+
+				-- www folder. Should we keep this??
 			create fhdl.make_hidden_with_path (setup.environment.www_path)
 			fhdl.disable_index
 			fhdl.set_not_found_handler (agent  (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
@@ -263,6 +275,27 @@ feature -- Execution
 			end
 		end
 
+	handle_module_files (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Handle files per modules.
+			-- i.e: "/module/{modname}/files{/vars}"
+		local
+			fhdl: WSF_FILE_SYSTEM_HANDLER
+			r: NOT_FOUND_ERROR_CMS_RESPONSE
+		do
+			if attached {WSF_STRING} req.path_parameter ("modname") as l_mod_name then
+				create fhdl.make_with_path (api.module_location_by_name (l_mod_name.url_encoded_value).extended ("files"))
+				fhdl.disable_index
+				fhdl.set_not_found_handler (agent (ia_uri: READABLE_STRING_8; ia_req: WSF_REQUEST; ia_res: WSF_RESPONSE)
+					do
+						execute_default (ia_req, ia_res)
+					end)
+				fhdl.execute_starts_with ("/module/" + l_mod_name.url_encoded_value + "/files/", req, res)
+			else
+				create r.make (req, res, api)
+				r.execute
+			end
+		end
+
 	execute_default (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Default request handler if no other are relevant
 		local
@@ -274,7 +307,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -27,11 +27,14 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			name := "Blog demo module"
 			version := "1.0"
 			description := "Service to demonstrate new node for blog"
 			package := "demo"
 		end
+
+feature -- Access
+
+	name: STRING = "blog"
 
 feature {CMS_API} -- Module Initialization			
 

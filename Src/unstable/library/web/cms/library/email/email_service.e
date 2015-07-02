@@ -7,8 +7,8 @@ class
 	EMAIL_SERVICE
 
 inherit
-
 	SHARED_ERROR
+
 	SHARED_LOGGER
 
 create
@@ -26,14 +26,10 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Initialize service.
-		local
-			l_address_factory: INET_ADDRESS_FACTORY
 		do
 			admin_email := parameters.admin_email
 
-				-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create l_address_factory
-			create smtp_protocol.make (parameters.smtp_server, l_address_factory.create_localhost.host_name)
+			create {NOTIFICATION_SMTP_MAILER} mailer.make (parameters.smtp_server)
 			set_successful
 		end
 
@@ -43,7 +39,7 @@ feature {NONE} -- Initialization
 	admin_email: IMMUTABLE_STRING_8
 			-- Site admin's email.
 
-	smtp_protocol: SMTP_PROTOCOL
+	mailer: NOTIFICATION_MAILER
 			-- SMTP protocol.
 
 feature -- Basic Operations
@@ -60,38 +56,34 @@ feature -- Basic Operations
 
 	send_message (a_from_address, a_to_address: READABLE_STRING_8; a_subjet: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL)
 		local
-			l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 			utf: UTF_CONVERTER
 		do
 			write_debug_log (generator + ".send_message: [from:" + a_from_address + ", to:" + a_to_address + ", subject:" + a_subjet + ", content:" + a_content)
-			create l_email.make_with_entry (a_from_address, a_to_address)
-			l_email.set_message (utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet))
-			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=utf-8")
+			create l_email.make (a_from_address, a_to_address, utf.escaped_utf_32_string_to_utf_8_string_8 (a_subjet) , utf.escaped_utf_32_string_to_utf_8_string_8 (a_content))
+			l_email.add_header_line ("MIME-Version:1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=utf-8")
 			send_email (l_email)
 		end
 
 feature {NONE} -- Implementation
 
-	send_email (a_email: EMAIL)
+	send_email (a_email: NOTIFICATION_EMAIL)
 			-- Send the email represented by `a_email'.
 		local
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				write_information_log (generator + ".send_email Process send email.")
-				smtp_protocol.initiate_protocol
-				smtp_protocol.transfer (a_email)
-				smtp_protocol.close_protocol
+				mailer.process_email (a_email)
 				write_information_log (generator + ".send_email Email sent.")
-				if smtp_protocol.error then
+				if mailer.has_error then
 					set_last_error ("smtp_protocol reported an error", generator + ".send_email")
 				else
 					set_successful
 				end
 			else
-				write_error_log (generator + ".send_email Email not send " + last_error_message )
+				write_error_log (generator + ".send_email Email not send " + last_error_message)
 			end
 		rescue
 			set_last_error_from_exception (generator + ".send_email")

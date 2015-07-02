@@ -16,7 +16,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create {NODE_MODULE}
+create {CMS_NODE_MODULE}
 	make_with_storage
 
 feature {NONE} -- Initialization

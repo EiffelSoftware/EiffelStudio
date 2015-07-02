@@ -11,7 +11,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms_app_env" location="..\app_env\app_env-safe.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
+		<library name="notification_mailer" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email-safe.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>
 </system>

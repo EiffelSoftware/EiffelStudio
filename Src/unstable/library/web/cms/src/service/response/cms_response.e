@@ -613,6 +613,28 @@ feature -- Hook: value alter
 			end
 		end
 
+feature -- Hook: response
+
+	subscribe_to_response_alter_hook (h: CMS_HOOK_RESPONSE_ALTER)
+			-- Add `h' as subscriber of response alter hooks CMS_HOOK_RESPONSE_ALTER.		
+		do
+			subscribe_to_hook (h, {CMS_HOOK_RESPONSE_ALTER})
+		end
+
+	invoke_response_alter (a_response: CMS_RESPONSE)
+			-- Invoke value table alter hook for table `a_table'.		
+		do
+			if attached hook_subscribers.item ({CMS_HOOK_RESPONSE_ALTER}) as lst then
+				across
+					lst as c
+				loop
+					if attached {CMS_HOOK_RESPONSE_ALTER} c.item as h then
+						h.response_alter (a_response)
+					end
+				end
+			end
+		end
+
 feature -- Hook: menu_system_alter
 
 	subscribe_to_menu_system_alter_hook (h: CMS_HOOK_MENU_SYSTEM_ALTER)
@@ -867,6 +889,9 @@ feature -- Generation
 				-- Values
 			common_prepare (page)
 			custom_prepare (page)
+
+				-- Cms response
+			invoke_response_alter (Current)
 
 				-- Cms values
 			invoke_value_table_alter (values)
@@ -1132,4 +1157,7 @@ feature {NONE} -- Execution
 
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -92,6 +92,12 @@ feature -- Query
 
 feature -- Access: Theme
 
+	site_location: PATH
+			-- Path to CMS site root dir.
+
+	files_location: PATH
+			-- Path to public "files" dir.			
+
 	modules_location: PATH
 			-- Path to modules.	
 
@@ -109,6 +115,13 @@ feature -- Access: Theme
 
 	theme_name: READABLE_STRING_32
 			-- theme name.
+
+feature -- Access
+
+	mailer: NOTIFICATION_MAILER
+			-- Email processor.
+		deferred
+		end
 
 feature -- Access: storage
 
@@ -186,4 +199,7 @@ feature -- Element change
 			module_registered: module_registered (m)
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

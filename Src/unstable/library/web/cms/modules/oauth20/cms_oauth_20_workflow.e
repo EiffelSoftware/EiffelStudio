@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			initilize (a_consumer)
 			create config.make_default (a_consumer.api_key, a_consumer.api_secret)
-			config.set_callback (a_host + "/account/"+ a_consumer.callback_name)
+			config.set_callback (a_host + "/account/oauth-callback/"+ a_consumer.callback_name)
 			config.set_scope (a_consumer.scope)
 				--Todo create a generic OAUTH_20_GENERIC_API
 			create oauth_api.make (a_consumer.endpoint, a_consumer.authorize_url, a_consumer.extractor)

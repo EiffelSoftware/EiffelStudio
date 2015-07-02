@@ -27,11 +27,14 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			name := "Demo module"
 			version := "1.0"
 			description := "Service to demonstrate and test cms system"
 			package := "demo"
 		end
+
+feature -- Access
+
+	name: STRING = "demo"
 
 feature {CMS_API} -- Module Initialization			
 

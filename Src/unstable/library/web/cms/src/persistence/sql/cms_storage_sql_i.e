@@ -134,7 +134,6 @@ feature -- Helper
 			-- Content of sql script located at `a_path'.
 		local
 			f: PLAIN_TEXT_FILE
-			sql: STRING
 		do
 			create f.make_with_path (a_path)
 			if f.exists and then f.is_access_readable then
@@ -453,4 +452,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

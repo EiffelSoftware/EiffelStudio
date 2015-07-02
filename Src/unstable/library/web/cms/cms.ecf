@@ -22,6 +22,7 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
+		<library name="notification_mailer" location="$ISE_LIBRARY\contrib\library\runtime\process\notification_email\notification_email.ecf"/>
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf" readonly="false"/>
 		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

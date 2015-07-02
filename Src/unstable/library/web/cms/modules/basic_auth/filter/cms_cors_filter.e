@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CORS_FILTER
+	CMS_CORS_FILTER
 
 inherit
 

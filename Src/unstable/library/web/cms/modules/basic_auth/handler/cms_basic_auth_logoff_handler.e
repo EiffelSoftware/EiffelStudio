@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {BASIC_AUTH_LOGOFF_HANDLER}."
+	description: "Summary description for {CMS_BASIC_AUTH_LOGOFF_HANDLER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	BASIC_AUTH_LOGOFF_HANDLER
+	CMS_BASIC_AUTH_LOGOFF_HANDLER
 
 inherit
 	CMS_HANDLER

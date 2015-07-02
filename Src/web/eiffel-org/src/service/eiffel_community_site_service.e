@@ -31,16 +31,28 @@ feature -- CMS setup
 	setup_storage (a_setup: CMS_SETUP)
 		do
 --			a_setup.storage_drivers.force (create {CMS_STORAGE_MYSQL_BUILDER}.make, "mysql")
---			a_setup.storage_drivers.force (create {CMS_STORAGE_SQLITE_BUILDER}.make, "sqlite")
+			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
 		end
 
 	setup_modules (a_setup: CMS_SETUP)
 		local
 			m: CMS_MODULE
 		do
-			create {CONTACT_MODULE} m.make
+			create {CMS_AUTHENTICATION_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
+
+			create {BASIC_AUTH_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
+			create {NODE_MODULE} m.make (a_setup)
+			m.enable
+			a_setup.register_module (m)
+
+--			create {CMS_BLOG_MODULE} m.make
+--			m.enable
+--			a_setup.register_module (m)
 
 			create {WDOCS_MODULE} m.make
 			m.enable

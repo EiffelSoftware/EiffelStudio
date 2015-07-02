@@ -1,0 +1,7 @@
+{
+	"api_secret":"ADD_YOUR_SECRET_KEY",
+	"api_key":"ADD_YOUR_PUBLIC_KEY",
+	"scope": "email",
+	"api_revoke":"https://accounts.google.com/o/oauth2/revoke?token=$ACCESS_TOKEN",	
+	"protected_resource_url":"https://www.googleapis.com/plus/v1/people/me"
+}

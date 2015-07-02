@@ -23,6 +23,9 @@ feature -- Settings
 	is_http_version_1_0: BOOLEAN
 			-- Is associated request using HTTP/1.0 ?
 
+	is_persistent_connection_supported: BOOLEAN
+			-- Is persistent connection supported?
+
 	is_persistent_connection_requested: BOOLEAN
 			-- Is persistent connection requested?
 
@@ -32,6 +35,12 @@ feature -- Settings change
 			-- Set associated request is using HTTP/1.0.
 		do
 			is_http_version_1_0 := True
+		end
+
+	set_is_persistent_connection_supported (b: BOOLEAN)
+			-- Set `is_persistent_connection_supported' to `b'.
+		do
+			is_persistent_connection_supported := b
 		end
 
 	set_is_persistent_connection_requested (b: BOOLEAN)
@@ -53,7 +62,7 @@ feature -- Header output operation
 			create s.make_from_string (a_text)
 
 			i := s.substring_index ("%NConnection:", 1)
-			if {HTTPD_SERVER}.is_persistent_connection_supported then
+			if is_persistent_connection_supported then
 					-- Current standalone support persistent connection.
 					-- If HTTP/1.1:
 					--		by default all connection are persistent

@@ -87,6 +87,7 @@ feature -- Request processing
 				else
 					l_output.set_http_version (version)
 				end
+				res.set_is_persistent_connection_supported ({HTTPD_SERVER}.is_persistent_connection_supported)
 				res.set_is_persistent_connection_requested (is_persistent_connection_requested)
 
 				req.set_meta_string_variable ("RAW_HEADER_DATA", request_header)
@@ -111,22 +112,30 @@ feature -- Request processing
 			end
 		end
 
+
 	process_rescue (res: detachable WGI_RESPONSE)
+		local
+			s: STRING
 		do
 			if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.trace as l_trace then
 				if res /= Void then
 					if not res.status_is_set then
 						res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
 					end
+					create s.make_empty
+					s.append ("<pre>")
+					s.append (html_encoder.encoded_string (l_trace))
+					s.append ("</pre>")
+					if not res.header_committed then
+						res.put_header_text ("Content-Type: text/html%R%NContent-Length: " + s.count.out + "%R%N%R%N")
+					end
 					if res.message_writable then
-						res.put_string ("<pre>")
-						res.put_string (html_encoder.encoded_string (l_trace))
-						res.put_string ("</pre>")
+						res.put_string (s)
 					end
 					res.push
 				end
 			end
-		end
+		end		
 
 	httpd_environment (a_socket: HTTPD_STREAM_SOCKET): STRING_TABLE [READABLE_STRING_8]
 		local

@@ -60,7 +60,6 @@ feature	-- Access
 
 	is_persistent_connection_supported: BOOLEAN = True
 			-- Is persistent connection supported?
-			--| For now, disabled during dev.
 
 feature -- Callbacks
 

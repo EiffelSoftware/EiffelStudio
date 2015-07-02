@@ -19,9 +19,9 @@ create
 	make_empty, make, make_from_path,
 	make_from_path_object
 
---convert
---	make ({ARRAY [STRING_8], ARRAY [READABLE_STRING_8], ARRAY [IMMUTABLE_STRING_8], ARRAY [STRING_32],
---		ARRAY [READABLE_STRING_32], ARRAY [IMMUTABLE_STRING_32], ARRAY [READABLE_STRING_GENERAL]})
+convert
+	make ({ARRAY [STRING_8], ARRAY [READABLE_STRING_8], ARRAY [IMMUTABLE_STRING_8], ARRAY [STRING_32],
+		ARRAY [READABLE_STRING_32], ARRAY [IMMUTABLE_STRING_32], ARRAY [READABLE_STRING_GENERAL]})
 
 feature {NONE} -- Initialization
 
@@ -146,7 +146,7 @@ feature {NONE} -- Constants
 	default_names_count: INTEGER = 5
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

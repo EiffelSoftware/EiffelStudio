@@ -106,7 +106,7 @@ feature {CMS_API} -- Module management
 	file_system_storage_path (api: CMS_API): PATH
 			-- Location of eventual file system based storage for contact messages.
 		do
-			Result := api.setup.environment.path.extended ("db").extended ("contact_messages")
+			Result := api.site_location.extended ("db").extended ("contact_messages")
 		end
 
 feature {CMS_API} -- Access: API

@@ -1,6 +1,33 @@
 {
+	"database": {
+		"datasource": {
+			"driver": "odbc",
+			"environment": "odbc-sqlite"
+		},
+		"environments": {
+			"odbc-sqlite": {
+				"connection_string":"Driver=SQLite3 ODBC Driver;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
+			},
+			"odbc-mysql": {
+				"connection_string":"Driver=mysql ODBC Driver;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
+			},
+			"mysql": {
+				"connection_string":"Driver=mysql;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
+			},
+			"development": {
+				"connection_string":"Server=localhost;Port=3306;Database=cms_dev;Uid=root;Pwd=;"
+				 },
+			"production": {
+				"connection_string":""
+			}
+		}
+	},
+	"smtp": {
+		"server": "localhost"
+		},
 	"logger": { 
 			"level":"DEBUG",
+			"type":"stderr",
 			"backup_count":"4"
 		}
 }

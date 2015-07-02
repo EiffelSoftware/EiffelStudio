@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 	make
 			-- Create current module
 		do
-			name := "codeboard"
 			version := "1.0"
 			description := "Eiffel codeboard module"
 			package := "codeboard"
@@ -43,6 +42,10 @@ feature {NONE} -- Initialization
 			create root_dir.make_current
 			cache_duration := 0
 		end
+
+feature -- Access
+
+	name: STRING = "codeboard"
 
 feature -- Access: docs
 

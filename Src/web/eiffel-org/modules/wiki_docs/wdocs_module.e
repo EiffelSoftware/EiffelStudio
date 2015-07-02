@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 	make
 			-- Create current module
 		do
-			name := "wdocs"
 			version := "1.0"
 			description := "Wiki Documentation"
 			package := "doc"
@@ -51,6 +50,10 @@ feature {NONE} -- Initialization
 			cache_duration := 0
 		end
 
+feature -- Access
+
+	name: STRING = "wdocs"
+
 feature -- Router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
@@ -62,7 +65,7 @@ feature -- Router
 		do
 				-- FIXME: this code could/should be retarded to when it is really needed
 				-- then if the module is disabled, it won't take CPU+memory for nothing.
-			cfg := configuration (a_api.setup.environment.config_path)
+			cfg := configuration (a_api.module_location (Current))
 			root_dir := cfg.root_dir
 			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir
@@ -159,11 +162,11 @@ feature -- Access: config
 					create {WDOCS_INI_CONFIG} Result.make (p)
 				end
 			else
-				p := a_dir.extended ("wdocs.ini")
+				p := a_dir.extended (name).appended_with_extension ("ini")
 				if ut.file_path_exists (p) then
 					create {WDOCS_INI_CONFIG} cfg.make (p)
 				else
-					p := a_dir.extended ("wdocs.json")
+					p := a_dir.extended (name).appended_with_extension ("json")
 					if ut.file_path_exists (p) then
 						create {WDOCS_JSON_CONFIG} cfg.make (p)
 					end

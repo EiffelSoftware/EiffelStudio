@@ -39,11 +39,14 @@ feature {NONE} -- Initialization
 	make
 			-- Create current module
 		do
-			name := "download"
 			version := "1.0"
 			description := "Eiffel GPL Download"
 			package := "download"
 		end
+
+feature -- Access
+
+	name: STRING = "download"
 
 feature -- Router
 

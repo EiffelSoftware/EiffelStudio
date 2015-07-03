@@ -1,6 +1,6 @@
 note
 	description: "[
-			A feature's if block editor analyzer's state, used in processing tokens between across..end tokens.
+			A feature's "across" block editor analyzer's state, used in processing tokens between "across" and "end".
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."

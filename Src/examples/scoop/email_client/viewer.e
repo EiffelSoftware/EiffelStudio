@@ -33,17 +33,12 @@ feature -- Access
 feature -- Status report
 
 	is_over: BOOLEAN
-			-- Shall `Current' stop displaying messages?
-
------------------------------------------------ INLINE SEPARATE PART FOR THIRD PARTY CONTROL, PAGE 24 -----------------------------------------------
---	is_over: BOOLEAN
---			-- Shall `Current' stop displaying messages?
---		do
---			separate controller as c do
---				Result := c.is_viewer_over
---			end
---		end	
-
+			 -- Shall `Current' stop displaying messages?
+		do
+			separate controller as c do
+				Result := c.is_viewer_over
+			end
+		end	
 
 feature -- Basic operations
 

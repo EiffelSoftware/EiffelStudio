@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 				downloader := c.downloader
 				viewer := c.viewer
 				mover := c.mover
+				controller := c.controller
 			end
 
 			if argument_count = 1 then
@@ -65,15 +66,22 @@ feature -- Access
 	mover: separate MOVER
 			-- The mover engine.
 
+	controller: separate CONTROLLER
+			-- The third-party controller.
+
 feature -- Tutorial: Main execution feature.
 
 	play1
 			-- Start the downloader, viewer and mover concurrently.
 		do
 			live_all (downloader, viewer, mover)
+
+				-- Uncomment these lines to stop the email client after 20 seconds.
+--			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 20 * 1_000_000_000)
+--			separate controller as c do c.stop_viewer; c.stop_downloader end
 		end
 
-	live_all(d: separate DOWNLOADER; v: separate VIEWER; m: separate MOVER)
+	live_all (d: separate DOWNLOADER; v: separate VIEWER; m: separate MOVER)
 			-- Run d, v, and m concurrently.
 		do
 			d.live
@@ -137,6 +145,7 @@ feature -- Tutorial: Type system
 		do
 				-- Uncomment to get a compiler error.
 --			c := client
+--			c.messages.extend ("ABC")
 		end
 
 	play7(c: CLIENT)
@@ -156,7 +165,7 @@ feature -- Tutorial: Traitors
 
 	close_friend: detachable PLAYER
 
-	set_close_friend (p: PLAYER)
+	set_close_friend (p: detachable PLAYER)
 			-- Set `close_friend' to `p'.
 		do
 			close_friend := p

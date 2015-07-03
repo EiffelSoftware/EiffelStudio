@@ -45,16 +45,11 @@ feature -- Status report
 
 	is_over: BOOLEAN
 			-- Shall `Current' stop its operation?
-
------------------------------------------------ INLINE SEPARATE PART FOR THIRD PARTY CONTROL, PAGE 24 -----------------------------------------------
-
---	is_over: BOOLEAN
---			-- Shall `Current' stop its operation?
---		do
---			separate controller as c do
---				Result := c.is_downloader_over
---			end
---		end
+		do
+			separate controller as c do
+				Result := c.is_downloader_over
+			end
+		end
 
 feature -- Basic operations.
 
@@ -81,13 +76,19 @@ feature -- Basic operations.
 			end
 		end
 
-	stop
-			-- Set `is_over' to True.
-			-- Note: It isn't possible to stop a SCOOP processor like this, as the client will never get exclusive
-			-- access while `Current' is executing {DOWNLOADER}.live.
-		do
-			is_over := true
-		end
+feature -- Stopping a Processor: the wrong approach.
+
+
+--	is_over: BOOLEAN
+			-- Shall `Current' stop its operation?
+
+--	stop
+--			-- Set `is_over' to True.
+--			-- Note: It isn't possible to stop a SCOOP processor like this, as the client will never get exclusive
+--			-- access while `Current' is executing {DOWNLOADER}.live.
+--		do
+--			is_over := True
+--		end
 
 feature {NONE} -- Implementation
 

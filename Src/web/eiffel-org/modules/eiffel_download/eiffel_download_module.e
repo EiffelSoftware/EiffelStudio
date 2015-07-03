@@ -41,12 +41,12 @@ feature {NONE} -- Initialization
 		do
 			version := "1.0"
 			description := "Eiffel GPL Download"
-			package := "download"
+			package := "eiffel"
 		end
 
 feature -- Access
 
-	name: STRING = "download"
+	name: STRING = "eiffel_download"
 
 feature -- Router
 

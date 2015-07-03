@@ -5,8 +5,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms-safe.ecf" readonly="false"/>
 		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
-		<library name="email_service" location="$ISE_LIBRARY\unstable\library\web\cms\library\email\email-safe.ecf" readonly="false"/>
-		<library name="config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config-safe.ecf"/>
+		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config-safe.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>

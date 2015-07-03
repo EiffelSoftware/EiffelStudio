@@ -3,7 +3,7 @@
 			<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
 		<div>
 			<div>	
-			    <form action method="POST">
+			    <form name="cms_basic_auth" action method="POST">
 					<div>
 						<input type="text" name="username" required>
 						<label>Username</label>

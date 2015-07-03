@@ -46,12 +46,12 @@ feature -- Basic operations
 			-- Simulate a user viewing a message once in a while.
 		do
 			from until is_over loop
-				view_one_fixed
+				view_one
 				wait (V_temporization)
 			end
 		end
 
-	view_one_fixed
+	view_one
 			-- Simulate viewing: if there are messages, display one, chosen randomly.
 		do
 			if attached select_message as l_message then

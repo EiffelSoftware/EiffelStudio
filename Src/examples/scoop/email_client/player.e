@@ -96,8 +96,8 @@ feature -- Tutorial: Order preservation and synchronization.
 			-- Download two messages.
 		do
 			separate downloader as d do
-				d.download_one_fixed
-				d.download_one_fixed
+				d.download_one
+				d.download_one
 			end
 		end
 
@@ -105,8 +105,8 @@ feature -- Tutorial: Order preservation and synchronization.
 			-- Download a message, view a message.
 		do
 			separate downloader as d, viewer as v do
-				d.download_one_fixed
-				v.view_one_fixed
+				d.download_one
+				v.view_one
 			end
 		end
 
@@ -116,8 +116,8 @@ feature -- Tutorial: Order preservation and synchronization.
 			n: INTEGER
 		do
 			separate downloader as d do
-				d.download_one_fixed
-				d.download_one_fixed
+				d.download_one
+				d.download_one
 				n := d.count
 				print (n)
 			end
@@ -129,8 +129,8 @@ feature -- Tutorial: Order preservation and synchronization.
 			n: INTEGER
 		do
 			separate downloader as d do
-				d.download_one_fixed
-				d.download_one_fixed
+				d.download_one
+				d.download_one
 				n := d.computed_count
 				print (n)
 			end

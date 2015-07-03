@@ -52,7 +52,7 @@ feature {NONE} -- Basic operation
 				l_next := next_text_token (l_next.token, l_next.line, True, l_end_token)
 			end
 			if l_end_token /~ a_end_token then
-					--| This mean, the real end token is after a "until", "loop", "some or "all" keyword
+					-- The real end token is after a "until", "loop", "some" or "all" keyword.
 				a_info.set_current_line (l_next.line, l_next.token)
 
 				a_info.increment_current_frame (False)

@@ -11,6 +11,11 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.NetSSL">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<external_cflag value="-D_WINSOCKAPI_">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_cflag>
 		<external_include location="/usr/include">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -21,11 +26,6 @@
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_cflag value="-D_WINSOCKAPI_">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_cflag>
 		<external_object location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\ssleay32.lib">
 			<condition>
 				<platform value="windows"/>

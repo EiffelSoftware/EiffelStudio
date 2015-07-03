@@ -23,8 +23,6 @@ feature -- SSL
 		do
 			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
 				create l_context.make_as_sslv23_client
-			elseif tls_protocol = {SSL_PROTOCOL}.ssl_3 then
-				create l_context.make_as_sslv3_client
 			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
 				create l_context.make_as_tlsv10_client
 			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_1 then
@@ -110,10 +108,10 @@ feature -- SSL
 			inspect tls_protocol
 			when {SSL_PROTOCOL}.ssl_23  then
 				create Result.make_as_sslv23_server
-			when {SSL_PROTOCOL}.ssl_3 then
-				create Result.make_as_sslv3_server
 			when {SSL_PROTOCOL}.tls_1_0 then
 				create Result.make_as_tlsv10_server
+			when {SSL_PROTOCOL}.tls_1_1 then
+				create Result.make_as_tlsv11_server
 			when {SSL_PROTOCOL}.dtls_1_0 then
 				create Result.make_as_dtlsv1_server
 			else

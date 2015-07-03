@@ -16,6 +16,8 @@ inherit
 
 	CMS_HOOK_AUTO_REGISTER
 
+	CMS_HOOK_RESPONSE_ALTER
+
 	SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -219,6 +221,11 @@ feature -- Access: docs
 		end
 
 feature -- Hooks
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+			a_response.add_style (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void), Void)
+		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do

@@ -42,11 +42,11 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
-			create {BASIC_AUTH_MODULE} m.make
+			create {CMS_BASIC_AUTH_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
-			create {NODE_MODULE} m.make (a_setup)
+			create {CMS_NODE_MODULE} m.make (a_setup)
 			m.enable
 			a_setup.register_module (m)
 

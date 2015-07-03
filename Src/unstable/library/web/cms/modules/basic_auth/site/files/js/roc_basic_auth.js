@@ -7,7 +7,7 @@ var userAgent = navigator.userAgent.toLowerCase();
 var firstLogIn = true;
  
 ROC_AUTH.login = function() {
-    var form = document.forms[0];
+    var form = document.forms['cms_basic_auth'];
     var username = form.username.value;
     var password = form.password.value;
 	  //var host = form.host.value;

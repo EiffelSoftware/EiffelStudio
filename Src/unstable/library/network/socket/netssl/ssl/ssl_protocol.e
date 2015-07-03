@@ -13,9 +13,6 @@ feature -- Access
 	Ssl_23: NATURAL = 1
 		-- Ssl version 3 but can rollback to version 2.
 
-	Ssl_3: NATURAL = 2
-		-- Ssl version 3.
-
 	Tls_1_0: NATURAL = 3
 		-- Tls version 1.
 
@@ -29,7 +26,7 @@ feature -- Access
 		-- Dtls version 1.0.	
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

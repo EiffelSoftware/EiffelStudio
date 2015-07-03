@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wiki_docs" uuid="9B1FA116-DBF3-4342-AA21-052A97A1FFF0" library_target="wiki_docs">
-	<target name="wiki_docs">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wdocs_module" uuid="9B1FA116-DBF3-4342-AA21-052A97A1FFF0" library_target="wdocs_module">
+	<target name="wdocs_module">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>

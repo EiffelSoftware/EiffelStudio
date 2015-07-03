@@ -13,7 +13,7 @@
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="true"/>
-		<library name="http_authorization" location="../../../../library/network/authentication/http_authorization/http_authorization-safe.ecf" readonly="true"/>
+		<library name="http_authorization" location="../../../../library/web/authentication/http_authorization/http_authorization-safe.ecf" readonly="true"/>
 		<library name="json" location="../../../../library/text/parser/json/library/json-safe.ecf" readonly="true"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="true"/>
 		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>

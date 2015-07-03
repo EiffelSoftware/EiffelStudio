@@ -33,6 +33,12 @@ feature -- Hook
 			if attached {CMS_HOOK_VALUE_TABLE_ALTER} Current as h_value then
 				a_response.subscribe_to_value_table_alter_hook (h_value)
 			end
+			if attached {CMS_HOOK_RESPONSE_ALTER} Current as h_resp then
+				a_response.subscribe_to_response_alter_hook (h_resp)
+			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

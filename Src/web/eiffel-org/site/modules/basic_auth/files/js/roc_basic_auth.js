@@ -205,6 +205,16 @@ ROC_AUTH.remove = function (id)
 
 
 
+$(document).ready(function() {
+
+  if (typeof String.prototype.contains != 'function') {
+    String.prototype.contains = function (str){
+      return this.indexOf(str) != -1;
+    };
+  }
+   ROC_AUTH.progressive_loging();
+
+});
 
 
 ROC_AUTH.progressive_loging = function () {
@@ -213,6 +223,11 @@ ROC_AUTH.progressive_loging = function () {
 };
 
 
+$(document).keypress(function(e) {
+  if ((e.which === 13) && (e.target.localName === 'input' &&  e.target.id === 'password')) {
+      ROC_AUTH.login();
+  }
+});
 
 ROC_AUTH.OnOneClick = function(event) {
   event.preventDefault();
@@ -308,20 +323,3 @@ if ((password != null) && (confirm_password != null)) {
   password.onchange = ROC_AUTH.validatePassword();
   confirm_password.onkeyup = ROC_AUTH.validatePassword;
 }
-
-$(document).ready(function() {
-
-  if (typeof String.prototype.contains != 'function') {
-    String.prototype.contains = function (str){
-      return this.indexOf(str) != -1;
-    };
-  }
-   ROC_AUTH.progressive_loging();
-
-});
-
-$(document).keypress(function(e) {
-  if ((e.which === 13) && (e.target.localName === 'input' &&  e.target.id === 'password')) {
-      ROC_AUTH.login();
-  }
-});

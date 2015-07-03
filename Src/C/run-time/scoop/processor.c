@@ -394,7 +394,7 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 
 		type = self->current_msg.message_type;
 
-		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK);
+		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK || type == SCOOP_MESSAGE_SYNC);
 
 		if (type == SCOOP_MESSAGE_UNLOCK) {
 				/* Forget dirtiness upon unlock */

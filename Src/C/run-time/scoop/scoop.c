@@ -137,7 +137,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("supplier_not_null", supplier);
 	REQUIRE ("queue_available", T_OK == rt_queue_cache_retrieve (&client->cache, supplier, &pq));
-	REQUIRE ("callback_or_synchronized", rt_queue_cache_has_locks_of (&client->cache, supplier) || rt_private_queue_is_synchronized (pq));
+	REQUIRE ("callback_or_synchronized", (supplier->is_passive_region && !supplier->is_creation_procedure_logged) || rt_queue_cache_has_locks_of (&client->cache, supplier) || rt_private_queue_is_synchronized (pq));
 
 		/* Adopt the once values and logical ID of the new thread. */
 	rt_swap_thread_context (client, supplier);
@@ -236,7 +236,7 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 
 	if (!supplier->is_creation_procedure_logged) {
 			/* Log a creation procedure. */
-		if (client->is_passive_region && rt_scoop_is_impersonation_allowed (client, supplier, pq, data)) {
+		if (supplier->is_passive_region && rt_scoop_is_impersonation_allowed (client, supplier, pq, data)) {
 			rt_scoop_impersonated_call (client, supplier, data);
 		} else {
 			rt_private_queue_lock (pq, client);

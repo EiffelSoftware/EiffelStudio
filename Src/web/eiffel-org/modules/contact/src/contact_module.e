@@ -238,11 +238,12 @@ feature -- Hooks
 	handle_post_contact (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			es: CONTACT_EMAIL_SERVICE
 			m: STRING
 			um: STRING
 			l_captcha_passed: BOOLEAN
 			msg: CONTACT_MESSAGE
+			l_params: CONTACT_EMAIL_SERVICE_PARAMETERS
+			e: CMS_EMAIL
 		do
 			write_information_log (generator + ".handle_post_contact")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -277,21 +278,37 @@ feature -- Hooks
 						l_contact_api.save_contact_message (msg)
 					end
 
-					create m.make_from_string (email_template ("email", r))
-					write_information_log (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message (r)))
-					create es.make (create {CONTACT_EMAIL_SERVICE_PARAMETERS}.make (api))
-					write_debug_log (generator + ".handle_post_contact: send_contact_email")
-					es.send_contact_email (l_email.value, m)
+					create l_params.make (api, Current)
 
+						-- Send internal email to admin.
 					create um.make_from_string (user_contact)
 					um.replace_substring_all ("$name", html_encoded (l_name.value))
 					um.replace_substring_all ("$email", html_encoded (l_email.value))
 					um.replace_substring_all ("$message", html_encoded (l_message.value))
 					write_debug_log (generator + ".handle_post_contact: send_internal_email")
-					es.send_internal_email (um)
 
-					if attached es.last_error then
-						write_error_log (generator + ".handle_post_contact: error message:["+ es.last_error_message +"]")
+					e := api.new_email (l_params.admin_email, "Notification Contact", um)
+					e.set_from_address (l_params.admin_email)
+					e.add_header_line ("MIME-Version:1.0")
+					e.add_header_line ("Content-Type: text/html; charset=utf-8")
+					api.process_email (e)
+--					es.send_internal_email (um)
+
+					if not api.has_error then
+
+							-- Send Contact email to the user
+						create m.make_from_string (email_template ("email", r))
+						write_information_log (generator + ".handle_post_contact: preparing the message:" + html_encoded (contact_message (r)))
+						e := api.new_email (l_email.value, l_params.contact_subject_text, m)
+						e.set_from_address (l_params.admin_email)
+						e.add_header_line ("MIME-Version:1.0")
+						e.add_header_line ("Content-Type: text/html; charset=utf-8")
+						write_debug_log (generator + ".handle_post_contact: send_contact_email")
+						api.process_email (e)
+					end
+
+					if api.has_error then
+						write_error_log (generator + ".handle_post_contact: error message:["+ api.string_representation_of_errors +"]")
 						r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
 						r.values.force (True, "has_error")
 						if attached template_block (Current, "post_contact", r) as l_tpl_block then

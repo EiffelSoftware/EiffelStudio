@@ -11,22 +11,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_message: like message)
+	make (a_name: like username; a_message: like message)
 		do
-			name := a_name
+			username := a_name
 			message := a_message
 			create date.make_now_utc
 		end
 
 feature -- Access
 
-	name: READABLE_STRING_32
+	username: READABLE_STRING_32
+
+	email: detachable READABLE_STRING_8
 
 	message: READABLE_STRING_32
 
 	date: DATE_TIME
-
-	email: detachable READABLE_STRING_8
 
 feature -- Change
 

@@ -38,7 +38,7 @@ feature -- Change
 			s.append (m.date.out)
 			s.append_character ('%N')
 			s.append ("name=")
-			s.append (utf.utf_32_string_to_utf_8_string_8 (m.name))
+			s.append (utf.utf_32_string_to_utf_8_string_8 (m.username))
 			s.append_character ('%N')
 
 			if attached m.email as l_email then

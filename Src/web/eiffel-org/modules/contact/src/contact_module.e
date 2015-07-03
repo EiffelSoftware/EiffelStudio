@@ -49,11 +49,16 @@ feature {NONE} -- Initialization
 	make
 			-- Create current module
 		do
-			name := "contact"
 			version := "1.0"
 			description := "Contact form module"
 			package := "messaging"
 		end
+
+
+feature -- Access
+
+	name: STRING = "contact"
+			-- <Precursor>
 
 feature {CMS_API} -- Module Initialization			
 

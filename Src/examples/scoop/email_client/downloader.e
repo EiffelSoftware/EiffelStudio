@@ -61,7 +61,7 @@ feature -- Basic operations.
 --			ml.extend (fetch_message)
 --		end
 
-	download_one_fixed
+	download_one
 			-- Read one message and record it in `messages'.
 		do
 			record_one (fetch_message, messages)
@@ -71,7 +71,7 @@ feature -- Basic operations.
 			-- Get messages and add them to the client message list.
 		do
 			from until is_over loop
-				record_one (fetch_message, messages)
+				download_one
 				wait(D_temporization)
 			end
 		end

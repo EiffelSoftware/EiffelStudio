@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wsf_policy_driven_v0" uuid="3FC00449-5101-461D-94C6-10920C30EBF4" library_target="wsf_policy_driven_v0">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="wsf_policy_driven_v0" uuid="E175F999-1164-48AA-83E1-6C14FC5E8C82" library_target="wsf_policy_driven_v0">
 	<target name="wsf_policy_driven_v0">
 		<root all_classes="true"/>
 		<file_rule>

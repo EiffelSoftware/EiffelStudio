@@ -10,7 +10,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoder" location="../../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
+		<library name="encoder" location="../../framework/ewf/text/encoder/encoder-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
 </system>

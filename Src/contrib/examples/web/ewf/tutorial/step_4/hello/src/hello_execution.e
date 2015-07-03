@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	setup_router
 		do
 --			router.map (create {WSF_URI_MAPPING}.make ("/hello", create {WSF_AGENT_URI_HANDLER}.make (agent execute_hello)))
-			map_uri_agent ("/hello", agent execute_hello)
+			map_uri_agent ("/hello", agent execute_hello, Void)
 
 --			router.map (create {WSF_URI_TEMPLATE_MAPPING}.make ("/users/{user}/message/{mesgid}", create {USER_MESSAGE_HANDLER}), router.methods_HEAD_GET_POST)
 			map_uri_template ("/users/{user}/message/{mesgid}", create {USER_MESSAGE_HANDLER}, router.methods_HEAD_GET_POST)

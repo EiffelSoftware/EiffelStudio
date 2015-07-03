@@ -37,6 +37,11 @@ feature -- Status report
 
 	is_over: BOOLEAN
 			-- Shall `Current' stop its operation?
+		do
+			separate controller as c do
+				Result := c.is_downloader_over
+			end
+		end
 
 	is_ready(ml: separate LINKED_LIST[separate STRING]): BOOLEAN
 			-- Has the size of `ml' reached `Max' messages?
@@ -51,21 +56,23 @@ feature -- Basic operations
 			--and when it does, remove all messages except the last Min ones.
 		do
 			from until is_over loop
-				trim (messages)
+				trim (messages, controller)
 			end
 		end
 
-	trim (ml: separate LINKED_LIST[separate STRING])
+	trim (ml: separate LINKED_LIST[separate STRING]; a_controller: separate CONTROLLER)
 			-- Remove all messages from `ml' except the last Min ones.
 		require
-			ml.count >= Max
+			ml.count > Max
+					-- This ensures that the mover can terminate as well.
+				or a_controller.is_downloader_over
 		do
 				-- There's no feature to remove a sequence from a list,
 				-- so we have to do it manually.
 			from
 				ml.start
 			until
-				ml.count = Min
+				ml.count <= Min
 			loop
 				ml.remove
 			end

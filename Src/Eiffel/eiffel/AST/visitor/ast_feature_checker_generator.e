@@ -5897,6 +5897,9 @@ feature {NONE} -- Visitor
 		end
 
 	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
+			-- <Precursor>
+		local
+			l_call_b: INSTR_CALL_B
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
@@ -5910,6 +5913,13 @@ feature {NONE} -- Visitor
 					-- The source might have been updated to change conversion into account.
 					-- Save these changes for future use.
 				l_as.set_source (s)
+			end
+				-- We need to wrap the NESTED_B instance that was created if type check was
+				-- successful otherwise we would not generate the proper debugger hook.
+			if is_byte_node_enabled and then attached {NESTED_B} last_byte_node as l_call then
+				create l_call_b.make (l_call, l_as.source.start_location.line)
+				l_call_b.set_line_pragma (l_as.line_pragma)
+				last_byte_node := l_call_b
 			end
 			assigner_source := Void
 		end

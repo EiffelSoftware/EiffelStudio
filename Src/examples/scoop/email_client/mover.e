@@ -39,7 +39,7 @@ feature -- Status report
 			-- Shall `Current' stop its operation?
 		do
 			separate controller as c do
-				Result := c.is_downloader_over
+				Result := c.is_over
 			end
 		end
 
@@ -65,7 +65,7 @@ feature -- Basic operations
 		require
 			ml.count > Max
 					-- This ensures that the mover can terminate as well.
-				or a_controller.is_downloader_over
+				or a_controller.is_over
 		do
 				-- There's no feature to remove a sequence from a list,
 				-- so we have to do it manually.

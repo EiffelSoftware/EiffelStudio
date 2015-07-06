@@ -39,7 +39,7 @@ feature -- Status report
 			 -- Shall `Current' stop displaying messages?
 		do
 			separate controller as c do
-				Result := c.is_viewer_over
+				Result := c.is_over
 			end
 		end
 

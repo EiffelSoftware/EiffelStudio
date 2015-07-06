@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 
 feature {NONE} -- GC data
 
-	data: separate LINKED_LIST [detachable ANY]
+	data: separate LINKED_LIST [detachable separate ANY]
 			-- Data to make sure GC cycle takes some time.
 		once ("PROCESS")
 			create Result.make

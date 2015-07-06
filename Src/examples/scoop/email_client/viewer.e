@@ -7,6 +7,9 @@ note
 class
 	VIEWER
 
+inherit
+	TUTORIAL_HELPER
+
 create
 	make
 
@@ -27,8 +30,8 @@ feature -- Access
 	controller: separate CONTROLLER
 			-- A separate controller which indicates when to stop execution.
 
-	V_temporization: INTEGER_64 = 1
-			-- The wait time in seconds between displaying two messages.
+	V_temporization: INTEGER_32 = 1000
+			-- The wait time in milliseconds between displaying two messages.
 
 feature -- Status report
 
@@ -38,7 +41,7 @@ feature -- Status report
 			separate controller as c do
 				Result := c.is_viewer_over
 			end
-		end	
+		end
 
 feature -- Basic operations
 
@@ -47,7 +50,9 @@ feature -- Basic operations
 		do
 			from until is_over loop
 				view_one
-				wait (V_temporization)
+				random_wait
+					-- Use this instead to get deterministic waiting.
+--				wait (V_temporization)
 			end
 		end
 
@@ -87,35 +92,6 @@ feature {NONE} -- Implementation
 					create Result.make_from_separate (s_message)
 				end
 			end
-		end
-
-	wait (sec: INTEGER_64)
-			-- Sleep for `sec' seconds.
-		local
-			environment: EXECUTION_ENVIRONMENT
-		do
-			create environment
-			environment.sleep (sec * 1_000_000_000)
-		end
-
-	random (a, b: INTEGER): INTEGER
-			-- Generate a pseudo-random number in the interval [a,b].
-		require
-			valid_interval: a <= b
-		do
-			if a = b then
-				Result := a
-			else
-				Result := random_generator.item
-				random_generator.forth
-				Result := (Result \\ (b-a)) + a
-			end
-		end
-
-	random_generator: RANDOM
-			-- A pseudo-random number generator.
-		attribute
-			create Result.make
 		end
 
 end

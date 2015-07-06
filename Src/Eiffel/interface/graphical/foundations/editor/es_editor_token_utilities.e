@@ -10,21 +10,6 @@ note
 class
 	ES_EDITOR_TOKEN_UTILITIES
 
-feature {NONE} -- Access: Keywords
-
-	feature_body_keywords: HASH_TABLE [BOOLEAN, STRING_32]
-			-- Keywords that mark the beginning of an Eiffel feature body.
-		once
-			create Result.make (5)
-			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.attribute_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.deferred_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.do_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.external_keyword))
-			Result.put (True, create {STRING_32}.make_from_string ({EIFFEL_KEYWORD_CONSTANTS}.once_keyword))
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Query
 
 	token_text (a_token: EDITOR_TOKEN): STRING_32
@@ -243,8 +228,8 @@ feature -- Query
 		end
 
 	next_text_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN): like next_token
-			-- Searches for the previous token given a start token and line. A predicate can be used to
-			-- locate special tokens or else the previous text token will be located.
+			-- Searches for the next token given a start token and line. A predicate can be used to
+			-- locate special tokens or else the next text token will be located.
 			--
 			-- `a_token'  : The token on the supplied line to find the previous token to.
 			-- `a_line'   : The line where the supplied token is resident.

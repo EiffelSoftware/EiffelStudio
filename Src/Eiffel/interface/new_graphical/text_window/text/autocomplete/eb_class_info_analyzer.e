@@ -56,8 +56,6 @@ inherit
 		end
 
 	ES_EDITOR_ANALYZER_UTILITIES
-		rename
-			feature_body_keywords as editor_feature_body_keywords
 		export
 			{NONE} all
 		end

@@ -1,0 +1,10 @@
+test_name	scoop-generic-argument-check
+test_description Test if the argument passing rule in SCOOP is correctly applied to generic classes.
+
+copy_sub	Ace	$TEST Ace
+copy_raw	test.e	$CLUSTER test.e
+
+compile_melted
+compile_result  validity_error TEST VUAR(3) VUAR(3)
+
+test_end

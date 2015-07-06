@@ -2176,17 +2176,20 @@ feature {NONE} -- Type checks
 			target_base_class_id: INTEGER
 			warning_count: INTEGER
 		do
-			if attached callee then
-					-- Regular feature calll.
-				formal_type := callee.arguments [argument_number]
-			else
-					-- Tuple access.
-				formal_type := actual_types [argument_number]
-			end
 			actual_target_type := target_type.actual_type
 			target_base_class := target_base_type.base_class
 			target_base_class_id := target_base_class.class_id
 			current_class := context.current_class
+			if attached callee then
+					-- Regular feature calll.
+				formal_type := callee.arguments [argument_number]
+					-- Adapt formal type of a feature argument.
+				formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+			else
+					-- Tuple access.
+				formal_type := actual_types [argument_number]
+			end
+
 			if formal_type.is_like_argument then
 				like_argument_type := formal_type.instantiation_in
 					(actual_target_type.as_implicitly_detachable, target_base_class_id).actual_argument_type
@@ -2208,11 +2211,6 @@ feature {NONE} -- Type checks
 				create {VUAR3} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			elseif system.is_scoop and then expression_type.is_expanded and then not expression_type.is_processor_attachable_to (target_type) then
 				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
-			end
-
-			if attached callee then
-					-- Adapt formal type of a feature argument.
-				formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
 			end
 
 			warning_count := error_handler.warning_list.count

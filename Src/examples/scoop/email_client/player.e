@@ -78,9 +78,12 @@ feature -- Tutorial: Main execution feature.
 		do
 			live_all (downloader, viewer, mover)
 
-				-- Uncomment these lines to stop the email client after 20 seconds.
---			wait (20_000)
---			separate controller as c do c.stop_viewer; c.stop_downloader end
+				-- This makes sure that the application terminates after 20 seconds.
+				-- Note: The wait should happen outside the separate block.
+			wait (20_000)
+			separate controller as c do
+				c.stop
+			end
 		end
 
 	live_all (d: separate DOWNLOADER; v: separate VIEWER; m: separate MOVER)
@@ -90,7 +93,6 @@ feature -- Tutorial: Main execution feature.
 			v.live
 			m.live
 		end
-
 
 feature -- Tutorial: Order preservation and synchronization.
 

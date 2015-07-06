@@ -50,7 +50,7 @@ feature -- Status report
 			-- Shall `Current' stop its operation?
 		do
 			separate controller as c do
-				Result := c.is_downloader_over
+				Result := c.is_over
 			end
 		end
 

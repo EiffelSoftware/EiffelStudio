@@ -9,24 +9,15 @@ class
 
 feature -- Status report
 
-	is_downloader_over: BOOLEAN
-			-- Should the downloader stop its execution?
-
-	is_viewer_over: BOOLEAN
-			-- Should the viewer stop its execution?
+	is_over: BOOLEAN
+			-- Should the email client stop its execution?
 
 feature -- Basic operations
 
-	stop_downloader
-			-- Record request to stop the downloader.
+	stop
+			-- Record request to stop execution.
 		do
-			is_downloader_over := True
-		end
-
-	stop_viewer
-			-- Record request to stop the viewer.	
-		do
-			is_viewer_over := True
+			is_over := True
 		end
 
 end

@@ -7,6 +7,9 @@ note
 class
 	DOWNLOADER
 
+inherit
+	TUTORIAL_HELPER
+
 create
 	make
 
@@ -30,8 +33,8 @@ feature -- Access
 	count: INTEGER
 			-- Number of downloaded messages.
 
-	D_temporization: INTEGER = 1
-			-- The wait time in seconds between downloading two messages.
+	D_temporization: INTEGER_64 = 1000
+			-- The wait time in milliseconds between downloading two messages.
 
 	computed_count: INTEGER
 			-- Number of messages in client's message list.
@@ -72,7 +75,10 @@ feature -- Basic operations.
 		do
 			from until is_over loop
 				download_one
-				wait(D_temporization)
+				random_wait
+					-- Use this instead to get deterministic waiting.
+				--wait (D_temporization)
+
 			end
 		end
 
@@ -91,15 +97,6 @@ feature -- Stopping a Processor: the wrong approach.
 --		end
 
 feature {NONE} -- Implementation
-
-	wait (sec: INTEGER_64)
-			-- Sleep for `sec' seconds.
-		local
-			environment: EXECUTION_ENVIRONMENT
-		do
-			create environment
-			environment.sleep (sec * 1_000_000_000)
-		end
 
 	record_one(m: separate STRING; ml: separate LINKED_LIST[separate STRING])
 			-- Store message `m' at the end of list `ml'.

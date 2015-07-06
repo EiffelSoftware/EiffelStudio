@@ -10,6 +10,8 @@ class
 inherit
 	ARGUMENTS
 
+	TUTORIAL_HELPER
+
 create
 	make
 
@@ -77,7 +79,7 @@ feature -- Tutorial: Main execution feature.
 			live_all (downloader, viewer, mover)
 
 				-- Uncomment these lines to stop the email client after 20 seconds.
---			(create {EXECUTION_ENVIRONMENT}).sleep ({INTEGER_64} 20 * 1_000_000_000)
+--			wait (20_000)
 --			separate controller as c do c.stop_viewer; c.stop_downloader end
 		end
 

@@ -38,7 +38,11 @@ feature {WSF_ROUTER_MAPPING} -- Dispatch helper
 			if not l_path.is_empty and l_path [1] = '/' then
 				l_path.remove_head (1)
 			end
-			Result := api.source_of_path_alias (l_path)
+			if attached api.source_of_path_alias (l_path) as l_aliased_path then
+				Result := l_aliased_path
+			else
+				Result := l_path
+			end
 			if Result.is_empty then
 				Result := "/"
 			elseif Result [1] /= '/' then
@@ -49,4 +53,7 @@ feature {WSF_ROUTER_MAPPING} -- Dispatch helper
 			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 		do
 			create {LINKED_LIST [STRING]} messages.make
 			create <NONE> controller
-			create mover.make (messages, controller)
+			create mover.make (Current)
 			create viewer.make (Current)
 			create downloader.make (Current)
 		end
@@ -34,7 +34,7 @@ feature -- Access
 	viewer: detachable separate VIEWER
 			-- Viewing engine.
 
-	mover: separate MOVER
+	mover: detachable separate MOVER
 			-- Archiving engine.
 
 	controller: separate CONTROLLER

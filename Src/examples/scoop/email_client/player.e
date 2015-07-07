@@ -53,12 +53,13 @@ feature {NONE} -- Initialization
 		do
 			check
 				attached c.downloader as d and
-				attached c.viewer as v
+				attached c.viewer as v and
+				attached c.mover as m
 			then
 				downloader := d
 				viewer := v
+				mover := m
 			end
-			mover := c.mover
 			controller := c.controller
 		end
 

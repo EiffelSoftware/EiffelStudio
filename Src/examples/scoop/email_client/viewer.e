@@ -60,15 +60,15 @@ feature -- Basic operations
 			random_wait
 
 				-- Select message to be displayed.
-			message := select_message (messages)
+			message := select_one (messages)
 
 				-- Display message, if any.
-			if attached message as l_message then
-				print("Viewing message: " +  l_message + "%N")
+			if attached message then
+				print("Viewing message: " +  message + "%N")
 			end
 		end
 
-	select_message (ml: separate LIST [STRING]): detachable STRING
+	select_one (ml: separate LIST [STRING]): detachable STRING
 			-- Select a message from `ml'.
 		local
 			message: separate STRING

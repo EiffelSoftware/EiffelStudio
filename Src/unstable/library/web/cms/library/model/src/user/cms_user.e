@@ -81,6 +81,16 @@ feature -- Access
 			--			trashed
 
 
+feature -- Access: helper
+
+	utf_8_name: STRING_8
+			-- UTF-8 version of `name'.
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_32_string_to_utf_8_string_8 (name)
+		end
+
 feature -- Roles
 
 	roles: detachable LIST [CMS_USER_ROLE]

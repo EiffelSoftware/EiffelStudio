@@ -305,6 +305,18 @@ feature -- Path aliases
 			storage.unset_path_alias (a_source, a_alias)
 		end
 
+	location_alias (a_source: READABLE_STRING_8): READABLE_STRING_8
+			-- Location alias associated with `a_source' or the source itself.
+		do
+			Result := a_source
+			if attached storage.path_alias (Result) as l_path then
+				Result := l_path
+				if Result.starts_with ("/") then
+					Result := Result.substring (2, Result.count)
+				end
+			end
+		end
+
 	path_alias (a_source: READABLE_STRING_8): READABLE_STRING_8
 			-- Path alias associated with `a_source' or the source itself.
 		do

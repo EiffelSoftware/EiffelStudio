@@ -102,7 +102,7 @@ feature -- Forms ...
 				if attached a_node.link as lnk then
 					l_uri := lnk.location
 				else
-					l_uri := percent_encoder.percent_decoded_string (response.api.path_alias (response.node_api.node_path (a_node)))
+					l_uri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
 				end
 				ti.set_text_value (l_uri)
 				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
@@ -121,6 +121,9 @@ feature -- Forms ...
 									fd.report_invalid_field ("path_alias", "Path alias should not be absolute url .")
 								else
 										-- TODO: implement full path alias validation
+								end
+								if attached a_response.api.location_alias (f_path_alias) as l_aliased_location then
+									fd.report_invalid_field ("path_alias", "Path is already aliazed to location %"" + l_aliased_location + "%" !")
 								end
 							end
 						end(?, response)

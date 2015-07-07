@@ -164,53 +164,57 @@ feature -- Handler
 			l_token: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Register", "optional_content_type")
-			if req.is_post_request_method then
-				if
-					attached {WSF_STRING} req.form_parameter ("name") as l_name and then
-					attached {WSF_STRING} req.form_parameter ("password") as l_password and then
-					attached {WSF_STRING} req.form_parameter ("email") as l_email
-				then
-					l_user_api := api.user_api
+			if r.has_permission ("account register") then
+				r.set_value ("Register", "optional_content_type")
+				if req.is_post_request_method then
+					if
+						attached {WSF_STRING} req.form_parameter ("name") as l_name and then
+						attached {WSF_STRING} req.form_parameter ("password") as l_password and then
+						attached {WSF_STRING} req.form_parameter ("email") as l_email
+					then
+						l_user_api := api.user_api
 
-					if attached l_user_api.user_by_name (l_name.value) then
-							-- Username already exist.
-						r.values.force ("The user name exist!", "error_name")
-						l_exist := True
-					end
-					if attached l_user_api.user_by_email (l_email.value) then
-							-- Emails already exist.
-						r.values.force ("The email exist!", "error_email")
-						l_exist := True
-					end
+						if attached l_user_api.user_by_name (l_name.value) then
+								-- Username already exist.
+							r.values.force ("User name already exists!", "error_name")
+							l_exist := True
+						end
+						if attached l_user_api.user_by_email (l_email.value) then
+								-- Emails already exist.
+							r.values.force ("An account is already associated with that email address!", "error_email")
+							l_exist := True
+						end
 
-					if not l_exist then
-							-- New user
-						create {ARRAYED_LIST [CMS_USER_ROLE]}l_roles.make (1)
-						l_roles.force (l_user_api.authenticated_user_role)
+						if not l_exist then
+								-- New user
+							create {ARRAYED_LIST [CMS_USER_ROLE]}l_roles.make (1)
+							l_roles.force (l_user_api.authenticated_user_role)
 
-						create u.make (l_name.value)
-						u.set_email (l_email.value)
-						u.set_password (l_password.value)
-						u.set_roles (l_roles)
-						l_user_api.new_user (u)
+							create u.make (l_name.value)
+							u.set_email (l_email.value)
+							u.set_password (l_password.value)
+							u.set_roles (l_roles)
+							l_user_api.new_user (u)
 
-							-- Create activation token
-						l_token := new_token
-						l_user_api.new_activation (l_token, u.id)
-						l_url := req.absolute_script_url ("/account/activate/" + l_token)
+								-- Create activation token
+							l_token := new_token
+							l_user_api.new_activation (l_token, u.id)
+							l_url := req.absolute_script_url ("/account/activate/" + l_token)
 
-							-- Send Email
-						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-						write_debug_log (generator + ".handle register: send_contact_email")
-						es.send_contact_email (l_email.value, l_url)
+								-- Send Email
+							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+							write_debug_log (generator + ".handle register: send_contact_email")
+							es.send_contact_email (l_email.value, l_url)
 
-					else
-						r.values.force (l_name.value, "name")
-						r.values.force (l_email.value, "email")
-						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+						else
+							r.values.force (l_name.value, "name")
+							r.values.force (l_email.value, "email")
+							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+						end
 					end
 				end
+			else
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
 			r.execute

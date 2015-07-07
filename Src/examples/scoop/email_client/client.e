@@ -17,9 +17,9 @@ feature {NONE} -- Initialization
 		do
 			create messages.make
 			create controller
-			create downloader.make (messages, controller)
 			create viewer.make (messages, controller)
 			create mover.make (messages, controller)
+			create downloader.make (Current, controller)
 		end
 
 feature -- Access
@@ -28,7 +28,7 @@ feature -- Access
 			-- Email messages received.
 			-- Note: The generic argument must be separate!
 
-	downloader: separate DOWNLOADER
+	downloader: detachable separate DOWNLOADER
 			-- Downloading engine.
 
 	viewer: separate VIEWER
@@ -51,5 +51,15 @@ feature -- Access
 			end
 		end
 
+feature -- Basic operations
+
+	extend (email: separate STRING)
+			-- Add `email' to the email storage.
+		local
+			l_email: STRING
+		do
+			create l_email.make_from_separate (email)
+			messages.extend (l_email)
+		end
 
 end

@@ -24,7 +24,9 @@ feature {NONE} -- Initialization
 			create <NONE> client.make
 
 			separate client as c do
-				downloader := c.downloader
+				check attached c.downloader as d then
+					downloader := d
+				end
 				viewer := c.viewer
 				mover := c.mover
 				controller := c.controller

@@ -190,9 +190,9 @@ feature -- Tutorial: Traitors
 			remote_friend: separate PLAYER
 		do
 			create remote_friend.make
-			separate remote_friend as l_friend do
+			separate remote_friend as rf do
 					-- Uncomment to get a compiler error.
---				l_friend.set_close_friend (Current)
+--				rf.set_close_friend (Current)
 			end
 		end
 

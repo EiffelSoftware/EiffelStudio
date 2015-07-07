@@ -15,17 +15,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_messages: like messages; a_controller: like controller)
+	make (a_client: separate CLIENT; a_controller: separate CONTROLLER)
 			-- Initialization for `Current'.
 		do
-			messages := a_messages
+			client := a_client
 			controller := a_controller
 		end
 
 feature -- Access
 
-	messages: separate LINKED_LIST[separate STRING]
-			-- The list of emails where new messages should be added.
+	client: separate CLIENT
+			-- The client where new messages should be stored.
 
 	controller: separate CONTROLLER
 			-- A separate controller which indicates when to stop execution.
@@ -33,14 +33,11 @@ feature -- Access
 	count: INTEGER
 			-- Number of downloaded messages.
 
-	D_temporization: INTEGER_64 = 1000
-			-- The wait time in milliseconds between downloading two messages.
-
 	computed_count: INTEGER
 			-- Number of messages in client's message list.
 		do
-			separate messages as m do
-				Result := m.count
+			separate client as m do
+				Result := m.messages.count
 			end
 		end
 
@@ -56,18 +53,28 @@ feature -- Status report
 
 feature -- Basic operations.
 
---	download_one (ml: separate LINKED_LIST [separate STRING])
---			-- Read one message and record it in `ml'.
---			-- Note: In a real application, downloading may take some time.
---			-- You probably do not want to do this while having exclusive access over the shared `ml' object.
---		do
---			ml.extend (fetch_message)
---		end
-
 	download_one
-			-- Read one message and record it in `messages'.
+			-- Read one message and record it in `client'.
+		local
+			latest: STRING
 		do
-			record_one (fetch_message, messages)
+				-- Simulate the time it takes to download a message.
+				-- Note: To get deterministic results, use `wait (1000)' instead.
+			random_wait
+
+				-- Generate a new message.
+			count := count + 1
+			latest := "Message" + count.out
+
+				-- Add the message to the client.
+			print ("Adding message: " + latest + "%N")
+			record_one (client, latest)
+		end
+
+	record_one (a_client: separate CLIENT; a_email: STRING)
+			-- Store message `a_email' in `a_client'.
+		do
+			a_client.extend (a_email)
 		end
 
 	live
@@ -75,10 +82,6 @@ feature -- Basic operations.
 		do
 			from until is_over loop
 				download_one
-				random_wait
-					-- Use this instead to get deterministic waiting.
-				--wait (D_temporization)
-
 			end
 		end
 
@@ -95,24 +98,5 @@ feature -- Stopping a Processor: the wrong approach.
 --		do
 --			is_over := True
 --		end
-
-feature {NONE} -- Implementation
-
-	record_one(m: separate STRING; ml: separate LINKED_LIST[separate STRING])
-			-- Store message `m' at the end of list `ml'.
-		do
-			ml.extend (m)
-		end
-
-	fetch_message: separate STRING
-			-- Download a new message.
-		local
-			l_downloaded: STRING
-		do
-			count := count + 1
-			l_downloaded := "Message" + count.out
-			print ("Adding message: " + l_downloaded + "%N")
-			create <NONE> Result.make_from_separate (l_downloaded)
-		end
 
 end

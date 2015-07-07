@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			seed := seed + (100 * generating_type.type_id)
 				-- Create the random number generator.
 			create Result.set_seed (seed)
-			Result.forth
+			Result.start
 		end
 
 end

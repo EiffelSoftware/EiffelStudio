@@ -27,7 +27,7 @@ feature -- Access
 	Max: INTEGER = 1000
 			-- The maximum number of items in the message list before archiving should be triggered.
 
-	messages: separate LINKED_LIST[separate STRING]
+	messages: separate LIST [STRING]
 			-- The list of emails whose size should be watched over.
 
 	controller: separate CONTROLLER
@@ -43,7 +43,7 @@ feature -- Status report
 			end
 		end
 
-	is_ready(ml: separate LINKED_LIST[separate STRING]): BOOLEAN
+	is_ready(ml: separate LIST [STRING]): BOOLEAN
 			-- Has the size of `ml' reached `Max' messages?
 		do
 			Result := (ml.count >= Max)
@@ -60,7 +60,7 @@ feature -- Basic operations
 			end
 		end
 
-	trim (ml: separate LINKED_LIST[separate STRING]; a_controller: separate CONTROLLER)
+	trim (ml: separate LIST [STRING]; a_controller: separate CONTROLLER)
 			-- Remove all messages from `ml' except the last Min ones.
 		require
 			ml.count > Max

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	messages: separate LINKED_LIST[separate STRING]
+	messages: separate LIST[STRING]
 			-- The list of email messages to be displayed.
 
 	controller: separate CONTROLLER

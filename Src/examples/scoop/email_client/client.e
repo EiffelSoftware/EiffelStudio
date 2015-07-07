@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialization for `Current'.
 		do
-			create messages.make
+			create {LINKED_LIST [STRING]} messages.make
 			create controller
 			create viewer.make (messages, controller)
 			create mover.make (messages, controller)
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	messages: LINKED_LIST [separate STRING]
+	messages: LIST [STRING]
 			-- Email messages received.
 			-- Note: The generic argument must be separate!
 

@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			-- Initialization for `Current'.
 		do
 			create {LINKED_LIST [STRING]} messages.make
-			create controller
+			create <NONE> controller
 			create viewer.make (messages, controller)
 			create mover.make (messages, controller)
 			create downloader.make (Current, controller)

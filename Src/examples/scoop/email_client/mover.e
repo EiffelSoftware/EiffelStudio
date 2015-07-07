@@ -63,11 +63,7 @@ feature -- Basic operations
 		do
 				-- There's no feature to remove a sequence from a list,
 				-- so we have to do it manually.
-			from
-				ml.start
-			until
-				ml.count <= Min
-			loop
+			from ml.start until ml.count <= Min loop
 				ml.remove
 			end
 			print("Size after trimming: " + ml.count.out + "%N")

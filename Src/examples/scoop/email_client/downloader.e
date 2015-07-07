@@ -15,11 +15,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_client: separate CLIENT; a_controller: separate CONTROLLER)
-			-- Initialization for `Current'.
+	make (c: separate CLIENT)
+			-- Initialize downloader so that it will download messages for `c'.
 		do
-			client := a_client
-			controller := a_controller
+			client := c
+			controller := c.controller
 		end
 
 feature -- Access
@@ -75,10 +75,10 @@ feature -- Basic operations.
 			record_one (client, latest)
 		end
 
-	record_one (a_client: separate CLIENT; a_email: STRING)
-			-- Store message `a_email' in `a_client'.
+	record_one (c: separate CLIENT; m: STRING)
+			-- Store message `m' in client `c'.
 		do
-			a_client.extend (a_email)
+			c.extend (m)
 		end
 
 	live

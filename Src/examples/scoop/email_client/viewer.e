@@ -15,11 +15,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_messages: separate LIST [STRING]; a_controller: separate CONTROLLER)
-			-- Initialize the {VIEWER} object with `messages'.
+	make (c: separate CLIENT)
+			-- Initialize viewer so that it will support viewing messages of `c'.
 		do
-			messages := a_messages
-			controller := a_controller
+			messages := c.messages
+			controller := c.controller
 		end
 
 feature -- Access

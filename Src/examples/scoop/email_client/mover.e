@@ -43,12 +43,6 @@ feature -- Status report
 			end
 		end
 
-	is_ready(ml: separate LIST [STRING]): BOOLEAN
-			-- Has the size of `ml' reached `Max' messages?
-		do
-			Result := (ml.count >= Max)
-		end
-
 feature -- Basic operations
 
 	live
@@ -78,6 +72,28 @@ feature -- Basic operations
 			end
 			print("Size after trimming: " + ml.count.out + "%N")
 		end
+
+feature -- Waiting for a condition: the wrong approach.
+
+--	move
+--			-- When client's mailbox reaches size Max, trim to Min.
+--		do
+--				-- Warning: for discussion only, don't program like this.
+--			from until is_ready (messages) loop wait_a_little end
+--			trim (messages, controller)
+--		end
+
+--	is_ready(ml: separate LIST [STRING]): BOOLEAN
+--			-- Has the size of `ml' reached `Max' messages?
+--		do
+--			Result := (ml.count >= Max)
+--		end
+
+--	wait_a_little
+--			-- Wait for a small amount of time.
+--		do
+--			(create {EXECUTION_ENVIRONMENT}).sleep (100_000_000)
+--		end
 
 invariant
 	correct_constants: Min < Max

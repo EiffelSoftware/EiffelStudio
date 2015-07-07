@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_messages: like messages; a_controller: like controller)
+	make (a_messages: separate LIST [STRING]; a_controller: separate CONTROLLER)
 			-- Initialize the {VIEWER} object with `messages'.
 		do
 			messages := a_messages
@@ -29,9 +29,6 @@ feature -- Access
 
 	controller: separate CONTROLLER
 			-- A separate controller which indicates when to stop execution.
-
-	V_temporization: INTEGER_32 = 1000
-			-- The wait time in milliseconds between displaying two messages.
 
 feature -- Status report
 
@@ -50,47 +47,35 @@ feature -- Basic operations
 		do
 			from until is_over loop
 				view_one
-				random_wait
-					-- Use this instead to get deterministic waiting.
---				wait (V_temporization)
 			end
 		end
 
 	view_one
 			-- Simulate viewing: if there are messages, display one, chosen randomly.
+		local
+			message: detachable STRING
 		do
-			if attached select_message as l_message then
+				-- Simulate viewing time.
+				-- Note: Use `wait (1000)' instead to get more deterministic results.
+			random_wait
+
+				-- Select message to be displayed.
+			message := select_message (messages)
+
+				-- Display message, if any.
+			if attached message as l_message then
 				print("Viewing message: " +  l_message + "%N")
 			end
 		end
 
---	view_one (ml: separate LINKED_LIST[separate STRING])
---			-- Simulate viewing: if there are messages, display one, chosen randomly.
---			-- TODO: This feature should be splitted as well, just like download_one.
---		local
---			s_message: separate STRING
---			l_message: STRING
---		do
---			if not ml.is_empty then
---				s_message := ml [random (1, ml.count)]
---				create l_message.make_from_separate (s_message)
---				print("Viewing message: " +  l_message + "%N")
---			end
---		end
-
-
-feature {NONE} -- Implementation
-
-	select_message: detachable STRING
-			-- Get a new message to be displayed from the client.
+	select_message (ml: separate LIST [STRING]): detachable STRING
+			-- Select a message from `ml'.
 		local
-			s_message: separate STRING
+			message: separate STRING
 		do
-			separate messages as ml do
-				if not ml.is_empty then
-					s_message := ml [random (1, ml.count)]
-					create Result.make_from_separate (s_message)
-				end
+			if not ml.is_empty then
+				message := ml.i_th (random (1, ml.count))
+				create Result.make_from_separate (message)
 			end
 		end
 

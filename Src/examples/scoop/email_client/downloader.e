@@ -58,16 +58,20 @@ feature -- Basic operations.
 		local
 			latest: STRING
 		do
-				-- Simulate the time it takes to download a message.
-				-- Note: To get deterministic results, use `wait (1000)' instead.
+				-- Simulate download time.
+				-- Note: Use `wait (1000)' instead to get more deterministic results.
 			random_wait
 
-				-- Generate a new message.
+				-- Increment message count.
 			count := count + 1
+
+				-- Make up new message.
 			latest := "Message" + count.out
 
-				-- Add the message to the client.
+				-- Display that message.
 			print ("Adding message: " + latest + "%N")
+
+				-- Add message to the client.
 			record_one (client, latest)
 		end
 

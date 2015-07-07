@@ -122,8 +122,10 @@ feature -- Forms ...
 								else
 										-- TODO: implement full path alias validation
 								end
-								if attached a_response.api.location_alias (f_path_alias) as l_aliased_location then
-									fd.report_invalid_field ("path_alias", "Path is already aliazed to location %"" + l_aliased_location + "%" !")
+								if
+									attached a_response.api.source_of_path_alias (f_path_alias) as l_aliased_location
+								then
+									fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + a_response.link (Void, l_aliased_location, Void) + "%" !")
 								end
 							end
 						end(?, response)

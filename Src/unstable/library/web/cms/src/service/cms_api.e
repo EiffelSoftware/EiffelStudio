@@ -326,18 +326,17 @@ feature -- Path aliases
 			end
 		end
 
-	source_of_path_alias (a_alias: READABLE_STRING_8): READABLE_STRING_8
+	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
 			-- Resolved path for alias `a_alias'.
 			--| the CMS supports aliases for path, and then this function simply returns
 			--| the effective target path/url for this `a_alias'.
 			--| For instance: articles/2015/may/this-is-an-article can be an alias to node/123
 			--| This function will return "node/123".
 			--| If the alias is bad (i.e does not alias real path), then this function
-			--| returns the alias itself.
+			--| returns Void.
 		do
-			Result := a_alias
-			if attached storage.source_of_path_alias (Result) as l_path then
-				Result := l_path
+			if attached storage.source_of_path_alias (a_alias) as l_source_path then
+				Result := l_source_path
 			end
 		end
 

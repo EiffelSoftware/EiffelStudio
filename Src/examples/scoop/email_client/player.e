@@ -51,10 +51,13 @@ feature {NONE} -- Initialization
 	initialize (c: separate CLIENT)
 			-- Finish initialization of `Current'.
 		do
-			check attached c.downloader as d then
+			check
+				attached c.downloader as d and
+				attached c.viewer as v
+			then
 				downloader := d
+				viewer := v
 			end
-			viewer := c.viewer
 			mover := c.mover
 			controller := c.controller
 		end

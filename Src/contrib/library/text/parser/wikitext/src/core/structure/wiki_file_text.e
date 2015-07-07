@@ -24,30 +24,38 @@ feature -- Access
 
 	path: PATH
 
+	content: detachable STRING
+		local
+			f: RAW_FILE
+			s: STRING
+		do
+			create f.make_with_path (path)
+			if f.exists and f.is_readable then
+				create Result.make (f.count)
+				f.open_read
+				from
+				until
+					f.exhausted or f.end_of_file
+				loop
+					f.read_stream_thread_aware (1_024)
+					s := f.last_string
+					s.prune_all ('%R')
+					Result.append (s)
+				end
+				f.close
+			end
+		end
+
 	structure: WIKI_STRUCTURE
 			-- Associated wiki structure.
 		local
 			l_internal_structure: detachable WIKI_STRUCTURE
 			f: RAW_FILE
-			t: STRING
 			s: STRING
 		do
 			l_internal_structure := internal_structure
 			if l_internal_structure = Void then
-				create f.make_with_path (path)
-				if f.exists and f.is_readable then
-					create t.make (f.count)
-					f.open_read
-					from
-					until
-						f.exhausted or f.end_of_file
-					loop
-						f.read_stream_thread_aware (1_024)
-						s := f.last_string
-						s.prune_all ('%R')
-						t.append (s)
-					end
-					f.close
+				if attached content as t then
 					create l_internal_structure.make (t)
 				else
 					create l_internal_structure.make ("!!ERROR!!")

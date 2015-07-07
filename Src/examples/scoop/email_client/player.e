@@ -22,15 +22,7 @@ feature {NONE} -- Initialization
 			tutorial: INTEGER
 		do
 			create <NONE> client.make
-
-			separate client as c do
-				check attached c.downloader as d then
-					downloader := d
-				end
-				viewer := c.viewer
-				mover := c.mover
-				controller := c.controller
-			end
+			initialize (client)
 
 			if argument_count = 1 then
 				tutorial := argument (1).to_integer
@@ -54,6 +46,17 @@ feature {NONE} -- Initialization
 			else
 				play1
 			end
+		end
+
+	initialize (c: separate CLIENT)
+			-- Finish initialization of `Current'.
+		do
+			check attached c.downloader as d then
+				downloader := d
+			end
+			viewer := c.viewer
+			mover := c.mover
+			controller := c.controller
 		end
 
 feature -- Access

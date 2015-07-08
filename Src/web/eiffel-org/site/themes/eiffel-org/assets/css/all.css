@@ -1,4 +1,3 @@
-/* line 1, base/base-reset.scss */
 body {
   margin: 0;
   color: #000000;
@@ -10,12 +9,10 @@ body {
   -ms-text-size-adjust: none;
 }
 
-/* line 11, base/base-reset.scss */
 * {
   max-height: 100000px;
 }
 
-/* line 12, base/base-reset.scss */
 article,
 aside,
 details,
@@ -31,23 +28,19 @@ summary {
   display: block;
 }
 
-/* line 27, base/base-reset.scss */
 img {
   border-style: none;
 }
 
-/* line 29, base/base-reset.scss */
 a {
   text-decoration: none;
   color: #5082D9;
 }
-/* line 32, base/base-reset.scss */
 a:hover {
   color: #5082D9;
   color: #3498db;
 }
 
-/* line 38, base/base-reset.scss */
 input,
 textarea,
 select {
@@ -56,7 +49,6 @@ select {
   vertical-align: middle;
 }
 
-/* line 46, base/base-reset.scss */
 form,
 fieldset {
   margin: 0;
@@ -64,14 +56,12 @@ fieldset {
   border-style: none;
 }
 
-/* line 53, base/base-reset.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
-/* line 59, base/base-reset.scss */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -81,13 +71,11 @@ input[type="submit"] {
   *overflow: visible;
 }
 
-/* line 68, base/base-reset.scss */
 input[type="submit"]:hover,
 button:hover {
   cursor: pointer;
 }
 
-/* line 73, base/base-reset.scss */
 input[type="text"],
 input[type="tel"],
 input[type="email"],
@@ -99,7 +87,6 @@ textarea {
   padding: 4px 7px;
   border: 1px solid #999999;
 }
-/* line 83, base/base-reset.scss */
 input[type="text"]:focus,
 input[type="tel"]:focus,
 input[type="email"]:focus,
@@ -110,21 +97,18 @@ textarea:focus {
   border-color: #4d4d4d;
 }
 
-/* line 89, base/base-reset.scss */
 textarea {
   overflow: auto;
   resize: vertical;
   vertical-align: top;
 }
 
-/* line 95, base/base-reset.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-/* line 101, base/base-reset.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
@@ -132,35 +116,29 @@ input[type="search"] {
   box-sizing: content-box;
 }
 
-/* line 108, base/base-reset.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-/* line 113, base/base-reset.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
   line-height: 1.2em;
   margin: 0 0 1.2em;
 }
 
-/* line 119, base/base-reset.scss */
 p {
   margin: 0 0 1.2em;
 }
 
-/* line 123, base/base-reset.scss */
 q {
   quotes: none;
 }
-/* line 125, base/base-reset.scss */
 q:before, q:after {
   content: '';
   content: none;
 }
 
-/* line 131, base/base-reset.scss */
 sub,
 sup {
   font-size: 75%;
@@ -169,30 +147,25 @@ sup {
   vertical-align: baseline;
 }
 
-/* line 139, base/base-reset.scss */
 sup {
   top: -0.5em;
 }
 
-/* line 143, base/base-reset.scss */
 sub {
   bottom: -0.25em;
 }
 
-/* line 147, base/base-reset.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 3, markup-mixins.scss */
 .container-codeboard:after, .container:after, #nav ul:after {
   content: " ";
   display: block;
   clear: both;
 }
 
-/* line 11, markup-mixins.scss */
 #content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, #content .rss-block ul, .widget ul, .social-networks {
   margin: 0;
@@ -200,7 +173,6 @@ table {
   list-style: none;
 }
 
-/* line 1, base/base-reset.scss */
 body {
   margin: 0;
   color: #000000;
@@ -212,12 +184,10 @@ body {
   -ms-text-size-adjust: none;
 }
 
-/* line 11, base/base-reset.scss */
 * {
   max-height: 100000px;
 }
 
-/* line 12, base/base-reset.scss */
 article,
 aside,
 details,
@@ -233,23 +203,19 @@ summary {
   display: block;
 }
 
-/* line 27, base/base-reset.scss */
 img {
   border-style: none;
 }
 
-/* line 29, base/base-reset.scss */
 a {
   text-decoration: none;
   color: #5082D9;
 }
-/* line 32, base/base-reset.scss */
 a:hover {
   color: #5082D9;
   color: #3498db;
 }
 
-/* line 38, base/base-reset.scss */
 input,
 textarea,
 select {
@@ -258,7 +224,6 @@ select {
   vertical-align: middle;
 }
 
-/* line 46, base/base-reset.scss */
 form,
 fieldset {
   margin: 0;
@@ -266,14 +231,12 @@ fieldset {
   border-style: none;
 }
 
-/* line 53, base/base-reset.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
-/* line 59, base/base-reset.scss */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -283,13 +246,11 @@ input[type="submit"] {
   *overflow: visible;
 }
 
-/* line 68, base/base-reset.scss */
 input[type="submit"]:hover,
 button:hover {
   cursor: pointer;
 }
 
-/* line 73, base/base-reset.scss */
 input[type="text"],
 input[type="tel"],
 input[type="email"],
@@ -301,7 +262,6 @@ textarea {
   padding: 4px 7px;
   border: 1px solid #999999;
 }
-/* line 83, base/base-reset.scss */
 input[type="text"]:focus,
 input[type="tel"]:focus,
 input[type="email"]:focus,
@@ -312,21 +272,18 @@ textarea:focus {
   border-color: #4d4d4d;
 }
 
-/* line 89, base/base-reset.scss */
 textarea {
   overflow: auto;
   resize: vertical;
   vertical-align: top;
 }
 
-/* line 95, base/base-reset.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-/* line 101, base/base-reset.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
@@ -334,35 +291,29 @@ input[type="search"] {
   box-sizing: content-box;
 }
 
-/* line 108, base/base-reset.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-/* line 113, base/base-reset.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
   line-height: 1.2em;
   margin: 0 0 1.2em;
 }
 
-/* line 119, base/base-reset.scss */
 p {
   margin: 0 0 1.2em;
 }
 
-/* line 123, base/base-reset.scss */
 q {
   quotes: none;
 }
-/* line 125, base/base-reset.scss */
 q:before, q:after {
   content: '';
   content: none;
 }
 
-/* line 131, base/base-reset.scss */
 sub,
 sup {
   font-size: 75%;
@@ -371,30 +322,25 @@ sup {
   vertical-align: baseline;
 }
 
-/* line 139, base/base-reset.scss */
 sup {
   top: -0.5em;
 }
 
-/* line 143, base/base-reset.scss */
 sub {
   bottom: -0.25em;
 }
 
-/* line 147, base/base-reset.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 3, markup-mixins.scss */
 .container-codeboard:after, .container:after, #nav ul:after {
   content: " ";
   display: block;
   clear: both;
 }
 
-/* line 11, markup-mixins.scss */
 #content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, #content .rss-block ul, .widget ul, .social-networks {
   margin: 0;
@@ -403,7 +349,6 @@ table {
 }
 
 /* WDOCS nav tree */
-/* line 9, site/docs.scss */
 #wdocs-tree.menu {
   border: solid 1px #ccc;
   border-top: none;
@@ -411,26 +356,21 @@ table {
   color: #112935;
   padding: 0;
 }
-/* line 15, site/docs.scss */
 #wdocs-tree.menu a {
   color: #112935;
 }
-/* line 18, site/docs.scss */
 #wdocs-tree.menu > ul > li {
   cursor: pointer;
   padding: 5px 0 3px 5px;
   border-top: solid 1px #ccc;
 }
-/* line 22, site/docs.scss */
 #wdocs-tree.menu > ul > li > a {
   color: #5082D9;
 }
-/* line 25, site/docs.scss */
 #wdocs-tree.menu > ul > li.expandable > * + a {
   display: inline-block;
   width: 85%;
 }
-/* line 30, site/docs.scss */
 #wdocs-tree.menu .arrow {
   font-family: "Lucida Console", "Courier New", "serif";
   color: #5082D9;
@@ -448,129 +388,104 @@ table {
   width: 0;
   left: -10px;
 }
-/* line 49, site/docs.scss */
 #wdocs-tree.menu li > a {
   padding-left: 12px;
 }
-/* line 52, site/docs.scss */
 #wdocs-tree.menu li.arrowed > a {
   padding-left: 0;
   background-color: transparent;
 }
-/* line 57, site/docs.scss */
 #wdocs-tree.menu li.arrowed:not(.expandable) > .arrow {
   left: -4px;
   border-width: 3px;
   border-color: #ddd;
   top: 0;
 }
-/* line 63, site/docs.scss */
 #wdocs-tree.menu li.arrowed:not(.expandable) > a {
   padding-left: 6px;
 }
-/* line 67, site/docs.scss */
 #wdocs-tree.menu > ul > li.arrowed:not(.expandable) > .arrow {
   border-color: #777;
 }
-/* line 70, site/docs.scss */
 #wdocs-tree.menu li.expandable > .arrow {
   left: -4px;
   border-color: transparent;
   border-left-color: #777;
   top: 0;
 }
-/* line 75, site/docs.scss */
 #wdocs-tree.menu li.expandable > .arrow:hover {
   border-color: transparent;
   border-left-color: #5082D9;
 }
-/* line 80, site/docs.scss */
 #wdocs-tree.menu li.expanded > .arrow {
   left: -6px;
   border-color: transparent;
   border-top-color: #777;
   top: 2px;
 }
-/* line 85, site/docs.scss */
 #wdocs-tree.menu li.expanded > .arrow:hover {
   border-color: transparent;
   border-top-color: #5082D9;
 }
-/* line 91, site/docs.scss */
 #wdocs-tree.menu > ul > li > ul > * {
   font-size: smaller;
   background-color: #fff;
   padding-left: 10px;
 }
-/* line 96, site/docs.scss */
 #wdocs-tree.menu ul {
   list-style-type: none;
   padding: 0;
 }
-/* line 100, site/docs.scss */
 #wdocs-tree.menu ul li {
   padding-left: 10px;
 }
-/* line 102, site/docs.scss */
 #wdocs-tree.menu ul li a:hover {
   color: #3498db;
 }
-/* line 107, site/docs.scss */
 #wdocs-tree.menu li.active {
   font-weight: bold;
   border-right: solid 2px #3498db;
   background-color: rgba(240, 240, 255, 0.6);
 }
-/* line 113, site/docs.scss */
 #wdocs-tree.menu li.active li {
   font-weight: normal;
 }
-/* line 117, site/docs.scss */
 #wdocs-tree.menu li.expandable:not(.expanded) li {
   display: none;
 }
-/* line 120, site/docs.scss */
 #wdocs-tree.menu li.expandable.expanded > a {
   font-weight: bold;
 }
 
-/* line 125, site/docs.scss */
 .wikipage {
   line-height: 1.8;
 }
-/* line 128, site/docs.scss */
 .wikipage a.wiki_link.wiki_notfound {
   color: red;
 }
-/* line 132, site/docs.scss */
 .wikipage table {
   border: solid 1px #666;
   margin-bottom: 5px;
 }
-/* line 136, site/docs.scss */
 .wikipage td {
   border: solid 1px #999;
   padding: 2px 4px 2px 4px;
 }
-/* line 140, site/docs.scss */
 .wikipage h1 {
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 25px;
   border-bottom: solid 2px #ccc;
 }
-/* line 145, site/docs.scss */
 .wikipage h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 20px;
   border-bottom: solid 1px #ccc;
 }
-/* line 150, site/docs.scss */
 .wikipage h3 {
   font: 24px/24px "museo_slab500", Arial, Helvetica, sans-serif;
   margin-top: 10px;
   border-bottom: dotted 1px #ccc;
 }
-/* line 155, site/docs.scss */
 .wikipage pre {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -584,29 +499,24 @@ table {
   margin: 2px 0 2px 0;
   overflow: auto;
 }
-/* line 170, site/docs.scss */
 .wikipage .wdocs-nav {
   border-top: solid 1px #999;
   color: #5082D9;
   background-color: rgba(220, 220, 220, 0.7);
 }
-/* line 174, site/docs.scss */
 .wikipage .wdocs-nav a.wdocs-folder:after {
   content: " ...";
 }
-/* line 179, site/docs.scss */
 .wikipage .cache-info, .wikipage .uuid {
   color: #999;
   font-size: smaller;
   text-align: right;
 }
 
-/* line 187, site/docs.scss */
 #content .bookcards {
   padding: 0;
   margin: 0;
 }
-/* line 192, site/docs.scss */
 #content .bookcards ul li {
   display: inline-block;
   display: inline;
@@ -617,7 +527,6 @@ table {
   height: 140px;
   margin: 0 10px 5px 0px;
 }
-/* line 197, site/docs.scss */
 #content .bookcards ul li a {
   border: solid 1px #ddd;
   margin: 10px;
@@ -628,23 +537,19 @@ table {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 205, site/docs.scss */
 #content .bookcards ul li a:hover {
   background: #e3e7e8;
 }
-/* line 209, site/docs.scss */
 #content .bookcards ul li img {
   float: left;
   opacity: 0.4;
 }
-/* line 213, site/docs.scss */
 #content .bookcards ul li h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
   padding: 0;
   margin-top: 5px;
   margin-bottom: 10px;
 }
-/* line 219, site/docs.scss */
 #content .bookcards ul li p {
   font-size: smaller;
   line-height: 1.2em;
@@ -656,7 +561,6 @@ table {
   overflow: auto;
 }
 
-/* line 1, base/base-reset.scss */
 body {
   margin: 0;
   color: #000000;
@@ -668,12 +572,10 @@ body {
   -ms-text-size-adjust: none;
 }
 
-/* line 11, base/base-reset.scss */
 * {
   max-height: 100000px;
 }
 
-/* line 12, base/base-reset.scss */
 article,
 aside,
 details,
@@ -689,23 +591,19 @@ summary {
   display: block;
 }
 
-/* line 27, base/base-reset.scss */
 img {
   border-style: none;
 }
 
-/* line 29, base/base-reset.scss */
 a {
   text-decoration: none;
   color: #5082D9;
 }
-/* line 32, base/base-reset.scss */
 a:hover {
   color: #5082D9;
   color: #3498db;
 }
 
-/* line 38, base/base-reset.scss */
 input,
 textarea,
 select {
@@ -714,7 +612,6 @@ select {
   vertical-align: middle;
 }
 
-/* line 46, base/base-reset.scss */
 form,
 fieldset {
   margin: 0;
@@ -722,14 +619,12 @@ fieldset {
   border-style: none;
 }
 
-/* line 53, base/base-reset.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
 
-/* line 59, base/base-reset.scss */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -739,13 +634,11 @@ input[type="submit"] {
   *overflow: visible;
 }
 
-/* line 68, base/base-reset.scss */
 input[type="submit"]:hover,
 button:hover {
   cursor: pointer;
 }
 
-/* line 73, base/base-reset.scss */
 input[type="text"],
 input[type="tel"],
 input[type="email"],
@@ -757,7 +650,6 @@ textarea {
   padding: 4px 7px;
   border: 1px solid #999999;
 }
-/* line 83, base/base-reset.scss */
 input[type="text"]:focus,
 input[type="tel"]:focus,
 input[type="email"]:focus,
@@ -768,21 +660,18 @@ textarea:focus {
   border-color: #4d4d4d;
 }
 
-/* line 89, base/base-reset.scss */
 textarea {
   overflow: auto;
   resize: vertical;
   vertical-align: top;
 }
 
-/* line 95, base/base-reset.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
 
-/* line 101, base/base-reset.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
@@ -790,35 +679,29 @@ input[type="search"] {
   box-sizing: content-box;
 }
 
-/* line 108, base/base-reset.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-/* line 113, base/base-reset.scss */
 h1, h2, h3, h4, h5, h6 {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
   line-height: 1.2em;
   margin: 0 0 1.2em;
 }
 
-/* line 119, base/base-reset.scss */
 p {
   margin: 0 0 1.2em;
 }
 
-/* line 123, base/base-reset.scss */
 q {
   quotes: none;
 }
-/* line 125, base/base-reset.scss */
 q:before, q:after {
   content: '';
   content: none;
 }
 
-/* line 131, base/base-reset.scss */
 sub,
 sup {
   font-size: 75%;
@@ -827,30 +710,25 @@ sup {
   vertical-align: baseline;
 }
 
-/* line 139, base/base-reset.scss */
 sup {
   top: -0.5em;
 }
 
-/* line 143, base/base-reset.scss */
 sub {
   bottom: -0.25em;
 }
 
-/* line 147, base/base-reset.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 3, markup-mixins.scss */
 .container-codeboard:after, .container:after, #nav ul:after {
   content: " ";
   display: block;
   clear: both;
 }
 
-/* line 11, markup-mixins.scss */
 #content .bookcards ul, #nav ul, .add-links ul, .column .libraries ul,
 .column .updates ul, #footer .copyrights, .footer-nav ul, .footer-nav ul li ul, #content .contribute-block ul, #content .about-block ul, #content .promo-block ul, #content .rss-block ul, .widget ul, .social-networks {
   margin: 0;
@@ -859,12 +737,10 @@ table {
 }
 
 /* Codeboard */
-/* line 8, site/codeboard.scss */
 #block-play_eiffel {
   position: absolute;
   top: 48px;
 }
-/* line 12, site/codeboard.scss */
 #block-play_eiffel pre.prettyprint {
   width: 490px;
   padding-left: 18px;
@@ -874,17 +750,14 @@ table {
   background-color: rgba(255, 255, 255, 0.75);
   height: 266px;
 }
-/* line 20, site/codeboard.scss */
 #block-play_eiffel .holder-play {
   width: 100%;
 }
-/* line 22, site/codeboard.scss */
 #block-play_eiffel .holder-play .btn-holder {
   width: 300px;
   padding: 0 0 16px;
   margin: 0 0 0 2px;
 }
-/* line 26, site/codeboard.scss */
 #block-play_eiffel .holder-play .btn-holder .btn-play {
   position: absolute;
   top: 40px;
@@ -905,7 +778,6 @@ table {
   letter-spacing: 1px;
   text-align: center;
 }
-/* line 39, site/codeboard.scss */
 #block-play_eiffel .holder-play .btn-holder .btn-play:hover {
   background-color: #0C1A26;
   background-image: -webkit-linear-gradient(top, #12273A, #0C1A26);
@@ -915,7 +787,6 @@ table {
   background-image: linear-gradient(top, #12273A, #0C1A26);
 }
 
-/* line 47, site/codeboard.scss */
 .container-codeboard {
   margin-left: auto;
   margin-right: auto;
@@ -924,14 +795,12 @@ table {
   height: 800px;
 }
 
-/* line 54, site/codeboard.scss */
 .ideHeader {
   width: 100%;
   height: 54px;
   border: 1px solid #a9a9a9;
 }
 
-/* line 60, site/codeboard.scss */
 .btn-codeboard {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
@@ -949,7 +818,6 @@ table {
   right: 230px;
   padding: 0 2px 0 2px;
 }
-/* line 71, site/codeboard.scss */
 .btn-codeboard:after {
   background: #2B4054 no-repeat;
   background-color: #2B4054;
@@ -959,7 +827,6 @@ table {
   right: 16px;
   top: 13px;
 }
-/* line 80, site/codeboard.scss */
 .btn-codeboard:hover {
   color: white;
   background-color: #12273A;
@@ -974,12 +841,10 @@ table {
 /***********************/
 /*    Download         */
 /***********************/
-/* line 5, site/download_product.scss */
 .toggleDownload {
   cursor: pointer;
 }
 
-/* line 9, site/download_product.scss */
 table.download_decorator {
   margin-left: 0px;
   margin-right: 20px;
@@ -987,50 +852,39 @@ table.download_decorator {
   border-style: none;
   text-align: left;
 }
-/* line 15, site/download_product.scss */
 table.download_decorator a:link {
   color: #6600CC;
 }
-/* line 18, site/download_product.scss */
 table.download_decorator a:hover {
   color: #00001E;
 }
-/* line 21, site/download_product.scss */
 table.download_decorator a:visited {
   color: #6600CC;
 }
-/* line 24, site/download_product.scss */
 table.download_decorator a:active {
   color: #6600CC;
 }
-/* line 27, site/download_product.scss */
 table.download_decorator td {
   padding-right: 10px;
 }
-/* line 30, site/download_product.scss */
 table.download_decorator tr {
   background-color: #f0f0f0;
   color: #000080;
 }
-/* line 34, site/download_product.scss */
 table.download_decorator tr:nth-child(0), table.download_decorator tr.first {
   background-color: #0E9A8F;
 }
-/* line 37, site/download_product.scss */
 table.download_decorator td, table.download_decorator th {
   white-space: nowrap;
   padding: 6px 10px;
 }
-/* line 41, site/download_product.scss */
 table.download_decorator tt {
   font-size: x-small;
 }
-/* line 44, site/download_product.scss */
 table.download_decorator tr.highlight td {
   font-weight: bold;
 }
 
-/* line 50, site/download_product.scss */
 #block-download_area .holder {
   border: none;
   height: 150px;
@@ -1039,11 +893,9 @@ table.download_decorator tr.highlight td {
   width: 490px;
   padding: 0;
 }
-/* line 56, site/download_product.scss */
 #block-download_area .holder .row {
   border-bottom: 1px solid #fff;
 }
-/* line 59, site/download_product.scss */
 #block-download_area .holder .btn-holder {
   padding: 0;
   margin-left: 0;
@@ -1056,51 +908,41 @@ table.download_decorator tr.highlight td {
 }
 
 /* Custom */
-/* line 6, site/custom.scss */
 .less.active .button-read-more {
   display: none;
 }
-/* line 9, site/custom.scss */
 .less.active .button-read-less {
   display: block;
 }
 
-/* line 13, site/custom.scss */
 .button-read-less {
   display: none;
 }
 
-/* line 16, site/custom.scss */
 .more {
   margin-top: 10px;
 }
-/* line 18, site/custom.scss */
 .more table {
   margin: 0;
   padding: 0;
 }
 
 /* Link */
-/* line 26, site/custom.scss */
 a.link-options {
   color: white;
 }
-/* line 28, site/custom.scss */
 a.link-options:hover {
   color: black;
 }
 
-/* line 33, site/custom.scss */
 a.link-platforms {
   color: #191922;
 }
-/* line 35, site/custom.scss */
 a.link-platforms:hover {
   color: black;
 }
 
 /* Welcome message */
-/* line 42, site/custom.scss */
 #block-front_header_welcome .holder {
   width: 490px;
   padding: 0;
@@ -1110,13 +952,32 @@ a.link-platforms:hover {
   background-color: rgba(255, 255, 255, 0.75);
   height: 115px;
 }
-/* line 49, site/custom.scss */
 #block-front_header_welcome .holder h3 {
   padding: 10px;
   text-align: center;
 }
 
-/* line 1, site/contact.scss */
+#primary-tabs ul.horizontal {
+  list-style-type: none;
+}
+#primary-tabs ul.horizontal li {
+  display: inline;
+  padding: 2px 5px;
+  border: solid 1px #ccf;
+}
+#primary-tabs ul.horizontal li.active {
+  border-color: #99f #99f #ddd;
+  border-style: solid solid none;
+  border-width: 2px 1px 0;
+  padding: 2px 7px 1px;
+}
+
+#message li.error {
+  background-color: #f99;
+  border: solid 1px red;
+  padding: 5px 2px 5px 2px;
+}
+
 #contact-form {
   background-color: #F2F7F9;
   width: 465px;
@@ -1129,19 +990,16 @@ a.link-platforms:hover {
   position: relative;
 }
 
-/* line 13, site/contact.scss */
 #contact-form h1 {
   font-size: 42px;
 }
 
-/* line 17, site/contact.scss */
 #contact-form h2 {
   margin-bottom: 15px;
   font-style: italic;
   font-weight: normal;
 }
 
-/* line 23, site/contact.scss */
 #contact-form input,
 #contact-form select,
 #contact-form textarea,
@@ -1150,7 +1008,6 @@ a.link-platforms:hover {
   margin-bottom: 2px;
 }
 
-/* line 31, site/contact.scss */
 #contact-form input,
 #contact-form select,
 #contact-form textarea {
@@ -1160,7 +1017,6 @@ a.link-platforms:hover {
   padding: 4px;
 }
 
-/* line 40, site/contact.scss */
 #contact-form input:focus,
 #contact-form select:focus,
 #contact-form textarea:focus {
@@ -1168,24 +1024,20 @@ a.link-platforms:hover {
   background-color: #EBF2F4;
 }
 
-/* line 47, site/contact.scss */
 #contact-form textarea {
   height: 150px;
   resize: none;
 }
 
-/* line 52, site/contact.scss */
 #contact-form label {
   display: block;
 }
 
-/* line 56, site/contact.scss */
 #contact-form .required {
   font-weight: bold;
   color: #F00;
 }
 
-/* line 61, site/contact.scss */
 #contact-form #submit-button {
   width: 100px;
   background-color: #333;
@@ -1199,18 +1051,15 @@ a.link-platforms:hover {
   -moz-border-radius: 8px;
 }
 
-/* line 74, site/contact.scss */
 #contact-form #submit-button:hover {
   background-color: #A6CFDD;
 }
 
-/* line 78, site/contact.scss */
 #contact-form #submit-button:active {
   position: relative;
   top: 1px;
 }
 
-/* line 83, site/contact.scss */
 #contact-form #loading {
   width: 32px;
   height: 32px;
@@ -1222,7 +1071,6 @@ a.link-platforms:hover {
   display: none;
 }
 
-/* line 94, site/contact.scss */
 #errors {
   border: solid 1px #E58E8E;
   padding: 10px;
@@ -1236,28 +1084,23 @@ a.link-platforms:hover {
   display: none;
 }
 
-/* line 107, site/contact.scss */
 #errors li {
   padding: 2px;
   list-style: none;
 }
 
-/* line 112, site/contact.scss */
 #errors li:before {
   content: ' - ';
 }
 
-/* line 116, site/contact.scss */
 #errors #info {
   font-weight: bold;
 }
 
-/* line 120, site/contact.scss */
 #errors #info:before {
   content: '';
 }
 
-/* line 124, site/contact.scss */
 #success {
   border: solid 1px #83D186;
   padding: 25px 10px;
@@ -1272,18 +1115,15 @@ a.link-platforms:hover {
   display: none;
 }
 
-/* line 138, site/contact.scss */
 #errors.visible, #success.visible {
   display: block;
 }
 
-/* line 142, site/contact.scss */
 #req-field-desc {
   font-style: italic;
 }
 
 /* Remove box shadow firefox, chrome and opera put around required fields. It looks rubbish. */
-/* line 147, site/contact.scss */
 input:required, textarea:required {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -1293,21 +1133,18 @@ input:required, textarea:required {
 
 /* Normalize placeholder styles */
 /* chrome, safari */
-/* line 157, site/contact.scss */
 ::-webkit-input-placeholder {
   color: #CCC;
   font-style: italic;
 }
 
 /* mozilla */
-/* line 163, site/contact.scss */
 input:-moz-placeholder, textarea:-moz-placeholder {
   color: #CCC;
   font-style: italic;
 }
 
 /* ie (faux placeholder) */
-/* line 169, site/contact.scss */
 input.placeholder-text, textarea.placeholder-text {
   color: #CCC;
   font-style: italic;
@@ -1327,14 +1164,12 @@ input.placeholder-text, textarea.placeholder-text {
   font-weight: normal;
   font-style: normal;
 }
-/* line 32, all.scss */
 #wrapper {
   width: 100%;
   overflow: hidden;
   position: relative;
 }
 
-/* line 35, all.scss */
 .w1 {
   position: relative;
   left: 50%;
@@ -1342,7 +1177,6 @@ input.placeholder-text, textarea.placeholder-text {
   width: 100%;
 }
 
-/* line 41, all.scss */
 .w2 {
   position: relative;
   left: -50%;
@@ -1350,19 +1184,16 @@ input.placeholder-text, textarea.placeholder-text {
   width: 100%;
 }
 
-/* line 47, all.scss */
 .container {
   margin-left: auto;
   margin-right: auto;
   width: 1020px;
 }
 
-/* line 52, all.scss */
 #header {
   background: #0AA694 url(../images/bg-head.jpg);
   position: relative;
 }
-/* line 55, all.scss */
 #header:after {
   background: url(../images/bg-head2.jpg);
   width: 9999px;
@@ -1373,14 +1204,12 @@ input.placeholder-text, textarea.placeholder-text {
   content: '';
 }
 
-/* line 66, all.scss */
 .header-block {
   min-height: 94px;
   position: relative;
   z-index: 2;
   background: url(../images/bg-header.jpg) no-repeat 50% 0;
 }
-/* line 71, all.scss */
 .header-block .header-holder {
   padding: 0 0 10px;
   position: relative;
@@ -1388,7 +1217,6 @@ input.placeholder-text, textarea.placeholder-text {
   width: 1200px;
 }
 
-/* line 79, all.scss */
 .logo {
   padding: 24px 0 0;
   display: inline;
@@ -1397,12 +1225,10 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 235px;
 }
-/* line 82, all.scss */
 .logo a {
   display: inline-block;
   vertical-align: top;
 }
-/* line 85, all.scss */
 .logo a img {
   color: #fff;
   font-size: 48px;
@@ -1410,7 +1236,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 0 -7px;
 }
 
-/* line 94, all.scss */
 #nav {
   display: inline;
   float: left;
@@ -1423,13 +1248,11 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 54px 0 0;
   width: 641px;
 }
-/* line 101, all.scss */
 #nav ul {
   margin: 0 -11px;
   text-align: right;
   letter-spacing: 1px;
 }
-/* line 107, all.scss */
 #nav ul li {
   display: inline-block;
   vertical-align: top;
@@ -1437,12 +1260,10 @@ input.placeholder-text, textarea.placeholder-text {
   position: relative;
   font-size: 15px;
 }
-/* line 113, all.scss */
 #nav ul li a {
   color: white;
   padding: 2px;
 }
-/* line 117, all.scss */
 #nav ul li:hover > a {
   color: black;
   -webkit-border-radius: 3px;
@@ -1452,37 +1273,30 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
   box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
 }
-/* line 126, all.scss */
 #nav ul .active a {
   color: white;
 }
-/* line 130, all.scss */
 #nav ul a {
   color: #112935;
   display: block;
 }
-/* line 133, all.scss */
 #nav ul a:hover {
   color: white;
 }
-/* line 135, all.scss */
 #nav ul .drop-slide-wrapper {
   width: 173px;
   left: 50% !important;
   top: 100%;
   margin: 0 0 0 -86px;
 }
-/* line 141, all.scss */
 #nav ul .dropdown {
   width: 100%;
   text-align: left;
   padding: 16px 0 0;
 }
-/* line 146, all.scss */
 #nav ul:hover .dropdown {
   display: block;
 }
-/* line 149, all.scss */
 #nav ul ul {
   background: #4a6d82;
   border: 1px solid #abc4d4;
@@ -1495,7 +1309,6 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
   box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
 }
-/* line 159, all.scss */
 #nav ul ul:after, #nav ul ul:before {
   bottom: 100%;
   left: 50%;
@@ -1506,32 +1319,27 @@ input.placeholder-text, textarea.placeholder-text {
   position: absolute;
   pointer-events: none;
 }
-/* line 170, all.scss */
 #nav ul ul:after {
   border-color: rgba(74, 109, 130, 0);
   border-bottom-color: #4a6d82;
   border-width: 9px 6px;
   margin-left: -6px;
 }
-/* line 176, all.scss */
 #nav ul ul:before {
   border-color: rgba(171, 196, 212, 0);
   border-bottom-color: #abc4d4;
   border-width: 10px 7px;
   margin-left: -7px;
 }
-/* line 182, all.scss */
 #nav ul ul li {
   display: block;
   margin: 0;
 }
-/* line 186, all.scss */
 #nav ul ul a {
   color: #abc4d4;
   padding: 3px 0 3px;
   position: relative;
 }
-/* line 190, all.scss */
 #nav ul ul a:after, #nav ul ul a:before {
   width: 4px;
   height: 100%;
@@ -1542,51 +1350,41 @@ input.placeholder-text, textarea.placeholder-text {
   display: none;
   content: '';
 }
-/* line 201, all.scss */
 #nav ul ul a:before {
   left: auto;
   right: -4px;
 }
-/* line 205, all.scss */
 #nav ul ul a:hover {
   color: white;
   background: #1a3d50;
 }
-/* line 209, all.scss */
 #nav ul ul a:hover:after, #nav ul ul a:hover:before {
   display: block;
 }
 
-/* line 219, all.scss */
 .home #nav {
   font-size: 22px;
   padding: 56px 0 0;
 }
-/* line 222, all.scss */
 .home #nav ul {
   margin: 0 -30px 0 -16px;
   text-align: left;
 }
-/* line 225, all.scss */
 .home #nav ul li {
   margin: 0 7px;
 }
-/* line 228, all.scss */
 .home #nav ul .dropdown {
   padding: 14px 0 0;
 }
-/* line 231, all.scss */
 .home #nav ul ul {
   margin: 0;
   text-align: center;
 }
-/* line 234, all.scss */
 .home #nav ul ul li {
   display: block;
   margin: 0;
 }
 
-/* line 243, all.scss */
 .header-right {
   display: inline;
   float: left;
@@ -1597,26 +1395,22 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 11px 0 0;
 }
 
-/* line 249, all.scss */
 .add-links {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 252, all.scss */
 .add-links ul {
   text-align: right;
   font: 12px/18px "museo_sans500", Arial, Helvetica, sans-serif;
   margin: 0 -7px 0 0;
   text-transform: uppercase;
 }
-/* line 258, all.scss */
 .add-links ul li {
   display: inline-block;
   vertical-align: top;
   position: relative;
   padding: 0 8px;
 }
-/* line 263, all.scss */
 .add-links ul li:after {
   position: absolute;
   width: 1px;
@@ -1627,20 +1421,16 @@ input.placeholder-text, textarea.placeholder-text {
   margin: -6px 0 0;
   content: '';
 }
-/* line 273, all.scss */
 .add-links ul li:first-child:after {
   display: none;
 }
-/* line 276, all.scss */
 .add-links ul li a {
   color: #99cc33;
 }
-/* line 278, all.scss */
 .add-links ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 286, all.scss */
 .search-form {
   width: 181px;
   padding: 4px 5px 4px 21px;
@@ -1653,7 +1443,6 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 4px;
   border-radius: 4px;
 }
-/* line 295, all.scss */
 .search-form input[type="search"],
 .search-form input[type="text"] {
   border: 0;
@@ -1666,7 +1455,6 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 12px;
   line-height: 18px;
 }
-/* line 307, all.scss */
 .search-form:after {
   background: url(../images/ico-search.png) no-repeat;
   width: 16px;
@@ -1677,25 +1465,21 @@ input.placeholder-text, textarea.placeholder-text {
   content: '';
 }
 
-/* line 317, all.scss */
 .search-form.parent-focus {
   -webkit-box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
   box-shadow: 0 0 5px rgba(13, 65, 67, 0.9), inset 1px 1px 1px 0 rgba(0, 0, 0, 0.4);
 }
 
-/* line 322, all.scss */
 .promo-area {
   padding: 80px 0 20px;
   min-height: 300px;
   position: relative;
 }
-/* line 326, all.scss */
 .promo-area .social-networks {
   position: absolute;
   top: 0;
   right: 0px;
 }
-/* line 331, all.scss */
 .promo-area .holder {
   width: 575px;
   overflow: hidden;
@@ -1705,14 +1489,12 @@ input.placeholder-text, textarea.placeholder-text {
   clear: both;
   margin-bottom: 15px;
 }
-/* line 339, all.scss */
 .promo-area .holder h1 {
   font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #112935;
   margin: 0 0 35px;
   letter-spacing: 2px;
 }
-/* line 345, all.scss */
 .promo-area .holder .btn-holder {
   width: 347px;
   border: 1px solid #98dcd4;
@@ -1720,7 +1502,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 0 2px;
   float: left;
 }
-/* line 351, all.scss */
 .promo-area .holder .btn-holder .row {
   overflow: hidden;
   color: #112935;
@@ -1730,12 +1511,10 @@ input.placeholder-text, textarea.placeholder-text {
   text-transform: uppercase;
   border-bottom: 1px solid #98dcd4;
 }
-/* line 359, all.scss */
 .promo-area .holder .btn-holder .row .release {
   float: left;
   padding: 0 8px;
 }
-/* line 363, all.scss */
 .promo-area .holder .btn-holder .row .date {
   width: 96px;
   float: right;
@@ -1743,7 +1522,6 @@ input.placeholder-text, textarea.placeholder-text {
   font-style: normal;
   border-left: 1px solid #98dcd4;
 }
-/* line 371, all.scss */
 .promo-area .holder .btn-holder .btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -1764,7 +1542,6 @@ input.placeholder-text, textarea.placeholder-text {
   position: relative;
   padding: 0 57px 6px 0;
 }
-/* line 384, all.scss */
 .promo-area .holder .btn-holder .btn-download:after {
   background: url(../images/ico-download.png) no-repeat;
   width: 37px;
@@ -1774,7 +1551,6 @@ input.placeholder-text, textarea.placeholder-text {
   top: 13px;
   content: '';
 }
-/* line 393, all.scss */
 .promo-area .holder .btn-holder .btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -1784,32 +1560,27 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
 
-/* line 401, all.scss */
 .promo-area .holder .btn-holder {
   padding: 0 0 0px;
 }
 
-/* line 405, all.scss */
 #breadcrumb {
   margin-bottom: 10px;
   font-size: smaller;
 }
 
-/* line 410, all.scss */
 #main {
   width: 100%;
   overflow: hidden;
   position: relative;
   padding: 28px 0;
 }
-/* line 413, all.scss */
 #main:after, #main:before {
   position: absolute;
   width: 100%;
   height: 22px;
   content: '';
 }
-/* line 420, all.scss */
 #main:after {
   top: 0;
   background-color: #f0f3f5;
@@ -1819,7 +1590,6 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #d1dae0, #f0f3f5);
   background-image: linear-gradient(top, #d1dae0, #f0f3f5);
 }
-/* line 424, all.scss */
 #main:before {
   bottom: 1px;
   background-color: #d1dae0;
@@ -1830,19 +1600,16 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #f0f3f5, #d1dae0);
 }
 
-/* line 431, all.scss */
 .home #main {
   background: #353637;
   padding: 50px 0 38px;
   border-bottom: 1px solid white;
   margin: 0 0 1px;
 }
-/* line 436, all.scss */
 .home #main:after, .home #main:before {
   display: none;
 }
 
-/* line 443, all.scss */
 .column {
   display: inline;
   float: left;
@@ -1850,7 +1617,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 445, all.scss */
 .column h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -1858,40 +1624,32 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 451, all.scss */
 .column h2 a {
   color: #99cc33;
 }
-/* line 453, all.scss */
 .column h2 a:hover {
   color: white;
 }
-/* line 456, all.scss */
 .column .news-holder,
 .column .blog-holder {
   overflow: hidden;
   width: 275px;
   color: #abc4d4;
 }
-/* line 461, all.scss */
 .column .news-holder .holder,
 .column .blog-holder .holder {
   overflow: hidden;
 }
-/* line 466, all.scss */
 .column .news-holder h2 {
   margin: 0 0 28px;
 }
-/* line 470, all.scss */
 .column .news {
   overflow: hidden;
   margin: 0 0 20px;
 }
-/* line 473, all.scss */
 .column .news p {
   margin: 0 0 12px;
 }
-/* line 477, all.scss */
 .column .date {
   display: block;
   text-transform: uppercase;
@@ -1899,81 +1657,66 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 484, all.scss */
 .column .blog-holder {
   margin: 0 0 0 27px;
 }
-/* line 486, all.scss */
 .column .blog-holder .blog-post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 489, all.scss */
 .column .blog-holder .blog-post p {
   margin: 0 0 10px;
 }
-/* line 493, all.scss */
 .column .blog-holder h3 {
   color: white;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 497, all.scss */
 .column .blog-holder h3 a {
   color: white;
 }
-/* line 499, all.scss */
 .column .blog-holder h3 a:hover {
   color: #c7ec7e;
 }
-/* line 505, all.scss */
 .column .libraries,
 .column .updates {
   width: 265px;
   overflow: hidden;
   margin: 0 0 34px 55px;
 }
-/* line 510, all.scss */
 .column .libraries h2,
 .column .updates h2 {
   border-bottom: 1px solid #292626;
   margin: 0 0 16px;
 }
-/* line 514, all.scss */
 .column .libraries ul,
 .column .updates ul {
   overflow: hidden;
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 518, all.scss */
 .column .libraries ul li,
 .column .updates ul li {
   border-bottom: 1px solid #292626;
   padding: 16px 0 5px;
 }
-/* line 521, all.scss */
 .column .libraries ul li:first-child,
 .column .updates ul li:first-child {
   padding-top: 0;
 }
-/* line 522, all.scss */
 .column .libraries ul li .date,
 .column .updates ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-/* line 526, all.scss */
 .column .libraries ul li a,
 .column .updates ul li a {
   color: #7FB514;
 }
-/* line 528, all.scss */
 .column .libraries ul li a:hover,
 .column .updates ul li a:hover {
   color: #c7ec7e;
 }
 
-/* line 537, all.scss */
 #footer {
   background: #4c6877;
   width: 100%;
@@ -1982,7 +1725,6 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   color: #6d8083;
 }
-/* line 542, all.scss */
 #footer .copyrights {
   display: inline;
   float: left;
@@ -1993,17 +1735,14 @@ input.placeholder-text, textarea.placeholder-text {
   border-top: 1px solid #1a3d50;
   padding: 8px 0 0;
 }
-/* line 545, all.scss */
 #footer .copyrights a {
   color: #abc4d4;
 }
-/* line 551, all.scss */
 #footer .copyrights li {
   float: left;
   padding: 0 7px 0;
   position: relative;
 }
-/* line 555, all.scss */
 #footer .copyrights li:after {
   background: url(../images/sep2.png) no-repeat;
   width: 2px;
@@ -2013,26 +1752,21 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: '';
 }
-/* line 563, all.scss */
 #footer .copyrights li:after a {
   display: inline-block;
 }
-/* line 567, all.scss */
 #footer .copyrights li:first-child {
   padding-left: 0;
 }
-/* line 569, all.scss */
 #footer .copyrights li:first-child:after {
   display: none;
 }
 
-/* line 577, all.scss */
 .footer-holder {
   overflow: hidden;
   padding: 44px 0 60px;
   min-height: 150px;
 }
-/* line 581, all.scss */
 .footer-holder .btn-holder {
   display: inline;
   float: left;
@@ -2043,7 +1777,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 0px;
   width: initial;
 }
-/* line 586, all.scss */
 .footer-holder .btn-holder .btn {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2063,7 +1796,6 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 7px 42px 7px 14px;
   font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 598, all.scss */
 .footer-holder .btn-holder .btn:after {
   width: 30px;
   height: 30px;
@@ -2072,7 +1804,6 @@ input.placeholder-text, textarea.placeholder-text {
   top: 8px;
   content: '';
 }
-/* line 607, all.scss */
 .footer-holder .btn-holder .btn.btn-download {
   background-color: #769830;
   background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2082,11 +1813,9 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #99cc33, #769830);
   color: white;
 }
-/* line 610, all.scss */
 .footer-holder .btn-holder .btn.btn-download:after {
   background: url(../images/ico-download2.png) no-repeat;
 }
-/* line 613, all.scss */
 .footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
   background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -2095,7 +1824,6 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
   background-image: linear-gradient(top, #89bc2b, #6a8c28);
 }
-/* line 617, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline {
   background-color: #12273A;
   background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
@@ -2105,7 +1833,6 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: linear-gradient(top, #2B4054, #12273A);
   color: white;
 }
-/* line 620, all.scss */
 .footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
@@ -2115,7 +1842,6 @@ input.placeholder-text, textarea.placeholder-text {
   background-image: -o-linear-gradient(top, #12273A, #12273A);
   background-image: linear-gradient(top, #12273A, #12273A);
 }
-/* line 627, all.scss */
 .footer-holder .social-holder {
   display: inline;
   float: left;
@@ -2125,7 +1851,6 @@ input.placeholder-text, textarea.placeholder-text {
   padding: 2px 0 0;
 }
 
-/* line 633, all.scss */
 .footer-nav {
   display: inline;
   float: left;
@@ -2136,32 +1861,26 @@ input.placeholder-text, textarea.placeholder-text {
   margin-left: 0px;
   width: 640px;
 }
-/* line 638, all.scss */
 .footer-nav ul {
   overflow: hidden;
   text-transform: uppercase;
   font: 16px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 643, all.scss */
 .footer-nav ul li {
   width: 152px;
   float: left;
   padding: 0 10px 6px 0;
 }
-/* line 647, all.scss */
 .footer-nav ul li:first-child {
   width: 135px;
 }
-/* line 650, all.scss */
 .footer-nav ul li a {
   color: white;
   display: inline-block;
 }
-/* line 653, all.scss */
 .footer-nav ul li a:hover {
   color: #abc4d4;
 }
-/* line 657, all.scss */
 .footer-nav ul li ul {
   overflow: hidden;
   text-transform: capitalize;
@@ -2169,17 +1888,14 @@ input.placeholder-text, textarea.placeholder-text {
   font-size: 13px;
   padding: 6px 0 0;
 }
-/* line 665, all.scss */
 .footer-nav ul li ul li a {
   color: #abc4d4;
   display: inline-block;
 }
-/* line 668, all.scss */
 .footer-nav ul li ul li a:hover {
   color: #fff;
 }
 
-/* line 678, all.scss */
 #content {
   display: inline;
   float: left;
@@ -2188,14 +1904,12 @@ input.placeholder-text, textarea.placeholder-text {
   width: 1000px;
   overflow: hidden;
 }
-/* line 681, all.scss */
 #content .holder {
   margin-left: 0px;
   margin-right: 0px;
   overflow-x: auto;
   overflow-y: hidden;
 }
-/* line 687, all.scss */
 #content.with-first-sidebar, #content.with-second-sidebar {
   display: inline;
   float: left;
@@ -2203,7 +1917,6 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 745px;
 }
-/* line 690, all.scss */
 #content.with-first-sidebar.with-second-sidebar {
   display: inline;
   float: left;
@@ -2211,22 +1924,18 @@ input.placeholder-text, textarea.placeholder-text {
   margin-right: 10px;
   width: 320px;
 }
-/* line 693, all.scss */
 #content .head {
   overflow: hidden;
   color: #13a69a;
   padding: 0 50px 0 0;
   margin: 0 0 5px;
 }
-/* line 698, all.scss */
 #content .head h1 {
   margin: 0 0 -1px;
 }
-/* line 701, all.scss */
 #content .head p {
   margin: 0 0 10px;
 }
-/* line 705, all.scss */
 #content .ico {
   display: inline-block;
   vertical-align: top;
@@ -2238,18 +1947,15 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 714, all.scss */
 #content .ico img {
   vertical-align: top;
 }
-/* line 718, all.scss */
 #content h1 {
   color: #1f3d4d;
   margin: 0 0 35px;
   letter-spacing: 2px;
   font: 36px/36px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 723, all.scss */
 #content h1 .ico {
   margin: 2px 10px 0 0;
   width: 21px;
@@ -2258,17 +1964,14 @@ input.placeholder-text, textarea.placeholder-text {
 }
 
 /* Content */
-/* line 734, all.scss */
 #content .contribute-block, #content .about-block, #content .promo-block {
   overflow: hidden;
   padding: 8px 25px 0;
   margin: 0 65px -46px;
 }
-/* line 738, all.scss */
 #content .contribute-block ul, #content .about-block ul, #content .promo-block ul {
   margin: 0 0 0 -73px;
 }
-/* line 741, all.scss */
 #content .contribute-block ul li, #content .about-block ul li, #content .promo-block ul li {
   background: #e9eced;
   width: 325px;
@@ -2278,17 +1981,14 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 748, all.scss */
 #content .contribute-block ul li:hover, #content .about-block ul li:hover, #content .promo-block ul li:hover {
   background: #e3e7e8;
 }
-/* line 751, all.scss */
 #content .contribute-block ul li a, #content .about-block ul li a, #content .promo-block ul li a {
   display: block;
   text-align: center;
   padding: 20px 5px;
 }
-/* line 756, all.scss */
 #content .contribute-block ul li .ico, #content .about-block ul li .ico, #content .promo-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2300,17 +2000,14 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 766, all.scss */
 #content .contribute-block ul li h2, #content .about-block ul li h2, #content .promo-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 771, all.scss */
 #content .contribute-block ul li p, #content .about-block ul li p, #content .promo-block ul li p {
   color: #0C0D0D;
 }
-/* line 774, all.scss */
 #content .contribute-block ul li div, #content .about-block ul li div, #content .promo-block ul li div {
   background: #e9eced;
   display: block;
@@ -2319,25 +2016,20 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 780, all.scss */
 #content .contribute-block ul li div:hover, #content .about-block ul li div:hover, #content .promo-block ul li div:hover {
   background: #e3e7e8;
 }
-/* line 783, all.scss */
 #content .contribute-block ul li div a, #content .about-block ul li div a, #content .promo-block ul li div a {
   display: inline-block;
 }
-/* line 792, all.scss */
 #content .rss-block {
   overflow: hidden;
   padding: 8px 0 0 40px;
   margin: 0 0 -46px;
 }
-/* line 796, all.scss */
 #content .rss-block ul {
   margin: 0 0 0 -70px;
 }
-/* line 799, all.scss */
 #content .rss-block ul li {
   width: 450px;
   float: left;
@@ -2353,7 +2045,6 @@ input.placeholder-text, textarea.placeholder-text {
   	}
   }*/
 }
-/* line 813, all.scss */
 #content .rss-block ul li .ico {
   width: 52px;
   height: 52px;
@@ -2365,42 +2056,34 @@ input.placeholder-text, textarea.placeholder-text {
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
-/* line 823, all.scss */
 #content .rss-block ul li h2 {
   color: #99cc33;
   margin: 0 0 11px;
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 828, all.scss */
 #content .rss-block ul li p {
   color: #0C0D0D;
 }
-/* line 837, all.scss */
 #content .about-block ul li, #content .promo-block ul li, #content .contribute-block ul li {
   /*height: 320px;*/
 }
-/* line 839, all.scss */
 #content .about-block ul li h2, #content .promo-block ul li h2, #content .contribute-block ul li h2 {
   -webkit-border-radius: 7px;
   border-radius: 7px;
   /* background: #2B4054; */
   padding: 0;
 }
-/* line 848, all.scss */
 #content .about-block ul, #content .contribute-block ul {
   margin: 0 0 0 0px;
 }
-/* line 853, all.scss */
 #content .promo-area {
   padding: 0 0 0 0px;
   min-height: 0px;
 }
-/* line 858, all.scss */
 #content .info-block {
   overflow: hidden;
   position: relative;
 }
-/* line 861, all.scss */
 #content .info-block:after {
   background: url(../images/sep.png) no-repeat;
   width: 22px;
@@ -2410,7 +2093,6 @@ input.placeholder-text, textarea.placeholder-text {
   left: 0;
   content: "";
 }
-/* line 870, all.scss */
 #content .info-block h2 {
   color: #99cc33;
   margin: 0 0 19px;
@@ -2418,26 +2100,21 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #bfd1da;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 877, all.scss */
 #content .info-block .post {
   overflow: hidden;
   margin: 0 0 13px;
 }
-/* line 880, all.scss */
 #content .info-block .post h3 {
   color: #0d4143;
   margin: 0 0 9px;
   font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 884, all.scss */
 #content .info-block .post h3 a {
   color: #0d4143;
 }
-/* line 886, all.scss */
 #content .info-block .post h3 a:hover {
   color: #4c6877;
 }
-/* line 891, all.scss */
 #content .info-block .post .date {
   display: block;
   text-transform: uppercase;
@@ -2445,23 +2122,19 @@ input.placeholder-text, textarea.placeholder-text {
   margin: 0 0 2px;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 898, all.scss */
 #content .info-block .post p {
   margin: 0 0 10px;
 }
-/* line 900, all.scss */
 #content .info-block .post p a {
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
   color: #1f3d4d;
   text-transform: uppercase;
 }
-/* line 904, all.scss */
 #content .info-block .post p a:hover {
   color: #4c6877;
 }
 
 /* #content */
-/* line 913, all.scss */
 #sidebar {
   border: none;
   display: inline;
@@ -2474,11 +2147,9 @@ input.placeholder-text, textarea.placeholder-text {
   top: -12px;
   margin: 0px 2px 0 2px;
 }
-/* line 920, all.scss */
 #sidebar .holder {
   padding: 0 5px 5px 5px;
 }
-/* line 923, all.scss */
 #sidebar div.title, #sidebar h2 {
   color: #99cc33;
   margin: 0 0 17px;
@@ -2486,17 +2157,14 @@ input.placeholder-text, textarea.placeholder-text {
   border-bottom: 1px solid #becbd3;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
-/* line 929, all.scss */
 #sidebar div.title a, #sidebar h2 a {
   color: #99cc33;
 }
-/* line 931, all.scss */
 #sidebar div.title a:hover, #sidebar h2 a:hover {
   color: white;
 }
 
 /* Code elements */
-/* line 939, all.scss */
 code {
   -webkit-border-radius: 4px;
   border-radius: 4px;
@@ -2510,7 +2178,6 @@ code {
   margin: 2px 0 2px 0;
 }
 
-/* line 951, all.scss */
 code.inline {
   -webkit-border-radius: 0;
   border-radius: 0;
@@ -2521,29 +2188,23 @@ code.inline {
 }
 
 /* ... */
-/* line 961, all.scss */
 .widget {
   overflow: hidden;
   margin: 0 0 34px;
 }
-/* line 964, all.scss */
 .widget h2 {
   margin: 0 0 16px;
 }
-/* line 967, all.scss */
 .widget ul {
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 970, all.scss */
 .widget ul li {
   border-bottom: 1px solid #becbd3;
   padding: 16px 0 5px;
 }
-/* line 973, all.scss */
 .widget ul li:first-child {
   padding-top: 0;
 }
-/* line 976, all.scss */
 .widget ul li .date {
   display: inline-block;
   margin: 0 5px 0 0;
@@ -2551,25 +2212,20 @@ code.inline {
   color: #1da699;
   font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
 }
-/* line 983, all.scss */
 .widget ul li a {
   color: #4c6877;
 }
-/* line 985, all.scss */
 .widget ul li a:hover {
   color: #1f3d4d;
 }
 
-/* line 994, all.scss */
 .social-networks {
   float: right;
 }
-/* line 997, all.scss */
 .social-networks li {
   float: left;
   margin: 0 0 0 10px;
 }
-/* line 1000, all.scss */
 .social-networks li a {
   display: block;
   width: 35px;
@@ -2578,74 +2234,73 @@ code.inline {
   overflow: hidden;
   text-indent: -9999px;
 }
-/* line 1006, all.scss */
 .social-networks li a:hover {
   background: url(../images/ico-social-h.png) no-repeat;
 }
-/* line 1008, all.scss */
 .social-networks li .facebook {
   width: 34px;
 }
-/* line 1011, all.scss */
 .social-networks li .linkedin {
   background-position: -44px 0;
 }
-/* line 1013, all.scss */
 .social-networks li .linkedin:hover {
   background-position: -44px 0;
 }
-/* line 1015, all.scss */
 .social-networks li .youtube {
   background-position: -89px 0;
 }
-/* line 1017, all.scss */
 .social-networks li .youtube:hover {
   background-position: -89px 0;
 }
-/* line 1019, all.scss */
 .social-networks li .twitter {
   background-position: -134px 0;
 }
-/* line 1021, all.scss */
 .social-networks li .twitter:hover {
   background-position: -134px 0;
 }
-/* line 1023, all.scss */
 .social-networks li .googleplus {
   background-position: -179px 0;
   width: 34px;
 }
-/* line 1026, all.scss */
 .social-networks li .googleplus:hover {
   background-position: -179px 0;
 }
 
-/* line 1031, all.scss */
 .social-plugin {
   overflow: hidden;
   margin: 0 0 30px -2px;
 }
-/* line 1034, all.scss */
 .social-plugin img {
   vertical-align: top;
 }
 
-/* line 1039, all.scss */
 .popular {
   padding: 12px 0 0;
 }
-/* line 1041, all.scss */
 .popular li {
   padding-left: 37px !important;
   position: relative;
 }
-/* line 1044, all.scss */
 .popular li img {
   position: absolute;
   top: 10px;
   left: 0;
 }
-/* line 1050, all.scss */
 .popular li:first-child img {
   top: -5px;
+}
+
+#primary-tabs ul.horizontal {
+  list-style-type: none;
+}
+#primary-tabs ul.horizontal li {
+  display: inline;
+  padding: 2px 5px;
+  border: solid 1px #ccf;
+}
+#primary-tabs ul.horizontal li.active {
+  border-color: #99f #99f #ddd;
+  border-style: solid solid none;
+  border-width: 2px 1px 0;
+  padding: 2px 7px 1px;
 }

@@ -26,7 +26,6 @@ feature -- Access
 
 	messages: LIST [STRING]
 			-- Email messages received.
-			-- Note: The generic argument must be separate!
 
 	downloader: detachable separate DOWNLOADER
 			-- Downloading engine.

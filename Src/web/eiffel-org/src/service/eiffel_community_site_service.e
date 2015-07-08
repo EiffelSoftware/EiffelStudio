@@ -37,6 +37,7 @@ feature -- CMS setup
 	setup_modules (a_setup: CMS_SETUP)
 		local
 			m: CMS_MODULE
+			wdocs: WDOCS_MODULE
 		do
 			create {CMS_AUTHENTICATION_MODULE} m.make
 			m.enable
@@ -50,30 +51,41 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
-			create {CMS_NODE_MODULE} m.make (a_setup)
-			m.enable
-			a_setup.register_module (m)
+--			create {CMS_NODE_MODULE} m.make (a_setup)
+--			m.enable
+--			a_setup.register_module (m)
 
 --			create {CMS_BLOG_MODULE} m.make
 --			m.enable
 --			a_setup.register_module (m)
 
-			create {WDOCS_MODULE} m.make
+				-- Wiki docs
+--			create {WDOCS_MODULE} m.make
+			create wdocs.make
+			m := wdocs
 			m.enable
 			a_setup.register_module (m)
 
+			create {WDOCS_EDIT_MODULE} m.make (wdocs)
+			m.enable
+			a_setup.register_module (m)
+
+				-- Custom community
 			create {EIFFEL_COMMUNITY_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
+				-- Eiffel download
 			create {EIFFEL_DOWNLOAD_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
+				-- Eiffel codeboard
 			create {CODEBOARD_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 
+				-- Others...
 			debug
 				create {CMS_DEBUG_MODULE} m.make
 				m.enable

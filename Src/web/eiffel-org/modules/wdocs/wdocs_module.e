@@ -8,8 +8,12 @@ class
 
 inherit
 	CMS_MODULE
+		rename
+			module_api as wdocs_api
 		redefine
-			register_hooks
+			register_hooks,
+			initialize,
+			wdocs_api
 		end
 
 	CMS_HOOK_BLOCK
@@ -18,18 +22,7 @@ inherit
 
 	CMS_HOOK_RESPONSE_ALTER
 
-	SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
-	SHARED_HTML_ENCODER
-
-	SHARED_WSF_PERCENT_ENCODER
-
-	REFACTORING_HELPER
-
-	WDOCS_HELPER
+	WDOCS_MODULE_HELPER
 
 create
 	make
@@ -38,6 +31,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Create current module
+		local
+			l_root_dir: PATH
 		do
 			version := "1.0"
 			description := "Wiki Documentation"
@@ -45,9 +40,9 @@ feature {NONE} -- Initialization
 
 				-- FIXME: maybe have a WDOCS_MODULE_EXECUTION to get those info when needed...
 				-- Note those values are really set in `register'
-			create root_dir.make_current
-			temp_dir := root_dir.extended ("tmp")
-			documentation_dir := root_dir.extended ("data").extended ("documentation")
+			create l_root_dir.make_current
+			temp_dir := l_root_dir.extended ("tmp")
+			documentation_dir := l_root_dir.extended ("data").extended ("documentation")
 			default_version_id := "current"
 			cache_duration := 0
 		end
@@ -56,34 +51,41 @@ feature -- Access
 
 	name: STRING = "wdocs"
 
-feature -- Router
+feature {CMS_API} -- Module Initialization			
 
-	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
-			-- Router configuration.
+	initialize (api: CMS_API)
+			-- <Precursor>
 		local
---			fs: WSF_FILE_SYSTEM_HANDLER
-			cfg: detachable WDOCS_CONFIG
-			h: WSF_URI_TEMPLATE_AGENT_HANDLER
+			cfg: WDOCS_CONFIG
 		do
-				-- FIXME: this code could/should be retarded to when it is really needed
-				-- then if the module is disabled, it won't take CPU+memory for nothing.
-			cfg := configuration (a_api.module_location (Current))
-			root_dir := cfg.root_dir
+			Precursor (api)
+			cfg := configuration (api.module_location (Current))
 			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir
 			cache_duration := cfg.cache_duration
 			default_version_id := cfg.documentation_default_version
 
-				-- Router			
+			create wdocs_api.make (api, cfg)
+		end
 
+feature -- Access: API
+
+	wdocs_api: detachable WDOCS_API
+			-- <Precursor>		
+
+feature -- Router
+
+	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
+			-- Router configuration.
+		local
+			h: WSF_URI_TEMPLATE_AGENT_HANDLER
+		do
 			create h.make (agent handle_documentation (a_api, ?, ?))
 			a_router.handle ("/documentation", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
-			a_router.handle ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
-			a_router.handle ("/version/{version_id}/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
-
---			a_router.handle ("/version/{version_id}/doc/uuid/{wikipage_uuid}/book/{bookid}", h, a_router.methods_get)
+			a_router.handle ("/book/uuid/{wikipage_uuid}", h, a_router.methods_get)
+			a_router.handle ("/version/{version_id}/book/uuid/{wikipage_uuid}", h, a_router.methods_get)
 
 			create h.make (agent handle_documentation (a_api, ?, ?))
 			a_router.handle ("/book/", h, a_router.methods_get)
@@ -96,18 +98,6 @@ feature -- Router
 			a_router.handle ("/book/{bookid}/{wikipageid}", h, a_router.methods_get)
 			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}", h, a_router.methods_get)
 
-			create h.make (agent handle_wikipage_source (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
-
-			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
-
-			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
-
 			create h.make (agent handle_wiki_image (a_api, ?, ?))
 			a_router.handle ("/book/{bookid}/_images/{filename}", h, a_router.methods_get)
 			a_router.handle ("/version/{version_id}/book/{bookid}/_images/{filename}", h, a_router.methods_get)
@@ -119,11 +109,6 @@ feature -- Router
 			a_router.handle ("/version/{version_id}/book/{bookid}/file/{filename}", h, a_router.methods_get)
 			a_router.handle ("/file/{filename}", h, a_router.methods_get)
 			a_router.handle ("/version/{version_id}/file/{filename}", h, a_router.methods_get)
-
-
---			create fs.make_with_path (a_api.setup.theme_location.extended ("assets").extended ("images"))
---			fs.disable_index
---			a_router.handle ("/theme/images", fs, a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -184,8 +169,6 @@ feature -- Access: config
 		end
 
 feature -- Access: docs
-
-	root_dir: PATH
 
 	temp_dir: PATH
 
@@ -672,133 +655,6 @@ feature -- Handler
 			end
 		end
 
-	handle_wikipage_editing (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			loc: STRING
-			wf: CMS_FORM
-			tf: WSF_FORM_TEXTAREA
-			bt_preview: WSF_FORM_SUBMIT_INPUT
-			s: STRING
-			wsf_theme: CMS_TO_WSF_THEME
-		do
-			if req.is_get_request_method then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				if
-					attached wikipage_data_from_request (req) as pg_info and then
-					attached pg_info.page as pg and then
-					attached pg.path as l_path and then
-					attached wiki_text (l_path) as l_wiki_text
-				then
-					if r.has_permission ("edit wdocs page") then
-
-
-						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-						r.set_title (pg.title)
-						loc := r.location
-						if loc.ends_with ("/edit") then
-							loc.remove_tail (5)
-						end
-						r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("View", loc))
-
-						create wf.make (r.url (loc + "/preview", Void), "wdoc_edit")
-						wf.set_method_post
-
-						create tf.make ("source")
-						tf.set_cols (100)
-						tf.set_rows (25)
-						tf.set_text_value (l_wiki_text)
-						tf.set_description ("Use wikitext formatting to provide the content.")
-						tf.set_description_collapsible (True)
-						tf.set_label ("Content")
-						wf.extend (tf)
-						create bt_preview.make_with_text ("preview", "Preview")
-						wf.extend (bt_preview)
-
-							-- Render webform
-						create s.make (l_wiki_text.count * 2)
-						create wsf_theme.make (r, r.theme)
-						wf.append_to_html (wsf_theme, s)
-
-						r.set_main_content (s)
-					else
-						create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-					end
-				else
-					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				end
-			else
-				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-			r.execute
-		end
-
-	handle_wikipage_html_preview (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			l_xhtml: STRING
-			l_preview_pg: like manager.new_wiki_page
-			l_field: READABLE_STRING_GENERAL
-			utf: UTF_CONVERTER
-			wvis: WDOCS_WIKI_XHTML_GENERATOR
-		do
-			if req.is_post_request_method then
-				if attached {WSF_STRING} req.query_parameter ("source_field") as s then
-					l_field := s.value
-				else
-					l_field := "source"
-				end
-				if
-					attached {WSF_STRING} req.form_parameter (l_field) as p_source and then
-					attached wikipage_data_from_request (req) as pg_info and then
-					attached pg_info.manager as l_manager and then
-					attached pg_info.page as pg and then
-					attached pg.path as l_path --and then
---					attached wiki_text (l_path) as l_wiki_text
-				then
-					l_preview_pg := l_manager.new_wiki_page (pg.title, pg.parent_key)
-					l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (utf.utf_32_string_to_utf_8_string_8 (p_source.value)))
-
-					create l_xhtml.make_empty
-					create wvis.make (l_xhtml)
-					wvis.set_link_resolver (l_manager)
-					wvis.set_image_resolver (l_manager)
-					wvis.set_template_resolver (l_manager)
-					wvis.set_file_resolver (l_manager)
-					wvis.visit_page (l_preview_pg)
-
-					res.header.put_content_type_text_html
-					res.header.put_content_length (l_xhtml.count)
-					res.put_string (l_xhtml)
-				else
-					res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
-				end
-			else
-				res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
-			end
-		end
-
-	handle_wikipage_source (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		do
-			if req.is_get_request_method then
-				if
-					attached wikipage_data_from_request (req) as pg_info and then
-					attached pg_info.page as pg and then
-					attached pg.path as l_path and then
-					attached wiki_text (l_path) as l_wiki_text
-				then
-					res.header.put_header_key_value ("X-WDOCS-file-location", l_path.utf_8_name)
-					res.header.put_content_type_utf_8_text_plain
-					res.header.put_content_length (l_wiki_text.count)
-					res.header.put_utc_date (file_date (l_path))
-					res.put_string (l_wiki_text)
-				else
-					res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.not_found))
-				end
-			else
-				res.send (create {CMS_CUSTOM_RESPONSE_MESSAGE}.make ({HTTP_STATUS_CODE}.bad_request))
-			end
-		end
-
 	handle_wiki_file (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 			--|	map: "/book/{bookid}/file/{filename}"
 		local
@@ -932,11 +788,11 @@ feature -- Handler
 			end
 		end
 
-feature {NONE} -- Implementation: request and response.
+feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request and response.
 
 	send_wikipage (pg: attached like {WDOCS_MANAGER}.page;
 					a_manager: WDOCS_MANAGER;
-					a_bookid: detachable READABLE_STRING_32;
+					a_bookid: detachable READABLE_STRING_GENERAL;
 					api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -948,13 +804,9 @@ feature {NONE} -- Implementation: request and response.
 			end
 
 			if req.is_get_request_method then
-				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				create {WDOCS_PAGE_CMS_RESPONSE} r.make (req, res, api)
 			else
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			end
-
-			if r.has_permission ("edit wdocs page") then -- FIXME: remove hack "True"!!!!
-				r.add_to_primary_tabs (create {CMS_LOCAL_LINK}.make ("Edit", r.location + "/edit"))
 			end
 
 --			r.set_optional_content_type ("doc")
@@ -986,11 +838,11 @@ feature {NONE} -- Implementation: request and response.
 						s.append ("File: ")
 						s.append (html_encoded (l_path.absolute_path.canonical_path.name))
 						s.append ("<br/>")
-						if attached wiki_text (l_path) as l_wiki_text then
-							s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
-							s.append (l_wiki_text)
-							s.append ("%N</pre>")
-						end
+					end
+					if attached wiki_text (pg) as l_wiki_text then
+						s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
+						s.append (l_wiki_text)
+						s.append ("%N</pre>")
 					end
 --					s.append ("HTML rendering:<pre style=%"border: solid 1px #000; background-color: #afa; white-space: pre-wrap;%">%N")
 --					s.append (html_encoded (s))
@@ -998,19 +850,19 @@ feature {NONE} -- Implementation: request and response.
 				else
 					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
 
-
 					if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
 						s.append ("<hr/>")
 						if attached pg.path as l_path then
 							s.append ("File: ")
 							s.append (html_encoded (l_path.absolute_path.canonical_path.name))
 							s.append ("<br/>")
-							if attached wiki_text (l_path) as l_wiki_text then
-								s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
-								s.append (l_wiki_text)
-								s.append ("%N</pre>")
-							end
 						end
+						if attached wiki_text (pg) as l_wiki_text then
+							s.append ("Wiki text:<pre style=%"border: solid 1px #000; background-color: #ffa; white-space: pre-wrap; %">%N")
+							s.append (l_wiki_text)
+							s.append ("%N</pre>")
+						end
+
 						s.append ("HTML rendering:<pre style=%"border: solid 1px #000; background-color: #afa; white-space: pre-wrap;%">%N")
 						s.append (html_encoded (s))
 						s.append ("</pre>")
@@ -1030,60 +882,44 @@ feature {NONE} -- Implementation: request and response.
 			r.execute
 		end
 
-	wikipage_data_from_request (req: WSF_REQUEST): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page; bookid: READABLE_STRING_32; manager: WDOCS_MANAGER]
+	wikipage_data_from_request (req: WSF_REQUEST): like wikipage_data_from_ids
 		local
-			l_version_id, l_bookid, l_wiki_id, l_wiki_uuid: detachable READABLE_STRING_32
-			mnger: WDOCS_MANAGER
+			l_ids: like wikipage_ids_from_request
+		do
+			if attached wdocs_api as l_api then
+				l_ids := wikipage_ids_from_request (req)
+				Result := wikipage_data_from_ids (l_ids)
+			end
+		end
+
+	wikipage_data_from_ids (ids: like wikipage_ids_from_request): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page; bookid: READABLE_STRING_GENERAL; manager: WDOCS_MANAGER]
+		local
 			pg: detachable like {WDOCS_MANAGER}.page
 		do
-			l_wiki_id := wikipage_id (req, Void)
-			l_version_id := version_id (req, Void)
-			l_bookid := book_id (req, Void)
+			if attached wdocs_api as l_api then
+				pg := l_api.wiki_page (ids.wiki_id, ids.bookid, ids.version_id)
 
-			l_wiki_uuid := wikipage_uuid (req, Void)
-
-			mnger := manager (l_version_id)
-
-			if l_bookid /= Void then
-				pg := mnger.page (l_wiki_id, l_bookid)
-				if pg = Void and l_wiki_id /= Void then
-					if l_wiki_id.is_case_insensitive_equal_general ("index") then
-						pg := mnger.page (l_bookid, l_bookid)
-					elseif l_wiki_id.is_case_insensitive_equal_general (l_bookid) then
-						pg := mnger.page ("index", l_bookid)
+				if attached ids.bookid as l_bookid then
+					if pg = Void and attached ids.wiki_uuid as l_wiki_uuid then
+						pg := l_api.wiki_page_by_uuid (l_wiki_uuid, l_bookid, ids.version_id)
 					end
-					if pg = Void then
-						pg := mnger.page_by_title (l_wiki_id, l_bookid)
+					if pg /= Void then
+						Result := [pg, l_bookid, manager (ids.version_id)]
 					end
-					if pg = Void then
-						pg := mnger.page_by_metadata ("link_title", l_wiki_id , l_bookid, True)
-					end
-					if pg = Void then
-						pg := mnger.page_by_uuid (l_wiki_id , l_bookid)
-					end
-				end
-				if pg = Void and l_wiki_uuid /= Void then
-					pg := mnger.page_by_uuid (l_wiki_uuid, l_bookid)
-				end
-				if pg /= Void then
-					Result := [pg, l_bookid, mnger]
 				end
 			end
 		end
 
-feature {NONE} -- Implementation: wiki render	
-
-
-	text_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
-			-- STRING path parameter associated with `a_name' if it exists.
-			-- If Result is Void, return `a_default' value.
+	wikipage_ids_from_request (req: WSF_REQUEST): TUPLE [wiki_id, bookid, version_id, wiki_uuid: detachable READABLE_STRING_GENERAL]
 		do
-			if attached {WSF_STRING} req.path_parameter (a_name) as l_param then
-				Result := l_param.value
-			else
-				Result := a_default
-			end
+			Result := [	wikipage_id (req, Void),
+						book_id (req, Void),
+						version_id (req, Void),
+						wikipage_uuid (req, Void)
+						]
 		end
+
+feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render	
 
 	version_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 		do
@@ -1212,22 +1048,15 @@ feature {NONE} -- Implementation: wiki render
 			a_output.append (l_xhtml)
 		end
 
-	wiki_text (fn: PATH): detachable STRING
-		local
-			f: RAW_FILE
+	wiki_text (pg: like wdocs_api.new_wiki_page): detachable READABLE_STRING_8
+		require
+			has_wdocs_api: wdocs_api /= Void
 		do
-			create f.make_with_path (fn)
-			if f.exists and then f.is_access_readable then
-				create Result.make (f.count)
-				f.open_read
-				from
-				until
-					f.exhausted or f.end_of_file
-				loop
-					f.read_stream (1_024)
-					Result.append (f.last_string)
-				end
-				f.close
+			if attached wdocs_api as l_wdocs_api then
+				Result := l_wdocs_api.wiki_text (pg)
+			else
+				check has_wdocs_api: False end
+				Result := pg.text.content
 			end
 		end
 
@@ -1324,36 +1153,6 @@ feature {NONE} -- implementation: wiki docs
 			Result := wdocs_book_link_location (a_version_id, a_book_name)
 			Result.append ("/")
 			Result.append (percent_encoder.percent_encoded_string (a_page_name))
-		end
-
-feature {NONE} -- Implementation: date and time
-
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_string (s)
-			if not d.has_error then
-				Result := d.date_time
-			end
-		end
-
-	file_date (p: PATH): DATE_TIME
-		require
-			path_exists: (create {FILE_UTILITIES}).file_path_exists (p)
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (p)
-			Result := timestamp_to_date (f.date)
-		end
-
-	timestamp_to_date (n: INTEGER): DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_timestamp (n)
-			Result := d.date_time
 		end
 
 feature {NONE} -- Implementation		

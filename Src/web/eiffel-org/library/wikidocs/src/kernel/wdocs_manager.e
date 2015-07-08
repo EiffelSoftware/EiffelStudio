@@ -568,36 +568,6 @@ feature -- Factory
 
 feature {NONE} -- Implementation
 
-	backup_file (a_file: FILE)
-		require
-			a_file.is_closed
-		local
-			bak: RAW_FILE
-		do
-			if a_file.exists and then a_file.is_access_readable then
-				create bak.make_with_path (a_file.path.appended_with_extension ("bak"))
-				if not bak.exists or else bak.is_access_writable then
-					bak.create_read_write
-					a_file.open_read
-					a_file.copy_to (bak)
-					a_file.close
-					bak.close
-				end
-			end
-		end
-
-	save_content_to_file (a_content: READABLE_STRING_8; a_path: PATH)
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (a_path)
-			if not f.exists or else f.is_access_writable then
-				f.open_write
-				f.put_string (a_content)
-				f.close
-			end
-		end
-
 	percent_encoder: PERCENT_ENCODER
 			-- Shared Percent encoding engine.
 		once

@@ -103,6 +103,14 @@ feature -- Query
 			end
 		end
 
+	has_metadata (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has metadata associated with name `a_name'.
+		do
+			if attached metadata_table as tb then
+				Result := tb.has_key (a_name)
+			end
+		end
+
 	metadata (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32 assign set_metadata
 			-- Metadata value associated with name `a_name'.
 		do
@@ -147,6 +155,27 @@ feature -- Comparison
 		end
 
 feature -- Element change
+
+	update_from_metadata
+			-- Update Current attribute with value from `metadata'.
+		do
+			if attached metadata ("title") as l_title then
+				set_title (l_title)
+			end
+			if 
+				attached metadata ("weight") as l_weight and then
+				l_weight.is_integer
+			then
+				set_weight (l_weight.to_integer)
+			end
+		end
+
+	update_metadata
+			-- Update metadata values, from specific attributes of Current.
+		do
+			set_metadata (title, "title")
+			set_metadata (weight.out, "weight")
+		end
 
 	set_title (a_title: READABLE_STRING_GENERAL)
 			-- Set `title' to `a_title'.

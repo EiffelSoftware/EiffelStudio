@@ -28,9 +28,12 @@
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wdocs\wdocs-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_embeded_video" location="modules\embeded_video\video-safe.ecf" readonly="false" use_application_options="true"/>
+
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+
 	</target>
 	<target name="eiffel_community_site_any" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>

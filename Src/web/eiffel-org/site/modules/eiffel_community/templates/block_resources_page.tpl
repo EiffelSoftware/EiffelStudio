@@ -15,7 +15,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="{$site_url/}contribute_description">
+										<a href="{$site_url/}resources/videos">
 											<span class="ico"><img src="{$site_url/}theme/images/film50.png" width="52" height="52" alt="Image Description"></span>
 											<h2>Videos</h2>
 											<p>For all audiences, from learning the basics of Eiffel to more advanced topics.</p>

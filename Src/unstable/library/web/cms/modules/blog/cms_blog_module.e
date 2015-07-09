@@ -52,9 +52,17 @@ feature {CMS_API} -- Module Initialization
 
 				node_api := l_node_api
 					-- Depends on {CMS_NODE_MODULE}
+					
 				create ct
+					--| For now, add all available formats to content type `ct'.
+				across
+					l_node_api.available_content_formats as ic
+				loop
+					ct.extend_format (ic.item)
+				end
 				l_node_api.add_content_type (ct)
 				l_node_api.add_content_type_webform_manager (create {CMS_BLOG_NODE_TYPE_WEBFORM_MANAGER}.make (ct))
+
 					-- Add support for CMS_BLOG, which requires a storage extension to store the optional "tags" value
 					-- For now, we only have extension based on SQL statement.
 				if attached {CMS_NODE_STORAGE_SQL} l_node_api.node_storage as l_sql_node_storage then

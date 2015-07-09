@@ -11,6 +11,22 @@ deferred class
 
 inherit
 	CMS_CONTENT_TYPE
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			Precursor
+			create available_formats.make (1)
+		end
+
+feature -- Access
+
+	available_formats: ARRAYED_LIST [CONTENT_FORMAT]
+			-- Available formats for Current type.		
 
 feature -- Factory
 

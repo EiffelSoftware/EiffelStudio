@@ -38,10 +38,29 @@ feature {NONE} -- Initialization
 			-- Initialize content type system.
 		local
 			ct: CMS_PAGE_NODE_TYPE
+			f: CMS_FORMAT
 		do
+				-- Initialize built-in formats
+			create available_content_formats.make (4)
+			create f.make_from_format (create {PLAIN_TEXT_CONTENT_FORMAT})
+			add_content_format (f)
+			create f.make_from_format (create {FILTERED_HTML_CONTENT_FORMAT})
+			add_content_format (f)
+			create f.make_from_format (create {FULL_HTML_CONTENT_FORMAT})
+			add_content_format (f)
+			create f.make ("cms_editor", "CMS HTML content")
+			add_content_format (f)
+
+				-- Initialize content types.			
 			create content_types.make (1)
 			create content_type_webform_managers.make (1)
 			create ct
+				--| For now, add all available formats to content type `ct'.
+			across
+				available_content_formats as ic
+			loop
+				ct.extend_format (ic.item)
+			end
 			add_content_type (ct)
 			add_content_type_webform_manager (create {CMS_PAGE_NODE_TYPE_WEBFORM_MANAGER}.make (ct))
 		end
@@ -160,6 +179,31 @@ feature -- Content type webform
 					l_type_name.is_case_insensitive_equal (l_manager.name)
 				then
 					Result := l_manager
+				end
+			end
+		end
+
+feature -- Content formats
+
+	available_content_formats: ARRAYED_LIST [CONTENT_FORMAT]
+			-- Available content formats.
+
+	add_content_format (f: CONTENT_FORMAT)
+			-- Add content format `f' to `available_content_formats'.
+		do
+			available_content_formats.extend (f)
+		end
+
+	content_format (a_name: READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
+			-- Format named `a_name' if available.
+		do
+			across
+				available_content_formats as ic
+			until
+				Result = Void
+			loop
+				if a_name.is_case_insensitive_equal (ic.item.name) then
+					Result := ic.item
 				end
 			end
 		end

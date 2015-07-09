@@ -39,7 +39,6 @@ feature -- Access URI
 		local
 			l_xhtml: STRING
 			l_preview_pg: WIKI_PAGE
-			l_field: READABLE_STRING_GENERAL
 			utf: UTF_CONVERTER
 			wvis: WDOCS_WIKI_XHTML_GENERATOR
 		do

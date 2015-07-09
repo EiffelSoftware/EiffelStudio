@@ -50,8 +50,6 @@ feature -- Access
 			-- Associated wiki structure.
 		local
 			l_internal_structure: detachable WIKI_STRUCTURE
-			f: RAW_FILE
-			s: STRING
 		do
 			l_internal_structure := internal_structure
 			if l_internal_structure = Void then

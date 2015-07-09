@@ -105,7 +105,6 @@ feature -- Change: User OAuth
 		-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 		do
 			error_handler.reset
 			sql_begin_transaction

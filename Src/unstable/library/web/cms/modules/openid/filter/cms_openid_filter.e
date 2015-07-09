@@ -34,9 +34,6 @@ feature -- Basic operations
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter.
-		local
-			o: OPENID_CONSUMER
-			v: OPENID_CONSUMER_VALIDATION
 
 		do
 			api.logger.put_debug (generator + ".execute ", Void)

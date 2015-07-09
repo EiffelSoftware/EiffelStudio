@@ -35,13 +35,20 @@ feature {NONE} -- Initialize
 		local
 			l_module: CMS_MODULE
 		do
+				-- Initialize formats.
+			initialize_formats
+
+				-- Initialize storage.
 			if attached setup.storage (error_handler) as l_storage then
 				storage := l_storage
 			else
 				create {CMS_STORAGE_NULL} storage
 			end
+
+				-- Complete storage setup.
 			storage.set_api (Current)
 
+				-- Initialize enabled modules.
 			across
 				setup.enabled_modules as ic
 			loop
@@ -55,6 +62,23 @@ feature {NONE} -- Initialize
 				end
 				l_module.initialize (Current)
 			end
+		end
+
+	initialize_formats
+			-- Initialize content formats.
+		local
+			f: CMS_FORMAT
+		do
+				-- Initialize built-in formats
+			create formats.make (4)
+			create f.make_from_format (create {PLAIN_TEXT_CONTENT_FORMAT})
+			formats.extend (f)
+			create f.make_from_format (create {FILTERED_HTML_CONTENT_FORMAT})
+			formats.extend (f)
+			create f.make_from_format (create {FULL_HTML_CONTENT_FORMAT})
+			formats.extend (f)
+			create f.make ("cms_editor", "CMS HTML content")
+			formats.extend (f)
 		end
 
 feature -- Access
@@ -72,9 +96,6 @@ feature -- Formats
 
 	formats: CMS_FORMATS
 			-- Available content formats.
-		once
-			create Result
-		end
 
 	format (a_format_name: detachable READABLE_STRING_GENERAL): detachable CONTENT_FORMAT
 			-- Content format name `a_format_name' if any.

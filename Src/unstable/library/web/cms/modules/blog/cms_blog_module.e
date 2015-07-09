@@ -52,11 +52,11 @@ feature {CMS_API} -- Module Initialization
 
 				node_api := l_node_api
 					-- Depends on {CMS_NODE_MODULE}
-					
+
 				create ct
 					--| For now, add all available formats to content type `ct'.
 				across
-					l_node_api.available_content_formats as ic
+					api.formats as ic
 				loop
 					ct.extend_format (ic.item)
 				end

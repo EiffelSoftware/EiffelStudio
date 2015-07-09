@@ -414,15 +414,31 @@ feature -- Environment/ module
 		local
 			p, l_path: detachable PATH
 			l_name: READABLE_STRING_GENERAL
+		do
+				-- Search first in site/config/modules/$module_name/($app|$module_name).(json|ini)
+				-- if none, look as sub configuration if $app /= Void
+				-- and then in site/modules/$module_name/config/($app|$module_name).(json|ini)
+				-- and if non in sub config if $app /= Void
+			p := site_location.extended ("config").extended ("modules").extended (a_module_name)
+			Result := module_configuration_by_name_in_location (a_module_name, p, a_name)
+			if Result = Void then
+				p := module_location_by_name (a_module_name).extended ("config")
+				Result := module_configuration_by_name_in_location (a_module_name, p, a_name)
+			end
+		end
+
+	module_configuration_by_name_in_location (a_module_name: READABLE_STRING_GENERAL; a_dir: PATH; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
+			-- Configuration reader from "$a_dir/($a_module_name|$a_name).(json|ini)" location.
+		local
+			p: PATH
+			l_path: PATH
 			ut: FILE_UTILITIES
 		do
 			if a_name = Void then
-				l_name := a_module_name
+				p := a_dir.extended (a_module_name)
 			else
-				l_name := a_name
+				p := a_dir.extended (a_name)
 			end
-			p := module_location_by_name (a_module_name).extended ("config").extended (l_name)
-
 			l_path := p.appended_with_extension ("json")
 			if ut.file_path_exists (l_path) then
 				create {JSON_CONFIG} Result.make_from_file (l_path)
@@ -434,10 +450,8 @@ feature -- Environment/ module
 			end
 			if Result = Void and a_name /= Void then
 					-- Use sub config from default?
-				if attached {CONFIG_READER} module_configuration_by_name (a_module_name, Void) as cfg then
+				if attached {CONFIG_READER} module_configuration_by_name_in_location (a_module_name, a_dir, Void) as cfg then
 					Result := cfg.sub_config (a_name)
-				else
-					-- Maybe try to use the global cms.ini ?
 				end
 			end
 		end

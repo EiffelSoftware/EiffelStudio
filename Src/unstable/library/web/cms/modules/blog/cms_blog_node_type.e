@@ -8,21 +8,6 @@ class
 
 inherit
 	CMS_NODE_TYPE [CMS_BLOG]
-		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create
-		do
-			Precursor
-			create {ARRAYED_LIST [like available_formats.item]} available_formats.make (4)
-			available_formats.extend (create {PLAIN_TEXT_CONTENT_FORMAT})
-			available_formats.extend (create {FILTERED_HTML_CONTENT_FORMAT})
-			available_formats.extend (create {FULL_HTML_CONTENT_FORMAT})
-			available_formats.extend (create {CMS_EDITOR_CONTENT_FORMAT})
-		end
 
 feature -- Access
 
@@ -34,11 +19,6 @@ feature -- Access
 
 	description: STRING_32 = "Content published as a blog post."
 			-- Optional description
-
-feature -- Access
-
-	available_formats: LIST [CONTENT_FORMAT]
-			-- Available formats for Current type.
 
 feature -- Factory
 

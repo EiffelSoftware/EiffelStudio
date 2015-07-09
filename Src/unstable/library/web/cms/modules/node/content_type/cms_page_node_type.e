@@ -1,5 +1,7 @@
 note
-	description: "Summary description for {CMS_PAGE_NODE_TYPE}."
+	description: "[
+			Interface defining a CMS page type.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,21 +10,6 @@ class
 
 inherit
 	CMS_NODE_TYPE [CMS_PAGE]
-		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create
-		do
-			Precursor
-			create {ARRAYED_LIST [like available_formats.item]} available_formats.make (4)
-			available_formats.extend (create {PLAIN_TEXT_CONTENT_FORMAT})
-			available_formats.extend (create {FILTERED_HTML_CONTENT_FORMAT})
-			available_formats.extend (create {FULL_HTML_CONTENT_FORMAT})
-			available_formats.extend (create {CMS_EDITOR_CONTENT_FORMAT})
-		end
 
 feature -- Access
 
@@ -34,11 +21,6 @@ feature -- Access
 
 	description: STRING_32 = "Use basic pages for your content, such as an 'About us' page."
 			-- Optional description
-
-feature -- Access
-
-	available_formats: LIST [CONTENT_FORMAT]
-			-- Available formats for Current type.
 
 feature -- Factory
 

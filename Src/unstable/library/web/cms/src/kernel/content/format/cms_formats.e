@@ -66,6 +66,11 @@ feature -- Built-in formats
 			create Result
 		end
 
+	filtered_html: FILTERED_HTML_CONTENT_FORMAT
+		once
+			create Result
+		end
+
 feature {NONE} -- Implementation
 
 	items: ARRAYED_LIST [CMS_FORMAT]

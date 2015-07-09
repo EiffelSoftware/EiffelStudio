@@ -31,6 +31,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	CMS_REQUEST_UTIL
+
 	SHARED_LOGGER
 
 create
@@ -84,7 +86,7 @@ feature -- Router
 			a_router.handle ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), a_router.methods_head_get)
 
 			a_router.handle ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/resources/video", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources_video (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/resources/videos", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources_video (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -371,12 +373,33 @@ feature -- Request handling: Contribute
 	handle_resources_video (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			l_videos: LIST[STRING]
+			l_filter: VIDEO_CONTENT_FILTER
+			s: STRING_8
 		do
+
 			fixme ("Use CMS node and associated content for Resources link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("videos", "optional_content_type")
-			r.set_main_content ("")
+
+			create {ARRAYED_LIST[STRING_8]} l_videos.make (3)
+	 		if attached {CMS_NODE_API} api.module_api_by_name ("node") as l_node_api then
+                create l_filter
+				across l_node_api.nodes as ic loop
+					create s.make_empty
+					if
+						attached ic.item.format as l_format and then l_format.same_string ("video_html") and then
+						attached ic.item.content as l_content
+					then
+						l_filter.filter (l_content)
+						s.append (l_content)
+						l_videos.force (s)
+					end
+				end
+			end
+
 			if attached template_block (Current, "videos_page", r) as l_tpl_block then
+				l_tpl_block.set_value (l_videos, "videos")
 				r.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
@@ -454,14 +477,14 @@ feature {NONE} -- Implementation: date and time
 
 feature {NONE} -- Implementation		
 
-	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
-		do
-			if s /= Void then
-				Result := html_encoder.general_encoded_string (s)
-			else
-				create Result.make_empty
-			end
-		end
+--	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
+--		do
+--			if s /= Void then
+--				Result := html_encoder.general_encoded_string (s)
+--			else
+--				create Result.make_empty
+--			end
+--		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="embeded_video" uuid="5F2C735B-B501-4889-88B8-D813E4ACD2F8" library_target="embeded_video">
+	<target name="embeded_video">
+		<root all_classes="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms-safe.ecf" readonly="false"/>
+		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config-safe.ecf"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
+		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

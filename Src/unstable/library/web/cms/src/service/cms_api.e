@@ -200,29 +200,10 @@ feature -- Query: module
 	module (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
 			-- Enabled module typed `a_type', if any.
 			--| usage: if attached module ({FOO_MODULE}) as mod then ...
-		local
-			l_type: TYPE [detachable CMS_MODULE]
 		do
-			across
-				setup.modules as ic
-			until
-				Result /= Void
-			loop
-				Result := ic.item
-				if not Result.is_enabled then
-					Result := Void
-				else
-					l_type := Result.generating_type
-					if a_type ~ l_type then
-							-- Found
-					elseif
-						attached a_type.attempt (Result) and then attached l_type.generating_type.attempt (a_type)
-					then
-							-- Found
-					else
-						Result := Void
-					end
-				end
+			Result := setup.modules.item (a_type)
+			if Result /= Void and then not Result.is_enabled then
+				Result := Void
 			end
 		ensure
 			Result /= Void implies (Result.is_enabled) -- and a_type.is_conforming_to (Result.generating_type))

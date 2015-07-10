@@ -51,11 +51,11 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
-			create {EMBEDED_VIDEO_MODULE} m.make
+			create {CMS_NODE_MODULE} m.make (a_setup)
 			m.enable
 			a_setup.register_module (m)
 
-			create {CMS_NODE_MODULE} m.make (a_setup)
+			create {EMBEDDED_VIDEO_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)
 

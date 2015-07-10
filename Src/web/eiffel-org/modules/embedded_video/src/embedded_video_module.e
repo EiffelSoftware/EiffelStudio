@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	EMBEDED_VIDEO_MODULE
+	EMBEDDED_VIDEO_MODULE
 
 inherit
 
@@ -33,13 +33,13 @@ feature {NONE} -- Initialization
 			-- Create current module
 		do
 			version := "1.0"
-			description := "Embeded video module"
-			package := "embeded video"
+			description := "Embedded video module"
+			package := "embedded video"
 		end
 
 feature -- Access
 
-	name: STRING = "embeded_video"
+	name: STRING = "embedded_video"
 			-- <Precursor>
 
 feature {CMS_API} -- Module Initialization

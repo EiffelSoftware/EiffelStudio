@@ -800,6 +800,8 @@ feature {NONE} -- Visitors
 			ba.append (Bc_jmp_f)
 			ba.mark_forward
 
+				-- Generate hook for Then_part.
+			generate_melted_debugger_hook (ba)
 				-- Generate alternative expression byte code.
 			a_node.expression.process (Current)
 			ba.append (Bc_jmp)
@@ -1164,9 +1166,6 @@ feature {NONE} -- Visitors
 		local
 			nb_jumps: INTEGER
 		do
-				-- Generate hook for the condition test.
-			generate_melted_debugger_hook (ba)
-
 				-- Generate byte code for condition.
 			a_node.condition.process (Current)
 
@@ -1176,6 +1175,8 @@ feature {NONE} -- Visitors
 				-- Deferred writing of the jump value.
 			ba.mark_forward
 
+				-- Generate hook for Then_part.
+			generate_melted_debugger_hook (ba)
 				-- Generate expression for Then_part.
 			a_node.then_expression.process (Current)
 
@@ -1196,6 +1197,8 @@ feature {NONE} -- Visitors
 				nb_jumps := nb_jumps + l.count
 			end
 
+				-- Generate hook for Else_part.
+			generate_melted_debugger_hook (ba)
 				-- Generate expression for Else_part.
 			a_node.else_expression.process (Current)
 

@@ -304,9 +304,6 @@ feature -- Code generation: C
 		do
 			buf := buffer
 
-				-- Generate the hook for "if condition then".
-			generate_frozen_debugger_hook
-
 			condition.generate
 
 			buf.put_new_line
@@ -315,6 +312,8 @@ feature -- Code generation: C
 			condition.print_register
 			buf.put_three_character (')', ' ', '{')
 			buf.indent
+				-- Generate the hook for Then_part.
+			generate_frozen_debugger_hook
 			then_expression.generate
 			buf.put_new_line
 			print_register
@@ -342,6 +341,7 @@ feature -- Code generation: C
 					c.item.condition.print_register
 					buf.put_three_character (')', ' ', '{')
 					buf.indent
+					c.item.generate_frozen_debugger_hook
 					c.item.expression.generate
 					buf.put_new_line
 					print_register
@@ -357,6 +357,7 @@ feature -- Code generation: C
 			buf.put_string ({C_CONST}.else_conditional)
 			buf.put_two_character (' ', '{')
 			buf.indent
+			generate_frozen_debugger_hook
 			else_expression.generate
 			buf.put_new_line
 			print_register
@@ -469,7 +470,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

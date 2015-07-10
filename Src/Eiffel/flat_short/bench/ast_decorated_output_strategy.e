@@ -2975,7 +2975,6 @@ feature {NONE} -- Implementation
 				l_text_formatter_decorator := text_formatter_decorator
 				l_text_formatter_decorator.set_separator (Void)
 				l_text_formatter_decorator.set_new_line_between_tokens
-				put_breakable
 				l_text_formatter_decorator.process_keyword_text (ti_if_keyword, Void)
 				l_text_formatter_decorator.put_space
 				l_text_formatter_decorator.new_expression
@@ -3998,6 +3997,7 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
 			l_text_formatter_decorator.put_new_line
 			l_text_formatter_decorator.indent
+			put_breakable
 			l_as.expression.process (Current)
 			l_text_formatter_decorator.put_new_line
 			l_text_formatter_decorator.exdent

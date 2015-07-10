@@ -119,21 +119,21 @@ feature -- Access
 
 feature {NONE} -- Queries
 
-	sql_select_blog_count: STRING = "SELECT count(*) FROM Nodes WHERE status != -1 AND type = %"blog%";"
+	sql_select_blog_count: STRING = "SELECT count(*) FROM nodes WHERE status != -1 AND type = %"blog%";"
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_blog_count_from_user: STRING = "SELECT count(*) FROM Nodes WHERE status != -1 AND type = %"blog%" AND author = :user ;"
+	sql_select_blog_count_from_user: STRING = "SELECT count(*) FROM nodes WHERE status != -1 AND type = %"blog%" AND author = :user ;"
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_blogs_order_created_desc: STRING = "SELECT * FROM Nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC;"
+	sql_select_blogs_order_created_desc: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC;"
 			-- SQL Query to retrieve all nodes that are from the type "blog" ordered by descending creation date.
 
-	sql_blogs_limited: STRING = "SELECT * FROM Nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
+	sql_blogs_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
 			--- SQL Query to retrieve all node of type "blog" limited by limit and starting at offset
 
-	sql_blogs_from_user_limited: STRING = "SELECT * FROM Nodes WHERE status != -1 AND type = %"blog%" AND author = :user ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
+	sql_blogs_from_user_limited: STRING = "SELECT * FROM nodes WHERE status != -1 AND type = %"blog%" AND author = :user ORDER BY created DESC LIMIT :limit OFFSET :offset ;"
 			--- SQL Query to retrieve all node of type "blog" from author with id limited by limit + offset
 
 

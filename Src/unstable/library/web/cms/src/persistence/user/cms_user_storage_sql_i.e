@@ -671,24 +671,24 @@ feature {NONE} -- Implementation: User role
 
 feature {NONE} -- Sql Queries: USER
 
-	Select_users_count: STRING = "SELECT count(*) FROM Users;"
+	Select_users_count: STRING = "SELECT count(*) FROM users;"
 			-- Number of users.
 
-	Sql_last_insert_user_id: STRING = "SELECT MAX(uid) FROM Users;"
+	Sql_last_insert_user_id: STRING = "SELECT MAX(uid) FROM users;"
 
-	Select_users: STRING = "SELECT * FROM Users;"
+	Select_users: STRING = "SELECT * FROM users;"
 			-- List of users.
 
-	Select_user_by_id: STRING = "SELECT * FROM Users WHERE uid =:uid;"
+	Select_user_by_id: STRING = "SELECT * FROM users WHERE uid =:uid;"
 			-- Retrieve user by id if exists.
 
-	Select_user_by_name: STRING = "SELECT * FROM Users WHERE name =:name;"
+	Select_user_by_name: STRING = "SELECT * FROM users WHERE name =:name;"
 			-- Retrieve user by name if exists.
 
-	Select_user_by_email: STRING = "SELECT * FROM Users WHERE email =:email;"
+	Select_user_by_email: STRING = "SELECT * FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
-	Select_salt_by_username: STRING = "SELECT salt FROM Users WHERE name =:name;"
+	Select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"
 			-- Retrieve salt by username if exists.
 
 	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status) VALUES (:name, :password, :salt, :email, :created, :status);"

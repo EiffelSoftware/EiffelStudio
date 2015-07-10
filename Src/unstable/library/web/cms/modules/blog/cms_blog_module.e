@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Service to demonstrate new node for blog"
 			package := "demo"
+			add_dependency ({CMS_NODE_MODULE})
 		end
 
 feature -- Access

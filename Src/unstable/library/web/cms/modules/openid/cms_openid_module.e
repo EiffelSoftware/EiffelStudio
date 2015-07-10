@@ -51,7 +51,8 @@ feature {NONE} -- Initialization
 		do
 			version := "1.0"
 			description := "Openid module"
-			package := "openid"
+			package := "authentication"
+			add_dependency ({CMS_AUTHENTICATION_MODULE})
 
 			create root_dir.make_current
 			cache_duration := 0

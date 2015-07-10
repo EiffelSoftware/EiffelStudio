@@ -194,8 +194,13 @@ feature -- Change: user
 				sql_change (sql_insert_user, l_parameters)
 				if not error_handler.has_error then
 					a_user.set_id (last_inserted_user_id)
+					update_user_roles (a_user)
 				end
-				sql_commit_transaction
+				if not error_handler.has_error then
+					sql_commit_transaction
+				else
+					sql_rollback_transaction
+				end
 			else
 				-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -224,6 +229,8 @@ feature -- Change: user
 				l_password_hash /= Void and l_password_salt /= Void and
 				attached a_user.email as l_email
 			then
+				sql_begin_transaction
+
 				write_information_log (generator + ".update_user")
 				create l_parameters.make (6)
 				l_parameters.put (a_user.id, "uid")
@@ -231,14 +238,102 @@ feature -- Change: user
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
-				l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 				l_parameters.put (a_user.status, "status")
 
 				sql_change (sql_update_user, l_parameters)
+				if not error_handler.has_error then
+					update_user_roles (a_user)
+				end
+				if not error_handler.has_error then
+					sql_commit_transaction
+				else
+					sql_rollback_transaction
+				end
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
 			end
+		end
+
+	update_user_roles (a_user: CMS_USER)
+			-- Update roles of `a_user'
+		require
+			a_user.has_id
+		local
+			l_roles, l_existing_roles: detachable LIST [CMS_USER_ROLE]
+			l_has_role: BOOLEAN
+		do
+			l_roles := a_user.roles
+			if l_roles = Void then
+				create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (0)
+			end
+
+			sql_begin_transaction
+
+			l_existing_roles:= user_roles_for (a_user)
+			across
+				l_existing_roles as ic
+			until
+				error_handler.has_error
+			loop
+				from
+					l_has_role := False
+					l_roles.start
+				until
+					l_has_role
+				loop
+					if l_roles.item.id = ic.item.id then
+						l_has_role := True
+						l_roles.remove -- Already stored.
+					else
+						l_roles.forth
+					end
+				end
+				if l_has_role then
+						-- Existing role has to be removed!
+					unassign_role_from_user (ic.item, a_user)
+				end
+			end
+			across
+				l_roles as ic
+			until
+				error_handler.has_error
+			loop
+					-- New role.
+				assign_role_to_user (ic.item, a_user)
+			end
+
+			if not error_handler.has_error then
+				sql_commit_transaction
+			else
+				sql_rollback_transaction
+			end
+		end
+
+	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
+		require
+			a_user.has_id
+			a_role.has_id
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create l_parameters.make (2)
+			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_role.id, "rid")
+			sql_change (sql_insert_role_to_user, l_parameters)
+		end
+
+	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
+		require
+			a_user.has_id
+			a_role.has_id
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create l_parameters.make (2)
+			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_role.id, "rid")
+			sql_change (sql_delete_role_from_user, l_parameters)
 		end
 
 feature -- Access: roles and permissions
@@ -710,8 +805,14 @@ feature {NONE} -- Sql Queries: USER ROLE
 	sql_update_user_role : STRING = "UPDATE roles SET name=:name WHERE rid=:rid;"
 			-- Update user role with id :rid.	
 
-	select_user_roles_by_user_id: STRING = "SELECT rid, name FROM roles INNER JOIN users_roles ON users_roles.rid=roles.rid WHERE users_roles.uid=:uid;"
+	select_user_roles_by_user_id: STRING = "SELECT users_roles.rid, roles.name FROM roles INNER JOIN users_roles ON users_roles.rid=roles.rid WHERE users_roles.uid=:uid;"
 			-- List of user roles for user id :uid.	
+
+	sql_insert_role_to_user: STRING = "INSERT INTO users_roles (uid, rid) VALUES (:uid, :rid);"
+
+	sql_delete_role_from_user: STRING = "DELETE FROM users_roles WHERE uid=:uid AND rid=:rid;"
+
+	sql_select_roles_ids_for_user: STRING = "SELECT rid FROM users_roles WHERE uid=:uid;"
 
 	select_user_role_by_id: STRING = "SELECT rid, name FROM roles WHERE rid=:rid;"
 			-- User role for role id :rid;
@@ -753,4 +854,7 @@ feature {NONE} -- User Password Recovery
 	Select_user_by_password_token: STRING = "SELECT u.* FROM users as u JOIN users_password_recovery as ua ON ua.uid = u.uid and ua.token = :token;"
 			-- Retrieve user by password token if exist.
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

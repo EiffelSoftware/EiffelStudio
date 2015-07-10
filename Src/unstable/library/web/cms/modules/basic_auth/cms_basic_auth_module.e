@@ -37,7 +37,8 @@ feature {NONE} -- Initialization
 		do
 			version := "1.0"
 			description := "Service to manage basic authentication"
-			package := "core"
+			package := "authentication"
+			add_dependency ({CMS_AUTHENTICATION_MODULE})
 		end
 
 feature -- Access

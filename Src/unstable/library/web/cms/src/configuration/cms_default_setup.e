@@ -103,25 +103,7 @@ feature {NONE} -- Initialization
 
 	initialize_modules
 				-- Intialize core modules.
-		local
---			m: CMS_MODULE
 		do
-			-- Core
---			create {BASIC_AUTH_MODULE} m.make
---			m.enable
---			register_module (m)
-
---			create {USER_MODULE} m.make (Current)
---			m.enable
---			register_module (m)
-
---			create {ADMIN_MODULE} m.make (Current)
---			m.enable
---			register_module (m)
-
---			create {NODE_MODULE} m.make (Current)
---			m.enable
---			register_module (m)
 		end
 
 feature {NONE} -- Configuration

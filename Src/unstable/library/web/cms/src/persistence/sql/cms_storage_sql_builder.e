@@ -57,7 +57,6 @@ feature -- Initialization
 			l_authenticated_role.add_permission ("delete own page")
 			l_authenticated_role.add_permission ("trash own page")
 			a_storage.save_user_role (l_authenticated_role)
-
 		end
 
 note

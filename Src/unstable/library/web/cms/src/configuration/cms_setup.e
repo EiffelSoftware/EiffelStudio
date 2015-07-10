@@ -33,8 +33,18 @@ feature -- Access
 				modules as ic
 			loop
 				l_module := ic.item
+				update_module_status_from_configuration (l_module)
 				if l_module.is_enabled then
 					Result.extend (l_module)
+				end
+			end
+			across
+				Result as ic
+			loop
+				l_module := ic.item
+				update_module_status_within (l_module, Result)
+				if not l_module.is_enabled then
+					Result.remove (l_module)
 				end
 			end
 		ensure
@@ -42,6 +52,54 @@ feature -- Access
 		end
 
 feature {CMS_MODULE, CMS_API} -- Restricted access
+
+	update_module_status_within (a_module: CMS_MODULE; a_collection: CMS_MODULE_COLLECTION)
+			-- Update status of module `a_module', taking into account its dependencies within the collection `a_collection'.
+		require
+			a_module_is_enabled: a_module.is_enabled
+		do
+			if attached a_module.dependencies as deps then
+				across
+					deps as ic
+				until
+					not a_module.is_enabled
+				loop
+					if
+						attached a_collection.item (ic.item) as mod and then
+						mod.is_enabled
+					then
+						update_module_status_within (mod, a_collection)
+					else
+							--| dependency not found or disabled
+						a_module.disable
+					end
+				end
+			end
+		end
+
+	update_module_status_from_configuration (m: CMS_MODULE)
+			-- Update status of module `m' according to configuration.
+		local
+			b: BOOLEAN
+			dft: BOOLEAN
+		do
+				-- By default enabled.
+			if false and attached text_item ("modules.*") as l_mod_status then
+				dft := l_mod_status.is_case_insensitive_equal_general ("on")
+			else
+				dft := True
+			end
+			if attached text_item ("modules." + m.name) as l_mod_status then
+				b := l_mod_status.is_case_insensitive_equal_general ("on")
+			else
+				b := dft
+			end
+			if b then
+				m.enable
+			else
+				m.disable
+			end
+		end
 
 	modules: CMS_MODULE_COLLECTION
 			-- List of available modules.

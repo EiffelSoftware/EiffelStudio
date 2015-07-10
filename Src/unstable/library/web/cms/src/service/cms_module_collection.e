@@ -21,6 +21,54 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	item (a_type: TYPE [CMS_MODULE]): detachable CMS_MODULE
+			-- Module typed `a_type', if any.
+			--| usage: if attached {FOO_MODULE} item ({FOO_MODULE}) as mod then ...
+		local
+			l_type: TYPE [detachable CMS_MODULE]
+		do
+			across
+				modules as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				l_type := Result.generating_type
+				if a_type ~ l_type then
+						-- Found
+				elseif
+						-- Hack: use conformance of type, and reverse conformance of type of type.
+					attached a_type.attempt (Result) and then attached l_type.generating_type.attempt (a_type)
+				then
+						-- Found
+				else
+					Result := Void
+				end
+			end
+		ensure
+			Result /= Void implies (Result.is_enabled)
+		end
+
+	item_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_MODULE
+			-- (first) module named `a_name', if any.
+			--| usage: if attached {FOO_MODULE} item_by_name ("foo") as mod then ...			
+		do
+			across
+				modules as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if not a_name.is_case_insensitive_equal (Result.name) then
+					Result := Void
+				end
+			end
+		ensure
+			Result /= Void implies a_name.is_case_insensitive_equal (Result.name)
+		end
+
+feature -- Access: iteration
+
 	new_cursor: INDEXABLE_ITERATION_CURSOR [CMS_MODULE]
 			-- <Precursor>
 		do
@@ -77,4 +125,7 @@ feature {NONE} -- Implementation
 	modules: ARRAYED_LIST [CMS_MODULE]
 			-- List of available modules.
 
+;note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

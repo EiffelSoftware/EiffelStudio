@@ -23,10 +23,14 @@ feature -- Access
 			-- Description of the module.
 
 	package: STRING
-			--
+			-- Associated package.
+			-- Mostly to group modules by package/category.
 
 	version: STRING
 			-- Version od the module?
+
+	dependencies: detachable LIST [TYPE [CMS_MODULE]]
+			-- Optional dependencies.
 
 feature {CMS_API} -- Module Initialization
 
@@ -40,6 +44,19 @@ feature {CMS_API} -- Module Initialization
 			is_initialized := True
 		ensure
 			is_initialized: is_initialized
+		end
+
+	add_dependency (a_type: TYPE [CMS_MODULE])
+			-- Add dependency using type of module `a_type'.
+		local
+			deps: like dependencies
+		do
+			deps := dependencies
+			if deps = Void then
+				create {ARRAYED_LIST [TYPE [CMS_MODULE]]} deps.make (1)
+				dependencies := deps
+			end
+			deps.force (a_type)
 		end
 
 feature -- Status		

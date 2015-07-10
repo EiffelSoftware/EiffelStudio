@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 				-- Options can be set in ewf.ini config file		
 			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} service_options.make_from_file ("ewf.ini")
 			create env.make_default
+			env.set_name ("eiffel_org")
 			initialize_logger (env)
 		end
 

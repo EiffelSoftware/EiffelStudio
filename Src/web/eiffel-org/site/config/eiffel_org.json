@@ -1,8 +1,8 @@
 {
 	"database": {
 		"datasource": {
-			"driver": "odbc",
-			"environment": "odbc-sqlite"
+			"driver": "mysql",
+			"environment": "eiffel-org-mysql"
 		},
 		"environments": {
 			"odbc-sqlite": {
@@ -11,7 +11,7 @@
 			"odbc-mysql": {
 				"connection_string":"Driver=mysql ODBC Driver;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
 			},
-			"mysql": {
+			"eiffel-org-mysql": {
 				"connection_string":"Driver=mysql;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
 			},
 			"development": {

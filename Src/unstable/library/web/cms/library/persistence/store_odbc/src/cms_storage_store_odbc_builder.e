@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Factory
 
-	storage (a_setup: CMS_SETUP): detachable CMS_STORAGE_STORE_ODBC
+	storage (a_setup: CMS_SETUP; a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE_STORE_ODBC
 		local
 			s: detachable STRING
 			conn: detachable DATABASE_CONNECTION
@@ -53,6 +53,8 @@ feature -- Factory
 								initialize (a_setup, Result)
 							end
 						end
+					else
+						a_error_handler.add_custom_error (0, "Could not connect to the ODBC storage", Void)
 					end
 				else
 					-- Wrong mapping between storage name and storage builder!

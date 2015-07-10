@@ -412,8 +412,7 @@ feature -- Environment/ module
 	module_configuration_by_name (a_module_name: READABLE_STRING_GENERAL; a_name: detachable READABLE_STRING_GENERAL): detachable CONFIG_READER
 			-- Configuration reader for `a_module', and if `a_name' is set, using name `a_name'.
 		local
-			p, l_path: detachable PATH
-			l_name: READABLE_STRING_GENERAL
+			p: detachable PATH
 		do
 				-- Search first in site/config/modules/$module_name/($app|$module_name).(json|ini)
 				-- if none, look as sub configuration if $app /= Void

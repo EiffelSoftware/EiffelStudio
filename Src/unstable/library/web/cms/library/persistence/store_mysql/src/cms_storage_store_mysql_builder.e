@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Factory
 
-	storage (a_setup: CMS_SETUP): detachable CMS_STORAGE_STORE_MYSQL
+	storage (a_setup: CMS_SETUP; a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE_STORE_MYSQL
 		local
 			conn: DATABASE_CONNECTION
 		do
@@ -40,6 +40,8 @@ feature -- Factory
 							initialize (a_setup, Result)
 						end
 					end
+				else
+					a_error_handler.add_custom_error (0, "Could not connect to the MySQL storage", Void)
 				end
 			end
 		end

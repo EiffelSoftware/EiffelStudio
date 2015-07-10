@@ -145,7 +145,7 @@ feature -- Access: storage
 					attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config and then
 					attached storage_drivers.item (l_database_config.driver) as l_builder
 				then
-					Result := l_builder.storage (Current)
+					Result := l_builder.storage (Current, a_error_handler)
 				end
 			else
 				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")

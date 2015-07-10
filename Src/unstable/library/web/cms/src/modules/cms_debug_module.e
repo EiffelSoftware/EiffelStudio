@@ -71,6 +71,7 @@ feature -- Hooks
 				create dbg.make
 				create s.make_empty
 				dbg.append_information_to (a_response.request, a_response.response, s)
+				append_info_to ("Storage", a_response.api.storage.generator, a_response, s)
 				create b.make ("debug-info", "Debug", s, a_response.formats.plain_text)
 				a_response.add_block (b, "footer")
 			end
@@ -102,15 +103,17 @@ feature -- Handler
 --				append_info_to ("Base url", cms.base_url, r, s)
 --				append_info_to ("Script url", cms.script_url, r, s)
 				s.append ("<hr/>")
-				append_info_to ("Site dir", api.setup.environment.path.utf_8_name, r, s)
+				append_info_to ("Site dir", api.site_location.utf_8_name, r, s)
 				append_info_to ("Www dir", api.setup.environment.www_path.utf_8_name, r, s)
 				append_info_to ("Assets dir", api.setup.environment.assets_path.utf_8_name, r, s)
 				append_info_to ("Config dir", api.setup.environment.config_path.utf_8_name, r, s)
 				s.append ("<hr/>")
 				append_info_to ("Theme", api.setup.theme_name, r, s)
-				append_info_to ("Theme location", api.setup.themes_location.utf_8_name, r, s)
+				append_info_to ("Theme location", api.theme_location.utf_8_name, r, s)
 				s.append ("<hr/>")
---				append_info_to ("Files location", api...files_location.utf_8_name, r, s)
+				append_info_to ("Files location", api.files_location.utf_8_name, r, s)
+				append_info_to ("Modules location", api.modules_location.utf_8_name, r, s)
+				append_info_to ("Storage", api.storage.generator, r, s)
 --				s.append ("<hr/>")
 
 				append_info_to ("Url", r.url ("/", Void), r, s)

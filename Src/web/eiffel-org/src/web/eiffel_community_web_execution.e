@@ -19,7 +19,6 @@ inherit
 create
 	make
 
-
 feature {NONE} -- Implementation
 
 	new_cms_environment: CMS_ENVIRONMENT
@@ -29,6 +28,7 @@ feature {NONE} -- Implementation
 			else
 				create Result.make_default
 			end
+			Result.set_name ("eiffel_org")
 		end
 
 end

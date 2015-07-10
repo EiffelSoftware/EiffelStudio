@@ -47,8 +47,6 @@ feature {CMS_API} -- Module Initialization
 	initialize (api: CMS_API)
 			-- <Precursor>
 		local
-			ut: FILE_UTILITIES
-			p: PATH
 			f: CMS_FORMAT
 		do
 			Precursor (api)

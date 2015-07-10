@@ -291,25 +291,25 @@ feature -- Helpers
 
 feature {NONE} -- Queries
 
-	sql_select_nodes_count: STRING = "SELECT count(*) FROM Nodes WHERE status != -1 ;"
+	sql_select_nodes_count: STRING = "SELECT count(*) FROM nodes WHERE status != -1 ;"
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes: STRING = "SELECT * FROM Nodes WHERE status != -1 ;"
+	sql_select_nodes: STRING = "SELECT * FROM nodes WHERE status != -1 ;"
 			-- SQL Query to retrieve all nodes.
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_trash_nodes: STRING = "SELECT * FROM Nodes WHERE status = -1 ;"
+	sql_select_trash_nodes: STRING = "SELECT * FROM nodes WHERE status = -1 ;"
 			-- SQL Query to retrieve all trahsed nodes.
 			--| note: {CMS_NODE_API}.trashed = -1		
 
-	sql_select_trash_nodes_by_author: STRING = "SELECT * FROM Nodes WHERE status = -1 and author = :author ;"
+	sql_select_trash_nodes_by_author: STRING = "SELECT * FROM nodes WHERE status = -1 and author = :author ;"
 			-- SQL Query to retrieve all nodes by a given author.
 			--| note: {CMS_NODE_API}.trashed = -1				
 
-	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM Nodes WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
+	sql_select_node_by_id: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE nid =:nid ORDER BY revision DESC, publish DESC LIMIT 1;"
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM Nodes ORDER BY nid DESC, publish DESC LIMIT :rows OFFSET :offset ;"
+	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY nid DESC, publish DESC LIMIT :rows OFFSET :offset ;"
 
 	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author) VALUES (1, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author);"
 			-- SQL Insert to add a new node.
@@ -343,7 +343,7 @@ feature {NONE} -- Queries
 
 feature {NONE} -- Sql Queries: USER_ROLES collaborators, author
 
-	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM Nodes INNER JOIN users ON nodes.author=users.uid AND nodes.nid = :nid;"
+	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM nodes INNER JOIN users ON nodes.author=users.uid AND nodes.nid = :nid;"
 
 	Select_node_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed FROM users INNER JOIN nodes ON nodes.author=users.uid AND nodes.nid =:nid;"
 

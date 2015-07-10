@@ -18,8 +18,7 @@ feature -- Initialization
 	initialize (a_setup: CMS_SETUP; a_storage: CMS_STORAGE_SQL)
 		local
 			u: CMS_USER
-			l_anonymous_role, l_authenticated_role, r: CMS_USER_ROLE
-			l_roles: LIST [CMS_USER_ROLE]
+			l_anonymous_role, l_authenticated_role: CMS_USER_ROLE
 		do
 				--| Schema
 			a_storage.sql_execute_file_script (a_setup.environment.site_path.extended ("scripts").extended ("core.sql"), Void)

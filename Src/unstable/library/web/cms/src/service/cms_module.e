@@ -86,14 +86,14 @@ feature {CMS_API} -- Module management
 		require
 			is_not_installed: not is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", "module-" + name, "yes")
+			api.storage.set_custom_value ("is_initialized", "yes", "module-" + name)
 		end
 
 	uninstall (api: CMS_API)
 		require
 			is_installed: is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", "module-" + name, "no")
+			api.storage.set_custom_value ("is_initialized", "no", "module-" + name)
 		end
 
 feature -- Router

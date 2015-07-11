@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			l_module: CMS_MODULE
 			l_enabled_modules: CMS_MODULE_COLLECTION
 		do
-			l_enabled_modules := setup.enabled_modules
+			l_enabled_modules := api.enabled_modules
 			across
 				l_enabled_modules as ic
 			loop

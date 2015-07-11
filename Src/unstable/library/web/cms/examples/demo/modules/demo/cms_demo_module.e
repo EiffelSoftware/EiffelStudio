@@ -77,7 +77,7 @@ CREATE TABLE tb_demo(
 						api.logger.put_error ("Could not initialize database for demo module", generating_type)
 					end
 				end
-				api.storage.set_custom_value ("is_initialized", "module-" + name, "yes")
+				Precursor {CMS_MODULE}(api)
 			end
 		end
 

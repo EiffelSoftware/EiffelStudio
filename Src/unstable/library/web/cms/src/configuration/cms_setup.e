@@ -23,6 +23,8 @@ feature -- Access
 			Result := environment
 		end
 
+feature {CMS_API} -- API Access		
+
 	enabled_modules: CMS_MODULE_COLLECTION
 			-- List of enabled modules.
 		local
@@ -51,7 +53,14 @@ feature -- Access
 			only_enabled_modules: across Result as ic all ic.item.is_enabled end
 		end
 
-feature {CMS_MODULE, CMS_API} -- Restricted access
+feature {CMS_MODULE, CMS_API, CMS_SETUP_ACCESS} -- Restricted access
+
+	modules: CMS_MODULE_COLLECTION
+			-- List of available modules.
+		deferred
+		end
+
+feature {NONE} -- Implementation: update		
 
 	update_module_status_within (a_module: CMS_MODULE; a_collection: CMS_MODULE_COLLECTION)
 			-- Update status of module `a_module', taking into account its dependencies within the collection `a_collection'.
@@ -99,11 +108,6 @@ feature {CMS_MODULE, CMS_API} -- Restricted access
 			else
 				m.disable
 			end
-		end
-
-	modules: CMS_MODULE_COLLECTION
-			-- List of available modules.
-		deferred
 		end
 
 feature -- Access: Site

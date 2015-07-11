@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			setup_storage (l_setup)
 			setup_modules (l_setup)
 			create api.make (l_setup)
-			modules := setup.enabled_modules
+			modules := api.enabled_modules
 
 			initialize_cms
 			Precursor
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 	initialize_modules
 			-- Intialize modules and keep only enabled modules.
 		do
-			modules := setup.enabled_modules
+			modules := api.enabled_modules
 		ensure
 			only_enabled_modules: across modules as ic all ic.item.is_enabled end
 		end
@@ -118,6 +118,7 @@ feature -- Settings: router
 		local
 			l_api: like api
 			l_router: like router
+			l_module: CMS_MODULE
 		do
 			api.logger.put_debug (generator + ".setup_router", Void)
 				-- Configure root of api handler.
@@ -130,7 +131,10 @@ feature -- Settings: router
 			across
 				modules as ic
 			loop
-				ic.item.setup_router (l_router, l_api)
+				l_module := ic.item
+				if l_module.is_initialized then
+					l_module.setup_router (l_router, l_api)
+				end
 			end
 				-- Configure files handler.
 			configure_api_file_handler (l_router)
@@ -148,6 +152,8 @@ feature -- Settings: router
 			a_router.handle ("/", l_root_handler, l_methods)
 			a_router.handle ("", l_root_handler, l_methods)
 			map_uri_agent ("/favicon.ico", agent handle_favicon, a_router.methods_head_get)
+
+			map_uri ("/admin/install", create {CMS_ADMIN_INSTALL_HANDLER}.make (api), a_router.methods_head_get)
 		end
 
 	configure_api_file_handler (a_router: WSF_ROUTER)

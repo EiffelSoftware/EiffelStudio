@@ -1984,8 +1984,8 @@ feature {NONE} -- Convenience
 				Result := Result | 0x1000
 			end
 
-				-- Bit 13: Store `is_separate'
-			if is_separate then
+				-- Bit 13: Store frozen nature of `l_class'.
+			if l_class.is_frozen then
 				Result := Result | 0x2000
 			end
 		end

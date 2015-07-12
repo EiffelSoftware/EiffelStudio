@@ -135,7 +135,6 @@ feature -- Conversion
 			end
 		ensure
 			as_string_8_not_void: Result /= Void
-			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
 		end
 
 feature -- Output

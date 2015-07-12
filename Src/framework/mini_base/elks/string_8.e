@@ -14,10 +14,15 @@ class
 
 inherit
 	COMPARABLE
+		redefine
+			out
+		end
 
 	ITERABLE [CHARACTER_8]
 		undefine
 			is_equal
+		redefine
+			out
 		end
 
 create
@@ -65,6 +70,12 @@ feature -- Status report
 			Result := count = 0
 		end
 
+	valid_code (v: NATURAL_32): BOOLEAN
+			-- Is `v' a valid code for a CHARACTER_32?
+		do
+			Result := v < {NATURAL_32} 256
+		end
+
 	area: SPECIAL [CHARACTER_8]
 
 	set_count (n: INTEGER)
@@ -85,6 +96,13 @@ feature -- Element change
 			create Result.make (10)
 		end
 
+	put_code (v: NATURAL_32; i: INTEGER)
+			-- Replace character at position `i' by character of code `v'.
+		do
+			area.put (v.to_character_8, i - 1)
+			internal_hash_code := 0
+		end
+
 feature -- Conversion
 
 	frozen to_cil: SYSTEM_STRING
@@ -94,8 +112,16 @@ feature -- Conversion
 			create Result.make (' ', 0)
 		end
 
+feature -- Output
+
+	out: STRING
+			-- Printable representation
+		do
+			Result := Current
+		end
+
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

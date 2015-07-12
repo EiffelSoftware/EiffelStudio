@@ -79,66 +79,88 @@ feature -- Status report
 
 feature -- Element change
 
+	set_output_default
+			-- Use standard output as default output.
+		do
+		end
+
 	put_character, putchar (c: CHARACTER)
 			-- Write `c' at end of default output.
 		do
+			put_string (c.out)
 		end
 
 	put_string, putstring (s: STRING)
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= Void
+		local
+			ext_s: ANY
 		do
+			if s.count /= 0 then
+				ext_s := s.area
+				file_ps (console_def (1), $ext_s, s.count)
+			end
 		end
 
 	put_real, putreal (r: REAL)
 			-- Write `r' at end of default output.
 		do
+			put_string (r.out)
 		end
 
 	put_double, putdouble (d: DOUBLE)
 			-- Write `d' at end of default output.
 		do
+			put_string (d.out)
 		end
 
 	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write `i' at end of default output.
 		do
+			put_string (i.out)
 		end
 
 	put_integer_8 (i: INTEGER_8)
 			-- Write `i' at end of default output.
 		do
+			put_string (i.out)
 		end
 
 	put_integer_16 (i: INTEGER_16)
 			-- Write `i' at end of default output.
 		do
+			put_string (i.out)
 		end
 
 	put_integer_64 (i: INTEGER_64)
 			-- Write `i' at end of default output.
 		do
+			put_string (i.out)
 		end
 
-	put_natural_8 (i: NATURAL_8)
-			-- Write `i' at end of default output.
+	put_natural_8 (n: NATURAL_8)
+			-- Write `n' at end of default output.
 		do
+			put_string (n.out)
 		end
 
-	put_natural_16 (i: NATURAL_16)
-			-- Write `i' at end of default output.
+	put_natural_16 (n: NATURAL_16)
+			-- Write `n' at end of default output.
 		do
+			put_string (n.out)
 		end
 
-	put_natural, put_natural_32 (i: NATURAL_32)
-			-- Write `i' at end of default output.
+	put_natural, put_natural_32 (n: NATURAL_32)
+			-- Write `n' at end of default output.
 		do
+			put_string (n.out)
 		end
 
-	put_natural_64 (i: NATURAL_64)
-			-- Write `i' at end of default output.
+	put_natural_64 (n: NATURAL_64)
+			-- Write `n' at end of default output.
 		do
+			put_string (n.out)
 		end
 
 	put_boolean, putbool (b: BOOLEAN)
@@ -154,6 +176,7 @@ feature -- Element change
 	put_new_line, new_line
 			-- Write line feed at end of default output.
 		do
+			put_character ('%N')
 		end
 
 feature -- Input
@@ -258,8 +281,27 @@ feature -- Input
 		do
 		end
 
+feature {NONE} -- Externals
+
+	file_ps (file: POINTER; a_string: POINTER; length: INTEGER_32)
+			-- Print `a_string' to `file'.
+			-- (from FILE)
+			-- (export status {NONE})
+		external
+			"C signature (FILE *, char *, EIF_INTEGER) use %"eif_file.h%""
+		alias
+			"eif_file_ps"
+		end
+
+	console_def (number: INTEGER): POINTER
+			-- Convert `number' to the corresponding
+			-- file descriptor.
+		external
+			"C use %"eif_console.h%""
+		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

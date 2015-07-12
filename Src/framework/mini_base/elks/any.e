@@ -191,6 +191,7 @@ feature -- Output
 			-- Handle to standard file setup
 		once
 			create Result
+			Result.set_output_default
 		ensure
 			io_not_void: Result /= Void
 		end
@@ -218,7 +219,7 @@ feature -- Output
 			-- on standard output.
 		do
 			if o /= Void then
---				io.put_string (o.out)
+				io.put_string (o.out)
 			end
 		end
 
@@ -270,7 +271,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

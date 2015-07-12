@@ -15,6 +15,12 @@ feature -- Access
 
 	item: like Current
 
+	natural_32_code: NATURAL_32
+			-- Associated natural value
+		do
+			Result := item.natural_32_code
+		end
+
 feature -- Settings
 
 	set_item (i: like Current)
@@ -26,7 +32,7 @@ feature -- Settings
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

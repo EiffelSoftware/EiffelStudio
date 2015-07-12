@@ -14,10 +14,15 @@ class
 
 inherit
 	COMPARABLE
+		redefine
+			out
+		end
 
 	ITERABLE [CHARACTER_32]
 		undefine
 			is_equal
+		redefine
+			out
 		end
 
 create
@@ -65,6 +70,12 @@ feature -- Status report
 			Result := count = 0
 		end
 
+	code (i: INTEGER): NATURAL_32
+			-- Character at position `i'
+		do
+			Result := area.item (i - 1).natural_32_code
+		end
+
 	area: SPECIAL [CHARACTER_32]
 
 	set_count (n: INTEGER)
@@ -94,8 +105,49 @@ feature -- Conversion
 			create Result.make (' ', 0)
 		end
 
+	as_string_8: STRING_8
+			-- Convert `Current' as a STRING_8. If a code of `Current' is
+			-- not a valid code for a STRING_8 it is replaced with the null
+			-- character.
+		local
+			i, nb: INTEGER
+			l_code: NATURAL_32
+		do
+			if attached {STRING_8} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_code := code (i)
+					if Result.valid_code (l_code) then
+						Result.put_code (l_code, i)
+					else
+						Result.put_code ({NATURAL_32} 0, i)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_8_not_void: Result /= Void
+			identity: (conforms_to ("") and Result = Current) or (not conforms_to ("") and Result /= Current)
+		end
+
+feature -- Output
+
+	out: STRING
+			-- Printable representation
+		do
+			Result := as_string_8
+		end
+
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

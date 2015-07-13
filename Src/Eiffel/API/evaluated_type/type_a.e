@@ -65,7 +65,7 @@ feature -- Generic conformance
 			-- Flags for annotations of Current.
 			-- Currently only `!' and `frozen' are supported
 		do
- 				-- Only if a type is not expanded do we need to generate the
+				-- Only if a type is not expanded do we need to generate the
 				-- attached annotation since by default expanded implies attached.
 			if is_attached and not is_expanded then
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
@@ -81,7 +81,9 @@ feature -- Generic conformance
 				-- False, is_variant always True.
 			check consistent: not compiler_profile.is_frozen_variant_supported implies (not is_frozen and is_variant) end
 			if is_frozen then
-				Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+				if not is_implicitly_frozen then
+					Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
+				end
 			elseif is_variant then
 				-- Nothing to do because due to backward compatibility with
 				-- old storables, nothing means variant.

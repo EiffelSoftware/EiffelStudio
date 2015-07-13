@@ -1098,6 +1098,10 @@ rt_public void eif_check_catcall (EIF_REFERENCE a_object, EIF_TYPE_INDEX a_dtype
 			/* `a_expected_ftype' has some annotations of its own, but it might be declared in a class that
 			 * already has some annotations `a_annotations', so we need to compute the resulting annotation. */
 		a_expected_ftype.annotations = rt_merged_annotation(a_annotations, a_expected_ftype.annotations);
+			/* FIXME: Manu 2015/07/13: The following is to remove a limitation of the Eiffel code
+			 * generation which should never generate a POLY_FLAG as the annotation of a type.
+			 * POLY_FLAG can only appear in actual generic parameter. */
+		a_expected_ftype.annotations &= ~POLY_FLAG;
 		if (a_object) {
 			l_ftype = eif_new_type(Dftype(a_object), ATTACHED_FLAG);
 			if (!RTRC(a_expected_ftype, l_ftype)) {

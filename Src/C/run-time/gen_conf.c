@@ -279,7 +279,7 @@ rt_private size_t rt_typename_len (EIF_TYPE, int);
 rt_private void rt_typename (EIF_TYPE, char*, int);
 rt_private EIF_GEN_DER *rt_new_gen_der(uint32, EIF_TYPE*, EIF_TYPE_INDEX, char, char, uint32);
 rt_private void rt_expand_tables(int);
-rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX**, EIF_TYPE**, EIF_TYPE_INDEX);
+rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX**, EIF_TYPE**, EIF_TYPE_INDEX, int);
 rt_private void rt_compute_ctab (EIF_TYPE_INDEX);
 rt_private EIF_CONF_TAB *rt_new_conf_tab (EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX, EIF_TYPE_INDEX);
 rt_private void rt_enlarge_conf_tab (EIF_CONF_TAB *, EIF_TYPE_INDEX);
@@ -686,7 +686,7 @@ rt_public EIF_TYPE rt_compound_id_with_context (struct rt_id_of_context *a_conte
 	REQUIRE("types not empty", types [0] != TERMINATOR);
 
 	outtable = outtab;
-	return rt_id_of (a_context, &types, &outtable, current_dftype);
+	return rt_id_of (a_context, &types, &outtable, current_dftype, 0);
 }
 
 
@@ -1372,14 +1372,17 @@ doc:		<summary>Given a set of compiler generated IDs in `intab' we evaluate them
 doc:		<param name="a_context" type="struct rt_id_of_context *">State context used during computation. If present we can state if the evaluation of the compiler generated IDs required the `ojb_type'. Mostly used for the C store/retrieve to see if we have qualified anchored type.</param>
 doc:		<param name="intab" type="const EIF_TYPE_INDEX **">Compiler generated IDs. They include both annotations and type IDs.</param>
 doc:		<param name="outtab" type="EIF_TYPE **">Set of type forming the computed type actual generic parameters. For example LIST [A], would create the following array [{A, ATTACHED_FLAG}] (ATTACHED_FLAG since by default types are attached).</param>
+			<param name="obj_type" type="EIF_TYPE_INDEX">Type of object that can be used to resolve type of actual generic parameters or anchors.</a_param>
+			<param name="a_depth" type="int">Depth of the recursion. 0 means first level. It is used so that we remove the POLY_FLAG tag in annotations at the first level since this is something that can only appear in formal generic parameters.</a_param>
 doc:		<return>The computed type ID with its annotations.</return>
 doc:		<thread_safety>Safe.</thread_safety>
 doc:		<synchronization>Through `eif_gen_mutex'.</synchronization>
 doc:	</routine>
 */
-rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX **intab, EIF_TYPE **outtab, EIF_TYPE_INDEX obj_type)
+rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE_INDEX **intab, EIF_TYPE **outtab, EIF_TYPE_INDEX obj_type, int a_depth)
 {
 	EIF_TYPE_INDEX l_type_entry, gcount = 0, i, nb;
+	EIF_TYPE_INDEX l_dtype;
 	EIF_TYPE *save_outtab, result, l_type;
 	int     mcmp;
 	uint32	pos, hcode;
@@ -1417,12 +1420,26 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 		}
 	}
 
+		/* FIXME: Manu 2015/07/13: The following is to remove a limitation of the Eiffel code
+		 * generation which should never generate a POLY_FLAG as the annotation of a type.
+		 * POLY_FLAG can only appear in actual generic parameter. */
+	if (a_depth == 0) {
+		result.annotations &= ~POLY_FLAG;
+	}
+
 	if (l_type_entry <= MAX_DTYPE) {
-		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[l_type_entry]))) {
+		l_dtype = eif_cid_map[l_type_entry];
+		if (EIF_IS_EXPANDED_TYPE(System (l_dtype))) {
+				/* Type is expanded, we have to remove attached/detachable or frozen annotations
+				 * since the nature of the type carries this with itself. */
 			is_expanded = '1';
-			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG);
+			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG | FROZEN_FLAG);
 		} else {
 			is_expanded = (char) 0;
+			if (EIF_IS_FROZEN_TYPE(System (l_dtype))) {
+					/* Type is a frozen class, no need for the frozen annotation. */
+				result.annotations &= ~FROZEN_FLAG;
+			}
 		}
 	} else {
 		is_expanded = (char) 0;
@@ -1486,7 +1503,7 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 			 * just going to use the return value to calculate
 			 * the dynamic type by processing the chain of routine IDs. */
 		save_outtab = *outtab;
-		l_type = rt_id_of (a_context, intab, outtab, obj_type);
+		l_type = rt_id_of (a_context, intab, outtab, obj_type, 0);
 		*outtab = save_outtab;
 		if (a_context && a_context->is_invalid) {
 				/* Context is invalid, so we just read all the routine IDs before
@@ -1574,7 +1591,7 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 			 * just going to use the return value to calculate
 			 * the dynamic type by processing the chain of routine IDs. */
 		save_outtab = *outtab;
-		l_type = rt_id_of (a_context, intab, outtab, obj_type);
+		l_type = rt_id_of (a_context, intab, outtab, obj_type, 0);
 		*outtab = save_outtab;
 		if (a_context && a_context->is_invalid) {
 				/* Here we return a dummy dynamic type. If this is part of a more complex
@@ -1633,8 +1650,9 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 
 			/* Compute types of actual generic parameters and the corresponding
 			 * hashcode using the FNV hash (http://www.isthe.com/chongo/tech/comp/fnv/). */
+		a_depth++;
 		for (hcode = 2166136261, i = gcount; i; --i) {
-			l_type = rt_id_of(a_context, intab, outtab, obj_type);
+			l_type = rt_id_of(a_context, intab, outtab, obj_type, a_depth);
 			hcode = (hcode * 16777619) ^ eif_encoded_type(l_type);
 		}
 
@@ -1696,11 +1714,15 @@ rt_private EIF_TYPE rt_id_of (struct rt_id_of_context *a_context, const EIF_TYPE
 			result.id = gdp->dftype;
 		}
 	} else {
-			/* Type was computed we just make sure that if it is expanded, it does not 
-			 * carry the attachment mark. See eweasel test#reflection005 when processing
-			 * A [C [STRING], ANY]. */
-		if (EIF_IS_EXPANDED_TYPE(System (eif_cid_map[result.id]))) {
-			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG);
+			/* Perform some normalization on annotations. */
+		l_dtype = eif_cid_map[result.id];
+		if (EIF_IS_EXPANDED_TYPE(System (l_dtype))) {
+				/* Type was computed and is expanded, it does not carry the attachment mark.
+				 * See eweasel test#reflection005 when processing A [C [STRING], ANY]. */
+			result.annotations &= ~(DETACHABLE_FLAG | ATTACHED_FLAG | FROZEN_FLAG);
+		} else if (EIF_IS_FROZEN_TYPE(System (l_dtype))) {
+				/* Type is a frozen class, no need for the frozen annotation. */
+			result.annotations &= ~FROZEN_FLAG;
 		}
 	}
 
@@ -2149,9 +2171,7 @@ rt_private void rt_typename (EIF_TYPE a_type, char *result, int a_level)
 			 * and if is RT_CONF_IS_POLY_TYPE then no need to print anything as this
 			 * is the default. */
 		if (RT_CONF_IS_FROZEN_FLAG(a_type.annotations)) {
-			/* We ignore them for now:
 			strcat (result, "frozen ");
-			*/
 		} else if (RT_CONF_IS_POLY_FLAG(a_type.annotations)) {
 		} else {
 			CHECK("has variant or no variance mark", RT_CONF_IS_VARIANT_FLAG(a_type.annotations) || !RT_CONF_HAS_VARIANT_MARK_FLAG(a_type.annotations));
@@ -2267,7 +2287,7 @@ rt_private size_t rt_typename_len (EIF_TYPE a_type, int a_level)
 			 * and if is RT_CONF_IS_POLY_TYPE then no need to print anything as this
 			 * is the default. */
 		if (RT_CONF_IS_FROZEN_FLAG(a_type.annotations)) {
-			//len += 7;	/* for frozen followed by space */
+			len += 7;	/* for frozen followed by space */
 		} else if (RT_CONF_IS_POLY_FLAG(a_type.annotations)) {
 		} else {
 			CHECK("has variant or no variance mark", RT_CONF_IS_VARIANT_FLAG(a_type.annotations) || !RT_CONF_HAS_VARIANT_MARK_FLAG(a_type.annotations));
@@ -2597,7 +2617,7 @@ rt_private void rt_compute_ctab (EIF_TYPE_INDEX dftype)
 		outtable = outtab;
 		l_intable = intable;
 		while (*l_intable != TERMINATOR) {
-			pftype = rt_id_of (NULL, &l_intable, &outtable, dftype).id;
+			pftype = rt_id_of (NULL, &l_intable, &outtable, dftype, 0).id;
 			if (*l_intable == PARENT_TYPE_SEPARATOR) {
 				l_intable++;
 			} else {

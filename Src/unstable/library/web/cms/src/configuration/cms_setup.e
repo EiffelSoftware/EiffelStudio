@@ -11,6 +11,65 @@ deferred class
 inherit
 	REFACTORING_HELPER
 
+feature {NONE} -- Initialization	
+
+	initialize
+		local
+			l_url: like site_url
+		do
+			site_location := environment.path
+
+				--| Site id, used to identified a site, this could be set to a uuid, or else
+			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
+
+				-- Site url: optional, but ending with a slash
+			l_url := string_8_item ("site_url")
+			if l_url /= Void and then not l_url.is_empty then
+				if l_url [l_url.count] /= '/' then
+					l_url := l_url + "/"
+				end
+			end
+			site_url := l_url
+
+				-- Site name
+			site_name := text_item_or_default ("site.name", "EWF::CMS")
+
+				-- Site email for any internal notification
+				-- Can be also used to precise the "From:" value for email.
+			site_email := text_item_or_default ("site.email", "webmaster")
+
+
+				-- Location for public files
+			if attached text_item ("files-dir") as s then
+				create files_location.make_from_string (s)
+			else
+				files_location := site_location.extended ("files")
+			end
+
+				-- Location for modules folders.
+			if attached text_item ("modules-dir") as s then
+				create modules_location.make_from_string (s)
+			else
+				modules_location := environment.modules_path
+			end
+
+				-- Location for themes folders.
+			if attached text_item ("themes-dir") as s then
+				create themes_location.make_from_string (s)
+			else
+				themes_location := environment.themes_path
+			end
+
+				-- Selected theme's name
+			theme_name := text_item_or_default ("theme", "default")
+
+			debug ("refactor_fixme")
+				fixme ("Review export clause for configuration and environment")
+			end
+
+			theme_location := themes_location.extended (theme_name)
+		end
+
 feature -- Access
 
 	environment: CMS_ENVIRONMENT

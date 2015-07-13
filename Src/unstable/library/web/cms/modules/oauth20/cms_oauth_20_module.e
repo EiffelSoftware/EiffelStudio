@@ -202,6 +202,7 @@ feature -- Hooks
 			if attached current_user (a_response.request) as l_user then
 				a_value.force (l_user, "user")
 			end
+			a_value.force ("roc-oauth-logout", "strategy")
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

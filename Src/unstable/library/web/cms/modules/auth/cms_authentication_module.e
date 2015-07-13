@@ -77,6 +77,7 @@ feature -- Router
 
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
 		do
+			a_router.handle ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register (a_api, ?, ?)), a_router.methods_get_post)
@@ -84,7 +85,8 @@ feature -- Router
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password (a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password (a_api, ?, ?)), a_router.methods_get_post)
-
+			a_router.handle ("/account/change-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_change_password (a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/account/post-change-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_change_password (a_api, ?, ?)), a_router.methods_get)
 		end
 
 feature -- Hooks configuration
@@ -124,6 +126,29 @@ feature -- Hooks configuration
 		end
 
 feature -- Handler
+
+	handle_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("Account Info", "optional_content_type")
+
+			if attached template_block ("account_info", r) as l_tpl_block then
+				r.set_value (current_user (req), "user")
+				if attached current_user (req) as l_user  then
+					r.set_value (api.user_api.user_roles (l_user), "roles")
+				end
+				r.add_block (l_tpl_block, "content")
+			else
+				debug ("cms")
+					r.add_warning_message ("Error with block [resources_page]")
+				end
+			end
+			r.execute
+		end
+
+
 
 	handle_login (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -360,6 +385,51 @@ feature -- Handler
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 				end
+			end
+			r.execute
+		end
+
+	handle_change_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			l_user_api: CMS_USER_API
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			l_user_api := api.user_api
+
+			if req.is_post_request_method then
+				if attached current_user (req) as l_user  then
+					r.set_value (api.user_api.user_roles (l_user), "roles")
+					if
+						attached {WSF_STRING} req.form_parameter ("password") as l_password and then
+						attached {WSF_STRING} req.form_parameter ("confirm_password") as l_confirm_password and then
+						l_password.value.same_string (l_confirm_password.value)
+					then
+							-- Does the passwords match?	
+						l_user.set_password (l_password.value)
+						l_user_api.update_user (l_user)
+						r.set_redirection (req.absolute_script_url ("/account/post-change-password"))
+					else
+						if attached template_block ("account_info", r) as l_tpl_block then
+							r.set_value (l_user, "user")
+							r.values.force ("Passwords Don't Match", "error_password")
+							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+							r.add_block (l_tpl_block, "content")
+						end
+					end
+				end
+			end
+			r.execute
+		end
+
+	handle_post_change_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			l_user_api: CMS_USER_API
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if attached template_block ("post_change", r) as l_tpl_block then
+				r.add_block (l_tpl_block, "content")
 			end
 			r.execute
 		end

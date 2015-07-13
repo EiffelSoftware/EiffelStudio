@@ -212,11 +212,11 @@ feature -- Hooks
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 		local
 			lnk: CMS_LOCAL_LINK
---			perms: detachable ARRAYED_LIST [READABLE_STRING_8]
 		do
-			create lnk.make ("List of nodes", "nodes")
-			a_menu_system.primary_menu.extend (lnk)
-
+			debug 
+				create lnk.make ("List of nodes", "nodes")
+				a_menu_system.primary_menu.extend (lnk)
+			end
 			create lnk.make ("Trash", "trash")
 			a_menu_system.primary_menu.extend (lnk)
 

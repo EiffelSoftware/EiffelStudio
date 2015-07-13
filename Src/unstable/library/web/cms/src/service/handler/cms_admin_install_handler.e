@@ -43,34 +43,49 @@ feature -- HTTP Methods
 			l_module: CMS_MODULE
 			s: STRING
 			lst: ARRAYED_LIST [CMS_MODULE]
+			l_denied: BOOLEAN
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			if attached api.setup.string_8_item ("admin.installation_access") as l_access then
+				if l_access.is_case_insensitive_equal ("none") then
+					l_denied := True
+				elseif l_access.is_case_insensitive_equal ("permission") then
+					l_denied := not r.has_permission ("install modules")
+				end
+			else
+				l_denied := True
+			end
+			if l_denied then
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				r.set_main_content ("You do not have permission to access CMS installation procedure!")
+			else
+				create s.make_from_string ("<h1>Modules</h1><ul>")
+				create lst.make (1)
+				across
+					api.setup.modules as ic
+				loop
+					l_module := ic.item
+					if api.is_module_installed (l_module) then
+						s.append ("<li>" + l_module.name + " is already installed.</li>%N")
+					else
+						lst.force (l_module)
+					end
+				end
+				api.install
+				across
+					lst as ic
+				loop
+					l_module := ic.item
+					if api.is_module_installed (l_module) then
+						s.append ("<li>" + l_module.name + " was successfully installed.</li>%N")
+					else
+						s.append ("<li>" + l_module.name + " could not be installed!</li>%N")
+					end
+				end
+				s.append ("</ul>")
+				r.set_main_content (s)
+			end
 			r.set_title (r.translation ("CMS Installation ...", Void))
-			create s.make_from_string ("<h1>Modules</h1><ul>")
-			create lst.make (1)
-			across
-				api.setup.modules as ic
-			loop
-				l_module := ic.item
-				if api.is_module_installed (l_module) then
-					s.append ("<li>" + l_module.name + " is already installed.</li>%N")
-				else
-					lst.force (l_module)
-				end
-			end
-			api.install
-			across
-				lst as ic
-			loop
-				l_module := ic.item
-				if api.is_module_installed (l_module) then
-					s.append ("<li>" + l_module.name + " was successfully installed.</li>%N")
-				else
-					s.append ("<li>" + l_module.name + " could not be installed!</li>%N")
-				end
-			end
-			s.append ("</ul>")
-			r.set_main_content (s)
 			r.execute
 		end
 

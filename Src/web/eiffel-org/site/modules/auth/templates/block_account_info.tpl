@@ -12,11 +12,13 @@
 			   	<div>	
 			   		<label>Creation Date:</label>  {$user.creation_date/}
 			   	</div>
+				{unless isempty="$user.last_login_date"}
 			   	<div>	
 			   		<label>Last login:</label>  {$user.last_login_date/}
 			   	</div>	
+				{/unless}
 			   	<div>
-			   		<form method="get" action="{$site_url/}account/{$strategy/}">
+			   		<form method="get" action="{$site_url/}{$strategy/}">
     					<button type="submit">Logout</button>
 					</form>
 			   	</div>	

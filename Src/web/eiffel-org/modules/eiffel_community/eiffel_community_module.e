@@ -87,6 +87,8 @@ feature -- Router
 
 			a_router.handle ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/resources/videos", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources_video (a_api, ?, ?)), a_router.methods_head_get)
+
+			a_router.handle ("/admin/module/" + name + "/hack/", create {EIFFEL_COMMUNITY_ADMIN_HACK_HANDLER}.make (a_api), a_router.methods_get_post)
 		end
 
 feature -- Hooks configuration
@@ -368,7 +370,6 @@ feature -- Request handling: Contribute
 			end
 			r.execute
 		end
-
 
 	handle_resources_video (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local

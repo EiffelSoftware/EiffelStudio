@@ -102,9 +102,6 @@ feature -- Hooks configuration
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			if attached current_user (a_response.request) as l_user then
-				a_value.force (l_user, "user")
-			end
 		end
 
 

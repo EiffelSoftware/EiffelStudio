@@ -17,6 +17,24 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize Current api.
 		do
+			create error_handler.make
+		end
+
+feature -- Access: error handling
+
+	error_handler: ERROR_HANDLER
+			-- Error handler.
+
+	reset_error
+			-- Reset error handler.
+		do
+			error_handler.reset
+		end
+
+	has_error: BOOLEAN
+			-- Error occurred?
+		do
+			Result := error_handler.has_error
 		end
 
 feature {CMS_API_ACCESS, CMS_MODULE, CMS_API} -- Restricted access		

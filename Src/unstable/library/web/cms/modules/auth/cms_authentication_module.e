@@ -425,7 +425,6 @@ feature -- Handler
 	handle_post_change_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_user_api: CMS_USER_API
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if attached template_block ("post_change", r) as l_tpl_block then

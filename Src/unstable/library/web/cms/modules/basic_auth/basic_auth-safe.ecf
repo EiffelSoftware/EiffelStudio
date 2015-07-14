@@ -17,7 +17,7 @@
 		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
-		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\" recursive="true"/>

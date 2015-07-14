@@ -343,6 +343,24 @@ feature -- Handler
 						r.values.force (l_email.value, "email")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
+				elseif attached {WSF_STRING} req.form_parameter ("username") as l_username then
+					if 	attached {CMS_USER} l_user_api.user_by_name (l_username) as l_user and then
+						attached l_user.email as l_email
+					then
+								-- User exist create a new token and send a new email.
+						l_token := new_token
+						l_user_api.new_password (l_token, l_user.id)
+						l_url := req.absolute_script_url ("/account/reset-password?token=" + l_token)
+
+								-- Send Email
+						create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
+						write_debug_log (generator + ".handle register: send_contact_password_email")
+						es.send_contact_password_email (l_email, l_url)
+					else
+						r.values.force ("The username does not exist !", "error_username")
+						r.values.force (l_username.value, "username")
+						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+					end
 				end
 			end
 			r.execute
@@ -621,10 +639,12 @@ feature {NONE} -- Block views
 					end
 				end
 			elseif a_response.request.is_post_request_method then
-				if a_response.values.has ("error_email")  then
+				if a_response.values.has ("error_email") or else a_response.values.has ("error_username")   then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
 						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
 						l_tpl_block.set_value (a_response.values.item ("email"), "email")
+						l_tpl_block.set_value (a_response.values.item ("error_username"), "error_username")
+						l_tpl_block.set_value (a_response.values.item ("username"), "username")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")

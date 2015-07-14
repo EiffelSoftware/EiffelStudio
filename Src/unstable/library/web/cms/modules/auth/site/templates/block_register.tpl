@@ -1,5 +1,5 @@
  <div>
-    <form action="/account/roc-register" method="post">
+    <form action="{$site_url/}account/roc-register" method="post">
         <fieldset>
             <legend>Register Form</legend>
             <div>

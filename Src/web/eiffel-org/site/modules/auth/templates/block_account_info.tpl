@@ -1,5 +1,5 @@
  	<div class="primary-tabs">
-		{if isset="$user"}
+	 {if isset="$user"}
 		<h3>Account Information</h3>
 		<div>
 			<div>
@@ -12,13 +12,11 @@
 			   	<div>	
 			   		<label>Creation Date:</label>  {$user.creation_date/}
 			   	</div>
-				{unless isempty="$user.last_login_date"}
 			   	<div>	
 			   		<label>Last login:</label>  {$user.last_login_date/}
 			   	</div>	
-				{/unless}
 			   	<div>
-			   		<form method="get" action="{$site_url/}{$strategy/}">
+			   		<form method="get" action="{$site_url/}{$auth_login_strategy/}">
     					<button type="submit">Logout</button>
 					</form>
 			   	</div>	
@@ -59,6 +57,13 @@
 			   	</div>
     		{/foreach}
     	</div>		
-	
-		{/if}
+	{/if}
+	{unless isset="$user"}
+		<div>
+			<p> You are not logged in </p>
+			<form method="get" action="{$site_url/}{$auth.login/}">
+    			<button type="submit">Login</button>
+			</form>
+		</div>	
+	{/unless}
 	</div>

@@ -1,5 +1,5 @@
  <div>
-    <form action="/account/reactivate" method="post">
+    <form action="{$site_url/}account/reactivate" method="post">
         <fieldset>
             <legend>Reactivate Form</legend>
             <div>

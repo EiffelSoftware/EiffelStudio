@@ -61,9 +61,7 @@
 	{unless isset="$user"}
 		<div>
 			<p> You are not logged in </p>
-			<form method="get" action="{$site_url/}{$auth.login/}">
-    			<button type="submit">Login</button>
-			</form>
+				<a href="{$site_url/}account/roc-login">Go to the login page</a>
 		</div>	
 	{/unless}
 	</div>

@@ -59,7 +59,7 @@ feature {CMS_API} -- Module Initialization
 			cfg: WDOCS_CONFIG
 		do
 			Precursor (api)
-			cfg := configuration (api.module_location (Current))
+			cfg := configuration (api)
 			temp_dir := cfg.temp_dir
 			documentation_dir := cfg.documentation_dir
 			cache_duration := cfg.cache_duration
@@ -119,12 +119,29 @@ feature -- Hooks configuration
 			auto_subscribe_to_hooks (a_response)
 		end
 
-feature -- Access: config
+feature {NONE} -- Config
 
-	configuration (a_dir: PATH): WDOCS_CONFIG
+	configuration (api: CMS_API): WDOCS_CONFIG
 			-- Configuration setup.
 		local
-			cfg: detachable WDOCS_CONFIG
+			d: PATH
+		do
+			d := api.site_location.extended ("config").extended ("modules").extended (name)
+			if attached configuration_within (d) as cfg then
+				Result := cfg
+			else
+				d := api.module_location (Current)
+				if attached configuration_within (d) as cfg then
+					Result := cfg
+				else
+						-- Default
+					create {WDOCS_DEFAULT_CONFIG} Result.make_default
+				end
+			end
+		end
+
+	configuration_within (a_dir: PATH): detachable WDOCS_CONFIG
+		local
 			p: detachable PATH
 			ut: FILE_UTILITIES
 		do
@@ -140,31 +157,24 @@ feature -- Access: config
 			if p /= Void then
 				if attached p.extension as ext then
 					if ext.is_case_insensitive_equal_general ("ini") then
-						create {WDOCS_INI_CONFIG} cfg.make (p)
+						create {WDOCS_INI_CONFIG} Result.make (p)
 					elseif ext.is_case_insensitive_equal_general ("json") then
-						create {WDOCS_JSON_CONFIG} cfg.make (p)
+						create {WDOCS_JSON_CONFIG} Result.make (p)
 					end
 				end
-				if cfg = Void then
+				if Result = Void then
 					create {WDOCS_INI_CONFIG} Result.make (p)
 				end
 			else
 				p := a_dir.extended (name).appended_with_extension ("ini")
 				if ut.file_path_exists (p) then
-					create {WDOCS_INI_CONFIG} cfg.make (p)
+					create {WDOCS_INI_CONFIG} Result.make (p)
 				else
 					p := a_dir.extended (name).appended_with_extension ("json")
 					if ut.file_path_exists (p) then
-						create {WDOCS_JSON_CONFIG} cfg.make (p)
+						create {WDOCS_JSON_CONFIG} Result.make (p)
 					end
 				end
-			end
-
-			if cfg /= Void then
-				Result := cfg
-			else
-					-- Default
-				create {WDOCS_DEFAULT_CONFIG} Result.make_default
 			end
 		end
 

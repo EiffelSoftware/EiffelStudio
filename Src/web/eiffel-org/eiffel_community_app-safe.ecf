@@ -31,9 +31,11 @@
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wdocs\wdocs-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_embedded_video" location="modules\embedded_video\video-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
 		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth-safe.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
+		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
 		<library name="cms_persistence_store_odbc" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

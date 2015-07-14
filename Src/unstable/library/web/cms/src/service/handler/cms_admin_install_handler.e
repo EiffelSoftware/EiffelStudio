@@ -66,7 +66,13 @@ feature -- HTTP Methods
 				loop
 					l_module := ic.item
 					if api.is_module_installed (l_module) then
-						s.append ("<li>" + l_module.name + " is already installed.</li>%N")
+						s.append ("<li>")
+						s.append (l_module.name)
+						if l_module.is_enabled then
+							s.append (" </strong>[enabled]</strong>")
+						end
+						s.append (" is already installed.")
+						s.append ("</li>%N")
 					else
 						lst.force (l_module)
 					end
@@ -76,11 +82,19 @@ feature -- HTTP Methods
 					lst as ic
 				loop
 					l_module := ic.item
-					if api.is_module_installed (l_module) then
-						s.append ("<li>" + l_module.name + " was successfully installed.</li>%N")
-					else
-						s.append ("<li>" + l_module.name + " could not be installed!</li>%N")
+					s.append ("<li>")
+					s.append (l_module.name)
+					if l_module.is_enabled then
+						s.append (" </strong>[enabled]</strong>")
 					end
+
+					if api.is_module_installed (l_module) then
+						s.append (" was successfully installed.")
+					else
+						s.append (" could not be installed!")
+						s.append (" <span class=%"error%">[ERROR]</span>")
+					end
+					s.append ("</li>%N")
 				end
 				s.append ("</ul>")
 				r.set_main_content (s)

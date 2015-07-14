@@ -102,8 +102,8 @@ feature -- Hooks configuration
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
+			a_value.force (a_response.user, "user")
 		end
-
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
@@ -129,11 +129,9 @@ feature -- Handler
 			r: CMS_RESPONSE
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Account Info", "optional_content_type")
 
 			if attached template_block ("account_info", r) as l_tpl_block then
-				r.set_value (current_user (req), "user")
-				if attached current_user (req) as l_user  then
+				if attached r.user as l_user then
 					r.set_value (api.user_api.user_roles (l_user), "roles")
 				end
 				r.add_block (l_tpl_block, "content")
@@ -158,7 +156,6 @@ feature -- Handler
 				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				r.set_value ("Login", "optional_content_type")
 				r.execute
 			end
 		end
@@ -172,14 +169,11 @@ feature -- Handler
 			r.execute
 		end
 
-
-
 	handle_register (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
 			u: CMS_USER
-			l_roles: LIST [CMS_USER_ROLE]
 			l_exist: BOOLEAN
 			es: CMS_AUTHENTICATON_EMAIL_SERVICE
 			l_url: STRING
@@ -187,7 +181,6 @@ feature -- Handler
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if r.has_permission ("account register") then
-				r.set_value ("Register", "optional_content_type")
 				if req.is_post_request_method then
 					if
 						attached {WSF_STRING} req.form_parameter ("name") as l_name and then
@@ -198,24 +191,20 @@ feature -- Handler
 
 						if attached l_user_api.user_by_name (l_name.value) then
 								-- Username already exist.
-							r.values.force ("User name already exists!", "error_name")
+							r.set_value ("User name already exists!", "error_name")
 							l_exist := True
 						end
 						if attached l_user_api.user_by_email (l_email.value) then
 								-- Emails already exist.
-							r.values.force ("An account is already associated with that email address!", "error_email")
+							r.set_value ("An account is already associated with that email address!", "error_email")
 							l_exist := True
 						end
 
 						if not l_exist then
 								-- New user
-							create {ARRAYED_LIST [CMS_USER_ROLE]}l_roles.make (1)
-							l_roles.force (l_user_api.authenticated_user_role)
-
 							create u.make (l_name.value)
 							u.set_email (l_email.value)
 							u.set_password (l_password.value)
-							u.set_roles (l_roles)
 							l_user_api.new_user (u)
 
 								-- Create activation token
@@ -229,8 +218,8 @@ feature -- Handler
 							es.send_contact_email (l_email.value, l_url)
 
 						else
-							r.values.force (l_name.value, "name")
-							r.values.force (l_email.value, "email")
+							r.set_value (l_name.value, "name")
+							r.set_value (l_email.value, "email")
 							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						end
 					end
@@ -257,12 +246,10 @@ feature -- Handler
 					l_user.mark_active
 					l_user_api.update_user (l_user)
 					l_user_api.remove_activation (l_token.value)
-					r.set_value ("Account activated", "optional_content_type")
 					r.set_main_content ("<p> Your account <i>"+ l_user.name +"</i> has been activated</p>")
 				else
 					-- the token does not exist, or it was already used.
 					r.set_status_code ({HTTP_CONSTANTS}.bad_request)
-					r.set_value ("Account not activated", "optional_content_type")
 					r.set_main_content ("<p>The token <i>" + l_token.value +"</i> is not valid " + r.link ("Reactivate Account", "account/reactivate", Void) + "</p>")
 				end
 				r.execute
@@ -290,7 +277,7 @@ feature -- Handler
 					if 	attached {CMS_USER} l_user_api.user_by_email (l_email.value) as l_user then
 							-- User exist create a new token and send a new email.
 						if l_user.is_active then
-							r.values.force ("The asociated user to the given email " + l_email.value + " , is already active", "is_active")
+							r.set_value ("The asociated user to the given email " + l_email.value + " , is already active", "is_active")
 							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 						else
 							l_token := new_token
@@ -303,8 +290,8 @@ feature -- Handler
 							es.send_contact_activation_email (l_email.value, l_url)
 						end
 					else
-						r.values.force ("The email does not exist or !", "error_email")
-						r.values.force (l_email.value, "email")
+						r.set_value ("The email does not exist or !", "error_email")
+						r.set_value (l_email.value, "email")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 				end
@@ -336,8 +323,8 @@ feature -- Handler
 						write_debug_log (generator + ".handle register: send_contact_password_email")
 						es.send_contact_password_email (l_email.value, l_url)
 					else
-						r.values.force ("The email does not exist !", "error_email")
-						r.values.force (l_email.value, "email")
+						r.set_value ("The email does not exist !", "error_email")
+						r.set_value (l_email.value, "email")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 				elseif attached {WSF_STRING} req.form_parameter ("username") as l_username then
@@ -354,8 +341,8 @@ feature -- Handler
 						write_debug_log (generator + ".handle register: send_contact_password_email")
 						es.send_contact_password_email (l_email, l_url)
 					else
-						r.values.force ("The username does not exist !", "error_username")
-						r.values.force (l_username.value, "username")
+						r.set_value ("The username does not exist !", "error_username")
+						r.set_value (l_username.value, "username")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 				end
@@ -372,9 +359,9 @@ feature -- Handler
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			l_user_api := api.user_api
 			if	attached {WSF_STRING} req.query_parameter ("token") as l_token then
-				r.values.force (l_token.value, "token")
+				r.set_value (l_token.value, "token")
 				if l_user_api.user_by_password_token (l_token.value) = Void  then
-					r.values.force ("The token " + l_token.value + " is not valid, " + r.link ("click here" , "account/new-password", Void) + " to generate a new token.", "error_token")
+					r.set_value ("The token " + l_token.value + " is not valid, " + r.link ("click here" , "account/new-password", Void) + " to generate a new token.", "error_token")
 					r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 				end
 			end
@@ -395,8 +382,8 @@ feature -- Handler
 							l_user_api.remove_password (l_token.value)
 						end
 					else
-						r.values.force ("Passwords Don't Match", "error_password")
-						r.values.force (l_token.value, "token")
+						r.set_value ("Passwords Don't Match", "error_password")
+						r.set_value (l_token.value, "token")
 						r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 					end
 				end
@@ -426,8 +413,8 @@ feature -- Handler
 						r.set_redirection (req.absolute_script_url ("/account/post-change-password"))
 					else
 						if attached template_block ("account_info", r) as l_tpl_block then
-							r.set_value (l_user, "user")
-							r.values.force ("Passwords Don't Match", "error_password")
+--							r.set_value (l_user, "user")
+							r.set_value ("Passwords Don't Match", "error_password")
 							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
 							r.add_block (l_tpl_block, "content")
 						end
@@ -536,17 +523,17 @@ feature {NONE} -- Block views
 
 	get_block_view_login (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		local
-			vals: CMS_VALUE_TABLE
+--			vals: CMS_VALUE_TABLE
 		do
 			if attached template_block (a_block_id, a_response) as l_tpl_block then
-				create vals.make (1)
-					-- add the variable to the block
-				value_table_alter (vals, a_response)
-				across
-					vals as ic
-				loop
-					l_tpl_block.set_value (ic.item, ic.key)
-				end
+--				create vals.make (1)
+--					-- add the variable to the block
+--				value_table_alter (vals, a_response)
+--				across
+--					vals as ic
+--				loop
+--					l_tpl_block.set_value (ic.item, ic.key)
+--				end
 				a_response.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
@@ -557,33 +544,35 @@ feature {NONE} -- Block views
 
 	get_block_view_register (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
-			if a_response.request.is_get_request_method then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "content")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif a_response.request.is_post_request_method then
-				if a_response.values.has ("error_name") or else a_response.values.has ("error_email") then
+			if a_response.has_permission ("account register") then
+				if a_response.request.is_get_request_method then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						l_tpl_block.set_value (a_response.values.item ("error_name"), "error_name")
-						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
-						l_tpl_block.set_value (a_response.values.item ("email"), "email")
-						l_tpl_block.set_value (a_response.values.item ("name"), "name")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
-				else
-					if attached template_block ("post_register", a_response) as l_tpl_block then
-						a_response.add_block (l_tpl_block, "content")
+				elseif a_response.request.is_post_request_method then
+					if a_response.values.has ("error_name") or else a_response.values.has ("error_email") then
+						if attached template_block (a_block_id, a_response) as l_tpl_block then
+	--						l_tpl_block.set_value (a_response.values.item ("error_name"), "error_name")
+	--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
+	--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
+	--						l_tpl_block.set_value (a_response.values.item ("name"), "name")
+							a_response.add_block (l_tpl_block, "content")
+						else
+							debug ("cms")
+								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+							end
+						end
 					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+						if attached template_block ("post_register", a_response) as l_tpl_block then
+							a_response.add_block (l_tpl_block, "content")
+						else
+							debug ("cms")
+								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+							end
 						end
 					end
 				end
@@ -604,9 +593,9 @@ feature {NONE} -- Block views
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_email") or else a_response.values.has ("is_active") then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
-						l_tpl_block.set_value (a_response.values.item ("email"), "email")
-						l_tpl_block.set_value (a_response.values.item ("is_active"), "is_active")
+--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
+--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
+--						l_tpl_block.set_value (a_response.values.item ("is_active"), "is_active")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -638,10 +627,10 @@ feature {NONE} -- Block views
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_email") or else a_response.values.has ("error_username")   then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
-						l_tpl_block.set_value (a_response.values.item ("email"), "email")
-						l_tpl_block.set_value (a_response.values.item ("error_username"), "error_username")
-						l_tpl_block.set_value (a_response.values.item ("username"), "username")
+--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
+--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
+--						l_tpl_block.set_value (a_response.values.item ("error_username"), "error_username")
+--						l_tpl_block.set_value (a_response.values.item ("username"), "username")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -664,8 +653,8 @@ feature {NONE} -- Block views
 		do
 			if a_response.request.is_get_request_method then
 				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					l_tpl_block.set_value (a_response.values.item ("token"), "token")
-					l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
+--					l_tpl_block.set_value (a_response.values.item ("token"), "token")
+--					l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
 					a_response.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")
@@ -675,9 +664,9 @@ feature {NONE} -- Block views
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_token") or else a_response.values.has ("error_password")   then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
-						l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
-						l_tpl_block.set_value (a_response.values.item ("error_password"), "error_password")
-						l_tpl_block.set_value (a_response.values.item ("token"), "token")
+--						l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
+--						l_tpl_block.set_value (a_response.values.item ("error_password"), "error_password")
+--						l_tpl_block.set_value (a_response.values.item ("token"), "token")
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")

@@ -357,6 +357,26 @@ feature -- Access: roles and permissions
 			end
 		end
 
+	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
+			-- User role by name `a_name', if any.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".user_role_by_name")
+			create l_parameters.make (1)
+			l_parameters.put (a_name, "name")
+			sql_query (select_user_role_by_name, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_user_role
+				if Result /= Void and not has_error then
+					fill_user_role (Result)
+				end
+			else
+				check no_more_than_one: sql_rows_count = 0 end
+			end
+		end
+
 	user_roles_for (a_user: CMS_USER): LIST [CMS_USER_ROLE]
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -816,6 +836,9 @@ feature {NONE} -- Sql Queries: USER ROLE
 
 	select_user_role_by_id: STRING = "SELECT rid, name FROM roles WHERE rid=:rid;"
 			-- User role for role id :rid;
+
+	select_user_role_by_name: STRING = "SELECT rid, name FROM roles WHERE name=:name;"
+			-- User role for role name :name;
 
 	sql_insert_user_role_permission: STRING = "INSERT INTO role_permissions (rid, permission, module) VALUES (:rid, :permission, :module);"
 			-- SQL Insert a new permission :permission for user role :rid.

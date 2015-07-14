@@ -66,6 +66,10 @@ feature -- Access: roles and permissions
 		do
 		end
 
+	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
+		do
+		end
+
 	user_roles_for (a_user: CMS_USER): LIST [CMS_USER_ROLE]
 			-- User roles for user `a_user'.
 			-- Note: anonymous and authenticated roles are not included.
@@ -108,4 +112,7 @@ feature -- Change: User password recovery
 		do
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

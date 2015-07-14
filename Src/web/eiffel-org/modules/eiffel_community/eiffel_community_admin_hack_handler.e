@@ -84,10 +84,11 @@ feature {NONE} -- Handler: admin hack...
 
 			create fe.make_with_text ("email", "")
 			fe.set_label ("Email")
-			fe.enable_required
 			fe.set_placeholder ("valid email")
 			fs.extend (fe)
 			create f_submit.make_with_text ("op", "Create user")
+			fs.extend (f_submit)
+			create f_submit.make_with_text ("op", "Update user")
 			fs.extend (f_submit)
 			f.extend (fs)
 
@@ -95,45 +96,94 @@ feature {NONE} -- Handler: admin hack...
 				create s.make_empty
 				f.validation_actions.extend (agent (fd: WSF_FORM_DATA; ia_api: CMS_API)
 						do
-							if attached fd.string_item ("username") as l_username then
-								if attached ia_api.user_api.user_by_name (l_username) then
-									fd.report_invalid_field ("username", "Username already taken!")
+							if attached fd.string_item ("op") as f_op then
+								if f_op.is_case_insensitive_equal_general ("Create user") then
+									if attached fd.string_item ("username") as l_username then
+										if attached ia_api.user_api.user_by_name (l_username) then
+											fd.report_invalid_field ("username", "Username already taken!")
+										end
+									else
+										fd.report_invalid_field ("username", "missing username")
+									end
+									if attached fd.string_item ("email") as l_email then
+										if attached ia_api.user_api.user_by_email (l_email) then
+											fd.report_invalid_field ("email", "Email address already associated with an existing account!")
+										end
+									else
+										fd.report_invalid_field ("email", "missing email address")
+									end
+								elseif f_op.is_case_insensitive_equal_general ("Update user") then
+									if attached fd.string_item ("username") as l_username then
+										if ia_api.user_api.user_by_name (l_username) = Void then
+											fd.report_invalid_field ("username", "Username does not exist!")
+										end
+									else
+										fd.report_invalid_field ("username", "missing username")
+									end
 								end
-							else
-								fd.report_invalid_field ("username", "missing username")
-							end
-							if attached fd.string_item ("email") as l_email then
-								if attached ia_api.user_api.user_by_email (l_email) then
-									fd.report_invalid_field ("email", "Email address already associated with an existing account!")
-								end
-							else
-								fd.report_invalid_field ("email", "missing email address")
 							end
 						end(?, a_api)
 					)
 				f.submit_actions.extend (agent (fd: WSF_FORM_DATA; ia_api: CMS_API; a_output: STRING)
 						local
 							u: CMS_USER
+							l_roles: detachable LIST [CMS_USER_ROLE]
+							l_trusted_user_role: detachable CMS_USER_ROLE
 						do
-							if
-								attached fd.string_item ("username") as l_username and then
-								attached fd.string_item ("email") as l_email and then
-								l_email.is_valid_as_string_8
-							then
-								create u.make (l_username)
-								u.set_email (l_email.as_string_8)
-								u.set_password (new_random_password (u))
-								ia_api.user_api.new_user (u)
-								if ia_api.user_api.has_error then
+							if attached fd.string_item ("op") as f_op then
+								if f_op.is_case_insensitive_equal_general ("Create user") then
+									if
+										attached fd.string_item ("username") as l_username and then
+										attached fd.string_item ("email") as l_email and then
+										l_email.is_valid_as_string_8
+									then
+										create u.make (l_username)
+										u.set_email (l_email.as_string_8)
+										u.set_password (new_random_password (u))
+										ia_api.user_api.new_user (u)
+										if ia_api.user_api.has_error then
 
+										end
+										a_output.append ("<li>New user ["+ html_encoded (l_username) +"] created.</li>")
+									else
+										fd.report_invalid_field ("username", "Missing username!")
+										fd.report_invalid_field ("email", "Missing email address!")
+									end
+								elseif f_op.is_case_insensitive_equal_general ("Update user") then
+									if
+										attached fd.string_item ("username") as l_username and then
+										attached ia_api.user_api.user_by_name (l_username) as l_user
+									then
+										l_trusted_user_role := ia_api.user_api.user_role_by_name ("trusted")
+										if l_trusted_user_role = Void then
+											create l_trusted_user_role.make ("trusted")
+											l_trusted_user_role.add_permission ("edit wdocs page")
+											ia_api.user_api.save_user_role (l_trusted_user_role)
+										end
+										l_trusted_user_role := ia_api.user_api.user_role_by_name ("trusted")
+										if l_trusted_user_role /= Void then
+											u := l_user
+											ia_api.user_api.update_user (u)
+											l_roles := u.roles
+											if l_roles = Void then
+												create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (1)
+											end
+											l_roles.force (l_trusted_user_role)
+											u.set_roles (l_roles)
+
+											ia_api.user_api.update_user (u)
+											a_output.append ("<li>User ["+ html_encoded (l_username) +"] updated.</li>")
+										else
+											a_output.append ("<li>User ["+ html_encoded (l_username) +"] NOT updated! [ERROR].</li>")
+										end
+									else
+										fd.report_invalid_field ("username", "User does not exist!")
+									end
 								end
-								a_output.append ("<li>New user ["+ html_encoded (l_username) +"] created.</li>")
-							else
-								fd.report_invalid_field ("username", "Missing username!")
-								fd.report_invalid_field ("email", "Missing email address!")
 							end
 						end(?, a_api, s)
 					)
+
 				f.process (r)
 				f.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), s)
 				r.set_main_content (s)

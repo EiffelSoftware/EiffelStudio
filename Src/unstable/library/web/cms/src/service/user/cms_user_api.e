@@ -123,6 +123,20 @@ feature -- User roles.
 			Result := storage.user_role_by_id (a_id)
 		end
 
+	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
+		do
+			Result := storage.user_role_by_name (a_name)
+		end
+
+feature -- Change User role		
+
+	save_user_role (a_user_role: CMS_USER_ROLE)
+		do
+			reset_error
+			storage.save_user_role (a_user_role)
+			error_handler.append (storage.error_handler)
+		end
+
 feature -- Change User
 
 	new_user (a_user: CMS_USER)

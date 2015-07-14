@@ -115,9 +115,8 @@ feature -- Hooks
 			-- <Precursor>
 		do
 			if attached current_user (a_response.request) as l_user then
-				a_value.force (l_user, "user")
+				a_value.force ("basic_auth_logoff", "auth_login_strategy")
 			end
-			a_value.force ("basic_auth_logoff", "strategy")
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

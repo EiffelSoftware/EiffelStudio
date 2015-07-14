@@ -179,10 +179,12 @@ feature -- Hooks
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			if attached current_user (a_response.request) as l_user then
-				a_value.force (l_user, "user")
+			if
+				attached a_response.current_user (a_response.request) as u and then
+				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session) 
+			then
+				a_value.force ("account/roc-openid-logout", "auth_login_strategy")
 			end
-			a_value.force ("roc-openid-logout", "strategy")
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

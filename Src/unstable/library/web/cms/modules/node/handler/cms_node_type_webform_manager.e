@@ -106,12 +106,12 @@ feature -- Forms ...
 				end
 				ti.set_text_value (l_uri)
 				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
-				ti.set_validation_action (agent (fd: WSF_FORM_DATA; a_response: CMS_RESPONSE)
+				ti.set_validation_action (agent (fd: WSF_FORM_DATA; ia_response: NODE_RESPONSE; ia_node: CMS_NODE)
 						do
 							if
 								attached fd.string_item ("path_alias") as f_path_alias
 							then
-								if a_response.api.is_valid_path_alias (f_path_alias) then
+								if ia_response.api.is_valid_path_alias (f_path_alias) then
 										-- Ok.
 								elseif f_path_alias.is_empty then
 										-- Ok
@@ -123,12 +123,13 @@ feature -- Forms ...
 										-- TODO: implement full path alias validation
 								end
 								if
-									attached a_response.api.source_of_path_alias (f_path_alias) as l_aliased_location
+									attached ia_response.api.source_of_path_alias (f_path_alias) as l_aliased_location and then
+									not l_aliased_location.same_string (ia_response.node_api.node_path (ia_node))
 								then
-									fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + a_response.link (Void, l_aliased_location, Void) + "%" !")
+									fd.report_invalid_field ("path_alias", "Path is already aliased to location %"" + ia_response.link (Void, l_aliased_location, Void) + "%" !")
 								end
 							end
-						end(?, response)
+						end(?, response, a_node)
 					)
 			end
 			if

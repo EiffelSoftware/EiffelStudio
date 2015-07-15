@@ -60,6 +60,26 @@ feature -- Access User Outh
 			end
 		end
 
+	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_string: STRING
+		do
+			error_handler.reset
+			write_information_log (generator + ".user_oauth2_by_email")
+			create l_parameters.make (1)
+			l_parameters.put (a_email, "email")
+			create l_string.make_from_string (select_user_oauth2_template_by_email)
+			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
+			sql_query (l_string, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_user
+			else
+				check no_more_than_one: sql_rows_count = 0 end
+			end
+		end
+
 	user_oauth2_by_token (a_token: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- <Precursor>
 		local
@@ -156,6 +176,8 @@ feature -- Change: User OAuth
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_user_profile, "profile")
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
+			l_parameters.put (a_user.email, "email")
+
 
 			create l_string.make_from_string (sql_insert_oauth2_template)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
@@ -164,7 +186,6 @@ feature -- Change: User OAuth
 		end
 
 	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL )
-			-- Update user `a_user' with oauth2 authentication.
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -180,6 +201,25 @@ feature -- Change: User OAuth
 			l_parameters.put (a_user_profile, "profile")
 
 			create l_string.make_from_string (sql_update_oauth2_template)
+			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
+			sql_change (l_string, l_parameters)
+			sql_commit_transaction
+		end
+
+	remove_user_oauth2 (a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_string: STRING
+		do
+			error_handler.reset
+			sql_begin_transaction
+
+			write_information_log (generator + ".remove_user_oauth2")
+			create l_parameters.make (1)
+			l_parameters.put (a_user.id, "uid")
+
+			create l_string.make_from_string (sql_remove_oauth2_template)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
 			sql_change (l_string, l_parameters)
 			sql_commit_transaction
@@ -294,9 +334,13 @@ feature {NONE} -- User OAuth2
 
 	Select_user_oauth2_template_by_id: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.uid = :uid;"
 
-	Sql_insert_oauth2_template: STRING = "INSERT INTO $table_name (uid, access_token, details, created) VALUES (:uid, :token, :profile, :utc_date);"
+	Select_user_oauth2_template_by_email: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.email = :email;"
+
+	Sql_insert_oauth2_template: STRING = "INSERT INTO $table_name (uid, access_token, details, created, email) VALUES (:uid, :token, :profile, :utc_date, :email);"
 
 	Sql_update_oauth2_template: STRING = "UPDATE $table_name SET access_token = :token, details = :profile WHERE uid =:uid;"
+
+	Sql_remove_oauth2_template: STRING = "DELETE FROM $table_name WHERE uid =:uid;"
 
 	Sql_oauth_consumers: STRING = "SELECT name FROM oauth2_consumers";
 

@@ -143,8 +143,6 @@ feature -- Handler
 			r.execute
 		end
 
-
-
 	handle_login (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -476,7 +474,6 @@ feature -- Handler
 				get_block_view_reset_password (a_block_id, a_response)
 			end
 		end
-
 
 feature {NONE} -- Token Generation
 

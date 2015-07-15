@@ -207,10 +207,6 @@ feature -- Hooks
 			then
 				a_value.force ("account/roc-oauth-logout", "auth_login_strategy")
 			end
-
-			if attached a_response.current_user (a_response.request) as u  then
-				associate_account (u, a_value)
-			end
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -250,7 +246,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"login">>
+			Result := <<"login", "account">>
 			debug ("roc")
 				create l_string.make_empty
 				across
@@ -270,6 +266,18 @@ feature -- Hooks
 				a_response.location.starts_with ("account/roc-oauth-login")
 			then
 				get_block_view_login (a_block_id, a_response)
+			elseif a_block_id.is_case_insensitive_equal_general ("account") then
+				if
+					attached template_block ("account_info", a_response) as l_tpl_block and then
+					attached current_user (a_response.request) as l_user
+				then
+					associate_account (l_user, a_response.values)
+					a_response.add_block (l_tpl_block, "content")
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [resources_page]")
+					end
+				end
 			end
 		end
 
@@ -491,6 +499,7 @@ feature -- OAuth2 Login with Provider
 			r: CMS_RESPONSE
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
 			if req.is_post_request_method then
 				if
 					attached {WSF_STRING} req.form_parameter ("consumer") as l_consumer and then

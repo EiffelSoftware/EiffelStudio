@@ -25,6 +25,11 @@ feature -- Access: Users
 		deferred
 		end
 
+	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- Retrieve a user by email `a_email' for the consumer `a_consumer', if any.
+		deferred
+		end
+
 	user_oauth2_by_token (a_token: READABLE_STRING_GENERAL; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- Retrieve a user by token `a_token' for the consumer `a_consumer'.
 		deferred
@@ -60,6 +65,13 @@ feature -- Change: User Oauth2
 
 	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL )
 			-- Update user `a_user' with oauth2 authentication.
+		deferred
+		end
+
+	remove_user_oauth2 (a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
+			-- Remove user `a_user' with oauth2 for the consumer `a_consumer'.
+		require
+			has_id: a_user.has_id
 		deferred
 		end
 

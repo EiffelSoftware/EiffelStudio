@@ -27,6 +27,11 @@ feature -- Access: Users
 		do
 		end
 
+	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
 	user_oauth2_by_token (a_token: READABLE_STRING_GENERAL; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- -- CMS User with Oauth credential by access token `a_token' if any.
 		do
@@ -64,6 +69,12 @@ feature -- Change: User Oauth2
 			-- Update user `a_user' with oauth2 authentication.
 		do
 		end
+
+	remove_user_oauth2 (a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
+			-- Remove user `a_user' with oauth2 for the consumer `a_consumer'.
+		do
+		end
+
 
 
 end

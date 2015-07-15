@@ -40,6 +40,12 @@ feature -- Access: User Oauth20
 			Result := oauth_20_storage.user_oauth2_by_id (a_uid, a_consumer)
 		end
 
+	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- Retrieve a user by email `a_email' for the consumer `a_consumer', if any.
+		do
+			Result := oauth_20_storage.user_oauth2_by_email (a_email, a_consumer)
+		end
+
 	user_oauth2_by_token (a_token: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- Retrieve a user by token `a_token' for the consumer `a_consumer'.
 		do
@@ -85,11 +91,22 @@ feature	-- Change: User OAuth20
 
 
 	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
-			-- Updaate user `a_user' with oauth2 for the consumer `a_consumer'.
+			-- Update user `a_user' with oauth2 for the consumer `a_consumer'.
 		require
 			has_id: a_user.has_id
 		do
 			oauth_20_storage.update_user_oauth2 (a_token, a_user_profile, a_user, a_consumer_table)
 		end
+
+
+	remove_user_oauth2 (a_user: CMS_USER; a_consumer_table: READABLE_STRING_GENERAL)
+			-- Remove user `a_user' with oauth2 for the consumer `a_consumer'.
+		require
+			has_id: a_user.has_id
+		do
+			oauth_20_storage.remove_user_oauth2 (a_user, a_consumer_table)
+		end
+
+
 
 end

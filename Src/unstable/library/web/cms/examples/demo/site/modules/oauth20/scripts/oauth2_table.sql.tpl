@@ -4,7 +4,10 @@ CREATE TABLE $table_name (
    `access_token` TEXT  NOT NULL,
    `created` DATETIME NOT NULL,
    `details` TEXT NOT NULL,
+   `email` TEXT NOT NULL,
    CONSTRAINT `uid`
-    UNIQUE(`uid`)
+    UNIQUE(`uid`),
+   CONSTRAINT `email`
+    UNIQUE(`email`) 
    );
 

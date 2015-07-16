@@ -270,7 +270,7 @@ feature -- Change: user
 
 			sql_begin_transaction
 
-			l_existing_roles:= user_roles_for (a_user)
+			l_existing_roles := user_roles_for (a_user)
 			across
 				l_existing_roles as ic
 			until
@@ -280,7 +280,7 @@ feature -- Change: user
 					l_has_role := False
 					l_roles.start
 				until
-					l_has_role
+					l_has_role or l_roles.after
 				loop
 					if l_roles.item.id = ic.item.id then
 						l_has_role := True

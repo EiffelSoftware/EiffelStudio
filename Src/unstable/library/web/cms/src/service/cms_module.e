@@ -79,14 +79,28 @@ feature {CMS_API} -- Module management
 	is_installed (api: CMS_API): BOOLEAN
 			-- Is Current module installed?
 		do
-			Result := attached api.storage.custom_value ("is_initialized", "module-" + name) as v and then v.is_case_insensitive_equal_general ("yes")
+			if attached api.storage.custom_value ("is_initialized", "module-" + name) as v then
+				if v.is_case_insensitive_equal_general (version) then
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("yes") then
+						-- Backward compatibility.
+					Result := True
+				elseif v.is_case_insensitive_equal_general ("no") then
+						-- Probably a module that was installed, but now uninstalled.
+					Result := False
+				else
+						-- Maybe a different version is installed.
+						-- For now, let's assume this is installed.
+					Result := True
+				end
+			end
 		end
 
 	install (api: CMS_API)
 		require
 			is_not_installed: not is_installed (api)
 		do
-			api.storage.set_custom_value ("is_initialized", "yes", "module-" + name)
+			api.storage.set_custom_value ("is_initialized", version, "module-" + name)
 		end
 
 	uninstall (api: CMS_API)
@@ -150,6 +164,10 @@ feature -- Hooks
 			end
 			create Result.make_empty
 		end
+
+invariant
+	name_set: not name.is_whitespace
+	version_set: not version.is_whitespace
 
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

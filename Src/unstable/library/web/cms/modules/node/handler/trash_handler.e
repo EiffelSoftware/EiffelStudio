@@ -42,19 +42,29 @@ feature -- HTTP Methods
 			s: STRING
 			n: CMS_NODE
 			lnk: CMS_LOCAL_LINK
+			l_username: detachable READABLE_STRING_32
+			l_trash_owner: detachable CMS_USER
 		do
 				-- At the moment the template is hardcoded, but we can
 				-- get them from the configuration file and load them into
 				-- the setup class.
-
-			if attached current_user (req) as l_user then
-				create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-
-				l_page.add_variable (node_api.trashed_nodes (l_user), "nodes")
-
+			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
+			if attached {WSF_STRING} req.query_parameter ("user") as p_username then
+				l_username := p_username.value
+				l_trash_owner := api.user_api.user_by_name (l_username)
+			end
+			if
+				(l_trash_owner /= Void and then l_page.has_permissions (<<"view any trash", "view own trash">>))
+				or else (l_page.has_permission ("view trash"))
+			then
 					-- NOTE: for development purposes we have the following hardcode output.
-				create s.make_from_string ("<p>Nodes:</p>")
-				if attached node_api.trashed_nodes (l_user) as lst then
+				if l_trash_owner /= Void then
+					create s.make_from_string ("<p>Trash for user " + l_page.html_encoded (l_trash_owner.name) + "</p>")
+				else
+					create s.make_from_string ("<p>Trash</p>")
+				end
+
+				if attached node_api.trashed_nodes (l_trash_owner) as lst then
 					s.append ("<ul class=%"cms-nodes%">%N")
 					across
 						lst as ic

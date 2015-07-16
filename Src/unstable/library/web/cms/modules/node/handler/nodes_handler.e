@@ -44,6 +44,7 @@ feature -- HTTP Methods
 			l_page_helper: CMS_PAGINATION_GENERATOR
 			s_pager: STRING
 			l_count: NATURAL_64
+			l_include_trashed: BOOLEAN
 		do
 				-- At the moment the template are hardcoded, but we can
 				-- get them from the configuration file and load them into
@@ -71,19 +72,35 @@ feature -- HTTP Methods
 			end
 
 			if attached node_api.recent_nodes (create {CMS_DATA_QUERY_PARAMETERS}.make (l_page_helper.current_page_offset, l_page_helper.page_size)) as lst then
+				if attached {WSF_STRING} req.query_parameter ("include_trash") as v and then v.is_case_insensitive_equal ("yes") then
+					l_include_trashed := l_response.has_permissions (<<"view trash", "view any trash">>)
+				end
 				s.append ("<ul class=%"cms-nodes%">%N")
 				across
 					lst as ic
 				loop
 					n := ic.item
-					lnk := node_api.node_link (n)
-					s.append ("<li class=%"cms_type_"+ n.content_type +"%">")
-					s.append (l_response.link (lnk.title, lnk.location, Void))
-					debug
-						if attached node_api.content_type (n.content_type) as ct then
-							s.append ("<span class=%"description%">")
-							s.append (html_encoded (ct.title))
-							s.append ("</span>")
+					if not n.is_trashed or else l_include_trashed then
+						lnk := node_api.node_link (n)
+						s.append ("<li class=%"cms_type_"+ n.content_type)
+						if not n.is_published then
+							s.append (" not-published")
+						elseif n.is_trashed then
+							s.append (" trashed")
+						end
+						s.append ("%">")
+						s.append (l_response.link (lnk.title, lnk.location, Void))
+						if not n.is_published then
+							s.append (" <em>(not-published)</em>")
+						elseif n.is_trashed then
+							s.append (" <em>(trashed)</em>")
+						end
+						debug
+							if attached node_api.content_type (n.content_type) as ct then
+								s.append ("<span class=%"description%">")
+								s.append (html_encoded (ct.title))
+								s.append ("</span>")
+							end
 						end
 					end
 					s.append ("</li>%N")
@@ -92,6 +109,20 @@ feature -- HTTP Methods
 			end
 				-- Again the pager at the bottom, if needed
 			s.append (s_pager)
+
+			if l_response.has_permissions (<<"view trash", "view any trash">>) then
+				if not l_include_trashed then
+					s.append (l_response.link ("With trashed items", l_response.location + "?include_trash=yes", Void))
+					s.append (" | ")
+				end
+
+				s.append (l_response.link ("Global-Trash", "trash", Void))
+				s.append (" | ")
+			end
+			if attached l_response.user as u and then l_response.has_permission ("view own trash") then
+				s.append (l_response.link ("Your-trash", "trash?user=" + l_response.url_encoded (u.name), Void))
+				s.append (" | ")
+			end
 
 			l_response.set_main_content (s)
 			l_response.execute

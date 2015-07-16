@@ -220,11 +220,11 @@ feature -- Access: Node
 			Result := node_storage.nodes
 		end
 
-	trashed_nodes (a_user: CMS_USER): LIST [CMS_NODE]
+	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
 			-- List of nodes with status in {CMS_NODE_API}.trashed.
-			-- if the current user is admin, it will retrieve all the trashed nodes
+			-- if `a_user' is set, return nodes related to this user.
 		do
-			Result := node_storage.trashed_nodes (a_user.id)
+			Result := node_storage.trashed_nodes (a_user)
 		end
 
 	recent_nodes (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]

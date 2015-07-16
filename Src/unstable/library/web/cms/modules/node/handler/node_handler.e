@@ -102,7 +102,9 @@ feature -- HTTP Methods
 				l_nid := node_id_path_parameter (req)
 				if l_nid > 0 then
 					l_node := node_api.node (l_nid)
-					if l_node /= Void then
+					if
+						l_node /= Void and then l_node.is_published
+					then
 						create view_response.make (req, res, api, node_api)
 						view_response.set_node (l_node)
 						view_response.execute

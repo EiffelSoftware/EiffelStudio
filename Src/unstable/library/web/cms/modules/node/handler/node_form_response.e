@@ -48,7 +48,7 @@ feature -- Execution
 				attached node_api.node (nid) as l_node
 			then
 				if attached node_api.node_type_for (l_node) as l_type then
- 					fixme ("refactor: process_edit, process_create porcess edit")
+ 					fixme ("refactor: process_edit, process_create process edit")
  					if
 						request.path_info.ends_with_general ("/edit") and then
 						node_api.has_permission_for_action_on_node ("edit", l_node, current_user (request))
@@ -249,6 +249,9 @@ feature -- Form
 					l_node.set_author (user)
 					s := "created"
 				end
+
+				fixme ("for now, publishing is not implemented, so let's assume any node saved is published.") -- FIXME
+				l_node.mark_published
 				node_api.save_node (l_node)
 				if attached current_user (request) as u then
 					api.log ("node",

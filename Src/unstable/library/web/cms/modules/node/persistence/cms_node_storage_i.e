@@ -73,8 +73,10 @@ feature -- Access
 		deferred
 		end
 
-	trashed_nodes (a_user_id: INTEGER_64): LIST [CMS_NODE]
-			-- List of nodes by user `a_user_id'.
+	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
+			-- List of nodes by user `a_user' if set, or any.
+		require
+			a_user /= Void implies a_user.has_id
 		deferred
 		end
 

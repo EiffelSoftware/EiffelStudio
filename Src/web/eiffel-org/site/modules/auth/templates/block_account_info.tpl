@@ -24,7 +24,7 @@
     	</div>
     	<hr>
     	{include file="block_change_password.tpl" /}
-    	<hr>
+       	<hr>
     	<h4>Roles</h4>
     	<div>
     		{foreach item="ic" from="$roles"}

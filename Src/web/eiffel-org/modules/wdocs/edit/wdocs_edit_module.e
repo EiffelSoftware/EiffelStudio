@@ -54,16 +54,21 @@ feature -- Router
 		do
 				-- Router			
 			create h.make (agent handle_wikipage_source (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/source", h, a_router.methods_get)
+			a_router.handle ("/doc/{bookid}/{wikipageid}/source", h, a_router.methods_get)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/source", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+
+			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
+			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
+
 
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
-			a_router.handle ("/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
-			a_router.handle ("/version/{version_id}/book/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
+			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 		end
 
 feature -- Helper
@@ -175,11 +180,15 @@ feature -- Hooks configuration
 			-- for related response `a_response'.
 		do
 			if
-				attached {WDOCS_PAGE_CMS_RESPONSE} a_response as a_wdocs_response and then
-				a_wdocs_response.has_permission ("edit wdocs page")
+				attached {WDOCS_PAGE_CMS_RESPONSE} a_response as a_wdocs_response
 			then
-				a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", a_wdocs_response.location + "/edit"))
-				a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", a_wdocs_response.location + "/source"))
+				if a_wdocs_response.has_permission ("edit wdocs page") then
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", a_wdocs_response.location + "/edit"))
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", a_wdocs_response.location + "/source"))
+				end
+				if a_wdocs_response.has_permission ("create wdocs page") then
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", a_wdocs_response.location + "/add-child"))
+				end
 			end
 		end
 

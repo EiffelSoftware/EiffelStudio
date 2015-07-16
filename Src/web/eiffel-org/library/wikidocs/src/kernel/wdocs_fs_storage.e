@@ -382,6 +382,12 @@ feature -- Basic operations
 			internal_images_data := Void
 		end
 
+	refresh_page_data (pg: WIKI_PAGE)
+		do
+			-- TODO: implement smart page refresh!
+			refresh
+		end
+
 feature -- Persistency
 
 	save_pages

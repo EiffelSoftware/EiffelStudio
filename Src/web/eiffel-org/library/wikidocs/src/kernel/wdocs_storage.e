@@ -107,6 +107,10 @@ feature -- Basic operations
 		deferred
 		end
 
+	refresh_page_data (pg: WIKI_PAGE)
+		deferred
+		end
+
 feature -- Persistency
 
 	save_image_path (a_path: PATH; a_image_name: READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL)

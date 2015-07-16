@@ -146,17 +146,31 @@ feature -- Factory
 			Result := manager (Void).new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), a_parent_key)
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH)
+	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_manager: WDOCS_MANAGER)
+			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH
 			txt: detachable STRING
 			s: STRING
 			i,j: INTEGER
 			utf: UTF_CONVERTER
+			wut: WSF_FILE_UTILITIES [RAW_FILE]
+			fn: STRING
 		do
+			reset_error
+
 			p := a_path
 			if p = Void then
 				p := a_page.path
+			else
+				if attached p.extension as ext and then ext.is_case_insensitive_equal_general ("wiki") then
+						-- Wiki file location.
+				else
+						-- A folder location.
+					create wut
+					fn := wut.safe_filename (a_page.title)
+					p := p.extended (fn).appended_with_extension ("wiki")
+				end
 			end
 			if p /= Void then
 				if a_source /= Void then
@@ -194,6 +208,9 @@ feature -- Factory
 					end
 
 					save_content_to_file (txt, p)
+					if not has_error then
+						a_manager.refresh_page_data (a_page)
+					end
 				end
 			end
 		end
@@ -262,6 +279,8 @@ feature {NONE} -- Implementation
 				f.put_string (a_content)
 				f.close
 				remove_backuped_file (f)
+			else
+				error_handler.add_custom_error (0, "Impossible to save wiki page", "Impossible to save wiki page")
 			end
 		end
 

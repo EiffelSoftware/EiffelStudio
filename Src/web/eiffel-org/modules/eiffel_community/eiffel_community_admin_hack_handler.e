@@ -160,6 +160,22 @@ feature {NONE} -- Handler: admin hack...
 											l_trusted_user_role.add_permission ("edit wdocs page")
 											ia_api.user_api.save_user_role (l_trusted_user_role)
 										end
+										if
+											not l_trusted_user_role.has_permission ("edit wdocs page")
+										then
+											l_trusted_user_role.add_permission ("edit wdocs page")
+											l_trusted_user_role.add_permission ("create wdocs page")
+											l_trusted_user_role.add_permission ("admin wdocs")
+											ia_api.user_api.save_user_role (l_trusted_user_role)
+										end
+										if not l_trusted_user_role.has_permission ("create wdocs page") then
+											l_trusted_user_role.add_permission ("create wdocs page")
+											ia_api.user_api.save_user_role (l_trusted_user_role)
+										end
+										if not l_trusted_user_role.has_permission ("admin wdocs") then
+											l_trusted_user_role.add_permission ("admin wdocs")
+											ia_api.user_api.save_user_role (l_trusted_user_role)
+										end
 										l_trusted_user_role := ia_api.user_api.user_role_by_name ("trusted")
 										if l_trusted_user_role /= Void then
 											u := l_user

@@ -25,12 +25,12 @@ feature -- Forms ...
 			create cms_format
 
 			create ti.make ("title")
+			ti.enable_required
 			ti.set_label ("Title")
 			ti.set_size (70)
 			if a_node /= Void then
 				ti.set_text_value (a_node.title)
 			end
-			ti.set_is_required (True)
 			f.extend (ti)
 
 			f.extend_html_text ("<br/>")
@@ -105,6 +105,8 @@ feature -- Forms ...
 				-- Path alias		
 			create ti.make ("path_alias")
 			ti.set_label ("Path")
+			ti.set_pattern ("^([A-Za-z0-9-_+ ]).+")
+			ti.set_description ("Path alias pattern: ^([A-Za-z0-9-_+ ]).+  For example resource/page1 ")
 			ti.set_size (70)
 			if a_node /= Void and then a_node.has_id then
 				if attached a_node.link as lnk then

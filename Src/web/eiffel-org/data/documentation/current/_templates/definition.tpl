@@ -1,1 +1,0 @@
-<p style="margin: 5px 10px 10px 10px; border: 1px solid #0A7D19; padding: 3px 10px 3px 10px; background-color: #EFFFF0; color: black;">[[Image:LogoDefinition|24px]] '''Definition -- {{{1}}}''': {{{2}}}</p>

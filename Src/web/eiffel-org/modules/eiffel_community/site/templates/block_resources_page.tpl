@@ -15,6 +15,14 @@
 										</a>
 									</li>
 									<li>
+										<div>
+											<a href="{$site_url/}resources/Eiffel_Wish_List"> <span class="ico"><img src="{$site_url/}theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
+											<h2>Eiffel Wish List</h2>
+											</a>
+								 
+										</div>										
+									</li>									
+									<li>
 										<a href="{$site_url/}resources/videos">
 											<span class="ico"><img src="{$site_url/}theme/images/film50.png" width="52" height="52" alt="Image Description"></span>
 											<h2>Videos</h2>

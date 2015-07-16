@@ -60,7 +60,7 @@ feature -- Access
 --			end
 		end
 
-	trashed_nodes (a_user_id: INTEGER_64): LIST [CMS_NODE]
+	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
 			-- List of nodes.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -72,9 +72,8 @@ feature -- Access
 
 			from
 				create l_parameters.make (1)
-				if a_user_id > 1 then
-					-- Not admin user
-					l_parameters.put (a_user_id, "author")
+				if a_user /= Void and then a_user.has_id then
+					l_parameters.put (a_user.id, "author")
 					sql_query (sql_select_trash_nodes_by_author, l_parameters)
 				else
 					sql_query (sql_select_trash_nodes, Void)
@@ -295,15 +294,15 @@ feature {NONE} -- Queries
 			-- Nodes count (Published and not Published)
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_nodes: STRING = "SELECT * FROM nodes WHERE status != -1 ;"
+	sql_select_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 ;"
 			-- SQL Query to retrieve all nodes.
 			--| note: {CMS_NODE_API}.trashed = -1
 
-	sql_select_trash_nodes: STRING = "SELECT * FROM nodes WHERE status = -1 ;"
+	sql_select_trash_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 ;"
 			-- SQL Query to retrieve all trahsed nodes.
 			--| note: {CMS_NODE_API}.trashed = -1		
 
-	sql_select_trash_nodes_by_author: STRING = "SELECT * FROM nodes WHERE status = -1 and author = :author ;"
+	sql_select_trash_nodes_by_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status = -1 and author = :author ;"
 			-- SQL Query to retrieve all nodes by a given author.
 			--| note: {CMS_NODE_API}.trashed = -1				
 

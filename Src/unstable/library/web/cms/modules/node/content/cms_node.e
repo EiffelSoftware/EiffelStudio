@@ -73,11 +73,29 @@ feature -- Access
 		deferred
 		end
 
+feature -- Status reports
+
 	status: INTEGER
 			-- Associated status for the current node.
 			-- default:	{CMS_NODE_API}.Not_Published}
 			--			{CMS_NODE_API}.Published
 			--			{CMS_NODE_API}.Trashed
+
+	is_published: BOOLEAN
+			-- Is Current published?
+		do
+			Result := status = {CMS_NODE_API}.published
+		ensure
+			Result implies not is_trashed
+		end
+
+	is_trashed: BOOLEAN
+			-- Is Current trashed?
+		do
+			Result := status = {CMS_NODE_API}.trashed
+		ensure
+			Result implies not is_published
+		end
 
 feature -- Access		
 

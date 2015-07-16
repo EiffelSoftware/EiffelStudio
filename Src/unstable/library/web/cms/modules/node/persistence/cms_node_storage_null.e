@@ -41,8 +41,8 @@ feature -- Access: node
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
-	trashed_nodes (a_user_id: INTEGER_64): LIST [CMS_NODE]
-			-- List of nodes by user `a_user_id'.
+	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
+			-- <Precursor>.
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end

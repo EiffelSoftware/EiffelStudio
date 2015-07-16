@@ -100,6 +100,12 @@ feature -- Basic operations
 			storage.refresh
 		end
 
+	refresh_page_data (pg: WIKI_PAGE)
+		do
+			storage.refresh_page_data (pg)
+			reload_data
+		end
+
 feature -- Access
 
 	book_names: ITERABLE [READABLE_STRING_32]
@@ -233,11 +239,11 @@ feature -- Access: link
 				l_book_name := book_name (a_page)
 			end
 			if attached page_by_title (a_link.name, l_book_name) as pg then
-				Result := wiki_page_uri_path (pg)
+				Result := wiki_page_uri_path (pg, version_id)
 			end
 			if Result = Void and then attached page_by_link_title (a_link.name, l_book_name) as pg then
 					-- Try to find using the `link_title' prop
-				Result := wiki_page_uri_path (pg)
+				Result := wiki_page_uri_path (pg, version_id)
 			end
 
 			if Result = Void then
@@ -262,20 +268,15 @@ feature -- Access: link
 				if f.exists then
 					create wi.make ("book", f.path)
 					if attached wi.page (a_link.name) as pg then
-						Result := wiki_page_uri_path (pg)
+						Result := wiki_page_uri_path (pg, version_id)
 					end
 				end
 
 			end
 
-			if Result /= Void then
-				if attached version_id as vid then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
-				end
-			end
 		end
 
-	wiki_page_uri_path (pg: WIKI_PAGE): STRING
+	wiki_page_uri_path (pg: WIKI_PAGE; a_version_id: detachable READABLE_STRING_GENERAL): STRING
 		local
 			utf: UTF_CONVERTER
 			l_path: detachable READABLE_STRING_32
@@ -285,12 +286,18 @@ feature -- Access: link
 			end
 			if l_path /= Void then
 				Result := "/" + utf.string_32_to_utf_8_string_8 (l_path)
-			elseif attached book_name (pg) as bn then
-				Result := "/book/" + bn + "/" + pg.title
-			elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
-				Result := "/book/" + l_book_pg.src
 			else
-				Result := "/book/" -- FIXME
+				Result := "/doc"
+				if a_version_id /= Void then
+					Result.append ("/version/" + percent_encoder.percent_encoded_string (a_version_id))
+				end
+				if attached book_name (pg) as bn then
+					Result.append ("/" + bn + "/" + pg.title)
+				elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
+					Result.append ("/" + l_book_pg.src)
+				else
+					Result.append ("/") -- FIXME
+				end
 			end
 		end
 
@@ -358,30 +365,27 @@ feature -- Access: File
 	file_to_url (a_file: WIKI_FILE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 			-- URL accessing the file `a_file'.
 		do
+			create Result.make_from_string ("/doc-file")
+			if attached version_id as vid then
+				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+			end
 			if a_page /= Void and then attached book_name (a_page) as l_book_name then
-				Result := "/book/" + l_book_name
-			else
-				Result := ""
+				Result.append ("/" + l_book_name)
 			end
-			Result.append ("/file/" + a_file.name)
-			if Result /= Void then
-				if attached version_id as vid then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
-				end
-			end
+			Result.append ("/" + a_file.name)
 		end
 
 feature -- Access: Image		
 
 	image_to_wiki_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		do
-			Result := "/images/" + a_link.name
-
-			if Result /= Void then
-				if attached version_id as vid then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
-				end
+			create Result.make_from_string ("/doc-image")
+			if attached version_id as vid then
+				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
 			end
+
+			Result.append ("/" + a_link.name)
+
 		end
 
 	image_to_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
@@ -462,10 +466,12 @@ feature -- Access: Image
 						p := f.path
 						bak := 0
 					end
-					create Result.make_empty
+					create Result.make_from_string ("/doc-image")
+					if attached version_id as vid then
+						Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+					end
 					if a_page /= Void then
-						Result.append ("/book/")
-						Result.append (percent_encoder.percent_encoded_string (l_book_name))
+						Result.append ("/" + percent_encoder.percent_encoded_string (l_book_name))
 						across
 							p.components as ic
 						loop
@@ -475,7 +481,7 @@ feature -- Access: Image
 							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 						end
 					else
-						Result.append ("/images/" + a_link.name)
+						Result.append ("/" + a_link.name)
 --	This commented code was used to try to compute relative path, give another try later.
 --						create Result.make (p.name.count)
 --						from
@@ -497,11 +503,6 @@ feature -- Access: Image
 --							Result.append (percent_encoder.percent_encoded_string (ic.item.name))
 --						end							
 					end
-				end
-			end
-			if Result /= Void then
-				if attached version_id as vid then
-					Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
 				end
 			end
 		end
@@ -555,15 +556,18 @@ feature -- Helpers
 			end
 		end
 
-
-
-
 feature -- Factory
 
 	new_wiki_page (a_title: READABLE_STRING_8; a_parent_key: READABLE_STRING_8): WIKI_BOOK_PAGE
 			-- Instantiate a new wiki page with title `a_title' and a parent key `a_parent_key'.
 		do
 			Result := storage.new_page (a_title, a_parent_key)
+		end
+
+	new_wiki_child_page (a_title: READABLE_STRING_8; a_parent: like new_wiki_page): WIKI_BOOK_PAGE
+			-- Instantiate a new wiki page with title `a_title' with parent `a_parent'.
+		do
+			Result := new_wiki_page (a_title, a_parent.key)
 		end
 
 feature {NONE} -- Implementation

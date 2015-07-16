@@ -49,7 +49,7 @@ feature {CMS_API} -- Module Initialization
 		local
 			f: CMS_FORMAT
 		do
-			Precursor (api)
+			Precursor {CMS_MODULE} (api)
 			create f.make_from_format (create {VIDEO_HTML_CONTENT_FORMAT})
 			api.formats.extend (f)
 		end

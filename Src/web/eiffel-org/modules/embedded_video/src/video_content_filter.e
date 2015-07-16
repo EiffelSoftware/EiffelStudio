@@ -60,8 +60,8 @@ feature -- Conversion
 			until
 				i = 0 or n > l_new.count
 			loop
-				i := l_new.index_of ('[', n + 1)
-				n := l_new.index_of (']', n + 1)
+				i := l_text.index_of ('[', n + 1)
+				n := l_text.index_of (']', n + 1)
 				l_new := l_text.substring (i , n )
 				filter_line (l_new)
 				l_result.append (l_new)

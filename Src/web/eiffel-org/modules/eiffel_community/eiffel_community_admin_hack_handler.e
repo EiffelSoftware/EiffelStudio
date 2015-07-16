@@ -157,25 +157,29 @@ feature {NONE} -- Handler: admin hack...
 										l_trusted_user_role := ia_api.user_api.user_role_by_name ("trusted")
 										if l_trusted_user_role = Void then
 											create l_trusted_user_role.make ("trusted")
-											l_trusted_user_role.add_permission ("edit wdocs page")
 											ia_api.user_api.save_user_role (l_trusted_user_role)
 										end
-										if
-											not l_trusted_user_role.has_permission ("edit wdocs page")
-										then
-											l_trusted_user_role.add_permission ("edit wdocs page")
-											l_trusted_user_role.add_permission ("create wdocs page")
-											l_trusted_user_role.add_permission ("admin wdocs")
-											ia_api.user_api.save_user_role (l_trusted_user_role)
-										end
-										if not l_trusted_user_role.has_permission ("create wdocs page") then
-											l_trusted_user_role.add_permission ("create wdocs page")
-											ia_api.user_api.save_user_role (l_trusted_user_role)
-										end
-										if not l_trusted_user_role.has_permission ("admin wdocs") then
-											l_trusted_user_role.add_permission ("admin wdocs")
-											ia_api.user_api.save_user_role (l_trusted_user_role)
-										end
+
+										l_trusted_user_role.add_permission ("admin wdocs")
+										l_trusted_user_role.add_permission ("edit wdocs page")
+										l_trusted_user_role.add_permission ("create wdocs page")
+										l_trusted_user_role.add_permission ("delete wdocs page")
+										l_trusted_user_role.add_permission ("edit any wdocs page")
+										l_trusted_user_role.add_permission ("delete any wdocs page")
+										l_trusted_user_role.add_permission ("clear wdocs cache")
+
+										l_trusted_user_role.add_permission ("create page")
+										l_trusted_user_role.add_permission ("edit any page")
+										l_trusted_user_role.add_permission ("delete any page")
+										l_trusted_user_role.add_permission ("create blog")
+										l_trusted_user_role.add_permission ("edit any blog")
+										l_trusted_user_role.add_permission ("delete any blog")
+
+										l_trusted_user_role.add_permission ("edit any node")
+										l_trusted_user_role.add_permission ("delete any node")
+
+
+										ia_api.user_api.save_user_role (l_trusted_user_role)
 										l_trusted_user_role := ia_api.user_api.user_role_by_name ("trusted")
 										if l_trusted_user_role /= Void then
 											u := l_user

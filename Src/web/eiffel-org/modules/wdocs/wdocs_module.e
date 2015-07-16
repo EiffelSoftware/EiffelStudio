@@ -595,7 +595,7 @@ feature -- Handler
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if req.is_get_request_method then
-				if r.has_permission ("admin wdocs") then
+				if r.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
 					if attached {WSF_STRING} req.path_parameter ("version") as p_version then
 						l_version := p_version.value
 					end

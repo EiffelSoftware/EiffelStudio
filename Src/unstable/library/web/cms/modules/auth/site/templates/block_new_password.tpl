@@ -1,7 +1,7 @@
  <div>
     <form action="{$site_url/}account/new-password" method="post">
         <fieldset>
-            <legend>Require new password by email</legend>
+            <legend>Request new password by email</legend>
             <div>
                 <input type="email" id="email" name="email"  value="{$email/}"  required/>
                 <label for="email">Email</label>
@@ -16,7 +16,7 @@
     <hr>
     <form action="{$site_url/}account/new-password" method="post">
         <fieldset>
-            <legend>Require new password by username</legend>
+            <legend>Request new password by username</legend>
             <div>
                 <input type="text" id="username" name="username"  value="{$username/}"  required/>
                 <label for="username">Username</label>

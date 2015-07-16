@@ -1,3 +1,0 @@
-[[Property:weight|-5]]
-[[Property:title|Eiffel Studio]]
-Book for EiffelStudio

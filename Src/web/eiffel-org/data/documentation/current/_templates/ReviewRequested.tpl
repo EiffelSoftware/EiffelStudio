@@ -1,1 +1,0 @@
-<center class="doc-tpl-box"><p style="text-align:center; width: 350px; border: 1px solid #0000CC; padding: 2px; background-color: #FFFFFF; color: black;">[[Image:LogoReviewRequested|24px]] '''Review requested: ''' [[Community#ReviewRequested|see definition]].</p></center>

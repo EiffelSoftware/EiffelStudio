@@ -266,10 +266,12 @@ feature -- Hooks
 				a_response.location.starts_with ("account/roc-oauth-login")
 			then
 				get_block_view_login (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("account") then
+			elseif a_block_id.is_case_insensitive_equal_general ("account") and then
+				a_response.location.same_string ("account")
+			then
 				if
 					attached template_block ("account_info", a_response) as l_tpl_block and then
-					attached current_user (a_response.request) as l_user
+					attached a_response.user as l_user
 				then
 					associate_account (l_user, a_response.values)
 					a_response.add_block (l_tpl_block, "content")

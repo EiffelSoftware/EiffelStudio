@@ -1801,11 +1801,11 @@ rt_private EIF_REFERENCE rt_malloc_free_list (size_t nbytes, struct rt_free_list
 
 	if ((nbytes <= estimated_free_space) && (nbytes < (unsigned int) full_coalesc_unsafe (type))) {
 #ifdef EIF_ASSERTIONS
-		EIF_REFERENCE result;
+		EIF_REFERENCE l_result;
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
-		result = rt_allocate_from_free_list (nbytes, a_free_list);
-		CHECK ("result not null", result);
-		return result;
+		l_result = rt_allocate_from_free_list (nbytes, a_free_list);
+		CHECK ("allocated from free list", l_result);
+		return l_result;
 #else
 		GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_UNLOCK);
 		return rt_allocate_from_free_list (nbytes, a_free_list);

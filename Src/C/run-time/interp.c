@@ -1615,14 +1615,14 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_ASSIGN\n");
 #endif
 		{
-			uint32 type;
+			uint32 l_type;
 			long att_offset;
 
 			routine_id = get_int32(&IC);		/* Get the routine ID */
-			type = get_uint32(&IC);			/* Get attribute meta-type */
+			l_type = get_uint32(&IC);			/* Get attribute meta-type */
 			att_offset = RTWA(routine_id, icur_dtype);
-			RTDBGA_ATTRB(icurrent->it_ref,att_offset,type,0,0);
-			assign(att_offset, type);
+			RTDBGA_ATTRB(icurrent->it_ref,att_offset,l_type,0,0);
+			assign(att_offset, l_type);
 		}
 		break;
 
@@ -1835,13 +1835,13 @@ rt_private void interpret(int flag, int where)
 
 	case BC_VOID:
 		{
-			EIF_TYPED_VALUE * last;
+			EIF_TYPED_VALUE * l_last;
 #ifdef DEBUG
 			dprintf(2)("BC_VOID\n");
 #endif
-			last = eif_opstack_push_empty(&op_stack);
-			last->it_ref = NULL;
-			last->type = SK_REF;
+			l_last = eif_opstack_push_empty(&op_stack);
+			l_last->it_ref = NULL;
+			l_last->type = SK_REF;
 		}
 		break;
 
@@ -2483,21 +2483,21 @@ rt_private void interpret(int flag, int where)
 				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
 						/* This is a separate access. */
 					int pos;
-					uint32 type;
+					uint32 l_type;
 					unsigned long stagval;
 					unsigned char * OLD_IC;
 					call_data * a;
 						/* Retrieve tuple access data. */
 					IC++;
 					pos = get_int32(&IC);            /* Position of access. */
-					type = get_uint32(&IC);	         /* SK_XX value of access. */
+					l_type = get_uint32(&IC);	         /* SK_XX value of access. */
 						/* Perform separate access to tuple. */
 					stagval = tagval;                /* Save tag value. */
 					OLD_IC  = IC;                    /* Save IC. */
 
 					RTS_AC (0, target -> it_ref, a); /* Create call structure. */
 					last = target;                   /* Reuse target cell for result. */
-					RTS_CTR (pos, type, a, *last);   /* Make separate access to a tuple. */
+					RTS_CTR (pos, l_type, a, *last);   /* Make separate access to a tuple. */
 					if (tagval != stagval)           /* Interpreted function was called. */
 						sync_registers(MTC scur, stop);
 					IC = OLD_IC;
@@ -3310,14 +3310,14 @@ rt_private void interpret(int flag, int where)
 	case BC_TUPLE_ACCESS:
 		{
 			int pos = get_int32(&IC);      /* Position of access. */
-			uint32 type = get_uint32(&IC); /* SK_XX value of access. */
-			EIF_TYPED_VALUE *last;
+			uint32 l_type = get_uint32(&IC); /* SK_XX value of access. */
+			EIF_TYPED_VALUE *l_last;
 
-			last = EIF_STACK_TOP_ADDRESS(op_stack);
-			CHECK("last not null", last);
-			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
-			last->type = type;         /* Stored type of accessed tuple element. */
-			eif_tuple_access (last->it_ref, pos, last);
+			l_last = EIF_STACK_TOP_ADDRESS(op_stack);
+			CHECK("last not null", l_last);
+			(void) RTCV(l_last->it_ref); /* Check that TUPLE is not Void. */
+			l_last->type = l_type;         /* Stored type of accessed tuple element. */
+			eif_tuple_access (l_last->it_ref, pos, l_last);
 		}
 		break;
 

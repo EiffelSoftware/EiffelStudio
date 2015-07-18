@@ -58,7 +58,7 @@ feature -- Conversion
 				filter_line (l_new)
 				l_result.append (l_new)
 			until
-				i = 0 or n > l_new.count
+				i = 0 or n > l_text.count
 			loop
 				i := l_text.index_of ('[', n + 1)
 				n := l_text.index_of (']', n + 1)

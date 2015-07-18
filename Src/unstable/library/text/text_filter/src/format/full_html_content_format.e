@@ -21,7 +21,10 @@ feature {NONE} -- Initialization
 			Precursor
 			create filters.make (2)
 			filters.force (create {URL_CONTENT_FILTER})
-			filters.force (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
+			debug ("text_filter")
+						-- Check if this is ok for a full html content.
+				 filters.force (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
+			end
 		end
 
 feature -- Access

@@ -270,6 +270,7 @@ feature -- Hooks
 				a_response.location.same_string ("account")
 			then
 				if
+					a_response.location.starts_with ("account") and then
 					attached template_block ("account_info", a_response) as l_tpl_block and then
 					attached a_response.user as l_user
 				then

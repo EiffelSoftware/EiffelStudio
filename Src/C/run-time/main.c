@@ -889,7 +889,13 @@ rt_public void eif_rtinit(int argc, EIF_NATIVE_CHAR **argv, EIF_NATIVE_CHAR **en
 
 	set_windows_exception_filter();
 
-#if defined(_MSC_VER) && _MSC_VER >= 1400 /* version 14.0+ (MSVC 8.0+)  */
+/* In older versions of Visual Studio (prior to 2015), exponents will always be printed with 3 digits which
+ * is not what the C standard specifies. Thus Microsoft introduced in VS 2005 a compatibility switch to let
+ * programmers choose the 2-digit format. Now in VS 2015, they have implemented the standard correctly.
+ * See more at:
+ * http://blogs.msdn.com/b/vcblog/archive/2014/06/18/crt-features-fixes-and-breaking-changes-in-visual-studio-14-ctp1.aspx
+ */
+#if defined(_MSC_VER) && (_MSC_VER >= 1400) && (_MSC_VER < 1900) /* version 14.0+ (MSVC 8.0+) and version 18.0 (MSVC 2013)  */
 		/* Ensures consistent behavior across all our platforms where we
 		 * get 2-digit exponent up to 99 and then 3-digit exponent for 100 and
 		 * above. */

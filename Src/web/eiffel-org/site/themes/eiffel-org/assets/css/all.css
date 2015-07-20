@@ -1355,12 +1355,15 @@ table.eiffel_org_nodes caption {
 table.eiffel_org_nodes thead th {
   background-color: #0E9A8F;
   color: white;
-  border: 1px solid #0E9A8F;
+  border: 1px solid black;
+  text-align: left;
+  padding-left: 4px;
 }
-/* line 21, site/eiffel_org_nodes.scss */
+/* line 23, site/eiffel_org_nodes.scss */
 table.eiffel_org_nodes tbody td {
-  border: 1px solid #0E9A8F;
-  font-size: 10px;
+  border: 1px solid black;
+  font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
+  padding-left: 4px;
 }
 
 @font-face {

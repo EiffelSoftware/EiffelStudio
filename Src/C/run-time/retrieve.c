@@ -3362,14 +3362,14 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		else {
 			/* Generic class */
 			struct cecil_info *info;
-			uint32 j;
+			uint32 k;
 
 			/* Read meta-types */
 			conv->generics = (int32 *) eif_rt_xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
 			if (conv->generics == NULL)
 				xraise (EN_MEM);
 			conv->generic_count = nb_gen;
-			for (j=0; j<nb_gen; j++) {
+			for (k=0; k<nb_gen; k++) {
 				long gtype;
 				if (sscanf (temp_buf," %ld", &gtype) != 1)
 					eise_io ("Independent retrieve: unable to read generic information.");
@@ -3377,9 +3377,9 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 				if (gtype == SK_DTYPE) {
 						/* Before we use to store SK_DTYPE, now we store SK_REF for
 						 * references. */
-					conv->generics[j] = SK_REF;
+					conv->generics[k] = SK_REF;
 				} else {
-					conv->generics[j] = gtype;
+					conv->generics[k] = gtype;
 				}
 				temp_buf = next_item (temp_buf);
 			}
@@ -3417,8 +3417,8 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 					print_generic_names (info, (t-info->patterns)/nb_gen);
 					printf ("}");
 #endif
-					for (j=0; j<nb_gen; j++) {
-						int32 gt = gtypes[j];
+					for (k=0; k<nb_gen; k++) {
+						int32 gt = gtypes[k];
 						int32 itype = *t++;
 						if (((itype & SK_HEAD) == SK_EXP) && ((gt & SK_HEAD) == SK_EXP)) {
 							matched = (type_description ((EIF_TYPE_INDEX) (gt & SK_DTYPE))->new_type != (itype & SK_DTYPE));

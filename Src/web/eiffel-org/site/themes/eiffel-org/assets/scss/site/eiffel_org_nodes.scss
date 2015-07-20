@@ -1,4 +1,5 @@
 table.eiffel_org_nodes{ 
+	width:100%;
 	caption { 
  		 font-size: 2rem; color: #444;
   		 margin: 1rem;
@@ -19,6 +20,7 @@ table.eiffel_org_nodes{
 	tbody{
 		 td {
 			 border: 1px solid #0E9A8F;
+			 font-size:10px
     	}
     }	
 }    

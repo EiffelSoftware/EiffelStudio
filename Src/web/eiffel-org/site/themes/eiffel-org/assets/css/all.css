@@ -1338,7 +1338,11 @@ input.placeholder-text, textarea.placeholder-text {
   font-style: italic;
 }
 
-/* line 2, site/eiffel_org_nodes.scss */
+/* line 1, site/eiffel_org_nodes.scss */
+table.eiffel_org_nodes {
+  width: 100%;
+}
+/* line 3, site/eiffel_org_nodes.scss */
 table.eiffel_org_nodes caption {
   font-size: 2rem;
   color: #444;
@@ -1347,15 +1351,16 @@ table.eiffel_org_nodes caption {
   background-repeat: no-repeat;
   background-position: center left, center right;
 }
-/* line 12, site/eiffel_org_nodes.scss */
+/* line 13, site/eiffel_org_nodes.scss */
 table.eiffel_org_nodes thead th {
   background-color: #0E9A8F;
   color: white;
   border: 1px solid #0E9A8F;
 }
-/* line 20, site/eiffel_org_nodes.scss */
+/* line 21, site/eiffel_org_nodes.scss */
 table.eiffel_org_nodes tbody td {
   border: 1px solid #0E9A8F;
+  font-size: 10px;
 }
 
 @font-face {

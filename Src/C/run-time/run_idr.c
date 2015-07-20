@@ -556,7 +556,6 @@ rt_public void widr_multi_any (const char *obj, size_t num)
 	} else {
 		size_t count = num / cap;
 		size_t left_over = num % cap;
-		rt_uint_ptr *lptr = (rt_uint_ptr *) obj;
 		while (count) {
 			check_capacity (&idrf.i_encode, cap * sizeof (char *));
 			for (i = cap; i > 0; i--, lptr++) {

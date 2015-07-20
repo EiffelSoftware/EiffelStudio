@@ -1773,7 +1773,6 @@ rt_private EIF_REFERENCE rt_malloc_free_list (size_t nbytes, struct rt_free_list
 		 */
 	if (gc_flag == GC_ON) {
 #ifdef EIF_THREADS
-		RT_GET_CONTEXT
 		if ((gc_thread_status == EIF_THREAD_GC_RUNNING) || thread_can_launch_gc) {
 			plsc();						/* Call garbage collector */
 			return rt_malloc_free_list (nbytes, a_free_list, type, GC_OFF);

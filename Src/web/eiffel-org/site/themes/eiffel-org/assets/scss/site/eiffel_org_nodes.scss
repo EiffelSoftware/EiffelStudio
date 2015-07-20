@@ -1,0 +1,24 @@
+table.eiffel_org_nodes{ 
+	caption { 
+ 		 font-size: 2rem; color: #444;
+  		 margin: 1rem;
+ 		 background-size: contain;
+ 		 background-repeat: no-repeat;
+  		background-position: center left, center right; 
+	}
+	
+	thead
+	  {
+		th {
+		    background-color: #0E9A8F;
+		    color: white;
+	    	border: 1px solid #0E9A8F;
+		}
+	}	
+
+	tbody{
+		 td {
+			 border: 1px solid #0E9A8F;
+    	}
+    }	
+}    

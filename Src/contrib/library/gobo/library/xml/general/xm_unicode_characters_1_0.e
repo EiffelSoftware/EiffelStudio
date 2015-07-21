@@ -182,6 +182,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 1232 and a <= 1259) then
 				Result := True
+			end
+			if Result then
+				-- Already found.
 			elseif (a >= 1262 and a <= 1269) then
 				Result := True
 			elseif (a >= 1272 and a <= 1273) then
@@ -250,6 +253,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 2616 and a <= 2617) then
 				Result := True
+			end
+			if Result then
+				-- Already found.
 			elseif (a >= 2649 and a <= 2652) then
 				Result := True
 			elseif a = 2654 then
@@ -387,6 +393,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 3762 and a <= 3763) then
 				Result := True
+			end
+			if Result then
+				-- Already found.
 			elseif a = 3773 then
 				Result := True
 			elseif (a >= 3776 and a <= 3780) then
@@ -453,6 +462,9 @@ feature -- Character classes (appendix B)
 				Result := True
 			elseif (a >= 4535 and a <= 4536) then
 				Result := True
+			end
+			if Result then
+				-- Already found.
 			elseif a = 4538 then
 				Result := True
 			elseif (a >= 4540 and a <= 4546) then

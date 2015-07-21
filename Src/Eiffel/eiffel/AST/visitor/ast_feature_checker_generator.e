@@ -1696,7 +1696,7 @@ feature {NONE} -- Implementation
 									(l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
 							then
 									-- The list of actual arguments may be adapted to the list of formal arguments.
-								if l_actual_count > l_formal_count and then l_formal_count > 0 then
+								if l_actual_count > l_formal_count then
 										-- Additional actual arguments may be converted to a TUPLE.
 									create l_wrapped_actuals.make (l_actual_count - l_formal_count + 1)
 									from

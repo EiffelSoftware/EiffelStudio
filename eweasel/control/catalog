@@ -1455,6 +1455,7 @@ test	scoop-passive-processor-exception		scoop067 tcf pass scoop multithreaded ex
 test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
 test	scoop-generic-argument-check			scoop069 tcf fail scoop multithreaded validity
 test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execution
+test	scoop-once-value-adoption				scoop071 tcf manual scoop multithreaded execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

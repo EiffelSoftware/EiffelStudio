@@ -1282,6 +1282,7 @@ feature {NONE} -- Implementation
 			l_tcat: CAT_CALL_WARNING
 			l_is_controlled: BOOLEAN
 			is_target_known: BOOLEAN
+			tuple_argument_number: INTEGER
 		do
 				-- Reset any previously reported VUAR error.
 			last_vuar_error := Void
@@ -1690,42 +1691,56 @@ feature {NONE} -- Implementation
 								l_parameters.start
 							end
 							if
-								l_actual_count /= l_formal_count and then not is_agent and then not l_is_in_assignment and then
-								l_formal_count > 0 and then
-								l_feature.arguments.i_th (l_formal_count).recomputed_in
-									(l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
+								l_actual_count /= l_formal_count and then
+								not is_agent and then
+								not l_is_in_assignment and then
+								l_formal_count > 0
 							then
-									-- The list of actual arguments may be adapted to the list of formal arguments.
-								if l_actual_count > l_formal_count then
-										-- Additional actual arguments may be converted to a TUPLE.
-									create l_wrapped_actuals.make (l_actual_count - l_formal_count + 1)
-									from
-										l_parameters.go_i_th (l_formal_count)
-									until
-										l_parameters.after
-									loop
-										l_wrapped_actuals.extend (l_parameters.item)
-										l_parameters.forth
+								tuple_argument_number := tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
+								if tuple_argument_number > 0 then
+										-- The list of actual arguments may be adapted to the list of formal arguments.
+									if l_actual_count > l_formal_count then
+											-- Additional actual arguments may be converted to a TUPLE.
+										create l_wrapped_actuals.make (l_actual_count - l_formal_count + 1)
+										from
+											l_parameters.go_i_th (tuple_argument_number)
+										until
+											l_wrapped_actuals.count = l_actual_count - l_formal_count + 1
+										loop
+											l_wrapped_actuals.extend (l_parameters.item)
+											l_parameters.forth
+										end
+											-- Avoid changing original list of arguments.
+										l_parameters.start
+										l_parameters := l_parameters.duplicate (l_actual_count)
+											-- Replace extra arguments with a tuple.
+										l_parameters.put_i_th (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void), tuple_argument_number)
+											-- Remove extra arguments.
+										from
+											l_parameters.go_i_th (tuple_argument_number)
+										until
+											l_actual_count = l_formal_count
+										loop
+											l_parameters.remove_right
+												-- Adjust number of actual arguments.
+											l_actual_count := l_actual_count - 1
+										variant
+											actual_count_formal_count_difference: l_actual_count - l_formal_count
+										end
+									elseif l_actual_count + 1 = l_formal_count then
+											-- Avoid changing original list of arguments.
+										if attached l_parameters then
+											l_parameters := l_parameters.twin
+										else
+											create l_parameters.make (1)
+										end
+											-- Add an empty tuple.
+										create l_wrapped_actuals.make (0)
+										l_parameters.go_i_th (tuple_argument_number)
+										l_parameters.put_left (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void))
+											-- Adjust number of actual arguments.
+										l_actual_count := l_formal_count
 									end
-										-- Avoid changing original list of arguments.
-									l_parameters.start
-									l_parameters := l_parameters.duplicate (l_formal_count)
-										-- Replace last arguments with a tuple.
-									l_parameters.put_i_th (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void), l_formal_count)
-										-- Adjust number of actual arguments.
-									l_actual_count := l_formal_count
-								elseif l_actual_count + 1 = l_formal_count then
-										-- Avoid changing original list of arguments.
-									if attached l_parameters then
-										l_parameters := l_parameters.twin
-									else
-										create l_parameters.make (1)
-									end
-										-- Add an empty tuple.
-									create l_wrapped_actuals.make (0)
-									l_parameters.extend (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void))
-										-- Adjust number of actual arguments.
-									l_actual_count := l_formal_count
 								end
 							end
 							if l_actual_count /= l_formal_count then
@@ -1784,30 +1799,6 @@ feature {NONE} -- Implementation
 
 								if error_level = l_error_level then
 										-- Conformance checking of arguments.
-										-- Check if an actual type of the last actual argument is compatible with a formal type of that argument.
-									if
-										attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [l_actual_count], l_actual_count, l_arg_types, l_feature, Void, l_parameters [l_actual_count].start_location) and then
-										l_feature.arguments.i_th (l_formal_count).recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type.is_tuple
-									then
-											-- Actual and formal types of the last argument are not compatible.
-											-- Try to wrap last argument in a tuple.
-										l_arg_type := l_arg_types [l_actual_count]
-										reset_for_unqualified_call_checking
-										create l_wrapped_actuals.make (1)
-										l_wrapped_actuals.extend (l_parameters [l_actual_count])
-										current_target_type :=
-											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
-										;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
-										l_arg_types [l_actual_count] := last_type
-											-- Check if now actual and formal types of the last argument are compatible
-										if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [l_actual_count], l_actual_count, l_arg_types, l_feature, Void, l_parameters [l_actual_count].start_location) then
-												-- Revert changes back.
-											l_arg_types [l_actual_count] := l_arg_type
-										elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as e then
-											-- Keep changes, update byte nodes.
-											l_arg_nodes [l_actual_count] := e
-										end
-									end
 										-- Compute required separateness status of arguments.
 									l_is_separate := a_type.is_separate
 									from
@@ -1817,14 +1808,43 @@ feature {NONE} -- Implementation
 									loop
 											-- Report type compatibility issues if any.
 										if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [i], i, l_arg_types, l_feature, Void, l_parameters [i].start_location) as e then
-											error_handler.insert_error (e)
+												-- Actual and formal types of the argument at position `i' are not compatible.
+											if
+												tuple_argument_number = 0 and then
+												tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id) = i
+											then
+													-- No actual arguments are wrapped to match a formal tuple argument
+													-- and there is a formal tuple argument at position `i'.
+													-- Try to wrap the actual argument into a tuple.
+												l_arg_type := l_arg_types [i]
+												reset_for_unqualified_call_checking
+												create l_wrapped_actuals.make (1)
+												l_wrapped_actuals.extend (l_parameters [i])
+												current_target_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+												;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
+												l_arg_types [i] := last_type
+													-- Check if now actual and formal types of the last argument are compatible
+												if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [i], i, l_arg_types, l_feature, Void, l_parameters [i].start_location) then
+														-- Revert changes back.
+													l_arg_types [i] := l_arg_type
+														-- Report an original error.
+													error_handler.insert_error (e)
+												elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as b then
+														-- Keep changes, update byte nodes.
+													l_arg_nodes [i] := b
+												end
+											else
+													-- There is no tuple argument that may be involved in argument wrapping.
+													-- Report an original error.
+												error_handler.insert_error (e)
+											end
 										end
 
 											-- Get actual argument type.
-										l_arg_type := l_arg_types.i_th (i)
+										l_arg_type := l_arg_types [i]
 
 											-- Get formal argument type.
-										l_formal_arg_type := l_feature.arguments.i_th (i)
+										l_formal_arg_type := l_feature.arguments [i]
 
 											-- Actual formal type of feature argument.
 										l_formal_arg_type := l_formal_arg_type.recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
@@ -2159,6 +2179,35 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			last_calls_target_type_proper_set: (error_level = old error_level and not is_last_access_tuple_access and last_type.is_known) implies last_calls_target_type /= Void
+		end
+
+	tuple_argument_index (arguments: FEAT_ARG; target_type: TYPE_A; base_type: TYPE_A; base_class_id: INTEGER): INTEGER
+			-- Index of an argument of a tuple type or 0 if there is none or several such arguments.
+		local
+			i: INTEGER
+			context_current_class_id: INTEGER
+		do
+			context_current_class_id := context.current_class.class_id
+			from
+				i := arguments.count
+			until
+				i <= 0
+			loop
+				if arguments.i_th (i).recomputed_in (target_type, context_current_class_id, base_type, base_class_id).actual_type.is_tuple then
+					if Result = 0 then
+							-- One tuple argument is found.
+						Result := i
+					else
+							-- There is more than one tuple argument.
+						Result := 0
+							-- Exit loop.
+						i := 1
+					end
+				end
+				i := i - 1
+			variant
+				countdown: i
+			end
 		end
 
 feature {NONE} -- Type checks

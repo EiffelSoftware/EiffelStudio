@@ -2,6 +2,13 @@ test_name	 parenthesis-alias-tuple-convention
 test_description Parenthesis alias should accept implicit tuple argument.
 
 copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	a_1_1.e $CLUSTER a_1_1.e
+copy_raw 	a_2_1.e $CLUSTER a_2_1.e
+copy_raw 	a_2_2.e $CLUSTER a_2_2.e
+copy_raw 	a_3_1.e $CLUSTER a_3_1.e
+copy_raw 	a_3_2.e $CLUSTER a_3_2.e
+copy_raw 	a_3_3.e $CLUSTER a_3_3.e
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted

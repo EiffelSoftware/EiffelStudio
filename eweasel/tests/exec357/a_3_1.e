@@ -18,6 +18,7 @@ feature {NONE} -- Creation
 			f (2, 3, 8, 9)
 			f ("a", 4, "b", 8, 9)
 			t := Current
+			t (8, 9)
 			t (1, 8, 9)
 			t (2, 3, 8, 9)
 			t ("a", 4, "b", 8, 9)

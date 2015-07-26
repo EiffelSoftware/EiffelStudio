@@ -18,6 +18,7 @@ feature {NONE} -- Creation
 			f (2, 3, 8)
 			f ("a", 4, "b", 8)
 			t := Current
+			t (8)
 			t (1, 8)
 			t (2, 3, 8)
 			t ("a", 4, "b", 8)

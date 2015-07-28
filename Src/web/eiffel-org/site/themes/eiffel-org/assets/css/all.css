@@ -1364,6 +1364,8 @@ table.eiffel_org_nodes tbody td {
   border: 1px solid black;
   font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
   padding-left: 4px;
+  display: table-cell;
+  vertical-align: top;
 }
 
 @font-face {

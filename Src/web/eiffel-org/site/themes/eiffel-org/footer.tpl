@@ -21,10 +21,11 @@
 									</li>
 									<li><a href="{$site_url/}resources">Resources</a>
 										<ul>
-											<li><a href="{$site_url/}contribute_description">Libraries</a></li>
-											<li><a href="{$site_url/}contribute_description">Projects</a></li>
-											<li><a href="{$site_url/}contribute_description">Videos</a></li>
-											<li><a href="{$site_url/}contribute_description">Follow us</a></li>
+											<li><a href="{$site_url/}resources/libraries">Libraries</a></li>
+											<li><a href="{$site_url/}resources/tools">Tools</a></li>
+											<li><a href="{$site_url/}resources/videos">Videos</a></li>
+											<li><a href="{$site_url/}resources/Eiffel_Wish_List">Eiffel wish list</a></li>
+											<li><a href="{$site_url/}resources/follow_us">Follow us</a></li>
 										</ul>
 									</li>
 									<li><a href="{$site_url/}contribute">Contribute</a>

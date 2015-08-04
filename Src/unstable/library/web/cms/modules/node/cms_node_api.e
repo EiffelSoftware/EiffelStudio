@@ -299,16 +299,6 @@ feature -- Permission Scope: Node
 					Result := cms_api.user_has_permission (a_user, a_action + " own " + l_type_name)
 				end
 			end
-			fixme ("when admin back end is ready, remove this, as too general.") -- FIXME
-			if not Result then
-				Result := cms_api.user_has_permission (a_user, a_action + " any node")
-				if not Result and a_user /= Void then
-					if is_author_of_node (a_user, a_node) then
-						Result := cms_api.user_has_permission (a_user, a_action + " own node")
-					end
-				end
-
-			end
 		end
 
 feature -- Change: Node

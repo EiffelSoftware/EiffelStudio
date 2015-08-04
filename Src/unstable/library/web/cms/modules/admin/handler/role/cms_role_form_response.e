@@ -13,6 +13,8 @@ inherit
 			initialize
 		end
 
+	CMS_SHARED_SORTING_UTILITIES
+
 create
 	make
 
@@ -317,7 +319,10 @@ feature -- Form
 			cb: WSF_FORM_CHECKBOX_INPUT
 			ts: WSF_FORM_SUBMIT_INPUT
 --			tb: WSF_FORM_BUTTON_INPUT
+			lab: WSF_WIDGET_TEXT
 			l_role_permissions: detachable LIST [READABLE_STRING_8]
+			l_module_names: ARRAYED_LIST [READABLE_STRING_8]
+			l_mod_name: READABLE_STRING_8
 		do
 			if attached a_role as l_role then
 				create fs.make
@@ -330,20 +335,45 @@ feature -- Form
 
 				a_form.extend_html_text ("<br/>")
 
-
 				create fs.make
 				fs.set_legend ("Permissions")
 
 				if
-					attached api.user_api.role_permissions as l_permissions
+					attached api.user_api.role_permissions as l_permissions_by_module
 				then
 					l_role_permissions := l_role.permissions
 					l_role_permissions.compare_objects
-					across l_permissions as ic loop
-						create cb.make_with_value ("cms_permissions", ic.item)
-						cb.set_checked (l_role_permissions.has (ic.item))
-						cb.set_title (ic.item)
-						fs.extend (cb)
+
+					create l_module_names.make (l_permissions_by_module.count)
+					across
+						l_permissions_by_module as mod_ic
+					loop
+						l_module_names.force (mod_ic.key)
+					end
+					string_sorter.sort (l_module_names)
+					across
+						l_module_names as mod_ic
+					loop
+						l_mod_name := mod_ic.item
+						if
+							attached l_permissions_by_module.item (l_mod_name) as l_permissions and then
+							not l_permissions.is_empty
+						then
+							if l_mod_name.is_whitespace then
+								l_mod_name := "... "
+							end
+
+							create lab.make_with_text ("<strong>" + l_mod_name + " module</strong>")
+
+							fs.extend (lab)
+							string_sorter.sort (l_permissions)
+							across l_permissions as ic loop
+								create cb.make_with_value ("cms_permissions", ic.item)
+								cb.set_checked (across l_role_permissions as rp_ic some rp_ic.item.is_case_insensitive_equal (ic.item) end)
+								cb.set_title (ic.item)
+								fs.extend (cb)
+							end
+						end
 					end
 				end
 				create ti.make ("new_cms_permissions[]")
@@ -475,4 +505,5 @@ feature -- Generation
 			    })
 			});
 	]"
+
 end

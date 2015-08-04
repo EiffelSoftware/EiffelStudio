@@ -142,22 +142,39 @@ feature -- User roles.
 			Result := storage.user_role_by_name (a_name)
 		end
 
-	role_permissions: LIST [READABLE_STRING_8]
-			-- Possible known permissions.
+	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
+			-- Possible known permissions indexed by modules.
 		local
 			perm: READABLE_STRING_8
+			lst, l_used_permissions: LIST [READABLE_STRING_8]
+			l_found: BOOLEAN
 		do
-			Result := storage.role_permissions
+			create Result.make (cms_api.enabled_modules.count + 1)
+
+			l_used_permissions := storage.role_permissions
 			across
 				cms_api.enabled_modules as ic
 			loop
+				lst := ic.item.permissions
+				Result.force (lst, ic.item.name)
 				across
-					ic.item.permissions as perms_ic
+					lst as p_ic
 				loop
-					perm := perms_ic.item
-					if not Result.has (perm) then
-						Result.force (perm)
+					from
+						l_used_permissions.start
+					until
+						l_used_permissions.after
+					loop
+						if l_used_permissions.item.is_case_insensitive_equal (p_ic.item) then
+							l_used_permissions.remove
+							l_used_permissions.finish
+						end
+						l_used_permissions.forth
 					end
+				end
+
+				if not l_used_permissions.is_empty then
+					Result.force (l_used_permissions, "")
 				end
 			end
 		end

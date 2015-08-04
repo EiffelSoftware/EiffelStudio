@@ -1,0 +1,59 @@
+ul.cms-users {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+	}
+
+	li.cms_user a::before {
+		content: "[users] ";
+	}
+}
+
+
+ul.cms-roles {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+	}
+
+	li.cms_role a::before {
+		content: "[roles] ";
+	}
+}
+
+
+ul.cms-permissions {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+	}
+
+	li.cms_permission a::before {
+		content: "[permission] ";
+	}
+}
+
+
+
+

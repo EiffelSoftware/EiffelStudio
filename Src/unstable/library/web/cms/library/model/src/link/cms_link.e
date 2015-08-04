@@ -49,7 +49,7 @@ feature -- Comparison
 			end
 		end
 
-feature -- status report	
+feature -- Status report
 
 	is_active: BOOLEAN
 			-- Is current link active?
@@ -76,6 +76,14 @@ feature -- status report
 
 	has_children: BOOLEAN
 			-- Has sub link?
+		deferred
+		end
+
+feature -- Security
+
+	is_forbidden: BOOLEAN
+			-- Is Current link forbidden?
+			-- Current link could be disabled for current CMS user.
 		deferred
 		end
 

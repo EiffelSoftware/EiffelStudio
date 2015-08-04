@@ -202,7 +202,7 @@ feature -- Hooks
 			-- <Precursor>
 		do
 			if
-				attached a_response.current_user (a_response.request) as u and then
+				attached a_response.user as u and then
 				attached {WSF_STRING} a_response.request.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session)
 			then
 				a_value.force ("account/roc-oauth-logout", "auth_login_strategy")
@@ -217,7 +217,7 @@ feature -- Hooks
 			lnk2: detachable CMS_LINK
 		do
 			if
-				attached a_response.current_user (a_response.request) as u and then
+				attached a_response.user as u and then
 				attached {WSF_STRING} a_response.request.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session) as l_roc_auth_session_token
 			then
 				across
@@ -225,14 +225,14 @@ feature -- Hooks
 				until
 					lnk2 /= Void
 				loop
-					if ic.item.title.has_substring ("(Logout)") then
+					if ic.item.location.same_string ("account/roc-logout") then
 						lnk2 := ic.item
 					end
 				end
 				if lnk2 /= Void then
 					a_menu_system.primary_menu.remove (lnk2)
 				end
-				create lnk.make (u.name +  " (Logout)", "account/roc-oauth-logout" )
+				create lnk.make ("Logout", "account/roc-oauth-logout" )
 				a_menu_system.primary_menu.extend (lnk)
 			else
 				if a_response.location.starts_with ("account/") then
@@ -270,7 +270,6 @@ feature -- Hooks
 				a_response.location.same_string ("account")
 			then
 				if
-					a_response.location.starts_with ("account") and then
 					attached template_block ("account_info", a_response) as l_tpl_block and then
 					attached a_response.user as l_user
 				then
@@ -308,10 +307,13 @@ feature -- Hooks
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
 				unset_current_user (req)
+
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.set_status_code ({HTTP_CONSTANTS}.found)
 				r.set_redirection (req.absolute_script_url (""))
 				r.execute
+			else
+				fixme (generator + ": missing else implementation in handle_logout!")
 			end
 		end
 
@@ -323,8 +325,8 @@ feature {NONE} -- Associate
 			l_not_associated: LIST [STRING]
 		do
 			if attached user_oauth_api as l_oauth_api then
-				create {ARRAYED_LIST [STRING]}l_associated.make (1)
-				create {ARRAYED_LIST [STRING]}l_not_associated.make (1)
+				create {ARRAYED_LIST [STRING]} l_associated.make (1)
+				create {ARRAYED_LIST [STRING]} l_not_associated.make (1)
 				across l_oauth_api.oauth2_consumers as ic loop
 					if attached l_oauth_api.user_oauth2_by_id (a_user.id, ic.item) then
 						l_associated.force (ic.item)
@@ -507,7 +509,7 @@ feature -- OAuth2 Login with Provider
 				if
 					attached {WSF_STRING} req.form_parameter ("consumer") as l_consumer and then
 					attached {WSF_STRING} req.form_parameter ("email") as l_email and then
-					attached current_user (req) as l_user
+					attached r.user as l_user
 				then
 					l_user.set_email (l_email.value)
 					a_oauth_api.new_user_oauth2 ("none", "none", l_user, l_consumer.value )
@@ -527,7 +529,7 @@ feature -- OAuth2 Login with Provider
 			if req.is_post_request_method then
 				if
 					attached {WSF_STRING} req.form_parameter ("consumer") as l_consumer and then
-					attached current_user (req) as l_user
+					attached r.user as l_user
 				then
 					a_oauth_api.remove_user_oauth2 (l_user, l_consumer.value)
 					-- TODO send email?

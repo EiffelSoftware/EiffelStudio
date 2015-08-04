@@ -23,6 +23,7 @@
 		<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
 		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20-safe.ecf" readonly="false"/>
 		<library name="cms_openid_module" location="..\..\modules\openid\openid-safe.ecf" readonly="false"/>
+		<library name="cms_admin_module" location="..\..\modules\admin\admin-safe.ecf" readonly="false"/>
 		<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
 		<!--
 		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>

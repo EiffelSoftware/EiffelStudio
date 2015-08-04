@@ -75,6 +75,16 @@ feature -- Access
 		deferred
 		end
 
+	users_count: INTEGER
+			-- Number of users
+		deferred
+		end
+
+	recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
+			-- List of recent `a_count' users with an offset of `lower'.
+		deferred
+		end
+
 feature -- Change: user
 
 	save_user (a_user: CMS_USER)
@@ -100,6 +110,14 @@ feature -- Change: user
 			has_id: a_user.has_id
 		deferred
 		end
+
+	delete_user (a_user: CMS_USER)
+			-- Delete user `a_user'.
+		require
+			has_id: a_user.has_id
+		deferred
+		end
+
 
 feature -- Access: roles and permissions
 
@@ -153,10 +171,41 @@ feature -- Access: roles and permissions
 		deferred
 		end
 
+	role_permissions: LIST [READABLE_STRING_8]
+			-- Possible known role permissions.
+		deferred
+		ensure
+			object_comparison: Result.object_comparison
+		end
+
 feature -- Change: roles and permissions		
 
 	save_user_role (a_user_role: CMS_USER_ROLE)
 			-- Save user role `a_user_role'
+		deferred
+		end
+
+	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
+			-- Unassign user_role to user
+		require
+				a_user.has_id
+				a_role.has_id
+		deferred
+		end
+
+	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
+			-- Assign user_role to user
+		require
+				a_user.has_id
+				a_role.has_id
+		deferred
+		end
+
+
+	delete_role (a_role: CMS_USER_ROLE)
+			-- Remove role `a_role'.
+		require
+			a_role.has_id
 		deferred
 		end
 

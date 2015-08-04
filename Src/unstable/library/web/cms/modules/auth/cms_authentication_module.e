@@ -111,8 +111,11 @@ feature -- Hooks configuration
 		local
 			lnk: CMS_LOCAL_LINK
 		do
-			if attached a_response.current_user (a_response.request) as u then
-				create lnk.make (u.name +  " (Logout)", "account/roc-logout" )
+			if attached a_response.user as u then
+				create lnk.make (u.name, "account" )
+				lnk.set_weight (97)
+				a_menu_system.primary_menu.extend (lnk)
+				create lnk.make ("Logout", "account/roc-logout")
 				lnk.set_weight (98)
 				a_menu_system.primary_menu.extend (lnk)
 			else
@@ -398,7 +401,7 @@ feature -- Handler
 			l_user_api := api.user_api
 
 			if req.is_post_request_method then
-				if attached current_user (req) as l_user  then
+				if attached r.user as l_user  then
 					r.set_value (api.user_api.user_roles (l_user), "roles")
 					if
 						attached {WSF_STRING} req.form_parameter ("password") as l_password and then

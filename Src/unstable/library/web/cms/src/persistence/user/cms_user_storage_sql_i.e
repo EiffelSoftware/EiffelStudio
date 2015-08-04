@@ -20,10 +20,10 @@ feature -- Access: user
 	has_user: BOOLEAN
 			-- Has any user?
 		do
-			Result := user_count > 0
+			Result := users_count > 0
 		end
 
-	user_count: INTEGER
+	users_count: INTEGER
 			-- Number of items users.
 		do
 			error_handler.reset
@@ -163,6 +163,31 @@ feature -- Access: user
 
 		end
 
+	recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".recent_users")
+
+			from
+				create l_parameters.make (2)
+				l_parameters.put (a_count, "rows")
+				l_parameters.put (a_lower, "offset")
+				sql_query (sql_select_recent_users, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_user as l_user then
+					Result.force (l_user)
+				end
+				sql_forth
+			end
+		end
 feature -- Change: user
 
 	new_user (a_user: CMS_USER)
@@ -255,6 +280,20 @@ feature -- Change: user
 			end
 		end
 
+	delete_user (a_user: CMS_USER)
+			-- Delete user `a_user'.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".delete_user")
+			create l_parameters.make (1)
+			l_parameters.put (a_user.id, "uid")
+			sql_change (sql_delete_user, l_parameters)
+			sql_commit_transaction
+		end
+
 	update_user_roles (a_user: CMS_USER)
 			-- Update roles of `a_user'
 		require
@@ -311,9 +350,6 @@ feature -- Change: user
 		end
 
 	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
-		require
-			a_user.has_id
-			a_role.has_id
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -324,9 +360,6 @@ feature -- Change: user
 		end
 
 	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
-		require
-			a_user.has_id
-			a_role.has_id
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
@@ -470,6 +503,27 @@ feature -- Access: roles and permissions
 			end
 		end
 
+	role_permissions: LIST [READABLE_STRING_8]
+			-- Possible known permissions.
+		do
+			error_handler.reset
+			write_information_log (generator + ".role_permissions")
+
+			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
+			Result.compare_objects
+			from
+				sql_query (select_role_permissions, Void)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached sql_read_string (1) as l_permission then
+					Result.force (l_permission)
+				end
+				sql_forth
+			end
+		end
+
 feature -- Change: roles and permissions		
 
 	save_user_role (a_user_role: CMS_USER_ROLE)
@@ -502,28 +556,25 @@ feature -- Change: roles and permissions
 					-- FIXME: check if this is non set permissions,or none ...
 					if l_existing_role /= Void then
 						l_permissions := l_existing_role.permissions
-						fill_user_role (l_existing_role)
+--						fill_user_role (l_existing_role)
 					end
 					if l_permissions = Void or else l_permissions.is_empty then
 						l_permissions := role_permissions_by_id (a_user_role.id)
+					end
+
+					a_user_role.permissions.compare_objects
+					across l_permissions as ic
+					loop
+						if not a_user_role.permissions.has (ic.item) then
+							unset_permission_for_role_id (ic.item, a_user_role.id)
+						end
 					end
 
 					across
 						a_user_role.permissions as ic
 					loop
 						p := ic.item
-						from
-							l_found := False
-							l_permissions.start
-						until
-							l_found or l_permissions.after
-						loop
-							if p.is_case_insensitive_equal (l_permissions.item) then
-								l_found := True
-							else
-								l_permissions.forth
-							end
-						end
+						l_found := across l_permissions as p_ic some p.is_case_insensitive_equal_general (p_ic.item) end
 						if l_found then
 								-- Already there, skip							
 						else
@@ -531,11 +582,15 @@ feature -- Change: roles and permissions
 							set_permission_for_role_id (p, a_user_role.id)
 						end
 					end
-						-- Remove other
-					across
-						l_permissions as ic
-					loop
-						unset_permission_for_role_id (ic.item, a_user_role.id)
+				else
+						-- The user role does not have permissions, unset permissions
+						-- if any in the storage.
+					if l_existing_role /= Void then
+						l_permissions := l_existing_role.permissions
+						across l_permissions as ic
+						loop
+							unset_permission_for_role_id (ic.item, a_user_role.id)
+						end
 					end
 				end
 			else
@@ -590,6 +645,22 @@ feature -- Change: roles and permissions
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_32 (1)
 			end
+		end
+
+
+	delete_role (a_role: CMS_USER_ROLE)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+			sql_begin_transaction
+			write_information_log (generator + ".delete_role")
+			create l_parameters.make (1)
+			l_parameters.put (a_role.id, "rid")
+			sql_change (sql_delete_role_permissions_by_role_id, l_parameters)
+			sql_change (sql_delete_role_by_id, l_parameters)
+			sql_commit_transaction
 		end
 
 
@@ -800,6 +871,9 @@ feature {NONE} -- Sql Queries: USER
 	Select_user_by_name: STRING = "SELECT * FROM users WHERE name =:name;"
 			-- Retrieve user by name if exists.
 
+	Sql_select_recent_users: STRING = "SELECT * FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset ;"
+			-- Retrieve recent users
+
 	Select_user_by_email: STRING = "SELECT * FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
@@ -811,6 +885,8 @@ feature {NONE} -- Sql Queries: USER
 
 	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status WHERE uid=:uid;"
 			-- SQL update to update an existing user.
+
+	sql_delete_user: STRING = "DELETE FROM users WHERE uid=:uid;"
 
 feature {NONE} -- Sql Queries: USER ROLE
 
@@ -848,6 +924,13 @@ feature {NONE} -- Sql Queries: USER ROLE
 
 	select_role_permissions_by_role_id: STRING = "SELECT permission, module FROM role_permissions WHERE rid=:rid;"
 			-- User role permissions for role id :rid;
+
+	select_role_permissions: STRING = "SELECT DISTINCT permission FROM role_permissions;"
+			-- Used user role permissions
+
+	sql_delete_role_permissions_by_role_id: STRING = "DELETE FROM role_permissions WHERE rid=:rid;"
+
+	sql_delete_role_by_id: STRING = "DELETE FROM roles WHERE rid=:rid;"
 
 feature {NONE} -- Sql Queries: USER ACTIVATION
 

@@ -50,10 +50,10 @@ feature -- Execution
 				if attached node_api.node_type_for (l_node) as l_type then
  					fixme ("refactor: process_edit, process_create process edit")
  					if
-						request.path_info.ends_with_general ("/edit") and then
-						node_api.has_permission_for_action_on_node ("edit", l_node, current_user (request))
+						location.ends_with_general ("/edit") and then
+						node_api.has_permission_for_action_on_node ("edit", l_node, user)
 					then
-						f := new_edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+						f := new_edit_form (l_node, url (location, Void), "edit-" + l_type.name, l_type)
 						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
@@ -76,10 +76,10 @@ feature -- Execution
 							f.append_to_html (wsf_theme, b)
 						end
 					elseif
-						request.path_info.ends_with_general ("/delete") and then
-						node_api.has_permission_for_action_on_node ("delete", l_node, current_user (request))
+						location.ends_with_general ("/delete") and then
+						node_api.has_permission_for_action_on_node ("delete", l_node, user)
 					then
-						f := new_delete_form (l_node, url (request.path_info, Void), "delete-" + l_type.name, l_type)
+						f := new_delete_form (l_node, url (location, Void), "delete-" + l_type.name, l_type)
 						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.process (Current)
@@ -100,10 +100,10 @@ feature -- Execution
 							f.append_to_html (wsf_theme, b)
 						end
 					elseif
-						request.path_info.ends_with_general ("/trash") and then
-						node_api.has_permission_for_action_on_node ("trash", l_node, current_user (request))
+						location.ends_with_general ("/trash") and then
+						node_api.has_permission_for_action_on_node ("trash", l_node, user)
 					then
-						f := new_trash_form (l_node, url (request.path_info, Void), "trash-" + l_type.name, l_type)
+						f := new_trash_form (l_node, url (location, Void), "trash-" + l_type.name, l_type)
 						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.process (Current)
@@ -136,7 +136,7 @@ feature -- Execution
 			then
 				if has_permissions (<<"create any", "create " +  l_type.name>>) then
 					if attached l_type.new_node (Void) as l_node then
-						f := new_edit_form (l_node, url (request.path_info, Void), "edit-" + l_type.name, l_type)
+						f := new_edit_form (l_node, url (location, Void), "edit-" + l_type.name, l_type)
 						invoke_form_alter (f, fd)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
@@ -253,7 +253,7 @@ feature -- Form
 				fixme ("for now, publishing is not implemented, so let's assume any node saved is published.") -- FIXME
 				l_node.mark_published
 				node_api.save_node (l_node)
-				if attached current_user (request) as u then
+				if attached user as u then
 					api.log ("node",
 							"User %"" + user_html_link (u) + "%" " + s + " node " + node_html_link (l_node, a_type.name + " #" + l_node.id.out),
 							0, node_local_link (l_node, Void)

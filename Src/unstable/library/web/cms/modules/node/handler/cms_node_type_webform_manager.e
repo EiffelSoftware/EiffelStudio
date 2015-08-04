@@ -264,7 +264,7 @@ feature -- Output
 		do
 			node_api := a_response.node_api
 
-			a_response.add_variable (a_node, "node")
+			a_response.set_value (a_node, "node")
 
 				-- Show tabs only if a user is authenticated.
 			if attached a_response.user as l_user then

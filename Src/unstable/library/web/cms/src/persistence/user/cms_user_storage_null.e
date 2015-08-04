@@ -46,6 +46,17 @@ feature -- Access: user
 		do
 		end
 
+	users_count: INTEGER
+			--<Precursor>
+		do
+		end
+
+	recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
+			-- <Precursor>
+		do
+			create {ARRAYED_LIST[CMS_USER]} Result.make (0)
+		end
+
 feature -- Change: user
 
 	new_user (a_user: CMS_USER)
@@ -56,6 +67,12 @@ feature -- Change: user
 
 	update_user (a_user: CMS_USER)
 			-- Update user `a_user'.
+		do
+		end
+
+
+	delete_user (a_user: CMS_USER)
+			-- Delete user `a_user'.
 		do
 		end
 
@@ -82,9 +99,28 @@ feature -- Access: roles and permissions
 			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (0)
 		end
 
+	role_permissions: LIST [READABLE_STRING_8]
+			-- Possible known permissions.
+		do
+			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
+		end
+
 feature -- Change: roles and permissions		
 
 	save_user_role (a_user_role: CMS_USER_ROLE)
+		do
+		end
+
+	unassign_role_from_user (a_user_role: CMS_USER_ROLE; a_user: CMS_USER)
+		do
+		end
+
+	assign_role_to_user (a_user_role: CMS_USER_ROLE; a_user: CMS_USER)
+		do
+		end
+
+	delete_role (a_role: CMS_USER_ROLE)
+			-- <Precursor>
 		do
 		end
 

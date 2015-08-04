@@ -148,46 +148,45 @@ feature {NONE} -- Implementation
 		local
 			cl: STRING
 		do
-			debug ("refactor_fixme")
-				fixme ("Remove HTML from Eiffel")
-			end
-			create cl.make_empty
-			if lnk.is_active then
-				cl.append ("active ")
-			end
-			if lnk.is_expandable then
-				cl.append ("expandable ")
-			end
-			if lnk.is_expanded then
-				cl.append ("expanded ")
-			end
-			if cl.is_empty then
-				s.append ("<li>")
-			else
-				s.append ("<li class=%""+ cl + "%">")
-			end
-			s.append ("<a href=%"")
-			s.append (url (lnk.location, Void))
-			s.append ("%">")
-			s.append (html_encoded (lnk.title))
-			s.append ("</a>")
-			if
-				(lnk.is_expanded or lnk.is_collapsed) and then
-				attached lnk.children as l_children
-			then
-				s.append ("<ul>%N")
-				across
-					l_children as c
-				loop
-					append_cms_link_to (c.item, s)
+			if not lnk.is_forbidden then
+				create cl.make_empty
+				if lnk.is_active then
+					cl.append ("active ")
 				end
-				s.append ("</ul>")
+				if lnk.is_expandable then
+					cl.append ("expandable ")
+				end
+				if lnk.is_expanded then
+					cl.append ("expanded ")
+				end
+				if cl.is_empty then
+					s.append ("<li>")
+				else
+					s.append ("<li class=%""+ cl + "%">")
+				end
+				s.append ("<a href=%"")
+				s.append (url (lnk.location, Void))
+				s.append ("%">")
+				s.append (html_encoded (lnk.title))
+				s.append ("</a>")
+				if
+					(lnk.is_expanded or lnk.is_collapsed) and then
+					attached lnk.children as l_children
+				then
+					s.append ("<ul>%N")
+					across
+						l_children as c
+					loop
+						append_cms_link_to (c.item, s)
+					end
+					s.append ("</ul>")
+				end
+				s.append ("</li>")
 			end
-			s.append ("</li>")
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

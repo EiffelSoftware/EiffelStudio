@@ -212,10 +212,12 @@ feature -- Status report
 	is_ignoring_attachment_marks: BOOLEAN
 			-- Are we simply ignoring attachment marks while parsing?
 
-	is_frozen_variant_mark_supported: BOOLEAN
-			-- Are type interval supported?
+	is_ignoring_variance_mark: BOOLEAN
+			-- Are frozen/variant annotations kept in the parsed AST?
 		do
-			Result := syntax_version = provisional_syntax
+				-- If the syntax is not provisional, we accept the 
+				-- frozen/variant annotations but won't record them.
+			Result := syntax_version /= provisional_syntax
 		end
 
 	is_type_inference_supported: BOOLEAN
@@ -972,21 +974,6 @@ feature {NONE} -- Actions
 				elseif has_syntax_warning then
 					report_one_warning (create {SYNTAX_WARNING}.make (a_keyword_id.line, a_keyword_id.column, a_keyword_id.filename,
 						"Using keyword as identifier."))
-				end
-			end
-		end
-
-	check_frozen_variant_supported (a_keyword: detachable KEYWORD_AS)
-			-- Check if a type using `frozen' or `variant' qualifier is supported by current parsing level.
-		local
-			l_msg: STRING
-		do
-			if not is_frozen_variant_mark_supported then
-				l_msg := "Frozen/variant qualifier is not supported for type declaration."
-				if a_keyword /= Void then
-					report_one_error (create {SYNTAX_ERROR}.make (a_keyword.line, a_keyword.column, filename, l_msg))
-				else
-					report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_msg))
 				end
 			end
 		end

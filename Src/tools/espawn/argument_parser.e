@@ -93,8 +93,8 @@ feature -- Access
 			Result := has_option (aync_switch)
 		end
 
-	max_processors: NATURAL_16
-			-- Maximum number of processors to untilize
+	max_jobs: NATURAL_16
+			-- Maximum number of jobs used.
 		require
 			is_successful: is_successful
 		once
@@ -105,8 +105,8 @@ feature -- Access
 				then
 					Result := l_option.natural_16_value
 				end
-				if Result = 0 or Result > resident_cpu_count then
-					Result := resident_cpu_count
+				if Result = 0 then
+					Result := host_cpu_count
 				end
 			else
 				Result := 1
@@ -170,7 +170,7 @@ feature {NONE} -- Usage
 				Result.extend (create {ARGUMENT_SWITCH}.make_hidden (x86_switch, True, False))
 			end
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (use_compiler_switch, "Forces espawn to use an specific environment.", True, False, "code", "The code related to a compiler, use -l to list codes.", False))
-			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously.", True, False, "count", "Number of processors to utilize.", True, 1, {NATURAL_16}.max_value))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (aync_switch, "Process commands asynchronously.", True, False, "count", "Number of commands executing concurrently.", True, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ignore_switch, "Use to ignore failures.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_compilers_switch, "List available compiler codes.", False, False))
 		end
@@ -195,7 +195,7 @@ feature {NONE} -- Switch names
 
 feature {NONE} -- Externals
 
-	resident_cpu_count: NATURAL_16
+	host_cpu_count: NATURAL_16
 			-- Number of CPUs.
 		external
 			"C inline use <windows.h>"
@@ -211,7 +211,7 @@ feature {NONE} -- Externals
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

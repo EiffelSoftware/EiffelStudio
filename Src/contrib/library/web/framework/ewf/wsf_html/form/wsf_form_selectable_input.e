@@ -72,12 +72,22 @@ feature -- Change
 
 	set_value (v: detachable WSF_VALUE)
 			-- Set value `v' if applicable to Current
+		local
+			l_found: BOOLEAN
 		do
 			if attached {ITERABLE [WSF_VALUE]} v as lst then
 				across
 					lst as c
+				until
+					l_found
 				loop
-					set_checked_by_value (c.item)
+					if attached {WSF_STRING} c.item as s and then is_same_value (s.value) then
+						set_checked_by_value (c.item)
+						l_found := true
+					end
+				end
+				if not l_found then
+					set_checked (False)
 				end
 			else
 				set_checked_by_value (v)

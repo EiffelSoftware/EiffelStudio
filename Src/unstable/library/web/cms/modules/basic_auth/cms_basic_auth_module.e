@@ -114,7 +114,7 @@ feature -- Hooks
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			if attached current_user (a_response.request) as l_user then
+			if a_response.is_authenticated then
 				a_value.force ("basic_auth_logoff", "auth_login_strategy")
 			end
 		end
@@ -126,13 +126,13 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 			lnk2: detachable CMS_LINK
 		do
-			if attached a_response.current_user (a_response.request) as u then
+			if attached a_response.user as u then
 				across
 					a_menu_system.primary_menu.items as ic
 				until
 					lnk2 /= Void
 				loop
-					if ic.item.title.has_substring ("(Logout)") then
+					if ic.item.location.same_string ("account/roc-logout") then
 						lnk2 := ic.item
 					end
 				end
@@ -141,7 +141,7 @@ feature -- Hooks
 					a_menu_system.primary_menu.remove (lnk2)
 				end
 
-				create lnk.make (u.name +  " (Logout)", "basic_auth_logoff" )
+				create lnk.make ("Logout", "basic_auth_logoff")
 				lnk.set_weight (98)
 				a_menu_system.primary_menu.extend (lnk)
 			else

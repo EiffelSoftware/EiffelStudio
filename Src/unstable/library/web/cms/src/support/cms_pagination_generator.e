@@ -266,19 +266,24 @@ feature -- Convertion
 				pagination_links as ic
 			loop
 				lnk := ic.item
-				if lnk.is_active then
-					a_output.append ("<li class=%"active%">")
-				elseif lnk.title.same_string (label_previous) then
-					a_output.append ("<li class=%"previous%">")
-				elseif lnk.title.same_string (label_next) then
-					a_output.append ("<li class=%"next%">")
-				else
-					a_output.append ("<li>")
+				if not lnk.is_forbidden then
+					if lnk.is_active then
+						a_output.append ("<li class=%"active%">")
+					elseif lnk.title.same_string (label_previous) then
+						a_output.append ("<li class=%"previous%">")
+					elseif lnk.title.same_string (label_next) then
+						a_output.append ("<li class=%"next%">")
+					else
+						a_output.append ("<li>")
+					end
+					a_output.append (a_response.link (lnk.title, lnk.location, Void))
+					a_output.append ("</li>")
 				end
-				a_output.append (a_response.link (lnk.title, lnk.location, Void))
-				a_output.append ("</li>")
 			end
 			a_output.append ("</ul>")
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

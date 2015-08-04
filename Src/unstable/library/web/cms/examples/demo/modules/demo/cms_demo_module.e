@@ -140,7 +140,7 @@ feature -- Handler
 			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
 		do
 			create r.make (req, res, a_api)
-			r.set_main_content ("DEMO module does not yet implement %"" + req.path_info + "%" ...")
+			r.set_main_content ("DEMO module does not yet implement %"" + req.percent_encoded_path_info + "%" ...")
 			r.add_error_message ("DEMO Module: not yet implemented")
 			r.execute
 		end

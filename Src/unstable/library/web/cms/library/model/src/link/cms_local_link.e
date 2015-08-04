@@ -71,6 +71,12 @@ feature -- Status report
 			Result := attached children as l_children and then not l_children.is_empty
 		end
 
+feature -- Security		
+
+	is_forbidden: BOOLEAN
+			-- <Precursor>
+			-- Related to `permission_arguments' values.
+
 feature -- Element change
 
 	set_title (a_title: detachable READABLE_STRING_GENERAL)
@@ -165,6 +171,16 @@ feature -- Status change
 			internal_is_expandable := b
 		ensure
 			is_expandable: is_expandable = b
+		end
+
+feature -- Security change
+
+	set_is_forbidden (b: BOOLEAN)
+			-- Set `is_forbidden' to `b'.
+		do
+			is_forbidden := b
+		ensure
+			is_forbidden: is_forbidden = b
 		end
 
 feature {NONE} -- Implementation

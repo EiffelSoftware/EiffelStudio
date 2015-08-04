@@ -55,6 +55,9 @@ feature -- CMS setup
 		local
 			m: CMS_MODULE
 		do
+			create {CMS_ADMIN_MODULE} m.make
+			a_setup.register_module (m)
+
 				-- Auth
 			create {CMS_AUTHENTICATION_MODULE} m.make
 			a_setup.register_module (m)

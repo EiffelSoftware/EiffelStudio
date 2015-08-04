@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_USER_API}."
-	author: ""
+	description: "API providing user related features."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,6 +45,19 @@ feature -- Access
 		do
 			Result := storage.user_by_password_token (a_token)
 		end
+
+	users_count: INTEGER
+			-- Number of users.
+		do
+			Result := storage.users_count
+		end
+
+	recent_users (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_USER]
+			-- List of the `a_rows' most recent users starting from  `a_offset'.
+		do
+			Result := storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
 
 feature -- Status report
 
@@ -119,13 +131,67 @@ feature -- User roles.
 		end
 
 	user_role_by_id (a_id: like {CMS_USER_ROLE}.id): detachable CMS_USER_ROLE
+			-- Retrieve a `Role' represented by an id `a_id' if any.
 		do
 			Result := storage.user_role_by_id (a_id)
 		end
 
 	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
+			-- Retrieve a `Role' represented by a name `a_name' if any.
 		do
 			Result := storage.user_role_by_name (a_name)
+		end
+
+	role_permissions: LIST [READABLE_STRING_8]
+			-- Possible known permissions.
+		local
+			perm: READABLE_STRING_8
+		do
+			Result := storage.role_permissions
+			across
+				cms_api.enabled_modules as ic
+			loop
+				across
+					ic.item.permissions as perms_ic
+				loop
+					perm := perms_ic.item
+					if not Result.has (perm) then
+						Result.force (perm)
+					end
+				end
+			end
+		end
+
+	roles: LIST [CMS_USER_ROLE]
+			-- List of possible roles.
+		do
+			Result := storage.user_roles
+		end
+
+	effective_roles: LIST [CMS_USER_ROLE]
+			-- List of possible roles, apart from anonymous and authenticated roles that are special.
+		local
+			l_roles: like roles
+			r: CMS_USER_ROLE
+		do
+			l_roles := storage.user_roles
+			create {ARRAYED_LIST [CMS_USER_ROLE]} Result.make (l_roles.count)
+			across
+				l_roles as ic
+			loop
+				r := ic.item
+				if r.same_user_role (anonymous_user_role) or r.same_user_role (authenticated_user_role) then
+					-- Ignore
+				else
+					Result.force (r)
+				end
+			end
+		end
+
+	roles_count: INTEGER
+			-- Number of roles
+		do
+			Result := storage.user_roles.count
 		end
 
 feature -- Change User role		
@@ -134,6 +200,29 @@ feature -- Change User role
 		do
 			reset_error
 			storage.save_user_role (a_user_role)
+			error_handler.append (storage.error_handler)
+		end
+
+	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER; )
+			-- Unassign user_role `a_role' to user `a_user'.
+		do
+			reset_error
+			storage.unassign_role_from_user (a_role, a_user)
+			error_handler.append (storage.error_handler)
+		end
+
+	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER; )
+			-- Assign user_role `a_role' to user `a_user'.
+		do
+			reset_error
+			storage.assign_role_to_user (a_role, a_user)
+			error_handler.append (storage.error_handler)
+		end
+
+	delete_role (a_role: CMS_USER_ROLE)
+		do
+			reset_error
+			storage.delete_role (a_role)
 			error_handler.append (storage.error_handler)
 		end
 
@@ -164,6 +253,16 @@ feature -- Change User
 		do
 			reset_error
 			storage.update_user (a_user)
+			error_handler.append (storage.error_handler)
+		end
+
+	delete_user (a_user: CMS_USER)
+			-- Delete user `a_user'.
+		require
+			has_id: a_user.has_id
+		do
+			reset_error
+			storage.delete_user (a_user)
 			error_handler.append (storage.error_handler)
 		end
 

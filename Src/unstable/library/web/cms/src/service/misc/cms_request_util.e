@@ -25,6 +25,7 @@ feature -- User
 
 	current_user (req: WSF_REQUEST): detachable CMS_USER
 			-- Current user or Void in case of Guest user.
+			-- note: if a CMS_RESPONSE is available, always prefer {CMS_RESPONSE}.user if relevant.
 		note
 			EIS: "eiffel:?class=AUTHENTICATION_FILTER&feature=execute"
 		do
@@ -70,4 +71,7 @@ feature -- Media Type
 			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

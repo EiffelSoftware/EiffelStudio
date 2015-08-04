@@ -32,6 +32,14 @@ feature -- Access
 	dependencies: detachable LIST [TYPE [CMS_MODULE]]
 			-- Optional dependencies.
 
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		require
+			is_initialized: is_initialized
+		do
+			create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (0)
+		end
+
 feature {CMS_API} -- Module Initialization
 
 	initialize (api: CMS_API)

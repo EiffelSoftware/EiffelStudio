@@ -180,8 +180,8 @@ feature -- Hooks
 			-- <Precursor>
 		do
 			if
-				attached a_response.current_user (a_response.request) as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session) 
+				attached a_response.user as u and then
+				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session)
 			then
 				a_value.force ("account/roc-openid-logout", "auth_login_strategy")
 			end
@@ -195,7 +195,7 @@ feature -- Hooks
 			lnk2: detachable CMS_LINK
 		do
 			if
-				attached a_response.current_user (a_response.request) as u and then
+				attached a_response.user as u and then
 				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session) as l_roc_auth_session_token
 			then
 				across
@@ -203,14 +203,14 @@ feature -- Hooks
 				until
 					lnk2 /= Void
 				loop
-					if ic.item.title.has_substring ("(Logout)") then
+					if ic.item.location.same_string ("account/roc-logout") then
 						lnk2 := ic.item
 					end
 				end
 				if lnk2 /= Void then
 					a_menu_system.primary_menu.remove (lnk2)
 				end
-				create lnk.make (u.name +  " (Logout)", "account/roc-openid-logout" )
+				create lnk.make ("Logout", "account/roc-openid-logout" )
 				a_menu_system.primary_menu.extend (lnk)
 			else
 				if a_response.location.starts_with ("account/") then
@@ -296,6 +296,8 @@ feature -- Hooks
 				r.set_status_code ({HTTP_CONSTANTS}.found)
 				r.set_redirection (req.absolute_script_url (""))
 				r.execute
+			else
+				-- FIXME: missing implementation!
 			end
 		end
 

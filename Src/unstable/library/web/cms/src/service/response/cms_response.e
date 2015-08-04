@@ -194,8 +194,13 @@ feature -- Access: CMS
 	values: CMS_VALUE_TABLE
 			-- Associated values indexed by string name.
 
-
 feature -- User access
+
+	is_authenticated: BOOLEAN
+			-- Is user authenticated?
+		do
+			Result := user /= Void
+		end
 
 	user: detachable CMS_USER
 		do
@@ -204,16 +209,28 @@ feature -- User access
 
 feature -- Permission
 
+	has_permission_on_link (a_link: CMS_LINK): BOOLEAN
+			-- Does current user has permission to access link `a_link'?
+		do
+			Result := True
+			if
+				attached {CMS_LOCAL_LINK} a_link as lnk and then
+				attached lnk.permission_arguments as l_perms
+			then
+				Result := has_permissions (l_perms)
+			end
+		end
+
 	has_permission (a_permission: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does current user has permission `a_permission' ?
 		do
-			Result := user_has_permission (current_user (request), a_permission)
+			Result := user_has_permission (user, a_permission)
 		end
 
 	has_permissions (a_permission_list: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN
 			-- Does current user has any of the permissions `a_permission_list' ?
 		do
-			Result := user_has_permissions (current_user (request), a_permission_list)
+			Result := user_has_permissions (user, a_permission_list)
 		end
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: READABLE_STRING_GENERAL): BOOLEAN
@@ -294,6 +311,12 @@ feature -- Element change
 	set_main_content (s: like main_content)
 		do
 			main_content := s
+		end
+
+	add_variable (a_element: ANY; a_key:READABLE_STRING_32)
+		obsolete "Use `set_value' [Aug/2015]"
+		do
+			set_value (a_element, a_key)
 		end
 
 	set_value (v: detachable ANY; k: READABLE_STRING_GENERAL)
@@ -859,15 +882,16 @@ feature -- Generation
 	prepare (page: CMS_HTML_PAGE)
 		local
 			lnk: CMS_LINK
+			l_menu_list_prepared: ARRAYED_LIST [CMS_LINK_COMPOSITE]
 		do
 				-- Menu
 			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
 			lnk.set_weight (-10)
 			add_to_primary_menu (lnk)
 			invoke_menu_system_alter (menu_system)
-			prepare_menu_system (menu_system)
 
 				-- Blocks
+			create l_menu_list_prepared.make (0)
 			get_blocks
 			across
 				regions as reg_ic
@@ -876,10 +900,22 @@ feature -- Generation
 					reg_ic.item.blocks as ic
 				loop
 					if attached {CMS_MENU_BLOCK} ic.item as l_menu_block then
-						recursive_get_active (l_menu_block.menu, request)
+						l_menu_list_prepared.force (l_menu_block.menu)
+						prepare_links (l_menu_block.menu)
 					end
 				end
 			end
+
+				-- Prepare menu not in a block.
+			across
+				menu_system as ic
+			loop
+				if not l_menu_list_prepared.has (ic.item) then
+					l_menu_list_prepared.force (ic.item)
+					prepare_links (ic.item)
+				end
+			end
+			l_menu_list_prepared.wipe_out -- Clear for memory purpose.
 
 				-- Sort items
 			across menu_system as ic loop
@@ -951,7 +987,7 @@ feature -- Generation
 			page.set_title (title)
 			debug ("cms")
 				if title = Void then
-					page.set_title ("CMS::" + request.path_info) --| FIXME: probably, should be removed and handled by theme.
+					page.set_title ({STRING_32} "CMS::" + request.path_info) --| FIXME: probably, should be removed and handled by theme.
 				end
 			end
 
@@ -988,54 +1024,19 @@ feature -- Generation
 		do
 		end
 
-    prepare_menu_system (a_menu_system: CMS_MENU_SYSTEM)
-		do
-			across
-				a_menu_system as c
-			loop
-				prepare_links (c.item)
-			end
-		end
-
-	prepare_links (a_menu: CMS_LINK_COMPOSITE)
-		local
-			to_remove: ARRAYED_LIST [CMS_LINK]
-		do
-			create to_remove.make (0)
-			across
-				a_menu as c
-			loop
-				if attached {CMS_LOCAL_LINK} c.item as lm then
---					if attached lm.permission_arguments as perms and then not has_permissions (perms) then
---						to_remove.force (lm)
---					else
-						-- if lm.permission_arguments is Void , this is permitted
-						get_local_link_active_status (lm)
-						if attached {CMS_LINK_COMPOSITE} lm as comp then
-							prepare_links (comp)
-						end
---					end
-				elseif attached {CMS_LINK_COMPOSITE} c.item as comp then
-					prepare_links (comp)
-				end
-			end
-			across
-				to_remove as c
-			loop
-				a_menu.remove (c.item)
-			end
-		end
-
-	recursive_get_active (a_comp: CMS_LINK_COMPOSITE; req: WSF_REQUEST)
+	prepare_links (a_comp: CMS_LINK_COMPOSITE)
 			-- Update the active status recursively on `a_comp'.
 		local
+			to_remove: ARRAYED_LIST [CMS_LINK]
 			ln: CMS_LINK
 			l_comp_link: detachable CMS_LOCAL_LINK
 		do
 			if attached {CMS_LOCAL_LINK} a_comp as lnk then
 				l_comp_link := lnk
+				get_local_link_active_status (lnk)
 			end
 			if attached a_comp.items as l_items then
+				create to_remove.make (0)
 				across
 					l_items as ic
 				loop
@@ -1043,14 +1044,26 @@ feature -- Generation
 					if attached {CMS_LOCAL_LINK} ln as l_local then
 						get_local_link_active_status (l_local)
 					end
-					if (ln.is_expanded or ln.is_collapsed) and then attached {CMS_LINK_COMPOSITE} ln as l_comp then
-						recursive_get_active (l_comp, req)
-					end
-					if l_comp_link /= Void then
-						if ln.is_expanded or (not ln.is_expandable and ln.is_active) then
-							l_comp_link.set_expanded (True)
+					if ln.is_forbidden then
+						to_remove.force (ln)
+					else
+						if
+							(ln.is_expanded or ln.is_collapsed) and then
+							attached {CMS_LINK_COMPOSITE} ln as l_comp
+						then
+							prepare_links (l_comp)
+						end
+						if l_comp_link /= Void then
+							if ln.is_expanded or (not ln.is_expandable and ln.is_active) then
+								l_comp_link.set_expanded (True)
+							end
 						end
 					end
+				end
+				across
+					to_remove as ic
+				loop
+					a_comp.remove (ic.item)
 				end
 			end
 			if l_comp_link /= Void and then l_comp_link.is_active then
@@ -1077,25 +1090,7 @@ feature -- Generation
 				l_is_active := qs.same_string (a_lnk.location)
 			end
 			a_lnk.set_is_active (l_is_active)
-		end
-
-feature -- Custom Variables
-
-	variables: detachable STRING_TABLE[ANY]
-			-- Custom variables to feed the templates.
-
-feature -- Element change: Add custom variables.
-
-	add_variable (a_element: ANY; a_key:READABLE_STRING_32)
-		local
-			l_variables: like variables
-		do
-			l_variables := variables
-			if l_variables = Void then
-				create l_variables.make (5)
-				variables := l_variables
-			end
-			l_variables.force (a_element, a_key)
+			a_lnk.set_is_forbidden (not has_permission_on_link (a_lnk))
 		end
 
 feature -- Execution

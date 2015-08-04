@@ -10,8 +10,6 @@ inherit
 	CMS_RESPONSE
 		rename
 			make as make_response
-		redefine
-			custom_prepare
 		end
 
 feature {NONE} -- Initialization
@@ -26,15 +24,6 @@ feature -- Access
 
 	node_api: CMS_NODE_API
 			-- Associated node API.
-
-feature -- Generation
-
-	custom_prepare (page: CMS_HTML_PAGE)
-		do
-			if attached variables as l_variables then
-				across l_variables as c loop page.register_variable (c.item, c.key) end
-			end
-		end
 
 feature -- Helpers
 

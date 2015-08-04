@@ -12,10 +12,25 @@ class
 	CONSTRAINT_LIST_AS
 
 inherit
-	EIFFEL_LIST[CONSTRAINING_TYPE_AS]
+	EIFFEL_LIST [CONSTRAINING_TYPE_AS]
 
 create
 	make, make_filled
+
+feature -- Status Report
+
+	has_frozen_mark: BOOLEAN
+			-- Is one of the constraint marked frozen?
+		do
+			from
+				start
+			until
+				Result or else after
+			loop
+				Result := item.type.has_frozen_mark
+				forth
+			end
+		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Dump
 
@@ -54,7 +69,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Dump
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

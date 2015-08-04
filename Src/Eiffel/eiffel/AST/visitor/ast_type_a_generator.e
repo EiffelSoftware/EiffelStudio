@@ -177,6 +177,11 @@ feature {NONE} -- Visitor implementation
 			if l_as.has_separate_mark then
 				f.set_separate_mark
 			end
+				-- If the associated formal of the current class is marked frozen,
+				-- we make sure that `f' is known to be intrinsically frozen.
+			if current_class.generics [l_as.position].formal.has_frozen_mark then
+				f.set_frozen_mark
+			end
 			if current_class.generics [l_as.position].constraints /= Void then
 					-- Check attachment and separateness status of constraints.
 					-- The loop iterates over all constraints recursively.
@@ -218,6 +223,7 @@ feature {NONE} -- Visitor implementation
 					loop
 						t := l [i].type
 						if t.has_frozen_mark then
+								-- One of the constraint is marked frozen, it can only be frozen by nature.
 							l_is_frozen := True
 						end
 						if

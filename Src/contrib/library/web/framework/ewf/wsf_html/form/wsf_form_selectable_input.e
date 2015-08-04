@@ -83,7 +83,7 @@ feature -- Change
 				loop
 					if attached {WSF_STRING} c.item as s and then is_same_value (s.value) then
 						set_checked_by_value (c.item)
-						l_found := true
+						l_found := True
 					end
 				end
 				if not l_found then

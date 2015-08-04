@@ -1669,16 +1669,14 @@ Class_or_tuple_type:
 	| TE_FROZEN Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	| TE_VARIANT Unmarked_class_or_tuple_type
 			{
 				$$ := $2
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 			}
@@ -1712,8 +1710,7 @@ Class_or_tuple_type:
 	| TE_FROZEN TE_DETACHABLE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1723,8 +1720,7 @@ Class_or_tuple_type:
 	| TE_FROZEN TE_ATTACHED Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1734,8 +1730,7 @@ Class_or_tuple_type:
 	| TE_FROZEN TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if attached $$ as l_type then
@@ -1745,8 +1740,7 @@ Class_or_tuple_type:
 	| TE_FROZEN TE_DETACHABLE TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1759,8 +1753,7 @@ Class_or_tuple_type:
 	| TE_FROZEN TE_ATTACHED TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1773,8 +1766,7 @@ Class_or_tuple_type:
 	| TE_VARIANT TE_DETACHABLE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1784,8 +1776,7 @@ Class_or_tuple_type:
 	| TE_VARIANT TE_ATTACHED Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1795,8 +1786,7 @@ Class_or_tuple_type:
 	| TE_VARIANT TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if attached $$ as l_type then
@@ -1806,8 +1796,7 @@ Class_or_tuple_type:
 	| TE_VARIANT TE_DETACHABLE TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1820,8 +1809,7 @@ Class_or_tuple_type:
 	| TE_VARIANT TE_ATTACHED TE_SEPARATE Unmarked_class_or_tuple_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1863,16 +1851,14 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN Unmarked_anchored_type
 			{
 				$$ := $2
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 			}
 	|	TE_VARIANT Unmarked_anchored_type
 			{
 				$$ := $2
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 			}
@@ -1906,8 +1892,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN TE_ATTACHED Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1917,8 +1902,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN TE_DETACHABLE Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1928,8 +1912,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if attached $$ as l_type then
@@ -1939,8 +1922,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN TE_ATTACHED TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1953,8 +1935,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_FROZEN TE_DETACHABLE TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1967,8 +1948,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_VARIANT TE_ATTACHED Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1978,8 +1958,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_VARIANT TE_DETACHABLE Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -1989,8 +1968,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_VARIANT TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $3
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if attached $$ as l_type then
@@ -2000,8 +1978,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_VARIANT TE_ATTACHED TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then
@@ -2014,8 +1991,7 @@ Anchored_type:	Unmarked_anchored_type
 	|	TE_VARIANT TE_DETACHABLE TE_SEPARATE Unmarked_anchored_type
 			{
 				$$ := $4
-				check_frozen_variant_supported ($1)
-				if attached $$ as l_type then
+				if not is_ignoring_variance_mark and then attached $$ as l_type then
 					l_type.set_variance_mark ($1, False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached $$ as l_type then

@@ -9474,8 +9474,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 			
@@ -9497,8 +9496,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 			
@@ -9594,8 +9592,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9621,8 +9618,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9648,8 +9644,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if attached yyval82 as l_type then
@@ -9674,8 +9669,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9704,8 +9698,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9734,8 +9727,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9761,8 +9753,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9788,8 +9779,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if attached yyval82 as l_type then
@@ -9814,8 +9804,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9844,8 +9833,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -9996,8 +9984,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 			
@@ -10019,8 +10006,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 			
@@ -10116,8 +10102,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10143,8 +10128,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10170,8 +10154,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if attached yyval82 as l_type then
@@ -10196,8 +10179,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10226,8 +10208,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), True, False)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10256,8 +10237,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10283,8 +10263,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10310,8 +10289,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if attached yyval82 as l_type then
@@ -10336,8 +10314,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then
@@ -10366,8 +10343,7 @@ debug ("GEYACC")
 end
 
 				yyval82 := yyvs82.item (yyvsp82)
-				check_frozen_variant_supported (yyvs12.item (yyvsp12 - 1))
-				if attached yyval82 as l_type then
+				if not is_ignoring_variance_mark and then attached yyval82 as l_type then
 					l_type.set_variance_mark (yyvs12.item (yyvsp12 - 1), False, True)
 				end
 				if not is_ignoring_attachment_marks and then attached yyval82 as l_type then

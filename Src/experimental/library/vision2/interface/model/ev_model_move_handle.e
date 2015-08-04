@@ -371,7 +371,7 @@ feature {NONE} -- Events
 			-- User pressed pointer button on `Current'.
 		do
 			if attached world as l_world and then l_world.capture_figure = Void then
-				if ev_application.ctrl_pressed then
+				if not ev_application.ctrl_pressed then
 					if b = move_button and is_moving then
 						-- move
 						enable_capture

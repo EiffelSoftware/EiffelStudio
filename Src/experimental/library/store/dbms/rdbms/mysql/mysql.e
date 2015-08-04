@@ -675,13 +675,16 @@ feature -- External features
 				Result := ar.count
 			else
 				l_area := string_buffer
-				l_area.resize (max_len)
 				l_length := get_data_len (no_descriptor, index)
-				Result := eif_mysql_column_data (
-					row_pointers.item (no_descriptor), index, l_area.item, l_length.min (max_len))
-				check
-					Result <= max_len
+				if (l_length >= l_area.count) then
+   					l_area.resize (l_length)
 				end
+				Result := eif_mysql_column_data (
+							row_pointers.item (no_descriptor), index, l_area.item, l_length)
+				check
+   					 Result <= l_length
+				end
+
 				ar.set_count (Result)
 				from
 					i := 1
@@ -703,7 +706,6 @@ feature -- External features
 			i: INTEGER
 			l_area: MANAGED_POINTER
 			l_length: INTEGER
-			l_count: INTEGER
 			l_str: STRING
 			l_str32: STRING_32
 		do
@@ -715,19 +717,22 @@ feature -- External features
 				Result := ar.count
 			else
 				l_area := string_buffer
-				l_area.resize (max_len)
 				l_length := get_data_len (no_descriptor, index)
-				l_count := eif_mysql_column_data (
-					row_pointers.item (no_descriptor), index, l_area.item, l_length.min (max_len))
-				check
-					l_count <= max_len
+				if (l_length >= l_area.count) then
+   					l_area.resize (l_length)
 				end
-				create l_str.make (l_count)
-				l_str.set_count (l_count)
+				Result := eif_mysql_column_data (
+						row_pointers.item (no_descriptor), index, l_area.item, l_length)
+				check
+   					 Result <= l_length
+				end
+
+				create l_str.make (Result)
+				l_str.set_count (Result)
 				from
 					i := 1
 				until
-					i > l_count
+					i > Result
 				loop
 					l_str.put (l_area.read_integer_8 (i - 1).to_character_8, i)
 					i := i + 1
@@ -1397,7 +1402,7 @@ feature {NONE} -- C Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

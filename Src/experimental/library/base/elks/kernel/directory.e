@@ -283,7 +283,8 @@ feature -- Measurement
 feature -- Conversion
 
 	entries: ARRAYED_LIST [PATH]
-			-- The entries, in sequential format, in a platform specific order.
+			-- Entries (i.e. just the file or directory name) of current directory,
+			-- in sequential format, in a platform specific order.
 		local
 			dir_temp: DIRECTORY
 			e: like last_entry_pointer
@@ -302,6 +303,38 @@ feature -- Conversion
 				e = default_pointer
 			loop
 				Result.extend (create {PATH}.make_from_pointer (e))
+				dir_temp.readentry
+				e := dir_temp.last_entry_pointer
+			end
+			dir_temp.close
+		end
+
+	resolved_entries: ARRAYED_LIST [PATH]
+			-- Entries of current directory resolved in the context of current directory (i.e. the path
+			-- of the current directory appended with the entry) in sequential format, in a platform specific
+			-- order.
+			-- Compared to `entries', it removes the need for callers to build the full path of the entry
+			-- using `Current'.
+		local
+			dir_temp: DIRECTORY
+			e: like last_entry_pointer
+			l_path: like path
+		do
+			create dir_temp.make_open_read (internal_name)
+				-- Arbitrary size for arrayed_list creation to avoid
+				-- querying `count' which traverses list of entries
+				-- in current directory as we do here, making current
+				-- less efficient if Current has a lot of entries.
+			create Result.make (16)
+			from
+				dir_temp.start
+				dir_temp.readentry
+				e := dir_temp.last_entry_pointer
+				l_path := path
+			until
+				e = default_pointer
+			loop
+				Result.extend (l_path.extended_path (create {PATH}.make_from_pointer (e)))
 				dir_temp.readentry
 				e := dir_temp.last_entry_pointer
 			end

@@ -116,7 +116,7 @@ feature -- Basic operations
 				-- Launch processes
 			create l_factory
 			l_commands := a_options.commands
-			create l_spawner.make (a_options.max_processors)
+			create l_spawner.make (a_options.max_jobs)
 			from l_commands.start until l_commands.after loop
 				l_process := l_factory.process_launcher_with_command_line (l_commands.item, Void)
 				l_spawner.launch_process (l_process, not a_options.ignore_failures)

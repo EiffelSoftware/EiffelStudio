@@ -1902,7 +1902,7 @@ feature -- URL Utility
 							elseif spos > 0 then
 								i := spos
 							end
-							spos := l_rq_uri.substring_index (path_info, i)
+							spos := l_rq_uri.substring_index (percent_encoded_path_info, i)
 							if spos > 0 then
 								l_base_url := l_rq_uri.substring (1, spos - 1)
 							else

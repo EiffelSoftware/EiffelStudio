@@ -709,6 +709,7 @@ feature {NONE} -- Settings
 			last_assignment_target := Void
 			set_is_inherited (False)
 			inline_agent_byte_codes := Void
+			internal_agent_call_routine_ids := Void
 		end
 
 	reset_types
@@ -1822,16 +1823,16 @@ feature {NONE} -- Implementation
 												l_wrapped_actuals.extend (l_parameters [i])
 												current_target_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
 												;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
-												l_arg_types [i] := last_type
+												l_arg_types.put_i_th (last_type, i)
 													-- Check if now actual and formal types of the last argument are compatible
 												if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [i], i, l_arg_types, l_feature, Void, l_parameters [i].start_location) then
 														-- Revert changes back.
-													l_arg_types [i] := l_arg_type
+													l_arg_types.put_i_th (l_arg_type, i)
 														-- Report an original error.
 													error_handler.insert_error (e)
 												elseif l_needs_byte_node and then attached {EXPR_B} last_byte_node as b then
 														-- Keep changes, update byte nodes.
-													l_arg_nodes [i] := b
+													l_arg_nodes.put_i_th (b, i)
 												end
 											else
 													-- There is no tuple argument that may be involved in argument wrapping.
@@ -1862,12 +1863,10 @@ feature {NONE} -- Implementation
 												create l_tcat.make (l_feature_name)
 												context.init_error (l_tcat)
 												l_tcat.set_called_feature (l_feature)
-												l_tcat.add_covariant_generic_violation
 												system.update_statistics (l_tcat)
 												error_handler.insert_error (l_tcat)
-											else
-												l_tcat.add_covariant_generic_violation
 											end
+											l_tcat.add_covariant_generic_violation
 										end
 
 										l_warning_count := error_handler.warning_list.count
@@ -1946,6 +1945,13 @@ feature {NONE} -- Implementation
 								end
 									-- Reset VUAR error (if any).
 								last_vuar_error := Void
+
+
+								if context.current_class.lace_class.is_catcall_conformance and then agent_call_routine_ids.has (l_feature.rout_id_set.first) then
+										-- This is an agent call with catcall avoidance enabled. We will verify that none of TUPLE
+										-- actual generic argument are variant.
+									check_agent_call_validity (l_feature, l_last_type, l_parameters, l_arg_types)
+								end
 							end
 
 								-- Reset original name because it was polluted by the argument checking
@@ -2106,15 +2112,19 @@ feature {NONE} -- Implementation
 							if is_qualified and then attached last_type then
 									-- Adapt separateness and controlled status of the result to target type.
 								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
-									-- If result type is declared frozen, then it keeps its status only if target is frozen.
-									-- Also if `last_type' is expanded or frozen or if the routine is frozen, we know for sure
-									-- there will not be any redeclaration so we can keep the `frozen' status of the query.
-								if
-									not (a_type.is_frozen or a_type.is_expanded or (attached a_type.base_class as l_class and then l_class.is_frozen)) and then
-									(l_feature.type.is_frozen and not l_feature.is_frozen)
-								then
-										-- Remove frozen status of type.
-									set_type (last_type.as_variant_free, a_name)
+									-- If the target of the call is `frozen' then we can keep `last_type' as is. Meaning that
+									-- if it was frozen, it will stay frozen. For other cases, we check if we can still
+									-- keep the frozen mark.
+								if not a_type.is_frozen and last_type.is_frozen then
+									if l_feature.is_frozen and then attached {CL_TYPE_A} l_feature.type then
+											-- The feature is `frozen' (i.e. it cannot be redefined) and
+											-- its base type is a Class_type which is not a formal, then it
+											-- cannot change.
+											-- We can keep the `frozen' mark to make code more flexible.
+									else
+											-- Remove frozen status of type.
+										set_type (last_type.as_variant_free, a_name)
+									end
 								end
 							end
 
@@ -10691,6 +10701,75 @@ feature {NONE} -- Agents
 			l_cur_class.insert_changed_assertion (a_feat)
 		end
 
+	check_agent_call_validity (a_feature: FEATURE_I; a_last_type: TYPE_A; a_parameters: EIFFEL_LIST [EXPR_AS]; a_arg_types: ARRAYED_LIST [TYPE_A])
+			-- Is the call to `{ROUTINE}.call' or `{FUNCTION}.item' and descendants valid with
+			-- respects to the variance mark of the TUPLE actual generic parameter of the agent
+			-- type. To be valid, the tuple type should not have any variant actual generic
+			-- parameters as otherwise we could have a catcall.
+		local
+			l_tcat: CAT_CALL_WARNING
+		do
+			check
+				has_generics: attached a_last_type.generics as l_generics and then l_generics.count >= 2
+			end
+				-- The type `a_last_type' represents a ROUTINE/PROCEDURE/FUNCTION/PREDICATE
+				-- and its second actual generic parameter represents the type of the TUPLE.
+				-- In the event, it is not generics, it means that the type is a formal one.
+				-- In this case, we do not do anything because it should be taken care with
+				-- existing rules governing calls on features involving formal generic parameters.
+			if attached a_last_type.generics.i_th (2).actual_type.generics as l_generics then
+				across
+					l_generics as l_types
+				loop
+					if l_types.item.is_variant then
+						if l_tcat = Void then
+							create l_tcat.make (a_parameters.start_location)
+							context.init_error (l_tcat)
+							l_tcat.set_called_feature (a_feature)
+							error_handler.insert_error (l_tcat)
+						end
+						l_tcat.add_covariant_generic_violation
+					end
+				end
+			end
+		end
+
+	agent_call_routine_ids: SEARCH_TABLE [INTEGER]
+			-- Set of the routine IDs for routines `call' and `item' of the agent classes (ROUTINE,
+			-- PROCEDURE, FUNCTION and PREDICATE).
+		do
+			if attached internal_agent_call_routine_ids as l_result then
+				Result := l_result
+			else
+				create Result.make (10)
+					-- Adding {ROUTINE}.call.
+				if attached system.routine_class as l_rout_class and then attached l_rout_class.compiled_class as l_class then
+					if attached l_class.feature_table.item_id ({NAMES_HEAP}.call_name_id) as l_feat then
+						Result.put (l_feat.rout_id_set.first)
+					end
+				end
+
+					-- Adding {PROCEDURE}.call.
+				if attached system.procedure_class as l_proc_class and then attached l_proc_class.compiled_class as l_class then
+					if attached l_class.feature_table.item_id ({NAMES_HEAP}.call_name_id) as l_feat then
+						Result.put (l_feat.rout_id_set.first)
+					end
+				end
+
+					-- Adding {FUNCTION}.item (and implicitely {PREDICATE}.item).
+				if attached system.function_class as l_func_class and then attached l_func_class.compiled_class as l_class then
+					if attached l_class.feature_table.item_id ({NAMES_HEAP}.item_name_id) as l_feat then
+						Result.put (l_feat.rout_id_set.first)
+					end
+				end
+
+				internal_agent_call_routine_ids := Result
+			end
+		end
+
+	internal_agent_call_routine_ids: SEARCH_TABLE [INTEGER]
+			-- Storage for `agent_call_routine_ids'.
+
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
 	break_point_slot_count: INTEGER
@@ -11043,7 +11122,7 @@ feature {NONE} -- Implementation: checking locals
 									create l_untyped_local.make (1)
 									untyped_local := l_untyped_local
 								end
-								l_untyped_local [i] := l_missing_type
+								l_untyped_local.force (l_missing_type, i)
 							else
 								l_local_info.set_type (l_solved_type)
 							end
@@ -11150,7 +11229,7 @@ feature {NONE} -- Implementation: checking locals
 						-- Update local type information.
 					l.set_type (r)
 						-- Keep computed type to avoid recomputing it again.
-					t [x] := r
+					t.force (r, x)
 				end
 			end
 				-- Remove all information about object test locals.

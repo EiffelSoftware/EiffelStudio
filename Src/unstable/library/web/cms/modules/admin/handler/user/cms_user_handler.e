@@ -84,7 +84,7 @@ feature -- HTTP Methods
 			r: CMS_RESPONSE
 		do
 			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if r.has_permission ("admin users") then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					check valid_url: req.percent_encoded_path_info.starts_with_general ("/admin/user/") end
 					create edit_response.make (req, res, api)
@@ -122,7 +122,7 @@ feature -- HTTP Methods
 			r: CMS_RESPONSE
 		do
 			create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
-			if r.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if r.has_permission ("admin users") then
 				if req.percent_encoded_path_info.ends_with_general ("/edit") then
 					create edit_response.make (req, res, api)
 					edit_response.execute

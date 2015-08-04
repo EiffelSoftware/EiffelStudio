@@ -9,7 +9,8 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks
+			register_hooks,
+			permissions
 		end
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -77,6 +78,18 @@ feature -- Access: router
 			a_router.handle ("/admin/role/{id}", l_role_handler, a_router.methods_get)
 			a_router.handle ("/admin/role/{id}/edit", l_role_handler, a_router.methods_get_post)
 			a_router.handle ("/admin/role/{id}/delete", l_role_handler, a_router.methods_get_post)
+		end
+
+feature -- Security
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("manage admin")
+			Result.force ("admin users")
+			Result.force ("admin roles")
+			Result.force ("admin modules")
 		end
 
 feature -- Hooks

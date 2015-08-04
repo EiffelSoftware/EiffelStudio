@@ -72,7 +72,7 @@ feature -- HTTP Methods
 				-- the setup class.
 
 			create {FORBIDDEN_ERROR_CMS_RESPONSE} l_response.make (req, res, api)
-			if l_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if l_response.has_permission ("admin users") then
 				user_api := api.user_api
 
 				l_count := user_api.users_count

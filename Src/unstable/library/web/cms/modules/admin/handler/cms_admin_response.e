@@ -42,10 +42,12 @@ feature -- Process
 			set_title (translation ("Admin Page", Void))
 			b.append ("<ul id=%"content-types%">")
 			fixme ("Check how to make it configurable")
-			if has_permissions (<< "View any">>) then
+			if has_permissions (<< "admin users">>) then
 				b.append ("<li>" + link ("Users", "admin/users", Void))
 				b.append ("<div class=%"description%">View/Edit/Add Users</div>")
 				b.append ("</li>")
+			end
+			if has_permissions (<< "admin roles">>) then
 				b.append ("<li>" + link ("Roles", "admin/roles", Void))
 				b.append ("<div class=%"description%">View/Edit/Add Roles</div>")
 				b.append ("</li>")

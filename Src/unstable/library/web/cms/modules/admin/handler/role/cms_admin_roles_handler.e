@@ -100,7 +100,7 @@ feature -- HTTP Methods
 				s.append ("</ul>%N")
 			end
 
-			if l_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) then
+			if l_response.has_permission ("admin roles") then
 				s.append (l_response.link ("Add Role", "admin/add/role", Void))
 			end
 

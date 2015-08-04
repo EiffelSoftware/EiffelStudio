@@ -140,26 +140,28 @@ feature -- Access
 
 	permissions: LIST [READABLE_STRING_8]
 			-- <Precursor>.
+		local
+			l_type_name: READABLE_STRING_8
 		do
 			Result := Precursor
-			Result.force ("create any")
-			Result.force ("view any")
-			Result.force ("edit any")
-			Result.force ("delete any")
-			Result.force ("view own")
-			Result.force ("edit own")
-			Result.force ("delete own")
+			Result.force ("create any node")
+
 			if attached node_api as l_node_api then
 				across
 					l_node_api.content_types as ic
 				loop
-					Result.force ("create " + ic.item.name)
-					Result.force ("view " + ic.item.name)
-					Result.force ("edit " + ic.item.name)
-					Result.force ("delete " + ic.item.name)
-					Result.force ("view own " + ic.item.name)
-					Result.force ("edit own " + ic.item.name)
-					Result.force ("delete own " + ic.item.name)
+					l_type_name := ic.item.name
+					if not l_type_name.is_whitespace then
+						Result.force ("create " + l_type_name)
+
+						Result.force ("view any " + l_type_name)
+						Result.force ("edit any " + l_type_name)
+						Result.force ("delete any " + l_type_name)
+
+						Result.force ("view own " + l_type_name)
+						Result.force ("edit own " + l_type_name)
+						Result.force ("delete own " + l_type_name)
+					end
 				end
 			end
 		end

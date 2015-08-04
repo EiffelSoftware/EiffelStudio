@@ -9,7 +9,8 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks
+			register_hooks,
+			permissions
 		end
 
 	CMS_HOOK_AUTO_REGISTER
@@ -69,6 +70,25 @@ feature -- Router
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
 			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
+		end
+
+feature -- Access			
+
+	permissions: LIST [READABLE_STRING_8]
+			-- <Precursor>.
+		do
+			Result := Precursor
+			Result.force ("admin wdocs")
+			Result.force ("edit wdocs page")
+			Result.force ("create wdocs page")
+			Result.force ("delete wdocs page")
+
+			Result.force ("edit any wdocs page")
+			Result.force ("delete any wdocs page")
+			Result.force ("edit own wdocs page")
+			Result.force ("delete own wdocs page")
+
+			Result.force ("clear wdocs cache")
 		end
 
 feature -- Helper

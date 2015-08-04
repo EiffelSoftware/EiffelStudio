@@ -30,7 +30,7 @@ feature -- CMS setup
 
 	setup_storage (a_setup: CMS_SETUP)
 		do
---			a_setup.storage_drivers.force (create {CMS_STORAGE_MYSQL_BUILDER}.make, "mysql")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_MYSQL_BUILDER}.make, "mysql")
 			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
 		end
 
@@ -39,6 +39,10 @@ feature -- CMS setup
 			m: CMS_MODULE
 			wdocs: WDOCS_MODULE
 		do
+			create {CMS_ADMIN_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 			create {CMS_AUTHENTICATION_MODULE} m.make
 			m.enable
 			a_setup.register_module (m)

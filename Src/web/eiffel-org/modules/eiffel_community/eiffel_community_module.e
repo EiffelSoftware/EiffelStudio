@@ -9,7 +9,8 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks
+			register_hooks,
+			permissions
 		end
 
 	CMS_HOOK_BLOCK
@@ -89,6 +90,15 @@ feature -- Router
 			a_router.handle ("/resources/videos", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources_video (a_api, ?, ?)), a_router.methods_head_get)
 
 			a_router.handle ("/admin/module/" + name + "/hack/", create {EIFFEL_COMMUNITY_ADMIN_HACK_HANDLER}.make (a_api), a_router.methods_get_post)
+		end
+
+feature -- Access			
+
+	permissions: LIST [READABLE_STRING_8]
+			-- <Precursor>.
+		do
+			Result := Precursor
+			Result.force ("manage " + name)
 		end
 
 feature -- Hooks configuration

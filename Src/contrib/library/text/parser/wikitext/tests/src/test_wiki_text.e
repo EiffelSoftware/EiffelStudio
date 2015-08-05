@@ -233,6 +233,28 @@ end
 			assert ("o", not o.is_empty)
 		end
 
+	test_code_with_brackets
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+<code lang="eiffel">
+class FOO
+feature
+    do_call (a_procedure: separate PROCEDURE [ANY, TUPLE[separate STRING]]; a_string: separate STRING)
+		do
+		end
+end
+</code>
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+		end
+
 	test_code_3backtiks
 		local
 			t: WIKI_CONTENT_TEXT

@@ -138,7 +138,7 @@ feature -- Tag
 
 	visit_code (a_code: WIKI_CODE)
 		do
-			a_code.text.process (Current)
+			-- Code content should not be processed for other wiki entities.
 		end
 
 	visit_tag (a_tag: WIKI_TAG)
@@ -215,7 +215,7 @@ feature -- Table
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

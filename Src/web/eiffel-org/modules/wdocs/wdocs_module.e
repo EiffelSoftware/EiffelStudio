@@ -220,7 +220,7 @@ feature -- Hooks
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-			a_response.add_style (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void), Void)
+			a_response.add_javascript_url (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void))
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]

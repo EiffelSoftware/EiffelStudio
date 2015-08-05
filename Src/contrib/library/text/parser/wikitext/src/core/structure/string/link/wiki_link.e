@@ -97,11 +97,21 @@ feature {NONE} -- Initialization
 			else
 				text := wiki_raw_string (name)
 			end
+			p := name.index_of ('#', 1)
+			if p > 0 then
+				fragment := name.substring (p + 1, name.count)
+				name.keep_head (p - 1)
+			else
+				fragment := Void
+			end
 		end
 
 feature -- Access
 
 	name: STRING
+
+	fragment: detachable READABLE_STRING_8
+			-- Optional fragment such as "ref" in "name#ref".
 
 	text: WIKI_STRING_ITEM
 

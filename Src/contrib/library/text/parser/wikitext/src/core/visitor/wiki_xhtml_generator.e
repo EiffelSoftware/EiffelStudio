@@ -592,12 +592,18 @@ feature -- Links
 	visit_link (a_link: WIKI_LINK)
 		local
 			l_css_class: STRING
+			l_url: STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
 			if
 				attached link_resolver as r and then
-				attached r.wiki_url (a_link, current_page) as l_url
+				attached r.wiki_url (a_link, current_page) as u
 			then
+				if attached a_link.fragment as l_fragment then
+					l_url := u + "#" + l_fragment
+				else
+					l_url := u
+				end
 				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
 				a_link.text.process (Current)
 				output ("</a>")

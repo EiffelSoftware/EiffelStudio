@@ -1492,7 +1492,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 			RTS_AA(v,f,t,n,a); \
 			val = ((call_data*)(a))->argument [(n) - 1].f; \
 			if (val) { \
-				if (!RTS_OU(Current, val)) { \
+				if (!eif_is_expanded (HEADER(val)->ov_flags) && !RTS_OU(Current, val)) { \
 					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, val)) { \
 						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
 					} \

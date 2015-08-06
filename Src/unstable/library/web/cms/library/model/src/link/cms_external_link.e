@@ -43,9 +43,8 @@ feature -- Status report
 
 feature -- Security		
 
-	is_forbidden: BOOLEAN
-			-- <Precursor>
-			-- Related to `permission_arguments' values.			
+	is_forbidden: BOOLEAN = False
+			-- <Precursor>			
 
 feature -- Access			
 

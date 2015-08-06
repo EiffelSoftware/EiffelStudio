@@ -145,9 +145,7 @@ feature -- User roles.
 	role_permissions: HASH_TABLE [LIST [READABLE_STRING_8], STRING_8]
 			-- Possible known permissions indexed by modules.
 		local
-			perm: READABLE_STRING_8
 			lst, l_used_permissions: LIST [READABLE_STRING_8]
-			l_found: BOOLEAN
 		do
 			create Result.make (cms_api.enabled_modules.count + 1)
 

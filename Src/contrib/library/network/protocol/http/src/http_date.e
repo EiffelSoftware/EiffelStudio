@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			when 5 then s.append ("May")
 			when 6 then s.append ("Jun")
 			when 7 then s.append ("Jul")
-			when 8 then s.append ("Aou")
+			when 8 then s.append ("Aug")
 			when 9 then s.append ("Sep")
 			when 10 then s.append ("Oct")
 			when 11 then s.append ("Nov")
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 					elseif l_mmm.same_string ("MAY") then l_mo := 05
 					elseif l_mmm.same_string ("JUN") then l_mo := 06
 					elseif l_mmm.same_string ("JUL") then l_mo := 07
-					elseif l_mmm.same_string ("AOU") then l_mo := 08
+					elseif l_mmm.same_string ("AUG") then l_mo := 08
 					elseif l_mmm.same_string ("SEP") then l_mo := 09
 					elseif l_mmm.same_string ("OCT") then l_mo := 10
 					elseif l_mmm.same_string ("NOV") then l_mo := 11
@@ -718,7 +718,7 @@ feature {NONE} -- Implementation
 					elseif l_mmm.same_string ("MAY") then l_mo := 05
 					elseif l_mmm.same_string ("JUN") then l_mo := 06
 					elseif l_mmm.same_string ("JUL") then l_mo := 07
-					elseif l_mmm.same_string ("AOU") then l_mo := 08
+					elseif l_mmm.same_string ("AUG") then l_mo := 08
 					elseif l_mmm.same_string ("SEP") then l_mo := 09
 					elseif l_mmm.same_string ("OCT") then l_mo := 10
 					elseif l_mmm.same_string ("NOV") then l_mo := 11
@@ -905,7 +905,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

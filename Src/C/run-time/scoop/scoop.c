@@ -218,6 +218,19 @@ rt_private rt_inline EIF_BOOLEAN rt_scoop_is_impersonation_allowed (struct rt_pr
 	return result;
 }
 
+/* Fix the call_data struct for expanded types (their PID is wrongly set to the client region). */
+rt_private void fix_call_data (struct call_data* call)
+{
+	size_t i = 0;
+	for (; i < call->count; ++i) {
+		if (call->argument [i].type == SK_REF) {
+			EIF_REFERENCE obj = call->argument [i].item.r;
+			if (obj && eif_is_expanded (HEADER(obj)->ov_flags)) {
+				RTS_PID (obj) = RTS_PID (call->target);
+			}
+		}
+	}
+}
 
 /* Call logging */
 rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data *data)
@@ -228,6 +241,8 @@ rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, c
 	int error = T_OK;
 
 	REQUIRE("has data", data);
+
+	fix_call_data (data);
 
 	error = rt_queue_cache_retrieve (&client->cache, supplier, &pq);
 	if (error != T_OK) {

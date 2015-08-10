@@ -73,6 +73,11 @@ feature -- Access
 		deferred
 		end
 
+	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- Revisions of node `a_node'.
+		deferred
+		end
+
 	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
 			-- List of nodes by user `a_user' if set, or any.
 		require
@@ -92,10 +97,18 @@ feature -- Access
 		deferred
 		end
 
-	node_author (a_id: like {CMS_NODE}.id): detachable CMS_USER
+	node_by_id_and_revision (a_node_id, a_revision: INTEGER_64): detachable CMS_NODE
+			-- Retrieve node by node id `a_node_id' and revision `a_revision', if any.
+		require
+			has_node_id: a_node_id > 0
+			has_revision: a_revision > 0
+		deferred
+		end
+
+	node_author (a_node: CMS_NODE): detachable CMS_USER
 			-- Node's author. if any.
 		require
-			valid_node: a_id > 0
+			valid_node: a_node.has_id
 		deferred
 		end
 

@@ -890,6 +890,10 @@ feature -- Generation
 			add_to_primary_menu (lnk)
 			invoke_menu_system_alter (menu_system)
 
+			if api.enabled_modules.count = 0 then
+				add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Install", "admin/install"))
+			end
+
 				-- Blocks
 			create l_menu_list_prepared.make (0)
 			get_blocks

@@ -11,6 +11,7 @@ inherit
 
 	CMS_PROXY_STORAGE_SQL
 		rename
+			make as make_proxy,
 			sql_storage as node_storage
 		redefine
 			node_storage
@@ -20,6 +21,12 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	make (a_node_api: CMS_NODE_API; a_sql_storage: CMS_NODE_STORAGE_SQL)
+		do
+			set_node_api (a_node_api)
+			make_proxy (a_sql_storage)
+		end
 
 	node_storage: CMS_NODE_STORAGE_SQL
 			-- <Precursor>
@@ -34,27 +41,25 @@ feature -- Access
 feature -- Persistence
 
 	store (a_node: CMS_BLOG)
+			-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_new_tags: detachable STRING_32
 			l_previous_tags: detachable STRING_32
 			l_update: BOOLEAN
+			l_has_modif: BOOLEAN
 		do
-			error_handler.reset
 			if attached api as l_api then
 				l_api.logger.put_information (generator + ".store", Void)
 			end
 
-			create l_parameters.make (2)
-			l_parameters.put (a_node.id, "nid")
-			l_parameters.put (a_node.revision, "revision")
-
-			sql_query (sql_select_blog_data, l_parameters)
+			error_handler.reset
+				-- Check existing record, if any.
+			if attached node_data (a_node) as d then
+				l_update := d.revision = a_node.revision
+				l_previous_tags := d.tags
+			end
 			if not has_error then
-				if sql_rows_count = 1 then
-					l_previous_tags := sql_read_string_32 (3)
-					l_update := True
-				end
 				if attached a_node.tags as l_tags and then not l_tags.is_empty then
 					create l_new_tags.make (0)
 					across
@@ -68,37 +73,64 @@ feature -- Persistence
 				else
 					l_new_tags := Void
 				end
-				l_parameters.put (l_new_tags, "tags")
-				if l_update and l_new_tags /~ l_previous_tags then
-					sql_change (sql_update_blog_data, l_parameters)
-				elseif l_new_tags /= Void then
-					sql_change (sql_insert_blog_data, l_parameters)
+
+				l_has_modif := l_has_modif or (l_new_tags /~ l_previous_tags)
+
+				create l_parameters.make (3)
+				l_parameters.put (a_node.id, "nid")
+				l_parameters.put (a_node.revision, "revision")
+				l_parameters.force (l_new_tags, "tags")
+
+				if l_update then
+					if l_has_modif then
+						sql_change (sql_update_node_data, l_parameters)
+					end
 				else
-					-- no blog data, means everything is empty.
+					if l_has_modif then
+						sql_change (sql_insert_node_data, l_parameters)
+					else
+						-- no page data, means everything is empty.
+						-- FOR NOW: always record row
+--						sql_change (sql_insert_node_data, l_parameters)
+					end
 				end
 			end
 		end
 
 	load (a_node: CMS_BLOG)
+			-- <Precursor>.
+		local
+			l_tags: READABLE_STRING_32
+		do
+			if attached node_data (a_node) as d then
+				l_tags := d.tags
+				a_node.set_tags_from_string (l_tags)
+			end
+		end
+
+feature {NONE} -- Implementation		
+
+	node_data (a_node: CMS_NODE): detachable TUPLE [revision: INTEGER_64; tags: READABLE_STRING_32]
+			-- Node extension data for node `a_node' as tuple.
 		local
 			l_parameters: STRING_TABLE [ANY]
+			l_rev: INTEGER_64
+			l_tags: detachable READABLE_STRING_32
 			n: INTEGER
 		do
 			error_handler.reset
 			create l_parameters.make (2)
 			l_parameters.put (a_node.id, "nid")
 			l_parameters.put (a_node.revision, "revision")
-			sql_query (sql_select_blog_data, l_parameters)
+			sql_query (sql_select_node_data, l_parameters)
 			if not has_error then
 				n := sql_rows_count
 				if n = 1 then
-						-- nid, revision, parent
-					if
-						attached sql_read_string_32 (3) as l_tags and then
-						not l_tags.is_whitespace
-					then
-							-- FIXME: find a simple way to access the declared content types.
-						a_node.set_tags_from_string (l_tags)
+						-- nid, revision, tags
+					l_rev := sql_read_integer_64 (2)
+					l_tags := sql_read_string_32 (3)
+					if l_tags /= Void then
+						Result := [l_rev, l_tags]
 					end
 				else
 					check unique_data: n = 0 end
@@ -108,8 +140,8 @@ feature -- Persistence
 
 feature -- SQL
 
-	sql_select_blog_data: STRING = "SELECT nid, revision, tags FROM blog_post_nodes WHERE nid =:nid AND revision=:revision;"
-	sql_insert_blog_data: STRING = "INSERT INTO blog_post_nodes (nid, revision, tags) VALUES (:nid, :revision, :tags);"
-	sql_update_blog_data: STRING = "UPDATE blog_post_nodes SET nid=:nid, revision=:revision, tags=:tags WHERE nid=:nid AND revision=:revision;"
+	sql_select_node_data: STRING = "SELECT nid, revision, tags FROM blog_post_nodes WHERE nid =:nid AND revision<=:revision ORDER BY revision DESC LIMIT 1;"
+	sql_insert_node_data: STRING = "INSERT INTO blog_post_nodes (nid, revision, tags) VALUES (:nid, :revision, :tags);"
+	sql_update_node_data: STRING = "UPDATE blog_post_nodes SET nid=:nid, revision=:revision, tags=:tags WHERE nid=:nid AND revision=:revision;"
 
 end

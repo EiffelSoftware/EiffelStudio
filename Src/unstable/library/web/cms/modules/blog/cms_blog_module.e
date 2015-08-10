@@ -49,12 +49,12 @@ feature {CMS_API} -- Module Initialization
 			Precursor (api)
 
 			if attached {CMS_NODE_API} api.module_api ({CMS_NODE_MODULE}) as l_node_api then
+				create ct
 				create blog_api.make (api, l_node_api)
 
 				node_api := l_node_api
 					-- Depends on {CMS_NODE_MODULE}
 
-				create ct
 					--| For now, add all available formats to content type `ct'.
 				across
 					api.formats as ic
@@ -67,7 +67,7 @@ feature {CMS_API} -- Module Initialization
 					-- Add support for CMS_BLOG, which requires a storage extension to store the optional "tags" value
 					-- For now, we only have extension based on SQL statement.
 				if attached {CMS_NODE_STORAGE_SQL} l_node_api.node_storage as l_sql_node_storage then
-					l_sql_node_storage.register_node_storage_extension (create {CMS_NODE_STORAGE_SQL_BLOG_EXTENSION}.make (l_sql_node_storage))
+					l_sql_node_storage.register_node_storage_extension (create {CMS_NODE_STORAGE_SQL_BLOG_EXTENSION}.make (l_node_api, l_sql_node_storage))
 				end
 			end
 		end
@@ -83,9 +83,10 @@ feature {CMS_API} -- Module management
 				if not l_sql_storage.sql_table_exists ("blog_post_nodes") then
 					sql := "[
 CREATE TABLE blog_post_nodes(
-  `nid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL CHECK("nid">=0),
-  `revision` INTEGER,
-  `tags` VARCHAR(255)
+  `nid` INTEGER NOT NULL CHECK("nid">=0),
+  `revision` INTEGER NOT NULL,
+  `tags` VARCHAR(255),
+  CONSTRAINT PK_nid_revision PRIMARY KEY (nid,revision)
 );
 					]"
 					l_sql_storage.sql_execute_script (sql, Void)

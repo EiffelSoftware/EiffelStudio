@@ -6,7 +6,16 @@ note
 deferred class
 	CMS_NODE_STORAGE_EXTENSION [G -> CMS_NODE]
 
+feature -- Change
+
+	set_node_api (a_node_api: CMS_NODE_API)
+		do
+			node_api := a_node_api
+		end
+
 feature -- Access
+
+	node_api: CMS_NODE_API
 
 	content_type: READABLE_STRING_8
 		deferred
@@ -43,10 +52,12 @@ feature -- Persistence
 feature {NONE} -- Persistence implementation
 
 	store (a_node: G)
+			-- Store extension data from node `a_node'.
 		deferred
 		end
 
 	load (a_node: G)
+			-- Load extension data into node `a_node'.	
 		deferred
 		end
 

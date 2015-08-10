@@ -81,7 +81,7 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_node: detachable CMS_NODE
-			l_nid: INTEGER_64
+			l_nid, l_rev: INTEGER_64
 			edit_response: NODE_FORM_RESPONSE
 			view_response: NODE_VIEW_RESPONSE
 		do
@@ -97,16 +97,32 @@ feature -- HTTP Methods
 				check valid_url: req.percent_encoded_path_info.starts_with ("/node/") end
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
+			elseif req.percent_encoded_path_info.ends_with ("/revision") then
+				do_revisions (req, res)
 			else
 					-- Display existing node
 				l_nid := node_id_path_parameter (req)
 				if l_nid > 0 then
+					if
+						attached {WSF_STRING} req.query_parameter ("revision") as p_rev and then
+						p_rev.value.is_integer_64
+					then
+						l_rev := p_rev.value.to_integer_64
+					end
 					l_node := node_api.node (l_nid)
 					if
-						l_node /= Void and then l_node.is_published
+						l_node /= Void and then
+						l_rev > 0 and then
+						node_api.has_permission_for_action_on_node ("view revisions", l_node, current_user (req))
+					then
+						l_node := node_api.revision_node (l_nid, l_rev)
+					end
+					if
+						l_node /= Void and then (l_rev > 0 or else l_node.is_published)
 					then
 						create view_response.make (req, res, api, node_api)
 						view_response.set_node (l_node)
+						view_response.set_revision (l_rev)
 						view_response.execute
 					else
 						send_not_found (req, res)
@@ -234,7 +250,7 @@ feature {NONE} -- Trash:Restore
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
+						if node_api.has_permission_for_action_on_node ("restore", l_node, current_user (req)) then
 							node_api.restore_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
@@ -249,6 +265,58 @@ feature {NONE} -- Trash:Restore
 				end
 			else
 				send_access_denied (req, res)
+			end
+		end
+
+	do_revisions (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Display revisions of a node.
+		local
+			r: GENERIC_VIEW_CMS_RESPONSE
+			b: STRING
+			n: CMS_NODE
+			l_link: CMS_LOCAL_LINK
+		do
+			if attached {WSF_STRING} req.path_parameter ("id") as l_id then
+				if
+					l_id.is_integer and then
+					attached node_api.node (l_id.integer_value) as l_node
+				then
+					if node_api.has_permission_for_action_on_node ("view revisions", l_node, current_user (req)) then
+						create r.make (req, res, api)
+						create b.make_empty
+						b.append ("<ul>")
+						across
+							node_api.node_revisions (l_node) as ic
+						loop
+							n := ic.item
+							b.append ("<li>")
+							b.append ("<a href=%"")
+							b.append (r.url (node_api.node_path (n) + "?revision=" + n.revision.out, Void))
+							b.append ("%">")
+
+							b.append (n.revision.out)
+							b.append (" : ")
+							b.append (n.modification_date.out)
+							b.append ("</a>")
+							if attached n.author as l_author then
+								b.append (" by ")
+								b.append (r.link (l_author.name, "user/" + l_author.id.out, Void))
+							end
+							b.append ("</li>")
+						end
+						b.append ("</ul>")
+						r.set_title ("Revisions for " + html_encoded (l_node.title))
+						r.set_main_content (b)
+						r.execute
+					else
+						send_access_denied (req, res)
+							-- send_not_authorized ?
+					end
+				else
+					do_error (req, res, l_id)
+				end
+			else
+				(create {INTERNAL_SERVER_ERROR_CMS_RESPONSE}.make (req, res, api)).execute
 			end
 		end
 

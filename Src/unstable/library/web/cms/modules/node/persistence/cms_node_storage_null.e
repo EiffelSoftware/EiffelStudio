@@ -35,8 +35,14 @@ feature -- Access: node
 		do
 		end
 
-	nodes: LIST[CMS_NODE]
+	nodes: LIST [CMS_NODE]
 			-- List of nodes.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+		end
+
+	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- Revisions of node `a_node'.
 		do
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
@@ -58,7 +64,12 @@ feature -- Access: node
 		do
 		end
 
-	node_author (a_id: like {CMS_NODE}.id): detachable CMS_USER
+	node_by_id_and_revision (a_node_id, a_revision: INTEGER_64): detachable CMS_NODE
+			-- <Precuror>
+		do
+		end
+
+	node_author (a_node: CMS_NODE): detachable CMS_USER
 			-- Node's author. if any.
 		do
 		end

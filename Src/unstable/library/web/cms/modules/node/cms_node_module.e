@@ -71,7 +71,7 @@ feature {CMS_API} -- Module Initialization
 				-- Add support for CMS_PAGE, which requires a storage extension to store the optional "parent" id.
 				-- For now, we only have extension based on SQL statement.
 			if attached {CMS_NODE_STORAGE_SQL} l_node_api.node_storage as l_sql_node_storage then
-				l_sql_node_storage.register_node_storage_extension (create {CMS_NODE_STORAGE_SQL_PAGE_EXTENSION}.make (l_sql_node_storage))
+				l_sql_node_storage.register_node_storage_extension (create {CMS_NODE_STORAGE_SQL_PAGE_EXTENSION}.make (l_node_api, l_sql_node_storage))
 
 					-- FIXME: the following code is mostly for test purpose/initialization, remove later
 				if l_sql_node_storage.sql_table_items_count ("page_nodes") = 0 then
@@ -157,10 +157,18 @@ feature -- Access
 						Result.force ("view any " + l_type_name)
 						Result.force ("edit any " + l_type_name)
 						Result.force ("delete any " + l_type_name)
+						Result.force ("trash any " + l_type_name)
+						Result.force ("restore any " + l_type_name)
+
+						Result.force ("view revisions any " + l_type_name)
 
 						Result.force ("view own " + l_type_name)
 						Result.force ("edit own " + l_type_name)
 						Result.force ("delete own " + l_type_name)
+						Result.force ("trash own " + l_type_name)
+						Result.force ("restore own " + l_type_name)
+
+						Result.force ("view revisions own " + l_type_name)
 					end
 				end
 			end
@@ -189,6 +197,7 @@ feature -- Access: router
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 			a_router.handle ("/node/add/{type}", l_node_handler, a_router.methods_get_post)
+			a_router.handle ("/node/{id}/revision", l_node_handler, a_router.methods_get)
 			a_router.handle ("/node/{id}/edit", l_node_handler, a_router.methods_get_post)
 			a_router.handle ("/node/{id}/delete", l_node_handler, a_router.methods_get_post)
 			a_router.handle ("/node/{id}/trash", l_node_handler, a_router.methods_get_post)
@@ -201,8 +210,7 @@ feature -- Access: router
 			create l_uri_mapping.make_trailing_slash_ignored ("/nodes", l_nodes_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get)
 
-				--Trash
-
+				-- Trash
 			create l_trash_handler.make (a_api, a_node_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/trash", l_trash_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get)

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			node_storage := a_node_storage
 			make (a_api)
+--			error_handler.add_synchronization (a_node_storage.error_handler)
 		end
 
 	initialize
@@ -220,6 +221,13 @@ feature -- Access: Node
 			Result := node_storage.nodes
 		end
 
+	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- List of revisions for node `a_node'.
+		do
+			Result := node_storage.node_revisions (a_node)
+			Result := full_nodes (Result)
+		end
+
 	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
 			-- List of nodes with status in {CMS_NODE_API}.trashed.
 			-- if `a_user' is set, return nodes related to this user.
@@ -240,6 +248,11 @@ feature -- Access: Node
 				fixme ("Check preconditions")
 			end
 			Result := full_node (node_storage.node_by_id (a_id))
+		end
+
+	revision_node (a_node_id: INTEGER_64; a_revision_id: INTEGER_64): detachable CMS_NODE
+		do
+			Result := full_node (node_storage.node_by_id_and_revision (a_node_id, a_revision_id))
 		end
 
 	full_node (a_node: detachable CMS_NODE): detachable CMS_NODE
@@ -277,10 +290,24 @@ feature -- Access: Node
 			end
 		end
 
+	full_nodes (a_nodes: LIST [CMS_NODE]): LIST [CMS_NODE]
+			-- Convert list of nodes into a list of nodes when possible.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (a_nodes.count)
+
+			across
+				a_nodes as ic
+			loop
+				if attached full_node (ic.item) as l_full then
+					Result.force (l_full)
+				end
+			end
+		end
+
 	is_author_of_node (u: CMS_USER; a_node: CMS_NODE): BOOLEAN
 			-- Is the user `u' owner of the node `n'.
 		do
-			if attached node_storage.node_author (a_node.id) as l_author then
+			if attached node_storage.node_author (a_node) as l_author then
 				Result := u.same_as (l_author)
 			end
 		end
@@ -306,7 +333,9 @@ feature -- Change: Node
 	save_node (a_node: CMS_NODE)
 			-- Save `a_node'.
 		do
+			reset_error
 			node_storage.save_node (a_node)
+			error_handler.append (node_storage.error_handler)
 		end
 
 	new_node (a_node: CMS_NODE)
@@ -314,38 +343,46 @@ feature -- Change: Node
 		require
 			no_id: not a_node.has_id
 		do
+			reset_error
 			node_storage.new_node (a_node)
+			error_handler.append (node_storage.error_handler)
 		end
 
 	delete_node (a_node: CMS_NODE)
 			-- Delete `a_node'.
 		do
+			reset_error
 			if a_node.has_id then
 				node_storage.delete_node (a_node)
+				error_handler.append (node_storage.error_handler)
 			end
 		end
 
 	update_node (a_node: CMS_NODE)
 			-- Update node `a_node' data.
 		do
+			reset_error
 			node_storage.update_node (a_node)
+			error_handler.append (node_storage.error_handler)
 		end
 
 	trash_node (a_node: CMS_NODE)
 			-- Trash node `a_node'.
 			--! remove the node from the storage.
 		do
+			reset_error
 			node_storage.trash_node (a_node)
+			error_handler.append (node_storage.error_handler)
 		end
-
 
 	restore_node (a_node: CMS_NODE)
 			-- Restore node `a_node'.
 			-- From {CMS_NODE_API}.trashed to {CMS_NODE_API}.not_published.
 		do
+			reset_error
 			node_storage.restore_node (a_node)
+			error_handler.append (node_storage.error_handler)
 		end
-
 
 feature -- Node status
 

@@ -37,11 +37,11 @@ feature -- Forms ...
 
 				-- Select field has to be initialized before textareas are replaced, because they depend on the selection of the field
 			create tselect.make ("format")
-			tselect.set_label ("Body's format")
+			tselect.set_label ("Format for content (and summary)")
 			tselect.set_is_required (True)
 
 				-- Main Content
-			create ta.make ("body")
+			create ta.make ("content")
 			ta.set_rows (10)
 			ta.set_cols (70)
 			ta.show_as_editor_if_selected (tselect, cms_format.name)
@@ -66,13 +66,12 @@ feature -- Forms ...
 			sum.set_is_required (False)
 
 			create fset.make
-			fset.set_legend ("Body")
 
 				-- Add summary
 			fset.extend (sum)
 			fset.extend_html_text("<br />")
 
-				-- Add content (body)
+				-- Add content
 			fset.extend (ta)
 			fset.extend_html_text ("<br/>")
 
@@ -165,8 +164,8 @@ feature -- Forms ...
 				a_node.set_title (l_title)
 			end
 
-			if attached fd.string_item ("body") as l_body then
-				b := l_body
+			if attached fd.string_item ("content") as l_content then
+				b := l_content
 			end
 
 			-- Read out the summary field from the form data
@@ -234,8 +233,8 @@ feature -- Forms ...
 			end
 
 				--Content
-			if attached fd.string_item ("body") as l_body then
-				b := l_body
+			if attached fd.string_item ("content") as l_content then
+				b := l_content
 			end
 
 			if attached fd.string_item ("format") as s_format and then attached response.api.format (s_format) as f_format then

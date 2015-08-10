@@ -4,7 +4,7 @@
 			  		:: Purpose
 </div>
 <h1>Purpose</h1>
-<p>Eiffel.org a forum that brings together Eiffel developers around the world
+<p>Eiffel.org is a forum that brings together Eiffel developers around the world
 to build libraries, share experiences, and help each other on all matters
 related to open-source Eiffel.</p>
 

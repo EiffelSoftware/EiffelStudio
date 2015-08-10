@@ -183,7 +183,7 @@ if not "%remove_desc%" == "1" (
 	echo call make>> make.bat
 )
 echo cd ..>> make.bat
-call make
+call make.bat
 goto end
 :clean
 copy cleanup.bat console\

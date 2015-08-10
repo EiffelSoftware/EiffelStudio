@@ -11,12 +11,27 @@ CREATE TABLE nodes (
 	`publish`	DATETIME,
 	`created`	DATETIME NOT NULL,
 	`changed`	DATETIME NOT NULL,
-	`status`	INTEGER
+	`status`	INTEGER,
+	CONSTRAINT Unique_nid_revision UNIQUE (nid,revision)
+);
+
+CREATE TABLE node_revisions (
+	`nid`	INTEGER NOT NULL,
+	`revision`	INTEGER NOT NULL,
+	`title`	VARCHAR(255) NOT NULL,
+	`summary`	TEXT,
+	`content`	TEXT,
+	`format`	VARCHAR(128),
+	`author`	INTEGER,
+	`changed`	DATETIME NOT NULL,
+	`status`	INTEGER,
+	CONSTRAINT Unique_nid_revision PRIMARY KEY (nid,revision)
 );
 
 CREATE TABLE page_nodes(
-  `nid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
-  `revision` INTEGER,
-  `parent` INTEGER
+	`nid` INTEGER NOT NULL,
+	`revision` INTEGER NOT NULL,
+	`parent` INTEGER,
+	CONSTRAINT PK_nid_revision PRIMARY KEY (nid,revision)
 );
 

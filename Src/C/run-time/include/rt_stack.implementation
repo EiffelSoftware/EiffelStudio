@@ -516,7 +516,7 @@ doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
 doc:		<synchronization>Requires safe access to `stk'.</synchronization>
 doc:	</routine>
 */
-rt_public void XX_EIF_STACK_FUNC(npop) (XX_EIF_STACK_TYPE *stk, size_t nb_items)
+rt_public void XX_EIF_STACK_FUNC(npop) (XX_EIF_STACK_TYPE *stk, rt_uint_ptr nb_items)
 {
 	XX_EIF_STACK_CHUNK_TYPE *chunk;
 	XX_EIF_STACK_ELEM_TYPE *top;

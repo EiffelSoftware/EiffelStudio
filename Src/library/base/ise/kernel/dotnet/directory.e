@@ -1,7 +1,5 @@
 note
-
-	description:
-		"Directories, in the Unix sense, with creation and exploration features"
+	description: "Directories, in the Unix sense, with creation and exploration features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -13,12 +11,23 @@ inherit
 	DISPOSABLE
 
 create
-	make, make_with_path,
+	make, make_with_path, make_with_name,
 	make_open_read
 
 feature -- Initialization
 
 	make (dn: READABLE_STRING_GENERAL)
+			-- Create directory object for directory
+			-- of name `dn'.
+		require
+			string_exists: dn /= Void
+		do
+			make_with_name (dn)
+		ensure
+			name_set: internal_name = dn
+		end
+
+	make_with_name (dn: READABLE_STRING_GENERAL)
 			-- Create directory object for directory
 			-- of name `dn'.
 		require
@@ -35,7 +44,6 @@ feature -- Initialization
 		require
 			a_path_attached: a_path /= Void
 		do
-			-- NOTE: this is a temporary implementation
 			make (a_path.name)
 		end
 
@@ -259,6 +267,18 @@ feature -- Access
 			name_changed: internal_name = new_name
 		end
 
+	rename_path (new_name: PATH)
+			-- Change directory name to `new_name'.
+		require
+			new_name_not_void: new_name /= Void
+			new_name_not_empty: not new_name.is_empty
+			file_exists: exists
+		do
+			change_name (new_name.name)
+		ensure
+			name_changed: internal_name = new_name.name
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -299,6 +319,40 @@ feature -- Conversion
 				end
 			end
 		end
+
+	resolved_entries: ARRAYED_LIST [PATH]
+			-- Entries of current directory resolved in the context of current directory (i.e. the path
+			-- of the current directory appended with the entry) in sequential format, in a platform specific
+			-- order.
+			-- Compared to `entries', it removes the need for callers to build the full path of the entry
+			-- using `Current'.
+		local
+			i, c, dc: INTEGER
+			l_string: detachable SYSTEM_STRING
+			l_path: like path
+		do
+			check attached {SYSTEM_DIRECTORY}.get_file_system_entries (internal_name.to_cil) as ent then
+				c := ent.count
+				dc := internal_name.count
+				if internal_name.item (internal_name.count) = (create {OPERATING_ENVIRONMENT}).directory_separator then
+					dc := dc - 1
+				end
+				from
+					create Result.make (c)
+					l_path := path
+				until
+					i = c
+				loop
+					l_string := ent.item (i)
+					if l_string /= Void then
+						Result.extend (l_path.extended (
+							create {STRING_32}.make_from_cil (l_string.remove (0, dc + 1))))
+					end
+					i := i + 1
+				end
+			end
+		end
+
 
 	linear_representation: ARRAYED_LIST [STRING_8]
 			-- The entries, in sequential format. Entries that can be
@@ -532,7 +586,7 @@ feature -- Removal
 			-- `is_cancel_requested' may be set to Void if you don't need it.
 		require
 			directory_exists: exists
-			valid_file_number: file_number > 0
+			valid_file_number: file_number >= 0
 		local
 			l_path, l_file_name: PATH
 			file: detachable RAW_FILE
@@ -688,9 +742,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class DIRECTORY
-
-
-
+end

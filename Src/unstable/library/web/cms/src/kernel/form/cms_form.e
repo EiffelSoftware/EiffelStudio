@@ -19,7 +19,7 @@ feature -- Basic operation
 
 	prepare (a_response: CMS_RESPONSE)
 		do
-			a_response.invoke_form_alter (Current, Void)
+			a_response.hooks.invoke_form_alter (Current, Void, a_response)
 		end
 
 	process (a_response: CMS_RESPONSE)
@@ -29,7 +29,7 @@ feature -- Basic operation
 
 	on_prepared (a_response: CMS_RESPONSE; fd: WSF_FORM_DATA)
 		do
-			a_response.invoke_form_alter (Current, fd)
+			a_response.hooks.invoke_form_alter (Current, fd, a_response)
 		end
 
 	on_processed (a_response: CMS_RESPONSE; fd: WSF_FORM_DATA)
@@ -39,4 +39,7 @@ feature -- Basic operation
 			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

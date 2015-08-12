@@ -90,6 +90,11 @@ feature -- Access
 		deferred
 		end
 
+	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
+			-- List of recent changes, before `a_date', according to `params' settings.
+		deferred
+		end
+
 	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
 			-- Retrieve node by id `a_id', if any.
 		require

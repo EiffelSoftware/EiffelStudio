@@ -236,9 +236,15 @@ feature -- Access: Node
 		end
 
 	recent_nodes (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_NODE]
-			-- List of the `a_rows' most recent nodes starting from  `a_offset'.
+			-- List of most recent nodes according to `params.offset' and `params.size'.
 		do
 			Result := node_storage.recent_nodes (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
+	recent_node_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME): ITERABLE [CMS_NODE]
+			-- List of recent changes, before `a_date', according to `params' settings.
+		do
+			Result := node_storage.recent_node_changes_before (params.offset.to_integer_32, params.size.to_integer_32, a_date)
 		end
 
 	node (a_id: INTEGER_64): detachable CMS_NODE
@@ -247,17 +253,26 @@ feature -- Access: Node
 			debug ("refactor_fixme")
 				fixme ("Check preconditions")
 			end
-			Result := full_node (node_storage.node_by_id (a_id))
+			Result := safe_full_node (node_storage.node_by_id (a_id))
 		end
 
 	revision_node (a_node_id: INTEGER_64; a_revision_id: INTEGER_64): detachable CMS_NODE
 		do
-			Result := full_node (node_storage.node_by_id_and_revision (a_node_id, a_revision_id))
+			Result := safe_full_node (node_storage.node_by_id_and_revision (a_node_id, a_revision_id))
 		end
 
-	full_node (a_node: detachable CMS_NODE): detachable CMS_NODE
+	safe_full_node (a_node: detachable CMS_NODE): detachable CMS_NODE
+		do
+			if a_node /= Void then
+				Result := full_node (a_node)
+			end
+		end
+
+	full_node (a_node: CMS_NODE): CMS_NODE
 			-- If `a_node' is partial, return the full node from `a_node',
 			-- otherwise return directly `a_node'.
+		require
+			a_node_set: a_node /= Void
 		do
 			if attached {CMS_PARTIAL_NODE} a_node as l_partial_node then
 				if attached node_type_for (l_partial_node) as ct then

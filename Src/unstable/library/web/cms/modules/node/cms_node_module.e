@@ -23,6 +23,8 @@ inherit
 
 	CMS_HOOK_BLOCK
 
+	CMS_RECENT_CHANGES_HOOK
+
 create
 	make
 
@@ -222,9 +224,12 @@ feature -- Hooks
 	register_hooks (a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			a_response.subscribe_to_menu_system_alter_hook (Current)
-			a_response.subscribe_to_block_hook (Current)
-			a_response.subscribe_to_response_alter_hook (Current)
+			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_response.hooks.subscribe_to_block_hook (Current)
+			a_response.hooks.subscribe_to_response_alter_hook (Current)
+
+				-- Module specific hook, if available.
+			a_response.hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -253,13 +258,63 @@ feature -- Hooks
 		do
 			debug
 				create lnk.make ("List of nodes", "nodes")
-				a_menu_system.primary_menu.extend (lnk)
+				a_menu_system.navigation_menu.extend (lnk)
 			end
 			create lnk.make ("Trash", "trash")
-			a_menu_system.primary_menu.extend (lnk)
+			a_menu_system.navigation_menu.extend (lnk)
 
 			create lnk.make ("Create ..", "node")
-			a_menu_system.primary_menu.extend (lnk)
+			a_menu_system.navigation_menu.extend (lnk)
+		end
+
+	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])
+		local
+			params: CMS_DATA_QUERY_PARAMETERS
+			ch: CMS_RECENT_CHANGE_ITEM
+			n: CMS_NODE
+			l_info: STRING_8
+			l_src: detachable READABLE_STRING_8
+			l_nodes: ITERABLE [CMS_NODE]
+		do
+			create params.make (0, a_changes.limit)
+			if attached node_api as l_node_api then
+				across
+					l_node_api.content_types as ic
+				loop
+					a_sources.force (ic.item.name)
+				end
+				l_src := a_changes.source
+				if attached a_changes.date as l_date then
+					l_nodes := l_node_api.recent_node_changes_before (params, l_date)
+				else
+					l_nodes := l_node_api.recent_node_changes_before (params, create {DATE_TIME}.make_now_utc)
+				end
+				across l_nodes as ic loop
+					n := ic.item
+					if l_src = Void or else l_src.is_case_insensitive_equal_general (n.content_type) then
+						n := l_node_api.full_node (n)
+						create ch.make (n.content_type, create {CMS_LOCAL_LINK}.make (n.title, "node/" + n.id.out), n.modification_date)
+						if n.creation_date ~ n.modification_date then
+							l_info := "new"
+							if not n.is_published then
+								l_info.append (" (unpublished)")
+							end
+						else
+							if n.is_trashed then
+								l_info := "trashed"
+							else
+								l_info := "updated"
+								if not n.is_published then
+									l_info.append (" (unpublished)")
+								end
+							end
+						end
+						ch.set_information (l_info)
+						ch.set_author (n.author)
+						a_changes.force (ch)
+					end
+				end
+			end
 		end
 
 end

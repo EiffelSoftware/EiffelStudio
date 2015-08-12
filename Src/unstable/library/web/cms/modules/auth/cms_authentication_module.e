@@ -95,8 +95,8 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_response)
-			a_response.subscribe_to_block_hook (Current)
-			a_response.subscribe_to_value_table_alter_hook (Current)
+			a_response.hooks.subscribe_to_block_hook (Current)
+			a_response.hooks.subscribe_to_value_table_alter_hook (Current)
 		end
 
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)

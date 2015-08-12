@@ -56,7 +56,6 @@ feature -- Execution
 	process
 			-- Computed response message.
 		local
-			b: detachable STRING_8
 			nid: INTEGER_64
 			l_node: like node
 		do

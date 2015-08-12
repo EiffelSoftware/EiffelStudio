@@ -105,8 +105,8 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_response)
-			a_response.subscribe_to_block_hook (Current)
-			a_response.subscribe_to_value_table_alter_hook (Current)
+			a_response.hooks.subscribe_to_block_hook (Current)
+			a_response.hooks.subscribe_to_value_table_alter_hook (Current)
 		end
 
 feature -- Hooks

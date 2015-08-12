@@ -55,14 +55,23 @@ ul.horizontal {
 .sidebar {
 	padding: 5px;
 	margin: 3px;
-	border: solid 1px #ccc;
+	/* border: solid 1px #ccc; */
 	&#sidebar_first {
 		width: 250px;
-		float: left;
+		position: fixed;
+		top: 45px;
+		left: 0;
+		bottom: 0;
+		width: 200px;
+		border-right: solid 1px #ddd;
 	}
 	&#sidebar_second {
 		width: 250px;
 		float: right;
+	}
+
+	&+.main {
+		margin-left: 200px;
 	}
 }
 #primary-tabs {

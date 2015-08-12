@@ -151,8 +151,8 @@ feature -- Hooks
 
 	register_hooks (a_response: CMS_RESPONSE)
 		do
-			a_response.subscribe_to_menu_system_alter_hook (Current)
-			a_response.subscribe_to_response_alter_hook (Current)
+			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_response.hooks.subscribe_to_response_alter_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)

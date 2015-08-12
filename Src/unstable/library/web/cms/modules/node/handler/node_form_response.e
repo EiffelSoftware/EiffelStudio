@@ -54,7 +54,7 @@ feature -- Execution
 						node_api.has_permission_for_action_on_node ("edit", l_node, user)
 					then
 						f := new_edit_form (l_node, url (location, Void), "edit-" + l_type.name, l_type)
-						invoke_form_alter (f, fd)
+						hooks.invoke_form_alter (f, fd, Current)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
 							f.submit_actions.extend (agent edit_form_submit (?, l_node, l_type, b))
@@ -80,7 +80,7 @@ feature -- Execution
 						node_api.has_permission_for_action_on_node ("delete", l_node, user)
 					then
 						f := new_delete_form (l_node, url (location, Void), "delete-" + l_type.name, l_type)
-						invoke_form_alter (f, fd)
+						hooks.invoke_form_alter (f, fd, Current)
 						if request.is_post_request_method then
 							f.process (Current)
 							fd := f.last_data
@@ -104,7 +104,7 @@ feature -- Execution
 						node_api.has_permission_for_action_on_node ("trash", l_node, user)
 					then
 						f := new_trash_form (l_node, url (location, Void), "trash-" + l_type.name, l_type)
-						invoke_form_alter (f, fd)
+						hooks.invoke_form_alter (f, fd, Current)
 						if request.is_post_request_method then
 							f.process (Current)
 							fd := f.last_data
@@ -137,7 +137,7 @@ feature -- Execution
 				if has_permissions (<<"create any", "create " +  l_type.name>>) then
 					if attached l_type.new_node (Void) as l_node then
 						f := new_edit_form (l_node, url (location, Void), "edit-" + l_type.name, l_type)
-						invoke_form_alter (f, fd)
+						hooks.invoke_form_alter (f, fd, Current)
 						if request.is_post_request_method then
 							f.validation_actions.extend (agent edit_form_validate (?, b))
 							f.submit_actions.extend (agent edit_form_submit (?, l_node, l_type, b))

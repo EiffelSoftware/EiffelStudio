@@ -63,6 +63,10 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
+			create {CMS_RECENT_CHANGES_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 --			create {EMBEDDED_VIDEO_MODULE} m.make
 --			m.enable
 --			a_setup.register_module (m)

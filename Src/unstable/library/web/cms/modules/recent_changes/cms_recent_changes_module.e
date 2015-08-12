@@ -11,7 +11,8 @@ inherit
 		rename
 			module_api as recent_changes_api
 		redefine
-			register_hooks
+			register_hooks,
+			permissions
 		end
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -34,6 +35,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "recent_changes"
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("view recent changes")
+		end
 
 feature -- Access: router
 
@@ -225,10 +233,6 @@ feature -- Hook
 			lnk.set_permission_arguments (<<"view recent changes">>)
 			a_menu_system.navigation_menu.extend (lnk)
 		end
-
---	populate_recent_changes (lst: LIST [CMS_RECENT_CHANGE_ITEM]; a_date: detachable DATE_TIME; a_limit: INTEGER)
---		do
---		end
 
 
 end

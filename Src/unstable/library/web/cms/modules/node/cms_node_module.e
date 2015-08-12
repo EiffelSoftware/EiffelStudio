@@ -301,7 +301,7 @@ feature -- Hooks
 							end
 						else
 							if n.is_trashed then
-								l_info := "trashed"
+								l_info := "deleted"
 							else
 								l_info := "updated"
 								if not n.is_published then

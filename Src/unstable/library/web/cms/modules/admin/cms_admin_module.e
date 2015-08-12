@@ -90,6 +90,7 @@ feature -- Security
 			Result.force ("admin users")
 			Result.force ("admin roles")
 			Result.force ("admin modules")
+			Result.force ("install modules")
 		end
 
 feature -- Hooks

@@ -1,4 +1,6 @@
 
+<h1>Contribute to Eiffel</h1>
+
 <p>Do you love the Eiffel language, method, tools and libraries but would like them to be even better? You can help. The entire technology is available under the GPL Open Source license, so that all developers can participate in its evolution. The future of Eiffel is in the hands of the community. </p> 
 
 <p>There are many ways to contribute, each detailed in the following sections:</p>

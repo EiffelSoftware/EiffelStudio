@@ -66,8 +66,8 @@ feature {NONE} -- Handler: admin hack...
 			s: STRING
 			r: CMS_RESPONSE
 			f: CMS_FORM
-			t: WSF_FORM_TEXT_INPUT
-			fe: WSF_FORM_EMAIL_INPUT
+--			t: WSF_FORM_TEXT_INPUT
+--			fe: WSF_FORM_EMAIL_INPUT
 			fs: WSF_FORM_FIELD_SET
 			f_submit: WSF_FORM_SUBMIT_INPUT
 		do

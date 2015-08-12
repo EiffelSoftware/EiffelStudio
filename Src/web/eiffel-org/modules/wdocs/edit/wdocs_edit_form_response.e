@@ -98,7 +98,7 @@ feature -- Execution
 
 				f := new_edit_form (pg, url (request.percent_encoded_path_info, Void), "wdocs_edit")
 
-				invoke_form_alter (f, fd)
+				hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.validation_actions.extend (agent edit_form_validate (?, pg, mng, b))
 					f.submit_actions.extend (agent edit_form_submit (?, mng, pg, l_bookid, b))
@@ -144,7 +144,7 @@ feature -- Execution
 					f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("parent", pg.title))
 				end
 
-				invoke_form_alter (f, fd)
+				hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.validation_actions.extend (agent edit_form_validate (?, new_pg, mng, b))
 					f.submit_actions.extend (agent edit_form_submit (?, mng, new_pg, l_bookid, b))

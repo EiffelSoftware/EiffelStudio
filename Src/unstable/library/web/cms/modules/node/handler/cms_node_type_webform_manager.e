@@ -300,6 +300,7 @@ feature -- Output
 				end
 			end
 			create s.make_empty
+			s.append ("<div class=%"cms-node node-" + a_node.content_type + "%">")
 			s.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
 				s.append (" by ")
@@ -339,6 +340,7 @@ feature -- Output
 
 				s.append ("</p>")
 			end
+			s.append ("</div>")
 
 			a_response.set_title (a_node.title)
 			a_response.set_main_content (s)

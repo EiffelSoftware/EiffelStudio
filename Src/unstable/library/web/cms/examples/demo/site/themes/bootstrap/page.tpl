@@ -49,7 +49,7 @@
 		{/unless}
 
         <!-- Highlighted, Help, Content -->      
-        <div class='span8 main'>
+        <div id='main' class='span8 main'>
           <!-- Highlighted Section -->
           {unless isempty="$page.region_highlighted"}
 		  <div id="highlighted">{$page.region_highlighted/}</div>

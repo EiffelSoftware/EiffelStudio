@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
-			create hook_subscribers.make (0)
+			create hooks.make
 			register_hooks
 		end
 
@@ -409,9 +409,9 @@ feature -- Blocks initialization
 			l_table["help"] := "help"
 			l_table["content"] := "content"
 			l_table["footer"] := "footer"
-			l_table["management"] := "first_sidebar"
-			l_table["navigation"] := "first_sidebar"
-			l_table["user"] := "first_sidebar"
+			l_table["management"] := "sidebar_first"
+			l_table["navigation"] := "sidebar_first"
+			l_table["user"] := "sidebar_first"
 			l_table["bottom"] := "page_bottom"
 			block_region_settings := l_table
 		end
@@ -474,16 +474,16 @@ feature -- Blocks
 			add_block (content_block, "content")
 
 			if attached management_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_first")
 			end
 			if attached navigation_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_first")
 			end
 			if attached user_menu_block as l_block then
-				add_block (l_block, "first_sidebar")
+				add_block (l_block, "sidebar_second")
 			end
 
-			invoke_block
+			hooks.invoke_block (Current)
 			debug ("cms")
 				add_block (create {CMS_CONTENT_BLOCK}.make ("made_with", Void, "Made with <a href=%"http://www.eiffel.com/%">EWF</a>", Void), "footer")
 			end
@@ -596,159 +596,8 @@ feature -- Blocks
 
 feature -- Hooks
 
-	hook_subscribers: HASH_TABLE [LIST [CMS_HOOK], TYPE [CMS_HOOK]]
-			-- Hook indexed by hook identifier.
-
-	subscribe_to_hook (h: CMS_HOOK; a_hook_type: TYPE [CMS_HOOK])
-			-- Subscribe `h' to hooks identified by `a_hook_type'.
-		local
-			lst: detachable LIST [CMS_HOOK]
-		do
-			lst := hook_subscribers.item (a_hook_type)
-			if lst = Void then
-				create {ARRAYED_LIST [CMS_HOOK]} lst.make (1)
-				hook_subscribers.force (lst, a_hook_type)
-			end
-			if not lst.has (h) then
-				lst.force (h)
-			end
-		end
-
-feature -- Hook: value alter
-
-	subscribe_to_value_table_alter_hook (h: CMS_HOOK_VALUE_TABLE_ALTER)
-			-- Add `h' as subscriber of value table alter hooks CMS_HOOK_VALUE_TABLE_ALTER.		
-		do
-			subscribe_to_hook (h, {CMS_HOOK_VALUE_TABLE_ALTER})
-		end
-
-	invoke_value_table_alter (a_table: CMS_VALUE_TABLE)
-			-- Invoke value table alter hook for table `a_table'.		
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_VALUE_TABLE_ALTER}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_VALUE_TABLE_ALTER} c.item as h then
-						h.value_table_alter (a_table, Current)
-					end
-				end
-			end
-		end
-
-feature -- Hook: response
-
-	subscribe_to_response_alter_hook (h: CMS_HOOK_RESPONSE_ALTER)
-			-- Add `h' as subscriber of response alter hooks CMS_HOOK_RESPONSE_ALTER.		
-		do
-			subscribe_to_hook (h, {CMS_HOOK_RESPONSE_ALTER})
-		end
-
-	invoke_response_alter (a_response: CMS_RESPONSE)
-			-- Invoke value table alter hook for table `a_table'.		
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_RESPONSE_ALTER}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_RESPONSE_ALTER} c.item as h then
-						h.response_alter (a_response)
-					end
-				end
-			end
-		end
-
-feature -- Hook: menu_system_alter
-
-	subscribe_to_menu_system_alter_hook (h: CMS_HOOK_MENU_SYSTEM_ALTER)
-			-- Add `h' as subscriber of menu system alter hooks CMS_HOOK_MENU_SYSTEM_ALTER.	
-		do
-			subscribe_to_hook (h, {CMS_HOOK_MENU_SYSTEM_ALTER})
-		end
-
-	invoke_menu_system_alter (a_menu_system: CMS_MENU_SYSTEM)
-			-- Invoke menu system alter hook for menu `a_menu_system'.	
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_MENU_SYSTEM_ALTER}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_MENU_SYSTEM_ALTER} c.item as h then
-						h.menu_system_alter (a_menu_system, Current)
-					end
-				end
-			end
-		end
-
-feature -- Hook: menu_alter
-
-	subscribe_to_menu_alter_hook (h: CMS_HOOK_MENU_ALTER)
-			-- Add `h' as subscriber of menu alter hooks CMS_HOOK_MENU_ALTER.
-		do
-			subscribe_to_hook (h, {CMS_HOOK_MENU_ALTER})
-		end
-
-	invoke_menu_alter (a_menu: CMS_MENU)
-			-- Invoke menu alter hook for menu `a_menu'.
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_MENU_ALTER}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_MENU_ALTER} c.item as h then
-						h.menu_alter (a_menu, Current)
-					end
-				end
-			end
-		end
-
-feature -- Hook: form_alter
-
-	subscribe_to_form_alter_hook (h: CMS_HOOK_FORM_ALTER)
-			-- Add `h' as subscriber of form alter hooks CMS_HOOK_FORM_ALTER.
-		do
-			subscribe_to_hook (h, {CMS_HOOK_MENU_ALTER})
-		end
-
-	invoke_form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA)
-			-- Invoke form alter hook for form `a_form' and associated data `a_form_data'
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_FORM_ALTER}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_FORM_ALTER} c.item as h then
-						h.form_alter (a_form, a_form_data, Current)
-					end
-				end
-			end
-		end
-
-feature -- Hook: block		
-
-	subscribe_to_block_hook (h: CMS_HOOK_BLOCK)
-			-- Add `h' as subscriber of hooks CMS_HOOK_BLOCK.
-		do
-			subscribe_to_hook (h, {CMS_HOOK_BLOCK})
-		end
-
-	invoke_block
-			-- Invoke block hook in order to get block from modules.
-		do
-			if attached hook_subscribers.item ({CMS_HOOK_BLOCK}) as lst then
-				across
-					lst as c
-				loop
-					if attached {CMS_HOOK_BLOCK} c.item as h then
-						across
-							h.block_list as blst
-						loop
-							h.get_block_view (blst.item, Current)
-						end
-					end
-				end
-			end
-		end
+	hooks: CMS_HOOK_CORE_MANAGER
+			-- Manager handling hook subscriptions.
 
 feature -- Menu: change
 
@@ -771,9 +620,6 @@ feature -- Menu: change
 
 	add_to_menu (lnk: CMS_LINK; m: CMS_MENU)
 		do
---			if attached {CMS_LOCAL_LINK} lnk as l_local then
---				l_local.get_is_active (request)
---			end
 			m.extend (lnk)
 		end
 
@@ -888,7 +734,7 @@ feature -- Generation
 			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
 			lnk.set_weight (-10)
 			add_to_primary_menu (lnk)
-			invoke_menu_system_alter (menu_system)
+			hooks.invoke_menu_system_alter (menu_system, Current)
 
 			if api.enabled_modules.count = 0 then
 				add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Install", "admin/install"))
@@ -931,10 +777,10 @@ feature -- Generation
 			custom_prepare (page)
 
 				-- Cms response
-			invoke_response_alter (Current)
+			hooks.invoke_response_alter (Current)
 
 				-- Cms values
-			invoke_value_table_alter (values)
+			hooks.invoke_value_table_alter (values, Current)
 
 				-- Predefined values
 			page.register_variable (page, "page") -- DO NOT REMOVE

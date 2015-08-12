@@ -97,8 +97,8 @@ feature -- Hooks
 	register_hooks (a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			a_response.subscribe_to_menu_system_alter_hook (Current)
-			a_response.subscribe_to_response_alter_hook (Current)
+			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_response.hooks.subscribe_to_response_alter_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -117,7 +117,7 @@ feature -- Hooks
 					-- TODO: we should probably use more side menu and less primary_menu.
 				create lnk.make ("Admin", "admin")
 				lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
-				a_menu_system.primary_menu.extend (lnk)
+				a_menu_system.management_menu.extend (lnk)
 			end
 		end
 

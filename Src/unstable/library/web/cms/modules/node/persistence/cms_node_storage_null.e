@@ -59,6 +59,12 @@ feature -- Access: node
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 		end
 
+	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
+			-- List of recent changes, before `a_date', according to `params' settings.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+		end
+
 	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
 			-- <Precursor>
 		do

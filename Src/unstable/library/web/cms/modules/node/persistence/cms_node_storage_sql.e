@@ -128,9 +128,37 @@ feature -- Access
 
 			from
 				create l_parameters.make (2)
-				l_parameters.put (a_count, "rows")
+				l_parameters.put (a_count, "size")
 				l_parameters.put (a_lower, "offset")
 				sql_query (sql_select_recent_nodes, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+		end
+
+	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
+			-- List of recent changes, before `a_date', according to `params' settings.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".nodes")
+
+			from
+				create l_parameters.make (3)
+				l_parameters.put (a_count, "size")
+				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_date, "date")
+
+				sql_query (sql_select_recent_node_changes_before, l_parameters)
 				sql_start
 			until
 				sql_after
@@ -402,7 +430,9 @@ feature {NONE} -- Queries
 
 	sql_select_node_by_id_and_revision: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision = :revision ORDER BY node_revisions.revision DESC;"
 
-	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY nid DESC, publish DESC LIMIT :rows OFFSET :offset ;"
+	sql_select_recent_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes ORDER BY nid DESC, publish DESC LIMIT :size OFFSET :offset ;"
+
+	sql_select_recent_node_changes_before: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE changed <= :date ORDER BY changed DESC, nid DESC LIMIT :size OFFSET :offset ;"
 
 	sql_insert_node: STRING = "INSERT INTO nodes (revision, type, title, summary, content, format, publish, created, changed, status, author) VALUES (:revision, :type, :title, :summary, :content, :format, :publish, :created, :changed, :status, :author);"
 			-- SQL Insert to add a new node.

@@ -274,7 +274,6 @@ feature {NONE} -- Trash:Restore
 			r: GENERIC_VIEW_CMS_RESPONSE
 			b: STRING
 			n: CMS_NODE
-			l_link: CMS_LOCAL_LINK
 		do
 			if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 				if

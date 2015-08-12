@@ -403,17 +403,24 @@ feature -- Blocks initialization
 			create regions.make_caseless (5)
 
 			create l_table.make_caseless (10)
-			l_table["top"] := "top"
-			l_table["header"] := "header"
-			l_table["highlighted"] := "highlighted"
-			l_table["help"] := "help"
-			l_table["content"] := "content"
-			l_table["footer"] := "footer"
-			l_table["management"] := "sidebar_first"
-			l_table["navigation"] := "sidebar_first"
-			l_table["user"] := "sidebar_first"
-			l_table["bottom"] := "page_bottom"
+			l_table["top"] := block_region_preference ("top", "top")
+			l_table["header"] := block_region_preference ("header", "header")
+			l_table["highlighted"] := block_region_preference ("highlighted", "highlighted")
+			l_table["help"] := block_region_preference ("help", "help")
+			l_table["content"] := block_region_preference ("content", "content")
+			l_table["footer"] := block_region_preference ("footer", "footer")
+			l_table["management"] := block_region_preference ("management", "sidebar_first")
+			l_table["navigation"] := block_region_preference ("navigation", "sidebar_first")
+			l_table["user"] := block_region_preference ("user", "sidebar_first")
+			l_table["bottom"] := block_region_preference ("bottom", "page_bottom")
+
 			block_region_settings := l_table
+		end
+
+	block_region_preference (a_block_id: READABLE_STRING_8; a_default_region: READABLE_STRING_8): READABLE_STRING_8
+			-- Region associated with `a_block_id' in configuration, if any.
+		do
+			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region)
 		end
 
 feature -- Blocks regions
@@ -430,12 +437,15 @@ feature -- Blocks regions
 		do
 			l_region_name := block_region_settings.item (b.name)
 			if l_region_name = Void then
-				if a_default_region /= Void then
+				if attached setup.text_item ("blocks." + b.name + ".region") as l_setup_name then
+					l_region_name := l_setup_name.as_string_8 -- FIXME: potential truncated string 32.
+						-- Remember for later.
+					block_region_settings.force (l_region_name, b.name)
+				elseif a_default_region /= Void then
 					l_region_name := a_default_region
 				else
 						-- Default .. put it in same named region
 						-- Maybe a bad idea
-
 					l_region_name := b.name.as_lower
 				end
 			end

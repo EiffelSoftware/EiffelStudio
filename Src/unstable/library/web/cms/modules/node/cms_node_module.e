@@ -173,6 +173,7 @@ feature -- Access
 						Result.force ("view revisions own " + l_type_name)
 					end
 				end
+				Result.force ("view trash")
 			end
 		end
 
@@ -255,6 +256,7 @@ feature -- Hooks
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 		local
 			lnk: CMS_LOCAL_LINK
+			perms: ARRAYED_LIST [READABLE_STRING_8]
 		do
 			debug
 				create lnk.make ("List of nodes", "nodes")
@@ -262,9 +264,20 @@ feature -- Hooks
 			end
 			create lnk.make ("Trash", "trash")
 			a_menu_system.navigation_menu.extend (lnk)
+			lnk.set_permission_arguments (<<"view trash">>)
 
 			create lnk.make ("Create ..", "node")
 			a_menu_system.navigation_menu.extend (lnk)
+			if attached node_api as l_node_api then
+				create perms.make (2)
+				perms.force ("create any node")
+				across
+					l_node_api.content_types as ic
+				loop
+					perms.force ("create " + ic.item.name)
+				end
+				lnk.set_permission_arguments (perms)
+			end
 		end
 
 	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])

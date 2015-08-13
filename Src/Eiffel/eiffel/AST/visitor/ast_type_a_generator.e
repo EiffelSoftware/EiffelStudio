@@ -75,20 +75,7 @@ feature {NONE} -- Visitor implementation
 			t: UNEVALUATED_LIKE_TYPE
 		do
 			create t.make (l_as.anchor.name)
-			if l_as.has_frozen_mark then
-				t.set_frozen_mark
-			elseif l_as.has_variant_mark then
-				t.set_variant_mark
-			end
-			if l_as.has_attached_mark then
-				t.set_attached_mark
-			elseif l_as.has_detachable_mark then
-				t.set_detachable_mark
-			end
-			if l_as.has_separate_mark then
-				t.set_separate_mark
-			end
-			last_type := t
+			last_type := updated_type_with_annotations (l_as, t)
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS)
@@ -96,20 +83,7 @@ feature {NONE} -- Visitor implementation
 			l_cur: LIKE_CURRENT
 		do
 			create l_cur.make (current_class.actual_type)
-			if l_as.has_frozen_mark then
-				l_cur.set_frozen_mark
-			elseif l_as.has_variant_mark then
-				l_cur.set_variant_mark
-			end
-			if l_as.has_attached_mark then
-				l_cur.set_attached_mark
-			elseif l_as.has_detachable_mark then
-				l_cur.set_detachable_mark
-			end
-			if l_as.has_separate_mark then
-				l_cur.set_separate_mark
-			end
-			last_type := l_cur
+			last_type := updated_type_with_annotations (l_as, l_cur)
 		end
 
 	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
@@ -129,20 +103,7 @@ feature {NONE} -- Visitor implementation
 					i := i + 1
 				end
 				create t.make (q, n)
-				if l_as.has_frozen_mark then
-					t.set_frozen_mark
-				elseif l_as.has_variant_mark then
-					t.set_variant_mark
-				end
-				if l_as.has_attached_mark then
-					t.set_attached_mark
-				elseif l_as.has_detachable_mark then
-					t.set_detachable_mark
-				end
-				if l_as.has_separate_mark then
-					t.set_separate_mark
-				end
-				last_type := t
+				last_type := updated_type_with_annotations (l_as, t)
 			end
 		end
 
@@ -160,23 +121,8 @@ feature {NONE} -- Visitor implementation
 			l_is_frozen: BOOLEAN
 		do
 			create f.make (l_as.is_reference, l_as.is_expanded, l_as.position)
-			last_type := f
 				-- The formal generic is separate by default.
 			s := True
-			if l_as.has_frozen_mark then
-				f.set_frozen_mark
-			elseif l_as.has_variant_mark then
-				f.set_variant_mark
-			end
-			if l_as.has_attached_mark then
-				f.set_attached_mark
-				check f.is_attached end
-			elseif l_as.has_detachable_mark then
-				f.set_detachable_mark
-			end
-			if l_as.has_separate_mark then
-				f.set_separate_mark
-			end
 				-- If the associated formal of the current class is marked frozen,
 				-- we make sure that `f' is known to be intrinsically frozen.
 			if current_class.generics [l_as.position].formal.has_frozen_mark then
@@ -307,6 +253,7 @@ feature {NONE} -- Visitor implementation
 			if l_is_frozen then
 				f.set_frozen_mark
 			end
+			last_type := updated_type_with_annotations (l_as, f)
 		end
 
 	process_class_type_as (l_as: CLASS_TYPE_AS)
@@ -342,7 +289,7 @@ feature {NONE} -- Visitor implementation
 					last_type := Void
 				else
 					l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded)
-					last_type := set_class_type_marks (l_as, l_type)
+					last_type := updated_type_with_annotations (l_as, l_type)
 				end
 			else
 				last_type := Void
@@ -400,7 +347,7 @@ feature {NONE} -- Visitor implementation
 					last_type := Void
 				else
 					check attached l_type end
-					last_type := set_class_type_marks (l_as, l_type)
+					last_type := updated_type_with_annotations (l_as, l_type)
 				end
 			else
 				last_type := Void
@@ -414,14 +361,16 @@ feature {NONE} -- Visitor implementation
 
 	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
-			last_type := set_class_type_marks (l_as, none_type)
+			last_type := updated_type_with_annotations (l_as, none_type)
 		end
 
 feature {NONE} -- Type marks
 
-	set_class_type_marks (a: TYPE_AS; t: TYPE_A): TYPE_A
-			-- Type `t' or its duplicate if `t' may be a result of a once funtion
-			-- with type marks specified in `a'.
+	updated_type_with_annotations (a: TYPE_AS; t: TYPE_A): TYPE_A
+			-- Update `t' with respects to annotations found in `a'.
+			--| The implementation might duplicate `t' in the event it is the 
+			--| value of a once function as to not modify the default annotations
+			--| found in the once.
 		require
 			a_attached: attached a
 			t_attached: attached t
@@ -430,7 +379,7 @@ feature {NONE} -- Type marks
 		do
 				-- Basic and NONE type descriptors may be shared, so we duplicate
 				-- if needed to avoid modifying once values.
-			is_shared := t.is_basic or else t.is_none
+			is_shared := attached {DEANCHORED_TYPE_A} t and then (t.is_basic or else t.is_none)
 			Result := t
 
 				-- Handle frozen/variant mark.
@@ -462,7 +411,11 @@ feature {NONE} -- Type marks
 					Result := Result.duplicate
 				end
 				Result.set_detachable_mark
-			elseif current_class.lace_class.is_attached_by_default then
+			elseif
+				current_class.lace_class.is_attached_by_default and then
+				attached {DEANCHORED_TYPE_A} Result and then
+				not attached {FORMAL_A} Result
+			then 
 					-- Avoid modifying once values.
 				if is_shared then
 					Result := Result.duplicate

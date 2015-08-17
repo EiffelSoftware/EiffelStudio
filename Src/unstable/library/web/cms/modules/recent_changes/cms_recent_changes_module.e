@@ -86,115 +86,119 @@ feature -- Handler
 			end
 
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			create l_changes.make (l_size, l_until_date, l_filter_source)
+			if r.has_permission ("view recent changes") then
+				create l_changes.make (l_size, l_until_date, l_filter_source)
 
-			create l_content.make (1024)
-			if attached r.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
-				create l_sources.make (lst.count)
-				across
-					lst as ic
-				loop
-					if attached {CMS_RECENT_CHANGES_HOOK} ic.item as h then
-						h.populate_recent_changes (l_changes, l_sources)
+				create l_content.make (1024)
+				if attached r.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
+					create l_sources.make (lst.count)
+					across
+						lst as ic
+					loop
+						if attached {CMS_RECENT_CHANGES_HOOK} ic.item as h then
+							h.populate_recent_changes (l_changes, l_sources)
+						end
 					end
-				end
-				create l_form.make (req.percent_encoded_path_info, "recent-changes")
-				create l_select.make ("source")
-				l_select.set_label ("Sources")
-				create opt.make ("", "...")
-				l_select.add_option (opt)
-				across
-					l_sources as ic
-				loop
-					create opt.make (ic.item, ic.item)
-					if l_filter_source /= Void and then ic.item.is_case_insensitive_equal (l_filter_source) then
-						opt.set_is_selected (True)
-					end
+					create l_form.make (req.percent_encoded_path_info, "recent-changes")
+					create l_select.make ("source")
+					l_select.set_label ("Sources")
+					create opt.make ("", "...")
 					l_select.add_option (opt)
-				end
-				l_form.extend (l_select)
-				l_form.extend_html_text ("<br/>")
-				l_form.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), l_content)
-			end
-
-			l_changes.reverse_sort
-			l_content.append ("<table class=%"recent-changes%" style=%"border-spacing: 5px;%">")
-			l_content.append ("<thead>")
-			l_content.append ("<tr>")
-			l_content.append ("<th>Date</th>")
-			l_content.append ("<th>Source</th>")
-			l_content.append ("<th>Resource</th>")
-			l_content.append ("<th>User</th>")
-			l_content.append ("<th>Information</th>")
-			l_content.append ("</tr>")
-			l_content.append ("</thead>")
-			l_content.append ("<tbody>")
-
-			across
-				l_changes as ic
-			loop
-				ch := ic.item
-				dt := ch.date.date
-				if dt /~ prev_dt then
-					l_content.append ("<tr>")
-					l_content.append ("<td class=%"title%" colspan=%"5%">")
-					l_content.append (dt.formatted_out ("ddd, dd mmm yyyy"))
-					l_content.append ("</td>")
-					l_content.append ("</tr>")
-				end
-				prev_dt := dt
-				l_content.append ("<tr>")
-				l_content.append ("<td class=%"date%">")
-				create htdate.make_from_date_time (ch.date)
-				htdate.append_to_rfc1123_string (l_content)
-				l_content.append ("</td>")
-				l_content.append ("<td class=%"source%">" + ch.source + "</td>")
-				l_content.append ("<td class=%"resource%">")
-				l_content.append (r.link (ch.link.title, ch.link.location, Void))
-				l_content.append ("</td>")
-				l_content.append ("<td class=%"user%">")
-				if attached ch.author as u then
-					l_content.append (r.link (u.name, "user/" + u.id.out, Void))
-				end
-				l_content.append ("</td>")
-				l_content.append ("<td class=%"info%">")
-				if attached ch.information as l_info then
-					l_content.append ("<strong>" + l_info + "</strong> ")
-				end
-				l_content.append ("</td>")
-				l_content.append ("</tr>%N")
-			end
-			l_content.append ("</tbody>")
-			l_content.append ("</table>%N")
-
-			if ch /= Void then
-				if l_until_date /= Void then
-					l_content.append (" <a href=%"")
-					l_content.append (r.url (r.location, Void))
-					l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
-				end
-
-				if l_until_date /~ ch.date then
-					create htdate.make_from_date_time (ch.date)
-					create l_query.make_from_string ("size=" + l_size.out)
-					l_query.append ("&date=")
-					l_query.append (htdate.timestamp.out)
-					if l_filter_source /= Void then
-						l_query.append ("&filter=")
-						l_query.append (l_filter_source)
+					across
+						l_sources as ic
+					loop
+						create opt.make (ic.item, ic.item)
+						if l_filter_source /= Void and then ic.item.is_case_insensitive_equal (l_filter_source) then
+							opt.set_is_selected (True)
+						end
+						l_select.add_option (opt)
 					end
-					l_content.append ("<a href=%"")
-					l_content.append (r.url (r.location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
-					l_content.append ("%">More  ...</a>")
+					l_form.extend (l_select)
+					l_form.extend_html_text ("<br/>")
+					l_form.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), l_content)
 				end
-			end
 
-			r.set_main_content (l_content)
-			if l_until_date = Void then
-				r.set_title ("Recent changes")
+				l_changes.reverse_sort
+				l_content.append ("<table class=%"recent-changes%" style=%"border-spacing: 5px;%">")
+				l_content.append ("<thead>")
+				l_content.append ("<tr>")
+				l_content.append ("<th>Date</th>")
+				l_content.append ("<th>Source</th>")
+				l_content.append ("<th>Resource</th>")
+				l_content.append ("<th>User</th>")
+				l_content.append ("<th>Information</th>")
+				l_content.append ("</tr>")
+				l_content.append ("</thead>")
+				l_content.append ("<tbody>")
+
+				across
+					l_changes as ic
+				loop
+					ch := ic.item
+					dt := ch.date.date
+					if dt /~ prev_dt then
+						l_content.append ("<tr>")
+						l_content.append ("<td class=%"title%" colspan=%"5%">")
+						l_content.append (dt.formatted_out ("ddd, dd mmm yyyy"))
+						l_content.append ("</td>")
+						l_content.append ("</tr>")
+					end
+					prev_dt := dt
+					l_content.append ("<tr>")
+					l_content.append ("<td class=%"date%">")
+					create htdate.make_from_date_time (ch.date)
+					htdate.append_to_rfc1123_string (l_content)
+					l_content.append ("</td>")
+					l_content.append ("<td class=%"source%">" + ch.source + "</td>")
+					l_content.append ("<td class=%"resource%">")
+					l_content.append (r.link (ch.link.title, ch.link.location, Void))
+					l_content.append ("</td>")
+					l_content.append ("<td class=%"user%">")
+					if attached ch.author as u then
+						l_content.append (r.link (u.name, "user/" + u.id.out, Void))
+					end
+					l_content.append ("</td>")
+					l_content.append ("<td class=%"info%">")
+					if attached ch.information as l_info then
+						l_content.append ("<strong>" + l_info + "</strong> ")
+					end
+					l_content.append ("</td>")
+					l_content.append ("</tr>%N")
+				end
+				l_content.append ("</tbody>")
+				l_content.append ("</table>%N")
+
+				if ch /= Void then
+					if l_until_date /= Void then
+						l_content.append (" <a href=%"")
+						l_content.append (r.url (r.location, Void))
+						l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
+					end
+
+					if l_until_date /~ ch.date then
+						create htdate.make_from_date_time (ch.date)
+						create l_query.make_from_string ("size=" + l_size.out)
+						l_query.append ("&date=")
+						l_query.append (htdate.timestamp.out)
+						if l_filter_source /= Void then
+							l_query.append ("&filter=")
+							l_query.append (l_filter_source)
+						end
+						l_content.append ("<a href=%"")
+						l_content.append (r.url (r.location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
+						l_content.append ("%">More  ...</a>")
+					end
+				end
+
+				r.set_main_content (l_content)
+				if l_until_date = Void then
+					r.set_title ("Recent changes")
+				else
+					create htdate.make_from_date_time (l_until_date)
+					r.set_title ("Recent changes before " + htdate.string)
+				end
 			else
-				create htdate.make_from_date_time (l_until_date)
-				r.set_title ("Recent changes before " + htdate.string)
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
 			r.execute

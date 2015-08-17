@@ -15,6 +15,9 @@ inherit
 		end
 
 	WDOCS_MODULE_HELPER
+		rename
+			percent_encoder as wdocs_percent_encoder
+		end
 
 create
 	make

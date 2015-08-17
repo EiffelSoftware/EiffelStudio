@@ -250,10 +250,10 @@ feature -- Hooks
 					end
 					mng := manager (l_version_id)
 					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_book_name") as t then
-						l_book_name := t
+						l_book_name := url_encoded_string_to_wiki_name (t)
 					end
 					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_page_name") as t then
-						l_page_name := t
+						l_page_name := url_encoded_string_to_wiki_name (t)
 					end
 
 					if a_block_id.same_string_general ("wdocs-tree") then
@@ -627,6 +627,9 @@ feature -- Handler
 			b: STRING
 			l_version_id, l_bookid: detachable READABLE_STRING_32
 			mnger: WDOCS_MANAGER
+			l_toc: BOOLEAN
+			wp: detachable WIKI_BOOK_PAGE
+			l_book: detachable WIKI_BOOK
 		do
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
@@ -641,42 +644,57 @@ feature -- Handler
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 			r.values.force (l_version_id, "wiki_version_id")
+			mnger := manager (l_version_id)
 
 			if l_bookid /= Void then
+				if attached {WSF_STRING} req.query_parameter ("toc") as p_toc then
+					l_toc := not p_toc.value.is_case_insensitive_equal_general ("no")
+				end
+
+				l_book := mnger.book (l_bookid)
+				if l_book /= Void then
+					wp := l_book.root_page
+				end
+
 				r.set_value ("doc", "optional_content_type")
 				r.set_title (l_bookid)
 				r.values.force (l_bookid, "wiki_book_name")
-				create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
-				mnger := manager (l_version_id)
-				if attached mnger.book (l_bookid) as l_book then
-					b.append ("<ul class=%"wdocs-nav%">")
-					if attached l_book.root_page as wp then
-						b.append ("<li>")
-						append_wiki_page_link (req, l_version_id, l_bookid, wp, True, mnger, b)
-						b.append ("</li>")
-					else
-						across
-							l_book.top_pages as ic
-						loop
+				if l_toc or wp = Void then
+					create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
+					if l_book /= Void then
+						b.append ("<ul class=%"wdocs-nav%">")
+						if wp /= Void then
 							b.append ("<li>")
-							append_wiki_page_link (req, l_version_id, l_bookid, ic.item, True, mnger, b)
+							append_wiki_page_link (req, l_version_id, l_bookid, wp, True, mnger, b)
 							b.append ("</li>")
+						else
+							across
+								l_book.top_pages as ic
+							loop
+								b.append ("<li>")
+								append_wiki_page_link (req, l_version_id, l_bookid, ic.item, True, mnger, b)
+								b.append ("</li>")
+							end
 						end
+						b.append ("</ul>")
 					end
-					b.append ("</ul>")
+					r.set_main_content (b)
+					r.execute
+				else
+					send_wikipage (wp, mnger, l_bookid, api, req, res)
 				end
 			else
 				create b.make_empty
-				mnger := manager (l_version_id)
-				if attached mnger.index_page as wp then
+				wp := mnger.index_page
+				if wp /= Void then
 					append_wiki_page_xhtml_to (wp, Void, Void, mnger, b, req)
 				end
 
 				r.set_value ("doc", "optional_content_type")
 				r.set_title (Void) --"Documentation")
+				r.set_main_content (b)
+				r.execute
 			end
-			r.set_main_content (b)
-			r.execute
 		end
 
 	handle_wikipage_by_uuid	(api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -993,12 +1011,12 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 
 	book_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 		do
-			Result := text_path_parameter (req, "bookid", a_default)
+			Result := wiki_name_text_path_parameter (req, "bookid", a_default)
 		end
 
 	wikipage_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 		do
-			Result := text_path_parameter (req, "wikipageid", a_default)
+			Result := wiki_name_text_path_parameter (req, "wikipageid", a_default)
 		end
 
 	wikipage_uuid (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
@@ -1173,7 +1191,7 @@ feature {NONE} -- implementation: wiki docs
 			if a_book_id /= Void then
 				a_output.append ("<a href=%""+ req.script_url ("/" + wdocs_page_link_location (a_version_id, a_book_id, a_page.title)) + "%"")
 			else
-				a_output.append ("<a href=%"../" + percent_encoder.percent_encoded_string (a_page.title) + "%"")
+				a_output.append ("<a href=%"../" + wiki_name_to_url_encoded_string (a_page.title) + "%"")
 			end
 			if l_pages /= Void then
 				a_output.append (" class=%"wdocs-folder%"")
@@ -1208,14 +1226,15 @@ feature {NONE} -- implementation: wiki docs
 				Result.append (percent_encoder.percent_encoded_string (a_version_id))
 				Result.append_character ('/')
 			end
-			Result.append (percent_encoder.percent_encoded_string (a_book_name))
+			Result.append (wiki_name_to_url_encoded_string (a_book_name))
 		end
 
 	wdocs_page_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL; a_page_name: READABLE_STRING_GENERAL): STRING
 		do
 			Result := wdocs_book_link_location (a_version_id, a_book_name)
 			Result.append ("/")
-			Result.append (percent_encoder.percent_encoded_string (a_page_name))
+				-- Encode twice, to avoid issue with / or %2F issue with apache.
+			Result.append (wiki_name_to_url_encoded_string (a_page_name))
 		end
 
 feature {NONE} -- Implementation		

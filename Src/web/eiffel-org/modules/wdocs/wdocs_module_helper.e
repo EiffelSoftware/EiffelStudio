@@ -8,9 +8,7 @@ deferred class
 	WDOCS_MODULE_HELPER
 
 inherit
-	SHARED_HTML_ENCODER
-
-	SHARED_WSF_PERCENT_ENCODER
+	WDOCS_SHARED_ENCODER
 
 	WDOCS_HELPER
 
@@ -22,6 +20,17 @@ inherit
 	REFACTORING_HELPER
 
 feature -- Access URI
+
+	wiki_name_text_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
+			-- STRING path parameter associated with `a_name' if it exists.
+			-- If Result is Void, return `a_default' value.
+		do
+			if attached {WSF_STRING} req.path_parameter (a_name) as l_param then
+				Result := url_encoded_string_to_wiki_name (l_param.url_encoded_value)
+			else
+				Result := a_default
+			end
+		end
 
 	text_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 			-- STRING path parameter associated with `a_name' if it exists.

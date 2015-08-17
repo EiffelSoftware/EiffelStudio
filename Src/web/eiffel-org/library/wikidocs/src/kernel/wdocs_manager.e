@@ -29,6 +29,8 @@ inherit
 
 	WDOCS_DATA_ACCESS
 
+	WDOCS_SHARED_ENCODER
+
 create
 	make
 
@@ -292,7 +294,8 @@ feature -- Access: link
 					Result.append ("/version/" + percent_encoder.percent_encoded_string (a_version_id))
 				end
 				if attached book_name (pg) as bn then
-					Result.append ("/" + bn + "/" + pg.title)
+					Result.append ("/" + wiki_name_to_url_encoded_string (bn))
+					Result.append ("/" + wiki_name_to_url_encoded_string (pg.title))
 				elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
 					Result.append ("/" + l_book_pg.src)
 				else
@@ -569,14 +572,5 @@ feature -- Factory
 		do
 			Result := new_wiki_page (a_title, a_parent.key)
 		end
-
-feature {NONE} -- Implementation
-
-	percent_encoder: PERCENT_ENCODER
-			-- Shared Percent encoding engine.
-		once
-			create Result
-		end
-
 
 end

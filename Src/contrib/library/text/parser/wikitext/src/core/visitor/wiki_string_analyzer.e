@@ -27,6 +27,14 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Query
+
+	is_alias_for_code (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `s' an alias of "<code>" ?
+		do
+			Result := s.is_case_insensitive_equal ("code") or else s.is_case_insensitive_equal ("source")
+		end
+
 feature -- Processing
 
 	visit_string (a_string: WIKI_STRING)
@@ -218,8 +226,7 @@ feature -- Processing
 								flush_buffer (a_parts, s)
 								if in_items.is_empty then
 									if
-										t.is_case_insensitive_equal_general ("code")
-										or else t.is_case_insensitive_equal_general ("source")
+										is_alias_for_code (t)
 									then
 										create {WIKI_CODE} w_item.make (a_text.substring (i, p), "")
 									elseif t.is_case_insensitive_equal_general ("nowiki") then
@@ -243,8 +250,7 @@ feature -- Processing
 										flush_buffer (a_parts, s)
 										if in_items.is_empty then
 											if
-												t.is_case_insensitive_equal_general ("code")
-												or else t.is_case_insensitive_equal_general ("source")
+												is_alias_for_code (t)
 											then
 												create {WIKI_CODE} w_item.make_from_source (a_text.substring (i, r))
 											elseif t.is_case_insensitive_equal_general ("nowiki") then

@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 	make (b: like buffer)
 		do
 			buffer := b
+			create code_aliases.make (2)
+			code_aliases.force ("code")
+			code_aliases.force ("source")
 --			create section_indexes.make_filled (0, 0, 50)
 --			create list_indexes.make_filled (0, 0, 50)
 		end
@@ -34,6 +37,17 @@ feature -- Basic operation
 			next_newline_ignored := False
 			current_page := Void
 		end
+
+feature -- Settings
+
+	code_aliases: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Aliases for <code>
+
+	is_alias_for_code (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `s' an alias of "<code>" ?
+		do
+			Result := across code_aliases as ic some ic.item.is_case_insensitive_equal (s) end
+		end		
 
 feature -- Callback
 
@@ -552,23 +566,29 @@ feature -- Tag
 	visit_tag (a_tag: WIKI_TAG)
 		local
 			s: STRING
+			l_code: WIKI_CODE
 		do
-			if in_pre_block then
-				create s.make_empty
-				append_html_escaped_to (a_tag.tag, s)
-				output (s)
-
-				if not a_tag.is_open_close_tag then
-					a_tag.text.process (Current)
-					create s.make_empty
-					append_html_escaped_to ("</" + a_tag.tag_name + ">", s)
-					output (s)
-				end
+			if is_alias_for_code (a_tag.tag_name) then
+				create l_code.make_from_tag (a_tag)
+				visit_code (l_code)
 			else
-				output (a_tag.tag)
-				if not a_tag.is_open_close_tag then
-					a_tag.text.process (Current)
-					output ("</" + a_tag.tag_name + ">")
+				if in_pre_block then
+					create s.make_empty
+					append_html_escaped_to (a_tag.tag, s)
+					output (s)
+
+					if not a_tag.is_open_close_tag then
+						a_tag.text.process (Current)
+						create s.make_empty
+						append_html_escaped_to ("</" + a_tag.tag_name + ">", s)
+						output (s)
+					end
+				else
+					output (a_tag.tag)
+					if not a_tag.is_open_close_tag then
+						a_tag.text.process (Current)
+						output ("</" + a_tag.tag_name + ">")
+					end
 				end
 			end
 		end

@@ -22,6 +22,8 @@ inherit
 
 	CMS_HOOK_RESPONSE_ALTER
 
+	CMS_RECENT_CHANGES_HOOK
+
 	WDOCS_MODULE_HELPER
 
 create
@@ -348,6 +350,27 @@ feature -- Hooks
 				create {CMS_CONTENT_BLOCK} Result.make_raw (a_block_id, Void, "", Void)
 			end
 		end
+
+feature -- Hook / Recent changes
+
+	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])
+			-- Populate recent changes inside `a_changes' according to associated parameters.
+			-- Also provide sources of information.
+		local
+			i: CMS_RECENT_CHANGE_ITEM
+			dt: detachable DATE_TIME
+		do
+			debug ("wdocs")
+				a_sources.force ("doc")
+				dt := a_changes.date
+				if dt = Void then
+					create dt.make_now_utc
+				end
+				create i.make ("doc", create {CMS_LOCAL_LINK}.make ("Fake doc", "doc/bla/bla"), dt)
+			end
+		end
+
+feature {NONE} -- Implementation		
 
 	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_LOCAL_LINK
 		local
@@ -1095,6 +1118,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				wvis.set_image_resolver (a_manager)
 				wvis.set_template_resolver (a_manager)
 				wvis.set_file_resolver (a_manager)
+				wvis.code_aliases.force ("eiffel") -- Support <eiffel>..</eiffel> as <code lang=eiffel>
 
 				if a_page_title /= Void and then not a_page_title.same_string_general (a_wiki_page.title) then
 					wvis.visit_page_with_title (a_wiki_page, html_encoded (a_page_title))

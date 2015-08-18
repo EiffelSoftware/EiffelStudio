@@ -19,7 +19,8 @@ inherit
 create
 	make,
 	make_from_source,
-	make_from_3backticks_source
+	make_from_3backticks_source,
+	make_from_tag
 
 feature {NONE} -- Initialization
 
@@ -35,6 +36,11 @@ feature {NONE} -- Initialization
 		do
 			Precursor (s)
 			set_is_inline (text.is_single_line and not s.has ('%N'))
+		end
+
+	make_from_tag (a_tag: WIKI_TAG)
+		do
+			make (a_tag.tag, a_tag.text.text)
 		end
 
 	make_from_3backticks_source (s: STRING)

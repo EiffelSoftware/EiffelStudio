@@ -23,7 +23,12 @@ feature -- Access
 	html_options: detachable CMS_HTML_OPTIONS
 			-- Optional addition html options.
 
-feature -- status report
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is current block empty?
+		deferred
+		end
 
 	is_enabled: BOOLEAN
 			-- Is current block enabled?
@@ -93,4 +98,7 @@ feature -- Status report
 			end
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -69,6 +69,9 @@ feature -- Access
 
 feature -- Status report
 
+	is_empty: BOOLEAN = False
+			-- Is current block empty?
+
 	is_raw: BOOLEAN
 			-- Is raw?
 			-- If True, do not get wrapped it with block specific div	
@@ -192,4 +195,7 @@ feature -- Debug
 			end
 			Result.append ("%N}")
 		end
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

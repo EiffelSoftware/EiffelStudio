@@ -21,11 +21,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: READABLE_STRING_8
-		-- Block region name.
+			-- Block region name.
 
 	blocks: ARRAYED_LIST [CMS_BLOCK]
-		-- List of blocks.
-
+			-- List of blocks.
 
 feature -- Element change
 
@@ -35,8 +34,15 @@ feature -- Element change
 			blocks.force (b)
 		end
 
-;note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	remove (b: CMS_BLOCK)
+		require
+			has_block_b: blocks.has (b)
+		do
+			blocks.prune_all (b)
+		end
+
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

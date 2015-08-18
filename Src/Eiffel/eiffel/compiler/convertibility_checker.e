@@ -323,7 +323,7 @@ feature -- Initialization/Checking
 			l_source_class, l_target_class: CLASS_C
 			l_convert_table: HASH_TABLE [INTEGER, DEANCHORED_TYPE_A]
 			l_conversion_type: TYPE_A
-			l_type: TYPE_A
+			l_source_type, l_type: TYPE_A
 			l_feat_name_id: INTEGER
 			l_feat: FEATURE_I
 			l_cl_type: CL_TYPE_A
@@ -341,13 +341,16 @@ feature -- Initialization/Checking
 					l_convert_table := l_target_class.convert_from
 				end
 				if l_convert_table /= Void then
-					l_type := a_source_type.as_attachment_mark_free
+						-- In the `l_convert_table' we only store attachment free mark of the conversion type,
+						-- thus we do not need it from `a_source_type'.
+					l_source_type := a_source_type.as_attachment_mark_free
 					from
 						l_cl_type ?= a_target_type
 						l_convert_table.start
 					until
 						l_convert_table.after or l_success
 					loop
+						l_type := l_source_type
 						l_conversion_type := l_convert_table.key_for_iteration
 							-- Evaluate conversion type in context of `a_target_type'. This is needed
 							-- in the following case:
@@ -359,6 +362,12 @@ feature -- Initialization/Checking
 							-- enabling us to convert from `X'.
 						if l_cl_type /= Void then
 							l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
+						end
+							-- if `l_conversion_type' is not expecting a frozen type, we can remove all the
+							-- variance marks from the source type. This enables us to have a conversion
+							-- routine only for `frozen' types.
+						if not l_conversion_type.is_frozen then
+							l_type := l_type.as_variant_free
 						end
 							-- In case there is a mismatch in attachment marks, or tuple vs. named tuple,
 							-- the types can still be the same if they conform to each other.
@@ -396,6 +405,8 @@ feature -- Initialization/Checking
 						l_convert_table := Void
 					end
 					if l_convert_table /= Void then
+							-- In the `l_convert_table' we only store attachment free mark of the conversion type,
+							-- thus we do not need it from `a_target_type'.
 						l_type := a_target_type.as_attachment_mark_free
 						from
 							l_cl_type ?= a_source_type
@@ -415,6 +426,13 @@ feature -- Initialization/Checking
 							if l_cl_type /= Void then
 								l_conversion_type := l_conversion_type.instantiated_in (l_cl_type)
 							end
+								-- if `l_type' is not expecting a frozen type, we can remove all the
+								-- variance mark from source `l_conversion_type'. This enables
+								-- us to have a conversion routine only to `frozen' types.
+							if not l_type.is_frozen then
+								l_conversion_type := l_conversion_type.as_variant_free
+							end
+
 								-- In case there is a mismatch in attachment marks,
 								-- the types can still be the same if they conform to each other.
 							if
@@ -745,7 +763,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

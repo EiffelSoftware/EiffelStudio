@@ -81,7 +81,7 @@ feature -- Generic conformance
 				-- False, is_variant always True.
 			check consistent: not compiler_profile.is_frozen_variant_supported implies (not is_frozen and is_variant) end
 			if is_frozen then
-				if not is_implicitly_frozen then
+				if not is_type_frozen then
 					Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
 				end
 			elseif is_variant then
@@ -352,11 +352,19 @@ feature -- Properties
 			-- Is type frozen?
 		do
 			if compiler_profile.is_frozen_variant_supported then
-				Result := has_frozen_mark or else is_implicitly_frozen
+				Result := has_frozen_mark or else is_implicitly_frozen or else is_type_frozen
 			end
 		end
 
 	is_implicitly_frozen: BOOLEAN
+			-- Is type frozen?
+		do
+			if compiler_profile.is_frozen_variant_supported then
+				Result := (variant_bits & is_implicitly_frozen_mask) /= 0
+			end
+		end
+
+	is_type_frozen: BOOLEAN
 			-- Is type implicitly frozen?
 			--| Case of a frozen class or an expanded class.
 		do
@@ -778,6 +786,16 @@ feature -- Annotations: modification
 			has_variant_mark_set: compiler_profile.is_frozen_variant_supported implies has_variant_mark
 		end
 
+	set_is_implicitly_frozen
+			-- Mark type as being implicitly frozen, meaning that it only conforms to itself.
+		do
+			if compiler_profile.is_frozen_variant_supported then
+				variant_bits := variant_bits | is_implicitly_frozen_mask
+			end
+		ensure
+			is_implicitly_frozen: Compiler_profile.is_frozen_variant_supported implies is_implicitly_frozen
+		end
+
 	set_is_attached
 			-- Set attached type property.
 		require
@@ -1158,19 +1176,27 @@ feature -- Duplication
 			result_has_no_separate_mark: not Result.has_separate_mark
 		end
 
-	as_variant_free: like Current
-			-- Same as Current but without any variance mark.
+	as_same_variant_bits (a_bits: like variant_bits): like Current
+			-- Attached variant of the current type
 		local
 			a: like variant_bits
 		do
-			if variant_bits = 0 then
+			if variant_bits = a_bits then
 				Result := Current
 			else
 				a := variant_bits
-				variant_bits := 0
+				variant_bits := a_bits
 				Result := duplicate
 				variant_bits := a
 			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	as_variant_free: like Current
+			-- Same as Current but without any variance mark.
+		do
+			Result := as_same_variant_bits (0)
 		ensure
 			has_no_variance_mark: not Result.has_variant_mark and not Result.has_frozen_mark
 		end
@@ -1265,7 +1291,7 @@ feature -- Duplication
 				-- Only do something if supported.
 			if other /= Result and then compiler_profile.is_frozen_variant_supported then
 				if other.is_like_current then
-					l_other_is_frozen := other.has_frozen_mark or else other.conformance_type.is_frozen
+					l_other_is_frozen := other.has_frozen_mark or other.is_implicitly_frozen or else other.conformance_type.is_frozen
 				else
 					l_other_is_frozen := other.actual_type.is_frozen
 				end
@@ -2015,6 +2041,9 @@ feature {NONE} -- Attachment properties
 
 	has_variant_mark_mask: NATURAL_8 = 2
 			-- Mask in `variant_bits' that tells whether the type has an explicit variant mark
+
+	is_implicitly_frozen_mask: NATURAL_8 = 4
+			-- Mask in `variant_bits' that tells whether the type is implicitly frozen.
 
 invariant
 		-- A generic type should at least have one generic parameter.

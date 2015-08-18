@@ -84,6 +84,8 @@ feature {NONE} -- Visitor implementation
 		do
 			create l_cur.make (current_class.actual_type)
 			last_type := updated_type_with_annotations (l_as, l_cur)
+				-- Regardless of where `like Current' appears, the type is a frozen one.
+			last_type.set_is_implicitly_frozen
 		end
 
 	process_qualified_anchored_type_as (l_as: QUALIFIED_ANCHORED_TYPE_AS)
@@ -368,7 +370,7 @@ feature {NONE} -- Type marks
 
 	updated_type_with_annotations (a: TYPE_AS; t: TYPE_A): TYPE_A
 			-- Update `t' with respects to annotations found in `a'.
-			--| The implementation might duplicate `t' in the event it is the 
+			--| The implementation might duplicate `t' in the event it is the
 			--| value of a once function as to not modify the default annotations
 			--| found in the once.
 		require
@@ -378,7 +380,8 @@ feature {NONE} -- Type marks
 			is_shared: BOOLEAN
 		do
 				-- Basic and NONE type descriptors may be shared, so we duplicate
-				-- if needed to avoid modifying once values.
+				-- if needed to avoid modifying once values. We only do that for
+				-- deanchored types.
 			is_shared := attached {DEANCHORED_TYPE_A} t and then (t.is_basic or else t.is_none)
 			Result := t
 
@@ -415,7 +418,7 @@ feature {NONE} -- Type marks
 				current_class.lace_class.is_attached_by_default and then
 				attached {DEANCHORED_TYPE_A} Result and then
 				not attached {FORMAL_A} Result
-			then 
+			then
 					-- Avoid modifying once values.
 				if is_shared then
 					Result := Result.duplicate

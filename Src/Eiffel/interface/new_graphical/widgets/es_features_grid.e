@@ -996,12 +996,14 @@ feature {NONE} -- Tree item factory
 			a_row.set_item (1, lab)
 		end
 
-	add_tree_item_for_parent (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; a_text: STRING_GENERAL; pix: EV_PIXMAP)
+	add_tree_item_for_parent (a_row: EV_GRID_ROW; a_parent: PARENT_AS; a_parent_class_i: detachable CLASS_I; a_text: STRING_GENERAL; pix: detachable EV_PIXMAP)
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
 			create lab.make_with_text (a_text)
-			lab.set_pixmap (pix)
+			if pix /= Void then
+				lab.set_pixmap (pix)
+			end
 
 			if is_clickable then
 				lab.pointer_button_press_actions.extend (agent button_go_to_ast (a_parent, ?, ?, ?, ?, ?, ?, ?, ?))
@@ -1091,7 +1093,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

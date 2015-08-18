@@ -11,7 +11,7 @@ inherit
 	DEANCHORED_TYPE_A
 		redefine
 			is_expanded, is_reference, valid_generic, is_ephemeral,
-			duplicate, meta_type, same_as, good_generics, error_generics,
+			meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to,
 			description, description_with_detachable_type,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
@@ -584,11 +584,11 @@ feature {TYPE_A} -- Helpers
 					else
 							-- Note for the reader who wonder why we allow any descendants of X to conform to frozen X.
 							-- This is because we want to allow redefinition of routines such as `f (a: frozen A)' to
-							-- `f (a: frozen B)'
+							-- `f (a: frozen B)'. Note that if `other' is `frozen', we need to be frozen, the way around is ok.
 							-- It is only in expression conformance that we check that an expression of type `frozen A'
 							-- is used as actual argument to `f' when using the `frozen A' version above.
 							-- See commit rev#95174 for when that change occurred.
-						Result := base_class.conform_to (other_class_type.base_class)
+						Result := base_class.conform_to (other_class_type.base_class) and (other.is_frozen implies is_frozen)
 					end
 					Result := Result and then other_class_type.valid_generic (a_context_class, Current, a_in_generic)
 					if not Result and then system.il_generation and then system.system_object_class /= Void then
@@ -764,10 +764,12 @@ feature {COMPILER_EXPORTER} -- Conformance
 			l_conforming_parents: FIXED_LIST [CL_TYPE_A]
 			l_is_attached: like is_attached
 			l_is_implicitly_attached: like is_implicitly_attached
+			l_is_frozen: like is_frozen
 		do
 			from
 				l_is_attached := is_attached
 				l_is_implicitly_attached := is_implicitly_attached
+				l_is_frozen := has_frozen_mark
 				l_conforming_parents := base_class.conforming_parents
 				i := 1
 				count := l_conforming_parents.count
@@ -775,11 +777,20 @@ feature {COMPILER_EXPORTER} -- Conformance
 				i > count or else Result
 			loop
 				parent_actual_type := parent_type (l_conforming_parents.i_th (i))
+
+					-- Update parent to have the same attachment marks as Current.
 				if l_is_attached and then not parent_actual_type.is_attached then
 					parent_actual_type := parent_actual_type.as_attached_type
 				elseif l_is_implicitly_attached and then not parent_actual_type.is_implicitly_attached then
 					parent_actual_type := parent_actual_type.as_implicitly_attached
 				end
+
+					-- Update parent to have the same variance marks as Current.
+				if l_is_frozen and then not parent_actual_type.is_frozen then
+					parent_actual_type := parent_actual_type.as_same_variant_bits (variant_bits)
+				end
+
+					-- Check if parent conforms.
 				Result := parent_actual_type.internal_conform_to (a_context_class, gen_type, a_in_generic)
 				i := i + 1
 			end
@@ -957,12 +968,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 				end
 				i := i + 1
 			end
-		end
-
-	duplicate: like Current
-			-- Duplication
-		do
-			Result := twin
 		end
 
 	duplicate_for_instantiation: like Current

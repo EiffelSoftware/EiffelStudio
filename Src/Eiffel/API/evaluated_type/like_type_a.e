@@ -48,6 +48,7 @@ inherit
 			set_is_implicitly_attached,
 			set_separate_mark,
 			unset_is_implicitly_attached,
+			set_is_implicitly_frozen,
 			description, description_with_detachable_type,
 			c_type,
 			generics,
@@ -57,7 +58,8 @@ inherit
 			maximum_interval_value, minimum_interval_value, is_optimized_as_frozen,
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			internal_generic_derivation, internal_same_generic_derivation_as,
-			skeleton_adapted_in, set_frozen_mark, is_frozen, is_variant
+			skeleton_adapted_in, set_frozen_mark, is_frozen, is_variant,
+			as_same_variant_bits
 		end
 
 feature -- Properties
@@ -305,6 +307,7 @@ feature -- Primitives
 			else
 				actual_type := a.to_other_immediate_attachment (Current)
 			end
+			actual_type := actual_type.to_other_variant (Current)
 		end
 
 	recomputed_in (target_type: TYPE_A; context_id: INTEGER; constraint: TYPE_A; written_id: INTEGER): TYPE_A
@@ -381,31 +384,25 @@ feature -- Modification
 			-- <Precursor>
 		do
 			Precursor
-			if attached actual_type as l_type then
+			if attached actual_type as l_type and then l_type /= Current then
 				actual_type := l_type.to_other_variant (Current)
 			end
 		end
 
 	set_attached_mark
 			-- Mark type declaration as having an explicit attached mark.
-		local
-			a: like actual_type
 		do
 			Precursor
-			a := actual_type
-			if a /= Void then
+			if attached actual_type as a then
 				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
 
 	set_detachable_mark
 			-- Set class type declaration as having an explicit detachable mark.
-		local
-			a: like actual_type
 		do
 			Precursor
-			a := actual_type
-			if a /= Void then
+			if attached actual_type as a then
 				actual_type := a.to_other_immediate_attachment (Current)
 			end
 		end
@@ -442,6 +439,44 @@ feature -- Modification
 			Precursor
 			if attached actual_type as a then
 				actual_type := a.to_other_separateness (Current)
+			end
+		end
+
+	set_is_implicitly_frozen
+			-- <Precursor>
+		do
+			Precursor
+			if attached actual_type as a and then a /= Current then
+				actual_type := a.to_other_variant (Current)
+			end
+		end
+
+	as_same_variant_bits (a_bits: like variant_bits): like Current
+			-- <Precursor>
+		local
+			c: like actual_type
+		do
+			if attached actual_type as t and then t /= Current then
+				c := t.as_same_variant_bits (a_bits)
+				if c /= t then
+						-- We have a modified version of `actual_type',
+						-- so we need to duplicate Current if not previously done.
+					actual_type := c
+					Result := Precursor (a_bits)
+					if Result = Current then
+						Result := duplicate
+					else
+							-- Nothing to do because current was duplicated
+							-- with a copy of `conformance_type'.
+					end
+						-- Restore former `actual_type'
+					actual_type := t
+				else
+						-- No change in `actual_type', we just call the ancestor
+					Result := Precursor (a_bits)
+				end
+			else
+				Result := Precursor (a_bits)
 			end
 		end
 

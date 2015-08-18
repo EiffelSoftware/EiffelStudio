@@ -1083,7 +1083,7 @@ invariant
 	is_current_actual_type_correct: attached current_class as c implies attached current_actual_type as t and then t.same_as (current_class.actual_type)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

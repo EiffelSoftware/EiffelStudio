@@ -669,6 +669,10 @@ feature -- Setting
 			if current_class.lace_class.is_void_safe_conformance then
 				current_class_type.set_attached_mark
 			end
+				-- Current is always frozen
+			if current_class.lace_class.is_catcall_conformance then
+				current_class_type.set_frozen_mark
+			end
 			set_written_class (Void)
 			from
 				s := a_class.skeleton
@@ -684,9 +688,8 @@ feature -- Setting
 			end
 		ensure
 			current_class_set: current_class = a_class
-			current_class_type_set: current_class_type.conformance_type = a_type
-				or else current_class_type.conformance_type.same_as (a_type.as_attached_type)
-				or else current_class_type.conformance_type.same_as (a_type.as_implicitly_attached)
+			current_class_type_set: current_class_type /= Void
+			current_class_type_valid: -- current_class_type.conformance_type.same_type_with_any_annotations (a_type)
 		end
 
 	set_current_feature (f: FEATURE_I)

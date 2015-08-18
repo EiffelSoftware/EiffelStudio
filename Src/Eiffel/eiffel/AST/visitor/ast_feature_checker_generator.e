@@ -926,7 +926,7 @@ feature {NONE} -- Roundtrip
 					-- written, since those are not inherited.
 				l_feature :=
 					system.class_of_id (l_as.class_id).eiffel_class_c.inline_agent_of_rout_id (l_as.inl_rout_id)
-				l_feature := l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
+				l_feature := l_feature.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable.as_variant_free)
 			elseif
 				not attached {ROUTINE_AS} l_as.body.content as r or else
 				r.is_external or else
@@ -1558,7 +1558,7 @@ feature {NONE} -- Implementation
 								end
 							else
 									-- Adapt separateness and controlled status of the result to target type.
-								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
+								adapt_type_to_target (last_type, a_type, Void, l_is_controlled, a_name, l_error_level, l_feature_name)
 								if l_needs_byte_node then
 									create {TUPLE_ACCESS_B} l_tuple_access_b.make (l_named_tuple, l_label_pos)
 									last_byte_node := l_tuple_access_b
@@ -1574,9 +1574,9 @@ feature {NONE} -- Implementation
 							then
 									-- For the use of `f.site.class_id' see test#anchor086.
 								l_result_type := f.descriptor.type.recomputed_in
-									(f.target.as_implicitly_detachable,
+									(f.target.as_implicitly_detachable.as_variant_free,
 									l_context_current_class.class_id,
-									f.site.as_implicitly_detachable,
+									f.site.as_implicitly_detachable.as_variant_free,
 									f.site.class_id)
 								if attached l_arg_types then
 									l_result_type := l_result_type.actual_argument_type (l_arg_types)
@@ -1697,7 +1697,7 @@ feature {NONE} -- Implementation
 								not l_is_in_assignment and then
 								l_formal_count > 0
 							then
-								tuple_argument_number := tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id)
+								tuple_argument_number := tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable.as_variant_free, l_last_constrained.as_implicitly_detachable.as_variant_free, l_last_id)
 								if tuple_argument_number > 0 then
 										-- The list of actual arguments may be adapted to the list of formal arguments.
 									if l_actual_count > l_formal_count then
@@ -1782,7 +1782,7 @@ feature {NONE} -- Implementation
 
 										reset_for_unqualified_call_checking
 										current_target_type :=
-											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+											l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable.as_variant_free, l_last_id).actual_type
 										l_parameters.i_th (i).process (Current)
 										if attached last_type and then attached l_arg_types then
 											l_arg_types.extend (last_type)
@@ -1812,7 +1812,7 @@ feature {NONE} -- Implementation
 												-- Actual and formal types of the argument at position `i' are not compatible.
 											if
 												tuple_argument_number = 0 and then
-												tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable, l_last_constrained.as_implicitly_detachable, l_last_id) = i
+												tuple_argument_index (l_feature.arguments, l_last_type.as_implicitly_detachable.as_variant_free, l_last_constrained.as_implicitly_detachable.as_variant_free, l_last_id) = i
 											then
 													-- No actual arguments are wrapped to match a formal tuple argument
 													-- and there is a formal tuple argument at position `i'.
@@ -1821,7 +1821,7 @@ feature {NONE} -- Implementation
 												reset_for_unqualified_call_checking
 												create l_wrapped_actuals.make (1)
 												l_wrapped_actuals.extend (l_parameters [i])
-												current_target_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable, l_last_id).actual_type
+												current_target_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable.as_variant_free, l_last_id).actual_type
 												;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
 												l_arg_types.put_i_th (last_type, i)
 													-- Check if now actual and formal types of the last argument are compatible
@@ -1848,7 +1848,7 @@ feature {NONE} -- Implementation
 										l_formal_arg_type := l_feature.arguments [i]
 
 											-- Actual formal type of feature argument.
-										l_formal_arg_type := l_formal_arg_type.recomputed_in (l_last_type.as_implicitly_detachable, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable, l_last_id).actual_type
+										l_formal_arg_type := l_formal_arg_type.recomputed_in (l_last_type.as_implicitly_detachable.as_variant_free, l_context_current_class.class_id, l_last_constrained.as_implicitly_detachable.as_variant_free, l_last_id).actual_type
 
 											-- check if `l_formal_arg_type' involves some generics whose actuals
 											-- are marked `variant'. Only do this when `is_inherited' is false, since
@@ -1915,7 +1915,7 @@ feature {NONE} -- Implementation
 												-- This fix is incomplete since it does not take care of types
 												-- that are redefined as expanded.
 											if a_precursor_type /= Void and l_last_class.is_expanded then
-												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type.as_implicitly_detachable, a_precursor_type.base_class.class_id))
+												l_parameter.set_attachment_type (l_formal_arg_type.instantiation_in (a_precursor_type.as_implicitly_detachable.as_variant_free, a_precursor_type.base_class.class_id))
 											else
 												l_parameter.set_attachment_type (l_formal_arg_type)
 												if not system.il_generation then
@@ -1963,9 +1963,9 @@ feature {NONE} -- Implementation
 								-- Get the type of Current feature.
 							l_result_type := l_feature.type
 							l_result_type := l_result_type.recomputed_in
-								(l_last_type.as_implicitly_detachable,
+								(l_last_type.as_implicitly_detachable.as_variant_free,
 								l_context_current_class.class_id,
-								l_last_constrained.as_implicitly_detachable,
+								l_last_constrained.as_implicitly_detachable.as_variant_free,
 								l_last_id)
 								-- Adapted type in case it is a formal generic parameter or a like.
 							if l_arg_types /= Void then
@@ -2111,21 +2111,7 @@ feature {NONE} -- Implementation
 							is_controlled := l_is_controlled
 							if is_qualified and then attached last_type then
 									-- Adapt separateness and controlled status of the result to target type.
-								adapt_type_to_target (last_type, a_type, l_is_controlled, a_name, l_error_level, l_feature_name)
-									-- If the target of the call is `frozen' then we can keep `last_type' as is. Meaning that
-									-- if it was frozen, it will stay frozen. For other cases, we check if we can still
-									-- keep the frozen mark.
-								if not a_type.is_frozen and last_type.is_frozen then
-									if l_feature.is_frozen and then attached {CL_TYPE_A} l_feature.type then
-											-- The feature is `frozen' (i.e. it cannot be redefined) and
-											-- its base type is a Class_type which is not a formal, then it
-											-- cannot change.
-											-- We can keep the `frozen' mark to make code more flexible.
-									else
-											-- Remove frozen status of type.
-										set_type (last_type.as_variant_free, a_name)
-									end
-								end
+								adapt_type_to_target (last_type, a_type, l_feature, l_is_controlled, a_name, l_error_level, l_feature_name)
 							end
 
 							if l_needs_byte_node then
@@ -2243,7 +2229,7 @@ feature {NONE} -- Type checks
 					-- Regular feature calll.
 				formal_type := callee.arguments [argument_number]
 					-- Adapt formal type of a feature argument.
-				formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable, current_class.class_id, target_base_type.as_implicitly_detachable, target_base_class_id).actual_type
+				formal_type := formal_type.recomputed_in (actual_target_type.as_implicitly_detachable.as_variant_free, current_class.class_id, target_base_type.as_implicitly_detachable.as_variant_free, target_base_class_id).actual_type
 			else
 					-- Tuple access.
 				formal_type := actual_types [argument_number]
@@ -2251,7 +2237,7 @@ feature {NONE} -- Type checks
 
 			if formal_type.is_like_argument then
 				like_argument_type := formal_type.instantiation_in
-					(actual_target_type.as_implicitly_detachable, target_base_class_id).actual_argument_type
+					(actual_target_type.as_implicitly_detachable.as_variant_free, target_base_class_id).actual_argument_type
 					(actual_types).actual_type
 					-- Check that `expression_type' is compatible to its `like argument'.
 					-- Once this is done, then type checking is done on the real
@@ -2276,7 +2262,6 @@ feature {NONE} -- Type checks
 			if not formal_type.backward_conform_to (current_class, expression_type) then
 				if
 					(not is_inherited and then
-					is_frozen_type_compatible (expression_type, formal_type, True) and then
 					expression_type.convert_to (current_class, formal_type.deep_actual_type))
 				then
 				elseif
@@ -2976,7 +2961,7 @@ feature {NONE} -- Visitor
 				last_access_writable := False
 				l_local_info.set_is_used (True)
 				l_type := l_local_info.type
-				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, last_type.base_class.class_id)
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
 				set_type (l_type, l_as)
 				if attached l_as.parameters as p then
 					create l_vuar1
@@ -3050,7 +3035,7 @@ feature {NONE} -- Visitor
 					-- Arguments are controlled.
 				is_controlled := True
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 				l_has_vuar_error := l_as.parameters /= Void
 				if l_needs_byte_node then
 					create l_argument
@@ -3077,7 +3062,7 @@ feature {NONE} -- Visitor
 					last_access_writable := True
 					l_has_vuar_error := l_as.parameters /= Void
 					l_type := l_local_info.type
-					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+					l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 					if l_needs_byte_node then
 						create l_local
 						l_local.set_position (l_local_info.position)
@@ -3129,7 +3114,7 @@ feature {NONE} -- Visitor
 						last_access_writable := False
 						l_has_vuar_error := l_as.parameters /= Void
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
@@ -3217,7 +3202,7 @@ feature {NONE} -- Visitor
 				is_controlled := True
 				l_arg_type := l_feature.arguments.i_th (l_arg_pos)
 
-				l_arg_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_arg_type := l_arg_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 				if context.is_argument_attached (l_as.feature_name.name_id) then
 					l_arg_type := l_arg_type.as_attached_in (context.current_class)
 				end
@@ -3258,7 +3243,7 @@ feature {NONE} -- Visitor
 						l_local_info.set_is_used (True)
 						last_access_writable := False
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						if is_byte_node_enabled then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							last_byte_node := l_local
@@ -4268,7 +4253,7 @@ feature {NONE} -- Visitor
 			if l_arg_pos /= 0 then
 					-- Found argument
 				l_type := l_feature.arguments.i_th (l_arg_pos)
-				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 				create l_typed_pointer.make_typed (l_type)
 				last_type := l_typed_pointer
 				if l_needs_byte_node then
@@ -4294,7 +4279,7 @@ feature {NONE} -- Visitor
 						l_type := m
 					end
 					if l_type.is_known then
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
 						last_type := l_typed_pointer
 						if l_needs_byte_node then
@@ -4328,7 +4313,7 @@ feature {NONE} -- Visitor
 						l_local_info.set_is_used (True)
 						last_access_writable := False
 						l_type := l_local_info.type
-						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable, l_last_id)
+						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
 						last_type := l_typed_pointer
 						if l_needs_byte_node then
@@ -4705,9 +4690,9 @@ feature {NONE} -- Visitor
 								if last_alias_error = Void then
 									l_feature_type := l_prefix_feature.type
 									l_feature_type := l_prefix_feature.type.recomputed_in
-										(last_type.as_implicitly_detachable,
+										(last_type.as_implicitly_detachable.as_variant_free,
 										l_context_current_class.class_id,
-										l_last_constrained.as_implicitly_detachable,
+										l_last_constrained.as_implicitly_detachable.as_variant_free,
 										l_last_class.class_id).actual_type
 									if 	l_last_feature_type = Void then
 										l_last_feature_type := l_feature_type
@@ -4765,7 +4750,7 @@ feature {NONE} -- Visitor
 					if not l_last_constrained.is_known then
 							-- Unknown feature in unknown class.
 							-- Use unknown type as a result type.
-						adapt_type_to_target (unknown_type, l_target_type, l_is_controlled, l_as, 0, Void)
+						adapt_type_to_target (unknown_type, l_target_type, Void, l_is_controlled, l_as, 0, Void)
 					elseif l_prefix_feature = Void then
 							-- Error: not prefixed function found
 						create l_vwoe
@@ -4819,24 +4804,24 @@ feature {NONE} -- Visitor
 								else
 										-- Usual case
 									l_prefix_feature_type := l_prefix_feature_type.recomputed_in
-										(last_type.as_implicitly_detachable,
+										(last_type.as_implicitly_detachable.as_variant_free,
 										l_context_current_class.class_id,
-										l_last_constrained.as_implicitly_detachable,
+										l_last_constrained.as_implicitly_detachable.as_variant_free,
 										l_last_class.class_id).actual_type
 								end
 							else
 									-- Usual case
 								l_prefix_feature_type := l_prefix_feature_type.recomputed_in
-									(last_type.as_implicitly_detachable,
+									(last_type.as_implicitly_detachable.as_variant_free,
 									l_context_current_class.class_id,
-									l_last_constrained.as_implicitly_detachable,
+									l_last_constrained.as_implicitly_detachable.as_variant_free,
 									l_last_class.class_id).actual_type
 							end
 							if attached old_assigner_source then
 								process_assigner_command (last_type, l_last_constrained, l_prefix_feature)
 							end
 
-							adapt_type_to_target (l_prefix_feature_type, l_target_type, l_is_controlled, l_as, l_error_level, l_as.operator_location)
+							adapt_type_to_target (l_prefix_feature_type, l_target_type, l_prefix_feature, l_is_controlled, l_as, l_error_level, l_as.operator_location)
 
 							if l_needs_byte_node then
 								l_access := l_prefix_feature.access (last_type, True, l_target_type.is_separate)
@@ -5080,9 +5065,9 @@ feature {NONE} -- Visitor
 									if l_error = Void then
 										l_feature_type := last_alias_feature.type
 										l_feature_type := l_feature_type.recomputed_in
-											(l_left_type.as_implicitly_detachable,
+											(l_left_type.as_implicitly_detachable.as_variant_free,
 											l_context_current_class.class_id,
-											l_left_constrained.as_implicitly_detachable,
+											l_left_constrained.as_implicitly_detachable.as_variant_free,
 											l_class.class_id)
 										if l_feature_type.has_like_argument then
 											create l_arg_types.make (1)
@@ -5217,9 +5202,9 @@ feature {NONE} -- Visitor
 								-- Update the type stack: instantiate result type of the
 								-- infixed feature
 							l_infix_type := last_alias_feature.type.recomputed_in
-								(l_target_type.as_implicitly_detachable,
+								(l_target_type.as_implicitly_detachable.as_variant_free,
 								l_context_current_class.class_id,
-								l_left_constrained.as_implicitly_detachable,
+								l_left_constrained.as_implicitly_detachable.as_variant_free,
 								l_left_id)
 							if l_infix_type.has_like_argument then
 								create l_arg_types.make (1)
@@ -5232,7 +5217,7 @@ feature {NONE} -- Visitor
 								process_assigner_command (l_target_type, l_left_constrained, last_alias_feature)
 							end
 
-							adapt_type_to_target (l_infix_type, l_target_type, l_is_controlled, l_as, l_error_level, l_as.operator_location)
+							adapt_type_to_target (l_infix_type, l_target_type, last_alias_feature, l_is_controlled, l_as, l_error_level, l_as.operator_location)
 
 							if l_needs_byte_node then
 								l_binary := byte_anchor.binary_node (l_as)
@@ -9436,8 +9421,8 @@ feature {NONE} -- Implementation
 						-- Conformance initialization
 						-- Argument conformance: infix feature must have one argument
 					l_arg_type := a_feature.arguments.i_th (1)
-					l_arg_type := l_arg_type.recomputed_in (a_left_type.as_implicitly_detachable, context.current_class.class_id,
-						a_left_constrained.as_implicitly_detachable, a_context_class.class_id).actual_type
+					l_arg_type := l_arg_type.recomputed_in (a_left_type.as_implicitly_detachable.as_variant_free, context.current_class.class_id,
+						a_left_constrained.as_implicitly_detachable.as_variant_free, a_context_class.class_id).actual_type
 
 					if not l_arg_type.backward_conform_to (context.current_class, a_right_type) then
 						if not is_inherited and then a_right_type.convert_to (context.current_class, l_arg_type.deep_actual_type) then
@@ -9564,7 +9549,6 @@ feature {NONE} -- Implementation
 			if not l_target_type.backward_conform_to (context.current_class, l_source_type) then
 				if
 					not is_inherited and then
-					is_frozen_type_compatible (l_source_type, l_target_type, True) and then
 					l_source_type.convert_to (context.current_class, l_target_type.deep_actual_type)
 				then
 					l_conv_info := context.last_conversion_info
@@ -9608,15 +9592,32 @@ feature {NONE} -- Implementation
 			a_source_type_not_void: a_source_type /= Void
 			a_target_type_not_void: a_target_type /= Void
 			type_conforms: not a_for_conversion implies a_target_type.backward_conform_to (context.current_class, a_source_type)
+		local
+			l_source, l_target: TYPE_A
 		do
-			if a_target_type.actual_type.has_frozen_mark then
+			if a_target_type.is_frozen then
 				if a_source_type.actual_type.is_none then
 						-- Assignment `a := Void' where `a' is frozen detachable,
 						-- this is ok.
 					Result := True
-				elseif a_source_type.actual_type.has_frozen_mark then
+				elseif a_source_type.is_frozen then
 						-- Both source and target are frozen.
-					Result := a_for_conversion or else a_source_type.conformance_type.as_attachment_mark_free.same_type (a_target_type.conformance_type.as_attachment_mark_free)
+					if a_for_conversion then
+							-- We have a conversion to a frozen type, so nothing to be done.
+						Result := True
+					else
+						l_source := a_source_type.conformance_type.as_attachment_mark_free
+						l_target := a_target_type.conformance_type.as_attachment_mark_free
+						Result := l_source.same_as (l_target)
+						if not Result then
+								-- Type are not exactly the same. So we check that they are the same
+								-- base type. Note that if one of the source and target type was a formal
+								-- the above test using `same_as' should succeed for the call to be valid.
+							Result := attached {CL_TYPE_A} l_source as l_source_type and then
+								attached {CL_TYPE_A} l_target as l_target_type and then
+								l_source_type.class_id = l_target_type.class_id
+						end
+					end
 				else
 					Result := False
 				end
@@ -9658,9 +9659,9 @@ feature {NONE} -- Implementation
 						context.supplier_ids.extend_depend_unit_with_level (l_target_class_id, l_assigner_command, depend_unit_level)
 					end
 					l_type := l_assigner_command.arguments.i_th (1).recomputed_in (
-						a_target_type.as_implicitly_detachable,
+						a_target_type.as_implicitly_detachable.as_variant_free,
 						context.current_class.class_id,
-						a_target_constrained_type.as_implicitly_detachable,
+						a_target_constrained_type.as_implicitly_detachable.as_variant_free,
 						l_target_class_id).actual_type
 				end
 				last_assigner_command := l_assigner_command
@@ -10049,7 +10050,7 @@ feature {NONE} -- Implementation: overloading
 
 				-- Instantiation of `Result' in context of target represented by `a_type' and
 				-- `last_id'.
-			Result := Result.instantiation_in (a_type.as_implicitly_detachable, last_id).actual_type
+			Result := Result.instantiation_in (a_type.as_implicitly_detachable.as_variant_free, last_id).actual_type
 		ensure
 			feature_arg_type_not_void: Result /= Void
 		end
@@ -10092,7 +10093,7 @@ feature {NONE} -- Agents
 
 			if a_is_query then
 					-- Evaluate type of Result in current context
-				l_type := a_feat_type.instantiation_in (a_target_type.as_implicitly_detachable, cid)
+				l_type := a_feat_type.instantiation_in (a_target_type.as_implicitly_detachable.as_variant_free, cid)
 				if l_is_qualified_call then
 					l_type := l_type.deep_actual_type
 				elseif l_type.has_like_argument then
@@ -10223,7 +10224,7 @@ feature {NONE} -- Agents
 
 						-- Evaluate type of operand in current context
 					l_type := l_type.instantiation_in (
-						a_target_type.as_implicitly_detachable, cid)
+						a_target_type.as_implicitly_detachable.as_variant_free, cid)
 					if l_is_qualified_call then
 						l_type := l_type.deep_actual_type
 					elseif l_type.has_like_argument then
@@ -10272,7 +10273,7 @@ feature {NONE} -- Agents
 			l_result_type := l_result_type.as_attached_in (context.current_class)
 
 				-- If a target type is separate, a type of the agent is separate.
-			adapt_type_to_target (l_result_type, a_target_type, is_controlled, an_agent, 0, Void)
+			adapt_type_to_target (l_result_type, a_target_type, a_feature, is_controlled, an_agent, 0, Void)
 			l_result_type := last_type
 
 			if is_byte_node_enabled then
@@ -10380,7 +10381,7 @@ feature {NONE} -- Agents
 				-- See eweasel test#agent010 where the FORMAL_A was not translated into CL_TYPE_A and we got
 				-- a compilation crash at degree 2; as well as test#agent004.
 			l_result_type := a_feature.type
-			l_result_type := l_result_type.instantiation_in (a_target_type.as_implicitly_detachable, a_rc.class_id)
+			l_result_type := l_result_type.instantiation_in (a_target_type.as_implicitly_detachable.as_variant_free, a_rc.class_id)
 			compute_fake_inline_agent (a_rc, a_feature.access (l_result_type, True, a_target_type.is_separate), l_result_type, a_target,
 									a_target_type, a_agent_type, a_feature)
 		end
@@ -10638,7 +10639,7 @@ feature {NONE} -- Agents
 				Result := Result.replicated (a_current_class.class_id)
 				Result.set_is_replicated_directly (True)
 					-- Instantiate agent with respect to current class.
-				Result := Result.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable)
+				Result := Result.instantiation_in (context.current_class_type.conformance_type.as_implicitly_detachable.as_variant_free)
 				if l_enclosing_feature.has_replicated_ast then
 					Result.set_has_replicated_ast (True)
 				end
@@ -11339,6 +11340,44 @@ feature {NONE} -- Implementation: Error handling
 
 feature {NONE} -- Implementation: catcall check
 
+	is_query_stable (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_query_type: CL_TYPE_A): BOOLEAN
+			-- Check if a query `a_feature' has the same base type in all descendants.
+			--
+			-- `a_callee_type': Type on which the call happens
+			-- `a_feature': Feature which is called on callee
+		require
+			a_callee_type_not_void: a_callee_type /= Void
+			a_feature_not_void: a_feature /= Void
+		local
+			l_descendants: ARRAYED_LIST [TYPE_A]
+			l_descendant_type: TYPE_A
+			l_descendant_class: CLASS_C
+			l_descendant_feature: FEATURE_I
+		do
+			l_descendants := conforming_descendants (a_feature, a_callee_type)
+			if l_descendants = Void then
+					-- Limitation of the compiler, we cannot ensure it is stable.
+			else
+					-- Loop through all descendants
+				from
+					Result := True
+					l_descendants.start
+				until
+					not Result or else l_descendants.after
+				loop
+						-- Get descendant class and the feature in the context of the descendant\
+					l_descendant_type := l_descendants.item
+					l_descendant_class := l_descendant_type.base_class
+					l_descendant_feature := l_descendant_class.feature_of_rout_id (a_feature.rout_id_set.first)
+
+					Result := attached {CL_TYPE_A} l_descendant_feature.type.actual_type as l_class_type and then
+						l_class_type.class_id = a_query_type.class_id
+
+					l_descendants.forth
+				end
+			end
+		end
+
 	check_cat_call (a_callee_type: TYPE_A; a_feature: FEATURE_I; a_params: ARRAYED_LIST [TYPE_A]; a_location: LOCATION_AS; a_parameters: EIFFEL_LIST [EXPR_AS])
 			-- Check if a call can potentially be a cat call.
 			--
@@ -11366,6 +11405,7 @@ feature {NONE} -- Implementation: catcall check
 			l_descendants := conforming_descendants (a_feature, a_callee_type)
 
 			if l_descendants = Void then
+					-- Limitation of the compiler, we declare the call to be potentially a catcall.
 				create l_tcat.make (a_location)
 				context.init_error (l_tcat)
 				l_tcat.set_called_feature (a_feature)
@@ -11700,7 +11740,7 @@ feature {NONE} -- Separateness
 			end
 		end
 
-	adapt_type_to_target (non_adapted_type: detachable TYPE_A; target_type: TYPE_A; c: BOOLEAN; n: AST_EIFFEL; e: like error_level; error_location: detachable LOCATION_AS)
+	adapt_type_to_target (non_adapted_type: detachable TYPE_A; target_type: TYPE_A; a_feature: FEATURE_I; c: BOOLEAN; n: AST_EIFFEL; e: like error_level; error_location: detachable LOCATION_AS)
 			-- Adapt separateness status of the last message type `non_adapted_type' of the AST node `n'
 			-- to the target of type `target_type' which has a controlled status `c' and update `is_controlled' accordingly.
 			-- If `error_location' is attached and the target type is separate, check that the type `l' has no non-separate reference attributes
@@ -11721,6 +11761,29 @@ feature {NONE} -- Separateness
 					result_type := non_adapted_type
 				end
 				set_type (result_type, n)
+
+					-- If the target of the call is `frozen' then we can keep `non_adapted_type' as is. Meaning that
+					-- if it was frozen, it will stay frozen. For other cases, we check if we can still
+					-- keep the frozen mark.
+				if a_feature /= Void and not target_type.is_frozen and result_type.is_frozen then
+					if a_feature.is_frozen and then attached {CL_TYPE_A} a_feature.type then
+						-- Optimization: The feature is `frozen' (i.e. it cannot be redefined) and
+						-- its base type is a Class_type which is not a formal, then it
+						-- cannot change.
+						-- We can keep the `frozen' mark.
+					elseif
+						attached {CL_TYPE_A} a_feature.type.actual_type as l_feature_type and then
+						is_query_stable (target_type.actual_type, a_feature, l_feature_type)
+					then
+						-- The type of `a_feature' resolves into a Class_type and all descendants are using
+						-- the exact same one.
+						-- We can keep the `frozen' mark.
+					else
+							-- Remove frozen status of type.
+						set_type (result_type.as_variant_free, n)
+					end
+				end
+
 					-- Verify that if result type of a separate feature call is expanded it has no non-separate reference attributes.
 				if
 					error_level = e and then

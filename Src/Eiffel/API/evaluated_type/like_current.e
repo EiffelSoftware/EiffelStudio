@@ -26,7 +26,8 @@ inherit
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
 			is_class_valid, skeleton_adapted_in, good_generics, has_like_current,
-			set_frozen_mark, initialize_info, annotation_flags
+			set_frozen_mark, initialize_info, annotation_flags,
+			set_is_implicitly_frozen, as_same_variant_bits
 		end
 
 create
@@ -331,7 +332,7 @@ feature -- Generic conformance
 				-- False, is_variant always True.
 			check consistent: not compiler_profile.is_frozen_variant_supported implies (not is_frozen and is_variant) end
 			if is_frozen then
-				if not is_implicitly_frozen then
+				if not is_type_frozen then
 					Result := Result | {SHARED_GEN_CONF_LEVEL}.frozen_type
 				end
 			elseif is_variant then
@@ -424,7 +425,8 @@ feature {TYPE_A} -- Helpers
 			if
 				attached {LIKE_CURRENT} other as a and then
 				(a_context_class.lace_class.is_void_safe_conformance implies is_attachable_to (a)) and then
-				is_processor_attachable_to (a) and then (a.has_frozen_mark implies has_frozen_mark)
+				is_processor_attachable_to (a) and then
+				(a_context_class.lace_class.is_catcall_conformance implies (a.is_frozen implies is_frozen))
 			then
 					-- Other is like Current that is compatible in terms of attachment status, separate status
 					-- and variance status.
@@ -526,6 +528,42 @@ feature {COMPILER_EXPORTER} -- Modification
 			Precursor
 			if attached t then
 				conformance_type := t.to_other_immediate_attachment (Current)
+			end
+		end
+
+	set_is_implicitly_frozen
+			-- <Precursor>
+		do
+			Precursor
+			conformance_type := conformance_type.to_other_variant (Current)
+		end
+
+	as_same_variant_bits (a_bits: like variant_bits): like Current
+			-- <Precursor>
+		local
+			c: like conformance_type
+		do
+			if attached conformance_type as t then
+				c := t.as_same_variant_bits (a_bits)
+				if c /= t then
+						-- We have a modified version of `conformance_type',
+						-- so we need to duplicate Current if not previously done.
+					conformance_type := c
+					Result := Precursor (a_bits)
+					if Result = Current then
+						Result := duplicate
+					else
+							-- Nothing to do because current was duplicated
+							-- with a copy of `conformance_type'.
+					end
+						-- Restore former `conformance_type'
+					conformance_type := t
+				else
+						-- No change in `conformance_type', we just call the ancestor
+					Result := Precursor (a_bits)
+				end
+			else
+				Result := Precursor (a_bits)
 			end
 		end
 

@@ -36,7 +36,7 @@ feature -- Status setting
 			background_color := a_color
 			invalidate
 		ensure
-			background_color_assigned: background_color = a_color
+			background_color_set: background_color ~ a_color
 		end
 
 	remove_background_color

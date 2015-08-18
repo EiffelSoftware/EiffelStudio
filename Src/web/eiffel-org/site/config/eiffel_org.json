@@ -9,13 +9,13 @@
 				"connection_string":"Driver=SQLite3 ODBC Driver;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
 			},
 			"odbc-mysql": {
-				"connection_string":"Driver=mysql ODBC Driver;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
+				"connection_string":"Driver=mysql ODBC Driver;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=;"
 			},
 			"eiffel-org-mysql": {
-				"connection_string":"Driver=mysql;Server=localhost;Port=3306;Database=roc;Uid=roc;Pwd=roc;"
+				"connection_string":"Driver=mysql;Server=localhost;Port=3306;Database=roc;Uid=root;Pwd="
 			},
 			"development": {
-				"connection_string":"Server=localhost;Port=3306;Database=cms_dev;Uid=root;Pwd=;"
+				"connection_string":"Server=localhost;Port=3306;Database=roc;Uid=root;Pwd=;"
 				 },
 			"production": {
 				"connection_string":""

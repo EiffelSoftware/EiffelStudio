@@ -16,7 +16,7 @@
 									</li>
 									<li>
 										<div>
-											<a href="{$site_url/}resources/Eiffel_Wish_List"> <span class="ico"><img src="{$site_url/}theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
+											<a href="{$site_url/}resources/wish_list"> <span class="ico"><img src="{$site_url/}theme/images/ico5.png" width="52" height="52" alt="Image Description"></span>
 											<h2>Eiffel Wish List</h2>
 											</a>
 											<p>Tell us what you want to see. Shape the future of Eiffel</p>

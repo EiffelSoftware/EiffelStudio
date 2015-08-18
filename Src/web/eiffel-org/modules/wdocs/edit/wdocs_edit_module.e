@@ -66,7 +66,6 @@ feature -- Router
 			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 
-
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
 			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/preview", h, a_router.methods_post)

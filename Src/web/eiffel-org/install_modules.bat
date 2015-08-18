@@ -11,6 +11,7 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\oauth20	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\openid	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\recent_changes	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module %ROC_CMS_SRC%\modules\wish_list	--dir %ROC_CMS_DIR%
 
 %ROC_CMD% install --module modules\codeboard	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\contact	--dir %ROC_CMS_DIR%

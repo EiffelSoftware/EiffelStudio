@@ -678,6 +678,7 @@
 
 #content{
 	@include grid(12);
+	border: none;
 	overflow: hidden;
 	.holder{
 		margin-left: 0px;
@@ -689,7 +690,7 @@
 		@include grid(9);
 	}
 	&.with-first-sidebar.with-second-sidebar {
-		@include grid(4);
+		@include grid(6);
 	}
 	.head{
 		overflow: hidden;
@@ -732,63 +733,63 @@
 
 /* Content */
 #content {
-	.contribute-block, .about-block, .promo-block {
+	ul.cards {
+		@extend %listreset;
+
 		overflow: hidden;
-		padding: 8px 25px 0;
-		margin: 0 65px -46px;
-		ul{
-			@extend %listreset;
-			margin: 0 0 0 -73px;
-			li{
-				background: #e9eced;
-				width: 325px;
-				height: 320px;
-				float: left;
-				margin: 0 48px 34px 33px;
-				@include border-radius(7px);
-				&:hover{
-					background: #e3e7e8;
-				}
+		padding: 10px 0 0 10px;
+		margin: 0;
+
+		li{
+			background: #e9eced;
+			width: 325px;
+			height: 320px;
+			float: left;
+			margin: 0 20px 30px 20px;
+			text-align: center;
+			@include border-radius(7px);
+			&:hover{
+				background: #e3e7e8;
+			}
+			>a{
+				display: block;
+				padding: 20px 5px 5px 5px;
+			}
+			.ico{
+				width: 52px;
+				height: 52px;
+				padding: 10px;
+				display: inline-block;
+				vertical-align: top;
+				background: #1e3b4b;
+				margin: 0 0 30px;
+				@include border-radius(100%);
+			}
+			h2{
+				color: $green-light;
+				margin: 0 0 11px;
+				font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
+			}
+			p{
+				color: #0C0D0D;
 				a{
-					display: block;
-					text-align: center;
-					padding: 20px 5px;
-				}
-				.ico{
-					width: 52px;
-					height: 52px;
-					padding: 10px;
 					display: inline-block;
-					vertical-align: top;
-					background: #1e3b4b;
-					margin: 0 0 30px;
-					@include border-radius(100%);
 				}
-				h2{
-					color: $green-light;
-					margin: 0 0 11px;
-					font: #{$base-h2-size}/#{$base-h2-lineheight} $museo_slab500;
-				}
-				p{
-					color: #0C0D0D;
-				}
-				div {
-					background: #e9eced;
-					display: block;
-					text-align: center;
-					padding: 20px 5px;
-					@include border-radius(7px);
-					&:hover{
-						background: #e3e7e8;
-					}
-					a{
-						display: inline-block;
-					}
-				 }
 			}
 		}
+		li.large-card {
+			height: 395px;
+		}
+		li.big-card {
+			height: 325px;
+		}
+		li.medium-card {
+			height: 255px;
+		}
+		li.small-card {
+			height: 185px;
+		}
 	}
-
 
 	.rss-block {
 		overflow: hidden;
@@ -801,54 +802,12 @@
 				width: 450px;
 				float: left;
 				margin: 0 0 54px 33px;
-				/*a{
-					background: #e9eced;
-					display: block;
-					text-align: center;
-					padding: 24px 20px 11px;
-					@include border-radius(7px);
-					&:hover{
-						background: #e3e7e8;
-					}
-				}*/
-				.ico{
-					width: 52px;
-					height: 52px;
-					padding: 10px;
-					display: inline-block;
-					vertical-align: top;
-					background: #1e3b4b;
-					margin: 0 0 30px;
-					@include border-radius(100%);
-				}
 				h2{
-					color: $green-light;
-					margin: 0 0 11px;
 					font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;
-				}
-				p{
-					color: #0C0D0D;
 				}
 			}
 		}
 		
-	}
-
-	.about-block, .promo-block, .contribute-block {
-		ul li {
-			/*height: 320px;*/
-			h2 {
-				@include border-radius(7px);
-				/* background: #2B4054; */
-				padding: 0; //22px 20px 11px;
-			}
-		}
-	}
-
-	.about-block, .contribute-block {
-		ul {
-			margin: 0 0 0 0px;
-		} 
 	}
 
 	.promo-area {
@@ -916,9 +875,9 @@
 	@include grid(3);
 	padding: 0;
 	position: relative;
-	top: -12px;
+	top: -3px;
 	margin: 0px 2px 0 2px;
-	.holder{
+	&.holder{
 		padding: 0 5px 5px 5px;
 	}
 	div.title, h2{
@@ -937,7 +896,7 @@
 }
 /* Code elements */
 
-code {
+code, eiffel {
 	@include border-radius(4px);
 	display: block;
 	font-family: monospace;
@@ -948,13 +907,13 @@ code {
 	line-height: 1.3;
 	padding: 10px;
 	margin: 2px 0 2px 0;
-}
-code.inline {
-	@include border-radius(0);
-	border: dotted 1px #ddd;
-	display: inline-block;
-	padding: 0 2px 0 2px;
-	margin: 0;
+	&.inline {
+		@include border-radius(0);
+		border: dotted 1px #ddd;
+		display: inline-block;
+		padding: 0 2px 0 2px;
+		margin: 0;
+	}
 }
 
 /* ... */
@@ -974,7 +933,7 @@ code.inline {
 			&:first-child{
 				padding-top: 0;
 			}
-			.date{
+			&.date{
 				display: inline-block;
 				margin: 0 5px 0 0;
 				text-transform: uppercase;

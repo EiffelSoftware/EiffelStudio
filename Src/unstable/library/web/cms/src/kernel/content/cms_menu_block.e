@@ -31,6 +31,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_empty: BOOLEAN
+			-- Is current block empty?
+		do
+			Result := menu.is_empty
+		end
+
 	is_horizontal: BOOLEAN assign set_is_horizontal
 		-- Is horizontal layout for the menu?
 
@@ -72,4 +78,7 @@ feature -- Conversion
 			Result := a_theme.menu_html (menu, is_horizontal, html_options)
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

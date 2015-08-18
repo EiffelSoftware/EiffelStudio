@@ -738,7 +738,9 @@ feature -- Generation
 	prepare (page: CMS_HTML_PAGE)
 		local
 			lnk: CMS_LINK
+			l_region: CMS_BLOCK_REGION
 			l_menu_list_prepared: ARRAYED_LIST [CMS_LINK_COMPOSITE]
+			l_empty_blocks: detachable ARRAYED_LIST [CMS_BLOCK]
 		do
 				-- Menu
 			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
@@ -756,13 +758,28 @@ feature -- Generation
 			across
 				regions as reg_ic
 			loop
+				l_region := reg_ic.item
 				across
-					reg_ic.item.blocks as ic
+					l_region.blocks as ic
 				loop
 					if attached {CMS_MENU_BLOCK} ic.item as l_menu_block then
 						l_menu_list_prepared.force (l_menu_block.menu)
 						prepare_links (l_menu_block.menu)
+						if l_menu_block.menu.is_empty then
+							if l_empty_blocks = Void then
+								create l_empty_blocks.make (1)
+							end
+							l_empty_blocks.force (l_menu_block)
+						end
 					end
+				end
+				if l_empty_blocks /= Void then
+					across
+						l_empty_blocks as ic
+					loop
+						l_region.remove (ic.item)
+					end
+					l_empty_blocks := Void
 				end
 			end
 

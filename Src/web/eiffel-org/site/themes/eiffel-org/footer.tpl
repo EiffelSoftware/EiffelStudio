@@ -13,29 +13,28 @@
 									</li>
 									<li><a href="{$site_url/}documentation">Documentation</a>
 										<ul>
-											<li><a href="#">Documentation</a></li>
-											<li><a href="#">Tutorials</a></li>
-											<li><a href="#">Packages</a></li>
-											<li><a href="#">FAQs</a></li>
+											<li><a href="{$site_url/}doc/eiffel">Eiffel</a></li>
+											<li><a href="{$site_url/}doc/eiffelstudio">EiffelStudio</a></li>
+											<li><a href="{$site_url/}doc/solutions">Solutions</a></li>
+											<li><a href="{$site_url/}doc/glossary">Glossary</a></li>
+											<li><a href="{$site_url/}doc/faqs">FAQs</a></li>
 										</ul>	
 									</li>
 									<li><a href="{$site_url/}resources">Resources</a>
 										<ul>
 											<li><a href="{$site_url/}resources/libraries">Libraries</a></li>
 											<li><a href="{$site_url/}resources/tools">Tools</a></li>
+											<li><a href="{$site_url/}resources/Eiffel_Wish_List">Wish list</a></li>
 											<li><a href="{$site_url/}resources/videos">Videos</a></li>
-											<li><a href="{$site_url/}resources/Eiffel_Wish_List">Eiffel wish list</a></li>
 											<li><a href="{$site_url/}resources/follow_us">Follow us</a></li>
 										</ul>
 									</li>
-									<li><a href="{$site_url/}contribute">Contribute</a>
-									</li>
-						
 								</ul>
 							</nav>
 							<div class="btn-holder">
 								<a class="btn btn-download" href="{$site_url/}download_options">Download Now</a>
 								<a class="btn btn-tryonline" href="{$site_url/}try_eiffel">Try Eiffel Online</a>
+								<a class="btn btn-contribute" href="{$site_url/}contribute">Contribute</a>
 							</div>
 							<div class="social-holder">
 								<ul class="social-networks">

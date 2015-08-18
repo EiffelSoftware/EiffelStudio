@@ -62,14 +62,14 @@ feature -- Forms ...
 				sum.set_text_value (a_node.summary)
 			end
 			sum.set_label ("Summary")
-			sum.set_description ("This is the summary")
+			sum.set_description ("Text displayed in short view.")
 			sum.set_is_required (False)
 
 			create fset.make
 
 				-- Add summary
 			fset.extend (sum)
-			fset.extend_html_text("<br />")
+			fset.extend_html_text("<br/>")
 
 				-- Add content
 			fset.extend (ta)

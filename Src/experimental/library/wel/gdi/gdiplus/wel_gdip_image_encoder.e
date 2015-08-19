@@ -45,7 +45,7 @@ feature -- Query
 			until
 				l_all_encoders.after or Result /= Void
 			loop
-				if l_all_encoders.item.format_id.is_equal (guid) then
+				if l_all_encoders.item.format_id ~ guid then
 					Result := l_all_encoders.item
 				end
 				l_all_encoders.forth
@@ -153,16 +153,16 @@ feature -- Contract support
 		require
 			a_guid_attached: a_guid /= Void
 		do
-			Result := 	a_guid.is_equal (quality) or
-						a_guid.is_equal (compression) or
-						a_guid.is_equal (color_depth) or
-						a_guid.is_equal (scan_method) or
-						a_guid.is_equal (version) or
-						a_guid.is_equal (render_method) or
-						a_guid.is_equal (transformation) or
-						a_guid.is_equal (luminance_table) or
-						a_guid.is_equal (chrominance_table) or
-						a_guid.is_equal (save_flag)
+			Result := 	a_guid ~ quality or
+						a_guid ~ compression or
+						a_guid ~ color_depth or
+						a_guid ~ scan_method or
+						a_guid ~ version or
+						a_guid ~ render_method or
+						a_guid ~ transformation or
+						a_guid ~ luminance_table or
+						a_guid ~ chrominance_table or
+						a_guid ~ save_flag
 		end
 
 feature {NONE} -- Implementation
@@ -196,14 +196,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

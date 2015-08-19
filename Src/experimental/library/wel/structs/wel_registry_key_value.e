@@ -60,7 +60,7 @@ feature -- Initialization
 			data.item.memory_copy (v.item, v.capacity)
 		ensure
 			type_set: type = t
-			internal_value_set: internal_value.is_equal (v)
+			internal_value_set: internal_value ~ v
 		end
 
 	make_with_dword_value (v: like dword_value)
@@ -164,7 +164,7 @@ feature -- Element Change
 			create data.make (l_str.capacity)
 			data.item.memory_copy (l_str.item, l_str.capacity)
 		ensure
-			value_set: value.is_equal (v)
+			value_set: value ~ v
 		end
 
 	set_dword_value (v: like dword_value)
@@ -197,7 +197,7 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

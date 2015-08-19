@@ -277,7 +277,7 @@ feature -- Element change
 			create a_wel_string.make (a_text)
 			{WEL_API}.send_message (item, Sb_settext, to_wparam (index), a_wel_string.item)
 		ensure
-			text_set: a_text.is_equal (text_for_part (index))
+			text_set: a_text.same_string (text_for_part (index))
 		end
 
 	set_text_part_with_style (index: INTEGER; a_text: READABLE_STRING_GENERAL;
@@ -296,7 +296,7 @@ feature -- Element change
 			create a_wel_string.make (a_text)
 			{WEL_API}.send_message (item, Sb_settext, to_wparam (index + a_style), a_wel_string.item)
 		ensure
-			text_set: a_text.is_equal (text_for_part (index))
+			text_set: a_text.same_string (text_for_part (index))
 			style_is_set: a_style = text_style_for_part (index)
 		end
 
@@ -407,14 +407,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

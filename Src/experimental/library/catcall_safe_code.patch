@@ -1,0 +1,4712 @@
+Index: base/base-safe.ecf
+===================================================================
+--- base/base-safe.ecf	(revision 97850)
++++ base/base-safe.ecf	(working copy)
+@@ -1,14 +1,14 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+ 	<description>Eiffel Base</description>
+ 	<target name="base">
+ 		<description>FreeELKS: Library of reusable components for Eiffel.
+-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
++&#9;&#9;&#9;Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+ 		<root all_classes="true"/>
+ 		<file_rule>
+ 			<exclude>/\.svn$</exclude>
+ 		</file_rule>
+-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
++		<option warning="true" cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<mapping old_name="REAL" new_name="REAL_32"/>
+@@ -45,53 +45,53 @@
+ 				<exclude>/structures/cursor_tree/two_way_cursor_tree.e$</exclude>
+ 			</file_rule>
+ 			<file_rule>
+-				<exclude>/kernel/console.e$</exclude>
+-				<exclude>/kernel/directory.e$</exclude>
+-				<exclude>/kernel/directory_name.e$</exclude>
++				<exclude>/kernel/file_info.e$</exclude>
++				<exclude>/kernel/function.e$</exclude>
++				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
++				<exclude>/kernel/stream.e$</exclude>
++				<exclude>/support/single_math.e$</exclude>
++				<exclude>/kernel/file.e$</exclude>
++				<exclude>/kernel/real_64_ref.e$</exclude>
++				<exclude>/kernel/memory.e$</exclude>
+ 				<exclude>/kernel/disposable.e$</exclude>
+-				<exclude>/kernel/exceptions.e$</exclude>
++				<exclude>/support/execution_environment.e$</exclude>
++				<exclude>/kernel/exceptions/void_target.e$</exclude>
++				<exclude>/support/reflected_object.e$</exclude>
++				<exclude>/kernel/tuple.e$</exclude>
++				<exclude>/support/class_name_translations.e$</exclude>
+ 				<exclude>/kernel/exceptions/exception.e$</exclude>
+-				<exclude>/kernel/exceptions/operating_system_failure.e$</exclude>
+-				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
+-				<exclude>/kernel/exceptions/void_target.e$</exclude>
+-				<exclude>/kernel/file.e$</exclude>
+-				<exclude>/kernel/file_name.e$</exclude>
+-				<exclude>/kernel/function.e$</exclude>
++				<exclude>/kernel/string/system_string.e$</exclude>
++				<exclude>/kernel/unix_signals.e$</exclude>
+ 				<exclude>/kernel/gc_info.e$</exclude>
+-				<exclude>/kernel/ise_runtime.e$</exclude>
++				<exclude>/kernel/console.e$</exclude>
++				<exclude>/support/mismatch_information.e$</exclude>
++				<exclude>/support/managed_pointer.e$</exclude>
++				<exclude>/kernel/path_name.e$</exclude>
++				<exclude>/kernel/directory_name.e$</exclude>
++				<exclude>/kernel/raw_file.e$</exclude>
++				<exclude>/support/operating_environment.e$</exclude>
+ 				<exclude>/kernel/mem_info.e$</exclude>
+-				<exclude>/kernel/memory.e$</exclude>
+-				<exclude>/kernel/native_array.e$</exclude>
+-				<exclude>/kernel/path_name.e$</exclude>
++				<exclude>/kernel/pointer.e$</exclude>
++				<exclude>/support/double_math.e$</exclude>
+ 				<exclude>/kernel/plain_text_file.e$</exclude>
+-				<exclude>/kernel/pointer.e$</exclude>
+-				<exclude>/kernel/pointer_ref.e$</exclude>
++				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
++				<exclude>/kernel/real_32_ref.e$</exclude>
++				<exclude>/kernel/special.e$</exclude>
++				<exclude>/kernel/exceptions/operating_system_failure.e$</exclude>
+ 				<exclude>/kernel/procedure.e$</exclude>
+-				<exclude>/kernel/raw_file.e$</exclude>
+-				<exclude>/kernel/real_32_ref.e$</exclude>
+-				<exclude>/kernel/real_64_ref.e$</exclude>
+ 				<exclude>/kernel/routine.e$</exclude>
+-				<exclude>/kernel/special.e$</exclude>
+-				<exclude>/kernel/storable.e$</exclude>
+-				<exclude>/kernel/stream.e$</exclude>
+-				<exclude>/kernel/string/system_string.e$</exclude>
+-				<exclude>/kernel/string/system_string_factory.e$</exclude>
+ 				<exclude>/kernel/type.e$</exclude>
+-				<exclude>/kernel/tuple.e$</exclude>
+-				<exclude>/kernel/file_info.e$</exclude>
+-				<exclude>/kernel/unix_signals.e$</exclude>
+-				<exclude>/support/class_name_translations.e$</exclude>
+-				<exclude>/support/double_math.e$</exclude>
+-				<exclude>/support/execution_environment.e$</exclude>
+-				<exclude>/support/object_graph_marker.e$</exclude>
++				<exclude>/kernel/pointer_ref.e$</exclude>
+ 				<exclude>/support/reflector.e$</exclude>
+-				<exclude>/support/reflected_object.e$</exclude>
++				<exclude>/kernel/string/system_string_factory.e$</exclude>
++				<exclude>/kernel/file_name.e$</exclude>
+ 				<exclude>/support/reflected_reference_object.e$</exclude>
+-				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
+-				<exclude>/support/managed_pointer.e$</exclude>
+-				<exclude>/support/mismatch_information.e$</exclude>
+-				<exclude>/support/operating_environment.e$</exclude>
+-				<exclude>/support/single_math.e$</exclude>
++				<exclude>/kernel/exceptions.e$</exclude>
++				<exclude>/kernel/native_array.e$</exclude>
++				<exclude>/kernel/storable.e$</exclude>
++				<exclude>/kernel/ise_runtime.e$</exclude>
++				<exclude>/kernel/directory.e$</exclude>
++				<exclude>/support/object_graph_marker.e$</exclude>
+ 				<condition>
+ 					<dotnet value="true"/>
+ 				</condition>
+@@ -157,5 +157,4 @@
+ 	<target name="base_scoop" extends="base">
+ 		<setting name="concurrency" value="scoop"/>
+ 	</target>
+-
+ </system>
+Index: base/elks/kernel/any.e
+===================================================================
+--- base/elks/kernel/any.e	(revision 97850)
++++ base/elks/kernel/any.e	(working copy)
+@@ -28,7 +28,7 @@
+ 			generator_not_empty: not Result.is_empty
+ 		end
+ 
+-	generating_type: TYPE [detachable like Current]
++	frozen generating_type: frozen TYPE [like Current]
+ 			-- Type of current object
+ 			-- (type of which it is a direct instance)
+ 		external
+@@ -89,16 +89,13 @@
+ 			-- Are `a' and `b' either both void or attached
+ 			-- to objects considered equal?
+ 		do
+-			if a = Void then
+-				Result := b = Void
+-			else
+-				Result := b /= Void and then
+-							a.is_equal (b)
+-			end
++			Result := (a ~ b)
+ 		ensure
+ 			definition: Result = (a = Void and b = Void) or else
+ 						((a /= Void and b /= Void) and then
+-						a.is_equal (b))
++						attached a.generating_type.as_frozen as t and then
++						attached t.attempted (a) as l_a and then attached t.attempted (b) as l_b and then
++						l_a.is_equal (l_b))
+ 		end
+ 
+ 	frozen standard_equal (a: detachable ANY; b: like a): BOOLEAN
+@@ -109,13 +106,15 @@
+ 			if a = Void then
+ 				Result := b = Void
+ 			else
+-				Result := b /= Void and then
+-							a.standard_is_equal (b)
++				Result := attached a.generating_type.as_frozen as t and then attached t.attempted (a) as u and then
++					attached t.attempted (b)  as v and then
++					u.standard_is_equal (v)
+ 			end
+ 		ensure
+ 			definition: Result = (a = Void and b = Void) or else
+-						((a /= Void and b /= Void) and then
+-						a.standard_is_equal (b))
++						(a /= Void and then attached a.generating_type.as_frozen as t and then attached t.attempted (a) as u and then
++							attached t.attempted (b)  as v and then
++							u.standard_is_equal (v))
+ 		end
+ 
+ 	frozen is_deep_equal (other: like Current): BOOLEAN
+@@ -137,7 +136,8 @@
+ 			if a = Void then
+ 				Result := b = Void
+ 			else
+-				Result := b /= Void and then a.is_deep_equal (b)
++				Result := attached a.generating_type.as_frozen as t and then attached t.attempted (a) as u and then
++					attached t.attempted (b)  as v and then u.is_deep_equal (v)
+ 			end
+ 		ensure
+ 			shallow_implies_deep: standard_equal (a, b) implies Result
+@@ -370,7 +370,7 @@
+ 	reflexive_conformance: conforms_to (Current)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/array.e
+===================================================================
+--- base/elks/kernel/array.e	(revision 97850)
++++ base/elks/kernel/array.e	(working copy)
+@@ -303,7 +303,7 @@
+ 			Result := True
+ 		end
+ 
+-	same_items (other: like Current): BOOLEAN
++	same_items (other: ARRAY [G]): BOOLEAN
+ 			-- Do `other' and Current have same items?
+ 		require
+ 			other_not_void: other /= Void
+@@ -470,7 +470,7 @@
+ 
+ feature -- Iteration
+ 
+-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
++	do_all (action: PROCEDURE [variant ANY, TUPLE [G]])
+ 			-- Apply `action' to every item, from first to last.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -480,7 +480,7 @@
+ 			area.do_all_in_bounds (action, 0, count - 1)
+ 		end
+ 
+-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
++	do_if (action: PROCEDURE [variant ANY, TUPLE [G]]; test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -491,7 +491,7 @@
+ 			area.do_if_in_bounds (action, test, 0, count - 1)
+ 		end
+ 
+-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	there_exists (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for at least one item?
+ 		require
+ 			test_not_void: test /= Void
+@@ -499,7 +499,7 @@
+ 			Result := area.there_exists_in_bounds (test, 0, count - 1)
+ 		end
+ 
+-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	for_all (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for all items?
+ 		require
+ 			test_not_void: test /= Void
+@@ -507,7 +507,7 @@
+ 			Result := area.for_all_in_bounds (test, 0, count - 1)
+ 		end
+ 
+-	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
++	do_all_with_index (action: PROCEDURE [variant ANY, TUPLE [G, INTEGER]])
+ 			-- Apply `action' to every item, from first to last.
+ 			-- `action' receives item and its index.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+@@ -530,7 +530,7 @@
+ 			end
+ 		end
+ 
+-	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
++	do_if_with_index (action: PROCEDURE [variant ANY, TUPLE [G, INTEGER]]; test: FUNCTION [variant ANY, TUPLE [G, INTEGER], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- `action' and `test' receive the item and its index.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+@@ -878,7 +878,7 @@
+ --				(index_set.upper = lower + count - 1))
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/console.e
+===================================================================
+--- base/elks/kernel/console.e	(revision 97850)
++++ base/elks/kernel/console.e	(working copy)
+@@ -30,7 +30,7 @@
+ 				putint, put_integer, put_integer_8, put_integer_16, put_integer_32, put_integer_64,
+ 				readint, read_integer, read_integer_8, read_integer_16, read_integer_32, read_integer_64,
+ 				put_natural, put_natural_8, put_natural_16, put_natural_32, put_natural_64,
+-				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64
++				read_natural, read_natural_8, read_natural_16, read_natural_32, read_natural_64, for_all
+ 		redefine
+ 			make_open_stdin, make_open_stdout, count, is_empty, exists,
+ 			read_real, read_double, read_character,
+@@ -451,7 +451,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/directory.e
+===================================================================
+--- base/elks/kernel/directory.e	(revision 97850)
++++ base/elks/kernel/directory.e	(working copy)
+@@ -504,8 +504,8 @@
+ 		end
+ 
+ 	delete_content_with_action (
+-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
+-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
++			action: detachable PROCEDURE [variant ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
++			is_cancel_requested: detachable FUNCTION [variant ANY, TUPLE, BOOLEAN]
+ 			file_number: INTEGER)
+ 			-- Delete all files located in current directory and its
+ 			-- subdirectories.
+@@ -531,7 +531,8 @@
+ 			l_last_entry_pointer: like last_entry_pointer
+ 			l_name: detachable STRING_8
+ 			file_count: INTEGER
+-			deleted_files: ARRAYED_LIST [READABLE_STRING_32]
++			deleted_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
++			deleted_files_as_list: LIST [READABLE_STRING_GENERAL]
+ 			requested_cancel: BOOLEAN
+ 		do
+ 			file_count := 1
+@@ -583,7 +584,8 @@
+ 							-- If `file_number' has been reached, call `action'.
+ 						if file_number > 0 and then file_count > file_number then
+ 							if action /= Void then
+-								action.call ([deleted_files])
++								deleted_files_as_list := deleted_files
++								action.call ([deleted_files_as_list])
+ 							end
+ 							if is_cancel_requested /= Void then
+ 								requested_cancel := is_cancel_requested.item (Void)
+@@ -601,7 +603,8 @@
+ 				-- If there is more than one deleted file and no
+ 				-- agent has been called, call one now.
+ 			if file_count > 1 and action /= Void then
+-				action.call ([deleted_files])
++				deleted_files_as_list := deleted_files
++				action.call ([deleted_files_as_list])
+ 			end
+ 		rescue
+ 			if dir_temp /= Void and then not dir_temp.is_closed then
+@@ -610,8 +613,8 @@
+ 		end
+ 
+ 	recursive_delete_with_action (
+-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
+-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
++			action: detachable PROCEDURE [variant ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
++			is_cancel_requested: detachable FUNCTION [variant ANY, TUPLE, BOOLEAN]
+ 			file_number: INTEGER)
+ 			-- Delete directory, its files and its subdirectories.
+ 			--
+@@ -620,6 +623,7 @@
+ 		require
+ 			directory_exists: exists
+ 		local
++			deleted_files_as_list: LIST [READABLE_STRING_GENERAL]
+ 			deleted_files: ARRAYED_LIST [READABLE_STRING_GENERAL]
+ 		do
+ 			delete_content_with_action (action, is_cancel_requested, file_number)
+@@ -629,7 +633,8 @@
+ 				if action /= Void then
+ 					create deleted_files.make (1)
+ 					deleted_files.extend (internal_name)
+-					action.call ([deleted_files])
++					deleted_files_as_list := deleted_files
++					action.call ([deleted_files_as_list])
+ 				end
+ 			end
+ 		end
+Index: base/elks/kernel/exceptions/exception_manager.e
+===================================================================
+--- base/elks/kernel/exceptions/exception_manager.e	(revision 97850)
++++ base/elks/kernel/exceptions/exception_manager.e	(working copy)
+@@ -32,7 +32,7 @@
+ 
+ feature -- Status setting
+ 
+-	ignore (a_exception: TYPE [detachable EXCEPTION])
++	ignore (a_exception: TYPE [variant detachable EXCEPTION])
+ 			-- Ignore type of `a_exception'.
+ 		require
+ 			a_exception_not_void: a_exception /= Void
+@@ -43,7 +43,7 @@
+ 			is_caught: is_ignored (a_exception)
+ 		end
+ 
+-	catch (a_exception: TYPE [detachable EXCEPTION])
++	catch (a_exception: TYPE [variant detachable EXCEPTION])
+ 			-- Set type of `a_exception' `is_caught'.
+ 		require
+ 			a_exception_not_void: a_exception /= Void
+@@ -53,7 +53,7 @@
+ 			is_ignored: not is_ignored (a_exception)
+ 		end
+ 
+-	set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)
++	set_is_ignored (a_exception: TYPE [variant detachable EXCEPTION]; a_ignored: BOOLEAN)
+ 			-- Set type of `a_exception' to be `a_ignored'.
+ 		require
+ 			a_exception_not_void: a_exception /= Void
+@@ -66,19 +66,19 @@
+ 
+ feature -- Status report
+ 
+-	is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_ignorable (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is ignorable.
+ 		external
+ 			"built_in"
+ 		end
+ 
+-	is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_raisable (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is raisable.
+ 		external
+ 			"built_in"
+ 		end
+ 
+-	is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_ignored (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is not raised.
+ 		external
+ 			"built_in"
+@@ -86,7 +86,7 @@
+ 			not_is_caught: Result = not is_caught (a_exception)
+ 		end
+ 
+-	is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_caught (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is raised.
+ 		external
+ 			"built_in"
+@@ -96,7 +96,7 @@
+ 
+ feature {EXCEPTIONS} -- Backward compatibility support
+ 
+-	type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]
++	type_of_code (a_code: INTEGER): detachable TYPE [variant EXCEPTION]
+ 			-- Exception type of `a_code'
+ 		external
+ 			"built_in"
+@@ -109,7 +109,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/path.e
+===================================================================
+--- base/elks/kernel/path.e	(revision 97850)
++++ base/elks/kernel/path.e	(working copy)
+@@ -191,7 +191,7 @@
+ 
+ feature {NONE} -- Internal initialization
+ 
+-	make_from_storage (a_path: STRING_8)
++	make_from_storage (a_path: like storage)
+ 			-- Initialize current from `a_path' and normalize `a_path' as it may be coming
+ 			-- from a user provided string or from a C API.
+ 		require
+@@ -205,7 +205,7 @@
+ 			is_normalized: is_normalized
+ 		end
+ 
+-	make_from_normalized_storage (a_path: STRING_8)
++	make_from_normalized_storage (a_path: like storage)
+ 			-- Initialize current from `a_path' which has already been normalized.
+ 		require
+ 			a_path_not_void: a_path /= Void
+@@ -224,7 +224,7 @@
+ 		require
+ 			a_path_pointer_not_null: a_path_pointer /= default_pointer
+ 		local
+-			l_cstr: C_STRING
++			l_cstr: frozen C_STRING
+ 			nb: INTEGER
+ 		do
+ 				-- Let's be safe here, we take the min between the recorded size and the actual size.
+@@ -460,7 +460,7 @@
+ 	components: ARRAYED_LIST [PATH]
+ 			-- Sequence of simple paths making up Current, including `root' if any.
+ 		local
+-			l_storage: STRING
++			l_storage: like storage
+ 			l_previous_pos, l_pos: INTEGER
+ 		do
+ 			create Result.make (10)
+@@ -851,7 +851,7 @@
+ 			if other = Current then
+ 				Result := True
+ 			else
+-				Result := storage.is_equal (other.storage)
++				Result := storage ~ other.storage
+ 			end
+ 		end
+ 
+@@ -952,7 +952,7 @@
+ 	is_normalized: BOOLEAN
+ 			-- Has current string be normalized?
+ 
+-	storage: STRING_8
++	frozen storage: frozen STRING_8
+ 			-- Internal storage for Current.
+ 			-- On UNIX, it is a binary sequence encoded in UTF-8 by default.
+ 			-- On Windows, it is a binary sequence encoded in UTF-16LE by default.
+@@ -1242,7 +1242,7 @@
+ 			has_separator: Result > 0 implies is_character (storage, Result, directory_separator)
+ 		end
+ 
+-	internal_append_into (a_storage: STRING_8; other: READABLE_STRING_GENERAL; a_separator: CHARACTER)
++	internal_append_into (a_storage: like storage; other: READABLE_STRING_GENERAL; a_separator: CHARACTER)
+ 			-- Append `a_separator' if different from '%U' and not already present as last character
+ 			-- in `a_storage', and then `other' to Current.
+ 		require
+@@ -1276,7 +1276,7 @@
+ 			end
+ 		end
+ 
+-	internal_path_append_into (a_storage, other: STRING_8; a_separator: CHARACTER)
++	internal_path_append_into (a_storage, other: like storage; a_separator: CHARACTER)
+ 			-- Append `a_separator' if other than '%U' and not already present as last character
+ 			-- of `a_storage', and then `other' to `a_storage'.
+ 		require
+@@ -1299,7 +1299,7 @@
+ 			a_storage.append (other)
+ 		end
+ 
+-	internal_path_append_substring_into (a_storage, other: STRING_8; other_start_index, other_end_index: INTEGER; a_separator: CHARACTER)
++	internal_path_append_substring_into (a_storage, other: like storage; other_start_index, other_end_index: INTEGER; a_separator: CHARACTER)
+ 			-- Append `a_separator' if other than '%U' and not already present as last character
+ 			-- of `a_storage.substring (other_start_index, other_end_index)', and then `other' to `a_storage'.
+ 		require
+@@ -1445,7 +1445,7 @@
+ 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
+ 
+ note
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/real_32_ref.e
+===================================================================
+--- base/elks/kernel/real_32_ref.e	(revision 97850)
++++ base/elks/kernel/real_32_ref.e	(working copy)
+@@ -117,7 +117,7 @@
+ 
+ feature -- Status report
+ 
+-	divisible (other: REAL_32_REF): BOOLEAN
++	divisible (other: like Current): BOOLEAN
+ 			-- May current object be divided by `other'?
+ 		do
+ 			Result := other.item /= 0.0
+@@ -349,7 +349,7 @@
+ 	sign_times_abs: not item.is_nan implies sign * abs = item
+ 
+ note
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/real_64_ref.e
+===================================================================
+--- base/elks/kernel/real_64_ref.e	(revision 97850)
++++ base/elks/kernel/real_64_ref.e	(working copy)
+@@ -117,7 +117,7 @@
+ 
+ feature -- Status report
+ 
+-	divisible (other: REAL_64_REF): BOOLEAN
++	divisible (other: like Current): BOOLEAN
+ 			-- May current object be divided by `other'?
+ 		do
+ 			Result := other.item /= 0.0
+@@ -350,7 +350,7 @@
+ 	sign_times_abs: not item.is_nan implies sign * abs = item
+ 
+ note
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/special.e
+===================================================================
+--- base/elks/kernel/special.e	(revision 97850)
++++ base/elks/kernel/special.e	(working copy)
+@@ -711,7 +711,7 @@
+ 
+ feature -- Iteration
+ 
+-	do_all_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; start_index, end_index: INTEGER)
++	do_all_in_bounds (action: PROCEDURE [variant ANY, TUPLE [T]]; start_index, end_index: INTEGER)
+ 			-- Apply `action' to every item, from first to last.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -731,7 +731,7 @@
+ 			end
+ 		end
+ 
+-	do_if_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER)
++	do_if_in_bounds (action: PROCEDURE [variant ANY, TUPLE [T]]; test: FUNCTION [variant ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER)
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -754,7 +754,7 @@
+ 			end
+ 		end
+ 
+-	there_exists_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
++	there_exists_in_bounds (test: FUNCTION [variant ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+ 			-- Is `test' true for at least one item?
+ 		require
+ 			test_not_void: test /= Void
+@@ -772,7 +772,7 @@
+ 			end
+ 		end
+ 
+-	for_all_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
++	for_all_in_bounds (test: FUNCTION [variant ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+ 			-- Is `test' true for all items?
+ 		require
+ 			test_not_void: test /= Void
+@@ -791,7 +791,7 @@
+ 			end
+ 		end
+ 
+-	do_all_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; start_index, end_index: INTEGER)
++	do_all_with_index_in_bounds (action: PROCEDURE [variant ANY, TUPLE [T, INTEGER]]; start_index, end_index: INTEGER)
+ 			-- Apply `action' to every item, from first to last.
+ 			-- `action' receives item and its index.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+@@ -814,7 +814,7 @@
+ 			end
+ 		end
+ 
+-	do_if_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; test: FUNCTION [ANY, TUPLE [T, INTEGER], BOOLEAN]; start_index, end_index: INTEGER)
++	do_if_with_index_in_bounds (action: PROCEDURE [variant ANY, TUPLE [T, INTEGER]]; test: FUNCTION [variant ANY, TUPLE [T, INTEGER], BOOLEAN]; start_index, end_index: INTEGER)
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- `action' and `test' receive the item and its index.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+@@ -876,7 +876,7 @@
+ 	count_less_than_capacity: count <= capacity
+ 
+ note
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/kernel/type.e
+===================================================================
+--- base/elks/kernel/type.e	(revision 97850)
++++ base/elks/kernel/type.e	(working copy)
+@@ -87,6 +87,12 @@
+ 			Result := type_id
+ 		end
+ 
++	as_frozen: frozen TYPE [frozen G]
++			-- Frozen variant of actual generic parameter
++		do
++			Result := {frozen G}
++		end
++
+ feature -- Measurement
+ 
+ 	generic_parameter_count: INTEGER
+Index: base/elks/structures/access/collection.e
+===================================================================
+--- base/elks/structures/access/collection.e	(revision 97850)
++++ base/elks/structures/access/collection.e	(working copy)
+@@ -30,7 +30,7 @@
+ 
+ 	is_inserted (v: G): BOOLEAN
+ 			-- Has `v' been inserted by the most recent insertion?
+-			-- (By default, the value returned is equivalent to calling 
++			-- (By default, the value returned is equivalent to calling
+ 			-- `has (v)'. However, descendants might be able to provide more
+ 			-- efficient implementations.)
+ 		do
+@@ -55,6 +55,7 @@
+ 		require
+ 			other_not_void: other /= Void
+ 			extendible: extendible
++			typing_consistent: other.linear_representation.for_all (agent (v: G): BOOLEAN do Result := attached {G} v end)
+ 		local
+ 			lin_rep: LINEAR [G]
+ 		do
+@@ -64,7 +65,11 @@
+ 			until
+ 				not extendible or else lin_rep.off
+ 			loop
+-				extend (lin_rep.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} lin_rep.item as l_item then
++					extend (l_item)
++				end
+ 				lin_rep.forth
+ 			end
+ 		end
+@@ -106,7 +111,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursor_tree/recursive_cursor_tree.e
+===================================================================
+--- base/elks/structures/cursor_tree/recursive_cursor_tree.e	(revision 97850)
++++ base/elks/structures/cursor_tree/recursive_cursor_tree.e	(working copy)
+@@ -31,7 +31,7 @@
+ 			Result := a.item
+ 		end
+ 
+-	cursor: RECURSIVE_TREE_CURSOR [G]
++	cursor: frozen RECURSIVE_TREE_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (active, active_parent, after, before, below)
+@@ -343,7 +343,7 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	active: DYNAMIC_TREE [G]
++	active: frozen DYNAMIC_TREE [G]
+ 			-- Current node
+ 
+ 	active_parent: detachable like active
+@@ -385,7 +385,7 @@
+ 	coherency: not above implies (attached active_parent as a and then a.child = active)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/linked_list_cursor.e
+===================================================================
+--- base/elks/structures/cursors/linked_list_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/linked_list_cursor.e	(working copy)
+@@ -27,7 +27,7 @@
+ 
+ feature {LINKED_LIST} -- Implementation
+ 
+-	active: detachable LINKABLE [G]
++	active: frozen detachable LINKABLE [G]
+ 			-- Current element in linked list
+ 
+ 	after: BOOLEAN
+@@ -41,7 +41,7 @@
+ 	no_active_not_on: active = Void implies (before or after)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/linked_tree_cursor.e
+===================================================================
+--- base/elks/structures/cursors/linked_tree_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/linked_tree_cursor.e	(working copy)
+@@ -21,11 +21,11 @@
+ 
+ feature {LINKED_TREE} -- Access
+ 
+-	active: detachable LINKED_TREE [G];
++	active: frozen detachable LINKED_TREE [G];
+ 			-- Current node
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/multar_list_cursor.e
+===================================================================
+--- base/elks/structures/cursors/multar_list_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/multar_list_cursor.e	(working copy)
+@@ -26,7 +26,7 @@
+ 
+ feature {MULTI_ARRAY_LIST} -- Implementation
+ 
+-	active: BI_LINKABLE [ARRAYED_LIST [G]]
++	active: frozen BI_LINKABLE [ARRAYED_LIST [G]]
+ 		-- Current element in array_sequence list
+ 
+ 	active_index: INTEGER
+@@ -36,7 +36,7 @@
+ 		-- Index in array_sequence list
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/recursive_tree_cursor.e
+===================================================================
+--- base/elks/structures/cursors/recursive_tree_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/recursive_tree_cursor.e	(working copy)
+@@ -30,7 +30,7 @@
+ 
+ feature {RECURSIVE_CURSOR_TREE} -- Access
+ 
+-	active: detachable DYNAMIC_TREE [G]
++	active: frozen detachable DYNAMIC_TREE [G]
+ 			-- Current node
+ 
+ 	active_parent: like active
+@@ -48,7 +48,7 @@
+ 			-- Is there no valid cursor position below cursor?
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/two_way_list_cursor.e
+===================================================================
+--- base/elks/structures/cursors/two_way_list_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/two_way_list_cursor.e	(working copy)
+@@ -20,11 +20,11 @@
+ 
+ feature {TWO_WAY_LIST} -- Implementation
+ 
+-	active: detachable BI_LINKABLE [G];
++	active: frozen detachable BI_LINKABLE [G];
+ 			-- Current element in linked list
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/cursors/two_way_tree_cursor.e
+===================================================================
+--- base/elks/structures/cursors/two_way_tree_cursor.e	(revision 97850)
++++ base/elks/structures/cursors/two_way_tree_cursor.e	(working copy)
+@@ -21,11 +21,11 @@
+ 
+ feature {TWO_WAY_TREE} -- Access
+ 
+-	active: detachable TWO_WAY_TREE [G];
++	active: frozen detachable TWO_WAY_TREE [G];
+ 			-- Current node
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/dispenser/heap_priority_queue.e
+===================================================================
+--- base/elks/structures/dispenser/heap_priority_queue.e	(revision 97850)
++++ base/elks/structures/dispenser/heap_priority_queue.e	(working copy)
+@@ -10,7 +10,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class HEAP_PRIORITY_QUEUE [G -> COMPARABLE]
++class HEAP_PRIORITY_QUEUE [frozen G -> COMPARABLE]
+ 
+ inherit
+ 	PRIORITY_QUEUE [G]
+@@ -251,7 +251,7 @@
+ 			-- Remove first occurrence of `v' if any.
+ 		local
+ 			i, nb: INTEGER
+-			l_tmp: ARRAYED_LIST [G]
++			l_tmp: frozen ARRAYED_LIST [G]
+ 			l_item: G
+ 			l_done: BOOLEAN
+ 		do
+@@ -331,7 +331,7 @@
+ 				area := area.aliased_resized_area (n)
+ 			end
+ 		ensure then
+-			same_items: linear_representation.is_equal (old linear_representation)
++			same_items: linear_representation ~ (old linear_representation)
+ 		end
+ 
+ feature -- Conversion
+@@ -362,7 +362,7 @@
+ 			n_in_bounds: n <= count
+ 		local
+ 			l_current: like Current
+-			l_tmp: ARRAYED_LIST [G]
++			l_tmp: frozen ARRAYED_LIST [G]
+ 			i: INTEGER
+ 		do
+ 				--| Extract `n' greatest items of Current.
+@@ -445,7 +445,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/dispenser/linked_priority_queue.e
+===================================================================
+--- base/elks/structures/dispenser/linked_priority_queue.e	(revision 97850)
++++ base/elks/structures/dispenser/linked_priority_queue.e	(working copy)
+@@ -8,7 +8,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class LINKED_PRIORITY_QUEUE [G -> COMPARABLE] inherit
++class LINKED_PRIORITY_QUEUE [frozen G -> COMPARABLE] inherit
+ 
+ 	SORTED_TWO_WAY_LIST [G]
+ 		rename
+@@ -72,7 +72,7 @@
+ 
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/dispenser/stack.e
+===================================================================
+--- base/elks/structures/dispenser/stack.e	(revision 97850)
++++ base/elks/structures/dispenser/stack.e	(working copy)
+@@ -37,7 +37,7 @@
+ 			extend (v)
+ 		end
+ 
+-	fill (other: LINEAR [G])
++	fill (other: CONTAINER [G])
+ 			-- Fill with as many items of `other' as possible.
+ 			-- Fill items with greatest index from `other' first.
+ 			-- Items inserted with lowest index (from `other') will
+@@ -46,15 +46,17 @@
+ 			-- need not be the same.
+ 		local
+ 			temp: ARRAYED_STACK [G]
++			l_other: LINEAR [G]
+ 		do
+ 			create temp.make (0)
++			l_other := other.linear_representation
+ 			from
+-				other.start
++				l_other.start
+ 			until
+-				other.off
++				l_other.off
+ 			loop
+-				temp.extend (other.item)
+-				other.forth
++				temp.extend (l_other.item)
++				l_other.forth
+ 			end
+ 			from
+ 			until
+@@ -66,7 +68,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/arrayed_circular.e
+===================================================================
+--- base/elks/structures/list/arrayed_circular.e	(revision 97850)
++++ base/elks/structures/list/arrayed_circular.e	(working copy)
+@@ -63,7 +63,7 @@
+ 			Result := list.item
+ 		end
+ 
+-	cursor: CIRCULAR_CURSOR
++	cursor: frozen CIRCULAR_CURSOR
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (list.cursor, internal_exhausted, starter)
+@@ -278,7 +278,7 @@
+ 			create Result.make (count)
+ 		end
+ 
+-	list: ARRAYED_LIST [G]
++	list: frozen ARRAYED_LIST [G]
+ 
+ 	standard_after: BOOLEAN
+ 			do
+@@ -371,7 +371,7 @@
+ 	valid_starter: starter >= 0 and starter <= count
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/arrayed_list.e
+===================================================================
+--- base/elks/structures/list/arrayed_list.e	(revision 97850)
++++ base/elks/structures/list/arrayed_list.e	(working copy)
+@@ -133,7 +133,7 @@
+ 	index: INTEGER
+ 			-- Index of `item', if valid.
+ 
+-	cursor: ARRAYED_LIST_CURSOR
++	cursor: frozen ARRAYED_LIST_CURSOR
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (index)
+@@ -168,7 +168,7 @@
+ 			end
+ 		end
+ 
+-	to_array: ARRAY [G]
++	to_array: frozen ARRAY [G]
+ 			-- Share content to be used as an ARRAY.
+ 			-- Note that although the content is shared, it might
+ 			-- not be shared when a resizing occur in either ARRAY or Current.
+@@ -183,7 +183,7 @@
+ 
+ feature -- Iteration
+ 
+-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
++	do_all (action: PROCEDURE [variant ANY, TUPLE [G]])
+ 			-- Apply `action' to every item, from first to last.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -191,7 +191,7 @@
+ 			area_v2.do_all_in_bounds (action, 0, area_v2.count - 1)
+ 		end
+ 
+-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
++	do_if (action: PROCEDURE [variant ANY, TUPLE [G]]; test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -199,19 +199,19 @@
+ 			area_v2.do_if_in_bounds (action, test, 0, area_v2.count - 1)
+ 		end
+ 
+-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	there_exists (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for at least one item?
+ 		do
+ 			Result := area_v2.there_exists_in_bounds (test, 0, area_v2.count - 1)
+ 		end
+ 
+-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	for_all (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for all items?
+ 		do
+ 			Result := area_v2.for_all_in_bounds (test, 0, area_v2.count - 1)
+ 		end
+ 
+-	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
++	do_all_with_index (action: PROCEDURE [variant ANY, TUPLE [G, INTEGER]])
+ 			-- Apply `action' to every item, from first to last.
+ 			-- `action' receives item and its index.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+@@ -236,7 +236,7 @@
+ 			end
+ 		end
+ 
+-	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
++	do_if_with_index (action: PROCEDURE [variant ANY, TUPLE [G, INTEGER]]; test: FUNCTION [variant ANY, TUPLE [G, INTEGER], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test', from first to last.
+ 			-- `action' and `test' receive the item and its index.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+@@ -518,7 +518,7 @@
+ 			put_i_th (v, index)
+ 		end
+ 
+-	merge_left (other: ARRAYED_LIST [G])
++	merge_left (other: like Current)
+ 			-- Merge `other' into current structure before cursor.
+ 		local
+ 			old_index: INTEGER
+@@ -531,7 +531,7 @@
+ 			index := old_index + old_other_count
+ 		end
+ 
+-	merge_right (other: ARRAYED_LIST [G])
++	merge_right (other: like Current)
+ 			-- Merge `other' into current structure after cursor.
+ 		local
+ 			l_new_count, l_old_count: INTEGER
+@@ -840,7 +840,7 @@
+ 	starts_from_one: lower = 1
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/chain.e
+===================================================================
+--- base/elks/structures/list/chain.e	(revision 97850)
++++ base/elks/structures/list/chain.e	(working copy)
+@@ -302,7 +302,11 @@
+ 			until
+ 				l.exhausted
+ 			loop
+-				extend (l.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} l.item as l_item then
++					extend (l_item)
++				end
+ 				finish
+ 				l.forth
+ 			end
+@@ -324,7 +328,11 @@
+ 			until
+ 				not extendible or else lin_rep.off
+ 			loop
+-				extend (lin_rep.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.
++				check attached {G} lin_rep.item as l_item then
++					extend (l_item)
++				end
+ 				finish
+ 				lin_rep.forth
+ 			end
+@@ -385,7 +393,7 @@
+ 	index_set_has_same_count: index_set.count = count
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/linked_circular.e
+===================================================================
+--- base/elks/structures/list/linked_circular.e	(revision 97850)
++++ base/elks/structures/list/linked_circular.e	(working copy)
+@@ -124,7 +124,7 @@
+ 			Result := list.item
+ 		end
+ 
+-	cursor: CIRCULAR_CURSOR
++	cursor: frozen CIRCULAR_CURSOR
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (list.cursor, internal_exhausted, starter)
+@@ -274,7 +274,7 @@
+ 			create Result.make
+ 		end
+ 
+-	list: LINKED_LIST [G]
++	list: frozen LINKED_LIST [G]
+ 
+ 	standard_after: BOOLEAN
+ 			do
+@@ -357,7 +357,7 @@
+ 			end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/linked_list.e
+===================================================================
+--- base/elks/structures/list/linked_list.e	(revision 97850)
++++ base/elks/structures/list/linked_list.e	(working copy)
+@@ -81,7 +81,7 @@
+ 			end
+ 		end
+ 
+-	cursor: LINKED_LIST_CURSOR [G]
++	cursor: frozen LINKED_LIST_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (active, after, before)
+@@ -641,7 +641,7 @@
+ 			create Result.make
+ 		end
+ 
+-	new_cell (v: like item): LINKABLE [like item]
++	new_cell (v: like item): frozen LINKABLE [like item]
+ 			-- A newly created instance of the same type as `first_element'.
+ 			-- This feature may be redefined in descendants so as to
+ 			-- produce an adequately allocated and initialized object.
+@@ -740,7 +740,7 @@
+ 	after_constraint: after implies (active = last_element)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/multi_array_list.e
+===================================================================
+--- base/elks/structures/list/multi_array_list.e	(revision 97850)
++++ base/elks/structures/list/multi_array_list.e	(working copy)
+@@ -76,16 +76,16 @@
+ 	index: INTEGER
+ 			-- Current cursor index
+ 
+-	cursor: MULTAR_LIST_CURSOR [G]
++	cursor: frozen MULTAR_LIST_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (active, active.item.index, index)
+ 		end
+ 
+-	first_element: BI_LINKABLE [ARRAYED_LIST [G]]
++	first_element: frozen BI_LINKABLE [ARRAYED_LIST [G]]
+ 			-- First array_sequence element of the list
+ 
+-	last_element: BI_LINKABLE [ARRAYED_LIST [G]]
++	last_element: frozen BI_LINKABLE [ARRAYED_LIST [G]]
+ 			-- Last array_sequence element of the list
+ 
+ 	block_size: INTEGER
+@@ -135,7 +135,7 @@
+ 	forth
+ 			-- Move cursor to next position, if any.
+ 		local
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			a: detachable like active
+ 		do
+ 			if not is_empty then
+@@ -157,7 +157,7 @@
+ 	back
+ 			-- Move cursor to previous position, if any.
+ 		local
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			a: detachable like active
+ 		do
+ 			if not is_empty then
+@@ -182,7 +182,7 @@
+ 		local
+ 			counter: INTEGER
+ 			cell: detachable like active
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 		do
+ 			cell := active
+ 			current_array := cell.item
+@@ -249,7 +249,7 @@
+ 	go_to (p: CURSOR)
+ 			-- Move cursor to position `p'
+ 		do
+-			if attached {MULTAR_LIST_CURSOR [G]} p as al_c then
++			if attached {like cursor} p as al_c then
+ 				active := al_c.active
+ 				active.item.go_i_th (al_c.active_index)
+ 				index := al_c.index
+@@ -262,7 +262,7 @@
+  			-- (Reference or object equality,
+ 			-- based on `object_comparison'.)
+ 		local
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			old_index: INTEGER
+ 			cell: detachable like active
+ 		do
+@@ -320,7 +320,7 @@
+ 	extend (v: like item)
+ 			-- Add `v' to end.
+ 		local
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			n: like new_cell
+ 		do
+ 			current_array := last_element.item
+@@ -365,7 +365,7 @@
+ 			-- Do not move cursor.
+ 		local
+ 			cell: like first_element
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			pos, cut: INTEGER
+ 			l: detachable like first_element
+ 		do
+@@ -436,7 +436,7 @@
+ 	remove
+ 			-- Remove current item
+ 		local
+-			current_array: ARRAYED_LIST [G]
++			current_array: like active_array
+ 			new_active: detachable like active
+ 			e: detachable like first_element
+ 		do
+@@ -617,7 +617,7 @@
+ 	extendible_definition: extendible
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/part_sorted_list.e
+===================================================================
+--- base/elks/structures/list/part_sorted_list.e	(revision 97850)
++++ base/elks/structures/list/part_sorted_list.e	(working copy)
+@@ -12,7 +12,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-deferred class PART_SORTED_LIST [G -> PART_COMPARABLE] inherit
++deferred class PART_SORTED_LIST [frozen G -> PART_COMPARABLE] inherit
+ 
+ 	LIST [G]
+ 		redefine
+@@ -81,6 +81,8 @@
+ 
+ 	merge (other: LINEAR [G])
+ 			-- Add all items from `other' at their proper positions.
++		require
++			typing_consistent: other.for_all (agent (v: G): BOOLEAN do Result := attached {G} v end)
+ 		do
+ 			from
+ 				other.start
+@@ -87,7 +89,11 @@
+ 			until
+ 				other.off
+ 			loop
+-				extend (other.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} other.item as l_item then
++					extend (l_item)
++				end
+ 				other.forth
+ 			end
+ 		ensure then
+@@ -101,7 +107,7 @@
+ 		deferred
+ 		end
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/part_sorted_two_way_list.e
+===================================================================
+--- base/elks/structures/list/part_sorted_two_way_list.e	(revision 97850)
++++ base/elks/structures/list/part_sorted_two_way_list.e	(working copy)
+@@ -10,7 +10,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class PART_SORTED_TWO_WAY_LIST [G -> PART_COMPARABLE] inherit
++class PART_SORTED_TWO_WAY_LIST [frozen G -> PART_COMPARABLE] inherit
+ 
+ 	TWO_WAY_LIST [G]
+ 		undefine
+@@ -154,7 +154,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/sequence.e
+===================================================================
+--- base/elks/structures/list/sequence.e	(revision 97850)
++++ base/elks/structures/list/sequence.e	(working copy)
+@@ -55,6 +55,7 @@
+ 			-- Append a copy of `s'.
+ 		require
+ 			argument_not_void: s /= Void
++			typing_consistent: s.for_all (agent (v: G): BOOLEAN do Result := attached {G} v end)
+ 		local
+ 			l: like s
+ 		do
+@@ -67,7 +68,11 @@
+ 			until
+ 				l.exhausted
+ 			loop
+-				extend (l.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} l.item as l_item then
++					extend (l_item)
++				end
+ 				l.forth
+ 			end
+ 		ensure
+@@ -111,7 +116,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/sorted_list.e
+===================================================================
+--- base/elks/structures/list/sorted_list.e	(revision 97850)
++++ base/elks/structures/list/sorted_list.e	(working copy)
+@@ -12,7 +12,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-deferred class SORTED_LIST [G -> COMPARABLE] inherit
++deferred class SORTED_LIST [frozen G -> COMPARABLE] inherit
+ 
+ 	PART_SORTED_LIST [G]
+ 
+@@ -52,7 +52,7 @@
+ 
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/sorted_two_way_list.e
+===================================================================
+--- base/elks/structures/list/sorted_two_way_list.e	(revision 97850)
++++ base/elks/structures/list/sorted_two_way_list.e	(working copy)
+@@ -10,7 +10,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
++class SORTED_TWO_WAY_LIST [frozen G -> COMPARABLE] inherit
+ 
+ 	TWO_WAY_LIST [G]
+ 		undefine
+@@ -152,7 +152,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/two_way_circular.e
+===================================================================
+--- base/elks/structures/list/two_way_circular.e	(revision 97850)
++++ base/elks/structures/list/two_way_circular.e	(working copy)
+@@ -21,10 +21,10 @@
+ 
+ feature -- Implementation
+ 
+-	list: TWO_WAY_LIST [G];
++	list: frozen TWO_WAY_LIST [G];
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/list/two_way_list.e
+===================================================================
+--- base/elks/structures/list/two_way_list.e	(revision 97850)
++++ base/elks/structures/list/two_way_list.e	(working copy)
+@@ -63,7 +63,7 @@
+ 	sublist: detachable like Current
+ 			-- Result produced by last `split'
+ 
+-	cursor: TWO_WAY_LIST_CURSOR [G]
++	cursor: frozen TWO_WAY_LIST_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (active, after, before)
+@@ -465,7 +465,7 @@
+ 			create Result.make
+ 		end
+ 
+-	new_cell (v: like item): BI_LINKABLE [G]
++	new_cell (v: like item): frozen BI_LINKABLE [like item]
+ 			-- A newly created instance of the type of `first_element'.
+ 		do
+ 			create Result.put (v)
+@@ -496,7 +496,7 @@
+ 				l.right = Void
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/binary_search_tree_set.e
+===================================================================
+--- base/elks/structures/set/binary_search_tree_set.e	(revision 97850)
++++ base/elks/structures/set/binary_search_tree_set.e	(working copy)
+@@ -10,7 +10,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class BINARY_SEARCH_TREE_SET [G -> COMPARABLE] inherit
++class BINARY_SEARCH_TREE_SET [frozen G -> COMPARABLE] inherit
+ 
+ 	COMPARABLE_SET [G]
+ 		redefine
+@@ -286,7 +286,7 @@
+ 
+ feature -- Duplication
+ 
+-	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G]
++	duplicate (n: INTEGER): frozen BINARY_SEARCH_TREE_SET [G]
+ 			-- New structure containing min (`n', `count')
+ 			-- items from current structure
+ 		local
+@@ -301,7 +301,7 @@
+ 
+ feature {BINARY_SEARCH_TREE_SET} -- Implementation
+ 
+-	tree: detachable BINARY_SEARCH_TREE [G]
++	tree: frozen detachable BINARY_SEARCH_TREE [G]
+ 
+ 	active_node: like tree
+ 
+@@ -343,7 +343,7 @@
+ 				object_comparison = t.object_comparison
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/comparable_set.e
+===================================================================
+--- base/elks/structures/set/comparable_set.e	(revision 97850)
++++ base/elks/structures/set/comparable_set.e	(working copy)
+@@ -9,7 +9,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-deferred class COMPARABLE_SET [G -> COMPARABLE] inherit
++deferred class COMPARABLE_SET [frozen G -> COMPARABLE] inherit
+ 
+ 	SUBSET [G]
+ 		undefine
+@@ -50,7 +50,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/part_sorted_set.e
+===================================================================
+--- base/elks/structures/set/part_sorted_set.e	(revision 97850)
++++ base/elks/structures/set/part_sorted_set.e	(working copy)
+@@ -13,7 +13,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
++class PART_SORTED_SET [frozen G -> PART_COMPARABLE] inherit
+ 
+ 	LINEAR_SUBSET [G]
+ 		undefine
+@@ -61,7 +61,6 @@
+ 			-- Add all items of `other'.
+ 		local
+ 			i: like item
+-			o: like item
+ 		do
+ 			from
+ 				start
+@@ -70,8 +69,7 @@
+ 				other.after or else after
+ 			loop
+ 				i := item
+-				o := other.item
+-				if i /= Void and then o /= Void then
++				if i /= Void and then attached {G} other.item as o then
+ 					if i < o then
+ 						forth
+ 					elseif i ~ o then
+@@ -88,7 +86,9 @@
+ 				until
+ 					other.after
+ 				loop
+-					put_left (other.item)
++					check attached {G} other.item as l_item then
++						put_left (l_item)
++					end
+ 					other.forth
+ 				end
+ 			end
+@@ -127,7 +127,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/strategies/subset_strategy_tree.e
+===================================================================
+--- base/elks/structures/set/strategies/subset_strategy_tree.e	(revision 97850)
++++ base/elks/structures/set/strategies/subset_strategy_tree.e	(working copy)
+@@ -10,13 +10,13 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class SUBSET_STRATEGY_TREE [G -> COMPARABLE] inherit
++class SUBSET_STRATEGY_TREE [frozen G -> COMPARABLE] inherit
+ 
+ 	SUBSET_STRATEGY [G]
+ 
+ feature -- Comparison
+ 
+-	disjoint (set1, set2: BINARY_SEARCH_TREE_SET [G]): BOOLEAN
++	disjoint (set1, set2: frozen BINARY_SEARCH_TREE_SET [G]): BOOLEAN
+ 			-- Are `set1' and `set2' disjoint?
+ 		do
+ 			from
+@@ -39,10 +39,10 @@
+ 				end
+ 			end
+ 		end
+-	
++
+ feature -- Basic operations
+ 
+-	symdif (set1, set2: BINARY_SEARCH_TREE_SET [G])
++	symdif (set1, set2: frozen BINARY_SEARCH_TREE_SET [G])
+ 			-- Remove all items of `set1' that are also in `set2', and add all
+ 			-- items of `set2' not already present in `set1'.
+ 		do
+@@ -55,9 +55,9 @@
+ 				set2.forth
+ 			end
+ 		end
+-	
++
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/subset.e
+===================================================================
+--- base/elks/structures/set/subset.e	(revision 97850)
++++ base/elks/structures/set/subset.e	(working copy)
+@@ -47,7 +47,7 @@
+ 			temp: like Current
+ 		do
+ 			if not is_empty then
+-				temp := duplicate (count)	
++				temp := duplicate (count)
+ 				temp.intersect (other)
+ 				Result := temp.is_empty
+ 			else
+@@ -62,6 +62,7 @@
+ 		require
+ 			set_exists: other /= Void
+  			same_rule: object_comparison = other.object_comparison
++			typing_consistent: other.linear_representation.for_all (agent (v: G): BOOLEAN do Result := attached {G} v end)
+ 		deferred
+ 		end
+ 
+@@ -109,6 +110,7 @@
+ 		require
+ 			set_exists: other /= Void
+ 			same_rule: object_comparison = other.object_comparison
++			typing_consistent: other.linear_representation.for_all (agent (v: G): BOOLEAN do Result := attached {G} v end)
+ 		local
+ 			temp: like Current
+ 		do
+@@ -119,7 +121,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/traversable_subset.e
+===================================================================
+--- base/elks/structures/set/traversable_subset.e	(revision 97850)
++++ base/elks/structures/set/traversable_subset.e	(working copy)
+@@ -48,7 +48,7 @@
+ 			end
+ 		end
+ 
+-	is_subset (other: TRAVERSABLE_SUBSET [G]): BOOLEAN
++	is_subset (other: SUBSET [G]): BOOLEAN
+ 			-- Is current set a subset of `other'?
+ 		do
+ 			if not other.is_empty and then count <= other.count then
+@@ -115,7 +115,11 @@
+ 			until
+ 				l.off
+ 			loop
+-				extend (l.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} l.item as l_item then
++					extend (l_item)
++				end
+ 				l.forth
+ 			end
+ 		end
+@@ -144,7 +148,11 @@
+ 					until
+ 						other.after
+ 					loop
+-						extend (other.item)
++							-- FIXME: Remove object test when we have a rule that prevents changing
++							-- the type of a generic once it has been instantiated with a non-formal type.				
++						check attached {G} other.item as l_item then
++							extend (l_item)
++						end
+ 					end
+ 				else
+ 					s := subset_strategy (other)
+@@ -228,7 +236,7 @@
+ 	count_range: count >= 0
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/set/two_way_sorted_set.e
+===================================================================
+--- base/elks/structures/set/two_way_sorted_set.e	(revision 97850)
++++ base/elks/structures/set/two_way_sorted_set.e	(working copy)
+@@ -13,7 +13,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
++class TWO_WAY_SORTED_SET [frozen G -> COMPARABLE] inherit
+ 
+ 	COMPARABLE_SET [G]
+ 		rename
+@@ -107,7 +107,6 @@
+ 			-- Add all items of `other'.
+ 		local
+ 			mode: BOOLEAN
+-			other_item: like item
+ 			b: BOOLEAN
+ 		do
+ 			from
+@@ -117,25 +116,32 @@
+ 			until
+ 				after or other.after
+ 			loop
+-				other_item := other.item
+-				if item < other_item then
+-					search_after (other_item)
+-				end
+-				if not after then
+-					b := not mode and then item = other_item
+-					if not b and then mode then
+-						b := item ~ other_item
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} other.item as other_item then
++					if item < other_item then
++						search_after (other_item)
+ 					end
+-					if b then
+-						forth
+-						other.forth
+-					else
+-						from
+-						until
+-							other.after or else other.item >= item
+-						loop
+-							put_left (other.item)
++					if not after then
++						b := not mode and then item = other_item
++						if not b and then mode then
++							b := item ~ other_item
++						end
++						if b then
++							forth
+ 							other.forth
++						else
++							from
++							until
++								other.after or else (attached {G} other.item as l_other_item and then l_other_item >= item)
++							loop
++									-- FIXME: Remove object test when we have a rule that prevents changing
++									-- the type of a generic once it has been instantiated with a non-formal type.				
++								check attached {G} other.item as l_other_item then
++									put_left (l_other_item)
++								end
++								other.forth
++							end
+ 						end
+ 					end
+ 				end
+@@ -144,7 +150,11 @@
+ 			until
+ 				other.after
+ 			loop
+-				put_left (other.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} other.item as l_other_item then
++					put_left (l_other_item)
++				end
+ 				other.forth
+ 			end
+ 		end
+@@ -257,7 +267,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/sort/comparable_struct.e
+===================================================================
+--- base/elks/structures/sort/comparable_struct.e	(revision 97850)
++++ base/elks/structures/sort/comparable_struct.e	(working copy)
+@@ -12,7 +12,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-deferred class COMPARABLE_STRUCT [G -> COMPARABLE] inherit
++deferred class COMPARABLE_STRUCT [frozen G -> COMPARABLE] inherit
+ 
+ 	BILINEAR [G]
+ 
+@@ -81,7 +81,7 @@
+ 	empty_constraint: min_max_available implies not is_empty
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/sort/sorted_struct.e
+===================================================================
+--- base/elks/structures/sort/sorted_struct.e	(revision 97850)
++++ base/elks/structures/sort/sorted_struct.e	(working copy)
+@@ -9,7 +9,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
++deferred class SORTED_STRUCT [frozen G -> COMPARABLE] inherit
+ 
+ 	COMPARABLE_STRUCT [G]
+ 		undefine
+@@ -109,7 +109,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/traversing/linear.e
+===================================================================
+--- base/elks/structures/traversing/linear.e	(revision 97850)
++++ base/elks/structures/traversing/linear.e	(working copy)
+@@ -173,7 +173,7 @@
+ 
+ feature -- Iteration
+ 
+-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
++	do_all (action: PROCEDURE [variant ANY, TUPLE [G]])
+ 			-- Apply `action' to every item.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -200,7 +200,7 @@
+ 			end
+ 		end
+ 
+-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
++	do_if (action: PROCEDURE [variant ANY, TUPLE [G]]; test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test'.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -229,7 +229,7 @@
+ 			end
+ 		end
+ 
+-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	there_exists (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for at least one item?
+ 			-- Semantics not guaranteed if `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -256,7 +256,7 @@
+ 			end
+ 		end
+ 
+-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	for_all (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for all items?
+ 			-- Semantics not guaranteed if `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -299,7 +299,7 @@
+ 	after_constraint: after implies off
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/traversing/traversable.e
+===================================================================
+--- base/elks/structures/traversing/traversable.e	(revision 97850)
++++ base/elks/structures/traversing/traversable.e	(working copy)
+@@ -45,7 +45,7 @@
+ feature -- Iteration
+ 
+ 
+-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
++	do_all (action: PROCEDURE [variant ANY, TUPLE [G]])
+ 			-- Apply `action' to every item.
+ 			-- Semantics not guaranteed if `action' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -55,8 +55,8 @@
+ 			linear_representation.do_all (action)
+ 		end
+ 
+-	do_if (action: PROCEDURE [ANY, TUPLE [G]];
+-	 test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
++	do_if (action: PROCEDURE [variant ANY, TUPLE [G]];
++	 test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN])
+ 			-- Apply `action' to every item that satisfies `test'.
+ 			-- Semantics not guaranteed if `action' or `test' changes the structure;
+ 			-- in such a case, apply iterator to clone of structure instead.
+@@ -68,7 +68,7 @@
+ 			linear_representation.do_if (action, test)
+ 		end
+ 
+-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	there_exists (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for at least one item?
+ 		require
+ 			test_exists: test /= Void
+@@ -77,7 +77,7 @@
+ 			Result := linear_representation.there_exists (test)
+ 		end
+ 
+-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
++	for_all (test: FUNCTION [variant ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+ 			-- Is `test' true for all items?
+ 		require
+ 			test_exists: test /= Void
+@@ -91,7 +91,7 @@
+ 	empty_constraint: is_empty implies off
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/arrayed_tree.e
+===================================================================
+--- base/elks/structures/tree/arrayed_tree.e	(revision 97850)
++++ base/elks/structures/tree/arrayed_tree.e	(working copy)
+@@ -201,7 +201,7 @@
+ 			-- before cursor position. Do not move cursor.
+ 			-- Make `other' a leaf.
+ 		local
+-			l_list: ARRAYED_LIST [like other]
++			l_list: frozen ARRAYED_LIST [like other]
+ 		do
+ 			attach (other)
+ 			create l_list.make (1)
+@@ -214,7 +214,7 @@
+ 			-- after cursor position. Do not move cursor.
+ 			-- Make `other' a leaf.
+ 		local
+-			l_list: ARRAYED_LIST [like other]
++			l_list: frozen ARRAYED_LIST [like other]
+ 		do
+ 			attach (other)
+ 			create l_list.make (1)
+@@ -428,7 +428,7 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	arrayed_list: ARRAYED_LIST [like Current]
++	arrayed_list: frozen ARRAYED_LIST [like Current]
+ 			-- arrayed list of arrayed_tree.
+ 
+ 	new_tree: like Current
+@@ -474,7 +474,7 @@
+ 			end
+ 		end
+ 
+-	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: like Current)
++	do_all_internal (an_agent: PROCEDURE [variant ANY, TUPLE [G]]; a_tree_node: like Current)
+ 			-- Apply action to every child.
+ 		require
+ 			non_void_agent: an_agent /= Void
+@@ -669,12 +669,12 @@
+ 			arrayed_list.put_right (v)
+ 		end
+ 
+-	al_merge_left (v: ARRAYED_LIST [like Current])
++	al_merge_left (v: frozen ARRAYED_LIST [like Current])
+ 		do
+ 			arrayed_list.merge_left (v)
+ 		end
+ 
+-	al_merge_right (v: ARRAYED_LIST [like Current])
++	al_merge_right (v: frozen ARRAYED_LIST [like Current])
+ 		do
+ 			arrayed_list.merge_right (v)
+ 		end
+@@ -720,7 +720,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/binary_search_tree.e
+===================================================================
+--- base/elks/structures/tree/binary_search_tree.e	(revision 97850)
++++ base/elks/structures/tree/binary_search_tree.e	(working copy)
+@@ -14,7 +14,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class BINARY_SEARCH_TREE [G -> COMPARABLE] inherit
++class BINARY_SEARCH_TREE [frozen G -> COMPARABLE] inherit
+ 
+ 	BINARY_TREE [G]
+ 		rename
+@@ -24,7 +24,7 @@
+ 			put_left_child, put_right_child,
+ 			remove_left_child, remove_right_child
+ 		redefine
+-			parent, has
++			has, copy_node
+ 		end
+ 
+ create
+@@ -50,10 +50,7 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable BINARY_SEARCH_TREE [G]
+-			-- Parent of current node
+-
+- 	has (v: like item): BOOLEAN
++	has (v: like item): BOOLEAN
+ 			-- Does tree contain a node whose item
+ 			-- is equal to `v' (object comparison)?
+ 		local
+@@ -303,10 +300,11 @@
+ 			--| The reason for the `external sort' is that
+ 			--| the insertion order in the tree will ensure
+ 			--| it is balanced
++
+ 		local
+ 			seq: LINEAR [G]
+ 			temp: SPECIAL [G]
+-			heap: HEAP_PRIORITY_QUEUE [G]
++			heap: frozen HEAP_PRIORITY_QUEUE [G]
+ 			i: INTEGER
+ 		do
+ 			seq := linear_representation
+@@ -319,7 +317,11 @@
+ 			until
+ 				seq.off
+ 			loop
+-				heap.put (seq.item)
++					-- FIXME: Remove object test when we have a rule that prevents changing
++					-- the type of a generic once it has been instantiated with a non-formal type.				
++				check attached {G} seq.item as l_item then
++					heap.put (l_item)
++				end
+ 				seq.forth
+ 			end
+ 			from
+@@ -338,8 +340,7 @@
+ 
+ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
+ 
+-
+-	is_subset (other: like Current): BOOLEAN
++	is_subset (other: BINARY_SEARCH_TREE [G]): BOOLEAN
+ 			-- Is Current a subset of other
+ 		local
+ 			c: like left_child
+@@ -397,7 +398,7 @@
+ 			end
+ 		end
+ 
+-	merge (other: like Current)
++	merge (other: frozen BINARY_SEARCH_TREE [G])
+ 			-- Add all items of `other'.
+ 		local
+ 			c: like left_child
+@@ -531,6 +532,12 @@
+ 			end
+ 		end
+ 
++	copy_node (n: like Current)
++			-- Copy content of `n' except tree data into Current.
++		do
++			Precursor (n)
++		end
++
+ feature {NONE} -- Implementation
+ 
+ 	fill_from_sorted_special (t: SPECIAL [G]; s, e: INTEGER)
+@@ -575,7 +582,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/binary_tree.e
+===================================================================
+--- base/elks/structures/tree/binary_tree.e	(revision 97850)
++++ base/elks/structures/tree/binary_tree.e	(working copy)
+@@ -21,7 +21,6 @@
+ 
+ 	TREE [G]
+ 		redefine
+-			parent,
+ 			is_leaf,
+ 			subtree_has,
+ 			subtree_count,
+@@ -51,9 +50,6 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable like Current
+-			-- Parent of current node
+-
+ 	child_index: INTEGER
+ 			-- Index of cursor position
+ 
+@@ -482,7 +478,11 @@
+ 	clone_node (n: like Current): like Current
+ 			-- Clone node `n'.
+ 		do
+-			create Result.make (n.item)
++				-- FIXME: Remove object test when we have a rule that prevents changing
++				-- the type of a generic once it has been instantiated with a non-formal type.				
++			check attached {G} n.item as l_item then
++				create Result.make (l_item)
++			end
+ 			Result.copy_node (n)
+ 		end
+ 
+@@ -531,7 +531,7 @@
+ 	fill_subtree (other: TREE [G])
+ 			-- Copy `other' to subtree.
+ 		local
+-			c: like left_child
++			c: frozen like left_child
+ 		do
+ 			if attached {like Current} other as l_other then
+ 				if not l_other.is_leaf then
+@@ -546,6 +546,10 @@
+ 						put_right_child (c.duplicate_all)
+ 					end
+ 				end
++			else
++					-- Inefficient filling of the tree by transforming `other'
++					-- into a binary tree.
++				fill_subtree (other.binary_representation)
+ 			end
+ 		end
+ 
+@@ -563,7 +567,7 @@
+ 	tree_is_binary: child_capacity = 2
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/dynamic_tree.e
+===================================================================
+--- base/elks/structures/tree/dynamic_tree.e	(revision 97850)
++++ base/elks/structures/tree/dynamic_tree.e	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable DYNAMIC_TREE [G]
++	parent: detachable like Current
+ 			-- Parent of current node.
+ 
+ feature -- Status report
+@@ -271,7 +271,7 @@
+ 	child_after_definition: child_after = (child_index = arity + 1)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/fixed_tree.e
+===================================================================
+--- base/elks/structures/tree/fixed_tree.e	(revision 97850)
++++ base/elks/structures/tree/fixed_tree.e	(working copy)
+@@ -400,7 +400,7 @@
+ 
+ feature {FIXED_TREE} -- Implementation
+ 
+-	fixed_list: FIXED_LIST [detachable like Current]
++	fixed_list: frozen FIXED_LIST [detachable like Current]
+ 
+ 	set_fixed_list (a_list: like fixed_list)
+ 			-- Set `fixed_list' with `a_list'
+@@ -577,7 +577,7 @@
+ 			fixed_list.extend (v)
+ 		end
+ 
+-	fl_duplicate (n: INTEGER): FIXED_LIST [detachable like Current]
++	fl_duplicate (n: INTEGER): like fixed_list
+ 		do
+ 			Result := fixed_list.duplicate (n)
+ 		end
+@@ -628,7 +628,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/linked_tree.e
+===================================================================
+--- base/elks/structures/tree/linked_tree.e	(revision 97850)
++++ base/elks/structures/tree/linked_tree.e	(working copy)
+@@ -35,6 +35,8 @@
+ 			{LINKED_TREE} l_put_right, forget_right
+ 		undefine
+ 			copy, is_equal
++		redefine
++			right_sibling
+ 		end
+ 
+ 	LINKED_LIST [G]
+@@ -119,12 +121,15 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable like new_cell
++	parent: frozen detachable like new_cell
+ 			-- Parent of current node
+ 
+ 	first_child: like parent
+ 			-- Leftmost child
+ 
++	right_sibling: like parent
++			-- Right neighbor (if any)
++
+ 	left_sibling: like parent
+ 			-- Left neighbor (if any)
+ 		local
+@@ -142,7 +147,7 @@
+ 			end
+ 		end
+ 
+-	child_cursor: LINKED_TREE_CURSOR [G]
++	child_cursor: frozen LINKED_TREE_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (child, child_after, child_before)
+@@ -301,7 +306,6 @@
+ 
+ feature {LINKED_TREE} -- Implementation
+ 
+-
+ 	new_cell (v: like item): like Current
+ 			-- New cell containing `v'
+ 		do
+@@ -368,7 +372,7 @@
+ 	no_void_child: readable_child = child_readable
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/tree.e
+===================================================================
+--- base/elks/structures/tree/tree.e	(revision 97850)
++++ base/elks/structures/tree/tree.e	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable TREE [G]
++	parent: detachable like Current
+ 			-- Parent of current node
+ 
+ 	child: like parent
+@@ -122,8 +122,8 @@
+ 				Result := (is_empty = other.is_empty) and
+ 						(object_comparison = other.object_comparison) and
+ 						(child_capacity = other.child_capacity)
+-				if Result and not is_empty then
+-					Result := tree_is_equal (Current, other)
++				if Result and not is_empty and then attached {like Current} other as l_other then
++					Result := tree_is_equal (Current, l_other)
+ 				end
+ 			end
+ 		end
+@@ -353,7 +353,11 @@
+ 			-- The representations of `other' and current node
+ 			-- need not be the same.
+ 		do
+-			replace (other.item)
++				-- FIXME: Remove object test when we have a rule that prevents changing
++				-- the type of a generic once it has been instantiated with a non-formal type.
++			check attached {G} other.item as l_item then
++				replace (l_item)
++			end
+ 			fill_subtree (other)
+ 		end
+ 
+@@ -390,7 +394,7 @@
+ 			Result := al
+ 		end
+ 
+-	binary_representation: BINARY_TREE [G]
++	binary_representation: frozen BINARY_TREE [G]
+ 			-- Convert to binary tree representation:
+ 			-- first child becomes left child,
+ 			-- right sibling becomes right child.
+@@ -581,7 +585,7 @@
+ 		local
+ 			p1, p2: like Current
+ 			c1, c2: like child
+-			t1_stack, t2_stack: LINKED_STACK [like Current]
++			t1_stack, t2_stack: frozen LINKED_STACK [like Current]
+ 			orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
+ 			l_current_cursor, l_other_cursor: like child_cursor
+ 		do
+@@ -718,7 +722,7 @@
+ 			t2.child_go_to (l_other_cursor)
+ 		end
+ 
+- 	tree_copy (other, tmp_tree: like Current)
++ 	tree_copy (other: like Current; tmp_tree: like Current)
+ 			-- Generic implementation of `copy'. `other' is copied onto
+ 			-- `Current'. `tmp_tree' is used as temporary storage during
+ 			-- copying. Since it cannot be created locally because of the
+@@ -730,9 +734,11 @@
+ 			same_rule: object_comparison = other.object_comparison
+ 		local
+ 			i: INTEGER
+-			p1, p2, node: like Current
+-			c1: like child
+-			other_stack, tmp_stack: LINKED_STACK [like Current]
++			p1: like Current
++			p2, node: like Current
++			c1: detachable like Current
++			other_stack: frozen LINKED_STACK [like Current]
++			tmp_stack: frozen LINKED_STACK [like Current]
+ 			idx_stack, orgidx_stack: LINKED_STACK [INTEGER]
+ 		do
+ 			create other_stack.make
+@@ -874,6 +880,7 @@
+ 			-- Clone node `n'.
+ 		require
+ 			not_void: n /= Void
++			valid_node: attached {G} n.item
+ 		deferred
+ 		ensure
+ 			result_is_root: Result.is_root
+@@ -892,7 +899,7 @@
+ 	child_after_definition: child_after = (child_index >= child_capacity + 1)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/structures/tree/two_way_tree.e
+===================================================================
+--- base/elks/structures/tree/two_way_tree.e	(revision 97850)
++++ base/elks/structures/tree/two_way_tree.e	(working copy)
+@@ -36,6 +36,8 @@
+ 				forget_left, forget_right
+ 		undefine
+ 			copy, is_equal
++		redefine
++			left_sibling, right_sibling
+ 		end
+ 
+ 	TWO_WAY_LIST [G]
+@@ -116,7 +118,7 @@
+ 
+ feature -- Access
+ 
+-	parent: detachable like new_cell
++	parent: frozen detachable like new_cell
+ 			-- Parent node
+ 
+ 	first_child: like parent
+@@ -124,7 +126,13 @@
+ 
+ 	last_child: like parent
+ 
+-	child_cursor: TWO_WAY_TREE_CURSOR [G]
++	right_sibling: like parent
++			-- <Precursor {DYNAMIC_TREE}>
++
++	left_sibling: like parent
++			-- <Precursor {DYNAMIC_TREE}>
++
++	child_cursor: frozen TWO_WAY_TREE_CURSOR [G]
+ 			-- Current cursor position
+ 		do
+ 			create Result.make (child, child_after, child_before)
+@@ -383,7 +391,7 @@
+ 	off_constraint: (child = Void) implies child_off
+ 
+ note
+-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/elks/support/c_string.e
+===================================================================
+--- base/elks/support/c_string.e	(revision 97850)
++++ base/elks/support/c_string.e	(working copy)
+@@ -150,7 +150,7 @@
+ 
+ feature -- Access
+ 
+-	substring (start_pos, end_pos: INTEGER): STRING
++	substring (start_pos, end_pos: INTEGER): frozen STRING
+ 			-- Copy of substring containing all characters at indices
+ 			-- between `start_pos' and `end_pos'.
+ 		require
+Index: base/elks/support/managed_pointer.e
+===================================================================
+--- base/elks/support/managed_pointer.e	(revision 97850)
++++ base/elks/support/managed_pointer.e	(working copy)
+@@ -329,7 +329,7 @@
+ 			($Result).memory_copy (item + pos, Real_64_bytes)
+ 		end
+ 
+-	read_array (pos, a_count: INTEGER): ARRAY [NATURAL_8]
++	read_array (pos, a_count: INTEGER): frozen ARRAY [NATURAL_8]
+ 			-- Read `count' bytes at position `pos'.
+ 		require
+ 			pos_nonnegative: pos >= 0
+@@ -1152,7 +1152,7 @@
+ 
+ feature -- Concatenation
+ 
+-	append (other: like Current)
++	append (other: MANAGED_POINTER)
+ 			-- Append `other' at the end of Current.
+ 		require
+ 			not_shared: not is_shared
+Index: base/ise/kernel/exceptions/ise_exception_manager.e
+===================================================================
+--- base/ise/kernel/exceptions/ise_exception_manager.e	(revision 97850)
++++ base/ise/kernel/exceptions/ise_exception_manager.e	(working copy)
+@@ -63,7 +63,7 @@
+ 
+ feature -- Status setting
+ 
+-	ignore (a_exception: TYPE [detachable EXCEPTION])
++	ignore (a_exception: TYPE [variant detachable EXCEPTION])
+ 			-- Make sure that any exception of type `a_exception' will be
+ 			-- ignored. This is not the default.
+ 		local
+@@ -73,7 +73,7 @@
+ 			ignored_exceptions.force (l_type, l_type)
+ 		end
+ 
+-	catch (a_exception: TYPE [detachable EXCEPTION])
++	catch (a_exception: TYPE [variant detachable EXCEPTION])
+ 			-- Set type of `a_exception' `is_ignored'.
+ 		local
+ 			l_type: INTEGER
+@@ -82,7 +82,7 @@
+ 			ignored_exceptions.remove (l_type)
+ 		end
+ 
+-	set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)
++	set_is_ignored (a_exception: TYPE [variant detachable EXCEPTION]; a_ignored: BOOLEAN)
+ 			-- Set type of `a_exception' to be `a_ignored'.
+ 		do
+ 			if a_ignored then
+@@ -94,25 +94,25 @@
+ 
+ feature -- Status report
+ 
+-	is_ignorable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_ignorable (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is ignorable.
+ 		do
+ 			Result := not unignorable_exceptions.has (a_exception.type_id)
+ 		end
+ 
+-	is_raisable (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_raisable (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is raisable.
+ 		do
+ 			Result := not unraisable_exceptions.has (a_exception.type_id)
+ 		end
+ 
+-	is_ignored (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_ignored (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is not raised.
+ 		do
+ 			Result := ignored_exceptions.has (a_exception.type_id)
+ 		end
+ 
+-	is_caught (a_exception: TYPE [detachable EXCEPTION]): BOOLEAN
++	is_caught (a_exception: TYPE [variant detachable EXCEPTION]): BOOLEAN
+ 			-- If set, type of `a_exception' is raised.
+ 		do
+ 			Result := not ignored_exceptions.has (a_exception.type_id)
+@@ -120,7 +120,7 @@
+ 
+ feature {EXCEPTIONS} -- Compatibility support
+ 
+-	type_of_code (a_code: INTEGER): detachable TYPE [EXCEPTION]
++	type_of_code (a_code: INTEGER): detachable TYPE [variant EXCEPTION]
+ 			-- Exception type of `a_code'
+ 		do
+ 			inspect a_code
+@@ -520,14 +520,14 @@
+ 
+ note
+ 	library:	"EiffelBase: Library of reusable components for Eiffel."
+-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end
+Index: base/ise/kernel/file_utilities.e
+===================================================================
+--- base/ise/kernel/file_utilities.e	(revision 97850)
++++ base/ise/kernel/file_utilities.e	(working copy)
+@@ -300,8 +300,7 @@
+ 	copy_file (old_name, new_name: READABLE_STRING_GENERAL)
+ 			-- Copy file named `old_name' to `new_name'.
+ 		local
+-			f: detachable RAW_FILE
+-			t: detachable RAW_FILE
++			f, t: frozen detachable RAW_FILE
+ 			is_rescued: BOOLEAN
+ 		do
+ 			if is_rescued then
+@@ -330,8 +329,7 @@
+ 	copy_file_path (old_path, new_path: PATH)
+ 			-- Copy file named `old_path' to `new_path'.
+ 		local
+-			f: detachable RAW_FILE
+-			t: detachable RAW_FILE
++			f, t: frozen detachable RAW_FILE
+ 			is_rescued: BOOLEAN
+ 		do
+ 			if is_rescued then
+@@ -406,7 +404,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	licensing_options: "http://www.eiffel.com/licensing"
+ 	copying: "[
+Index: base/ise/runtime/debug/implementation/classic/rt_dbg_call_record.e
+===================================================================
+--- base/ise/runtime/debug/implementation/classic/rt_dbg_call_record.e	(revision 97850)
++++ base/ise/runtime/debug/implementation/classic/rt_dbg_call_record.e	(working copy)
+@@ -5,7 +5,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class
++frozen class
+ 	RT_DBG_CALL_RECORD
+ 
+ inherit
+@@ -80,10 +80,10 @@
+ 			--| When not is_replaying, Cursor is always `after'
+ 			--| When is_replaying, Cursor point to replayed position's step
+ 
+-	call_records: detachable ARRAYED_LIST [like Current]
++	call_records: frozen detachable ARRAYED_LIST [like Current]
+ 			-- Sub call records.
+ 
+-	value_records: detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
++	value_records: frozen detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+ 			-- Recorded values (assignment...)
+ 
+ 	flat_value_records_has_local: BOOLEAN
+@@ -1205,7 +1205,7 @@
+ 
+ note
+ 	library:   "EiffelBase: Library of reusable components for Eiffel."
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/ise/runtime/debug/implementation/classic/rt_dbg_internal.e
+===================================================================
+--- base/ise/runtime/debug/implementation/classic/rt_dbg_internal.e	(revision 97850)
++++ base/ise/runtime/debug/implementation/classic/rt_dbg_internal.e	(working copy)
+@@ -24,7 +24,7 @@
+ 			Result := reflected_object.field_count
+ 		end
+ 
+-	frozen object_records (obj: ANY): detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
++	frozen object_records (obj: ANY): frozen detachable ARRAYED_LIST [RT_DBG_VALUE_RECORD]
+ 			-- List of field records on `obj'
+ 		require
+ 			obj_attached: obj /= Void
+@@ -866,7 +866,7 @@
+ 
+ note
+ 	library:   "EiffelBase: Library of reusable components for Eiffel."
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/ise/runtime/debug/implementation/rt_extension_general.e
+===================================================================
+--- base/ise/runtime/debug/implementation/rt_extension_general.e	(revision 97850)
++++ base/ise/runtime/debug/implementation/rt_extension_general.e	(working copy)
+@@ -34,16 +34,16 @@
+ 
+ 	tilda_equal_evaluation (a,b: detachable ANY): BOOLEAN
+ 			-- Return the evaluation of `a ~ b'
++		obsolete
++			"Use `is_equal_evaluation' instead."
+ 		do
+-			Result := a ~ b
++			Result := (a ~ b)
+ 		end
+ 
+-	is_equal_evaluation (a,b: ANY): BOOLEAN
+-			-- Return the evaluation of `a.is_equal (b)'	
+-		require
+-			a_b_attached: a /= Void and b /= Void
++	is_equal_evaluation (a, b: detachable ANY): BOOLEAN
++			-- Return the evaluation of `a ~ b'	
+ 		do
+-			Result := a.is_equal (b)
++			Result := (a ~ b)
+ 		end
+ 
+ 	equal_sign_evaluation (a,b: detachable ANY): BOOLEAN
+@@ -90,10 +90,10 @@
+ 					file.open_read
+ 					o := file.retrieved
+ 					file.close
+-					if attached {ANY} r as o1 then
+-						if attached {ANY} o as o2 and then o1.same_type (o2) then
+-							o1.standard_copy (o2)
+-							Result := o1
++					if r /= Void and then attached r.generating_type.as_frozen as t then
++						if attached t.attempted (o) as l_o and then attached t.attempted (r) as l_r then
++							l_r.standard_copy (l_o)
++							Result := l_r
+ 						end
+ 					else
+ 						Result := o
+@@ -150,7 +150,7 @@
+ 
+ note
+ 	library:   "EiffelBase: Library of reusable components for Eiffel."
+-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/ise/serialization/serializers/sed_recoverable_deserializer.e
+===================================================================
+--- base/ise/serialization/serializers/sed_recoverable_deserializer.e	(revision 97850)
++++ base/ise/serialization/serializers/sed_recoverable_deserializer.e	(working copy)
+@@ -143,7 +143,7 @@
+ 	mismatches: HASH_TABLE [SED_TYPE_MISMATCH, INTEGER]
+ 			-- Set of mismatches recorded during retrieval indexed by dynamic types.
+ 
+-	mismatched_object: ARRAYED_LIST [TUPLE [object: ANY; info: MISMATCH_INFORMATION]]
++	mismatched_object: ARRAYED_LIST [TUPLE [object: ANY; info: frozen MISMATCH_INFORMATION]]
+ 			-- List of all mismatched objects found during retrieval.
+ 
+ feature {NONE} -- Status report
+@@ -532,7 +532,7 @@
+ 			end
+ 		end
+ 
+-	safe_mismatch_correction (an_obj: ANY; a_mismatch_information: MISMATCH_INFORMATION)
++	safe_mismatch_correction (an_obj: ANY; a_mismatch_information: frozen MISMATCH_INFORMATION)
+ 			-- Try to apply `{MISMATCH_CORRECTOR}.correct_mismatch' to `an_obj' using `a_mismatch_information'
+ 			-- to solve the mismatch.
+ 		local
+@@ -609,7 +609,7 @@
+ 			i, nb: INTEGER
+ 			l_dtype, l_exp_dtype, l_new_offset: INTEGER
+ 			l_mismatch_info: SED_TYPE_MISMATCH
+-			l_info: detachable MISMATCH_INFORMATION
++			l_info: frozen detachable MISMATCH_INFORMATION
+ 			l_check_for_non_void: BOOLEAN
+ 			l_has_mismatch: BOOLEAN
+ 			l_field_info: detachable TUPLE [old_name, new_name: STRING; old_attribute_type, new_attribute_type, old_position, new_position: INTEGER; is_changed, is_removed, is_attachment_check_required: BOOLEAN]
+@@ -805,7 +805,7 @@
+ 
+ note
+ 	library:	"EiffelBase: Library of reusable components for Eiffel."
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base/ise/serialization/serializers/sed_session_deserializer.e
+===================================================================
+--- base/ise/serialization/serializers/sed_session_deserializer.e	(revision 97850)
++++ base/ise/serialization/serializers/sed_session_deserializer.e	(working copy)
+@@ -616,7 +616,7 @@
+ 			end
+ 		end
+ 
+-	frozen new_special_instance (a_dtype, a_item_type, a_count: INTEGER): SPECIAL [detachable ANY]
++	frozen new_special_instance (a_dtype, a_item_type, a_count: INTEGER): SPECIAL [variant detachable ANY]
+ 			-- Create new special instance of a special object whose dynamic
+ 			-- type is `a_dtype', whose element abstract type is `a_item_type'
+ 			-- and of count `a_count'.
+@@ -1086,7 +1086,7 @@
+ 
+ note
+ 	library:	"EiffelBase: Library of reusable components for Eiffel."
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: base_extension/base_extension-safe.ecf
+===================================================================
+--- base_extension/base_extension-safe.ecf	(revision 97850)
++++ base_extension/base_extension-safe.ecf	(working copy)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="base_extension" uuid="BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF" library_target="base_extension">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="base_extension" uuid="BB1FDCB0-C2AB-4911-8ABD-D20F72139DBF" library_target="base_extension">
+ 	<target name="base_extension">
+ 		<description>base extension library</description>
+ 		<root all_classes="true"/>
+@@ -6,7 +6,7 @@
+ 		<file_rule>
+ 			<exclude>/\.svn</exclude>
+ 		</file_rule>
+-		<option void_safety="all" namespace="EiffelSoftware.Library.Base">
++		<option cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library.Base">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+Index: base_extension/kernel/agent_equality_tester.e
+===================================================================
+--- base_extension/kernel/agent_equality_tester.e	(revision 97850)
++++ base_extension/kernel/agent_equality_tester.e	(working copy)
+@@ -59,7 +59,7 @@
+ 
+ 	is_equal (other: like Current): BOOLEAN
+ 		do
+-			Result := action.is_equal (other.action)
++			Result := action ~ other.action
+ 		end
+ 
+ 	less_than (u, v: G): BOOLEAN
+@@ -72,14 +72,14 @@
+ 	action_not_void: action /= Void
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end
+Index: base_extension/kernel/comparable_comparator.e
+===================================================================
+--- base_extension/kernel/comparable_comparator.e	(revision 97850)
++++ base_extension/kernel/comparable_comparator.e	(working copy)
+@@ -6,7 +6,7 @@
+ 	revision: "$Revision$"
+ 
+ class
+-	COMPARABLE_COMPARATOR [G -> COMPARABLE]
++	COMPARABLE_COMPARATOR [frozen G -> COMPARABLE]
+ 
+ inherit
+ 	COMPARATOR [G]
+@@ -20,14 +20,8 @@
+ 		end
+ 
+ note
+-	copyright: "[
+-		Copyright (c) 1984-2011, Eiffel Software and others
+-		Copyright (c) 2000, Eric Bezault and others
+-		]"
+-	license: "[
+-		Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+-		MIT License (see http://www.eiffel.com/licensing/mit.txt)
+-		]"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
++	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+ 			5949 Hollister Ave., Goleta, CA 93117 USA
+Index: base_extension/structures/list/sortable_array.e
+===================================================================
+--- base_extension/structures/list/sortable_array.e	(revision 97850)
++++ base_extension/structures/list/sortable_array.e	(working copy)
+@@ -6,7 +6,7 @@
+ 	revision: "$Revision$"
+ 
+ class
+-	SORTABLE_ARRAY [G -> COMPARABLE]
++	SORTABLE_ARRAY [frozen G -> COMPARABLE]
+ 
+ inherit
+ 	ARRAY [G]
+@@ -251,13 +251,13 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ end
+Index: net/abstract/socket/packet.e
+===================================================================
+--- net/abstract/socket/packet.e	(revision 97850)
++++ net/abstract/socket/packet.e	(working copy)
+@@ -100,7 +100,7 @@
+ 
+ feature -- Storage
+ 
+-	data: MANAGED_POINTER
++	data: frozen MANAGED_POINTER
+ 			-- Place holder
+ 
+ invariant
+@@ -107,14 +107,14 @@
+ 	data_not_equal_void: data /= Void
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/abstract/socket/socket.e
+===================================================================
+--- net/abstract/socket/socket.e	(revision 97850)
++++ net/abstract/socket/socket.e	(working copy)
+@@ -742,8 +742,8 @@
+ 			socket_exists: exists
+ 			opened_for_read: is_open_read
+ 		local
+-			l_data: detachable MANAGED_POINTER
+-			recv_packet: MANAGED_POINTER
++			l_data: frozen detachable MANAGED_POINTER
++			recv_packet: frozen MANAGED_POINTER
+ 			amount_read: INTEGER
+ 			return_val: INTEGER
+ 			ext_data: POINTER
+@@ -779,8 +779,8 @@
+ 			socket_exists: exists
+ 			opened_for_read: is_open_read
+ 		local
+-			l_data: detachable MANAGED_POINTER
+-			recv_packet: MANAGED_POINTER
++			l_data: frozen detachable MANAGED_POINTER
++			recv_packet: frozen MANAGED_POINTER
+ 			amount_read: INTEGER
+ 			return_val: INTEGER
+ 			ext_data: POINTER
+Index: net/abstract/socket/socket_address.e
+===================================================================
+--- net/abstract/socket/socket_address.e	(revision 97850)
++++ net/abstract/socket/socket_address.e	(working copy)
+@@ -32,7 +32,7 @@
+ 
+ feature {NONE} -- Initalization
+ 
+-	make_from_separate (other: separate like Current)
++	make_from_separate (other: separate SOCKET_ADDRESS)
+ 			-- Initialize from `other'.
+ 		do
+ 			create socket_address.make_from_pointer (other.socket_address.item, other.count)
+@@ -42,7 +42,7 @@
+ 
+ feature -- Access
+ 
+-	socket_address: MANAGED_POINTER
++	socket_address: frozen MANAGED_POINTER
+ 			-- Hold data.
+ 
+ feature -- Measurement
+Index: net/mail/email.e
+===================================================================
+--- net/mail/email.e	(revision 97850)
++++ net/mail/email.e	(working copy)
+@@ -38,7 +38,7 @@
+ 
+ feature {NONE} -- Basic operations.
+ 
+-	transfer (resource: PROTOCOL_RESOURCE)
++	transfer (resource: EMAIL_RESOURCE)
+ 			-- Used when the mailer will receive an email from 'resource'.
+ 		do
+ 
+@@ -132,7 +132,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/mail/smtp_protocol.e
+===================================================================
+--- net/mail/smtp_protocol.e	(revision 97850)
++++ net/mail/smtp_protocol.e	(working copy)
+@@ -72,11 +72,11 @@
+ 
+ feature -- Implementation (EMAIL_RESOURCE).
+ 
+-	transfer (resource: MEMORY_RESOURCE)
++	transfer (resource: EMAIL_RESOURCE)
+ 			-- Send the email and add a %R%N. at the end of the message.
+ 		do
+-			if not error then
+-				memory_resource := resource
++			if not error and attached {like memory_resource} resource as l_mem_resource then
++				memory_resource := l_mem_resource
+ 				recipients := Void
+ 				send_mail
+ 			end
+@@ -291,10 +291,10 @@
+ 					l_entries.after
+ 				loop
+ 					if bcc_mode then
+-						if sub_header_key.is_equal (H_bcc) then
++						if sub_header_key.same_string (H_bcc) then
+ 							sub_header.append (H_to + ":" + l_header.entries.item + "%R%N")
+ 						end
+-						if not (sub_header_key.is_equal (H_to) or sub_header_key.is_equal (H_cc)) then
++						if not (sub_header_key.same_string (H_to) or sub_header_key.same_string (H_cc)) then
+ 							sub_header.append (sub_header_key + ":" + l_entries.item + "%R%N")
+ 						end
+ 					else
+@@ -391,7 +391,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/net-safe.ecf
+===================================================================
+--- net/net-safe.ecf	(revision 97850)
++++ net/net-safe.ecf	(working copy)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="net" uuid="A806012E-91F3-4D4C-AAAA-E05F6F2BACAA" library_target="net">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="net" uuid="A806012E-91F3-4D4C-AAAA-E05F6F2BACAA" library_target="net">
+ 	<target name="net">
+ 		<description>Net library: Networking library with serialization facilities.
+       Copyright (c) 1984-2006, Eiffel Software and others.
+@@ -9,7 +9,7 @@
+ 			<exclude>/test$</exclude>
+ 			<exclude>/\.svn</exclude>
+ 		</file_rule>
+-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Library.Net">
++		<option warning="true" full_class_checking="true" cat_call_detection="all" is_attached_by_default="true" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library.Net">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<external_object location="$(ISE_LIBRARY)/library/net/spec/$(ISE_PLATFORM)/lib/libmtnet.a">
+Index: net/network/socket/host_address.e
+===================================================================
+--- net/network/socket/host_address.e	(revision 97850)
++++ net/network/socket/host_address.e	(working copy)
+@@ -51,7 +51,7 @@
+ 
+ feature -- Access
+ 
+-	address_host: MANAGED_POINTER
++	address_host: frozen MANAGED_POINTER
+ 			-- Special data zone.
+ 
+ feature -- Measurement
+@@ -210,14 +210,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/network/socket/inet4_address.e
+===================================================================
+--- net/network/socket/inet4_address.e	(revision 97850)
++++ net/network/socket/inet4_address.e	(working copy)
+@@ -118,7 +118,7 @@
+ 	    	and (((the_address |>> 16) & 0xFF) <= 195);
+     	end
+ 
+-	raw_address: ARRAY [NATURAL_8]
++	raw_address: frozen ARRAY [NATURAL_8]
+ 		do
+ 			create Result.make_filled ({NATURAL_8}0, 1, inaddrsz)
+ 			Result.put (((the_address |>> 24) & 0xFF).to_natural_8, 1)
+@@ -129,7 +129,7 @@
+ 
+ feature {NETWORK_SOCKET_ADDRESS}
+ 
+-	sockaddr (a_port: INTEGER): MANAGED_POINTER
++	sockaddr (a_port: INTEGER): frozen MANAGED_POINTER
+ 		do
+ 			create Result.make (sockaddr_size)
+ 			fill_ipv4 (Result.item, the_address, a_port)
+@@ -169,4 +169,14 @@
+ 			"en_sockaddr_get_ipv4_address"
+ 		end
+ 
++note
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
++	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
++	source: "[
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
++		]"
+ end
+Index: net/network/socket/inet6_address.e
+===================================================================
+--- net/network/socket/inet6_address.e	(revision 97850)
++++ net/network/socket/inet6_address.e	(working copy)
+@@ -24,7 +24,7 @@
+ 
+ feature {INET_ADDRESS_FACTORY} -- Initialization
+ 
+-	make_from_host_and_address (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8])
++	make_from_host_and_address (a_hostname: detachable STRING; an_address: frozen ARRAY [NATURAL_8])
+ 		require
+ 			an_address_count_valid: an_address.count = inaddrsz
+ 		do
+@@ -33,7 +33,7 @@
+ 			the_address := an_address
+ 		end
+ 
+-	make_from_host_and_address_and_interface_name (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; an_iface_name: STRING)
++	make_from_host_and_address_and_interface_name (a_hostname: detachable STRING; an_address: frozen ARRAY [NATURAL_8]; an_iface_name: STRING)
+ 		require
+ 			an_address_count_valid: an_address.count = inaddrsz
+ 		do
+@@ -42,7 +42,7 @@
+ 			make_from_host_and_address_and_scope(a_hostname, an_address, 0)
+ 		end
+ 
+-	make_from_host_and_address_and_scope (a_hostname: detachable STRING; an_address: ARRAY [NATURAL_8]; a_scope_id: INTEGER)
++	make_from_host_and_address_and_scope (a_hostname: detachable STRING; an_address: frozen ARRAY [NATURAL_8]; a_scope_id: INTEGER)
+ 		require
+ 			an_address_count_valid: an_address.count = inaddrsz
+ 		do
+@@ -56,7 +56,7 @@
+ 	make_from_host_and_pointer (a_hostname: detachable STRING; a_pointer: POINTER)
+ 		local
+ 			ptr: POINTER
+-			addr: ARRAY [NATURAL_8]
++			addr: frozen ARRAY [NATURAL_8]
+ 			i: INTEGER
+ 			scope: INTEGER
+ 		do
+@@ -167,7 +167,7 @@
+ 			Result := ((the_address[1] & 0xff) = 0xff and (the_address[2] & 0x0f) = 0x08)
+ 		end
+ 
+-	raw_address: ARRAY [NATURAL_8]
++	raw_address: frozen ARRAY [NATURAL_8]
+ 		do
+ 			Result := the_address.twin
+ 		end
+@@ -174,7 +174,7 @@
+ 
+ feature {NETWORK_SOCKET_ADDRESS}
+ 
+-	sockaddr (a_port: INTEGER): MANAGED_POINTER
++	sockaddr (a_port: INTEGER): frozen MANAGED_POINTER
+ 		local
+ 			a: MANAGED_POINTER
+ 		do
+@@ -185,7 +185,7 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	the_address: ARRAY [NATURAL_8]
++	the_address: frozen ARRAY [NATURAL_8]
+ 
+ 	the_scope_id: INTEGER
+ 
+@@ -254,4 +254,14 @@
+ 			"((unsigned char*)$ptr)[$index]"
+ 		end
+ 
++note
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
++	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
++	source: "[
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
++		]"
+ end
+Index: net/network/socket/inet_address.e
+===================================================================
+--- net/network/socket/inet_address.e	(revision 97850)
++++ net/network/socket/inet_address.e	(working copy)
+@@ -84,13 +84,13 @@
+ 		deferred
+ 		end
+ 
+-	raw_address: ARRAY [NATURAL_8]
++	raw_address: frozen ARRAY [NATURAL_8]
+ 		deferred
+ 		end
+ 
+ feature {NETWORK_SOCKET_ADDRESS}
+ 
+-	sockaddr (port: INTEGER): MANAGED_POINTER
++	sockaddr (port: INTEGER): frozen MANAGED_POINTER
+ 		deferred
+ 		end
+ 
+@@ -107,4 +107,14 @@
+ 			"en_socket_address_len"
+ 		end
+ 
++note
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
++	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
++	source: "[
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
++		]"
+ end
+Index: net/network/socket/inet_address_factory.e
+===================================================================
+--- net/network/socket/inet_address_factory.e	(revision 97850)
++++ net/network/socket/inet_address_factory.e	(working copy)
+@@ -50,7 +50,7 @@
+ 			end
+ 		end
+ 
+-	create_from_address (address: ARRAY [NATURAL_8]): detachable INET_ADDRESS
++	create_from_address (address: frozen ARRAY [NATURAL_8]): detachable INET_ADDRESS
+ 			--
+ 		require
+ 			valid_address: address /= Void
+@@ -104,7 +104,7 @@
+     	local
+     		ipv6_expected: BOOLEAN
+     		host: STRING
+-    		addr_array: detachable ARRAY [NATURAL_8]
++    		addr_array: frozen detachable ARRAY [NATURAL_8]
+     		addr: INET_ADDRESS
+     		numeric_zone: INTEGER
+     		iface_name: detachable STRING
+@@ -213,7 +213,7 @@
+ 			end
+ 		end
+ 
+-    text_to_numeric_format_v4 (src: STRING): detachable ARRAY [NATURAL_8]
++    text_to_numeric_format_v4 (src: STRING): frozen detachable ARRAY [NATURAL_8]
+     	require
+     		valid_src: src /= Void
+     	local
+@@ -313,7 +313,7 @@
+ 			end
+     	end
+ 
+-    text_to_numeric_format_v6 (src: STRING): detachable ARRAY [NATURAL_8]
++    text_to_numeric_format_v6 (src: STRING): frozen detachable ARRAY [NATURAL_8]
+     	require
+     		valid_src: src /= Void
+     	local
+@@ -324,9 +324,7 @@
+     		val: INTEGER
+     		ch: CHARACTER
+     		ia4: STRING
+-    		v4addr: detachable ARRAY [NATURAL_8]
+     		done: BOOLEAN
+-    		new_result: detachable ARRAY [NATURAL_8]
+     	do
+     		if src.count >= 2 then
+     			length := src.count
+@@ -391,10 +389,7 @@
+ 								if dot_count (ia4) /= 3 then
+ 		    						Result := Void
+ 								else
+-									v4addr := text_to_numeric_format_v4 (ia4);
+-									if v4addr = Void then
+-		    							Result := Void
+-									else
++									if attached text_to_numeric_format_v4 (ia4) as v4addr then
+ 										from
+ 											k := 1
+ 										until
+@@ -406,6 +401,8 @@
+ 										end
+ 										saw_xdigit := False;
+ 										done := True
++									else
++										Result := Void
+ 									end
+ 								end
+ 							else
+@@ -446,8 +443,7 @@
+ 	    						Result := Void
+ 	    					else
+ 	    						check result_attached: Result /= Void then
+-									new_result := convert_from_ipv4_mappedd_address (Result)
+-									if new_result /= Void then
++									if attached convert_from_ipv4_mappedd_address (Result) as new_result then
+ 		    							Result := new_result;
+ 		    						end
+ 								end
+@@ -459,7 +455,7 @@
+ 		end
+ 
+ 
+-	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): detachable ARRAY [NATURAL_8]
++	convert_from_ipv4_mappedd_address (addr: ARRAY [NATURAL_8]): frozen detachable ARRAY [NATURAL_8]
+ 		local
+ 			i: INTEGER
+ 		do
+@@ -618,7 +614,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/network/socket/network_datagram_socket.e
+===================================================================
+--- net/network/socket/network_datagram_socket.e	(revision 97850)
++++ net/network/socket/network_datagram_socket.e	(working copy)
+@@ -160,7 +160,7 @@
+ 		local
+ 			return_val: INTEGER;
+ 			a_last_fd: like last_fd
+-			p: MANAGED_POINTER
++			p: frozen MANAGED_POINTER
+ 			l_peer_address: like peer_address
+ 		do
+ 			create p.make (size)
+@@ -262,7 +262,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/polling/abstract/poll_mask.e
+===================================================================
+--- net/polling/abstract/poll_mask.e	(revision 97850)
++++ net/polling/abstract/poll_mask.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	mask: MANAGED_POINTER
++	mask: frozen MANAGED_POINTER
+ 			-- Hold data.
+ 
+ feature -- Measurement
+@@ -156,14 +156,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/transfer/resources/data_resource.e
+===================================================================
+--- net/transfer/resources/data_resource.e	(revision 97850)
++++ net/transfer/resources/data_resource.e	(working copy)
+@@ -380,7 +380,7 @@
+ 			error_reset: not error
+ 		end
+ 
+-	reuse_connection (other: DATA_RESOURCE)
++	reuse_connection (other: like Current)
+ 			-- Reuse connection of `other'.
+ 		require
+ 			other_exists: other /= Void
+@@ -448,14 +448,14 @@
+ 	mode_constraint: is_mode_set = read_mode xor write_mode
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/transfer/resources/data_resource_factory_impl.e
+===================================================================
+--- net/transfer/resources/data_resource_factory_impl.e	(revision 97850)
++++ net/transfer/resources/data_resource_factory_impl.e	(working copy)
+@@ -131,9 +131,9 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	url_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
++	url_function: detachable FUNCTION [variant ANY, TUPLE, variant URL]
+ 
+-	resource_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
++	resource_function: detachable FUNCTION [variant ANY, TUPLE, variant DATA_RESOURCE]
+ 
+ 	lookup_service_id: INTEGER
+ 			-- Lookup ID for service.
+@@ -258,7 +258,7 @@
+ 							not default_service.is_empty
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/transfer/resources/file_protocol.e
+===================================================================
+--- net/transfer/resources/file_protocol.e	(revision 97850)
++++ net/transfer/resources/file_protocol.e	(working copy)
+@@ -198,7 +198,7 @@
+ 			mode := Write_mode_id
+ 		end
+ 
+-	reuse_connection (other: DATA_RESOURCE)
++	reuse_connection (other: like Current)
+ 			-- Reuse connection of `other'.
+ 		do
+ 		end
+@@ -253,14 +253,14 @@
+ 	overwrite_mode: BOOLEAN;
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/transfer/resources/ftp_protocol.e
+===================================================================
+--- net/transfer/resources/ftp_protocol.e	(revision 97850)
++++ net/transfer/resources/ftp_protocol.e	(working copy)
+@@ -235,7 +235,7 @@
+ 			passive_mode_set: passive_mode
+ 		end
+ 
+-	reuse_connection (other: FTP_PROTOCOL)
++	reuse_connection (other: like Current)
+ 			-- Reuse connection of `other'.
+ 		do
+ 			main_socket := other.main_socket
+@@ -768,7 +768,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/transfer/resources/http_protocol.e
+===================================================================
+--- net/transfer/resources/http_protocol.e	(revision 97850)
++++ net/transfer/resources/http_protocol.e	(working copy)
+@@ -202,7 +202,7 @@
+ 			check attached main_socket as l_socket then
+ 				from
+ 				until
+-					error or else (str /= Void and then str.is_equal ("%R"))
++					error or else (str /= Void and then str.same_string ("%R"))
+ 				loop
+ 					check_socket (l_socket, Read_only)
+ 					if not error then
+@@ -341,7 +341,7 @@
+ 				(is_packet_pending = (bytes_transferred < count))
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/transfer/resources/network_resource.e
+===================================================================
+--- net/transfer/resources/network_resource.e	(revision 97850)
++++ net/transfer/resources/network_resource.e	(working copy)
+@@ -145,7 +145,7 @@
+ 			read_buffer_size := n
+ 		end
+ 
+-	reuse_connection (other: NETWORK_RESOURCE)
++	reuse_connection (other: like Current)
+ 			-- Reuse connection of `other'.
+ 		do
+ 			main_socket := other.main_socket
+@@ -255,7 +255,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: net/transfer/transactions/multiple_transaction.e
+===================================================================
+--- net/transfer/transactions/multiple_transaction.e	(revision 97850)
++++ net/transfer/transactions/multiple_transaction.e	(working copy)
+@@ -132,8 +132,11 @@
+ 			not_empty: not is_empty
+ 			first_source_set: a_first_source /= Void
+ 		do
+-			if index > 1 then
+-				transaction.source.reuse_connection (a_first_source)
++			if
++				index > 1 and then attached transaction.source.generating_type.as_frozen as t and then
++				attached t.attempted (transaction.source) as l_source and then attached t.attempted (a_first_source) as l_first_source
++			then
++				l_source.reuse_connection (l_first_source)
+ 			end
+ 			debug Io.error.put_string ("- OPEN TARGET -%N") end
+ 			target.open
+@@ -151,14 +154,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/transfer/transactions/transaction_container.e
+===================================================================
+--- net/transfer/transactions/transaction_container.e	(revision 97850)
++++ net/transfer/transactions/transaction_container.e	(working copy)
+@@ -119,7 +119,7 @@
+ 			index_unchanged: index = old index
+ 		end
+ 
+-	execute_command (cmd: PROCEDURE [TRANSACTION_CONTAINER[G], TUPLE])
++	execute_command (cmd: PROCEDURE [variant ANY, TUPLE])
+ 			-- Execute command `cmd' for all transactions.
+ 		require
+ 			command_exists: cmd /= Void
+@@ -154,14 +154,14 @@
+ 	index_in_range: not is_empty implies (1 <= index and index <= count)
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: net/transfer/transactions/transfer_manager_builder_impl.e
+===================================================================
+--- net/transfer/transactions/transfer_manager_builder_impl.e	(revision 97850)
++++ net/transfer/transactions/transfer_manager_builder_impl.e	(working copy)
+@@ -392,10 +392,10 @@
+ 	transfer_manager: detachable TRANSFER_MANAGER
+ 			-- Transfer manager
+ 
+-	readable_set: BINARY_SEARCH_TREE_SET [STRING]
++	readable_set: BINARY_SEARCH_TREE_SET [frozen STRING]
+ 			-- Set storing readable adresses
+ 
+-	writable_set: BINARY_SEARCH_TREE_SET [STRING]
++	writable_set: BINARY_SEARCH_TREE_SET [frozen STRING]
+ 			-- Set storing writable adresses
+ 
+ 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]
+@@ -552,7 +552,7 @@
+ 	count_equality: (optimized_count > 0) implies (count = optimized_count)
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: runtime/process/arg_parser/argument_parser-safe.ecf
+===================================================================
+--- runtime/process/arg_parser/argument_parser-safe.ecf	(revision 97850)
++++ runtime/process/arg_parser/argument_parser-safe.ecf	(working copy)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="arg_parser" uuid="3BA55A43-C81F-48E9-86EC-9E53B212716A" library_target="arg_parser">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="arg_parser" uuid="3BA55A43-C81F-48E9-86EC-9E53B212716A" library_target="arg_parser">
+ 	<description>An argument parser library for parsing and validating command line arguments.</description>
+ 	<target name="arg_parser">
+ 		<root all_classes="true"/>
+@@ -20,7 +20,7 @@
+ 				<platform value="windows"/>
+ 			</condition>
+ 		</file_rule>
+-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Framework">
++		<option warning="true" cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Framework">
+ 			<assertions supplier_precondition="true"/>
+ 		</option>
+ 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
+Index: runtime/process/arg_parser/validators/argument_numeric_range_validator.e
+===================================================================
+--- runtime/process/arg_parser/validators/argument_numeric_range_validator.e	(revision 97850)
++++ runtime/process/arg_parser/validators/argument_numeric_range_validator.e	(working copy)
+@@ -6,7 +6,7 @@
+ 	revision: "$Revision$"
+ 
+ deferred class
+-	ARGUMENT_NUMERIC_RANGE_VALIDATOR [G -> {NUMERIC, COMPARABLE}]
++	ARGUMENT_NUMERIC_RANGE_VALIDATOR [frozen G -> {NUMERIC, COMPARABLE}]
+ 
+ inherit
+ 	ARGUMENT_VALUE_VALIDATOR
+@@ -52,8 +52,8 @@
+ 	min_less_than_max: min < max
+ 
+ ;note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
++	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	licensing_options: "http://www.eiffel.com/licensing"
+ 	copying: "[
+ 			This file is part of Eiffel Software's Eiffel Development Environment.
+Index: thread/thread-safe.ecf
+===================================================================
+--- thread/thread-safe.ecf	(revision 97850)
++++ thread/thread-safe.ecf	(working copy)
+@@ -1,15 +1,15 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
+ 	<target name="thread">
+ 		<description>EiffelThread: Multithreading facilities for Eiffel.
+-			Copyright (c) 1984-2013, Eiffel Software and others.
+-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
++&#9;&#9;&#9;Copyright (c) 1984-2013, Eiffel Software and others.
++&#9;&#9;&#9;Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+ 		<root all_classes="true"/>
+ 		<file_rule>
+ 			<exclude>/tests$</exclude>
+ 			<exclude>/\.svn$</exclude>
+ 		</file_rule>
+-		<option void_safety="all" namespace="EiffelSoftware.Library">
++		<option cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+Index: time/absolute.e
+===================================================================
+--- time/absolute.e	(revision 97850)
++++ time/absolute.e	(working copy)
+@@ -7,7 +7,7 @@
+ 	access: date, time
+ 
+ deferred class
+-	ABSOLUTE
++	ABSOLUTE [frozen G -> DURATION]
+ 
+ inherit
+ 	COMPARABLE
+@@ -26,7 +26,7 @@
+ 
+ feature -- Measurement
+ 
+-	duration: DURATION
++	duration: frozen G
+ 			-- Length of the interval of time since `origin'
+ 		deferred
+ 		end
+@@ -41,7 +41,7 @@
+ 
+ feature -- Basic operations
+ 
+-	minus alias "-" (other: like Current): INTERVAL [like Current]
++	minus alias "-" (other: like Current): INTERVAL [like Current, G]
+ 			-- Interval between current object and `other'
+ 		require
+ 			other_exists: other /= Void
+@@ -64,14 +64,14 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: time/date.e
+===================================================================
+--- time/date.e	(revision 97850)
++++ time/date.e	(working copy)
+@@ -11,7 +11,7 @@
+ 
+ class DATE inherit
+ 
+-	ABSOLUTE
++	ABSOLUTE [frozen DATE_DURATION]
+ 		undefine
+ 			out
+ 		redefine
+@@ -218,7 +218,7 @@
+ 
+ feature -- Access
+ 
+-	origin: DATE
++	origin: frozen DATE
+ 			-- Origin date
+ 		once
+ 			create Result.make (1600, 1, 1)
+@@ -243,7 +243,7 @@
+ 
+ feature -- Measurement
+ 
+-	duration: DATE_DURATION
++	duration: frozen DATE_DURATION
+ 			-- Definite duration elapsed since `origin'
+ 		do
+ 			create Result.make_by_days (days_from (origin.year) + year_day -
+@@ -369,7 +369,7 @@
+ 
+ feature -- Basic operations
+ 
+-	plus alias "+" (d: DATE_DURATION): DATE
++	plus alias "+" (d: frozen DATE_DURATION): frozen DATE
+ 			-- Sum to current date the duration `d'
+ 			-- if duration not define, add years and then months and then days.
+ 		require
+@@ -397,7 +397,7 @@
+ 			end
+ 		end
+ 
+-	relative_duration (other: like Current): DATE_DURATION
++	relative_duration (other: like Current): frozen DATE_DURATION
+ 			-- Duration from `other' to the current date
+ 		do
+ 			create Result.make_by_days (days - other.days)
+@@ -596,7 +596,7 @@
+ 	year_non_negative: year >= 0
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: time/date_duration.e
+===================================================================
+--- time/date_duration.e	(revision 97850)
++++ time/date_duration.e	(working copy)
+@@ -71,7 +71,7 @@
+ 
+ 	year: INTEGER
+ 
+-	origin_date: detachable DATE
++	origin_date: frozen detachable DATE
+ 			-- Origin date of duration
+ 
+ 	days_count: INTEGER
+@@ -124,7 +124,7 @@
+ 			result_definition: Result = ((year = 0) and then (month = 0))
+ 		end
+ 
+-	canonical (date: DATE): BOOLEAN
++	canonical (date: frozen DATE): BOOLEAN
+ 			-- Is duration expressed minimally for adding to `date', i.e.
+ 			-- 	If addition will yield a date after `date', then:
+ 			--		`year' positive,
+@@ -139,8 +139,8 @@
+ 		require
+ 			date_exist: date /= Void
+ 		local
+-			final_date, limit_date: DATE
+-			d: DATE_DURATION
++			final_date, limit_date: frozen DATE
++			d: frozen DATE_DURATION
+ 		do
+ 			final_date := date + Current
+ 			if final_date >= date then
+@@ -172,7 +172,7 @@
+ 
+ feature -- Status setting
+ 
+-	set_origin_date (d: detachable DATE)
++	set_origin_date (d: like origin_date)
+ 			-- Set `origin_date' to `d'.
+ 		do
+ 			origin_date := d
+@@ -269,13 +269,13 @@
+ 
+ feature -- Conversion
+ 
+-	to_canonical (start_date: DATE): like Current
++	to_canonical (start_date: frozen DATE): like Current
+ 			-- A new duration, equivalent to current one
+ 			-- and canonical for `date'
+ 		require
+ 			start_date_not_void: start_date /= Void
+ 		local
+-			date_tmp, final_date: DATE
++			date_tmp, final_date: frozen DATE
+ 			d1: INTEGER
+ 		do
+ 			if canonical (start_date) then
+@@ -358,14 +358,14 @@
+ 			(day <= 0 and month <= 0 and year <= 0)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end -- class DATE_DURATION
+Index: time/date_set.e
+===================================================================
+--- time/date_set.e	(revision 97850)
++++ time/date_set.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	item (i: INTEGER): DATE
++	item (i: INTEGER): frozen DATE
+ 			-- Item at index `i'
+ 		require
+ 			index_in_range: 1 <= i and i <= last
+@@ -61,14 +61,14 @@
+ 	last_small_enough: last <= count
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: time/date_time.e
+===================================================================
+--- time/date_time.e	(revision 97850)
++++ time/date_time.e	(working copy)
+@@ -10,7 +10,7 @@
+ 
+ class DATE_TIME inherit
+ 
+-	ABSOLUTE
++	ABSOLUTE [frozen DATE_TIME_DURATION]
+ 		undefine
+ 			out
+ 		redefine
+@@ -92,7 +92,7 @@
+ 			second_set: fine_second = s
+ 		end
+ 
+-	make_by_date_time (d: DATE; t: TIME)
++	make_by_date_time (d: frozen DATE; t: frozen TIME)
+ 			-- Set `date' to `d' and `time' to `t'
+ 		require
+ 			d_exists: d /= Void;
+@@ -105,7 +105,7 @@
+ 			time_set: time = t
+ 		end;
+ 
+-	make_by_date (d: DATE)
++	make_by_date (d: like date)
+ 			-- Set `date' to `d' and `time' to origin of time.
+ 		require
+ 			d_exists: d /= Void;
+@@ -205,7 +205,7 @@
+ 		local
+ 			d: INTEGER
+ 			ss: INTEGER
+-			l_dur: DATE_TIME_DURATION
++			l_dur: frozen DATE_TIME_DURATION
+ 		do
+ 			if s < 0 then
+ 				ss := -s
+@@ -225,19 +225,19 @@
+ 
+ feature -- Access
+ 
+-	date: DATE
++	date: frozen DATE
+ 			-- Date of the current object
+ 
+-	time: TIME
++	time: frozen TIME
+ 			-- Time of the current object
+ 
+-	origin: DATE_TIME
++	origin: frozen DATE_TIME
+ 			-- Origin date with origin time
+ 		once
+ 			create Result.make_by_date_time (date.origin, time.origin)
+ 		end
+ 
+-	date_duration: DATE_DURATION
++	date_duration: frozen DATE_DURATION
+ 			-- Definite duration between origin of date and current date
+ 		do
+ 			Result := date.duration
+@@ -249,7 +249,7 @@
+ 			Result := date.days
+ 		end
+ 
+-	time_duration: TIME_DURATION
++	time_duration: frozen TIME_DURATION
+ 			-- Duration elapsed from midnight of the current date
+ 		do
+ 			Result := time.duration
+@@ -279,7 +279,7 @@
+ 
+ feature -- Measurement
+ 
+-	duration: DATE_TIME_DURATION
++	duration: frozen DATE_TIME_DURATION
+ 			-- Definite duration elapsed from `origin'
+ 		do
+ 			create Result.make_by_date_time (date_duration, time_duration)
+@@ -289,7 +289,7 @@
+ 
+ feature -- Element Change
+ 
+-	set_date (d: DATE)
++	set_date (d: like date)
+ 			-- Set `date' to `d'.
+ 		require
+ 			d_exists: d /= Void
+@@ -299,7 +299,7 @@
+ 			date_set: date = d
+ 		end
+ 
+-	set_time (t: TIME)
++	set_time (t: like time)
+ 			-- Set `time' to `t'.
+ 		require
+ 			t_exists: t /= Void
+@@ -321,7 +321,7 @@
+ 
+ feature -- Basic operations
+ 
+-	plus alias "+" (d: DATE_TIME_DURATION): like Current
++	plus alias "+" (d: frozen DATE_TIME_DURATION): like Current
+ 			-- Sum the current object with `d'
+ 		require
+ 			d_not_void: d /= Void
+@@ -332,7 +332,7 @@
+ 			result_exists: Result /= Void
+ 		end
+ 
+-	add (dtd: DATE_TIME_DURATION)
++	add (dtd: frozen DATE_TIME_DURATION)
+ 			-- Adds `dtd' to current duration
+ 		require
+ 			dtd_not_void: dtd /= Void
+@@ -459,7 +459,7 @@
+ 		end
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: time/date_time_duration.e
+===================================================================
+--- time/date_time_duration.e	(revision 97850)
++++ time/date_time_duration.e	(working copy)
+@@ -78,7 +78,7 @@
+ 			fine_second_set: fine_second = s
+ 		end
+ 
+-	 make_by_date_time (d: DATE_DURATION; t: TIME_DURATION)
++	 make_by_date_time (d: like date; t: like time)
+ 			-- Set `date' to `d' and `time' to `t'.
+ 		require
+ 			date_exists: d /= Void
+@@ -91,7 +91,7 @@
+ 			time_set: time = t
+ 		end
+ 
+-	make_by_date (d: DATE_DURATION)
++	make_by_date (d: like date)
+ 			-- Set `date' to `d' and `time' to zero.
+ 		require
+ 			d_exists: d /= Void;
+@@ -106,13 +106,13 @@
+ 
+ feature -- Access
+ 
+-	date: DATE_DURATION
++	date: frozen DATE_DURATION
+ 			-- Date part of the current duration
+ 
+-	time: TIME_DURATION
++	time: frozen TIME_DURATION
+ 			-- Time part of current duration
+ 
+-	origin_date_time: detachable DATE_TIME
++	origin_date_time: frozen detachable DATE_TIME
+ 			-- Origin date time of duration
+ 
+ 	zero: like Current
+@@ -174,7 +174,7 @@
+ 			result_definition: Result = (year = 0 and then month = 0)
+ 		end
+ 
+-	canonical (start_date: DATE_TIME): BOOLEAN
++	canonical (start_date: frozen DATE_TIME): BOOLEAN
+ 			-- Are the time and date parts of the same sign,
+ 			-- and both canonical?
+ 		require
+@@ -209,7 +209,7 @@
+ 
+ feature -- Status setting
+ 
+-	set_origin_date_time (dt: detachable DATE_TIME)
++	set_origin_date_time (dt: like origin_date_time)
+ 			-- Set `origin_date_time' to `dt'.
+ 		do
+ 			origin_date_time := dt
+@@ -225,7 +225,7 @@
+ 
+ feature -- Element Change
+ 
+-	set_date (d: DATE_DURATION)
++	set_date (d: like date)
+ 			-- Set `date' to `d'.
+ 		require
+ 			d_exists: d /= Void
+@@ -235,7 +235,7 @@
+ 			date_set: date = d
+ 		end
+ 
+-	set_time (t: TIME_DURATION)
++	set_time (t: like time)
+ 			-- Set `time' to `t'.
+ 		require
+ 			t_exists: time /= Void
+@@ -290,13 +290,13 @@
+ 
+ feature -- Conversion
+ 
+-	to_canonical (start_date: DATE_TIME): like Current
++	to_canonical (start_date: frozen DATE_TIME): like Current
+ 			-- A new duration, equivalent to current one
+ 			-- and canonical for `start_date'
+ 		local
+-			final_date: DATE_TIME
+-			date_part_of_result: DATE_DURATION
+-			time_part_of_result: TIME_DURATION
++			final_date: frozen DATE_TIME
++			date_part_of_result: frozen DATE_DURATION
++			time_part_of_result: frozen TIME_DURATION
+ 		do
+ 			if canonical (start_date) then
+ 				Result := deep_twin
+@@ -367,14 +367,14 @@
+ 				(time.is_negative or time.is_zero))
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: time/format/date_time_code_string.e
+===================================================================
+--- time/format/date_time_code_string.e	(revision 97850)
++++ time/format/date_time_code_string.e	(working copy)
+@@ -357,7 +357,7 @@
+ 			string_correspond: correspond (Result)
+ 		end
+ 
+-	create_date_string (date: DATE): STRING
++	create_date_string (date: frozen DATE): STRING
+ 				-- Create the output of `date' according to the code string.
+ 		require
+ 			date_exists: date /= Void
+Index: time/interval.e
+===================================================================
+--- time/interval.e	(revision 97850)
++++ time/interval.e	(working copy)
+@@ -5,7 +5,7 @@
+ 	date: "$Date$"
+ 	revision: "$Revision$"
+ 
+-class INTERVAL [G -> ABSOLUTE] inherit
++class INTERVAL [frozen G -> ABSOLUTE [H], frozen H -> DURATION] inherit
+ 
+ 	PART_COMPARABLE
+ 		redefine
+@@ -61,15 +61,15 @@
+ 
+ feature -- Access
+ 
+-	start_bound: attached G
++	start_bound: G
+ 			-- Start bound of the current interval
+ 
+-	end_bound: attached G
++	end_bound: G
+ 			-- End bound of the current interval
+ 
+ feature -- Measurement
+ 
+-	duration: DURATION
++	duration: H
+ 			-- Length of the interval
+ 		do
+ 			Result := end_bound.duration - start_bound.duration
+@@ -198,7 +198,7 @@
+ 		do
+ 			Result := start_bound.is_equal (end_bound)
+ 		ensure
+-			result_definition: Result = duration.is_equal (duration.zero)
++			result_definition: Result = (duration ~ duration.zero)
+ 		end
+ 
+ 	has (v: G): BOOLEAN
+@@ -349,7 +349,7 @@
+ 	between_bound: after (start_bound) and before (end_bound)
+ 
+ note
+-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: time/time-safe.ecf
+===================================================================
+--- time/time-safe.ecf	(revision 97850)
++++ time/time-safe.ecf	(working copy)
+@@ -1,5 +1,5 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="time" uuid="78D80981-EF3C-42EC-8919-EF7D7BB61701" library_target="time">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="time" uuid="78D80981-EF3C-42EC-8919-EF7D7BB61701" library_target="time">
+ 	<target name="time">
+ 		<note>
+ 			<eis auto="true" src="$(ISE_DOC_REF)/$(unique_id)"/>
+@@ -6,10 +6,10 @@
+ 			<eis src="$(ISE_DOC_UUID)/3d96626f-11f3-67a2-dec6-69f7faf4a8d6" tag="EiffelTime" protocol="" name="EiffelTime"/>
+ 		</note>
+ 		<description>EiffelTime: Date/Time abstractions and computations.
+-			Copyright (c) 1984-2013, Eiffel Software and others.
+-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
++&#9;&#9;&#9;Copyright (c) 1984-2013, Eiffel Software and others.
++&#9;&#9;&#9;Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+ 		<root all_classes="true"/>
+-		<option void_safety="all" namespace="EiffelSoftware.Library">
++		<option cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+@@ -24,10 +24,10 @@
+ 			<option namespace="DateTime">
+ 			</option>
+ 			<file_rule>
++				<exclude>/dotnet$</exclude>
++				<exclude>/french$</exclude>
+ 				<exclude>/\.svn$</exclude>
+-				<exclude>/french$</exclude>
+ 				<exclude>/german$</exclude>
+-				<exclude>/dotnet$</exclude>
+ 				<exclude>/tests$</exclude>
+ 				<condition>
+ 					<dotnet value="false"/>
+@@ -34,11 +34,11 @@
+ 				</condition>
+ 			</file_rule>
+ 			<file_rule>
++				<exclude>/french$</exclude>
+ 				<exclude>/\.svn$</exclude>
+-				<exclude>/french$</exclude>
++				<exclude>/tests$</exclude>
++				<exclude>/classic$</exclude>
+ 				<exclude>/german$</exclude>
+-				<exclude>/classic$</exclude>
+-				<exclude>/tests$</exclude>
+ 				<condition>
+ 					<dotnet value="true"/>
+ 				</condition>
+Index: time/time.e
+===================================================================
+--- time/time.e	(revision 97850)
++++ time/time.e	(working copy)
+@@ -9,7 +9,7 @@
+ 
+ class TIME inherit
+ 
+-	ABSOLUTE
++	ABSOLUTE [frozen TIME_DURATION]
+ 		undefine
+ 			out
+ 		redefine
+@@ -172,7 +172,7 @@
+ 
+ feature -- Access
+ 
+-	origin: TIME
++	origin: frozen TIME
+ 			-- Origin time
+ 		once
+ 			create Result.make (0, 0, 0)
+@@ -195,7 +195,7 @@
+ 
+ feature -- Measurement
+ 
+-	duration: TIME_DURATION
++	duration: frozen TIME_DURATION
+ 			-- Duration elapsed from midnight
+ 		do
+ 			create Result.make_fine (hour, minute, fine_second)
+@@ -222,7 +222,7 @@
+ 
+ feature -- Basic operations
+ 
+-	plus alias "+" (t: TIME_DURATION): TIME
++	plus alias "+" (t: TIME_DURATION): frozen TIME
+ 			-- Sum of the current time and duration `t'
+ 		require
+ 			t_exists: t /= Void
+@@ -235,7 +235,7 @@
+ 			result_exists: Result /= Void
+ 		end
+ 
+-	relative_duration (other: like Current): TIME_DURATION
++	relative_duration (other: like Current): frozen TIME_DURATION
+ 			-- Duration elapsed from `other' to `Current'
+ 		do
+ 			create Result.make_by_fine_seconds (fine_seconds - other.fine_seconds)
+@@ -390,14 +390,14 @@
+ 	hour_small_enough: hour < hours_in_day
+ 
+ note
+-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: time/time_set.e
+===================================================================
+--- time/time_set.e	(revision 97850)
++++ time/time_set.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	item (i: INTEGER): TIME
++	item (i: INTEGER): frozen TIME
+ 			-- Item at index `i'
+ 		require
+ 			index_in_range: 1 <= i and i <= last
+@@ -73,14 +73,14 @@
+ 	last_small_enough: last <= count
+ 
+ note
+-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
++	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 5949 Hollister Ave., Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end -- class TIME_SET
+Index: wel/structs/wel_composition_form.e
+===================================================================
+--- wel/structs/wel_composition_form.e	(revision 97850)
++++ wel/structs/wel_composition_form.e	(working copy)
+@@ -31,11 +31,11 @@
+ 
+ feature -- Access
+ 
+-	point: WEL_POINT
++	point: frozen WEL_POINT
+ 			-- WEL_POINT structure containing the coordinates of the upper-left corner
+ 			-- of the composition window.
+ 
+-	rect: WEL_RECT
++	rect: frozen WEL_RECT
+ 			-- WEL_RECT structure containing the coordinates of the upper-left and lower-right
+ 			-- corners of the composition window.
+ 
+Index: wel/structs/wel_guid.e
+===================================================================
+--- wel/structs/wel_guid.e	(revision 97850)
++++ wel/structs/wel_guid.e	(working copy)
+@@ -72,7 +72,7 @@
+ 			data_3_set: data_3 = a_value
+ 		end
+ 
+-	set_data_4 (a_values: ARRAY [NATURAL_8]; a_index: INTEGER)
++	set_data_4 (a_values: frozen ARRAY [NATURAL_8]; a_index: INTEGER)
+ 			-- Set `data_4' array item at `a_index''s value with `a_value'.
+ 		require
+ 			a_value_not_void: a_values /= Void
+@@ -103,7 +103,7 @@
+ 			Result := internal_item.read_natural_16 (data_3_pos)
+ 		end
+ 
+-	data_4: ARRAY [NATURAL_8]
++	data_4: frozen ARRAY [NATURAL_8]
+ 			-- Data 4
+ 		do
+ 			Result := internal_item.read_array (data_4_pos, data_4_count)
+@@ -145,7 +145,7 @@
+ 
+ feature {WEL_GUID} -- Access
+ 
+-	internal_item: MANAGED_POINTER
++	internal_item: frozen MANAGED_POINTER
+ 			-- To hold data of Current.
+ 
+ 	data_1_pos: INTEGER = 0
+@@ -158,14 +158,14 @@
+ 	internal_item_not_void: internal_item /= Void
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end
+Index: wel/structs/wel_lv_hittestinfo.e
+===================================================================
+--- wel/structs/wel_lv_hittestinfo.e	(revision 97850)
++++ wel/structs/wel_lv_hittestinfo.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	point: WEL_POINT
++	point: frozen WEL_POINT
+ 			-- Client coordinates of the point to test.
+ 		require
+ 			exists: exists
+Index: wel/structs/wel_min_max_info.e
+===================================================================
+--- wel/structs/wel_min_max_info.e	(revision 97850)
++++ wel/structs/wel_min_max_info.e	(working copy)
+@@ -18,7 +18,7 @@
+ 
+ feature -- Access
+ 
+-	max_size: WEL_POINT
++	max_size: frozen WEL_POINT
+ 			-- Maximized width and height of the window
+ 		require
+ 			exists: exists
+@@ -28,7 +28,7 @@
+ 			result_not_void: Result /= Void
+ 		end
+ 
+-	max_position: WEL_POINT
++	max_position: frozen WEL_POINT
+ 			-- Position of the left side of the maximized window
+ 			-- and the position of the top of the maximized window
+ 		require
+@@ -39,7 +39,7 @@
+ 			result_not_void: Result /= Void
+ 		end
+ 
+-	min_track_size: WEL_POINT
++	min_track_size: frozen WEL_POINT
+ 			-- Minimum tracking width and the minimum tracking
+ 			-- height of the window
+ 		require
+@@ -50,7 +50,7 @@
+ 			result_not_void: Result /= Void
+ 		end
+ 
+-	max_track_size: WEL_POINT
++	max_track_size: frozen WEL_POINT
+ 			-- Maximum tracking width and the minimum tracking
+ 			-- height of the window
+ 		require
+Index: wel/structs/wel_point.e
+===================================================================
+--- wel/structs/wel_point.e	(revision 97850)
++++ wel/structs/wel_point.e	(working copy)
+@@ -224,14 +224,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end
+Index: wel/structs/wel_rect.e
+===================================================================
+--- wel/structs/wel_rect.e	(revision 97850)
++++ wel/structs/wel_rect.e	(working copy)
+@@ -471,14 +471,14 @@
+ 	positive_height: exists implies height >= 0
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ end
+Index: wel/structs/wel_tc_hittestinfo.e
+===================================================================
+--- wel/structs/wel_tc_hittestinfo.e	(revision 97850)
++++ wel/structs/wel_tc_hittestinfo.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	point: WEL_POINT
++	point: frozen WEL_POINT
+ 			-- Client coordinates of the point to test.
+ 		do
+ 			create Result.make_by_pointer (cwel_tv_hittestinfo_get_pt (item))
+Index: wel/structs/wel_tool_info.e
+===================================================================
+--- wel/structs/wel_tool_info.e	(revision 97850)
++++ wel/structs/wel_tool_info.e	(working copy)
+@@ -62,7 +62,7 @@
+ 			Result := cwel_toolinfo_get_uid (item)
+ 		end
+ 
+-	rect: WEL_RECT
++	rect: frozen WEL_RECT
+ 			-- Coordinates of the bounding rectangle of the tool
+ 		do
+ 			create Result.make_by_pointer (cwel_toolinfo_get_rect (item))
+Index: wel/structs/wel_tv_hittestinfo.e
+===================================================================
+--- wel/structs/wel_tv_hittestinfo.e	(revision 97850)
++++ wel/structs/wel_tv_hittestinfo.e	(working copy)
+@@ -31,7 +31,7 @@
+ 
+ feature -- Access
+ 
+-	point: WEL_POINT
++	point: frozen WEL_POINT
+ 			-- Client coordinates of the point to test.
+ 		require
+ 			exists: exists
+Index: wel/support/wel_registry.e
+===================================================================
+--- wel/support/wel_registry.e	(revision 97850)
++++ wel/support/wel_registry.e	(working copy)
+@@ -119,7 +119,7 @@
+ 		require
+ 			at_least_one_back_slash: key_path /= Void and then key_path.has_code (('\').natural_32_code)
+ 		local
+-			node_list: LIST [READABLE_STRING_GENERAL]
++			node_list: LIST [variant READABLE_STRING_GENERAL]
+ 			i: POINTER
+ 			item: READABLE_STRING_GENERAL
+ 		do
+@@ -622,7 +622,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: wel/wel-safe.ecf
+===================================================================
+--- wel/wel-safe.ecf	(revision 97850)
++++ wel/wel-safe.ecf	(working copy)
+@@ -1,11 +1,11 @@
+ <?xml version="1.0" encoding="ISO-8859-1"?>
+-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
++<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
+ 	<target name="wel">
+ 		<description>WEL: Windows Eiffel Library, reusable Eiffel components for Windows programming.
+ Copyright (c) 1984-2013, Eiffel Software and others.
+ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+ 		<root all_classes="true"/>
+-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
++		<option warning="true" cat_call_detection="all" void_safety="all" syntax="provisional" namespace="EiffelSoftware.Library">
+ 		</option>
+ 		<setting name="dotnet_naming_convention" value="true"/>
+ 		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
+Index: wel/windows/wel_window.e
+===================================================================
+--- wel/windows/wel_window.e	(revision 97850)
++++ wel/windows/wel_window.e	(working copy)
+@@ -368,7 +368,7 @@
+ 			result_large_enough: Result >= minimal_height
+ 		end
+ 
+-	client_rect: WEL_RECT
++	client_rect: frozen WEL_RECT
+ 			-- Client rectangle
+ 		require
+ 			exists: exists
+@@ -378,7 +378,7 @@
+ 			result_not_void: Result /= Void
+ 		end
+ 
+-	window_rect: WEL_RECT
++	window_rect: frozen WEL_RECT
+ 			-- Window rectangle (absolute position)
+ 		require
+ 			exists: exists
+@@ -2773,7 +2773,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software

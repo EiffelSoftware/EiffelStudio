@@ -10,14 +10,14 @@ class
 	WEL_INTEGER_ARRAY
 
 inherit
-	
+
 	WEL_STRUCTURE
 		rename
 			make as structure_make
 		end
 
 create
-	make 
+	make
 
 feature {NONE} -- Initialization
 
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				j := j + 1
 			end
 		ensure
-			set: to_array (an_array.lower).is_equal (an_array)
+			set: to_array (an_array.lower) ~ an_array
 		end
 
 feature -- Conversion
@@ -84,7 +84,7 @@ feature -- Measurement
 				-- We need to return at least 1 to preserve the postcondition.
 			Result := (Integer_size * count).max (1)
 		end
-		
+
 feature {NONE} -- Constants
 
 	Integer_size: INTEGER = 4
@@ -94,14 +94,14 @@ invariant
 	positive_count: count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

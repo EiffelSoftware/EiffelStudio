@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_max_size (point: WEL_POINT)
+	set_max_size (point: like max_size)
 			-- Set `max_size' with `point'.
 		require
 			exists: exists
@@ -74,7 +74,7 @@ feature -- Element change
 			point_set: max_size.is_equal (point)
 		end
 
-	set_max_position (point: WEL_POINT)
+	set_max_position (point: like max_position)
 			-- Set `max_position' with `point'.
 		require
 			exists: exists
@@ -85,7 +85,7 @@ feature -- Element change
 			point_set: max_position.is_equal (point)
 		end
 
-	set_min_track_size (point: WEL_POINT)
+	set_min_track_size (point: like min_track_size)
 			-- Set `min_track_size' with `point'.
 		require
 			exists: exists
@@ -96,7 +96,7 @@ feature -- Element change
 			point_set: min_track_size.is_equal (point)
 		end
 
-	set_max_track_size (point: WEL_POINT)
+	set_max_track_size (point: like max_track_size)
 			-- Set `max_track_size' with `point'.
 		require
 			exists: exists
@@ -165,14 +165,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

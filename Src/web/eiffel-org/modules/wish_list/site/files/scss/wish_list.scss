@@ -1,0 +1,190 @@
+@import "variables";
+@import "base/base-reset";
+@import "markup-mixins";
+@import "960";
+@import "variables";
+
+
+/* Content */
+#content {
+	div.row {
+		@extend %listreset;
+		overflow: hidden;
+		margin: 0;
+
+		form {
+			@include grid(12);
+			background: #e9eced;
+			height: 100%;
+			width: 95%;
+			float: left;
+			margin: 0 20px 30px 20px;
+			padding: 10px 10px 10px 10px;
+			text-align: left;
+			@include border-radius(10px);
+			&:hover{
+				background: #e3e7e8;
+			}
+			display:block;
+			> label.class-form-1 {
+				@include grid-width(1);
+			}
+			> label.class-form-2 {
+				@include grid-width(2);
+			}
+			> label.class-form-12 {
+				@include grid-width(12);
+			}
+			> div.class-form-2 {
+				@include grid-width(2);
+			}
+			> div.class-form-4 {
+				@include grid-width(4);
+			}
+			> div.class-form-6 {
+				@include grid-width(6);
+			}
+			> input.class-form-6 {
+				@include grid-width(6);
+			}
+			textarea.class-form-textarea {
+				width: 95%;
+				border: 3px solid #cccccc;
+				padding: 5px;
+				font-family: Tahoma, sans-serif;
+				background-position: bottom right;
+				background-repeat: no-repeat;
+			}
+		}
+		section {
+			@include grid(12);
+			background: #e9eced;
+			height: 100%;
+			width: 95%;
+			float: left;
+			margin: 0 20px 30px 20px;
+			padding: 10px 10px 10px 10px;
+			text-align: left;
+			@include border-radius(10px);
+			&:hover{
+				background: #e3e7e8;
+			}
+			div.row-interaction{
+				background: white;
+				height: 100%;
+				width: 95%;
+				float: left;
+				margin: 0 20px 30px 15px;
+				padding: 10px 0px 10px 10px;
+				text-align: left;
+				@include border-radius(10px);
+				&:hover{
+					background: white;
+				}
+			}
+			display:block;
+			> span.class-form-1 {
+				@include grid-width(1);
+			}
+			> span.class-form-2 {
+				@include grid-width(2);
+			}
+			> span.class-form-12 {
+				@include grid-width(12);
+			}
+			> span.class-form-2 {
+				@include grid-width(2);
+			}
+			> span.class-form-6 {
+				@include grid-width(6);
+			}
+			textarea.class-form-textarea {
+				width: 98%;
+				border: 3px solid #cccccc;
+				padding: 5px;
+				font-family: Tahoma, sans-serif;
+				background-position: bottom right;
+				background-repeat: no-repeat;
+			}
+		}
+		ul.cms-links {
+			@include grid(12);
+			background: #e9eced;
+			height: 100%;
+			width: 90%;
+			float: left;
+			margin: 0 20px 30px 20px;
+			padding: 10px 10px 10px 10px;
+			text-align: center;
+			list-style-type: none;
+			@include border-radius(10px);
+			display:block;
+			> li{
+				@include grid-width(2);
+				@include border-radius(10px);
+				background-color: white;
+				display: inline-block;
+					&:hover{
+						background: #e3e7e8;
+					> a{
+					}
+				}
+			}
+		}
+	
+	}
+}
+
+
+
+table.wish_nodes{ 
+	width:100%;
+	margin-bottom: 20px;
+	caption { 
+ 		 font-size: 2rem; color: #444;
+  		 margin: 1rem;
+ 		 background-size: contain;
+ 		 background-repeat: no-repeat;
+  		 background-position: center left, center right; 
+	}
+	
+	thead
+	  {
+		th {
+		    background-color: #0E9A8F;
+		    color: white;
+	    	border: 1px solid black;
+	    	text-align: left;
+	    	padding-left:4px;
+	    	a {
+	    		color: white;
+	    	}
+		}
+	}	
+
+	tbody{
+		 td {
+			 border: 1px solid black;
+			 font: 16px/24px "Open Sans", Arial, Helvetica, sans-serif;
+			 padding-left:4px;
+			 display: table-cell;
+  			 vertical-align: top; 
+    	}
+    }	
+}
+
+div.btn-add-wish {
+	 background: #e9eced;
+	 @include grid-width(2);	
+	 color: white;
+	 text-align: center;
+	 padding-left:4px;
+	 @include border-radius(10px);
+	display:block;
+	 &:hover{
+			background: #e3e7e8;
+		    	a {
+		 		color: white;
+		    }
+		}   	
+}    

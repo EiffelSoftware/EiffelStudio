@@ -1,5 +1,4 @@
-		<div class="container-fluid" >
-			<div class="main">
+		<div class="row">
 				{if isset="$id"}
 					<form class="form-inline well" action="{$site_url/}resources/wish_detail/{$form.wish.id/}/interaction_form/{$id/}" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
 				{/if}
@@ -9,14 +8,10 @@
 					<fieldset>
 						<legend><h1>Wish Interaction Submission</h1></legend>
 						<p>Fill in the description for the new interaction for the <strong>{$form.wish.status.synopsis/}</strong> item wish <a target="_blank" href="{$site_url/}resources/wish_detail/{$form.wish.id/}">{$form.wish.id/}</a>.</p>
-						<div class="row">
-							<div class="col-xs-12">
 								<label class="control-label" for="textarea">Description</label>
 								<div class="controls">
-									<textarea class="form-control input-xlarge" id="description" name="description" rows="17" placeholder="" required form="wish">{$form.description/}</textarea>
+									<textarea class="class-form-textarea" id="description" name="description" rows="17" placeholder="" required form="wish">{$form.description/}</textarea>
 								</div>
-							</div>
-						</div>
 						<p></p>
 						{if condition="$has_permissions"}
 						<div class="row">
@@ -96,4 +91,4 @@
 					</fieldset>
 				</form>
 			</div>
-		</div>
+	

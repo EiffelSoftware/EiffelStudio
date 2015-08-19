@@ -196,8 +196,8 @@ feature -- Interface
 									l_substrg.to_integer >= code.value_min
 							end
 						elseif code.is_meridiem (code.value) then
-							Result := Result and (l_substrg.as_upper.is_equal ("AM") or
-								l_substrg.as_upper.is_equal ("PM"))
+							Result := Result and (l_substrg.is_case_insensitive_equal ("AM") or
+								l_substrg.is_case_insensitive_equal ("PM"))
 						elseif code.is_day_text (code.value) then
 							Result := Result and days.has (l_substrg)
 						elseif code.is_month_text (code.value) then
@@ -405,7 +405,7 @@ feature -- Interface
 			l_day_text := l_parser.day_text
 			if l_day_text /= Void then
 				i := Result.date.day_of_the_week
-				right_day_text := l_day_text.is_equal (days.item (i))
+				right_day_text := l_day_text.same_string (days.item (i))
 			end
 		ensure
 			date_time_exists: Result /= Void
@@ -501,7 +501,7 @@ feature -- Interface
 			value := tmp_ht
 		ensure
 			time_exists: Result /= Void
-			time_correspond: create_time_string (Result).is_equal (s)
+			time_correspond: create_time_string (Result).same_string (s)
 		end
 
 
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

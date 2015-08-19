@@ -34,9 +34,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("dd")
+			Result := s.same_string ("dd")
 		ensure
-			definition: Result = s.is_equal ("dd")
+			definition: Result = s.same_string ("dd")
 		end
 
 	is_day0 (s: STRING): BOOLEAN
@@ -45,9 +45,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]dd")
+			Result := s.same_string ("[0]dd")
 		ensure
-			definition: Result = s.is_equal ("[0]dd")
+			definition: Result = s.same_string ("[0]dd")
 		end
 
 	is_day_text (s: STRING): BOOLEAN
@@ -55,9 +55,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("ddd")
+			Result := s.same_string ("ddd")
 		ensure
-			definition: Result = s.is_equal ("ddd")
+			definition: Result = s.same_string ("ddd")
 		end
 
 	is_year4 (s: STRING): BOOLEAN
@@ -66,9 +66,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("yyyy")
+			Result := s.same_string ("yyyy")
 		ensure
-			definition: Result = s.is_equal ("yyyy")
+			definition: Result = s.same_string ("yyyy")
 		end
 
 
@@ -78,9 +78,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("yy")
+			Result := s.same_string ("yy")
 		ensure
-			definition: Result = s.is_equal ("yy")
+			definition: Result = s.same_string ("yy")
 		end
 
 
@@ -89,9 +89,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("mm")
+			Result := s.same_string ("mm")
 		ensure
-			definition: Result = s.is_equal ("mm")
+			definition: Result = s.same_string ("mm")
 		end
 
 	is_month0 (s: STRING): BOOLEAN
@@ -100,9 +100,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]mm")
+			Result := s.same_string ("[0]mm")
 		ensure
-			definition: Result = s.is_equal ("[0]mm")
+			definition: Result = s.same_string ("[0]mm")
 		end
 
 
@@ -111,9 +111,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("mmm")
+			Result := s.same_string ("mmm")
 		ensure
-			definition: Result = s.is_equal ("mmm")
+			definition: Result = s.same_string ("mmm")
 		end
 
 
@@ -122,9 +122,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("hh")
+			Result := s.same_string ("hh")
 		ensure
-			definition: Result = s.is_equal ("hh")
+			definition: Result = s.same_string ("hh")
 		end
 
 
@@ -134,9 +134,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]hh")
+			Result := s.same_string ("[0]hh")
 		ensure
-			definition: Result = s.is_equal ("[0]hh")
+			definition: Result = s.same_string ("[0]hh")
 		end
 
 
@@ -145,9 +145,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("hh12")
+			Result := s.same_string ("hh12")
 		ensure
-			definition: Result = s.is_equal ("hh12")
+			definition: Result = s.same_string ("hh12")
 		end
 
 	is_hour12_0 (s: STRING): BOOLEAN
@@ -155,9 +155,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]hh12")
+			Result := s.same_string ("[0]hh12")
 		ensure
-			definition: Result = s.is_equal ("[0]hh12")
+			definition: Result = s.same_string ("[0]hh12")
 		end
 
 	is_minute (s: STRING): BOOLEAN
@@ -165,9 +165,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("mi")
+			Result := s.same_string ("mi")
 		ensure
-			definition: Result = s.is_equal ("mi")
+			definition: Result = s.same_string ("mi")
 		end
 
 
@@ -177,9 +177,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]mi")
+			Result := s.same_string ("[0]mi")
 		ensure
-			definition: Result = s.is_equal ("[0]mi")
+			definition: Result = s.same_string ("[0]mi")
 		end
 
 
@@ -188,9 +188,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("ss")
+			Result := s.same_string ("ss")
 		ensure
-			definition: Result = s.is_equal ("ss")
+			definition: Result = s.same_string ("ss")
 		end
 
 
@@ -200,9 +200,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("[0]ss")
+			Result := s.same_string ("[0]ss")
 		ensure
-			definition: Result = s.is_equal ("[0]ss")
+			definition: Result = s.same_string ("[0]ss")
 		end
 
 
@@ -217,10 +217,10 @@ feature -- Preconditions
 			if s.count > 2 then
 				substrg := s.substring (1, 2)
 				substrg2 := s.substring (3, s.count)
-				Result := substrg.is_equal ("ff") and substrg2.is_integer
+				Result := substrg.same_string ("ff") and substrg2.is_integer
 			end
 		ensure
-			definition: Result = ((s.count > 2) and then (s.substring (1, 2).is_equal ("ff") and
+			definition: Result = ((s.count > 2) and then (s.substring (1, 2).same_string ("ff") and
 									s.substring (3, s.count).is_integer))
 		end
 
@@ -229,9 +229,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal (":")
+			Result := s.same_string (":")
 		ensure
-			definition: Result = s.is_equal (":")
+			definition: Result = s.same_string (":")
 		end
 
 
@@ -240,9 +240,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("/")
+			Result := s.same_string ("/")
 		ensure
-			definition: Result = s.is_equal ("/")
+			definition: Result = s.same_string ("/")
 		end
 
 
@@ -251,9 +251,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal ("-")
+			Result := s.same_string ("-")
 		ensure
-			definition: Result = s.is_equal ("-")
+			definition: Result = s.same_string ("-")
 		end
 
 
@@ -262,9 +262,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal (",")
+			Result := s.same_string (",")
 		ensure
-			definition: Result = s.is_equal (",")
+			definition: Result = s.same_string (",")
 		end
 
 
@@ -273,9 +273,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal (" ")
+			Result := s.same_string (" ")
 		ensure
-			definition: Result = s.is_equal (" ")
+			definition: Result = s.same_string (" ")
 		end
 
 
@@ -284,9 +284,9 @@ feature -- Preconditions
 		require
 			s_exists: s /= Void
 		do
-			Result := s.is_equal (".")
+			Result := s.same_string (".")
 		ensure
-			definition: Result = s.is_equal (".")
+			definition: Result = s.same_string (".")
 		end
 
 	is_separator (s: STRING): BOOLEAN
@@ -311,10 +311,10 @@ feature -- Preconditions
 			tmp: STRING
 		do
 			tmp := s.as_upper
-			Result := tmp.is_equal ("AM") or tmp.is_equal ("PM")
+			Result := tmp.same_string ("AM") or tmp.same_string ("PM")
 		ensure
-			definition: Result = s.as_upper.is_equal ("AM") or
-								s.as_upper.is_equal ("PM")
+			definition: Result = s.as_upper.same_string ("AM") or
+								s.as_upper.same_string ("PM")
 		end
 
 note

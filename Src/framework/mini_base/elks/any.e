@@ -28,11 +28,11 @@ feature -- Access
 			generator_not_empty: not Result.is_empty
 		end
 
-	generating_type: TYPE [detachable like Current]
+	frozen generating_type: frozen TYPE [like Current]
 			-- Type of current object
 			-- (type of which it is a direct instance)
-		do
-			Result := {detachable like Current}
+		external
+			"built_in"
  		ensure
  			generating_type_not_void: Result /= Void
  		end
@@ -104,7 +104,8 @@ feature -- Comparison
 			if a = Void then
 				Result := b = Void
 			else
-				Result := b /= Void and then a.is_deep_equal (b)
+				Result := attached a.generating_type.as_frozen as t and then attached t.attempted (a) as u and then
+					attached t.attempted (b) as v and then u.is_deep_equal (v)
 			end
 		ensure
 			both_or_none_void: (a = Void) implies (Result = (b = Void))

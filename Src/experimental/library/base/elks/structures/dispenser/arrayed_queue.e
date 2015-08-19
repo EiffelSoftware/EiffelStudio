@@ -331,7 +331,7 @@ feature -- Resizing
 				area := area.aliased_resized_area (n)
 			end
 		ensure then
-			same_items: linear_representation.is_equal (old linear_representation)
+			same_items: linear_representation ~ old linear_representation
 		end
 
 feature -- Conversion
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

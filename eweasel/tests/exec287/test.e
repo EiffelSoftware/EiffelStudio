@@ -16,7 +16,7 @@ feature
 			last_translated := [0, l]
 
 			test.b := False -- Works
-			test.i := ({ANY}).attempt (7) -- Works
+			test.i := ({ANY}).attempted (7) -- Works
 			test.i := 7 -- Segmentation violation; Operating system signal
 			test.i := True -- Segmentation violation; Operating system signal
 

@@ -7,7 +7,7 @@ feature {NONE}
 
 	make is
 		do
-			x := ({NONE}).attempt ("Weasel")
+			x := ({NONE}).attempted ("Weasel")
 			if x /= Void then
 				print ("Value is not Void%N")
 				print (x); io.new_line

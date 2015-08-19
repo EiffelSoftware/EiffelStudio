@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		require
 			a_guid_attached: a_guid /= Void
 			valid: (create {WEL_GDIP_IMAGE_ENCODER}.make (a_guid)).is_valid (a_guid)
-			valid_for_quality: a_guid.is_equal ((create {WEL_GDIP_IMAGE_ENCODER}.make (a_guid)).quality) implies (0 <= a_value and a_value <= 100)
+			valid_for_quality: a_guid ~ ((create {WEL_GDIP_IMAGE_ENCODER}.make (a_guid)).quality) implies (0 <= a_value and a_value <= 100)
 		do
 			create item.make (size)
 			set_guid (a_guid)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			set_number_of_values (1)
 			set_value (a_value)
 		ensure
-			set: guid.is_equal (a_guid)
+			set: guid ~ a_guid
 			set: value = a_value
 			set: value_type = 4
 			set: number_of_values = 1
@@ -46,7 +46,7 @@ feature -- Command
 		do
 			c_set_guid (item.item, a_guid.item)
 		ensure
-			set: guid.is_equal (a_guid)
+			set: guid ~ a_guid
 		end
 
 	set_value_type (a_type: NATURAL_64)
@@ -209,14 +209,14 @@ feature {NONE} -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

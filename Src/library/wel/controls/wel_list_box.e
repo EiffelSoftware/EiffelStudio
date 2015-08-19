@@ -85,7 +85,7 @@ feature -- Access
 			Result := a_wel_string.string
 		ensure
 			result_exists: Result /= Void
-			same_result_as_strings: Result.is_equal (strings.item (i))
+			same_result_as_strings: Result.same_string (strings.item (i))
 		end
 
 	i_th_text_length (i: INTEGER): INTEGER
@@ -421,14 +421,14 @@ invariant
 	consistent_count: exists and then selected implies count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

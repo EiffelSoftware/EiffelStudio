@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			l_area := an_array.area
 			item.memory_copy ($l_area, count)
 		ensure
-			set: to_array (an_array.lower).is_equal (an_array)
+			set: to_array (an_array.lower) ~ an_array
 		end
 
 feature -- Conversion
@@ -71,7 +71,7 @@ invariant
 	positive_count: count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

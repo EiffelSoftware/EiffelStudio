@@ -160,7 +160,7 @@ feature -- Element change
 			id_set: id = an_id
 		end
 
-	set_rect (a_rect: WEL_RECT)
+	set_rect (a_rect: like rect)
 			-- Set `rect' with `a_rect'.
 		require
 			a_rect_not_void: a_rect /= Void
@@ -325,7 +325,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

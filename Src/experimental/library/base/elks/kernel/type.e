@@ -149,12 +149,23 @@ feature -- Conversion
 			adapted: Result ~ g
 		end
 
-	attempt alias "#?" (obj: detachable separate ANY): detachable G
-			-- Result of assignment attempt of `obj' to entity of type G
+	attempted alias "/" (obj: detachable separate ANY): detachable G
+			-- If possible, `obj' understood as an object of type `G';
+			-- If not, default detachable value of type `G'..
 		do
 			if attached {G} obj as l_g then
 				Result := l_g
 			end
+		ensure
+			assigned_or_void: Result = obj or Result = default_detachable_value
+		end
+
+	attempt alias "#?" (obj: detachable separate ANY): detachable G
+			-- Result of assignment attempt of `obj' to entity of type G
+		obsolete
+			"Use `attempted' or its operator alias `/'"
+		do
+			Result := attempted (obj)
 		ensure
 			assigned_or_void: Result = obj or Result = default_detachable_value
 		end
@@ -301,7 +312,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

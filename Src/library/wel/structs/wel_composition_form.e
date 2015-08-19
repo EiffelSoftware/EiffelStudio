@@ -59,7 +59,7 @@ feature -- Status Setting
 			style_set: style = sty
 		end
 
-	set_point (a_point: WEL_POINT)
+	set_point (a_point: like point)
 			-- Set `a_point' tp `point'.
 		require
 			exists: exists
@@ -72,7 +72,7 @@ feature -- Status Setting
 			point_set: point.is_equal (a_point)
 		end
 
-	set_force_point (a_point: WEL_POINT)
+	set_force_point (a_point: like point)
 			-- Set `a_point' tp `point'.
 			-- Override IME settings.
 		require
@@ -86,7 +86,7 @@ feature -- Status Setting
 			point_set: point.is_equal (a_point)
 		end
 
-	set_rect (a_rect: WEL_RECT)
+	set_rect (a_rect: like rect)
 			-- Set `rect' with `a_rect'.
 		require
 			exists: exists
@@ -145,14 +145,14 @@ feature -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -57,11 +57,38 @@ feature -- Access
 	root_path: detachable PATH
 			-- Root location for files universe.
 
+	resolved_location: PATH
+			-- Path of related file, taking into account `root_path' and `location'.
+		do
+				-- Process html generation
+			if attached root_path as l_root_path then
+				Result := l_root_path.extended_path (location)
+			else
+				Result := location
+			end
+		end
+
 feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is current block empty?
+		do
+			Result := not exists
+			debug ("cms")
+				Result := True
+			end
+		end
 
 	is_raw: BOOLEAN
 			-- Is raw?
 			-- If True, do not get wrapped it with block specific div	
+
+	exists: BOOLEAN
+		local
+			ut: FILE_UTILITIES
+		do
+			Result := ut.file_path_exists (resolved_location)
+		end
 
 feature -- Element change
 
@@ -94,11 +121,7 @@ feature -- Conversion
 			ut: FILE_UTILITIES
 		do
 				-- Process html generation
-			if attached root_path as l_root_path then
-				p := l_root_path.extended_path (location)
-			else
-				p := location
-			end
+			p := resolved_location
 			if ut.file_path_exists (p) then
 				create f.make_with_path (p)
 				if f.exists and then f.is_access_readable then
@@ -145,4 +168,7 @@ feature -- Debug
 			end
 			Result.append ("%N")
 		end
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

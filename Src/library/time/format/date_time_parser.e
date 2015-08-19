@@ -275,7 +275,7 @@ feature -- Basic operations
 							until
 								j > 12
 							loop
-								if l_months.item (j).is_equal (l_substrg) then
+								if l_months.item (j).same_string (l_substrg) then
 									month_val := j
 								else
 									-- error
@@ -301,7 +301,7 @@ feature -- Basic operations
 						end
 					when {DATE_TIME_CODE}.meridiem_type_code then
 						l_is_pm_computed := True
-						l_is_pm := l_substrg.as_upper.is_equal ("PM")
+						l_is_pm := l_substrg.is_case_insensitive_equal ("PM")
 					when {DATE_TIME_CODE}.minute_numeric_type_code, {DATE_TIME_CODE}.minute_numeric_on_2_digits_type_code then
 						minute_val := l_substrg.to_integer
 					when {DATE_TIME_CODE}.second_numeric_type_code, {DATE_TIME_CODE}.second_numeric_on_2_digits_type_code then
@@ -371,7 +371,7 @@ invariant
 	valid_value_implies_parsing: is_value_valid implies parsed
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -25,7 +25,7 @@ feature -- Creation
 		do
 			set_value (v)
 		ensure
-			value_set: value.is_equal (v)
+			value_set: value.same_string (v)
 		end
 
 feature -- Status report
@@ -273,7 +273,7 @@ feature -- Change
 			end
 			name := l_name
 		ensure
-			value_set: value.is_equal (v)
+			value_set: value.same_string (v)
 		end
 
 feature -- Attributes
@@ -336,7 +336,7 @@ feature {FIND_SEPARATOR_FACILITY} -- Implementation
 		-- Type code constants
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

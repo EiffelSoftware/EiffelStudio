@@ -808,7 +808,14 @@ feature -- Access
 			n2 := a_other.count
 
 			if n1 = 0 then
-				Result := a_other.twin
+					-- There is no way to type this but we know that if
+					-- Current is a tuple without any actual generic parameter
+					-- then `a_other' does conform to `like Current'.
+				if attached {like plus} a_other.twin as l_res then
+					Result := l_res
+				else
+					check current_is_empty_tuple: count = 0 end
+				end
 			elseif n2 = 0 then
 				Result := twin
 			else
@@ -1503,7 +1510,7 @@ feature {NONE} -- Externals: Setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

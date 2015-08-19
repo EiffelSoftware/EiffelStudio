@@ -11,19 +11,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -62,9 +62,9 @@ char *win_eif_getenv (char *k, char *app)
 		char modulename [PATH_MAX + 1];
 		HKEY hkey;
 		DWORD bsize;
-	
+
 		GetModuleFileName (NULL, modulename, PATH_MAX);
-	
+
 		if (app == NULL)
 			appl_len = strrchr (modulename, '.') - strrchr (modulename, '\\') -1;
 		else
@@ -72,22 +72,22 @@ char *win_eif_getenv (char *k, char *app)
 		key_len = strlen (k);
 		if ((key = (char *) calloc (appl_len + 57 + key_len, 1)) == NULL)
 			return result;
-	
+
 		if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL) {
 			free (key);
 			return result;
 		}
-	
+
 		strcpy (lower_k, k);
 		CHECK ("Valid length", key_len <= INT32_MAX);
 		CharLowerBuff (lower_k, (DWORD) key_len);
-	
-		strcpy (key, "Software\\ISE\\Eiffel_15.07\\");
+
+		strcpy (key, "Software\\ISE\\Eiffel_15.08\\");
 		if (app == NULL)
 			strncat (key, strrchr(modulename, '\\')+1, appl_len);
 		else
 			strcat (key, app);
-	
+
 		bsize = 1024;
 		if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 			if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {

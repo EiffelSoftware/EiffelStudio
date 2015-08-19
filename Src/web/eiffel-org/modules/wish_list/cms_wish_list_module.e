@@ -184,12 +184,12 @@ feature -- Hooks configuration
 			auto_subscribe_to_hooks (a_response)
 		end
 
+
 	response_alter (a_response: CMS_RESPONSE)
 			-- <Precursor>
 		do
-			--TODO add javascript support
+			a_response.add_style (a_response.url ("/module/" + name + "/files/css/wish_list.css", Void), Void)
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

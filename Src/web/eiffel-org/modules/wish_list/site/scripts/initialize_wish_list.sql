@@ -1,5 +1,5 @@
 
-	-- Wish list categories
+	
 INSERT INTO wish_list_categories (synopsis, description, is_active) 
 VALUES ('Compiler', '', 1);
 
@@ -16,8 +16,7 @@ INSERT INTO wish_list_categories (synopsis, description, is_active)
 VALUES ('Other', '', 1);
 
 
-	-- Wish list status
-
+	
 INSERT INTO wish_list_status (synopsis, description) 
 VALUES ('Open', 'The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.');
 

@@ -1848,7 +1848,7 @@ table.eiffel_org_nodes tbody td {
   color: white;
 }
 .footer-holder .btn-holder .btn.btn-download:after {
-  background: url(../images/ico-download2.png) no-repeat;
+  background: url(../images/download_b_30x30.png) no-repeat;
 }
 .footer-holder .btn-holder .btn.btn-download:hover {
   background-color: #6a8c28;
@@ -1867,6 +1867,9 @@ table.eiffel_org_nodes tbody td {
   background-image: linear-gradient(top, #2B4054, #12273A);
   color: white;
 }
+.footer-holder .btn-holder .btn.btn-tryonline:after {
+  background: url(../images/play12_b_30x30.png) no-repeat;
+}
 .footer-holder .btn-holder .btn.btn-tryonline:hover {
   background-color: #12273A;
   background-color: #12273A;
@@ -1884,6 +1887,9 @@ table.eiffel_org_nodes tbody td {
   background-image: -o-linear-gradient(top, #3c75d8, #2b4175);
   background-image: linear-gradient(top, #3c75d8, #2b4175);
   color: white;
+}
+.footer-holder .btn-holder .btn.btn-contribute:after {
+  background: url(../images/arrows_b_30x30.png) no-repeat;
 }
 .footer-holder .btn-holder .btn.btn-contribute:hover {
   background-color: #2b4175;
@@ -2017,7 +2023,7 @@ table.eiffel_org_nodes tbody td {
 /* Content */
 #content ul.cards {
   overflow: hidden;
-  padding: 10px 0 0 10px;
+  padding: 8px 0 0 8px;
   margin: 0;
 }
 #content ul.cards li {
@@ -2025,7 +2031,7 @@ table.eiffel_org_nodes tbody td {
   width: 320px;
   height: 320px;
   float: left;
-  margin: 0 20px 30px 20px;
+  margin: 0 18px 26px 18px;
   text-align: center;
   -webkit-border-radius: 7px;
   border-radius: 7px;
@@ -2035,7 +2041,7 @@ table.eiffel_org_nodes tbody td {
 }
 #content ul.cards li > a {
   display: block;
-  padding: 20px 5px 5px 5px;
+  padding: 18px 5px 5px 5px;
 }
 #content ul.cards li .ico {
   width: 52px;
@@ -2044,13 +2050,13 @@ table.eiffel_org_nodes tbody td {
   display: inline-block;
   vertical-align: top;
   background: #1e3b4b;
-  margin: 0 0 30px;
+  margin: 0 0 15px;
   -webkit-border-radius: 100%;
   border-radius: 100%;
 }
 #content ul.cards li h2 {
   color: #99cc33;
-  margin: 0 0 11px;
+  margin: 0 0 8px;
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
 }
 #content ul.cards li p {
@@ -2060,16 +2066,16 @@ table.eiffel_org_nodes tbody td {
   display: inline-block;
 }
 #content ul.cards li.large-card {
-  height: 395px;
+  height: 365px;
 }
 #content ul.cards li.big-card {
-  height: 325px;
+  height: 305px;
 }
 #content ul.cards li.medium-card {
-  height: 255px;
+  height: 225px;
 }
 #content ul.cards li.small-card {
-  height: 185px;
+  height: 165px;
 }
 #content .rss-block {
   overflow: hidden;

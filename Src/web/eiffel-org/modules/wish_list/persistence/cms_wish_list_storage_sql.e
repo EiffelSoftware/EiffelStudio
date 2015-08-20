@@ -18,7 +18,6 @@ inherit
 create
 	make
 
-
 feature -- Acess: WishList
 
 	row_count_wish_list (a_category: INTEGER; a_status: STRING; a_filter: STRING; a_content:INTEGER ): INTEGER
@@ -434,7 +433,6 @@ feature {NONE} -- Implemenation
 	store_wish (a_wish: CMS_WISH_LIST)
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_wid: like last_inserted_wish_id
 			now: DATE_TIME
 		do
 			create now.make_now_utc
@@ -483,7 +481,6 @@ feature {NONE} -- Implemenation
 	store_wish_interaction (a_wish_interaction: CMS_WISH_LIST_INTERACTION)
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_wid: like last_inserted_wish_id
 			now: DATE_TIME
 		do
 			create now.make_now_utc

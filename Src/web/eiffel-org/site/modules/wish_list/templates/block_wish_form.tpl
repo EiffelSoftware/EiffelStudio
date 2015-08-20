@@ -1,19 +1,19 @@
 		<div class="row">
 				{if isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish_form/{$id/}" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
+					<form class="form-inline well" action="{$site_url/}resources/wish/{$id/}/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
 						{if isset="$status"}
 							<input type="hidden" name="status" value="{$status.id/}">
 						{/if}
 				{/if}
 				{unless isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish_form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
+					<form class="form-inline well" action="{$site_url/}resources/wish/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
 				{/unless}
 						{unless isset="$status"}
 							<input type="hidden" name="status" value="1">
 						{/unless}
 					<fieldset>
 						<legend>Wish Submission</legend>
-						<label class="class-form-2" data-original-title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
+						<label class="class-form-2 tooltip" title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 						<select class="class-form-4" data-style="btn-primary" name="category" form="wish" required>
 											<option value=""></option>
 											{foreach from="$categories" item="item"}
@@ -37,14 +37,14 @@
 									</div>
 								{/foreach}
 						{/if}
-						<label class="class-form-2" for="fileInput" itemprop="attachment" data-original-title="<p>List of files that will be stored together with the description of the problem</p>">Temporary Attachments</label>
+						<label class="class-form-2 tooltip" for="fileInput" itemprop="attachment" title="<p>List of files that will be stored together with the description of the problem</p>">Temporary Attachments</label>
 								<input  name="uploaded_file[]" id="fileInput" type="file" multiple>
 							<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
 
-							<label class="class-form-4" has-success has-feedback itemprop="synopsis" data-original-title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem wish subjects.</p>">Synopsis</label>
+							<label class="class-form-4 tooltip" has-success has-feedback itemprop="synopsis" title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem wish subjects.</p>">Synopsis</label>
 							<input type="text" id="synopsis" name="synopsis" class="class-form-6" value="{$synopsis/}" required>
 							<div>
-							<label class="class-form-12" for="description" itemprop="description" data-original-title="<p>Precise description of the problem.</p>">Description</label>
+							<label class="class-form-12 tooltip" for="description" itemprop="description" title="<p>Precise description of the problem.</p>">Description</label>
 							<textarea  class="class-form-textarea" id="description" name="description" rows="17" placeholder="" maxlength="32768" required form="wish">{$description/}</textarea>
 							<small><p>Note: Description cannot exceed 32768 bytes (32 KB).</p></small>
 							</div>

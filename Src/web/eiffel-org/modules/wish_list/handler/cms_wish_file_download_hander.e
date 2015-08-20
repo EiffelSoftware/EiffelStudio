@@ -1,11 +1,10 @@
 note
-	description: "Summary description for {CMS_WISH_FILE_DOWNLOAD_HANDER}."
+	description: "Download files from wish items and interactions"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	CMS_WISH_FILE_DOWNLOAD_HANDER
-
 
 inherit
 
@@ -47,37 +46,44 @@ feature -- GET
 		local
 			l_found: BOOLEAN
 		do
-			if attached current_user (req) as l_user then
-				if
-					attached {WSF_STRING} req.path_parameter ("wish_id") as l_wid and then
-					attached {WSF_STRING} req.path_parameter ("filename") as l_name
-				then
-					if attached wish_api.wish_attachments (l_wid.integer_value) as l_attachments then
-						across l_attachments as c until l_found loop
-							if c.item.name.is_case_insensitive_equal (l_name.value) then
-								l_found := True
-								compute_response_get_txt (req, res, c.item.content)
-							end
+			to_implement ("Download all--depend on a zipper library like 7zip")
+			if
+				attached {WSF_STRING} req.path_parameter ("wish_id") as l_wid and then
+				attached {WSF_STRING} req.path_parameter ("id") as l_id and then
+				attached {WSF_STRING} req.path_parameter ("filename") as l_name
+			then
+				if attached wish_api.wish_interactions_attachments (l_wid.integer_value, l_id.integer_value) as l_attachments then
+					across
+						l_attachments as c
+					until
+						l_found
+					loop
+						if c.item.name.is_case_insensitive_equal (l_name.value) then
+							l_found := True
+							compute_response_get_txt (req, res, c.item.content)
 						end
 					end
-				elseif
-					attached {WSF_STRING} req.path_parameter ("wish_id") as l_wid and then
-					attached {WSF_STRING} req.path_parameter ("id") as l_id and then
-					attached {WSF_STRING} req.path_parameter ("filename") as l_name
-				then
-					if attached wish_api.wish_interactions_attachments (l_wid.integer_value, l_id.integer_value) as l_attachments then
-						across l_attachments as c until l_found loop
-							if c.item.name.is_case_insensitive_equal (l_name.value) then
-								l_found := True
-								compute_response_get_txt (req, res, c.item.content)
-							end
+				end
+			elseif
+				attached {WSF_STRING} req.path_parameter ("wish_id") as l_wid and then
+				attached {WSF_STRING} req.path_parameter ("filename") as l_name
+			then
+				if attached wish_api.wish_attachments (l_wid.integer_value) as l_attachments then
+					across
+						l_attachments as c
+					until
+						l_found
+					loop
+						if c.item.name.is_case_insensitive_equal (l_name.value) then
+							l_found := True
+							compute_response_get_txt (req, res, c.item.content)
 						end
 					end
 				end
 			end
 		end
 
-feature -- Response	
+feature -- Response
 
 	compute_response_get_txt (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
 			--Simple response to download content
@@ -94,4 +100,5 @@ feature -- Response
 			res.put_header_text (h.string)
 			res.put_string (l_msg)
 		end
+
 end

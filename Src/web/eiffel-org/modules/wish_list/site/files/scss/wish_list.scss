@@ -111,7 +111,7 @@
 			@include grid(12);
 			background: #e9eced;
 			height: 100%;
-			width: 90%;
+			width: 95%;
 			float: left;
 			margin: 0 20px 30px 20px;
 			padding: 10px 10px 10px 10px;
@@ -138,8 +138,9 @@
 
 
 table.wish_nodes{ 
-	width:100%;
+	width:97%;
 	margin-bottom: 20px;
+	margin-left: 20px;
 	caption { 
  		 font-size: 2rem; color: #444;
   		 margin: 1rem;
@@ -179,8 +180,9 @@ div.btn-add-wish {
 	 color: white;
 	 text-align: center;
 	 padding-left:4px;
+	 margin-left: 20px;
 	 @include border-radius(10px);
-	display:block;
+	 display:block;
 	 &:hover{
 			background: #e3e7e8;
 		    	a {

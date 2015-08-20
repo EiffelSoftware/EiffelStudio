@@ -145,8 +145,8 @@ feature -- Router
 
 				-- Wish Download
 			create l_wish_file_download_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/download/wish/{wish_id}/{filename}", l_wish_file_download_handler, a_router.methods_get)
-			a_router.handle ("/download/wish/{wish_id}/interaction/{id}/{filename}", l_wish_file_download_handler, a_router.methods_get)
+			a_router.handle ("/resources/wish/{wish_id}/download/{filename}", l_wish_file_download_handler, a_router.methods_get)
+			a_router.handle ("/resources/wish/{wish_id}/interaction/{id}/download/{filename}", l_wish_file_download_handler, a_router.methods_get)
 
 				-- Wish list
 			create l_wish_handler.make (a_api, a_wish_list_api)
@@ -154,25 +154,20 @@ feature -- Router
 
 				-- Wish Form
 			create l_wish_form_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/resources/wish_form", l_wish_form_handler, a_router.methods_get_post)
-			a_router.handle ("/resources/wish_form/{id}", l_wish_form_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/form", l_wish_form_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/{id}/form", l_wish_form_handler, a_router.methods_get_post)
 
 				-- Wish Interaction Form
 			create l_wish_interaction_form_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/resources/wish_detail/{wish_id}/interaction_form", l_wish_interaction_form_handler, a_router.methods_get_post)
-			a_router.handle ("/resources/wish_detail/{wish_id}/interaction_form/{id}", l_wish_interaction_form_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/detail/{wish_id}/interaction_form", l_wish_interaction_form_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/detail/{wish_id}/interaction_form/{id}", l_wish_interaction_form_handler, a_router.methods_get_post)
 
 
 				-- Widh details
 			create l_wish_detail_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/resources/wish_detail/{id}", l_wish_detail_handler, a_router.methods_get_post)
-			a_router.handle ("/resources/wish_detail/{?search}", l_wish_detail_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/{id}/detail", l_wish_detail_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/detail/{?search}", l_wish_detail_handler, a_router.methods_get_post)
 
-
-				-- Wish Interaction Form
-			create l_wish_interaction_form_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/resources/wish_detail/{wish_id}/interaction_form", l_wish_interaction_form_handler, a_router.methods_get_post)
-			a_router.handle ("/resources/wish_detail/{wish_id}/interaction_form/{id}", l_wish_interaction_form_handler, a_router.methods_get_post)
 
 		end
 
@@ -189,6 +184,7 @@ feature -- Hooks configuration
 			-- <Precursor>
 		do
 			a_response.add_style (a_response.url ("/module/" + name + "/files/css/wish_list.css", Void), Void)
+			a_response.add_javascript_url (a_response.url ("/module/" + name + "/files/js/jquery.tooltipster.min.js", Void))
 		end
 
 note

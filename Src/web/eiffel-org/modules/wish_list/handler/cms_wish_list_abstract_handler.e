@@ -52,8 +52,6 @@ feature {NONE} -- Helpers
 feature {NONE} -- Block views
 
 	get_block_view_login (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-		local
-			vals: CMS_VALUE_TABLE
 		do
 			if attached template_block (a_block_id, a_response) as l_tpl_block then
 				a_response.add_block (l_tpl_block, "content")

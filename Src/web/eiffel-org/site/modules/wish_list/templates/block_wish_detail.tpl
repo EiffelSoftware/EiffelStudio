@@ -2,7 +2,7 @@
 	{if isset="$edit"}
 	{/if}
 		<div id="primary-tabs" class="menu tabs"><ul class="horizontal">
-			<li class="active"><a href="{$site_url/}resources/wish_form/{$wish.id/}">Edit</a></li></ul>
+			<li class="active"><a href="{$site_url/}resources/wish/{$wish.id/}/form">Edit</a></li></ul>
 		</div>	
 
 	<div class="row">
@@ -22,7 +22,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading">
 												<span class="label label-primary-api-interactions" itemprop="attachment">Attachment:</span>
-													<a href="{$site_url/}download/wish/{$wish.id/}/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href="{$site_url/}resources/wish/{$wish.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
 												<span class="label label-primary-api-interactions">Size:</span>{$elem.size/}
 											</div>
 										</div>
@@ -46,7 +46,7 @@
 					<br/>
 					{foreach from="$item.attachments" item="elem"}
 								<span class="label label-primary-api-interactions" itemprop="attachment">Attachment:</span>
-								<a href="{$site_url/}download/wish/{$wish.id/}/interaction/{$item.id/}/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="{$site_url/}resources/wish/{$wish.id/}/interaction/{$item.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<span class="label label-primary-api-interactions">Size:</span>{$elem.size/}
 					{/foreach}
 				</div>
@@ -56,6 +56,8 @@
 
 {if isset="$user"}
 	<div class="btn-add-wish">
-		<a href="{$site_url/}resources/wish_detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
+		<a href="{$site_url/}resources/wish/detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
 	</div>
 {/if}
+
+

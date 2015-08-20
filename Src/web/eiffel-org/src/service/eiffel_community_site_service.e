@@ -31,7 +31,7 @@ feature -- CMS setup
 	setup_storage (a_setup: CMS_SETUP)
 		do
 			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_MYSQL_BUILDER}.make, "mysql")
-			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
 		end
 
 	setup_modules (a_setup: CMS_SETUP)

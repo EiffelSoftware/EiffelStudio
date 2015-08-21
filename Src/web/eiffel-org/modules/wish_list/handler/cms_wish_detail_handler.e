@@ -73,6 +73,9 @@ feature {NONE} -- Implementation
 				if attached wish_api.wish_by_id (a_id.to_integer) as l_wish then
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 					if attached template_block ("wish_detail", r) as l_tpl_block then
+						if wish_api.has_permission_for_action_on_wish ("edit", l_wish, current_user (req)) then
+							l_tpl_block.set_value (True, "can_edit")
+						end
 						l_tpl_block.set_value (l_wish, "wish")
 						r.add_block (l_tpl_block, "content")
 					end

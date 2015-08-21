@@ -26,6 +26,22 @@
 				background: #e3e7e8;
 			}
 			display:block;
+			> select.class-form-6 {
+				@include grid-width(6);
+				margin-left: 5px;
+    			margin-bottom: 5px;
+			}
+			> select.class-form-4 {
+				@include grid-width(4);
+				margin-left: 5px;
+    			margin-bottom: 5px;
+			}
+				> input.class-form-1 {
+				@include grid-width(1);
+			}
+			> input.class-form-2 {
+				@include grid-width(2);
+			}
 			> label.class-form-1 {
 				@include grid-width(1);
 			}

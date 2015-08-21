@@ -1,9 +1,9 @@
 <h1 class="sub-header">WISH# {$wish.id/} {$wish.synopsis/} </h1>  
-	{if isset="$edit"}
-	{/if}
+	{if isset="$can_edit"}
 		<div id="primary-tabs" class="menu tabs"><ul class="horizontal">
 			<li class="active"><a href="{$site_url/}resources/wish/{$wish.id/}/form">Edit</a></li></ul>
 		</div>	
+	{/if}
 
 	<div class="row">
 			<section>
@@ -15,7 +15,7 @@
 				<span  class="class-form-6" itemprop="synopsis">Synopsis:</span> <span class="class-form-6">{$wish.synopsis/}</span> <br>
 			
 				<strong>Description</strong>
-				<textarea class="class-form-textarea" style="border: none ;background-color:white;" rows="17">{$wish.description/}</textarea>
+				<textarea class="class-form-textarea" style="border: none ;background-color:white;" rows="17" readonly>{$wish.description/}</textarea>
 				{foreach from="$wish.attachments" item="elem"}
 								<div class="row">
 									<div class="col-xs-1">

@@ -46,6 +46,14 @@ feature -- Access : WishList
 		deferred
 		end
 
+
+	wish_author (a_wish: CMS_WISH_LIST): detachable CMS_USER
+			-- Wish's author. if any.
+		require
+			valid_wish: a_wish.has_id
+		deferred
+		end
+
 feature -- Change: Wishlist
 
 	save_wish (a_wish: CMS_WISH_LIST)

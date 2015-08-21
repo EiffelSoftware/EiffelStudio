@@ -13,7 +13,7 @@
 									<textarea class="class-form-textarea" id="description" name="description" rows="17" placeholder="" required form="wish">{$form.description/}</textarea>
 								</div>
 						<p></p>
-						{if condition="$has_permissions"}
+						{if condition="$can_edit_category"}
 						<div class="row">
 							<div class="col-xs-2">
 								<label class="control-label" itemprop="category">Change Category from <strong>{$form.wish.category.synopsis/}</strong> to </label>
@@ -32,6 +32,8 @@
 								</select>
 							</div>
 						</div>
+						{/if}
+						{if condition="$can_edit_status"}
 						<div class="row">
 							<div class="col-xs-2">
 								<label class="control-label" itemprop="status">Change status from <strong>{$form.wish.status.synopsis/}</strong> to </label>

@@ -87,6 +87,31 @@ feature -- Access Wish List
 			end
 		end
 
+
+	is_author_of_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+			-- Is the user `u' owner of the wish `a_wish'.
+		do
+			if attached wish_list_storage.wish_author (a_wish) as l_author then
+				Result := u.same_as (l_author)
+			end
+		end
+
+feature -- Permission Scope: Node
+
+	has_permission_for_action_on_wish (a_action: READABLE_STRING_8; a_wish: CMS_WISH_LIST; a_user: detachable CMS_USER; ): BOOLEAN
+			-- Has permission to execute action `a_action' on wish `a_wish', by eventual user `a_user'?
+		local
+			l_type_name: READABLE_STRING_8
+		do
+			l_type_name := a_wish.type
+			Result := cms_api.user_has_permission (a_user, a_action + " any " + l_type_name)
+			if not Result and a_user /= Void then
+				if is_author_of_wish (a_user, a_wish) then
+					Result := cms_api.user_has_permission (a_user, a_action + " own " + l_type_name)
+				end
+			end
+		end
+
 feature -- Change wish list
 
 	save_wish (a_wish: CMS_WISH_LIST)

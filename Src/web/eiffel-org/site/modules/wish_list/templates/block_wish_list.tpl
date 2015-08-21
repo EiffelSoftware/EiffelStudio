@@ -2,7 +2,7 @@
 
 <div class="row">
       <form action="{$site_url/}resources/wish_list" id="search" method="GET" itemprop="search">
-      <input type="hidden" name="size" value="{$size/}"/>
+      		<input type="hidden" name="size" value="{$size/}"/>
               <label class="class-form-2 tooltip" itemprop="category" title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 	          <select class="class-form-4" data-style="btn-primary" name="category" form="search" itemprop="search">
 	             <option value="0">ALL</option>
@@ -16,7 +16,7 @@
 	                {/foreach}
 	            </select>
 
-		      <label class="class-form-2 tooltip" itemprop="status" title="<small><p>The status of a problem can be one of the following:</p>
+		      <label class="class-form-4 tooltip" itemprop="status" title="<small><p>The status of a problem can be one of the following:</p>
                 <ul>
                   <li><b>Open</b> The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
                   <li><b>Analyzed</b> The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
@@ -33,11 +33,11 @@
                 {unless condition="$item.is_selected"}
                   <input type="checkbox" id="checkbox-status-{$item.id/}" name="status" value="{$item.id/}"/>
                 {/unless}
-              <label class="class-form-1" for="checkbox-status-{$item.id/}">
+              <label class="class-form-2" for="checkbox-status-{$item.id/}">
                 <img src="{$site_url/}module/wish_list/files/images/status_{$item.id/}.gif" class="img-rounded tooltip" title="{$item.synopsis/}"/>
               </label>
               {/foreach}
-          <label class="class-form-2 tooltip" title="To retrieve wish list items filtered by default synopsis or Content, Descriptions, Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
+          <label class="class-form-4 tooltip" title="To retrieve wish list items filtered by default synopsis or Content, Descriptions, Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
          {if isset="$filter"}
             <input type="text" name="filter" class="form-control" placeholder="" value="{$filter/}">
           {/if}

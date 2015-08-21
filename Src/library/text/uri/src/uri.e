@@ -316,7 +316,7 @@ feature -- Access
 
 feature -- Access
 
-	decoded_path: READABLE_STRING_32
+	decoded_path: STRING_32
 			-- Decoded `path'
 		local
 			s: STRING_32
@@ -468,7 +468,7 @@ feature -- Access
 
 feature -- Query
 
-	hier: READABLE_STRING_8
+	hier: STRING_8
 			-- Hier part.
 			-- hier-part   = "//" authority path-abempty
             --      / path-absolute
@@ -523,7 +523,7 @@ feature -- Query
 			end
 		end
 
-	authority: detachable READABLE_STRING_8
+	authority: detachable STRING_8
 			-- Hierarchical element for naming authority.
 			--| RFC3986: authority   = [ userinfo "@" ] host [ ":" port ]
 		local
@@ -567,7 +567,7 @@ feature -- Conversion
 			end
 		end
 
-	string: READABLE_STRING_8
+	string: STRING_8
 			-- String representation.
 			-- scheme://username:password@hostname/path?query#fragment
 		local

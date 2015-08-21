@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="svn" uuid="542546F4-A62F-4E6B-B298-C7EBAE7B82A8" library_target="svn">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="svn" uuid="542546F4-A62F-4E6B-B298-C7EBAE7B82A8" library_target="svn">
 	<target name="svn">
 		<description>Eiffel SVN (Subversion library)</description>
 		<root all_classes="true"/>
@@ -8,11 +8,12 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser-safe.ecf"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree-safe.ecf"/>
 		<cluster name="svn" location=".\" recursive="true">

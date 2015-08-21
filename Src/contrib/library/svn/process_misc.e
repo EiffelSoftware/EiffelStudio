@@ -11,17 +11,21 @@ feature
 
 	last_error: INTEGER
 
-	output_of_command (a_cmd: STRING; a_dir: detachable STRING): detachable STRING
+	output_of_command (a_cmd: READABLE_STRING_GENERAL; a_dir: detachable PATH): detachable STRING
 		local
 			pf: PROCESS_FACTORY
 			p: PROCESS
 			retried: BOOLEAN
+			dn: detachable READABLE_STRING_32
 		do
 			if not retried then
 				last_error := 0
 				create Result.make (10)
 				create pf
-				p := pf.process_launcher_with_command_line (a_cmd, a_dir)
+				if a_dir /= Void then
+					dn := a_dir.name
+				end
+				p := pf.process_launcher_with_command_line (a_cmd, dn)
 				p.set_hidden (True)
 				p.set_separate_console (False)
 				p.redirect_output_to_agent (agent (res: STRING; s: STRING)
@@ -39,7 +43,7 @@ feature
 			retry
 		end
 
-	launch_no_wait_command (a_cmd, a_dir: STRING; is_hidden: BOOLEAN)
+	launch_no_wait_command (a_cmd: READABLE_STRING_GENERAL; a_dir: PATH; is_hidden: BOOLEAN)
 		local
 			pf: PROCESS_FACTORY
 			p: PROCESS
@@ -48,7 +52,7 @@ feature
 			if not retried then
 				last_error := 0
 				create pf
-				p := pf.process_launcher_with_command_line (a_cmd, a_dir)
+				p := pf.process_launcher_with_command_line (a_cmd, a_dir.name)
 				p.set_hidden (True)
 				p.set_separate_console (False)
 				p.launch
@@ -60,4 +64,12 @@ feature
 			retry
 		end
 
+note
+	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Jocelyn Fiat
+			 Contact: jocelyn@eiffelsolution.com
+			 Website http://www.eiffelsolution.com/
+		]"
 end

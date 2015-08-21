@@ -12,25 +12,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_localisation: STRING)
+	make (a_localisation: READABLE_STRING_8)
 		do
 			localisation := a_localisation
 		end
 
 feature -- Access
 
-	localisation: STRING assign set_localisation
+	localisation: STRING_32 assign set_localisation
 	url: detachable STRING assign set_url
-	repository_root: detachable STRING assign set_repository_root
+	repository_root: detachable STRING_32 assign set_repository_root
 	repository_uuid: detachable STRING assign set_repository_uuid
 	revision: INTEGER assign set_revision
-	last_changed_author: detachable STRING assign set_last_changed_author
+	last_changed_author: detachable STRING_32 assign set_last_changed_author
 	last_changed_rev: INTEGER assign set_last_changed_rev
 	last_changed_date: detachable STRING assign set_last_changed_date
 
 feature -- Element change
 
-	set_localisation (v: STRING)
+	set_localisation (v: STRING_32)
 		do
 			localisation := v
 		end
@@ -40,7 +40,7 @@ feature -- Element change
 			url := v
 		end
 
-	set_repository_root (v: detachable STRING)
+	set_repository_root (v: detachable STRING_32)
 		do
 			repository_root := v
 		end
@@ -55,7 +55,7 @@ feature -- Element change
 			revision := v
 		end
 
-	set_last_changed_author (v: detachable STRING)
+	set_last_changed_author (v: detachable STRING_32)
 		do
 			last_changed_author := v
 		end
@@ -71,7 +71,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 2003-2010, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

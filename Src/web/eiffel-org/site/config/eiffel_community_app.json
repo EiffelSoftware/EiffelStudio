@@ -1,0 +1,21 @@
+{
+	"database": {
+		"datasource": {
+			"driver": "",
+			"environment": "app",
+		},
+		"environments": {
+			"app": {
+				"connection_string":""
+			}
+		}
+	},
+	"smtp": {
+		"server": "null"
+		},
+	"logger": { 
+			"level":"DEBUG",
+			"type":"stderr",
+			"backup_count":"4"
+		}
+}

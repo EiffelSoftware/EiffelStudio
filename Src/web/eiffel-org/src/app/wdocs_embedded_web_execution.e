@@ -36,6 +36,31 @@ feature {NONE} -- Initialization
 			initialize_cms_execution
 		end
 
+feature -- CMS setup
+
+	setup_storage (a_setup: CMS_SETUP)
+		do
+		end
+
+	setup_modules (a_setup: CMS_SETUP)
+		local
+			m: CMS_MODULE
+			wdocs: WDOCS_MODULE
+		do
+				-- Wiki docs
+			create wdocs.make
+			m := wdocs
+			m.enable
+			a_setup.register_module (m)
+
+				-- Others...
+			debug
+				create {CMS_DEBUG_MODULE} m.make
+				m.enable
+				a_setup.register_module (m)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	new_cms_environment: APP_CMS_ENVIRONMENT

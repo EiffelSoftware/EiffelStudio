@@ -224,7 +224,7 @@ feature -- Access
 	is_absolute: BOOLEAN
 			-- Is current URI represents an absolute path?
 
-	hier: READABLE_STRING_8
+	hier: STRING_8
 			-- Hier part.
 			-- hier-part   = "//" authority path-abempty
             --      / path-absolute
@@ -249,7 +249,7 @@ feature -- Access
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

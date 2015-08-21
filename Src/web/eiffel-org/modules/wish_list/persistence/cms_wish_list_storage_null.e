@@ -47,6 +47,11 @@ feature -- Acess : WishList
 		do
 		end
 
+	wish_author (a_wish: CMS_WISH_LIST): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
 feature -- Change: WishList
 
 	save_wish (a_wish: CMS_WISH_LIST)

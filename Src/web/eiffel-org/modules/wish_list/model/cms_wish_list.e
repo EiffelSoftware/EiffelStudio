@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 	make_empty
 		do
 			set_synopsis ("")
+			mark_wish
 		end
 
 feature -- Access
@@ -50,6 +51,10 @@ feature -- Access
 			Result := id > 0
 		end
 
+	type: STRING
+			-- wish, wish category, wish status.
+			-- by default wish.	
+
 feature -- Optional
 
 	category: detachable CMS_WISH_LIST_CATEGORY
@@ -60,6 +65,27 @@ feature -- Optional
 
 
 feature -- Element change
+
+	mark_wish
+		do
+			type := "wish"
+		ensure
+			type_set: type.same_string("wish")
+		end
+
+	mark_wish_category
+		do
+			type := "wish category"
+		ensure
+			type_set: type.same_string("wish category")
+		end
+
+	mark_wish_status
+		do
+			type := "wish status"
+		ensure
+			type_set: type.same_string("wish status")
+		end
 
 	set_id (a_id: like id)
 		do

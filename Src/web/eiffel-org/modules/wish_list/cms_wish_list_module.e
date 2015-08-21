@@ -15,7 +15,8 @@ inherit
 			register_hooks,
 			initialize,
 			install,
-			wish_list_api
+			wish_list_api,
+			permissions
 		end
 
 	CMS_HOOK_AUTO_REGISTER
@@ -30,6 +31,8 @@ inherit
 	CMS_HOOK_RESPONSE_ALTER
 
 	SHARED_LOGGER
+
+
 
 create
 	make
@@ -167,8 +170,26 @@ feature -- Router
 			create l_wish_detail_handler.make (a_api, a_wish_list_api)
 			a_router.handle ("/resources/wish/{id}/detail", l_wish_detail_handler, a_router.methods_get_post)
 			a_router.handle ("/resources/wish/detail/{?search}", l_wish_detail_handler, a_router.methods_get_post)
+		end
 
 
+feature -- Security
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("create wish")
+			Result.force ("view own wish")
+			Result.force ("view any wish")
+			Result.force ("edit own wish")
+			Result.force ("edit any wish")
+			Result.force ("delete own wish")
+			Result.force ("delete any wish")
+			Result.force ("update any wish status")
+			Result.force ("update any wish category")
+			Result.force ("update own wish category")
+			Result.force ("create wish category")
 		end
 
 feature -- Hooks configuration

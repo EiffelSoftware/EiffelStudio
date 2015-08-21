@@ -56,7 +56,6 @@ feature -- GET
 					-- New Wish Interaction
 				new_wish_interaction_form (req, res, l_wish_id.integer_value)
 			end
-
 		end
 
 feature -- POST
@@ -88,7 +87,17 @@ feature {NONE} --GET Implementation
 
 						 -- TODO add permissions.
 						 -- Workaround
-					l_tpl_block.set_value (True, "has_permissions")
+					if attached l_form.wish as l_wish then
+							-- can edit status?
+						l_wish.mark_wish_status
+						if wish_api.has_permission_for_action_on_wish ("update", l_wish , current_user (req)) then
+							l_tpl_block.set_value (True, "can_edit_status" )
+						end
+						l_wish.mark_wish_category
+						if wish_api.has_permission_for_action_on_wish ("update", l_wish , current_user (req)) then
+							l_tpl_block.set_value (True, "can_edit_category" )
+						end
+					end
 
 					if l_form.id > 0 then
 						l_tpl_block.set_value (l_form.id, "id")
@@ -122,9 +131,18 @@ feature {NONE} --GET Implementation
 					l_tpl_block.set_value (l_form.description, "description")
 					l_tpl_block.set_value (l_form.category, "category")
 
-						 -- TODO add permissions.
-						 -- Workaround
-					l_tpl_block.set_value (True, "has_permissions")
+					if attached l_form.wish as l_wish then
+							-- can edit status?
+						l_wish.mark_wish_status
+						if wish_api.has_permission_for_action_on_wish ("update", l_wish , current_user (req)) then
+							l_tpl_block.set_value (True, "can_edit_status" )
+						end
+						l_wish.mark_wish_category
+						if wish_api.has_permission_for_action_on_wish ("update", l_wish , current_user (req)) then
+							l_tpl_block.set_value (True, "can_edit_category" )
+						end
+					end
+
 
 					if l_form.id > 0 then
 						l_tpl_block.set_value (l_form.id, "id")

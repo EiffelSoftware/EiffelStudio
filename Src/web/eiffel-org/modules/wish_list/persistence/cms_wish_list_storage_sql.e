@@ -185,6 +185,21 @@ feature -- Acess: WishList
 		end
 
 
+	wish_author (a_wish: CMS_WISH_LIST): detachable CMS_USER
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".wish_author")
+			create l_parameters.make (2)
+			l_parameters.put (a_wish.id, "wid")
+			sql_query (Select_user_author, l_parameters)
+			if sql_rows_count >= 1 then
+				Result := fetch_author
+			end
+		end
+
 feature -- Change: WishList
 
 	save_wish (a_wish: CMS_WISH_LIST)
@@ -555,6 +570,27 @@ feature {NONE} -- Implemenation
 			end
 		end
 
+
+	fetch_author: detachable CMS_USER
+		do
+			if attached sql_read_string_32 (2) as l_name and then not l_name.is_whitespace then
+				create Result.make (l_name)
+				if attached sql_read_integer_32 (1) as l_id then
+					Result.set_id (l_id)
+				end
+				if attached sql_read_string (3) as l_password then
+						-- FIXME: should we return the password here ???
+					Result.set_hashed_password (l_password)
+				end
+				if attached sql_read_string (5) as l_email then
+					Result.set_email (l_email)
+				end
+			else
+				check expected_valid_user: False end
+			end
+		end
+
+
 feature {NONE} -- Queries
 
 	sql_select_categories: STRING = "SELECT cid, synopsis FROM wish_list_categories WHERE is_active != 0 ;"
@@ -644,5 +680,8 @@ feature {NONE} -- Queries
 	sql_delete_wish_attachments: STRING = "DELETE FROM wish_list_attachments  WHERE wid =:wid and iid=:iid;"
 
 	sql_delete_wish_attachment_by_name: STRING = "DELETE FROM wish_list_attachments  WHERE wid =:wid and fileName =:name and iid =:iid;"
+
+	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM wish_list INNER JOIN users ON wish_list.author=users.uid AND wish_list.wid = :wid;"
+
 
 end

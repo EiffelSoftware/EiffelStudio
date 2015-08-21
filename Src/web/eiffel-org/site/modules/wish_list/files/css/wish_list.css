@@ -162,6 +162,18 @@ table {
     display: block; }
     #content div.row form:hover {
       background: #e3e7e8; }
+    #content div.row form > select.class-form-6 {
+      width: 490px;
+      margin-left: 5px;
+      margin-bottom: 5px; }
+    #content div.row form > select.class-form-4 {
+      width: 320px;
+      margin-left: 5px;
+      margin-bottom: 5px; }
+    #content div.row form > input.class-form-1 {
+      width: 65px; }
+    #content div.row form > input.class-form-2 {
+      width: 150px; }
     #content div.row form > label.class-form-1 {
       width: 65px; }
     #content div.row form > label.class-form-2 {

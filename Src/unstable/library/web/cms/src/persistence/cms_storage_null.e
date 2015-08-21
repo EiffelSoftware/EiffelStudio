@@ -101,7 +101,19 @@ feature -- Custom
 
 	custom_value (a_name: READABLE_STRING_GENERAL; a_type: detachable READABLE_STRING_8): detachable READABLE_STRING_32
 			-- Data for name `a_name' and type `a_type' (or default if none).
+		local
+			s: STRING_32
 		do
+			if attached api as l_api then
+				create s.make_from_string_general ("custom_values")
+				if a_type /= Void then
+					s.append_character ('.')
+					s.append_string_general (a_type)
+				end
+				s.append_character ('.')
+				s.append_string_general (a_name)
+				Result := l_api.setup.text_item (s)
+			end
 		end
 
 

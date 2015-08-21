@@ -51,11 +51,11 @@ feature -- Id
 			end
 		end
 
-	string_to_kind (a_kind_name: STRING): NATURAL_8
+	string_to_kind (a_kind_name: READABLE_STRING_GENERAL): NATURAL_8
 		do
-			if a_kind_name.same_string_general ("file") then
+			if a_kind_name.same_string ("file") then
 				Result := kind_file
-			elseif a_kind_name.same_string_general ("dir") then
+			elseif a_kind_name.same_string ("dir") then
 				Result := kind_dir
 			else
 				--| Result := 0
@@ -115,7 +115,7 @@ feature -- Id
 		end
 
 note
-	copyright: "Copyright (c) 2003-2010, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

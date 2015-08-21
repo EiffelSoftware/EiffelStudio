@@ -29,7 +29,6 @@ feature
 			create log_message.make_empty
 			create date.make_empty
 			create author.make_empty
---			create {ARRAYED_LIST [TUPLE [path: STRING; kind: NATURAL_8; action: STRING]]} paths.make (3)
 			create {ARRAYED_LIST [like paths.item_for_iteration]} paths.make (3)
 		end
 
@@ -37,16 +36,16 @@ feature -- Access
 
 	revision: INTEGER
 
-	author: STRING
+	author: STRING_32
 
-	date: STRING
+	date: STRING_32
 
-	paths: LIST [TUPLE [path: STRING; kind: NATURAL_8; action: STRING]]
+	paths: LIST [TUPLE [path: READABLE_STRING_32; kind: NATURAL_8; action: READABLE_STRING_32]]
 
-	common_parent_path: STRING
+	common_parent_path: STRING_32
 		local
-			p: STRING
-			r: detachable STRING
+			p: READABLE_STRING_32
+			r: detachable READABLE_STRING_32
 			i, c: INTEGER
 		do
 			if attached paths as l_paths and then not l_paths.is_empty then
@@ -91,7 +90,7 @@ feature -- Access
 			end
 		end
 
-	folder_name (s: STRING): STRING
+	folder_name (s: READABLE_STRING_32): READABLE_STRING_32
 		local
 			p: INTEGER
 		do
@@ -106,7 +105,7 @@ feature -- Access
 			Result /= s
 		end
 
-	format_folder_name (s: STRING)
+	format_folder_name (s: STRING_32)
 		require
 			s_attached: s /= Void
 		do
@@ -121,11 +120,11 @@ feature -- Access
 			string_with_final_separator: s.count > 0 and then s[s.count] = '/'
 		end
 
-	log_message: STRING
+	log_message: STRING_32
 
-	single_line_log_message: like log_message
+	single_line_log_message: STRING_32
 		do
-			Result := log_message.string
+			create Result.make_from_string (log_message)
 			Result.left_adjust
 			Result.right_adjust
 			if Result.occurrences ('%N') > 0 then
@@ -162,23 +161,23 @@ feature -- Element change
 			log_message := v
 		end
 
-	add_path (a_path: STRING; a_kind: STRING; a_action: STRING)
+	add_path (a_path: READABLE_STRING_32; a_kind: READABLE_STRING_GENERAL; a_action: READABLE_STRING_32)
 		do
 			paths.force ([a_path, string_to_kind (a_kind), a_action])
 		end
 
-	add_dir_path (a_path: STRING; a_action: STRING)
+	add_dir_path (a_path: READABLE_STRING_32; a_action: READABLE_STRING_32)
 		do
 			paths.force ([a_path, Kind_file, a_action])
 		end
 
-	add_file_path (a_path: STRING; a_action: STRING)
+	add_file_path (a_path: READABLE_STRING_32; a_action: READABLE_STRING_32)
 		do
 			paths.force ([a_path, Kind_file, a_action])
 		end
 
 note
-	copyright: "Copyright (c) 2003-2010, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

@@ -22,12 +22,11 @@ create
 
 feature
 
-	make (d: STRING; p: like path; pp: like prefix_path )
+	make (d: PATH; p: like path; pp: like prefix_path )
 		do
 			set_path (p)
 			prefix_path := pp
-			create absolute_path.make_from_string (d)
-			absolute_path.extend (path)
+			absolute_path := d.extended (path)
 			wc_status := status_none_id
 			repos_status := status_none_id
 		end
@@ -38,28 +37,27 @@ feature
 		local
 			file: RAW_FILE
 		do
-			create file.make (absolute_path)
+			create file.make_with_path (absolute_path)
 			Result := file.exists and then file.is_directory
 		end
 
-	absolute_path: FILE_NAME
+	absolute_path: PATH
 
 	prefix_path: detachable STRING
 
-	display_path: STRING
+	display_path: STRING_32
 		local
-			fn: FILE_NAME
+			fn: PATH
 		do
 			if attached prefix_path as l_prefix_path then
 				create fn.make_from_string (l_prefix_path)
-				fn.extend (path)
-				Result := fn
+				Result := fn.extended (path).name
 			else
-				Result := path.twin
+				create Result.make_from_string_general (path)
 			end
 		end
 
-	path: STRING
+	path: STRING_32
 
 	wc_revision, repos_revision: INTEGER
 
@@ -88,10 +86,10 @@ feature
 			wc_revision := v
 		end
 
-	set_wc_status (v: detachable like wc_status)
+	set_wc_status (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v /= Void and then not v.is_empty then
-				wc_status := v
+			if v /= Void and then not v.is_whitespace and then v.is_valid_as_string_8 then
+				wc_status := v.as_string_8
 			else
 				wc_status := status_none_id
 			end
@@ -103,10 +101,10 @@ feature
 			repos_revision := v
 		end
 
-	set_repos_status (v: detachable like repos_status)
+	set_repos_status (v: detachable READABLE_STRING_GENERAL)
 		do
-			if v /= Void and then not v.is_empty then
-				repos_status := v
+			if v /= Void and then not v.is_whitespace and then v.is_valid_as_string_8 then
+				repos_status := v.as_string_8
 			else
 				repos_status := status_none_id
 			end
@@ -114,7 +112,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 2003-2010, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

@@ -16,11 +16,11 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create svn
---			svn.set_svn_executable_path ("path-to-svn-executable") -- by default "svn"
+			svn.set_svn_executable_path ("C:\apps\dev\SlikSvn\bin\svn.exe") -- by default "svn"
 
---			test_statuses
---			test_repository_info
---			test_logs
+			test_statuses
+			test_repository_info
+			test_logs
 			get_logs
 		end
 
@@ -97,9 +97,7 @@ feature -- Test
 
 	last_stored_rev: INTEGER
 		local
-			fn: FILE_NAME
 			d: DIRECTORY
-			s: STRING
 		do
 			create d.make ("logs.db")
 			if d.exists then
@@ -110,8 +108,10 @@ feature -- Test
 				until
 					d.lastentry = Void
 				loop
-					s := d.lastentry
-					if s.is_integer then
+					if
+						attached d.last_entry_32 as s and then
+						s.is_integer
+					then
 						Result := Result.max (s.to_integer)
 					end
 					d.readentry
@@ -122,21 +122,16 @@ feature -- Test
 
 	store_rev (r: SVN_REVISION_INFO)
 		local
-			fn: FILE_NAME
+			fn: PATH
 			d: DIRECTORY
 			f: RAW_FILE
 		do
 			create d.make ("logs.db")
 			if not d.exists then
-				if d.name.has (operating_environment.directory_separator) then
-					d.recursive_create_dir
-				else
-					d.create_dir
-				end
+				d.recursive_create_dir
 			end
-			create fn.make_from_string (d.name)
-			fn.set_file_name (r.revision.out)
-			create f.make (fn)
+			fn := d.path.extended (r.revision.out)
+			create f.make_with_path (fn)
 			if not f.exists then
 				f.create_read_write
 				f.put_string ("revision=" + r.revision.out + "%N")
@@ -172,7 +167,12 @@ feature -- Access
 
 	display_repository_info (info: SVN_REPOSITORY_INFO)
 		do
-			print ("[" + info.url + "] " + info.last_changed_rev.out + " out of " + info.revision.out + "%N")
+			if attached info.url as l_url then
+				print ("[" + l_url + "] ")
+			else
+				print ("[...] ")
+			end
+			print (info.last_changed_rev.out + " out of " + info.revision.out + "%N")
 		end
 
 	display_revision (r: SVN_REVISION_INFO)

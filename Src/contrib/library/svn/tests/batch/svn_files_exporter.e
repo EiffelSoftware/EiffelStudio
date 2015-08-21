@@ -242,8 +242,8 @@ feature -- Access
 
 	export_entry (a_info: SVN_STATUS_INFO)
 		local
-			fp: STRING
-			target_fn: FILE_NAME
+			fp: PATH
+			target_fn: READABLE_STRING_8
 			exc: BOOLEAN
 		do
 			if a_info /= Void then
@@ -254,9 +254,9 @@ feature -- Access
 					fp := a_info.absolute_path
 					target_fn := target_file_name (a_info)
 					if a_info.path_is_directory then
-						copy_dir_to (fp, target_fn)
+						copy_dir_to (fp.utf_8_name, target_fn)
 					else
-						copy_file_to (fp, target_fn)
+						copy_file_to (fp.utf_8_name, target_fn)
 					end
 				end
 			end

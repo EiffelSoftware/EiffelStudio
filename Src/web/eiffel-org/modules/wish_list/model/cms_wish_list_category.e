@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			id := 0
 			set_synopsis ("")
+			set_description ("")
 			set_is_active (False)
 		end
 
@@ -35,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			id := a_id
 			synopsis := a_synop
+			set_description ("")
 			is_active := a_active
 		ensure
 			id_set: id = a_id
@@ -49,6 +51,9 @@ feature -- Access
 
 	synopsis: READABLE_STRING_32
 		-- Short description.
+
+	description: READABLE_STRING_32
+		-- Full description	
 
 	is_active: BOOLEAN
 		-- Is current active?
@@ -66,6 +71,13 @@ feature -- Change Element
 		do
 			synopsis := a_synopsis
 		end
+
+	set_description  (a_description: like description)
+			-- Set description with a_description.
+		do
+			description := a_description
+		end
+
 
 	set_is_active (a_val: BOOLEAN)
 			-- Set `is_active' with `a_val'.

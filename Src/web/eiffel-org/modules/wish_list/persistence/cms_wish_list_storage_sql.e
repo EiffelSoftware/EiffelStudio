@@ -200,6 +200,23 @@ feature -- Acess: WishList
 			end
 		end
 
+
+	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".has_vote_wish")
+			create l_parameters.make (2)
+			l_parameters.put (a_wish.id, "wid")
+			l_parameters.put (u.id, "author")
+			sql_query (Select_wish_author_vote, l_parameters)
+			if sql_rows_count = 1 then
+				Result := True
+			end
+		end
+
 feature -- Change: WishList
 
 	save_wish (a_wish: CMS_WISH_LIST)
@@ -282,6 +299,46 @@ feature -- Change: WishList
 
 feature -- Access: Categories
 
+	categories_count: INTEGER
+			-- <Precursor>
+		do
+			error_handler.reset
+			write_information_log (generator + ".categories_count")
+
+			sql_query (select_categories_count, Void)
+			if sql_rows_count = 1 then
+				Result := sql_read_integer_32 (1)
+			end
+			error_handler.reset
+		end
+
+
+	recent_categories (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_WISH_LIST_CATEGORY]
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_WISH_LIST_CATEGORY]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".recent_categories")
+
+			from
+				create l_parameters.make (2)
+				l_parameters.put (a_count, "rows")
+				l_parameters.put (a_lower, "offset")
+				sql_query (sql_select_recent_categories, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_category as l_category then
+					Result.force (l_category)
+				end
+				sql_forth
+			end
+		end
+
 	categories: LIST [CMS_WISH_LIST_CATEGORY]
 			-- <Precursor>
 		do
@@ -302,6 +359,45 @@ feature -- Access: Categories
 				sql_forth
 			end
 		end
+
+	category_by_id (a_id: INTEGER_64): detachable CMS_WISH_LIST_CATEGORY
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".category_by_id")
+			create l_parameters.make (1)
+			l_parameters.put (a_id, "cid")
+			sql_query (sql_select_category_by_id, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_category
+			end
+		end
+
+	category_by_name (a_name: READABLE_STRING_32): detachable CMS_WISH_LIST_CATEGORY
+			-- Category for the given name`a_name', if any.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".category_by_name")
+			create l_parameters.make (1)
+			l_parameters.put (a_name, "name")
+			sql_query (sql_select_category_by_name, l_parameters)
+			if sql_rows_count = 1 then
+				Result := fetch_category
+			end
+		end
+
+feature -- Change: Category
+
+	save_category (a_category: CMS_WISH_LIST_CATEGORY)
+			-- Save category `a_category'.
+		do
+			store_category (a_category)
+		end
+
 
 feature -- Access: Status
 
@@ -338,6 +434,14 @@ feature {NONE} -- Implemenation
 					-- Synopsis
 				if attached sql_read_string_32 (2) as l_synopsis then
 					Result.set_synopsis (l_synopsis)
+				end
+					-- Description
+				if attached sql_read_string_32 (3) as l_description then
+					Result.set_description (l_description)
+				end
+
+				if attached sql_read_integer_32 (4) as l_boolean then
+					Result.set_is_active (l_boolean.to_boolean)
 				end
 			end
 		end
@@ -534,6 +638,46 @@ feature {NONE} -- Implemenation
 			end
 		end
 
+
+	store_category (a_category: CMS_WISH_LIST_CATEGORY)
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			now: DATE_TIME
+		do
+			create now.make_now_utc
+			error_handler.reset
+
+			write_information_log (generator + ".store_category")
+			create l_parameters.make (3)
+			l_parameters.put (a_category.synopsis,"synopsis")
+			l_parameters.put (a_category.is_active.to_integer, "is_active")
+			if
+				attached a_category.description as l_description
+			then
+				l_parameters.put (l_description, "description")
+			else
+				l_parameters.put ("", "description")
+			end
+
+			sql_begin_transaction
+			if a_category.has_id then
+				l_parameters.put (a_category.id, "cid")
+				sql_change (sql_update_wish_category, l_parameters)
+			else
+					-- New
+				sql_change (sql_insert_wish_category, l_parameters)
+				if not error_handler.has_error then
+					a_category.set_id (last_inserted_wish_category_id)
+				end
+			end
+
+			if error_handler.has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+			end
+		end
+
 	fetch_attachment: detachable CMS_WISH_FILE
 		do
 			if
@@ -548,7 +692,7 @@ feature {NONE} -- Implemenation
 		end
 
 	last_inserted_wish_id: INTEGER_64
-			-- Last insert node id.
+			-- Last insert wish id.
 		do
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_wish_id")
@@ -560,11 +704,23 @@ feature {NONE} -- Implemenation
 
 
 	last_inserted_wish_interaction_id: INTEGER_64
-			-- Last insert node id.
+			-- Last insert wish_interaction id.
 		do
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_wish_interaction_id")
 			sql_query (Sql_last_insert_wish_interaction_id, Void)
+			if sql_rows_count = 1 then
+				Result := sql_read_integer_64 (1)
+			end
+		end
+
+
+	last_inserted_wish_category_id: INTEGER_64
+			-- Last insert wish_category id.
+		do
+			error_handler.reset
+			write_information_log (generator + ".last_inserted_wish_category_id")
+			sql_query (Sql_last_insert_wish_category_id, Void)
 			if sql_rows_count = 1 then
 				Result := sql_read_integer_64 (1)
 			end
@@ -592,10 +748,6 @@ feature {NONE} -- Implemenation
 
 
 feature {NONE} -- Queries
-
-	sql_select_categories: STRING = "SELECT cid, synopsis FROM wish_list_categories WHERE is_active != 0 ;"
-			-- SQL Query to retrieve all active categories.
-			--| note: is_active =! 0
 
 
 	sql_select_status: STRING = "SELECT sid, synopsis FROM wish_list_status;"
@@ -682,6 +834,30 @@ feature {NONE} -- Queries
 	sql_delete_wish_attachment_by_name: STRING = "DELETE FROM wish_list_attachments  WHERE wid =:wid and fileName =:name and iid =:iid;"
 
 	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM wish_list INNER JOIN users ON wish_list.author=users.uid AND wish_list.wid = :wid;"
+
+	Select_wish_author_vote: STRING = "SELECT * FROM wish_list_votes  WHERE wish=:wid and author=:author;"
+
+
+feature -- SQL query: Categories
+
+	select_categories_count: STRING = "SELECT COUNT(*) FROM wish_list_categories;"
+
+	Sql_select_recent_categories: STRING = "SELECT cid, synopsis, description, is_active FROM wish_list_categories ORDER BY cid DESC LIMIT :rows OFFSET :offset ;"
+			-- Retrieve recent users
+
+	sql_select_categories: STRING = "SELECT cid, synopsis, description, is_active FROM wish_list_categories WHERE is_active != 0 ;"
+			-- SQL Query to retrieve all active categories.
+			--| note: is_active =! 0
+
+	sql_select_category_by_id: STRING = "SELECT cid, synopsis, description, is_active FROM wish_list_categories WHERE cid =:cid;"
+
+	sql_select_category_by_name: STRING = "SELECT cid, synopsis, description, is_active FROM wish_list_categories WHERE synopsis =:name;"
+
+	sql_update_wish_category: STRING = "UPDATE wish_list_categories SET synopsis=:synopsis, is_active=:is_active, description=:description WHERE cid=:cid;"
+
+	sql_insert_wish_category: STRING = "INSERT INTO wish_list_categories (synopsis, is_active, description ) VALUES (:synopsis, :is_active, :description);"
+
+	sql_last_insert_wish_category_id: STRING = "SELECT MAX(cid) FROM wish_list_categories;"
 
 
 end

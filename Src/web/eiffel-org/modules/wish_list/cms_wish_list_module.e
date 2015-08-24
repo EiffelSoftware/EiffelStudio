@@ -144,6 +144,9 @@ feature -- Router
 			l_wish_form_handler: CMS_WISH_FORM_HANDLER
 			l_wish_interaction_form_handler: CMS_WISH_INTERACTION_FORM_HANDLER
 			l_wish_file_download_handler: CMS_WISH_FILE_DOWNLOAD_HANDER
+			l_categories_handler: CMS_WISH_CATEGORIES_HANDLER
+			l_category_handler: CMS_WISH_CATEGORY_HANDLER
+			l_uri_mapping: WSF_URI_MAPPING
 		do
 
 				-- Wish Download
@@ -166,10 +169,24 @@ feature -- Router
 			a_router.handle ("/resources/wish/detail/{wish_id}/interaction_form/{id}", l_wish_interaction_form_handler, a_router.methods_get_post)
 
 
-				-- Widh details
+				-- Wish details
 			create l_wish_detail_handler.make (a_api, a_wish_list_api)
 			a_router.handle ("/resources/wish/{id}/detail", l_wish_detail_handler, a_router.methods_get_post)
 			a_router.handle ("/resources/wish/detail/{?search}", l_wish_detail_handler, a_router.methods_get_post)
+
+
+				-- Wish Category Administrator
+			create l_categories_handler.make (a_api, a_wish_list_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/resources/wish/categories", l_categories_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+
+			create l_category_handler.make (a_api, a_wish_list_api)
+			a_router.handle ("/resources/wish/add/category", l_category_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/category/{id}", l_category_handler, a_router.methods_get)
+			a_router.handle ("/resources/wish/category/{id}/edit", l_category_handler, a_router.methods_get_post)
+--			a_router.handle ("/resources/wish/category/{id}/delete", l_category_handler, a_router.methods_get_post)
+
 		end
 
 
@@ -189,7 +206,7 @@ feature -- Security
 			Result.force ("update any wish status")
 			Result.force ("update any wish category")
 			Result.force ("update own wish category")
-			Result.force ("create wish category")
+			Result.force ("admin wish category")
 		end
 
 feature -- Hooks configuration

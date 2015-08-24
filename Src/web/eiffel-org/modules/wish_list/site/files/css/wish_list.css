@@ -308,3 +308,14 @@ div.btn-add-wish {
     background: #e3e7e8; }
     div.btn-add-wish:hover a {
       color: white; }
+
+ul.cms-categories {
+  list-style-type: none;
+  padding: 3px 3px 3px 3px;
+  border: solid 1px #ccc; }
+  ul.cms-categories li {
+    border-top: dotted 1px #ccc; }
+    ul.cms-categories li:first-child {
+      border-top: none; }
+  ul.cms-categories li.cms_category a::before {
+    content: "[categories] "; }

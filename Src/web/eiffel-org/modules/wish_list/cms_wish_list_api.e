@@ -87,13 +87,18 @@ feature -- Access Wish List
 			end
 		end
 
-
 	is_author_of_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
 			-- Is the user `u' owner of the wish `a_wish'.
 		do
 			if attached wish_list_storage.wish_author (a_wish) as l_author then
 				Result := u.same_as (l_author)
 			end
+		end
+
+	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+			-- Has the user `u' vote for the wish `a_wish'.
+		do
+			Result := wish_list_storage.has_vote_wish (u, a_wish)
 		end
 
 feature -- Permission Scope: Node
@@ -164,10 +169,42 @@ feature -- Change wish list
 
 feature -- Access - Categories
 
+	categories_count: INTEGER
+			-- Number of categories.
+		do
+			Result := wish_list_storage.categories_count
+		end
+
+	recent_categories (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_WISH_LIST_CATEGORY]
+			-- List of the `a_rows' most recent categories starting from `a_offset'.
+		do
+			Result := wish_list_storage.recent_categories (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
 	categories: LIST [CMS_WISH_LIST_CATEGORY]
 			-- List of wish list categories.
 		do
 			Result := wish_list_storage.categories
+		end
+
+	category_by_id (a_id: INTEGER_64): detachable CMS_WISH_LIST_CATEGORY
+			-- Category for the given id `a_id', if any.
+		do
+			Result := wish_list_storage.category_by_id (a_id)
+		end
+
+	category_by_name (a_name: READABLE_STRING_32): detachable CMS_WISH_LIST_CATEGORY
+			-- Category for the given name`a_name', if any.
+		do
+			Result := wish_list_storage.category_by_name (a_name)
+		end
+
+feature -- Change - Category
+
+	save_category (a_category: CMS_WISH_LIST_CATEGORY)
+			-- Save category `a_category'.
+		do
+			wish_list_storage.save_category (a_category)
 		end
 
 feature -- Access - Status

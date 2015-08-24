@@ -54,6 +54,14 @@ feature -- Access : WishList
 		deferred
 		end
 
+	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+			-- Has the user `u' vote for the wish `a_wish'.
+		require
+			valid_wish: a_wish.has_id
+			valid_user: a_wish.has_id
+		deferred
+		end
+
 feature -- Change: Wishlist
 
 	save_wish (a_wish: CMS_WISH_LIST)
@@ -83,12 +91,39 @@ feature -- Change: Wishlist
 
 feature -- Access: Categories
 
+	categories_count: INTEGER
+			-- Number of categories.
+		deferred
+		end
+
+	recent_categories (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_WISH_LIST_CATEGORY]
+			-- List of recent `a_count' users with an offset of `lower'.
+		deferred
+		end
+
 	categories: LIST [CMS_WISH_LIST_CATEGORY]
 			-- List of wish list categories.
 		deferred
 		end
 
+	category_by_id (a_id: INTEGER_64): detachable CMS_WISH_LIST_CATEGORY
+			-- Category id for the given id `a_id', if any.
+		deferred
+		end
 
+
+	category_by_name (a_name: READABLE_STRING_32): detachable CMS_WISH_LIST_CATEGORY
+			-- Category for the given name`a_name', if any.
+		deferred
+		end
+
+feature -- Change: Category
+
+	save_category (a_category: CMS_WISH_LIST_CATEGORY)
+			-- Save category `a_category'.
+		deferred
+		end
+		
 feature -- Access: Status
 
 	status: LIST [CMS_WISH_LIST_STATUS]

@@ -52,6 +52,11 @@ feature -- Acess : WishList
 		do
 		end
 
+	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+			-- <Precursor>.
+		do
+		end
+
 feature -- Change: WishList
 
 	save_wish (a_wish: CMS_WISH_LIST)
@@ -81,11 +86,41 @@ feature -- Change: WishList
 
 feature -- Access: Categories
 
+	categories_count: INTEGER
+			-- <Precursor>
+		do
+		end
+
+	recent_categories (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_WISH_LIST_CATEGORY]
+			-- <Precursor>.
+		do
+			create {ARRAYED_LIST [CMS_WISH_LIST_CATEGORY]} Result.make (0)
+		end
+
 	categories: LIST [CMS_WISH_LIST_CATEGORY]
 			-- <Precursor>
 		do
 			create {ARRAYED_LIST [CMS_WISH_LIST_CATEGORY]} Result.make (0)
 		end
+
+	category_by_id (a_id: INTEGER_64): detachable CMS_WISH_LIST_CATEGORY
+			-- <Precursor>.
+		do
+		end
+
+	category_by_name (a_name: READABLE_STRING_32): detachable CMS_WISH_LIST_CATEGORY
+			-- <Precursor>.
+		do
+		end
+
+feature -- Change: Category
+
+	save_category (a_category: CMS_WISH_LIST_CATEGORY)
+			-- <Precursor>.
+		do
+		end
+
+
 
 feature -- Access: Status
 

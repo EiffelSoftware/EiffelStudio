@@ -4,8 +4,22 @@
 			<li class="active"><a href="{$site_url/}resources/wish/{$wish.id/}/form">Edit</a></li></ul>
 		</div>	
 	{/if}
-
 	<div class="row">
+			{if False}
+			{if condition="$do_like"}
+				<form  action="{$site_url/}resources/wish/detail/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+					<label class="class-form-4">Do you like this?</label>
+					<button type="submit" >Like</button>
+				</form>
+			{/if}
+			{if condition="$do_not_like"}
+				<form  action="{$site_url/}resources/wish/detail/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+					<label class="class-form-4">Don't you like this?</label>
+					<button type="submit" >Not Like</button>
+				</form>
+			{/if}
+			
+			{/if}	
 			<section>
 				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6">{$wish.contact.name/}</span> <br>
 				<span  class="class-form-6" itemprop="category">Category:</span>	<span class="class-form-6">{$wish.category.synopsis/}</span> <br>
@@ -55,9 +69,11 @@
 </div>
 
 {if isset="$user"}
-	<div class="btn-add-wish">
-		<a href="{$site_url/}resources/wish/detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
-	</div>
+	 <div  class="row">
+	 	 <ul class="cms-links">
+			<li><a href="{$site_url/}resources/wish/detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a></li>
+		  </ul>	
+	 </div> 		
 {/if}
 
 

@@ -144,6 +144,8 @@
 						background: #e3e7e8;
 					> a{
 					}
+					> form {
+					}
 				}
 			}
 		}
@@ -206,3 +208,25 @@ div.btn-add-wish {
 		    }
 		}   	
 }    
+
+
+
+
+ul.cms-categories {
+	
+	list-style-type: none;
+	padding: 3px 3px 3px 3px;
+	border: solid 1px #ccc;
+
+	li{
+		border-top: dotted 1px #ccc;
+		&:first-child {
+			border-top: none;
+		}
+	}
+
+	li.cms_category a::before {
+		content: "[categories] ";
+	}
+}
+

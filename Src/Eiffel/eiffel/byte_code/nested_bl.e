@@ -262,6 +262,13 @@ feature
 				end
 				target.analyze
 			end
+			if system.is_scoop and then real_type (target.type).is_separate then
+					-- Allocate a register for a container that stores arguments
+					-- to be passed to the scheduler.
+				create separate_register.make (pointer_c_type)
+					-- Mark current because separate calls use Current to compute client processor ID.
+				context.mark_current_used
+			end
 				-- Analyze the next target
 			msg_target.analyze_on (target)
 				-- These register will be freed by a call to free_register if
@@ -296,14 +303,9 @@ feature
 					-- We are not the last call on the chain.
 				message.analyze
 			end
-			if system.is_scoop and then real_type (target.type).is_separate then
-					-- Allocate a register for a container that stores arguments
-					-- to be passed to the scheduler.
-				create separate_register.make (pointer_c_type)
+			if attached separate_register as r then
 					-- The register is not used right after the call.
 				separate_register.free_register
-					-- Mark current because separate calls use Current to compute client processor ID.
-				context.mark_current_used
 			end
 		end
 

@@ -1459,6 +1459,7 @@ test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execu
 test	scoop-once-value-adoption				scoop071 tcf manual scoop multithreaded execution
 test	scoop-asynchronous-expanded				scoop072 tcf pass scoop multithreaded execution
 test	scoop-locking-expanded-argument			scoop073 tcf pass scoop multithreaded execution
+test	scoop-controlled-object-test			scoop074 tcf fail scoop multithreaded object_test validity execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

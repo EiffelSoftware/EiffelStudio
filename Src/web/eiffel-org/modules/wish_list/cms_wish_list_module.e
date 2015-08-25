@@ -147,16 +147,20 @@ feature -- Router
 			l_categories_handler: CMS_WISH_CATEGORIES_HANDLER
 			l_category_handler: CMS_WISH_CATEGORY_HANDLER
 			l_uri_mapping: WSF_URI_MAPPING
+			l_vote_handler: CMS_WISH_VOTE_HANDLER
+
 		do
+
+				-- Wish list
+			create l_wish_handler.make (a_api, a_wish_list_api)
+			a_router.handle ("/resources/wish_list", l_wish_handler, a_router.methods_head_get)
+
 
 				-- Wish Download
 			create l_wish_file_download_handler.make (a_api, a_wish_list_api)
 			a_router.handle ("/resources/wish/{wish_id}/download/{filename}", l_wish_file_download_handler, a_router.methods_get)
 			a_router.handle ("/resources/wish/{wish_id}/interaction/{id}/download/{filename}", l_wish_file_download_handler, a_router.methods_get)
 
-				-- Wish list
-			create l_wish_handler.make (a_api, a_wish_list_api)
-			a_router.handle ("/resources/wish_list", l_wish_handler, a_router.methods_head_get)
 
 				-- Wish Form
 			create l_wish_form_handler.make (a_api, a_wish_list_api)
@@ -187,6 +191,9 @@ feature -- Router
 			a_router.handle ("/resources/wish/category/{id}/edit", l_category_handler, a_router.methods_get_post)
 --			a_router.handle ("/resources/wish/category/{id}/delete", l_category_handler, a_router.methods_get_post)
 
+			create l_vote_handler.make (a_api, a_wish_list_api)
+			a_router.handle ("/resources/wish/{id}/like", l_vote_handler, a_router.methods_get_post)
+			a_router.handle ("/resources/wish/{id}/not_like", l_vote_handler, a_router.methods_get_post)
 		end
 
 

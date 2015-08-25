@@ -32,7 +32,7 @@ feature -- Acess : WishList
 			create {ARRAYED_LIST [CMS_WISH_LIST]} Result.make (0)
 		end
 
-	wish_by_id (a_wid: INTEGER): detachable CMS_WISH_LIST
+	wish_by_id (a_wid: INTEGER_64): detachable CMS_WISH_LIST
 			-- <Precursor>
 		do
 		end
@@ -52,10 +52,24 @@ feature -- Acess : WishList
 		do
 		end
 
-	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+	vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): INTEGER
 			-- <Precursor>.
 		do
 		end
+
+
+feature -- Change wish vote
+
+	add_wish_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add like to wish `a_wid'.
+		do
+		end
+
+	add_wish_not_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add not like to wish `a_wid'.
+		do
+		end
+
 
 feature -- Change: WishList
 

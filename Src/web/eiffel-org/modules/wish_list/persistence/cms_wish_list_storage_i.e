@@ -31,7 +31,7 @@ feature -- Access : WishList
 		deferred
 		end
 
-	wish_by_id (a_wid: INTEGER): detachable CMS_WISH_LIST
+	wish_by_id (a_wid: INTEGER_64): detachable CMS_WISH_LIST
 			-- Wish list item for the given id `a_wid', if any.
 		deferred
 		end
@@ -54,11 +54,23 @@ feature -- Access : WishList
 		deferred
 		end
 
-	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+	vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): INTEGER
 			-- Has the user `u' vote for the wish `a_wish'.
 		require
 			valid_wish: a_wish.has_id
 			valid_user: a_wish.has_id
+		deferred
+		end
+
+feature -- Change wish vote
+
+	add_wish_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add like to wish `a_wid'.
+		deferred
+		end
+
+	add_wish_not_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add not like to wish `a_wid'.
 		deferred
 		end
 
@@ -123,7 +135,7 @@ feature -- Change: Category
 			-- Save category `a_category'.
 		deferred
 		end
-		
+
 feature -- Access: Status
 
 	status: LIST [CMS_WISH_LIST_STATUS]

@@ -24,14 +24,6 @@ feature -- Access
 	is_controlled: BOOLEAN
 			-- Is variable controlled?
 
-	actual_type: TYPE_A
-			-- Actual type of `type'.
-		require
-			type_exists: type /= Void
-		do
-			Result := type.actual_type
-		end
-
 feature -- Setting
 
 	set_position (i: INTEGER)

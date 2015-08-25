@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	paths: LIST [TUPLE [path: STRING; kind: NATURAL_8; action: STRING]]
+	paths: LIST [TUPLE [path: READABLE_STRING_32; kind: NATURAL_8; action: READABLE_STRING_32]]
 		deferred
 		end
 

@@ -188,14 +188,22 @@ feature -- Status report
 			end
 		end
 
-	logs (a_location: READABLE_STRING_8; is_verbose: BOOLEAN; a_start, a_end: INTEGER; a_limit: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_REVISION_INFO]
+	logs (a_location: READABLE_STRING_GENERAL; is_verbose: BOOLEAN; a_start, a_end: SVN_RANGE_INDEX; a_limit: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_REVISION_INFO]
 		local
 			s: detachable STRING
 			cmd: STRING_32
 			l_svn_xml_manager: like svn_xml_manager
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn logs from [" + a_location + "] (range [" + a_start.out + ".." + a_end.out + "] limit of " + a_limit.out + " entries) %N")
+				print ("Fetch svn logs from [" + a_location.as_string_8 + "] (range [")
+				if a_start /= Void then
+					print (a_start.string)
+				end
+				if a_end /= Void then
+					print ("..")
+					print (a_end.string)
+				end
+				print ("] limit of " + a_limit.out + " entries) %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -203,12 +211,20 @@ feature -- Status report
 			if is_verbose then
 				cmd.append_string_general (" -v ")
 			end
-			if a_start > 0 then
+			if 
+				a_start /= Void and then 
+				not a_start.string.is_whitespace and then
+				not a_start.string.is_case_insensitive_equal_general ("0") 
+			then
 				cmd.append_string_general (" -r")
-				cmd.append_integer (a_start)
-				if a_end > a_start then
+				cmd.append_string_general (a_start.string)
+				if 
+					a_end /= Void and then
+					not a_end.string.is_whitespace and then
+					not a_end.string.is_case_insensitive_equal_general ("0") 
+				then
 					cmd.append_character (':')
-					cmd.append_integer (a_end)
+					cmd.append_string_general (a_end.string)
 				end
 			end
 			if a_limit > 0 then

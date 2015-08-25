@@ -1,6 +1,93 @@
 {
     "mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
     "products": [
+         {
+            "id": "eiffelstudio",
+            "name": "EiffelStudio",
+            "version": "15.08 GPL",
+            "number": "15.08",
+            "build": "Build_97862",
+            "download": [
+                {
+                    "platform": "freebsd-x86-64",
+                    "filename": "Eiffel_15.08_gpl_97862-freebsd-x86-64.tar.bz2",
+                    "size": "90983275",
+                    "hash": "97004f273b1387fc380ccf6318ab696814db5391c39f4a96b0dcd0b6892ba825"
+                },
+                {
+                    "platform": "freebsd-x86",
+                    "filename": "Eiffel_15.08_gpl_97862-freebsd-x86.tar.bz2",
+                    "size": "82788517",
+                    "hash": "b5bddaa9742e9464accdbc0d6a55b7813df27a0a53a967e314d38a7584c8af66"
+                },
+                {
+                    "platform": "linux-armv6",
+                    "filename": "Eiffel_15.08_gpl_97862-linux-armv6.tar.bz2",
+                    "size": "90738794",
+                    "hash": "cbbf645436adab016927251c817fcc2cc63696578c7b6f10aa5126410081d088"
+                },
+                {
+                    "platform": "linux-x86-64",
+                    "filename": "Eiffel_15.08_gpl_97862-linux-x86-64.tar.bz2",
+                    "size": "98113981",
+                    "hash": "442392d0b45d77171cbda331f10c94682d83b20314a76a4435aee82081224e1a"
+                },
+                {
+                    "platform": "linux-x86",
+                    "filename": "Eiffel_15.08_gpl_97862-linux-x86.tar.bz2",
+                    "size": "85991569",
+                    "hash": "24874da851b20613b52672d0128642788267261dc2495148807b7f74870cea67"
+                },
+                {
+                    "platform": "macosx-x86-64",
+                    "filename": "Eiffel_15.08_gpl_97862-macosx-x86-64.tar.bz2",
+                    "size": "87990761",
+                    "hash": "445fb1a282928c12c729ec97294eabbfb2ac2ed5513d719603776585f62ff0e7"
+                },
+                {
+                    "platform": "openbsd-x86-64",
+                    "filename": "Eiffel_15.08_gpl_97862-openbsd-x86-64.tar.bz2",
+                    "size": "95160746",
+                    "hash": "912d468e68b8c09b1c7b1b9c18a5d412af81c6c7dd624f137ec84db2701098ca"
+                },
+                {
+                    "platform": "solaris-sparc-64",
+                    "filename": "Eiffel_15.08_gpl_97862-solaris-sparc-64.tar.bz2",
+                    "size": "106508284",
+                    "hash": "4b72c3bd650090ba3a33d1ee8690a0bd91137568fe630a7756da1ffa8be08271"
+                },
+                {
+                    "platform": "solaris-sparc",
+                    "filename": "Eiffel_15.08_gpl_97862-solaris-sparc.tar.bz2",
+                    "size": "104665329",
+                    "hash": "2179cfbdebedb5b73c0d6186724eb9a6fdfe68a64ed9e332bd4ec309eb37e63f"
+                },
+                {
+                    "platform": "solaris-x86-64",
+                    "filename": "Eiffel_15.08_gpl_97862-solaris-x86-64.tar.bz2",
+                    "size": "92056401",
+                    "hash": "6f4516d7659fd0dedc675b65bd0e3b2a22ff005d8c71bb1fa7bf3b36b4e78376"
+                },
+                {
+                    "platform": "solaris-x86",
+                    "filename": "Eiffel_15.08_gpl_97862-solaris-x86.tar.bz2",
+                    "size": "83397000",
+                    "hash": "eea9c130a2ff33c6d85450e8d3a48d5706da3e15cf2c117ede8927cc5f2948b7"
+                },
+                {
+                    "platform": "win64",
+                    "filename": "Eiffel_15.08_gpl_97862-win64.msi",
+                    "size": "141387890",
+                    "hash": "0a56bd6f1438828d4de89aac72b19ee1a87dacbd35ecd6fcc3e95d362c128fce"
+                },
+                {
+                    "platform": "windows",
+                    "filename": "Eiffel_15.08_gpl_97862-windows.msi",
+                    "size": "129845260",
+                    "hash": "ccdffed98937475fce6e48b81c26921bb256eede4c95de7de270ad19becfaabb"
+                }
+            ]
+        },
      {
             "id": "eiffelstudio",
             "name": "EiffelStudio",

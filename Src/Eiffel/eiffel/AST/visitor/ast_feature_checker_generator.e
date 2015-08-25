@@ -2960,6 +2960,7 @@ feature {NONE} -- Visitor
 			if l_local_info /= Void then
 				last_access_writable := False
 				l_local_info.set_is_used (True)
+				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
 				set_type (l_type, l_as)
@@ -3113,6 +3114,7 @@ feature {NONE} -- Visitor
 						l_local_info.set_is_used (True)
 						last_access_writable := False
 						l_has_vuar_error := l_as.parameters /= Void
+						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						if l_needs_byte_node then
@@ -3242,6 +3244,7 @@ feature {NONE} -- Visitor
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
 						last_access_writable := False
+						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						if is_byte_node_enabled then
@@ -4312,6 +4315,7 @@ feature {NONE} -- Visitor
 					if l_local_info /= Void then
 						l_local_info.set_is_used (True)
 						last_access_writable := False
+						is_controlled := l_local_info.is_controlled
 						l_type := l_local_info.type
 						l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
 						create l_typed_pointer.make_typed (l_type)
@@ -5668,6 +5672,7 @@ feature {NONE} -- Visitor
 					end
 					if local_info = Void and then (local_id /= Void or else l_needs_byte_node) then
 						create local_info
+						local_info.set_is_controlled (is_controlled)
 						local_info.set_type (local_type)
 						local_info.set_position (context.next_object_test_local_position)
 						if local_id /= Void then

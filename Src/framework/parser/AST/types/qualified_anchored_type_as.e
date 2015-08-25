@@ -72,8 +72,8 @@ feature -- Modification
 		require
 			attached_i: i /= Void
 		do
-			if attached d as s then
-				chain.extend_separator (s)
+			if attached d then
+				chain.extend_separator (d)
 			end
 			chain.extend (create {FEATURE_ID_AS}.make (i))
 		ensure
@@ -189,7 +189,7 @@ invariant
 	chain_not_empty: not chain.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

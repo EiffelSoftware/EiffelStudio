@@ -72,7 +72,6 @@ feature -- Execution
 		local
 			lnk: CMS_LOCAL_LINK
 			s: STRING
-			l_role: CMS_USER_ROLE
 		do
 			a_response.set_value (a_category, "category")
 			create lnk.make (a_response.translation ("View", Void), "resources/wish/category/" + a_category.id.out)

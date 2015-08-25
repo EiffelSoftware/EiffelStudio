@@ -77,10 +77,15 @@ feature {NONE} -- Implementation
 							if wish_api.has_permission_for_action_on_wish ("edit", l_wish, l_user) then
 								l_tpl_block.set_value (True, "can_edit")
 							end
-							if wish_api.has_vote_wish (l_user, l_wish) then
+							inspect wish_api.vote_wish (l_user, l_wish)
+							when 0 then
+								l_tpl_block.set_value (True, "can_vote")
+							when 1 then
 								l_tpl_block.set_value (True, "do_not_like")
-							else
+							when -1 then
 								l_tpl_block.set_value (True, "do_like")
+							else
+								-- nothing
 							end
 						end
 						l_tpl_block.set_value (l_wish, "wish")

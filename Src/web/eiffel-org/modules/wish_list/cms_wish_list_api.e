@@ -95,10 +95,33 @@ feature -- Access Wish List
 			end
 		end
 
-	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+	vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): INTEGER
 			-- Has the user `u' vote for the wish `a_wish'.
+			-- 0 no vote
+			-- 1 like
+			-- -1 not like
 		do
-			Result := wish_list_storage.has_vote_wish (u, a_wish)
+			Result := wish_list_storage.vote_wish (u, a_wish)
+		end
+
+feature -- Change wish votes
+
+	add_wish_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add like to wish `a_wid'.
+		require
+			valid_user: a_user.has_id
+			valid_wish: a_wid > 0
+		do
+			wish_list_storage.add_wish_like (a_user, a_wid)
+		end
+
+	add_wish_not_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add not like to wish `a_wid'.
+		require
+			valid_user: a_user.has_id
+			valid_wish: a_wid > 0
+		do
+			wish_list_storage.add_wish_not_like (a_user, a_wid)
 		end
 
 feature -- Permission Scope: Node

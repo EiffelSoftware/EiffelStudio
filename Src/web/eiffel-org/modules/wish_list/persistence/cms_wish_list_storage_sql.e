@@ -115,7 +115,7 @@ feature -- Acess: WishList
 				end
 			end
 
-	wish_by_id (a_wid: INTEGER): detachable CMS_WISH_LIST
+	wish_by_id (a_wid: INTEGER_64): detachable CMS_WISH_LIST
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -201,19 +201,100 @@ feature -- Acess: WishList
 		end
 
 
-	has_vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): BOOLEAN
+	vote_wish (u: CMS_USER; a_wish: CMS_WISH_LIST): INTEGER
 			-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".has_vote_wish")
+			write_information_log (generator + ".vote_wish")
 			create l_parameters.make (2)
 			l_parameters.put (a_wish.id, "wid")
 			l_parameters.put (u.id, "author")
 			sql_query (Select_wish_author_vote, l_parameters)
 			if sql_rows_count = 1 then
+				Result := sql_read_integer_32 (1)
+			end
+		end
+
+	has_vote_wish (u: CMS_USER; a_wid: INTEGER_64): BOOLEAN
+			-- <Precursor>.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".vote_wish")
+			create l_parameters.make (2)
+			l_parameters.put (a_wid, "wid")
+			l_parameters.put (u.id, "author")
+			sql_query (Select_exist_wish_author_vote, l_parameters)
+			if sql_rows_count = 1 then
 				Result := True
+			end
+		end
+
+feature -- Change wish vote
+
+	add_wish_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add like to wish `a_wid'.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			error_handler.reset
+			write_information_log (generator + ".add_wish_like")
+			create l_parameters.make (3)
+			l_parameters.put (1, "vote")
+			l_parameters.put (a_wid, "wid")
+			l_parameters.put (a_user.id, "author")
+
+			sql_begin_transaction
+			if has_vote_wish (a_user, a_wid) then
+					-- Update
+				sql_change (sql_update_wish_vote, l_parameters)
+			else
+					-- New
+				sql_change (sql_insert_wish_vote, l_parameters)
+			end
+			if error_handler.has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+				if attached {CMS_WISH_LIST} wish_by_id (a_wid) as l_wish then
+					 l_wish.set_votes (l_wish.votes + 1)
+					 save_wish (l_wish)
+				end
+			end
+		end
+
+	add_wish_not_like (a_user: CMS_USER; a_wid: INTEGER_64)
+			-- User `a_user' add not like to wish `a_wid'.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			  -- Todo refactor
+			error_handler.reset
+			write_information_log (generator + ".add_wish_not_like")
+			create l_parameters.make (3)
+			l_parameters.put (-1, "vote")
+			l_parameters.put (a_wid, "wid")
+			l_parameters.put (a_user.id, "author")
+
+			sql_begin_transaction
+			if has_vote_wish (a_user, a_wid) then
+					-- Update
+				sql_change (sql_update_wish_vote, l_parameters)
+			else
+					-- New
+				sql_change (sql_insert_wish_vote, l_parameters)
+			end
+			if error_handler.has_error then
+				sql_rollback_transaction
+			else
+				sql_commit_transaction
+				if attached {CMS_WISH_LIST} wish_by_id (a_wid) as l_wish then
+					 l_wish.set_votes (l_wish.votes - 1)
+					 save_wish (l_wish)
+				end
 			end
 		end
 
@@ -571,7 +652,7 @@ feature {NONE} -- Implemenation
 				l_parameters.put (a_wish.synopsis, "synopsis")
 				l_parameters.put (l_description, "description")
 				l_parameters.put (now, "changed")
-				l_parameters.put (1, "votes")
+				l_parameters.put (a_wish.votes, "votes")
 			else
 				error_handler.add_custom_error (1, "Missign required data", "Check if category, contact, description or status are defined!")
 			end
@@ -835,8 +916,13 @@ feature {NONE} -- Queries
 
 	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM wish_list INNER JOIN users ON wish_list.author=users.uid AND wish_list.wid = :wid;"
 
-	Select_wish_author_vote: STRING = "SELECT * FROM wish_list_votes  WHERE wish=:wid and author=:author;"
+	Select_wish_author_vote: STRING = "SELECT vote FROM wish_list_votes  WHERE wish=:wid AND author=:author;"
 
+	Select_exist_wish_author_vote: STRING = "SELECT * FROM wish_list_votes  WHERE wish=:wid AND author=:author;"
+
+	SQL_update_wish_vote: STRING = "UPDATE wish_list_votes SET vote=:vote WHERE wish=:wid AND author=:author;"
+
+	SQL_insert_wish_vote: STRING = "INSERT INTO wish_list_votes (wish, author, vote) VALUES (:wid, :author, :vote);"
 
 feature -- SQL query: Categories
 

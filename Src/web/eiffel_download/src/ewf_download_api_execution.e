@@ -7,11 +7,14 @@ class
 	EWF_DOWNLOAD_API_EXECUTION
 
 inherit
-
-	WSF_ROUTED_EXECUTION
-		redefine
-			initialize
+	WSF_ROUTED_SKELETON_EXECUTION
+		rename
+			make as make_execution
+		undefine
+			requires_proxy
 		end
+
+	WSF_NO_PROXY_POLICY
 
 	WSF_URI_HELPER_FOR_ROUTED_EXECUTION
 
@@ -30,11 +33,21 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize
+	make (a_config: EWF_DOWNLOAD_CONFIGURATION; a_server: EWF_DOWNLOAD_SERVICE_EXECUTION)
 		do
-			setup_config
-			Precursor
+			config := a_config
+			server := a_server
+			layout := config.layout
+			database_service := config.database_service
+			email_service := config.email_service
+			download_service := config.download_service
+			make_from_execution  (a_server)
+
 		end
+
+	config: EWF_DOWNLOAD_CONFIGURATION
+
+	server: EWF_DOWNLOAD_SERVICE_EXECUTION
 
 	setup_router
 			-- Setup `router'
@@ -537,26 +550,6 @@ feature -- Services
 	layout: APPLICATION_LAYOUT
 			--Application layout.		
 
-feature -- Configuration
-
-	setup_config
-			-- Configure API.
-		local
-			l_database: DATABASE_CONNECTION
-		do
-			if attached separate_character_option_value ('d') as l_dir then
-				create layout.make_with_path (create {PATH}.make_from_string (l_dir))
-			else
-				create layout.make_default
-			end
-
-			create email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration (layout.application_config_path))
-			if attached (create {JSON_CONFIGURATION}).new_database_configuration (layout.application_config_path) as l_database_config then
-				create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
-				create database_service.make (l_database)
-			end
-			create download_service.make ((create {DOWNLOAD_JSON_CONFIGURATION}).new_download_configuration (layout.config_path.extended ("downloads_configuration.json")))
-		end
 
 feature -- Send Email		
 

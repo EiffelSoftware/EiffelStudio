@@ -72,7 +72,7 @@ feature -- ESA Configuraion
  			-- Configure API.
  		local
  			l_configuration_factory: ESA_CONFIGURATION_FACTORY
- 		do 
+ 		do
  			create l_configuration_factory
  			esa_config := l_configuration_factory.esa_config (separate_character_option_value ('d'))
 			if attached l_configuration_factory.last_error as l_error then
@@ -109,6 +109,11 @@ feature -- Filters
 			create {WSF_MAINTENANCE_FILTER} f
 			f.set_next (l_filter)
 			l_filter := f
+
+			    -- CORS Authentication
+             create {ESA_CORS_FILTER} f
+             f.set_next (l_filter)
+             l_filter := f
 
 				-- Logger Filter
 			create {ESA_LOGGER_FILTER} f.make (esa_config)

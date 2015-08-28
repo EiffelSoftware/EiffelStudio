@@ -6,27 +6,31 @@
 	{/if}
 	<div class="row">
 			{if condition="$can_vote"}
-			<div  class="row">
-	 	 			<ul class="cms-links">
-						<li><a href="{$site_url/}resources/wish/{$wish.id/}/like"> Like </a></li>
-						<li><a href="{$site_url/}resources/wish/{$wish.id/}/not_like"> Not Like </a></li>
-					</ul>
-			</div>			
+				<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+					<input type="hidden" name="wishid" value="{$wish.id/}">
+					<label class="class-form-4">Do you like this?</label>
+					<button type="submit" >Like</button>
+				</form>
+				<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+					<input type="hidden" name="wishid" value="{$wish.id/}">
+					<label class="class-form-4">Don't you like this?</label>
+					<button type="submit" >Not Like</button>
+				</form>
 			{/if}
 
 			{if condition="$do_like"}
-				<div  class="row">
-	 				 <ul class="cms-links">
-						<li><a href="{$site_url/}resources/wish/{$wish.id/}/like"> Like </a></li>
-					</ul>
-				</div>		
+				<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+					<input type="hidden" name="wishid" value="{$wish.id/}">
+					<label class="class-form-4">Do you like this?</label>
+					<button type="submit" >Like</button>
+				</form>
 			{/if}
 			{if condition="$do_not_like"}
-				<div  class="row">
-	 	 			<ul class="cms-links">
-						<li><a href="{$site_url/}resources/wish/{$wish.id/}/not_like"> Not Like </a></li>
-					</ul>
-				</div>		
+				<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+					<input type="hidden" name="wishid" value="{$wish.id/}">
+					<label class="class-form-4">Don't you like this?</label>
+					<button type="submit" >Not Like</button>
+				</form>
 			{/if}
 			<section>
 				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6">{$wish.contact.name/}</span> <br>

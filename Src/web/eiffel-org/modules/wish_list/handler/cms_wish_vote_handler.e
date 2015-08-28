@@ -94,8 +94,9 @@ feature -- HTTP methods
 					wish_api.add_wish_not_like (l_user, wish_id_path_parameter (req))
 				end
 			end
-			r.set_status_code ({HTTP_STATUS_CODE}.found)
-			r.set_redirection (req.absolute_script_url ("/resources/wish_list"))
+			if attached template_block ("post_vote", r) as l_tpl_block then
+				r.add_block (l_tpl_block, "content")
+			end
 			r.execute
 		end
 

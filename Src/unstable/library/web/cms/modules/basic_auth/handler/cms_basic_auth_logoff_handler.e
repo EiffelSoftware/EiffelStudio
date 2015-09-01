@@ -47,6 +47,7 @@ feature -- HTTP Methods
 			l_page: CMS_RESPONSE
 			l_url: STRING
 			i: INTEGER
+			l_message: STRING
 		do
 			api.logger.put_information (generator + ".do_get Processing basic auth logoff", Void)
 			if attached req.query_parameter ("prompt") as l_prompt then
@@ -72,6 +73,10 @@ feature -- HTTP Methods
 					l_page.set_status_code ({HTTP_STATUS_CODE}.found)
 					l_page.set_redirection (l_url)
 				end
+				create l_message.make_from_string (logout_message)
+				l_message.replace_substring_all ("$site_login", req.absolute_script_url ("/account/roc-login"))
+				l_message.replace_substring_all ("$site_home", req.absolute_script_url (""))
+				l_page.set_main_content (l_message)
 				l_page.execute
 			end
 		end
@@ -112,5 +117,15 @@ feature -- HTTP Methods
                 Result := "Unknown"
             end
         end
+
+
+ feature {NONE}-- Lougout Message
+
+	logout_message: STRING = "[
+		<div class=%"cms-logout-message%">
+			<h2>You are now signed out</h2>
+			<p>You can <a href=$site_login>log</a> in again, or go to the <a href=%"$site_home%">front page</a>.</p>
+		</div>
+	]"	 
 
 end

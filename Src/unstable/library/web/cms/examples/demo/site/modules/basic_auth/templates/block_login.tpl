@@ -5,12 +5,12 @@
 			<div>	
 			    <form name="cms_basic_auth" action method="POST">
 					<div>
-						<input type="text" name="username" required>
+						<input type="text" name="username" id="username" required>
 						<label>Username</label>
 					</div>
 										
 					<div>
-						<input  type="password" name="password" required>
+						<input  type="password" name="password"  id="password" required>
 						<label>Password</label>
 					</div>
         
@@ -25,10 +25,5 @@
 				</p>
 			</div>
 		</div>	
-		<div>
-			{foreach item="item" from="$oauth_consumers"}
-				<a href="{$site_url/}account/login-with-oauth/{$item/}">Login with {$item/}</a><br>
-			{/foreach}	
-		</div>    	
 		{/unless}
 	</div>

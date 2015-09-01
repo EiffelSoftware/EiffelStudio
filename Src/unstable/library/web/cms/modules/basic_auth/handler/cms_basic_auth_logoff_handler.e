@@ -122,10 +122,13 @@ feature -- HTTP Methods
  feature {NONE}-- Lougout Message
 
 	logout_message: STRING = "[
-		<div class=%"cms-logout-message%">
+		<div class="cms-logout-message">
 			<h2>You are now signed out</h2>
-			<p>You can <a href=$site_login>log</a> in again, or go to the <a href=%"$site_home%">front page</a>.</p>
+			<p>You can <a href="$site_login">log</a> in again, or go to the <a href="$site_home">front page</a>.</p>
 		</div>
-	]"	 
+	]"
+
+
+
 
 end

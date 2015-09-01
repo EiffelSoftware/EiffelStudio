@@ -25,7 +25,7 @@ ROC_AUTH.login = function() {
                     var newdiv = document.createElement('div');
 	                  newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
-                     $("body").append(newdiv);
+                     $(".primary-tabs").append(newdiv);
                } 
 	}else{  
          
@@ -49,7 +49,7 @@ ROC_AUTH.login = function() {
                     var newdiv = document.createElement('div');
 	                   newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
-                    $("body").append(newdiv);
+                    $(".primary-tabs").append(newdiv);
                    } 
 
                   }
@@ -93,7 +93,7 @@ ROC_AUTH.login_with_redirect = function() {
                     var newdiv = document.createElement('div');
                       newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
-                    $("body").append(newdiv);
+                    $(".primary-tabs").append(newdiv);
                      $("#imgProgressRedirect").hide();
                } 
     }else{  
@@ -122,8 +122,8 @@ ROC_AUTH.login_with_redirect = function() {
                     var newdiv = document.createElement('div');
                        newdiv.innerHTML = "<br>Invalid Credentials</br>";
                     newdiv.id = 'myModalFormId';
-                    $("body").append(newdiv);
-                     $("#imgProgressRedirect").hide();    
+                    $(".primary-tabs").append(newdiv);
+                    $("#imgProgressRedirect").hide();    
                    } 
 
                   }

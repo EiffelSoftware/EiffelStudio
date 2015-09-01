@@ -32,7 +32,7 @@
 								</ul>
 							</nav>
 							<div class="btn-holder">
-								<a class="btn btn-download" href="{$site_url/}download_options">Download Now</a>
+								<a class="btn btn-download" href="{$site_url/}downloads">Download Now</a>
 								<a class="btn btn-tryonline" href="{$site_url/}try_eiffel">Try Eiffel Online</a>
 								<a class="btn btn-contribute" href="{$site_url/}contribute">Contribute</a>
 							</div>

@@ -54,7 +54,7 @@ feature -- Router
 			-- Router configuration.
 		do
 			a_router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/download_options", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -161,7 +161,7 @@ feature -- Hooks
 				end
 			elseif
 				a_block_id.is_case_insensitive_equal_general ("download_options") and then
-				a_response.request.path_info.same_string ("/download_options")
+				a_response.request.path_info.same_string ("/downloads")
 			then
 				get_block_view_download_options (a_block_id, a_response)
 			end

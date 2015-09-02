@@ -58,20 +58,20 @@ feature -- Status report
 			Result := statuses (a_path, is_verbose, is_recursive, is_remote, a_options)
 		end
 
-	repository_info (a_location: READABLE_STRING_8; a_options: detachable SVN_ENGINE_OPTIONS): detachable SVN_REPOSITORY_INFO
+	repository_info (a_location: READABLE_STRING_GENERAL; a_options: detachable SVN_ENGINE_OPTIONS): detachable SVN_REPOSITORY_INFO
 		local
 			s: detachable STRING
 			cmd: STRING_32
 			l_svn_xml_manager: like svn_xml_manager
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn info from [" + a_location + "] %N")
+				print ("Fetch svn info from [" + a_location.as_string_8 + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
 			cmd.append_string (option_to_command_line_flags (a_options))
 			cmd.append_string (" --xml info ")
-			cmd.append_string (a_location)
+			cmd.append_string_general (a_location)
 
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
@@ -100,19 +100,19 @@ feature -- Status report
 			end
 		end
 
-	diff (a_location: STRING; a_start, a_end: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
 		local
 			s: detachable STRING
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn info from [" + a_location + "] %N")
+				print ("Fetch svn info from [" + a_location.as_string_8 + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
 			cmd.append_string (option_to_command_line_flags (a_options))
 			cmd.append_string (" diff ")
-			cmd.append_string (a_location)
+			cmd.append_string_general (a_location)
 
 			if a_start > 0 then
 				cmd.append_string (" -r")
@@ -149,13 +149,13 @@ feature -- Status report
 			end
 		end
 
-	path_content (a_location: STRING; a_path: STRING; a_rev: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
+	path_content (a_location: READABLE_STRING_GENERAL; a_path: STRING; a_rev: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
 		local
 			s: detachable STRING
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch path content from [" + a_location + a_path + "] %N")
+				print ("Fetch path content from [" + a_location.as_string_8 + a_path + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)

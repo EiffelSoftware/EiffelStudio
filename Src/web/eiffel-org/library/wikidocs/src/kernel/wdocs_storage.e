@@ -47,6 +47,11 @@ feature -- Access
 		deferred
 		end
 
+	page_book_and_title_for_path (a_path: PATH): detachable TUPLE [bookid: READABLE_STRING_GENERAL; title: READABLE_STRING_GENERAL]
+			-- Bookid and title for page located at `a_path'.
+		deferred
+		end
+
 	metadata (a_source: PATH; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL]): detachable WDOCS_METADATA
 			-- Metadata for page `pg',
 			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.

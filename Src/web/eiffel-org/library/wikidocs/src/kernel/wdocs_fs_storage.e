@@ -108,6 +108,33 @@ feature -- Access
 			Result := manager.page (a_bookpage, a_bookid)
 		end
 
+	page_book_and_title_for_path (a_path: PATH): detachable TUPLE [bookid: READABLE_STRING_GENERAL; title: READABLE_STRING_GENERAL]
+			-- <Precursor>.
+		local
+			l_bookid: detachable READABLE_STRING_GENERAL
+			l_title: detachable READABLE_STRING_GENERAL
+		do
+			across
+				pages_data.pages_path_by_title_and_book as b_ic
+			until
+				l_title /= Void
+			loop
+				across
+					b_ic.item as p_ic
+				until
+					l_title /= Void
+				loop
+					if p_ic.item.same_as (a_path) then
+						l_bookid := b_ic.key
+						l_title := p_ic.key
+					end
+				end
+			end
+			if l_bookid /= Void and l_title /= Void then
+				Result := [l_bookid, l_title]
+			end
+		end
+
 	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
 		do

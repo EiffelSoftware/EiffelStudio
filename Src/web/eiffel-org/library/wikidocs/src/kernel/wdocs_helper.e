@@ -9,6 +9,9 @@ class
 
 feature -- Helper
 
+	normalization_enabled: BOOLEAN = False
+			-- For now, normalization is disabled by default.
+
 	normalized_fs_text (a_text: READABLE_STRING_GENERAL): STRING_32
 			-- `a_text' converted to a normalized file system text.
 			--| for instance a wiki name converted to safe filename.
@@ -19,27 +22,31 @@ feature -- Helper
 		local
 			i,n: INTEGER
 		do
-				-- Replace any space with underscore
-			create Result.make (a_text.count)
-			from
-				i := 1
-				n := a_text.count
-			until
-				i > n
-			loop
-				if a_text[i].is_space then
-					from
-						i := i + 1
-					until
-						not a_text[i].is_space
-					loop
+			if normalization_enabled then
+					-- Replace any space with underscore
+				create Result.make (a_text.count)
+				from
+					i := 1
+					n := a_text.count
+				until
+					i > n
+				loop
+					if a_text[i].is_space then
+						from
+							i := i + 1
+						until
+							not a_text[i].is_space
+						loop
+							i := i + 1
+						end
+						Result.append_character ('_')
+					else
+						Result.append_character (a_text[i])
 						i := i + 1
 					end
-					Result.append_character ('_')
-				else
-					Result.append_character (a_text[i])
-					i := i + 1
 				end
+			else
+				create Result.make_from_string_general (a_text)
 			end
 		end
 
@@ -47,7 +54,11 @@ feature -- Helper
 		require
 			not_absolute: a_path.is_absolute
 		do
-			create Result.make_from_string (normalized_fs_text (a_path.name))
+			if normalization_enabled then
+				create Result.make_from_string (normalized_fs_text (a_path.name))
+			else
+				Result := a_path
+			end
 		end
 
 

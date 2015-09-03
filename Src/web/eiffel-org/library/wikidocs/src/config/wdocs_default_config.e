@@ -18,20 +18,16 @@ feature {NONE} -- Initialization
 
 	make_default
 		do
-			make (create {PATH}.make_current, Void)
+			make (create {PATH}.make_current, "current")
 		end
 
-	make (a_root_dir: PATH; a_default_version: detachable READABLE_STRING_8)
-			-- Initialize Current with `a_root_dir' and default version to `a_default_version' if set, otherwise "current".
+	make (a_root_dir: PATH; a_default_version: READABLE_STRING_8)
+			-- Initialize Current with `a_root_dir' and default version to `a_default_version'.
 		do
 			set_root_dir (a_root_dir)
 			set_temp_dir (a_root_dir.extended ("tmp"))
 			set_documentation_dir (a_root_dir.extended ("data").extended ("documentation"))
-			if a_default_version /= Void then
-				set_documentation_default_version (a_default_version)
-			else
-				set_documentation_default_version ("current")
-			end
+			set_documentation_default_version (a_default_version)
 			set_cache_duration (6 * 60 * 60) -- 6 hours
 		end
 

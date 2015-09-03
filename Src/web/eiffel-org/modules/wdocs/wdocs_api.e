@@ -160,6 +160,11 @@ feature -- Recent changes
 --			create opts
 
 			create svn
+			if attached cms_api.setup.text_item ("tools.subversion.location") as l_svn_loc then
+				svn.set_svn_executable_path (l_svn_loc)
+			elseif {PLATFORM}.is_unix then
+				svn.set_svn_executable_path ("/usr/bin/svn")
+			end
 			if a_version_id = Void then
 				loc := configuration.documentation_dir.extended (configuration.documentation_default_version)
 			else

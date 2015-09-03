@@ -16,6 +16,7 @@
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
+		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<library name="wikidocs" location="..\..\library\wikidocs\wikidocs-safe.ecf" readonly="false"/>

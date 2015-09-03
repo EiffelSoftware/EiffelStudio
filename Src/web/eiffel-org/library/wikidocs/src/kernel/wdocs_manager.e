@@ -223,6 +223,15 @@ feature -- Access
 			Result := storage.page_by_uuid (a_page_uuid, a_bookid)
 		end
 
+	book_and_page_by_path (a_path: PATH): detachable TUPLE [bookid: READABLE_STRING_GENERAL; page: like new_wiki_page]
+		do
+			if attached storage.page_book_and_title_for_path (a_path) as d then
+				if attached page_by_title (d.title, d.bookid) as wp then
+					Result := [d.bookid, wp]
+				end
+			end
+		end
+
 	wiki_text (p: WIKI_PAGE): detachable READABLE_STRING_8
 		do
 			Result := storage.wiki_text (p)

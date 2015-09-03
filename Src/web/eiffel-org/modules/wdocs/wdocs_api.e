@@ -58,7 +58,7 @@ feature -- Query
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 		do
 			if a_version_id = Void then
-				create Result.make (documentation_wiki_dir (default_version_id), a_version_id, temp_dir)
+				create Result.make (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
 			else
 				create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
 			end
@@ -98,7 +98,7 @@ feature -- Query: wiki
 			end
 		end
 
-	wiki_page (a_wiki_id: detachable READABLE_STRING_GENERAL; a_bookid, a_version_id: detachable READABLE_STRING_GENERAL): detachable like manager.new_wiki_page
+	wiki_page (a_wiki_id: detachable READABLE_STRING_GENERAL; a_bookid, a_version_id: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 		local
 			mnger: WDOCS_MANAGER
 		do
@@ -129,7 +129,7 @@ feature -- Query: wiki
 			end
 		end
 
-	wiki_page_by_uuid (a_wiki_uuid: READABLE_STRING_GENERAL; a_bookid, a_version_id: detachable READABLE_STRING_GENERAL): detachable like manager.new_wiki_page
+	wiki_page_by_uuid (a_wiki_uuid: READABLE_STRING_GENERAL; a_bookid, a_version_id: detachable READABLE_STRING_GENERAL): detachable like new_wiki_page
 		local
 			mnger: WDOCS_MANAGER
 		do
@@ -137,9 +137,146 @@ feature -- Query: wiki
 			Result := mnger.page_by_uuid (a_wiki_uuid, a_bookid)
 		end
 
+feature -- Recent changes	
+
+	recent_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME; a_version_id: detachable READABLE_STRING_GENERAL): LIST [TUPLE [time: DATE_TIME; author: READABLE_STRING_32; bookid: READABLE_STRING_GENERAL; page: like new_wiki_page; log: READABLE_STRING_8]]
+			-- List of recent changes, before `a_date', according to `params' settings.
+		local
+			hdate: HTTP_DATE
+			svn: SVN_ENGINE
+			opts: detachable SVN_ENGINE_OPTIONS
+			l_info: SVN_REVISION_INFO
+			loc: PATH
+			l_base_url: detachable STRING_8
+			s: STRING_32
+			utf: UTF_CONVERTER
+			wp: detachable WIKI_BOOK_PAGE
+			wbookid: detachable READABLE_STRING_GENERAL
+			mnger: like manager
+			dt: DATE_TIME
+		do
+			create {ARRAYED_LIST [like recent_changes_before.item]} Result.make (params.size.as_integer_32)
+
+--			create opts
+
+			create svn
+			if a_version_id = Void then
+				loc := configuration.documentation_dir.extended (configuration.documentation_default_version)
+			else
+				loc := configuration.documentation_dir.extended (a_version_id)
+			end
+
+			if attached svn.repository_info (loc.name, opts) as l_repo_info then
+				if
+					attached l_repo_info.url as l_repo_url and
+					attached l_repo_info.repository_root as l_repo_root
+				then
+					create l_base_url.make_from_string (l_repo_url)
+					l_base_url.remove_head (l_repo_root.count)
+				end
+			end
+			if l_base_url = Void then
+				create l_base_url.make_empty
+			end
+			if attached svn.logs (loc.name, True, a_date, 1, params.size.to_integer_32, opts) as l_logs then
+				across
+					l_logs as ic
+				loop
+					l_info := ic.item
+					dt := svn_log_date_to_date_time (l_info.date)
+					across
+						l_info.paths as p_ic
+					loop
+						s := p_ic.item.path
+						if s.starts_with (l_base_url) then
+							s.remove_head (l_base_url.count + 1)
+						end
+						if not s.is_empty and then s.item (1) = '/' then
+							s.remove_head (1)
+						end
+						wp := Void
+						wbookid := Void
+						mnger := manager (a_version_id)
+						if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
+							wp := l_wb_and_wp.page
+							wbookid := l_wb_and_wp.bookid
+						end
+--						if wp = Void then
+--							wp := new_wiki_page (s, "recent_changes")
+--							wp.set_path (loc.extended (s))
+--						end
+						if wbookid /= Void and wp /= Void then
+							wp.update_from_metadata
+							wp.set_src (mnger.wiki_page_uri_path (wp, a_version_id))
+							wp.set_src (wp.src.substring (2, wp.src.count))
+							Result.force ([dt, l_info.author, wbookid, wp, utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)])
+						else
+								-- FIXME: Either not a doc item, or issue. To handle.
+						end
+					end
+				end
+			end
+		end
+
+	svn_log_date_to_date_time (a_date_string: READABLE_STRING_32): DATE_TIME
+			-- "2015-08-14T10:34:13.493740Z"
+		local
+			i,j: INTEGER
+			s: READABLE_STRING_GENERAL
+			y,m,d,h,min: INTEGER
+			sec: REAL_64
+		do
+			i := a_date_string.index_of ('-', 1)
+			if i > 0 then
+				s := a_date_string.substring (1, i - 1)
+				y := s.to_integer_32 -- Year
+				j := i + 1
+				i := a_date_string.index_of ('-', j)
+				if i > 0 then
+					s := a_date_string.substring (j, i - 1)
+					m := s.to_integer_32 -- Month
+					j := i + 1
+					i := a_date_string.index_of ('T', j)
+					if i = 0 then
+						i := a_date_string.index_of (' ', j)
+					end
+					if i = 0 then
+						i := a_date_string.count + 1
+					end
+					if i > 0 then
+						s := a_date_string.substring (j, i - 1)
+						if s.is_integer then
+							d := s.to_integer_32 -- Day							
+							j := i + 1
+							i := a_date_string.index_of (':', j)
+							if i > 0 then
+								s := a_date_string.substring (j, i - 1)
+								h := s.to_integer
+								j := i + 1
+								i := a_date_string.index_of (':', j)
+								if i > 0 then
+									s := a_date_string.substring (j, i - 1)
+									min := s.to_integer
+									j := i + 1
+									i := a_date_string.index_of ('Z', j)
+									if i = 0 then
+										i := a_date_string.count + 1
+									end
+									s := a_date_string.substring (j, i - 1)
+									sec := s.to_double
+								end
+							end
+						end
+					end
+				end
+			end
+			create Result.make (y,m,d,h,m,0)
+			Result.fine_second_add (sec)
+		end
+
 feature -- Factory
 
-	new_wiki_page (a_title: READABLE_STRING_GENERAL; a_parent_key: READABLE_STRING_8): WIKI_BOOK_PAGE
+	new_wiki_page (a_title: READABLE_STRING_GENERAL; a_parent_key: READABLE_STRING_8): like manager.new_wiki_page
 		local
 			utf: UTF_CONVERTER
 		do

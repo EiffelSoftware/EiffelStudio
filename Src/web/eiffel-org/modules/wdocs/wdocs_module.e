@@ -122,6 +122,9 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_response)
+
+				-- Module specific hook, if available.
+			a_response.hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 		end
 
 feature {NONE} -- Config
@@ -353,20 +356,69 @@ feature -- Hooks
 
 feature -- Hook / Recent changes
 
-	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])
-			-- Populate recent changes inside `a_changes' according to associated parameters.
-			-- Also provide sources of information.
+	recent_changes_sources: detachable LIST [READABLE_STRING_8]
+			-- <Precursor>
 		local
+			lst: ARRAYED_LIST [READABLE_STRING_8]
+		do
+			create lst.make (1)
+			lst.extend ("doc")
+			Result := lst
+		end
+
+	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_current_user: detachable CMS_USER)
+			-- <Precursor>.
+		local
+			pos,pos_eol: INTEGER
 			i: CMS_RECENT_CHANGE_ITEM
 			dt: detachable DATE_TIME
+			l_src: detachable READABLE_STRING_8
+			params: CMS_DATA_QUERY_PARAMETERS
+			wp: WIKI_BOOK_PAGE
+			s: STRING
+			utf: UTF_CONVERTER
+			l_title: detachable READABLE_STRING_32
 		do
-			debug ("wdocs")
-				a_sources.force ("doc")
-				dt := a_changes.date
-				if dt = Void then
-					create dt.make_now_utc
+			if attached wdocs_api as l_wdocs_api then
+				l_src := a_changes.source --| i.e filter on source
+
+				if l_src = Void or else l_src.is_case_insensitive_equal_general ("doc") then
+					dt := a_changes.date
+					if dt = Void then
+						create dt.make_now_utc
+					end
+
+					create params.make (0, a_changes.limit)
+					across
+						l_wdocs_api.recent_changes_before (params, dt, Void) as ic
+					loop
+						if attached ic.item as l_data then
+							wp := l_data.page
+							l_title := wp.metadata ("link_title")
+							if l_title = Void then
+								l_title := wp.title
+							end
+							create i.make ("doc", create {CMS_LOCAL_LINK}.make (l_title, wp.src), l_data.time)
+							i.set_author_name (l_data.author)
+							if attached ic.item.log as l_log then
+								i.set_information (l_log)
+									-- Looking for real author "Signed-off-by: Super Developer <super.dev@gmail.com>"
+								pos := l_log.substring_index ("%NSigned-off-by:", 1)
+								if pos > 0 then
+									pos_eol := l_log.index_of ('%N', pos + 14)
+									if pos_eol = 0 then
+										pos_eol := l_log.count
+									end
+									s := l_log.substring (pos + 15, pos_eol - 1)
+									s.right_adjust
+									s.left_adjust
+									i.set_author_name (utf.utf_8_string_8_to_string_32 (s))
+								end
+							end
+							a_changes.force (i)
+						end
+					end
 				end
-				create i.make ("doc", create {CMS_LOCAL_LINK}.make ("Fake doc", "doc/bla/bla"), dt)
 			end
 		end
 

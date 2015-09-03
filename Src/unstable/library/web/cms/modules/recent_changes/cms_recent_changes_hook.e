@@ -11,9 +11,13 @@ inherit
 
 feature -- Invocation
 
-	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])
+	recent_changes_sources: detachable LIST [READABLE_STRING_8]
+			-- Source provided by Current hook.
+		deferred
+		end
+
+	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_current_user: detachable CMS_USER)
 			-- Populate recent changes inside `a_changes' according to associated parameters.
-			-- Also provide sources of information.
 		deferred
 		end
 

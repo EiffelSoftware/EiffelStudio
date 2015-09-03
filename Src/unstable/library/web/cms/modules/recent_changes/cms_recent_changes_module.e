@@ -58,25 +58,33 @@ feature -- Handler
 			r: CMS_RESPONSE
 			l_changes: CMS_RECENT_CHANGE_CONTAINER
 			l_sources: ARRAYED_LIST [READABLE_STRING_8]
-			dt, prev_dt: detachable DATE
+			dt,	prev_dt: detachable DATE_TIME
+			prev_info: detachable READABLE_STRING_8
 			ch: detachable CMS_RECENT_CHANGE_ITEM
 			htdate: HTTP_DATE
 			l_content: STRING
 			l_form: CMS_FORM
 			l_select: WSF_FORM_SELECT
+			l_size_field: WSF_FORM_NUMBER_INPUT
+			l_submit: WSF_FORM_SUBMIT_INPUT
 			l_until_date: detachable DATE_TIME
 			l_filter_source: detachable READABLE_STRING_8
 			l_size: NATURAL_32
 			l_query: STRING
 			opt: WSF_FORM_SELECT_OPTION
+			l_user: detachable CMS_USER
+			i: INTEGER
 		do
 			if attached {WSF_STRING} req.query_parameter ("date") as p_until_date then
 				create htdate.make_from_timestamp (p_until_date.value.to_integer_64)
 				l_until_date := htdate.date_time
 --				l_until_date.second_add (-1)
 			end
-			if attached {WSF_STRING} req.query_parameter ("filter") as p_filter then
+			if attached {WSF_STRING} req.query_parameter ("source") as p_filter then
 				l_filter_source := p_filter.url_encoded_value
+				if l_filter_source.is_empty then
+					l_filter_source := Void
+				end
 			end
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size then
 				l_size := p_size.integer_value.to_natural_32
@@ -87,22 +95,33 @@ feature -- Handler
 
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if r.has_permission ("view recent changes") then
+				l_user := r.user
 				create l_changes.make (l_size, l_until_date, l_filter_source)
 
 				create l_content.make (1024)
 				if attached r.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
 					create l_sources.make (lst.count)
+
 					across
 						lst as ic
 					loop
 						if attached {CMS_RECENT_CHANGES_HOOK} ic.item as h then
-							h.populate_recent_changes (l_changes, l_sources)
+							if attached h.recent_changes_sources as h_sources then
+								l_sources.append (h_sources)
+								if
+									l_filter_source = Void
+									or else across h_sources as h_ic some h_ic.item.is_case_insensitive_equal (l_filter_source) end
+								then
+									h.populate_recent_changes (l_changes, l_user)
+								end
+							end
 						end
 					end
 					create l_form.make (req.percent_encoded_path_info, "recent-changes")
+					l_form.set_method_get
 					create l_select.make ("source")
 					l_select.set_label ("Sources")
-					create opt.make ("", "...")
+					create opt.make ("", "Any source")
 					l_select.add_option (opt)
 					across
 						l_sources as ic
@@ -114,12 +133,19 @@ feature -- Handler
 						l_select.add_option (opt)
 					end
 					l_form.extend (l_select)
+
+					create l_size_field.make_with_text ("size", l_size.out)
+					l_size_field.set_size (25)
+					l_size_field.set_label ("Items per page")
+					l_form.extend (l_size_field)
+					create l_submit.make_with_text ("op", "Filter")
+					l_form.extend (l_submit)
 					l_form.extend_html_text ("<br/>")
 					l_form.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), l_content)
 				end
 
 				l_changes.reverse_sort
-				l_content.append ("<table class=%"recent-changes%" style=%"border-spacing: 5px;%">")
+				l_content.append ("<table class=%"recent-changes%">")
 				l_content.append ("<thead>")
 				l_content.append ("<tr>")
 				l_content.append ("<th>Date</th>")
@@ -135,20 +161,24 @@ feature -- Handler
 					l_changes as ic
 				loop
 					ch := ic.item
-					dt := ch.date.date
-					if dt /~ prev_dt then
+					dt := ch.date
+					if prev_dt = Void or else dt.date /~ prev_dt.date then
 						l_content.append ("<tr>")
 						l_content.append ("<td class=%"title%" colspan=%"5%">")
-						l_content.append (dt.formatted_out ("ddd, dd mmm yyyy"))
+						l_content.append (dt.date.formatted_out ("ddd, dd mmm yyyy"))
 						l_content.append ("</td>")
 						l_content.append ("</tr>")
 					end
-					prev_dt := dt
 					l_content.append ("<tr>")
 					l_content.append ("<td class=%"date%">")
-					create htdate.make_from_date_time (ch.date)
-					htdate.append_to_rfc1123_string (l_content)
+					if dt /~ prev_dt then
+						create htdate.make_from_date_time (dt)
+						htdate.append_to_rfc1123_string (l_content)
+					else
+						l_content.append ("<span class=%"same-value%">''</span>")
+					end
 					l_content.append ("</td>")
+
 					l_content.append ("<td class=%"source%">" + ch.source + "</td>")
 					l_content.append ("<td class=%"resource%">")
 					l_content.append (r.link (ch.link.title, ch.link.location, Void))
@@ -156,14 +186,32 @@ feature -- Handler
 					l_content.append ("<td class=%"user%">")
 					if attached ch.author as u then
 						l_content.append (r.link (u.name, "user/" + u.id.out, Void))
+					elseif attached ch.author_name as un then
+						l_content.append (r.html_encoded (un))
 					end
 					l_content.append ("</td>")
 					l_content.append ("<td class=%"info%">")
-					if attached ch.information as l_info then
-						l_content.append ("<strong>" + l_info + "</strong> ")
+					if attached ch.information as l_info and then not l_info.is_empty then
+						if prev_dt ~ dt and prev_info ~ l_info then
+							l_content.append ("<span class=%"same-value%">''</span>")
+						else
+							i := l_info.index_of ('%N', 1)
+							if i > 0 and i < l_info.count then
+								l_content.append (l_info.substring (1, i - 1))
+								l_content.append ("<span class=%"tooltip%">")
+								l_content.append (l_info.substring (i, l_info.count))
+								l_content.append ("</span>")
+							else
+								l_content.append (l_info)
+							end
+						end
+						prev_info := l_info
+					else
+						prev_info := Void
 					end
 					l_content.append ("</td>")
 					l_content.append ("</tr>%N")
+					prev_dt := dt
 				end
 				l_content.append ("</tbody>")
 				l_content.append ("</table>%N")

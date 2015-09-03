@@ -280,7 +280,27 @@ feature -- Hooks
 			end
 		end
 
-	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_sources: LIST [READABLE_STRING_8])
+	recent_changes_sources: detachable LIST [READABLE_STRING_8]
+			-- <Precursor>
+		local
+			lst: ARRAYED_LIST [READABLE_STRING_8]
+		do
+			if
+				attached node_api as l_node_api and then
+				attached l_node_api.content_types as l_types and then
+				not l_types.is_empty
+			then
+				create lst.make (l_types.count)
+				across
+					l_types as ic
+				loop
+					lst.force (ic.item.name)
+				end
+				Result := lst
+			end
+		end
+
+	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_current_user: detachable CMS_USER)
 		local
 			params: CMS_DATA_QUERY_PARAMETERS
 			ch: CMS_RECENT_CHANGE_ITEM
@@ -288,43 +308,44 @@ feature -- Hooks
 			l_info: STRING_8
 			l_src: detachable READABLE_STRING_8
 			l_nodes: ITERABLE [CMS_NODE]
+			l_date: detachable DATE_TIME
 		do
 			create params.make (0, a_changes.limit)
 			if attached node_api as l_node_api then
-				across
-					l_node_api.content_types as ic
-				loop
-					a_sources.force (ic.item.name)
-				end
 				l_src := a_changes.source
-				if attached a_changes.date as l_date then
-					l_nodes := l_node_api.recent_node_changes_before (params, l_date)
-				else
-					l_nodes := l_node_api.recent_node_changes_before (params, create {DATE_TIME}.make_now_utc)
+				l_date := a_changes.date
+				if l_date = Void then
+					create l_date.make_now_utc
 				end
+				l_nodes := l_node_api.recent_node_changes_before (params, l_date)
 				across l_nodes as ic loop
 					n := ic.item
 					if l_src = Void or else l_src.is_case_insensitive_equal_general (n.content_type) then
-						n := l_node_api.full_node (n)
-						create ch.make (n.content_type, create {CMS_LOCAL_LINK}.make (n.title, "node/" + n.id.out), n.modification_date)
-						if n.creation_date ~ n.modification_date then
-							l_info := "new"
-							if not n.is_published then
-								l_info.append (" (unpublished)")
-							end
-						else
-							if n.is_trashed then
-								l_info := "deleted"
-							else
-								l_info := "updated"
+						if l_node_api.has_permission_for_action_on_node ("view", n, a_current_user) then
+							n := l_node_api.full_node (n)
+							create ch.make (n.content_type, create {CMS_LOCAL_LINK}.make (n.title, "node/" + n.id.out), n.modification_date)
+							if n.creation_date ~ n.modification_date then
+								l_info := "new"
 								if not n.is_published then
 									l_info.append (" (unpublished)")
 								end
+							else
+								if n.is_trashed then
+									l_info := "deleted"
+								else
+									l_info := "updated"
+									if not n.is_published then
+										l_info.append (" (unpublished)")
+									end
+								end
 							end
+							ch.set_information (l_info)
+							ch.set_author (n.author)
+							a_changes.force (ch)
+						else
+							-- Forbidden
+							-- FIXME: provide a visual indication!
 						end
-						ch.set_information (l_info)
-						ch.set_author (n.author)
-						a_changes.force (ch)
 					end
 				end
 			end

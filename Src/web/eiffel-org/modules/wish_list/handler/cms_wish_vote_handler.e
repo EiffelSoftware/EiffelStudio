@@ -61,7 +61,6 @@ feature -- HTTP methods
 	do_get (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_message: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if attached r.user as l_user then
@@ -82,7 +81,6 @@ feature -- HTTP methods
 	do_post (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_message: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if attached r.user as l_user then

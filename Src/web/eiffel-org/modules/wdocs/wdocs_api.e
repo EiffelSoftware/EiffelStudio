@@ -142,7 +142,6 @@ feature -- Recent changes
 	recent_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME; a_version_id: detachable READABLE_STRING_GENERAL): LIST [TUPLE [time: DATE_TIME; author: READABLE_STRING_32; bookid: READABLE_STRING_GENERAL; page: like new_wiki_page; log: READABLE_STRING_8]]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		local
-			hdate: HTTP_DATE
 			svn: SVN_ENGINE
 			opts: detachable SVN_ENGINE_OPTIONS
 			l_info: SVN_REVISION_INFO

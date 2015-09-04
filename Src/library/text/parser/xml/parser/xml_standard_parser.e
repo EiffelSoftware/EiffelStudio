@@ -645,6 +645,7 @@ feature {NONE} -- Implementation: parse
 						loop
 								-- In this loop body, no check on end_of_input
 								-- at worst it reports a "No more characters" error
+								-- FIXME: when text ends by "]]]>" or similar issue. 
 							if last_character = ']' then
 								read_character
 								if last_character = ']' then
@@ -654,6 +655,11 @@ feature {NONE} -- Implementation: parse
 										done := True
 									elseif c = '-' then
 										s.append_character (']')
+										rewind_character
+									elseif c = ']' then
+											-- Could be ]]]
+										s.append_character (']')
+										rewind_character
 										rewind_character
 									else
 										s.append_character (']')

@@ -18,6 +18,8 @@ inherit
 			process_attribute
 		end
 
+	XML_SHARED_UTILITIES
+
 create
 	make
 
@@ -77,8 +79,44 @@ feature -- Processing
 
 	process_character_data (c: XML_CHARACTER_DATA)
 			-- Process character data `c'.
+		local
+			l_content: READABLE_STRING_32
+			lst: ARRAYED_LIST [TUPLE [a,b: INTEGER]]
+			i,j: INTEGER
+			s: STRING_8
 		do
-			output.put_string_32_escaped (c.content)
+			l_content := c.content
+				-- ]]> is forbidden in CDATA section,
+				-- so let's split the string for each ]]>   just before the '>'
+				-- And have as many CDATA section needed to support ]]> in content.
+			create lst.make (1)
+			from
+				i := 1
+				j := l_content.substring_index ("]]>", i)
+			until
+				j = 0
+			loop
+				lst.force ([i, j + 2])
+				i := j + 3
+				j := l_content.substring_index ("]]>", i)
+			end
+			if j = 0 then
+				lst.force ([i, l_content.count])
+			end
+			across
+				lst as ic
+			loop
+				output.put_string_8 ("<![CDATA[")
+					-- FIXME: implement smart xml escaping, depending on the usage!
+				s := xml_utilities.escaped_xml (l_content.substring (ic.item.a, ic.item.b))
+					-- note: unescape &lt; &gt; and &amp;  (i.e  < > and & ) since they are allowed in CDATA sections
+				s.replace_substring_all ("&lt;", "<")
+				s.replace_substring_all ("&gt;", ">")
+				s.replace_substring_all ("&amp;", "&")
+				s.replace_substring_all ("&quot;", "%"")
+				output.put_string_8 (s)
+				output.put_string_8 ("]]>")
+			end
 		end
 
 	process_processing_instruction (a_pi: XML_PROCESSING_INSTRUCTION)
@@ -135,7 +173,7 @@ invariant
 	output_not_void: output /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -99,6 +99,15 @@ feature -- HTTP Methods
 				edit_response.execute
 			elseif req.percent_encoded_path_info.ends_with ("/revision") then
 				do_revisions (req, res)
+--			elseif req.percent_encoded_path_info.ends_with ("/add_child/page") then
+--					-- Add child node
+--				l_nid := node_id_path_parameter (req)
+--				if l_nid > 0 then
+--						-- create a new child node with node id `l_id' as parent.
+--					create_new_node (req, res)
+--				else
+--					send_not_found (req, res)
+--				end
 			else
 					-- Display existing node
 				l_nid := node_id_path_parameter (req)
@@ -117,15 +126,29 @@ feature -- HTTP Methods
 					then
 						l_node := node_api.revision_node (l_nid, l_rev)
 					end
-					if
-						l_node /= Void and then (l_rev > 0 or else l_node.is_published)
-					then
-						create view_response.make (req, res, api, node_api)
-						view_response.set_node (l_node)
-						view_response.set_revision (l_rev)
-						view_response.execute
-					else
+					if l_node = Void then
 						send_not_found (req, res)
+					else
+						if
+							l_rev > 0 or else l_node.is_published
+						then
+							create view_response.make (req, res, api, node_api)
+							view_response.set_node (l_node)
+							view_response.set_revision (l_rev)
+							view_response.execute
+						elseif
+							attached current_user (req) as l_user and then
+							(	node_api.is_author_of_node (l_user, l_node)
+								or else api.user_api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
+							)
+						then
+							create view_response.make (req, res, api, node_api)
+							view_response.set_node (l_node)
+							view_response.set_revision (l_rev)
+							view_response.execute
+						else
+							send_access_denied (req, res)
+						end
 					end
 				else
 --					redirect_to (req.absolute_script_url ("/node/"), res) -- New node.
@@ -166,6 +189,9 @@ feature -- HTTP Methods
 			elseif req.percent_encoded_path_info.starts_with ("/node/add/") then
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
+			elseif req.percent_encoded_path_info.ends_with ("/add_child/page") then
+				create edit_response.make (req, res, api, node_api)
+				edit_response.execute
 			else
 				to_implement ("REST API")
 				send_not_implemented ("REST API not yet implemented", req, res)
@@ -179,8 +205,8 @@ feature -- HTTP Methods
 			send_not_implemented ("REST API not yet implemented", req, res)
 		end
 
-	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- <Precursor>
+	do_trash (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Trash a node, soft delete.
 		do
 			if attached current_user (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
@@ -188,8 +214,8 @@ feature -- HTTP Methods
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("delete", l_node, current_user (req)) then
-							node_api.delete_node (l_node)
+						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
+							node_api.trash_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
 							send_access_denied (req, res)
@@ -214,8 +240,8 @@ feature -- HTTP Methods
 
 feature {NONE} -- Trash:Restore
 
-	do_trash (req: WSF_REQUEST; res: WSF_RESPONSE)
-			-- Trash a node from the database.
+	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Delete a node from the database.
 		do
 			if attached current_user (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
@@ -223,8 +249,8 @@ feature {NONE} -- Trash:Restore
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
-							node_api.trash_node (l_node)
+						if node_api.has_permission_for_action_on_node ("delete", l_node, current_user (req)) then
+							node_api.delete_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
 							send_access_denied (req, res)
@@ -355,5 +381,4 @@ feature {NONE} -- Node
 				send_bad_request (req, res)
 			end
 		end
-
 end

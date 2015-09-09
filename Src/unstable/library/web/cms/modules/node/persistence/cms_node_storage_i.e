@@ -117,6 +117,21 @@ feature -- Access
 		deferred
 		end
 
+feature -- Access: outline
+
+	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
+			-- Children of node `a_node'.
+			-- note: this is the partial version of the nodes.
+		deferred
+		end
+
+	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- Given the node `a_node', return the list of possible parent nodes id
+		deferred
+		ensure
+			a_node_excluded: across Result as ic all not a_node.same_node (ic.item) end
+		end
+
 feature -- Change: Node
 
 	save_node (a_node: CMS_NODE)

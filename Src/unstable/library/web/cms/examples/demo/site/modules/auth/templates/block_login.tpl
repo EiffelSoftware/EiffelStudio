@@ -25,5 +25,5 @@
 				</p>
 			</div>
 		</div>	
-	{/unless}
-</div>
+		{/unless}
+	</div>

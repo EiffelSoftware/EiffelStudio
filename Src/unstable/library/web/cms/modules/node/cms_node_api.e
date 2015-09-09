@@ -281,14 +281,17 @@ feature -- Access: Node
 				else
 					Result := l_partial_node
 				end
+					-- Update link with aliasing.
+				if Result /= Void and then Result.has_id then
+					Result.set_link (node_link (Result))
+				end
 			else
 				Result := a_node
+				if Result.has_id and Result.link = Void then
+					Result.set_link (node_link (Result))
+				end
 			end
-
-				-- Update link with aliasing.
-			if a_node /= Void and then a_node.has_id then
-				a_node.set_link (node_link (a_node))
-			end
+			check has_link: Result.has_id implies attached Result.link as lnk and then lnk.location.same_string (node_link (Result).location) end
 
 				-- Update partial user if needed.
 			if
@@ -324,6 +327,47 @@ feature -- Access: Node
 		do
 			if attached node_storage.node_author (a_node) as l_author then
 				Result := u.same_as (l_author)
+			end
+		end
+
+feature -- Access: page/book outline
+
+	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
+			-- Children of node `a_node'.
+			-- note: this is the partial version of the nodes.
+		do
+			Result := node_storage.children (a_node)
+		end
+
+	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- Potential parent nodes for node `a_node'.
+			-- Ensure no cycle exists.
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+			across node_storage.available_parents_for_node (a_node) as ic loop
+				check distinct: not a_node.same_node (ic.item) end
+				if not is_node_a_parent_of (a_node, ic.item) then
+					Result.force (ic.item)
+				end
+			end
+		ensure
+			no_cycle: across Result as c all not is_node_a_parent_of (a_node, c.item) end
+		end
+
+	is_node_a_parent_of (a_node: CMS_NODE; a_child: CMS_NODE): BOOLEAN
+			-- Is `a_node' a direct or indirect parent of node `a_child'?
+		require
+			distinct_nodes: not a_node.same_node (a_child)
+		do
+			if
+				attached {CMS_PAGE} full_node (a_child) as l_child_page and then
+				attached l_child_page.parent as l_parent
+			then
+				if l_parent.same_node (a_node) then
+					Result := True
+				else
+					Result := is_node_a_parent_of (a_node, l_parent)
+				end
 			end
 		end
 
@@ -365,6 +409,7 @@ feature -- Change: Node
 
 	delete_node (a_node: CMS_NODE)
 			-- Delete `a_node'.
+			--! remove the node from the storage.
 		do
 			reset_error
 			if a_node.has_id then
@@ -383,7 +428,7 @@ feature -- Change: Node
 
 	trash_node (a_node: CMS_NODE)
 			-- Trash node `a_node'.
-			--! remove the node from the storage.
+			-- Soft delete
 		do
 			reset_error
 			node_storage.trash_node (a_node)

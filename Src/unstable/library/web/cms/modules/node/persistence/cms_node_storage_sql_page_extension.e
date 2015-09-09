@@ -55,7 +55,7 @@ feature -- Persistence
 			error_handler.reset
 				-- Check existing record, if any.
 			if attached node_data (a_node) as d then
-				l_update := True
+				l_update := a_node.revision = d.revision
 				l_previous_parent_id := d.parent_id
 			end
 			if not has_error then
@@ -114,7 +114,7 @@ feature -- Persistence
 
 feature {NONE} -- Implementation
 
-	node_data (a_node: CMS_NODE): detachable TUPLE [parent_id: INTEGER_64]
+	node_data (a_node: CMS_NODE): detachable TUPLE [revision: INTEGER_64; parent_id: INTEGER_64]
 			-- Node extension data for node `a_node' as tuple.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -129,16 +129,18 @@ feature {NONE} -- Implementation
 				n := sql_rows_count
 				if n = 1 then
 						-- nid, revision, parent
-					Result := [sql_read_integer_64 (3)]
+					Result := [sql_read_integer_64 (2), sql_read_integer_64 (3)]
 				else
 					check unique_data: n = 0 end
 				end
 			end
+		ensure
+			accepted_revision: Result /= Void implies Result.revision <= a_node.revision
 		end
 
 feature -- SQL
 
-	sql_select_node_data: STRING = "SELECT nid, revision, parent FROM page_nodes WHERE nid =:nid AND revision<=:revision ORDER BY revision DESC LIMIT 1;"
+	sql_select_node_data: STRING = "SELECT nid, revision, parent FROM page_nodes WHERE nid=:nid AND revision<=:revision ORDER BY revision DESC LIMIT 1;"
 	sql_insert_node_data: STRING = "INSERT INTO page_nodes (nid, revision, parent) VALUES (:nid, :revision, :parent);"
 	sql_update_node_data: STRING = "UPDATE page_nodes SET nid=:nid, revision=:revision, parent=:parent WHERE nid=:nid AND revision=:revision;"
 

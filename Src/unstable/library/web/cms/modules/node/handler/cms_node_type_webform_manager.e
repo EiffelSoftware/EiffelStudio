@@ -274,10 +274,10 @@ feature -- Output
 
 
 				if a_node.status = {CMS_NODE_API}.trashed then
-					create lnk.make ("Trash", node_api.node_path (a_node) + "/trash")
+					create lnk.make ("Delete", node_api.node_path (a_node) + "/delete")
 					lnk.set_weight (2)
 					a_response.add_to_primary_tabs (lnk)
-				elseif a_node /= Void and then a_node.has_id then
+				elseif a_node.has_id then
 						-- Node in {{CMS_NODE_API}.published} or {CMS_NODE_API}.not_published} status.
 					create lnk.make ("Edit", node_api.node_path (a_node) + "/edit")
 					lnk.set_weight (2)
@@ -291,9 +291,9 @@ feature -- Output
 					end
 
 					if
-						node_api.has_permission_for_action_on_node ("delete", a_node, l_user)
+						node_api.has_permission_for_action_on_node ("trash", a_node, l_user)
 					then
-						create lnk.make ("Delete", node_api.node_path (a_node) + "/delete")
+						create lnk.make ("Move to trash", node_api.node_path (a_node) + "/trash")
 						lnk.set_weight (3)
 						a_response.add_to_primary_tabs (lnk)
 					end

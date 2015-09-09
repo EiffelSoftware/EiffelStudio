@@ -170,6 +170,8 @@ feature -- Access
 						Result.force ("trash own " + l_type_name)
 						Result.force ("restore own " + l_type_name)
 
+						Result.force ("view unpublished " + l_type_name)
+
 						Result.force ("view revisions own " + l_type_name)
 					end
 				end

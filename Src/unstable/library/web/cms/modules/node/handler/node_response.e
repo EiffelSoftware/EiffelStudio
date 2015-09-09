@@ -27,12 +27,12 @@ feature -- Access
 
 feature -- Helpers
 
-	node_id_path_parameter (req: WSF_REQUEST): INTEGER_64
-			-- Node id passed as path parameter for request `req'.
+	node_id_path_parameter: INTEGER_64
+			-- Node id passed as path parameter for request `request'.
 		local
 			s: STRING
 		do
-			if attached {WSF_STRING} req.path_parameter ("id") as p_nid then
+			if attached {WSF_STRING} request.path_parameter ("id") as p_nid then
 				s := p_nid.value
 				if s.is_integer_64 then
 					Result := s.to_integer_64

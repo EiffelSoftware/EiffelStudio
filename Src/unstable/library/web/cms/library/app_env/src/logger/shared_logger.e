@@ -11,107 +11,130 @@ inherit
 
 	SHARED_EXECUTION_ENVIRONMENT
 
-feature -- Logging
+feature -- Logger
 
-	write_debug_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_debug (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	write_information_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_information (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	write_warning_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_warning (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	write_error_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_error (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	write_critical_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_critical (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	write_alert_log (m: READABLE_STRING_8)
-		local
-			retried: BOOLEAN
-		do
-			if not retried and attached logger as l_logger then
-				separate l_logger as log do
-					log.put_alert (m)
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-feature {NONE} -- Logger
-
-	logger: detachable separate LOGGER
-			-- Logging facilities (once per process)
+	logger: separate LOGGER
+			-- `log' facility (once per process)
             -- that could be shared between threads
             -- without reinitializing it.
 		do
-			separate logger_cell as cl do
-				Result := cl.item
-			end
+			Result := logger_cell_item (logger_cell)
 		end
 
-	logger_cell: separate CELL [detachable separate LOGGER]
+	logger_cell: separate CELL [separate LOGGER]
 		once ("PROCESS")
-			create Result.put (Void) --create {separate LOGGER}.make)
+			create Result.put (create {separate LOGGER}.make)
+		end
+
+	logger_cell_item (a_cell: like logger_cell): separate LOGGER
+		do
+			Result := a_cell.item
+		end
+
+feature -- Logging
+
+	write_debug_log (m: READABLE_STRING_8)
+		do
+--			write_debug_log_to (m, logger)
+		end
+
+	write_information_log (m: READABLE_STRING_8)
+		do
+--			write_information_log_to (m, logger)
+		end
+
+	write_warning_log (m: READABLE_STRING_8)
+		do
+--			write_warning_log_to (m, logger)
+		end
+
+	write_error_log (m: READABLE_STRING_8)
+		do
+--			write_error_log_to (m, logger)
+		end
+
+	write_critical_log (m: READABLE_STRING_8)
+		do
+--			write_critical_log_to (m, logger)
+		end
+
+	write_alert_log (m: READABLE_STRING_8)
+		do
+--			write_alert_log_to (m, logger)
+		end
+
+feature {NONE} -- Logger: separate implementation			
+
+	write_debug_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_debug (m)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	write_information_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_information (m)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	write_warning_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_warning (m)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	write_error_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_error (m)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	write_critical_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_critical (m)
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	write_alert_log_to (m: READABLE_STRING_8; a_log: like logger)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_log.put_alert (m)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation
@@ -121,9 +144,12 @@ feature {NONE} -- Implementation
 			l_logger: separate LOGGER
 		do
 			create l_logger.make_with_environment (app)
-			separate logger_cell as cl do
-				cl.replace (l_logger)
-			end
+			set_logger_to (l_logger, logger_cell)
+		end
+
+	set_logger_to (a_logger: separate LOGGER; a_cell: like logger_cell)
+		do
+			a_cell.replace (a_logger)
 		end
 note
 	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

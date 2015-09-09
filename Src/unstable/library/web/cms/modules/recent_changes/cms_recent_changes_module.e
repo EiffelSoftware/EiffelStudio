@@ -66,8 +66,10 @@ feature -- Handler
 			l_form: CMS_FORM
 			l_select: WSF_FORM_SELECT
 			l_size_field: WSF_FORM_NUMBER_INPUT
+			l_date_field: WSF_FORM_HIDDEN_INPUT
 			l_submit: WSF_FORM_SUBMIT_INPUT
 			l_until_date: detachable DATE_TIME
+			l_until_date_timestamp: INTEGER_64
 			l_filter_source: detachable READABLE_STRING_8
 			l_size: NATURAL_32
 			l_query: STRING
@@ -76,7 +78,8 @@ feature -- Handler
 			i: INTEGER
 		do
 			if attached {WSF_STRING} req.query_parameter ("date") as p_until_date then
-				create htdate.make_from_timestamp (p_until_date.value.to_integer_64)
+				l_until_date_timestamp := p_until_date.value.to_integer_64
+				create htdate.make_from_timestamp (l_until_date_timestamp)
 				l_until_date := htdate.date_time
 --				l_until_date.second_add (-1)
 			end
@@ -138,6 +141,12 @@ feature -- Handler
 					l_size_field.set_size (25)
 					l_size_field.set_label ("Items per page")
 					l_form.extend (l_size_field)
+
+					if l_until_date /= Void then
+						create l_date_field.make_with_text ("date", l_until_date_timestamp.out)
+						l_form.extend (l_date_field)
+					end
+					
 					create l_submit.make_with_text ("op", "Filter")
 					l_form.extend (l_submit)
 					l_form.extend_html_text ("<br/>")

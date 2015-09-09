@@ -255,6 +255,58 @@ feature -- Access
 --			end
 		end
 
+feature -- Access: outline
+
+	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".children")
+
+			from
+				create l_parameters.make (1)
+				l_parameters.put (a_node.id, "nid")
+				sql_query (sql_select_children_of_node, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+		end
+
+	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".available_parents_for_node")
+
+			from
+				create l_parameters.make (1)
+				l_parameters.put (a_node.id, "nid")
+				sql_query (sql_select_available_parents_for_node, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+		end
+
 feature -- Change: Node
 
 	new_node (a_node: CMS_NODE)
@@ -269,7 +321,7 @@ feature -- Change: Node
 			store_node (a_node)
 		end
 
-	delete_node_by_id (a_id: INTEGER_64)
+	trash_node_by_id (a_id: INTEGER_64)
 			-- Remove node by id `a_id'.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -281,10 +333,10 @@ feature -- Change: Node
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 			l_parameters.put ({CMS_NODE_API}.trashed, "status")
 			l_parameters.put (a_id, "nid")
-			sql_change (sql_delete_node, l_parameters)
+			sql_change (sql_trash_node, l_parameters)
 		end
 
-	trash_node_by_id (a_id: INTEGER_64)
+	 delete_node_by_id (a_id: INTEGER_64)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -296,7 +348,7 @@ feature -- Change: Node
 			error_handler.reset
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "nid")
-			sql_change (sql_trash_node, l_parameters)
+			sql_change (sql_delete_node, l_parameters)
 		end
 
 	restore_node_by_id (a_id: INTEGER_64)
@@ -440,10 +492,10 @@ feature {NONE} -- Queries
 	sql_update_node : STRING = "UPDATE nodes SET revision=:revision, type=:type, title=:title, summary=:summary, content=:content, format=:format, publish=:publish, changed=:changed, status=:status, author=:author WHERE nid=:nid;"
 			-- SQL update node.
 
-	sql_delete_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
+	sql_trash_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
 			-- Soft deletion with free metadata.
 
-	sql_trash_node: STRING = "DELETE FROM nodes WHERE nid=:nid"
+	sql_delete_node: STRING = "DELETE FROM nodes WHERE nid=:nid"
 			-- Physical deletion with free metadata.		
 
 	sql_restore_node: STRING = "UPDATE nodes SET changed=:changed, status =:status WHERE nid=:nid"
@@ -455,6 +507,18 @@ feature {NONE} -- Queries
 
 	Sql_last_insert_node_revision: STRING = "SELECT MAX(revision) FROM node_revisions;"
 	Sql_last_insert_node_revision_for_nid: STRING = "SELECT MAX(revision) FROM node_revisions WHERE nid=:nid;"
+
+	sql_select_available_parents_for_node : STRING = "[
+			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status 
+			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid AND node.nid != :nid 
+			WHERE node.nid != :nid AND pn.parent != :nid AND node.status != -1 GROUP BY node.nid, node.revision;
+		]"
+
+	sql_select_children_of_node: STRING = "[
+			SELECT node.nid, node.revision, node.type, title, summary, content, format, author, publish, created, changed, status
+			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid
+			WHERE pn.parent = :nid AND node.status != -1 GROUP BY node.nid, node.revision;
+		]"
 
 feature {NONE} -- Sql Queries: USER_ROLES collaborators, author
 

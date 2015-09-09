@@ -10,7 +10,7 @@ deferred class
 	CMS_NODE
 
 inherit
-
+	DEBUG_OUTPUT
 	REFACTORING_HELPER
 
 feature{NONE} -- Initialization
@@ -165,6 +165,23 @@ feature -- Access: menu
 
 	link: detachable CMS_LOCAL_LINK
 			-- Associated menu link.
+
+feature -- Status report
+
+	debug_output: STRING_32
+			-- <Precursor>
+		do
+			create Result.make_from_string_general ("#")
+			Result.append_integer_64 (id)
+			Result.append_character (' ')
+			Result.append_character ('<')
+			Result.append_string_general (content_type)
+			Result.append_character ('>')
+			Result.append_character (' ')
+			Result.append_character ('%"')
+			Result.append (title)
+			Result.append_character ('%"')
+		end
 
 feature -- Element change
 

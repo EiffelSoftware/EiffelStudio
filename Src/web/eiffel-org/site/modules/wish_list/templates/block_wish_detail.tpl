@@ -6,32 +6,47 @@
 	{/if}
 	<div class="row">
 			{if condition="$can_vote"}
-				<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
-					<input type="hidden" name="wishid" value="{$wish.id/}">
-					<label class="class-form-4">Do you like this?</label>
-					<button type="submit" >Like</button>
-				</form>
-				<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
-					<input type="hidden" name="wishid" value="{$wish.id/}">
-					<label class="class-form-4">Don't you like this?</label>
-					<button type="submit" >Not Like</button>
-				</form>
-			{/if}
+				<div class="vote-container">
+  			   		 <div class="vote-float">
+							<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+								<input type="hidden" name="wishid" value="{$wish.id/}">
+								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
+							</form>
+				    </div>
+				</div>
+				<div class="vote-container">
+ 				    <div class="vote-float">
+ 				    		<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+							<input type="hidden" name="wishid" value="{$wish.id/}">
+							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
+						</form>
+		
+				    </div>
+				</div>	    	
+		 	{/if}
 
-			{if condition="$do_like"}
-				<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
-					<input type="hidden" name="wishid" value="{$wish.id/}">
-					<label class="class-form-4">Do you like this?</label>
-					<button type="submit" >Like</button>
-				</form>
-			{/if}
-			{if condition="$do_not_like"}
-				<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
-					<input type="hidden" name="wishid" value="{$wish.id/}">
-					<label class="class-form-4">Don't you like this?</label>
-					<button type="submit" >Not Like</button>
-				</form>
-			{/if}
+			<div class="vote-container">
+  			    <div class="vote-float">
+				    	{if condition="$do_like"}
+							<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+								<input type="hidden" name="wishid" value="{$wish.id/}">
+								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
+							</form>
+						{/if}
+				    </div>
+			</div>
+	    	
+			<div class="vote-container">
+  				  <div class="vote-float">
+					{if condition="$do_not_like"}
+						<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+							<input type="hidden" name="wishid" value="{$wish.id/}">
+							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
+						</form>
+					{/if}
+				 </div>
+			</div>
+				
 			<section>
 				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6">{$wish.contact.name/}</span> <br>
 				<span  class="class-form-6" itemprop="category">Category:</span>	<span class="class-form-6">{$wish.category.synopsis/}</span> <br>

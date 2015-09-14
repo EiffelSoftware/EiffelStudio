@@ -43,12 +43,134 @@ doc:<file name="queue_cache.c" header="rt_queue_cache.h" version="$Id$" summary=
 #include "rt_private_queue.h"
 #include "rt_processor.h"
 
+#if defined EIF_ASSERTIONS
+/* A set of basic invariants which must always be true, no matter if locks are pushed away. */
+rt_private EIF_BOOLEAN basic_invariant (struct queue_cache* self)
+{
+	EIF_BOOLEAN result = EIF_TRUE;
+
+		/* Owner should never be NULL. */
+	result = result && self->owner;
+
+		/* A negative lock_stack_status means that the lock stack has been pushed away. */
+	result = result && ((self->lock_stack_status < 0) == (!self->lock_stack));
+
+		/* self should always be at the first position of the storage array. */
+	result = result && (rt_vector_queue_cache_item (&self->storage, 0) == self);
+
+		/* There should be no negative push_operation_count */
+	result = result && (self->push_operation_count >= 0);
+
+	return result;
+}
+
+/* The invariant of a queue cache. Note that the invariant may be broken when a processor gives away its queues.
+ * In that case it is suspended however and shouldn't call rt_queue_cache_retrieve() and some other methods.*/
+rt_private EIF_BOOLEAN invariant (struct queue_cache* self)
+{
+	EIF_BOOLEAN result = EIF_TRUE;
+	struct rt_vector_queue_cache* l_queues = self->lock_stack;
+
+		/* The basic invariant should hold. */
+	result = result && basic_invariant (self);
+
+		/* Borrowed queues should never be NULL. */
+	result = result && l_queues;
+
+		/* A negative lock_stack_status means the locks have been pushed away. */
+	result = result && (self->lock_stack_status >= 0);
+
+		/* The vector should always be bigger than lock_passing_count, because
+		 * 'self' is always present and during impersonated lock passing only the vector grows. */
+	result = result && (self->lock_stack_status < (int) rt_vector_queue_cache_count (l_queues));
+
+		/* (lock_passing_queue == 0) implies that the queue stack contains 'self' at the first position. */
+	result = result && ((self->lock_stack_status > 0) || (l_queues == &self->storage ));
+
+		/* The queue cache of the current region should always be last. */
+	/*result = result && (rt_vector_queue_cache_last (l_queues)->owner->pid == TODO;*/
+
+	return result;
+}
+#endif /* EIF_ASSERTIONS */
+
+
 /* Function to convert the PID to a hash table key.
  * This is needed because the SCOOP pid 0 is not a valid key. */
 rt_private rt_inline rt_uint_ptr pid_to_key (EIF_SCP_PID pid)
 {
 	REQUIRE ("not_null_processor", pid != EIF_NULL_PROCESSOR);
 	return pid + 1;
+}
+
+
+/*
+doc:	<routine name="rt_queue_cache_init" return_type="int" export="shared">
+doc:		<summary> Initialize the queue_cache struct 'self' with owner 'a_owner' and reserve some memory in the internal hash table. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to be initialized. Must not be NULL. </param>
+doc:		<param name="a_owner" type="struct rt_processor*"> The owner of the queue_cache. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared int rt_queue_cache_init (struct queue_cache* self, struct rt_processor* a_owner)
+{
+	int error = T_OK;
+
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("owner_not_null", a_owner);
+
+	self->owner = a_owner;
+	self->lock_stack_status = 0;
+	self->push_operation_count = 0;
+	self->lock_stack = &self->storage;
+
+		/* Initialize the storage vector. */
+	rt_vector_queue_cache_init (&self->storage);
+
+		/* The current queue cache is always present in the lock stack. */
+	error = rt_vector_queue_cache_extend (&self->storage, self);
+
+	if (error == T_OK) {
+			/* Initialize and allocate the hash table used to track owned private queues. */
+		error = ht_create (&self->owned_queues, HASH_TABLE_SIZE, sizeof (struct rt_private_queue*));
+			/* Convert the error code to our own representation. */
+		error = (error == 0) ? T_OK : T_NO_MORE_MEMORY;
+	}
+
+		/* Release storage memory if hash table creation failed. */
+	if (error != T_OK) {
+		rt_vector_queue_cache_deinit (&self->storage);
+	}
+
+	ENSURE ("invariant_established", error != T_OK || invariant (self));
+	return error;
+}
+
+/*
+doc:	<routine name="rt_queue_cache_deinit" return_type="void" export="shared">
+doc:		<summary> Deconstruct the queue_cache 'self' and free any internal memory. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to be de-initialized. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_queue_cache_deinit (struct queue_cache* self)
+{
+		/* When a queue cache gets deleted, it should not have any passed locks,
+		 * as the associated processor was idle and all its objects have been garbage collected. */
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("no_foreign_lock_stack", self->lock_stack == &self->storage);
+	REQUIRE ("no_foreign_locks", rt_vector_queue_cache_count (&self->storage) == 1);
+	REQUIRE ("invariant_established", invariant (self));
+
+		/* Delete the hash table used to hold the queues owned by this processor.
+		 * The queues themselves will be deleted by the processor which is supplier of the queue. */
+	ht_release (&self->owned_queues);
+
+		/* Free any internal memory in the storage vector. */
+	rt_vector_queue_cache_deinit (&self->storage);
 }
 
 /*
@@ -69,6 +191,7 @@ rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
+	REQUIRE ("basic_invariant", basic_invariant (self));
 
 		/* Find the position in the owned_queues hash table. */
 	l_owned = &self->owned_queues;
@@ -79,58 +202,62 @@ rt_private struct rt_private_queue* rt_queue_cache_find_from_owned (struct queue
 		l_result = *l_position;
 	}
 
+	ENSURE ("basic_invariant", basic_invariant (self));
+	ENSURE ("correct", !l_result || l_result->supplier == supplier);
 	return l_result;
 }
 
 
 /*
-doc:	<routine name="rt_queue_cache_find_from_borrowed" return_type="struct rt_private_queue*" export="private">
-doc:		<summary> Find a locked private queue in the stack of borrowed queue caches. </summary>
+doc:	<routine name="rt_queue_cache_find_locked_queue" return_type="struct rt_private_queue*" export="private">
+doc:		<summary> Find a locked private queue in the stack of queue caches. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be found. Must not be NULL. </param>
-doc:		<return> A private queue to the specified processor. If none can be found, the result is NULL. </return>
+doc:		<return> A locked private queue to the specified processor. If none can be found, the result is NULL. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_private struct rt_private_queue* rt_queue_cache_find_from_borrowed (struct queue_cache* self, struct rt_processor* const supplier)
+rt_private struct rt_private_queue* rt_queue_cache_find_locked_queue (struct queue_cache* self, struct rt_processor* const supplier)
 {
 	struct rt_private_queue* l_result = NULL;
-	struct rt_vector_queue_cache* l_borrowed = NULL;
+	struct rt_vector_queue_cache* l_lock_stack = NULL;
+	size_t l_size = 0;
+	size_t i = 0;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
+	REQUIRE ("invariant_on_self", invariant (self));
 
-	l_borrowed = self->borrowed_queues;
-	if (l_borrowed) {
+	l_lock_stack = self->lock_stack;
+	CHECK ("not_null", l_lock_stack);
 
-			/*
-			* As we push/pop from the end of the stack, we do a forward
-			* search through the queue stack here.
-			* This ensures that "older" locks have priority over "newer" locks
-			* (i.e. if a lock has been pushed several times already it has priority
-			* over a lock that has been pushed only once).
-			*/
+		/*
+		* As we push/pop from the end of the stack, we do a forward
+		* search through the queue stack here.
+		* This ensures that "older" locks have priority over "newer" locks
+		* (i.e. if a lock has been pushed several times already it has priority
+		* over a lock that has been pushed only once).
+		*/
 
-		size_t l_size = rt_vector_queue_cache_count (l_borrowed);
-		size_t i;
+	l_size = rt_vector_queue_cache_count (l_lock_stack);
 
-		for (i = 0; i < l_size && !l_result; ++i) {
+	for (i = 0; i < l_size && !l_result; ++i) {
 
-			struct queue_cache* l_item = rt_vector_queue_cache_item (l_borrowed, i);
-			struct rt_private_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
+		struct queue_cache* l_item = rt_vector_queue_cache_item (l_lock_stack, i);
+		struct rt_private_queue* l_queue = rt_queue_cache_find_from_owned (l_item, supplier);
 
-				/* Only return locked queues, ignore all others. */
-			if (l_queue && rt_private_queue_is_locked (l_queue)) {
-				l_result = l_queue;
-			}
+			/* Only return locked queues, ignore all others. */
+		if (l_queue && rt_private_queue_is_locked (l_queue)) {
+			l_result = l_queue;
 		}
 	}
 
+	ENSURE ("invariant_on_self", invariant (self));
+	ENSURE ("correct", !l_result || (l_result->supplier == supplier));
 	ENSURE ("is_locked", !l_result || rt_private_queue_is_locked (l_result));
 	return l_result;
 }
-
 
 /*
 doc:	<routine name="rt_queue_cache_is_locked" return_type="EIF_BOOLEAN" export="shared">
@@ -148,28 +275,22 @@ rt_shared EIF_BOOLEAN rt_queue_cache_is_locked (struct queue_cache* self, struct
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
+	REQUIRE ("invariant_on_self", invariant (self));
 
-		/* First check the list of borrowed queues. */
-	if (rt_queue_cache_find_from_borrowed (self, supplier)) {
-			/* Borrowed queues are always locked. */
+		/* Find a locked queue in the lock_stack. */
+	if (rt_queue_cache_find_locked_queue (self, supplier)) {
 		l_result = EIF_TRUE;
-
-	} else {
-			/* Next, try our own cache. */
-		struct rt_private_queue* owned = rt_queue_cache_find_from_owned (self, supplier);
-
-			/* Within our own cache a private queue might not necessarily be locked. */
-		if (owned && rt_private_queue_is_locked (owned)) {
-			l_result = EIF_TRUE;
-		}
 	}
+
+	ENSURE ("correct", !l_result || rt_private_queue_is_locked (rt_queue_cache_find_locked_queue (self, supplier)));
+	ENSURE ("invariant_on_self", invariant (self));
 	return l_result;
 }
 
 /*
 doc:	<routine name="rt_queue_cache_push" return_type="int" export="shared">
 doc:		<summary> Pass all locks from 'giver' to 'self'.
-doc: 			The locks (private queues) from the other processor will be added to this cache.
+doc: 			The lock stack (with all private queues) from the other processor will be adopted by this cache.
 doc: 			This should be called in pairs with rt_queue_cache_pop(). </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache to receive the locks. Must not be NULL. </param>
 doc:		<param name="giver" type="struct queue_cache*"> The queue cache to give away the locks. Must not be NULL. </param>
@@ -180,39 +301,36 @@ doc:	</routine>
 */
 rt_shared int rt_queue_cache_push (struct queue_cache* self, struct queue_cache* giver)
 {
-	struct rt_vector_queue_cache *l_borrowed = NULL;
+	struct rt_vector_queue_cache *l_lock_stack = NULL;
 	int error = T_OK;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("giver_not_null", giver);
 	REQUIRE ("not_equal", self != giver);
+	REQUIRE ("invariant_on_giver", invariant (giver));
+	REQUIRE ("basic_inv_on_self", basic_invariant (self));
 
-		/* Try to get any borrowed locks from 'giver'. */
-	l_borrowed = giver->borrowed_queues;
+		/* Get the locks currently held by 'giver'. */
+	l_lock_stack = giver->lock_stack;
 
-		/* If 'giver' does not yet have such locks, we have to initialize a new vector
-		 * containing the queue_caches of processors that passed their locks.
-		 * We can use our own 'storage' vector to avoid any memory allocation. */
-
-		/* NOTE: This works as long as a processor cannot pass his locks multiple times to different
-		 * processors, without getting them back first. Historically, this has not always been the
-		 * case (i.e. when separate callbacks were executed asynchronously). */
-	if (NULL == l_borrowed) {
-		CHECK ("storage_not_used", rt_vector_queue_cache_count (&self->storage) == 0);
-		l_borrowed = &self->storage;
-	}
-
-		/* Add 'giver' at the end of the vector. */
-	error = rt_vector_queue_cache_extend (l_borrowed, giver);
+		/* Add ourselves at the end of the vector. */
+	error = rt_vector_queue_cache_extend (l_lock_stack, self);
 
 	if (error == T_OK) {
-			/* Update the state in both queue caches. */
-		giver->borrowed_queues = NULL;
-		self->borrowed_queues = l_borrowed;
 
-		ENSURE ("locks_passed", !giver->borrowed_queues && self->borrowed_queues);
+			/* Update 'self' to take the locks from 'giver'. */
+		self->lock_stack = l_lock_stack;
+		self->push_operation_count += 1;
+		self->lock_stack_status = giver->lock_stack_status + 1;
+
+			/* Invalidate 'giver'. */
+		giver->lock_stack = NULL;
+		giver->lock_stack_status = -1;
+
+		ENSURE ("locks_passed", !giver->lock_stack && self->lock_stack);
+		ENSURE ("basic_inv_on_giver", basic_invariant (giver));
+		ENSURE ("invariant_on_self", invariant (self));
 	}
-
 	return error;
 }
 
@@ -226,44 +344,52 @@ doc:	</routine>
 */
 rt_shared void rt_queue_cache_pop (struct queue_cache* self)
 {
-	struct rt_vector_queue_cache *l_borrowed = NULL;
+	struct rt_vector_queue_cache *l_lock_stack = NULL;
 	struct queue_cache* origin = NULL;
 
 	REQUIRE ("not_null", self);
-	REQUIRE ("has_lock_stack", self->borrowed_queues);
-	REQUIRE ("lock_stack_not_empty", rt_vector_queue_cache_count (self->borrowed_queues) > 0);
+	REQUIRE ("invariant_on_self", invariant (self));
+	REQUIRE ("lock_stack_not_empty", rt_vector_queue_cache_count (self->lock_stack) > 1);
 
-	l_borrowed = self->borrowed_queues;
+	l_lock_stack = self->lock_stack;
 
-		/* Remove the locks from the current processor. */
-	self->borrowed_queues = NULL;
 
 		/* Retrieve the queue cache that initially passed the locks.
 		 * Since the push/pop operations have to be balanced,
-		 * the owner is on top of the stack. */
-	origin = rt_vector_queue_cache_last (l_borrowed);
-	rt_vector_queue_cache_remove_last (l_borrowed);
+		 * 'self' should be on top of the stack, followed by the
+		 * region where we initially got the locks from. */
+	CHECK ("self_is_last", rt_vector_queue_cache_last (l_lock_stack) == self);
 
+	rt_vector_queue_cache_remove_last (l_lock_stack);
+	origin = rt_vector_queue_cache_last (l_lock_stack);
 
-	if (rt_vector_queue_cache_count (l_borrowed) > 0 ) {
-			/* Return the locks to its original owner. */
-		origin->borrowed_queues = l_borrowed;
+	CHECK ("not_equal", origin != self);
+	CHECK ("basic_inv_on_origin", basic_invariant (origin));
+		/* lock_stack_status == 1 implies that 'origin' was the first to push away the locks. */
+	CHECK ("balanced", self->lock_stack_status != 1 || l_lock_stack == &origin->storage);
 
+		/* Re-establish the invariant in 'origin'. */
+	origin->lock_stack = l_lock_stack;
+	origin->lock_stack_status = self->lock_stack_status - 1;
+
+		/* Remove the locks from this queue cache. */
+	self->push_operation_count -= 1;
+	if (self->push_operation_count == 0) {
+		self->lock_stack = &self->storage;
+		self->lock_stack_status = 0;
 	} else {
-			/* If 'origin' was the last element in the vector,
-			 * it means that the current queue_cache created
-			 * the vector initially. In that case we don't have
-			 * to return anything. */
-		CHECK ("my_storage", l_borrowed == &self->storage);
+		self->lock_stack = NULL;
+		self->lock_stack_status = -1;
 	}
 
-	ENSURE ("locks_returned", !self->borrowed_queues);
+	ENSURE ("invariant_on_origin", invariant (origin));
+	ENSURE ("basic_inv_on_self", basic_invariant (self));
+	ENSURE ("locks_returned", self->lock_stack == &self->storage || !self->lock_stack);
 }
-
 
 /*
 doc:	<routine name="rt_queue_cache_has_locks_of" return_type="EIF_BOOLEAN" export="shared">
-doc:		<summary> Check if 'self' has all the locks of 'supplier'. This can only be true when 'supplier' has passed the locks to 'client' in a previous call.
+doc:		<summary> Check if 'self' has the locks of 'supplier'. This can only be true when 'supplier' has passed the locks to 'client' in a previous call.
 dic:		The result of this query is important to determine if we need to perform a separate callback instead of a regular call. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor that might have passed its locks to 'self'. Must not be NULL. </param>
@@ -274,30 +400,29 @@ doc:	</routine>
 */
 rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, struct rt_processor* const supplier)
 {
-	struct rt_vector_queue_cache* l_borrowed = NULL;
+	struct rt_vector_queue_cache* l_lock_stack = NULL;
 	EIF_BOOLEAN l_result = EIF_FALSE;
-	size_t l_size = 0, i;
+	size_t l_size = 0;
+	size_t i = 0;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
+	REQUIRE ("invariant_on_self", invariant (self));
+	REQUIRE ("not_equal", supplier != self->owner);
 
-		/* Get the borrowed queues in 'self'.
-		 * Note that this value could be NULL. */
-	l_borrowed = self->borrowed_queues;
+		/* Get the lock stack in 'self'. */
+	l_lock_stack = self->lock_stack;
+	l_size =  rt_vector_queue_cache_count (l_lock_stack);
 
-		/* TODO: In the C++ implementation, the owner is subordinate to itself.
-		 * This property is ensured by the next statement.
-		 * It does not seem to be necessary however, but we have to check it. */
-	l_result = (supplier == self->owner);
+	CHECK ("l_lock_stack_not_null", l_lock_stack);
 
-	if (l_borrowed && !l_result) {
-			/* Search through all borrowed queue caches if one of their owner matches 'supplier' */
-		l_size =  rt_vector_queue_cache_count(l_borrowed);
 
-		for (i = 0; i < l_size && !l_result; ++i) {
-			l_result = (rt_vector_queue_cache_item (l_borrowed, i)->owner == supplier);
-		}
+	while (i < l_size && !l_result) {
+		l_result = rt_vector_queue_cache_item (l_lock_stack, i)->owner == supplier;
+		i = i + 1;
 	}
+
+	ENSURE ("invariant_on_self", invariant (self));
 	return l_result;
 }
 
@@ -306,8 +431,8 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, str
 doc:	<routine name="rt_queue_cache_retrieve" return_type="int" export="shared">
 doc:		<summary> Retrieve a private queue for processor 'supplier' from this queue cache.
 doc:			A new private queue will be constructed if none already exists.
-doc:			This will also look to see if there are any private queues that were passed to this queue_cache during lock-passing.
-doc:			These passed-queues will already be locked and have priority over non-passed, possibly unlocked queues. </summary>
+doc:			This will also look to see if there are any private queues that were passed to 'self' during lock-passing.
+doc:			A passed queue is always locked and has priority over an owned, possibly unlocked queues. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="supplier" type="struct rt_processor*"> The processor for which a private queue shall be retrieved. Must not be NULL. </param>
 doc:		<param name="result" type="struct rt_private_queue**"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
@@ -324,11 +449,12 @@ rt_shared int rt_queue_cache_retrieve (struct queue_cache* self, struct rt_proce
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
 	REQUIRE ("result_not_null", result);
+	REQUIRE ("invariant_on_self", invariant (self));
 
-		/* We first need to search any borrowed queues. */
-	l_result = rt_queue_cache_find_from_borrowed (self, supplier);
+		/* We first need to search the lock stack. */
+	l_result = rt_queue_cache_find_locked_queue (self, supplier);
 
-		/* If no borrowed queue can be found, we try our own cache. */
+		/* If no locked queue can be found, we try our own cache for unlocked queues. */
 	if (NULL == l_result) {
 		l_result = rt_queue_cache_find_from_owned (self, supplier);
 	}
@@ -342,12 +468,7 @@ rt_shared int rt_queue_cache_retrieve (struct queue_cache* self, struct rt_proce
 			int ht_error = ht_safe_force (&self->owned_queues, pid_to_key (supplier->pid), &l_result);
 
 				/* Convert the error code from ht_safe_force to our own representation. */
-			if (ht_error != 0) {
-				error = T_NO_MORE_MEMORY;
-					/* NOTE: We don't delete the generated private queue if
-					 * hash table extension failed. It will be done at some
-					 * later point when the supplier processor dies. */
-			}
+			error = (ht_error == 0) ? T_OK : T_NO_MORE_MEMORY;
 		}
 	}
 
@@ -357,62 +478,36 @@ rt_shared int rt_queue_cache_retrieve (struct queue_cache* self, struct rt_proce
 		*result = l_result;
 	} else {
 		*result = NULL;
+			/* NOTE: We don't delete a (potentially) generated private
+			 * queue in case of an error. This will be done at some
+			 * later point when the supplier processor dies. */
 	}
 
 	ENSURE ("result_available", error != T_OK || *result);
+	ENSURE ("invariant_on_self", invariant (self));
 	return error;
 }
 
-#if 0 /* Apparently the rt_queue_cache_mark feature was never used. GC traversal happens through rt_processor->generated_private_queues. */
-/*
-doc:	<routine name="rt_queue_cache_mark" return_type="void" export="shared">
-doc:		<summary> Garbage Collection: Mark the calls that may be in the private queues handled by this cache. </summary>
-doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
-doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_queue_cache_mark (struct queue_cache* self, MARKER marking)
-{
-	size_t l_count = 0;
-	rt_uint_ptr* l_keys = NULL;
-	struct rt_private_queue** l_area = NULL;
-
-	REQUIRE ("self_not_null", self);
-	REQUIRE ("marking_not_null", marking);
-
-	l_count = self->owned_queues.h_size;
-	l_keys = self->owned_queues.h_keys;
-	l_area = (struct rt_private_queue**) self->owned_queues.h_values;
-
-		/* It is not necessary to mark queues which are borrowed from other queue_aches.
-		* The GC will traverse them later. */
-	for (size_t i = 0; i < l_count; ++i) {
-		if (l_keys [i] != 0) {
-			rt_private_queue_mark (l_area [i], marking);
-		}
-	}
-}
-#endif
-
 /*
 doc:	<routine name="rt_queue_cache_clear" return_type="void" export="shared">
-doc:		<summary> Garbage Collection: Remove the private queue of 'proc' from this cache, as it is not used any more. </summary>
+doc:		<summary> Garbage Collection: Remove the private queue of 'a_dead_processor' from this cache, as it is not used any more. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache. Must not be NULL. </param>
 doc:		<param name="marking" type="MARKER"> The processor whose private queue shall be removed. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_queue_cache_clear (struct queue_cache* self, struct rt_processor *proc)
+rt_shared void rt_queue_cache_clear (struct queue_cache* self, struct rt_processor *a_dead_processor)
 {
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("proc_not_null", proc);
+	REQUIRE ("proc_not_null", a_dead_processor);
+	REQUIRE ("basic_invariant", basic_invariant (self));
 
-		/* It is not necessary to delete queues which are borrowed from other queue_aches.
-		* The algorithm in processor_registry will traverse them later. */
-	ht_remove (&self->owned_queues, pid_to_key (proc->pid));
+		/* NOTE: We only need to delete the queue in 'owned_queues', but not those in 'lock_stack'.
+		* The algorithm used by the GC will traverse them later. */
+	ht_remove (&self->owned_queues, pid_to_key (a_dead_processor->pid));
+
+	ENSURE ("basic_invariant", basic_invariant (self));
 }
 
 /*

@@ -83,7 +83,6 @@ feature -- Router
 			a_router.handle ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), a_router.methods_head_get)
 
-			a_router.handle ("/contribute", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), a_router.methods_head_get)
 
 			a_router.handle ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
@@ -415,24 +414,6 @@ feature -- Request handling: Contribute
 			else
 				debug ("cms")
 					r.add_warning_message ("Error with block [resources_page]")
-				end
-			end
-			r.execute
-		end
-
-	handle_contribute (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			fixme ("Use CMS node and associated content for Contribute link!")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("contribute", "optional_content_type")
-			r.set_main_content ("")
-			if attached template_block (Current, "contribute_page", r) as l_tpl_block then
-				r.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					r.add_warning_message ("Error with block [contribute_page]")
 				end
 			end
 			r.execute

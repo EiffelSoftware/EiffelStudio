@@ -49,6 +49,13 @@ feature -- Persistence
 			end
 		end
 
+	delete_node (a_node: CMS_NODE)
+			-- remove node extensions.
+		require
+			a_node_accepted: is_accepted (a_node)
+		deferred
+		end
+
 feature {NONE} -- Persistence implementation
 
 	store (a_node: G)

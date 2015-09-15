@@ -108,6 +108,18 @@ feature -- Persistence
 			end
 		end
 
+	delete_node (a_node: CMS_BLOG)
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			if a_node.has_id then
+				create l_parameters.make (1)
+				l_parameters.put (a_node.id, "nid")
+				sql_change (sql_delete_node_data, l_parameters)
+			end
+		end
+
 feature {NONE} -- Implementation		
 
 	node_data (a_node: CMS_NODE): detachable TUPLE [revision: INTEGER_64; tags: READABLE_STRING_32]
@@ -145,5 +157,6 @@ feature -- SQL
 	sql_select_node_data: STRING = "SELECT nid, revision, tags FROM blog_post_nodes WHERE nid=:nid AND revision<=:revision ORDER BY revision DESC LIMIT 1;"
 	sql_insert_node_data: STRING = "INSERT INTO blog_post_nodes (nid, revision, tags) VALUES (:nid, :revision, :tags);"
 	sql_update_node_data: STRING = "UPDATE blog_post_nodes SET nid=:nid, revision=:revision, tags=:tags WHERE nid=:nid AND revision=:revision;"
+	sql_delete_node_data: STRING = "DELETE FROM blog_post_nodes WHERE nid=:nid;"
 
 end

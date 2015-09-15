@@ -30,7 +30,7 @@ feature -- Forms ...
 		local
 			ti: WSF_FORM_NUMBER_INPUT
 			fs: WSF_FORM_FIELD_SET
-			l_parent_id, nid: INTEGER_64
+			l_parent_id: INTEGER_64
 		do
 			Precursor (response, f, a_node)
 
@@ -102,7 +102,6 @@ feature -- Forms ...
 
 	parent_validation (a_response: NODE_RESPONSE; fd: WSF_FORM_DATA)
 		local
-			l_selected: BOOLEAN
 			node_api: CMS_NODE_API
 			l_parent_id: INTEGER_64
 			nid: INTEGER_64

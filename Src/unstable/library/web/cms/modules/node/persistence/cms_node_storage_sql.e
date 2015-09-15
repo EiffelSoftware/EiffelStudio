@@ -53,11 +53,6 @@ feature -- Access
 				end
 				sql_forth
 			end
---			across
---				Result as ic
---			loop
---				fill_node (ic.item)
---			end
 		end
 
 	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
@@ -95,7 +90,7 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".trash_nodes")
+			write_information_log (generator + ".trashed_nodes")
 
 			from
 				create l_parameters.make (1)
@@ -124,7 +119,7 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".nodes")
+			write_information_log (generator + ".recent_nodes")
 
 			from
 				create l_parameters.make (2)
@@ -150,7 +145,7 @@ feature -- Access
 			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
 
 			error_handler.reset
-			write_information_log (generator + ".nodes")
+			write_information_log (generator + ".recent_node_changes_before")
 
 			from
 				create l_parameters.make (3)
@@ -176,7 +171,7 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".node")
+			write_information_log (generator + ".node_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "nid")
 			sql_query (sql_select_node_by_id, l_parameters)
@@ -191,7 +186,7 @@ feature -- Access
 			l_parameters: STRING_TABLE [ANY]
 		do
 			error_handler.reset
-			write_information_log (generator + ".node")
+			write_information_log (generator + ".node_by_id_and_revision")
 			create l_parameters.make (1)
 			l_parameters.put (a_node_id, "nid")
 			l_parameters.put (a_revision, "revision")
@@ -326,7 +321,7 @@ feature -- Change: Node
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			write_information_log (generator + ".delete_node {" + a_id.out + "}")
+			write_information_log (generator + ".trash_node_by_id {" + a_id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (3)
@@ -336,19 +331,27 @@ feature -- Change: Node
 			sql_change (sql_trash_node, l_parameters)
 		end
 
-	 delete_node_by_id (a_id: INTEGER_64)
+	 delete_node_base (a_node: CMS_NODE)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_time: DATE_TIME
 		do
 			create l_time.make_now_utc
-			write_information_log (generator + ".trash_node {" + a_id.out + "}")
+			write_information_log (generator + ".delete_node_base {" + a_node.id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (1)
-			l_parameters.put (a_id, "nid")
+			l_parameters.put (a_node.id, "nid")
 			sql_change (sql_delete_node, l_parameters)
+
+				-- we remove node_revisions and pages.
+				-- Check: maybe we need a transaction.
+			sql_change (sql_delete_node_revisions, l_parameters)
+
+			if not error_handler.has_error then
+				extended_delete (a_node)
+			end
 		end
 
 	restore_node_by_id (a_id: INTEGER_64)
@@ -358,7 +361,7 @@ feature -- Change: Node
 			l_time: DATE_TIME
 		do
 			create l_time.make_now_utc
-			write_information_log (generator + ".restore_node {" + a_id.out + "}")
+			write_information_log (generator + ".restore_node_by_id {" + a_id.out + "}")
 
 			error_handler.reset
 			create l_parameters.make (1)
@@ -519,6 +522,8 @@ feature {NONE} -- Queries
 			FROM nodes node LEFT JOIN page_nodes pn ON node.nid = pn.nid
 			WHERE pn.parent = :nid AND node.status != -1 GROUP BY node.nid, node.revision;
 		]"
+
+	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
 
 feature {NONE} -- Sql Queries: USER_ROLES collaborators, author
 

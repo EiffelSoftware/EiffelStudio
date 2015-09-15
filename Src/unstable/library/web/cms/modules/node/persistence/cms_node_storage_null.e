@@ -106,7 +106,7 @@ feature -- Node
 		do
 		end
 
-	delete_node_by_id (a_id: INTEGER_64)
+	delete_node_base (a_node: CMS_NODE)
 			-- <Precursor>
 		do
 		end

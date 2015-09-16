@@ -211,13 +211,17 @@ rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_m
 {
 	struct mc_node* node = NULL;
 	REQUIRE ("self_not_null", self);
+	REQUIRE ("valid_message", rt_message_is_valid (message_type, sender, call, queue));
 
 		/* Allocate a new node. */
 	node = allocate_node (self);
 	CHECK ("next_is_null", !node->next);
 
 		/* Set up the rt_message value. */
-	rt_message_init (&node->value, message_type, sender, call, queue);
+	node->value.sender_processor = sender;
+	node->value.call = call;
+	node->value.queue = queue;
+	node->value.message_type = message_type;
 
 		/* Enqueue the message. The store_release guarantees that the receiver
 		 * will see a consistent view of the node (i.e. with all fields initialized
@@ -277,24 +281,22 @@ doc:	<routine name="rt_message_channel_send" return_type="void" export="shared">
 doc:		<summary> Send the message 'message_type' over channel 'self'. </summary>
 doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to send the message. Must not be NULL. </param>
 doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
-doc:		<param name="sender" type="struct rt_processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
+doc:		<param name="sender_processor" type="struct rt_processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender, struct call_data* call, struct rt_private_queue* queue)
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender_processor, struct call_data* call, struct rt_private_queue* queue)
 {
 	REQUIRE ("self_not_null", self);
-	REQUIRE ("sender_not_null", sender || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
-	REQUIRE ("call_not_null", call || (message_type != SCOOP_MESSAGE_EXECUTE && message_type != SCOOP_MESSAGE_CALLBACK));
-	REQUIRE ("queue_not_null", queue || (message_type != SCOOP_MESSAGE_ADD_QUEUE));
+	REQUIRE ("valid_message", rt_message_is_valid (message_type, sender_processor, call, queue));
 
 	/* TODO: Measure if there's any performance benefit at all by doing the enqueue operation outside the lock. */
 #if defined EIF_HAS_MEMORY_BARRIER
 		/* Perform the non-blocking enqueue operation. */
-	enqueue (self, message_type, sender, call, queue);
+	enqueue (self, message_type, sender_processor, call, queue);
 
 		/* Lock the condition variable mutex. */
 	RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
@@ -303,7 +305,7 @@ rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum sc
 	RT_TRACE (eif_pthread_mutex_lock (self->has_elements_condition_mutex));
 
 			/* Perform the enqueue operation. */
-	enqueue (self, message_type, sender, call, queue);
+	enqueue (self, message_type, sender_processor, call, queue);
 #endif
 
 		/* Wake up the receiver. */
@@ -529,7 +531,7 @@ rt_shared int rt_message_channel_init (struct rt_message_channel* self, size_t d
 
 			/* Initialize the node to a consistent state. */
 		l_node->next = NULL;
-		rt_message_init (&l_node->value, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+		rt_message_init (&l_node->value);
 
 			/* In the beginning, all pointers point to the guard node. */
 		self->head = l_node;

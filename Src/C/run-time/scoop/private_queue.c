@@ -72,7 +72,7 @@ rt_shared int rt_private_queue_init (struct rt_private_queue* self, struct rt_pr
 	self->lock_depth = 0;
 	rt_macro_set_saved_result (self, NULL);
 
-	rt_message_init (&self->call_stack_msg, SCOOP_MESSAGE_INVALID, NULL, NULL, NULL);
+	rt_message_init (&self->call_stack_msg);
 	error = rt_message_channel_init (&self->channel, 512);
 
 	return error;
@@ -267,7 +267,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 			rt_macro_set_saved_result (self, NULL);
 
 				/* Execute the separate callback on this thread (i.e. the one behind 'client'). */
-			rt_processor_execute_call (client, l_message->sender, l_message->call);
+			rt_processor_execute_call (client, l_message->sender_processor, l_message->call);
 			l_message->call = NULL;
 
 				/* During the next receive we may get the answer to our query,

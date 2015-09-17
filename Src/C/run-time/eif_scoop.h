@@ -76,7 +76,7 @@ typedef struct call_data {
 	void (* pattern) (struct call_data *); /* Stub that is used to perform a call */
 #endif /* WORKBENCH */
 	EIF_NATURAL_32 count;			/* Number of arguments excluding target object */
-	EIF_SCP_PID sync_pid;			/* Indicator of a synchronous call */
+	EIF_BOOLEAN is_synchronous;		/* Indicator of a synchronous call */
 	EIF_TYPED_VALUE argument [1];	/* Arguments excluding target object */
 } call_data;
 
@@ -87,7 +87,6 @@ RT_LNK void eif_call_const (call_data * a);
  * TODO: Are these macros still in use somewhere? */
 #define set_boolean_return_value(a_boolean_typed_value,a_boolean) ((EIF_TYPED_VALUE *) a_boolean_typed_value)->item.b = a_boolean;
 #define set_integer_32_return_value(a_integer_32_typed_value,a_integer) ((EIF_TYPED_VALUE *) a_integer_32_typed_value)->item.i4 = a_integer;
-#define call_data_sync_pid(a_call_data) ((call_data*) a_call_data)->sync_pid
 
 /* Processor properties */
 RT_LNK void eif_new_processor(EIF_REFERENCE obj, EIF_BOOLEAN is_passive);

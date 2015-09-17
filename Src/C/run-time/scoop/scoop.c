@@ -209,7 +209,7 @@ rt_private rt_inline EIF_BOOLEAN rt_scoop_is_impersonation_allowed (struct rt_pr
 			/* If we're currently synchronized with the supplier (i.e. we already sent
 			 * 'supplier' a synchronous call), and the next call is also synchronous,
 			 * we can apply impersonation. */
-		result = result || (call->sync_pid != EIF_NULL_PROCESSOR &&  rt_private_queue_is_synchronized (queue));
+		result = result || (call->is_synchronous &&  rt_private_queue_is_synchronized (queue));
 
 			/* A separate callback is always synchronous, so we can impersonate it. */
 		result = result || rt_queue_cache_has_locks_of (&client->cache, supplier);

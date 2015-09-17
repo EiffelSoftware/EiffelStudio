@@ -302,7 +302,7 @@ doc:	</routine>
 */
 rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct call_data* call)
 {
-	EIF_BOOLEAN is_synchronous;
+	EIF_BOOLEAN l_is_synchronous;
 	EIF_BOOLEAN is_successful;
 	size_t l_count = 0;
 	int error = T_OK;
@@ -311,12 +311,12 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 	REQUIRE ("client_not_null", client);
 	REQUIRE ("call_not_null", call);
 
-	is_synchronous = (call->sync_pid != EIF_NULL_PROCESSOR);
+	l_is_synchronous = call->is_synchronous;
 
 		/* Only execute the call when the current processor region is clean. */
 	if (!self->is_dirty) {
 
-		if (is_synchronous) {
+		if (l_is_synchronous) {
 				/* Grab all locks held by the client. */
 			error = rt_queue_cache_push (&self->cache, &client->cache);
 		}
@@ -342,14 +342,14 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 				/* The request group stack should be the same after this call. */
 			CHECK ("same_stack_size", rt_processor_request_group_stack_count(self) == l_count);
 
-			if (is_synchronous) {
+			if (l_is_synchronous) {
 					/* Return the previously acquired locks. */
 				rt_queue_cache_pop (&self->cache);
 			}
 		}
 	}
 
-	if (is_synchronous) {
+	if (l_is_synchronous) {
 
 		if (self->is_dirty) {
 			self->is_dirty = EIF_FALSE;

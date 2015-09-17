@@ -206,8 +206,7 @@ doc:	</routine>
 */
 rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call)
 {
-	EIF_SCP_PID l_sync_pid = call->sync_pid;
-	EIF_BOOLEAN will_sync = l_sync_pid != EIF_NULL_PROCESSOR;
+	EIF_BOOLEAN will_sync = call->is_synchronous;
 	struct rt_message_channel* l_result_notify = client->result_notify_proxy;
 #ifdef WORKBENCH
 	EIF_TYPED_VALUE* l_result = call->result;
@@ -227,8 +226,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		 */
 		
 		/* A separate callback should always be synchronous. */
-		l_sync_pid = client-> pid;
-		call -> sync_pid = client -> pid;
+		call->is_synchronous = EIF_TRUE;
 		will_sync = EIF_TRUE;
 
 		rt_message_channel_send (self->supplier->result_notify_proxy, SCOOP_MESSAGE_CALLBACK, client, call, NULL);

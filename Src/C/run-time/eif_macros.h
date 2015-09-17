@@ -1395,8 +1395,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 	{                                                         \
 		((call_data*)(a)) -> routine_id = rid;            \
 		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data *)(a))->sync_pid, RTS_PID(t), (call_data*) a); \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(t), (call_data*) a); \
 	}
 #define RTS_CP(rid,n,t,a) {\
 		((call_data*)(a)) -> routine_id = rid; \
@@ -1409,8 +1409,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 		(r).type = s;                                     \
 		(r).it_r = 0;                                     \
 		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data *)(a))->sync_pid, RTS_PID(((call_data*)a)->target), (call_data*) a); \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)a)->target), (call_data*) a); \
 	}
 #define RTS_CTW(p,a) {\
 		((call_data*)(a)) -> routine_id = -p; \
@@ -1422,8 +1422,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> feature.address = (fnptr) fptr; \
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CP(fptr,p,t,a) \
 	{                                                         \
@@ -1437,22 +1437,22 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> feature.offset = o;          \
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CS(t,a) \
 	{                                                         \
 		((call_data*)(a)) -> pattern = eif_call_const;    \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*) a);    \
 	}
 #define RTS_CTR(o,p,a,r) \
 	{                                                         \
 		((call_data*)(a)) -> feature.offset = o;          \
 		((call_data*)(a)) -> pattern = p;                 \
 		((call_data*)(a)) -> result = &(r);               \
-		((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
-		eif_log_call (((call_data*)(a))->sync_pid, RTS_PID(((call_data*)(a))->target), (call_data*)(a)); \
+		((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
+		eif_log_call (RTS_PID(Current), RTS_PID(((call_data*)(a))->target), (call_data*)(a)); \
 	}
 #define RTS_CTW(o,p,a) {\
 		((call_data*)(a)) -> feature.offset = o;          \
@@ -1475,7 +1475,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 		((call_data*)(a)) -> target = (t); \
 		((call_data*)(a)) -> count = (n); \
 		((call_data*)(a)) -> result = NULL; \
-		((call_data*)(a)) -> sync_pid = (EIF_SCP_PID) -1; \
+		((call_data*)(a)) -> is_synchronous = EIF_FALSE; \
 	}
 #ifdef WORKBENCH
 #define RTS_AA(v,f,t,n,a) ((call_data*)(a)) -> argument [(n) - 1] = (v);
@@ -1494,7 +1494,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 			if (val) { \
 				if (!eif_is_expanded (HEADER(val)->ov_flags) && !RTS_OU(Current, val)) { \
 					if (EIF_IS_DIFFERENT_PROCESSOR (((call_data*)(a))->target, val)) { \
-						((call_data*)(a)) -> sync_pid = RTS_PID(Current); \
+						((call_data*)(a)) -> is_synchronous = EIF_TRUE; \
 					} \
 				} \
 			} \

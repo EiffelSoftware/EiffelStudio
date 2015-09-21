@@ -11,6 +11,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="EiffelSoftware.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

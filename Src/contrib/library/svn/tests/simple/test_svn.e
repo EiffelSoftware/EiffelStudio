@@ -15,16 +15,118 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create svn
-			svn.set_svn_executable_path ("C:\apps\dev\SlikSvn\bin\svn.exe") -- by default "svn"
+			create {SVN_ENGINE} svn.make_with_executable_path ("C:\apps\dev\SlikSvn\bin\svn.exe")
 
+			test_working_copy
+			test_remote
+		end
+
+	test_working_copy
+		local
+			g: UUID_GENERATOR
+			id: STRING
+			rn: STRING_32
+			res: SVN_RESULT
+			d: DIRECTORY
+			p,r,wc: PATH
+			f: PLAIN_TEXT_FILE
+			sh: SHARED_PROCESS_MISC
+		do
+			create g
+			id := g.generate_uuid.out
+
+			create p.make_current
+			p := p.extended ("test-" + id)
+			create d.make_with_path (p)
+			d.recursive_create_dir
+			r := p.extended ("repo")
+			rn := r.absolute_path.canonical_path.name
+			if {PLATFORM}.is_windows then
+				rn.replace_substring_all ("\", "/")
+			end
+			rn.prepend ("file:///")
+
+			create sh
+			if
+				attached sh.process_misc.output_of_command ({STRING_32} "svnadmin create " + r.name, Void) as l_admin_res and then
+				l_admin_res.exit_code = 0
+			then
+				wc := p.extended ("wc")
+				res := svn.checkout (rn, wc.name, Void, Void)
+
+				create d.make_with_path (wc.extended ("dir"))
+				d.recursive_create_dir
+
+				create f.make_with_path (d.path.extended ("test.txt"))
+				f.create_read_write
+				f.put_string ("Hello, this is a test for svn lib%N")
+				f.close
+
+				res := svn.add (d.path.name, Void)
+				if res.failed then
+					if attached res.message as msg then
+						print (msg)
+						print ("%N")
+					end
+				else
+					res := svn.move (f.path.name, d.path.extended ("new_test.txt").name, Void)
+					if res.failed then
+						if attached res.message as msg then
+							print (msg)
+							print ("%N")
+						end
+					else
+						create f.make_with_path (d.path.extended ("new_test.txt"))
+						res := svn.commit (d.path.name, "new folder, and renamed", Void)
+						if res.failed then
+							if attached res.message as msg then
+								print (msg)
+								print ("%N")
+							end
+						else
+							res := svn.update (wc.name, Void, Void)
+							if res.failed then
+								if attached res.message as msg then
+									print (msg)
+									print ("%N")
+								end
+							else
+								res := svn.delete (f.path.name, Void)
+								if res.failed then
+									if attached res.message as msg then
+										print (msg)
+										print ("%N")
+									end
+								else
+									res := svn.commit (wc.name, "delete file", Void)
+									if res.failed then
+										if attached res.message as msg then
+											print (msg)
+											print ("%N")
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			-- Cleanup
+			create d.make_with_path (p)
+			if d.exists then
+				d.recursive_delete
+			end
+		end
+
+	test_remote
+		do
 			test_statuses
 			test_repository_info
 			test_logs
 			get_logs
 		end
 
-	svn: SVN_ENGINE
+	svn: SVN
 
 feature -- Test
 
@@ -53,7 +155,7 @@ feature -- Test
 		local
 			rev: like svn.logs.item_for_iteration
 		do
-			if attached svn.logs ("https://svn.eiffel.com/eiffelstudio/trunk", True, 0 , 0, 10, Void) as lst then
+			if attached svn.logs ("https://svn.eiffel.com/eiffelstudio/trunk", True, Void, Void, 10, Void) as lst then
 				from
 					lst.start
 				until

@@ -11,16 +11,18 @@ feature
 
 	last_error: INTEGER
 
-	output_of_command (a_cmd: READABLE_STRING_GENERAL; a_dir: detachable PATH): detachable STRING
+	output_of_command (a_cmd: READABLE_STRING_GENERAL; a_dir: detachable PATH): detachable PROCESS_COMMAND_RESULT
 		local
 			pf: PROCESS_FACTORY
 			p: PROCESS
 			retried: BOOLEAN
 			dn: detachable READABLE_STRING_32
+			err,res: STRING
 		do
 			if not retried then
 				last_error := 0
-				create Result.make (10)
+				create res.make (0)
+				create err.make (0)
 				create pf
 				if a_dir /= Void then
 					dn := a_dir.name
@@ -28,13 +30,20 @@ feature
 				p := pf.process_launcher_with_command_line (a_cmd, dn)
 				p.set_hidden (True)
 				p.set_separate_console (False)
-				p.redirect_output_to_agent (agent (res: STRING; s: STRING)
+				p.redirect_output_to_agent (agent (ia_res: STRING; s: STRING)
 						do
-							res.append_string (s)
-						end (Result, ?)
+							ia_res.append_string (s)
+						end (res, ?)
+					)
+
+				p.redirect_error_to_agent (agent (ia_err: STRING; s: STRING)
+						do
+							ia_err.append_string (s)
+						end (err, ?)
 					)
 				p.launch
 				p.wait_for_exit
+				create Result.make (p.exit_code, res, err)
 			else
 				last_error := 1
 			end

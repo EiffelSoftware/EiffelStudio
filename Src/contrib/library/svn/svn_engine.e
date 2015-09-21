@@ -1,6 +1,5 @@
 note
-	description: "Objects that ..."
-	author: ""
+	description: "Implementation of {SVN} interface."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,21 +7,48 @@ class
 	SVN_ENGINE
 
 inherit
+	SVN
+		rename
+			print as ascii_print
+		redefine
+			default_create
+		end
+
 	SVN_CONSTANTS
+		rename
+			print as ascii_print
 		redefine
 			default_create
 		end
 
 	SHARED_PROCESS_MISC
+		rename
+			print as ascii_print
 		redefine
 			default_create
 		end
+
+	LOCALIZED_PRINTER
+		rename
+			print as ascii_print
+		redefine
+			default_create
+		end
+
+create
+	default_create,
+	make_with_executable_path
 
 feature {NONE} -- Initialization
 
 	default_create
 		do
 			set_svn_executable_path ("svn")
+		end
+
+	make_with_executable_path (v: READABLE_STRING_GENERAL)
+		do
+			set_svn_executable_path (v)
 		end
 
 feature -- Access
@@ -44,28 +70,326 @@ feature -- Element change
 			svn_executable_path := v.name
 		end
 
-feature -- Status report
+feature -- Output
 
-	statuses (a_path: READABLE_STRING_GENERAL; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_STATUS_INFO]
+	print (a_str: detachable READABLE_STRING_GENERAL)
+			-- Write `a_str' on standard output.
+		do
+			localized_print (a_str)
+		end
+
+feature -- Access: working copy
+
+	statuses (a_path: READABLE_STRING_GENERAL; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_OPTIONS): detachable LIST [SVN_STATUS_INFO]
 		do
 			Result := impl_statuses (Void, create {PATH}.make_from_string (a_path), is_verbose, is_recursive, is_remote, a_options)
 		end
 
-	list_of_nodes_from (a_path: READABLE_STRING_GENERAL; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_STATUS_INFO]
-		obsolete
-			"use statuses"
+	checkout (a_location: READABLE_STRING_GENERAL; a_path: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
 		do
-			Result := statuses (a_path, is_verbose, is_recursive, is_remote, a_options)
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn checkout from [" + a_location.as_string_32 + {STRING_32} "] into [" + a_path.as_string_32 +"].%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" checkout ")
+
+			if
+				a_rev /= Void and then
+				not a_rev.string.is_whitespace and then
+				not a_rev.string.is_case_insensitive_equal_general ("0")
+			then
+				cmd.append_string_general (" -r")
+				cmd.append_string_general (a_rev.string)
+			end
+			cmd.append_character (' ')
+
+			cmd.append_string_general (a_location)
+			cmd.append_string (" %"")
+			cmd.append_string_general (a_path)
+			cmd.append_string ("%"")
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
 		end
 
-	repository_info (a_location: READABLE_STRING_GENERAL; a_options: detachable SVN_ENGINE_OPTIONS): detachable SVN_REPOSITORY_INFO
+	update (a_changelist: SVN_CHANGELIST; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
 		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn update [" + a_changelist.as_command_line_arguments +"].%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" update ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+			if
+				a_rev /= Void and then
+				not a_rev.string.is_whitespace and then
+				not a_rev.string.is_case_insensitive_equal_general ("0")
+			then
+				cmd.append_string_general (" -r")
+				cmd.append_string_general (a_rev.string)
+			end
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+		end
+
+	add (a_changelist: SVN_CHANGELIST; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn add " + a_changelist.as_command_line_arguments + "%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" add ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+		end
+
+	delete (a_changelist: SVN_CHANGELIST; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn delete ")
+				across
+					a_changelist as ic
+				loop
+					print ("%"")
+					print (ic.item)
+					print ("%" ")
+				end
+				print ("%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" delete ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+		end
+
+	move (a_location, a_new_location: READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn move from [" + a_location.as_string_32 + {STRING_32} "] to [" + a_new_location.as_string_32 +"].%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" move %"")
+			cmd.append_string_general (a_location)
+			cmd.append_string ("%" %"")
+			cmd.append_string_general (a_new_location)
+			cmd.append_string ("%" ")
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+		end
+
+	commit (a_changelist: SVN_CHANGELIST; a_log_message: detachable READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS): SVN_RESULT
+			-- <Precursor>
+		local
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable STRING
+			cmd: STRING_32
+		do
+			debug ("SVN_ENGINE")
+				print ({STRING_32} "svn commit " + a_changelist.as_command_line_arguments + "%N")
+			end
+
+			create cmd.make_from_string (svn_executable_path)
+			cmd.append_string (option_to_command_line_flags (a_options))
+			cmd.append_string (" commit ")
+			a_changelist.append_as_command_line_arguments_to (cmd)
+
+			if a_log_message /= Void then
+				cmd.append (" --message %"")
+				cmd.append_string_general (a_log_message)
+				cmd.append ("%"")
+			end
+
+
+			debug ("SVN_ENGINE")
+				print ("Command: [" + cmd + "]%N")
+			end
+			res := process_misc.output_of_command (cmd, Void)
+			debug ("SVN_ENGINE")
+				print ("-> terminated %N")
+			end
+			if res = Void or else res.exit_code /= 0 then
+				debug ("SVN_ENGINE")
+					print ("-> terminated : None .%N")
+				end
+				create Result.make_failure
+				Result.set_command (cmd)
+				if res /= Void then
+					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
+				end
+			else
+				s := res.output
+				debug ("SVN_ENGINE")
+					print ("-> terminated : count=" + s.count.out + " .%N")
+					print (s)
+				end
+				create Result.make_success
+			end
+
+			Result.set_message ("Not Yet Implemented")
+		end
+
+feature -- Access: svn		
+
+	repository_info (a_location: READABLE_STRING_GENERAL; a_options: detachable SVN_OPTIONS): detachable SVN_REPOSITORY_INFO
+		local
+			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable STRING
 			cmd: STRING_32
 			l_svn_xml_manager: like svn_xml_manager
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn info from [" + a_location.as_string_8 + "] %N")
+				print ({STRING_32} "Fetch svn info from [" + a_location.as_string_32 + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -76,15 +400,16 @@ feature -- Status report
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			s := process_misc.output_of_command (cmd, Void)
+			res := process_misc.output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if s = Void then
+			if res = Void then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
 			else
+				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -100,13 +425,14 @@ feature -- Status report
 			end
 		end
 
-	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
+	diff (a_location: READABLE_STRING_GENERAL; a_start, a_end: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
 		local
+			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable STRING
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn info from [" + a_location.as_string_8 + "] %N")
+				print ({STRING_32} "Fetch svn info from [" + a_location.as_string_32 + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -114,32 +440,38 @@ feature -- Status report
 			cmd.append_string (" diff ")
 			cmd.append_string_general (a_location)
 
-			if a_start > 0 then
-				cmd.append_string (" -r")
-				if a_end > a_start then
-					cmd.append_integer (a_start)
+			if
+				a_start /= Void and then
+				not a_start.string.is_whitespace and then
+				not a_start.string.is_case_insensitive_equal_general ("0")
+			then
+				cmd.append_string_general (" -r")
+				cmd.append_string_general (a_start.string)
+				if
+					a_end /= Void and then
+					not a_end.string.is_whitespace and then
+					not a_end.string.is_case_insensitive_equal_general ("0")
+				then
 					cmd.append_character (':')
-					cmd.append_integer (a_end)
-				else
-					cmd.append_integer (a_start - 1)
-					cmd.append_character (':')
-					cmd.append_integer (a_start)
+					cmd.append_string_general (a_end.string)
 				end
 			end
+
 --			cmd.append_string (" --summarize ")
 
 			debug ("SVN_ENGINE")
 				print ("Command: [" + cmd + "]%N")
 			end
-			s := process_misc.output_of_command (cmd, Void)
+			res := process_misc.output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if s = Void then
+			if res = Void then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
 			else
+				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -149,36 +481,52 @@ feature -- Status report
 			end
 		end
 
-	path_content (a_location: READABLE_STRING_GENERAL; a_path: STRING; a_rev: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable STRING
+	path_content (a_location: READABLE_STRING_GENERAL; a_path: STRING; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
 		local
+			s: STRING_32
+		do
+			create s.make_from_string_general (a_location)
+			s.append_string_general (a_path)
+			Result := content (s, a_rev, a_options)
+		end
+
+	content (a_location: READABLE_STRING_GENERAL; a_rev: detachable SVN_RANGE_INDEX; a_options: detachable SVN_OPTIONS): detachable STRING
+		local
+			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable STRING
 			cmd: STRING_32
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch path content from [" + a_location.as_string_8 + a_path + "] %N")
+				print ({STRING_32} "Fetch path content from [" + a_location.as_string_32 + "] %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
 			cmd.append_string (option_to_command_line_flags (a_options))
 			cmd.append_string_general (" cat ")
-			cmd.append_string_general (" -r")
-			cmd.append_integer (a_rev)
+			if
+				a_rev /= Void and then
+				not a_rev.string.is_whitespace and then
+				not a_rev.string.is_case_insensitive_equal_general ("0")
+			then
+				cmd.append_string_general (" -r")
+				cmd.append_string_general (a_rev.string)
+			end
 			cmd.append_character (' ')
 			cmd.append_string_general (a_location)
-			cmd.append_string_general (a_path)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			s := process_misc.output_of_command (cmd, Void)
+			res := process_misc.output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if s = Void then
+			if res = Void then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
 			else
+				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -188,14 +536,15 @@ feature -- Status report
 			end
 		end
 
-	logs (a_location: READABLE_STRING_GENERAL; is_verbose: BOOLEAN; a_start, a_end: SVN_RANGE_INDEX; a_limit: INTEGER; a_options: detachable SVN_ENGINE_OPTIONS): detachable LIST [SVN_REVISION_INFO]
+	logs (a_location: READABLE_STRING_GENERAL; is_verbose: BOOLEAN; a_start, a_end: detachable SVN_RANGE_INDEX; a_limit: INTEGER; a_options: detachable SVN_OPTIONS): detachable LIST [SVN_REVISION_INFO]
 		local
-			s: detachable STRING
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 			l_svn_xml_manager: like svn_xml_manager
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn logs from [" + a_location.as_string_8 + "] (range [")
+				print ({STRING_32} "Fetch svn logs from [" + a_location.as_string_32 + "] (range [")
 				if a_start /= Void then
 					print (a_start.string)
 				end
@@ -211,17 +560,17 @@ feature -- Status report
 			if is_verbose then
 				cmd.append_string_general (" -v ")
 			end
-			if 
-				a_start /= Void and then 
+			if
+				a_start /= Void and then
 				not a_start.string.is_whitespace and then
-				not a_start.string.is_case_insensitive_equal_general ("0") 
+				not a_start.string.is_case_insensitive_equal_general ("0")
 			then
 				cmd.append_string_general (" -r")
 				cmd.append_string_general (a_start.string)
-				if 
+				if
 					a_end /= Void and then
 					not a_end.string.is_whitespace and then
-					not a_end.string.is_case_insensitive_equal_general ("0") 
+					not a_end.string.is_case_insensitive_equal_general ("0")
 				then
 					cmd.append_character (':')
 					cmd.append_string_general (a_end.string)
@@ -235,20 +584,21 @@ feature -- Status report
 			cmd.append_string_general (a_location)
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			s := process_misc.output_of_command (cmd, Void)
+			res := process_misc.output_of_command (cmd, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if s = Void then
+			if res = Void then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
 			else
+				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
-					print (s)
+					print (res.output)
 				end
 --				s.replace_substring_all ("%R%N", "%N")
 
@@ -263,7 +613,7 @@ feature -- Status report
 
 feature {NONE} -- impl
 
-	option_to_command_line_flags (a_options: detachable SVN_ENGINE_OPTIONS): STRING_32
+	option_to_command_line_flags (a_options: detachable SVN_OPTIONS): STRING_32
 		do
 			create Result.make_empty
 			if a_options /= Void then
@@ -283,16 +633,17 @@ feature {NONE} -- impl
 
 	svn_xml_manager: detachable SVN_XML_MANAGER
 
-	impl_statuses (a_prefix_path: detachable STRING; a_path: PATH; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_ENGINE_OPTIONS): detachable ARRAYED_LIST [SVN_STATUS_INFO]
+	impl_statuses (a_prefix_path: detachable STRING; a_path: PATH; is_verbose, is_recursive, is_remote: BOOLEAN; a_options: detachable SVN_OPTIONS): detachable ARRAYED_LIST [SVN_STATUS_INFO]
 		local
-			s: detachable STRING
+			res: detachable PROCESS_COMMAND_RESULT
+			s: detachable READABLE_STRING_8
 			cmd: STRING_32
 			info: SVN_STATUS_INFO
 			lst, lst2: detachable ARRAYED_LIST [SVN_STATUS_INFO]
 			l_svn_xml_manager: like svn_xml_manager
 		do
 			debug ("SVN_ENGINE")
-				print ("Fetch svn info from [" + a_path.utf_8_name + "] (is_recursive=" + is_recursive.out + ") %N")
+				print ({STRING_32} "Fetch svn info from [" + a_path.name + "] (is_recursive=" + is_recursive.out + ") %N")
 			end
 
 			create cmd.make_from_string (svn_executable_path)
@@ -309,17 +660,18 @@ feature {NONE} -- impl
 			cmd.append_string_general (" --xml status ")
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ({STRING_32} "Command: [" + cmd + "]%N")
 			end
-			s := process_misc.output_of_command (cmd, a_path)
+			res := process_misc.output_of_command (cmd, a_path)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
-			if s = Void then
+			if res = Void then
 				debug ("SVN_ENGINE")
 					print ("-> terminated : None .%N")
 				end
 			else
+				s := res.output
 				debug ("SVN_ENGINE")
 					print ("-> terminated : count=" + s.count.out + " .%N")
 					print (s)
@@ -348,7 +700,7 @@ feature {NONE} -- impl
 						then
 							if info.path_is_directory then
 								debug ("SVN_ENGINE")
-									print ("Explore [" + info.absolute_path.utf_8_name + "] %N")
+									print ({STRING_32} "Explore [" + info.absolute_path.name + "] %N")
 								end
 								lst2 := impl_statuses (info.display_path, info.absolute_path, is_verbose, is_recursive, is_remote, a_options)
 								if lst2 /= Void and then lst2.count > 0 then

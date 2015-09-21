@@ -1,31 +1,16 @@
 note
 	description: "Summary description for {SVN_ENGINE_OPTIONS}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	SVN_ENGINE_OPTIONS
 
-feature -- Access
+obsolete
+	"Use SVN_OPTIONS directly [2015-sept]."
 
-	username: detachable STRING_32
-
-	password: detachable STRING_32
-
-	auth_cached: BOOLEAN
-
-feature -- Element change
-
-	set_username (u: like username)
-		do
-			username := u
-		end
-
-	set_password (p: like password)
-		do
-			password := p
-		end
+inherit
+	SVN_OPTIONS
 
 
 note

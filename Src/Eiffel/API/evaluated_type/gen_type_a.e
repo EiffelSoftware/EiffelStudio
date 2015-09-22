@@ -1582,6 +1582,9 @@ feature -- Primitives
 			l_formal_as: FORMAL_AS
 			l_formal_dec_as: FORMAL_CONSTRAINT_AS
 			l_check_creation_readiness: BOOLEAN
+			l_wrapped_into_tuple: BOOLEAN
+			wrapped_actuals: ARRAYED_LIST [TYPE_A]
+			tuple_actual: detachable TUPLE_TYPE_A
 		do
 			l_conform := True
 			l_class := base_class
@@ -1618,16 +1621,43 @@ feature -- Primitives
 					(not compiler_profile.is_frozen_variant_supported or else
 						(l_formal_as.has_frozen_mark implies l_generic_parameter.is_frozen))
 				then
-						-- Everything is fine, we conform
+						-- Everything is fine, the actual generic conforms to the formal generic.
 				else
-						-- We do not conform, insert an error for this type.
-					l_conform := False
-					generate_constraint_error (Current, l_generic_parameter.to_type_set, l_constraint_item.to_type_set, i, Void)
+						-- The actual generic does not conform to the formal generic.
+						-- It is possible this formal generic conforms to a tuple type, and there is only one such formal generic,
+						-- then the actual generic can be wrapped in a tuple.
+					if not l_wrapped_into_tuple and then l_class.tuple_parameter_index = i then
+							-- Try to wrap the actrual parameter into a tuple and redo the conformance checks.
+						l_wrapped_into_tuple := True
+							-- Additional actual parameters may be converted to a tuple type.
+						create wrapped_actuals.make (1)
+						wrapped_actuals.extend (l_generic_parameter)
+							-- Replace extra arguments with a tuple.
+						create tuple_actual.make (system.tuple_id, wrapped_actuals)
+						tuple_actual.set_is_attached
+						l_generic_parameter := tuple_actual
+						l_constraints.start
+					else
+							-- The actual generic does not conform to the constraint, report an error.
+						if l_wrapped_into_tuple then
+								-- The actual generic has been wrapped into a tuple, but it still does not conform to one of the constraints.
+								-- Unwrap the actual parameter and report an error.
+							l_generic_parameter := l_generic_parameters [i]
+							tuple_actual := Void
+							l_wrapped_into_tuple := False
+						end
+						l_conform := False
+						generate_constraint_error (Current, l_generic_parameter.to_type_set, l_constraint_item.to_type_set, i, Void)
+					end
 				end
 
 				l_constraints.forth
 			end
 			if l_conform then
+					-- Replace an actual generic type with a tuple-folded one if required.
+				if l_wrapped_into_tuple then
+					l_generic_parameters [i] := l_generic_parameter
+				end
 					-- Check now for the validity of the creation constraint clause if
 					-- there is one which can be checked, i.e. when `to_check' conforms
 					-- to `constraint_type'.

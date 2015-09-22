@@ -1812,6 +1812,8 @@ test	conditional-expression-constant		exec358 tcf pass execution conditional exp
 test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias conversion tuple conformance
 test	expanded-hash-table				exec360 tcf pass execution expanded
 test	conversion-in-assigner-command		exec361 tcf pass execution assigner conversion
+test	formal-generic-tuple-constraint		exec362 tcf pass execution parenthesis_alias conversion tuple conformance formal generic constraint
+test	formal-generic-tuple-ulfolding		exec363 tcf fail execution parenthesis_alias conversion tuple conformance formal generic constraint
 
 -- Once specific
 

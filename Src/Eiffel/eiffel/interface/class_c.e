@@ -2198,9 +2198,78 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
 			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
 			-- rather than if statements.
+		local
+			formal_count: INTEGER
+			actual_count: INTEGER
+			tuple_parameter_number: INTEGER
+			wrapped_actuals: ARRAYED_LIST [TYPE_A]
+			new_actuals: detachable ARRAYED_LIST [TYPE_A]
+			tuple_actual: TUPLE_TYPE_A
 		do
-			if gen /= Void then
-				create {GEN_TYPE_A} Result.make (class_id, gen)
+				-- Do tuple parameter unfolding if necessary.
+			if attached generics as formal_generics then
+				formal_count := formal_generics.count
+			end
+			if attached gen then
+				actual_count := gen.count
+				new_actuals := gen
+			end
+			if actual_count /= formal_count and formal_count > 0 then
+					-- Check if exactly one of the formal generic parameters is of a tuple type.
+				tuple_parameter_number := tuple_parameter_index
+				if tuple_parameter_number > 0 then
+						-- The list of actual parameters may be adapted to the list of formal parameters.
+					if actual_count > formal_count then
+						check arithmetics: attached new_actuals then end
+							-- Additional actual parameters may be converted to a tuple type.
+						create wrapped_actuals.make (actual_count - formal_count + 1)
+						from
+							new_actuals.go_i_th (tuple_parameter_number)
+						until
+							wrapped_actuals.count = actual_count - formal_count + 1
+						loop
+							wrapped_actuals.extend (new_actuals.item)
+							new_actuals.forth
+						end
+							-- Avoid changing original list of arguments.
+						new_actuals.start
+						new_actuals := new_actuals.duplicate (actual_count)
+							-- Replace extra arguments with a tuple.
+						create tuple_actual.make (system.tuple_id, wrapped_actuals)
+						tuple_actual.set_is_attached
+						new_actuals.put_i_th (tuple_actual, tuple_parameter_number)
+							-- Remove extra arguments.
+						from
+							new_actuals.go_i_th (tuple_parameter_number)
+						until
+							actual_count = formal_count
+						loop
+							new_actuals.remove_right
+								-- Adjust number of actual arguments.
+							actual_count := actual_count - 1
+						variant
+							actual_count_formal_count_difference: actual_count - formal_count
+						end
+					elseif actual_count + 1 = formal_count then
+							-- Avoid changing original list of arguments.
+						if attached new_actuals then
+							new_actuals := new_actuals.twin
+						else
+							create new_actuals.make (1)
+						end
+							-- Add an empty tuple.
+						create wrapped_actuals.make (0)
+						new_actuals.go_i_th (tuple_parameter_number)
+						create tuple_actual.make (system.tuple_id, wrapped_actuals)
+						tuple_actual.set_is_attached
+						new_actuals.put_left (tuple_actual)
+							-- Adjust number of actual arguments.
+						actual_count := formal_count
+					end
+				end
+			end
+			if attached new_actuals then
+				create {GEN_TYPE_A} Result.make (class_id, new_actuals)
 			else
 				create Result.make (class_id)
 			end
@@ -2212,6 +2281,72 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			end
 		ensure
 			actual_type_not_void: Result /= Void
+		end
+
+feature {GEN_TYPE_A} -- Tuple paramter unfolding
+
+	tuple_parameter_index: INTEGER
+			-- Index of a formal parameter constrained to a tuple type or 0 if there is none or several such parameters.
+		local
+			i: INTEGER
+		do
+			if attached generics as g then
+				from
+					i := g.count
+				until
+					i <= 0
+				loop
+					if is_tuple_constrained (i, Void) then
+						if Result = 0 then
+								-- One tuple parameter is found.
+							Result := i
+						else
+								-- There is more than one tuple parameters.
+							Result := 0
+								-- Exit loop.
+							i := 1
+						end
+					end
+					i := i - 1
+				variant
+					countdown: i
+				end
+			end
+		end
+
+	is_tuple_constrained (f: INTEGER; g: detachable ARRAYED_STACK [INTEGER]): BOOLEAN
+			-- Is a formal generic `f' constrained by a tuple type given that generics `g' are not directly constrained by a tuple type?
+		local
+			processed: ARRAYED_STACK [INTEGER]
+		do
+			if attached generics [f].constraints as cs then
+				across
+					cs as c
+				loop
+					if attached c.item.type as t then
+						if attached {CLASS_TYPE_AS} t as ct then
+								-- Check if a class type is a tuple type.
+							Result :=
+								attached universe.class_named (ct.class_name.name, group) as ci and then
+								ci.is_compiled and then
+								attached ci.compiled_class as cc and then
+								cc.is_tuple
+						elseif attached {FORMAL_AS} t as ft then
+								-- Extend a set of processed formal generic types with the current one.
+							if attached g then
+								processed := g
+							else
+								create processed.make (1)
+							end
+							processed.extend (f)
+								-- Check if the other formal generic has not been processed and is constrained to tuple.
+							Result := not processed.has (ft.position) and then is_tuple_constrained (ft.position, processed)
+								-- Remove the current formal generic from the set of processed formal generic types.
+							processed.remove
+						end
+					end
+				end
+			end
 		end
 
 feature -- Incrementality

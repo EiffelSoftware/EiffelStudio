@@ -10,6 +10,6 @@ feature
 			
 		end
 
-	a: like {ROUTINE [BOOLEAN, BOOLEAN]}.operands
+	a: like {HASH_TABLE [TEST, TEST]}.item
 
 end

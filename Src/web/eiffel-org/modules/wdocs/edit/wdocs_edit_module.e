@@ -59,19 +59,19 @@ feature -- Router
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/source", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
-			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 
 			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
-			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
-			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 		end
 
-feature -- Access			
+feature -- Access
 
 	permissions: LIST [READABLE_STRING_8]
 			-- <Precursor>.
@@ -197,16 +197,29 @@ feature -- Hooks configuration
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
 			-- for related response `a_response'.
+		local
+			loc: STRING
+			l_version: detachable READABLE_STRING_GENERAL
 		do
 			if
-				attached {WDOCS_PAGE_CMS_RESPONSE} a_response as a_wdocs_response
+				attached {WDOCS_PAGE_CMS_RESPONSE} a_response as l_wdocs_response
 			then
-				if a_wdocs_response.has_permission ("edit wdocs page") then
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", a_wdocs_response.location + "/edit"))
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", a_wdocs_response.location + "/source"))
+				if attached l_wdocs_response.page as pg then
+					l_version := l_wdocs_response.version_id
+					loc := manager (l_version).wiki_page_uri_path (pg, l_wdocs_response.book_name, l_version)
+					if loc.starts_with_general ("/") then
+						loc.remove_head (1)
+					end
+				else
+					loc := l_wdocs_response.location
 				end
-				if a_wdocs_response.has_permission ("create wdocs page") then
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", a_wdocs_response.location + "/add-child"))
+
+				if l_wdocs_response.has_permission ("edit wdocs page") then
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", loc + "/edit"))
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", loc + "/source"))
+				end
+				if l_wdocs_response.has_permission ("create wdocs page") then
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", loc + "/add-child"))
 				end
 			end
 		end

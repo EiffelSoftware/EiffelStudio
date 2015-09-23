@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WDOCS_DEFAULT_CONFIG}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,10 +17,10 @@ feature {NONE} -- Initialization
 
 	make_default
 		do
-			make (create {PATH}.make_current, "current")
+			make (create {PATH}.make_current, Void)
 		end
 
-	make (a_root_dir: PATH; a_default_version: READABLE_STRING_8)
+	make (a_root_dir: PATH; a_default_version: detachable READABLE_STRING_GENERAL)
 			-- Initialize Current with `a_root_dir' and default version to `a_default_version'.
 		do
 			set_root_dir (a_root_dir)

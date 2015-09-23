@@ -3,10 +3,12 @@ note
 			Objects that will be used to precise a range of commits, for instance
 					   -r123:456
 					or -r{2015-06-06}:456
+
 		]"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=svn revision specifiers", "protocol=URI", "src=http://svnbook.red-bean.com/en/1.7/svn.tour.revs.specifiers.html"
 
 class
 	SVN_RANGE_INDEX

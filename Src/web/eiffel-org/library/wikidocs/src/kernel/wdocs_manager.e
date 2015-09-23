@@ -32,7 +32,8 @@ inherit
 	WDOCS_SHARED_ENCODER
 
 create
-	make
+	make,
+	make_default
 
 feature {NONE} -- Initialization
 
@@ -42,6 +43,12 @@ feature {NONE} -- Initialization
 			version_id := a_version_id
 			tmp_dir := a_tmp_dir
 			initialize
+		end
+	
+	make_default (a_wiki_dir: PATH; a_version_id: like version_id; a_tmp_dir: PATH)
+		do
+			make (a_wiki_dir, a_version_id, a_tmp_dir)
+			is_default_version := True
 		end
 
 	initialize
@@ -54,18 +61,21 @@ feature -- Access
 
 	wiki_database_path: PATH
 
-	version_id: detachable READABLE_STRING_GENERAL
+	version_id: READABLE_STRING_GENERAL
+
+	is_default_version: BOOLEAN
+			-- Is Current manager for default version?
+			-- i.e no need to include it in url.
 
 	tmp_dir: PATH
 
-	is_version_id (v: like version_id): BOOLEAN
+	is_version_id (v: detachable like version_id): BOOLEAN
+			-- Is `v' same version as `version_id' ?
 		do
 			if v = Void then
-				Result := version_id = Void
-			elseif not attached version_id as l_version_id then
-				Result := v = Void
+				Result := is_default_version
 			else
-				Result := l_version_id.is_case_insensitive_equal (v)
+				Result := version_id.is_case_insensitive_equal (v)
 			end
 		end
 
@@ -250,11 +260,19 @@ feature -- Access: link
 				l_book_name := book_name (a_page)
 			end
 			if attached page_by_title (a_link.name, l_book_name) as pg then
-				Result := wiki_page_uri_path (pg, version_id)
+				if is_default_version then
+					Result := wiki_page_uri_path (pg, l_book_name, Void)
+				else
+					Result := wiki_page_uri_path (pg, l_book_name, version_id)
+				end
 			end
 			if Result = Void and then attached page_by_link_title (a_link.name, l_book_name) as pg then
 					-- Try to find using the `link_title' prop
-				Result := wiki_page_uri_path (pg, version_id)
+				if is_default_version then
+					Result := wiki_page_uri_path (pg, l_book_name, Void)
+				else
+					Result := wiki_page_uri_path (pg, l_book_name, version_id)
+				end
 			end
 
 			if Result = Void then
@@ -279,18 +297,21 @@ feature -- Access: link
 				if f.exists then
 					create wi.make ("book", f.path)
 					if attached wi.page (a_link.name) as pg then
-						Result := wiki_page_uri_path (pg, version_id)
+						if is_default_version then
+							Result := wiki_page_uri_path (pg, l_book_name, Void)
+						else
+							Result := wiki_page_uri_path (pg, l_book_name, version_id)
+						end
 					end
 				end
-
 			end
-
 		end
 
-	wiki_page_uri_path (pg: WIKI_PAGE; a_version_id: detachable READABLE_STRING_GENERAL): STRING
+	wiki_page_uri_path (pg: WIKI_PAGE; a_book_name: detachable READABLE_STRING_GENERAL; a_version_id: detachable READABLE_STRING_GENERAL): STRING
 		local
 			utf: UTF_CONVERTER
 			l_path: detachable READABLE_STRING_32
+			l_book_name: detachable READABLE_STRING_GENERAL
 		do
 			if attached page_metadata (pg, <<"path">>) as md then
 				l_path := md.item ("path")
@@ -302,8 +323,12 @@ feature -- Access: link
 				if a_version_id /= Void then
 					Result.append ("/version/" + percent_encoder.percent_encoded_string (a_version_id))
 				end
-				if attached book_name (pg) as bn then
-					Result.append ("/" + wiki_name_to_url_encoded_string (bn))
+				l_book_name := a_book_name
+				if l_book_name = Void then
+					l_book_name := book_name (pg)
+				end
+				if l_book_name /= Void then
+					Result.append ("/" + wiki_name_to_url_encoded_string (l_book_name))
 					Result.append ("/" + wiki_name_to_url_encoded_string (pg.title))
 				elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
 					Result.append ("/" + l_book_pg.src)
@@ -378,8 +403,8 @@ feature -- Access: File
 			-- URL accessing the file `a_file'.
 		do
 			create Result.make_from_string ("/doc-file")
-			if attached version_id as vid then
-				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+			if not is_default_version then
+				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
 			end
 			if a_page /= Void and then attached book_name (a_page) as l_book_name then
 				Result.append ("/" + l_book_name)
@@ -392,8 +417,8 @@ feature -- Access: Image
 	image_to_wiki_url (a_link: WIKI_IMAGE_LINK; a_page: detachable WIKI_PAGE): detachable STRING
 		do
 			create Result.make_from_string ("/doc-image")
-			if attached version_id as vid then
-				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+			if not is_default_version then
+				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
 			end
 
 			Result.append ("/" + a_link.name)
@@ -479,8 +504,8 @@ feature -- Access: Image
 						bak := 0
 					end
 					create Result.make_from_string ("/doc-image")
-					if attached version_id as vid then
-						Result.prepend ("/version/" + percent_encoder.percent_encoded_string (vid))
+					if not is_default_version then
+						Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
 					end
 					if a_page /= Void then
 						Result.append ("/" + percent_encoder.percent_encoded_string (l_book_name))

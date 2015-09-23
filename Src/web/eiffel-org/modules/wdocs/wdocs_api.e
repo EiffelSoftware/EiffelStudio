@@ -11,8 +11,6 @@ inherit
 	CMS_MODULE_API
 		rename
 			make as make_with_cms_api
-		redefine
-			initialize
 		end
 
 	REFACTORING_HELPER
@@ -24,26 +22,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_api: CMS_API; a_cfg: WDOCS_CONFIG)
+	make (a_default_version_id: READABLE_STRING_GENERAL; a_api: CMS_API; a_cfg: WDOCS_CONFIG)
+		require
+			a_default_version_id_valid: not a_default_version_id.is_whitespace
 		do
-			configuration := a_cfg
+			default_version_id := a_default_version_id
+			temp_dir := a_cfg.temp_dir
+			documentation_dir := a_cfg.documentation_dir
+--			configuration := a_cfg
 			make_with_cms_api (a_api)
 		end
 
-	initialize
-			-- Initialize Current api.
-		local
-			cfg: detachable WDOCS_CONFIG
-		do
-			Precursor
-
-			cfg := configuration
-			temp_dir := cfg.temp_dir
-			documentation_dir := cfg.documentation_dir
-			default_version_id := cfg.documentation_default_version
-		end
-
-	configuration: WDOCS_CONFIG
+--	configuration: WDOCS_CONFIG
 
 	name: STRING = "wdocs"
 
@@ -57,8 +47,8 @@ feature -- Query
 
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
 		do
-			if a_version_id = Void then
-				create Result.make (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
+			if a_version_id = Void or else a_version_id.same_string (default_version_id) then
+				create Result.make_default (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
 			else
 				create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
 			end
@@ -142,8 +132,8 @@ feature -- Recent changes
 	recent_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME; a_version_id: detachable READABLE_STRING_GENERAL): LIST [TUPLE [time: DATE_TIME; author: READABLE_STRING_32; bookid: READABLE_STRING_GENERAL; page: like new_wiki_page; log: READABLE_STRING_8]]
 			-- List of recent changes, before `a_date', according to `params' settings.
 		local
-			svn: SVN_ENGINE
-			opts: detachable SVN_ENGINE_OPTIONS
+			svn: SVN
+			opts: detachable SVN_OPTIONS
 			l_info: SVN_REVISION_INFO
 			loc: PATH
 			l_base_url: detachable STRING_8
@@ -158,16 +148,18 @@ feature -- Recent changes
 
 --			create opts
 
-			create svn
+			create {SVN_ENGINE} svn
 			if attached cms_api.setup.text_item ("tools.subversion.location") as l_svn_loc then
-				svn.set_svn_executable_path (l_svn_loc)
+				create {SVN_ENGINE} svn.make_with_executable_path (l_svn_loc)
 			elseif {PLATFORM}.is_unix then
-				svn.set_svn_executable_path ("/usr/bin/svn")
+				create {SVN_ENGINE} svn.make_with_executable_path ("/usr/bin/svn")
+			else
+				create {SVN_ENGINE} svn
 			end
 			if a_version_id = Void then
-				loc := configuration.documentation_dir.extended (configuration.documentation_default_version)
+				loc := documentation_dir.extended (default_version_id)
 			else
-				loc := configuration.documentation_dir.extended (a_version_id)
+				loc := documentation_dir.extended (a_version_id)
 			end
 
 			if attached svn.repository_info (loc.name, opts) as l_repo_info then
@@ -211,7 +203,7 @@ feature -- Recent changes
 --						end
 						if wbookid /= Void and wp /= Void then
 							wp.update_from_metadata
-							wp.set_src (mnger.wiki_page_uri_path (wp, a_version_id))
+							wp.set_src (mnger.wiki_page_uri_path (wp, wbookid, a_version_id))
 							wp.set_src (wp.src.substring (2, wp.src.count))
 							Result.force ([dt, l_info.author, wbookid, wp, utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)])
 						else
@@ -410,12 +402,17 @@ feature {NONE} -- Implementation
 	save_content_to_file (a_content: READABLE_STRING_8; a_path: PATH)
 		local
 			f: RAW_FILE
+			d: DIRECTORY
 		do
 			create f.make_with_path (a_path)
 			if f.exists and then f.is_access_readable then
 				backup_file (f)
 			end
 			if not f.exists or else f.is_access_writable then
+				create d.make_with_path (a_path.parent)
+				if not d.exists then
+					d.recursive_create_dir
+				end
 				f.open_write
 				f.put_string (a_content)
 				f.close

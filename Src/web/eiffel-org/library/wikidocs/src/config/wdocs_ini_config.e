@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 				create documentation_dir.make_from_string (l_doc)
 			end
 			if attached ini.text_item ("documentation_default_version") as l_version then
-				create documentation_default_version.make_from_string (l_version)
+				create {IMMUTABLE_STRING_32} documentation_default_version.make_from_string (l_version)
 			end
 			if
 				attached ini.text_item ("cache_duration") as l_duration and then

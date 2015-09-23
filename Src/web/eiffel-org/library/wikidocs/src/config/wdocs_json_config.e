@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 				create documentation_dir.make_from_string (l_documentation_dir)
 			end
 			if attached cfg.text_item ("layout.documentation_default_version") as l_version then
-				create documentation_default_version.make_from_string (l_version)
+				create {IMMUTABLE_STRING_32} documentation_default_version.make_from_string (l_version)
 			end
 			if
 				attached cfg.text_item ("settings.cache_duration") as l_duration and then

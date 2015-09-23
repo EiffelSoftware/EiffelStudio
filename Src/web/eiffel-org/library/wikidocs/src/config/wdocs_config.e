@@ -14,7 +14,7 @@ feature -- Access
 
 	documentation_dir: PATH
 
-	documentation_default_version: STRING
+	documentation_default_version: detachable READABLE_STRING_GENERAL
 
 	cache_duration: INTEGER
 

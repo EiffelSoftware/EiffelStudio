@@ -138,7 +138,6 @@ feature -- Execution
 				end
 				new_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_text))
 
-
 				f := new_edit_form (new_pg, url (request.percent_encoded_path_info, Void), "wdocs_edit")
 				if l_bookid /= Void then
 					f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("bookid", l_bookid.as_string_32))
@@ -153,9 +152,26 @@ feature -- Execution
 					f.submit_actions.extend (agent edit_form_submit (?, mng, new_pg, l_bookid, b))
 					f.process (Current)
 					fd := f.last_data
-				end
+					if fd /= Void and then fd.is_valid then
+						b.append ("<p>View wiki page ")
+						b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id), Void))
+						b.append (".</p>")
 
-				f.append_to_html (wsf_theme, b)
+						if pg /= Void then
+							b.append ("<p>Back to parent page ")
+							b.append (link (pg.title, view_location, Void))
+							b.append (".</p>")
+						else
+							b.append ("<p>Back to ")
+							b.append (link ("parent page", view_location, Void))
+							b.append (".</p>")
+						end
+					else
+						f.append_to_html (wsf_theme, b)
+					end
+				else
+					f.append_to_html (wsf_theme, b)
+				end
 			else
 				b.append ("<h1>")
 				b.append (translation ("Access denied", Void))
@@ -281,14 +297,16 @@ feature -- Form
 							fd.report_error ("Error: could not save wiki page!")
 							add_error_message ("Error: could not save wiki page!")
 						else
-							create s.make_from_string ("Updated wiki %"" + l_page.title + "%"")
+							create s.make_from_string ("Wiki page %"" + l_page.title + "%" was updated")
 							if attached user as u then
-								s.append (" by ")
+								s.append (" (by ")
 								s.append (utf_8_string (u.name))
+								s.append (")")
 							end
---							a_manager.refresh_page_data (l_page)
+							s.append (".")
+							a_manager.refresh_page_data (l_page)
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
-							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache", Void) + ".")
+							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache?destination=" + view_location, Void) + ".")
 
 							api.log ("wdocs", "Wiki page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
 							add_success_message ("Wiki doc saved.")
@@ -320,7 +338,6 @@ feature -- Form
 			bt_reset: WSF_FORM_RESET_INPUT
 			th: WSF_FORM_HIDDEN_INPUT
 		do
-
 			create f.make (a_url, a_formid)
 			f.set_method_post
 
@@ -353,8 +370,16 @@ feature -- Form
 			tf.set_cols (100)
 			tf.set_rows (25)
 			tf.set_description ("[
-				<p>The first part concerns the wiki properties <strong>[[Property:name|value]]</strong>.<br/>
-				The properties with navigation semantics are: <em>uuid, title, link_title, description, weight</em>.</p>
+				<p>
+				Put at the beginning of this content, the wiki properties <strong>[[Property:name|value]]</strong> which are used to set metadata such as: uuid, title, link_title, description, weight.
+				<ul>
+				  <li>[[Property:<strong>title</strong>|A title]]: Wiki page title (<em>set from title field</em>).</li>
+				  <li>[[Property:<strong>uuid</strong>|a_uuid_value]]: unique identifier for the wiki page (<em>if none, initialized by the application</em>).</li>
+				  <li>[[Property:<strong>link_title</strong>|a short title]]: short version of `title', mostly used in link.</li>
+				  <li>[[Property:<strong>description</strong>|A summary of the page]]: description for wiki page, not used for now.</li>
+				  <li>[[Property:<strong>weight</strong>|a numeric value]]: weight of the wiki page, it is used to order sibling pages (lower weight is first, upper is last).</li>
+				</ul>
+				</p>
 				<p>Use wikitext formatting to provide the content.</p>
 			]")
 			tf.set_description_collapsible (False)

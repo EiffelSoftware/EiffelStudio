@@ -13,6 +13,8 @@ inherit
 			make as make_with_cms_api
 		end
 
+	WDOCS_HELPER
+
 	REFACTORING_HELPER
 
 	SHARED_EXECUTION_ENVIRONMENT
@@ -59,6 +61,55 @@ feature -- Query
 			a_version_id_not_blank: not a_version_id.is_whitespace
 		do
 			Result := documentation_dir.extended (a_version_id)
+		end
+
+feature -- Access: cache system
+
+	cache_for_wiki_page_xhtml (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_wiki_page: WIKI_BOOK_PAGE): WDOCS_FILE_STRING_8_CACHE
+		local
+			p: PATH
+			d: DIRECTORY
+		do
+			p := temp_dir.extended ("cache").extended (a_version_id)
+			if a_book_name /= Void then
+				p := p.extended (a_book_name)
+			end
+			create d.make_with_path (p)
+			if not d.exists then
+				d.recursive_create_dir
+			end
+			p := p.extended (normalized_fs_text (a_wiki_page.title)).appended_with_extension ("xhtml")
+			create Result.make (p)
+		end
+
+	cache_for_book_cms_menu (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): WDOCS_CACHE [CMS_MENU]
+			-- Cache for cms menu related to `a_version_id'/`a_book_name' or "all".
+		local
+			d: DIRECTORY
+			p: PATH
+		do
+			p := temp_dir.extended ("cache")
+			create d.make_with_path (p)
+			if not d.exists then
+				d.recursive_create_dir
+			end
+
+			p := p.extended ("cms_menu__book__")
+			p := p.appended (a_version_id)
+			p := p.appended ("_")
+			if a_book_name /= Void then
+				p := p.appended (a_book_name)
+			else
+				p := p.appended ("all")
+			end
+			p := p.appended_with_extension ("cache")
+			create {WDOCS_FILE_OBJECT_CACHE [CMS_MENU]} Result.make (p)
+		end
+
+	reset_cms_menu_cache_for (a_version_id: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL)
+			-- Reset cache for cms menu related to `a_version_id'/`a_book_name' or "all".
+		do
+			cache_for_book_cms_menu (a_version_id, a_book_name).delete
 		end
 
 feature -- Query: wiki
@@ -279,7 +330,7 @@ feature -- Factory
 			Result := manager (Void).new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), a_parent_key)
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_manager: WDOCS_MANAGER)
+	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH
@@ -341,8 +392,16 @@ feature -- Factory
 					end
 
 					save_content_to_file (txt, p)
+					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
 					if not has_error then
-						a_manager.refresh_page_data (a_page)
+						a_manager.refresh_page_data (a_book_id, a_page)
+						cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, a_page).delete
+						if
+							attached a_manager.book (a_book_id) as wb and then
+							attached wb.page_by_key (a_page.parent_key) as l_parent_page
+						then
+							cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, l_parent_page).delete
+						end
 					end
 				end
 			end

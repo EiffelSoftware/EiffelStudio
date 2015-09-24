@@ -100,16 +100,23 @@ feature -- Execution
 				end
 
 				f := new_edit_form (pg, url (request.percent_encoded_path_info, Void), "wdocs_edit")
+				if l_bookid /= Void then
+					f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("bookid", l_bookid.as_string_32))
+				end
 
 				hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
-					f.validation_actions.extend (agent edit_form_validate (?, pg, mng, b))
-					f.submit_actions.extend (agent edit_form_submit (?, mng, pg, l_bookid, b))
-					f.process (Current)
-					fd := f.last_data
+					if l_bookid = Void then
+						add_error_message ("Missing book name information!")
+					else
+						f.validation_actions.extend (agent edit_form_validate (?, pg, mng, b))
+						f.submit_actions.extend (agent edit_form_submit (?, mng, pg, l_bookid, b))
+						f.process (Current)
+						fd := f.last_data
+					end
+				else
+					f.append_to_html (wsf_theme, b)
 				end
-
-				f.append_to_html (wsf_theme, b)
 			elseif
 				location.ends_with_general ("/add-child") and then
 				has_permission ("create wdocs page")
@@ -148,26 +155,31 @@ feature -- Execution
 
 				hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
-					f.validation_actions.extend (agent edit_form_validate (?, new_pg, mng, b))
-					f.submit_actions.extend (agent edit_form_submit (?, mng, new_pg, l_bookid, b))
-					f.process (Current)
-					fd := f.last_data
-					if fd /= Void and then fd.is_valid then
-						b.append ("<p>View wiki page ")
-						b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id), Void))
-						b.append (".</p>")
-
-						if pg /= Void then
-							b.append ("<p>Back to parent page ")
-							b.append (link (pg.title, view_location, Void))
-							b.append (".</p>")
-						else
-							b.append ("<p>Back to ")
-							b.append (link ("parent page", view_location, Void))
-							b.append (".</p>")
-						end
-					else
+					if l_bookid = Void then
+						add_error_message ("Missing book name information!")
 						f.append_to_html (wsf_theme, b)
+					else
+						f.validation_actions.extend (agent edit_form_validate (?, new_pg, mng, b))
+						f.submit_actions.extend (agent edit_form_submit (?, mng, new_pg, l_bookid, b))
+						f.process (Current)
+						fd := f.last_data
+						if fd /= Void and then fd.is_valid then
+							b.append ("<p>View wiki page ")
+							b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id), Void))
+							b.append (".</p>")
+
+							if pg /= Void then
+								b.append ("<p>Back to parent page ")
+								b.append (link (pg.title, view_location, Void))
+								b.append (".</p>")
+							else
+								b.append ("<p>Back to ")
+								b.append (link ("parent page", view_location, Void))
+								b.append (".</p>")
+							end
+						else
+							f.append_to_html (wsf_theme, b)
+						end
 					end
 				else
 					f.append_to_html (wsf_theme, b)
@@ -200,6 +212,9 @@ feature -- Form
 			l_source: detachable READABLE_STRING_32
 			l_xhtml: READABLE_STRING_8
 		do
+--			if fd.item ("bookid") = Void then
+--				fd.report_error ("Missing book name information!")
+--			end
 			if attached {WSF_STRING} fd.item ("modification_date") as f_date then
 				if pg /= Void and then attached pg.path as l_path then
 					if file_timestamp (l_path) /= f_date.value.to_integer then
@@ -226,14 +241,15 @@ feature -- Form
 			end
 		end
 
-	edit_form_submit (fd: WSF_FORM_DATA; a_manager: WDOCS_MANAGER; pg: detachable WIKI_BOOK_PAGE; a_bookid: detachable READABLE_STRING_GENERAL; b: STRING)
+	edit_form_submit (fd: WSF_FORM_DATA; a_manager: WDOCS_MANAGER; pg: detachable WIKI_BOOK_PAGE; a_bookid: READABLE_STRING_GENERAL; b: STRING)
 		local
 			l_preview: BOOLEAN
 			l_path: detachable PATH
 			l_page: detachable WIKI_BOOK_PAGE
-			l_title_value, l_source_value: detachable READABLE_STRING_8
+			l_link_title_value, l_title_value, l_source_value: detachable READABLE_STRING_8
 			l_content: detachable READABLE_STRING_8
 			l_changed: BOOLEAN
+			l_meta_link_title: detachable READABLE_STRING_32
 			s: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
@@ -252,12 +268,17 @@ feature -- Form
 					end
 				end
 				l_title_value := safe_utf_8_string (fd.string_item ("title"))
+				l_link_title_value := safe_utf_8_string (fd.string_item ("link_title"))
 				l_source_value := safe_utf_8_string (fd.string_item ("source"))
 
 				if pg /= Void then
+					l_meta_link_title := pg.metadata ("link_title")
 					l_path := pg.path
 					l_page := pg
 					l_content := wdocs_api.wiki_text (pg)
+					if attached pg.metadata_table as tb then
+						tb.wipe_out
+					end
 				elseif l_title_value /= Void and a_bookid /= Void then
 					l_page := wdocs_api.new_wiki_page (l_title_value, utf_8_string (a_bookid))
 					l_changed := True
@@ -265,13 +286,27 @@ feature -- Form
 				if l_page = Void or l_title_value = Void then
 					b.append ("<strong>Can not create a new wiki doc. Not enough information!</strong>")
 				else
+					if l_source_value /= Void then
+						l_changed := l_content = Void or else not l_content.same_string (l_source_value)
+						l_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_source_value))
+					end
 					if not l_page.title.same_string (l_title_value) then
 						l_page.set_title (l_title_value)
 						l_changed := True
 					end
-					if l_source_value /= Void then
-						l_changed := l_content = Void or else not l_content.same_string (l_source_value)
-						l_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_source_value))
+					if l_meta_link_title = Void or else l_meta_link_title.is_whitespace then
+						if l_link_title_value /= Void and then not l_link_title_value.is_whitespace then
+							l_page.set_metadata (l_link_title_value, "link_title")
+							l_changed := True
+						end
+					else
+						if l_link_title_value = Void or else l_link_title_value.is_whitespace then
+							l_page.set_metadata (Void, "link_title")
+							l_changed := True
+						elseif not l_meta_link_title.same_string (l_link_title_value) then
+							l_page.set_metadata (l_link_title_value, "link_title")
+							l_changed := True
+						end
 					end
 					if l_changed then
 						if l_path = Void then
@@ -292,7 +327,8 @@ feature -- Form
 								end
 							end
 						end
-						wdocs_api.save_wiki_page (l_page, l_source_value, l_path, a_manager)
+						l_page.update_from_metadata
+						wdocs_api.save_wiki_page (l_page, l_source_value, l_path, a_bookid, a_manager)
 						if wdocs_api.has_error then
 							fd.report_error ("Error: could not save wiki page!")
 							add_error_message ("Error: could not save wiki page!")
@@ -304,7 +340,7 @@ feature -- Form
 								s.append (")")
 							end
 							s.append (".")
-							a_manager.refresh_page_data (l_page)
+
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
 							add_warning_message ("You may need to " + link ("clear the cache", "admin/module/wdocs/clear-cache?destination=" + view_location, Void) + ".")
 
@@ -333,7 +369,7 @@ feature -- Form
 		local
 			f: CMS_FORM
 			tf: WSF_FORM_TEXTAREA
-			f_title: WSF_FORM_TEXT_INPUT
+			f_title, f_link_title: WSF_FORM_TEXT_INPUT
 			bt_preview, bt_save: WSF_FORM_SUBMIT_INPUT
 			bt_reset: WSF_FORM_RESET_INPUT
 			th: WSF_FORM_HIDDEN_INPUT
@@ -365,6 +401,15 @@ feature -- Form
 			f_title.set_label ("Title")
 			f_title.set_description ("The page title will be used as wiki name for reference, such as [[WikiName|Text]].")
 			f.extend (f_title)
+
+			if pg /= Void and then attached pg.metadata ("link_title") as l_link_title then
+				create f_link_title.make_with_text ("link_title", l_link_title)
+			else
+				create f_link_title.make_with_text ("link_title", "")
+			end
+			f_link_title.set_label ("Short Title")
+			f_link_title.set_description ("Optional short title, used in menu or link.")
+			f.extend (f_link_title)
 
 			create tf.make ("source")
 			tf.set_cols (100)

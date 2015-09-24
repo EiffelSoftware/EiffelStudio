@@ -112,7 +112,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	refresh_page_data (pg: WIKI_PAGE)
+	refresh_page_data (bn: READABLE_STRING_GENERAL; pg: WIKI_PAGE)
 		deferred
 		end
 

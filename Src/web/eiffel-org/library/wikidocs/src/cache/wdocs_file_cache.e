@@ -86,12 +86,18 @@ feature -- Element change
 			-- <Precursor>
 		local
 			f: RAW_FILE
+			retried: BOOLEAN
 		do
-			create f.make_with_path (path)
-				-- Create recursively parent directory if it does not exists.
-			if f.exists and then f.is_access_writable then
-				f.delete
+			if not retried then
+				create f.make_with_path (path)
+					-- Create recursively parent directory if it does not exists.
+				if f.exists and then f.is_access_writable then
+					f.delete
+				end
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	put (g: G)

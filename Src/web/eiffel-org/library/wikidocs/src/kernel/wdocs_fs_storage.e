@@ -354,18 +354,25 @@ feature -- Factory
 
 feature -- Access
 
+	existing_pages_data: detachable WDOCS_PAGES_DATA
+		do
+			Result := internal_pages_data
+			if Result = Void then
+				if attached stored_pages_data as l_stored_data then
+					Result := l_stored_data
+				end
+				internal_pages_data := Result
+			end
+		end
+
 	pages_data: WDOCS_PAGES_DATA
 		local
 			l_data: like internal_pages_data
 		do
-			l_data := internal_pages_data
+			l_data := existing_pages_data
 			if l_data = Void then
-				if attached stored_pages_data as l_stored_data then
-					l_data := l_stored_data
-				else
-					l_data := new_pages_data
-					store_pages_data (l_data)
-				end
+				l_data := new_pages_data
+				store_pages_data (l_data)
 				internal_pages_data := l_data
 			end
 			Result := l_data
@@ -405,11 +412,9 @@ feature -- Basic operations
 			reset_books_data
 			reset_images_data
 			reset_pages_data
-			internal_pages_data := Void
-			internal_images_data := Void
 		end
 
-	refresh_page_data (pg: WIKI_PAGE)
+	refresh_page_data (bn: READABLE_STRING_GENERAL; pg: WIKI_PAGE)
 		do
 			-- TODO: implement smart page refresh!
 			refresh
@@ -840,6 +845,7 @@ feature {NONE} -- Storage: pages
 			-- Reset data in cache, if any
 		do
 			pages_cache.delete
+			internal_pages_data := Void
 		end
 
 feature {NONE} -- Implementation: images
@@ -961,6 +967,7 @@ feature {NONE} -- Storage: images
 			-- Reset data in cache, if any
 		do
 			images_cache.delete
+			internal_images_data := Void
 		end
 
 feature {NONE} -- Helpers

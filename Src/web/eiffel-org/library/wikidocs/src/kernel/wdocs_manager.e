@@ -112,9 +112,9 @@ feature -- Basic operations
 			storage.refresh
 		end
 
-	refresh_page_data (pg: WIKI_PAGE)
+	refresh_page_data (bn: READABLE_STRING_GENERAL; pg: WIKI_PAGE)
 		do
-			storage.refresh_page_data (pg)
+			storage.refresh_page_data (bn, pg)
 			reload_data
 		end
 

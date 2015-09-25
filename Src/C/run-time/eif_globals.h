@@ -134,6 +134,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* eif_threads.c */
 	int is_external_cx;					/* Is current thread created by an external entity. */
 
+		/* SCOOP */
+	EIF_SCP_PID scoop_processor_id; 		/* The processor ID. Remains stable throughout the lifetime of a thread. */
+	EIF_SCP_PID scoop_region_id;			/* The region ID. Can be changed during impersonation. */
+	
 } eif_global_context_t;
 
 

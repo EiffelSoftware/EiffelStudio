@@ -3942,11 +3942,12 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint16 flags, EIF_TYPE_IN
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
-	// Set SCOOP Processor if available.
+		/* Set SCOOP region ID. */
 #ifdef EIF_THREADS
-	zone->ov_pid = (eif_thr_context->logical_id != (EIF_SCP_PID) -1 ? eif_thr_context->logical_id : 0);
+	CHECK ("valid_region_id", rt_globals->eif_globals->scoop_region_id != EIF_NULL_PROCESSOR);
+	zone->ov_pid = rt_globals->eif_globals->scoop_region_id;
 #else
-	zone->ov_pid = (EIF_SCP_PID)0;
+ 	zone->ov_pid = (EIF_SCP_PID) 0;
 #endif
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 	zone->ov_flags = flags;
@@ -4029,11 +4030,12 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
-	// Set SCOOP Processor if available.
+		/* Set SCOOP region ID. */
 #ifdef EIF_THREADS
-	zone->ov_pid = (eif_thr_context->logical_id != (EIF_SCP_PID) -1 ? eif_thr_context->logical_id : 0);
+	CHECK ("valid_region_id", rt_globals->eif_globals->scoop_region_id != EIF_NULL_PROCESSOR);
+	zone->ov_pid = rt_globals->eif_globals->scoop_region_id;
 #else
-	zone->ov_pid = (EIF_SCP_PID)0;
+ 	zone->ov_pid = (EIF_SCP_PID) 0;
 #endif
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
 

@@ -581,7 +581,7 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile pre_start = 0;		/* Start of a precondition. */
 	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
 	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
-	RTS_SDP(rt_globals->eif_thr_context_cx->logical_id); /* Declarations for request chain */
+	RTS_SDP (eif_globals->scoop_processor_id);      /* Declarations for request chain */
 	RTS_SDC;
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */

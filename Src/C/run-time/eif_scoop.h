@@ -102,6 +102,11 @@ RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);
 RT_LNK void eif_scoop_lock_request_group (EIF_SCP_PID client_pid);
 
+/* Lock stack management */
+RT_LNK size_t eif_scoop_lock_stack_count (EIF_SCP_PID processor_id);
+RT_LNK void eif_scoop_lock_stack_impersonated_push (EIF_SCP_PID client_processor_id, EIF_SCP_PID supplier_region_id);
+RT_LNK void eif_scoop_lock_stack_impersonated_pop (EIF_SCP_PID client_processor_id, size_t count);
+
 /* Debugger extensions. */
 RT_LNK EIF_SCP_PID eif_scoop_client_of (EIF_SCP_PID supplier);
 

@@ -48,6 +48,7 @@ void rt_unset_processor_id (void);	/* Dissociate processor from the current thre
 
 void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark references in a call_data struct with the MARKER function. */
 
+void rt_scoop_execute_call (call_data* call); /* Execute 'call' without catching any exceptions. */
 EIF_BOOLEAN rt_scoop_try_call (struct call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
 
 rt_shared void rt_scoop_gc_request (int* fingerprint); /* Request a GC cycle if the fingerprint hasn't changed since last invocation. */

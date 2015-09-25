@@ -119,6 +119,22 @@ rt_private void rt_apply_wcall (call_data *data)
 }
 #endif
 
+/*
+doc:	<routine name="rt_scoop_try_call" export="shared">
+doc:		<summary> Execute the feature in 'call' and do not catch exceptions. </summary>
+doc:		<param name="call" type="struct call_data*"> The feature to apply. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+void rt_scoop_execute_call (call_data* call)
+{
+#ifdef WORKBENCH
+	rt_apply_wcall (call);
+#else
+	call->pattern (call);
+#endif
+}
 
 /*
 doc:	<routine name="rt_scoop_try_call" return_type="EIF_BOOLEAN" export="shared">
@@ -154,11 +170,8 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 
 	if (!setjmp(exenv)) {
 			/* Execute the Eiffel function. */
-#ifdef WORKBENCH
-		rt_apply_wcall (call);
-#else
-		call->pattern (call);
-#endif
+		rt_scoop_execute_call (call);
+
 		success = EIF_TRUE;
 
 		expop(&eif_stack);

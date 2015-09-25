@@ -135,7 +135,6 @@ doc:	</routine>
 */
 rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct rt_processor* supplier, struct call_data* call)
 {
-	size_t l_count = 0;
 	EIF_BOOLEAN is_successful = EIF_FALSE;
 #ifdef EIF_ASSERTIONS
 	struct rt_private_queue* pq = NULL; /* For assertion checking. */
@@ -148,9 +147,6 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 
 		/* Adopt the once values and logical ID of the new thread. */
 	rt_swap_thread_context (client, supplier);
-
-		/* Store the size of the request group stack of the impersonated thread. */
-	l_count = rt_processor_request_group_stack_count (supplier);
 
 		/* Perform lock passing. */
 	is_successful = (T_OK == rt_queue_cache_push (&supplier->cache, &client->cache));
@@ -171,9 +167,6 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 		rt_queue_cache_pop (&supplier->cache);
 	}
 
-		/* Restore the size of the request group stack in the supplier. */
-	rt_processor_request_group_stack_remove (supplier, rt_processor_request_group_stack_count (supplier) - l_count);
-
 		/* Restore the thread context. */
 	rt_swap_thread_context (supplier, client);
 
@@ -187,6 +180,23 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 
 }
 
+/* Before impersonation:
+ * - Perform lock passing
+ * - Adjust region ID
+ * - Change once values
+ * After impersonation
+ * - Revert lock passing
+ * - Adjust region ID
+ * - Change once values
+ * - Free call_data struct
+ * On exception recovery
+ * - Restore the lock stack
+ * - Restore request group stack
+ * - Adjust region ID
+ * - Restore once values
+ * On separate callback
+ * - If RTS_PID(target) != region_id, impersonate region
+*/
 
 /*
 doc:	<routine name="rt_scoop_is_impersonation_allowed" return_type="void" export="private">
@@ -420,6 +430,31 @@ rt_public void eif_scoop_lock_request_group (EIF_SCP_PID client_pid)
 	struct rt_processor* client = rt_get_processor (client_pid);
 	struct rt_request_group* l_group = rt_processor_request_group_stack_last (client);
 	rt_request_group_lock (l_group);
+}
+
+/* Lock stack management */
+
+/* The size of the lock stack in 'processor_id'. */
+rt_public size_t eif_scoop_lock_stack_count (EIF_SCP_PID processor_id)
+{
+	struct rt_processor* proc = rt_get_processor (processor_id);
+	return rt_queue_cache_lock_passing_count (&proc->cache);
+}
+
+/* Push the locks of 'supplier_region_id' onto the lock stack of 'client_processor_id'. */
+rt_public void eif_scoop_lock_stack_impersonated_push (EIF_SCP_PID client_processor_id, EIF_SCP_PID supplier_region_id)
+{
+	struct rt_processor* client = rt_get_processor (client_processor_id);
+	struct rt_processor* supplier = rt_get_processor (supplier_region_id);
+	/* TODO: Error handling */
+	int error = rt_queue_cache_push_on_impersonation (&client->cache, &supplier->cache);
+}
+
+/* Remove 'count' elements from the lock stack of 'client_processor_id'. */
+rt_public void eif_scoop_lock_stack_impersonated_pop (EIF_SCP_PID client_processor_id, size_t count)
+{
+	struct rt_processor* client = rt_get_processor (client_processor_id);
+	rt_queue_cache_pop_on_impersonation (&client->cache, count);
 }
 
 /* Debugger extensions. */

@@ -159,6 +159,8 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 	RTLXL;
 #endif
 
+	RTS_SDX; /* Record the request group stack count, the lock stack count, and the current region ID. */
+
 		/* TODO: We used to keep track of last_exception in this function,
 		 * which caused a call into Eiffel code. Therefore it was necessary
 		 * register the call_data struct somewhere for GC traversal.
@@ -180,8 +182,11 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 		RTLXE;
 #endif
 		RTXSC;
+		RTS_SRR; /* Restore the two stacks and the region ID. */
 		success = EIF_FALSE;
 	}
+	CHECK ("same_request_group_stack", eif_scoop_request_group_stack_count (l_scoop_processor_id) == l_scoop_request_group_stack_count);
+	CHECK ("same_lock_stack", eif_scoop_lock_stack_count (l_scoop_processor_id) == l_scoop_lock_stack_count);
 
 	return success;
 }

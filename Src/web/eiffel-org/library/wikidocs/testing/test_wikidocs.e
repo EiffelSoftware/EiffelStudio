@@ -40,6 +40,7 @@ feature {NONE} -- Events
 			lst: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			i: INTEGER
 			ut: FILE_UTILITIES
+			l_version: detachable READABLE_STRING_GENERAL
 		do
 			create d.make_with_path (execution_environment.current_working_path.extended ("tmp"))
 --			if d.exists then
@@ -60,8 +61,12 @@ feature {NONE} -- Events
 
 			create d.make_with_path (cfg.documentation_dir)
 			assert ("directory does not exists", not d.exists)
+			l_version := cfg.documentation_default_version
+			if l_version = Void then
+				l_version := "current"
+			end
+			p := cfg.documentation_dir.extended (l_version)
 
-			p := cfg.documentation_dir.extended (cfg.documentation_default_version)
 			wikidocs_dir := p
 			create d.make_with_path (p)
 			if not d.exists then
@@ -100,7 +105,7 @@ feature {NONE} -- Events
 				book_infos.force (lst, ic.key)
 			end
 
-			create wdocs.make (p, cfg.documentation_default_version, cfg.temp_dir)
+			create wdocs.make (p, l_version, cfg.temp_dir)
 			wdocs.refresh_data
 		end
 

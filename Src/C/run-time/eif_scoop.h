@@ -80,7 +80,7 @@ typedef struct call_data {
 	EIF_TYPED_VALUE argument [1];	/* Arguments excluding target object */
 } call_data;
 
-RT_LNK void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data* data);
+RT_LNK void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, call_data* data);
 RT_LNK void eif_call_const (call_data * a);
 
 /* Scoop Macros

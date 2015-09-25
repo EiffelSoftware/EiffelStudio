@@ -240,14 +240,19 @@ rt_private void fix_call_data (struct call_data* call)
 }
 
 /* Call logging */
-rt_public void eif_log_call (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid, call_data *data)
+rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, call_data *data)
 {
-	struct rt_processor *client = rt_get_processor (client_pid);
+	EIF_SCP_PID supplier_pid = RTS_PID (data->target);
+	struct rt_processor *client = rt_get_processor (client_processor_id);
 	struct rt_processor *supplier = rt_get_processor (supplier_pid);
 	struct rt_private_queue *pq = NULL;
 	int error = T_OK;
 
 	REQUIRE("has data", data);
+
+	/* TODO: This check is temporary and will be removed in a future commit.
+	 * TODO: Check all the code and see whether we need region or processor ID. */
+	CHECK ("same_pid", client_processor_id == client_region_id);
 
 	fix_call_data (data);
 

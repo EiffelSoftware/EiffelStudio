@@ -517,11 +517,14 @@ rt_private void initialize_request_chain (void)
 {
 	/* Define indirect variable that is used to keep track of request chain stack. */
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
+	RTS_SD;
 	uint32 n;
 
 		/* Register reference arguments. */
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
+			/* TODO: RS: Why only register arguments when they're uncontrolled in the interpreter? */
 		if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent -> it_ref, last -> it_ref)) {
 			RTS_RS(icurrent -> it_ref, last -> it_ref);
 		}
@@ -581,8 +584,7 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile pre_start = 0;		/* Start of a precondition. */
 	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
 	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
-	RTS_SDP (eif_globals->scoop_processor_id);      /* Declarations for request chain */
-	RTS_SDC;
+	RTS_SDX;			/* Declarations for SCOOP */
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int routine_id = 0;

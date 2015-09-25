@@ -887,6 +887,10 @@ rt_private void eif_thr_entry (void *arg)
 
 		eif_thr_context = routine_ctxt;
 
+			/* Set the processor and region ID. */
+		eif_globals->scoop_processor_id = eif_thr_context->logical_id;
+		eif_globals->scoop_region_id = eif_thr_context->logical_id;
+
 		if (eif_thr_context->is_processor) {
 			global_ctxs[eif_thr_context->logical_id] = rt_globals;
 		}

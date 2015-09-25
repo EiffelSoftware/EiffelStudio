@@ -112,6 +112,13 @@ rt_private void rt_swap_thread_context (struct rt_processor* first_processor, st
 	first->eif_thr_context_cx->logical_id = second_pid;
 	second->eif_thr_context_cx->logical_id = first_pid;
 
+		/* Also adjust the IDs in the public context.
+		 * Swapping the processor ID is done temporarily until we can switch to the new impersonation mechanism. */
+	first->eif_globals->scoop_region_id = second_pid;
+	second->eif_globals->scoop_region_id = first_pid;
+	first->eif_globals->scoop_processor_id = second_pid;
+	second->eif_globals->scoop_processor_id = first_pid;
+
 		/* Swap the position in global_ctxs. */
 	global_ctxs [first_pid] = second;
 	global_ctxs [second_pid] = first;

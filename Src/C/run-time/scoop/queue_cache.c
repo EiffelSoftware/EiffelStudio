@@ -388,6 +388,64 @@ rt_shared void rt_queue_cache_pop (struct queue_cache* self)
 }
 
 /*
+doc:	<routine name="rt_queue_cache_push_on_impersonation" return_type="int" export="shared">
+doc:		<summary> Pass all locks from 'giver' to 'self'.
+doc: 			The lock stack (with all private queues) from the other processor will be adopted by this cache.
+doc:			The difference between a regular push/pop is that this feature is executed by the client during impersonation,
+doc:			and thus the implementation is a bit simpler.
+doc: 			This should be called in pairs with rt_queue_cache_pop_on_impersonation(). </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache to receive the locks. Must not be NULL. </param>
+doc:		<param name="giver" type="struct queue_cache*"> The queue cache to give away the locks. Must not be NULL. </param>
+doc:		<return> T_OK on success. T_NO_MORE_MEMORY if a memory allocation failure happened. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared int rt_queue_cache_push_on_impersonation (struct queue_cache* self, struct queue_cache* giver)
+{
+	int error = T_OK;
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("giver_not_null", giver);
+
+	error = rt_vector_queue_cache_extend (self->lock_stack, giver);
+	return error;
+}
+
+/*
+doc:	<routine name="rt_queue_cache_pop_on_impersonation" return_type="void" export="shared">
+doc:		<summary> Return all locks that were received during the last rt_queue_cache_push_on_impersonation() operation. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache that has the locks. Must not be NULL. </param>
+doc:		<param name="count" type="size_t"> The number of times the pop() operation should be executed. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_queue_cache_pop_on_impersonation (struct queue_cache* self, size_t count)
+{
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("valid_count", count < rt_vector_queue_cache_count (self->lock_stack));
+	while (count > 0) {
+		rt_vector_queue_cache_remove_last (self->lock_stack);
+		--count;
+	}
+}
+
+/*
+doc:	<routine name="rt_queue_cache_lock_passing_count" return_type="size_t" export="shared">
+doc:		<summary> The current size of the lock stack in the queue_cache objct. </summary>
+doc:		<param name="self" type="struct queue_cache*"> The queue cache object. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared size_t rt_queue_cache_lock_passing_count (struct queue_cache* self)
+{
+	REQUIRE ("self_not_null", self);
+	return rt_vector_queue_cache_count (self->lock_stack);
+}
+
+
+/*
 doc:	<routine name="rt_queue_cache_has_locks_of" return_type="EIF_BOOLEAN" export="shared">
 doc:		<summary> Check if 'self' has the locks of 'supplier'. This can only be true when 'supplier' has passed the locks to 'client' in a previous call.
 dic:		The result of this query is important to determine if we need to perform a separate callback instead of a regular call. </summary>

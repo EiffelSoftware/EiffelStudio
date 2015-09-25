@@ -11,10 +11,12 @@ inherit
 
 create
 	make,
-	make_with_name
+	make_with_name,
+	make_with_path
 
 convert
 	make_with_name ({READABLE_STRING_GENERAL, READABLE_STRING_8, STRING_8, IMMUTABLE_STRING_8, READABLE_STRING_32, STRING_32, IMMUTABLE_STRING_32}) ,
+	make_with_path ({PATH}) ,
 	as_command_line_arguments: {STRING_32}
 
 feature {NONE} -- Initialization	
@@ -23,6 +25,11 @@ feature {NONE} -- Initialization
 		do
 			make
 			items.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
+		end
+
+	make_with_path (a_path: PATH)
+		do
+			make_with_name (a_path.name)
 		end
 
 	make

@@ -17,7 +17,7 @@
 									{/unless}
 									</ul>
 								</nav>
-								<form class="search-form" method="GET" action="http://www.google.com/search"> 
+								<form class="search-form" method="GET" action="https://www.google.com/search"> 
 									<input type="text" name="q" size="25" maxlength="255" value=""placeholder=""/>
 									<input type="checkbox" name="sitesearch" value="{$site_url/}" checked style="opacity:0; position:absolute; left:9999px;"/>
 								</form>

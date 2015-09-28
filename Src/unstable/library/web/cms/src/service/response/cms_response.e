@@ -995,6 +995,7 @@ feature {NONE} -- Execution
 			page: CMS_HTML_PAGE_RESPONSE
 			utf: UTF_CONVERTER
 			h: HTTP_HEADER
+			l_new_location: READABLE_STRING_8
 		do
 			if attached {READABLE_STRING_GENERAL} values.item ("optional_content_type") as l_type then
 				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
@@ -1010,12 +1011,12 @@ feature {NONE} -- Execution
 			if attached redirection as l_location then
 					-- FIXME: find out if this is safe or not.
 				if l_location.has_substring ("://") then
---					h.put_location (l_location)
-					response.redirect_now (l_location)
+					l_new_location := l_location
 				else
---					h.put_location (request.absolute_url (l_location, Void))
-					response.redirect_now (absolute_url (l_location, Void))
+					l_new_location := absolute_url (l_location, Void)
 				end
+--				h.put_location (l_new_location)
+				response.redirect_now (l_new_location)
 			else
 				h.put_header_object (header)
 

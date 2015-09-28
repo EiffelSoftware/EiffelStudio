@@ -22,6 +22,8 @@ inherit
 
 	CMS_HOOK_RESPONSE_ALTER
 
+	CMS_HOOK_MENU_SYSTEM_ALTER
+
 	CMS_RECENT_CHANGES_HOOK
 
 	WDOCS_MODULE_HELPER
@@ -261,6 +263,15 @@ feature -- Hooks
 	response_alter (a_response: CMS_RESPONSE)
 		do
 			a_response.add_javascript_url (a_response.url ("/module/" + name + "/files/js/wdocs.js", Void))
+		end
+
+	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
+			-- Hook execution on collection of menu contained by `a_menu_system'
+			-- for related response `a_response'.
+		do
+			if a_response.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
+				a_menu_system.management_menu.extend (create {CMS_LOCAL_LINK}.make ("Clear Doc cache", "admin/module/" + name + "/clear-cache?destination=" + percent_encoder.percent_encoded_string (a_response.location)))
+			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]

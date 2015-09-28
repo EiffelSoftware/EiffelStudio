@@ -73,7 +73,11 @@ feature -- Access: cache system
 		do
 			p := temp_dir.extended ("cache").extended (a_version_id)
 			if a_book_name /= Void then
-				p := p.extended (a_book_name)
+				if a_book_name.is_empty then
+					p := p.extended ("_none_")
+				else
+					p := p.extended (a_book_name)
+				end
 			end
 			create d.make_with_path (p)
 			if not d.exists then
@@ -99,7 +103,11 @@ feature -- Access: cache system
 			p := p.appended (a_version_id)
 			p := p.appended ("_")
 			if a_book_name /= Void then
-				p := p.appended (a_book_name)
+				if a_book_name.is_empty then
+					p := p.appended ("_none_")
+				else
+					p := p.appended (a_book_name)
+				end
 			else
 				p := p.appended ("all")
 			end

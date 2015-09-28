@@ -907,7 +907,7 @@ code, eiffel {
 	white-space: pre-wrap;
 
 	border: solid 1px #ccc;
-	background-color: #FFFFD8;
+	background-color: #fff;
 	line-height: 1.3;
 	padding: 10px;
 	margin: 2px 0 2px 0;
@@ -917,6 +917,19 @@ code, eiffel {
 		display: inline-block;
 		padding: 0 2px 0 2px;
 		margin: 0;
+	}
+	.typ {
+		color: #00f;
+	}
+	.atg {
+		color: #000;
+	}
+	.fcl {
+		font-style: normal;
+		color: #000;
+	}
+	.com {
+		font-style: italic;
 	}
 }
 

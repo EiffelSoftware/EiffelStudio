@@ -1,0 +1,66 @@
+{
+  "_links": {
+    "self": { "href": "/orders" },
+    "next": { "href": "/orders?page=2" },
+    "search": { "href": "/orders?id={order_id}" }
+  },
+  "_embedded": {
+    "order": [
+      {
+        "_links": {
+          "self": { "href": "/orders/123" },
+          "customer": { "href": "/customer/bob", "title": "Bob Jones <bob@jones.com>" }
+        },
+        "total": 30.00,
+        "currency": "USD",
+        "status": "shipped",
+        "placed": "2011-01-16",
+        "_embedded": {
+          "basket": {
+            "_links": {
+              "self": { "href": "/orders/123/basket" }
+            },
+            "items": [
+              {
+                "sku": "ABC123",
+                "quantity": 2,
+                "price": 9.50
+              },{
+                "sku": "GFZ111",
+                "quantity": 1,
+                "price": 11
+              }
+            ]
+          }
+        }
+      },{
+        "_links": {
+          "self": { "href": "/orders/124" },
+          "customer": { "href": "/customer/jen", "title": "Jen Harris <jen@internet.com>" }
+        },
+        "total": 20.00,
+        "currency": "USD",
+        "status": "processing",
+        "placed": "2011-01-16",
+        "_embedded": {
+          "basket": {
+            "_links": {
+              "self": { "href": "/orders/124/basket" }
+            },
+            "items": [
+              {
+                "sku": "KLM222",
+                "quantity": 1,
+                "price": 9.00
+              },{
+                "sku": "HHI50",
+                "quantity": 1,
+                "price": 11.00
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

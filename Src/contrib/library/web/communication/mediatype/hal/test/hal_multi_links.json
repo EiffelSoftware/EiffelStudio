@@ -1,0 +1,11 @@
+{
+  "_links": {
+    "self": { "href": "/product/987" },
+    "upsell": [
+      { "href": "/product/452", "title": "Flower pot" },
+      { "href": "/product/832", "title": "Hover donkey" }
+    ]
+  },
+  "name": "A product",
+  "weight": 400
+}

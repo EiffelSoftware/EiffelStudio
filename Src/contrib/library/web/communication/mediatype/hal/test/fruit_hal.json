@@ -1,0 +1,11 @@
+{"location":"desk",
+ "_embedded":{
+  "fruits":[
+   {"title":"Apple",
+    "colors":[],
+    "_links":{"self":{"href":"http://fruits/apple"}}
+  }]  
+ "_links":{
+  "self":  {"href":"http://bowls/desk"},
+  "fruits":{"href":"http://bowls/desk/fruits"}}
+}

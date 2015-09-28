@@ -1,0 +1,44 @@
+{
+  "_links": {
+    "self": { "href": "orders" },
+    "next": { "href": "orders?page=2" },
+    "find": { "href": "orders{?id}", "templated": true },
+    "admin": [
+      { "href": "admins/2", "title": "Fred" },
+      { "href": "admins/5", "title": "Kate" }
+    ],
+    "curies" : [
+      { "name": "api-root", "href": "https://api.example.org/{?href}", "templated": true},
+      { "name": "file-api-root", "href": "https://pool-2.static.example.org/file/{?href}", "templated": true }
+    ]
+  },
+  "currentlyProcessing": 14,
+  "shippedToday": 20,
+  "_embedded": {
+   "orders": [{
+       "_links": {
+         "curies": [
+           { "name": "file-api-root", "href": "https://pool-99.static.example.org/file/{?href}", "templated": true }
+         ],
+         "api-root:self": { "href": "orders/123" },
+         "api-root:basket": { "href": "baskets/98712" },
+         "api-root:customer": { "href": "customers/7809" },
+         "file-api-root:sellHistoryChartImage": { "href": "chart/20130314-123.png" },
+         "trackAndTrace": { "href": "https://shippingcompany.com/track/2374981" }
+       },
+       "total": 30.00,
+       "currency": "USD",
+       "status": "shipped"
+     },{
+       "_links": {
+         "api-root:self": { "href": "orders/124" },
+         "api-root:basket": { "href": "baskets/97213" },
+         "api-root:customer": { "href": "customers/12369" },
+         "file-api-root:sellHistoryChartImage": { "href": "chart/20130314-124.png"}
+       },
+       "total": 20.00,
+       "currency": "USD",
+       "status": "processing"
+    }]
+  }
+}

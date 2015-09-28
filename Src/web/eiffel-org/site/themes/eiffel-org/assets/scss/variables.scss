@@ -1,8 +1,3 @@
-$ninesixty-class-separator: "_" !default;
-$ninesixty-columns: 12 !default;
-// Fixed grid variables
-$ninesixty-grid-width: 1020px !default;
-$ninesixty-gutter-width: 20px !default;
 $base-text-color: #000000;
 $base-background-color: #f0f3f5;
 $base-link-color: #5082D9;
@@ -39,3 +34,9 @@ $green-lt: #1da699;
 $yellow-lt: #c7ec7e;
 $blue: #1f3d4d;
 $blue-light: #4c6877;
+
+$ninesixty-class-separator: "_" !default;
+$ninesixty-columns: 12 !default;
+// Fixed grid variables
+$ninesixty-grid-width: $base-min-width !default;
+$ninesixty-gutter-width: 20px !default;

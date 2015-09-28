@@ -72,6 +72,7 @@ feature -- Execution
 			mng: WDOCS_MANAGER
 			l_bookid: detachable READABLE_STRING_GENERAL
 			l_text: STRING
+			l_preview: BOOLEAN
 		do
 			create b.make_empty
 			if attached wiki_page_info_from_request as pg_info then
@@ -113,10 +114,20 @@ feature -- Execution
 						f.submit_actions.extend (agent edit_form_submit (?, mng, pg, l_bookid, b))
 						f.process (Current)
 						fd := f.last_data
-						if pg /= Void then
-							set_redirection (mng.wiki_page_uri_path (pg, l_bookid, mng.version_id))
+
+						if fd /= Void and then fd.is_valid then
+							l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string ("Preview")
+							if l_preview then
+								f.append_to_html (wsf_theme, b)
+							else
+								if pg /= Void then
+									set_redirection (mng.wiki_page_uri_path (pg, l_bookid, mng.version_id))
+								else
+									set_redirection (view_location)
+								end
+							end
 						else
-							set_redirection (view_location)
+							f.append_to_html (wsf_theme, b)
 						end
 					end
 				else
@@ -423,7 +434,7 @@ feature -- Form
 			f.extend (f_link_title)
 
 			create tf.make ("source")
-			tf.set_cols (100)
+			tf.set_cols (90)
 			tf.set_rows (25)
 			tf.set_description ("[
 				<p>

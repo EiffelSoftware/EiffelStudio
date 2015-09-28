@@ -171,9 +171,6 @@
 		border-top: solid 1px #999;
 		color: $wdocs-nav-color;
 		background-color: $wdocs-nav-bg-color;
-		a.wdocs-folder:after {
-			content: " ...";
-		}
 	}
 
 	.cache-info, .uuid {

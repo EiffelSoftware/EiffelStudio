@@ -113,6 +113,11 @@ feature -- Execution
 						f.submit_actions.extend (agent edit_form_submit (?, mng, pg, l_bookid, b))
 						f.process (Current)
 						fd := f.last_data
+						if pg /= Void then
+							set_redirection (mng.wiki_page_uri_path (pg, l_bookid, mng.version_id))
+						else
+							set_redirection (view_location)
+						end
 					end
 				else
 					f.append_to_html (wsf_theme, b)
@@ -177,6 +182,7 @@ feature -- Execution
 								b.append (link ("parent page", view_location, Void))
 								b.append (".</p>")
 							end
+							set_redirection (mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id))
 						else
 							f.append_to_html (wsf_theme, b)
 						end
@@ -253,6 +259,7 @@ feature -- Form
 			s: STRING
 			e: CMS_EMAIL
 			fn: STRING_32
+			ctx: WDOCS_CHANGE_CONTEXT
 		do
 			l_preview := attached {WSF_STRING} fd.item ("op") as l_op and then l_op.same_string (translation ("Preview", Void))
 			if not l_preview then
@@ -328,7 +335,10 @@ feature -- Form
 							end
 						end
 						l_page.update_from_metadata
-						wdocs_api.save_wiki_page (l_page, l_source_value, l_path, a_bookid, a_manager)
+						create ctx
+						ctx.set_user (user)
+						ctx.set_log ({STRING_32} "Update wikipage " + l_page.title + ".")
+						wdocs_api.save_wiki_page (l_page, l_source_value, l_path, a_bookid, a_manager, ctx)
 						if wdocs_api.has_error then
 							fd.report_error ("Error: could not save wiki page!")
 							add_error_message ("Error: could not save wiki page!")
@@ -388,6 +398,7 @@ feature -- Form
 			else
 				create f_title.make_with_text ("title", "")
 			end
+			f_title.set_size (40)
 			f_title.set_validation_action (agent (fd: WSF_FORM_DATA)
 					do
 						if

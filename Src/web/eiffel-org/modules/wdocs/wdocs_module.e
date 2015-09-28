@@ -433,12 +433,24 @@ feature -- Hook / Recent changes
 							if attached ic.item.log as l_log then
 								i.set_information (l_log)
 									-- Looking for real author "Signed-off-by: Super Developer <super.dev@gmail.com>"
-								pos := l_log.substring_index ("%NSigned-off-by:", 1)
+								pos_eol := 0
+								pos := l_log.substring_index ("(Signed-off-by:", 1)
 								if pos > 0 then
-									pos_eol := l_log.index_of ('%N', pos + 14)
+									pos_eol := l_log.index_of (')', pos + 14)
 									if pos_eol = 0 then
-										pos_eol := l_log.count
+										pos := 0
 									end
+								end
+								if pos = 0 then
+									pos := l_log.substring_index ("%NSigned-off-by:", 1)
+									if pos > 0 then
+										pos_eol := l_log.index_of ('%N', pos + 14)
+										if pos_eol = 0 then
+											pos_eol := l_log.count + 1
+										end
+									end
+								end
+								if pos > 0 then
 									s := l_log.substring (pos + 15, pos_eol - 1)
 									s.right_adjust
 									s.left_adjust

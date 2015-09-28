@@ -31,11 +31,12 @@ feature {NONE} -- Initialization
 			default_version_id := a_default_version_id
 			temp_dir := a_cfg.temp_dir
 			documentation_dir := a_cfg.documentation_dir
---			configuration := a_cfg
+			configuration := a_cfg
 			make_with_cms_api (a_api)
 		end
 
---	configuration: WDOCS_CONFIG
+	configuration: WDOCS_CONFIG
+			-- Associated configuration.
 
 	name: STRING = "wdocs"
 
@@ -199,14 +200,7 @@ feature -- Recent changes
 
 --			create opts
 
-			create {SVN_ENGINE} svn
-			if attached cms_api.setup.text_item ("tools.subversion.location") as l_svn_loc then
-				create {SVN_ENGINE} svn.make_with_executable_path (l_svn_loc)
-			elseif {PLATFORM}.is_unix then
-				create {SVN_ENGINE} svn.make_with_executable_path ("/usr/bin/svn")
-			else
-				create {SVN_ENGINE} svn
-			end
+			svn := new_svn
 			if a_version_id = Void then
 				loc := documentation_dir.extended (default_version_id)
 			else
@@ -241,24 +235,22 @@ feature -- Recent changes
 						if not s.is_empty and then s.item (1) = '/' then
 							s.remove_head (1)
 						end
-						wp := Void
-						wbookid := Void
-						mnger := manager (a_version_id)
-						if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
-							wp := l_wb_and_wp.page
-							wbookid := l_wb_and_wp.bookid
-						end
---						if wp = Void then
---							wp := new_wiki_page (s, "recent_changes")
---							wp.set_path (loc.extended (s))
---						end
-						if wbookid /= Void and wp /= Void then
-							wp.update_from_metadata
-							wp.set_src (mnger.wiki_page_uri_path (wp, wbookid, a_version_id))
-							wp.set_src (wp.src.substring (2, wp.src.count))
-							Result.force ([dt, l_info.author, wbookid, wp, utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)])
-						else
-								-- FIXME: Either not a doc item, or issue. To handle.
+						if not s.is_empty then
+							wp := Void
+							wbookid := Void
+							mnger := manager (a_version_id)
+							if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
+								wp := l_wb_and_wp.page
+								wbookid := l_wb_and_wp.bookid
+							end
+							if wbookid /= Void and wp /= Void then
+								wp.update_from_metadata
+								wp.set_src (mnger.wiki_page_uri_path (wp, wbookid, a_version_id))
+								wp.set_src (wp.src.substring (2, wp.src.count))
+								Result.force ([dt, l_info.author, wbookid, wp, utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)])
+							else
+									-- FIXME: Either not a doc item, or issue. To handle.
+							end
 						end
 					end
 				end
@@ -330,7 +322,7 @@ feature -- Factory
 			Result := manager (Void).new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), a_parent_key)
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER)
+	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH
@@ -390,12 +382,23 @@ feature -- Factory
 							end
 						end
 					end
-
-					save_content_to_file (txt, p)
+					if (create {FILE_UTILITIES}).file_path_exists (p) then
+						save_content_to_file (txt, p)
+					else
+						save_content_to_file (txt, p)
+						svn_add (p)
+					end
+					if a_context /= Void then
+						svn_commit (p, a_context.username, a_context.log)
+					else
+						svn_commit (p, Void, Void)
+					end
 					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
 					if not has_error then
 						a_manager.refresh_page_data (a_book_id, a_page)
+						svn_update (documentation_dir.extended (a_manager.version_id))
 						cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, a_page).delete
+						cache_for_book_cms_menu (a_manager.version_id, a_book_id).delete
 						if
 							attached a_manager.book (a_book_id) as wb and then
 							attached wb.page_by_key (a_page.parent_key) as l_parent_page
@@ -481,5 +484,72 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Subversion helpers	
+
+	svn_update (p: PATH)
+		local
+			svn: SVN
+			opts: detachable SVN_OPTIONS
+		do
+			svn := new_svn
+			if attached svn.update (p, Void, opts) as res then
+				-- FIXME: handle error
+			end
+		end
+
+	svn_add (p: PATH)
+		local
+			svn: SVN
+			opts: detachable SVN_OPTIONS
+		do
+			svn := new_svn
+			if attached svn.add (p, opts) as res then
+				-- FIXME: handle error
+			end
+		end
+
+	svn_commit (p: PATH; a_username: detachable READABLE_STRING_32; a_log: detachable READABLE_STRING_32)
+		local
+			svn: SVN
+			opts: detachable SVN_OPTIONS
+			s: STRING
+			utf: UTF_CONVERTER
+		do
+			svn := new_svn
+			if
+				attached cms_api.setup.text_item ("tools.subversion.username") as l_svn_username and
+				attached cms_api.setup.text_item ("tools.subversion.password") as l_svn_password
+			then
+				create opts
+				opts.set_username (l_svn_username)
+				opts.set_password (l_svn_password)
+			end
+			if a_log /= Void then
+				s := utf.utf_32_string_to_utf_8_string_8 (a_log)
+			else
+				s := "Updated wikidocs."
+			end
+			if a_username /= Void then
+				s.append_character ('%T')
+				s.append ("(Signed-off-by:")
+				s.append (utf.utf_32_string_to_utf_8_string_8 (a_username))
+				s.append (").")
+			end
+			if attached svn.commit (p, s, opts) as res then
+				-- FIXME: handle error
+			end
+		end
+
+	new_svn: SVN
+		do
+			if attached cms_api.setup.text_item ("tools.subversion.location") as l_svn_loc then
+				create {SVN_ENGINE} Result.make_with_executable_path (l_svn_loc)
+			elseif {PLATFORM}.is_unix then
+				create {SVN_ENGINE} Result.make_with_executable_path ("/usr/bin/svn")
+			else
+				create {SVN_ENGINE} Result
+			end
+		end
 
 end
+

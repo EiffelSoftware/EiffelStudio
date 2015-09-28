@@ -119,14 +119,12 @@ feature -- Router
 		local
 			h: WSF_URI_TEMPLATE_AGENT_HANDLER
 		do
-			create h.make (agent handle_documentation (a_api, ?, ?))
-			a_router.handle ("/documentation", h, a_router.methods_get)
-
 			create h.make (agent handle_wikipage_by_uuid (a_api, ?, ?))
 			a_router.handle ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/uuid/{wikipage_uuid}", h, a_router.methods_get)
 
 			create h.make (agent handle_documentation (a_api, ?, ?))
+			a_router.handle ("/documentation", h, a_router.methods_get)
 			a_router.handle ("/doc/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/{bookid}", h, a_router.methods_get)
@@ -800,13 +798,13 @@ feature -- Handler
 				create b.make_empty
 				wp := mnger.index_page
 				if wp /= Void then
-					append_wiki_page_xhtml_to (wp, Void, Void, mnger, b, req)
+					send_wikipage (wp, mnger, "", api, req, res)
+				else
+					r.set_value ("doc", "optional_content_type")
+					r.set_title (Void) --"Documentation")
+					r.set_main_content (b)
+					r.execute
 				end
-
-				r.set_value ("doc", "optional_content_type")
-				r.set_title (Void) --"Documentation")
-				r.set_main_content (b)
-				r.execute
 			end
 		end
 

@@ -375,8 +375,6 @@ feature -- Access: working copy
 				end
 				create Result.make_success
 			end
-
-			Result.set_message ("Not Yet Implemented")
 		end
 
 feature -- Access: svn		

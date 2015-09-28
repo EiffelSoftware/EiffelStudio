@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- Initialize service.
 		do
 			admin_email := parameters.admin_email
-
 			create {NOTIFICATION_SMTP_MAILER} mailer.make (parameters.smtp_server)
 			set_successful
 		end

@@ -86,13 +86,19 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			f: FILE
+			l_chain: NOTIFICATION_CHAIN_MAILER
+			l_storage_mailer: NOTIFICATION_STORAGE_MAILER
+			l_mailer: detachable NOTIFICATION_MAILER
 		do
 			if not retried then
 				if attached text_item ("mailer.smtp") as l_smtp then
-					create {NOTIFICATION_SMTP_MAILER} mailer.make (l_smtp)
+					create {NOTIFICATION_SMTP_MAILER} l_mailer.make (l_smtp)
 				elseif attached text_item ("mailer.sendmail") as l_sendmail then
-					create {NOTIFICATION_SENDMAIL_MAILER} mailer.make_with_location (l_sendmail)
-				elseif attached text_item ("mailer.output") as l_output then
+					create {NOTIFICATION_SENDMAIL_MAILER} l_mailer.make_with_location (l_sendmail)
+				end
+					-- If a mailer.ouput is set, set a notification chain with potential previous mailer
+					-- and file storage.
+				if attached text_item ("mailer.output") as l_output then
 					if l_output.is_case_insensitive_equal ("@stderr") then
 						f := io.error
 					elseif l_output.is_case_insensitive_equal ("@stdout") then
@@ -104,10 +110,18 @@ feature -- Access
 							f.close
 						end
 					end
-					create {NOTIFICATION_STORAGE_MAILER} mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
-				else
-					create {NOTIFICATION_STORAGE_MAILER} mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.error))
+					create {NOTIFICATION_STORAGE_MAILER} l_storage_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (f))
+					if l_mailer /= Void then
+						create l_chain.make (l_mailer)
+						l_chain.set_next (l_storage_mailer)
+						l_mailer := l_chain
+					else
+						l_mailer := l_storage_mailer
+					end
+				elseif l_mailer = Void then
+					create {NOTIFICATION_STORAGE_MAILER} l_mailer.make (create {NOTIFICATION_EMAIL_FILE_STORAGE}.make (io.error))
 				end
+				mailer := l_mailer
 			else
 				check valid_mailer: False end
 					-- FIXME: should we report persistent error message? If yes, see how.

@@ -20,9 +20,10 @@ feature -- Generation
 
 	custom_prepare (page: CMS_HTML_PAGE)
 		do
+			set_status_code ({HTTP_STATUS_CODE}.forbidden)
 			page.register_variable (absolute_url (request.percent_encoded_path_info, Void), "request")
-			page.set_status_code ({HTTP_STATUS_CODE}.forbidden)
-			page.register_variable (page.status_code.out, "code")
+			page.set_status_code (status_code)
+			page.register_variable (status_code.out, "code")
 		end
 
 feature -- Execution

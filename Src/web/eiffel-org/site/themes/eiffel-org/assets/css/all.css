@@ -561,6 +561,10 @@ table {
   overflow: auto;
 }
 
+#wdocs_edit textarea {
+  width: 98%;
+}
+
 body {
   margin: 0;
   color: #000000;

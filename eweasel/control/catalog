@@ -1450,13 +1450,13 @@ test	scoop-named-tuple-execution			scoop061 tcf pass scoop multithreaded tuple a
 test	scoop-generating-type-deadlock		scoop062 tcf manual scoop multithreaded
 test	scoop-conformance				scoop063 tcf pass scoop multithreaded generic conformance object_test execution
 test	scoop-agent-with-reference-argument		scoop064 tcf manual scoop multithreaded agent execution
-test	scoop-impersonation-tests				scoop065 tcf manual scoop multithreaded execution
+test	scoop-impersonation-tests				scoop065 tcf pass scoop multithreaded execution
 test	scoop-passive-processors			scoop066 tcf pass scoop multithreaded
 test	scoop-passive-processor-exception		scoop067 tcf pass scoop multithreaded exception
 test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
 test	scoop-generic-argument-check			scoop069 tcf fail scoop multithreaded validity
 test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execution
-test	scoop-once-value-adoption				scoop071 tcf manual scoop multithreaded execution
+test	scoop-once-value-adoption				scoop071 tcf fail scoop multithreaded execution
 test	scoop-asynchronous-expanded				scoop072 tcf pass scoop multithreaded execution
 test	scoop-locking-expanded-argument			scoop073 tcf pass scoop multithreaded execution
 test	scoop-controlled-object-test			scoop074 tcf pass scoop multithreaded object_test validity execution

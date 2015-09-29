@@ -229,6 +229,10 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		call->is_synchronous = EIF_TRUE;
 		will_sync = EIF_TRUE;
 
+			/* NOTE: What happens if the target region is impersonated by another processor?
+			 * This cannot happen. Separate callbacks are _always_ impersonated, and the only case when
+			 * this piece of code can be executed is during a separate callback to a region that is marked as
+			 * non-impersonable. In that case, the 'result_notify_proxy' is the correct one. */
 		rt_message_channel_send (self->supplier->result_notify_proxy, SCOOP_MESSAGE_CALLBACK, client, call, NULL);
 
 	} else {
@@ -264,7 +268,8 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 				 * further calls, in which case saved_result should be NULL. */
 			rt_macro_set_saved_result (self, NULL);
 
-				/* Execute the separate callback on this thread (i.e. the one behind 'client'). */
+				/* Execute the separate callback on this thread (i.e. the one behind 'client').
+				 * TODO: We have to impersonate the target region here in certain cases.*/
 			rt_processor_execute_call (client, l_message->sender_processor, l_message->call);
 			l_message->call = NULL;
 

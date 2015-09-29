@@ -219,7 +219,14 @@ feature -- Hooks configuration
 					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", loc + "/source"))
 				end
 				if l_wdocs_response.has_permission ("create wdocs page") then
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", loc + "/add-child"))
+					if l_wdocs_response.book_name.is_empty then
+							-- FIXME: add a link to create new book!
+--						if l_wdocs_response.has_permission ("create wdocs book") then
+--							a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Create Book", loc + "/add-child"))
+--						end
+					else
+						a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", loc + "/add-child"))
+					end
 				end
 			end
 		end

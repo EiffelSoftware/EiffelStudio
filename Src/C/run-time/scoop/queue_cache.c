@@ -338,34 +338,34 @@ rt_shared int rt_queue_cache_push (struct queue_cache* self, struct queue_cache*
 doc:	<routine name="rt_queue_cache_pop" return_type="void" export="shared">
 doc:		<summary> Return all locks that were received during the last rt_queue_cache_push() operation. </summary>
 doc:		<param name="self" type="struct queue_cache*"> The queue cache that has the locks. Must not be NULL. </param>
+doc:		<param name="origin" type="struct queue_cache*"> The queue cache that originally passed the locks. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_queue_cache_pop (struct queue_cache* self)
+rt_shared void rt_queue_cache_pop (struct queue_cache* self, struct queue_cache* origin)
 {
 	struct rt_vector_queue_cache *l_lock_stack = NULL;
-	struct queue_cache* origin = NULL;
 
-	REQUIRE ("not_null", self);
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("origin_not_null", origin);
+	REQUIRE ("not_equal", self != origin);
 	REQUIRE ("invariant_on_self", invariant (self));
+	REQUIRE ("basic_inv_on_origin", basic_invariant (origin));
 	REQUIRE ("lock_stack_not_empty", rt_vector_queue_cache_count (self->lock_stack) > 1);
 
 	l_lock_stack = self->lock_stack;
 
-
 		/* Retrieve the queue cache that initially passed the locks.
 		 * Since the push/pop operations have to be balanced,
-		 * 'self' should be on top of the stack, followed by the
-		 * region where we initially got the locks from. */
+		 * 'self' should be on top of the stack.
+		 * The 'origin' cache may not be the second-last however, because
+		 * there could be a number of impersonated push operations in between. */
 	CHECK ("self_is_last", rt_vector_queue_cache_last (l_lock_stack) == self);
 
 	rt_vector_queue_cache_remove_last (l_lock_stack);
-	origin = rt_vector_queue_cache_last (l_lock_stack);
 
-	CHECK ("not_equal", origin != self);
-	CHECK ("basic_inv_on_origin", basic_invariant (origin));
-		/* lock_stack_status == 1 implies that 'origin' was the first to push away the locks. */
+		/* lock_stack_status == 1 implies that 'origin' was the first to push away the locks (in a non-impersonated push). */
 	CHECK ("balanced", self->lock_stack_status != 1 || l_lock_stack == &origin->storage);
 
 		/* Re-establish the invariant in 'origin'. */
@@ -466,7 +466,7 @@ rt_shared EIF_BOOLEAN rt_queue_cache_has_locks_of (struct queue_cache* self, str
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("supplier_not_null", supplier);
 	REQUIRE ("invariant_on_self", invariant (self));
-	REQUIRE ("not_equal", supplier != self->owner);
+	REQUIRE ("different_regions", supplier != rt_vector_queue_cache_last (self->lock_stack)->owner);
 
 		/* Get the lock stack in 'self'. */
 	l_lock_stack = self->lock_stack;

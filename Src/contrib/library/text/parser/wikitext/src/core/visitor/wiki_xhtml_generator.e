@@ -47,7 +47,7 @@ feature -- Settings
 			-- Is `s' an alias of "<code>" ?
 		do
 			Result := across code_aliases as ic some ic.item.is_case_insensitive_equal (s) end
-		end		
+		end
 
 feature -- Callback
 
@@ -321,8 +321,11 @@ feature -- Processing
 
 	visit_paragraph (a_paragraph: WIKI_PARAGRAPH)
 		do
---			output("%N")
-			visit_composite (a_paragraph)
+			if a_paragraph.count > 0 then
+				output ("<p>")
+				visit_composite (a_paragraph)
+				output ("</p>%N")
+			end
 		end
 
 	visit_list (a_list: WIKI_LIST)
@@ -440,10 +443,10 @@ feature -- Processing
 			else
 				if a_line.is_empty then -- FIXME: or is_whitespace ??
 					output ("")
-					set_next_output_require_newline
+--					set_next_output_require_newline
 				else
 					a_line.text.process (Current)
-					set_next_output_require_newline
+--					set_next_output_require_newline
 				end
 			end
 		end

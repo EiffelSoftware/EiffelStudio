@@ -91,8 +91,27 @@ Any existing breakpoint can be referenced by an implicit tag with the form: ''"'
 			l_expected_output := "[
 
 <a name="test"></a><h1>test</h1>
-<div>toto</div><br/>
-end
+<p><div>toto</div>end</p>
+
+]"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_paragraph
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("This is a first line.%NThen the second line.%N%NNext paragraph, line 1.%Nline 2.%Nend.")
+			l_expected_output := "[
+<p>This is a first line.Then the second line.</p>
+<p>Next paragraph, line 1.line 2.end.</p>
+
 ]"
 
 			create o.make_empty
@@ -117,10 +136,11 @@ end
 			l_expected_output := "[
 
 <a name="test"></a><h2>test</h2>
-Template#seealso
+<p>Template#seealso
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>, <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 2={{{2}}} 
 3={{{3}}}
+</p>
 
 <a name="end"></a><h2>end</h2>
 
@@ -148,10 +168,11 @@ Template#seealso
 			l_expected_output := "[
 
 <a name="test"></a><h2>test</h2>
-Template#seealso
+<p>Template#seealso
 1= <a href="Breakpoint commands" class="wiki_link wiki_notfound">Breakpoint commands</a>  
 2= <a href="Breakpoint information command" class="wiki_link wiki_notfound">Breakpoint information command</a>  
 3={{{3}}}
+</p>
 
 <a name="end"></a><h2>end</h2>
 
@@ -178,9 +199,10 @@ Template#seealso
 			l_expected_output := "[
 
 <a name="test"></a><h2>test</h2>
-Template#Rule
+<p>Template#Rule
 name=foo
 text=bar
+</p>
 
 <a name="end"></a><h2>end</h2>
 

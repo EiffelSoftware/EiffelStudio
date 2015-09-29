@@ -335,7 +335,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 
 			if (l_is_synchronous) {
 					/* Return the previously acquired locks. */
-				rt_queue_cache_pop (&self->cache);
+				rt_queue_cache_pop (&self->cache, &client->cache);
 			}
 		}
 	}

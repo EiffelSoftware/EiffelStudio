@@ -987,7 +987,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 
 	send_wikipage (pg: attached like {WDOCS_MANAGER}.page;
 					a_manager: WDOCS_MANAGER;
-					a_bookid: detachable READABLE_STRING_GENERAL;
+					a_bookid: READABLE_STRING_GENERAL;
 					api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			pgr: WDOCS_PAGE_CMS_RESPONSE
@@ -1000,10 +1000,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 			end
 
 			if req.is_get_request_method then
-				create pgr.make (req, res, api)
-				pgr.set_page (pg)
-				pgr.set_book_name (a_bookid)
-				pgr.set_version_id (a_manager.version_id)
+				create pgr.make_with_page (a_bookid, pg, a_manager.version_id, req, res, api)
 				r := pgr
 			else
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)

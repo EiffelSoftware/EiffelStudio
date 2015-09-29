@@ -135,17 +135,24 @@ feature -- Execution
 				end
 			elseif
 				location.ends_with_general ("/add-child") and then
-				has_permission ("create wdocs page")
+				has_permission ("create wdocs page") and then
+				l_bookid /= Void and then not l_bookid.is_empty -- FIXME: remove and handle the new Book creation.
 			then
-				if pg /= Void then
-					set_title (formatted_string (translation ("Add child to doc page %"$1%"", Void), [pg.title]))
-				else
-					set_title (translation ("New doc page", Void))
-				end
+--				if l_bookid = Void or else l_bookid.is_empty then
+--						-- Create new book
+--					set_title (translation ("Create Book", Void))
+--					pg := Void
+--				else
+					if pg /= Void then
+						set_title (formatted_string (translation ("Add child to doc page %"$1%"", Void), [pg.title]))
+					else
+						set_title (translation ("New doc page", Void))
+					end
+--				end
 				if pg /= Void then
 					new_pg := mng.new_wiki_child_page ("", pg)
 				else
-					if l_bookid /= Void then
+					if l_bookid /= Void and then not l_bookid.is_empty then
 						new_pg := mng.new_wiki_page ("", utf_8_string (l_bookid))
 					else
 						new_pg := mng.new_wiki_page ("", "")

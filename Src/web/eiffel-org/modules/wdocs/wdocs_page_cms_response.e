@@ -10,15 +10,16 @@ inherit
 	GENERIC_VIEW_CMS_RESPONSE
 
 create
-	make,
 	make_with_page
 
 feature {NONE} -- Initialization
 
-	make_with_page (pg: like page; req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api)
+	make_with_page (a_bookid: like book_name; pg: like page; a_version_id: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api)
 		do
 			make (req, res, a_api)
 			set_page (pg)
+			set_book_name (a_bookid)
+			set_version_id (a_version_id)
 		end
 
 feature -- Access
@@ -26,10 +27,10 @@ feature -- Access
 	page: like {WDOCS_MANAGER}.page
 			-- Associated page.
 
-	book_name: detachable READABLE_STRING_GENERAL
+	book_name: READABLE_STRING_GENERAL
 			-- Associated book name.
 
-	version_id: detachable READABLE_STRING_GENERAL
+	version_id: READABLE_STRING_GENERAL
 			-- Associated version id.
 
 feature -- Element change

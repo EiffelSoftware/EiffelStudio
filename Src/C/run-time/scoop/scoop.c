@@ -164,7 +164,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 		client->current_impersonated_call = NULL;
 
 			/* Revoke the locks. */
-		rt_queue_cache_pop (&supplier->cache);
+		rt_queue_cache_pop (&supplier->cache, &client->cache);
 	}
 
 		/* Restore the thread context. */
@@ -344,10 +344,10 @@ rt_public int eif_is_synced_on (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid
 	return (error == T_OK) && rt_private_queue_is_synchronized (pq);
 }
 
-int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
+rt_public int eif_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id)
 {
-	struct rt_processor *client = rt_get_processor (client_pid);
-	struct rt_processor *supplier = rt_get_processor (supplier_pid);
+ 	struct rt_processor *client_processor = rt_get_processor (client_processor_id);
+	struct rt_processor *supplier = rt_get_processor (supplier_region_id);
 
 	/*
 	 * An object is only uncontrolled when all of the following apply:
@@ -356,9 +356,9 @@ int eif_is_uncontrolled (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid)
 	 * - the supplier has not passed its locks to the client in a previous call (separate callbacks).
 	 */
 
-	return client != supplier
-		&& !rt_queue_cache_is_locked (&client->cache, supplier)
-		&& !rt_queue_cache_has_locks_of (&client->cache, supplier);
+	return client_region_id != supplier_region_id
+		&& !rt_queue_cache_is_locked (&client_processor->cache, supplier)
+		&& !rt_queue_cache_has_locks_of (&client_processor->cache, supplier);
 }
 
 /* Entry point for the root thread. */

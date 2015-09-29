@@ -1311,8 +1311,8 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_EIF_ACCESS(r) (r ? eif_scoop_access (r) : NULL) 
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
 
-
-#define RTS_OU(c,o) ((o) && eif_is_uncontrolled (RTS_PID (c), RTS_PID (o)))
+/* TODO: Again, there's a problem that RTS_SD is not emitted for separate creation procedures. */
+#define RTS_OU(c,o) ((o) && eif_is_uncontrolled (eif_globals->scoop_processor_id, eif_globals->scoop_region_id, RTS_PID (o)))
 
 #define EIF_SET_ACTIVE(o) ; /*  "SCOOP/Qs: set_active not implemented" o; */
 #define EIF_SET_PASSIVE(o) ; /*  "SCOOP/Qs: set_passive not implemented" o; */

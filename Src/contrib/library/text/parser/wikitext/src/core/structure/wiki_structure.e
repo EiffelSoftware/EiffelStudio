@@ -124,6 +124,7 @@ feature -- Basic operation
 			s: STRING
 			l_items: ARRAYED_STACK [TUPLE [pos: INTEGER; kind: STRING]]
 			l_tag: detachable READABLE_STRING_8
+			l_line: detachable READABLE_STRING_8
 		do
 			create l_items.make (0)
 			from
@@ -266,19 +267,25 @@ feature -- Basic operation
 						w_plist := Void
 						w_block := Void
 						is_start_of_line := True
-						create w_line.make (a_text.substring (b, l_eol))
-
-						if w_box = Void then
+						l_line := a_text.substring (b, l_eol)
+						if l_line.is_empty then
 							w_box := new_paragraph (w_psec)
-						end
-						add_element_to (w_box, w_line)
-						if mt_ln > 0 then
-							w_line.set_line_count (mt_ln)
-							mt_ln := 0
-							ln := ln + 1 + mt_ln
+--							add_element_to (w_box, w_line)
 						else
-							ln := ln + 1
+							create w_line.make (l_line)
+							if w_box = Void then
+								w_box := new_paragraph (w_psec)
+							end
+							add_element_to (w_box, w_line)
+							if mt_ln > 0 then
+								w_line.set_line_count (mt_ln)
+								mt_ln := 0
+								ln := ln + 1 + mt_ln
+							else
+								ln := ln + 1
+							end
 						end
+
 						b := i + 1
 					end
 				when '{' then

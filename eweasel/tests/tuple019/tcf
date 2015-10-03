@@ -1,0 +1,10 @@
+test_name	 tuple-field-non-conforming-assignment
+test_description An attempt to assign a non-conforming value to a tuple field should cause an error report.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VUAR(2)
+
+test_end

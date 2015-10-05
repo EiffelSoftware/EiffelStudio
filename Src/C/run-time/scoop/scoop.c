@@ -151,18 +151,14 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 	error = rt_queue_cache_push_on_impersonation (&client->cache, &supplier->cache);
 
 
-		/* Adjust the region ID */
-	eif_globals->scoop_region_id = supplier->pid;
-
-		/* TODO: Adopt the once values of the target region. */
+		/* Adjust the region ID and the once values of the target region.*/
+	eif_scoop_impersonate (eif_globals, supplier->pid);
 
 		/* Perform the call. */
 	rt_scoop_execute_call (call);
 
-		/* TODO: Adopt the once values of the current region. */
-
-		/* Revert the region ID. */
-	eif_globals->scoop_region_id = stored_pid;
+		/* Adopt the once values of the current region and revert the region ID. */
+	eif_scoop_impersonate (eif_globals, stored_pid);
 
 		/* Return the locks. */
 	rt_queue_cache_pop_on_impersonation (&client->cache, 1);
@@ -170,24 +166,6 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 		/* Free the call_data struct. TODO: There's a memory leak in case of an exception. */
 	free (call);
 }
-
-/* Before impersonation:
- * - Perform lock passing
- * - Adjust region ID
- * - TODO: Change once values
- * After impersonation
- * - Revert lock passing
- * - Adjust region ID
- * - TODO: Change once values
- * - Free call_data struct
- * On exception recovery
- * - Restore the lock stack
- * - Restore request group stack
- * - Adjust region ID
- * - TODO: Restore once values
- * On separate callback
- * - TODO: If RTS_PID(target) != region_id, impersonate region
-*/
 
 /*
 doc:	<routine name="rt_scoop_is_impersonation_allowed" return_type="void" export="private">
@@ -273,6 +251,32 @@ rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client
 		rt_private_queue_log_call(pq, client, data);
 	}
 }
+
+/*
+doc:	<routine name="eif_scoop_impersonate" return_type="void" export="public">
+doc:		<summary> Let the current processor adopt the region ID and once values of 'region_id'. </summary>
+doc:		<param name="eif_globals" type="eif_global_context_t*"> The global context to be modified. The context is the same as in EIF_GET_CONTEXT
+doc:			of the caller; the argument is just used to avoid a lookup of thread-local storage. </param>
+doc:		<param name="region_id" type="EIF_SCP_PID"> The region that shall be impersonated. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call this function when the current thread has exclusive access over 'region_id'. </synchronization>
+doc:	</routine>
+*/
+rt_public void eif_scoop_impersonate (eif_global_context_t* eif_globals, EIF_SCP_PID region_id)
+{
+	struct rt_processor* target_region = rt_get_processor (region_id);
+
+	CHECK ("same_pid", target_region->pid == region_id);
+
+	eif_globals->scoop_region_id = region_id;
+	eif_globals->EIF_once_values_cx = target_region->stored_once_values;
+	eif_globals->EIF_oms_cx = target_region->stored_oms_values;
+
+#ifdef EIF_WINDOWS
+	eif_globals->wel_per_thread_data = target_region->stored_wel_per_thread_data;
+#endif
+}
+
 
 rt_public void eif_call_const (call_data * a)
 {

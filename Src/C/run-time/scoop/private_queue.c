@@ -262,6 +262,9 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 		while (l_message->message_type == SCOOP_MESSAGE_CALLBACK) {
 				/* A separate callback arrived. We need to execute it right away
 				 * and send back our result to the supplier. */
+			EIF_GET_CONTEXT
+			EIF_SCP_PID current_region = eif_globals->scoop_region_id;
+			EIF_SCP_PID target_region = RTS_PID (l_message->call->target);
 
 				/* Clear the saved_result. The supplier won't set the value
 				 * while the client executes a callback, but the client may log
@@ -269,8 +272,18 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 			rt_macro_set_saved_result (self, NULL);
 
 				/* Execute the separate callback on this thread (i.e. the one behind 'client').
-				 * TODO: We have to impersonate the target region here in certain cases.*/
+				 * We may have to impersonate the target region here.*/
+			if (current_region != target_region) {
+				eif_scoop_impersonate (eif_globals, target_region);
+			}
+
 			rt_processor_execute_call (client, l_message->sender_processor, l_message->call);
+
+			if (current_region != target_region) {
+				eif_scoop_impersonate (eif_globals, current_region);
+			}
+
+				/* Set the call data struct to NULL to avoid unnecessary GC marking. */
 			l_message->call = NULL;
 
 				/* During the next receive we may get the answer to our query,

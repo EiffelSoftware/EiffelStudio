@@ -41,6 +41,7 @@ doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summ
 
 #include "rt_scoop_helpers.h"
 #include "rt_processor_registry.h"
+#include "rt_processor.h"
 
 #include "eif_interp.h"
 #include "rt_wbench.h"
@@ -243,9 +244,17 @@ doc:	</routine>
 rt_shared void rt_set_processor_id (EIF_SCP_PID pid)
 {
 	RT_GET_CONTEXT
+	struct rt_processor* proc = rt_get_processor (pid);
+
 	rt_thr_context * c = rt_globals->eif_thr_context_cx;
 	c -> logical_id = pid;
 	c -> is_processor = EIF_TRUE;
+
+	proc->stored_once_values = rt_globals->eif_globals->EIF_once_values_cx;
+	proc->stored_oms_values = rt_globals->eif_globals->EIF_oms_cx;
+#ifdef EIF_WINDOWS
+	proc->stored_wel_per_thread_data = rt_globals->eif_globals->wel_per_thread_data;
+#endif
 }
 
 /*

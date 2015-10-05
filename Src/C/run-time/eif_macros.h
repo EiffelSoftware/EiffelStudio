@@ -1383,7 +1383,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_SRF(p) RTS_RF (p); RTS_RD(p);
 #define RTS_SRD(p) RTS_RD (p);
 #define RTS_SRR \
-	eif_globals->scoop_region_id = l_scoop_region_id;\
+	eif_scoop_impersonate (eif_globals, l_scoop_region_id); \
 	eif_delete_scoop_request_group (l_scoop_processor_id, eif_scoop_request_group_stack_count (l_scoop_processor_id) - l_scoop_request_group_stack_count); \
 	eif_scoop_lock_stack_impersonated_pop (l_scoop_processor_id, eif_scoop_lock_stack_count (l_scoop_processor_id) - l_scoop_lock_stack_count);
 

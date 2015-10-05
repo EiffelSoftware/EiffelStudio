@@ -83,6 +83,11 @@ typedef struct call_data {
 RT_LNK void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, call_data* data);
 RT_LNK void eif_call_const (call_data * a);
 
+#ifdef EIF_THREADS
+struct tag_eif_globals; /* Forward declaration. That way we don't need to include basically all header files in eif_scoop.h" */
+RT_LNK void eif_scoop_impersonate (struct tag_eif_globals* eif_globals, EIF_SCP_PID region_id);
+#endif
+
 /* Scoop Macros
  * TODO: Are these macros still in use somewhere? */
 #define set_boolean_return_value(a_boolean_typed_value,a_boolean) ((EIF_TYPED_VALUE *) a_boolean_typed_value)->item.b = a_boolean;

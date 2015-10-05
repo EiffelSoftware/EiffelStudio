@@ -127,6 +127,13 @@ struct rt_processor {
 	EIF_BOOLEAN is_dirty;
 	volatile EIF_BOOLEAN is_impersonation_allowed;
 	EIF_BOOLEAN is_passive_region;
+
+		/* Once value management during impersonation. */
+	EIF_once_value_t* stored_once_values;
+	EIF_REFERENCE** stored_oms_values;
+#ifdef EIF_WINDOWS
+	void* stored_wel_per_thread_data;
+#endif
 };
 
 /* Creation and destruction. */

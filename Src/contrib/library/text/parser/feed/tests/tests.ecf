@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="tests" uuid="C68BD5DC-F756-484E-A9FE-F2D1FD432B2A">
+	<target name="tests">
+		<root class="ANY" feature="default_create"/>
+		<setting name="console_application" value="false"/>
+		<setting name="concurrency" value="none"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="feed" location="..\feed.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="src" location=".\" recursive="true"/>
+	</target>
+</system>

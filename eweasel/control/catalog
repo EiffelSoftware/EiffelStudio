@@ -558,6 +558,7 @@ test	missing-vuar2-error-2		valid283 tcf pass validity anchored_type system-vali
 test	missing-vjar-error			valid284 tcf pass validity anchored_type system-validity
 test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-validity
 test	parenthesis-alias-tuple-vuar	valid286 tcf pass validity parenthesis_alias conversion tuple conformance
+test	conversion-on-separate-target	valid287 tcf fail validity conversion scoop
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

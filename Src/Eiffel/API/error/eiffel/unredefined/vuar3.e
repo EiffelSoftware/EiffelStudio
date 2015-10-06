@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Validity error: formal argument of a separate feature call is not separate
 		when the corresponding actual argument is of a reference type.
@@ -20,32 +20,6 @@ inherit
 
 create
 	make
-
-feature {NONE} -- Creation
-
-	make (context: AST_CONTEXT; f: detachable FEATURE_I; u: detachable ID_AS; c: CLASS_C; i: INTEGER; t, a: TYPE_A; l: LOCATION_AS)
-			-- Initialize an error object in context `context' with feature `f' called on class `c'
-			-- with argument position `i' of formal type `t' and actual type `a' at location `l'.
-		require
-			f_or_u_attached: attached f or attached u
-			c_attached: attached c
-			valid_i: attached f implies 0 < i and i <= f.argument_count
-			a_attached: attached a
-			t_attached: attached t
-			l_attached: attached l
-		do
-			if attached f then
-				set_called_feature (f, c.class_id)
-				set_argument_name (f.arguments.item_name (i))
-			elseif attached u then
-				set_argument_name (u.name_32)
-			end
-			set_argument_position (i)
-			set_actual_type (a)
-			set_formal_type (t)
-			set_location (l)
-			context.init_error (Current)
-		end
 
 feature -- Access
 

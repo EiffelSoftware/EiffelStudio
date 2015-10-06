@@ -2306,7 +2306,7 @@ test	attached-tuple-element-validity	tuple015	tcf pass tuple
 test	tuple-basic-to-reference		tuple016 tcf pass tuple basic_types
 test	named-tuple-in-generic-constraint	tuple017 tcf fail tuple formal multiconstraint generic
 test	named-tuple-constraint-validity		tuple018 tcf fail tuple formal multiconstraint generic validity
-test	tuple-field-non-conforming-assignment	tuple019 tcf fail tuple assigner validity
+test	tuple-field-non-conforming-assignment	tuple019 tcf pass tuple assigner validity
 
 -- ~ operator test
 test	tilde-on-basic-type		tilde001	tcf pass tilde

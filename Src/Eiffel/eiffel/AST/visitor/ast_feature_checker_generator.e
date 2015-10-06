@@ -1824,7 +1824,7 @@ feature {NONE} -- Implementation
 												current_target_type := l_formal_arg_type.instantiation_in (l_last_type.as_implicitly_detachable.as_variant_free, l_last_id).actual_type
 												;(create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void)).process (Current)
 												l_arg_types.put_i_th (last_type, i)
-													-- Check if now actual and formal types of the last argument are compatible
+													-- Check if now actual and formal types of the tuple argument are compatible.
 												if attached argument_compatibility_error (a_type, l_last_constrained, l_arg_types [i], i, l_arg_types, l_feature, Void, l_parameters [i].start_location) then
 														-- Revert changes back.
 													l_arg_types.put_i_th (l_arg_type, i)
@@ -2247,7 +2247,7 @@ feature {NONE} -- Type checks
 					not expression_type.conform_to (current_class, like_argument_type) and then
 					(is_inherited or else not expression_type.convert_to (current_class, like_argument_type.deep_actual_type))
 				then
-					Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, like_argument_type, location)
+					create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, like_argument_type, expression_type, location)
 				end
 				if warning_count /= error_handler.warning_list.count then
 					error_handler.warning_list.last.set_location (location)
@@ -2269,10 +2269,10 @@ feature {NONE} -- Type checks
 					expression_type.is_conformant_to (current_class, formal_type)
 				then
 				else
-					Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, formal_type, location)
+					create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 				end
 			elseif not is_frozen_type_compatible (expression_type, formal_type, False) then
-				Result := vuar2_error (callee, target_base_class_id, argument_number, expression_type, formal_type, location)
+				create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			elseif warning_count /= error_handler.warning_list.count then
 				error_handler.warning_list.last.set_location (location)
 			end
@@ -9491,44 +9491,6 @@ feature {NONE} -- Implementation
 	last_infix_argument_conversion_info: CONVERSION_INFO
 			-- Helpers to perform type check and byte_node generation.
 
-	insert_vuar2_error (a_feature: FEATURE_I; a_params: EIFFEL_LIST [EXPR_AS]; a_in_class_id, a_pos: INTEGER; a_actual_type, a_formal_type: TYPE_A)
-			-- Insert a VUAR2 error in call to `a_feature' from `a_in_class_id' class for argument
-			-- at position `a_pos'.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_params_not_void: a_params /= Void
-			a_params_matches: a_params.valid_index (a_pos)
-			a_in_class_id_non_negative: a_in_class_id >= 0
-			a_pos_positive: a_pos > 0
-			a_pos_valid: a_pos <= a_feature.argument_count
-			a_actual_type_not_void: a_actual_type /= Void
-			a_formal_type_not_void: a_formal_type /= Void
-		do
-			error_handler.insert_error (vuar2_error (a_feature, a_in_class_id, a_pos, a_actual_type, a_formal_type, a_params.i_th (a_pos).start_location))
-		end
-
-	vuar2_error (a_feature: FEATURE_I; a_in_class_id, a_pos: INTEGER; a_actual_type, a_formal_type: TYPE_A; a_location: LOCATION_AS): VUAR2
-			-- VUAR2 error in call to `a_feature' from `a_in_class_id' class for argument at position `a_pos'
-			-- with actual type `a_actual_type', formal type `a_formal_type' at location `a_location'.
-		require
-			a_feature_not_void: attached a_feature
-			a_in_class_id_non_negative: a_in_class_id >= 0
-			a_pos_positive: a_pos > 0
-			a_pos_valid: a_pos <= a_feature.argument_count
-			a_actual_type_not_void: attached a_actual_type
-			a_formal_type_not_void: attached a_formal_type
-			a_location_attachedd: attached a_location
-		do
-			create Result
-			context.init_error (Result)
-			Result.set_called_feature (a_feature, a_in_class_id)
-			Result.set_argument_position (a_pos)
-			Result.set_argument_name (a_feature.arguments.item_name (a_pos))
-			Result.set_actual_type (a_actual_type)
-			Result.set_formal_type (a_formal_type)
-			Result.set_location (a_location)
-		end
-
 	process_type_compatibility (l_target_type: like last_type)
 			-- Test if `last_type' is compatible with `l_target_type' and
 			-- make the result available in `is_type_compatible'.
@@ -11446,8 +11408,9 @@ feature {NONE} -- Implementation: catcall check
 								-- Once this is done, then type checking is done on the real
 								-- type of the routine, not the anchor.
 							if not l_arg_type.conform_to (context.current_class, l_like_arg_type) then
-								insert_vuar2_error (l_descendant_feature, a_parameters, l_desc_class_id, i, l_arg_type,
-									l_like_arg_type)
+								error_handler.insert_error
+									(create {VUAR2}.make (context, l_descendant_feature, Void, l_descendant_class,
+										i, l_like_arg_type, l_arg_type, a_parameters [i].start_location))
 							end
 						end
 

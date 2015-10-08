@@ -122,8 +122,8 @@ feature {NONE} -- Internal
 feature -- Conversion to string
 
 	yyyy_mmm_dd_string: STRING
-			-- String representation YYYY mmm dd
-			-- 2012 Dec 25
+			-- String representation [YYYY mmm dd]
+			-- ex: 2012 Dec 25
 		do
 			create Result.make (11)
 			append_date_time_to_yyyy_mmm_dd_string (date_time, Result)
@@ -131,7 +131,8 @@ feature -- Conversion to string
 
 	rfc1123_string: STRING
 			-- String representation following RFC 1123.
-			--| Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
+			-- format: [ddd, dd mmm yyyy hh:mi:ss GMT]
+			-- ex: Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
 		local
 			s: like internal_rfc1123_string
 		do
@@ -145,7 +146,8 @@ feature -- Conversion to string
 		end
 
 	rfc850_string: STRING
-			-- String representation following RFC 850
+			-- String representation following RFC 850.
+			-- format: [mmm, dd-mmm-yy hh:mi:ss GMT]
 		do
 			create Result.make (32)
 			append_date_time_to_rfc850_string (date_time, Result)
@@ -153,6 +155,7 @@ feature -- Conversion to string
 
 	ansi_c_string: STRING
 			-- ANSI C's asctime() format	
+			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
 		do
 			create Result.make (32)
 			append_date_time_to_ansi_c_string (date_time, Result)
@@ -161,74 +164,34 @@ feature -- Conversion to string
 feature -- Conversion into string		
 
 	append_to_yyyy_mmm_dd_string (s: STRING_GENERAL)
-		local
-			dt: DATE_TIME
+			-- Append `datetime' as [yyyy mmm dd] format to `s'.
 		do
-			dt := date_time
-			append_integer_to (dt.year, s)					-- yyyy
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_integer_to (dt.day, s)			-- dd
+			append_date_time_to_yyyy_mmm_dd_string (date_time, s)
 		end
 
 	append_to_rfc1123_string (s: STRING_GENERAL)
-		local
-			dt: DATE_TIME
+			-- Append `date_time' as [ddd, dd mmm yyyy hh:mi:ss GMT] format to `s'.
 		do
-			dt := date_time
-			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
-			s.append_code (44) -- 44 ','					-- ','
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_integer_to (dt.day, s)			-- dd
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_integer_to (dt.year, s)					-- YYYY
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
-			s.append (" GMT")								-- SPace + GMT
+			append_date_time_to_rfc1123_string (date_time, s)
 		end
 
 	append_rfc850_string (s: STRING_GENERAL)
-		local
-			dt: DATE_TIME
+			-- Append `date_time' as [mmm, dd-mmm-yy hh:mi:ss GMT] format to `s'.
 		do
-			dt := date_time
-			append_day_name_to (dt.date.day_of_the_week, s)	-- mmm
-			s.append_code (44) -- 44 ','					-- ','
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_integer_to (dt.day, s)			-- dd
-			s.append_code (45) -- 45 '-'					-- '-'
-			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_code (45) -- 45 '-'					-- '-'
-			append_integer_to (dt.year \\ 100, s)			-- yy
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_time_to (dt.time, s)			-- hh:mi:ss
-			s.append (" GMT")								-- SPace + GMT
+			append_date_time_to_rfc850_string (date_time, s)
 		end
 
 	append_to_ansi_c_string (s: STRING_GENERAL)
+			-- Append `date_time' as ANSI C's asctime format to `s'.
 			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
-		local
-			dt: DATE_TIME
 		do
-			dt := date_time
-			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_month_mmm_to (dt.month, s)				-- mmm
-			s.append_code (32) -- 32 ' '					-- SPace
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_integer_to (dt.day, s)					-- d
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_2_digits_time_to (dt.time, s) 			-- hh:mi:ss
-			s.append_code (32) -- 32 ' '					-- SPace
-			append_integer_to (dt.year, s)					-- yyyy
+			append_date_time_to_ansi_c_string (date_time, s)
 		end
 
 feature -- Conversion into string
 
 	append_date_time_to_yyyy_mmm_dd_string (dt: DATE_TIME; s: STRING_GENERAL)
+			-- Append `dt' as [yyyy mmm dd] format to `s'.
 		do
 			append_integer_to (dt.year, s)					-- yyyy
 			s.append_code (32) -- 32 ' '					-- SPace
@@ -238,6 +201,7 @@ feature -- Conversion into string
 		end
 
 	append_date_time_to_rfc1123_string (dt: DATE_TIME; s: STRING_GENERAL)
+			-- Append `dt' as [ddd, dd mmm yyyy hh:mi:ss GMT] format to `s'.
 		do
 			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
 			s.append_code (44) -- 44 ','					-- ','
@@ -253,6 +217,7 @@ feature -- Conversion into string
 		end
 
 	append_date_time_to_rfc850_string (dt: DATE_TIME; s: STRING_GENERAL)
+			-- Append `dt' as [mmm, dd-mmm-yy hh:mi:ss GMT] format to `s'.
 		do
 			append_day_name_to (dt.date.day_of_the_week, s)	-- mmm
 			s.append_code (44) -- 44 ','					-- ','
@@ -268,7 +233,8 @@ feature -- Conversion into string
 		end
 
 	append_date_time_to_ansi_c_string (dt: DATE_TIME; s: STRING_GENERAL)
-			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
+			-- Append `dt' as ANSI C's asctime format to `s'.
+			-- Sun Nov  6 08:49:37 1994    ; ANSI C's asctime() format
 		do
 			append_day_ddd_to (dt.date.day_of_the_week, s)	-- ddd
 			s.append_code (32) -- 32 ' '					-- SPace
@@ -294,7 +260,7 @@ feature -- Status report
 			end
 		end
 
-feature {NONE} -- Implementation
+feature -- Helper routines.
 
 	append_2_digits_integer_to (i: INTEGER; s: STRING_GENERAL)
 		require
@@ -599,7 +565,11 @@ feature {NONE} -- Implementation
 					t.extend (s[i].as_upper)
 					i := i + 1
 				end
-				if t.same_string ("GMT") or t.same_string ("UTC") then
+				if 
+					t.same_string ("GMT") 		-- for instance: GMT+0002
+					or t.same_string ("UTC")  	-- for instance: UTC+0002
+					or t.is_empty 				-- for instance: +0002
+				then
 					from until i > n or else not s[i].is_space  loop i := i + 1 end
 					if i <= n then
 						t.wipe_out

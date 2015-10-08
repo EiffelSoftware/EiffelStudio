@@ -19,7 +19,7 @@ feature -- Test routines
 			-- New test routine
 		local
 			feed_parser: FEED_DEFAULT_PARSERS
-			vis: FEED_TO_STRING_32_VISITOR
+			vis: FEED_TO_STRING_32_DEBUG_VISITOR
 			s: STRING_32
 		do
 			create feed_parser

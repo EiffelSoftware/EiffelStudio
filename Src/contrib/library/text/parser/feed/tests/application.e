@@ -43,9 +43,9 @@ feature	-- Initialization
 	test_feed (t: READABLE_STRING_8)
 		local
 			feed_parser: FEED_DEFAULT_PARSERS
-			vis: FEED_TO_STRING_32_VISITOR
-			gen: RSS_2_GENERATOR
-			atom_gen: ATOM_GENERATOR
+			vis: FEED_TO_STRING_32_DEBUG_VISITOR
+			gen: RSS_2_FEED_GENERATOR
+			atom_gen: ATOM_FEED_GENERATOR
 			s: STRING_32
 			s8: STRING_8
 			pp: XML_PRETTY_PRINT_FILTER

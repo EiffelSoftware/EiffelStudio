@@ -9,6 +9,8 @@ class
 inherit
 	FEED_HELPERS
 
+	ITERABLE [FEED_ITEM]
+
 create
 	make
 
@@ -17,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_title: READABLE_STRING_GENERAL)
 		do
 			create title.make_from_string_general (a_title)
-			create entries.make (1)
+			create items.make (1)
 			create links.make (1)
 		end
 
@@ -42,8 +44,16 @@ feature -- Access
 	links: STRING_TABLE [FEED_LINK]
 			-- Url indexed by relation
 
-	entries: ARRAYED_LIST [FEED_ENTRY]
+	items: ARRAYED_LIST [FEED_ITEM]
 			-- List of feed items.
+
+feature -- Access
+
+	new_cursor: ITERATION_CURSOR [FEED_ITEM]
+			-- <Precursor>
+		do
+			Result := items.new_cursor
+		end
 
 feature -- Element change	
 
@@ -69,6 +79,7 @@ feature -- Element change
 		end
 
 	set_updated_date_with_text (a_date_text: detachable READABLE_STRING_32)
+			-- Set `date' from date string representation `a_date_text'.
 		do
 			if a_date_text = Void then
 				date := Void
@@ -77,9 +88,45 @@ feature -- Element change
 			end
 		end
 
-	add_entry (e: FEED_ENTRY)
+	extend (a_item: FEED_ITEM)
+			-- Add item `a_item' to feed `items'.
 		do
-			entries.force (e)
+			items.force (a_item)
+		end
+
+	extended alias "+" (a_feed: FEED): FEED
+			-- New feed object made from Current merged with a_feed.
+		local
+			l_title: STRING_32
+		do
+			create l_title.make (title.count + a_feed.title.count)
+			l_title.append_character ('(')
+			l_title.append (title)
+			l_title.append_character (')')
+			l_title.append_character ('+')
+			l_title.append_character ('(')
+			l_title.append (a_feed.title)
+			l_title.append_character (')')
+			create Result.make (l_title)
+			Result.items.append (items)
+			across
+				a_feed.items as ic
+			loop
+					-- FIXME jfiat [2015/10/07] : check there is no duplication! (same id, or link, ...)
+				Result.extend (ic.item)
+			end
+			Result.sort
+		end
+
+	sort
+			-- Sort `items', (recent first).
+		local
+			s: QUICK_SORTER [FEED_ITEM]
+			comp: COMPARABLE_COMPARATOR [FEED_ITEM]
+		do
+			create comp
+			create s.make (comp)
+			s.reverse_sort (items)
 		end
 
 feature -- Visitor

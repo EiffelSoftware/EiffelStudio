@@ -36,7 +36,7 @@ feature -- Access
 		local
 			l_title: READABLE_STRING_32
 			x_entry, x_link: detachable XML_ELEMENT
-			e: FEED_ENTRY
+			e: FEED_ITEM
 			l_author: FEED_AUTHOR
 			lnk: FEED_LINK
 			s: STRING_32
@@ -92,7 +92,7 @@ feature -- Access
 									e.set_author (l_author)
 								end
 							end
-							Result.add_entry (e)
+							Result.extend (e)
 						end
 					end
 				end

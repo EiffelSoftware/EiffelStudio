@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	ATOM_GENERATOR
+	ATOM_FEED_GENERATOR
 
 inherit
 	FEED_VISITOR
@@ -44,7 +44,7 @@ feature -- Visitor
 				append_content_tag_to ("updated", Void, date_to_string (dt), buffer)
 			end
 			across
-				a_feed.entries as ic
+				a_feed.items as ic
 			loop
 				ic.item.accept (Current)
 			end
@@ -53,7 +53,7 @@ feature -- Visitor
 			buffer.append ("</feed>")
 		end
 
-	visit_entry (a_entry: FEED_ENTRY)
+	visit_item (a_entry: FEED_ITEM)
 		do
 			buffer.append (indentation)
 			buffer.append ("<entry>%N")

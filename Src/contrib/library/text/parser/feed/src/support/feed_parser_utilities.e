@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {FEED_PARSER_UTILITIES}."
-	author: ""
+	description: "Helpers routine for feed xml parsers."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -80,5 +79,5 @@ feature -- Access
 				end
 			end
 		end
-		
+
 end

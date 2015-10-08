@@ -16,7 +16,7 @@ feature -- Visit
 		deferred
 		end
 
-	visit_entry (a_entry: FEED_ENTRY)
+	visit_item (a_item: FEED_ITEM)
 		deferred
 		end
 

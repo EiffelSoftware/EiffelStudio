@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	RSS_2_GENERATOR
+	RSS_2_FEED_GENERATOR
 
 inherit
 	FEED_VISITOR
@@ -43,7 +43,7 @@ feature -- Visitor
 				append_content_tag_to ("lastBuildDate", Void, date_to_string (dt), buffer)
 			end
 			across
-				a_feed.entries as ic
+				a_feed.items as ic
 			loop
 				ic.item.accept (Current)
 			end
@@ -55,33 +55,33 @@ feature -- Visitor
 				]")
 		end
 
-	visit_entry (a_entry: FEED_ENTRY)
+	visit_item (a_item: FEED_ITEM)
 		do
 			buffer.append (indentation)
 			buffer.append ("<item>%N")
 			indent
-			append_content_tag_to ("title", Void, a_entry.title, buffer)
-			if attached a_entry.date as dt then
+			append_content_tag_to ("title", Void, a_item.title, buffer)
+			if attached a_item.date as dt then
 				append_content_tag_to ("pubDate", Void, date_to_string (dt), buffer)
 			end
 			across
-				a_entry.links as tb
+				a_item.links as tb
 			loop
 				tb.item.accept (Current)
 			end
-			if attached a_entry.author as u then
+			if attached a_item.author as u then
 				u.accept (Current)
 			end
-			if attached a_entry.categories as cats then
+			if attached a_item.categories as cats then
 				across
 					cats as ic
 				loop
 					append_content_tag_to ("category", Void, ic.item, buffer)
 				end
 			end
-			append_content_tag_to ("guid", Void, a_entry.id, buffer)
-			append_content_tag_to ("description", Void, a_entry.description, buffer)
-			append_cdata_content_tag_to ("content:encoded", Void, a_entry.content, buffer)
+			append_content_tag_to ("guid", Void, a_item.id, buffer)
+			append_content_tag_to ("description", Void, a_item.description, buffer)
+			append_cdata_content_tag_to ("content:encoded", Void, a_item.content, buffer)
 
 			exdent
 			buffer.append (indentation)

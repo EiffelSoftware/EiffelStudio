@@ -1,10 +1,15 @@
 note
-	description: "Item of feed."
+	description: "[
+			A feed contains a list of items.
+			This FEED_ITEM interface provides
+				- title, description, content, id, date, ...
+				- could be compared with other item to sort by date+title.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	FEED_ENTRY
+	FEED_ITEM
 
 inherit
 	FEED_HELPERS
@@ -41,6 +46,7 @@ feature -- Access
 			-- By default, this should be text/html.
 
 	content_type_or_default (dft: READABLE_STRING_8): READABLE_STRING_8
+			-- Associated content type, and if none, return given value `dft'.
 		do
 			if attached content_type as l_type then
 				Result := l_type
@@ -54,6 +60,21 @@ feature -- Access
 
 	date: detachable DATE_TIME
 			-- Publishing date.
+
+	link: detachable FEED_LINK
+			-- Main link for the entry, if any.
+		do
+			if attached links as l_links then
+				Result := l_links.item ("")
+				across
+					l_links as ic
+				until
+					Result /= Void
+				loop
+					Result := ic.item
+				end
+			end
+		end
 
 	links: STRING_TABLE [FEED_LINK]
 			-- Url indexed by relation
@@ -166,7 +187,7 @@ feature -- Visitor
 
 	accept (vis: FEED_VISITOR)
 		do
-			vis.visit_entry (Current)
+			vis.visit_item (Current)
 		end
 
 end

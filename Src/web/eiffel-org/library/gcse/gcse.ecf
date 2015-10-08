@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="recaptcha" uuid="2A966489-284A-48A0-91BC-31E84EA9C3B1" library_target="recaptcha">
-	<target name="recaptcha">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="gcse"  library_target="gcse">
+	<target name="gcse">
 		<root all_classes="true"/>
 			<file_rule>
 				<exclude>/.git$</exclude>
@@ -21,7 +21,8 @@
 		<library name="http_client_extension" location="..\http_client_extension\http_client_extension.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
 		<!--<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/> -->
-		<cluster name="recaptcha" location=".\src\" recursive="true">
+		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<cluster name="gcse" location=".\src\" recursive="true">
 		</cluster>
 	</target>
 </system>

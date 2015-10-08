@@ -1,14 +1,13 @@
 note
-	description: "Summary description for {REQUEST_EXECUTOR}."
-	author: ""
+	description: "Executes an HTTP request"
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 class
 	REQUEST_EXECUTOR
 
 inherit
+
 	HTTP_CLIENT_HELPER
 
 	HTTP_CONSTANTS
@@ -74,7 +73,7 @@ feature -- Execute
 			elseif verb.same_string (method_options) then
 				Result := Void
 			elseif verb.same_string (method_patch) then
-				Result := execute_patch ("",body)
+				Result := execute_patch ("", body)
 			elseif verb.same_string (method_post) then
 				Result := execute_post ("", body)
 			elseif verb.same_string (method_put) then
@@ -88,11 +87,11 @@ note
 	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
-end
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
+end

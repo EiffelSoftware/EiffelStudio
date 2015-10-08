@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {REQUEST}."
-	author: ""
+	description: "Represent an HTTP request."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -48,7 +47,7 @@ feature -- Status Report
 		end
 
 	sanitized_url: READABLE_STRING_8
-			-- Returns the URL without the query string part	
+			-- Returns the URL without the query string part
 		local
 			l_uri: URI
 		do
@@ -122,7 +121,7 @@ feature -- Execute
 	execute: detachable RESPONSE
 		do
 			initialize_executor
-			Result := do_execute
+			Result := execute_request
 		end
 
 	initialize_executor
@@ -132,16 +131,12 @@ feature -- Execute
 
 feature {NONE} -- Implementation
 
-	do_execute: detachable RESPONSE
+	execute_request: detachable RESPONSE
 		do
 			if attached executor as l_executor then
 					-- add headers
 				add_headers (l_executor)
-				if
-					verb.same_string (method_put)
-					or else verb.same_string (method_post)
-					or else verb.same_string (method_patch)
-				then
+				if verb.same_string (method_put) or else verb.same_string (method_post) or else verb.same_string (method_patch) then
 					l_executor.set_body (body_contents)
 				end
 				if not l_executor.context_executor.headers.has (content_type_header_name) then
@@ -183,9 +178,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	as_uri (a_string: READABLE_STRING_8) : URI
+	as_uri (a_string: READABLE_STRING_8): URI
 		require
-			is_valid_uri : is_valid_uri (a_string)
+			is_valid_uri: is_valid_uri (a_string)
 		do
 			create Result.make_from_string (a_string)
 		end
@@ -194,10 +189,11 @@ note
 	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
+
 end

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {HTTP_CLIENT_HELPER}."
-	author: ""
+	description: "Wrapper class for HTTP_CLIENT_SESSION"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +30,7 @@ feature -- Access
 					sess.set_is_debug (True)
 				end
 				debug ("proxy8888")
-					sess.set_proxy ("127.0.0.1", 8888) --| inspect traffic with http://www.fiddler2.com/					
+					sess.set_proxy ("127.0.0.1", 8888) --| inspect traffic with http://www.fiddler2.com/
 				end
 			end
 		end
@@ -84,16 +83,17 @@ feature -- HTTP client helpers
 			create Result.make
 		end
 
-	base_url: STRING
+	base_url: STRING;
 
-;note
+note
 	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
+
 end

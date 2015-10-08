@@ -112,6 +112,11 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
+				-- Google Custom Search Engine
+			create {GOOGLE_CUSTOM_SEARCH_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
 				-- Others...
 			debug
 				create {CMS_DEBUG_MODULE} m.make

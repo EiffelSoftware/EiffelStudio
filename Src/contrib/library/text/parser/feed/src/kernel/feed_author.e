@@ -1,5 +1,8 @@
 note
-	description: "Object representing author of Feed or feed entry."
+	description: "[
+			Author of feed or feed entry.
+			- name and email information.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

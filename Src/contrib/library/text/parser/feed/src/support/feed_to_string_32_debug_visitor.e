@@ -1,10 +1,13 @@
 note
-	description: "Convert a FEED to STRING_32 representation. Mostly for debug output."
+	description: "[
+			Convert a FEED to STRING_32 representation. 
+			Mostly for debug output!
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	FEED_TO_STRING_32_VISITOR
+	FEED_TO_STRING_32_DEBUG_VISITOR
 
 inherit
 	FEED_VISITOR
@@ -55,7 +58,7 @@ feature -- Visitor
 			append_new_line
 
 			across
-				a_feed.entries as ic
+				a_feed.items as ic
 			loop
 				exdent
 				append_text (create {STRING_32}.make_filled ('-', 40))
@@ -66,7 +69,7 @@ feature -- Visitor
 			end
 		end
 
-	visit_entry (a_entry: FEED_ENTRY)
+	visit_item (a_entry: FEED_ITEM)
 		do
 			if attached a_entry.id as l_id then
 				append_text ("#")

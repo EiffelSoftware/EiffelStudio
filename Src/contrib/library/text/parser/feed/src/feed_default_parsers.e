@@ -1,5 +1,8 @@
 note
-	description: "Collection of default feed parsers."
+	description: "[
+			Collection of default feed parsers provided by the current library.
+			A new parser can be easily added via `parsers.extend (...)'.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +35,8 @@ feature -- Access
 
 feature -- Access
 
-	feed_from_string (a_atom_content: READABLE_STRING_8): detachable FEED
+	feed_from_string (a_content: READABLE_STRING_8): detachable FEED
+			-- Feed object from `a_content' string, if a parser is able to parse.it.
 		local
 			p: XML_STANDARD_PARSER
 			cb_tree: XML_CALLBACKS_FILTER_DOCUMENT
@@ -41,7 +45,7 @@ feature -- Access
 			create p.make
 			create cb_tree.make_null
 			p.set_callbacks (cb_tree)
-			p.parse_from_string_8 (a_atom_content)
+			p.parse_from_string_8 (a_content)
 			if p.is_correct then
 				xdoc := cb_tree.document
 				Result := feed (xdoc)

@@ -40,7 +40,7 @@ feature -- Access
 		local
 			lnk: FEED_LINK
 			x_item, x_content, x_author: detachable XML_ELEMENT
-			e: FEED_ENTRY
+			e: FEED_ITEM
 			l_author: FEED_AUTHOR
 		do
 			if attached xdoc.element_by_name ("rss") as x_rss then
@@ -112,7 +112,7 @@ feature -- Access
 										else
 											e.set_content (xml_element_code (x_content), Void)
 										end
-										Result.add_entry (e)
+										Result.extend (e)
 									end
 								end
 							end

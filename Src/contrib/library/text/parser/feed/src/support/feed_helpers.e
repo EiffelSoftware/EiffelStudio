@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {FEED_HELPERS}."
-	author: ""
+	description: "Helpers routine for feed library."
 	date: "$Date$"
 	revision: "$Revision$"
 

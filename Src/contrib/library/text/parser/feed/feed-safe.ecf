@@ -3,6 +3,7 @@
 	<target name="feed">
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>

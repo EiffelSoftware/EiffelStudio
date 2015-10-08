@@ -795,6 +795,33 @@
 		}
 	}
 
+	ul.cms-page-links {
+			@include grid(12);
+			background: #e9eced;
+			height: 100%;
+			width: 95%;
+			float: left;
+			margin: 0 20px 30px 20px;
+			padding: 10px 10px 10px 10px;
+			text-align: center;
+			list-style-type: none;
+			@include border-radius(10px);
+			display:block;
+			> li{
+				@include grid-width(2);
+				@include border-radius(10px);
+				background-color: white;
+				display: inline-block;
+					&:hover{
+						background: #e3e7e8;
+					> a{
+					}
+					> form {
+					}
+				}
+			}
+		}
+
 	.rss-block {
 		overflow: hidden;
 		padding: 8px 0 0 40px;

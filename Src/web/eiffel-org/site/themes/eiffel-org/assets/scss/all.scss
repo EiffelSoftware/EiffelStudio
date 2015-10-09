@@ -796,49 +796,28 @@
 	}
 
 	ul.cms-page-links {
-			@include grid(12);
-			background: #e9eced;
-			height: 100%;
-			width: 95%;
-			float: left;
-			margin: 0 20px 30px 20px;
-			padding: 10px 10px 10px 10px;
-			text-align: center;
-			list-style-type: none;
+		@include grid(12);
+		background: #e9eced;
+		height: 100%;
+		width: 95%;
+		float: left;
+		margin: 0 20px 30px 20px;
+		padding: 10px 10px 10px 10px;
+		text-align: center;
+		list-style-type: none;
+		@include border-radius(10px);
+		display:block;
+		> li{
+			@include grid-width(2);
 			@include border-radius(10px);
-			display:block;
-			> li{
-				@include grid-width(2);
-				@include border-radius(10px);
-				background-color: white;
-				display: inline-block;
-					&:hover{
-						background: #e3e7e8;
-					> a{
-					}
-					> form {
-					}
-				}
+			background-color: white;
+			display: inline-block;
+			&:hover{
+				background: #e3e7e8;
+				> a { }
+				> form { }
 			}
 		}
-
-	.rss-block {
-		overflow: hidden;
-		padding: 8px 0 0 40px;
-		margin: 0 0 -46px;
-		ul{
-			@extend %listreset;
-			margin: 0 0 0 -70px;
-			li{
-				@include grid-width(4);
-				float: left;
-				margin: 0 0 54px 33px;
-				h2{
-					font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;
-				}
-			}
-		}
-		
 	}
 
 	.promo-area {
@@ -900,6 +879,24 @@
 		}
 	}
 } /* #content */
+
+.rss-block {
+	overflow: hidden;
+	padding: 8px 0 0 40px;
+	>ul{
+		@extend %listreset;
+		margin: 0 0 0 -70px;
+		>li{
+			@include grid-width(3);
+			float: left;
+			margin: 0 0 54px 33px;
+			>h2{
+				font: (#{$base-h2-size}-8)/(#{$base-h2-lineheight}-8) $museo_slab500;			
+			}
+		}
+	}
+}
+
 
 #sidebar{
 	border: none;

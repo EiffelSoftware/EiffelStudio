@@ -121,7 +121,11 @@ feature -- Execution
 								f.append_to_html (wsf_theme, b)
 							else
 								if pg /= Void then
-									set_redirection (mng.wiki_page_uri_path (pg, l_bookid, mng.version_id))
+									if mng.is_default_version then
+										set_redirection (mng.wiki_page_uri_path (pg, l_bookid, Void))
+									else
+										set_redirection (mng.wiki_page_uri_path (pg, l_bookid, mng.version_id))
+									end
 								else
 									set_redirection (view_location)
 								end
@@ -188,7 +192,11 @@ feature -- Execution
 						fd := f.last_data
 						if fd /= Void and then fd.is_valid then
 							b.append ("<p>View wiki page ")
-							b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id), Void))
+							if mng.is_default_version then
+								b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, Void), Void))
+							else
+								b.append (link (new_pg.title, mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id), Void))
+							end
 							b.append (".</p>")
 
 							if pg /= Void then
@@ -200,7 +208,11 @@ feature -- Execution
 								b.append (link ("parent page", view_location, Void))
 								b.append (".</p>")
 							end
-							set_redirection (mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id))
+							if mng.is_default_version then
+								set_redirection (mng.wiki_page_uri_path (new_pg, l_bookid, Void))
+							else
+								set_redirection (mng.wiki_page_uri_path (new_pg, l_bookid, mng.version_id))
+							end
 						else
 							f.append_to_html (wsf_theme, b)
 						end
@@ -296,17 +308,29 @@ feature -- Form
 				l_link_title_value := safe_utf_8_string (fd.string_item ("link_title"))
 				l_source_value := safe_utf_8_string (fd.string_item ("source"))
 
-				if pg /= Void then
-					l_meta_link_title := pg.metadata ("link_title")
-					l_path := pg.path
-					l_page := pg
-					l_content := wdocs_api.wiki_text (pg)
-					if attached pg.metadata_table as tb then
-						tb.wipe_out
+				if location.ends_with_general ("/add-child") then
+					if l_title_value /= Void and a_bookid /= Void then
+						if pg /= Void then
+							l_page := pg
+							l_page.set_title (l_title_value)
+						else
+							l_page := wdocs_api.new_wiki_page (l_title_value, utf_8_string (a_bookid))
+						end
+						l_changed := True
 					end
-				elseif l_title_value /= Void and a_bookid /= Void then
-					l_page := wdocs_api.new_wiki_page (l_title_value, utf_8_string (a_bookid))
-					l_changed := True
+				else
+					if pg /= Void then
+						l_meta_link_title := pg.metadata ("link_title")
+						l_path := pg.path
+						l_page := pg
+						l_content := wdocs_api.wiki_text (pg)
+						if attached pg.metadata_table as tb then
+							tb.wipe_out
+						end
+					elseif l_title_value /= Void and a_bookid /= Void then
+						l_page := wdocs_api.new_wiki_page (l_title_value, utf_8_string (a_bookid))
+						l_changed := True
+					end
 				end
 				if l_page = Void or l_title_value = Void then
 					b.append ("<strong>Can not create a new wiki doc. Not enough information!</strong>")
@@ -356,7 +380,8 @@ feature -- Form
 						create ctx
 						ctx.set_user (user)
 						ctx.set_log ({STRING_32} "Update wikipage " + l_page.title + ".")
-						wdocs_api.save_wiki_page (l_page, l_source_value, l_path, a_bookid, a_manager, ctx)
+
+						wdocs_api.save_wiki_page (l_page, pg, l_source_value, l_path, a_bookid, a_manager, ctx)
 						if wdocs_api.has_error then
 							fd.report_error ("Error: could not save wiki page!")
 							add_error_message ("Error: could not save wiki page!")

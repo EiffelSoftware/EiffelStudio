@@ -362,7 +362,7 @@ feature -- Factory
 			Result := manager (Void).new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), a_parent_key)
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
+	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH
@@ -372,6 +372,7 @@ feature -- Factory
 			utf: UTF_CONVERTER
 			wut: WSF_FILE_UTILITIES [RAW_FILE]
 			fn: STRING
+			l_changelist: SVN_CHANGELIST
 		do
 			reset_error
 
@@ -424,14 +425,17 @@ feature -- Factory
 					end
 					if (create {FILE_UTILITIES}).file_path_exists (p) then
 						save_content_to_file (txt, p)
+						create l_changelist.make_with_path (p)
 					else
+						create l_changelist.make_with_path (p)
+						prepare_wiki_parent_directory (p.parent, a_parent_page, l_changelist)
 						save_content_to_file (txt, p)
 						svn_add (p)
 					end
 					if a_context /= Void then
-						svn_commit (p, a_context.username, a_context.log)
+						svn_commit (l_changelist, a_context.username, a_context.log)
 					else
-						svn_commit (p, Void, Void)
+						svn_commit (l_changelist, Void, Void)
 					end
 					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
 					if not has_error then
@@ -446,6 +450,46 @@ feature -- Factory
 							cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, l_parent_page).delete
 						end
 					end
+				end
+			end
+		end
+
+	prepare_wiki_parent_directory (p: PATH; a_parent_page: detachable like new_wiki_page; a_changelist: SVN_CHANGELIST)
+			-- Prepare parent directory for a new sub wiki page.
+		local
+			dir: DIRECTORY
+			l_index_path: detachable PATH
+			fut: FILE_UTILITIES
+			f: PLAIN_TEXT_FILE
+		do
+			create dir.make_with_path (p)
+			if not dir.exists then
+				a_changelist.extend_path (p)
+				dir.recursive_create_dir
+				svn_add (p)
+				if a_parent_page /= Void then
+					if
+						attached a_parent_page.path as pp and then
+						fut.file_path_exists (pp)
+					then
+						l_index_path := pp
+					else
+						l_index_path := p.parent.extended (a_parent_page.parent_key).appended_with_extension ("wiki")
+					end
+				end
+				if
+					l_index_path /= Void and then
+					fut.file_path_exists (l_index_path)
+				then
+					svn_move (l_index_path, p.extended ("index.wiki"))
+					a_changelist.extend_path (l_index_path)
+				else
+					l_index_path := p.extended ("index.wiki")
+					create f.make_with_path (l_index_path)
+					f.create_read_write
+					f.put_new_line
+					f.close
+					svn_add (l_index_path)
 				end
 			end
 		end
@@ -531,9 +575,12 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
+			error_handler.reset
 			svn := new_svn
 			if attached svn.update (p, Void, opts) as res then
-				-- FIXME: handle error
+				if res.failed then
+					error_handler.add_custom_error (1, "svn update failed", res.message)
+				end
 			end
 		end
 
@@ -542,19 +589,42 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
+			error_handler.reset
 			svn := new_svn
+			create opts
+			opts.set_parameters ("--parents")
 			if attached svn.add (p, opts) as res then
-				-- FIXME: handle error
+				if res.failed then
+					error_handler.add_custom_error (1, "svn add failed", res.message)
+				end
 			end
 		end
 
-	svn_commit (p: PATH; a_username: detachable READABLE_STRING_32; a_log: detachable READABLE_STRING_32)
+	svn_move (p, a_new_location: PATH)
+			-- Svn move node at `p' to new location `a_new_location'.
+		local
+			svn: SVN
+			opts: detachable SVN_OPTIONS
+		do
+			error_handler.reset
+			svn := new_svn
+			create opts
+			opts.set_parameters ("--parents")
+			if attached svn.move (p.name, a_new_location.name, opts) as res then
+				if res.failed then
+					error_handler.add_custom_error (1, "svn add failed", res.message)
+				end
+			end
+		end
+
+	svn_commit (a_changelist: SVN_CHANGELIST; a_username: detachable READABLE_STRING_32; a_log: detachable READABLE_STRING_32)
 		local
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 			s: STRING
 			utf: UTF_CONVERTER
 		do
+			error_handler.reset
 			svn := new_svn
 			if
 				attached cms_api.setup.text_item ("tools.subversion.username") as l_svn_username and
@@ -575,8 +645,10 @@ feature -- Subversion helpers
 				s.append (utf.utf_32_string_to_utf_8_string_8 (a_username))
 				s.append (").")
 			end
-			if attached svn.commit (p, s, opts) as res then
-				-- FIXME: handle error
+			if attached svn.commit (a_changelist, s, opts) as res then
+				if res.failed then
+					error_handler.add_custom_error (1, "svn commit failed", res.message)
+				end
 			end
 		end
 

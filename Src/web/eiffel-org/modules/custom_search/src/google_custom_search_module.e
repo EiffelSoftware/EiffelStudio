@@ -15,8 +15,6 @@ inherit
 			register_hooks
 		end
 
-	SHARED_HTML_ENCODER
-
 	CMS_HOOK_BLOCK_HELPER
 
 	CMS_HOOK_AUTO_REGISTER
@@ -98,13 +96,6 @@ feature -- Hooks configuration
 			auto_subscribe_to_hooks (a_response)
 		end
 
-	response_alter (a_response: CMS_RESPONSE)
-			-- <Precursor>
-		do
-			a_response.add_style (a_response.url ("/module/wish_list/files/css/wish_list.css", Void), Void)
-		end
-
-
 feature -- Hooks
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -118,12 +109,15 @@ feature -- Hooks
 			Result := <<"search">>
 		end
 
+feature -- Handler
+
 	handle_search (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_parameters:GCSE_QUERY_PARAMETERS
 			l_search: GCSE_API
 		do
+				-- TODO handle errors!!!
 			write_debug_log (generator + ".handle_search")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if
@@ -148,17 +142,5 @@ feature -- Hooks
 			end
 			r.execute
 		end
-
-feature {NONE} -- HTML ENCODING.
-
-	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
-		do
-			if s /= Void then
-				Result := html_encoder.general_encoded_string (s)
-			else
-				create Result.make_empty
-			end
-		end
-
 
 end

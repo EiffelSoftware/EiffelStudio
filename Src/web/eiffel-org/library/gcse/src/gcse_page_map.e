@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {GCSE_PAGE_MAP}."
+	description: "Represent a google page map"
 	date: "$Date$"
 	revision: "$Revision$"
 	EIS: "name=PageMaps", "src=https://developers.google.com/custom-search/docs/structured_data#pagemaps", "protocol=url"
@@ -8,6 +8,21 @@ class
 	GCSE_PAGE_MAP
 
 feature -- Access
+
+--	"pagemap": {
+--    "cse_image": [
+--     {
+--      "src": "https://www.eiffel.org/portal/files/userpictures/picture-40.jpg"
+--     }
+--    ],
+--    "cse_thumbnail": [
+--     {
+--      "width": "81",
+--      "height": "61",
+--      "src": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRnC-RKzps6BFItx_MLYBVskFI7U6u0y3VJBInomPYEF5sO6gkip94mLw"
+--     }
+--    ]
+--   }
 
 
 note

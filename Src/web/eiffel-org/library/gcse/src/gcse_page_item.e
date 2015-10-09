@@ -46,6 +46,8 @@ feature -- Access
 			-- Kind of actual search result.
 
 	page_map: detachable GCSE_PAGE_MAP
+			-- Page map
+			--! Not supported for now.
 
 feature -- Element change
 

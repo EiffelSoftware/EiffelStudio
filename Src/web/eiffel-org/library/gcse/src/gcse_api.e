@@ -33,16 +33,17 @@ feature -- Access
 			-- Google custom search parameters.
 
 	last_result: detachable GCSE_RESPONSE
+			-- Search results.
 
 feature -- Status Reports
 
 	errors: detachable LIST [READABLE_STRING_8]
 			-- optional table of error codes
 
-
 feature -- API
 
 	search
+			-- Search
 		local
 			l_parser: JSON_PARSER
 			l_gcse_response: detachable GCSE_RESPONSE
@@ -93,7 +94,7 @@ feature -- API
 feature {NONE} -- REST API
 
 	get: detachable RESPONSE
-			-- Reading Data
+			-- Reading Data.
 		local
 			l_request: REQUEST
 		do
@@ -134,6 +135,7 @@ feature {NONE} -- Implementation
 		end
 
 	put_error (a_code: READABLE_STRING_GENERAL)
+			-- put error with code `a_code'.
 		local
 			l_errors: like errors
 			utf: UTF_CONVERTER
@@ -147,6 +149,7 @@ feature {NONE} -- Implementation
 		end
 
 	item (a_item: JSON_OBJECT): GCSE_PAGE_ITEM
+			-- Google Result Metadata Item.
 		do
 			create Result
 			if attached {JSON_STRING} a_item.item (create {JSON_STRING}.make_from_string ("kind")) as l_kind then
@@ -176,7 +179,7 @@ feature {NONE} -- Implementation
 		end
 
 	query_page (a_page_key: JSON_STRING; a_queries: JSON_OBJECT): detachable GCSE_PAGE
-			-- Return a query page based for a query with page key `a_page_key', if any.
+			-- Google result medata query. Return a query page based for a query with page key `a_page_key', if any.
 		do
 			if attached {JSON_ARRAY} a_queries.item (a_page_key) as jquerypage and then attached {JSON_OBJECT} jquerypage.i_th (1) as jpage then
 				create Result

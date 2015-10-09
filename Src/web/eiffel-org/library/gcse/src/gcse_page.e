@@ -67,21 +67,7 @@ feature -- Change element
 			start_index_set: start_index = a_start_index
 		end
 
-		--nextPage": [
-		--   {
-		--    "title": "Google Custom Search - Scoop",
-		--    "totalResults": "712",
-		--    "searchTerms": "Scoop",
-		--    "count": 10,
-		--    "startIndex": 11,
-		--    "inputEncoding": "utf8",
-		--    "outputEncoding": "utf8",
-		--    "safe": "off",
-		--    "cx": "015017565055626880074:9gdgp1fvt-g"
-		--   }
-
-
-	feature -- Output
+feature -- Output
 
 		to_string: STRING_8
 			do

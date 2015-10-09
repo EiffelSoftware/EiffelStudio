@@ -18,7 +18,7 @@
           </h3>
         </header>
         <blockquote cite="{$item.link/}">
-          <p>{$item.snippet_2/}</p>
+          <p>{htmlentities}{$item.snippet/}{/htmlentities}</p>
           <footer>
             <p><abbr title="Uniform Resource Locator">Source</abbr> <a href="{$item.link/}">{$item.display_link/}</a></p>
           </footer>
@@ -29,7 +29,7 @@
 
     
   </ol>  
-  <ul class="cms-links">
+  <ul class="cms-page-links">
       {if isset="$result.previous_page"}
         <li><a href="{$site_url/}gcse/?q={$result.previous_page.search_terms/}&amp;start={$result.previous_page.start_index/}&amp;num={$result.previous_page.count/}">Previous</a></li>
       {/if}

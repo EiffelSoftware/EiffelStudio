@@ -195,6 +195,7 @@ feature -- Recent changes
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 			l_info: SVN_REVISION_INFO
+			l_log: READABLE_STRING_8
 			loc: PATH
 			l_base_url: detachable STRING_8
 			s: STRING_32
@@ -203,6 +204,10 @@ feature -- Recent changes
 			wbookid: detachable READABLE_STRING_GENERAL
 			mnger: like manager
 			dt: DATE_TIME
+			l_prev: detachable like recent_changes_before.item
+			l_logs: detachable LIST [SVN_REVISION_INFO]
+			nb: INTEGER
+			done: BOOLEAN
 		do
 			create {ARRAYED_LIST [like recent_changes_before.item]} Result.make (params.size.as_integer_32)
 
@@ -227,37 +232,64 @@ feature -- Recent changes
 			if l_base_url = Void then
 				create l_base_url.make_empty
 			end
-			if attached svn.logs (loc.name, True, a_date, 1, params.size.to_integer_32, opts) as l_logs then
-				across
-					l_logs as ic
-				loop
-					l_info := ic.item
-					dt := svn_log_date_to_date_time (l_info.date)
+			from
+				nb := params.size.to_integer_32
+				done := False
+				dt := a_date
+			until
+				Result.count >= nb or done
+			loop
+				l_logs := svn.logs (loc.name, True, 1, dt, nb - Result.count, opts)
+				if l_logs = Void or else l_logs.count = 0 then
+					done := True
+				else
 					across
-						l_info.paths as p_ic
+						l_logs as ic
 					loop
-						s := p_ic.item.path
-						if s.starts_with (l_base_url) then
-							s.remove_head (l_base_url.count + 1)
-						end
-						if not s.is_empty and then s.item (1) = '/' then
-							s.remove_head (1)
-						end
-						if not s.is_empty then
-							wp := Void
-							wbookid := Void
-							mnger := manager (a_version_id)
-							if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
-								wp := l_wb_and_wp.page
-								wbookid := l_wb_and_wp.bookid
+						l_info := ic.item
+						dt := svn_log_date_to_date_time (l_info.date)
+						across
+							l_info.paths as p_ic
+						loop
+							s := p_ic.item.path
+							if s.starts_with (l_base_url) then
+								s.remove_head (l_base_url.count + 1)
 							end
-							if wbookid /= Void and wp /= Void then
-								wp.update_from_metadata
-								wp.set_src (mnger.wiki_page_uri_path (wp, wbookid, a_version_id))
-								wp.set_src (wp.src.substring (2, wp.src.count))
-								Result.force ([dt, l_info.author, wbookid, wp, utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)])
-							else
-									-- FIXME: Either not a doc item, or issue. To handle.
+							if not s.is_empty and then s.item (1) = '/' then
+								s.remove_head (1)
+							end
+							if not s.is_empty then
+								wp := Void
+								wbookid := Void
+								mnger := manager (a_version_id)
+								if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
+									wp := l_wb_and_wp.page
+									wbookid := l_wb_and_wp.bookid
+								end
+								if wbookid /= Void and wp /= Void then
+									wp.update_from_metadata
+									wp.set_src (mnger.wiki_page_uri_path (wp, wbookid, a_version_id))
+									wp.set_src (wp.src.substring (2, wp.src.count))
+									l_log := utf.utf_32_string_to_utf_8_string_8 (p_ic.item.action + {STRING_32} "%N -- " + l_info.log_message)
+									if
+										l_prev /= Void and then
+										wbookid.same_string (l_prev.bookid) and then
+										l_prev.page ~ wp
+									then
+											-- Update previous data
+										l_prev.time := dt
+										l_prev.author := l_info.author
+										l_prev.bookid := wbookid
+										if not l_prev.log.same_string (l_log) then
+											l_prev.log := l_prev.log + l_log
+										end
+									else
+										l_prev := [dt, l_info.author, wbookid, wp, l_log]
+										Result.force (l_prev)
+									end
+								else
+										-- FIXME: Either not a doc item, or issue. To handle.
+								end
 							end
 						end
 					end

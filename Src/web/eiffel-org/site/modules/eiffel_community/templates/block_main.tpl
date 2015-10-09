@@ -1,3 +1,4 @@
+<!--
 <section class="rss-block">
 	<ul>
 		<li>
@@ -16,3 +17,4 @@
     	</li>	
 	</ul>	
 </section>		
+-->

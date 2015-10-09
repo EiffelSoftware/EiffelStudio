@@ -73,6 +73,11 @@ feature -- CMS setup
 			m.enable
 			a_setup.register_module (m)
 
+			create {FEED_AGGREGATOR_MODULE} m.make
+			m.enable
+			a_setup.register_module (m)
+
+
 --			create {EMBEDDED_VIDEO_MODULE} m.make
 --			m.enable
 --			a_setup.register_module (m)

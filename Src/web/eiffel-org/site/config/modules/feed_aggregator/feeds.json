@@ -1,0 +1,37 @@
+{
+	"ids": ["eiffel", "forum", "updates"],
+	"feeds": { 
+			"eiffel": {
+				"title": "What's New", 
+				"expiration": 21600,
+				"size": 10,
+				"locations": [
+						"https://bertrandmeyer.com/feed/",
+						"https://room.eiffel.com/blog/feed",
+						"https://room.eiffel.com/article/feed",
+						"https://room.eiffel.com/library/feed"
+						]
+				, "categories": ["Eiffel"]
+				,"option_description": "enabled"
+				},
+			"forum": {
+				"title": "Forum",
+				"expiration": 21600,
+				"size": 10,
+				"locations": [
+					"https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
+					"http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
+				]
+				,"option_description": "enabled"
+			},
+			"updates": {
+				"title": "Recent Updates",
+				"expiration": 21600,
+				"size": 10,
+				"locations": [
+					"http://127.0.0.1:9090/recent_changes/feed"
+				]
+				,"option_description": "enabled"
+			}
+	}
+}

@@ -124,7 +124,11 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"front_header_welcome", "social_area", "eiffel_copyright", "welcome_main", "purpose", "news", "social_buttons", "updates", "sidebar_updates","popular_nodes", "libraries", "privacy_policy", "terms_of_use", "main">>
+			Result := <<
+						"front_header_welcome", "social_area", "eiffel_copyright", "welcome_main",
+						"purpose", "news", "social_buttons", "updates", "sidebar_updates", "popular_nodes",
+						"libraries", "privacy_policy", "terms_of_use", "main"
+					>>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -135,13 +139,13 @@ feature -- Hooks
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		local
-			l_path_info: READABLE_STRING_8
+			loc: READABLE_STRING_8
 		do
 			fixme ("Feature too long!!!")
-			l_path_info := a_response.request.percent_encoded_path_info
+			loc := a_response.location
 
 				--"purpose","news","articles","blogs"
-			if a_block_id.is_case_insensitive_equal_general ("front_header_welcome") and then l_path_info.same_string_general ("/") then
+			if a_block_id.is_case_insensitive_equal_general ("front_header_welcome") and then loc.is_empty then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "header")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -150,7 +154,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("welcome_main") and then l_path_info.starts_with ("/welcome") then
+			elseif a_block_id.is_case_insensitive_equal_general ("welcome_main") and then loc.starts_with ("welcome") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -159,7 +163,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then l_path_info.starts_with ("/purpose") then
+			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then loc.starts_with ("purpose") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -168,7 +172,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("news") and then l_path_info.starts_with ("/news") then
+			elseif a_block_id.is_case_insensitive_equal_general ("news") and then loc.starts_with ("news") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -177,7 +181,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("updates") and then l_path_info.starts_with ("/updates") then
+			elseif a_block_id.is_case_insensitive_equal_general ("updates") and then loc.starts_with ("updates") then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
@@ -186,9 +190,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			end
-
-			if a_block_id.is_case_insensitive_equal_general ("social_buttons") then
+			elseif a_block_id.is_case_insensitive_equal_general ("social_buttons") then
 				if
 					attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
 					l_type.same_string ("doc")
@@ -211,7 +213,7 @@ feature -- Hooks
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  a_response.request.path_info.same_string_general ("/") then
+			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  loc.is_empty then
 				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 					-- TODO: double check: Social Header is only included in the home page.
 					a_response.add_block (l_tpl_block, "header")
@@ -251,35 +253,34 @@ feature -- Hooks
 						end
 					end
 				end
-			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then  a_response.request.path_info.same_string_general ("/privacy_policy") then
-						if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
-							a_response.add_block (l_tpl_block, "content")
-							write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-						else
-							debug ("cms")
-								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-							end
-						end
-			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then  a_response.request.path_info.same_string_general ("/terms_of_use") then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
-							a_response.add_block (l_tpl_block, "content")
-							write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then loc.same_string_general ("privacy_policy") then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
-			elseif a_block_id.is_case_insensitive_equal_general ("main") and then  a_response.request.path_info.same_string_general ("/") then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then loc.same_string_general ("terms_of_use") then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("main") and then loc.is_empty then
+				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					a_response.add_block (l_tpl_block, "content")
+					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+				else
+					debug ("cms")
+						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+					end
+				end
 			end
-
 		end
 
 feature -- Request handling: About	
@@ -466,17 +467,6 @@ feature {NONE} -- Implementation: date and time
 			create d.make_from_timestamp (n)
 			Result := d.date_time
 		end
-
-feature {NONE} -- Implementation		
-
---	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
---		do
---			if s /= Void then
---				Result := html_encoder.general_encoded_string (s)
---			else
---				create Result.make_empty
---			end
---		end
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

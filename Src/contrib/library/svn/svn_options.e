@@ -13,6 +13,8 @@ feature -- Access
 
 	password: detachable STRING_32
 
+	parameters: detachable READABLE_STRING_32
+
 	auth_cached: BOOLEAN
 
 feature -- Element change
@@ -25,6 +27,15 @@ feature -- Element change
 	set_password (p: like password)
 		do
 			password := p
+		end
+
+	set_parameters (a_params: detachable READABLE_STRING_GENERAL)
+		do
+			if a_params = Void then
+				parameters := Void
+			else
+				create {STRING_32} parameters.make_from_string_general (a_params)
+			end
 		end
 
 

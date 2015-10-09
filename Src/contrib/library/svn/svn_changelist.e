@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make_with_name (a_name: READABLE_STRING_GENERAL)
 		do
 			make
-			items.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
+			extend (a_name)
 		end
 
 	make_with_path (a_path: PATH)
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create {ARRAYED_LIST [READABLE_STRING_32]} items.make (3)
+			create {ARRAYED_LIST [READABLE_STRING_32]} items.make (1)
 		end
 
 feature -- Access
@@ -46,6 +46,18 @@ feature -- Access
 			-- <Precursor>
 		do
 			Result := items.new_cursor
+		end
+
+feature -- Element change
+
+	extend_path (p: PATH)
+		do
+			extend (p.name)
+		end
+
+	extend (a_name: READABLE_STRING_GENERAL)
+		do
+			items.force (create {IMMUTABLE_STRING_32}.make_from_string_general (a_name))
 		end
 
 feature -- Conversion

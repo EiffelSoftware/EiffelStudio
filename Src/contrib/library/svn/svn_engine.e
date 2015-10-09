@@ -626,6 +626,14 @@ feature {NONE} -- impl
 				if not a_options.auth_cached then
 					Result.append_string_general (" --no-auth-cache " )
 				end
+				if 
+					attached a_options.parameters as l_params and then
+					not l_params.is_whitespace
+				then
+					Result.append_string_general (" ")
+					Result.append (l_params)
+					Result.append_string_general (" ")
+				end
 			end
 		end
 

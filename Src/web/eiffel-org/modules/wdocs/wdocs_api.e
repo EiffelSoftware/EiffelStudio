@@ -239,7 +239,7 @@ feature -- Recent changes
 			until
 				Result.count >= nb or done
 			loop
-				l_logs := svn.logs (loc.name, True, 1, dt, nb - Result.count, opts)
+				l_logs := svn.logs (loc.name, True, dt, 1, nb - Result.count, opts)
 				if l_logs = Void or else l_logs.count = 0 then
 					done := True
 				else

@@ -156,12 +156,27 @@ feature -- Element change
 		end
 
 	set_updated_date_with_text (a_date_text: detachable READABLE_STRING_32)
+			-- Set `date' from date string representation `a_date_text'.
+		obsolete 
+			"Use set_date_with_text [oct/2015]"
+		do
+			set_date_with_text (a_date_text)
+		end
+
+	set_date_with_text (a_date_text: detachable READABLE_STRING_32)
+			-- Set `date' from date string representation `a_date_text'.
 		do
 			if a_date_text = Void then
-				date := Void
+				set_date (Void)
 			else
-				date := date_time (a_date_text)
+				set_date (date_time (a_date_text))
 			end
+		end
+
+	set_date (a_date: detachable DATE_TIME)
+			-- Set `date' from `a_date'.
+		do
+			date := a_date
 		end
 
 	set_author (a_author: detachable FEED_AUTHOR)

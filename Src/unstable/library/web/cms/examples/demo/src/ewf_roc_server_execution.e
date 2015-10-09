@@ -82,6 +82,9 @@ feature -- CMS setup
 			create {CMS_RECENT_CHANGES_MODULE} m.make
 			a_setup.register_module (m)
 
+				-- Recent changes
+			create {FEED_AGGREGATOR_MODULE} m.make
+			a_setup.register_module (m)
 
 				-- Miscellanious
 			create {CMS_DEBUG_MODULE} m.make

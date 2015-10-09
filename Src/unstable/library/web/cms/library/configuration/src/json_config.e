@@ -63,10 +63,46 @@ feature -- Access: Config Reader
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with query `k'.
 		do
-			if attached {JSON_STRING} item (k) as l_string then
-				Result := l_string.unescaped_string_32
-			elseif attached {JSON_NUMBER} item (k) as l_number then
-				Result := l_number.item
+			Result := value_to_string_32 (item (k))
+		end
+
+	text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- List of String item associated with key `k'.
+		do
+			if attached {JSON_ARRAY} item (k) as l_array then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (l_array.count)
+				Result.compare_objects
+				across
+					l_array as ic
+				until
+					Result = Void
+				loop
+					if attached value_to_string_32 (ic.item) as s32 then
+						Result.force (s32)
+					else
+						Result := Void
+					end
+				end
+			end
+		end
+
+	text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Table of String item associated with key `k'.
+		do
+			if attached {JSON_OBJECT} item (k) as obj then
+				create {STRING_TABLE [READABLE_STRING_32]} Result.make (obj.count)
+				Result.compare_objects
+				across
+					obj as ic
+				until
+					Result = Void
+				loop
+					if attached value_to_string_32 (ic.item) as s32 then
+						Result.force (s32, ic.key.item)
+					else
+						Result := Void
+					end
+				end
 			end
 		end
 
@@ -104,6 +140,15 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	value_to_string_32 (v: detachable ANY): detachable STRING_32
+		do
+			if attached {JSON_STRING} v as l_string then
+				Result := l_string.unescaped_string_32
+			elseif attached {JSON_NUMBER} v as l_number then
+				Result := l_number.item
+			end
+		end
 
 	object_json_value (a_object: JSON_OBJECT; a_query: READABLE_STRING_32): detachable JSON_VALUE
 			-- Item associated with query `a_query' from object `a_object' if any.
@@ -163,7 +208,7 @@ feature {NONE} -- JSON
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

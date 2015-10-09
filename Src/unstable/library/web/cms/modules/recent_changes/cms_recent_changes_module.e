@@ -1,5 +1,5 @@
 note
-	description: "CMS module that bring support for recent changes."
+	description: "CMS module that brings support for recent changes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,6 +18,8 @@ inherit
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	CMS_HOOK_RESPONSE_ALTER
+
+	CMS_HOOK_BLOCK
 
 create
 	make
@@ -49,9 +51,131 @@ feature -- Access: router
 			-- <Precursor>
 		do
 			a_router.handle ("/recent_changes/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_recent_changes (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/recent_changes/feed", create {WSF_URI_AGENT_HANDLER}.make (agent handle_recent_changes_feed (a_api, ?, ?)), a_router.methods_head_get)
+		end
+
+feature -- Hook		
+
+	block_list: ITERABLE [like {CMS_BLOCK}.name]
+			-- List of block names, managed by current object.
+			-- If prefixed by "?", condition will be check
+			-- to determine if it should be displayed (and computed) or not.
+		do
+			Result := <<"?recent_changes">>
+		end
+
+	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+			-- Get block object identified by `a_block_id' and associate with `a_response'.
+		local
+			b: CMS_CONTENT_BLOCK
+			s, l_content: STRING
+			gen: FEED_TO_XHTML_VISITOR
+		do
+			if a_block_id.same_string_general ("recent_changes") then
+				create l_content.make (1024)
+				create gen.make (l_content)
+
+				create s.make_empty
+				s.append_string ("<liv class=%"nav%">")
+				s.append_string (a_response.link ("See more ...", "recent_changes/", Void))
+				s.append_string ("</li>")
+				gen.set_footer (s)
+
+				recent_changes_feed (a_response, 10, Void).accept (gen)
+
+				create b.make (a_block_id, Void, l_content, Void)
+				a_response.put_block (b, Void, False)
+			end
+		end
+
+	recent_changes_feed (a_response: CMS_RESPONSE; a_size: NATURAL_32; a_source: detachable READABLE_STRING_8): FEED
+		local
+			l_changes: CMS_RECENT_CHANGE_CONTAINER
+			ch: CMS_RECENT_CHANGE_ITEM
+			l_user: detachable CMS_USER
+			l_feed: FEED
+			l_feed_item: FEED_ITEM
+			lnk: FEED_LINK
+			nb: NATURAL_32
+		do
+			l_user := Void -- Public access for the feed!
+			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source)
+			if attached a_response.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
+				across
+					lst as ic
+				loop
+					if attached {CMS_RECENT_CHANGES_HOOK} ic.item as h then
+						if attached h.recent_changes_sources as h_sources then
+							if
+								a_source = Void
+								or else across h_sources as h_ic some h_ic.item.is_case_insensitive_equal (a_source) end
+							then
+								h.populate_recent_changes (l_changes, l_user)
+							end
+						end
+					end
+				end
+			end
+			create l_feed.make ("CMS Recent changes")
+			l_feed.set_date (create {DATE_TIME}.make_now_utc)
+			nb := a_size
+			across
+				l_changes as ic
+			until
+				nb = 0
+			loop
+				ch := ic.item
+				create l_feed_item.make (ch.link.title)
+				l_feed_item.set_date (ch.date)
+				l_feed_item.set_description (ch.information)
+				l_feed_item.set_category (ch.source)
+				create lnk.make (a_response.absolute_url (ch.link.location, Void))
+				l_feed_item.links.force (lnk, "")
+				l_feed.extend (l_feed_item)
+				nb := nb - 1
+			end
+			l_feed.sort
+			Result := l_feed
 		end
 
 feature -- Handler
+
+	handle_recent_changes_feed (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			htdate: HTTP_DATE
+			l_content: STRING
+			l_until_date: detachable DATE_TIME
+			l_until_date_timestamp: INTEGER_64
+			l_filter_source: detachable READABLE_STRING_8
+			l_size: NATURAL_32
+			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
+		do
+			if attached {WSF_STRING} req.query_parameter ("date") as p_until_date then
+				l_until_date_timestamp := p_until_date.value.to_integer_64
+				create htdate.make_from_timestamp (l_until_date_timestamp)
+				l_until_date := htdate.date_time
+			end
+			if attached {WSF_STRING} req.query_parameter ("source") as p_filter then
+				l_filter_source := p_filter.url_encoded_value
+				if l_filter_source.is_empty then
+					l_filter_source := Void
+				end
+			end
+			if attached {WSF_STRING} req.query_parameter ("size") as p_size then
+				l_size := p_size.integer_value.to_natural_32
+			end
+			if l_size = 0 then
+				l_size := 25
+			end
+
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create l_content.make (1024)
+			recent_changes_feed (r, l_size, l_filter_source).accept (create {ATOM_FEED_GENERATOR}.make (l_content))
+			create mesg.make ({HTTP_STATUS_CODE}.ok)
+			mesg.set_payload (l_content)
+			res.send (mesg)
+		end
 
 	handle_recent_changes (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -146,7 +270,7 @@ feature -- Handler
 						create l_date_field.make_with_text ("date", l_until_date_timestamp.out)
 						l_form.extend (l_date_field)
 					end
-					
+
 					create l_submit.make_with_text ("op", "Filter")
 					l_form.extend (l_submit)
 					l_form.extend_html_text ("<br/>")
@@ -243,7 +367,7 @@ feature -- Handler
 						end
 						l_content.append ("<a href=%"")
 						l_content.append (r.url (r.location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))
-						l_content.append ("%">More  ...</a>")
+						l_content.append ("%">See more ...</a>")
 					end
 				end
 
@@ -268,6 +392,7 @@ feature -- Hooks configuration
 		do
 			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
 			a_response.hooks.subscribe_to_response_alter_hook (Current)
+			a_response.hooks.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hook

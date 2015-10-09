@@ -21,6 +21,18 @@ feature -- Test
 			create {INI_CONFIG} cfg.make_from_string ("[
 				foo = bar
 				
+				collection[] = a
+				collection[] = b
+				collection[] = c
+				collection[] = 1
+				collection[] = 2
+				collection[] = 3
+				
+				table[a] = 1
+				table[b] = 2
+				table[c] = 3
+				table[d] = test
+				
 				[first]
 				abc = 1
 				def = and so on
@@ -57,6 +69,21 @@ feature -- Test
 			assert ("item (first.abc)",  attached cfg.text_item ("first.abc")  as v and then v.same_string_general ("1"))
 			assert ("has_item (second.is)", cfg.has_item ("second.is"))
 			assert ("item (second.is)",  attached cfg.text_item ("second.is")  as v and then v.same_string_general ("2"))
+
+			assert ("has_item (collection)", cfg.has_item ("collection"))
+			assert ("item (collection)",  attached cfg.text_list_item ("collection") as lst and then (
+							lst.has ("a") and lst.has ("b") and lst.has ("c") and lst.has ("1") and lst.has ("2") and lst.has ("3")
+						)
+					)
+					
+			assert ("has_item (table)", cfg.has_item ("table"))
+			assert ("item (table)",  attached cfg.text_table_item ("table") as tb and then (
+							tb.item ("a") ~ {STRING_32} "1" and 
+							tb.item ("b") ~ {STRING_32} "2" and 
+							tb.item ("c") ~ {STRING_32} "3" and 
+							tb.item ("d") ~ {STRING_32} "test"							
+						)
+					)
 
 			if attached cfg.sub_config ("second") as cfg_second then
 				assert ("has_item (is)", cfg_second.has_item ("is"))
@@ -141,7 +168,9 @@ feature -- Test
 						"is": 2,
 						"the": 3,
 						"end": 4
-					}
+					},
+					"collection": ["a", "b", "c", 1, 2, 3],
+					"table": { "a": 1, "b": 2, "c": 3, "d" : "test" }
 				}
 			]")
 
@@ -163,6 +192,21 @@ feature -- Test
 			assert ("item (second.is)",   attached cfg.text_item ("second.is")   as v and then v.same_string_general ("2"))
 			assert ("item (second.the)",  attached cfg.text_item ("second.the")  as v and then v.same_string_general ("3"))
 			assert ("item (second.end)",  attached cfg.text_item ("second.end")  as v and then v.same_string_general ("4"))
+
+			assert ("has_item (collection)", cfg.has_item ("collection"))
+			assert ("item (collection)",  attached cfg.text_list_item ("collection") as lst and then (
+							lst.has ("a") and lst.has ("b") and lst.has ("c") and lst.has ("1") and lst.has ("2") and lst.has ("3")
+						)
+					)
+					
+			assert ("has_item (table)", cfg.has_item ("table"))
+			assert ("item (table)",  attached cfg.text_table_item ("table") as tb and then (
+							tb.item ("a") ~ {STRING_32} "1" and 
+							tb.item ("b") ~ {STRING_32} "2" and 
+							tb.item ("c") ~ {STRING_32} "3" and 
+							tb.item ("d") ~ {STRING_32} "test"							
+						)
+					)
 
 			if attached cfg.sub_config ("second") as cfg_second then
 				assert ("has_item (is)", cfg_second.has_item ("is"))

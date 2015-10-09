@@ -58,7 +58,7 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"debug-info">>
+			Result := <<"?debug-info">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -67,14 +67,13 @@ feature -- Hooks
 			dbg: WSF_DEBUG_INFORMATION
 			s: STRING
 		do
-			if a_response.theme.has_region ("debug") then
-				create dbg.make
-				create s.make_empty
-				dbg.append_information_to (a_response.request, a_response.response, s)
-				append_info_to ("Storage", a_response.api.storage.generator, a_response, s)
-				create b.make ("debug-info", "Debug", s, a_response.formats.plain_text)
-				a_response.add_block (b, "footer")
-			end
+			create dbg.make
+			create s.make_empty
+			dbg.append_information_to (a_response.request, a_response.response, s)
+			append_info_to ("Storage", a_response.api.storage.generator, a_response, s)
+			create b.make ("debug-info", "Debug", s, a_response.formats.plain_text)
+			b.add_condition (create {CMS_BLOCK_EXPRESSION_CONDITION}.make_none)
+			a_response.add_block (b, "footer")
 		end
 
 feature -- Handler		

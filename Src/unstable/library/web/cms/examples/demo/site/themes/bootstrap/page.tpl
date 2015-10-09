@@ -62,9 +62,15 @@
           <!-- Main Content Section -->
 		  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
           {$page.region_content/}   
+		  {if condition="$page.is_front"}
+			  {if isset="$page.region_feed_eiffel"}
+				<div class="column" style="width: 45%; float: left">{$page.region_feed_eiffel/}</div>
+			  {/if}
+			  {if isset="$page.region_feed_forum"}
+				<div class="column" style="width: 45%; float: left">{$page.region_feed_forum/}</div>
+			  {/if}
+		  {/if}
           </div>
-
-
       </div>
     </div>
 

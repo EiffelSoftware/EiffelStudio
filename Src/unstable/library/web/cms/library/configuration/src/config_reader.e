@@ -33,11 +33,53 @@ feature -- Query
 			end
 		end
 
+	resolved_text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- List of String item associated with key `k',
+			-- and expanded values to resolved variables ${varname}.
+		do
+			if attached text_list_item (k) as lst then
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					lst.replace (resolved_expression (lst.item))
+					lst.forth
+				end
+			end
+		end
+
+	resolved_text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Table of String item associated with key `k',
+			-- and expanded values to resolved variables ${varname}.
+		do
+			if attached text_table_item (k) as tb then
+				from
+					tb.start
+				until
+					tb.after
+				loop
+					tb.replace (resolved_expression (tb.item_for_iteration), tb.key_for_iteration)
+					tb.forth
+				end
+			end
+		end
+
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.
 		deferred
 		end
 
+	text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- List of String item associated with key `k'.
+		deferred
+		end
+
+	text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Table of String item associated with key `k'.
+		deferred
+		end
+		
 	integer_item (k: READABLE_STRING_GENERAL): INTEGER
 			-- Integer item associated with key `k'.
 		deferred
@@ -109,7 +151,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

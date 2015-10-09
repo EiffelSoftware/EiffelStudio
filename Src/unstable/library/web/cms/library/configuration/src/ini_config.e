@@ -119,14 +119,47 @@ feature -- Access: Config Reader
 
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.	
-		local
-			obj: like item
 		do
-			obj := item (k)
-			if attached {READABLE_STRING_32} obj as s32 then
-				Result := s32
-			elseif attached {READABLE_STRING_8} obj as s then
-				Result := utf.utf_8_string_8_to_escaped_string_32 (s)
+			Result := value_to_string_32 (item (k))
+		end
+
+	text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- List of String item associated with key `k'.
+		do
+			if attached {LIST [READABLE_STRING_8]} item (k) as l_list then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (l_list.count)
+				Result.compare_objects
+				across
+					l_list as ic
+				until
+					Result = Void
+				loop
+					if attached value_to_string_32 (ic.item) as s32 then
+						Result.force (s32)
+					else
+						Result := Void
+					end
+				end
+			end
+		end
+
+	text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Table of String item associated with key `k'.
+		do
+			if attached {STRING_TABLE [READABLE_STRING_8]} item (k) as l_list then
+				create {STRING_TABLE [READABLE_STRING_32]} Result.make (l_list.count)
+				Result.compare_objects
+				across
+					l_list as ic
+				until
+					Result = Void
+				loop
+					if attached value_to_string_32 (ic.item) as s32 then
+						Result.force (s32, ic.key)
+					else
+						Result := Void
+					end
+				end
 			end
 		end
 
@@ -225,6 +258,15 @@ feature -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	value_to_string_32 (obj: detachable ANY): detachable STRING_32
+		do
+			if attached {READABLE_STRING_32} obj as s32 then
+				Result := s32
+			elseif attached {READABLE_STRING_8} obj as s then
+				Result := utf.utf_8_string_8_to_escaped_string_32 (s)
+			end
+		end
 
 	item_from_values (a_values: STRING_TABLE [ANY]; k: READABLE_STRING_GENERAL): detachable ANY
 		local
@@ -460,7 +502,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

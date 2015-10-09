@@ -196,6 +196,16 @@ feature -- Query
 		deferred
 		end
 
+	text_list_item (a_name: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- Configuration values associated with `a_name', if any.
+		deferred
+		end
+
+	text_table_item (a_name: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Configuration indexed values associated with `a_name', if any.
+		deferred
+		end
+
 	text_item_or_default (a_name: READABLE_STRING_GENERAL; a_default_value: READABLE_STRING_GENERAL): READABLE_STRING_32
 			-- `text_item' associated with `a_name' or if none, `a_default_value'.
 		do

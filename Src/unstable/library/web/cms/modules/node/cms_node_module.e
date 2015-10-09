@@ -244,7 +244,7 @@ feature -- Hooks
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 			-- <Precursor>
 		do
-			Result := <<"node-info">>
+			Result := <<"?node-info">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)

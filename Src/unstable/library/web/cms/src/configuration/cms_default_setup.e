@@ -68,6 +68,18 @@ feature -- Access
 			Result := configuration.resolved_text_item (a_name)
 		end
 
+	text_list_item (a_name: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- Configuration values associated with `a_name', if any.
+		do
+			Result := configuration.text_list_item (a_name)
+		end
+
+	text_table_item (a_name: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Configuration indexed values associated with `a_name', if any.
+		do
+			Result := configuration.text_table_item (a_name)
+		end
+
 	string_8_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- String 8 configuration value associated with `a_name', if any.
 		local

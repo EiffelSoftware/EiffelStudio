@@ -19,6 +19,7 @@
 		<library name="cms_blog_module" location="..\..\modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 		<library name="cms_email_service" location="..\..\library\email\email-safe.ecf" readonly="false"/>
+		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
 		<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
 		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20-safe.ecf" readonly="false"/>

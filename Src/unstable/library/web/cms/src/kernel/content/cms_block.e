@@ -39,6 +39,9 @@ feature -- Status report
 		deferred
 		end
 
+	conditions: detachable LIST [CMS_BLOCK_CONDITION]
+			-- Optional block condition to be enabled.
+
 feature -- Element change
 
 	add_css_class (a_class: READABLE_STRING_8)
@@ -65,6 +68,19 @@ feature -- Element change
 				html_options := opts
 			end
 			opts.remove_css_class (a_class)
+		end
+
+	add_condition (a_condition: CMS_BLOCK_CONDITION)
+			-- Add condition `a_condition'.
+		local
+			l_conditions: like conditions
+		do
+			l_conditions := conditions
+			if l_conditions = Void then
+				create {ARRAYED_LIST [CMS_BLOCK_CONDITION]} l_conditions.make (1)
+				conditions := l_conditions
+			end
+			l_conditions.force (a_condition)
 		end
 
 feature -- Conversion

@@ -521,26 +521,26 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Block views
 
-	get_block_view_login (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-		local
---			vals: CMS_VALUE_TABLE
-		do
-			if attached template_block (a_block_id, a_response) as l_tpl_block then
---				create vals.make (1)
---					-- add the variable to the block
---				value_table_alter (vals, a_response)
---				across
---					vals as ic
---				loop
---					l_tpl_block.set_value (ic.item, ic.key)
+--	get_block_view_login (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+--		local
+----			vals: CMS_VALUE_TABLE
+--		do
+--			if attached template_block (a_block_id, a_response) as l_tpl_block then
+----				create vals.make (1)
+----					-- add the variable to the block
+----				value_table_alter (vals, a_response)
+----				across
+----					vals as ic
+----				loop
+----					l_tpl_block.set_value (ic.item, ic.key)
+----				end
+--				a_response.put_required_block (l_tpl_block, "content")
+--			else
+--				debug ("cms")
+--					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 --				end
-				a_response.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-				end
-			end
-		end
+--			end
+--		end
 
 	get_block_view_register (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
@@ -578,7 +578,6 @@ feature {NONE} -- Block views
 				end
 			end
 		end
-
 
 	get_block_view_reactivate (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do

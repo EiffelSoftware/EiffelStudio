@@ -93,7 +93,7 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"demo-info">>
+			Result := <<"?demo-info">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -103,8 +103,8 @@ feature -- Hooks
 			m: CMS_MENU
 			lnk: CMS_LOCAL_LINK
 		do
-			if a_block_id.is_case_insensitive_equal_general ("demo-info") then
-				if a_response.request.request_uri.starts_with ("/demo/") then
+			if a_block_id.same_string ("demo-info") then
+				if a_response.location.starts_with_general ("demo/") then
 					create m.make_with_title (a_block_id, "Demo", 2)
 					create lnk.make ("demo: abc", "demo/abc")
 					m.extend (lnk)

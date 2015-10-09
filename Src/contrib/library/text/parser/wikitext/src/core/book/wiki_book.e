@@ -204,7 +204,14 @@ feature -- Access
 			loop
 				Result := ic.item
 				if not Result.key.is_case_insensitive_equal_general (a_key) then
-					Result := Void
+					if
+						Result.is_index_page and then 
+						Result.parent_key.is_case_insensitive_equal_general (a_key) 
+					then
+							-- Find it.
+					else
+						Result := Void
+					end
 				end
 			end
 		end

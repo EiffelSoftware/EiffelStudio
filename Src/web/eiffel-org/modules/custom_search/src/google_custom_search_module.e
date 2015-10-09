@@ -120,24 +120,32 @@ feature -- Handler
 				-- TODO handle errors!!!
 			write_debug_log (generator + ".handle_search")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if
-				attached {WSF_STRING} req.query_parameter ("q") as l_query and then
-				attached gcse_cx_key (api) as l_cx and then
-				attached gcse_secret_key (api) as l_key
-			then
-				create l_parameters.make (l_key, l_cx, l_query.value )
+			if attached {WSF_STRING} req.query_parameter ("q") as l_query then
 				if
-					attached {WSF_STRING} req.query_parameter ("start") as l_index and then
-				  	attached {WSF_STRING} req.query_parameter ("num") as l_num
+					attached gcse_cx_key (api) as l_cx and then
+					attached gcse_secret_key (api) as l_key
 				then
-					l_parameters.set_start (l_index.value)
-					l_parameters.set_num (l_num.value)
-				end
-				create l_search.make (l_parameters)
-				l_search.search
-				if attached template_block (Current, "search", r) as l_tpl_block then
-					l_tpl_block.set_value (l_search.last_result, "result")
-					r.add_block (l_tpl_block, "content")
+					create l_parameters.make (l_key, l_cx, l_query.value )
+					if
+						attached {WSF_STRING} req.query_parameter ("start") as l_index and then
+					  	attached {WSF_STRING} req.query_parameter ("num") as l_num
+					then
+						l_parameters.set_start (l_index.value)
+						l_parameters.set_num (l_num.value)
+					end
+					create l_search.make (l_parameters)
+					l_search.search
+					if attached template_block (Current, "search", r) as l_tpl_block then
+						l_tpl_block.set_value (l_search.last_result, "result")
+						r.add_block (l_tpl_block, "content")
+					end
+				else
+						-- If no key are provided, at least output google search result page.
+					if req.is_https then
+						r.set_redirection ("https://www.google.com/search?sitesearch=" + r.absolute_url ("", Void) + "&q=" + l_query.url_encoded_value)
+					else
+						r.set_redirection ("http://www.google.com/search?sitesearch=" + r.absolute_url ("", Void) + "&q=" + l_query.url_encoded_value)
+					end
 				end
 			end
 			r.execute

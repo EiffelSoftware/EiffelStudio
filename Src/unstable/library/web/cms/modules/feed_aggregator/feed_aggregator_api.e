@@ -20,7 +20,7 @@ feature -- Access
 			agg: FEED_AGGREGATION
 			l_feed_id: READABLE_STRING_32
 			l_title: detachable READABLE_STRING_GENERAL
-			l_location_list: detachable LIST [READABLE_STRING_32]
+			l_locations: detachable STRING_TABLE [READABLE_STRING_8]
 			utf: UTF_CONVERTER
 			l_table: like internal_aggregations
 		do
@@ -36,16 +36,28 @@ feature -- Access
 							l_ids as ic
 						loop
 							l_feed_id := ic.item
-							l_location_list := cfg.text_list_item ({STRING_32} "feeds." + l_feed_id + ".locations")
+							create l_locations.make (1)
+
+							if attached cfg.text_list_item ({STRING_32} "feeds." + l_feed_id + ".locations") as l_location_list then
+								across
+									l_location_list as loc_ic
+								loop
+									l_locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_ic.item), loc_ic.item)
+								end
+							end
+							if attached cfg.text_table_item ({STRING_32} "feeds." + l_feed_id + ".locations") as l_location_table then
+								across
+									l_location_table as loc_tb_ic
+								loop
+									l_locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_tb_ic.item), loc_tb_ic.key)
+								end
+							end
 							if
 								attached cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".location") as l_location
 							then
-								if l_location_list = Void then
-									create {ARRAYED_LIST [READABLE_STRING_32]} l_location_list.make (1)
-								end
-								l_location_list.force (l_location)
+								l_locations.force (utf.utf_32_string_to_utf_8_string_8 (l_location), l_location)
 							end
-							if l_location_list /= Void and then not l_location_list.is_empty then
+							if l_locations /= Void and then not l_locations.is_empty then
 								l_title := cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".title")
 								if l_title = Void then
 									l_title := l_feed_id
@@ -62,10 +74,10 @@ feature -- Access
 									end
 								end
 								if attached cfg.text_item ({STRING_32} "feeds." + l_feed_id + ".option_description") as l_description_opt then
-										agg.set_description_enabled (not l_description_opt.is_case_insensitive_equal_general ("disabled"))
+									agg.set_description_enabled (not l_description_opt.is_case_insensitive_equal_general ("disabled"))
 								end
 								across
-									l_location_list as loc_ic
+									l_locations as loc_ic
 								loop
 									agg.locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_ic.item))
 								end

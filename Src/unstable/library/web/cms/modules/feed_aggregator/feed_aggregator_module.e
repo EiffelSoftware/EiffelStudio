@@ -23,6 +23,8 @@ inherit
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
+	CMS_HOOK_CACHE
+
 create
 	make
 
@@ -181,9 +183,23 @@ feature -- Hooks configuration
 			a_response.hooks.subscribe_to_block_hook (Current)
 			a_response.hooks.subscribe_to_response_alter_hook (Current)
 			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_response.hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature -- Hook
+
+	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
+			-- <Precursor>.
+		local
+			p: PATH
+			dir: DIRECTORY
+		do
+			p := a_response.api.files_location.extended (".cache").extended (name)
+			create dir.make_with_path (p)
+			if dir.exists then
+				dir.recursive_delete
+			end
+		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 			-- List of block names, managed by current object.

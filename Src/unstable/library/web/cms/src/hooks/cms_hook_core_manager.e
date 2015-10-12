@@ -104,7 +104,6 @@ feature -- Hook: menu_alter
 			end
 		end
 
-
 feature -- Hook: form_alter
 
 	subscribe_to_form_alter_hook (h: CMS_HOOK_FORM_ALTER)
@@ -172,6 +171,29 @@ feature -- Hook: block
 								end
 							end
 						end
+					end
+				end
+			end
+		end
+
+feature -- Hook: cache
+
+	subscribe_to_cache_hook (h: CMS_HOOK_CACHE)
+			-- Add `h' as subscriber of cache hooks CMS_HOOK_CACHE,
+			-- and response `a_response'.
+		do
+			subscribe_to_hook (h, {CMS_HOOK_CACHE})
+		end
+
+	invoke_clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
+			-- Invoke cache hook for identifiers `a_cache_id_list'.
+		do
+			if attached subscribers ({CMS_HOOK_CACHE}) as lst then
+				across
+					lst as c
+				loop
+					if attached {CMS_HOOK_CACHE} c.item as h then
+						h.clear_cache (a_cache_id_list, a_response)
 					end
 				end
 			end

@@ -53,6 +53,8 @@ feature -- Access: router
 			l_user_handler: CMS_USER_HANDLER
 			l_role_handler:	CMS_ROLE_HANDLER
 
+			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
+
 			l_uri_mapping: WSF_URI_MAPPING
 		do
 			create l_admin_handler.make (a_api)
@@ -67,6 +69,10 @@ feature -- Access: router
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/roles", l_roles_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
+			create l_admin_cache_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/admin/cache", l_admin_cache_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
 			create l_user_handler.make (a_api)
 			a_router.handle ("/admin/add/user", l_user_handler, a_router.methods_get_post)
 			a_router.handle ("/admin/user/{id}", l_user_handler, a_router.methods_get)
@@ -78,6 +84,8 @@ feature -- Access: router
 			a_router.handle ("/admin/role/{id}", l_role_handler, a_router.methods_get)
 			a_router.handle ("/admin/role/{id}/edit", l_role_handler, a_router.methods_get_post)
 			a_router.handle ("/admin/role/{id}/delete", l_role_handler, a_router.methods_get_post)
+
+
 		end
 
 feature -- Security
@@ -118,6 +126,13 @@ feature -- Hooks
 					-- TODO: we should probably use more side menu and less primary_menu.
 				create lnk.make ("Admin", "admin")
 				lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
+				a_menu_system.management_menu.extend (lnk)
+			end
+			if
+				a_response.has_permission ("admin cache") -- Note: admin user has all permissions enabled by default.
+			then
+				create lnk.make ("Cache", "admin/cache")
+				lnk.set_permission_arguments (<<"admin cache">>)
 				a_menu_system.management_menu.extend (lnk)
 			end
 		end

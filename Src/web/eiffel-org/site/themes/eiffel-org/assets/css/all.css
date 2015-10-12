@@ -2173,12 +2173,22 @@ table.eiffel_org_nodes tbody td {
   margin: 0 0 0 -70px;
 }
 .rss-block > ul > li {
-  width: 235px;
+  width: 303px;
   float: left;
   margin: 0 0 54px 33px;
 }
+.rss-block > ul > li:not(:last-child) {
+  border-right: dotted 1px #99cc33;
+}
 .rss-block > ul > li > h2 {
   font: 28px-8/28px-8 "museo_slab500", Arial, Helvetica, sans-serif;
+}
+.rss-block > ul > li .feed {
+  font-size: 14px;
+  line-height: 14px;
+}
+.rss-block > ul > li .feed .description {
+  line-height: 18px;
 }
 
 #sidebar {

@@ -194,10 +194,13 @@ feature -- Hook
 			p: PATH
 			dir: DIRECTORY
 		do
-			p := a_response.api.files_location.extended (".cache").extended (name)
-			create dir.make_with_path (p)
-			if dir.exists then
-				dir.recursive_delete
+			if a_cache_id_list = Void then
+					-- Clear all cache.
+				p := a_response.api.files_location.extended (".cache").extended (name)
+				create dir.make_with_path (p)
+				if dir.exists then
+					dir.recursive_delete
+				end
 			end
 		end
 

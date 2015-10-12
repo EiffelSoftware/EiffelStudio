@@ -206,12 +206,15 @@ feature -- Recent changes
 			dt: DATE_TIME
 			l_prev: detachable like recent_changes_before.item
 			l_logs: detachable LIST [SVN_REVISION_INFO]
+			l_result_count: INTEGER
 			nb: INTEGER
 			done: BOOLEAN
 		do
 			create {ARRAYED_LIST [like recent_changes_before.item]} Result.make (params.size.as_integer_32)
 
 --			create opts
+
+			mnger := manager (a_version_id)
 
 			svn := new_svn
 			if a_version_id = Void then
@@ -239,12 +242,16 @@ feature -- Recent changes
 			until
 				Result.count >= nb or done
 			loop
-				l_logs := svn.logs (loc.name, True, dt, 1, nb - Result.count, opts)
+				l_result_count := Result.count
+				l_logs := svn.logs (loc.name, True, dt, 1, nb - l_result_count, opts)
 				if l_logs = Void or else l_logs.count = 0 then
 					done := True
 				else
+					done := l_logs.count < nb - l_result_count
 					across
 						l_logs as ic
+					until
+						done
 					loop
 						l_info := ic.item
 						dt := svn_log_date_to_date_time (l_info.date)
@@ -261,7 +268,6 @@ feature -- Recent changes
 							if not s.is_empty then
 								wp := Void
 								wbookid := Void
-								mnger := manager (a_version_id)
 								if attached mnger.book_and_page_by_path (loc.extended (s)) as l_wb_and_wp then
 									wp := l_wb_and_wp.page
 									wbookid := l_wb_and_wp.bookid
@@ -292,7 +298,10 @@ feature -- Recent changes
 								end
 							end
 						end
+						done := done or Result.count >= nb
 					end
+						-- Stop if no new change were added (prevent very long processing) that may occurs with "svn copy ...".
+					done := done or Result.count = l_result_count
 				end
 			end
 		end

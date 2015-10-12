@@ -26,6 +26,8 @@ inherit
 
 	CMS_RECENT_CHANGES_HOOK
 
+	CMS_HOOK_CACHE
+
 	WDOCS_MODULE_HELPER
 
 create
@@ -160,6 +162,8 @@ feature -- Hooks configuration
 
 				-- Module specific hook, if available.
 			a_response.hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+
+			a_response.hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature {NONE} -- Config
@@ -257,6 +261,22 @@ feature -- Access: docs
 		end
 
 feature -- Hooks
+
+	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
+			-- <Precursor>.
+		local
+			mng: like manager
+		do
+			if a_cache_id_list = Void then
+				mng := manager (Void)
+				mng.refresh_data
+				across
+					mng.book_names as ic
+				loop
+					reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
+				end
+			end
+		end
 
 	response_alter (a_response: CMS_RESPONSE)
 		do

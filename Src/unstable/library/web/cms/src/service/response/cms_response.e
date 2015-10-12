@@ -423,6 +423,8 @@ feature -- Blocks initialization
 			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region)
 		end
 
+feature -- Block management		
+
 	block_conditions (a_block_id: READABLE_STRING_8): detachable ARRAYED_LIST [CMS_BLOCK_EXPRESSION_CONDITION]
 				-- Condition associated with `a_block_id' in configuration, if any.
 		do
@@ -473,6 +475,34 @@ feature -- Blocks initialization
 						Result := [create {CMS_CACHE_BLOCK} .make (a_block_id, l_cache), l_region, True]
 					end
 				end
+			end
+		end
+
+	clear_block_caches (a_block_id_list: detachable ITERABLE [READABLE_STRING_8])
+			-- Clear cache for block `a_block_id_list' if set,
+			-- otherwise clear all block caches if `a_block_id_list' is Void.
+		local
+			p,pb: PATH
+			dir: DIRECTORY
+			l_cache: CMS_FILE_STRING_8_CACHE
+		do
+			p := api.files_location.extended (".cache").extended ("blocks")
+			if a_block_id_list /= Void then
+				across
+					a_block_id_list as ic
+				loop
+						-- FIXME: find a smarter way to avoid conflict between block id, and other cache id.
+						-- however, this is only about "Cache" so not that critical if deleted by mistake.
+					pb := p.extended (ic.item).appended_with_extension ("html")
+					create l_cache.make (pb)
+					if l_cache.exists then
+						l_cache.delete
+					end
+				end
+			else
+					-- Clear all block caches.
+				create dir.make_with_path (p)
+				dir.recursive_delete
 			end
 		end
 

@@ -196,6 +196,8 @@ feature -- Hook: cache
 						h.clear_cache (a_cache_id_list, a_response)
 					end
 				end
+
+				a_response.clear_block_caches (a_cache_id_list)
 			end
 		end
 

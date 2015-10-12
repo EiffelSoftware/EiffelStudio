@@ -45,6 +45,15 @@ feature -- Access
 	description_enabled: BOOLEAN
 			-- Display description?
 
+feature -- Status report
+
+	has_category_filter: BOOLEAN
+			-- Is there any category filtering?
+			-- i.e via `included_categories'
+		do
+			Result := attached included_categories as cats and then not cats.is_empty
+		end
+
 feature -- Element change
 
 	set_description (a_desc: detachable READABLE_STRING_GENERAL)
@@ -99,6 +108,10 @@ feature -- Element change
 feature -- Status report
 
 	is_included (e: FEED_ITEM): BOOLEAN
+			-- Is `e' included in final aggregation?
+			-- i.e: related to `included_categories'
+			-- note that if `e' has no category, it is included by default,
+			-- even if `included_categories' is defined.
 		do
 			Result := True
 			if attached e.categories as e_cats then

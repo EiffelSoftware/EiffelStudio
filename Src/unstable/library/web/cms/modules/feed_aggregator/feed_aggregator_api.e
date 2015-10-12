@@ -113,16 +113,11 @@ feature -- Operation
 
 	aggregation_feed (agg: FEED_AGGREGATION): detachable FEED
 			-- Feed from aggregation `agg'.
-		local
-			fac: FEED_DEFAULT_PARSERS
-			f: detachable FEED
 		do
-			create fac
 			across
 				agg.locations as ic
 			loop
-				if attached new_http_client_session (ic.item).get ("", Void).body as res then
-					f := fac.feed_from_string (res)
+				if attached feed (ic.item) as f then
 					if Result /= Void then
 						if f /= Void then
 							Result := Result + f

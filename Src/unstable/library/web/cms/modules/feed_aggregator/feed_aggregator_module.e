@@ -280,6 +280,19 @@ feature -- Hook
 						vis.set_footer (s)
 
 						if attached l_feed_api.aggregation_feed (l_agg) as l_feed then
+							if l_agg.has_category_filter and attached l_feed.items as lst then
+								from
+									lst.start
+								until
+									lst.after
+								loop
+									if not l_agg.is_included (lst.item_for_iteration) then
+										lst.remove
+									else
+										lst.forth
+									end
+								end
+							end
 							l_feed.accept (vis)
 						end
 						l_cache.put (Result)

@@ -478,7 +478,7 @@ feature -- Block management
 			end
 		end
 
-	clear_block_caches (a_block_id_list: detachable ITERABLE [READABLE_STRING_8])
+	clear_block_caches (a_block_id_list: detachable ITERABLE [READABLE_STRING_GENERAL])
 			-- Clear cache for block `a_block_id_list' if set,
 			-- otherwise clear all block caches if `a_block_id_list' is Void.
 		local

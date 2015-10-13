@@ -185,7 +185,6 @@ RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
 RT_LNK void eif_thr_wait(EIF_OBJECT);
 RT_LNK EIF_BOOLEAN eif_thr_wait_with_timeout(EIF_OBJECT, EIF_NATURAL_64);
-RT_LNK void *eif_thr_impersonate(EIF_SCP_PID);
 RT_LNK void eif_thr_create_with_attr(EIF_OBJECT, EIF_PROCEDURE, EIF_THR_ATTR_TYPE *);
 RT_LNK void eif_thr_create_with_attr_new(EIF_OBJECT, EIF_PROCEDURE, EIF_INTEGER_32, EIF_BOOLEAN, EIF_THR_ATTR_TYPE *);
 /* Obsolete `eif_thr_create_with_args' but maintained to make it easy to switch between runtime versions. */

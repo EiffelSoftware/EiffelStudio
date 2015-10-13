@@ -252,9 +252,6 @@ typedef struct tag_rt_globals
 
 } rt_global_context_t;
 
-/* Shared variable mapping logical processor IDs to global contexts */
-RT_LNK rt_global_context_t *global_ctxs[RT_MAX_SCOOP_PROCESSOR_COUNT];
-
 	/*
 	 * Definition of the macros RT_GET_CONTEXT
 	 *

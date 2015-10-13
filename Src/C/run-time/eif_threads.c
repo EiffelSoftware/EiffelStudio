@@ -108,8 +108,6 @@ rt_private void eif_free_gc_stacks (void);
 rt_private void load_stack_in_gc (struct stack_list *, void *);
 rt_private void remove_data_from_gc (struct stack_list *, void *);
 
-rt_shared rt_global_context_t *global_ctxs[RT_MAX_SCOOP_PROCESSOR_COUNT];
-
 #ifdef EIF_TLS_WRAP
 /*
 doc:	<function name="eif_global_key" return_type="EIF_TSD_TYPE" export="private">
@@ -314,13 +312,6 @@ rt_public void eif_thr_init_root(void)
 	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
 	eif_thr_init_global_mutexes();
 	eif_thr_register(0);
-
-	{
-		RT_GET_CONTEXT
-		
-		global_ctxs[0] = rt_globals;
-	}
-    
 #ifdef ISE_GC
 	create_scavenge_zones();
 #endif
@@ -562,17 +553,6 @@ rt_public int eif_thr_is_initialized(void)
 {
 	EIF_GET_CONTEXT
 	return (eif_globals != NULL);
-}
-
-/*
- * Switch the current rt_globals and eif_globals with those mapped
- * to the RTS_PID of the argument o.
- */
-rt_public void *eif_thr_impersonate(EIF_SCP_PID pid) {
-	rt_global_context_t *tmp_rt_ctx = global_ctxs [pid];
-	EIF_TSD_SET(rt_global_key, tmp_rt_ctx, "Couldn't bind private context to TSD.");
-	EIF_TSD_SET(eif_global_key, tmp_rt_ctx->eif_globals, "Couldn't bind global context to TSD.");
-	return tmp_rt_ctx->eif_globals;
 }
 
 rt_private rt_global_context_t *eif_new_context (void)
@@ -890,10 +870,6 @@ rt_private void eif_thr_entry (void *arg)
 			/* Set the processor and region ID. */
 		eif_globals->scoop_processor_id = eif_thr_context->logical_id;
 		eif_globals->scoop_region_id = eif_thr_context->logical_id;
-
-		if (eif_thr_context->is_processor) {
-			global_ctxs[eif_thr_context->logical_id] = rt_globals;
-		}
 
 		initsig();
 		initstk();

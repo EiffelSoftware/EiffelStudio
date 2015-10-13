@@ -118,7 +118,6 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		self->is_dirty = EIF_FALSE;
 		self->is_impersonation_allowed = EIF_TRUE;
 		rt_message_init (&self->current_msg);
-		self->current_impersonated_call = NULL;
 		self->result_notify_proxy = &self->result_notify;
 			/* Only the root processor's creation procedure is initially "logged". */
 		self->is_creation_procedure_logged = is_root_processor;
@@ -270,11 +269,6 @@ rt_shared void rt_processor_mark (struct rt_processor* self, MARKER marking)
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
-
-		/* Mark the call_data of the impersonated call being executed right now. */
-	if (self->current_impersonated_call) {
-		rt_mark_call_data (marking, self->current_impersonated_call);
-	}
 
 		/* Also mark the call that may be executed right now. */
 	if (self->current_msg.call) {

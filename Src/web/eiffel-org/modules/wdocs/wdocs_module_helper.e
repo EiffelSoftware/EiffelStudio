@@ -51,6 +51,8 @@ feature -- Access URI
 			utf: UTF_CONVERTER
 			wvis: WDOCS_WIKI_XHTML_GENERATOR
 			l_title, l_parent_key: detachable READABLE_STRING_8
+			l_map: STRING
+			vid: STRING
 		do
 			if pg /= Void then
 				l_title := pg.title
@@ -73,10 +75,15 @@ feature -- Access URI
 			wvis.set_template_resolver (a_manager)
 			wvis.set_file_resolver (a_manager)
 			if attached a_wdocs_api as l_wdocs_api then
+					-- register interwiki mapping,
+					-- and expand "$version" if any.
+				vid := percent_encoder.percent_encoded_string (a_manager.version_id)
 				across
 					l_wdocs_api.settings.interwiki_mapping as ic
 				loop
-					wvis.interwiki_mappings.force (ic.item, ic.key)
+					l_map := ic.item
+					l_map.replace_substring_all ("$version", vid)
+					wvis.interwiki_mappings.force (l_map, ic.key)
 				end
 			end
 

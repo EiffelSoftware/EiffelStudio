@@ -148,6 +148,8 @@ feature -- Router
 			a_router.handle ("/doc-file/version/{version_id}/{bookid}/{filename}", h, a_router.methods_get)
 			a_router.handle ("/doc-file/{bookid}/{filename}", h, a_router.methods_get)
 
+			create h.make (agent handle_static_documentation (a_api, ?, ?))
+			a_router.handle ("/doc-static/version/{version_id}{/vars}", h, a_router.methods_get)
 
 			create h.make (agent handle_clear_cache (a_api, ?, ?))
 			a_router.handle ("/admin/module/" + name + "/clear-cache", h, a_router.methods_get)
@@ -989,6 +991,43 @@ feature -- Handler
 				create l_not_found.make (req)
 				res.send (l_not_found)
 			end
+		end
+
+	handle_static_documentation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Handle /doc-static/... request to redirect to expected static doc location.
+		local
+			redir: CMS_REDIRECTION_RESPONSE_MESSAGE
+			vid, loc: detachable STRING
+			l_is_ref: BOOLEAN
+		do
+			if attached {WSF_STRING} req.path_parameter ("version_id") as v then
+				vid := v.url_encoded_value
+			end
+			if attached {WSF_TABLE} req.path_parameter ("vars") as vars then
+				create loc.make_empty
+				across
+					vars as ic
+				loop
+					if attached {WSF_STRING} ic.item as v then
+						if v.value.same_string_general ("reference") then
+							l_is_ref := True
+						else
+							loc.append_character ('/')
+							loc.append (v.value)
+						end
+					end
+				end
+				if l_is_ref then
+					loc.append (".html")
+				end
+			else
+				loc := "/index.html"
+			end
+			if vid = Void then
+				vid := percent_encoder.percent_encoded_string (default_version_id)
+			end
+			create redir.make (req.absolute_script_url ("/files/doc/static/" + vid + loc))
+			res.send (redir)
 		end
 
 feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request and response.

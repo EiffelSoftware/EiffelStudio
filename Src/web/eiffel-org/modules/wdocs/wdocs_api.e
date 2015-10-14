@@ -24,23 +24,23 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_default_version_id: READABLE_STRING_GENERAL; a_api: CMS_API; a_cfg: WDOCS_CONFIG)
+	make (a_default_version_id: READABLE_STRING_GENERAL; a_api: CMS_API; a_setup: WDOCS_SETUP)
 		require
 			a_default_version_id_valid: not a_default_version_id.is_whitespace
 		do
 			default_version_id := a_default_version_id
-			temp_dir := a_cfg.temp_dir
-			documentation_dir := a_cfg.documentation_dir
-			configuration := a_cfg
+			temp_dir := a_setup.temp_dir
+			documentation_dir := a_setup.documentation_dir
+			settings := a_setup
 			make_with_cms_api (a_api)
 		end
-
-	configuration: WDOCS_CONFIG
-			-- Associated configuration.
 
 	name: STRING = "wdocs"
 
 feature -- Access
+
+	settings: WDOCS_SETUP
+			-- Associated configuration.
 
 	documentation_dir: PATH
 
@@ -49,11 +49,27 @@ feature -- Access
 feature -- Query
 
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
+			-- Wikidocs manager for version `a_version_id'.
+		local
+			v: READABLE_STRING_GENERAL
 		do
-			if a_version_id = Void or else a_version_id.same_string (default_version_id) then
-				create Result.make_default (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
+			if a_version_id /= Void then
+				v := a_version_id
 			else
-				create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
+				v := default_version_id
+			end
+			if
+				attached internal_managers as tb and then
+				attached tb.item (v) as mng
+			then
+				Result := mng
+			else
+				if a_version_id = Void or else a_version_id.same_string (default_version_id) then
+					create Result.make_default (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
+				else
+					create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
+				end
+				remember_manager (Result)
 			end
 		end
 
@@ -63,6 +79,24 @@ feature -- Query
 		do
 			Result := documentation_dir.extended (a_version_id)
 		end
+
+feature {NONE} -- Query: cache		
+
+	remember_manager (mng: like manager)
+			-- Cache in memory wdocs manager `mng'.
+		local
+			tb: like internal_managers
+		do
+			tb := internal_managers
+			if tb = Void then
+				create tb.make (1)
+				internal_managers := tb
+			end
+			tb.force (mng, mng.version_id)
+		end
+
+	internal_managers: detachable STRING_TABLE [WDOCS_MANAGER]
+			-- wdocs manager cache.
 
 feature -- Access: cache system
 

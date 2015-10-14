@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {WDOCS_CONFIG}."
+	description: "Summary description for {WDOCS_SETUP}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	WDOCS_CONFIG
+	WDOCS_SETUP
 
 feature -- Access
 
@@ -17,6 +17,8 @@ feature -- Access
 	documentation_default_version: detachable READABLE_STRING_GENERAL
 
 	cache_duration: INTEGER
+
+	interwiki_mapping: STRING_TABLE [READABLE_STRING_8]
 
 feature -- Element change
 

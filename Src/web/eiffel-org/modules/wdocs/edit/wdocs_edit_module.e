@@ -145,10 +145,7 @@ feature -- Handlers
 	handle_wikipage_html_preview (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_xhtml: STRING
-			l_preview_pg: like manager.new_wiki_page
 			l_field: READABLE_STRING_GENERAL
-			utf: UTF_CONVERTER
-			wvis: WDOCS_WIKI_XHTML_GENERATOR
 		do
 			if req.is_post_request_method then
 				if attached {WSF_STRING} req.query_parameter ("source_field") as s then
@@ -164,17 +161,7 @@ feature -- Handlers
 					attached pg.path as l_path --and then
 --					attached wiki_text (l_path) as l_wiki_text
 				then
-					l_preview_pg := l_manager.new_wiki_page (pg.title, pg.parent_key)
-					l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (utf.utf_32_string_to_utf_8_string_8 (p_source.value)))
-
-					create l_xhtml.make_empty
-					create wvis.make (l_xhtml)
-					wvis.set_link_resolver (l_manager)
-					wvis.set_image_resolver (l_manager)
-					wvis.set_template_resolver (l_manager)
-					wvis.set_file_resolver (l_manager)
-					wvis.visit_page (l_preview_pg)
-
+					l_xhtml := wiki_to_xhtml (wdocs_api, pg.title, p_source.value, pg, l_manager)
 					res.header.put_content_type_text_html
 					res.header.put_content_length (l_xhtml.count)
 					res.put_string (l_xhtml)

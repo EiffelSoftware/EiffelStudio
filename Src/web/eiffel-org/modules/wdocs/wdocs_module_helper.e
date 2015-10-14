@@ -43,19 +43,28 @@ feature -- Access URI
 			end
 		end
 
-	wiki_to_xhtml (a_wdocs_api: WDOCS_API; a_title: READABLE_STRING_GENERAL; a_source: READABLE_STRING_GENERAL; pg: detachable WIKI_BOOK_PAGE; a_manager: WDOCS_MANAGER): STRING
+	wiki_to_xhtml (a_wdocs_api: detachable WDOCS_API; a_title: detachable READABLE_STRING_GENERAL; a_source: READABLE_STRING_GENERAL; pg: detachable WIKI_BOOK_PAGE; a_manager: WDOCS_MANAGER): STRING
 			-- XHTML rendering for `a_source'
 		local
 			l_xhtml: STRING
 			l_preview_pg: WIKI_PAGE
 			utf: UTF_CONVERTER
 			wvis: WDOCS_WIKI_XHTML_GENERATOR
+			l_title, l_parent_key: detachable READABLE_STRING_8
 		do
 			if pg /= Void then
-				l_preview_pg := a_manager.new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), pg.parent_key)
-			else
-				l_preview_pg := a_manager.new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), utf.utf_32_string_to_utf_8_string_8 (a_title))
+				l_title := pg.title
+				l_parent_key := pg.parent_key
 			end
+			if a_title /= Void then
+				l_title := utf.utf_32_string_to_utf_8_string_8 (a_title)
+			elseif l_title = Void then
+				l_title := "?"
+			end
+			if l_parent_key = Void then
+				l_parent_key := l_title
+			end
+			l_preview_pg := a_manager.new_wiki_page (l_title, l_parent_key)
 			l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (utf.utf_32_string_to_utf_8_string_8 (a_source)))
 			create l_xhtml.make_empty
 			create wvis.make (l_xhtml)
@@ -63,7 +72,17 @@ feature -- Access URI
 			wvis.set_image_resolver (a_manager)
 			wvis.set_template_resolver (a_manager)
 			wvis.set_file_resolver (a_manager)
-			wvis.visit_page (l_preview_pg)
+			if attached a_wdocs_api as l_wdocs_api then
+				across
+					l_wdocs_api.settings.interwiki_mapping as ic
+				loop
+					wvis.interwiki_mappings.force (ic.item, ic.key)
+				end
+			end
+
+			wvis.code_aliases.force ("eiffel") -- Support <eiffel>..</eiffel> as <code lang=eiffel>
+
+			wvis.visit_page_with_title (l_preview_pg, l_title)
 
 			Result := l_xhtml
 		end

@@ -108,6 +108,12 @@ feature -- Element change
 			items.force (a_item)
 		end
 
+	prune (a_item: FEED_ITEM)
+			-- Remove feed item `a_item' from Current list of feed items.
+		do
+			items.prune (a_item)
+		end
+
 	extended alias "+" (a_feed: FEED): FEED
 			-- New feed object made from Current merged with a_feed.
 		local

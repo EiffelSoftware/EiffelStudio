@@ -28,15 +28,13 @@ feature -- Access
 			Result.append_character ('%"')
 		end
 
-	location: STRING
+	location: READABLE_STRING_8
 
 feature -- Evaluation
 
 	satisfied_for_response (res: CMS_RESPONSE): BOOLEAN
-		local
-			loc: like location
 		do
-			Result := res.location.same_string (loc)
+			Result := res.location.same_string (location)
 		end
 
 note

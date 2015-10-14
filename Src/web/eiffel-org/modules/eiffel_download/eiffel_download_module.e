@@ -141,7 +141,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"download_area", "download_options">>
+			Result := <<"?download_area", "?download_options">>
 			create l_string.make_empty
 			across Result as ic loop
 				l_string.append (ic.item)

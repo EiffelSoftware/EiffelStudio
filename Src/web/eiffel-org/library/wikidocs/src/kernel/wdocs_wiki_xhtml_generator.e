@@ -10,15 +10,37 @@ class
 inherit
 	WIKI_XHTML_GENERATOR
 		redefine
-			page_title
+			make,
+			page_title,
+			visit_link,
+			visit_missing_link
 		end
 
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (b: like buffer)
+		do
+			Precursor (b)
+			create interwiki_mappings.make (0)
+		end
+
 feature -- Setting
 
 	overridden_title: detachable READABLE_STRING_8
+
+	interwiki_mappings: STRING_TABLE [READABLE_STRING_8]
+			-- handling of interwiki links indexed by name.
+			-- For example [[wp:Name]] .
+			--| examples:
+			--|		Wikipedia: wp   | http://en.wikipedia.org/wiki/$1
+			--|		DevEiffelCom: dev | http://dev.eiffel.com/$1
+			--|		StaticReference: ref | isedoc/static/$1
+			--|		UuidReference: uuid | isedoc/uuid/$1
+			--|		Local file: file | sites/default/files/$1
+
 
 feature -- Page processing
 
@@ -27,6 +49,51 @@ feature -- Page processing
 			overridden_title := a_title
 			visit_page (a_page)
 			overridden_title := Void
+		end
+
+	visit_link (a_link: WIKI_LINK)
+			-- <Precursor>
+		local
+			l_css_class: STRING
+			l_url: STRING
+
+			l_link_name: READABLE_STRING_8
+			l_link_arg: READABLE_STRING_8
+			l_interwiki_location: detachable STRING_8
+		do
+			l_link_name := a_link.name
+			if l_link_name.has (':') then
+				across
+					interwiki_mappings as ic
+				until
+					l_interwiki_location /= Void
+				loop
+					if l_link_name.starts_with_general (ic.key.as_string_8 + ":") then
+						create l_interwiki_location.make_from_string (ic.item)
+						l_link_arg := l_link_name.substring (ic.key.count + 2, l_link_name.count)
+						l_interwiki_location.replace_substring_all ("$1", l_link_arg)
+					end
+				end
+			end
+			if l_interwiki_location /= Void then
+				create l_css_class.make_from_string ("wiki_external") -- TODO: "wiki_link")
+				if attached a_link.fragment as l_fragment then
+					l_url := l_interwiki_location + "#" + l_fragment
+				else
+					l_url := l_interwiki_location
+				end
+				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
+				a_link.text.process (Current)
+				output ("</a>")
+			else
+				Precursor (a_link)
+			end
+		end
+
+	visit_missing_link (a_link: WIKI_LINK)
+			-- <Precursor>
+		do
+			Precursor (a_link)
 		end
 
 feature -- Helper

@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			tmp_dir := a_tmp_dir
 			initialize
 		end
-	
+
 	make_default (a_wiki_dir: PATH; a_version_id: like version_id; a_tmp_dir: PATH)
 		do
 			make (a_wiki_dir, a_version_id, a_tmp_dir)

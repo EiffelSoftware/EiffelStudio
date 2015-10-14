@@ -62,18 +62,18 @@ feature {CMS_API} -- Module Initialization
 	initialize (api: CMS_API)
 			-- <Precursor>
 		local
-			cfg: WDOCS_CONFIG
+			l_setup: WDOCS_SETUP
 		do
 			Precursor (api)
-			cfg := configuration (api)
-			temp_dir := cfg.temp_dir
-			documentation_dir := cfg.documentation_dir
-			cache_duration := cfg.cache_duration
-			get_default_version_id (cfg)
-			create wdocs_api.make (default_version_id, api, cfg)
+			l_setup:= settings (api)
+			temp_dir := l_setup.temp_dir
+			documentation_dir := l_setup.documentation_dir
+			cache_duration := l_setup.cache_duration
+			get_default_version_id (l_setup)
+			create wdocs_api.make (default_version_id, api, l_setup)
 		end
 
-	get_default_version_id (cfg: WDOCS_CONFIG)
+	get_default_version_id (cfg: WDOCS_SETUP)
 			-- Get default version id from `cfg' or "version" file from `documentation_dir'.
 			-- If set via configuration, it has priority over "version" file.
 		local
@@ -168,31 +168,31 @@ feature -- Hooks configuration
 
 feature {NONE} -- Config
 
-	configuration (api: CMS_API): WDOCS_CONFIG
+	settings (api: CMS_API): WDOCS_SETUP
 			-- Configuration setup.
 		local
 			d: PATH
 		do
 			d := api.site_location.extended ("config").extended ("modules").extended (name)
-			if attached configuration_within (d) as cfg then
+			if attached settings_within (d) as cfg then
 				Result := cfg
 			else
 				d := api.module_location (Current)
-				if attached configuration_within (d) as cfg then
+				if attached settings_within (d) as cfg then
 					Result := cfg
 				else
 						-- Default
-					create {WDOCS_DEFAULT_CONFIG} Result.make_default
+					create {WDOCS_DEFAULT_SETUP} Result.make_default
 				end
 			end
 		end
 
-	configuration_within (a_dir: PATH): detachable WDOCS_CONFIG
+	settings_within (a_dir: PATH): detachable WDOCS_SETUP
 		local
 			p: detachable PATH
 			ut: FILE_UTILITIES
 		do
-			if attached execution_environment.item ("WDOCS_CONFIG") as s then
+			if attached execution_environment.item ("WDOCS_SETUP") as s then
 				create p.make_from_string (s)
 				if not ut.file_path_exists (p) then
 					p := a_dir.extended (s)
@@ -202,24 +202,15 @@ feature {NONE} -- Config
 				end
 			end
 			if p /= Void then
-				if attached p.extension as ext then
-					if ext.is_case_insensitive_equal_general ("ini") then
-						create {WDOCS_INI_CONFIG} Result.make (p)
-					elseif ext.is_case_insensitive_equal_general ("json") then
-						create {WDOCS_JSON_CONFIG} Result.make (p)
-					end
-				end
-				if Result = Void then
-					create {WDOCS_INI_CONFIG} Result.make (p)
-				end
+				create {WDOCS_DEFAULT_SETUP} Result.make_with_configuration (p)
 			else
 				p := a_dir.extended (name).appended_with_extension ("ini")
 				if ut.file_path_exists (p) then
-					create {WDOCS_INI_CONFIG} Result.make (p)
+					create {WDOCS_DEFAULT_SETUP} Result.make_with_configuration (p)
 				else
 					p := a_dir.extended (name).appended_with_extension ("json")
 					if ut.file_path_exists (p) then
-						create {WDOCS_JSON_CONFIG} Result.make (p)
+						create {WDOCS_DEFAULT_SETUP} Result.make_with_configuration (p)
 					end
 				end
 			end
@@ -252,11 +243,11 @@ feature -- Access: docs
 		end
 
 	manager (a_version_id: detachable READABLE_STRING_GENERAL): WDOCS_MANAGER
+		require
+			has_wdocs_api: wdocs_api /= Void
 		do
-			if a_version_id = Void or else a_version_id.same_string (default_version_id) then
-				create Result.make_default (documentation_wiki_dir (default_version_id), default_version_id, temp_dir)
-			else
-				create Result.make (documentation_wiki_dir (a_version_id), a_version_id, temp_dir)
+			check attached wdocs_api as l_wdocs_api then
+				Result := l_wdocs_api.manager (a_version_id)
 			end
 		end
 
@@ -264,11 +255,8 @@ feature -- Hooks
 
 	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
 			-- <Precursor>.
-		local
-			mng: like manager
 		do
-			if a_cache_id_list = Void then
-				mng := manager (Void)
+			if a_cache_id_list = Void and attached manager (Void) as mng then
 				mng.refresh_data
 				across
 					mng.book_names as ic
@@ -1173,7 +1161,6 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 		local
 			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
 			l_xhtml: detachable STRING_8
-			wvis: WDOCS_WIKI_XHTML_GENERATOR
 			f: PLAIN_TEXT_FILE
 			l_wiki_page_date_time: detachable DATE_TIME
 			client_request_no_server_cache: BOOLEAN
@@ -1203,7 +1190,6 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			client_request_no_server_cache := attached req.meta_string_variable ("HTTP_CACHE_CONTROL") as s_cache_control and then
 						s_cache_control.is_case_insensitive_equal_general ("no-cache")
 
-
 			if
 				not client_request_no_server_cache and then
 				l_cache /= Void and then -- i.r: cache enabled
@@ -1215,19 +1201,10 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 
 				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
-				create l_xhtml.make_empty
-
-				create wvis.make (l_xhtml)
-				wvis.set_link_resolver (a_manager)
-				wvis.set_image_resolver (a_manager)
-				wvis.set_template_resolver (a_manager)
-				wvis.set_file_resolver (a_manager)
-				wvis.code_aliases.force ("eiffel") -- Support <eiffel>..</eiffel> as <code lang=eiffel>
-
-				if a_page_title /= Void and then not a_page_title.same_string_general (a_wiki_page.title) then
-					wvis.visit_page_with_title (a_wiki_page, html_encoded (a_page_title))
+				if attached a_wiki_page.text.content as l_wiki_content then
+					l_xhtml := wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager)
 				else
-					wvis.visit_page (a_wiki_page)
+					create l_xhtml.make_empty
 				end
 
 				l_xhtml.append ("<ul class=%"wdocs-nav%">")

@@ -155,12 +155,13 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 	EIF_BOOLEAN success;
 	jmp_buf exenv;
 	RTXDR;
+
+	RTS_SDX; /* Record the request group stack count, the lock stack count, and the current region ID. */
+
 #ifdef WORKBENCH
 	RTLXD;
 	RTLXL;
 #endif
-
-	RTS_SDX; /* Record the request group stack count, the lock stack count, and the current region ID. */
 
 		/* TODO: We used to keep track of last_exception in this function,
 		 * which caused a call into Eiffel code. Therefore it was necessary

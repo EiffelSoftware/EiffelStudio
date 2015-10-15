@@ -920,19 +920,14 @@ feature -- C code generation: request chain
 	generate_request_chain_declaration
 			-- Generate declarations required to use request chain.
 		do
-			if has_request_chain then
-					-- Generate declaration to use request chain.
-				buffer.put_new_line
-				if has_rescue then
-						-- Generate declaration to use and restore request chain on exception.
-					buffer.put_string ("RTS_SDX;")
-				else
-					buffer.put_string ("RTS_SD;")
-				end
-			elseif has_rescue and then system.is_scoop then
+			if has_rescue and then system.is_scoop then
 					-- Generate declaration to restore request chain on exception.
 				buffer.put_new_line
-				buffer.put_string ("RTS_SDR;")
+				buffer.put_string ("RTS_SDX;")
+			elseif has_request_chain then
+					-- Generate declaration to use SCOOP calls.
+				buffer.put_new_line
+				buffer.put_string ("RTS_SD;")
 			end
 		end
 
@@ -943,7 +938,7 @@ feature -- C code generation: request chain
 		do
 			buffer.put_new_line
 			buffer.put_string (request_chain_creation)
-			buffer.put_string (" (Current);")
+			buffer.put_character (';')
 		end
 
 	generate_request_chain_wait_condition_failure
@@ -953,7 +948,7 @@ feature -- C code generation: request chain
 		do
 			buffer.put_new_line
 			buffer.put_string (request_chain_wait_condition_failure)
-			buffer.put_string (" (Current);")
+			buffer.put_character (';')
 		end
 
 	generate_request_chain_removal
@@ -963,7 +958,7 @@ feature -- C code generation: request chain
 		do
 			buffer.put_new_line
 			buffer.put_string (request_chain_removal)
-			buffer.put_string (" (Current);")
+			buffer.put_character (';')
 		end
 
 	generate_request_chain_restore
@@ -981,19 +976,19 @@ feature {NONE} -- C code generation: request chain
 			-- Initialize macros to work with request chain.
 		do
 			if has_rescue then
-				request_chain_creation := once "RTS_SRCX"
+				request_chain_creation := once "RTS_RCX"
 			else
-				request_chain_creation := once "RTS_SRC"
+				request_chain_creation := once "RTS_RC"
 			end
 		end
 
 	request_chain_creation: STRING
 			-- Macro to create request chain.
 
-	request_chain_wait_condition_failure: STRING = "RTS_SRF"
+	request_chain_wait_condition_failure: STRING = "RTS_RF"
 			-- Macro to relase request chain when wait condition evaluates to false.
 
-	request_chain_removal: STRING = "RTS_SRD"
+	request_chain_removal: STRING = "RTS_RD"
 			-- Macro to relase request chain on routine completion.
 
 	request_chain_restore: STRING = "RTS_SRR"

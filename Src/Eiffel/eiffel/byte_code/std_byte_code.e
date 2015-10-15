@@ -503,6 +503,9 @@ feature -- Analyzis
 				-- Generate variables for used in request chain generation (for SCOOP).
 			generate_control_information
 
+				-- Generate code to lock separate arguments in a request group. (for SCOOP).
+			generate_request_group_initialization
+
 				-- Precondition check generation
 			generate_precondition
 			if l_context.has_chained_prec then
@@ -1208,41 +1211,6 @@ end
 				buf.put_new_line
 				buf.put_string ("int has_wait_condition = 0;")
 			end
-			if attached arguments as a and then context.has_request_chain then
-					-- There are separate arguments.
-					-- They should be locked if they are not controlled yet.
-					-- Locking is done for all the uncontrolled arguments at once.
-					-- A request chain is created for that.
-					-- If argument is controlled, there is no need to lock it again.
-					-- The generated code looks like
-					--    if (uarg) {
-					--       RTS_SRC (Current);      // Create request chain.
-					--       RTS_RS (Current, argN); // Register argument in the chain.
-					--       ...                     // Repeat for other arguments.
-					--       RTS_RW (Current);       // Wait until all arguments are locked.
-					--    }
-				buf.put_new_line
-				buf.put_string ("if (uarg) ")
-				buf.generate_construct_block_open
-				context.generate_request_chain_creation
-				from
-					i := a.count
-				until
-					i <= 0
-				loop
-					if real_type (a [i]).is_separate then
-							-- Register uncontrolled argument in the request chain.
-						buf.put_new_line
-						buf.put_string ("RTS_RS (Current, arg")
-						buf.put_integer (i)
-						buf.put_two_character (')', ';')
-					end
-					i := i - 1
-				end
-				buf.put_new_line
-				buf.put_string ("RTS_RW (Current);");
-				buf.generate_block_close
-			end
 			workbench_mode := context.workbench_mode
 				-- Preconditions are always generated in workbench mode.
 				-- In finalized mode they are generated if requested by user
@@ -1825,6 +1793,50 @@ feature {NONE} -- C code generation
 				l_buf.put_new_line
 				l_buf.put_string (uarg)
 				l_buf.put_character (';')
+			end
+		end
+
+	generate_request_group_initialization
+			-- Generate code to lock separate arguments in a request group.
+		local
+			buf: like buffer
+			i: INTEGER
+		do
+			buf := buffer
+			if attached arguments as a and then context.has_request_chain then
+					-- There are separate arguments.
+					-- They should be locked if they are not controlled yet.
+					-- Locking is done for all the uncontrolled arguments at once.
+					-- A request group is created for that.
+					-- If argument is controlled, there is no need to lock it again.
+					-- The generated code looks like
+					--    if (uarg) {
+					--       RTS_RC[X];     // Create request chain.
+					--       RTS_RS (argN); // Register argument in the chain.
+					--       ...            // Repeat for other arguments.
+					--       RTS_RW;        // Wait until all arguments are locked.
+					--    }
+				buf.put_new_line
+				buf.put_string ("if (uarg) ")
+				buf.generate_construct_block_open
+				context.generate_request_chain_creation
+				from
+					i := a.count
+				until
+					i <= 0
+				loop
+					if real_type (a [i]).is_separate then
+							-- Register uncontrolled argument in the request chain.
+						buf.put_new_line
+						buf.put_string ("RTS_RS (arg")
+						buf.put_integer (i)
+						buf.put_two_character (')', ';')
+					end
+					i := i - 1
+				end
+				buf.put_new_line
+				buf.put_string ("RTS_RW;");
+				buf.generate_block_close
 			end
 		end
 

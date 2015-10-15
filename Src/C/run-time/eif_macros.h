@@ -1326,38 +1326,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_PA(o) eif_new_processor (o, EIF_FALSE);
 #define RTS_PP(o) eif_new_processor (o, EIF_TRUE);
 
-/*
- * Request chain:
- * RTS_RC(p)   - create a request chain for the processor identified by object p
- * RTS_RD(p)   - delete a request chain for the processor identified by object p
- * RTS_RF(p)   - same as RTS_RD except that it is called when wait condition fails
- * RTS_RS(p,s) - add a supplier s to the request chain of the processor identified by object p
- * RTS_RW(p)   - wait until all the suppliers are ready in the request chain of the processor identified by object p
- * The only valid sequence of calls is
- *      RTS_RC (RTS_RS)* [RTS_RW] RTS_RD
- *
- * TODO: Remove the first parameter in this group of macros.
- */
-#define RTS_RC(p) eif_new_scoop_request_group(l_scoop_processor_id);
-#define RTS_RD(p) eif_delete_scoop_request_group(l_scoop_processor_id, 1);
-#define RTS_RF(p)   eif_scoop_wait_request_group (l_scoop_processor_id);
-#define RTS_RS(p,s) eif_scoop_add_supplier_request_group(l_scoop_processor_id, RTS_PID(s));
-#define RTS_RW(p) eif_scoop_lock_request_group(l_scoop_processor_id);
+
 
 /*
- * Request chain stack:
- * RTS_SD - declare variables that are used to track request chain stack without rescue clause.
- * RTS_SDX - declare variables that are used to track request chain stack with rescue clause.
- * RTS_SDR - declare variables that are used to restore request chain stack with rescue clause.
+ * SCOOP feature initialization macros:
  *
- * RTS_SDP(p) - declare a variable holding the PID 'p' of the currently executing thread.
- * RTS_SDC - declare a variable used to keep track of the count of the request group stack for exception handling.
- *
- * RTS_SRC(p) - create request chain for the processor identified by object p when there is no rescue clase.
- * RTS_SRCX(p) - create request chain for the processor identified by object p when there is a rescue clase.
- * RTS_SRF(p) - release request chain for the processor identified by object p when wait condition fails.
- * RTS_SRD(p) - release request chain for the processor identified by object p when routine exits normally.
- * RTS_SRR - release request chains (if any) when entering a rescue clause because of an exception.
+ * RTS_SD - Declare variables for SCOOP separate calls.
+ * RTS_SDX - Declare variables for separate calls and to keep track of the request group and lock stacks. Variation of RTS_SD for features with a rescue clause.
+ * RTS_SRR - Restore the SCOOP stacks and region ID when entering a rescue clause because of an exception.
  */
 #define RTS_SD \
 	EIF_SCP_PID l_scoop_processor_id = eif_globals->scoop_processor_id;\
@@ -1368,24 +1344,33 @@ RT_LNK void eif_exit_eiffel_code(void);
 	size_t l_scoop_request_group_stack_count = eif_scoop_request_group_stack_count (l_scoop_processor_id);\
 	size_t l_scoop_lock_stack_count = eif_scoop_lock_stack_count (l_scoop_processor_id)
 
-#define RTS_SDR RTS_SDX
-
-
-#define RTS_SRC(p) RTS_RC(p);
-#define RTS_SRCX(p) RTS_SRC(p); l_scoop_request_group_stack_count = eif_scoop_request_group_stack_count (l_scoop_processor_id);
-#define RTS_SRP(p)
-
-/* TODO: As the request group is allocated again and again during precondition evaluation,
- * we have to delete the request group here when a precondition fails to keep the stack
- * balanced. It would be much better though if the request group could
- * be initialized once and for all _before_ the wait condition evaluation loop starts.
- */
-#define RTS_SRF(p) RTS_RF (p); RTS_RD(p);
-#define RTS_SRD(p) RTS_RD (p);
 #define RTS_SRR \
 	eif_scoop_impersonate (eif_globals, l_scoop_region_id); \
 	eif_delete_scoop_request_group (l_scoop_processor_id, eif_scoop_request_group_stack_count (l_scoop_processor_id) - l_scoop_request_group_stack_count); \
 	eif_scoop_lock_stack_impersonated_pop (l_scoop_processor_id, eif_scoop_lock_stack_count (l_scoop_processor_id) - l_scoop_lock_stack_count);
+
+
+/*
+ * Request group management:
+ * RTS_RC    - Create a request group for the current processor.
+ * RTS_RCX   - Create a request group for the current processor (variation for features with a rescue clause).
+ * RTS_RS(s) - Add a supplier s to the request group of the current processor.
+ * RTS_RW    - Lock the request group of the current processor.
+ * RTS_RF    - Register for wait condition notifications, unlock the request group, wait for a notification and lock the request group again. It is called when a wait condition fails.
+ * RTS_RD    - Delete a request group for the current processor.
+ *
+ * The only valid sequence of calls is
+ *      RTS_RC[X] (RTS_RS)* RTS_RW (RTS_RF)* RTS_RD
+ */
+#define RTS_RC eif_new_scoop_request_group(l_scoop_processor_id)
+#define RTS_RCX \
+	RTS_RC;\
+	l_scoop_request_group_stack_count = eif_scoop_request_group_stack_count (l_scoop_processor_id)
+
+#define RTS_RS(s) eif_scoop_add_supplier_request_group(l_scoop_processor_id, RTS_PID (s))
+#define RTS_RW eif_scoop_lock_request_group(l_scoop_processor_id)
+#define RTS_RF eif_scoop_wait_request_group (l_scoop_processor_id)
+#define RTS_RD eif_delete_scoop_request_group(l_scoop_processor_id, 1)
 
 /*
  * Separate call, the first two arguments to them have a different meaning between workbench and finalized mode):

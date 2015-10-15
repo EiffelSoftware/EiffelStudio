@@ -526,11 +526,11 @@ rt_private void initialize_request_chain (void)
 		EIF_TYPED_VALUE *last = arg(n);
 			/* TODO: RS: Why only register arguments when they're uncontrolled in the interpreter? */
 		if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent -> it_ref, last -> it_ref)) {
-			RTS_RS(icurrent -> it_ref, last -> it_ref);
+			RTS_RS (last->it_ref);
 		}
 	}
 		/* Wait for arguments to be locked. */
-	RTS_RW(icurrent -> it_ref);
+	RTS_RW;
 }
 #endif /* EIF_THREADS */
 
@@ -847,14 +847,15 @@ rt_private void interpret(int flag, int where)
 			}
 
 		}
-		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 #ifdef EIF_THREADS
-				/* Initialize request chain if required. */
-			if (uarg) {
-				RTS_SRCX(icurrent -> it_ref);
-				initialize_request_chain ();
-			}
+			/* Initialize request chain if required. */
+		if (uarg) {
+			RTS_RCX;
+			initialize_request_chain ();
+		}
 #endif
+
+		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
@@ -1009,11 +1010,6 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_PRECOND\n");
 #endif
 #ifdef EIF_THREADS
-			/* Initialize request chain if required. */
-		if (uarg) {
-			RTS_SRCX(icurrent -> it_ref);
-			initialize_request_chain ();
-		}
 			/* Record offset of a precondition block to repeat the check
 			   for failing wait conditions. */
 		pre_start = IC - 1;
@@ -1102,13 +1098,6 @@ rt_private void interpret(int flag, int where)
 
 	case BC_END_CATCALL:
 		if (*IC != BC_PRECOND) {
-#ifdef EIF_THREADS
-				/* Initialize request chain if required. */
-			if (uarg) {
-				RTS_SRCX(icurrent -> it_ref);
-				initialize_request_chain ();
-			}
-#endif
 			goto enter_body; /* Start execution of a routine body. */
 		}
 		break;
@@ -1891,16 +1880,16 @@ rt_private void interpret(int flag, int where)
 
 #ifdef EIF_THREADS
 				/* Create request group. */
-			RTS_RC (icurrent->it_ref);
+			RTS_RC;
 				/* Add processors of uncontrolled separate arguments to the reuest group. */
 			for (; argument_count > 0; -- argument_count) {
 				last = eif_opstack_pop_address(&op_stack);
 				if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent->it_ref, last->it_ref)) {
-					RTS_RS (icurrent->it_ref, last->it_ref);
+					RTS_RS (last->it_ref);
 				}
 			}
 				/* Wait to get control. */
-			RTS_RW (icurrent->it_ref);
+			RTS_RW;
 #endif
 		}
 		break;
@@ -1914,7 +1903,7 @@ rt_private void interpret(int flag, int where)
 #endif
 #ifdef EIF_THREADS
 			/* Release control of the request group. */
-		RTS_RD (icurrent->it_ref);
+		RTS_RD;
 #endif
 		break;
 
@@ -2037,7 +2026,7 @@ rt_private void interpret(int flag, int where)
 				/* Remove assertion entry from the stack. */
 			RTCK;
 				/* Notify SCOOP scheduler that wait condition failed. */
-			RTS_SRF(icurrent -> it_ref);
+			RTS_RF;
 				/* Jump to the precondition start. */
 			IC = pre_start;
 		}
@@ -3829,7 +3818,7 @@ rt_private void interpret(int flag, int where)
 		pop_registers();	/* Pop registers */
 #ifdef EIF_THREADS
 			/* Release request chain if required. */
-		if (uarg) RTS_SRD (icurrent -> it_ref);
+		if (uarg) RTS_RD;
 #endif
 		/* leave_body: */
 			/* Exit rutine body. */

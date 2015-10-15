@@ -175,16 +175,16 @@ feature -- Code generation
 						-- If an argument is controlled, there is no need to lock it again.
 						-- The generated code looks like
 						--    if (uarg) {
-						--       RTS_SRC (Current);      // Create request chain.
-						--       if (uarg1) RTS_RS (Current, loc1); // Register arguments in the chain.
+						--       RTS_RC;      // Create request chain.
+						--       if (uarg1) RTS_RS (loc1); // Register arguments in the chain.
 						--       ...                     // Repeat for other arguments.
-						--       RTS_RW (Current);       // Wait until all arguments are locked.
+						--       RTS_RW;       // Wait until all arguments are locked.
 						--    }
 					buf.put_new_line
 					buf.put_string ("if (uarg) {")
 					buf.indent
 					buf.put_new_line
-					buf.put_string ("RTS_SRC (Current);")
+					buf.put_string ("RTS_RC;")
 					across
 						arguments as arg
 					loop
@@ -194,14 +194,14 @@ feature -- Code generation
 								buf.put_new_line
 								buf.put_string ("if (uarg")
 								buf.put_integer (arg.target_index)
-								buf.put_string (") RTS_RS (Current, ")
+								buf.put_string (") RTS_RS (")
 								buf.put_string (t.register_name)
 								buf.put_two_character (')', ';')
 							end
 						end
 					end
 					buf.put_new_line
-					buf.put_string ("RTS_RW (Current);");
+					buf.put_string ("RTS_RW;");
 					buf.exdent
 					buf.put_new_line
 					buf.put_character ('}')
@@ -211,7 +211,7 @@ feature -- Code generation
 				if has_request_chain then
 						-- Generate request chain removal.
 					buf.put_new_line
-					buf.put_string ("if (uarg) RTS_SRD (Current);")
+					buf.put_string ("if (uarg) RTS_RD;")
 						-- Close block.
 					buf.exdent
 					buf.put_new_line

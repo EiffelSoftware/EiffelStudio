@@ -1,4 +1,4 @@
-test_name	 formal-generic-tuple-ulfolding
+test_name	 formal-generic-tuple-unfolding
 test_description Incompatible actual generic types are subject to tuple unfolding.
 
 copy_sub 	Ace $TEST Ace

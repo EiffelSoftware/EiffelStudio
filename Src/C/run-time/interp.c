@@ -971,7 +971,9 @@ rt_private void interpret(int flag, int where)
 		RESTORE(loc_stack, ls_cur, ls_top);
 #endif
 #ifdef EIF_THREADS
-		RTS_SRR;
+		if (rt_globals->eif_thr_context_cx->is_processor) {
+			RTS_SRR;
+		}
 #endif
 		sync_registers(MTC scur, stop);
 		CHECK("exvect not null", exvect);

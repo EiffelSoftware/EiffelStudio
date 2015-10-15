@@ -1366,7 +1366,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_SDX \
 	RTS_SD;\
 	size_t l_scoop_request_group_stack_count = eif_scoop_request_group_stack_count (l_scoop_processor_id);\
-	size_t l_scoop_lock_stack_count = eif_scoop_lock_stack_count (l_scoop_processor_id);
+	size_t l_scoop_lock_stack_count = eif_scoop_lock_stack_count (l_scoop_processor_id)
 
 #define RTS_SDR RTS_SDX
 

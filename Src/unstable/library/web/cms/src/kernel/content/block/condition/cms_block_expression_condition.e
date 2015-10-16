@@ -41,6 +41,8 @@ feature -- Evaluation
 	satisfied_for_response (res: CMS_RESPONSE): BOOLEAN
 		local
 			exp: like expression
+			l_path: READABLE_STRING_8
+			kmp: KMP_WILD
 		do
 			exp := expression
 			if exp.same_string ("is_front") then
@@ -50,7 +52,17 @@ feature -- Evaluation
 			elseif exp.same_string ("<none>") then
 				Result := False
 			elseif exp.starts_with ("path:") then
-				Result := res.location.same_string (exp.substring (6, exp.count))
+				l_path := exp.substring (6, exp.count)
+				if l_path.has ('*') then
+					if l_path.index_of ('*', 1) = l_path.count then
+						Result := res.location.starts_with_general (l_path.substring (1, l_path.count - 1))
+					else
+						create kmp.make (l_path, res.location)
+						Result := kmp.pattern_matches
+					end
+				else
+					Result := res.location.same_string (l_path)
+				end
 			end
 		end
 

@@ -27,8 +27,6 @@ feature -- Access
 
 	name: READABLE_STRING_8
 
-	title: detachable READABLE_STRING_32
-
 feature -- Status report
 
 	is_empty: BOOLEAN
@@ -51,12 +49,6 @@ feature -- Element change
 			not n.is_whitespace
 		do
 			name := n
-		end
-
-	set_title (a_title: like title)
-			-- Set `title' to `a_title'.
-		do
-			title := a_title
 		end
 
 	set_is_horizontal (b: BOOLEAN)

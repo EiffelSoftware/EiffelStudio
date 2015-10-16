@@ -39,9 +39,6 @@ feature -- Access
 	name: READABLE_STRING_8
 			-- <Precursor>
 
-	title: detachable READABLE_STRING_32
-			-- <Precursor>
-
 	content: READABLE_STRING_8
 
 	format: detachable CONTENT_FORMAT
@@ -72,12 +69,6 @@ feature -- Element change
 			not n.is_whitespace
 		do
 			name := n
-		end
-
-	set_title (a_title: like title)
-			-- Set `title' to `a_title'.
-		do
-			title := a_title
 		end
 
 feature -- Conversion

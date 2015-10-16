@@ -138,12 +138,16 @@ feature -- Hook: block
 	invoke_block (a_response: CMS_RESPONSE)
 			-- Invoke block hook for response `a_response' in order to get block from modules.
 		local
-			bl: READABLE_STRING_8
+			bl, l_alias: READABLE_STRING_8
 			bl_optional: BOOLEAN
 			l_ok: BOOLEAN
 			l_block_cache: detachable TUPLE [block: CMS_CACHE_BLOCK; region: READABLE_STRING_8; expired: BOOLEAN]
+			l_alias_table: detachable STRING_TABLE [LIST [READABLE_STRING_8]] --| block_id => [alias_ids..]
+			l_origin_block: detachable CMS_BLOCK
 		do
 			if attached subscribers ({CMS_HOOK_BLOCK}) as lst then
+				l_alias_table := a_response.block_alias_table
+
 				across
 					lst as c
 				loop
@@ -162,12 +166,37 @@ feature -- Hook: block
 							else
 								l_ok := True
 							end
+
 							if l_ok then
 								l_block_cache := a_response.block_cache (bl)
 								if l_block_cache /= Void and then not l_block_cache.expired then
 									a_response.add_block (l_block_cache.block, l_block_cache.region)
 								else
 									h.get_block_view (bl, a_response)
+								end
+							end
+							if
+								l_alias_table /= Void and then
+								attached l_alias_table.item (bl) as l_aliases
+							then
+								across
+									l_aliases as aliases_ic
+								loop
+									l_alias := aliases_ic.item
+									l_origin_block := a_response.blocks.item (bl)
+									if l_origin_block = Void then
+										h.get_block_view (bl, a_response)
+										l_origin_block := a_response.blocks.item (bl)
+										if l_origin_block /= Void then
+												-- Previously, it was not included.
+												-- Computed only to include alias
+												-- then remove `l_origin_block'.
+											a_response.remove_block (l_origin_block)
+										end
+									end
+									if l_origin_block /= Void then
+										a_response.add_block (create {CMS_ALIAS_BLOCK}.make_with_block (l_alias, l_origin_block), Void)
+									end
 								end
 							end
 						end

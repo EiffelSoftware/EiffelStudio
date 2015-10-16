@@ -41,6 +41,16 @@ feature -- Element change
 			blocks.prune_all (b)
 		end
 
+feature -- Sort
+
+	sort
+		local
+			cmp: QUICK_SORTER [CMS_BLOCK]
+		do
+			create cmp.make (create {COMPARABLE_COMPARATOR [CMS_BLOCK]})
+			cmp.sort (blocks)
+		end
+
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

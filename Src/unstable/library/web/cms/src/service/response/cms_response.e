@@ -401,6 +401,7 @@ feature -- Blocks initialization
 				fixme ("let the user choose ...")
 			end
 			create regions.make_caseless (5)
+			create blocks.make (10)
 
 			create l_table.make_caseless (10)
 			l_table["top"] := block_region_preference ("top", "top")
@@ -423,10 +424,30 @@ feature -- Blocks initialization
 			Result := setup.text_item_or_default ("blocks." + a_block_id + ".region", a_default_region)
 		end
 
-feature -- Block management		
+feature -- Block management
+
+	update_block (a_block: CMS_BLOCK)
+			-- Update parameters for block `a_block' according to configuration.
+		do
+			if
+				attached setup.text_item ("blocks." + a_block.name + ".weight") as w and then
+				w.is_integer
+			then
+				a_block.set_weight (w.to_integer)
+			end
+			if
+				attached setup.text_item ("blocks." + a_block.name + ".title") as l_title
+			then
+				if l_title.same_string ("<none>") then
+					a_block.set_title (Void)
+				else
+					a_block.set_title (l_title)
+				end
+			end
+		end
 
 	block_conditions (a_block_id: READABLE_STRING_8): detachable ARRAYED_LIST [CMS_BLOCK_EXPRESSION_CONDITION]
-				-- Condition associated with `a_block_id' in configuration, if any.
+			-- Condition associated with `a_block_id' in configuration, if any.
 		do
 			if attached setup.text_item ("blocks." + a_block_id + ".condition") as s then
 				create Result.make (1)
@@ -435,12 +456,20 @@ feature -- Block management
 			if attached setup.text_list_item ("blocks." + a_block_id + ".conditions") as lst then
 				if Result = Void then
 					create Result.make (lst.count)
-					across
-						lst as ic
-					loop
-						Result.force (create {CMS_BLOCK_EXPRESSION_CONDITION}.make (ic.item))
-					end
 				end
+				across
+					lst as ic
+				loop
+					Result.force (create {CMS_BLOCK_EXPRESSION_CONDITION}.make (ic.item))
+				end
+			end
+		end
+
+	block_options (a_block_id: READABLE_STRING_8): detachable STRING_TABLE [READABLE_STRING_32]
+			-- Options associated with `a_block_id' in configuration, if any.
+		do
+			if attached setup.text_table_item ("blocks." + a_block_id + ".options") as tb then
+				Result := tb
 			end
 		end
 
@@ -506,10 +535,59 @@ feature -- Block management
 			end
 		end
 
+feature {CMS_HOOK_CORE_MANAGER} -- Block management: internal
+
+	internal_block_alias_table: like block_alias_table
+			-- Internal memory cache for `block_alias_table'.
+
+	block_alias_table: detachable STRING_TABLE [LIST [READABLE_STRING_8]]
+			-- Table of included block aliases, if any.
+			-- note: { block_id => [ alias-names ..] }
+		local
+			k,v: READABLE_STRING_GENERAL
+			l_block_id, l_alias_id: READABLE_STRING_8
+			lst: detachable LIST [READABLE_STRING_8]
+		do
+			Result := internal_block_alias_table
+			if
+				Result = Void and then
+				attached setup.text_table_item ("blocks.&aliases") as tb
+			then
+				create Result.make (tb.count)
+				across
+					tb as ic
+				loop
+					k := ic.key
+					v := ic.item
+					if v.is_valid_as_string_8 then
+						l_block_id := v.to_string_8
+						if k.is_valid_as_string_8 then
+							l_alias_id := k.to_string_8
+							if is_block_included (l_alias_id, False) then
+								lst := Result.item (l_block_id)
+								if lst = Void then
+									create {ARRAYED_LIST [READABLE_STRING_8]} lst.make (1)
+								end
+								lst.force (l_alias_id)
+								Result.force (lst, l_block_id)
+							end
+						else
+							check valid_alias_id: False end
+						end
+					else
+						check valid_block_id: False end
+					end
+				end
+			end
+		end
+
 feature -- Blocks regions
 
 	regions: STRING_TABLE [CMS_BLOCK_REGION]
 			-- Layout regions, that contains blocks.
+
+	blocks: STRING_TABLE [CMS_BLOCK]
+			-- Blocks indexed by their block id.
 
 	block_region_settings: STRING_TABLE [STRING]
 
@@ -540,6 +618,34 @@ feature -- Blocks regions
 			end
 		end
 
+feature {NONE} -- Blocks
+
+	put_core_block (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8; is_block_included_by_default: BOOLEAN; a_alias_table: like block_alias_table)
+			-- Add block `b' to associated region or `a_default_region' if provided
+			-- and check optional associated condition.
+			-- If no condition then use `is_block_included_by_default' to
+			-- decide if block is included or not.
+		local
+			l_region: detachable like block_region
+		do
+			if is_block_included (b.name, is_block_included_by_default) then
+				l_region := block_region (b, a_default_region)
+				l_region.extend (b)
+				blocks.force (b, b.name)
+			end
+				-- Included alias block ids.
+			if
+				a_alias_table /= Void and then
+				attached a_alias_table.item (b.name) as l_aliases
+			then
+				across
+					l_aliases as ic
+				loop
+					add_block (create {CMS_ALIAS_BLOCK}.make_with_block (ic.item, b), a_default_region)
+				end
+			end
+		end
+
 feature -- Blocks
 
 	put_block (b: CMS_BLOCK; a_default_region: detachable READABLE_STRING_8; is_block_included_by_default: BOOLEAN)
@@ -553,6 +659,7 @@ feature -- Blocks
 			if is_block_included (b.name, is_block_included_by_default) then
 				l_region := block_region (b, a_default_region)
 				l_region.extend (b)
+				blocks.force (b, b.name)
 			end
 		end
 
@@ -564,37 +671,91 @@ feature -- Blocks
 		do
 			l_region := block_region (b, a_default_region)
 			l_region.extend (b)
+			blocks.force (b, b.name)
+		end
+
+	remove_block (b: CMS_BLOCK)
+			-- Remove block `b' from associated region.
+		local
+			l_region: detachable like block_region
+			l_found: BOOLEAN
+		do
+			across
+				regions as reg_ic
+			until
+				l_found
+			loop
+				l_region := reg_ic.item
+				l_found := l_region.blocks.has (b)
+				if l_found then
+					l_region.remove (b)
+				end
+			end
+			blocks.remove (b.name)
 		end
 
 	get_blocks
+			-- Get block from CMS core, and from modules.
+		local
+			l_region: CMS_BLOCK_REGION
+			b: CMS_BLOCK
 		do
-			debug ("refactor_fixme")
-				fixme ("find a way to have this in configuration or database, and allow different order")
+			get_core_blocks
+			get_module_blocks
+
+			across
+				regions as reg_ic
+			loop
+				l_region := reg_ic.item
+				across
+					l_region.blocks as ic
+				loop
+					update_block (ic.item)
+				end
+				l_region.sort
 			end
-			put_block (top_header_block, "top", True)
-			put_block (header_block, "header", True)
+
+			debug ("cms")
+				create {CMS_CONTENT_BLOCK} b.make ("made_with", Void, "Made with <a href=%"https://www.eiffel.org/%">EWF</a>", Void)
+				b.set_weight (99)
+				put_block (b, "footer", True)
+			end
+		end
+
+	get_core_blocks
+			-- Get blocks provided by the CMS core.
+		local
+			l_alias_table: like block_alias_table
+		do
+				-- Get included aliased blocks.
+			l_alias_table := block_alias_table
+
+			put_core_block (top_header_block, "top", True, l_alias_table)
+			put_core_block (header_block, "header", True, l_alias_table)
 			if attached message_block as m then
-				put_block (m, "content", True)
+				put_core_block (m, "content", True, l_alias_table)
 			end
 			if attached primary_tabs_block as m then
-				put_block (m, "content", True)
+				put_core_block (m, "content", True, l_alias_table)
 			end
 			add_block (content_block, "content") -- Can not be disabled!
 
 			if attached management_menu_block as l_block then
-				put_block (l_block, "sidebar_first", True)
+				put_core_block (l_block, "sidebar_first", True, l_alias_table)
 			end
 			if attached navigation_menu_block as l_block then
-				put_block (l_block, "sidebar_first", True)
+				put_core_block (l_block, "sidebar_first", True, l_alias_table)
 			end
 			if attached user_menu_block as l_block then
-				put_block (l_block, "sidebar_second", True)
+				put_core_block (l_block, "sidebar_second", True, l_alias_table)
 			end
+		end
 
+	get_module_blocks
+			-- Get blocks provided by modules.
+		do
+				-- Get block from modules, and related alias.
 			hooks.invoke_block (Current)
-			debug ("cms")
-				put_block (create {CMS_CONTENT_BLOCK}.make ("made_with", Void, "Made with <a href=%"https://www.eiffel.org/%">EWF</a>", Void), "footer", True)
-			end
 		end
 
 	primary_menu_block: detachable CMS_MENU_BLOCK
@@ -641,6 +802,7 @@ feature -- Blocks
 		do
 			create s.make_empty
 			create Result.make ("page_top", Void, s, Void)
+			Result.set_weight (-5)
 			Result.set_is_raw (True)
 		end
 
@@ -652,6 +814,7 @@ feature -- Blocks
 			create s.make_from_string (theme.menu_html (primary_menu, True, Void))
 			create l_hb.make_empty
 			create Result.make ("header", Void, l_hb, Void)
+			Result.set_weight (-4)
 			Result.set_is_raw (True)
 		end
 
@@ -683,6 +846,7 @@ feature -- Blocks
 			if attached message as m and then not m.is_empty then
 				create Result.make ("message", Void, "<div id=%"message%">" + m + "</div>", Void)
 				Result.set_is_raw (True)
+				Result.set_weight (-2)
 			end
 		end
 
@@ -699,6 +863,7 @@ feature -- Blocks
 				end
 			end
 			create Result.make ("content", Void, s, Void)
+			Result.set_weight (-1)
 			Result.set_is_raw (True)
 		end
 
@@ -922,8 +1087,10 @@ feature -- Generation
 			across
 				regions as reg_ic
 			loop
+				l_region := reg_ic.item
+					-- region blocks Already sorted.
 				across
-					reg_ic.item.blocks as ic
+					l_region.blocks as ic
 				loop
 					if attached {CMS_SMARTY_TEMPLATE_BLOCK} ic.item as l_tpl_block then
 							-- Apply page variables to smarty block.

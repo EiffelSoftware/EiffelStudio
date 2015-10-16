@@ -786,16 +786,6 @@ feature -- Blocks
 			end
 		end
 
-	primary_tabs_block: detachable CMS_MENU_BLOCK
-		do
-			if attached primary_tabs as m and then not m.is_empty then
-				create Result.make (m)
-				Result.is_horizontal := True
-				Result.set_is_raw (True)
-				Result.add_css_class ("tabs")
-			end
-		end
-
 	top_header_block: CMS_CONTENT_BLOCK
 		local
 			s: STRING
@@ -846,7 +836,18 @@ feature -- Blocks
 			if attached message as m and then not m.is_empty then
 				create Result.make ("message", Void, "<div id=%"message%">" + m + "</div>", Void)
 				Result.set_is_raw (True)
+				Result.set_weight (-3)
+			end
+		end
+
+	primary_tabs_block: detachable CMS_MENU_BLOCK
+		do
+			if attached primary_tabs as m and then not m.is_empty then
+				create Result.make (m)
+				Result.is_horizontal := True
+				Result.set_is_raw (True)
 				Result.set_weight (-2)
+				Result.add_css_class ("tabs")
 			end
 		end
 

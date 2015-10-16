@@ -230,6 +230,7 @@ feature -- Hook
 			s: READABLE_STRING_8
 			b: CMS_CONTENT_BLOCK
 			pref: STRING
+			nb: INTEGER
 		do
 			if attached feed_aggregator_api as l_feed_api then
 				pref := "feed."
@@ -238,7 +239,15 @@ feature -- Hook
 				else
 					s := a_block_id
 				end
-				if attached feed_to_html (s, 0, True, a_response) as l_content then
+				nb := 0
+				if
+					attached a_response.block_options (a_block_id) as l_options and then
+					attached {READABLE_STRING_GENERAL} l_options.item ("size") as l_size and then
+					l_size.is_integer
+				then
+					nb := l_size.to_integer
+				end
+				if attached feed_to_html (s, nb, True, a_response) as l_content then
 					create b.make (a_block_id, Void, l_content, Void)
 					b.set_is_raw (True)
 					a_response.add_block (b, "feed_" + s)

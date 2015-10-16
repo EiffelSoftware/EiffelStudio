@@ -140,7 +140,6 @@ feature -- Hook: block
 		local
 			bl, l_alias: READABLE_STRING_8
 			bl_optional: BOOLEAN
-			l_ok: BOOLEAN
 			l_block_cache: detachable TUPLE [block: CMS_CACHE_BLOCK; region: READABLE_STRING_8; expired: BOOLEAN]
 			l_alias_table: detachable STRING_TABLE [LIST [READABLE_STRING_8]] --| block_id => [alias_ids..]
 			l_origin_block: detachable CMS_BLOCK
@@ -155,19 +154,13 @@ feature -- Hook: block
 						across
 							h.block_list as blst
 						loop
-							l_ok := False
 							bl := blst.item
 							bl_optional := bl.count > 0 and bl[1] = '?'
 							if bl_optional then
 								bl := bl.substring (2, bl.count)
-								if a_response.is_block_included (bl, False) then
-									l_ok := True
-								end
-							else
-								l_ok := True
 							end
 
-							if l_ok then
+							if a_response.is_block_included (bl, not bl_optional) then
 								l_block_cache := a_response.block_cache (bl)
 								if l_block_cache /= Void and then not l_block_cache.expired then
 									a_response.add_block (l_block_cache.block, l_block_cache.region)

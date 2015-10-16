@@ -70,6 +70,7 @@ feature -- Hook
 			b: CMS_CONTENT_BLOCK
 			s, l_content: STRING
 			gen: FEED_TO_XHTML_VISITOR
+			nb: NATURAL_32
 		do
 			if a_block_id.same_string_general ("recent_changes") then
 				create l_content.make (1024)
@@ -81,7 +82,16 @@ feature -- Hook
 				s.append_string ("</li>")
 				gen.set_footer (s)
 
-				recent_changes_feed (a_response, 10, Void).accept (gen)
+				nb := 10
+				if
+					attached a_response.block_options (a_block_id) as l_options and then
+					attached {READABLE_STRING_GENERAL} l_options.item ("size") as l_size and then
+					l_size.is_integer
+				then
+					nb := l_size.to_natural_32
+				end
+
+				recent_changes_feed (a_response, nb, Void).accept (gen)
 
 				create b.make (a_block_id, Void, l_content, Void)
 				a_response.put_block (b, Void, False)

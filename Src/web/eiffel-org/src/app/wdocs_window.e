@@ -219,11 +219,16 @@ feature {NONE} -- Implementation
 
 	build_wdocs_manager
 		local
-			cfg: WDOCS_INI_CONFIG
+			cfg: WDOCS_DEFAULT_SETUP
 			wdocs: like wdocs_manager
+			dft: detachable READABLE_STRING_GENERAL
 		do
-			create cfg.make (environment.config_path.extended ("wdocs.ini"))
-			create wdocs.make (cfg.documentation_dir.extended (cfg.documentation_default_version), cfg.documentation_default_version, cfg.temp_dir)
+			create cfg.make (environment.config_path.extended ("wdocs.ini"), "trunk")
+			dft := cfg.documentation_default_version
+			if dft = Void then
+				dft := "trunk"
+			end
+			create wdocs.make (cfg.documentation_dir.extended (dft), dft, cfg.temp_dir)
 			wdocs.set_server_url ("http://localhost:" + port_number.out)
 			wdocs_manager := wdocs
 		end

@@ -288,7 +288,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_check_private_key (a_ctx_ptr: POINTER): INTEGER
 			-- Call external SSL_CTX_check_private_key.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_CTX_check_private_key"
 		end
@@ -296,7 +296,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_free (a_ctx_ptr: POINTER)
 			-- External call to SSL_CTX_free.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_CTX_free"
 		end
@@ -304,7 +304,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_new (method_ptr: POINTER): POINTER
 			-- External call to SSL_CTX_new.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_CTX_new"
 		end
@@ -312,7 +312,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_use_certificate(a_ctx_ptr, a_cert_buffer: POINTER ): INTEGER
 			-- Call external c_ssl_ctx_use_certificate.
 		external
-			"C inline use <eif_openssl.h>"
+			"C inline use %"eif_openssl.h%""
 		alias
 			"{
 				X509 *cert = NULL;
@@ -328,7 +328,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_use_rsaprivatekey	(a_ctx_ptr, a_key_buffer: POINTER): INTEGER
 			-- Call external c_ssl_ctx_use_rsaprivatekey
 		external
-			"C inline use <eif_openssl.h>"
+			"C inline use %"eif_openssl.h%""
 		alias
 		 "{
 			BIO *kbio;
@@ -343,7 +343,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_use_certificate_file (a_ctx_ptr, file: POINTER; type: INTEGER): INTEGER
 			-- Call external SSL_CTX_use_certificate_file.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_CTX_use_certificate_file"
 		end
@@ -351,7 +351,7 @@ feature {NONE} -- Externals
 	c_ssl_ctx_use_privatekey_file (a_ctx_ptr, file: POINTER; type: INTEGER): INTEGER
 			-- Call external SSL_CTX_use_PrivateKey_file.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_CTX_use_PrivateKey_file"
 		end
@@ -359,7 +359,7 @@ feature {NONE} -- Externals
 	c_sslv3_client_method: POINTER
 			-- External call to SSLv3_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSLv3_client_method"
 		end
@@ -367,7 +367,7 @@ feature {NONE} -- Externals
 	c_sslv23_client_method: POINTER
 			-- External call to SSLv23_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSLv23_client_method"
 		end
@@ -375,7 +375,7 @@ feature {NONE} -- Externals
 	c_sslv23_server_method: POINTER
 			-- External call to SSLv23_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSLv23_server_method"
 		end
@@ -383,7 +383,7 @@ feature {NONE} -- Externals
 	c_sslv3_server_method: POINTER
 			-- External call to SSLv3_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSLv3_server_method"
 		end
@@ -391,7 +391,7 @@ feature {NONE} -- Externals
 	c_tlsv10_client_method: POINTER
 			-- External call to TLSv1_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_client_method"
 		end
@@ -399,7 +399,7 @@ feature {NONE} -- Externals
 	c_tlsv10_server_method: POINTER
 			-- External call to TLSv1_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_server_method"
 		end
@@ -407,7 +407,7 @@ feature {NONE} -- Externals
 	c_tlsv11_client_method: POINTER
 			-- External call to TLSv1_1_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_1_client_method"
 		end
@@ -415,7 +415,7 @@ feature {NONE} -- Externals
 	c_tlsv11_server_method: POINTER
 			-- External call to TLSv1_1_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_1_server_method"
 		end
@@ -423,7 +423,7 @@ feature {NONE} -- Externals
 	c_tlsv12_client_method: POINTER
 			-- External call to TLSv1_2_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_2_client_method"
 		end
@@ -431,7 +431,7 @@ feature {NONE} -- Externals
 	c_tlsv12_server_method: POINTER
 			-- External call to TLSv1_2_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_2_server_method"
 		end
@@ -439,7 +439,7 @@ feature {NONE} -- Externals
 	c_dtlsv1_client_method: POINTER
 			-- External call to DTLSv1_client_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"DTLSv1_client_method"
 		end
@@ -447,7 +447,7 @@ feature {NONE} -- Externals
 	c_dtlsv1_server_method: POINTER
 			-- External call to DTLSv1_server_method.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"DTLSv1_server_method"
 		end

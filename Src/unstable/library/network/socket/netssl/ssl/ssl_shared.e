@@ -54,7 +54,7 @@ feature {NONE} -- External
 	c_ssl_load_error_strings
 			-- External call to SSL_load_error_strings.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_load_error_strings"
 		end
@@ -62,7 +62,7 @@ feature {NONE} -- External
 	c_ssleay_add_ssl_algorithms
 			-- External call to SSLeay_add_ssl_algorithms.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSLeay_add_ssl_algorithms"
 		end
@@ -70,7 +70,7 @@ feature {NONE} -- External
 	c_ssl_get_ctx (a_ssl: POINTER): POINTER
 			-- External call to SSL_get_SSL_CTX.
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_get_SSL_CTX"
 		end

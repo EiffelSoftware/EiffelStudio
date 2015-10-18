@@ -200,7 +200,7 @@ feature {NONE} -- Externals
 	c_err_error_string (ssl_err: INTEGER_64; buf_ptr: POINTER): POINTER
 			-- External call to ERR_error_string
 		external
-			"C use <openssl/err.h>"
+			"C signature (unsigned long, char *): EIF_POINTER use %"eif_openssl.h%""
 		alias
 			"ERR_error_string"
 		end
@@ -208,7 +208,7 @@ feature {NONE} -- Externals
 	c_err_get_error: INTEGER_64
 			-- External call to ERR_get_error
 		external
-			"C use <openssl/err.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"ERR_get_error"
 		end
@@ -216,7 +216,7 @@ feature {NONE} -- Externals
 	c_ssl_accept (an_ssl_ptr: POINTER): INTEGER
 			-- External call to SSL_accept
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_accept"
 		end
@@ -224,7 +224,7 @@ feature {NONE} -- Externals
 	c_ssl_connect (an_ssl_ptr: POINTER): INTEGER
 			-- External call to SSL_connect
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_connect"
 		end
@@ -232,7 +232,7 @@ feature {NONE} -- Externals
 	c_ssl_free (an_ssl_ptr: POINTER)
 			-- External call to SSL_free
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_free"
 		end
@@ -240,7 +240,7 @@ feature {NONE} -- Externals
 	c_ssl_new (a_ctx_ptr: POINTER): POINTER
 			-- External call to SSL_new
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_new"
 		end
@@ -248,7 +248,7 @@ feature {NONE} -- Externals
 	c_ssl_read (an_ssl_ptr: POINTER; buffer: POINTER; nb_bytes: INTEGER): INTEGER
 			-- External call to SSL_read
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_read"
 		end
@@ -256,7 +256,7 @@ feature {NONE} -- Externals
 	c_ssl_set_fd (a_ctx_ptr: POINTER; an_fd: INTEGER)
 			-- External call to SSL_set_fd
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_set_fd"
 		end
@@ -264,7 +264,7 @@ feature {NONE} -- Externals
 	c_ssl_shutdown (an_ssl_ptr: POINTER)
 			-- External call to SSL_shutdown
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_shutdown"
 		end
@@ -272,7 +272,7 @@ feature {NONE} -- Externals
 	c_ssl_write (an_ssl_ptr: POINTER; buffer: POINTER; nb_bytes: INTEGER): INTEGER
 			-- External call to SSL_write
 		external
-			"C use <openssl/ssl.h>"
+			"C use %"eif_openssl.h%""
 		alias
 			"SSL_write"
 		end

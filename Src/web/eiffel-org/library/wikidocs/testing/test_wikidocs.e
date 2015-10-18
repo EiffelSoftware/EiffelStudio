@@ -32,7 +32,7 @@ feature {NONE} -- Events
 	on_prepare
 			-- <Precursor>
 		local
-			cfg: WDOCS_DEFAULT_CONFIG
+			cfg: WDOCS_DEFAULT_SETUP
 			d: DIRECTORY
 			p: PATH
 			n: READABLE_STRING_GENERAL

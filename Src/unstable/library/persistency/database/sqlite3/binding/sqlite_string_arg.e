@@ -35,17 +35,21 @@ feature {SQLITE_STATEMENT} -- Basic operations
 			-- <Precursor>
 		local
 			l_cstring: C_STRING
-			l_value: like value
+			l_count: INTEGER
 		do
-			l_value := value
-			check l_value_attached: attached l_value end
-
-			create l_cstring.make (l_value)
-			sqlite_raise_on_failure ({SQLITE_EXTERNALS}.c_sqlite3_bind_text (a_statement.internal_stmt, a_index, l_cstring.item, l_value.count, default_pointer))
+			if attached value as l_value then
+				create l_cstring.make (l_value)
+				l_count := l_value.count
+			else
+				check value_set: attached value end
+				create l_cstring.make ("")
+				l_count := 0
+			end
+			sqlite_raise_on_failure ({SQLITE_EXTERNALS}.c_sqlite3_bind_text (a_statement.internal_stmt, a_index, l_cstring.item, l_count, default_pointer))
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

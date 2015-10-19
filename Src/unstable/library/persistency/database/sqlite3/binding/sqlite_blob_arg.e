@@ -37,12 +37,15 @@ feature {SQLITE_STATEMENT} -- Basic operations
 			l_value: like value
 		do
 			l_value := value
-			check l_value_attached: attached l_value end
+			if l_value = Void then
+				check l_value_attached: attached value end
+				create l_value.make (0)
+			end
 			sqlite_raise_on_failure ({SQLITE_EXTERNALS}.c_sqlite3_bind_blob (a_statement.internal_stmt, a_index, l_value.item, l_value.count, default_pointer))
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

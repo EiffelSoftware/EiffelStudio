@@ -285,6 +285,13 @@ feature -- Externals
 			"return (EIF_INTEGER_64)sqlite3_last_insert_rowid((sqlite3 *)$a_db)"
 		end
 
+	c_sqlite3_limit (a_db: POINTER; a_id: INTEGER; a_new_value: INTEGER): INTEGER_64
+		external
+			"C inline use <sqlite3.h>"
+		alias
+			"return (EIF_INTEGER_64)sqlite3_limit((sqlite3 *)$a_db, (int)$a_id, (int)$a_new_value)"
+		end
+
 	c_sqlite3_libversion: POINTER
 		external
 			"C inline use <sqlite3.h>"

@@ -73,17 +73,6 @@ feature -- Status report
 			Result := True
 		end
 
-feature -- Measurement
-
-	min_index_id: NATURAL_8 = 1
-			-- Minumum allowable id index.
-
-	max_index_id: NATURAL_8
-			-- Maximum allowable id index.
-		do
-			Result := SQLITE_LIMIT_VARIABLE_NUMBER.as_natural_8
-		end
-
 feature {SQLITE_STATEMENT, SQLITE_STATEMENT_ITERATION_CURSOR} -- Basic operations
 
 	bind_to_statement (a_statement: SQLITE_STATEMENT; a_index: INTEGER)
@@ -108,7 +97,7 @@ invariant
 	value_is_valid_value: is_valid_value (value)
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

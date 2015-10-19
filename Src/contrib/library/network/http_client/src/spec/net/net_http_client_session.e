@@ -1,18 +1,20 @@
 note
 	description: "[
-				Specific implementation of HTTP_CLIENT_SESSION based on Eiffel cURL library
-				
-				WARNING: Do not forget to have the dynamic libraries libcurl (.dll or .so) 
-				and related accessible to the executable (i.e in same directory, or in the PATH)
+				Specific implementation of HTTP_CLIENT_SESSION based on Eiffel NET library
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LIBCURL_HTTP_CLIENT_SESSION
+	NET_HTTP_CLIENT_SESSION
 
 inherit
 	HTTP_CLIENT_SESSION
+		redefine
+			close
+		end
+
+	NET_HTTP_CLIENT_INFO
 
 create
 	make
@@ -21,9 +23,6 @@ feature {NONE} -- Initialization
 
 	initialize
 		do
-			create curl -- cURL externals
-			create curl_easy -- cURL easy externals
-			curl_easy.set_curl_function (create {LIBCURL_DEFAULT_FUNCTION}.make)
 		end
 
 feature -- Status report
@@ -31,7 +30,34 @@ feature -- Status report
 	is_available: BOOLEAN
 			-- Is interface usable?
 		do
-			Result := curl.is_dynamic_library_exists
+			Result := True
+			if base_url.starts_with_general ("https://") then
+				Result := has_https_support
+			end
+		end
+
+feature -- Access: persistent connection
+
+	persistent_connection: detachable NET_HTTP_CLIENT_CONNECTION
+			-- Socket used for persistent connection purpose.
+
+feature -- Element change: persistent connection		
+
+	set_persistent_connection (a_connection: like persistent_connection)
+			-- Set `persistent_connection' to `a_connection'.
+		do
+			persistent_connection := a_connection
+		end
+
+feature -- Basic operation
+
+	close
+			-- <Precursor>
+		do
+			if attached persistent_connection as l_connection then
+				persistent_connection := Void
+				l_connection.socket.cleanup
+			end
 		end
 
 feature -- Custom
@@ -41,7 +67,7 @@ feature -- Custom
 		local
 			req: HTTP_CLIENT_REQUEST
 		do
-			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
+			create {NET_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
 			Result := req.response
 		end
 
@@ -119,7 +145,6 @@ feature {NONE} -- Implementation
 		local
 			req: HTTP_CLIENT_REQUEST
 			ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
-			f: detachable RAW_FILE
 			l_data: detachable READABLE_STRING_8
 		do
 			ctx := a_ctx
@@ -138,44 +163,15 @@ feature {NONE} -- Implementation
 			if ctx /= Void then
 				l_data := ctx.upload_data
 				if l_data /= Void and a_method.is_case_insensitive_equal_general ("PUT") then
-					--| Quick and dirty hack using real file, for PUT uploaded data
-					--| FIXME [2012-05-23]: better use libcurl for that purpose
-
-					if ctx.has_upload_filename then
-						check put_conflict_file_and_data: False end
-					end
-					create f.make_open_write (create {FILE_NAME}.make_temporary_name)
-					f.put_string (l_data)
-					f.close
-					check ctx /= Void then
-						ctx.set_upload_data (Void)
-						ctx.set_upload_filename (f.path.name)
-					end
+					check put_conflict_file_and_data: not ctx.has_upload_filename end
 				end
 			end
 
-			create {LIBCURL_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
+			create {NET_HTTP_CLIENT_REQUEST} req.make (base_url + a_path, a_method, Current, ctx)
 			Result := req.response
-
-			if f /= Void then
-				f.delete
-			end
-			if l_data /= Void and a_ctx /= Void then
-				a_ctx.set_upload_filename (Void)
-				a_ctx.set_upload_data (l_data)
-			end
 		end
 
-feature {LIBCURL_HTTP_CLIENT_REQUEST} -- Curl implementation
-
-	curl: CURL_EXTERNALS
-			-- cURL externals
-
-	curl_easy: CURL_EASY_EXTERNALS
-			-- cURL easy externals
-
-
-;note
+note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,6 +1,9 @@
 note
 	description: "[
 				Specific implementation of HTTP_CLIENT_REQUEST based on Eiffel cURL library
+
+				WARNING: Do not forget to have the dynamic libraries libcurl (.dll or .so) 
+				and related accessible to the executable (i.e in same directory, or in the PATH)
 			]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,9 +13,8 @@ class
 
 inherit
 	HTTP_CLIENT_REQUEST
-		rename
-			make as make_request
 		redefine
+			make,
 			session
 		end
 
@@ -23,8 +25,7 @@ feature {NONE} -- Initialization
 
 	make (a_url: READABLE_STRING_8; a_request_method: like request_method; a_session: like session; ctx: like context)
 		do
-			make_request (a_url, a_session, ctx)
-			request_method := a_request_method
+			Precursor (a_url, a_request_method, a_session, ctx)
 			apply_workaround
 		end
 
@@ -38,13 +39,10 @@ feature {NONE} -- Initialization
 
 	session: LIBCURL_HTTP_CLIENT_SESSION
 
-feature -- Access
-
-	request_method: READABLE_STRING_8
-
 feature -- Execution
 
-	execute: HTTP_CLIENT_RESPONSE
+	response: HTTP_CLIENT_RESPONSE
+			-- <Precursor>
 		local
 			l_result: INTEGER
 			l_curl_string: detachable CURL_STRING
@@ -63,6 +61,8 @@ feature -- Execution
 			l_upload_data: detachable READABLE_STRING_8
 			l_upload_filename: detachable READABLE_STRING_GENERAL
 			l_headers: like headers
+			l_is_http_1_0: BOOLEAN
+			l_uri: URI
 		do
 			if not retried then
 				curl := session.curl
@@ -71,6 +71,10 @@ feature -- Execution
 				curl.global_init
 
 				ctx := context
+
+				if ctx /= Void then
+					l_is_http_1_0 := attached ctx.http_version as l_http_version and then l_http_version.same_string ("HTTP/1.0")
+				end
 
 				--| Configure cURL session
 				initialize_curl_session (ctx, curl, curl_easy, curl_handle)
@@ -81,12 +85,48 @@ feature -- Execution
 					append_parameters_to_url (ctx.query_parameters, l_url)
 				end
 
+				if session.is_header_sent_verbose then
+					io.error.put_string ("> Sending:%N")
+					create l_uri.make_from_string (l_url)
+					io.error.put_string ("> ")
+					io.error.put_string (request_method + " " + l_uri.path)
+					if attached l_uri.query as q then
+						io.error.put_string (q)
+					end
+					if l_is_http_1_0 then
+						io.error.put_string (" HTTP/1.0")
+					else
+						io.error.put_string (" HTTP/1.1")
+					end
+					io.error.put_new_line
+					if attached l_uri.host as l_host then
+						io.error.put_string ("> ")
+						io.error.put_string ("Host: " + l_host)
+						io.error.put_new_line
+					end
+					across
+						headers as ic
+					loop
+						io.error.put_string ("> ")
+						io.error.put_string (ic.key)
+						io.error.put_string (": ")
+						io.error.put_string (ic.item)
+						io.error.put_new_line
+					end
+					io.error.put_string ("> ... ")
+					io.error.put_new_line
+				end
+
 				debug ("service")
 					io.put_string ("SERVICE: " + l_url)
 					io.put_new_line
 				end
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_url, l_url)
-
+				if l_is_http_1_0 then
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_http_version, {CURL_OPT_CONSTANTS}.curl_http_version_1_0)
+				else
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_http_version, {CURL_OPT_CONSTANTS}.curl_http_version_none)
+				end
 				l_headers := headers
 
 				-- Context
@@ -241,6 +281,10 @@ feature -- Execution
 					Result.status := response_status_code (curl_easy, curl_handle)
 					if l_curl_string /= Void then
 						Result.set_response_message (l_curl_string.string, ctx)
+						if session.is_header_received_verbose then
+							io.error.put_string ("< Receiving:%N")
+							io.error.put_string (Result.raw_header)
+						end
 					end
 				else
 					Result.set_error_message ("Error: cURL Error[" + l_result.out + "]")
@@ -390,7 +434,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

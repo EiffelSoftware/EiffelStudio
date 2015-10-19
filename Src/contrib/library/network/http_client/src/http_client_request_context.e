@@ -81,7 +81,10 @@ feature -- Access
 			-- Optional output file to get downloaded content and header
 
 	output_content_file: detachable FILE
-			-- Optional output file to get downloaded content			
+			-- Optional output file to get downloaded content
+
+	http_version: detachable IMMUTABLE_STRING_8
+			-- Overwrite default http version if set.
 
 feature -- Status report
 
@@ -209,6 +212,17 @@ feature -- Element change
 			output_content_file := f
 		end
 
+	set_http_version (v: detachable READABLE_STRING_8)
+		require
+			valid_version: v = Void or else v.starts_with_general ("HTTP/")
+		do
+			if v = Void then
+				http_version := Void
+			else
+				create http_version.make_from_string (v)
+			end
+		end
+
 feature -- Status setting
 
 	set_proxy (a_host: detachable READABLE_STRING_8; a_port: INTEGER)
@@ -264,7 +278,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

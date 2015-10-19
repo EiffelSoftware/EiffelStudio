@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="http_client" uuid="628F5A96-021B-4191-926B-B3BF49272866" library_target="http_client">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="http_client" uuid="628F5A96-021B-4191-926B-B3BF49272866" library_target="http_client">
 	<target name="http_client">
 		<root all_classes="true"/>
 		<file_rule>
@@ -9,10 +9,76 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="provisional">
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf">
+			<condition>
+				<custom name="libcurl_http_client_disabled" excluded_value="true"/>
+			</condition>
+		</library>
 		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder.ecf"/>
-		<cluster name="src" location=".\src\" recursive="true"/>
+		<library name="http" location="..\protocol\http\http.ecf"/>
+		<library name="http_auth" location="../authentication/http_authorization/http_authorization.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
+			<condition>
+				<custom name="net_http_client_disabled" excluded_value="true"/>
+				<custom name="netssl_http_client_enabled" value="true"/>
+			</condition>
+		</library>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<cluster name="src" location=".\src\">
+			<cluster name="spec_null" location="$|spec\null\" recursive="true"/>
+			<cluster name="spec_net" location="$|spec\net\">
+				<condition>
+					<custom name="net_http_client_disabled" excluded_value="true"/>
+				</condition>
+				<cluster name="net_implementation" location="$|implementation\" hidden="true">
+					<condition>
+						<custom name="net_http_client_disabled" excluded_value="true"/>
+					</condition>
+				</cluster>
+				<cluster name="net_ssl_disabled" location="$|no_ssl\">
+					<condition>
+						<custom name="net_http_client_disabled" excluded_value="true"/>
+						<custom name="netssl_http_client_enabled" excluded_value="true"/>
+					</condition>
+				</cluster>
+				<cluster name="net_ssl_enabled" location="$|ssl\">
+					<condition>
+						<custom name="net_http_client_disabled" excluded_value="true"/>
+						<custom name="netssl_http_client_enabled" value="true"/>
+					</condition>
+				</cluster>
+			</cluster>
+			<cluster name="spec_libcurl" location="$|spec\libcurl\" recursive="true">
+				<condition>
+					<custom name="libcurl_http_client_disabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="default_null" location="$|default\null\">
+				<condition>
+					<custom name="net_http_client_disabled" value="true"/>
+					<custom name="libcurl_http_client_disabled" value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="default_net" location="$|default\net\">
+				<condition>
+					<custom name="net_http_client_disabled" excluded_value="true"/>
+					<custom name="libcurl_http_client_disabled" value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="default_libcurl" location="$|default\libcurl\">
+				<condition>
+					<custom name="net_http_client_disabled" value="true"/>
+					<custom name="libcurl_http_client_disabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="default_libcurl_or_net" location="$|default\libcurl_or_net\">
+				<condition>
+					<custom name="net_http_client_disabled" excluded_value="true"/>
+					<custom name="libcurl_http_client_disabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+		</cluster>
 	</target>
 </system>

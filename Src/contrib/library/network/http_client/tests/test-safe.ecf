@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="test_http_client" uuid="920E5C50-41E1-4DAC-8D48-D9C860E49228">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="test_http_client" uuid="920E5C50-41E1-4DAC-8D48-D9C860E49228">
 	<target name="test_http_client">
 		<root class="TEST" feature="make"/>
 		<file_rule>
@@ -10,6 +10,9 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<variable name="netssl_http_client_enabled" value="false"/>
+		<variable name="net_http_client_disabled" value="false"/>
+		<variable name="libcurl_http_client_disabled" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="http_client" location="..\http_client-safe.ecf" readonly="false" use_application_options="true">
 			<option>
@@ -17,6 +20,19 @@
 			</option>
 		</library>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<tests name="tests" location=".\"/>
+		<tests name="tests" location=".\">
+			<file_rule>
+				<exclude>.*libcurl_.*.e$</exclude>
+				<condition>
+					<custom name="libcurl_http_client_disabled" value="true"/>
+				</condition>
+			</file_rule>
+			<file_rule>
+				<exclude>.*net_.*.e$</exclude>
+				<condition>
+					<custom name="net_http_client_disabled" value="true"/>
+				</condition>
+			</file_rule>
+		</tests>
 	</target>
 </system>

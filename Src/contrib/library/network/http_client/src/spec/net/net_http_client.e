@@ -1,35 +1,22 @@
 note
 	description : "[
-				Specific implementation of HTTP_CLIENT based on Eiffel cURL library
-				
-				WARNING: Do not forget to have the dynamic libraries libcurl (.dll or .so) 
-				and related accessible to the executable (i.e in same directory, or in the PATH)
+				Specific implementation of HTTP_CLIENT based on Eiffel NET library
+
+				WARNING: this is work in progress
 			]"
 	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
 
 class
-	LIBCURL_HTTP_CLIENT
+	NET_HTTP_CLIENT
 
 inherit
 	HTTP_CLIENT
 
-create
-	default_create,
-	make
-
-feature {NONE} -- Initialization
-
-	make
-			-- Initialize `Current'.
-		do
-			default_create
-		end
-
 feature -- Status
 
-	new_session (a_base_url: READABLE_STRING_8): LIBCURL_HTTP_CLIENT_SESSION
+	new_session (a_base_url: READABLE_STRING_8): NET_HTTP_CLIENT_SESSION
 		do
 			create Result.make (a_base_url)
 		end

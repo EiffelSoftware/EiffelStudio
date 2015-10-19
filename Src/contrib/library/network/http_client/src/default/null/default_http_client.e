@@ -1,19 +1,23 @@
 note
-	description : "[
-				Instantiate one of the descendant of HTTP_CLIENT
-				then use `new_session' to create a session of http requests
-			]"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "[
+			Default HTTP_CLIENT based on NULL_HTTP_CLIENT.
+		]"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
+class
+	DEFAULT_HTTP_CLIENT
+
+inherit
 	HTTP_CLIENT
 
 feature -- Access
 
 	new_session (a_base_url: READABLE_STRING_8): HTTP_CLIENT_SESSION
 			-- Create a new session using `a_base_url'.
-		deferred
+		do
+			create {NULL_HTTP_CLIENT_SESSION} Result.make (a_base_url)
 		end
 
 note

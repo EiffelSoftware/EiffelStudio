@@ -1,20 +1,15 @@
 note
-	description : "[
-				Instantiate one of the descendant of HTTP_CLIENT
-				then use `new_session' to create a session of http requests
-			]"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "Additional information related to NET HTTP Client.."
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class
-	HTTP_CLIENT
+class
+	NET_HTTP_CLIENT_INFO
 
 feature -- Access
 
-	new_session (a_base_url: READABLE_STRING_8): HTTP_CLIENT_SESSION
-			-- Create a new session using `a_base_url'.
-		deferred
-		end
+	has_https_support: BOOLEAN = True
+			-- Is HTTPS supported?
 
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

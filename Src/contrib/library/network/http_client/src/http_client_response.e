@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_url: like url)
+	make (a_url: READABLE_STRING_8)
 			-- Initialize `Current'.
 		do
 				--| Default values
@@ -54,11 +54,22 @@ feature -- Access
 
 	status_line: detachable READABLE_STRING_8
 
+	http_version: detachable READABLE_STRING_8
+			-- http version associated with `status_line'.
+
 	raw_header: READABLE_STRING_8
 			-- Raw http header of the response.	
 
 	redirections: detachable ARRAYED_LIST [TUPLE [status_line: detachable READABLE_STRING_8; raw_header: READABLE_STRING_8; body: detachable READABLE_STRING_8]]
 			-- Header of previous redirection if any.
+
+	redirections_count: INTEGER
+			-- Number of redirections.
+		do
+			if attached redirections as lst then
+				Result := lst.count
+			end
+		end
 
 	header (a_name: READABLE_STRING_8): detachable READABLE_STRING_8
 			-- Header entry value related to `a_name'
@@ -92,6 +103,24 @@ feature -- Access
 			Result := s
 		end
 
+	multiple_header (a_name: READABLE_STRING_8): detachable LIST [READABLE_STRING_8]
+			-- Header multiple entries related to `a_name'
+		local
+			k: READABLE_STRING_8
+		do
+			across
+				headers as hds
+			loop
+				k := hds.item.name
+				if k.same_string (a_name) then
+					if Result = Void then
+						create {ARRAYED_LIST [READABLE_STRING_8]} Result.make (1)
+					end
+					Result.force (hds.item.value)
+				end
+			end
+		end
+
 	headers: LIST [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]
 			-- Computed table of http headers of the response.
 			--| We use a LIST since one might have multiple message-header fields with the same field-name
@@ -115,7 +144,7 @@ feature -- Access
 				loop
 					l_start := pos
 						--| Left justify
-					from until not h[l_start].is_space loop
+					from until not h [l_start].is_space loop
 						l_start := l_start + 1
 					end
 					pos := h.index_of ('%N', l_start)
@@ -129,7 +158,7 @@ feature -- Access
 					end
 					if l_end > 0 then
 							--| Right justify
-						from until not h[l_end].is_space loop
+						from until not h [l_end].is_space loop
 							l_end := l_end - 1
 						end
 						c := h.index_of (':', l_start)
@@ -188,7 +217,29 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_http_1_0: BOOLEAN
+			-- Is response using HTTP/1.0 protocole?
+			--| Note: it is relevant once the raw header are set.		
+		do
+			Result := attached http_version as v and then v.same_string ("1.0")
+		end
+
+	is_http_1_1: BOOLEAN
+			-- Is response using HTTP/1.1 protocole?
+			--| Note: it is relevant once the raw header are set.		
+		do
+			Result := attached http_version as v and then v.same_string ("1.1")
+		end
+
 feature -- Change
+
+	set_http_version (v: like http_version)
+			-- Set `http_version' to `v'.
+		do
+			http_version := v
+		end
 
 	set_status (s: INTEGER)
 			-- Set response `status' code to `s'
@@ -196,9 +247,42 @@ feature -- Change
 			status := s
 		end
 
+	set_status_line (a_line: detachable READABLE_STRING_8)
+			-- Set status line to `a_line',
+			-- and also `status' extracted from `a_line' if possible.
+		local
+			i,j: INTEGER
+			s: READABLE_STRING_8
+		do
+			status_line := a_line
+			http_version := Void
+
+			if a_line /= Void then
+				if a_line.starts_with ("HTTP/") then
+					i := a_line.index_of (' ', 1)
+					if i > 0 then
+						http_version := a_line.substring (1 + 5, i - 1) -- ("HTTP/").count = 5
+						i := i + 1
+					end
+				else
+					i := 1
+				end
+					-- Get status code token.
+				if i > 0 then
+					j := a_line.index_of (' ', i)
+					if j > i then
+						s := a_line.substring (i, j - 1)
+						if s.is_integer then
+							set_status (s.to_integer)
+						end
+					end
+				end
+			end
+		end
+
 	set_response_message (a_source: READABLE_STRING_8; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT)
 			-- Parse `a_source' response message
-			-- and set `header' and `body'.
+			-- and set `status_line', `status', `header' and `body'.
 			--| ctx is the context associated with the request
 			--| it might be useful to deal with redirection customization...
 		local
@@ -234,7 +318,7 @@ feature -- Change
 
 					j := i + 2
 					pos := j
-					status_line := l_status_line
+					set_status_line (l_status_line)
 					set_raw_header (h)
 
 --					libcURL does not cache redirection content.
@@ -277,10 +361,23 @@ feature -- Change
 
 	set_raw_header (h: READABLE_STRING_8)
 			-- Set http header `raw_header' to `h'
+		local
+			i: INTEGER
+			s: STRING_8
 		do
 			raw_header := h
 				--| Reset internal headers
 			internal_headers := Void
+
+				--| Set status line, right away.
+			i := h.index_of ('%N', 1)
+			if i > 0 then
+				s := h.substring (1, i - 1)
+				if s.starts_with ("HTTP/") then
+					s.right_adjust
+					set_status_line (s)
+				end
+			end
 		end
 
 	add_redirection (s: detachable READABLE_STRING_8; h: READABLE_STRING_8; a_body: detachable READABLE_STRING_8)
@@ -308,7 +405,7 @@ feature {NONE} -- Implementation
 			-- Internal cached value for the headers			
 
 ;note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -76,7 +76,15 @@ feature {NONE} -- Initialization
 			database_set: database = a_db
 		end
 
-feature {NONE} -- Clean up
+feature -- Clean up
+
+	cleanup
+			-- Cleanup Current statement.
+		do
+			dispose
+		end
+
+feature {NONE} -- Clean up	
 
 	dispose
 			-- <Precursor>
@@ -551,9 +559,12 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			mark_increased: mark > old mark
 		rescue
 			if l_locked then
-				check l_db_attached: attached l_db end
+				if l_db /= Void then
+					l_db.unlock
+				else
+					check l_db_attached: False end
+				end
 				l_locked := False
-				l_db.unlock
 			end
 			if is_executing then
 				is_executing := False
@@ -742,7 +753,7 @@ invariant
 	internal_thread_id_set: {PLATFORM}.is_thread_capable implies internal_thread_id /= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

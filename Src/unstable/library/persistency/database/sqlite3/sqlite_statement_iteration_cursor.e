@@ -58,7 +58,7 @@ feature {NONE} -- Initalization
 			start
 		ensure
 			statement_statement: statement = a_statement
-			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok 
+			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok
 				or last_result = {SQLITE_RESULT_CODE}.row
 				or last_result = {SQLITE_RESULT_CODE}.done
 		end
@@ -77,7 +77,7 @@ feature {NONE} -- Initalization
 		ensure
 			statement_statement: statement = a_statement
 			bindings_set: bindings = a_bindings
-			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok 
+			last_result_is_valid: last_result = {SQLITE_RESULT_CODE}.ok
 				or last_result = {SQLITE_RESULT_CODE}.row
 				or last_result = {SQLITE_RESULT_CODE}.done
 		end
@@ -92,14 +92,13 @@ feature -- Access
 
 	item: SQLITE_RESULT_ROW
 			-- <Precursor>
-		local
-			l_result: like internal_item
 		do
-			l_result := internal_item
-			check l_result_attached: attached l_result end
-			Result := l_result
+			check internal_item_set: attached internal_item as l_result then
+				Result := l_result
+			end
 		end
-		feature -- Access
+
+feature -- Access
 
 	new_cursor: ITERATION_CURSOR [SQLITE_RESULT_ROW]
 			-- Fresh cursor associated with current structure
@@ -273,7 +272,7 @@ feature {NONE} -- Implementation: void-safety helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

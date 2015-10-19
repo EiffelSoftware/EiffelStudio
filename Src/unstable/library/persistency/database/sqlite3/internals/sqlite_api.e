@@ -65,6 +65,7 @@ feature {NONE} -- Initialize
 			else
 				l_count.put (l_count.item + 1)
 			end
+			set_maximum_variable_index_number (999)
 		end
 
 feature {NONE} -- Clean up
@@ -178,6 +179,23 @@ feature -- Status report
 			is_thread_capable: Result implies {PLATFORM}.is_thread_capable
 		end
 
+feature -- Settings
+
+	maximum_variable_index_number: INTEGER
+			-- Maximum index number of any parameter in an SQL statement.
+			-- See {SQLITE_DATABASE}.maximum_variable_index_number
+			--| Default: 127
+
+feature -- Settings change
+
+	set_maximum_variable_index_number (nb: INTEGER)
+			-- Set `maximum_variable_index_number' value to `nb'.
+			-- It has no impact on sqlite data.
+			--| i.e: sqlite3_limit (...) is not called.
+		do
+			maximum_variable_index_number := nb
+		end
+
 feature -- Status report: SQL
 
 	is_complete_statement (a_sql: READABLE_STRING_8): BOOLEAN
@@ -208,7 +226,7 @@ invariant
 	initialization_count_not_negative: initialization_count.item >= 0
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

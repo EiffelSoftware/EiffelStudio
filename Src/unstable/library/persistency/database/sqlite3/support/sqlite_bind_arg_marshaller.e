@@ -55,7 +55,7 @@ feature -- Query
 			l_arg: detachable ANY
 			l_var: STRING
 		do
-			i_count := iterable_min_count_or_value (a_args, SQLITE_LIMIT_VARIABLE_NUMBER)
+			i_count := iterable_min_count_or_value (a_args, maximum_variable_index_number)
 			create Result.make_filled (default_bind_arg, 1, i_count)
 			i := 1
 			across
@@ -187,7 +187,7 @@ feature -- Query
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

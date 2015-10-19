@@ -75,8 +75,7 @@ feature {NONE} -- Initialization
 			is_sqlite_available: is_sqlite_available
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
 		do
 			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_read
@@ -90,8 +89,7 @@ feature {NONE} -- Initialization
 			is_sqlite_available: is_sqlite_available
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
-			a_file_name_exists: (create {RAW_FILE}.make (a_file_name.as_string_8)).exists
+			a_file_name_exists: (create {RAW_FILE}.make_with_name (a_file_name)).exists
 		do
 			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_read_write
@@ -106,7 +104,6 @@ feature {NONE} -- Initialization
 			is_sqlite_available: is_sqlite_available
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_is_string_8: a_file_name.is_string_8
 		do
 			make (create {SQLITE_FILE_SOURCE}.make (a_file_name))
 			open_create_read_write
@@ -224,6 +221,23 @@ feature -- Measurements
 			Result := sqlite3_total_changes (sqlite_api, internal_db).as_natural_32
 		end
 
+	maximum_variable_index_number: INTEGER
+			-- Maximum index number of any parameter in an SQL statement.
+		do
+			Result := {SQLITE_EXTERNALS}.c_sqlite3_limit (internal_db, SQLITE_LIMIT_VARIABLE_NUMBER, -1).to_integer_32
+		end
+
+feature {NONE} -- Externals
+
+	SQLITE_LIMIT_VARIABLE_NUMBER: INTEGER
+			-- Upper limit on a numerical id.
+			--| Default: 999
+		external
+			"C macro use <sqlite3.h>"
+		alias
+			"SQLITE_LIMIT_VARIABLE_NUMBER"
+		end
+
 feature -- Element change
 
 	set_busy_timeout (a_ms: NATURAL)
@@ -339,6 +353,15 @@ feature -- Element change
 		ensure
 			busy_handler_set: busy_handler = a_handler
 			busy_timeout_reset: attached a_handler implies busy_timeout = 0
+		end
+
+	set_maximum_variable_index_number (nb: INTEGER)
+			-- Set `maximum_variable_index_number' to `nb'.
+		local
+			res: INTEGER_64
+		do
+			res := {SQLITE_EXTERNALS}.c_sqlite3_limit (internal_db, SQLITE_LIMIT_VARIABLE_NUMBER, nb.to_integer_32)
+			check limit_set: res.to_integer_32 = nb end
 		end
 
 feature -- Status report
@@ -795,6 +818,7 @@ feature {NONE} -- Basic operations
 						set_busy_timeout (busy_timeout)
 					end
 				end
+				sqlite_api.set_maximum_variable_index_number (maximum_variable_index_number)
 			else
 				if l_db /= default_pointer then
 						-- Even in the event of an error, db's must be closed.
@@ -1111,7 +1135,7 @@ invariant
 	locked_thread_id_is_positive: {PLATFORM}.is_thread_capable implies internal_thread_id /= default_pointer
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

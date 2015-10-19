@@ -10,6 +10,9 @@ note
 class
 	SQLITE_BINDING_HELPERS
 
+inherit
+	SQLITE_SHARED_API
+
 feature -- Status report
 
 	is_valid_argument (a_value: detachable ANY): BOOLEAN
@@ -66,9 +69,9 @@ feature -- Status report
 			not_a_args_is_empty: across a_args as ic some True end
 		local
 			n: INTEGER
-			l_sqlite_limit_variable_number: like SQLITE_LIMIT_VARIABLE_NUMBER
+			l_sqlite_limit_variable_number: like maximum_variable_index_number
 		do
-			l_sqlite_limit_variable_number := SQLITE_LIMIT_VARIABLE_NUMBER
+			l_sqlite_limit_variable_number := maximum_variable_index_number
 			Result := True
 			across
 				a_args as ic
@@ -105,7 +108,7 @@ feature -- Status report
 					l_index_str := a_var.substring (2, i_count)
 					if l_index_str.is_integer_32 then
 						i := l_index_str.to_integer_32
-						Result := i > 0 and i <= SQLITE_LIMIT_VARIABLE_NUMBER
+						Result := i > 0 and i <= maximum_variable_index_number
 					end
 				end
 			elseif l_qualifier = ':' or l_qualifier = '@' or l_qualifier = '$' then
@@ -127,7 +130,7 @@ feature -- Status report
 		local
 			i,n: INTEGER
 		do
-			n := SQLITE_LIMIT_VARIABLE_NUMBER
+			n := maximum_variable_index_number
 			across
 				lst as ic
 			until
@@ -174,16 +177,15 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	SQLITE_LIMIT_VARIABLE_NUMBER: INTEGER
-			-- Upper limit on a numerical id.
-		external
-			"C macro use <sqlite3.h>"
-		alias
-			"SQLITE_LIMIT_VARIABLE_NUMBER"
+	maximum_variable_index_number: INTEGER
+			-- Maximum index number of any parameter in an SQL statement.
+			-- See {SQLITE_DATABASE}.maximum_variable_index_number
+		do
+			Result := sqlite_api.maximum_variable_index_number
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

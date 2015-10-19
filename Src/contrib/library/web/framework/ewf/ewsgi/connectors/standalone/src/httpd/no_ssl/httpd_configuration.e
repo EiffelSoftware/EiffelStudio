@@ -27,11 +27,6 @@ feature -- SSL Helpers
 				-- Ignored
 		end
 
-	set_ssl_protocol_to_ssl_3
-			-- Set `ssl_protocol' with `Ssl_3'.
-		do
-				-- Ignored
-		end
 
 	set_ssl_protocol_to_tls_1_0
 			-- Set `ssl_protocol' with `Tls_1_0'.

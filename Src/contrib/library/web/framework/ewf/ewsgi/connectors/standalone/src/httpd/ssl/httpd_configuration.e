@@ -41,12 +41,6 @@ feature -- SSL Helpers
 			set_ssl_protocol ({SSL_PROTOCOL}.Ssl_23)
 		end
 
-	set_ssl_protocol_to_ssl_3
-			-- Set `ssl_protocol' with `Ssl_3'.
-		do
-			set_ssl_protocol ({SSL_PROTOCOL}.Ssl_3)
-		end
-
 	set_ssl_protocol_to_tls_1_0
 			-- Set `ssl_protocol' with `Tls_1_0'.
 		do

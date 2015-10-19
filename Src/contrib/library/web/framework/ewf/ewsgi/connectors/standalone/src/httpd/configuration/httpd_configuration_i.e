@@ -81,7 +81,7 @@ feature -- Element change
 			-- Unset `http_server_name' value.
 		do
 			http_server_name := Void
-		ensure 	
+		ensure
 			unset_http_server_name: http_server_name = Void
 		end
 
@@ -199,11 +199,6 @@ feature -- SSL Helpers
 
 	set_ssl_protocol_to_ssl_2_or_3
 			-- Set `ssl_protocol' with `Ssl_23'.
-		deferred
-		end
-
-	set_ssl_protocol_to_ssl_3
-			-- Set `ssl_protocol' with `Ssl_3'.
 		deferred
 		end
 

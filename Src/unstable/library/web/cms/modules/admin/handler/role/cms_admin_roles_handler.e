@@ -93,7 +93,7 @@ feature -- HTTP Methods
 					s.append ("<a href=%"")
 					s.append (req.absolute_script_url ("/admin/role/" + u.id.out))
 					s.append ("%">")
-					s.append (u.name)
+					s.append (html_encoded (u.name))
 					s.append ("</a>")
 					s.append ("</li>%N")
 				end

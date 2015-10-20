@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 				if attached sql_read_string_32 (5) as l_summary then
 					Result.set_summary (l_summary)
 				end
-				if attached sql_read_string (6) as l_content then
+				if attached sql_read_string_32 (6) as l_content then
 					Result.set_content (l_content)
 				end
 				if attached sql_read_string (7) as l_format then

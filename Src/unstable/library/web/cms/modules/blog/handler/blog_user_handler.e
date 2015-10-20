@@ -123,7 +123,7 @@ feature -- HTML Output
 		do
 			a_output.append ("<h2>Posts from ")
 			if attached user as l_user then
-				a_output.append (l_user.name)
+				a_output.append (html_encoded (l_user.name))
 			else
 				a_output.append ("unknown user")
 			end

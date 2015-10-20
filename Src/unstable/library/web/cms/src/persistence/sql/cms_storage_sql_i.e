@@ -315,11 +315,14 @@ feature -- Access
 			-- Retrieved value at `a_index' position in `item'.
 		local
 			l_item: like sql_item
+			utf: UTF_CONVERTER
 		do
 			-- FIXME: handle string_32 !
 			l_item := sql_item (a_index)
 			if attached {READABLE_STRING_32} l_item as l_string then
 				Result := l_string
+			elseif attached {READABLE_STRING_8} l_item as l_string_8 then
+				Result := utf.utf_8_string_8_to_string_32 (l_string_8)
 			else
 				if attached sql_read_string (a_index) as s8 then
 					Result := s8.to_string_32 -- FIXME: any escape?

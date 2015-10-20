@@ -9,17 +9,20 @@ class
 inherit
 	CMS_STORAGE_SQL
 		redefine
-			sql_read_date_time, sql_read_integer_32
+			sql_read_date_time, sql_read_integer_32,
+			sql_read_string_32
 		end
 
 	CMS_CORE_STORAGE_SQL_I
 		redefine
-			sql_read_date_time, sql_read_integer_32
+			sql_read_date_time, sql_read_integer_32,
+			sql_read_string_32
 		end
 
 	CMS_USER_STORAGE_SQL_I
 		redefine
-			sql_read_date_time, sql_read_integer_32
+			sql_read_date_time, sql_read_integer_32,
+			sql_read_string_32
 		end
 
 	SQLITE_BIND_ARG_MARSHALLER
@@ -227,6 +230,7 @@ feature -- Operation
 		local
 			k: READABLE_STRING_GENERAL
 			k8: STRING
+			utf: UTF_CONVERTER
 		do
 			create Result.make (a_params.count)
 			across
@@ -236,11 +240,12 @@ feature -- Operation
 				if k.is_valid_as_string_8 then
 					k8 := k.as_string_8
 				else
-					k8 := (create {UTF_CONVERTER}).utf_32_string_to_utf_8_string_8 (k)
+					k8 := utf.utf_32_string_to_utf_8_string_8 (k)
 				end
 				if attached {DATE_TIME} ic.item as dt then
-
 					Result.force (new_binding_argument (date_time_to_string (dt), ":" + k8))
+				elseif attached {READABLE_STRING_32} ic.item as s32 then
+					Result.force (new_binding_argument (utf.utf_32_string_to_utf_8_string_8 (s32), ":" + k8))
 				else
 					Result.force (new_binding_argument (ic.item, ":" + k8))
 				end
@@ -360,6 +365,19 @@ feature -- Access
 			if attached last_sqlite_result_cursor as l_cursor then
 				l_row := l_cursor.item
 				Result := l_row.value (a_index.to_natural_32)
+			end
+		end
+
+	sql_read_string_32 (a_index: INTEGER): detachable STRING_32
+			-- <Precursor>
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := Precursor (a_index)
+			if Result = Void then
+				if attached sql_read_string (a_index) as s8 then
+					Result := utf.utf_8_string_8_to_string_32 (s8)
+				end
 			end
 		end
 

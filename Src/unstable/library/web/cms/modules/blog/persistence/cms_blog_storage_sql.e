@@ -23,9 +23,10 @@ feature -- Access
 			error_handler.reset
 			write_information_log (generator + ".blogs_count")
 			sql_query (sql_select_blog_count, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 	blogs_count_from_user (a_user: CMS_USER) : INTEGER_64
@@ -38,9 +39,10 @@ feature -- Access
 			create l_parameters.make (2)
 			l_parameters.put (a_user.id, "user")
 			sql_query (sql_select_blog_count_from_user, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 	blogs: LIST [CMS_NODE]
@@ -62,6 +64,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	blogs_limited (a_limit: NATURAL_32; a_offset: NATURAL_32): LIST [CMS_NODE]
@@ -88,6 +91,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	blogs_from_user_limited (a_user: CMS_USER; a_limit: NATURAL_32; a_offset: NATURAL_32): LIST [CMS_NODE]
@@ -115,6 +119,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 feature {NONE} -- Queries

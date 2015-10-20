@@ -28,11 +28,11 @@ feature -- Access
 			error_handler.reset
 			write_information_log (generator + ".nodes_count")
 			sql_query (sql_select_nodes_count, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_natural_64 (1)
 			end
+			sql_finalize
 		end
-
 
 	nodes: LIST [CMS_NODE]
 			-- List of nodes.
@@ -53,6 +53,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	node_revisions (a_node: CMS_NODE): LIST [CMS_NODE]
@@ -80,6 +81,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	trashed_nodes (a_user: detachable CMS_USER): LIST [CMS_NODE]
@@ -109,6 +111,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	recent_nodes (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_NODE]
@@ -135,6 +138,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	recent_node_changes_before (a_lower: INTEGER; a_count: INTEGER; a_date: DATE_TIME): LIST [CMS_NODE]
@@ -163,6 +167,7 @@ feature -- Access
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	node_by_id (a_id: INTEGER_64): detachable CMS_NODE
@@ -175,9 +180,10 @@ feature -- Access
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "nid")
 			sql_query (sql_select_node_by_id, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_node
 			end
+			sql_finalize
 		end
 
 	node_by_id_and_revision (a_node_id, a_revision: INTEGER_64): detachable CMS_NODE
@@ -191,9 +197,10 @@ feature -- Access
 			l_parameters.put (a_node_id, "nid")
 			l_parameters.put (a_revision, "revision")
 			sql_query (sql_select_node_by_id_and_revision, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_node
 			end
+			sql_finalize
 		end
 
 	node_author (a_node: CMS_NODE): detachable CMS_USER
@@ -207,9 +214,10 @@ feature -- Access
 			l_parameters.put (a_node.id, "nid")
 			l_parameters.put (a_node.revision, "revision")
 			sql_query (Select_user_author, l_parameters)
-			if sql_rows_count >= 1 then
+			if not has_error and not sql_after then
 				Result := fetch_author
 			end
+			sql_finalize
 		end
 
 	last_inserted_node_id: INTEGER_64
@@ -218,9 +226,10 @@ feature -- Access
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_node_id")
 			sql_query (Sql_last_insert_node_id, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 	last_inserted_node_revision (a_node: detachable CMS_NODE): INTEGER_64
@@ -234,15 +243,20 @@ feature -- Access
 				create l_parameters.make (1)
 				l_parameters.force (a_node.id, "nid")
 				sql_query (Sql_last_insert_node_revision_for_nid, l_parameters)
-				if sql_rows_count = 1 then
+				if not has_error and not sql_after then
 					if sql_item (1) /= Void then
 						Result := sql_read_integer_64 (1)
 					end
+					sql_forth
+					if not sql_after then
+						check no_more_than_one: False end
+					end
 				end
+				sql_finalize
 			end
 --			if Result = 0 and not has_error then --| include the case a_node = Void
 --				sql_query (Sql_last_insert_node_revision, Void)
---				if sql_rows_count = 1 then
+--				if not has_error and not sql_after then
 --					if sql_item (1) /= Void then
 --						Result := sql_read_integer_64 (1)
 --					end
@@ -275,6 +289,7 @@ feature -- Access: outline
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	available_parents_for_node (a_node: CMS_NODE): LIST [CMS_NODE]
@@ -300,6 +315,7 @@ feature -- Access: outline
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 feature -- Change: Node
@@ -328,7 +344,8 @@ feature -- Change: Node
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "changed")
 			l_parameters.put ({CMS_NODE_API}.trashed, "status")
 			l_parameters.put (a_id, "nid")
-			sql_change (sql_trash_node, l_parameters)
+			sql_modify (sql_trash_node, l_parameters)
+			sql_finalize
 		end
 
 	 delete_node_base (a_node: CMS_NODE)
@@ -343,11 +360,13 @@ feature -- Change: Node
 			error_handler.reset
 			create l_parameters.make (1)
 			l_parameters.put (a_node.id, "nid")
-			sql_change (sql_delete_node, l_parameters)
+			sql_modify (sql_delete_node, l_parameters)
+			sql_finalize
 
 				-- we remove node_revisions and pages.
 				-- Check: maybe we need a transaction.
-			sql_change (sql_delete_node_revisions, l_parameters)
+			sql_modify (sql_delete_node_revisions, l_parameters)
+			sql_finalize
 
 			if not error_handler.has_error then
 				extended_delete (a_node)
@@ -368,7 +387,8 @@ feature -- Change: Node
 			l_parameters.put (l_time, "changed")
 			l_parameters.put ({CMS_NODE_API}.not_published, "status")
 			l_parameters.put (a_id, "nid")
-			sql_change (sql_restore_node, l_parameters)
+			sql_modify (sql_restore_node, l_parameters)
+			sql_finalize
 		end
 
 
@@ -412,7 +432,9 @@ feature {NONE} -- Implementation
 				create l_copy_parameters.make (2)
 				l_copy_parameters.force (a_node.id, "nid")
 --				l_copy_parameters.force (l_rev - 1, "revision")
-				sql_change (sql_copy_node_to_revision, l_copy_parameters)
+				sql_insert (sql_copy_node_to_revision, l_copy_parameters)
+				sql_finalize
+
 
 				if not has_error then
 					a_node.set_revision (l_rev)
@@ -420,7 +442,8 @@ feature {NONE} -- Implementation
 						-- Update
 					l_parameters.put (a_node.id, "nid")
 					l_parameters.put (a_node.revision, "revision")
-					sql_change (sql_update_node, l_parameters)
+					sql_modify (sql_update_node, l_parameters)
+					sql_finalize
 
 					if not error_handler.has_error then
 						a_node.set_modification_date (now)
@@ -431,7 +454,9 @@ feature {NONE} -- Implementation
 				l_parameters.put (a_node.creation_date, "created")
 				l_parameters.put (l_rev, "revision")
 
-				sql_change (sql_insert_node, l_parameters)
+				sql_insert (sql_insert_node, l_parameters)
+				sql_finalize
+
 				if not error_handler.has_error then
 					a_node.set_modification_date (now)
 					a_node.set_id (last_inserted_node_id)

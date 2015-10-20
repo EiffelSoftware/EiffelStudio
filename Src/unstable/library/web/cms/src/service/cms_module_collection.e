@@ -1,5 +1,7 @@
 note
-	description: "Collection of CMS modules."
+	description: "[
+				Collection of CMS modules.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +40,8 @@ feature -- Access
 						-- Found
 				elseif
 						-- Hack: use conformance of type, and reverse conformance of type of type.
-					attached a_type.attempt (Result) and then attached l_type.generating_type.attempt (a_type)
+					attached a_type.attempted (Result) and then
+					attached l_type.generating_type.attempted (a_type)
 				then
 						-- Found
 				else

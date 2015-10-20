@@ -48,6 +48,7 @@ feature -- Factory
 					if conn.is_connected then
 						create Result.make_with_driver (conn, l_database_config.item ("Driver"))
 						set_map_zero_null_value (False)	--| This way we map 0 to 0, instead of Null as default.
+						set_use_extended_types (True) --| Use extended types: STRING_32 etc.
 						if Result.is_available then
 							if not Result.is_initialized then
 								initialize (a_setup, Result)

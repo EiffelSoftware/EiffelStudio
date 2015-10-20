@@ -1,4 +1,4 @@
-package ROC_cms
+package ROC
 
 project
 	cms = "cms-safe.ecf"
@@ -19,6 +19,21 @@ project
 	basic_auth = "modules/basic_auth/basic_auth.ecf"
 	node = "modules/node/node-safe.ecf"
 	node = "modules/node/node.ecf"
+	demo = "examples/demo/demo-safe.ecf"
+	cms_demo_module = "examples/demo/modules/demo/cms_demo_module-safe.ecf"
+	config_tests = "library/configuration/tests/config_tests-safe.ecf"
+	email_service = "library/email/email-safe.ecf"
+	persistence_sqlite3 = "library/persistence/sqlite3/persistence_sqlite3-safe.ecf"
+	store_mysql = "library/persistence/store_mysql/store_mysql-safe.ecf"
+	persistence_store_odbc = "library/persistence/store_odbc/store_odbc-safe.ecf"
+	tests_store_odbc = "library/persistence/store_odbc/tests/tests-safe.ecf"
+	admin = "modules/admin/admin-safe.ecf"
+	auth_module = "modules/auth/auth-safe.ecf"
+	cms_blog_module = "modules/blog/cms_blog_module-safe.ecf"
+	feed_aggregator = "modules/feed_aggregator/feed_aggregator-safe.ecf"
+	oauth_module = "modules/oauth20/oauth20-safe.ecf"
+	openid_module = "modules/openid/openid-safe.ecf"
+	recent_changes = "modules/recent_changes/recent_changes-safe.ecf"
 
 note
 	title: ROC CMS
@@ -27,5 +42,6 @@ note
 	license: Eiffel Forum v2
 	copyright: Jocelyn Fiat, Javier Velilla, Eiffel Software
 	link[source]: "Github" https://github.com/EiffelWebFramework/ROC.git
+--	link[doc]: "Documentation" http:// 
 
 end

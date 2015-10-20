@@ -50,8 +50,6 @@ feature -- Initialization via external configuration reader.
 
 	load_from_config (cfg: CONFIG_READER)
 			-- Initialize with config `cfg'.
-		local
-			utf: UTF_CONVERTER
 		do
 			if attached cfg.text_item ("layout.root") as l_root then
 				create root_dir.make_from_string (l_root)

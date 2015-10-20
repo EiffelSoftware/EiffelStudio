@@ -1,0 +1,28 @@
+{
+	"ids": ["news", "forum"],
+	"feeds": { 
+		"news": {
+			"title": "Eiffel related posts", 
+			"expiration": "21600",
+			"size": 5,
+			"locations": [
+					"https://bertrandmeyer.com/feed/",
+					"https://room.eiffel.com/blog/feed",
+					"https://room.eiffel.com/article/feed",
+					"https://room.eiffel.com/library/feed"
+					]
+			, "categories": ["Eiffel"]
+			,"option_description": "enabled"
+			},
+		"forum": {
+			"title": "Eiffel Forum",
+			"expiration": "21600",
+			"size": 5,
+			"locations": [
+					"https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=15",
+					"http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
+				]
+			,"option_description": "enabled"
+		}
+	}
+}

@@ -1,6 +1,6 @@
 
 CREATE TABLE wish_list_categories(
-   `cid` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT CHECK(`cid`>=0) ,
+   `cid` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT CHECK(`cid`>=0) ,
    `synopsis` VARCHAR(255) NOT NULL,
    `description` TEXT  NOT NULL,
    `is_active`  INTEGER,
@@ -12,7 +12,7 @@ CREATE TABLE wish_list_categories(
 
 
 CREATE TABLE wish_list_status(
-   `sid` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT CHECK(`sid`>=0) ,
+   `sid` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT CHECK(`sid`>=0) ,
    `synopsis` VARCHAR(255) NOT NULL,
    `description` TEXT  NOT NULL,
    CONSTRAINT `sid`
@@ -31,7 +31,7 @@ CREATE TABLE wish_list_votes(
 
 
 CREATE TABLE wish_list(
-   `wid` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT CHECK(`wid`>=0),
+   `wid` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT CHECK(`wid`>=0),
    `author` INTEGER,
    `category` INTEGER,
    `status` INTEGER,
@@ -54,7 +54,7 @@ CREATE TABLE wish_list_attachments(
 
 
 CREATE TABLE wish_list_interactions(
-   `iid` INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT CHECK(`iid`>=0),
+   `iid` INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT CHECK(`iid`>=0),
    `wid` INTEGER,
    `author` INTEGER,
    `content` TEXT NOT NULL,
@@ -62,8 +62,5 @@ CREATE TABLE wish_list_interactions(
    CONSTRAINT `iid`
     UNIQUE(`iid`)
 );
-
-
-
 
 

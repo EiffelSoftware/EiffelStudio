@@ -73,17 +73,18 @@ feature -- Persistence
 
 				if l_update then
 					if l_has_modif then
-						sql_change (sql_update_node_data, l_parameters)
+						sql_modify (sql_update_node_data, l_parameters)
 					end
 				else
 					if l_has_modif then
-						sql_change (sql_insert_node_data, l_parameters)
+						sql_insert (sql_insert_node_data, l_parameters)
 					else
 						-- no page data, means everything is empty.
 						-- FOR NOW: always record row
-						sql_change (sql_insert_node_data, l_parameters)
+						sql_insert (sql_insert_node_data, l_parameters)
 					end
 				end
+				sql_finalize
 			end
 		end
 
@@ -121,7 +122,8 @@ feature -- Persistence
 			if a_node.has_id then
 				create l_parameters.make (1)
 				l_parameters.put (a_node.id, "nid")
-				sql_change (sql_delete_node_data, l_parameters)
+				sql_modify (sql_delete_node_data, l_parameters)
+				sql_finalize
 			end
 		end
 
@@ -139,14 +141,19 @@ feature {NONE} -- Implementation
 			l_parameters.put (a_node.revision, "revision")
 			sql_query (sql_select_node_data, l_parameters)
 			if not has_error then
-				n := sql_rows_count
-				if n = 1 then
+				if not sql_after then
 						-- nid, revision, parent
 					Result := [sql_read_integer_64 (2), sql_read_integer_64 (3)]
+					sql_forth
+					if not sql_after then
+						check unique_data: n = 0 end
+						Result := Void
+					end
 				else
 					check unique_data: n = 0 end
 				end
 			end
+			sql_finalize
 		ensure
 			accepted_revision: Result /= Void implies Result.revision <= a_node.revision
 		end

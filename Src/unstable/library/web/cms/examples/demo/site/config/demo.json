@@ -1,10 +1,15 @@
 {
 	"database": {
 		"datasource": {
-			"driver": "odbc",
-			"environment": "odbc-sqlite"
+			"driver": "sqlite3",
+			"environment": "sqlite3",
+			"-driver": "odbc",
+			"-environment": "odbc-sqlite"
 		},
 		"environments": {
+			"sqlite3": {
+				"connection_string":"Database=./site/database.sqlite3;"
+			},
 			"odbc-sqlite": {
 				"connection_string":"Driver=SQLite3 ODBC Driver;Database=./site/database.sqlite;LongNames=0;Timeout=1000;NoTXN=0;SyncPragma=NORMAL;StepAPI=0;"
 			},

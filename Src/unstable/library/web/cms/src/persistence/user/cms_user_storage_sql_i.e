@@ -30,10 +30,12 @@ feature -- Access: user
 			write_information_log (generator + ".user_count")
 
 			sql_query (select_users_count, Void)
-			if sql_rows_count = 1 then
-				Result := sql_read_integer_32 (1)
+			if not has_error and then not sql_after then
+				Result := sql_read_integer_64 (1).to_integer_32
+				sql_forth
+				check one_row: sql_after end
 			end
-			error_handler.reset
+			sql_finalize
 		end
 
 	users: LIST [CMS_USER]
@@ -47,13 +49,14 @@ feature -- Access: user
 				sql_query (select_users, Void)
 				sql_start
 			until
-				sql_after
+				sql_after or has_error
 			loop
 				if attached fetch_user as l_user then
 					Result.force (l_user)
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
@@ -66,11 +69,12 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "uid")
 			sql_query (select_user_by_id, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_user
-			else
-				check no_more_than_one: sql_rows_count = 0 end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
@@ -83,11 +87,12 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (select_user_by_name, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user
-			else
-				check no_more_than_one: sql_rows_count = 0 end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
@@ -100,11 +105,12 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
 			sql_query (select_user_by_email, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user
-			else
-				check no_more_than_one: sql_rows_count = 0 end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -117,11 +123,12 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_user_by_activation_token, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user
-			else
-				check no_more_than_one: sql_rows_count = 0 end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	user_by_password_token (a_token: READABLE_STRING_32): detachable CMS_USER
@@ -134,11 +141,12 @@ feature -- Access: user
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (select_user_by_password_token, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user
-			else
-				check no_more_than_one: sql_rows_count = 0 end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	is_valid_credential (l_auth_login, l_auth_password: READABLE_STRING_32): BOOLEAN
@@ -160,7 +168,6 @@ feature -- Access: user
 					write_information_log (generator + ".is_valid_credential User:" + l_auth_login + "does not exist" )
 				end
 			end
-
 		end
 
 	recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_USER]
@@ -187,6 +194,7 @@ feature -- Access: user
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 feature -- Change: user
 
@@ -216,7 +224,7 @@ feature -- Change: user
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
 				l_parameters.put (a_user.status, "status")
 
-				sql_change (sql_insert_user, l_parameters)
+				sql_insert (sql_insert_user, l_parameters)
 				if not error_handler.has_error then
 					a_user.set_id (last_inserted_user_id)
 					update_user_roles (a_user)
@@ -226,6 +234,7 @@ feature -- Change: user
 				else
 					sql_rollback_transaction
 				end
+				sql_finalize
 			else
 				-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -265,7 +274,8 @@ feature -- Change: user
 				l_parameters.put (l_email, "email")
 				l_parameters.put (a_user.status, "status")
 
-				sql_change (sql_update_user, l_parameters)
+				sql_modify (sql_update_user, l_parameters)
+				sql_finalize
 				if not error_handler.has_error then
 					update_user_roles (a_user)
 				end
@@ -274,6 +284,7 @@ feature -- Change: user
 				else
 					sql_rollback_transaction
 				end
+				sql_finalize
 			else
 					-- set error
 				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
@@ -290,8 +301,9 @@ feature -- Change: user
 			write_information_log (generator + ".delete_user")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
-			sql_change (sql_delete_user, l_parameters)
+			sql_modify (sql_delete_user, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 	update_user_roles (a_user: CMS_USER)
@@ -347,6 +359,7 @@ feature -- Change: user
 			else
 				sql_rollback_transaction
 			end
+			sql_finalize
 		end
 
 	assign_role_to_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
@@ -356,7 +369,8 @@ feature -- Change: user
 			create l_parameters.make (2)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_role.id, "rid")
-			sql_change (sql_insert_role_to_user, l_parameters)
+			sql_insert (sql_insert_role_to_user, l_parameters)
+			sql_finalize
 		end
 
 	unassign_role_from_user (a_role: CMS_USER_ROLE; a_user: CMS_USER)
@@ -366,7 +380,8 @@ feature -- Change: user
 			create l_parameters.make (2)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_role.id, "rid")
-			sql_change (sql_delete_role_from_user, l_parameters)
+			sql_modify (sql_delete_role_from_user, l_parameters)
+			sql_finalize
 		end
 
 feature -- Access: roles and permissions
@@ -380,14 +395,16 @@ feature -- Access: roles and permissions
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "rid")
 			sql_query (select_user_role_by_id, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user_role
+				sql_forth
+				check one_row: sql_after end
+				sql_finalize
 				if Result /= Void and not has_error then
 					fill_user_role (Result)
 				end
-			else
-				check no_more_than_one: sql_rows_count = 0 end
 			end
+			sql_finalize
 		end
 
 	user_role_by_name (a_name: READABLE_STRING_GENERAL): detachable CMS_USER_ROLE
@@ -400,14 +417,16 @@ feature -- Access: roles and permissions
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (select_user_role_by_name, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := fetch_user_role
+				sql_forth
+				check one_row: sql_after end
+				sql_finalize
 				if Result /= Void and not has_error then
 					fill_user_role (Result)
 				end
-			else
-				check no_more_than_one: sql_rows_count = 0 end
 			end
+			sql_finalize
 		end
 
 	user_roles_for (a_user: CMS_USER): LIST [CMS_USER_ROLE]
@@ -431,6 +450,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
+			sql_finalize
 			if not has_error then
 				across Result as ic loop
 					fill_user_role (ic.item)
@@ -458,6 +478,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
+			sql_finalize
 			if not has_error then
 				across Result as ic loop
 					fill_user_role (ic.item)
@@ -501,6 +522,7 @@ feature -- Access: roles and permissions
 --				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	role_permissions: LIST [READABLE_STRING_8]
@@ -522,6 +544,7 @@ feature -- Access: roles and permissions
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 feature -- Change: roles and permissions		
@@ -550,7 +573,8 @@ feature -- Change: roles and permissions
 					create l_parameters.make (2)
 					l_parameters.put (a_user_role.id, "rid")
 					l_parameters.put (a_user_role.name, "name")
-					sql_change (sql_update_user_role, l_parameters)
+					sql_modify (sql_update_user_role, l_parameters)
+					sql_finalize
 				end
 				if not a_user_role.permissions.is_empty then
 					-- FIXME: check if this is non set permissions,or none ...
@@ -596,7 +620,8 @@ feature -- Change: roles and permissions
 			else
 				create l_parameters.make (1)
 				l_parameters.put (a_user_role.name, "name")
-				sql_change (sql_insert_user_role, l_parameters)
+				sql_insert (sql_insert_user_role, l_parameters)
+				sql_finalize
 				if not error_handler.has_error then
 					a_user_role.set_id (last_inserted_user_role_id)
 					across
@@ -619,7 +644,8 @@ feature -- Change: roles and permissions
 			l_parameters.put (a_role_id, "rid")
 			l_parameters.put (a_permission, "permission")
 			l_parameters.put (Void, "module") -- FIXME: unsupported for now!
-			sql_change (sql_insert_user_role_permission, l_parameters)
+			sql_insert (sql_insert_user_role_permission, l_parameters)
+			sql_finalize
 		end
 
 	unset_permission_for_role_id (a_permission: READABLE_STRING_8; a_role_id: INTEGER)
@@ -633,7 +659,8 @@ feature -- Change: roles and permissions
 			create l_parameters.make (2)
 			l_parameters.put (a_role_id, "rid")
 			l_parameters.put (a_permission, "permission")
-			sql_change (sql_delete_user_role_permission, l_parameters)
+			sql_modify (sql_delete_user_role_permission, l_parameters)
+			sql_finalize
 		end
 
 	last_inserted_user_role_id: INTEGER_32
@@ -642,9 +669,12 @@ feature -- Change: roles and permissions
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_user_role_id")
 			sql_query (Sql_last_insert_user_role_id, Void)
-			if sql_rows_count = 1 then
-				Result := sql_read_integer_32 (1)
+			if not sql_after then
+				Result := sql_read_integer_64 (1).to_integer_32
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 
@@ -658,9 +688,11 @@ feature -- Change: roles and permissions
 			write_information_log (generator + ".delete_role")
 			create l_parameters.make (1)
 			l_parameters.put (a_role.id, "rid")
-			sql_change (sql_delete_role_permissions_by_role_id, l_parameters)
-			sql_change (sql_delete_role_by_id, l_parameters)
+			sql_modify (sql_delete_role_permissions_by_role_id, l_parameters)
+			sql_finalize
+			sql_modify (sql_delete_role_by_id, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 
@@ -676,9 +708,12 @@ feature -- Access: User activation
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (sql_select_activation_expiration, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := sql_read_integer_32 (1)
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	user_id_by_activation (a_token: READABLE_STRING_32): INTEGER_64
@@ -691,9 +726,12 @@ feature -- Access: User activation
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
 			sql_query (sql_select_userid_activation, l_parameters)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := sql_read_integer_32 (1)
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 feature -- Change: User activation
@@ -712,8 +750,9 @@ feature -- Change: User activation
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_id, "uid")
 			l_parameters.put (l_utc_date, "utc_date")
-			sql_change (sql_insert_activation, l_parameters)
+			sql_insert (sql_insert_activation, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 	remove_activation (a_token: READABLE_STRING_32)
@@ -726,8 +765,9 @@ feature -- Change: User activation
 			write_information_log (generator + ".remove_activation")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
-			sql_change (sql_remove_activation, l_parameters)
+			sql_modify (sql_remove_activation, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 feature -- Change: User password recovery
@@ -746,8 +786,9 @@ feature -- Change: User password recovery
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_id, "uid")
 			l_parameters.put (l_utc_date, "utc_date")
-			sql_change (sql_insert_password, l_parameters)
+			sql_insert (sql_insert_password, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 	remove_password (a_token: READABLE_STRING_32)
@@ -760,8 +801,9 @@ feature -- Change: User password recovery
 			write_information_log (generator + ".remove_password")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
-			sql_change (sql_remove_password, l_parameters)
+			sql_modify (sql_remove_password, l_parameters)
 			sql_commit_transaction
+			sql_finalize
 		end
 
 feature {NONE} -- Implementation: User
@@ -776,11 +818,14 @@ feature {NONE} -- Implementation: User
 			create l_parameters.make (1)
 			l_parameters.put (a_username, "name")
 			sql_query (select_salt_by_username, l_parameters)
-			if sql_rows_count  = 1 then
+			if not sql_after then
 				if attached sql_read_string (1) as l_salt then
 					Result := l_salt
 				end
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	fetch_user: detachable CMS_USER
@@ -826,9 +871,12 @@ feature {NONE} -- Implementation: User
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_user_id")
 			sql_query (Sql_last_insert_user_id, Void)
-			if sql_rows_count = 1 then
+			if not sql_after then
 				Result := sql_read_integer_64 (1)
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 feature {NONE} -- Implementation: User role		

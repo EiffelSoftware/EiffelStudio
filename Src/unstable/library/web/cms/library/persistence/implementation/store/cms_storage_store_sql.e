@@ -86,8 +86,23 @@ feature -- Query
 			sql_post_execution
 		end
 
-	sql_change (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
-			-- Execute an sql query change `a_sql_statement' with the params `a_params'.
+	sql_finalize
+			-- <Precursor>
+		do
+			-- N/A
+		end
+
+	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- <Precursor>
+		do
+			check_sql_query_validity (a_sql_statement, a_params)
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
+			db_handler.execute_change
+			sql_post_execution
+		end
+
+	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- <Precursor>
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (a_sql_statement, a_params))
@@ -130,6 +145,34 @@ feature -- Query
 				Result := l_item.item (a_index)
 			else
 				check has_item_at_index: False end
+			end
+		end
+
+	sql_read_integer_32 (a_index: INTEGER): INTEGER_32
+			-- Retrieved value at `a_index' position in `item'.
+		local
+			l_item: like sql_item
+		do
+			l_item := sql_item (a_index)
+			if attached {INTEGER_32} l_item as i then
+				Result := i
+			elseif attached {INTEGER_32_REF} l_item as l_value then
+				Result := l_value.item
+			else
+				check is_integer_32: False end
+			end
+		end
+
+	sql_read_date_time (a_index: INTEGER): detachable DATE_TIME
+			-- Retrieved value at `a_index' position in `item'.
+		local
+			l_item: like sql_item
+		do
+			l_item := sql_item (a_index)
+			if attached {DATE_TIME} l_item as dt then
+				Result := dt
+			else
+				check is_date_time_or_null: l_item = Void end
 			end
 		end
 

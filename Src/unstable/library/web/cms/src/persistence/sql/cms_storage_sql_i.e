@@ -119,12 +119,22 @@ feature -- Operation
 		end
 
 	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
-			-- <Precursor>
+			-- Execute sql query `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
 
-	sql_change (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
-			-- <Precursor>
+	sql_finalize
+			-- Finalize sql query (i.e destroy previous query statement.
+		deferred
+		end
+
+	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute sql insert `a_sql_statement' with optional parameters `a_params'.
+		deferred
+		end
+
+	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+			-- Execute sql modify `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
 
@@ -179,7 +189,11 @@ feature -- Helper
 			loop
 				if attached next_sql_statement (a_sql_script, i, cl) as s then
 					if not s.is_whitespace then
-						sql_change (sql_statement (s), a_params)
+						if s.starts_with ("INSERT") then
+							sql_insert (sql_statement (s), a_params)
+						else
+							sql_modify (sql_statement (s), a_params)
+						end
 						err := err or has_error
 						reset_error
 					end
@@ -193,6 +207,7 @@ feature -- Helper
 			else
 				sql_commit_transaction
 			end
+			sql_finalize
 		end
 
 	sql_table_exists (a_table_name: READABLE_STRING_8): BOOLEAN
@@ -202,6 +217,7 @@ feature -- Helper
 			sql_query ("SELECT count(*) FROM " + a_table_name + " ;", Void)
 			Result := not has_error
 				-- FIXME: find better solution
+			sql_finalize
 			reset_error
 		end
 
@@ -213,14 +229,10 @@ feature -- Helper
 			if not has_error then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 feature -- Access		
-
-	sql_rows_count: INTEGER
-			-- Number of rows for last sql execution.	
-		deferred
-		end
 
 	sql_start
 			-- Set the cursor on first element.
@@ -279,17 +291,7 @@ feature -- Access
 
 	sql_read_integer_32 (a_index: INTEGER): INTEGER_32
 			-- Retrieved value at `a_index' position in `item'.
-		local
-			l_item: like sql_item
-		do
-			l_item := sql_item (a_index)
-			if attached {INTEGER_32} l_item as i then
-				Result := i
-			elseif attached {INTEGER_32_REF} l_item as l_value then
-				Result := l_value.item
-			else
-				check is_integer_32: False end
-			end
+		deferred
 		end
 
 	sql_read_string (a_index: INTEGER): detachable STRING
@@ -329,15 +331,7 @@ feature -- Access
 
 	sql_read_date_time (a_index: INTEGER): detachable DATE_TIME
 			-- Retrieved value at `a_index' position in `item'.
-		local
-			l_item: like sql_item
-		do
-			l_item := sql_item (a_index)
-			if attached {DATE_TIME} l_item as dt then
-				Result := dt
-			else
-				check is_date_time_nor_null: l_item = Void end
-			end
+		deferred
 		end
 
 	sql_read_boolean (a_index: INTEGER): detachable BOOLEAN

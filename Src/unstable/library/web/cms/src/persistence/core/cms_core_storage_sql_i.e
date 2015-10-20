@@ -37,7 +37,8 @@ feature -- URL aliases
 					error_handler.add_custom_error (0, "alias exists", "Path alias %"" + a_alias + "%" already exists!")
 				end
 			else
-				sql_change (sql_insert_path_alias, l_parameters)
+				sql_insert (sql_insert_path_alias, l_parameters)
+				sql_finalize
 			end
 		end
 
@@ -63,7 +64,8 @@ feature -- URL aliases
 				l_parameters.put (l_previous_alias, "old")
 				l_parameters.put (a_alias, "alias")
 
-				sql_change (sql_update_path_alias, l_parameters)
+				sql_modify (sql_update_path_alias, l_parameters)
+				sql_finalize
 			end
 		end
 
@@ -79,7 +81,8 @@ feature -- URL aliases
 						-- Found
 					create l_parameters.make (1)
 					l_parameters.put (a_alias, "alias")
-					sql_change (sql_delete_path_alias, l_parameters)
+					sql_modify (sql_delete_path_alias, l_parameters)
+					sql_finalize
 				else
 					error_handler.add_custom_error (0, "alias mismatch", "Path alias %"" + a_alias + "%" is not related to source %"" + a_source + "%"!")
 				end
@@ -97,11 +100,12 @@ feature -- URL aliases
 			create l_parameters.make (1)
 			l_parameters.put (a_source, "source")
 			sql_query (sql_select_path_source, l_parameters)
-			if not has_error then
-				if sql_rows_count = 1 then
-					Result := sql_read_string (1)
-				end
+			if not has_error and not sql_after then
+				Result := sql_read_string (1)
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	source_of_path_alias (a_alias: READABLE_STRING_8): detachable READABLE_STRING_8
@@ -114,10 +118,13 @@ feature -- URL aliases
 			l_parameters.put (a_alias, "alias")
 			sql_query (sql_select_path_alias, l_parameters)
 			if not has_error then
-				if sql_rows_count = 1 then
+				if not has_error and not sql_after then
 					Result := sql_read_string (1)
+					sql_forth
+					check one_row: sql_after end
 				end
 			end
+			sql_finalize
 		end
 
 	sql_select_path_alias: STRING = "SELECT source FROM path_aliases WHERE alias=:alias ;"
@@ -166,7 +173,8 @@ feature -- Logs
 				l_parameters.put (Void, "link")
 			end
 			l_parameters.put (now, "date")
-			sql_change (sql_insert_log, l_parameters)
+			sql_insert (sql_insert_log, l_parameters)
+			sql_finalize
 		end
 
 	sql_insert_log: STRING = "INSERT INTO logs (category, level, uid, message, info, link, date) VALUES (:category, :level, :uid, :message, :info, :link, :date);"
@@ -193,10 +201,12 @@ feature -- Misc
 				if a_value.same_string (l_value) then
 						-- already up to date
 				else
-					sql_change (sql_update_custom_value, l_parameters)
+					sql_modify (sql_update_custom_value, l_parameters)
+					sql_finalize
 				end
 			else
-				sql_change (sql_insert_custom_value, l_parameters)
+				sql_insert (sql_insert_custom_value, l_parameters)
+				sql_finalize
 			end
 		end
 
@@ -214,7 +224,8 @@ feature -- Misc
 				l_parameters.put (a_type, "default")
 			end
 			l_parameters.put (a_name, "name")
-			sql_change (sql_delete_custom_value, l_parameters)
+			sql_modify (sql_delete_custom_value, l_parameters)
+			sql_finalize
 		end
 
 	custom_value (a_name: READABLE_STRING_GENERAL; a_type: detachable READABLE_STRING_8): detachable READABLE_STRING_32
@@ -232,11 +243,12 @@ feature -- Misc
 			end
 			l_parameters.put (a_name, "name")
 			sql_query (sql_select_custom_value, l_parameters)
-			if not has_error then
-				if sql_rows_count = 1 then
-					Result := sql_read_string_32 (1)
-				end
+			if not has_error and not sql_after then
+				Result := sql_read_string_32 (1)
+				sql_forth
+				check one_row: sql_after end
 			end
+			sql_finalize
 		end
 
 	sql_select_custom_value: STRING = "SELECT value FROM custom_values WHERE type=:type AND name=:name;"
@@ -252,4 +264,7 @@ feature -- Misc
 				-- SQL delete custom value;
 
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

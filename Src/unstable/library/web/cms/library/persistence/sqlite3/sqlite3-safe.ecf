@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="persistence_sqlite3" uuid="4E536C92-A09F-4305-8230-2EC5ABC51416" library_target="persistence_sqlite3">
+	<target name="persistence_sqlite3">
+		<root all_classes="true"/>
+		<option warning="true" void_safety="all">
+			<assertions precondition="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="app_env" location="..\..\app_env\app_env-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\..\..\cms-safe.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
+		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
+		<library name="model" location="..\..\model\cms_model-safe.ecf"/>
+		<library name="sqlite3" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite-safe.ecf" readonly="false">
+			<option msil_application_optimize="false">
+				<assertions precondition="true" supplier_precondition="true"/>
+			</option>
+		</library>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<cluster name="persistence_sqlite" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/old$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

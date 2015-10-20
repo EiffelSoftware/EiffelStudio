@@ -68,18 +68,23 @@ feature -- Operation
 			sql_storage.sql_query (a_sql_statement, a_params)
 		end
 
-	sql_change (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_finalize
+			-- Finalize sql query (i.e destroy previous query statement.
 		do
-			sql_storage.sql_change (a_sql_statement, a_params)
+			sql_storage.sql_finalize
+		end
+
+	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+		do
+			sql_storage.sql_insert (a_sql_statement, a_params)
+		end
+
+	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+		do
+			sql_storage.sql_modify (a_sql_statement, a_params)
 		end
 
 feature -- Access		
-
-	sql_rows_count: INTEGER
-			-- Number of rows for last sql execution.	
-		do
-			Result := sql_storage.sql_rows_count
-		end
 
 	sql_start
 			-- Set the cursor on first element.
@@ -109,6 +114,16 @@ feature -- Access
 			Result:= sql_storage.sql_item (a_index)
 		end
 
+	sql_read_integer_32 (a_index: INTEGER_32): INTEGER_32
+		do
+			Result := sql_storage.sql_read_integer_32 (a_index)
+		end
+
+	sql_read_date_time (a_index: INTEGER_32): detachable DATE_TIME
+		do
+			Result := sql_storage.sql_read_date_time (a_index)
+		end
+
 feature -- Conversion
 
 	sql_statement (a_statement: STRING): STRING
@@ -117,4 +132,7 @@ feature -- Conversion
 			Result := sql_storage.sql_statement (a_statement)
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

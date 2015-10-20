@@ -121,6 +121,7 @@ feature {CMS_API} -- Module management
 						end
 						l_sql_storage.sql_forth
 					end
+					l_sql_storage.sql_finalize
 					across l_consumers as ic  loop
 						if not l_sql_storage.sql_table_exists (ic.item) then
 							if attached l_sql_storage.sql_script_content (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_table.sql.tpl"))) as sql then
@@ -131,6 +132,7 @@ feature {CMS_API} -- Module management
 						end
 					end
 				end
+				l_sql_storage.sql_finalize
 				Precursor {CMS_MODULE}(api)
 			end
 		end

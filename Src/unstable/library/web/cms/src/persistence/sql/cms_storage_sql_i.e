@@ -302,6 +302,11 @@ feature -- Access
 			l_item := sql_item (a_index)
 			if attached {READABLE_STRING_8} l_item as l_string then
 				Result := l_string
+			elseif
+				attached {READABLE_STRING_32} l_item as l_string_32 and then
+				l_string_32.is_valid_as_string_8
+			then
+				Result := l_string_32.to_string_8
 			elseif attached {BOOLEAN} l_item as l_boolean then
 				Result := l_boolean.out
 			elseif attached {BOOLEAN_REF} l_item as l_boolean_ref then

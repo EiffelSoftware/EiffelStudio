@@ -230,9 +230,9 @@ feature -- HTML Output
 				lnk := blog_api.node_api.node_link (n)
 				a_output.append ("<p class=%"blog_list_summary%">")
 				if attached api.format (n.format) as f then
-					a_output.append (f.formatted_output (l_summary))
+					f.append_formatted_to (l_summary, a_output)
 				else
-					a_output.append (page.formats.default_format.formatted_output (l_summary))
+					page.formats.default_format.append_formatted_to (l_summary, a_output)
 				end
 				a_output.append ("<br />")
 				a_output.append (page.link ("See more...", lnk.location, Void))

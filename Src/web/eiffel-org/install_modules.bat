@@ -22,6 +22,4 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module modules\custom_search	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\wish_list	--dir %ROC_CMS_DIR%
 
-echo %ROC_CMD% install --module %ROC_CMS_SRC%\modules\wish_list	--dir %ROC_CMS_DIR%
-
 echo done

@@ -13,6 +13,11 @@ inherit
 			default_create
 		end
 
+	STRING_HANDLER
+		redefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -30,14 +35,18 @@ feature -- Access
 
 feature -- Conversion
 
-	filter (a_text: STRING_8)
+	filter (a_text: STRING_GENERAL)
 		local
-			l_new: STRING_8
+			l_new: STRING_GENERAL
 			i: INTEGER
 			n: INTEGER
 			p1, p2, p3: INTEGER
 		do
-			create l_new.make (a_text.count)
+			if attached {STRING_8} a_text then
+				create {STRING_8} l_new.make (a_text.count)
+			else
+				create {STRING_32} l_new.make (a_text.count)
+			end
 			from
 				p1 := 1
 				i := a_text.index_of ('<', 1)
@@ -80,7 +89,7 @@ feature -- Conversion
 				end
 			end
 			l_new.append (a_text.substring (p1, n))
-			a_text.wipe_out
+			a_text.set_count (0)
 			a_text.append (l_new)
 		end
 

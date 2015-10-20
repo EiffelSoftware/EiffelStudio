@@ -10,6 +10,8 @@ class
 inherit
 	CONTENT_FILTER
 
+	STRING_HANDLER
+
 feature -- Access
 
 	name: STRING_8 = "html_to_text"
@@ -20,14 +22,14 @@ feature -- Access
 
 feature -- Conversion
 
-	filter (a_text: STRING_8)
+	filter (a_text: STRING_GENERAL)
 		local
 			enc: HTML_ENCODER
 			s: STRING_8
 		do
 			create enc
 			s := enc.encoded_string (a_text)
-			a_text.wipe_out
+			a_text.set_count (0)
 			a_text.append (s)
 		end
 

@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Conversion
 
-	filter (a_text: STRING_8)
+	filter (a_text: STRING_GENERAL)
 		do
 			--| FIXME jfiat [2012/09/12] : todo
 		end

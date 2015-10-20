@@ -14,6 +14,11 @@ inherit
 			html_help
 		end
 
+	STRING_HANDLER
+		redefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create
@@ -59,22 +64,27 @@ feature -- Access
 			loop
 				Result.append ("&lt;" + c.item + "&gt; ")
 			end
-		end		
+		end
 
 	allowed_html_tags: LIST [READABLE_STRING_8]
 			-- HTML tag to preserve during filtering.
 
 feature -- Conversion
 
-	filter (a_text: STRING_8)
+	filter (a_text: STRING_GENERAL)
 		local
-			l_new: STRING_8
+			l_new: STRING_GENERAL
 			i: INTEGER
 			n: INTEGER
 			in_tag: BOOLEAN
 			p1, p2: INTEGER
 		do
-			create l_new.make (a_text.count)
+			if attached {READABLE_STRING_8} a_text then
+				create {STRING_8} l_new.make (a_text.count)
+			else
+				create {STRING_32} l_new.make (a_text.count)
+			end
+
 			from
 				p1 := 1
 				i := a_text.index_of ('<', 1)
@@ -113,15 +123,15 @@ feature -- Conversion
 				end
 			end
 			l_new.append (a_text.substring (p1, n))
-			a_text.wipe_out
+			a_text.set_count (0)
 			a_text.append (l_new)
 		end
 
-	is_authorized (s: READABLE_STRING_8): BOOLEAN
+	is_authorized (s: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `s' authorized?
 			--| `s' has either "<....>" or "<..../>" or "</.....>"
 		local
-			l_tagname: detachable STRING
+			l_tagname: detachable READABLE_STRING_GENERAL
 			i,n,p1: INTEGER
 		do
 --			create l_tagname.make_empty
@@ -144,8 +154,12 @@ feature -- Conversion
 				i := i + 1
 			end
 			if l_tagname /= Void then
-				l_tagname.to_lower
-				Result := across allowed_html_tags as c some c.item.same_string (l_tagname) end
+				if attached {READABLE_STRING_8} l_tagname as l_tagname_s8 then
+					l_tagname := l_tagname_s8.as_lower
+				elseif attached {READABLE_STRING_32} l_tagname as l_tagname_s32 then
+					l_tagname := l_tagname_s32.as_lower
+				end
+				Result := across allowed_html_tags as c some l_tagname.same_string (c.item) end
 			else
 				Result := True
 			end

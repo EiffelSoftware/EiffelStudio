@@ -20,14 +20,18 @@ feature -- Access
 	title: STRING_8 = "Line break converter"
 
 	help: STRING = "Lines and paragraphs break automatically"
-	
+
 	description: STRING_8 = "Converts line breaks into HTML (i.e. <br> and <p> tags)."
 
 feature -- Conversion
 
-	filter (a_text: STRING_8)
+	filter (a_text: STRING_GENERAL)
 		do
-			a_text.replace_substring_all ("%N", "<br/>%N")
+			if attached {STRING_8} a_text as s8 then
+				s8.replace_substring_all ("%N", "<br/>%N")
+			elseif attached {STRING_32} a_text as s32 then
+				s32.replace_substring_all ({STRING_32} "%N", {STRING_32} "<br/>%N")
+			end
 			-- FIXME jfiat [2012/09/12] :also use <p> ...
 		end
 

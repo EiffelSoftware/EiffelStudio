@@ -34,11 +34,11 @@ feature -- Access
 			-- Help in html text.
 		do
 			Result := help
-		end		
+		end
 
 feature -- Conversion
 
-	filter (s: STRING_8)
+	filter (s: STRING_GENERAL)
 			-- Filter `s' and alter string `s'.
 		deferred
 		end

@@ -53,9 +53,10 @@ feature -- Acess: WishList
 			l_query.replace_substring_all ("$StatusSet", "(" + a_status + ")")
 			write_information_log (generator + ".row_count_wish_list")
 			sql_query (l_query, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_32 (1)
 			end
+			sql_finalize
 		end
 
 
@@ -113,6 +114,7 @@ feature -- Acess: WishList
 					end
 					sql_forth
 				end
+				sql_finalize
 			end
 
 	wish_by_id (a_wid: INTEGER_64): detachable CMS_WISH_LIST
@@ -125,9 +127,10 @@ feature -- Acess: WishList
 			create l_parameters.make (1)
 			l_parameters.put (a_wid, "wid")
 			sql_query (sql_select_wish_by_id, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_wish
 			end
+			sql_finalize
 		end
 
 	wish_interactions (a_wid: INTEGER): detachable LIST [CMS_WISH_LIST_INTERACTION]
@@ -154,6 +157,7 @@ feature -- Acess: WishList
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 
@@ -182,6 +186,7 @@ feature -- Acess: WishList
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 
@@ -195,9 +200,10 @@ feature -- Acess: WishList
 			create l_parameters.make (2)
 			l_parameters.put (a_wish.id, "wid")
 			sql_query (Select_user_author, l_parameters)
-			if sql_rows_count >= 1 then
+			if not has_error and not sql_after then
 				Result := fetch_author
 			end
+			sql_finalize
 		end
 
 
@@ -212,9 +218,10 @@ feature -- Acess: WishList
 			l_parameters.put (a_wish.id, "wid")
 			l_parameters.put (u.id, "author")
 			sql_query (Select_wish_author_vote, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_32 (1)
 			end
+			sql_finalize
 		end
 
 	has_vote_wish (u: CMS_USER; a_wid: INTEGER_64): BOOLEAN
@@ -228,9 +235,10 @@ feature -- Acess: WishList
 			l_parameters.put (a_wid, "wid")
 			l_parameters.put (u.id, "author")
 			sql_query (Select_exist_wish_author_vote, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := True
 			end
+			sql_finalize
 		end
 
 feature -- Change wish vote
@@ -250,10 +258,10 @@ feature -- Change wish vote
 			sql_begin_transaction
 			if has_vote_wish (a_user, a_wid) then
 					-- Update
-				sql_change (sql_update_wish_vote, l_parameters)
+				sql_modify (sql_update_wish_vote, l_parameters)
 			else
 					-- New
-				sql_change (sql_insert_wish_vote, l_parameters)
+				sql_insert (sql_insert_wish_vote, l_parameters)
 			end
 			if error_handler.has_error then
 				sql_rollback_transaction
@@ -282,10 +290,10 @@ feature -- Change wish vote
 			sql_begin_transaction
 			if has_vote_wish (a_user, a_wid) then
 					-- Update
-				sql_change (sql_update_wish_vote, l_parameters)
+				sql_modify (sql_update_wish_vote, l_parameters)
 			else
 					-- New
-				sql_change (sql_insert_wish_vote, l_parameters)
+				sql_insert (sql_insert_wish_vote, l_parameters)
 			end
 			if error_handler.has_error then
 				sql_rollback_transaction
@@ -327,7 +335,7 @@ feature -- Change: WishList
 			l_parameters.put (a_content, "content")
 			l_parameters.put (a_file_name, "fileName")
 			sql_begin_transaction
-			sql_change (sql_upload_wish_attachment, l_parameters)
+			sql_modify (sql_upload_wish_attachment, l_parameters)
 			if error_handler.has_error then
 				sql_rollback_transaction
 			else
@@ -347,7 +355,7 @@ feature -- Change: WishList
 			l_parameters.put (a_id, "wid")
 			l_parameters.put (a_interaction_id, "iid")
 			sql_begin_transaction
-			sql_change (sql_delete_wish_attachments, l_parameters)
+			sql_modify (sql_delete_wish_attachments, l_parameters)
 			if error_handler.has_error then
 				sql_rollback_transaction
 			else
@@ -369,7 +377,7 @@ feature -- Change: WishList
 			l_parameters.put (a_name, "name")
 			l_parameters.put (a_interaction_id, "iid")
 			sql_begin_transaction
-			sql_change (sql_delete_wish_attachment_by_name, l_parameters)
+			sql_modify (sql_delete_wish_attachment_by_name, l_parameters)
 			if error_handler.has_error then
 				sql_rollback_transaction
 			else
@@ -387,12 +395,12 @@ feature -- Access: Categories
 			write_information_log (generator + ".categories_count")
 
 			sql_query (select_categories_count, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_32 (1)
 			end
+			sql_finalize
 			error_handler.reset
 		end
-
 
 	recent_categories (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_WISH_LIST_CATEGORY]
 			-- <Precursor>.
@@ -418,6 +426,7 @@ feature -- Access: Categories
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	categories: LIST [CMS_WISH_LIST_CATEGORY]
@@ -439,6 +448,7 @@ feature -- Access: Categories
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 	category_by_id (a_id: INTEGER_64): detachable CMS_WISH_LIST_CATEGORY
@@ -451,9 +461,10 @@ feature -- Access: Categories
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "cid")
 			sql_query (sql_select_category_by_id, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_category
 			end
+			sql_finalize
 		end
 
 	category_by_name (a_name: READABLE_STRING_32): detachable CMS_WISH_LIST_CATEGORY
@@ -466,9 +477,10 @@ feature -- Access: Categories
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "name")
 			sql_query (sql_select_category_by_name, l_parameters)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := fetch_category
 			end
+			sql_finalize
 		end
 
 feature -- Change: Category
@@ -501,6 +513,7 @@ feature -- Access: Status
 				end
 				sql_forth
 			end
+			sql_finalize
 		end
 
 
@@ -660,11 +673,11 @@ feature {NONE} -- Implemenation
 			sql_begin_transaction
 			if a_wish.has_id then
 				l_parameters.put (a_wish.id, "id")
-				sql_change (sql_update_wish, l_parameters)
+				sql_modify (sql_update_wish, l_parameters)
 			else
 					-- New
 				l_parameters.put (now, "created")
-				sql_change (sql_insert_wish, l_parameters)
+				sql_insert (sql_insert_wish, l_parameters)
 				if not error_handler.has_error then
 					a_wish.set_id (last_inserted_wish_id)
 				end
@@ -703,10 +716,10 @@ feature {NONE} -- Implemenation
 			sql_begin_transaction
 			if a_wish_interaction.has_id then
 				l_parameters.put (a_wish_interaction.id, "id")
-				sql_change (sql_update_wish_interaction, l_parameters)
+				sql_modify (sql_update_wish_interaction, l_parameters)
 			else
 					-- New
-				sql_change (sql_insert_wish_interaction, l_parameters)
+				sql_insert (sql_insert_wish_interaction, l_parameters)
 				if not error_handler.has_error then
 					a_wish_interaction.set_id (last_inserted_wish_interaction_id)
 				end
@@ -743,10 +756,10 @@ feature {NONE} -- Implemenation
 			sql_begin_transaction
 			if a_category.has_id then
 				l_parameters.put (a_category.id, "cid")
-				sql_change (sql_update_wish_category, l_parameters)
+				sql_modify (sql_update_wish_category, l_parameters)
 			else
 					-- New
-				sql_change (sql_insert_wish_category, l_parameters)
+				sql_insert (sql_insert_wish_category, l_parameters)
 				if not error_handler.has_error then
 					a_category.set_id (last_inserted_wish_category_id)
 				end
@@ -778,9 +791,10 @@ feature {NONE} -- Implemenation
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_wish_id")
 			sql_query (Sql_last_insert_wish_id, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 
@@ -790,9 +804,10 @@ feature {NONE} -- Implemenation
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_wish_interaction_id")
 			sql_query (Sql_last_insert_wish_interaction_id, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 
@@ -802,9 +817,10 @@ feature {NONE} -- Implemenation
 			error_handler.reset
 			write_information_log (generator + ".last_inserted_wish_category_id")
 			sql_query (Sql_last_insert_wish_category_id, Void)
-			if sql_rows_count = 1 then
+			if not has_error and not sql_after then
 				Result := sql_read_integer_64 (1)
 			end
+			sql_finalize
 		end
 
 
@@ -841,6 +857,7 @@ feature {NONE} -- Queries
 					WHERE ((wish_list.category = :category) OR (NOT EXISTS (SELECT cid FROM wish_list_categories WHERE cid = :category)))
 					AND ((wish_list.status in $StatusSet))
 					$SearchBySynopsisAndOrDescription
+					;
 				]"
 
 

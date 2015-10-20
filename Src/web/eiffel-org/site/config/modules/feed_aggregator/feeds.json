@@ -1,35 +1,51 @@
 {
-	"ids": ["news", "forum", "updates"],
+	"ids": ["news", "forum", "news_page", "forum_page"],
 	"feeds": { 
-			"news": {
-				"title": "News", 
-				"expiration": 21600,
-				"size": 5,
-				"locations": {
-						"bm": "https://bertrandmeyer.com/feed/",
-						"blog": "https://room.eiffel.com/blog/feed",
-						"article": "https://room.eiffel.com/article/feed",
-						"library": "https://room.eiffel.com/library/feed"
-						}
-				, "categories": ["Eiffel"]
-				,"option_description": "enabled"
-				},
-			"forum": {
-				"title": "Forum",
-				"expiration": 21600,
-				"size": 5,
-				"locations": {
-					"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
-					"stackoverflow": "http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
-				}
-				,"option_description": "enabled"
-			},
-			"updates": {
-				"title": "Updates",
-				"expiration": 21600,
-				"size": 5,
-				"location": "http://127.0.0.1:9090/recent_changes/feed"
-				,"option_description": "enabled"
+		"news": {
+			"title": "News", 
+			"expiration": 21600,
+			"size": 5,
+			"locations": {
+				"bm": "https://bertrandmeyer.com/feed/",
+				"blog": "https://room.eiffel.com/blog/feed",
+				"article": "https://room.eiffel.com/article/feed",
+				"library": "https://room.eiffel.com/library/feed"
 			}
+			, "categories": ["Eiffel"]
+			,"option_description": "enabled"
+		},
+		"forum": {
+			"title": "Forum",
+			"expiration": 21600,
+			"size": 5,
+			"locations": {
+				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
+				"stackoverflow": "http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
+			}
+			,"option_description": "enabled"
+		},
+		"news_page": {
+			"title": "News", 
+			"expiration": 3600,
+			"size": 25,
+			"locations": {
+				"bm": "https://bertrandmeyer.com/feed/",
+				"blog": "https://room.eiffel.com/blog/feed",
+				"article": "https://room.eiffel.com/article/feed",
+				"library": "https://room.eiffel.com/library/feed"
+			}
+			, "categories": ["Eiffel"]
+			,"option_description": "enabled"
+		},
+		"forum_page": {
+			"title": "Forum", 
+			"expiration": 3600,
+			"size": 25,
+			"locations": {
+				"eiffelusers": "https://groups.google.com/forum/feed/eiffel-users/msgs/atom.xml?num=10",
+				"stackoverflow": "http://stackoverflow.com/feeds/tag?tagnames=eiffel&sort=newest"
+			}
+			,"option_description": "enabled"
+		}
 	}
 }

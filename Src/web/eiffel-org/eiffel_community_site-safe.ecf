@@ -7,7 +7,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
@@ -18,13 +18,14 @@
 		<library name="cms_admin_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\admin\admin-safe.ecf" readonly="false"/>
 		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth-safe.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
-		<library name="cms_feed_aggregator_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
 		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="cms_feed_aggregator_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
 		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
-		<!--
+<!--
+		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false"/>		
 		<library name="cms_persistence_store_odbc" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
-		-->
+-->
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
@@ -33,10 +34,9 @@
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_embedded_video" location="modules\embedded_video\video-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_google_custom_search" location="modules\custom_search\custom_search.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wdocs\wdocs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wish_list" location="modules\wish_list\cms_wish_list-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_google_custom_search" location="modules\custom_search\custom_search.ecf" readonly="false" use_application_options="true"/>
-
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>

@@ -33,10 +33,10 @@ feature -- Access: code
 
 feature -- Access: content			
 
-	summary: detachable READABLE_STRING_8
+	summary: detachable READABLE_STRING_32
 			-- A short summary of the node.
 
-	content: detachable READABLE_STRING_8
+	content: detachable READABLE_STRING_32
 			-- Content of the node.
 
 	format: detachable READABLE_STRING_8

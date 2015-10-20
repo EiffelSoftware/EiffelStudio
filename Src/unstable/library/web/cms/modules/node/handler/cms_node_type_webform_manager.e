@@ -100,6 +100,7 @@ feature -- Forms ...
 		local
 			ti: WSF_FORM_TEXT_INPUT
 			l_uri: detachable READABLE_STRING_8
+			l_iri: detachable READABLE_STRING_32
 		do
 				-- Path alias		
 			create ti.make ("path_alias")
@@ -111,7 +112,8 @@ feature -- Forms ...
 				if attached a_node.link as lnk then
 					l_uri := lnk.location
 				else
-					l_uri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
+					l_iri := percent_encoder.percent_decoded_string (response.api.location_alias (response.node_api.node_path (a_node)))
+					l_uri := l_iri.to_string_8
 				end
 				ti.set_text_value (l_uri)
 				ti.set_description ("Optionally specify an alternative URL path by which this content can be accessed. For example, type 'about' when writing an about page. Use a relative path or the URL alias won't work.")
@@ -151,10 +153,9 @@ feature -- Forms ...
 			end
 		end
 
-
 	update_node	(response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: CMS_NODE)
 		local
-			b,s: detachable READABLE_STRING_8
+			b,s: detachable READABLE_STRING_32
 			f: detachable CONTENT_FORMAT
 		do
 			if attached fd.integer_item ("id") as l_id and then l_id > 0 then
@@ -193,7 +194,7 @@ feature -- Forms ...
 	new_node (response: NODE_RESPONSE; fd: WSF_FORM_DATA; a_node: detachable CMS_NODE): G
 			-- <Precursor>
 		local
-			b,s: detachable READABLE_STRING_8
+			b,s: detachable READABLE_STRING_32
 			f: detachable CONTENT_FORMAT
 			l_node: detachable like new_node
 		do
@@ -304,7 +305,7 @@ feature -- Output
 			s.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
 				s.append (" by ")
-				s.append (l_author.name)
+				s.append (a_response.html_encoded (l_author.name))
 			end
 			if attached a_node.modification_date as l_modified then
 				s.append (" (modified: ")
@@ -321,9 +322,9 @@ feature -- Output
 --			if attached a_node.summary as l_summary then
 --				s.append ("<p class=%"summary%">")
 --				if attached node_api.cms_api.format (a_node.format) as f then
---					s.append (f.formatted_output (l_summary))
+--					append_formatted_output (l_content, f, s)
 --				else
---					s.append (a_response.formats.default_format.formatted_output (l_summary))
+--					append_formatted_output (l_content, a_response.formats.default_format, s)
 --				end
 
 --				s.append ("</p>")
@@ -333,9 +334,9 @@ feature -- Output
 			if attached a_node.content as l_content then
 				s.append ("<p class=%"content%">")
 				if attached node_api.cms_api.format (a_node.format) as f then
-					s.append (f.formatted_output (l_content))
+					append_formatted_output (l_content, f, s)
 				else
-					s.append (a_response.formats.default_format.formatted_output (l_content))
+					append_formatted_output (l_content, a_response.formats.default_format, s)
 				end
 
 				s.append ("</p>")
@@ -344,6 +345,16 @@ feature -- Output
 
 			a_response.set_title (a_node.title)
 			a_response.set_main_content (s)
+		end
+
+	append_formatted_output (a_content: READABLE_STRING_GENERAL; a_format: CONTENT_FORMAT; a_output: STRING_8)
+			-- Format `a_content' with format `a_format'.
+		do
+			if a_content.is_valid_as_string_8 then
+				a_output.append (a_format.formatted_output (a_content.to_string_8))
+			else
+				a_format.append_formatted_to (a_content, a_output)
+			end
 		end
 
 end

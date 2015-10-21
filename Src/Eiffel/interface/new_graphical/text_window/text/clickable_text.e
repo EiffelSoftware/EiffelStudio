@@ -156,6 +156,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 			else
 				create current_string.make_empty
 			end
+			current_pos := 1
 		end
 
 	end_processing

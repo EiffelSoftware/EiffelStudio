@@ -147,10 +147,11 @@ feature {NONE} -- Implementation constants
 	at_full_class_checking: INTEGER = 1058
 	at_catcall_detection: INTEGER = 1059
 	at_is_attached_by_default: INTEGER = 1060
-	at_is_void_safe: INTEGER = 1061
-	at_void_safety: INTEGER = 1062
-	at_syntax_level: INTEGER = 1063
-	at_syntax: INTEGER = 1064
+	at_is_obsolete_routine_type: INTEGER = 1061
+	at_is_void_safe: INTEGER = 1062
+	at_void_safety: INTEGER = 1063
+	at_syntax_level: INTEGER = 1064
+	at_syntax: INTEGER = 1065
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

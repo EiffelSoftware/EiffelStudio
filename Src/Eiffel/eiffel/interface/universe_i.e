@@ -433,12 +433,14 @@ feature -- Access
 			end
 		end
 
-	cluster_of_name (cluster_name: READABLE_STRING_GENERAL): CLUSTER_I
+	cluster_of_name (cluster_name: READABLE_STRING_GENERAL): detachable CLUSTER_I
 			-- Cluster whose name is `cluster_name' (Void if none)
 		require
 			good_argument: cluster_name /= Void
 		do
-			Result ?= group_of_name (cluster_name)
+			if attached {CLUSTER_I} group_of_name (cluster_name) as c then
+				Result := c
+			end
 		end
 
 	group_of_name (group_name: READABLE_STRING_GENERAL): CONF_GROUP
@@ -850,7 +852,7 @@ feature {COMPILER_EXPORTER} -- Precompilation
 		do
 			precomp_ids := Precompilation_directories.current_keys
 			nb := precomp_ids.count + 1
-			precomp_ids.conservative_resize (1, nb)
+			precomp_ids.conservative_resize_with_default (0, 1, nb)
 			precomp_ids.put (System.compilation_id, nb)
 		end
 

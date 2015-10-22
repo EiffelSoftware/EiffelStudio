@@ -42,7 +42,7 @@ feature -- Access
 			results_conform: Result.for_all (
 				agent (a_t: TYPE [TEST_SESSION_RECORD]; a_record: TEST_SESSION_RECORD): BOOLEAN
 					do
-						Result := a_t.attempt (a_record) /= Void
+						Result := attached a_t.attempted (a_record)
 					end (a_type, ?))
 			results_sorted: (create {BUBBLE_SORTER [TEST_SESSION_RECORD]}.make (
 				create {COMPARABLE_COMPARATOR [TEST_SESSION_RECORD]})).sorted (Result)
@@ -195,7 +195,7 @@ feature {TEST_SESSION_RECORD} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

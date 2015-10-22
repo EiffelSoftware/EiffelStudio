@@ -257,6 +257,12 @@ feature -- Access
 			Result := not is_void_unsafe and options.is_attached_by_default
 		end
 
+	is_obsolete_routine_type: BOOLEAN
+			-- Is obsolete routine type declaration (i.e., "ROUTINE [BASE_TYPE, OPEN_ARGS]" instead of "ROUTINE [OPEN_ARGS]") used?
+		do
+			Result := options.is_obsolete_routine_type
+		end
+
 	is_void_unsafe: BOOLEAN
 			-- Is current class compiled without any void-safety mechanism enabled?
 		do

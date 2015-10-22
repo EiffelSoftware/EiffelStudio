@@ -1576,6 +1576,17 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
 				end
 			end
+			if attached current_attributes.item (at_is_obsolete_routine_type) as l_is_obsolete_routine_type then
+				if includes_this_or_after (namespace_1_15_0) then
+					if l_is_obsolete_routine_type.is_boolean then
+						l_current_option.set_is_obsolete_routine_type (l_is_obsolete_routine_type.to_boolean)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_obsolete_routine_type"))
+					end
+				else
+					report_unknown_attribute ("is_obsolete_routine_type")
+				end
+			end
 			if attached current_attributes.item (at_void_safety) as l_void_safety then
 				if includes_this_or_after (namespace_1_5_0) then
 					if l_current_option.void_safety.is_valid_item (l_void_safety) then
@@ -2205,6 +2216,11 @@ feature {NONE} -- Processing of options
 					o := factory.new_option
 				end
 				if
+					a_namespace.same_string (namespace_1_15_0)
+				then
+						-- Use the defaults of ES 15.11.
+					o.merge (default_options_15_11)
+				elseif
 					a_namespace.same_string (namespace_1_14_0) or
 					a_namespace.same_string (namespace_1_13_0)
 				then
@@ -2762,6 +2778,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_full_class_checking, "full_class_checking")
 			l_attr.force (at_catcall_detection, "cat_call_detection")
 			l_attr.force (at_is_attached_by_default, "is_attached_by_default")
+			l_attr.force (at_is_obsolete_routine_type, "is_obsolete_routine_type")
 			l_attr.force (at_is_void_safe, "is_void_safe")
 			l_attr.force (at_void_safety, "void_safety")
 			l_attr.force (at_syntax_level, "syntax_level")
@@ -2970,6 +2987,14 @@ feature {NONE} -- Implementation state transitions
 		end
 
 feature {NONE} -- Default options
+
+	default_options_15_11: CONF_OPTION
+			-- Default options of 15.11.
+		once
+			create Result.make_15_11
+		ensure
+			result_attached: Result /= Void
+		end
 
 	default_options_14_05: CONF_OPTION
 			-- Default options of 14.05.

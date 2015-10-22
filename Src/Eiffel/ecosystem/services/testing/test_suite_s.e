@@ -189,7 +189,7 @@ feature -- Basic operations
 			a_type_attached: a_type /= Void
 		deferred
 		ensure
-			result_conforms: Result /= Void implies a_type.attempt (Result) /= Void
+			result_conforms: Result /= Void implies attached a_type.attempted (Result)
 			results_usable: Result /= Void implies Result.is_interface_usable
 			result_valid: Result /= Void implies Result.test_suite = Current
 			result_not_running: Result /= Void implies not Result.has_next_step
@@ -232,7 +232,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

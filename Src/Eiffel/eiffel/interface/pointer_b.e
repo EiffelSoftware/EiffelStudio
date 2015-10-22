@@ -67,21 +67,17 @@ feature {NONE} -- Initialization
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN): CL_TYPE_A
-			-- Actual type of `current depending on the context in which it is declared
-			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
-			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
-			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
-			-- rather than if statements.
+	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; a: CLASS_TYPE_AS; c: CLASS_C): CL_TYPE_A
+			-- <Precursor>
 		do
 			if is_typed_pointer then
-				if gen /= Void then
+				if attached gen then
 					create {TYPED_POINTER_A} Result.make_typed (gen.first)
 				else
 					create Result.make (class_id)
 				end
 			else
-				Result := Precursor {CLASS_B} (gen, is_exp)
+				Result := Precursor {CLASS_B} (gen, a, c)
 			end
 		end
 
@@ -92,7 +88,6 @@ feature -- Validity
 		local
 			special_error: SPECIAL_ERROR
 			l_feat: FEATURE_I
-			l_proc: PROCEDURE_I
 		do
 			if not is_typed_pointer then
 				Precursor
@@ -114,9 +109,8 @@ feature -- Validity
 				end
 
 					-- Check for a procedure `set_item'.
-				l_proc ?= feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 				if
-					l_proc = Void or else
+					not attached {PROCEDURE_I} feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id) as l_proc or else
 					l_proc.argument_count /= 1 or else
 					not l_proc.arguments.i_th (1).conformance_type.same_as (pointer_type)
 				then
@@ -127,7 +121,7 @@ feature -- Validity
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

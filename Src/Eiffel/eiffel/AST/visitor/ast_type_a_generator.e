@@ -290,7 +290,7 @@ feature {NONE} -- Visitor implementation
 				if l_has_error then
 					last_type := Void
 				else
-					l_type := l_class_c.partial_actual_type (l_actual_generic, l_as.is_expanded)
+					l_type := l_class_c.partial_actual_type (l_actual_generic, l_as, current_class)
 					last_type := updated_type_with_annotations (l_as, l_type)
 				end
 			else

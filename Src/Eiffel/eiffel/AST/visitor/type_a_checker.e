@@ -357,6 +357,16 @@ feature -- Special checking
 								end
 								l_cursor1 := l_class_type_generics.index
 								l_class_type_generics.start
+								if
+									a_context_class.lace_class.is_obsolete_routine_type and then
+									(l_associated_class.class_id = system.routine_class_id or
+									l_associated_class.class_id = system.procedure_class_id or
+									l_associated_class.class_id = system.predicate_class_id or
+									l_associated_class.class_id = system.function_class_id)
+								then
+										-- Ignore the first actual parameter.
+									l_class_type_generics.forth
+								end
 								l_cl_generics.start
 								l_pos := 1
 							until
@@ -392,7 +402,7 @@ feature -- Special checking
 								l_class_type_generics.forth
 								l_cl_generics.forth
 							end
-							l_cl_generics.go_i_th (l_cursor1)
+							l_class_type_generics.go_i_th (l_cursor1)
 						else
 								-- TUPLE: has no generics
 							from

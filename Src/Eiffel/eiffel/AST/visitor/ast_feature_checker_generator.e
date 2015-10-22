@@ -10061,24 +10061,22 @@ feature {NONE} -- Agents
 			if a_is_query then
 					-- Evaluate type of Result in current context
 				l_type := a_feat_type.instantiation_in (a_target_type.as_implicitly_detachable.as_variant_free, cid)
-				if l_is_qualified_call then
-					l_type := l_type.deep_actual_type
-				elseif l_type.has_like_argument then
+				if l_is_qualified_call or l_type.has_like_argument then
 					l_type := l_type.deep_actual_type
 				end
 				if l_type.actual_type.is_boolean then
-						-- generics are: base_type, open_types
-					create l_generics.make (2)
+						-- generics are: open_types
+					create l_generics.make (1)
 					create l_gen_type.make (System.predicate_class_id, l_generics)
 				else
-						-- generics are: base_type, open_types, result_type
-					create l_generics.make (3)
+						-- generics are: open_types, result_type
+					create l_generics.make (2)
 					l_query_type := l_type
 					create l_gen_type.make (System.function_class_id, l_generics)
 				end
 			else
-					-- generics are: base_type, open_types
-				create l_generics.make (2)
+					-- generics are: open_types
+				create l_generics.make (1)
 				create l_gen_type.make (System.procedure_class_id, l_generics)
 			end
 				-- Type of an agent is frozen.
@@ -10222,19 +10220,12 @@ feature {NONE} -- Agents
 			l_tuple_type.set_frozen_mark
 				-- Type of an argument tuple is always attached.
 			l_tuple_type := l_tuple_type.as_attached_in (context.current_class)
-
-				-- Type of the first actual generic parameter of the routine type
-				-- should always be attached.
-			l_type := a_target_type.as_attached_in (context.current_class)
-				-- The target type is not separate, because an agent object is created on a target processor.
-			l_type := l_type.to_other_separateness (l_tuple_type)
-			l_generics.extend (l_type)
-				-- Insert it as second generic parameter of ROUTINE.
+				-- Add argument parameter of ROUTINE.
 			l_generics.extend (l_tuple_type)
+				-- Add result paramater of FUNCTION (if required).
 			if l_query_type /= Void then
 				l_generics.extend (l_query_type)
 			end
-
 
 				-- Type of an agent is always attached.
 			l_result_type := l_result_type.as_attached_in (context.current_class)
@@ -10678,14 +10669,14 @@ feature {NONE} -- Agents
 			l_tcat: CAT_CALL_WARNING
 		do
 			check
-				has_generics: attached a_last_type.generics as l_generics and then l_generics.count >= 2
+				has_generics: attached a_last_type.generics as l_generics and then l_generics.count > 1
 			end
 				-- The type `a_last_type' represents a ROUTINE/PROCEDURE/FUNCTION/PREDICATE
 				-- and its second actual generic parameter represents the type of the TUPLE.
 				-- In the event, it is not generics, it means that the type is a formal one.
 				-- In this case, we do not do anything because it should be taken care with
 				-- existing rules governing calls on features involving formal generic parameters.
-			if attached a_last_type.generics.i_th (2).actual_type.generics as l_generics then
+			if attached a_last_type.generics.first.actual_type.generics as l_generics then
 				across
 					l_generics as l_types
 				loop

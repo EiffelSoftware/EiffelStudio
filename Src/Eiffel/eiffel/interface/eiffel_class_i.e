@@ -222,12 +222,16 @@ feature {COMPILER_EXPORTER} -- Setting
 					new_options := options
 					if
 						new_options.is_attached_by_default /= old_options.is_attached_by_default or else
+						new_options.is_obsolete_routine_type /= old_options.is_obsolete_routine_type or else
 						new_options.syntax.index /= old_options.syntax.index
 					then
 							-- Class should be reparsed.
 						is_modified := True
 					end
-					if new_options.void_safety.index /= old_options.void_safety.index then
+					if
+						new_options.void_safety.index /= old_options.void_safety.index or else
+						new_options.catcall_detection.index /= old_options.catcall_detection.index
+					then
 							-- Class should be reparsed and rechecked for validity of interface and code.
 						is_modified := True
 						if attached c then
@@ -287,7 +291,7 @@ invariant
 	name_in_upper: name.as_upper.is_equal (name)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

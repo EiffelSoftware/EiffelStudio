@@ -541,8 +541,8 @@ feature -- Plug and Makefile file
 			buffer.put_string (arr_make_name)
 			buffer.put_string ("();%N")
 
-				-- Make ROUTINE declaration
-			rout_cl := system.class_of_id (system.routine_class_id)
+				-- Make ROUTINE declaration.
+			rout_cl := system.routine_class.compiled_class
 
 			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
 				cl_type := rout_cl.types.first

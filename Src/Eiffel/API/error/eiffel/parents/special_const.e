@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Constants for special errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -88,10 +88,17 @@ feature -- Access: NATIVE_ARRAY
 
 feature -- Access: TYPE
 
-	type_case_1: STRING = "Class TYPE must have one formal generic parameter";
+	type_case_1: STRING = "Class TYPE must have one formal generic parameter"
 
-note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+feature -- Access: routine classes
+
+	routine_case_1: STRING = "Class ROUTINE must have one formal generic parameter constrained to TUPLE."
+	procedure_case_1: STRING = "Class PROCEDURE must have one formal generic parameter constrained to TUPLE."
+	predicate_case_1: STRING = "Class PREDICATE must have one formal generic parameter constrained to TUPLE."
+	function_case_1: STRING = "Class FUNCTION must have two formal generic parameters, the first one must be constrained to TUPLE."
+
+;note
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

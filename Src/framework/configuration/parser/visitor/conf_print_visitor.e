@@ -917,6 +917,9 @@ feature {NONE} -- Implementation
 				if an_options.is_attached_by_default_configured then
 					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
 				end
+				if an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type and then is_after_or_equal (namespace, namespace_1_15_0) then
+					append_text (" is_obsolete_routine_type=%""+an_options.is_obsolete_routine_type.out.as_lower+"%"")
+				end
 				if an_options.void_safety.is_set then
 					if is_after_or_equal (namespace, namespace_1_11_0) then
 							-- Current namespace.

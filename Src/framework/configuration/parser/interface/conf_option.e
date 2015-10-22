@@ -29,7 +29,8 @@ create
 	make_6_4,
 	make_7_0,
 	make_7_3,
-	make_14_05
+	make_14_05,
+	make_15_11
 
 feature {NONE} -- Creation
 
@@ -45,6 +46,7 @@ feature {NONE} -- Creation
 			create syntax.make (syntax_name, syntax_index_obsolete)
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
+			is_obsolete_routine_type := True
 		end
 
 	make_6_4
@@ -53,6 +55,7 @@ feature {NONE} -- Creation
 			create syntax.make (syntax_name, syntax_index_transitional)
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
+			is_obsolete_routine_type := True
 		end
 
 	make_7_0
@@ -62,6 +65,7 @@ feature {NONE} -- Creation
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
+			is_obsolete_routine_type := True
 		end
 
 	make_7_3
@@ -72,9 +76,21 @@ feature {NONE} -- Creation
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
 			is_full_class_checking := True
+			is_obsolete_routine_type := True
 		end
 
 	make_14_05
+			-- Initialize options to the defaults of 14.05.
+		do
+			create syntax.make (syntax_name, syntax_index_standard)
+			create void_safety.make (void_safety_name, void_safety_index_all)
+			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
+			is_attached_by_default := True
+			is_full_class_checking := True
+			is_obsolete_routine_type := True
+		end
+
+	make_15_11
 			-- Initialize options to the defaults of 14.05.
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
@@ -110,6 +126,9 @@ feature -- Status
 	is_attached_by_default_configured: BOOLEAN
 			-- Is `is_attached_by_default' configured?
 
+	is_obsolete_routine_type_configured: BOOLEAN
+			-- Is `is_obsolete_routine_type' configured?
+
 	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
@@ -123,6 +142,7 @@ feature -- Status
 				is_full_class_checking_configured or
 				catcall_detection.is_set or
 				is_attached_by_default_configured or
+				is_obsolete_routine_type_configured or
 				void_safety.is_set or
 				assertions /= Void or
 				local_namespace /= Void or
@@ -189,6 +209,13 @@ feature -- Status update
 			is_attached_by_default := False
 		end
 
+	unset_is_obsolete_routine_type
+			-- Unset `is_obsolete_routine_type'.
+		do
+			is_obsolete_routine_type_configured := False
+			is_obsolete_routine_type := False
+		end
+
 feature -- Access, stored in configuration file
 
 	assertions: detachable CONF_ASSERTIONS
@@ -223,6 +250,9 @@ feature -- Access, stored in configuration file
 
 	is_attached_by_default: BOOLEAN
 			-- Is type declaration considered attached by default?
+
+	is_obsolete_routine_type: BOOLEAN
+			-- Is an obsolete routine type declaration used?
 
 	description: detachable STRING_32
 			-- A description about the options.
@@ -482,6 +512,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_attached_by_default_configured: is_attached_by_default_configured
 		end
 
+	set_is_obsolete_routine_type (v: BOOLEAN)
+			-- Set `is_obsolete_routine_type' to `v'.
+		do
+			is_obsolete_routine_type_configured := True
+			is_obsolete_routine_type := v
+		ensure
+			is_obsolete_routine_type_set: is_obsolete_routine_type = v
+			is_obsolete_routine_type_configured: is_obsolete_routine_type_configured
+		end
+
 	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
@@ -531,6 +571,8 @@ feature -- Comparison
 			and then equal (description, other.description)
 			and then is_attached_by_default = other.is_attached_by_default
 			and then is_attached_by_default_configured = other.is_attached_by_default_configured
+			and then is_obsolete_routine_type = other.is_obsolete_routine_type
+			and then is_obsolete_routine_type_configured = other.is_obsolete_routine_type_configured
 			and then catcall_detection.is_equal (other.catcall_detection)
 			and then is_debug = other.is_debug
 			and then is_debug_configured = other.is_debug_configured
@@ -566,6 +608,7 @@ feature -- Comparison
 				is_full_class_checking = other.is_full_class_checking and
 				catcall_detection.index = other.catcall_detection.index and
 				is_attached_by_default = other.is_attached_by_default and
+				is_obsolete_routine_type = other.is_obsolete_routine_type and
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
 				syntax.index = other.syntax.index and
@@ -708,6 +751,10 @@ feature -- Merging
 				if not is_attached_by_default_configured then
 					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
 					is_attached_by_default := other.is_attached_by_default
+				end
+				if not is_obsolete_routine_type_configured then
+					is_obsolete_routine_type_configured := other.is_obsolete_routine_type_configured or else is_obsolete_routine_type /~ other.is_obsolete_routine_type
+					is_obsolete_routine_type := other.is_obsolete_routine_type
 				end
 				void_safety.set_safely (other.void_safety)
 				syntax.set_safely (other.syntax)

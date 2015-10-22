@@ -139,16 +139,25 @@ feature {NONE} -- Constants
 			Result := namespace_1_14_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd"
 		end
 
+	namespace_1_15_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-15-0"
+			-- Namespace of the 15.11 release.
+
+	schema_1_15_0: STRING_32
+			-- Schema of the 15.11 release.
+		once
+			Result := namespace_1_15_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd"
+		end
+
 	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
-			Result := namespace_1_14_0
+			Result := namespace_1_15_0
 		end
 
 	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
-			Result := schema_1_14_0
+			Result := schema_1_15_0
 		end
 
 feature -- Status report
@@ -185,6 +194,7 @@ feature -- Normalization
 			elseif n.same_string (namespace_1_12_0) then Result := namespace_1_12_0
 			elseif n.same_string (namespace_1_13_0) then Result := namespace_1_13_0
 			elseif n.same_string (namespace_1_14_0) then Result := namespace_1_14_0
+			elseif n.same_string (namespace_1_15_0) then Result := namespace_1_15_0
 			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
 					-- Unknown namespace.
@@ -243,6 +253,7 @@ feature {NONE} -- Ordering
 			Result.extend (12, namespace_1_12_0)
 			Result.extend (13, namespace_1_13_0)
 			Result.extend (14, namespace_1_14_0)
+			Result.extend (15, namespace_1_15_0)
 				-- When adding a new namespace, do not forget to increment the counter index too!
 		end
 

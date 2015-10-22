@@ -59,7 +59,7 @@ feature -- Attributes
 				if l_type.base_class.class_id = system.predicate_class_id then
 					Result := True
 				else
-					Result := l_type.instantiated_in (context.context_class_type.type).generics.i_th (3).is_basic
+					Result := l_type.instantiated_in (context.context_class_type.type).generics.last.is_basic
 				end
 			end
 		end
@@ -108,7 +108,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

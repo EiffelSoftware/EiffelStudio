@@ -34,14 +34,10 @@ feature
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN): CL_TYPE_A
-			-- Actual type of `current depending on the context in which it is declared
-			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
-			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
-			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
-			-- rather than if statements.
+	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; a: CLASS_TYPE_AS; c: CLASS_C): CL_TYPE_A
+			-- <Precursor>
 		do
-			if gen /= Void then
+			if attached gen then
 				create {GEN_TYPE_A} Result.make (class_id, gen)
 			else
 				initialize_actual_type
@@ -55,7 +51,6 @@ feature -- Validity
 			-- Check validity of a simple type reference class.
 		local
 			special_error: SPECIAL_ERROR
-			l_proc: PROCEDURE_I
 			l_feat: FEATURE_I
 		do
 				-- First, no generics
@@ -75,9 +70,8 @@ feature -- Validity
 			end
 
 				-- Check for a procedure `set_item'.
-			l_proc ?= feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 			if
-				l_proc = Void or else
+				not attached {PROCEDURE_I} feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id) as l_proc or else
 				l_proc.argument_count /= 1 or else
 				not l_proc.arguments.i_th (1).conformance_type.same_as (actual_type)
 			then
@@ -90,7 +84,7 @@ invariant
 	is_expanded: is_expanded
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

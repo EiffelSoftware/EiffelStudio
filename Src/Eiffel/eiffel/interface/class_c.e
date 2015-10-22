@@ -2192,12 +2192,9 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 
-	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; is_exp: BOOLEAN): CL_TYPE_A
-			-- Actual type of `current depending on the context in which it is declared
-			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
-			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
-			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
-			-- rather than if statements.
+	partial_actual_type (gen: detachable ARRAYED_LIST [TYPE_A]; a: CLASS_TYPE_AS; c: CLASS_C): CL_TYPE_A
+			-- Actual type of current depending on context `c' in which it is declared as `a'.
+			-- That is to say, it could have generics `gen' but not be a generic class.
 		local
 			formal_count: INTEGER
 			actual_count: INTEGER
@@ -2205,6 +2202,7 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			wrapped_actuals: ARRAYED_LIST [TYPE_A]
 			new_actuals: detachable ARRAYED_LIST [TYPE_A]
 			tuple_actual: TUPLE_TYPE_A
+			expected_generics_count: INTEGER
 		do
 				-- Do tuple parameter unfolding if necessary.
 			if attached generics as formal_generics then
@@ -2213,6 +2211,40 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			if attached gen then
 				actual_count := gen.count
 				new_actuals := gen
+			end
+			if attached new_actuals then
+				create {GEN_TYPE_A} Result.make (class_id, new_actuals)
+			else
+				create Result.make (class_id)
+			end
+			if c.lace_class.is_obsolete_routine_type then
+					-- Adapt actual generic parameters in routine types if necessary.
+				if
+					class_id = system.routine_class_id or
+					class_id = system.procedure_class_id or
+					class_id = system.predicate_class_id
+				then
+					expected_generics_count := 2
+				elseif class_id = system.function_class_id then
+					expected_generics_count := 3
+				end
+				if expected_generics_count = 0 or else not attached new_actuals then
+						-- Non-routine class, skip it.
+				elseif actual_count /= expected_generics_count then
+						-- Incorrect number of actual generics.
+					system.error_handler.insert_error (create {VTUG2_SYNTAX}.make (Result, c, a.first_token (Void)))
+				elseif not (new_actuals [2].is_formal or new_actuals [2].is_like or new_actuals [2].is_none) and then not new_actuals [2].is_tuple then
+						-- Incorrect type of the second actual generic parameter.
+						-- It's still possible to miss an error when an obsolete type declaration used formal generics or anchored types,
+						-- but this is ignored.
+					system.error_handler.insert_error (create {VTCG_SYNTAX}.make (Result, c, a.first_token (Void)))
+				else
+						-- Remove first actual parameter.
+					new_actuals.start
+					new_actuals.remove
+						-- Update number of actual parameters.
+					actual_count := actual_count - 1
+				end
 			end
 			if actual_count /= formal_count and formal_count > 0 then
 					-- Check if exactly one of the formal generic parameters is of a tuple type.
@@ -2250,6 +2282,8 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 						variant
 							actual_count_formal_count_difference: actual_count - formal_count
 						end
+							-- Use a type with an updated number of actual generic parameters.
+						create {GEN_TYPE_A} Result.make (class_id, new_actuals)
 					elseif actual_count + 1 = formal_count then
 							-- Avoid changing original list of arguments.
 						if attached new_actuals then
@@ -2265,15 +2299,12 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 						new_actuals.put_left (tuple_actual)
 							-- Adjust number of actual arguments.
 						actual_count := formal_count
+							-- Use a type with an updated number of actual generic parameters.
+						create {GEN_TYPE_A} Result.make (class_id, new_actuals)
 					end
 				end
 			end
-			if attached new_actuals then
-				create {GEN_TYPE_A} Result.make (class_id, new_actuals)
-			else
-				create Result.make (class_id)
-			end
-			if is_exp then
+			if a.is_expanded then
 				Result.set_expanded_mark
 			end
 			if is_expanded then

@@ -242,73 +242,61 @@ feature -- Predefined types
 		require
 			tuple_compiled: System.tuple_class.is_compiled
 		do
-				-- Not once because tuple_id can change
+				-- Not once because `system.tuple_id' can change
 			create Result.make (System.tuple_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
-		end;
+		end
 
 	Function_type_a: GEN_TYPE_A
 			-- Default function type: FUNCTION [ANY, TUPLE, ANY]
 		require
 			function_compiled: System.function_class.is_compiled
 			any_compiled: System.any_class.is_compiled
-			array_compiled: System.array_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
 		local
-			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
 		do
-				-- Not once because function_id can change
-			create generics.make (3)
-			create any_type.make (System.any_id)
-			generics.extend (any_type)
+				-- Not once because `system.function_id' can change.
+			create generics.make (2)
 			generics.extend (Tuple_type_a)
-			generics.extend (any_type)
+			generics.extend (system.any_type)
 
 			create Result.make (System.function_class_id, generics)
 		end
 
 	Predicate_type_a: GEN_TYPE_A
-			-- Default function type: PREDICATE [ANY, TUPLE]
+			-- Default function type: PREDICATE [TUPLE]
 		require
 			predicate_compiled: System.predicate_class.is_compiled
-			any_compiled: System.any_class.is_compiled
-			array_compiled: System.array_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
 		do
-				-- Not once because function_id can change
-			create generics.make (2)
-			create any_type.make (System.any_id)
-			generics.extend (any_type)
+				-- Not once because `system.predicate_id' can change.
+			create generics.make (1)
 			generics.extend (Tuple_type_a)
 
 			create Result.make (System.predicate_class_id, generics)
 		end
 
 	Procedure_type_a: GEN_TYPE_A
-			-- Default procedure type: PROCEDURE [ANY, TUPLE]
+			-- Default procedure type: PROCEDURE [TUPLE]
 		require
 			procedure_compiled: System.procedure_class.is_compiled
-			any_compiled: System.any_class.is_compiled
-			array_compiled: System.array_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
 		local
 			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
 		do
-				-- Not once because procedure_id can change
-			create generics.make (2)
-			create any_type.make (System.any_id)
-			generics.extend (any_type)
+				-- Not once because `system.procedure_id' can change.
+			create generics.make (1)
 			generics.extend (Tuple_type_a)
 
 			create Result.make (System.procedure_class_id, generics)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

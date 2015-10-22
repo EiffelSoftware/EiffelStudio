@@ -5041,17 +5041,25 @@ feature {NONE} -- Implementation: helpers
 			l_result_type: GEN_TYPE_A
 			l_actual_target_type: TYPE_A
 			l_feat: E_FEATURE
+			l_query_type: detachable TYPE_A
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 			if not has_error_internal then
-				if l_feat.has_return_value then
-						-- generics are: base_type, open_types, result_type
-					create l_generics.make (3)
-					create l_result_type.make (System.function_class_id, l_generics)
-				else
-						-- generics are: base_type, open_types
-					create l_generics.make (2)
+				l_query_type := l_feat.type.actual_type
+				if not l_feat.has_return_value then
+						-- generics are: open_types
+					create l_generics.make (1)
 					create l_result_type.make (System.procedure_class_id, l_generics)
+					l_query_type := Void
+				elseif l_query_type.is_boolean then
+						-- generics are: open_types
+					create l_generics.make (1)
+					create l_result_type.make (System.predicate_class_id, l_generics)
+					l_query_type := Void
+				else
+						-- generics are: open_types, result_type
+					create l_generics.make (2)
+					create l_result_type.make (System.function_class_id, l_generics)
 				end
 					-- The type of an agent is frozen.				
 				l_result_type.set_frozen_mark
@@ -5065,7 +5073,6 @@ feature {NONE} -- Implementation: helpers
 				end
 
 				l_actual_target_type := l_target_type.actual_type
-				l_generics.extend (l_target_type)
 
 				l_feat_args := l_feat.arguments
 
@@ -5181,11 +5188,12 @@ feature {NONE} -- Implementation: helpers
 				create l_tuple.make (System.tuple_id, l_oargtypes)
 				l_tuple.set_frozen_mark
 
-					-- Insert it as second generic parameter of ROUTINE.
+					-- Insert it as argument generic parameter of ROUTINE.
 				l_generics.extend (l_tuple)
 
-				if l_feat.has_return_value then
-					l_generics.extend (l_feat.type.actual_type)
+				if attached l_query_type then
+						-- Insert it as result generic parameter of ROUTINE.
+					l_generics.extend (l_query_type)
 				end
 				Result := l_result_type
 			end

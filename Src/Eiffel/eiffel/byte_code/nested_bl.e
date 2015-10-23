@@ -268,6 +268,8 @@ feature
 				create separate_register.make (pointer_c_type)
 					-- Mark current because separate calls use Current to compute client processor ID.
 				context.mark_current_used
+					-- Inform the context that there is a separate call.
+				context.set_has_separate_call
 			end
 				-- Analyze the next target
 			msg_target.analyze_on (target)

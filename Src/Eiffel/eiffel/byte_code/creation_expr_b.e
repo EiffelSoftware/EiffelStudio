@@ -138,6 +138,8 @@ feature -- Analyze
 				separate_register.free_register
 					-- Mark current because separate calls use Current to compute client processor ID.
 				context.mark_current_used
+					-- Inform the context that there is a separate call.
+				context.set_has_separate_call
 			end
 		end
 

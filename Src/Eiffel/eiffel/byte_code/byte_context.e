@@ -201,6 +201,9 @@ feature -- Access
 	has_wait_condition: BOOLEAN
 			-- Are there wait conditions?
 
+	has_separate_call: BOOLEAN
+			-- Is there a call to a separate object, including creation procedures?
+
 	is_inside_hidden_code: BOOLEAN
 			-- Is inside hidden code?
 			--| used for sugar code such as new loop construct "across"
@@ -318,6 +321,14 @@ feature -- Setting
 			has_wait_condition := True
 		ensure
 			has_wait_condition: has_wait_condition
+		end
+
+	set_has_separate_call
+			-- Set `has_separate_call' to `True'.
+		do
+			has_separate_call := True
+		ensure
+			has_separate_call: has_separate_call
 		end
 
 	set_hidden_code_level (a_level: like hidden_code_level)
@@ -924,7 +935,7 @@ feature -- C code generation: request chain
 					-- Generate declaration to restore request chain on exception.
 				buffer.put_new_line
 				buffer.put_string ("RTS_SDX;")
-			elseif has_request_chain then
+			elseif has_request_chain or has_separate_call then
 					-- Generate declaration to use SCOOP calls.
 				buffer.put_new_line
 				buffer.put_string ("RTS_SD;")
@@ -2754,6 +2765,7 @@ feature -- Clearing
 			need_gc_hook := False
 			has_request_chain := False
 			has_wait_condition := False
+			has_separate_call := False
 			label := 0
 			local_list.wipe_out
 			breakpoint_slots_number := 0;

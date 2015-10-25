@@ -845,11 +845,8 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
 	CHECK ("Not a routine object", gdp->size > 1);
 
-		/* Type of call target */
-	gtype = gdp->types [0].id;
-
-		/* Now treat the arguments.  This is necessarily a TUPLE */
-	dftype = gdp->types [1].id;
+		/* Treat the arguments. This is necessarily a TUPLE. */
+	dftype = gdp->types [0].id;
 
 	CHECK ("Valid dftype", dftype < eif_next_gen_id);
 	CHECK ("Routines implies we have tuples", tuple_static_type < MAX_DTYPE);
@@ -858,8 +855,8 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
 
-		/* Create a string for gdp->size + 1 characters */
-	len = gdp->size + 1;
+		/* Create a string for gdp->size characters */
+	len = gdp->size;
 
 	ret = emalloc(egc_str_dtype);
 	RT_GC_PROTECT(ret);
@@ -874,9 +871,6 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	 */
 
 	strp = *(EIF_REFERENCE*)ret;
-
-	*strp = EIF_TUPLE_CODE(System(eif_cid_map[gtype]));
-	strp++;
 
 	for (pos = 0; pos < gdp->size; pos++, strp++) {
 		gtype = gdp->types [pos].id;

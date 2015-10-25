@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
+	ROUTINE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 feature {NONE} -- Implementation
 
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

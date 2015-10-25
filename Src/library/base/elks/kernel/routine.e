@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
+	ROUTINE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	HASHABLE
@@ -141,7 +141,7 @@ feature -- Status report
 					i > open_count or not Result
 				loop
 					arg_type_code := args.item_code (i)
-					Result := arg_type_code = open_type_codes.item (i + 1).code
+					Result := arg_type_code = open_type_codes.item (i).code
 					if Result and then arg_type_code = {TUPLE}.reference_code then
 						arg := args.item (i)
 						l_type := open_operand_type (i)
@@ -432,7 +432,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

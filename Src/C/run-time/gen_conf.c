@@ -843,7 +843,7 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 	gdp = eif_derivations [dftype];
 
 	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
-	CHECK ("Not a routine object", gdp->size > 1);
+	CHECK ("Not a routine object", gdp->size > 0);
 
 		/* Treat the arguments. This is necessarily a TUPLE. */
 	dftype = gdp->types [0].id;

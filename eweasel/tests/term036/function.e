@@ -12,10 +12,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	FUNCTION [BASE_TYPE, OPEN_ARGS -> TUPLE, RESULT_TYPE]
+	FUNCTION [OPEN_ARGS -> TUPLE, RESULT_TYPE]
 
 inherit
-	ROUTINE [BASE_TYPE, OPEN_ARGS]
+	ROUTINE [ANY, OPEN_ARGS]
 		redefine
 			is_equal, copy
 		end

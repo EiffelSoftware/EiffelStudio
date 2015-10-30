@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE]
+	ROUTINE [OPEN_ARGS -> TUPLE]
 
 inherit
 	MEMORY
@@ -171,7 +171,7 @@ feature -- Status report
 				loop
 					arg ?= args.item (i)
 					arg_type_code := args.arg_item_code (i)
-					open_arg_type_code := open_type_codes.item (i + 1)
+					open_arg_type_code := open_type_codes.item (i)
 					if arg_type_code = eif_reference_code then				
 						inspect	open_arg_type_code
 						when eif_boolean_code then

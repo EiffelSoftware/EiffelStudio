@@ -10,10 +10,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE]
+	PROCEDURE [OPEN_ARGS ->TUPLE]
 
 inherit
-	ROUTINE [BASE_TYPE, OPEN_ARGS]
+	ROUTINE [ANY, OPEN_ARGS]
 
 feature -- Calls
 

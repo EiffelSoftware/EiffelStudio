@@ -187,7 +187,7 @@ feature -- Generation
 				end
 				buffer.put_character ('(')
 				p.result_type.generate_function_cast (buffer, p.argument_type_array, False)
-				buffer.put_string ("(a -> feature.address)) (eif_scoop_access (a -> target)")
+				buffer.put_string ("(a -> address)) (a -> target")
 				if attached p.argument_types as a then
 						-- This pattern cannot be used for attribute call stub.
 					is_attribute := False
@@ -197,18 +197,11 @@ feature -- Generation
 						buffer.put_two_character (',', ' ')
 						value := x.item
 						is_reference := value.is_reference
-						if is_reference then
-								-- Use RTS_EIF_ACCESS as this checks whether argument is null before calling `eif_access'.
-							buffer.put_string ("RTS_EIF_ACCESS (")
-						end
 						buffer.put_string ("a -> argument [")
 							-- `x' is a SPECIAL so it is already zero-indexed.
 						buffer.put_integer (x.target_index)
 						buffer.put_two_character (']', '.')
 						value.generate_typed_field (buffer)
-						if is_reference then
-							buffer.put_character (')')
-						end
 					end
 				end
 				buffer.put_two_character (')', ';')
@@ -224,7 +217,7 @@ feature -- Generation
 					p.result_type.generate_access_cast (buffer)
 					buffer.put_string ("(a -> result) = *")
 					p.result_type.generate_access_cast (buffer)
-					buffer.put_string (" (eif_scoop_access (a -> target) + a -> feature.offset);")
+					buffer.put_string (" (a->target + a->offset);")
 					buffer.generate_block_close
 				end
 				t.forth
@@ -257,7 +250,7 @@ feature -- Generation
 				p.result_type.generate_access_cast (buffer)
 				buffer.put_character ('(')
 				reference_c_type.generate_function_cast (buffer, p.argument_type_array, False)
-				buffer.put_string ("(a -> feature.address)) (eif_scoop_access (a -> target)")
+				buffer.put_string ("(a -> address)) (a->target")
 				if attached p.argument_types as a then
 					across
 						a as x
@@ -265,18 +258,11 @@ feature -- Generation
 						buffer.put_two_character (',', ' ')
 						value := x.item
 						is_reference := value.is_reference
-						if is_reference then
-								-- Use RTS_EIF_ACCESS as this checks whether argument is null before calling `eif_access'.
-							buffer.put_string ("RTS_EIF_ACCESS (")
-						end
 						buffer.put_string ("a -> argument [")
 							-- `x' is a SPECIAL so it is already zero-indexed.
 						buffer.put_integer (x.target_index)
 						buffer.put_two_character (']', '.')
 						value.generate_typed_field (buffer)
-						if is_reference then
-							buffer.put_character (')')
-						end
 					end
 				end
 				buffer.put_two_character (')', ';')
@@ -303,17 +289,10 @@ feature -- Generation
 						-- Write operation.
 					value := p.argument_types [0]
 					value.generate_tuple_put (buffer)
-					buffer.put_string (" (eif_scoop_access (a -> target), a -> feature.offset, ")
+					buffer.put_string (" (a->target, a->offset, ")
 					is_reference := value.is_reference
-					if is_reference then
-							-- Use RTS_EIF_ACCESS as this checks whether argument is null before calling `eif_access'.
-						buffer.put_string ("RTS_EIF_ACCESS (")
-					end
 					buffer.put_string ("a -> argument [0].")
 					value.generate_typed_field (buffer)
-					if is_reference then
-						buffer.put_character (')')
-					end
 					buffer.put_two_character (')', ';')
 				else
 						-- Read operation.
@@ -321,7 +300,7 @@ feature -- Generation
 					p.result_type.generate_access_cast (buffer)
 					buffer.put_string ("(a -> result) = ")
 					p.result_type.generate_tuple_item (buffer)
-					buffer.put_string (" (eif_scoop_access (a -> target), a -> feature.offset);")
+					buffer.put_string (" (a -> target, a -> offset);")
 				end
 				buffer.generate_block_close
 				buffer.put_new_line

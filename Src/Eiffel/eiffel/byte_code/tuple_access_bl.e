@@ -12,16 +12,16 @@ inherit
 	TUPLE_ACCESS_B
 		redefine
 			analyze,
-			free_register,
 			generate_access,
 			generate_on,
-			generate_separate_call,
 			parameters,
 			propagate,
 			register,
 			set_register,
 			set_source,
-			unanalyze
+			unanalyze,
+			generate_workbench_separate_call_args,
+			generate_finalized_separate_call_args
 		end
 
 create
@@ -57,16 +57,10 @@ feature -- C Code generation
 	analyze
 			-- Analyze current byte code.
 		do
-			if context_type.is_separate then
-				if attached source as s then
+			if attached source as s then
+				if context_type.is_separate then
 					s.set_is_for_tuple_access (False)
-					s.analyze
-				elseif context.final_mode then
-					get_register
-				else
-					register := context.get_argument_register (tuple_element_type.c_type)
 				end
-			elseif attached source as s then
 				s.analyze
 			end
 		end
@@ -83,28 +77,11 @@ feature -- C Code generation
 	propagate (r: REGISTRABLE)
 			-- Propagate `r'
 		do
-			if context_type.is_separate then
-				if attached source as s then
-					s.propagate (r)
-				elseif r /= No_register and then r.c_type.is_reference then
-					register := r
-				end
-			elseif not context.propagated then
+			if not context.propagated then
+
 				if r = No_register or r.c_type.same_class_type (c_type) then
 					register := r
 					context.set_propagated
-				end
-			end
-		end
-
-	free_register
-			-- <Precursor>
-		do
-			if context_type.is_separate then
-				if attached source as s then
-					s.free_register
-				else
-					register.free_register
 				end
 			end
 		end
@@ -180,60 +157,35 @@ feature -- C Code generation
 			buf.put_character (')')
 		end
 
-	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+feature {NONE} -- Separate call
+
+	generate_workbench_separate_call_args
 			-- <Precursor>
 		local
 			buf: like buffer
 		do
-			check attached {CL_TYPE_A} context_type as c then
-				buf := buffer
-				if attached r then
-						-- Read operation.
-					buf.put_new_line
-					buf.put_string ("RTS_CTR (")
-					buf.put_integer (position)
-					buf.put_two_character (',', ' ')
-					if context.final_mode then
-							-- Generate pattern.
-						system.separate_patterns.put_tuple_access (Current)
-					else
-							-- Generate SK type.
-						r.c_type.generate_sk_value (buf)
-					end
-					buf.put_two_character (',', ' ')
-					s.print_register
-					buf.put_two_character (',', ' ')
-					check attached {REGISTER} register as ar then
-						if context.final_mode then
-							ar.print_register
-						else
-							context.print_argument_register (ar, buf)
-						end
-					end
-					buf.put_two_character (')', ';')
-					buf.put_new_line
-					r.print_register
-					buf.put_three_character (' ', '=', ' ')
-					register.print_register
-				else
-						-- Write operation.
-					check attached source as a then
-							-- Generate call.
-						buf.put_new_line
-						buf.put_string ("RTS_CTW (")
-						buf.put_integer (position)
-						buf.put_two_character (',', ' ')
-						if context.final_mode then
-								-- Generate pattern.
-							system.separate_patterns.put_tuple_access (Current)
-							buf.put_two_character (',', ' ')
-						end
-						s.print_register
-						buf.put_character (')')
-					end
-				end
-				buf.put_character (';')
-			end
+			buf := buffer
+			buf.put_character ('-')
+			buf.put_integer (position)
+		end
+
+	generate_finalized_separate_call_args (a_target: REGISTRABLE; a_has_result: BOOLEAN)
+			-- <Precursor>
+		local
+			buf: like buffer
+		do
+			buf := buffer
+
+				-- Generate the feature name.
+			buf.put_string ({C_CONST}.null)
+
+				-- Generate the pattern.
+			buf.put_two_character (',', ' ')
+			system.separate_patterns.put_tuple_access (Current)
+
+				-- Generate the offset.
+			buf.put_two_character (',', ' ')
+			buf.put_integer (position)
 		end
 
 note

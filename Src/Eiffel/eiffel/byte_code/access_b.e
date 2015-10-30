@@ -376,12 +376,95 @@ feature -- C generation
 
 feature {ACCESS_B} -- C code generation: separate call
 
-	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
-			-- Generate a call on target register `t' using register `s' to pass arguments
-			-- and storing result (if any) in `r'.
+	generate_separate_call (a_result: detachable REGISTRABLE; a_target: REGISTRABLE)
+			-- Generate a separate call on target register `a_target' and store result (if any) in `r'.
+		require
+			target_attached: attached a_target
+		local
+			buf: like buffer
 		do
-			buffer.put_new_line
-			buffer.put_string ("/* Separate call is not implemented for " + generating_type + " */")
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("RTS_CALL (")
+			if context.workbench_mode then
+
+					-- Generate the routine ID.
+				generate_workbench_separate_call_args
+
+					-- Generate the result SK_* value.
+				buf.put_two_character (',', ' ')
+				if attached a_result then
+					a_result.c_type.generate_sk_value (buf)
+				else
+					buf.put_string ("SK_VOID")
+				end
+			else
+					-- Generate feature name, pattern and offset.
+				generate_finalized_separate_call_args (a_target, attached a_result)
+
+					-- Generate the result pointer.
+				buf.put_two_character (',', ' ')
+				if attached a_result then
+					buf.put_two_character ('&', '(')
+					a_result.print_register
+					buf.put_character (')')
+				else
+					buf.put_string ({C_CONST}.null)
+				end
+			end
+
+			buf.put_two_character (')', ';')
+
+			if attached a_result then
+				if context.workbench_mode then
+					generate_workbench_separate_call_get_result (a_result)
+				else
+					generate_finalized_separate_call_get_result (a_result)
+				end
+			end
+		end
+
+	generate_workbench_separate_call_args
+			-- Generate the arguments for a separate call in workbench mode.
+		require
+			workbench: context.workbench_mode
+		do
+		end
+
+	generate_finalized_separate_call_args (a_target: REGISTRABLE; a_has_result: BOOLEAN)
+			-- Generate the arguments for a separate call on target register `a_target' in finalized mode.
+			-- The call should generate in this order: feature name, feature pattern, offset.
+			-- Some of these arguments may receive default values.
+		require
+			finalized: context.final_mode
+			has_target: attached a_target
+		do
+		end
+
+	generate_workbench_separate_call_get_result (a_result: REGISTRABLE)
+			-- Generate code to get the result from the macro-defined l_scoop_result register into `a_result'.
+		require
+			workbench: context.workbench_mode
+			not_void: attached a_result
+		local
+			buf: like buffer
+		do
+			buf := buffer
+			buf.put_new_line
+			a_result.print_register
+			buf.put_three_character (' ', '=', ' ')
+			buf.put_string ("l_scoop_result")
+			buf.put_character ('.')
+			c_type.generate_typed_field (buf)
+			buf.put_character (';')
+		end
+
+	generate_finalized_separate_call_get_result (a_result: REGISTRABLE)
+			-- Generate code to get the result from a SCOOP specific register (if any) into `a_result'.
+		require
+			finalized: context.final_mode
+			a_result_not_void: attached a_result
+		do
 		end
 
 feature -- C generation
@@ -403,13 +486,12 @@ feature -- C generation
 			end
 		end
 
-	generate_call (s: detachable REGISTER; is_exactly_separate: BOOLEAN; r: detachable REGISTRABLE; t: REGISTRABLE)
-			-- Generate a call on target register `t' using register `s' to pass arguments
-			-- if the call may be separate (it cannot be non-separate if `is_exactly_separate' is 'True')
-			-- and storing result (if any) in `r'.
+	generate_call (is_separate: BOOLEAN; is_exactly_separate: BOOLEAN; r: detachable REGISTRABLE; t: REGISTRABLE)
+			-- Generate a call on target register `t' and store the result (if any) in `r'.
+			-- If `is_separate' is true, the call may be separate (it cannot be non-separate if `is_exactly_separate' is 'True').
 		require
 			t_attached: attached t
-			is_exactly_separate_consistent: is_exactly_separate implies attached s
+			is_exactly_separate_consistent: is_exactly_separate implies is_separate
 		local
 			buf: GENERATION_BUFFER
 			p: like parameters
@@ -417,7 +499,7 @@ feature -- C generation
 			a: PARAMETER_B
 		do
 			buf := buffer
-			if attached s then
+			if is_separate then
 					-- Generate a call on a separate target as follows:
 					--    if ((EIF_IS_DIFFERENT_PROCESSOR (Current, target)) && !(EIF_IS_PASSIVE (target))) {
 					--        ... // Prepare arguments to pass in args.
@@ -452,8 +534,6 @@ feature -- C generation
 				buf.put_integer (n)
 				buf.put_two_character (',', ' ')
 				t.print_register
-				buf.put_two_character (',', ' ')
-				s.print_register
 				buf.put_two_character (')', ';')
 				if attached p then
 						-- Register arguments to be passed to the scheduler in the allocated container.
@@ -478,14 +558,13 @@ feature -- C generation
 						a.c_type.generate_sk_value (buf)
 						buf.put_two_character (',', ' ')
 						buf.put_integer (n)
-						buf.put_two_character (',', ' ')
-						s.print_register
 						buf.put_two_character (')', ';')
 						n := n - 1
 					end
 				end
 					-- Register a call in a scheduler.
-				generate_separate_call (s, r, t)
+				generate_separate_call (r, t)
+
 				if not is_exactly_separate then
 						-- The call may be non-separate.
 					buf.exdent
@@ -522,7 +601,7 @@ feature -- C generation
 					register.print_register
 				end
 				buf.put_character (';')
-				if attached s then
+				if is_separate then
 					buf.put_new_line
 					buf.put_string ("RTS_IMPERSONATE (RTS_PID(Current));")
 						-- Close else part of a separate conditional.

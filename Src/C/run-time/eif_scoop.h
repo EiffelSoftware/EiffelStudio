@@ -68,14 +68,12 @@ typedef struct call_data {
 	int routine_id;					/* Routine to be called */
 	EIF_TYPED_VALUE *result;		/* Address of a result for queries */
 #else
-	union {
-		fnptr address;				/* Routine to be called */
-		size_t offset;				/* Offset of an attribute */
-	} feature;
+	fnptr address;					/* Routine to be called */
 	EIF_POINTER result;				/* Address of a result for queries, the result type depends on the called feature */
 	void (* pattern) (struct call_data *); /* Stub that is used to perform a call */
 #endif /* WORKBENCH */
-	EIF_NATURAL_32 count;			/* Number of arguments excluding target object */
+	EIF_NATURAL_16 count;			/* Number of arguments excluding target object */
+	EIF_INTEGER_16 offset;			/* Offset of an attribute */
 	EIF_BOOLEAN is_synchronous;		/* Indicator of a synchronous call */
 	EIF_TYPED_VALUE argument [1];	/* Arguments excluding target object */
 } call_data;

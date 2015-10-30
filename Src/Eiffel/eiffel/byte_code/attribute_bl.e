@@ -9,9 +9,18 @@ inherit
 	ATTRIBUTE_B
 		redefine
 			free_register,
-			basic_register, generate_access_on_type, generate_separate_call,
-			is_polymorphic, generate_on, generate_access,
-			analyze_on, analyze, set_parent, parent, set_register, register
+			basic_register,
+			generate_access_on_type,
+			is_polymorphic,
+			generate_on,
+			generate_access,
+			analyze_on,
+			analyze,
+			set_parent,
+			parent,
+			set_register,
+			register,
+			generate_finalized_separate_call_args
 		end
 
 	SHARED_TABLE
@@ -221,7 +230,7 @@ end
 
 feature {NONE} -- Separate call
 
-	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_finalized_separate_call_args (a_target: REGISTRABLE; a_has_result: BOOLEAN)
 			-- <Precursor>
 		local
 			buf: GENERATION_BUFFER
@@ -230,9 +239,17 @@ feature {NONE} -- Separate call
 			name: STRING
 		do
 			buf := buffer
-			buf.put_new_line
-			buf.put_string ({C_CONST}.rts_ca)
-			buf.put_two_character (' ', '(')
+
+				-- Generate the feature name.
+			buf.put_string ({C_CONST}.null)
+
+				-- Generate the feature pattern.
+			buf.put_two_character (',', ' ')
+			system.separate_patterns.put (Current)
+
+				-- Generate the offset.
+			buf.put_two_character (',', ' ')
+
 			target_type := context_type
 			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
 			if array_index >= 0 then
@@ -245,7 +262,7 @@ feature {NONE} -- Separate call
 				buf.put_character ('[')
 				buf.put_string ({C_CONST}.dtype);
 				buf.put_character ('(')
-				t.print_register
+				a_target.print_register
 				buf.put_character (')')
 				buf.put_character ('-')
 				buf.put_integer (array_index)
@@ -265,15 +282,6 @@ feature {NONE} -- Separate call
 					attr_table.generate_attribute_offset (buf, target_type, context.context_class_type)
 				end
 			end
-			buf.put_two_character (',', ' ')
-			system.separate_patterns.put (Current)
-			buf.put_two_character (',', ' ')
-			t.print_register
-			buf.put_two_character (',', ' ')
-			s.print_register
-			buf.put_two_character (',', ' ')
-			r.print_register
-			buf.put_two_character (')', ';')
 		end
 
 note

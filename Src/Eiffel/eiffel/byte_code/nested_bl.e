@@ -220,7 +220,6 @@ feature
 					-- We are not the last call on the chain.
 				message.unanalyze
 			end
-			separate_register := Void
 		end
 
 	analyze
@@ -263,9 +262,6 @@ feature
 				target.analyze
 			end
 			if system.is_scoop and then real_type (target.type).is_separate then
-					-- Allocate a register for a container that stores arguments
-					-- to be passed to the scheduler.
-				create separate_register.make (pointer_c_type)
 					-- Mark current because separate calls use Current to compute client processor ID.
 				context.mark_current_used
 					-- Inform the context that there is a separate call.
@@ -305,10 +301,6 @@ feature
 					-- We are not the last call on the chain.
 				message.analyze
 			end
-			if attached separate_register as r then
-					-- The register is not used right after the call.
-				separate_register.free_register
-			end
 		end
 
 	generate
@@ -340,6 +332,7 @@ feature
 	generate_call (reg: REGISTRABLE)
 			-- Generate a call on entity held in `reg'
 		local
+			l_type: TYPE_A
 			message_target: ACCESS_B
 		do
 				-- Message_target is the target of the message (if message is a nested_bl) and message otherwise.
@@ -350,7 +343,8 @@ feature
 					-- If register is No_register, then the call will be
 					-- generated directly by a call to `print_register'.
 					-- Otherwise, we have to generate it now.
-				message_target.generate_call (separate_register, False, register, reg)
+				l_type := real_type (target.type)
+				message_target.generate_call (system.is_scoop and then l_type.is_separate, False, register, reg)
 			end
 		end
 
@@ -358,11 +352,6 @@ feature
 			-- The expression has at least one call
 
 	allocates_memory: BOOLEAN = True;
-
-feature {NONE} -- Separate feature call
-
-	separate_register: REGISTER;
-			-- Register to store data to be passed to the scheduler
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software"

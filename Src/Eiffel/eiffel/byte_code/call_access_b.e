@@ -14,7 +14,9 @@ inherit
 			enlarged,
 			enlarged_on,
 			generate_parameters,
-			generate_separate_call
+			generate_finalized_separate_call_args,
+			generate_workbench_separate_call_args,
+			generate_workbench_separate_call_get_result
 		end
 
 	SHARED_NAMES_HEAP
@@ -226,7 +228,7 @@ feature -- Byte code generation
 			reg_attached: attached reg
 			typ_attached: attached typ
 		do
-			generate_call_macro (routine_macro, reg, typ, Void, Void)
+			generate_call_macro (routine_macro, reg, typ)
 		end
 
 	generate_workbench_end (result_register: REGISTER)
@@ -410,10 +412,9 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_call_macro (m: like routine_macro; t: REGISTRABLE; c: CL_TYPE_A; s, r: detachable REGISTER)
+	generate_call_macro (m: like routine_macro; t: REGISTRABLE; c: CL_TYPE_A)
 			-- Generate a call macro identified by `m' to a feature
-			-- assuming that `t' contains a target of a call of type `c',
-			-- `s' contains arguments (if requires), `r' contains a result (if required).
+			-- assuming that `t' contains a target of a call of type `c'.
 		require
 			m_attached: attached m
 			t_attached: attached t
@@ -477,16 +478,6 @@ feature {NONE} -- C code generation
 				t.print_register
 				buf.put_character (')')
 			end
-			if attached s then
-					-- Add arguments of a call.
-				buf.put_two_character (',', ' ')
-				s.print_register
-			end
-			if attached r then
-					-- Add result of call.
-				buf.put_two_character (',', ' ')
-				context.print_argument_register (r, buf)
-			end
 			buf.put_character (')')
 		end
 
@@ -501,49 +492,13 @@ feature {NONE} -- C code generation
 
 feature {NONE} -- Separate call
 
-	separate_function_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
-			-- Name of a macro to make a call to a function depending on the kind of a call.
-			-- See `routine_macro' for details.
-		once
-				-- There are no unqualified separate calls as well as creation function calls.
-			Result := ["ERROR", {C_CONST}.rts_cf, "ERROR"]
-		end
-
-	separate_procedure_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]
-			-- Name of a macro to make a call to a procedure depending on the kind of a call.
-			-- See `routine_macro' for details.
-		once
-				-- There are no unqualified separate calls.
-			Result := ["ERROR", {C_CONST}.rts_cp, {C_CONST}.rts_cc]
-		end
-
-	generate_separate_call_for_workbench (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE; result_register: REGISTER)
+	generate_workbench_separate_call_args
 			-- <Precursor>
-		local
-			buf: like buffer
 		do
-			check attached {CL_TYPE_A} context_type as c then
-				buf := buffer
-				buf.put_new_line
-				if attached r then
-						-- Call to a function.
-					generate_call_macro (separate_function_macro, t, c, s, result_register)
-					buf.put_character (';')
-					buf.put_new_line
-					r.print_register
-					buf.put_four_character (' ', '=', ' ', '(')
-					context.print_argument_register (result_register, buf)
-					generate_return_value_conversion (result_register)
-					buf.put_character (')')
-				else
-						-- Call to a procedure.
-					generate_call_macro (separate_procedure_macro, t, c, s, Void)
-				end
-				buf.put_character (';')
-			end
+			buffer.put_integer (routine_id)
 		end
 
-	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_finalized_separate_call_args (a_target: REGISTRABLE; a_has_result: BOOLEAN)
 			-- <Precursor>
 		local
 			buf: GENERATION_BUFFER
@@ -553,16 +508,9 @@ feature {NONE} -- Separate call
 			name: STRING
 			is_optimized_result: BOOLEAN
 		do
+				-- Generate the feature name.
+
 			buf := buffer
-			buf.put_new_line
-			if attached r then
-				buf.put_string ({C_CONST}.rts_cf)
-			elseif call_kind = call_kind_creation then
-				buf.put_string ({C_CONST}.rts_cc)
-			else
-				buf.put_string ({C_CONST}.rts_cp)
-			end
-			buf.put_two_character (' ', '(')
 			target_type := context_type
 			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
 			if array_index = -2 then
@@ -576,7 +524,7 @@ feature {NONE} -- Separate call
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
 					-- then we would fail to detect that.
 				is_optimized_result :=
-					attached r and then
+					a_has_result and then
 					system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then
 					real_type (type).is_basic and then not has_one_signature
 					-- Generate following dispatch:
@@ -586,7 +534,7 @@ feature {NONE} -- Separate call
 				buf.put_character ('[')
 				buf.put_string ({C_CONST}.dtype);
 				buf.put_character ('(')
-				t.print_register
+				a_target.print_register
 				buf.put_two_character (')', '-')
 				buf.put_integer (array_index)
 				buf.put_character (']')
@@ -615,22 +563,41 @@ feature {NONE} -- Separate call
 					buf.put_string ("NULL")
 				end
 			end
+
+				-- Generate the feature pattern.
 			buf.put_two_character (',', ' ')
 			if is_optimized_result then
 				system.separate_patterns.put_optimized (Current)
 			else
 				system.separate_patterns.put (Current)
 			end
-			buf.put_two_character (',', ' ')
-			t.print_register
-			buf.put_two_character (',', ' ')
-			s.print_register
-			if attached r then
-				buf.put_two_character (',', ' ')
-				r.print_register
-			end
-			buf.put_two_character (')', ';')
+
+				-- Generate the offset.
+			buf.put_three_character (',', ' ', '0')
 		end
+
+	generate_workbench_separate_call_get_result (a_result: REGISTRABLE)
+			-- <Precursor>
+		local
+			buf: like buffer
+			l_c_type: like c_type
+		do
+			check return_type_not_void: not c_type.is_void end
+
+			buf := buffer
+			l_c_type := c_type
+
+				-- Generate return value conversion if necessary.
+			if not is_attribute and l_c_type.is_reference then
+				buf.put_new_line
+				buf.put_string ("if ((l_scoop_result.type & SK_HEAD) != SK_REF) l_scoop_result.")
+				l_c_type.generate_typed_field (buf)
+				buf.put_string (" = RTBU(l_scoop_result);")
+			end
+
+			Precursor (a_result)
+		end
+
 
 feature {NONE} -- Debug
 

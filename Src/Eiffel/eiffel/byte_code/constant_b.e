@@ -21,7 +21,6 @@ inherit
 			generate,
 			generate_on,
 			generate_parameters,
-			generate_separate_call,
 			has_gcable_variable,
 			is_constant,
 			is_constant_expression,
@@ -31,7 +30,11 @@ inherit
 			propagate,
 			set_multi_constraint_static,
 			set_parent,
-			unanalyze
+			unanalyze,
+			generate_workbench_separate_call_args,
+			generate_finalized_separate_call_args,
+			generate_workbench_separate_call_get_result,
+			generate_finalized_separate_call_get_result
 		end
 
 create
@@ -254,33 +257,38 @@ feature -- Comparison
 
 feature {NONE} -- Separate call
 
-	generate_separate_call (s: REGISTER; r: detachable REGISTRABLE; t: REGISTRABLE)
+	generate_workbench_separate_call_args
+			-- <Precursor>
+		do
+			access.generate_workbench_separate_call_args
+		end
+
+	generate_finalized_separate_call_args (a_target: REGISTRABLE; a_has_result: BOOLEAN)
+			-- <Precursor>
+		do
+				-- We don't need anything special for constants.
+			buffer.put_string (once "NULL, eif_call_const, 0")
+		end
+
+
+	generate_workbench_separate_call_get_result (a_result: REGISTRABLE)
+			-- <Precursor>
+		do
+			access.generate_workbench_separate_call_get_result (a_result)
+		end
+
+
+	generate_finalized_separate_call_get_result (a_result: REGISTRABLE)
 			-- <Precursor>
 		local
-			b: GENERATION_BUFFER
+			buf: like buffer
 		do
-			if context.workbench_mode then
-				access.generate_separate_call (s, r, t)
-			else
-				b := buffer
-					-- Generate code
-					--   RTS_CS (t, s);
-					--   r = value;
-				b.put_new_line
-				b.put_string ({C_CONST}.rts_cs)
-				b.put_two_character (' ', '(')
-				t.print_register
-				b.put_two_character (',', ' ')
-				s.print_register
-				b.put_two_character (')', ';')
-				check attached r then
-					b.put_new_line
-					r.print_register
-					b.put_three_character (' ', '=', ' ')
-					print_register
-					b.put_character (';')
-				end
-			end
+			buf := buffer
+			buf.put_new_line
+			a_result.print_register
+			buf.put_three_character (' ', '=', ' ')
+			print_register
+			buf.put_character (';')
 		end
 
 note

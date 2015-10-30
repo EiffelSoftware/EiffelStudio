@@ -1,4 +1,4 @@
-PROCEDURE [B, TUPLE]
+PROCEDURE [TUPLE]
 base
 
 wel

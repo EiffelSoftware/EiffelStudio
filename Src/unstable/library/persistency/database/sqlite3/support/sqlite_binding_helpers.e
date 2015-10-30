@@ -59,7 +59,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid_arguments (a_args: ITERABLE [detachable separate ANY]): BOOLEAN
+	is_valid_arguments (a_args: ITERABLE [detachable ANY]): BOOLEAN
 			-- Determines if an argument tuple is valid.
 			--
 			-- `a_args': A tuple of arguments to validate.

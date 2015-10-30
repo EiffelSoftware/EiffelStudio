@@ -172,7 +172,7 @@ feature -- Access: Cursor
 			result_attached: attached Result
 		end
 
-	execute_new_with_arguments (a_arguments: ITERABLE [detachable separate ANY]): SQLITE_STATEMENT_ITERATION_CURSOR
+	execute_new_with_arguments (a_arguments: ITERABLE [detachable ANY]): SQLITE_STATEMENT_ITERATION_CURSOR
 			-- Executes the SQLite statement with bound set of arguments.
 			--
 			-- `a_arguments': The bound arguments to call the SQLite query statement with.

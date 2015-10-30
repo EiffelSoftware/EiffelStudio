@@ -130,12 +130,7 @@ feature -- Analyze
 			else
 				create {REGISTER} register.make (l_type.c_type)
 			end
-			if system.is_scoop and then real_type (type).is_separate then
-					-- Allocate a register for a container that stores arguments
-					-- to be passed to the scheduler.
-				create separate_register.make (pointer_c_type)
-					-- The register is not used right after the call.
-				separate_register.free_register
+			if system.is_scoop and then l_type.is_separate then
 					-- Mark current because separate calls use Current to compute client processor ID.
 				context.mark_current_used
 					-- Inform the context that there is a separate call.
@@ -156,7 +151,6 @@ feature -- Analyze
 					l_call.unanalyze
 				end
 			end
-			separate_register := Void
 		end
 
 feature -- Status report
@@ -331,11 +325,14 @@ feature -- Generation
 			parameter: PARAMETER_BL
 			l_is_make_filled: BOOLEAN
 			l_generate_call: BOOLEAN
+			l_is_separate: BOOLEAN
 		do
 			buf := buffer
 			generate_line_info
 
 			t := real_type (type)
+			l_is_separate := system.is_scoop and then t.is_separate
+
 			if attached {BASIC_A} t as l_basic_type then
 				buf.put_new_line
 				register.print_register
@@ -380,7 +377,7 @@ feature -- Generation
 				l_generate_call := True
 			end
 
-			if system.is_scoop and then t.is_separate then
+			if l_is_separate then
 					-- Attach new object to a new region.
 				buf.put_new_line
 				if is_active then
@@ -398,7 +395,7 @@ feature -- Generation
 					c.generate_parameters (register)
 				end
 					-- Call a creation procedure
-				c.generate_call (separate_register, attached separate_register, Void, register)
+				c.generate_call (l_is_separate, l_is_separate, Void, register)
 				c.set_parent (Void)
 				generate_frozen_debugger_hook_nested
 			end
@@ -425,11 +422,6 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 				(call /= Void and then call.parameters /= Void and then
 				((not is_special_make_filled and call.parameters.count = 1) or (is_special_make_filled and call.parameters.count = 2)))
 		end
-
-feature {NONE} -- Separate feature call
-
-	separate_register: REGISTER;
-			-- Register to store data to be passed to the scheduler
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software"

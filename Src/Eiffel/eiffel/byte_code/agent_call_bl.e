@@ -21,7 +21,6 @@ inherit
 			generate_access_on_type,
 			generate_end,
 			generate_parameters_list,
-			generate_separate_call,
 			basic_register,
 			is_feature_call,
 			analyze,

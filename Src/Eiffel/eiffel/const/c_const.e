@@ -158,12 +158,6 @@ feature -- Macros
 	rtre: STRING = "RTRE"
 	rtrv: STRING = "RTRV"
 
-	rts_ca: STRING = "RTS_CA"
-	rts_cf: STRING = "RTS_CF"
-	rts_cc: STRING = "RTS_CC"
-	rts_cp: STRING = "RTS_CP"
-	rts_cs: STRING = "RTS_CS"
-
 feature -- C constants
 
 	opt_all: STRING = "OPT_ALL"

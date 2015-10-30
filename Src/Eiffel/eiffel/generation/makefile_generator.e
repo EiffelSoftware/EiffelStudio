@@ -25,6 +25,8 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
+	SHARED_CONFIGURE_RESOURCES
+
 	COMPILER_EXPORTER
 
 feature -- Attributes
@@ -55,11 +57,17 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER = 33
+	Packet_number: INTEGER
 			-- Maximum number of files in a single linking phase in Workbench mode.
+		once
+			Result := configure_resources.get_integer ({SHARED_CONFIGURE_RESOURCES}.r_workbench_c_basket_limit, 33)
+		end
 
-	Final_packet_number: INTEGER = 50
+	Final_packet_number: INTEGER
 			-- Maximum number of files in a single linking phase in Final mode.
+		once
+			Result := configure_resources.get_integer ({SHARED_CONFIGURE_RESOURCES}.r_finalized_c_basket_limit, 50)
+		end
 
 	System_packet_number: INTEGER = 20
 			-- Maximum number of files in a single linking phase
@@ -1378,7 +1386,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

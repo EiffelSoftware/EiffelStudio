@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Query
 
-	new_binding_argument_array (a_args: ITERABLE [detachable separate ANY]): ARRAY [SQLITE_BIND_ARG [ANY]]
+	new_binding_argument_array (a_args: ITERABLE [detachable ANY]): ARRAY [SQLITE_BIND_ARG [ANY]]
 			-- Creates a new argument array from a tuple of values.
 			--
 			-- `a_args': Arguments to create a new array for.

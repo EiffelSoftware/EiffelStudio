@@ -35,7 +35,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_arguments: ITERABLE [detachable separate ANY])
+	frozen execute_with_arguments (a_arguments: ITERABLE [detachable ANY])
 			-- Executes the SQLite modification statement with bound set of arguments.
 			--
 			-- `a_arguments': The bound arguments to call the SQLite query statement with.

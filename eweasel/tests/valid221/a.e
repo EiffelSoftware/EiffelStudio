@@ -5,16 +5,22 @@ feature
 
 	f (other: G)
 		local
-			b: FUNCTION [ANY, TUPLE [G], BOOLEAN]
+			q: FUNCTION [ANY, TUPLE [G], BOOLEAN]
 		do
-			b := pt.negation (agent g)
+			q := b.negation (agent g)
+			q := c.negation (agent g)
 		end
 
 	g (other: G): BOOLEAN
 		do
 		end
 
-	pt: B [G]
+	b: B [G]
+		do
+			create Result
+		end
+
+	c: C [G]
 		do
 			create Result
 		end

@@ -5,9 +5,9 @@ indexing
 	revision: "$Revision$"
 
 class
-	PREDICATE [BASE_TYPE, OPEN_ARGS -> TUPLE create default_create end]
+	PREDICATE [OPEN_ARGS -> TUPLE create default_create end]
 
 inherit
-	FUNCTION [BASE_TYPE, OPEN_ARGS, BOOLEAN]
+	FUNCTION [ANY, OPEN_ARGS, BOOLEAN]
 
 end

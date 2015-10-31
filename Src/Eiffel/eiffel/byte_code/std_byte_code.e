@@ -1175,11 +1175,10 @@ end
 	generate_precondition
 			-- Generate precondition check if needed
 		local
-			workbench_mode	: BOOLEAN
-			have_assert		: BOOLEAN
-			inh_assert		: INHERITED_ASSERTION
-			buf				: GENERATION_BUFFER
-			i: like arguments.count
+			workbench_mode: BOOLEAN
+			have_assert: BOOLEAN
+			inh_assert: INHERITED_ASSERTION
+			buf: GENERATION_BUFFER
 			has_wait_condition: BOOLEAN
 		do
 			buf := buffer

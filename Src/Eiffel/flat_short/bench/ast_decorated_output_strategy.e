@@ -5045,7 +5045,10 @@ feature {NONE} -- Implementation: helpers
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 			if not has_error_internal then
-				l_query_type := l_feat.type.actual_type
+				l_query_type := l_feat.type
+				if attached l_query_type then
+					l_query_type := l_query_type.actual_type
+				end
 				if not l_feat.has_return_value then
 						-- generics are: open_types
 					create l_generics.make (1)

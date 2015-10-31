@@ -105,7 +105,7 @@ feature {NONE} -- Rule checking
 					l_previous := l_current
 					l_current := l_instr.item
 					if attached {ASSIGN_AS} l_previous as l_assign and then attached {ACCESS_ID_AS} l_assign.target as l_aid then
-						if l_aid.is_local then
+						if not attached {REVERSE_AS} l_assign  and then l_aid.is_local then
 							analyze_reads (l_aid.feature_name, l_current)
 							if is_read and then
 									instruction_length (l_current) - l_aid.access_name_32.count + expression_length (l_assign) <= max_line_length.value then

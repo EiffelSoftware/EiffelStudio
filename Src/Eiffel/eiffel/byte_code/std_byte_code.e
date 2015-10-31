@@ -320,9 +320,10 @@ feature -- Analyzis
 					if l_context.workbench_mode or system.check_for_catcall_at_runtime then
 						l_name_id := l_context.current_feature.feature_name_id
 						l_any_class_id := system.any_id
-						l_is_catcall_checking_enabled := (l_context.current_feature.written_in /= l_any_class_id or else
-							(l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
-							l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id))
+						l_is_catcall_checking_enabled :=
+							l_context.current_feature.written_in /= l_any_class_id or
+							l_name_id /= {PREDEFINED_NAMES}.equal_name_id or
+							l_name_id /= {PREDEFINED_NAMES}.standard_equal_name_id
 					end
 				until
 					i > nb
@@ -1269,7 +1270,7 @@ end
 			workbench_mode := context.workbench_mode
 			if workbench_mode or else context.system.keep_assertions then
 				inh_assert := Context.inherited_assertion
-				have_assert := (postcondition /= Void or else inh_assert.has_postcondition)
+				have_assert := postcondition /= Void or else inh_assert.has_postcondition
 				if have_assert then
 					buf := buffer
 					context.set_assertion_type (In_postcondition)
@@ -1374,7 +1375,6 @@ end
 	generate_rescue
 			-- Generate the rescue clause
 		local
-			nb_refs: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			if rescue_clause = Void then
@@ -1389,7 +1389,6 @@ end
 					buf.put_string ("RTLXE;")
 				end
 					-- Resynchronize local variables stack
-				nb_refs := context.ref_var_used
 				buf.put_new_line
 				buf.put_string ("RTXSC;")
 				context.generate_request_chain_restore

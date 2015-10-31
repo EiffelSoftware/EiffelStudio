@@ -269,7 +269,6 @@ feature -- Predefined types
 			predicate_compiled: System.predicate_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
 		local
-			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because `system.predicate_id' can change.
@@ -285,7 +284,6 @@ feature -- Predefined types
 			procedure_compiled: System.procedure_class.is_compiled
 			tuple_compiled: System.tuple_class.is_compiled
 		local
-			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
 		do
 				-- Not once because `system.procedure_id' can change.

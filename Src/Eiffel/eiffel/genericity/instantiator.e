@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Find all types in system. It includes reference class types and
 		expanded class types, as well as all generic derivations of a given
@@ -50,23 +50,18 @@ feature -- Processing
 			a_type_not_void: a_type /= Void
 			a_class_not_void: a_class /= Void
 		local
-			type_i: CL_TYPE_A;
-			i, nb: INTEGER;
-			generics: ARRAYED_LIST [TYPE_A];
-			insertion_list: FILTER_LIST;
+			i, nb: INTEGER
+			generics: ARRAYED_LIST [TYPE_A]
+			insertion_list: FILTER_LIST
 		do
-				-- Evaluation of a type class
-			type_i ?= a_type
-
 			if system.il_generation and then a_type.is_valid then
 					-- If `a_type' has an anchor, we need to add them to `{CLASS_C}.type_set'.
 					-- Currently this is only needed in .NET code generation.
 				a_type.dispatch_anchors (a_class)
 			end
 
-				-- We do not record various type declaration of BIT x
-				-- as we only need the one from BIT_REF.
-			if type_i /= Void then
+				-- Evaluation of a type class.
+			if attached {CL_TYPE_A} a_type as type_i then
 					-- Check if it is a data or a filter
 				if type_i.is_loose then
 						-- It is a filter: the insertion list is the filter
@@ -74,20 +69,20 @@ feature -- Processing
 					insertion_list := a_class.filters
 					check
 						class_has_generics: type_i.has_formal_generic implies a_class.generics /= Void
-					end;
+					end
 				else
 						-- it is a data: the insertion list is the Current one
 					insertion_list := Current
 				end
 
 				debug
-					io.error.put_string ("Dispatch : ");
-					io.error.put_string (a_class.name);
-					io.error.put_integer (a_class.class_id);
-					io.error.put_new_line;
-					io.error.put_string (a_type.dump);
-					io.error.put_new_line;
-				end;
+					io.error.put_string ("Dispatch : ")
+					io.error.put_string (a_class.name)
+					io.error.put_integer (a_class.class_id)
+					io.error.put_new_line
+					io.error.put_string (a_type.dump)
+					io.error.put_new_line
+				end
 
 					-- Insert item in the insertion list if not present
 				insertion_list.put (type_i)
@@ -111,7 +106,7 @@ feature -- Processing
 	process
 			-- Process the list in order to find new class types
 		local
-			class_array: ARRAY [CLASS_C];
+			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 		do
 				-- Remove the obsolete class types
@@ -135,11 +130,11 @@ feature -- Processing
 			until
 				after
 			loop
-				item_for_iteration.base_class.update_types (item_for_iteration);
+				item_for_iteration.base_class.update_types (item_for_iteration)
 				forth
-			end;
-			derivations.wipe_out;
-		end;
+			end
+			derivations.wipe_out
+		end
 
 feature -- Removal
 
@@ -154,7 +149,7 @@ feature -- Removal
 	clean_all
 			-- Clean up Current and all classes from obsolete type.
 		local
-			class_array: ARRAY [CLASS_C];
+			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 		do
 				-- Remove obsolete class types in each class' filters.
@@ -221,8 +216,8 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES} -- Predefined types
 			-- Default array type.
 			-- Not a once since `array_id' might change.
 		require
-			any_compiled: System.any_class.is_compiled;
-			array_compiled: System.array_class.is_compiled;
+			any_compiled: System.any_class.is_compiled
+			array_compiled: System.array_class.is_compiled
 		local
 			any_type: CL_TYPE_A
 			generics: ARRAYED_LIST [TYPE_A]
@@ -233,7 +228,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES} -- Predefined types
 			generics.extend (any_type)
 
 			create Result.make (System.array_id, generics)
-		end;
+		end
 
 feature -- Predefined types
 
@@ -325,5 +320,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INSTANTIATOR
+end
 

@@ -997,6 +997,17 @@ feature -- Element Change
 			status_code_set: status_code = a_status
 		end
 
+feature -- Cache managment
+
+	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL])
+			-- Clear caches identified by `a_cache_id_list',
+			-- or clear all caches if `a_cache_id_list' is Void.	
+		do
+			if has_permissions (<<"clear blocks cache", "admin core caches">>) then
+				clear_block_caches (a_cache_id_list)
+			end
+		end
+
 feature -- Generation
 
 	prepare (page: CMS_HTML_PAGE)

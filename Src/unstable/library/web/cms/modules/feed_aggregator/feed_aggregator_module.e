@@ -46,8 +46,12 @@ feature -- Access
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("manage feed aggregator")
+			Result.force (permission__manage_feed_aggregator)
+			Result.force (permission__clear_feed_cache)
 		end
+
+	permission__manage_feed_aggregator: STRING = "manage feed aggregator"
+	permission__clear_feed_cache: STRING = "clear feed cache"
 
 feature {CMS_API} -- Module Initialization			
 
@@ -194,12 +198,14 @@ feature -- Hook
 			p: PATH
 			dir: DIRECTORY
 		do
-			if a_cache_id_list = Void then
-					-- Clear all cache.
-				p := a_response.api.files_location.extended (".cache").extended (name)
-				create dir.make_with_path (p)
-				if dir.exists then
-					dir.recursive_delete
+			if a_response.has_permissions (<<permission__clear_feed_cache, permission__manage_feed_aggregator>>) then
+				if a_cache_id_list = Void then
+						-- Clear all cache.
+					p := a_response.api.files_location.extended (".cache").extended (name)
+					create dir.make_with_path (p)
+					if dir.exists then
+						dir.recursive_delete
+					end
 				end
 			end
 		end
@@ -341,7 +347,7 @@ feature -- Hook
 			-- for related response `a_response'.
 		do
 			a_menu_system.navigation_menu.extend (create {CMS_LOCAL_LINK}.make ("Feeds", "feed_aggregation/"))
-			if a_response.has_permission ("manage feed aggregator") then
+			if a_response.has_permission (permission__manage_feed_aggregator) then
 				a_menu_system.management_menu.extend (create {CMS_LOCAL_LINK}.make ("Feeds (admin)", "admin/feed_aggregator/"))
 			end
 		end

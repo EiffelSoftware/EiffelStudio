@@ -395,7 +395,7 @@ feature -- Generation
 					c.generate_parameters (register)
 				end
 					-- Call a creation procedure
-				c.generate_call (l_is_separate, l_is_separate, Void, register)
+				c.generate_call (l_is_separate, l_is_separate and is_active, Void, register)
 				c.set_parent (Void)
 				generate_frozen_debugger_hook_nested
 			end

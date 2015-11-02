@@ -1308,6 +1308,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
 
+/* TODO: Remove the first argument here. */
 #define RTS_OU(c,o) ((o) && eif_is_uncontrolled (l_scoop_processor_id, l_scoop_region_id, RTS_PID (o)))
 
 #define EIF_SET_ACTIVE(o) ; /*  "SCOOP/Qs: set_active not implemented" o; */
@@ -1400,6 +1401,19 @@ RT_LNK void eif_exit_eiffel_code(void);
 	if (r) l_scoop_call_data->is_synchronous = EIF_TRUE; \
 	eif_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
 #endif
+
+/*
+ * Impersonation macros:
+ * RTS_CI (is_query, target) - Can a separate call to 'target' be impersonated?
+ * RTS_BI (target) - Impersonate the region of 'target'.
+ * RTS_EI - Switch back to the current region.
+ * TODO: Implement the impersonation macros.
+ */
+#define RTS_CI(is_query, target) l_scoop_region_id == RTS_PID (target)
+#define RTS_BI(target) (void)0
+#define RTS_EI (void)0
+
+
 
 /*
  * Separate call arguments:

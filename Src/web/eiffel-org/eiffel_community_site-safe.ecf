@@ -34,7 +34,7 @@
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_embedded_video" location="modules\embedded_video\video-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_google_custom_search" location="modules\custom_search\custom_search.ecf" readonly="false" use_application_options="true"/>
+		<library name="module_google_custom_search" location="modules\google_search\google_search-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wdocs" location="modules\wdocs\wdocs-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_wish_list" location="modules\wish_list\cms_wish_list-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

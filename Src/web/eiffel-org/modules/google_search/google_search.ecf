@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="google_search" uuid="054E9C5C-ACCB-4A4D-B825-6C574AEC30A9" library_target="google_search">
+	<target name="google_search">
+		<root all_classes="true"/>
+		<option is_attached_by_default="false" void_safety="none">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cms" location="..\..\cms.ecf" readonly="false"/>
+		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>
+		<library name="cms_config" location="..\..\library\configuration\config.ecf"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
+		<library name="google_cse" location="..\..\library\gcse\gcse.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
+		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

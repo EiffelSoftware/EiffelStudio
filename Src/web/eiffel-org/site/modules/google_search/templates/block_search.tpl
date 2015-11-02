@@ -4,7 +4,7 @@
   </header>
   
   <!-- list of results -->
-  <ol>
+  <ol start="{$result.current_page.start_index/}">
   
     <!-- Item result -->
     {foreach from="$result.items" item="item"}
@@ -18,7 +18,7 @@
           </h3>
         </header>
         <blockquote cite="{$item.link/}">
-          <p>{htmlentities}{$item.snippet/}{/htmlentities}</p>
+          <p>{$item.html_snippet/}</p>
           <footer>
             <p><abbr title="Uniform Resource Locator">Source</abbr> <a href="{$item.link/}">{$item.display_link/}</a></p>
           </footer>

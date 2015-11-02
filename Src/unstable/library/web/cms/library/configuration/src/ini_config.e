@@ -442,7 +442,17 @@ feature {NONE} -- Implementation
 							j := k.index_of (']', i + 1)
 							if j = i + 1 then -- ends_with "[]"
 								k.keep_head (i - 1)
-								if attached {LIST [STRING_8]} items.item (k) as l_list then
+								if 
+									a_section_prefix /= Void and then
+									attached {LIST [STRING_8]} items.item (a_section_prefix + {STRING_32} "." + k) as l_list
+								then
+									lst := l_list
+								elseif 
+									attached last_section_name as l_section_prefix and then
+									attached {LIST [STRING_8]} items.item (l_section_prefix + {STRING_32} "." + k) as l_list
+								then
+									lst := l_list
+								elseif attached {LIST [STRING_8]} items.item (k) as l_list then
 									lst := l_list
 								else
 									create {ARRAYED_LIST [STRING_8]} lst.make (1)

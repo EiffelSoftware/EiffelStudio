@@ -134,12 +134,23 @@ rt_private rt_inline EIF_BOOLEAN rt_scoop_is_impersonation_allowed (struct rt_pr
 /* Fix the call_data struct for expanded types (their PID is wrongly set to the client region). */
 rt_private void fix_call_data (struct call_data* call)
 {
+	EIF_GET_CONTEXT;
+	RTS_SD;
+
 	size_t i = 0;
 	for (; i < call->count; ++i) {
 		if (call->argument [i].type == SK_REF) {
 			EIF_REFERENCE obj = call->argument [i].item.r;
 			if (obj && eif_is_expanded (HEADER(obj)->ov_flags)) {
 				RTS_PID (obj) = RTS_PID (call->target);
+			}
+			else {
+					/*Mark call as synchronous if necessary.
+					 *TODO: This is a temporary solution due to compiler changes.
+					 * Rewrite this function to make it more efficient and clear. */
+				if (obj && !RTS_OU (ignored, obj) && (RTS_PID(obj) != RTS_PID(call->target))) {
+					call->is_synchronous = EIF_TRUE;
+				}
 			}
 		}
 	}

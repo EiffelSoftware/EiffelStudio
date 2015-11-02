@@ -486,129 +486,134 @@ feature -- C generation
 			end
 		end
 
-	generate_call (is_separate: BOOLEAN; is_exactly_separate: BOOLEAN; r: detachable REGISTRABLE; t: REGISTRABLE)
-			-- Generate a call on target register `t' and store the result (if any) in `r'.
+	generate_call (is_separate: BOOLEAN; is_exactly_separate: BOOLEAN; a_result: detachable REGISTRABLE; a_target: REGISTRABLE)
+			-- Generate a call on target register `a_target' and store the result (if any) in `a_result'.
 			-- If `is_separate' is true, the call may be separate (it cannot be non-separate if `is_exactly_separate' is 'True').
 		require
-			t_attached: attached t
+			target_attached: attached a_target
 			is_exactly_separate_consistent: is_exactly_separate implies is_separate
 		local
 			buf: GENERATION_BUFFER
-			p: like parameters
-			n: like parameters.count
-			a: PARAMETER_B
+			l_parameters: like parameters
+			l_count: like parameters.count
+			l_argument: PARAMETER_B
+			is_maybe_separate: BOOLEAN
 		do
 			buf := buffer
-			if is_separate then
-					-- Generate a call on a separate target as follows:
-					--    if ((EIF_IS_DIFFERENT_PROCESSOR (Current, target)) && !(EIF_IS_PASSIVE (target))) {
-					--        ... // Prepare arguments to pass in args.
-					--        RTS_Cxy (feature_data, target, arguments, result);
-					--    } else {
-					--        ... // Make non-separate call.
-					--    }
-				if not is_exactly_separate then
-						-- The call may be non-separate, this is determined at tun-time.					
-					buf.put_new_line
-					buf.put_string ("if ((EIF_IS_DIFFERENT_PROCESSOR")
-					-- If there's a result then we use the query processor check
-					if attached r then
-						buf.put_string ("_FOR_QUERY")
-					end
+			is_maybe_separate := is_separate and not is_exactly_separate
 
-					buf.put_string (" (Current, ")
-					t.print_register
-					buf.put_string (")) && !(EIF_IS_PASSIVE (")
-					t.print_register
-					buf.put_string ("))) {")
-					buf.indent
-				end
-					-- Allocate a container to pass arguments to a scheduler.
+			if is_maybe_separate then
+					-- Generate if-else structure for an impersonated call as well as a separate call.
+					-- The construct should look like this:
+					-- if (RTS_CI (is_query, target)) {
+					-- 		RTS_BI (target);
+					--		    /* Generate regular call. */
+					--		RTS_EI;
+					-- } else {
+					--		    /* Generate separate call. */
+					-- }
 				buf.put_new_line
-				buf.put_string ("RTS_AC (")
-					-- Calculate the number of arguments to be passed.
-				p := parameters
-				if attached p then
-					n := p.count
+				buf.put_string ("if (RTS_CI (")
+
+					-- Generate a boolean indicating whether the call is a query.
+				if attached a_result then
+					buf.put_string ({C_CONST}.eif_true)
+				else
+					buf.put_string ({C_CONST}.eif_false)
 				end
-				buf.put_integer (n)
+
 				buf.put_two_character (',', ' ')
-				t.print_register
-				buf.put_two_character (')', ';')
-				if attached p then
-						-- Register arguments to be passed to the scheduler in the allocated container.
-					from
-					until
-						n <= 0
-					loop
-						buf.put_new_line
-						a := p [n]
-						if real_type (a.attachment_type).is_basic then
-								-- The argument is passed without any additional checks.
-							buf.put_string ("RTS_AA (")
-						else
-								-- The argument needs to be checked if it is controlled or not.
-								-- If the argument is controlled, the call needs to be synchronous.
-							buf.put_string ("RTS_AS (")
-						end
-						a.print_register
-						buf.put_two_character (',', ' ')
-						a.c_type.generate_typed_field (buf)
-						buf.put_two_character (',', ' ')
-						a.c_type.generate_sk_value (buf)
-						buf.put_two_character (',', ' ')
-						buf.put_integer (n)
-						buf.put_two_character (')', ';')
-						n := n - 1
-					end
-				end
-					-- Register a call in a scheduler.
-				generate_separate_call (r, t)
+				a_target.print_register
+				buf.put_four_character (')', ')', ' ', '{')
 
-				if not is_exactly_separate then
-						-- The call may be non-separate.
-					buf.exdent
-					buf.put_new_line
-					buf.put_string ("} else {")
-					buf.indent
-					buf.put_new_line
-					buf.put_string ("RTS_IMPERSONATE (RTS_PID(")
-					t.print_register
-					buf.put_string ("));")
-				end
-			end
-			if not is_exactly_separate then
-					-- The call may be non-separate.
-					-- Now if there is a result for the call and the result
-					-- has to be stored in a real register, do generate the
-					-- assignment.
+				buf.indent
 				buf.put_new_line
-				if not attached r then
+				buf.put_string ("RTS_BI (")
+				a_target.print_register
+				buf.put_two_character (')', ';')
+			end
+
+				-- Generate the regular call. This is also required for non-separate calls.
+				-- Now if there is a result for the call and the result
+				-- has to be stored in a real register, do generate the assignment.
+			if not is_exactly_separate then
+				buf.put_new_line
+				if not attached a_result then
 						-- Call to a procedure.
-					generate_on (t)
+					generate_on (a_target)
 				elseif not attached {AGENT_CALL_B} Current then
 						-- Call to a simple function.
-					r.print_register
+					a_result.print_register
 					buf.put_three_character (' ', '=', ' ')
-					generate_on (t)
+					generate_on (a_target)
 				else
 						-- Call to an agent function.
-					generate_on (t)
+					generate_on (a_target)
 					buf.put_character (';')
 					buf.put_new_line
-					r.print_register
+					a_result.print_register
 					buf.put_string (" = ")
 					register.print_register
 				end
 				buf.put_character (';')
-				if is_separate then
-					buf.put_new_line
-					buf.put_string ("RTS_IMPERSONATE (RTS_PID(Current));")
-						-- Close else part of a separate conditional.
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
+			end
+
+				-- Continue with the if-else structure for impersonated calls.
+			if is_maybe_separate then
+				buf.put_new_line
+				buf.put_string ("RTS_EI;")
+				buf.exdent
+				buf.put_new_line
+				buf.put_string ("} else {")
+				buf.indent
+			end
+
+				-- Generate a separate call. The generated code should look like this:
+				--  RTS_AC (arg_count, target, separate_type);
+				--  RTS_AA (arg, typed_field, sk_value, position); /* Repeat for all arguments. */
+				--	RTS_CALL (...);
+			if is_separate then
+				buf.put_new_line
+				buf.put_string ("RTS_AC (")
+					-- Calculate the number of arguments to be passed.
+				l_parameters := parameters
+				if attached l_parameters then
+					l_count := l_parameters.count
 				end
+				buf.put_integer (l_count)
+				buf.put_two_character (',', ' ')
+				a_target.print_register
+				buf.put_two_character (')', ';')
+
+				check valid_count: l_parameters = Void implies l_count <= 0 end
+
+					-- Register arguments to be passed to the SCOOP runtime in the allocated container.
+				from
+				until
+					l_count <= 0
+				loop
+					buf.put_new_line
+					buf.put_string ("RTS_AA (")
+					l_argument := l_parameters [l_count]
+					l_argument.print_register
+					buf.put_two_character (',', ' ')
+					l_argument.c_type.generate_typed_field (buf)
+					buf.put_two_character (',', ' ')
+					l_argument.c_type.generate_sk_value (buf)
+					buf.put_two_character (',', ' ')
+					buf.put_integer (l_count)
+					buf.put_two_character (')', ';')
+					l_count := l_count - 1
+				end
+					-- Generate the RTS_CALL line.
+				generate_separate_call (a_result, a_target)
+			end
+
+				-- Finish the if-else structure.
+			if is_maybe_separate then
+				buf.exdent
+				buf.put_new_line
+				buf.put_character ('}')
 			end
 		end
 

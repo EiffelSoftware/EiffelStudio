@@ -456,7 +456,17 @@ feature {NONE} -- Implementation
 								sk.left_adjust
 								sk.right_adjust
 								k.keep_head (i - 1)
-								if attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
+								if 
+									a_section_prefix /= Void and then
+									attached {STRING_TABLE [STRING_8]} items.item (a_section_prefix + {STRING_32} "." + k) as l_table
+								then
+									tb := l_table
+								elseif 
+									attached last_section_name as l_section_prefix and then
+									attached {STRING_TABLE [STRING_8]} items.item (l_section_prefix + {STRING_32} "." + k) as l_table
+								then
+									tb := l_table
+								elseif attached {STRING_TABLE [STRING_8]} items.item (k) as l_table then
 									tb := l_table
 								else
 									create tb.make (1)

@@ -13,7 +13,8 @@ inherit
 		redefine
 			register_hooks,
 			initialize,
-			wdocs_api
+			wdocs_api,
+			permissions
 		end
 
 	CMS_HOOK_BLOCK
@@ -56,6 +57,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "wdocs"
+
+	permissions: LIST [READABLE_STRING_8]
+			-- <Precursor>.
+		do
+			Result := Precursor
+			Result.force ("clear wdocs cache")
+		end
 
 feature {CMS_API} -- Module Initialization			
 
@@ -258,12 +266,14 @@ feature -- Hooks
 	clear_cache (a_cache_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE)
 			-- <Precursor>.
 		do
-			if a_cache_id_list = Void and attached manager (Void) as mng then
-				mng.refresh_data
-				across
-					mng.book_names as ic
-				loop
-					reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
+			if a_response.has_permission ("clear wdocs cache") then
+				if a_cache_id_list = Void and attached manager (Void) as mng then
+					mng.refresh_data
+					across
+						mng.book_names as ic
+					loop
+						reset_cached_wdocs_cms_menu (mng.version_id, ic.item, mng)
+					end
 				end
 			end
 		end

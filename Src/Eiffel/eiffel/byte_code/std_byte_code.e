@@ -1758,7 +1758,7 @@ feature {NONE} -- C code generation
 			if attached arguments as a and then context.has_request_chain then
 				from
 						-- The variable that tells if an argument is uncontrolled
-						-- is generated in the form "uargK = (EIF_BOOLEAN) RTS_OU (Current, argK);"
+						-- is generated in the form "uargK = (EIF_BOOLEAN) RTS_OU (argK);"
 						-- The variable to detect if a request chain is required
 						-- is generated in the form "uarg = uargA || uargB || ... || uargZ;".
 					uarg := ""
@@ -1773,7 +1773,7 @@ feature {NONE} -- C code generation
 						l_buf.put_new_line
 						l_buf.put_string ("uarg")
 						l_buf.put_integer (i)
-						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (Current, arg")
+						l_buf.put_string (" = (EIF_BOOLEAN) RTS_OU (arg")
 						l_buf.put_integer (i)
 						l_buf.put_two_character (')', ';')
 							-- Update expression to compute a variable that tells whether a request chain is required.

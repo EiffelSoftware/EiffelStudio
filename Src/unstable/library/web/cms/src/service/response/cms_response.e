@@ -653,13 +653,9 @@ feature -- Blocks
 			-- and check optional associated condition.
 			-- If no condition then use `is_block_included_by_default' to
 			-- decide if block is included or not.
-		local
-			l_region: detachable like block_region
 		do
 			if is_block_included (b.name, is_block_included_by_default) then
-				l_region := block_region (b, a_default_region)
-				l_region.extend (b)
-				blocks.force (b, b.name)
+				add_block (b, a_default_region)
 			end
 		end
 

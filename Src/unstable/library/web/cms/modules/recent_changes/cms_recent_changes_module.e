@@ -94,7 +94,7 @@ feature -- Hook
 				recent_changes_feed (a_response, nb, Void).accept (gen)
 
 				create b.make (a_block_id, Void, l_content, Void)
-				a_response.put_block (b, Void, False)
+				a_response.add_block (b, Void)
 			end
 		end
 

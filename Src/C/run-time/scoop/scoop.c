@@ -148,7 +148,7 @@ rt_private void fix_call_data (struct call_data* call)
 					/*Mark call as synchronous if necessary.
 					 *TODO: This is a temporary solution due to compiler changes.
 					 * Rewrite this function to make it more efficient and clear. */
-				if (obj && !RTS_OU (ignored, obj) && (RTS_PID(obj) != RTS_PID(call->target))) {
+				if (obj && !RTS_OU (obj) && (RTS_PID(obj) != RTS_PID(call->target))) {
 					call->is_synchronous = EIF_TRUE;
 				}
 			}

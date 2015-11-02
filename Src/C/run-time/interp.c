@@ -525,7 +525,7 @@ rt_private void initialize_request_chain (void)
 	for (n = argnum; n > 0; n--) {
 		EIF_TYPED_VALUE *last = arg(n);
 			/* TODO: RS: Why only register arguments when they're uncontrolled in the interpreter? */
-		if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent -> it_ref, last -> it_ref)) {
+		if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (last -> it_ref)) {
 			RTS_RS (last->it_ref);
 		}
 	}
@@ -585,6 +585,7 @@ rt_private void interpret(int flag, int where)
 	char volatile has_wait_condition = '\0';        /* Is there a wait condition? */
 	char volatile has_uncontrolled_argument = '\0'; /* Is uncontrolled argument used? */
 	RTS_SDX;			/* Declarations for SCOOP */
+	RTS_SDC;
 #endif
 	BODY_INDEX body_id = 0;		/* Body id of routine */
 	int routine_id = 0;
@@ -672,7 +673,7 @@ rt_private void interpret(int flag, int where)
 					break;
 				case EIF_REFERENCE_CODE:
 #ifdef EIF_THREADS
-					if (RTS_OU(icurrent->it_ref, ref)) {
+					if (RTS_OU(ref)) {
 						usep |= ((EIF_NATURAL_64) 1) << (n - 1);
 						uarg++;
 					}
@@ -1884,7 +1885,7 @@ rt_private void interpret(int flag, int where)
 				/* Add processors of uncontrolled separate arguments to the reuest group. */
 			for (; argument_count > 0; -- argument_count) {
 				last = eif_opstack_pop_address(&op_stack);
-				if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (icurrent->it_ref, last->it_ref)) {
+				if ((last -> type & SK_HEAD) == SK_REF && RTS_OU (last->it_ref)) {
 					RTS_RS (last->it_ref);
 				}
 			}
@@ -2519,13 +2520,9 @@ rt_private void interpret(int flag, int where)
 
 					(void) eif_opstack_pop_address(&op_stack);                  /* Remove target from the evaluation stack. */
 					source = eif_opstack_pop_address(&op_stack);                 /* Get source value. */
-					if ((source -> type & SK_HEAD) == SK_REF) {
-						RTS_AS(*source, it_r, source->type, 1); /* Record a possibly separate argument. */
-					} else {
-							/* We use `0' for the second argument because the macro does not actually use it
-							 * in workbench mode. */
-						RTS_AA(*source, 0, source -> type, 1); /* Record a non-separate argument. */
-					}
+						/* We use `0' for the second argument because the macro does not actually use it
+							* in workbench mode. */
+					RTS_AA(*source, 0, source -> type, 1); /* Record an argument. */
 					RTS_CALL (-pos, SK_VOID);		/* Make separate access to a tuple. */
 					if (tagval != stagval)           /* Interpreted function was called. */
 						sync_registers(MTC scur, stop);
@@ -2575,13 +2572,9 @@ rt_private void interpret(int flag, int where)
 				eif_opstack_pop_address(&op_stack);                /* Remove target of a call. */
 				while (n > 0) {         /* Record arguments of a call. */
 					EIF_TYPED_VALUE * p = eif_opstack_pop_address(&op_stack);
-					if ((p -> type & SK_HEAD) == SK_REF) {
-						RTS_AS(*p, it_r, p->type, n); /* Record a possibly separate argument. */
-					} else {
-							/* We use `0' for the second argument because the macro does not actually use it
-							 * in workbench mode. */
-						RTS_AA(*p, 0, p -> type, n); /* Record non-separate argument. */
-					}
+						/* We use `0' for the second argument because the macro does not actually use it
+							* in workbench mode. */
+					RTS_AA(*p, 0, p -> type, n); /* Record an argument. */
 					n--;
 				};
 				switch (code = *IC++)

@@ -936,9 +936,15 @@ feature -- C code generation: request chain
 				buffer.put_new_line
 				buffer.put_string ("RTS_SDX;")
 			elseif has_request_chain or has_separate_call then
-					-- Generate declaration to use SCOOP calls.
+					-- Generate declaration for SCOOP operations.
 				buffer.put_new_line
 				buffer.put_string ("RTS_SD;")
+			end
+
+				-- Generate declarations for SCOOP separate calls.
+			if has_separate_call then
+				buffer.put_new_line
+				buffer.put_string ("RTS_SDC;")
 			end
 		end
 

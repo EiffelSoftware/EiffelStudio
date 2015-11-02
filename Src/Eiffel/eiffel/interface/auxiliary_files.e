@@ -802,19 +802,9 @@ feature -- Plug and Makefile file
 
 				-- Record whether the system is SCOOP-aware.
 			if system.is_scoop then
-				buffer.put_string ("[
-					#ifdef RTS_SCP_CAPABLE
-						egc_is_scoop_capable = 1;
-					#endif
-
-				]")
+				buffer.put_string ("%Tegc_is_scoop_capable = 1;%N")
 			else
-				buffer.put_string ("[
-					#ifdef RTS_SCP_CAPABLE
-						egc_is_scoop_capable = 0;
-					#endif
-
-				]")
+				buffer.put_string ("%Tegc_is_scoop_capable = 0;%N")
 			end
 
 				-- Pointer on `set_exception_data' of class ISE_EXCEPTION_MANAGER.

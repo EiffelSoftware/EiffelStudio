@@ -111,9 +111,9 @@ feature -- Code generation
 				if system.is_scoop then
 						-- Generate computation of whether a request chain is required in the form
 						--		int uarg;
-						--		int uarg1 = RTS_OU (Current, loc1);
+						--		int uarg1 = RTS_OU (loc1);
 						--		...
-						--		int uargN = RTS_OU (Current, locN);
+						--		int uargN = RTS_OU (locN);
 						--		RTS_SD
 						--		uarg = uarg1 || uarg2 || ... || uargN;
 					across
@@ -136,7 +136,7 @@ feature -- Code generation
 								buf.put_new_line
 								buf.put_string ("int uarg")
 								buf.put_integer (arg.target_index)
-								buf.put_string (" = RTS_OU (Current, ")
+								buf.put_string (" = RTS_OU (")
 								buf.put_string (t.register_name)
 								buf.put_character (')')
 								buf.put_character (';')

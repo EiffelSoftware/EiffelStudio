@@ -1,6 +1,6 @@
 note
 	description: "[
-			Module that provide Google Custom Search functionality.
+			Module providing Google Custom Search functionality.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,15 +11,8 @@ class
 inherit
 
 	CMS_MODULE
-		redefine
-			register_hooks
-		end
 
 	CMS_HOOK_BLOCK_HELPER
-
-	CMS_HOOK_AUTO_REGISTER
-
-	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	SHARED_EXECUTION_ENVIRONMENT
 		export
@@ -45,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING = "custom_search"
+	name: STRING = "google_search"
 			-- <Precursor>
 
 feature -- Router
@@ -88,27 +81,6 @@ feature -- Recaptcha
 			end
 		end
 
-feature -- Hooks configuration
-
-	register_hooks (a_response: CMS_RESPONSE)
-			-- Module hooks configuration.
-		do
-			auto_subscribe_to_hooks (a_response)
-		end
-
-feature -- Hooks
-
-	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
-			-- Hook execution on collection of menu contained by `a_menu_system'
-			-- for related response `a_response'.
-		do
-		end
-
-	block_list: ITERABLE [like {CMS_BLOCK}.name]
-		do
-			Result := <<"search">>
-		end
-
 feature -- Handler
 
 	handle_search (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -120,12 +92,15 @@ feature -- Handler
 				-- TODO handle errors!!!
 			write_debug_log (generator + ".handle_search")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if attached {WSF_STRING} req.query_parameter ("q") as l_query then
+			if
+				attached {WSF_STRING} req.query_parameter ("q") as l_query and then
+				not l_query.value.is_empty
+			then
 				if
 					attached gcse_cx_key (api) as l_cx and then
 					attached gcse_secret_key (api) as l_key
 				then
-					create l_parameters.make (l_key, l_cx, l_query.value )
+					create l_parameters.make (l_key, l_cx, l_query.url_encoded_value )
 					if
 						attached {WSF_STRING} req.query_parameter ("start") as l_index and then
 					  	attached {WSF_STRING} req.query_parameter ("num") as l_num
@@ -135,20 +110,41 @@ feature -- Handler
 					end
 					create l_search.make (l_parameters)
 					l_search.search
-					if attached template_block (Current, "search", r) as l_tpl_block then
-						l_tpl_block.set_value (l_search.last_result, "result")
-						r.add_block (l_tpl_block, "content")
+					if
+						attached l_search.last_result as l_result and then
+					    l_result.status = 200
+					then
+						if attached template_block (Current, "search", r) as l_tpl_block then
+							l_tpl_block.set_value (l_result, "result")
+							r.add_block (l_tpl_block, "content")
+						end
+					else
+							-- Quota limit (403 status code) or not results.
+						google_search_site (req, r,  l_query)
 					end
 				else
 						-- If no key are provided, at least output google search result page.
-					if req.is_https then
-						r.set_redirection ("https://www.google.com/search?sitesearch=" + r.absolute_url ("", Void) + "&q=" + l_query.url_encoded_value)
-					else
-						r.set_redirection ("http://www.google.com/search?sitesearch=" + r.absolute_url ("", Void) + "&q=" + l_query.url_encoded_value)
-					end
+					google_search_site (req, r,  l_query)
 				end
+			else
+				r.add_message ("No query submitted", Void)
 			end
 			r.execute
 		end
 
+feature {NONE} -- Helper
+
+	google_search_site (req: WSF_REQUEST; res: CMS_RESPONSE; query: WSF_STRING)
+			-- Workaround to output google search result page
+			-- If no key are provided or if GCSE reached the quota limit.
+		local
+			l_url_encoder: URL_ENCODER
+		do
+			create l_url_encoder
+			if req.is_https then
+				res.set_redirection ("https://www.google.com/search?sitesearch=" + l_url_encoder.general_encoded_string (res.absolute_url ("", Void)) + "&q=" + query.url_encoded_value)
+			else
+				res.set_redirection ("http://www.google.com/search?sitesearch=" + l_url_encoder.general_encoded_string (res.absolute_url ("", Void)) + "&q=" + query.url_encoded_value)
+			end
+		end
 end

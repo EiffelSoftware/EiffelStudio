@@ -82,6 +82,9 @@ feature -- CMS modules
 
 			create {CMS_DEMO_MODULE} m.make
 			a_setup.register_module (m)
+
+			create {GOOGLE_CUSTOM_SEARCH_MODULE} m.make
+			a_setup.register_module (m)
 		end
 
 end

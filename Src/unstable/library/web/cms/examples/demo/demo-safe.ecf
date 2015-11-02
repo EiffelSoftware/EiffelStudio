@@ -31,6 +31,8 @@
 		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20-safe.ecf" readonly="false"/>
 		<library name="cms_openid_module" location="..\..\modules\openid\openid-safe.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="..\..\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
+		<library name="module_google_custom_search" location="..\..\modules\google_search\google_search.ecf" readonly="false" use_application_options="true"/>
+		
 		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false">
 			<option>
 				<assertions/>

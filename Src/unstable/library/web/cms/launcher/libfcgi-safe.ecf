@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="libfcgi_launcher" uuid="04D7D1EA-059B-4024-B0DE-BBB57AB2D00C" library_target="libfcgi_launcher">
+	<target name="common" abstract="true">
+		<root all_classes="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\cms-safe.ecf"/>
+		<library name="cms_app_env" location="..\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+	</target>
+	<target name="libfcgi_launcher" extends="common">
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<cluster name="src" location=".\" recursive="false"/>
+		<cluster name="launcher" location=".\default\" recursive="true"/>
+	</target>
+</system>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="standalone_launcher" uuid="F42660A9-26C2-466B-A63C-C7823C808BE7" library_target="standalone_launcher">
+	<target name="common" abstract="true">
+		<root all_classes="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\cms-safe.ecf"/>
+		<library name="cms_app_env" location="..\library\app_env\app_env-safe.ecf" readonly="false"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+	</target>
+	<target name="standalone_launcher" extends="common">
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
+		<cluster name="src" location=".\" recursive="false"/>
+		<cluster name="launcher" location=".\default\" recursive="true"/>
+	</target>
+</system>

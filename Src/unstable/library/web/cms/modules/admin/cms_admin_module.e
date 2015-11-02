@@ -99,6 +99,8 @@ feature -- Security
 			Result.force ("admin roles")
 			Result.force ("admin modules")
 			Result.force ("install modules")
+			Result.force ("admin core caches")
+			Result.force ("clear blocks cache")
 		end
 
 feature -- Hooks
@@ -128,13 +130,9 @@ feature -- Hooks
 				lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
 				a_menu_system.management_menu.extend (lnk)
 			end
-			if
-				a_response.has_permission ("admin cache") -- Note: admin user has all permissions enabled by default.
-			then
-				create lnk.make ("Cache", "admin/cache")
-				lnk.set_permission_arguments (<<"admin cache">>)
-				a_menu_system.management_menu.extend (lnk)
-			end
+				-- Per module cache permission!
+			create lnk.make ("Cache", "admin/cache")
+			a_menu_system.management_menu.extend (lnk)
 		end
 
 note

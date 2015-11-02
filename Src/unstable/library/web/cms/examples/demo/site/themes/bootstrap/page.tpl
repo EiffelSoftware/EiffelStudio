@@ -5,9 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- EWF CMS -->
 	<link rel="stylesheet" href="{$site_url/}theme/css/style.css">
-
+ 
 	<!-- jQuery dep -->
 	<script src="{$site_url/}theme/js/jquery-1.10.2.min.js"></script>
+	<script src="{$site_url/}theme/js/popup_search.js"></script>
 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
@@ -36,7 +37,17 @@
           {$page.primary_nav/}
       {/if}
     </div> 
-    
+	<!-- Page search -->
+	<div class="row">
+		<div class="col-md-2 col-md-offset-9">
+			<form action="{$site_url/}gcse" class="search-form" id="gcse_search_form">
+				<div class="form-group has-feedback">
+					<input type="search" class="form-control" name="q" id="gcse_search" placeholder="search">
+					<span class="glyphicon glyphicon-search form-control-feedback"></span>
+				</div>
+			</form>
+		</div>
+	</div>
     <!-- General Page Content -->
     <div id='content' class='row-fluid'>
 		<!-- Left Sidebar sidebar_first -->

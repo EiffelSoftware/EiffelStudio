@@ -1373,11 +1373,19 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_CI (is_query, target) - Can a separate call to 'target' be impersonated?
  * RTS_BI (target) - Impersonate the region of 'target'.
  * RTS_EI - Switch back to the current region.
- * TODO: Implement the impersonation macros.
  */
-#define RTS_CI(is_query, target) l_scoop_region_id == RTS_PID (target)
-#define RTS_BI(target) (void)0
-#define RTS_EI (void)0
+#define RTS_CI(is_query, target) (l_scoop_region_id == RTS_PID (target)) || eif_scoop_can_impersonate (l_scoop_processor_id, RTS_PID (target), is_query)
+#define RTS_BI(target) \
+	if (l_scoop_region_id != RTS_PID(target)) {\
+		eif_scoop_lock_stack_impersonated_push (l_scoop_processor_id, RTS_PID(target));\
+		eif_scoop_impersonate (eif_globals, RTS_PID(target)); \
+	} else (void) 0
+
+#define RTS_EI \
+	if (l_scoop_region_id != eif_globals->scoop_region_id) {\
+		eif_scoop_impersonate (eif_globals, l_scoop_region_id); \
+		eif_scoop_lock_stack_impersonated_pop (l_scoop_processor_id, 1);\
+	} else (void) 0
 
 /*
  * Separate call arguments:

@@ -131,25 +131,54 @@ rt_private rt_inline EIF_BOOLEAN rt_scoop_is_impersonation_allowed (struct rt_pr
 	return result;
 }
 
-/* Fix the call_data struct for expanded types (their PID is wrongly set to the client region). */
-rt_private void fix_call_data (struct call_data* call)
+/*
+doc:	<routine name="rt_scoop_prepare_call" return_type="void" export="private">
+doc:		<summary> Prepare the call data structure: Calculate whether the call is synchronous and set the correct PID for expanded objects. </summary>
+doc:		<param name="client_processor_id" type="EIF_SCP_PID"> The ID of the client processor. </param>
+doc:		<param name="client_region_id" type="EIF_SCP_PID"> The ID of the client region. </param>
+doc:		<param name="call" type="struct call_data"> The call data structure. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_private void rt_scoop_prepare_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct call_data* call)
 {
-	EIF_GET_CONTEXT;
-	RTS_SD;
-
+	EIF_REFERENCE obj = NULL;
+	EIF_SCP_PID supplier_id = RTS_PID (call->target);
 	size_t i = 0;
-	for (; i < call->count; ++i) {
+
+#ifdef WORKBENCH
+		/* Remove the result pointer when not needed. */
+	if (call->result && call->result->type == SK_VOID) {
+		call->result = NULL;
+	}
+#endif
+
+		/* A call with a result is always synchronous. */
+	if (call->result) {
+		call->is_synchronous = EIF_TRUE;
+	}
+
+		/* Iterate over all arguments and see whether they're controlled.
+		 * We only care about non-NULL reference arguments. */
+	for (i=0; i < call->count; ++i) {
 		if (call->argument [i].type == SK_REF) {
-			EIF_REFERENCE obj = call->argument [i].item.r;
-			if (obj && eif_is_expanded (HEADER(obj)->ov_flags)) {
-				RTS_PID (obj) = RTS_PID (call->target);
-			}
-			else {
-					/*Mark call as synchronous if necessary.
-					 *TODO: This is a temporary solution due to compiler changes.
-					 * Rewrite this function to make it more efficient and clear. */
-				if (obj && !RTS_OU (obj) && (RTS_PID(obj) != RTS_PID(call->target))) {
-					call->is_synchronous = EIF_TRUE;
+			obj = call->argument [i].item.r;
+			if (obj) {
+
+					/* Set the correct PID for expanded objects.
+					 * See also eweasel test#scoop072. */
+				if (eif_is_expanded (HEADER(obj)->ov_flags)) {
+					RTS_PID (obj) = supplier_id;
+				} else {
+
+					/* Mark the call as synchronous if there is an argument
+					 * that is controlled by the current processor. */
+					if (!call->is_synchronous && RTS_PID (obj) != supplier_id
+						&& !eif_is_uncontrolled (client_processor_id, client_region_id, RTS_PID(obj)))
+					{
+						call->is_synchronous = EIF_TRUE;
+					}
 				}
 			}
 		}
@@ -167,7 +196,7 @@ rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client
 
 	REQUIRE("has data", data);
 
-	fix_call_data (data);
+	rt_scoop_prepare_call (client_processor_id, client_region_id, data);
 
 	error = rt_queue_cache_retrieve (&client->cache, supplier, &pq);
 	if (error != T_OK) {

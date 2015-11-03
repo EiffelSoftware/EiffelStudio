@@ -1320,8 +1320,8 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_PA(o) - associate a fresh processor with an object o
  * RTS_PP(o) - create a new passive region for object o
  */
-#define RTS_PA(o) eif_new_processor (o, EIF_FALSE);
-#define RTS_PP(o) eif_new_processor (o, EIF_TRUE);
+#define RTS_PA(o) eif_new_processor (o, EIF_FALSE)
+#define RTS_PP(o) eif_new_processor (o, EIF_TRUE)
 
 /*
  * Request group management:
@@ -1355,12 +1355,9 @@ RT_LNK void eif_exit_eiffel_code(void);
 #ifdef WORKBENCH
 #define RTS_CALL(rid, rtype) \
 	l_scoop_call_data->routine_id = (rid); \
-	if (rtype!=SK_VOID) { \
-		l_scoop_call_data->is_synchronous = EIF_TRUE; \
-		l_scoop_call_data->result = &l_scoop_result;\
-		l_scoop_result.type = rtype; \
-		l_scoop_result.it_r = 0; \
-	} \
+	l_scoop_call_data->result = &l_scoop_result;\
+	l_scoop_result.type = rtype; \
+	l_scoop_result.it_r = 0; \
 	eif_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
 #else
 #define RTS_CALL(fptr, p, o, r) \
@@ -1368,7 +1365,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 	l_scoop_call_data->pattern = p; \
 	l_scoop_call_data->offset = o; \
 	l_scoop_call_data->result = (r); \
-	if (r) l_scoop_call_data->is_synchronous = EIF_TRUE; \
 	eif_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
 #endif
 
@@ -1393,7 +1389,6 @@ RT_LNK void eif_exit_eiffel_code(void);
 		l_scoop_call_data = malloc (sizeof (struct call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
 		l_scoop_call_data -> target = (t); \
 		l_scoop_call_data -> count = (n); \
-		l_scoop_call_data -> result = NULL; \
 		l_scoop_call_data -> is_synchronous = EIF_FALSE; \
 	}
 #ifdef WORKBENCH

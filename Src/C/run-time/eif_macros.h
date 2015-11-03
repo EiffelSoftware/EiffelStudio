@@ -1319,9 +1319,16 @@ RT_LNK void eif_exit_eiffel_code(void);
  *
  * RTS_PA(o) - associate a fresh processor with an object o
  * RTS_PP(o) - create a new passive region for object o
+ *
+ * NOTE: Since the evaluation order in an assignment is not defined in C,
+ * we need to introduce a local variable to avoid writing to an object that has moved.
  */
-#define RTS_PA(o) eif_new_processor (o, EIF_FALSE)
-#define RTS_PP(o) eif_new_processor (o, EIF_TRUE)
+#define RTS_PA(o) { \
+	EIF_SCP_PID l_scoop_new_pid = eif_new_processor (EIF_FALSE); \
+	RTS_PID (o) = l_scoop_new_pid;}
+#define RTS_PP(o) { \
+	EIF_SCP_PID l_scoop_new_pid = eif_new_processor (EIF_TRUE); \
+	RTS_PID (o) = l_scoop_new_pid;}
 
 /*
  * Request group management:

@@ -283,39 +283,37 @@ rt_public void eif_call_const (call_data * a)
 	(void) a;
 }
 
-/* Processor creation */
-
-/* RTS_PA */
-rt_public void eif_new_processor (EIF_REFERENCE obj, EIF_BOOLEAN is_passive)
+/*
+doc:	<routine name="eif_new_processor" return_type="EIF_SCP_PID" export="public">
+doc:		<summary> Create a new SCOOP region. If there's no free region ID, the function will trigger a GC run and then wait for a new ID. </summary>
+doc:		<param name="is_passive" type="EIF_BOOLEAN"> Whether a passive region shall be created. </param>
+doc:		<return> The ID of the newly created region. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> Done internally. Careful: May trigger garbage collection. </synchronization>
+doc:	</routine>
+*/
+rt_public EIF_SCP_PID eif_new_processor (EIF_BOOLEAN is_passive)
 {
 	EIF_SCP_PID new_pid = 0;
 	int error = T_OK;
 
-		/* TODO: Return newly allocated PID instead of writing it to 'obj'
-		   so that the argument 'obj' can be removed. */
-	EIF_OBJECT object = eif_protect (obj);
-
 	error = rt_processor_registry_create_region (&new_pid, is_passive);
 
-	switch (error) {
-		case T_OK:
-			obj = eif_access (object);
-			RTS_PID(obj) = new_pid;
-			eif_wean (object);
-			rt_processor_registry_activate (new_pid);
-			if (is_passive) {
-				rt_get_processor (new_pid)->is_creation_procedure_logged = EIF_TRUE;
-			}
-			break;
-		case T_NO_MORE_MEMORY:
-			eif_wean (object);
-			enomem();
-			break;
-		default:
-			eif_wean (object);
-			esys();
-			break;
+	if (error == T_OK) {
+
+		rt_processor_registry_activate (new_pid);
+				/* For passive regions we'll execute the creation procedure right away. */
+		if (is_passive) {
+			rt_get_processor (new_pid)->is_creation_procedure_logged = EIF_TRUE;
+		}
+	} else {
+		if (error == T_NO_MORE_MEMORY) {
+			enomem ();
+		} else {
+			esys ();
+		}
 	}
+	return new_pid;
 }
 
 /* Status report */

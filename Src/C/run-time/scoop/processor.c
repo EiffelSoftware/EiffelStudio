@@ -81,7 +81,8 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (private_queue_list_t, struct rt_private_queue*
 RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
 
-
+/* Forward declaration. */
+rt_private void rt_processor_publish_wait_condition (struct rt_processor* self);
 
 
 /*
@@ -351,7 +352,6 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 	free (call);
 }
 
-
 /*
 doc:	<routine name="rt_processor_process_private_queue" return_type="void" export="private">
 doc:		<summary> Execute all calls in the private queue 'queue' until an unlock message has arrived. </summary>
@@ -364,38 +364,43 @@ doc:	</routine>
 rt_private void rt_processor_process_private_queue (struct rt_processor* self, struct rt_private_queue *queue)
 {
 	EIF_BOOLEAN is_stopped = EIF_FALSE;
-	enum scoop_message_type type = SCOOP_MESSAGE_INVALID;
+	struct rt_message* l_message = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("queue_not_null", queue);
 
+	l_message = &self->current_msg;
+
 	while (!is_stopped) {
 
-			/* Receive a new call and store it in current_msg.
+			/* Receive a new call and store it in self->current_msg.
 			* This is a blocking call if no data is available.
 			* The call might be logged by the original client of the queue
 			* or some other processor that has acquired the locks during lock passing. */
-		rt_message_channel_receive (&queue->channel, &self->current_msg);
+		rt_message_channel_receive (&queue->channel, l_message);
 
-		type = self->current_msg.message_type;
-
-		CHECK ("valid_messages", type == SCOOP_MESSAGE_EXECUTE || type == SCOOP_MESSAGE_UNLOCK || type == SCOOP_MESSAGE_SYNC);
-
-		if (type == SCOOP_MESSAGE_UNLOCK) {
-				/* Forget dirtiness upon unlock */
-			self->is_dirty = EIF_FALSE;
-			is_stopped = EIF_TRUE;
-		} else if (type == SCOOP_MESSAGE_SYNC) {
-				/* We're a passive processor that got a lock request. */
-			CHECK ("is_passive", self->is_passive_region);
-			rt_message_channel_send (self->current_msg.sender_processor->result_notify_proxy, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
-		} else {
-
-			rt_processor_execute_call (self, self->current_msg.sender_processor, self->current_msg.call);
-
-				/* Make sure the call doesn't get traversed again for GC */
-			rt_message_init (&self->current_msg);
+		switch (l_message->message_type) {
+			case SCOOP_MESSAGE_UNLOCK:
+				rt_processor_publish_wait_condition (self);
+					/* Fallthrough intended. */
+			case SCOOP_MESSAGE_WAIT_CONDITION_UNLOCK:
+				self->is_dirty = EIF_FALSE;
+				is_stopped = EIF_TRUE;
+				break;
+			case SCOOP_MESSAGE_SYNC:
+					/* We're a passive processor that got a lock request. */
+				CHECK ("is_passive", self->is_passive_region);
+				rt_message_channel_send (l_message->sender_processor->result_notify_proxy, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
+				break;
+			case SCOOP_MESSAGE_EXECUTE:
+				rt_processor_execute_call (self, l_message->sender_processor, l_message->call);
+				break;
+			default:
+				CHECK ("valid_message", EIF_FALSE);
 		}
+
+			/* Make sure the call doesn't get traversed again for GC */
+		rt_message_init (l_message);
 	}
 }
 
@@ -403,51 +408,34 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 doc:	<routine name="rt_processor_publish_wait_condition" return_type="void" export="private">
 doc:		<summary> Notify all processors in the 'self->wait_condition_subscribers' vector that a wait condition has changed. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor with the subscribers list. Must not be NULL. </param>
-doc:		<param name="dead_processor" type="struct rt_processor*"> The processor whose private queue 'self' has been processing last. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> The feature rt_processor_subscribe_wait_condition must only be called when the thread executing 'self' is synchronized with a client.
 doc:			This ensures that rt_publish_wait_condition cannot be executed at the same time. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_publish_wait_condition (struct rt_processor* self, struct rt_processor *client)
+rt_private void rt_processor_publish_wait_condition (struct rt_processor* self)
 {
-	EIF_BOOLEAN found = EIF_FALSE;
 	struct subscriber_list_t* subscribers = NULL;
 
 	REQUIRE ("self_not_null", self);
 
 	subscribers = &self->wait_condition_subscribers;
 
-	while ( !(0 == subscriber_list_t_count(subscribers))) {
+	while (0 != subscriber_list_t_count(subscribers)) {
+
 		struct rt_processor* item = subscriber_list_t_last (subscribers);
 		subscriber_list_t_remove_last (subscribers);
 
-		if (item == client) {
-				/* The client might be the processor that has just unlocked us
-				 * after a wait condition has failed. We obviously don't want to
-				 * send it a notification back. */
-			found = EIF_TRUE;
-		} else {
+		if (item) {
+				/* Lock the registered processor's condition variable mutex. */
+			RT_TRACE (eif_pthread_mutex_lock (item->wait_condition_mutex));
 
-				/* To avoid having to move around items within the vector,
-				 * the GC may set some references to NULL. */
-			if (item) {
+				/* Send a signal. */
+			RT_TRACE (eif_pthread_cond_signal (item->wait_condition));
 
-					/* Lock the registered processor's condition variable mutex. */
-				RT_TRACE (eif_pthread_mutex_lock (item->wait_condition_mutex));
-
-					/* Send a signal. */
-				RT_TRACE (eif_pthread_cond_signal (item->wait_condition));
-
-					/* Release the lock. */
-				RT_TRACE (eif_pthread_mutex_unlock (item->wait_condition_mutex));
-			}
+				/* Release the lock. */
+			RT_TRACE (eif_pthread_mutex_unlock (item->wait_condition_mutex));
 		}
-	}
-	if (found) {
-			/* An error can only happen during reallocation. This is impossible here,
-			 * because we only push one item, and only if it was removed previously. */
-		RT_TRACE (subscriber_list_t_extend (subscribers, client));
 	}
 }
 
@@ -491,7 +479,6 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 			self->client = next_job.sender_processor->pid; /* TODO: This is the only place where we would need the client region ID instead of the processor ID. */
 
 			rt_processor_process_private_queue (self, next_job.queue);
-			rt_processor_publish_wait_condition (self, next_job.sender_processor);
 
 			self->is_active = EIF_FALSE;
 			self->client = EIF_NULL_PROCESSOR;
@@ -692,7 +679,7 @@ rt_shared void rt_processor_request_group_stack_remove (struct rt_processor* sel
 
 	for (i = 0; i < count; ++i) {
 		l_last = rt_processor_request_group_stack_last (self);
-		rt_request_group_unlock (l_last);
+		rt_request_group_unlock (l_last, EIF_FALSE);
 		rt_request_group_deinit (l_last);
 		request_group_stack_t_remove_last (&self->request_group_stack);
 	}

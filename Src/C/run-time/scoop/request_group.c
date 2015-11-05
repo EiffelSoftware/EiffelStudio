@@ -156,7 +156,7 @@ rt_shared int rt_request_group_wait (struct rt_request_group* self)
 		 * change. If we wouldn't hold the lock acquired in the previous step,
 		 * we might miss those signals and thus remain stuck in a wait condition
 		 * forever. */
-	rt_request_group_unlock (self);
+	rt_request_group_unlock (self, EIF_TRUE);
 
 		/* Now we perform the blocking wait on our condition.
 		 * This also releases the mutex, such that our suppliers may send signals to it.
@@ -244,11 +244,12 @@ doc:	<routine name="rt_request_group_unlock" return_type="void" export="shared">
 doc:		<summary> Unlock all processors in the request group. This feature can only be called when the request group is locked.
 doc:			This feature doesn't block long. It may block for a short amount of time for memory allocation or to send a signal. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
+doc:		<param name="is_wait_condition_failure" type="EIF_BOOLEAN"> Whether the unlock operation is done after a wait condition failure. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_request_group_unlock (struct rt_request_group* self)
+rt_shared void rt_request_group_unlock (struct rt_request_group* self, EIF_BOOLEAN is_wait_condition_failure)
 {
 	size_t l_count = rt_request_group_count (self);
 	int i = (int) l_count - 1;
@@ -261,7 +262,7 @@ rt_shared void rt_request_group_unlock (struct rt_request_group* self)
 	if (self->is_locked) {
 			/* Unlock in the opposite order that they were locked */
 		for (; i >= 0; --i) {
-			rt_private_queue_unlock (rt_request_group_item (self, i));
+			rt_private_queue_unlock (rt_request_group_item (self, i), is_wait_condition_failure);
 		}
 		self->is_locked = 0;
  	}

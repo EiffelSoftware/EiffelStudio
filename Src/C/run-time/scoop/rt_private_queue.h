@@ -92,7 +92,7 @@ rt_shared EIF_BOOLEAN rt_private_queue_is_synchronized (struct rt_private_queue*
 rt_shared EIF_BOOLEAN rt_private_queue_is_locked (struct rt_private_queue* self);
 
 rt_shared void rt_private_queue_lock (struct rt_private_queue* self, struct rt_processor* client);
-rt_shared void rt_private_queue_unlock (struct rt_private_queue* self);
+rt_shared void rt_private_queue_unlock (struct rt_private_queue* self, EIF_BOOLEAN is_wait_condition_failure);
 rt_shared int rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client);
 
 rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call);

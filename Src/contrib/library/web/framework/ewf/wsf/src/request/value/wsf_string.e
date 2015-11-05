@@ -16,17 +16,24 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_percent_encoded_values
 
 convert
 	string_representation: {READABLE_STRING_32, STRING_32}
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_8; a_string: READABLE_STRING_8)
+	make (a_name: READABLE_STRING_GENERAL; a_string: READABLE_STRING_GENERAL)
 		do
-			url_encoded_name := utf_8_percent_encoded_string (a_name)
-			url_encoded_value := utf_8_percent_encoded_string (a_string)
+			url_encoded_name := url_encoded_string (a_name)
+			url_encoded_value := url_encoded_string (a_string)
+		end
+
+	make_with_percent_encoded_values (a_encoded_name: READABLE_STRING_8; a_encoded_value: READABLE_STRING_8)
+		do
+			url_encoded_name := a_encoded_name
+			url_encoded_value := a_encoded_value
 		end
 
 feature -- Access
@@ -105,11 +112,10 @@ feature -- Status report
 feature -- Element change
 
 	change_name (a_name: like name)
+			-- <Precursor>
 		do
-			internal_name := Void
-			url_encoded_name := a_name
-		ensure then
-			a_name.same_string (url_encoded_name)
+			internal_name := a_name
+			url_encoded_name := url_encoded_string (a_name)
 		end
 
 feature -- Helper
@@ -147,89 +153,8 @@ feature -- Visitor
 			vis.process_string (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	utf_8_percent_encoded_string (s: READABLE_STRING_8): READABLE_STRING_8
-			-- Percent-encode the UTF-8 sequence characters from UTF-8 encoded `s' and
-			-- return the Result.
-		local
-			s8: STRING_8
-			i, n, nb: INTEGER
-		do
-				-- First check if there are such UTF-8 character
-				-- If it has, convert them and return a new object as Result
-				-- otherwise return `s' directly to avoid creating a new object
-			from
-				i := 1
-				n := s.count
-				nb := 0
-			until
-				i > n
-			loop
-				if s.code (i) > 0x7F then -- >= 128
-					nb := nb + 1
-				end
-				i := i + 1
-			end
-			if nb > 0 then
-				create s8.make (s.count + nb * 3)
-				utf_8_string_8_into_percent_encoded_string_8 (s, s8)
-				Result := s8
-			else
-				Result := s
-			end
-		end
-
-	utf_8_string_8_into_percent_encoded_string_8 (s: READABLE_STRING_8; a_result: STRING_8)
-			-- Copy STRING_32 corresponding to UTF-8 sequence `s' appended into `a_result'.
-		local
-			i: INTEGER
-			n: INTEGER
-			c: NATURAL_32
-		do
-			from
-				n := s.count
-				a_result.grow (a_result.count + n)
-			until
-				i >= n
-			loop
-				i := i + 1
-				c := s.code (i)
-				if c <= 0x7F then
-						-- 0xxxxxxx
-					a_result.append_code (c)
-				elseif c <= 0xDF then
-						-- 110xxxxx 10xxxxxx
-					url_encoder.append_percent_encoded_character_code_to (c, a_result)
-					i := i + 1
-					if i <= n then
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i), a_result)
-					end
-				elseif c <= 0xEF then
-						-- 1110xxxx 10xxxxxx 10xxxxxx
-					url_encoder.append_percent_encoded_character_code_to  (s.code (i), a_result)
-					i := i + 2
-					if i <= n then
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i - 1), a_result)
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i), a_result)
-					end
-				elseif c <= 0xF7 then
-						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-					url_encoder.append_percent_encoded_character_code_to  (s.code (i), a_result)
-					i := i + 3
-					if i <= n then
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i - 2), a_result)
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i - 1), a_result)
-						url_encoder.append_percent_encoded_character_code_to  (s.code (i), a_result)
-					end
-				else
-					a_result.append_code (c)
-				end
-			end
-		end
-
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

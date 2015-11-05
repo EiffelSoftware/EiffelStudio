@@ -42,12 +42,21 @@ feature -- Settings
 	is_verbose: BOOLEAN
 			-- Has verbose output (default: True)?
 
+	unicode_output_enabled: BOOLEAN
+			-- Display names and values as unicode.
+
 feature -- Settings change
 
 	set_is_verbose (b: BOOLEAN)
 			-- Set `is_verbose' to `b'.
 		do
 			is_verbose := b
+		end
+
+	set_unicode_output_enabled (b: BOOLEAN)
+			-- if `b' then enable unicode output, otherwise disable.
+		do
+			unicode_output_enabled := b
 		end
 
 feature -- Execution
@@ -232,7 +241,7 @@ feature {NONE} -- Implementation
 						it as c
 					loop
 						s.append ("  - ")
-						s.append (utf.escaped_utf_32_string_to_utf_8_string_8 (c.key))
+						append_unicode (c.key, s)
 						s.append_character (' ')
 						if attached c.item as l_item then
 							s.append_character ('{')
@@ -302,7 +311,11 @@ feature {NONE} -- Implementation
 						it as c
 					loop
 						a_output.append ("  - ")
-						a_output.append (c.item.url_encoded_name)
+						if unicode_output_enabled then
+							append_unicode (c.item.name, a_output)
+						else
+							a_output.append (c.item.url_encoded_name)
+						end
 						t := c.item.generating_type
 						if t.same_string ("WSF_STRING") then
 						else
@@ -313,15 +326,15 @@ feature {NONE} -- Implementation
 						end
 						a_output.append_character ('=')
 						if attached {WSF_STRING} c.item as l_str then
-							s := l_str.url_encoded_value
+							if unicode_output_enabled then
+								s := l_str.value
+							else
+								s := l_str.url_encoded_value
+							end
 						else
 							s := c.item.string_representation
 						end
-						if s.is_valid_as_string_8 then
-							v := s.as_string_8
-						else
-							v := utf.escaped_utf_32_string_to_utf_8_string_8 (s)
-						end
+						v := utf.utf_32_string_to_utf_8_string_8 (s)
 						if v.has ('%N') then
 							a_output.append (eol)
 							across
@@ -349,7 +362,6 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 			v: READABLE_STRING_8
-			utf: UTF_CONVERTER
 		do
 			if is_verbose then
 				a_output.append (a_title)
@@ -368,11 +380,7 @@ feature {NONE} -- Implementation
 						it as c
 					loop
 						a_output.append ("  - ")
-						if c.key.is_valid_as_string_8 then
-							a_output.append (c.key.as_string_8)
-						else
-							a_output.append (utf.utf_32_string_to_utf_8_string_8 (c.key))
-						end
+						append_unicode (c.key, a_output)
 						a_output.append_character ('=')
 						v := c.item
 						if v.has ('%N') then
@@ -396,6 +404,13 @@ feature {NONE} -- Implementation
 					a_output.append (eol)
 				end
 			end
+		end
+
+	append_unicode (s: READABLE_STRING_GENERAL; a_output: STRING)
+		local
+			utf: UTF_CONVERTER
+		do
+			a_output.append (utf.utf_32_string_to_utf_8_string_8 (s))
 		end
 
 feature -- Constants

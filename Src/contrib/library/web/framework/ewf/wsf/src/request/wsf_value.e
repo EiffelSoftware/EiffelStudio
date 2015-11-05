@@ -36,8 +36,10 @@ feature -- Access
 feature -- Element change
 
 	change_name (a_name: like name)
-			-- Change parameter name
+			-- Change parameter `name'.
 		deferred
+		ensure
+			name_changed: a_name.same_string (name)
 		end
 
 feature -- Status report
@@ -128,7 +130,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

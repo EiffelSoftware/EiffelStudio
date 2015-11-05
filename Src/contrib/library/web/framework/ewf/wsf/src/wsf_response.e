@@ -319,7 +319,7 @@ feature -- Header output operation: helpers
 feature -- Header add cookie
 
 	add_cookie (a_cookie: WSF_COOKIE)
-			-- Add a Set-Cookie header field to the response, 
+			-- Add a Set-Cookie header field to the response,
 			-- if no Set-Cookie header field already use same cookie-name.
 			--| Servers SHOULD NOT include more than one Set-Cookie header field in
   			--| the same response with the same cookie-name.
@@ -328,7 +328,7 @@ feature -- Header add cookie
 		do
 			across
 				internal_header.headers as ic
-			until 
+			until
 				l_same_cookie_name
 			loop
 				if ic.item.starts_with ("Set-Cookie:") then
@@ -564,7 +564,7 @@ feature {NONE} -- Implemenation
 					loop
 						j := j + 1
 					end
-					if j > n then
+					if j <= n then
 						Result := a_cookie_name.same_characters (a_cookie_line, j, i, 1)
 					end
 				end

@@ -241,7 +241,7 @@ rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client
 				 * the private queue first. */
 			rt_private_queue_lock (pq, client);
 			rt_private_queue_log_call(pq, client, data);
-			rt_private_queue_unlock (pq);
+			rt_private_queue_unlock (pq, EIF_FALSE);
 			supplier->is_creation_procedure_logged = EIF_TRUE;
 		} else {
 				/* Perform a regular call. */

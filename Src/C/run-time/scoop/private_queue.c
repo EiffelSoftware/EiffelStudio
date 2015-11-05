@@ -151,18 +151,20 @@ rt_shared void rt_private_queue_lock (struct rt_private_queue* self, struct rt_p
 doc:	<routine name="rt_private_queue_unlock" return_type="void" export="shared">
 doc:		<summary> Unlock this private queue by instructing the supplier to remove this queue from the queue-of-queues. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue to be unlocked. Must not be NULL. </param>
+doc:		<param name="is_wait_condition_failure" type="EIF_BOOLEAN"> Whether the unlock operation is done after a wait condition failure. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_unlock (struct rt_private_queue* self)
+rt_shared void rt_private_queue_unlock (struct rt_private_queue* self, EIF_BOOLEAN is_wait_condition_failure)
 {
 	REQUIRE ("self_not_null", self);
 
 	self->lock_depth--;
 
 	if (self->lock_depth == 0) {
-		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_UNLOCK, NULL, NULL, NULL);
+		enum scoop_message_type l_type = is_wait_condition_failure ? SCOOP_MESSAGE_WAIT_CONDITION_UNLOCK : SCOOP_MESSAGE_UNLOCK;
+		rt_message_channel_send (&self->channel, l_type, NULL, NULL, NULL);
 		self->synced = EIF_FALSE;
 	}
 }

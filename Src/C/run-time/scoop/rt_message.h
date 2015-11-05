@@ -58,6 +58,9 @@ enum scoop_message_type {
 		/* Unlock operation. After this the receiver can start executing calls from another queue. */
 	SCOOP_MESSAGE_UNLOCK,
 
+		/* Unlock the receiver after a wait condition failure. */
+	SCOOP_MESSAGE_WAIT_CONDITION_UNLOCK,
+
 		/* Inform the receiver that a synchronous call has ended. */
 	SCOOP_MESSAGE_RESULT_READY,
 

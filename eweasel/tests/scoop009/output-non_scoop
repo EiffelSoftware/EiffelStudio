@@ -1,3 +1,6 @@
-0 OK
-0 OK
+1: f -> 0
+1: wait -> 1
+1: wait -> 2
+1: wait -> 3
+1: g -> 3
 Execution completed

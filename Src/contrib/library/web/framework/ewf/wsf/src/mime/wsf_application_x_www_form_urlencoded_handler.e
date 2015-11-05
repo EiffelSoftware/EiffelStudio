@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WSF_APPLICATION_X_WWW_FORM_URLENCODED_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,6 +10,11 @@ inherit
 	WSF_MIME_HANDLER
 
 	WSF_MIME_HANDLER_HELPER
+
+	WSF_VALUE_UTILITIES
+		export
+			{NONE} all
+		end
 
 feature -- Status report
 
@@ -54,7 +58,7 @@ feature -- Execution
 						if j > 0 then
 							l_name := s.substring (1, j - 1)
 							l_value := s.substring (j + 1, s.count)
-							add_string_value_to_table (l_name, l_value, a_vars)
+							add_percent_encoded_string_value_to_table (l_name, l_value, a_vars)
 						end
 					end
 				end
@@ -62,7 +66,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2012, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

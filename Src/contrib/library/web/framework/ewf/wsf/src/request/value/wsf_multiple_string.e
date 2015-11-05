@@ -89,10 +89,9 @@ feature -- Access
 feature -- Element change
 
 	change_name (a_name: like name)
+			-- <Precursor>
 		do
 			name := a_name
-		ensure then
-			a_name.same_string (name)
 		end
 
 feature -- Status report
@@ -180,7 +179,7 @@ invariant
 	string_values_not_empty: values.count >= 1
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

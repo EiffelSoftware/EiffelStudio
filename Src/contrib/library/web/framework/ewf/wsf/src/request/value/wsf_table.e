@@ -17,23 +17,34 @@ inherit
 	ITERABLE [WSF_VALUE]
 
 create
-	make
+	make,
+	make_with_percent_encoded_name
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_8)
+	make (a_name: READABLE_STRING_GENERAL)
 		do
-			name := url_decoded_string (a_name)
-			url_encoded_name := a_name
-			create values.make (5)
+			name := a_name.as_string_32
+			url_encoded_name := url_encoded_string (a_name)
+			create values.make (3)
+		end
+
+	make_with_percent_encoded_name (a_encoded_name: READABLE_STRING_8)
+		do
+			url_encoded_name := a_encoded_name
+			name := url_decoded_string (a_encoded_name)
+			create values.make (3)
 		end
 
 feature -- Access
 
 	name: READABLE_STRING_32
-			-- Parameter name
+			-- <Precursor>
+			--| Note that the value might be html encoded as well
+			--| this is the application responsibility to html decode it
 
 	url_encoded_name: READABLE_STRING_8
+			-- URL encoded string of `name'.
 
 	first_value: detachable WSF_VALUE
 			-- First value if any.
@@ -59,13 +70,16 @@ feature -- Access
 		end
 
 	values: HASH_TABLE [WSF_VALUE, STRING_32]
+			-- Associated items values, indexed by unicode name.
 
 	value (k: READABLE_STRING_GENERAL): detachable WSF_VALUE
+			-- Value associated with name `k'.
 		do
 			Result := values.item (k.to_string_32)
 		end
 
 	count: INTEGER
+			-- Number of values.
 		do
 			Result := values.count
 		end
@@ -79,12 +93,13 @@ feature -- Access
 
 feature -- Element change
 
+feature -- Element change
+
 	change_name (a_name: like name)
+			-- <Precursor>
 		do
-			name := url_decoded_string (a_name)
-			url_encoded_name := a_name
-		ensure then
-			a_name.same_string (url_encoded_name)
+			name := a_name
+			url_encoded_name := url_encoded_string (a_name)
 		end
 
 feature -- Status report
@@ -217,7 +232,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

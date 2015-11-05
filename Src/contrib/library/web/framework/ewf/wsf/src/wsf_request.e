@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end
 
+	WSF_VALUE_UTILITIES
+		export
+			{NONE} all
+		end
+
 create {WSF_EXECUTION, WGI_EXPORTER}
 	make_from_wgi
 
@@ -846,7 +851,7 @@ feature -- Access: CGI meta parameters - 1.1
 		local
 			l_result: like internal_percent_encoded_path_info
 			r: READABLE_STRING_8
-			i: INTEGER
+			i,m,n,spos: INTEGER
 		do
 			l_result := internal_percent_encoded_path_info
 			if l_result = Void then
@@ -860,6 +865,28 @@ feature -- Access: CGI meta parameters - 1.1
 				if attached script_name as s then
 					if l_result.starts_with (s) then
 						l_result := l_result.substring (s.count + 1, l_result.count)
+					else
+						--| Handle Rewrite url engine, to have clean path
+						from
+							i := 1
+							m := l_result.count
+							n := s.count
+						until
+							i > m or i > n or l_result[i] /= s[i]
+						loop
+							if l_result[i] = '/' then
+								spos := i
+							end
+							i := i + 1
+						end
+						if i > 1 then
+							if l_result[i-1] = '/' then
+								i := i -1
+							elseif spos > 0 then
+								i := spos
+							end
+							l_result := l_result.substring (i, m)
+						end
 					end
 				end
 				internal_percent_encoded_path_info := l_result
@@ -1399,7 +1426,7 @@ feature {NONE} -- Cookies
 							k.left_adjust
 							k.right_adjust
 							if not k.is_empty then
-								add_value_to_table (k, v, l_cookies)
+								add_percent_encoded_string_value_to_table (k, v, l_cookies)
 							end
 						end
 					end
@@ -1463,7 +1490,7 @@ feature {WSF_REQUEST_PATH_PARAMETERS_SOURCE} -- Path parameters: Element change
 						across
 							lst as c
 						loop
-							add_value_to_table (c.key, c.item, l_table)
+							add_percent_encoded_string_value_to_table (c.key, c.item, l_table)
 						end
 						src.update_path_parameters (l_table)
 					end
@@ -1494,7 +1521,7 @@ feature {NONE} -- Query parameters: implementation
 			vars: like internal_query_parameters_table
 			p,e: INTEGER
 			rq_uri: like request_uri
-			s: detachable STRING
+			s: detachable READABLE_STRING_8
 		do
 			vars := internal_query_parameters_table
 			if vars = Void then
@@ -1556,7 +1583,7 @@ feature {NONE} -- Query parameters: implementation
 								l_name := s
 								l_value := empty_string_8
 							end
-							add_value_to_table (l_name, l_value, Result)
+							add_percent_encoded_string_value_to_table (l_name, l_value, Result)
 						end
 					end
 				end
@@ -1713,100 +1740,6 @@ feature {NONE} -- Form fields and related
 				create vars.make_equal (0)
 			end
 			Result := vars
-		end
-
-feature {NONE} -- Implementation: smart parameter identification
-
-	add_value_to_table (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8; a_table: STRING_TABLE [WSF_VALUE])
-			-- Add urlencoded parameter  `a_name'=`a_value' to `a_table'
-			-- following smart computation such as handling the "..[..]" as table
-		local
-			v: detachable WSF_VALUE
-			n, k, r: STRING_8
-			k32: STRING_32
-			p, q: INTEGER
-			tb, ptb: detachable WSF_TABLE
-		do
-			--| Check if this is a list format such as   choice[]  or choice[a] or even choice[a][] or choice[a][b][c]...
-			p := a_name.index_of ('[', 1)
-			if p > 0 then
-				q := a_name.index_of (']', p + 1)
-				if q > p then
-					n := a_name.substring (1, p - 1)
-					r := a_name.substring (q + 1, a_name.count)
-					r.left_adjust; r.right_adjust
-
-					create tb.make (n)
-					if a_table.has_key (tb.name) and then attached {WSF_TABLE} a_table.found_item as l_existing_table then
-						tb := l_existing_table
-					end
-
-					k := a_name.substring (p + 1, q - 1)
-					k.left_adjust; k.right_adjust
-					if k.is_empty then
-						k.append_integer (tb.count + 1)
-					end
-					v := tb
-					create n.make_from_string (n)
-					n.append_character ('[')
-					n.append (k)
-					n.append_character (']')
-
-					from
-					until
-						r.is_empty
-					loop
-						ptb := tb
-						p := r.index_of ({CHARACTER_8} '[', 1)
-						if p > 0 then
-							q := r.index_of ({CHARACTER_8} ']', p + 1)
-							if q > p then
-								k32 := url_decoded_string (k)
-								if attached {WSF_TABLE} ptb.value (k32) as l_tb_value then
-									tb := l_tb_value
-								else
-									create tb.make (n)
-									ptb.add_value (tb, k32)
-								end
-
-								k := r.substring (p + 1, q - 1)
-								r := r.substring (q + 1, r.count)
-								r.left_adjust; r.right_adjust
-								if k.is_empty then
-									k.append_integer (tb.count + 1)
-								end
-								n.append_character ('[')
-								n.append (k)
-								n.append_character (']')
-							end
-						else
-							r.wipe_out
-							--| Ignore bad value
-						end
-					end
-					tb.add_value (new_string_value (n, a_value), k)
-				else
-					--| Missing end bracket
-				end
-			end
-			if v = Void then
-				v := new_string_value (a_name, a_value)
-			end
-			if a_table.has_key (v.name) and then attached a_table.found_item as l_existing_value then
-				if tb /= Void then
-					--| Already done in previous part
-				elseif attached {WSF_MULTIPLE_STRING} l_existing_value as l_multi then
-					l_multi.add_value (v)
-				elseif attached {WSF_TABLE} l_existing_value as l_table then
-					-- Keep previous values (most likely we have table[1]=foo, table[2]=bar ..and table=/foo/bar
-					-- Anyway for this case, we keep the previous version, and ignore this "conflict"
-				else
-					a_table.force (create {WSF_MULTIPLE_STRING}.make_with_array (<<l_existing_value, v>>), v.name)
-					check replaced: a_table.found and then a_table.found_item ~ l_existing_value end
-				end
-			else
-				a_table.force (v, v.name)
-			end
 		end
 
 feature -- Uploaded File Handling
@@ -2131,11 +2064,6 @@ feature {NONE} -- Implementation: utilities
 			end
 		ensure
 			one_starting_slash: Result[1] = '/' and (Result.count = 1 or else Result[2] /= '/')
-		end
-
-	new_string_value (a_name: READABLE_STRING_8; a_value: READABLE_STRING_8): WSF_STRING
-		do
-			create Result.make (a_name, a_value)
 		end
 
 	empty_string_32: IMMUTABLE_STRING_32

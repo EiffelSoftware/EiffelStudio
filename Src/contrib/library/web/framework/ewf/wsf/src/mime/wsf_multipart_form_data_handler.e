@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {WSF_MULTIPART_FORM_DATA_HANDLER}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -139,10 +138,12 @@ feature {NONE} -- Implementation: Form analyzer
 		local
 			n, i,p, b,e: INTEGER
 			l_name, l_filename, l_content_type: detachable STRING_8
+			l_unicode_name: READABLE_STRING_32
 			l_header: detachable STRING_8
 			l_content: detachable STRING_8
 			l_line: detachable STRING_8
 			l_up_file: WSF_UPLOADED_FILE
+			utf: UTF_CONVERTER
 		do
 			from
 				p := 1
@@ -235,12 +236,13 @@ feature {NONE} -- Implementation: Form analyzer
 						if l_content_type = Void then
 							l_content_type := default_content_type
 						end
-						create l_up_file.make (l_name, l_filename, l_content_type, l_content.count)
-						add_value_to_table (l_name, l_up_file, vars)
+						l_unicode_name := utf.utf_8_string_8_to_string_32 (l_name)
+						create l_up_file.make (l_unicode_name, utf.utf_8_string_8_to_escaped_string_32 (l_filename), l_content_type, l_content.count)
+						add_value_to_table (l_unicode_name, l_up_file, vars)
 						--| `l_up_file' might have a new name
 						req.save_uploaded_file (l_up_file, l_content)
 					else
-						add_string_value_to_table (l_name, l_content, vars)
+						add_utf_8_string_value_to_table (l_name, l_content, vars)
 					end
 				else
 					req.error_handler.add_custom_error (0, "unamed multipart entry", Void)
@@ -254,7 +256,7 @@ feature {NONE} -- Implementation: Form analyzer
 			-- Default content type		
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

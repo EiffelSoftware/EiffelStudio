@@ -59,6 +59,7 @@ feature -- Access
 
 			create dbg.make
 			dbg.set_is_verbose (True)
+			dbg.set_unicode_output_enabled (True)
 			dbg.append_cgi_variables_to (req, res, s)
 			dbg.append_information_to (req, res, s)
 

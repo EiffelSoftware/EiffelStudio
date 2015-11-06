@@ -29,13 +29,17 @@ feature {NONE} -- Implementation
 	process_htmlentities
 		local
 			item_output: STRING
+			utf: UTF_CONVERTER
+			s32: READABLE_STRING_32
 		do
-			item_output := (create {HTML_ENCODER}).encoded_string (foreach_iteration_string (inside_text, False))
+			s32 := utf.utf_8_string_8_to_string_32 (foreach_iteration_string (inside_text, False))
+
+			item_output := (create {HTML_ENCODER}).encoded_string (s32)
 			set_forced_output (item_output)
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

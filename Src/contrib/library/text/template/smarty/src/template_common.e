@@ -16,9 +16,15 @@ inherit
 feature {NONE} -- Helpers
 
 	string_value (a: detachable ANY): detachable STRING
+		local
+			utf: UTF_CONVERTER
 		do
 			if a /= Void then
-				Result := a.out
+				if attached {READABLE_STRING_32} a as s32 then
+					Result := utf.utf_32_string_to_utf_8_string_8 (s32)
+				else
+					Result := a.out
+				end
 			end
 		end
 

@@ -23,6 +23,8 @@ feature -- Access
 
 	name: STRING
 
+	unicode_text: detachable READABLE_STRING_32
+
 	id: INTEGER
 
 feature -- Change
@@ -30,6 +32,11 @@ feature -- Change
 	set_parent (p: like parent)
 		do
 			parent := p
+		end
+
+	set_unicode_text (v: detachable READABLE_STRING_32)
+		do
+			unicode_text := v
 		end
 
 feature {NONE} -- Impl

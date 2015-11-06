@@ -38,6 +38,8 @@ feature
 					obj_fields.has (fdn)
 				then
 					Result := field (obj_fields.item (fdn), obj)
+				elseif attached {TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as l_table then
+					Result := l_table.item (fdn)
 				end
 			end
 		end
@@ -90,6 +92,7 @@ feature -- Inspectors
 				l_inspectors.off
 			loop
 				if ti = l_inspectors.item_for_iteration then
+						-- FIXME jfiat [2014/12/03] : avoid remove in a loop for table.
 					l_inspectors.remove (l_inspectors.key_for_iteration)
 				else
 					l_inspectors.forth
@@ -103,7 +106,7 @@ feature -- Inspectors
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2015, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

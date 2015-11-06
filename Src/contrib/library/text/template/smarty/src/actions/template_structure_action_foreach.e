@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 	process_foreach
 		local
-			sitem, skey: detachable STRING
+			sfrom,sitem, skey: detachable STRING
 			vfrom: detachable ANY
 			lst_any: detachable ITERABLE [detachable ANY]
 			hsh_any_hashable: detachable TABLE_ITERABLE [detachable ANY, HASHABLE]
@@ -61,10 +61,12 @@ feature {NONE} -- Implementation
 			if parameters.has (item_param_id) then
 				sitem := parameters.item (item_param_id)
 			end
-			if
-				parameters.has (from_param_id) and then
-				attached parameters.item (from_param_id) as sfrom
-			then
+			if parameters.has (from_param_id) then
+				sfrom := parameters.item (from_param_id)
+			elseif parameters.has (expression_param_id) then
+				sfrom := parameters.item (expression_param_id)
+			end
+			if sfrom /= Void then
 				vfrom := resolved_expression (sfrom)
 				if vfrom /= Void then
 					hsh_any_hashable := Void

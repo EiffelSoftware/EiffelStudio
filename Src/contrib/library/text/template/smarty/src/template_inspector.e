@@ -14,6 +14,11 @@ feature -- Change
 			Template_routines.register_template_inspector (Current, a_inspector_name)
 		end
 
+	register_type (a_type: TYPE [detachable ANY])
+		do
+			register (a_type.name)
+		end
+
 	unregister
 		do
 			Template_routines.unregister_template_inspector (Current)

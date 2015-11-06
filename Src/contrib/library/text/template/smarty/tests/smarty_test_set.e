@@ -20,6 +20,12 @@ inherit
 
 feature -- Test routines
 
+	tpl_folder: PATH
+		once
+			create Result.make_current
+			Result := Result.extended ("tpl")
+		end
+
 	test_simple
 			-- New test routine
 		local
@@ -29,8 +35,7 @@ feature -- Test routines
 			s: STRING
 			res: STRING
 		do
-			create p.make_current
-			p := p.extended ("..").extended ("..").extended ("..").extended ("..").extended ("..").extended ("tpl").canonical_path
+			p := tpl_folder
 			template_context.set_template_folder (p)
 --			create template.make_from_file ("index-bug.tpl")
 --			create template.make_from_file ("index.tpl")
@@ -65,8 +70,7 @@ feature -- Test routines
 			s: STRING
 			res: STRING
 		do
-			create p.make_current
-			p := p.extended ("..").extended ("..").extended ("..").extended ("..").extended ("..").extended ("tpl").canonical_path
+			p := tpl_folder
 			template_context.set_template_folder (p)
 			create template.make_from_file ("index.tpl")
 
@@ -88,7 +92,7 @@ feature -- Test routines
 						% Tree name = My test tree%N%
 						%%N%
 						%*** List of Nodes ***%N%
-						%  - part A (#3)%N%
+						%  - part A Unicode=[Hello&#8212;Unicode] (#3)%N%
 						%    - item a1 (#3)%N%
 						%      - a1 - i (#0)%N%
 						%      - a1 - ii (#0)%N%
@@ -115,8 +119,7 @@ feature -- Test routines
 			to_z_tree: TEMPLATE_OBJECT_Z_TREE
 			res: STRING
 		do
-			create p.make_current
-			p := p.extended ("..").extended ("..").extended ("..").extended ("..").extended ("..").extended ("tpl").canonical_path
+			p := tpl_folder
 			template_context.set_template_folder (p)
 			create template.make_from_file ("index-title.tpl")
 			create to_z_tree.register ("Z_TREE")
@@ -178,6 +181,8 @@ feature {NONE} -- Implementation
 			create z_tree.make ("My test tree")
 
 			create z_item.make ("part A")
+			z_item.set_unicode_text ({STRING_32} "Hello%/8212/Unicode")
+
 			z_tree.add_node (z_item)
 			z_item.add_node (create {Z_TREE_ITEM}.make ("item a1"))
 			z_item.add_node (create {Z_TREE_ITEM}.make ("item a2"))

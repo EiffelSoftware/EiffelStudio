@@ -584,9 +584,6 @@ feature {NONE} -- Implementation
 
 feature -- GUI preferences
 
-	code_analysis_namespace: STRING = "tools.code_analysis"
-			-- The namespace for the Code Analysis preferences.
-
 	initialize_preferences
 			-- Initializes the preferences related to the tool panel.
 		local
@@ -595,23 +592,18 @@ feature -- GUI preferences
 		do
 			create l_helper
 			code_analyzer := l_helper.code_analyzer
-			create l_manager.make (code_analyzer.preferences, code_analysis_namespace)
+			create l_manager.make (code_analyzer.preferences, {CA_SETTINGS}.code_analysis_namespace)
 
 			error_bgcolor := l_manager.new_color_preference_value (l_manager,
-				ca_names.color_category + "." + ca_names.error_bgcolor, default_error_bgcolor)
-			error_bgcolor.set_default_value (color_string (default_error_bgcolor))
+				preference_option_name_error_background, default_error_bgcolor)
 			warning_bgcolor := l_manager.new_color_preference_value (l_manager,
-				ca_names.color_category + "." + ca_names.warning_bgcolor, default_warning_bgcolor)
-			warning_bgcolor.set_default_value (color_string (default_warning_bgcolor))
+				preference_option_name_warning_background, default_warning_bgcolor)
 			suggestion_bgcolor := l_manager.new_color_preference_value (l_manager,
-				ca_names.color_category + "." + ca_names.suggestion_bgcolor, default_suggestion_bgcolor)
-			suggestion_bgcolor.set_default_value (color_string (default_suggestion_bgcolor))
+				preference_option_name_suggestion_background, default_suggestion_bgcolor)
 			hint_bgcolor := l_manager.new_color_preference_value (l_manager,
-				ca_names.color_category + "." + ca_names.suggestion_bgcolor, default_hint_bgcolor)
-			hint_bgcolor.set_default_value (color_string (default_hint_bgcolor))
+				preference_option_name_hint_background, default_hint_bgcolor)
 			fixed_violation_bgcolor := l_manager.new_color_preference_value (l_manager,
-				ca_names.color_category + "." + ca_names.fixed_violation_bgcolor, default_fixed_violation_bgcolor)
-			fixed_violation_bgcolor.set_default_value (color_string (default_fixed_violation_bgcolor))
+				preference_option_name_fixed_background, default_fixed_violation_bgcolor)
 		end
 
 	color_string (a_color: attached EV_COLOR): STRING
@@ -669,9 +661,46 @@ feature -- GUI preferences
 			valid_result: Result /= Void
 		end
 
+feature {NONE} -- Preferences
+
+	preference_option_name_error_background: STRING
+			-- A name of an error background option within the corresponding preference namespace.
+		do
+			Result := color_option_name ("error_background")
+		end
+
+	preference_option_name_warning_background: STRING
+			-- A name of a warning background option within the corresponding preference namespace.
+		do
+			Result := color_option_name ("warning_background")
+		end
+
+	preference_option_name_suggestion_background: STRING
+			-- A name of a suggestion background option within the corresponding preference namespace.
+		do
+			Result := color_option_name ("suggestion_background")
+		end
+
+	preference_option_name_hint_background: STRING
+			-- A name of a hint background option within the corresponding preference namespace.
+		do
+			Result := color_option_name ("hint_background")
+		end
+
+	preference_option_name_fixed_background: STRING
+			-- A name of a fixed violation background option within the corresponding preference namespace.
+		do
+			Result := color_option_name ("fixed_violation_background")
+		end
+
+	color_option_name (n: STRING): STRING
+			-- A color option name in the corresponding color namespace.
+		do
+			Result := "color." + n
+		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

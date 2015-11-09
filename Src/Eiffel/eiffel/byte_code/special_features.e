@@ -336,6 +336,8 @@ feature -- C special code generation
 				generate_out (buffer, type_of (basic_type), target)
 			when hash_code_type then
 				generate_hashcode (buffer, type_of (basic_type), target)
+			when hash_code_64_type then
+				generate_hashcode_64 (buffer, type_of (basic_type), target)
 			when max_type then
 				generate_max (buffer, type_of (basic_type), target, parameter)
 			when min_type then
@@ -409,6 +411,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (out_type, {PREDEFINED_NAMES}.out_name_id)
+			Result.put (hash_code_64_type, {PREDEFINED_NAMES}.hash_code_64_name_id)
 			Result.put (hash_code_type, {PREDEFINED_NAMES}.hash_code_name_id)
 			Result.put (hash_code_type, {PREDEFINED_NAMES}.code_name_id)
 			Result.put (max_type, {PREDEFINED_NAMES}.max_name_id)
@@ -642,7 +645,8 @@ feature {NONE} -- Fast access to feature name
 	do_nothing_type: INTEGER = 63
 	is_default_pointer_type: INTEGER = 64
 	is_character_8_type: INTEGER = 65
-	max_type_id: INTEGER = 65
+	hash_code_64_type: INTEGER = 66
+	max_type_id: INTEGER = 66
 
 feature {NONE} -- Byte code generation
 
@@ -855,6 +859,30 @@ feature {NONE} -- C code generation
 				buffer.put_string ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) ((rt_int_ptr) (")
 				target.print_register
 				buffer.put_three_character (')', ')', ')')
+			end
+		end
+
+	generate_hashcode_64 (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE)
+			-- Generate fast wrapper for call on `hash_code' where target
+			-- is a basic type.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+		do
+			inspect
+				type_of_basic
+			when boolean_type_id then
+				buffer.put_character ('(')
+				target.print_register
+				buffer.put_string (" ? 1L : 0L)")
+			when character_type_id then
+				buffer.put_string ("(EIF_NATURAL_64) (")
+				target.print_register
+				buffer.put_character(')')
+			else
+				buffer.put_string ("(EIF_NATURAL_64) (rt_int_ptr) (")
+				target.print_register
+				buffer.put_character (')')
 			end
 		end
 
@@ -1335,7 +1363,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

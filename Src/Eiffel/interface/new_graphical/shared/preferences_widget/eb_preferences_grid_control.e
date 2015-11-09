@@ -87,7 +87,7 @@ inherit
 		end
 
 create
-	make, make_with_hidden
+	make, make_with_hidden, make_with_translation_namespace
 
 feature -- Access
 
@@ -95,9 +95,16 @@ feature -- Access
 			-- New window.  Redefined to register EiffelStudio specific preference widgets for
 			-- special preference types.
 		do
+			make_with_translation_namespace (a_preferences, "preference")
+		end
+
+	make_with_translation_namespace (p: like view_preferences; n: like translation_namespace)
+		do
+			view_preferences := p
+			set_translation_namespace (n)
 			set_root_icon (icon_pixmaps.tool_preferences_icon)
 			set_folder_icon (icon_pixmaps.folder_preference_icon)
-			Precursor {PREFERENCES_GRID_CONTROL} (a_preferences)
+			build_interface
 			grid.enable_default_tree_navigation_behavior (True, True, True, True)
 		end
 
@@ -221,6 +228,7 @@ feature {NONE} -- Implementation
 		local
 			l_str_32: STRING_32
 			l_list: LIST [READABLE_STRING_GENERAL]
+			s: READABLE_STRING_GENERAL
 		do
 			create l_str_32.make (a_pref.count)
 			l_list := a_pref.split ('.')
@@ -230,7 +238,10 @@ feature {NONE} -- Implementation
 				until
 					l_list.after
 				loop
-					l_str_32.append (try_to_translate (formatted_name (l_list.item)).as_string_32)
+					s := l_list.item
+					if not s.is_empty then
+						l_str_32.append (try_to_translate (formatted_name (s)).as_string_32)
+					end
 					l_list.forth
 					if not l_list.after then
 						l_str_32.extend ('.')
@@ -242,22 +253,17 @@ feature {NONE} -- Implementation
 
 	update_grid_columns
 			-- Update the grid columns widths and borders depending on current display type
-		local
-			l_preference: PREFERENCE
-			nb: INTEGER
 		do
 			if grid.is_tree_enabled then
 					-- If structured view is enabled then we autosize the columns
 				Precursor
 			end
 			grid.ev_application.process_events
-			nb := grid.row_count
-			if nb > 0 then
+			if grid.row_count > 0 then
 				grid.row (1).enable_select
 				on_resize
-				l_preference ?= grid.row (1).data
-				if l_preference /= Void then
-					show_preference_description (l_preference)
+				if attached {PREFERENCE} grid.row (1).data as p then
+					show_preference_description (p)
 				end
 				if grid.is_displayed and grid.is_sensitive then
 					grid.set_focus
@@ -297,13 +303,25 @@ feature {NONE} -- Implementation
 	try_to_translate (a_string: STRING_GENERAL): STRING_32
 			-- Try to translate `a_string'.
 		do
-			Result := locale.translation_in_context (a_string, "preference")
+			Result := locale.translation_in_context (a_string, translation_namespace)
 		end
 
 	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE)
 			-- Shortcut modification denied.
 		do
 			prompts.show_error_prompt (shortcut_modification_denied, Void, Void)
+		end
+
+	translation_namespace: READABLE_STRING_GENERAL
+			-- Namespace used for translation.
+
+feature -- Internationalization
+
+	set_translation_namespace (n: READABLE_STRING_GENERAL)
+		do
+			translation_namespace := n
+		ensure
+			translation_namespace_set: translation_namespace = n
 		end
 
 feature {NONE} -- Widget initialization

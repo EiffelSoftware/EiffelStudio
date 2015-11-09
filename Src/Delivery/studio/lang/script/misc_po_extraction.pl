@@ -14,6 +14,10 @@ unless (open DATABASE, "../../eifinit/spec/windows/default.xml") {
 	die "Error: Couldn't open ../../eifinit/spec/windows/default.xml: $!; aborting";
 }
 
+unless (open DATABASE, "../../eifinit/code_analysis.xml") {
+	die "Error: Couldn't open ../../eifinit/code_analysis.xml: $!; aborting";
+}
+
 unless (open POT_FILE, ">>../po_files/estudio.pot") {
 	die "Error: Couldn't open ../po_files/estudio.pot: $!; aborting";
 }
@@ -49,6 +53,11 @@ unless (open DATABASE, "../../eifinit/spec/unix/default.xml") {
 }
 &extract ("\$EIFFEL_SRC/Delivery/studio/eifinit/spec/unix/default.xml");
 
+unless (open DATABASE, "../../eifinit/code_analysis.xml") {
+	die "Error: Couldn't open code_analysis.xml: $!; aborting";
+}
+&extract ("\$EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml", "code_analysis.preference");
+
 # Extracting names from wizard discription files.
 foreach $dsc_file (@pm_files){
 	unless (open DATABASE, $dsc_file) {
@@ -74,18 +83,22 @@ foreach $dsc_file (@pm_files){
 
 select STDOUT;
 
+# Arguments:
+# 0 - file name
+# 1 (optional) - context
 sub extract {
 	$count = 0;
 	while ($line = <DATABASE>) {
 		$count = $count + 1;
 		$o_line = $line;
 		$file_name = $_[0];
+		$context = $_[1] ? $_[1] : "preference";
 		chomp;
 		if ($line =~ /DESCRIPTION\s*=\s*\"((?:[^"]|\"\")+)\"/i) {
 			$extracted = &escape_xml ($1);
 			print "#. $o_line\n";
 			print "#: $file_name:$count\n";
-			print "msgctxt \"preference\"\n";
+			print "msgctxt \"$context\"\n";
 			print "msgid \"$extracted\"\n";
 			print "msgstr \"\"\n\n";
 		}
@@ -95,12 +108,12 @@ sub extract {
 				# and "shortname" can be "word1_word2_word3".
 			@spit_parent = split /\./, $1;
 			foreach $parent (@spit_parent){
-					# Follow the algerithm of {PREFERENCES_GRID}.formatted_name
+					# Follow the algorithm of {PREFERENCES_GRID}.formatted_name
 					# to ensure that i18n can find strings extracted.
 				$words = &upper_case (&make_words ($parent));
 				print "#. $o_line\n";
 				print "#: $file_name:$count\n";
-				print "msgctxt \"preference\"\n";
+				print "msgctxt \"$context\"\n";
 				print "msgid \"$words\"\n";
 				print "msgstr \"\"\n\n";
 			}
@@ -122,8 +135,8 @@ sub escape_xml {
 
 sub make_words {
 	$_ = $_[0];
-		# Replace "_" with space.
-	s/_/ /g;
+		# Replace "_" with space if there are no spaces inside.
+	s/_/ /g if /^\S*$/;
 	$_;
 }
 

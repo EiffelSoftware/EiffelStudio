@@ -228,6 +228,7 @@ feature -- Constants
 	is_character_8_name_id: INTEGER = 215
 	parentheses_symbol_id: INTEGER = 216
 	new_cursor_name_id: INTEGER = 217
+	hash_code_64_name_id: INTEGER = 218
 
 feature -- Classification
 

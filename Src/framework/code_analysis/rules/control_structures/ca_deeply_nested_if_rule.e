@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #43: Deeply nested if instructions.
 	
@@ -42,8 +42,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			depth_threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.deeply_nested_if_threshold_option,
-				default_depth_threshold)
+				preference_option_name_depth_threshold, default_depth_threshold)
 			depth_threshold.set_default_value (default_depth_threshold.out)
 			depth_threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 2, 20))
 		end
@@ -75,7 +74,7 @@ feature {NONE} -- Rule checking
 		do
 			if (a_if.else_part = Void) and (a_if.elsif_list = Void) then
 					-- Only look at pure if's.
-				if current_depth = depth_threshold.value then
+				if current_depth > depth_threshold.value then
 					create l_viol.make_with_rule (Current)
 					l_viol.set_location (a_if.start_location)
 					l_viol.long_description_info.extend (depth_threshold.value)
@@ -87,6 +86,15 @@ feature {NONE} -- Rule checking
 
 feature {NONE} -- Preferences
 
+	preference_option_name_depth_threshold: STRING
+			-- A name of a depth threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_depth_threshold)
+		end
+
+	option_name_depth_threshold: STRING = "maximum_depth"
+			-- A name of a threshold option.
+
 	default_depth_threshold: INTEGER = 3
 			-- The default depth necessary that will trigger a rule violation.
 
@@ -94,6 +102,9 @@ feature {NONE} -- Preferences
 			-- The depth necessary that will trigger a rule violation.
 
 feature -- Properties
+
+	name: STRING = "deeply_nested_conditionals"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

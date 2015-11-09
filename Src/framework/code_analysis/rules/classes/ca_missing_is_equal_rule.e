@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #82: Missing is_equal redefinition
 	
@@ -34,6 +34,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "inconsistent_hash_code_redeclaration"
+			-- <Precursor>
 
 	title: STRING_32
 		do

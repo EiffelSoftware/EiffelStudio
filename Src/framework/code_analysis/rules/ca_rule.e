@@ -29,6 +29,13 @@ feature {NONE} -- Initialization
 
 feature -- Basic properties, usually fix
 
+	name: STRING
+			-- A locale-independent name used to store the rule settings.
+		deferred
+		ensure
+			attached_result: attached Result
+		end
+
 	title: STRING_32
 			-- A short title.
 		deferred
@@ -145,14 +152,34 @@ feature {CA_CODE_ANALYZER} -- Preferences
 			Result := preference_namespace + a_preference_name
 		end
 
+feature -- Preferences
+
+	option_name_enable: STRING = "enable"
+			-- A name of an enable option.
+
+	preference_option_name_enable: STRING
+			-- A name of an enable option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_enable)
+		end
+
+	preference_option_name_severity: STRING
+			-- A name of a severity option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_severity)
+		end
+
 feature {NONE} -- Preferences
 
 	frozen preference_namespace: STRING
 			-- Every rule has a separate sub namespace so that in the preferences dialog,
 			-- the rule will have its own folder.
 		do
-			Result := ca_names.rules_category + "." + title + "."
+			Result := "rule." + name + "."
 		end
+
+	option_name_severity: STRING = "severity"
+			-- A name of a severity option.
 
 	frozen is_integer_string_within_bounds (a_value: attached READABLE_STRING_GENERAL; a_lower, a_upper: INTEGER): BOOLEAN
 			-- Is the integer string `a_value' within the interval [`a_lower', `a_upper']?

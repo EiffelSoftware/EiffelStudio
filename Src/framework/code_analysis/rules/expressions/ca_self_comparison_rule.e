@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #71: Self-comparison
 	
@@ -43,6 +43,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "self_comparison"
+			-- <Precursor>
 
 	title: STRING_32
 		do

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #10: High complexity of nested branches and loops
 	
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.nested_complexity_threshold_option, 5)
+				preference_option_name_threshold, 5)
 			threshold.set_default_value ("5")
 			threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 2, 100))
 		end
@@ -55,6 +55,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "nested_complexity"
+			-- <Precursor>
 
 	title: STRING_32
 		do
@@ -90,6 +93,15 @@ feature -- Properties
 		end
 
 feature {NONE} -- Options
+
+	preference_option_name_threshold: STRING
+			-- A name of a threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_threshold)
+		end
+
+	option_name_threshold: STRING = "threshold"
+			-- A name of a threshold option.
 
 	threshold: INTEGER_PREFERENCE
 			-- Minimum nested branches and loops threshold.
@@ -162,7 +174,7 @@ feature {NONE} -- AST Visits
 				maximum_depth := current_depth
 			end
 
-			if not current_violation_exists and then current_depth >= threshold.value then
+			if not current_violation_exists and then current_depth > threshold.value then
 				current_violation_exists := True
 			end
 		end

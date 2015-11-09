@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #1: Self-assignment
 			
@@ -8,7 +8,7 @@ note
 			others: the programmer wanted to assign a local variable
 			to a class attribute and used one of the variable names twice.
 		]"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh, Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,6 +38,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "self_assignment"
+			-- <Precursor>
 
 	title: STRING_32
 		do

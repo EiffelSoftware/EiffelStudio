@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #92: Wrong loop iteration
 
@@ -156,6 +156,9 @@ feature {NONE} -- Checking Loop For Pattern
 			-- The loop iteration variable (often times `i` or `j`).
 
 feature -- Properties
+
+	name: STRING = "suspicious_interation_scheme"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

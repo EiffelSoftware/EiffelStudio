@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #3: Feature never called
 			
@@ -84,6 +84,9 @@ feature {NONE} -- Feature Visitor for Violation Check
 		end
 
 feature -- Properties
+
+	name: STRING = "unused_feature"
+			-- <Precursor>
 
 	title: STRING_32
 		do

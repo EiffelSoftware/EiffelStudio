@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #23: Unneeded parentheses
 	
@@ -70,6 +70,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "redundant_parentheses"
+			-- <Precursor>
 
 	title: STRING_32
 		do

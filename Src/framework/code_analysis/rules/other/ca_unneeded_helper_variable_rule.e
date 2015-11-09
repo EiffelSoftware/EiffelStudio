@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #85: Unneeded helper variable
 	
@@ -47,8 +47,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			max_line_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.max_line_length_option,
-				default_max_line_length)
+				preference_option_name_line_length_threshold, default_max_line_length)
 			max_line_length.set_default_value (default_max_line_length.out)
 			max_line_length.set_validation_agent (agent is_integer_string_within_bounds (?, 30, 1000))
 		end
@@ -210,6 +209,15 @@ feature {NONE} -- Rule checking
 
 feature {NONE} -- Preferences
 
+	preference_option_name_line_length_threshold: STRING
+			-- A name of a line length threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_line_length_threshold)
+		end
+
+	option_name_line_length_threshold: STRING = "maximum_line_length"
+			-- A name of a line length threshold option.
+
 	default_max_line_length: INTEGER = 80
 			-- Default maximum number of characters a line may have.
 
@@ -217,6 +225,9 @@ feature {NONE} -- Preferences
 			-- Maximum number of characters a line may have.
 
 feature -- Properties
+
+	name: STRING = "single_use_variable"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

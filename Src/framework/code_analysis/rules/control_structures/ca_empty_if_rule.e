@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #17: Empty conditional instruction
 	
@@ -33,6 +33,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "empty_conditional"
+			-- <Precursor>
 
 	title: STRING_32
 		do

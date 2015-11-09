@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #5: Object test with object test local on read-only variable (locals, object test locals, arguments)
 	
@@ -37,6 +37,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "redundant_object_test_local"
+			-- <Precursor>
 
 	title: STRING_32
 		do

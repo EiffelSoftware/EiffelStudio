@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #13: Creation procedure is exported and may be called after object creation
 	
@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
+	name: STRING = "exported_creation_procedure"
+			-- <Precursor>
 
 	title: STRING_32
 		do

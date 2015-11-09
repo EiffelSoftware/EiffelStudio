@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #41: Boolean result can be returned directly
 	
@@ -37,6 +37,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "conditional_computes_only_boolean"
+			-- <Precursor>
 
 	title: STRING_32
 		do

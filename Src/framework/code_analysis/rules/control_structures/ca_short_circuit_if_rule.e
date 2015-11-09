@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #28: Two if instructions can be combined using short-circuit operator
 	
@@ -6,7 +6,7 @@ note
 			inner one does not have an else clause, should be combined into a single
 			if instruction using the short circuit 'and then' operator.
 		]"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh, Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,6 +59,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "combinable_nested_conditionals"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

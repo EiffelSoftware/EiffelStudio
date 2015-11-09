@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #24: From-until loop on ITERABLE can be reduced to across loop
 	
@@ -145,6 +145,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "general_loop_on_iterable"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

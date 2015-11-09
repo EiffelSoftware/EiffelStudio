@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #80: TODO
 
@@ -42,6 +42,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "todo_comment"
+			-- <Precursor>
 
 	title: STRING_32
 		do

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #32: Very long routine implementation
 	
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.very_long_routine_threshold_option, default_threshold)
+				preference_option_name_instruction_threshold, default_threshold)
 			threshold.set_default_value (default_threshold.out)
 			threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 3, 1_000_000))
 		end
@@ -145,6 +145,9 @@ feature -- Rule checking
 
 feature -- Properties
 
+	name: STRING = "long_feature"
+			-- <Precursor>
+
 	title: STRING_32
 		do
 			Result := ca_names.very_long_routine_title
@@ -178,7 +181,17 @@ feature -- Properties
 			a_formatter.add (ca_messages.very_long_routine_violation_4)
 		end
 
-feature {NONE} -- Options
+feature {NONE} -- Preferences
+
+
+	preference_option_name_instruction_threshold: STRING
+			-- A name of an instruction count threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_instruction_threshold)
+		end
+
+	option_name_instruction_threshold: STRING = "maximum_instruction_count"
+			-- A name of a threshold option.
 
 	threshold: INTEGER_PREFERENCE
 

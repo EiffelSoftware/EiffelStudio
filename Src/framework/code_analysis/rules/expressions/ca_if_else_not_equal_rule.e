@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #46: Avoid 'not equal' in If-Else instructions
 	
@@ -59,6 +59,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "inequality_in_conditional"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #62: Very long identifier
 	
@@ -38,20 +38,17 @@ feature {NONE} -- Initialization
 			create l_factory
 
 			max_feature_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.max_feature_name_length_option,
-				default_max_feature_name_length)
+				full_preference_name (option_name_feature_name_threshold), default_max_feature_name_length)
 			max_feature_name_length.set_default_value (default_max_feature_name_length.out)
 			max_feature_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 9, 1_000_000))
 
 			max_argument_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.max_argument_name_length_option,
-				default_max_argument_name_length)
+				full_preference_name (option_name_argument_name_threshold), default_max_argument_name_length)
 			max_argument_name_length.set_default_value (default_max_argument_name_length.out)
 			max_argument_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 9, 1_000_000))
 
 			max_local_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.max_local_name_length_option,
-				default_max_local_name_length)
+				full_preference_name (option_name_local_name_threshold), default_max_local_name_length)
 			max_local_name_length.set_default_value (default_max_local_name_length.out)
 			max_local_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 9, 1_000_000))
 		end
@@ -164,7 +161,21 @@ feature -- Options
 	default_max_argument_name_length: INTEGER = 20
 	default_max_local_name_length: INTEGER = 20
 
+feature {NONE} -- Preferences
+
+	option_name_feature_name_threshold: STRING = "maximum_feature_name_length"
+			-- A name of a feature name length threshold option.
+
+	option_name_argument_name_threshold: STRING = "maximum_argument_name_length"
+			-- A name of an argument name length threshold option.
+
+	option_name_local_name_threshold: STRING = "maximum_local_name_length"
+			-- A name of a local name length threshold option.
+
 feature -- Properties
+
+	name: STRING = "long_identifier"
+			-- <Precursor>
 
 	title: STRING_32
 		do

@@ -1,6 +1,5 @@
-note
-	description: "Summary description for {ES_CA_SHOW_PREFERENCES_COMMAND}."
-	author: ""
+﻿note
+	description: "Command to open code analysis preference dialog."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,18 +29,17 @@ feature -- Execution
 	execute
 		do
 			if preference_window = Void or else preference_window.is_destroyed then
-				create preference_window.make (code_analyzer.preferences, window_manager.last_focused_development_window.window)
+				create preference_window.make (code_analyzer.preferences)
 				preference_window.set_title (ca_names.preferences_window_title)
 				preference_window.raise
-
 			end
-
 			preference_window.show
 		end
 
 feature {NONE} -- Implementation
 
-	preference_window: EB_PREFERENCES_WINDOW
+	preference_window: ES_CA_PREFERENCES_WINDOW
+			-- Preferences dialog.
 
 feature -- Properties
 
@@ -82,7 +80,7 @@ feature -- Properties
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

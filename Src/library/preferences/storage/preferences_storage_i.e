@@ -115,7 +115,7 @@ feature {PREFERENCES} -- Query
 		deferred
 		end
 
-	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
+	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Retrieve the preference string value from the underlying store.
 		require
 			initialized: initialized
@@ -146,7 +146,7 @@ feature {PREFERENCES} -- Access
 	location: READABLE_STRING_GENERAL
 			-- The actual location of the underlying preference (filename, registry key, etc).
 
-	session_values: STRING_TABLE [STRING_32]
+	session_values: STRING_TABLE [READABLE_STRING_32]
 			-- Hash of user-defined values which have been loaded.
 
 	preferences: detachable PREFERENCES
@@ -206,7 +206,7 @@ invariant
 	preferences_not_void_when_initialized: initialized implies preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

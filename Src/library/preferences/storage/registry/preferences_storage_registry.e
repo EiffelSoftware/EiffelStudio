@@ -101,7 +101,7 @@ feature {PREFERENCES} -- Resource Management
 			Result := get_preference_value (a_name) /= Void
 		end
 
-	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable STRING_32
+	get_preference_value (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Retrieve the preference string value from the underlying store.
 		local
 			l_handle: POINTER
@@ -174,7 +174,7 @@ invariant
 	has_session_values: session_values /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

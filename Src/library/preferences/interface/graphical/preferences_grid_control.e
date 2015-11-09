@@ -779,6 +779,7 @@ feature {NONE} -- Implementation
 	add_parent_structure_preference_row (a_pref_parent_full_name: READABLE_STRING_GENERAL; a_grid_structure: STRING_TABLE [EV_GRID_ROW])
 		require
 			structured_mode: grid.is_tree_enabled
+			a_pref_parent_full_name_not_empty: not a_pref_parent_full_name.is_empty
 			no_row_for_pref: not a_grid_structure.has (a_pref_parent_full_name)
 		local
 			l_parent_name: READABLE_STRING_GENERAL
@@ -1313,11 +1314,15 @@ feature {NONE} -- Implementation
 		end
 
 	formatted_name (a_name: READABLE_STRING_GENERAL): STRING_32
-			-- Formatted name for display
+			-- Formatted name for display.
+		require
+			not_empty: not a_name.is_empty
 		do
 			create Result.make_from_string_general (a_name)
-			Result.replace_substring_all ({STRING_32} "_", {STRING_32} " ")
-			Result.put (Result.item (1).upper, 1)
+			if not Result.has (' ') then
+				Result.replace_substring_all ({STRING_32} "_", {STRING_32} " ")
+			end
+			Result [1] := Result [1].upper
 		ensure
 			a_name /= Result
 		end
@@ -1695,7 +1700,7 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

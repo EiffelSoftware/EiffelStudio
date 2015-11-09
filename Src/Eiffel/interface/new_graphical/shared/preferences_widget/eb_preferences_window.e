@@ -10,11 +10,9 @@ class
 
 inherit
 	PREFERENCES_GRID_DIALOG
-		rename
-			make as view_make,
-			make_with_hidden as view_make_with_hidden
 		redefine
 			hide,
+			make_with_control,
 			on_close,
 			pref_control
 		end
@@ -38,24 +36,18 @@ inherit
 		end
 
 create
-	make, make_with_hidden
+	make_with_hidden, make_with_control
 
-feature -- Access
+feature {NONE} -- Creation
 
-	make (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW)
-			-- New window.  Redefined to register EiffelStudio specific preference widgets for
-			-- special preference types.
+	make_with_control (c: like pref_control)
+			-- <Precursor>
 		do
-			make_with_hidden (a_preferences, a_obs_parent_window, False)
-		end
-
-	make_with_hidden (a_preferences: PREFERENCES; a_obs_parent_window: EV_WINDOW; a_show_hidden_flag: BOOLEAN)
-			-- New window.  Redefined to register EiffelStudio specific preference widgets for
-			-- special preference types.
-		do
-			view_make_with_hidden (a_preferences, a_show_hidden_flag)
+			Precursor (c)
 			set_icon_pixmap (icon_pixmaps.tool_preferences_icon)
 		end
+
+feature -- Access
 
 	pref_control: EB_PREFERENCES_GRID_CONTROL
 

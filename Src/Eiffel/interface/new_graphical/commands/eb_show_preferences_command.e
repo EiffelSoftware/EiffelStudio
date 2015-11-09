@@ -38,11 +38,7 @@ feature {NONE} -- Execution
 			l_show_hidden_flag := preferences.misc_data.show_hidden_preferences
 			if preference_window = Void or else preference_window.is_destroyed then
 					-- Preference tool is not currently displayed, create and display it.
-				create preference_window.make_with_hidden (
-						preferences.preferences,
-						window_manager.last_focused_development_window.window,
-						l_show_hidden_flag
-					)
+				create preference_window.make_with_hidden (preferences.preferences,l_show_hidden_flag)
 			end
 			preference_window.set_size (preferences.misc_data.preference_window_width, preferences.misc_data.preference_window_height)
 			preference_window.set_show_hidden_preferences (l_show_hidden_flag)

@@ -12,6 +12,9 @@ inherit
 
 feature -- General
 
+	translation_namespace: STRING = "code_analyzer"
+			-- A namespace used for translations.
+
 	tool_description: STRING_32
 		do Result := translation_in_context ("Performs a static code analysis based on a rule set %
 			%and the current code analysis preferences.", once "code_analyzer") end
@@ -39,16 +42,16 @@ feature -- Rules
 		do Result := translation_in_context ("Remove unused argument ", once "code_analyzer") end
 
 	npath_title: STRING_32
-		do Result := translation_in_context ("High NPATH", once "code_analyzer") end
+		do Result := translation_in_context ("High NPath", once "code_analyzer") end
 
 	npath_description: STRING_32
-		do Result := translation_in_context ("NPATH is the number of acyclic execution%
-			% paths through a routine. A routine's NPATH complexity should not be too%
-			% high. In order to reduce the NPATH complexity one can move some %
+		do Result := translation_in_context ("NPath is the number of acyclic execution%
+			% paths through a routine. A routine's NPath complexity should not be too%
+			% high. In order to reduce the NPath complexity one can move some %
 			%functionality to separate routines.", once "code_analyzer") end
 
 	npath_threshold_option: STRING_32
-		do Result := translation_in_context ("Minimum NPATH threshold", once "code_analyzer") end
+		do Result := translation_in_context ("Minimum NPath threshold", once "code_analyzer") end
 
 	empty_if_title: STRING_32
 		do Result := translation_in_context ("Empty if instruction", once "code_analyzer") end
@@ -394,50 +397,11 @@ feature -- Rules
 
 feature -- Preferences
 
+	preference_translation_namespace: STRING = "code_analysis.preference"
+			-- A namespace used for translations.
+
 	preferences_window_title: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector Preferences", once "code_analyzer") end
-
-	general_category: STRING_32
-		do Result := translation_in_context ("General", once "code_analyzer") end
-
-	rules_category: STRING_32
-		do Result := translation_in_context ("Rules", once "code_analyzer") end
-
-	color_category: STRING_32
-		do Result := translation_in_context ("Colors", once "code_analyzer") end
-
-	are_errors_enabled: STRING_32
-		do Result := translation_in_context ("Enable errors", once "code_analyzer") end
-
-	are_warnings_enabled: STRING_32
-		do Result := translation_in_context ("Enable warnings", once "code_analyzer") end
-
-	are_suggestions_enabled: STRING_32
-		do Result := translation_in_context ("Enable suggestions", once "code_analyzer") end
-
-	are_hints_enabled: STRING_32
-		do Result := translation_in_context ("Enable hints", once "code_analyzer") end
-
-	enable_rule: STRING_32
-		do Result := translation_in_context ("Enable rule", once "code_analyzer") end
-
-	severity_score: STRING_32
-		do Result := translation_in_context ("Importance score", once "code_analyzer") end
-
-	error_bgcolor: STRING_32
-		do Result := translation_in_context ("Error background color", once "code_analyzer") end
-
-	warning_bgcolor: STRING_32
-		do Result := translation_in_context ("Warning background color", once "code_analyzer") end
-
-	suggestion_bgcolor: STRING_32
-		do Result := translation_in_context ("Suggestion background color", once "code_analyzer") end
-
-	hint_bgcolor: STRING_32
-		do Result := translation_in_context ("Hint background color", once "code_analyzer") end
-
-	fixed_violation_bgcolor: STRING_32
-		do Result := translation_in_context ("Fixed violation background color", once "code_analyzer") end
+		do Result := translation_in_context ("Eiffel Inspector Preferences", once "code_analysis.preference") end
 
 feature -- GUI
 

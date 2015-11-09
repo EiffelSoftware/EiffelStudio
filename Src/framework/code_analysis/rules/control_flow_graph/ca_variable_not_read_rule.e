@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #20: Variable not read after assignment
 	
@@ -302,6 +302,9 @@ feature {NONE} -- Analysis data
 			-- Set of CFG nodes that represent an assignment or a creation.
 
 feature -- Properties
+
+	name: STRING = "unread_variable"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

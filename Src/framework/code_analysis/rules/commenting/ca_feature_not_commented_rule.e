@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #36: Feature not commented
 	
@@ -54,6 +54,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "missing_feature_comment"
+			-- <Precursor>
 
 	title: STRING_32
 		do

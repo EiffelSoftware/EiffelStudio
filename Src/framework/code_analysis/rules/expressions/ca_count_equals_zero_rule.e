@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #52: Number of elements of a structure is compared to zero
 	
@@ -90,6 +90,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "zero_count_test"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

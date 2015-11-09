@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #6: Object test typing not needed
 	
@@ -38,6 +38,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "redundant_object_test"
+			-- <Precursor>
 
 	title: STRING_32
 		do

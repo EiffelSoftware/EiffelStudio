@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #25: Semicolon to separate arguments
 	
@@ -39,6 +39,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "missing_argument_semicolon"
+			-- <Precursor>
 
 	title: STRING_32
 		do

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #11: Many feature arguments
 	
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			n_arguments_threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.arguments_threshold_option, 4)
+				preference_option_name_argument_threshold, 4)
 			n_arguments_threshold.set_default_value ("4")
 			n_arguments_threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 2, 20))
 		end
@@ -57,6 +57,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
+	name: STRING = "many_arguments"
+			-- <Precursor>
 
 	title: STRING_32
 		do
@@ -92,7 +95,16 @@ feature -- Properties
 			a_formatter.add (".")
 		end
 
-feature {NONE} -- Options
+feature {NONE} -- Preferences
+
+	preference_option_name_argument_threshold: STRING
+			-- A name of an argument threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_argument_threshold)
+		end
+
+	option_name_argument_threshold: STRING = "maximum_argument_count"
+			-- A name of a threshold option.
 
 	n_arguments_threshold : INTEGER_PREFERENCE
 			-- The minimum number of arguments a feature body must have in order to
@@ -112,7 +124,7 @@ feature -- Visitor
 					n := n + l_args_2.item.id_list.count
 				end
 
-				if n >= n_arguments_threshold.value then
+				if n > n_arguments_threshold.value then
 					create l_viol.make_with_rule (Current)
 					l_viol.set_location (a_feature.start_location)
 					l_viol.long_description_info.extend (a_feature.feature_name.name_32)

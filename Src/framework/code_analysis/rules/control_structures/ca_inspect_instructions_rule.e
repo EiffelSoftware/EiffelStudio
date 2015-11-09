@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #44: Many instructions in an Inspect case
 	
@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			max_instructions := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.inspect_instructions_max_instructions_option,
-				default_max)
+				preference_option_name_instruction_threshold, default_max)
 			max_instructions.set_default_value (default_max.out)
 			max_instructions.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 		end
@@ -75,13 +74,25 @@ feature {NONE} -- Rule Checking
 			end
 		end
 
-feature {NONE} -- Options
+feature {NONE} -- Preferences
+
+	preference_option_name_instruction_threshold: STRING
+			-- A name of an instruction count threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_instruction_threshold)
+		end
+
+	option_name_instruction_threshold: STRING = "maximum_instruction_count"
+			-- A name of an instruction threshold option.
 
 	max_instructions: INTEGER_PREFERENCE
 
 	default_max: INTEGER = 8
 
 feature -- Properties
+
+	name: STRING = "long_multi_branch"
+			-- <Precursor>
 
 	title: STRING_32
 		do

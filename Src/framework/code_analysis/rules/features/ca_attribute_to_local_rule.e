@@ -6,7 +6,7 @@
 			single routine of the class where it is defined (and that is not read
 			by any other class) can be transformed into a local variable.
 		]"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh, Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -92,6 +92,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "attribute_in_single_feature"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

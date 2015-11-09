@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #53: Empty routine in deferred class.
 	
@@ -63,6 +63,9 @@ feature {NONE} -- Rule checking
 		end
 
 feature -- Properties
+
+	name: STRING = "empty_feature_in_deferred class"
+			-- <Precursor>
 
 	title: STRING_32
 			-- Rule title.

@@ -1,13 +1,13 @@
-note
+﻿note
 	description: "[
-			RULE #34: High NPATH complexity
+			RULE #34: High NPath complexity
 	
-			NPATH is the number of acyclic execution
-			paths through a routine. A routine's NPATH complexity should not be too
-			high. In order to reduce the NPATH complexity one can move some
+			NPath is the number of acyclic execution
+			paths through a routine. A routine's NPath complexity should not be too
+			high. In order to reduce the NPath complexity one can move some
 			functionality to separate routines.
 		]"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh, Eiffel Software"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		do
 			create l_factory
 			threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.npath_threshold_option, default_threshold)
+				preference_option_name_threshold, default_threshold)
 			threshold.set_default_value (default_threshold.out)
 			threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 10, 1_000_000))
 		end
@@ -62,6 +62,9 @@ feature {NONE} -- Activation
 
 
 feature -- Properties
+
+	name: STRING = "npath_complexity"
+			-- <Precursor>
 
 	title: STRING_32
 			-- <Precursor>
@@ -99,18 +102,27 @@ feature -- Properties
 			a_formatter.add (".")
 		end
 
-feature {NONE} -- Options
+feature {NONE} -- Preferences
+
+	preference_option_name_threshold: STRING
+			-- A name of a threshold option within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_threshold)
+		end
+
+	option_name_threshold: STRING = "threshold"
+			-- A name of a threshold option.
 
 	default_threshold: INTEGER = 200
 			-- Default value for `threshold'.
 
 	threshold: INTEGER_PREFERENCE
-			-- Maximally allowed NPATH measure for a routine.
+			-- Maximally allowed NPath measure for a routine.
 
 feature {NONE} -- Rule Checking
 
 	npath_stack: STACK [INTEGER]
-			-- NPATH measures of nested inner blocks, such as if...end.
+			-- NPath measures of nested inner blocks, such as if...end.
 
 	process_feature (a_feature_as: FEATURE_AS)
 			-- Sets the currently processed feature to `a_feature_as'.
@@ -141,7 +153,7 @@ feature {NONE} -- Rule Checking
 		end
 
 	evaluate_routine
-			-- Creates a rule violation if NPATH is high enough.
+			-- Creates a rule violation if NPath is high enough.
 		local
 			l_violation: CA_RULE_VIOLATION
 			l_npath, l_threshold: INTEGER
@@ -163,13 +175,13 @@ feature {NONE} -- Rule Checking
 		end
 
 	pre_process_if (a_if: IF_AS)
-			-- Adds a new element to the NPATH stack.
+			-- Adds a new element to the NPath stack.
 		do
 			npath_stack.put (1)
 		end
 
 	post_process_if (a_if: IF_AS)
-			-- Combines the inner NPATH of `a_if' with the next-outer
+			-- Combines the inner NPath of `a_if' with the next-outer
 			-- level.
 		local
 			inner_npath, outer_npath: INTEGER
@@ -181,13 +193,13 @@ feature {NONE} -- Rule Checking
 		end
 
 	pre_process_loop (a_loop: LOOP_AS)
-			-- Adds a new element to the NPATH stack.
+			-- Adds a new element to the NPath stack.
 		do
 			npath_stack.put (1)
 		end
 
 	post_process_loop (a_loop: LOOP_AS)
-			-- Combines the inner NPATH of `a_loop' with the next-outer
+			-- Combines the inner NPath of `a_loop' with the next-outer
 			-- level.
 		local
 			inner_npath, outer_npath: INTEGER
@@ -199,13 +211,13 @@ feature {NONE} -- Rule Checking
 		end
 
 	pre_process_inspect (a_inspect: INSPECT_AS)
-			-- Adds a new element to the NPATH stack.
+			-- Adds a new element to the NPath stack.
 		do
 			npath_stack.put (1)
 		end
 
 	post_process_inspect (a_inspect: INSPECT_AS)
-			-- Combines the inner NPATH of `a_inspect' with the next-outer
+			-- Combines the inner NPath of `a_inspect' with the next-outer
 			-- level.
 		local
 			inner_npath, outer_npath: INTEGER
@@ -217,14 +229,14 @@ feature {NONE} -- Rule Checking
 		end
 
 	process_and_then (a_and_then: BIN_AND_THEN_AS)
-			-- Do nothing. It would be possible to raise the NPATH measure
+			-- Do nothing. It would be possible to raise the NPath measure
 			-- here, too.
 		do
 
 		end
 
 	process_or_else (a_or_else: BIN_OR_ELSE_AS)
-			-- Do nothing. It would be possible to raise the NPATH measure
+			-- Do nothing. It would be possible to raise the NPath measure
 			-- here, too.
 		do
 

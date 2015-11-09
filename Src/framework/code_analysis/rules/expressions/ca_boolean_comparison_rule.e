@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #42: Unneeded comparison of boolean variables or queries
 	
@@ -36,6 +36,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "comparison_to_boolean_constant"
+			-- <Precursor>
 
 	title: STRING_32
 		do

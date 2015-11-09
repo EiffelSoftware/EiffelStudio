@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #4: No command-query separation (possible function side effect)
 			
@@ -118,6 +118,9 @@ feature {NONE} -- AST Visits
 		end
 
 feature -- Properties
+
+	name: STRING = "possible_side_effect"
+			-- <Precursor>
 
 	title: STRING_32
 		do

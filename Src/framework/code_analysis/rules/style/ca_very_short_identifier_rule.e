@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #61: Very short identifier
 	
@@ -38,30 +38,30 @@ feature {NONE} -- Initialization
 			create l_factory
 
 			min_feature_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.min_feature_name_length_option,
+				full_preference_name (option_name_min_feature_name_length),
 				default_min_feature_name_length)
 			min_feature_name_length.set_default_value (default_min_feature_name_length.out)
 			min_feature_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			min_argument_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.min_argument_name_length_option,
+				full_preference_name (option_name_min_argument_name_length),
 				default_min_argument_name_length)
 			min_argument_name_length.set_default_value (default_min_argument_name_length.out)
 			min_argument_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			min_local_name_length := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.min_local_name_length_option,
+				full_preference_name (option_name_min_local_name_length),
 				default_min_local_name_length)
 			min_local_name_length.set_default_value (default_min_local_name_length.out)
 			min_local_name_length.set_validation_agent (agent is_integer_string_within_bounds (?, 1, 1_000_000))
 
 			count_argument_prefix := l_factory.new_boolean_preference_value (a_pref_manager,
-				preference_namespace + ca_names.count_argument_prefix_option,
+				full_preference_name (option_name_is_argument_prefix_counted),
 				default_count_argument_prefix)
 			count_argument_prefix.set_default_value (default_count_argument_prefix.out)
 
 			count_local_prefix := l_factory.new_boolean_preference_value (a_pref_manager,
-				preference_namespace + ca_names.count_local_prefix_option,
+				full_preference_name (option_name_is_local_prefix_counted),
 				default_count_local_prefix)
 			count_local_prefix.set_default_value (default_count_local_prefix.out)
 		end
@@ -170,6 +170,23 @@ feature {NONE} -- Rule checking
 			Result := not (a_id.count = 1 and then a_id.is_equal ("i") or a_id.is_equal ("j") or a_id.is_equal ("k") or a_id.is_equal ("n"))
 		end
 
+feature {NONE} -- Properties
+
+	option_name_min_feature_name_length: STRING = "minimum_feature_name_length"
+			-- An option for minimum feature name length.
+
+	option_name_min_argument_name_length: STRING = "minimum_argument_name_length"
+			-- An option for minimum argument name length.
+
+	option_name_min_local_name_length: STRING = "minimum_local_name_length"
+			-- An option for minimum local name length.
+
+	option_name_is_argument_prefix_counted: STRING = "is_argument_prefix_counted"
+			-- An option that controls if an argument prefix is counted.
+
+	option_name_is_local_prefix_counted: STRING = "is_local_prefix_counted"
+			-- An option that controls if an local prefix is counted.
+
 feature -- Options
 
 	min_feature_name_length,
@@ -187,6 +204,9 @@ feature -- Options
 	default_count_local_prefix: BOOLEAN = True
 
 feature -- Properties
+
+	name: STRING = "short_identifier"
+			-- <Precursor>
 
 	title: STRING_32
 		do

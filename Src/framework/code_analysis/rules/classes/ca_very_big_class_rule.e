@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #33: Very big class
 	
@@ -48,12 +48,12 @@ feature {NONE} -- Initialization
 			create l_factory
 
 			features_threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.very_big_class_features_threshold_option, default_features_threshold)
+				full_preference_name (option_name_features_threshold), default_features_threshold)
 			features_threshold.set_default_value (default_features_threshold.out)
 			features_threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 3, 1_000_000))
 
 			instructions_threshold := l_factory.new_integer_preference_value (a_pref_manager,
-				preference_namespace + ca_names.very_big_class_instructions_threshold_option, default_instructions_threshold)
+				full_preference_name (option_name_instructions_threshold), default_instructions_threshold)
 			instructions_threshold.set_default_value (default_instructions_threshold.out)
 			instructions_threshold.set_validation_agent (agent is_integer_string_within_bounds (?, 3, 1_000_000))
 		end
@@ -159,6 +159,9 @@ feature -- Rule checking
 
 feature -- Properties
 
+	name: STRING = "long_class"
+			-- <Precursor>
+
 	title: STRING_32
 		do
 			Result := ca_names.very_big_class_title
@@ -198,6 +201,14 @@ feature -- Properties
 			end
 			a_formatter.add (ca_messages.very_big_class_violation_6)
 		end
+
+feature {NONE} -- Preferences
+
+	option_name_features_threshold: STRING = "maximum_feature_count"
+			-- A name of a features threshold option.
+
+	option_name_instructions_threshold: STRING = "maximum_instruction_count"
+			-- A name of an instructions threshold option.
 
 feature {NONE} -- Options
 

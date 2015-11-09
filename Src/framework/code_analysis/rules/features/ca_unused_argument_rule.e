@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #2: Unused argument
 			
@@ -40,6 +40,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "unused_argument"
+			-- <Precursor>
 
 	title: STRING_32
 		do

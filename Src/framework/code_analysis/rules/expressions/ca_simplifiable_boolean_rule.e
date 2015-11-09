@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			RULE #57: Simplifiable boolean expression
 	
@@ -35,6 +35,9 @@ feature {NONE} -- Activation
 		end
 
 feature -- Properties
+
+	name: STRING = "negated_comparison"
+			-- <Precursor>
 
 	title: STRING_32
 		do

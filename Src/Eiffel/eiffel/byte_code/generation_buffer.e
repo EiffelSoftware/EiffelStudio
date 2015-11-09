@@ -183,7 +183,13 @@ feature -- Ids generation
 			-- Generate textual representation of real body index
 			-- in generated C code
 		do
-			current_buffer.append_integer (real_body_index - 1)
+			if real_body_index > 0 then
+				current_buffer.append_integer (real_body_index - 1)
+			else
+					-- If the value is negative we can only output a hex format since
+					-- a body index is an unsigned integer.
+				put_hex_integer_32 (real_body_index)
+			end
 		end
 
 	put_type_id (type_id: INTEGER)

@@ -90,9 +90,9 @@ for filename in os.listdir (path_help_error_short):
         file.close()
         
 po.save()
-print 'generated errors.pot'
+print ('generated errors.pot')
 os.system('msguniq -o ' + po.filepath + ' ' + po.filepath)
-print 'called msguniq to remove duplicates'
+print ('called msguniq to remove duplicates')
 
 
 # extract default metric definitions
@@ -128,9 +128,9 @@ for metric in dom.getElementsByTagName('basic_metric'):
             '$EIFFEL_SRC/Delivery/studio/metrics/predefined_metrics.xml'))
 
 po.save()
-print 'generated metrics.pot'
+print ('generated metrics.pot')
 os.system('msguniq -o ' + po.filepath + ' ' + po.filepath)
-print 'called msguniq to remove duplicates'
+print ('called msguniq to remove duplicates')
 
 
 # extract preferences
@@ -203,9 +203,9 @@ for root, dirs, files in os.walk(path_eifinit):
             extract_preferences(filepath)
 
 po.save()
-print 'generated preferences.pot'
+print ('generated preferences.pot')
 os.system('msguniq -o ' + po.filepath + ' ' + po.filepath)
-print 'called msguniq to remove duplicates'
+print ('called msguniq to remove duplicates')
 
 
 # extract wizard descriptions
@@ -248,9 +248,9 @@ for filename in os.listdir (path_wizards):
                 filepath))
 
 po.save()
-print 'generated wizards.pot'
+print ('generated wizards.pot')
 os.system('msguniq -o ' + po.filepath + ' ' + po.filepath)
-print 'called msguniq to remove duplicates'
+print ('called msguniq to remove duplicates')
 
 
 # Extract documentation
@@ -262,5 +262,5 @@ print 'called msguniq to remove duplicates'
 #       later. Probably it will not be done at all...
 
 
-print 'finished'
+print ('finished')
 

@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 						l_parse_error := true
 					else
 							-- Enable the rule.
-						forced_preferences.extend ([l_rule_name, ca_names.enable_rule.to_string_8, "True"])
+						forced_preferences.extend ([l_rule_name, {CA_RULE}.Option_name_enable, "True"])
 
 							-- Trim the head
 						l_line.remove_head (l_rule_name.count)

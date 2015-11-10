@@ -1318,19 +1318,19 @@ feature {NONE} -- Type information
 			l_nat: NATURAL_A
 			t: TYPED_POINTER_A
 		do
-			inspect b.hash_code
-			when {SHARED_HASH_CODE}.Boolean_code then Result := boolean_type_id
-			when {SHARED_HASH_CODE}.Character_code then
+			inspect b.sk_value (Void)
+			when {SK_CONST}.sk_bool then Result := boolean_type_id
+			when {SK_CONST}.sk_char8 then
 				Result := character_type_id
 				is_wide := False
 
-			when {SHARED_HASH_CODE}.Wide_char_code then
+			when {SK_CONST}.sk_char32 then
 				Result := character_type_id
 				is_wide := True
 
 			when
-				{SHARED_HASH_CODE}.natural_8_code, {SHARED_HASH_CODE}.natural_16_code,
-				{SHARED_HASH_CODE}.natural_32_code, {SHARED_HASH_CODE}.natural_64_code
+				{SK_CONST}.sk_uint8, {SK_CONST}.sk_uint16,
+				{SK_CONST}.sk_uint32, {SK_CONST}.sk_uint64
 			then
 				Result := integer_type_id
 				is_signed_integer := False
@@ -1338,17 +1338,17 @@ feature {NONE} -- Type information
 				integer_size := l_nat.size
 
 			when
-				{SHARED_HASH_CODE}.Integer_8_code, {SHARED_HASH_CODE}.Integer_16_code,
-				{SHARED_HASH_CODE}.Integer_32_code, {SHARED_HASH_CODE}.Integer_64_code
+				{SK_CONST}.sk_int8, {SK_CONST}.sk_int16,
+				{SK_CONST}.sk_int32, {SK_CONST}.sk_int64
 			then
 				Result := integer_type_id
 				is_signed_integer := True
 				l_int ?= b
 				integer_size := l_int.size
 
-			when {SHARED_HASH_CODE}.Pointer_code then Result := pointer_type_id
-			when {SHARED_HASH_CODE}.Real_32_code then Result := real_32_type_id
-			when {SHARED_HASH_CODE}.Real_64_code then Result := real_64_type_id
+			when {SK_CONST}.sk_pointer then Result := pointer_type_id
+			when {SK_CONST}.sk_real32 then Result := real_32_type_id
+			when {SK_CONST}.sk_real64 then Result := real_64_type_id
 
 			else
 				t ?= b

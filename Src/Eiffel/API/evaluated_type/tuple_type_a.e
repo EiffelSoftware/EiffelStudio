@@ -58,7 +58,7 @@ feature -- Access
 
 	generic_derivation: TUPLE_TYPE_A
 		do
-				-- Since the generic derivation for a TUPLE does not has actual generic parameter
+				-- Since the generic derivation for a TUPLE does not have actual generic parameter
 				-- we simply create a copy of current without actuals.
 			create Result.make (class_id, create {ARRAYED_LIST [TYPE_A]}.make (0))
 			Result.set_mark (declaration_mark)

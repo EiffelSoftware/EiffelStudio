@@ -143,6 +143,7 @@ rt_shared void rt_processor_shutdown (struct rt_processor* self);
 /* Wait condition subscription management. */
 rt_shared int rt_processor_subscribe_wait_condition (struct rt_processor* self, struct rt_processor* client);
 rt_shared void rt_processor_unsubscribe_wait_condition (struct rt_processor* self, struct rt_processor* dead_processor);
+rt_shared void rt_processor_publish_wait_condition (struct rt_processor* self);
 
 /* Declarations for group stack manipulation. */
 rt_shared int rt_processor_request_group_stack_extend (struct rt_processor* self);

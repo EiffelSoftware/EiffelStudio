@@ -81,10 +81,6 @@ RT_DECLARE_VECTOR_SIZE_FUNCTIONS (private_queue_list_t, struct rt_private_queue*
 RT_DECLARE_VECTOR_ARRAY_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
 RT_DECLARE_VECTOR_STACK_FUNCTIONS (private_queue_list_t, struct rt_private_queue*)
 
-/* Forward declaration. */
-rt_private void rt_processor_publish_wait_condition (struct rt_processor* self);
-
-
 /*
 doc:	<routine name="rt_processor_create" return_type="int" export="shared">
 doc:		<summary> Create a new processor with ID 'a_pid'. Note: This only creates the processor object and does not spawn a new thread. </summary>
@@ -387,11 +383,6 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 				self->is_dirty = EIF_FALSE;
 				is_stopped = EIF_TRUE;
 				break;
-			case SCOOP_MESSAGE_SYNC:
-					/* We're a passive processor that got a lock request. */
-				CHECK ("is_passive", self->is_passive_region);
-				rt_message_channel_send (l_message->sender_processor->result_notify_proxy, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
-				break;
 			case SCOOP_MESSAGE_EXECUTE:
 				rt_processor_execute_call (self, l_message->sender_processor, l_message->call);
 				break;
@@ -405,7 +396,7 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 }
 
 /*
-doc:	<routine name="rt_processor_publish_wait_condition" return_type="void" export="private">
+doc:	<routine name="rt_processor_publish_wait_condition" return_type="void" export="shared">
 doc:		<summary> Notify all processors in the 'self->wait_condition_subscribers' vector that a wait condition has changed. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor with the subscribers list. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
@@ -413,7 +404,7 @@ doc:		<synchronization> The feature rt_processor_subscribe_wait_condition must o
 doc:			This ensures that rt_publish_wait_condition cannot be executed at the same time. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_publish_wait_condition (struct rt_processor* self)
+rt_shared void rt_processor_publish_wait_condition (struct rt_processor* self)
 {
 	struct subscriber_list_t* subscribers = NULL;
 

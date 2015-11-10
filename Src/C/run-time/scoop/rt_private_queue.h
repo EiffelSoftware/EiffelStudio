@@ -96,6 +96,5 @@ rt_shared void rt_private_queue_unlock (struct rt_private_queue* self, EIF_BOOLE
 rt_shared int rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client);
 
 rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call);
-rt_shared void rt_private_queue_synchronize (struct rt_private_queue* self, struct rt_processor* client);
 
 #endif /* _rt_private_queue_h_ */

@@ -141,8 +141,14 @@ rt_shared void rt_private_queue_lock (struct rt_private_queue* self, struct rt_p
 	REQUIRE ("client_not_null", client);
 
 	if (self->lock_depth == 0) {
-		rt_message_channel_send (&(self->supplier->queue_of_queues), SCOOP_MESSAGE_ADD_QUEUE, client, NULL, self);
-		self->synced = EIF_FALSE;
+		if (self->supplier->is_passive_region) {
+				/* NOTE: We reuse the wait_condition mutex of a passive region as a lock. This mutex is never used anyway in a passive region. */
+			RT_TRACE (eif_pthread_mutex_lock (self->supplier->wait_condition_mutex));
+			self->synced = EIF_TRUE;
+		} else {
+			rt_message_channel_send (&(self->supplier->queue_of_queues), SCOOP_MESSAGE_ADD_QUEUE, client, NULL, self);
+			self->synced = EIF_FALSE;
+		}
 	}
 	self->lock_depth++;
 }
@@ -163,8 +169,15 @@ rt_shared void rt_private_queue_unlock (struct rt_private_queue* self, EIF_BOOLE
 	self->lock_depth--;
 
 	if (self->lock_depth == 0) {
-		enum scoop_message_type l_type = is_wait_condition_failure ? SCOOP_MESSAGE_WAIT_CONDITION_UNLOCK : SCOOP_MESSAGE_UNLOCK;
-		rt_message_channel_send (&self->channel, l_type, NULL, NULL, NULL);
+		if (self->supplier->is_passive_region) {
+			if (!is_wait_condition_failure) {
+				rt_processor_publish_wait_condition (self->supplier);
+			}
+			RT_TRACE (eif_pthread_mutex_unlock (self->supplier->wait_condition_mutex));
+		} else {
+			enum scoop_message_type l_type = is_wait_condition_failure ? SCOOP_MESSAGE_WAIT_CONDITION_UNLOCK : SCOOP_MESSAGE_UNLOCK;
+			rt_message_channel_send (&self->channel, l_type, NULL, NULL, NULL);
+		}
 		self->synced = EIF_FALSE;
 	}
 }
@@ -306,29 +319,6 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 	}
 
 	self->synced = will_sync;
-}
-
-
-/*
-doc:	<routine name="rt_private_queue_synchronize" return_type="void" export="shared">
-doc:		<summary> Synchronize with the supplier. This is used to lock a passive processor. </summary>
-doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
-doc:		<param name="client" type="struct rt_processor*"> The (active) client that wants to synchronize. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_private_queue_synchronize (struct rt_private_queue* self, struct rt_processor* client)
-{
-	struct rt_message_channel* l_result_notify = client->result_notify_proxy;
-	struct rt_message l_message;
-
-	rt_message_channel_send (&self->channel, SCOOP_MESSAGE_SYNC, client, NULL, NULL);
-
-	rt_message_channel_receive (l_result_notify, &l_message);
-	CHECK ("correct_message", l_message.message_type == SCOOP_MESSAGE_RESULT_READY);
-
-	self->synced = EIF_TRUE;
 }
 
 /*

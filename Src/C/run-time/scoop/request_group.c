@@ -191,7 +191,10 @@ doc:	</routine>
 */
 rt_shared void rt_request_group_lock (struct rt_request_group* self)
 {
-	size_t i, l_count = rt_request_group_count (self);
+	struct rt_private_queue* l_queue = NULL;
+	size_t i = 0;
+	size_t l_count = rt_request_group_count (self);
+	EIF_BOOLEAN l_has_passive = EIF_FALSE;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("not_locked", !self->is_locked);
@@ -207,30 +210,44 @@ rt_shared void rt_request_group_lock (struct rt_request_group* self)
 		self->is_sorted = 1;
 	}
 
-		/* Temporarily lock the queue-of-queue of all suppliers. */
-	for (i = 0; i < l_count; ++i) {
-		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
-		RT_TRACE (eif_pthread_mutex_lock (l_supplier->queue_of_queues_mutex));
+	/* First we lock all passive regions. */
+	for (i=0; i < l_count; ++i) {
+		l_queue = rt_request_group_item (self, i);
+		if (l_queue->supplier->is_passive_region) {
+				/* We only register a blocking operation with the GC if it's really necessary,
+				 * since this is a somewhat costly operation. */
+			if (!l_has_passive) {
+				l_has_passive = EIF_TRUE;
+				EIF_ENTER_C;
+			}
+			rt_private_queue_lock (l_queue, self->client);
+		}
 	}
 
-		/* Add all private queues to the queue-of-queues */
+		/* Synchronize with the GC again. */
+	if (l_has_passive) {
+		EIF_EXIT_C;
+		RTGC;
+	}
+
+		/* Temporarily lock the queue-of-queue of all suppliers. */
 	for (i = 0; i < l_count; ++i) {
-		rt_private_queue_lock (rt_request_group_item (self, i), self->client);
+		l_queue = rt_request_group_item (self, i);
+		RT_TRACE (eif_pthread_mutex_lock (l_queue->supplier->queue_of_queues_mutex));
+	}
+
+		/* Add all private queues of active regions to the queue-of-queues */
+	for (i = 0; i < l_count; ++i) {
+		l_queue = rt_request_group_item (self, i);
+		if (!l_queue->supplier->is_passive_region) {
+			rt_private_queue_lock (l_queue, self->client);
+		}
 	}
 
 		/* Release the queue-of-queue locks. */
 	for (i = 0; i < l_count; ++i) {
-		struct rt_processor* l_supplier = rt_request_group_item (self, i)->supplier;
-		RT_TRACE (eif_pthread_mutex_unlock (l_supplier->queue_of_queues_mutex));
-	}
-
-		/* Synchronize with all passive processors. */
-	for (i=0; i < l_count; ++i) {
-		struct rt_private_queue* l_queue = rt_request_group_item (self, i);
-		if (l_queue->supplier->is_passive_region) {
-			rt_private_queue_synchronize (l_queue, self->client);
-		}
-
+		l_queue = rt_request_group_item (self, i);
+		RT_TRACE (eif_pthread_mutex_unlock (l_queue->supplier->queue_of_queues_mutex));
 	}
 
 	self->is_locked = 1;

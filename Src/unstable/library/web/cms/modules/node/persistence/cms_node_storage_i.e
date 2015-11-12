@@ -127,6 +127,26 @@ feature -- Access
 		deferred
 		end
 
+	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]
+			-- List of nodes of type `a_node_type'.
+			--| Redefine to optimize!
+		do
+			Result := nodes
+			from
+				Result.start
+			until
+				Result.after
+			loop
+				if Result.item.content_type.same_string (a_node_type.name) then
+					Result.forth
+				else
+					Result.remove
+				end
+			end
+		ensure
+			expected_type: across Result as ic all ic.item.content_type.same_string (a_node_type.name) end
+		end
+
 feature -- Access: outline
 
 	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]

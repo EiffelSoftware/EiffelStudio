@@ -12,6 +12,9 @@ inherit
 	CMS_PROXY_STORAGE_SQL
 
 	CMS_NODE_STORAGE_I
+		redefine
+			nodes_of_type
+		end
 
 	CMS_STORAGE_SQL_I
 
@@ -264,6 +267,33 @@ feature -- Access
 --			end
 		end
 
+	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]
+			-- <Precursor>
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_NODE]} Result.make (0)
+
+			error_handler.reset
+			write_information_log (generator + ".nodes_of_type")
+			create l_parameters.make (1)
+			l_parameters.put (a_node_type.name, "node_type")
+
+			from
+				sql_query (sql_select_nodes_of_type, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_node as l_node then
+					check expected_node_type: l_node.content_type.same_string (a_node_type.name) end
+					Result.force (l_node)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
 feature -- Access: outline
 
 	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]
@@ -494,6 +524,10 @@ feature {NONE} -- Queries
 	sql_select_nodes: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 ;"
 			-- SQL Query to retrieve all nodes.
 			--| note: {CMS_NODE_API}.trashed = -1
+
+	sql_select_nodes_of_type: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed, status FROM nodes WHERE status != -1 AND type=:node_type ;"
+			-- SQL Query to retrieve all nodes of type :node_type.
+			--| note: {CMS_NODE_API}.trashed = -1		
 
 	sql_select_node_revisions: STRING = "SELECT nodes.nid, node_revisions.revision, nodes.type, node_revisions.title, node_revisions.summary, node_revisions.content, node_revisions.format, node_revisions.author, nodes.publish, nodes.created, node_revisions.changed, node_revisions.status FROM nodes INNER JOIN node_revisions ON nodes.nid = node_revisions.nid WHERE nodes.nid = :nid AND node_revisions.revision < :revision ORDER BY node_revisions.revision DESC;"
 			-- SQL query to get node revisions (missing the latest one).

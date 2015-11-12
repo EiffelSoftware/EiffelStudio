@@ -829,6 +829,7 @@ feature {NONE} -- Implementation: User
 		end
 
 	fetch_user: detachable CMS_USER
+			-- Fetch user from fields: 1:uid, 2:name, 3:password, 4:salt, 5:email, 6:status, 7:created, 8:signed.
 		local
 			l_id: INTEGER_64
 			l_name: detachable READABLE_STRING_32
@@ -919,10 +920,10 @@ feature {NONE} -- Sql Queries: USER
 	Select_user_by_name: STRING = "SELECT * FROM users WHERE name =:name;"
 			-- Retrieve user by name if exists.
 
-	Sql_select_recent_users: STRING = "SELECT * FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset ;"
+	Sql_select_recent_users: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users ORDER BY uid DESC, created DESC LIMIT :rows OFFSET :offset ;"
 			-- Retrieve recent users
 
-	Select_user_by_email: STRING = "SELECT * FROM users WHERE email =:email;"
+	Select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
 	Select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"

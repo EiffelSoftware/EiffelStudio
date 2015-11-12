@@ -97,6 +97,21 @@ feature -- Access node
 			Result := nodes_to_blogs (blog_storage.blogs_from_user_limited (a_user, a_limit, a_offset))
 		end
 
+feature -- Conversion
+
+	full_blog_node (a_blog: CMS_BLOG): CMS_BLOG
+			-- If `a_blog' is partial, return the full blog node from `a_blog',
+			-- otherwise return directly `a_blog'.
+		require
+			a_blog_set: a_blog /= Void
+		do
+			if attached {CMS_BLOG} node_api.full_node (a_blog) as l_full_blog then
+				Result := l_full_blog
+			else
+				Result := a_blog
+			end
+		end
+
 feature {NONE} -- Helpers
 
 	nodes_to_blogs (a_nodes: LIST [CMS_NODE]): ARRAYED_LIST [CMS_BLOG]

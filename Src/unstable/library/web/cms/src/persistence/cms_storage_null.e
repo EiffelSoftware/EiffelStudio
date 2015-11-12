@@ -80,6 +80,12 @@ feature -- URL aliases
 		do
 		end
 
+	path_aliases: STRING_TABLE [READABLE_STRING_8]
+			-- <Precursor>.
+		do
+			create Result.make (0)
+		end
+
 feature -- Logs
 
 	save_log (a_log: CMS_LOG)
@@ -116,5 +122,12 @@ feature -- Custom
 			end
 		end
 
+	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]
+			-- Values as list of [name, type, value].
+		do
+		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

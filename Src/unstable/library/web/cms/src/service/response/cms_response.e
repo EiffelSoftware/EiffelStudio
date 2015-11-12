@@ -71,6 +71,7 @@ feature {NONE} -- Initialization
 			l_module: CMS_MODULE
 			l_enabled_modules: CMS_MODULE_COLLECTION
 		do
+			api.register_hooks (hooks)
 			l_enabled_modules := api.enabled_modules
 			across
 				l_enabled_modules as ic

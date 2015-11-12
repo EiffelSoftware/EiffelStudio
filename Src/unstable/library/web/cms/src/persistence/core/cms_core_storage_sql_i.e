@@ -127,6 +127,35 @@ feature -- URL aliases
 			sql_finalize
 		end
 
+	path_aliases: STRING_TABLE [READABLE_STRING_8]
+			-- All path aliases as a table containing sources indexed by alias.
+		local
+			l_source: READABLE_STRING_8
+		do
+			error_handler.reset
+			create Result.make (5)
+			sql_query (sql_select_all_path_alias, Void)
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached sql_read_string (1) as s_src then
+						l_source := s_src
+						if attached sql_read_string (2) as s_alias then
+							Result.force (l_source, s_alias)
+						end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize
+		end
+
+	sql_select_all_path_alias: STRING = "SELECT source, alias, lang FROM path_aliases;"
+			-- SQL select all path aliases.
+
 	sql_select_path_alias: STRING = "SELECT source FROM path_aliases WHERE alias=:alias ;"
 			-- SQL select path aliases.
 
@@ -250,6 +279,38 @@ feature -- Misc
 			end
 			sql_finalize
 		end
+
+	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]
+			-- Values as list of [name, type, value].
+		local
+			l_type, l_name: READABLE_STRING_8
+		do
+			error_handler.reset
+			create {ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]} Result.make (5)
+			sql_query (sql_select_all_custom_values, Void)
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached sql_read_string (1) as s_type then
+						l_type := s_type
+						if attached sql_read_string (2) as s_name then
+							l_name := s_name
+							if attached sql_read_string_32 (3) as s_value then
+								Result.force ([l_name, l_type, s_value])
+							end
+						end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize
+		end
+
+	sql_select_all_custom_values: STRING = "SELECT type, name, value FROM custom_values;"
+				-- SQL Insert to add a new custom value.
 
 	sql_select_custom_value: STRING = "SELECT value FROM custom_values WHERE type=:type AND name=:name;"
 				-- SQL Insert to add a new custom value.

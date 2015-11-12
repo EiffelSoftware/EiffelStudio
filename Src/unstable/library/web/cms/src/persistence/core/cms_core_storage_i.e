@@ -47,6 +47,11 @@ feature -- URL aliases
 		deferred
 		end
 
+	path_aliases: STRING_TABLE [READABLE_STRING_8]
+			-- All path aliases as a table containing sources indexed by alias.
+		deferred
+		end
+
 feature -- Logs
 
 	save_log (a_log: CMS_LOG)
@@ -71,5 +76,12 @@ feature -- Misc
 		deferred
 		end
 
+	custom_values: detachable LIST [TUPLE [name: READABLE_STRING_GENERAL; type: detachable READABLE_STRING_8; value: detachable READABLE_STRING_32]]
+			-- Values as list of [name, type, value].
+		deferred
+		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

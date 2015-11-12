@@ -223,6 +223,34 @@ feature -- Hook: cache
 			end
 		end
 
+feature -- Hook: export
+
+	subscribe_to_export_hook (h: CMS_HOOK_EXPORT)
+			-- Add `h' as subscriber of export hooks CMS_HOOK_EXPORT.		
+		do
+			subscribe_to_hook (h, {CMS_HOOK_EXPORT})
+		end
+
+	invoke_export_to (a_export_id_list: detachable ITERABLE [READABLE_STRING_GENERAL]; a_export_parameters: CMS_EXPORT_PARAMETERS; a_response: CMS_RESPONSE)
+			-- Invoke response alter hook for response `a_response'.		
+		local
+			d: DIRECTORY
+		do
+			if attached subscribers ({CMS_HOOK_EXPORT}) as lst then
+				create d.make_with_path (a_export_parameters.location)
+				if not d.exists then
+					d.recursive_create_dir
+				end
+				across
+					lst as ic
+				loop
+					if attached {CMS_HOOK_EXPORT} ic.item as h then
+						h.export_to (a_export_id_list, a_export_parameters, a_response)
+					end
+				end
+			end
+		end
+
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

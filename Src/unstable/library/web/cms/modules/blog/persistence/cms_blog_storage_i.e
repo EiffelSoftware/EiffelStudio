@@ -6,8 +6,12 @@ note
 deferred class
 	CMS_BLOG_STORAGE_I
 
-inherit
-	CMS_NODE_STORAGE_I
+feature -- Error Handling
+
+	error_handler: ERROR_HANDLER
+			-- Error handler.
+		deferred
+		end
 
 feature -- Access
 

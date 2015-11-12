@@ -330,6 +330,14 @@ feature -- Access: Node
 			end
 		end
 
+	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]
+			-- List of nodes of type `a_node_type'.
+		do
+			Result := node_storage.nodes_of_type (a_node_type)
+		ensure
+			expected_type: across Result as ic all ic.item.content_type.same_string (a_node_type.name) end
+		end
+
 feature -- Access: page/book outline
 
 	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]

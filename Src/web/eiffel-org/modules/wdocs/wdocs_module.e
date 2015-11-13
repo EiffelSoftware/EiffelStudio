@@ -1148,16 +1148,23 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 	wikipage_data_from_ids (ids: like wikipage_ids_from_request): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page; bookid: READABLE_STRING_GENERAL; manager: WDOCS_MANAGER]
 		local
 			pg: detachable like {WDOCS_MANAGER}.page
+			l_book_id: detachable READABLE_STRING_GENERAL
+			mng: like manager
 		do
 			if attached wdocs_api as l_api then
-				pg := l_api.wiki_page (ids.wiki_id, ids.bookid, ids.version_id)
+				l_book_id := ids.bookid
+				pg := l_api.wiki_page (ids.wiki_id, l_book_id, ids.version_id)
 
-				if attached ids.bookid as l_bookid then
-					if pg = Void and attached ids.wiki_uuid as l_wiki_uuid then
-						pg := l_api.wiki_page_by_uuid (l_wiki_uuid, l_bookid, ids.version_id)
+				if pg = Void and attached ids.wiki_uuid as l_wiki_uuid then
+					pg := l_api.wiki_page_by_uuid (l_wiki_uuid, l_book_id, ids.version_id)
+				end
+				if pg /= Void then
+					mng := manager (ids.version_id)
+					if l_book_id = Void then
+						l_book_id := mng.book_name (pg)
 					end
-					if pg /= Void then
-						Result := [pg, l_bookid, manager (ids.version_id)]
+					if l_book_id /= Void then
+						Result := [pg, l_book_id, mng]
 					end
 				end
 			end

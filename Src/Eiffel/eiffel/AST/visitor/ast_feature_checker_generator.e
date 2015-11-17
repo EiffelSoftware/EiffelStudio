@@ -10669,10 +10669,10 @@ feature {NONE} -- Agents
 			l_tcat: CAT_CALL_WARNING
 		do
 			check
-				has_generics: attached a_last_type.generics as l_generics and then l_generics.count > 1
+				has_generics: attached a_last_type.generics as l_generics and then not l_generics.is_empty
 			end
 				-- The type `a_last_type' represents a ROUTINE/PROCEDURE/FUNCTION/PREDICATE
-				-- and its second actual generic parameter represents the type of the TUPLE.
+				-- and its first actual generic parameter represents the type of the TUPLE.
 				-- In the event, it is not generics, it means that the type is a formal one.
 				-- In this case, we do not do anything because it should be taken care with
 				-- existing rules governing calls on features involving formal generic parameters.

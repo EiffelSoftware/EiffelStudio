@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_14_05
+			make_15_11
 		end
 
 	make_6_3

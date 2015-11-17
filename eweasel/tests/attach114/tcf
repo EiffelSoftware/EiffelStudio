@@ -1,0 +1,11 @@
+test_name 	 targeted-parenthesis-alias-call
+test_description A parenthesis call should be disallowed on a non-initialized object.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+test_end

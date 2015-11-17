@@ -2813,6 +2813,7 @@ test	initialization-in-conditional		attach110 tcf pass void_safe attached_types 
 test	targeted-in-structure-classes		attach111 tcf pass void_safe targeted validity
 test	iteration-loop-target-attachment	attach112 tcf pass void_safe validity across iteration loop
 test	conversion-with-wrong-target-type	attach113 tcf pass void_safe conversion
+test	targeted-parenthesis-alias-call		attach114 tcf fail void_safe targeted parenthesis_alias validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -2314,7 +2314,7 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 			actual_type_not_void: Result /= Void
 		end
 
-feature {GEN_TYPE_A} -- Tuple paramter unfolding
+feature -- Tuple paramter unfolding
 
 	tuple_parameter_index: INTEGER
 			-- Index of a formal parameter constrained to a tuple type or 0 if there is none or several such parameters.

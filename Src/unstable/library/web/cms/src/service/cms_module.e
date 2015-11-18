@@ -27,7 +27,7 @@ feature -- Access
 			-- Mostly to group modules by package/category.
 
 	version: STRING
-			-- Version od the module?
+			-- Version of the module?
 
 	dependencies: detachable LIST [TYPE [CMS_MODULE]]
 			-- Optional dependencies.

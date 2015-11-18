@@ -123,6 +123,7 @@ feature -- Hooks configuration
 				lnk.set_weight (98)
 				a_menu_system.primary_menu.extend (lnk)
 			end
+
 		end
 
 feature -- Handler

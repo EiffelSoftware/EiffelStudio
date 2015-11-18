@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 feature -- Factory
 
 	initial_cms_setup: CMS_SETUP
+			-- Default setup object that Current interface can customize.
 		deferred
 		end
 

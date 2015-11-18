@@ -94,8 +94,6 @@ feature -- C Code generation
 		do
 			buf := buffer
 			if attached source as s then
-				generate_line_info
-				generate_frozen_debugger_hook
 				if context.workbench_mode or system.check_for_catcall_at_runtime then
 					l_target_type := real_type (tuple_element_type)
 					if l_target_type.c_type.is_reference then

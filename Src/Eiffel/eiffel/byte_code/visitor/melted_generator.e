@@ -2015,7 +2015,6 @@ feature {NONE} -- Visitors
 				-- TUPLE_ACCESS_B is always the message of a NESTED_B node.
 			if a_node.source /= Void then
 					-- Assignment to a tuple entry.
-				generate_melted_debugger_hook (ba)
 				a_node.source.process (Current)
 				if a_node.source.is_hector then
 					if attached {HECTOR_B} a_node.source.expression as l_hector_b then

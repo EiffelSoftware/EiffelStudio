@@ -59,7 +59,8 @@ feature -- Access
 				if attached g_response.body as l_body then
 					l_http_response.append ("%N%N")
 					l_http_response.append (l_body)
-					if attached json (l_body) as j then
+					if 	not l_body.is_empty and then
+						attached json (l_body) as j then
 						col := cj_collection (j)
 					end
 				end

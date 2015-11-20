@@ -232,41 +232,12 @@ feature {NONE} -- Html contents
 		end
 
 
-feature {NONE}
+feature -- Access
 
 	report_form_uri: STRING_8
 			-- Report form uri.
-		local
-			l_resp: ESA_SUPPORT_RESPONSE
-			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			l_found: BOOLEAN
 		do
-			create ctx.make
-			if attached basic_auth (last_username, last_password) as l_auth then
-				ctx.add_header ("Authorization", l_auth)
-			end
-			l_resp := get (config.service_root, ctx)
-			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-			else
-				if attached l_resp.collection as l_col then
-					across
-						l_col.links as ic
-					until
-						l_found
-					loop
-						if ic.item.rel.same_string ("create_report_form") and then ic.item.prompt.same_string ("Report a Problem") then
-							l_found := True
-							create {STRING} Result.make_from_string (ic.item.href)
-						end
-					end
-					if Result = Void then
-						create {STRING} Result.make_empty
-					end
-				else
-					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-				end
-			end
+			Result := retrieve_url ("create_report_form", "Report a Problem")
 		end
 
 

@@ -46,9 +46,12 @@ feature -- Basic operations
 			if not retried then
 				is_bad_request := False
 				create ctx.make
-				if attached basic_auth (a_user, a_pass) as l_auth then
-					ctx.add_header ("Authorization", l_auth)
+				if a_user /= Void and a_pass /= Void then
+					if attached basic_auth (a_user, a_pass) as l_auth then
+						ctx.add_header ("Authorization", l_auth)
+					end
 				end
+
 				l_resp := get (logon_url, ctx)
 				if l_resp.status = 200 then
 					is_logged_in := True
@@ -79,13 +82,15 @@ feature -- Basic operations
 			l_resp: ESA_SUPPORT_RESPONSE
 		do
 			is_logged_in := False
-			last_username := Void
-			last_password := Void
 			if not retried then
-				if attached basic_auth (last_username, last_password) as l_auth then
-					ctx.add_header ("Authorization", l_auth)
+				if last_username /= Void and last_password /= Void then
+					if attached basic_auth (last_username, last_password) as l_auth then
+						ctx.add_header ("Authorization", l_auth)
+					end
+					last_username := Void
+					last_password := Void
+					l_resp := get (logoff_url, ctx)
 				end
-				l_resp := get (logoff_url, ctx)
 			end
 		ensure
 			not_is_logged_in: not is_logged_in
@@ -98,6 +103,9 @@ feature {NONE} -- Implementation
 
 	basic_auth (a_user, a_pass: STRING_GENERAL): detachable READABLE_STRING_8
 			-- Create a basic auth password with `a_user' and `a_pass'.
+		require
+			user_not_void: a_user /= Void
+			pass_not_void: a_pass /= Void
 		local
 			h: HTTP_AUTHORIZATION
 		do
@@ -149,9 +157,12 @@ feature {NONE} -- Constants
 			l_found: BOOLEAN
 		do
 			create ctx.make
-			if attached basic_auth (last_username, last_password) as l_auth then
-				ctx.add_header ("Authorization", l_auth)
+			if last_username /= Void and last_password /= Void then
+				if attached basic_auth (last_username, last_password) as l_auth then
+					ctx.add_header ("Authorization", l_auth)
+				end
 			end
+
 			l_resp := get (config.service_root, ctx)
 			if l_resp.status /= 200 then
 				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)

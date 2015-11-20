@@ -122,8 +122,10 @@ feature {NONE} -- Basic operations
 			l_tpl.add_data (l_data)
 
 			create ctx.make
-			if attached basic_auth (last_username, last_password) as l_auth then
-				ctx.add_header ("Authorization", l_auth)
+			if last_username /= Void and last_password /= Void then
+				if attached basic_auth (last_username, last_password) as l_auth then
+					ctx.add_header ("Authorization", l_auth)
+				end
 			end
 
 			l_resp := create_with_template (report_form_uri, l_tpl, ctx)
@@ -175,8 +177,10 @@ feature {NONE} -- Basic operations
 
 
 			create ctx.make
-			if attached basic_auth (last_username, last_password) as l_auth then
-				ctx.add_header ("Authorization", l_auth)
+			if last_username /= Void and last_password /= Void then
+				if attached basic_auth (last_username, last_password) as l_auth then
+					ctx.add_header ("Authorization", l_auth)
+				end
 			end
 
 			l_resp := create_with_template (a_target_url, l_tpl, ctx)

@@ -115,42 +115,33 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Constants
+feature -- Access
 
-	logon_url: STRING
+	logon_url: STRING_8
 				-- Retrieve Login url from CJ response.
-		local
-			l_resp: ESA_SUPPORT_RESPONSE
-			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			l_found: BOOLEAN
 		do
-			create ctx.make
-			l_resp := get (config.service_root, ctx)
-			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-			else
-				if attached l_resp.collection as l_col then
-					across
-						l_col.links as ic
-					until
-						l_found
-					loop
-						if ic.item.rel.same_string ("login") and then ic.item.prompt.same_string ("Login") then
-							l_found := True
-							create {STRING} Result.make_from_string (ic.item.href)
-						end
-					end
-					if Result = Void then
-						create {STRING} Result.make_empty
-					end
-				else
-					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
-				end
-			end
+			Result := retrieve_url ("login", "Login")
 		end
 
-	logoff_url: STRING
+	logoff_url: STRING_8
 			-- Retrieve Logoff url from CJ response.
+		do
+			Result := retrieve_url ("logoff", "Logoff")
+		end
+
+	register_url: STRING_8
+			-- Retrieve Register url from CJ response.
+		do
+			Result := retrieve_url ("register", "Register")
+		end
+
+
+feature {NONE} -- Retrieve URL
+
+
+	retrieve_url (a_rel: STRING_8; a_prompt: STRING_8): STRING_8
+			-- Retrieve an Href value from CJ response if any, in other case
+			-- and empty String.
 		local
 			l_resp: ESA_SUPPORT_RESPONSE
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -173,7 +164,7 @@ feature {NONE} -- Constants
 					until
 						l_found
 					loop
-						if ic.item.rel.same_string ("logoff") and then ic.item.prompt.same_string ("Logoff") then
+						if ic.item.rel.same_string (a_rel) and then ic.item.prompt.same_string (a_prompt) then
 							l_found := True
 							create {STRING} Result.make_from_string (ic.item.href)
 						end
@@ -186,6 +177,9 @@ feature {NONE} -- Constants
 				end
 			end
 		end
+
+
+
 
 invariant
 	last_username_attached: is_logged_in implies last_username /= Void

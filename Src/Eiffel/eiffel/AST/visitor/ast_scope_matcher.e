@@ -28,6 +28,10 @@ inherit
 		export {NONE} all
 		end
 
+	SHARED_TYPES
+		export {NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make (c: like context)
@@ -45,7 +49,8 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
 	process_bin_and_as (l_as: BIN_AND_AS)
 		do
-			if is_negated = is_negation_expected then
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id and then is_negated = is_negation_expected then
 				if is_nested then
 					l_as.left.process (Current)
 				end
@@ -55,7 +60,8 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
 	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
-			if is_negated = is_negation_expected then
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id and then is_negated = is_negation_expected then
 				l_as.left.process (Current)
 				l_as.right.process (Current)
 			end
@@ -65,7 +71,8 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 		local
 			old_is_nested: BOOLEAN
 		do
-			if is_negated /= is_negation_expected then
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
 				old_is_nested := is_nested
 				is_nested := True
 				is_negated := not is_negated
@@ -78,7 +85,8 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
 	process_bin_or_as (l_as: BIN_OR_AS)
 		do
-			if is_negated /= is_negation_expected then
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
 				if is_nested then
 					l_as.left.process (Current)
 				end
@@ -88,7 +96,8 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
 	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
-			if is_negated /= is_negation_expected then
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id and then is_negated /= is_negation_expected then
 				l_as.left.process (Current)
 				l_as.right.process (Current)
 			end
@@ -96,11 +105,14 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 
 	process_un_not_as (l_as: UN_NOT_AS)
 		do
-				-- Boolean expression is negated
-			is_negated := not is_negated
-			l_as.expr.process (Current)
-				-- Revert original status in case there are other voidness tests
-			is_negated := not is_negated
+				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
+			if l_as.class_id = boolean_type.class_id then
+					-- Boolean expression is negated
+				is_negated := not is_negated
+				l_as.expr.process (Current)
+					-- Revert original status in case there are other voidness tests
+				is_negated := not is_negated
+			end
 		end
 
 feature {AST_EIFFEL} -- Visitor pattern: content
@@ -284,7 +296,7 @@ invariant
 	context_attached: context /= Void
 
 note
-	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -297,22 +309,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

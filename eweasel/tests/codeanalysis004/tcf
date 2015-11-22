@@ -11,7 +11,7 @@ test_description Test various different command line arguments and syntax varian
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 
-analyze_code rule "CA043 (Depth threshold=3);"
+analyze_code rule "CA043 (maximum_depth=3);"
 analyze_code_result ok
 
 analyze_code rule "CA043 CA080"

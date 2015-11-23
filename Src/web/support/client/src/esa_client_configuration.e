@@ -6,17 +6,18 @@ note
 class
 	ESA_CLIENT_CONFIGURATION
 
+inherit
+
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
 feature {NONE} -- Implemention
 
 	make
-		local
-			ev: EXECUTION_ENVIRONMENT
 		do
-			create ev
-			create json_configuration.make (ev.current_working_path.extended ("esa_config.json"))
+			create json_configuration.make (Execution_environment.current_working_path.extended ("esa_config.json"))
 		end
 
 

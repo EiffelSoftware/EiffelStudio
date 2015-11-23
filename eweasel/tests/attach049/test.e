@@ -9,6 +9,7 @@ feature {NONE} -- Creation
 		local
 			s: detachable STRING
 		do
+			(create {A}.make).do_nothing
 				-- "and"
 			if Current and attached s as l then print (l.count) end -- VEEN
 			if Current and attached s then print (s.count) end -- VUTA(2)

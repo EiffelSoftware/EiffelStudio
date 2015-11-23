@@ -1,10 +1,11 @@
 test_name	 scope-with-non-boolean-operator
 test_description Non-boolean operator does not set the object test scope.
 
+copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_error TEST VEEN VEEN VEEN VEEN VEEN; TEST VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2)
+compile_result	validity_error A VEEN VEEN VEEN VEEN VEEN; A VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2); TEST VEEN VEEN VEEN VEEN VEEN; TEST VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2)
 
 test_end

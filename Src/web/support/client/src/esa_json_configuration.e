@@ -48,7 +48,7 @@ feature -- Access
 				Result := l_root.item
 			else
 					-- Default service location.
-				Result := "http://localhost:9999"
+				Result := "https://www2.eiffel.com/beta"
 			end
 		end
 

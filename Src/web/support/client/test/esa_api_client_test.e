@@ -23,7 +23,7 @@ feature -- Test routines
 		do
 				-- !Note
 				-- Launch the esa_api
-			create cfg.make
+			create cfg.make_with_config
 			create login.make (cfg)
 			login.attempt_logon ("bad_user", "bad_user", false)
 			assert ("Not logged in", not login.is_logged_in)
@@ -37,7 +37,7 @@ feature -- Test routines
 		do
 				-- !Note
 				-- Launch the esa_api
-			create cfg.make
+			create cfg.make_with_config
 			create login.make (cfg)
 			login.attempt_logon ("javierv", "test", false)
 			assert ("is logged in", login.is_logged_in)
@@ -56,7 +56,7 @@ feature -- Test routines
 			create report.make ("testing client", "testing client", "testing client")
 			report.set_environment ("Win")
 			report.set_to_reproduce ("to_reproduce")
-			create cfg.make
+			create cfg.make_with_config
 			create reporter.make (cfg)
 			reporter.attempt_logon ("javierv", "test", false)
 			reporter.report_bug (report)

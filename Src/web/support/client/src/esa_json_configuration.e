@@ -12,7 +12,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_path: PATH)
-			-- Build a new database configuration.
+			-- Build a new client configuration.
 		local
 			l_parser: JSON_PARSER
 		do

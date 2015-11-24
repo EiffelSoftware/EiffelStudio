@@ -27,8 +27,14 @@ feature -- Basic operations
 			is_logged_in: is_logged_in
 			a_report_attached: a_report /= Void
 		do
+			last_reported_uri := Void
 			fill_bug_report (a_report)
 		end
+
+feature -- Access
+
+	last_reported_uri: detachable STRING_8
+			-- uri of the last reported issue.
 
 feature {NONE} -- Basic operations
 
@@ -186,6 +192,15 @@ feature {NONE} -- Basic operations
 			l_resp := create_with_template (a_target_url, l_tpl, ctx)
 			if l_resp.status /= 200 then
 				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+			else
+				if attached l_resp.collection as l_col then
+					if attached {ARRAYED_LIST[CJ_ITEM]} l_col.items as l_items and then
+					   not l_items.is_empty and then l_items.count > 1
+					then
+						last_reported_uri := l_items.at (1).href
+					end
+				end
+
 			end
 		end
 

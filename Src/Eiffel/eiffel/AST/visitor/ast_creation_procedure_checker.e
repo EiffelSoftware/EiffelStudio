@@ -338,7 +338,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 	process_access_feat_as (a: ACCESS_FEAT_AS)
 			-- <Precursor>
 		local
-			f: FEATURE_I
+			f: detachable FEATURE_I
 			i: INTEGER
 		do
 			safe_process (a.internal_parameters)
@@ -392,6 +392,18 @@ feature {AST_EIFFEL} -- Visitor: access to features
 						-- The feature never exits, all bets after calling it are off.
 						-- In particular all the attributes may be considered initialized.
 					attribute_initialization.set_all
+				end
+			end
+			if attached a.internal_parameters as p and then not p.routine_ids.is_empty then
+					-- There is a parenthesis alias call.
+				record_qualified_call (p)
+				i := p.class_id
+				if system.has_class_of_id (i) and then attached system.class_of_id (i) as c then
+					if attached c.feature_of_rout_id (p.routine_ids.first) as h  and then not h.has_return_value and then h.is_failing then
+							-- The feature never exits, all bets after calling it are off.
+							-- In particular all the attributes may be considered initialized.
+						attribute_initialization.set_all
+					end
 				end
 			end
 		end

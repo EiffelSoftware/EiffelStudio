@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		require
 			f_not_void: f /= Void
 		do
+			make_id_set
 			feature_name := f
 			if a_as /= Void then
 				address_symbol_index := a_as.index
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 		ensure
 			feature_name_set: feature_name = f
 			address_symbol_set: a_as /= Void implies address_symbol_index = a_as.index
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Visitor
@@ -139,7 +141,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

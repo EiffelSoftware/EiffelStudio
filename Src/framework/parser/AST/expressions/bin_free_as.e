@@ -29,12 +29,14 @@ feature {NONE} -- Initialization
 			op_not_void: op /= Void
 			r_not_void: r /= Void
 		do
+			make_id_set
 			op_name := op
 			initialize_binary_as (l, r, op)
 		ensure
 			left_set: left = l
 			op_name_set: op_name = op
 			right_set: right = r
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Attributes
@@ -88,7 +90,7 @@ invariant
 	op_name_not_void: op_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

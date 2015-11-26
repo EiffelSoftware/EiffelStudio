@@ -34,6 +34,7 @@ feature{NONE} -- Initialization
 		ensure
 			agent_keyword_set: a_as /= Void implies agent_keyword_index = a_as.index
 			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Visitor
@@ -108,7 +109,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

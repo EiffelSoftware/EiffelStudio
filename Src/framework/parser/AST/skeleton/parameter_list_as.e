@@ -13,12 +13,24 @@ inherit
 		rename
 			make as initialize,
 			content as parameters
+		redefine
+			initialize
 		end
 
 	ID_SET_ACCESSOR
 
 create
 	initialize
+
+feature {NONE} -- Creation
+
+	initialize (s_as: EIFFEL_LIST [EXPR_AS]; lp_as, rp_as: like lparan_symbol)
+		do
+			make_id_set
+			Precursor (s_as, lp_as, rp_as)
+		ensure then
+			no_routine_id: routine_ids.is_empty
+		end
 
 feature -- Visitor
 
@@ -29,7 +41,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

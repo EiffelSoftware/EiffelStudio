@@ -20,6 +20,7 @@ feature {NONE} -- Creation
 			make_id_set
 		ensure
 			name_set: name = n
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Access
@@ -66,7 +67,7 @@ feature -- Comparison
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -30,11 +30,11 @@ feature{NONE} -- Initialization
 		require
 			body_not_void: a_body /= Void
 		do
+			body := a_body
 			initialize (Void, Void, o, False)
 			if a_as /= Void then
 				agent_keyword_index := a_as.index
 			end
-			body := a_body
 		ensure
 			agent_keyword_set: a_as /= Void implies agent_keyword_index = a_as.index
 			body_set: body = a_body

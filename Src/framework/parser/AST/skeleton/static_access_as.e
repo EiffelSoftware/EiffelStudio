@@ -35,8 +35,8 @@ feature {AST_FACTORY} -- Initialization
 			c_not_void: c /= Void
 			f_not_void: f /= Void
 		do
-			feat_initialize (f, p)
 			class_type := c
+			feat_initialize (f, p)
 			if f_as /= Void then
 				feature_keyword_index := f_as.index
 			end

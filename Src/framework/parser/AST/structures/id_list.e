@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 			-- Allocate current ID set.
 		do
 			first := Dead_value
+		ensure
+			is_empty: is_empty
 		end
 
 feature -- Access
@@ -304,7 +306,7 @@ feature {NONE} -- Implementation
 			-- Special value to show that `first' is not yet set.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,7 +27,7 @@
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light-safe.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
-		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
+		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities-safe.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
 			<condition>
 				<platform value="windows"/>

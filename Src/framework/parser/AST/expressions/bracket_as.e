@@ -28,6 +28,7 @@ feature {NONE} -- Creation
 			o_not_void: o /= Void
 			o_not_empty: not o.is_empty
 		do
+			make_id_set
 			target := t
 			operands :=  o
 			lbracket_symbol := l_as
@@ -37,6 +38,7 @@ feature {NONE} -- Creation
 			operands_set: operands = o
 			lbracket_symbol_set: lbracket_symbol = l_as
 			rbracket_symbol_set: rbracket_symbol = r_as
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Roundtrip
@@ -112,7 +114,7 @@ invariant
 	operands_not_empty: not operands.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

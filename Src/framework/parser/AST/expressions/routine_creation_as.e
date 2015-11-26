@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			-- Create a new ROUTINE_CREATION AST node.
 			-- When `t' is Void it means it is a question mark.
 		do
+			make_id_set
 			target := t
 			feature_name := f
 			internal_operands := o
@@ -27,6 +28,7 @@ feature {NONE} -- Initialization
 			feature_name_set: feature_name = f
 			internal_operands_set: internal_operands = o
 			has_target_set: has_target = ht
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Visitor
@@ -120,7 +122,7 @@ invariant
 					  (internal_operands = Void implies operands = Void)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			l_not_void: l /= Void
 			r_not_void: r /= Void
 		do
+			make_id_set
 			left := l
 			right := r
 			if o /= Void then
@@ -37,6 +38,7 @@ feature {NONE} -- Initialization
 			left_set: left = l
 			right_set: right = r
 			operator_set: o /= Void implies operator_index = o.index
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Attributes
@@ -187,7 +189,7 @@ invariant
 	right_not_void: right /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

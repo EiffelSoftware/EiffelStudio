@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			pk_not_void: pk /= Void
 			valid_n: n /= Void implies n.generics = Void
 		do
+			make_id_set
 			precursor_keyword := pk
 			parent_base_class := n
 			internal_parameters := p
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 			precursor_keyword_set: precursor_keyword = pk
 			parent_base_class_set: parent_base_class = n
 			internal_parameters_set: internal_parameters = p
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Visitor
@@ -147,7 +149,7 @@ invariant
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

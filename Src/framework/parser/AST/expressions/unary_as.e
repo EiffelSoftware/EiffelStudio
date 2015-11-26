@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 		require
 			e_not_void: e /= Void
 		do
+			make_id_set
 			expr := e
 			if o /= Void then
 				operator_index := o.index
@@ -34,6 +35,7 @@ feature {NONE} -- Initialization
 		ensure
 			expr_set: expr = e
 			operator_set: o /= Void implies operator_index = o.index
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Roundtrip
@@ -175,7 +177,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

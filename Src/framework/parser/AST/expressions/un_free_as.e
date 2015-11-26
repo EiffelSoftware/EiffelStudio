@@ -28,11 +28,13 @@ feature {NONE} -- Initialization
 			op_not_void: op /= Void
 			e_not_void: e /= Void
 		do
+			make_id_set
 			op_name := op
 			expr := e
 		ensure
 			op_name_set: op_name = op
 			expr_set: expr = e
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Attributes
@@ -78,7 +80,7 @@ feature {UNARY_AS}	-- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

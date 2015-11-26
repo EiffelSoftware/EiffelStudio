@@ -35,9 +35,8 @@ feature {AST_FACTORY} -- Initialization
 			c_not_void: c /= Void
 			f_not_void: f /= Void
 		do
+			feat_initialize (f, p)
 			class_type := c
-			feature_name := f
-			set_parameters (p)
 			if f_as /= Void then
 				feature_keyword_index := f_as.index
 			end
@@ -50,6 +49,7 @@ feature {AST_FACTORY} -- Initialization
 			internal_parameters_set: internal_parameters = p
 			feature_keyword_set: f_as /= Void implies feature_keyword_index = f_as.index
 			dot_symbol_set: d_as /= Void implies dot_symbol_index = d_as.index
+			no_routine_id: routine_ids.is_empty
 		end
 
 feature -- Visitor
@@ -127,7 +127,7 @@ invariant
 	feature_name_not_void: feature_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

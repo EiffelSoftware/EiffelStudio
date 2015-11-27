@@ -12,6 +12,11 @@ EWEASEL_OUTPUT=$(MAKEDIR)\..\output
 PROCESSORS=0
 !ENDIF
 
+!IFDEF AFFINITY
+SPACE=
+COMMAND_PREFIX=cmd /c start /w /affinity $(AFFINITY) $(SPACE)
+!ENDIF
+
 DO_MAKE=$(MAKE) -nologo -f Makefile.win
 
 EXE=.exe

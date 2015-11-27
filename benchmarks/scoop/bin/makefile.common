@@ -4,7 +4,7 @@ TOP=..
 
 ELAPSED_TIME_DIR=$(TOP)/../tool/elapsed_time
 ELAPSED_TIME=$(ELAPSED_TIME_DIR)/EIFGENs/elapsed_time/F_code/elapsed_time$(EXE)
-MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c -p $(PROCESSORS)
+MEASURE="$(ELAPSED_TIME)" -nologo -skip_first 1 -f c
 
 benchmark benchmark_1::
 	$(DO_MAKE) action.echo "MESSAGE=Name,Processors,Count,Minimum (ms),Maximum (ms),Average (ms),Standard deviation (ms),Command,Directory,Skip first count,Skip maximum count"
@@ -56,10 +56,10 @@ winnow:
 	$(DO_MAKE) action.$(ACTION) TARGET=$@ TEST=bench014 ARGUMENT="-i $(EWEASEL_OUTPUT)/bench014/EIFGENs/test/F_code/test.in -bench" "REPEAT=-c 18"
 
 action.benchmark: $(ELAPSED_TIME) action.build
-	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) $(REPEAT) "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) $(REPEAT) "$(COMMAND_PREFIX)$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
 
 action.benchmark_1: $(ELAPSED_TIME) action.build
-	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) -c 1 "$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
+	$(MEASURE) -w "$(EWEASEL_OUTPUT)/$(TEST)" -n $(TARGET) -c 1 "$(COMMAND_PREFIX)$(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE) $(ARGUMENT)" >> "$(OUTPUT)"
 
 action.build: $(EWEASEL_OUTPUT)/$(TEST)/EIFGENs/test/F_code/test$(EXE)
 

@@ -71,7 +71,6 @@ feature -- Properties
 			-- Same as Current but without any attachment mark
 		local
 			l_bits: like attachment_bits
-			l_actual_type, l_old_actual_type: like actual_type
 			l_conformance_type, l_old_conformance_type: like conformance_type
 		do
 			l_bits := attachment_bits
@@ -201,11 +200,8 @@ feature -- Properties
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
-		local
-			l: LIKE_CURRENT
 		do
-			if other.is_like_current then
-				l ?= other
+			if attached {LIKE_CURRENT} other as l then
 				Result := has_same_marks (l) and then conformance_type.same_as (other.conformance_type)
 			end
 		end

@@ -210,7 +210,7 @@ feature -- Melting
 						else
 							ba.append_boolean (False)
 							check type_id_positive: entry_item.static_feature_type_id > 0 end
-							ba.append_short_integer (entry_item.static_feature_type_id - 1)
+							ba.append_natural_16 (entry_item.static_feature_type_id.to_natural_16 - 1)
 						end
 					else
 							-- Generate the NULL pointer array.

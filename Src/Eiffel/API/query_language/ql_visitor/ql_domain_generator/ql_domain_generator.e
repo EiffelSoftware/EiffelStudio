@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Domain generator to perform domain transformation eigther between the same type of domains, or between
 					different type of domains.
@@ -68,7 +68,6 @@ note
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -594,8 +593,6 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 		require
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
-		local
-			l_tuple: TUPLE [value: like item_type]
 		do
 			if is_fill_domain_enabled then
 				domain.content.extend (a_item)
@@ -603,9 +600,7 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 			if not a_interval_actions_applied then
 				increase_internal_counter (a_item)
 			end
-			create l_tuple
-			l_tuple.value := a_item
-			item_satisfied_actions.call (l_tuple)
+			item_satisfied_actions.call (a_item)
 		end
 
 invariant
@@ -616,7 +611,7 @@ invariant
 	tautology_criterion_attached: tautology_criterion /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -646,7 +641,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

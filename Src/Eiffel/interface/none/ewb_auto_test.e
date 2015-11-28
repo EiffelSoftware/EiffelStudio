@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		TTY menu for launching AutoTest.
 	]"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (args: LINKED_LIST [STRING_32])
+	make_with_arguments (args: LINKED_LIST [READABLE_STRING_32])
 			-- Initialize `Current'.
 		require
 			args_attached: args /= Void
@@ -45,7 +45,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

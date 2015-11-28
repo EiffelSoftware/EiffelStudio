@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Batch compiler without invoking the -loop. This is the root%
 		%class for the personal version (which does allow c compilation)."
@@ -660,7 +660,6 @@ feature -- Update
 			ewb_senders: EWB_SENDERS
 			ewb_callees: EWB_CALLEES
 			l_arg: STRING_32
-			l_at_args: LINKED_LIST [STRING_32]
 			in_filename, out_filename: STRING_32
 		do
 			filter_name := ""
@@ -1269,24 +1268,18 @@ feature -- Update
 				end
 
 			elseif option.same_string_general ("-auto_test") then
-				create l_at_args.make
-				from
-					current_option := current_option + 1
-				until
-					current_option > argument_count
-				loop
-					l_at_args.force (argument (current_option))
-					current_option := current_option + 1
-				end
 					-- FIXME: This only works if `-auto_test' is the last argument, as otherwise it will
 					-- override the compilation option that was previously set.
-				create {EWB_AUTO_TEST} command.make_with_arguments (l_at_args)
+				create {EWB_AUTO_TEST} command.make_with_arguments
+					(arguments_in_range (current_option + 1, argument_count))
+				current_option := argument_count + 1
 				command_option := option
 
-			elseif option.is_equal ("-code-analysis") then
-				l_at_args := arguments_in_range (current_option + 1, argument_count)
+			elseif option.same_string_general ("-code-analysis") then
+					-- FIXME: This only works if `-code-analysis' is the last argument.
+				create {EWB_CODE_ANALYSIS} command.make_with_arguments
+					(arguments_in_range (current_option + 1, argument_count))
 				current_option := argument_count + 1
-				create {EWB_CODE_ANALYSIS} command.make_with_arguments (l_at_args)
 
 			elseif option.same_string_general ("-tests") then
 					-- FIXME: This only works if `-tests' is the last argument, as otherwise it will
@@ -1411,7 +1404,7 @@ feature {NONE} -- Implementation
 			io.put_string (l_unit)
 		end
 
-	arguments_in_range (a_lower, a_upper: INTEGER): LINKED_LIST [STRING_32]
+	arguments_in_range (a_lower, a_upper: INTEGER): LINKED_LIST [READABLE_STRING_32]
 			-- Arguments from position `a_lower' to `a_upper'
 		require
 			a_lower_valid: a_lower > 0 and a_lower <= argument_count + 1
@@ -1462,4 +1455,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES
+end

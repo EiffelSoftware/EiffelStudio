@@ -820,8 +820,6 @@ feature {NONE} -- Implementation
 				n := t.chain.count
 				create routine_id.make_filled (0, n)
 				from
-						-- Register intermediate type with instantiator.
-					instantiator.dispatch (q.conformance_type, current_class)
 				until
 					not attached q or else i >= n
 				loop
@@ -836,6 +834,8 @@ feature {NONE} -- Implementation
 							-- The type is not valid in current context.
 						q := Void
 					else
+							-- Register intermediate type with instantiator.
+						instantiator.dispatch (q.conformance_type, current_class)
 						feature_finder.find (t.chain [i], q, current_class)
 						if
 							attached feature_finder.found_feature as f and then

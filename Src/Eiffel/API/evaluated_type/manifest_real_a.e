@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Actual type for manifest real constant types. By default they are considered as REAL_64,
 		but will conform to REAL_32 until we are able to check if a manifest real will only fit in
@@ -35,7 +35,6 @@ feature -- Property
 
 	intrinsic_type: REAL_A
 			-- Real type of current manifest real.
-			-- It is always a REAL_64.
 		do
 			if size = 32 then
 				Result := real_32_type
@@ -60,9 +59,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 				Result := Precursor {REAL_A} (a_context_class, a_target_type)
 			end
 		end
-
-invariant
-	correct_size: size = 64
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software"

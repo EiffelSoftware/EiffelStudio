@@ -58,8 +58,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- <Precursor>
 		do
-				-- Avoid collisions with `{FORMAL_A}.hash_code'.
-			Result := ({SHARED_HASH_CODE}.other_code - position).abs
+			Result := combined_hash_code({SHARED_GEN_CONF_LEVEL}.max_dtype, position)
 		end
 
 feature -- Comparison
@@ -361,7 +360,7 @@ feature {NONE} -- Helper
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

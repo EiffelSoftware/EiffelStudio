@@ -25,7 +25,9 @@ feature
 		do
 			derivations := item (an_id)
 			if derivations /= Void then
-				Result := derivations.has_item (a_type)
+					-- Only add generic derivations for type except
+					-- TUPLE that doesn't require any generic derivations.
+				Result := attached {TUPLE_TYPE_A} a_type or else derivations.has_item (a_type)
 			end;
 		end;
 
@@ -46,7 +48,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -13,12 +13,12 @@ inherit
 			make as cl_make
 		redefine
 			generics, valid_generic, parent_type, dump, ext_append_to,
-			has_like, has_like_argument, has_like_current, is_loose, duplicate, good_generics,
+			has_like, has_like_argument, has_like_current, is_loose, good_generics,
 			error_generics, check_constraints, has_formal_generic, formal_instantiated_in,
 			instantiated_in, recomputed_in,
 			has_expanded, internal_is_valid_for_class, expanded_deferred, valid_expanded_creation,
 			same_as, is_equivalent, description, description_with_detachable_type, instantiated_description, is_explicit,
-			deep_actual_type, context_free_type, instantiation_in, has_actual,
+			deep_actual_type, deanchored_form_marks_free, context_free_type, instantiation_in, has_actual,
 			actual_argument_type, update_dependance, hash_code,
 			is_full_named_type, is_known, process, evaluated_type_in_descendant,
 			generate_cid, generate_cid_array, generate_cid_init,
@@ -143,7 +143,7 @@ feature -- Access
 
 	hash_code: INTEGER
 		local
-			l_rotate, l_bytes, i: INTEGER
+			l_new_value, l_bytes, i: INTEGER
 			l_generics: like generics
 		do
 			Result := Precursor
@@ -154,14 +154,9 @@ feature -- Access
 				until
 					i = 0
 				loop
-					l_rotate := l_generics.i_th (i).hash_code
-					l_bytes := 4 * (1 + i \\ 8)
-					l_rotate := (l_rotate |<< l_bytes) | (l_rotate |>> (32 - l_bytes))
-					Result := Result.bit_xor (l_generics.i_th (i).hash_code)
+					Result := combined_hash_code (Result, l_generics.i_th (i).hash_code)
 					i := i - 1
 				end
-					-- To prevent negative values.
-				Result := Result.hash_code
 			end
 		end
 
@@ -758,39 +753,24 @@ feature {TYPE_A} -- Helpers
 	internal_generic_derivation (a_level: INTEGER): like Current
 			-- Precise generic derivation of current type.
 		local
-			i, count: INTEGER
-			l_generics, l_new_generics: like generics
-			l_attachment_bits: like attachment_bits
-			l_variant_bits: like variant_bits
-			s: like has_separate_mark
-			l_type: TYPE_A
+			i: INTEGER
+			l_old_generics, l_new_generics: like generics
+			l_new_type, l_prev_type: TYPE_A
 		do
+			Result := as_marks_free
 			from
-					-- Duplicate current without the attachment and separateness information
-					-- since it does not matter for a generic derivation.
-				l_attachment_bits := attachment_bits
-				l_variant_bits := variant_bits
-				attachment_bits := 0
-				variant_bits := 0
-				s := has_separate_mark
-				has_separate_mark := False
-				Result := duplicate_for_instantiation
-				has_separate_mark := s
-				attachment_bits := l_attachment_bits
-				variant_bits := l_variant_bits
-
-				l_generics := generics
-				l_new_generics := Result.generics
-				i := 1
-				count := l_generics.count
+				l_old_generics := Result.generics
+				i := l_old_generics.count
 			until
-				i > count
+				i <= 0
 			loop
-				l_type := l_generics.i_th (i)
-				if l_type.actual_type.is_formal or l_type.is_reference then
+				l_prev_type := l_old_generics.i_th (i)
+					-- For generic derivation we have to tweak the types so that
+					-- they are either expandeds or formals.
+				if l_prev_type.actual_type.is_formal or l_prev_type.is_reference then
 					if a_level = 0 then
 							-- We are now analyzing the B part in A [B]
-						l_new_generics.put_i_th (create {FORMAL_A}.make (False, False, i), i)
+						create {FORMAL_A} l_new_type.make (False, False, i)
 					else
 							-- We are now analyzing the X part in A [B [X]]
 							-- which can only happen if B [X] is expanded. In that case, we
@@ -799,19 +779,29 @@ feature {TYPE_A} -- Helpers
 							-- we put the first constraint in the list as we use this for sorting
 							-- the CLASS_TYPE for code generation (See eweasel test#multicon060).
 						if base_class.generics.i_th (i).is_multi_constrained (base_class.generics) then
-							l_new_generics.put_i_th (base_class.constrained_types (i).first.type, i)
+							l_new_type := base_class.constrained_types (i).first.type
 						else
-							l_new_generics.put_i_th (base_class.constrained_type (i).as_marks_free, i)
+							l_new_type := base_class.constrained_type (i)
 						end
 					end
 				else
-						-- We have a basic type, as an optimization, we
-						-- store the basic type data, rather than a formal
-						-- generic paramter to save some time at run-time
-						-- when computing the dynamic type.
-					l_new_generics.put_i_th (l_type.internal_generic_derivation (a_level + 1), i)
+					l_new_type := l_prev_type
 				end
-				i := i + 1
+					-- Recurse now.
+				l_new_type := l_new_type.internal_generic_derivation (a_level + 1)
+				if l_prev_type /= l_new_type then
+					if l_new_generics = Void then
+							-- Void modifying original type.
+						if Result = Current then
+							Result := Result.duplicate_for_instantiation
+						else
+							Result.set_generics (generics.twin)
+						end
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put_i_th (l_new_type, i)
+				end
+				i := i - 1
 			end
 		end
 
@@ -853,9 +843,7 @@ feature {TYPE_A} -- Helpers
 						l_type := current_type.generics.i_th (l_formal.position)
 					end
 					if current_type /= Void and then attached {LIKE_CURRENT} l_type.actual_type as l_like_current then
-							-- If actual generic parameter is `like Current' and that we have a context type, then
-							-- its type is clearly the context type `current_type'.
-						l_type := current_type
+						l_type := l_like_current.conformance_type
 					end
 					if l_type.actual_type.is_formal or l_type.is_reference then
 						if a_level = 0 then
@@ -1023,6 +1011,41 @@ feature -- Primitives
 					if l_new_generics = Void then
 							-- Void modifying original type.
 						Result := Result.duplicate_for_instantiation
+						l_new_generics := Result.generics
+					end
+					l_new_generics.put_i_th (l_new_type, i)
+				end
+				i := i - 1
+			end
+		end
+
+	deanchored_form_marks_free: like Current
+			-- <Precursor>
+		local
+			i: INTEGER
+			l_old_generics, l_new_generics: like generics
+			l_prev_type, l_new_type: TYPE_A
+			a: like attachment_bits
+			s: BOOLEAN
+			b: like variant_bits
+		do
+			Result := as_marks_free
+			from
+				l_old_generics := Result.generics
+				i := l_old_generics.count
+			until
+				i <= 0
+			loop
+				l_prev_type := l_old_generics.i_th (i)
+				l_new_type := l_prev_type.deanchored_form_marks_free
+				if l_prev_type /= l_new_type then
+					if l_new_generics = Void then
+							-- Void modifying original type.
+						if Result = Current then
+							Result := Result.duplicate_for_instantiation
+						else
+							Result.set_generics (generics.twin)
+						end
 						l_new_generics := Result.generics
 					end
 					l_new_generics.put_i_th (l_new_type, i)
@@ -1434,26 +1457,6 @@ feature -- Primitives
 				Result := generics.i_th (i).is_known
 				i := i + 1
 			end
-		end
-
-	duplicate: like Current
-			-- Duplication
-		local
-			i, count: INTEGER
-			duplicate_generics: like generics
-		do
-			from
-				i := 1
-				count := generics.count
-				create duplicate_generics.make (count)
-			until
-				i > count
-			loop
-				duplicate_generics.extend (generics.i_th (i).duplicate)
-				i := i + 1
-			end
-			Result := twin
-			Result.set_generics (duplicate_generics)
 		end
 
 	duplicate_for_instantiation: like Current

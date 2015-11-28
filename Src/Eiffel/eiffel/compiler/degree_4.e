@@ -184,7 +184,9 @@ feature -- Processing
 				-- anymore (see eweasel test#incr282). It used to be done before calling
 				-- `execute' but this would trigger some assertion violations if some of the
 				-- constraints in the new system are not valid. See eweasel test#incr386.
-			instantiator.clean_standalone
+			if instantiator.is_clean_up_requested then
+				instantiator.clean_all
+			end
 
 			empty_temp_remaining_validity_checking_list
 
@@ -1026,7 +1028,7 @@ invariant
 	delayed_classes_attached: attached delayed_classes
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

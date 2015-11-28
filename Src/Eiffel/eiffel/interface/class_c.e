@@ -1626,7 +1626,16 @@ feature -- Parent checking
 	remove_types
 			-- Removes all types from system
 		do
+				-- Types are now invalid, we have to request a clean up
+				-- any invalid instantiation. Do not move this inside the
+				-- condition `has_types' as during incremental recompilation
+				-- we may have removed the types, nevertheless we still need
+				-- to clean the instantiator as temporary types, now invalid,
+				-- may have been inserted during an incremental recompilation
+				-- with errors (See eweasel test#incr331).
+			system.instantiator.request_clean_up
 			if has_types then
+					-- Remove all the class types.
 				from
 					types.start
 				until
@@ -2785,10 +2794,6 @@ end
 			class_filters_cursor: INTEGER
 		do
 			class_filters := filters
-				-- Propagation along the filters since we have a new type
-				-- Clean the filters. Some of the filters can be obsolete
-				-- if the base class has been removed from the system
-			class_filters.clean (Current)
 			from
 				class_filters.start
 			until
@@ -2825,10 +2830,6 @@ feature {CLASS_C} -- Incrementality
 			class_filters_cursor: INTEGER
 		do
 			class_filters := filters
-				-- Propagation along the filters since we have a new type
-				-- Clean the filters. Some of the filters can be obsolete
-				-- if the base class has been removed from the system
-			class_filters.clean (Current)
 			from
 				class_filters.start
 			until

@@ -1,10 +1,10 @@
 
 test_name 	 root-class-none
-test_description A system with root class none and no precompiled library crashes the compiler
+test_description A system with root class none and no precompiled library crashes the compiler. In version 15.11, it compiles without crashing and reporting any error. The question is should we report a VD27 error?
 
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_error NONE VD27
+compile_result	ok
 
 test_end

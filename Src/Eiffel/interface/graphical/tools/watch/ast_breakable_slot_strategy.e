@@ -476,8 +476,15 @@ feature {NONE} -- Implementation
 		do
 			if l_as.constant_type /= Void then
 				l_as.constant_type.process (Current)
+				if attached {REAL_A} last_type as l_real then
+					if l_real.size = 32 then
+						last_type := manifest_real_32_type
+					else
+						last_type := manifest_real_64_type
+					end
+				end
 			elseif expr_type_visiting then
-				last_type := manifest_real_type
+				last_type := manifest_real_64_type
 			end
 		end
 

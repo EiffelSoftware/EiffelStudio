@@ -1298,6 +1298,12 @@ feature {BYTE_NODE} -- Visitor
 			tmp_target := l_tmp_target_backup
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		do
+			process_expr_b (a_node.expr)
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		local

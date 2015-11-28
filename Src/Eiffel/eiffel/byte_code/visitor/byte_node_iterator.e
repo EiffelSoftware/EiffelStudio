@@ -642,6 +642,14 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- <Precursor>
+		do
+			preorder_process (a_node)
+			safe_process (a_node.expr)
+			postorder_process (a_node)
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		do

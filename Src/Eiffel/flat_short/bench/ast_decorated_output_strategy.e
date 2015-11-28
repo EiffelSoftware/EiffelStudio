@@ -596,9 +596,16 @@ feature {NONE} -- Implementation
 			end
 
 			if l_as.constant_type = Void then
-				last_type := manifest_real_type
+				last_type := manifest_real_64_type
 			elseif expr_type_visiting then
 				l_as.constant_type.process (Current)
+				if attached {REAL_A} last_type as l_real then
+					if l_real.size = 32 then
+						last_type := manifest_real_32_type
+					else
+						last_type := manifest_real_64_type
+					end
+				end
 			else
 				-- Nothing to be done, done above when process `l_as.constant_type'.
 			end
@@ -1608,7 +1615,12 @@ feature {NONE} -- Implementation
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck the code in the descendant.
 				l_text_formatter_decorator := text_formatter_decorator
-				if l_info.is_from_conversion then
+				if l_info.is_null_conversion then
+					l_type := l_info.creation_type.evaluated_type_in_descendant (source_class, current_class, current_feature)
+					if not expr_type_visiting then
+						l_as.expr.process (Current)
+					end
+				elseif l_info.is_from_conversion then
 					l_type := l_info.creation_type.evaluated_type_in_descendant (source_class, current_class, current_feature)
 					if not expr_type_visiting then
 						l_text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)

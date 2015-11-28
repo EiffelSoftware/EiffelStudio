@@ -672,6 +672,15 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		require
+			is_valid: is_valid
+			a_node_not_void: a_node /= Void
+			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		require

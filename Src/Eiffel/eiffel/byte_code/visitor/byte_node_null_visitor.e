@@ -367,6 +367,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		do
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		do

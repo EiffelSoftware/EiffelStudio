@@ -1519,11 +1519,10 @@ feature {NONE} -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
-													l_argument := old_assigner_source.converted_expression (
-														create {PARENT_CONVERSION_INFO}.make (l_conv_info))
-														-- Make sure the source of the assigner instruction is updated.
-													assigner_source := l_argument
 												end
+												l_argument := old_assigner_source.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info))
+													-- Make sure the source of the assigner instruction is updated.
+												assigner_source := l_argument
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
 													-- conversion routines, we will use the attachment type to figure
@@ -1878,13 +1877,12 @@ feature {NONE} -- Implementation
 												l_conv_info := context.last_conversion_info
 												if l_conv_info.has_depend_unit then
 													context.supplier_ids.extend (l_conv_info.depend_unit)
-													l_argument := l_parameters.i_th (i).converted_expression (
-														create {PARENT_CONVERSION_INFO}.make (l_conv_info))
-													l_parameters.put_i_th (l_argument, i)
-													if attached old_assigner_source and then i = 1 then
-															-- Make sure the source of the assigner instruction is updated.
-														assigner_source := l_argument
-													end
+												end
+												l_argument := l_parameters.i_th (i).converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info))
+												l_parameters.put_i_th (l_argument, i)
+												if attached old_assigner_source and then i = 1 then
+														-- Make sure the source of the assigner instruction is updated.
+													assigner_source := l_argument
 												end
 													-- Generate conversion byte node only if we are not checking
 													-- a custom attribute. Indeed in that case, we do not want those
@@ -2329,11 +2327,18 @@ feature {NONE} -- Visitor
 	process_real_as (l_as: REAL_AS)
 		do
 			if l_as.constant_type = Void then
-				set_type (manifest_real_type, l_as)
+				set_type (manifest_real_64_type, l_as)
 			else
 				fixme ("We should check that `constant_type' matches the real `value' and%
 					%possibly remove `constant_type' from REAL_AS.")
 				check_type (l_as.constant_type)
+				if attached {REAL_A} last_type as l_real then
+					if l_real.size = 32 then
+						set_type (manifest_real_32_type, l_as)
+					else
+						set_type (manifest_real_64_type, l_as)
+					end
+				end
 			end
 			if last_type /= Void and is_byte_node_enabled then
 				create {REAL_CONST_B} last_byte_node.make (l_as.value, last_type)
@@ -2412,9 +2417,8 @@ feature {NONE} -- Visitor
 								if not is_inherited and then l_element_type.convert_to (l_current_class, l_type_a.deep_actual_type) then
 									if l_context.last_conversion_info.has_depend_unit then
 										context.supplier_ids.extend (l_context.last_conversion_info.depend_unit)
-										l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (
-											create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
 									end
+									l_as.expressions.put_i_th (l_as.expressions.i_th (i).converted_expression (create {PARENT_CONVERSION_INFO}.make (l_context.last_conversion_info)), i)
 									if is_byte_node_enabled and not is_checking_cas then
 										l_list.put_i_th (l_context.last_conversion_info.byte_node (
 											l_list.i_th (i)), i)
@@ -4085,9 +4089,10 @@ feature {NONE} -- Visitor
 					-- If we have some data about the above with a conversion, we need
 					-- to extract it so that we can recheck that the converted code still
 					-- make sense in a descendant.
-				if l_info.is_from_conversion then
-						-- For a from conversion, we just need to adapt the creation type to the
-						-- descendant class (case of formal generics that might need to be instantiated).
+				if l_info.is_null_conversion or l_info.is_from_conversion then
+						-- For a from conversion or a null conversion, we just need to adapt the creation
+						-- type to the descendant class (case of formal generics that might need to be
+						-- instantiated).
 					set_type (l_info.creation_type.evaluated_type_in_descendant (context.written_class,
 						context.current_class, context.current_feature), l_as)
 				else
@@ -5156,9 +5161,8 @@ feature {NONE} -- Visitor
 								check not_is_inherited: not is_inherited end
 								if l_target_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_target_conv_info.depend_unit)
-									l_as.set_left (l_as.left.converted_expression (
-										create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
 								end
+								l_as.set_left (l_as.left.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_target_conv_info)))
 								l_target_type := l_target_conv_info.target_type
 								if l_needs_byte_node then
 									l_left_expr := l_target_conv_info.byte_node (l_left_expr)
@@ -5189,9 +5193,8 @@ feature {NONE} -- Visitor
 								check not_inherited: not is_inherited end
 								if last_infix_argument_conversion_info.has_depend_unit then
 									context.supplier_ids.extend (last_infix_argument_conversion_info.depend_unit)
-									l_as.set_right (l_as.right.converted_expression (
-										create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
 								end
+								l_as.set_right (l_as.right.converted_expression (create {PARENT_CONVERSION_INFO}.make (last_infix_argument_conversion_info)))
 								if l_needs_byte_node then
 									l_right_expr ?= last_infix_argument_conversion_info.byte_node (l_right_expr)
 								end
@@ -5421,9 +5424,8 @@ feature {NONE} -- Visitor
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
-								l_as.set_right (l_as.right.converted_expression (
-									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							end
+							l_as.set_right (l_as.right.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							if l_needs_byte_node then
 								l_right_expr := l_conv_info.byte_node (l_right_expr)
 							end
@@ -5432,9 +5434,8 @@ feature {NONE} -- Visitor
 							l_conv_info := context.last_conversion_info
 							if l_conv_info.has_depend_unit then
 								context.supplier_ids.extend (l_conv_info.depend_unit)
-								l_as.set_left (l_as.left.converted_expression (
-									create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							end
+							l_as.set_left (l_as.left.converted_expression (create {PARENT_CONVERSION_INFO}.make (l_conv_info)))
 							if l_needs_byte_node then
 									l_left_expr := l_conv_info.byte_node (l_left_expr)
 							end
@@ -5893,13 +5894,9 @@ feature {NONE} -- Visitor
 					end
 					if
 						not is_inherited and then
-						is_type_compatible.conversion_info /= Void and then
-						is_type_compatible.conversion_info.has_depend_unit
+						is_type_compatible.conversion_info /= Void
 					then
-							-- No need to record the depend_unit from `is_type_compatible.conversion_info'
-							-- because it was already saved in `process_type_compatibility'.
-						l_as.set_source (l_as.source.converted_expression (
-							create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
+						l_as.set_source (l_as.source.converted_expression (create {PARENT_CONVERSION_INFO}.make (is_type_compatible.conversion_info)))
 					end
 				end
 

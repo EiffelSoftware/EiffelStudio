@@ -2698,6 +2698,20 @@ feature {NONE} -- Visitors
 			end
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		local
+			l_expr_type, l_type: TYPE_A
+		do
+			a_node.expr.process (Current)
+			l_expr_type := context.real_type (a_node.expr.type)
+			l_type := context.real_type (a_node.type)
+			if not l_type.same_as (l_expr_type) then
+				il_generator.generate_check_cast (l_expr_type, l_type)
+			end
+			is_object_load_required := False
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		local

@@ -40,8 +40,8 @@ test	date-duration-with-leap-years	time002 tcf pass time
 test	date-time-with-epoch	time003 tcf pass time
 test	date-make-by-days		time004 tcf pass time
 test	date-make-by-days-min-value		time005 tcf fail time
-test	mt-date-time-duration-failure	time006 tcf fail time
-test	mt-cdate-bogus			time007 tcf fail time
+test	mt-date-time-duration-failure	time006 tcf pass time
+test	mt-cdate-bogus			time007 tcf pass time
 
 -- EiffelBase tests
 
@@ -1069,7 +1069,7 @@ test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_
 test	static-type-id-crash-3			incr419 tcf pass incrementality anchored_type
 test	internal-search-crash			incr420 tcf pass incrementality skip
 test	change-application-options		incr421 tcf pass incrementality
-test	fix-vlec-infinite-recursion		incr422	tcf fail used_to_pass incrementality scoop expanded
+test	fix-vlec-infinite-recursion		incr422	tcf fail pass incrementality scoop expanded
 test	duplicate-vlec-after-resume		incr423	tcf fail incrementality expanded
 test 	inline-agent-removal-crash		incr424	tcf fail incrementality agents
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agents
@@ -1078,8 +1078,8 @@ test 	create-generic-remove-generic-inheritance incr427 tcf fail incrementality 
 test	config-remove-library-indirectly	incr428 tcf fail incrementality config
 test	ececil-undefined-symbol-4	incr429	tcf fail incrementality
 test	qat-vwce-sneak			incr430	tcf fail incrementality anchored_type conditional expression
-test	unique-recompile-crash	incr431	tcf fail incrementality
-test	infinite-recursion-scoop-recompile	incr432	tcf fail incrementality scoop
+test	unique-recompile-crash	incr431	tcf pass incrementality
+test	infinite-recursion-scoop-recompile	incr432	tcf pass incrementality scoop
 
 
 -- Melting
@@ -1320,7 +1320,7 @@ test	inline-deferred-with-generic-descendant	final100 tcf pass finalizing inlini
 test	inline-deferred-with-generic-descendant-2	final101 tcf pass finalizing inlining
 test	inline-inherited-routine-with-less-generics	final102 tcf pass finalizing inlining
 test	inline-inherited-routine-with-less-generics-2	final103 tcf pass finalizing inlining
-test	finalize-wrong-generating-type		final104 tcf fail finalizing expanded
+test	finalize-wrong-generating-type		final104 tcf pass finalizing expanded
 test	inlining-parent-with-less-formals	final105 tcf pass finalizing inlining
 test	inlining-in-parent-with-child-with-less-formals final106 tcf pass finalizing inlining
 test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
@@ -1332,7 +1332,7 @@ test	finalize-keep-once-strings		final112 tcf pass finalizing
 test	finalize-inline-attribute-with-body	final113 tcf fail finalizing inlining attribute
 test	finalize-inline-across-loop		final114 tcf fail finalizing inlining
 test	finalize-inline-none-generic-derivation	final115 tcf fail finalizing
-test	profile-crash-on-override		final116 tcf fail finalizing profile
+test	profile-crash-on-override		final116 tcf pass finalizing profile
 test	tight-loop-integer-constant-infinite-loop final117 tcf pass finalizing manual
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
@@ -1409,7 +1409,7 @@ test	scoop-top-exception				scoop019 tcf pass scoop multithreaded exception
 test	scoop-separate-formal				scoop020 tcf pass scoop multithreaded formal generic conformance validity
 test	scoop-object-test				scoop021 tcf fail used_to_pass scoop multithreaded formal generic conformance object_test execution
 test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity incrementality
-test	scoop-expanded-class-constrained-generic	scoop023 tcf fail scoop multithreaded termination expanded generic
+test	scoop-expanded-class-constrained-generic	scoop023 tcf pass scoop multithreaded termination expanded generic
 test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution assigner
 test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
 test	scoop-unnested-logging				scoop026 tcf pass scoop multithreaded execution
@@ -1455,7 +1455,7 @@ test	scoop-impersonation-tests				scoop065 tcf pass scoop multithreaded executio
 test	scoop-passive-processors			scoop066 tcf pass scoop multithreaded
 test	scoop-passive-processor-exception		scoop067 tcf pass scoop multithreaded exception
 test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
-test	scoop-generic-argument-check			scoop069 tcf fail scoop multithreaded validity
+test	scoop-generic-argument-check			scoop069 tcf pass scoop multithreaded validity
 test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execution
 test	scoop-once-value-adoption				scoop071 tcf pass scoop multithreaded execution
 test	scoop-asynchronous-expanded				scoop072 tcf pass scoop multithreaded execution
@@ -1815,7 +1815,7 @@ test	invalid-conversion-to-tuple		exec359 tcf pass execution parenthesis_alias c
 test	expanded-hash-table				exec360 tcf pass execution expanded
 test	conversion-in-assigner-command		exec361 tcf pass execution assigner conversion
 test	formal-generic-tuple-constraint		exec362 tcf pass execution parenthesis_alias conversion tuple conformance formal generic constraint
-test	formal-generic-tuple-unfolding		exec363 tcf fail execution parenthesis_alias conversion tuple conformance formal generic constraint
+test	formal-generic-tuple-unfolding		exec363 tcf pass execution parenthesis_alias conversion tuple conformance formal generic constraint
 
 -- Once specific
 
@@ -2038,7 +2038,7 @@ test	inherited-static-access-on-generic	term207 tcf fail termination formal gene
 test	agent-in-postcondition			term208 tcf pass termination agents
 test	long-string-constants-crash		term209 tcf pass termination
 test	empty-class-file-crash			term210 tcf pass termination
-test	root-class-none				term211 tcf fail termination
+test	root-class-none				term211 tcf pass termination
 test	bad-library-class			term212 tcf fail termination
 test	across-on-tuple				term213 tcf pass termination across iteration
 test	qat-greater-number-of-formal	term214 tcf pass validity anchored_type system-validity
@@ -2224,7 +2224,7 @@ test	storable-formats-63			store026 tcf pass storable
 test	storable-with-special-type	store027 tcf pass storable
 test	storable-with-tuple-type	store028 tcf pass storable
 test	storable-formats-63-2		store029 tcf pass storable
-test	store-retrieve-transient-attributes	store030 tcf fail used_to_pass storable transient
+test	store-retrieve-transient-attributes	store030 tcf fail pass storable transient
 test	store-retrieve-with-version	store031 tcf pass storable
 test	store-in-different-thread	store032 tcf pass storable multithreaded
 test	store-bounded-queues-stacks	store033 tcf pass storable
@@ -2903,7 +2903,7 @@ test	qat-generic-with-rename		anchor061 tcf pass anchored_type
 test	qat-generic-inheritance		anchor062 tcf pass anchored_type
 test	qat-constraints-crash		anchor063 tcf pass anchored_type formal generic
 test	qat-generic-with-rename-inherited anchor064 tcf pass anchored_type formal generic
-test 	qat-generic-func-expanded-actual anchor065 tcf fail finalizing anchored_type
+test 	qat-generic-func-expanded-actual anchor065 tcf pass finalizing anchored_type
 test 	qat-generic-resolving-to-none 	anchor066 tcf fail finalizing anchored_type
 test 	qat-with-tuple-labels		anchor067 tcf fail anchored_type tuple
 test 	qat-with-secret-features	anchor068 tcf fail anchored_type

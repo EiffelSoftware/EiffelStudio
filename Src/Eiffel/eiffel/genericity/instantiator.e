@@ -49,6 +49,7 @@ feature -- Processing
 		require
 			a_type_not_void: a_type /= Void
 			a_class_not_void: a_class /= Void
+			a_type_is_valid: a_type.is_valid
 		local
 			i, nb: INTEGER
 			generics: ARRAYED_LIST [TYPE_A]
@@ -80,15 +81,19 @@ feature -- Processing
 					io.error.put_string (a_class.name)
 					io.error.put_integer (a_class.class_id)
 					io.error.put_new_line
-					io.error.put_string (a_type.dump)
+					io.error.put_string (type_i.dump)
 					io.error.put_new_line
 				end
 
-					-- Insert item in the insertion list if not present
-				insertion_list.put (type_i)
+					-- Insert item in the insertion list if not present, but only for non TUPLE type,
+					-- as TUPLE types can have any kind of generic derivations, we only have one type at
+					-- runtime.
+				if not attached {TUPLE_TYPE_A} type_i then
+					insertion_list.put (type_i)
+				end
 
 					-- Recursion on the generic types
-				generics := a_type.generics
+				generics := type_i.generics
 				if generics /= Void then
 					from
 						i := 1
@@ -109,22 +114,21 @@ feature -- Processing
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 		do
-				-- Remove the obsolete class types
-			class_array := System.classes
-			nb := Class_counter.count
-			from i := 1 until i > nb loop
-				if attached class_array [i] as l_class then
-					l_class.types.clean
-				end
-				i := i + 1
-			end
-
 				-- Ensures that all required classes are properly registered
 			check_required_classes
 
-				-- Remove the obsolete types
-			clean_standalone
-
+			if was_clean_up_requested then
+					-- Remove the invalid class types
+				class_array := System.classes
+				nb := Class_counter.count
+				from i := 1 until i > nb loop
+					if attached class_array [i] as l_class then
+						l_class.types.clean
+					end
+					i := i + 1
+				end
+				was_clean_up_requested := False
+			end
 			from
 				start
 			until
@@ -136,18 +140,34 @@ feature -- Processing
 			derivations.wipe_out
 		end
 
-feature -- Removal
+feature -- Cleaning
 
-	clean_standalone
-			-- Remove all invalid standalone types..
+	reset_is_clean_up_requested
+			-- Reset `is_clean_up_requested' to its default, i.e. no cleanup will be performed.
 		do
-				-- Use the class with the worst void-safety settings, i.e. root class,
-				-- because these settings are used when performing conformance tests.
-			clean (system.root_creators.first.root_class.compiled_class)
+			is_clean_up_requested := False
+		ensure
+			is_clean_up_requested_not_set: not is_clean_up_requested
 		end
+
+	request_clean_up
+			-- During a recompilation a class is removed or a class has changed its formal
+			-- generic parameters in such a way that requires checking all the instantiation
+			-- and removing the bad one.
+		do
+			is_clean_up_requested := True
+		end
+
+	is_clean_up_requested: BOOLEAN
+			-- Is a cleanup required?
+
+	was_clean_up_requested: BOOLEAN
+			-- Was a cleanup performed
 
 	clean_all
 			-- Clean up Current and all classes from obsolete type.
+		require
+			is_clean_up_requested: is_clean_up_requested
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
@@ -162,7 +182,12 @@ feature -- Removal
 				i := i + 1
 			end
 				-- Remove obsolete types from the global list.
-			clean_standalone
+				-- Use the class with the worst void-safety settings, i.e. root class,
+				-- because these settings are used when performing conformance tests.
+			clean (system.root_creators.first.root_class.compiled_class)
+
+			reset_is_clean_up_requested
+			was_clean_up_requested := True
 		end
 
 feature -- Access

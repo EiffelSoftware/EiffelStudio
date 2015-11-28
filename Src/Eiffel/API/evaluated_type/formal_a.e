@@ -14,7 +14,7 @@ inherit
 		redefine
 			adapted_in,
 			annotation_flags,
-			as_non_separate,
+			reset_separate_mark,
 			check_const_gen_conformance,
 			convert_to,
 			description,
@@ -84,12 +84,12 @@ feature -- Modification
 			is_separate: is_separate
 		end
 
-	reset_is_separate
+	reset_separate_mark
 			-- Mark the type as being non-separate.
 		do
-			reset_separate_mark
+			Precursor
 			is_separate := False
-		ensure
+		ensure then
 			is_non_separate: not is_separate
 		end
 
@@ -98,15 +98,6 @@ feature -- Modification
 		do
 			Precursor
 			set_is_separate
-		end
-
-feature -- Duplication
-
-	as_non_separate: like Current
-			-- <Precursor>
-		do
-			Result := duplicate
-			Result.reset_is_separate
 		end
 
 feature -- Visitor
@@ -230,7 +221,7 @@ feature -- Access
 
 	hash_code: INTEGER
 		do
-			Result := {SHARED_HASH_CODE}.other_code + position
+			Result := combined_hash_code ({SHARED_GEN_CONF_LEVEL}.formal_type, position)
 		end
 
 	description: GENERIC_DESC

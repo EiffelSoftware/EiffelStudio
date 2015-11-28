@@ -14,7 +14,7 @@ inherit
 			same_as
 		redefine
 			actual_type, annotation_flags,
-			deep_actual_type, context_free_type,
+			deep_actual_type, deanchored_form_marks_free, context_free_type,
 			conformance_type,
 			convert_to,
 			has_associated_class,
@@ -59,7 +59,7 @@ inherit
 			is_generated_as_single_type, heaviest, instantiation_in, adapted_in,
 			internal_generic_derivation, internal_same_generic_derivation_as,
 			skeleton_adapted_in, set_frozen_mark, is_frozen, is_variant,
-			as_same_variant_bits
+			as_same_variant_bits, as_attachment_mark_free
 		end
 
 feature -- Properties
@@ -71,6 +71,12 @@ feature -- Properties
 			-- <Precursor>
 		do
 			Result := actual_type.deep_actual_type
+		end
+
+	deanchored_form_marks_free: TYPE_A
+			-- <Precursor>
+		do
+			Result := actual_type.deanchored_form_marks_free
 		end
 
 	context_free_type: TYPE_A
@@ -255,7 +261,7 @@ feature -- Access
 
 	hash_code: INTEGER
 		do
-			Result := actual_type.hash_code
+			Result := combined_hash_code ({SHARED_GEN_CONF_LEVEL}.like_feature_type, actual_type.hash_code)
 		end
 
 	base_class: CLASS_C
@@ -477,6 +483,26 @@ feature -- Modification
 				end
 			else
 				Result := Precursor (a_bits)
+			end
+		end
+
+	as_attachment_mark_free: like Current
+			-- Same as Current but without any attachment mark
+		local
+			l_bits: like attachment_bits
+			l_actual_type, l_old_actual_type: like actual_type
+		do
+			l_bits := attachment_bits
+			l_actual_type := actual_type.as_attachment_mark_free
+			if l_bits = 0 and then l_actual_type = actual_type then
+				Result := Current
+			else
+				attachment_bits := 0
+				l_old_actual_type := actual_type
+				actual_type := l_actual_type
+				Result := duplicate
+				attachment_bits := l_bits
+				actual_type := l_old_actual_type
 			end
 		end
 

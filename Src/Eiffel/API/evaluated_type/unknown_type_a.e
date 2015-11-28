@@ -56,7 +56,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- <Precursor>
 		do
-			Result := {SHARED_HASH_CODE}.other_code
+			Result := {SHARED_GEN_CONF_LEVEL}.max_dtype
 		end
 
 feature -- Comparison
@@ -119,7 +119,7 @@ feature {TYPE_A} -- Helpers
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

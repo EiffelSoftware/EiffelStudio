@@ -403,9 +403,6 @@ feature -- Action
 					-- `class_id' of CLASS_C and file ".TMP_AST".
 				ast_b.set_class_id (class_id)
 				Tmp_ast_server.put (ast_b)
-
-					-- Clean the filters, i.e. remove all the obsolete types
-				filters.clean (Current)
 			end
 		rescue
 			if Rescue_status.is_error_exception then

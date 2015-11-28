@@ -25,7 +25,7 @@ inherit
 			adapted_in, skeleton_adapted_in, is_class_valid, is_valid_generic_derivation,
 			dispatch_anchors, has_like_current, internal_generic_derivation,
 			internal_same_generic_derivation_as, generic_derivation, check_labels,
-			duplicate_for_instantiation
+			duplicate_for_instantiation, deanchored_form_marks_free
 		redefine
 			is_typed_pointer, c_type, base_class, process,
 			il_type_name, generic_il_type_name
@@ -127,7 +127,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

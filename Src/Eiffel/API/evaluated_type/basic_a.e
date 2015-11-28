@@ -17,7 +17,7 @@ inherit
 			meta_type, is_basic, reference_type,
 			good_generics, internal_is_valid_for_class, error_generics,
 			description, description_with_detachable_type,
-			generic_il_type_name, hash_code, internal_generic_derivation, generic_derivation,
+			generic_il_type_name, internal_generic_derivation, generic_derivation,
 			internal_same_generic_derivation_as, generate_cecil_value,
 			sk_value, element_type, make, is_processor_attachable_to
 		end
@@ -60,11 +60,6 @@ feature -- Status Report
 			-- Is the current actual type a basic one ?
 
 feature -- Access
-
-	hash_code: INTEGER
-		do
-			Result := c_type.hash_code
-		end
 
 	description: ATTR_DESC
 			-- Type description for skeleton
@@ -177,7 +172,7 @@ feature {TYPE_A} -- Helpers
 			if a_level = 0 and not system.il_generation then
 				create Result.make (class_id)
 			else
-				Result := Current
+				Result := Precursor (a_level)
 			end
 		end
 
@@ -227,7 +222,7 @@ invariant
 	is_expanded: is_expanded
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

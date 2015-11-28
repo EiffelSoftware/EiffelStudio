@@ -11,7 +11,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_type, deep_actual_type, context_free_type,
+			actual_type, deep_actual_type, deanchored_form_marks_free, context_free_type,
 			base_class, associated_class_type, internal_conform_to, conformance_type, convert_to,
 			generics, has_associated_class, has_associated_class_type, formal_instantiated_in,
 			instantiated_in, duplicate, set_separate_mark, recomputed_in,
@@ -27,7 +27,8 @@ inherit
 			hash_code, internal_generic_derivation, internal_same_generic_derivation_as,
 			is_class_valid, skeleton_adapted_in, good_generics, has_like_current,
 			set_frozen_mark, initialize_info, annotation_flags,
-			set_is_implicitly_frozen, as_same_variant_bits
+			set_is_implicitly_frozen, as_same_variant_bits,
+			as_attachment_mark_free
 		end
 
 create
@@ -58,6 +59,33 @@ feature -- Properties
 			-- <Precursor>
 		do
 			Result := conformance_type.deep_actual_type
+		end
+
+	deanchored_form_marks_free: TYPE_A
+			-- <Precursor>
+		do
+			Result := conformance_type.deanchored_form_marks_free
+		end
+
+	as_attachment_mark_free: like Current
+			-- Same as Current but without any attachment mark
+		local
+			l_bits: like attachment_bits
+			l_actual_type, l_old_actual_type: like actual_type
+			l_conformance_type, l_old_conformance_type: like conformance_type
+		do
+			l_bits := attachment_bits
+			l_conformance_type := conformance_type.as_attachment_mark_free
+			if l_bits = 0 and then l_conformance_type = conformance_type then
+				Result := Current
+			else
+				attachment_bits := 0
+				l_old_conformance_type := conformance_type
+				conformance_type := l_conformance_type
+				Result := duplicate
+				attachment_bits := l_bits
+				conformance_type := l_old_conformance_type
+			end
 		end
 
 	context_free_type: like Current
@@ -178,7 +206,7 @@ feature -- Properties
 		do
 			if other.is_like_current then
 				l ?= other
-				Result := has_same_marks (l)
+				Result := has_same_marks (l) and then conformance_type.same_as (other.conformance_type)
 			end
 		end
 
@@ -189,7 +217,11 @@ feature -- Access
 
 	hash_code: INTEGER
 		do
-			Result := {SHARED_HASH_CODE}.other_code
+			if conformance_type /= Void then
+				Result := combined_hash_code ({SHARED_GEN_CONF_LEVEL}.like_current_type, conformance_type.hash_code)
+			else
+				Result := {SHARED_GEN_CONF_LEVEL}.like_current_type
+			end
 		end
 
 	base_class: CLASS_C

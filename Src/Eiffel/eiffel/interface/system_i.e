@@ -1917,6 +1917,10 @@ end
 							-- the system may become invalid if the compiler servers are manipulated without
 							-- being stored to disk, which is only the case during code generation.
 						test_system.remove_unused_classes
+							-- If classes have been removed, we have to clean up our types.
+						if instantiator.is_clean_up_requested then
+							instantiator.clean_all
+						end
 					end
 
 				end -- if a_system_check
@@ -2207,8 +2211,6 @@ end
 
 	process_removed_classes
 			-- Remove classes that disappeared after a recompilation.
-		local
-			l_has_removed_classes: BOOLEAN
 		do
 			if removed_classes /= Void then
 				from
@@ -2218,15 +2220,11 @@ end
 				loop
 					if removed_classes.key_for_iteration.is_removable then
 						internal_remove_class (removed_classes.key_for_iteration, 0)
-						l_has_removed_classes := True
+						instantiator.request_clean_up
 					end
 					removed_classes.forth
 				end
 				removed_classes := Void
-			end
-			if l_has_removed_classes then
-					-- Remove all obsolete types we may find in the universe after removal of classes.
-				instantiator.clean_all
 			end
 		end
 

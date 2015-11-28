@@ -44,7 +44,7 @@ feature -- Access
 	hash_code: INTEGER
 			-- Hash code for current type
 		do
-			Result := {SHARED_HASH_CODE}.none_code
+			Result := {SHARED_GEN_CONF_LEVEL}.none_type
 		end
 
 	same_as (other: TYPE_A): BOOLEAN

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command-line Eiffel Inspector (code analysis)"
 	author: "Stefan Zurfluh"
 	date: "$Date$"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (a_arguments: ITERABLE [STRING_32])
+	make_with_arguments (a_arguments: ITERABLE [READABLE_STRING_32])
 			-- Initialization for `Current'. `a_arguments' are the command-line
 			-- arguments that are relevant for the Code Analyzer.
 		local
@@ -30,19 +30,19 @@ feature {NONE} -- Initialization
 			create unknown_arguments.make (8)
 
 			across a_arguments as l_args loop
-				if l_args.item.same_string ("-cadefaults") then
+				if l_args.item.same_string_general ("-cadefaults") then
 					restore_preferences := True
-				elseif l_args.item.same_string ("-caloadprefs") then
+				elseif l_args.item.same_string_general ("-caloadprefs") then
 					l_args.forth
 					preference_file := l_args.item
-				elseif l_args.item.same_string ("-caforcerules") then
+				elseif l_args.item.same_string_general ("-caforcerules") then
 					l_args.forth
 
 					parse_forced_rules (l_args.item)
 					if forced_rules_parse_error then
 						unknown_arguments.extend (l_args.item)
 					end
-				elseif l_args.item.same_string ("-caclass") or l_args.item.same_string ("-caclasses") then
+				elseif l_args.item.same_string_general ("-caclass") or l_args.item.same_string_general ("-caclasses") then
 						-- Syntax: -caclass "MY_CLASS; MY_CLASS_2; MY_CLASS_3"
 						-- where semicolons are optional.
 					l_args.forth
@@ -55,8 +55,8 @@ feature {NONE} -- Initialization
 						l_string := l_args.item.to_string_32
 
 							-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR"
-						l_string.replace_substring_all (";", " ")
-						l_list_strings := l_string.to_string_32.split (' ')
+						l_string.replace_substring_all ({STRING_32} ";", {STRING_32} " ")
+						l_list_strings := l_string.split (' ')
 
 							-- Remove empty entries
 						create {ARRAYED_LIST [STRING_32]} class_name_list.make (l_list_strings.count)
@@ -77,20 +77,19 @@ feature {NONE} -- Initialization
 		forced_rules_parse_error: BOOLEAN
 				-- Did the last call to `parse_forced_rules' result in an error?
 
-		parse_forced_rules (a_line: STRING)
+		parse_forced_rules (a_line: READABLE_STRING_32)
 				-- Parse an argument representing the forced rules list (possibly with forced preferences).
 			local
-				l_line: STRING
-				l_preferences_to_add: like parse_preference_block
+				l_line: STRING_32
 				l_parse_error: BOOLEAN
-				l_rule_name: STRING
+				l_rule_name: READABLE_STRING_32
 				l_block_end_pos: INTEGER
 			do
-				l_line := a_line.twin
+				l_line := a_line
 				create forced_preferences.make (16)
 
 					-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR"
-				l_line.replace_substring_all (";", " ")
+				l_line.replace_substring_all ({STRING_32} ";", {STRING_32} " ")
 
 				from
 					-- l_line
@@ -112,20 +111,17 @@ feature {NONE} -- Initialization
 						l_line.left_adjust
 
 							-- Do we have a preference block?
-						if l_line.starts_with ("(") then
+						if l_line.index_of ('(', 1) = 1 then
 							l_block_end_pos := l_line.index_of (')', 1)
 							if l_block_end_pos = 0 then
-								l_parse_error := true
+								l_parse_error := True
 							else
-								l_preferences_to_add := parse_preference_block (l_line.substring (2, l_block_end_pos - 1), l_rule_name)
-
-								if attached l_preferences_to_add then
+								if attached parse_preference_block (l_line.substring (2, l_block_end_pos - 1), l_rule_name) as l_preferences_to_add then
 									forced_preferences.finish
 									forced_preferences.merge_right (l_preferences_to_add)
 								else
 									l_parse_error := True
 								end
-
 									-- Trim again
 								l_line.remove_head (l_block_end_pos)
 								l_line.left_adjust
@@ -137,19 +133,17 @@ feature {NONE} -- Initialization
 				forced_rules_parse_error := l_parse_error
 			end
 
-	parse_preference_block (a_block, a_rule_id: STRING): like forced_preferences
+	parse_preference_block (a_block, a_rule_id: READABLE_STRING_32): like forced_preferences
 			-- Parse a preference block for a single forced rule. Return the list of preferences to force.
 			-- Return Void in case of error.
 		local
-			l_preferences: LIST [STRING]
-			l_preference: STRING
+			l_preferences: LIST [READABLE_STRING_32]
+			l_preference: STRING_32
 			l_equal_pos: INTEGER
-			l_name, l_value: STRING
-			l_this_forced_preference: like forced_preference_type
 		do
 			if a_block.is_empty then
 					-- Border case: split would return one string, I want zero.
-				create {ARRAYED_LIST [STRING]} l_preferences.make (0)
+				create {ARRAYED_LIST [READABLE_STRING_32]} l_preferences.make (0)
 			else
 				l_preferences := a_block.split (',')
 			end
@@ -167,19 +161,19 @@ feature {NONE} -- Initialization
 						-- Error
 					Result := Void
 				else
-					l_name := l_preference.head (l_equal_pos - 1)
-					l_value := l_preference.substring (l_equal_pos + 1, l_preference.count)
-
-					create l_this_forced_preference
-					l_this_forced_preference.rule_id := a_rule_id
-					l_this_forced_preference.preference_name := l_name
-					l_this_forced_preference.preference_value := l_value
-					Result.extend (l_this_forced_preference)
+					if
+						attached l_preference.head (l_equal_pos - 1) as n and then
+						across n as nc all nc.item.natural_32_code <= 127 end
+					then
+						Result.extend ([a_rule_id, n.to_string_8, l_preference.substring (l_equal_pos + 1, l_preference.count)])
+					else
+							-- Invalid rule name.
+						Result := Void
+					end
 				end
 				l_preferences.forth
 			end
 		end
-
 
 feature {NONE} -- Options
 
@@ -201,9 +195,9 @@ feature {NONE} -- Options
 			-- Does the user want to restore the Code Analysis preferences to their
 			-- default values?
 
-	preference_file: STRING
+	preference_file: READABLE_STRING_32
 
-	unknown_arguments: ARRAYED_LIST [STRING]
+	unknown_arguments: ARRAYED_LIST [READABLE_STRING_32]
 
 feature -- Execution (declared in EWB_CMD)
 
@@ -274,7 +268,7 @@ feature -- Execution (declared in EWB_CMD)
 			if not l_has_violations then output_window.add (ca_messages.no_issues + "%N") end
 		end
 
-	import_preferences (a_pref: PREFERENCES; a_xml_file: STRING)
+	import_preferences (a_pref: PREFERENCES; a_xml_file: READABLE_STRING_32)
 			-- Imports the preferences from the XML file `a_xml_file' to
 			-- `a_pref'.
 		local
@@ -319,13 +313,13 @@ feature -- Info (declared in EWB_CMD)
 
 feature {NONE} -- Implementation
 
-	is_identifier_character (a_char: CHARACTER): BOOLEAN
+	is_identifier_character (a_char: CHARACTER_32): BOOLEAN
 			-- Is `a_char' a valid Eiffel identifier character?
 		do
 			Result := (a_char = '_' or (a_char >= 'a' and a_char <= 'z') or (a_char >= 'A' and a_char <= 'Z') or (a_char >= '0' and a_char <= '9'))
 		end
 
-	first_word (a_string: STRING; a_start_index: INTEGER): STRING
+	first_word (a_string: READABLE_STRING_32; a_start_index: INTEGER): READABLE_STRING_32
 			-- The first word (formed with valid Eiffel identifier characters) in `a_string',
 			-- starting from `a_start_index'.
 			-- An empty string if `a_string' does not start with a valid identifier.
@@ -333,54 +327,21 @@ feature {NONE} -- Implementation
 			argument_exists: a_string /= Void
 		local
 			i: INTEGER
-			l_stop: BOOLEAN
 		do
 			from
 				i := 1
 			until
-				l_stop or i > a_string.count
+				i > a_string.count or else not is_identifier_character (a_string [i])
 			loop
-				if not is_identifier_character (a_string.at (i)) then
-					l_stop := True
-				else
-					i := i + 1
-				end
+				i := i + 1
 			end
 			Result := a_string.substring (a_start_index, i - 1)
 		ensure
 			is_prefix: a_string.starts_with (Result)
 		end
 
-		next_word_index (a_string: STRING; a_start_index: INTEGER): INTEGER
-			-- At which position does the next word (formed with valid Eiffel identifier characters)
-			-- start in `a_string', after `a_start_index'?
-			-- Return `a_string'.count + 1 if not found.
-		require
-			argument_exists: a_string /= Void
-		local
-			i: INTEGER
-			l_stop: BOOLEAN
-		do
-			from
-				i := a_start_index
-			until
-				l_stop or i > a_string.count
-			loop
-				if is_identifier_character (a_string.at (i)) then
-					l_stop := True
-				else
-					i := i + 1
-				end
-			end
-			Result := i
-		ensure
-			positive_result: Result >= 1
-			result_small_enough: Result <= a_string.count + 1
-		end
-
-
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		TTY menu for launching AutoTest.
 	]"
@@ -21,13 +21,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (a_arguments: LINKED_LIST [STRING_32])
+	make_with_arguments (a_arguments: LINKED_LIST [READABLE_STRING_32])
 			-- Initialize `auto_test_arguments' with `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void
 		do
 			create {DS_LINKED_LIST [STRING_32]} auto_test_arguments.make
-			a_arguments.do_all (agent auto_test_arguments.force_last)
+			across a_arguments as ac loop auto_test_arguments.force_last (ac.item) end
 		ensure
 			auto_test_arguments_set: auto_test_arguments /= Void and then auto_test_arguments.count = a_arguments.count
 		end
@@ -184,7 +184,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -8,7 +8,10 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen expanded class REAL_64 
+frozen expanded class REAL_64
+
+inherit
+	COMPARABLE
 
 feature -- Access
 
@@ -24,8 +27,15 @@ feature -- Settings
 			item_set: item = i
 		end
 
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current integer less than `other'?
+		do
+		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

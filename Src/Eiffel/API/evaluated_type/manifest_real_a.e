@@ -15,24 +15,13 @@ class
 inherit
 	REAL_A
 		redefine
-			default_create, convert_to, intrinsic_type, process
+			convert_to, intrinsic_type, process
 		end
 
 	SHARED_TYPES
-		redefine
-			default_create
-		end
 
 create
-	default_create
-
-feature {NONE} -- Initialization
-
-	default_create
-		do
-				-- By default we always create a manifest real constant as if it was a 64-bit value.
-			make (64)
-		end
+	make
 
 feature -- Visitor
 
@@ -48,26 +37,25 @@ feature -- Property
 			-- Real type of current manifest real.
 			-- It is always a REAL_64.
 		do
-			Result := real_64_type
+			if size = 32 then
+				Result := real_32_type
+			else
+				Result := real_64_type
+			end
 		end
 
 feature {COMPILER_EXPORTER} -- Implementation
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- <Precursor>
-		local
-			l_info: CONVERSION_INFO
-			l_feat: FEATURE_I
 		do
-			if attached {REAL_A} a_target_type as l_real and then l_real.size = 32 then
-				l_feat := base_class.feature_table.item_id ({PREDEFINED_NAMES}.truncated_to_real_name_id)
-					-- We protect ourself in case the `truncated_to_real' routine
-					-- would have been removed from the REAL_64 class.
-				if l_feat /= Void then
-					create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_real, base_class, l_feat)
-					Result := True
-				end
-				context.set_last_conversion_info (l_info)
+				-- Currently as long as we do not validate the value of the manifest real constant,
+				-- we allow assignment of manifest reals to either 32 or 64-bit value.
+				-- Typed real are useful to find out the type of the real constant to build manifest
+				-- tuples for example.
+			if attached {REAL_A} a_target_type as l_real then
+				Result := True
+				context.set_last_conversion_info (create {NULL_CONVERSION_INFO}.make (l_real))
 			else
 				Result := Precursor {REAL_A} (a_context_class, a_target_type)
 			end
@@ -77,7 +65,7 @@ invariant
 	correct_size: size = 64
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -76,7 +76,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			elseif a_const.is_character then
 				constant_type := Character_type
 			elseif a_const.is_real then
-				constant_type := manifest_real_type
+				constant_type := manifest_real_64_type
 			elseif a_const.is_integer then
 				l_int ?= a_const
 				check
@@ -105,7 +105,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

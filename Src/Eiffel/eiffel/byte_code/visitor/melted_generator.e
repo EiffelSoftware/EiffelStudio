@@ -1688,6 +1688,33 @@ feature {NONE} -- Visitors
 			a_node.message.process (Current)
 		end
 
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		local
+			l_expr_type, l_type: TYPE_A
+		do
+			a_node.expr.process (Current)
+			l_expr_type := context.real_type (a_node.expr.type)
+			l_type := context.real_type (a_node.type)
+			if not l_type.same_as (l_expr_type) then
+				inspect l_type.sk_value (Void)
+				when {SK_CONST}.sk_char32 then ba.append (bc_cast_char32)
+				when {SK_CONST}.sk_char8 then ba.append (bc_cast_char8)
+				when {SK_CONST}.sk_int8 then ba.append (bc_cast_integer) ba.append_integer (8)
+				when {SK_CONST}.sk_int16 then ba.append (bc_cast_integer) ba.append_integer (16)
+				when {SK_CONST}.sk_int32 then ba.append (bc_cast_integer) ba.append_integer (32)
+				when {SK_CONST}.sk_int64 then ba.append (bc_cast_integer) ba.append_integer (64)
+				when {SK_CONST}.sk_uint8 then ba.append (bc_cast_integer) ba.append_integer (8)
+				when {SK_CONST}.sk_uint16 then ba.append (bc_cast_integer) ba.append_integer (16)
+				when {SK_CONST}.sk_uint32 then ba.append (bc_cast_integer) ba.append_integer (32)
+				when {SK_CONST}.sk_uint64 then ba.append (bc_cast_integer) ba.append_integer (64)
+				when {SK_CONST}.sk_real32 then ba.append (bc_cast_real32)
+				when {SK_CONST}.sk_real64 then ba.append (bc_cast_real64)
+				else
+				end
+			end
+		end
+
 	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		local

@@ -26,6 +26,7 @@ inherit
 			process_constant_b,
 			process_external_b,
 			process_integer_constant,
+			process_null_conversion_b,
 			process_paran_b,
 			process_real_const_b,
 			process_string_b,
@@ -334,6 +335,13 @@ feature {BYTE_NODE} -- Visitors
 				ca_blob.put_integer_8 (a_node.type.element_type)
 			end
 			insert_integer_constant (a_node)
+		end
+
+	process_null_conversion_b (a_node: NULL_CONVERSION_B)
+			-- Process `a_node'.
+		do
+			check is_constant_expression: a_node.is_constant_expression end
+			a_node.expr.process (Current)
 		end
 
 	process_paran_b (a_node: PARAN_B)
@@ -666,7 +674,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

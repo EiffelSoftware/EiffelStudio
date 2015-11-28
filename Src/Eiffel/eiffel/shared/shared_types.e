@@ -83,13 +83,22 @@ feature -- Access
 			create Result.make (64)
 		end
 
-	manifest_real_type: MANIFEST_REAL_A
+	manifest_real_32_type: MANIFEST_REAL_A
 			-- Type for manifest real_type.
 			--| They can be once because at the moment we do not care about the
 			--| actual value of the constant, we assume it will work equally well
 			--| as a REAL_32 and REAL_64.
 		once
-			create Result
+			create Result.make (32)
+		end
+
+	manifest_real_64_type: MANIFEST_REAL_A
+			-- Type for manifest real_type.
+			--| They can be once because at the moment we do not care about the
+			--| actual value of the constant, we assume it will work equally well
+			--| as a REAL_32 and REAL_64.
+		once
+			create Result.make (64)
 		end
 
 	Void_type: VOID_A
@@ -117,7 +126,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

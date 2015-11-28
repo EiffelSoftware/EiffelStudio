@@ -143,7 +143,7 @@ feature -- Access
 
 	hash_code: INTEGER
 		local
-			l_new_value, l_bytes, i: INTEGER
+			i: INTEGER
 			l_generics: like generics
 		do
 			Result := Precursor
@@ -1025,9 +1025,6 @@ feature -- Primitives
 			i: INTEGER
 			l_old_generics, l_new_generics: like generics
 			l_prev_type, l_new_type: TYPE_A
-			a: like attachment_bits
-			s: BOOLEAN
-			b: like variant_bits
 		do
 			Result := as_marks_free
 			from

@@ -138,6 +138,9 @@ feature -- from ENTRY
 			l_context_type := system.class_type_of_id (type_id).type
 			if type.has_associated_class_type (l_context_type) then
 				Result := type.static_type_id (l_context_type)
+			elseif type.is_none then
+					-- We do + 1 because we susbstract - 1 later and we want to get back to NONE_TYPE.
+				Result := {SHARED_GEN_CONF_LEVEL}.none_type.to_integer_32 + 1
 			end
 		end
 

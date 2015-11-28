@@ -81,6 +81,7 @@ rt_private void cnode_updt(struct cnode *);	/* Update a cnode structure */
 /* Read information from byte code file `melted_file'. */
 rt_private void wread(char *buffer, size_t nbytes);
 rt_private EIF_INTEGER_16 wshort(void);
+rt_private EIF_NATURAL_16 wnat16(void);
 rt_private int32 wint32(void);
 rt_private uint32 wuint32(void);
 rt_private EIF_TYPE_INDEX *wtype_array(void);
@@ -870,7 +871,7 @@ rt_public void desc_updt(void)
 						desc_ptr[i].type.generic = wtype_array();
 					} else {
 							/* Special trick here (See DESC_UNIT for explanation). */
-						desc_ptr[i].type.non_generic = (rt_uint_ptr) ((wshort() << 1) | 1);
+						desc_ptr[i].type.non_generic = (rt_uint_ptr) ((wnat16() << 1) | 1);
 					}
 					desc_ptr[i].body_index = wuint32();
 					desc_ptr[i].offset = wuint32();
@@ -916,6 +917,16 @@ rt_private EIF_INTEGER_16 wshort(void)
 	EIF_INTEGER_16 result;
 
 	wread((char *)(&result), sizeof(EIF_INTEGER_16));
+	return result;
+}
+
+rt_private EIF_NATURAL_16 wnat16(void)
+{
+	/* Next NATURAL_16. */
+
+	EIF_NATURAL_16 result;
+
+	wread((char *)(&result), sizeof(EIF_NATURAL_16));
 	return result;
 }
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Actual type for integer constant type NATURAL_64."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,19 +57,13 @@ feature {COMPILER_EXPORTER} -- Implementation
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
-		local
-			l_int: INTEGER_A
-			l_nat: NATURAL_A
-			l_info: CONVERSION_INFO
 		do
-			if a_target_type.is_integer then
-				l_int ?= a_target_type
+			if attached {INTEGER_A} a_target_type as l_int then
 				if is_convertible_to_integer_64 and then l_int.size >= 64 then
 					context.set_last_conversion_info (create {NULL_CONVERSION_INFO}.make (l_int))
 					Result := True
 				end
-			elseif a_target_type.is_natural then
-				l_nat ?= a_target_type
+			elseif attached {NATURAL_A} a_target_type as l_nat then
 				if l_nat.size >= 64 then
 					context.set_last_conversion_info (create {NULL_CONVERSION_INFO}.make (l_nat))
 					Result := True

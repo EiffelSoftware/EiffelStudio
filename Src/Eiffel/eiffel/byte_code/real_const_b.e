@@ -91,6 +91,7 @@ feature -- C code generation
 	print_register
 			-- Print real value
 		do
+				-- FIXME: Shouldn't we use the same way to generate the manifest value as done in REAL_VALUE_I?
 			if real_size = 64 then
 				buffer.put_string ("(EIF_REAL_64) ")
 			else
@@ -114,7 +115,7 @@ invariant
 	value_has_no_undescores: not value.has ('_')
 	real_size_valid: real_size = 32 or real_size = 64
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

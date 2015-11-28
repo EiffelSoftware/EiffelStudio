@@ -1043,7 +1043,7 @@ feature -- Duplication
 		end
 
 	frozen as_separate: like Current
-			-- Separate version of this type
+			-- Separate version of this type.
 		require
 			not_separate: not is_separate
 		do
@@ -1052,7 +1052,7 @@ feature -- Duplication
 		end
 
 	frozen as_non_separate: like Current
-			-- Non-separate version of this type
+			-- Non-separate version of this type.
 		require
 			is_separate: is_separate
 		do
@@ -1061,7 +1061,7 @@ feature -- Duplication
 		end
 
 	frozen as_attached_type: like Current
-			-- Attached variant of the current type
+			-- Attached variant of the current type.
 		require
 			not_is_attached: not is_attached
 		do
@@ -1072,17 +1072,13 @@ feature -- Duplication
 		end
 
 	frozen as_implicitly_attached: like Current
-			-- Implicitly attached type
+			-- Implicitly attached type.
 		require
 			not_is_attached: not is_attached
 			not_is_implicitly_attached: not is_implicitly_attached
 		do
-			if is_implicitly_attached then
-				Result := Current
-			else
-				Result := duplicate
-				Result.set_is_implicitly_attached
-			end
+			Result := duplicate
+			Result.set_is_implicitly_attached
 		ensure
 			result_attached: Result /= Void
 			result_not_attached: not Result.is_attached
@@ -1110,7 +1106,7 @@ feature -- Duplication
 		end
 
 	frozen as_implicitly_detachable: like Current
-			-- Implicitly detachable type
+			-- Implicitly detachable type.
 		do
 			if not is_attached and then is_implicitly_attached then
 				Result := duplicate
@@ -1123,7 +1119,7 @@ feature -- Duplication
 		end
 
 	frozen as_detachable_type: like Current
-			-- detachable type
+			-- Detachable type.
 		do
 			if not has_detachable_mark then
 				Result := duplicate
@@ -1134,7 +1130,7 @@ feature -- Duplication
 		end
 
 	as_attachment_mark_free: like Current
-			-- Same as Current but without any attachment mark
+			-- Same as `Current' but without any attachment mark.
 		local
 			l_bits: like attachment_bits
 		do
@@ -1153,7 +1149,7 @@ feature -- Duplication
 		end
 
 	frozen as_marks_free: like Current
-			-- Same as Current but without any attachment and separate marks
+			-- Same as `Current' but without any attachment, separate, variant marks.
 		local
 			a: like attachment_bits
 			s: BOOLEAN
@@ -1197,7 +1193,7 @@ feature -- Duplication
 		end
 
 	as_same_variant_bits (a_bits: like variant_bits): like Current
-			-- Attached variant of the current type
+			-- Attached variant of the current type.
 		local
 			a: like variant_bits
 		do
@@ -1214,7 +1210,7 @@ feature -- Duplication
 		end
 
 	as_variant_free: like Current
-			-- Same as Current but without any variance mark.
+			-- Same as `Current' but without any variance mark.
 		do
 			Result := as_same_variant_bits (0)
 		ensure
@@ -1222,7 +1218,7 @@ feature -- Duplication
 		end
 
 	to_other_attachment (other: TYPE_A): like Current
-			-- Current type to which attachment status of `other' is applied
+			-- Current type to which attachment status of `other' is applied.
 		require
 			other_attached: other /= Void
 		local
@@ -1250,7 +1246,7 @@ feature -- Duplication
 
 	to_other_immediate_attachment (other: TYPE_A): like Current
 			-- Current type to which attachment status of `other' is applied
-			-- without taking into consideration attachment status of an anchor (if any)
+			-- without taking into consideration attachment status of an anchor (if any).
 		require
 			other_attached: other /= Void
 		do
@@ -1277,7 +1273,7 @@ feature -- Duplication
 		end
 
 	to_other_separateness (other: TYPE_A): like Current
-			-- Current type to which separateness status of `other' is applied
+			-- Current type to which separateness status of `other' is applied.
 		require
 			other_attached: other /= Void
 		do

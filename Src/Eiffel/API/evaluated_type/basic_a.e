@@ -211,15 +211,14 @@ feature {COMPILER_EXPORTER}
 			-- Reference counterpart of an expanded type
 		do
 			create Result.make (class_id)
-			if class_declaration_mark = expanded_mark then
-				Result.set_expanded_class_mark
-			end
+			Result.set_expanded_class_mark
 			Result.set_reference_mark
 		end
 
 invariant
 	is_basic: is_basic
 	is_expanded: is_expanded
+	is_base_class_expanded: class_declaration_mark = expanded_mark
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software"

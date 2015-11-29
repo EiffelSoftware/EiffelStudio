@@ -1069,7 +1069,7 @@ test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_
 test	static-type-id-crash-3			incr419 tcf pass incrementality anchored_type
 test	internal-search-crash			incr420 tcf pass incrementality skip
 test	change-application-options		incr421 tcf pass incrementality
-test	fix-vlec-infinite-recursion		incr422	tcf fail pass incrementality scoop expanded
+test	fix-vlec-infinite-recursion		incr422	tcf pass incrementality scoop expanded
 test	duplicate-vlec-after-resume		incr423	tcf fail incrementality expanded
 test 	inline-agent-removal-crash		incr424	tcf fail incrementality agents
 test 	inline-agent-removal-crash-2	incr425	tcf fail incrementality agents
@@ -2224,7 +2224,7 @@ test	storable-formats-63			store026 tcf pass storable
 test	storable-with-special-type	store027 tcf pass storable
 test	storable-with-tuple-type	store028 tcf pass storable
 test	storable-formats-63-2		store029 tcf pass storable
-test	store-retrieve-transient-attributes	store030 tcf fail pass storable transient
+test	store-retrieve-transient-attributes	store030 tcf pass storable transient
 test	store-retrieve-with-version	store031 tcf pass storable
 test	store-in-different-thread	store032 tcf pass storable multithreaded
 test	store-bounded-queues-stacks	store033 tcf pass storable

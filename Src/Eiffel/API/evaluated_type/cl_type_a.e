@@ -679,17 +679,29 @@ feature {COMPILER_EXPORTER} -- Settings
 	set_expanded_mark
 			-- Set class type declaration as expanded.
 		do
-			declaration_mark := expanded_mark
+			if is_reference then
+				if base_class.is_expanded then
+					declaration_mark := no_mark
+				else
+					declaration_mark := expanded_mark
+				end
+			end
 		ensure
-			has_expanded_mark: has_expanded_mark
+			is_expanded: is_expanded
 		end
 
 	set_reference_mark
 			-- Set class type declaration as reference.
 		do
-			declaration_mark := reference_mark
+			if is_expanded then
+				if base_class.is_expanded then
+					declaration_mark := reference_mark
+				else
+					declaration_mark := no_mark
+				end
+			end
 		ensure
-			has_reference_mark: has_reference_mark
+			is_reference: is_reference
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance

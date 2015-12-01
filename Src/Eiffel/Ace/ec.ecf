@@ -47,6 +47,8 @@
 		</library>
 		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf" readonly="false"/>
 		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf" readonly="false"/>
+
+		<library name="esa_api_client" location="$EIFFEL_SRC\web\support\client\esa_client.ecf"/>
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>

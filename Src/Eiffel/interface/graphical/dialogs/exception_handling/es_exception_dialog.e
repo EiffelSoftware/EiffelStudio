@@ -69,7 +69,7 @@ feature {NONE} -- Initialize
 			-- Note: No user interface initialization should be done here! Use `build_dialog_interface' instead
 		do
 			Precursor {ES_ERROR_PROMPT}
-			create support_login.make
+			create support_login.make (create {ESA_CLIENT_CONFIGURATION}.make (preferences.misc_data.support_url.string))
 		end
 
 	build_prompt_interface (a_container: EV_VERTICAL_BOX)
@@ -134,7 +134,7 @@ feature {NONE} -- Initialize
 			l_box.disable_item_expand (save_button)
 
 			if not support_login.is_support_accessible then
-					-- Do not have access to cURL
+					-- Do not have access to SupportSite
 				submit_bug_button.disable_sensitive
 			end
 
@@ -148,7 +148,6 @@ feature {NONE} -- Clean up
 			-- To be called when the button has became useless.
 		do
 			if is_initialized then
-				support_login.dispose
 				support_login := Void
 			end
 			Precursor {ES_ERROR_PROMPT}
@@ -163,7 +162,8 @@ feature -- Access
 			-- Last description for submitting bug report
 			-- Maybe void if not recorded
 
-	support_login: COMM_SUPPORT_BUG_REPORTER
+
+	support_login: ESA_SUPPORT_BUG_REPORTER
 			-- Support site login proxy communicator
 
 feature {NONE} -- Access
@@ -305,6 +305,7 @@ feature {NONE} -- Action handlers
 			retry
 		end
 
+
 	on_submit_bug
 			-- Called when the user selects the Submit Bug button
 		require
@@ -397,7 +398,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

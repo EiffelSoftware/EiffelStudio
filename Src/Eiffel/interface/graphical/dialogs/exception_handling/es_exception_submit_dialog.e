@@ -2,15 +2,14 @@ note
 	description: "[
 		Dialog that submit exception as bug report to http://support.eiffel.com
 	]"
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_EXCEPTION_SUBMIT_DIALOG
 
 inherit
+
 	ES_DIALOG
 		rename
 			make as make_dialog
@@ -65,6 +64,7 @@ feature {NONE} -- Initialization
 			l_vbox.set_padding ({ES_UI_CONSTANTS}.vertical_padding)
 			l_vbox.set_border_width ({ES_UI_CONSTANTS}.frame_border)
 			login_frame.extend (l_vbox)
+
 
 				-- Username and password
 			create l_user_label.make_with_text (locale_formatter.translation (lb_username))
@@ -136,11 +136,13 @@ feature {NONE} -- Initialization
 			create l_link.make_with_text (locale_formatter.translation (b_here))
 			l_link.select_actions.extend (agent
 				local
-					l_launcher: EB_PROCESS_LAUNCHER
+					l_uri_provider: RAW_URI_HELP_PROVIDER
 				do
-					l_launcher := (create {EB_SHARED_MANAGERS}).external_launcher
-					l_launcher.open_url_in_web_browser (register_url)
+					create l_uri_provider.make (
+						agent (preferences.misc_data.internet_browser_preference).value)
+					l_uri_provider.show_help (support_login.register_url, Void)
 				end)
+
 			l_link.align_text_left
 			l_hbox.extend (l_text)
 			l_hbox.disable_item_expand (l_text)
@@ -327,7 +329,7 @@ feature -- Access
 
 feature {NONE} -- Implementation: access
 
-	support_login: COMM_SUPPORT_BUG_REPORTER
+	support_login: ESA_SUPPORT_BUG_REPORTER
 			-- Reporter used to report bugs to the support system
 
 	remembered_username: STRING_GENERAL
@@ -904,12 +906,15 @@ feature {NONE} -- Reporting
 			not_is_recycled: not is_recycled
 			support_login_is_logged_in: support_login.is_logged_in
 		local
-			l_report: COMM_SUPPORT_BUG_REPORT
+			l_report: ESA_SUPPORT_BUG_REPORT
 			l_thanks: ES_INFORMATION_PROMPT
 			l_error: ES_ERROR_PROMPT
 			l_transistion: ES_POPUP_TRANSITION_WINDOW
 			l_window: EV_WINDOW
 			retried: BOOLEAN
+			l_submitted: STRING
+			l_link: EVS_LINK_LABEL
+			l_uri: STRING_8
 		do
 			if not retried then
 				create l_transistion.make_with_icon (locale_formatter.translation (lb_submitting), stock_pixmaps.tool_output_failed_icon_buffer)
@@ -931,7 +936,6 @@ feature {NONE} -- Reporting
 				end
 
 				support_login.report_bug (l_report)
-
 				l_transistion.hide
 
 				create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
@@ -957,6 +961,7 @@ feature {NONE} -- Reporting
 
 feature {NONE} -- Internationalization
 
+
 	t_account_access: STRING = "Account Access"
 	t_bug_information: STRING = "Bug Information"
 
@@ -968,7 +973,12 @@ feature {NONE} -- Internationalization
 	lb_password: STRING = "Password:"
 	lb_remember_me: STRING = "Remember me"
 	lb_severity: STRING = "Severity:"
-	lb_submitted: STRING = "The submitted report is now available at http://support.eiffel.com."
+	lb_submitted: STRING
+		once
+			Result := "The submitted report is now available at "
+			Result.append (preferences.misc_data.support_url.string)
+		end
+
 	lb_submitting: STRING = "Submitting bug report, please wait..."
 	lb_register_account: STRING = "If you do not already have an account, please register "
 	lb_username: STRING = "Username:"
@@ -983,7 +993,12 @@ feature {NONE} -- Internationalization
 	i_non_critical: STRING = "Non Critical"
 
 	w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to reproduce.%N%NDo you want to continue submitting a bug report?"
-	e_submit_error: STRING = "There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com."
+	e_submit_error: STRING
+		once
+			Result := "There was a problem submitting the problem report. Please retry or submit it manually at "
+			Result.append (preferences.misc_data.support_url.string)
+		end
+
 
 feature {NONE} -- Constants
 
@@ -991,7 +1006,6 @@ feature {NONE} -- Constants
 	password_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.password"
 	remembered_session_id: STRING_8 = "com.eiffel.exception_submit_dialog.remembered"
 
-	register_url: STRING = "https://www2.eiffel.com/login/secure/register.aspx"
 
 invariant
 	support_reporter: support_login /= Void
@@ -1011,7 +1025,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

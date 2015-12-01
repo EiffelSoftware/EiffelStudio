@@ -43,8 +43,8 @@
 /* Forward declaration */
 struct call_data;
 
-void rt_set_processor_id (EIF_SCP_PID pid); /* Associate processor of ID `pid' with the current thread. */
-void rt_unset_processor_id (void);	/* Dissociate processor from the current thread. */
+void rt_set_processor_id (EIF_SCP_PID pid, rt_global_context_t* rt_globals); /* Associate processor of ID `pid' with the current thread. */
+void rt_unset_processor_id (rt_global_context_t* rt_globals);	/* Dissociate processor from the current thread. */
 
 void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark references in a call_data struct with the MARKER function. */
 

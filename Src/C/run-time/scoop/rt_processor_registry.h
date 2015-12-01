@@ -41,6 +41,7 @@
 #include "rt_identifier_set.h"
 #include "rt_scoop.h"
 #include "rt_assert.h"
+#include "rt_globals.h"
 
 /* Forward declarations */
 struct rt_processor;
@@ -52,7 +53,8 @@ rt_shared void rt_processor_registry_deinit (void);
 /* Processor lifecycle management. */
 rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result, EIF_BOOLEAN is_passive);
 rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid);
-rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid);
+rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid, rt_global_context_t* a_context);
+rt_shared void rt_processor_registry_cleanup (void);
 
 /* Root thread entry point. */
 rt_shared void rt_processor_registry_quit_root_processor (void);

@@ -67,6 +67,10 @@ extern struct stack_list rt_globals_list;
 extern void eif_terminate_all_other_threads(void);
 #endif
 
+
+rt_shared rt_global_context_t* rt_thread_new_passive_region (EIF_SCP_PID region_id);
+rt_shared void rt_thread_destroy_passive_region (rt_global_context_t* a_context);
+
 /* Debugger usage */
 #ifdef WORKBENCH
 rt_shared EIF_THR_TYPE dbg_switch_to_thread (EIF_THR_TYPE);

@@ -52,6 +52,9 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 /* The global processor_registry struct. */
 struct rt_processor_registry registry;
 
+RT_DECLARE_VECTOR (rt_passive_region_context_list, rt_global_context_t*)
+struct rt_passive_region_context_list dead_passive_regions;
+
 /* Private declarations. */
 rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc);
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid);
@@ -71,6 +74,9 @@ rt_shared int rt_processor_registry_init (void)
 	struct rt_processor* root_proc = NULL;
 	int error = T_OK;
 	
+
+	rt_passive_region_context_list_init (&dead_passive_regions);
+
 	self->all_done_mutex = NULL;
 	self->all_done_cv = NULL;
 	self->processor_count = 0;
@@ -135,6 +141,8 @@ rt_shared void rt_processor_registry_deinit (void)
 		self->all_done_cv = NULL;
 	}
 	rt_identifier_set_deinit (&self->free_pids);
+
+	rt_passive_region_context_list_deinit (&dead_passive_regions);
 }
 
 
@@ -222,16 +230,20 @@ doc:	</routine>
 */
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
 {
+	RT_GET_CONTEXT
 	struct rt_processor *proc = rt_get_processor (pid);
 
 		/* Record that the current thread is associated with a processor of a given ID. */
-	rt_set_processor_id (pid);
+	rt_set_processor_id (pid, rt_globals);
 
 		/* Send a message to the creator thread that we have succesfully spawned.
 		 * We recycle the RESULT_READY message here since the creator is not interested in the message anyway. */
 	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
 
 	rt_processor_application_loop (proc);
+
+		/* Decouple processor ID from the current thread. */
+	rt_unset_processor_id (rt_globals);
 
 	rt_processor_registry_destroy_region (proc);
 }
@@ -250,17 +262,23 @@ rt_shared void rt_processor_registry_activate (EIF_SCP_PID pid)
 {
 	struct rt_processor* proc = rt_get_processor (pid);
 
-		/* TODO: What happens when thread allocation fails? */
-	eif_thr_create_with_attr_new (
-		NULL,	/* No root object, if this is only passed to spawn_main this is OK */
-		(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
-		pid, /* Logical PID */
-		EIF_TRUE, /* We are a processor */
-		NULL); /* There are no attributes */
+	if (proc->is_passive_region) {
+		rt_global_context_t* new_context = rt_thread_new_passive_region (pid);
+		rt_set_processor_id (pid, new_context);
+		proc->is_active = EIF_FALSE;
+	} else {
+			/* TODO: What happens when thread allocation fails? */
+		eif_thr_create_with_attr_new (
+			NULL,	/* No root object, if this is only passed to spawn_main this is OK */
+			(EIF_PROCEDURE) spawn_main, /* The entry point for the new thread. */
+			pid, /* Logical PID */
+			EIF_TRUE, /* We are a processor */
+			NULL); /* There are no attributes */
 
-		/* Wait for the signal that the new thread has started.
-		 * TODO: RS: Why exactly is this necessary? The GC can still run during the receive operation... */
-	rt_message_channel_receive (&proc->startup_notify, NULL);
+			/* Wait for the signal that the new thread has started.
+			* TODO: RS: Why exactly is this necessary? The GC can still run during the receive operation... */
+		rt_message_channel_receive (&proc->startup_notify, NULL);
+	}
 }
 
 /*
@@ -268,11 +286,12 @@ doc:	<routine name="rt_processor_registry_deactivate" return_type="void" export=
 doc:		<summary> Deactivate the processor with ID 'pid' and remove all references to it from the other processors.
 doc:			This routine is a callback from the GC when it detects unused processors. </summary>
 doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be deactivated. </param>
+doc:		<param name="a_context" type="rt_global_context_t*"> The private context of the associated thread. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call during GC. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
+rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid, rt_global_context_t* a_context)
 {
 		/* This is a callback from the GC, which will notify us */
 		/* of all unused processors, even those that have already been */
@@ -300,8 +319,38 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid)
 				rt_processor_unsubscribe_wait_condition (item, to_be_removed);
 			}
 		}
-			/* Send a shutdown signal such that the processor can terminate itself. */
-		rt_processor_shutdown (to_be_removed);
+		if (to_be_removed->is_passive_region) {
+			RT_TRACE (rt_passive_region_context_list_extend (&dead_passive_regions, a_context)); /* TODO: Error handling */
+		} else {
+				/* Send a shutdown signal such that the processor can terminate itself. */
+			rt_processor_shutdown (to_be_removed);
+		}
+	}
+}
+
+/*
+doc:	<routine name="rt_processor_registry_cleanup" return_type="void" export="shared">
+doc:		<summary> Free all dead passive regions. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call during GC. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_cleanup (void)
+{
+	rt_global_context_t* l_context = NULL;
+	struct rt_processor* l_processor = NULL;
+
+	while (rt_passive_region_context_list_count (&dead_passive_regions) != 0) {
+
+			/* Pop one passive region element. */
+		l_context = rt_passive_region_context_list_last (&dead_passive_regions);
+		rt_passive_region_context_list_remove_last (&dead_passive_regions);
+
+			/* Free the region. */
+		l_processor = rt_get_processor (l_context->eif_thr_context_cx->logical_id);
+		rt_unset_processor_id (l_context);
+		rt_processor_registry_destroy_region (l_processor);
+		rt_thread_destroy_passive_region (l_context);
 	}
 }
 
@@ -320,9 +369,6 @@ rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 	struct rt_processor_registry* self = &registry;
 
 	REQUIRE ("processor_not_collected", rt_lookup_processor (pid));
-
-		/* Decouple processor ID from the current thread. */
-	rt_unset_processor_id ();
 
 		/* Remove the processor from the bookkeeping structures in the processor registry. */
 	l_count = RTS_AD_I32 (&self->processor_count); /* Atomic pre-decrement */

@@ -832,6 +832,119 @@ rt_public void eif_thr_create_with_attr_new (EIF_OBJECT thr_root_obj,
 	}
 }
 
+/*
+doc:	<routine name="rt_thread_new_passive_region" return_type="rt_global_context_t*" export="shared">
+doc:		<summary> Create a new Eiffel thread context for the passive region 'region_id'. </summary>
+doc:		<param name="region_id" type="EIF_SCP_PID"> The region ID for the new passive region. </param>
+doc:		<return> The private data of the new thread context. </return>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared rt_global_context_t* rt_thread_new_passive_region (EIF_SCP_PID region_id)
+{
+	/*
+	 * NOTE: Some of the structures which are allocated here are never really used.
+	 * The main purpose of allocating this thread context is to have once values
+	 * for passive regions which are properly marked during garbage collection.
+	 * TODO: If memory usage of passive regions becomes an issue in the future,
+	 * one can try to avoid allocating some of the structures or even the whole
+	 * thread context and instead tweak the garbage collector to properly
+	 * recognize passive regions.
+	 */
+
+	rt_global_context_t* l_stored_globals = NULL;
+	rt_global_context_t* l_result = NULL;
+	rt_thr_context* l_thread_context = NULL;
+
+		/* Due to the abundant use of thread-local variables we need to backup our own context. */
+	RT_GET_CONTEXT
+	l_stored_globals = rt_globals;
+
+		/* Allocate a thread context and do some basic initialization. */
+	l_thread_context = calloc (1, sizeof (rt_thr_context));
+	if (l_thread_context) {
+		l_thread_context->is_processor = EIF_TRUE;
+		l_thread_context->logical_id = region_id;
+
+			/* Now it's getting tricky. We need to initialize the new context with the current thread.
+			 * To do this we need to switch the thread-local variables to the new thread, but first
+			 * we need to de-register the current thread from GC to avoid a potential deadlock. */
+		EIF_ENTER_C;
+
+			/* The next statement allocates the eif_globals and rt_globals structures for the new context,
+			 * registers the new context with the garbage collector, and unfortunately also overwrites
+			 * our own thread-local variables. */
+		eif_thr_register (1);
+
+		{
+			RT_GET_CONTEXT
+			EIF_GET_CONTEXT
+			struct ex_vect *exvect;
+			jmp_buf exenv;
+
+				/*  We're not done yet... Set the processor and region ID. */
+			eif_thr_context = l_thread_context;
+			rt_globals->eif_globals->scoop_processor_id = eif_thr_context->logical_id;
+			rt_globals->eif_globals->scoop_region_id = eif_thr_context->logical_id;
+
+				/* Now we need to initialize some stacks and the exception manager. */
+			initsig();
+			initstk();
+			exvect = exset((char *) 0, 0, (char *) 0);
+			(exvect->ex_jbuf) = &exenv;
+			if ((echval) = setjmp(exenv)) {
+					failure();
+			}
+
+#ifdef WORKBENCH
+			xinitint();
+#endif
+			init_emnger();
+
+
+			/* TODO: Is this safe?*/
+			exok();
+
+			/* As a last step, we signal the GC that the new "thread" is always blocked so it never has to synchronize. */
+			EIF_ENTER_C;
+
+			l_result = rt_globals;
+		}
+			/* Almost done. Now we need to restore the context of the current thread. */
+		EIF_TSD_SET(rt_global_key, l_stored_globals, "Couldn't bind private context to TSD.");
+		EIF_TSD_SET(eif_global_key, l_stored_globals->eif_globals, "Couldn't bind private context to TSD.");
+		EIF_EXIT_C;
+		RTGC;
+	}
+	return l_result;
+}
+
+/*
+doc:	<routine name="rt_thread_destroy_passive_region" return_type="void" export="shared">
+doc:		<summary> Destroy the Eiffel thread context 'a_context'. </summary>
+doc:		<param name="a_context" type="rt_global_context_t*"> The private data of the thread context to be destroyed. </return>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call this feature at the end of a GC phase. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_thread_destroy_passive_region (rt_global_context_t* a_context)
+{
+	/* NOTE: This function is executed at the end of a GC phase. */
+
+		/* Back up the current thread context. */
+	RT_GET_CONTEXT
+
+		/* Destroy the other context. This unfortunately sets our TSD data to NULL. */
+		/* Note: We don't need to synchronize for GC, because we are already synchronized. */
+	eif_remove_gc_stacks (a_context);
+	eif_free_context (a_context);
+
+		/* Restore the TSD data. */
+	EIF_TSD_SET(rt_global_key, rt_globals, "Couldn't bind private context to TSD.");
+	EIF_TSD_SET(eif_global_key, rt_globals->eif_globals, "Couldn't bind private context to TSD.");
+}
+
 rt_private void eif_thr_entry (void *arg)
 {
 	/*

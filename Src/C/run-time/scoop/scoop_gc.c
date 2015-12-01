@@ -395,17 +395,25 @@ rt_shared void rt_report_live_index (void)
 	size_t i;
 	rt_global_context_t ** t = (rt_global_context_t **) rt_globals_list.threads.data;
 	size_t count = rt_globals_list.count; /* Total number of indexes. */
+	rt_global_context_t* l_context = NULL;
+	EIF_SCP_PID l_processor_id;
 
 	/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
 	for (i = live_index_count; i < count; i++) {
-		rt_thr_context * c = t [thread_index [i]] -> eif_thr_context_cx;
+
+		l_context = t [thread_index [i]];
+		l_processor_id = l_context->eif_thr_context_cx->logical_id;
+
 			/* Notify SCOOP manager that the processor is not used anymore. */
 			/* Note: Processors with a EIF_NULL_PROCESSOR are about to destroy themselves.
 			 * No need to send the shutdown signal again. */
-		if (c->logical_id != EIF_NULL_PROCESSOR) {
-			rt_processor_registry_deactivate (c->logical_id);
+		if (l_processor_id != EIF_NULL_PROCESSOR) {
+			rt_processor_registry_deactivate (l_processor_id, l_context);
 		}
 	}
+		/* Tell the processor registry to remove passive regions. */
+	rt_processor_registry_cleanup ();
+
 	/* Notify SCOOP manager that the GC cycle is over. */
 	/* Unused currently, don't want to come up with another replacement
 		 macro for this as well. */

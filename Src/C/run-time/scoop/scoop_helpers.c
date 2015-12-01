@@ -238,13 +238,13 @@ rt_shared void rt_mark_call_data(MARKER marking, struct call_data* call)
 doc:	<routine name="rt_set_processor_id" export="shared">
 doc:		<summary>Associate processor of ID `pid' with the current thread.</summary>
 doc:		<param name="pid" type="EIF_SCP_PID">ID of the processor.</param>
+doc:		<param name="a_context" type="rt_global_context_t*">The thread context.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Not required because called before starting any threads.</synchronization>
 doc:	</routine>
 */
-rt_shared void rt_set_processor_id (EIF_SCP_PID pid)
+rt_shared void rt_set_processor_id (EIF_SCP_PID pid, rt_global_context_t* rt_globals)
 {
-	RT_GET_CONTEXT
 	struct rt_processor* proc = rt_get_processor (pid);
 
 	rt_thr_context * c = rt_globals->eif_thr_context_cx;
@@ -261,13 +261,13 @@ rt_shared void rt_set_processor_id (EIF_SCP_PID pid)
 /*
 doc:	<routine name="rt_unset_processor_id" export="shared">
 doc:		<summary>Dissociate processor from the current thread.</summary>
+doc:		<param name="a_context" type="rt_global_context_t*">The thread context.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Not required because changes a single integer value.</synchronization>
 doc:	</routine>
 */
-rt_shared void rt_unset_processor_id (void)
+rt_shared void rt_unset_processor_id (rt_global_context_t* rt_globals)
 {
-	RT_GET_CONTEXT
 		/* We use the EIF_NULL_PROCESSOR to indicate that this thread is
 		 * a SCOOP processor that is about to be destroyed.
 		 * Otherwise the GC might think that it's dealing with a regular thread. */
@@ -315,10 +315,11 @@ rt_public void rt_scoop_setup (int is_scoop_enabled)
 		 * because of a bug in the interpreter which may sometimes execute RTS_OU
 		 * even in non-SCOOP systems. */
 	int error = rt_processor_registry_init ();
+	RT_GET_CONTEXT
 
 	if (T_OK == error && is_scoop_enabled) {
 			/* Record that the current thread is associated with a processor of a PID 0. */
-		rt_set_processor_id (0);
+		rt_set_processor_id (0, rt_globals);
 	}
 
 	if (T_OK != error) {

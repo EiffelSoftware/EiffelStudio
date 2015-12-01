@@ -78,7 +78,6 @@ feature -- Instruction
 			l_temp_string: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (16)
-			Result.extend ("-melt")
 			Result.extend (Code_analysis_ec_option)
 			if load_defaults then
 				Result.extend (Load_defaults_ec_option)

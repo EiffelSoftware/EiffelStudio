@@ -170,6 +170,12 @@ feature -- Value
 			Result := eis_path_preference.value
 		end
 
+	support_url: STRING_32
+			-- Support service url
+		do
+			Result := support_url_preference.value
+		end
+
 feature -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
@@ -187,6 +193,7 @@ feature -- Preference
 	pnd_preference: BOOLEAN_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
+	support_url_preference: STRING_32_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -205,6 +212,7 @@ feature {NONE} -- Preference Strings
 	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
+	support_url_preference_string: STRING = "general.support_url"
 
 feature {NONE} -- Implementation
 
@@ -252,6 +260,10 @@ feature {NONE} -- Implementation
 			end
 
 			use_postscript_preference := l_manager.new_boolean_preference_value (l_manager, use_postscript_preference_string, False)
+
+			support_url_preference := l_manager.new_string_32_preference_value (l_manager, support_url_preference_string, {STRING_32} "https://www2.eiffel.com/support")
+			support_url_preference.set_hidden (True)
+
 		end
 
 	preferences: PREFERENCES
@@ -381,10 +393,11 @@ invariant
 	pnd_preference_not_void: pnd_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
+	support_url_preference_not_void:  support_url_preference /= Void
 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

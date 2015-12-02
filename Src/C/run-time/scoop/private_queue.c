@@ -214,12 +214,12 @@ doc:			This is essentially an send operation on the underlying message channel,
 doc: 			which can wake up the supplier if it is waiting for more calls. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
 doc:		<param name="client" type="struct rt_processor*"> The client that issues the call. </param>
-doc:		<param name="call" type="struct call_data*"> The call to be executed by the supplier. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> The call to be executed by the supplier. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call)
+rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct eif_scoop_call_data* call)
 {
 	EIF_BOOLEAN will_sync = call->is_synchronous;
 	struct rt_message_channel* l_result_notify = client->result_notify_proxy;
@@ -253,7 +253,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 	} else {
 		rt_message_channel_send (&self->channel, SCOOP_MESSAGE_EXECUTE, client, call, NULL);
 	}
-		/* NOTE: After the previous send operations, the call data struct might have been */
+		/* NOTE: After the previous send operations, the eif_scoop_call_data struct might have been */
 		/* free()'d by the supplier. Therefore it must not be accessed any more here. */
 	call = NULL;
 	
@@ -298,7 +298,7 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 				eif_scoop_impersonate (eif_globals, current_region);
 			}
 
-				/* Set the call data struct to NULL to avoid unnecessary GC marking. */
+				/* Set self->call_stack_msg->call to NULL to avoid unnecessary GC marking. */
 			l_message->call = NULL;
 
 				/* During the next receive we may get the answer to our query,
@@ -323,9 +323,9 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 
 /*
 doc:	<routine name="rt_private_queue_mark" return_type="void" export="shared">
-doc:		<summary> Mark the call_data structs within this private queue.
+doc:		<summary> Mark the eif_scoop_call_data structures within this private queue.
 doc:			This is for integration with the EiffelStudio garbage collector
-doc:			so that the target and arguments of the calls in the call data
+doc:			so that the target and arguments of the calls in the message channel
 doc:			(which is here outside the view of the runtime) will not be collected. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
 doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
@@ -335,7 +335,7 @@ doc:	</routine>
 */
 rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking)
 {
-	struct call_data* call = NULL;
+	struct eif_scoop_call_data* call = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);

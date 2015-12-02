@@ -286,12 +286,12 @@ doc:	<routine name="rt_processor_execute_call" return_type="void" export="shared
 doc:		<summary> Execute the call 'call' coming from processor 'client'. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor that executes the call. Must not be NULL. </param>
 doc:		<param name="client" type="struct rt_processor*"> The processor that sent the request. Must not be NULL. </param>
-doc:		<param name="call" type="struct call_data*"> The call to be executed. Must not be NULL. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> The call to be executed. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct call_data* call)
+rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct eif_scoop_call_data* call)
 {
 	EIF_BOOLEAN l_is_synchronous;
 	EIF_BOOLEAN is_successful;
@@ -344,7 +344,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 		}
 	}
 
-		/* Free the call data struct, as it's not needed any more. */
+		/* Free the object containing the separate call, as it's not needed any more. */
 	free (call);
 }
 

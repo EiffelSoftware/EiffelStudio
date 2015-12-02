@@ -59,7 +59,7 @@ extern void rt_update_live_index (void);  /* Update live indexes by taking into 
 extern void rt_complement_live_index (void); /* Add indexes of dead processors at the end of the live index list. */
 extern void rt_report_live_index (void); /* Notify SCOOP manager about live indexes. */
 
-extern void rt_mark_all_processors (MARKER marking); /* Mark all call_data structs in all processors. */
+extern void rt_mark_all_processors (MARKER marking); /* Mark all eif_scoop_call_data structures in all processors. */
 
 #ifdef __cplusplus
 }

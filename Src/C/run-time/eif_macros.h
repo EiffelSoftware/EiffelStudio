@@ -1296,11 +1296,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 #ifdef WORKBENCH
 #define RTS_SDC \
-	struct call_data* l_scoop_call_data = NULL; \
+	struct eif_scoop_call_data* l_scoop_call_data = NULL; \
 	EIF_TYPED_VALUE l_scoop_result
 #else
 #define RTS_SDC \
-	struct call_data* l_scoop_call_data = NULL
+	struct eif_scoop_call_data* l_scoop_call_data = NULL
 #endif
 
 /*
@@ -1401,7 +1401,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  */
 #define RTS_AC(n,t) \
 	{ \
-		l_scoop_call_data = malloc (sizeof (struct call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
+		l_scoop_call_data = malloc (sizeof (struct eif_scoop_call_data) + sizeof (EIF_TYPED_VALUE) * (size_t) (n) - sizeof (EIF_TYPED_VALUE)); \
 		l_scoop_call_data -> target = (t); \
 		l_scoop_call_data -> count = (n); \
 		l_scoop_call_data -> is_synchronous = EIF_FALSE; \

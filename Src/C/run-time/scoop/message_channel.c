@@ -201,13 +201,13 @@ doc:		<summary> Enqueue a message in rt_message_channel 'self'. </summary>
 doc:		<param name="self" type="struct rt_message_channel*"> The rt_message_channel struct. Must not be NULL. </param>
 doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="sender" type="struct rt_processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
-doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required, but must not be called during garbage collection. </synchronization>
 doc:	</routine>
  */
-rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender, struct call_data* call, struct rt_private_queue* queue)
+rt_private rt_inline void enqueue (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender, struct eif_scoop_call_data* call, struct rt_private_queue* queue)
 {
 	struct mc_node* node = NULL;
 	REQUIRE ("self_not_null", self);
@@ -282,13 +282,13 @@ doc:		<summary> Send the message 'message_type' over channel 'self'. </summary>
 doc:		<param name="self" type="struct rt_message_channel*"> The channel on which to send the message. Must not be NULL. </param>
 doc:		<param name="message_type" type="enum scoop_message_type"> The type of the message. </param>
 doc:		<param name="sender_processor" type="struct rt_processor*"> The sender processor. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
-doc:		<param name="call" type="struct call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> Information about a call to be executed. Must not be NULL for SCOOP_MESSAGE_EXECUTE and SCOOP_MESSAGE_CALLBACK. </param>
 doc:		<param name="queue" type="struct rt_private_queue*"> The queue to be executed by the receiver. Must not be NULL for ADD_QUEUE messages. </param>
 doc:		<thread_safety> Safe for exactly one sender thread and one receiver thread. </thread_safety>
 doc:		<synchronization> None required. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender_processor, struct call_data* call, struct rt_private_queue* queue)
+rt_shared void rt_message_channel_send (struct rt_message_channel* self, enum scoop_message_type message_type, struct rt_processor* sender_processor, struct eif_scoop_call_data* call, struct rt_private_queue* queue)
 {
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("valid_message", rt_message_is_valid (message_type, sender_processor, call, queue));
@@ -357,7 +357,7 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 			 *
 			 * We cannot call dequeue() at a point where the garbage collector
 			 * may run, because we risk that we lose updates to moved references
-			 * in the call_data struct.
+			 * in the eif_scoop_call_data struct.
 			 *
 			 * Also, we cannot synchronize for garbage collection while holding
 			 * the has_elements_condition_mutex, otherwise there might be a deadlock
@@ -483,7 +483,7 @@ doc:	</routine>
 rt_shared void rt_message_channel_mark (struct rt_message_channel* self, MARKER marking)
 {
 	struct mc_node* node = NULL;
-	struct call_data* call = NULL;
+	struct eif_scoop_call_data* call = NULL;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);

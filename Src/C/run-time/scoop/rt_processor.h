@@ -152,7 +152,7 @@ rt_shared size_t rt_processor_request_group_stack_count (struct rt_processor* se
 rt_shared void rt_processor_request_group_stack_remove (struct rt_processor* self, size_t count);
 
 /* Features executed by the processor itself. */
-rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct call_data* call);
+rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct eif_scoop_call_data* call);
 rt_shared void rt_processor_application_loop (struct rt_processor* self);
 
 /* Utility functions. */

@@ -59,12 +59,13 @@ doc:<file name="scoop.c" header="eif_scoop.h" version="$Id$" summary="Main funct
 doc:	<routine name="rt_scoop_impersonated_call" return_type="void" export="private">
 doc:		<summary> Execute the separate call 'call' on the client processor, while assuming the identity of 'supplier'. </summary>
 doc:		<param name="client" type="struct rt_processor*"> The client processor. Must not be NULL. </param>
-doc:		<param name="second_pid" type="EIF_SCP_PID"> The supplier processor whose identity is temporarily adopted. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The supplier processor whose identity is temporarily adopted. Must not be NULL. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> The call to be executed. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Should only be called by the client while the supplier is synchronized. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct rt_processor* supplier, struct call_data* call)
+rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct rt_processor* supplier, struct eif_scoop_call_data* call)
 {
 	EIF_GET_CONTEXT
 	EIF_SCP_PID stored_pid = eif_globals->scoop_region_id;
@@ -89,7 +90,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 	eif_scoop_impersonate (eif_globals, supplier->pid);
 
 		/* Perform the call. We perform a safe call here because we need
-		 * to free the call_data struct afterwards. */
+		 * to free the eif_scoop_call_data struct afterwards. */
 	is_successful = rt_scoop_try_call (call);
 
 		/* Adopt the once values of the current region and revert the region ID. */
@@ -98,7 +99,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 		/* Return the locks. */
 	rt_queue_cache_pop_on_impersonation (&client->cache, 1);
 
-		/* Free the call_data struct. */
+		/* Free the call structure. */
 	free (call);
 
 		/* If there was an error, raise an exception now. */
@@ -152,12 +153,12 @@ doc:	<routine name="rt_scoop_prepare_call" return_type="void" export="private">
 doc:		<summary> Prepare the call data structure: Calculate whether the call is synchronous and set the correct PID for expanded objects. </summary>
 doc:		<param name="client_processor_id" type="EIF_SCP_PID"> The ID of the client processor. </param>
 doc:		<param name="client_region_id" type="EIF_SCP_PID"> The ID of the client region. </param>
-doc:		<param name="call" type="struct call_data"> The call data structure. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data"> The separate call to be prepared. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None </synchronization>
 doc:	</routine>
 */
-rt_private void rt_scoop_prepare_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct call_data* call)
+rt_private void rt_scoop_prepare_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data* call)
 {
 	EIF_REFERENCE obj = NULL;
 	EIF_SCP_PID supplier_id = RTS_PID (call->target);
@@ -206,12 +207,12 @@ doc:	<routine name="eif_log_call" return_type="void" export="public">
 doc:		<summary> Log the separate call 'data' and wait for the result if necessary. </summary>
 doc:		<param name="client_processor_id" type="EIF_SCP_PID"> The processor ID of the client. </param>
 doc:		<param name="client_region_id" type="EIF_SCP_PID"> The region ID of the client. </param>
-doc:		<param name="data" type="struct call_data"> The separate call to be logged and executed. </param>
+doc:		<param name="data" type="struct eif_scoop_call_data*"> The separate call to be logged and executed. </param>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None for creation procedures. For regular calls, make sure that the supplier region is locked within an rt_request_group. </synchronization>
 doc:	</routine>
 */
-rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, call_data *data)
+rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data *data)
 {
 	EIF_SCP_PID supplier_pid = RTS_PID (data->target);
 	struct rt_processor *client = rt_get_processor (client_processor_id);
@@ -276,7 +277,7 @@ rt_public void eif_scoop_impersonate (eif_global_context_t* eif_globals, EIF_SCP
 }
 
 
-rt_public void eif_call_const (call_data * a)
+rt_public void eif_call_const (struct eif_scoop_call_data* a)
 {
 	/* Constant value is hard-coded in the generated code: nothing to do here. */
 	/* Avoid C compiler error about unreferenced parameter. */

@@ -63,7 +63,7 @@ extern "C" {
 /* Call logging */
 
 #ifdef WORKBENCH
-rt_private void rt_apply_wcall (call_data *data)
+rt_private void rt_apply_wcall (struct eif_scoop_call_data* data)
 {
 	EIF_GET_CONTEXT
 	uint32            pid = 0; /* Pattern id of the frozen feature */
@@ -123,12 +123,12 @@ rt_private void rt_apply_wcall (call_data *data)
 /*
 doc:	<routine name="rt_scoop_try_call" export="shared">
 doc:		<summary> Execute the feature in 'call' and do not catch exceptions. </summary>
-doc:		<param name="call" type="struct call_data*"> The feature to apply. Must not be NULL. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> The feature to apply. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None </synchronization>
 doc:	</routine>
 */
-void rt_scoop_execute_call (call_data* call)
+void rt_scoop_execute_call (struct eif_scoop_call_data* call)
 {
 #ifdef WORKBENCH
 	rt_apply_wcall (call);
@@ -140,12 +140,12 @@ void rt_scoop_execute_call (call_data* call)
 /*
 doc:	<routine name="rt_scoop_try_call" return_type="EIF_BOOLEAN" export="shared">
 doc:		<summary> Try to apply the feature in 'call', and catch any exceptions that may occur. </summary>
-doc:		<param name="call" type="struct call_data*"> The feature to apply. Must not be NULL. </param>
+doc:		<param name="call" type="struct eif_scoop_call_data*"> The feature to apply. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
+rt_shared EIF_BOOLEAN rt_scoop_try_call (struct eif_scoop_call_data *call)
 {
 		/* Switch this on to catch exceptions */
 		/* This section slows down some benchmarks by 2x. I believe */
@@ -165,7 +165,7 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (call_data *call)
 
 		/* TODO: We used to keep track of last_exception in this function,
 		 * which caused a call into Eiffel code. Therefore it was necessary
-		 * register the call_data struct somewhere for GC traversal.
+		 * register the eif_scoop_call_data struct somewhere for GC traversal.
 		 * This is no longer the case now, which means some client code
 		 * can be simplified. */
 
@@ -211,14 +211,14 @@ rt_private void rt_mark_ref (MARKER marking, EIF_REFERENCE *ref)
 }
 /*
 doc:	<routine name="rt_mark_call_data" export="shared">
-doc:		<summary>Mark all references in the call_data struct 'call'.</summary>
+doc:		<summary>Mark all references in the 'call' structure.</summary>
 doc:		<param name="marking" type="MARKER">The marker function. Must not be NULL.</param>
-doc:		<param name="call" type="struct call_data*">The call_data struct. Must not be NULL.</param>
+doc:		<param name="call" type="struct eif_scoop_call_data*">The structure containing a separate call. Must not be NULL.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Only call during GC.</synchronization>
 doc:	</routine>
 */
-rt_shared void rt_mark_call_data(MARKER marking, struct call_data* call)
+rt_shared void rt_mark_call_data(MARKER marking, struct eif_scoop_call_data* call)
 {
 	size_t i;
 

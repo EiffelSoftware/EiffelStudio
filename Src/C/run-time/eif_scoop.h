@@ -80,7 +80,7 @@ typedef struct eif_scoop_call_data {
 
 
 RT_LNK EIF_BOOLEAN eif_scoop_can_impersonate (EIF_SCP_PID client_processor_id, EIF_SCP_PID supplier_region_id, EIF_BOOLEAN is_synchronous);
-RT_LNK void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data* data);
+RT_LNK void eif_scoop_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data* data);
 RT_LNK void eif_call_const (struct eif_scoop_call_data * a);
 
 #ifdef EIF_THREADS
@@ -89,13 +89,13 @@ RT_LNK void eif_scoop_impersonate (struct tag_eif_globals* eif_globals, EIF_SCP_
 #endif
 
 /* Processor properties */
-RT_LNK EIF_SCP_PID eif_new_processor(EIF_BOOLEAN is_passive);
-RT_LNK int eif_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id);
-RT_LNK void eif_wait_for_all_processors(void);
+RT_LNK EIF_SCP_PID eif_scoop_new_processor(EIF_BOOLEAN is_passive);
+RT_LNK int eif_scoop_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id);
+RT_LNK void eif_scoop_wait_for_all_processors(void);
 
 /* Request chain operations */
-RT_LNK void eif_new_scoop_request_group (EIF_SCP_PID client_pid);
-RT_LNK void eif_delete_scoop_request_group (EIF_SCP_PID client_pid, size_t count);
+RT_LNK void eif_scoop_new_request_group (EIF_SCP_PID client_pid);
+RT_LNK void eif_scoop_delete_request_group (EIF_SCP_PID client_pid, size_t count);
 RT_LNK size_t eif_scoop_request_group_stack_count (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_wait_request_group (EIF_SCP_PID client_pid);
 RT_LNK void eif_scoop_add_supplier_request_group (EIF_SCP_PID client_pid, EIF_SCP_PID supplier_pid);

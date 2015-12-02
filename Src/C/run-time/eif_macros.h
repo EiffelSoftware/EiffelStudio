@@ -1312,7 +1312,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  */
 #define RTS_PID(o) HEADER(o)->ov_pid
 #define RTS_OS(c,o) (RTS_PID (c) != RTS_PID (o))
-#define RTS_OU(o) ((o) && eif_is_uncontrolled (l_scoop_processor_id, l_scoop_region_id, RTS_PID (o)))
+#define RTS_OU(o) ((o) && eif_scoop_is_uncontrolled (l_scoop_processor_id, l_scoop_region_id, RTS_PID (o)))
 
 /*
  * Processor creation:
@@ -1324,10 +1324,10 @@ RT_LNK void eif_exit_eiffel_code(void);
  * we need to introduce a local variable to avoid writing to an object that has moved.
  */
 #define RTS_PA(o) { \
-	EIF_SCP_PID l_scoop_new_pid = eif_new_processor (EIF_FALSE); \
+	EIF_SCP_PID l_scoop_new_pid = eif_scoop_new_processor (EIF_FALSE); \
 	RTS_PID (o) = l_scoop_new_pid;}
 #define RTS_PP(o) { \
-	EIF_SCP_PID l_scoop_new_pid = eif_new_processor (EIF_TRUE); \
+	EIF_SCP_PID l_scoop_new_pid = eif_scoop_new_processor (EIF_TRUE); \
 	RTS_PID (o) = l_scoop_new_pid;}
 
 /*
@@ -1342,7 +1342,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  * The only valid sequence of calls is
  *      RTS_RC[X] (RTS_RS)* RTS_RW (RTS_RF)* RTS_RD
  */
-#define RTS_RC eif_new_scoop_request_group(l_scoop_processor_id)
+#define RTS_RC eif_scoop_new_request_group(l_scoop_processor_id)
 #define RTS_RCX \
 	RTS_RC;\
 	l_scoop_request_group_stack_count = eif_scoop_request_group_stack_count (l_scoop_processor_id)
@@ -1350,7 +1350,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTS_RS(s) eif_scoop_add_supplier_request_group(l_scoop_processor_id, RTS_PID (s))
 #define RTS_RW eif_scoop_lock_request_group(l_scoop_processor_id)
 #define RTS_RF eif_scoop_wait_request_group (l_scoop_processor_id)
-#define RTS_RD eif_delete_scoop_request_group(l_scoop_processor_id, 1)
+#define RTS_RD eif_scoop_delete_request_group(l_scoop_processor_id, 1)
 
 /*
  * RTS_CALL: Invoke a separate call.
@@ -1365,14 +1365,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 	l_scoop_call_data->result = &l_scoop_result;\
 	l_scoop_result.type = rtype; \
 	l_scoop_result.it_r = 0; \
-	eif_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
+	eif_scoop_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
 #else
 #define RTS_CALL(fptr, p, o, r) \
 	l_scoop_call_data->address = (fnptr) fptr; \
 	l_scoop_call_data->pattern = p; \
 	l_scoop_call_data->offset = o; \
 	l_scoop_call_data->result = (r); \
-	eif_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
+	eif_scoop_log_call (l_scoop_processor_id, l_scoop_region_id, l_scoop_call_data)
 #endif
 
 /*
@@ -1422,11 +1422,11 @@ RT_LNK void eif_exit_eiffel_code(void);
  * RTS_WPR - For root thread only: Enter the listening loop and answer reply to SCOOP separate calls when done with the root creation procedure.
  * RTS_SRR - Restore the SCOOP stacks and region ID when entering a rescue clause because of an exception.
  */
-#define RTS_WPR eif_wait_for_all_processors();
+#define RTS_WPR eif_scoop_wait_for_all_processors();
 
 #define RTS_SRR \
 	eif_scoop_impersonate (eif_globals, l_scoop_region_id); \
-	eif_delete_scoop_request_group (l_scoop_processor_id, eif_scoop_request_group_stack_count (l_scoop_processor_id) - l_scoop_request_group_stack_count); \
+	eif_scoop_delete_request_group (l_scoop_processor_id, eif_scoop_request_group_stack_count (l_scoop_processor_id) - l_scoop_request_group_stack_count); \
 	eif_scoop_lock_stack_impersonated_pop (l_scoop_processor_id, eif_scoop_lock_stack_count (l_scoop_processor_id) - l_scoop_lock_stack_count);
 
  /*

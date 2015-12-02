@@ -192,7 +192,7 @@ rt_private void rt_scoop_prepare_call (EIF_SCP_PID client_processor_id, EIF_SCP_
 					/* Mark the call as synchronous if there is an argument
 					 * that is controlled by the current processor. */
 					if (!call->is_synchronous && RTS_PID (obj) != supplier_id
-						&& !eif_is_uncontrolled (client_processor_id, client_region_id, RTS_PID(obj)))
+						&& !eif_scoop_is_uncontrolled (client_processor_id, client_region_id, RTS_PID(obj)))
 					{
 						call->is_synchronous = EIF_TRUE;
 					}
@@ -203,7 +203,7 @@ rt_private void rt_scoop_prepare_call (EIF_SCP_PID client_processor_id, EIF_SCP_
 }
 
 /*
-doc:	<routine name="eif_log_call" return_type="void" export="public">
+doc:	<routine name="eif_scoop_log_call" return_type="void" export="public">
 doc:		<summary> Log the separate call 'data' and wait for the result if necessary. </summary>
 doc:		<param name="client_processor_id" type="EIF_SCP_PID"> The processor ID of the client. </param>
 doc:		<param name="client_region_id" type="EIF_SCP_PID"> The region ID of the client. </param>
@@ -212,7 +212,7 @@ doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None for creation procedures. For regular calls, make sure that the supplier region is locked within an rt_request_group. </synchronization>
 doc:	</routine>
 */
-rt_public void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data *data)
+rt_public void eif_scoop_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data *data)
 {
 	EIF_SCP_PID supplier_pid = RTS_PID (data->target);
 	struct rt_processor *client = rt_get_processor (client_processor_id);
@@ -285,7 +285,7 @@ rt_public void eif_call_const (struct eif_scoop_call_data* a)
 }
 
 /*
-doc:	<routine name="eif_new_processor" return_type="EIF_SCP_PID" export="public">
+doc:	<routine name="eif_scoop_new_processor" return_type="EIF_SCP_PID" export="public">
 doc:		<summary> Create a new SCOOP region. If there's no free region ID, the function will trigger a GC run and then wait for a new ID. </summary>
 doc:		<param name="is_passive" type="EIF_BOOLEAN"> Whether a passive region shall be created. </param>
 doc:		<return> The ID of the newly created region. </return>
@@ -293,7 +293,7 @@ doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> Done internally. Careful: May trigger garbage collection. </synchronization>
 doc:	</routine>
 */
-rt_public EIF_SCP_PID eif_new_processor (EIF_BOOLEAN is_passive)
+rt_public EIF_SCP_PID eif_scoop_new_processor (EIF_BOOLEAN is_passive)
 {
 	EIF_SCP_PID new_pid = 0;
 	int error = T_OK;
@@ -319,7 +319,7 @@ rt_public EIF_SCP_PID eif_new_processor (EIF_BOOLEAN is_passive)
 
 /* Status report */
 
-rt_public int eif_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id)
+rt_public int eif_scoop_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id)
 {
  	struct rt_processor *client_processor = rt_get_processor (client_processor_id);
 	struct rt_processor *supplier = rt_get_processor (supplier_region_id);
@@ -338,7 +338,7 @@ rt_public int eif_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID 
 
 /* Entry point for the root thread. */
 
-rt_public void eif_wait_for_all_processors(void)
+rt_public void eif_scoop_wait_for_all_processors(void)
 {
 	rt_processor_registry_quit_root_processor ();
 }
@@ -346,7 +346,7 @@ rt_public void eif_wait_for_all_processors(void)
 /*Functions to manipulate the request group stack */
 
 /* RTS_RC (o) - create request group for o */
-rt_public void eif_new_scoop_request_group (EIF_SCP_PID client_pid)
+rt_public void eif_scoop_new_request_group (EIF_SCP_PID client_pid)
 {
 	struct rt_processor* client = rt_get_processor (client_pid);
 	int error = rt_processor_request_group_stack_extend (client);
@@ -363,7 +363,7 @@ rt_public size_t eif_scoop_request_group_stack_count (EIF_SCP_PID client_pid)
 }
 
 /* RTS_RD (o) - delete request group of o and release any locks */
-rt_public void eif_delete_scoop_request_group (EIF_SCP_PID client_pid, size_t count)
+rt_public void eif_scoop_delete_request_group (EIF_SCP_PID client_pid, size_t count)
 {
 	struct rt_processor* client = rt_get_processor (client_pid);
 

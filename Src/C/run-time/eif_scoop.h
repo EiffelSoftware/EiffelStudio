@@ -90,7 +90,7 @@ RT_LNK void eif_scoop_impersonate (struct tag_eif_globals* eif_globals, EIF_SCP_
 
 /* Processor properties */
 RT_LNK EIF_SCP_PID eif_scoop_new_processor(EIF_BOOLEAN is_passive);
-RT_LNK int eif_scoop_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id);
+RT_LNK EIF_BOOLEAN eif_scoop_is_uncontrolled (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, EIF_SCP_PID supplier_region_id);
 RT_LNK void eif_scoop_wait_for_all_processors(void);
 
 /* Request chain operations */

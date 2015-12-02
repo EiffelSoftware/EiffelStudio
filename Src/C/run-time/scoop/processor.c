@@ -317,7 +317,7 @@ rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_p
 		} else {
 
 				/* Execute the call. */
-			is_successful = rt_scoop_try_call (call);
+			is_successful = rt_try_execute_scoop_call (call);
 
 				/* Mark the current region as dirty if the call fails. */
 			if (!is_successful) {

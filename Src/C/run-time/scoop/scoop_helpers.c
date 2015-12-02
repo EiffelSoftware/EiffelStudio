@@ -59,12 +59,20 @@ doc:<file name="scoop_helpers.c" header="rt_scoop_helpers.h" version="$Id$" summ
 extern "C" {
 #endif
 
-
-/* Call logging */
-
-#ifdef WORKBENCH
-rt_private void rt_apply_wcall (struct eif_scoop_call_data* data)
+/*
+doc:	<routine name="execute_scoop_call" return_type="void" export="private">
+doc:		<summary> Execute the feature in 'a_call' and do not catch exceptions. </summary>
+doc:		<param name="a_call" type="struct eif_scoop_call_data*"> The feature to be executed. Must not be NULL. </param>
+doc:		<thread_safety> Safe, if arguments differ. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_private void execute_scoop_call (struct eif_scoop_call_data* a_call)
 {
+#ifndef WORKBENCH
+	a_call->pattern (a_call); /* Execute a feature in finalized mode. */
+#else
+		/* Execute a feature in workbench mode. */
 	EIF_GET_CONTEXT
 	uint32            pid = 0; /* Pattern id of the frozen feature */
 	EIF_NATURAL_32    i;
@@ -72,22 +80,22 @@ rt_private void rt_apply_wcall (struct eif_scoop_call_data* data)
 	BODY_INDEX        body_id;
 	EIF_TYPED_VALUE * v;
 
-	REQUIRE("has data", data);
-	REQUIRE("has target", data->target);
+	REQUIRE("call_not_null", a_call);
+	REQUIRE("target_not_null", a_call->target);
 
 		/* Push arguments to the evaluation stack */
-	for (n = data->count, i = 0; i < n; i++) {
+	for (n = a_call->count, i = 0; i < n; i++) {
 		v = eif_opstack_push_empty(&op_stack);
-		* v = data->argument [i];
+		* v = a_call->argument [i];
 	}
-	if (data->routine_id >= 0) {
+	if (a_call->routine_id >= 0) { /*NOTE: Tuple access has a negative routine ID.*/
 			/* Regular feature call. */
 			/* Push current to the evaluation stack */
 		v = eif_opstack_push_empty(&op_stack);
-		v->it_r = data->target;
+		v->it_r = a_call->target;
 		v->type = SK_REF;
 			/* Make a feature call. */
-		CBodyId(body_id, data->routine_id,Dtype(data->target));
+		CBodyId(body_id, a_call->routine_id,Dtype(a_call->target));
 		if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
 			pid = (uint32) FPatId(body_id);
 			(pattern[pid].toc)(egc_frozen[body_id]); /* Call pattern */
@@ -99,7 +107,7 @@ rt_private void rt_apply_wcall (struct eif_scoop_call_data* data)
 			xinterp(MTC melt[body_id], 0);
 		}
 			/* Save result of a call if any. */
-		v = data->result;
+		v = a_call->result;
 		if (v) {
 			* v = * eif_opstack_pop_address(&op_stack);
 		}
@@ -108,44 +116,27 @@ rt_private void rt_apply_wcall (struct eif_scoop_call_data* data)
 			/* Tuple access. */
 		if (n == 0) {
 				/* Access to a tuple field. */
-			v = data->result;
-			eif_tuple_access (data->target, - data->routine_id, v);
+			v = a_call->result;
+			eif_tuple_access (a_call->target, - a_call->routine_id, v);
 		}
 		else {
 				/* Assignment to a tuple field. */
 			v = eif_opstack_pop_address(&op_stack);
-			eif_tuple_assign (data->target, - data->routine_id, v);
+			eif_tuple_assign (a_call->target, - a_call->routine_id, v);
 		}
 	}
-}
-#endif
-
-/*
-doc:	<routine name="rt_scoop_try_call" export="shared">
-doc:		<summary> Execute the feature in 'call' and do not catch exceptions. </summary>
-doc:		<param name="call" type="struct eif_scoop_call_data*"> The feature to apply. Must not be NULL. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None </synchronization>
-doc:	</routine>
-*/
-void rt_scoop_execute_call (struct eif_scoop_call_data* call)
-{
-#ifdef WORKBENCH
-	rt_apply_wcall (call);
-#else
-	call->pattern (call);
 #endif
 }
 
 /*
-doc:	<routine name="rt_scoop_try_call" return_type="EIF_BOOLEAN" export="shared">
+doc:	<routine name="rt_try_execute_scoop_call" return_type="EIF_BOOLEAN" export="shared">
 doc:		<summary> Try to apply the feature in 'call', and catch any exceptions that may occur. </summary>
 doc:		<param name="call" type="struct eif_scoop_call_data*"> The feature to apply. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None </synchronization>
 doc:	</routine>
 */
-rt_shared EIF_BOOLEAN rt_scoop_try_call (struct eif_scoop_call_data *call)
+rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call)
 {
 		/* Switch this on to catch exceptions */
 		/* This section slows down some benchmarks by 2x. I believe */
@@ -174,7 +165,7 @@ rt_shared EIF_BOOLEAN rt_scoop_try_call (struct eif_scoop_call_data *call)
 
 	if (!setjmp(exenv)) {
 			/* Execute the Eiffel function. */
-		rt_scoop_execute_call (call);
+		execute_scoop_call (call);
 
 		success = EIF_TRUE;
 
@@ -275,14 +266,14 @@ rt_shared void rt_unset_processor_id (rt_global_context_t* rt_globals)
 }
 
 /*
-doc:	<routine name="rt_scoop_gc_request" return_type="void" export="shared">
+doc:	<routine name="rt_request_gc_cycle" return_type="void" export="shared">
 doc:		<summary> Run a GC cycle when 'fingerprint' has not changed since the last call. </summary>
 doc:		<param name="fingerprint" type="int*"> The fingerprint value. </param>
 doc:		<thread_safety> Safe. </thread_safety>
 doc:		<synchronization> None required, done internally through atomic operations. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_scoop_gc_request (int* fingerprint)
+rt_shared void rt_request_gc_cycle (int* fingerprint)
 {
 	static volatile int gc_fingerprint = 0;
 	int previous_fingerprint = * fingerprint;

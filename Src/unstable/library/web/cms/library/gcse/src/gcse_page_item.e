@@ -1,5 +1,5 @@
 note
-	description: "Represent a search result, include the URL, title and text snippets that describe the result"
+	description: "Represents a search result, include the URL, title and text snippets that describe the result"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,7 +7,6 @@ class
 	GCSE_PAGE_ITEM
 
 inherit
-
 	DEBUG_OUTPUT
 
 feature -- Access
@@ -139,62 +138,62 @@ feature -- Element change
 
 feature -- Output
 
-		debug_output: STRING_8
-				-- <Precursor>
-			do
-				create Result.make_from_string ("%NPage Item details%N")
-				if attached title as l_title then
-					Result.append ("Title:")
-					Result.append (l_title)
-					Result.append_character ('%N')
-				end
-				if attached kind as l_kind then
-					Result.append ("Kind:")
-					Result.append (l_kind)
-					Result.append_character ('%N')
-				end
-				if attached html_title as l_html_title then
-					Result.append ("Html title:")
-					Result.append (l_html_title)
-					Result.append_character ('%N')
-				end
-				if attached link as l_link then
-					Result.append ("Link:")
-					Result.append (l_link)
-					Result.append_character ('%N')
-				end
-				if attached display_link as l_display_link then
-					Result.append ("Display link:")
-					Result.append (l_display_link)
-					Result.append_character ('%N')
-				end
-				if attached snippet as l_snippet then
-					Result.append ("Snippet:")
-					Result.append (l_snippet)
-					Result.append_character ('%N')
-				end
-				if attached html_snippet as l_html_snippet then
-					Result.append ("Html snippet:")
-					Result.append (l_html_snippet)
-					Result.append_character ('%N')
-				end
-				if attached cache_id as l_cache_id then
-					Result.append ("Cache_id:")
-					Result.append (l_cache_id)
-					Result.append_character ('%N')
-				end
-				if attached formatted_url as l_formatted_url then
-					Result.append ("Formatted url:")
-					Result.append (l_formatted_url)
-					Result.append_character ('%N')
-				end
-				if attached html_formatted_url as l_html_formatted_url then
-					Result.append ("Html formatted url:")
-					Result.append (l_html_formatted_url)
-					Result.append_character ('%N')
-				end
-
+	debug_output: STRING_8
+			-- <Precursor>
+		do
+			create Result.make_from_string ("%NPage Item details%N")
+			if attached title as l_title then
+				Result.append ("Title:")
+				Result.append (l_title)
+				Result.append_character ('%N')
 			end
+			if attached kind as l_kind then
+				Result.append ("Kind:")
+				Result.append (l_kind)
+				Result.append_character ('%N')
+			end
+			if attached html_title as l_html_title then
+				Result.append ("Html title:")
+				Result.append (l_html_title)
+				Result.append_character ('%N')
+			end
+			if attached link as l_link then
+				Result.append ("Link:")
+				Result.append (l_link)
+				Result.append_character ('%N')
+			end
+			if attached display_link as l_display_link then
+				Result.append ("Display link:")
+				Result.append (l_display_link)
+				Result.append_character ('%N')
+			end
+			if attached snippet as l_snippet then
+				Result.append ("Snippet:")
+				Result.append (l_snippet)
+				Result.append_character ('%N')
+			end
+			if attached html_snippet as l_html_snippet then
+				Result.append ("Html snippet:")
+				Result.append (l_html_snippet)
+				Result.append_character ('%N')
+			end
+			if attached cache_id as l_cache_id then
+				Result.append ("Cache_id:")
+				Result.append (l_cache_id)
+				Result.append_character ('%N')
+			end
+			if attached formatted_url as l_formatted_url then
+				Result.append ("Formatted url:")
+				Result.append (l_formatted_url)
+				Result.append_character ('%N')
+			end
+			if attached html_formatted_url as l_html_formatted_url then
+				Result.append ("Html formatted url:")
+				Result.append (l_html_formatted_url)
+				Result.append_character ('%N')
+			end
+
+		end
 
 note
 	copyright: "2011-2015 Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

@@ -406,7 +406,7 @@ rt_private rt_inline void rt_message_channel_receive_impl (struct rt_message_cha
 			if (is_with_gc && error == T_TIMEDOUT) {
 				rt_uint_ptr new_timeout = RT_GC_TIMEOUT_STEP * wait_timeout;
 				wait_timeout = (new_timeout > wait_timeout) ? new_timeout : wait_timeout; /* Overflow protection */
-				rt_scoop_gc_request (&gc_fingerprint);
+				rt_request_gc_cycle (&gc_fingerprint);
 			}
 
 				/* To perform the dequeue operation we should reacquire the lock. */

@@ -101,7 +101,7 @@ rt_private void rt_scoop_impersonated_call (struct rt_processor* client, struct 
 
 		/* Perform the call. We perform a safe call here because we need
 		 * to free the eif_scoop_call_data struct afterwards. */
-	is_successful = rt_scoop_try_call (call);
+	is_successful = rt_try_execute_scoop_call (call);
 
 		/* Adopt the once values of the current region and revert the region ID. */
 	eif_scoop_impersonate (eif_globals, stored_pid);

@@ -61,7 +61,7 @@ extern "C" {
 
 /* Separate calls */
 
-typedef struct call_data {
+typedef struct eif_scoop_call_data {
 	EIF_REFERENCE target;			/* Target of a call */
 
 #ifdef WORKBENCH
@@ -70,7 +70,7 @@ typedef struct call_data {
 #else
 	fnptr address;					/* Routine to be called */
 	EIF_POINTER result;				/* Address of a result for queries, the result type depends on the called feature */
-	void (* pattern) (struct call_data *); /* Stub that is used to perform a call */
+	void (* pattern) (struct eif_scoop_call_data *); /* Stub that is used to perform a call */
 #endif /* WORKBENCH */
 	EIF_NATURAL_16 count;			/* Number of arguments excluding target object */
 	EIF_INTEGER_16 offset;			/* Offset of an attribute */
@@ -80,8 +80,8 @@ typedef struct call_data {
 
 
 RT_LNK EIF_BOOLEAN eif_scoop_can_impersonate (EIF_SCP_PID client_processor_id, EIF_SCP_PID supplier_region_id, EIF_BOOLEAN is_synchronous);
-RT_LNK void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, call_data* data);
-RT_LNK void eif_call_const (call_data * a);
+RT_LNK void eif_log_call (EIF_SCP_PID client_processor_id, EIF_SCP_PID client_region_id, struct eif_scoop_call_data* data);
+RT_LNK void eif_call_const (struct eif_scoop_call_data * a);
 
 #ifdef EIF_THREADS
 struct tag_eif_globals; /* Forward declaration. That way we don't need to include basically all header files in eif_scoop.h" */

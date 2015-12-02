@@ -41,15 +41,15 @@
 #include "rt_garcol.h" /* TODO: It would be nice if we wouldn't have to pull in as many dependencies for the definition of MARKER. */
 
 /* Forward declaration */
-struct call_data;
+struct eif_scoop_call_data;
 
 void rt_set_processor_id (EIF_SCP_PID pid, rt_global_context_t* rt_globals); /* Associate processor of ID `pid' with the current thread. */
 void rt_unset_processor_id (rt_global_context_t* rt_globals);	/* Dissociate processor from the current thread. */
 
-void rt_mark_call_data(MARKER marking, struct call_data* call); /* Mark references in a call_data struct with the MARKER function. */
+void rt_mark_call_data(MARKER marking, struct eif_scoop_call_data* call); /* Mark references in 'call' with the MARKER function. */
 
-void rt_scoop_execute_call (call_data* call); /* Execute 'call' without catching any exceptions. */
-EIF_BOOLEAN rt_scoop_try_call (struct call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
+void rt_scoop_execute_call (struct eif_scoop_call_data* call); /* Execute 'call' without catching any exceptions. */
+EIF_BOOLEAN rt_scoop_try_call (struct eif_scoop_call_data *call); /* Execute 'call' and return EIF_FALSE if an exception happened. */
 
 rt_shared void rt_scoop_gc_request (int* fingerprint); /* Request a GC cycle if the fingerprint hasn't changed since last invocation. */
 

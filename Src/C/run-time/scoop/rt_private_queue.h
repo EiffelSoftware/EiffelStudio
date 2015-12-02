@@ -49,7 +49,7 @@ doc:		<summary> The private queue struct.
 doc:
 doc:			This structure serves as a central part of communication between
 doc:			a client and a supplier. It contains an rt_message_channel for the
-doc:			client to send new call data structs.
+doc:			client to send new SCOOP separate calls.
 doc:
 doc:			The struct also serves as a lock for the client on the supplier:
 doc:			As long as a private queue is inside the queue-of-queues of  the supplier
@@ -95,6 +95,6 @@ rt_shared void rt_private_queue_lock (struct rt_private_queue* self, struct rt_p
 rt_shared void rt_private_queue_unlock (struct rt_private_queue* self, EIF_BOOLEAN is_wait_condition_failure);
 rt_shared int rt_private_queue_register_wait (struct rt_private_queue* self, struct rt_processor* client);
 
-rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct call_data* call);
+rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct rt_processor* client, struct eif_scoop_call_data* call);
 
 #endif /* _rt_private_queue_h_ */

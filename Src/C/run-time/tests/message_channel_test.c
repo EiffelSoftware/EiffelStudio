@@ -29,7 +29,7 @@ int volatile eif_is_gc_collecting = 0;
 void eif_synchronize_for_gc () {}
 void rt_scoop_gc_request (int* fingerprint) {}
 void eif_panic (char* msg) {}
-void rt_mark_call_data (MARKER marking, struct call_data* call) {}
+void rt_mark_call_data (MARKER marking, struct eif_scoop_call_data* call) {}
 
 /*
  * Data structures.

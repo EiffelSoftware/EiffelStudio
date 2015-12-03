@@ -4922,6 +4922,14 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A, TYPE_A_CHECKER} -- Degree 4
 			degree_4_processed_set: degree_4_processed
 		end
 
+	unset_degree_4_processed
+			-- Set `degree_4_processed' to `False'.
+		do
+			degree_4_processed := False
+		ensure
+			degree_4_processed_set: not degree_4_processed
+		end
+
 	set_expanded_modified
 			-- Set `expanded_modifed' to True.
 		do

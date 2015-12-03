@@ -173,25 +173,29 @@ feature {NONE} -- Create a new node
 			f: like new_edit_form
 			fd: detachable WSF_FORM_DATA
 		do
-			f := new_delete_form (a_node, url (location, Void), "delete-" + a_type.name, a_type)
-			hooks.invoke_form_alter (f, fd, Current)
-			if request.is_post_request_method then
-				f.process (Current)
-				fd := f.last_data
-			end
-			if a_node.has_id then
-				add_to_menu (node_local_link (a_node, translation ("View", Void)), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (a_node) + "/edit"), primary_tabs)
-				add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", node_api.node_path (a_node) + "/delete"), primary_tabs)
-			end
+			if a_node.is_trashed then
+				f := new_delete_form (a_node, url (location, Void), "delete-" + a_type.name, a_type)
+				hooks.invoke_form_alter (f, fd, Current)
+				if request.is_post_request_method then
+					f.process (Current)
+					fd := f.last_data
+				end
+				if a_node.has_id then
+					add_to_menu (node_local_link (a_node, translation ("View", Void)), primary_tabs)
+					add_to_menu (create {CMS_LOCAL_LINK}.make (translation ("Edit", Void), node_api.node_path (a_node) + "/edit"), primary_tabs)
+					add_to_menu (create {CMS_LOCAL_LINK}.make ("Delete", node_api.node_path (a_node) + "/delete"), primary_tabs)
+				end
 
-			if attached redirection as l_location then
-					-- FIXME: Hack for now
-				set_title (a_node.title)
-				b.append (html_encoded (a_type.title) + " deleted")
+				if attached redirection as l_location then
+						-- FIXME: Hack for now
+					set_title (a_node.title)
+					b.append (html_encoded (a_type.title) + " deleted")
+				else
+					set_title (formatted_string (translation ("Delete $1 #$2", Void), [a_type.title, a_node.id]))
+					f.append_to_html (wsf_theme, b)
+				end
 			else
-				set_title (formatted_string (translation ("Delete $1 #$2", Void), [a_type.title, a_node.id]))
-				f.append_to_html (wsf_theme, b)
+				--
 			end
 		end
 
@@ -355,6 +359,8 @@ feature -- Form
 
 	new_delete_form (a_node: detachable CMS_NODE; a_url: READABLE_STRING_8; a_name: STRING; a_node_type: CMS_NODE_TYPE [CMS_NODE]): CMS_FORM
 			-- Create a web form named `a_name' for node `a_node' (if set), using form action url `a_url', and for type of node `a_node_type'.
+		require
+				is_trashed: attached a_node as l_node and then a_node.is_trashed
 		local
 			f: CMS_FORM
 			ts: WSF_FORM_SUBMIT_INPUT
@@ -375,10 +381,27 @@ feature -- Form
 					ts.set_default_value (translation ("Delete"))
 					]")
 				f.extend (ts)
-				to_implement ("Refactor code to use the new wsf_html HTML5 support")
-				f.extend_html_text("<input type='submit' value='Cancel' formmethod='GET', formaction='/node/"+a_node.id.out+"'>" )
+				create ts.make ("op")
+				ts.set_default_value ("Cancel")
+				ts.set_formaction ("/node/"+a_node.id.out)
+				ts.set_formmethod ("GET")
+				f.extend (ts)
 			end
-
+			f.extend_html_text ("<br/>")
+			f.extend_html_text ("<legend>Do you want to restore the current node?</legend>")
+			if
+				a_node /= Void and then
+				a_node.id > 0
+			then
+				create ts.make ("op")
+				ts.set_default_value ("Restore")
+				ts.set_formaction ("/node/"+a_node.id.out+"/delete")
+				ts.set_formmethod ("POST")
+				fixme ("[
+					ts.set_default_value (translation ("Restore"))
+					]")
+				f.extend (ts)
+			end
 			Result := f
 		end
 
@@ -401,19 +424,6 @@ feature -- Form
 				ts.set_default_value ("Trash")
 				fixme ("[
 					ts.set_default_value (translation ("Trash"))
-					]")
-				f.extend (ts)
-			end
-			f.extend_html_text ("<br/>")
-			f.extend_html_text ("<legend>Do you want to restore the current node?</legend>")
-			if
-				a_node /= Void and then
-				a_node.id > 0
-			then
-				create ts.make ("op")
-				ts.set_default_value ("Restore")
-				fixme ("[
-					ts.set_default_value (translation ("Restore"))
 					]")
 				f.extend (ts)
 			end

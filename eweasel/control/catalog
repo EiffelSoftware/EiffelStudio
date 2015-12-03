@@ -1064,8 +1064,8 @@ test 	adding-removing-transient			incr413 tcf pass incrementality transient
 test 	removing-descendant-crash	incr414 tcf pass incrementality
 test 	system-change-crash			incr415 tcf fail incrementality
 test 	recompilation-forces-freeze	incr416 tcf pass incrementality
-test 	qat-spurious-veen		incr417 tcf fail incrementality validity
-test 	qat-precursor-anchored-to-caller incr418 tcf fail incrementality anchored_type
+test 	qat-spurious-veen			incr417 tcf pass incrementality validity
+test 	qat-precursor-anchored-to-caller	incr418 tcf pass incrementality anchored_type
 test	static-type-id-crash-3			incr419 tcf pass incrementality anchored_type
 test	internal-search-crash			incr420 tcf pass incrementality skip
 test	change-application-options		incr421 tcf pass incrementality

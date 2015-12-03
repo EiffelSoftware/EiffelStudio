@@ -173,6 +173,11 @@ feature -- HTTP Methods
 					l_op.value.same_string ("Delete")
 				then
 					do_delete (req, res)
+				elseif
+					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
+					l_op.value.same_string ("Restore")
+				then
+					do_restore (req, res)
 				end
 			elseif req.percent_encoded_path_info.ends_with ("/trash") then
 				if
@@ -180,11 +185,6 @@ feature -- HTTP Methods
 					l_op.value.same_string ("Trash")
 				then
 					do_trash (req, res)
-				elseif
-					attached {WSF_STRING} req.form_parameter ("op") as l_op and then
-					l_op.value.same_string ("Restore")
-				then
-					do_restore (req, res)
 				end
 			elseif req.percent_encoded_path_info.starts_with ("/node/add/") then
 				create edit_response.make (req, res, api, node_api)
@@ -242,15 +242,19 @@ feature {NONE} -- Trash:Restore
 
 	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Delete a node from the database.
+		local
+			l_source: STRING
 		do
 			if attached current_user (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
-						attached node_api.node (l_id.integer_value) as l_node
+						attached {CMS_NODE} node_api.node (l_id.integer_value) as l_node
 					then
 						if node_api.has_permission_for_action_on_node ("delete", l_node, current_user (req)) then
 							node_api.delete_node (l_node)
+							l_source := node_api.node_path (l_node)
+							api.unset_path_alias (l_source, api.location_alias (l_source))
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
 							send_access_denied (req, res)

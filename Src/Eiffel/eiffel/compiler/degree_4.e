@@ -188,6 +188,23 @@ feature -- Processing
 				instantiator.clean_all
 			end
 
+				-- Unmark classes as processed to take into account the case when
+				-- they have been marked as processed but then an error has been raised.
+				-- (This fixes several incrementality bugs, including test#inct417, test#incr418, test#incr419.)
+			from
+				nb := 0
+				i := 1
+			until
+				nb = count
+			loop
+				a_class := classes.item (i)
+				if a_class /= Void and then a_class.degree_4_needed then
+					a_class.unset_degree_4_processed
+					nb := nb + 1
+				end
+				i := i + 1
+			end
+
 			empty_temp_remaining_validity_checking_list
 
 				-- Process classes until there are no more.

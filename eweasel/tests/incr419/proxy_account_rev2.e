@@ -1,5 +1,5 @@
 class
-	PROXY_ACCOUNT -- [G -> NUMERIC]
+	PROXY_ACCOUNT
 
 inherit
 	PROXY

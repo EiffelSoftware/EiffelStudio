@@ -114,7 +114,6 @@ rt_shared int rt_processor_create (EIF_SCP_PID a_pid, EIF_BOOLEAN is_root_proces
 		self->is_active = EIF_TRUE;
 		self->is_dirty = EIF_FALSE;
 		self->is_impersonation_allowed = EIF_TRUE;
-		rt_message_init (&self->current_msg);
 		self->result_notify_proxy = &self->result_notify;
 			/* Only the root processor's creation procedure is initially "logged". */
 		self->is_creation_procedure_logged = is_root_processor;
@@ -267,11 +266,6 @@ rt_shared void rt_processor_mark (struct rt_processor* self, MARKER marking)
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
 
-		/* Also mark the call that may be executed right now. */
-	if (self->current_msg.call) {
-		rt_mark_call_data (marking, self->current_msg.call);
-	}
-
 		/* Mark all private queues in generated_private_queues */
 	l_count = private_queue_list_t_count (&self->generated_private_queues);
 
@@ -360,22 +354,21 @@ doc:	</routine>
 rt_private void rt_processor_process_private_queue (struct rt_processor* self, struct rt_private_queue *queue)
 {
 	EIF_BOOLEAN is_stopped = EIF_FALSE;
-	struct rt_message* l_message = NULL;
+	struct rt_message l_message;
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("queue_not_null", queue);
 
-	l_message = &self->current_msg;
-
 	while (!is_stopped) {
 
-			/* Receive a new call and store it in self->current_msg.
+			/* Receive a new call and store it in l_message.
 			* This is a blocking call if no data is available.
 			* The call might be logged by the original client of the queue
 			* or some other processor that has acquired the locks during lock passing. */
-		rt_message_channel_receive (&queue->channel, l_message);
+		rt_message_init (&l_message);
+		rt_message_channel_receive (&queue->channel, &l_message);
 
-		switch (l_message->message_type) {
+		switch (l_message.message_type) {
 			case SCOOP_MESSAGE_UNLOCK:
 				rt_processor_publish_wait_condition (self);
 					/* Fallthrough intended. */
@@ -384,14 +377,11 @@ rt_private void rt_processor_process_private_queue (struct rt_processor* self, s
 				is_stopped = EIF_TRUE;
 				break;
 			case SCOOP_MESSAGE_EXECUTE:
-				rt_processor_execute_call (self, l_message->sender_processor, l_message->call);
+				rt_processor_execute_call (self, l_message.sender_processor, l_message.call);
 				break;
 			default:
 				CHECK ("valid_message", EIF_FALSE);
 		}
-
-			/* Make sure the call doesn't get traversed again for GC */
-		rt_message_init (l_message);
 	}
 }
 

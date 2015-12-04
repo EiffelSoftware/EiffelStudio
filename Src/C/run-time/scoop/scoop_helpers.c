@@ -138,10 +138,11 @@ doc:	</routine>
 */
 rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *call)
 {
-		/* Switch this on to catch exceptions */
-		/* This section slows down some benchmarks by 2x. I believe */
-		/* this is due to either some locking in the allocation routines (again) */
-		/* or reloading the thread local variables often. */
+		/* NOTE: It is vitally important that this function does not trigger
+		 * garbage collection until the stack frame of the Eiffel function described
+		 * by 'call' is properly set up and registered with the GC.
+		 * The reason is that the eif_scoop_call_data structure is NOT marked by
+		 * the GC any more at this point. */
 	EIF_GET_CONTEXT
 	EIF_BOOLEAN success;
 	jmp_buf exenv;
@@ -153,12 +154,6 @@ rt_shared EIF_BOOLEAN rt_try_execute_scoop_call (struct eif_scoop_call_data *cal
 	RTLXD;
 	RTLXL;
 #endif
-
-		/* TODO: We used to keep track of last_exception in this function,
-		 * which caused a call into Eiffel code. Therefore it was necessary
-		 * register the eif_scoop_call_data struct somewhere for GC traversal.
-		 * This is no longer the case now, which means some client code
-		 * can be simplified. */
 
 		/* Record pseudo execution vector */
 	excatch(&exenv);

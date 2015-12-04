@@ -72,7 +72,6 @@ rt_shared int rt_private_queue_init (struct rt_private_queue* self, struct rt_pr
 	self->lock_depth = 0;
 	rt_macro_set_saved_result (self, NULL);
 
-	rt_message_init (&self->call_stack_msg);
 	error = rt_message_channel_init (&self->channel, 512);
 
 	return error;
@@ -258,12 +257,11 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 	call = NULL;
 	
 	if (will_sync) {
-		
-		/* NOTE: In a previous revision, the variable 'client' was retrieved again
-		 * from the global rt_processor_registry. This seemed to be unnecessary however
-		 * and was therefore removed. */
 
-		struct rt_message* l_message = &self->call_stack_msg;
+			/* Allocate stack space for the result message. */
+		struct rt_message result_message;
+		struct rt_message* l_message = &result_message;
+		rt_message_init (l_message);
 
 			/* In workbench mode, we have to keep track of the EIF_TYPED_VALUE for the result
 			 * and make sure the reference is updated during GC (see also test#bench016).
@@ -297,9 +295,6 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 			if (current_region != target_region) {
 				eif_scoop_impersonate (eif_globals, current_region);
 			}
-
-				/* Set self->call_stack_msg->call to NULL to avoid unnecessary GC marking. */
-			l_message->call = NULL;
 
 				/* During the next receive we may get the answer to our query,
 				 * so we need to set saved_result again. */
@@ -335,17 +330,10 @@ doc:	</routine>
 */
 rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking)
 {
-	struct eif_scoop_call_data* call = NULL;
-
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("marking_not_null", marking);
 
 	rt_message_channel_mark (&self->channel, marking);
-
-	call = self->call_stack_msg.call;
-	if (call) {
-		rt_mark_call_data (marking, call);
-	}
 
 #ifdef WORKBENCH
 		/* Mark saved_result, if it is a reference. */

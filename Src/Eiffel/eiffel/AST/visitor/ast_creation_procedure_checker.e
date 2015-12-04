@@ -30,6 +30,7 @@ inherit
 			process_if_expression_as,
 			process_inline_agent_creation_as,
 			process_inspect_as,
+			process_iteration_as,
 			process_like_cur_as,
 			process_loop_as,
 			process_named_expression_as,
@@ -739,6 +740,15 @@ feature {AST_EIFFEL} -- Visitor: compound
 				keeper.save_sibling
 			end
 			keeper.leave_realm
+		end
+
+	process_iteration_as (a: ITERATION_AS)
+			-- <Precursor>
+		do
+			Precursor (a)
+				-- Iteration implicitly makes several qualified calls that include:
+				-- "new_cursor", "after", "forth".
+			record_qualified_call (a.expression)
 		end
 
 	process_loop_as (a: LOOP_AS)

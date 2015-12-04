@@ -58,7 +58,6 @@ doc:
 doc:			Note that the client processor may change during lock passing, i.e.
 doc:			it's not guaranteed to be always the client that created the queue.
 doc:		</summary>
-doc:		<field name="call_stack_msg" type="struct rt_message"> The call being executed right now. Accessed only by the supplier or by the GC. </field>
 doc:		<field name="channel" type="struct rt_message_channel"> The message channel used for communication. </field>
 doc:		<field name="supplier" type="struct rt_processor*"> The supplier to whom messages will be sent. This field is constant. Accessed only by the client. </field>
 doc:		<field name="lock_depth" type="int"> The current lock depth (for recursive locking). Accessed only by the client. </field>
@@ -68,9 +67,6 @@ doc:		<fixme> It may be possible to improve performance slightly with some caref
 doc:	</struct>
 */
 struct rt_private_queue {
-		/* Consumer (or supplier) part. */
-	struct rt_message call_stack_msg;
-
 		/* Shared part. */
 	struct rt_message_channel channel;
 

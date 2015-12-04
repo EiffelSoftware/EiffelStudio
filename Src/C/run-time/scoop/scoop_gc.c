@@ -65,7 +65,6 @@ doc:<file name="scoop_gc.c" header="rt_scoop_gc.h" version="$Id$" summary="SCOOP
 
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
-#include "eif_atomops.h"
 
 #define PID_MAP_ITEM_TYPE uint32                       /* Type of items in `live_pid_map'. (It must be unsigned.) */
 #define PID_MAP_ITEM_SIZE (sizeof (PID_MAP_ITEM_TYPE)) /* Size of one element in `live_pid_map' in bytes. */
@@ -430,31 +429,17 @@ doc:	</routine>
 */
 rt_shared void rt_mark_all_processors (MARKER marking)
 {
-	static volatile EIF_INTEGER_32 rt_is_marking = 0;
 	struct rt_processor* proc = NULL;
-
-	EIF_INTEGER_32 new_value = 1;
-	EIF_INTEGER_32 expected = 0;
-	EIF_INTEGER_32 previous;
+	EIF_SCP_PID i = 0;
 
 	REQUIRE ("marking_not_null", marking);
 
-		/* Use compare-exchange to determine whether marking is necessary. */
-		/* TODO: RS: Why is it necessary to use CAS here? As far as I can see this
-		 * operation is called exactly once and only by a single thread during GC... */
-	previous = RTS_ACAS_I32 (&rt_is_marking, new_value, expected);
+	for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; ++i) {
+		proc = rt_lookup_processor (i);
 
-	if (previous == expected) {
-		EIF_SCP_PID i;
-		for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-
-			proc = rt_lookup_processor (i);
-			if (proc) {
-				rt_processor_mark (proc, marking);
-			}
+		if (proc) {
+			rt_processor_mark (proc, marking);
 		}
-			/* Reset rt_is_marking to zero. */
-		RTS_AS_I32 (&rt_is_marking, 0);
 	}
 }
 /*

@@ -325,8 +325,6 @@ feature -- Input
 			end
 		end
 
-feature {NONE} -- Implementation
-
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
@@ -350,6 +348,8 @@ feature {NONE} -- Implementation
 				j := j + 1
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	c_open_modifier: INTEGER = 32768
 			-- Open the file in binary mode.

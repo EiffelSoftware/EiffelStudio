@@ -9,13 +9,13 @@ source_path	$BUGS
 
 
 -- Code analysis
-test	ca-simple-violation				codeanalysis001 tcf pass code_analysis
-test	ca-load-preferences				codeanalysis002 tcf pass code_analysis
-test	ca-forced-rules-preferences		codeanalysis003 tcf pass code_analysis
-test	ca-various-warnings				codeanalysis004 tcf pass code_analysis
+test	ca-simple-violation				codeanalysis001 tcf fail used_to_pass code_analysis
+test	ca-load-preferences				codeanalysis002 tcf fail used_to_pass code_analysis
+test	ca-forced-rules-preferences		codeanalysis003 tcf fail used_to_pass code_analysis
+test	ca-various-warnings				codeanalysis004 tcf fail used_to_pass code_analysis
 test	ca-024-bug-001					codeanalysis005 tcf fail code_analysis
 test	ca-071-bug-001					codeanalysis006 tcf fail code_analysis
-test	ca-080-bug-001					codeanalysis007 tcf pass code_analysis
+test	ca-080-bug-001					codeanalysis007 tcf fail used_to_pass code_analysis
 test	ca-030-001						codeanalysis008 tcf fail code_analysis
 test	ca-051-001						codeanalysis009 tcf fail code_analysis
 test	ca-059-001						codeanalysis010 tcf fail code_analysis

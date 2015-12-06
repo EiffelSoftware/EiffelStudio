@@ -297,6 +297,7 @@ feature -- Status report
 			valid_index: valid_index (index)
 		local
 			l_reflector: REFLECTOR
+			l_type_id: INTEGER
 		do
 			if v = Void then
 					-- A Void entry is valid only for references and as long as the expected type
@@ -324,7 +325,11 @@ feature -- Status report
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
 					create l_reflector
-					Result := l_reflector.field_conforms_to (v.generating_type.type_id, generating_type.generic_parameter_type (index).type_id)
+						--| Replace this line with the commented line once we solve the nature
+						--| of type instances in a SCOOP context.
+					l_type_id := {ISE_RUNTIME}.dynamic_type (v)
+--					l_type_id := v.generating_type.type_id
+					Result := l_reflector.field_conforms_to (l_type_id, generating_type.generic_parameter_type (index).type_id)
 				end
 			end
 		end

@@ -283,6 +283,31 @@ feature -- Input
 			end
 		end
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		local
+			i, j: INTEGER
+			str_area: NATIVE_ARRAY [NATURAL_8]
+		do
+			create str_area.make (nb)
+			if attached internal_stream as l_stream then
+				Result := l_stream.read (str_area, 0, nb)
+			end
+			internal_end_of_file := peek = -1
+			from
+				i := 0
+				j := pos
+			until
+				i >= Result
+			loop
+				a_string.put (str_area.item (i).to_character_8, j)
+				i := i + 1
+				j := j + 1
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
@@ -346,31 +371,6 @@ feature {NONE} -- Implementation
 			end
 			back
 			internal_end_of_file := peek = -1
-		end
-
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
-			-- Fill `a_string', starting at position `pos' with at
-			-- most `nb' characters read from current file.
-			-- Return the number of characters actually read.
-		local
-			i, j: INTEGER
-			str_area: NATIVE_ARRAY [NATURAL_8]
-		do
-			create str_area.make (nb)
-			if attached internal_stream as l_stream then
-				Result := l_stream.read (str_area, 0, nb)
-			end
-			internal_end_of_file := peek = -1
-			from
-				i := 0
-				j := pos
-			until
-				i >= Result
-			loop
-				a_string.put (str_area.item (i).to_character_8, j)
-				i := i + 1
-				j := j + 1
-			end
 		end
 
 	c_open_modifier: INTEGER = 16384

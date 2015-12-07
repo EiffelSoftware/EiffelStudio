@@ -232,7 +232,7 @@ feature -- HTML Output
 				if attached api.format (n.format) as f then
 					f.append_formatted_to (l_summary, a_output)
 				else
-					page.formats.default_format.append_formatted_to (l_summary, a_output)
+					api.formats.default_format.append_formatted_to (l_summary, a_output)
 				end
 				a_output.append ("<br />")
 				a_output.append (page.link ("See more...", lnk.location, Void))

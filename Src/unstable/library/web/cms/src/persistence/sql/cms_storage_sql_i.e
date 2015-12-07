@@ -236,16 +236,22 @@ feature -- Access
 
 	sql_start
 			-- Set the cursor on first element.
+		require
+			no_error: not has_error
 		deferred
 		end
 
 	sql_after: BOOLEAN
 			-- Are there no more items to iterate over?	
+		require
+			no_error: not has_error
 		deferred
 		end
 
 	sql_forth
 			-- Fetch next row from last sql execution, if any.
+		require
+			no_error: not has_error
 		deferred
 		end
 
@@ -255,6 +261,7 @@ feature -- Access
 
 	sql_item (a_index: INTEGER): detachable ANY
 		require
+			no_error: not has_error
 			valid_index: sql_valid_item_index (a_index)
 		deferred
 		end
@@ -446,7 +453,7 @@ feature {NONE} -- Implementation
 					across
 						l_removals as ic
 					loop
-						Result.remove_substring (ic.item.start_index - j, ic.item.end_index - j)
+						Result.remove_substring (ic.item.start_index - j - a_start_index + 1, ic.item.end_index - j - a_start_index + 1)
 						j := j + ic.item.end_index - ic.item.start_index + 1
 					end
 --					a_offset.replace (a_offset.item  j)

@@ -1,5 +1,5 @@
 note
-	description: "Represents a search result, include the URL, title and text snippets that describe the result"
+	description: "Represent a search result, include the URL, title and text snippets that describe the result"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -101,7 +101,7 @@ feature -- Persistence
 					l_parent_id /= a_node.id and then
 					attached node_storage.node_by_id (l_parent_id) as l_parent
 				then
-					if attached {CMS_PAGE_NODE_TYPE} node_api.content_type (l_parent.content_type) as l_parent_ct then
+					if attached {CMS_PAGE_NODE_TYPE} node_api.node_type (l_parent.content_type) as l_parent_ct then
 						ct := l_parent_ct
 					else
 						create ct

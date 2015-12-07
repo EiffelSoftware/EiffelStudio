@@ -71,7 +71,7 @@ feature -- Execution
 					attached node_api.node_type_for (l_node) as l_content_type and then
 					attached node_api.node_type_webform_manager (l_content_type) as l_manager
 				then
-					l_manager.append_html_output_to (l_node, Current)
+					l_manager.append_content_as_html_to_page (l_node, Current)
 				end
 			elseif revision > 0 then
 				set_main_content ("Missing revision node!")

@@ -12,7 +12,7 @@ inherit
 			module_api as user_oauth_api
 		redefine
 			filters,
-			register_hooks,
+			setup_hooks,
 			initialize,
 			install,
 			user_oauth_api
@@ -72,7 +72,7 @@ feature {CMS_API} -- Module Initialization
 			Precursor (a_api)
 
 				-- Storage initialization
-			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_storage_sql then
+			if attached a_api.storage.as_sql_storage as l_storage_sql then
 				create {CMS_OAUTH_20_STORAGE_SQL} l_user_auth_storage.make (l_storage_sql)
 			else
 				-- FIXME: in case of NULL storage, should Current be disabled?
@@ -93,7 +93,7 @@ feature {CMS_API} -- Module management
 			l_consumers: LIST [STRING]
 		do
 				-- Schema
-			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
+			if attached api.storage.as_sql_storage as l_sql_storage then
 				if not l_sql_storage.sql_table_exists ("oauth2_consumers") then
 					--| Schema
 					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers.sql")), Void)
@@ -112,7 +112,7 @@ feature {CMS_API} -- Module management
 				else
 					from
 						l_sql_storage.sql_start
-						create {ARRAYED_LIST[STRING]} l_consumers.make (2)
+						create {ARRAYED_LIST [STRING]} l_consumers.make (2)
 					until
 						l_sql_storage.sql_after
 					loop
@@ -190,12 +190,12 @@ feature -- Router
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
-			a_response.hooks.subscribe_to_block_hook (Current)
-			a_response.hooks.subscribe_to_value_table_alter_hook (Current)
+			auto_subscribe_to_hooks (a_hooks)
+			a_hooks.subscribe_to_block_hook (Current)
+			a_hooks.subscribe_to_value_table_alter_hook (Current)
 		end
 
 feature -- Hooks

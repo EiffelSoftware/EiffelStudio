@@ -9,7 +9,7 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks,
+			setup_hooks,
 			permissions
 		end
 
@@ -47,6 +47,8 @@ feature -- Access: router
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
 		local
 			l_admin_handler: CMS_ADMIN_HANDLER
+
+			l_modules_handler: CMS_ADMIN_MODULES_HANDLER
 			l_users_handler: CMS_ADMIN_USERS_HANDLER
 			l_roles_handler: CMS_ADMIN_ROLES_HANDLER
 
@@ -60,6 +62,10 @@ feature -- Access: router
 		do
 			create l_admin_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin", l_admin_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+			create l_modules_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/admin/modules", l_modules_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 			create l_users_handler.make (a_api)
@@ -110,11 +116,11 @@ feature -- Security
 
 feature -- Hooks
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- <Precursor>
 		do
-			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_response.hooks.subscribe_to_response_alter_hook (Current)
+			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_response_alter_hook (Current)
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -134,7 +140,13 @@ feature -- Hooks
 				create lnk.make ("Admin", "admin")
 				lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
 				a_menu_system.management_menu.extend (lnk)
+
 			end
+
+			create lnk.make ("Module", "admin/modules")
+			lnk.set_permission_arguments (<<"manage module">>)
+			a_menu_system.management_menu.extend (lnk)
+
 				-- Per module cache permission!
 			create lnk.make ("Cache", "admin/cache")
 			a_menu_system.management_menu.extend (lnk)

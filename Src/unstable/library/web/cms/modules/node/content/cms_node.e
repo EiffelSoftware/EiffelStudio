@@ -10,7 +10,11 @@ deferred class
 	CMS_NODE
 
 inherit
-	DEBUG_OUTPUT
+	CMS_CONTENT
+		redefine
+			debug_output
+		end
+
 	REFACTORING_HELPER
 
 feature{NONE} -- Initialization
@@ -67,12 +71,6 @@ feature -- Access
 			-- Revision value.
 			--| Note: for now version is not supported.
 
-	content_type: READABLE_STRING_8
-			-- Associated content type name.
-			-- Page, Article, Blog, News, etc.
-		deferred
-		end
-
 feature -- Status reports
 
 	status: INTEGER
@@ -113,12 +111,6 @@ feature -- Access
 		deferred
 		end
 
-	format: detachable READABLE_STRING_8
-			-- Format associated with `content' and `summary'.
-			-- For example: text, mediawiki, html, etc
-		deferred
-		end
-
 feature -- Access: date			
 
 	modification_date: DATE_TIME
@@ -155,12 +147,6 @@ feature -- status report
 			valid_result: Result implies a_node.id = id
 		end
 
-	is_typed_as (a_content_type: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is current node of type `a_content_type' ?
-		do
-			Result := a_content_type.is_case_insensitive_equal (content_type)
-		end
-
 feature -- Access: menu		
 
 	link: detachable CMS_LOCAL_LINK
@@ -174,13 +160,7 @@ feature -- Status report
 			create Result.make_from_string_general ("#")
 			Result.append_integer_64 (id)
 			Result.append_character (' ')
-			Result.append_character ('<')
-			Result.append_string_general (content_type)
-			Result.append_character ('>')
-			Result.append_character (' ')
-			Result.append_character ('%"')
-			Result.append (title)
-			Result.append_character ('%"')
+			Result.append (Precursor)
 		end
 
 feature -- Element change

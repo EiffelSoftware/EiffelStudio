@@ -46,6 +46,26 @@ feature {CMS_API_ACCESS, CMS_MODULE, CMS_API} -- Restricted access
 			Result := cms_api.storage
 		end
 
+feature -- Bridge to CMS API
+
+	html_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded for html output.
+		do
+			Result := cms_api.html_encoded (a_string)
+		end
+
+	url_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded with percent encoding, mainly used for url.
+		do
+			Result := cms_api.url_encoded (a_string)
+		end
+
+	percent_encoded (a_string: READABLE_STRING_GENERAL): STRING_8
+			-- `a_string' encoded with percent encoding, mainly used for url.
+		do
+			Result := cms_api.percent_encoded (a_string)
+		end
+
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

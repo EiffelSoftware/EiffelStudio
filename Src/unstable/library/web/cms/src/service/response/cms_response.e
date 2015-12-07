@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 			get_theme
 			create menu_system.make
 			initialize_block_region_settings
-			create hooks.make
-			register_hooks
+			obsolete_register_hooks
 		end
 
 	initialize_site_url
@@ -66,7 +65,9 @@ feature {NONE} -- Initialization
 			site_url_ends_with_slash: site_url.ends_with_general ("/")
 		end
 
-	register_hooks
+	obsolete_register_hooks
+			-- Obsolete code to initialize hooks.
+			-- Dangerous, since those hooks would be available only under CMS_RESPONSE context.
 		local
 			l_module: CMS_MODULE
 			l_enabled_modules: CMS_MODULE_COLLECTION
@@ -77,9 +78,6 @@ feature {NONE} -- Initialization
 				l_enabled_modules as ic
 			loop
 				l_module := ic.item
-				if attached {CMS_HOOK_AUTO_REGISTER} l_module as l_auto then
-					l_auto.auto_subscribe_to_hooks (Current)
-				end
 				l_module.register_hooks (Current)
 			end
 		end
@@ -752,7 +750,7 @@ feature -- Blocks
 			-- Get blocks provided by modules.
 		do
 				-- Get block from modules, and related alias.
-			hooks.invoke_block (Current)
+			api.hooks.invoke_block (Current)
 		end
 
 	primary_menu_block: detachable CMS_MENU_BLOCK
@@ -869,6 +867,11 @@ feature -- Hooks
 
 	hooks: CMS_HOOK_CORE_MANAGER
 			-- Manager handling hook subscriptions.
+		obsolete
+			"Use api.hooks [dec/2015]"
+		do
+			Result := api.hooks
+		end
 
 feature -- Menu: change
 
@@ -1019,7 +1022,7 @@ feature -- Generation
 			create {CMS_LOCAL_LINK} lnk.make ("Home", "")
 			lnk.set_weight (-10)
 			add_to_primary_menu (lnk)
-			hooks.invoke_menu_system_alter (menu_system, Current)
+			api.hooks.invoke_menu_system_alter (menu_system, Current)
 
 			if api.enabled_modules.count = 0 then
 				add_to_primary_menu (create {CMS_LOCAL_LINK}.make ("Install", "admin/install"))
@@ -1077,10 +1080,10 @@ feature -- Generation
 			custom_prepare (page)
 
 				-- Cms response
-			hooks.invoke_response_alter (Current)
+			api.hooks.invoke_response_alter (Current)
 
 				-- Cms values
-			hooks.invoke_value_table_alter (values, Current)
+			api.hooks.invoke_value_table_alter (values, Current)
 
 				-- Predefined values
 			page.register_variable (page, "page") -- DO NOT REMOVE
@@ -1249,6 +1252,34 @@ feature -- Generation
 			end
 			a_lnk.set_is_active (l_is_active)
 			a_lnk.set_is_forbidden (not has_permission_on_link (a_lnk))
+		end
+
+feature -- Helpers: cms link
+
+	local_link (a_title: READABLE_STRING_GENERAL; a_location: READABLE_STRING_8): CMS_LOCAL_LINK
+		do
+			create Result.make (a_title, a_location)
+		end
+
+	user_local_link (u: CMS_USER; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
+		do
+			if a_opt_title /= Void then
+				create Result.make (a_opt_title, user_url (u))
+			else
+				create Result.make (u.name, user_url (u))
+			end
+		end
+
+	user_html_link (u: CMS_USER): like link
+		do
+			Result := link (u.name, "user/" + u.id.out, Void)
+		end
+
+	user_url (u: CMS_USER): like url
+		require
+			u_with_id: u.has_id
+		do
+			Result := url ("user/" + u.id.out, Void)
 		end
 
 feature -- Execution

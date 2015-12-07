@@ -12,3 +12,4 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module ..\..\modules\recent_changes	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module ..\..\modules\feed_aggregator	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module ..\..\modules\google_search	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module ..\..\modules\taxonomy	--dir %ROC_CMS_DIR%

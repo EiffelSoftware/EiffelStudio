@@ -45,6 +45,7 @@ feature -- HTTP Methods
 			lst: ARRAYED_LIST [CMS_MODULE]
 			l_denied: BOOLEAN
 		do
+				--| FIXME: improve the installer.
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			if attached api.setup.string_8_item ("admin.installation_access") as l_access then
 				if l_access.is_case_insensitive_equal ("none") then
@@ -77,7 +78,7 @@ feature -- HTTP Methods
 						lst.force (l_module)
 					end
 				end
-				api.install
+				api.install_all_modules
 				across
 					lst as ic
 				loop

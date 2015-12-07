@@ -87,7 +87,6 @@ feature {NONE} -- Switches
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
-		]"rt.eiffel.com
 		]"
 
 end

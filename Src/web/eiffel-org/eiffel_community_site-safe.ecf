@@ -22,6 +22,7 @@
 		<library name="cms_feed_aggregator_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
 		<library name="cms_google_search_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\google_search\google_search-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
+		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy-safe.ecf" readonly="false"/>
 		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
 <!--
 		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false"/>

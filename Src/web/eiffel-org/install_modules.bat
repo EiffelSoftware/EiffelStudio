@@ -14,6 +14,7 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\recent_changes	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\feed_aggregator	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\google_search	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module %ROC_CMS_SRC%\modules\taxonomy	--dir %ROC_CMS_DIR%
 
 %ROC_CMD% install --module modules\codeboard	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\contact	--dir %ROC_CMS_DIR%

@@ -11,7 +11,7 @@ inherit
 		rename
 			module_api as wdocs_api
 		redefine
-			register_hooks,
+			setup_hooks,
 			initialize,
 			wdocs_api,
 			permissions
@@ -165,15 +165,15 @@ feature -- Router
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
+			auto_subscribe_to_hooks (a_hooks)
 
 				-- Module specific hook, if available.
-			a_response.hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
 
-			a_response.hooks.subscribe_to_cache_hook (Current)
+			a_hooks.subscribe_to_cache_hook (Current)
 		end
 
 feature {NONE} -- Config

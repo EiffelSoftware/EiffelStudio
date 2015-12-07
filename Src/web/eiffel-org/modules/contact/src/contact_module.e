@@ -15,7 +15,7 @@ inherit
 		rename
 			module_api as contact_api
 		redefine
-			register_hooks,
+			setup_hooks,
 			is_installed,
 			install,
 			initialize,
@@ -161,11 +161,11 @@ feature -- Recaptcha
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
-			a_response.hooks.subscribe_to_block_hook (Current)
+			auto_subscribe_to_hooks (a_hooks)
+			a_hooks.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hooks

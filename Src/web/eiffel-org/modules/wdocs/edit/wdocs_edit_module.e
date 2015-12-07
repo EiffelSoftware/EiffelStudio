@@ -9,7 +9,7 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks,
+			setup_hooks,
 			permissions
 		end
 
@@ -175,10 +175,10 @@ feature -- Handlers
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
+			auto_subscribe_to_hooks (a_hooks)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)

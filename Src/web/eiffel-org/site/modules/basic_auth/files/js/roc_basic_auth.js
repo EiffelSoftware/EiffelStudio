@@ -11,7 +11,7 @@ ROC_AUTH.login = function() {
     var username = form.username.value;
     var password = form.password.value;
 	  //var host = form.host.value;
-  	var origin = window.location.origin + window.location.pathname;
+	var origin = window.location.origin + window.location.pathname;
     var _login = function(){
 
  

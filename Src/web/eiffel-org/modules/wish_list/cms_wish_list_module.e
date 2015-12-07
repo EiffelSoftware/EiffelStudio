@@ -12,7 +12,7 @@ inherit
 			module_api as wish_list_api
 		redefine
 			filters,
-			register_hooks,
+			setup_hooks,
 			initialize,
 			install,
 			wish_list_api,
@@ -218,12 +218,11 @@ feature -- Security
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
+			auto_subscribe_to_hooks (a_hooks)
 		end
-
 
 	response_alter (a_response: CMS_RESPONSE)
 			-- <Precursor>

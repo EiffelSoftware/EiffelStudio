@@ -107,8 +107,11 @@ feature -- Properties
 
 	is_expanded: BOOLEAN
 			-- Is the type expanded?
+		local
+			l_mark: like declaration_mark
 		do
-			Result := has_expanded_mark or else (has_no_mark and then base_class.is_expanded)
+			l_mark := declaration_mark
+			Result := l_mark = expanded_mark or else (l_mark = no_mark and then class_declaration_mark = expanded_mark)
 		end
 
 	is_ephemeral: BOOLEAN
@@ -119,8 +122,11 @@ feature -- Properties
 
 	is_reference: BOOLEAN
 			-- Is the type a reference type?
+		local
+			l_mark: like declaration_mark
 		do
-			Result := has_reference_mark or else (has_no_mark and then not base_class.is_expanded)
+			l_mark := declaration_mark
+			Result := l_mark = reference_mark or else (l_mark = no_mark and then class_declaration_mark = no_mark)
 		end
 
 	is_full_named_type: BOOLEAN
@@ -179,8 +185,6 @@ feature -- Comparison
 		do
 			other_class_type ?= other
 			Result := other_class_type /= Void and then class_id = other_class_type.class_id
-				and then declaration_mark = other_class_type.declaration_mark
-				and then is_expanded = other_class_type.is_expanded
 				and then has_same_marks (other_class_type)
 		end
 

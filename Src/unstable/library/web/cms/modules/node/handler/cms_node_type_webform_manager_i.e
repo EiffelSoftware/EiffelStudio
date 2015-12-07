@@ -10,15 +10,34 @@ deferred class
 	CMS_NODE_TYPE_WEBFORM_MANAGER_I [G -> CMS_NODE]
 
 inherit
-	CMS_CONTENT_TYPE_WEBFORM_MANAGER
+	CMS_CONTENT_TYPE_WEBFORM_MANAGER [CMS_NODE]
+		rename
+			make as old_make
 		redefine
 			content_type
+		end
+
+feature {NONE} -- Initialization
+
+	make (a_type: like content_type; a_node_api: CMS_NODE_API)
+		do
+			node_api := a_node_api
+			old_make (a_type)
 		end
 
 feature -- Access
 
 	content_type: CMS_NODE_TYPE [G]
 			-- Associated content type.
+
+	cms_api: CMS_API
+			-- API for current instance of CMS.
+		do
+			Result := node_api.cms_api
+		end
+
+	node_api: CMS_NODE_API
+			-- Associated node API.
 
 feature -- Query			
 
@@ -57,11 +76,18 @@ feature -- Node ...
 
 feature -- Output
 
-	append_html_output_to (a_node: CMS_NODE; a_response: NODE_RESPONSE)
+	append_content_as_html_to_page (a_node: G; a_response: NODE_RESPONSE)
 			-- Append an html representation of `a_node' to response `a_response'.
 		require
 			has_valid_node_type (a_node)
-		deferred
+		local
+			s: STRING
+		do
+			create s.make_empty
+			a_response.set_value (a_node, "node")
+			a_response.set_title (a_node.title)
+			append_content_as_html_to (a_node, False, s, a_response)
+			a_response.set_main_content (s)
 		end
 
 end

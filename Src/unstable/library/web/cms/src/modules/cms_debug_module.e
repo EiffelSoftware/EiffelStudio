@@ -9,7 +9,7 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks
+			setup_hooks
 		end
 
 	CMS_HOOK_BLOCK
@@ -47,11 +47,11 @@ feature -- Router
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
-			a_response.hooks.subscribe_to_block_hook (Current)
+			auto_subscribe_to_hooks (a_hooks)
+			a_hooks.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hooks
@@ -71,7 +71,7 @@ feature -- Hooks
 			create s.make_empty
 			dbg.append_information_to (a_response.request, a_response.response, s)
 			append_info_to ("Storage", a_response.api.storage.generator, a_response, s)
-			create b.make ("debug-info", "Debug", s, a_response.formats.plain_text)
+			create b.make ("debug-info", "Debug", s, a_response.api.formats.plain_text)
 			b.add_condition (create {CMS_BLOCK_EXPRESSION_CONDITION}.make_none)
 			a_response.add_block (b, "footer")
 		end

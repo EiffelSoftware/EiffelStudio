@@ -96,7 +96,7 @@ feature -- HTTP Methods
 							s.append (" <em>(trashed)</em>")
 						end
 						debug
-							if attached node_api.content_type (n.content_type) as ct then
+							if attached node_api.node_type (n.content_type) as ct then
 								s.append ("<span class=%"description%">")
 								s.append (html_encoded (ct.title))
 								s.append ("</span>")

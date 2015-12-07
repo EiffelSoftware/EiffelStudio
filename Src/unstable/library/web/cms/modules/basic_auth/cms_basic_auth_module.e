@@ -13,7 +13,7 @@ inherit
 	CMS_MODULE
 		redefine
 			filters,
-			register_hooks
+			setup_hooks
 		end
 
 	CMS_HOOK_AUTO_REGISTER
@@ -101,12 +101,12 @@ feature {NONE} -- Implementation: routes
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_response)
-			a_response.hooks.subscribe_to_block_hook (Current)
-			a_response.hooks.subscribe_to_value_table_alter_hook (Current)
+			auto_subscribe_to_hooks (a_hooks)
+			a_hooks.subscribe_to_block_hook (Current)
+			a_hooks.subscribe_to_value_table_alter_hook (Current)
 		end
 
 feature -- Hooks

@@ -48,8 +48,8 @@ feature -- Forms ...
 			if a_node /= Void then
 				ta.set_text_value (a_node.content)
 			end
-			ta.set_label ("Content")
-			ta.set_description ("This is the main content")
+			ta.set_label (response.translation ("Content", Void))
+			ta.set_description (response.translation ("This is the main content", Void))
 			ta.set_is_required (False)
 
 				-- Summary
@@ -61,8 +61,8 @@ feature -- Forms ...
 			if a_node /= Void then
 				sum.set_text_value (a_node.summary)
 			end
-			sum.set_label ("Summary")
-			sum.set_description ("Text displayed in short view.")
+			sum.set_label (response.translation ("Summary", Void))
+			sum.set_description (response.translation ("Text displayed in short view.", Void))
 			sum.set_is_required (False)
 
 			create fset.make
@@ -93,7 +93,228 @@ feature -- Forms ...
 			f.extend (fset)
 
 				-- Path alias		
+			populate_form_with_taxonomy (response, f, a_node)
 			populate_form_with_path_alias (response, f, a_node)
+		end
+
+	populate_form_with_taxonomy (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
+		local
+			ti: detachable WSF_FORM_TEXT_INPUT
+			w_set: WSF_FORM_FIELD_SET
+			w_select: WSF_FORM_SELECT
+			w_opt: WSF_FORM_SELECT_OPTION
+			w_cb: WSF_FORM_CHECKBOX_INPUT
+			w_voc_set: WSF_FORM_FIELD_SET
+			s: STRING_32
+			voc: CMS_VOCABULARY
+			t: detachable CMS_TERM
+			l_terms: detachable CMS_TERM_COLLECTION
+			l_has_edit_permission: BOOLEAN
+		do
+			if
+				attached {CMS_TAXONOMY_API} response.api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then
+				attached l_taxonomy_api.vocabularies_for_type (content_type.name) as l_vocs and then not l_vocs.is_empty
+			then
+
+				l_has_edit_permission := response.has_permissions (<<"update any taxonomy", "update " + content_type.name + " taxonomy">>)
+
+				-- Handle Taxonomy fields, if any associated with `content_type'.
+				create w_set.make
+				w_set.add_css_class ("taxonomy")
+				l_vocs.sort
+				across
+					l_vocs as vocs_ic
+				loop
+					voc := vocs_ic.item
+					l_terms := Void
+					if a_node /= Void and then a_node.has_id then
+						l_terms := l_taxonomy_api.terms_of_entity (a_node.content_type, a_node.id.out, voc)
+						if l_terms /= Void then
+							l_terms.sort
+						end
+					end
+					create w_voc_set.make
+					w_set.extend (w_voc_set)
+
+					if voc.is_tags then
+						w_voc_set.set_legend (response.translation (voc.name, Void))
+
+						create ti.make ({STRING_32} "taxonomy_terms[" + voc.name + "]")
+						w_voc_set.extend (ti)
+						if voc.is_term_required then
+							ti.enable_required
+						end
+						if attached voc.description as l_desc then
+							ti.set_description (response.html_encoded (response.translation (l_desc, Void)))
+						else
+							ti.set_description (response.html_encoded (response.translation (voc.name, Void)))
+						end
+						ti.set_size (70)
+						if l_terms /= Void then
+							create s.make_empty
+							across
+								l_terms as ic
+							loop
+								t := ic.item
+								if not s.is_empty then
+									s.append_character (',')
+									s.append_character (' ')
+								end
+								if ic.item.text.has (' ') then
+									s.append_character ('"')
+									s.append (t.text)
+									s.append_character ('"')
+								else
+									s.append (t.text)
+								end
+							end
+							ti.set_text_value (s)
+						end
+						if not l_has_edit_permission then
+							ti.set_is_readonly (True)
+						end
+					else
+						l_taxonomy_api.fill_vocabularies_with_terms (voc)
+						if not voc.terms.is_empty then
+							if voc.multiple_terms_allowed then
+								if attached voc.description as l_desc then
+									w_voc_set.set_legend (response.html_encoded (l_desc))
+								else
+									w_voc_set.set_legend (response.html_encoded (voc.name))
+								end
+								across
+									voc as voc_terms_ic
+								loop
+									t := voc_terms_ic.item
+									create w_cb.make_with_value ({STRING_32} "taxonomy_terms[" + voc.name + "]", t.text)
+									w_voc_set.extend (w_cb)
+									if l_terms /= Void and then across l_terms as ic some ic.item.text.same_string (t.text) end then
+										w_cb.set_checked (True)
+									end
+									if not l_has_edit_permission then
+										w_cb.set_is_readonly (True)
+									end
+								end
+							else
+								create w_select.make ({STRING_32} "taxonomy_terms[" + voc.name + "]")
+								w_voc_set.extend (w_select)
+
+								if attached voc.description as l_desc then
+									w_select.set_description (response.html_encoded (l_desc))
+								else
+									w_select.set_description (response.html_encoded (voc.name))
+								end
+								w_voc_set.set_legend (response.html_encoded (voc.name))
+
+								across
+									voc as voc_terms_ic
+								loop
+									t := voc_terms_ic.item
+									create w_opt.make (response.html_encoded (t.text), response.html_encoded (t.text))
+									w_select.add_option (w_opt)
+
+									if l_terms /= Void and then across l_terms as ic some ic.item.text.same_string (t.text) end then
+										w_opt.set_is_selected (True)
+									end
+								end
+								if not l_has_edit_permission then
+									w_select.set_is_readonly (True)
+								end
+							end
+						end
+					end
+				end
+
+				f.submit_actions.extend (agent taxonomy_submit_action (response, l_taxonomy_api, l_vocs, a_node, ?))
+
+				if
+					attached f.fields_by_name ("title") as l_title_fields and then
+					attached l_title_fields.first as l_title_field
+				then
+					f.insert_after (w_set, l_title_field)
+				else
+					f.extend (w_set)
+				end
+			end
+		end
+
+	taxonomy_submit_action (a_response: CMS_RESPONSE; a_taxonomy_api: CMS_TAXONOMY_API; a_vocs: CMS_VOCABULARY_COLLECTION; a_node: detachable CMS_NODE fd: WSF_FORM_DATA)
+		require
+			vocs_not_empty: not a_vocs.is_empty
+		local
+			l_voc_name: READABLE_STRING_32
+			l_terms_to_remove: ARRAYED_LIST [CMS_TERM]
+			l_new_terms: LIST [READABLE_STRING_32]
+			l_text: READABLE_STRING_GENERAL
+			l_found: BOOLEAN
+			t: detachable CMS_TERM
+		do
+			if
+				a_node /= Void and then a_node.has_id and then
+				attached fd.table_item ("taxonomy_terms") as fd_terms
+			then
+				across
+					fd_terms.values as ic
+				loop
+					if attached {WSF_STRING} ic.item as l_string then
+						l_voc_name := ic.key
+						l_new_terms := a_taxonomy_api.splitted_string (l_string.value, ',')
+						if attached a_vocs.item_by_name (l_voc_name) as voc then
+							if a_response.has_permissions (<<{STRING_32} "update any taxonomy", {STRING_32} "update " + content_type.name + " taxonomy">>) then
+								create l_terms_to_remove.make (0)
+								if attached a_taxonomy_api.terms_of_entity (content_type.name, a_node.id.out, voc) as l_existing_terms then
+									across
+										l_existing_terms as t_ic
+									loop
+										l_text := t_ic.item.text
+										from
+											l_found := False
+											l_new_terms.start
+										until
+											l_new_terms.after
+										loop
+											if l_new_terms.item.same_string_general (l_text) then
+													-- Already associated with term `t_ic.text'.
+												l_found := True
+												l_new_terms.remove
+											else
+												l_new_terms.forth
+											end
+										end
+										if not l_found then
+												-- Remove term
+											l_terms_to_remove.force (t_ic.item)
+										end
+									end
+									across
+										l_terms_to_remove as t_ic
+									loop
+										a_taxonomy_api.unassociate_term_from_entity (t_ic.item, content_type.name, a_node.id.out)
+									end
+								end
+								across
+									l_new_terms as t_ic
+								loop
+									t := a_taxonomy_api.term_by_text (t_ic.item, voc)
+									if
+										t = Void and voc.is_tags
+									then
+											-- Create new term!
+										create t.make (t_ic.item)
+										a_taxonomy_api.save_term (t, voc)
+										if a_taxonomy_api.has_error then
+											t := Void
+										end
+									end
+									if t /= Void then
+										a_taxonomy_api.associate_term_with_entity (t, content_type.name, a_node.id.out)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
 		end
 
 	populate_form_with_path_alias (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
@@ -179,7 +400,7 @@ feature -- Forms ...
 			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
 				f := f_format
 			else
-				f := response.formats.default_format
+				f := cms_api.formats.default_format
 			end
 
 			-- Update node with summary and body content
@@ -243,7 +464,7 @@ feature -- Forms ...
 			elseif a_node /= Void and then attached a_node.format as s_format and then attached response.api.format (s_format) as f_format then
 				f := f_format
 			else
-				f := response.formats.default_format
+				f := cms_api.formats.default_format
 			end
 
 			-- Update node with summary and content
@@ -255,106 +476,125 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_html_output_to (a_node: CMS_NODE; a_response: NODE_RESPONSE)
+	append_content_as_html_to (a_node: G; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
 			-- <Precursor>
 		local
-			lnk: CMS_LOCAL_LINK
+			lnk: detachable CMS_LOCAL_LINK
 			hdate: HTTP_DATE
-			s: STRING
-			node_api: CMS_NODE_API
+			l_node_api: CMS_NODE_API
 		do
-			node_api := a_response.node_api
-
-			a_response.set_value (a_node, "node")
+			l_node_api := node_api
 
 				-- Show tabs only if a user is authenticated.
-			if attached a_response.user as l_user then
-				lnk := a_response.node_local_link (a_node, a_response.translation ("View", Void))
+			if
+				not is_teaser and then
+				a_response /= Void and then
+				attached a_response.user as l_user
+			then
+				lnk := a_node.link
+				if lnk /= Void then
+					lnk := a_response.local_link (a_response.translation ("View", Void), lnk.location)
+				else
+					lnk := a_response.local_link (a_response.translation ("View", Void), l_node_api.node_path (a_node))
+				end
 				lnk.set_weight (1)
 				a_response.add_to_primary_tabs (lnk)
 
-
 				if a_node.status = {CMS_NODE_API}.trashed then
-					create lnk.make ("Delete", node_api.node_path (a_node) + "/delete")
+					create lnk.make ("Delete", l_node_api.node_path (a_node) + "/delete")
 					lnk.set_weight (2)
 					a_response.add_to_primary_tabs (lnk)
 				elseif a_node.has_id then
 						-- Node in {{CMS_NODE_API}.published} or {CMS_NODE_API}.not_published} status.
-					create lnk.make ("Edit", node_api.node_path (a_node) + "/edit")
+					create lnk.make ("Edit", l_node_api.node_path (a_node) + "/edit")
 					lnk.set_weight (2)
 					a_response.add_to_primary_tabs (lnk)
 					if
-						node_api.has_permission_for_action_on_node ("view revisions", a_node, l_user)
+						l_node_api.has_permission_for_action_on_node ("view revisions", a_node, l_user)
 					then
-						create lnk.make ("Revisions", node_api.node_path (a_node) + "/revision")
+						create lnk.make ("Revisions", l_node_api.node_path (a_node) + "/revision")
 						lnk.set_weight (3)
 						a_response.add_to_primary_tabs (lnk)
 					end
 
 					if
-						node_api.has_permission_for_action_on_node ("trash", a_node, l_user)
+						l_node_api.has_permission_for_action_on_node ("trash", a_node, l_user)
 					then
-						create lnk.make ("Move to trash", node_api.node_path (a_node) + "/trash")
+						create lnk.make ("Move to trash", l_node_api.node_path (a_node) + "/trash")
 						lnk.set_weight (3)
 						a_response.add_to_primary_tabs (lnk)
 					end
 				end
 			end
-			create s.make_empty
-			s.append ("<div class=%"cms-node node-" + a_node.content_type + "%">")
-			s.append ("<div class=%"info%"> ")
+			a_output.append ("<div class=%"")
+			if is_teaser then
+				a_output.append (" cms-teaser")
+			end
+			a_output.append ("cms-node node-" + a_node.content_type + "%">")
+
+			a_output.append ("<div class=%"info%"> ")
 			if attached a_node.author as l_author then
-				s.append (" by ")
-				s.append (a_response.html_encoded (l_author.name))
+				a_output.append (" by ")
+				a_output.append (l_node_api.html_encoded (l_author.name))
 			end
 			if attached a_node.modification_date as l_modified then
-				s.append (" (modified: ")
+				a_output.append (" (modified: ")
 				create hdate.make_from_date_time (l_modified)
-				s.append (hdate.yyyy_mmm_dd_string)
-				s.append (")")
+				a_output.append (hdate.yyyy_mmm_dd_string)
+				a_output.append (")")
 			end
-			s.append ("</div>")
+			a_output.append ("</div>")
 
+			if
+				a_response /= Void and then
+				attached {CMS_TAXONOMY_API} cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then
+				attached l_taxonomy_api.vocabularies_for_type (content_type.name) as vocs and then not vocs.is_empty
+			then
+				vocs.sort
+				across
+					vocs as ic
+				loop
+					if
+						attached l_taxonomy_api.terms_of_entity (content_type.name, a_node.id.out, ic.item) as l_terms and then
+						not l_terms.is_empty
+					then
+						a_output.append ("<ul class=%"taxonomy term-" + ic.item.id.out + "%">")
+						a_output.append (l_node_api.html_encoded (ic.item.name))
+						a_output.append (": ")
+						across
+							l_terms as t_ic
+						loop
+							a_output.append ("<li>")
+							a_response.append_link_to_html (t_ic.item.text, "taxonomy/term/" + t_ic.item.id.out, Void, a_output)
+							a_output.append ("</li>")
+						end
+						a_output.append ("</ul>%N")
+					end
+				end
+			end
 
 			-- We don't show the summary on the detail page, since its just a short view of the full content. Otherwise we would write the same thing twice.
 			-- The usage of the summary is to give a short overview in the list of nodes or for the meta tag "description"
-
---			if attached a_node.summary as l_summary then
---				s.append ("<p class=%"summary%">")
---				if attached node_api.cms_api.format (a_node.format) as f then
---					append_formatted_output (l_content, f, s)
---				else
---					append_formatted_output (l_content, a_response.formats.default_format, s)
---				end
-
---				s.append ("</p>")
-
---			end
-
-			if attached a_node.content as l_content then
-				s.append ("<p class=%"content%">")
-				if attached node_api.cms_api.format (a_node.format) as f then
-					append_formatted_output (l_content, f, s)
-				else
-					append_formatted_output (l_content, a_response.formats.default_format, s)
+			if is_teaser then
+				if attached a_node.summary as l_summary then
+					a_output.append ("<p class=%"summary%">")
+					if attached cms_api.format (a_node.format) as f then
+						append_formatted_content_to (l_summary, f, a_output)
+					else
+						append_formatted_content_to (l_summary, cms_api.formats.default_format, a_output)
+					end
+					a_output.append ("</p>")
 				end
-
-				s.append ("</p>")
+			elseif attached a_node.content as l_content then
+				a_output.append ("<p class=%"content%">")
+				if attached cms_api.format (a_node.format) as f then
+					append_formatted_content_to (l_content, f, a_output)
+				else
+					append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
+				end
+				a_output.append ("</p>")
 			end
-			s.append ("</div>")
-
-			a_response.set_title (a_node.title)
-			a_response.set_main_content (s)
-		end
-
-	append_formatted_output (a_content: READABLE_STRING_GENERAL; a_format: CONTENT_FORMAT; a_output: STRING_8)
-			-- Format `a_content' with format `a_format'.
-		do
-			if a_content.is_valid_as_string_8 then
-				a_output.append (a_format.formatted_output (a_content.to_string_8))
-			else
-				a_format.append_formatted_to (a_content, a_output)
-			end
+			a_output.append ("</div>")
 		end
 
 end

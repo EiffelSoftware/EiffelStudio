@@ -68,6 +68,10 @@ feature -- CMS modules
 			create {CMS_BLOG_MODULE} m.make
 			a_setup.register_module (m)
 
+				-- Taxonomy
+			create {CMS_TAXONOMY_MODULE} m.make
+			a_setup.register_module (m)
+
 				-- Recent changes
 			create {CMS_RECENT_CHANGES_MODULE} m.make
 			a_setup.register_module (m)

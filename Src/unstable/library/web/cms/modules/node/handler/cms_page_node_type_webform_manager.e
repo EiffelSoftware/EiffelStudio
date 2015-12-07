@@ -10,7 +10,7 @@ inherit
 	CMS_NODE_TYPE_WEBFORM_MANAGER [CMS_PAGE]
 		redefine
 			content_type,
-			append_html_output_to,
+			append_content_as_html_to,
 			populate_form,
 			new_node,
 			update_node
@@ -102,27 +102,27 @@ feature -- Forms ...
 
 	parent_validation (a_response: NODE_RESPONSE; fd: WSF_FORM_DATA)
 		local
-			node_api: CMS_NODE_API
+			l_node_api: CMS_NODE_API
 			l_parent_id: INTEGER_64
 			nid: INTEGER_64
 			l_parent_node: detachable CMS_NODE
 		do
-			node_api := a_response.node_api
+			l_node_api := node_api
 			if attached fd.integer_item ("select_parent_node") as s_parent_node then
 				l_parent_id := s_parent_node.to_integer_64
 			else
 				l_parent_id := 0
 			end
 			if l_parent_id > 0 then
-				l_parent_node := node_api.node (l_parent_id)
+				l_parent_node := l_node_api.node (l_parent_id)
 				if l_parent_node = Void then
 					fd.report_invalid_field ("select_parent_node", "Invalid parent, not found id #" + l_parent_id.out)
 				else
 					nid := a_response.node_id_path_parameter
 					if
 						nid > 0 and then
-						attached node_api.node (nid) as l_node and then
-						node_api.is_node_a_parent_of (l_node, l_parent_node)
+						attached l_node_api.node (nid) as l_node and then
+						l_node_api.is_node_a_parent_of (l_node, l_parent_node)
 					then
 						fd.report_invalid_field ("select_parent_node", "Invalid parent due to cycle (node #" + nid.out + " is already a parent of node #" + l_parent_id.out)
 					end
@@ -137,50 +137,51 @@ feature -- Forms ...
 
 feature -- Output
 
-	append_html_output_to (a_node: CMS_NODE; a_response: NODE_RESPONSE)
+	append_content_as_html_to (a_node: CMS_PAGE; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
 			-- <Precursor>
 		local
-			s: STRING
-			node_api: CMS_NODE_API
+			l_node_api: CMS_NODE_API
 			lnk: CMS_LOCAL_LINK
 		do
-			node_api := a_response.node_api
-			Precursor (a_node, a_response)
-
-			if a_node.has_id and then not a_node.is_trashed then
-				if node_api.has_permission_for_action_on_node ("create", a_node, a_response.user) then
-					create lnk.make ("Add Child", "node/add/page?parent=" + a_node.id.out)
-					lnk.set_weight (3)
-					a_response.add_to_primary_tabs (lnk)
-				end
-			end
-
-			if attached a_response.main_content as l_main_content then
-				s := l_main_content
-			else
-				create s.make_empty
-			end
-
-			if attached {CMS_PAGE} a_node as l_node_page then
-				s.append ("<ul class=%"page-navigation%">")
-				if attached l_node_page.parent as l_parent_node then
-					s.append ("<li class=%"page-parent%">Go to parent page ")
-					s.append (a_response.link (l_parent_node.title, a_response.node_api.node_path (l_parent_node), Void))
-					s.append ("</li>")
-				end
-				if attached node_api.children (a_node) as l_children then
-					across
-						l_children as ic
-					loop
-						s.append ("<li>")
-						s.append (a_response.link (ic.item.title, a_response.node_api.node_path (ic.item), Void))
-						s.append ("</li>")
+			Precursor (a_node, is_teaser, a_output, a_response)
+			
+			if not is_teaser then
+				l_node_api := node_api
+				if
+					a_response /= Void and then
+					a_node.has_id and then not a_node.is_trashed
+				then
+					if
+						l_node_api.has_permission_for_action_on_node ("create", a_node, a_response.user)
+					then
+						create lnk.make ("Add Child", "node/add/page?parent=" + a_node.id.out)
+						lnk.set_weight (3)
+						a_response.add_to_primary_tabs (lnk)
 					end
 				end
-				s.append ("</ul>")
-			end
 
-			a_response.set_main_content (s)
+				if
+					a_response /= Void and then
+					attached {CMS_PAGE} a_node as l_node_page
+				then
+					a_output.append ("<ul class=%"page-navigation%">")
+					if attached l_node_page.parent as l_parent_node then
+						a_output.append ("<li class=%"page-parent%">Go to parent page ")
+						a_output.append (a_response.link (l_parent_node.title, l_node_api.node_path (l_parent_node), Void))
+						a_output.append ("</li>")
+					end
+					if attached l_node_api.children (a_node) as l_children then
+						across
+							l_children as ic
+						loop
+							a_output.append ("<li>")
+							a_output.append (a_response.link (ic.item.title, l_node_api.node_path (ic.item), Void))
+							a_output.append ("</li>")
+						end
+					end
+					a_output.append ("</ul>")
+				end
+			end
 		end
 
 end

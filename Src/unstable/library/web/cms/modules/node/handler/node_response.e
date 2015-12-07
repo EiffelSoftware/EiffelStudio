@@ -42,15 +42,6 @@ feature -- Helpers
 
 feature -- Helpers: cms link
 
-	user_local_link (u: CMS_USER; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
-		do
-			if a_opt_title /= Void then
-				create Result.make (a_opt_title, user_url (u))
-			else
-				create Result.make (u.name, user_url (u))
-			end
-		end
-
 	node_local_link (n: CMS_NODE; a_opt_title: detachable READABLE_STRING_GENERAL): CMS_LOCAL_LINK
 		do
 			if attached n.link as lnk then
@@ -59,16 +50,11 @@ feature -- Helpers: cms link
 				Result := node_api.node_link (n)
 			end
 			if a_opt_title /= Void and then not Result.title.same_string_general (a_opt_title) then
-				create Result.make (a_opt_title, Result.location)
+				Result := local_link (a_opt_title, Result.location)
 			end
 		end
 
 feature -- Helpers: html link
-
-	user_html_link (u: CMS_USER): like link
-		do
-			Result := link (u.name, "user/" + u.id.out, Void)
-		end
 
 	node_html_link (n: CMS_NODE; a_opt_title: detachable READABLE_STRING_GENERAL): like link
 		local
@@ -80,17 +66,9 @@ feature -- Helpers: html link
 				l_title := n.title
 			end
 			Result := link (l_title, node_api.node_path (n), Void)
-
 		end
 
 feature -- Helpers: URL		
-
-	user_url (u: CMS_USER): like url
-		require
-			u_with_id: u.has_id
-		do
-			Result := url ("user/" + u.id.out, Void)
-		end
 
 	node_url (n: CMS_NODE): like url
 		require

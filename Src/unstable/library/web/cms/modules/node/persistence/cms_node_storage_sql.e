@@ -383,7 +383,6 @@ feature -- Change: Node
 		local
 			l_parameters: STRING_TABLE [ANY]
 			l_time: DATE_TIME
-			l_sql_delete_node_aliases: STRING
 		do
 			sql_begin_transaction
 			create l_time.make_now_utc

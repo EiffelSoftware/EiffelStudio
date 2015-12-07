@@ -114,10 +114,10 @@ feature {NONE} -- Create a new node
 			if attached a_type.new_node (Void) as l_node then
 					-- create new node
 				f := new_edit_form (l_node, url (location, Void), "edit-" + a_type.name, a_type)
-				hooks.invoke_form_alter (f, fd, Current)
+				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.validation_actions.extend (agent edit_form_validate (?, b))
-					f.submit_actions.extend (agent edit_form_submit (?, l_node, a_type, b))
+					f.submit_actions.put_front (agent edit_form_submit (?, l_node, a_type, b))
 					f.process (Current)
 					fd := f.last_data
 				end
@@ -144,10 +144,10 @@ feature {NONE} -- Create a new node
 			fd: detachable WSF_FORM_DATA
 		do
 			f := new_edit_form (A_node, url (location, Void), "edit-" + a_type.name, a_type)
-			hooks.invoke_form_alter (f, fd, Current)
+			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent edit_form_validate (?, b))
-				f.submit_actions.extend (agent edit_form_submit (?, a_node, a_type, b))
+				f.submit_actions.put_front (agent edit_form_submit (?, a_node, a_type, b))
 				f.process (Current)
 				fd := f.last_data
 			end
@@ -175,7 +175,7 @@ feature {NONE} -- Create a new node
 		do
 			if a_node.is_trashed then
 				f := new_delete_form (a_node, url (location, Void), "delete-" + a_type.name, a_type)
-				hooks.invoke_form_alter (f, fd, Current)
+				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					f.process (Current)
 					fd := f.last_data
@@ -206,7 +206,7 @@ feature {NONE} -- Create a new node
 			fd: detachable WSF_FORM_DATA
 		do
 			f := new_trash_form (a_node, url (location, Void), "trash-" + a_type.name, a_type)
-			hooks.invoke_form_alter (f, fd, Current)
+			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)
 				fd := f.last_data

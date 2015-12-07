@@ -27,6 +27,16 @@ feature -- Access
 	api: detachable CMS_API assign set_api
 			-- Associated CMS API.
 
+feature -- Conversion
+
+	as_sql_storage: detachable CMS_STORAGE_SQL_I
+			-- SQL based variant of `Current' if possible.
+		do
+			if attached {CMS_STORAGE_SQL_I} Current as st then
+				Result := st
+			end
+		end
+
 feature -- Status report
 
 	is_available: BOOLEAN
@@ -59,4 +69,7 @@ feature -- Element change
 			api := a_api
 		end
 
+note
+	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -13,7 +13,7 @@ inherit
 			populate_form,
 			update_node,
 			new_node,
-			append_html_output_to
+			append_content_as_html_to
 		end
 
 create
@@ -76,34 +76,24 @@ feature -- form
 
 feature -- Output
 
-	append_html_output_to (a_node: CMS_NODE; a_response: NODE_RESPONSE)
+	append_content_as_html_to (a_node: CMS_BLOG; is_teaser: BOOLEAN; a_output: STRING; a_response: detachable CMS_RESPONSE)
 			-- <Precursor>
-		local
-			s: STRING
 		do
-			Precursor (a_node, a_response)
-			if attached a_response.main_content as l_main_content then
-				s := l_main_content
-			else
-				create s.make_empty
-			end
+			Precursor (a_node, is_teaser, a_output, a_response)
 
 			if attached {CMS_BLOG} a_node as l_blog_post then
 				if attached l_blog_post.tags as l_tags then
-					s.append ("<div><strong>Tags:</strong> ")
+					a_output.append ("<div><strong>Tags:</strong> ")
 					across
 						l_tags as ic
 					loop
-						s.append ("<span class=%"tag%">")
-						s.append (a_response.html_encoded (ic.item))
-						s.append ("</span> ")
+						a_output.append ("<span class=%"tag%">")
+						a_output.append (cms_api.html_encoded (ic.item))
+						a_output.append ("</span> ")
 					end
-					s.append ("</div>")
+					a_output.append ("</div>")
 				end
 			end
-			a_response.set_main_content (s)
 		end
-
-
 
 end

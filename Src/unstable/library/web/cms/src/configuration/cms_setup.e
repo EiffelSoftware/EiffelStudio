@@ -132,14 +132,16 @@ feature {NONE} -- Implementation: update
 				until
 					not a_module.is_enabled
 				loop
-					if
-						attached a_collection.item (ic.item) as mod and then
-						mod.is_enabled
-					then
-						update_module_status_within (mod, a_collection)
-					else
-							--| dependency not found or disabled
-						a_module.disable
+					if ic.item.is_required then
+						if
+							attached a_collection.item (ic.item.module_type) as mod and then
+							mod.is_enabled
+						then
+							update_module_status_within (mod, a_collection)
+						else
+								--| dependency not found or disabled
+							a_module.disable
+						end
 					end
 				end
 			end

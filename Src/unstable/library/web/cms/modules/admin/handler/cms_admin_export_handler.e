@@ -69,8 +69,7 @@ feature -- Execution
 					else
 						create l_exportation_parameters.make (api.site_location.extended ("export").extended ((create {DATE_TIME}.make_now_utc).formatted_out ("yyyy-[0]mm-[0]dd---hh24-[0]mi-[0]ss")))
 					end
-
-					l_response.hooks.invoke_export_to (Void, l_exportation_parameters, l_response)
+					api.hooks.invoke_export_to (Void, l_exportation_parameters, l_response)
 					l_response.add_notice_message ("All data exported (if allowed)!")
 					create s.make_empty
 					across

@@ -9,7 +9,7 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			register_hooks,
+			setup_hooks,
 			initialize,
 			is_installed,
 			install,
@@ -24,6 +24,8 @@ inherit
 	CMS_HOOK_BLOCK
 
 	CMS_RECENT_CHANGES_HOOK
+
+	CMS_TAXONOMY_HOOK
 
 	CMS_HOOK_EXPORT
 
@@ -41,6 +43,9 @@ feature {NONE} -- Initialization
 			description := "Service to manage content based on 'node'"
 			package := "core"
 			config := a_setup
+				-- Optional dependencies, mainly for information.
+			put_dependency ({CMS_RECENT_CHANGES_MODULE}, False)
+			put_dependency ({CMS_TAXONOMY_MODULE}, False)
 		end
 
 	config: CMS_SETUP
@@ -63,7 +68,7 @@ feature {CMS_API} -- Module Initialization
 			Precursor (a_api)
 
 				-- Storage initialization
-			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_storage_sql then
+			if attached a_api.storage.as_sql_storage as l_storage_sql then
 				create {CMS_NODE_STORAGE_SQL} l_node_storage.make (l_storage_sql)
 			else
 				-- FIXME: in case of NULL storage, should Current be disabled?
@@ -111,7 +116,7 @@ feature {CMS_API} -- Module management
 			-- Is Current module installed?
 		do
 			Result := Precursor (a_api)
-			if Result and attached {CMS_STORAGE_SQL_I} a_api.storage as l_sql_storage then
+			if Result and attached a_api.storage.as_sql_storage as l_sql_storage then
 				Result := l_sql_storage.sql_table_exists ("nodes") and
 					l_sql_storage.sql_table_exists ("page_nodes")
 			end
@@ -120,7 +125,7 @@ feature {CMS_API} -- Module management
 	install (a_api: CMS_API)
 		do
 				-- Schema
-			if attached {CMS_STORAGE_SQL_I} a_api.storage as l_sql_storage then
+			if attached a_api.storage.as_sql_storage as l_sql_storage then
 				l_sql_storage.sql_execute_file_script (a_api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended (name).appended_with_extension ("sql")), Void)
 			end
 			Precursor {CMS_MODULE}(a_api)
@@ -155,7 +160,7 @@ feature -- Access
 
 			if attached node_api as l_node_api then
 				across
-					l_node_api.content_types as ic
+					l_node_api.node_types as ic
 				loop
 					l_type_name := ic.item.name
 					if not l_type_name.is_whitespace then
@@ -231,16 +236,17 @@ feature -- Access: router
 
 feature -- Hooks
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- <Precursor>
 		do
-			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_response.hooks.subscribe_to_block_hook (Current)
-			a_response.hooks.subscribe_to_response_alter_hook (Current)
-			a_response.hooks.subscribe_to_export_hook (Current)
+			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_block_hook (Current)
+			a_hooks.subscribe_to_response_alter_hook (Current)
+			a_hooks.subscribe_to_export_hook (Current)
 
 				-- Module specific hook, if available.
-			a_response.hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -282,7 +288,7 @@ feature -- Hooks
 				create perms.make (2)
 				perms.force ("create any node")
 				across
-					l_node_api.content_types as ic
+					l_node_api.node_types as ic
 				loop
 					perms.force ("create " + ic.item.name)
 				end
@@ -297,7 +303,7 @@ feature -- Hooks
 		do
 			if
 				attached node_api as l_node_api and then
-				attached l_node_api.content_types as l_types and then
+				attached l_node_api.node_types as l_types and then
 				not l_types.is_empty
 			then
 				create lst.make (l_types.count)
@@ -357,6 +363,51 @@ feature -- Hooks
 							-- FIXME: provide a visual indication!
 						end
 					end
+				end
+			end
+		end
+
+	populate_content_associated_with_term (t: CMS_TERM; a_contents: CMS_TAXONOMY_ENTITY_CONTAINER)
+		local
+			l_node_typenames: ARRAYED_LIST [READABLE_STRING_8]
+			nid: INTEGER_64
+			l_info_to_remove: ARRAYED_LIST [TUPLE [entity: READABLE_STRING_32; typename: detachable READABLE_STRING_32]]
+		do
+			if
+				attached node_api as l_node_api and then
+				attached l_node_api.node_types as l_node_types and then
+				not l_node_types.is_empty
+			then
+				create l_node_typenames.make (l_node_types.count)
+				across
+					l_node_types as ic
+				loop
+					l_node_typenames.force (ic.item.name)
+				end
+				create l_info_to_remove.make (0)
+				across
+					a_contents.taxonomy_info as ic
+				loop
+					if
+						attached ic.item.typename as l_typename and then
+						across l_node_typenames as t_ic some t_ic.item.same_string (l_typename) end
+					then
+						if ic.item.entity.is_integer then
+							nid := ic.item.entity.to_integer_64
+							if nid > 0 and then attached l_node_api.node (nid) as l_node then
+								if l_node.link = Void then
+									l_node.set_link (l_node_api.node_link (l_node))
+								end
+								a_contents.force (create {CMS_TAXONOMY_ENTITY}.make (l_node, l_node.modification_date))
+								l_info_to_remove.force (ic.item)
+							end
+						end
+					end
+				end
+				across
+					l_info_to_remove as ic
+				loop
+					a_contents.taxonomy_info.prune_all (ic.item)
 				end
 			end
 		end

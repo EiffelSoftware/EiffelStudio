@@ -90,3 +90,14 @@ ul.horizontal li {
   border: solid 1px red;
   padding: 5px 2px 5px 2px;
 }
+
+ul.taxonomy-entities {
+  list-style-type: none;
+  padding: 0;
+}
+ul.taxonomy-entities li {
+  padding: 0;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-top: dotted 1px #ccc;
+}

@@ -11,7 +11,7 @@ inherit
 		rename
 			module_api as recent_changes_api
 		redefine
-			register_hooks,
+			setup_hooks,
 			permissions
 		end
 
@@ -110,7 +110,7 @@ feature -- Hook
 		do
 			l_user := Void -- Public access for the feed!
 			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source)
-			if attached a_response.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
+			if attached a_response.api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
 				across
 					lst as ic
 				loop
@@ -236,7 +236,7 @@ feature -- Handler
 				create l_changes.make (l_size, l_until_date, l_filter_source)
 
 				create l_content.make (1024)
-				if attached r.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
+				if attached api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
 					create l_sources.make (lst.count)
 
 					across
@@ -397,12 +397,12 @@ feature -- Handler
 
 feature -- Hooks configuration
 
-	register_hooks (a_response: CMS_RESPONSE)
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			a_response.hooks.subscribe_to_menu_system_alter_hook (Current)
-			a_response.hooks.subscribe_to_response_alter_hook (Current)
-			a_response.hooks.subscribe_to_block_hook (Current)
+			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_response_alter_hook (Current)
+			a_hooks.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hook

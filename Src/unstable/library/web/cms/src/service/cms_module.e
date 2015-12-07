@@ -29,8 +29,8 @@ feature -- Access
 	version: STRING
 			-- Version of the module?
 
-	dependencies: detachable LIST [TYPE [CMS_MODULE]]
-			-- Optional dependencies.
+	dependencies: detachable LIST [TUPLE [module_type: TYPE [CMS_MODULE]; is_required: BOOLEAN]]
+			-- Optional declaration for dependencies.
 
 	permissions: LIST [READABLE_STRING_8]
 			-- List of permission ids, used by this module, and declared.
@@ -55,16 +55,22 @@ feature {CMS_API} -- Module Initialization
 		end
 
 	add_dependency (a_type: TYPE [CMS_MODULE])
-			-- Add dependency using type of module `a_type'.
-		local
-			deps: like dependencies
+			-- Add required dependency using type of module `a_type'.
 		do
-			deps := dependencies
-			if deps = Void then
-				create {ARRAYED_LIST [TYPE [CMS_MODULE]]} deps.make (1)
-				dependencies := deps
+			put_dependency (a_type, True)
+		end
+
+	put_dependency (a_type: TYPE [CMS_MODULE]; is_required: BOOLEAN)
+			-- Add required or optional dependency using type of module `a_type', based on `is_required' value.
+		local
+			lst: like dependencies
+		do
+			lst := dependencies
+			if lst = Void then
+				create {ARRAYED_LIST [TUPLE [module_type: TYPE [CMS_MODULE]; is_required: BOOLEAN]]} lst.make (1)
+				dependencies := lst
 			end
-			deps.force (a_type)
+			lst.force ([a_type, is_required])
 		end
 
 feature -- Status		
@@ -130,6 +136,15 @@ feature -- Router
 feature -- Hooks configuration
 
 	register_hooks (a_response: CMS_RESPONSE)
+		obsolete
+			"!UNSAFE!: it is highly recommended to update this module and use setup_hooks [Dec/2015]."
+		require
+			is_enabled: is_enabled
+		do
+			setup_hooks (a_response.api.hooks)
+		end
+
+	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		require
 			is_enabled: is_enabled

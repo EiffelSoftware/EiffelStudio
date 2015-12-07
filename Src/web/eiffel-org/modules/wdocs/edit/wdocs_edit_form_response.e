@@ -105,7 +105,7 @@ feature -- Execution
 					f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("bookid", l_bookid.as_string_32))
 				end
 
-				hooks.invoke_form_alter (f, fd, Current)
+				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					if l_bookid = Void then
 						add_error_message ("Missing book name information!")
@@ -180,7 +180,7 @@ feature -- Execution
 					f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("parent", pg.title))
 				end
 
-				hooks.invoke_form_alter (f, fd, Current)
+				api.hooks.invoke_form_alter (f, fd, Current)
 				if request.is_post_request_method then
 					if l_bookid = Void then
 						add_error_message ("Missing book name information!")

@@ -89,7 +89,7 @@ feature -- Process Edit
 		do
 			create b.make_empty
 			f := new_edit_form (a_category, url (location, Void), "edit-category")
-			hooks.invoke_form_alter (f, fd, Current)
+			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent new_form_validate (?, b))
 				f.submit_actions.extend (agent edit_form_submit (?, a_category, b))
@@ -122,7 +122,7 @@ feature -- Process Delete
 		do
 			create b.make_empty
 			f := new_delete_form (a_category, url (location, Void), "edit-category")
-			hooks.invoke_form_alter (f, fd, Current)
+			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.process (Current)
 				fd := f.last_data
@@ -155,7 +155,7 @@ feature -- Process New
 		do
 			create b.make_empty
 			f := new_edit_form (l_category, url (location, Void), "create-category")
-			hooks.invoke_form_alter (f, fd, Current)
+			api.hooks.invoke_form_alter (f, fd, Current)
 			if request.is_post_request_method then
 				f.validation_actions.extend (agent new_form_validate (?, b))
 				f.submit_actions.extend (agent edit_form_submit (?, l_category, b))

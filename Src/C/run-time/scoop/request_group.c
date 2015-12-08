@@ -73,7 +73,7 @@ rt_private rt_inline void bubble_sort (struct rt_private_queue** area, size_t co
 doc:	<routine name="rt_request_group_add" return_type="int" export="shared">
 doc:		<summary> Add a new supplier to the request group. This feature cannot be called any more after the first lock operation. </summary>
 doc:		<param name="self" type="struct rt_request_group*"> The request group struct. Must not be NULL. </param>
-doc:		<param name="a_client" type="struct rt_processor*"> The supplier processor to be added to this request group. Must not be NULL. </param>
+doc:		<param name="supplier" type="struct rt_processor*"> The supplier processor to be added to this request group. Must not be NULL. </param>
 doc:		<return> T_OK on success. T_NO_MORE_MEMORY in case of a memory allocation failure. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
@@ -108,8 +108,6 @@ doc:		<param name="self" type="struct rt_request_group*"> The request group stru
 doc:		<return> T_OK on success. T_NO_MORE_MEMORY if memory allocation fails, in which case the request group remains locked. </return>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
-doc:		<fixme> Instead of unlocking normally after the wait condition, we could have a special 'unlock-after-wait-condition-failure'.
-doc:			That way we can avoid sending unnecessary notifications after the evaluation of a wait condition. </fixme>
 doc:	</routine>
 */
 rt_shared int rt_request_group_wait (struct rt_request_group* self)
@@ -273,16 +271,13 @@ rt_shared void rt_request_group_unlock (struct rt_request_group* self, EIF_BOOLE
 
 	REQUIRE ("self_not_null", self);
 	REQUIRE ("lock_called", self->is_sorted);
-		/* Removed because unlock is sometimes called on unlocked objects due to a bug. */
-	/* REQUIRE ("locked", self->is_locked);*/
+	REQUIRE ("locked", self->is_locked);
 
-	if (self->is_locked) {
-			/* Unlock in the opposite order that they were locked */
-		for (; i >= 0; --i) {
-			rt_private_queue_unlock (rt_request_group_item (self, i), is_wait_condition_failure);
-		}
-		self->is_locked = 0;
- 	}
+		/* Unlock in the opposite order that they were locked */
+	for (; i >= 0; --i) {
+		rt_private_queue_unlock (rt_request_group_item (self, i), is_wait_condition_failure);
+	}
+	self->is_locked = 0;
 
 	ENSURE ("not_locked", !self->is_locked);
 }

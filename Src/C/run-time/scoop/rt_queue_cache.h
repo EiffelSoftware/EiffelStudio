@@ -86,10 +86,10 @@ doc:		</summary>
 doc:		<field name="owner" type="struct rt_processor*"> The owner of this queue_cache. </field>
 doc:		<field name="owned_queues" type="struct htable"> A hash table of private queues owned by this queue cache. Indexed by the processor ID of the supplier processor. </field>
 doc:		<field name="lock_stack" type="struct rt_vector_queue_cache*"> The locks of all queue_caches available to this cache. </field>
-doc:		<field name="storage" type="struct rt_vector_queue_cache"> A pre-made vector that can be used for lock_stack.
-doc:			This field is only present to avoid memory allocation during lock passing. </field>
+doc:		<field name="storage" type="struct rt_vector_queue_cache"> A pre-made vector that can be used for lock_stack. It is the 'native' stack which is used
+doc:			when a processor doesn't hold someone else's locks. </field>
 doc:		<fixme> The implementation can be rather inefficient when we have a recursion with separate callbacks. This is rare, but it can happen.
-doc: 			In the future we may need to change the implementation e.g. by not extending the lock_stack stack if we detect that the queue_cache to be inserted
+doc: 			In the future we may need to change the implementation e.g. by not extending the lock_stack if we detect that the queue_cache to be inserted
 doc:			is already in the stack. This probably needs some more data structures though to ensure correct behaviour on pop(). </fixme>
 doc:	</struct>
 */

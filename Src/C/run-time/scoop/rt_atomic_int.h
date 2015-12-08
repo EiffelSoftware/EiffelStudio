@@ -45,6 +45,10 @@
 #include "eif_posix_threads.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct rt_atomic_int {
 #if !defined EIF_HAS_ATOMIC
 	EIF_MUTEX_TYPE* lock;
@@ -87,6 +91,9 @@ rt_private rt_inline int rt_atomic_int_decrement_and_fetch (struct rt_atomic_int
 	return result;
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _rt_atomic_int_h_ */
 

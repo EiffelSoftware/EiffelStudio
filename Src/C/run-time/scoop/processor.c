@@ -442,11 +442,15 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 	while (!is_stopped) {
 		struct rt_message next_job;
 
-			/* Triggering the collection happens when all */
-			/* processors are idle. This is sufficient for */
-			/* program termination, but not sufficient for */
-			/* freeing threads to let new ones take their */
-			/* place. */
+			/* When all processors are idle, trigger a
+			 * garbage collection cycle. This is sufficient for
+			 * program termination, but it isn't useful to free
+			 * processors early, before RT_MAX_SCOOP_PROCESSOR_COUNT
+			 * has been reached.
+			 * TODO: Since the introduction of the early GC technique,
+			 * the mechanism here has become obsolete and can be
+			 * removed.
+			 */
 		if (decrement_and_fetch_active_processor_count() == 0
 			&& rt_message_channel_is_empty (&self->queue_of_queues)) {
 			plsc();
@@ -457,7 +461,14 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 		if (next_job.message_type == SCOOP_MESSAGE_ADD_QUEUE) {
 			increment_active_processor_count();
 			self->is_active = EIF_TRUE;
-			self->client = next_job.sender_processor->pid; /* TODO: This is the only place where we would need the client region ID instead of the processor ID. */
+				/* TODO: The information (self->client) is not used by SCOOP itself,
+				 * but may be used in the debugger. The idea is to display current
+				 * client region of a processor.
+				 * However, here we use the client processor instead, because we
+				 * don't have the region available. In the future it may be useful
+				 * to add a new field to rt_message or in the private queue that
+				 * shows the current client. */
+			self->client = next_job.sender_processor->pid;
 
 			rt_processor_process_private_queue (self, next_job.queue);
 

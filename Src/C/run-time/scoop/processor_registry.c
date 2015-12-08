@@ -43,21 +43,86 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 #include "rt_processor_registry.h"
 #include "rt_processor.h"
 #include "rt_scoop_helpers.h"
+#include "rt_atomic_int.h"
 
 #include "rt_assert.h"
 #include "eif_macros.h"
 #include "eif_scoop.h"
 #include "eif_atomops.h"
 
-/* The global processor_registry struct. */
-struct rt_processor_registry registry;
 
 RT_DECLARE_VECTOR (rt_passive_region_context_list, rt_global_context_t*)
-struct rt_passive_region_context_list dead_passive_regions;
 
 /* Private declarations. */
 rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc);
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid);
+
+
+
+/*
+doc:	<struct name="rt_processor_registry" export="shared">
+doc:		<summary> The processor registry struct is a singleton.
+doc:			It manages a processor's lifecycle, maintains a set of free
+doc:			processor identifiers, and manages a mapping from PID to
+doc:			processor objects.
+doc:		</summary>
+doc:		<field name="processor_lookup_table" type="struct rt_processor**"> The array used to map PIDs to processors. </field>
+doc:		<field name="free_pids" type="struct rt_identifier_set"> A set of free (unassigned) PIDs. </field>
+doc:		<field name="dead_passive_regions" type="rt_vector of rt_global_context_t*"> A vector of passive regions to be deleted. </field>
+doc:		<field name="processor_count" type="struct rt_atomic_int"> An atomic integer to keep track of currently alive processors. </field>
+doc:		<field name="all_done" type="EIF_BOOLEAN"> A boolean value indicating whether there are no more alive processors. Used by the root thread for program termination. </field>
+doc:		<field name="all_done_mutex" type="EIF_MUTEX_TYPE*"> A mutex to protect the all_done field. </field>
+doc:		<field name="all_done_cv" type="EIF_COND_TYPE*"> A condition variable for the root thread to wait for the all_done field to become true. </field>
+doc:		<fixme> Could it be that all_done and processor_count==0 contain the same information? </fixme>
+doc:	</struct>
+*/
+struct rt_processor_registry {
+	/* processor_lookup_table is stored outside the struct to allow inlining of rt_get_processor. */
+
+  struct rt_identifier_set free_pids;
+  struct rt_passive_region_context_list dead_passive_regions;
+
+  struct rt_atomic_int processor_count;
+
+  /* end of life notification */
+  volatile EIF_BOOLEAN all_done;
+  EIF_MUTEX_TYPE* all_done_mutex;
+  EIF_COND_TYPE* all_done_cv;
+};
+
+
+/*
+* Although the processor_lookup_table is accessed by several threads,
+* it is not necessary to synchronize the access. There are several
+* properties that make it unnecessary:
+*
+* Data race freedom:
+* - A new value is inserted by the creator thread after it received
+*   a new unique PID from the free_pids set.
+* - After creation, the field remains constant.
+* - The value is reset to NULL only by the thread behind the specified
+*   processor ID, after the garbage collector concluded that it is no
+*   longer referenced anywhere.
+* - The uniqueness of PIDs is guaranteed by the free_pids set. A new
+*   ID has to be acquired before adding an entry in 'processor_lookup_table', and it
+*   can only be released after resetting 'processor_lookup_table' to NULL.
+*
+* Visibility:
+* - Generally, x86 has strong visibility guarantees, and by creating
+*   initializing the processor object before adding it to 'processor_lookup_table'
+*   any other thread can see a consistent view.
+* - The update to the processor_lookup_table array itself is visible in the garbage collector,
+*   because the creator thread synchronizes with the GC thread prior to a cycle.
+* - The same applies during removal of a processor.
+* - Between the creator thread and the spawned thread, visibility is guaranteed
+*   because of the thread creation operation.
+* - In between processors, visibility is guaranteed because the creator first
+*   has to publish the root object of the new processor, and as soon as this
+*   object is visible by other threads the update is visible as well, thanks
+*   to the visibility guarantees of x86.
+*/
+struct rt_processor* processor_lookup_table [RT_MAX_SCOOP_PROCESSOR_COUNT];
+struct rt_processor_registry registry;
 
 /*
 doc:	<routine name="rt_processor_registry_init" return_type="int" export="shared">
@@ -75,12 +140,13 @@ rt_shared int rt_processor_registry_init (void)
 	int error = T_OK;
 	
 
-	rt_passive_region_context_list_init (&dead_passive_regions);
+	rt_passive_region_context_list_init (&self->dead_passive_regions);
 
 	self->all_done_mutex = NULL;
 	self->all_done_cv = NULL;
-	self->processor_count = 0;
 	self->all_done = EIF_FALSE; /* End of life notification. */
+
+	rt_atomic_int_init (&self->processor_count);
 	
 		/* Create and initialize the identifier set. */
 	error = rt_identifier_set_init (&self->free_pids, RT_MAX_SCOOP_PROCESSOR_COUNT);
@@ -102,14 +168,14 @@ rt_shared int rt_processor_registry_init (void)
 		EIF_SCP_PID i;	
 			/* Prepare the procs attribute. */
 		for (i = 0; i < RT_MAX_SCOOP_PROCESSOR_COUNT; i++) {
-			self->procs [i] = NULL;
+			processor_lookup_table [i] = NULL;
 		}
 		
 		CHECK ("processor_is_active", root_proc->is_active);
-		self->procs[0] = root_proc;
+		processor_lookup_table[0] = root_proc;
 		
 			/* Atomically increment processor_count (we start with 1 root processor). */
-		RTS_AI_I32 (&self->processor_count);
+		rt_atomic_int_increment (&self->processor_count);
 	}
 	
 	if (T_OK != error) {
@@ -142,7 +208,9 @@ rt_shared void rt_processor_registry_deinit (void)
 	}
 	rt_identifier_set_deinit (&self->free_pids);
 
-	rt_passive_region_context_list_deinit (&dead_passive_regions);
+	rt_passive_region_context_list_deinit (&self->dead_passive_regions);
+
+	rt_atomic_int_deinit (&self->processor_count);
 }
 
 
@@ -204,9 +272,9 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result, EIF_BOOL
 
 		if (T_OK == error) {
 				/* Update the internal bookkeeping structures. */
-			self->procs [pid] = new_processor;
+			processor_lookup_table [pid] = new_processor;
 			new_processor->is_passive_region = a_is_passive;
-			RTS_AI_I32 (&self->processor_count); /* Atomic increment */
+			rt_atomic_int_increment (&self->processor_count); /* Atomic increment */
 			*result = pid;
 		} else {
 				/* Processor allocation failed. Return the PID. */
@@ -320,7 +388,7 @@ rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid, rt_global_cont
 			}
 		}
 		if (to_be_removed->is_passive_region) {
-			RT_TRACE (rt_passive_region_context_list_extend (&dead_passive_regions, a_context)); /* TODO: Error handling */
+			RT_TRACE (rt_passive_region_context_list_extend (&registry.dead_passive_regions, a_context)); /* TODO: Error handling */
 		} else {
 				/* Send a shutdown signal such that the processor can terminate itself. */
 			rt_processor_shutdown (to_be_removed);
@@ -339,12 +407,13 @@ rt_shared void rt_processor_registry_cleanup (void)
 {
 	rt_global_context_t* l_context = NULL;
 	struct rt_processor* l_processor = NULL;
+	struct rt_passive_region_context_list* l_procs = &registry.dead_passive_regions;
 
-	while (rt_passive_region_context_list_count (&dead_passive_regions) != 0) {
+	while (rt_passive_region_context_list_count (l_procs) != 0) {
 
 			/* Pop one passive region element. */
-		l_context = rt_passive_region_context_list_last (&dead_passive_regions);
-		rt_passive_region_context_list_remove_last (&dead_passive_regions);
+		l_context = rt_passive_region_context_list_last (l_procs);
+		rt_passive_region_context_list_remove_last (l_procs);
 
 			/* Free the region. */
 		l_processor = rt_get_processor (l_context->eif_thr_context_cx->logical_id);
@@ -357,9 +426,9 @@ rt_shared void rt_processor_registry_cleanup (void)
 /*
 doc:	<routine name="rt_processor_registry_destroy_region" return_type="void" export="private">
 doc:		<summary> Free all resources in 'proc', remove the PID->processor mapping, and recycle the identifier. </summary>
-doc:		<param name="fingerprint" type="EIF_INTEGER_32"> The fingerprint value. </param>
+doc:		<param name="proc" type="struct rt_processor*"> The region to be destroyed. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only call from the thread belonging to processor 'proc'. </synchronization>
+doc:		<synchronization> Only call from the thread that owns processor 'proc'. </synchronization>
 doc:	</routine>
 */
 rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
@@ -371,8 +440,8 @@ rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 	REQUIRE ("processor_not_collected", rt_lookup_processor (pid));
 
 		/* Remove the processor from the bookkeeping structures in the processor registry. */
-	l_count = RTS_AD_I32 (&self->processor_count); /* Atomic pre-decrement */
-	self->procs [pid] = NULL;
+	l_count = rt_atomic_int_decrement_and_fetch (&self->processor_count); /* Atomic pre-decrement */
+	processor_lookup_table [pid] = NULL;
 
 		/* Free all resources in 'proc'. */
 	rt_processor_destroy (proc);

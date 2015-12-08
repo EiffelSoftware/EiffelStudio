@@ -50,6 +50,9 @@ doc:<file name="private_queue.c" header="rt_private_queue.h" version="$Id$" summ
 #	define rt_macro_set_saved_result(self,x) (void) 0
 #endif
 
+/* Private declarations. */
+rt_private void execute_separate_callback (struct rt_private_queue* self, struct rt_processor* client, struct rt_message* message);
+
 /*
 doc:	<routine name="rt_private_queue_init" return_type="int" export="shared">
 doc:		<summary> Initialize the private queue 'self' with supplier 'a_supplier'. </summary>
@@ -91,6 +94,33 @@ rt_shared void rt_private_queue_deinit (struct rt_private_queue* self)
 	rt_message_channel_deinit (&self->channel);
 }
 
+/*
+doc:	<routine name="rt_private_queue_mark" return_type="void" export="shared">
+doc:		<summary> Mark the eif_scoop_call_data structures within this private queue.
+doc:			This is for integration with the EiffelStudio garbage collector
+doc:			so that the target and arguments of the calls in the message channel
+doc:			(which is here outside the view of the runtime) will not be collected. </summary>
+doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
+doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking)
+{
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("marking_not_null", marking);
+
+	rt_message_channel_mark (&self->channel, marking);
+
+#ifdef WORKBENCH
+		/* Mark saved_result, if it is a reference. */
+	if (self->saved_result && ((self->saved_result->type) & SK_HEAD) == SK_REF) {
+		EIF_REFERENCE* ref = &(self->saved_result->it_ref);
+		*ref = marking (ref);
+	}
+#endif
+}
 
 /*
 doc:	<routine name="rt_private_queue_is_synchronized" return_type="EIF_BOOLEAN" export="shared">
@@ -257,92 +287,80 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 	call = NULL;
 	
 	if (will_sync) {
+		struct rt_message l_message;
+		EIF_BOOLEAN is_stopped = EIF_FALSE;
 
-			/* Allocate stack space for the result message. */
-		struct rt_message result_message;
-		struct rt_message* l_message = &result_message;
-		rt_message_init (l_message);
+			/* Wait for a result, if any. We use a loop here because we may need
+			 * to answer separate callbacks. */
+		while (!is_stopped) {
 
-			/* In workbench mode, we have to keep track of the EIF_TYPED_VALUE for the result
-			 * and make sure the reference is updated during GC (see also test#bench016).
-			 * The critical section starts here, when the supplier may have finished the call but
-			 * before the client (i.e. the thread executing this feature) wakes up again. */
-		rt_macro_set_saved_result (self, l_result);
-
-			/* Wait on our own result notifier for a message by the other processor. */
-		rt_message_channel_receive (l_result_notify, l_message);
-
-		while (l_message->message_type == SCOOP_MESSAGE_CALLBACK) {
-				/* A separate callback arrived. We need to execute it right away
-				 * and send back our result to the supplier. */
-			EIF_GET_CONTEXT
-			EIF_SCP_PID current_region = eif_globals->scoop_region_id;
-			EIF_SCP_PID target_region = RTS_PID (l_message->call->target);
-
-				/* Clear the saved_result. The supplier won't set the value
-				 * while the client executes a callback, but the client may log
-				 * further calls, in which case saved_result should be NULL. */
-			rt_macro_set_saved_result (self, NULL);
-
-				/* Execute the separate callback on this thread (i.e. the one behind 'client').
-				 * We may have to impersonate the target region here.*/
-			if (current_region != target_region) {
-				eif_scoop_impersonate (eif_globals, target_region);
-			}
-
-			rt_processor_execute_call (client, l_message->sender_processor, l_message->call);
-
-			if (current_region != target_region) {
-				eif_scoop_impersonate (eif_globals, current_region);
-			}
-
-				/* During the next receive we may get the answer to our query,
-				 * so we need to set saved_result again. */
+				/* In workbench mode, we have to keep track of the EIF_TYPED_VALUE for the result
+				* and make sure the reference is updated during GC (see also test#bench016).
+				* The critical section starts here, when the supplier may have finished the call but
+				* before the client (i.e. the thread executing this feature) wakes up again. */
 			rt_macro_set_saved_result (self, l_result);
 
-				/* Again, wait on our result notification channel for a new message. */
-			rt_message_channel_receive (l_result_notify, l_message);
-		}
+				/* Wait on our own result notifier for a message by the other processor. */
+			rt_message_channel_receive (l_result_notify, &l_message);
 
-			/* The critical part is over, as the current thread is awake
-			 * again and synchronized with the GC. */
-		rt_macro_set_saved_result (self, NULL);
+				/* Clear the saved_result, because the critical part is over and the
+				 * current thread is awake again and synchronized with the GC.
+				 * NOTE: This is also safe in case of a separate callback:
+				 * The supplier won't set the value while we execute a callback
+				 * (but the client may log further calls in which case saved_result
+				 * should not be NULL). */
+			rt_macro_set_saved_result (self, NULL);
 
-		if (l_message->message_type == SCOOP_MESSAGE_DIRTY) {
-			eraise ((const char *) "EVE/Qs dirty processor exception", EN_DIRTY);
+			switch (l_message.message_type)
+			{
+				case SCOOP_MESSAGE_CALLBACK:
+						/* A separate callback arrived. We need to execute it right
+						 * away and send back our result to the supplier. */
+					execute_separate_callback (self, client, &l_message);
+					break;
+				case SCOOP_MESSAGE_DIRTY:
+						/* The supplier suffered an exception that we need to propagate. */
+					eraise ((const char *) "EVE/Qs dirty processor exception", EN_DIRTY);
+					break;
+				case SCOOP_MESSAGE_RESULT_READY:
+					is_stopped = EIF_TRUE;
+					break;
+				default:
+					CHECK ("valid_message", EIF_FALSE);
+			}
 		}
 	}
-
 	self->synced = will_sync;
 }
 
 /*
-doc:	<routine name="rt_private_queue_mark" return_type="void" export="shared">
-doc:		<summary> Mark the eif_scoop_call_data structures within this private queue.
-doc:			This is for integration with the EiffelStudio garbage collector
-doc:			so that the target and arguments of the calls in the message channel
-doc:			(which is here outside the view of the runtime) will not be collected. </summary>
+doc:	<routine name="execute_separate_callback" return_type="void" export="private">
+doc:		<summary> Execute a separate callback. </summary>
 doc:		<param name="self" type="struct rt_private_queue*"> The private queue struct. Must not be NULL. </param>
-doc:		<param name="marking" type="MARKER"> The marking function to use on each reference from the Eiffel runtime. Must not be NULL. </param>
+doc:		<param name="client" type="struct rt_processor*"> The client processor that received the separate callback. Must not be NULL. </param>
+doc:		<param name="message" type="struct rt_message*"> The message containing the separate callback. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> None. </synchronization>
 doc:	</routine>
 */
-rt_shared void rt_private_queue_mark (struct rt_private_queue* self, MARKER marking)
+rt_private void execute_separate_callback (struct rt_private_queue* self, struct rt_processor* client, struct rt_message* message)
 {
-	REQUIRE ("self_not_null", self);
-	REQUIRE ("marking_not_null", marking);
+	EIF_GET_CONTEXT
+	EIF_SCP_PID current_region = eif_globals->scoop_region_id;
+	EIF_SCP_PID target_region = RTS_PID (message->call->target);
 
-	rt_message_channel_mark (&self->channel, marking);
-
-#ifdef WORKBENCH
-		/* Mark saved_result, if it is a reference. */
-	if (self->saved_result && ((self->saved_result->type) & SK_HEAD) == SK_REF) {
-		EIF_REFERENCE* ref = &(self->saved_result->it_ref);
-		*ref = marking (ref);
+		/* Execute the separate callback on this thread (i.e. the one behind 'client').
+		 * We may have to impersonate the target region here.*/
+	if (current_region != target_region) {
+		eif_scoop_impersonate (eif_globals, target_region);
 	}
-#endif
 
+	rt_processor_execute_call (client, message->sender_processor, message->call);
+
+		/* Switch back to the initial region. */
+	if (current_region != target_region) {
+		eif_scoop_impersonate (eif_globals, current_region);
+	}
 }
 
 /*

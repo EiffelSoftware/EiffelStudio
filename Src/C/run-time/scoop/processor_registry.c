@@ -41,6 +41,7 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 */
 
 #include "rt_processor_registry.h"
+#include "rt_identifier_set.h"
 #include "rt_processor.h"
 #include "rt_scoop_helpers.h"
 #include "rt_atomic_int.h"
@@ -54,9 +55,9 @@ doc:	summary="Manages the lifecycle of SCOOP processors and regions and provides
 RT_DECLARE_VECTOR (rt_passive_region_context_list, rt_global_context_t*)
 
 /* Private declarations. */
-rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc);
+rt_private void allocate_new_identifier (EIF_SCP_PID* result);
 rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid);
-
+rt_private void destroy_region (struct rt_processor* proc);
 
 
 /*
@@ -213,37 +214,6 @@ rt_shared void rt_processor_registry_deinit (void)
 	rt_atomic_int_deinit (&self->processor_count);
 }
 
-
-/*
-doc:	<routine name="rt_processor_registry_new_identifier" return_type="int" export="private">
-doc:		<summary> Acquire a new unique region identifier and store it in 'result'.
-doc:			If none is currently available, a GC cycle is triggered and the feature blocks until it gets a free ID. </summary>
-doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<return> T_OK on success. </return>
-doc:		<thread_safety> Safe. </thread_safety>
-doc:		<synchronization> None required. </synchronization>
-doc:	</routine>
-*/
-rt_private int rt_processor_registry_new_identifier (EIF_SCP_PID* result)
-{
-	int error = T_OK;
-	EIF_BOOLEAN success = EIF_FALSE;
-	struct rt_processor_registry* self = &registry;
-
-	REQUIRE ("result_not_null", result);
-
-		/* We first check if there's a result available. */
-	success = rt_identifier_set_try_consume (&self->free_pids, result);
-
-		/* If none is available, we have to run the garbage collector and then wait. */
-	if (!success) {
-		plsc();
-		rt_identifier_set_consume (&self->free_pids, result);
-	}
-		/* TODO: Can we remove this error code? */
-	return error;
-}
-
 /*
 doc:	<routine name="rt_processor_registry_create_region" return_type="int" export="shared">
 doc:		<summary> Create a new SCOOP region. The region is created as passive, meaning it has no thread attached to it.
@@ -264,56 +234,23 @@ rt_shared int rt_processor_registry_create_region (EIF_SCP_PID* result, EIF_BOOL
 	REQUIRE ("result_not_null", result);
 
 		/* Acquire a new ID. */
-	error = rt_processor_registry_new_identifier (&pid);
+	allocate_new_identifier (&pid);
+
+		/* Create and initialize the processor object. */
+	error = rt_processor_create (pid, EIF_FALSE, &new_processor);
 
 	if (T_OK == error) {
-			/* Create and initialize the processor object. */
-		error = rt_processor_create (pid, EIF_FALSE, &new_processor);
-
-		if (T_OK == error) {
-				/* Update the internal bookkeeping structures. */
-			processor_lookup_table [pid] = new_processor;
-			new_processor->is_passive_region = a_is_passive;
-			rt_atomic_int_increment (&self->processor_count); /* Atomic increment */
-			*result = pid;
-		} else {
-				/* Processor allocation failed. Return the PID. */
-			rt_identifier_set_extend (&self->free_pids, pid);
-		}
+			/* Update the internal bookkeeping structures. */
+		processor_lookup_table [pid] = new_processor;
+		new_processor->is_passive_region = a_is_passive;
+		rt_atomic_int_increment (&self->processor_count); /* Atomic increment */
+		*result = pid;
+	} else {
+			/* Processor allocation failed. Return the PID. */
+		rt_identifier_set_extend (&self->free_pids, pid);
 	}
+
 	return error;
-}
-
-
-/*
-doc:	<routine name="spawn_main" return_type="void" export="private">
-doc:		<summary> The entry point for new SCOOP processors after the Eiffel runtime has set up the context.
-doc:			Note: The feature has an unused EIF_REFERENCE as its first argument.
-doc:			This is necessary because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. </summary>
-doc:		<param name="dummy_thread_object" type="EIF_REFERENCE"> A dummy object to make the signature conform to EIF_PROCEDURE. </param>
-doc:		<param name="pid", type="EIF_SCP_PID"> The ID of the newly spawned processor. </param>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> None </synchronization>
-doc:	</routine>
-*/
-rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
-{
-	RT_GET_CONTEXT
-	struct rt_processor *proc = rt_get_processor (pid);
-
-		/* Record that the current thread is associated with a processor of a given ID. */
-	rt_set_processor_id (pid, rt_globals);
-
-		/* Send a message to the creator thread that we have succesfully spawned.
-		 * We recycle the RESULT_READY message here since the creator is not interested in the message anyway. */
-	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
-
-	rt_processor_application_loop (proc);
-
-		/* Decouple processor ID from the current thread. */
-	rt_unset_processor_id (rt_globals);
-
-	rt_processor_registry_destroy_region (proc);
 }
 
 /*
@@ -418,20 +355,109 @@ rt_shared void rt_processor_registry_cleanup (void)
 			/* Free the region. */
 		l_processor = rt_get_processor (l_context->eif_thr_context_cx->logical_id);
 		rt_unset_processor_id (l_context);
-		rt_processor_registry_destroy_region (l_processor);
+		destroy_region (l_processor);
 		rt_thread_destroy_passive_region (l_context);
 	}
 }
 
 /*
-doc:	<routine name="rt_processor_registry_destroy_region" return_type="void" export="private">
+doc:	<routine name="rt_processor_registry_quit_root_processor" return_type="void" export="shared">
+doc:		<summary> Finish execution of the root processor after it has completed the root feature. </summary>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> Only call by the root processor. </synchronization>
+doc:	</routine>
+*/
+rt_shared void rt_processor_registry_quit_root_processor (void)
+{
+	struct rt_processor_registry* self = &registry;
+	struct rt_processor* root_proc = rt_get_processor (0);
+
+		/* First we have to enter a regular application loop, as some
+		 * clients may still have references to objects created by the root processor. */
+	rt_processor_application_loop (root_proc);
+
+		/* When no more references to objects on the root region exist, we terminate. */
+	destroy_region (root_proc);
+
+		/* Now the root thread has to wait for all processors to finish, such that it
+		 * can perform some final program cleanup.
+		 * Allow the GC to execute during this period. */
+	EIF_ENTER_C;
+	RT_TRACE (eif_pthread_mutex_lock (self->all_done_mutex));
+	while (!self->all_done) {
+		RT_TRACE (eif_pthread_cond_wait (self->all_done_cv, self->all_done_mutex));
+	}
+	RT_TRACE (eif_pthread_mutex_unlock (self->all_done_mutex));
+	EIF_EXIT_C;
+	RTGC;
+}
+
+/*
+doc:	<routine name="allocate_new_identifier" return_type="void" export="private">
+doc:		<summary> Acquire a new unique region identifier and store it in 'result'.
+doc:			If none is currently available, a GC cycle is triggered and the feature blocks until it gets a free ID. </summary>
+doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
+doc:		<thread_safety> Safe. </thread_safety>
+doc:		<synchronization> None required. </synchronization>
+doc:	</routine>
+*/
+rt_private void allocate_new_identifier (EIF_SCP_PID* result)
+{
+	EIF_BOOLEAN success = EIF_FALSE;
+	struct rt_processor_registry* self = &registry;
+
+	REQUIRE ("result_not_null", result);
+
+		/* We first check if there's a result available. */
+	success = rt_identifier_set_try_consume (&self->free_pids, result);
+
+		/* If none is available, we have to run the garbage collector and then wait. */
+	if (!success) {
+		plsc();
+		rt_identifier_set_consume (&self->free_pids, result);
+	}
+}
+
+/*
+doc:	<routine name="spawn_main" return_type="void" export="private">
+doc:		<summary> The entry point for new SCOOP processors after the Eiffel runtime has set up the context.
+doc:			Note: The feature has an unused EIF_REFERENCE as its first argument.
+doc:			This is necessary because eif_thr_create_with_attr_new expects an EIF_PROCEDURE as a thread entry point. </summary>
+doc:		<param name="dummy_thread_object" type="EIF_REFERENCE"> A dummy object to make the signature conform to EIF_PROCEDURE. </param>
+doc:		<param name="pid", type="EIF_SCP_PID"> The ID of the newly spawned processor. </param>
+doc:		<thread_safety> Not safe. </thread_safety>
+doc:		<synchronization> None </synchronization>
+doc:	</routine>
+*/
+rt_private void spawn_main (EIF_REFERENCE dummy_thread_object, EIF_SCP_PID pid)
+{
+	RT_GET_CONTEXT
+	struct rt_processor *proc = rt_get_processor (pid);
+
+		/* Record that the current thread is associated with a processor of a given ID. */
+	rt_set_processor_id (pid, rt_globals);
+
+		/* Send a message to the creator thread that we have succesfully spawned.
+		 * We recycle the RESULT_READY message here since the creator is not interested in the message anyway. */
+	rt_message_channel_send (&proc->startup_notify, SCOOP_MESSAGE_RESULT_READY, NULL, NULL, NULL);
+
+	rt_processor_application_loop (proc);
+
+		/* Decouple processor ID from the current thread. */
+	rt_unset_processor_id (rt_globals);
+
+	destroy_region (proc);
+}
+
+/*
+doc:	<routine name="destroy_region" return_type="void" export="private">
 doc:		<summary> Free all resources in 'proc', remove the PID->processor mapping, and recycle the identifier. </summary>
 doc:		<param name="proc" type="struct rt_processor*"> The region to be destroyed. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only call from the thread that owns processor 'proc'. </synchronization>
 doc:	</routine>
 */
-rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
+rt_private void destroy_region (struct rt_processor* proc)
 {
 	EIF_INTEGER_32 l_count = 0;
 	EIF_SCP_PID pid = proc->pid;
@@ -460,38 +486,6 @@ rt_private void rt_processor_registry_destroy_region (struct rt_processor* proc)
 	if (pid != 0) {
 		rt_identifier_set_extend (&self->free_pids, pid);
 	}
-}
-
-/*
-doc:	<routine name="rt_processor_registry_quit_root_processor" return_type="void" export="shared">
-doc:		<summary> Finish execution of the root processor after it has completed the root feature. </summary>
-doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only call by the root processor. </synchronization>
-doc:	</routine>
-*/
-rt_shared void rt_processor_registry_quit_root_processor (void)
-{
-	struct rt_processor_registry* self = &registry;
-	struct rt_processor* root_proc = rt_get_processor (0);
-
-		/* First we have to enter a regular application loop, as some
-		 * clients may still have references to objects created by the root processor. */
-	rt_processor_application_loop (root_proc);
-
-		/* When no more references to objects on the root region exist, we terminate. */
-	rt_processor_registry_destroy_region (root_proc);
-
-		/* Now the root thread has to wait for all processors to finish, such that it
-		 * can perform some final program cleanup.
-		 * Allow the GC to execute during this period. */
-	EIF_ENTER_C;
-	RT_TRACE (eif_pthread_mutex_lock (self->all_done_mutex));
-	while (!self->all_done) {
-		RT_TRACE (eif_pthread_cond_wait (self->all_done_cv, self->all_done_mutex));
-	}
-	RT_TRACE (eif_pthread_mutex_unlock (self->all_done_mutex));
-	EIF_EXIT_C;
-	RTGC;
 }
 
 /*

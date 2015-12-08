@@ -38,7 +38,6 @@
 #ifndef _rt_processor_registry_h_
 #define _rt_processor_registry_h_
 
-#include "rt_identifier_set.h"
 #include "rt_scoop.h"
 #include "rt_assert.h"
 #include "rt_globals.h"

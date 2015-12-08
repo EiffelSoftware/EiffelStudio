@@ -15,13 +15,20 @@ inherit
 			new_keyword_id_as,
 			new_old_syntax_object_test_as,
 			new_static_access_as,
-			new_symbol_as
+			new_symbol_as,
+			new_class_type_as,
+			new_filled_id_as
 		end
 
 feature -- Access
 
 	has_obsolete_constructs: BOOLEAN
 			-- Does current class has some obsolete constructs?
+
+	is_updating_agents: BOOLEAN
+			-- Are we updating agents to drop the first actual generic parameter
+			-- and replacing TUPLE with nothing, i.e. PROCEDURE [ANY, TUPLE [STRING]]
+			-- becoming PROCEDURE [STRING].
 
 feature -- Status setting
 
@@ -30,6 +37,14 @@ feature -- Status setting
 			has_obsolete_constructs := False
 		ensure
 			no_obsolete_constructs: not has_obsolete_constructs
+		end
+
+	set_is_updating_agents (v: like is_updating_agents)
+			-- Set `is_updating_agents' with `v'.
+		do
+			is_updating_agents := v
+		ensure
+			is_updating_agents_set: is_updating_agents = v
 		end
 
 feature -- Processing
@@ -96,8 +111,56 @@ feature -- Processing
 
 			end
 		end
+
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
+		local
+			l_cnt: INTEGER_32
+			l_str: STRING_8
+		do
+				-- Filter all identifiers based on the agent types. Only in `new_class_type_as'
+				-- do we check that they are not just identifier, but class types.
+			if
+				not has_obsolete_constructs and then is_updating_agents and then
+				(a_scn.same_test_case_insensitve_as (routine_class_name) or
+				a_scn.same_test_case_insensitve_as (procedure_class_name) or
+				a_scn.same_test_case_insensitve_as (function_class_name) or
+				a_scn.same_test_case_insensitve_as (predicate_class_name))
+			then
+				l_cnt := a_scn.text_count
+				l_str := Reusable_string_buffer
+				l_str.wipe_out
+				a_scn.append_text_to_string (l_str)
+				create Result.initialize (l_str)
+				Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
+			end
+		end
+
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS
+			-- <Precursor>
+		do
+			if n /= Void then
+				check
+					is_not_empty: not n.name_32.is_empty
+					is_agent_name:
+						n.name_32.same_caseless_characters (routine_class_name, 1, routine_class_name.count, 1) or
+						n.name_32.same_caseless_characters (procedure_class_name, 1, procedure_class_name.count, 1) or
+						n.name_32.same_caseless_characters (function_class_name, 1, function_class_name.count, 1) or
+						n.name_32.same_caseless_characters (predicate_class_name, 1, predicate_class_name.count, 1)
+				end
+				has_obsolete_constructs := True
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	routine_class_name: STRING_8 = "ROUTINE"
+	procedure_class_name: STRING_8 = "PROCEDURE"
+	function_class_name: STRING_8 = "FUNCTION"
+	predicate_class_name: STRING_8 = "PREDICATE"
+			-- Name of agent types being in use.
+
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

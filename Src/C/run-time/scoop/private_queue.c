@@ -307,8 +307,8 @@ rt_shared void rt_private_queue_log_call (struct rt_private_queue* self, struct 
 				 * current thread is awake again and synchronized with the GC.
 				 * NOTE: This is also safe in case of a separate callback:
 				 * The supplier won't set the value while we execute a callback
-				 * (but the client may log further calls in which case saved_result
-				 * should not be NULL). */
+				 * (but the client may log further calls, and in that case
+				 * saved_result should be NULL). */
 			rt_macro_set_saved_result (self, NULL);
 
 			switch (l_message.message_type)

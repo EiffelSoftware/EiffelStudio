@@ -349,6 +349,11 @@ rt_private void execute_separate_callback (struct rt_private_queue* self, struct
 	EIF_SCP_PID current_region = eif_globals->scoop_region_id;
 	EIF_SCP_PID target_region = RTS_PID (message->call->target);
 
+	REQUIRE ("self_not_null", self);
+	REQUIRE ("client_not_null", client);
+	REQUIRE ("message_not_null", message);
+	REQUIRE ("callback_message", message->message_type == SCOOP_MESSAGE_CALLBACK && message->call);
+
 		/* Execute the separate callback on this thread (i.e. the one behind 'client').
 		 * We may have to impersonate the target region here.*/
 	if (current_region != target_region) {

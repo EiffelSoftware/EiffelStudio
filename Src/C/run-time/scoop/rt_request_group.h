@@ -55,8 +55,7 @@ doc:		<field name="client", type="struct rt_processor*> The processor that wants
 doc:		<field name="is_sorted", type="EIF_BOOLEAN"> A boolean to indicate whether the private queues within this request group are sorted.
 doc: 			It also indicates whether rt_request_group_lock() has been called in the past. </field>
 doc:		<field name="is_locked", type="EIF_BOOLEAN"> A boolean to indicate whether the request group is locked.
-doc:			FIXME: The field is currently necessary because the compiler deletes and recreates request groups during wait condition evaluations, which means that unlock requests
-doc:			sometimes happen on already unlocked request groups. Once the compiler is fixed, this attribute can be removed or turned into a ghost field for contract checking. </field>
+doc:			NOTE: This attribute is a ghost field for contract checking. </field>
 doc:		<fixme> A possible improvement might be to place the first few private queues into the request group struct itself, to avoid memory allocation on the heap. </fixme>
 doc:	</struct>
  */

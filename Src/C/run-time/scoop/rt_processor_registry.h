@@ -71,7 +71,7 @@ doc:		<summary> Get the processor object with the SCOOP id 'pid'. </summary>
 doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
 doc:		<return> The processor with ID 'pid'. </return>
 doc:		<thread_safety> Safe </thread_safety>
-doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
+doc:		<synchronization> None required. See explanation for 'processor_lookup_table' attribute. </synchronization>
 doc:	</routine>
 */
 rt_private rt_inline struct rt_processor* rt_get_processor (EIF_SCP_PID pid)
@@ -93,7 +93,7 @@ doc:		<summary> Try to get the processor object with the SCOOP id 'pid'. If none
 doc:		<param name="pid" type="EIF_SCP_PID"> The ID of the processor to be found. </param>
 doc:		<return> The processor with ID 'pid'. May be NULL. </return>
 doc:		<thread_safety> Safe </thread_safety>
-doc:		<synchronization> None required. See explanation for 'procs' attribute. </synchronization>
+doc:		<synchronization> None required. See explanation for 'processor_lookup_table' attribute. </synchronization>
 doc:	</routine>
 */
 rt_private rt_inline struct rt_processor* rt_lookup_processor (EIF_SCP_PID pid)

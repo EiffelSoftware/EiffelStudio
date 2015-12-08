@@ -52,8 +52,8 @@ doc:			a client and a supplier. It contains an rt_message_channel for the
 doc:			client to send new SCOOP separate calls.
 doc:
 doc:			The struct also serves as a lock for the client on the supplier:
-doc:			As long as a private queue is inside the queue-of-queues of  the supplier
-doc:			the client has exclusive access.
+doc:			As long as a private queue is inside the queue-of-queues
+doc:			of the supplier, the client has exclusive access.
 doc:
 doc:			Note that the client processor may change during lock passing, i.e.
 doc:			it's not guaranteed to be always the client that created the queue.
@@ -63,7 +63,6 @@ doc:		<field name="supplier" type="struct rt_processor*"> The supplier to whom m
 doc:		<field name="lock_depth" type="int"> The current lock depth (for recursive locking). Accessed only by the client. </field>
 doc:		<field name="synced" type="EIF_BOOLEAN"> Whether the supplier is synchronized with the client. Accessed only by the client. </field>
 doc:		<field name="saved_result" type="EIF_TYPED_VALUE*"> The typed Eiffel value where the result of a query gets stored. This is only needed in workbench mode to update a reference during GC. </field>
-doc:		<fixme> It may be possible to improve performance slightly with some careful alignment to cache lines (also within rt_message_channel) </fixme>
 doc:	</struct>
 */
 struct rt_private_queue {

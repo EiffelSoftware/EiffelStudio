@@ -159,7 +159,7 @@ doc:	<routine name="rt_identifier_set_do_consume" return_type="void" export="pri
 doc:		<summary> Helper feature for the consume operation. </summary>
 doc:		<param name="self" type="struct rt_identifier_set*"> The rt_identifier_set struct. Must not be NULL. </param>
 doc:		<param name="result" type="EIF_SCP_PID*"> A pointer to the location where the result shall be stored. Must not be NULL. </param>
-doc:		<thread_safety> Note safe. </thread_safety>
+doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Required by client. </synchronization>
 doc:	</routine>
 */

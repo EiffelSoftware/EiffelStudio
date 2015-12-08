@@ -197,7 +197,6 @@ doc:	</routine>
 rt_shared void rt_processor_registry_deinit (void)
 {
 	struct rt_processor_registry* self = &registry;
-	/* CHECK ("no_more_processors", self->processor_count == 0); */
 	
 	if (self->all_done_cv) {
 		RT_TRACE (eif_pthread_cond_destroy (self->all_done_cv));
@@ -298,18 +297,19 @@ doc:	</routine>
 */
 rt_shared void rt_processor_registry_deactivate (EIF_SCP_PID pid, rt_global_context_t* a_context)
 {
-		/* This is a callback from the GC, which will notify us */
-		/* of all unused processors, even those that have already been */
-		/* freed, but still have a thread of execution. */
-		/* To avoid double free we check first to see if they're */
-		/* still active. */
-		/* Note that this mechanism doesn't avoid double shutdown messages. */
 	struct rt_processor* to_be_removed = NULL;
 	struct rt_processor* item = NULL;
 	EIF_SCP_PID index = 0;
 
 	REQUIRE ("in_bounds", pid < RT_MAX_SCOOP_PROCESSOR_COUNT);
 
+		/* This is a callback from the GC, which will notify us
+		 * of all unused processors, even those that have already received
+		 * a SHUTDOWN message during the last GC cycle and whose thread is now
+		 * in the process of terminating itself.
+		 *
+		 * To avoid double free we check first to see if the processor structure is
+		 * still available. Note that this mechanism doesn't avoid double shutdown messages. */
 	to_be_removed = rt_lookup_processor (pid);
 
 	if (to_be_removed) {

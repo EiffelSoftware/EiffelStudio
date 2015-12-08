@@ -282,7 +282,7 @@ doc:		<param name="self" type="struct rt_processor*"> The processor that execute
 doc:		<param name="client" type="struct rt_processor*"> The processor that sent the request. Must not be NULL. </param>
 doc:		<param name="call" type="struct eif_scoop_call_data*"> The call to be executed. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
+doc:		<synchronization> Only execute this feature on the thread that owns 'self'. </synchronization>
 doc:	</routine>
 */
 rt_shared void rt_processor_execute_call (struct rt_processor* self, struct rt_processor* client, struct eif_scoop_call_data* call)
@@ -348,7 +348,7 @@ doc:		<summary> Execute all calls in the private queue 'queue' until an unlock m
 doc:		<param name="self" type="struct rt_processor*"> The processor object. Must not be NULL. </param>
 doc:		<param name="queue" type="struct rt_private_queue*"> The private queue to be worked on. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
-doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
+doc:		<synchronization> Only execute this feature on the thread that owns 'self'. </synchronization>
 doc:	</routine>
 */
 rt_private void rt_processor_process_private_queue (struct rt_processor* self, struct rt_private_queue *queue)
@@ -423,9 +423,9 @@ rt_shared void rt_processor_publish_wait_condition (struct rt_processor* self)
 /*
 doc:	<routine name="rt_processor_application_loop" return_type="void" export="shared">
 doc:		<summary> The main loop of a SCOOP processor.
-doc:			Normally this will be called when the thread spawns but here we expose it
-doc:			so that it may be called externally for the root thread (whose thread is
-doc:			the main thread of the program, and thus already exists). </summary>
+doc:			This is the entry point for every processor and will be the called by
+doc:			rt_processor_registry.c:spawn_main(). The root thread of the application will also
+doc:			enter this loop after execution of the root feature. </summary>
 doc:		<param name="self" type="struct rt_processor*"> The processor object. Must not be NULL. </param>
 doc:		<thread_safety> Not safe. </thread_safety>
 doc:		<synchronization> Only execute this feature on the thread behind processor 'self'. </synchronization>
@@ -465,9 +465,9 @@ rt_shared void rt_processor_application_loop (struct rt_processor* self)
 				 * but may be used in the debugger. The idea is to display current
 				 * client region of a processor.
 				 * However, here we use the client processor instead, because we
-				 * don't have the region available. In the future it may be useful
-				 * to add a new field to rt_message or in the private queue that
-				 * shows the current client. */
+				 * don't have the information about the region available. In the future
+				 * it may be useful to add a new field to rt_message or in the private
+				 * queue that shows the current client. */
 			self->client = next_job.sender_processor->pid;
 
 			rt_processor_process_private_queue (self, next_job.queue);
@@ -547,7 +547,7 @@ int rt_processor_new_private_queue (struct rt_processor* self, struct rt_private
 
 /*
 doc:	<routine name="rt_processor_subscribe_wait_condition" return_type="int" export="shared">
-doc:		<summary> Register for a notification when the heap protected by processor 'self' may have changed.
+doc:		<summary> Register for a notification when the memory region handled by processor 'self' may have changed.
 doc:			This is used to implement wait condition change signalling.
 doc:			The registration is only valid for a single notification and will be deleted by 'self' afterwards.
 doc:			Note: This feature is executed by the 'client' processor (i.e. thread), and can only be called when the

@@ -35,6 +35,21 @@ feature -- Status report
 	is_updated: BOOLEAN
 			-- Did current processing changed the AST?
 
+	is_updating_agents: BOOLEAN
+			-- Are we updating agents to drop the first actual generic parameter
+			-- and replacing TUPLE with nothing, i.e. PROCEDURE [ANY, TUPLE [STRING]]
+			-- becoming PROCEDURE [STRING].
+
+feature -- Status setting
+
+	set_is_updating_agents (v: like is_updating_agents)
+			-- Set `is_updating_agents' with `v'.
+		do
+			is_updating_agents := v
+		ensure
+			is_updating_agents_set: is_updating_agents = v
+		end
+
 feature -- Reset
 
 	reset
@@ -286,7 +301,11 @@ feature -- Types
 			safe_process (l_as.expanded_keyword (match_list))
 			safe_process (l_as.separate_keyword (match_list))
 			safe_process (l_as.class_name)
-			safe_process (l_as.internal_generics)
+			if is_agent_class (l_as.class_name.name_32) then
+				simplify_generics_for_agent (l_as.class_name.name_32, l_as.internal_generics)
+			else
+				safe_process (l_as.internal_generics)
+			end
 			safe_process (l_as.rcurly_symbol (match_list))
 		end
 
@@ -409,8 +428,112 @@ feature {NONE} -- Access
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	is_agent_class (a_name: STRING_32): BOOLEAN
+			-- Is agent simplification requested and does `a_name' represent an agent
+			-- class, i.e. ROUTINE, PROCEDURE, FUNCTION or PREDICATE?
+		do
+			Result := is_updating_agents and then
+				(a_name.is_case_insensitive_equal (routine_class_name) or
+				a_name.is_case_insensitive_equal (procedure_class_name) or
+				a_name.is_case_insensitive_equal (function_class_name) or
+				a_name.is_case_insensitive_equal (predicate_class_name))
+		end
+
+	simplify_generics_for_agent (a_name: STRING_32; l_as: TYPE_LIST_AS)
+			-- Simplify actual generics
+		require
+			is_agent_class: is_agent_class (a_name)
+		local
+			l_has_two_parameter: BOOLEAN
+			l_tuple: detachable CLASS_TYPE_AS
+		do
+			if
+				a_name.is_case_insensitive_equal (routine_class_name) or
+				a_name.is_case_insensitive_equal (procedure_class_name) or
+				a_name.is_case_insensitive_equal (predicate_class_name)
+			then
+					-- We are done if ROUTINE/PROCEDURE/PREDUCATE doesn't have 2 actual generic parameters
+					-- and if 2, the second one has to be a TUPLE.
+				if l_as.count = 2 then
+					l_has_two_parameter := True
+					if
+						attached {CLASS_TYPE_AS} l_as.i_th (2) as l_class and then
+						l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
+					then
+						l_tuple := l_class
+					end
+				end
+			else
+				check is_predicate: a_name.is_case_insensitive_equal (function_class_name) end
+					-- We are done if FUNCTION doesn't have 3 actual generic parameters and if 3, the second
+					-- one has to be a TUPLE.			
+				if l_as.count = 3 then
+					l_has_two_parameter := False
+					if
+						attached {CLASS_TYPE_AS} l_as.i_th (2) as l_class and then
+						l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
+					then
+						l_tuple := l_class
+					end
+				end
+			end
+
+				-- If heuristics shows that it has been updated already, we use the default version
+			if l_tuple = Void then
+				safe_process (l_as)
+			else
+				is_updated := True
+				if l_has_two_parameter then
+					if attached l_tuple.generics as l_generics then
+							-- Case of a tuple with actual generic parameters
+						process_leading_leaves (l_as.opening_bracket_as_index)
+						last_index := l_tuple.generics.opening_bracket_as_index
+						safe_process (l_generics)
+						last_index := l_as.closing_bracket_as_index
+					else
+							-- Case of an agent of the form PROCEDURE [ANY, TUPLE],
+							-- the new declaration is PROCEDURE [TUPLE].
+						safe_process (l_as.opening_bracket_as (match_list))
+							-- Dropping the first generic parameter, and keeping the one from the tuple.
+						last_index := l_tuple.first_token (match_list).index
+						safe_process (l_tuple)
+						safe_process (l_as.closing_bracket_as (match_list))
+					end
+				else
+					if attached l_tuple.generics as l_generics then
+						safe_process (l_as.opening_bracket_as (match_list))
+						last_index := l_tuple.generics.opening_bracket_as_index
+						across l_generics as l_gen loop
+							safe_process (l_gen.item)
+						end
+						last_index := l_tuple.generics.closing_bracket_as_index
+						safe_process (l_as.i_th (3))
+						safe_process (l_as.closing_bracket_as (match_list))
+					else
+							-- Case of an agent of the form FUNCTION [ANY, TUPLE, STRING],
+							-- the new declaration is FUNCTION [TUPLE, STRING].
+						safe_process (l_as.opening_bracket_as (match_list))
+							-- Dropping the first generic parameter, and keeping the one from the tuple.
+						last_index := l_tuple.first_token (match_list).index
+						safe_process (l_tuple)
+						safe_process (l_as.i_th (3))
+						safe_process (l_as.closing_bracket_as (match_list))
+					end
+				end
+			end
+		end
+
+	routine_class_name: STRING_32 = "ROUTINE"
+	procedure_class_name: STRING_32 = "PROCEDURE"
+	function_class_name: STRING_32 = "FUNCTION"
+	predicate_class_name: STRING_32 = "PREDICATE"
+	tuple_class_name: STRING_32 = "TUPLE"
+			-- Name of agent types being in use.
+
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

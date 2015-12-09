@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="test">
+	<target name="test">
+		<root class="TEST" feature="default_create"/>
+		<option void_safety="all"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\">
+			<file_rule>
+				<exclude>/xyzzyabc12300.E$</exclude>
+				<exclude>/xyzzyabc12301.E$</exclude>
+				<exclude>/xyzzyabc12302.E$</exclude>
+				<exclude>/xyzzyabc12303.E$</exclude>
+				<exclude>/xyzzyabc12304.E$</exclude>
+				<exclude>/xyzzyabc12305.E$</exclude>
+				<exclude>/xyzzyabc12306.E$</exclude>
+				<exclude>/xyzzyabc12307.E$</exclude>
+				<exclude>/xyzzyabc12308.E$</exclude>
+				<exclude>/xyzzyabc12309.E$</exclude>
+				<exclude>/xyzzyabc12310.E$</exclude>
+				<exclude>/xyzzyabc12311.E$</exclude>
+				<exclude>/xyzzyabc12312.E$</exclude>
+				<exclude>/xyzzyabc12313.E$</exclude>
+				<exclude>/xyzzyabc12314.E$</exclude>
+				<exclude>/xyzzyabc12315.E$</exclude>
+				<exclude>/xyzzyabc12316.E$</exclude>
+				<exclude>/xyzzyabc12317.E$</exclude>
+				<exclude>/xyzzyabc12318.E$</exclude>
+				<exclude>/xyzzyabc12319.E$</exclude>
+				<exclude>/xyzzyabc12320.E$</exclude>
+				<exclude>/xyzzyabc12321.E$</exclude>
+				<exclude>/xyzzyabc12322.E$</exclude>
+				<exclude>/xyzzyabc12323.E$</exclude>
+				<exclude>/xyzzyabc12324.E$</exclude>
+				<exclude>/xyzzyabc12325.E$</exclude>
+				<exclude>/xyzzyabc12326.E$</exclude>
+				<exclude>/xyzzyabc12327.E$</exclude>
+				<exclude>/xyzzyabc12328.E$</exclude>
+				<exclude>/xyzzyabc12329.E$</exclude>
+				<exclude>/xyzzyabc12330.E$</exclude>
+				<exclude>/xyzzyabc12331.E$</exclude>
+				<exclude>/xyzzyabc12332.E$</exclude>
+				<exclude>/xyzzyabc12333.E$</exclude>
+				<exclude>/xyzzyabc12334.E$</exclude>
+				<exclude>/xyzzyabc12335.E$</exclude>
+				<exclude>/xyzzyabc12336.E$</exclude>
+				<exclude>/xyzzyabc12337.E$</exclude>
+				<exclude>/xyzzyabc12338.E$</exclude>
+				<exclude>/xyzzyabc12339.E$</exclude>
+				<exclude>/xyzzyabc12340.E$</exclude>
+				<exclude>/xyzzyabc12341.E$</exclude>
+				<exclude>/xyzzyabc12342.E$</exclude>
+				<exclude>/xyzzyabc12343.E$</exclude>
+				<exclude>/xyzzyabc12344.E$</exclude>
+				<exclude>/xyzzyabc12345.E$</exclude>
+				<exclude>/xyzzyabc12346.E$</exclude>
+				<exclude>/xyzzyabc12347.E$</exclude>
+				<exclude>/xyzzyabc12348.E$</exclude>
+				<exclude>/xyzzyabc12349.E$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/xyzzyabc12350.E$</exclude>
+				<exclude>/xyzzyabc12351.E$</exclude>
+				<exclude>/xyzzyabc12352.E$</exclude>
+				<exclude>/xyzzyabc12353.E$</exclude>
+				<exclude>/xyzzyabc12354.E$</exclude>
+				<exclude>/xyzzyabc12355.E$</exclude>
+				<exclude>/xyzzyabc12356.E$</exclude>
+				<exclude>/xyzzyabc12357.E$</exclude>
+				<exclude>/xyzzyabc12358.E$</exclude>
+				<exclude>/xyzzyabc12359.E$</exclude>
+				<exclude>/xyzzyabc12360.E$</exclude>
+				<exclude>/xyzzyabc12361.E$</exclude>
+				<exclude>/xyzzyabc12362.E$</exclude>
+				<exclude>/xyzzyabc12363.E$</exclude>
+				<exclude>/xyzzyabc12364.E$</exclude>
+				<exclude>/xyzzyabc12365.E$</exclude>
+				<exclude>/xyzzyabc12366.E$</exclude>
+				<exclude>/xyzzyabc12367.E$</exclude>
+				<exclude>/xyzzyabc12368.E$</exclude>
+				<exclude>/xyzzyabc12369.E$</exclude>
+				<exclude>/xyzzyabc12370.E$</exclude>
+				<exclude>/xyzzyabc12371.E$</exclude>
+				<exclude>/xyzzyabc12372.E$</exclude>
+				<exclude>/xyzzyabc12373.E$</exclude>
+				<exclude>/xyzzyabc12374.E$</exclude>
+				<exclude>/xyzzyabc12375.E$</exclude>
+				<exclude>/xyzzyabc12376.E$</exclude>
+				<exclude>/xyzzyabc12377.E$</exclude>
+				<exclude>/xyzzyabc12378.E$</exclude>
+				<exclude>/xyzzyabc12379.E$</exclude>
+				<exclude>/xyzzyabc12380.E$</exclude>
+				<exclude>/xyzzyabc12381.E$</exclude>
+				<exclude>/xyzzyabc12382.E$</exclude>
+				<exclude>/xyzzyabc12383.E$</exclude>
+				<exclude>/xyzzyabc12384.E$</exclude>
+				<exclude>/xyzzyabc12385.E$</exclude>
+				<exclude>/xyzzyabc12386.E$</exclude>
+				<exclude>/xyzzyabc12387.E$</exclude>
+				<exclude>/xyzzyabc12388.E$</exclude>
+				<exclude>/xyzzyabc12389.E$</exclude>
+				<exclude>/xyzzyabc12390.E$</exclude>
+				<exclude>/xyzzyabc12391.E$</exclude>
+				<exclude>/xyzzyabc12392.E$</exclude>
+				<exclude>/xyzzyabc12393.E$</exclude>
+				<exclude>/xyzzyabc12394.E$</exclude>
+				<exclude>/xyzzyabc12395.E$</exclude>
+				<exclude>/xyzzyabc12396.E$</exclude>
+				<exclude>/xyzzyabc12397.E$</exclude>
+				<exclude>/xyzzyabc12398.E$</exclude>
+				<exclude>/xyzzyabc12399.E$</exclude>
+			</file_rule>
+		</cluster>
+	</target>       	
+</system>               	
+                        	

@@ -1056,6 +1056,19 @@ feature -- Parse errors
 
 	e_parse_external_outside_target_element: STRING_32 do Result := locale.translation ("External element found outside a target element.") end
 
+	e_parse_invalid_regexp (regexp: READABLE_STRING_GENERAL; file, description: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			if attached file and attached description then
+				Result := locale.formatted_string (locale.translation ("Parse error ($3) in %"$2%" at regular expression %"$1%"."), [regexp, file, description])
+			elseif attached file then
+				Result := locale.formatted_string (locale.translation ("Parse error in %"$2%": Invalid regular expression: %"$1%"."), [regexp, file])
+			elseif attached description then
+				Result := locale.formatted_string (locale.translation ("Parse error ($2) at regular expression %"$1%"."), [regexp, description])
+			else
+				Result := locale.formatted_string (locale.translation ("Parse error: Invalid regular expression: %"$1%"."), [regexp])
+			end
+		end
+
 feature -- Boolean values
 
 	boolean_true: STRING_32 do Result := locale.translation ("True") end

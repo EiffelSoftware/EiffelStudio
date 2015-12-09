@@ -85,27 +85,37 @@ feature -- Access queries
 			end
 		end
 
-	active_file_rule (a_state: CONF_STATE): CONF_FILE_RULE
-			-- Active file rule for `a_state'.
+	active_file_rule (a_state: CONF_STATE): detachable CONF_FILE_RULE
+			-- Active file rule for `a_state' if there is no error.
+			-- Set `last_error' to the corresponding error otherwise.
 		require
 			a_state_not_void: a_state /= Void
 		local
 			l_rules: like file_rule
+			r: CONF_FILE_RULE
 		do
+			reset_error
 			create Result.make
 			from
 				l_rules := file_rule
 				l_rules.start
 			until
-				l_rules.after
+				l_rules.after or Result = Void
 			loop
-				if l_rules.item.is_enabled (a_state) then
-					Result.merge (l_rules.item)
+				r := l_rules.item
+				if r.is_enabled (a_state) then
+					if r.valid_includes and r.valid_excludes then
+						Result.merge (r)
+						if attached Result.error as e then
+							set_error (create {CONF_ERROR_REGEXP}.make_with_description ("", e))
+						end
+					end
 				end
 				l_rules.forth
 			end
 		ensure
-			Result_not_void: Result /= Void
+			attached_result: not attached last_error implies attached Result
+			attached_last_error: not attached Result implies attached last_error
 		end
 
 	file_rule: ARRAYED_LIST [CONF_FILE_RULE]
@@ -578,7 +588,7 @@ invariant
 	parent_child_relationship: attached parent as p implies (attached p.children as p_children and then p_children.has (Current))
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

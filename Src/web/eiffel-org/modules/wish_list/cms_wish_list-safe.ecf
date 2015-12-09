@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="wish_list_module" uuid="217DC548-0579-48B8-90A5-355F4F49C078" library_target="wish_list_module">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wish_list_module" uuid="217DC548-0579-48B8-90A5-355F4F49C078" library_target="wish_list_module">
 	<target name="wish_list_module">
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/site</exclude>
 			<exclude>/.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="all" syntax="standard">
 		</option>
 		<library name="apis" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\apis\apis.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
@@ -19,11 +20,25 @@
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
+		<library name="motion" location="..\..\library\motion\motion-safe.ecf" readonly="false"/>
 		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html-safe.ecf"/>
-		<cluster name="src" location=".\" recursive="true"/>
+		<cluster name="src" location=".\" recursive="true">
+			<file_rule>
+				<exclude>^model$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^model$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^model$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>^validator$</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

@@ -1,14 +1,14 @@
-<h1 class="sub-header">WISH# {$wish.id/} {$wish.synopsis/} </h1>  
+<h1 class="sub-header">{$module_item/}# {$wish.id/} {$wish.synopsis/} </h1>  
 	{if isset="$can_edit"}
 		<div id="primary-tabs" class="menu tabs"><ul class="horizontal">
-			<li class="active"><a href="{$site_url/}resources/wish/{$wish.id/}/form">Edit</a></li></ul>
+			<li class="active"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/form">Edit</a></li></ul>
 		</div>	
 	{/if}
 	<div class="row">
 			{if condition="$can_vote"}
 				<div class="vote-container">
   			   		 <div class="vote-float">
-							<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+							<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
 								<input type="hidden" name="wishid" value="{$wish.id/}">
 								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
 							</form>
@@ -16,7 +16,7 @@
 				</div>
 				<div class="vote-container">
  				    <div class="vote-float">
- 				    		<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+ 				    		<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
 							<input type="hidden" name="wishid" value="{$wish.id/}">
 							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
 						</form>
@@ -28,7 +28,7 @@
 			<div class="vote-container">
   			    <div class="vote-float">
 				    	{if condition="$do_like"}
-							<form  action="{$site_url/}resources/wish/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
+							<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/like" id="wish" method="POST" itemprop="vote">
 								<input type="hidden" name="wishid" value="{$wish.id/}">
 								<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/like.png" width="52" height="52" alt="Like"></button>
 							</form>
@@ -39,7 +39,7 @@
 			<div class="vote-container">
   				  <div class="vote-float">
 					{if condition="$do_not_like"}
-						<form  action="{$site_url/}resources/wish/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
+						<form  action="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/not_like" id="wish" method="POST" itemprop="vote">
 							<input type="hidden" name="wishid" value="{$wish.id/}">
 							<button class='vote-button vote-btn-blue' type="submit" ><img src="{$site_url/}theme/images/notlike.png" width="52" height="52" alt="Not Like"></button>
 						</form>
@@ -63,7 +63,7 @@
 										<div class="panel panel-default">
 											<div class="panel-heading">
 												<span class="label label-primary-api-interactions" itemprop="attachment">Attachment:</span>
-													<a href="{$site_url/}resources/wish/{$wish.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
 												<span class="label label-primary-api-interactions">Size:</span>{$elem.size/}
 											</div>
 										</div>
@@ -87,7 +87,7 @@
 					<br/>
 					{foreach from="$item.attachments" item="elem"}
 								<span class="label label-primary-api-interactions" itemprop="attachment">Attachment:</span>
-								<a href="{$site_url/}resources/wish/{$wish.id/}/interaction/{$item.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/interaction/{$item.id/}/download/{$elem.name/}" download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
 								<span class="label label-primary-api-interactions">Size:</span>{$elem.size/}
 					{/foreach}
 				</div>
@@ -98,7 +98,7 @@
 {if isset="$user"}
 	 <div  class="row">
 	 	 <ul class="cms-links">
-			<li><a href="{$site_url/}resources/wish/detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a></li>
+			<li><a href="{$site_url/}{$resource_path/}/{$module_item/}/detail/{$wish.id/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a></li>
 		  </ul>	
 	 </div> 		
 {/if}

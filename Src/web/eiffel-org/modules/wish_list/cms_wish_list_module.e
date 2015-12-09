@@ -60,7 +60,7 @@ feature {CMS_API} -- Module Initialization
 			-- <Precursor>
 		local
 			l_wish_list_api: like wish_list_api
-			l_wish_list_storage: CMS_WISH_LIST_STORAGE_I
+			l_wish_list_storage: CMS_MOTION_LIST_STORAGE_I
 		do
 			Precursor (a_api)
 
@@ -69,11 +69,11 @@ feature {CMS_API} -- Module Initialization
 				create {CMS_WISH_LIST_STORAGE_SQL} l_wish_list_storage.make (l_storage_sql)
 			else
 				-- FIXME: in case of NULL storage, should Current be disabled?
-				create {CMS_WISH_LIST_STORAGE_NULL} l_wish_list_storage
+				create {CMS_MOTION_LIST_STORAGE_NULL} l_wish_list_storage
 			end
 
 				-- API initialization
-			create l_wish_list_api.make_with_storage (a_api, l_wish_list_storage)
+			create {CMS_WISH_LIST_API} l_wish_list_api.make_with_storage (a_api, l_wish_list_storage)
 			wish_list_api := l_wish_list_api
 		ensure then
 			wish_list_api_set: wish_list_api /= Void
@@ -101,7 +101,7 @@ feature {CMS_API} -- Module management
 
 feature {CMS_API} -- Access: API
 
-	wish_list_api: detachable CMS_WISH_LIST_API
+	wish_list_api: detachable CMS_MOTION_API
 			-- <Precursor>		
 
 feature -- Filters
@@ -137,17 +137,17 @@ feature -- Router
 			end
 		end
 
-	configure_web (a_api: CMS_API; a_wish_list_api: CMS_WISH_LIST_API; a_router: WSF_ROUTER)
+	configure_web (a_api: CMS_API; a_wish_list_api: CMS_MOTION_API; a_router: WSF_ROUTER)
 		local
-			l_wish_handler: CMS_WISH_LIST_HANDLER
-			l_wish_detail_handler: CMS_WISH_DETAIL_HANDLER
-			l_wish_form_handler: CMS_WISH_FORM_HANDLER
-			l_wish_interaction_form_handler: CMS_WISH_INTERACTION_FORM_HANDLER
-			l_wish_file_download_handler: CMS_WISH_FILE_DOWNLOAD_HANDER
-			l_categories_handler: CMS_WISH_CATEGORIES_HANDLER
-			l_category_handler: CMS_WISH_CATEGORY_HANDLER
+			l_wish_handler: CMS_MOTION_LIST_HANDLER
+			l_wish_detail_handler: CMS_MOTION_DETAIL_HANDLER
+			l_wish_form_handler: CMS_MOTION_FORM_HANDLER
+			l_wish_interaction_form_handler: CMS_MOTION_INTERACTION_FORM_HANDLER
+			l_wish_file_download_handler: CMS_MOTION_FILE_DOWNLOAD_HANDER
+			l_categories_handler: CMS_MOTION_CATEGORIES_HANDLER
+			l_category_handler: CMS_MOTION_CATEGORY_HANDLER
 			l_uri_mapping: WSF_URI_MAPPING
-			l_vote_handler: CMS_WISH_VOTE_HANDLER
+			l_vote_handler: CMS_MOTION_VOTE_HANDLER
 
 		do
 

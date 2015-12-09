@@ -25,7 +25,8 @@
 										<ul>
 											<li><a href="{$site_url/}resources/libraries">Libraries</a></li>
 											<li><a href="{$site_url/}resources/tools">Tools</a></li>
-											<li><a href="{$site_url/}resources/Eiffel_Wish_List">Wish list</a></li>
+											<li><a href="{$site_url/}resources/wish_list">Wish list</a></li>
+											<li><a href="{$site_url/}resources/task_list">Task list</a></li>
 											<li><a href="{$site_url/}resources/videos">Videos</a></li>
 											<li><a href="{$site_url/}resources/follow_us">Follow us</a></li>
 										</ul>

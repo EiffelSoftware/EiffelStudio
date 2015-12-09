@@ -1,13 +1,13 @@
 		<div class="row">
 				{if isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish/detail/{$form.wish.id/}/interaction_form/{$id/}" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
+					<form class="form-inline well" action="{$site_url/}{$resource_path/}/{$module_item/}/detail/{$form.wish.id/}/interaction_form/{$id/}" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
 				{/if}
 				{unless isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish/detail/{$form.wish.id/}/interaction_form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
+					<form class="form-inline well" action="{$site_url/}{$resource_path/}/{$module_item/}/detail/{$form.wish.id/}/interaction_form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
 				{/unless}
 					<fieldset>
 						<legend><h1>Wish Interaction Submission</h1></legend>
-						<p>Fill in the description for the new interaction for the <strong>{$form.wish.status.synopsis/}</strong> item wish <a target="_blank" href="{$site_url/}resources/wish/{$form.wish.id/}/detail">{$form.wish.id/}</a>.</p>
+						<p>Fill in the description for the new interaction for the <strong>{$form.wish.status.synopsis/}</strong> item wish <a target="_blank" href="{$site_url/}{$resource_path/}/{$module_item/}/{$form.wish.id/}/detail">{$form.wish.id/}</a>.</p>
 								<label class="control-label" for="textarea">Description</label>
 								<div class="controls">
 									<textarea class="class-form-textarea" id="description" name="description" rows="17" placeholder="" required form="wish">{$form.description/}</textarea>
@@ -81,7 +81,7 @@
 						{if isset="$id"}
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">Update</button>
-								<a href="{$site_url/}resources/wish_list">Go to wish list</a>
+								<a href="{$site_url/}{$resource_path/}/{$module_item/}_list">Go to wish list</a>
 							</div>
 						{/if}
 						{unless isset="$id"}

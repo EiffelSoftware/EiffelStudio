@@ -1,12 +1,12 @@
 		<div class="row">
 				{if isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish/{$id/}/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
+					<form class="form-inline well" action="{$site_url/}{$resource_path/}/{$module_item/}/{$id/}/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="update">
 						{if isset="$status"}
 							<input type="hidden" name="status" value="{$status.id/}">
 						{/if}
 				{/if}
 				{unless isset="$id"}
-					<form class="form-inline well" action="{$site_url/}resources/wish/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
+					<form class="form-inline well" action="{$site_url/}{$resource_path/}/{$module_item/}/form" id="wish" method="POST" enctype="multipart/form-data" itemprop="create">
 				{/unless}
 						{unless isset="$status"}
 							<input type="hidden" name="status" value="1">
@@ -52,7 +52,7 @@
 						{if isset="$id"}
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">Update</button>
-								<a href="{$site_url/}resources/wish_list">Go to wish list</a>
+								<a href="{$site_url/}{$resource_path/}/{$module_item/}_list">Go to {$module_item/} list</a>
 							</div>
 						{/if}
 						{unless isset="$id"}

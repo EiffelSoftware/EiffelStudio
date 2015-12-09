@@ -1,7 +1,7 @@
 {include file="search_by_wish_id.tpl"/}
 
 <div class="row">
-      <form action="{$site_url/}resources/wish_list" id="search" method="GET" itemprop="search">
+      <form action="{$site_url/}{$resource_path/}/{$module_name/}" id="search" method="GET" itemprop="search">
       		<input type="hidden" name="size" value="{$size/}"/>
               <label class="class-form-2 tooltip" itemprop="category" title="The name of the product, component or concept where the problem lies. In order to get the best possible support, please select the category carefully.">Category</label>
 	          <select class="class-form-4" data-style="btn-primary" name="category" form="search" itemprop="search">
@@ -19,7 +19,7 @@
 		      <label class="class-form-4 tooltip" itemprop="status" title="<small><p>The status of a problem can be one of the following:</p>
                 <ul>
                   <li><b>Open</b> The initial state of a Problem Report. This means the PR has been filed and the responsible person(s) notified.</li>
-                  <li><b>Analyzed</b> The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and resources necessary to solve the problem. It should also suggest possible workarounds.</li>
+                  <li><b>Analyzed</b> The responsible person has analyzed the problem. The analysis should contain a preliminary evaluation of the problem and an estimate of the amount of time and {$resource_path/} necessary to solve the problem. It should also suggest possible workarounds.</li>
                   <li><b>Closed</b> A Problem Report is closed only when any changes have been integrated, documented, and tested, and the submitter has confirmed the solution </li>
                   <li><b>Suspended</b> Work on the problem has been postponed. This happens if a timely solution is not possible or is not cost-effective at the present time. The PR continues to exist, though a solution is not being actively sought. If the problem cannot be solved at all, it should be closed rather than suspended.</li>
                   <li><b>Won't fix</b> Won't fix problem report.</li>
@@ -34,7 +34,7 @@
                   <input type="checkbox" id="checkbox-status-{$item.id/}" name="status" value="{$item.id/}"/>
                 {/unless}
               <label class="class-form-2" for="checkbox-status-{$item.id/}">
-                <img src="{$site_url/}module/wish_list/files/images/status_{$item.id/}.gif" class="img-rounded tooltip" title="{$item.synopsis/}"/>
+                <img src="{$site_url/}module/{$module_name/}/files/images/status_{$item.id/}.gif" class="img-rounded tooltip" title="{$item.synopsis/}"/>
               </label>
               {/foreach}
           <label class="class-form-4 tooltip" title="To retrieve wish list items filtered by default synopsis or Content, Descriptions, Interactions Content" itemprop="filter" data-original-title="<p>Filter problem Report</p>">Filter</label>
@@ -63,7 +63,7 @@
 				<input type="hidden" name="pages" id="pages_pe" value="{$pages/}"/>
 				<input type="hidden" name="size" id="size_pe" value="{$size/}"/>
 
-				<form action="{$site_url/}resources/wish_list" id="wish_list" method="GET" itemprop="size">
+				<form action="{$site_url/}{$resource_path/}/{$module_name/}" id="wish_list" method="GET" itemprop="size">
 					<input type="hidden" name="page" id="page_pe" value="{$index/}"/>
 					<input type="hidden" name="category" id="category_pe" value="{$selected_category/}"/>
 					<input type="hidden" name="orderBy" id="orderBy_pe" value="{$orderBy/}"/>
@@ -95,14 +95,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># </a>
+						<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"># </a>
 					{/unless}
 				</th>
 				<th>
@@ -111,14 +111,14 @@
 					
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/wish_list/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/{$module_name/}/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/wish_list/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/{$module_name/}/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if}	
 						{unless condition="$view.order_by ~ $column"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/wish_list/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}"><img src="{$site_url/}module/{$module_name/}/files/images/grid_header.gif" class="img-rounded" alt="{$item.status.synopsis/}"/> </a>
 						{/unless}
 				</th>
 				<th>
@@ -127,14 +127,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis </a>
+						<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Synopsis </a>
 					{/unless}
 				</th>
 				<th> 
@@ -143,14 +143,14 @@
 				
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date </a>
+						<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Date </a>
 					{/unless}
 				</th>
 				<th>
@@ -158,14 +158,14 @@
 					{assign name="ldir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category </a>
+						<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Category </a>
 					{/unless}
 				</th>
 				<th>
@@ -173,14 +173,14 @@
 					{assign name="ldir" value="ASC"/}
 					{if condition="$view.order_by ~ $column"}
 						{if condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes <img src="{$site_url/}module/wish_list/files/images/up.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=DESC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes <img src="{$site_url/}module/{$module_name/}/files/images/up.gif" class="img-rounded"/></a>
 						{/if}
 						{unless condition="$view.direction ~ $ldir"}
-							<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes <img src="{$site_url/}module/wish_list/files/images/down.gif" class="img-rounded"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes <img src="{$site_url/}module/{$module_name/}/files/images/down.gif" class="img-rounded"/></a>
 						{/unless}
 					{/if} 
 					{unless condition="$view.order_by ~ $column"}
-						<a href="{$site_url/}resources/wish_list?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes </a>
+						<a href="{$site_url/}{$resource_path/}/{$module_name/}?page={$index/}&amp;size={$size/}&amp;orderBy={$column/}&amp;dir=ASC&amp;status={$status_query/}&amp;filter={$view.filter/}&amp;filter_content={$view.filter_content/}">Votes </a>
 					{/unless}
 				</th>
 			</tr>
@@ -188,9 +188,9 @@
 		<tbody>
 			{foreach from="$wish_list" item="item"}
 				<tr>
-					<td itemprop="report_number"><a href="{$site_url/}resources/wish/{$item.id/}/detail" itemprop="report_interaction" rel="report_interaction">{$item.id/}</a></td>
+					<td itemprop="report_number"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$item.id/}/detail" itemprop="report_interaction" rel="report_interaction">{$item.id/}</a></td>
 					<td class="text-center tooltip" itemprop="status">
-							<a href="{$site_url/}resources/wish_list?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$site_url/}module/wish_list/files/images/status_{$item.status.id/}.gif" class="img-rounded" title="{$item.status.synopsis/}"/></a>
+							<a href="{$site_url/}{$resource_path/}/{$module_name/}?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$site_url/}module/{$module_name/}/files/images/status_{$item.status.id/}.gif" class="img-rounded" title="{$item.status.synopsis/}"/></a>
 					</td>
 
 					<td itemprop="synopsis">{$item.synopsis/}</td>
@@ -208,7 +208,7 @@
 		
 	{if isset="$user"}
 		<div class="btn-add-wish">
-			<a href="{$host/}resources/wish/form" itemprop="create-wish-form" rel="create-wish-form">Add Wish</a>
+			<a href="{$host/}{$resource_path/}/{$module_item/}/form" itemprop="create-wish-form" rel="create-wish-form">Add {$module_item/}</a>
 		</div>
 	{/if}
 

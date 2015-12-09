@@ -48,10 +48,14 @@ feature -- Access, stored in configuration file
 	description: detachable STRING_32
 			-- A description about the rules.
 
+	error: detachable STRING_32
+			-- An error message (if any) set by `add_exclude', `add_include', `del_exclude', `del_include'.
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	add_exclude (a_pattern: STRING_32)
 			-- Add an exclude pattern.
+			-- Set `error' if combined exclude or include patterns cannot be compiled.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
 		local
@@ -68,6 +72,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	add_include (a_pattern: STRING_32)
 			-- Add an include pattern.
+			-- Set `error' if combined exclude or include patterns cannot be compiled.
 		require
 			a_pattern_ok: valid_regexp (a_pattern)
 		local
@@ -84,6 +89,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	del_exclude (a_pattern: STRING_32)
 			-- Delete an exclude pattern.
+			-- Set `error' if combined exclude or include patterns cannot be compiled.
 		require
 			a_pattern_ok: attached exclude as l_exclude and then l_exclude.has (a_pattern)
 		do
@@ -100,6 +106,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	del_include (a_pattern: STRING_32)
 			-- Delete an include pattern.
+			-- Set `error' if combined exclude or include patterns cannot be compiled.
 		require
 			a_pattern_ok: attached include as l_include and then l_include.has (a_pattern)
 		do
@@ -126,6 +133,7 @@ feature {CONF_ACCESS} -- Merging
 
 	merge (other: like Current)
 			-- Merge with other.
+			-- Set `error' if combined exclude or include patterns cannot be compiled.
 		require
 			other_valid: other.valid_excludes and other.valid_includes
 		do
@@ -147,8 +155,6 @@ feature {CONF_ACCESS} -- Merging
 				end
 
 				compile
---				exclude_regexp.merge (other.exclude_regexp)
---				include_regexp.merge (other.include_regexp)
 			end
 		end
 
@@ -206,18 +212,27 @@ feature {NONE} -- Implementation
 
 	compile
 			-- (Re)compile the regexp patterns.
+		require
+			valid_exclude: attached exclude as e implies across e as ec all valid_regexp (ec.item) end
+			valid_include: attached include as i implies across i as ic all valid_regexp (ic.item) end
 		do
 			exclude_regexp := compile_list (exclude)
-			include_regexp := compile_list (include)
+			if not attached error then
+					-- Do not compile includes if excudes cannot be compiled to keep errors.
+				include_regexp := compile_list (include)
+			end
 		end
 
 	compile_list (a_list: like include): detachable REGULAR_EXPRESSION
 			-- Compile `a_list' into a regular expression.
+		require
+			valid_a_list: attached a_list as xs implies across xs as x all valid_regexp (x.item) end
 		local
 			l_regexp_str: STRING
 			l_left_paren, l_right_paren_and_bar: STRING
 			u: UTF_CONVERTER
 		do
+			error := Void
 			if a_list /= Void and then not a_list.is_empty then
 				debug ("fixme")
 					(create {REFACTORING_HELPER}).fixme ("Support regular expressions with Unicode.")
@@ -241,10 +256,12 @@ feature {NONE} -- Implementation
 				create Result
 				Result.set_caseless ({PLATFORM}.is_windows)
 				Result.compile (l_regexp_str)
-				check
-					correct_regexp: Result.is_compiled
+				if Result.is_compiled then
+					Result.optimize
+				else
+					error := Result.error_message
+					Result := Void
 				end
-				Result.optimize
 			end
 		end
 
@@ -284,12 +301,8 @@ feature -- Contracts
 			end
 		end
 
-invariant
-	exclude_patterns_valid: valid_excludes
-	include_patterns_valid: valid_includes
-
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

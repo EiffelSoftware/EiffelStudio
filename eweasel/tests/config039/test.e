@@ -1,0 +1,1 @@
+class TEST end

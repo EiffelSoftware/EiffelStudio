@@ -2173,6 +2173,9 @@ feature {NONE} -- Implementation content processing
 			if valid_regexp (current_content) then
 				if attached current_file_rule as l_current_file_rule then
 					l_current_file_rule.add_exclude (current_content)
+					if attached l_current_file_rule.error as e then
+						set_error (create {CONF_ERROR_REGEXP}.make_with_description (current_content, e))
+					end
 				else
 					check file_rule: False end
 					set_internal_error
@@ -2190,6 +2193,9 @@ feature {NONE} -- Implementation content processing
 			if valid_regexp (current_content) then
 				if attached current_file_rule as l_current_file_rule then
 					l_current_file_rule.add_include (current_content)
+					if attached l_current_file_rule.error as e then
+						set_error (create {CONF_ERROR_REGEXP}.make_with_description (current_content, e))
+					end
 				else
 					check file_rule: False end
 					set_internal_error

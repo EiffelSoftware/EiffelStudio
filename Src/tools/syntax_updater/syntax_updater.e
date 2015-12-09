@@ -189,9 +189,11 @@ feature {NONE} -- Implementation
 				display_error (l_loader.last_error.text)
 			else
 					-- Remove the `is_obsolete_routine_type' option if present on all targets.
-				across l_loader.last_system.targets as l_target loop
-					if attached l_target.item.internal_options as l_options then
-						l_options.unset_is_obsolete_routine_type
+				if has_option (update_agents_switch) then
+					across l_loader.last_system.targets as l_target loop
+						if attached l_target.item.internal_options as l_options then
+							l_options.unset_is_obsolete_routine_type
+						end
 					end
 				end
 					-- Resave the file in the right format

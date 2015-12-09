@@ -121,10 +121,10 @@ feature -- Processing
 				-- do we check that they are not just identifier, but class types.
 			if
 				not has_obsolete_constructs and then is_updating_agents and then
-				(a_scn.same_test_case_insensitve_as (routine_class_name) or
-				a_scn.same_test_case_insensitve_as (procedure_class_name) or
-				a_scn.same_test_case_insensitve_as (function_class_name) or
-				a_scn.same_test_case_insensitve_as (predicate_class_name))
+				(a_scn.is_text_case_insensitve_equal_to (routine_class_name) or
+				a_scn.is_text_case_insensitve_equal_to (procedure_class_name) or
+				a_scn.is_text_case_insensitve_equal_to (function_class_name) or
+				a_scn.is_text_case_insensitve_equal_to (predicate_class_name))
 			then
 				l_cnt := a_scn.text_count
 				l_str := Reusable_string_buffer

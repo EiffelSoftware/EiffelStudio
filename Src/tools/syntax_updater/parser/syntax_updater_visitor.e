@@ -494,12 +494,9 @@ feature {NONE} -- Implementation
 						last_index := l_as.closing_bracket_as_index
 					else
 							-- Case of an agent of the form PROCEDURE [ANY, TUPLE],
-							-- the new declaration is PROCEDURE [TUPLE].
-						safe_process (l_as.opening_bracket_as (match_list))
-							-- Dropping the first generic parameter, and keeping the one from the tuple.
-						last_index := l_tuple.first_token (match_list).index
-						safe_process (l_tuple)
-						safe_process (l_as.closing_bracket_as (match_list))
+							-- the new declaration is simply PROCEDURE.
+							-- We drop everything between the brackets, including them.
+						last_index := l_as.closing_bracket_as (match_list).index
 					end
 				else
 					if attached l_tuple.generics as l_generics then
@@ -513,11 +510,10 @@ feature {NONE} -- Implementation
 						safe_process (l_as.closing_bracket_as (match_list))
 					else
 							-- Case of an agent of the form FUNCTION [ANY, TUPLE, STRING],
-							-- the new declaration is FUNCTION [TUPLE, STRING].
+							-- the new declaration is FUNCTION [STRING].
 						safe_process (l_as.opening_bracket_as (match_list))
 							-- Dropping the first generic parameter, and keeping the one from the tuple.
-						last_index := l_tuple.first_token (match_list).index
-						safe_process (l_tuple)
+						last_index := l_as.i_th (3).first_token (match_list).index
 						safe_process (l_as.i_th (3))
 						safe_process (l_as.closing_bracket_as (match_list))
 					end

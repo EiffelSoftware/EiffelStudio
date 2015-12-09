@@ -495,7 +495,15 @@ feature -- Visit nodes
 			a_cluster.set_classes (l_current_classes)
 			a_cluster.set_classes_by_filename (current_classes_by_filename)
 
-			process_cluster_recursive ({STRING_32} "", a_cluster, a_cluster.active_file_rule (state))
+			if attached a_cluster.active_file_rule (state) as f then
+				process_cluster_recursive ({STRING_32} "", a_cluster, f)
+			else
+				check
+					from_active_file_rule_postcondition: attached a_cluster.last_error as e
+				then
+					add_and_raise_error (e)
+				end
+			end
 
 			if partial_classes /= Void then
 				process_partial_classes
@@ -1140,7 +1148,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -86,7 +86,15 @@ feature -- Visit nodes
 		do
 			on_process_group (an_override)
 				-- Check if any classes have been added and force a rebuild if this is the case.
-			process_cluster_recursive ({STRING_32} "", an_override, an_override.active_file_rule (state))
+			if attached an_override.active_file_rule (state) as f then
+				process_cluster_recursive ({STRING_32} "", an_override, f)
+			else
+				check
+					from_active_file_rule_postcondition: attached an_override.last_error as e
+				then
+					add_and_raise_error (e)
+				end
+			end
 			find_modified (an_override)
 		end
 
@@ -213,7 +221,7 @@ invariant
 	process_group_observer_not_void: process_group_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

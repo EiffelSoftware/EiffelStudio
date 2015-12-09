@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="controller" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="common">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="controller" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="common">
 	<target name="common" abstract="true">
 		<root class="IRON_NODE_SERVICE_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
@@ -7,15 +7,14 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="standard">
+		<option debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="transitional" syntax="standard">
 			<debug name="iron" enabled="true"/>
 			<debug name="no_cache" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="thread"/>
 		<setting name="executable_name" value="irond"/>
-
+		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="conneg" location="$ISE_LIBRARY\contrib\library\network\protocol\content_negotiation\conneg-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>
@@ -37,48 +36,47 @@
 	<target name="server_libfcgi" extends="common">
 		<setting name="concurrency" value="none"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
-		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 	</target>
 	<target name="server_cgi" extends="common">
 		<setting name="concurrency" value="none"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
-		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 	</target>
 	<target name="server_standalone" extends="common">
 		<setting name="concurrency" value="scoop"/>
-		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<variable name="httpd_ssl_disabled" value="true"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
-		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 	</target>
 	<target name="server_any" extends="common">
 		<setting name="concurrency" value="thread"/>
-		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
+		<variable name="httpd_ssl_disabled" value="true"/>
+		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
-		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
 		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
-
-		<cluster name="service_launcher" location=".\service_launcher\any\" recursive="true"/>
 		<cluster name="service" location=".\service\" recursive="true">
 			<file_rule>
 				<exclude>/REMOVED$</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="service_launcher" location=".\service_launcher\any\" recursive="true"/>
 	</target>
 	<target name="server" extends="server_libfcgi">
 	</target>

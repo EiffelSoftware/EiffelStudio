@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 				create l_saver.make
 				l_saver.process_system (l_loader.last_system)
 				create l_file.make_with_path (a_file)
-				l_file.open_write
+				safe_open_write (l_file)
 				l_file.put_string (l_saver.text)
 				l_file.close
 			end
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			then
 				create file.make_with_path (file_name)
 				count := file.count
-				file.open_read
+				safe_open_read (file)
 				if file.is_open_read then
 					if string_buffer.count < count then
 						string_buffer.resize (count)
@@ -285,9 +285,8 @@ feature {NONE} -- Implementation
 									end
 								end
 								create outfile.make_with_path (file_name)
-								outfile.open_write
 								safe_open_write (outfile)
-								if last_open_write_successful then
+								if last_open_successful then
 									if l_converted and then attached original_bom as l_bom then
 										outfile.put_string (l_bom)
 									end
@@ -350,23 +349,38 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_open_write (a_file: RAW_FILE)
+	safe_open_read (a_file: FILE)
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				a_file.open_write
-				last_open_write_successful := True
+				a_file.open_read
+				last_open_successful := True
 			else
-				last_open_write_successful := False
+				last_open_successful := False
 			end
 		rescue
 			retried := True
 			retry
 		end
 
-	last_open_write_successful: BOOLEAN
-			-- Was last call to `safe_open_write' successful?
+	safe_open_write (a_file: FILE)
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_file.open_write
+				last_open_successful := True
+			else
+				last_open_successful := False
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	last_open_successful: BOOLEAN
+			-- Was last call to `safe_open_read|write' successful?
 
 	is_eiffel_class_updated: BOOLEAN
 			-- Was a class updated?

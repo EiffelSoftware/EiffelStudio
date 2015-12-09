@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error for invalid regexps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,15 +15,35 @@ inherit
 		redefine
 			text
 		end
+
+	CONF_INTERFACE_CONSTANTS
+		undefine
+			out
+		end
+
 create
-	make
+	make,
+	make_with_description
 
 feature {NONE} -- Initialization
 
 	make (a_regexp: READABLE_STRING_GENERAL)
-			-- Create.
+			-- Create an error for regular expression `a_regexp'.
 		do
 			regexp := a_regexp
+		ensure
+			regexp_set: regexp = a_regexp
+			message_set: message = Void
+		end
+
+	make_with_description (a_regexp: READABLE_STRING_GENERAL; d: READABLE_STRING_GENERAL)
+			-- Create an error for regular expression `a_regexp' with description `d'.
+		do
+			regexp := a_regexp
+			message := d
+		ensure
+			regexp_set: regexp = a_regexp
+			message_set: message = d
 		end
 
 feature -- Access
@@ -31,20 +51,16 @@ feature -- Access
 	text: STRING_32
 			-- Error text.
 		do
-			if attached file as l_file then
-				Result := {STRING_32} "Parse error in " + l_file + {STRING_32} ": Invalid regexp: " + regexp
-			else
-				Result := {STRING_32} "Parse error: Invalid regexp: " + regexp
-			end
+			Result := conf_interface_names.e_parse_invalid_regexp (regexp, file, message)
 		end
 
 feature {NONE} -- Implementation
 
-	regexp: READABLE_STRING_GENERAL;
+	regexp: READABLE_STRING_GENERAL
 		-- Incorrect regular expression.
 
-note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

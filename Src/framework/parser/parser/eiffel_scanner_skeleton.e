@@ -232,6 +232,54 @@ feature -- Access: Encoding
 	detected_bom: detachable STRING
 			-- Bom of the encoding detected by last parsing
 
+feature -- Comparison
+
+	is_text_case_insensitve_equal_to (a_text: STRING_8): BOOLEAN
+			-- Is `text' the same as `a_text' in a case insensitive way?
+			--| We use `STRING_8' and not `READABLE_STRING_8' to have
+			--| an efficient comparison using the areas.
+		local
+			i, j, nb: INTEGER
+			l_other_area: SPECIAL [CHARACTER_8]
+		do
+			nb := text_count
+			if nb > 0 and a_text.count = nb then
+				if attached yy_content_area as l_area then
+					from
+						i := 0
+						j := yy_start
+						Result := True
+						l_other_area := a_text.area
+					until
+						i = nb
+					loop
+						if l_area.item (j).as_lower /= l_other_area.item (i).as_lower then
+							i := nb - 1
+							Result := False
+						end
+						i := i + 1
+						j := j + 1
+					end
+				else
+						-- Inefficient version.
+					from
+						i := 1
+						Result := True
+					until
+						i > nb
+					loop
+						if text_item (i).as_lower /= a_text.item (i).as_lower then
+							i := nb
+							Result := False
+						end
+						i := i + 1
+					end
+				end
+			end
+		ensure
+			definition: Result = (text.same_string (a_text))
+		end
+
 feature {NONE} -- Status
 
 	syntax_version: NATURAL_8
@@ -848,7 +896,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

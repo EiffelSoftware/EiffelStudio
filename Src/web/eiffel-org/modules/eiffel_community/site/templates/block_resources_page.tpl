@@ -35,5 +35,12 @@
 										</a>
 										<p><a href="https://twitter.com/eiffel_software">Twitter</a> <a href="https://www.facebook.com/eiffelsoftware">Facebook</a> <a href="https://plus.google.com/117564431713099800122/posts">Google+</a> <a href="http://www.youtube.com/user/EiffelLanguage">Youtube</a></p>
 									</li>
+									<li class="medium-card">
+										<a href="{$site_url/}resources/task_list">
+											<span class="ico"><img src="{$site_url/}theme/images/person277.png" width="52" height="52" alt="Tasks"></span>
+											<h2>Task list</h2>
+											<p>Help Us Spread the World.</p>
+										</a>
+									</li>
 								</ul>
 							</section>

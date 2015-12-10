@@ -198,7 +198,7 @@ feature -- Basic operation
 					if attached include_regexp as l_include_regexp then
 							-- it's excluded, check if there is an include that matches
 						check
-							compiled_include_regexp: include_regexp.is_compiled
+							compiled_include_regexp: l_include_regexp.is_compiled
 						end
 						l_include_regexp.match (l_loc)
 						Result := l_include_regexp.has_matched

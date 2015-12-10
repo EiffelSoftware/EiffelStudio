@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 	make (nb: INTEGER)
 		do
 			create items.make (nb)
+			items.compare_objects
 		end
 
 feature -- Access
@@ -33,6 +34,21 @@ feature -- Access
 			loop
 				if ic.item.name.is_case_insensitive_equal_general (a_voc_name) then
 					Result := ic.item
+				end
+			end
+		end
+
+	item_by_id (a_id: INTEGER_64): detachable CMS_VOCABULARY
+			-- Vocabulary of id `a_id' contained in Current, if any.
+		do
+			across
+				items as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if Result.id /= a_id then
+					Result := Void
 				end
 			end
 		end

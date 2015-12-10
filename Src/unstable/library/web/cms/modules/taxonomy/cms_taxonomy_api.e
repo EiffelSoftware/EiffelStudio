@@ -52,7 +52,7 @@ feature -- Access node
 			Result := taxonomy_storage.vocabularies (a_limit, a_offset)
 		end
 
-	vocabulary (a_id: INTEGER): detachable CMS_VOCABULARY
+	vocabulary (a_id: INTEGER_64): detachable CMS_VOCABULARY
 			-- Vocabulary associated with id `a_id'.
 		require
 			valid_id: a_id > 0
@@ -64,6 +64,27 @@ feature -- Access node
 			-- Vocabularies associated with content type `a_type_name'.
 		do
 			Result := taxonomy_storage.vocabularies_for_type (a_type_name)
+		end
+
+	types_associated_with_vocabulary (a_vocab: CMS_VOCABULARY): detachable LIST [READABLE_STRING_32]
+			-- Type names associated with `a_vocab'.
+		do
+			Result := taxonomy_storage.types_associated_with_vocabulary (a_vocab)
+		end
+
+	vocabularies_for_term (a_term: CMS_TERM): detachable CMS_VOCABULARY_COLLECTION
+			-- Vocabularies including `a_term'.
+		do
+			Result := taxonomy_storage.vocabularies_for_term (a_term)
+		end
+
+	is_term_inside_vocabulary (a_term: CMS_TERM; a_vocab: CMS_VOCABULARY): BOOLEAN
+			-- Is `a_term' inside `a_vocab' ?
+		require
+			valid_term: a_term.has_id
+			valid_vocabulary: a_vocab.has_id
+		do
+			Result := taxonomy_storage.is_term_inside_vocabulary (a_term, a_vocab)
 		end
 
 	fill_vocabularies_with_terms (a_vocab: CMS_VOCABULARY)
@@ -125,16 +146,36 @@ feature -- Access node
 feature -- Write
 
 	save_vocabulary (a_voc: CMS_VOCABULARY)
+			-- Insert or update vocabulary `a_voc'
+			-- and also save {CMS_VOCABULARY}.terms if `a_with_terms' is True.	
 		do
 			reset_error
-			taxonomy_storage.save_vocabulary (a_voc)
+			taxonomy_storage.save_vocabulary (a_voc, False)
 			error_handler.append (taxonomy_storage.error_handler)
 		end
 
-	save_term (a_term: CMS_TERM; voc: CMS_VOCABULARY)
+	save_vocabulary_and_terms (a_voc: CMS_VOCABULARY)
+			-- Insert or update vocabulary `a_voc'
+			-- and also save {CMS_VOCABULARY}.terms.	
+		do
+			reset_error
+			taxonomy_storage.save_vocabulary (a_voc, True)
+			error_handler.append (taxonomy_storage.error_handler)
+		end
+
+	save_term (a_term: CMS_TERM; voc: detachable CMS_VOCABULARY)
+			-- Save `a_term' inside `voc' if set.
 		do
 			reset_error
 			taxonomy_storage.save_term (a_term, voc)
+			error_handler.append (taxonomy_storage.error_handler)
+		end
+
+	remove_term_from_vocabulary (t: CMS_TERM; voc: CMS_VOCABULARY)
+			-- Remove term `t' from vocabulary `voc'.
+		do
+			reset_error
+			taxonomy_storage.remove_term_from_vocabulary (t, voc)
 			error_handler.append (taxonomy_storage.error_handler)
 		end
 

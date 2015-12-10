@@ -15,7 +15,7 @@ inherit
 
 	REFACTORING_HELPER
 
-	CMS_ENCODERS
+	CMS_REQUEST_UTIL
 
 create
 	make
@@ -407,7 +407,7 @@ feature {NONE} -- Hooks
 			l_hooks: like hooks
 		do
 			l_hooks := hooks
-			register_hooks (l_hooks)
+			setup_core_hooks (l_hooks)
 			across
 				enabled_modules as ic
 			loop
@@ -436,7 +436,7 @@ feature -- Query: API
 
 feature -- Hooks
 
-	register_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
+	setup_core_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Register hooks associated with the cms core.
 		do
 			a_hooks.subscribe_to_export_hook (Current)

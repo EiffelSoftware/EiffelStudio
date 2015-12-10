@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 	make (nb: INTEGER)
 		do
 			create items.make (nb)
+			items.compare_objects
 		end
 
 feature -- Access
@@ -46,6 +47,21 @@ feature -- Status report
 			-- Has `a_term'?
 		do
 			Result := items.has (a_term)
+		end
+
+	term_by_id (tid: INTEGER_64): detachable CMS_TERM
+			-- Term of id `tid' contained in Current, if any.
+		do
+			across
+				items as ic
+			until
+				Result /= Void
+			loop
+				Result := ic.item
+				if Result.id /= tid then
+					Result := Void
+				end
+			end
 		end
 
 feature -- Element change

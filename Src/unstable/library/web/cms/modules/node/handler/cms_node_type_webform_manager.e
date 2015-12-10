@@ -100,6 +100,7 @@ feature -- Forms ...
 	populate_form_with_taxonomy (response: NODE_RESPONSE; f: CMS_FORM; a_node: detachable CMS_NODE)
 		local
 			ti: detachable WSF_FORM_TEXT_INPUT
+			th: WSF_FORM_HIDDEN_INPUT
 			w_set: WSF_FORM_FIELD_SET
 			w_select: WSF_FORM_SELECT
 			w_opt: WSF_FORM_SELECT_OPTION
@@ -126,6 +127,9 @@ feature -- Forms ...
 					l_vocs as vocs_ic
 				loop
 					voc := vocs_ic.item
+					create th.make_with_text ({STRING_32} "taxonomy_vocabularies[" + voc.id.out + "]", voc.name)
+					w_set.extend (th)
+
 					l_terms := Void
 					if a_node /= Void and then a_node.has_id then
 						l_terms := l_taxonomy_api.terms_of_entity (a_node.content_type, a_node.id.out, voc)
@@ -139,7 +143,7 @@ feature -- Forms ...
 					if voc.is_tags then
 						w_voc_set.set_legend (response.translation (voc.name, Void))
 
-						create ti.make ({STRING_32} "taxonomy_terms[" + voc.name + "]")
+						create ti.make ({STRING_32} "taxonomy_" + voc.id.out)
 						w_voc_set.extend (ti)
 						if voc.is_term_required then
 							ti.enable_required
@@ -186,7 +190,8 @@ feature -- Forms ...
 									voc as voc_terms_ic
 								loop
 									t := voc_terms_ic.item
-									create w_cb.make_with_value ({STRING_32} "taxonomy_terms[" + voc.name + "]", t.text)
+									create w_cb.make_with_value ({STRING_32} "taxonomy_" + voc.id.out + "[]", t.text)
+									w_cb.set_title (t.text)
 									w_voc_set.extend (w_cb)
 									if l_terms /= Void and then across l_terms as ic some ic.item.text.same_string (t.text) end then
 										w_cb.set_checked (True)
@@ -196,7 +201,7 @@ feature -- Forms ...
 									end
 								end
 							else
-								create w_select.make ({STRING_32} "taxonomy_terms[" + voc.name + "]")
+								create w_select.make ({STRING_32} "taxonomy_" + voc.id.out)
 								w_voc_set.extend (w_select)
 
 								if attached voc.description as l_desc then
@@ -248,67 +253,80 @@ feature -- Forms ...
 			l_text: READABLE_STRING_GENERAL
 			l_found: BOOLEAN
 			t: detachable CMS_TERM
+			vid: INTEGER_64
 		do
 			if
 				a_node /= Void and then a_node.has_id and then
-				attached fd.table_item ("taxonomy_terms") as fd_terms
+				attached fd.table_item ("taxonomy_vocabularies") as fd_vocs
 			then
-				across
-					fd_terms.values as ic
-				loop
-					if attached {WSF_STRING} ic.item as l_string then
-						l_voc_name := ic.key
-						l_new_terms := a_taxonomy_api.splitted_string (l_string.value, ',')
-						if attached a_vocs.item_by_name (l_voc_name) as voc then
-							if a_response.has_permissions (<<{STRING_32} "update any taxonomy", {STRING_32} "update " + content_type.name + " taxonomy">>) then
-								create l_terms_to_remove.make (0)
-								if attached a_taxonomy_api.terms_of_entity (content_type.name, a_node.id.out, voc) as l_existing_terms then
-									across
-										l_existing_terms as t_ic
+				if a_response.has_permissions (<<{STRING_32} "update any taxonomy", {STRING_32} "update " + content_type.name + " taxonomy">>) then
+					across
+						fd_vocs.values as ic
+					loop
+						vid := ic.key.to_integer_64
+						l_voc_name := ic.item.string_representation
+
+						if attached a_vocs.item_by_id (vid) as voc then
+							if attached fd.string_item ("taxonomy_" + vid.out) as l_string then
+								l_new_terms := a_taxonomy_api.splitted_string (l_string, ',')
+							elseif attached fd.table_item ("taxonomy_" + vid.out) as fd_terms then
+								create {ARRAYED_LIST [READABLE_STRING_32]} l_new_terms.make (fd_terms.count)
+								across
+									fd_terms as t_ic
+								loop
+									l_new_terms.force (t_ic.item.string_representation)
+								end
+							else
+								create {ARRAYED_LIST [READABLE_STRING_32]} l_new_terms.make (0)
+							end
+
+							create l_terms_to_remove.make (0)
+							if attached a_taxonomy_api.terms_of_entity (content_type.name, a_node.id.out, voc) as l_existing_terms then
+								across
+									l_existing_terms as t_ic
+								loop
+									l_text := t_ic.item.text
+									from
+										l_found := False
+										l_new_terms.start
+									until
+										l_new_terms.after
 									loop
-										l_text := t_ic.item.text
-										from
-											l_found := False
-											l_new_terms.start
-										until
-											l_new_terms.after
-										loop
-											if l_new_terms.item.same_string_general (l_text) then
-													-- Already associated with term `t_ic.text'.
-												l_found := True
-												l_new_terms.remove
-											else
-												l_new_terms.forth
-											end
-										end
-										if not l_found then
-												-- Remove term
-											l_terms_to_remove.force (t_ic.item)
+										if l_new_terms.item.same_string_general (l_text) then
+												-- Already associated with term `t_ic.text'.
+											l_found := True
+											l_new_terms.remove
+										else
+											l_new_terms.forth
 										end
 									end
-									across
-										l_terms_to_remove as t_ic
-									loop
-										a_taxonomy_api.unassociate_term_from_entity (t_ic.item, content_type.name, a_node.id.out)
+									if not l_found then
+											-- Remove term
+										l_terms_to_remove.force (t_ic.item)
 									end
 								end
 								across
-									l_new_terms as t_ic
+									l_terms_to_remove as t_ic
 								loop
-									t := a_taxonomy_api.term_by_text (t_ic.item, voc)
-									if
-										t = Void and voc.is_tags
-									then
-											-- Create new term!
-										create t.make (t_ic.item)
-										a_taxonomy_api.save_term (t, voc)
-										if a_taxonomy_api.has_error then
-											t := Void
-										end
+									a_taxonomy_api.unassociate_term_from_entity (t_ic.item, content_type.name, a_node.id.out)
+								end
+							end
+							across
+								l_new_terms as t_ic
+							loop
+								t := a_taxonomy_api.term_by_text (t_ic.item, voc)
+								if
+									t = Void and voc.is_tags
+								then
+										-- Create new term!
+									create t.make (t_ic.item)
+									a_taxonomy_api.save_term (t, voc)
+									if a_taxonomy_api.has_error then
+										t := Void
 									end
-									if t /= Void then
-										a_taxonomy_api.associate_term_with_entity (t, content_type.name, a_node.id.out)
-									end
+								end
+								if t /= Void then
+									a_taxonomy_api.associate_term_with_entity (t, content_type.name, a_node.id.out)
 								end
 							end
 						end

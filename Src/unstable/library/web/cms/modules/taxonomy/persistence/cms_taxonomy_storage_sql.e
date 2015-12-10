@@ -232,21 +232,41 @@ feature -- Access
 
 feature -- Store
 
-	save_vocabulary (voc: CMS_VOCABULARY)
+	save_vocabulary (voc: CMS_VOCABULARY; a_with_terms: BOOLEAN)
+		local
+			l_terms: CMS_TERM_COLLECTION
 		do
 			save_term (voc, create {CMS_VOCABULARY}.make_none)
-			across
-				voc.terms as ic
-			until
-				has_error
-			loop
-				save_term (ic.item, voc)
+
+			if a_with_terms then
+				l_terms := terms (voc, 0, 0)
+				across
+					voc.terms as ic
+				until
+					has_error
+				loop
+					if attached l_terms.term_by_id (ic.item.id) as t then
+							-- Already contained.
+							-- Remove from `l_terms' to leave only terms to remove.
+						l_terms.remove (t)
+					else
+						save_term (ic.item, voc)
+					end
+				end
+				across
+					l_terms as ic
+				until
+					has_error
+				loop
+					remove_term_from_vocabulary (ic.item, voc)
+				end
 			end
 		end
 
-	save_term (t: CMS_TERM; voc: CMS_VOCABULARY)
+	save_term (t: CMS_TERM; voc: detachable CMS_VOCABULARY)
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_insert_voc: BOOLEAN
 		do
 			error_handler.reset
 
@@ -254,6 +274,8 @@ feature -- Store
 			l_parameters.put (t.text, "text")
 			l_parameters.put (t.description, "description")
 			l_parameters.put (t.weight, "weight")
+
+			l_insert_voc := voc /= Void and then is_term_inside_vocabulary (t, voc)
 
 			sql_begin_transaction
 			if t.has_id then
@@ -263,9 +285,18 @@ feature -- Store
 				sql_insert (sql_insert_term, l_parameters)
 				t.set_id (last_inserted_term_id)
 			end
-			if not has_error then
+			if
+				not has_error and
+				voc /= Void and then
+				not l_insert_voc
+			then
+				l_parameters.wipe_out
 				l_parameters.put (t.id, "tid")
-				l_parameters.put (voc.id, "parent_tid")
+				if voc.has_id then
+					l_parameters.put (voc.id, "parent_tid")
+				else
+					l_parameters.put (0, "parent_tid")
+				end
 				sql_insert (sql_insert_term_in_vocabulary, l_parameters)
 			end
 			if has_error then
@@ -273,6 +304,19 @@ feature -- Store
 			else
 				sql_commit_transaction
 			end
+			sql_finalize
+		end
+
+	remove_term_from_vocabulary (t: CMS_TERM; voc: CMS_VOCABULARY)
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (2)
+			l_parameters.put (t.id, "tid")
+			l_parameters.put (voc.id, "parent_tid")
+			sql_modify (sql_remove_term_from_vocabulary, l_parameters)
 			sql_finalize
 		end
 
@@ -376,6 +420,90 @@ feature -- Vocabulary and types
 			end
 		end
 
+	is_term_inside_vocabulary (a_term: CMS_TERM; a_voc: CMS_VOCABULARY): BOOLEAN
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (2)
+			l_parameters.put (a_term.id, "tid")
+			l_parameters.put (a_voc.id, "parent_tid")
+			sql_query (sql_select_term_in_vocabulary, l_parameters)
+			sql_start
+			if not has_error or sql_after then
+				Result := sql_read_integer_64 (1) > 0
+			end
+			sql_finalize
+		end
+
+	vocabularies_for_term (a_term: CMS_TERM): detachable CMS_VOCABULARY_COLLECTION
+			-- <Precursor>
+		local
+			voc: detachable CMS_VOCABULARY
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_parent_id: INTEGER_64
+			l_ids: ARRAYED_LIST [INTEGER_64]
+		do
+			error_handler.reset
+
+			create l_parameters.make (3)
+			l_parameters.put (a_term.id, "tid")
+			sql_query (sql_select_vocabularies_for_term, l_parameters)
+
+			create l_ids.make (1)
+			from
+				sql_start
+			until
+				sql_after or has_error
+			loop
+				l_parent_id := sql_read_integer_64 (1)
+				l_ids.force (l_parent_id)
+				sql_forth
+			end
+			sql_finalize
+
+			if l_ids.count > 0 then
+				create Result.make (1)
+				across
+					l_ids as ic
+				loop
+					voc := vocabulary (ic.item)
+					if voc /= Void then
+						Result.force (voc)
+					end
+				end
+				if Result.count = 0 then
+					Result := Void
+				end
+			end
+		end
+
+	types_associated_with_vocabulary (a_vocab: CMS_VOCABULARY): detachable LIST [READABLE_STRING_32]
+			-- Type names associated with `a_vocab'.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			error_handler.reset
+
+			create l_parameters.make (1)
+			l_parameters.put (a_vocab.id, "tid")
+			sql_query (sql_select_type_associated_with_vocabulary, l_parameters)
+
+			create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (3)
+			from
+				sql_start
+			until
+				sql_after or has_error
+			loop
+				if attached sql_read_string_32 (1) as l_typename then
+					Result.force (l_typename)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
 	associate_vocabulary_with_type (a_voc: CMS_VOCABULARY; a_type_name: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
@@ -396,10 +524,17 @@ feature -- Vocabulary and types
 				i := i | mask_is_required
 			end
 			l_parameters.put ((- i).out, "entity")
-
 			l_parameters.put (a_type_name, "type")
 
-			sql_insert (sql_insert_term_index, l_parameters)
+			if
+				attached vocabularies_for_type (a_type_name) as lst and then
+				across lst as ic some a_voc.id = ic.item.id  end
+			then
+				sql_modify (sql_update_term_index, l_parameters)
+			else
+				sql_insert (sql_insert_term_index, l_parameters)
+			end
+
 			sql_finalize
 		end
 
@@ -464,6 +599,20 @@ feature {NONE} -- Queries
 			]"
 			-- Terms under :parent_tid.
 
+	sql_select_vocabularies_for_term: STRING = "[
+				SELECT parent 
+				FROM taxonomy_hierarchy
+				WHERE tid = :tid
+				;
+		]"
+
+	sql_select_term_in_vocabulary: STRING = "[
+				SELECT count(*)
+				FROM taxonomy_hierarchy
+				WHERE tid = :tid and parent = :parent_tid
+				;
+		]"
+
 	sql_select_terms_with_range: STRING = "[
 				SELECT taxonomy_term.tid, taxonomy_term.text, taxonomy_term.weight, taxonomy_term.description
 				FROM taxonomy_term INNER JOIN taxonomy_hierarchy ON taxonomy_term.tid = taxonomy_hierarchy.tid
@@ -505,6 +654,10 @@ feature {NONE} -- Queries
 				VALUES (:tid, :parent_tid);
 			]"
 
+	sql_remove_term_from_vocabulary: STRING = "[
+				DELETE FROM taxonomy_hierarchy WHERE tid=:tid AND parent=:parent_tid;
+			]"
+
 	sql_select_terms_of_entity: STRING = "[
 			SELECT tid FROM taxonomy_index WHERE type=:type AND entity=:entity;
 		]"
@@ -525,6 +678,19 @@ feature {NONE} -- Queries
 				SELECT tid, entity
 				FROM taxonomy_index
 				WHERE type=:type AND entity <= 0;
+			]"
+
+	sql_select_type_associated_with_vocabulary: STRING = "[
+				SELECT type
+				FROM taxonomy_index
+				WHERE tid=:tid AND entity <= 0;
+			]"
+
+	sql_update_term_index: STRING = "[
+				UPDATE taxonomy_index 
+				SET entity=:entity
+				WHERE tid=:tid and type=:type
+				;
 			]"
 
 	sql_insert_term_index: STRING = "[

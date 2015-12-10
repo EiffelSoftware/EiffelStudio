@@ -152,6 +152,7 @@ feature -- Query
 			-- Retrieved value at `a_index' position in `item'.
 		local
 			l_item: like sql_item
+			i64: INTEGER_64
 		do
 			l_item := sql_item (a_index)
 			if attached {INTEGER_32} l_item as i then
@@ -159,7 +160,18 @@ feature -- Query
 			elseif attached {INTEGER_32_REF} l_item as l_value then
 				Result := l_value.item
 			else
-				check is_integer_32: False end
+				if attached {INTEGER_64} l_item as i then
+					i64 := i
+				elseif attached {INTEGER_64_REF} l_item as l_value then
+					i64 := l_value.item
+				else
+					check is_integer_32: False end
+				end
+				if i64 <= {INTEGER_32}.max_value then
+					Result := i64.to_integer_32
+				else
+					check is_integer_32: False end
+				end				
 			end
 		end
 

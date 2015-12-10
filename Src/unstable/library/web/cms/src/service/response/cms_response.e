@@ -72,7 +72,6 @@ feature {NONE} -- Initialization
 			l_module: CMS_MODULE
 			l_enabled_modules: CMS_MODULE_COLLECTION
 		do
-			api.register_hooks (hooks)
 			l_enabled_modules := api.enabled_modules
 			across
 				l_enabled_modules as ic
@@ -983,6 +982,26 @@ feature -- Theme
 				to_implement ("Check how to add the Retry-after, http://tools.ietf.org/html/rfc7231#section-6.6.4 and http://tools.ietf.org/html/rfc7231#section-7.1.3")
 			end
 		end
+
+feature -- Theme helpers
+
+	wsf_theme: WSF_THEME
+			-- WSF Theme from CMS `theme' for Current response.
+		local
+			t: like internal_wsf_theme
+		do
+			t := internal_wsf_theme
+			if t = Void then
+				create {CMS_TO_WSF_THEME} t.make (Current, theme)
+				internal_wsf_theme := t
+			end
+			Result := t
+		end
+
+feature {NONE} -- Theme helpers		
+
+	internal_wsf_theme: detachable WSF_THEME
+			-- Once per object for `wsf_theme'.
 
 feature -- Element Change
 

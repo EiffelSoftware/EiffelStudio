@@ -91,13 +91,10 @@ ul.horizontal li {
   padding: 5px 2px 5px 2px;
 }
 
-ul.taxonomy-entities {
-  list-style-type: none;
-  padding: 0;
+table.with_border thead td {
+  font-weight: bold;
 }
-ul.taxonomy-entities li {
-  padding: 0;
-  margin-top: 5px;
-  margin-bottom: 10px;
-  border-top: dotted 1px #ccc;
+table.with_border td {
+  border: solid 1px #ccc;
+  padding: 2px 5px 2px 5px;
 }

@@ -13,14 +13,29 @@ class
 
 inherit
 	IRON_ARGUMENT_SINGLE_PARSER
+		redefine
+			validate_arguments
+		end
 
 	IRON_SHARE_ARGUMENTS
 
 create
 	make
 
-feature -- Access
+feature {NONE} -- Validation
 
+	validate_arguments
+			-- <Precursor>
+		do
+			Precursor
+			if has_option (username_switch) and has_option (password_switch) then
+			elseif has_option (configuration_file_switch) then
+			else
+				add_error ("Missing username, password , or configuration file.")
+			end
+		end
+
+feature -- Access
 
 	configuration_file: detachable PATH
 			-- <Precursor>
@@ -208,8 +223,8 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		once
 			create Result.make (12)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", False, False, "username", "required username", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", False, False, "password", "required password", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (username_switch, "Username", True, False, "username", "required username", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (password_switch, "Password", True, False, "password", "required password", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (repo_switch, "Repository", True, False, "url", "Repository url including the version", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (configuration_file_switch, "Configuration file location", True, False, "location", "location of configuration file that may set 'username,password,repository' (.ini syntax)", False))
 
@@ -243,7 +258,7 @@ feature {NONE} -- Switches
 	package_index_switch: STRING = "index"
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -109,6 +109,7 @@ feature -- Access: router
 		do
 			if attached taxonomy_api as l_taxonomy_api then
 				configure_web (a_api, l_taxonomy_api, a_router)
+				configure_web_amin (a_api, l_taxonomy_api, a_router)
 			else
 					-- Issue with api/dependencies,
 					-- thus Current module should not be used!
@@ -120,9 +121,48 @@ feature -- Access: router
 			-- Configure router mapping for web interface.
 		local
 			l_taxonomy_handler: TAXONOMY_HANDLER
+			l_voc_handler: TAXONOMY_VOCABULARY_HANDLER
 		do
 			create l_taxonomy_handler.make (a_api, a_taxonomy_api)
 			a_router.handle ("/taxonomy/term/{termid}", l_taxonomy_handler, a_router.methods_get)
+
+			create l_voc_handler.make (a_api, a_taxonomy_api)
+			a_router.handle ("/taxonomy/vocabulary/", l_voc_handler, a_router.methods_get)
+			a_router.handle ("/taxonomy/vocabulary/{vocid}", l_voc_handler, a_router.methods_get)
+		end
+
+	configure_web_amin (a_api: CMS_API; a_taxonomy_api: CMS_TAXONOMY_API; a_router: WSF_ROUTER)
+			-- Configure router mapping for web interface.
+		local
+			l_taxonomy_handler: TAXONOMY_TERM_ADMIN_HANDLER
+			l_voc_handler: TAXONOMY_VOCABULARY_ADMIN_HANDLER
+		do
+			a_router.handle ("/admin/taxonomy/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_admin_taxonomy (?, ?, a_api)), a_router.methods_get)
+
+			create l_taxonomy_handler.make (a_api, a_taxonomy_api)
+			a_router.handle ("/admin/taxonomy/term/", l_taxonomy_handler, a_router.methods_get_post)
+			a_router.handle ("/admin/taxonomy/term/{termid}", l_taxonomy_handler, a_router.methods_get_post)
+
+			create l_voc_handler.make (a_api, a_taxonomy_api)
+			a_router.handle ("/admin/taxonomy/vocabulary/", l_voc_handler, a_router.methods_get_post)
+			a_router.handle ("/admin/taxonomy/vocabulary/{vocid}", l_voc_handler, a_router.methods_get_post)
+		end
+
+feature -- Handler
+
+	handle_admin_taxonomy (req: WSF_REQUEST; res: WSF_RESPONSE; api: CMS_API)
+		local
+			l_page: CMS_RESPONSE
+			lnk: CMS_LOCAL_LINK
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
+			create lnk.make ("Admin Vocabularies", "admin/taxonomy/vocabulary/")
+			l_page.add_to_primary_tabs (lnk)
+
+			create lnk.make ("Create terms", "admin/taxonomy/term/")
+			l_page.add_to_primary_tabs (lnk)
+
+			l_page.execute
 		end
 
 feature -- Hooks
@@ -139,10 +179,14 @@ feature -- Hooks
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
+		local
+			lnk: CMS_LOCAL_LINK
 		do
-				-- Add the link to the taxonomy to the main menu
---			create lnk.make ("Taxonomy", "taxonomy/")
---			a_menu_system.primary_menu.extend (lnk)
+				 -- Add the link to the taxonomy to the main menu
+			if a_response.has_permission ("admin taxonomy") then
+				create lnk.make ("Taxonomy", "admin/taxonomy/")
+				a_menu_system.management_menu.extend (lnk)
+			end
 		end
 
 end

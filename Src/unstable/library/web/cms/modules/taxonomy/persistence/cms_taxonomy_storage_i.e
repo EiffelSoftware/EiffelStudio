@@ -41,6 +41,24 @@ feature -- Access
 		deferred
 		end
 
+	vocabularies_for_term (a_term: CMS_TERM): detachable CMS_VOCABULARY_COLLECTION
+			-- Vocabularies including `a_term'.
+		deferred
+		end
+
+	is_term_inside_vocabulary (a_term: CMS_TERM; a_vocab: CMS_VOCABULARY): BOOLEAN
+			-- Is `a_term' inside `a_vocab' ?
+		require
+			valid_term: a_term.has_id
+			valid_vocabulary: a_vocab.has_id
+		deferred
+		end
+
+	types_associated_with_vocabulary (a_vocab: CMS_VOCABULARY): detachable LIST [READABLE_STRING_32]
+			-- Type names associated with `a_vocab'.
+		deferred
+		end
+
 	terms_count: INTEGER_64
 			-- Number of terms.
 		deferred
@@ -89,18 +107,26 @@ feature -- Access
 
 feature -- Store
 
-	save_vocabulary (a_voc: CMS_VOCABULARY)
-			-- Insert or update vocabulary `a_voc'.
+	save_vocabulary (a_voc: CMS_VOCABULARY; a_with_terms: BOOLEAN)
+			-- Insert or update vocabulary `a_voc'
+			-- and also save {CMS_VOCABULARY}.terms if `a_with_terms' is True.
 		deferred
 		ensure
 			not error_handler.has_error implies a_voc.has_id and then vocabulary (a_voc.id) /= Void
 		end
 
-	save_term (t: CMS_TERM; voc: CMS_VOCABULARY)
-			-- Insert or update term `t' as part of vocabulary `voc'.
+	save_term (t: CMS_TERM; voc: detachable CMS_VOCABULARY)
+			-- Insert or update term `t' as part of vocabulary `voc' if set.
 		deferred
 		ensure
 			not error_handler.has_error implies t.has_id and then term_by_id (t.id) /= Void
+		end
+
+	remove_term_from_vocabulary (t: CMS_TERM; voc: CMS_VOCABULARY)
+			-- Remove term `t' from vocabulary `voc'.
+		require
+			t_has_id: t.has_id
+		deferred
 		end
 
 	associate_term_with_entity (a_term: CMS_TERM; a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL)

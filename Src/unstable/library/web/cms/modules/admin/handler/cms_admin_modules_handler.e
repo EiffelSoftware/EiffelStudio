@@ -88,7 +88,7 @@ feature -- Execution
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				f := modules_collection_web_form (r)
 				create s.make_empty
-				f.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), s)
+				f.append_to_html (r.wsf_theme, s)
 				r.set_page_title ("Modules")
 				r.set_main_content (s)
 				r.execute
@@ -133,7 +133,7 @@ feature -- Execution
 						then
 							r.add_error_message ("Error occurred.")
 							create s.make_empty
-							f.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), s)
+							f.append_to_html (r.wsf_theme, s)
 							r.set_page_title ("Modules")
 							r.set_main_content (s)
 						else

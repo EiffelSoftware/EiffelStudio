@@ -284,7 +284,7 @@ feature -- Handler
 					create l_submit.make_with_text ("op", "Filter")
 					l_form.extend (l_submit)
 					l_form.extend_html_text ("<br/>")
-					l_form.append_to_html (create {CMS_TO_WSF_THEME}.make (r, r.theme), l_content)
+					l_form.append_to_html (r.wsf_theme, l_content)
 				end
 
 				l_changes.reverse_sort

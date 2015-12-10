@@ -44,7 +44,7 @@ feature -- Execution
 			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 			f := exportation_web_form (l_response)
 			create s.make_empty
-			f.append_to_html (create {CMS_TO_WSF_THEME}.make (l_response, l_response.theme), s)
+			f.append_to_html (l_response.wsf_theme, s)
 			l_response.set_main_content (s)
 			l_response.execute
 		end
@@ -85,7 +85,7 @@ feature -- Execution
 				end
 			end
 			create s.make_empty
-			f.append_to_html (create {CMS_TO_WSF_THEME}.make (l_response, l_response.theme), s)
+			f.append_to_html (l_response.wsf_theme, s)
 			l_response.set_main_content (s)
 			l_response.execute
 		end

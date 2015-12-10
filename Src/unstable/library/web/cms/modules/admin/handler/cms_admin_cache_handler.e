@@ -44,7 +44,7 @@ feature -- Execution
 			create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 			f := clear_cache_web_form (l_response)
 			create s.make_empty
-			f.append_to_html (create {CMS_TO_WSF_THEME}.make (l_response, l_response.theme), s)
+			f.append_to_html (l_response.wsf_theme, s)
 			l_response.set_main_content (s)
 			l_response.execute
 		end
@@ -63,14 +63,14 @@ feature -- Execution
 				fd.is_valid
 			then
 				if attached fd.string_item ("op") as l_op and then l_op.same_string (text_clear_all_caches) then
-					l_response.hooks.invoke_clear_cache (Void, l_response)
+					api.hooks.invoke_clear_cache (Void, l_response)
 					l_response.add_notice_message ("Caches cleared (if allowed)!")
 				else
 					fd.report_error ("Invalid form data!")
 				end
 			end
 			create s.make_empty
-			f.append_to_html (create {CMS_TO_WSF_THEME}.make (l_response, l_response.theme), s)
+			f.append_to_html (l_response.wsf_theme, s)
 			l_response.set_main_content (s)
 			l_response.execute
 		end

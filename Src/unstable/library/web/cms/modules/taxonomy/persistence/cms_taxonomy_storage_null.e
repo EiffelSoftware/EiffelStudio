@@ -53,6 +53,21 @@ feature -- Access
 		do
 		end
 
+	vocabularies_for_term (a_term: CMS_TERM): detachable CMS_VOCABULARY_COLLECTION
+			-- <Precursor>
+		do
+		end
+
+	is_term_inside_vocabulary (a_term: CMS_TERM; a_vocab: CMS_VOCABULARY): BOOLEAN
+			-- <Precursor>
+		do
+		end
+
+	types_associated_with_vocabulary (a_vocab: CMS_VOCABULARY): detachable LIST [READABLE_STRING_32]
+			-- <Precursor>
+		do
+		end
+
 	terms_count: INTEGER_64
 			-- Number of terms.
 		do
@@ -85,16 +100,23 @@ feature -- Access
 
 feature -- Store
 
-	save_vocabulary (a_voc: CMS_VOCABULARY)
-			-- Insert or update vocabulary `a_voc'.
+	save_vocabulary (a_voc: CMS_VOCABULARY; a_with_terms: BOOLEAN)
+			-- Insert or update vocabulary `a_voc'
+			-- and also save {CMS_VOCABULARY}.terms if `a_with_terms' is True.
 		do
 			error_handler.add_custom_error (-1, "not implemented", "save_vocabulary")
 		end
 
-	save_term (t: CMS_TERM; voc: CMS_VOCABULARY)
+	save_term (t: CMS_TERM; voc: detachable CMS_VOCABULARY)
 			-- <Precursor>
 		do
 			error_handler.add_custom_error (-1, "not implemented", "save_term")
+		end
+
+	remove_term_from_vocabulary (t: CMS_TERM; voc: CMS_VOCABULARY)
+			-- Remove term `t' from vocabulary `voc'.
+		do
+			error_handler.add_custom_error (-1, "not implemented", "remove_term_from_vocabulary")
 		end
 
 	associate_term_with_entity (a_term: CMS_TERM; a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL)

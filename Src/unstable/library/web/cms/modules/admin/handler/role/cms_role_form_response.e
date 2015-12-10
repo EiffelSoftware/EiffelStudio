@@ -8,31 +8,11 @@ class
 
 inherit
 	CMS_RESPONSE
-		redefine
-			make,
-			initialize
-		end
 
 	CMS_SHARED_SORTING_UTILITIES
 
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api)
-		do
-			create {WSF_NULL_THEME} wsf_theme.make
-			Precursor (req, res, a_api)
-		end
-
-	initialize
-		do
-			Precursor
-			create {CMS_TO_WSF_THEME} wsf_theme.make (Current, theme)
-		end
-
-	wsf_theme: WSF_THEME
 
 feature -- Query
 

@@ -22,5 +22,6 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module modules\eiffel_download	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\wdocs	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\wish_list	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module modules\task_list	--dir %ROC_CMS_DIR%
 
 echo done

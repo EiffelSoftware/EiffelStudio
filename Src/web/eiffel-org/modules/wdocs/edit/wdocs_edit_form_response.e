@@ -10,8 +10,6 @@ inherit
 	CMS_RESPONSE
 		rename
 			make as make_response
-		redefine
-			initialize
 		end
 
 	WDOCS_MODULE_HELPER
@@ -26,19 +24,10 @@ feature {NONE} -- Initialization
 
 	make (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api; a_wdocs_api: WDOCS_API; a_wdocs_edit_module: WDOCS_EDIT_MODULE)
 		do
-			create {WSF_NULL_THEME} wsf_theme.make
 			wdocs_api := a_wdocs_api
 			wdocs_module := a_wdocs_edit_module.wdocs_module
 			make_response (req, res, a_api)
 		end
-
-	initialize
-		do
-			Precursor
-			create {CMS_TO_WSF_THEME} wsf_theme.make (Current, theme)
-		end
-
-	wsf_theme: WSF_THEME
 
 feature -- Access
 

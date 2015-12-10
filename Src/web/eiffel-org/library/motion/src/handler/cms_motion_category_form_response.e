@@ -11,8 +11,6 @@ inherit
 	CMS_RESPONSE
 		rename
 			make as make_response
-		redefine
-			initialize
 		end
 
 create
@@ -24,17 +22,8 @@ feature {NONE} -- Initialization
 	make (req: WSF_REQUEST; res: WSF_RESPONSE; a_api: like api; a_motion_api: CMS_MOTION_API)
 		do
 			motion_api := a_motion_api
-			create {WSF_NULL_THEME} wsf_theme.make
 			make_response (req, res, a_api)
 		end
-
-	initialize
-		do
-			Precursor
-			create {CMS_TO_WSF_THEME} wsf_theme.make (Current, theme)
-		end
-
-	wsf_theme: WSF_THEME
 
 	motion_api: CMS_MOTION_API
 

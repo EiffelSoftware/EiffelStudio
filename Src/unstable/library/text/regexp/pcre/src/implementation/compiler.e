@@ -1,6 +1,6 @@
 note
 	description: "PCRE compiler"
-	copyright: "Copyright (c) 2001-2008, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2015, Harald Erdbruegger and others"
 	license: "MIT License"
 
 class
@@ -831,6 +831,7 @@ feature {NONE} -- Compilation
 			old_extended, old_greedy: BOOLEAN
 			c: INTEGER
 			stop, flag: BOOLEAN
+			byte_code_constants: BYTE_CODE_CONSTANTS
 		do
 				-- Initialize no required char, and count of literals.
 			required_character := -1
@@ -1107,7 +1108,7 @@ feature {NONE} -- Compilation
 						else
 								-- Else we have a referencing group adjust the opcode.
 							subexpression_count := subexpression_count + 1
-							if subexpression_count > {BYTE_CODE_CONSTANTS}.extract_max then
+							if subexpression_count > byte_code_constants.extract_max then
 								set_error ({ERROR_CONSTANTS}.err_msg_13, 13, pattern_position)
 							else
 								bravalue := {BYTE_CODE_CONSTANTS}.op_bra + subexpression_count.as_integer_32

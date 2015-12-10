@@ -6,10 +6,10 @@ note
 		position. Furthermore, sets 'op_*star', 'op_*plus', 'op_*query'
 		'op_*upto', op_*exact' should be in that order.
 	]"
-	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger and others"
+	copyright: "Copyright (c) 2001-2015, Harald Erdbruegger and others"
 	license: "MIT License"
 
-class BYTE_CODE_CONSTANTS
+expanded class BYTE_CODE_CONSTANTS
 
 feature -- End of pattern
 
@@ -412,9 +412,12 @@ feature -- Miscellaneous
 
 feature -- Constants
 
-	extract_max: NATURAL = 99
+	extract_max: NATURAL
 			-- Highest extraction number. This is limited by the number of opcodes left
-			-- after `op_bra', i.e. 255 - `op_bra'. It is actually set somewhat lower.
+			-- after `op_bra'. It is actually set somewhat lower.
+		do
+			Result := ({like op_bra}.max_value - 1 - op_bra).as_natural_32
+		end
 
 feature -- Access
 

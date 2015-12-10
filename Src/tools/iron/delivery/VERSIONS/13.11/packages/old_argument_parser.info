@@ -1,4 +1,0 @@
-name=old_argument_parser
-description=Argument parser (Obsolete, no unicode support)
-source=../library/argument_parser
-maps=/com.eiffel/library/argument_parser

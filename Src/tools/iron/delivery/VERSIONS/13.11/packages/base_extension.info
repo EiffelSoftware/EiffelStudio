@@ -1,5 +1,0 @@
-name=base_extension
-description=Eiffel Base extension
-source=../library/base_extension
-maps=/com.eiffel/library/base_extension
-maps=/com.eiffel/library/data_structure/adt/base_extension

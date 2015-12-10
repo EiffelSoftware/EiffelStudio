@@ -134,8 +134,6 @@ feature {CONF_ACCESS} -- Merging
 	merge (other: like Current)
 			-- Merge with other.
 			-- Set `error' if combined exclude or include patterns cannot be compiled.
-		require
-			other_valid: other.valid_excludes and other.valid_includes
 		do
 			if attached other as l_other then
 				if attached l_other.exclude as l_other_exclude then
@@ -153,7 +151,6 @@ feature {CONF_ACCESS} -- Merging
 						include := l_other_include.twin
 					end
 				end
-
 				compile
 			end
 		end
@@ -176,14 +173,11 @@ feature -- Basic operation
 			a_path_not_void: a_path /= Void
 			a_sub_path_not_void: a_sub_path /= Void
 		local
-			l_exclude_regexp: like exclude_regexp
-			l_include_regexp: like include_regexp
 			u: UTF_CONVERTER
 			l_loc: STRING_8
 		do
 			Result := True
-			l_exclude_regexp := exclude_regexp
-			if l_exclude_regexp /= Void then
+			if attached exclude_regexp as l_exclude_regexp then
 					-- Our regular expressions in ECFs always contain the cluster separator /
 					-- so we need to include it.
 				if a_path.is_empty then
@@ -195,12 +189,17 @@ feature -- Basic operation
 				end
 				l_loc.append_character ('/')
 				u.utf_32_string_into_utf_8_string_8 (a_sub_path, l_loc)
+				check
+					compiled_exclude_regexp: l_exclude_regexp.is_compiled
+				end
 				l_exclude_regexp.match (l_loc)
 				if l_exclude_regexp.has_matched then
 					Result := False
-					l_include_regexp := include_regexp
-					if l_include_regexp /= Void then
+					if attached include_regexp as l_include_regexp then
 							-- it's excluded, check if there is an include that matches
+						check
+							compiled_include_regexp: include_regexp.is_compiled
+						end
 						l_include_regexp.match (l_loc)
 						Result := l_include_regexp.has_matched
 					end
@@ -213,14 +212,25 @@ feature {NONE} -- Implementation
 	compile
 			-- (Re)compile the regexp patterns.
 		require
-			valid_exclude: attached exclude as e implies across e as ec all valid_regexp (ec.item) end
-			valid_include: attached include as i implies across i as ic all valid_regexp (ic.item) end
+			valid_exclude: attached exclude as xs implies across xs as x all valid_regexp (x.item) end
+			valid_include: attached include as xs implies across xs as x all valid_regexp (x.item) end
+		local
+			e: like error
 		do
 			exclude_regexp := compile_list (exclude)
-			if not attached error then
-					-- Do not compile includes if excudes cannot be compiled to keep errors.
-				include_regexp := compile_list (include)
+			e := error
+			include_regexp := compile_list (include)
+			if attached e then
+					-- Report an error discovered earlier.
+				error := e
 			end
+		ensure
+			attached_exclude_regexp: attached exclude as x and then not x.is_empty and not attached error implies attached exclude_regexp
+			attached_include_regexp:  attached include as x and then not x.is_empty and not attached error implies attached include_regexp
+			compiled_exclude_regexp: attached exclude_regexp as r implies r.is_compiled
+			compiled_include_regexp: attached include_regexp as r implies r.is_compiled
+			attached_error_for_exclude: attached exclude as x and then not x.is_empty and not attached exclude_regexp implies attached error
+			attached_error_for_include: attached include as x and then not x.is_empty and not attached include_regexp implies attached error
 		end
 
 	compile_list (a_list: like include): detachable REGULAR_EXPRESSION
@@ -263,6 +273,10 @@ feature {NONE} -- Implementation
 					Result := Void
 				end
 			end
+		ensure
+			attached_result: attached a_list and then not a_list.is_empty and not attached error implies attached Result
+			compiled_result: attached Result implies Result.is_compiled
+			attached_error: attached a_list and then not a_list.is_empty and not attached Result implies attached error
 		end
 
 feature {CONF_FILE_RULE} -- Implementation, merging
@@ -300,6 +314,10 @@ feature -- Contracts
 				Result := l_include_regexp.is_compiled
 			end
 		end
+
+invariant
+			compiled_exclude_regexp: attached exclude_regexp as r implies r.is_compiled
+			compiled_include_regexp: attached include_regexp as r implies r.is_compiled
 
 note
 	copyright:	"Copyright (c) 1984-2015, Eiffel Software"

@@ -1,15 +1,29 @@
 test_name 	 config-too-many-excludes
 test_description It should be OK to have more than 100 excluded files in a configuration file.
 
-copy_sub	Ace1 $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
+copy_sub	Ace1 $TEST Ace
 compile_melted
 compile_result	ok
 
 copy_sub	Ace2 $TEST Ace
-copy_raw	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
 
+copy_sub	Ace3 $TEST Ace
+compile_melted
+compile_result	ok
+
+copy_sub	Ace4 $TEST Ace
+compile_melted
+compile_result	ok
+
+copy_sub	Ace5 $TEST Ace
+compile_melted
+compile_result	ok
+
+copy_sub	Ace6 $TEST Ace
 compile_melted
 compile_result	ok
 

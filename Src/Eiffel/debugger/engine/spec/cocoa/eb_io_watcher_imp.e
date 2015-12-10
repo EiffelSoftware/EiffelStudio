@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mechanism to call an action when a file/pipe is changed.%N%
 				  %Carbon Implementation."
 	legal: "See notice at end of class."
@@ -150,7 +150,7 @@ feature {NONE} -- Externals
 --			"ewb_pipe_read_fd"
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

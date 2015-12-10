@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tester facilities for ES5SH"
 	author: "David Schwartz, VMS diehard"
 	original: 01,Jan,1995

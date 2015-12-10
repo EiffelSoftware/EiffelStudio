@@ -1,4 +1,4 @@
-indexing
+note
 	original_author: "Mark Howard"
 	description: "linear with count and index, from ROSE_LINEAR"
 	keywords: "linear,iterator,agent"
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	cursor : LINEAR_CURSOR is
+	cursor : LINEAR_CURSOR
 			-- New cursor for `Current'
 		do
 			create Result.make (index)
@@ -27,7 +27,7 @@ feature -- Access
 			cursor_not_void: Result /= Void
 		end
 
-	has_reference (a_value: G): BOOLEAN is
+	has_reference (a_value: G): BOOLEAN
 			-- Is 'a_value' referenced in this linear?
 		local
 			l_save_index: INTEGER
@@ -44,7 +44,7 @@ feature -- Access
 			go_i_th (l_save_index)
 		end
 
-	has_value (a_value: G): BOOLEAN is
+	has_value (a_value: G): BOOLEAN
 			-- Is 'a_value' present in this linear?
 			-- Warning: uses 'deep_equal' !
 		local
@@ -62,14 +62,14 @@ feature -- Access
 			go_i_th (l_save_index)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 		-- Position of cursor
 		deferred
 		ensure then
 			non_negative_index: Result >= 0
 		end
 
-	count: INTEGER is
+	count: INTEGER
 		-- Number of items in `Current'
 		deferred
 		ensure
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_cursor (a_cursor : like cursor) : BOOLEAN is
+	valid_cursor (a_cursor : like cursor) : BOOLEAN
 			-- Is `a_cursor' valid for `Current'?
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	go_to (a_cursor : like cursor) is
+	go_to (a_cursor : like cursor)
 			-- Go to item pointed at by `a_cursor'.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -98,7 +98,7 @@ feature -- Cursor movement
 			correct_position: index = a_cursor.index
 		end
 
-	go_i_th (a_index: INTEGER) is
+	go_i_th (a_index: INTEGER)
 			-- Go to item at `a_index'.
 		require
 			-- Can we add positive index requirement? (used in many places)
@@ -109,7 +109,7 @@ feature -- Cursor movement
 
 feature -- Iteration
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		local
 			l_cursor: like cursor
@@ -131,7 +131,7 @@ feature -- Iteration
 			go_to (l_cursor)
 		end
 
-	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (a_test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 		local
 			l_cursor: like cursor
@@ -154,7 +154,7 @@ feature -- Iteration
 			go_to (l_cursor)
 		end
 
-	for_all_with_index (a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]): BOOLEAN is
+	for_all_with_index (a_test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN]): BOOLEAN
 			-- Is `a_test' true for all items?
 		require
 			a_test_not_void: a_test /= Void
@@ -180,7 +180,7 @@ feature -- Iteration
 			go_to (l_cursor)
 		end
 
-	do_all_with_index2 (a_action: PROCEDURE [ANY, TUPLE [G, INTEGER]]) is
+	do_all_with_index2 (a_action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
 			-- Apply `a_action' to every item.
 			-- `a_action' receives item and it's index.
 			-- Semantics not guaranteed if `a_action' changes the structure;
@@ -210,7 +210,7 @@ feature -- Iteration
 			go_to (l_cursor)
 		end
 
-	do_all_intervals (a_action: PROCEDURE [ANY, TUPLE [G, G]]) is
+	do_all_intervals (a_action: PROCEDURE [ANY, TUPLE [G, G]])
 			-- Apply `a_action' to every pair of (item, following item) in the container.
 			-- For instance for the list << 1,2,3,4 >>, call the action 3 times on [1,2], [2,3] and [3,4].
 		require
@@ -227,7 +227,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_product (a_other: INDEXED_LINEAR [G]; a_action: PROCEDURE [ANY, TUPLE [G, G]]) is
+	do_all_product (a_other: INDEXED_LINEAR [G]; a_action: PROCEDURE [ANY, TUPLE [G, G]])
 			-- Call `a_action' on items of the product of `Current' by `a_other'.
 			-- for example
 			--  Current := << 1, 2 >> and a_other := << 101, 102, 103 >>
@@ -242,7 +242,7 @@ feature -- Iteration
 
 feature {NONE} -- Implementation
 
-	do_all_intervals_item (a_action: PROCEDURE [ANY, TUPLE [G, G]]; a_first_done: CELL [BOOLEAN]; a_previous: CELL [G]; a_item: G) is
+	do_all_intervals_item (a_action: PROCEDURE [ANY, TUPLE [G, G]]; a_first_done: CELL [BOOLEAN]; a_previous: CELL [G]; a_item: G)
 			-- Implementation for `do_all_intervals'.
 		require
 			a_action_not_void: a_action /= Void
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			first_done: a_first_done.item
 		end
 
-	do_all_product_item (a_action: PROCEDURE [ANY, TUPLE [G, G]]; a_other: INDEXED_LINEAR [G]; a_item: G) is
+	do_all_product_item (a_action: PROCEDURE [ANY, TUPLE [G, G]]; a_other: INDEXED_LINEAR [G]; a_item: G)
 			-- Implementation for `do_all_product'.
 		require
 			a_action_not_void: a_action /= Void

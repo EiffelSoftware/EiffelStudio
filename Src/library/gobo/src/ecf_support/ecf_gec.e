@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gobo Eiffel Compiler with ECF support."
 	copyright: "Copyright (c) 2005-2007, Eric Bezault and others"
 	license: "MIT License"
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	ecf_target: STRING is
+	ecf_target: STRING
 			-- Target if any specified.
 		do
 			if target_option.was_found then
@@ -34,7 +34,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		local
@@ -58,7 +58,7 @@ feature {NONE} -- Arguments
 	target_option: AP_STRING_OPTION
 			-- Flag for '--target'
 
-	parse_arguments is
+	parse_arguments
 			-- Initialize options and parse the command line.
 		local
 			a_parser: AP_PARSER
@@ -141,7 +141,7 @@ feature {NONE} -- Arguments
 			end
 		end
 
-	application_name: STRING is "ec"
+	application_name: STRING = "ec"
 			-- Application name of estudio (for EIFFEL_ENV),
 			-- to find right right keys in the registry
 

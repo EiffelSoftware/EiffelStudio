@@ -14,7 +14,7 @@ create
 
 feature -- Initialisation
 
-	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER) is
+	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER)
 		do
 			Precursor (an_opcode, a_data_pointer)
 			block_number := read_block_number
@@ -24,7 +24,7 @@ feature
 
 	block_number: INTEGER
 
-	make_from_address_block (an_address: INET_ADDRESS; a_port: INTEGER; a_block_number: INTEGER) is
+	make_from_address_block (an_address: INET_ADDRESS; a_port: INTEGER; a_block_number: INTEGER)
 			--
 		require
 			address_non_void: an_address /= Void

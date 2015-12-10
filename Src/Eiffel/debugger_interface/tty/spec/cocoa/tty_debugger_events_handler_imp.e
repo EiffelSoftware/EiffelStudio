@@ -1,4 +1,4 @@
-indexing
+note
 	description: "implementation for DEBUGGER_MANAGER. Carbon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ feature {NONE} -- Interface
 	interface: TTY_DEBUGGER_EVENTS_HANDLER;
 			-- Interface instance.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

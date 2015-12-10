@@ -1,4 +1,4 @@
-indexing
+note
 	description: "indexable cursor, from ROSE_LINEAR_CURSOR"
 	author: "MK"
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_index: INTEGER) is
+	make (a_index: INTEGER)
 			-- Create a cursor and set it up on `current_index'.
 		do
 			index := a_index

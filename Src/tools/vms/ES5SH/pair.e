@@ -1,4 +1,4 @@
-indexing
+note
    description : "simple implementation of an ordered pair of items"
    author : "Mark Howard"
    keywords : "pair,ordered"
@@ -10,7 +10,7 @@ create
 
 feature --Initialization
 
-	make, set (a_first : G; a_second : H) is
+	make, set (a_first : G; a_second : H)
 			-- Creation procedure.
 		do
 			first := a_first
@@ -24,13 +24,13 @@ feature --Access
 
 feature -- Basic operations
 
-	set_first (a_value: like first) is
+	set_first (a_value: like first)
 			-- Set 'first'.
 		do
 			first := a_value
 		end
 
-	set_second (a_value: like second) is
+	set_second (a_value: like second)
 			-- Set 'second'.
 		do
 			second := a_value

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enhanced PLAIN_TEXT_FILE"
 	author: "David Schwartz, VMS diehard"
 	notes: "[
@@ -59,27 +59,27 @@ feature -- Initialization
 			initialize
 		end
 
-	open_read is
+	open_read
 		do
 			Precursor
 			initialize
 		end
-	open_write is
+	open_write
 		do
 			Precursor
 			initialize
 		end
-	open_append is
+	open_append
 		do
 			Precursor
 			initialize
 		end
-	open_read_write is
+	open_read_write
 		do
 			Precursor
 			initialize
 		end
-	open_read_append is
+	open_read_append
 		do
 			Precursor
 			initialize
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Input
 
-	read_line is
+	read_line
 		-- Read a string until new line or end of file.
 		-- Count number of lines read in `line_count'
 		-- Remove spurious trailing carriage return and output warning message
@@ -107,13 +107,13 @@ feature -- Input
 			end
 		end
 
-	readline is
+	readline
 			-- synonym for read_line; must be separate to call Precursor
 		do  read_line  end
 
 feature -- Output
 
-	put_line (a_ray: ARRAY[STRING]) is
+	put_line (a_ray: ARRAY[STRING])
 			-- write each element of `a_ray' to file terminated by newline
 		local
 			l_big: STRING -- a really big string
@@ -138,7 +138,7 @@ feature -- Output
 			put_string (l_big)
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- write `s' to file, save as `last_string_output', update line_count
 		do
 			Precursor (s)
@@ -146,13 +146,13 @@ feature -- Output
 			line_count := line_count + last_string_output.occurrences ('%N')
 		end
 
-	putstring (s: STRING) is
+	putstring (s: STRING)
 			-- synonym for put_string; must be distinct from put_string to use Precursor
 		do
 			put_string (s)
 		end
 
-	put_new_line is
+	put_new_line
 			-- output new_line, append to last_string_output
 		do
 			Precursor
@@ -161,7 +161,7 @@ feature -- Output
 			line_count := line_count + 1
 		end
 
-	new_line is
+	new_line
 			-- output new_line, append to last_string_output
 		do
 			put_new_line
@@ -178,13 +178,13 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 		do
 			line_count := 0
 			create last_string_output.make_empty
 		end
 
-	print_spurious_message (a_line: STRING) is
+	print_spurious_message (a_line: STRING)
 		once
 			debug ("spurious_cr_message")
 				print (generating_type + ": spurious <cr> eliminated from line #" + line_count.out + ": " + a_line + "%N")

@@ -1,4 +1,4 @@
-indexing
+note
 	name: "EIFFEL_SRC:[ES5SH]ES5SH.E"
 	description: "System for converting Unix Makefile.SH files to VMS Makefile. files"
 	author: "David Morgan"
@@ -57,7 +57,7 @@ create make
 
 feature -- Initialization
 
-	make is
+	make
 			-- convert makefiles taking into account config.eif file
 		local
 			l_finished_file: PLAIN_TEXT_FILE
@@ -283,7 +283,7 @@ feature -- Attributes
 	value_macro_SUBDIRS: STRING
 
 
-	precompile_tag: STRING  is	"driver.exe"
+	precompile_tag: STRING  =	"driver.exe"
 	-- The tag that is used to determine that we are processing a precompile.
 	-- it was "precompile" in Eiffel3; it is "driver.exe" in Eiffel4 and Eiffel5
 
@@ -297,7 +297,7 @@ feature -- Attributes
 --		Result.compare_objects
 --	end
 
-	suppressed_macro_definitions: ARRAY [STRING] is
+	suppressed_macro_definitions: ARRAY [STRING]
 			-- macro definitions that are suppressed in the output Makefile
 			-- (unless handled as a special case in process_macro_definition)
 		once
@@ -305,7 +305,7 @@ feature -- Attributes
 			Result.compare_objects
 		end
 
-	echoed_unprocessed_macro_definitions: ARRAY [STRING] is
+	echoed_unprocessed_macro_definitions: ARRAY [STRING]
 			-- macro definitions that are always shown with unpreprocessed definition as a comment,
 			-- even if comment_prefix configuration option is not defined
 			-- includes suppressed_macro_definitions
@@ -320,14 +320,14 @@ feature -- Attributes
 			l_res.append_array (suppressed_macro_definitions)
 		end
 
-	unechoed_unprocessed_commands: ARRAY [STRING] is
+	unechoed_unprocessed_commands: ARRAY [STRING]
 			-- commands that are not echoed unprocessed as comments to output Makefile
 		once
 				Result := << "$(CC)","$(CPP)","$(X2C)", "$(RM)" >>
 				Result.compare_objects
 		end
 
-	unprocessed_targets: ES5SH_SET [STRING] is
+	unprocessed_targets: ES5SH_SET [STRING]
 			-- targets that are echoed without processing to  output Makefile
 		once
 			create Result.make_from_array (<< "sub_clean", "sub_clobber" >>)
@@ -338,7 +338,7 @@ feature -- Attributes
 feature -- Input/Output Makefiles
 --------------------------------------------------------------------------
 
-	open_makefiles (a_subdirectory : STRING) is
+	open_makefiles (a_subdirectory : STRING)
 			-- open input Makefile.SH and new Makefile in `a_subdirectory' or
 			-- open in top level directory if a_subdirectory is Void
 		require
@@ -399,7 +399,7 @@ feature -- Input/Output Makefiles
 		end -- open_makefiles
 
 
-	close_makefiles is
+	close_makefiles
 			-- close current Makefiles
 		do
 			-- (re)initialize all per-file values
@@ -415,7 +415,7 @@ feature -- Input/Output Makefiles
 		end -- close_makefiles
 
 
-	current_input_file_name : STRING is
+	current_input_file_name : STRING
 			-- the name of the current input file including the path ([.c1]Makefile.SH)
 		do
 			if in_makefile = Void then
@@ -455,7 +455,7 @@ feature -- Process arguments and configuration options
 -- If the path argument is specified, it generates Makefiles but does not perform the make.
 -- That behavior is still preserved, even after adding the processing of additional option arguments.
 
-	process_arguments is
+	process_arguments
 			-- process command line arguments
 		require
 			argument_0_is_command_name: arguments_.argument_array.lower = 0
@@ -604,7 +604,7 @@ feature --  Process Makefile.SH files
 -----------------------------------------------------------------------
 
 
-	process_makefiles is
+	process_makefiles
 		do
 			create application_dependencies.make_empty
 			create dependent_subdirectories.make_empty
@@ -616,7 +616,7 @@ feature --  Process Makefile.SH files
 		end
 
 
-	process_top_level_makefile is
+	process_top_level_makefile
 			-- create a new Makefile for the top level
 		require
 			no_current_input_file:	in_makefile = Void
@@ -651,7 +651,7 @@ feature --  Process Makefile.SH files
 		end -- process_top_level_makefile
 
 
-	process_subdirectory_makefiles is
+	process_subdirectory_makefiles
 			-- process Makefiles in each of `dependent_subdirectories'
 		local
 			l_saved_index: INTEGER
@@ -689,7 +689,7 @@ feature --  Process Makefile.SH files
 feature -- Process elements of Makefile.SH
 --------------------------------------------------------------------------
 
-	process_case_stmt () is
+	process_case_stmt
 			-- process a case block by ignoring it
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -728,7 +728,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_case_stmt
 
 
-	process_echo_stmt  is
+	process_echo_stmt
 			-- process an echo statement by ignoring it
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -748,7 +748,7 @@ feature -- Process elements of Makefile.SH
 		end
 
 
-	get_spitshell_end_tag : STRING is
+	get_spitshell_end_tag : STRING
 			-- the tag that ends the spitshell block on the current line of the input makefile
 			-- if the tag is quoted (with single quotes), remove the enclosing quote characters
 			-- read the next input line
@@ -772,7 +772,7 @@ feature -- Process elements of Makefile.SH
 		end -- get_spitshell_end_tag
 
 
-	process_spit1_block () is
+	process_spit1_block
 			-- process the first spitshell block (contains macro definitions)
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -812,7 +812,7 @@ feature -- Process elements of Makefile.SH
 		end  -- process_spit1_block
 
 
-	process_spit2_block (a_end_tag: STRING) is
+	process_spit2_block (a_end_tag: STRING)
 			-- process second spitshell block (contains dependency rules)
 			-- for top level makefile, this is called after the objects and subdirectories and stuff
 			-- to process the rest of the block.
@@ -885,7 +885,7 @@ feature -- Process elements of Makefile.SH
 --		end
 
 
-	process_rule () is
+	process_rule
 			-- process target definition:    <target>... : [ <prerequisite>... ]
 			-- and following command and comment lines
 		require
@@ -987,7 +987,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_rule
 
 
-	process_suffix_rule (a_target: STRING) is
+	process_suffix_rule (a_target: STRING)
 			-- process a suffix rule (eg.  .c.o:)
 		require
 			input_file_readable: in_makefile /= Void  and then in_makefile.is_open_read
@@ -1029,7 +1029,7 @@ feature -- Process elements of Makefile.SH
 		end -- end process_suffix_rule
 
 
-	process_subdirectory_rule (a_target, a_prerequisite: STRING) is
+	process_subdirectory_rule (a_target, a_prerequisite: STRING)
 			-- process a subdirectory rule (eg.  X99/Xobj99.o: Makefile)
 		require
 			input_file_readable: in_makefile /= Void  and then in_makefile.is_open_read
@@ -1118,7 +1118,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_subdirectory_rule
 
 
-	process_rule_all (a_target, a_prerequisite: STRING) is
+	process_rule_all (a_target, a_prerequisite: STRING)
 			-- process all: target
 			-- If this is the top level makefile, it will be  all: <appl>  (all: hello)
 			-- If a subdirectory, it will be   all: <subdirectory_object>  (all: Cobj1.o)
@@ -1175,7 +1175,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_rule_all
 
 
-	process_rule_application (a_target, a_prerequisite: STRING) is
+	process_rule_application (a_target, a_prerequisite: STRING)
 			-- Process application target, eg:  <appl>: $(OBJECTS) E1/emain.o Makefile
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -1326,7 +1326,7 @@ feature -- Process elements of Makefile.SH
 		end  -- process_rule_application
 
 
-	process_rule_cecil (a_target, a_prerequisite: STRING) is
+	process_rule_cecil (a_target, a_prerequisite: STRING)
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
 			is_cecil_target_definition:	starts_with (in_makefile.last_string, "cecil:")
@@ -1421,7 +1421,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_rule_cecil
 
 
-	process_target_prerequisites (a_dependents : STRING; initial_pos : INTEGER) is
+	process_target_prerequisites (a_dependents : STRING; initial_pos : INTEGER)
 			-- process prerequisites (dependents) of a target:
 			--  replace macro references with their values;
 			--  for each "word", translate filespec to VMS syntax if it is a Unix filespec and
@@ -1479,7 +1479,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_target_prerequisites
 
 
-	process_rule_commands (a_target, a_prerequisite: STRING) is
+	process_rule_commands (a_target, a_prerequisite: STRING)
 			-- process the commands of the current target definition:
 			-- skip the current line (target rule dependency definition),
 			-- process successive lines (commands) that begin with comment or whitespace character.
@@ -1571,7 +1571,7 @@ feature -- Process elements of Makefile.SH
 		end -- process_rule_commands
 
 
-	echo_rule_commands is
+	echo_rule_commands
 			-- skip past the current target definition and echoes its commands
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -1589,7 +1589,7 @@ feature -- Process elements of Makefile.SH
 		end -- echo_rule_commands
 
 
-	skip_rule_commands is
+	skip_rule_commands
 			-- skip past the current target definition and its commands:
 			-- skip successive lines (directives) until we come to the next target entry -
 			-- (a line beginning with nonblank/noncomment character)
@@ -1615,7 +1615,7 @@ feature -- Process elements of Makefile.SH
 
 
 
-	perform_inchoate_replacements (a_str : STRING) is
+	perform_inchoate_replacements (a_str : STRING)
 			-- Perform general replacements that are needed because we don't parse the makefile lines
 			-- and act on them intelligently, just blindly perform replacements.
 			-- these are done in process_externals, process_spit2_line, etc.
@@ -1672,7 +1672,7 @@ feature -- Process elements of Makefile.SH
 		end -- perform_inchoate_replacements
 
 
-	subdirectory_name (a_subdir: STRING): STRING is
+	subdirectory_name (a_subdir: STRING): STRING
 			-- returns a subdirectory name, stripped of all path delimiters
 		require
 			subdirectory_exists: a_subdir /= Void
@@ -1695,7 +1695,7 @@ feature -- Process elements of Makefile.SH
 		end
 
 
-	subdirectory_object_filename (a_subdir: STRING): STRING is
+	subdirectory_object_filename (a_subdir: STRING): STRING
 			-- the file name (less extension) of the object file for a subdirectory (eg. Cobj1 for subdirectory C1/)
 		require
 			subdirectory_nonblank: a_subdir /= Void and then not a_subdir.is_empty
@@ -1706,7 +1706,7 @@ feature -- Process elements of Makefile.SH
 		end
 
 
-	is_current_subdirectory_object_file (a_fil: STRING): BOOLEAN is
+	is_current_subdirectory_object_file (a_fil: STRING): BOOLEAN
 			-- is `a_file' the object filename (including extension) for the current subdirectory (eg. Cobj3.o for C3/)?
 		do
 			if not dependent_subdirectories.off then
@@ -1715,7 +1715,7 @@ feature -- Process elements of Makefile.SH
 			end
 		end
 
-	is_subdirectory_object_file (a_fil, a_subdir: STRING): BOOLEAN is
+	is_subdirectory_object_file (a_fil, a_subdir: STRING): BOOLEAN
 			-- is `a_fil' the object file for `a_subdir' (eg. Cobj99.o of C99/)?
 		do
 			Result := a_fil.is_equal (subdirectory_object_filename (a_subdir) + ".o")
@@ -1726,7 +1726,7 @@ feature -- Process elements of Makefile.SH
 feature -- Produce output files
 --------------------------------------------------------------------------
 
-	produce_link_dot_com is
+	produce_link_dot_com
 			-- generate link.com (DCL command procedure) from application_dependencies
 		require
 			application_dependencies_exists:	application_dependencies /= Void
@@ -1972,7 +1972,7 @@ feature -- Produce output files
 --		end -- produce_make_dot_com
 
 
-	will_produce_concatenated_source_file_in (a_subdir: STRING) : BOOLEAN is
+	will_produce_concatenated_source_file_in (a_subdir: STRING) : BOOLEAN
 			-- will we creating concatenated source file for subdirectory `a_subdir'?
 			-- True if we're doing it at all, unless the subdirectory is "E1"
 		require
@@ -1982,7 +1982,7 @@ feature -- Produce output files
 		end
 
 
-	produce_concatenated_source_file (a_subdir : STRING) is
+	produce_concatenated_source_file (a_subdir : STRING)
 			-- produce concatenated source file for subdirectory `a_subdir'
 		require
 			will_produce_concatenated_source_file_in (a_subdir)
@@ -2037,7 +2037,7 @@ feature -- Produce output files
 			l_big_file.close
 		end -- produce_concatenated_source_file
 
-	concatenated_source_file_name (a_subdir: STRING) : STRING is
+	concatenated_source_file_name (a_subdir: STRING) : STRING
 			-- name of concatenated source file for subdirectory `a_subdir'
 		require
 			subdirectory_nonblank: a_subdir /= Void and then not a_subdir.is_empty
@@ -2049,7 +2049,7 @@ feature -- Produce output files
 			end
 		end
 
-	append_source_to_big_file_agent (a_source: STRING; a_index: INTEGER; a_big_file: ES5SH_TEXT_FILE; a_path: DIRECTORY_NAME; a_extension: STRING) is
+	append_source_to_big_file_agent (a_source: STRING; a_index: INTEGER; a_big_file: ES5SH_TEXT_FILE; a_path: DIRECTORY_NAME; a_extension: STRING)
 			-- append source `a_source'.`a_extension' in `a_path' to big source file `a_big_file'
 			-- may be accomplished by appending an #include directive or appending the contents of the file
 		require
@@ -2087,7 +2087,7 @@ feature -- Produce output files
 			end
 		end
 
-	append_source_contents_to_big_file (a_source_file, a_big_file: ES5SH_TEXT_FILE) is
+	append_source_contents_to_big_file (a_source_file, a_big_file: ES5SH_TEXT_FILE)
 			-- append contents of file `a_source'.`a_extension' in `a_path' to big source file `a_big_file'
 			--  preceded by platform-appropriate #line directives, and with any embedded line directives commented out.
 		require
@@ -2131,7 +2131,7 @@ feature -- Produce output files
 feature -- Process macro definitions
 --------------------------------------------------------------------------
 
-	is_macro_definition (line : STRING) : BOOLEAN is
+	is_macro_definition (line : STRING) : BOOLEAN
 			-- is this line a macro definition (of the form <name> = <value>) ?
 		local
 			l_token1, l_token2 : STRING
@@ -2150,7 +2150,7 @@ feature -- Process macro definitions
 		end -- is_macro_definition
 
 
-	is_macro_definition_of (a_line : STRING; a_macro_name : STRING) : BOOLEAN is
+	is_macro_definition_of (a_line : STRING; a_macro_name : STRING) : BOOLEAN
 			-- is `a_line' a macro definition of the specified macro `a_name' (NAME = <value>)
 			-- with optional whitespace around the =?
 		require
@@ -2176,7 +2176,7 @@ feature -- Process macro definitions
 		end -- is_macro_definition_of
 
 
-	process_macro_definition () is
+	process_macro_definition
 			-- process current line containing a macro definition
 			-- EIFLIB, CFLAGS, CPPFLAGS et. al. are handled specially here.
 		require
@@ -2237,7 +2237,7 @@ feature -- Process macro definitions
 		end -- process_macro_definition
 
 
-	process_macro_CFLAGS (a_macro_name : STRING) is
+	process_macro_CFLAGS (a_macro_name : STRING)
 			-- process CFLAGS or CPPFLAGS macro definition
 			-- a_macro_name is the macro name (CFLAGS or CPPFLAGS)
 			-- eg. CFLAGS = ... -DWORKBENCH -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include \$(INCLUDE_PATH)
@@ -2428,7 +2428,7 @@ feature -- Process macro definitions
 		end -- process_macro_CFLAGS
 
 
-	process_macro_EIFLIB (a_macro_name_unused: STRING) is
+	process_macro_EIFLIB (a_macro_name_unused: STRING)
 				-- process EIFLIB macro definition
 		--indexing "FIXME"
 		require
@@ -2452,7 +2452,7 @@ feature -- Process macro definitions
 	end -- process_macro_EIFLIB
 
 
-	process_macro_EXTERNALS (a_macro_name_unused: STRING) is
+	process_macro_EXTERNALS (a_macro_name_unused: STRING)
 			-- process EXTERNALS macro definition: for each word (filespec) make it VMS syntax, add to externals_list
 		require
 			input_file_readable: in_makefile /= Void and then in_makefile.is_open_read
@@ -2518,7 +2518,7 @@ feature -- Process macro definitions
 		end -- process_macro_EXTERNALS
 
 
-	process_macro_INCLUDE_PATH (a_macro_name_unused: STRING) is
+	process_macro_INCLUDE_PATH (a_macro_name_unused: STRING)
 			-- Process INCLUDE_PATH macro definition.
 			-- Most processing is deferred until the CFLAGS macro is processed
 			-- because all of the -I options have to be collected into a single DCL qualifier.
@@ -2575,7 +2575,7 @@ feature -- Process macro definitions
 		end -- process_macro_INCLUDE_PATH
 
 
-	process_macro_OBJECTS (a_macro_name_unused: STRING) is
+	process_macro_OBJECTS (a_macro_name_unused: STRING)
 			-- process line containing OBJECTS macro definition
 		require
 			input_file_readable:	in_makefile /= Void and then in_makefile.is_open_read
@@ -2616,7 +2616,7 @@ feature -- Process macro definitions
 		end -- process_macro_OBJECTS
 
 
-	process_macro_OLDOBJECTS (a_macro_name_unused: STRING) is
+	process_macro_OLDOBJECTS (a_macro_name_unused: STRING)
 			-- process line containing OLDOBJECTS macro definition
 			-- (only encountered when quick_finalize is run before ES5SH, which no longer happens on VMS)
 		require
@@ -2639,7 +2639,7 @@ feature -- Process macro definitions
 
 
 
-	read_processed_macro_value (a_macro_name : STRING) : STRING is
+	read_processed_macro_value (a_macro_name : STRING) : STRING
 			-- The processed value of the macro defined on the current input line (plus any continuation lines).
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- Only continued input lines are consumed.
@@ -2659,7 +2659,7 @@ feature -- Process macro definitions
 		end -- read_processed_macro_value
 
 
-	read_macro_value (a_macro_name: STRING) : STRING is
+	read_macro_value (a_macro_name: STRING) : STRING
 			-- The value of the macro defined on the current line of in_makefile (plus any continuation lines).
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- The current input line, and all continued lines, are consumed. Commands and queries are a fool's mixture.
@@ -2676,7 +2676,7 @@ feature -- Process macro definitions
 			Result_exists: Result /= Void
 		end
 
-	effective_comment_prefix (a_macro_name: STRING) : STRING is
+	effective_comment_prefix (a_macro_name: STRING) : STRING
 			-- comment prefix to be used for original value of `a_macro_name' definition.
 			-- if `a_macro_name' is in `echoed_unprocessed_macro_definitions' then `default_comment_prefix'
 			-- otherwise the configuration comment prefix is used if defined (may be Void)
@@ -2689,7 +2689,7 @@ feature -- Process macro definitions
 		end
 
 
-	read_macro_value_echoed (a_macro_name: STRING; a_comment_prefix: STRING) : STRING is
+	read_macro_value_echoed (a_macro_name: STRING; a_comment_prefix: STRING) : STRING
 			-- The value of the macro defined on the current line of in_makefile, plus any continuation lines.
 			-- Position in input file is advanced if necessary, to consume continued lines.
 			-- The current input line, and all continued lines, are consumed. Commands and queries are a fool's mixture.
@@ -2771,7 +2771,7 @@ feature -- Process macro definitions
 feature -- Macro replacement
 ----------------------------------------
 
-	process_macro_value (a_value : STRING) is
+	process_macro_value (a_value : STRING)
 			-- UNIX filespecs are translated to VMS syntax, shell commands are processed.
 		require
 			value_exists: a_value /= Void
@@ -2793,7 +2793,7 @@ feature -- Macro replacement
 --			replace_eiffel_symbols (Result)
 --		end
 
-	replace_eiffel_symbols (a_str : STRING) is
+	replace_eiffel_symbols (a_str : STRING)
 			-- replace EIFFEL and PLATFORM macros
 		require
 			string_exists:	a_str /= Void
@@ -2802,10 +2802,10 @@ feature -- Macro replacement
 		end -- replace_eiffel_symbols
 
 
-	macro_open_delimiters: STRING is "({["
-	macro_close_delimiters: STRING is ")}]"
+	macro_open_delimiters: STRING = "({["
+	macro_close_delimiters: STRING = ")}]"
 
-	replace_macros (a_str : STRING): STRING is
+	replace_macros (a_str : STRING): STRING
 			-- string with each macro ($-prefixed element) in `a_str' replaced with its value
 			-- escaped-$-prefixed words are passed without the escape
 			-- leading and trailing are removed, multiple spaces are replaced with a single space
@@ -2917,7 +2917,7 @@ feature -- Macro replacement
 feature -- special purpose output
 --------------------------------------------------------------------------
 
-	put_comment_prefixed_line (a_line : STRING) is
+	put_comment_prefixed_line (a_line : STRING)
 			-- if comment_prefix is defined, ouput line to out_makefile as a comment with terminating newline,
 		require
 			line_exists:	a_line /= Void
@@ -2954,7 +2954,7 @@ feature -- special purpose output
 --		end -- put_comment_prefixed_strings
 
 
-	put_comment_prefixed_text (a_text : STRING) is
+	put_comment_prefixed_text (a_text : STRING)
 			-- if comment_prefix is defined, ouput text as a comment,
 		require
 			text_exists:	a_text /= Void
@@ -2978,7 +2978,7 @@ feature -- special purpose output
 		end -- put_comment_prefixed_text
 
 
-	put_macro_definition (a_macro_name : STRING; a_macro_value : STRING) is
+	put_macro_definition (a_macro_name : STRING; a_macro_value : STRING)
 			-- output macro definition to current output makefile
 		require
 			macro_name_nonblank:	a_macro_name /= Void and then not a_macro_name.is_empty
@@ -2992,7 +2992,7 @@ feature -- special purpose output
 	end ; -- put_macro_definition
 
 
-	put_continued_line (line : STRING; continuation_prefix : STRING; wrap_margin : INTEGER) is
+	put_continued_line (line : STRING; continuation_prefix : STRING; wrap_margin : INTEGER)
 			-- Output continued line with (optional) continuation prefix
 			-- using primitive (whitespace) tokenization.
 			-- If line exceeds wrap margin it is continued by using continuation string.
@@ -3056,7 +3056,7 @@ feature -- special purpose output
 feature -- platform specific file names
 ----------------------------------------
 
-	subdirectory_make_command (a_subdir, a_target: STRING): STRING is
+	subdirectory_make_command (a_subdir, a_target: STRING): STRING
 			-- command string to perform make in subdirectory of (optional) target `a_target'
 			-- eg. <tab>-@ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).bin]make.vms subidr target
 		require
@@ -3079,7 +3079,7 @@ feature -- platform specific file names
 			end
 		end
 
-	platform_specific_path_name (base, subdir: ARRAY[STRING]) : FILE_NAME is
+	platform_specific_path_name (base, subdir: ARRAY[STRING]) : FILE_NAME
 			-- build a VMS-syntax platform specific path name: ISE_EIFFEL:[<base>.$(ISE_platform).<subdir>]
 			-- typically <base> is studio.spec (i.e. <<"studio","spec">> or studio.config,
 			-- subdir
@@ -3114,7 +3114,7 @@ feature -- platform specific file names
 			l_hack := as_vms_filespec (Result)
 		end -- platform_specific_path_name
 
-	platform_specific_file_name (base, subdir: ARRAY[STRING]; filename: STRING) : FILE_NAME is
+	platform_specific_file_name (base, subdir: ARRAY[STRING]; filename: STRING) : FILE_NAME
 			-- build a VMS-syntax platform-specific file name: ISE_EIFFEL:[<base>.$ISE_PLATFORM.<subdir>]<filename>
 			-- typically <base> is studio.spec (i.e. <<"studio","spec">> or studio.config
 		local
@@ -3127,7 +3127,7 @@ feature -- platform specific file names
 			l_hack := as_vms_filespec (Result)
 		end -- platform_specific_file_name
 
-	eiffel_library_filespec: STRING is
+	eiffel_library_filespec: STRING
 			-- VMS file specification of the Eiffel runtime/workbench object library (with platform macro replaced)
 			--   ISE_EIFFEL:[studio.spec.<ISE_platform>.lib]<prefix><eiffel_library><suffix>
 		require
@@ -3141,7 +3141,7 @@ feature -- platform specific file names
 			Result.replace_substring_all ("$(ISE_PLATFORM)", value_platform)
 		end -- eiffel_library_filespec
 
-	to_vms_filespecs (str : STRING; initial_pos : INTEGER) is
+	to_vms_filespecs (str : STRING; initial_pos : INTEGER)
 			-- for each "word" in `str', translate filespec to VMS syntax
 			-- also handle semantics for .a and .o extensions
 		require
@@ -3229,7 +3229,7 @@ feature -- platform specific file names
 		end -- to_vms_filespecs
 
 
-	as_vms_filespec (a_filespec : STRING) : STRING is
+	as_vms_filespec (a_filespec : STRING) : STRING
 			-- a new string transformed from a Unix filespec to vms syntax
 			-- enclosing quotes are removed
 			-- Rules:
@@ -3363,7 +3363,7 @@ feature -- platform specific file names
 feature -- shell commands
 -------------------------------------------------------------
 
-	is_shell_command (a_str : STRING; a_start : INTEGER) : BOOLEAN is
+	is_shell_command (a_str : STRING; a_start : INTEGER) : BOOLEAN
 			-- is a shell command in `a_str' beginning at `a_start?'
 			-- examples: `foo' or $(foo)
 			--  where foo is a command followed by optional arguments, eg.
@@ -3401,7 +3401,7 @@ feature -- shell commands
 			end
 		end -- is_shell_command
 
-	shell_command_end_index (a_str: STRING; a_start: INTEGER): INTEGER is
+	shell_command_end_index (a_str: STRING; a_start: INTEGER): INTEGER
 			-- the position in 'a_str' of the ending delimiter of the shell command that starts at 'a_start'.
 			-- zero if not found
 		require
@@ -3438,7 +3438,7 @@ feature -- shell commands
 			end
 		end -- shell_command_end_index
 
-	process_shell_commands (a_str : STRING; a_start_pos : INTEGER ) is
+	process_shell_commands (a_str : STRING; a_start_pos : INTEGER )
 			-- process all shell commands in `a_str' beginning at `a_start_pos'
 		require
 			string_exists : a_str /= Void
@@ -3470,7 +3470,7 @@ feature -- shell commands
 		end -- process_shell_commands
 
 
-	process_shell_command_at (a_str : STRING ; a_start_pos : INTEGER) is
+	process_shell_command_at (a_str : STRING ; a_start_pos : INTEGER)
 			-- replace the shell command in `a_str' starting at `a_start_pos'
 		require
 --			string_exists : a_str /= Void
@@ -3495,10 +3495,10 @@ feature -- shell commands
 		end
 
 
-	vision2_gtk_shell_script_name: STRING is "vision2-gtk-config"
+	vision2_gtk_shell_script_name: STRING = "vision2-gtk-config"
 	--vision2_gtk_shell_script_path: STRING is "$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/"
-	vision2_gtk_shell_script_path: STRING is "/library/vision2/implementation/gtk/Clib/"
-	shell_command_result (a_str : STRING) : STRING is
+	vision2_gtk_shell_script_path: STRING = "/library/vision2/implementation/gtk/Clib/"
+	shell_command_result (a_str : STRING) : STRING
 			-- options resulting from shell command `a_str'
 		require
 			string_exists : a_str /= Void
@@ -3592,7 +3592,7 @@ feature -- shell commands
 feature -- DCL operations -- another missed opportunity to create a class
 --------------------------------------------------------------------------
 
-	append_DCL_value (a_str : STRING; a_value : STRING ) is
+	append_DCL_value (a_str : STRING; a_value : STRING )
 			-- append `a_value' to `a_str' using DCL rules for parentheses, commas, and quoting
 		require
 			this_exists:	a_str  /= Void
@@ -3627,7 +3627,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 		end -- append_DCL_value
 
 
-	DCL_qualifier_name_size ( a_str : STRING ; start_pos : INTEGER ) : INTEGER is
+	DCL_qualifier_name_size ( a_str : STRING ; start_pos : INTEGER ) : INTEGER
 			-- size of DCL qualifier at start of a_str, zero if not a DCL qualifier
 			-- size must be zero or >= 2, and always includes leading '/'
 		require
@@ -3661,7 +3661,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 	end ; -- DCL_qualifier_name_size
 
 
-	DCL_qualifier_name ( a_str : STRING ; start_pos : INTEGER ) : STRING is
+	DCL_qualifier_name ( a_str : STRING ; start_pos : INTEGER ) : STRING
 			-- name of DCL qualifier at start_pos in a_str, Void if not a DCL qualifier
 		require
 		local
@@ -3673,7 +3673,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 			end
 		end -- DCL_qualifier_name
 
-	DCL_qualifier_matches ( DCL_qualifier: STRING ; minimum : INTEGER ; str : STRING ; start_pos : INTEGER ) : BOOLEAN is
+	DCL_qualifier_matches ( DCL_qualifier: STRING ; minimum : INTEGER ; str : STRING ; start_pos : INTEGER ) : BOOLEAN
 				-- does DCL_qualifier match that at start_pos in str?
 		require
 			str_exists: str /= Void
@@ -3713,7 +3713,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 		end -- DCL_qualifier_matches
 
 
-	DCL_quoted_word (word : STRING) : STRING is
+	DCL_quoted_word (word : STRING) : STRING
 				-- generate a DCL word with quoted '$' if required
 		require
 			word_exists:  word /= Void
@@ -3737,7 +3737,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 		end -- DCL_quoted_word
 
 
-	remove_redundant_DCL_filespecs (a_value : STRING) is
+	remove_redundant_DCL_filespecs (a_value : STRING)
 			-- Remove redundant DCL file specifications from DCL value string `a_value'.
 			-- This is done solely to shorten the DCL command.
 			-- The device (and directory?) portions of a DCL value are redundant in
@@ -3791,7 +3791,7 @@ feature -- DCL operations -- another missed opportunity to create a class
 feature -- continuation lines
 -------------------------------------------------------------
 
-	is_continued_line (a_line : STRING) : BOOLEAN is
+	is_continued_line (a_line : STRING) : BOOLEAN
 			-- returns True if input ends with continuation character, otherwise False
 		require
 			line_exists:		a_line /= Void
@@ -3799,7 +3799,7 @@ feature -- continuation lines
 			Result := continuation_character_index (a_line) > 0
 		end -- is_continued_line
 
-	strip_continuation (a_line : STRING)  is
+	strip_continuation (a_line : STRING)
 			-- strip continuation indicator from input string
 		require
 			line_exists:		a_line /= Void
@@ -3815,7 +3815,7 @@ feature -- continuation lines
 			end
 	end -- strip_continuation
 
-	continuation_character_index (a_line : STRING) : INTEGER is
+	continuation_character_index (a_line : STRING) : INTEGER
 			-- returns index of continuation character in line, 0 if none
 		require
 			line_exists:	a_line /= Void
@@ -3840,7 +3840,7 @@ feature -- continuation lines
 
 feature -- Test
 
-	test is
+	test
 		local
 			l_test: ES5SH_TEST
 		do

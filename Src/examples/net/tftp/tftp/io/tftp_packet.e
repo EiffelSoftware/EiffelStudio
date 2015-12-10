@@ -27,7 +27,7 @@ feature
 
 feature {NONE} -- Initialization
 
-	make_from_host_port_size (a_host: INET_ADDRESS; a_port: INTEGER; an_opcode: INTEGER; size: INTEGER) is
+	make_from_host_port_size (a_host: INET_ADDRESS; a_port: INTEGER; an_opcode: INTEGER; size: INTEGER)
 		do
 			opcode := an_opcode.as_natural_16
 			host := a_host
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			create data_pointer.make (size)
 		end
 
-	make_from_host_port_managed_pointer (a_host: INET_ADDRESS; a_port: INTEGER; an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER) is
+	make_from_host_port_managed_pointer (a_host: INET_ADDRESS; a_port: INTEGER; an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER)
 			--
 		require
 			valid_host: a_host /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			port := a_port
 		end
 
-	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER) is
+	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER)
 			--
 		require
 			valod_opcode: an_opcode >= rrq and then an_opcode <= error
@@ -59,56 +59,56 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	opcode_offset: INTEGER is
+	opcode_offset: INTEGER
 		do
 			Result := 0
 		end
 
-	filename_offset: INTEGER is
+	filename_offset: INTEGER
 		do
 			Result := 2
 		end
 
-	block_number_offset: INTEGER is
+	block_number_offset: INTEGER
 		do
 			Result := 2
 		end
 
-	error_code_offset: INTEGER is
+	error_code_offset: INTEGER
 		do
 			Result := 2
 		end
 
-	error_message_offset: INTEGER is
+	error_message_offset: INTEGER
 		do
 			Result := 4
 		end
 
-	read_block_number: INTEGER is
+	read_block_number: INTEGER
 			--
 		do
 			Result := data_pointer.read_natural_16_be (block_number_offset)
 		end
 
-	write_opcode (an_opcode:INTEGER) is
+	write_opcode (an_opcode:INTEGER)
 			--
 		do
 			data_pointer.put_natural_16_be (an_opcode.as_natural_16, opcode_offset)
 		end
 
-	write_block_number (block_number: INTEGER) is
+	write_block_number (block_number: INTEGER)
 			--
 		do
 			data_pointer.put_natural_16_be (block_number.as_natural_16, block_number_offset)
 		end
 
-	write_error_code (error_code: INTEGER) is
+	write_error_code (error_code: INTEGER)
 			--
 		do
 			data_pointer.put_natural_16_be (error_code.as_natural_16, error_code_offset)
 		end
 
-	write_string (s: STRING; offset: INTEGER) is
+	write_string (s: STRING; offset: INTEGER)
 			--
 		local
 			i: INTEGER
@@ -124,14 +124,14 @@ feature {NONE} -- Implementation
 			data_pointer.put_natural_8 (0, offset+i-1)
 		end
 
-	write_error (error_code: INTEGER; message: STRING) is
+	write_error (error_code: INTEGER; message: STRING)
 			--
 		do
 			write_error_code (error_code)
 			write_string (message, error_message_offset)
 		end
 
-	write_filename_and_mode (file_name: STRING; mode: STRING) is
+	write_filename_and_mode (file_name: STRING; mode: STRING)
 			--
 		local
 			i: INTEGER
@@ -159,13 +159,13 @@ feature {NONE} -- Implementation
 			data_pointer.put_natural_8 (0, offset+i-1)
 		end
 
-	read_error_code: INTEGER is
+	read_error_code: INTEGER
 			--
 		do
 			Result := data_pointer.read_natural_16_be (error_code_offset)
 		end
 
-	read_string (offset: INTEGER): STRING is
+	read_string (offset: INTEGER): STRING
 			--
 		require
 			data_pointer /= Void

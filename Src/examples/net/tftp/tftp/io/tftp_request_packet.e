@@ -14,15 +14,15 @@ create
 
 feature -- Constants
 
-	mode_octet: INTEGER is 0
+	mode_octet: INTEGER = 0
 
-	mode_netascii: INTEGER is 1
+	mode_netascii: INTEGER = 1
 
-	mode_mail: INTEGER is 2
+	mode_mail: INTEGER = 2
 
 feature -- Initialisation
 
-	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER) is
+	make_from_managed_pointer (an_opcode: NATURAL_16; a_data_pointer: MANAGED_POINTER)
 		do
 			Precursor (an_opcode, a_data_pointer)
 			read_filename_and_mode
@@ -36,7 +36,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	read_filename_and_mode is
+	read_filename_and_mode
 			--
 		local
 			done: BOOLEAN

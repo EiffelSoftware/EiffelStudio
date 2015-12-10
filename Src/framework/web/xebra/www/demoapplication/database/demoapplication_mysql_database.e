@@ -20,11 +20,11 @@ inherit
 
 feature -- Constants
 
-	host: STRING is "localhost"
-	datasource: STRING is "Default"
-	database: STRING is "demoapplication_db"
-	username: STRING is "root"
-	password: STRING is ""
+	host: STRING = "localhost"
+	datasource: STRING = "Default"
+	database: STRING = "demoapplication_db"
+	username: STRING = "root"
+	password: STRING = ""
 
 
 

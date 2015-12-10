@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pseudo random number in a range."
 	author: "David Stevens"
 	date: "$Date$"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default is
+	make_default
 		local
 			t: TIME
 		do
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	next_item_in_range (a_min: INTEGER; a_max: INTEGER): INTEGER is
+	next_item_in_range (a_min: INTEGER; a_max: INTEGER): INTEGER
 		local
 			l_double: DOUBLE
 		do

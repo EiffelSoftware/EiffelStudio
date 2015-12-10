@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sortable_Array"
 	author: "David Stevens"
 	date: "$Date$"
@@ -24,7 +24,7 @@ feature
 
 	found_index: INTEGER
 	
-	found_item: G is
+	found_item: G
 		do
 			if found and found_index >= lower and found_index <= upper then
 				Result := item (found_index)

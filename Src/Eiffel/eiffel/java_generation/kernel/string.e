@@ -39,7 +39,7 @@ create
 	make_string_integer	
 feature {NONE} -- Initialisation
 
-	make_string is	
+	make_string	
 			-- public java.lang.String()			
 		external
 			"JVM creator use java.lang.String"		
@@ -47,7 +47,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_string (arg_1: STRING) is	
+	make_string_string (arg_1: STRING)	
 			-- public java.lang.String(java.lang.String)			
 		external
 			"JVM creator signature (java.lang.String) use java.lang.String"		
@@ -55,7 +55,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_character_ (arg_1: ARRAY[CHARACTER]) is	
+	make_string_array_character_ (arg_1: ARRAY[CHARACTER])	
 			-- public java.lang.String(char[])			
 		external
 			"JVM creator signature (char[]) use java.lang.String"		
@@ -63,7 +63,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER) is	
+	make_string_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER)	
 			-- public java.lang.String(char[],int,int)			
 		external
 			"JVM creator signature (char[], int, int) use java.lang.String"		
@@ -71,7 +71,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__integer_integer_integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: INTEGER) is	
+	make_string_array_integer_8__integer_integer_integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: INTEGER)	
 			-- public java.lang.String(byte[],int,int,int)			
 		external
 			"JVM creator signature (byte[], int, int, int) use java.lang.String"		
@@ -79,7 +79,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER) is	
+	make_string_array_integer_8__integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER)	
 			-- public java.lang.String(byte[],int)			
 		external
 			"JVM creator signature (byte[], int) use java.lang.String"		
@@ -87,7 +87,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__integer_integer_sun_io_bytetocharconverter (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: SUN_IO_BYTETOCHARCONVERTER) is	
+	make_string_array_integer_8__integer_integer_sun_io_bytetocharconverter (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: SUN_IO_BYTETOCHARCONVERTER)	
 			-- private java.lang.String(byte[],int,int,sun.io.ByteToCharConverter)			
 		external
 			"JVM creator signature (byte[], int, int, sun.io.ByteToCharConverter) use java.lang.String"		
@@ -95,7 +95,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__integer_integer_string (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: STRING) is	
+	make_string_array_integer_8__integer_integer_string (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER; arg_4: STRING)	
 			-- public java.lang.String(byte[],int,int,java.lang.String) throws java.io.UnsupportedEncodingException			
 		external
 			"JVM creator signature (byte[], int, int, java.lang.String) use java.lang.String"		
@@ -103,7 +103,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__string (arg_1: ARRAY[INTEGER_8]; arg_2: STRING) is	
+	make_string_array_integer_8__string (arg_1: ARRAY[INTEGER_8]; arg_2: STRING)	
 			-- public java.lang.String(byte[],java.lang.String) throws java.io.UnsupportedEncodingException			
 		external
 			"JVM creator signature (byte[], java.lang.String) use java.lang.String"		
@@ -111,7 +111,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8__integer_integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER) is	
+	make_string_array_integer_8__integer_integer (arg_1: ARRAY[INTEGER_8]; arg_2: INTEGER; arg_3: INTEGER)	
 			-- public java.lang.String(byte[],int,int)			
 		external
 			"JVM creator signature (byte[], int, int) use java.lang.String"		
@@ -119,7 +119,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_array_integer_8_ (arg_1: ARRAY[INTEGER_8]) is	
+	make_string_array_integer_8_ (arg_1: ARRAY[INTEGER_8])	
 			-- public java.lang.String(byte[])			
 		external
 			"JVM creator signature (byte[]) use java.lang.String"		
@@ -127,7 +127,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_java_lang_stringbuffer (arg_1: JAVA_LANG_STRINGBUFFER) is	
+	make_string_java_lang_stringbuffer (arg_1: JAVA_LANG_STRINGBUFFER)	
 			-- public java.lang.String(java.lang.StringBuffer)			
 		external
 			"JVM creator signature (java.lang.StringBuffer) use java.lang.String"		
@@ -135,7 +135,7 @@ feature {NONE} -- Initialisation
 			"java.lang.String"			
 		end
 	
-	make_string_integer (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[CHARACTER]) is	
+	make_string_integer (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[CHARACTER])	
 			-- private java.lang.String(int,int,char[])			
 		external
 			"JVM creator signature (int, int, char[]) use java.lang.String"		
@@ -145,7 +145,7 @@ feature {NONE} -- Initialisation
 	
 feature {ANY} -- Public functions
 
-	length: INTEGER is	
+	length: INTEGER	
 			-- public int java.lang.String.length()			
 		external
 			"JVM signature :int use java.lang.String"		
@@ -153,7 +153,7 @@ feature {ANY} -- Public functions
 			"length"			
 		end
 	
-	charat (arg_1: INTEGER): CHARACTER is	
+	charat (arg_1: INTEGER): CHARACTER	
 			-- public char java.lang.String.charAt(int)			
 		external
 			"JVM signature (int) :char use java.lang.String"		
@@ -161,7 +161,7 @@ feature {ANY} -- Public functions
 			"charAt"			
 		end
 	
-	getbytes_string (arg_1: STRING): ARRAY[INTEGER_8] is	
+	getbytes_string (arg_1: STRING): ARRAY[INTEGER_8]	
 			-- public byte[] java.lang.String.getBytes(java.lang.String) throws java.io.UnsupportedEncodingException			
 		external
 			"JVM signature (java.lang.String) :byte[] use java.lang.String"		
@@ -169,7 +169,7 @@ feature {ANY} -- Public functions
 			"getBytes"			
 		end
 	
-	getbytes: ARRAY[INTEGER_8] is	
+	getbytes: ARRAY[INTEGER_8]	
 			-- public byte[] java.lang.String.getBytes()			
 		external
 			"JVM signature :byte[] use java.lang.String"		
@@ -177,7 +177,7 @@ feature {ANY} -- Public functions
 			"getBytes"			
 		end
 	
-	equals (arg_1: ANY): BOOLEAN is	
+	equals (arg_1: ANY): BOOLEAN	
 			-- public boolean java.lang.String.equals(java.lang.Object)			
 		external
 			"JVM signature (java.lang.Object) :boolean use java.lang.String"		
@@ -185,7 +185,7 @@ feature {ANY} -- Public functions
 			"equals"			
 		end
 	
-	equalsignorecase (arg_1: STRING): BOOLEAN is	
+	equalsignorecase (arg_1: STRING): BOOLEAN	
 			-- public boolean java.lang.String.equalsIgnoreCase(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :boolean use java.lang.String"		
@@ -193,7 +193,7 @@ feature {ANY} -- Public functions
 			"equalsIgnoreCase"			
 		end
 	
-	compareto (arg_1: STRING): INTEGER is	
+	compareto (arg_1: STRING): INTEGER	
 			-- public int java.lang.String.compareTo(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :int use java.lang.String"		
@@ -201,7 +201,7 @@ feature {ANY} -- Public functions
 			"compareTo"			
 		end
 	
-	regionmatches_integer (arg_1: INTEGER; arg_2: STRING; arg_3: INTEGER; arg_4: INTEGER): BOOLEAN is	
+	regionmatches_integer (arg_1: INTEGER; arg_2: STRING; arg_3: INTEGER; arg_4: INTEGER): BOOLEAN	
 			-- public boolean java.lang.String.regionMatches(int,java.lang.String,int,int)			
 		external
 			"JVM signature (int, java.lang.String, int, int) :boolean use java.lang.String"		
@@ -209,7 +209,7 @@ feature {ANY} -- Public functions
 			"regionMatches"			
 		end
 	
-	regionmatches_boolean (arg_1: BOOLEAN; arg_2: INTEGER; arg_3: STRING; arg_4: INTEGER; arg_5: INTEGER): BOOLEAN is	
+	regionmatches_boolean (arg_1: BOOLEAN; arg_2: INTEGER; arg_3: STRING; arg_4: INTEGER; arg_5: INTEGER): BOOLEAN	
 			-- public boolean java.lang.String.regionMatches(boolean,int,java.lang.String,int,int)			
 		external
 			"JVM signature (boolean, int, java.lang.String, int, int) :boolean use java.lang.String"		
@@ -217,7 +217,7 @@ feature {ANY} -- Public functions
 			"regionMatches"			
 		end
 	
-	startswith_string_integer (arg_1: STRING; arg_2: INTEGER): BOOLEAN is	
+	startswith_string_integer (arg_1: STRING; arg_2: INTEGER): BOOLEAN	
 			-- public boolean java.lang.String.startsWith(java.lang.String,int)			
 		external
 			"JVM signature (java.lang.String, int) :boolean use java.lang.String"		
@@ -225,7 +225,7 @@ feature {ANY} -- Public functions
 			"startsWith"			
 		end
 	
-	startswith_string (arg_1: STRING): BOOLEAN is	
+	startswith_string (arg_1: STRING): BOOLEAN	
 			-- public boolean java.lang.String.startsWith(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :boolean use java.lang.String"		
@@ -233,7 +233,7 @@ feature {ANY} -- Public functions
 			"startsWith"			
 		end
 	
-	endswith (arg_1: STRING): BOOLEAN is	
+	endswith (arg_1: STRING): BOOLEAN	
 			-- public boolean java.lang.String.endsWith(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :boolean use java.lang.String"		
@@ -241,7 +241,7 @@ feature {ANY} -- Public functions
 			"endsWith"			
 		end
 	
-	hashcode: INTEGER is	
+	hashcode: INTEGER	
 			-- public int java.lang.String.hashCode()			
 		external
 			"JVM signature :int use java.lang.String"		
@@ -249,7 +249,7 @@ feature {ANY} -- Public functions
 			"hashCode"			
 		end
 	
-	indexof_integer (arg_1: INTEGER): INTEGER is	
+	indexof_integer (arg_1: INTEGER): INTEGER	
 			-- public int java.lang.String.indexOf(int)			
 		external
 			"JVM signature (int) :int use java.lang.String"		
@@ -257,7 +257,7 @@ feature {ANY} -- Public functions
 			"indexOf"			
 		end
 	
-	indexof_integer_integer (arg_1: INTEGER; arg_2: INTEGER): INTEGER is	
+	indexof_integer_integer (arg_1: INTEGER; arg_2: INTEGER): INTEGER	
 			-- public int java.lang.String.indexOf(int,int)			
 		external
 			"JVM signature (int, int) :int use java.lang.String"		
@@ -265,7 +265,7 @@ feature {ANY} -- Public functions
 			"indexOf"			
 		end
 	
-	lastindexof_integer (arg_1: INTEGER): INTEGER is	
+	lastindexof_integer (arg_1: INTEGER): INTEGER	
 			-- public int java.lang.String.lastIndexOf(int)			
 		external
 			"JVM signature (int) :int use java.lang.String"		
@@ -273,7 +273,7 @@ feature {ANY} -- Public functions
 			"lastIndexOf"			
 		end
 	
-	lastindexof_integer_integer (arg_1: INTEGER; arg_2: INTEGER): INTEGER is	
+	lastindexof_integer_integer (arg_1: INTEGER; arg_2: INTEGER): INTEGER	
 			-- public int java.lang.String.lastIndexOf(int,int)			
 		external
 			"JVM signature (int, int) :int use java.lang.String"		
@@ -281,7 +281,7 @@ feature {ANY} -- Public functions
 			"lastIndexOf"			
 		end
 	
-	indexof_string (arg_1: STRING): INTEGER is	
+	indexof_string (arg_1: STRING): INTEGER	
 			-- public int java.lang.String.indexOf(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :int use java.lang.String"		
@@ -289,7 +289,7 @@ feature {ANY} -- Public functions
 			"indexOf"			
 		end
 	
-	indexof_string_integer (arg_1: STRING; arg_2: INTEGER): INTEGER is	
+	indexof_string_integer (arg_1: STRING; arg_2: INTEGER): INTEGER	
 			-- public int java.lang.String.indexOf(java.lang.String,int)			
 		external
 			"JVM signature (java.lang.String, int) :int use java.lang.String"		
@@ -297,7 +297,7 @@ feature {ANY} -- Public functions
 			"indexOf"			
 		end
 	
-	lastindexof_string (arg_1: STRING): INTEGER is	
+	lastindexof_string (arg_1: STRING): INTEGER	
 			-- public int java.lang.String.lastIndexOf(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :int use java.lang.String"		
@@ -305,7 +305,7 @@ feature {ANY} -- Public functions
 			"lastIndexOf"			
 		end
 	
-	lastindexof_string_integer (arg_1: STRING; arg_2: INTEGER): INTEGER is	
+	lastindexof_string_integer (arg_1: STRING; arg_2: INTEGER): INTEGER	
 			-- public int java.lang.String.lastIndexOf(java.lang.String,int)			
 		external
 			"JVM signature (java.lang.String, int) :int use java.lang.String"		
@@ -313,7 +313,7 @@ feature {ANY} -- Public functions
 			"lastIndexOf"			
 		end
 	
-	substring_integer (arg_1: INTEGER): STRING is	
+	substring_integer (arg_1: INTEGER): STRING	
 			-- public java.lang.String java.lang.String.substring(int)			
 		external
 			"JVM signature (int) :java.lang.String use java.lang.String"		
@@ -321,7 +321,7 @@ feature {ANY} -- Public functions
 			"substring"			
 		end
 	
-	substring_integer_integer (arg_1: INTEGER; arg_2: INTEGER): STRING is	
+	substring_integer_integer (arg_1: INTEGER; arg_2: INTEGER): STRING	
 			-- public java.lang.String java.lang.String.substring(int,int)			
 		external
 			"JVM signature (int, int) :java.lang.String use java.lang.String"		
@@ -329,7 +329,7 @@ feature {ANY} -- Public functions
 			"substring"			
 		end
 	
-	concat (arg_1: STRING): STRING is	
+	concat (arg_1: STRING): STRING	
 			-- public java.lang.String java.lang.String.concat(java.lang.String)			
 		external
 			"JVM signature (java.lang.String) :java.lang.String use java.lang.String"		
@@ -337,7 +337,7 @@ feature {ANY} -- Public functions
 			"concat"			
 		end
 	
-	replace (arg_1: CHARACTER; arg_2: CHARACTER): STRING is	
+	replace (arg_1: CHARACTER; arg_2: CHARACTER): STRING	
 			-- public java.lang.String java.lang.String.replace(char,char)			
 		external
 			"JVM signature (char, char) :java.lang.String use java.lang.String"		
@@ -345,7 +345,7 @@ feature {ANY} -- Public functions
 			"replace"			
 		end
 	
-	tolowercase_java_util_locale (arg_1: JAVA_UTIL_LOCALE): STRING is	
+	tolowercase_java_util_locale (arg_1: JAVA_UTIL_LOCALE): STRING	
 			-- public java.lang.String java.lang.String.toLowerCase(java.util.Locale)			
 		external
 			"JVM signature (java.util.Locale) :java.lang.String use java.lang.String"		
@@ -353,7 +353,7 @@ feature {ANY} -- Public functions
 			"toLowerCase"			
 		end
 	
-	tolowercase: STRING is	
+	tolowercase: STRING	
 			-- public java.lang.String java.lang.String.toLowerCase()			
 		external
 			"JVM signature :java.lang.String use java.lang.String"		
@@ -361,7 +361,7 @@ feature {ANY} -- Public functions
 			"toLowerCase"			
 		end
 	
-	touppercase_java_util_locale (arg_1: JAVA_UTIL_LOCALE): STRING is	
+	touppercase_java_util_locale (arg_1: JAVA_UTIL_LOCALE): STRING	
 			-- public java.lang.String java.lang.String.toUpperCase(java.util.Locale)			
 		external
 			"JVM signature (java.util.Locale) :java.lang.String use java.lang.String"		
@@ -369,7 +369,7 @@ feature {ANY} -- Public functions
 			"toUpperCase"			
 		end
 	
-	touppercase: STRING is	
+	touppercase: STRING	
 			-- public java.lang.String java.lang.String.toUpperCase()			
 		external
 			"JVM signature :java.lang.String use java.lang.String"		
@@ -377,7 +377,7 @@ feature {ANY} -- Public functions
 			"toUpperCase"			
 		end
 	
-	trim: STRING is	
+	trim: STRING	
 			-- public java.lang.String java.lang.String.trim()			
 		external
 			"JVM signature :java.lang.String use java.lang.String"		
@@ -385,7 +385,7 @@ feature {ANY} -- Public functions
 			"trim"			
 		end
 	
-	tostring: STRING is	
+	tostring: STRING	
 			-- public java.lang.String java.lang.String.toString()			
 		external
 			"JVM signature :java.lang.String use java.lang.String"		
@@ -393,7 +393,7 @@ feature {ANY} -- Public functions
 			"toString"			
 		end
 	
-	tochararray: ARRAY[CHARACTER] is	
+	tochararray: ARRAY[CHARACTER]	
 			-- public char[] java.lang.String.toCharArray()			
 		external
 			"JVM signature :char[] use java.lang.String"		
@@ -401,7 +401,7 @@ feature {ANY} -- Public functions
 			"toCharArray"			
 		end
 	
-	valueof_any (arg_1: ANY): STRING is	
+	valueof_any (arg_1: ANY): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(java.lang.Object)			
 		external
 			"JVM static signature (java.lang.Object) :java.lang.String use java.lang.String"		
@@ -409,7 +409,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_array_character_ (arg_1: ARRAY[CHARACTER]): STRING is	
+	valueof_array_character_ (arg_1: ARRAY[CHARACTER]): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(char[])			
 		external
 			"JVM static signature (char[]) :java.lang.String use java.lang.String"		
@@ -417,7 +417,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER): STRING is	
+	valueof_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(char[],int,int)			
 		external
 			"JVM static signature (char[], int, int) :java.lang.String use java.lang.String"		
@@ -425,7 +425,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	copyvalueof_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER): STRING is	
+	copyvalueof_array_character__integer (arg_1: ARRAY[CHARACTER]; arg_2: INTEGER; arg_3: INTEGER): STRING	
 			-- public static java.lang.String java.lang.String.copyValueOf(char[],int,int)			
 		external
 			"JVM static signature (char[], int, int) :java.lang.String use java.lang.String"		
@@ -433,7 +433,7 @@ feature {ANY} -- Public functions
 			"copyValueOf"			
 		end
 	
-	copyvalueof_array_character_ (arg_1: ARRAY[CHARACTER]): STRING is	
+	copyvalueof_array_character_ (arg_1: ARRAY[CHARACTER]): STRING	
 			-- public static java.lang.String java.lang.String.copyValueOf(char[])			
 		external
 			"JVM static signature (char[]) :java.lang.String use java.lang.String"		
@@ -441,7 +441,7 @@ feature {ANY} -- Public functions
 			"copyValueOf"			
 		end
 	
-	valueof_boolean (arg_1: BOOLEAN): STRING is	
+	valueof_boolean (arg_1: BOOLEAN): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(boolean)			
 		external
 			"JVM static signature (boolean) :java.lang.String use java.lang.String"		
@@ -449,7 +449,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_character (arg_1: CHARACTER): STRING is	
+	valueof_character (arg_1: CHARACTER): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(char)			
 		external
 			"JVM static signature (char) :java.lang.String use java.lang.String"		
@@ -457,7 +457,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_integer (arg_1: INTEGER): STRING is	
+	valueof_integer (arg_1: INTEGER): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(int)			
 		external
 			"JVM static signature (int) :java.lang.String use java.lang.String"		
@@ -465,7 +465,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_integer_64 (arg_1: INTEGER_64): STRING is	
+	valueof_integer_64 (arg_1: INTEGER_64): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(long)			
 		external
 			"JVM static signature (long) :java.lang.String use java.lang.String"		
@@ -473,7 +473,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_real (arg_1: REAL): STRING is	
+	valueof_real (arg_1: REAL): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(float)			
 		external
 			"JVM static signature (float) :java.lang.String use java.lang.String"		
@@ -481,7 +481,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	valueof_double (arg_1: DOUBLE): STRING is	
+	valueof_double (arg_1: DOUBLE): STRING	
 			-- public static java.lang.String java.lang.String.valueOf(double)			
 		external
 			"JVM static signature (double) :java.lang.String use java.lang.String"		
@@ -489,7 +489,7 @@ feature {ANY} -- Public functions
 			"valueOf"			
 		end
 	
-	intern: STRING is	
+	intern: STRING	
 			-- public native java.lang.String java.lang.String.intern()			
 		external
 			"JVM signature :java.lang.String use java.lang.String"		
@@ -499,7 +499,7 @@ feature {ANY} -- Public functions
 	
 feature {ANY} -- Public procedures
 
-	getchars (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[CHARACTER]; arg_4: INTEGER) is	
+	getchars (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[CHARACTER]; arg_4: INTEGER)	
 			-- public void java.lang.String.getChars(int,int,char[],int)			
 		external
 			"JVM signature (int, int, char[], int) use java.lang.String"		
@@ -507,7 +507,7 @@ feature {ANY} -- Public procedures
 			"getChars"			
 		end
 	
-	getbytes_integer (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[INTEGER_8]; arg_4: INTEGER) is	
+	getbytes_integer (arg_1: INTEGER; arg_2: INTEGER; arg_3: ARRAY[INTEGER_8]; arg_4: INTEGER)	
 			-- public void java.lang.String.getBytes(int,int,byte[],int)			
 		external
 			"JVM signature (int, int, byte[], int) use java.lang.String"		

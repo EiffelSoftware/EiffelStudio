@@ -21,7 +21,7 @@ note
 
 class EXAMPLE
 
-creation
+create
 	make
 
 feature {NONE}

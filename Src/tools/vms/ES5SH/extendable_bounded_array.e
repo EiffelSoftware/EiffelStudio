@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Array which is extendable and linear"
 	keywords: "array,linear,extendable,iterable"
 	author: "Mark Howard"
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make (a_lower, a_upper: INTEGER) is
+	make (a_lower, a_upper: INTEGER)
 			-- Allocate an array with 'a_lower' and 'a_upper' bounds.
 		do
 			Precursor (a_lower, a_upper)
@@ -41,13 +41,13 @@ feature -- Initialization
 			compare_objects
 		end
 
-	make_empty is
+	make_empty
 			-- Allocate an empty array.
 		do
 			make (1, 0)
 		end
 
-	make_from_linear (a_linear: LINEAR [G]) is
+	make_from_linear (a_linear: LINEAR [G])
 			-- Allocate an array initially populated with all elements from 'a_linear'.
 		do
 			make_empty
@@ -61,7 +61,7 @@ feature -- Initialization
 			end
 		end
 
-	make_from_array (a_array: ARRAY[G]) is
+	make_from_array (a_array: ARRAY[G])
 			-- Allocate an array initially populated with all elements from 'a_array'.
 		local
 			i: INTEGER
@@ -77,7 +77,7 @@ feature -- Initialization
 			end
 		end
 
-	make_from_array_reversed (a_array: ARRAY[G]) is
+	make_from_array_reversed (a_array: ARRAY[G])
 			-- Allocate an array initially populated with all elements from 'a_array' in reverse order.
 		local
 			i: INTEGER
@@ -93,7 +93,7 @@ feature -- Initialization
 			end
 		end
 
-	make_with_default_value (a_lower, a_upper: INTEGER; a_default_value: G) is
+	make_with_default_value (a_lower, a_upper: INTEGER; a_default_value: G)
 			-- Make filled with 'a_default_value'.
 		local
 			i: INTEGER
@@ -109,7 +109,7 @@ feature -- Initialization
 
 feature -- Access
 
-	safe_item (i: INTEGER): G is
+	safe_item (i: INTEGER): G
 			-- 'i'-th item if valid index 'i', Void (or default value) otherwise
 		do
 			if valid_index (i) then
@@ -117,7 +117,7 @@ feature -- Access
 			end
 		end
 
-	current_item: G is
+	current_item: G
 			-- Current item if valid, Void otherwise
 		do
 			if lower <= index and then index <= upper then
@@ -126,7 +126,7 @@ feature -- Access
 			end
 		end
 
-	previous_item: G is
+	previous_item: G
 			-- Item just previous to current item
 		require
 			index_greater_than_lower: index > lower
@@ -134,7 +134,7 @@ feature -- Access
 			Result := item (index - 1)
 		end
 
-	next_item: G is
+	next_item: G
 			-- Item just after current item
 		require
 			index_less_than_upper: index < upper
@@ -142,13 +142,13 @@ feature -- Access
 			Result := item (index + 1)
 		end
 
-	first: G is
+	first: G
 			-- Item at first position, if any
 		do
 			Result := safe_item (lower)
 		end
 
-	last: like first is
+	last: like first
 			-- Item at last position, if any
 		do
 			if count > 0 then
@@ -162,7 +162,7 @@ feature -- Access
 	found_index: INTEGER
 			-- Index of item eventually found by last call to 'has' (this is a side effect)
 
-	new_index_of (a_item: G): INTEGER is
+	new_index_of (a_item: G): INTEGER
 			-- Index of first occurrence of 'a_item' in this array
 		local
 			i: INTEGER
@@ -183,55 +183,55 @@ feature -- Access
 
 feature -- Status report
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May items be added?
 		do
 			Result := True
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := (count = capacity)
 		end
 
-	at_first: BOOLEAN is
+	at_first: BOOLEAN
 			-- Is the cursor at the first item?
 		do
 			Result := index = lower
 		end
 
-	at_last: BOOLEAN is
+	at_last: BOOLEAN
 			-- Is the cursor at the last item?
 		do
 			Result := index = upper
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := before or after
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			Result := index > upper
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			Result := index < lower
 		end
 
-	has (a_value: G): BOOLEAN is
+	has (a_value: G): BOOLEAN
 			-- Does `a_value' appear in this array?
  			-- (Reference or object equality, based on `object_comparison'.)
 		local
@@ -258,7 +258,7 @@ feature -- Status report
 			Result := not (found_index > n)
 		end
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears in structure
 		local
 			i: INTEGER
@@ -290,7 +290,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions, does not go outside array bounds.
 		do
 			index := index + i
@@ -303,7 +303,7 @@ feature -- Cursor movement
 			within_bounds: not is_empty implies valid_index (index)
 		end
 
-	start is
+	start
 			-- Move cursor to first position if any.
 		do
 			index := lower
@@ -311,7 +311,7 @@ feature -- Cursor movement
 			after_when_empty: is_empty implies after
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position if any.
 		do
 			index := upper
@@ -323,39 +323,39 @@ feature -- Cursor movement
 			before_when_empty: is_empty implies before
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		do
 			index := index + 1
 		end
 
-	back is
+	back
 			-- Move cursor one position backward.
 		do
 			index := index - 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			index := i
 		end
 
-	start_forth is
+	start_forth
 			-- Move cursor to first position if any, then if not off, move one position forth.
 		do
 			start
 			if not off then forth end
 		end
 
-	finish_back is
+	finish_back
 			-- Move cursor to last position if any, then if not off, move one position back.
 		do
 			finish
 			if not off then back end
 		end
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at 'index' position.
 		local
@@ -366,7 +366,7 @@ feature -- Cursor movement
 			put (l_item, i)
 		end
 
-	put_front (a_value: G) is
+	put_front (a_value: G)
 			-- Add `a_value' to the beginning.
 			-- Do not move cursor.
 		do
@@ -377,14 +377,14 @@ feature -- Cursor movement
 			end
 		end
 
-	extend (a_value: G) is
+	extend (a_value: G)
 			-- Add `a_value' to end.
 			-- Do not move cursor.
 		do
 			force (a_value, upper + 1)
 		end
 
-	put_left (a_value: G) is
+	put_left (a_value: G)
 			-- Add `a_value' to the left of current position.
 			-- Do not move cursor.
 		do
@@ -396,7 +396,7 @@ feature -- Cursor movement
 			end
 		end
 
-	put_right (a_value: G) is
+	put_right (a_value: G)
 			-- Add `a_value' to the right of current position.
 			-- Do not move cursor.
 		do
@@ -407,13 +407,13 @@ feature -- Cursor movement
 			end
 		end
 
-	replace (a_value: like first) is
+	replace (a_value: like first)
 			-- Replace current item by `a_value'.
 		do
 			put (a_value, index)
 		end
 
-	append_linear (a_linear: LINEAR [G]) is
+	append_linear (a_linear: LINEAR [G])
 			-- Append contents of 'a_linear' to this array.
 		require
 			a_linear_not_void: a_linear /= Void
@@ -431,7 +431,7 @@ feature -- Cursor movement
 			end
 		end
 
-	append_array (a_array: ARRAY [G]) is
+	append_array (a_array: ARRAY [G])
 			-- Append contents of 'a_array' to this array.
 		local
 			i: INTEGER
@@ -448,7 +448,7 @@ feature -- Cursor movement
 			end
 		end
 
-	apply (a_agent: PROCEDURE[ANY,TUPLE[G]]) is
+	apply (a_agent: PROCEDURE[ANY,TUPLE[G]])
 			--version of do_all which does not affect the state, so safe for recursion
 		local
 			 i: INTEGER
@@ -462,7 +462,7 @@ feature -- Cursor movement
 			end
 		end
 
-	restrict (a_lower, a_upper: INTEGER) is
+	restrict (a_lower, a_upper: INTEGER)
 			-- Restrict bounds of this array to 'a_lower' and 'a_upper'
 		do
 			conservative_resize (a_lower,a_upper)
@@ -472,7 +472,7 @@ feature -- Cursor movement
 
 feature -- Removal
 
-	prune (a_value: G) is
+	prune (a_value: G)
 			-- Remove first occurrence of `a_value', if any,
 			-- after cursor position.
 			-- Move cursor to right neighbor
@@ -499,7 +499,7 @@ feature -- Removal
 			if not after then remove end
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
@@ -526,7 +526,7 @@ feature -- Removal
 			end
 		end
 
-	prune_all (a_value: G) is
+	prune_all (a_value: G)
 			-- Remove all occurrences of `a_value'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -597,7 +597,7 @@ feature -- Removal
 			is_after: after
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -605,7 +605,7 @@ feature -- Removal
 			remove
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position
 			-- Do not move cursor
 		do
@@ -614,7 +614,7 @@ feature -- Removal
 			back
 		end
 
-	empty_out,wipe_out is
+	empty_out,wipe_out
 			-- Remove all items.
 		do
 			discard_items
@@ -622,7 +622,7 @@ feature -- Removal
 			upper := lower - 1
 		end
 
-	insert (a_value: G; pos: INTEGER) is
+	insert (a_value: G; pos: INTEGER)
 			-- Add `a_value' at `pos', moving subsequent items
 			-- to the right.
 		require
@@ -652,14 +652,14 @@ feature -- Removal
 			insertion_done: item (pos) = a_value
 		end
 
-	valid_cursor (a_cursor : like cursor) : BOOLEAN is
+	valid_cursor (a_cursor : like cursor) : BOOLEAN
 			--is a_cursor valid?
 		do
 			Result := a_cursor.index >= lower - 1 and then
 			a_cursor.index <= upper + 1
 		end
 
-	item_equal (a_1, a_2: G): BOOLEAN is
+	item_equal (a_1, a_2: G): BOOLEAN
 			-- Equal has problems in some versions of eiffel.
 			-- The locals are a trick to handle
 			-- reference and expanded generic parameter the same way

@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,12 +14,12 @@ create
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse ECF file `a_file'.
 		do
 		end
 
-	set_ise_version (s: UT_VERSION) is
+	set_ise_version (s: UT_VERSION)
 			--
 		do
 

@@ -104,11 +104,9 @@ feature -- Access queries
 			loop
 				r := l_rules.item
 				if r.is_enabled (a_state) then
-					if r.valid_includes and r.valid_excludes then
-						Result.merge (r)
-						if attached Result.error as e then
-							set_error (create {CONF_ERROR_REGEXP}.make_with_description ("", e))
-						end
+					Result.merge (r)
+					if attached Result.error as e then
+						set_error (create {CONF_ERROR_REGEXP}.make_with_description ("", e))
 					end
 				end
 				l_rules.forth

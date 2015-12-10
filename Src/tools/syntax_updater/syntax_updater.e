@@ -59,8 +59,8 @@ feature {NONE} -- File discovering and processing
 			l_processed_values: ARRAYED_LIST [STRING]
 		do
 				-- Set settings from command line
-			visitor.set_is_updating_agents (has_option (update_agents_switch))
-			fast_factory.set_is_updating_agents (has_option (update_agents_switch))
+			visitor.set_is_updating_agents (is_updating_agents)
+			fast_factory.set_is_updating_agents (is_updating_agents)
 
 				-- Reset `is_eiffel_class_updated' to its default value, False.
 			is_eiffel_class_updated := False
@@ -148,6 +148,7 @@ feature {NONE} -- File discovering and processing
 									-- We do not process ECFs if no Eiffel classes have been modified in `a_dir',
 									-- so we have to store all the ECFs we encounter before converting them.
 								if
+									is_updating_ecfs and then
 									attached l_file.path.extension as l_extension and then l_extension.count = 3 and then
 									l_extension.same_caseless_characters_general ("ecf", 1, 3, 1)
 								then
@@ -174,6 +175,7 @@ feature {NONE} -- Implementation
 	process_configuration (a_file: PATH)
 			-- Process configuration file `a_file' located in `a_dir'
 		require
+			is_updating_ecfs: is_updating_ecfs
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 			a_file_is_ecf: attached a_file.extension as l_extension and then l_extension.count = 3 and then
 				l_extension.same_caseless_characters_general ("ecf", 1, 3, 1)
@@ -189,7 +191,7 @@ feature {NONE} -- Implementation
 				display_error (l_loader.last_error.text)
 			else
 					-- Remove the `is_obsolete_routine_type' option if present on all targets.
-				if has_option (update_agents_switch) then
+				if is_updating_agents then
 					across l_loader.last_system.targets as l_target loop
 						if attached l_target.item.internal_options as l_options then
 							l_options.unset_is_obsolete_routine_type
@@ -429,6 +431,18 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Arguments processing
 
+	is_updating_agents: BOOLEAN
+			-- Will agent types be updated?
+		do
+			Result := has_option (agents_switch)
+		end
+
+	is_updating_ecfs: BOOLEAN
+			-- Will ECFs be updated?
+		do
+			Result := has_option (ecf_switch) or else is_updating_agents
+		end
+
 	name: STRING = "Eiffel Syntax Updater"
 	version: STRING = "6.4.1"
 	copyright: STRING = "Copyright Eiffel Software 2007-2011. All Rights Reserved."
@@ -440,8 +454,10 @@ feature {NONE} -- Arguments processing
 	verbose_switch_description: STRING = "Verbose output of processing"
 	force_switch: STRING = "f|force"
 	force_switch_description: STRING = "Force generation of syntactically incorrect classes"
-	update_agents_switch: STRING = "u|update"
-	update_agents_swith_description: STRING = "Update type of agents to new 15.11 definition"
+	agents_switch: STRING = "a|agents"
+	agents_swith_description: STRING = "Update type of agents to new 15.11 definition. Implies -e."
+	ecf_switch: STRING = "e|ecf"
+	ecf_switch_description: STRING = "Update ECF if Eiffel classes have been updated"
 			-- Our arguments
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
@@ -449,7 +465,8 @@ feature {NONE} -- Arguments processing
 			create Result.make (2)
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, verbose_switch_description, True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, force_switch_description, True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (update_agents_switch, update_agents_swith_description, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (ecf_switch, ecf_switch_description, True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (agents_switch, agents_swith_description, True, False))
 		end
 
 invariant

@@ -1,5 +1,0 @@
-name=base
-description=Eiffel Base: Kernel library classes, data structure, I/O
-source=../library/base
-maps=/com.eiffel/library/base
-maps=/com.eiffel/library/data_structure/adt/base

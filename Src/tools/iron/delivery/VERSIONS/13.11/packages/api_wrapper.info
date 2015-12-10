@@ -1,5 +1,0 @@
-name=api_wrapper
-description=API wrapper: Make it easy to call C routines from dynamically loaded shared libraries
-source=../library/api_wrapper
-maps=/com.eiffel/library/api_wrapper
-maps=/com.eiffel/library/language_interface/C/api_wrapper

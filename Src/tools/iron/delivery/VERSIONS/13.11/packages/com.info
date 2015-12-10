@@ -1,5 +1,0 @@
-name=com
-description=Eiffel COM: COM technology (Windows only)
-source=../library/com
-maps=/com.eiffel/library/com
-maps=/com.eiffel/library/language_interface/COM/com

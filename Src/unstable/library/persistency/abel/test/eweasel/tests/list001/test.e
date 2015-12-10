@@ -6,7 +6,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create different descendants of LIST and execute tests.
 		local
 			i: INTEGER
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 
 	l1, l2, l3, l4, l5: LIST [STRING]
 
-	test_equality (sname, dname: STRING; src, dest: LIST [STRING]) is
+	test_equality (sname, dname: STRING; src, dest: LIST [STRING])
 			-- Compare list `src' and `dest', named `sname' and `dname'.
 		do
 			Io.put_string (sname)
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			Io.put_new_line
 		end
 
-	fill_up is
+	fill_up
 			-- Fill the containers up.
 		local
 			s1: STRING
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			l3.extend (s2)
 		end
 
-	comparisons is
+	comparisons
 			-- Do the comparisons.
 		do
 			l1.compare_references

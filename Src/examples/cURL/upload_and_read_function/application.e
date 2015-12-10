@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		local
 			l_result: INTEGER
@@ -63,13 +63,13 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	curl: CURL_EXTERNALS is
+	curl: CURL_EXTERNALS
 			-- cURL externals
 		once
 			create Result
 		end
 
-	curl_easy: CURL_EASY_EXTERNALS is
+	curl_easy: CURL_EASY_EXTERNALS
 			-- cURL easy externals
 		once
 			create Result

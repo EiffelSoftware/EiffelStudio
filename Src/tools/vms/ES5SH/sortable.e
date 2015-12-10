@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sortable"
 	author: "David Stevens"
 	date: "$Date$"
@@ -11,35 +11,35 @@ feature -- Access
 	found_index: INTEGER
 	found: BOOLEAN
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 		deferred
 		end
 
-	item alias "[]" (i: INTEGER): G is
+	item alias "[]" (i: INTEGER): G
 			-- Entry at index `i'.
 		deferred
 		end
 
-	lower : INTEGER is
+	lower : INTEGER
 		deferred
 		end
 
-	upper : INTEGER is
+	upper : INTEGER
 		deferred
 		end
 
-	less_than (a, b: G): BOOLEAN is
+	less_than (a, b: G): BOOLEAN
 		deferred
 		end
 
-	greater_than (a, b: G): BOOLEAN is
+	greater_than (a, b: G): BOOLEAN
 		do
 			Result := not less_than (a, b) and not a.is_equal (b)
 		end
 
 feature -- Basic operations
 
-	linear_search (a_item: G) is
+	linear_search (a_item: G)
 		do
 			from
 				found := False
@@ -56,7 +56,7 @@ feature -- Basic operations
 			really_found: found implies a_item.is_equal (item (found_index))
 		end
 
-	binary_search (a_item: G) is
+	binary_search (a_item: G)
 		local
 			l_lower,l_upper: INTEGER
 		do
@@ -100,7 +100,7 @@ feature -- Basic operations
 			really_found: found implies a_item.is_equal (item (found_index))
 		end
 
-	dynamic_binary_search (a_compare: FUNCTION [ANY,TUPLE [G],INTEGER]) is
+	dynamic_binary_search (a_compare: FUNCTION [ANY,TUPLE [G],INTEGER])
 		local
 			l_lower,l_upper: INTEGER
 		do
@@ -144,12 +144,12 @@ feature -- Basic operations
 			really_found: found implies a_compare.item ([item (found_index)]) = 0
 		end
 
-	put (a_value: like item; i: INTEGER) is
+	put (a_value: like item; i: INTEGER)
 			-- Replace `i'-th entry.
 		deferred
 		end
 
-	sort is
+	sort
 			-- Taken from algorithm provided in "Combinatorial Algorithms, Theory and Practice" by
 			-- Edward M. Reingold, Jurg Nievergelt, and Narsingh Deo; Prentice-Hall Copyright 1977, page 289.
 			-- isbn 0-13-152447-X.
@@ -240,7 +240,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	integer_valued_less (a_1, a_2: G): INTEGER is
+	integer_valued_less (a_1, a_2: G): INTEGER
 		do
 			if less_than (a_1,a_2) then
 				Result := -1
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_swap (i, j: INTEGER) is
+	internal_swap (i, j: INTEGER)
 		local
 			l_temp_item: like item
 		do

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Platform specific implementation for DEBUGGER_EVENTS_HANDLER_IMP. Cocoa"
 	author: "$Author$"
 	date: "$Date$"
@@ -13,7 +13,7 @@ feature -- Access
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

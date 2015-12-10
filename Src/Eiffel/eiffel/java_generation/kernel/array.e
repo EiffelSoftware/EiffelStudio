@@ -12,7 +12,7 @@
 
 feature {NONE} -- Initialization
 
-   make (n: INTEGER) is
+   make (n: INTEGER)
 			-- Create an array with `n' elements.
       do
 			-- Built-in
@@ -20,23 +20,23 @@ feature {NONE} -- Initialization
 
 feature
 
-   put (i: INTEGER; v:G) is
+   put (i: INTEGER; v:G)
       do
       end
 
-   item (i: INTEGER): G is
+   item (i: INTEGER): G
       do
       end
 
-   upper: INTEGER is
+   upper: INTEGER
       do
       end
    
-   lower: INTEGER is
+   lower: INTEGER
       do
       end
 
-   count: INTEGER is
+   count: INTEGER
       do
 			Result := upper - lower + 1
       end

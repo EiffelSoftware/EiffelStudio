@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple class for parsing a delimited string, from ROSE_DELIMITED_TEXT"
 	author: "Cammie Howard"
 	date: "$Date$"
@@ -18,7 +18,7 @@ create
 
 feature -- Creation
 
-	make (a_text: STRING; a_delimiter: CHARACTER) is
+	make (a_text: STRING; a_delimiter: CHARACTER)
 			-- Create `Current' from text `a_text' and delimiter `a_delimiter'.
 		require
 			a_text_not_void: a_text /= Void
@@ -29,7 +29,7 @@ feature -- Creation
 			parse
 		end
 
-	make_ignoring_repeats (a_text : STRING; a_delimiter : CHARACTER) is
+	make_ignoring_repeats (a_text : STRING; a_delimiter : CHARACTER)
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -37,7 +37,7 @@ feature -- Creation
 			make (a_text,a_delimiter)
 		end
 
-	make_ignoring_quotes (a_text : STRING; a_delimiter : CHARACTER) is
+	make_ignoring_quotes (a_text : STRING; a_delimiter : CHARACTER)
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -45,7 +45,7 @@ feature -- Creation
 			make (a_text, a_delimiter)
 		end
 
-	make_removing_quotes (a_text : STRING; a_delimiter : CHARACTER) is
+	make_removing_quotes (a_text : STRING; a_delimiter : CHARACTER)
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -53,7 +53,7 @@ feature -- Creation
 			make (a_text, a_delimiter)
 		end
 
-	make_removing_spaces (a_text : STRING; a_delimiter : CHARACTER) is
+	make_removing_spaces (a_text : STRING; a_delimiter : CHARACTER)
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -93,7 +93,7 @@ feature -- Creation
 
 feature -- Basic operations
 
-	parse is
+	parse
 		--
 		--	This should correctly handle the following cases:
 		--
@@ -131,7 +131,7 @@ feature -- Basic operations
 			end
 		end
 
-	prune_token (a_token: STRING): STRING is
+	prune_token (a_token: STRING): STRING
 			-- apply pruning to token
 		do
 			if (remove_quotes) then
@@ -153,23 +153,23 @@ feature -- Basic operations
 	remove_spaces : BOOLEAN
 	text : STRING
 
-	ignore_spaces is
+	ignore_spaces
 			-- ignore spaces
 		do
 			remove_spaces := true
 		end
-	ignore_repeated_delimiters is
+	ignore_repeated_delimiters
 			-- ignore repeated delimiters
 		do
 			repeated_delimiters_ignored := true
 		end
-	count_repeated_delimiters is
+	count_repeated_delimiters
 			-- count repeated delimiters
 		do
 			repeated_delimiters_ignored := false
 		end
 
-	delimited_string (a_delimiter: CHARACTER) : STRING is
+	delimited_string (a_delimiter: CHARACTER) : STRING
 			-- delimited string in canonical form
 		local
 			i : INTEGER

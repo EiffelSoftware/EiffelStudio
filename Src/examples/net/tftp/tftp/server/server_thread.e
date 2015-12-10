@@ -18,14 +18,14 @@ feature -- Constants
 
 feature -- Initialization
 
-	make (a_frontend: TFTP_FRONTEND) is
+	make (a_frontend: TFTP_FRONTEND)
 		require
 			frontend_non_void: a_frontend /= Void
 		do
 			make_with_port (a_frontend, default_port)
 		end
 
-	make_with_port (a_frontend: TFTP_FRONTEND; a_port: NATURAL_16) is
+	make_with_port (a_frontend: TFTP_FRONTEND; a_port: NATURAL_16)
 		require
 			frontend_non_void: a_frontend /= Void
 		do
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature
 
-	execute is
+	execute
 			-- Routine executed by new thread.
 		local
 			packet: TFTP_REQUEST_PACKET
@@ -77,14 +77,14 @@ feature
 			frontend.log_message_by_source ("SERVER:", 2,"Tftp Server thread stopped.")
 		end
 
-	worker_terminated (id: STRING) is
+	worker_terminated (id: STRING)
 		require
 			id_non_void: id /= Void
 			id_non_epty: not id.is_empty
 		do
 		end
 
-	dispatch_tftp_event (event: TFTP_EVENT) is
+	dispatch_tftp_event (event: TFTP_EVENT)
 		require
 			event_non_void: event /= Void
 		do
@@ -100,7 +100,7 @@ feature
 			mutex.unlock
 		end
 
-	sent_data (data_length: INTEGER) is
+	sent_data (data_length: INTEGER)
 		do
 			mutex.lock
 			from
@@ -114,7 +114,7 @@ feature
 			mutex.unlock
 		end
 
-	received_data (data_length: INTEGER) is
+	received_data (data_length: INTEGER)
 		do
 			mutex.lock
 			from
@@ -128,7 +128,7 @@ feature
 			mutex.unlock
 		end
 
-	add_tftp_event_listener (listener: TFTP_EVENT_LISTENER) is
+	add_tftp_event_listener (listener: TFTP_EVENT_LISTENER)
 		require
 			listener_non_void: listener /= Void
 		do
@@ -137,7 +137,7 @@ feature
 			mutex.unlock
 		end
 
-	remove_tftp_event_listener (listener: TFTP_EVENT_LISTENER) is
+	remove_tftp_event_listener (listener: TFTP_EVENT_LISTENER)
 		require
 			listener_non_void: listener /= Void
 		do

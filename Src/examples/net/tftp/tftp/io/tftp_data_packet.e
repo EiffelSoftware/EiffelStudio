@@ -19,7 +19,7 @@ feature
 
 feature -- Initialization
 
-	make_from_address_code_data (an_address: INET_ADDRESS; a_port: INTEGER; a_block_number: INTEGER; a_data_pointer: MANAGED_POINTER; a_data_length: INTEGER) is
+	make_from_address_code_data (an_address: INET_ADDRESS; a_port: INTEGER; a_block_number: INTEGER; a_data_pointer: MANAGED_POINTER; a_data_length: INTEGER)
 			--
 		require
 			address_non_void: an_address /= Void
@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature
 
-	data_length: INTEGER is
+	data_length: INTEGER
 			--
 		do
 			Result := data_pointer.count - data_offset

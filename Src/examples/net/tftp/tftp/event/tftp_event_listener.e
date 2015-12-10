@@ -4,15 +4,15 @@ deferred class
 
 feature
 
-	tftp_message (e: TFTP_EVENT) is
+	tftp_message (e: TFTP_EVENT)
 		deferred
 		end
 
-	sent_data (data_length: INTEGER) is
+	sent_data (data_length: INTEGER)
 		deferred
 		end
 
-	received_data (data_length: INTEGER) is
+	received_data (data_length: INTEGER)
 		deferred
 		end
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error: Problem during the parsing of an ecf file."
 	author: "Patrick Ruckstuhl <patrick@tario.org>"
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_error: STRING) is
+	make (a_error: STRING)
 			-- Create a new error reporting that error.
 		require
 			a_error_ok: a_error /= Void and then not a_error.is_empty
@@ -26,10 +26,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: ECF parsing error: '$1'."
+	default_template: STRING = "$0: ECF parsing error: '$1'."
 			-- Default template used to built the error message
 
-	code: STRING is "ECF0001"
+	code: STRING = "ECF0001"
 			-- Error code
 
 invariant

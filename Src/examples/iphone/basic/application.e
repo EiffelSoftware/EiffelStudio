@@ -1,4 +1,4 @@
-indexing
+note
 	description : "basic application root class"
 	date        : "$Date$"
 	revision    : "$Revision$"

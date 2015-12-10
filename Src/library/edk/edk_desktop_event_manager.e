@@ -208,7 +208,7 @@ feature {EDK_OBJECT_I} -- Implementation
 			end
 		end
 
-	eif_id_object (an_id: INTEGER): IDENTIFIED is
+	eif_id_object (an_id: INTEGER): IDENTIFIED
 			-- Object associated with `an_id'
 		external
 			"C | %"eif_object_id.h%""
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	native_default_window_procedure (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): POINTER is
+	native_default_window_procedure (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): POINTER
 		external
 			"C inline use <edk.h>"
 		alias
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_x_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_x_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_y_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_y_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_width (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_width (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_height (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_height (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -616,7 +616,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_flags (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_flags (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "System's root class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Run application.
 		local
 			l_app_server: EDK_APPLICATION_SERVER

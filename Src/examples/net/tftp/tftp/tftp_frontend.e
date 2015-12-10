@@ -3,28 +3,28 @@ deferred class TFTP_FRONTEND
 feature
 
 
-	allow_overwrite (address: INET_ADDRESS): BOOLEAN is
+	allow_overwrite (address: INET_ADDRESS): BOOLEAN
 		deferred
 		end
 
-	allow_write (address: INET_ADDRESS): BOOLEAN is
+	allow_write (address: INET_ADDRESS): BOOLEAN
 		deferred
 		end
 
-	allow_read (address: INET_ADDRESS): BOOLEAN is
+	allow_read (address: INET_ADDRESS): BOOLEAN
 		deferred
 		end
 
-	retransmit_count (address: INET_ADDRESS): NATURAL is
+	retransmit_count (address: INET_ADDRESS): NATURAL
 		deferred
 		end
 
-	timeout (address: INET_ADDRESS): NATURAL is
+	timeout (address: INET_ADDRESS): NATURAL
 		deferred
 		end
 
 
-	log_message_by_source (a_source: STRING; a_level: INTEGER; a_message: STRING) is
+	log_message_by_source (a_source: STRING; a_level: INTEGER; a_message: STRING)
 		require
 			source_non_void: a_source /= Void
 			source_valid: not a_source.is_empty
@@ -33,7 +33,7 @@ feature
 		deferred
 		end
 
-	log_message_by_address (an_address: INET_ADDRESS; a_level: INTEGER; a_message: STRING) is
+	log_message_by_address (an_address: INET_ADDRESS; a_level: INTEGER; a_message: STRING)
 		require
 			address_non_void: an_address /= Void
 			message_non_void: a_message /= Void
@@ -42,7 +42,7 @@ feature
 			log_message_by_source (an_address.host_address, a_level, a_message)
 		end
 
-	base_path (an_address: INET_ADDRESS): STRING is
+	base_path (an_address: INET_ADDRESS): STRING
 		deferred
 		end
 end

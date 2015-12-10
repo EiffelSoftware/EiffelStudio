@@ -22,7 +22,7 @@ feature -- Properties
 		attribute
 		end
 
-	set_arg1 (a_arg1: like arg1) is
+	set_arg1 (a_arg1: like arg1)
 			-- Set `arg1' with `a_arg1'.
 		do
 			arg1 := a_arg1
@@ -37,7 +37,7 @@ feature -- Properties
 		attribute
 		end
 
-	set_operator (a_operator: like operator) is
+	set_operator (a_operator: like operator)
 			-- Set `operator' with `a_operator'.
 		do
 			operator := a_operator
@@ -52,7 +52,7 @@ feature -- Properties
 		attribute
 		end
 
-	set_arg2 (a_arg2: like arg2) is
+	set_arg2 (a_arg2: like arg2)
 			-- Set `arg2' with `a_arg2'.
 		do
 			arg2 := a_arg2

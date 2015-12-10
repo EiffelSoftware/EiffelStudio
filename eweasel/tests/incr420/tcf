@@ -5,7 +5,7 @@ test_description Repeated compilations using a config file with many libraries a
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -15,7 +15,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -25,7 +25,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -35,7 +35,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -45,7 +45,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -55,7 +55,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -65,7 +65,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -75,7 +75,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -85,7 +85,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -95,7 +95,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -105,7 +105,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -115,7 +115,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -125,7 +125,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -135,7 +135,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace
@@ -145,7 +145,7 @@ compile_result	ok
 define		ALL_CLASSES "true"
 copy_sub	Ace $TEST Ace
 compile_frozen
-compile_result	validity_warning EV_ANY_IMP Obsolete; EV_POINTER_STYLE Obsolete; EV_POINTER_STYLE_IMP Obsolete
+compile_result	ok
 
 define		ALL_CLASSES "false"
 copy_sub	Ace $TEST Ace

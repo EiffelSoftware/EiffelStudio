@@ -4,55 +4,55 @@
 		<root class="ANY" all_classes="$ALL_CLASSES"/>
 		<option warning="false" full_class_checking="true" is_attached_by_default="false" void_safety="none"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
-		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
-		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf"/>
-		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf"/>
-		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.ecf"/>
-		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
-		<library name="event" location="$ISE_LIBRARY\library\event\event.ecf"/>
-		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf"/>
-		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
-		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
-		<library name="gobo_math" location="$ISE_LIBRARY\library\gobo\gobo_math.ecf"/>
-		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
-		<library name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\gobo_pattern.ecf"/>
-		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
-		<library name="gobo_string" location="$ISE_LIBRARY\library\gobo\gobo_string.ecf"/>
-		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf"/>
-		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>
-		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
-		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
-		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf"/>
-		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>
-		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
-		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
-		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf"/>
-		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf"/>
-		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
-		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
-		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
-		<library name="store_dataview" location="$ISE_LIBRARY\library\store\dataview\store_dataview.ecf"/>
-		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="time_french" location="$ISE_LIBRARY\library\time\time_french.ecf"/>
-		<library name="time_german" location="$ISE_LIBRARY\library\time\time_german.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
-		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
-		<library name="web" location="$ISE_LIBRARY\library\web\web.ecf"/>
-		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
-		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf"/>
+		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf" use_application_options="true"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" use_application_options="true" />
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true" />
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" use_application_options="true" />
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf" use_application_options="true" />
+		<library name="diff" location="$ISE_LIBRARY\library\diff\diff.ecf" use_application_options="true" />
+		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf" use_application_options="true" />
+		<library name="eiffel2java" location="$ISE_LIBRARY\library\Eiffel2Java\Eiffel2Java.ecf" use_application_options="true" />
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" use_application_options="true" />
+		<library name="event" location="$ISE_LIBRARY\library\event\event.ecf" use_application_options="true" />
+		<library name="gobo_argument" location="$ISE_LIBRARY\library\gobo\gobo_argument.ecf" use_application_options="true" />
+		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" use_application_options="true" />
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" use_application_options="true" />
+		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf" use_application_options="true" />
+		<library name="gobo_math" location="$ISE_LIBRARY\library\gobo\gobo_math.ecf" use_application_options="true" />
+		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf" use_application_options="true" />
+		<library name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\gobo_pattern.ecf" use_application_options="true" />
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf" use_application_options="true" />
+		<library name="gobo_string" location="$ISE_LIBRARY\library\gobo\gobo_string.ecf" use_application_options="true" />
+		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf" use_application_options="true" />
+		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf" use_application_options="true" />
+		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf" use_application_options="true" />
+		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf" use_application_options="true" />
+		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf" use_application_options="true" />
+		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf" use_application_options="true" />
+		<library name="graph" location="$ISE_LIBRARY\library\graph\graph.ecf" use_application_options="true" />
+		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" use_application_options="true" />
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf" use_application_options="true" />
+		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" use_application_options="true" />
+		<library name="memory_analyzer" location="$ISE_LIBRARY\library\memory_analyzer\memory_analyzer.ecf" use_application_options="true" />
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf" use_application_options="true" />
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf" use_application_options="true" />
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf" use_application_options="true" />
+		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf" use_application_options="true" />
+		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf" use_application_options="true" />
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" use_application_options="true" />
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" use_application_options="true" />
+		<library name="store_dataview" location="$ISE_LIBRARY\library\store\dataview\store_dataview.ecf" use_application_options="true" />
+		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf" use_application_options="true" />
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true" />
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true" />
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" use_application_options="true" />
+		<library name="time_french" location="$ISE_LIBRARY\library\time\time_french.ecf" use_application_options="true" />
+		<library name="time_german" location="$ISE_LIBRARY\library\time\time_german.ecf" use_application_options="true" />
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" use_application_options="true" />
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" use_application_options="true" />
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" use_application_options="true" />
+		<library name="web" location="$ISE_LIBRARY\library\web\web.ecf" use_application_options="true" />
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf" use_application_options="true" />
+		<library name="xml_tree" location="$ISE_LIBRARY\library\text\parser\xml\tree\xml_tree.ecf" use_application_options="true" />
 	</target>
 </system>

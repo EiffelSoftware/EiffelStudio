@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="test">
+	<target name="test">
+		<root class="TEST" feature="default_create"/>
+		<option void_safety="all"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="root_cluster" location="$CLUSTER\">
+			<file_rule>
+				<include>/xyzzyabc12300.E$</include>
+				<include>/xyzzyabc12301.E$</include>
+				<include>/xyzzyabc12302.E$</include>
+				<include>/xyzzyabc12303.E$</include>
+				<include>/xyzzyabc12304.E$</include>
+				<include>/xyzzyabc12305.E$</include>
+				<include>/xyzzyabc12306.E$</include>
+				<include>/xyzzyabc12307.E$</include>
+				<include>/xyzzyabc12308.E$</include>
+				<include>/xyzzyabc12309.E$</include>
+				<include>/xyzzyabc12310.E$</include>
+				<include>/xyzzyabc12311.E$</include>
+				<include>/xyzzyabc12312.E$</include>
+				<include>/xyzzyabc12313.E$</include>
+				<include>/xyzzyabc12314.E$</include>
+				<include>/xyzzyabc12315.E$</include>
+				<include>/xyzzyabc12316.E$</include>
+				<include>/xyzzyabc12317.E$</include>
+				<include>/xyzzyabc12318.E$</include>
+				<include>/xyzzyabc12319.E$</include>
+				<include>/xyzzyabc12320.E$</include>
+				<include>/xyzzyabc12321.E$</include>
+				<include>/xyzzyabc12322.E$</include>
+				<include>/xyzzyabc12323.E$</include>
+				<include>/xyzzyabc12324.E$</include>
+				<include>/xyzzyabc12325.E$</include>
+				<include>/xyzzyabc12326.E$</include>
+				<include>/xyzzyabc12327.E$</include>
+				<include>/xyzzyabc12328.E$</include>
+				<include>/xyzzyabc12329.E$</include>
+				<include>/xyzzyabc12330.E$</include>
+				<include>/xyzzyabc12331.E$</include>
+				<include>/xyzzyabc12332.E$</include>
+				<include>/xyzzyabc12333.E$</include>
+				<include>/xyzzyabc12334.E$</include>
+				<include>/xyzzyabc12335.E$</include>
+				<include>/xyzzyabc12336.E$</include>
+				<include>/xyzzyabc12337.E$</include>
+				<include>/xyzzyabc12338.E$</include>
+				<include>/xyzzyabc12339.E$</include>
+				<include>/xyzzyabc12340.E$</include>
+				<include>/xyzzyabc12341.E$</include>
+				<include>/xyzzyabc12342.E$</include>
+				<include>/xyzzyabc12343.E$</include>
+				<include>/xyzzyabc12344.E$</include>
+				<include>/xyzzyabc12345.E$</include>
+				<include>/xyzzyabc12346.E$</include>
+				<include>/xyzzyabc12347.E$</include>
+				<include>/xyzzyabc12348.E$</include>
+				<include>/xyzzyabc12349.E$</include>
+			</file_rule>
+			<file_rule>
+				<include>/xyzzyabc12350.E$</include>
+				<include>/xyzzyabc12351.E$</include>
+				<include>/xyzzyabc12352.E$</include>
+				<include>/xyzzyabc12353.E$</include>
+				<include>/xyzzyabc12354.E$</include>
+				<include>/xyzzyabc12355.E$</include>
+				<include>/xyzzyabc12356.E$</include>
+				<include>/xyzzyabc12357.E$</include>
+				<include>/xyzzyabc12358.E$</include>
+				<include>/xyzzyabc12359.E$</include>
+				<include>/xyzzyabc12360.E$</include>
+				<include>/xyzzyabc12361.E$</include>
+				<include>/xyzzyabc12362.E$</include>
+				<include>/xyzzyabc12363.E$</include>
+				<include>/xyzzyabc12364.E$</include>
+				<include>/xyzzyabc12365.E$</include>
+				<include>/xyzzyabc12366.E$</include>
+				<include>/xyzzyabc12367.E$</include>
+				<include>/xyzzyabc12368.E$</include>
+				<include>/xyzzyabc12369.E$</include>
+				<include>/xyzzyabc12370.E$</include>
+				<include>/xyzzyabc12371.E$</include>
+				<include>/xyzzyabc12372.E$</include>
+				<include>/xyzzyabc12373.E$</include>
+				<include>/xyzzyabc12374.E$</include>
+				<include>/xyzzyabc12375.E$</include>
+				<include>/xyzzyabc12376.E$</include>
+				<include>/xyzzyabc12377.E$</include>
+				<include>/xyzzyabc12378.E$</include>
+				<include>/xyzzyabc12379.E$</include>
+				<include>/xyzzyabc12380.E$</include>
+				<include>/xyzzyabc12381.E$</include>
+				<include>/xyzzyabc12382.E$</include>
+				<include>/xyzzyabc12383.E$</include>
+				<include>/xyzzyabc12384.E$</include>
+				<include>/xyzzyabc12385.E$</include>
+				<include>/xyzzyabc12386.E$</include>
+				<include>/xyzzyabc12387.E$</include>
+				<include>/xyzzyabc12388.E$</include>
+				<include>/xyzzyabc12389.E$</include>
+				<include>/xyzzyabc12390.E$</include>
+				<include>/xyzzyabc12391.E$</include>
+				<include>/xyzzyabc12392.E$</include>
+				<include>/xyzzyabc12393.E$</include>
+				<include>/xyzzyabc12394.E$</include>
+				<include>/xyzzyabc12395.E$</include>
+				<include>/xyzzyabc12396.E$</include>
+				<include>/xyzzyabc12397.E$</include>
+				<include>/xyzzyabc12398.E$</include>
+				<include>/xyzzyabc12399.E$</include>
+			</file_rule>
+		</cluster>
+	</target>       	
+</system>               	
+                        	

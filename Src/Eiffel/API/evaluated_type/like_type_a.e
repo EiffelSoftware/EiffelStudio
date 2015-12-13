@@ -541,7 +541,6 @@ feature -- IL code generation
 
 feature -- Generic conformance
 
-
 	annotation_flags: NATURAL_16
 			-- <Precursor>
 		do

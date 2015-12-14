@@ -13,7 +13,7 @@ inherit
 	LIKE_TYPE_A
 		redefine
 			actual_argument_type, is_like_argument, has_like_argument, evaluated_type_in_descendant,
-			initialize_info
+			initialize_info, annotation_flags
 		end
 
 feature -- Visitor
@@ -68,6 +68,22 @@ feature -- Setting
 		end
 
 feature -- Generic conformance
+
+	annotation_flags: NATURAL_16
+			-- <Precursor>
+		do
+			Result := Precursor
+			if not compiler_profile.is_experimental_mode then
+					-- Unlike {LIKE_TYPE_A} and {FORMAL_A}, if the type is declared without an attachment
+					-- mark but the `actual_type' is attached we will need to declare the attachment mark,
+					-- this is needed as in non-experimental mode, the type of an object is always detachable
+					-- thus we would create a T [detachable A] when T [A] was expected if the argument is
+					-- associated to an object of type A.
+				if not has_attached_mark and is_attached then
+					Result := Result | {SHARED_GEN_CONF_LEVEL}.attached_type
+				end
+			end
+		end
 
 	initialize_info (an_info: like shared_create_info)
 		do
@@ -156,7 +172,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

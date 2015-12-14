@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="collection_json" location="$ISE_LIBRARY\contrib\library\web\communication\mediatype\collection+json\library\collection+json.ecf"/>
-		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization.ecf"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true">

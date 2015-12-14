@@ -437,6 +437,7 @@ feature {NONE} -- Libraries cache.
 			retried: BOOLEAN
 			sed: SED_STORABLE_FACILITIES
 			sed_rw: SED_MEDIUM_READER_WRITER
+			l_deserializer: detachable SED_RECOVERABLE_DESERIALIZER
 		do
 			if not retried then
 				p := eiffel_layout.temporary_path.extended (a_name)
@@ -445,7 +446,18 @@ feature {NONE} -- Libraries cache.
 					f.open_read
 					create sed
 					create sed_rw.make_for_reading (f)
-					Result := sed.retrieved (sed_rw, False)
+						--| Read only if it is a "recoverable" storable file.
+						--| and thus, avoid trying to load old data stored
+						--| using basic_store ...
+					sed_rw.read_header
+					if sed_rw.read_natural_32 = sed.eiffel_recoverable_store then
+						create l_deserializer.make (sed_rw)
+						l_deserializer.decode (False)
+						if not l_deserializer.has_error then
+							Result := l_deserializer.last_decoded_object
+							sed_rw.read_footer
+						end
+					end
 					f.close
 				end
 			end
@@ -473,7 +485,7 @@ feature {NONE} -- Libraries cache.
 						f.create_read_write
 						create sed
 						create sed_rw.make_for_writing (f)
-						sed.basic_store (a_data, sed_rw, True)
+						sed.store (a_data, sed_rw)
 						f.close
 					end
 				else
@@ -930,7 +942,7 @@ invariant
 	target_set_in_boxes: libraries_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

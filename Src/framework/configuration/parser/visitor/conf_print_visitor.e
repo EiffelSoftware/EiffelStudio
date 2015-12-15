@@ -560,7 +560,10 @@ feature {NONE} -- Implementation
 					if multiline and then c = '%N' then
 						text.append_character ('%N')
 					else
-						if ' ' <= c and then c <= '%/127/' then
+						if
+							'%T' = c or else
+							(' ' <= c and then c <= '%/127/')
+						then
 							text.append_character (c.to_character_8)
 						else
 							text.append_character ('&')

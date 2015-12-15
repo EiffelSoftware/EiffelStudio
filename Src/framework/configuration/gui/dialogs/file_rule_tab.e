@@ -77,17 +77,7 @@ feature {NONE} -- Initialization
 			vb.set_padding (layout_constants.default_padding_size)
 
 			if data.exclude /= Void then
-				l_hs := data.exclude
-				create l_list.make (l_hs.count)
-				from
-					l_hs.start
-				until
-					l_hs.after
-				loop
-					l_list.put_right (l_hs.item_for_iteration)
-					l_hs.forth
-				end
-				create exclude_pattern.make_with_strings (l_list)
+				create exclude_pattern.make_with_strings (data.ordered_exclude)
 			else
 				create exclude_pattern
 			end
@@ -118,17 +108,7 @@ feature {NONE} -- Initialization
 			vb.set_border_width (layout_constants.default_border_size)
 
 			if data.include /= Void then
-				l_hs := data.include
-				create l_list.make (l_hs.count)
-				from
-					l_hs.start
-				until
-					l_hs.after
-				loop
-					l_list.put_right (l_hs.item_for_iteration)
-					l_hs.forth
-				end
-				create include_pattern.make_with_strings (l_list)
+				create include_pattern.make_with_strings (data.ordered_include)
 			else
 				create include_pattern
 			end
@@ -308,7 +288,7 @@ invariant
 	gui_elements_created: is_initialized implies exclude_pattern /= Void and new_exclude /= Void and include_pattern /= Void and new_include /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

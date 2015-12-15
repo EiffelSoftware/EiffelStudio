@@ -60,7 +60,7 @@ def alter_folder_with (a_source, a_alter):
 				
 def main():
 	if len(sys.argv) > 1:
-		cfg_location = sys.argv[2]
+		cfg_location = sys.argv[1]
 	else:
 		cfg_location = "iron.cfg"
 

@@ -207,6 +207,30 @@ feature -- Basic operation
 			end
 		end
 
+feature -- Ordered representation inclusion and exclusion lists
+
+	ordered_exclude: detachable ARRAYED_LIST [STRING_32]
+			-- Sorted items of `exclude'.
+		do
+			if attached exclude as x then
+				Result := x.linear_representation
+				sorter.sort (Result)
+			end
+		ensure
+			attached_result: attached exclude implies attached Result
+		end
+
+	ordered_include: detachable ARRAYED_LIST [STRING_32]
+			-- Sorted items of `include'.
+		do
+			if attached include as x then
+				Result := x.linear_representation
+				sorter.sort (Result)
+			end
+		ensure
+			attached_result: attached include implies attached Result
+		end
+
 feature {NONE} -- Implementation
 
 	compile
@@ -313,6 +337,13 @@ feature -- Contracts
 			elseif attached include_regexp as l_include_regexp then
 				Result := l_include_regexp.is_compiled
 			end
+		end
+
+feature {NONE} -- Sorting
+
+	sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+		once
+			create Result.make (create {STRING_COMPARATOR}.make)
 		end
 
 invariant

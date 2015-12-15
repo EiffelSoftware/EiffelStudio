@@ -912,9 +912,6 @@ feature {NONE} -- Reporting
 			l_transistion: ES_POPUP_TRANSITION_WINDOW
 			l_window: EV_WINDOW
 			retried: BOOLEAN
-			l_submitted: STRING
-			l_link: EVS_LINK_LABEL
-			l_uri: STRING_8
 		do
 			if not retried then
 				create l_transistion.make_with_icon (locale_formatter.translation (lb_submitting), stock_pixmaps.tool_output_failed_icon_buffer)

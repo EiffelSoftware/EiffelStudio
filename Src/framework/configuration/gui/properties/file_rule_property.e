@@ -29,7 +29,6 @@ feature -- Display
 			-- Displayed format of the data.
 		local
 			l_fr: CONF_FILE_RULE
-			l_pattern: like {CONF_FILE_RULE}.include
 		do
 			create Result.make_empty
 			if value /= Void and then not value.is_empty then
@@ -43,32 +42,29 @@ feature -- Display
 					value.forth
 				end
 				if not l_fr.is_empty then
-					l_pattern := l_fr.exclude
-					if l_pattern /= Void and then not l_pattern.is_empty then
+					if attached l_fr.ordered_exclude as p and then not p.is_empty then
 						Result.append ("Excluded: ")
-						from
-							l_pattern.start
-						until
-							l_pattern.after
+						across
+							p as pc
 						loop
-							Result.append (l_pattern.item_for_iteration + ";")
-							l_pattern.forth
+							Result.append (pc.item)
+							Result.append_character (';')
 						end
+						Result.remove_tail (1)
 					end
-
-					l_pattern := l_fr.include
-					if l_pattern /= Void and then not l_pattern.is_empty then
+					if attached l_fr.ordered_include as p and then not p.is_empty then
+						if not Result.is_empty then
+							Result.append_character (' ')
+						end
 						Result.append ("Included: ")
-						from
-							l_pattern.start
-						until
-							l_pattern.after
+						across
+							p as pc
 						loop
-							Result.append (l_pattern.item_for_iteration + ";")
-							l_pattern.forth
+							Result.append (pc.item)
+							Result.append_character (';')
 						end
+						Result.remove_tail (1)
 					end
-					Result.remove_tail (1)
 				end
 			end
 		end
@@ -79,7 +75,7 @@ feature {NONE} -- Dialog
 			-- Dialog to edit the value.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

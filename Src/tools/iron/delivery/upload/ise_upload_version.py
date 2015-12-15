@@ -3,7 +3,7 @@ import sys;
 import os;
 import shutil;
 from subprocess import call
-from upload_version import upload_version;
+from upload_version import upload_version, iron_config;
 def get_ise_libraries(basedir, br, v):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
@@ -59,23 +59,20 @@ def alter_folder_with (a_source, a_alter):
 			shutil.copytree (a_alter, a_source)
 				
 def main():
-	try:
-		import credential;
-	except ImportError:
-		print "missing 'credential.py'"
-		sys.exit()
-	
-	try:
-		import repository_cfg;
-	except ImportError:
-		print "missing 'repository_cfg.py'"
-		sys.exit()
-	l_base_dir = os.path.normpath(os.path.abspath (os.path.join ("VERSIONS", repository_cfg.version())))
+	if len(sys.argv) > 1:
+		cfg_location = sys.argv[2]
+	else:
+		cfg_location = "iron.cfg"
+
+	config = iron_config (cfg_location)
+	l_version = config['version']
+	l_branch = config['branch']
+	l_base_dir = os.path.normpath(os.path.abspath (os.path.join ("VERSIONS", l_version)))
 	l_sources_dir = os.path.join (l_base_dir, "sources")
 	#l_packages_dir = os.path.join (l_base_dir, "packages")
 	if not os.path.exists (l_sources_dir):
 		os.makedirs(l_sources_dir)
-	get_ise_libraries(l_sources_dir, repository_cfg.branch(), repository_cfg.version())
+	get_ise_libraries(l_sources_dir, l_branch, l_version)
 	print "Updating the ecf files for iron packaging ..."
 	upload_version(l_sources_dir)
 

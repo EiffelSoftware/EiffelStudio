@@ -121,21 +121,19 @@ feature -- AST visiting
 	process_body_as (l_as: BODY_AS)
 			-- <Precursor>
 		local
-			c_as: CONSTANT_AS
+			l_has_constant: BOOLEAN
 		do
 			safe_process (l_as.internal_arguments)
 			safe_process (l_as.colon_symbol (match_list))
 			safe_process (l_as.type)
 			safe_process (l_as.assign_keyword (match_list))
 			safe_process (l_as.assigner)
-			c_as ?= l_as.content
 			if attached {KEYWORD_AS} l_as.is_keyword (match_list) as l_keyword then
 				if l_keyword.code = {EIFFEL_TOKENS}.te_is then
-					if c_as /= Void then
+					if attached {CONSTANT_AS} l_as.content then
 						process_leading_leaves (l_as.is_keyword_index)
-						if c_as /= Void then
-							context.add_string ("=")
-						end
+						context.add_string ("=")
+						l_has_constant := True
 					else
 						remove_following_spaces
 					end
@@ -145,7 +143,7 @@ feature -- AST visiting
 					l_keyword.process (Current)
 				end
 			end
-			if c_as /= Void then
+			if l_has_constant then
 				l_as.content.process (Current)
 				safe_process (l_as.indexing_clause)
 			else
@@ -327,13 +325,11 @@ feature {NONE} -- Access
 	add_white_space_if_necessary
 			-- Add a white space only if the next token is not already a break.
 		local
-			l_break_as: BREAK_AS
 			l_index: INTEGER
 		do
 			l_index := last_index
 			if match_list.valid_index (l_index) then
-				l_break_as ?= match_list.i_th (l_index)
-				if l_break_as = Void then
+				if not attached {BREAK_AS} match_list.i_th (l_index) then
 					context.add_string (" ")
 				end
 			end
@@ -342,15 +338,13 @@ feature {NONE} -- Access
 	remove_following_spaces
 			-- Remove all white spaces..
 		local
-			l_break_as: BREAK_AS
 			l_index: INTEGER
 			l_string: STRING
 			l_done: BOOLEAN
 		do
 			l_index := last_index + 1
 			if match_list.valid_index (l_index) then
-				l_break_as ?= match_list.i_th (last_index + 1)
-				if l_break_as /= Void then
+				if attached {BREAK_AS} match_list.i_th (last_index + 1) as l_break_as then
 					l_string := l_break_as.literal_text (match_list)
 					if l_string /= Void then
 						l_string := l_string.twin
@@ -381,7 +375,6 @@ feature {NONE} -- Access
 		local
 			i: INTEGER
 			stop: BOOLEAN
-			l_break: BREAK_AS
 		do
 			from
 				i := last_index + 1
@@ -389,8 +382,7 @@ feature {NONE} -- Access
 				stop
 			loop
 				if match_list.valid_index (i) then
-					l_break ?= match_list.i_th (i)
-					if l_break /= Void then
+					if attached {BREAK_AS} match_list.i_th (i) as l_break then
 						l_break.process (Current)
 					else
 						stop := True

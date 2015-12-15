@@ -241,9 +241,13 @@ feature {NONE} -- Implementation
 							-- We ignore syntax errors since we want to test roundtrip parsing
 							-- on valid Eiffel classes.
 
-						display_error ({STRING_32} "Syntax error in file: " + file_name.name)
 						if attached {SYNTAX_ERROR} error_handler.error_list.last as l_syntax1 then
-							display_error ({STRING_32} " (" + l_syntax1.line.out + ", " + l_syntax1.column.out + ")" + l_syntax1.error_message)
+							display_error ({STRING_32} "Syntax error at (" + l_syntax1.line.out + ", " + l_syntax1.column.out + ") in file: " + file_name.name)
+							if not l_syntax1.error_message.is_empty then
+								display_error ({STRING} "    " + l_syntax1.error_message)
+							end
+						else
+							display_error ({STRING_32} "Syntax error in file: " + file_name.name)
 						end
 						error_handler.wipe_out
 					elseif fast_factory.has_obsolete_constructs then

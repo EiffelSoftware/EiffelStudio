@@ -826,11 +826,8 @@ feature {NONE} -- Implementation
 	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE])
 			-- Append `a_file_rule'
 		local
-			s: QUICK_SORTER [READABLE_STRING_GENERAL]
-			p: ARRAYED_LIST [STRING_32]
 			l_rule: CONF_FILE_RULE
 		do
-			create s.make (create {STRING_COMPARATOR}.make)
 			from
 				a_file_rules.start
 			until
@@ -843,16 +840,12 @@ feature {NONE} -- Implementation
 					indent := indent + 1
 					append_description_tag (l_rule.description)
 						-- Save patterns lexicographically ordered.
-					if attached l_rule.exclude as unsorted_patterns then
-						p := unsorted_patterns.linear_representation
-						s.sort (p)
+					if attached l_rule.ordered_exclude as p then
 						across p as pc loop
 							append_tag ("exclude", pc.item, Void, Void)
 						end
 					end
-					if attached l_rule.include as unsorted_patterns then
-						p := unsorted_patterns.linear_representation
-						s.sort (p)
+					if attached l_rule.ordered_include as p then
 						across p as pc loop
 							append_tag ("include", pc.item, Void, Void)
 						end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Communicates with the support site to permit the submission of a bug report.
 	]"
@@ -18,7 +18,7 @@ create
 feature -- Basic operations
 
 	report_bug (a_report: ESA_SUPPORT_BUG_REPORT)
-			-- Reports a bug
+			-- Report a bug.
 			-- Note: A login must be performed before attempting to submit a report.
 			--
 			-- `a_report': Report to submit to the public bug report system.
@@ -34,7 +34,7 @@ feature -- Basic operations
 feature -- Access
 
 	last_reported_uri: detachable STRING_8
-			-- uri of the last reported issue.
+			-- URI of the last reported issue.
 
 feature {NONE} -- Basic operations
 
@@ -43,7 +43,6 @@ feature {NONE} -- Basic operations
 		require
 			is_support_accessible: is_support_accessible
 		local
-			l_result_string: STRING_GENERAL
 			l_uri_confirm: STRING_GENERAL
 			l_value: STRING_GENERAL
 		do
@@ -171,7 +170,6 @@ feature {NONE} -- Basic operations
 			l_data: CJ_DATA
 			l_resp: ESA_SUPPORT_RESPONSE
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
-			l_found: BOOLEAN
 		do
 			create l_tpl.make
 
@@ -207,13 +205,12 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Html contents
 
 	confirm_report_uri (a_uri: STRING_GENERAL; a_value: STRING_GENERAL): STRING_GENERAL
-			-- confirm report uri 'a_uri and set the value.
+			-- Confirm report URI `a_uri' and set the value.
 		require
 			a_uri_not_void: a_uri /= Void
 			not_a_uri_is_empty: not a_uri.is_empty
 			is_support_accessible: is_support_accessible
 		local
-			l_result_string: STRING_GENERAL
 			ctx : HTTP_CLIENT_REQUEST_CONTEXT
 			l_resp: ESA_SUPPORT_RESPONSE
 			l_found: BOOLEAN
@@ -250,10 +247,9 @@ feature {NONE} -- Html contents
 feature -- Access
 
 	report_form_uri: STRING_8
-			-- Report form uri.
+			-- Report form URI.
 		do
 			Result := retrieve_url ("create_report_form", "Report a Problem")
 		end
-
 
 end

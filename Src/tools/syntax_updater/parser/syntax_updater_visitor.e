@@ -447,7 +447,9 @@ feature {NONE} -- Implementation
 			is_agent_class: is_agent_class (a_name)
 		local
 			l_has_two_parameter: BOOLEAN
+			l_type: TYPE_AS
 			l_tuple: detachable CLASS_TYPE_AS
+			l_keep_as_tuple_type: detachable TYPE_AS
 		do
 			if
 				a_name.is_case_insensitive_equal (routine_class_name) or
@@ -458,11 +460,27 @@ feature {NONE} -- Implementation
 					-- and if 2, the second one has to be a TUPLE.
 				if l_as.count = 2 then
 					l_has_two_parameter := True
-					if
-						attached {CLASS_TYPE_AS} l_as.i_th (2) as l_class and then
+					l_type := l_as.i_th (2)
+					if attached {NAMED_TUPLE_TYPE_AS} l_type then
+						l_keep_as_tuple_type := l_type
+					elseif
+						attached {CLASS_TYPE_AS} l_type as l_class and then
 						l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
 					then
 						l_tuple := l_class
+							-- If we have PROCEDURE [ANY, TUPLE [TUPLE [...]]], we cannot
+							-- convert it to PROCEDURE [TUPLE [...]] as this would be considered
+							-- an agent of type PROCEDURE [...].
+						if attached l_tuple.generics as l_gen and then l_gen.count = 1 and then is_tuple_type (l_gen.i_th (1)) then
+							l_tuple := Void
+						end
+					elseif attached {FORMAL_AS} l_type as l_formal then
+							-- Check if we are handling a formal who is constraint to TUPLE
+						if parsed_class.generics.i_th (l_formal.position).constraints.count = 1 then
+							if is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type) then
+								l_keep_as_tuple_type := l_formal
+							end
+						end
 					end
 				end
 			else
@@ -471,27 +489,49 @@ feature {NONE} -- Implementation
 					-- one has to be a TUPLE.			
 				if l_as.count = 3 then
 					l_has_two_parameter := False
-					if
-						attached {CLASS_TYPE_AS} l_as.i_th (2) as l_class and then
+					l_type := l_as.i_th (2)
+					if attached {NAMED_TUPLE_TYPE_AS} l_type then
+						l_keep_as_tuple_type := l_type
+					elseif
+						attached {CLASS_TYPE_AS} l_type as l_class and then
 						l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
 					then
 						l_tuple := l_class
+							-- If we have FUNCTION [ANY, TUPLE [TUPLE [...]], RES], we cannot
+							-- convert it to FUNCTION [TUPLE [...], RES] as this would be considered
+							-- an agent of type FUNCTION [..., RES].
+						if attached l_tuple.generics as l_gen and then l_gen.count = 1 and then is_tuple_type (l_gen.i_th (1)) then
+							l_tuple := Void
+						end
+					elseif attached {FORMAL_AS} l_type as l_formal then
+							-- Check if we are handling a formal who is constraint to TUPLE
+						if parsed_class.generics.i_th (l_formal.position).constraints.count = 1 then
+							if is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type) then
+								l_keep_as_tuple_type := l_formal
+							end
+						end
 					end
 				end
 			end
 
 				-- If heuristics shows that it has been updated already, we use the default version
-			if l_tuple = Void then
+			if l_tuple = Void and l_keep_as_tuple_type = Void then
 				safe_process (l_as)
 			else
 				is_updated := True
 				if l_has_two_parameter then
-					if attached l_tuple.generics as l_generics then
+					if l_tuple /= Void and then attached l_tuple.generics as l_generics then
 							-- Case of a tuple with actual generic parameters
 						process_leading_leaves (l_as.opening_bracket_as_index)
 						last_index := l_tuple.generics.opening_bracket_as_index
 						safe_process (l_generics)
 						last_index := l_as.closing_bracket_as_index
+					elseif l_keep_as_tuple_type /= Void then
+							-- Case of a named tuple or formal constrained to TUPLE, we leave it as is.
+						safe_process (l_as.opening_bracket_as (match_list))
+						last_index := l_keep_as_tuple_type.first_token (match_list).index
+						safe_process (l_keep_as_tuple_type)
+						safe_process (l_as.closing_bracket_as (match_list))
 					else
 							-- Case of an agent of the form PROCEDURE [ANY, TUPLE],
 							-- the new declaration is simply PROCEDURE.
@@ -499,13 +539,20 @@ feature {NONE} -- Implementation
 						last_index := l_as.closing_bracket_as (match_list).index
 					end
 				else
-					if attached l_tuple.generics as l_generics then
+					if l_tuple /= Void and then attached l_tuple.generics as l_generics then
 						safe_process (l_as.opening_bracket_as (match_list))
 						last_index := l_tuple.generics.opening_bracket_as_index
 						across l_generics as l_gen loop
 							safe_process (l_gen.item)
 						end
 						last_index := l_tuple.generics.closing_bracket_as_index
+						safe_process (l_as.i_th (3))
+						safe_process (l_as.closing_bracket_as (match_list))
+					elseif l_keep_as_tuple_type /= Void then
+							-- Case of a named tuple with actual generic parameters, we leave it as is.
+						safe_process (l_as.opening_bracket_as (match_list))
+						last_index := l_keep_as_tuple_type.first_token (match_list).index
+						safe_process (l_keep_as_tuple_type)
 						safe_process (l_as.i_th (3))
 						safe_process (l_as.closing_bracket_as (match_list))
 					else
@@ -518,6 +565,19 @@ feature {NONE} -- Implementation
 						safe_process (l_as.closing_bracket_as (match_list))
 					end
 				end
+			end
+		end
+
+	is_tuple_type (a_type: TYPE_AS): BOOLEAN
+			-- Does `a_type' represent a TUPLE type?
+		do
+			if attached {NAMED_TUPLE_TYPE_AS} a_type then
+				Result := True
+			elseif
+				attached {CLASS_TYPE_AS} a_type as l_class and then
+				l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
+			then
+				Result := True
 			end
 		end
 

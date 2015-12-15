@@ -188,7 +188,6 @@ def upload_version(a_sources_dir, a_cfg_location):
 			print "source directory \"%s\" does not exist" % (a_sources_dir)
 			sys.exit()
 
-		sys.exit() -- FIXME
 		print "Updating the ecf files for iron packaging ..."
 		call([iron_command_name(), "update_ecf", "--save", "-D", "ISE_LIBRARY=%s" % (a_sources_dir), a_sources_dir])
 		process_iron_package_files (a_sources_dir, a_sources_dir, l_login, l_password, repo, l_version)

@@ -74,7 +74,7 @@ def main():
 		os.makedirs(l_sources_dir)
 	get_ise_libraries(l_sources_dir, l_branch, l_version)
 	print "Updating the ecf files for iron packaging ..."
-	upload_version(l_sources_dir)
+	upload_version(l_sources_dir, cfg_location)
 
 
 	#process_iron_package_files (os.path.join (l_sources_dir, "library"), l_sources_dir, l_packages_dir, l_login, l_password, repo, repository_cfg.version())

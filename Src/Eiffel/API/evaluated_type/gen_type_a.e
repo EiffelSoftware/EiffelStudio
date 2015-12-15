@@ -1634,7 +1634,10 @@ feature -- Primitives
 						wrapped_actuals.extend (l_generic_parameter)
 							-- Replace extra arguments with a tuple.
 						create tuple_actual.make (system.tuple_id, wrapped_actuals)
-						tuple_actual.set_is_attached
+						if not a_type_context.lace_class.is_void_unsafe then
+								-- Do not set any marks for non-void safe code.
+							tuple_actual.set_is_attached
+						end
 						l_generic_parameter := tuple_actual
 						l_constraints.start
 					else

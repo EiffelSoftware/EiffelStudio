@@ -2277,7 +2277,10 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 						new_actuals := new_actuals.duplicate (actual_count)
 							-- Replace extra arguments with a tuple.
 						create tuple_actual.make (system.tuple_id, wrapped_actuals)
-						tuple_actual.set_is_attached
+						if not lace_class.is_void_unsafe then
+								-- Do not set any marks for non-void safe code.
+							tuple_actual.set_is_attached
+						end
 						new_actuals.put_i_th (tuple_actual, tuple_parameter_number)
 							-- Remove extra arguments.
 						from
@@ -2304,7 +2307,10 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 						create wrapped_actuals.make (0)
 						new_actuals.go_i_th (tuple_parameter_number)
 						create tuple_actual.make (system.tuple_id, wrapped_actuals)
-						tuple_actual.set_is_attached
+						if not lace_class.is_void_unsafe then
+								-- Do not set any marks for non-void safe code.
+							tuple_actual.set_is_attached
+						end
 						new_actuals.put_left (tuple_actual)
 							-- Adjust number of actual arguments.
 						actual_count := formal_count

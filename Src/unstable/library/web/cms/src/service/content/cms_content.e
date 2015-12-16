@@ -13,6 +13,11 @@ inherit
 
 feature -- Access
 
+	identifier: detachable READABLE_STRING_32
+			-- Optional identifier.
+		deferred
+		end
+
 	title: detachable READABLE_STRING_32
 			-- Title associated with Current content.
 		deferred
@@ -36,6 +41,14 @@ feature -- Access
 		end
 
 feature -- Status report
+
+	has_identifier: BOOLEAN
+			-- Current content has identifier?
+		do
+			Result := identifier /= Void
+		ensure
+			Result implies identifier /= Void
+		end
 
 	is_typed_as (a_content_type: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is current node of type `a_content_type' ?

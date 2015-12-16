@@ -109,6 +109,17 @@ feature -- Access node
 			Result := taxonomy_storage.term_count_from_vocabulary (a_vocab)
 		end
 
+	terms_of_content (a_content: CMS_CONTENT; a_vocabulary: detachable CMS_VOCABULARY): detachable CMS_TERM_COLLECTION
+			-- Terms related to `a_content', and if `a_vocabulary' is set
+			-- constrain to be part of `a_vocabulary'.
+		require
+			content_with_identifier: a_content.has_identifier
+		do
+			if attached a_content.identifier as l_id then
+				Result := terms_of_entity (a_content.content_type, l_id, a_vocabulary)
+			end
+		end
+
 	terms_of_entity (a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL; a_vocabulary: detachable CMS_VOCABULARY): detachable CMS_TERM_COLLECTION
 			-- Terms related to `(a_type_name,a_entity)', and if `a_vocabulary' is set
 			-- constrain to be part of `a_vocabulary'.
@@ -179,6 +190,30 @@ feature -- Write
 			error_handler.append (taxonomy_storage.error_handler)
 		end
 
+	associate_term_with_content (a_term: CMS_TERM; a_content: CMS_CONTENT)
+			-- Associate term `a_term' with `a_content'.
+		require
+			content_with_identifier: a_content.has_identifier
+		do
+			reset_error
+			if attached a_content.identifier as l_id then
+				taxonomy_storage.associate_term_with_entity (a_term, a_content.content_type, l_id)
+				error_handler.append (taxonomy_storage.error_handler)
+			end
+		end
+
+	unassociate_term_from_content (a_term: CMS_TERM; a_content: CMS_CONTENT)
+			-- Unassociate term `a_term' from `a_content'.
+		require
+			content_with_identifier: a_content.has_identifier
+		do
+			reset_error
+			if attached a_content.identifier as l_id then
+				taxonomy_storage.unassociate_term_from_entity (a_term, a_content.content_type, l_id)
+				error_handler.append (taxonomy_storage.error_handler)
+			end
+		end
+
 	associate_term_with_entity (a_term: CMS_TERM; a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL)
 			-- Associate term `a_term' with `(a_type_name, a_entity)'.
 		do
@@ -213,6 +248,275 @@ feature -- Write
 			reset_error
 			taxonomy_storage.unassociate_vocabulary_with_type (a_voc, a_type_name)
 			error_handler.append (taxonomy_storage.error_handler)
+		end
+
+feature -- Web forms
+
+	populate_edit_form (a_response: CMS_RESPONSE; a_form: CMS_FORM; a_content_type_name: READABLE_STRING_8; a_content: detachable CMS_CONTENT)
+		local
+			ti: detachable WSF_FORM_TEXT_INPUT
+			th: WSF_FORM_HIDDEN_INPUT
+			w_set: WSF_FORM_FIELD_SET
+			w_select: WSF_FORM_SELECT
+			w_opt: WSF_FORM_SELECT_OPTION
+			w_cb: WSF_FORM_CHECKBOX_INPUT
+			w_voc_set: WSF_FORM_FIELD_SET
+			s: STRING_32
+			voc: CMS_VOCABULARY
+			t: detachable CMS_TERM
+			l_terms: detachable CMS_TERM_COLLECTION
+			l_has_edit_permission: BOOLEAN
+		do
+			if
+				attached vocabularies_for_type (a_content_type_name) as l_vocs and then not l_vocs.is_empty
+			then
+				l_has_edit_permission := a_response.has_permissions (<<"update any taxonomy", "update " + a_content_type_name + " taxonomy">>)
+
+				-- Handle Taxonomy fields, if any associated with `content_type'.
+				create w_set.make
+				w_set.add_css_class ("taxonomy")
+				l_vocs.sort
+				across
+					l_vocs as vocs_ic
+				loop
+					voc := vocs_ic.item
+					create th.make_with_text ({STRING_32} "taxonomy_vocabularies[" + voc.id.out + "]", voc.name)
+					w_set.extend (th)
+
+					l_terms := Void
+					if a_content /= Void then
+						l_terms := terms_of_content (a_content, voc)
+						if l_terms /= Void then
+							l_terms.sort
+						end
+					end
+					create w_voc_set.make
+					w_set.extend (w_voc_set)
+
+					if voc.is_tags then
+						w_voc_set.set_legend (cms_api.translation (voc.name, Void))
+
+						create ti.make ({STRING_32} "taxonomy_" + voc.id.out)
+						w_voc_set.extend (ti)
+						if voc.is_term_required then
+							ti.enable_required
+						end
+						if attached voc.description as l_desc then
+							ti.set_description (cms_api.html_encoded (cms_api.translation (l_desc, Void)))
+						else
+							ti.set_description (a_response.html_encoded (cms_api.translation (voc.name, Void)))
+						end
+						ti.set_size (70)
+						if l_terms /= Void then
+							create s.make_empty
+							across
+								l_terms as ic
+							loop
+								t := ic.item
+								if not s.is_empty then
+									s.append_character (',')
+									s.append_character (' ')
+								end
+								if ic.item.text.has (' ') then
+									s.append_character ('"')
+									s.append (t.text)
+									s.append_character ('"')
+								else
+									s.append (t.text)
+								end
+							end
+							ti.set_text_value (s)
+						end
+						if not l_has_edit_permission then
+							ti.set_is_readonly (True)
+						end
+					else
+						fill_vocabularies_with_terms (voc)
+						if not voc.terms.is_empty then
+							if voc.multiple_terms_allowed then
+								if attached voc.description as l_desc then
+									w_voc_set.set_legend (cms_api.html_encoded (l_desc))
+								else
+									w_voc_set.set_legend (cms_api.html_encoded (voc.name))
+								end
+								across
+									voc as voc_terms_ic
+								loop
+									t := voc_terms_ic.item
+									create w_cb.make_with_value ({STRING_32} "taxonomy_" + voc.id.out + "[]", t.text)
+									w_cb.set_title (t.text)
+									w_voc_set.extend (w_cb)
+									if l_terms /= Void and then across l_terms as ic some ic.item.text.same_string (t.text) end then
+										w_cb.set_checked (True)
+									end
+									if not l_has_edit_permission then
+										w_cb.set_is_readonly (True)
+									end
+								end
+							else
+								create w_select.make ({STRING_32} "taxonomy_" + voc.id.out)
+								w_voc_set.extend (w_select)
+
+								if attached voc.description as l_desc then
+									w_select.set_description (cms_api.html_encoded (l_desc))
+								else
+									w_select.set_description (cms_api.html_encoded (voc.name))
+								end
+								w_voc_set.set_legend (cms_api.html_encoded (voc.name))
+
+								across
+									voc as voc_terms_ic
+								loop
+									t := voc_terms_ic.item
+									create w_opt.make (cms_api.html_encoded (t.text), cms_api.html_encoded (t.text))
+									w_select.add_option (w_opt)
+
+									if l_terms /= Void and then across l_terms as ic some ic.item.text.same_string (t.text) end then
+										w_opt.set_is_selected (True)
+									end
+								end
+								if not l_has_edit_permission then
+									w_select.set_is_readonly (True)
+								end
+							end
+						end
+					end
+				end
+
+				a_form.submit_actions.extend (agent taxonomy_submit_action (a_response, Current, l_vocs, a_content, ?))
+
+				if
+					attached a_form.fields_by_name ("title") as l_title_fields and then
+					attached l_title_fields.first as l_title_field
+				then
+					a_form.insert_after (w_set, l_title_field)
+				else
+					a_form.extend (w_set)
+				end
+			end
+		end
+
+	taxonomy_submit_action (a_response: CMS_RESPONSE; a_taxonomy_api: CMS_TAXONOMY_API; a_vocs: CMS_VOCABULARY_COLLECTION; a_content: detachable CMS_CONTENT fd: WSF_FORM_DATA)
+		require
+			vocs_not_empty: not a_vocs.is_empty
+		local
+			l_voc_name: READABLE_STRING_32
+			l_terms_to_remove: ARRAYED_LIST [CMS_TERM]
+			l_new_terms: LIST [READABLE_STRING_32]
+			l_text: READABLE_STRING_GENERAL
+			l_found: BOOLEAN
+			t: detachable CMS_TERM
+			vid: INTEGER_64
+		do
+			if
+				a_content /= Void and then a_content.has_identifier and then
+				attached fd.table_item ("taxonomy_vocabularies") as fd_vocs
+			then
+				if a_response.has_permissions (<<{STRING_32} "update any taxonomy", {STRING_32} "update " + a_content.content_type + " taxonomy">>) then
+					across
+						fd_vocs.values as ic
+					loop
+						vid := ic.key.to_integer_64
+						l_voc_name := ic.item.string_representation
+
+						if attached a_vocs.item_by_id (vid) as voc then
+							if attached fd.string_item ("taxonomy_" + vid.out) as l_string then
+								l_new_terms := a_taxonomy_api.splitted_string (l_string, ',')
+							elseif attached fd.table_item ("taxonomy_" + vid.out) as fd_terms then
+								create {ARRAYED_LIST [READABLE_STRING_32]} l_new_terms.make (fd_terms.count)
+								across
+									fd_terms as t_ic
+								loop
+									l_new_terms.force (t_ic.item.string_representation)
+								end
+							else
+								create {ARRAYED_LIST [READABLE_STRING_32]} l_new_terms.make (0)
+							end
+
+							create l_terms_to_remove.make (0)
+							if attached a_taxonomy_api.terms_of_content (a_content, voc) as l_existing_terms then
+								across
+									l_existing_terms as t_ic
+								loop
+									l_text := t_ic.item.text
+									from
+										l_found := False
+										l_new_terms.start
+									until
+										l_new_terms.after
+									loop
+										if l_new_terms.item.same_string_general (l_text) then
+												-- Already associated with term `t_ic.text'.
+											l_found := True
+											l_new_terms.remove
+										else
+											l_new_terms.forth
+										end
+									end
+									if not l_found then
+											-- Remove term
+										l_terms_to_remove.force (t_ic.item)
+									end
+								end
+								across
+									l_terms_to_remove as t_ic
+								loop
+									a_taxonomy_api.unassociate_term_from_content (t_ic.item, a_content)
+								end
+							end
+							across
+								l_new_terms as t_ic
+							loop
+								t := a_taxonomy_api.term_by_text (t_ic.item, voc)
+								if
+									t = Void and voc.is_tags
+								then
+										-- Create new term!
+									create t.make (t_ic.item)
+									a_taxonomy_api.save_term (t, voc)
+									if a_taxonomy_api.has_error then
+										t := Void
+									end
+								end
+								if t /= Void then
+									a_taxonomy_api.associate_term_with_content (t, a_content)
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
+	append_taxonomy_to_xhtml (a_content: CMS_CONTENT; a_response: CMS_RESPONSE; a_output: STRING)
+			-- Append taxonomy related to `a_content' to xhtml string `a_output',
+			-- using `a_response' helper routines.
+		do
+			if
+				attached vocabularies_for_type (a_content.content_type) as vocs and then not vocs.is_empty
+			then
+				vocs.sort
+				across
+					vocs as ic
+				loop
+					if
+						attached terms_of_content (a_content, ic.item) as l_terms and then
+						not l_terms.is_empty
+					then
+						a_output.append ("<ul class=%"taxonomy term-" + ic.item.id.out + "%">")
+						a_output.append (cms_api.html_encoded (ic.item.name))
+						a_output.append (": ")
+						across
+							l_terms as t_ic
+						loop
+							a_output.append ("<li>")
+							a_response.append_link_to_html (t_ic.item.text, "taxonomy/term/" + t_ic.item.id.out, Void, a_output)
+							a_output.append ("</li>")
+						end
+						a_output.append ("</ul>%N")
+					end
+				end
+			end
 		end
 
 feature -- Helpers

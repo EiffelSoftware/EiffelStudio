@@ -396,6 +396,7 @@ feature {NONE} -- Implementation
 
 	type_id_of (a: separate ANY): INTEGER
 			-- Type ID of an object `a'.
+			--| FIXME
 			--| Replace all usage of {ISE_RUNTIME}.dynamic_type (a) by this routine
 			--| when we solve the nature of TYPE instances in a SCOOP context.
 		require

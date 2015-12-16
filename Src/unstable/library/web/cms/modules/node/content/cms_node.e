@@ -11,8 +11,10 @@ deferred class
 
 inherit
 	CMS_CONTENT
+		rename
+			has_identifier as has_id
 		redefine
-			debug_output
+			debug_output, has_id
 		end
 
 	REFACTORING_HELPER
@@ -62,6 +64,12 @@ feature -- Conversion
 		end
 
 feature -- Access
+
+	identifier: detachable IMMUTABLE_STRING_32
+			-- Optional identifier.
+		do
+			create Result.make_from_string_general (id.out)
+		end
 
 	id: INTEGER_64 assign set_id
 			-- Unique id.

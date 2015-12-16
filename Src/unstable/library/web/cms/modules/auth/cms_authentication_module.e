@@ -9,9 +9,9 @@ class
 inherit
 	CMS_MODULE
 		redefine
-			setup_hooks
+			setup_hooks,
+			permissions
 		end
-
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -51,6 +51,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "auth"
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force ("account register")
+		end
 
 feature -- Access: docs
 
@@ -228,6 +235,7 @@ feature -- Handler
 				end
 			else
 				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				r.set_main_content ("You can also contact the webmaster to ask for an account.")
 			end
 
 			r.execute

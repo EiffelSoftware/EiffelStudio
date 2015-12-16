@@ -81,8 +81,6 @@ feature {CMS_API} -- Module Initialization
 feature {CMS_API} -- Module management
 
 	install (api: CMS_API)
-		local
-			l_consumers: LIST [STRING]
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then

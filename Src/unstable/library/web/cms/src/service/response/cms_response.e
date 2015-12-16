@@ -113,26 +113,6 @@ feature -- Access
 			end
 		end
 
-feature -- Internationalization (i18n)
-
-	translation (a_text: READABLE_STRING_GENERAL; opts: detachable CMS_API_OPTIONS): STRING_32
-			-- Translated text `a_text' according to expected context (lang, ...)
-			-- and adapt according to options eventually set by `opts'.
-		do
-			to_implement ("Implement i18n support [2015-may]")
-			Result := a_text.as_string_32
-		end
-
-	formatted_string (a_text: READABLE_STRING_GENERAL; args: TUPLE): STRING_32
-			-- Format `a_text' using arguments `args'.
-			--| ex: formatted_string ("hello $1, see page $title.", ["bob", "contact"] -> "hello bob, see page contact"
-		local
-			l_formatter: CMS_STRING_FORMATTER
-		do
-			create l_formatter
-			Result := l_formatter.formatted_string (a_text, args)
-		end
-
 feature -- API
 
 	api: CMS_API
@@ -894,6 +874,22 @@ feature -- Menu: change
 	add_to_menu (lnk: CMS_LINK; m: CMS_MENU)
 		do
 			m.extend (lnk)
+		end
+
+feature -- Internationalization (i18n)
+
+	translation (a_text: READABLE_STRING_GENERAL; opts: detachable CMS_API_OPTIONS): STRING_32
+			-- Translated text `a_text' according to expected context (lang, ...)
+			-- and adapt according to options eventually set by `opts'.
+		do
+			Result := api.translation (a_text, opts)
+		end
+
+	formatted_string (a_text: READABLE_STRING_GENERAL; args: TUPLE): STRING_32
+			-- Format `a_text' using arguments `args'.
+			--| ex: formatted_string ("hello $1, see page $title.", ["bob", "contact"] -> "hello bob, see page contact"
+		do
+			Result := api.formatted_string (a_text, args)
 		end
 
 feature -- Message

@@ -89,6 +89,9 @@ feature -- CMS modules
 
 			create {GOOGLE_CUSTOM_SEARCH_MODULE} m.make
 			a_setup.register_module (m)
+
+			create {CMS_SESSION_AUTH_MODULE} m.make
+			a_setup.register_module (m)
 		end
 
 end

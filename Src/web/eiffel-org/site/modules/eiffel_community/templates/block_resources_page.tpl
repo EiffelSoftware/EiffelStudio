@@ -41,5 +41,6 @@
 											<h2>Task list</h2>
 											<p>Help Us Spread the World.</p>
 										</a>
-									</li>								</ul>
+									</li>
+								</ul>
 							</section>

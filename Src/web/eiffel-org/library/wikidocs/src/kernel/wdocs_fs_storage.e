@@ -183,7 +183,7 @@ feature -- Access
 			-- if `a_restricted_names' is set, include only those metadata names after `a_restricted_names' items.
 		local
 			mdf: WDOCS_METADATA_FILE
-			mdw: WDOCS_METADATA_WIKI
+			mdw: WDOCS_METADATA_WIKI_FILE
 			p: PATH
 			n: STRING_32
 		do

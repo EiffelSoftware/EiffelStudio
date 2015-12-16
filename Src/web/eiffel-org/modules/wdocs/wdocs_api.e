@@ -11,6 +11,8 @@ inherit
 	CMS_MODULE_API
 		rename
 			make as make_with_cms_api
+		redefine
+			initialize
 		end
 
 	WDOCS_HELPER
@@ -35,9 +37,17 @@ feature {NONE} -- Initialization
 			make_with_cms_api (a_api)
 		end
 
-	name: STRING = "wdocs"
+	initialize
+			-- <Precursor>
+		local
+			ct: CMS_WDOCS_CONTENT_TYPE
+		do
+			Precursor
+			create ct
+			cms_api.add_content_type (ct)
+		end
 
-feature -- Access
+feature -- Access				
 
 	settings: WDOCS_SETUP
 			-- Associated configuration.
@@ -219,6 +229,16 @@ feature -- Query: wiki
 		do
 			mnger := manager (a_version_id)
 			Result := mnger.page_by_uuid (a_wiki_uuid, a_bookid)
+		end
+
+	wiki_page_uuid (a_wp: WIKI_PAGE; a_version_id: detachable READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+		local
+			mnger: WDOCS_MANAGER
+		do
+			mnger := manager (a_version_id)
+			if attached mnger.page_metadata (a_wp, <<"uuid">>) as md then
+				Result := md.item ("uuid")
+			end
 		end
 
 feature -- Recent changes	
@@ -416,6 +436,8 @@ feature -- Factory
 			wut: WSF_FILE_UTILITIES [RAW_FILE]
 			fn: STRING
 			l_changelist: SVN_CHANGELIST
+			md_text: WDOCS_METADATA_WIKI_TEXT
+			l_prev_md: detachable STRING_TABLE [READABLE_STRING_32]
 		do
 			reset_error
 
@@ -444,7 +466,29 @@ feature -- Factory
 					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
 				end
 				if txt /= Void then
+					if attached a_page.metadata_table as md_tb then
+						create l_prev_md.make (md_tb.count)
+						across
+							md_tb as ic
+						loop
+							l_prev_md.force (ic.item, ic.key)
+						end
+					end
 					a_page.update_metadata
+					create md_text.make_with_text (txt)
+					if l_prev_md /= Void then
+						across
+							l_prev_md as ic
+						loop
+							md_text.force (ic.item, ic.key)
+						end
+					end
+					across
+						md_text as ic
+					loop
+						a_page.set_metadata (ic.item, ic.key)
+					end
+
 					if not a_page.has_metadata ("uuid") then
 						a_page.set_metadata ((create {UUID_GENERATOR}).generate_uuid.out, "uuid")
 					end

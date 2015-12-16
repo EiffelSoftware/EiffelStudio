@@ -31,6 +31,8 @@ inherit
 
 	WDOCS_MODULE_HELPER
 
+	CMS_TAXONOMY_HOOK
+
 create
 	make
 
@@ -172,6 +174,7 @@ feature -- Hooks configuration
 
 				-- Module specific hook, if available.
 			a_hooks.subscribe_to_hook (Current, {CMS_RECENT_CHANGES_HOOK})
+			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
 
 			a_hooks.subscribe_to_cache_hook (Current)
 		end
@@ -710,6 +713,45 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Hook
+
+	populate_content_associated_with_term (t: CMS_TERM; a_contents: CMS_TAXONOMY_ENTITY_CONTAINER)
+			-- Populate `a_contents' with taxonomy entity associated with term `t'.
+		local
+			c: CMS_WDOCS_CONTENT
+			lnk: CMS_LOCAL_LINK
+			l_uuid: READABLE_STRING_GENERAL
+			l_info_to_remove: ARRAYED_LIST [TUPLE [entity: READABLE_STRING_32; typename: detachable READABLE_STRING_32]]
+		do
+			if
+				attached wdocs_api as l_wdocs_api
+			then
+				create l_info_to_remove.make (0)
+				across
+					a_contents.taxonomy_info as ic
+				loop
+					if
+						attached ic.item.typename as l_typename and then
+						l_typename.is_case_insensitive_equal ({CMS_WDOCS_CONTENT_TYPE}.name)
+					then
+						l_uuid := ic.item.entity
+						if attached l_wdocs_api.wiki_page_by_uuid (l_uuid, Void, Void) as pg then
+							create {CMS_WDOCS_CONTENT} c.make (pg, l_uuid)
+							create lnk.make (pg.title, "doc/uuid/" + l_uuid)
+							c.set_link (lnk)
+							a_contents.force (create {CMS_TAXONOMY_ENTITY}.make (c, create {DATE_TIME}.make_now_utc))
+							l_info_to_remove.force (ic.item)
+						end
+					end
+				end
+				across
+					l_info_to_remove as ic
+				loop
+					a_contents.taxonomy_info.prune_all (ic.item)
+				end
+			end
+		end
+
 feature -- Handler		
 
 	handle_clear_cache (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -1101,7 +1143,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 --					s.append (html_encoded (s))
 --					s.append ("</pre>")
 				else
-					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req)
+					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req, r)
 
 					if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
 						s.append ("<hr/>")
@@ -1213,7 +1255,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			s.append ("<li>Location: " + req.request_uri + "</li>")
 		end
 
-	append_wiki_page_xhtml_to (a_wiki_page: WIKI_BOOK_PAGE; a_page_title: detachable READABLE_STRING_8; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST)
+	append_wiki_page_xhtml_to (a_wiki_page: WIKI_BOOK_PAGE; a_page_title: detachable READABLE_STRING_8; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST; a_response: CMS_RESPONSE)
 		local
 			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
 			l_xhtml: detachable STRING_8
@@ -1257,10 +1299,12 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 
 				l_xhtml.append ("<div class=%"cache-info%">cached: " + l_cache.cache_date_time.out + "</div>")
 			else
+				create l_xhtml.make_empty
+				if attached wdocs_api as l_wdocs_api and then attached {CMS_TAXONOMY_API} l_wdocs_api.cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api and then attached a_wiki_page.metadata ("uuid") as l_uuid then
+					l_taxonomy_api.append_taxonomy_to_xhtml (create {CMS_WDOCS_CONTENT}.make (a_wiki_page, l_uuid), a_response, l_xhtml)
+				end
 				if attached a_wiki_page.text.content as l_wiki_content then
-					l_xhtml := wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager)
-				else
-					create l_xhtml.make_empty
+					l_xhtml.append (wiki_to_xhtml (wdocs_api, a_page_title, l_wiki_content, a_wiki_page, a_manager))
 				end
 
 				l_xhtml.append ("<ul class=%"wdocs-nav%">")

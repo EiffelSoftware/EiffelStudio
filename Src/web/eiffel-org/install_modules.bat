@@ -11,6 +11,7 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\blog	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\oauth20	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\openid	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module %ROC_CMS_SRC%\modules\session_auth	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\recent_changes	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\feed_aggregator	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\google_search	--dir %ROC_CMS_DIR%

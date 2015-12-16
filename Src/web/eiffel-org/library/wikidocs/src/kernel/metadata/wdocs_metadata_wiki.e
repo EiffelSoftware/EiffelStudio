@@ -4,23 +4,12 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	WDOCS_METADATA_WIKI
 
 inherit
 	WDOCS_METADATA
 
-create
-	make_with_path
-
-feature {NONE} -- Initialization
-
-	make_with_path (p: PATH)
-		do
-			path := p
-		end
-
-	path: PATH
 
 feature -- Element change
 
@@ -84,8 +73,7 @@ feature -- Status report
 
 	exists: BOOLEAN
 			-- Is metadata file exists?
-		do
-			Result := (create {FILE_UTILITIES}).file_path_exists (path)
+		deferred
 		end
 
 	has_metadata: BOOLEAN
@@ -117,56 +105,47 @@ feature {NONE} -- Implementation
 
 	internal_items: detachable like items
 
-	parse (a_items: STRING_TABLE [READABLE_STRING_32]; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL])
+	is_parsing_done: BOOLEAN
+			-- Is parsing done?
+
+	parse (a_items: STRING_TABLE [READABLE_STRING_32]; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL])			
+		deferred
+		end
+
+	parse_line (a_line: READABLE_STRING_8; a_items: STRING_TABLE [READABLE_STRING_32]; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL])
 		local
 			utf: UTF_CONVERTER
-			f: RAW_FILE
 			n,v: detachable STRING_8
-			l_line: STRING_8
 			i,j,k: INTEGER
-			done: BOOLEAN
 			prop: WIKI_PROPERTY
 		do
-			create f.make_with_path (path)
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				from
-				until
-					f.exhausted or f.end_of_file or done
-				loop
-					n := Void
-					f.read_line_thread_aware
-					l_line := f.last_string
-					if not l_line.is_whitespace then
-						i := l_line.substring_index ("[[", 1)
-						if i = 0 then
-							done := True
-						else
-							if l_line.same_caseless_characters_general ("Property:", 1, 8, i + 2) then
-								j := i
-								i := i + 2 + 8
-								k := l_line.substring_index ("]]", i)
-								if k > 0 then
-									create prop.make (l_line.substring (j, k + 1))
-									end_position_of_properties_area := k + 1
-									n := prop.name
-									v := prop.text.text
-									if
-										a_restricted_names = Void
-										or else across a_restricted_names as ic some n.same_string_general (ic.item)  end
-									then
-										a_items.force (utf.utf_8_string_8_to_string_32 (v), n)
-									end
-								else
-									done := True
-								end
-							else
-								done := True
+			if not a_line.is_whitespace then
+				i := a_line.substring_index ("[[", 1)
+				if i = 0 then
+					is_parsing_done := True
+				else
+					if a_line.same_caseless_characters_general ("Property:", 1, 8, i + 2) then
+						j := i
+						i := i + 2 + 8
+						k := a_line.substring_index ("]]", i)
+						if k > 0 then
+							create prop.make (a_line.substring (j, k + 1))
+							end_position_of_properties_area := k + 1
+							n := prop.name
+							v := prop.text.text
+							if
+								a_restricted_names = Void
+								or else across a_restricted_names as ic some n.same_string_general (ic.item)  end
+							then
+								a_items.force (utf.utf_8_string_8_to_string_32 (v), n)
 							end
+						else
+							is_parsing_done := True
 						end
+					else
+						is_parsing_done := True
 					end
 				end
-				f.close
 			end
 		end
 

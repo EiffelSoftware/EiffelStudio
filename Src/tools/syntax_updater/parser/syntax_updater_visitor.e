@@ -417,6 +417,8 @@ feature {NONE} -- Access
 				else
 					l_mark.process (Current)
 				end
+			elseif attached a_type.attachment_keyword (match_list) as l_keyword then
+				l_keyword.process (Current)
 			end
 		end
 
@@ -476,7 +478,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				check is_predicate: a_name.is_case_insensitive_equal (function_class_name) end
+				check is_function_class: a_name.is_case_insensitive_equal (function_class_name) end
 					-- We are done if FUNCTION doesn't have 3 actual generic parameters and if 3, the second
 					-- one has to be a TUPLE.			
 				if l_as.count = 3 then

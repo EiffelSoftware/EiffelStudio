@@ -203,7 +203,10 @@ feature -- Hooks
 				until
 					lnk2 /= Void
 				loop
-					if ic.item.location.same_string ("account/roc-logout") then
+					if
+						ic.item.location.same_string ("account/roc-logout") or else
+						ic.item.location.same_string ("basic_auth_logoff")
+					then
 						lnk2 := ic.item
 					end
 				end

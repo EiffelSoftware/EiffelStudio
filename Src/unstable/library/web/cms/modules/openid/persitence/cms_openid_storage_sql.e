@@ -197,7 +197,7 @@ feature {NONE} -- User OpenID
 
 	Sql_insert_openid: STRING = "INSERT INTO openid_items (uid, identity, created) VALUES (:uid, :identity, :utc_date);"
 
-	Sql_openid_consumers: STRING = "SELECT name FROM openid_consumers";
+	Sql_openid_consumers: STRING = "SELECT name FROM openid_consumers;"
 
 
 feature {NONE} -- Consumer

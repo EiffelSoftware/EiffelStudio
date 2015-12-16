@@ -99,7 +99,7 @@ feature {CMS_API} -- Module management
 					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers.sql")), Void)
 
 					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for blog module", generating_type)
+						api.logger.put_error ("Could not initialize database for oauth_20 module", generating_type)
 					end
 						-- TODO workaround.
 					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers_initialize.sql")), Void)
@@ -108,7 +108,7 @@ feature {CMS_API} -- Module management
 					-- TODO workaround, until we have an admin module
 				l_sql_storage.sql_query ("SELECT name FROM oauth2_consumers;", Void)
 				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for differnent consumerns", generating_type)
+					api.logger.put_error ("Could not initialize database for differnent consumers", generating_type)
 				else
 					from
 						l_sql_storage.sql_start
@@ -227,7 +227,10 @@ feature -- Hooks
 				until
 					lnk2 /= Void
 				loop
-					if ic.item.location.same_string ("account/roc-logout") then
+					if
+						ic.item.location.same_string ("account/roc-logout") or else
+						ic.item.location.same_string ("basic_auth_logoff")
+					then
 						lnk2 := ic.item
 					end
 				end

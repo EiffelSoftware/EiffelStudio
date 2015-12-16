@@ -455,7 +455,9 @@ feature {NONE} -- Implementation
 				if l_as.count = 2 then
 					l_has_two_parameter := True
 					l_type := l_as.i_th (2)
-					if attached {NAMED_TUPLE_TYPE_AS} l_type then
+					if l_type.attachment_mark (match_list) /= Void or l_type.separate_keyword (match_list) /= Void then
+							-- There is an attachment mark on the possibly TUPLE type, we cannot simplify
+							-- the notation
 						l_keep_as_tuple_type := l_type
 					elseif
 						attached {CLASS_TYPE_AS} l_type as l_class and then
@@ -467,13 +469,7 @@ feature {NONE} -- Implementation
 							-- an agent of type PROCEDURE [...].
 						if attached l_tuple.generics as l_gen and then l_gen.count = 1 and then is_tuple_type (l_gen.i_th (1)) then
 							l_tuple := Void
-						end
-					elseif attached {FORMAL_AS} l_type as l_formal then
-							-- Check if we are handling a formal who is constraint to TUPLE
-						if parsed_class.generics.i_th (l_formal.position).constraints.count = 1 then
-							if is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type) then
-								l_keep_as_tuple_type := l_formal
-							end
+							l_keep_as_tuple_type := l_type
 						end
 					else
 							-- Unfortunately we lack context to find out if this type has already been
@@ -489,7 +485,9 @@ feature {NONE} -- Implementation
 				if l_as.count = 3 then
 					l_has_two_parameter := False
 					l_type := l_as.i_th (2)
-					if attached {NAMED_TUPLE_TYPE_AS} l_type then
+					if l_type.attachment_mark (match_list) /= Void or l_type.separate_keyword (match_list) /= Void then
+							-- There is an attachment mark on the possibly TUPLE type, we cannot simplify
+							-- the notation
 						l_keep_as_tuple_type := l_type
 					elseif
 						attached {CLASS_TYPE_AS} l_type as l_class and then
@@ -501,13 +499,7 @@ feature {NONE} -- Implementation
 							-- an agent of type FUNCTION [..., RES].
 						if attached l_tuple.generics as l_gen and then l_gen.count = 1 and then is_tuple_type (l_gen.i_th (1)) then
 							l_tuple := Void
-						end
-					elseif attached {FORMAL_AS} l_type as l_formal then
-							-- Check if we are handling a formal who is constraint to TUPLE
-						if parsed_class.generics.i_th (l_formal.position).constraints.count = 1 then
-							if is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type) then
-								l_keep_as_tuple_type := l_formal
-							end
+							l_keep_as_tuple_type := l_type
 						end
 					else
 							-- Unfortunately we lack context to find out if this type has already been
@@ -577,10 +569,20 @@ feature {NONE} -- Implementation
 		do
 			if attached {NAMED_TUPLE_TYPE_AS} a_type then
 				Result := True
-			elseif
-				attached {CLASS_TYPE_AS} a_type as l_class and then
-				l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name)
-			then
+			elseif attached {CLASS_TYPE_AS} a_type as l_class then
+				if l_class.class_name.name_32.is_case_insensitive_equal (tuple_class_name) then
+					Result := True
+				end
+			elseif attached {FORMAL_AS} a_type as l_formal then
+					-- Check if we are handling a formal who is constraint to TUPLE
+				if parsed_class.generics.i_th (l_formal.position).constraints.count = 1 then
+					if is_tuple_type (parsed_class.generics.i_th (l_formal.position).constraint.type) then
+						Result := true
+					end
+				end
+			else
+					-- We do not have enough context to be sure it is not a TUPLE type,
+					-- we will assume it is.
 				Result := True
 			end
 		end

@@ -325,6 +325,7 @@ feature -- Status report
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
 					create l_reflector
+						--| FIXME
 						--| Replace this line with the commented line once we solve the nature
 						--| of type instances in a SCOOP context.
 					l_type_id := {ISE_RUNTIME}.dynamic_type (v)

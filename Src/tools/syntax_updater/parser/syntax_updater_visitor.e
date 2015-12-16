@@ -475,6 +475,11 @@ feature {NONE} -- Implementation
 								l_keep_as_tuple_type := l_formal
 							end
 						end
+					else
+							-- Unfortunately we lack context to find out if this type has already been
+							-- converted or not, we will assume it was not and drop the first actual generic
+							-- parameter.
+						l_keep_as_tuple_type := l_type
 					end
 				end
 			else
@@ -504,6 +509,11 @@ feature {NONE} -- Implementation
 								l_keep_as_tuple_type := l_formal
 							end
 						end
+					else
+							-- Unfortunately we lack context to find out if this type has already been
+							-- converted or not, we will assume it was not and drop the first actual generic
+							-- parameter.
+						l_keep_as_tuple_type := l_type
 					end
 				end
 			end

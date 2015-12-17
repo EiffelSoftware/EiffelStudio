@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	unique_identifier (a_base: STRING; a_comparer: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]): STRING
+	unique_identifier (a_base: STRING; a_comparer: FUNCTION [STRING, BOOLEAN]): STRING
 			-- Unique identifier in `a_list' from `a_base'
 			--| An identifier is considered unique if applying `a_comparer' to it returns `False'
 		require

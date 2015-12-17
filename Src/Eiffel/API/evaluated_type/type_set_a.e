@@ -492,7 +492,7 @@ feature -- Access for Error handling
 			a_name_id_valid: a_name_id > 0
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
-			l_feature_agent: FUNCTION [ANY, TUPLE [RENAMED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
+			l_feature_agent: FUNCTION [RENAMED_TYPE_A, TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
 		do
 			l_feature_agent :=
 				agent (g_name_id: INTEGER; a_ext_type: RENAMED_TYPE_A): TUPLE [E_FEATURE,FEATURE_I]
@@ -531,7 +531,7 @@ feature -- Access for Error handling
 			a_name_id_valid: a_name_id > 0
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
-			l_feature_agent: FUNCTION [ANY, TUPLE [RENAMED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
+			l_feature_agent: FUNCTION [RENAMED_TYPE_A, TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
 		do
 			l_feature_agent :=
 				agent (g_name_id: INTEGER; a_ext_type: RENAMED_TYPE_A): TUPLE [E_FEATURE,FEATURE_I]
@@ -576,7 +576,7 @@ feature -- Access for Error handling
 		require
 			a_context_class_not_void_if_needed: has_formal implies a_context_class /= Void
 		local
-			l_feature_agent: FUNCTION[ANY,TUPLE [RENAMED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
+			l_feature_agent: FUNCTION[RENAMED_TYPE_A, TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]
 		do
 			l_feature_agent :=
 				agent (g_routine_id: INTEGER; l_ext_type: RENAMED_TYPE_A): TUPLE [E_FEATURE,FEATURE_I]
@@ -603,7 +603,7 @@ feature -- Access for Error handling
 
 feature {TYPE_SET_A} -- Access implementation
 
-	info_about_feature_by_agent (a_feature: FUNCTION [ANY, TUPLE [RENAMED_TYPE_A], TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]; a_formal_position: INTEGER; a_context_class: CLASS_C; a_visited_formals: SEARCH_TABLE [INTEGER]): like info_about_feature_by_rout_id
+	info_about_feature_by_agent (a_feature: FUNCTION [RENAMED_TYPE_A, TUPLE [e_feature: E_FEATURE; feature_i: FEATURE_I]]; a_formal_position: INTEGER; a_context_class: CLASS_C; a_visited_formals: SEARCH_TABLE [INTEGER]): like info_about_feature_by_rout_id
 			-- Gather information about feature
 			-- 			
 			-- `a_feature' is an agent which returns information about a feature given a `CLASS_C' instance.			

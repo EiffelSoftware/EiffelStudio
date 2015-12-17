@@ -43,7 +43,7 @@ feature -- Access
 			good_result: Result = target_scope
 		end
 
-	calculate_function: FUNCTION [ANY, TUPLE [QL_TARGET], DOUBLE]
+	calculate_function: FUNCTION [QL_TARGET, DOUBLE]
 			-- Function to calculate metric
 			-- Return value of current function will be added into `metric'.`internal_value' by `metric'.`increase_value_by'.
 

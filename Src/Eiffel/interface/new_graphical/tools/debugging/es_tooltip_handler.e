@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 	hide_tooltip_timer: detachable EV_TIMEOUT
 			-- Timer to hide the tooltip
 
-	show_position_callback: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable TUPLE [x, y: INTEGER]]
+	show_position_callback: detachable FUNCTION [INTEGER, INTEGER, detachable TUPLE [x, y: INTEGER]]
 			-- Call back to query a preferred show position
 			-- Arguments and return values are screen positions
 

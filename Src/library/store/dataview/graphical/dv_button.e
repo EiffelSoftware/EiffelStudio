@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	set_action (action: PROCEDURE [ANY, TUPLE])
+	set_action (action: PROCEDURE)
 			-- Set `action' to associated button action.
 		obsolete
 			"Use `add_action'."
@@ -31,7 +31,7 @@ feature -- Basic operations
 			select_actions.extend (action)
 		end
 
-	add_action (action: PROCEDURE [ANY, TUPLE])
+	add_action (action: PROCEDURE)
 			-- Set `action' to associated button action.
 		do
 			select_actions.extend (action)

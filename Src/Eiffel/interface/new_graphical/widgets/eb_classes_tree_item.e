@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pointer_press_action_agent: PROCEDURE [ANY, TUPLE [x: INTEGER_32; y: INTEGER_32; button: INTEGER_32; x_tilt: REAL_64; y_tilt: REAL_64; pressure: REAL_64; screen_x: INTEGER_32; screen_y: INTEGER_32]];
+	pointer_press_action_agent: PROCEDURE [TUPLE [x: INTEGER_32; y: INTEGER_32; button: INTEGER_32; x_tilt: REAL_64; y_tilt: REAL_64; pressure: REAL_64; screen_x: INTEGER_32; screen_y: INTEGER_32]];
 			-- `pointer_press_action' handler
 
 note

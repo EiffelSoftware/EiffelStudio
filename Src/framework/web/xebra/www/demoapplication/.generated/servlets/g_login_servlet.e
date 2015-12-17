@@ -292,7 +292,7 @@ feature-- Implementation
 			response.append ("<form id=%"l_temp_0%" action=%"" +request.uri + "%" method=%"post%">")
 				-- line: 19 row: 1 of file: ./master_template.xeb
 				-- line: 19 row: 1 of file: ./master_template.xeb
-			agent_table ["l_temp_0"] := create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]}.make (3)
+			agent_table ["l_temp_0"] := create {HASH_TABLE [PROCEDURE, STRING]}.make (3)
 				-- line: 17 row: 5 of file: ./master_template.xeb
 			response.append ({G_SERVLET_CONSTANTS}.class_temp_22)
 				-- line: 18 row: 1 of file: ./master_template.xeb
@@ -489,7 +489,7 @@ feature-- Implementation
 			response.append ("<form id=%"l_temp_3%" action=%"" +request.uri + "%" method=%"post%">")
 				-- line: 43 row: 1 of file: ./login.xeb
 				-- line: 43 row: 1 of file: ./login.xeb
-			agent_table ["l_temp_3"] := create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]}.make (3)
+			agent_table ["l_temp_3"] := create {HASH_TABLE [PROCEDURE, STRING]}.make (3)
 				-- line: 9 row: 8 of file: ./login.xeb
 			response.append ({G_SERVLET_CONSTANTS}.class_temp_110)
 				-- line: 42 row: 1 of file: ./login.xeb

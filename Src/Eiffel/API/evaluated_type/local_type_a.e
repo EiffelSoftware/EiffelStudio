@@ -265,7 +265,7 @@ feature {NONE} -- Modification
 		other: TYPE_A;
 		in_generic: BOOLEAN;
 		is_conforming: like conform_to_agent;
-		other_bound: FUNCTION [ANY, TUPLE [LOCAL_TYPE_A], like lower_bound])
+		other_bound: FUNCTION [LOCAL_TYPE_A, like lower_bound])
 			-- Add type `other' as a bound of the type in `context_class' to `bound'
 			-- using `is_conforming' to check that one type conforms to another one
 			-- and a function `other_bound' to access the corresponding bound of `other'
@@ -331,7 +331,7 @@ feature {NONE} -- Modification
 
 feature {NONE} -- Helper
 
-	conform_to_agent: PREDICATE [ANY, TUPLE [s: TYPE_A; t: TYPE_A; c: CLASS_C]]
+	conform_to_agent: PREDICATE [TUPLE [s: TYPE_A; t: TYPE_A; c: CLASS_C]]
 			-- A predicate to check that `s' conforms to `t' in class `c'?
 		once
 			Result :=
@@ -341,7 +341,7 @@ feature {NONE} -- Helper
 					end
 		end
 
-	reverse_conform_to_agent: PREDICATE [ANY, TUPLE [s: TYPE_A; t: TYPE_A; c: CLASS_C]]
+	reverse_conform_to_agent: PREDICATE [TUPLE [s: TYPE_A; t: TYPE_A; c: CLASS_C]]
 			-- A predicate to check that `t' conforms to `s' in class `c'?
 		once
 			Result :=

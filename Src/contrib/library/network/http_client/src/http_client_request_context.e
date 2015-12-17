@@ -73,7 +73,7 @@ feature -- Access
 			-- Upload data read from `upload_filename'
 			--| Note: make sure to precise the Content-Type header
 
-	write_agent: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_8]]
+	write_agent: detachable PROCEDURE [READABLE_STRING_8]
 			-- Use this agent to hook the write of the response.
 			--| could be used to save the response directly in a file		
 

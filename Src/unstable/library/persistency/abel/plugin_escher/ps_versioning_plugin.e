@@ -262,8 +262,8 @@ feature {NONE} -- Schema Evolution helper functions
 				-- ATTENTION: feature 'conversion_function_available' is a new feature
 			if current_schema_evolution_handler.conversion_function_available (current_version, stored_version) then
 					-- If conversion function is available get it from the current schema evolution handler
-				if attached {HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]} current_schema_evolution_handler.create_schema_evolution_handler (current_version, stored_version) as tmp then
-					if attached {TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]]} tmp.item (attr_name) as tuple then
+				if attached {HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]], STRING]} current_schema_evolution_handler.create_schema_evolution_handler (current_version, stored_version) as tmp then
+					if attached {TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]]} tmp.item (attr_name) as tuple then
 						evaluate_function (current_class_instance, stored_obj_attr_values, type, index, tuple)
 						Result := true
 					end
@@ -271,7 +271,7 @@ feature {NONE} -- Schema Evolution helper functions
 			end
 		end
 
-	evaluate_function (current_class_instance: ANY; stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING], STRING]; type: INTEGER; index: INTEGER; tuple: TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]])
+	evaluate_function (current_class_instance: ANY; stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING], STRING]; type: INTEGER; index: INTEGER; tuple: TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]])
 			-- 'tuple' contains a list of variables and a function
 			-- The list of variables contains the names of the variables that are needed to evaluate the function
 			-- The values of the variables that are needed as input arguments to the function can be found in 'stored_obj_attr_values'
@@ -284,7 +284,7 @@ feature {NONE} -- Schema Evolution helper functions
 				-- Get the list of variables
 			if attached {LIST [STRING]} tuple.item (1) as vars then
 					-- Get the function
-				if attached {FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]} tuple.item (2) as function then
+				if attached {FUNCTION [LIST [ANY], ANY]} tuple.item (2) as function then
 					create values.make (vars.count)
 						-- Calculate for each variable the respective value
 					from

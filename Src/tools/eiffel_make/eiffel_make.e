@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 	process_compilation
 			-- Process all actions in `actions' until it is empty.
 		local
-			l_action: FUNCTION [ANY, TUPLE, BOOLEAN]
+			l_action: FUNCTION [BOOLEAN]
 			l_failure: BOOLEAN
 		do
 			from

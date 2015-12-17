@@ -86,8 +86,8 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
-			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]
-			l_procedure: PROCEDURE [ANY, TUPLE]
+			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE]
+			l_procedure: PROCEDURE
 		do
 			Precursor {CONF_ITERATOR} (a_target)
 			create l_conf_tuple
@@ -149,9 +149,9 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 		local
-			l_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]]
-			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]
-			l_procedure: PROCEDURE [ANY, TUPLE]
+			l_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE]
+			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE]
+			l_procedure: PROCEDURE
 		do
 			create l_conf_tuple
 			l_procedure := agent process_notable_only_conf (l_conf_tuple)
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	process_notable_only_conf (a_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]])
+	process_notable_only_conf (a_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE])
 			-- Process configuration node of `a_target'
 		require
 			a_tuple_filed: a_tuple.t_notable /= Void and then a_tuple.t_procedure /= Void
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			background_procedures_not_has: not background_procedures.has (a_tuple.t_procedure)
 		end
 
-	process_class_internal (a_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]])
+	process_class_internal (a_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE])
 			-- Process `a_tuple.t_class'.
 			-- Remove `a_tuple.t_procedure' from `background_procedures' and
 			-- Put next background procedure into idle actions.
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			background_procedures_not_has: not background_procedures.has (a_tuple.t_procedure)
 		end
 
-	background_procedures: attached LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+	background_procedures: attached LINKED_LIST [PROCEDURE];
 			-- All managed background procedures.
 
 note

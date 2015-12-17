@@ -28,13 +28,13 @@ feature {NONE} -- Implementation
 			create connector.make_with_base (a_service, a_base_url)
 		end
 
-	make_with_callback (a_callback: PROCEDURE [ANY, TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]])
+	make_with_callback (a_callback: PROCEDURE [TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]])
 			-- Initialize `Current'.
 		do
 			make_custom_with_callback (a_callback, Void)
 		end
 
-	make_custom_with_callback (a_callback: PROCEDURE [ANY, TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]]; a_base_url: detachable STRING)
+	make_custom_with_callback (a_callback: PROCEDURE [TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]]; a_base_url: detachable STRING)
 			-- Initialize `Current'.
 		require
 			base_url_starts_with_slash: (a_base_url /= Void and then not a_base_url.is_empty) implies a_base_url.starts_with ("/")

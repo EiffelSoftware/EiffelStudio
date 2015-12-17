@@ -64,7 +64,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	perform_with_test_suite (a_procedure: ROUTINE [ANY, TUPLE [TEST_SUITE_S]])
+	perform_with_test_suite (a_procedure: ROUTINE [TEST_SUITE_S])
 			-- Call given procedure with usable test suite service.
 			--
 			-- `a_procedure': Procedure to be called which takes a test suite as the only argument.
@@ -87,7 +87,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	launch_session_type (a_type: TYPE [TEST_SESSION_I]; a_procedure: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
+	launch_session_type (a_type: TYPE [TEST_SESSION_I]; a_procedure: detachable PROCEDURE [TEST_SESSION_I])
 			-- Instatiate and launch session of given type, optionally calling a procedure before performing
 			-- the actualy launch.
 			--
@@ -97,7 +97,7 @@ feature {NONE} -- Basic operations
 		require
 			a_type_attached: a_type /= Void
 		do
-			perform_with_test_suite (agent (a_ts: TEST_SUITE_S; a_t: TYPE [TEST_SESSION_I]; a_p: detachable PROCEDURE [ANY, TUPLE [TEST_SESSION_I]])
+			perform_with_test_suite (agent (a_ts: TEST_SUITE_S; a_t: TYPE [TEST_SESSION_I]; a_p: detachable PROCEDURE [TEST_SESSION_I])
 				local
 					l_tuple: TUPLE [TEST_SESSION_I]
 				do
@@ -388,7 +388,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Helpers
 
-	enumerate_types (receiver: PROCEDURE [ANY, TUPLE [STRING_32]]; temporary: BOOLEAN; session: SESSION_I)
+	enumerate_types (receiver: PROCEDURE [STRING_32]; temporary: BOOLEAN; session: SESSION_I)
 			-- Enumerate (`temporary') type names from `session' passing them to `receiver' one by one.
 		local
 			v: ANY

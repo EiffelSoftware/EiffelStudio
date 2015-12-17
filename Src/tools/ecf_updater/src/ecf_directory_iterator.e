@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			action := a_action
 		end
 
-	action: PROCEDURE [ANY, TUPLE [PATH]]
+	action: PROCEDURE [PATH]
 
 feature -- Visitor
 

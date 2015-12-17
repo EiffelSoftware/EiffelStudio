@@ -184,7 +184,7 @@ feature -- Status report
 
 feature -- Storage
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE])
+	load (a_error_agent: PROCEDURE)
 			-- Load information.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local

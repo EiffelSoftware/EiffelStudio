@@ -79,7 +79,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	activator: detachable FUNCTION [ANY, TUPLE, detachable G]
+	activator: detachable FUNCTION [detachable G]
 			-- The function use to active an object for the first time
 			-- Note: Once the object has been activated the function will not long be available.
 

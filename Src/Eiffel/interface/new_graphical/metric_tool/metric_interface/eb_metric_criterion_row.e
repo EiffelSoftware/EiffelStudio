@@ -238,7 +238,7 @@ feature -- Basic operation
 			grid.resize_column (2, 0)
 		end
 
-	resize_grid_agent: PROCEDURE [ANY, TUPLE]
+	resize_grid_agent: PROCEDURE
 			-- Agent of `resize_grid'
 
 feature -- Access
@@ -463,7 +463,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	property_item_deactivated_agent: PROCEDURE [ANY, TUPLE]
+	property_item_deactivated_agent: PROCEDURE
 			-- Agent of `on_property_item_deactivated'
 
 	insert_empty_row_in_parent

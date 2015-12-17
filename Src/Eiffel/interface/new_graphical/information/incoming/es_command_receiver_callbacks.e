@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	project_open_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	project_open_actions: ARRAYED_LIST [PROCEDURE]
 			-- Project open actions
 		once
 			create Result.make (1)

@@ -54,7 +54,7 @@ feature -- Access
 		require
 			a_scope_attached: a_scope /= Void
 		local
-			l_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			l_table := criterion_table.item (a_scope)
 			if l_table /= Void then
@@ -78,7 +78,7 @@ feature -- Access
 			-- List of criterion of type `a_scope'
 			-- Can be Void if there is no criterion of `a_scope' registered in `criterion_table'.
 		local
-			l_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			l_table := criterion_table.item (a_scope)
 			if l_table /= Void then
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	criterion_table: HASH_TABLE [HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING], QL_SCOPE]
+	criterion_table: HASH_TABLE [HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING], QL_SCOPE]
 			-- Table of agents to create criteria
 			-- Key of outer hash table is criterion scope type
 			-- Key of inner hash table is criterion name,
@@ -236,7 +236,7 @@ feature{NONE} -- Initialization
 	initialize_target_criteria
 			-- Initialize target criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, target_scope)
@@ -257,7 +257,7 @@ feature{NONE} -- Initialization
 	initialize_group_criteria
 			-- Initialize group criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, group_scope)
@@ -285,7 +285,7 @@ feature{NONE} -- Initialization
 	initialize_class_criteria
 			-- Initialize class criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (40)
 			criterion_table.put (l_hash_table, class_scope)
@@ -349,7 +349,7 @@ feature{NONE} -- Initialization
 	initialize_generic_criteria
 			-- Initialize generic criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, generic_scope)
@@ -376,7 +376,7 @@ feature{NONE} -- Initialization
 	initialize_feature_criteria
 			-- Initialize feature criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (50)
 			criterion_table.put (l_hash_table, feature_scope)
@@ -445,7 +445,7 @@ feature{NONE} -- Initialization
 	initialize_argument_criteria
 			-- Initialize argument criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, argument_scope)
@@ -470,7 +470,7 @@ feature{NONE} -- Initialization
 	initialize_local_criteria
 			-- Initialize local criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, local_scope)
@@ -496,7 +496,7 @@ feature{NONE} -- Initialization
 	initialize_assertion_criteria
 			-- Initialize assertion criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (20)
 			criterion_table.put (l_hash_table, assertion_scope)
@@ -530,7 +530,7 @@ feature{NONE} -- Initialization
 	initialize_line_criteria
 			-- Initialize line criteria.
 		local
-			l_hash_table: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_METRIC_CRITERION], STRING]
+			l_hash_table: HASH_TABLE [FUNCTION [EB_METRIC_CRITERION], STRING]
 		do
 			create l_hash_table.make (10)
 			criterion_table.put (l_hash_table, line_scope)

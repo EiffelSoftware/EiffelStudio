@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		local
 			pool: THREAD_POOL [ANY]
 			times, size, i: NATURAL
-			integrate_agent: PROCEDURE [ANY, TUPLE]
+			integrate_agent: PROCEDURE
 		do
 			times := argument (1).to_natural_32
 			size := argument(2).to_natural_32

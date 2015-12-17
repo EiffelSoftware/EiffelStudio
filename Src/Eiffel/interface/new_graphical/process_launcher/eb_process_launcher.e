@@ -95,7 +95,7 @@ feature -- Launching parameters setting
 			time_interval_set: time_interval = itv
 		end
 
-	set_output_handler (handler: PROCEDURE [ANY, TUPLE [STRING]])
+	set_output_handler (handler: PROCEDURE [STRING])
 			-- Set the agent handler used when output from the child process arrives.
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
@@ -106,7 +106,7 @@ feature -- Launching parameters setting
 			output_handler_set: output_handler = handler
 		end
 
-	set_error_handler (handler: PROCEDURE [ANY, TUPLE [STRING]])
+	set_error_handler (handler: PROCEDURE [STRING])
 			-- Set the agent handler used when error from the child process arrives.
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
@@ -117,7 +117,7 @@ feature -- Launching parameters setting
 			error_handler_set: error_handler = handler
 		end
 
-	set_on_start_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_start_handler (handler: ROUTINE)
 			-- Set a `handler' which will be called when process starts.
 			-- if `handler' is Void, on_start_handler will be disabled
 		require
@@ -128,7 +128,7 @@ feature -- Launching parameters setting
 			handler_set: on_start_handler = handler
 		end
 
-	set_on_fail_launch_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_fail_launch_handler (handler: ROUTINE)
 			-- Set a `handler' which will be called when process launch failed.
 			-- if `handler' is Void, on_launch_failed_handler will be disabled			
 		require
@@ -139,7 +139,7 @@ feature -- Launching parameters setting
 			handler_set: on_fail_launch_handler = handler
 		end
 
-	set_on_successful_launch_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_successful_launch_handler (handler: ROUTINE)
 			-- Set a `handler' which will be called when process launch successed.
 			-- if `handler' is Void, on_launch_successed_handler will be disabled						
 		require
@@ -150,7 +150,7 @@ feature -- Launching parameters setting
 			handler_set: on_successful_launch_handler = handler
 		end
 
-	set_on_exit_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_exit_handler (handler: ROUTINE)
 			-- Set a `handler' which will be called when process exits.
 			-- if `handler' is Void, on_exit_handler will be disabled						
 		require
@@ -161,7 +161,7 @@ feature -- Launching parameters setting
 			handler_set: on_exit_handler = handler
 		end
 
-	set_on_terminate_handler (handler: ROUTINE [ANY, TUPLE])
+	set_on_terminate_handler (handler: ROUTINE)
 			-- Set a `handler' which will be called when process has been terminated.
 			-- if `handler' is Void, on_terminate_handler will be disabled									
 		require
@@ -488,8 +488,8 @@ feature -- Status reporting
 			end
 		end
 
-	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
-	error_handler:	PROCEDURE [ANY, TUPLE [STRING]]
+	output_handler: PROCEDURE [STRING]
+	error_handler:	PROCEDURE [STRING]
 			-- Handlers of output or error from process	
 
 	command_line: STRING_32
@@ -521,11 +521,11 @@ feature {NONE} -- Implementation
 	is_hidden: BOOLEAN
 			-- Should process be launched hidden?
 
-	on_start_handler: ROUTINE [ANY, TUPLE]
-	on_exit_handler: ROUTINE [ANY, TUPLE]
-	on_terminate_handler: ROUTINE [ANY, TUPLE]
-	on_fail_launch_handler: ROUTINE [ANY, TUPLE]
-	on_successful_launch_handler: ROUTINE [ANY, TUPLE]
+	on_start_handler: ROUTINE
+	on_exit_handler: ROUTINE
+	on_terminate_handler: ROUTINE
+	on_fail_launch_handler: ROUTINE
+	on_successful_launch_handler: ROUTINE
 			-- Different agent handlers
 
 	initial_time_interval: INTEGER = 250

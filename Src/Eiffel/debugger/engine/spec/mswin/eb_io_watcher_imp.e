@@ -60,7 +60,7 @@ feature -- Access
 
 	is_destroyed: BOOLEAN
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Callback feature called with the file/pipe is changed.
 
 feature -- Element change

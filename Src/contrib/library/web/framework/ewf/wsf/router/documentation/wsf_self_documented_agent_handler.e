@@ -19,7 +19,7 @@ feature -- Access
 
 	descriptions: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 
-	self_documentation_builder: detachable FUNCTION [ANY, TUPLE [WSF_ROUTER_MAPPING, detachable WSF_REQUEST_METHODS], WSF_ROUTER_MAPPING_DOCUMENTATION]
+	self_documentation_builder: detachable FUNCTION [WSF_ROUTER_MAPPING, detachable WSF_REQUEST_METHODS, WSF_ROUTER_MAPPING_DOCUMENTATION]
 			-- Function building the `mapping_documentation'.
 
 feature -- Change

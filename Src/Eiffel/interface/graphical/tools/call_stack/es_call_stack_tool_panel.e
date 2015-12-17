@@ -2414,7 +2414,7 @@ feature {NONE} -- Implementation, cosmetic
 	set_row_highlight_bg_color_agent,
 	set_row_replayable_bg_color_agent,
 	set_row_internal_bg_color_agent,
-	set_unsensitive_fg_color_agent: PROCEDURE [ANY, TUPLE [COLOR_PREFERENCE]]
+	set_unsensitive_fg_color_agent: PROCEDURE [COLOR_PREFERENCE]
 			-- agents associated with color assignment from preferences
 			-- get properly removed when recycling.
 

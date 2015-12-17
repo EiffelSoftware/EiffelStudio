@@ -152,7 +152,7 @@ feature {TRIE} -- Implementation element change
 
 feature -- Quantifiers
 
-	for_all (test: FUNCTION[ANY,TUPLE[LINKED_LIST[G]], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION[LINKED_LIST[G], BOOLEAN]): BOOLEAN
 			-- does `test' hold for all sequences in the trie?
 		require
 			test_not_void: test /= Void
@@ -163,7 +163,7 @@ feature -- Quantifiers
 		end
 
 	hold_count (test:
-					FUNCTION [ANY, TUPLE[LINKED_LIST[G]], BOOLEAN]):
+					FUNCTION [LINKED_LIST[G], BOOLEAN]):
 				INTEGER
 				-- Number of  times `test' holds in the TRIE
 			require
@@ -178,7 +178,7 @@ feature -- Quantifiers
 				Result >= 0
 			end
 
-	exists (test: FUNCTION[ANY, TUPLE[LINKED_LIST[G]], BOOLEAN]): BOOLEAN
+	exists (test: FUNCTION[LINKED_LIST[G], BOOLEAN]): BOOLEAN
 			-- Does `test' hold for at least one of the sequences in the trie?
 		require
 			test_not_void: test /= Void
@@ -188,7 +188,7 @@ feature -- Quantifiers
 				Result =( hold_count (test) >= 1)
 		end
 
-	exists1 (test: FUNCTION[ANY, TUPLE[LINKED_LIST[G]], BOOLEAN]): BOOLEAN
+	exists1 (test: FUNCTION[LINKED_LIST[G], BOOLEAN]): BOOLEAN
 			-- Does `test' hold for at least one of the sequences in the trie?
 		require
 			test_not_void: test /= Void
@@ -264,7 +264,7 @@ feature {TRIE} -- Implementation
 		end
 
 hold_count_recursive(test:
-					FUNCTION [ANY, TUPLE[LINKED_LIST[G]], BOOLEAN];
+					FUNCTION [LINKED_LIST[G], BOOLEAN];
 					seq: LINKED_LIST[G]):
 				INTEGER
 			-- apply `test' to `seq' if `terminal' holds

@@ -58,7 +58,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	perform_query_save_modified (a_action: PROCEDURE [ANY, TUPLE])
+	perform_query_save_modified (a_action: PROCEDURE)
 			-- Performs an action, on the condition and modifications are saved or discarded.
 			--
 			-- `a_action': A protected action to perform, which will only be executed if Current is unmodified for the user

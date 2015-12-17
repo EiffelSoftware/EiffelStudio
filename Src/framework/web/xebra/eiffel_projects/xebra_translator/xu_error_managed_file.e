@@ -17,7 +17,7 @@ feature -- Initialization
 
 feature -- Access
 
-	process_file (a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [source: STRING; file: PLAIN_TEXT_FILE]])
+	process_file (a_file_name: STRING; a_action: PROCEDURE [TUPLE [source: STRING; file: PLAIN_TEXT_FILE]])
 			-- Manages error handling of a file and processes `a_action' with it
 			-- `a_file_name': The filename/path
 			-- `a_action': The action which should be executed with the file

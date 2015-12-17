@@ -56,12 +56,12 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	frozen make_callback (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
+	frozen make_callback (a_callback:  PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
 		do
 			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
 		end
 
-	frozen make_callback_and_launch (a_callback:  PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
+	frozen make_callback_and_launch (a_callback:  PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; a_options: like options)
 		do
 			make (create {WSF_CALLBACK_SERVICE}.make (a_callback), a_options)
 		end

@@ -43,7 +43,7 @@ feature -- Access
 	current_order: INTEGER
 			-- Current sorting order
 
-	sort_order_change_function: FUNCTION [ANY, TUPLE [INTEGER], INTEGER]
+	sort_order_change_function: FUNCTION [INTEGER, INTEGER]
 			-- Function to decide next sorting order
 			-- Parameter of the function is the original sort order, return value of the function is
 			-- new sort order.
@@ -51,7 +51,7 @@ feature -- Access
 	indicator: HASH_TABLE [EV_PIXMAP, INTEGER]
 			-- Pixmap indicators for every sorting order
 
-	comparator: FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]
+	comparator: FUNCTION [G, G, INTEGER, BOOLEAN]
 			-- Comparator used to sort
 			-- The first two arguments are rows to be compared with each other
 			-- The third integer argument is current sorting order

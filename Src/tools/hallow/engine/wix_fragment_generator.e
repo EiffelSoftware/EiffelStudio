@@ -284,7 +284,7 @@ feature {NONE} -- Element generation
 			end
 		end
 
-	generate_component (a_path: SYSTEM_STRING; a_content_gen: PROCEDURE [WIX_FRAGMENT_GENERATOR, TUPLE [I_OPTIONS, XML_TEXT_WRITER]]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
+	generate_component (a_path: SYSTEM_STRING; a_content_gen: PROCEDURE [I_OPTIONS, XML_TEXT_WRITER]; a_options: I_OPTIONS; a_writer: XML_TEXT_WRITER)
 			-- Generates a single WiX Component element and its content using a generator agent.
 			--
 			-- `a_path': Full path to a disk entity that the component is generated for.

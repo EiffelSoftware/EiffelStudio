@@ -22,7 +22,7 @@ feature -- Delayed validity checking
 			remaining_validity_checking_list_not_void: Result /= Void
 		end
 
-	add_future_checking (context_class: CLASS_C; p: PROCEDURE [ANY, TUPLE])
+	add_future_checking (context_class: CLASS_C; p: PROCEDURE)
 				-- Gather all information which will enable to check that
 				-- all the declaration of generic classes conforms to the
 				-- generic creation constraint of the generic class.

@@ -165,7 +165,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_ok_action (an_agent: PROCEDURE [ANY, TUPLE])
+	set_ok_action (an_agent: PROCEDURE)
 			-- Set the action performed when the Ok button is selected.
 		require
 			an_agent_attached: an_agent /= Void
@@ -179,7 +179,7 @@ feature -- Status setting
 			ok_button.select_actions.extend (an_agent)
 		end
 
-	set_no_action (an_agent: PROCEDURE [ANY, TUPLE])
+	set_no_action (an_agent: PROCEDURE)
 			-- Set the action performed when the No button is selected.
 		require
 			no_button_exists: buttons_count >= 3
@@ -192,7 +192,7 @@ feature -- Status setting
 			no_button.select_actions.extend (an_agent)
 		end
 
-	set_cancel_action (an_agent: PROCEDURE [ANY, TUPLE])
+	set_cancel_action (an_agent: PROCEDURE)
 			-- Set the action performed when the Cancel button is selected.
 		require
 			cancel_button_exists: buttons_count >= 2
@@ -240,13 +240,13 @@ feature {NONE} -- Implementation
 	cancel_button: EV_BUTTON
 			-- Button for "Cancel" answer.
 
-	ok_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	ok_action: detachable PROCEDURE note option: stable attribute end
 			-- Action performed when ok is selected.
 
-	cancel_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	cancel_action: detachable PROCEDURE note option: stable attribute end
 			-- Action performed when Cancel is selected.
 
-	no_action: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	no_action: detachable PROCEDURE note option: stable attribute end
 			-- Action performed when ok is selected.
 
 	Layout_constants: EV_LAYOUT_CONSTANTS

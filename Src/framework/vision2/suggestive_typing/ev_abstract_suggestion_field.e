@@ -126,7 +126,7 @@ feature -- Configuration
 		deferred
 		end
 
-	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]] assign set_default_key_processing_handler
+	default_key_processing_handler: detachable PREDICATE [EV_KEY] assign set_default_key_processing_handler
 			-- Agent used to determine whether the default key processing should occur for Current.
 			-- If agent returns True then default key processing continues as normal, False prevents
 			-- default key processing from occurring.

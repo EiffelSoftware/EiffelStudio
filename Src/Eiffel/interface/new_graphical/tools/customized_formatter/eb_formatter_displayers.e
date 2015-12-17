@@ -34,7 +34,7 @@ feature -- Views
 
 feature -- Generators
 
-	generator_with_name (a_name: STRING): FUNCTION [ANY, TUPLE, EB_FORMATTER_BROWSER_DISPLAYER]
+	generator_with_name (a_name: STRING): FUNCTION [EB_FORMATTER_BROWSER_DISPLAYER]
 			-- Generator with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -138,7 +138,7 @@ feature -- Generators
 
 feature{NONE} -- Implementation
 
-	generators_internal: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_FORMATTER_BROWSER_DISPLAYER], STRING];
+	generators_internal: HASH_TABLE [FUNCTION [EB_FORMATTER_BROWSER_DISPLAYER], STRING];
 		-- Generators indexed with name
 
 note

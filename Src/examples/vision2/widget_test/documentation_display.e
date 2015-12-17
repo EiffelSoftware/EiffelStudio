@@ -45,7 +45,7 @@ feature -- Status setting
 
 	widget_to_update: EV_WIDGET
 
-	real_update_for_type_change_agent: PROCEDURE [DOCUMENTATION_DISPLAY, TUPLE ]
+	real_update_for_type_change_agent: PROCEDURE
 
 	real_update_for_type_change
 			-- Actually perform the update of the text.

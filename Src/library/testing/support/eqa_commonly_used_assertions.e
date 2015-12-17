@@ -133,7 +133,7 @@ feature -- Equality
 			assert (a_tag, object = Void)
 		end
 
-	assert_predicate (a_tag: READABLE_STRING_GENERAL; pred: PREDICATE [ANY, TUPLE])
+	assert_predicate (a_tag: READABLE_STRING_GENERAL; pred: PREDICATE)
 			-- Check that `pred' evaluates to True.
 		require
 			a_tag_not_void: a_tag /= Void

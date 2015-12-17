@@ -271,7 +271,7 @@ feature{NONE} -- Matchers
 			string_matcher_set: string_matcher /= Void
 		end
 
-	string_matcher: FUNCTION [ANY, TUPLE [a_string: READABLE_STRING_GENERAL], BOOLEAN]
+	string_matcher: FUNCTION [TUPLE [a_string: READABLE_STRING_GENERAL], BOOLEAN]
 			-- String matcher used to match `a_string'
 
 	set_string_matcher (a_matcher: like string_matcher)

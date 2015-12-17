@@ -106,12 +106,12 @@ feature {AEL_PRINTF} -- Shared routines
 			io.error.put_string (v)
 		end
 
-	client_log_proc: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	client_log_proc: detachable PROCEDURE [STRING]
 		do
 			Result := client_log_proc_cell.item
 		end
 
-	client_log_proc_cell: CELL [detachable PROCEDURE [ANY, TUPLE [STRING]]]
+	client_log_proc_cell: CELL [detachable PROCEDURE [STRING]]
 		once
 			create Result.put (Void)
 		end
@@ -126,13 +126,13 @@ feature {AEL_PRINTF} -- Shared routines
 	--|--------------------------------------------------------------
 
 	printf_client_error_agent:
-		detachable PROCEDURE [ANY, TUPLE [AEL_PF_FORMAT_ERROR]]
+		detachable PROCEDURE [AEL_PF_FORMAT_ERROR]
 		do
 			Result := printf_client_error_agent_cell.item
 		end
 
 	printf_client_error_agent_cell:
-		CELL [detachable PROCEDURE [ANY, TUPLE [AEL_PF_FORMAT_ERROR]]]
+		CELL [detachable PROCEDURE [AEL_PF_FORMAT_ERROR]]
 		once
 			create Result.put (Void)
 		end

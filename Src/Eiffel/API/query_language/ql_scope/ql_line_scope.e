@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Metric support
 
-	basic_scope (a_calculate_function: FUNCTION [ANY, TUPLE [QL_LINE], DOUBLE]; a_criterion: QL_LINE_CRITERION): QL_METRIC_LINE_BASIC_SCOPE_INFO
+	basic_scope (a_calculate_function: FUNCTION [QL_LINE, DOUBLE]; a_criterion: QL_LINE_CRITERION): QL_METRIC_LINE_BASIC_SCOPE_INFO
 			-- Metric basic scope information that uses `a_calculate_function' and `a_criterion' to calculate metric.
 			-- If `a_calculate_function' or `a_criterion' is Void, default value will be used.
 			-- Default value for `a_calculate_function' is to do counting simply, and for `a_criterion' is a tautology criterion.

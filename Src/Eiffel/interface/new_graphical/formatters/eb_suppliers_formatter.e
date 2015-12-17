@@ -44,7 +44,7 @@ feature -- Properties
 	browser: EB_CLASS_BROWSER_TREE_VIEW
 			-- Browser where information gets displayed
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
+	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_class_flat_displayer, displayer_generators.class_flat_displayer]

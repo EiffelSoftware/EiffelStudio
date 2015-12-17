@@ -92,7 +92,7 @@ feature -- Access
 			Result := implementation.internal_pointer_style
 		end
 
-	actual_drop_target_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
+	actual_drop_target_agent: detachable FUNCTION [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', `Current' will use the default drop target.
 		require
@@ -114,7 +114,7 @@ feature -- Access
 			bridge_ok: Result = implementation.real_target
 		end
 
-	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]]
+	default_key_processing_handler: detachable PREDICATE [EV_KEY]
 			-- Agent used to determine whether the default key processing should occur for Current.
 			-- If agent returns True then default key processing continues as normal, False prevents
 			-- default key processing from occurring.

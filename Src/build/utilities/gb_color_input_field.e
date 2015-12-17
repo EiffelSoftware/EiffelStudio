@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_COLOR], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS)
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [EV_COLOR]; a_validate_agent: FUNCTION [EV_COLOR, BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- If `label_text' `is_empty', do not display a label.
@@ -156,7 +156,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			color_area.clear
 		end
 
-	execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]
+	execution_agent: PROCEDURE [EV_COLOR]
 		-- Agent to execute command associated with value entered into `Current'.
 
 	horizontal_box: EV_HORIZONTAL_BOX
@@ -168,7 +168,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 	spacing_cell: EV_CELL
 		-- Cell used to space buttons.
 
-	validate_agent: FUNCTION [ANY, TUPLE [EV_COLOR], BOOLEAN]
+	validate_agent: FUNCTION [EV_COLOR, BOOLEAN]
 		-- Is color a valid integer for `execution_agent'.
 
 	execute_agent (new_value: EV_COLOR)

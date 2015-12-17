@@ -107,13 +107,13 @@ feature -- Update
 			l_changed := value /~ a_value
 			value := a_value
 			if l_changed then
-				data_change_actions.do_all (agent {PROCEDURE [ANY, TUPLE [like value]]}.call ([value]))
+				data_change_actions.do_all (agent {PROCEDURE [TUPLE [like value]]}.call ([value]))
 			end
 		end
 
 feature -- Events
 
-	data_change_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [like value]]]
+	data_change_actions: ARRAYED_LIST [PROCEDURE [TUPLE [like value]]]
 			-- Called if `value' changes.
 
 feature {NONE} -- GUI elements

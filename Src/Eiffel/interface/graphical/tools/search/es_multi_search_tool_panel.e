@@ -1869,7 +1869,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			end
 		end
 
-	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE])
+	check_class_file_and_do (a_pro: PROCEDURE)
 			-- Check class before insert `a_pro' to loaded_actions and run all actions in it.
 		require
 			a_pro_not_void: a_pro /= Void

@@ -623,25 +623,25 @@ feature {NONE}  -- Implementation
 			-- All singletons
 
 	main_window_focus_out, main_window_focus_in,
-	top_level_window_focus_out, top_level_window_focus_in: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE]
+	top_level_window_focus_out, top_level_window_focus_in: PROCEDURE
 			-- Agents registered into the main window's focus in and out actions
 
-	widget_pointer_press_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+	widget_pointer_press_handler: PROCEDURE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]
 			-- Pointer press actions
 
-	widget_pointer_press_for_upper_zone_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+	widget_pointer_press_for_upper_zone_handler: PROCEDURE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]
 			-- Pointer press actions for SD_UPPER_ZONEs
 
-	pnd_motion_actions_handler: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]]
+	pnd_motion_actions_handler: PROCEDURE [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Pick and Drop pointer motion action handler
 
-	pick_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]
+	pick_actions_handler: PROCEDURE [ANY]
 			-- Pick actions handler
 
-	drop_actions_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE [ANY]]
+	drop_actions_handler: PROCEDURE [ANY]
 			-- Drop actions handler
 
-	theme_changed_handler: PROCEDURE [SD_DOCKING_MANAGER_AGENTS, TUPLE]
+	theme_changed_handler: PROCEDURE
 			-- Theme changed actions handler
 
 	ignore_additional_click: BOOLEAN

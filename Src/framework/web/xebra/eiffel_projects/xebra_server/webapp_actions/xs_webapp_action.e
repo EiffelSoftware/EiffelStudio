@@ -442,9 +442,9 @@ feature {NONE} -- Implementation
 	launch_process (a_exe: FILE_NAME;
 					 a_args: STRING;
 					 a_dir: DIRECTORY_NAME;
-					 a_exit_handler: ROUTINE [ANY, TUPLE];
-					 a_output_handler: PROCEDURE [ANY, TUPLE [STRING]];
-					 a_error_output_handler: PROCEDURE [ANY, TUPLE [STRING]]): detachable PROCESS
+					 a_exit_handler: ROUTINE;
+					 a_output_handler: PROCEDURE [STRING];
+					 a_error_output_handler: PROCEDURE [STRING]): detachable PROCESS
 			-- Launches a process.
 			--
 			-- `a_exe': The file to execute

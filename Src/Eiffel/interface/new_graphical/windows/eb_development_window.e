@@ -711,7 +711,7 @@ feature -- Update
 			ev_application.do_once_on_idle (l_agent)
 		end
 
-	update_eis_system_agent: detachable PROCEDURE [ANY, TUPLE]
+	update_eis_system_agent: detachable PROCEDURE
 			-- Agent to update EIS system
 
 feature -- Stone process
@@ -1130,7 +1130,7 @@ feature -- Resource Update
 			end
 		end
 
-	save_and (an_action: PROCEDURE [ANY, TUPLE])
+	save_and (an_action: PROCEDURE)
 			-- Save and `an_actions'.
 		local
 			save_dialog: EB_CONFIRM_SAVE_DIALOG
@@ -1448,7 +1448,7 @@ feature -- Multiple editor management
 			ev_application.do_once_on_idle (update_paste_cmd_agent)
 		end
 
-	update_paste_cmd_agent: PROCEDURE [ANY, TUPLE]
+	update_paste_cmd_agent: PROCEDURE
 		-- Agent used for updating the paste command.
 
 feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor

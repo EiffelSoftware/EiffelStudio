@@ -175,11 +175,11 @@ feature{NONE} -- Implementation
 	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING_32], INTEGER]
 			-- Mapping of possible attributes of tags.
 
-	tag_start_processors: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	tag_start_processors: HASH_TABLE [PROCEDURE, INTEGER]
 			-- Table of processors to be called when start tag finish is met.
 			-- [processor, tag id]
 
-	tag_finish_processors: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	tag_finish_processors: HASH_TABLE [PROCEDURE, INTEGER]
 			-- Table of processors to be called when tag finish is met.
 			-- [processor, tag id]
 

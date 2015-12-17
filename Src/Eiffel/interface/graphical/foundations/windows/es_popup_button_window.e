@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			is_initializing: is_initializing
 		end
 
-	bind_select_actions (a_action: PROCEDURE [ANY, TUPLE])
+	bind_select_actions (a_action: PROCEDURE)
 			-- Binds the selection actions the the window's widgets to ensure the pop up widget is display
 			-- Note: `propagate_action' can be used to bind the actions to a widget structure, if the struture is deep and all widgets need to process
 			--       the show action.
@@ -81,7 +81,7 @@ feature {NONE} -- Access
 	popup_widget_container: EV_VERTICAL_BOX
 			-- The primary contain in which to add any popup widget to.
 
-	popup_widget_fetch_action: FUNCTION [ANY, TUPLE [window: ES_POPUP_BUTTON_WINDOW], EV_WIDGET]
+	popup_widget_fetch_action: FUNCTION [TUPLE [window: ES_POPUP_BUTTON_WINDOW], EV_WIDGET]
 			-- Agent used to fetch a popup widget strucutre, shown when `popup_widget' is called.
 
 	popup_widget_activate_timer: EV_TIMEOUT

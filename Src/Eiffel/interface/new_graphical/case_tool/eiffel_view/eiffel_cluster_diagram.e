@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			cluster_added: BOOLEAN
 			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
-			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE]
 		do
 			l_clusters := parents_of_group (a_cluster)
 
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			cluster_added: BOOLEAN
 			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
-			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE]
 		do
 			l_clusters := parents_of_group (a_lib)
 
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 			parent, es_cluster: ES_CLUSTER
 			parent_fig, cluster_fig: EG_CLUSTER_FIGURE
 			l_clusters: ARRAYED_LIST [ES_CLUSTER]
-			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE]
 		do
 			l_clusters := parents_of_group (a_cluster)
 			if not l_clusters.is_empty then
@@ -457,7 +457,7 @@ feature {NONE} -- Cluster manager observer
 			l_classes: ARRAYED_LIST [ES_CLASS]
 			l_remove_links: LIST [ES_ITEM]
 			fig: EIFFEL_CLASS_FIGURE
-			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE]
 			l_manager: EB_CLUSTERS
 		do
 			if not is_dropped_on_diagram then
@@ -569,8 +569,8 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 			class_cluster: CONF_GROUP
 			es_cluster: ES_CLUSTER
 			fig: EIFFEL_CLASS_FIGURE
-			l_array_redo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
-			l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo: ARRAYED_LIST [PROCEDURE]
+			l_array_undo: ARRAYED_LIST [PROCEDURE]
 		do
 			class_cluster := a_class.group
 			l_clusters := model.cluster_from_interface (class_cluster)
@@ -807,8 +807,8 @@ feature {NONE} -- Implementation
 			l_classes: ARRAYED_LIST [ES_CLASS]
 			l_class_i: CLASS_I
 			es_class: ES_CLASS
-			l_array_redo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
-			l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo: ARRAYED_LIST [PROCEDURE]
+			l_array_undo: ARRAYED_LIST [PROCEDURE]
 			l_old_path: STRING
 		do
 			dropped_on_cluster := top_cluster_at (Current, drop_x, drop_y)
@@ -1196,7 +1196,7 @@ feature {NONE} -- Implementation
 			es_cluster: ES_CLUSTER
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
 			l_found_cluster: ES_CLUSTER
-			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE]
 			remove_classes: like classes_to_remove_in_cluster
 			remove_links: LIST [ES_ITEM]
 			l_string: STRING_GENERAL

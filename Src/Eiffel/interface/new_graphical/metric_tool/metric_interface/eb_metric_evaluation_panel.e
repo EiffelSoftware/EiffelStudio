@@ -585,10 +585,10 @@ feature {NONE} -- Implementation/Data
 	show_percent_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 		-- Buttons used in tool bar
 
-	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+	on_stop_metric_evaluation_agent: PROCEDURE [TUPLE [a_item: QL_ITEM]]
 			-- Agent of `stop_metric_evaluation_agnet'
 
-	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+	on_process_gui_agent: PROCEDURE [TUPLE [a_item: QL_ITEM]]
 			-- Agent of `process_gui'
 
 	domain_selector: EB_METRIC_DOMAIN_SELECTOR

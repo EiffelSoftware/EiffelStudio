@@ -93,7 +93,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]
+			execution_agent: PROCEDURE [EV_COLOR]
 		do
 			value := new_value
 			build_small_pixmap

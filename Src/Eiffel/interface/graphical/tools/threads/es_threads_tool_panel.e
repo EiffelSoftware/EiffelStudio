@@ -626,7 +626,7 @@ feature {NONE} -- Implementation, cosmetic
 			end
 		end
 
-	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
+	set_row_highlight_bg_color_agent : PROCEDURE
 			-- Store agent for `set_row_highlight_bg_color' so that it gets properly removed
 			-- when recycling.
 

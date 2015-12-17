@@ -27,7 +27,7 @@ feature
 	end
 
 feature {NONE} --version 1
-	v1_to_v2: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]
+	v1_to_v2: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]], STRING]
 			-- Conversion table from 1 to 2.
 	local
 		tmp: SCHEMA_EVOLUTION_DEFAULT_CONVERSION_FUNCTIONS
@@ -46,7 +46,7 @@ feature {NONE} --version 1
 	end
 
 feature {NONE} --version 2
-	v2_to_v3: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]
+	v2_to_v3: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]], STRING]
 			-- Conversion table from 2 to 3.
 	local
 		tmp: SCHEMA_EVOLUTION_DEFAULT_CONVERSION_FUNCTIONS
@@ -63,7 +63,7 @@ feature {NONE} --version 2
 	end
 
 feature {NONE} --version 3
-	v3_to_v4: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]
+	v3_to_v4: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]], STRING]
 			-- Conversion table from 3 to 4.
 	local
 		tmp: SCHEMA_EVOLUTION_DEFAULT_CONVERSION_FUNCTIONS
@@ -80,7 +80,7 @@ feature {NONE} --version 3
 	end
 
 feature {NONE} --version 4
-	v4_to_v5: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [ANY, TUPLE [LIST [ANY]], ANY]], STRING]
+	v4_to_v5: HASH_TABLE [TUPLE [LIST [STRING], FUNCTION [LIST [ANY], ANY]], STRING]
 			-- Conversion table from 4 to 5.
 	local
 		tmp: SCHEMA_EVOLUTION_DEFAULT_CONVERSION_FUNCTIONS

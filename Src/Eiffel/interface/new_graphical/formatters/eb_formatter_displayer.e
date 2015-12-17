@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE])
+	set_refresher (a_refresher: PROCEDURE)
 			-- Set `a_refresher' into Current, it serves as a refresher to be invoked to update Current displayer
 		do
 		end

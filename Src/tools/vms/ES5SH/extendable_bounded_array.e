@@ -448,7 +448,7 @@ feature -- Cursor movement
 			end
 		end
 
-	apply (a_agent: PROCEDURE[ANY,TUPLE[G]])
+	apply (a_agent: PROCEDURE[G])
 			--version of do_all which does not affect the state, so safe for recursion
 		local
 			 i: INTEGER

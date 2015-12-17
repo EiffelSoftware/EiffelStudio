@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Element change
 
-	register (a_socket: ZMQ_SOCKET; a_flag: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+	register (a_socket: ZMQ_SOCKET; a_flag: INTEGER; a_action: PROCEDURE)
 			-- Register `a_socket' to be polled for `a_flag'.
 		require
 			a_socket_exists: a_socket.exists
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	managed_pointer: MANAGED_POINTER
 			-- Storage for the poll entries.
 
-	actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	actions: ARRAYED_LIST [PROCEDURE]
 			-- Storage for actions associated to poll entries.
 
 	element_size: INTEGER

@@ -27,7 +27,7 @@ feature {PS_CRUD_TESTS}
 		end
 
 
-	test_crud_operations (object: G; update_operation: PROCEDURE [ANY, TUPLE [G]])
+	test_crud_operations (object: G; update_operation: PROCEDURE [G])
 			-- Tests all the CRUD operations on `object'
 			-- An update on object is done with `update_operation'.
 		local

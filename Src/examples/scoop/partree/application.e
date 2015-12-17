@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			lefty, righty: separate ADDER_LEAF
 			i: INTEGER
 			tre: ADDER_BRANCH
-			l_function: FUNCTION [APPLICATION, TUPLE[INTEGER, INTEGER], INTEGER]
+			l_function: FUNCTION [INTEGER, INTEGER, INTEGER]
 		do
 
 

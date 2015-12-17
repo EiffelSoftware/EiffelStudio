@@ -180,7 +180,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	restoration_callback: detachable FUNCTION [ANY, TUPLE [title: READABLE_STRING_GENERAL], SD_CONTENT]
+	restoration_callback: detachable FUNCTION [TUPLE [title: READABLE_STRING_GENERAL], SD_CONTENT]
 			-- Agent to use to attempt to retrieve a {SD_CONTENT} during restoration from a cached
 			-- layout file
 

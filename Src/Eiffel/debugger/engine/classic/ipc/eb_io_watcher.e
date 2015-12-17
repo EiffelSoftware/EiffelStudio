@@ -53,7 +53,7 @@ feature -- Access
 			is_destroyed: is_destroyed
 		end
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Callback feature called with the file/pipe is changed.
 		do
 			Result := implementation.action

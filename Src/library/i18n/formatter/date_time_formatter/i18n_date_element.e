@@ -17,7 +17,7 @@ create
 
 feature {I18N_FORMAT_STRING_PARSER} -- Initialization
 
-	make (a_date_action: FUNCTION[ANY,TUPLE[DATE],STRING_32])
+	make (a_date_action: FUNCTION[DATE,STRING_32])
 			-- creation procedure, make with `a_date_action' as action
 			-- when filled
 		require
@@ -28,7 +28,7 @@ feature {I18N_FORMAT_STRING_PARSER} -- Initialization
 
 feature {NONE} -- Action
 
-	date_action: FUNCTION[ANY,TUPLE[DATE],STRING_32]
+	date_action: FUNCTION[DATE,STRING_32]
 		-- action to apply
 
 feature --Output

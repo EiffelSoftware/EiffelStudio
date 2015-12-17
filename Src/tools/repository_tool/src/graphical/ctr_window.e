@@ -1071,7 +1071,7 @@ feature {NONE} -- Asynchronious operation
 
 	asynchronious_svn_tasks: detachable ARRAYED_LIST [REPOSITORY_SVN_DATA]
 
-	asynchronious_svn_tasks_scheduler_action: detachable PROCEDURE [ANY, TUPLE]
+	asynchronious_svn_tasks_scheduler_action: detachable PROCEDURE
 
 	check_asynchronious_svn_tasks
 		do

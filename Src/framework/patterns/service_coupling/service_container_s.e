@@ -67,7 +67,7 @@ feature -- Extension
 			container.register (a_type, a_service, a_promote)
 		end
 
-	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			container.register_with_activator (a_type, a_activator, a_promote)

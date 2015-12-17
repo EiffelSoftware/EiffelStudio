@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_condition_list (condition: attached like {CONF_CONDITION}.platform; get_name: FUNCTION [ANY, TUPLE [INTEGER], STRING]; name: READABLE_STRING_8)
+	append_condition_list (condition: attached like {CONF_CONDITION}.platform; get_name: FUNCTION [INTEGER, STRING]; name: READABLE_STRING_8)
 			-- Append condition of name `name' with values specified by `condition' with printable elements that can be obtained using `get_name'.
 		require
 			condition_attached: attached condition

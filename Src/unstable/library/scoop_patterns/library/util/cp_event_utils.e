@@ -9,7 +9,7 @@ class
 
 feature -- Status report
 
-	is_event_subscribed (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [ANY, D]): BOOLEAN
+	is_event_subscribed (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [D]): BOOLEAN
 			-- Is `action' subscribed?
 		do
 			Result := an_event.is_subscribed (action)
@@ -17,7 +17,7 @@ feature -- Status report
 
 feature -- Subscription
 
-	event_subscribe (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [ANY, D])
+	event_subscribe (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [D])
 			-- Subscribe to `an_event' with `action'.
 		require
 			not_subscribed: not an_event.is_subscribed (action)
@@ -25,7 +25,7 @@ feature -- Subscription
 			an_event.subscribe (action)
 		end
 
-	event_unsubscribe (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [ANY, D])
+	event_unsubscribe (an_event: separate CP_EVENT [D]; action: separate PROCEDURE [D])
 			-- Remove subscription  of `action' from `an_event'.
 		require
 			subscribed: an_event.is_subscribed (action)

@@ -276,7 +276,7 @@ feature{NONE} -- Implementation
 	on_pointer_right_click_agent_internal: like on_pointer_right_click_agent
 			-- Implementation of `on_pointer_right_click_agent'
 
-	on_color_or_font_change_agent: PROCEDURE [ANY, TUPLE]
+	on_color_or_font_change_agent: PROCEDURE
 			-- Agent of `on_color_or_font_change'
 		do
 			if on_color_or_font_change_agent_internal = Void then
@@ -287,7 +287,7 @@ feature{NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	on_scroll_behavior_change_agent: PROCEDURE [ANY, TUPLE]
+	on_scroll_behavior_change_agent: PROCEDURE
 			-- Agent of `on_scroll_behavior_change'
 		do
 			if on_scroll_behavior_change_agent_internal = Void then
@@ -298,7 +298,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	on_pointer_right_click_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
+	on_pointer_right_click_agent: PROCEDURE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]
 			-- Agent of `on_pointer_right_click'
 		do
 			if on_pointer_right_click_agent_internal = Void then
@@ -309,7 +309,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	context_menu_factory_function: FUNCTION [ANY, TUPLE, EB_CONTEXT_MENU_FACTORY]
+	context_menu_factory_function: FUNCTION [EB_CONTEXT_MENU_FACTORY]
 			-- Context menu factory agent.
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)

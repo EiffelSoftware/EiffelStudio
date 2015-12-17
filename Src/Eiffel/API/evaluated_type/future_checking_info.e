@@ -33,7 +33,7 @@ feature -- Access
 	context_class: CLASS_C
 			-- Class where the occurrence of generic type to be checked appears
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Action launched in context of current to check validity of constraint
 
 invariant

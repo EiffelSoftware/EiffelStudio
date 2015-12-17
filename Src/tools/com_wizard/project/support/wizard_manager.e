@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]];
+	event_raiser: ROUTINE [EV_THREAD_EVENT];
 			-- Agent used to raise events
 
 note

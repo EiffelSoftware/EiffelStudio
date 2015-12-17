@@ -61,7 +61,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
+	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [ agent displayer_generators.new_dependency_displayer, displayer_generators.dependency_displayer]

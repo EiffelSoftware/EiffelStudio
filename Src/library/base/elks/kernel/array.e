@@ -470,7 +470,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (action: PROCEDURE [G])
 			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -480,7 +480,7 @@ feature -- Iteration
 			area.do_all_in_bounds (action, 0, count - 1)
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN])
+	do_if (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -491,7 +491,7 @@ feature -- Iteration
 			area.do_if_in_bounds (action, test, 0, count - 1)
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	there_exists (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -499,7 +499,7 @@ feature -- Iteration
 			Result := area.there_exists_in_bounds (test, 0, count - 1)
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
@@ -507,7 +507,7 @@ feature -- Iteration
 			Result := area.for_all_in_bounds (test, 0, count - 1)
 		end
 
-	do_all_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]])
+	do_all_with_index (action: PROCEDURE [G, INTEGER])
 			-- Apply `action' to every item, from first to last.
 			-- `action' receives item and its index.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -530,7 +530,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index (action: PROCEDURE [ANY, TUPLE [G, INTEGER]]; test: FUNCTION [ANY, TUPLE [G, INTEGER], BOOLEAN])
+	do_if_with_index (action: PROCEDURE [G, INTEGER]; test: FUNCTION [G, INTEGER, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- `action' and `test' receive the item and its index.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;

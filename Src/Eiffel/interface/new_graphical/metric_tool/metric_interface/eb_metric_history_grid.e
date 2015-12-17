@@ -348,7 +348,7 @@ feature{NONE} -- Grid item generation
 			result_attached: Result /= Void
 		end
 
-	detailed_result_item (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]]): EV_GRID_LABEL_ITEM
+	detailed_result_item (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [EB_METRIC_ARCHIVE_NODE]): EV_GRID_LABEL_ITEM
 			-- Detailed result item
 			-- If `a_archive_node' containes detailed result, bind `a_go_to_result_action' to double click actions of returned item
 		require
@@ -498,7 +498,7 @@ feature{NONE} -- Item updator
 			a_item.set_text (a_archive_node.calculated_time.out)
 		end
 
-	update_detailed_result_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]])
+	update_detailed_result_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [EB_METRIC_ARCHIVE_NODE])
 			-- Update `a_item' with `a_archive_node'.
 		require
 			a_item_attached: a_item /= Void
@@ -793,7 +793,7 @@ feature{NONE} -- Implementation/Operations
 			end
 		end
 
-	change_row_selection_status (a_agent: FUNCTION [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE], BOOLEAN]; a_status: BOOLEAN)
+	change_row_selection_status (a_agent: FUNCTION [EB_METRIC_ARCHIVE_NODE, BOOLEAN]; a_status: BOOLEAN)
 			-- If archive node from `archive' satisfied by `a_aggent', change selection status of grid row which displays archive node to `a_status'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -837,7 +837,7 @@ feature{NONE} -- Implementation/Actions
 			a_archive_node.set_is_result_filtered (a_item.is_checked)
 		end
 
-	on_go_to_result (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_agent: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]])
+	on_go_to_result (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_agent: PROCEDURE [EB_METRIC_ARCHIVE_NODE])
 			-- Action to be performed to go invoke `a_agent' to show detailed result stored in `a_archive_node'
 		require
 			a_archive_node_attached: a_archive_node /= Void

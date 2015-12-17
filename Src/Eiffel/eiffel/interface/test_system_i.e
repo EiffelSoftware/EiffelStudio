@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	execute_safe (an_agent: PROCEDURE [ANY, TUPLE])
+	execute_safe (an_agent: PROCEDURE)
 		require
 			an_agent_attached: an_agent /= Void
 			an_agent_expects_not_operands: an_agent.valid_operands (Void)

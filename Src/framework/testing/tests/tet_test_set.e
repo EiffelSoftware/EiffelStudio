@@ -83,7 +83,7 @@ feature -- Access
 			-- <Precursor>
 		do
 			create Result.make (
-				agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+				agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 					do
 						Result := <<
 							[task_run_event, agent an_observer.on_task_run],

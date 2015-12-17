@@ -89,14 +89,14 @@ feature {EV_ANY_I} -- Implementation
 		-- Number of iterations before forcing Garbage Collector to kick in.
 		-- 30 Seconds = 30 * 1000 / sleep time
 
-	idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
+	idle_actions_snapshot: detachable SPECIAL [PROCEDURE]
 			-- Idle actions snapshot used for temporarily storing a copy of `idle_actions' during its iteration.
 		note
 			option: stable
 		attribute
 		end
 
-	kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE [ANY, TUPLE]]
+	kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE]
 			-- Kamikaze Idle actions snapshot used for temporarily storing a copy of `kamikaze_idle_actions' during its iteration.
 		note
 			option: stable
@@ -112,8 +112,8 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 			l_idle_actions_internal: like idle_actions_internal
 			l_idle_is_locked, l_kamikaze_is_locked: BOOLEAN
 			l_retry_count: INTEGER
-			l_idle_actions_snapshot: detachable SPECIAL [PROCEDURE [ANY, TUPLE]]
-			l_kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE [ANY, TUPLE]]
+			l_idle_actions_snapshot: detachable SPECIAL [PROCEDURE]
+			l_kamikaze_idle_actions_snapshot: detachable SPECIAL [separate PROCEDURE]
 			i, l_count: INTEGER
 		do
 			if l_retry_count = 0 then
@@ -255,7 +255,7 @@ feature {EV_APPLICATION, EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 		-- Are the idle actions currently being executed?
 		-- We need this flag to prevent recursive calls to idle actions from the GUI thread.
 
-	call_separate_action (a_action: separate PROCEDURE [ANY, TUPLE])
+	call_separate_action (a_action: separate PROCEDURE)
 			-- Execute `call' on 'a_action'.
 		do
 			a_action.call (Void)
@@ -482,7 +482,7 @@ feature -- Basic operation
 		require
 			a_widget_not_void: a_widget /= Void
 		local
-			an_help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+			an_help_context: detachable FUNCTION [EV_HELP_CONTEXT]
 		do
 			an_help_context := a_widget.help_context
 			if an_help_context /= Void then
@@ -490,7 +490,7 @@ feature -- Basic operation
 			end
 		end
 
-	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
+	add_idle_action (a_idle_action: PROCEDURE)
 			-- Extend `idle_actions' with `a_idle_action'.
 			-- Thread safe
 		require
@@ -503,7 +503,7 @@ feature -- Basic operation
 			idle_unlock
 		end
 
-	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (a_idle_action: PROCEDURE)
 			-- Remove `a_idle_action' from `idle_actions'
 			-- Thread safe
 		require
@@ -589,7 +589,7 @@ feature {NONE} -- Thread implementation
 
 feature -- Events
 
-	do_once_on_idle (an_action: separate PROCEDURE [ANY, TUPLE])
+	do_once_on_idle (an_action: separate PROCEDURE)
 			-- Perform `an_action' one time only on idle.
 		do
 			kamikaze_lock
@@ -741,7 +741,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY; a_configure_agent: detachable PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY; a_configure_agent: detachable PROCEDURE; a_menu_only: BOOLEAN)
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -753,9 +753,9 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_item_data: detachable EV_PND_TARGET_DATA
 			l_search_tree: detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
-			l_comparator_agent: PREDICATE [ANY, TUPLE [EV_PND_TARGET_DATA, EV_PND_TARGET_DATA]]
+			l_comparator_agent: PREDICATE [EV_PND_TARGET_DATA, EV_PND_TARGET_DATA]
 			l_arrayed_list: ARRAYED_LIST [EV_PND_TARGET_DATA]
-			l_alphabetical_sort_agent: PROCEDURE [ANY, TUPLE [PROCEDURE [ANY, TUPLE], BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]]
+			l_alphabetical_sort_agent: PROCEDURE [PROCEDURE, BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]
 			l_configurable_item_added: BOOLEAN
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
@@ -816,7 +816,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 				if l_search_tree /= Void then
 						-- Sort items alphabetically using recursive inline agent
-					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE [ANY, TUPLE]; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
+					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
 						do
 							if a_node /= Void then
 								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
@@ -1109,7 +1109,7 @@ feature {NONE} -- Implementation
  	old_pointer_button_press_actions: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
 
-	help_handler_procedure: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	help_handler_procedure: detachable PROCEDURE note option: stable attribute end
 			-- Help handler procedure associated with help accelerator
 
 	help_handler
@@ -1123,10 +1123,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	contextual_help_handler_procedure: detachable PROCEDURE [ANY, TUPLE]  note option: stable attribute end
+	contextual_help_handler_procedure: detachable PROCEDURE  note option: stable attribute end
 			-- Help handler procedure associated with context help accelerator
 
-	contextual_help_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	contextual_help_procedure: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			-- Called when mouse pointer is pressed while contextual help is enabled
 		once
 			Result := agent contextual_help

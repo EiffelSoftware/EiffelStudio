@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (name: STRING_8; c: ROUTINE [ANY, TUPLE])
+	make (name: STRING_8; c: ROUTINE)
 			-- Create Current
 		require else
 			make_pre_c: c /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			make_post_case_name: case_name = name
 		end
 
-	make_with_tag (name: STRING_8; c: ROUTINE [ANY, TUPLE]; expected_tag: STRING_8)
+	make_with_tag (name: STRING_8; c: ROUTINE; expected_tag: STRING_8)
 			-- Create Current
 		require
 			make_pre_c: c /= Void

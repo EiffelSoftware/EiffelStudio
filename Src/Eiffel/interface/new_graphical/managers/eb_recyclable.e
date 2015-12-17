@@ -32,7 +32,7 @@ feature -- Basic operations
 		local
 			l_pool: like internal_recycle_pool
 			l_recycle_actions: like internal_recycle_actions
-			l_action: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
+			l_action: TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; action: PROCEDURE]
 			l_recycled: ARRAYED_LIST [EB_RECYCLABLE]
 			l_recycling: BOOLEAN
 			l_compare: BOOLEAN
@@ -204,7 +204,7 @@ feature {ANY} -- Extension
 			recycle_pool_has_a_object: recycle_pool.has (a_object)
 		end
 
-	frozen delayed_auto_recycle (a_action: FUNCTION [ANY, TUPLE, ANY])
+	frozen delayed_auto_recycle (a_action: FUNCTION [ANY])
 			-- Automatically recycles of an object when Current is recycled of.
 			--
 			-- `a_action': The action to retrieve a object for when Current is recycled.
@@ -224,7 +224,7 @@ feature {ANY} -- Extension
 
 feature -- Agent assistance
 
-	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
+	register_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE)
 			-- Registers an action sequence and automatically pools it for later removal.
 			--
 			-- `a_sequence': Action sequence to extend an action on.
@@ -239,7 +239,7 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has (a_action)
 		end
 
-	register_kamikaze_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
+	register_kamikaze_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE)
 			-- Registers a single-execute action sequence and automatically pools it for later removal, if it was not used.
 			--
 			-- `a_sequence': Action sequence to extend an action on.
@@ -254,7 +254,7 @@ feature -- Agent assistance
 			a_sequence_has_action: a_sequence.has_kamikaze_action (a_action)
 		end
 
-	unregister_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE])
+	unregister_action (a_sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE)
 			-- Unregisters an action sequence and automatically pools it for later removal.
 			--
 			-- `a_sequence': Action sequence to remove an action on.
@@ -317,7 +317,7 @@ feature {NONE} -- Access
 			esult_consistent: Result = recycle_pool
 		end
 
-	frozen recycle_actions: ARRAYED_LIST [TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE [ANY, TUPLE]]]
+	frozen recycle_actions: ARRAYED_LIST [TUPLE [sequence: ACTION_SEQUENCE [TUPLE]; a_action: PROCEDURE]]
 			-- List of items to be automatically recycled when Current is recycled
 		require
 			is_interface_usable: is_interface_usable
@@ -385,7 +385,7 @@ feature {NONE} -- Query
 		require
 			a_object_attached: a_object /= Void
 		local
-			l_action: FUNCTION [ANY, TUPLE, ANY]
+			l_action: FUNCTION [ANY]
 		do
 			l_action ?= a_object
 			if l_action /= Void then

@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tweet_action: PROCEDURE [ANY, TUPLE [tweet: ES_TWEET]]
+	tweet_action: PROCEDURE [TUPLE [tweet: ES_TWEET]]
 			-- Action called when a new tweet is generated
 			--
 			-- 'tweet': A new tweet.

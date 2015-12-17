@@ -93,7 +93,7 @@ feature {NONE} -- Access
 		require
 			a_name_attached: a_name /= Void
 		local
-			l_function: FUNCTION [ANY, TUPLE [TEST_SUITE_S], detachable TEST_I]
+			l_function: FUNCTION [TEST_SUITE_S, detachable TEST_I]
 		do
 			l_function := agent (a_test_suite: TEST_SUITE_S; a_n: READABLE_STRING_32): detachable TEST_I
 				do

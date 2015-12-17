@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			create string.make_from_string_general (a_string)
 		end
 
-	meet_function: FUNCTION [ANY, TUPLE [G], BOOLEAN]
+	meet_function: FUNCTION [G, BOOLEAN]
 
 feature -- Status report
 

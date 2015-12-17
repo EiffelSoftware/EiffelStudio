@@ -151,13 +151,13 @@ feature -- Status setting
 			end
 		end
 
-	add_double_click_action (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_double_click_action (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a double click action `p' on `Current'.
 		do
 			pointer_double_press_actions.extend (p)
 		end
 
-	add_single_click_action (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_single_click_action (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a single click action `p' on `Current'.
 		do
 			pointer_button_press_actions.extend (p)

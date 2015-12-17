@@ -98,7 +98,7 @@ feature -- Access
 	starting_element_group: QL_GROUP
 			-- Group in which `starting_element_group' locates
 
-	post_row_bind_action_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [EV_GRID_ROW]], INTEGER]
+	post_row_bind_action_table: HASH_TABLE [PROCEDURE [EV_GRID_ROW], INTEGER]
 			-- Table of action to be performed after a row whose level index is specified by key of the table has been binded into `grid'.
 
 	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
@@ -598,7 +598,7 @@ feature{NONE} -- Grid binding
 	should_level_be_expanded (a_level_index: INTEGER): BOOLEAN
 			-- Should level indexed by `a_level_index' be expanded by default?
 		local
-			l_expansion_table: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], INTEGER]
+			l_expansion_table: HASH_TABLE [FUNCTION [BOOLEAN], INTEGER]
 		do
 			create l_expansion_table.make (4)
 			l_expansion_table.put (agent: BOOLEAN do Result := True end, 1)
@@ -628,7 +628,7 @@ feature{NONE} -- Grid binding
 			l_starting_column: INTEGER
 			l_row, l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_grid_has_been_binded_for_current_data: BOOLEAN
-			l_post_row_bind_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+			l_post_row_bind_action: PROCEDURE [EV_GRID_ROW]
 			l_row_count: INTEGER
 		do
 			l_rows := a_level.children

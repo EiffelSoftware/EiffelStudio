@@ -148,7 +148,7 @@ feature --Access
 	value: ANY
 			-- The value to check for
 
-	my_agent: PREDICATE [ANY, TUPLE [ANY]]
+	my_agent: PREDICATE [ANY]
 			-- Used if the predefined queries cannot be executed by the database.
 
 feature -- Predefined Operators

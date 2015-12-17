@@ -111,10 +111,10 @@ feature {NONE} -- Context
 	context_class: CLASS_C
 			-- Class in which search is performed
 
-	feature_in_class: FUNCTION [ANY, TUPLE [CLASS_C], detachable FEATURE_I]
+	feature_in_class: FUNCTION [CLASS_C, detachable FEATURE_I]
 			-- Lookup procedure for {CL_TYPE_A}
 
-	find_in_renamed_type_a: PROCEDURE [TYPE_A_FEATURE_FINDER, TUPLE [RENAMED_TYPE_A]]
+	find_in_renamed_type_a: PROCEDURE [RENAMED_TYPE_A]
 			-- Lookup procedure for {RENAMED_TYPE_A}
 
 	formal_generics: detachable ARRAYED_LIST [FORMAL_A]

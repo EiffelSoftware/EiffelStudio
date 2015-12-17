@@ -95,7 +95,7 @@ feature -- output
 			text_formatter_visitor.append_arguments (application_status.current_call_stack_element, tty_output)
 		end
 
-	display_breakpoints (on_select_proc: PROCEDURE [ANY, TUPLE [BREAKPOINT]]; a_proc_message: STRING)
+	display_breakpoints (on_select_proc: PROCEDURE [BREAKPOINT]; a_proc_message: STRING)
 			-- Display on breakpoints
 		local
 			bl: BREAK_LIST
@@ -189,8 +189,8 @@ feature -- Interaction
 
 	dbg_running_menu: EWB_TTY_MENU
 		local
-			ag_is_stopped: FUNCTION [ANY, TUPLE, BOOLEAN]
-			ag_is_executing: FUNCTION [ANY, TUPLE, BOOLEAN]
+			ag_is_stopped: FUNCTION [BOOLEAN]
+			ag_is_executing: FUNCTION [BOOLEAN]
 		do
 			Result := internal_dbg_running_menu
 			if Result = Void then

@@ -68,7 +68,7 @@ feature -- Status setting
 			is_path_set: is_path_set
 		end
 
-	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [PATH]])
+	set_one_file_searched_action (action: PROCEDURE [PATH])
 			-- Set action for invokation one a file searched
 		require
 			action_not_void: action /= Void
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 	directory_strategy: MSR_SEARCH_DIRECTORY_STRATEGY
 			-- Directory strategy used for directory recursively searching
 
-	one_file_searched_internal: PROCEDURE [ANY, TUPLE [PATH]]
+	one_file_searched_internal: PROCEDURE [PATH]
 			-- Invokes once one file searched
 
 invariant

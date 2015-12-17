@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	history_item_output_function: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
+	history_item_output_function: FUNCTION [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
 			-- Function to get output representation of a specified item
 			-- For example, for an item "name", we may want to get "<name>"
 

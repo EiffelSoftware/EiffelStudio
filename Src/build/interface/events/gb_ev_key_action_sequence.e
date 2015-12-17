@@ -28,7 +28,7 @@ feature -- Access
 			Result.extend ("a_key")
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [EV_KEY]]
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [EV_KEY]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.

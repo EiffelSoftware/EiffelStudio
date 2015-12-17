@@ -271,7 +271,7 @@ feature -- Preparation and cleanup
 
 feature -- Sorting
 
-	sort (a_test_agent: FUNCTION [ANY, TUPLE [item_a: like item_type; item_b: like item_type], BOOLEAN])
+	sort (a_test_agent: FUNCTION [TUPLE [item_a: like item_type; item_b: like item_type], BOOLEAN])
 			-- Use `a_test_agent' to sort current.
 		require
 			a_test_agent_attached: a_test_agent /= Void

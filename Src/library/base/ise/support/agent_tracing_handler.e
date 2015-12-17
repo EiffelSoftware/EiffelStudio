@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action: PROCEDURE [ANY, TUPLE [type: TYPE [detachable ANY]; class_name, feature_name: detachable STRING; depth: INTEGER; is_entering: BOOLEAN]]
+	action: PROCEDURE [TUPLE [type: TYPE [detachable ANY]; class_name, feature_name: detachable STRING; depth: INTEGER; is_entering: BOOLEAN]]
 			-- Action being performed each time `trace' is called
 
 feature -- Tracing

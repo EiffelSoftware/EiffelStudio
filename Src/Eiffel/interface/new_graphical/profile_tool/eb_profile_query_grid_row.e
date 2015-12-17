@@ -80,7 +80,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		-- Percentage of time spent in the function and the descendants.
 		-- If `type' is 2 or 3 this is a cumulative value of all subrows.
 
-	display_agent: PROCEDURE [ANY, TUPLE]
+	display_agent: PROCEDURE
 		-- An agent to display `Current' in a grid.
 
 	feature_grid_item: EV_GRID_DRAWABLE_ITEM
@@ -242,7 +242,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			percentage_grid_item := a_percentage_grid_item
 		end
 
-	set_display_agent (a_display_agent: PROCEDURE [ANY, TUPLE])
+	set_display_agent (a_display_agent: PROCEDURE)
 			-- Assign `a_display_agent' to `Current'.
 		require
 			a_display_agent_not_void: a_display_agent /= Void

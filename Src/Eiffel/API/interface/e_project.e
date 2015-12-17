@@ -65,8 +65,8 @@ feature -- Initialization
 		base_dir: DIRECTORY;
 		a_project_location: PROJECT_DIRECTORY
 		deletion_requested: BOOLEAN
-		deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+		deletion_agent: PROCEDURE [LIST [READABLE_STRING_GENERAL]]
+		cancel_agent: FUNCTION [BOOLEAN]
 	)
 			-- Create an Eiffel Project.
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
@@ -632,8 +632,8 @@ feature -- Update
 		end
 
 	delete_generation_directory (
-			base_name: PATH; deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]];
-			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
+			base_name: PATH; deletion_agent: PROCEDURE [LIST [READABLE_STRING_GENERAL]];
+			cancel_agent: FUNCTION [BOOLEAN])
 
 			-- Delete then EIFFEL generated directory named `base_name'.
 			--
@@ -1004,7 +1004,7 @@ feature {NONE} -- Implementation
 			compiler_objects_not_void: Result /= Void
 		end
 
-	exit_agent: PROCEDURE [ANY, TUPLE]
+	exit_agent: PROCEDURE
 			-- Optional procedure that should be called when an error occurs and
 			-- `exit_on_error' is set.
 

@@ -42,7 +42,7 @@ feature -- Mapping helper: uri template
 
 feature -- Mapping helper: uri template agent
 
-	map_uri_template_agent (a_tpl: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template_agent (a_tpl: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_tpl', according to `rqst_methods'.
 		require
 			a_tpl_attached: a_tpl /= Void
@@ -51,7 +51,7 @@ feature -- Mapping helper: uri template agent
 			map_uri_template (a_tpl, create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (proc), rqst_methods)
 		end
 
-	map_uri_template_agent_with_request_methods (a_tpl: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template_agent_with_request_methods (a_tpl: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_tpl' for request methods `rqst_methods'.
 		obsolete
 			"Use directly `map_uri_template_agent' [June/2015]"

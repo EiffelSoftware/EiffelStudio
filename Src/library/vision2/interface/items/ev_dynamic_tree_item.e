@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	subtree_function: detachable FUNCTION [ANY, TUPLE, LINEAR [EV_TREE_NODE]]
+	subtree_function: detachable FUNCTION [LINEAR [EV_TREE_NODE]]
 			-- Function be be executed to fill `Current' with items of
 			-- type EV_TREE_NODE.
 

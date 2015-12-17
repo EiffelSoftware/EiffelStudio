@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS)
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [STRING]; a_validate_agent: FUNCTION [STRING, BOOLEAN]; multiple_line_text_entry: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -140,7 +140,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
 feature {NONE} -- Implementation
 
-	execution_agent: PROCEDURE [ANY, TUPLE [STRING]]
+	execution_agent: PROCEDURE [STRING]
 		-- Agent to execute command associated with value entered into `Current'.
 
 	text_entry: EV_TEXT_COMPONENT
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
 
-	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	validate_agent: FUNCTION [STRING, BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
 	execute_agent (new_value: STRING)
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN])
+	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [STRING]; a_validate_agent: FUNCTION [STRING, BOOLEAN])
 			-- Initialize text field for entry.
 		require
 			a_parent_not_void: a_parent /= Void

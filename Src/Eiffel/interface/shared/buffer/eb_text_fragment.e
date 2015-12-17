@@ -50,10 +50,10 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normalized_text_function: FUNCTION [ANY, TUPLE [a_text: like text], like normalized_text]
+	normalized_text_function: FUNCTION [TUPLE [a_text: like text], like normalized_text]
 			-- Function to return normalized representation of `a_text'
 
-	text_validity_function: FUNCTION [ANY, TUPLE [a_text: like text], BOOLEAN]
+	text_validity_function: FUNCTION [TUPLE [a_text: like text], BOOLEAN]
 			-- Function to test if `a_text' is valid for current replacer
 			-- If set, `is_text_valid' will return the return valid of this function,
 			-- otherwise, the original result from `is_text_valid' is used.

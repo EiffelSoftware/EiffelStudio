@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 	end_token: STRING = "]"
 			-- End token character(s)
 
-	token_commands: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING, STRING]], STRING]
+	token_commands: HASH_TABLE [PROCEDURE [STRING, STRING], STRING]
 			-- Hash table of [processing agent (source_line, token_name), token name]
 		do
 			create Result.make (1)

@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			l_string: STRING
 			l_result: BOOLEAN
 		do
-			if message_information /= Void and then attached {FUNCTION [ANY, TUPLE [STRING], BOOLEAN]} interface.external_command_action as lt_action then
+			if message_information /= Void and then attached {FUNCTION [STRING, BOOLEAN]} interface.external_command_action as lt_action then
 				l_wel_string := command_string (message_information.l_param)
 					-- |Fixme: Causes information loss doing as_string_8.
 				l_string := l_wel_string.string.as_string_8

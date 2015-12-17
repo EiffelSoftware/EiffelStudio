@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 	default_retries: INTEGER = 2
 			-- The default retries for implicit transaction handling, if there is a transaction conflict.
 
-	execute_within_implicit_transaction (action: PROCEDURE [ANY, TUPLE [PS_INTERNAL_TRANSACTION]]; readonly: BOOLEAN)
+	execute_within_implicit_transaction (action: PROCEDURE [PS_INTERNAL_TRANSACTION]; readonly: BOOLEAN)
 			-- This function will execute `action' with implicit transaction handling
 			-- It will retry `action' `Current.default_retries' times if there's a transaction conflict,
 			-- and then raise a `PS_TRANSACTION_ABORTED_ERROR' error.
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	handle_error_on_action (action: PROCEDURE [ANY, TUPLE]; transaction: PS_INTERNAL_TRANSACTION)
+	handle_error_on_action (action: PROCEDURE; transaction: PS_INTERNAL_TRANSACTION)
 			-- This function will try the repository operation `action' and catch any error.
 			-- In case of a conflict between transactions, it will abort `transaction' and return normally.
 			-- In every other case of errors it will abort `transaction' and raise an exception.

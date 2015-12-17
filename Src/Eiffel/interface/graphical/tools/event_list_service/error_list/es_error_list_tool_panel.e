@@ -1005,7 +1005,7 @@ feature {NONE} -- Fixing
 			end
 		end
 
-	fix_undo_promt (action: PROCEDURE [ANY, TUPLE])
+	fix_undo_promt (action: PROCEDURE)
 			-- Raise a discardable prompt about performing fixes by `action' with the description of "undo" behaviour.
 		local
 			p: ES_DISCARDABLE_WARNING_PROMPT
@@ -1016,7 +1016,7 @@ feature {NONE} -- Fixing
 				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False))
 			p.set_button_action
 				(p.default_confirm_button,
-				agent (a: PROCEDURE [ANY, TUPLE])
+				agent (a: PROCEDURE)
 					do
 							-- Perform original action.
 						a.call
@@ -1558,7 +1558,7 @@ feature {NONE} -- Factory
 			filter_button_attached: filter_button /= Void
 		end
 
-	create_clickable_tooltip (a_lines: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
+	create_clickable_tooltip (a_lines: FUNCTION [LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
 			-- <Precursor>
 		local
 			l_just_created: BOOLEAN

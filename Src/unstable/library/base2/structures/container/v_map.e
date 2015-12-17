@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Search
 
-	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
+	key_equivalence: PREDICATE [K, K]
 			-- Key equivalence relation.
 		deferred
 		end
@@ -41,11 +41,11 @@ feature -- Search
 			definition: Result = map.domain.exists (agent equivalent (k, ?))
 		end
 
-	exists_key (pred: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
+	exists_key (pred: PREDICATE [K]): BOOLEAN
 			-- Is there a key that satisfies `pred'?
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
+			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [K]): BOOLEAN
 				do
 					Result := p.precondition ([k])
 				end (?, pred))
@@ -65,11 +65,11 @@ feature -- Search
 			definition: Result = map.domain.exists (pred)
 		end
 
-	for_all_keys (pred: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
+	for_all_keys (pred: PREDICATE [K]): BOOLEAN
 			-- Do all keys satisfy `pred'?
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [ANY, TUPLE [K]]): BOOLEAN
+			precondition_satisfied: map.domain.for_all (agent (k: K; p: PREDICATE [K]): BOOLEAN
 				do
 					Result := p.precondition ([k])
 				end (?, pred))

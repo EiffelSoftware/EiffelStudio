@@ -191,13 +191,13 @@ feature {PS_ABEL_EXPORT} -- Deletion management
 			end
 		end
 
-	register_for_deletion_event (action: PROCEDURE [ANY, TUPLE [INTEGER]])
+	register_for_deletion_event (action: PROCEDURE [INTEGER])
 			-- Register `action' and call it every time an object gets deleted
 		do
 			subscribers.extend (action)
 		end
 
-	subscribers: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
+	subscribers: LINKED_LIST [PROCEDURE [INTEGER]]
 			-- A list of all subscribers interested in deletion events
 
 feature {PS_ABEL_EXPORT} -- Utilities

@@ -1033,7 +1033,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 			end
 		end
 
-	on_runtime_module_registration_action: PROCEDURE [ANY, TUPLE [ICOR_DEBUG_MODULE]]
+	on_runtime_module_registration_action: PROCEDURE [ICOR_DEBUG_MODULE]
 
 	set_on_runtime_module_registration_action (p: like 	on_runtime_module_registration_action)
 		do

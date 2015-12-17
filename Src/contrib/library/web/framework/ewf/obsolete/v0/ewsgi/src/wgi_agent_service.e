@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	callback: PROCEDURE [ANY, TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]]
+	callback: PROCEDURE [TUPLE [req: WGI_REQUEST; res: WGI_RESPONSE]]
 			-- Procedure called on `execute'
 
 	execute (req: WGI_REQUEST; res: WGI_RESPONSE)

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action_list: LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
+	action_list: LIST [FUNCTION [G, G, INTEGER, BOOLEAN]]
 			-- Action performed to compare two non-void items.
 
 	sorting_order_list: LIST [INTEGER]
@@ -63,7 +63,7 @@ feature -- Access
 			i: INTEGER
 			l_count: INTEGER
 			l_item: INTEGER
-			l_action_tbl: HASH_TABLE [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN], INTEGER]
+			l_action_tbl: HASH_TABLE [FUNCTION [G, G, INTEGER, BOOLEAN], INTEGER]
 			l_order_tbl: HASH_TABLE [INTEGER, INTEGER]
 		do
 			l_index_list := column_index_list
@@ -84,7 +84,7 @@ feature -- Access
 				sorting_order_list.forth
 			end
 
-			create {ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]} l_action_list.make (l_count)
+			create {ARRAYED_LIST [FUNCTION [G, G, INTEGER, BOOLEAN]]} l_action_list.make (l_count)
 			create {ARRAYED_LIST [INTEGER]} l_order_list.make (l_count)
 			from
 				i := 1
@@ -110,7 +110,7 @@ feature -- Status report
 			l_tuple1, l_tuple2: TUPLE [a: G; b: G; sorting_order: INTEGER]
 			l_action_list: like action_list
 			l_sorting_order_list: like sorting_order_list
-			l_item: FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]
+			l_item: FUNCTION [G, G, INTEGER, BOOLEAN]
 			l_column_order: INTEGER
 			done: BOOLEAN
 		do

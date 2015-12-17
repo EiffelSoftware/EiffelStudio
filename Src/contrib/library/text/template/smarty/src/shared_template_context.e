@@ -14,7 +14,7 @@ feature {NONE} -- Template context
 			create Result.make
 		end
 
-	template_custom_action_by_id (a_id: detachable STRING): detachable FUNCTION [ANY, TUPLE [STRING, STRING_TABLE [STRING]], STRING]
+	template_custom_action_by_id (a_id: detachable STRING): detachable FUNCTION [STRING, STRING_TABLE [STRING], STRING]
 		do
 			if a_id /= Void then
 				Result := template_context.template_custom_actions.item (a_id)

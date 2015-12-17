@@ -488,7 +488,7 @@ feature {NONE} -- Factory
 			l_set_object: BOOLEAN
 			l_existing_load_agents: ACTION_SEQUENCE [TUPLE]
 			l_load_agents: ACTION_SEQUENCE [TUPLE]
-			l_load_agent: PROCEDURE [ANY, TUPLE]
+			l_load_agent: PROCEDURE
 		do
 			l_set_object := True
 
@@ -548,7 +548,7 @@ feature {NONE} -- Factory
 								-- with no project loaded, then the window is closed and then project is opened, the agent
 								-- will still be called. We cannot have this.
 							l_disposable.automation.notify_on_disposing (
-								agent (ia_load_agents: ACTION_SEQUENCE [TUPLE]; ia_agent: PROCEDURE [ANY, TUPLE])
+								agent (ia_load_agents: ACTION_SEQUENCE [TUPLE]; ia_agent: PROCEDURE)
 									do
 										ia_load_agents.prune (ia_agent)
 									end (l_load_agents,l_load_agent))

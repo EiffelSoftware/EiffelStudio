@@ -686,7 +686,7 @@ feature {NONE} -- Recyclable
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 		end
 
-	setup_accelerators_agent: PROCEDURE [ANY, TUPLE]
+	setup_accelerators_agent: PROCEDURE
 
 feature {NONE} -- Action handlers
 

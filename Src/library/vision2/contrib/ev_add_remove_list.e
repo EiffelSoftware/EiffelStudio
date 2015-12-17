@@ -103,10 +103,10 @@ feature -- Setting
 
 feature {NONE} -- Implementation: access
 
-	is_entry_valid: detachable FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN] note option: stable attribute end
+	is_entry_valid: detachable FUNCTION [STRING_32, BOOLEAN] note option: stable attribute end
 			-- Check if new entry is valid before adding it.
 
-	display_error_message: detachable PROCEDURE [ANY, TUPLE [STRING_32]] note option: stable attribute end
+	display_error_message: detachable PROCEDURE [STRING_32] note option: stable attribute end
 			-- Display error message when entry is not valid.
 
 	add_button, apply_button, remove_button: detachable EV_BUTTON note option: stable attribute end

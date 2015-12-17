@@ -11,7 +11,7 @@ inherit
 
 feature -- Action
 
-	run_test (a_agent: PROCEDURE [ANY, TUPLE])
+	run_test (a_agent: PROCEDURE)
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		local

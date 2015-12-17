@@ -130,7 +130,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
+	new_value_criterion (a_evaluate_value_func: FUNCTION [QL_ITEM, BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void

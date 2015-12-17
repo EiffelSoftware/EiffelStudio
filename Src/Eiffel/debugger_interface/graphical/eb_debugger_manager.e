@@ -2257,7 +2257,7 @@ feature {NONE} -- Implementation
 
 	new_std_cmd (a_menu_name: STRING_GENERAL; a_pixmap: EV_PIXMAP;
 					a_shortcut_pref: SHORTCUT_PREFERENCE; a_use_acc: BOOLEAN;
-					a_action: PROCEDURE [ANY, TUPLE]): EB_STANDARD_CMD
+					a_action: PROCEDURE): EB_STANDARD_CMD
 		local
 			l_cmd: EB_STANDARD_CMD
 			l_acc: EV_ACCELERATOR

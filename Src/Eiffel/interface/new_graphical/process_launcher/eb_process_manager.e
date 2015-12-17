@@ -121,7 +121,7 @@ feature -- Execution
 			terminate_external_command
 		end
 
-	confirm_process_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
+	confirm_process_termination (ok_agent, no_agent: PROCEDURE; a_window: EV_WINDOW)
 			-- Confirm if user want to terminate running c compilation.
 		require
 			a_window_not_void: a_window /= Void
@@ -141,7 +141,7 @@ feature -- Execution
 			end
 		end
 
-	confirm_process_termination_for_quiting (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
+	confirm_process_termination_for_quiting (ok_agent, no_agent: PROCEDURE; a_window: EV_WINDOW)
 			-- Confirm if user want to exit EiffelStudio when c compilation or external command is running.
 		require
 			a_window_not_void: a_window /= Void
@@ -166,7 +166,7 @@ feature -- Execution
 			end
 		end
 
-	confirm_external_command_termination (ok_agent, no_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
+	confirm_external_command_termination (ok_agent, no_agent: PROCEDURE; a_window: EV_WINDOW)
 			-- Confirm running external command termination before destroy a development window.
 		require
 			a_window_not_void: a_window /= Void

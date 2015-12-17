@@ -75,7 +75,7 @@ feature {NONE} -- update
 
 feature {NONE} -- Implementation Properties
 
-	update_on_idle_agent: PROCEDURE [ANY, TUPLE]; --TUPLE [BOOLEAN]]
+	update_on_idle_agent: PROCEDURE; --TUPLE [BOOLEAN]]
 			-- Procedure used in the update on idle mecanism
 
 	real_update_on_idle_called_on_stopped: BOOLEAN

@@ -30,7 +30,7 @@ create
 
 feature -- Init
 
-	make (a_group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP])
+	make (a_group_callback: FUNCTION [CONF_GROUP])
 			-- Initialize
 		require
 			a_group_callback_not_void: a_group_callback /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- GUI
 
 feature {NONE} -- Implementation
 
-	group_internal: FUNCTION [ANY, TUPLE, CONF_GROUP]
+	group_internal: FUNCTION [CONF_GROUP]
 
 	update_buttons
 			-- Enable or disable sensitivity of `Apply', `Add'

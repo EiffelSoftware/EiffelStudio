@@ -90,13 +90,13 @@ feature -- Aspects
 			Precursor
 		end
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE)
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (
 				msg, Void, a_action, Void)
 		end
 
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
+	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE;
 			a_button_count: INTEGER; a_pref_string: STRING)
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT

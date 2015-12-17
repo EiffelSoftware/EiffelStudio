@@ -291,11 +291,11 @@ feature {NONE} -- Save
 			end
 		end
 
-	save_and (a_pro: PROCEDURE [ANY, TUPLE])
+	save_and (a_pro: PROCEDURE)
 			-- Save and do.
 		local
 			l_warning_dlg: EV_CONFIRMATION_DIALOG
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+			actions: ARRAY [PROCEDURE]
 		do
 			if text_changed then
 				actions := <<agent on_save, a_pro>>

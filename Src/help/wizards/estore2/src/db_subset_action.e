@@ -24,7 +24,7 @@ feature -- Access
 	valid_values: LIST [H]
 			-- Valid values for a database object criterion value.
 
-	extract_function: FUNCTION [ANY, TUPLE [G], H]
+	extract_function: FUNCTION [G, H]
 			-- Function to extract criterion value from a database result object.
 
 feature -- Element change
@@ -40,7 +40,7 @@ feature -- Element change
 			valid_values_assigned: valid_values = a_valid_values
 		end
 
-	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H])
+	set_extract_function (a_extract_function: FUNCTION [G, H])
 			-- Assign `a_extract_function' to `extract_function'.
 		require
 			not_void: a_extract_function /= Void

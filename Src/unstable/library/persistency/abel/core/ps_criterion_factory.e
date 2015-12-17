@@ -54,7 +54,7 @@ feature -- Creating a criterion
 		require
 			well_formed: is_agent (tuple) or is_predefined (tuple)
 		do
-			if attached {TUPLE [predicate: PREDICATE [detachable ANY, detachable TUPLE]]} tuple as agent_tuple then
+			if attached {TUPLE [predicate: PREDICATE [detachable TUPLE]]} tuple as agent_tuple then
 				Result := new_agent (agent_tuple.predicate)
 			else
 				check from_precondition: attached {TUPLE [attr: STRING; operator: STRING; value: ANY]} tuple as predefined_tuple then
@@ -63,7 +63,7 @@ feature -- Creating a criterion
 			end
 		end
 
-	new_agent (a_predicate: PREDICATE [detachable ANY, detachable TUPLE]): PS_CRITERION
+	new_agent (a_predicate: PREDICATE [detachable TUPLE]): PS_CRITERION
 			-- Creates a criterion with a predicate acting as a filter.
 		do
 			create {PS_AGENT_CRITERION} Result.make (a_predicate)
@@ -85,7 +85,7 @@ feature -- Preconditions
 	is_agent (tuple: TUPLE [ANY]): BOOLEAN
 			-- Does `tuple' correspond to the format for agents?
 		do
-			Result := attached {TUPLE [PREDICATE [detachable ANY, detachable TUPLE]]} tuple
+			Result := attached {TUPLE [PREDICATE [detachable TUPLE]]} tuple
 		end
 
 	is_predefined (tuple: TUPLE [ANY]): BOOLEAN

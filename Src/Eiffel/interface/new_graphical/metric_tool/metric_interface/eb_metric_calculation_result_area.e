@@ -301,7 +301,7 @@ feature{NONE} -- Implementation/Access
 	maximize_result_btn: EV_TOOL_BAR_BUTTON
 			-- Button to maximize/restore result grid
 
-	maximize_result_preference_change_agent: PROCEDURE [ANY, TUPLE]
+	maximize_result_preference_change_agent: PROCEDURE
 			-- Agent of `on_maximize_result_preference_change'
 
 feature -- Refresh

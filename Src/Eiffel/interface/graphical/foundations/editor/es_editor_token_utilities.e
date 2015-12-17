@@ -259,7 +259,7 @@ feature -- Query
 
 feature -- Query
 
-	previous_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, like token_line_data, BOOLEAN]): like next_token
+	previous_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [like token_line_data, BOOLEAN]): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -339,7 +339,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	previous_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
+	previous_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
 			-- Searches for the previous token given a start token and line. A predicate can be used to
 			-- locate special tokens or else the previous text token will be located.
 			--
@@ -356,7 +356,7 @@ feature -- Query
 			a_predicate_attached: a_predicate /= Void
 		do
 			Result := previous_token (a_token, a_line, a_skip_ws, a_finish_token,
-				agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE; ia_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
+				agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE; ia_predicate: FUNCTION [TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
 					do
 						Result := ia_predicate.item ([ia_token])
 					end (?, ?, a_predicate))
@@ -366,7 +366,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	next_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [ANY, like token_line_data, BOOLEAN]): detachable like token_line_data
+	next_token (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: detachable FUNCTION [like token_line_data, BOOLEAN]): detachable like token_line_data
 			-- Searches for the next token given a start token and line. A predicate can be used to locate
 			-- special tokens or else the next text token will be located.
 			--
@@ -441,7 +441,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-	next_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
+	next_token_simplified (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE; a_skip_ws: BOOLEAN; a_finish_token: detachable EDITOR_TOKEN; a_predicate: FUNCTION [TUPLE [token: EDITOR_TOKEN], BOOLEAN]): like next_token
 			-- Searches for the next token given a start token and line. A predicate can be used to locate
 			-- special tokens or else the next text token will be located.
 			--
@@ -458,7 +458,7 @@ feature -- Query
 			a_line_has_a_token: a_line.has_token (a_token)
 		do
 			Result := next_token (a_token, a_line, a_skip_ws, a_finish_token,
-				agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE; ia_predicate: FUNCTION [ANY, TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
+				agent (ia_token: EDITOR_TOKEN; ia_line: EDITOR_LINE; ia_predicate: FUNCTION [TUPLE [token: EDITOR_TOKEN], BOOLEAN]): BOOLEAN
 					do
 						Result := ia_predicate.item ([ia_token])
 					end (?, ?, a_predicate))

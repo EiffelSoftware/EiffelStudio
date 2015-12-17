@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (o: PREDICATE [ANY, TUPLE [G, G]])
+	make (o: PREDICATE [G, G])
 			-- Create an empty set with elements order `o'.
 		require
 			--- o_is_total: o.precondition |=| True
@@ -92,7 +92,7 @@ feature -- Search
 			end
 		end
 
-	order: PREDICATE [ANY, TUPLE [G, G]]
+	order: PREDICATE [G, G]
 			-- Order relation on values.
 
 	less_equal (x, y: G): BOOLEAN
@@ -103,7 +103,7 @@ feature -- Search
 			definition: Result = order.item ([x, y])
 		end
 
-	equivalence: PREDICATE [ANY, TUPLE [G, G]]
+	equivalence: PREDICATE [G, G]
 			-- Equivalence relation derived from `less_order'.	
 		do
 			Result := agent (x, y: G): BOOLEAN

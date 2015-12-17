@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	generate (dirs: LIST [PATH]; a_output: PATH; a_cond: detachable FUNCTION [ANY, TUPLE [PATH], BOOLEAN]; args: ECF_INTEGRATION_APPLICATION_ARGUMENTS)
+	generate (dirs: LIST [PATH]; a_output: PATH; a_cond: detachable FUNCTION [PATH, BOOLEAN]; args: ECF_INTEGRATION_APPLICATION_ARGUMENTS)
 		local
 			tb: like new_ecf_table
 			dv: ECF_DIRECTORY_CUSTOM_ITERATOR
@@ -230,7 +230,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	collect_ecf (a_fn: PATH; a_cond: detachable FUNCTION [ANY, TUPLE [PATH], BOOLEAN]; a_tb: like new_ecf_table)
+	collect_ecf (a_fn: PATH; a_cond: detachable FUNCTION [PATH, BOOLEAN]; a_tb: like new_ecf_table)
 		local
 			fn: STRING_GENERAL
 			--lst: like segments_from_string

@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	timeout_connection_id: NATURAL_32
 		-- GTK handle on timeout connection.
 
-	timeout_agent_internal: detachable PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE] note option: stable attribute end
+	timeout_agent_internal: detachable PROCEDURE note option: stable attribute end
 		-- Reusable agent used for connecting timeout to gtk implementation.
 
 feature {EV_ANY_I} -- Implementation

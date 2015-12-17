@@ -203,13 +203,13 @@ feature {NONE} -- Vision2 events
 			end
 		end
 
-	on_class_add: PROCEDURE [ANY, TUPLE [CLASS_I]]
+	on_class_add: PROCEDURE [CLASS_I]
 
-	on_cluster_add: PROCEDURE [ANY, TUPLE [CONF_GROUP]]
+	on_cluster_add: PROCEDURE [CONF_GROUP]
 
-	on_folder_add: PROCEDURE [ANY, TUPLE [EB_FOLDER]]
+	on_folder_add: PROCEDURE [EB_FOLDER]
 
-	on_target_add: PROCEDURE [ANY, TUPLE [CONF_TARGET]]
+	on_target_add: PROCEDURE [CONF_TARGET]
 
 	on_ok
 			-- Terminate the dialog and clear the selection.

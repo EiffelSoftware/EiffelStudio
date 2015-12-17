@@ -248,7 +248,7 @@ feature -- Basic operations
 
 feature -- Actions
 
-	on_open_new_archive (a_selection_agent: PROCEDURE [ANY, TUPLE])
+	on_open_new_archive (a_selection_agent: PROCEDURE)
 			-- Action to be performed to open a dialog to select a file name when create/update a metric archive
 			-- When user press "OK" in `open_file_dialog', `a_selection_agent' will be invoked.
 		require
@@ -265,7 +265,7 @@ feature -- Actions
 			new_archive_file_name_text.set_text (open_file_dialog.full_file_path.name)
 		end
 
-	on_new_archive_file_name_changes (a_timer: EV_TIMEOUT; a_text_field: EV_TEXT_FIELD; a_agent: PROCEDURE [ANY, TUPLE [BOOLEAN, BOOLEAN, LIST [EB_METRIC_ARCHIVE_NODE]]])
+	on_new_archive_file_name_changes (a_timer: EV_TIMEOUT; a_text_field: EV_TEXT_FIELD; a_agent: PROCEDURE [BOOLEAN, BOOLEAN, LIST [EB_METRIC_ARCHIVE_NODE]])
 			-- Action to be performed when text in `new_archive_file_name_text' changes
 		do
 			a_timer.actions.wipe_out
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation
 	current_archive_timer: EV_TIMEOUT
 			-- Timer used in `current_metric_archive_text'
 
-	check_archive_validity (a_text_field: EV_TEXT_FIELD; a_action: PROCEDURE [ANY, TUPLE [a_file_exist: BOOLEAN; a_archive_valid: BOOLEAN; a_archive: LIST [EB_METRIC_ARCHIVE_NODE]]]; a_timer: EV_TIMEOUT)
+	check_archive_validity (a_text_field: EV_TEXT_FIELD; a_action: PROCEDURE [TUPLE [a_file_exist: BOOLEAN; a_archive_valid: BOOLEAN; a_archive: LIST [EB_METRIC_ARCHIVE_NODE]]]; a_timer: EV_TIMEOUT)
 			-- Check validity of archive defined in `a_text_field' and invoke `a_action' after checking.
 			-- If the specified archive file doesn't exist, the first boolean argument (a_file_exist) of `a_action' will be False, otherwise True.
 			-- If the archive file exists, the second will be set to True if the archive is valid, otherwise False.

@@ -83,7 +83,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [EV_FONT]]
+			execution_agent: PROCEDURE [EV_FONT]
 		do
 			from
 				referers.start

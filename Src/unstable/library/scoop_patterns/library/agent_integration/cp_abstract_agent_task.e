@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CP_ABSTRACT_AGENT_TASK [G -> ROUTINE [ANY, TUPLE]]
+	CP_ABSTRACT_AGENT_TASK [G -> ROUTINE]
 
 inherit
 
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Contract support
 
-	is_defining_attributes (a_routine: ROUTINE [ANY, TUPLE]): BOOLEAN
+	is_defining_attributes (a_routine: ROUTINE): BOOLEAN
 			-- Does the target of `a_routine' define attributes?
 		local
 			l_type_id: INTEGER
@@ -86,7 +86,7 @@ feature -- Contract support
 			Result := reflector.field_count_of_type (l_type_id) /= 0
 		end
 
-	has_open_arguments (a_routine: ROUTINE [ANY, TUPLE]): BOOLEAN
+	has_open_arguments (a_routine: ROUTINE): BOOLEAN
 			-- Does `a_routine' have an open argument (except for a target)?
 		do
 			if a_routine.is_target_closed then

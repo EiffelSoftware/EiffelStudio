@@ -32,7 +32,7 @@ feature {PS_ABEL_EXPORT} -- Status repurt
 
 feature {PS_ABEL_EXPORT} -- Basic operations
 
-	execute_disassembly (object: ANY; operation: PS_WRITE_OPERATION; persistence_query_agent: PREDICATE [ANY, TUPLE [ANY]])
+	execute_disassembly (object: ANY; operation: PS_WRITE_OPERATION; persistence_query_agent: PREDICATE [ANY])
 			-- Take `object' apart and store the result in `object_graph'.
 		do
 			prepare (operation, persistence_query_agent)
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 	object_graph_part_cache: LINKED_LIST [PS_OBJECT_GRAPH_PART]
 			-- A cache to avoid creating an object graph part twice.
 
-	persistence_query: PREDICATE [ANY, TUPLE [ANY]]
+	persistence_query: PREDICATE [ANY]
 			-- An agent to the OBJECT_IDENTIFICATION_MANAGER.is_persistent feature (if correctly initialized).
 
 	operation_stack: LINKED_STACK [PS_WRITE_OPERATION]
@@ -291,7 +291,7 @@ feature {NONE} -- Initialization
 				end
 		end
 
-	prepare (operation: PS_WRITE_OPERATION; persistence_query_agent: PREDICATE [ANY, TUPLE [ANY]])
+	prepare (operation: PS_WRITE_OPERATION; persistence_query_agent: PREDICATE [ANY])
 			-- Prepare a disassemble for an object.
 		do
 			object_graph_part_cache.wipe_out

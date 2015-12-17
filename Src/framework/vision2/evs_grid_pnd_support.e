@@ -78,7 +78,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	old_item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
+	old_item_pebble_function: detachable FUNCTION [detachable EV_GRID_ITEM, detachable ANY]
 			-- Old `item_pebble_function' in `grid' before last `enable_grid_item_pnd_support'
 
 	stone_at_position (a_x, a_y: INTEGER): detachable ANY
@@ -157,7 +157,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_pick_ended_action: PROCEDURE [ANY, TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]]
+	on_pick_ended_action: PROCEDURE [TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]]
 			-- Agent object of `on_pick_ended_from_grid_editor_token_item'
 		local
 			v: like on_pick_ended_action_internal
@@ -172,7 +172,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	on_pick_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], detachable ANY]
+	on_pick_function: FUNCTION [TUPLE [a_item: EV_GRID_ITEM], detachable ANY]
 			-- Agent object of `on_pick_start_from_grid_editor_token_item'
 		local
 			v: like on_pick_function_internal
@@ -193,7 +193,7 @@ feature{NONE} -- Implementation
 	on_pick_function_internal: detachable like on_pick_function
 			-- Implementation of `on_pick_function'
 
-	on_pick_start_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]
+	on_pick_start_action: PROCEDURE [INTEGER, INTEGER]
 			-- agent of `on_pick_start'
 		local
 			v: like on_pick_start_action_internal

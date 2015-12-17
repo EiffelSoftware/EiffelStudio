@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_action (a_action: PROCEDURE [G, TUPLE]): BOOLEAN
+	valid_action (a_action: PROCEDURE): BOOLEAN
 			-- Is `a_action' a valid action for the current pool.
 		do
 				-- There should be no open operands.
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	add_work (work: PROCEDURE [G, TUPLE])
+	add_work (work: PROCEDURE)
 			-- Launches a thread with the specified argument `arg'. Reuse of thread if possible.
 		require
 			valid_action: valid_action (work)
@@ -120,7 +120,7 @@ feature -- Basic operations
 			termination_mutex.unlock
 		end
 
-	get_work (requester: POOLED_THREAD [G]): detachable PROCEDURE [G, TUPLE]
+	get_work (requester: POOLED_THREAD [G]): detachable PROCEDURE
 			-- If there is work to do, it is returned
 			-- Yields Void otherwise
 		do
@@ -173,7 +173,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation: Access
 
-	work_queue: ARRAYED_QUEUE [PROCEDURE [G, TUPLE]]
+	work_queue: ARRAYED_QUEUE [PROCEDURE]
 			-- Queue that holds unprocessed requests as agents
 			-- Thread-safe access when accessor holds `queue_mutex'
 

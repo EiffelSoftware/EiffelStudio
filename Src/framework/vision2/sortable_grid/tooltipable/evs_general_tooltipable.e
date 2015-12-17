@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]]
+	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [BOOLEAN]]
 			-- Functions used to determine whether or not to display tooltip when other condition
 			-- such as `is_tooltip_enabled', pointer on owner are all satisfied.
 			-- A True value returned by a function indicates that tooltip should be displayed,
@@ -57,7 +57,7 @@ feature {NONE} -- Access
 	tooltip_background_color: detachable EV_COLOR
 			-- Background color of tooltip window	
 
-	force_tooltip_disappear_function: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+	force_tooltip_disappear_function: detachable FUNCTION [BOOLEAN]
 			-- Function used to determine whether or not to hide tooltip when other condition
 			-- are all satisfied.
 			-- This is useful for example when you want tooltip to disappear right away when certain keys
@@ -174,7 +174,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_picking_from_tooltip_set: is_picking_from_tooltip = b
 		end
 
-	setup_timer (timeout: INTEGER; a_agent: detachable PROCEDURE [ANY, TUPLE])
+	setup_timer (timeout: INTEGER; a_agent: detachable PROCEDURE)
 			-- Setup `timer' with `timeout' and `a_agent'.
 			-- Used to start `timer' or stop it (when `timeout' is 0 and `a_agent' is Void)
 		require
@@ -670,7 +670,7 @@ feature{NONE} -- Implementation
 	timer_internal: detachable like timer
 			-- Internal timer used to simulate tooltip delay time
 
-	pointer_enter_agent: PROCEDURE [ANY, TUPLE]
+	pointer_enter_agent: PROCEDURE
 			-- Agent to wrap `on_pointer_enter'
 		local
 			v: like pointer_enter_agent_internal
@@ -685,7 +685,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	pointer_leave_agent: PROCEDURE [ANY, TUPLE]
+	pointer_leave_agent: PROCEDURE
 			-- Agent to wrap `on_pointer_leave'
 		local
 			v: like pointer_leave_agent_internal
@@ -700,7 +700,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	select_agent: PROCEDURE [ANY, TUPLE]
+	select_agent: PROCEDURE
 			-- Agent to wrap `on_selected'
 		local
 			v: like select_agent_internal

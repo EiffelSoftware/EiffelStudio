@@ -116,7 +116,7 @@ feature -- Access
 	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
+	pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 

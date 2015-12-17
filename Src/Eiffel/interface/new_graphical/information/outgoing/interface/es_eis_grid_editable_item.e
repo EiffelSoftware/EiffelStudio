@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Access
 
-	key_press_action: detachable PROCEDURE [ANY, TUPLE [key: EV_KEY]];
+	key_press_action: detachable PROCEDURE [TUPLE [key: EV_KEY]];
 			-- Actions to be performed when a keyboard key is pressed on the choice list.
 
 note

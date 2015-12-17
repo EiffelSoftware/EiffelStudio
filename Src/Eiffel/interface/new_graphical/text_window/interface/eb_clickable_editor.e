@@ -361,7 +361,7 @@ feature -- Possibly delayed operations
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded
 		local
-			l_deferred_action: PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]
+			l_deferred_action: PROCEDURE
 		do
 			if text_is_fully_loaded and text_displayed.cursor /= Void then
 				if text_displayed.has_selection then
@@ -842,7 +842,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	after_reading_text_actions: LINKED_LIST [PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]]
+	after_reading_text_actions: LINKED_LIST [PROCEDURE]
 			-- Procedures to be applied when the text is completely loaded.
 
 	hidden_breakpoints: BOOLEAN

@@ -57,7 +57,7 @@ feature {PS_TEST_PROVIDER}
 		end
 
 
-	test_read_write_cycle (object: ANY; update_operation: detachable PROCEDURE [ANY, TUPLE [ANY]])
+	test_read_write_cycle (object: ANY; update_operation: detachable PROCEDURE [ANY])
 			-- Perform a write-read test on `object' with a possible `update_operation'.
 		local
 			context: PS_TRANSACTION
@@ -101,7 +101,7 @@ feature {PS_TEST_PROVIDER}
 		end
 
 
-	test_read_write_cycle_with_root (an_object: ANY; update_operation: detachable PROCEDURE [ANY, TUPLE [ANY]])
+	test_read_write_cycle_with_root (an_object: ANY; update_operation: detachable PROCEDURE [ANY])
 			-- Perform a write-read test on `object' with a possible `update_operation'.
 			-- Use root object status.
 		local

@@ -398,7 +398,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			Result := ev_children.has (a_child)
 		end
 
-	reversed_sizing_agents: detachable ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	reversed_sizing_agents: detachable ARRAYED_LIST [PROCEDURE]
 			-- When a box is getting larger, we do not want the items on the left or on the top
 			-- to overlap the items next to them as it causes Window to misbehave and the drawing
 			-- is not proper.

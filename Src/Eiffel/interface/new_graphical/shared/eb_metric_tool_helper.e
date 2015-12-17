@@ -31,7 +31,7 @@ inherit
 
 feature -- Access
 
-	show_error_message (a_error_agent: FUNCTION [ANY, TUPLE, EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE [ANY, TUPLE]; a_window: EV_WINDOW)
+	show_error_message (a_error_agent: FUNCTION [EB_METRIC_ERROR]; a_clear_error_agent: PROCEDURE; a_window: EV_WINDOW)
 			-- Show error message retrieved from `a_error_agent' if any in `a_window'.
 			-- And then clear error by calling `a_clear_error_agent'.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE [ANY, TUPLE]; a_window: EB_DEVELOPMENT_WINDOW)
+	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE; a_window: EB_DEVELOPMENT_WINDOW)
 			-- Display `a_msg' in status bar of `a_window'
 			-- And then call `a_agent'.
 		require
@@ -307,7 +307,7 @@ feature -- Basic Operations
 
 feature{NONE} -- Implementation
 
-	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG)
+	call_agent_and_then_hide (a_agent: PROCEDURE; a_dialog: EV_DIALOG)
 			-- Call `a_agent' and then hide `a_dialog'.
 		require
 			a_agent_attached: a_agent /= Void

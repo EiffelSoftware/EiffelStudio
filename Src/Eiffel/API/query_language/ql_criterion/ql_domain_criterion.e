@@ -75,7 +75,7 @@ feature{NONE} -- Initialization
 			criterion_domain_evaluated: is_criterion_domain_evaluated
 		end
 
-	initialize_agent: PROCEDURE [ANY, TUPLE]
+	initialize_agent: PROCEDURE
 			-- Agent of `initialize_domain'
 		do
 			if initialize_agent_internal = Void then

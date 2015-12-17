@@ -40,25 +40,25 @@ feature -- Decimal
 			Result := default_decimal_scale_cell.item
 		end
 
-	decimal_creation_function: FUNCTION [ANY, TUPLE [digits: STRING_8; sign, precision, scale: INTEGER], ANY]
+	decimal_creation_function: FUNCTION [TUPLE [digits: STRING_8; sign, precision, scale: INTEGER], ANY]
 			-- Function to create decimal
 		do
 			Result := decimal_creation_function_cell.item
 		end
 
-	decimal_factor_function: FUNCTION [ANY, TUPLE [ANY], TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]]
+	decimal_factor_function: FUNCTION [ANY, TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]]
 			-- Function to get base type to form a decimal from a given ANY object.
 		do
 			Result := decimal_factor_function_cell.item
 		end
 
-	is_decimal_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	is_decimal_function: FUNCTION [ANY, BOOLEAN]
 			-- Fuction to check if an object is a decimal
 		do
 			Result := is_decimal_function_cell.item
 		end
 
-	decimal_output_function: FUNCTION [ANY, TUPLE [ANY], STRING_8]
+	decimal_output_function: FUNCTION [ANY, STRING_8]
 			-- Function to output a decimal for the purpose of building correct SQL statement
 		do
 			Result := decimal_output_function_cell.item
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			create Result.put (4)
 		end
 
-	decimal_creation_function_cell: CELL [FUNCTION [ANY, TUPLE [digits: STRING_8; sign, precision, scale: INTEGER], ANY]]
+	decimal_creation_function_cell: CELL [FUNCTION [TUPLE [digits: STRING_8; sign, precision, scale: INTEGER], ANY]]
 			-- Cell to hold `decimal_creation_function'
 		once
 			create Result.put (
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	is_decimal_function_cell: CELL [FUNCTION [ANY, TUPLE [ANY], BOOLEAN]]
+	is_decimal_function_cell: CELL [FUNCTION [ANY, BOOLEAN]]
 			-- Cell to hold `is_decimal_function'
 		once
 			create Result.put (
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	decimal_factor_function_cell: CELL [FUNCTION [ANY, TUPLE [ANY], TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]]]
+	decimal_factor_function_cell: CELL [FUNCTION [ANY, TUPLE [digits: STRING_8; sign, precision, scale: INTEGER]]]
 			-- Cell to hold `decimal_factor_function'
 		once
 			create Result.put (
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	decimal_output_function_cell: CELL [FUNCTION [ANY, TUPLE [ANY], STRING_8]]
+	decimal_output_function_cell: CELL [FUNCTION [ANY, STRING_8]]
 		once
 			create Result.put (
 				agent (a_obj: ANY): STRING_8 do Result := "0" end

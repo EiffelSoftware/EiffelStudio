@@ -28,7 +28,7 @@ feature -- Access
 	object: G
 			-- Type of object to retrieve from database.
 
-	extract_function: FUNCTION [ANY, TUPLE [G], H]
+	extract_function: FUNCTION [G, H]
 			-- Function that extracts criterion value from object.
 
 	valid_values: LIST [H]
@@ -66,7 +66,7 @@ feature -- Element change
 			object_assigned: object = a_object
 		end
 
-	set_extract_function (a_extract_function: FUNCTION [ANY, TUPLE [G], H])
+	set_extract_function (a_extract_function: FUNCTION [G, H])
 			-- Assign `a_extract_function' to `extract_function'.
 		require
 			not_void: a_extract_function /= Void

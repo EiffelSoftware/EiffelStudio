@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="paintbrush" uuid="384BDBD6-A805-4771-A6E2-8C6DBA6000C8">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="paintbrush" uuid="384BDBD6-A805-4771-A6E2-8C6DBA6000C8">
 	<target name="classic">
 		<root class="PAINTBRUSH" feature="make_and_launch"/>
-		<option warning="true">
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
 		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>

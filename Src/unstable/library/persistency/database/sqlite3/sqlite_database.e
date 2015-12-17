@@ -126,25 +126,25 @@ feature -- Access
 
 feature -- Access: Actions
 
-	commit_action: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_commit_action
+	commit_action: detachable FUNCTION [BOOLEAN] assign set_commit_action
 			-- Action called when during the commit transaction.
 			--
 			-- 'Result': True to abort a commit; False otherwise.
 
-	rollback_action: detachable PROCEDURE [ANY, TUPLE] assign set_rollback_action
+	rollback_action: detachable PROCEDURE assign set_rollback_action
 			-- Action called when during the rollback of a commit.
 
-	update_action: detachable PROCEDURE [ANY, TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
+	update_action: detachable PROCEDURE [TUPLE [action: INTEGER; db_name: STRING; table: STRING; row: INTEGER_64]] assign set_update_action
 			-- Action called when during the rollback of a commit.
 			--| See {SQLITE_UPDATE_ACTION} for valid value for `action'
 
-	progress_handler: detachable FUNCTION [ANY, TUPLE, BOOLEAN] assign set_progress_handler
+	progress_handler: detachable FUNCTION [BOOLEAN] assign set_progress_handler
 			-- Progress update handler, called when a long running statement is being executed.
 			-- This handler is useful to prevent UI or other run loops from being blocked.
 			--
 			-- 'Result': True to abort the long running statement; False to continue.
 
-	busy_handler: detachable FUNCTION [ANY, TUPLE [calls: NATURAL], BOOLEAN] assign set_busy_handler
+	busy_handler: detachable FUNCTION [TUPLE [calls: NATURAL], BOOLEAN] assign set_busy_handler
 			-- Handler called when the database is processing an statement and another action has received a busy status.
 			--
 			-- 'calls': Number of calls made to the busy handler.

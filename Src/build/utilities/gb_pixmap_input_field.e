@@ -20,10 +20,10 @@ create
 feature {NONE} -- Initialization
 
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING;
-		an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, PATH]];
-		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, PATH], BOOLEAN];
-		a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
-		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], PATH];
+		an_execution_agent: PROCEDURE [EV_PIXMAP, PATH];
+		a_validate_agent: FUNCTION [EV_PIXMAP, PATH, BOOLEAN];
+		a_pixmap_agent: FUNCTION [EV_PIXMAP];
+		a_pixmap_path_agent: FUNCTION [PATH];
 		a_components: GB_INTERNAL_COMPONENTS)
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -212,15 +212,15 @@ feature {NONE} -- Implementation
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
 
-	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, PATH]]
+	execution_agent: PROCEDURE [EV_PIXMAP, PATH]
 		-- Agent to execute command associated with value entered into `Current'.
 
-	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]
+	validate_agent: FUNCTION [EV_PIXMAP, BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
-	return_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP]
+	return_pixmap_agent: FUNCTION [EV_PIXMAP]
 
-	pixmap_path_agent: FUNCTION [ANY, TUPLE [], PATH]
+	pixmap_path_agent: FUNCTION [PATH]
 
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.

@@ -52,11 +52,11 @@ feature {NONE} -- Access
 feature -- IL Generation
 
 	generate_il_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]];
-			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
+			implemented_feature_processor: PROCEDURE [FEATURE_I, CLASS_TYPE, FEATURE_I];
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE];
+			type_feature_processor: PROCEDURE [TYPE_FEATURE_I];
+			inline_agent_processor: PROCEDURE [FEATURE_I])
 
 			-- Generate IL code for feature in `class_c'.
 		local
@@ -181,7 +181,7 @@ feature -- IL Generation
 		end
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
+			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [TYPE_FEATURE_I])
 
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
@@ -201,9 +201,9 @@ feature -- IL Generation
 		end
 
 	generate_il_implementation_parents (class_interface: CLASS_INTERFACE;
-			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
+			implemented_feature_processor: PROCEDURE [FEATURE_I, CLASS_TYPE, FEATURE_I];
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE])
 
 			-- Generate IL code for feature in `class_c'.
 		require
@@ -238,8 +238,8 @@ feature -- IL Generation
 	generate_il_implementation_local
 			(class_interface: CLASS_INTERFACE; class_c: CLASS_C;
 			class_type: CLASS_TYPE;
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE])
 
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
@@ -291,9 +291,9 @@ feature -- IL Generation
 
 	generate_il_implementation_inherited
 			(class_interface: CLASS_INTERFACE; class_c: CLASS_C; class_type: CLASS_TYPE;
-			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
+			implemented_feature_processor: PROCEDURE [FEATURE_I, CLASS_TYPE, FEATURE_I];
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE])
 
 			-- Generate IL code for inherited features of `current_class_type'.
 		require

@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Change
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]; is_kamikazee: BOOLEAN)
+	add_idle_action (v: PROCEDURE; is_kamikazee: BOOLEAN)
 			-- Extend `idle_actions' with `v'.
 		do
 			if not idle_actions.has (v) then
@@ -64,7 +64,7 @@ feature -- Change
 			end
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (v: PROCEDURE)
 			-- Remove `v' from `idle_actions'
 		local
 			l_cursor: CURSOR

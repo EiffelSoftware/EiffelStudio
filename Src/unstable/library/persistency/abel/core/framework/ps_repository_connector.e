@@ -122,7 +122,7 @@ feature {PS_ABEL_EXPORT} -- Write operations
 		deferred
 		end
 
-	after_write_action: detachable PROCEDURE [ANY, TUPLE [PS_OBJECT_WRITE_DATA]]
+	after_write_action: detachable PROCEDURE [PS_OBJECT_WRITE_DATA]
 			-- An action to be performed by `Current' after a write operation.
 
 feature {PS_REPOSITORY_CONNECTOR} -- Implementation

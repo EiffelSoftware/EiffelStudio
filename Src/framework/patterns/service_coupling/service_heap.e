@@ -75,7 +75,7 @@ feature -- Extension
 			is_service_proffered: is_service_proffered (a_type)
 		end
 
-	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I])
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [detachable SERVICE_I])
 			-- Registers a service activator function, used to create a service on demand, using a
 			-- identifying service type object.
 			--

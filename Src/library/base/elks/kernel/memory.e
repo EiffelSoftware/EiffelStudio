@@ -271,7 +271,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	execute_without_collection (a_action: PROCEDURE [ANY, TUPLE])
+	execute_without_collection (a_action: PROCEDURE)
 			-- Execute `a_action' with the garbage collector disabled.
 			-- If `a_action' modifies the status of `collecting', we restore
 			-- it no matter what at the end.

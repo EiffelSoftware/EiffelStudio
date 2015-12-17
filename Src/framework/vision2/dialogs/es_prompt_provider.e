@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	show_error_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_error_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays an error prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -30,7 +30,7 @@ feature -- Factory
 			safe_show_dialog (l_error, a_window)
 		end
 
-	show_info_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_info_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays an information prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -48,7 +48,7 @@ feature -- Factory
 			safe_show_dialog (l_info, a_window)
 		end
 
-	show_warning_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays a warning prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -66,7 +66,7 @@ feature -- Factory
 			safe_show_dialog (l_warning, a_window)
 		end
 
-	show_warning_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE; a_cancel_action: detachable PROCEDURE)
 			-- Displays an warning prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -85,7 +85,7 @@ feature -- Factory
 			safe_show_dialog (l_warning, a_window)
 		end
 
-	show_question_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE];)
+	show_question_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE; a_no_action: detachable PROCEDURE;)
 			-- Displays a question prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -104,7 +104,7 @@ feature -- Factory
 			safe_show_dialog (l_confirm, a_window)
 		end
 
-	show_question_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_question_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE; a_no_action: detachable PROCEDURE; a_cancel_action: detachable PROCEDURE)
 			-- Displays an question prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user

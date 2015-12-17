@@ -41,7 +41,7 @@ feature -- Access
 			Result := is_selected_function /= Void and then is_selected_function.item (Void)
 		end
 
-	is_selected_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	is_selected_function: FUNCTION [BOOLEAN]
 			-- Is selected function ?
 
 	execute_actions: ACTION_SEQUENCE [TUPLE]
@@ -143,7 +143,7 @@ feature -- Status setting
 			name := s
 		end
 
-	add_action (a: PROCEDURE [ANY, TUPLE])
+	add_action (a: PROCEDURE)
 			-- Extend `execute_actions' with `a'.
 		do
 			execute_actions.extend (a)

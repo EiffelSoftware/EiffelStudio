@@ -13,7 +13,7 @@ class
 	PREDICATE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
-	FUNCTION [ANY, OPEN_ARGS, BOOLEAN]
+	FUNCTION [OPEN_ARGS, BOOLEAN]
 
 create {NONE}
 	set_rout_disp

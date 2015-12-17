@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	invalid_message: STRING
 		-- Message displayed if `text' not valid.
 
-	validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	validation_agent: FUNCTION [STRING, BOOLEAN]
 		-- Agent to validate entry in `initial_text'.
 
 	validate

@@ -465,7 +465,7 @@ feature -- Queries
 		end
 
 	enum_tokens (   a_class_token: NATURAL_32;
-					enum_agent: FUNCTION [ANY, TUPLE [TYPED_POINTER [POINTER], NATURAL_32, INTEGER], ARRAY [NATURAL_32]];
+					enum_agent: FUNCTION [TYPED_POINTER [POINTER], NATURAL_32, INTEGER, ARRAY [NATURAL_32]];
 				): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0

@@ -54,7 +54,7 @@ feature -- Status report
 			not_is_disposed: is_disposed implies not Result
 		end
 
-	is_notified_on_disposing (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	is_notified_on_disposing (a_action: PROCEDURE): BOOLEAN
 			-- <Precursor>
 		local
 			l_events: like internal_disposing_event
@@ -69,7 +69,7 @@ feature -- Status report
 			a_action_is_subscribed: is_interface_usable implies disposing_event.is_subscribed (a_action)
 		end
 
-	is_notified_on_disposed (a_action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	is_notified_on_disposed (a_action: PROCEDURE): BOOLEAN
 			-- <Precursor>
 		local
 			l_events: like internal_disposed_event
@@ -101,7 +101,7 @@ feature {NONE} -- Query
 		require
 			a_object_attached: a_object /= Void
 		do
-			if attached {FUNCTION [ANY, TUPLE, ANY]} a_object as l_action then
+			if attached {FUNCTION [ANY]} a_object as l_action then
 				Result := l_action.item (Void)
 			else
 				Result := a_object
@@ -112,7 +112,7 @@ feature {NONE} -- Query
 
 feature {DISPOSABLE_I, DISPOSABLE} -- Basic operations
 
-	perform_automotive_dispose (a_action: PROCEDURE [ANY, TUPLE])
+	perform_automotive_dispose (a_action: PROCEDURE)
 			-- <Precursor>
 		require
 			is_interface_usable: is_interface_usable
@@ -191,7 +191,7 @@ feature -- Basic operation
 			object_pool_has_a_object: is_interface_usable implies object_pool.has (a_object)
 		end
 
-	frozen delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
+	frozen delayed_auto_dispose (a_action: FUNCTION [ANY])
 			-- <Precursor>
 		do
 			check
@@ -205,20 +205,20 @@ feature -- Basic operation
 
 feature -- Notification
 
-	notify_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
+	notify_on_disposing (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			check not_is_actively_disposing: not is_actively_disposing end
 			disposing_event.subscribe (a_action)
 		end
 
-	ignore_on_disposing (a_action: PROCEDURE [ANY, TUPLE])
+	ignore_on_disposing (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			disposing_event.unsubscribe (a_action)
 		end
 
-	notify_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
+	notify_on_disposed (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			check not_is_actively_disposing: not is_actively_disposing end
@@ -227,7 +227,7 @@ feature -- Notification
 			end
 		end
 
-	ignore_on_disposed (a_action: PROCEDURE [ANY, TUPLE])
+	ignore_on_disposed (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			disposed_event.unsubscribe (a_action)

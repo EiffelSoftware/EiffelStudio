@@ -143,7 +143,7 @@ feature -- Access
 				l_template := template_registry.item_for_iteration.copy_template
 				if not l_template.is_template then
 					create l_servlet_gen.make_minimal (l_template.template_name, path, force)
-					l_root_tag := l_template.resolve (template_registry, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (1), create {ARRAYED_LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]}.make (1), l_servlet_gen)
+					l_root_tag := l_template.resolve (template_registry, create {HASH_TABLE [LIST [XP_TAG_ELEMENT], STRING]}.make (1), create {ARRAYED_LIST [PROCEDURE [TUPLE [a_uid: STRING; a_controller_class: STRING]]]}.make (1), l_servlet_gen)
 					l_servlet_gen.set_root_tag (l_root_tag)
 					servlet_g_generators.extend (l_servlet_gen)
 				end

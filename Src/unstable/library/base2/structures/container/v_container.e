@@ -64,11 +64,11 @@ feature -- Search
 			definition: Result = bag [v]
 		end
 
-	count_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+	count_satisfying (pred: PREDICATE [G]): INTEGER
 			-- How many elements satisfy `pred'?
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
@@ -84,11 +84,11 @@ feature -- Search
 			definition: Result = (bag | (bag.domain | pred)).count
 		end
 
-	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+	exists (pred: PREDICATE [G]): BOOLEAN
 			-- Is there an element that satisfies `pred'?
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
@@ -98,11 +98,11 @@ feature -- Search
 			definition: Result = bag.domain.exists (pred)
 		end
 
-	for_all (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+	for_all (pred: PREDICATE [G]): BOOLEAN
 			-- Do all elements satisfy `pred'?
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))

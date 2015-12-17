@@ -14,7 +14,7 @@ inherit
 
 feature{NONE} -- Agent registration
 
-	safe_register_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE])
+	safe_register_agent (a_agent: PROCEDURE; a_action_sequence: ACTION_SEQUENCE [TUPLE])
 			-- If `a_action_sequence' doesn't has `a_agent' already, register `a_agent' into `a_action_sequence'.
 		require
 			a_agent_attached: a_agent /= Void
@@ -27,7 +27,7 @@ feature{NONE} -- Agent registration
 			a_agent_registered: a_action_sequence.has (a_agent)
 		end
 
-	safe_remove_agent (a_agent: PROCEDURE [ANY, TUPLE]; a_action_sequence: ACTION_SEQUENCE [TUPLE])
+	safe_remove_agent (a_agent: PROCEDURE; a_action_sequence: ACTION_SEQUENCE [TUPLE])
 			-- If `a_action_sequence' has `a_agent', remove it from `a_action_sequence'.
 		require
 			a_agent_attached: a_agent /= Void

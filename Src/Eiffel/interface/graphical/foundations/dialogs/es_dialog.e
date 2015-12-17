@@ -426,7 +426,7 @@ feature -- Element change
 			end
 		end
 
-	set_button_action (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+	set_button_action (a_id: INTEGER; a_action: PROCEDURE)
 			-- Assigns an action to a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
@@ -443,7 +443,7 @@ feature -- Element change
 			button_action_set: button_action (a_id) = a_action
 		end
 
-	set_button_action_before_close (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+	set_button_action_before_close (a_id: INTEGER; a_action: PROCEDURE)
 			-- Assigns an action to a specific button to be called prior to closing.
 			-- Note: This routine can use `veto_close' to prevent the dialog from being closed.
 			--
@@ -545,7 +545,7 @@ feature {NONE} -- Status setting
 
 feature -- Query
 
-	button_action (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
+	button_action (a_id: INTEGER): PROCEDURE
 			-- Button action, called after the dialog is closed, for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
@@ -555,7 +555,7 @@ feature -- Query
 			is_interface_usable: is_interface_usable
 			buttons_contains_a_id: buttons.has (a_id)
 		local
-			l_action: TUPLE [action: PROCEDURE [ANY, TUPLE]; on_close: BOOLEAN]
+			l_action: TUPLE [action: PROCEDURE; on_close: BOOLEAN]
 		do
 			if button_actions.has (a_id) then
 				l_action := button_actions.item (a_id)
@@ -565,7 +565,7 @@ feature -- Query
 			end
 		end
 
-	button_action_before_close (a_id: INTEGER): PROCEDURE [ANY, TUPLE]
+	button_action_before_close (a_id: INTEGER): PROCEDURE
 			-- Button action, called before the dialog is closed, for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
@@ -576,7 +576,7 @@ feature -- Query
 			a_id_is_valid_button_id: dialog_buttons.is_valid_button_id (a_id)
 			buttons_contains_a_id: buttons.has (a_id)
 		local
-			l_action: TUPLE [action: PROCEDURE [ANY, TUPLE]; on_close: BOOLEAN]
+			l_action: TUPLE [action: PROCEDURE; on_close: BOOLEAN]
 		do
 			if button_actions.has (a_id) then
 				l_action := button_actions.item (a_id)

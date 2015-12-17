@@ -8,7 +8,7 @@ class
 
 feature -- Calls
 
-	call (action: separate PROCEDURE [ANY, TUPLE])
+	call (action: separate PROCEDURE)
 			-- call action.
 		do
 			action.call

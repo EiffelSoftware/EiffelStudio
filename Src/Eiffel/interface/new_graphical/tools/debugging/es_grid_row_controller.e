@@ -145,13 +145,13 @@ feature -- Actions
 
 feature {NONE} -- Implementation
 
-	expand_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+	expand_action: PROCEDURE [EV_GRID_ROW]
 			-- Action to be perform on row expanded.
 
-	collapse_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]];
+	collapse_action: PROCEDURE [EV_GRID_ROW];
 			-- Action to be perform on row collapsed.
 
-	key_pressed_action: PROCEDURE [ANY, TUPLE [EV_KEY]];
+	key_pressed_action: PROCEDURE [EV_KEY];
 			-- Action to be perform on key pressed.
 
 note

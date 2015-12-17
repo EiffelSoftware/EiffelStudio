@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (format_substring: PROCEDURE [ANY, TUPLE [G, READABLE_STRING_GENERAL, INTEGER_32, INTEGER_32]])
+	make (format_substring: PROCEDURE [G, READABLE_STRING_GENERAL, INTEGER_32, INTEGER_32])
 			-- Associate formatter with the procedure `format_substring' to render message string elements.
 		do
 			format_message := format_substring
@@ -40,18 +40,18 @@ feature {NONE} -- Creation
 
 feature -- Formatting
 
-	format (formatter: G; message: READABLE_STRING_GENERAL; arguments: ITERABLE [PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]])
+	format (formatter: G; message: READABLE_STRING_GENERAL; arguments: ITERABLE [PROCEDURE [detachable FORMAT_SPECIFICATION, G]])
 			-- Format `message' replacing placeholders with elements from `arguments' using `formatter'.
 			-- Placeholders are denoted by {n} where n indicates an argument position.
 		local
-			a: detachable ARRAYED_LIST [PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]]
+			a: detachable ARRAYED_LIST [PROCEDURE [detachable FORMAT_SPECIFICATION, G]]
 			i: INTEGER
 			j: INTEGER
 			n: INTEGER
 			nesting_level: NATURAL_32
 			has_number: BOOLEAN
 			argument_number: INTEGER_32
-			cursor: ITERATION_CURSOR [PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]]
+			cursor: ITERATION_CURSOR [PROCEDURE [detachable FORMAT_SPECIFICATION, G]]
 			state: NATURAL_32
 		do
 			from
@@ -206,8 +206,8 @@ feature {NONE} -- State of a parser
 feature {NONE} -- Argument evaluation
 
 	compute_argument
-			(storage: detachable ARRAYED_LIST [PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]];
-			cursor: ITERATION_CURSOR [PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]];
+			(storage: detachable ARRAYED_LIST [PROCEDURE [detachable FORMAT_SPECIFICATION, G]];
+			cursor: ITERATION_CURSOR [PROCEDURE [detachable FORMAT_SPECIFICATION, G]];
 			argument_number: INTEGER_32)
 			-- Compute argument at position `argument_number' if possible using `cursor' and put it to `storage'.
 		local
@@ -234,12 +234,12 @@ feature {NONE} -- Argument evaluation
 
 feature -- Constructor
 
-	list (add_list: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G, ITERABLE [PROCEDURE [ANY, TUPLE [G]]]]]; items: ITERABLE [PROCEDURE [ANY, TUPLE [G]]]): PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G]]
+	list (add_list: PROCEDURE [detachable FORMAT_SPECIFICATION, G, ITERABLE [PROCEDURE [G]]]; items: ITERABLE [PROCEDURE [G]]): PROCEDURE [detachable FORMAT_SPECIFICATION, G]
 			-- New list composed by `add_list' from given `items' that can be passed as an element to `format'.
 			-- For example, "t.format ("{1}", [t.list (..., foo)])" will process "foo" as a list to be injected at position "{1}".
 			-- If "foo" were an iterable object, the call "t.format ("{1}", [foo])" will inject only the first item of "foo" instead.
 		do
-			Result := agent (s: detachable FORMAT_SPECIFICATION; a: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, G, ITERABLE [PROCEDURE [ANY, TUPLE [G]]]]]; i: ITERABLE [PROCEDURE [ANY, TUPLE [G]]]; t: G)
+			Result := agent (s: detachable FORMAT_SPECIFICATION; a: PROCEDURE [detachable FORMAT_SPECIFICATION, G, ITERABLE [PROCEDURE [G]]]; i: ITERABLE [PROCEDURE [G]]; t: G)
 				do
 					a (s, t, i)
 				end (?, add_list, items, ?)
@@ -247,7 +247,7 @@ feature -- Constructor
 
 feature {NONE} -- Access
 
-	format_message: PROCEDURE [ANY, TUPLE [f: G; s: READABLE_STRING_GENERAL; first: INTEGER_32; last: INTEGER_32]]
+	format_message: PROCEDURE [TUPLE [f: G; s: READABLE_STRING_GENERAL; first: INTEGER_32; last: INTEGER_32]]
 			-- Formatter to be used for rendering message `s' from index `first' to index `last' using formatter `f'..
 
 	escape_char: CHARACTER_32 = '`'

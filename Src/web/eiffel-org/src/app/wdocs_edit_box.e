@@ -418,7 +418,7 @@ feature -- Events
 --			m.show
 		end
 
-	append_menu_to_grid (a_menu: EV_MENU; a_grid: EV_GRID; a_post_selected_action: detachable PROCEDURE [ANY, TUPLE])
+	append_menu_to_grid (a_menu: EV_MENU; a_grid: EV_GRID; a_post_selected_action: detachable PROCEDURE)
 		require
 			is_tree_enabled: a_grid.is_tree_enabled
 		local

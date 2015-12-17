@@ -241,7 +241,7 @@ feature -- Events: Connection point
 			l_result := internal_session_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [SESSION_EVENT_OBSERVER, SESSION_I]} Result.make (
-					agent (ia_observer: SESSION_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: SESSION_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]]
 						do
 							Result := << [value_changed_event, agent ia_observer.on_session_value_changed] >>
 						end)

@@ -643,7 +643,7 @@ feature -- Batch processing
 			not_is_dirty: not is_dirty
 		end
 
-	execute_batch_modifications (a_action: PROCEDURE [ANY, TUPLE]; a_prepare: BOOLEAN; a_commit: BOOLEAN)
+	execute_batch_modifications (a_action: PROCEDURE; a_prepare: BOOLEAN; a_commit: BOOLEAN)
 			-- Performs modifications in deferred-commit mode.
 			--
 			-- `a_action': Action to call during batch modifications.

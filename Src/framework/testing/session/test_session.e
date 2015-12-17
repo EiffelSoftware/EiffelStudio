@@ -46,7 +46,7 @@ feature -- Access
 			l_result := connection_cache
 			if l_result = Void then
 				l_result := create {EVENT_CONNECTION [TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make (
-					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
 							Result := <<
 									[proceeded_event, agent an_observer.on_proceeded],
@@ -81,7 +81,7 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Basic operations
 
-	append_output (a_procedure: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]; a_activate: BOOLEAN)
+	append_output (a_procedure: PROCEDURE [TEXT_FORMATTER]; a_activate: BOOLEAN)
 			-- Append output for `Current'.
 			--
 			-- `a_precedure': Procedure called with corresponding {TEXT_FORMATTER} instance.

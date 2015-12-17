@@ -102,7 +102,7 @@ feature -- Properties
 			result_attached: Result /= Void
 		end
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
+	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		deferred
 		ensure
@@ -120,7 +120,7 @@ feature -- Properties
 		deferred
 		end
 
-	veto_format_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	veto_format_function: FUNCTION [BOOLEAN]
 			-- Function to veto format.
 			-- If not Void, it's invoked before `format'. And if returned value is True,
 			-- format will go on, if returned value is False, format is vetoed.

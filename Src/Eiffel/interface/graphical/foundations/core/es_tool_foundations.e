@@ -160,7 +160,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-    execute_with_busy_cursor (a_action: PROCEDURE [ANY, TUPLE])
+    execute_with_busy_cursor (a_action: PROCEDURE)
             -- Executes a action with a wait cursor
             --
             -- `a_action': An action to execute with a wait cursor displayed until the action has been completed
@@ -185,7 +185,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [ANY, TUPLE [EV_WIDGET]]; a_excluded: ARRAY [EV_WIDGET])
+	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [EV_WIDGET]; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates a performed action to all child widgets of an initial widget.
 			--
 			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.
@@ -225,7 +225,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [ANY, TUPLE [EV_WIDGET], ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE [ANY, TUPLE]; a_excluded: ARRAY [EV_WIDGET])
+	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [EV_WIDGET, ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates an actions to all child widgets
 			--
 			-- `a_exclude': An array of widgets to exluding the the propagation of actions, or Void to include all widgets

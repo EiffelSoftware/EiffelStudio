@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="esplitter" uuid="F0BDAC07-73F2-4FA7-8644-D30849C54389">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="esplitter" uuid="F0BDAC07-73F2-4FA7-8644-D30849C54389">
 	<target name="esplit_common">
 		<description>eSplitter utility</description>
 		<version major="7" minor="0" release="0" build="0"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option is_attached_by_default="false" syntax="transitional">
+		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 		</option>
 		<setting name="automatic_backup" value="true"/>
 		<setting name="cls_compliant" value="true"/>
@@ -39,8 +39,8 @@
 			<option namespace="EiffelSoftware.Codedom.Esplit">
 			</option>
 			<file_rule>
-				<exclude>/gui$</exclude>
 				<exclude>/bin$</exclude>
+				<exclude>/gui$</exclude>
 			</file_rule>
 		</cluster>
 	</target>
@@ -64,17 +64,17 @@
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common\">
-			<option namespace="EiffelSoftware.Codedom.Tools">
-			</option>
-		</cluster>
 		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\splitter\" recursive="true">
 			<option namespace="EiffelSoftware.Codedom.Esplit">
 			</option>
 			<file_rule>
-				<exclude>/text$</exclude>
 				<exclude>/bin$</exclude>
+				<exclude>/text$</exclude>
 			</file_rule>
+		</cluster>
+		<cluster name="tools_common" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\tools\common\">
+			<option namespace="EiffelSoftware.Codedom.Tools">
+			</option>
 		</cluster>
 	</target>
 	<target name="esplit_graphical_release" extends="esplit_graphical_debug">

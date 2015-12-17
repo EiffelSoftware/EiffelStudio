@@ -33,11 +33,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING]
+	validate_agents: HASH_TABLE [FUNCTION [BOOLEAN], STRING]
 			-- Agents to query if a property modification is permitted, accessible
 			-- via their associated name.
 
-	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
+	execution_agents: HASH_TABLE [PROCEDURE, STRING]
 			-- Agents to execute a property modification, accessible
 			-- via their associated name.
 
@@ -77,12 +77,12 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE])
+	for_all_objects (p: PROCEDURE)
 			-- Call `p' on every item in `objects'.
 		deferred
 		end
 
-	for_first_object (p: PROCEDURE [EV_ANY, TUPLE])
+	for_first_object (p: PROCEDURE)
 			-- Call `p' on the first_item in `objects'.
 		deferred
 		end
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			object := an_object
 		end
 
-	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]])
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [GB_OBJECT])
 			-- For all instance referers recursively of `an_object', call `p' with the current
 			-- instance referer filled as the open argument. Used in places where `for_all_objects'
 			-- can not be used directly as some level of indirection and/or calculation is required

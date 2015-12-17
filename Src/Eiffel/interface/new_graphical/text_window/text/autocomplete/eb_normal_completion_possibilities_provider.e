@@ -68,8 +68,8 @@ feature -- Access
 	use_all_classes_in_universe: BOOLEAN
 			-- Provide all classes in universe?
 
-	dynamic_context_class_c_function: FUNCTION [ANY, TUPLE, CLASS_C]
-	dynamic_context_feature_as_function: FUNCTION [ANY, TUPLE, FEATURE_AS]
+	dynamic_context_class_c_function: FUNCTION [CLASS_C]
+	dynamic_context_feature_as_function: FUNCTION [FEATURE_AS]
 
 feature -- Change
 
@@ -151,7 +151,7 @@ feature -- Element change
 			dynamic_context_feature_as_function := a_feat_call
 		end
 
-	set_group_callback (a_call: FUNCTION [ANY, TUPLE, CONF_GROUP])
+	set_group_callback (a_call: FUNCTION [CONF_GROUP])
 			-- Group call back
 		require
 			a_call_not_void: a_call /= Void
@@ -384,7 +384,7 @@ feature {NONE} -- Build completion possibilities
 	watching_line: EDITOR_LINE
 			-- Line
 
-	group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]
+	group_callback: FUNCTION [CONF_GROUP]
 			-- Function to retrieve group
 
 ;note

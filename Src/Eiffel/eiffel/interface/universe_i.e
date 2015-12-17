@@ -657,7 +657,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			system_exists: system /= Void
 		local
-			l_actions: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]
+			l_actions: HASH_TABLE [PROCEDURE [CLASS_I], STRING]
 			l_exceptions: SEARCH_TABLE [STRING]
 			l_system: like system
 		do
@@ -744,7 +744,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			Error_handler.checksum
 		end
 
-	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]; a_except: SEARCH_TABLE [STRING])
+	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [CLASS_I], STRING]; a_except: SEARCH_TABLE [STRING])
 			-- Universe checking, check all class names in `a_set' to ensure that only
 			-- one instance with specified name is found in universe. If it is unique,
 			-- then for each unique instance calls associated action.

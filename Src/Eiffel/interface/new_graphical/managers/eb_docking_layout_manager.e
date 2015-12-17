@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			Result := develop_window.project_location.target_path.extended (eiffel_layout.docking_standard_file + "_" + develop_window.window_id.out)
 		end
 
-	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE [EB_DOCKING_LAYOUT_MANAGER, TUPLE]
+	restore_agent_for_restore_action, restore_agent_for_maximize_action:  PROCEDURE
 			-- Restore agent recorded for cleanup
 
 	restore_tools_docking_layout_immediately

@@ -22,9 +22,9 @@ feature {NONE} -- Initialization
 
 feature -- Agent
 
-	agent_all_criteria: FUNCTION [ANY, TUPLE, like all_criteria]
-	agent_remember_criteria: detachable PROCEDURE [ANY, TUPLE [name: detachable READABLE_STRING_GENERAL; criteria: READABLE_STRING_GENERAL]]
-	agent_forget_criteria: detachable PROCEDURE [ANY, TUPLE [name: READABLE_STRING_GENERAL]]
+	agent_all_criteria: FUNCTION [like all_criteria]
+	agent_remember_criteria: detachable PROCEDURE [TUPLE [name: detachable READABLE_STRING_GENERAL; criteria: READABLE_STRING_GENERAL]]
+	agent_forget_criteria: detachable PROCEDURE [TUPLE [name: READABLE_STRING_GENERAL]]
 
 	set_agent_all_criteria (agt: like agent_all_criteria)
 		do

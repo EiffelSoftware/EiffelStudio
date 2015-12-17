@@ -42,7 +42,7 @@ feature -- Query
 
 feature {NONE} -- Factory
 
-	new_method_agents: HASH_TABLE [ROUTINE [ANY, TUPLE], READABLE_STRING_8]
+	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_8]
 			-- <Precursor>
 		do
 			create Result.make (0)

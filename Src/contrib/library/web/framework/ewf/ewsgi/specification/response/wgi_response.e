@@ -29,7 +29,7 @@ feature {WGI_CONNECTOR, WGI_SERVICE, WGI_EXPORTER} -- Commit
 
 feature -- Access: commit
 
-	post_commit_action: detachable PROCEDURE [ANY, TUPLE]
+	post_commit_action: detachable PROCEDURE
 			-- Action associated with the final `commit' execution
 			-- Note: useful to trigger action just after the
 			--       response is transfered to the client.

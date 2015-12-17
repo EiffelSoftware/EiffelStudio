@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	open_file_agent: PROCEDURE [ANY, TUPLE [PATH, INTEGER_32]]
+	open_file_agent: PROCEDURE [PATH, INTEGER_32]
 			-- Action to open a file and scroll to a givne line number.
 			-- Arguments: [file name, line number]
 

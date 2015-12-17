@@ -116,7 +116,7 @@ feature -- Access: connection point
 			l_result := internal_test_suite_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [TEST_SUITE_OBSERVER, TEST_SUITE_S]} l_result.make (
-					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+					agent (an_observer: TEST_SUITE_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
 							Result := <<
 									[test_added_event, agent an_observer.on_test_added],

@@ -573,7 +573,7 @@ feature {NONE} -- Text Loading
 			on_text_fully_loaded
 		end
 
-	finish_reading_string_agent: PROCEDURE [like Current, TUPLE]
+	finish_reading_string_agent: PROCEDURE
 			-- Agent for function `finish_reading_string'
 
 feature {NONE} -- Implementation

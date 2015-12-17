@@ -826,7 +826,7 @@ feature -- Basic Operations
 		local
 			dialog: EV_INFORMATION_DIALOG
 			button_labels: ARRAY [STRING]
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+			actions: ARRAY [PROCEDURE]
 		do
 			is_checking_modifications := True
 
@@ -1655,7 +1655,7 @@ feature {MARGIN} -- Implementation
 	in_resize: BOOLEAN
 			-- Are we a call to on_resize that was not triggered by the function itself.
 
-	update_scroll_agent: PROCEDURE [like Current, TUPLE]
+	update_scroll_agent: PROCEDURE
 			-- Agent for scrollbar display updates.
 
 	platform_is_windows: BOOLEAN
@@ -1699,7 +1699,7 @@ feature {EDITOR_TOKEN} -- User set data
 
 feature {NONE} -- Implementation
 
-	refresh_line_number_agent: PROCEDURE [ANY, TUPLE]
+	refresh_line_number_agent: PROCEDURE
 			-- Agent called when `show_line_numbers' preferences is changed.
 
 feature -- Memory management

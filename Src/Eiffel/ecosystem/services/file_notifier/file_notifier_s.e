@@ -72,7 +72,7 @@ feature -- Basic operations
 			is_monitoring_a_file_name: is_monitoring (a_file_name)
 		end
 
-	check_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
+	check_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [TUPLE [modification_type: NATURAL_8]])
 			-- Checks a file for any modifications.
 			-- Note: This must be called everytime a client wants to determine if a file has changed. The appropriate modification
 			--       event will be fired based on the file state. There is no real automatic solution because of the last of file
@@ -108,7 +108,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	uncheck_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [ANY, TUPLE [modification_type: NATURAL_8]])
+	uncheck_modifications_with_callback (a_file_name: PATH; a_callback: PROCEDURE [TUPLE [modification_type: NATURAL_8]])
 			-- Indicates to the service that the file no longer needs to be monitored.
 			-- Note: Unchecking a file does not necessarly mean that it is no longer monitored. Other parts of the
 			--       system could be moniroting the same file. However, it is (very* important that for every check call
@@ -162,7 +162,7 @@ feature -- Events: Connection point
 			l_result := internal_file_notifier_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [FILE_NOTIFIER_EVENT_OBSERVER, FILE_NOTIFIER_S]} Result.make (
-					agent (ia_observer: FILE_NOTIFIER_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: FILE_NOTIFIER_EVENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := << [file_modified_events, agent ia_observer.on_file_modified] >>
 						end)

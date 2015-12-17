@@ -34,7 +34,7 @@ feature -- Mapping helper: uri
 
 feature -- Mapping helper: uri agent		
 
-	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		require
 			a_uri_attached: a_uri /= Void
 			proc_attached: proc /= Void
@@ -42,7 +42,7 @@ feature -- Mapping helper: uri agent
 			map_uri (a_uri, create {WSF_URI_AGENT_CONTEXT_HANDLER [C] }.make (proc), rqst_methods)
 		end
 
-	map_uri_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		obsolete
 			"Use directly `map_uri_agent' [June-2015]"
 		require

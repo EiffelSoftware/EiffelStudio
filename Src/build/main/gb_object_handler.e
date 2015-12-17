@@ -848,7 +848,7 @@ feature -- Basic operation
 			object_removed_from_deleted: objects.has (an_object.id) and not deleted_objects.has (an_object.id)
 		end
 
-	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [ANY, TUPLE [GB_OBJECT]])
+	recursive_do_all (an_object: GB_OBJECT; action: PROCEDURE [GB_OBJECT])
 			-- For `an_object' and all objects parented at any level in
 			-- `an_object', call `action' with the current object as
 			-- the argument.

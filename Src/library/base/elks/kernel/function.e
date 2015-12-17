@@ -17,7 +17,7 @@ class
 	FUNCTION [OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
 
 inherit
-	ROUTINE [ANY, OPEN_ARGS]
+	ROUTINE [OPEN_ARGS]
 		redefine
 			is_equal, copy
 		end

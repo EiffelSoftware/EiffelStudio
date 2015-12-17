@@ -521,7 +521,7 @@ feature -- Access
 			end
 		end
 
-	update_instances (p: PROCEDURE [EV_ANY, TUPLE])
+	update_instances (p: PROCEDURE)
 			-- For all `instance_refers' of `Current', call `p' on
 			-- all representations.
 		require
@@ -556,7 +556,7 @@ feature -- Access
 			end
 		end
 
-	update_first_instances (p: PROCEDURE [EV_ANY, TUPLE])
+	update_first_instances (p: PROCEDURE)
 			-- For all `instance_refers' of `Current', call `p' on
 			-- the first representation only.
 		require

@@ -42,7 +42,7 @@ feature -- Access
 			l_result := connection_cache
 			if l_result = Void then
 				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
-					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
 							Result := <<
 									[task_run_event, agent an_observer.on_task_run],

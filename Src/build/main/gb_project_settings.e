@@ -425,7 +425,7 @@ feature {NONE} --Implementation
 		-- in the save file, so we know what sort of processing to perform
 		-- when we double click on the .bpr file.
 
-	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]])
+	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [INTEGER])
 			-- Call `an_agent' with `a_string' converted to an INTEGER.
 		require
 			a_string_not_void: a_string /= Void
@@ -436,7 +436,7 @@ feature {NONE} --Implementation
 		end
 
 
-	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [STRING]])
+	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [STRING])
 			-- Call `an_agent' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -445,7 +445,7 @@ feature {NONE} --Implementation
 			an_agent.call ([a_string])
 		end
 
-	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE [ANY, TUPLE])
+	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE)
 			-- If `a_string' is `True_string' then call `true_agent', else call `false_agent'.
 		require
 			a_string_not_void: a_string /= Void

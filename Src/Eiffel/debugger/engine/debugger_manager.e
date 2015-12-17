@@ -871,21 +871,21 @@ feature -- Events/Timers helpers
 			Result := events_handler.new_timer
 		end
 
-	do_once_on_idle (v: PROCEDURE [ANY, TUPLE])
+	do_once_on_idle (v: PROCEDURE)
 		require
 			events_handler_not_void: events_handler /= Void
 		do
 			events_handler.add_idle_action (v, True)
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE])
+	add_idle_action (v: PROCEDURE)
 		require
 			events_handler_not_void: events_handler /= Void
 		do
 			events_handler.add_idle_action (v, False)
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (v: PROCEDURE)
 		require
 			events_handler_not_void: events_handler /= Void
 		do
@@ -1688,7 +1688,7 @@ feature -- Actions
 
 feature -- One time action
 
-	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN)
+	add_on_stopped_action (p: PROCEDURE [DEBUGGER_MANAGER]; is_kamikaze: BOOLEAN)
 			-- Add `p' to `stopped_actions' with `p'.
 		require
 			p_not_void: p /= Void
@@ -1700,7 +1700,7 @@ feature -- One time action
 			end
 		end
 
-	add_on_update_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN)
+	add_on_update_action (p: PROCEDURE [DEBUGGER_MANAGER]; is_kamikaze: BOOLEAN)
 			-- Add `p' to `update_actions' with `p'.
 		require
 			p_not_void: p /= Void

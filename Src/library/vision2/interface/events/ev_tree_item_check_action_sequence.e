@@ -21,13 +21,13 @@ create {EV_TREE_ITEM_CHECK_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_tree_item: EV_TREE_NODE; action: PROCEDURE [ANY, TUPLE])
+	wrapper (a_tree_item: EV_TREE_NODE; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

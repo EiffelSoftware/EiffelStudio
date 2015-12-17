@@ -75,14 +75,14 @@ feature {NONE} -- Initialization
 
 feature -- Analysis interface
 
-	add_completed_action (a_action: attached PROCEDURE [ANY, TUPLE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]]])
+	add_completed_action (a_action: attached PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
 			-- Adds `a_action' to the list of procedures that will be
 			-- called when analysis has completed.
 		do
 			completed_actions.extend (a_action)
 		end
 
-	add_output_action (a_action: attached PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]])
+	add_output_action (a_action: attached PROCEDURE [READABLE_STRING_GENERAL])
 			-- Adds `a_action' to the procedures that are called for outputting status. The final results
 			-- (rule violations) are not given to these procedures.
 		do

@@ -31,7 +31,7 @@ feature -- Access
 
 	previous_page: detachable WIZARD_PAGE
 
-	validation: detachable PROCEDURE [ANY, TUPLE [WIZARD_PAGE]]
+	validation: detachable PROCEDURE [WIZARD_PAGE]
 
 	update_actions: ACTION_SEQUENCE [TUPLE]
 

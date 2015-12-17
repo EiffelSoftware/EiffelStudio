@@ -35,13 +35,13 @@ feature -- Change
 		deferred
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]; is_kamikazee: BOOLEAN)
+	add_idle_action (v: PROCEDURE; is_kamikazee: BOOLEAN)
 		require
 			v_not_void: v /= Void
 		deferred
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (v: PROCEDURE)
 		require
 			v_not_void: v /= Void
 		deferred

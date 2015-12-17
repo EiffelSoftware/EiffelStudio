@@ -92,7 +92,7 @@ feature -- Access
 		end
 
 
-	tasks: STRING_TABLE [TUPLE [factory_function: FUNCTION [ANY, TUPLE [ARRAY [IMMUTABLE_STRING_32]], IRON_TASK]; description: READABLE_STRING_GENERAL]]
+	tasks: STRING_TABLE [TUPLE [factory_function: FUNCTION [ARRAY [IMMUTABLE_STRING_32], IRON_TASK]; description: READABLE_STRING_GENERAL]]
 		once
 			Result := Precursor
 			Result.replace ([agent (args: like task_arguments): ES_IRON_INSTALL_TASK do create Result.make (args) end, "install package"], {ES_IRON_INSTALL_TASK}.name)

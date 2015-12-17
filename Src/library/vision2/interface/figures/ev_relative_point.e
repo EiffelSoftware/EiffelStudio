@@ -123,7 +123,7 @@ feature -- Access
 			-- Relative vertical scaling factor.
 			--| Only propagation purpose.
 
-	positioner: detachable PROCEDURE [ANY, TUPLE [like Current]]
+	positioner: detachable PROCEDURE [TUPLE [like Current]]
 			-- Take special absolute positioning action.
 			-- A positioner is expected to use the routines:
 			-- set_x_abs, set_y_abs.

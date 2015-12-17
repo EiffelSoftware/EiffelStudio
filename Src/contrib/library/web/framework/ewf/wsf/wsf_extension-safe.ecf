@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="wsf_extension" uuid="11055B92-CBEF-4272-8B50-0450BDA154E5" library_target="wsf_extension">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wsf_extension" uuid="11055B92-CBEF-4272-8B50-0450BDA154E5" library_target="wsf_extension">
 	<target name="wsf_extension">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoder" location="../text/encoder/encoder-safe.ecf"/>
+		<library name="encoder" location="..\text\encoder\encoder-safe.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi-safe.ecf"/>
-		<library name="http" location="../../../../network/protocol/http/http-safe.ecf"/>
+		<library name="http" location="..\..\..\..\network\protocol\http\http-safe.ecf"/>
 		<library name="wsf" location="wsf-safe.ecf"/>
 		<library name="wsf_router_context" location="wsf_router_context-safe.ecf" readonly="true"/>
 		<cluster name="extension" location=".\extension\" recursive="true"/>

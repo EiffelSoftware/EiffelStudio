@@ -102,7 +102,7 @@ feature -- Basic operations
 			can_invert: can_invert
 		end
 
-	set_redirector (red: FUNCTION [ANY, TUPLE [ANY], STRING])
+	set_redirector (red: FUNCTION [ANY, STRING])
 			-- Set the redirector to use.
 			-- PLEASE set a procedure keeping argument of type ANY to avoid cat calls.
 		require
@@ -113,7 +113,7 @@ feature -- Basic operations
 			at_least_one_result_set: at_least_one_result_set
 		end
 
-	set_invertor (inv: FUNCTION [ANY, TUPLE [STRING], ANY])
+	set_invertor (inv: FUNCTION [STRING, ANY])
 			-- Set the invertor to use.
 			-- Warning: set a procedure keeping result of type ANY to avoid cat calls.
 		require
@@ -126,10 +126,10 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	redirector: detachable FUNCTION [ANY, TUPLE [ANY], STRING]
+	redirector: detachable FUNCTION [ANY, STRING]
 			-- Function to redirect data to a string representation.
 
-	invertor: detachable FUNCTION [ANY, TUPLE [STRING], ANY]
+	invertor: detachable FUNCTION [STRING, ANY]
 			-- Function to find back data from its string representation.
 
 	result_table: HASH_TABLE [STRING_32, HASHABLE]

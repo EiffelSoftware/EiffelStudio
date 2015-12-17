@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	process (req: WSF_REQUEST; a_before_callback, a_after_callback: detachable PROCEDURE [ANY, TUPLE [WSF_FORM_DATA]])
+	process (req: WSF_REQUEST; a_before_callback, a_after_callback: detachable PROCEDURE [WSF_FORM_DATA])
 			-- Process Current form with request `req'
 			-- agent `a_before_callback' is called before the validation
 			-- agent `a_after_callback' is called after the validation

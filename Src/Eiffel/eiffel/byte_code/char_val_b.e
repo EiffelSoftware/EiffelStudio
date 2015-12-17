@@ -57,7 +57,7 @@ feature -- Error reporting
 
 feature -- Iteration
 
-	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE [ANY, TUPLE])
+	do_all (is_included: BOOLEAN; other: like Current; is_other_included: BOOLEAN; action: PROCEDURE)
 			-- Apply `action' to all values in range `Current'..`other' where
 			-- inclusion of bounds in the range is specified by `is_included' and `is_other_included'.
 		local

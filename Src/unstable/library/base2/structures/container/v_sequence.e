@@ -130,12 +130,12 @@ feature -- Search
 				Result = (map | create {MML_INTERVAL}.from_range (i, upper)).inverse.image_of (v).extremum (agent less_equal)
 		end
 
-	index_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+	index_satisfying (pred: PREDICATE [G]): INTEGER
 			-- Index of the first value that satisfies `pred';
 			-- out of range, if `pred' is never satisfied.
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
@@ -148,12 +148,12 @@ feature -- Search
 			definition_has: map.range.exists (pred) implies Result = map.inverse.image (map.range | pred).extremum (agent less_equal)
 		end
 
-	index_satisfying_from (pred: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
+	index_satisfying_from (pred: PREDICATE [G]; i: INTEGER): INTEGER
 			-- Index of the first value that satisfies `pred' starting from position `i';
 			-- out of range, if `pred' is never satisfied.
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
@@ -181,7 +181,7 @@ feature -- Search
 				Result = (map | create {MML_INTERVAL}.from_range (i, upper)).inverse.image (map.range | pred).extremum (agent less_equal)
 		end
 
-	key_equivalence: PREDICATE [ANY, TUPLE [INTEGER, INTEGER]]
+	key_equivalence: PREDICATE [INTEGER, INTEGER]
 			-- Index equivalence relation: identity.
 		once
 			Result := agent reference_equal

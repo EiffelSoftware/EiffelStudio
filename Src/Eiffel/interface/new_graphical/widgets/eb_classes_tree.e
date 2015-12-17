@@ -269,25 +269,25 @@ feature -- Activation
 			window := a_window
 		end
 
-	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_double_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a double click action for classes.
 		do
 			classes_double_click_agents.extend (p)
 		end
 
-	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_double_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a double click action for classes.
 		do
 			cluster_double_click_agents.extend (p)
 		end
 
-	add_single_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_single_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a single click action for classes.
 		do
 			classes_single_click_agents.extend (p)
 		end
 
-	add_single_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_single_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add a single click action for classes.
 		do
 			cluster_single_click_agents.extend (p)
@@ -1126,16 +1126,16 @@ feature {EB_CLASSES_TREE_ITEM} -- Protected Properties
 	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
 
-	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	classes_double_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to double-clicks on classes.
 
-	cluster_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+	cluster_double_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]];
 			-- Agents associated to double-clicks on clusters.
 
-	classes_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	classes_single_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to single-click on classes.
 
-	cluster_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]];
+	cluster_single_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]];
 			-- Agents associated to single-click on clusters.
 
 	set_last_pressed_item (a_item: like last_pressed_item)

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	development_window_agent: FUNCTION [ANY, TUPLE, EB_DEVELOPMENT_WINDOW]
+	development_window_agent: FUNCTION [EB_DEVELOPMENT_WINDOW]
 
 feature -- Status
 
@@ -68,7 +68,7 @@ feature -- Change
 			implementation := Void
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]; is_kamikazee: BOOLEAN)
+	add_idle_action (v: PROCEDURE; is_kamikazee: BOOLEAN)
 			-- Add `a_idle_actions' to idle_actions if not already present.
 			-- Thread safe
 		do
@@ -79,7 +79,7 @@ feature -- Change
 			end
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (v: PROCEDURE)
 			-- Remove `v' from `idle_actions'
 		do
 			ev_application.remove_idle_action (v)

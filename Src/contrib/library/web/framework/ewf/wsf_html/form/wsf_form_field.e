@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Validation		
 
-	validation_action: detachable PROCEDURE [ANY, TUPLE [WSF_FORM_DATA]]
+	validation_action: detachable PROCEDURE [WSF_FORM_DATA]
 			-- Function returning True if valid, otherwise False
 
 	validate (fd: WSF_FORM_DATA)

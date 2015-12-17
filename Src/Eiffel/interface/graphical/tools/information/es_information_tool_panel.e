@@ -320,7 +320,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Access
 
-	refresh_list_agent: detachable PROCEDURE [ANY, TUPLE];
+	refresh_list_agent: detachable PROCEDURE;
 			-- Agent of `user_widget.refresh_list'
 
 note

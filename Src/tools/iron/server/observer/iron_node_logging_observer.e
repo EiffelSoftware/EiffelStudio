@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			level := a_level
 		end
 
-	logging: PROCEDURE [ANY, TUPLE [IRON_NODE_LOG]]
+	logging: PROCEDURE [IRON_NODE_LOG]
 
 	level: NATURAL_8
 			-- logging level

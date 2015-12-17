@@ -501,10 +501,10 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
+	sorting_order_getter: FUNCTION [STRING]
 			-- Agent to retrieve last recorded sorting order
 
-	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
+	sorting_order_setter: PROCEDURE [STRING]
 			-- Agent to retrieve last recorded sorting order
 
 	selected_row_background_color (a_grid_row: EV_GRID_ROW): EV_COLOR
@@ -823,7 +823,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	do_all_in_rows (a_row_list: LIST [EV_GRID_ROW]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]])
+	do_all_in_rows (a_row_list: LIST [EV_GRID_ROW]; a_agent: PROCEDURE [EV_GRID_ROW])
 			-- Call `a_agent' for all rows in `a_row_list'.
 		require
 			a_row_list_attached: a_row_list /= Void
@@ -841,7 +841,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	do_all_in_items (a_item_list: LIST [EV_GRID_ITEM]; a_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]])
+	do_all_in_items (a_item_list: LIST [EV_GRID_ITEM]; a_agent: PROCEDURE [EV_GRID_ITEM])
 			-- Call `a_agent' for all items in `a_item_list'.
 		require
 			a_item_list_attached: a_item_list /= Void
@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 			is_resize_by_user_set: is_resize_by_user = b
 		end
 
-	select_all_in_dynamic_grid (a_grid: EV_GRID; a_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]; a_columns: LIST [INTEGER])
+	select_all_in_dynamic_grid (a_grid: EV_GRID; a_item_function: FUNCTION [INTEGER, INTEGER, EV_GRID_ITEM]; a_columns: LIST [INTEGER])
 			-- Select all rows/items in dynamic grid `a_grid'.			
 			-- `a_item_function' is the function to get grid items on the fly.			
 			-- `a_columns' contains indexes of columns whose items are to be retrieved.
@@ -943,7 +943,7 @@ feature -- Tree hierarchy highlight
 			grid_is_in_tree_mode: grid.is_tree_enabled
 			tree_node_highlight_enabled: is_tree_node_highlight_enabled
 		local
-			l_agent: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+			l_agent: PROCEDURE [EV_GRID_ROW]
 			l_selected_rows: LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 		do
@@ -1095,7 +1095,7 @@ feature{NONE} -- Implementation/Stone
 			end
 		end
 
-	is_subrow_recursively_expanded (a_row: EV_GRID_ROW; a_expanded_agent: FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]): BOOLEAN
+	is_subrow_recursively_expanded (a_row: EV_GRID_ROW; a_expanded_agent: FUNCTION [EV_GRID_ROW, BOOLEAN]): BOOLEAN
 			-- Is `a_row' and all its recursive subrows expanded?
 			-- `a_expanded_agent' is a function to decide if the grid row given as the only argument is expanded.
 		require

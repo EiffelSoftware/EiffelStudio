@@ -626,8 +626,8 @@ feature {NONE} -- When hits
 				TUPLE [
 					data: BREAKPOINT_WHEN_HITS_ACTION_I;
 					data_type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I];
-					is_valid_function: FUNCTION [ANY, TUPLE [BREAKPOINT], BOOLEAN];
-					apply_function: FUNCTION [ANY, TUPLE [BREAKPOINT], BREAKPOINT_WHEN_HITS_ACTION_I]
+					is_valid_function: FUNCTION [BREAKPOINT, BOOLEAN];
+					apply_function: FUNCTION [BREAKPOINT, BREAKPOINT_WHEN_HITS_ACTION_I]
 					]
 				]
 
@@ -1506,7 +1506,7 @@ feature -- Action
 						when_hits_actions_entries.item_for_iteration.is_valid_function.item ([bp])
 					then
 						wh_a := when_hits_actions_entries.item_for_iteration.data
-						l_changes.extend (agent (a_bp:BREAKPOINT; awh: BREAKPOINT_WHEN_HITS_ACTION_I; afct: FUNCTION [ANY, TUPLE [BREAKPOINT], BREAKPOINT_WHEN_HITS_ACTION_I])
+						l_changes.extend (agent (a_bp:BREAKPOINT; awh: BREAKPOINT_WHEN_HITS_ACTION_I; afct: FUNCTION [BREAKPOINT, BREAKPOINT_WHEN_HITS_ACTION_I])
 								require
 									bp_not_void: a_bp /= Void
 									apply_function_not_void: afct /= Void

@@ -68,7 +68,7 @@ feature -- Status
 
 feature -- Access
 
-	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
+	output_handler: PROCEDURE [STRING]
 			-- Output handler that will be invoked for any compiler output
 
 feature -- Status Settings

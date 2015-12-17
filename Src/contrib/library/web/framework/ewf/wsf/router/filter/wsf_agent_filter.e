@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			action := agt
 		end
 
-	action: PROCEDURE [ANY, TUPLE [WSF_REQUEST, WSF_RESPONSE]]
+	action: PROCEDURE [WSF_REQUEST, WSF_RESPONSE]
 
 feature -- Basic operations
 

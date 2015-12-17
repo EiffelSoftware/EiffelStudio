@@ -27,7 +27,7 @@ feature{NONE} -- Access
 
 feature -- Callback action register
 
-	extend_action (a_action: PROCEDURE [ANY, TUPLE [EB_METRIC_VISITABLE]])
+	extend_action (a_action: PROCEDURE [EB_METRIC_VISITABLE])
 			-- Extend `a_action' which is invoked when processing certain kind of {EB_METRIC_VISITABLE}.
 		require
 			a_action_attached: a_action /= Void
@@ -37,7 +37,7 @@ feature -- Callback action register
 			a_action_extened: visitor.has_action (a_action)
 		end
 
-	append_actions (a_actions: ARRAY [PROCEDURE [ANY, TUPLE [EB_METRIC_VISITABLE]]])
+	append_actions (a_actions: ARRAY [PROCEDURE [EB_METRIC_VISITABLE]])
 			-- Append `a_actions' to `visitor'.
 		require
 			a_actions_attached: a_actions /= Void

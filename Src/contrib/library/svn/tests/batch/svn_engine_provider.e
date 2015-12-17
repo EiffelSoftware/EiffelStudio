@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 
-	wait_until_has_info (i: INTEGER; a_agent: PROCEDURE [ANY, TUPLE])
+	wait_until_has_info (i: INTEGER; a_agent: PROCEDURE)
 		do
 			from
 			until

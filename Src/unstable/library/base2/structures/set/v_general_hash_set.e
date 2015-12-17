@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
+	make (eq: PREDICATE [G, G]; h: FUNCTION [G, INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
 		require
 			--- eq_is_total: eq.precondition |=| True
@@ -100,10 +100,10 @@ feature -- Search
 			end
 		end
 
-	equivalence: PREDICATE [ANY, TUPLE [G, G]]
+	equivalence: PREDICATE [G, G]
 			-- Equivalence relation on values.
 
-	hash: FUNCTION [ANY, TUPLE [G], INTEGER]
+	hash: FUNCTION [G, INTEGER]
 			-- Hash function.
 
 feature -- Iteration

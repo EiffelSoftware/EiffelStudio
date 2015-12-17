@@ -68,7 +68,7 @@ feature -- Access
 	possibilities_provider: EB_EXTERNAL_CMD_COMPLETION_PROVIDER
 			-- Possibilities provider
 
-	can_complete_agent: FUNCTION [ANY, TUPLE [a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN], BOOLEAN]
+	can_complete_agent: FUNCTION [TUPLE [a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN], BOOLEAN]
 			-- Agent to decide if completion can start
 
 feature -- Setting

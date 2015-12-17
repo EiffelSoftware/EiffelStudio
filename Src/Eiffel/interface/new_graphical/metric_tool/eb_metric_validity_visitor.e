@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	delayed_validity_function: FUNCTION [ANY, TUPLE [a_delayed_domain_item: EB_METRIC_DELAYED_DOMAIN_ITEM], EB_METRIC_ERROR]
+	delayed_validity_function: FUNCTION [TUPLE [a_delayed_domain_item: EB_METRIC_DELAYED_DOMAIN_ITEM], EB_METRIC_ERROR]
 			-- Function used to check validity of `a_delayed_domain_item'.
 			-- If `a_delayed_domain_item' is invalid, error information is returned from this function, otherwise,
 			-- Void is returned.
@@ -921,7 +921,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	last_domain_item_error_retriever: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
+	last_domain_item_error_retriever: FUNCTION [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
 			-- Last error message retriever
 
 	set_last_domain_item_error_retriever (a_retriever: like last_domain_item_error_retriever)

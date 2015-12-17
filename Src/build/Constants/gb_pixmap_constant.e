@@ -192,7 +192,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 			-- Rebuild representations of `Current', and update all referers within system.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]]
+			execution_agent: PROCEDURE [EV_PIXMAP, STRING_GENERAL]
 			file_name: FILE_NAME
 		do
 			if is_absolute then

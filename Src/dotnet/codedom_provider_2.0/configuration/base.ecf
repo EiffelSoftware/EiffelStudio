@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="eiffelsoftware.codedom.base" uuid="190A6272-E25A-42BE-AD95-D336828D769D" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="eiffelsoftware.codedom.base" uuid="190A6272-E25A-42BE-AD95-D336828D769D" library_target="base">
 	<target name="base">
 		<description>Codedom provider base</description>
 		<root class="ANY"/>
 		<version major="5" minor="7" release="426" build="0"/>
+		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		</option>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="EiffelSoftware.Codedom.Base2_0"/>

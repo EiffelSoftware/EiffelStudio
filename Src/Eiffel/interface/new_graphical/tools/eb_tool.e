@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [ANY, TUPLE [EV_WIDGET]]; a_excluded: ARRAY [EV_WIDGET])
+	propagate_action (a_start_widget: EV_WIDGET; a_action: PROCEDURE [EV_WIDGET]; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates a performed action to all child widgets of an initial widget.
 			--
 			-- `a_start_widget': The starting widget to apply an action, as well as to all it's children widgets.

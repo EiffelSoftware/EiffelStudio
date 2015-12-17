@@ -49,7 +49,7 @@ feature -- Access
 		deferred
 		end
 
-	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
+	sorting_order_getter: FUNCTION [STRING]
 			-- Getter to retrieve sorting order status
 		do
 			if sorting_status_preference /= Void then
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
+	sorting_order_setter: PROCEDURE [STRING]
 			-- Setter to set sorting order given as the only argument
 		do
 			if sorting_status_preference /= Void then

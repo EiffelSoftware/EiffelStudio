@@ -28,7 +28,7 @@ feature -- Access
 			Result.extend ("a_tree_item")
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [EV_TREE_ITEM]]
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [EV_TREE_ITEM]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.

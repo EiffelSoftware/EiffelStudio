@@ -80,7 +80,7 @@ feature -- Cursor
 
 feature -- Action
 
-	action: FUNCTION [ANY, detachable TUPLE, G]
+	action: FUNCTION [detachable TUPLE, G]
 			-- Agent to create a new item of type G.
 
 feature {NONE} -- Implementation

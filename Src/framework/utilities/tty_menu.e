@@ -84,7 +84,7 @@ feature -- Change
 			add_conditional_entry (a_abr, a_text, a_action, Void)
 		end
 
-	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: detachable FUNCTION [ANY, TUPLE, BOOLEAN])
+	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: detachable FUNCTION [BOOLEAN])
 			-- Add a new entry with condition
 			-- the entry will be display only if the `a_cond' is satisfied.
 		local
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	leave: BOOLEAN
 			-- Leave when possible.
 
-	action_from (t: attached like entry): detachable PROCEDURE [ANY, TUPLE]
+	action_from (t: attached like entry): detachable PROCEDURE
 			-- Menu action for entry `t'.
 		require
 			t /= Void
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	entry (a_index: INTEGER; a_abr: detachable STRING): detachable TUPLE [index:INTEGER; abrev: detachable STRING; text: STRING_GENERAL; action: detachable PROCEDURE [ANY, TUPLE]; cond: detachable FUNCTION [ANY, TUPLE, BOOLEAN]]
+	entry (a_index: INTEGER; a_abr: detachable STRING): detachable TUPLE [index:INTEGER; abrev: detachable STRING; text: STRING_GENERAL; action: detachable PROCEDURE; cond: detachable FUNCTION [BOOLEAN]]
 			-- Entry indexed by `a_index'.
 		local
 			lst: like entries

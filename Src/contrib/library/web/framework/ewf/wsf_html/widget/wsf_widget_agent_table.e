@@ -60,7 +60,7 @@ feature -- Access
 	data: detachable ITERABLE [G]
 			-- tbody
 
-	compute_item_function: detachable FUNCTION [ANY, TUPLE [data: G], WSF_WIDGET_TABLE_ROW]
+	compute_item_function: detachable FUNCTION [TUPLE [data: G], WSF_WIDGET_TABLE_ROW]
 
 feature -- Change
 

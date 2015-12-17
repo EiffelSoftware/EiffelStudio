@@ -131,9 +131,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	url_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
+	url_function: detachable FUNCTION [URL]
 
-	resource_function: detachable FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
+	resource_function: detachable FUNCTION [DATA_RESOURCE]
 
 	lookup_service_id: INTEGER
 			-- Lookup ID for service.

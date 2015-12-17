@@ -28,19 +28,19 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	perform (a_action: PROCEDURE [ANY, TUPLE])
+	perform (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			a_action.call (Void)
 		end
 
-	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
+	retrieve (a_action: FUNCTION [detachable ANY]): detachable ANY
 			-- <Precursor>
 		do
 			Result := a_action.item (Void)
 		end
 
-	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
+	test (a_action: PREDICATE; a_expected: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := (a_action.item (Void) = a_expected)

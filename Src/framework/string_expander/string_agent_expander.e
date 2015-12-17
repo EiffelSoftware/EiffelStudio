@@ -27,15 +27,15 @@ inherit
 
 feature {NONE} -- Access
 
-	value_delegate: detachable FUNCTION [ANY, TUPLE [name: READABLE_STRING_8], detachable STRING]
+	value_delegate: detachable FUNCTION [TUPLE [name: READABLE_STRING_8], detachable STRING]
 			-- Function used to retrieve a variable value associated with a name.
 
-	value_delegate_32: detachable FUNCTION [ANY, TUPLE [name: READABLE_STRING_32], detachable STRING_32]
+	value_delegate_32: detachable FUNCTION [TUPLE [name: READABLE_STRING_32], detachable STRING_32]
 			-- Function used to retrieve a variable 32-bit value associated with a name.
 
 feature -- Query
 
-	expand_string (a_string: READABLE_STRING_8; a_delegate: FUNCTION [ANY, TUPLE [name: READABLE_STRING_8], detachable STRING]; a_keep: BOOLEAN): STRING
+	expand_string (a_string: READABLE_STRING_8; a_delegate: FUNCTION [TUPLE [name: READABLE_STRING_8], detachable STRING]; a_keep: BOOLEAN): STRING
 			-- Expands a 8-bit string and replaces any variable values.
 			--
 			-- `a_string'  : The string to expand.
@@ -53,7 +53,7 @@ feature -- Query
 			value_delegate_detached: value_delegate = Void
 		end
 
-	expand_string_32 (a_string: READABLE_STRING_32; a_delegate: FUNCTION [ANY, TUPLE [name: READABLE_STRING_32], detachable STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
+	expand_string_32 (a_string: READABLE_STRING_32; a_delegate: FUNCTION [TUPLE [name: READABLE_STRING_32], detachable STRING_32]; a_use_env: BOOLEAN; a_keep: BOOLEAN): STRING_32
 			-- Expands a 32-bit string and replaces any variable values.
 			--
 			-- `a_string'  : The string to expand.

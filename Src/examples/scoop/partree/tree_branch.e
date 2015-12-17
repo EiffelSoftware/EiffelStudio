@@ -14,16 +14,16 @@ feature
 	left, right: separate PAR_TREE [G]
 
         compute_agents (init: G;
-                 trns: FUNCTION [ANY, TUPLE [G], G];
-                 comb: FUNCTION [ANY, TUPLE [G,G], G]
+                 trns: FUNCTION [G, G];
+                 comb: FUNCTION [G,G, G]
                 )
                 do
                         comp_result := compute_agents_sub (init, trns, comb, left, right)
                 end
 
         compute_agents_sub (init: separate G;
-                        trns: separate FUNCTION [ANY, TUPLE [G], G];
-                        comb: separate FUNCTION [ANY, TUPLE [G,G], G];
+                        trns: separate FUNCTION [G, G];
+                        comb: separate FUNCTION [G,G, G];
                         l, r: separate PAR_TREE [G]
                        ): G
                 do

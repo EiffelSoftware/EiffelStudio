@@ -215,7 +215,7 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Main widget
 
-	close_button_action: detachable PROCEDURE [ANY, TUPLE]
+	close_button_action: detachable PROCEDURE
 			-- Action called when "Close" button is pressed.
 
 	parent_window: detachable EV_WINDOW note option: stable attribute end
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			l_prefs_to_sort: detachable LIST [PREFERENCE]
 			l_known_pref_ht: STRING_TABLE [PREFERENCE]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]]
-			l_compare_agent: PREDICATE [ANY, TUPLE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]]
+			l_compare_agent: PREDICATE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]
 			l_proxy_comparable: PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]
 			l_pref_index, l_pref_name, l_display_name: STRING_32
 			l_pref: detachable PREFERENCE
@@ -1675,7 +1675,7 @@ feature {NONE} -- Private attributes
 	default_row_height: INTEGER
 			-- Default row height
 
-	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
+	display_update_agent: PROCEDURE [PREFERENCE]
 			-- Agent to be called when preference is changed outside	
 
 	col_name_index: INTEGER = 1

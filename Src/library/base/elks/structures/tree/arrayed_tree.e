@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	do_all_internal (an_agent: PROCEDURE [ANY, TUPLE [G]]; a_tree_node: like Current)
+	do_all_internal (an_agent: PROCEDURE [G]; a_tree_node: like Current)
 			-- Apply action to every child.
 		require
 			non_void_agent: an_agent /= Void
@@ -621,7 +621,7 @@ feature -- Access
 			arrayed_list.move (i)
 		end
 
-	do_all (an_agent: PROCEDURE [ANY, TUPLE [G]])
+	do_all (an_agent: PROCEDURE [G])
 			-- Apply `an_agent' to every child nodes in the tree.
 		do
 			do_all_internal (an_agent, Current)

@@ -149,7 +149,7 @@ feature {NONE} -- Actions
 			l_window: detachable EB_DEVELOPMENT_WINDOW
 			l_target: detachable CONF_TARGET
 			l_clusters: STRING_TABLE [CONF_CLUSTER]
-			l_classes_in_cluster: PROCEDURE [ANY, TUPLE [CONF_CLUSTER]]
+			l_classes_in_cluster: PROCEDURE [CONF_CLUSTER]
 			l_stone: detachable STONE
 		do
 			l_window := window_manager.last_focused_development_window

@@ -102,7 +102,7 @@ feature -- Basic operation
 			Result.extend ("system_interface.xml")
 		end
 
-	register_object_written_agent (an_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]])
+	register_object_written_agent (an_agent: PROCEDURE [INTEGER, INTEGER])
 			-- Insert `an_agent' into `object_written_actions'.
 		require
 			agent_not_void: an_agent /= Void
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 		end
 
-	object_written_action: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]
+	object_written_action: PROCEDURE [INTEGER, INTEGER]
 			-- An agent to be fired when a new object is written to the XML.
 
 	last_stored_individual_object_document: XM_DOCUMENT;

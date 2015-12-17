@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="threading" uuid="290B4136-9F21-49A3-9883-54C60C71A592" library_target="threading">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="threading" uuid="290B4136-9F21-49A3-9883-54C60C71A592" library_target="threading">
 	<target name="threading">
-		<root all_classes="true"/>
 		<description>Augments the threading library.</description>
+		<root all_classes="true"/>
 		<file_rule>
 			<exclude>mono-threaded</exclude>
 			<condition>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</file_rule>
 		<file_rule>
 			<exclude>multi-threaded</exclude>
 			<condition>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</file_rule>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 			<exclude>EIFGENs</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="patterns" location="$EIFFEL_SRC\framework\patterns\patterns-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf">
 			<condition>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</library>
 		<cluster name="threading" location=".\" recursive="true"/>

@@ -40,7 +40,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	method_table: HASH_TABLE [ROUTINE [ANY, TUPLE], READABLE_STRING_8]
+	method_table: HASH_TABLE [ROUTINE, READABLE_STRING_8]
 			-- Table of XML-RPC method calls.
 			--
 			-- key: A API method name generated from `method_table_key'.
@@ -126,7 +126,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	method alias "[]" (a_name: READABLE_STRING_8): ROUTINE [ANY, TUPLE]
+	method alias "[]" (a_name: READABLE_STRING_8): ROUTINE
 			-- Retrieves an API method.
 			--
 			-- `a_name': Name of the method to retrieve
@@ -138,7 +138,7 @@ feature -- Query
 			has_method_a_name: has_method (a_name)
 		local
 			l_key: like method_table_key
-			l_result: detachable ROUTINE [ANY, TUPLE]
+			l_result: detachable ROUTINE
 		do
 			l_key := method_table_key (a_name)
 			l_result := method_table.item (a_name)
@@ -204,7 +204,7 @@ feature {XRPC_SERVER_DISPATCHER} -- Action handlers
 
 feature {NONE} -- Factory
 
-	new_method_agents: HASH_TABLE [ROUTINE [ANY, TUPLE], READABLE_STRING_8]
+	new_method_agents: HASH_TABLE [ROUTINE, READABLE_STRING_8]
 			-- Creates a new table of method agents.
 			-- XML-RPC method agents may use either Eiffel types or XML-RPC types for arguments and
 			-- results. XML-RPC agents may be either a procedure or function using the following supported

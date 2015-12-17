@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (an_undo_procedure, a_redo_procedure: PROCEDURE [ANY, TUPLE])
+	make (an_undo_procedure, a_redo_procedure: PROCEDURE)
 			-- Create with `an_undo_procedure' and `a_redo_procedure'.
 		require
 			an_undo_procedure /= Void
@@ -96,10 +96,10 @@ feature -- Comparison
 
 feature {UNDO_PAIR} -- Implementation
 
-	undo_procedure: PROCEDURE [ANY, TUPLE]
+	undo_procedure: PROCEDURE
 			-- Reverses operation.
 
-	redo_procedure: PROCEDURE [ANY, TUPLE]
+	redo_procedure: PROCEDURE
 			-- Reperforms operation.
 
 invariant

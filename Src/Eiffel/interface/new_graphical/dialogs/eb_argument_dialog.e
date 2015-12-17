@@ -251,7 +251,7 @@ feature {NONE} -- Properties
 	debugging_options_control: EB_DEBUGGING_OPTIONS_CONTROL
 			-- Widget holding all arguments information.
 
-	run: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PROFILE]]
+	run: PROCEDURE [DEBUGGER_EXECUTION_PROFILE]
 
 feature {NONE} -- Implementation
 

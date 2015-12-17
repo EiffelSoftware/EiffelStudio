@@ -55,7 +55,7 @@ feature	-- Basic Functionality
 --			-- FIXME TODO
 --		end
 
-	add_attribute_setter (a_key: STRING; a_setter: PROCEDURE [ANY, TUPLE [ANY]])
+	add_attribute_setter (a_key: STRING; a_setter: PROCEDURE [ANY])
 			-- Sets the bean attribute setter for a specific key
 		require
 			a_key_valid: attached a_key and then not a_key.is_empty

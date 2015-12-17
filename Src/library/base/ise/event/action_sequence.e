@@ -39,7 +39,7 @@ class
 	ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
 
 inherit
-	INTERACTIVE_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	INTERACTIVE_LIST [PROCEDURE [EVENT_DATA]]
 		rename
 			make as arrayed_list_make
 		redefine
@@ -317,7 +317,7 @@ feature -- Element status
 
 feature -- Event handling
 
-	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	not_empty_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
 		local
 			r: like not_empty_actions_internal
@@ -330,7 +330,7 @@ feature -- Event handling
 			Result := r
 		end
 
-	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	empty_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
 		local
 			r: like empty_actions_internal
@@ -345,7 +345,7 @@ feature -- Event handling
 
 feature {NONE} -- Implementation
 
-	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]])
+	call_action_list (actions: ARRAYED_LIST [PROCEDURE])
 			-- Call each action in `actions'.
 		require
 			actions_not_void: actions /= Void
@@ -443,7 +443,7 @@ feature -- Obsolete
 		end
 
 	set_source_connection_agent
-				(a_source_connection_agent: PROCEDURE [ANY, TUPLE])
+				(a_source_connection_agent: PROCEDURE)
 			-- Set `a_source_connection_agent' that will connect sequence to an
 			-- actual event source. The agent will be called when the first action is
 			-- added to the sequence. If there are already actions in the

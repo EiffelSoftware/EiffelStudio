@@ -24,7 +24,7 @@ feature -- Status Setting
 			description_set: description = a_title
 		end		
 
-	set_procedure (a_procedure: PROCEDURE [ANY, TUPLE])
+	set_procedure (a_procedure: PROCEDURE)
 			-- Set procedure
 		require
 			procedure_not_void: a_procedure /= Void
@@ -189,7 +189,7 @@ feature -- Access
 	description: STRING
 			-- Description title for generation
 	
-	generation_routine: PROCEDURE [ANY, TUPLE]
+	generation_routine: PROCEDURE
 			-- Routine to call on generation start
 	
 feature {NONE} -- Access	

@@ -801,7 +801,7 @@ feature {NONE} -- Implementation: Graphical interface
 
 feature {NONE} -- Implementation: Creation routine selection
 
-	choose_creation_routine (next_action: PROCEDURE [ANY, TUPLE])
+	choose_creation_routine (next_action: PROCEDURE)
 			-- If possible, find a valid creation routine of `current_class',
 			-- and set `current_creation_routine' after asking the user if necessary.
 			-- Call `next_action' iff a creation routine was chosen.
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation: Creation routine selection
 	creation_routine_list: LIST [E_FEATURE]
 			-- The creation routines of `current_class' among which the user may choose.
 
-	call_back: PROCEDURE [ANY, TUPLE]
+	call_back: PROCEDURE
 			-- What should be executed after choosing a creation routine.
 
 feature {NONE} -- Implementation: Low_level dialog, file operations
@@ -1044,7 +1044,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			load_ok := True
 		end
 
-	ask_for_file_name (load: BOOLEAN; next_action: PROCEDURE [ANY, TUPLE])
+	ask_for_file_name (load: BOOLEAN; next_action: PROCEDURE)
 			-- Prompt the user for a `.def' file, set `file_name' to the chosen file name, and execute `next_action'.
 			-- If `load' then we assume we want to open a file. Otherwise we want to save it.
 		local
@@ -1093,7 +1093,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 	dynamic_library: E_DYNAMIC_LIB
 			-- Helper to read/write .def files.
 
-	file_call_back: PROCEDURE [ANY, TUPLE]
+	file_call_back: PROCEDURE
 			-- Action performed after a file has been chosen.
 
 feature {NONE} -- Implementation: Feature creation

@@ -221,8 +221,8 @@ feature -- Basic operations
 	extract_case_ranges (
 				a_table_name: STRING;
 				a_list: ARRAYED_LIST [UNICODE_CHARACTER_DATA];
-				a_filter: FUNCTION [ANY, TUPLE [UNICODE_CHARACTER_DATA], BOOLEAN];
-				a_value: FUNCTION [ANY, TUPLE [UNICODE_CHARACTER_DATA], NATURAL_32];
+				a_filter: FUNCTION [UNICODE_CHARACTER_DATA, BOOLEAN];
+				a_value: FUNCTION [UNICODE_CHARACTER_DATA, NATURAL_32];
 				): ARRAYED_LIST [ARRAYED_LIST [TUPLE [key, value: NATURAL_32]]]
 			-- Helper function that generate the ranges for the various conversion of
 			-- a Unicode character to either lower, upper or title case. This function

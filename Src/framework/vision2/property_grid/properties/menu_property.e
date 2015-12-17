@@ -40,16 +40,16 @@ feature -- Access
 	menu: detachable EV_MENU
 			-- Menu to be displayed
 
-	menu_position_function: detachable FUNCTION [ANY, TUPLE [a_menu: like menu; a_property: like Current], EV_RECTANGLE]
+	menu_position_function: detachable FUNCTION [TUPLE [a_menu: like menu; a_property: like Current], EV_RECTANGLE]
 			-- Function to retrieve position (related to top-left corner of `a_property') at which `menu' will be displayed.
 			-- Argument `a_menu' passed to function is the menu to be displayed.
 			-- Argument `a_property' is Current property
 			-- If this function is Void, `menu' will be displayed at pointer position.
 
-	value_retriever: detachable FUNCTION [ANY, TUPLE [a_menu_item: EV_MENU_ITEM], G]
+	value_retriever: detachable FUNCTION [TUPLE [a_menu_item: EV_MENU_ITEM], G]
 			-- Function to retrieve value from a selected menu item
 
-	value_converter: detachable FUNCTION [ANY, TUPLE [a_displayed_value: like displayed_value], like value]
+	value_converter: detachable FUNCTION [TUPLE [a_displayed_value: like displayed_value], like value]
 			-- Function to convert displayed value to value
 
 feature -- Status report
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	recursive_do (a_menu: like menu; a_proc: PROCEDURE [ANY, TUPLE [a_menu: EV_MENU]])
+	recursive_do (a_menu: like menu; a_proc: PROCEDURE [TUPLE [a_menu: EV_MENU]])
 			-- Recursive apply `a_proc' to every menu from `a_menu'.
 		require
 			a_proc_attached: a_proc /= Void
@@ -206,7 +206,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_menu_item_selected_agent: PROCEDURE [ANY, TUPLE [EV_MENU_ITEM]]
+	on_menu_item_selected_agent: PROCEDURE [EV_MENU_ITEM]
 			-- Agent of `on_menu_item_selected'
 		do
 			if attached on_menu_item_selected_agent_internal as l_agent then

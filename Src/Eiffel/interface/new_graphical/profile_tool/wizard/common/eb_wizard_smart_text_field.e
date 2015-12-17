@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 	caller: EB_WIZARD_STATE_WINDOW
 			-- Caller of this object.
 
-	browse_button_action: PROCEDURE [ANY, TUPLE];
+	browse_button_action: PROCEDURE;
 			-- Action for the browse button.
 
 note

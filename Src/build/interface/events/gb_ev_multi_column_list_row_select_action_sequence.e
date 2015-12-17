@@ -28,7 +28,7 @@ feature -- Access
 			Result.extend ("an_item")
 		end
 
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [EV_MULTI_COLUMN_LIST_ROW]]
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [EV_MULTI_COLUMN_LIST_ROW]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `textable'.

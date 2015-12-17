@@ -48,7 +48,7 @@ feature -- Access
 	possibilities_provider: detachable COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider.
 
-	key_completable : detachable FUNCTION [ANY, TUPLE [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
+	key_completable : detachable FUNCTION [EV_KEY, BOOLEAN, BOOLEAN, BOOLEAN, BOOLEAN]
 			-- EV_KEY can activate text completion?
 
 	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
@@ -65,7 +65,7 @@ feature -- Access
 			key_press_actions_not_void: Result /= Void
 		end
 
-	save_list_position_action: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]]
+	save_list_position_action: detachable PROCEDURE [INTEGER, INTEGER, INTEGER, INTEGER]
 			-- Action to save completion list position.
 			-- [x_position, y_position, width, height]
 

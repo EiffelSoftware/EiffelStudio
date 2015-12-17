@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access	
 
-	action: PROCEDURE [ANY, TUPLE [request: WSF_REQUEST; response: WSF_RESPONSE]]
+	action: PROCEDURE [TUPLE [request: WSF_REQUEST; response: WSF_RESPONSE]]
 
 feature -- Execution
 

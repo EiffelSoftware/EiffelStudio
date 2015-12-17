@@ -591,7 +591,7 @@ feature -- Basic operations
 			grid_item_exists: BOOLEAN
 			current_item_y_position, current_item_x_position: INTEGER
 			current_tree_adjusted_item_x_position, current_tree_adjusted_column_width: INTEGER
-			dynamic_content_function: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			dynamic_content_function: detachable FUNCTION [INTEGER, INTEGER, EV_GRID_ITEM]
 			internal_client_width, internal_client_height: INTEGER
 			current_subrow_indent: INTEGER
 			visible_column_indexes: ARRAYED_LIST [INTEGER]

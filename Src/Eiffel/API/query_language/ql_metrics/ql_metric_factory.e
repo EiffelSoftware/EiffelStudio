@@ -188,7 +188,7 @@ feature{NONE} -- Calculation
 
 feature{NONE} -- Implementation
 
-	metric_creator_table: HASH_TABLE [FUNCTION [ANY, TUPLE, QL_METRIC], QL_METRIC_UNIT]
+	metric_creator_table: HASH_TABLE [FUNCTION [QL_METRIC], QL_METRIC_UNIT]
 			-- Table for metric creators
 			-- Key is metric unit, value is the creator for that unit
 		once

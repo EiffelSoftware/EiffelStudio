@@ -74,7 +74,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	evaluate_agent: FUNCTION [ANY, TUPLE [like item_type], BOOLEAN]
+	evaluate_agent: FUNCTION [TUPLE [like item_type], BOOLEAN]
 			-- Agent used to evaluate current criterion against a given item
 
 	require_compiled_internal: BOOLEAN

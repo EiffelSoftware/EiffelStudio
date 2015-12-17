@@ -8,14 +8,14 @@ class
 	CP_ROUTINE_ACCESS
 
 inherit
-	PROCEDURE [ANY, TUPLE]
+	PROCEDURE
 		export {ROUTINE}
 			all
 		end
 
 feature -- Access
 
-	get_closed_operands (a_routine: separate ROUTINE [ANY, TUPLE]): detachable separate TUPLE
+	get_closed_operands (a_routine: separate ROUTINE): detachable separate TUPLE
 			-- Get the closed operands of `a_routine'.
 		do
 			Result := a_routine.closed_operands

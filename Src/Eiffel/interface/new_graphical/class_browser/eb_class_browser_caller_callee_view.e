@@ -293,7 +293,7 @@ feature -- Grind binding
 			l_row: INTEGER
 			l_grid_item: EV_GRID_ITEM
 			l_grid_row: EV_GRID_ROW
-			l_item_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			l_item_function: FUNCTION [INTEGER, INTEGER, EV_GRID_ITEM]
 			l_width: INTEGER
 			l_subrow_depth: INTEGER
 			l_parent_row: EV_GRID_ROW

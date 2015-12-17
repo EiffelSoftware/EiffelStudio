@@ -38,7 +38,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	filtered_archive (a_filter_agent: FUNCTION [ANY, TUPLE [a_archive_node: EB_METRIC_ARCHIVE_NODE], BOOLEAN]): like Current
+	filtered_archive (a_filter_agent: FUNCTION [TUPLE [a_archive_node: EB_METRIC_ARCHIVE_NODE], BOOLEAN]): like Current
 			-- Archive that satisfies predicate given by `a_filter_agent'.
 		require
 			a_filter_agent_attached: a_filter_agent /= Void
@@ -204,7 +204,7 @@ feature -- Archive manipulation
 			end
 		end
 
-	store_archive (a_file_name: PATH; a_error_agent: PROCEDURE [ANY, TUPLE])
+	store_archive (a_file_name: PATH; a_error_agent: PROCEDURE)
 			-- Write `archive' into file `a_file_name'.
 			-- Clear content of `a_file_name' if file already exists.
 			-- `a_error_agent' will be invoked when error occurs.

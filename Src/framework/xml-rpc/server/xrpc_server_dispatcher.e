@@ -135,7 +135,7 @@ feature -- Query
 
 feature {NONE} -- Query: Marshalling
 
-	marshal_routine_arguments (a_agent: ROUTINE [ANY, TUPLE]; a_args: ARRAY [XRPC_VALUE]): TUPLE
+	marshal_routine_arguments (a_agent: ROUTINE; a_args: ARRAY [XRPC_VALUE]): TUPLE
 			-- Marshals a routine's arguments and returns a tuple callable with the supplied routine.
 			--
 			-- `a_agent': The agent to call with the supplied arguments.
@@ -147,7 +147,7 @@ feature {NONE} -- Query: Marshalling
 			a_args_attached: a_args /= Void
 			a_args_big_enough: a_args.count >= a_agent.open_count
 		local
-			l_agent_type: TYPE [detachable ROUTINE [ANY, TUPLE]]
+			l_agent_type: TYPE [detachable ROUTINE]
 			l_tuple_type: TYPE [detachable ANY]
 			l_arg_type: TYPE [detachable ANY]
 			l_value: XRPC_VALUE
@@ -287,7 +287,7 @@ feature {NONE} -- Basic operations
 			a_delegate_has_method_a_name: a_delegate.has_method (a_name)
 			--a_args_contains_valid_values: attached a_args implies a_args.for_all (agent {XRPC_VALUE}.is_valid)
 		local
-			l_agent: ROUTINE [ANY, TUPLE]
+			l_agent: ROUTINE
 			l_result: ANY
 			l_open_args: detachable like marshal_routine_arguments
 		do
@@ -301,7 +301,7 @@ feature {NONE} -- Basic operations
 				if marshaller.is_marshallable_routine (l_agent) then
 					if a_args = Void or else a_args.is_empty then
 						a_delegate.on_before_call (a_name, Void)
-						if attached {FUNCTION [ANY, TUPLE, ANY]} l_agent as l_function then
+						if attached {FUNCTION [ANY]} l_agent as l_function then
 								-- Make call with no arguments.
 							l_result := l_function.item (Void)
 							if l_result /= Void then
@@ -319,7 +319,7 @@ feature {NONE} -- Basic operations
 						l_open_args := marshal_routine_arguments (l_agent, a_args)
 						if l_agent.valid_operands (l_open_args) then
 							a_delegate.on_before_call (a_name, l_open_args)
-							if attached {FUNCTION [ANY, TUPLE, ANY]} l_agent as l_function then
+							if attached {FUNCTION [ANY]} l_agent as l_function then
 									-- Make call with arguments.
 								l_result := l_function.item (l_open_args)
 								if attached l_result then

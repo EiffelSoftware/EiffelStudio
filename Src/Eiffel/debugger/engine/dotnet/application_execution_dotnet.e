@@ -1479,7 +1479,7 @@ feature {NONE} -- Events on notification
 
 feature -- update processing
 
-	agent_update_notify_on_after_stopped: PROCEDURE [ANY, TUPLE]
+	agent_update_notify_on_after_stopped: PROCEDURE
 			-- Procedure used as agent for `update_notify_on_after_stopped'
 
 	update_notify_on_after_stopped

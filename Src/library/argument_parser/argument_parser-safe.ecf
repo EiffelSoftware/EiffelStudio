@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="obsolete_arg_parser" uuid="F2CC3814-B342-4E64-9830-A39F6C1448D7" library_target="obsolete_arg_parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="obsolete_arg_parser" uuid="F2CC3814-B342-4E64-9830-A39F6C1448D7" library_target="obsolete_arg_parser">
 	<description>An argument parser library for parsing and validating command line arguments.</description>
 	<target name="obsolete_arg_parser">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/tests$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/tests$</exclude>
 		</file_rule>
 		<file_rule>
 			<exclude>/windows$</exclude>

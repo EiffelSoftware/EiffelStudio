@@ -43,7 +43,7 @@ feature -- Access
 			good_result: Result = class_scope
 		end
 
-	calculate_function: FUNCTION [ANY, TUPLE [QL_CLASS], DOUBLE]
+	calculate_function: FUNCTION [QL_CLASS, DOUBLE]
 			-- Function to calculate metric
 
 	domain_generator: QL_CLASS_DOMAIN_GENERATOR

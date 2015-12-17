@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Wrappers
 
-	change_no_argument_boolean_wrapper (a_dummy: BOOLEAN; a_call: PROCEDURE [ANY, TUPLE])
+	change_no_argument_boolean_wrapper (a_dummy: BOOLEAN; a_call: PROCEDURE)
 			-- Wrapper that allows to plugin in an agent without arguments on a change call (e.g. to refresh inheritance information).
 		require
 			a_call_not_void: a_call /= Void
@@ -18,7 +18,7 @@ feature {NONE} -- Wrappers
 			a_call.call (Void)
 		end
 
-	change_no_argument_wrapper (a_dummy: ANY; a_call: PROCEDURE [ANY, TUPLE])
+	change_no_argument_wrapper (a_dummy: ANY; a_call: PROCEDURE)
 			-- Wrapper that allows to plugin in an agent without arguments on a change call (e.g. to refresh inheritance information).
 		require
 			a_call_not_void: a_call /= Void

@@ -17,7 +17,7 @@ feature -- Format: action
 			format (t, locale.translation_in_context ("Remove {1}", "fix"), <<list (local_list)>>)
 		end
 
-	format_action_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
+	format_action_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [TEXT_FORMATTER])
 			-- Add a name of an action to add a local type `v' to `t'.
 		do
 			format (t, locale.translation_in_context ("Add type {1}", "fix"), <<element (v)>>)
@@ -31,7 +31,7 @@ feature -- Format: description
 			format (t, locale.translation_in_context ("Remove declarations of the local variables {1}.", "fix"), <<list (local_list)>>)
 		end
 
-	format_description_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]])
+	format_description_missing_local_type (t: TEXT_FORMATTER; v: PROCEDURE [TEXT_FORMATTER])
 			-- Add a description of an action to add a local type `v' to `t'.
 		do
 			format (t, locale.translation_in_context ("Add type declaration {1} to the local declaration list.", "fix"), <<element (v)>>)

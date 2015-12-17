@@ -21,7 +21,7 @@ feature -- Change
 
 feature -- Access	
 
-	action: PROCEDURE [ANY, TUPLE [context: C; request: WSF_REQUEST; response: WSF_RESPONSE]]
+	action: PROCEDURE [TUPLE [context: C; request: WSF_REQUEST; response: WSF_RESPONSE]]
 
 feature -- Execution
 

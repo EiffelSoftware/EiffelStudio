@@ -25,13 +25,13 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 		deferred
 		end
 
-	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING]
+	validate_agents: HASH_TABLE [FUNCTION [BOOLEAN], STRING]
 			-- Agents to query if a property modification is permitted, accessible
 			-- via their associated name.
 		deferred
 		end
 
-	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
+	execution_agents: HASH_TABLE [PROCEDURE, STRING]
 			-- Agents to execute a property modification, accessible
 			-- via their associated name.
 		deferred
@@ -83,17 +83,17 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 		end
 
 
-	for_all_objects (p: Procedure [EV_ANY, TUPLE])
+	for_all_objects (p: Procedure)
 			-- Call `p' on every item in `objects'.
 		deferred
 		end
 
-	for_first_object (p: Procedure [EV_ANY, TUPLE])
+	for_first_object (p: Procedure)
 			-- Call `p' on the first_item in `objects'.
 		deferred
 		end
 
-	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]])
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [GB_OBJECT])
 			-- For all instance referers recursively of `an_object', call `p' with the current
 			-- instance referer filled as the open argument. Used in places where `for_all_objects'
 			-- can not be used directly as some level of indirection and/or calculation is required

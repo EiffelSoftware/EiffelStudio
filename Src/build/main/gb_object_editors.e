@@ -99,7 +99,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE])
+	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE)
 			-- For all editors referencing `vision2_object', update by calling `p' on the editor.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
@@ -125,7 +125,7 @@ feature -- Implementation
 			local_all_editors.go_to (cursor)
 		end
 
-	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE])
+	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE)
 			-- For all editors, update by calling `p' on the editor.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]

@@ -37,7 +37,7 @@ feature {NONE} -- Access
 			-- Target on which the `thread_procedure' should be applied
 			-- Depending on which launch is used, target is not used
 
-	thread_procedure: detachable PROCEDURE [G, TUPLE]
+	thread_procedure: detachable PROCEDURE
 			-- Work that should be executed by the thread
 
 	semaphore: SEMAPHORE

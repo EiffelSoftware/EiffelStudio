@@ -60,7 +60,7 @@ feature {PS_ABEL_EXPORT} -- Object graph creation
 			owner_set: attached {PS_RELATIONAL_COLLECTION_PART} Result as res implies res.reference_owner = owner
 		end
 
-	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
+	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[detachable ANY, PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
 			-- Iterate over the collection and call `object_graph_factory' on each item
 		deferred
 		end

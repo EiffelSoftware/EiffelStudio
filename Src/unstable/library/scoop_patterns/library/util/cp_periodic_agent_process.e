@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	routine: separate ROUTINE [ANY, TUPLE]
+	routine: separate ROUTINE
 			-- The agent to be invoked.
 
 

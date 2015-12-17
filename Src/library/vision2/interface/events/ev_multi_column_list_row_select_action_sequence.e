@@ -22,13 +22,13 @@ create {EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (an_item: EV_MULTI_COLUMN_LIST_ROW; action: PROCEDURE [ANY, TUPLE])
+	wrapper (an_item: EV_MULTI_COLUMN_LIST_ROW; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

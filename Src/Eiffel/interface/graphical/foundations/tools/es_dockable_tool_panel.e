@@ -465,7 +465,7 @@ feature -- Basic operations
             is_initialized: (develop_window/= Void and then not develop_window.is_recycling and not develop_window.is_recycled) implies is_initialized
         end
 
-	execute_until_shown (a_procedure: PROCEDURE [ANY, TUPLE])
+	execute_until_shown (a_procedure: PROCEDURE)
 			-- Execute `a_procedure' until the panel is shown.
 			-- Execute the procedure if the panel is already shown.
 		require
@@ -493,7 +493,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDATIONS)
 
-    execute_with_busy_cursor (a_action: PROCEDURE [ANY, TUPLE])
+    execute_with_busy_cursor (a_action: PROCEDURE)
             -- Executes a action with a wait cursor
             --
             -- `a_action': An action to execute with a wait cursor displayed until the action has been completed
@@ -518,7 +518,7 @@ feature {NONE} -- Basic operations (Note code is replicated from ES_TOOL_FOUNDAT
 			end
 		end
 
-	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [ANY, TUPLE [EV_WIDGET], ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE [ANY, TUPLE]; a_excluded: ARRAY [EV_WIDGET])
+	propagate_register_action (a_start_widget: EV_WIDGET; a_sequence: FUNCTION [EV_WIDGET, ACTION_SEQUENCE [TUPLE]]; a_action: PROCEDURE; a_excluded: ARRAY [EV_WIDGET])
 			-- Propagates an actions to all child widgets
 			--
 			-- `a_exclude': An array of widgets to excluding the propagation of actions, or Void to include all widgets

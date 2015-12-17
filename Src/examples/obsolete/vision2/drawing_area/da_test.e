@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	draw (da: EV_DRAWING_AREA; dominant_color: INTEGER)
 		local
 			random_int: INTEGER
-			drawing_primitive: PROCEDURE[DA_TEST,TUPLE]
+			drawing_primitive: PROCEDURE
 		do
 			random_int := (get_random_real * Number_drawing_operations).floor
 			drawing_primitive := drawing_operations @ random_int
@@ -278,7 +278,7 @@ feature {NONE} -- Drawing Operations
 
 feature {NONE} -- Random Drawing
 
-	drawing_operations: ARRAY [PROCEDURE[DA_TEST,TUPLE]]
+	drawing_operations: ARRAY [PROCEDURE]
 
 	initialize_drawing_operations
 		do

@@ -115,7 +115,7 @@ feature -- Access
 			end
 		end
 
-	stone_function: FUNCTION [ANY, TUPLE, STONE]
+	stone_function: FUNCTION [STONE]
 			-- Function to fetch `stone'.
 
 	component_spacing: INTEGER

@@ -247,14 +247,14 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Private Access
 
-	text_processor: FUNCTION [ANY, TUPLE [STRING], WIZARD_VALIDITY_STATUS]
+	text_processor: FUNCTION [STRING, WIZARD_VALIDITY_STATUS]
 			-- Process combo text upon changes
 			-- Return validity status
 
-	enter_processor: PROCEDURE [ANY, TUPLE []]
+	enter_processor: PROCEDURE
 			-- Process `enter' key press
 
-	select_processor: PROCEDURE [ANY, TUPLE []]
+	select_processor: PROCEDURE
 			-- Process `enter' key press
 
 	key: STRING

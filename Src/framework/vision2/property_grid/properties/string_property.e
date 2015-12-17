@@ -24,7 +24,7 @@ feature -- Update
 			-- Is `a_value' a correct value for `data'?
 		do
 			Result := equal (value, a_value) or else
-				validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
+				validate_value_actions.for_all (agent {FUNCTION [TUPLE [like value], BOOLEAN]}.item ([a_value]))
 		end
 
 	set_value (a_value: detachable READABLE_STRING_GENERAL)

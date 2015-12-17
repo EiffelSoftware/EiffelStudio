@@ -17,7 +17,7 @@ class
 	PROCEDURE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
-	ROUTINE [ANY, OPEN_ARGS]
+	ROUTINE [OPEN_ARGS]
 
 feature
 

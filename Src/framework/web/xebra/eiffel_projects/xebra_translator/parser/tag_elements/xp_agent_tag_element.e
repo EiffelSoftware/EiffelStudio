@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: detachable PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]])
+	make_with_additional_arguments (a_namespace: STRING; a_id: STRING; a_class_name: STRING; a_debug_information: STRING; a_attribute_handler: detachable PROCEDURE [STRING, XP_TAG_ARGUMENT])
 			-- <Precursor>
 			-- `a_attribute_handler': Handles attributes passed to this tag
 		require
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature {XP_TAG_ELEMENT}  -- Access
 
-		attribute_handler: detachable PROCEDURE [ANY, TUPLE [STRING, XP_TAG_ARGUMENT]]
+		attribute_handler: detachable PROCEDURE [STRING, XP_TAG_ARGUMENT]
 				-- Handles the incoming attributes
 
 feature -- Access

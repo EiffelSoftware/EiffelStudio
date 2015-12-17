@@ -33,7 +33,7 @@ feature {NONE} -- Access
 
 feature -- Execution
 
-	frozen execute (a_routine: PROCEDURE [ANY, TUPLE [EQA_TEST_SET]]): EQA_PARTIAL_RESULT
+	frozen execute (a_routine: PROCEDURE [EQA_TEST_SET]): EQA_PARTIAL_RESULT
 			-- Run full test sequence for given test set and test procedure. This includes invoking `set_up'
 			-- on the {TEST_SET} instance, then calling the procedure providing the test set as an operand
 			-- and finally invoking `tear_down' on the test set.
@@ -47,7 +47,7 @@ feature -- Execution
 			-- `a_routine': Agent which invokes actual test routine.
 		local
 			l_start_date: DATE_TIME
-			l_creator: FUNCTION [like Current, TUPLE, EQA_TEST_SET]
+			l_creator: FUNCTION [EQA_TEST_SET]
 			l_prepare, l_test, l_clean: like execute_test_stage
 			l_old: detachable PLAIN_TEXT_FILE
 			l_old_work_dir: PATH
@@ -91,7 +91,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execute_test_stage (a_procedure: ROUTINE [ANY, TUPLE]): EQA_TEST_INVOCATION_RESPONSE
+	execute_test_stage (a_procedure: ROUTINE): EQA_TEST_INVOCATION_RESPONSE
 			-- Execute one stage of a test execution and return the corresponding invocation response.
 			--
 			-- `a_procedure': Procedure to call.

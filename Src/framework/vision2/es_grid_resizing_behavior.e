@@ -82,9 +82,9 @@ feature -- Change
 
 feature {NONE} -- Actions
 
-	motion_resize_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
-	press_resize_agent, release_resize_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
-	leave_resize_agent: detachable PROCEDURE [ANY, TUPLE]
+	motion_resize_agent: detachable PROCEDURE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+	press_resize_agent, release_resize_agent: detachable PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+	leave_resize_agent: detachable PROCEDURE
 
 	set_grid_separator_resizer (a_enabling: BOOLEAN)
 		local

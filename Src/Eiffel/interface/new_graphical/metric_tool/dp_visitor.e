@@ -30,7 +30,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	has_action (a_action: PROCEDURE [ANY, TUPLE [G]]): BOOLEAN
+	has_action (a_action: PROCEDURE [G]): BOOLEAN
 			-- Does Current visitor has `a_action'?
 		require
 			a_action_attached: a_action /= Void
@@ -48,8 +48,8 @@ feature -- Visit
 			l_args: TUPLE [G]
 			l_dynamic_type: INTEGER
 			l_actions: like actions
-			l_action: PROCEDURE [ANY, TUPLE [G]]
-			l_cursor: DS_ARRAYED_LIST_CURSOR [PROCEDURE [ANY, TUPLE [G]]]
+			l_action: PROCEDURE [G]
+			l_cursor: DS_ARRAYED_LIST_CURSOR [PROCEDURE [G]]
 			l_internal: INTERNAL
 			done: BOOLEAN
 		do
@@ -85,7 +85,7 @@ feature -- Visit
 
 feature -- Action registeration
 
-	extend (a_action: PROCEDURE [ANY, TUPLE [G]])
+	extend (a_action: PROCEDURE [G])
 			-- Extend `a_action' for processing type {G} into Current visitor.
 			-- If another action which processes type {G} already exists, it will be overwritten by the new one.
 		require
@@ -100,7 +100,7 @@ feature -- Action registeration
 			action_extended: has_action (a_action)
 		end
 
-	append (a_actions: ARRAY [PROCEDURE [ANY, TUPLE [G]]])
+	append (a_actions: ARRAY [PROCEDURE [G]])
 			-- Append actions in `a_actions' to the end of the `actions' list.
 			-- If another action which processes type {G} already exists, it will be overwritten by the new one.
 		require
@@ -117,17 +117,17 @@ feature -- Action registeration
 
 feature{NONE} -- Implementation
 
-	action_type_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [G]], INTEGER]
+	action_type_table: HASH_TABLE [PROCEDURE [G], INTEGER]
 			-- Type id table indexed by agent.
 			-- Type id is the dynamic type id of the generic parameter in that agent.
 
-	sorter: DS_TOPOLOGICAL_SORTER [PROCEDURE [ANY, TUPLE [G]]]
+	sorter: DS_TOPOLOGICAL_SORTER [PROCEDURE [G]]
 			-- Sorter used to sort registered agents according to their dynamic type
 
-	actions: DS_ARRAYED_LIST [PROCEDURE [ANY, TUPLE [G]]]
+	actions: DS_ARRAYED_LIST [PROCEDURE [G]]
 			-- List of agents which are used when visiting
 
-	expanded_items: DS_LINKED_LIST [PROCEDURE [ANY, TUPLE [G]]]
+	expanded_items: DS_LINKED_LIST [PROCEDURE [G]]
 			-- Actions applied to expanded types
 
 	cache: like action_type_table
@@ -136,12 +136,12 @@ feature{NONE} -- Implementation
 	initial_capacity: INTEGER = 10
 			-- Initial capacity of `action_type_table', `sorter'
 
-	catch_all_agent: PROCEDURE [ANY, TUPLE [G]]
+	catch_all_agent: PROCEDURE [G]
 			-- Agent on `catch_all'
 
 feature{NONE} -- Implementation
 
-	prepare_topological_sort (a_action: PROCEDURE [ANY, TUPLE [G]])
+	prepare_topological_sort (a_action: PROCEDURE [G])
 			-- Prepare topological sort for `a_action'.
 		require
 			a_action_attached: a_action /= Void

@@ -41,14 +41,14 @@ feature -- Access
 			good_result: Result = new_text_internal
 		end
 
-	new_text_function: FUNCTION [ANY, TUPLE [a_text: like text], like new_text]
+	new_text_function: FUNCTION [TUPLE [a_text: like text], like new_text]
 			-- Function to return result for `new_text'
 			-- When called, `text' will be passed as argument.
 
-	prepare_procedure: PROCEDURE [ANY, TUPLE [like Current]]
+	prepare_procedure: PROCEDURE [TUPLE [like Current]]
 			-- Procedure to prepare before replacement
 
-	dispose_procedure: PROCEDURE [ANY, TUPLE [like Current]]
+	dispose_procedure: PROCEDURE [TUPLE [like Current]]
 			-- Procedure to dispose after replacement
 
 feature -- Status report

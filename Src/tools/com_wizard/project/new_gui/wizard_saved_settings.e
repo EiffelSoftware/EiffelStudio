@@ -66,7 +66,7 @@ feature -- Basic Operations
 			-- Add entry `a_entry' to combo box `a_combo' if not there already.
 			-- Persist combo box strings.
 		local
-			l_save_routine: ROUTINE [ANY, TUPLE [LIST [STRING]]]
+			l_save_routine: ROUTINE [LIST [STRING]]
 			l_item: EV_LIST_ITEM
 			l_entry: STRING_32
 			l_has_entry: BOOLEAN

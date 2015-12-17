@@ -114,7 +114,7 @@ feature -- Element change
 			end
 		end
 
-	set_remove_procedure (proc: PROCEDURE [ANY, TUPLE])
+	set_remove_procedure (proc: PROCEDURE)
 			-- Make `remove_button' call `proc'.
 		require
 			proc_exists: proc /= Void

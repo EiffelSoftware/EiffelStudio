@@ -505,7 +505,7 @@ feature -- Generic conformance
 			il_generator.generate_generic_type_instance (n)
 		end
 
-	frozen enumerate_interfaces (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]])
+	frozen enumerate_interfaces (processor: PROCEDURE [CLASS_TYPE])
 			-- Enumerate all class types for which an object of this type can be attached to.
 			-- FIXME: To be put in GEN_TYPE_A when refactoring complete.
 		require
@@ -707,7 +707,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-	enumerate_interfaces_recursively (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]; n: INTEGER)
+	enumerate_interfaces_recursively (processor: PROCEDURE [CLASS_TYPE]; n: INTEGER)
 			-- Enumerate all class types for which an object of this type can be attached to
 			-- using `n' as an upper bound for generic parameters that can be changed.
 		require

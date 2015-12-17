@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (map: FUNCTION [ANY, TUPLE [H], G]; other: ITERABLE [H])
+	make (map: FUNCTION [H, G]; other: ITERABLE [H])
 			-- Associate iteration with `other' which elements are to be transformed using `map'.
 		do
 			target := other
@@ -38,7 +38,7 @@ feature {NONE} -- Access
 	target: ITERABLE [H]
 			-- Original structure to be iterated over.
 
-	mapping_function: FUNCTION [ANY, TUPLE [H], G]
+	mapping_function: FUNCTION [H, G]
 			-- Function to tranform elements of the original structure `target' to elements of the desired type {G}.
 
 ;note

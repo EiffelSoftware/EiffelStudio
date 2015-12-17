@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="wsf_session" uuid="C41D0367-9852-4AA7-9E7E-DEA162A4CBB0" library_target="wsf_session">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wsf_session" uuid="C41D0367-9852-4AA7-9E7E-DEA162A4CBB0" library_target="wsf_session">
 	<target name="wsf_session">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<library name="time" location="$ISE_LIBRARY/library/time/time.ecf"/>
-		<library name="uuid" location="$ISE_LIBRARY/library/uuid/uuid.ecf"/>
-		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
+		<library name="http" location="..\..\..\..\network\protocol\http\http.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wsf" location="wsf.ecf"/>
-		<cluster name="session" location="./session" recursive="true"/>
+		<cluster name="session" location=".\session\" recursive="true"/>
 	</target>
 </system>

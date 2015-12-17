@@ -506,28 +506,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Resources
 
-	parent_tree_mouse_wheel_action: detachable PROCEDURE [ANY, TUPLE [INTEGER_32]]
+	parent_tree_mouse_wheel_action: detachable PROCEDURE [INTEGER_32]
 			-- Parent tree mouse wheel action
 
-	parent_tree_resize_action: detachable PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, INTEGER_32]]
+	parent_tree_resize_action: detachable PROCEDURE [INTEGER_32, INTEGER_32, INTEGER_32, INTEGER_32]
 			-- Parent tree resize action
 
-	parent_tree_focus_out_action: detachable PROCEDURE [ANY, TUPLE]
+	parent_tree_focus_out_action: detachable PROCEDURE
 			-- Parent tree focus out action
 
-	parent_tree_focus_in_action: detachable PROCEDURE [ANY, TUPLE]
+	parent_tree_focus_in_action: detachable PROCEDURE
 			-- Parent tree focus in action
 
-	parent_tree_vertical_scroll_action: detachable PROCEDURE [ANY, TUPLE[INTEGER, INTEGER]]
+	parent_tree_vertical_scroll_action: detachable PROCEDURE [INTEGER, INTEGER]
 			-- Parent tree vertical scroll action
 
-	parent_tree_horizontal_scroll_action: detachable PROCEDURE [ANY, TUPLE[INTEGER, INTEGER]]
+	parent_tree_horizontal_scroll_action: detachable PROCEDURE [INTEGER, INTEGER]
 			-- Parent tree horizontal scroll action
 
-	parent_window_move_action: detachable PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, INTEGER_32]]
+	parent_window_move_action: detachable PROCEDURE [INTEGER_32, INTEGER_32, INTEGER_32, INTEGER_32]
 			-- Parent tree move action
 
-	parent_window_maximize_action: detachable PROCEDURE [ANY, TUPLE]
+	parent_window_maximize_action: detachable PROCEDURE
 			-- Parent tree maximize action
 
 ;note

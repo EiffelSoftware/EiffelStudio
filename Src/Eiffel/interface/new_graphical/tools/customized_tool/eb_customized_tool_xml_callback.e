@@ -34,10 +34,10 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	tool_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [EB_CUSTOMIZED_TOOL_DESP]]]
+	tool_receiver: LINKED_STACK [PROCEDURE [EB_CUSTOMIZED_TOOL_DESP]]
 			-- Receiver stack for customized tool
 
-	handler_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [tool_id: STRING; stone_name: STRING]]]
+	handler_receiver: LINKED_STACK [PROCEDURE [TUPLE [tool_id: STRING; stone_name: STRING]]]
 			-- Receiver stack for handler
 
 feature{NONE} -- Actions

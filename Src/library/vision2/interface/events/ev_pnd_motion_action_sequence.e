@@ -19,13 +19,13 @@ create {EV_PND_MOTION_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, ?, ?, action))
 		end
 
-	wrapper (an_x, a_y: INTEGER; a_pick_and_dropable: detachable EV_ABSTRACT_PICK_AND_DROPABLE; action: PROCEDURE [ANY, TUPLE])
+	wrapper (an_x, a_y: INTEGER; a_pick_and_dropable: detachable EV_ABSTRACT_PICK_AND_DROPABLE; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

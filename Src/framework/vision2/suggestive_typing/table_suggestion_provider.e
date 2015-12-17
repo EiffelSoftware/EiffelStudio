@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_callback: PROCEDURE [ANY, TUPLE [SUGGESTION_ITEM]]; a_cancel_request: detachable PREDICATE [ANY, TUPLE])
+	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE; a_callback: PROCEDURE [SUGGESTION_ITEM]; a_cancel_request: detachable PREDICATE)
 			-- <Precursor>
 		do
 			if a_cancel_request /= Void then

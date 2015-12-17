@@ -292,7 +292,7 @@ feature -- Access
 			l_metrics.go_to (l_cursor)
 		end
 
-	ordered_metrics (a_metric_order_tester: FUNCTION [ANY, TUPLE [EB_METRIC, EB_METRIC], BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
+	ordered_metrics (a_metric_order_tester: FUNCTION [EB_METRIC, EB_METRIC, BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
 			-- All metrics in order retrieved by `a_metric_order_tester'.
 			-- If `a_flat' is True, DO NOT sort metrics according to unit, and all sorted metrics will be in a list with the key `no_unit'.
 		require
@@ -453,7 +453,7 @@ feature -- Access
 	archive_history: EB_METRIC_ARCHIVE
 			-- Archive history
 
-	on_compile_start_agent: PROCEDURE [ANY, TUPLE]
+	on_compile_start_agent: PROCEDURE
 			-- Agent for `on_compile_start'
 		do
 			if on_compile_start_agent_internal = Void then

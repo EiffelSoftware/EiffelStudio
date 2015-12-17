@@ -103,7 +103,7 @@ feature -- Query
 
 feature -- Properties
 
-	button_action: PROCEDURE [ANY, TUPLE]
+	button_action: PROCEDURE
 			-- Actions called if the button is pressed.	
 
 	button: EV_BUTTON

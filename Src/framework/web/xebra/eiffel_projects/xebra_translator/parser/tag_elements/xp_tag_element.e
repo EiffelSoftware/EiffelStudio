@@ -229,7 +229,7 @@ feature --Basic Implementation
 
 	resolve_all_dependencies (
 				a_templates: HASH_TABLE [XP_TEMPLATE, STRING];
-				a_pending: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]];
+				a_pending: LIST [PROCEDURE [TUPLE [a_uid: STRING; a_controller_class: STRING]]];
 				a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR;
 				a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING])
 			-- Resolves dependencies between xeb files set with page:include statements in the xeb file.

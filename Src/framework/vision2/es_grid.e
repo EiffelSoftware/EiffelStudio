@@ -183,7 +183,7 @@ feature -- properties
 
 	resizing_behavior: detachable ES_GRID_RESIZING_BEHAVIOR
 
-	selected_rows_function: FUNCTION [ANY, TUPLE, LIST [EV_GRID_ROW]]
+	selected_rows_function: FUNCTION [LIST [EV_GRID_ROW]]
 			-- Selected rows.
 			-- Use `selected_rows' by default.
 		do
@@ -1123,7 +1123,7 @@ feature -- Delayed cleaning
 			remove_and_clear_all_rows
 		end
 
-	set_delayed_cleaning_action (v: PROCEDURE [ANY, TUPLE])
+	set_delayed_cleaning_action (v: PROCEDURE)
 		require
 			delayed_cleaning_exists
 		do

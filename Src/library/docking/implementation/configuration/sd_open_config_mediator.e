@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_tools_config_imp (a_config_data: SD_CONFIG_DATA; a_after_editor_prepared: PREDICATE [ANY, TUPLE]): BOOLEAN
+	open_tools_config_imp (a_config_data: SD_CONFIG_DATA; a_after_editor_prepared: PREDICATE): BOOLEAN
 			-- Open tools config, except all editors
 			-- Not same as normal `open_config', it doesn't clear editors related things.
 			-- `a_config_data' can be void

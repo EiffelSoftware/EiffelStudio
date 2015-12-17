@@ -54,7 +54,7 @@ feature -- Setting
 
 feature{NONE} -- Agents
 
-	generated_editor_token (a_text_processor_function: FUNCTION [ANY, TUPLE [like token_writer], PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]; a_text: READABLE_STRING_GENERAL): LIST [EDITOR_TOKEN]
+	generated_editor_token (a_text_processor_function: FUNCTION [TUPLE [like token_writer], PROCEDURE [READABLE_STRING_GENERAL]]; a_text: READABLE_STRING_GENERAL): LIST [EDITOR_TOKEN]
 			-- Process `a_text' using agent returned from `a_text_processor_function' and returned generated editor tokens.
 		require
 			a_text_processor_function_attached: a_text_processor_function /= Void
@@ -76,7 +76,7 @@ feature{NONE} -- Agents
 			a_text_attached: a_text /= Void
 		do
 			Result := generated_editor_token (
-				agent (a_writer: like token_writer): PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]] do Result := agent a_writer.add end ,
+				agent (a_writer: like token_writer): PROCEDURE [READABLE_STRING_GENERAL] do Result := agent a_writer.add end ,
 				a_text
 			)
 		ensure
@@ -89,7 +89,7 @@ feature{NONE} -- Agents
 			a_text_attached: a_text /= Void
 		do
 			Result := generated_editor_token (
-				agent (a_writer: like token_writer): PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]] do Result := agent a_writer.process_symbol_text end ,
+				agent (a_writer: like token_writer): PROCEDURE [READABLE_STRING_GENERAL] do Result := agent a_writer.process_symbol_text end ,
 				a_text
 			)
 		ensure
@@ -102,7 +102,7 @@ feature{NONE} -- Agents
 			a_text_attached: a_text /= Void
 		do
 			Result := generated_editor_token (
-				agent (a_writer: like token_writer): PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]] do Result := agent a_writer.process_number_text end ,
+				agent (a_writer: like token_writer): PROCEDURE [READABLE_STRING_GENERAL] do Result := agent a_writer.process_number_text end ,
 				a_text
 			)
 		ensure
@@ -127,7 +127,7 @@ feature{NONE} -- Agents
 			result_attached: Result /= Void
 		end
 
-	process_folder_text (a_writer: like token_writer; a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]
+	process_folder_text (a_writer: like token_writer; a_folder_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP): PROCEDURE [READABLE_STRING_GENERAL]
 			-- `a_folder_name' is the name of the folder,
 			-- `a_path' is the path in which `a_folder_name' exist, so for example,
 			-- for path "/abc/def", "def" is the folder name, while "/abc/def" is the path.

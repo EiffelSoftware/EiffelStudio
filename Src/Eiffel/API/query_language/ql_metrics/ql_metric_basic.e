@@ -265,10 +265,10 @@ feature -- Setting
 
 feature -- Access
 
-	value_initialize_function: FUNCTION [ANY, TUPLE, DOUBLE]
+	value_initialize_function: FUNCTION [DOUBLE]
 			-- Function to initialize `value' before metric calculation
 
-	post_calculation_function: FUNCTION [ANY, TUPLE [a_source_domain: QL_DOMAIN; a_value: DOUBLE], DOUBLE]
+	post_calculation_function: FUNCTION [TUPLE [a_source_domain: QL_DOMAIN; a_value: DOUBLE], DOUBLE]
 			-- Function invoked after metric calculation.
 			-- Parameters are the source domain and the calculated result value.
 			-- The final effect metric value will be the return value of this function.

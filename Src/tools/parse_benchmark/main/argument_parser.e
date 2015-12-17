@@ -168,7 +168,7 @@ feature -- Access
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_agent: PROCEDURE [ANY, TUPLE])
+	execute_noop (a_agent: PROCEDURE)
 			-- <Precursor>
 		do
 			display_usage

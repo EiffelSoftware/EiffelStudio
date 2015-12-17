@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 
-	query (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]): ARRAYED_LIST [SUGGESTION_ITEM]
+	query (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE): ARRAYED_LIST [SUGGESTION_ITEM]
 			-- Given a query `a_expression', provides a list of possible associated items.
 			-- When list is fully built, `a_termination' will be called.
 		require
@@ -19,7 +19,7 @@ feature -- Access
 			Result := query_with_cancellation (a_expression, a_termination, Void)
 		end
 
-	query_with_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_cancel_request: detachable PREDICATE [ANY, TUPLE]): like query
+	query_with_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE; a_cancel_request: detachable PREDICATE): like query
 			-- Given a query `a_expression', provides a list of possible associated items up to the point where
 			-- `a_cancel_request' returns True.
 			-- When list is fully built, `a_termination' will be called regardless of the cancellation of the query.
@@ -33,7 +33,7 @@ feature -- Access
 				end (Result, ?), a_cancel_request)
 		end
 
-	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE [ANY, TUPLE]; a_callback: PROCEDURE [ANY, TUPLE [SUGGESTION_ITEM]]; a_cancel_request: detachable PREDICATE [ANY, TUPLE])
+	query_with_callback_and_cancellation (a_expression: READABLE_STRING_GENERAL; a_termination: detachable PROCEDURE; a_callback: PROCEDURE [SUGGESTION_ITEM]; a_cancel_request: detachable PREDICATE)
 			-- Given a query `a_expression', and for each result execute `a_callback' until all results have been
 			-- obtained or if `a_cancel_request' returns True.
 			-- When list is fully built, `a_termination' will be called regardless of the cancellation of the query.

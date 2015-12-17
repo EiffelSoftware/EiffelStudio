@@ -28,7 +28,7 @@ class
 
 inherit
 
-	CP_IMPORTER [ROUTINE [ANY, TUPLE]]
+	CP_IMPORTER [ROUTINE]
 		undefine
 			is_importable
 		end
@@ -43,13 +43,13 @@ inherit
 
 feature -- Basic operations
 
-	import (routine: separate ROUTINE [ANY, TUPLE]): ROUTINE [ANY, TUPLE]
+	import (routine: separate ROUTINE): ROUTINE
 			-- Import `routine' by creating a copy on the local processor.
 		do
 			Result := do_import (routine)
 		end
 
-	unsafe_import (routine: separate ROUTINE [ANY, TUPLE]): ROUTINE [ANY, TUPLE]
+	unsafe_import (routine: separate ROUTINE): ROUTINE
 			-- Import `routine' by creating a copy on the local processor.
 			-- Note: This function is dangerous, as it may introduce traitors or Void calls.
 			-- Make sure you follow these two rules:
@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	do_import (routine: separate ROUTINE [ANY, TUPLE]): ROUTINE [ANY, TUPLE]
+	do_import (routine: separate ROUTINE): ROUTINE
 			-- Import `routine'.
 		require
 			unsafe_importable: is_unsafe_importable (routine)
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			type_id := {ISE_RUNTIME}.dynamic_type (routine)
 
 				-- Should succeed because `type_id' is a valid type.
-			check attached {ROUTINE [ANY, TUPLE [ANY]]} reflector.new_instance_of (type_id) as res then
+			check attached {ROUTINE [ANY]} reflector.new_instance_of (type_id) as res then
 				Result := res
 			end
 

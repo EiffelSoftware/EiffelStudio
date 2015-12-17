@@ -1913,7 +1913,7 @@ feature -- Features info
 			class_type_not_void: class_type /= Void
 			not_external_class_type: not class_type.is_external
 		local
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
+			type_feature_processor: PROCEDURE [TYPE_FEATURE_I]
 		do
 			set_current_class_type (class_type)
 			set_current_type_id (class_type.static_type_id)
@@ -3103,11 +3103,11 @@ feature -- IL Generation
 		end
 
 	generate_il_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
-			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
+			implemented_feature_processor: PROCEDURE [FEATURE_I, CLASS_TYPE, FEATURE_I];
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE];
+			type_feature_processor: PROCEDURE [TYPE_FEATURE_I]
+			inline_agent_processor: PROCEDURE [FEATURE_I])
 
 			-- Generate IL code for feature in `class_c'.
 		require
@@ -8295,7 +8295,7 @@ feature {NONE} -- Implementation
 
 feature -- Inline agents
 
-	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
+	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; inline_agent_processor: PROCEDURE [FEATURE_I])
 
 			-- Generate IL code for inline agents in `eif_cl'
 		require

@@ -271,7 +271,7 @@ feature{NONE} -- Implementation
 	owner_destroy_checking_internal: INTEGER = 100
 			-- Time interval (in milliseconds) to check if `owner' is destroyed
 
-	pointer_motion_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
+	pointer_motion_agent: PROCEDURE [EV_WIDGET, INTEGER, INTEGER]
 			-- Wrapper of `on_pointer_motion'
 		local
 			agt: like pointer_motion_agent_internal

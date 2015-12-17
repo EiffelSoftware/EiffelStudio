@@ -71,7 +71,7 @@ feature {NONE} -- Access
 			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
-	default_browser_delegate: detachable FUNCTION [ANY, TUPLE, STRING_32]
+	default_browser_delegate: detachable FUNCTION [STRING_32]
 			-- Delegate action to fetch a default URI browser, handy for systems with preferences.
 
 feature -- Status report

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
 	<description>Eiffel Base</description>
 	<target name="base">
 		<description>FreeELKS: Library of reusable components for Eiffel.
-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+&#9;&#9;&#9;Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -37,12 +37,12 @@
 			<option namespace="Base">
 			</option>
 			<file_rule>
-				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
-				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
-				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
-				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
 				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
 				<exclude>/structures/cursor_tree/two_way_cursor_tree.e$</exclude>
+				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/kernel/console.e$</exclude>
@@ -55,6 +55,7 @@
 				<exclude>/kernel/exceptions/operating_system_signal_failure.e$</exclude>
 				<exclude>/kernel/exceptions/void_target.e$</exclude>
 				<exclude>/kernel/file.e$</exclude>
+				<exclude>/kernel/file_info.e$</exclude>
 				<exclude>/kernel/file_name.e$</exclude>
 				<exclude>/kernel/function.e$</exclude>
 				<exclude>/kernel/gc_info.e$</exclude>
@@ -76,21 +77,20 @@
 				<exclude>/kernel/stream.e$</exclude>
 				<exclude>/kernel/string/system_string.e$</exclude>
 				<exclude>/kernel/string/system_string_factory.e$</exclude>
-				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/tuple.e$</exclude>
-				<exclude>/kernel/file_info.e$</exclude>
+				<exclude>/kernel/type.e$</exclude>
 				<exclude>/kernel/unix_signals.e$</exclude>
 				<exclude>/support/class_name_translations.e$</exclude>
 				<exclude>/support/double_math.e$</exclude>
 				<exclude>/support/execution_environment.e$</exclude>
-				<exclude>/support/object_graph_marker.e$</exclude>
-				<exclude>/support/reflector.e$</exclude>
-				<exclude>/support/reflected_object.e$</exclude>
-				<exclude>/support/reflected_reference_object.e$</exclude>
-				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
 				<exclude>/support/managed_pointer.e$</exclude>
 				<exclude>/support/mismatch_information.e$</exclude>
+				<exclude>/support/object_graph_marker.e$</exclude>
 				<exclude>/support/operating_environment.e$</exclude>
+				<exclude>/support/reflected_copy_semantics_object.e$</exclude>
+				<exclude>/support/reflected_object.e$</exclude>
+				<exclude>/support/reflected_reference_object.e$</exclude>
+				<exclude>/support/reflector.e$</exclude>
 				<exclude>/support/single_math.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
@@ -107,10 +107,10 @@
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
-				<exclude>/kernel/exceptions/io_failure.e$</exclude>
-				<exclude>/kernel/execution_environment_32.e$</exclude>
 				<exclude>/classic$</exclude>
+				<exclude>/kernel/exceptions/io_failure.e$</exclude>
+				<exclude>/kernel/exceptions/ise_exception_manager.e$</exclude>
+				<exclude>/kernel/execution_environment_32.e$</exclude>
 				<condition>
 					<dotnet value="true"/>
 				</condition>
@@ -157,5 +157,4 @@
 	<target name="base_scoop" extends="base">
 		<setting name="concurrency" value="scoop"/>
 	</target>
-
 </system>

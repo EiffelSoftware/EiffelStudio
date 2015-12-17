@@ -313,7 +313,7 @@ feature {NONE} -- Contract support
 feature {NONE} -- Initialization
 
 	make_button (
-			a_set_button: PROCEDURE [ANY, TUPLE [SD_TOOL_BAR_BUTTON]];
+			a_set_button: PROCEDURE [SD_TOOL_BAR_BUTTON];
 			an_icon: EV_PIXMAP;
 			an_icon_buffer: EV_PIXEL_BUFFER;
 			a_key_code: INTEGER_32;

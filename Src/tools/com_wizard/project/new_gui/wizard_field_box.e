@@ -26,11 +26,11 @@ inherit
 
 feature -- Access
 
-	focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]]
+	focus_lost_actions: LIST [ROUTINE]
 			-- Focus lost actions
 		do
 			if internal_focus_lost_actions = Void then
-				create {ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]} internal_focus_lost_actions.make (10)
+				create {ARRAYED_LIST [ROUTINE]} internal_focus_lost_actions.make (10)
 			end
 			Result := internal_focus_lost_actions
 		ensure
@@ -56,7 +56,7 @@ feature {NONE} -- Event Handling
 
 feature {NONE} -- Implementation
 
-		internal_focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]];
+		internal_focus_lost_actions: LIST [ROUTINE];
 			-- Focus lost actions cache
 
 note

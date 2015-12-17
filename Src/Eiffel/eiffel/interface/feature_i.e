@@ -266,7 +266,7 @@ feature -- Access
 			Result := feature_flags & has_convert_mark_mask = has_convert_mark_mask
 		end
 
-	frozen covariant_argument_checker_agent: PREDICATE [FEATURE_I, TUPLE [TYPE_A]]
+	frozen covariant_argument_checker_agent: PREDICATE [TYPE_A]
 			-- Argument checker for `covariantly_redefined_features'
 		once
 				-- If all arguments are expanded or if they are a frozen class

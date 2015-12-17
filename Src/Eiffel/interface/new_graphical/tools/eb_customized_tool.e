@@ -294,7 +294,7 @@ feature{NONE} -- Stone handler matching
 			result_attached: Result /= Void
 		end
 
-	stone_testers: LINKED_LIST [TUPLE [a_stone_name: STRING; a_tester: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]]]
+	stone_testers: LINKED_LIST [TUPLE [a_stone_name: STRING; a_tester: FUNCTION [STONE, BOOLEAN]]]
 			-- List of stone testers.
 			-- `a_stone_name' is the name of the stone,
 			-- `a_tester' is a predicate with a stone as argument and evaluates to True if the stone is of certain type.

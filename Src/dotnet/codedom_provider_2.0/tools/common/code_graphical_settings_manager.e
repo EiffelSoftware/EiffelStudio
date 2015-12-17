@@ -145,7 +145,7 @@ feature -- Basic Operation
 			-- Persist combo box strings.
 			-- Warning: this may cause the combo box select event to be triggered.
 		local
-			l_save_routine: ROUTINE [ANY, TUPLE [LIST [STRING]]]
+			l_save_routine: ROUTINE [LIST [STRING]]
 			l_list, l_new_list: LIST [STRING]
 		do
 			if not a_entry.is_empty then

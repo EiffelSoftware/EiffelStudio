@@ -27,7 +27,7 @@ feature -- Access
 	router: WSF_ROUTER
 			-- Router
 
-	execute_default_action: detachable PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]
+	execute_default_action: detachable PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]
 			-- `execute_default' action
 
 feature -- Element change

@@ -364,7 +364,7 @@ feature -- Actions
 			l_new_row: EV_GRID_ROW
 			l_old_index: INTEGER
 			l_new_data: EB_METRIC_CRITERION_ROW
-			l_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]]
+			l_agent: PROCEDURE [INTEGER, INTEGER, INTEGER, EV_GRID_ITEM]
 			l_last_row: EB_METRIC_CRITERION_ROW
 			l_insert_index: INTEGER
 			l_stone: STONE

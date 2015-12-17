@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
+	make (eq: PREDICATE [K, K]; h: FUNCTION [K, INTEGER])
 			-- Create an empty table with key equivalence `eq' and hash function `h'.
 		require
 			--- eq_is_total: eq.precondition |=| True
@@ -66,10 +66,10 @@ feature -- Initialization
 
 feature -- Search
 
-	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
+	key_equivalence: PREDICATE [K, K]
 			-- Equivalence relation on keys.
 
-	key_hash: FUNCTION [ANY, TUPLE [K], INTEGER]
+	key_hash: FUNCTION [K, INTEGER]
 			-- Hash function on keys.
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation

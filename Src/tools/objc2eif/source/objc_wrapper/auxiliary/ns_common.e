@@ -231,7 +231,7 @@ feature {NONE} -- Objc-Encodings Conversion
 
 feature {NONE} -- Callbacks Implementation
 
-	add_objc_callback (selector_name: STRING; eiffel_callback: ROUTINE [ANY, TUPLE])
+	add_objc_callback (selector_name: STRING; eiffel_callback: ROUTINE)
 			-- Add an Objective-C callback associated to an eiffel function to the current class.
 		require
 			is_subclass_instance: is_subclass_instance
@@ -247,14 +247,14 @@ feature {NONE} -- Callbacks Implementation
 			create selector.make_with_name (selector_name)
 			create arguments_types.make_empty
 			create objc_encodings.make_empty
-			if attached {PREDICATE [ANY, TUPLE]} eiffel_callback as eiffel_predicate_callback then
+			if attached {PREDICATE} eiffel_callback as eiffel_predicate_callback then
 				return_type := {BOOLEAN}
 				objc_encodings.append (objc_encoding_for_eiffel_type (return_type))
-			elseif attached {FUNCTION [ANY, TUPLE, detachable ANY]} eiffel_callback as eiffel_function_callback then
+			elseif attached {FUNCTION [detachable ANY]} eiffel_callback as eiffel_function_callback then
 				return_type := eiffel_function_callback.generating_type.generic_parameter_type (3)
 				objc_encodings.append (objc_encoding_for_eiffel_type (return_type))
 			else
-				check attached {PROCEDURE [ANY, TUPLE]} eiffel_callback end
+				check attached {PROCEDURE} eiffel_callback end
 				objc_encodings.append ("v")
 			end
 			objc_encodings.append ("@:")
@@ -278,7 +278,7 @@ feature {NONE} -- Callbacks Implementation
 														arguments_types: ARRAY [TYPE [detachable ANY]]
 													 ];
 										objc_encoding: STRING;
-										eiffel_callback: ROUTINE [ANY, TUPLE]
+										eiffel_callback: ROUTINE
 									  ],
 								POINTER]
 			-- A mapping from Objective-C selectors to Eiffel types and Eiffel callbacks.
@@ -292,7 +292,7 @@ feature {NONE} -- Callbacks Implementation
 			arguments_types: ARRAY [TYPE [detachable ANY]]
 			arguments_types_count: INTEGER
 			argument_type: TYPE [detachable ANY]
-			eiffel_callback: ROUTINE [ANY, TUPLE]
+			eiffel_callback: ROUTINE
 			arguments_tuple: TUPLE
 			eiffel_types: TUPLE [return_type: detachable TYPE [detachable ANY]; arguments_types: ARRAY [TYPE [detachable ANY]]]
 			pointer_bytes: INTEGER
@@ -411,38 +411,38 @@ feature {NONE} -- Callbacks Implementation
 					arguments_tuple := []
 				end
 				if attached eiffel_types.return_type as attached_return_type then
-					check attached {FUNCTION [ANY, TUPLE, detachable ANY]} eiffel_callback as eiffel_function_callback then
+					check attached {FUNCTION [detachable ANY]} eiffel_callback as eiffel_function_callback then
 						if attached_return_type.is_expanded then
-							check attached {FUNCTION [ANY, TUPLE, ANY]} eiffel_function_callback as expanded_type_function then
-								if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} expanded_type_function as f then
+							check attached {FUNCTION [ANY]} eiffel_function_callback as expanded_type_function then
+								if attached {FUNCTION [BOOLEAN]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).to_integer.as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, CHARACTER_8]} expanded_type_function as f then
+								elseif attached {FUNCTION [CHARACTER_8]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).code.as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, INTEGER_8]} expanded_type_function as f then
+								elseif attached {FUNCTION [INTEGER_8]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, NATURAL_8]} expanded_type_function as f then
+								elseif attached {FUNCTION [NATURAL_8]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, INTEGER_16]} expanded_type_function as f then
+								elseif attached {FUNCTION [INTEGER_16]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, NATURAL_16]} expanded_type_function as f then
+								elseif attached {FUNCTION [NATURAL_16]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, INTEGER_32]} expanded_type_function as f then
+								elseif attached {FUNCTION [INTEGER_32]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, NATURAL_32]} expanded_type_function as f then
+								elseif attached {FUNCTION [NATURAL_32]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, INTEGER_64]} expanded_type_function as f then
+								elseif attached {FUNCTION [INTEGER_64]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple).as_natural_64)
-								elseif attached {FUNCTION [ANY, TUPLE, NATURAL_64]} expanded_type_function as f then
+								elseif attached {FUNCTION [NATURAL_64]} expanded_type_function as f then
 									Result := convert_to_pointer (f.item (arguments_tuple))
-								elseif attached {FUNCTION [ANY, TUPLE, REAL_32]} expanded_type_function as f then
+								elseif attached {FUNCTION [REAL_32]} expanded_type_function as f then
 									check real_32_as_return_type_is_supported: False end
-								elseif attached {FUNCTION [ANY, TUPLE, REAL_64]} expanded_type_function as f then
+								elseif attached {FUNCTION [REAL_64]} expanded_type_function as f then
 									check real_64_as_return_type_is_supported: False end
 								end
 							end
 						-- elseif it is a struct then
 								-- TODO
-						elseif attached {FUNCTION [ANY, TUPLE, OBJC_SELECTOR]} eiffel_function_callback as f then
+						elseif attached {FUNCTION [OBJC_SELECTOR]} eiffel_function_callback as f then
 							Result := f.item (arguments_tuple).item
 						else
 								-- Assume it is an object

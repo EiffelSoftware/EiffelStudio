@@ -59,7 +59,7 @@ feature -- High Level Eiffel Interface
 			exists: exists
 		end
 
-	add_method (a_method_selector: STRING; a_agent: ROUTINE [ANY, TUPLE])
+	add_method (a_method_selector: STRING; a_agent: ROUTINE)
 			--
 		require
 			-- The method is not already implemented in the current class (though it may be in a superclass)
@@ -80,7 +80,7 @@ feature -- High Level Eiffel Interface
 			l_ret := {NS_OBJC_RUNTIME}.class_add_method (item, l_sel, l_imp, l_types)
 		end
 
-	replace_method (a_method_selector: STRING; a_agent: ROUTINE [ANY, TUPLE]): PROCEDURE [ANY, TUPLE]
+	replace_method (a_method_selector: STRING; a_agent: ROUTINE): PROCEDURE
 			-- Replace a method in an objective-c class by a_agent and returns the previous method.
 			-- This can be dangerous as the method is replaced for all objects which are instances of that class
 			-- even those that were created before this call.
@@ -246,15 +246,15 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	type_encoding_for_agent (a_agent: ROUTINE [ANY, TUPLE]): STRING
+	type_encoding_for_agent (a_agent: ROUTINE): STRING
 			-- Given an Eiffel agent, returns the Objective-C type encoding for a similar message that will be used to do the dispatching.
 		local
 			type: STRING
 		do
 			create Result.make_from_string ("@:")
-			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} a_agent as l_function then
+			if attached {FUNCTION [BOOLEAN]} a_agent as l_function then
 				Result.prepend ("b") -- BOOL return type
-			elseif attached {ROUTINE [ANY, TUPLE]} a_agent as l_routine then
+			elseif attached {ROUTINE} a_agent as l_routine then
 				-- Command / No return type
 				Result.prepend ("v")
 				type := l_routine.generating_type.generic_parameter_type (2).name

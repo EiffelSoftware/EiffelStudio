@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="esa_db" uuid="6052764C-5998-4290-8578-18C2D7DA9D14" library_target="esa_db">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="esa_db" uuid="6052764C-5998-4290-8578-18C2D7DA9D14" library_target="esa_db">
 	<target name="esa_db">
 		<root all_classes="true"/>
 		<option warning="true" void_safety="all">
@@ -9,19 +9,18 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<library name="esa_core" location="..\core\esa_core.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="logging" location="$ISE_LIBRARY\library\runtime\logging\logging-safe.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc-safe.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store-safe.ecf" readonly="false"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="esa_core" location="..\core\esa_core.ecf"/>
-
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="esa_db" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

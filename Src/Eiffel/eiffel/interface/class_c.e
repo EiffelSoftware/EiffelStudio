@@ -5023,7 +5023,7 @@ feature {CLASS_C, DEGREE_4} -- Degree 3 and 4 recompilation
 
 feature {CLASS_C} -- Degree 3 and 4 recompilation
 
-	recompile_descendants_with_condition (condition: PREDICATE [CLASS_C, TUPLE [CLASS_C]]; is_degree_4_required: BOOLEAN; c: CLASS_C)
+	recompile_descendants_with_condition (condition: PREDICATE [CLASS_C]; is_degree_4_required: BOOLEAN; c: CLASS_C)
 			-- Mark all descendants of class `c' that match `condition' for complete recompilation,
 			-- including degree 4 when `is_degree_4 = True'.
 		require

@@ -124,9 +124,9 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	url_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
+	url_function: FUNCTION [URL]
 
-	resource_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
+	resource_function: FUNCTION [DATA_RESOURCE]
 
 	lookup_service_id: INTEGER
 			-- Lookup ID for service.

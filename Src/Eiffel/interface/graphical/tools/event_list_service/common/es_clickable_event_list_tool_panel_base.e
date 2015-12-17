@@ -225,7 +225,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	create_clickable_tooltip (a_lines: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
+	create_clickable_tooltip (a_lines: FUNCTION [LIST [EIFFEL_EDITOR_LINE]]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
 			-- Creates a new clickable tool tip with the context of `a_lines' and attaches itself it `a_item'
 			--
 			-- Note: If `a_item' already had a tool tip created for it, no new tool tip will be created but the same
@@ -255,7 +255,7 @@ feature {NONE} -- Factory
 					-- Otherwise, lock_update should be called.
 				Result.enable_pointer_on_tooltip
 				Result.enable_tooltip
-				Result.before_display_actions.extend (agent (a_tooltip: EB_EDITOR_TOKEN_TOOLTIP; a_lines_func: FUNCTION [ANY, TUPLE, LIST [EIFFEL_EDITOR_LINE]])
+				Result.before_display_actions.extend (agent (a_tooltip: EB_EDITOR_TOKEN_TOOLTIP; a_lines_func: FUNCTION [LIST [EIFFEL_EDITOR_LINE]])
 					local
 						l_tokens: like tokens_list_from_lines
 					do

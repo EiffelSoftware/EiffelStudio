@@ -55,7 +55,7 @@ feature {ES_HTML_GEN, ES_TEST} -- Access
 
 	violation_type: INTEGER_32
 
-	case: ROUTINE [ANY, TUPLE]
+	case: ROUTINE
 
 end -- class ES_TEST_CASE
 

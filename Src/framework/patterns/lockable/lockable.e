@@ -140,7 +140,7 @@ feature -- Events
 			l_result := internal_lockable_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: LOCKABLE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: LOCKABLE_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := <<
 								[locked_event, agent ia_observer.on_locked],

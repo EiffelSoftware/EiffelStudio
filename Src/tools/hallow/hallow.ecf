@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="hallow" uuid="F3C1601B-9912-470D-8D12-D1AD2BDFB63E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="hallow" uuid="F3C1601B-9912-470D-8D12-D1AD2BDFB63E">
 	<target name="hallow">
 		<description>A WiX tool for generating XML fragements for file directory structures.</description>
 		<root cluster="hallow" class="APPLICATION" feature="make"/>
 		<version major="1" minor="0" release="0" build="0" company="Eiffel Software" copyright="Eiffel Software 2007"/>
-		<option warning="true" msil_application_optimize="true" namespace="EiffelSoftware.Tools">
+		<option warning="true" msil_application_optimize="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional" namespace="EiffelSoftware.Tools">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
 		<setting name="console_application" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="executable_name" value="hallow"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="msil_use_optimized_precompile" value="true"/>
-		<setting name="msil_clr_version" value="v2.0.50727"/>
-		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false">
-		</library>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
-		</library>
+		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll"/>
 		<assembly name="system.xml" location="$ISE_DOTNET_FRAMEWORK\System.XML.dll"/>
@@ -26,8 +24,8 @@
 			<option namespace="WiX">
 			</option>
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

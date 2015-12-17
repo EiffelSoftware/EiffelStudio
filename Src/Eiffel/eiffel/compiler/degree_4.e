@@ -524,13 +524,13 @@ feature -- Actions to be done at the end of degree
 			current_class_attached: attached system.current_class
 		do
 			if attached actions as a then
-				a.extend ([create {ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]}.make (1), system.current_class.class_id])
+				a.extend ([create {ARRAYED_LIST [PROCEDURE]}.make (1), system.current_class.class_id])
 			end
 		ensure
 			is_action_class_set: is_action_class_set
 		end
 
-	put_action (a: PROCEDURE [ANY, TUPLE])
+	put_action (a: PROCEDURE)
 			-- Record action `a' to be executed at the end of degree.
 		require
 			a_attached: attached a
@@ -548,7 +548,7 @@ feature {NONE} -- Actions to be done at the end of degree
 	delayed_classes: SEARCH_TABLE [CLASS_C]
 			-- Classes marked for recompilation during this degree
 
-	actions: ARRAYED_LIST [TUPLE [actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]; class_id: INTEGER_32]]
+	actions: ARRAYED_LIST [TUPLE [actions: ARRAYED_LIST [PROCEDURE]; class_id: INTEGER_32]]
 			-- Actions to be done at the end of degree for the class identified by class ID
 
 feature {NONE} -- Processing

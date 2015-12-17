@@ -34,7 +34,7 @@ feature -- Execution
 			tf_c, tf_f: EV_TEXT_FIELD
 			cl: EV_CELL
 			but, cbut: EV_BUTTON
-			but_action: PROCEDURE [ANY, TUPLE]
+			but_action: PROCEDURE
 		do
 			create l_dlg.make_with_title ("Class/Feature info")
 			keep_dialog (l_dlg)

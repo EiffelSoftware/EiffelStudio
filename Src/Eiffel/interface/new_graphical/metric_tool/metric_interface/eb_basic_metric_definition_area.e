@@ -348,7 +348,7 @@ feature{NONE} -- Actions
 			on_definition_change
 		end
 
-	on_add_domain_item (a_domain_item_retrieval_agent: FUNCTION [ANY, TUPLE, EB_METRIC_DOMAIN_ITEM])
+	on_add_domain_item (a_domain_item_retrieval_agent: FUNCTION [EB_METRIC_DOMAIN_ITEM])
 			-- Action to be performed to add domain item retrieved from `a_domain_item_retrieval_agent'
 			-- into current selected domain grid item
 		require

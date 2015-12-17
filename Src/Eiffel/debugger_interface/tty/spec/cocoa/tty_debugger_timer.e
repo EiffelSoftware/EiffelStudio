@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 
 	timeout_connection_id: INTEGER
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER_32; args: POINTER)
+	marshal (action: PROCEDURE; n_args: INTEGER_32; args: POINTER)
 		do
 			action.call (Void)
 		end

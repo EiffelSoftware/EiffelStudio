@@ -110,7 +110,7 @@ feature -- Access
 			-- Number of milliseconds to wait after receiving the last keystroke event
 			-- before starting a request to `suggestion_provider'.
 
-	update_row_agent: detachable PROCEDURE [ANY, TUPLE [EV_GRID_ROW, SUGGESTION_ITEM]]
+	update_row_agent: detachable PROCEDURE [EV_GRID_ROW, SUGGESTION_ITEM]
 			-- Agent called for converting SUGGESTION_ITEM into EV_GRID_ITEM in a grid row.
 
 	mouse_wheel_scroll_size: INTEGER
@@ -150,10 +150,10 @@ feature -- Access
 		attribute
 		end
 
-	save_list_position_action: detachable PROCEDURE [ANY, TUPLE [x_position, y_position, width, height: INTEGER]]
+	save_list_position_action: detachable PROCEDURE [TUPLE [x_position, y_position, width, height: INTEGER]]
 			-- Action to save suggestion list position.
 
-	query_cancel_request: detachable PREDICATE [ANY, TUPLE]
+	query_cancel_request: detachable PREDICATE
 			-- Action that is called after obtaining a result from the suggestion provider
 			-- to find out if we should continue getting some more results or if we should stop.
 			--| By default we get all the results unless overridden by user.
@@ -169,7 +169,7 @@ feature -- Access
 			end
 		end
 
-	searched_text_agent: detachable FUNCTION [ANY, TUPLE [displayed_text: STRING_32], STRING_32]
+	searched_text_agent: detachable FUNCTION [TUPLE [displayed_text: STRING_32], STRING_32]
 			-- Given a `displayed_text' return a string representing what we should be searching for.
 			--| For example, if you have the following partial phone number displayed "(555) 253-4"
 			--| then the searched text could be "5552534".
@@ -183,10 +183,10 @@ feature -- Character handling
 			-- List of characters that can be used to stop suggestion.
 			-- By default, only Enter and Escape are set.
 
-	override_shortcut_trigger: detachable FUNCTION [ANY, TUPLE [key: EV_KEY; ctrl, alt, shift: BOOLEAN], BOOLEAN]
+	override_shortcut_trigger: detachable FUNCTION [TUPLE [key: EV_KEY; ctrl, alt, shift: BOOLEAN], BOOLEAN]
 			-- User controlled definition that can activate suggestion?
 
-	character_translator: detachable FUNCTION [ANY, TUPLE [CHARACTER_32], CHARACTER_32]
+	character_translator: detachable FUNCTION [CHARACTER_32, CHARACTER_32]
 			-- Given a character entered by users while performing completion, returns
 			-- the character really wanted by the underlying tools. This is useful for
 			-- example if you only want upper case to be printed for example.

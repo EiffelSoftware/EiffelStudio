@@ -76,7 +76,7 @@ feature {NONE} -- Access
 			result_consistent: Result = connections
 		end
 
-	frozen observer_event_action_map_fetch_action: FUNCTION [I, TUPLE [observer: G], ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]]
+	frozen observer_event_action_map_fetch_action: FUNCTION [TUPLE [observer: G], ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]]]
 			-- A very confusing looking agent to retrieve an array of tuples, containing an event type and event handler routine on an observer {G}.
 			-- The function should be implemented on the interface {I}.
 
@@ -105,8 +105,8 @@ feature -- Event connection
 	connect_events (a_observer: G)
 			-- <Precursor>
 		local
-			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
-			l_event_map: detachable TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE [ANY, TUPLE]]
+			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]]
+			l_event_map: detachable TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]
 			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
@@ -137,7 +137,7 @@ feature -- Event connection
 			-- <Precursor>
 		local
 			l_connections: like connections
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_action: PROCEDURE
 			l_event: EVENT_TYPE_I [TUPLE]
 			l_upper, i: INTEGER
 		do

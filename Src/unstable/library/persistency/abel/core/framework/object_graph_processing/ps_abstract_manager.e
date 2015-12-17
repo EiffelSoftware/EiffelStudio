@@ -172,14 +172,14 @@ feature {NONE} -- Utilities
 			correct: attached Result implies Result.can_handle_type (type)
 		end
 
-	do_all (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]])
+	do_all (operation: PROCEDURE [PS_HANDLER, G])
 			-- Apply `operation' on all items.
 			-- Ignore items when {PS_OBJECT_DATA}.handler is void or {PS_OBJECT_DATA}.is_ignored is True.
 		do
 			do_all_in_set (operation, 1 |..| count)
 		end
 
-	do_all_in_set (operation: PROCEDURE [ANY, TUPLE [PS_HANDLER, G]]; set: INTEGER_INTERVAL)
+	do_all_in_set (operation: PROCEDURE [PS_HANDLER, G]; set: INTEGER_INTERVAL)
 			-- Apply `operation' on all items with an index in `set'.
 			-- Ignore items when `{PS_OBJECT_DATA}.handler' is Void or `{PS_OBJECT_DATA}.is_ignored' is True.
 			-- Do nothing if `set.is_empty'

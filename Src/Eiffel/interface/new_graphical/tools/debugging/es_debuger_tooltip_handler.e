@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 	create_object_grid: ES_OBJECTS_GRID
 			-- Create object grid
 		local
-			l_expand_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+			l_expand_action: PROCEDURE [EV_GRID_ROW]
 		do
 			create Result.make_with_name ("", "")
 				-- Do it on idle to ensure that the expansion actions on rows

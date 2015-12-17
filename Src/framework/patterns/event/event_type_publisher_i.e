@@ -38,7 +38,7 @@ feature -- Publication
 			is_publishing_unchanged: is_publishing = old is_publishing
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.

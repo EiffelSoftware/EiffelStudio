@@ -235,7 +235,7 @@ feature -- C: Commands
 
 feature -- D: Quantifiers
 
-	for_all (test: FUNCTION[ANY,TUPLE[VALUE,KEY], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION[VALUE,KEY, BOOLEAN]): BOOLEAN
 			-- does `test' hold for all key value pairs?
 		do
 			Result := true
@@ -258,7 +258,7 @@ feature -- D: Quantifiers
 			no_change_in_count: old count = count
 		end
 
-	exists (test: FUNCTION[ANY,TUPLE[VALUE,KEY], BOOLEAN]): BOOLEAN
+	exists (test: FUNCTION[VALUE,KEY, BOOLEAN]): BOOLEAN
 			-- does `test' hold for at least one of the key value pairs?
 		do
 			Result := false

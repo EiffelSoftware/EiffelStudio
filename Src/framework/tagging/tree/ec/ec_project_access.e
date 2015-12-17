@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- `a_project': An Eiffel project.
 		local
 			l_manager: EB_PROJECT_MANAGER
-			l_agent: PROCEDURE [ANY, TUPLE]
+			l_agent: PROCEDURE
 		do
 			project := a_project
 			l_manager := project.manager

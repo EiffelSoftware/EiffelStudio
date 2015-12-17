@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_projector_to_scrollbar_values_agent: PROCEDURE [ANY, TUPLE]
+	update_projector_to_scrollbar_values_agent: PROCEDURE
 		once
 			Result := agent update_projector_to_scrollbar_values
 		end

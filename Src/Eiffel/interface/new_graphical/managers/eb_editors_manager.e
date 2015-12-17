@@ -683,7 +683,7 @@ feature -- Element change
 			create editors_internal.make (5)
 		end
 
-	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN])
+	set_veto_pebble_function (a_func: FUNCTION [ANY, SD_CONTENT, BOOLEAN])
 			-- Set veto pebble_function for all editors.
 		require
 			a_func_attached: a_func /= Void
@@ -1424,13 +1424,13 @@ feature {NONE} -- Implementation
 	is_opening_editors: BOOLEAN
 		-- If Current opening more than one editors?
 
-	on_show_imp_agent: PROCEDURE [ANY, TUPLE]
+	on_show_imp_agent: PROCEDURE
 			-- Agent created by `on_show', cleared by `on_show_imp' or `on_fake_focus'.
 
 	editor_number_factory: EB_EDITOR_NUMBER_FACTORY
 			-- Produce editor number and internal names.
 
-	veto_pebble_function_internal: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
+	veto_pebble_function_internal: FUNCTION [ANY, SD_CONTENT, BOOLEAN]
 			-- Veto pebble function.
 
 	close_editor_perform (a_editor: like current_editor)

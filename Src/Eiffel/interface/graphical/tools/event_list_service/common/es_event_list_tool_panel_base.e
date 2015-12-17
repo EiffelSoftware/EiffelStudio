@@ -557,7 +557,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Basic operations: Navigation
 
-	move_next (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
+	move_next (a_query_action: FUNCTION [EVENT_LIST_ITEM_I, BOOLEAN])
 			-- Moves to the next item in the errors and warnings list based on some fundamental conditions.
 			--
 			-- `a_query_function': The function to determine if a matched event list item is applicable.
@@ -676,7 +676,7 @@ feature {NONE} -- Basic operations: Navigation
 			end
 		end
 
-	move_previous (a_query_action: FUNCTION [ANY, TUPLE [EVENT_LIST_ITEM_I], BOOLEAN])
+	move_previous (a_query_action: FUNCTION [EVENT_LIST_ITEM_I, BOOLEAN])
 			-- Moves to the previous item in the errors and warnings list based on some fundamental conditions.
 			--
 			-- `a_query_function': The function to determine if a matched event list item is applicable.

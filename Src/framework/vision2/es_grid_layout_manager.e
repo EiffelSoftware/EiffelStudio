@@ -701,17 +701,17 @@ feature -- Actions
 
 feature {NONE} -- Agent
 
-	row_is_ready_for_identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
+	row_is_ready_for_identification_agent: detachable FUNCTION [EV_GRID_ROW, BOOLEAN]
 
-	row_is_ready_for_evaluation_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], BOOLEAN]
+	row_is_ready_for_evaluation_agent: detachable FUNCTION [EV_GRID_ROW, BOOLEAN]
 
-	global_identification_agent: detachable FUNCTION [ANY, TUPLE, STRING_32]
+	global_identification_agent: detachable FUNCTION [STRING_32]
 
-	identification_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW], STRING_32]
+	identification_agent: detachable FUNCTION [EV_GRID_ROW, STRING_32]
 
-	value_agent: detachable FUNCTION [ANY, TUPLE [EV_GRID_ROW, BOOLEAN], ANY]
+	value_agent: detachable FUNCTION [EV_GRID_ROW, BOOLEAN, ANY]
 
-	on_difference_callback: detachable PROCEDURE [ANY, TUPLE [EV_GRID_ROW, detachable ANY]];
+	on_difference_callback: detachable PROCEDURE [EV_GRID_ROW, detachable ANY];
 			-- row and old value
 
 note

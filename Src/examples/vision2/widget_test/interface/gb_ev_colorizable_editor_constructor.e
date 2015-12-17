@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			colorizable ?= default_object_by_type (class_name (first))
 			p := agent {EV_COLORIZABLE}.set_background_color (colorizable.background_color)
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			-- Restore `foreground_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			colorizable ?= default_object_by_type (class_name (first))
 			p := agent {EV_COLORIZABLE}.set_foreground_color (colorizable.foreground_color)
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 	actually_set_background_color (color: EV_COLOR)
 			-- Actually update the background colors.
 		local
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			p := agent {EV_COLORIZABLE}.set_background_color (color)
 			for_all_objects (p)
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 	actually_set_foreground_color (color: EV_COLOR)
 			-- Actually update the foreground colors.
 		local
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			p := agent {EV_COLORIZABLE}.set_foreground_color (color)
 			for_all_objects (p)

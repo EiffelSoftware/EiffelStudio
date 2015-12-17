@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Storage
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE])
+	load (a_error_agent: PROCEDURE)
 			-- Load information.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		deferred
@@ -90,7 +90,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XML_COMPOSITE], XML_ELEMENT]; a_path: PATH; a_file_name: STRING)
+	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [TUPLE [a_item: G; a_parent: XML_COMPOSITE], XML_ELEMENT]; a_path: PATH; a_file_name: STRING)
 			-- Store `a_descritpors' in formatter descriptor `a_file_name' in `a_path'.
 			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
 			-- `a_error_agent' will be invoked when error occurs.

@@ -139,7 +139,7 @@ feature -- Specific custom actions
 
 	template_custom_actions: HASH_TABLE [like template_custom_action_by_id, STRING]
 
-	template_custom_action_by_id (a_id: STRING): detachable FUNCTION [ANY, TUPLE [STRING, STRING_TABLE [STRING]], STRING]
+	template_custom_action_by_id (a_id: STRING): detachable FUNCTION [STRING, STRING_TABLE [STRING], STRING]
 		do
 			Result := template_custom_actions.item (a_id)
 		end

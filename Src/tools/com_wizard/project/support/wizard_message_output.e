@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
+	event_raiser: ROUTINE [EV_THREAD_EVENT]
 			-- Agent on event raiser
 
 feature -- Basic operations

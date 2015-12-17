@@ -15,14 +15,14 @@ inherit
 
 feature -- Action
 
-	run_test (a_agent: PROCEDURE [ANY, TUPLE])
+	run_test (a_agent: PROCEDURE)
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		do
 			run_test_with_delay (0, a_agent)
 		end
 
-	run_test_with_delay (a_delay_in_ms: INTEGER; a_agent: PROCEDURE [ANY, TUPLE])
+	run_test_with_delay (a_delay_in_ms: INTEGER; a_agent: PROCEDURE)
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
 		local

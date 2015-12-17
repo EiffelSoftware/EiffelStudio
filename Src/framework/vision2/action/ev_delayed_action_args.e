@@ -225,14 +225,14 @@ feature {NONE} -- Delayed cleaning implementation
 
 	last_args: detachable G
 
-	on_request_start_action: detachable PROCEDURE [ANY, TUPLE]
+	on_request_start_action: detachable PROCEDURE
 			-- Action to be called on request
 
-	on_request_end_action: detachable PROCEDURE [ANY, TUPLE]
+	on_request_end_action: detachable PROCEDURE
 			-- Action to be called on cancelling
 			-- or after the request is completed (so just before the delayed_action)
 
-	delayed_action: PROCEDURE [ANY, G]
+	delayed_action: PROCEDURE [G]
 			-- Action to be called
 
 	delayed_action_timer: detachable EV_TIMEOUT

@@ -147,7 +147,7 @@ feature {NONE} -- Properties
 
 	list: ES_GRID
 
-	callback: PROCEDURE [ANY, TUPLE [INTEGER]]
+	callback: PROCEDURE [INTEGER]
 			-- Command who calls `Current'
 			-- Will be sent the position of
 			-- the selected item.

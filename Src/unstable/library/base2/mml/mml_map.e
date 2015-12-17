@@ -54,7 +54,7 @@ feature -- Properties
 			Result := values.for_all (agent meq_value (c, ?))
 		end
 
-	for_all (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
+	for_all (test: PREDICATE [K, V]): BOOLEAN
 			-- Does `test' hold for all indexe-value pairs?
 		require
 			test_has_one_arg: test.open_count = 2
@@ -72,7 +72,7 @@ feature -- Properties
 			end
 		end
 
-	exists (test: PREDICATE [ANY, TUPLE [K, V]]): BOOLEAN
+	exists (test: PREDICATE [K, V]): BOOLEAN
 			-- Does `test' hold for any indexe-value pair?
 		require
 			test_has_one_arg: test.open_count = 2

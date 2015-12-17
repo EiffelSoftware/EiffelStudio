@@ -140,7 +140,7 @@ feature -- Access
 --			end
 --		end
 
-	valid_subarray(a_valid : FUNCTION[ANY, TUPLE[G], BOOLEAN]) : like Current
+	valid_subarray(a_valid : FUNCTION[G, BOOLEAN]) : like Current
 		-- sub array by a agent
 		local
 			i : INTEGER
@@ -156,7 +156,7 @@ feature -- Access
 			end
 		end
 
-	valid_flags(a_valid : FUNCTION[ANY, TUPLE[G], BOOLEAN]) : LINEAR_ARRAY[BOOLEAN]
+	valid_flags(a_valid : FUNCTION[G, BOOLEAN]) : LINEAR_ARRAY[BOOLEAN]
 		-- valid data item flags
 		local
 			i : INTEGER
@@ -192,7 +192,7 @@ feature -- Access
 			end
 		end
 
-	min_max (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]): PAIR [G,G]
+	min_max (a_comparison: FUNCTION [G, G, BOOLEAN]): PAIR [G,G]
 		do
 			if not is_empty then
 				from
@@ -212,19 +212,19 @@ feature -- Access
 			end
 		end
 
-	equivalent_from_order (a_order: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_1: G; a_2: G): BOOLEAN
+	equivalent_from_order (a_order: FUNCTION [G,G,BOOLEAN]; a_1: G; a_2: G): BOOLEAN
 			-- determine if two items are the same using just a less_than function
 		do
 			Result := (not a_order.item ([a_1, a_2])) and (not a_order.item ([a_2, a_1]))
 		end
 
-	quotient_with_less_than_function (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
+	quotient_with_less_than_function (a_order : FUNCTION [G,G,BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
 			-- create a quotient, just using less than function
 		do
 			Result := ordered_quotient (a_order, agent equivalent_from_order (a_order, ?, ?))
 		end
 
-	ordered_quotient (a_order : FUNCTION [ANY,TUPLE [G,G],BOOLEAN]; a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
+	ordered_quotient (a_order : FUNCTION [G,G,BOOLEAN]; a_equivalent: FUNCTION [G,G,BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
 			-- create ordered quotient
 		local
 			l_array : LINEAR_ARRAY [G]
@@ -234,7 +234,7 @@ feature -- Access
 			Result := l_array.quotient (a_equivalent)
 		end
 
-	quotient (a_equivalent: FUNCTION [ANY,TUPLE [G,G],BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
+	quotient (a_equivalent: FUNCTION [G,G,BOOLEAN]): LINEAR_ARRAY [LINEAR_ARRAY [G]]
 			-- create quotient; assumes you have sorted the array
 		local
 			l_last: G
@@ -315,9 +315,9 @@ feature -- Basic operations
 			end
 		end
 
-	comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
+	comparison: FUNCTION [G, G, BOOLEAN]
 
-	sort_by (a_comparison: FUNCTION [ANY, TUPLE [G, G], BOOLEAN])
+	sort_by (a_comparison: FUNCTION [G, G, BOOLEAN])
 			-- Sort this array using 'a_comparison'.
 		do
 			comparison := a_comparison
@@ -325,7 +325,7 @@ feature -- Basic operations
 			comparison := Void
 		end
 
-	sort_by_and_remember (a_routine: FUNCTION [ANY, TUPLE [G, G], BOOLEAN])
+	sort_by_and_remember (a_routine: FUNCTION [G, G, BOOLEAN])
 			-- Sort this array using 'a_comparison', and remember 'a_comparison' for further searching
 		require
 			need_comparison: a_routine /= Void or comparison /= Void

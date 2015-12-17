@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (o: PREDICATE [ANY, TUPLE [K, K]])
+	make (o: PREDICATE [K, K])
 			-- Create an empty table with key order `o'.
 		require
 			--- o_is_total: o.precondition |=| True
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Search
 
-	key_order: PREDICATE [ANY, TUPLE [K, K]]
+	key_order: PREDICATE [K, K]
 			-- Order relation on keys.
 
 	less_equal (k1, k2: K): BOOLEAN
@@ -68,7 +68,7 @@ feature -- Search
 			definition: Result = key_order.item ([k1, k2])
 		end
 
-	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
+	key_equivalence: PREDICATE [K, K]
 			-- Key equivalence relation derived from `key_less_order'.	
 		do
 			Result := agent (x, y: K): BOOLEAN

@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="wrapper_generator" uuid="65C63A00-398E-409D-90D5-D57C52B16C12">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wrapper_generator" uuid="65C63A00-398E-409D-90D5-D57C52B16C12">
 	<target name="wrapper_generator">
 		<root class="APPLICATION" feature="make"/>
-		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="provisional">
 			<debug name="objc_simple_parser_debug" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<external_include location=". -ObjC"/>
-		<external_object location="-framework AppKit"/>
+		<external_include location="."/>
+		<external_cflag value="-ObjC"/>
+		<external_linker_flag value="-framework AppKit"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="wrapper_generator" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
-				<exclude>/templates$</exclude>
-				<exclude>/structs$</exclude>
-				<exclude>/objc_wrapper$</exclude>
-				<exclude>/testing$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 				<exclude>/examples$</exclude>
+				<exclude>/objc_wrapper$</exclude>
+				<exclude>/structs$</exclude>
+				<exclude>/templates$</exclude>
+				<exclude>/testing$</exclude>
 			</file_rule>
 			<mapping old_name="SIZE_T" new_name="NATURAL_64"/>
 		</cluster>

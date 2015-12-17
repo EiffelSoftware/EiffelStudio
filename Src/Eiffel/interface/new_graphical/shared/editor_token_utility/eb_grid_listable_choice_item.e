@@ -111,12 +111,12 @@ feature -- Access
 			end
 		end
 
-	selection_changing_action: detachable FUNCTION [ANY, TUPLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM], BOOLEAN]
+	selection_changing_action: detachable FUNCTION [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM, BOOLEAN]
 			-- Called on selected value changing
 			-- Result indicate if the real change should be conducted.
 			-- If not set, value will always be changed.
 
-	choice_list_key_press_action: PROCEDURE [ANY, TUPLE [key: EV_KEY]]
+	choice_list_key_press_action: PROCEDURE [TUPLE [key: EV_KEY]]
 			-- Actions to be performed when a keyboard key is pressed on the choice list.
 
 feature {NONE} -- Implementation

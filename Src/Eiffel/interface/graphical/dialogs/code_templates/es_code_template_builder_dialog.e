@@ -194,7 +194,7 @@ feature {NONE} -- Clean up
 	internal_recycle
 			-- <Precursor>
 		local
-			l_action: PROCEDURE [ANY, TUPLE [CODE_SYMBOL_TABLE, READABLE_STRING_32]]
+			l_action: PROCEDURE [CODE_SYMBOL_TABLE, READABLE_STRING_32]
 		do
 			l_action := agent on_code_symbol_table_value_changed
 			if code_symbol_table.value_changed_event.is_subscribed (l_action) then

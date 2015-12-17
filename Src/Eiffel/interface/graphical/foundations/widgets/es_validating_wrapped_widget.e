@@ -110,15 +110,15 @@ feature {NONE} -- Access
 
 feature -- Access: Validataion and formatting
 
-	entry_error_function: detachable FUNCTION [ANY, TUPLE [STRING_32], TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]]
+	entry_error_function: detachable FUNCTION [STRING_32, TUPLE [is_valid: BOOLEAN; reason: detachable STRING_32]]
 			-- Function used to validate the entered text, which upon failing will display an error message.
 
-	entry_validation: detachable PREDICATE [ANY, TUPLE [text: STRING_32]] assign set_entry_validation
+	entry_validation: detachable PREDICATE [TUPLE [text: STRING_32]] assign set_entry_validation
 			-- An optional predicate used to determine if the changed text is valid for the widget.
 			-- Note: This differs from `entry_error_function' because text will be disallowed where
 			--       as the `entry_error_function' will allow text but display an error.
 
-	entry_formatter: detachable FUNCTION [ANY, TUPLE [STRING_32], STRING_32] assign set_entry_formatter
+	entry_formatter: detachable FUNCTION [STRING_32, STRING_32] assign set_entry_formatter
 			-- An optional function used to format the entered text.
 
 feature -- User interface elements

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="wizard" uuid="CEF6706D-914F-4ED1-A29F-967465C0EE7B">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wizard" uuid="CEF6706D-914F-4ED1-A29F-967465C0EE7B">
 	<target name="wizard">
 		<root class="WIZARD_MANAGER" feature="make_and_launch"/>
+		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		</option>
 		<setting name="dead_code_removal" value="True"/>
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-		<variable name="vision_implementation" value="cocoa"/>
 		<setting name="platform" value="macintosh"/>
+		<variable name="vision_implementation" value="cocoa"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf"/>

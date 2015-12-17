@@ -1199,7 +1199,7 @@ feature -- Implementation
 			l_stored_display_data.mask := temp_mask
 		end
 
-	im_context_commit_translate_agent: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+	im_context_commit_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used input method context commits.
 		once
 			Result :=

@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			Result /= Void implies a_name.same_string (Result.name)
 		end
 
-	tasks: STRING_TABLE [TUPLE [factory_function: FUNCTION [ANY, TUPLE [ARRAY [IMMUTABLE_STRING_32]], IRON_TASK]; description: READABLE_STRING_GENERAL]]
+	tasks: STRING_TABLE [TUPLE [factory_function: FUNCTION [ARRAY [IMMUTABLE_STRING_32], IRON_TASK]; description: READABLE_STRING_GENERAL]]
 		once
 			create Result.make_caseless (7 + 1)
 

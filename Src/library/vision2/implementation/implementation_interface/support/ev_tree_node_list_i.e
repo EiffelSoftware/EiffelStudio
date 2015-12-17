@@ -124,7 +124,7 @@ Feature -- Status report
 			index_not_changed: old attached_interface.index = attached_interface.index
 		end
 
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [EV_TREE_NODE]])
+	recursive_do_all (action: PROCEDURE [EV_TREE_NODE])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 		local

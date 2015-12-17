@@ -379,7 +379,7 @@ feature {SQLITE_STATEMENT} -- Basic operations: Execution
 			not_has_error: not has_error
 		end
 
-	execute_internal (a_callback: detachable FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: detachable ARRAY [SQLITE_BIND_ARG [ANY]])
+	execute_internal (a_callback: detachable FUNCTION [TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_bindings: detachable ARRAY [SQLITE_BIND_ARG [ANY]])
 			-- Performs execution of the SQLite statement with a callback routine for each returned result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.

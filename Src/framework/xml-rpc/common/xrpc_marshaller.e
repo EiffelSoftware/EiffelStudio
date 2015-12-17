@@ -58,7 +58,7 @@ feature -- Status report
 				(is_marshallable_type (a_type) or else a_type = xrpc_response_type)
 		end
 
-	is_marshallable_routine (a_routine: ROUTINE [ANY, TUPLE]): BOOLEAN
+	is_marshallable_routine (a_routine: ROUTINE): BOOLEAN
 			-- Determines if a routine is able to be marshalled.
 			-- This check ensures any arguments and a result type are marshallable.
 			--
@@ -85,7 +85,7 @@ feature -- Status report
 					end
 				end
 
-				if Result and then attached {FUNCTION [ANY, TUPLE, ANY]} a_routine as l_function then
+				if Result and then attached {FUNCTION [ANY]} a_routine as l_function then
 						-- Check result type
 					l_type := l_function.generating_type.generic_parameter_type (3)
 					Result := is_marshallable_result_type (l_type)

@@ -78,10 +78,10 @@ feature -- Output
 
 feature {NONE} -- Access
 
-	output: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]
+	output: PROCEDURE [READABLE_STRING_GENERAL]
 			-- Procedure to write.
 
-	is_open_query: PREDICATE [ANY, TUPLE]
+	is_open_query: PREDICATE
 			-- Function to check stream status.
 
 ;note

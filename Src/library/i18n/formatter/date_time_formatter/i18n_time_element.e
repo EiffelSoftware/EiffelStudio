@@ -16,7 +16,7 @@ create {I18N_FORMAT_STRING_PARSER}
 
 feature {NONE}  -- Initialization
 
-	make (a_time_action: FUNCTION[ANY,TUPLE[TIME],STRING_32])
+	make (a_time_action: FUNCTION[TIME,STRING_32])
 			-- Creation procedure, set `time_action'
 		require
 			a_time_action_not_void: a_time_action /= Void
@@ -28,7 +28,7 @@ feature {NONE}  -- Initialization
 
 feature {NONE} -- Action
 
-	time_action: FUNCTION[ANY,TUPLE[TIME],STRING_32]
+	time_action: FUNCTION[TIME,STRING_32]
 
 feature --Output
 

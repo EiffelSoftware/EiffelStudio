@@ -554,7 +554,7 @@ feature -- Interactivity
 			end
 		end
 
-	add_double_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_double_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a double click in child classes.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -580,7 +580,7 @@ feature -- Interactivity
 			end
 		end
 
-	add_double_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_double_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a double click in child clusters.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -609,7 +609,7 @@ feature -- Interactivity
 			pointer_double_press_actions.extend (p)
 		end
 
-	add_single_click_action_to_classes (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_single_click_action_to_classes (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a single click in child classes.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -635,7 +635,7 @@ feature -- Interactivity
 			end
 		end
 
-	add_single_click_action_to_cluster (p: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]])
+	add_single_click_action_to_cluster (p: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Add `p' recursively to the list of actions associated with a single click in child clusters.
 		local
 			conv_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -675,16 +675,16 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Implementation
 
-	classes_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	classes_double_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to double-clicks on classes.
 
-	cluster_double_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	cluster_double_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to double-clicks on cluster.
 
-	classes_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	classes_single_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to single-clicks on classes.
 
-	cluster_single_click_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]]
+	cluster_single_click_agents: LINKED_LIST [PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Agents associated to single-clicks on cluster.
 
 feature {EB_CLASSES_TREE} -- Implementation

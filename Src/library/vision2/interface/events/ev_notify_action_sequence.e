@@ -24,7 +24,7 @@ create {EV_NOTIFY_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	wrapper (action: PROCEDURE [ANY, TUPLE])
+	wrapper (action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
@@ -33,7 +33,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (action))

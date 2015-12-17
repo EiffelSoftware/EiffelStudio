@@ -625,7 +625,7 @@ feature {NONE} -- Handle keystrokes
 
 	completion_bckp: INTEGER
 
-	basic_cursor_move (action: PROCEDURE [like cursor_type,TUPLE])
+	basic_cursor_move (action: PROCEDURE)
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char.
@@ -797,7 +797,7 @@ feature {NONE} -- Brace matching
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: attached like last_highlighted_matched_braces
 			l_invalidated_line: detachable EDITOR_LINE
-			l_action: PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]
+			l_action: PROCEDURE
 		do
 			if text_is_fully_loaded then
 				create l_invalidated_lines.make (2)

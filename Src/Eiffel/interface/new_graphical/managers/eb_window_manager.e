@@ -801,7 +801,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	for_all_development_windows (p: PROCEDURE [ANY, TUPLE [EB_DEVELOPMENT_WINDOW]])
+	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW])
 			-- Call `p' on all development windows.
 		local
 			cv_dev: EB_DEVELOPMENT_WINDOW
@@ -1469,7 +1469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	for_all (action: PROCEDURE [ANY, TUPLE])
+	for_all (action: PROCEDURE)
 			-- Iterate `action' on every managed window.
 		local
 			l_index: INTEGER

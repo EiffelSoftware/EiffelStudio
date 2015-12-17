@@ -239,7 +239,7 @@ feature -- Access
 	selected_target: STRING_32
 			-- Target to select on startup.
 
-	external_editor_command: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL, INTEGER], READABLE_STRING_GENERAL]
+	external_editor_command: FUNCTION [READABLE_STRING_GENERAL, INTEGER, READABLE_STRING_GENERAL]
 			-- Command that builds an external editor command line by taking a target and a line number.
 
 	split_position: INTEGER
@@ -284,7 +284,7 @@ feature -- Command
 
 feature {NONE} -- Agents
 
-	refresh_current: PROCEDURE [ANY, TUPLE]
+	refresh_current: PROCEDURE
 			-- What to call to refresh the current view.
 
 	on_cancel

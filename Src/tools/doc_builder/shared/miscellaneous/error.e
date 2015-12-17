@@ -58,7 +58,7 @@ feature -- Access
 	line_position: INTEGER
 			-- Line position of error if applicable
 			
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Response action for error
 
 invariant

@@ -199,7 +199,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE [STRING_8], EB_METRIC_DOMAIN_ITEM], STRING_8]
+	domain_item_type_table: HASH_TABLE [FUNCTION [STRING_8, EB_METRIC_DOMAIN_ITEM], STRING_8]
 			-- Domain item type
 		once
 			create Result.make (6)
@@ -254,7 +254,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	domain_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]]
+	domain_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [EB_METRIC_DOMAIN]; is_called: BOOLEAN]]
 			-- Domain receiver stack
 			-- `setter' is the setter procedure to set last parsed domain,
 			-- `is_called' is a flag to indicate if a domain exists. It's used to detect if a needed domain is missing.
@@ -266,12 +266,12 @@ feature{NONE} -- Implementation
 	element_stack: LINKED_STACK [STRING_GENERAL]
 			-- Stack of met element name			
 
-	tester_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]]
+	tester_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_TESTER]; is_called: BOOLEAN]]
 			-- Tester receiver stack
 			-- `setter' is the setter procedure to set last parsed tester.
 			-- `is_called' is a flag to indicate if a tester exists. It's used to detect if a needed tester is missing.
 
-	value_retriever_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]]
+	value_retriever_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_RETRIEVER]; is_called: BOOLEAN]]
 			-- Value retriever stack
 			-- `setter' is the setter procedure to set last parsed value retriever.
 			-- `is_called' is a flag to indicate if a value retirever exists. It's used to detect if a needed value retriever is missing.	
@@ -303,7 +303,7 @@ feature {NONE} -- Status report
 
 feature{NONE} -- Implementation
 
-	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: READABLE_STRING_GENERAL)
+	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY]; is_called: BOOLEAN]];  a_error_message: READABLE_STRING_GENERAL)
 			-- Test if last registered receiver from `a_stack' has receivered data
 			-- If so, remove that receiver from `a_stack'. If not, fire an error `a_error_message'.
 		require
@@ -311,7 +311,7 @@ feature{NONE} -- Implementation
 			not_a_stack_is_empty: not a_stack.is_empty
 			a_error_message_attached: a_error_message /= Void
 		local
-			l_item: TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]
+			l_item: TUPLE [a_setter: PROCEDURE [ANY]; is_called: BOOLEAN]
 		do
 			l_item := a_stack.item
 			if l_item.is_called then
@@ -353,7 +353,7 @@ feature{NONE} -- Process
 	process_domain
 			-- Process "domain" definition list node.		
 		local
-			l_domain_receiver: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
+			l_domain_receiver: TUPLE [setter: PROCEDURE [EB_METRIC_DOMAIN]; is_called: BOOLEAN]
 		do
 			if not has_error then
 				check not domain_receiver_stack.is_empty end
@@ -368,7 +368,7 @@ feature{NONE} -- Process
 	process_domain_finish
 			-- Process when a domain node has been parsed.				
 		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_DOMAIN]; is_called: BOOLEAN]
 		do
 			check not domain_receiver_stack.is_empty end
 			l_item := domain_receiver_stack.item
@@ -423,7 +423,7 @@ feature{NONE} -- Process
 			-- Process tester.
 		local
 			l_relation_str: like current_attributes.item
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_TESTER]; is_called: BOOLEAN]
 		do
 			if not has_error then
 				check not tester_receiver_stack.is_empty end
@@ -483,7 +483,7 @@ feature{NONE} -- Process
 	process_constant_value
 			-- Process "constant_value" node.
 		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_RETRIEVER]; is_called: BOOLEAN]
 		do
 			if not has_error then
 				check not value_retriever_stack.is_empty end
@@ -514,7 +514,7 @@ feature{NONE} -- Process
 			-- Process "metric_value" node.
 		local
 			l_metric_name: like current_attributes.item
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_RETRIEVER]; is_called: BOOLEAN]
 			l_boolean_set: BOOLEAN
 		do
 			if not has_error then
@@ -552,7 +552,7 @@ feature{NONE} -- Process
 	process_tester_finish
 			-- Process when a tester node has been parsed.
 		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_TESTER]; is_called: BOOLEAN]
 		do
 			check not tester_receiver_stack.is_empty end
 			l_item := tester_receiver_stack.item
@@ -564,7 +564,7 @@ feature{NONE} -- Process
 	process_value_retriever_finish
 			-- Process when a value retriever has been parsed.
 		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+			l_item: TUPLE [setter: PROCEDURE [EB_METRIC_VALUE_RETRIEVER]; is_called: BOOLEAN]
 		do
 			check not value_retriever_stack.is_empty end
 			l_item := value_retriever_stack.item

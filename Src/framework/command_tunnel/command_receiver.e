@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_command_action: detachable FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
+	external_command_action: detachable FUNCTION [STRING, BOOLEAN]
 			-- Function to be called when command is received.
 			-- Return True to claim that the command can be handled.
 

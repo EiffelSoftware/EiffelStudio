@@ -10,10 +10,10 @@ class
 
 feature -- Access
 
-	status_querier: detachable FUNCTION [ANY, TUPLE[], BOOLEAN]
+	status_querier: detachable FUNCTION [BOOLEAN]
 			-- Check whether to stop process
 
-	status_printer, error_printer: detachable ROUTINE [ANY, TUPLE [READABLE_STRING_GENERAL]]
+	status_printer, error_printer: detachable ROUTINE [READABLE_STRING_GENERAL]
 			-- Print status and error messages
 
 feature -- Element settings

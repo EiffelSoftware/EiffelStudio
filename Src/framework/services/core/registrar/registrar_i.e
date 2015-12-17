@@ -124,7 +124,7 @@ feature -- Basic operations
 			a_item_sited: (attached {SITE [REGISTRAR_I [G, K]]} a_item as l_site) implies (l_site.is_sited and then l_site.site = Current)
 		end
 
-	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, G]; a_key: K)
+	register_with_activator (a_activator: FUNCTION [G]; a_key: K)
 			-- Registers an activator function, used to retrieve a registration object upon request.
 			--
 			-- `a_item': The object to register.

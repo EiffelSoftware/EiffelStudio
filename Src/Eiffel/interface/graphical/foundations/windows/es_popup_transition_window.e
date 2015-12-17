@@ -129,7 +129,7 @@ feature -- Access
 	icon: detachable EV_PIXEL_BUFFER
 			-- Icon displayed adjecent to the message.
 
-	action: detachable PROCEDURE [ANY, TUPLE] assign set_action
+	action: detachable PROCEDURE assign set_action
 			-- Action called when the window is shown, and hides the window when completed.
 
 feature {NONE} -- Access

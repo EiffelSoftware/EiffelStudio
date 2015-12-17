@@ -84,7 +84,7 @@ feature -- Measurement
 
 feature -- Search
 
-	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+	exists (pred: PREDICATE [G]): BOOLEAN
 			-- Is there an element that satisfies `pred'?
 		do
 			Result := cell_satisfying (pred) /= Void
@@ -296,7 +296,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			end
 		end
 
-	cell_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): detachable V_LINKABLE [G]
+	cell_satisfying (pred: PREDICATE [G]): detachable V_LINKABLE [G]
 			-- Cell where item satisfies `pred'.
 		do
 			from

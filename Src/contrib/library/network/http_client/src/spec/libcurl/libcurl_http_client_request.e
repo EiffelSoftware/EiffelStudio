@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_write_data_to_file_agent (f: FILE; h: detachable STRING): PROCEDURE [ANY, TUPLE [READABLE_STRING_8]]
+	new_write_data_to_file_agent (f: FILE; h: detachable STRING): PROCEDURE [READABLE_STRING_8]
 			-- Write all downloaded header and content data into `f'
 			-- and write raw header into `h' if attached.
 		do
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 							end (?, h, f, create {CELL [BOOLEAN]}.put (False))
 		end
 
-	new_write_content_data_to_file_agent (f: FILE; h: STRING): PROCEDURE [ANY, TUPLE [READABLE_STRING_8]]
+	new_write_content_data_to_file_agent (f: FILE; h: STRING): PROCEDURE [READABLE_STRING_8]
 			-- Write all downloaded content data into `f' (without raw header)
 			-- and write raw header into `h' if attached.
 		do

@@ -97,7 +97,7 @@ feature -- Setting
 
 feature -- Actions
 
-	add_scope_action: PROCEDURE [ANY, TUPLE[ANY]]
+	add_scope_action: PROCEDURE [ANY]
 			-- Action to be peformed when a scope is added from dialog.
 
 feature{NONE} -- Implementation

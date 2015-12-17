@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<version major="7" minor="2" release="9" build="376"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional" namespace="EiffelSoftware.MetadataConsumer">
+		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional" namespace="EiffelSoftware.MetadataConsumer">
 			<assertions/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
@@ -43,9 +43,9 @@
 				<dotnet value="true"/>
 			</condition>
 			<file_rule>
-				<exclude>main</exclude>
-				<exclude>/resources$</exclude>
 				<exclude>/interop$</exclude>
+				<exclude>/resources$</exclude>
+				<exclude>main</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
@@ -53,19 +53,19 @@
 				<dotnet value="false"/>
 			</condition>
 			<file_rule>
-				<exclude>/emitter$</exclude>
-				<exclude>/support/notifier$</exclude>
-				<exclude>/resources$</exclude>
 				<exclude>/cache$</exclude>
+				<exclude>/emitter$</exclude>
 				<exclude>/interop$</exclude>
-				<exclude>/support/errors$</exclude>
-				<exclude>/support/interop$</exclude>
 				<exclude>/main$</exclude>
+				<exclude>/resources$</exclude>
+				<exclude>/support/errors$</exclude>
 				<exclude>/support/helpers$</exclude>
+				<exclude>/support/interop$</exclude>
+				<exclude>/support/notifier$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="interop" location="$EIFFEL_SRC\dotnet\consumer\support\interop\" recursive="true">

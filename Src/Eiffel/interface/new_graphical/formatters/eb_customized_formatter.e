@@ -175,7 +175,7 @@ feature -- Access
 	metric: STRING
 			-- Name of metric which is used to retrieve result for Current formatter
 
-	valid_stone_function: FUNCTION [ANY, TUPLE [STONE], BOOLEAN]
+	valid_stone_function: FUNCTION [STONE, BOOLEAN]
 			-- Function to check if given stone is suitable for Current formatter
 
 	name: STRING_GENERAL
@@ -188,7 +188,7 @@ feature -- Access
 	viewer: STRING
 			-- Viewer
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
+	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [displayer_generators.generator_with_name (viewer), viewer]
@@ -206,7 +206,7 @@ feature -- Access
 	descriptor: EB_CUSTOMIZED_FORMATTER_DESP
 			-- Descriptor of Current formatter
 
-	sorting_order_getter: FUNCTION [ANY, TUPLE, STRING]
+	sorting_order_getter: FUNCTION [STRING]
 			-- Getter to retrieve sorting order status
 		do
 			if descriptor /= Void and then tool /= Void then
@@ -214,7 +214,7 @@ feature -- Access
 			end
 		end
 
-	sorting_order_setter: PROCEDURE [ANY, TUPLE [STRING]]
+	sorting_order_setter: PROCEDURE [STRING]
 			-- Setter to set sorting order given as the only argument
 		do
 			if descriptor /= Void and then tool /= Void then
@@ -488,7 +488,7 @@ feature{NONE} -- Implementation/Data
 	symbol_internal: like symbol
 			-- Implementation of `symbol'
 
-	viewer_table: HASH_TABLE [FUNCTION [ANY, TUPLE [EB_DEVELOPMENT_WINDOW, EV_PND_ACTION_SEQUENCE], like browser], STRING]
+	viewer_table: HASH_TABLE [FUNCTION [EB_DEVELOPMENT_WINDOW, EV_PND_ACTION_SEQUENCE, like browser], STRING]
 			-- Table to retrieve builder agents for viewer whose type name is given as argument
 		do
 			if viewer_table_internal = Void then

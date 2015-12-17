@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 				-- waiting for the file to load before being able to interact with the interface.
 		end
 
-	real_load_texts_agent: PROCEDURE [TEST_CONTROLLER, TUPLE]
+	real_load_texts_agent: PROCEDURE
 	type_to_retrieve: STRING
 
 	real_load_texts

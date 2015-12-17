@@ -70,10 +70,10 @@ feature -- Access
 	current_value: G
 			-- Current synchronized value
 
-	host_agents_type: TUPLE [register: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [G]]];
-							deregister: PROCEDURE [ANY, TUPLE [EB_VALUE_SYNCHRONIZER [G]]];
-							getter: FUNCTION [ANY, TUPLE, G];
-							setter: PROCEDURE [ANY, TUPLE [G]]]
+	host_agents_type: TUPLE [register: PROCEDURE [EB_VALUE_SYNCHRONIZER [G]];
+							deregister: PROCEDURE [EB_VALUE_SYNCHRONIZER [G]];
+							getter: FUNCTION [G];
+							setter: PROCEDURE [G]]
 			-- Anchored type for host agents
 			-- `register' is used to register Current synchronizer into that value host,
 			-- this alway needs to make sure that that value host calls `on_value_change_from' when value changes.
@@ -81,7 +81,7 @@ feature -- Access
 			-- this always needs to detach `on_value_change_from' from that value host class.
 			-- `setter' is used to set value into that
 
-	value_equality_tester: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
+	value_equality_tester: FUNCTION [G, G, BOOLEAN]
 			-- Agent to test if 2 given values are equal
 			-- If Void, `is_value_equal' will be used to test value equality.
 

@@ -15,7 +15,7 @@ deferred class
 
 feature -- Basic operations
 
-	perform (a_action: PROCEDURE [ANY, TUPLE])
+	perform (a_action: PROCEDURE)
 			-- Performs a synchronous action.
 			--
 			-- `a_action': The action to perform.
@@ -24,7 +24,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
+	retrieve (a_action: FUNCTION [detachable ANY]): detachable ANY
 			-- Performs a synchronous action, and returns the result.
 			--
 			-- `a_action': The action to perform.
@@ -34,7 +34,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
+	test (a_action: PREDICATE; a_expected: BOOLEAN): BOOLEAN
 			-- Performs a synchronous test, and returns a result base on the expected result.
 			--
 			-- `a_action': The action to perform.

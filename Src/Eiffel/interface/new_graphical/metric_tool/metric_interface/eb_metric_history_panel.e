@@ -827,10 +827,10 @@ feature{NONE} -- Implementation/Actions
 			update_ui
 		end
 
-	on_hide_old_item_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+	on_hide_old_item_change_from_outside_agent: PROCEDURE
 			-- Agent of `on_hide_old_item_change_from_outside'
 
-	on_item_age_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+	on_item_age_change_from_outside_agent: PROCEDURE
 			-- Agent of `on_item_age_change_from_outside'
 
 invariant

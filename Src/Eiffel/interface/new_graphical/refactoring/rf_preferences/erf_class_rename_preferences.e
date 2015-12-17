@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
-			l_update_agent: PROCEDURE [ANY, TUPLE]
+			l_update_agent: PROCEDURE
 		do
 			create l_manager.make (preferences, "refactoring.class_rename")
 			l_update_agent := agent update

@@ -26,13 +26,13 @@ feature {NONE} -- Initialization
 
 feature
 
-	start_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	start_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions executed when a new refactoring is started.
 
-	end_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	end_actions: ARRAYED_LIST [PROCEDURE]
 			-- Actions executed when a refactoring is finished.
 
-	class_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CLASS_I]]]
+	class_actions: ARRAYED_LIST [PROCEDURE [CLASS_I]]
 			-- Actions executed when a class has been modified.
 
 feature -- Trigger events

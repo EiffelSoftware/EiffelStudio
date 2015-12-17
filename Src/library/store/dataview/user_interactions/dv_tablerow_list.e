@@ -28,13 +28,13 @@ feature {DV_COMPONENT} -- Status report
 		deferred
 		end
 
-	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	has_select_action (action: PROCEDURE): BOOLEAN
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		deferred
 		end
 
-	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	has_deselect_action (action: PROCEDURE): BOOLEAN
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		deferred
@@ -61,13 +61,13 @@ feature {DV_COMPONENT} -- Basic operations
 		deferred
 		end
 
-	extend_select_actions (action: PROCEDURE [ANY, TUPLE])
+	extend_select_actions (action: PROCEDURE)
 			-- extend list of actions executed when an item is selected
 			-- with `action'.
 		deferred
 		end
 
-	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE])
+	extend_deselect_actions (action: PROCEDURE)
 			-- extend list of actions executed when an item is deselected
 			-- with `action'.
 		deferred

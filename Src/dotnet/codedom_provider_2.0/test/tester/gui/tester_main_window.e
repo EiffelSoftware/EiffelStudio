@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 			Event_manager.raise_event (create {TESTER_EVENT}.make (l_message, False))
 		end
 
-	browse_for_file (a_title, a_filter: STRING; a_processor: ROUTINE [ANY, TUPLE [STRING]])
+	browse_for_file (a_title, a_filter: STRING; a_processor: ROUTINE [STRING])
 			-- Browse for file and give title `a_title' to browse dialog and filter `a_filter'.
 			-- Call `a_processor' with resulting file name if not empty.
 		require
@@ -977,7 +977,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	browse_for_directory (a_title, a_key: STRING; a_processor: ROUTINE [ANY, TUPLE [STRING]])
+	browse_for_directory (a_title, a_key: STRING; a_processor: ROUTINE [STRING])
 			-- Browse for directory and give title `a_title' to browse dialog.
 			-- Store/retrieve last used folder in `a_key'.
 			-- Call `a_processor' with resulting file name if not empty.

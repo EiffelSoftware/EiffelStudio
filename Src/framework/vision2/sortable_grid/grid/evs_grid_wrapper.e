@@ -375,7 +375,7 @@ feature -- Access
 	grid: EV_GRID
 			-- Grid for display			
 
-	sort_action: detachable PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
+	sort_action: detachable PROCEDURE [TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
 			-- Action used to sort
 
 	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]]
@@ -394,14 +394,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_item_function: FUNCTION [ANY, TUPLE [a_column: INTEGER; a_row: INTEGER], detachable EV_GRID_ITEM]
+	grid_item_function: FUNCTION [TUPLE [a_column: INTEGER; a_row: INTEGER], detachable EV_GRID_ITEM]
 			-- Function that returns grid item at position (`a_column', `a_row')
 
-	ensure_visible_action: PROCEDURE [ANY, TUPLE [a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN]]
+	ensure_visible_action: PROCEDURE [TUPLE [a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN]]
 			-- Action to be performed to ensure that `a_item' is visible.
 			-- `a_selected' is True indicates that `a_item' should be selected by default.
 
-	selection_function: detachable FUNCTION [ANY, TUPLE, STRING_GENERAL]
+	selection_function: detachable FUNCTION [STRING_GENERAL]
 			-- Function to return selected text in grid' (all selected rows or items should be taken into consideration).
 			-- If Void, `selection' will return an empty string.
 
@@ -424,7 +424,7 @@ feature -- Access
 			end
 		end
 
-	select_all_action: detachable PROCEDURE [ANY, TUPLE]
+	select_all_action: detachable PROCEDURE
 			-- Action to be performed to select all items in `grid'
 			-- Used in Ctrl+A.
 			-- If Void, `default_select_all_action' will be used.
@@ -587,7 +587,7 @@ feature -- Virtual grid
 			Result ?= grid_item_function.item ([a_column, a_row])
 		end
 
-	item_text_function: detachable FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], like selection]
+	item_text_function: detachable FUNCTION [TUPLE [a_item: EV_GRID_ITEM], like selection]
 			-- Function to return text of `a_item'
 
 feature{NONE} -- Implementation
@@ -656,7 +656,7 @@ feature{NONE} -- Implementation
 			not_a_column_index_is_empty: not a_column_index.is_empty
 		local
 			l_sort_info: like column_sort_info
-			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
+			l_action_list: ARRAYED_LIST [FUNCTION [G, G, INTEGER, BOOLEAN]]
 			l_order_list: ARRAYED_LIST [INTEGER]
 			l_index_list: ARRAYED_LIST [INTEGER]
 		do
@@ -688,7 +688,7 @@ feature{NONE} -- Implementation
 			Result := is_multi_column_sorting_forced or else ev_application.ctrl_pressed
 		end
 
-	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	sort_agent_table: HASH_TABLE [PROCEDURE, INTEGER]
 			-- Table to store sort agents, key is column index, value is sort agent for that column
 		local
 			l_sort_agent_table_internal: like sort_agent_table_internal
@@ -1009,7 +1009,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_copy_using_key_agent: PROCEDURE [ANY, TUPLE [EV_KEY]]
+	on_copy_using_key_agent: PROCEDURE [EV_KEY]
 			-- Agent of `on_copy_using_key'
 		local
 			l_on_copy_using_key_agent_internal: like on_copy_using_key_agent_internal

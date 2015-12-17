@@ -15,7 +15,7 @@ create
 	make
 
 convert
-	make ({PROCEDURE [ANY, TUPLE [WSF_REQUEST, WSF_RESPONSE]]})
+	make ({PROCEDURE [WSF_REQUEST, WSF_RESPONSE]})
 
 feature {NONE} -- Implementation
 
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	callback: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]
+	callback: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]
 			-- Procedure called on `execute'
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)

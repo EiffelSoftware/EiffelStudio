@@ -20,7 +20,7 @@ feature -- Initialization
 
 feature -- Access
 
-	output_displayer: ROUTINE [ANY, TUPLE [STRING]]
+	output_displayer: ROUTINE [STRING]
 			-- Text displayer routine
 
 feature -- Basic Operation

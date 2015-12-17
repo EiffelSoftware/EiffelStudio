@@ -21,7 +21,7 @@ feature -- Shortcut/Status report
 
 feature -- Shortcut/Access
 
-	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): detachable LIST [PROCEDURE [ANY, TUPLE]]
+	shortcut_actions (a_shortcut: ES_KEY_SHORTCUT): detachable LIST [PROCEDURE]
 			-- Trigger agent for `a_shortcut'
 			-- Void if no agent is registered for `a_shortcut'.
 		do
@@ -52,19 +52,19 @@ feature -- Call
 
 feature -- Shortcut/Register key shortcuts
 
-	register_shortcut (a_shortcut: ES_KEY_SHORTCUT; a_agent: PROCEDURE [ANY, TUPLE])
+	register_shortcut (a_shortcut: ES_KEY_SHORTCUT; a_agent: PROCEDURE)
 			-- Register `a_agent' for `a_shortcut'.
 		require
 			a_shortcut_attached: a_shortcut /= Void
 			a_agent_attached: a_agent /= Void
 		local
-			l_agent_list: detachable LIST [PROCEDURE [ANY, TUPLE]]
+			l_agent_list: detachable LIST [PROCEDURE]
 		do
 			if key_table.has_key (a_shortcut) then
 				l_agent_list := key_table.found_item
 				check found_item: l_agent_list /= Void end
 			else
-				create {LINKED_LIST [PROCEDURE [ANY, TUPLE]]} l_agent_list.make
+				create {LINKED_LIST [PROCEDURE]} l_agent_list.make
 				key_table.put (l_agent_list, a_shortcut)
 			end
 			if l_agent_list /= Void then
@@ -91,16 +91,16 @@ feature -- Shortcut/Register key shortcuts
 
 feature -- Access
 
-	expand_selected_rows_agent: detachable PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_agent: detachable PROCEDURE
 			-- Agent to be performed when expanding rows retrieved from `selected_rows_function'.			
 
-	expand_selected_rows_recursive_agent: detachable PROCEDURE [ANY, TUPLE]
+	expand_selected_rows_recursive_agent: detachable PROCEDURE
 			-- Agent to be performed when recursively expanding rows retrieved from `selected_rows_function'.		
 
-	collapse_selected_rows_agent: detachable PROCEDURE [ANY, TUPLE]
+	collapse_selected_rows_agent: detachable PROCEDURE
 			-- Agent to be performed when collapsing rows retrieved from `selected_rows_function'.
 
-	collapse_selected_rows_recursive_agent: detachable PROCEDURE [ANY, TUPLE]
+	collapse_selected_rows_recursive_agent: detachable PROCEDURE
 			-- Agent to be performed when recursively collapsing rows retrieved from `selected_rows_function'.
 
 feature -- Setting
@@ -196,7 +196,7 @@ feature -- Access
 
 feature{NONE} -- Shortcut/Implementation
 
-	key_table: HASH_TABLE [LIST [PROCEDURE [ANY, TUPLE]], ES_KEY_SHORTCUT]
+	key_table: HASH_TABLE [LIST [PROCEDURE], ES_KEY_SHORTCUT]
 			-- Table of actions to be performed indexed by the key shortcut to trigger that action
 		local
 			l_key_table_internal: like key_table_internal

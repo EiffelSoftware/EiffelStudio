@@ -423,7 +423,7 @@ feature -- Change
 
 feature {NONE} -- Implementation		
 
-	builder (a_name: READABLE_STRING_GENERAL): detachable FUNCTION [ANY, TUPLE [name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], like criteria]
+	builder (a_name: READABLE_STRING_GENERAL): detachable FUNCTION [TUPLE [name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], like criteria]
 		do
 			if attached builders.item (a_name) as b then
 				Result := b.builder

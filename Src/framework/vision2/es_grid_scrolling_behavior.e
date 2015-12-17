@@ -288,7 +288,7 @@ feature -- Scrolling
 
 feature {NONE} -- Scrolling : Action implementation
 
-	on_mouse_wheel_action_agent: detachable PROCEDURE [ANY, TUPLE [INTEGER]]
+	on_mouse_wheel_action_agent: detachable PROCEDURE [INTEGER]
 			-- Agent representing `agent on_mouse_wheel_action' .
 
 	on_mouse_wheel_action (a_step: INTEGER)

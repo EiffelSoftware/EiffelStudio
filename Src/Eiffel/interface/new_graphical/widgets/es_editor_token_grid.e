@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			redraw
 		end
 
-	update_and_redraw_agent: detachable PROCEDURE [ANY, TUPLE];
+	update_and_redraw_agent: detachable PROCEDURE;
 			-- Saved agent to be recycled.
 
 note

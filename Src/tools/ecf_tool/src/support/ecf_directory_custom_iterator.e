@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	directory_excluded_function: detachable FUNCTION [ANY, TUPLE [PATH], BOOLEAN]
+	directory_excluded_function: detachable FUNCTION [PATH, BOOLEAN]
 
 feature -- Change
 

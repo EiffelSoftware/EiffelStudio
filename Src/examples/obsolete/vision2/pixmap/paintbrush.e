@@ -95,7 +95,7 @@ feature -- Initialization
 			my_pixmap.disable_sensitive
 		end
 
-	add_toolbar_button (a_toolbar: EV_TOOL_BAR; pixmap_name: STRING; command: PROCEDURE [ANY, TUPLE])
+	add_toolbar_button (a_toolbar: EV_TOOL_BAR; pixmap_name: STRING; command: PROCEDURE)
 			-- Add a button to the toolbar `a_toolbar' with the pixmap `pixmap_name' and the action
 			-- `command'.
 		local

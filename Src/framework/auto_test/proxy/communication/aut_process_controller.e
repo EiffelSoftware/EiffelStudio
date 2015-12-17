@@ -161,7 +161,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	launch (a_output_handler: PROCEDURE [ANY, TUPLE [STRING]])
+	launch (a_output_handler: PROCEDURE [STRING])
 		require
 			not_launched: not is_launched
 		do

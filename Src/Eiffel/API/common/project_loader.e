@@ -995,10 +995,10 @@ feature {NONE} -- User interaction
 
 feature {NONE} -- Deletion
 
-	deletion_agent: PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
+	deletion_agent: PROCEDURE [LIST [READABLE_STRING_GENERAL]]
 			-- Agent for displaying progress when deleting files of a project.
 
-	cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	cancel_agent: FUNCTION [BOOLEAN]
 			-- Agent for cancelling deletion of a project.
 
 feature {NONE} -- Constants

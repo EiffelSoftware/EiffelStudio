@@ -76,10 +76,10 @@ feature {NONE} -- Implementation
 	synchronizer: EB_VALUE_SYNCHRONIZER [BOOLEAN]
 			-- Synchronizer used to synchroize selection status of Current toggle button and its associated `preference'
 
-	button_status_change_agent: PROCEDURE [ANY, TUPLE]
+	button_status_change_agent: PROCEDURE
 			-- Agent to be performed when selection status of Current toggle button changes
 
-	preference_status_change_agent: PROCEDURE [ANY, TUPLE]
+	preference_status_change_agent: PROCEDURE
 			-- Agent to be performed when value of `preference' changes
 
 	set_selection_status (b: BOOLEAN)

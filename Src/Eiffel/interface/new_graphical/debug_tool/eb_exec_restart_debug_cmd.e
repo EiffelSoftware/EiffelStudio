@@ -32,7 +32,7 @@ feature -- Initialization
 	internal_execute (a_execution_mode: INTEGER)
 			-- Execute.
 		local
-			pre_ag, ag: PROCEDURE [ANY, TUPLE]
+			pre_ag, ag: PROCEDURE
 			params: like last_parameters
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
 		do

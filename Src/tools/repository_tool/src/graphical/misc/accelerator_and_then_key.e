@@ -174,7 +174,7 @@ feature -- Change
 			actions_by_code.remove (k.code)
 		end
 
-	register_action	(k: EV_KEY; a_action: PROCEDURE [ANY, TUPLE]; a_details: like details)
+	register_action	(k: EV_KEY; a_action: PROCEDURE; a_details: like details)
 			-- Register `a_action' for "and_key" `k'
 		require
 			k_not_void: k /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 	focused_widget: detachable EV_WIDGET
 			-- Focused widget when accelerator event occurred
 
-	on_trigger_agent: PROCEDURE [ANY, TUPLE]
+	on_trigger_agent: PROCEDURE
 			-- Computed `on_trigger' agent
 
 	Default_timeout: INTEGER = 1000

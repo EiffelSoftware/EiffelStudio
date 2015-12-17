@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	for_all_objects (p: PROCEDURE [EV_ANY, TUPLE])
+	for_all_objects (p: PROCEDURE)
 			-- Call `p' on every item in `objects'.
 		local
 			l_tuple: TUPLE
@@ -185,7 +185,7 @@ feature -- Basic operations
 			end
 		end
 
-	for_first_object (p: PROCEDURE [EV_ANY, TUPLE])
+	for_first_object (p: PROCEDURE)
 			-- Call `p' on the first_item in `objects'.
 		local
 			l_tuple: TUPLE

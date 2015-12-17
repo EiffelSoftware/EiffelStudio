@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="vision2_demo" uuid="3136A08C-7C74-4922-9026-81A822D3FE13">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="vision2_demo" uuid="3136A08C-7C74-4922-9026-81A822D3FE13">
 	<target name="vision2_demo">
 		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -15,8 +15,8 @@
 		<cluster name="build_classes" location="$EIFFEL_SRC\build\" recursive="true"/>
 		<override name="root_cluster" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/templates$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/templates$</exclude>
 			</file_rule>
 		</override>
 	</target>

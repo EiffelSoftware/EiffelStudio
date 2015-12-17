@@ -79,7 +79,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- referers not permitted to use `new_value'?
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
+			validate_agent: FUNCTION [INTEGER, BOOLEAN]
 		do
 			Result := True
 			from
@@ -103,7 +103,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
+			execution_agent: PROCEDURE [INTEGER]
 		do
 			from
 				referers.start

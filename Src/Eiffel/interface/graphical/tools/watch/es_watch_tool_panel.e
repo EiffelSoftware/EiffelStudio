@@ -444,9 +444,9 @@ feature {NONE} -- Memory management
 			end
 		end
 
-	set_mouse_wheel_scroll_size_agent : PROCEDURE [ANY, TUPLE [INTEGER_32]]
-	set_mouse_wheel_scroll_full_page_agent: PROCEDURE [ES_OBJECTS_GRID, TUPLE [BOOLEAN]]
-	set_scrolling_common_line_count_agent: PROCEDURE [ANY, TUPLE [INTEGER_32]]
+	set_mouse_wheel_scroll_size_agent : PROCEDURE [INTEGER_32]
+	set_mouse_wheel_scroll_full_page_agent: PROCEDURE [BOOLEAN]
+	set_scrolling_common_line_count_agent: PROCEDURE [INTEGER_32]
 			-- Agents for recycling
 
 feature {NONE} -- add new expression from the grid
@@ -1293,7 +1293,7 @@ feature {NONE} -- Implementation: internal data
 	move_up_cmd, move_down_cmd: EB_STANDARD_CMD
 			-- Move selected item up or down.
 
-	update_agent: PROCEDURE [ANY, TUPLE]
+	update_agent: PROCEDURE
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
 	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
@@ -1600,7 +1600,7 @@ feature {NONE} -- Shortcuts
 		local
 			g: like watches_grid
 			p: SHORTCUT_PREFERENCE
-			ag: PROCEDURE [ANY, TUPLE]
+			ag: PROCEDURE
 		do
 			g := watches_grid
 
@@ -1648,7 +1648,7 @@ feature {NONE} -- Shortcuts
 			create Result.make_with_key_combination (create {EV_KEY}.make_with_code (a_key), a_ctrl, a_alt, a_shift)
 		end
 
-	update_shortcut_with_pref (g: like watches_grid; sh: like new_shortcut; ag: PROCEDURE [ANY, TUPLE]; ap: SHORTCUT_PREFERENCE)
+	update_shortcut_with_pref (g: like watches_grid; sh: like new_shortcut; ag: PROCEDURE; ap: SHORTCUT_PREFERENCE)
 			-- Update shortcut `sh' on grid `g' with agent `ag' with pref `ap'
 		require
 			g_attached: g /= Void

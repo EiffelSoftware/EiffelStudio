@@ -49,7 +49,7 @@ feature -- Access
 	buffer: EB_BUFFER
 			-- Buffer attached to Current fragment
 
-	new_text_function: FUNCTION [ANY, TUPLE [a_text: READABLE_STRING_GENERAL], like new_text]
+	new_text_function: FUNCTION [TUPLE [a_text: READABLE_STRING_GENERAL], like new_text]
 			-- Function to return result for `new_text'
 			-- When called, `text' will be passed as argument.
 

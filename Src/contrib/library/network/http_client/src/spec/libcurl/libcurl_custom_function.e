@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	write_procedure: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_8]]
+	write_procedure: detachable PROCEDURE [READABLE_STRING_8]
 			-- File for sending data
 
 	file_to_read: detachable FILE

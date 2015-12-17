@@ -70,7 +70,7 @@ feature -- Properties
 	data: ANY
 			-- List of groups contained in Current stone
 
-	validity_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	validity_function: FUNCTION [ANY, BOOLEAN]
 			-- Function used to check if `data' is valid
 			-- If not set, `data' is considered to be valid by default.
 

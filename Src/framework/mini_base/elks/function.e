@@ -17,7 +17,7 @@ class
 	FUNCTION [OPEN_ARGS -> detachable TUPLE create default_create end, RESULT_TYPE]
 
 inherit
-	ROUTINE [ANY, OPEN_ARGS]
+	ROUTINE [OPEN_ARGS]
 
 note
 	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"

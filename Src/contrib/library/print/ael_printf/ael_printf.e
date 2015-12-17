@@ -249,7 +249,7 @@ feature -- Convenience function
 feature -- Debug assistance
 --|========================================================================
 
-	set_client_log_proc (v: PROCEDURE [ANY, TUPLE [STRING]])
+	set_client_log_proc (v: PROCEDURE [STRING])
 			-- Set the procedure to call to log a message for the client
 			-- For debugging support only
 		do
@@ -384,7 +384,7 @@ feature -- Global status setting
 		end
 
 	set_printf_client_error_agent (
-		v: detachable PROCEDURE [ANY, TUPLE [AEL_PF_FORMAT_ERROR]])
+		v: detachable PROCEDURE [AEL_PF_FORMAT_ERROR])
 			-- Set the procedure to call upon encountering a format error
 		do
 			pf_fmt_constants.set_printf_client_error_agent (v)

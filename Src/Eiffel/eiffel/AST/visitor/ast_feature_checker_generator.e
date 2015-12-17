@@ -11758,7 +11758,7 @@ feature {NONE} -- Separateness
 
 feature -- Type recording
 
-	type_recorder: detachable PROCEDURE [ANY, TUPLE [t: TYPE_A; a: AST_EIFFEL; w: CLASS_C; f: FEATURE_I; c: CLASS_C]]
+	type_recorder: detachable PROCEDURE [TUPLE [t: TYPE_A; a: AST_EIFFEL; w: CLASS_C; f: FEATURE_I; c: CLASS_C]]
 			-- A procedure to record type `t' of AST node `a' written in class `w'
 			-- when evaluated in a feature `f' of class `c'.
 

@@ -203,7 +203,7 @@ feature -- Status setting
 			components.tools.widget_selector.item_added_to_directory (Current, new_item)
 		end
 
-	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM]])
+	recursive_do_all (action: PROCEDURE [GB_WIDGET_SELECTOR_COMMON_ITEM])
 			-- Apply `action' to very item recusively.
 		do
 			from
@@ -217,7 +217,7 @@ feature -- Status setting
 			end
 		end
 
-	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN
+	recursive_check_all (action: FUNCTION [GB_WIDGET_SELECTOR_COMMON_ITEM, BOOLEAN]): BOOLEAN
 			-- For all items in `Current' recursively, call `action'.
 			-- `Result' is True if one call to `action' returns True, False otherwise.
 		require

@@ -38,7 +38,7 @@ feature -- Search
 			Result = (set | agent equivalent (v, ?)).any_item
 		end
 
-	equivalence: PREDICATE [ANY, TUPLE [G, G]]
+	equivalence: PREDICATE [G, G]
 			-- Equivalence relation on values.
 		deferred
 		end

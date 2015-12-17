@@ -1367,7 +1367,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Action agents
 
-	last_file_change_notified_agent: PROCEDURE [ANY, TUPLE]
+	last_file_change_notified_agent: PROCEDURE
 			-- Last agent set for file notifications when the tool was not displayed
 
 feature {NONE} -- Factory

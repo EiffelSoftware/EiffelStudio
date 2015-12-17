@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_rules_checker: attached CA_ALL_RULES_CHECKER; a_rules: attached LINKED_LIST [attached CA_RULE]; a_classes: attached LINKED_SET [CLASS_C]; a_completed_action: attached PROCEDURE [ANY, TUPLE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]]])
+	make (a_rules_checker: attached CA_ALL_RULES_CHECKER; a_rules: attached LINKED_LIST [attached CA_RULE]; a_classes: attached LINKED_SET [CLASS_C]; a_completed_action: attached PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]])
 			-- Initializes `Current'. `a_rules_checker' will be used for checking standard rules. All classes from `a_classes'
 			-- will be analyzed by all rules from `a_rules'. `a_completed_action' will be called as soon as the analysis is done.
 		do
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	classes: LINKED_SET [CLASS_C]
 			-- Classes that shall be analyzed.
 
-	completed_action: PROCEDURE [ANY, TUPLE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]]]
+	completed_action: PROCEDURE [ITERABLE [TUPLE [detachable EXCEPTION, CLASS_C]]]
 			-- Shall be called when analysis has completed.
 
 	output_actions: detachable ACTION_SEQUENCE [TUPLE [READABLE_STRING_GENERAL]]

@@ -653,7 +653,7 @@ feature -- Access
 			Result := implementation.is_horizontal_overscroll_enabled
 		end
 
-	dynamic_content_function: detachable FUNCTION [ANY, TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM]
+	dynamic_content_function: detachable FUNCTION [TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require
@@ -859,7 +859,7 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
+	item_pebble_function: detachable FUNCTION [detachable EV_GRID_ITEM, detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -871,7 +871,7 @@ feature -- Access
 			Result := implementation.item_pebble_function
 		end
 
-	item_veto_pebble_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
+	item_veto_pebble_function: detachable FUNCTION [EV_GRID_ITEM, ANY, BOOLEAN]
 			-- Function used to determine whether dropping is allowed on a particular item.
 			-- When called during PND transport, the grid item currently under the pebble
 			-- and the pebble itself are passed to the function.  A return value of True means
@@ -883,7 +883,7 @@ feature -- Access
 			Result := implementation.item_veto_pebble_function
 		end
 
-	item_accept_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_accept_cursor_function: detachable FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -892,7 +892,7 @@ feature -- Access
 			Result := implementation.item_accept_cursor_function
 		end
 
-	item_deny_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_deny_cursor_function: detachable FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -1009,7 +1009,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN])
+	set_item_veto_pebble_function (a_function: FUNCTION [EV_GRID_ITEM, ANY, BOOLEAN])
 			-- Assign `a_function' to `item_veto_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1019,7 +1019,7 @@ feature -- Status setting
 			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY])
+	set_item_pebble_function (a_function: FUNCTION [detachable EV_GRID_ITEM, detachable ANY])
 			-- Assign `a_function' to `item_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1029,7 +1029,7 @@ feature -- Status setting
 			item_pebble_function_set: item_pebble_function = a_function
 		end
 
-	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
+	set_item_accept_cursor_function (a_function: FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_accept_cursor_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1039,7 +1039,7 @@ feature -- Status setting
 			item_accept_cursor_function_set: item_accept_cursor_function = a_function
 		end
 
-	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
+	set_item_deny_cursor_function (a_function: FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_deny_cursor_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1503,7 +1503,7 @@ feature -- Status setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM])
+	set_dynamic_content_function (a_function: FUNCTION [TUPLE [col: INTEGER; row: INTEGER], EV_GRID_ITEM])
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require

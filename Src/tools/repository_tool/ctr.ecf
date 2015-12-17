@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
 	<target name="repository_tool_core">
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" syntax="provisional">
+		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
 		<setting name="concurrency" value="none"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="eapml" location="$ISE_LIBRARY/contrib/library/math/eapml/eapml.ecf"/>
-		<library name="encryption" location="$ISE_LIBRARY/contrib/library/text/encryption/eel/eel.ecf"/>
+		<library name="eapml" location="$ISE_LIBRARY\contrib\library\math\eapml\eapml.ecf"/>
+		<library name="encryption" location="$ISE_LIBRARY\contrib\library\text\encryption\eel\eel.ecf"/>
 		<library name="matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="sqlite3" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf"/>
@@ -75,7 +75,7 @@
 		</cluster>
 	</target>
 	<target name="repository_tool_unix" extends="repository_tool">
-		<option full_class_checking="true" cat_call_detection="true">
+		<option full_class_checking="true" cat_call_detection="all">
 		</option>
 	</target>
 	<target name="repository_tool_test_compilation_unix" extends="repository_tool_unix">
@@ -84,7 +84,7 @@
 	</target>
 	<target name="repository_tool_test_compilation_windows" extends="repository_tool">
 		<description>Compiling WINDOWS version on other platforms than Unices</description>
-		<option full_class_checking="true" cat_call_detection="true">
+		<option full_class_checking="true" cat_call_detection="all">
 		</option>
 		<setting name="platform" value="windows"/>
 	</target>

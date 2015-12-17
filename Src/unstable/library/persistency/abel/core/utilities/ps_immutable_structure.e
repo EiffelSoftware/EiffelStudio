@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]])
+	do_all (action: PROCEDURE [G])
 			-- Apply `action' to every item.
 		do
 			across
@@ -69,7 +69,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 		do
 			Result :=

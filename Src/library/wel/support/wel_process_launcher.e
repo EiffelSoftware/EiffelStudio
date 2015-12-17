@@ -85,7 +85,7 @@ feature -- Basic Operations
 			process_info_attached: process_info /= Void
 		end
 
-	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [ANY, TUPLE [STRING]])
+	launch (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_output_handler: detachable ROUTINE [STRING])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
@@ -141,7 +141,7 @@ feature -- Basic Operations
 			l_input_pipe.close_output
 		end
 
-	launch_and_refresh (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_refresh_handler: detachable ROUTINE [ANY, TUPLE])
+	launch_and_refresh (a_command_line: READABLE_STRING_GENERAL; a_working_directory: detachable READABLE_STRING_GENERAL; a_refresh_handler: detachable ROUTINE)
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Calls `a_refresh_handler' regularly while waiting for end of process.
 		require

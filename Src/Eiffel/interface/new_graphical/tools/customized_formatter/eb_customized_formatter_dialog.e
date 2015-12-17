@@ -176,7 +176,7 @@ feature -- Access
 	cancel_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when "Cancel" button is pressed
 
-	items_getter: FUNCTION [ANY, TUPLE, LIST [G]]
+	items_getter: FUNCTION [LIST [G]]
 			-- Agent to get information of `items'
 
 	tool_table: HASH_TABLE [TUPLE [display_name: STRING_32; pixmap: EV_PIXMAP], STRING]

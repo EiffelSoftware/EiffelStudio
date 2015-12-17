@@ -689,7 +689,7 @@ feature -- Comment extraction
 
 feature -- Status reporting
 
-	if_all_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN
+	if_all_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [LEAF_AS, BOOLEAN]): BOOLEAN
 			-- Do all tokens in `a_region' satisfy `test'?
 		require
 			a_region_not_void: a_region /= Void
@@ -710,7 +710,7 @@ feature -- Status reporting
 			end
 		end
 
-	if_any_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN
+	if_any_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [LEAF_AS, BOOLEAN]): BOOLEAN
 			-- Does any token in `a_region' satisfy `test'?
 		require
 			a_region_not_void: a_region /= Void

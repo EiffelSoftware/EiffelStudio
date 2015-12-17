@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Refresh breakpoints info Now implementation
 
-	agent_refresh_breakpoints_info_now: PROCEDURE [ANY, TUPLE]
+	agent_refresh_breakpoints_info_now: PROCEDURE
 			-- agent on `refresh_breakpoints_info_now'.
 
 	request_refresh_breakpoints_info_now
@@ -1414,7 +1414,7 @@ feature {NONE} -- Implementation, cosmetic
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
+	set_row_highlight_bg_color_agent : PROCEDURE
 			-- Set row highlight background color agent.
 
 	set_row_highlight_bg_color (v: COLOR_PREFERENCE)

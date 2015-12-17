@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 	caller: WIZARD_STATE_WINDOW
 			-- Caller of this object.
 
-	browse_button_action: detachable PROCEDURE [ANY, TUPLE];
+	browse_button_action: detachable PROCEDURE;
 			-- Action for the browse button.
 
 note

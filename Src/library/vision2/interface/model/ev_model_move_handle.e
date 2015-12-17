@@ -81,7 +81,7 @@ feature -- Access
 	maximum_y: INTEGER
 			-- Bottom boundary.
 
-	real_position_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], TUPLE [x: INTEGER; y: INTEGER]]
+	real_position_agent: detachable FUNCTION [INTEGER, INTEGER, TUPLE [x: INTEGER; y: INTEGER]]
 			-- User defined function that translates actual coordinates to
 			-- the coordinates `Current' will be displayed on.
 
@@ -316,10 +316,10 @@ feature {NONE} -- Events
 	Min_integer: INTEGER = -100000
 			-- Lowest possible integer value.
 
-	show_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	show_agent: detachable PROCEDURE note option: stable attribute end
 			-- Connected to `enter_actions'.
 
-	hide_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	hide_agent: detachable PROCEDURE note option: stable attribute end
 			-- Connected to `leave_actions'.
 
 	on_enter

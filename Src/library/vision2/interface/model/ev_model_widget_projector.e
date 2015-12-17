@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			area := a_drawable
 		end
 
-	project_agent: detachable PROCEDURE [like Current, TUPLE] note option: stable attribute end
+	project_agent: detachable PROCEDURE note option: stable attribute end
 		-- Agent used for projection.
 
 feature -- Access

@@ -279,7 +279,7 @@ feature {NONE} -- Implementation: UI
 			end
 		end
 
-	add_button_action_to (a_text: READABLE_STRING_GENERAL; a_action: detachable PROCEDURE [ANY, TUPLE]; a_box: EV_BOX)
+	add_button_action_to (a_text: READABLE_STRING_GENERAL; a_action: detachable PROCEDURE; a_box: EV_BOX)
 		local
 			but: EV_BUTTON
 		do

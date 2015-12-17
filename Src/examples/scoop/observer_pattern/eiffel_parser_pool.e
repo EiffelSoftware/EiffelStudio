@@ -18,7 +18,7 @@ feature
 			create parsers.make (10)
 		end
 
-	parse (a_file: STRING; a_setup_action: PROCEDURE [ANY, TUPLE [separate EIFFEL_PARSER]]; a_post_action: PROCEDURE [ANY, TUPLE])
+	parse (a_file: STRING; a_setup_action: PROCEDURE [separate EIFFEL_PARSER]; a_post_action: PROCEDURE)
 		require
 			a_file_not_void: a_file /= Void
 		local
@@ -64,12 +64,12 @@ feature
 
 feature {NONE} -- Implementation
 
-	set_post_action (a_parser: separate EIFFEL_PARSER; a_post_action: PROCEDURE [ANY, TUPLE])
+	set_post_action (a_parser: separate EIFFEL_PARSER; a_post_action: PROCEDURE)
 		do
 			a_parser.set_post_parsing_action (a_post_action)
 		end
 
-	parser_creation: FUNCTION [ANY, TUPLE, separate EIFFEL_PARSER]
+	parser_creation: FUNCTION [separate EIFFEL_PARSER]
 
 	max_parsers: INTEGER = 5
 

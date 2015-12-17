@@ -307,7 +307,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
+	finder_agent: PROCEDURE [CLASS_C]
 			-- Finder used to find result for current criterion
 		do
 			if is_indirect_class_enabled then

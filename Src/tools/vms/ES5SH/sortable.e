@@ -100,7 +100,7 @@ feature -- Basic operations
 			really_found: found implies a_item.is_equal (item (found_index))
 		end
 
-	dynamic_binary_search (a_compare: FUNCTION [ANY,TUPLE [G],INTEGER])
+	dynamic_binary_search (a_compare: FUNCTION [G,INTEGER])
 		local
 			l_lower,l_upper: INTEGER
 		do

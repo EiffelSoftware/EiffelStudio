@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			a_window_attached: a_window /= Void
 			not_a_window_is_destoryed: not a_window.is_destroyed
 		local
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_action: PROCEDURE
 			l_shortcut: SHORTCUT_PREFERENCE
 			l_acc: EV_ACCELERATOR
 		do

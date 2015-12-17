@@ -887,7 +887,7 @@ feature {NONE} -- Blink Cursor Management
 			not_blink_suspended: is_initialized implies not blink_suspended
 		end
 
-	basic_cursor_move (action: PROCEDURE[like cursor_type, TUPLE])
+	basic_cursor_move (action: PROCEDURE)
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char

@@ -49,7 +49,7 @@ feature -- Formatting
 			end
 		end
 
-	open_execution_parameters_dialog (a_cmd: PROCEDURE [ANY, TUPLE [DEBUGGER_EXECUTION_PROFILE]])
+	open_execution_parameters_dialog (a_cmd: PROCEDURE [DEBUGGER_EXECUTION_PROFILE])
 			-- Show the arguments dialog
 		local
 			args_dialog: EB_ARGUMENT_DIALOG

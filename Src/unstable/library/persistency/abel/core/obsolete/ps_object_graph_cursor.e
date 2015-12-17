@@ -56,10 +56,10 @@ feature -- Cursor status and movement
 
 feature -- Visited item handler function
 
-	cycle_handler: PROCEDURE [ANY, TUPLE [PS_OBJECT_GRAPH_PART, PS_OBJECT_GRAPH_PART]]
+	cycle_handler: PROCEDURE [PS_OBJECT_GRAPH_PART, PS_OBJECT_GRAPH_PART]
 			-- A handler function to handle cycles in the object graph.
 
-	set_handler (a_handler: PROCEDURE [ANY, TUPLE [PS_OBJECT_GRAPH_PART, PS_OBJECT_GRAPH_PART]])
+	set_handler (a_handler: PROCEDURE [PS_OBJECT_GRAPH_PART, PS_OBJECT_GRAPH_PART])
 			-- Set a handler function to be called when a cycle is detected.
 		do
 			cycle_handler := a_handler

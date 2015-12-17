@@ -249,7 +249,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	result_from_unary_operation (a_calculation_function: FUNCTION [ANY, TUPLE [DOUBLE], DOUBLE]): like Current
+	result_from_unary_operation (a_calculation_function: FUNCTION [DOUBLE, DOUBLE]): like Current
 			-- Result vector of `Current' and `other' with `a_calculation_function' applied.
 		require
 			a_calculation_function_attached: a_calculation_function /= Void
@@ -275,7 +275,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	result_vector (other: like Current; a_calculation_function: FUNCTION [ANY, TUPLE[DOUBLE, DOUBLE], DOUBLE]): like Current
+	result_vector (other: like Current; a_calculation_function: FUNCTION [DOUBLE, DOUBLE, DOUBLE]): like Current
 			-- Result vector of `Current' and `other' with `a_calculation_function' applied.
 		require
 			other_attached: other /= Void

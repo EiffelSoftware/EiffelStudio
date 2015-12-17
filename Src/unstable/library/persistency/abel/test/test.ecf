@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
-		xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd"
-		name="abel_test"
-		uuid="671C9530-CB14-493E-8F77-39A919C5723A"
-		library_target="abel_test" >
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="abel_test" uuid="671C9530-CB14-493E-8F77-39A919C5723A" library_target="abel_test">
 	<description>Unit-tests for the ABEL library.</description>
 	<target name="abel_test">
 		<root class="START" feature="make"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<file_rule>
 			<exclude>^/test_classes$</exclude>
 		</file_rule>
-		<option trace="false" warning="true" full_class_checking="false" cat_call_detection="false" is_attached_by_default="true" void_safety="transitional" syntax="provisional" namespace="EiffelSoftware.Library">
+		<option trace="false" warning="true" full_class_checking="false" cat_call_detection="none" is_attached_by_default="true" void_safety="transitional" syntax="provisional" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
@@ -32,8 +26,7 @@
 		<library name="mysql" location="$ISE_LIBRARY\unstable\library\persistency\database\mysqli\mysqli.ecf"/>
 		<library name="sqlite" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite-safe.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-
-		<tests name="abel_test" location=".\" />
+		<tests name="abel_test" location=".\"/>
 		<cluster name="test_classes" location=".\test_classes\" recursive="true"/>
 	</target>
 </system>

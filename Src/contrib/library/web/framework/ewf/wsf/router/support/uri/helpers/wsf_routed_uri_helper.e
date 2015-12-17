@@ -35,13 +35,13 @@ feature -- Mapping helper: uri
 
 feature -- Mapping helper: uri agent		
 
-	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_uri', according to `rqst_methods'.
 		do
 			map_uri (a_uri, create {WSF_URI_AGENT_HANDLER}.make (proc), rqst_methods)
 		end
 
-	map_uri_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_uri' for request methods `rqst_methods'.
 		obsolete
 			"Use directly `map_uri_agent' [June/2015]"

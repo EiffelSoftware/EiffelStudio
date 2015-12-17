@@ -49,7 +49,7 @@ feature -- Processing
 			l_degree_output: like degree_output
 			l_system: like system
 			l_error_handler: like error_handler
-			l_full_class_checking_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
+			l_full_class_checking_agent: PROCEDURE [CLASS_C]
 		do
 			l_degree_output := degree_output
 			l_system := system

@@ -223,7 +223,7 @@ feature -- Roundtrip/Token
 			token_region_not_void: Result /= Void
 		end
 
-	index_of_matching_leaf (a_list: LEAF_AS_LIST; a_start_index: INTEGER; a_forward_search: BOOLEAN; a_matching: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): INTEGER
+	index_of_matching_leaf (a_list: LEAF_AS_LIST; a_start_index: INTEGER; a_forward_search: BOOLEAN; a_matching: FUNCTION [LEAF_AS, BOOLEAN]): INTEGER
 			-- Index of the first matching leaf for `a_matching' in `a_list' starting from
 			-- `a_start_index' in the direction indicated by `a_forward_search'.
 		require

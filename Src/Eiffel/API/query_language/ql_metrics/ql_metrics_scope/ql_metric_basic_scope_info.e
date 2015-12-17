@@ -24,7 +24,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	calculate_function: FUNCTION [ANY, TUPLE [QL_ITEM], DOUBLE]
+	calculate_function: FUNCTION [QL_ITEM, DOUBLE]
 			-- Function to calculate metric
 
 	domain_generator: QL_DOMAIN_GENERATOR

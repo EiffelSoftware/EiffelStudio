@@ -80,7 +80,7 @@ feature -- Basic operations
 			application_under_test_destroyed: gui.application_under_test.is_destroyed
 		end
 
-	run_safe_test (a_test: PROCEDURE [ANY, TUPLE])
+	run_safe_test (a_test: PROCEDURE)
 			-- Run a test procedure in a rescue clause.
 		local
 			failed: BOOLEAN

@@ -218,14 +218,14 @@ feature -- Cursor movement
 				(sequence [index] = v and not sequence.interval (old index, index - 1).has (v))
 		end
 
-	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
+	satisfy_forth (pred: PREDICATE [G])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		note
 			modify: index
 		require else
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
@@ -267,14 +267,14 @@ feature -- Cursor movement
 				(sequence [index] = v and not sequence.interval (index + 1, old index).has (v))
 		end
 
-	satisfy_back (pred: PREDICATE [ANY, TUPLE [G]])
+	satisfy_back (pred: PREDICATE [G])
 			-- Move to the first position at or before current where `p' holds.
 			-- If `pred' never holds, move `after'.
 		note
 			modify: index
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))

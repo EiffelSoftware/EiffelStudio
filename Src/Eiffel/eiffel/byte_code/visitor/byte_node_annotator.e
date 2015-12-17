@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (pre, post: detachable ROUTINE [ANY, TUPLE [BYTE_NODE]])
+	make (pre, post: detachable ROUTINE [BYTE_NODE])
 			-- Initialize `pre_actions' and `post_actions' with `pre' and `post'. Those
 			-- actions will be called each time a byte node will be processed
 		do
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 
 feature -- Actions
 
-	pre_actions: detachable ROUTINE [ANY, TUPLE [BYTE_NODE]]
-	post_actions: detachable ROUTINE [ANY, TUPLE [BYTE_NODE]]
+	pre_actions: detachable ROUTINE [BYTE_NODE]
+	post_actions: detachable ROUTINE [BYTE_NODE]
 			-- Actions to be called by `preorder_process' and `postorder_process'.
 
 feature -- Code iterator routine

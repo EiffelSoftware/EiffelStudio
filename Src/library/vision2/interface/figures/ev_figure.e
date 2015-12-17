@@ -65,7 +65,7 @@ feature -- Access
 	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
+	pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 
@@ -276,7 +276,7 @@ feature -- Element change
 			pebble_function := Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
+	set_pebble_function (a_function: FUNCTION [ANY])
 			-- Set `a_function' to compute `pebble'.
 		do
 			pebble_function := a_function

@@ -12,12 +12,12 @@ inherit
 feature
 	list: separate SPECIAL [G]
 
-	compute_agents (init: G; trns: FUNCTION [ANY, TUPLE [G], G]; comb: FUNCTION [ANY, TUPLE [G,G], G])
+	compute_agents (init: G; trns: FUNCTION [G, G]; comb: FUNCTION [G,G, G])
 		do
 			compute_agents_imp (init, trns, comb, list)
 		end
 
-	compute_agents_imp (init: G; trns: FUNCTION [ANY, TUPLE [G], G]; comb: FUNCTION [ANY, TUPLE [G,G], G]; a_list: separate SPECIAL [G])
+	compute_agents_imp (init: G; trns: FUNCTION [G, G]; comb: FUNCTION [G,G, G]; a_list: separate SPECIAL [G])
 		local
 			i: INTEGER
 		do

@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			initialize_generate_button
 		end
 
-	run (a_event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]])
+	run (a_event_raiser: ROUTINE [EV_THREAD_EVENT])
 			-- Run wizard and handle events with `a_event_handler'.
 		local
 			l_manager: WIZARD_MANAGER

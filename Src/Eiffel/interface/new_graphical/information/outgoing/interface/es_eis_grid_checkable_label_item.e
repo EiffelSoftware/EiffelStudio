@@ -92,7 +92,7 @@ feature -- Action
 
 feature {NONE} -- Implementation
 
-	check_button_key_press_action: PROCEDURE [ANY, TUPLE [key: EV_KEY]]
+	check_button_key_press_action: PROCEDURE [TUPLE [key: EV_KEY]]
 			-- Actions to be performed when a keyboard key is pressed on the check button.
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW)

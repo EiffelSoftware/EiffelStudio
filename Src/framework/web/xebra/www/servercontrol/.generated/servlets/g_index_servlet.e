@@ -182,7 +182,7 @@ feature-- Implementation
 			response.append ("<form id=%"l_temp_0%" action=%"" +request.uri + "%" method=%"post%">")
 				-- line: 85 row: 1 of file: ./index.xeb
 				-- line: 85 row: 1 of file: ./index.xeb
-			agent_table ["l_temp_0"] := create {HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]}.make (17)
+			agent_table ["l_temp_0"] := create {HASH_TABLE [PROCEDURE, STRING]}.make (17)
 				-- line: 17 row: 2 of file: ./index.xeb
 			response.append ({G_SERVLET_CONSTANTS}.class_temp_19)
 				-- line: 18 row: 1 of file: ./index.xeb

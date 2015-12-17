@@ -656,13 +656,13 @@ feature -- Actions
 				)
 		end
 
-	launch_iron_command (a_title: READABLE_STRING_32; a_args: ITERABLE [READABLE_STRING_GENERAL]; cb: detachable PROCEDURE [ANY, TUPLE [succeed: BOOLEAN]])
+	launch_iron_command (a_title: READABLE_STRING_32; a_args: ITERABLE [READABLE_STRING_GENERAL]; cb: detachable PROCEDURE [TUPLE [succeed: BOOLEAN]])
 			-- Execute externally iron command with argument `args' and call associated callback `cb'.
 		local
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_dialog: IRON_OUTPUT_DIALOG
-			l_done_handler: ROUTINE [ANY, TUPLE]
+			l_done_handler: ROUTINE
 			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			create args.make (3)

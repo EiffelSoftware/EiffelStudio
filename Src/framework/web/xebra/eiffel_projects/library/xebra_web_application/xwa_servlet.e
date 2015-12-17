@@ -35,7 +35,7 @@ feature {XWA_SERVLET} -- Initialization
 
 feature -- Access
 
-	agent_table: HASH_TABLE [HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING], STRING]
+	agent_table: HASH_TABLE [HASH_TABLE [PROCEDURE, STRING], STRING]
 			-- Agent-Table for lazy execution at next request
 
 	current_session: XH_SESSION
@@ -122,7 +122,7 @@ feature -- Basic Operations
 			a_session_manager.place_cookie_order (current_session, a_response)
 		end
 
-	execute_on_controller (a_controllers: LIST [XWA_CONTROLLER]; a_feature: PROCEDURE [ANY, TUPLE [XWA_CONTROLLER]])
+	execute_on_controller (a_controllers: LIST [XWA_CONTROLLER]; a_feature: PROCEDURE [XWA_CONTROLLER])
 			-- Executes a feature on all the controllers
 		require
 			a_controllers_attached: attached a_controllers

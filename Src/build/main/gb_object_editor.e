@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 	client_check_button: EV_CHECK_BUTTON
 		-- Enables a user to specify if `Current' uses EiffelVision as a client or not.
 
-	for_all_input_fields (action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]])
+	for_all_input_fields (action: PROCEDURE [GB_INPUT_FIELD])
 			-- For all input fields within `Current', call `action'.
 		require
 			action_not_void: action /= Void
@@ -891,7 +891,7 @@ feature {NONE} -- Implementation
 			for_all_input_fields_internal (item_parent, action)
 		end
 
-	for_all_input_fields_internal (a_parent: EV_WIDGET_LIST; action: PROCEDURE [ANY, TUPLE [GB_INPUT_FIELD]])
+	for_all_input_fields_internal (a_parent: EV_WIDGET_LIST; action: PROCEDURE [GB_INPUT_FIELD])
 			-- For all input fields within `a_parent', call `action'.
 		require
 			a_parent_not_void: a_parent /= Void

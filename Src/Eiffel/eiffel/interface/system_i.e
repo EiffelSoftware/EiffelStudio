@@ -2419,7 +2419,7 @@ end
 			instantiator.process
 		end
 
-	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]])
+	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [CLASS_TYPE])
 			-- Build the conformance table
 		require
 			set_or_reset_action_not_void: set_or_reset_action /= Void

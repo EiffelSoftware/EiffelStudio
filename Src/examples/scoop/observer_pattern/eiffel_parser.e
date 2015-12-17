@@ -26,9 +26,9 @@ feature
 			post_action := a_action
 		end
 
-	post_action: detachable separate PROCEDURE [ANY, TUPLE]
+	post_action: detachable separate PROCEDURE
 
-	apply_post_action (a_action: separate PROCEDURE [ANY, TUPLE])
+	apply_post_action (a_action: separate PROCEDURE)
 		do
 			a_action.apply
 		end

@@ -196,7 +196,7 @@ feature -- Events: Connection point
 				Result := l_result
 			else
 				create {EVENT_CONNECTION [CODE_TEMPLATE_CATALOG_OBSERVER, CODE_TEMPLATE_CATALOG_S]} Result.make (
-					agent (ia_observer: CODE_TEMPLATE_CATALOG_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: CODE_TEMPLATE_CATALOG_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := << [catalog_changed_event, agent ia_observer.on_catalog_changed] >>
 						end)

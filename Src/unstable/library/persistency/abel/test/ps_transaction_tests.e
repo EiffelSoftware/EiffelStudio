@@ -216,11 +216,11 @@ feature {PS_REPOSITORY_TESTS}
 
 feature {NONE} -- Support
 
-	check_failure (action: PROCEDURE [ANY, TUPLE [
+	check_failure (action: PROCEDURE [
 			PS_QUERY [TEST_PERSON],
 			PS_QUERY [TEST_PERSON],
 			PS_TRANSACTION,
-			PS_TRANSACTION]])
+			PS_TRANSACTION])
 			-- Call `action' and check if it triggers a transaction conflict.
 		local
 			q1, q2: detachable PS_QUERY [TEST_PERSON]

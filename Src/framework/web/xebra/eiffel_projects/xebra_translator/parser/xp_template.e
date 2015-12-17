@@ -159,7 +159,7 @@ feature -- Basic functionality
 			date := a_other.date
 		end
 
-	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [ANY, TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
+	resolve (a_templates: HASH_TABLE [XP_TEMPLATE, STRING]; a_regions: HASH_TABLE [LIST[XP_TAG_ELEMENT], STRING]; a_pending_uids: LIST [PROCEDURE [TUPLE [a_uid: STRING; a_controller_class: STRING]]]; a_servlet_gen: XGEN_SERVLET_GENERATOR_GENERATOR): XP_TAG_ELEMENT
 			-- `a_templates': All the templates that can be included
 			-- `a_regions': All regions already defined with 'page:define_region'
 			-- `a_pending_uids': A list of agents which set the proper controller uids as soon as possible

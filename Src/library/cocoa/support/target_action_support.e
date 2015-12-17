@@ -15,7 +15,7 @@ inherit
 
 feature --
 
-	set_action (an_action: PROCEDURE [ANY, TUPLE])
+	set_action (an_action: PROCEDURE)
 			-- Sets
 		require
 			an_action /= void
@@ -29,12 +29,12 @@ feature {NONE} -- Callback
 
 	target
 		do
-			if attached {PROCEDURE [ANY, TUPLE]} action as l_action then
+			if attached {PROCEDURE} action as l_action then
 				l_action.call([])
 			end
 		end
 
-	action: detachable PROCEDURE [ANY, TUPLE]
+	action: detachable PROCEDURE
 
 	item: POINTER
 		deferred

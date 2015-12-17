@@ -488,7 +488,7 @@ feature -- Element Change
 			cleanup_set: cleanup = a_boolean
 		end
 
-	add_abort_request_action (a_action: ROUTINE [ANY, TUPLE[]])
+	add_abort_request_action (a_action: ROUTINE)
 			-- Add `a_action' to `abort_request_actions'.
 		require
 			non_void_action: a_action /= Void
@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	abort_request_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]
+	abort_request_actions: ARRAYED_LIST [ROUTINE]
 			-- Abort request actions cell
 
 	abort_request_actions_mutex: MUTEX

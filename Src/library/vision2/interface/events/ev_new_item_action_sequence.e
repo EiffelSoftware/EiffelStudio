@@ -21,13 +21,13 @@ create {EV_NEW_ITEM_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_widget: EV_WIDGET; action: PROCEDURE [ANY, TUPLE])
+	wrapper (a_widget: EV_WIDGET; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

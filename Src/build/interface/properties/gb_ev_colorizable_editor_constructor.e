@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			-- Restore `background_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 				-- Firsty remove the constant if one exists.
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			-- Restore `foreground_color' of objects to originals.
 		local
 			colorizable: EV_COLORIZABLE
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 			constant_context: GB_CONSTANT_CONTEXT
 		do
 				-- Firsty remove the constant if one exists.
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			-- Actually update the background colors.
 		local
 --			container: EV_CONTAINER
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			p := agent {EV_COLORIZABLE}.set_background_color (color)
 			for_all_objects (p)
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 	actually_set_foreground_color (color: EV_COLOR)
 			-- Actually update the foreground colors.
 		local
-			p: PROCEDURE [EV_ANY, TUPLE]
+			p: PROCEDURE
 		do
 			p := agent {EV_COLORIZABLE}.set_foreground_color (color)
 			for_all_objects (p)

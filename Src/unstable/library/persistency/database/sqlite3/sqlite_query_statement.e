@@ -84,7 +84,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	frozen execute (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN])
+	frozen execute (a_callback: FUNCTION [TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN])
 			-- Executes the SQLite query statement and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback function accepting a result row as its argument.
@@ -106,7 +106,7 @@ feature -- Basic operations
 			not_is_executing: not is_executing
 		end
 
-	frozen execute_with_arguments (a_callback: FUNCTION [ANY, TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_arguments: ITERABLE [detachable ANY])
+	frozen execute_with_arguments (a_callback: FUNCTION [TUPLE [row: SQLITE_RESULT_ROW], BOOLEAN]; a_arguments: ITERABLE [detachable ANY])
 			-- Executes the SQLite query statement with arguments and calls back a routine with a result row.
 			--
 			-- `a_callback': A callback routine accepting a result row as its argument.

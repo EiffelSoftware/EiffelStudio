@@ -147,8 +147,8 @@ feature -- C code generation
 		local
 			buf: GENERATION_BUFFER
 			workbench_mode: BOOLEAN
-			generate_test_start: PROCEDURE [ANY, TUPLE]
-			generate_test_end: PROCEDURE [ANY, TUPLE]
+			generate_test_start: PROCEDURE
+			generate_test_end: PROCEDURE
 			i: like invariant_code
 			v: like variant_code
 			l_context: like context

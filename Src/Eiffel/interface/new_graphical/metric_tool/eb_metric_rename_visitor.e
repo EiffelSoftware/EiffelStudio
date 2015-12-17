@@ -100,7 +100,7 @@ feature{NONE} -- Process
 
 feature{NONE} -- Implementation
 
-	replace_name (a_old_name: STRING; a_name_setter: PROCEDURE [ANY, TUPLE [STRING]])
+	replace_name (a_old_name: STRING; a_name_setter: PROCEDURE [STRING])
 			-- If `a_old_name' is considered to be the same as `old_metric_name',
 			-- invoke `a_name_setter' to set `new_metric_name'.
 		require

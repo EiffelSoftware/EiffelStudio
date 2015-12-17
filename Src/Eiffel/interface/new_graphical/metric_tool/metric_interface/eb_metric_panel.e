@@ -92,7 +92,7 @@ feature -- Actions
 		deferred
 		end
 
-	on_metric_sent_to_history_agent: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE, ANY]]
+	on_metric_sent_to_history_agent: PROCEDURE [EB_METRIC_ARCHIVE_NODE, ANY]
 			-- Agent of `on_metric_sent_to_history'		
 		do
 			if on_metric_sent_to_history_agent_internal = Void then
@@ -240,7 +240,7 @@ feature -- Actions
 			update_ui
 		end
 
-	on_unit_order_change_agent: PROCEDURE [ANY, TUPLE]
+	on_unit_order_change_agent: PROCEDURE
 			-- Agent of `on_unit_order_change'
 
 feature -- Pick and drop

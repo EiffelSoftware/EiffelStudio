@@ -167,7 +167,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Agents
 
-	on_project_loaded_agent: PROCEDURE [ANY, TUPLE]
+	on_project_loaded_agent: PROCEDURE
 			-- Agent of `on_project_loaded'.
 		do
 			if on_project_loaded_agent_internal = Void then
@@ -176,7 +176,7 @@ feature{NONE} -- Agents
 			Result := on_project_loaded_agent_internal
 		end
 
-	on_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
+	on_project_unloaded_agent: PROCEDURE
 			-- Agent of `on_project_unloaded'.
 		do
 			if on_project_unloaded_agent_internal = Void then
@@ -185,7 +185,7 @@ feature{NONE} -- Agents
 			Result := on_project_unloaded_agent_internal
 		end
 
-	on_compile_start_agent: PROCEDURE [ANY, TUPLE]
+	on_compile_start_agent: PROCEDURE
 			-- Agent of `on_compile_start'
 		do
 			if on_compile_start_agent_internal = Void then
@@ -194,7 +194,7 @@ feature{NONE} -- Agents
 			Result := on_compile_start_agent_internal
 		end
 
-	on_compile_stop_agent: PROCEDURE [ANY, TUPLE]
+	on_compile_stop_agent: PROCEDURE
 			-- Agent of `on_compile_stop'
 		do
 			if on_compile_stop_agent_internal = Void then
@@ -203,7 +203,7 @@ feature{NONE} -- Agents
 			Result := on_compile_stop_agent_internal
 		end
 
-	on_metric_evaluation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_metric_evaluation_start_agent: PROCEDURE [ANY]
 			-- Agent of `on_metric_evaluation_start'
 		do
 			if on_metric_evaluation_start_agent_internal = Void then
@@ -212,7 +212,7 @@ feature{NONE} -- Agents
 			Result := on_metric_evaluation_start_agent_internal
 		end
 
-	on_metric_evaluation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_metric_evaluation_stop_agent: PROCEDURE [ANY]
 			-- Agent of `on_metric_evaluation_stop'
 		do
 			if on_metric_evaluation_stop_agent_internal = Void then
@@ -221,7 +221,7 @@ feature{NONE} -- Agents
 			Result := on_metric_evaluation_stop_agent_internal
 		end
 
-	on_archive_calculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_archive_calculation_start_agent: PROCEDURE [ANY]
 			-- Agent of `on_archive_calculation_start'
 		do
 			if on_archive_calculation_start_agent_internal = Void then
@@ -230,7 +230,7 @@ feature{NONE} -- Agents
 			Result := on_archive_calculation_start_agent_internal
 		end
 
-	on_archive_calculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_archive_calculation_stop_agent: PROCEDURE [ANY]
 			-- Agent of `on_archive_calculation_stop'
 		do
 			if on_archive_calculation_stop_agent_internal = Void then
@@ -239,7 +239,7 @@ feature{NONE} -- Agents
 			Result := on_archive_calculation_stop_agent_internal
 		end
 
-	on_history_recalculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_history_recalculation_stop_agent: PROCEDURE [ANY]
 			-- Agent of `on_history_recalculation_stop'
 		do
 			if on_history_recalculation_stop_agent_internal = Void then
@@ -248,7 +248,7 @@ feature{NONE} -- Agents
 			Result := on_history_recalculation_stop_agent_internal
 		end
 
-	on_history_recalculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	on_history_recalculation_start_agent: PROCEDURE [ANY]
 			-- Agent of `on_history_recalculation_start'
 		do
 			if on_history_recalculation_start_agent_internal = Void then
@@ -257,7 +257,7 @@ feature{NONE} -- Agents
 			Result := on_history_recalculation_start_agent_internal
 		end
 
-	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE]
+	on_metric_loaded_agent: PROCEDURE
 			-- Agent of `on_metric_loaded'
 		do
 			if on_metric_loaded_agent_internal = Void then
@@ -266,7 +266,7 @@ feature{NONE} -- Agents
 			Result := on_metric_loaded_agent_internal
 		end
 
-	on_metric_renamed_agent: PROCEDURE [ANY, TUPLE [a_old_name: STRING; a_new_name: STRING]]
+	on_metric_renamed_agent: PROCEDURE [TUPLE [a_old_name: STRING; a_new_name: STRING]]
 			-- Agent of `on_metric_renamed'
 		do
 			if on_metric_rename_agent_internal = Void then

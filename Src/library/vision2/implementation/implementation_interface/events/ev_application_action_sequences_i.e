@@ -51,7 +51,7 @@ feature -- Event handling
 			Result := idle_actions_internal
 		end
 
-	kamikaze_actions: ARRAYED_LIST [separate PROCEDURE [ANY, TUPLE]]
+	kamikaze_actions: ARRAYED_LIST [separate PROCEDURE]
 			-- Actions to be performed once when the application is otherwise idle.
 			-- Allows for separate agents coming from other processors that may want to be called when the application is idle
 			-- via 'do_once_on_idle'.

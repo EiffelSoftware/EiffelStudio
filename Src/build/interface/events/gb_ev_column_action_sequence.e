@@ -29,7 +29,7 @@ feature -- Access
 			Result.extend ("a_column")
 		end
 		
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER]]
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [INTEGER]
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `textable'.

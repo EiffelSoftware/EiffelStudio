@@ -427,7 +427,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	veto_format_function_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	veto_format_function_agent: FUNCTION [BOOLEAN]
 			-- Veto format function
 
 	veto_format: BOOLEAN
@@ -543,7 +543,7 @@ feature{NONE} -- Implementation
 			l_formatters: LIST [EB_FORMATTER]
 			l_cursor: CURSOR
 			l_formatter: EB_FORMATTER
-			l_generator: TUPLE [displayer_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]; displayer_name: STRING]
+			l_generator: TUPLE [displayer_generator: FUNCTION [EB_FORMATTER_DISPLAYER]; displayer_name: STRING]
 			l_browser_formatter: EB_BROWSER_FORMATTER
 			l_editor_formatter: EB_EDITOR_FORMATTER
 			l_displayer: EB_FORMATTER_DISPLAYER
@@ -578,7 +578,7 @@ feature{NONE} -- Implementation
 			l_formatters.go_to (l_cursor)
 		end
 
-	new_displayer (a_name: STRING; a_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]): EB_FORMATTER_DISPLAYER
+	new_displayer (a_name: STRING; a_generator: FUNCTION [EB_FORMATTER_DISPLAYER]): EB_FORMATTER_DISPLAYER
 			-- New displayer whose name is `a_name' generated from `a_generator'
 			-- If there is already a displayer of the same name in cache, use that one instead of generating a new one.
 			-- If a new displayer is generated, also put it in cache.
@@ -614,10 +614,10 @@ feature{NONE} -- Implementation
 	displayer_cache_internal: like displayer_cache
 			-- Implementation of `displayer_cache'
 
-	on_customized_formatter_loaded_agent: PROCEDURE [ANY, TUPLE]
+	on_customized_formatter_loaded_agent: PROCEDURE
 			-- Agent of `on_customized_formatter_loaded'
 
-	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE]
+	on_metric_loaded_agent: PROCEDURE
 			-- Agent of `on_metric_loaded'
 
 	on_focus_in
@@ -692,7 +692,7 @@ feature{NONE} -- Implementation
 	layout_formatters: like formatters
 			-- List of formatters with possible Void items in it representing separators
 
-	on_project_loaded_agent: PROCEDURE [ANY, TUPLE]
+	on_project_loaded_agent: PROCEDURE
 			-- Agent of `on_project_loaded'
 
 	empty_widget_internal: like empty_widget

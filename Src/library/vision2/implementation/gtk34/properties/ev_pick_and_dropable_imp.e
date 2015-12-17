@@ -322,7 +322,7 @@ feature -- Implementation
 
 			-- Initialize a pick and drop transport.
 		local
-			l_configure_agent: detachable PROCEDURE [ANY, TUPLE]
+			l_configure_agent: detachable PROCEDURE
 			l_pebble: like pebble
 		do
 			call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)

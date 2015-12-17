@@ -61,7 +61,7 @@ feature -- Access
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
-	veto_general_tooltip_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	veto_general_tooltip_function: FUNCTION [BOOLEAN]
 			-- Agent to veto `general_tooltip' display
 		local
 			fct: like veto_general_tooltip_function_internal
@@ -522,19 +522,19 @@ feature{NONE} -- Implementation/Status report
 
 feature{NONE} -- Actions for components
 
-	on_pointer_button_pressed_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
+	on_pointer_button_pressed_agent: PROCEDURE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]
 			-- Agent of `on_pointer_button_pressed'
 
-	on_pointer_double_press_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
+	on_pointer_double_press_agent: PROCEDURE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]
 			-- Agent of `on_pointer_double_pressed'			
 
-	on_pointer_button_release_agent: detachable PROCEDURE [ANY, TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
+	on_pointer_button_release_agent: detachable PROCEDURE [TUPLE [x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]]
 			-- Agent of `on_pointer_button_release'
 
-	on_pointer_leave_agent: PROCEDURE [ANY, TUPLE]
+	on_pointer_leave_agent: PROCEDURE
 			-- Agent of `on_pointer_leave'
 
-	on_pointer_move_agent: PROCEDURE [ANY, TUPLE [x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]];
+	on_pointer_move_agent: PROCEDURE [TUPLE [x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER]];
 			-- Agent of `on_pointer_move'
 
 	on_pointer_button_pressed (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)

@@ -73,7 +73,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	has_tooltip_text_function: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+	has_tooltip_text_function: detachable FUNCTION [BOOLEAN]
 			-- Function to indicate if there is text in Current tooltip
 			-- Used by `has_tooltip_text'.
 

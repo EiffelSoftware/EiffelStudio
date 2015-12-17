@@ -55,11 +55,11 @@ feature {NONE} -- Access
 feature -- IL Generation
 
 	generate_il_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
-			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
-			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
-			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
-			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
+			implemented_feature_processor: PROCEDURE [FEATURE_I, CLASS_TYPE, FEATURE_I];
+			local_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN];
+			inherited_feature_processor: PROCEDURE [FEATURE_I, FEATURE_I, CLASS_TYPE];
+			type_feature_processor: PROCEDURE [TYPE_FEATURE_I]
+			inline_agent_processor: PROCEDURE [FEATURE_I])
 		
 			-- Generate IL code for feature in `class_c'.
 		local

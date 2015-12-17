@@ -153,7 +153,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_value_retriever_dialog_function: FUNCTION [ANY, TUPLE, EB_METRIC_VALUE_CRITERION_DIALOG]
+	metric_value_retriever_dialog_function: FUNCTION [EB_METRIC_VALUE_CRITERION_DIALOG]
 			-- Function to retrieve a dialog to setup metric value retriever
 
 feature -- Status report

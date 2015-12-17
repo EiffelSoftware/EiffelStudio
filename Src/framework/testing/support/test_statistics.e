@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			-- Retrieve `test_statistics' from hard drive.
 		local
 			l_file: RAW_FILE
-			l_retrieval: FUNCTION [ANY, TUPLE [RAW_FILE], detachable ANY]
+			l_retrieval: FUNCTION [RAW_FILE, detachable ANY]
 			l_test_suite: like test_suite
 			u: FILE_UTILITIES
 		do
@@ -175,7 +175,7 @@ feature {NONE} -- Access: event connection
 			l_result := internal_statistics_connection
 			if l_result = Void then
 				create {EVENT_CONNECTION [TEST_STATISTICS_OBSERVER, TEST_STATISTICS_I]} l_result.make (
-					agent (an_observer: TEST_STATISTICS_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+					agent (an_observer: TEST_STATISTICS_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
 							Result := <<
 									[statistics_updated_event, agent an_observer.on_statistics_updated],

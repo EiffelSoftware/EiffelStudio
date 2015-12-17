@@ -130,7 +130,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	creation_function: FUNCTION [ANY, TUPLE, like criterion_type]
+	creation_function: FUNCTION [like criterion_type]
 			-- Creation function type anchor
 
 	criterion_type: QL_CRITERION
@@ -185,7 +185,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	value_criterion_evalaute_agent (a_item: QL_ITEM; a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): BOOLEAN
+	value_criterion_evalaute_agent (a_item: QL_ITEM; a_evaluate_value_func: FUNCTION [QL_ITEM, BOOLEAN]): BOOLEAN
 			-- Value agent for value criterion.
 		require
 			a_item_attached: a_item /= Void

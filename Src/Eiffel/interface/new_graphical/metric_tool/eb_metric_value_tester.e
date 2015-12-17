@@ -168,7 +168,7 @@ feature{NONE} -- Implementation
 			Result := a_value >= a_base_value
 		end
 
-	tester_table: HASH_TABLE [FUNCTION [ANY, TUPLE [DOUBLE, DOUBLE], BOOLEAN], INTEGER]
+	tester_table: HASH_TABLE [FUNCTION [DOUBLE, DOUBLE, BOOLEAN], INTEGER]
 			-- Table of tester agents.
 			-- Key is criterion type, and value is agent for that type.
 		once

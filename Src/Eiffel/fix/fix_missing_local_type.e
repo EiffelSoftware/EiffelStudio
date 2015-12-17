@@ -65,11 +65,11 @@ feature -- Basic operations
 
 feature {NONE} -- Formatting
 
-	locals: ITERABLE [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]]]
+	locals: ITERABLE [PROCEDURE[TEXT_FORMATTER]]
 			-- Collection of formatters to add unused local variables.
 		do
-			create {ITERABLE_FUNCTION [PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]], INTEGER_32]} Result.make
-				(agent (local_name: INTEGER_32): PROCEDURE[ANY, TUPLE [TEXT_FORMATTER]]
+			create {ITERABLE_FUNCTION [PROCEDURE[TEXT_FORMATTER], INTEGER_32]} Result.make
+				(agent (local_name: INTEGER_32): PROCEDURE[TEXT_FORMATTER]
 					do
 						Result := agent {TEXT_FORMATTER}.add_local (names_heap.item_32 (local_name))
 					end,

@@ -605,13 +605,13 @@ feature {NONE} -- Implementation attributes
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	internal_key_press_function: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]] note option: stable attribute end
+	internal_key_press_function: detachable PROCEDURE [EV_WIDGET, EV_KEY] note option: stable attribute end
 			-- Golbal key press action
 
-	internal_key_release_function: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, EV_KEY]] note option: stable attribute end
+	internal_key_release_function: detachable PROCEDURE [EV_WIDGET, EV_KEY] note option: stable attribute end
 			-- Golbal key release action
 
-	focus_out_agent: detachable PROCEDURE [SD_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
+	focus_out_agent: detachable PROCEDURE [EV_WIDGET]
 			-- Focus out agent
 
 	last_top_window: detachable EV_WINDOW

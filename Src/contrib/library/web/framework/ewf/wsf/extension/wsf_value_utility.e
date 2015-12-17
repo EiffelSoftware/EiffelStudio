@@ -133,7 +133,7 @@ feature -- Convertion
 
 feature {NONE} -- Implementation		
 
-	string_array_for (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_item_fct: FUNCTION [ANY, TUPLE [WSF_REQUEST, READABLE_STRING_GENERAL], detachable READABLE_STRING_32]): detachable ARRAY [READABLE_STRING_32]
+	string_array_for (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_item_fct: FUNCTION [WSF_REQUEST, READABLE_STRING_GENERAL, detachable READABLE_STRING_32]): detachable ARRAY [READABLE_STRING_32]
 			-- Array of string values for query parameter `a_name' if relevant.
 		local
 			i: INTEGER

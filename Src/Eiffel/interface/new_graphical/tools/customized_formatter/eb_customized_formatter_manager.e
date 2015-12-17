@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Setting
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE])
+	load (a_error_agent: PROCEDURE)
 			-- Load global and target scope formatters.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local
@@ -197,7 +197,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	load_formatters (a_file: PATH; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
+	load_formatters (a_file: PATH; a_global: BOOLEAN; a_error_agent: PROCEDURE)
 			-- Load formatters contained in file `a_file' and mark loaded formatters as of global scope if `a_global' is True,
 			-- otherwise as of target scope.
 			-- If error occurs, call `a_error_agent'.

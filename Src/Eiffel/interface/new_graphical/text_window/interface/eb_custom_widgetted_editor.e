@@ -753,14 +753,14 @@ feature {NONE} -- Implementation
 			widget := l_widget
 		end
 
-	customizable_commands: HASH_TABLE [PROCEDURE [like Current, TUPLE], STRING]
+	customizable_commands: HASH_TABLE [PROCEDURE, STRING]
 			-- Hash of customizable commands (agent hashed by shortcut name)
 
-	check_search_bar_visible_procedure: PROCEDURE [ANY, TUPLE];
+	check_search_bar_visible_procedure: PROCEDURE;
 			-- Procedure instance added into focus_in_actions of current window
 
-	first_result_reached_action: PROCEDURE [ANY, TUPLE]
-	bottom_reached_action: PROCEDURE [ANY, TUPLE];
+	first_result_reached_action: PROCEDURE
+	bottom_reached_action: PROCEDURE;
 			-- Actions to recycle
 
 	on_text_fully_loaded

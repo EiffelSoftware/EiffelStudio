@@ -15,7 +15,7 @@ create
 
 feature -- Status report
 
-	is_subscribed (action: separate PROCEDURE [ANY, D]): BOOLEAN
+	is_subscribed (action: separate PROCEDURE [D]): BOOLEAN
 			-- Is `action' subscribed?
 		do
 			Result := utils.is_event_subscribed (subject, action)
@@ -23,14 +23,14 @@ feature -- Status report
 
 feature -- Subscription
 
-	subscribe (action: separate PROCEDURE [ANY, D])
+	subscribe (action: separate PROCEDURE [D])
 			-- Subscribe with `action'.
 			-- Blocks if already subscribed.
 		do
 			utils.event_subscribe (subject, action)
 		end
 
-	unsubscribe (action: separate PROCEDURE [ANY, D])
+	unsubscribe (action: separate PROCEDURE [D])
 			-- Remove subscription  of `action'.
 			-- Blocks if not yet subscribed.
 		do

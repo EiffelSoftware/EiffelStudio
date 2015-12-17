@@ -73,7 +73,7 @@ feature -- Printing Timer
 	finalizing_printer: INTEGER = 3
 			-- Printer to display finalizing output
 
-	printer_list: ARRAYED_LIST [ PROCEDURE [ANY, TUPLE]]
+	printer_list: ARRAYED_LIST [ PROCEDURE]
 			-- List of printers
 		once
 			create Result.make (3)

@@ -19,7 +19,7 @@ create {NS_OBJECT}
 
 feature {NONE} -- Creating a Timer
 
-	scheduled_timer (a_ti: REAL_64; a_callback: PROCEDURE [ANY, TUPLE]; a_user_info: detachable NS_OBJECT; a_yes_or_no: BOOLEAN)
+	scheduled_timer (a_ti: REAL_64; a_callback: PROCEDURE; a_user_info: detachable NS_OBJECT; a_yes_or_no: BOOLEAN)
 			-- Returns a new `NSTimer' object, scheduled the current `NSRunLoop' object in the default mode.
 		local
 			l_user_info: POINTER
@@ -33,7 +33,7 @@ feature {NONE} -- Creating a Timer
 			make_from_pointer ({NS_TIMER_API}.scheduled_timer_with_time_interval_target_selector_user_info_repeats (a_ti, callback_item, selector, l_user_info, a_yes_or_no))
 		end
 
-	make_timer (a_ti: REAL_64; a_callback: PROCEDURE [ANY, TUPLE]; a_user_info: NS_OBJECT; a_yes_or_no: BOOLEAN)
+	make_timer (a_ti: REAL_64; a_callback: PROCEDURE; a_user_info: NS_OBJECT; a_yes_or_no: BOOLEAN)
 			-- Returns a new `NSTimer' that, when added to a run loop, will fire after a specified number of seconds.
 		local
 			l_user_info: POINTER
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	callback: detachable PROCEDURE [ANY, TUPLE]
+	callback: detachable PROCEDURE
 
 	callback_item: POINTER
 

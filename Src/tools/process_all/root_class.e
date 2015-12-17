@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 	max_processes: INTEGER
 			-- Max processes to run.
 
-	waiting_tasks: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	waiting_tasks: ARRAYED_LIST [PROCEDURE]
 			-- Waiting tasks
 
 	path_regexp_ignored (p: READABLE_STRING_32): BOOLEAN
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 	finish_report (a_worker_id: INTEGER_32)
 			-- Finish report
 		local
-			l_item: PROCEDURE [ANY, TUPLE]
+			l_item: PROCEDURE
 		do
 			if attached non_reported_workers as l_workers then
 				l_workers.prune_all (a_worker_id)

@@ -341,7 +341,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	add_idle_action_kamikaze, do_once_on_idle (an_action: separate PROCEDURE [ANY, TUPLE])
+	add_idle_action_kamikaze, do_once_on_idle (an_action: separate PROCEDURE)
 			-- Perform `an_action' one time when the application is next idle.
 			-- Thread safe
 		require
@@ -350,7 +350,7 @@ feature -- Event handling
 			implementation.do_once_on_idle (an_action)
 		end
 
-	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
+	add_idle_action (a_idle_action: PROCEDURE)
 			-- Add `a_idle_actions' to `idle_actions' if not already present.
 			-- Thread safe
 		require
@@ -359,7 +359,7 @@ feature -- Event handling
 			implementation.add_idle_action (a_idle_action)
 		end
 
-	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
+	remove_idle_action (a_idle_action: PROCEDURE)
 			-- Remove `a_idle_action' from `idle_actions'.
 			-- Thread safe.
 		require

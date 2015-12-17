@@ -516,7 +516,7 @@ feature -- Access: global variables
 			end
 		end
 
-	string_array_item_for (a_name: READABLE_STRING_GENERAL; a_item_fct: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], detachable WSF_VALUE]): detachable ARRAY [READABLE_STRING_32]
+	string_array_item_for (a_name: READABLE_STRING_GENERAL; a_item_fct: FUNCTION [READABLE_STRING_GENERAL, detachable WSF_VALUE]): detachable ARRAY [READABLE_STRING_32]
 			-- Array of string values for query parameter `a_name' if relevant.
 		local
 			i: INTEGER
@@ -540,7 +540,7 @@ feature -- Access: global variables
 			Result.keep_head (n - 1)
 		end
 
-	table_item (a_name: READABLE_STRING_GENERAL; f: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], detachable WSF_VALUE]): detachable WSF_VALUE
+	table_item (a_name: READABLE_STRING_GENERAL; f: detachable FUNCTION [READABLE_STRING_GENERAL, detachable WSF_VALUE]): detachable WSF_VALUE
 			-- Return value associated with table for flat name `a_name'.
 			-- Use function `f' to get the item, this could be agent of `form_parameter' or `query_parameter', ...
 			--     By default, this uses `items'

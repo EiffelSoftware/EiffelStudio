@@ -9,7 +9,7 @@ class
 
 feature -- default tuples to add at the hash table
 
-	variable_changed_name (old_name: STRING): TUPLE [LIST [STRING],FUNCTION [ANY,TUPLE [LIST [ANY]],ANY]]
+	variable_changed_name (old_name: STRING): TUPLE [LIST [STRING],FUNCTION [LIST [ANY],ANY]]
 			-- agent to change the variable name
 		local
 			var: ARRAYED_LIST [STRING]
@@ -19,7 +19,7 @@ feature -- default tuples to add at the hash table
 			Result := [var, agent change_name (?)]
 		end
 
-	variable_constant (value: ANY): TUPLE [LIST [STRING],FUNCTION [ANY,TUPLE [LIST [ANY]],ANY]]
+	variable_constant (value: ANY): TUPLE [LIST [STRING],FUNCTION [LIST [ANY],ANY]]
 			-- set a constant value
 		local
 			var: ARRAYED_LIST [STRING]
@@ -28,7 +28,7 @@ feature -- default tuples to add at the hash table
 			Result := [var, agent constant_function (value,?)]
 		end
 
-	variable_changed_type (old_name: STRING; conv_function: FUNCTION [ANY,TUPLE,ANY]): TUPLE [LIST [STRING],FUNCTION [ANY,TUPLE [LIST [ANY]],ANY]]
+	variable_changed_type (old_name: STRING; conv_function: FUNCTION [ANY]): TUPLE [LIST [STRING],FUNCTION [LIST [ANY],ANY]]
 			-- change the type
 		local
 			var: ARRAYED_LIST [STRING]
@@ -52,7 +52,7 @@ feature{NONE} -- functions
 			Result := value
 		end
 
-	change_type (var: LIST [ANY]; conv_function: FUNCTION [ANY,TUPLE,ANY]): ANY
+	change_type (var: LIST [ANY]; conv_function: FUNCTION [ANY]): ANY
 			-- change the function type
 		do
 			if attached {ANY} var.i_th (1) as arg then

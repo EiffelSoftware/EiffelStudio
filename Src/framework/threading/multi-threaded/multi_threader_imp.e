@@ -32,7 +32,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	perform (a_action: PROCEDURE [ANY, TUPLE])
+	perform (a_action: PROCEDURE)
 			-- <Precursor>
 		local
 			l_locked: BOOLEAN
@@ -50,7 +50,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
+	retrieve (a_action: FUNCTION [detachable ANY]): detachable ANY
 			-- <Precursor>
 		local
 			l_locked: BOOLEAN
@@ -68,7 +68,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
+	test (a_action: PREDICATE; a_expected: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		local
 			l_locked: BOOLEAN

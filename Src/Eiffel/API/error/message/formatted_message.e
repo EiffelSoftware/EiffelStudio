@@ -6,10 +6,10 @@ class
 
 feature -- Format: elements
 
-	element (data: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]): like formattable
+	element (data: PROCEDURE [TEXT_FORMATTER]): like formattable
 			-- Agent to add a given `data' to output using a formatter.
 		do
-			Result := agent (s: FORMAT_SPECIFICATION; v: PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]; t: TEXT_FORMATTER)
+			Result := agent (s: FORMAT_SPECIFICATION; v: PROCEDURE [TEXT_FORMATTER]; t: TEXT_FORMATTER)
 				do
 					v (t)
 				end (?, data, ?)
@@ -25,14 +25,14 @@ feature -- Format: lists
 
 feature {NONE} -- Format: lists
 
-	frozen listable: ITERABLE [PROCEDURE [ANY, TUPLE [TEXT_FORMATTER]]]
+	frozen listable: ITERABLE [PROCEDURE [TEXT_FORMATTER]]
 			-- An anchor for a type that can be used to create a formatted list using `list'.
 		do
 		ensure
 			is_used: False
 		end
 
-	add_list: PROCEDURE [ANY, TUPLE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, like listable]]
+	add_list: PROCEDURE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, like listable]
 			-- Agent to add an arbitrary list of items to output using a formatter.
 		do
 			Result := agent (f: detachable FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: like listable)
@@ -68,7 +68,7 @@ feature -- Format: message parsing
 
 feature {NONE} -- Format: message parsing
 
-	formattable: PROCEDURE [ANY, TUPLE [FORMAT_SPECIFICATION, TEXT_FORMATTER]]
+	formattable: PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER]
 			-- An anchor for a type of message parameters accepted by `format'.
 		do
 		ensure

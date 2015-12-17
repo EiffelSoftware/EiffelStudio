@@ -31,7 +31,7 @@ feature -- Access
 		attribute
 		end
 
-	target_data_function: detachable FUNCTION [ANY, TUPLE [like pebble], EV_PND_TARGET_DATA]
+	target_data_function: detachable FUNCTION [TUPLE [like pebble], EV_PND_TARGET_DATA]
 			-- Function for computing target meta data based on source pebble.
 			-- Primarily used for Pick and Drop target menu.
 		note
@@ -39,7 +39,7 @@ feature -- Access
 		attribute
 		end
 
-	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
+	pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 		deferred
 		end
@@ -79,7 +79,7 @@ feature -- Status setting
 			pebble_removed: pebble = Void and pebble_function = Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
+	set_pebble_function (a_function: FUNCTION [detachable ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -111,7 +111,7 @@ feature -- Status setting
 				attached target_name as l_target_name and then a_name /= l_target_name and then a_name.same_string (l_target_name)
 		end
 
-	set_target_data_function (a_function: FUNCTION [ANY, TUPLE [like pebble], EV_PND_TARGET_DATA])
+	set_target_data_function (a_function: FUNCTION [TUPLE [like pebble], EV_PND_TARGET_DATA])
 			-- Set `a_function' to compute target meta data based on transport source.
 			-- Overrides any `target_name' set with `set_target_name'.
 		require

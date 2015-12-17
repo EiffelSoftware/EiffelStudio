@@ -995,7 +995,7 @@ feature {NONE} -- Output Implementation
 			ta: detachable ANY
 			sep: STRING
 			tt: detachable TUPLE
-			tfunc: detachable FUNCTION [ ANY, TUPLE, STRING]
+			tfunc: detachable FUNCTION [STRING]
 			lin_first, lin_last: BOOLEAN
 		do
 			-- Arg must be a list unless the agent flag was provided, in 
@@ -1013,7 +1013,7 @@ feature {NONE} -- Output Implementation
 				else
 					tca := any_to_container (tt.reference_item (1))
 					if 
-						attached {FUNCTION [ANY,TUPLE,STRING]}
+						attached {FUNCTION [STRING]}
 						tt.reference_item (2) as ltf
 					 then
 						 tfunc := ltf
@@ -1068,11 +1068,11 @@ feature {NONE} -- Output Implementation
 			Result := ""
 			if
 				attached
-				{TUPLE [ANY, FUNCTION [ANY, TUPLE [detachable ANY], STRING]]}
+				{TUPLE [ANY, FUNCTION [detachable ANY, STRING]]}
 				argument as targ
 			 then
 				 if
-					 attached {FUNCTION [ANY, TUPLE [detachable ANY], STRING]}
+					 attached {FUNCTION [detachable ANY, STRING]}
 					 targ.item (2) as tfunc
 				  then
 					  Result := tfunc.item ([targ.item (1)])

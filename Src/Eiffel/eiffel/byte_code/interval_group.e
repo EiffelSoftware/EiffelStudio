@@ -233,7 +233,7 @@ feature -- IL code generation
 			is_included: BOOLEAN
 			interval: like lower_interval
 			interval_b: INTERVAL_B
-			generate_default_label: PROCEDURE [ANY, TUPLE]
+			generate_default_label: PROCEDURE
 			case_index: INTEGER
 			case_label: IL_LABEL
 			cases: LINKED_LIST [INTEGER]

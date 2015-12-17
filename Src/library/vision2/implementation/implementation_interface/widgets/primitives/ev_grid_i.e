@@ -368,7 +368,7 @@ feature -- Access
 			-- while `is_row_height_fixed', otherwise the individual height of each
 			-- row is used directly.
 
-	dynamic_content_function: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+	dynamic_content_function: detachable FUNCTION [INTEGER, INTEGER, EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
 
@@ -675,7 +675,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	item_veto_pebble_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
+	item_veto_pebble_function: detachable FUNCTION [EV_GRID_ITEM, ANY, BOOLEAN]
 		-- User item veto function.
 
 	set_item_veto_pebble_function (a_function: like item_veto_pebble_function)
@@ -694,7 +694,7 @@ feature -- Pick and Drop
 			item_accept_cursor_function_set: item_accept_cursor_function = a_function
 		end
 
-	item_accept_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_accept_cursor_function: detachable FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 
 	set_item_deny_cursor_function (a_function: like item_deny_cursor_function)
@@ -705,7 +705,7 @@ feature -- Pick and Drop
 			item_deny_cursor_function_set: item_deny_cursor_function = a_function
 		end
 
-	item_deny_cursor_function: detachable FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
+	item_deny_cursor_function: detachable FUNCTION [EV_GRID_ITEM, EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 
 	drop_action_intermediary (a_pebble: ANY)
@@ -832,7 +832,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY])
+	set_item_pebble_function (a_function: FUNCTION [detachable EV_GRID_ITEM, detachable ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -932,7 +932,7 @@ feature -- Pick and Drop
 
 feature -- Status setting
 
-	item_pebble_function: detachable FUNCTION [ANY, TUPLE [detachable EV_GRID_ITEM], detachable ANY]
+	item_pebble_function: detachable FUNCTION [detachable EV_GRID_ITEM, detachable ANY]
 		-- User pebble function
 
 	activate_window: detachable EV_POPUP_WINDOW
@@ -1626,7 +1626,7 @@ feature -- Status setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM])
+	set_dynamic_content_function (a_function: FUNCTION [INTEGER, INTEGER, EV_GRID_ITEM])
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
 		require
@@ -1861,7 +1861,7 @@ feature -- Status setting
 			drawable.set_pebble (a_pebble)
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
+	set_pebble_function (a_function: FUNCTION [detachable ANY])
 			-- Assign `a_function' to `pebble_function'.
 		do
 			Precursor {EV_CELL_I} (a_function)

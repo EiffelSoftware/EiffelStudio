@@ -23,7 +23,7 @@ create
 	
 feature -- Change agent
 
-	set_on_new_position_yielded (a_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]])
+	set_on_new_position_yielded (a_procedure: PROCEDURE [INTEGER, INTEGER])
 			-- set `on_new_opsition_yielded'
 		require
 			a_procedure_not_void: a_procedure /= Void
@@ -63,7 +63,7 @@ feature -- Replacement
 
 feature {NONE} -- Agent
 
-	on_new_position_yielded: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]];
+	on_new_position_yielded: PROCEDURE [INTEGER, INTEGER];
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

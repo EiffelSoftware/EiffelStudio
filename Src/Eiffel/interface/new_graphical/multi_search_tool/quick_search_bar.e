@@ -111,10 +111,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	lose_focus: PROCEDURE [ANY, TUPLE]
+	lose_focus: PROCEDURE
 			-- Any widget loses focus.
 
-	key_press_action: PROCEDURE [ANY, TUPLE [EV_KEY]]
+	key_press_action: PROCEDURE [EV_KEY]
 			-- Key is pressed on any widget.
 
 feature -- Status report

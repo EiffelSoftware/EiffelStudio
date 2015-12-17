@@ -23,7 +23,7 @@ inherit
 
 feature -- Factory
 
-	show_error_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_error_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays an error prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -38,7 +38,7 @@ feature -- Factory
 			l_error.recycle
 		end
 
-	show_info_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_info_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays an information prompt to the user with an Ok button only
 			--
 			-- `a_message': A message to display to the user
@@ -53,7 +53,7 @@ feature -- Factory
 			l_info.recycle
 		end
 
-	show_warning_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE)
 			-- Displays a warning prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -68,7 +68,7 @@ feature -- Factory
 			l_warning.recycle
 		end
 
-	show_warning_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_warning_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_ok_action: detachable PROCEDURE; a_cancel_action: detachable PROCEDURE)
 			-- Displays an warning prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -85,7 +85,7 @@ feature -- Factory
 			l_warning.recycle
 		end
 
-	show_question_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE])
+	show_question_prompt (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE; a_no_action: detachable PROCEDURE)
 			-- Displays a question prompt to the user with an Ok button only.
 			--
 			-- `a_message': A message to display to the user
@@ -102,7 +102,7 @@ feature -- Factory
 			l_question.recycle
 		end
 
-	show_question_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE [ANY, TUPLE]; a_no_action: detachable PROCEDURE [ANY, TUPLE]; a_cancel_action: detachable PROCEDURE [ANY, TUPLE])
+	show_question_prompt_with_cancel (a_message: READABLE_STRING_GENERAL; a_window: detachable EV_WINDOW; a_yes_action: detachable PROCEDURE; a_no_action: detachable PROCEDURE; a_cancel_action: detachable PROCEDURE)
 			-- Displays an question prompt to the user with Ok & Cancel buttons
 			--
 			-- `a_message': A message to display to the user
@@ -123,7 +123,7 @@ feature -- Factory
 
 feature {NONE} -- Display
 
-	safe_set_button_action (a_prompt: ES_PROMPT; a_button: INTEGER; a_action: detachable PROCEDURE [ANY, TUPLE])
+	safe_set_button_action (a_prompt: ES_PROMPT; a_button: INTEGER; a_action: detachable PROCEDURE)
 			-- Associates a dialog prompt's button with an action
 			--
 			-- `a_prompt': Dialog prompt to set the button action on.

@@ -20,10 +20,10 @@ inherit
 
 feature {NONE} -- Access
 
-	responder: detachable PROCEDURE [ANY, TUPLE [tweet: ES_TWEET]]
+	responder: detachable PROCEDURE [TUPLE [tweet: ES_TWEET]]
 			-- Responder to call when a tweet has been generated.
 
-	completed_responder: detachable PROCEDURE [ANY, TUPLE]
+	completed_responder: detachable PROCEDURE
 			-- Responder to call when all tweets have been generated.
 
 	xml_parser: XML_STOPPABLE_PARSER
@@ -62,7 +62,7 @@ feature -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	request_tweets_aync (a_count: NATURAL_8; a_responder: PROCEDURE [ANY, TUPLE [ES_TWEET]]; a_completed: detachable PROCEDURE [ANY, TUPLE])
+	request_tweets_aync (a_count: NATURAL_8; a_responder: PROCEDURE [ES_TWEET]; a_completed: detachable PROCEDURE)
 			-- Requests the tweets synchronusly.
 			--
 			-- `a_count': Maximum number of tweets to retrieve or 0 to retrieve all.

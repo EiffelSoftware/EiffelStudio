@@ -117,7 +117,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	veto_replace_function: FUNCTION [ANY, TUPLE [original, new: like image], BOOLEAN]
+	veto_replace_function: FUNCTION [TUPLE [original, new: like image], BOOLEAN]
 			-- Parameter [TUPLE [original, new: like image]]
 			-- (ETL3 TUPLE with named parameters)	
 			-- Function used to determine whether or not replacement of every occurrence of `original'

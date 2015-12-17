@@ -219,12 +219,12 @@ feature {NONE} -- Access
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-	frozen button_actions: attached HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
+	frozen button_actions: attached HASH_TABLE [PROCEDURE, INTEGER]
 			-- Dialog button actions.
 
 feature -- Element change
 
-	set_button_action (a_id: INTEGER; a_action: PROCEDURE [ANY, TUPLE])
+	set_button_action (a_id: INTEGER; a_action: PROCEDURE)
 			-- Assigns an action to a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.
@@ -264,7 +264,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	button_action (a_id: INTEGER): detachable PROCEDURE [ANY, TUPLE]
+	button_action (a_id: INTEGER): detachable PROCEDURE
 			-- Button action for a specific button.
 			--
 			-- `a_id': A button id corresponding to an actual dialog button.

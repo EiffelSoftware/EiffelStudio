@@ -20,19 +20,19 @@ inherit
 
 feature -- Basic operations
 
-	perform (a_action: PROCEDURE [ANY, TUPLE])
+	perform (a_action: PROCEDURE)
 			-- <Precursor>
 		do
 			bridge.perform (a_action)
 		end
 
-	retrieve (a_action: FUNCTION [ANY, TUPLE, detachable ANY]): detachable ANY
+	retrieve (a_action: FUNCTION [detachable ANY]): detachable ANY
 			-- <Precursor>
 		do
 			Result := bridge.retrieve (a_action)
 		end
 
-	test (a_action: PREDICATE [ANY, TUPLE]; a_expected: BOOLEAN): BOOLEAN
+	test (a_action: PREDICATE; a_expected: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			Result := bridge.test (a_action, a_expected)

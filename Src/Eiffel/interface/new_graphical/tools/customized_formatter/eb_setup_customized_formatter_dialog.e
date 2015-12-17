@@ -85,7 +85,7 @@ feature{NONE} -- Actions
 			refresh_grid_for_descriptor (a_descriptor)
 		end
 
-	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE])
+	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [STRING]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -100,7 +100,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_data_32_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [READABLE_STRING_32]]; a_refresher: PROCEDURE [ANY, TUPLE])
+	on_data_32_change (a_new_data: STRING_32; a_setter: PROCEDURE [READABLE_STRING_32]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -115,7 +115,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_data_general_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]; a_refresher: PROCEDURE [ANY, TUPLE])
+	on_data_general_change (a_new_data: STRING_32; a_setter: PROCEDURE [READABLE_STRING_GENERAL]; a_refresher: PROCEDURE)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.

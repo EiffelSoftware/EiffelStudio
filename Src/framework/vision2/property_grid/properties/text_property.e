@@ -119,7 +119,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	display_agent: detachable FUNCTION [ANY, TUPLE [G], STRING_32]
+	display_agent: detachable FUNCTION [G, STRING_32]
 
 	to_displayed_value (a_value: like value): like displayed_value
 		local
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			result_attached: attached Result
 		end
 
-	convert_to_data_agent: detachable FUNCTION [ANY, TUPLE [STRING_32], G]
+	convert_to_data_agent: detachable FUNCTION [STRING_32, G]
 
 	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.

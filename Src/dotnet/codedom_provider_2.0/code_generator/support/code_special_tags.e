@@ -34,7 +34,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	special_tag_handlers: HASH_TABLE [PROCEDURE [ANY, TUPLE [STRING]], STRING]
+	special_tag_handlers: HASH_TABLE [PROCEDURE [STRING], STRING]
 			-- Tag handlers
 		once
 			create Result.make (2)

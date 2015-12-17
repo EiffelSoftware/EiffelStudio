@@ -54,7 +54,7 @@ feature{NONE} -- Implementation
 			-- Find proper classes according to `criterion_domain'
 		local
 			l_class_tbl: HASH_TABLE [QL_CLASS, INTEGER]
-			l_finder: PROCEDURE [ANY, TUPLE [CLASS_C]]
+			l_finder: PROCEDURE [CLASS_C]
 		do
 			l_class_tbl := compiled_classes_from_domain (criterion_domain)
 			l_finder := finder_agent
@@ -162,7 +162,7 @@ feature{NONE} -- Implemenation/Data
 			-- Flag structure to indicate whether or not a class has been processed
 			-- Item of this set is `class_id' of a compiled class
 
-	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]]
+	finder_agent: PROCEDURE [CLASS_C]
 			-- Finder used to find result for current criterion
 		deferred
 		ensure

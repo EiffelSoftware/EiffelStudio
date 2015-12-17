@@ -86,18 +86,18 @@ feature {NONE} -- Access
 	select_actions: like owner_select_actions
 			-- Actions to be performed when a selection is made.
 
-	widget_function: FUNCTION [ANY, TUPLE, EV_WIDGET]
+	widget_function: FUNCTION [EV_WIDGET]
 			-- Function to return widget for current tooltip
 			-- Ensure return value of this function is attached.
 
-	owner_destroy_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+	owner_destroy_function: FUNCTION [BOOLEAN]
 			-- Function to indicate whether or not owner of current tooltip is destroyed.
 
-	required_width_function: FUNCTION [ANY, TUPLE, INTEGER]
+	required_width_function: FUNCTION [INTEGER]
 			-- Function to return required width in pixels of current tooltips.
 			-- Ensure return value is non-negative.
 
-	required_height_function: FUNCTION [ANY, TUPLE, INTEGER]
+	required_height_function: FUNCTION [INTEGER]
 			-- Function to return required height in pixels of current tooltips.
 			-- Ensure return value is non-negative.
 

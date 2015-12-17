@@ -29,7 +29,7 @@ feature -- Access
 			Result.extend ("a_keystring")
 		end
 
-	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [STRING_32]]
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [STRING_32]
 			-- `Result' is agent which will display all arguments passed to an
 			-- action sequence represented by `Current', using name `name' and
 			-- outputs to `string_handler'.

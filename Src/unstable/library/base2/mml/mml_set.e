@@ -56,7 +56,7 @@ feature -- Properties
 			count_zero: Result = (count = 0)
 		end
 
-	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+	for_all (test: PREDICATE [G]): BOOLEAN
 			-- Does `test' hold for all elements?
 		require
 			test_has_one_arg: test.open_count = 1
@@ -64,7 +64,7 @@ feature -- Properties
 			Result := array.for_all (test)
 		end
 
-	exists (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+	exists (test: PREDICATE [G]): BOOLEAN
 			-- Does `test' hold for at least one element?
 		require
 			test_has_one_arg: test.open_count = 1
@@ -88,7 +88,7 @@ feature -- Elements
 			element: has (Result)
 		end
 
-	extremum (order: PREDICATE [ANY, TUPLE [G, G]]): G
+	extremum (order: PREDICATE [G, G]): G
 			-- Least element with respect to `order'.
 		require
 			not_empty: not is_empty
@@ -115,7 +115,7 @@ feature -- Elements
 			end
 		ensure
 			element: has (Result)
-			extremum: for_all (agent (x, y: G; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
+			extremum: for_all (agent (x, y: G; o: PREDICATE [G, G]): BOOLEAN
 				do
 					Result := o.item ([x, y])
 				end (Result, ?, order))
@@ -123,7 +123,7 @@ feature -- Elements
 
 feature -- Subsets
 
-	filtered alias "|" (test: PREDICATE [ANY, TUPLE [G]]): MML_SET [G]
+	filtered alias "|" (test: PREDICATE [G]): MML_SET [G]
 			-- Set of all elements that satisfy `test'.
 		require
 			test_has_one_arg: test.open_count = 1
@@ -314,7 +314,7 @@ feature -- Modification
 			definition: Result |=| ((Current + other) - (Current * other))
 		end
 
-	mapped (f: FUNCTION [ANY, TUPLE [G], G]): MML_SET [G]
+	mapped (f: FUNCTION [G, G]): MML_SET [G]
 			-- Set of elements of `Current' with `f' applied to each of them.
 		require
 			f_has_one_arg: f.open_count = 1

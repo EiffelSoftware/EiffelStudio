@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="httpd" uuid="50FE258D-CC94-4748-9223-55F1129E5FB3" library_target="httpd">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="httpd" uuid="50FE258D-CC94-4748-9223-55F1129E5FB3" library_target="httpd">
 	<target name="httpd">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
@@ -18,7 +18,6 @@
 				<custom name="httpd_ssl_enabled" value="true"/>
 			</condition>
 		</library>
-		
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
 			<condition>
 				<concurrency excluded_value="none"/>
@@ -29,15 +28,15 @@
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/concurrency$</exclude>
-				<exclude>/ssl$</exclude>
 				<exclude>/no_ssl$</exclude>
+				<exclude>/ssl$</exclude>
 			</file_rule>
-			<cluster name="no_ssl" location="$|no_ssl" recursive="true">
+			<cluster name="no_ssl" location="$|no_ssl\" recursive="true">
 				<condition>
 					<custom name="httpd_ssl_enabled" excluded_value="true"/>
 				</condition>
 			</cluster>
-			<cluster name="ssl" location="$|ssl" recursive="true">
+			<cluster name="ssl" location="$|ssl\" recursive="true">
 				<condition>
 					<custom name="httpd_ssl_enabled" value="true"/>
 				</condition>

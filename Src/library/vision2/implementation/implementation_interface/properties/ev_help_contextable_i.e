@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	help_context: detachable FUNCTION [EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		local
 			w: detachable EV_WIDGET_I
@@ -74,7 +74,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_HELP_CONTEXTABLE_I} -- Implementation
 
-	internal_help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	internal_help_context: detachable FUNCTION [EV_HELP_CONTEXT]
 			-- Help context
 
 feature {NONE} -- Implementation

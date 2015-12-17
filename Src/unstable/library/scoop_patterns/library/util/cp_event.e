@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_subscribed (action: separate PROCEDURE [ANY, D]): BOOLEAN
+	is_subscribed (action: separate PROCEDURE [D]): BOOLEAN
 			-- Is `action' subscribed?
 		do
 			Result := actions.has (action)
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Subscription
 
-	subscribe (an_action: separate PROCEDURE [ANY, D])
+	subscribe (an_action: separate PROCEDURE [D])
 			-- Add `an_action' to the subscription list.
 		require
 			not_subscribed: not is_subscribed (an_action)
@@ -43,7 +43,7 @@ feature -- Subscription
 			index_at_same_position: actions.index = old actions.index
 		end
 
-	unsubscribe (an_action: separate PROCEDURE [ANY, D])
+	unsubscribe (an_action: separate PROCEDURE [D])
 			-- Remove `an_action' from the subscription list.
 		require
 			subscribed: is_subscribed (an_action)
@@ -73,10 +73,10 @@ feature -- Publication
 
 feature {NONE} -- Implementation
 
-	actions: LINKED_LIST [separate PROCEDURE [ANY, D]]
+	actions: LINKED_LIST [separate PROCEDURE [D]]
 			-- List of subscribed actions.
 
-	call_async (an_action: separate PROCEDURE [ANY, D]; data: D)
+	call_async (an_action: separate PROCEDURE [D]; data: D)
 			-- Wrapper for calling `an_action' separately.
 		do
 			an_action.call (data)

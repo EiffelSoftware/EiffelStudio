@@ -78,10 +78,10 @@ feature {NONE} -- Access
 
 feature -- Access: Validation and formatting
 
-	predicate: attached PREDICATE [ANY, TUPLE [text: attached STRING_32]]
+	predicate: attached PREDICATE [TUPLE [text: attached STRING_32]]
 			-- A predicate used to determine if the changed text is valid for the textable widget
 
-	format_function: detachable FUNCTION [ANY, TUPLE [attached STRING_32], attached STRING_32]
+	format_function: detachable FUNCTION [attached STRING_32, attached STRING_32]
 			-- The optional function used to format the entered text
 
 feature -- Element change

@@ -506,10 +506,10 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	notify_project_loaded_agent: PROCEDURE [ANY, TUPLE]
+	notify_project_loaded_agent: PROCEDURE
 			-- Agent of `notify_project_loaded'
 
-	notify_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
+	notify_project_unloaded_agent: PROCEDURE
 			-- Agent of `notify_project_unloaded'
 
 feature{EB_METRIC_EVALUATION_PANEL} -- Title change

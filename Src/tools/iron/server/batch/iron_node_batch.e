@@ -39,7 +39,7 @@ feature -- Execution
 			end
 		end
 
-	Operations: STRING_TABLE [PROCEDURE [ANY, TUPLE]]
+	Operations: STRING_TABLE [PROCEDURE]
 		once
 			create Result.make (3)
 			Result.put (agent operate_help, "help")

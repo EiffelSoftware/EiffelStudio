@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			Result := preferences.editor_data
 		end
 
-	finish_reading_text_agent: PROCEDURE [like Current, TUPLE]
+	finish_reading_text_agent: PROCEDURE
 			-- Agent for function `finish_reading_text'
 
 	add_eis_source (s: READABLE_STRING_GENERAL)

@@ -9,14 +9,14 @@ expanded class
 
 feature	-- Conversion
 
-	expanded_string_32 (s: READABLE_STRING_32; a_variable_provider: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], detachable READABLE_STRING_32]): STRING_32
+	expanded_string_32 (s: READABLE_STRING_32; a_variable_provider: FUNCTION [READABLE_STRING_GENERAL, detachable READABLE_STRING_32]): STRING_32
 			-- String `s' with variables from `a_variable_provider' expanded.
 		do
 			create Result.make_from_string (s)
 			expand_string_32 (Result, a_variable_provider)
 		end
 
-	expand_string_32 (s: STRING_32; a_variable_provider: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], detachable READABLE_STRING_32])
+	expand_string_32 (s: STRING_32; a_variable_provider: FUNCTION [READABLE_STRING_GENERAL, detachable READABLE_STRING_32])
 			-- Expand variables from `a_variable_provider' in `s'.
 		local
 			i,j,k,n: INTEGER

@@ -43,7 +43,7 @@ feature -- Access
 			good_result: Result = group_scope
 		end
 
-	calculate_function: FUNCTION [ANY, TUPLE [QL_GROUP], DOUBLE]
+	calculate_function: FUNCTION [QL_GROUP, DOUBLE]
 			-- Function to calculate metric
 
 	domain_generator: QL_GROUP_DOMAIN_GENERATOR

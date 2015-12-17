@@ -170,13 +170,13 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	formatter_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [EB_CUSTOMIZED_FORMATTER_DESP]]]
+	formatter_receiver: LINKED_STACK [PROCEDURE [EB_CUSTOMIZED_FORMATTER_DESP]]
 			-- Stack of receivers to get foramtters
 
-	content_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [like current_content]]]
+	content_receiver: LINKED_STACK [PROCEDURE [TUPLE [like current_content]]]
 			-- Stack of receivers for contents
 
-	tool_receiver: LINKED_STACK [PROCEDURE [ANY, TUPLE [STRING_8, STRING_8, STRING_8]]]
+	tool_receiver: LINKED_STACK [PROCEDURE [STRING_8, STRING_8, STRING_8]]
 			-- Tool receiver
 
 feature{NONE} -- Implementation

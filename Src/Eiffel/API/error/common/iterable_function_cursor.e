@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (map: FUNCTION [ANY, TUPLE [H], G]; other: ITERATION_CURSOR [H])
+	make (map: FUNCTION [H, G]; other: ITERATION_CURSOR [H])
 			-- Associate iteration with `other' which elements are to be transformed using `map'.
 		do
 			target := other
@@ -54,7 +54,7 @@ feature {NONE} -- Access
 	target: ITERATION_CURSOR [H]
 			-- Original iteration cursor.
 
-	mapping_function: FUNCTION [ANY, TUPLE [H], G]
+	mapping_function: FUNCTION [H, G]
 			-- Function to tranform elements produced by `target' to elements of the desired type {G}.
 
 ;note

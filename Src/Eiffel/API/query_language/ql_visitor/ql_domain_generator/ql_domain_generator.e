@@ -402,7 +402,7 @@ feature{QL_CRITERION} -- Implementation/Criterion interaction
 
 feature{NONE} -- Implementation
 
-	process_groups_from_target (a_target: CONF_TARGET; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_GROUP]])
+	process_groups_from_target (a_target: CONF_TARGET; a_parent: QL_ITEM; a_action: PROCEDURE [QL_GROUP])
 			-- Iterate through groups in `a_target' and call `a_action' for every group.
 		require
 			a_target_attached: a_target /= Void
@@ -431,7 +431,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_classes_from_group (a_group: CONF_GROUP; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_CLASS]])
+	process_classes_from_group (a_group: CONF_GROUP; a_parent: QL_ITEM; a_action: PROCEDURE [QL_CLASS])
 			-- For every class in `a_group', call `a_action'.
 		require
 			a_group_attached: a_group /= Void
@@ -473,7 +473,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_feature_from_class (a_class: QL_CLASS; a_real_feature_action: PROCEDURE [ANY, TUPLE [QL_REAL_FEATURE]]; a_invariant_action: PROCEDURE [ANY, TUPLE [QL_INVARIANT]])
+	process_feature_from_class (a_class: QL_CLASS; a_real_feature_action: PROCEDURE [QL_REAL_FEATURE]; a_invariant_action: PROCEDURE [QL_INVARIANT])
 			-- Iterate through features in `a_class' and call `a_real_feature_action' for every real feature,
 			-- call `a_invariant_action' for every invariant feature.
 		require

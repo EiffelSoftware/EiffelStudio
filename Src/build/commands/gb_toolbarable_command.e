@@ -37,11 +37,11 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 		
-	drop_agent: PROCEDURE [ANY, TUPLE [ANY]]
+	drop_agent: PROCEDURE [ANY]
 	
-	veto_drop_agent: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	veto_drop_agent: FUNCTION [ANY, BOOLEAN]
 	
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: FUNCTION [ANY]
 
 feature -- Status Report
 

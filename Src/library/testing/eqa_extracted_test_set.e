@@ -225,7 +225,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Basic operations
 
-	run_extracted_test (a_routine: ROUTINE [ANY, TUPLE]; a_operands: TUPLE)
+	run_extracted_test (a_routine: ROUTINE; a_operands: TUPLE)
 			-- Call routine with given operands.
 			--
 			-- `a_routine': Arbitrary Eiffel routine.

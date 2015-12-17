@@ -515,7 +515,7 @@ feature {NONE} -- Access
 	managed_tags: SORTED_TWO_WAY_LIST [STRING_32];
 			-- Sorted tags. Do not change directly out of EIS observer.
 
-	build_tree_agent: detachable PROCEDURE [ANY, TUPLE]
+	build_tree_agent: detachable PROCEDURE
 			-- Agent of `build_tree'
 
 invariant

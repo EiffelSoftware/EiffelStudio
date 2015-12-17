@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" 
-		name="abel_plugin_escher" 
-		uuid="AFD48E88-B20B-4778-A732-A729683F796A" 
-		library_target="abel_plugin_escher">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="abel_plugin_escher" uuid="AFD48E88-B20B-4778-A732-A729683F796A" library_target="abel_plugin_escher">
 	<target name="abel_plugin_escher">
 		<root all_classes="true"/>
-		<option warning="true">
+		<option warning="true" void_safety="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
 		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf"/>
-		<!-- <library name="serializer" location="..\schema_evolution\serializer_lib\serializer.ecf"/> <library name="persistence_utils" location="../persistence_utils/persistence_utils.ecf"/>		-->
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="abel_plugin_escher" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

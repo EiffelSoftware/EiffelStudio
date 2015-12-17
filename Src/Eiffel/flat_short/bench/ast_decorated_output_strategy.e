@@ -2959,8 +2959,8 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
-			indent: PROCEDURE [ANY, TUPLE]
-			exdent: PROCEDURE [ANY, TUPLE]
+			indent: PROCEDURE
+			exdent: PROCEDURE
 		do
 			if
 				true
@@ -3145,8 +3145,8 @@ feature {NONE} -- Implementation
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
-			indent: PROCEDURE [ANY, TUPLE]
-			exdent: PROCEDURE [ANY, TUPLE]
+			indent: PROCEDURE
+			exdent: PROCEDURE
 		do
 			if not expr_type_visiting then
 				l_text_formatter_decorator := text_formatter_decorator
@@ -5227,7 +5227,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	append_iteration_as (l_as: ITERATION_AS; indent: PROCEDURE [ANY, TUPLE]; exdent: PROCEDURE [ANY, TUPLE])
+	append_iteration_as (l_as: ITERATION_AS; indent: PROCEDURE; exdent: PROCEDURE)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do

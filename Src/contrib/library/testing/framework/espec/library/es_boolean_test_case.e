@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (name: STRING_8; c: PREDICATE [ANY, TUPLE])
+	make (name: STRING_8; c: PREDICATE)
 			-- Create Current
 		do
 			case := c
@@ -61,7 +61,7 @@ feature -- Basic Op
 
 feature {NONE} -- Implementation
 
-	case: PREDICATE [ANY, TUPLE]
+	case: PREDICATE
 
 end -- class ES_BOOLEAN_TEST_CASE
 

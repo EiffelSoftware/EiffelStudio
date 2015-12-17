@@ -528,7 +528,7 @@ feature -- Basic operations
 			not_popup_window_is_displayed: not is_shown implies not popup_window.is_displayed
 		end
 
-	frozen execute_unfocusing_action (a_action: PROCEDURE [ANY, TUPLE])
+	frozen execute_unfocusing_action (a_action: PROCEDURE)
 			-- Performs an action that will cause the popup window to loose focus, but protects the popup window
 			-- from closing if `is_focus_sensitive' is true.
 			--

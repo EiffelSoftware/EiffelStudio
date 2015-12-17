@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			widget_container_set: widget_container = a_container
 		end
 
-	bind_select_actions (a_action: PROCEDURE [ANY, TUPLE])
+	bind_select_actions (a_action: PROCEDURE)
 			-- Binds the selection actions the the window's widgets to ensure the pop up widget is display
 			-- Note: `propagate_action' can be used to bind the actions to a widget structure, if the struture is deep and all widgets need to process
 			--       the show action.

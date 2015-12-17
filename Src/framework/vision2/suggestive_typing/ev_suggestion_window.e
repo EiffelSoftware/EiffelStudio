@@ -341,7 +341,7 @@ feature {EV_ABSTRACT_SUGGESTION_FIELD} -- Completion
 			not_destroyed: not is_destroyed
 		local
 			l_grid: like grid
-			l_post_action: detachable PROCEDURE [ANY, TUPLE]
+			l_post_action: detachable PROCEDURE
 			l_is_displayed: like is_displayed
 		do
 				-- To prevent flickering due to the potential

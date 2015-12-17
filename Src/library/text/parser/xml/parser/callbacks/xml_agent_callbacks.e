@@ -29,27 +29,27 @@ feature -- Access
 
 feature -- Agents
 
-	on_attribute_action: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32, READABLE_STRING_32]] assign set_on_attribute_action
+	on_attribute_action: detachable PROCEDURE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32, READABLE_STRING_32] assign set_on_attribute_action
 
-	on_comment_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]] assign set_on_comment_action
+	on_comment_action: detachable PROCEDURE [READABLE_STRING_32] assign set_on_comment_action
 
-	on_content_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]] assign set_on_content_action
+	on_content_action: detachable PROCEDURE [READABLE_STRING_32] assign set_on_content_action
 
-	on_end_tag_action: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32]] assign set_on_end_tag_action
+	on_end_tag_action: detachable PROCEDURE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32] assign set_on_end_tag_action
 
-	on_error_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32]] assign set_on_error_action
+	on_error_action: detachable PROCEDURE [READABLE_STRING_32] assign set_on_error_action
 
-	on_finish_action: detachable PROCEDURE [ANY, TUPLE] assign set_on_finish_action
+	on_finish_action: detachable PROCEDURE assign set_on_finish_action
 
-	on_processing_instruction_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32, READABLE_STRING_32]] assign set_on_processing_instruction_action
+	on_processing_instruction_action: detachable PROCEDURE [READABLE_STRING_32, READABLE_STRING_32] assign set_on_processing_instruction_action
 
-	on_start_action: detachable PROCEDURE [ANY, TUPLE] assign set_on_start_action
+	on_start_action: detachable PROCEDURE assign set_on_start_action
 
-	on_start_tag_action: detachable PROCEDURE [ANY, TUPLE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32]] assign set_on_start_tag_action
+	on_start_tag_action: detachable PROCEDURE [detachable READABLE_STRING_32, detachable READABLE_STRING_32, READABLE_STRING_32] assign set_on_start_tag_action
 
-	on_start_tag_finish_action: detachable PROCEDURE [ANY, TUPLE] assign set_on_start_tag_finish_action
+	on_start_tag_finish_action: detachable PROCEDURE assign set_on_start_tag_finish_action
 
-	on_xml_declaration_action: detachable PROCEDURE [ANY, TUPLE [READABLE_STRING_32, detachable READABLE_STRING_32, BOOLEAN]] assign set_on_xml_declaration_action
+	on_xml_declaration_action: detachable PROCEDURE [READABLE_STRING_32, detachable READABLE_STRING_32, BOOLEAN] assign set_on_xml_declaration_action
 
 
 feature -- Setting

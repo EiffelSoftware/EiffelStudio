@@ -26,7 +26,7 @@ feature -- Basic operations
 			end
 		end
 
-	perform (a_object: ANY; a_action: PROCEDURE [ANY, TUPLE])
+	perform (a_object: ANY; a_action: PROCEDURE)
 			-- Performs an action on with a supplied object and then cleans up the supplied object.
 			-- Note: In the interest of safety `a_object' should not be held on to by any other object
 			--       because it will be disposed of.

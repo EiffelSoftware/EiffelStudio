@@ -32,7 +32,7 @@ feature -- Access
 	value: detachable G
 			-- Data stored in `Current'.
 
-	refresh_action: detachable FUNCTION [ANY, TUPLE [], like value]
+	refresh_action: detachable FUNCTION [like value]
 			-- Action to call to get data value that is up to date.
 
 feature -- Update
@@ -81,7 +81,7 @@ feature -- Update
 
 feature -- Event handling
 
-	validate_value_actions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [like value], BOOLEAN]]
+	validate_value_actions: ARRAYED_LIST [FUNCTION [TUPLE [like value], BOOLEAN]]
 			-- Actions called to validate a value.
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
@@ -121,7 +121,7 @@ feature -- Update
 				Result := True
 			else
 				Result := validate_value_actions.for_all
-					(agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
+					(agent {FUNCTION [TUPLE [like value], BOOLEAN]}.item ([a_value]))
 			end
 		end
 

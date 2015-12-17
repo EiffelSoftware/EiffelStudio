@@ -54,10 +54,10 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen subscribers: ARRAYED_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen subscribers: ARRAYED_SET [detachable PROCEDURE [EVENT_DATA]]
 			-- List of actions currently subscribed to the event.
 
-	frozen suicide_actions: ARRAYED_SET [detachable PROCEDURE [ANY, EVENT_DATA]]
+	frozen suicide_actions: ARRAYED_SET [detachable PROCEDURE [EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time.
 			--|This list is a subset of `subscribers'
 
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	is_subscribed (a_action: PROCEDURE [ANY, EVENT_DATA]): BOOLEAN
+	is_subscribed (a_action: PROCEDURE [EVENT_DATA]): BOOLEAN
 			-- <Precursor>
 		do
 			Result := subscribers.has (a_action)
@@ -102,7 +102,7 @@ feature -- Status settings
 
 feature -- Subscription
 
-	subscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
+	subscribe (a_action: PROCEDURE [EVENT_DATA])
 			-- <Precursor>
 		do
 			subscribers.extend (a_action)
@@ -110,7 +110,7 @@ feature -- Subscription
 			subscribers_incremented: subscribers.count = old subscribers.count + 1
 		end
 
-	subscribe_for_single_notification (a_action: PROCEDURE [ANY, EVENT_DATA])
+	subscribe_for_single_notification (a_action: PROCEDURE [EVENT_DATA])
 			-- <Precursor>
 		do
 			suicide_actions.extend (a_action)
@@ -121,11 +121,11 @@ feature -- Subscription
 			suicide_actions_incremented: suicide_actions.count = old suicide_actions.count + 1
 		end
 
-	unsubscribe (a_action: PROCEDURE [ANY, EVENT_DATA])
+	unsubscribe (a_action: PROCEDURE [EVENT_DATA])
 			-- <Precursor>
 		local
-			l_subscribers: LIST [detachable PROCEDURE [ANY, EVENT_DATA]]
-			l_actions: LIST [detachable PROCEDURE [ANY, EVENT_DATA]]
+			l_subscribers: LIST [detachable PROCEDURE [EVENT_DATA]]
+			l_actions: LIST [detachable PROCEDURE [EVENT_DATA]]
 		do
 				-- Remove subscriber
 			l_subscribers :=  subscribers
@@ -160,7 +160,7 @@ feature -- Publication
 			publish_internal (a_args, Void)
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [ANY, EVENT_DATA])
+	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
 			-- <Precursor>
 		do
 			publish_internal (a_args, a_predicate)
@@ -168,7 +168,7 @@ feature -- Publication
 
 feature {NONE} -- Publication
 
-	publish_internal (a_args: detachable EVENT_DATA; a_predicate: detachable PREDICATE [ANY, EVENT_DATA])
+	publish_internal (a_args: detachable EVENT_DATA; a_predicate: detachable PREDICATE [EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -178,7 +178,7 @@ feature {NONE} -- Publication
 			not_is_publishing: not is_publishing
 		local
 			l_actions: like suicide_actions
-			l_action: detachable PROCEDURE [ANY, EVENT_DATA]
+			l_action: detachable PROCEDURE [EVENT_DATA]
 			l_subscribers: like subscribers
 			l_suspended: BOOLEAN
 		do

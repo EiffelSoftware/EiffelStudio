@@ -54,7 +54,7 @@ feature -- Cursor movement
 			box_effect: box.is_empty or else box.any_item = v
 		end
 
-	satisfy (pred: PREDICATE [ANY, TUPLE [detachable G]])
+	satisfy (pred: PREDICATE [detachable G])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		note

@@ -1566,7 +1566,7 @@ feature {NONE} -- force last stone when displayed
 			force_last_stone
 		end
 
-	agent_force_last_stone_now: PROCEDURE [ANY, TUPLE]
+	agent_force_last_stone_now: PROCEDURE
 			-- agent on `force_last_stone_now'.
 
 	request_force_last_stone_now
@@ -2229,7 +2229,7 @@ feature {NONE} -- Implementation
 			toggle_selected_classes_suppliers_cmd.enable_sensitive
 		end
 
-	project_close_agent: PROCEDURE [ANY, TUPLE]
+	project_close_agent: PROCEDURE
 			-- The agent that is called when the project is closed.
 
 	excluded_class_figures: HASH_TABLE [STRING, STRING]

@@ -91,16 +91,16 @@ feature -- Access
 	index_disabled: BOOLEAN
 			-- Index disabled?
 
-	index_ignores_function: detachable FUNCTION [ANY, TUPLE [PATH], BOOLEAN]
+	index_ignores_function: detachable FUNCTION [PATH, BOOLEAN]
 			-- Function to evaluate if a path is ignored or not during autoindex.
 			-- If `index_ignores' is Void and `index_ignores_function' is Void, use default ignore rules.
 
 	directory_index: detachable ARRAY [READABLE_STRING_8]
 			-- File serve if a directory index is requested.
 
-	not_found_handler: detachable PROCEDURE [ANY, TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
+	not_found_handler: detachable PROCEDURE [TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
 
-	access_denied_handler: detachable PROCEDURE [ANY, TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
+	access_denied_handler: detachable PROCEDURE [TUPLE [uri: READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE]]
 
 feature -- Element change
 

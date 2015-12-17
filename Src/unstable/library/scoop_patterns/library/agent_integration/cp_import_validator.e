@@ -38,7 +38,7 @@ feature -- Status report
 
 feature -- Status report
 
-	is_agent_importable (a_routine: separate ROUTINE [ANY, TUPLE]): BOOLEAN
+	is_agent_importable (a_routine: separate ROUTINE): BOOLEAN
 			-- Is `a_routine' importable?
 		local
 			routine_access: CP_ROUTINE_ACCESS
@@ -65,7 +65,7 @@ feature -- Status report
 			correct_relation: Result implies is_agent_unsafe_importable (a_routine)
 		end
 
-	is_agent_unsafe_importable (a_routine: separate ROUTINE [ANY, TUPLE]): BOOLEAN
+	is_agent_unsafe_importable (a_routine: separate ROUTINE): BOOLEAN
 			-- Is `a_routine' ready for an unsafe import?
 		local
 			l_operands_void: BOOLEAN
@@ -79,7 +79,7 @@ feature -- Status report
 			l_target_open := not a_routine.is_target_closed
 
 				-- There should not be a result from a previous invocation.
-			if attached {separate FUNCTION [ANY, TUPLE, ANY]} a_routine as a_function then
+			if attached {separate FUNCTION [ANY]} a_routine as a_function then
 				l_no_result := is_function_result_void (a_function)
 			else
 				l_no_result := True
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			-- A reflector instance.
 		attribute create Result	end
 
-	is_function_result_void (a_function: separate FUNCTION [ANY, TUPLE, ANY]): BOOLEAN
+	is_function_result_void (a_function: separate FUNCTION [ANY]): BOOLEAN
 			-- Is `a_function.last_result' Void?
 		local
 			l_type_id: INTEGER

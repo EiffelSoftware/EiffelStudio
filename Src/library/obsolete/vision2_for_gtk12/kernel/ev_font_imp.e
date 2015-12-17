@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 	match_preferred_face (
-		try_string_creator: FUNCTION[EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]
+		try_string_creator: FUNCTION[EV_FONT_IMP, STRING, STRING]
 	): EV_GDK_FONT
 			-- Match the preferred face using the font
 			-- string creator `try_string_creator'
@@ -381,7 +381,7 @@ feature {EV_FONT_IMP} -- Implementation
 
 	--| String-routines to facilitate in searching the best matching font.
 
-	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]]
+	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, STRING, STRING]]
 				-- Create and setup the preferred font face mechanism
 		once
 			create Result.make (1, 6)

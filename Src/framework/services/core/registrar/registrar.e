@@ -140,7 +140,7 @@ feature -- Basic operations
 			internal_register (l_concealer, a_key)
 		end
 
-	register_with_activator (a_activator: FUNCTION [ANY, TUPLE, G]; a_key: K)
+	register_with_activator (a_activator: FUNCTION [G]; a_key: K)
 			-- <Precursor>
 		local
 			l_concealer: CONCEALER_WITH_ACTIVATOR [G]
@@ -286,7 +286,7 @@ feature {NONE} -- Actions handlers
 			a_registration_attached: a_registration /= Void
 			a_registration_is_valid_registration_item: (attached {G} a_registration) or (attached {CONCEALER_I [G]} a_registration)
 		local
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_action: PROCEDURE
 		do
 			if attached {G} a_registration as l_item then
 					-- Actual item is available.
@@ -342,7 +342,7 @@ feature -- Events: Connection point
 				Result := l_result
 			else
 				create {EVENT_CONNECTION [REGISTRAR_OBSERVER [G, K], REGISTRAR_I [G, K]]} Result.make (
-					agent (ia_observer: REGISTRAR_OBSERVER [G, K]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: REGISTRAR_OBSERVER [G, K]): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := <<
 								[registered_event, agent ia_observer.on_registered],

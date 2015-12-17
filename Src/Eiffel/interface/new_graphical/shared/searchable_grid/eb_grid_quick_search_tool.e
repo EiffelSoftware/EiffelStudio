@@ -273,7 +273,7 @@ feature {NONE} -- Recyclable
 
 feature{NONE} -- Actions
 
-	on_key_pressed_agent: PROCEDURE [ANY, TUPLE [EV_KEY]]
+	on_key_pressed_agent: PROCEDURE [EV_KEY]
 			-- Agent wrapper of `on_key_pressed'
 		do
 			if on_key_pressed_agent_internal = Void then

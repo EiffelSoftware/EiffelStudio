@@ -231,8 +231,8 @@ feature -- event
 			cat, lastcat: detachable STRING_32
 			i,r: INTEGER
 			w: INTEGER
-			chk_chg_action: PROCEDURE [ANY, TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
-			grp_chk_chg_action: detachable PROCEDURE [ANY, TUPLE [EV_GRID_CHECKABLE_LABEL_ITEM]]
+			chk_chg_action: PROCEDURE [EV_GRID_CHECKABLE_LABEL_ITEM]
+			grp_chk_chg_action: detachable PROCEDURE [EV_GRID_CHECKABLE_LABEL_ITEM]
 			tup: like category_name_tag
 		do
 			create pw.make_with_shadow

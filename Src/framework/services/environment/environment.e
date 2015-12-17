@@ -257,7 +257,7 @@ feature -- Events: Connection point
 				Result := l_result
 			else
 				create Result.make (
-					agent (ia_observer: ENVIRONMENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: ENVIRONMENT_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := << [value_changed_event, agent ia_observer.on_environment_value_changed] >>
 						end)

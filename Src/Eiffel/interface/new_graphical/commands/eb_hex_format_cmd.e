@@ -66,7 +66,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	command_call_back: PROCEDURE [ANY, TUPLE [BOOLEAN]]
+	command_call_back: PROCEDURE [BOOLEAN]
 			-- Call back procedure to execute current
 
 	name: STRING

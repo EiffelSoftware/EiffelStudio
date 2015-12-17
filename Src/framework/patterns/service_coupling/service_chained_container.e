@@ -39,7 +39,7 @@ feature -- Extension
 			end
 		end
 
-	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [ANY, TUPLE, detachable SERVICE_I] a_promote: BOOLEAN)
+	register_with_activator (a_type: TYPE [detachable SERVICE_I]; a_activator: FUNCTION [detachable SERVICE_I] a_promote: BOOLEAN)
 			-- <Precursor>
 		do
 			if a_promote and then attached {SERVICE_CONTAINER_I} site as l_container then

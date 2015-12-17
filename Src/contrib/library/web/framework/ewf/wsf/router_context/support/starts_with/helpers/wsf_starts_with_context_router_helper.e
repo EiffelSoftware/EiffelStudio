@@ -34,7 +34,7 @@ feature -- Mapping helper: starts_with
 
 feature -- Mapping helper: starts_with agent		
 
-	map_starts_with_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [start_path: READABLE_STRING_8; ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_starts_with_agent (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [start_path: READABLE_STRING_8; ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		require
 			a_uri_attached: a_uri /= Void
 			proc_attached: proc /= Void
@@ -42,7 +42,7 @@ feature -- Mapping helper: starts_with agent
 			map_starts_with (a_uri, create {WSF_STARTS_WITH_AGENT_CONTEXT_HANDLER [C] }.make (proc), rqst_methods)
 		end
 
-	map_starts_with_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [ANY, TUPLE [start_path: READABLE_STRING_8; ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_starts_with_agent_with_request_methods (a_uri: READABLE_STRING_8; proc: PROCEDURE [TUPLE [start_path: READABLE_STRING_8; ctx: C; req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
 		obsolete
 			"Use directly `map_starts_with_agent' [June-2015]"
 		require

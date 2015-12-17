@@ -524,7 +524,7 @@ feature {NONE} -- External attribute processing
 
 feature {NONE} -- Conversion from earlier version
 
-	split_external (c: PROCEDURE [ANY, TUPLE [like {CONF_EXTERNAL}.location]])
+	split_external (c: PROCEDURE [TUPLE [like {CONF_EXTERNAL}.location]])
 			-- Split `current_external' into several ones if it comes
 			-- from the old ECF and consists of several parts.
 		require

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="preferences_reg" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences_reg">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="preferences_reg" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences_reg">
 	<target name="preferences_reg">
-		<description>Preferences library.&#10;      Copyright (c) 1984-2012, Eiffel Software and others.&#10;      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<description>Preferences library.
+      Copyright (c) 1984-2012, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option warning="true" is_attached_by_default="false" syntax="standard" namespace="EiffelSoftware.Library">
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="platform" value="windows"/>
@@ -39,9 +41,9 @@
 			<option namespace="Preferences.Interface">
 			</option>
 			<file_rule>
+				<exclude>/build_project$</exclude>
 				<exclude>/graphical$</exclude>
 				<exclude>/shortcut_management$</exclude>
-				<exclude>/build_project$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="preference" location="preference\" recursive="true">

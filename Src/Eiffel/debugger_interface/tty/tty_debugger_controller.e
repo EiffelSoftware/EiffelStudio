@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE)
 		local
 			is_yes: BOOLEAN
 		do
@@ -32,7 +32,7 @@ feature -- Access
 			end
 		end
 
-	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
+	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE;
 			a_button_count: INTEGER; a_pref_string: STRING)
 		do
 			if manager.is_true_boolean_value (a_pref_string) then

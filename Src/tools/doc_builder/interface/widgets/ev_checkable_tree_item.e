@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make_with_text_and_expand_function (a_text: STRING; a_function: FUNCTION [ANY, TUPLE, ANY])
+	make_with_text_and_expand_function (a_text: STRING; a_function: FUNCTION [ANY])
 			-- Create `Current' and assign `a_text' to `text'
 		local
 			l_dummy_node: EV_TREE_ITEM
@@ -76,7 +76,7 @@ feature {EV_CHECKABLE_TREE, EV_CHECKABLE_TREE_ITEM} -- Status Setting
 
 feature -- Implementation
 
-	expand_function: FUNCTION [ANY, TUPLE, ANY]
+	expand_function: FUNCTION [ANY]
 			-- Function to call on expand
 
 	call_expand_function

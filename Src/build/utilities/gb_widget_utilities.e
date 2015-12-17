@@ -190,7 +190,7 @@ feature -- Basic operations
 			end
 		end
 
-	fake_cancel_button (a_dialog: EV_DIALOG; action: PROCEDURE [ANY, TUPLE])
+	fake_cancel_button (a_dialog: EV_DIALOG; action: PROCEDURE)
 			-- Place a cancel button in `a_dialog',
 			-- and then remove it, so that we have
 			-- a cross on the window.

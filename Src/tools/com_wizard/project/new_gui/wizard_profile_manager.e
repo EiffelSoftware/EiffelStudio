@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize instance.
 		do
-			create {ARRAYED_LIST [ROUTINE [ANY, TUPLE []]]} active_profile_change_actions.make (10)
-			create {ARRAYED_LIST [FUNCTION [ANY, TUPLE [], WIZARD_PROFILE_ITEM]]} active_profile_save_actions.make (10)
+			create {ARRAYED_LIST [ROUTINE]} active_profile_change_actions.make (10)
+			create {ARRAYED_LIST [FUNCTION [WIZARD_PROFILE_ITEM]]} active_profile_save_actions.make (10)
 		end
 
 feature -- Access
@@ -48,10 +48,10 @@ feature -- Access
 	active_profile: STRING
 			-- Active profile
 
-	active_profile_change_actions: LIST [ROUTINE [ANY, TUPLE []]]
+	active_profile_change_actions: LIST [ROUTINE]
 			-- List of routines to call when active profile changes
 
-	active_profile_save_actions: LIST [FUNCTION [ANY, TUPLE [], WIZARD_PROFILE_ITEM]]
+	active_profile_save_actions: LIST [FUNCTION [WIZARD_PROFILE_ITEM]]
 			-- List of routines to call when saving active profile to retrieve items
 
 	found: BOOLEAN

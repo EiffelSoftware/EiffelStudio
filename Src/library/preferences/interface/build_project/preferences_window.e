@@ -843,7 +843,7 @@ feature {NONE} -- Private attributes
 	default_row_height: INTEGER
 		-- Default row height
 
-	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
+	display_update_agent: PROCEDURE [PREFERENCE]
 			-- Agent to be called when preference is changed outside	
 
 	resized_columns_list: ARRAY [BOOLEAN]

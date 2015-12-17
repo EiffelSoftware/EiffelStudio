@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="estudio_gui_wizard" uuid="6E6AAD4F-8869-428A-B507-54EACE8613E9" library_target="estudio_gui_wizard">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="estudio_gui_wizard" uuid="6E6AAD4F-8869-428A-B507-54EACE8613E9" library_target="estudio_gui_wizard">
 	<target name="estudio_gui_wizard">
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-		<cluster name="core" location=".\core" recursive="true"/>
-		<cluster name="console" location=".\console" recursive="true"/>
-		<cluster name="graphical" location=".\gui" recursive="true"/>
+		<cluster name="console" location=".\console\" recursive="true"/>
+		<cluster name="core" location=".\core\" recursive="true"/>
+		<cluster name="graphical" location=".\gui\" recursive="true"/>
 	</target>
 </system>

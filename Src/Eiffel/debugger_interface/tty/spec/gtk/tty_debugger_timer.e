@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 
 	timeout_connection_id: NATURAL_32
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER_32; args: POINTER)
+	marshal (action: PROCEDURE; n_args: INTEGER_32; args: POINTER)
 		do
 			action.call (Void)
 		end
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			"c_ev_gtk_callback_marshal_set_is_enabled"
 		end
 
-	frozen marshal_timeout_connect (a_delay: INTEGER_32; an_agent: PROCEDURE [ANY, TUPLE]): NATURAL_32
+	frozen marshal_timeout_connect (a_delay: INTEGER_32; an_agent: PROCEDURE): NATURAL_32
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""

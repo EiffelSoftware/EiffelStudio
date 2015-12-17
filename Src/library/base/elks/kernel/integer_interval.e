@@ -335,7 +335,7 @@ feature -- Duplication
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [INTEGER]])
+	do_all (action: PROCEDURE [INTEGER])
 			-- Apply `action' to every item of current interval.
 		require
 			action_exists: action /= Void
@@ -355,7 +355,7 @@ feature -- Iteration
 		end
 
 	for_all (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Do all interval's values satisfy `condition'?
 		require
@@ -378,7 +378,7 @@ feature -- Iteration
 		end
 
 	exists (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Does at least one of  interval's values
 			-- satisfy `condition'?
@@ -402,7 +402,7 @@ feature -- Iteration
 		end
 
 	exists1 (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			BOOLEAN
 			-- Does exactly one of  interval's values
 			-- satisfy `condition'?
@@ -417,7 +417,7 @@ feature -- Iteration
 		end
 
 	hold_count (condition:
-				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
+				FUNCTION [INTEGER, BOOLEAN]):
 			INTEGER
 			-- Number of  interval's values that
 			-- satisfy `condition'

@@ -12,10 +12,10 @@ deferred class
 
 feature {PEG_ABSTRACT_PEG} -- Behaviours
 
-	behaviour: detachable FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
+	behaviour: detachable FUNCTION [PEG_PARSER_RESULT, PEG_PARSER_RESULT]
 			-- Optional behaviour which transforms a result of the children to a new one
 
-	error_strategy: detachable FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT]
+	error_strategy: detachable FUNCTION [PEG_PARSER_RESULT, PEG_PARSER_RESULT]
 			-- Optional error strategy which tries to handle failures of a parser
 
 feature {PEG_ABSTRACT_PEG} -- Access
@@ -26,7 +26,7 @@ feature {PEG_ABSTRACT_PEG} -- Access
 	parser_name: detachable READABLE_STRING_8
 			-- The optional name for the parser
 
-	error_message_handler: detachable PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]] 
+	error_message_handler: detachable PROCEDURE [PEG_PARSER_RESULT] 
 			-- If parsing is unsuccessful, what should the parser do?
 			-- Detachable!
 
@@ -35,7 +35,7 @@ feature {PEG_ABSTRACT_PEG} -- Access
 
 feature -- Access
 
-	set_error_message_handler (a_error_message_handler: PROCEDURE [ANY, TUPLE [PEG_PARSER_RESULT]])
+	set_error_message_handler (a_error_message_handler: PROCEDURE [PEG_PARSER_RESULT])
 			-- Sets the error message
 		require
 			a_error_message_handler_attached: attached a_error_message_handler
@@ -67,7 +67,7 @@ feature -- Access
 			is_cached_set: is_cached = a_is_cached
 		end
 
-	set_behaviour (a_behaviour: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT])
+	set_behaviour (a_behaviour: FUNCTION [PEG_PARSER_RESULT, PEG_PARSER_RESULT])
 			-- Sets the behaviour.
 		require
 			a_behaviour_attached: attached a_behaviour
@@ -77,7 +77,7 @@ feature -- Access
 			behaviour_set: behaviour = a_behaviour
 		end
 
-	set_error_strategy (a_error_strategy: FUNCTION [ANY, TUPLE [PEG_PARSER_RESULT], PEG_PARSER_RESULT])
+	set_error_strategy (a_error_strategy: FUNCTION [PEG_PARSER_RESULT, PEG_PARSER_RESULT])
 			-- Sets the error strategy
 		require
 			a_error_strategy_attached: attached a_error_strategy

@@ -673,7 +673,7 @@ feature -- Removal
 
 feature -- Iteration
 
-	do_all_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; start_index, end_index: INTEGER)
+	do_all_in_bounds (action: PROCEDURE [T]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item, from first to last.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -693,7 +693,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_in_bounds (action: PROCEDURE [ANY, TUPLE [T]]; test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER)
+	do_if_in_bounds (action: PROCEDURE [T]; test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -716,7 +716,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+	there_exists_in_bounds (test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -734,7 +734,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all_in_bounds (test: FUNCTION [ANY, TUPLE [T], BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
+	for_all_in_bounds (test: FUNCTION [T, BOOLEAN]; start_index, end_index: INTEGER): BOOLEAN
 			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
@@ -753,7 +753,7 @@ feature -- Iteration
 			end
 		end
 
-	do_all_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; start_index, end_index: INTEGER)
+	do_all_with_index_in_bounds (action: PROCEDURE [T, INTEGER]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item, from first to last.
 			-- `action' receives item and its index.
 			-- Semantics not guaranteed if `action' changes the structure;
@@ -776,7 +776,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if_with_index_in_bounds (action: PROCEDURE [ANY, TUPLE [T, INTEGER]]; test: FUNCTION [ANY, TUPLE [T, INTEGER], BOOLEAN]; start_index, end_index: INTEGER)
+	do_if_with_index_in_bounds (action: PROCEDURE [T, INTEGER]; test: FUNCTION [T, INTEGER, BOOLEAN]; start_index, end_index: INTEGER)
 			-- Apply `action' to every item that satisfies `test', from first to last.
 			-- `action' and `test' receive the item and its index.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;

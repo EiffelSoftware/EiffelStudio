@@ -37,7 +37,7 @@ feature -- Persistence
 
 feature -- Access
 
-	execute_action: PROCEDURE [ANY, TUPLE [BREAKPOINT, DEBUGGER_MANAGER]]
+	execute_action: PROCEDURE [BREAKPOINT, DEBUGGER_MANAGER]
 			-- Action to execute.
 
 feature -- Change

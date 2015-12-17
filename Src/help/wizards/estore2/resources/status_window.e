@@ -75,7 +75,7 @@ feature -- Access
 			end
 		end
 
-	send_confirmation (message: STRING; action: PROCEDURE [ANY, TUPLE])
+	send_confirmation (message: STRING; action: PROCEDURE)
 			-- Prompt user for confirmation with `message' in a dialog modal to `Current' before
 			-- executing `action'.
 		require

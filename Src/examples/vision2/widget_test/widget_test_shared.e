@@ -76,7 +76,7 @@ feature -- Basic operation
 			current_text_size_ref.set_item (a_size)
 		end
 
-	register_type_change_agent (an_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET]])
+	register_type_change_agent (an_agent: PROCEDURE [EV_WIDGET])
 			-- Insert `an_agent' into `widget_type_changed_agents'.
 		require
 			agent_not_void: an_agent /= Void
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	widget_type_changed_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_WIDGET]]]
+	widget_type_changed_agents: ARRAYED_LIST [PROCEDURE [EV_WIDGET]]
 			-- A list of agents to be executed when the type of the current
 			-- test widget changes. A client may use `register_type_change_agent'
 			-- to an associate an event with this list.

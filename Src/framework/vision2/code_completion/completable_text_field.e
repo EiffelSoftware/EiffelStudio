@@ -55,13 +55,13 @@ feature -- Access
 	possibilities_provider: detachable COMPLETION_POSSIBILITIES_PROVIDER
 			-- Possibilities provider
 
-	can_complete_agent: detachable FUNCTION [ANY, TUPLE [CHARACTER_32], BOOLEAN]
+	can_complete_agent: detachable FUNCTION [CHARACTER_32, BOOLEAN]
 			-- Agent to decide if completion can start
 
-	preferred_width_agent: detachable FUNCTION [ANY, TUPLE, INTEGER]
+	preferred_width_agent: detachable FUNCTION [INTEGER]
 			-- Preferred width
 
-	preferred_height_agent: detachable FUNCTION [ANY, TUPLE, INTEGER]
+	preferred_height_agent: detachable FUNCTION [INTEGER]
 			-- Preferred height
 
 feature -- Setting

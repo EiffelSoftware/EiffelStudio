@@ -428,7 +428,7 @@ feature -- Property
 	on_object_context_class: CLASS_C
 			-- Dynamic type related to object in `on_object' mode.
 
-	callback: PROCEDURE [ANY, TUPLE]
+	callback: PROCEDURE
 			-- Callback that should be called after the dialog is closed.
 
 feature -- Status report
@@ -453,7 +453,7 @@ feature -- Change
 
 feature -- Status setting
 
-	set_callback (cb: PROCEDURE [ANY, TUPLE])
+	set_callback (cb: PROCEDURE)
 			-- Define the callback that should be called after the dialog is closed.
 		require
 			valid_callback: cb /= Void

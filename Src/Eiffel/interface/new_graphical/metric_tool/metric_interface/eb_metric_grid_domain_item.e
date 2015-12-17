@@ -79,7 +79,7 @@ feature -- Access
 	dialog_cancel_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Cancel button in `dialog' is pressed
 
-	dialog_function: FUNCTION [ANY, TUPLE, EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]]
+	dialog_function: FUNCTION [EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]]
 			-- Function to get a dialog from which domain and value manipulation can be done
 
 	ellipsis_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -143,7 +143,7 @@ feature -- Setting
 			dialog_function_set: dialog_function = a_func
 		end
 
-	add_pebble (a_pebble: ANY; a_agent: PROCEDURE [ANY, TUPLE])
+	add_pebble (a_pebble: ANY; a_agent: PROCEDURE)
 			-- Add domain item contained in `a_pebble' if any.
 			-- If `a_pebble' is added successfully, call `a_agent' is it's not Void.
 		local

@@ -18,13 +18,13 @@ create {EV_DOCKABLE_SOURCE_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (source: EV_DOCKABLE_SOURCE; action: PROCEDURE [ANY, TUPLE])
+	wrapper (source: EV_DOCKABLE_SOURCE; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

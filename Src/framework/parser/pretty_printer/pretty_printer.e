@@ -1852,7 +1852,7 @@ feature {NONE} -- Comments
 			end
 		end
 
-	change_indent: PROCEDURE [ANY, TUPLE]
+	change_indent: PROCEDURE
 			-- Procedure to change `indent'.
 
 	print_comment (s: READABLE_STRING_32)

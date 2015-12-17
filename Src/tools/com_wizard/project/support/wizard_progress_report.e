@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]];
+	event_raiser: ROUTINE [EV_THREAD_EVENT];
 			-- Event raiser
 
 note

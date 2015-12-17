@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]])
+	do_all (action: PROCEDURE [EVS_GRID_SEARCHABLE_ITEM])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -161,7 +161,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]]; test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN])
+	do_if (action: PROCEDURE [EVS_GRID_SEARCHABLE_ITEM]; test: FUNCTION [EVS_GRID_SEARCHABLE_ITEM, BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -176,7 +176,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN
+	there_exists (test: FUNCTION [EVS_GRID_SEARCHABLE_ITEM, BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -191,7 +191,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN
+	for_all (test: FUNCTION [EVS_GRID_SEARCHABLE_ITEM, BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.

@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Callback feature called when the file/pipe is changed.
 
-	exception_action: detachable PROCEDURE [ANY, TUPLE]
+	exception_action: detachable PROCEDURE
 			-- Callback feature called when an exceptions occurs on the file/pipe.
 
 	destroy

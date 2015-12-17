@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	editor_token_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]
+	editor_token_function: FUNCTION [LIST [EDITOR_TOKEN]]
 			-- Function to transform a string to editor tokens
 
 	text: LIST [EDITOR_TOKEN]
@@ -34,7 +34,7 @@ feature -- Access
 			end
 		end
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: FUNCTION [ANY]
 			-- Function to retrieve pebble for `text'
 			-- If not void, every editor token in `text' will be fed with the resulted value
 			-- from this function as that editor token's pebble
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text_function (a_function: FUNCTION [ANY, TUPLE, STRING_32])
+	set_text_function (a_function: FUNCTION [STRING_32])
 			-- Set `text_function' with `a_function'.
 		require
 			a_text_function_attached: a_function /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	editor_token_function_internal (a_string_agent: FUNCTION [ANY, TUPLE, STRING_32]): LIST [EDITOR_TOKEN]
+	editor_token_function_internal (a_string_agent: FUNCTION [STRING_32]): LIST [EDITOR_TOKEN]
 			-- Editor token representation of `a_string'.
 		require
 			a_string_agent_attached: a_string_agent /= Void

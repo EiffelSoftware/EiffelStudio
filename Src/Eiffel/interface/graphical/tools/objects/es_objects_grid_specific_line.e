@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 	compute_grid_display_for_current_object (cse: like call_stack_element)
 		local
 			value: ABSTRACT_DEBUG_VALUE
-			proc: PROCEDURE [ANY, TUPLE]
+			proc: PROCEDURE
 			item: ES_OBJECTS_GRID_OBJECT_LINE
 			dn_st: APPLICATION_STATUS_DOTNET
 			app: APPLICATION_EXECUTION

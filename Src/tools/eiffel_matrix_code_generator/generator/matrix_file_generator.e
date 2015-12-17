@@ -125,7 +125,7 @@ feature {NONE} -- Query
 
 feature -- Basic Operations
 
-	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE [ANY, TUPLE]; a_post_process: PROCEDURE [ANY, TUPLE])
+	process (a_doc: INI_DOCUMENT; a_post_validate: PROCEDURE; a_post_process: PROCEDURE)
 			-- Processes INI document `a_doc' and executes `a_post_validate' to do other initalization once the basics have been validated
 			-- and `a_post_validate' on post processing
 		require

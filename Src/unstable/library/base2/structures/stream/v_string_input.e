@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G])
+	make (src: STRING; fs: FUNCTION [STRING, G])
 			-- Create a stream that reads from `src' and uses function `fs' to convert from string to `G'.
 			-- (Use function `default_is_separator' to recognize separator characters).
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			--- is_separator_effect: is_separator = agent default_is_separator
 		end
 
-	make_with_separators (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G]; is_sep: PREDICATE [ANY, TUPLE [CHARACTER]])
+	make_with_separators (src: STRING; fs: FUNCTION [STRING, G]; is_sep: PREDICATE [CHARACTER])
 			-- Create a stream that reads from `src', uses function `fs' to convert from string to `G'
 			-- and function `is_sep' to recognize separator characters.
 		require
@@ -99,10 +99,10 @@ feature -- Access
 	index: INTEGER
 			-- Position of the first character of current token in `source'.
 
-	from_string: FUNCTION [ANY, TUPLE [STRING], G]
+	from_string: FUNCTION [STRING, G]
 			-- Function that converts a string into a value of type `G'.			
 
-	is_separator: PREDICATE [ANY, TUPLE [CHARACTER]]
+	is_separator: PREDICATE [CHARACTER]
 			-- Function that recognizes separator characters
 			-- (characters to be skipped in `source').
 
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 feature -- Specification
 
-	index_satisfying_from (s: STRING; p: PREDICATE [ANY, TUPLE [CHARACTER]]; i: INTEGER): INTEGER
+	index_satisfying_from (s: STRING; p: PREDICATE [CHARACTER]; i: INTEGER): INTEGER
 			-- Index of the first character of `s' that satisfies `p' starting from position `i';
 			-- out of range, if `p' is never satisfied.	
 		do

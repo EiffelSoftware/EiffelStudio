@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="configuration_gui" uuid="A07073FB-5E1C-472A-B130-1B58ED5732C5" library_target="configuration_gui">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="configuration_gui" uuid="A07073FB-5E1C-472A-B130-1B58ED5732C5" library_target="configuration_gui">
 	<target name="configuration_gui">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" is_attached_by_default="false" syntax="transitional">
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -15,8 +15,6 @@
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
-		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
 		<library name="fmwk_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>
 		<library name="framework_vision2" location="$EIFFEL_SRC\framework\vision2\vision2.ecf">
 			<class_option class="ELLIPSIS_PROPERTY">
@@ -27,6 +25,8 @@
 			</class_option>
 		</library>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
+		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
+		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>

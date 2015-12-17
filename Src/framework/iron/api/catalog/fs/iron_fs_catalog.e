@@ -548,7 +548,7 @@ feature -- Package operations
 			end
 		end
 
-	execute_command_line (a_command_line: READABLE_STRING_GENERAL; a_dir: detachable PATH; agt_output: detachable PROCEDURE [ANY, TUPLE [STRING_8]]; cell_return_code: detachable CELL [INTEGER])
+	execute_command_line (a_command_line: READABLE_STRING_GENERAL; a_dir: detachable PATH; agt_output: detachable PROCEDURE [STRING_8]; cell_return_code: detachable CELL [INTEGER])
 			-- Execute `a_command_line' in folder `a_dir' (if provided),
 			-- return the exit code in `cell_return_code.item' if `cell_return_code' is provided,
 			-- and return the output in `cell_output.item' if `a_output' is provided.

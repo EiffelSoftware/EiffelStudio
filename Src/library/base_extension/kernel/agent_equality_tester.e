@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action: FUNCTION [ANY, TUPLE [G, G], BOOLEAN]
+	action: FUNCTION [G, G, BOOLEAN]
 			-- Action performed to compare two non-void items.
 
 feature -- Status report

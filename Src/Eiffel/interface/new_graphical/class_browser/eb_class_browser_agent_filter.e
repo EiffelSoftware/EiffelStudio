@@ -25,7 +25,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	selection_function: FUNCTION [ANY, TUPLE [a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]], BOOLEAN]
+	selection_function: FUNCTION [TUPLE [a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]], BOOLEAN]
 			-- Function used to decide if `a_data' can come through Current filter and to be displayed in `a_viewer'.
 			-- `a_context' is the context to help to decide the filtered result.
 

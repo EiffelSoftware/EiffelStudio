@@ -212,7 +212,7 @@ feature -- Removal
 			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image_of (v)))
 		end
 
-	remove_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
+	remove_satisfying (pred: PREDICATE [G])
 			-- Remove the first element satisfying `pred'.
 		note
 			modify: sequence
@@ -228,13 +228,13 @@ feature -- Removal
 			sequence_effect: sequence |=| old (sequence.removed_at (sequence.inverse.image (sequence.inverse.domain | pred).extremum (agent less_equal)))
 		end
 
-	remove_all_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
+	remove_all_satisfying (pred: PREDICATE [G])
 			-- Remove all elements satisfying `pred'.
 		note
 			modify: sequence
 		require
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [G]): BOOLEAN
 				do
 					Result := p.precondition ([x])
 				end (?, pred))

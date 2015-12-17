@@ -53,7 +53,7 @@ feature -- Setting
 
 feature -- Setting
 
-	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE])
+	set_refresher (a_refresher: PROCEDURE)
 			-- Set `a_refresher' into Current, it serves as a refresher to be invoked to update Current displayer
 		do
 			browser.retrieve_data_actions.extend (a_refresher)

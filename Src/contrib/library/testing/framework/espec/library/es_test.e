@@ -10,7 +10,7 @@ inherit
 
 feature -- Basic Operations
 
-	add_boolean_case (v: PREDICATE [ANY, TUPLE])
+	add_boolean_case (v: PREDICATE)
 			-- Add boolean function v
 		require
 			v_valid: v /= Void
@@ -27,7 +27,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_violation_case_with_tag (expected_tag: STRING_8; v: PROCEDURE [ANY, TUPLE])
+	add_violation_case_with_tag (expected_tag: STRING_8; v: PROCEDURE)
 			-- Add boolean function v
 		require
 			v_valid: v /= Void
@@ -44,7 +44,7 @@ feature -- Basic Operations
 			end
 		end
 
-	add_violation_case (v: PROCEDURE [ANY, TUPLE])
+	add_violation_case (v: PROCEDURE)
 			-- Add boolean function v
 		require
 			v_valid: v /= Void

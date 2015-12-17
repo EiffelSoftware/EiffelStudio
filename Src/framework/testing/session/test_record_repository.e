@@ -184,7 +184,7 @@ feature -- Access
 			l_cache := connection_cache
 			if l_cache = Void then
 				l_cache := create {EVENT_CONNECTION [TEST_RECORD_REPOSITORY_OBSERVER, TEST_RECORD_REPOSITORY_I]}.make
-					(agent (an_observer: TEST_RECORD_REPOSITORY_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE [ANY, TUPLE]]]
+					(agent (an_observer: TEST_RECORD_REPOSITORY_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
 							Result := <<
 									[record_added_event, agent an_observer.on_record_added],

@@ -67,7 +67,7 @@ feature -- Access
 	process_subfolders: BOOLEAN
 			-- Should subfolders of `folder' be scanned for Eiffel multi-class files?
 
-	event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
+	event_handler: ROUTINE [EV_THREAD_EVENT]
 			-- Event handler
 
 	file_count: INTEGER

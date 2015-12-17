@@ -161,7 +161,7 @@ feature -- UI
 			Result := pixmap_function /= Void
 		end
 
-	pixmap_function: detachable FUNCTION [ANY, TUPLE [ANY], like pixmap]
+	pixmap_function: detachable FUNCTION [ANY, like pixmap]
 			-- Function to return the pixmap associated with argument data
 
 	set_pixmap_function (a_fct: like pixmap_function)

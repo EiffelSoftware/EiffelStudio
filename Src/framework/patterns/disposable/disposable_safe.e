@@ -190,7 +190,7 @@ feature {DISPOSABLE_I, DISPOSABLE} -- Basic operation
 			end
 		end
 
-	frozen delayed_auto_dispose (a_action: FUNCTION [ANY, TUPLE, ANY])
+	frozen delayed_auto_dispose (a_action: FUNCTION [ANY])
 			-- <Precursor>
 		do
 			if not is_disposed and then not is_actively_disposing then

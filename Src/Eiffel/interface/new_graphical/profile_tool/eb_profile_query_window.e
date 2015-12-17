@@ -963,11 +963,11 @@ feature {NONE} -- Implementation
 		-- Pixel position from left edge of first item in row
 		-- where the text of the item begins.
 
-	last_sorted_column_agent: FUNCTION [ANY, TUPLE [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW], BOOLEAN]
+	last_sorted_column_agent: FUNCTION [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW, BOOLEAN]
 		-- The last agent used to perform a full sort on `output_grid'. We need access to
 		-- this for implementing sorts within sorts.
 
-	last_equal_column_agent: FUNCTION [ANY, TUPLE [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW], BOOLEAN]
+	last_equal_column_agent: FUNCTION [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW, BOOLEAN]
 		-- An agent used to determine if two profile query grid rows are equal based on the same
 		-- seach criteria as `last_sorted_column_agent'. We need access to
 		-- this for implementing sorts within sorts.
@@ -1766,7 +1766,7 @@ feature {NONE} -- Implementation
 		-- that the window is displayed or the preferences change, and are not onces as a user
 		-- may change the colors.
 
-	colors_changed_agent: PROCEDURE [ANY, TUPLE]
+	colors_changed_agent: PROCEDURE
 		-- Agent connected to the color change events from EiffelStudio.
 
 	count_active_subqueries

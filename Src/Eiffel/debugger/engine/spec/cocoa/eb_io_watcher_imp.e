@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	action: PROCEDURE [ANY, TUPLE]
+	action: PROCEDURE
 			-- Callback feature called with the file/pipe is changed.
 
 	destroy

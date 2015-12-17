@@ -511,19 +511,19 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.set_tooltip (Interface_names.E_up_to_date)
 		end
 
-	close_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
+	close_agent: PROCEDURE
 			-- Agent called when the project is closed.
 
-	load_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
+	load_agent: PROCEDURE
 			-- Agent called when the project is loaded.
 
-	create_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
+	create_agent: PROCEDURE
 			-- Agent called when the project is created.
 
-	compile_start_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE]
+	compile_start_agent: PROCEDURE
 			-- Agent called when the project is compiled.
 
-	compile_stop_agent: PROCEDURE [EB_DEVELOPMENT_WINDOW_STATUS_BAR, TUPLE [BOOLEAN]]
+	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
 
 feature {NONE} -- Implementation

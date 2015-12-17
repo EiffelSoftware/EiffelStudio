@@ -83,7 +83,7 @@ feature -- Access
 			-- <Precursor>
 		local
 			l_test: TEST_I
-			l_query: detachable FUNCTION [ANY, TUPLE [TEST_SUITE_S], detachable EV_GRID_ITEM]
+			l_query: detachable FUNCTION [TEST_SUITE_S, detachable EV_GRID_ITEM]
 		do
 			if a_node.is_leaf and a_column > 1 then
 				l_test := a_node.item

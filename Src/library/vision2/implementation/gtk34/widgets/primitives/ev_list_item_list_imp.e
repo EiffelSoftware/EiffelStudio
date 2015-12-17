@@ -228,7 +228,7 @@ feature -- Status report
 
 	temp_pebble: detachable ANY
 
-	temp_pebble_function: detachable FUNCTION [ANY, TUPLE [], detachable ANY]
+	temp_pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by PND mechanism.
 
 	temp_accept_cursor, temp_deny_cursor: detachable EV_POINTER_STYLE

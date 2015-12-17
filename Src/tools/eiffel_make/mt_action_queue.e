@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	extend (an_action: ROUTINE [ANY, TUPLE])
+	extend (an_action: ROUTINE)
 			-- Extend `an_action' to `actions'.
 		require
 			an_action_not_void: an_action /= Void
@@ -32,7 +32,7 @@ feature -- Element change
 			mutex.unlock
 		end
 
-	removed_element: ROUTINE [ANY, TUPLE]
+	removed_element: ROUTINE
 			-- Remove and return last element from `actions', if any.
 			-- Otherwise do nothing and return Void.
 			--| Not following CQS principle since it would not be thread safe.
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation: access
 	mutex: MUTEX
 			-- Mutex used for protecting access to `actions'.
 
-	actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE]]
+	actions: ARRAYED_LIST [ROUTINE]
 			-- List of actions being executed.
 
 invariant

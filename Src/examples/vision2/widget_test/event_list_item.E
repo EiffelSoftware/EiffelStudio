@@ -17,15 +17,15 @@ create
 	
 feature -- access
 
-	check_event: PROCEDURE [ANY, TUPLE []]
+	check_event: PROCEDURE
 		-- Agent to be executed when `Current' is becomes checked.
 	
-	uncheck_event: PROCEDURE [ANY, TUPLE []]
+	uncheck_event: PROCEDURE
 		-- Agent to be executed when `Current' becomes unchecked.
 
 feature -- Status setting
 
-	set_accept (an_agent: PROCEDURE [ANY, TUPLE []])
+	set_accept (an_agent: PROCEDURE)
 			-- Assign `an_agent' to `check_event'.
 		do
 			check_event := an_agent
@@ -33,7 +33,7 @@ feature -- Status setting
 			event_set: check_event = an_agent
 		end
 		
-	set_deny (an_agent: PROCEDURE [ANY, TUPLE []])
+	set_deny (an_agent: PROCEDURE)
 			-- Assign `an_agent' to `uncheck_event'.
 		do
 			uncheck_event := an_agent

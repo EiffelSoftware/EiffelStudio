@@ -162,7 +162,7 @@ feature -- Events: Connection point
 				Result := l_result
 			else
 				create Result.make (
-					agent (ia_observer: DEBUGGER_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
+					agent (ia_observer: DEBUGGER_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
 						do
 							Result := <<
 								 [application_launched_event, agent ia_observer.on_application_launched],

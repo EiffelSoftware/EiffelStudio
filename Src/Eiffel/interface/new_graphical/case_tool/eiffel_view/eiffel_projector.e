@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			draw_item: EV_MODEL
 			g: EV_MODEL_GROUP
 			i, nb: INTEGER
-			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
+			dr: PROCEDURE [EV_MODEL]
 			polyline: EV_MODEL_POLYLINE
 		do
 			from
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			draw_item: EV_MODEL
 			g: EV_MODEL_GROUP
 			i, nb: INTEGER
-			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
+			dr: PROCEDURE [EV_MODEL]
 			polyline: EV_MODEL_POLYLINE
 		do
 			from
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			draw_item: EV_MODEL
 			g: EV_MODEL_GROUP
 			i, nb: INTEGER
-			dr: PROCEDURE [ANY, TUPLE [EV_MODEL]]
+			dr: PROCEDURE [EV_MODEL]
 			polyline: EV_MODEL_POLYLINE
 		do
 			from

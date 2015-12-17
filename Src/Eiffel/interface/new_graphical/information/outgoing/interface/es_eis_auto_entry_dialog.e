@@ -59,7 +59,7 @@ feature -- Access
 
 	target: CONF_TARGET
 
-	apply_action: detachable PROCEDURE [ANY, TUPLE]
+	apply_action: detachable PROCEDURE
 
 
 	buttons: DS_SET [INTEGER_32]

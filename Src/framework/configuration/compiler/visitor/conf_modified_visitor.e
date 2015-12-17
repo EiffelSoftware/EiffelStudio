@@ -131,7 +131,7 @@ feature -- Update
 
 feature -- Observer
 
-	process_group_observer: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [CONF_GROUP]]]
+	process_group_observer: ARRAYED_LIST [PROCEDURE [CONF_GROUP]]
 			-- Observer if a group is processed.
 
 feature -- Events

@@ -137,7 +137,7 @@ feature -- Access
 			l_writer: like token_writer
 			l_feature: QL_FEATURE
 			l_folder: EB_FOLDER_DOMAIN_ITEM
-			l_pebble_function: FUNCTION [ANY, TUPLE, ANY]
+			l_pebble_function: FUNCTION [ANY]
 		do
 			if a_item.is_valid then
 					-- For valid item, we display its pickable name.

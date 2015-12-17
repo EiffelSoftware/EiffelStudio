@@ -155,7 +155,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	token_action (a_token: attached EDITOR_TOKEN; a_line: INTEGER): detachable PROCEDURE [ANY, TUPLE]
+	token_action (a_token: attached EDITOR_TOKEN; a_line: INTEGER): detachable PROCEDURE
 			-- Retrieve's an action for a token, called when the token in selected in the pop up window.
 			--
 			-- `a_token': The token to retrieve a action for.
@@ -183,7 +183,7 @@ feature -- Basic operations
 			l_x_offset: INTEGER
 			l_y_offset: INTEGER
 			l_token_widget: EV_WIDGET
-			l_token_action: PROCEDURE [ANY, TUPLE]
+			l_token_action: PROCEDURE
 			l_can_show: BOOLEAN
 			l_cursor_token: EDITOR_TOKEN
 			l_window: like popup_window
@@ -254,7 +254,7 @@ feature -- Basic operations
 							l_window.show_popup_widget
 						end
 
-						if attached {PROCEDURE [ANY, TUPLE]} l_token_action as l_action then
+						if attached {PROCEDURE} l_token_action as l_action then
 							l_window.register_action (l_window.token_select_actions, l_action)
 						end
 

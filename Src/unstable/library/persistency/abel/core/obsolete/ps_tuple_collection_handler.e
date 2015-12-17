@@ -38,7 +38,7 @@ feature {PS_ABEL_EXPORT} -- Object graph creation
 			end
 		end
 
-	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[ANY, TUPLE[detachable ANY], PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
+	create_items (collection: PS_COLLECTION_PART; object_graph_factory: FUNCTION[detachable ANY, PS_OBJECT_GRAPH_PART]): LINKED_LIST[PS_OBJECT_GRAPH_PART]
 			-- Iterate over the collection and call `object_graph_factory' on each item
 		local
 			i:INTEGER

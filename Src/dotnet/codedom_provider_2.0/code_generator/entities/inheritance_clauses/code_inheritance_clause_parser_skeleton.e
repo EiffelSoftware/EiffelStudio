@@ -37,7 +37,7 @@ feature -- Access
 	parents: LIST [CODE_SNIPPET_PARENT]
 			-- Parse results
 
-	error_handler: ROUTINE [ANY, TUPLE [STRING]]
+	error_handler: ROUTINE [STRING]
 			-- Error handler
 
 feature -- Element Settings

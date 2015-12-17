@@ -710,7 +710,7 @@ feature{NONE} -- Process
 			process_command_related_finish (t_error, agent (external_command_tester_stack.item).set_error)
 		end
 
-	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [ANY, TUPLE [STRING_32]])
+	process_command_related_finish (a_tag: INTEGER; a_agent: PROCEDURE [STRING_32])
 			-- Process.
 		require
 			a_agent_attached: a_agent /= Void
@@ -1358,7 +1358,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	coefficient_for_ratio_metric (a_value: READABLE_STRING_GENERAL; a_error_message_agent: FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]): DOUBLE
+	coefficient_for_ratio_metric (a_value: READABLE_STRING_GENERAL; a_error_message_agent: FUNCTION [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]): DOUBLE
 			-- Coefficient from `a_value' for ratio metric.
 			-- If `a_value' doesn't represent a valid double, file an error with error message retrieved by `a_error_message_agent'.
 		require

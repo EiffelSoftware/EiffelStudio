@@ -22,7 +22,7 @@ feature -- Access
 
 	id: READABLE_STRING_8
 
-	validation: detachable PROCEDURE [ANY, TUPLE [WIZARD_PAGE]]
+	validation: detachable PROCEDURE [WIZARD_PAGE]
 
 feature -- Validation
 

@@ -495,7 +495,7 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 				)
 		end
 
-	objects_grid_item_function: FUNCTION [ANY, TUPLE [DBG_ADDRESS], like objects_grid_item]
+	objects_grid_item_function: FUNCTION [DBG_ADDRESS, like objects_grid_item]
 			-- Function used to retrieve the objects_grid objects line related to `addr'.
 
 	set_objects_grid_item_function (fct: like objects_grid_item_function)
@@ -751,7 +751,7 @@ feature {NONE} -- Grid items activation
 			ei.activate
 		end
 
-	pre_activation_action: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]]
+	pre_activation_action: PROCEDURE [EV_GRID_ITEM]
 			-- Called before an item is activated.
 
 feature -- Grid items activation change

@@ -141,7 +141,7 @@ feature -- Replacement
 				old (map | (map.domain - create {MML_INTERVAL}.from_range (index, index + other_last - other_first)))
 		end
 
-	sort (order: PREDICATE [ANY, TUPLE [G, G]])
+	sort (order: PREDICATE [G, G])
 			-- Sort elements in `order' left to right.
 		note
 			modify: map
@@ -156,7 +156,7 @@ feature -- Replacement
 			map_effect_short: map.count < 2 implies map |=| old map
 			map_effect_long: map.count >= 2 implies
 				bag |=| old bag and
-				(map.domain / upper).for_all (agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
+				(map.domain / upper).for_all (agent (i: INTEGER; o: PREDICATE [G, G]): BOOLEAN
 					do
 						Result := o.item ([map [i], map [i + 1]])
 					end (?, order))
@@ -189,7 +189,7 @@ feature -- Replacement
 
 feature {NONE} -- Implementation
 
-	quick_sort (left, right: INTEGER; order: PREDICATE [ANY, TUPLE [G, G]])
+	quick_sort (left, right: INTEGER; order: PREDICATE [G, G])
 			-- Sort element in index range [`left', `right'] in `order' left to right.
 		require
 			in_range: right > left implies has_index (left) and has_index (right)

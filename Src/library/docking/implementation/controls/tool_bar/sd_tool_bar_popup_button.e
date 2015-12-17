@@ -91,14 +91,14 @@ feature -- Query
 			-- It means, if `menu' and `popup_widget' both not void,
 			-- `menu' will be used.
 
-	menu_function: detachable FUNCTION [ANY, TUPLE, like menu]
+	menu_function: detachable FUNCTION [like menu]
 			-- Function to compute the menu to popup after end user pressed.
 			-- Note: `menu' has priority over menu_function,
 			--		which has priority over `popup_widget'.
 			-- It means, if `menu' or `menu_function.item (Void)' and `popup_widget' both not void,
 			-- `menu' or `menu_function.item (Void)' will be used.
 
-	popup_widget_function: detachable FUNCTION [ANY, TUPLE, like popup_widget]
+	popup_widget_function: detachable FUNCTION [like popup_widget]
 			-- Function to compute the popup_widget to popup after end user pressed.
 			-- Note: `popup_widget' has priority over `popup_widget_function',
 			--		which has priority over `popup_widget'.

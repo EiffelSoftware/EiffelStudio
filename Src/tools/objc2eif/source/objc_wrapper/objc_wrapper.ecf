@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="objc_wrapper" uuid="C1719730-0921-4A86-843E-0D0D9DF12BCD" library_target="objc_wrapper">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="objc_wrapper" uuid="C1719730-0921-4A86-843E-0D0D9DF12BCD" library_target="objc_wrapper">
 	<target name="objc_wrapper">
 		<root all_classes="true"/>
-		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
+		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="provisional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<external_include location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/Clib -ObjC"/>
+		<external_include location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/Clib"/>
+		<external_cflag value="-ObjC"/>
 		<external_object location="/Users/matteo/Documents/Projects/Eiffel/wrapper_generator/objc_wrapper/spec/$(ISE_PLATFORM)/lib/objc.o"/>
-		<external_object location="-framework Foundation"/>
-		<external_object location="-framework AppKit"/>
-		<external_object location="-framework QuartzCore"/>
-		<external_object location="-framework CoreData"/>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
+		<external_linker_flag value="-framework Foundation"/>
+		<external_linker_flag value="-framework AppKit"/>
+		<external_linker_flag value="-framework QuartzCore"/>
+		<external_linker_flag value="-framework CoreData"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="objc_wrapper" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 			<mapping old_name="CG_POINT" new_name="NS_POINT"/>
 			<mapping old_name="CG_SIZE" new_name="NS_SIZE"/>

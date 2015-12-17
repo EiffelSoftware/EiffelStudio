@@ -55,7 +55,7 @@ feature -- Disposing
 
 feature -- Extending
 
-	extend (a_action: PROCEDURE [ANY, TUPLE])
+	extend (a_action: PROCEDURE)
 			-- Extend action queue with `a_action'
 		require
 			a_action_attached: a_action /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			mutex_guard.unlock
 		end
 
-	action_queue: ARRAYED_QUEUE [PROCEDURE [ANY, TUPLE]]
+	action_queue: ARRAYED_QUEUE [PROCEDURE]
 			-- Queue of all actions to process.
 
 	action_timer: EV_TIMEOUT

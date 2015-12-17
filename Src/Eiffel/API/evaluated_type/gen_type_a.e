@@ -318,13 +318,23 @@ feature -- Output
 			-- <Precursor>
 		local
 			i, count: INTEGER
+			tuple_index: INTEGER
+			is_comma_needed: BOOLEAN
+			t: TYPE_A
 		do
 				-- Append classname "TUPLE"
 			Precursor {CL_TYPE_A} (a_text_formatter, a_context_class)
 
-			count := generics.count
 				-- TUPLE may have zero generic parameters
-			if count > 0 then
+			count := generics.count
+				-- A type may also have a single tuple parameter without any actual generics.
+			tuple_index := base_class.tuple_parameter_index
+			if count > 0 and then
+				(tuple_index /= 1 or else
+				count > 1 or else
+				not attached {TUPLE_TYPE_A} generics [1] as tt or else
+				(attached tt.generics as g and then not g.is_empty))
+			then
 				a_text_formatter.add_space
 				a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 				from
@@ -332,10 +342,43 @@ feature -- Output
 				until
 					i > count
 				loop
-					generics.i_th (i).ext_append_to (a_text_formatter, a_context_class)
-					if i /= count then
+					if is_comma_needed then
 						a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
 						a_text_formatter.add_space
+					end
+					is_comma_needed := True
+					t := generics [i]
+					if tuple_index = i then
+							-- Fold the tuple parameter.
+						if not t.is_tuple then
+								-- The actual generic is not a tuple.
+								-- This could be because a type formatter did not wrap the actual generic into a tuple.
+								-- Preserve the actual parameter as is.
+							t.ext_append_to (a_text_formatter, a_context_class)
+						elseif not attached t.generics as g or else g.is_empty then
+								-- Omit the parameter altogether.
+							is_comma_needed := False
+						elseif g.count = 1 and then g [1].is_tuple then
+								-- Preserve tuple actual parameter for the cases like "A [TUPLE [TUPLE [...]]]".
+							t.ext_append_to (a_text_formatter, a_context_class)
+						else
+								-- Remove tuple wrapping.
+								-- If there is a parameter before tuple parameter, a comma is already printed.
+							is_comma_needed := False
+							across
+								g as gg
+							loop
+								if is_comma_needed then
+									a_text_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_Comma)
+									a_text_formatter.add_space
+								end
+								is_comma_needed := True
+								gg.item.ext_append_to (a_text_formatter, a_context_class)
+							end
+						end
+					else
+							-- Apply general formatting rules.
+						t.ext_append_to (a_text_formatter, a_context_class)
 					end
 					i := i + 1
 				end

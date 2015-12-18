@@ -26,6 +26,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	identifier: detachable READABLE_STRING_32
+			-- <Precursor>
+
 	title: detachable READABLE_STRING_32
 			-- Title associated with Current content.
 
@@ -41,6 +44,15 @@ feature -- Access
 			-- Associated menu link.
 
 feature -- Element change
+
+	set_identifier (a_identifier: detachable READABLE_STRING_GENERAL)
+		do
+			if a_identifier = Void then
+				identifier := Void
+			else
+				create {IMMUTABLE_STRING_32} identifier.make_from_string_general (a_identifier)
+			end
+		end
 
 	set_title (a_title: detachable READABLE_STRING_GENERAL)
 		do

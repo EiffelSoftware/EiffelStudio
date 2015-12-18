@@ -277,7 +277,7 @@ rt_shared void rt_prepare_live_index ()
 		rt_thr_context * c = t [i] -> eif_thr_context_cx;
 		if (c -> is_processor) {
 				/* The thread is allocated for a processor. */
-				/* Liveness of processor will be reported by SCOOP manager and detected during GC. */
+				/* Liveness of processor will be reported by rt_enumerate_live_processors and detected during GC. */
 				/* Record "PID->index" relation for future use. */
 			if (c->logical_id != EIF_NULL_PROCESSOR) {
 				pid_index [c -> logical_id] = i;
@@ -384,7 +384,7 @@ rt_shared void rt_complement_live_index (void)
 
 /*
 doc:	<routine name="rt_report_live_index" export="shared">
-doc:		<summary>Notify SCOOP manager about live indexes.</summary>
+doc:		<summary>Notify the processor registry about live indexes.</summary>
 doc:		<thread_safety>Unsafe</thread_safety>
 doc:		<synchronization>Ensured by the caller using `eif_gc_mutex'.</synchronization>
 doc:	</routine>
@@ -397,13 +397,13 @@ rt_shared void rt_report_live_index (void)
 	rt_global_context_t* l_context = NULL;
 	EIF_SCP_PID l_processor_id;
 
-	/* Iterate over all dead indexes and report processor IDs to the SCOOP manager. */
+	/* Iterate over all dead indexes and report processor IDs to the processor registry. */
 	for (i = live_index_count; i < count; i++) {
 
 		l_context = t [thread_index [i]];
 		l_processor_id = l_context->eif_thr_context_cx->logical_id;
 
-			/* Notify SCOOP manager that the processor is not used anymore. */
+			/* Notify processor registry that the processor is not used anymore. */
 			/* Note: Processors with a EIF_NULL_PROCESSOR are about to destroy themselves.
 			 * No need to send the shutdown signal again. */
 		if (l_processor_id != EIF_NULL_PROCESSOR) {
@@ -412,11 +412,6 @@ rt_shared void rt_report_live_index (void)
 	}
 		/* Tell the processor registry to remove passive regions. */
 	rt_processor_registry_cleanup ();
-
-	/* Notify SCOOP manager that the GC cycle is over. */
-	/* Unused currently, don't want to come up with another replacement
-		 macro for this as well. */
-	/* RTS_TCB(scoop_task_update_statistics, 0, 0, 0); */
 }
 
 /*

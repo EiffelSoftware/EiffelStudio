@@ -177,7 +177,7 @@ feature -- Storage
 				end
 				f.close
 
-				create md.make_with_path (a_wiki_file)
+				create {WDOCS_METADATA_WIKI_FILE} md.make_with_path (a_wiki_file)
 				if md.end_position_of_properties_area > 0 then
 					src.remove_head (md.end_position_of_properties_area)
 				end

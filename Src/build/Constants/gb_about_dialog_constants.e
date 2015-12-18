@@ -28,7 +28,7 @@ feature -- Access
 	t_Copyright_info: STRING
 		once
 			Result :=
-				"Copyright (C) 1985-2007 Eiffel Software Inc.%N%
+				"Copyright (C) 1985-2015 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end
 
@@ -36,11 +36,11 @@ feature -- Access
 		once
 			create Result.make (500)
 			Result.append (
-				"Eiffel Software Inc.%N%
-				%ISE Building%N%
-				%356 Storke Road, Goleta, CA 93117 USA%N%
-				%Telephone: 805-685-1006, Fax 805-685-6869%N%
-				% %N%
+				"Eiffel Software%N%
+				%5949 Hollister Ave., Goleta, CA 93117 USA%N%
+				%Telephone: 805-685-1006%N%
+				%Fax 805-685-6869%N%
+				%%N%
 				%Web Customer Support: http://support.eiffel.com%N%
 				%Visit Eiffel on the Web: http://www.eiffel.com%N"
 			)

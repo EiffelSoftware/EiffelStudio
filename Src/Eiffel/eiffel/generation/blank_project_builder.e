@@ -163,9 +163,9 @@ feature {NONE} -- Implementation
 				new_class.open_write
 				new_class.put_string (
 					"note%N%
-					%%Tdescription : %"" + system_name + " application root class%"%N%
-					%%Tdate        : %"$"+ "Date" + "$%"%N%
-					%%Trevision    : %"$" + "Revision" + "$%"%N%
+					%%Tdescription: %"" + system_name + " application root class%"%N%
+					%%Tdate: %"$"+ "Date" + "$%"%N%
+					%%Trevision: %"$" + "Revision" + "$%"%N%
 					%%N%
 					%class%N%
 					%%T" + root_class_name + "%N%
@@ -212,7 +212,7 @@ feature {NONE} -- Private attributes
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

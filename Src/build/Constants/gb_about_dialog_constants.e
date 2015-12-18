@@ -9,14 +9,17 @@ note
 class
 	GB_ABOUT_DIALOG_CONSTANTS
 
+inherit
+	EIFFEL_CONSTANTS
+
 feature -- Access
 
 	t_version_info: STRING
 		once
 			Result := "EiffelBuild "
-			Result.append_integer ({EIFFEL_CONSTANTS}.major_version)
+			Result.append_string (two_digit_minimum_major_version)
 			Result.append_character ('.')
-			Result.append_integer ({EIFFEL_CONSTANTS}.minor_version)
+			Result.append_string (two_digit_minimum_minor_version)
 			Result.append_character ('.')
 				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
 				-- will get replaced by the delivery scripts (see comments for `snv_revision').

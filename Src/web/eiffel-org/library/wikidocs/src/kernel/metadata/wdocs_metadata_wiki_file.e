@@ -34,12 +34,9 @@ feature {NONE} -- Implementation
 
 	parse (a_items: STRING_TABLE [READABLE_STRING_32]; a_restricted_names: detachable ITERABLE [READABLE_STRING_GENERAL])
 		local
-			utf: UTF_CONVERTER
 			f: RAW_FILE
-			n,v: detachable STRING_8
+			n: detachable STRING_8
 			l_line: STRING_8
-			i,j,k: INTEGER
-			prop: WIKI_PROPERTY
 		do
 			is_parsing_done := False
 			create f.make_with_path (path)

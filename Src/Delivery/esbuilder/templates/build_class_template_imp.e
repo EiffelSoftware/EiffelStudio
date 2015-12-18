@@ -200,13 +200,13 @@ feature {NONE} -- Constant setting
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_PIXMAP]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_PIXMAP]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_PIXMAP]]
 	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
 	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER_INTERVAL]]
 	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_FONT]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_FONT]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_COLOR]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_COLOR]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_COLOR]]
 
 	frozen integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of

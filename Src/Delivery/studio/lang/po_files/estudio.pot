@@ -2233,7 +2233,7 @@ msgid "Abstract"
 msgstr ""
 
 #. Source code: t_account_access: STRING = "Account Access"
-#: es_exception_submit_dialog.e:960
+#: es_exception_submit_dialog.e:962
 msgid "Account Access"
 msgstr ""
 
@@ -3741,12 +3741,12 @@ msgid "Argument"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Argument -project_path conflicts with -use_settings.")
-#: es.e:1075
+#: es.e:1074
 msgid "Argument -project_path conflicts with -use_settings."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Argument -use_settings conflicts with -project_path.")
-#: es.e:1132
+#: es.e:1131
 msgid "Argument -use_settings conflicts with -project_path."
 msgstr ""
 
@@ -3996,8 +3996,8 @@ msgstr ""
 #. 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:15
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:16
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:13
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:14
 msgctxt "code_analysis.preference"
 msgid "Attribute in single feature"
 msgstr ""
@@ -4096,7 +4096,7 @@ msgid "AutoTest Results"
 msgstr ""
 
 #. Source code: e_generation_unavailable: STRING = "AutoTest is currently unavailable"
-#: shared_test_service.e:475
+#: shared_test_service.e:478
 msgid "AutoTest is currently unavailable"
 msgstr ""
 
@@ -5739,7 +5739,7 @@ msgid "Background color for features."
 msgstr ""
 
 #. 	<PREF NAME="color.fixed_violation_background" DESCRIPTION="Background color for fixed violations."><COLOR>181;230;29</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:6
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:3
 msgctxt "code_analysis.preference"
 msgid "Background color for fixed violations."
 msgstr ""
@@ -5751,7 +5751,7 @@ msgid "Background color for generics."
 msgstr ""
 
 #. 	<PREF NAME="color.hint_background" DESCRIPTION="Background color for hints."><COLOR>188;226;193</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:5
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:4
 msgctxt "code_analysis.preference"
 msgid "Background color for hints."
 msgstr ""
@@ -5814,7 +5814,7 @@ msgid "Background color for reserved words."
 msgstr ""
 
 #. 	<PREF NAME="color.suggestion_background" DESCRIPTION="Background color for suggestions."><COLOR>239;228;176</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:4
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:5
 msgctxt "code_analysis.preference"
 msgid "Background color for suggestions."
 msgstr ""
@@ -5837,7 +5837,7 @@ msgid ""
 msgstr ""
 
 #. 	<PREF NAME="color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;188</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:3
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:6
 msgctxt "code_analysis.preference"
 msgid "Background color for warnings."
 msgstr ""
@@ -6376,7 +6376,7 @@ msgid "Browser"
 msgstr ""
 
 #. Source code: t_bug_information: STRING = "Bug Information"
-#: es_exception_submit_dialog.e:961
+#: es_exception_submit_dialog.e:963
 msgid "Bug Information"
 msgstr ""
 
@@ -6568,29 +6568,29 @@ msgid ""
 msgstr ""
 
 #. Source code: e_debugging_not_ready: STRING = "Can not debug test because debugger is currently running."
-#: shared_test_service.e:478
+#: shared_test_service.e:481
 msgid "Can not debug test because debugger is currently running."
 msgstr ""
 
 #. Source code: e_execution_conf_invalid: STRING = "Can not execute selected tests. Make sure none of the tests are already queued or running by a differend executor."
-#: shared_test_service.e:483
+#: shared_test_service.e:486
 msgid ""
 "Can not execute selected tests. Make sure none of the tests are already "
 "queued or running by a differend executor."
 msgstr ""
 
 #. Source code: e_extraction_not_ready: STRING = "Can not extract any tests, please check debugger state."
-#: shared_test_service.e:480
+#: shared_test_service.e:483
 msgid "Can not extract any tests, please check debugger state."
 msgstr ""
 
 #. Source code: e_generation_not_ready: STRING = "Can not launch AutoTest because it is already running."
-#: shared_test_service.e:481
+#: shared_test_service.e:484
 msgid "Can not launch AutoTest because it is already running."
 msgstr ""
 
 #. Source code: e_execution_not_ready: STRING = "Can not launch test execution because it is currently executing tests."
-#: shared_test_service.e:477
+#: shared_test_service.e:480
 msgid "Can not launch test execution because it is currently executing tests."
 msgstr ""
 
@@ -6750,14 +6750,14 @@ msgid "Cannot instantiate type {$1} : $2."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
-#: es.e:1086
+#: es.e:1085
 msgid ""
 "Cannot mix -config or -target when compiling a system using an Eiffel class "
 "as argument"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Cannot mix -project, -config or -target when compiling a system using an Eiffel class as argument")
-#: es.e:1055
+#: es.e:1054
 msgid ""
 "Cannot mix -project, -config or -target when compiling a system using an "
 "Eiffel class as argument"
@@ -6774,12 +6774,12 @@ msgid "Cannot open file: $1."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Cannot override -compat with -experiment.")
-#: es.e:1247
+#: es.e:1246
 msgid "Cannot override -compat with -experiment."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Cannot override -experiment with -compat.")
-#: es.e:1239
+#: es.e:1238
 msgid "Cannot override -experiment with -compat."
 msgstr ""
 
@@ -8242,13 +8242,13 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="color.error_background" DESCRIPTION="Background color for errors."><COLOR>255;220;220</COLOR></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;188</COLOR></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="color.suggestion_background" DESCRIPTION="Background color for suggestions."><COLOR>239;228;176</COLOR></PREF>
+#. 	<PREF NAME="color.fixed_violation_background" DESCRIPTION="Background color for fixed violations."><COLOR>181;230;29</COLOR></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="color.hint_background" DESCRIPTION="Background color for hints."><COLOR>188;226;193</COLOR></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="color.fixed_violation_background" DESCRIPTION="Background color for fixed violations."><COLOR>181;230;29</COLOR></PREF>
+#. 	<PREF NAME="color.suggestion_background" DESCRIPTION="Background color for suggestions."><COLOR>239;228;176</COLOR></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;188</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:2
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:3
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:4
@@ -8658,8 +8658,8 @@ msgstr ""
 #. 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:19
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:20
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:15
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:16
 msgctxt "code_analysis.preference"
 msgid "Combinable nested conditionals"
 msgstr ""
@@ -8847,8 +8847,8 @@ msgstr ""
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:17
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:18
 msgctxt "code_analysis.preference"
 msgid "Comparison to boolean constant"
 msgstr ""
@@ -9076,8 +9076,8 @@ msgstr ""
 #. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:17
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:18
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:19
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:20
 msgctxt "code_analysis.preference"
 msgid "Conditional computes only boolean"
 msgstr ""
@@ -10181,7 +10181,7 @@ msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
 msgstr ""
 
 #. Source code: 
-#: es_exception_submit_dialog.e:981
+#: es_exception_submit_dialog.e:988
 msgid "Critical"
 msgstr ""
 
@@ -10328,7 +10328,7 @@ msgid "Current view is not editable."
 msgstr ""
 
 #. Source code: e_creation_not_ready: STRING = "Currently unable to create new tests."
-#: shared_test_service.e:479
+#: shared_test_service.e:482
 msgid "Currently unable to create new tests."
 msgstr ""
 
@@ -12500,9 +12500,9 @@ msgstr ""
 #. 	<PREF NAME="rule.deeply_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.maximum_depth" DESCRIPTION="Maximum allowed number of nested conditionals."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:21
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:22
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
 msgctxt "code_analysis.preference"
 msgid "Deeply nested conditionals"
 msgstr ""
@@ -17019,8 +17019,8 @@ msgstr ""
 #. 	<PREF NAME="rule.empty_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.empty_conditional.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:30
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:31
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
 msgctxt "code_analysis.preference"
 msgid "Empty conditional"
 msgstr ""
@@ -17041,26 +17041,20 @@ msgstr ""
 #. 	<PREF NAME="rule.empty_feature_in_deferred class.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.empty_feature_in_deferred class.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:32
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:33
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
 msgctxt "code_analysis.preference"
 msgid "Empty_feature_in_deferred class"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17070,9 +17064,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17082,7 +17078,7 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.many_arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17090,17 +17086,23 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17109,8 +17111,6 @@ msgstr ""
 #. 	<PREF NAME="rule.suspicious_interation_scheme.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.unread_variable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17124,31 +17124,31 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:17
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:19
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:21
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:30
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:32
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:34
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:36
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:40
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:47
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:58
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:60
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:62
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:65
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:72
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:74
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:76
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:78
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:80
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:87
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:90
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:92
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:94
@@ -17224,7 +17224,7 @@ msgid "Enable errors"
 msgstr ""
 
 #. 	<PREF NAME="general.enable_hints" DESCRIPTION="Report hints."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:11
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:9
 msgctxt "code_analysis.preference"
 msgid "Enable hints"
 msgstr ""
@@ -17248,19 +17248,13 @@ msgid "Enable remove here"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17270,9 +17264,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17282,7 +17278,7 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.many_arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17290,17 +17286,23 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17309,8 +17311,6 @@ msgstr ""
 #. 	<PREF NAME="rule.suspicious_interation_scheme.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.unread_variable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -17324,31 +17324,31 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:17
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:19
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:21
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:30
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:32
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:34
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:36
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:40
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:47
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:58
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:60
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:62
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:65
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:72
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:74
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:76
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:78
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:80
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:87
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:90
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:92
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:94
@@ -17372,7 +17372,7 @@ msgid "Enable suggestions"
 msgstr ""
 
 #. 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:9
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:11
 msgctxt "code_analysis.preference"
 msgid "Enable warnings"
 msgstr ""
@@ -17634,12 +17634,12 @@ msgid "Enter or select a name to save the current layout as."
 msgstr ""
 
 #. Source code: lb_enter_bug_information: STRING = "Enter supplementary bug information"
-#: es_exception_submit_dialog.e:965
+#: es_exception_submit_dialog.e:967
 msgid "Enter supplementary bug information"
 msgstr ""
 
 #. Source code: lb_enter_synopsis: STRING = "Enter synopsis"
-#: es_exception_submit_dialog.e:966
+#: es_exception_submit_dialog.e:968
 msgid "Enter synopsis"
 msgstr ""
 
@@ -18382,8 +18382,8 @@ msgstr ""
 #. 	<PREF NAME="rule.exported_creation_procedure.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:34
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:35
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
 msgctxt "code_analysis.preference"
 msgid "Exported creation procedure"
 msgstr ""
@@ -18648,7 +18648,7 @@ msgid "Failures"
 msgstr ""
 
 #. Source code: boolean_false: STRING_32 do Result := locale.translation ("False") end
-#: conf_interface_names.e:1063
+#: conf_interface_names.e:1076
 msgid "False"
 msgstr ""
 
@@ -19590,7 +19590,7 @@ msgid "Fix: "
 msgstr ""
 
 #. 	<PREF NAME="color.fixed_violation_background" DESCRIPTION="Background color for fixed violations."><COLOR>181;230;29</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:6
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:3
 msgctxt "code_analysis.preference"
 msgid "Fixed violation background"
 msgstr ""
@@ -20169,11 +20169,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="general.enable_errors" DESCRIPTION="Report errors."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="general.enable_hints" DESCRIPTION="Report hints."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="general.enable_suggestions" DESCRIPTION="Report suggestions."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="general.enable_hints" DESCRIPTION="Report hints."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:8
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:9
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:10
@@ -20406,8 +20406,8 @@ msgstr ""
 #. 	<PREF NAME="rule.general_loop_on_iterable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:30
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:31
 msgctxt "code_analysis.preference"
 msgid "General loop on iterable"
 msgstr ""
@@ -21185,7 +21185,7 @@ msgid "Hindi (India)"
 msgstr ""
 
 #. 	<PREF NAME="color.hint_background" DESCRIPTION="Background color for hints."><COLOR>188;226;193</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:5
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:4
 msgctxt "code_analysis.preference"
 msgid "Hint background"
 msgstr ""
@@ -21334,7 +21334,7 @@ msgid ""
 msgstr ""
 
 #. Source code: lb_register_account: STRING = "If you do not already have an account, please register "
-#: es_exception_submit_dialog.e:973
+#: es_exception_submit_dialog.e:980
 msgid "If you do not already have an account, please register "
 msgstr ""
 
@@ -21583,8 +21583,8 @@ msgstr ""
 #. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:72
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:73
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:32
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:33
 msgctxt "code_analysis.preference"
 msgid "Inconsistent hash code redeclaration"
 msgstr ""
@@ -21699,8 +21699,8 @@ msgstr ""
 #. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:36
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:37
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:34
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:35
 msgctxt "code_analysis.preference"
 msgid "Inequality in conditional"
 msgstr ""
@@ -22636,7 +22636,7 @@ msgid "Invalid platform $1."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Invalid platform argument")
-#: es.e:1265
+#: es.e:1264
 msgid "Invalid platform argument"
 msgstr ""
 
@@ -22868,13 +22868,13 @@ msgid "Is alias enabled"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.is_argument_prefix_counted" DESCRIPTION="Is argument prefix 'a_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:83
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:82
 msgctxt "code_analysis.preference"
 msgid "Is argument prefix 'a_' counted?"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.is_argument_prefix_counted" DESCRIPTION="Is argument prefix 'a_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:83
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:82
 msgctxt "code_analysis.preference"
 msgid "Is argument prefix counted"
 msgstr ""
@@ -22886,7 +22886,7 @@ msgid "Is assigner enabled"
 msgstr ""
 
 #. Source code: lb_is_compiling: STRING = "Is compiling: $1"
-#: es_exception_dialog.e:391
+#: es_exception_dialog.e:392
 msgid "Is compiling: $1"
 msgstr ""
 
@@ -22929,13 +22929,13 @@ msgid "Is item path shown?"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.is_local_prefix_counted" DESCRIPTION="Is local prefix 'l_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:84
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:83
 msgctxt "code_analysis.preference"
 msgid "Is local prefix 'l_' counted?"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.is_local_prefix_counted" DESCRIPTION="Is local prefix 'l_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:84
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:83
 msgctxt "code_analysis.preference"
 msgid "Is local prefix counted"
 msgstr ""
@@ -23374,7 +23374,7 @@ msgid "Last browsed cluster directory"
 msgstr ""
 
 #. Source code: lb_last_degree: STRING = "Last compilation degree: $1"
-#: es_exception_dialog.e:392
+#: es_exception_dialog.e:393
 msgid "Last compilation degree: $1"
 msgstr ""
 
@@ -23390,7 +23390,7 @@ msgid "Last imported metric definition directory"
 msgstr ""
 
 #. Source code: lb_last_processed_class: STRING = "Last known class processed: $1"
-#: es_exception_dialog.e:393
+#: es_exception_dialog.e:394
 msgid "Last known class processed: $1"
 msgstr ""
 
@@ -23473,7 +23473,7 @@ msgid "Last saved stack path"
 msgstr ""
 
 #. Source code: lb_status_bar_text: STRING = "Last status message: $1"
-#: es_exception_dialog.e:394
+#: es_exception_dialog.e:395
 msgid "Last status message: $1"
 msgstr ""
 
@@ -23943,12 +23943,12 @@ msgid "Lock the Tools"
 msgstr ""
 
 #. Source code: b_submit: STRING = "Submit"
-#: es_exception_submit_dialog.e:978
+#: es_exception_submit_dialog.e:985
 msgid "Log out"
 msgstr ""
 
 #. Source code: b_log_out: STRING = "Log out"
-#: es_exception_submit_dialog.e:977
+#: es_exception_submit_dialog.e:984
 msgid "Login"
 msgstr ""
 
@@ -23960,10 +23960,10 @@ msgstr ""
 #. 	<PREF NAME="rule.long_class.maximum_feature_count" DESCRIPTION="Maximum allowed number of features in a class."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a class."><INTEGER>300</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:40
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:41
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:36
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:37
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
 msgctxt "code_analysis.preference"
 msgid "Long class"
 msgstr ""
@@ -23974,9 +23974,9 @@ msgstr ""
 #. 	<PREF NAME="rule.long_feature.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_feature.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a feature."><INTEGER>70</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:40
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:41
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
 msgctxt "code_analysis.preference"
 msgid "Long feature"
 msgstr ""
@@ -23986,16 +23986,16 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.maximum_argument_name_length" DESCRIPTION="Maximum allowed length of an argument name."><INTEGER>20</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.maximum_local_name_length" DESCRIPTION="Maximum allowed length of a local name."><INTEGER>20</INTEGER></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:47
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
 msgctxt "code_analysis.preference"
 msgid "Long identifier"
 msgstr ""
@@ -24006,9 +24006,9 @@ msgstr ""
 #. 	<PREF NAME="rule.long_multi_branch.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in one branch."><INTEGER>8</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
 msgctxt "code_analysis.preference"
 msgid "Long multi branch"
 msgstr ""
@@ -24086,7 +24086,7 @@ msgid "Main Editor Views"
 msgstr ""
 
 #. Source code: lb_make_public: STRING = "Make bug publicly available"
-#: es_exception_submit_dialog.e:967
+#: es_exception_submit_dialog.e:969
 msgid "Make bug publicly available"
 msgstr ""
 
@@ -24225,14 +24225,14 @@ msgid "Manually Edit Configuration"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.many_arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.many_arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
+#. 	<PREF NAME="rule.many_arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
 msgctxt "code_analysis.preference"
 msgid "Many arguments"
 msgstr ""
@@ -24368,85 +24368,85 @@ msgid "Maximum Call Stack Depth"
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed length of a feature name."
 msgstr ""
 
 #. 	<PREF NAME="rule.single_use_variable.maximum_line_length" DESCRIPTION="Maximum allowed length of a line."><INTEGER>80</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:87
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed length of a line."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_local_name_length" DESCRIPTION="Maximum allowed length of a local name."><INTEGER>20</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:47
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed length of a local name."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_argument_name_length" DESCRIPTION="Maximum allowed length of an argument name."><INTEGER>20</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed length of an argument name."
 msgstr ""
 
 #. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:66
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of acyclic execution paths through a routine."
 msgstr ""
 
-#. 	<PREF NAME="rule.Many arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
+#. 	<PREF NAME="rule.many_arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of arguments."
 msgstr ""
 
 #. 	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>5</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of branches and loops."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_class.maximum_feature_count" DESCRIPTION="Maximum allowed number of features in a class."><INTEGER>60</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of features in a class."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_class.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a class."><INTEGER>300</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of instructions in a class."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_feature.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a feature."><INTEGER>70</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of instructions in a feature."
 msgstr ""
 
 #. 	<PREF NAME="rule.long_multi_branch.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in one branch."><INTEGER>8</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of instructions in one branch."
 msgstr ""
 
 #. 	<PREF NAME="rule.deeply_nested_conditionals.maximum_depth" DESCRIPTION="Maximum allowed number of nested conditionals."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
 msgctxt "code_analysis.preference"
 msgid "Maximum allowed number of nested conditionals."
 msgstr ""
 
-#. 	<PREF NAME="rule.Many arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
+#. 	<PREF NAME="rule.many_arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
 msgctxt "code_analysis.preference"
 msgid "Maximum argument count"
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_argument_name_length" DESCRIPTION="Maximum allowed length of an argument name."><INTEGER>20</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
 msgctxt "code_analysis.preference"
 msgid "Maximum argument name length"
 msgstr ""
@@ -24463,7 +24463,7 @@ msgid "Maximum count of remembered test runs:"
 msgstr ""
 
 #. 	<PREF NAME="rule.deeply_nested_conditionals.maximum_depth" DESCRIPTION="Maximum allowed number of nested conditionals."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:23
 msgctxt "code_analysis.preference"
 msgid "Maximum depth"
 msgstr ""
@@ -24482,13 +24482,13 @@ msgid ""
 msgstr ""
 
 #. 	<PREF NAME="rule.long_class.maximum_feature_count" DESCRIPTION="Maximum allowed number of features in a class."><INTEGER>60</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:38
 msgctxt "code_analysis.preference"
 msgid "Maximum feature count"
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
 msgctxt "code_analysis.preference"
 msgid "Maximum feature name length"
 msgstr ""
@@ -24516,15 +24516,15 @@ msgstr ""
 #. 	<PREF NAME="rule.long_feature.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in a feature."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in one branch."><INTEGER>8</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:43
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:46
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:50
 msgctxt "code_analysis.preference"
 msgid "Maximum instruction count"
 msgstr ""
 
 #. 	<PREF NAME="rule.single_use_variable.maximum_line_length" DESCRIPTION="Maximum allowed length of a line."><INTEGER>80</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:87
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
 msgctxt "code_analysis.preference"
 msgid "Maximum line length"
 msgstr ""
@@ -24536,7 +24536,7 @@ msgid "Maximum line length"
 msgstr ""
 
 #. 	<PREF NAME="rule.long_identifier.maximum_local_name_length" DESCRIPTION="Maximum allowed length of a local name."><INTEGER>20</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:51
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:47
 msgctxt "code_analysis.preference"
 msgid "Maximum local name length"
 msgstr ""
@@ -24839,25 +24839,25 @@ msgid "Minimum NPath threshold"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:80
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
 msgctxt "code_analysis.preference"
 msgid "Minimum allowed length of a feature name."
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:82
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
 msgctxt "code_analysis.preference"
 msgid "Minimum allowed length of a local name."
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:81
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:84
 msgctxt "code_analysis.preference"
 msgid "Minimum allowed length of an argument name."
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:81
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:84
 msgctxt "code_analysis.preference"
 msgid "Minimum argument name length"
 msgstr ""
@@ -24875,7 +24875,7 @@ msgid "Minimum arguments threshold"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:80
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
 msgctxt "code_analysis.preference"
 msgid "Minimum feature name length"
 msgstr ""
@@ -24892,7 +24892,7 @@ msgid "Minimum index displayed"
 msgstr ""
 
 #. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:82
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
 msgctxt "code_analysis.preference"
 msgid "Minimum local name length"
 msgstr ""
@@ -24936,8 +24936,8 @@ msgstr ""
 #. 	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:58
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:59
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:54
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
 msgctxt "code_analysis.preference"
 msgid "Missing argument semicolon"
 msgstr ""
@@ -24948,37 +24948,37 @@ msgid "Missing attribute '$1'"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing class and feature name for option -callees")
-#: es.e:832
+#: es.e:831
 msgid "Missing class and feature name for option -callees"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing class and feature name for option -callers")
-#: es.e:761
+#: es.e:760
 msgid "Missing class and feature name for option -callers"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing class name and feature name arguments for -dumpoperands.")
-#: es.e:1202
+#: es.e:1201
 msgid "Missing class name and feature name arguments for -dumpoperands."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing class name argument for -dumpfeatures.")
-#: es.e:1189
+#: es.e:1188
 msgid "Missing class name argument for -dumpfeatures."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing class name or -all argument following filter name.")
-#: es.e:1006
+#: es.e:1005
 msgid "Missing class name or -all argument following filter name."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing config name for option -ace.")
-#: es.e:1091
+#: es.e:1090
 msgid "Missing config name for option -ace."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing config name for option -config.")
-#: es.e:1101
+#: es.e:1100
 msgid "Missing config name for option -config."
 msgstr ""
 
@@ -24986,8 +24986,8 @@ msgstr ""
 #. 	<PREF NAME="rule.missing_feature_clause_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_clause_comment.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:60
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:61
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
 msgctxt "code_analysis.preference"
 msgid "Missing feature clause comment"
 msgstr ""
@@ -24996,39 +24996,39 @@ msgstr ""
 #. 	<PREF NAME="rule.missing_feature_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.severity" DESCRIPTION="Severity score."><INTEGER>20</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:62
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:63
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:58
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:59
 msgctxt "code_analysis.preference"
 msgid "Missing feature comment"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing feature name for option -callers")
-#: es.e:811
+#: es.e:810
 msgid "Missing feature name for option -callers"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing feature name for options -callees")
-#: es.e:882
+#: es.e:881
 msgid "Missing feature name for options -callees"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing file name argument for -file.")
-#: es.e:1149
+#: es.e:1148
 msgid "Missing file name argument for -file."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing filter name for option -filter.")
-#: es.e:723
+#: es.e:722
 msgid "Missing filter name for option -filter."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing input class file path for option -pretty")
-#: es.e:981
+#: es.e:980
 msgid "Missing input class file path for option -pretty"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing library argument.")
-#: es.e:1229
+#: es.e:1228
 msgid "Missing library argument."
 msgstr ""
 
@@ -25038,27 +25038,27 @@ msgid "Missing parent target: $1 in target $2"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing path for option -output_file.")
-#: es.e:1069
+#: es.e:1068
 msgid "Missing path for option -output_file."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing path to metadata cache path.")
-#: es.e:1215
+#: es.e:1214
 msgid "Missing path to metadata cache path."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing project file for option -project.")
-#: es.e:1060
+#: es.e:1059
 msgid "Missing project file for option -project."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing project path for option -project_path.")
-#: es.e:1081
+#: es.e:1080
 msgid "Missing project path for option -project_path."
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Missing target name for option -target.")
-#: es.e:1111
+#: es.e:1110
 msgid "Missing target name for option -target."
 msgstr ""
 
@@ -25384,8 +25384,8 @@ msgstr ""
 #. 	<PREF NAME="rule.negated_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:60
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:61
 msgctxt "code_analysis.preference"
 msgid "Negated comparison"
 msgstr ""
@@ -25411,9 +25411,9 @@ msgstr ""
 #. 	<PREF NAME="rule.nested_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>5</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:62
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:63
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
 msgctxt "code_analysis.preference"
 msgid "Nested complexity"
 msgstr ""
@@ -25690,7 +25690,7 @@ msgid "No breakpoints"
 msgstr ""
 
 #. Source code: w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to reproduce.%N%NDo you want to continue submitting a bug report?"
-#: es_exception_submit_dialog.e:985
+#: es_exception_submit_dialog.e:992
 msgid ""
 "No bug description has been supplied. Submitting a report without additional "
 "details can make it hard to reproduce.\n"
@@ -26009,7 +26009,7 @@ msgid "No views are available for this cluster"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:983
+#: es_exception_submit_dialog.e:990
 msgid "Non Critical"
 msgstr ""
 
@@ -26143,9 +26143,9 @@ msgstr ""
 #. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:65
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:66
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
 msgctxt "code_analysis.preference"
 msgid "Npath complexity"
 msgstr ""
@@ -27080,9 +27080,29 @@ msgstr ""
 msgid "Parents:"
 msgstr ""
 
+#. Source code: Result := locale.formatted_string (locale.translation ("Parse error ($2) at regular expression %"$1%"."), [regexp, description])
+#: conf_interface_names.e:1066
+msgid "Parse error ($2) at regular expression \"$1\"."
+msgstr ""
+
+#. Source code: Result := locale.formatted_string (locale.translation ("Parse error ($3) in %"$2%" at regular expression %"$1%"."), [regexp, file, description])
+#: conf_interface_names.e:1062
+msgid "Parse error ($3) in \"$2\" at regular expression \"$1\"."
+msgstr ""
+
+#. Source code: Result := locale.formatted_string (locale.translation ("Parse error in %"$2%": Invalid regular expression: %"$1%"."), [regexp, file])
+#: conf_interface_names.e:1064
+msgid "Parse error in \"$2\": Invalid regular expression: \"$1\"."
+msgstr ""
+
 #. Source code: l_parse_error: STRING_32 do Result := locale.translation ("Parse error:") end
 #: eb_metric_names.e:204
 msgid "Parse error:"
+msgstr ""
+
+#. Source code: Result := locale.formatted_string (locale.translation ("Parse error: Invalid regular expression: %"$1%"."), [regexp])
+#: conf_interface_names.e:1068
+msgid "Parse error: Invalid regular expression: \"$1\"."
 msgstr ""
 
 #. Source code: lb_degree_5: STRING = "Parsing Classes"
@@ -27116,7 +27136,7 @@ msgid "Passes"
 msgstr ""
 
 #. Source code: lb_password: STRING = "Password:"
-#: es_exception_submit_dialog.e:968
+#: es_exception_submit_dialog.e:970
 msgid "Password:"
 msgstr ""
 
@@ -27261,7 +27281,7 @@ msgid "Platform"
 msgstr ""
 
 #. Source code: option_error_message := locale.translation ("Platform option requires a platform name.")
-#: es.e:1268
+#: es.e:1267
 msgid "Platform option requires a platform name."
 msgstr ""
 
@@ -27538,8 +27558,8 @@ msgstr ""
 #. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:21
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:22
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
 msgctxt "code_analysis.preference"
 msgid "Possible side effect"
 msgstr ""
@@ -27904,7 +27924,7 @@ msgid "Project already exists"
 msgstr ""
 
 #. Source code: lb_was_compiled: STRING = "Project compiled: $1"
-#: es_exception_dialog.e:390
+#: es_exception_dialog.e:391
 msgid "Project compiled: $1"
 msgstr ""
 
@@ -27931,7 +27951,7 @@ msgid "Project is not readable. Check permissions."
 msgstr ""
 
 #. Source code: lb_project_loaded: STRING = "Project loaded: $1"
-#: es_exception_dialog.e:389
+#: es_exception_dialog.e:390
 msgid "Project loaded: $1"
 msgstr ""
 
@@ -28387,8 +28407,8 @@ msgstr ""
 #. 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:74
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:75
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
 msgctxt "code_analysis.preference"
 msgid "Redundant object test"
 msgstr ""
@@ -28397,8 +28417,8 @@ msgstr ""
 #. 	<PREF NAME="rule.redundant_object_test_local.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:76
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:77
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:72
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:73
 msgctxt "code_analysis.preference"
 msgid "Redundant object test local"
 msgstr ""
@@ -28407,8 +28427,8 @@ msgstr ""
 #. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:92
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:93
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:74
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:75
 msgctxt "code_analysis.preference"
 msgid "Redundant parentheses"
 msgstr ""
@@ -28554,7 +28574,7 @@ msgid "Remember completion list size"
 msgstr ""
 
 #. Source code: lb_remember_me: STRING = "Remember me"
-#: es_exception_submit_dialog.e:969
+#: es_exception_submit_dialog.e:971
 msgid "Remember me"
 msgstr ""
 
@@ -29044,7 +29064,7 @@ msgid "Report errors."
 msgstr ""
 
 #. 	<PREF NAME="general.enable_hints" DESCRIPTION="Report hints."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:11
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:9
 msgctxt "code_analysis.preference"
 msgid "Report hints."
 msgstr ""
@@ -29056,7 +29076,7 @@ msgid "Report suggestions."
 msgstr ""
 
 #. 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:9
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:11
 msgctxt "code_analysis.preference"
 msgid "Report warnings."
 msgstr ""
@@ -29521,33 +29541,21 @@ msgid "Row replayable background color"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29567,13 +29575,17 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29593,9 +29605,9 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.maximum_argument_name_length" DESCRIPTION="Maximum allowed length of an argument name."><INTEGER>20</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.long_identifier.maximum_feature_name_length" DESCRIPTION="Maximum allowed length of a feature name."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_identifier.maximum_local_name_length" DESCRIPTION="Maximum allowed length of a local name."><INTEGER>20</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29605,11 +29617,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.maximum_instruction_count" DESCRIPTION="Maximum allowed number of instructions in one branch."><INTEGER>8</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.many_arguments.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.many_arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
+#. 	<PREF NAME="rule.many_arguments.maximum_argument_count" DESCRIPTION="Maximum allowed number of arguments."><INTEGER>4</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29623,12 +29635,6 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.severity" DESCRIPTION="Severity score."><INTEGER>20</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
@@ -29639,9 +29645,15 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>5</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. 	<PREF NAME="rule.npath_complexity.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29651,19 +29663,31 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.is_argument_prefix_counted" DESCRIPTION="Is argument prefix 'a_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.is_local_prefix_counted" DESCRIPTION="Is local prefix 'l_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.single_use_variable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -29678,10 +29702,6 @@ msgstr ""
 #. 	<PREF NAME="rule.todo_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.unread_variable.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -30762,8 +30782,8 @@ msgstr ""
 #. 	<PREF NAME="rule.self_assignment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:13
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:14
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:76
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:77
 msgctxt "code_analysis.preference"
 msgid "Self assignment"
 msgstr ""
@@ -30772,8 +30792,8 @@ msgstr ""
 #. 	<PREF NAME="rule.self_comparison.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:78
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:79
 msgctxt "code_analysis.preference"
 msgid "Self comparison"
 msgstr ""
@@ -30880,7 +30900,7 @@ msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:982
+#: es_exception_submit_dialog.e:989
 msgid "Serious"
 msgstr ""
 
@@ -31095,19 +31115,13 @@ msgid "Several classes have the same name:\n"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31117,9 +31131,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31129,7 +31145,7 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.many_arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31137,17 +31153,23 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.severity" DESCRIPTION="Severity score."><INTEGER>20</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31156,8 +31178,6 @@ msgstr ""
 #. 	<PREF NAME="rule.suspicious_interation_scheme.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.unread_variable.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31171,31 +31191,31 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:18
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:20
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:22
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:31
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:33
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:35
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:37
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:41
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:59
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:61
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:63
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:65
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:66
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:73
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:75
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:77
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:79
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:81
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:91
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:93
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:95
@@ -31213,19 +31233,13 @@ msgid "Severity Score"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. 	<PREF NAME="rule.conditional_computes_only_boolean.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.deeply_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31235,9 +31249,11 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.exported_creation_procedure.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.general_loop_on_iterable.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_class.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31247,7 +31263,7 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.long_multi_branch.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.Many arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.many_arguments.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_argument_semicolon.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31255,17 +31271,23 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.missing_feature_comment.severity" DESCRIPTION="Severity score."><INTEGER>20</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.negated_comparison.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
+#. 	<PREF NAME="rule.npath_complexity.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.possible_side_effect.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.redundant_object_test_local.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_assignment.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.self_comparison.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31274,8 +31296,6 @@ msgstr ""
 #. 	<PREF NAME="rule.suspicious_interation_scheme.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.redundant_parentheses.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.unread_variable.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31289,31 +31309,31 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:18
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:20
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:22
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:24
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:26
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:28
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:25
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:27
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:29
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:31
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:33
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:35
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:37
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:39
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:41
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:45
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:48
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:53
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:56
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:44
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:49
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:52
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:55
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:57
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:59
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:61
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:63
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:65
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:68
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:70
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:66
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:69
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:73
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:75
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:77
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:79
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:81
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:91
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:93
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:95
@@ -31325,7 +31345,7 @@ msgid "Severity score."
 msgstr ""
 
 #. Source code: lb_severity: STRING = "Severity:"
-#: es_exception_submit_dialog.e:970
+#: es_exception_submit_dialog.e:972
 msgid "Severity:"
 msgstr ""
 
@@ -31344,22 +31364,22 @@ msgstr ""
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.is_argument_prefix_counted" DESCRIPTION="Is argument prefix 'a_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.short_identifier.is_local_prefix_counted" DESCRIPTION="Is local prefix 'l_' counted?"><BOOLEAN>True</BOOLEAN></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:78
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:79
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_argument_name_length" DESCRIPTION="Minimum allowed length of an argument name."><INTEGER>3</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_feature_name_length" DESCRIPTION="Minimum allowed length of a feature name."><INTEGER>3</INTEGER></PREF>
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.short_identifier.minimum_local_name_length" DESCRIPTION="Minimum allowed length of a local name."><INTEGER>3</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:80
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:81
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:82
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:83
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:84
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
 msgctxt "code_analysis.preference"
 msgid "Short identifier"
 msgstr ""
@@ -33069,9 +33089,9 @@ msgstr ""
 #. 	<PREF NAME="rule.single_use_variable.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.single_use_variable.maximum_line_length" DESCRIPTION="Maximum allowed length of a line."><INTEGER>80</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:85
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:86
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:87
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
 msgctxt "code_analysis.preference"
 msgid "Single use variable"
 msgstr ""
@@ -33840,17 +33860,17 @@ msgid "Subcluster depth"
 msgstr ""
 
 #. Source code: i_critical: STRING = "Critical"
-#: es_exception_submit_dialog.e:979
+#: es_exception_submit_dialog.e:986
 msgid "Submit"
 msgstr ""
 
 #. Source code: lb_submitting: STRING = "Submitting bug report, please wait..."
-#: es_exception_submit_dialog.e:972
+#: es_exception_submit_dialog.e:979
 msgid "Submitting bug report, please wait..."
 msgstr ""
 
 #. 	<PREF NAME="color.suggestion_background" DESCRIPTION="Background color for suggestions."><COLOR>239;228;176</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:4
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:5
 msgctxt "code_analysis.preference"
 msgid "Suggestion background"
 msgstr ""
@@ -33902,8 +33922,8 @@ msgstr ""
 #. 	<PREF NAME="rule.suspicious_interation_scheme.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.suspicious_interation_scheme.severity" DESCRIPTION="Severity score."><INTEGER>70</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:88
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:89
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:90
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:91
 msgctxt "code_analysis.preference"
 msgid "Suspicious interation scheme"
 msgstr ""
@@ -34417,17 +34437,17 @@ msgid "Test classes"
 msgstr ""
 
 #. Source code: e_creation_unavailable: STRING = "Test creation is currently unavailable"
-#: shared_test_service.e:473
+#: shared_test_service.e:476
 msgid "Test creation is currently unavailable"
 msgstr ""
 
 #. Source code: e_debugging_unavailable: STRING = "Test debugging is currently unavailable"
-#: shared_test_service.e:472
+#: shared_test_service.e:475
 msgid "Test debugging is currently unavailable"
 msgstr ""
 
 #. Source code: e_execution_unavailable: STRING = "Test execution is currently unavailable"
-#: shared_test_service.e:471
+#: shared_test_service.e:474
 msgid "Test execution is currently unavailable"
 msgstr ""
 
@@ -34442,7 +34462,7 @@ msgid "Test execution was canceled by user"
 msgstr ""
 
 #. Source code: e_extraction_unavailable: STRING = "Test extraction is currently unavailable"
-#: shared_test_service.e:474
+#: shared_test_service.e:477
 msgid "Test extraction is currently unavailable"
 msgstr ""
 
@@ -34482,7 +34502,7 @@ msgid "Testing directory and files"
 msgstr ""
 
 #. Source code: e_service_not_available: STRING = "Testing service is currently not available."
-#: shared_test_service.e:469
+#: shared_test_service.e:472
 msgid "Testing service is currently not available."
 msgstr ""
 
@@ -34596,7 +34616,7 @@ msgid "Thai (Thailand)"
 msgstr ""
 
 #. Source code: tt_thank_you: STRING = "Thank you for the bug report"
-#: es_exception_submit_dialog.e:963
+#: es_exception_submit_dialog.e:965
 msgid "Thank you for the bug report"
 msgstr ""
 
@@ -35081,9 +35101,9 @@ msgid ""
 "themselves completely. Use '0' to disable animation effect."
 msgstr ""
 
-#. Source code: lb_submitted: STRING = "The submitted report is now available at http://support.eiffel.com."
-#: es_exception_submit_dialog.e:971
-msgid "The submitted report is now available at http://support.eiffel.com."
+#. Source code: Result := "The submitted report is now available at "
+#: es_exception_submit_dialog.e:975
+msgid "The submitted report is now available at "
 msgstr ""
 
 #. Source code: "The system could not be launched in allotted time:%N%
@@ -35291,11 +35311,11 @@ msgid ""
 "the class file."
 msgstr ""
 
-#. Source code: e_submit_error: STRING = "There was a problem submitting the problem report. Please retry or submit it manually at http://support.eiffel.com."
-#: es_exception_submit_dialog.e:986
+#. Source code: Result := "There was a problem submitting the problem report. Please retry or submit it manually at "
+#: es_exception_submit_dialog.e:995
 msgid ""
 "There was a problem submitting the problem report. Please retry or submit it "
-"manually at http://support.eiffel.com."
+"manually at "
 msgstr ""
 
 #. Source code: e_save_session_data_failed: attached STRING_32 do Result := locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
@@ -35561,11 +35581,11 @@ msgid "Threads"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
-#. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
-#. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.nested_complexity.threshold" DESCRIPTION="Maximum allowed number of branches and loops."><INTEGER>5</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:66
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:71
+#. #-#-#-#-#  estudio.pot  #-#-#-#-#
+#. 	<PREF NAME="rule.npath_complexity.threshold" DESCRIPTION="Maximum allowed number of acyclic execution paths through a routine."><INTEGER>200</INTEGER></PREF>
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:64
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:67
 msgctxt "code_analysis.preference"
 msgid "Threshold"
 msgstr ""
@@ -35661,8 +35681,8 @@ msgstr ""
 #. 	<PREF NAME="rule.todo_comment.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.todo_comment.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:90
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:91
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:92
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:93
 msgctxt "code_analysis.preference"
 msgid "Todo comment"
 msgstr ""
@@ -36545,7 +36565,7 @@ msgid "Trigger zoom out editor's font."
 msgstr ""
 
 #. Source code: boolean_true: STRING_32 do Result := locale.translation ("True") end
-#: conf_interface_names.e:1061
+#: conf_interface_names.e:1074
 msgid "True"
 msgstr ""
 
@@ -37032,7 +37052,7 @@ msgid "Unable to create file $2."
 msgstr ""
 
 #. Source code: e_creation_conf_invalid: STRING = "Unable to create new tests."
-#: shared_test_service.e:484
+#: shared_test_service.e:487
 msgid "Unable to create new tests."
 msgstr ""
 
@@ -37075,7 +37095,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_extraction_conf_invalid: STRING = "Unable to extract tests for selected call stack frames."
-#: shared_test_service.e:485
+#: shared_test_service.e:488
 msgid "Unable to extract tests for selected call stack frames."
 msgstr ""
 
@@ -37127,12 +37147,12 @@ msgid "Unable to initialize the project generated by the wizard"
 msgstr ""
 
 #. Source code: e_generation_conf_invalid: STRING = "Unable to launch AutoTest with provided options."
-#: shared_test_service.e:486
+#: shared_test_service.e:489
 msgid "Unable to launch AutoTest with provided options."
 msgstr ""
 
 #. Source code: e_unkonwn_error: STRING = "Unable to launch processor"
-#: shared_test_service.e:488
+#: shared_test_service.e:491
 msgid "Unable to launch processor"
 msgstr ""
 
@@ -38252,7 +38272,7 @@ msgid "User-defined tags"
 msgstr ""
 
 #. Source code: lb_username: STRING = "Username:"
-#: es_exception_submit_dialog.e:974
+#: es_exception_submit_dialog.e:981
 msgid "Username:"
 msgstr ""
 
@@ -38886,7 +38906,7 @@ msgid "Warning"
 msgstr ""
 
 #. 	<PREF NAME="color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;188</COLOR></PREF>
-#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:3
+#: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:6
 msgctxt "code_analysis.preference"
 msgid "Warning background"
 msgstr ""
@@ -39993,7 +40013,7 @@ msgid "group item"
 msgstr ""
 
 #. Source code: b_login: STRING = "Login"
-#: es_exception_submit_dialog.e:976
+#: es_exception_submit_dialog.e:983
 msgid "here"
 msgstr ""
 

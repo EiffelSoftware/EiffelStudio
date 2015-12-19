@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Find out if two paths corresponds to exactly the same file."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	c_same_files (a_path1, a_path2: POINTER): BOOLEAN is
+	c_same_files (a_path1, a_path2: POINTER): BOOLEAN
 			-- Do C paths `a_path1' and `a_path2' represent the same file?
 		require
 			a_path1_not_null: a_path1 /= default_pointer

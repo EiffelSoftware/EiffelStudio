@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Lists implemented by resizable arrays"
@@ -63,7 +63,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate list with `n' items.
 			-- (`n' may be zero for empty list.)
 		require
@@ -79,7 +79,7 @@ feature -- Initialization
 			is_empty: is_empty
 		end
 
-	make_filled (n: INTEGER) is
+	make_filled (n: INTEGER)
 			-- Allocate list with `n' items.
 			-- (`n' may be zero for empty list.)
 			-- This list will be full.
@@ -96,7 +96,7 @@ feature -- Initialization
 			filled: full
 		end
 
-	make_from_array (a: ARRAY [G]) is
+	make_from_array (a: ARRAY [G])
 			-- Create list from array `a'.
 		do
 			Precursor (a)
@@ -111,7 +111,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require else
 			index_is_valid: valid_index (index)
@@ -119,19 +119,19 @@ feature -- Access
 			Result := area.item (index - 1)
 		end
 
-	i_th, at alias "@" (i: INTEGER): like item is
+	i_th, at alias "@" (i: INTEGER): like item
 			-- Item at `i'-th position
 		do
 			Result := area.item (i - 1)
 		end
 
-	first: like item is
+	first: like item
 			-- Item at first position
 		do
 			Result := area.item (0)
 		end
 
-	last: like first is
+	last: like first
 			-- Item at last position
 		do
 			Result := area.item (count - 1)
@@ -140,13 +140,13 @@ feature -- Access
 	index: INTEGER
 			-- Index of `item', if valid.
 
-	cursor: CURSOR is
+	cursor: CURSOR
 			-- Current cursor position
 		do
 			create {ARRAYED_LIST_CURSOR} Result.make (index)
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does current include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -184,19 +184,19 @@ feature -- Measurement
 
 feature -- Status report
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := (count = capacity)
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		local
 			al_c: ARRAYED_LIST_CURSOR
@@ -207,13 +207,13 @@ feature -- Status report
 			end
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do
 			Result := (1 <= i) and (i <= count)
 		end
 
-	is_inserted (v: G): BOOLEAN is
+	is_inserted (v: G): BOOLEAN
 			-- Has `v' been inserted at the end by the most recent `put' or
 			-- `extend'?
 		do
@@ -229,7 +229,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		do
 			index := index + i
@@ -240,7 +240,7 @@ feature -- Cursor movement
 			end
 		end
 
-	start is
+	start
 			-- Move cursor to first position if any.
 		do
 			index := 1
@@ -248,7 +248,7 @@ feature -- Cursor movement
 			after_when_empty: is_empty implies after
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position if any.
 		do
 			index := count
@@ -260,25 +260,25 @@ feature -- Cursor movement
 			before_when_empty: is_empty implies before
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		do
 			index := index + 1
 		end
 
-	back is
+	back
 			-- Move cursor one position backward.
 		do
 			index := index - 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			index := i
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
 			al_c: ARRAYED_LIST_CURSOR
@@ -290,7 +290,7 @@ feature -- Cursor movement
 			index := al_c.index
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- If structure does not include `v' ensure that
@@ -337,7 +337,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' to the beginning.
 			-- Do not move cursor.
 		do
@@ -349,7 +349,7 @@ feature -- Element change
 			index := index + 1
 		end
 
-	force, extend (v: like item) is
+	force, extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
@@ -357,7 +357,7 @@ feature -- Element change
 			force_i_th (v, count)
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of current position.
 			-- Do not move cursor.
 		do
@@ -369,7 +369,7 @@ feature -- Element change
 			index := index + 1
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of current position.
 			-- Do not move cursor.
 		do
@@ -380,13 +380,13 @@ feature -- Element change
 			end
 		end
 
-	replace (v: like first) is
+	replace (v: like first)
 			-- Replace current item by `v'.
 		do
 			put_i_th (v, index)
 		end
 
-	merge_left (other: ARRAYED_LIST [G]) is
+	merge_left (other: ARRAYED_LIST [G])
 			-- Merge `other' into current structure before cursor.
 		local
 			old_index: INTEGER
@@ -399,7 +399,7 @@ feature -- Element change
 			index := old_index + old_other_count
 		end
 
-	merge_right (other: ARRAYED_LIST [G]) is
+	merge_right (other: ARRAYED_LIST [G])
 			-- Merge `other' into current structure after cursor.
 		local
 			l_default: G
@@ -416,7 +416,7 @@ feature -- Element change
 			end
 		end
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [G])
 			-- Append a copy of `s'.
 		local
 			al: ARRAYED_LIST [G]
@@ -440,7 +440,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove first occurrence of `v', if any,
 			-- after cursor position.
 			-- Move cursor to right neighbor.
@@ -467,7 +467,7 @@ feature -- Removal
 			if not after then remove end
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor)
@@ -483,7 +483,7 @@ feature -- Removal
 			index: index = old index
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -525,7 +525,7 @@ feature -- Removal
 			is_after: after
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -533,7 +533,7 @@ feature -- Removal
 			remove
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position
 			-- Do not move cursor
 		do
@@ -542,7 +542,7 @@ feature -- Removal
 			index := index - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			set_count (0)
@@ -552,7 +552,7 @@ feature -- Removal
 
 feature -- Transformation
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at `i'-th position with item
 			-- at cursor position.
 		local
@@ -565,7 +565,7 @@ feature -- Transformation
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at current position
 			-- and having min (`n', `count' - `index' + 1) items.
 		local
@@ -582,14 +582,14 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- Unused
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	insert (v: like item; pos: INTEGER) is
+	insert (v: like item; pos: INTEGER)
 			-- Add `v' at `pos', moving subsequent items
 			-- to the right.
 		require
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			insertion_done: i_th (pos) = v
 		end
 		
-	set_count (new_count: INTEGER) is
+	set_count (new_count: INTEGER)
 			-- Set `count' to `new_count'
 		do
 			count := new_count			
@@ -620,7 +620,7 @@ invariant
 	starts_from_one: lower = 1
 	empty_means_storage_empty: is_empty implies all_default
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

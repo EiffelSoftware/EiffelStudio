@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures whose items may be accessed sequentially, one-way";
@@ -16,7 +16,7 @@ deferred class LINEAR [G] inherit
 
 feature -- Access
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does structure include an occurrence of `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -28,7 +28,7 @@ feature -- Access
 			Result := not exhausted
 		end;
 
-	index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of `v'.
 			-- 0 if none.
 			-- (Reference or object equality,
@@ -72,7 +72,7 @@ feature -- Access
 			non_negative_result: Result >= 0
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- (Reference or object equality,
@@ -101,12 +101,12 @@ feature -- Access
 				 implies v = item
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		deferred
 		end;
 
-	occurrences (v: G): INTEGER is
+	occurrences (v: G): INTEGER
 			-- Number of times `v' appears.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Status report
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Has structure been completely explored?
 		do
 			Result := off
@@ -133,12 +133,12 @@ feature -- Status report
 			exhausted_when_off: off implies Result
 		end;
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		deferred
 		end;
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := is_empty or after
@@ -146,12 +146,12 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	finish is
+	finish
 			-- Move to last position.
 		deferred
 		end;
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		require
@@ -163,7 +163,7 @@ feature -- Cursor movement
 
 feature -- Conversion
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		do
 			Result := Current

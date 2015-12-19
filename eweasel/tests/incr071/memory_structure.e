@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a memory structure."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ deferred class
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize current with given `structure_size'.
 		local
 			null: POINTER
@@ -20,7 +20,7 @@ feature -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Initialize current with `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -37,7 +37,7 @@ feature -- Access
 	shared: BOOLEAN
 			-- Is current memory area shared with others?
 
-	item: POINTER is
+	item: POINTER
 			-- Access to memory area.
 		do
 			if shared then
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		deferred
 		ensure

@@ -7,12 +7,12 @@ inherit
 			make as process_make
 		end;
 	
-creation
+create
 	make
 
 feature
 
-	make (args: STRING) is
+	make (args: STRING)
 		local
 			s: STRING;
 		do

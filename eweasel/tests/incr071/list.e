@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sequential lists, without commitment to a particular representation";
@@ -19,7 +19,7 @@ deferred class LIST [G] inherit
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		deferred
@@ -29,13 +29,13 @@ feature -- Cursor movement
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := (index = count + 1)
 		end;
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := (index = 0)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Data structures of the most general kind, %
@@ -16,7 +16,7 @@ deferred class
 
 feature -- Access
 
-	has (v: G): BOOLEAN is
+	has (v: G): BOOLEAN
 			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -27,12 +27,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no element?
 		deferred
 		end;
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is there no element?
 		obsolete
 			"ELKS 2000: Use `is_empty' instead"
@@ -44,7 +44,7 @@ feature -- Status report
 			-- Must search operations use `equal' rather than `='
 			-- for comparing references? (Default: no, use `='.)
 
-	changeable_comparison_criterion: BOOLEAN is
+	changeable_comparison_criterion: BOOLEAN
 			-- May `object_comparison' be changed?
 			-- (Answer: yes by default.)
 		do
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compare_objects is
+	compare_objects
 			-- Ensure that future search operations will use `equal'
 			-- rather than `=' for comparing references.
 		require
@@ -64,7 +64,7 @@ feature -- Status setting
 			object_comparison
 		end;
 
-	compare_references is
+	compare_references
 			-- Ensure that future search operations will use `='
 			-- rather than `equal' for comparing references.
 		require
@@ -77,7 +77,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	linear_representation: LINEAR [G] is
+	linear_representation: LINEAR [G]
 			-- Representation as a linear structure
 		deferred
 		end;

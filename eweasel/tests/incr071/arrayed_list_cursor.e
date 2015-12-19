@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for arrayed lists";
@@ -12,13 +12,13 @@ class ARRAYED_LIST_CURSOR inherit
 
 	CURSOR
 
-creation
+create
 
 	make
 
 feature {ARRAYED_LIST} -- Initialization
 
-	make (current_index: INTEGER) is
+	make (current_index: INTEGER)
 			-- Create a cursor and set it up on `current_index'.
 		do
 			index := current_index

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Tables whose keys are integers in a contiguous interval";

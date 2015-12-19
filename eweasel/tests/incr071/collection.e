@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		General container data structures, 
@@ -18,17 +18,17 @@ deferred class COLLECTION [G] inherit
 
 feature -- Status report
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		deferred
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed?
 		deferred
 		end
 
-	is_inserted (v: G): BOOLEAN is
+	is_inserted (v: G): BOOLEAN
 			-- Has `v' been inserted by the most recent insertion?
 			-- (By default, the value returned is equivalent to calling 
 			-- `has (v)'. However, descendants might be able to provide more
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put, extend (v: G) is
+	put, extend (v: G)
 			-- Ensure that structure includes `v'.
 		require
 			extendible: extendible
@@ -48,7 +48,7 @@ feature -- Element change
 			item_inserted: is_inserted (v)
 		end
 
-	fill (other: CONTAINER [G]) is
+	fill (other: CONTAINER [G])
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
@@ -71,7 +71,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: G) is
+	prune (v: G)
 			-- Remove one occurrence of `v' if any.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -80,7 +80,7 @@ feature -- Removal
 		deferred
 		end
 
-	prune_all (v: G) is
+	prune_all (v: G)
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -96,7 +96,7 @@ feature -- Removal
 			no_more_occurrences: not has (v)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		require
 			prunable: prunable
@@ -105,7 +105,7 @@ feature -- Removal
 			wiped_out: is_empty
 		end
 
-indexing
+note
 
 	library: "[
 			EiffelBase: Library of reusable components for Eiffel.

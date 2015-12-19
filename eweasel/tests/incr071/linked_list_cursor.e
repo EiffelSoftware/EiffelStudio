@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for linked lists";
@@ -13,13 +13,13 @@ class LINKED_LIST_CURSOR [G] inherit
 
 	CURSOR
 
-creation
+create
 
 	make
 
 feature {LINKED_LIST} -- Initialization
 
-	make (active_element: like active; aft, bef: BOOLEAN) is
+	make (active_element: like active; aft, bef: BOOLEAN)
 			-- Create a cursor and set it up on `active_element'.
 		do
 			active := active_element;

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"``Active'' data structures, which at every stage have %
@@ -18,7 +18,7 @@ deferred class ACTIVE [G] inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require
 			readable: readable
@@ -27,12 +27,12 @@ feature -- Access
 
 feature -- Status report
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		deferred
 		end;
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		deferred
 		end;
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace current item by `v'.
 		require
 			writable: writable
@@ -56,7 +56,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove current item.
 		require
 			prunable: prunable;

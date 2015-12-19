@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dynamically modifiable chains";
@@ -23,10 +23,10 @@ deferred class DYNAMIC_CHAIN [G] inherit
 
 feature -- Status report
 
-	extendible: BOOLEAN is True;
+	extendible: BOOLEAN = True;
 			-- May new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := True
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' at beginning.
 			-- Do not move cursor.
 		deferred
@@ -43,7 +43,7 @@ feature -- Element change
 			item_inserted: first = v
 		end;
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -55,7 +55,7 @@ feature -- Element change
 	 		new_index: index = old index + 1
 		end;
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -67,7 +67,7 @@ feature -- Element change
 	 		same_index: index = old index
 		end;
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
@@ -81,7 +81,7 @@ feature -- Element change
 			other_is_empty: other.is_empty
 		end;
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
@@ -97,7 +97,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove first occurrence of `v', if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor;
@@ -109,7 +109,7 @@ feature -- Removal
 			end
 		end;
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -120,7 +120,7 @@ feature -- Removal
 	 		new_index: index = old index - 1
 		end;
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -131,7 +131,7 @@ feature -- Removal
 	 		same_index: index = old index
 		end;
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -150,7 +150,7 @@ feature -- Removal
 			is_exhausted: exhausted
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			from
@@ -164,7 +164,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
@@ -191,7 +191,7 @@ feature -- Duplication
 
 feature {DYNAMIC_CHAIN} -- Implementation
 
-	new_chain: like Current is
+	new_chain: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.

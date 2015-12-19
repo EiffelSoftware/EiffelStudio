@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Data structures of the most general kind, %
@@ -16,7 +16,7 @@ deferred class BOX [G] inherit
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		deferred
 		end;

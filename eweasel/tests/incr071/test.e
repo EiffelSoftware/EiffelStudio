@@ -1,14 +1,14 @@
 
 class TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		local
 			a: STRING;
-		do
-			!!s.make (a);
+		do 
+			create s.make (a);
 		end;
 	
 	s: SYSTEM_EXECUTION

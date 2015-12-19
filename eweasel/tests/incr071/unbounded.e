@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Finite structures whose item count is not bounded";

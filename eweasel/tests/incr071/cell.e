@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cells containing an item";
@@ -11,7 +11,7 @@ indexing
 
 class CELL [G]
 
-creation
+create
 	put
 
 feature -- Access
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Element change
 
-	put, replace (v : like item) is
+	put, replace (v : like item)
 			-- Make `v' the cell's `item'.
 		do
 			item := v

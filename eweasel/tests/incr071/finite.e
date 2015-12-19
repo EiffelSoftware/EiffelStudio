@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures with a finite item count";
@@ -14,14 +14,14 @@ deferred class FINITE [G] inherit
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		deferred
 		end;
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		do
 			Result := (count = 0)

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursors for remembering positions in arbitrary data structures";

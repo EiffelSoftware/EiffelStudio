@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Structures for which there exists a traversal policy %
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at current position
 		require
 			not_off: not off
@@ -29,14 +29,14 @@ feature -- Access
 
 feature -- Status report
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		deferred
 		end
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position if any.
 		deferred
 		end;

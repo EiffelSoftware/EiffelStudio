@@ -6,7 +6,7 @@ feature -- Access
 
 feature -- Functions with different number of arguments
 
-	f1 alias "$(OPERATOR)" (x: like Current): BOOLEAN is
+	f1 alias "$(OPERATOR)" (x: like Current): BOOLEAN
 		do
 			Result := item $(OPERATOR) x.item
 		end

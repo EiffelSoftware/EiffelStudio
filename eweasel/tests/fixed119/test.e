@@ -17,7 +17,7 @@ create
 
 feature
 	
-	make is
+	make
 		local
 			i: $TYPE
 		do

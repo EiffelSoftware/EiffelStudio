@@ -15,7 +15,7 @@ feature
 
 	item: BOOLEAN
 
-	f alias "$(OPERATOR)" (x: like Current): BOOLEAN is
+	f alias "$(OPERATOR)" (x: like Current): BOOLEAN
 		do
 			Result := item $(OPERATOR) x.item
 		end

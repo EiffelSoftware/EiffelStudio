@@ -19,7 +19,7 @@ feature {NONE} -- Creation
 
 feature
 
-	f1 alias "$(OPERATOR)" (x: like Current): BOOLEAN is
+	f1 alias "$(OPERATOR)" (x: like Current): BOOLEAN
 		do
 			Result := item $(OPERATOR) x.item
 		end

@@ -9,7 +9,7 @@ create
 	make
 feature
 	
-	make is
+	make
 		do
 		end;
 			

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Truth values, with the boolean operations"
 	external_name: "System.Boolean"
 	assembly: "mscorlib"

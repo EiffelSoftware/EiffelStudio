@@ -5,11 +5,11 @@
 --| Public License version 2.
 
 class TEST
-creation
+create
 	make
 feature
 	
-	make is
+	make
 		do
 		end
 end

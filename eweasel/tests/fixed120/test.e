@@ -14,10 +14,10 @@
 
 class 
 	TEST
-creation
+create
 	make
 feature
-	make is
+	make
 		local
 			k: INTEGER;
 			s: ARRAY [STRING];

@@ -3,14 +3,14 @@ class
 
 feature -- Raise
 
-	raise is
+	raise
 			-- Raise current exception
 		do
 		end
 
 feature -- Access
 
-	meaning: STRING is
+	meaning: STRING
 			-- A message in English describing what `except' is
 		do
 		end
@@ -18,12 +18,12 @@ feature -- Access
 	message: STRING
 			-- Message(Tag) of current exception
 
-	exception_trace: STRING is
+	exception_trace: STRING
 			-- String representation of current exception trace
 		do
 		end
 
-	frozen original: EXCEPTION is
+	frozen original: EXCEPTION
 			-- The original exception caused current exception
 		do
 		end
@@ -44,7 +44,7 @@ feature -- Access
 			-- Name of the class that includes the recipient
 			-- of original form of current exception
 
-	code: INTEGER is
+	code: INTEGER
 			-- Code of the exception.
 		do
 		end
@@ -54,59 +54,59 @@ feature -- Access
 
 feature -- Status settings
 
-	set_message (a_message: like message) is
+	set_message (a_message: like message)
 			-- Set `message' with `a_message'.
 		do
 		end
 
 feature -- Status report
 
-	frozen is_ignorable: BOOLEAN is
+	frozen is_ignorable: BOOLEAN
 			-- Is current exception ignorable?
 		do
 		end
 
-	frozen is_raisable: BOOLEAN is
+	frozen is_raisable: BOOLEAN
 			-- Is current exception raisable by `raise'?
 		do
 		end
 
-	frozen is_ignored: BOOLEAN is
+	frozen is_ignored: BOOLEAN
 			-- If set, no exception is raised.
 		do
 		end
 
-	frozen is_caught: BOOLEAN is
+	frozen is_caught: BOOLEAN
 			-- If set, exception is raised.
 		do
 		end
 
 feature {EXCEPTION_MANAGER} -- Implementation
 
-	frozen set_throwing_exception (a_exception: EXCEPTION) is
+	frozen set_throwing_exception (a_exception: EXCEPTION)
 			-- Set `throwing_exception' with `a_exception'.
 		do
 		end
 
-	frozen is_throwing (a_exception: EXCEPTION): BOOLEAN is
+	frozen is_throwing (a_exception: EXCEPTION): BOOLEAN
 			-- Is current exception throwing `a_exception'?
 			-- If the throwing exception is current, return False.
 		do
 		end
 
-	set_recipient_name (a_name: like recipient_name) is
+	set_recipient_name (a_name: like recipient_name)
 			-- Set `recipient_name' with `a_name'
 		do
 			recipient_name := a_name
 		end
 
-	internal_meaning: STRING is
+	internal_meaning: STRING
 			-- Internal `meaning'
 		once
 			Result := "General exception."
 		end
 
-	frozen set_type_name (a_type: like type_name) is
+	frozen set_type_name (a_type: like type_name)
 			-- Set `type_name' with `a_type'
 		do
 		end
@@ -114,12 +114,12 @@ feature {EXCEPTION_MANAGER} -- Implementation
 	frozen internal_is_ignorable: BOOLEAN
 			-- Internal `is_ignorable'
 
-	frozen exception_manager: EXCEPTION_MANAGER is
+	frozen exception_manager: EXCEPTION_MANAGER
 		once
 			create Result
 		end
 		
-	frozen set_exception_trace (a_trace: like exception_trace) is
+	frozen set_exception_trace (a_trace: like exception_trace)
 			-- Set `exception_trace' with `a_trace'.
 		do
 		end

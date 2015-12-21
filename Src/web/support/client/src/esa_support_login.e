@@ -119,20 +119,44 @@ feature -- Access
 
 	logon_url: STRING_8
 				-- Retrieve Login url from CJ response.
+		local
+			retried: BOOLEAN
 		do
-			Result := retrieve_url ("login", "Login")
+			if not retried then
+				Result := retrieve_url ("login", "Login")
+			end
+		rescue
+			is_bad_request := True
+			retried := True
+			retry
 		end
 
 	logoff_url: STRING_8
 			-- Retrieve Logoff url from CJ response.
+		local
+			retried: BOOLEAN
 		do
-			Result := retrieve_url ("logoff", "Logoff")
+			if not retried then
+				Result := retrieve_url ("logoff", "Logoff")
+			end
+		rescue
+			is_bad_request := True
+			retried := True
+			retry
 		end
 
 	register_url: STRING_8
 			-- Retrieve Register url from CJ response.
+		local
+			retried: BOOLEAN
 		do
-			Result := retrieve_url ("register", "Register")
+			if not retried then
+				Result := retrieve_url ("register", "Register")
+			end
+		rescue
+			is_bad_request := True
+			retried := True
+			retry
 		end
 
 
@@ -177,9 +201,6 @@ feature {NONE} -- Retrieve URL
 				end
 			end
 		end
-
-
-
 
 invariant
 	last_username_attached: is_logged_in implies last_username /= Void

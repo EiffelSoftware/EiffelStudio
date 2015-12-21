@@ -26,9 +26,17 @@ feature -- Basic operations
 			is_support_accessible: is_support_accessible
 			is_logged_in: is_logged_in
 			a_report_attached: a_report /= Void
+		local
+			retried: BOOLEAN
 		do
-			last_reported_uri := Void
-			fill_bug_report (a_report)
+			if not retried then
+				last_reported_uri := Void
+				fill_bug_report (a_report)
+			end
+		rescue
+			is_bad_request := True
+			retried := True
+			retry
 		end
 
 feature -- Access

@@ -66,10 +66,10 @@ feature -- Basic operations
 		require
 			action_not_void: action /= Void
 			undo_procedure_not_void: undo_procedure /= Void
-			action_valid: conforms (action, "PROCEDURE [ANY, TUPLE]")
-				or conforms_to_tuple_of_array_of (action, "PROCEDURE [ANY, TUPLE]")
-			undo_procedure_valid: conforms (undo_procedure, "PROCEDURE [ANY, TUPLE]")
-				or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [ANY, TUPLE]")
+			action_valid: conforms (action, "PROCEDURE [TUPLE]")
+				or conforms_to_tuple_of_array_of (action, "PROCEDURE [TUPLE]")
+			undo_procedure_valid: conforms (undo_procedure, "PROCEDURE [TUPLE]")
+				or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [TUPLE]")
 		local
 			t: TUPLE
 			action_proc: PROCEDURE
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			-- Call all procedures in `array'.
 		require
 			array_not_void: array /= Void
-			array_valid: conforms_to_array_of (array, "PROCEDURE [ANY, TUPLE]")
+			array_valid: conforms_to_array_of (array, "PROCEDURE [TUPLE]")
 		local
 			i: INTEGER
 			p: PROCEDURE
@@ -290,7 +290,7 @@ invariant
 	redo_exhausted_actions_not_void: redo_exhausted_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -303,22 +303,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class UNDO_CONTEXT

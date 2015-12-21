@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb_main, hb: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
-			l_list: ARRAYED_LIST [STRING_32]
-			l_hs: like {CONF_FILE_RULE}.include
 		do
 			default_create
 			data := a_file_rule

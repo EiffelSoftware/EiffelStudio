@@ -137,10 +137,21 @@ feature {NONE} -- Initialization
 			l_link.select_actions.extend (agent
 				local
 					l_uri_provider: RAW_URI_HELP_PROVIDER
+					l_register_url: STRING_8
+					l_error_info: STRING_8
+					l_error: ES_ERROR_PROMPT
 				do
 					create l_uri_provider.make (
 						agent (preferences.misc_data.internet_browser_preference).value)
-					l_uri_provider.show_help (support_login.register_url, Void)
+					l_register_url := support_login.register_url
+					if support_login.is_bad_request then
+						l_error_info := "Unable to register due to network problem. Please try again later."
+						create l_error.make_standard (l_error_info)
+						l_error.show (dialog)
+					else
+						l_uri_provider.show_help (support_login.register_url, Void)
+					end
+
 				end)
 
 			l_link.align_text_left
@@ -935,10 +946,15 @@ feature {NONE} -- Reporting
 				support_login.report_bug (l_report)
 				l_transistion.hide
 
-				create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
-				l_thanks.set_sub_title (locale_formatter.translation (tt_thank_you))
-				l_thanks.show (dialog)
-				is_submit_successed := True
+				if support_login.is_bad_request then
+					create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.")
+					l_error.show (dialog)
+				else
+					create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
+					l_thanks.set_sub_title (locale_formatter.translation (tt_thank_you))
+					l_thanks.show (dialog)
+					is_submit_successed := True
+				end
 			else
 				if attached l_transistion and then l_transistion.is_shown then
 						-- Need to hide the transition window if there was a failure.

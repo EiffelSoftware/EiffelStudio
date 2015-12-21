@@ -189,7 +189,11 @@ feature {NONE} -- Implementation
 			if l_loader.is_error then
 				display_error ({STRING_32} "Could not retrieve configuration " + a_file.name + "!")
 				display_error (l_loader.last_error.text)
-			else
+
+				-- We only process an ECF file that is not a redirection, otherwise we would
+				-- be replacing the redirection with the content of the redirected ECF.
+			elseif l_loader.last_redirection = Void then
+
 					-- Remove the `is_obsolete_routine_type' option if present on all targets.
 				if is_updating_agents then
 					across l_loader.last_system.targets as l_target loop

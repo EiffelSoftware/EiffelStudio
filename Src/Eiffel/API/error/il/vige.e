@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			internal_error_string := "%
 				%Unable to load .NET components. Make sure .NET and Eiffel for .NET%N%
 				%are properly installed%N%N%
-				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
+				%See https://eiffel.org/doc/solutions/.NET for more details.%N"
 		end
 
 	make_output_in_use (t: READABLE_STRING_GENERAL)

@@ -39,7 +39,7 @@ feature {NONE} -- Access
 	base_url: STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("http://docs.eiffel.com/isedoc/uuid/")
+			create Result.make_from_string ("https://eiffel.org/doc/uuid/")
 		end
 
 	section_url_separator: CHARACTER_32

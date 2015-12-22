@@ -23,6 +23,15 @@ feature {NONE} -- Access
 	last_password: STRING_GENERAL
 			-- Last logged in user's password
 
+	cache_register_url: STRING_8
+			-- Cached register url.
+
+	cache_logon_url: STRING_8
+			-- Cached logon url.				
+
+	cache_logoff_url: STRING_8
+			-- Cached logoff url.
+
 feature -- Status report
 
 	is_logged_in: BOOLEAN
@@ -83,6 +92,7 @@ feature -- Basic operations
 		do
 			is_logged_in := False
 			if not retried then
+				create ctx.make
 				if last_username /= Void and last_password /= Void then
 					if attached basic_auth (last_username, last_password) as l_auth then
 						ctx.add_header ("Authorization", l_auth)
@@ -123,7 +133,11 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := retrieve_url ("login", "Login")
+					-- Cache logon url
+				if cache_logon_url = Void then
+					cache_logon_url := retrieve_url ("login", "Login")
+				end
+				Result := cache_logon_url
 			end
 		rescue
 			is_bad_request := True
@@ -137,7 +151,10 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := retrieve_url ("logoff", "Logoff")
+				if cache_logoff_url = Void then
+					cache_logoff_url := retrieve_url ("logoff", "Logoff")
+				end
+				Result := cache_logoff_url
 			end
 		rescue
 			is_bad_request := True
@@ -151,7 +168,11 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := retrieve_url ("register", "Register")
+					-- Cache Register page.
+				if cache_register_url = Void then
+					cache_register_url := retrieve_url ("register", "Register")
+				end
+				Result := cache_register_url
 			end
 		rescue
 			is_bad_request := True

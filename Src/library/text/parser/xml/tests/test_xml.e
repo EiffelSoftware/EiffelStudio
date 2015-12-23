@@ -279,16 +279,24 @@ feature -- Test routines
 			p: XML_PARSER
 			l_input: XML_FILE_INPUT_STREAM
 			l_file: RAW_FILE
+			retried: BOOLEAN
 		do
-			p := factory.new_parser
-			create l_file.make_open_write ("test_xml_parser_without_start.xml")
-			l_file.put_string ("<system></system>")
-			l_file.close
-			create l_input.make_with_filename ("test_xml_parser_without_start.xml")
-			p.parse_from_stream (l_input)
-			l_input.close
-			assert ("parsed", p.is_correct)
-			assert ("succeed", not p.error_occurred)
+			if not retried then
+				p := factory.new_parser
+				create l_file.make_open_write ("test_xml_parser_without_start.xml")
+				l_file.put_string ("<system></system>")
+				l_file.close
+				create l_input.make_with_filename ("test_xml_parser_without_start.xml")
+				p.parse_from_stream (l_input)
+				l_input.close
+				assert ("parsed", p.is_correct)
+				assert ("succeed", not p.error_occurred)
+				assert ("exception raised", False) --!!!
+			end
+		rescue
+			assert ("exception raised", True)
+			retried := True
+			retry
 		end
 
 	test_xml_parser_with_unicode_tag
@@ -708,6 +716,20 @@ feature -- ASCII
 	test_bad_xml_09
 		do
 			test_xml_content ("bad_xml_08", False, False, bad_xml_08)
+		end
+
+	test_cdata
+		do
+			test_xml_content ("cdata_01", True, False, "<doc><![CDATA[<author>John Smith</author>]]></doc>")
+			test_xml_content ("cdata_02", True, False, "<doc><![CDATA[]]></doc>") -- empty
+			test_xml_content ("cdata_03", True, False, "<doc><![CDATA[<author>John Smith</author>]]><![CDATA[<author>Foo Bar</author>]]></doc>")
+			test_xml_content ("cdata_04", True, False, "<doc><![CDATA[]]><![CDATA[]]></doc>") -- empty
+		end
+
+	test_cdata_bracket
+		do
+			test_xml_content ("cdata_bracket_01", True, False, "<doc><![CDATA[]]]]></doc>") -- ]]
+			test_xml_content ("cdata_bracket_02", True, False, "<doc><![CDATA[]]]]><![CDATA[>]]></doc>")
 		end
 
 feature {NONE} -- XML content

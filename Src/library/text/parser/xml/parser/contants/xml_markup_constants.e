@@ -53,6 +53,7 @@ feature -- Constants
 	Gt_entity: STRING_32 = "&gt;"
 	Amp_entity: STRING_32 = "&amp;"
 	Quot_entity: STRING_32 = "&quot;"
+	Apos_entity: STRING_32 = "&apos;"
 
 	Char_entity_prefix: STRING_32 = "&#"
 	Entity_suffix: STRING_32 = ";"
@@ -78,7 +79,7 @@ feature -- Constants
 	xml_base_with_prefix: STRING_32 = "xml:base"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

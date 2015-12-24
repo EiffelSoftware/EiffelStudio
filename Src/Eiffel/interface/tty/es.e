@@ -198,7 +198,7 @@ feature -- Initialization
 									compilation.set_is_finish_freezing_called (is_finish_freezing_called)
 									compilation.execute
 
-									if command /= compilation and then system.successful then
+									if command /= compilation and then workbench.system_defined and then system.successful then
 											-- Case where we forced a quick melt. In the event we also have the `-tests'
 											-- flag and no executable is present, we force a C compilation.
 										if is_finish_freezing_for_test_needed then

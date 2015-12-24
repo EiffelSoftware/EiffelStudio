@@ -8,6 +8,9 @@ note
 deferred class
 	ENVIRONMENT_ARGUMENTS
 
+inherit
+	SHARED_EXECUTION_ENVIRONMENT
+
 feature -- Access
 
 	argument (i: INTEGER): IMMUTABLE_STRING_32
@@ -17,16 +20,35 @@ feature -- Access
 			index_large_enough: i >= 0
 			index_small_enough: i <= argument_count
 		do
-			if i <= base_arguments.argument_count then
-				Result := base_arguments.argument (i)
+			if i = 0 then
+				Result := base_arguments.argument (0)
 			else
-				Result := environment_argument_item (i)
+				if environment_arguments_prepended then
+					if i <= environment_arguments.count then
+						Result := environment_argument_item (i)
+					else
+						Result := base_argument_item (i)
+					end
+				else
+					if i <= base_arguments.argument_count then
+						Result := base_argument_item (i)
+					else
+						Result := environment_argument_item (i)
+					end
+				end
 			end
 		ensure
 			argument_not_void: Result /= Void
 		end
 
 feature -- Status report
+
+	environment_arguments_prepended: BOOLEAN
+			-- Are environment argument before base arguments?
+			-- Redefine to change behavior.
+		do
+			Result := False
+		end
 
 	index_of_word_option (opt: READABLE_STRING_GENERAL): INTEGER
 			-- Does command line specify word option `opt' and, if so,
@@ -35,6 +57,7 @@ feature -- Status report
 			-- is `Xopt', where `X' is the current `option_sign',
 			-- then index of this argument in list;
 			-- else 0.
+			-- Check first in command line argument, and then in environment arguments!
 		require
 			opt_non_void: opt /= Void
 			opt_meaningful: not opt.is_empty
@@ -42,10 +65,19 @@ feature -- Status report
 			i, n: INTEGER
 		do
 			Result := base_arguments.index_of_word_option (opt)
-			if Result = 0 then
-				n := argument_count
+			if Result > 0 then
+				if environment_arguments_prepended then
+					Result := Result + environment_arguments.count
+				end
+			else
 				from
-					i := base_arguments.argument_count + 1
+					if environment_arguments_prepended then
+						n := environment_arguments.count
+						i := 1
+					else
+						n := argument_count
+						i := base_arguments.argument_count + 1
+					end
 				until
 					i > n or else option_word_equal (environment_argument_item (i), opt)
 				loop
@@ -109,13 +141,37 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	environment_argument_item (i: INTEGER): IMMUTABLE_STRING_32
-			-- `i'-th argument of environment option
+	base_argument_item (i: INTEGER): IMMUTABLE_STRING_32
+			-- `i'-th argument of command line option.
+			-- Except argument at position `0'.
 		require
-			index_large_enough: i > base_arguments.argument_count
-			index_small_enough: i <= argument_count
+			index_large_enough: (environment_arguments_prepended and i > environment_arguments.count)
+							or (not environment_arguments_prepended and i > 0)
+			index_small_enough: (environment_arguments_prepended and i <= argument_count)
+							or (not environment_arguments_prepended and i <= base_arguments.argument_count)
 		do
-			Result := environment_arguments.i_th (i - base_arguments.argument_count)
+			if environment_arguments_prepended then
+				Result := base_arguments.argument (i - environment_arguments.count)
+			else
+				Result := base_arguments.argument (i)
+			end
+		ensure
+			argument_not_void: Result /= Void
+		end
+
+	environment_argument_item (i: INTEGER): IMMUTABLE_STRING_32
+			-- `i'-th argument of environment option.
+		require
+			index_large_enough: (environment_arguments_prepended and i > 0)
+								or (not environment_arguments_prepended and i > base_arguments.argument_count)
+			index_small_enough: (environment_arguments_prepended and i <= environment_arguments.count)
+								or (not environment_arguments_prepended and i <= argument_count)
+		do
+			if environment_arguments_prepended then
+				Result := environment_arguments.i_th (i)
+			else
+				Result := environment_arguments.i_th (i - base_arguments.argument_count)
+			end
 		ensure
 			argument_not_void: Result /= Void
 		end
@@ -130,12 +186,9 @@ feature {NONE} -- Implementation
 			exec: EXECUTION_ENVIRONMENT
 			l_in_quote: BOOLEAN
 		once
-			create exec
+			exec := execution_environment
 			l_flags := exec.item (arguments_environment_name)
-			if l_flags /= Void then
-				l_flags.right_adjust --| To exclude flag with only whitespace
-			end
-			if l_flags /= Void and then not l_flags.is_empty then
+			if l_flags /= Void and then not l_flags.is_whitespace then
 				from
 					i := 1
 					n := l_flags.count
@@ -188,7 +241,7 @@ invariant
 				argument_count > base_arguments.argument_count
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

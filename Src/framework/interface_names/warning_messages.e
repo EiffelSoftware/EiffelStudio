@@ -750,6 +750,12 @@ feature -- Ace/Project settings warnings
 	w_Could_not_parse_ace: STRING_32 do Result := locale.translation ("An error occurred while parsing the configuration file.%N%
 									%Please try using the project settings tool.") end
 
+feature -- Argument warnings
+
+	w_obsolete_command_line_option (option: READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (locale.translation
+			("Obsolete command-line option: %"$1%"."), option) end
+
 feature -- Profiler messages
 
 	w_Profiler_Bad_query: STRING_32
@@ -1161,7 +1167,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1192,4 +1198,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class WARNING_MESSAGES
+end

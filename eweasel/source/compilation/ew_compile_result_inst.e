@@ -2,7 +2,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
-	date: "93/08/30"
+	date: "$Date$"
 
 class EW_COMPILE_RESULT_INST
 
@@ -49,6 +49,14 @@ feature
 					else
 						cr.set_compilation_finished;
 						init_ok := True;
+					end
+				elseif type.same_string_general (command_line_option_error_result) then
+					if phrases.count > 0 then
+						failure_explanation := "no arguments allowed for command_line_option_error result"
+						init_ok := False
+					else
+						cr.set_has_command_line_option_error
+						init_ok := True
 					end
 				elseif equal (type, Syntax_error_result) or equal (type, Syntax_warning_result) then
 					if phrases.count = 0 then
@@ -238,6 +246,8 @@ feature {NONE} -- Implementation
 
 	Phrase_separator: CHARACTER = ';';
 
+feature {EW_COMPILE_RESULT_INST, EW_CODE_ANALYSIS_RESULT_INST} -- Result strings
+
 	Ok_result: STRING = "ok"
 
 	Syntax_error_result: STRING = "syntax_error"
@@ -248,9 +258,11 @@ feature {NONE} -- Implementation
 
 	Validity_warning_result: STRING = "validity_warning";
 
+	command_line_option_error_result: STRING = "command_line_option_error"
+
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2015, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

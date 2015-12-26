@@ -3,7 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
-	date: "05/2014"
+	date: "$Date$"
 
 class
 	EW_RUN_CODE_ANALYSIS_INST
@@ -78,7 +78,6 @@ feature -- Instruction
 			l_temp_string: STRING
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (16)
-			Result.extend (Code_analysis_ec_option)
 			if load_defaults then
 				Result.extend (Load_defaults_ec_option)
 			end
@@ -86,12 +85,14 @@ feature -- Instruction
 				Result.extend (Load_preferences_ec_option)
 				Result.extend (os.full_file_name (a_test.environment.value (Test_dir_name), l_preference_file_name))
 			end
+			Result.extend (Specify_classes_ec_option)
 			if attached class_list as l_class_list then
-				Result.extend (Specify_classes_ec_option)
 				l_temp_string := merged_with_separator (l_class_list, " ")
 				l_temp_string.prepend_character ('%"')
 				l_temp_string.append_character ('%"')
 				Result.extend (l_temp_string)
+			else
+				Result.extend (all_classes_ec_option)
 			end
 			if attached forced_rules_argument as l_forced_rules_argument then
 				Result.extend (Force_rules_ec_option)
@@ -144,19 +145,19 @@ feature {NONE} -- Internal constants
 
 		-- Arguments to be passed to the compiler.
 
-	Code_analysis_ec_option: STRING = "-code-analysis"
+	Load_defaults_ec_option: STRING = "-ca_default"
 
-	Load_defaults_ec_option: STRING = "-cadefaults"
+	Load_preferences_ec_option: STRING = "-ca_setting"
 
-	Load_preferences_ec_option: STRING = "-caloadprefs"
+	Specify_classes_ec_option: STRING = "-ca_class"
 
-	Specify_classes_ec_option: STRING = "-caclass"
+	Force_rules_ec_option: STRING = "-ca_rule"
 
-	Force_rules_ec_option: STRING = "-caforcerules"
+	all_classes_ec_option: STRING = "-all"
 
 note
 	copyright: "[
-		Copyright (c) 1984-2007, University of Southern California and contributors.
+		Copyright (c) 1984-2015, University of Southern California and contributors.
 		All rights reserved.
 	]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

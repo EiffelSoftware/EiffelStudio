@@ -2,7 +2,7 @@ note
 	description: "An Eiffel compilation result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "93/08/30"
+	date: "$Date$"
 
 class EW_EIFFEL_COMPILATION_RESULT
 
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 		end
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2015, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

@@ -1,6 +1,6 @@
 ﻿note
 	description: "Command-line Eiffel Inspector (code analysis)"
-	author: "Stefan Zurfluh"
+	author: "Stefan Zurfluh and others"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,72 +16,127 @@ inherit
 	CA_SHARED_NAMES
 
 create
-	make_with_arguments
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (a_arguments: ITERABLE [READABLE_STRING_32])
-			-- Initialization for `Current'. `a_arguments' are the command-line
-			-- arguments that are relevant for the Code Analyzer.
-		local
-			l_string: STRING_32
-			l_list_strings: LIST [STRING_32]
+	make
+			-- Initialize with empty set of classes and rules.
 		do
-			create unknown_arguments.make (8)
+		end
 
+feature -- Status report
+
+	argument_error: detachable STRING_32
+			-- Error in an argument(s) (if any).
+
+	is_all_classes: BOOLEAN
+			-- Should all classes be processed?
+
+feature -- Initialization
+
+	parse_arguments (a_arguments: ITERABLE [READABLE_STRING_32])
+			-- Initialize using command-line arguments `a_arguments'
+			-- that are relevant for the Code Analyzer.
+		do
 			across a_arguments as l_args loop
 				if l_args.item.same_string_general ("-cadefaults") then
-					restore_preferences := True
+					set_defaults
 				elseif l_args.item.same_string_general ("-caloadprefs") then
 					l_args.forth
-					preference_file := l_args.item
+					if l_args.after then
+						argument_error := ca_messages.missing_file_name ("-caloadprefs")
+					else
+						set_preference_file (l_args.item)
+					end
 				elseif l_args.item.same_string_general ("-caforcerules") then
 					l_args.forth
-
-					parse_forced_rules (l_args.item)
-					if forced_rules_parse_error then
-						unknown_arguments.extend (l_args.item)
+					if l_args.after then
+						argument_error := ca_messages.missing_rule ("-caforcerules")
+					elseif not attached argument_error then
+						add_rule (l_args.item)
+						if attached argument_error as e then
+								-- Add option name to the error message.
+							argument_error := ca_messages.rule_argument_error ("-caforcerules", e)
+						end
 					end
 				elseif l_args.item.same_string_general ("-caclass") or l_args.item.same_string_general ("-caclasses") then
 						-- Syntax: -caclass "MY_CLASS; MY_CLASS_2; MY_CLASS_3"
 						-- where semicolons are optional.
 					l_args.forth
-
-					if l_args.item.is_empty then
-							-- Corner case: split would return one empty string, I want zero strings.
-							-- We still want to instantiate the list, as we want to analyze exactly zero classes.
-						create {ARRAYED_LIST [STRING_32]} class_name_list.make (0)
+					if l_args.after then
+						argument_error := ca_messages.missing_class ("-caclasses")
 					else
-						l_string := l_args.item.to_string_32
-
-							-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR"
-						l_string.replace_substring_all ({STRING_32} ";", {STRING_32} " ")
-						l_list_strings := l_string.split (' ')
-
-							-- Remove empty entries
-						create {ARRAYED_LIST [STRING_32]} class_name_list.make (l_list_strings.count)
-						across l_list_strings as ic loop
-							if not ic.item.is_empty then
-								class_name_list.extend (ic.item)
-							end
-						end
-
+						add_class (l_args.item)
 					end
 				else
-					unknown_arguments.extend (l_args.item)
+					argument_error := ca_messages.unknown_argument (l_args.item)
+				end
+			end
+				-- By default if code analysis is requested with an old command-line option,
+				-- it should be performed in any case.
+				-- Therefore if a class list is not set, all classes need to be processed.
+			if not attached class_name_list then
+				is_all_classes := True
+			end
+		end
+
+	set_defaults
+			-- Tell code analyzer to use default preferences.
+		do
+			restore_preferences := True
+		end
+
+	set_preference_file (f: READABLE_STRING_32)
+			-- Tell code analyzer to load preferences from a file of name `f'.
+		do
+			preference_file := f
+		end
+
+	add_rule (r: READABLE_STRING_32)
+			-- Tell code analyzer to apply a specified rule or rules (with optional preference settings).
+		do
+			parse_forced_rules (r)
+		end
+
+	set_all_classes
+			-- Tell code analyzer to process all classes.
+		do
+			is_all_classes := True
+		end
+
+	add_class (c: READABLE_STRING_32)
+			-- Tell code analyzer to process a given class or classes.
+		local
+			s: STRING_32
+			ss: like {STRING_32}.split
+		do
+			if c.is_empty then
+					-- Request to analyze exactly zero classes.
+				create {ARRAYED_LIST [STRING_32]} class_name_list.make (0)
+			else
+				s := c.to_string_32
+
+					-- We can't just prune all semicolons, otherwise "FOO;BAR" would become "FOOBAR".
+				s.replace_substring_all ({STRING_32} ";", {STRING_32} " ")
+				ss := s.split (' ')
+
+					-- Remove empty entries
+				create {ARRAYED_LIST [STRING_32]} class_name_list.make (ss.count)
+				across ss as ic loop
+					if not ic.item.is_empty then
+						class_name_list.extend (ic.item)
+					end
 				end
 			end
 		end
 
-
-		forced_rules_parse_error: BOOLEAN
-				-- Did the last call to `parse_forced_rules' result in an error?
+feature {NONE} -- Parsing
 
 		parse_forced_rules (a_line: READABLE_STRING_32)
 				-- Parse an argument representing the forced rules list (possibly with forced preferences).
 			local
 				l_line: STRING_32
-				l_parse_error: BOOLEAN
 				l_rule_name: READABLE_STRING_32
 				l_block_end_pos: INTEGER
 			do
@@ -92,16 +147,15 @@ feature {NONE} -- Initialization
 				l_line.replace_substring_all ({STRING_32} ";", {STRING_32} " ")
 
 				from
-					-- l_line
 				until
-					l_line.is_empty or l_parse_error
+					l_line.is_empty or attached argument_error
 				loop
 						-- Read the rule name
 					l_rule_name := first_word (l_line, 1)
 
-						-- Get angry if it's not recognized
 					if l_rule_name.is_empty then
-						l_parse_error := true
+							-- Report bad rule name.
+						argument_error := ca_messages.invalid_rule_name
 					else
 							-- Enable the rule.
 						forced_preferences.extend ([l_rule_name, {CA_RULE}.Option_name_enable, "True"])
@@ -114,13 +168,15 @@ feature {NONE} -- Initialization
 						if l_line.index_of ('(', 1) = 1 then
 							l_block_end_pos := l_line.index_of (')', 1)
 							if l_block_end_pos = 0 then
-								l_parse_error := True
+									-- Report missing closing parenthesis.
+								argument_error := ca_messages.missing_closing_parenthesis (l_rule_name)
 							else
 								if attached parse_preference_block (l_line.substring (2, l_block_end_pos - 1), l_rule_name) as l_preferences_to_add then
 									forced_preferences.finish
 									forced_preferences.merge_right (l_preferences_to_add)
 								else
-									l_parse_error := True
+										-- Report invalid rule settings.
+									argument_error := ca_messages.invalid_rule_setting (l_rule_name)
 								end
 									-- Trim again
 								l_line.remove_head (l_block_end_pos)
@@ -129,8 +185,6 @@ feature {NONE} -- Initialization
 						end
 					end
 				end
-
-				forced_rules_parse_error := l_parse_error
 			end
 
 	parse_preference_block (a_block, a_rule_id: READABLE_STRING_32): like forced_preferences
@@ -196,8 +250,7 @@ feature {NONE} -- Options
 			-- default values?
 
 	preference_file: READABLE_STRING_32
-
-	unknown_arguments: ARRAYED_LIST [READABLE_STRING_32]
+			-- Name of a preference file.
 
 feature -- Execution (declared in EWB_CMD)
 
@@ -212,26 +265,21 @@ feature -- Execution (declared in EWB_CMD)
 				-- Delegate any output to the command line window.
 			l_code_analyzer.add_output_action (agent print_line)
 
-			if not attached class_name_list then
+			if is_all_classes then
 				l_code_analyzer.add_whole_system
-			else
-				across class_name_list as ic loop
-					try_add_class_with_name (l_code_analyzer, ic.item)
+			elseif attached class_name_list as cs then
+				across cs as c loop
+					try_add_class_with_name (l_code_analyzer, c.item)
 				end
 			end
 
 			output_window.add ("%NEiffel Inspector%N")
 			output_window.add ("----------------%N")
 
-			if attached unknown_arguments then
-				across unknown_arguments as ic loop
-					print_line (ca_messages.unknown_argument (ic.item))
-				end
-			end
-
 			if restore_preferences then
 				l_code_analyzer.preferences.restore_defaults
-			elseif preference_file /= Void then -- The user wants to load preferences.
+			end
+			if preference_file /= Void then -- The user wants to load preferences.
 				import_preferences (l_code_analyzer.preferences, preference_file)
 			end
 			if attached forced_preferences as l_forced_preferences then

@@ -659,9 +659,11 @@ feature -- Update
 			show_creators: BOOLEAN
 			ewb_senders: EWB_SENDERS
 			ewb_callees: EWB_CALLEES
-			l_arg: STRING_32
+			l_arg: READABLE_STRING_32
 			in_filename, out_filename: STRING_32
+			code_analysis_command: EWB_CODE_ANALYSIS
 		do
+			create code_analysis_command.make
 			filter_name := ""
 			option := argument (current_option);
 
@@ -1277,9 +1279,55 @@ feature -- Update
 
 			elseif option.same_string_general ("-code-analysis") then
 					-- FIXME: This only works if `-code-analysis' is the last argument.
-				create {EWB_CODE_ANALYSIS} command.make_with_arguments
-					(arguments_in_range (current_option + 1, argument_count))
-				current_option := argument_count + 1
+					-- TODO: Mark the option as obsolete.
+				if attached command then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				else
+					code_analysis_command.parse_arguments (arguments_in_range (current_option + 1, argument_count))
+					current_option := argument_count + 1
+					if attached code_analysis_command.argument_error as e then
+						option_error_message := e
+					else
+						command := code_analysis_command
+					end
+				end
+
+			elseif option.same_string_general ("-ca_default") then
+				code_analysis_command.set_defaults
+
+			elseif option.same_string_general ("-ca_setting") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					code_analysis_command.set_preference_file (argument (current_option))
+				else
+					option_error_message := code_analysis_command.ca_messages.missing_file_name ("-ca_setting")
+				end
+
+			elseif option.same_string_general ("-ca_class") then
+				if current_option < argument_count then
+						-- Read a class name or "-all" for all classes.
+					current_option := current_option + 1
+					l_arg := argument (current_option)
+					if l_arg.same_string_general ("-all") then
+						code_analysis_command.set_all_classes
+					else
+						code_analysis_command.add_class (l_arg)
+					end
+				else
+					option_error_message := code_analysis_command.ca_messages.missing_class ("-ca_class")
+				end
+
+			elseif option.same_string_general ("-ca_rule") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					code_analysis_command.add_rule (argument (current_option))
+					if attached code_analysis_command.argument_error as e then
+							-- Add option name to the error message.
+						option_error_message := code_analysis_command.ca_messages.rule_argument_error ("-ca_rule", e)
+					end
+				else
+					option_error_message := code_analysis_command.ca_messages.missing_rule ("-ca_rule")
+				end
 
 			elseif option.same_string_general ("-tests") then
 					-- FIXME: This only works if `-tests' is the last argument, as otherwise it will

@@ -3,7 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	keywords: "Eiffel test";
-	date: "93/08/30"
+	date: "$Date$"
 
 class EW_EIFFEL_COMPILER_CONSTANTS
 
@@ -19,6 +19,8 @@ feature {NONE} -- Output constants
 	Pass_prefix: STRING = "[";
 
 	Pass_string: STRING = "Degree";
+
+	Command_line_option_error_prefix: STRING = "Error in command-line option";
 
 	Syntax_error_prefix: STRING = "Syntax error";
 
@@ -46,7 +48,7 @@ feature {NONE} -- Output constants
 
 note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2015, University of Southern California and contributors.
 			All rights reserved.
 			]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

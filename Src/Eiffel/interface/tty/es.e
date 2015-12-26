@@ -72,6 +72,9 @@ feature -- Initialization
 			l_ec_preferences: EC_PREFERENCES
 			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
 		do
+				-- Code analysis command state is kept in a separate object
+				-- that accumulates the corresponding requests.
+			create code_analysis_command.make
 				-- Check that environment variables
 				-- are properly set.
 			if not is_eiffel_layout_defined then
@@ -613,7 +616,7 @@ feature -- Output
 			end
 		end
 
-feature -- Update
+feature {NONE} -- Update
 
 	add_help_special_cmds
 		do
@@ -649,6 +652,9 @@ feature -- Update
 			end
 		end
 
+	code_analysis_command: EWB_CODE_ANALYSIS
+			-- Code analysis command.
+
 	analyze_one_option
 			-- Analyze current option.
 		local
@@ -661,9 +667,7 @@ feature -- Update
 			ewb_callees: EWB_CALLEES
 			l_arg: READABLE_STRING_32
 			in_filename, out_filename: STRING_32
-			code_analysis_command: EWB_CODE_ANALYSIS
 		do
-			create code_analysis_command.make
 			filter_name := ""
 			option := argument (current_option);
 
@@ -1304,7 +1308,10 @@ feature -- Update
 				end
 
 			elseif option.same_string_general ("-ca_class") then
-				if current_option < argument_count then
+					-- Check if a command is already set to something different from `code_analysis_command'.
+				if attached command and then command /= code_analysis_command then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				elseif current_option < argument_count then
 						-- Read a class name or "-all" for all classes.
 					current_option := current_option + 1
 					l_arg := argument (current_option)
@@ -1313,6 +1320,7 @@ feature -- Update
 					else
 						code_analysis_command.add_class (l_arg)
 					end
+					command := code_analysis_command
 				else
 					option_error_message := code_analysis_command.ca_messages.missing_class ("-ca_class")
 				end

@@ -355,6 +355,27 @@ feature -- Command Line
 	unknown_argument (a_argument_name: attached READABLE_STRING_GENERAL): STRING_32
 		do Result := locale.formatted_string (translation_in_context ("Warning: argument $1 is not recognized or could not be parsed, ignoring it.", once "code_analyzer"), [a_argument_name]) end
 
+	missing_file_name (a_option: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Missing file name after command-line option %"$1%".", once "code_analyzer"), [a_option]) end
+
+	missing_rule (a_option: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Missing rule name (with optional settings) after command-line option %"$1%".", once "code_analyzer"), [a_option]) end
+
+	missing_class (a_option: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Missing class name after command-line option %"$1%".", once "code_analyzer"), [a_option]) end
+
+	rule_argument_error (a_option: attached READABLE_STRING_GENERAL; a_message: attached READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Error in command-line option %"$1%": $2.", once "code_analyzer"), a_option, a_message) end
+
+	invalid_rule_name: STRING_32
+		do Result := translation_in_context ("Invalid rule name", once "code_analyzer") end
+
+	invalid_rule_setting (a_rule_name: READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Invalid settings for rule %"$1%"", once "code_analyzer"), a_rule_name) end
+
+	missing_closing_parenthesis (a_rule_name: READABLE_STRING_GENERAL): STRING_32
+		do Result := locale.formatted_string (translation_in_context ("Missing closing parenthesis for rule %"$1%"", once "code_analyzer"), a_rule_name) end
+
 feature {NONE} -- Translation
 
 	translation_in_context (s: READABLE_STRING_GENERAL; context: READABLE_STRING_GENERAL): STRING_32

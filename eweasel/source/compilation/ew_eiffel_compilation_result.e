@@ -17,6 +17,9 @@ inherit
 
 feature -- Properties
 
+	has_command_line_option_error: BOOLEAN
+			-- Is there a command-line option error?
+
 	syntax_errors: SORTED_TWO_WAY_LIST [EW_EIFFEL_SYNTAX_ERROR];
 			-- Syntax errors reported by compiler
 
@@ -65,7 +68,8 @@ feature -- Properties
 			Result := compilation_paused or compilation_aborted
 				or compilation_finished or missing_precompile
 				or execution_failure or had_exception
-				or had_panic or illegal_instruction
+				or had_panic or illegal_instruction or
+				has_command_line_option_error
 		end
 
 	raw_compiler_output: STRING
@@ -103,6 +107,9 @@ feature -- Properties
 			end;
 
 			create status.make (0);
+			if has_command_line_option_error then
+				status.append ("command_line_option_error ")
+			end
 			if compilation_paused then
 				status.append ("paused ");
 			end;
@@ -161,6 +168,8 @@ feature -- Update
 				if not s.after then
 					in_error := False;
 				end;
+			elseif is_prefix (Command_line_option_error_prefix, line) then
+				has_command_line_option_error := True
 			elseif is_prefix (Syntax_error_prefix, line) then
 				analyze_syntax_error (line);
 			elseif is_prefix (Syntax_warning_prefix, line) then
@@ -205,6 +214,14 @@ feature {NONE} -- State
 
 
 feature -- Modification
+
+	set_has_command_line_option_error
+			-- Record an error in command line options.
+		do
+			has_command_line_option_error := True
+		ensure
+			has_command_line_option_error: has_command_line_option_error
+		end
 
 	set_compilation_paused
 			-- Set the `compilation_paused' status flag to True.
@@ -275,6 +292,7 @@ feature -- Comparison
 			Result := had_panic = other.had_panic and
 				had_exception = other.had_exception and
 				missing_precompile = other.missing_precompile and
+				has_command_line_option_error = other.has_command_line_option_error and
 				execution_failure = other.execution_failure and
 				illegal_instruction = other.illegal_instruction
 				and compilation_paused = other.compilation_paused

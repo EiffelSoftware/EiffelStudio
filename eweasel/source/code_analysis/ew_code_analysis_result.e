@@ -3,7 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test";
-	date: "05/2014"
+	date: "$Date$"
 
 class
 	EW_CODE_ANALYSIS_RESULT
@@ -226,7 +226,11 @@ feature -- Comparison
 	matches (other: EW_CODE_ANALYSIS_RESULT): BOOLEAN
 			-- Does the `Current' actual code analysis result match the `other' expected result?
 		do
-			Result := Precursor (other) and analysis_clean.is_equal (other.analysis_clean) and eweasel_parse_error.is_equal (other.eweasel_parse_error) and status.is_equal (other.status) and list_matches_pattern (violations, other.violations)
+			Result := Precursor (other) and
+				analysis_clean.is_equal (other.analysis_clean) and
+				eweasel_parse_error.is_equal (other.eweasel_parse_error) and
+				status.is_equal (other.status) and
+				list_matches_pattern (violations, other.violations)
 		end
 
 feature {NONE} -- Implementation
@@ -350,7 +354,7 @@ invariant
 
 note
 	copyright: "[
-		Copyright (c) 1984-2007, University of Southern California and contributors.
+		Copyright (c) 1984-2015, University of Southern California and contributors.
 		All rights reserved.
 	]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"

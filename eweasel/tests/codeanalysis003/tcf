@@ -19,7 +19,7 @@ analyze_code_result ok
 
 -- Syntax error
 analyze_code rule "CA043 (maximum_depth=3; CA080"
-analyze_code_result violation "TEST CA043" argument_warning
+analyze_code_result command_line_option_error
 
 -- Non-existent preference
 analyze_code rule "CA043 (maximum_depth=3,fake_preference=9); CA080"

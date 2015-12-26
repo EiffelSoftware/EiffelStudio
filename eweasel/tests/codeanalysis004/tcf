@@ -33,6 +33,6 @@ analyze_code class "" loaddefaults
 analyze_code_result ok
 
 analyze_code rule "CA080 (syntax error" loaddefaults
-analyze_code_result argument_warning
+analyze_code_result command_line_option_error
 
 test_end

@@ -141,14 +141,17 @@ feature -- Initialization
 				if not new_resources.error_occurred then
 						-- Reset errors
 					option_error_message := Void
+					option_warning_messages := Void
 					analyze_options
 					if has_error then
 						print_option_error
+						print_option_warnings
 					elseif help_only then
 						print_help
 					elseif version_only then
 						print_version
 					elseif not file_error then
+						print_option_warnings
 						if output_window = Void then
 							command.set_output_window (Error_window)
 						else
@@ -314,6 +317,9 @@ feature -- Properties
 	option_error_message: detachable STRING_32
 			-- Error message when an error occurred.
 
+	option_warning_messages: detachable ARRAYED_LIST [READABLE_STRING_32]
+			-- Warning messages about using options (if any).
+
 	current_option: INTEGER
 			-- Current index in the option list
 
@@ -445,10 +451,10 @@ feature -- Setting
 			end
 		end
 
-feature -- Output
+feature {NONE} -- Output
 
 	print_option_error
-			-- Print the correct usage of ewb.
+			-- Print the incorrect usage of ewb.
 		do
 			print_version
 			localized_print ("%N")
@@ -457,6 +463,32 @@ feature -- Output
 			localized_print ("%N")
 			localized_print (option_error_message)
 			localized_print ("%N")
+		end
+
+	add_option_warning (m: READABLE_STRING_32)
+			-- Add message `m' to the list of option warning messages.
+		local
+			ms: like option_warning_messages
+		do
+			ms := option_warning_messages
+			if not attached ms then
+				create ms.make (1)
+				option_warning_messages := ms
+			end
+			ms.extend (m)
+		ensure
+			added: attached option_warning_messages as w and then w.last = m
+		end
+
+	print_option_warnings
+			-- Print the incorrect usage of ewb.
+		do
+			if attached option_warning_messages as m then
+				across m as mc loop
+					localized_print (mc.item)
+					localized_print ("%N")
+				end
+			end
 		end
 
 	print_usage
@@ -487,11 +519,10 @@ feature -- Output
 				%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
 			io.put_string ("%
 				%%T[[-config config.ecf] [-target target] |%N%
-				%%T%T-ace Ace (obsolete) | -project Project_file_name (obsolete)] |%N%
 				%%T[class_file.e [-library library_name]] |%N%
 				%%T-stop | -no_library |%N%
 				%%T-project_path Project_directory_path | -file File |%N%
-				%%T-code-analysis [-cadefaults | -caloadprefs pref_file | -caclasses class ...] | %N%
+				%%T-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |%N%
 				%%T-gc_stats]%N")
 		end
 
@@ -1055,6 +1086,7 @@ feature {NONE} -- Update
 				end
 
 			elseif option.same_string_general ("-project") then
+				add_option_warning (messages.w_obsolete_command_line_option (option))
 				if is_single_file_compilation then
 						-- In single file compilation mode no ace file may be specified
 					option_error_message := locale.translation ("Cannot mix -project, -config or -target when compiling a system using an Eiffel class as argument")
@@ -1086,6 +1118,7 @@ feature {NONE} -- Update
 					option_error_message := locale.translation ("Missing project path for option -project_path.")
 				end
 			elseif option.same_string_general ("-ace") then
+				add_option_warning (messages.w_obsolete_command_line_option (option))
 				if is_single_file_compilation then
 						-- In single file compilation mode no ace file may be specified
 					option_error_message := locale.translation ("Cannot mix -config or -target when compiling a system using an Eiffel class as argument")
@@ -1283,7 +1316,7 @@ feature {NONE} -- Update
 
 			elseif option.same_string_general ("-code-analysis") then
 					-- FIXME: This only works if `-code-analysis' is the last argument.
-					-- TODO: Mark the option as obsolete.
+				add_option_warning (messages.w_obsolete_command_line_option (option))
 				if attached command then
 					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
 				else

@@ -58,13 +58,15 @@ feature -- Status
 		do
 			p := a_path
 			l_uri := based_uri (uri, a_router)
-			if l_uri.ends_with ("/") then
-				if not p.ends_with ("/") then
-					p := p + "/"
-				end
-			else
-				if p.ends_with ("/") then
-					p := p.substring (1, p.count - 1)
+			if trailing_slash_ignored then
+				if l_uri.ends_with ("/") then
+					if not p.ends_with ("/") then
+						p := p + "/"
+					end
+				else
+					if p.ends_with ("/") then
+						p := p.substring (1, p.count - 1)
+					end
 				end
 			end
 			if p.same_string (l_uri) then

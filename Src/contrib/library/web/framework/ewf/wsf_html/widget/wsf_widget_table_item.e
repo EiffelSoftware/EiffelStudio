@@ -70,6 +70,7 @@ feature -- Conversion
 			a_html.append ("<td")
 			append_css_class_to (a_html, Void)
 			append_css_style_to (a_html)
+			append_html_attributes_to (a_html)
 			a_html.append_character ('>')
 			content.append_to_html (a_theme, a_html)
 			a_html.append ("</td>")

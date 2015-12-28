@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {WIKI_XHTML_GENERATOR}."
-	author: ""
+	description: "Wiki page visitor to generate XHTML with wikidocs parameters."
 	date: "$Date$"
 	revision: "$Revision$"
 

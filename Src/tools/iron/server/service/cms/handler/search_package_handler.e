@@ -75,6 +75,7 @@ feature -- Execution
 					s.append ("<li>")
 					s.append (html_encoder.general_encoded_string (ic.key))
 					s.append (" ")
+					-- FIXME jfiat [2015/12/29] : remove dependency on bootstrap theme!
 					if l_sort_by /= Void and then l_sort_by.is_case_insensitive_equal_general (ic.key) then
 						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span>")
 					else
@@ -93,6 +94,7 @@ feature -- Execution
 				end
 				s.append ("</ul>")
 			end
+			l_search_help := iron.database.version_package_criteria_factory.description
 
 			if
 				attached req.string_item ("name") as l_searched_name and then
@@ -129,7 +131,6 @@ feature -- Execution
 				not l_search_query.is_whitespace
 			then
 				html.add_parameter (l_search_query, "search_query_text")
-				l_search_help := iron.database.version_package_criteria_factory.description
 				html.add_parameter (l_search_help, "search_query_description")
 				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
 				l_title := {STRING_32} "Search for query=%"" + l_search_query + "%""

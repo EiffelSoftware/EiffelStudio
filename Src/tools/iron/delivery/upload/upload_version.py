@@ -22,7 +22,14 @@ def cmd_call (cmd):
 	call(cmd, shell=True, stdout=sys.stdout)
 
 def iron_command_name():
-	return "iron"
+	cmd = 'iron'
+	if os.environ.has_key('IRON_BIN'):
+		cmd = os.path.join (os.environ['IRON_BIN'], 'iron')
+		if not os.path.exists (cmd):
+			cmd = "%s.exe" % (cmd) # For Windows
+			if not os.path.exists (cmd):
+				cmd = 'iron'
+	return cmd
 
 def get_package_id (a_name):
 	lines = os.popen (iron_command_name() + ' info ' + a_name).readlines ()

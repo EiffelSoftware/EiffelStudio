@@ -38,6 +38,7 @@ feature -- Execution
 	handle_search_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			s: detachable STRING
+			l_search_help: detachable STRING
 			coll: detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
 			lst: detachable LIST [IRON_NODE_VERSION_PACKAGE]
 			html_vis: HTML_IRON_NODE_ITERATOR
@@ -48,18 +49,19 @@ feature -- Execution
 			kmp: KMP_WILD
 		do
 			html := new_response_message (req)
+			create s.make_empty
 
 			if
-				attached {WSF_STRING} req.query_parameter ("name") as l_searched_name and then
-				not l_searched_name.is_empty
+				attached req.string_item ("name") as l_searched_name and then
+				not l_searched_name.is_whitespace
 			then
-				l_title := {STRING_32} "Search for name=%"" + l_searched_name.value + "%""
+				l_title := {STRING_32} "Search for name=%"" + l_searched_name + "%""
 				coll := iron.database.version_packages (iron_version (req), 1, 0)
 				if coll /= Void then
 					l_total_count := coll.count
 					create kmp.make_empty
 					kmp.disable_case_sensitive
-					kmp.set_pattern (l_searched_name.value)
+					kmp.set_pattern (l_searched_name)
 					lst := coll.items
 					from
 						lst.start
@@ -68,7 +70,6 @@ feature -- Execution
 					loop
 						if attached lst.item.name as l_name then
 							kmp.set_text (l_name)
---							if l_name.is_case_insensitive_equal_general (l_searched_name.value) then
 							if kmp.pattern_matches then
 								lst.forth
 							else
@@ -81,15 +82,16 @@ feature -- Execution
 					l_found_count := lst.count
 				end
 			elseif
-				attached {WSF_STRING} req.query_parameter ("query") as l_search_query and then
-				not l_search_query.is_empty
+				attached req.string_item ("query") as l_search_query and then
+				not l_search_query.is_whitespace
 			then
-				html.add_parameter (l_search_query.value, "search_query_text")
-				html.add_parameter (iron.database.version_package_criteria_factory.description, "search_query_description")
+				html.add_parameter (l_search_query, "search_query_text")
+				l_search_help := iron.database.version_package_criteria_factory.description
+				html.add_parameter (l_search_help, "search_query_description")
 				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
-				l_title := {STRING_32} "Search for query=%"" + l_search_query.value + "%""
+				l_title := {STRING_32} "Search for query=%"" + l_search_query + "%""
 				l_total_count := iron.database.version_packages_count (iron_version (req))
-				coll := iron.database.query_version_packages (l_search_query.value, iron_version (req), 1, 0)
+				coll := iron.database.query_version_packages (l_search_query, iron_version (req), 1, 0)
 				l_found_count := coll.count
 			else
 				coll := iron.database.version_packages (iron_version (req), 1, 0)
@@ -98,7 +100,6 @@ feature -- Execution
 					l_found_count := coll.count
 				end
 			end
-			create s.make_empty
 			if coll /= Void then
 				create html_vis.make (s, req, iron, iron_version (req))
 				html_vis.set_user (current_user (req))
@@ -112,6 +113,12 @@ feature -- Execution
 				html.set_title ("All packages (version " + iron_version (req).value + ")")
 			end
 			s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
+			if l_search_help /= Void then
+				s.append ("<div id=%"advanced-help%"><strong>Advanced search help:</strong>")
+				s.append ("<pre>")
+				s.append (html_encoder.encoded_string (l_search_help))
+				s.append ("</pre></div>")
+			end
 			html.set_body (s)
 			res.send (html)
 		end

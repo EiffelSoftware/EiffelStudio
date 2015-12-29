@@ -190,11 +190,11 @@ feature -- Version Package: Access
 						loop
 							lst.remove
 						end
-						across
-							lst as ic
-						loop
-							Result.force (ic.item)
-						end
+					end
+					across
+						lst as ic
+					loop
+						Result.force (ic.item)
 					end
 				end
 			end

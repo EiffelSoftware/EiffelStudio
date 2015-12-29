@@ -1,0 +1,157 @@
+body {
+	margin: 5px 2px 5px 2px;
+	background-color: #ddddff;
+	background: #a7cfdf; /* Old browsers */
+	background: -moz-linear-gradient(top,  #a7cfdf 0%, #23538a 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a7cfdf), color-stop(100%,#23538a)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #a7cfdf 0%,#23538a 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #a7cfdf 0%,#23538a 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #a7cfdf 0%,#23538a 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #a7cfdf 0%,#23538a 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a7cfdf', endColorstr='#23538a',GradientType=0 ); /* IE6-9 */
+	background-attachment: fixed;
+}
+
+div#page {
+	margin: auto;
+	max-width: 900px;
+	height: auto;
+	border-left: solid 1px #ccf;
+	border-right: solid 1px #ccf;
+	background-color: #fff;
+}
+div#main {	
+	padding: 5px 5px 5px 15px;
+}
+
+#menu {
+}
+
+div#header {
+	-webkit-border-radius: 20px;
+	-webkit-border-top-left-radius: 0;
+	-webkit-border-bottom-right-radius: 0;
+	-moz-border-radius: 20px;
+	-moz-border-radius-topleft: 0;
+	-moz-border-radius-bottomright: 0;
+	border-radius: 20px;
+	border-top-left-radius: 0;
+	border-bottom-right-radius: 0;
+	
+	margin-bottom: 20px;
+	padding: 20px;
+	font-size: 140%;
+	border: solid 1px #23538a;
+	color: #fff;
+	background-color: #23538a;
+	text-align: center;
+
+	position: relative;
+	margin-top: 30px;
+	top: -20px;
+}
+
+div#footer {
+	-webkit-border-radius: 20px;
+	-webkit-border-top-left-radius: 0;
+	-webkit-border-top-right-radius: 0;
+	-moz-border-radius: 20px;
+	-moz-border-radius-topleft: 0;
+	-moz-border-radius-topright: 0;
+	border-radius: 20px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: dotted 1px #cfcfdf;
+	background-color: #cfcfdf;
+	text-align: center;
+	min-height: 40px;
+	padding: 5px;
+	
+	position: relative;
+	bottom: -20px;
+}
+ul {
+	padding-left: 30px;
+	li.package {
+		list-style: none;
+		border-top: solid 1px #dedede;
+		border-left: solid 1px #dedede;
+		padding: 4px 5px 5px 4px;
+		margin-bottom: 5px;
+		div.description, div.archive {
+			padding-left: 25px;
+		}
+		&:hover {
+			padding: 3px 3px 3px 3px;
+			border: solid 2px #00f;
+		}
+	}
+}
+.error {
+	background-color: red;
+}
+.warning {
+	background-color: orange;
+}
+.dialog.message {
+	border: solid 1px #aa6;
+	margin: 5px auto 5px auto;
+	padding: 10px;
+	width: 80%;
+	background-color: #ffc;
+}
+
+span.packageid {
+	float: right;
+	font-style: italic;
+	color: #ccc;
+	position: relative;
+	bottom: 1em;
+}
+p.description { 
+	padding: 10px 0px 10px 0; 
+}
+p.howto {
+	font-family: Lucida Console, Verdana, Arial;
+	background-color: black;
+	color: yellow;
+	border: solid 3px #ddd;
+	border-top: solid 10px #ddd;
+	margin-left: 30px;
+	padding: 15px;
+}
+ul.menu {
+	list-style-type: none;
+	li {
+		display: inline;
+		border: solid 1px #900;
+		padding: 2px 5px 2px 5px;
+		&:hover {
+			background-color: #FF9;
+		}
+	}
+}
+.package-index li {
+	border: solid 1px #ddd;
+	padding: 2px 2px 2px 15px;
+	&.package-folder-inline {
+		border-left: solid 10px #ddf;
+		padding: 2px 2px 2px 5px;
+		background-color: #fafaff;
+	}
+	&.package-folder-inline:after {
+		content: " ...";
+	}
+	.packageid {
+		display: none;
+	}
+}
+
+/* Bootstrap */
+span.badge {
+	a { 
+		color: white;
+	}
+}
+  
+

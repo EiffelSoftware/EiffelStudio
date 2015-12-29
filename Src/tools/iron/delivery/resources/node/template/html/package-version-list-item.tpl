@@ -9,7 +9,7 @@
 {/unless}
 {unless isempty="$package.tags" }
 <p>
-{foreach item="tag" from="$package.tags" }<span class="badge">{$tag/}</span> {/foreach}
+{foreach item="tag" from="$package.tags" }<span class="badge"><a href="/repository/{$package.version.value/}/package/?query=tag%3A{$tag/}">{$tag/}</a></span> {/foreach}
 </p>
 {/unless}
 <p class="text-muted text-right">

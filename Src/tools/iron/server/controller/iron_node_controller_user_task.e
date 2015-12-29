@@ -62,7 +62,7 @@ feature -- Execution
 			io.put_string ("    create username password {email}: create new user with optional email%N")
 			io.put_string ("    update username %N")
 			io.put_string ("        --add-role {role_name} --remove-role {role_name}: add or remove role for user%N")
-			io.put_string ("        --password "new-password" --email "new-email": change password, or email address%N")
+			io.put_string ("        --password %"new-password%" --email %"new-email%": change password, or email address%N")
 		end
 
 	display_list (iron: IRON_NODE)

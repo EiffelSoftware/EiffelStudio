@@ -159,6 +159,10 @@ feature -- Conversion
 					create Result.make_from_string ("iron:")
 					Result.set_unencoded_path (l_name)
 					p := Result.path
+						-- FIXME: workaround issue with URI on linux (fixed by rev#98343).
+					if not p.is_empty and then p[1] = '/' then
+						p := p.substring (2, p.count)
+					end
 					Result.set_path (p + ":" + s2)
 				end
 			end

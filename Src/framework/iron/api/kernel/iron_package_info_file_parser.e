@@ -78,7 +78,6 @@ feature -- Parse
 		local
 			done: BOOLEAN
 			s: STRING
-			utf: UTF_CONVERTER
 		do
 			create s.make (2_046)
 			from
@@ -90,10 +89,19 @@ feature -- Parse
 				s.append_string (f.last_string)
 				done := f.exhausted or f.last_string.count < 2_046
 			end
+			parse_text (s)
+		end
+
+	parse_text (s: READABLE_STRING_8)
+		local
+			utf: UTF_CONVERTER
+		do
 			buffer.wipe_out
 			utf.utf_8_string_8_into_escaped_string_32 (s, buffer)
 			parse_buffer
 		end
+
+feature {NONE} -- Parsing
 
 	parse_buffer
 		local
@@ -888,7 +896,7 @@ feature {NONE} -- Implementation
 invariant
 	buffer_index <= buffer.count + 1
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -221,6 +221,7 @@ feature {WSF_RESPONSE} -- Output
 					end
 				end
 				if attached iron.database.versions as l_versions then
+					l_versions.reverse_sort
 					create l_versions_alternatives.make (0)
 					l_url := request.request_uri
 					across
@@ -298,6 +299,7 @@ feature {NONE} -- HTML Generation
 				l_version := Void
 			end
 			if attached iron.database.versions as l_versions then
+				l_versions.reverse_sort
 				create l_form.make (iron.page_redirection (Void), "redirection")
 				l_form.set_method_get
 				create l_combo.make ("redirection")
@@ -408,7 +410,7 @@ feature {NONE} -- HTML Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

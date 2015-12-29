@@ -143,12 +143,14 @@ feature -- Conversion
 			-- Iron uri location for `a_relative_ecf_path'.
 			--| similar to "iron:package-name:relative_ecf_uri_path"
 		local
+			l_path: like path
 			p1,p2: PATH_URI
 			s1,s2: STRING
 			p: READABLE_STRING_8
 		do
-			create p1.make_from_path (path.absolute_path.canonical_path)
-			create p2.make_from_path (path.extended_path (a_relative_ecf_path).absolute_path.canonical_path)
+			l_path := path
+			create p1.make_from_path (l_path.absolute_path.canonical_path)
+			create p2.make_from_path (l_path.extended_path (a_relative_ecf_path).absolute_path.canonical_path)
 			s1 := p1.string
 			s2 := p2.string
 			if s2.starts_with (s1) then
@@ -288,7 +290,7 @@ feature -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

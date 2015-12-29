@@ -77,18 +77,28 @@ feature -- Access
 			end
 		end
 
+feature -- Permission		
+
+	has_permission_to_administrate_versions (req: WSF_REQUEST): BOOLEAN
+		do
+			Result := attached current_user (req) as u and then user_has_permission_to_administrate_versions (u)
+		end
+
 	has_permission_to_modify_package (req: WSF_REQUEST; a_package: IRON_NODE_PACKAGE): BOOLEAN
 		do
-			if attached current_user (req) as u then
-				Result := user_has_permission_to_modify_package (u, a_package)
-			end
+			Result := attached current_user (req) as u and then user_has_permission_to_modify_package (u, a_package)
 		end
 
 	has_permission_to_modify_package_version (req: WSF_REQUEST; a_package: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
-			if attached current_user (req) as u then
-				Result := user_has_permission_to_modify_package_version (u, a_package)
-			end
+			Result := attached current_user (req) as u and then user_has_permission_to_modify_package_version (u, a_package)
+		end
+
+feature -- Permission user.				
+
+	user_has_permission_to_administrate_versions (a_user: IRON_NODE_USER): BOOLEAN
+		do
+			Result := user_has_permission (a_user, "admin versions")
 		end
 
 	user_has_permission_to_modify_package (a_user: IRON_NODE_USER; a_package: IRON_NODE_PACKAGE): BOOLEAN
@@ -96,7 +106,7 @@ feature -- Access
 			if attached a_package.owner as o then
 				Result := a_user.same_user (o) or else a_user.is_administrator
 			else
-				Result := a_user.is_administrator
+				Result := user_has_permission (a_user, "modify any package")
 			end
 		end
 
@@ -105,8 +115,24 @@ feature -- Access
 			if attached a_package.owner as o then
 				Result := a_user.same_user (o) or else a_user.is_administrator
 			else
-				Result := a_user.is_administrator
+				Result := user_has_permission (a_user, "modify any package version")
 			end
+		end
+
+feature -- Permission core.		
+
+	user_has_permission (a_user: IRON_NODE_USER; a_permission: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			if a_user.is_administrator then
+				Result := True
+			elseif attached a_user.roles as l_roles then
+				Result := across l_roles as ic some user_role_has_permission (ic.item, a_permission) end
+			end
+		end
+
+	user_role_has_permission (a_role: IRON_NODE_USER_ROLE; a_permission: READABLE_STRING_GENERAL): BOOLEAN
+		do
+			Result := False
 		end
 
 feature -- Request: methods
@@ -319,8 +345,8 @@ feature -- Package form
 
 			if vp /= Void and then vp.has_archive then
 --				f_fieldset.insert_after (create {WSF_FORM_RAW_TEXT}.make ("Has already an archive (" + p.archive_file_size.out + " octets)"), f_archive)
-				f_fieldset.extend_text ("Has already an archive (" + vp.archive_file_size.out + " octets)")
-				f_fieldset.extend_text ("<div>You can delete this archive by clicking <a href=%""+ iron.package_version_archive_web_page (vp) +"?" + Method_query_parameter + "=DELETE%">[DELETE]</a></div>")
+				f_fieldset.extend_html_text ("Has already an archive (" + vp.archive_file_size.out + " octets)")
+				f_fieldset.extend_html_text ("<div>You can delete this archive by clicking <a href=%""+ iron.package_version_archive_web_page (vp) +"?" + Method_query_parameter + "=DELETE%">[DELETE]</a></div>")
 			end
 			f.extend (f_fieldset)
 

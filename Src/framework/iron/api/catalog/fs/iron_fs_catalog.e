@@ -606,7 +606,7 @@ feature {NONE} -- Helper
 
 	new_client: HTTP_CLIENT
 		do
-			create {LIBCURL_HTTP_CLIENT} Result.make
+			create {DEFAULT_HTTP_CLIENT} Result
 		end
 
 note

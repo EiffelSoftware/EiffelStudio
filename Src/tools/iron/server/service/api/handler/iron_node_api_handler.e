@@ -265,6 +265,7 @@ feature -- Package form
 			f_name: WSF_FORM_TEXT_INPUT
 			f_title: WSF_FORM_TEXT_INPUT
 			f_desc: WSF_FORM_TEXTAREA
+			f_package_file: WSF_FORM_TEXTAREA
 			f_archive: WSF_FORM_FILE_INPUT
 			f_archive_url: WSF_FORM_TEXT_INPUT
 			f_submit: WSF_FORM_SUBMIT_INPUT
@@ -294,6 +295,10 @@ feature -- Package form
 			create f_desc.make ("description")
 			f_desc.set_label ("Description")
 			f.extend (f_desc)
+
+			create f_package_file.make ("package_info")
+			f_package_file.set_label ("Package Info")
+			f.extend (f_package_file)
 
 			create f_fieldset.make
 			f_fieldset.set_legend ("Associated Archive")
@@ -353,11 +358,13 @@ feature -- Package form
 		local
 			m: like new_response_message
 			s,t: STRING
+			k: READABLE_STRING_GENERAL
 			p: IRON_NODE_PACKAGE
 			l_path_id: detachable READABLE_STRING_32
 			cl_path: CELL [detachable PATH]
 			pv: detachable IRON_NODE_VERSION_PACKAGE
 			l_name: detachable READABLE_STRING_32
+			pif: detachable IRON_PACKAGE_INFO_FILE
 		do
 			m := new_response_message (req)
 			create s.make_empty
@@ -379,6 +386,14 @@ feature -- Package form
 					l_path_id := p_id.value
 				end
 				l_name := fd.string_item ("name")
+				if attached fd.string_item ("package_info") as l_package_info_text then
+					pif := iron.package_info_from_text (l_package_info_text)
+					if l_name = Void and pif /= Void then
+						l_name := pif.package_name
+					end
+				else
+					pif := Void
+				end
 				if attached fd.string_item ("id") as l_id then
 					if l_path_id /= Void then
 						if l_id.is_case_insensitive_equal (l_path_id) then
@@ -386,7 +401,9 @@ feature -- Package form
 								p := l_package.package
 							else
 									-- Error
-								fd.report_error ("Package ["+ l_id +"] not found")
+								debug
+									fd.report_error ("Package ["+ l_id +"] not found")
+								end
 								create p.make (l_id)
 							end
 						else
@@ -439,14 +456,50 @@ feature -- Package form
 				end
 				if not fd.has_error then
 					l_name := fd.string_item ("name")
+					if l_name = Void and pif /= Void then
+						l_name := pif.package_name
+					end
 					if l_name /= Void then
 						p.set_name (l_name)
 					end
 					if attached fd.string_item ("title") as l_title then
 						p.set_title (l_title)
+					elseif pif /= Void then
+						p.set_title (pif.title)
 					end
 					if attached fd.string_item ("description") as l_description then
 						p.set_description (l_description)
+					elseif pif /= Void then
+						p.set_description (pif.description)
+					end
+					if pif /= Void then
+						if attached pif.tags as l_tags then
+							across
+								l_tags as ic
+							loop
+								p.add_tag (ic.item)
+							end
+						end
+							-- Links
+						across
+							pif.notes as ic
+						loop
+							k := ic.key
+							if
+								k.is_case_insensitive_equal ("title") or
+								k.is_case_insensitive_equal ("description") or
+								k.is_case_insensitive_equal ("tags")
+							then
+									-- Already handled
+							elseif
+								k.starts_with ("link[") and then
+								ic.item.is_valid_as_string_8
+							then
+								p.add_link (k.substring (6, k.count - 1), create {IRON_NODE_LINK}.make (ic.item.to_string_8, Void))
+							else
+								p.put (ic.item, k)
+							end
+						end
 					end
 				end
 				if has_permission_to_modify_package (req, p) then

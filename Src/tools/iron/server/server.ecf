@@ -21,6 +21,7 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf" readonly="false"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\network\authentication\http_authorization\http_authorization-safe.ecf" readonly="false"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client-safe.ecf" readonly="false"/>
+		<library name="iron_api" location="..\..\..\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
 		<library name="iron_node" location="iron_node.ecf" readonly="false"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
@@ -78,6 +79,6 @@
 		</cluster>
 		<cluster name="service_launcher" location=".\service_launcher\any\" recursive="true"/>
 	</target>
-	<target name="server" extends="server_libfcgi">
+	<target name="server" extends="server_standalone">
 	</target>
 </system>

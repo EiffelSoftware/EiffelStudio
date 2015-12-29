@@ -33,18 +33,28 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	id: detachable READABLE_STRING_32
+			-- Iron id.
 
 	name: detachable READABLE_STRING_32
+			-- Short name of related iron package.
 
 	title: detachable READABLE_STRING_32
+			-- Long name of related iron package.
 
 	description: detachable READABLE_STRING_32
+			-- Description of related iron package.
+
+	package_file_location: detachable PATH
+			-- Location of iron package "package.iron" related file.
 
 	archive: detachable PATH
+			-- Location of archive file.
 
 	source: detachable PATH
+			-- Location of source code folder.
 
 	indexes: detachable ARRAYED_LIST [READABLE_STRING_32]
+			-- Iron mapping indexes, if any.
 
 feature -- Status report
 
@@ -111,6 +121,12 @@ feature -- Change
 			else
 				description := v
 			end
+		end
+
+	set_package_file_location (p: detachable PATH)
+			-- Set iron package file location to `p'.
+		do
+			package_file_location := p
 		end
 
 	set_archive (v: like archive)
@@ -181,7 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

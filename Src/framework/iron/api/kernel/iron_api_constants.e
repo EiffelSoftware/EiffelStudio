@@ -40,7 +40,7 @@ feature -- Version
 
 	minor: NATURAL_16 = 1
 
-	built: STRING = "0007"
+	built: STRING = "0009"
 
 	version: IMMUTABLE_STRING_8
 		local
@@ -57,7 +57,7 @@ feature -- Version
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

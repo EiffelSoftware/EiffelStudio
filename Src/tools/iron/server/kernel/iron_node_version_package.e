@@ -14,6 +14,11 @@ inherit
 			is_equal
 		end
 
+	COMPARABLE
+		redefine
+			is_equal
+		end
+
 create
 	make
 
@@ -44,7 +49,17 @@ feature -- Access
 	download_count: INTEGER assign set_download_count
 			-- Download count.
 
-feature -- Comparison		
+feature -- Comparison	
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- <Precursor>.
+		do
+			if package.is_equal (other.package) then
+				Result := version < other.version
+			else
+				Result := package < other.package
+			end
+		end
 
 	is_equal (other: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 			-- Is `other' attached to an object considered
@@ -186,14 +201,49 @@ feature -- Access: archive
 			end
 		end
 
-feature -- Access: items	
+feature -- Access: items
+
+	notes: like items
+			-- Items filtered to have only non technical items.
+		do
+			Result := items
+			if Result /= Void then
+				Result.remove ("name")
+				Result.remove ("archive_hash")
+				Result.remove ("maps")
+			end
+		end
 
 	items: detachable STRING_TABLE [detachable READABLE_STRING_32]
+			-- Version and global option info.
+			-- Warning: Result computed for each call.
+		do
+			if attached package.items as p_items and then not p_items.is_empty then
+				create Result.make (p_items.count)
+				across
+					p_items as ic
+				loop
+					Result.force (ic.item, ic.key)
+				end
+			end
+			if attached version_items as v_items and then not v_items.is_empty then
+				if Result = Void then
+					create Result.make (v_items.count)
+				end
+				across
+					v_items as ic
+				loop
+					Result.force (ic.item, ic.key)
+				end
+			end
+		end
+
+	version_items: detachable STRING_TABLE [detachable READABLE_STRING_32]
 			-- Optional info
 
 	item (n: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 		do
-			if attached items as tb then
+			if attached version_items as tb then
 				Result := tb.item (n)
 			end
 			if Result = Void then
@@ -205,21 +255,21 @@ feature -- Change
 
 	put (v: detachable READABLE_STRING_32; k: READABLE_STRING_GENERAL)
 		local
-			tb: like items
+			tb: like version_items
 		do
-			tb := items
+			tb := version_items
 			if tb = Void then
 				create tb.make (1)
-				items := tb
+				version_items := tb
 			end
 			tb.force (v, k)
 		end
 
 	remove (k: READABLE_STRING_GENERAL)
 		local
-			tb: like items
+			tb: like version_items
 		do
-			tb := items
+			tb := version_items
 			if tb /= Void then
 				tb.remove (k)
 			end
@@ -248,7 +298,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

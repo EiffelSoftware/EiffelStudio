@@ -17,7 +17,7 @@ feature -- Initialization
 	setup_router
 			-- Setup `router'
 		local
-			h_access: ACCESS_HANDLER
+			h_access: HOME_HANDLER
 			h_account: ACCOUNT_HANDLER
 			h_user: USER_HANDLER
 			h_search: SEARCH_PACKAGE_HANDLER
@@ -58,7 +58,7 @@ feature -- Initialization
 
 				--| Access
 			create h_access.make (l_iron)
-			map_uri (l_iron.cms_page ("/"), h_access, router.methods_get) -- Admin::home
+			map_uri (l_iron.cms_page ("/"), h_access, router.methods_get_post) -- Admin::home
 			map_uri_template (l_iron.cms_page ("/{version}/"), h_access, router.methods_get) -- Admin::home
 
 			create h_create.make (l_iron)
@@ -137,6 +137,7 @@ feature -- handler
 			r: IRON_NODE_HTML_RESPONSE
 			s: STRING
 			l_iron: like iron
+			l_versions: IRON_NODE_VERSION_COLLECTION
 		do
 			l_iron := iron
 			create r.make (req, l_iron)
@@ -144,8 +145,10 @@ feature -- handler
 			s.append ("<ul>")
 			s.append ("<li><a href=%"" + req.script_url (l_iron.cms_page ("")) + "%">Home</a></li>")
 --			s.append ("<li><a href=%"" + req.script_url (l_iron.package_list_web_page) + "%">Any version</a></li>")
+			l_versions := l_iron.database.versions
+			l_versions.reverse_sort
 			across
-				l_iron.database.versions as c_version
+				l_versions as c_version
 			loop
 				s.append ("<li><a href=%"" + req.script_url (l_iron.package_version_list_web_page (c_version.item)) + "%">Version " + c_version.item.value + "</a></li>")
 			end

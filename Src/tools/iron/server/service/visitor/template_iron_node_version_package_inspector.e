@@ -43,6 +43,10 @@ feature -- Internal data
 					Result := cell_of (obj.tags)
 				elseif fn.is_case_insensitive_equal_general ("links") then
 					Result := cell_of (obj.links)
+				elseif fn.is_case_insensitive_equal_general ("notes") then
+					Result := cell_of (obj.notes)
+				elseif fn.is_case_insensitive_equal_general ("items") then
+					Result := cell_of (obj.items)
 				elseif fn.is_case_insensitive_equal_general ("has_archive") then
 					Result := cell_of (obj.has_archive)
 				elseif fn.is_case_insensitive_equal_general ("archive_file_size") then
@@ -73,7 +77,7 @@ feature -- Internal data
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

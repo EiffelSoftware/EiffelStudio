@@ -276,6 +276,21 @@ feature -- Visit
 							end
 						end
 					end
+					if attached p.notes as l_notes and then not l_notes.is_empty then
+						s.append ("<ul class=%"notes%">")
+						across
+							l_notes as ic_notes
+						loop
+							if attached ic_notes.item as l_note then
+								s.append ("<li>")
+								s.append (html_encoder.encoded_string (ic_notes.key.as_string_32))
+								s.append_character (':')
+								s.append (html_encoder.encoded_string (l_note))
+								s.append ("</li>")
+							end
+						end
+						s.append ("</ul>")
+					end
 					if attached p.last_modified as dt then
 						s.append ("<div class=%"lastmodified%"><span>")
 						append_formatted_date_to (dt, s)
@@ -346,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

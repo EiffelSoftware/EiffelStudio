@@ -753,7 +753,7 @@ feature -- Element Change
 		local
 			s: STRING_8
 		do
-			if {PLATFORM}.is_windows and then path.is_empty and then not has_authority then
+			if path.is_empty and then not has_authority then
 				set_path (www_form_urlencoded_string (a_segment))
 			else
 				create s.make_from_string (path)

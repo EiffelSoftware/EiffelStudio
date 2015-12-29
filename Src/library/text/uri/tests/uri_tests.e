@@ -294,6 +294,20 @@ feature -- Tests
 --			urn:oasis:names:specification:docbook:dtd:xml:4.1.2
 		end
 
+	test_urn_building
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("iron:")
+			uri.set_unencoded_path ("base")
+			assert ("path ok", uri.path.same_string ("base"))
+			uri.add_unencoded_path_segment ("foo")
+			assert ("path ok", uri.path.same_string ("base/foo"))
+
+			uri.add_unencoded_path_segment ("foo/bar")
+			assert ("path ok", uri.path.same_string ("base/foo/foo%%2Fbar"))
+		end
+
 	test_opaque
 		local
 			uri: URI

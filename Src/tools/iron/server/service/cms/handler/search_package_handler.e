@@ -47,9 +47,52 @@ feature -- Execution
 			l_found_count: INTEGER
 			l_total_count: INTEGER
 			kmp: KMP_WILD
+			l_url: READABLE_STRING_8
+			k: STRING
+			l_sort_by: detachable READABLE_STRING_32
 		do
 			html := new_response_message (req)
 			create s.make_empty
+
+			if
+				attached iron.database.version_package_sorter_factory as l_sorter_factory and then
+				l_sorter_factory.count > 0
+			then
+				l_sort_by := req.string_item ("sort-by")
+
+				s.append ("<ul class=%"sorters%">")
+				s.append ("<strong>Sort by</strong>: ")
+				l_url := req.percent_encoded_path_info
+				if l_url.has ('?') then
+					l_url := l_url + "&sort-by="
+				else
+					l_url := l_url + "?sort-by="
+				end
+				across
+					l_sorter_factory as ic
+				loop
+					k := url_encoder.general_encoded_string (ic.key)
+					s.append ("<li>")
+					s.append (html_encoder.general_encoded_string (ic.key))
+					s.append (" ")
+					if l_sort_by /= Void and then l_sort_by.is_case_insensitive_equal_general (ic.key) then
+						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span>")
+					else
+						s.append ("<a href=%"" + l_url + k + "%">")
+						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span>")
+						s.append ("</a>")
+					end
+					if l_sort_by /= Void and then l_sort_by.is_case_insensitive_equal_general ({STRING_32} "-" + ic.key) then
+						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span>")
+					else
+						s.append ("<a href=%"" + l_url + "-" + k + "%">")
+						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span>")
+						s.append ("</a>")
+					end
+					s.append ("</li>")
+				end
+				s.append ("</ul>")
+			end
 
 			if
 				attached req.string_item ("name") as l_searched_name and then
@@ -100,7 +143,18 @@ feature -- Execution
 					l_found_count := coll.count
 				end
 			end
-			if coll /= Void then
+			if coll /= Void and then coll.count > 0 then
+				if
+					l_sort_by /= Void and then
+					attached iron.database.version_package_sorter_factory.sorter (l_sort_by) as l_sorter
+				then
+					if l_sorter.is_reversed then
+						coll.reverse_sort_with (l_sorter.sorter)
+					else
+						coll.sort_with (l_sorter.sorter)
+					end
+				end
+
 				create html_vis.make (s, req, iron, iron_version (req))
 				html_vis.set_user (current_user (req))
 				html_vis.visit_package_version_iterable (coll)

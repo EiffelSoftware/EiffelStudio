@@ -201,6 +201,72 @@ feature -- Version Package: Access
 			Result.sort
 		end
 
+feature -- Version Package: Sorter
+
+	version_package_sorter_factory: IRON_SORTER_FACTORY [IRON_NODE_VERSION_PACKAGE]
+		local
+			l_sorter: SORTER [IRON_NODE_VERSION_PACKAGE]
+			eq: detachable AGENT_EQUALITY_TESTER [IRON_NODE_VERSION_PACKAGE]
+		once
+			create Result.make (3)
+				-- by name
+			create eq.make (agent version_package_is_less_than_by_name)
+			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
+			Result.register_builder ("name", l_sorter, Void)
+
+				-- by title
+			create eq.make (agent version_package_is_less_than_by_title)
+			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
+			Result.register_builder ("title", l_sorter, Void)
+
+				-- by downloads
+			create eq.make (agent version_package_is_less_than_by_downloads)
+			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
+			Result.register_builder ("downloads", l_sorter, Void)
+
+				-- by date
+			create eq.make (agent version_package_is_less_than_by_last_modified)
+			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
+			Result.register_builder ("date", l_sorter, Void)
+		end
+
+feature {NONE} -- Version Package: Sorter		
+
+	version_package_is_less_than_by_value (v1, v2: detachable COMPARABLE; p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			if v1 = Void then
+				if v2 = Void then
+					Result := p1 < p2
+				else
+					Result := True
+				end
+			elseif v2 = Void then
+				Result := False
+			else
+				Result := v1 < v2
+			end
+		end
+
+	version_package_is_less_than_by_name (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			Result := version_package_is_less_than_by_value (p1.name, p2.name, p1, p2)
+		end
+
+	version_package_is_less_than_by_title (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			Result := version_package_is_less_than_by_value (p1.title, p2.title, p1, p2)
+		end
+
+	version_package_is_less_than_by_downloads (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			Result := version_package_is_less_than_by_value (p1.download_count, p2.download_count, p1, p2)
+		end
+
+	version_package_is_less_than_by_last_modified (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			Result := version_package_is_less_than_by_value (p1.last_modified, p2.last_modified, p1, p2)
+		end
+
 feature -- Version Package: Criteria
 
 	version_package_criteria_factory: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]

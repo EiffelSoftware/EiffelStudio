@@ -153,5 +153,19 @@ span.badge {
 		color: white;
 	}
 }
+
+ul.sorters {
+	text-align: right;
+	list-style-type: none;
+	li {
+		display: inline;
+		border: solid 1px #ddf;
+		margin: 2px 3px 2px 3px;
+		padding: 2px 5px 2px 5px;
+		&:hover {
+			background-color: #ddf;
+		}
+	}
+}
   
 

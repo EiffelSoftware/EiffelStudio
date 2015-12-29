@@ -189,7 +189,7 @@ feature -- Execute
 			ref: PATH
 		do
 			io.error.put_string ("IRON::Updating ecf ")
-			io.error.put_string (a_ecf)
+			localized_print_error (a_ecf)
 			io.error.put_string ("%N")
 
 			create cfg_factory
@@ -220,16 +220,6 @@ feature -- Execute
 						if attached iron_updated_directory_location (clu.location, tgt, ref, pif) as l_new_loc then
 							clu.set_location (l_new_loc)
 						end
-					end
-
-					debug ("update_ecf")
-	--					Result := "abc${ISE_LIBRARY}\bar/spec/$(ISE_PLATFORM)/lib"
-	--					text_mapping (Result, str_exp.expand_string_32 (Result, True))
-	--					print (ironized_text ("abc${ISE_LIBRARY}\library\store\bar/spec/$(ISE_PLATFORM)/lib and abc${ISE_LIBRARY}\library\store\bar/spec/$(ISE_PLATFORM)/spec", ref, pif))
-	--					print (ironized_text ("$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\il_odbc_store.lib", ref, pif))
-						print (ironized_text ("$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o", ref, pif))
-						print ("%N")
-						(create {EXCEPTIONS}).die (-1)
 					end
 
 					across
@@ -719,7 +709,7 @@ feature -- Execute
 			else
 				p := a_loc.evaluated_path
 				debug
-					io.error.put_string (p.name.as_string_8) -- FIXME: unicode
+					localized_print_error (p.name)
 					io.error.put_string ("%N")
 				end
 
@@ -750,7 +740,7 @@ feature -- Execute
 								io.error.put_string ("  - ")
 								io.error.put_string (l_uri.string)
 								io.error.put_string ("  (")
-								io.error.put_string (a_loc.evaluated_path.name.as_string_8) -- FIXME: unicode
+								localized_print_error (a_loc.evaluated_path.name)
 								io.error.put_string (")%N")
 								create Result.make (l_uri.string, a_target)
 							end
@@ -779,7 +769,7 @@ feature -- Execute
 			else
 				p := a_loc.evaluated_path
 				debug
-					io.error.put_string (p.name.as_string_8) -- FIXME: unicode
+					localized_print_error (p.name)
 					io.error.put_string ("%N")
 				end
 
@@ -802,7 +792,7 @@ feature -- Execute
 							if attached pif.to_iron_uri_location (create {PATH}.make_from_string (s_ecf)) as l_uri then
 								io.error.put_string (l_uri.string)
 								io.error.put_string ("  (")
-								io.error.put_string (a_loc.evaluated_path.name.as_string_8) -- FIXME: unicode
+								localized_print_error (a_loc.evaluated_path.name)
 								io.error.put_string (")%N")
 								create Result.make (l_uri.string, a_target)
 							end

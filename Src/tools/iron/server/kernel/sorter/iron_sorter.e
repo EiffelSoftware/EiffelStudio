@@ -1,75 +1,35 @@
 note
-	description: "Collection of IRON node version package."
+	description: "Sorter interface specific for iron."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_NODE_VERSION_PACKAGE_COLLECTION
-
-inherit
-	ITERABLE [IRON_NODE_VERSION_PACKAGE]
+	IRON_SORTER [G]
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER)
+	make (a_name: READABLE_STRING_GENERAL; a_sorter: like sorter)
 		do
-			create items.make (nb)
+			sorter := a_sorter
+			create name.make_from_string_general (a_name)
 		end
 
 feature -- Access
 
-	count: INTEGER
-			-- Number of versions.
-		do
-			Result := items.count
-		end
+	name: IMMUTABLE_STRING_32
 
-	items: ARRAYED_LIST [IRON_NODE_VERSION_PACKAGE]
+	is_reversed: BOOLEAN
 
-	new_cursor: ITERATION_CURSOR [IRON_NODE_VERSION_PACKAGE]
-			-- <Precursor>
-		do
-			Result := items.new_cursor
-		end
+	sorter: SORTER [G]
 
 feature -- Element change
 
-	force, put (v: IRON_NODE_VERSION_PACKAGE)
+	set_is_reversed (b: BOOLEAN)
 		do
-			items.force (v)
-		end
-
-feature -- Sorting
-
-	sort_with (a_sorter: SORTER [IRON_NODE_VERSION_PACKAGE])
-		do
-			a_sorter.sort (items)
-		end
-
-	reverse_sort_with (a_sorter: SORTER [IRON_NODE_VERSION_PACKAGE])
-		do
-			a_sorter.reverse_sort (items)
-		end
-
-	sort
-			-- Sort alphabetically, older first.
-		local
-			s: QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]
-		do
-			create s.make (create {COMPARABLE_COMPARATOR [IRON_NODE_VERSION_PACKAGE]})
-			sort_with (s)
-		end
-
-	reverse_sort
-			-- Sort alphabetically, latest first.
-		local
-			s: QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]
-		do
-			create s.make (create {COMPARABLE_COMPARATOR [IRON_NODE_VERSION_PACKAGE]})
-			reverse_sort_with (s)
+			is_reversed := b
 		end
 
 note

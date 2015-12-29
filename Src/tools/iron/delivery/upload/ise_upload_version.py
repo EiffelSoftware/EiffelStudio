@@ -73,6 +73,7 @@ def main():
 	if not os.path.exists (l_sources_dir):
 		os.makedirs(l_sources_dir)
 	get_ise_libraries(l_sources_dir, l_branch, l_version)
+
 	print "Updating the ecf files for iron packaging ..."
 	upload_version(l_sources_dir, cfg_location)
 

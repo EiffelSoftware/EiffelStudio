@@ -13,9 +13,13 @@ inherit
 feature -- Visit
 
 	visit_node (v: IRON_NODE)
+		local
+			l_versions: IRON_NODE_VERSION_COLLECTION
 		do
+			l_versions := v.database.versions
+			l_versions.reverse_sort
 			across
-				v.database.versions as ic
+				l_versions as ic
 			loop
 				ic.item.accept (Current)
 			end
@@ -58,7 +62,7 @@ feature -- Visit
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

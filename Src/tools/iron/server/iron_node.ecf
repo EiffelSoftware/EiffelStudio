@@ -14,6 +14,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="iron_api" location="..\..\..\framework\iron\api\iron_api-safe.ecf" readonly="false"/>
 		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria-safe.ecf" readonly="false"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf" readonly="false"/>

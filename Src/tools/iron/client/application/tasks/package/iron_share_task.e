@@ -47,6 +47,7 @@ feature -- Execute
 			cl_body: CELL [detachable READABLE_STRING_8]
 			l_upload_new_archive: BOOLEAN
 			l_iron_archive: detachable IRON_ARCHIVE
+			l_local_hash: detachable READABLE_STRING_8
 		do
 			err := False
 
@@ -171,11 +172,10 @@ feature -- Execute
 								else
 									print ({STRING_32} "Create new package %N")
 								end
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, Void, u, p)
 							else
 								print ({STRING_32} "Update package " + l_package.human_identifier + {STRING_32} " %N")
-								remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_package, Void, u, p)
 							end
+							remote_node.publish_package (l_id, l_name, l_title, l_data.description, l_data.package_file_location, l_package, Void, u, p)
 							if remote_node.last_operation_succeed then
 								if l_package /= Void then
 									print ({STRING_32} "Package "+ l_package.human_identifier + {STRING_32} " updated.")
@@ -277,9 +277,15 @@ feature -- Execute
 												print (" ).")
 												print_new_line
 											else
+												if args.verbose then
+													print ("Computing the archive hash (sha1) ...%N")
+													l_local_hash := l_iron_archive.hash
+												else
+													l_local_hash := Void
+												end
 												print ("Uploading package archive [size="+ l_iron_archive.file_size.out +"]")
-												if attached l_iron_archive.hash as l_hash then
-													print (" ["+ l_hash + "]")
+												if l_local_hash /= Void then
+													print (" ["+ l_local_hash + "]")
 												end
 												print ("...%N")
 												if l_package.has_archive_uri then
@@ -377,6 +383,7 @@ feature -- Execute
 			end
 
 			if attached args.package_file as l_loc then
+				Result.set_package_file_location (l_loc)
 				pf := (create {IRON_PACKAGE_FILE_FACTORY}).new_package_file (l_loc)
 				if attached pf.title as l_title then
 					Result.set_title (l_title)

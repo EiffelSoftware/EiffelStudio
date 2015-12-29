@@ -38,6 +38,7 @@ feature -- Execution
 	handle_search_package (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			s: detachable STRING
+			coll: detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
 			lst: detachable LIST [IRON_NODE_VERSION_PACKAGE]
 			html_vis: HTML_IRON_NODE_ITERATOR
 			html: IRON_NODE_HTML_RESPONSE
@@ -53,12 +54,13 @@ feature -- Execution
 				not l_searched_name.is_empty
 			then
 				l_title := {STRING_32} "Search for name=%"" + l_searched_name.value + "%""
-				lst := iron.database.version_packages (iron_version (req), 1, 0)
-				if lst /= Void then
-					l_total_count := lst.count
+				coll := iron.database.version_packages (iron_version (req), 1, 0)
+				if coll /= Void then
+					l_total_count := coll.count
 					create kmp.make_empty
 					kmp.disable_case_sensitive
 					kmp.set_pattern (l_searched_name.value)
+					lst := coll.items
 					from
 						lst.start
 					until
@@ -87,20 +89,20 @@ feature -- Execution
 				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
 				l_title := {STRING_32} "Search for query=%"" + l_search_query.value + "%""
 				l_total_count := iron.database.version_packages_count (iron_version (req))
-				lst := iron.database.query_version_packages (l_search_query.value, iron_version (req), 1, 0)
-				l_found_count := lst.count
+				coll := iron.database.query_version_packages (l_search_query.value, iron_version (req), 1, 0)
+				l_found_count := coll.count
 			else
-				lst := iron.database.version_packages (iron_version (req), 1, 0)
-				if lst /= Void then
-					l_total_count := lst.count
-					l_found_count := lst.count
+				coll := iron.database.version_packages (iron_version (req), 1, 0)
+				if coll /= Void then
+					l_total_count := coll.count
+					l_found_count := coll.count
 				end
 			end
 			create s.make_empty
-			if lst /= Void then
+			if coll /= Void then
 				create html_vis.make (s, req, iron, iron_version (req))
 				html_vis.set_user (current_user (req))
-				html_vis.visit_package_version_iterable (lst)
+				html_vis.visit_package_version_iterable (coll)
 			end
 
 				-- Create new package
@@ -125,7 +127,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

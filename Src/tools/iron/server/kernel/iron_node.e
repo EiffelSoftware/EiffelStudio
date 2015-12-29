@@ -43,12 +43,15 @@ feature -- Query
 			Result := database.versions
 		end
 
-	packages (a_lower, a_upper: INTEGER_32): detachable LIST [IRON_NODE_PACKAGE]
+	packages (a_lower, a_upper: INTEGER_32): detachable IRON_NODE_PACKAGE_COLLECTION
 		do
 			Result := database.packages (a_lower, a_upper)
+			if Result /= Void then
+				Result.sort
+			end
 		end
 
-	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER_32): detachable LIST [IRON_NODE_VERSION_PACKAGE]
+	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER_32): detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
 		do
 			Result := database.version_packages (v, a_lower, a_upper)
 		end
@@ -75,16 +78,25 @@ feature -- Access: api url
 	api_base_url: STRING = "/access"
 
 	api_resource (p: READABLE_STRING_8): READABLE_STRING_8
+		local
+			s: STRING_8
 		do
-			Result := api_base_url + p
+			create s.make_from_string (api_base_url)
+			if not p.is_empty then
+				if p[1] /= '/' then
+					s.append_character ('/')
+				end
+				s.append (p)
+			end
+			Result := s
 		end
 
 	resource (v: detachable IRON_NODE_VERSION; p: READABLE_STRING_8): READABLE_STRING_8
 		do
 			if v /= Void then
-				Result := api_base_url + "/" + v.value + p
+				Result := api_resource (v.value + p)
 			else
-				Result := api_base_url + p
+				Result := api_resource (p)
 			end
 		end
 
@@ -118,36 +130,50 @@ feature -- Access: cms url
 	cms_base_url: STRING = "/repository"
 
 	cms_page (p: READABLE_STRING_8): READABLE_STRING_8
+		local
+			s: STRING
 		do
-			Result := cms_base_url + p
+			create s.make_from_string (cms_base_url)
+			if not p.is_empty then
+				if p[1] /= '/' then
+					s.append_character ('/')
+				end
+				s.append (p)
+			end
+			Result := s
+		end
+
+	version_create_page: READABLE_STRING_8
+		do
+			Result := cms_page ("/") -- POST
 		end
 
 	html_page (v: detachable IRON_NODE_VERSION; s: READABLE_STRING_8): READABLE_STRING_8
 		do
 			if v /= Void then
-				Result := cms_base_url + "/" + v.value + "/html/" + s
+				Result := cms_page (v.value + "/html/" + s)
 			else
-				Result := cms_base_url + "/html/" + s
+				Result := cms_page ("html/" + s)
 			end
 		end
 
 	page (v: detachable IRON_NODE_VERSION; p: READABLE_STRING_8): READABLE_STRING_8
 		do
 			if v /= Void then
-				Result := cms_base_url + "/" + v.value + p
+				Result := cms_page (v.value + p)
 			else
-				Result := cms_base_url + p
+				Result := cms_page (p)
 			end
 		end
 
 	user_page (u: IRON_NODE_USER): READABLE_STRING_8
 		do
-			Result := cms_base_url + "/user/" + url_encoder.general_encoded_string (u.name)
+			Result := cms_page ("user/" + url_encoder.general_encoded_string (u.name))
 		end
 
 	account_page (u: detachable IRON_NODE_USER): STRING_8
 		do
-			Result := cms_base_url + "/account/"
+			Result := cms_page ("account/")
 			if u /= Void then
 				Result.append (url_encoder.general_encoded_string (u.name) + "/")
 			end
@@ -231,6 +257,16 @@ feature -- Access: cms url
 			Result := page (v, "/package/") -- POST
 		end
 
+feature -- Iron client
+
+	package_info_from_text (a_text: READABLE_STRING_8): detachable IRON_PACKAGE_INFO_FILE
+		local
+			fac: IRON_PACKAGE_FILE_FACTORY
+		do
+			create fac
+			Result := fac.new_package_info_file_from_text (create {PATH}.make_from_string ("package.iron"), a_text)
+		end
+
 feature -- Encoders
 
 	url_encoder: URL_ENCODER
@@ -245,7 +281,7 @@ feature -- Encoders
 
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

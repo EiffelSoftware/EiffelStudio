@@ -14,6 +14,11 @@ inherit
 			is_equal
 		end
 
+	COMPARABLE
+		redefine
+			is_equal
+		end
+
 create
 	make,
 	make_empty
@@ -40,6 +45,12 @@ feature -- Status
 	has_id: BOOLEAN
 		do
 			Result := not id.is_empty
+		end
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- <Precursor>.
+		do
+			Result := identifier.as_lower < other.identifier.as_lower
 		end
 
 feature -- Comparison		
@@ -211,7 +222,6 @@ feature -- Change
 			create last_modified.make_now_utc
 		end
 
-
 	add_tag (t: READABLE_STRING_GENERAL)
 		local
 			l_tags: like tags
@@ -220,12 +230,15 @@ feature -- Change
 			l_tags := tags
 			if l_tags = Void then
 				create {ARRAYED_LIST [READABLE_STRING_32]} l_tags.make (1)
+				l_tags.compare_objects
 				tags := l_tags
 			end
 			create s.make_from_string_general (t)
 			s.left_adjust
 			s.right_adjust
-			l_tags.force (s)
+			if not l_tags.has (s) then
+				l_tags.force (s)
+			end
 		end
 
 	remove_tag (t: READABLE_STRING_GENERAL)
@@ -284,7 +297,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

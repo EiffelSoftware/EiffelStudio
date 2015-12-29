@@ -17,6 +17,11 @@ inherit
 			is_equal
 		end
 
+	COMPARABLE
+		redefine
+			is_equal
+		end
+
 create
 	make,
 	make_default
@@ -50,6 +55,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- <Precursor>.
+		do
+			Result := value.as_lower < other.value.as_lower
+		end
+
 	debug_output: READABLE_STRING_GENERAL
 			-- String that should be displayed in debugger to represent `Current'.
 		do
@@ -78,7 +89,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -53,8 +53,14 @@ feature -- Credential
 
 feature -- Version
 
-	versions: ITERABLE [IRON_NODE_VERSION]
+	versions: IRON_NODE_VERSION_COLLECTION
 		deferred
+		end
+
+	save_version (a_version: IRON_NODE_VERSION)
+		deferred
+		ensure
+			created: versions.has (a_version.value)
 		end
 
 feature -- Package
@@ -81,7 +87,7 @@ feature -- Package
 			Result /= Void implies Result.is_named (a_name)
 		end
 
-	packages (a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_PACKAGE]
+	packages (a_lower, a_upper: INTEGER): detachable IRON_NODE_PACKAGE_COLLECTION
 			-- Range [a_lower:a_upper] of packages for version `v'
 			-- if a_upper <= 0 then a_upper start from the end.
 		require
@@ -126,7 +132,7 @@ feature -- Version Package: Access
 		deferred
 		end
 
-	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_VERSION_PACKAGE]
+	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
 			-- Range [a_lower:a_upper] of packages for version `v'
 			-- if a_upper <= 0 then a_upper start from the end.
 		require
@@ -156,36 +162,43 @@ feature -- Version Package: Access
 			count_incremented: a_package.download_count > old a_package.download_count
 		end
 
-	query_version_packages (q: READABLE_STRING_32; v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): LIST [IRON_NODE_VERSION_PACKAGE]
+	query_version_packages (q: READABLE_STRING_32; v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): IRON_NODE_VERSION_PACKAGE_COLLECTION
 			-- Range [a_lower:a_upper] of packages for version `v' meeting the criteria expressed by `q'
 			-- if a_upper <= 0 then a_upper start from the end.
 		local
 			i: INTEGER
+			lst: LIST [IRON_NODE_VERSION_PACKAGE]
 		do
-			create {ARRAYED_LIST [IRON_NODE_VERSION_PACKAGE]} Result.make (0)
-			if attached version_packages (v, 1, 0) as lst then
+			create Result.make (0)
+			if attached version_packages (v, 1, 0) as coll then
 				if attached version_package_criteria_factory.criteria_from_string (q) as crit then
-					Result := crit.list (lst)
+					lst := crit.list (coll.items)
 					if a_upper >= a_lower then
 						from
-							Result.start
+							lst.start
 							i := 1
 						until
-							i = a_lower or Result.after
+							i = a_lower or lst.after
 						loop
-							Result.remove
+							lst.remove
 						end
 						from
-							Result.finish
+							lst.finish
 							i := a_upper - a_lower
 						until
-							Result.count = i
+							lst.count = i
 						loop
-							Result.remove
+							lst.remove
+						end
+						across
+							lst as ic
+						loop
+							Result.force (ic.item)
 						end
 					end
 				end
 			end
+			Result.sort
 		end
 
 feature -- Version Package: Criteria
@@ -294,8 +307,7 @@ feature -- Version Package: change
 			has_id: a_package.has_id
 		deferred
 		ensure
-			has_no_id: not a_package.has_id
-			version_package (a_package.version, old a_package.id) = Void
+			deleted: version_package (a_package.version, old a_package.id) = Void
 		end
 
 feature -- Version Package/ archive: change	
@@ -367,7 +379,7 @@ feature -- Version Package/ map,path: change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

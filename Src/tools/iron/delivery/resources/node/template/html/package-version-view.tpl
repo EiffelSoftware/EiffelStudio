@@ -9,16 +9,24 @@
   <div class="panel-body">
 <p class="description">
 {unless isempty="$package.description" }{$package.description/}{/unless}
+<div class="well well-sm">
+
 {unless isempty="$package.tags" }
-<div class="well well-sm"><strong>tags:</strong>
-{foreach item="tag" from="$package.tags" }<span class="badge">{$tag/}</span> {/foreach}
-</div>
+<p><strong>tags:</strong>
+{foreach item="tag" from="$package.tags" }<span class="badge">{$tag/}</span> {/foreach}</p>
 {/unless}
+
 {unless isempty="$package.links" }
-<div class="well well-sm"><strong>Links:</strong>
-{foreach key="lnk_name" item="lnk" from="$package.links" }<a href="{$lnk.url/}"><span class="label label-info">{htmlentities}{if isempty="$lnk.title"}{$lnk_name/}{/if}{unless isempty-"$lnk.title"}{$lnk.title/}{/unless}{/htmlentities}</span></a> {/foreach}
-</div>
+<p><strong>Links:</strong>
+{foreach key="lnk_name" item="lnk" from="$package.links" }<a href="{$lnk.url/}"><span class="label label-info">{htmlentities}{if isempty="$lnk.title"}{$lnk_name/}{/if}{unless isempty-"$lnk.title"}{$lnk.title/}{/unless}{/htmlentities}</span></a> {/foreach}</p>
 {/unless}
+
+{unless isempty="$package.notes" }
+<p>{foreach key="note_name" item="note_text" from="$package.notes" }<strong>{htmlentities}{$note_name/}{/htmlentities}</strong>: {htmlentities}{$note_text/}{/htmlentities}<br/>{/foreach}</p>
+{/unless}
+
+</div>
+
 </p>
 
 {if condition="$package.has_archive" }
@@ -37,9 +45,13 @@
 {/foreach}
 </ul>
 </div>
-<p class="howto"><span class="glyphicon glyphicon-cog"></span> iron install {$package.identifier/}</p>
 {/if}
 <br/>
+
+{if condition="$package.has_archive" }
+<p class="howto"><span class="glyphicon glyphicon-cog"></span> iron install {$package.identifier/}</p>
+{/if}
+
 
 <p class="text-muted text-right">
   <span>{$package.text_last_modified/}</span>

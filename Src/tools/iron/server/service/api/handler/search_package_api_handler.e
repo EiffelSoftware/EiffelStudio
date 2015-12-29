@@ -39,7 +39,8 @@ feature -- Execution
 		local
 			h: WSF_HEADER
 			s: detachable STRING
-			lst: detachable LIST [IRON_NODE_VERSION_PACKAGE]
+			coll: detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
+			lst: LIST [IRON_NODE_VERSION_PACKAGE]
 			json_vis: JSON_V1_IRON_NODE_ITERATOR
 			l_title: detachable READABLE_STRING_32
 			l_found_count: INTEGER
@@ -50,9 +51,10 @@ feature -- Execution
 				not l_searched_name.is_empty
 			then
 				l_title := {STRING_32} "Search IRON packages with name=%"" + l_searched_name.value + "%""
-				lst := iron.database.version_packages (iron_version (req), 1, 0)
-				if lst /= Void then
-					l_total_count := lst.count
+				coll := iron.database.version_packages (iron_version (req), 1, 0)
+				if coll /= Void then
+					l_total_count := coll.count
+					lst := coll.items
 					from
 						lst.start
 					until
@@ -70,15 +72,15 @@ feature -- Execution
 					l_found_count := lst.count
 				end
 			else
-				lst := iron.database.version_packages (iron_version (req), 1, 0)
-				if lst /= Void then
-					l_total_count := lst.count
-					l_found_count := lst.count
+				coll := iron.database.version_packages (iron_version (req), 1, 0)
+				if coll /= Void then
+					l_total_count := coll.count
+					l_found_count := coll.count
 				end
 			end
 
 			create json_vis.make (req, iron, iron_version (req))
-			s := json_vis.package_versions_to_json (lst)
+			s := json_vis.package_versions_to_json (coll)
 
 			create h.make
 			h.put_content_type_application_json
@@ -98,7 +100,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

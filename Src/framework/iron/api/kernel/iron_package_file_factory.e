@@ -23,8 +23,13 @@ feature -- Factory
 			end
 		end
 
+	new_package_info_file_from_text (fn: PATH; a_text: READABLE_STRING_8): IRON_PACKAGE_INFO_FILE
+		do
+			create Result.make_from_text (fn, a_text)
+		end
+
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -7,6 +7,11 @@
 {unless isempty="$package.description" }
 <p class="list-group-item-text">{$package.description/}</p>
 {/unless}
+{unless isempty="$package.tags" }
+<p>
+{foreach item="tag" from="$package.tags" }<span class="badge">{$tag/}</span> {/foreach}
+</p>
+{/unless}
 <p class="text-muted text-right">
   <span>{$package.text_last_modified/}</span>
   <span class="packagetooltip text-right" data-toggle="popover" data-placement="right" data-content="id={$package.id/}"><span class="glyphicon glyphicon-info-sign"></span></span>

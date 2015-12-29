@@ -17,7 +17,8 @@ inherit
 		end
 
 create {IRON_PACKAGE_FILE_FACTORY}
-	make_from_path
+	make_from_path,
+	make_from_text
 
 feature {NONE} -- Initialization
 
@@ -35,6 +36,24 @@ feature {NONE} -- Initialization
 			create l_parser.make
 			l_parser.set_callbacks (Current)
 			l_parser.parse (fn)
+			has_error := l_parser.error_occurred
+		end
+
+	make_from_text (fn: PATH; a_text: READABLE_STRING_8)
+			-- Create info file `fn' with `a_text' as content.
+		do
+			path := fn
+			create notes.make (0)
+			import_text (a_text)
+		end
+
+	import_text (a_text: READABLE_STRING_8)
+		local
+			l_parser: IRON_PACKAGE_INFO_FILE_PARSER
+		do
+			create l_parser.make
+			l_parser.set_callbacks (Current)
+			l_parser.parse_text (a_text)
 			has_error := l_parser.error_occurred
 		end
 
@@ -93,7 +112,7 @@ feature -- Change
 			notes.wipe_out
 		end
 
-feature {NONE} -- Internal
+feature -- Access
 
 	package_name: detachable IMMUTABLE_STRING_32
 
@@ -344,7 +363,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

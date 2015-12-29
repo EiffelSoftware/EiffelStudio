@@ -133,7 +133,7 @@ feature -- Operation
 
 	last_operation_error_message: detachable READABLE_STRING_8
 
-	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32;
+	publish_package (a_id, a_name, a_title, a_description: detachable READABLE_STRING_32; a_package_file_location: detachable PATH;
 				a_package: detachable IRON_PACKAGE; a_published_package_cell: detachable CELL [detachable IRON_PACKAGE];
 				a_user, a_password: READABLE_STRING_32)
 		require
@@ -164,6 +164,9 @@ feature -- Operation
 			end
 			if a_description /= Void then
 				ctx.add_form_parameter ("description", a_description)
+			end
+			if a_package_file_location /= Void and then attached file_content (a_package_file_location) as l_info then
+				ctx.add_form_parameter ("package_info", l_info)
 			end
 			if a_package = Void then
 				res := sess.post (urls.path_create_package (repository), ctx, Void)
@@ -320,7 +323,7 @@ feature {NONE} -- Implementation
 
 	http_client: HTTP_CLIENT
 		once
-			create {LIBCURL_HTTP_CLIENT} Result.make
+			create {DEFAULT_HTTP_CLIENT} Result
 		end
 
 	new_auth_session (a_base_url: READABLE_STRING_8; a_user, a_password: READABLE_STRING_32): HTTP_CLIENT_SESSION
@@ -403,6 +406,28 @@ feature {NONE} -- Implementation
 				elseif v.is_integer then
 					Result := v.to_integer
 				end
+			end
+		end
+
+	file_content (a_path: PATH): detachable STRING
+			-- Eventual content of file at location `a_path'.
+		local
+			f: RAW_FILE
+			done: BOOLEAN
+		do
+			create f.make_with_path (a_path)
+			if f.exists and then f.is_access_readable then
+				create Result.make (f.count)
+				f.open_read
+				from
+				until
+					done
+				loop
+					f.read_stream_thread_aware (1024)
+					Result.append (f.last_string)
+					done := f.last_string.count < 1024 or f.exhausted or f.end_of_file
+				end
+				f.close
 			end
 		end
 

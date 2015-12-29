@@ -45,7 +45,7 @@ feature -- Networking
 
 	new_client: HTTP_CLIENT
 		do
-			create {LIBCURL_HTTP_CLIENT} Result.make
+			create {DEFAULT_HTTP_CLIENT} Result
 		end
 
 feature -- Execute
@@ -116,7 +116,7 @@ feature -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

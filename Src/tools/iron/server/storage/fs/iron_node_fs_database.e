@@ -275,13 +275,12 @@ feature -- User
 
 feature -- Version
 
-	versions: ITERABLE [IRON_NODE_VERSION]
+	versions: IRON_NODE_VERSION_COLLECTION
 		local
 			d: DIRECTORY
 			u: FILE_UTILITIES
-			lst: ARRAYED_LIST [IRON_NODE_VERSION]
 		do
-			create lst.make (5)
+			create Result.make (5)
 			create d.make_with_path (versions_path)
 			if d.exists and d.is_readable then
 				d.open_read
@@ -290,13 +289,22 @@ feature -- Version
 				loop
 					if attached {PATH} c.item as p and then not (p.is_current_symbol or p.is_parent_symbol) then
 						if u.directory_path_exists (d.path.extended_path (p)) then
-							lst.force (create {IRON_NODE_VERSION}.make (p.utf_8_name))
+							Result.force (create {IRON_NODE_VERSION}.make (p.utf_8_name))
 						end
 					end
 				end
 				d.close
 			end
-			Result := lst
+		end
+
+	save_version (a_version: IRON_NODE_VERSION)
+		local
+			d: DIRECTORY
+		do
+			create d.make_with_path (versions_path.extended (a_version.value))
+			if not d.exists then
+				d.recursive_create_dir
+			end
 		end
 
 feature -- Package
@@ -376,9 +384,10 @@ feature -- Package
 						or c.key.same_string ("description")
 						or c.key.same_string ("tags")
 						or c.key.same_string ("owner")
-						or c.key.same_string ("links")
 						or c.key.same_string ("last-modified")
 						or c.key.same_string ("last-archive-revision")
+						or c.key.same_string ("links")
+						or c.key.starts_with ("links[")
 					then
 							-- no way
 					else
@@ -392,7 +401,7 @@ feature -- Package
 			end
 		end
 
-	packages (a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_PACKAGE]
+	packages (a_lower, a_upper: INTEGER): detachable IRON_NODE_PACKAGE_COLLECTION
 		local
 			p: PATH
 			d,t: DIRECTORY
@@ -423,7 +432,7 @@ feature -- Package
 						end
 					end
 				end
-				create {ARRAYED_LIST [IRON_NODE_PACKAGE]} Result.make (l_files.count)
+				create Result.make (l_files.count)
 				i := a_lower - 1
 				if a_upper <= 0 then
 					l_upper := a_lower - 1 + l_files.count + a_upper
@@ -674,7 +683,7 @@ feature -- Version package
 			end
 		end
 
-	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable LIST [IRON_NODE_VERSION_PACKAGE]
+	version_packages (v: IRON_NODE_VERSION; a_lower, a_upper: INTEGER): detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
 		local
 			p: PATH
 			d,t: DIRECTORY
@@ -706,7 +715,7 @@ feature -- Version package
 						end
 					end
 				end
-				create {ARRAYED_LIST [IRON_NODE_VERSION_PACKAGE]} Result.make (l_files.count)
+				create Result.make (l_files.count)
 				i := a_lower - 1
 				if a_upper <= 0 then
 					l_upper := a_lower - 1 + l_files.count + a_upper
@@ -727,6 +736,7 @@ feature -- Version package
 						end
 					end
 				end
+				Result.sort
 			end
 		end
 
@@ -915,7 +925,7 @@ feature -- Version Package: change
 
 				-- Save information
 			create inf.make_empty
-			if attached a_package.items as tb then
+			if attached a_package.version_items as tb then
 				across
 					tb as c
 				loop

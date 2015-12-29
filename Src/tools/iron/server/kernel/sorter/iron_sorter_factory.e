@@ -1,13 +1,13 @@
 note
-	description: "Collection of IRON node version package."
+	description: "Summary description for {IRON_SORTER_FACTORY}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_NODE_VERSION_PACKAGE_COLLECTION
+	IRON_SORTER_FACTORY [G]
 
 inherit
-	ITERABLE [IRON_NODE_VERSION_PACKAGE]
+	TABLE_ITERABLE [TUPLE [sorter: SORTER [G]; description: detachable READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
 
 create
 	make
@@ -16,60 +16,54 @@ feature {NONE} -- Initialization
 
 	make (nb: INTEGER)
 		do
-			create items.make (nb)
+			create items.make_caseless (nb)
 		end
 
 feature -- Access
 
+	sorter (a_name: READABLE_STRING_GENERAL): detachable IRON_SORTER [G]
+		local
+			n: STRING_32
+			neg: BOOLEAN
+		do
+			create n.make_from_string_general (a_name)
+			if n.starts_with ("-") then
+				neg := True
+				n.remove_head (1)
+				n.to_lower
+			end
+			if attached items.item (n) as d then
+				create Result.make (n, d.sorter)
+				if neg then
+					Result.set_is_reversed (neg)
+				end
+			end
+		end
+
+	items: STRING_TABLE [TUPLE [sorter: SORTER [G]; description: detachable READABLE_STRING_GENERAL]]
+
+feature -- Status report
+
 	count: INTEGER
-			-- Number of versions.
 		do
 			Result := items.count
 		end
 
-	items: ARRAYED_LIST [IRON_NODE_VERSION_PACKAGE]
-
-	new_cursor: ITERATION_CURSOR [IRON_NODE_VERSION_PACKAGE]
-			-- <Precursor>
+	new_cursor: TABLE_ITERATION_CURSOR [TUPLE [sorter: SORTER [G]; description: detachable READABLE_STRING_GENERAL], READABLE_STRING_GENERAL]
+			-- Fresh cursor associated with current structure
 		do
 			Result := items.new_cursor
 		end
 
 feature -- Element change
 
-	force, put (v: IRON_NODE_VERSION_PACKAGE)
-		do
-			items.force (v)
-		end
-
-feature -- Sorting
-
-	sort_with (a_sorter: SORTER [IRON_NODE_VERSION_PACKAGE])
-		do
-			a_sorter.sort (items)
-		end
-
-	reverse_sort_with (a_sorter: SORTER [IRON_NODE_VERSION_PACKAGE])
-		do
-			a_sorter.reverse_sort (items)
-		end
-
-	sort
-			-- Sort alphabetically, older first.
+	register_builder (a_name: READABLE_STRING_GENERAL; a_sorter: SORTER [G]; a_description: detachable READABLE_STRING_GENERAL)
 		local
-			s: QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]
+			n: STRING_32
 		do
-			create s.make (create {COMPARABLE_COMPARATOR [IRON_NODE_VERSION_PACKAGE]})
-			sort_with (s)
-		end
-
-	reverse_sort
-			-- Sort alphabetically, latest first.
-		local
-			s: QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]
-		do
-			create s.make (create {COMPARABLE_COMPARATOR [IRON_NODE_VERSION_PACKAGE]})
-			reverse_sort_with (s)
+			create n.make_from_string_general (a_name)
+			n.to_lower
+			items.force ([a_sorter, a_description], n)
 		end
 
 note

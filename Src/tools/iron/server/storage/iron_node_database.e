@@ -212,22 +212,22 @@ feature -- Version Package: Sorter
 				-- by name
 			create eq.make (agent version_package_is_less_than_by_name)
 			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
-			Result.register_builder ("name", l_sorter, Void)
+			Result.register_builder ("name", l_sorter, "Sort by short name")
 
 				-- by title
 			create eq.make (agent version_package_is_less_than_by_title)
 			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
-			Result.register_builder ("title", l_sorter, Void)
+			Result.register_builder ("title", l_sorter, "Sort by title (i.e full name)")
 
 				-- by downloads
 			create eq.make (agent version_package_is_less_than_by_downloads)
 			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
-			Result.register_builder ("downloads", l_sorter, Void)
+			Result.register_builder ("downloads", l_sorter, "Sort by downloads count")
 
 				-- by date
 			create eq.make (agent version_package_is_less_than_by_last_modified)
 			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)
-			Result.register_builder ("date", l_sorter, Void)
+			Result.register_builder ("date", l_sorter, "Sort by last-modified date")
 		end
 
 feature {NONE} -- Version Package: Sorter		
@@ -272,6 +272,7 @@ feature -- Version Package: Criteria
 	version_package_criteria_factory: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]
 		once
 			create Result.make
+
 			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
 						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
@@ -305,6 +306,25 @@ feature -- Version Package: Criteria
 											Result := kmp.pattern_matches
 										else
 											Result := l_title.as_lower.has_substring (s.as_lower)
+										end
+									end
+								end(?, v)
+							)
+					end)
+			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
+							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								local
+									kmp: KMP_WILD
+								do
+									if attached obj.description as l_description then
+										if s.has ('*') or s.has ('?') then
+											create kmp.make (s, l_description)
+											kmp.disable_case_sensitive
+											Result := kmp.pattern_matches
+										else
+											Result := l_description.as_lower.has_substring (s.as_lower)
 										end
 									end
 								end(?, v)
@@ -344,11 +364,32 @@ feature -- Version Package: Criteria
 								)
 						end
 					end)
-			Result.register_default_builder ("name")
-			Result.set_builder_description ("name", "has package name (support wildcard)")
-			Result.set_builder_description ("tag", "has tag")
-			Result.set_builder_description ("owner", "is published by username")
-			Result.set_builder_description ("downloads", "has at least N downloads")
+
+			Result.register_builder ("text", agent (n,v: READABLE_STRING_GENERAL; a_names: ITERABLE [READABLE_STRING_GENERAL]; fac: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+					do
+						across
+							a_names as ic
+						loop
+							if attached fac.criteria (ic.item, v) as crit then
+								if Result = Void then
+									Result := crit
+								else
+									create {CRITERIA_OR [IRON_NODE_VERSION_PACKAGE]} Result.make (Result, crit)
+								end
+							end
+						end
+					end(?,?, <<"name", "title", "tag">>, Result))
+
+			Result.register_default_builder ("text")
+			Result.set_builder_description ("text", "search in 'name', 'title', and 'tag' (wildcard supported)")
+
+			Result.set_builder_description ("name", "package name (i.e short name) has searched pattern (wildcard supported)")
+			Result.set_builder_description ("title", "package title (i.e full human name) has searched pattern (wildcard supported)")
+			Result.set_builder_description ("description", "package description has searched pattern (wildcard supported)")
+			Result.set_builder_description ("tag", "package has related tag")
+			Result.set_builder_description ("owner", "package is published by username (with username=searched pattern)")
+			Result.set_builder_description ("downloads", "package has at least N downloads (with N=searched pattern)")
+
 		end
 
 feature -- Version Package: change		
@@ -445,7 +486,7 @@ feature -- Version Package/ map,path: change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

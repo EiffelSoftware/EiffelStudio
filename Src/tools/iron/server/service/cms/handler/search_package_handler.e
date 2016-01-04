@@ -40,56 +40,96 @@ feature -- Execution
 			s: detachable STRING
 			l_search_help: detachable STRING
 			coll: detachable IRON_NODE_VERSION_PACKAGE_COLLECTION
-			lst: detachable LIST [IRON_NODE_VERSION_PACKAGE]
 			html_vis: HTML_IRON_NODE_ITERATOR
 			html: IRON_NODE_HTML_RESPONSE
-			l_title: detachable READABLE_STRING_32
+			l_title, l_desc: detachable READABLE_STRING_32
+			l_desc_html, l_link_attribs: detachable STRING
 			l_found_count: INTEGER
 			l_total_count: INTEGER
-			kmp: KMP_WILD
-			l_url: READABLE_STRING_8
 			k: STRING
-			l_sort_by: detachable READABLE_STRING_32
+			l_search_query, l_sort_by: detachable READABLE_STRING_32
+			l_uri, l_sort_uri: URI
 		do
 			html := new_response_message (req)
 			create s.make_empty
+			l_sort_by := req.string_item ("sort-by")
+			if l_sort_by /= Void then
+				if l_sort_by.is_whitespace then
+					l_sort_by := Void
+				else
+					html.add_parameter (l_sort_by, "search_sort_by")
+				end
+			end
+			if l_sort_by = Void then
+				l_sort_by := "name"
+			end
+			l_search_query := req.string_item ("query")
+			if l_search_query /= Void and then l_search_query.is_whitespace then
+				l_search_query := Void
+			end
+			if l_search_query = Void then
+				if attached req.string_item ("name") as l_search_name and then not l_search_name.is_whitespace then
+					l_search_query := {STRING_32} "name:%"" + l_search_name + "%""
+				end
+				if attached req.string_item ("title") as l_search_title and then not l_search_title.is_whitespace then
+					l_search_query := {STRING_32} "title:%"" + l_search_title + "%""
+				end
+				if attached req.string_item ("tag") as l_search_tag and then not l_search_tag.is_whitespace then
+					l_search_query := {STRING_32} "tag:" + l_search_tag
+				end
+			end
+
+			create l_uri.make_from_string (req.percent_encoded_path_info)
+			if l_search_query /= Void then
+				l_uri.add_query_parameter ("query", l_search_query)
+			end
 
 			if
 				attached iron.database.version_package_sorter_factory as l_sorter_factory and then
 				l_sorter_factory.count > 0
 			then
-				l_sort_by := req.string_item ("sort-by")
-
 				s.append ("<ul class=%"sorters%">")
 				s.append ("<strong>Sort by</strong>: ")
-				l_url := req.percent_encoded_path_info
-				if l_url.has ('?') then
-					l_url := l_url + "&sort-by="
-				else
-					l_url := l_url + "?sort-by="
-				end
+				check sort_by_is_attached: l_sort_by /= Void end
 				across
 					l_sorter_factory as ic
 				loop
+					create l_link_attribs.make (0)
+					l_desc := l_sorter_factory.sorter_description (ic.key)
+					if l_desc /= Void then
+						l_desc_html := html_encoder.general_encoded_string (l_desc)
+						l_desc_html.replace_substring_all ("%N", "<br/>")
+						if l_desc_html /= Void and then not l_desc_html.is_whitespace then
+							l_link_attribs.append (" title=%"" + l_desc_html + "%"")
+							l_link_attribs.append (" class=%"iron-tooltip%"")
+						end
+					end
 					k := url_encoder.general_encoded_string (ic.key)
-					s.append ("<li>")
-					s.append (html_encoder.general_encoded_string (ic.key))
-					s.append (" ")
+					create l_sort_uri.make_from_uri (l_uri)
 					-- FIXME jfiat [2015/12/29] : remove dependency on bootstrap theme!
-					if l_sort_by /= Void and then l_sort_by.is_case_insensitive_equal_general (ic.key) then
-						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span>")
+					if l_sort_by.is_case_insensitive_equal_general (ic.key) then
+						s.append ("<li class=%"active%">")
+						l_sort_uri.add_query_parameter ("sort-by", {STRING_32} "-" + k)
+						s.append ("<a href=%"" + l_sort_uri.string + "%"")
+						s.append (l_link_attribs)
+						s.append (">")
+						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span> ")
+					elseif l_sort_by.is_case_insensitive_equal_general ({STRING_32} "-" + ic.key) then
+						s.append ("<li class=%"active%">")
+						l_sort_uri.add_query_parameter ("sort-by", k)
+						s.append ("<a href=%"" + l_sort_uri.string + "%"")
+						s.append (l_link_attribs)
+						s.append (">")
+						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span> ")
 					else
-						s.append ("<a href=%"" + l_url + k + "%">")
-						s.append ("<span class=%"glyphicon glyphicon-chevron-down%"></span>")
-						s.append ("</a>")
+						s.append ("<li>")
+						l_sort_uri.add_query_parameter ("sort-by", k)
+						s.append ("<a href=%"" + l_sort_uri.string + "%"")
+						s.append (l_link_attribs)
+						s.append (">")
 					end
-					if l_sort_by /= Void and then l_sort_by.is_case_insensitive_equal_general ({STRING_32} "-" + ic.key) then
-						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span>")
-					else
-						s.append ("<a href=%"" + l_url + "-" + k + "%">")
-						s.append ("<span class=%"glyphicon glyphicon-chevron-up%"></span>")
-						s.append ("</a>")
-					end
+					s.append (k)
+					s.append ("</a>")
 					s.append ("</li>")
 				end
 				s.append ("</ul>")
@@ -97,38 +137,7 @@ feature -- Execution
 			l_search_help := iron.database.version_package_criteria_factory.description
 
 			if
-				attached req.string_item ("name") as l_searched_name and then
-				not l_searched_name.is_whitespace
-			then
-				l_title := {STRING_32} "Search for name=%"" + l_searched_name + "%""
-				coll := iron.database.version_packages (iron_version (req), 1, 0)
-				if coll /= Void then
-					l_total_count := coll.count
-					create kmp.make_empty
-					kmp.disable_case_sensitive
-					kmp.set_pattern (l_searched_name)
-					lst := coll.items
-					from
-						lst.start
-					until
-						lst.after
-					loop
-						if attached lst.item.name as l_name then
-							kmp.set_text (l_name)
-							if kmp.pattern_matches then
-								lst.forth
-							else
-								lst.remove
-							end
-						else
-							lst.remove
-						end
-					end
-					l_found_count := lst.count
-				end
-			elseif
-				attached req.string_item ("query") as l_search_query and then
-				not l_search_query.is_whitespace
+				l_search_query /= Void
 			then
 				html.add_parameter (l_search_query, "search_query_text")
 				html.add_parameter (l_search_help, "search_query_description")
@@ -144,6 +153,9 @@ feature -- Execution
 					l_found_count := coll.count
 				end
 			end
+
+			s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
+			
 			if coll /= Void and then coll.count > 0 then
 				if
 					l_sort_by /= Void and then
@@ -189,7 +201,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

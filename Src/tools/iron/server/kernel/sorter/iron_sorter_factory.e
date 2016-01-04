@@ -40,6 +40,24 @@ feature -- Access
 			end
 		end
 
+	sorter_description (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+		local
+			n: STRING_32
+			neg: BOOLEAN
+		do
+			create n.make_from_string_general (a_name)
+			if n.starts_with ("-") then
+				neg := True
+				n.remove_head (1)
+				n.to_lower
+			end
+			if attached items.item (n) as d then
+				if attached d.description as desc and then not desc.is_whitespace then
+					Result := desc.as_string_32
+				end
+			end
+		end
+
 	items: STRING_TABLE [TUPLE [sorter: SORTER [G]; description: detachable READABLE_STRING_GENERAL]]
 
 feature -- Status report
@@ -67,7 +85,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -74,13 +74,9 @@ def main():
 		os.makedirs(l_sources_dir)
 	get_ise_libraries(l_sources_dir, l_branch, l_version)
 
-	print "Updating the ecf files for iron packaging ..."
+	print "Upload ISE packages ..."
 	upload_version(l_sources_dir, cfg_location)
 
-
-	#process_iron_package_files (os.path.join (l_sources_dir, "library"), l_sources_dir, l_packages_dir, l_login, l_password, repo, repository_cfg.version())
-	#process_iron_package_files (os.path.join (l_sources_dir, "unstable", "library"), l_sources_dir, l_packages_dir, l_login, l_password, repo, repository_cfg.version())
-	#process_iron_package_files (os.path.join (l_sources_dir, "contrib", "library"), l_sources_dir, l_packages_dir, l_login, l_password, repo, repository_cfg.version())
 if __name__ == '__main__':
 	main()
 	sys.exit()

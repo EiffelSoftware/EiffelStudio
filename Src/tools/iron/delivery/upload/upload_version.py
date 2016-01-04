@@ -5,9 +5,17 @@ import os;
 import shutil;
 from subprocess import call
 
+def debug():
+	return False;
 
 def trim(s):
 	return s.strip()
+
+def pause(m):
+	try:
+	    input(m)
+	except SyntaxError:
+	    pass
 
 def module_exists(module_name):
     try:
@@ -55,7 +63,7 @@ def package_name_from_iron_package_file (pf):
 			pf_name = result.group(1)
 	return pf_name
 
-def process_iron_package (ipfn, a_sources_dir, u,p,repo,v):
+def process_iron_package (ipfn, a_sources_dir, a_cfg_location, u,p,repo,v):
 	import re;
 
 	print "----"
@@ -84,17 +92,16 @@ def process_iron_package (ipfn, a_sources_dir, u,p,repo,v):
 #			p_source = None
 
 	p_source = os.path.normpath(os.path.dirname(ipfn))
+	iron_opts = " --config %s --batch " % (a_cfg_location)
+	#iron_opts = " --config %s -u %s -p \"%s\" --repository %s --batch " % (a_cfg_location, u, p, repo)
 
-	iron_create_cmd = "%s share create -u %s -p \"%s\" --repository %s --batch --package %s " % (iron_command_name(), u, p, repo, ipfn)
+	iron_create_cmd = "%s share create %s --package %s " % (iron_command_name(), iron_opts, ipfn)
 
-	iron_update_cmd = "%s share update -u %s -p \"%s\" --repository %s --batch --package %s " % (iron_command_name(), u, p, repo, ipfn)
+	iron_update_cmd = "%s share update %s --package %s " % (iron_command_name(), iron_opts, ipfn)
 
 	cmd = "%s" % (iron_create_cmd)
 	if p_description != None:
 		cmd = "%s --package-description \"%s\" " % (cmd, p_description)
-		#call([iron_command_name(), 'share', 'create', '-u', u, '-p', p, '--repository', repo, '--batch', '--package-name', p_name, '--package-description', p_description], shell=True, stdout=sys.stdout)
-	#else:
-		#call([iron_command_name(), 'share', 'create', '-u', u, '-p', p, '--repository', repo, '--batch', '--package-name', p_name], shell=True, stdout=sys.stdout)
 	cmd_call (cmd)
 
 	if p_source != None:
@@ -137,7 +144,7 @@ def process_iron_package (ipfn, a_sources_dir, u,p,repo,v):
 				cmd_call (cmd)
 				print ""
 
-def process_iron_package_files(a_dir, a_sources_dir, a_login, a_password, a_repo, a_version):
+def process_iron_package_files(a_dir, a_sources_dir, a_cfg_location, a_login, a_password, a_repo, a_version):
 	l_nodes = os.listdir (a_dir)
 	l_iron_package_found=False
 	l_dirs=[]
@@ -150,12 +157,12 @@ def process_iron_package_files(a_dir, a_sources_dir, a_login, a_password, a_repo
 		else:
 			if f == 'package.iron':
 				l_iron_package_found = True
-				process_iron_package (ff, a_sources_dir, a_login, a_password, a_repo, a_version)
+				process_iron_package (ff, a_sources_dir, a_cfg_location, a_login, a_password, a_repo, a_version)
 				break
 			
 	if not l_iron_package_found:
 		for d in l_dirs:
-			process_iron_package_files(d, a_sources_dir, a_login, a_password, a_repo, a_version)
+			process_iron_package_files(d, a_sources_dir, a_cfg_location, a_login, a_password, a_repo, a_version)
 
 def iron_config(a_cfg_location):
 	import re;
@@ -203,9 +210,14 @@ def upload_version(a_sources_dir, a_cfg_location):
 		call([iron_command_name(), "repository", "--add", repo])
 #		call([iron_command_name(), "repository", "--remove", repo])
 
+		if debug():
+			pause ("Press [ENTER] to start updating ecf files..,")
 		print "Updating the ecf files for iron packaging ..."
 		call([iron_command_name(), "update_ecf", "--save", "-D", "ISE_LIBRARY=%s" % (a_sources_dir), a_sources_dir])
-		process_iron_package_files (a_sources_dir, a_sources_dir, l_login, l_password, repo, l_version)
+
+		if debug():
+			pause ("Press [ENTER] to start uploading..,")
+		process_iron_package_files (a_sources_dir, a_sources_dir, a_cfg_location, l_login, l_password, repo, l_version)
 
 	else:
 		print "Invalid iron repository url!"

@@ -91,6 +91,12 @@ feature -- Processing
 		deferred
 		end
 
+	visit_magic_word (a_word: WIKI_MAGIC_WORD)
+		require
+			a_word_attached: a_word /= Void
+		deferred
+		end
+
 feature -- Strings
 
 	visit_raw_string (a_raw_string: WIKI_RAW_STRING)
@@ -213,7 +219,7 @@ feature -- Table
 
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

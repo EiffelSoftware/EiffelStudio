@@ -79,6 +79,7 @@
 	</nav>
   <div id="main">
   {unless isempty="$page_title"}<h1>{$page_title/}</h1>{/unless}
+  {if condition="$is_front"}{include file="front-page-message.tpl"/}{/if}
   {$main/}
   </div>
   <div id="footer">{$footer/}</div>

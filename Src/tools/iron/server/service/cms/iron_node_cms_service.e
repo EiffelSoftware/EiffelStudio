@@ -30,7 +30,7 @@ feature -- Initialization
 			--			h_fs: WSF_FILE_SYSTEM_HANDLER
 			l_layout: IRON_NODE_LAYOUT
 			l_iron: like iron
-			h_doc: IRON_FILE_SYSTEM_HANDLER
+			h_doc: WSF_FILE_SYSTEM_HANDLER
 		do
 				--| Optional
 			router.handle ("/debug/", create {WSF_DEBUG_HANDLER}.make_hidden, Void)

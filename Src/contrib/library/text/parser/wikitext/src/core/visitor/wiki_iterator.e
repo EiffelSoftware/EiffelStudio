@@ -36,13 +36,10 @@ feature -- Processing
 		do
 			elts := a_composite.elements
 			if elts.count > 0 then
-				from
-					elts.start
-				until
-					elts.after
+				across
+					elts as ic
 				loop
-					elts.item.process (Current)
-					elts.forth
+					ic.item.process (Current)
 				end
 			end
 		end
@@ -111,6 +108,10 @@ feature -- Processing
 			if attached a_string.parts as l_parts then
 				visit_composite (l_parts)
 			end
+		end
+
+	visit_magic_word (a_word: WIKI_MAGIC_WORD)
+		do
 		end
 
 feature -- Strings
@@ -215,7 +216,7 @@ feature -- Table
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

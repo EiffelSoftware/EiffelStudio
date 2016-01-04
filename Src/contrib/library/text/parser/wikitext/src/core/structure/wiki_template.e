@@ -41,6 +41,13 @@ feature -- Access
 
 	parameters_text: detachable READABLE_STRING_8
 
+	parameter (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+		do
+			if attached parameters as l_params then
+				Result := l_params.item (a_name)
+			end
+		end
+
 	parameters: detachable STRING_TABLE [READABLE_STRING_8]
 		local
 			p: INTEGER
@@ -53,7 +60,8 @@ feature -- Access
 				create Result.make (0)
 				p := l_params.index_of ('|', 1)
 				if p = 0 then
-					Result.force (l_params, "1")
+					record_parameter_text_into (l_params, Result)
+--					Result.force (l_params, "1")
 				else
 					create l_split_positions.make (1)
 					create l_stack.make (1)
@@ -233,7 +241,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -344,6 +344,33 @@ feature -- Processing
 							check should_not_occur: False end
 						end
 					end
+				when '_' then
+					if not in_items.is_empty then
+						--| do not process this for now
+						s.extend (c)
+					elseif safe_character (a_text, i + 1) = '_' then
+						from
+							p := i + 2
+						until
+							not (a_text[p].is_alpha and a_text[p].is_upper) or p > n
+						loop
+							p := p + 1
+						end
+						if
+							p > i + 2 and
+							safe_character (a_text, p) = '_' and
+							safe_character (a_text, p + 1) = '_'
+						then
+							p := p + 1
+							flush_buffer (a_parts, s)
+							a_parts.add_element (create {WIKI_MAGIC_WORD}.make_from_source (a_text.substring (i, p)))
+							i := p
+						else
+							s.extend (c)
+						end
+					else
+						s.extend (c)
+					end
 				when '&' then
 					if not in_items.is_empty then
 						s.extend (c)
@@ -422,7 +449,7 @@ feature -- Processing
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

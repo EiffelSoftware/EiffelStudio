@@ -20,8 +20,6 @@ feature {NONE} -- Initialization
 			create code_aliases.make (2)
 			code_aliases.force ("code")
 			code_aliases.force ("source")
---			create section_indexes.make_filled (0, 0, 50)
---			create list_indexes.make_filled (0, 0, 50)
 		end
 
 feature -- Basic operation
@@ -47,6 +45,13 @@ feature -- Settings
 		do
 			Result := across code_aliases as ic some ic.item.is_case_insensitive_equal (s) end
 		end
+
+	is_auto_toc_enabled: BOOLEAN
+			-- Generate TOC automatically.
+
+	toc_depth_limit: NATURAL_8
+			-- Limit depth of TOC.
+			-- If 0, no limit.
 
 feature -- Callback
 
@@ -80,9 +85,33 @@ feature -- Callback change
 			file_resolver := r
 		end
 
+feature -- Setting change	
+
+	set_is_auto_toc_enabled (b: BOOLEAN)
+			-- Set `is_auto_toc_enabled' to `b'.
+		do
+			is_auto_toc_enabled := b
+		end
+
+	set_toc_depth_limit (n: NATURAL_8)
+			-- Set toc depth limit to `n'.
+			-- No limit if `n' is 0.
+		do
+			toc_depth_limit := n
+		end
+
 feature -- Output
 
 	buffer: STRING
+
+feature {NONE} -- Implementation	
+
+	output_indentation
+		do
+			if level > 0 then
+				output (create {STRING}.make_filled ('%T', level))
+			end
+		end
 
 	output (s: STRING)
 		local
@@ -246,29 +275,122 @@ feature -- Book processing
 		do
 			current_page := a_page
 			if attached a_page.structure as st then
--- TODO: support for __TOC__ and related
--- TOC				
---				across
---					st.elements as ic
---				loop
---					if attached {WIKI_SECTION} ic.item as w_section then
---						output ("<li>")
---						if attached w_section.text as l_text then
---							output (l_text.text)
---						else
---							output ("...")
---						end
---						output ("</li>")
---					end
---				end
 				output ("<div>")
+				if is_auto_toc_enabled then
+					output_toc (Void, True)
+				end
 				st.process (Current)
 				output ("</div>%N")
 			end
 			current_page := Void
 		end
 
+feature -- Internal
+
+	last_structure: detachable WIKI_STRUCTURE
+			-- Last visited WIKI_STRUCTURE.
+
 feature -- Processing
+
+	output_toc (a_wiki: detachable WIKI_ITEM; is_auto_toc: BOOLEAN)
+			-- Output the TOC from `a_structure'.
+			-- This is the automatically generated TOC if `is_auto_toc' is True.
+		local
+			it: WIKI_TOC_VISITOR
+			l_sections: LIST [WIKI_SECTION]
+			curr, prev: NATURAL_8
+			l_is_horizontal: BOOLEAN
+			l_list_tag: STRING
+		do
+			if attached current_page as pg and then attached pg.structure as l_structure then
+				create it.make
+				it.set_depth_limit (toc_depth_limit)
+				l_structure.process (it)
+				if a_wiki /= Void then
+						-- Useful to get TOC limit and other settings.
+					it.import_settings_from (a_wiki)
+					l_is_horizontal := it.is_horizontal
+				end
+				l_sections := it.sections
+				if
+					not l_sections.is_empty and then
+					(
+							-- TOC is automatically generated for each structure with at least 4 headinds, and if no __NOTOC__ is set.
+						not is_auto_toc
+						or else it.has_auto_generated_toc
+					)
+				then
+					if l_is_horizontal then
+						l_list_tag := "ul"
+						output ("%N<" + l_list_tag + " class=%"wiki-toc horizontal%">")
+					else
+						l_list_tag := "ol"
+						output ("%N<" + l_list_tag + " class=%"wiki-toc%">")
+					end
+					if is_auto_toc or not it.has_auto_generated_toc then
+						output ("<a name=%"toc%"></a>")
+					end
+					output ("<span class=%"title%">Contents</span>%N")
+					indent
+					curr := 1
+					prev := curr
+					across
+						l_sections as ic
+					loop
+						if attached {WIKI_SECTION} ic.item as w_section then
+							curr := w_section.level
+							if curr = prev then
+							elseif curr > prev then
+								from
+								until
+									prev = curr
+								loop
+									output_indentation
+									output ("<" + l_list_tag + ">%N")
+									indent
+									prev := prev + 1
+								end
+							else
+								from
+								until
+									prev = curr
+								loop
+									exdent
+									output_indentation
+									output ("</" + l_list_tag + ">%N")
+									prev := prev - 1
+								end
+							end
+							output_indentation
+							output ("<li>")
+							if attached w_section.text as l_text then
+								output ("<a href=%"#" + l_text.text + "%">")
+								output (l_text.text)
+								output ("</a>")
+							else
+								output ("...")
+							end
+							output ("</li>%N")
+						end
+						prev := curr
+					end
+					curr := 1
+					if prev > curr then
+						from
+						until
+							prev = curr
+						loop
+							exdent
+							output_indentation
+							output ("</" + l_list_tag + ">%N")
+							prev := prev - 1
+						end
+					end
+					exdent
+					output ("</" + l_list_tag + ">%N")
+				end
+			end
+		end
 
 	visit_structure (a_structure: WIKI_STRUCTURE)
 		do
@@ -480,6 +602,16 @@ feature -- Processing
 			end
 		end
 
+	visit_magic_word (a_word: WIKI_MAGIC_WORD)
+		do
+			if
+				a_word.value.is_case_insensitive_equal_general ("TOC")
+				or a_word.value.is_case_insensitive_equal_general ("FORCETOC")
+			then
+				output_toc (a_word, False)
+			end
+		end
+
 feature -- Strings
 
 	visit_raw_string (a_raw_string: WIKI_RAW_STRING)
@@ -536,7 +668,15 @@ feature -- Template
 			then
 				witem := a_template.text (tpl)
 				witem.process (Current)
+			elseif
+				a_template.name.is_case_insensitive_equal_general ("TOC")
+				or a_template.name.is_case_insensitive_equal_general ("Horizontal TOC")
+			then
+				output_toc (a_template, False)
+			elseif a_template.name.is_case_insensitive_equal_general ("TOC limit") then
+					-- ignore
 			else
+
 				output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
 				output ("<strong>" + a_template.name + "</strong>: ")
 				if attached a_template.parameters as l_params then
@@ -926,16 +1066,11 @@ feature -- Implementation
 		do
 			elts := a_composite.elements
 			if elts.count > 0 then
-				indent
-				from
-					elts.start
-				until
-					elts.after
+				across
+					elts as ic
 				loop
-					elts.item.process (Current)
-					elts.forth
+					ic.item.process (Current)
 				end
-				exdent
 			end
 		end
 

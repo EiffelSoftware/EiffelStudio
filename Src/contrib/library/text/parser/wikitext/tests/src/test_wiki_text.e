@@ -81,6 +81,148 @@ Any existing breakpoint can be referenced by an implicit tag with the form: ''"'
 			assert ("o", not o.is_empty)
 		end
 
+	test_toc_disabled
+		local
+			p: WIKI_PAGE
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("{
+begin
+__NOTOC__
+=One=
+== one.1 ==
+== one.2 ==
+== one.3 ==
+=Two=
+== two.1 ==
+== two.2 ==
+=Three=
+== three.1 ==
+== three.2 ==
+== three.3 ==
+end
+}")
+			l_expected_output := "{
+<div><p>begin</p>
+
+<a name="One"></a><h1>One</h1>
+
+<a name="one.1"></a><h2>one.1</h2>
+
+<a name="one.2"></a><h2>one.2</h2>
+
+<a name="one.3"></a><h2>one.3</h2>
+
+<a name="Two"></a><h1>Two</h1>
+
+<a name="two.1"></a><h2>two.1</h2>
+
+<a name="two.2"></a><h2>two.2</h2>
+
+<a name="Three"></a><h1>Three</h1>
+
+<a name="three.1"></a><h2>three.1</h2>
+
+<a name="three.2"></a><h2>three.2</h2>
+
+<a name="three.3"></a><h2>three.3</h2>
+<p>end</p>
+</div>
+
+}"
+
+			create p.make_with_title ("Test TOC")
+			p.set_text (t)
+
+			create o.make_empty
+
+			p.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_toc
+		local
+			p: WIKI_PAGE
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			l_expected_output: STRING
+		do
+			create t.make_from_string ("{
+begin
+__TOC__
+=One=
+== one.1 ==
+== one.2 ==
+== one.3 ==
+=Two=
+== two.1 ==
+== two.2 ==
+=Three=
+== three.1 ==
+== three.2 ==
+== three.3 ==
+end
+}")
+			l_expected_output := "{
+<div><p>begin
+<ol class="wiki-toc"><a name="toc"></a><span class="title">Contents</span>
+	<li><a href="#One">One</a></li>
+	<ol>
+		<li><a href="#one.1">one.1</a></li>
+		<li><a href="#one.2">one.2</a></li>
+		<li><a href="#one.3">one.3</a></li>
+	</ol>
+	<li><a href="#Two">Two</a></li>
+	<ol>
+		<li><a href="#two.1">two.1</a></li>
+		<li><a href="#two.2">two.2</a></li>
+	</ol>
+	<li><a href="#Three">Three</a></li>
+	<ol>
+		<li><a href="#three.1">three.1</a></li>
+		<li><a href="#three.2">three.2</a></li>
+		<li><a href="#three.3">three.3</a></li>
+	</ol>
+</ol>
+</p>
+
+<a name="One"></a><h1>One</h1>
+
+<a name="one.1"></a><h2>one.1</h2>
+
+<a name="one.2"></a><h2>one.2</h2>
+
+<a name="one.3"></a><h2>one.3</h2>
+
+<a name="Two"></a><h1>Two</h1>
+
+<a name="two.1"></a><h2>two.1</h2>
+
+<a name="two.2"></a><h2>two.2</h2>
+
+<a name="Three"></a><h1>Three</h1>
+
+<a name="three.1"></a><h2>three.1</h2>
+
+<a name="three.2"></a><h2>three.2</h2>
+
+<a name="three.3"></a><h2>three.3</h2>
+<p>end</p>
+</div>
+
+}"
+
+			create p.make_with_title ("Test TOC")
+			p.set_text (t)
+
+			create o.make_empty
+
+			p.process (new_xhtml_generator (o))
+			assert ("o", same_output (o, l_expected_output))
+		end
+
 	test_html
 		local
 			t: WIKI_CONTENT_TEXT

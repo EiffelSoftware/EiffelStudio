@@ -104,7 +104,11 @@ feature -- Output
 --				buf.append ("<br/>%N")
 --				buf.append (create {STRING}.make_filled (' ', level * 2))
 			end
-			buf.append (s)
+			if is_html_encoded_output then
+				append_html_escaped_to (s, buf)
+			else
+				buf.append (s)
+			end
 		end
 
 	append_html_escaped_to (s: STRING; a_output: STRING)
@@ -142,6 +146,14 @@ feature -- Output
 	reset_ignore_next_newline
 		do
 			next_newline_ignored := False
+		end
+
+	is_html_encoded_output: BOOLEAN
+			-- Does `output' html escape text?
+
+	set_html_encoded_output (b: BOOLEAN)
+		do
+			is_html_encoded_output := b
 		end
 
 	unset_next_output_require_newline
@@ -412,6 +424,7 @@ feature -- Processing
 				output ("<pre>")
 				enter_pre_block
 				visit_composite (a_block)
+				ignore_next_newline
 				exit_pre_block
 				output ("</pre>")
 				ignore_next_newline
@@ -446,6 +459,9 @@ feature -- Processing
 				else
 					a_line.text.process (Current)
 --					set_next_output_require_newline
+				end
+				if in_pre_block then
+					set_next_output_require_newline
 				end
 			end
 		end
@@ -512,6 +528,7 @@ feature -- Template
 	visit_template (a_template: WIKI_TEMPLATE)
 		local
 			witem: WIKI_ITEM
+			l_is_first: BOOLEAN
 		do
 			if
 				attached template_resolver as r and then
@@ -523,9 +540,15 @@ feature -- Template
 				output ("<div class=%"wiki-template " + a_template.name + "%" class=%"inline%">")
 				output ("<strong>" + a_template.name + "</strong>: ")
 				if attached a_template.parameters as l_params then
+					l_is_first := True
 					across
 						l_params as ic
 					loop
+						if l_is_first then
+							l_is_first := False
+						else
+							output (" | ")
+						end
 						visit_string (create {WIKI_STRING}.make (ic.item))
 					end
 				end
@@ -539,6 +562,7 @@ feature -- Tag
 		local
 			l_is_inline: BOOLEAN
 			l_tag: STRING
+			b: BOOLEAN
 		do
 			if a_code.is_open_close_tag then
 					-- Ignore
@@ -557,7 +581,10 @@ feature -- Tag
 					output (l_tag)
 				end
 				unset_next_output_require_newline
+				b := is_html_encoded_output
+				set_html_encoded_output (True)
 				a_code.text.process (Current)
+				set_html_encoded_output (b)
 				output ("</" + a_code.tag_name + ">")
 				if not l_is_inline then
 					set_next_output_require_newline
@@ -913,7 +940,7 @@ feature -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

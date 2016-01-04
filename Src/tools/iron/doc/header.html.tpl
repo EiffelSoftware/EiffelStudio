@@ -5,5 +5,7 @@
 	<link type="text/css" rel="stylesheet" media="all" href="iron.css" />
 </head>
 <body>
+<ul class="navbar">
+<li><a href="..">Back to IRON repository</a></li>
+</ul>
 <h1>IRON: the Eiffel package repository</h1>
-

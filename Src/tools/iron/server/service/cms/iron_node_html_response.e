@@ -19,6 +19,8 @@ inherit
 			send_to
 		end
 
+	SHARED_TEMPLATE_CONTEXT
+
 create
 	make, make_with_body, make_not_permitted, make_not_found
 
@@ -55,6 +57,8 @@ feature {NONE} -- Initialization
 			set_body ("Resource not found.")
 		end
 
+feature -- Access		
+
 	iron: IRON_NODE
 
 	request: WSF_REQUEST
@@ -65,6 +69,11 @@ feature {NONE} -- Initialization
 
 	parameters: detachable STRING_TABLE [ANY]
 			-- Associated data, mainly for template mode.
+
+feature -- Status report
+
+	is_front: BOOLEAN
+			-- Is front page?			
 
 feature -- Change
 
@@ -87,6 +96,11 @@ feature -- Change
 				set_status_code ({HTTP_STATUS_CODE}.found)
 				header.put_location (v)
 			end
+		end
+
+	set_is_front (b: BOOLEAN)
+		do
+			is_front := b
 		end
 
 	add_parameter (v: READABLE_STRING_GENERAL; k: READABLE_STRING_8)
@@ -180,6 +194,7 @@ feature {WSF_RESPONSE} -- Output
 		do
 			p := iron.layout.html_template_path.extended ("page.tpl")
 			if ut.file_path_exists (p) then
+				template_context.set_template_folder (iron.layout.html_template_path)
 				create tpl.make_from_file (p.name)
 				tpl.analyze
 
@@ -190,6 +205,8 @@ feature {WSF_RESPONSE} -- Output
 						tpl.add_value (ic.item, utf.escaped_utf_32_string_to_utf_8_string_8 (ic.key)) -- Conversion to STRING_8 !!
 					end
 				end
+
+				tpl.add_value (is_front.out, "is_front")
 
 				tpl.add_value (request.absolute_script_url (""), "base_url")
 				tpl.add_value (request.request_uri, "current_url")
@@ -410,7 +427,7 @@ feature {NONE} -- HTML Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

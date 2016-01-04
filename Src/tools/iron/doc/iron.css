@@ -1,43 +1,110 @@
-body { 
-	max-width: 1000px; margin: 5px 20px 5px 20px; margin-left: auto; margin-right: auto; 
-	background-color: #fff;
+body {
+  max-width: 1000px;
+  margin: 5px 20px 5px 20px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #fff;
 }
-pre, code { 
-	display: block; 
-	overflow: auto;
-	line-height: 1.3;
-	font-family: monospace;
-	white-space: pre-wrap;
-	border: solid 1px #999; 
-	background-color: #ffffef; 
-	padding: 5px; 
-	margin: 2px 5px 2px 20px; 
-	color: #000;
-	font-size: 1.1em;
+
+ul.navbar {
+  padding: 5px;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  list-style: none;
+}
+ul.navbar a {
+  text-decoration: none;
+  color: #ff0;
+}
+ul.navbar a:hover {
+  text-decoration: underline;
+  color: #0f0;
+}
+ul.navbar li {
+  display: inline;
+}
+
+pre, code {
+  display: block;
+  overflow: auto;
+  line-height: 1.3;
+  font-family: monospace;
+  white-space: pre-wrap;
+  border: solid 1px #999;
+  background-color: #ffffef;
+  padding: 5px;
+  margin: 2px 5px 2px 20px;
+  color: #000;
+  font-size: 1.1em;
 }
 
 code.inline {
-	display: inline; 
-	font-family: monospace;
-	border: 0;
-	margin: 0;
-	padding: 0;
-	background-color: #fff;
+  display: inline;
+  font-family: monospace;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
 }
+
 div.wiki-template {
-	margin-left: 20px;
-	border: solid 1px #9f9;
-	background-color: #cfc;
-	padding: 5px;
+  margin-left: 20px;
+  border: solid 1px #9f9;
+  background-color: #cfc;
+  padding: 5px;
 }
+
 table.wikitable {
-	margin: 5px 0 2px 20px;
-	border: solid 1px #ccc;
-	border-collapse:collapse;
+  margin: 5px 0 2px 20px;
+  border: solid 1px #ccc;
+  border-collapse: collapse;
 }
-table.wikitable th,
-table.wikitable td {
-	border: solid 1px #ccc;
-	text-align: left;
-	padding: 2px 5px 2px 5px;
+table.wikitable th, table.wikitable td {
+  border: solid 1px #ccc;
+  text-align: left;
+  padding: 2px 5px 2px 5px;
+}
+
+.wiki-toc {
+  /*
+  -moz-box-shadow:    -3px 0 3px 5px #ccc;
+  -webkit-box-shadow: 0 0 3px 5px #ccc;
+  */
+  box-shadow: -3px 5px 4px 0 #99c;
+  position: relative;
+  top: -70px;
+  float: right;
+  clear: both;
+  overflow: auto;
+  margin-left: 15px;
+  padding: 5px 5px 5px 25px;
+  background-color: #ddf;
+  border: solid 1px #999;
+  font-size: smaller;
+}
+.wiki-toc span.title {
+  font-weight: bold;
+}
+.wiki-toc a {
+  text-decoration: none;
+}
+.wiki-toc ol {
+  padding-left: 20px;
+}
+.wiki-toc.horizontal {
+  position: relative;
+  top: 0;
+  float: none;
+  overflow: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+.wiki-toc.horizontal li {
+  display: inline;
+  padding: 0 5px 0 0;
+}
+.wiki-toc.horizontal li::before {
+  content: "| ";
 }

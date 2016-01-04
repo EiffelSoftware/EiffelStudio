@@ -12,6 +12,31 @@ body {
 	background-attachment: fixed;
 }
 
+div#enter-box {
+	text-align: center;
+	font-size: 160%;
+	margin: 0 auto 0 auto;
+	border: solid 1px #23538a;
+	background-color: #ccf;
+	width: 60%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	&:hover {
+		a { color: #fff; }
+		background-color: #23538a;
+	}
+}
+
+div#welcome-box {
+	text-align: left;
+	font-size: 120%;
+	margin: 0 auto 0 auto;
+	border: solid 1px #ccc;
+	background-color: #cedbc3;
+	width: 100%;
+	padding: 20px 10px 20px 10px;
+}
+
 div#page {
 	margin: auto;
 	max-width: 900px;

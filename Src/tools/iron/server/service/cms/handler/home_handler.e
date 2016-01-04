@@ -46,6 +46,7 @@ feature -- Execution
 		do
 			if req.is_content_type_accepted ("text/html") then
 				m := new_response_message (req)
+				m.set_is_front (True)
 				if has_iron_version (req) then
 					create s.make_empty
 					s.append ("<ul>")
@@ -85,7 +86,7 @@ feature -- Execution
 					m.set_location (l_redir.value)
 				end
 
-				m.set_title ("Information")
+				m.set_title (Void)
 				m.set_body (s)
 				res.send (m)
 			else
@@ -152,7 +153,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

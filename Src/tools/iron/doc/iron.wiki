@@ -1,8 +1,11 @@
-﻿=Purpose=
+{{TOC|limit=2}}
+
+=Purpose=
+
 IRON provides an easy-to-use facility for using and sharing packages of quality Eiffel components, automating many of the tasks involved.
 Most often a package is a library or a set of libraries, but it could also other resources such as tools.
 
-{{definition|IRON|a package management solution based on repositories.}}
+{{Definition|IRON|a package management solution based on repositories.}}
 
 =Package Repository vs Library Repository=
 Certainly the IRON repository is a repository of Eiffel libraries. However, sometimes libraries are used together, or cross reference one another, and thus are appropriate to be delivered together as a unit. 
@@ -19,7 +22,8 @@ To configure Eiffel projects, programmers uses "ECFs" (Eiffel Configuration File
 One application of ECFs is to reference libraries installed in different locations. Without IRON, the usual solution is to use relative or absolute path, and generally using environment variables such as ISE_LIBRARY or EIFFEL_LIBRARY, and a few package specific variables such as GOBO, ...
 
 Typical library references without IRON in ECF:
-<code><library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+<code>
+<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 <library name="xml_parser" location="$EIFFEL_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
 <library name="dummy_foobar" location="$LIB_DUMMY\src\foo\bar.ecf"/>
 </code>
@@ -33,7 +37,8 @@ IRON has made it possible to simplify this scenario dramatically.  For any commo
 ** as you can see, no more environment variable, and only a relative path from the root of the package. This simplifies a lot the referencing, and package/library management. No need to know where are located the installed files on the local machine.
 
 That's all!  In the above example, the location of the libraries, in the project, then become something like:
-<code><library name="base" location="iron:base:base.ecf" />
+<code>
+<library name="base" location="iron:base:base.ecf" />
 <library name="xml_parser" location="iron:xml:parser/xml_parser.ecf" />
 <library name="foobar" location="iron:dummy:src/foo/bar.ecf" />
 </code>
@@ -293,27 +298,27 @@ If the sequence of repositories is not to your liking, you can change it in thre
 ==Building a package==
 An IRON package has to provide, at its root, a file <code>package.iron</code>. This file describes the package with name, description, and various other information.
 See for instance, the package.iron for Eiffel Base package:
-<code>'''package''' base
+<code>package base
 
-'''project'''
+project
 	base_safe = "base-safe.ecf"
 	base = "base.ecf"
 	base_testing = "testing/testing-safe.ecf"
 	base_testing = "testing/testing.ecf"
 
-'''note'''
+note
 	title: Eiffel Base
 	description: "Eiffel Base: kernel library classes, data structure, Input and Output"
 
 	tags: base,kernel,structure,io
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
 	copyright: 1984-2013 Eiffel Software and others
-	link<nowiki>[doc]</nowiki>: "Documentation" http://eiffelroom.com/
-	link<nowiki>[source]</nowiki>: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base
-	link<nowiki>[license]</nowiki>: http://www.eiffel.com/licensing/forum.txt
+	link[doc]: "Documentation" http://eiffelroom.com/
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base
+	link[license]: http://www.eiffel.com/licensing/forum.txt
 	maps: /com.eiffel/library/data_structure/adt/base
 
-'''end'''</code>
+end</code>
 
 Note: The package iron file for the Eiffel Base package is available online at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base/package.iron] .
 
@@ -321,13 +326,14 @@ Current status:
 * only the '''name of the package is required'''
 * the section "project" list the various available .ecf projects
 * the section "note" contains title, description, tags, ... informations. The formation is similar to Eiffel indexing note, and in addition it supports bracket in the name of note, such as in ''<nowiki>link[doc]</nowiki>''.
-** The "link" declaration: <code>link<nowiki>[category</nowiki>]: "Optional Title" associated-url</code>
+** The "link" declaration: <code>link[category]: "Optional Title" associated-url</code>
 * The following notes have semantic that are processed by Iron: '''title, description, tags, link<nowiki>[..]</nowiki>, and maps''', for now mostly on the Iron server.
 * It is possible to use any note name.  Currently they are simply stored and never displayed. In the future, Iron may support additional semantic for those notes.
 
 A few packages may require '''post installation operations''', such as compiling C code, or others. 
 For that, use the section '''setup''', and in particular the '''compile_library''' information.
 During installation, '''iron''' will launch the <code>compile_library</code> tool delivered with EiffelStudio on the provided directory.
+
 Example at [https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL/package.iron] :
 
 <code>package cURL

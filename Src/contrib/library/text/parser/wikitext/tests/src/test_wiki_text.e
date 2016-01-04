@@ -236,10 +236,40 @@ text=bar
 			assert ("o", not o.is_empty)
 		end
 
+	test_preformatted_text
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+		do
+			create t.make_from_string ("{
+begin
+    abc
+    def
+    ghi 
+end
+}")
+
+e := "{
+<p>begin</p>
+<pre>   abc
+   def
+   ghi </pre><p>end</p>
+
+}"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 	test_code
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
+			e: STRING
 		do
 			create t.make_from_string ("[
 <code lang="eiffel">
@@ -249,16 +279,50 @@ end
 </code>
 			]")
 
+e := "{
+<p><code lang="eiffel">class FOO
+feature
+end</code><br/>
+</p>
+
+}"
+
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_html_code
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+		do
+			create t.make_from_string ("[
+<code>
+<foo>bar</foo>
+</code>
+			]")
+
+			e := "{
+<p><code>&lt;foo&gt;bar&lt;/foo&gt;</code><br/>
+</p>
+
+}"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
 	test_code_with_brackets
 		local
 			t: WIKI_CONTENT_TEXT
-			o: STRING
+			o,e: STRING
 		do
 			create t.make_from_string ("[
 <code lang="eiffel">
@@ -270,6 +334,16 @@ feature
 end
 </code>
 			]")
+			e := "{
+<p><code lang="eiffel">class FOO
+feature
+    do_call (a_procedure: separate PROCEDURE [ANY, TUPLE[separate STRING]]; a_string: separate STRING)
+		do
+		end
+end</code><br/>
+</p>
+
+}"
 
 			create o.make_empty
 

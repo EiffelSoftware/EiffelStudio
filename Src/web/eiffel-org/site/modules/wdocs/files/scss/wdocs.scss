@@ -1,0 +1,31 @@
+/* Wikidocs Table of contents */
+
+.wiki-toc {
+	-moz-box-shadow:    -3px 5px 4px 0 #99c;
+	-webkit-box-shadow: -3px 5px 4px 0 #99c;
+	box-shadow:         -3px 5px 4px 0 #99c;
+
+	padding: 5px;
+	line-height: 1.2em;
+
+	border: solid 1px #ccc;
+	font-size: smaller;
+	span.title {
+		font-weight: bold;
+	}
+	a {
+		text-decoration: none;
+	}
+	ol {
+		padding-left: 20px;
+	}
+	&.horizontal {
+		padding: 5px;
+		li {
+			&::before { content: "| " }
+			display: inline;
+			padding: 0 5px 0 0;
+		}
+	}
+}
+

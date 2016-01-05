@@ -1,0 +1,29 @@
+/* Wikidocs Table of contents */
+.wiki-toc {
+  -moz-box-shadow: -3px 5px 4px 0 #99c;
+  -webkit-box-shadow: -3px 5px 4px 0 #99c;
+  box-shadow: -3px 5px 4px 0 #99c;
+  padding: 5px;
+  line-height: 1.2em;
+  border: solid 1px #ccc;
+  font-size: smaller;
+}
+.wiki-toc span.title {
+  font-weight: bold;
+}
+.wiki-toc a {
+  text-decoration: none;
+}
+.wiki-toc ol {
+  padding-left: 20px;
+}
+.wiki-toc.horizontal {
+  padding: 5px;
+}
+.wiki-toc.horizontal li {
+  display: inline;
+  padding: 0 5px 0 0;
+}
+.wiki-toc.horizontal li::before {
+  content: "| ";
+}

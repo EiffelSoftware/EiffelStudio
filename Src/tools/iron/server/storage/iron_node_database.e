@@ -230,7 +230,22 @@ feature -- Version Package: Sorter
 			Result.register_builder ("date", l_sorter, "Sort by last-modified date")
 		end
 
-feature {NONE} -- Version Package: Sorter		
+feature {NONE} -- Version Package: Sorter
+
+	version_package_is_less_than_by_string_value (s1, s2: detachable READABLE_STRING_GENERAL; p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
+		do
+			if s1 = Void then
+				if s2 = Void then
+					Result := p1 < p2
+				else
+					Result := True
+				end
+			elseif s2 = Void then
+				Result := False
+			else
+				Result := s1.as_lower < s2.as_lower
+			end
+		end
 
 	version_package_is_less_than_by_value (v1, v2: detachable COMPARABLE; p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
@@ -249,12 +264,12 @@ feature {NONE} -- Version Package: Sorter
 
 	version_package_is_less_than_by_name (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
-			Result := version_package_is_less_than_by_value (p1.name, p2.name, p1, p2)
+			Result := version_package_is_less_than_by_string_value (p1.name, p2.name, p1, p2)
 		end
 
 	version_package_is_less_than_by_title (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
-			Result := version_package_is_less_than_by_value (p1.title, p2.title, p1, p2)
+			Result := version_package_is_less_than_by_string_value (p1.title, p2.title, p1, p2)
 		end
 
 	version_package_is_less_than_by_downloads (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN

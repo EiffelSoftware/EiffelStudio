@@ -67,10 +67,8 @@ table.wikitable th, table.wikitable td {
 }
 
 .wiki-toc {
-  /*
-  -moz-box-shadow:    -3px 0 3px 5px #ccc;
-  -webkit-box-shadow: 0 0 3px 5px #ccc;
-  */
+  -moz-box-shadow: -3px 5px 4px 0 #99c;
+  -webkit-box-shadow: -3px 5px 4px 0 #99c;
   box-shadow: -3px 5px 4px 0 #99c;
   position: relative;
   top: -70px;

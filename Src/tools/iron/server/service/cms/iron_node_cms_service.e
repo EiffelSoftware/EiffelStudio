@@ -27,7 +27,6 @@ feature -- Initialization
 			h_package_map: PACKAGE_MAP_HANDLER
 			h_archive_package: ARCHIVE_PACKAGE_HANDLER
 			h_package_fetcher: FETCH_PACKAGE_HANDLER
-			--			h_fs: WSF_FILE_SYSTEM_HANDLER
 			l_layout: IRON_NODE_LAYOUT
 			l_iron: like iron
 			h_doc: WSF_FILE_SYSTEM_HANDLER

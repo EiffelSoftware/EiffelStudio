@@ -62,22 +62,20 @@ feature -- Execution
 
 	execute
 			-- Execute the command. Prompt the user for the new filenane and save it.
-		do
-			if attached window_manager.last_focused_development_window as l_w then
-				execute_with_dialog (Void, create {PATH}.make_from_string (l_w.file_name))
-			else
-				execute_with_dialog (Void, Void)
-			end
-		end
-
-	execute_with_filename (new_filename: PATH)
-			-- Save a file with a chosen name.
-		require
-			valid_filename: new_filename /= Void and then not new_filename.is_empty
 		local
-			file_opener: EB_FILE_OPENER
+			fsd: EB_FILE_SAVE_DIALOG
+			l_pref: PATH_PREFERENCE
 		do
-			create file_opener.make_with_parent (Current, new_filename, window_manager.last_focused_development_window.window)
+			if attached window_manager.last_focused_development_window as l_w and then attached l_w.file_name as l_file_name then
+				l_pref := preferences.dialog_data.last_saved_save_file_as_directory_preference
+				if l_pref.value = Void or else l_pref.value.is_empty then
+					l_pref.set_value (eiffel_layout.user_projects_path)
+				end
+				create fsd.make_with_preference (l_pref)
+				fsd.set_full_file_path (create {PATH}.make_from_string (l_file_name))
+				fsd.save_actions.extend (agent execute_with_filename (fsd, l_w.window))
+				fsd.show_modal_to_window (l_w.window)
+			end
 		end
 
 feature -- Status setting
@@ -144,31 +142,20 @@ feature {EB_FILE_OPENER} -- Callbacks
 			new_file.close
 		end
 
-feature {EB_SAVE_FILE_COMMAND} -- Implementation
-
-	execute_with_dialog (argument: detachable EB_FILE_SAVE_DIALOG; a_file_name: detachable PATH)
-			-- Save a file with the chosen name.
-		local
-			fsd: EB_FILE_SAVE_DIALOG
-			l_pref: PATH_PREFERENCE
-		do
-			if argument = Void then
-				l_pref := preferences.dialog_data.last_saved_save_file_as_directory_preference
-				if l_pref.value = Void or else l_pref.value.is_empty then
-					l_pref.set_value (eiffel_layout.user_projects_path)
-				end
-				create fsd.make_with_preference (l_pref)
-				if a_file_name /= Void then
-					fsd.set_full_file_path (a_file_name)
-				end
-				fsd.save_actions.extend (agent execute_with_dialog (fsd, Void))
-				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
-			else
-				execute_with_filename (argument.full_file_path)
-			end
-		end
-
 feature {NONE} -- Implementation
+
+	execute_with_filename (a_diag: EB_FILE_SAVE_DIALOG; a_window: EV_WINDOW)
+			-- Save a file set via `a_diag' relative to `a_window'.
+		require
+			a_diag_not_void: a_diag /= Void
+			a_diag_path_is_set: not a_diag.full_file_path.is_empty
+			a_window_not_void: a_window /= Void
+			a_window_exists: not a_window.is_destroyed
+		local
+			file_opener: EB_FILE_OPENER
+		do
+			create file_opener.make_with_parent (Current, a_diag.full_file_path, a_window)
+		end
 
 	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
@@ -177,7 +164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

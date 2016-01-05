@@ -249,6 +249,7 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 			-- Save window content in `ptf'.
 		require
 			pft_not_void: ptf /= Void
+			pft_closed: ptf.is_closed
 		local
 			a_string: STRING
 			i: INTEGER
@@ -1999,7 +2000,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

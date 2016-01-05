@@ -796,6 +796,8 @@ feature -- Stone process
 			elseif a_stone = Void then
 					-- We reset the stone.
 				old_set_stone (Void)
+
+				update_save_symbol
 			end
 		ensure then
 			stone_set: not is_processing_stone implies stone = a_stone
@@ -2563,7 +2565,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

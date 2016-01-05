@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			create code_aliases.make (2)
 			code_aliases.force ("code")
 			code_aliases.force ("source")
+			is_auto_toc_enabled := True
 		end
 
 feature -- Basic operation

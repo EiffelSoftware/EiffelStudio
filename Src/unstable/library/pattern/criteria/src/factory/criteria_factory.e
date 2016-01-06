@@ -388,46 +388,55 @@ feature -- Access
 
 	short_description: STRING_32
 		local
+			k: READABLE_STRING_GENERAL
 			s: STRING_32
+			len: INTEGER
 		do
 			create s.make_empty
 			s.append ("Criteria:%N")
 			across
 				builders as c
 			loop
+				len := len.max (c.key.count)
+			end
+
+			across
+				builders as c
+			loop
+				k := c.key
 				s.append_character (' ')
 				s.append_character (' ')
 				s.append_character ('[')
-				s.append_string_general (c.key)
+				s.append_string_general (k)
 				s.append_character (']')
+				if k.count < len then
+					s.append (create {STRING_32}.make_filled (' ', len - k.count))
+				end
 				if attached c.item.description as d then
 					s.append_character (' ')
 					s.append_string_general (d)
 				end
 				s.append_character ('%N')
 			end
-			if attached default_builder_name as dft then
-				s.append ("%N  Default is [" + dft + "]%N")
-			end
 			Result := s
 		end
 
 	description: STRING_32
 		local
+			sh: READABLE_STRING_32
 			s: STRING_32
 		do
-			create s.make_from_string (short_description)
-			s.append ("%N")
-			s.append ("[
-				Operators: or, and, not
-				Usage: criterion:value
-				  prefix '-' -> 'not'
-				  prefix '+' -> 'or'
-				]")
-
+			sh := short_description
+			create s.make (sh.count + 30)
+			s.append ("Usage: %"criterion:value%"")
 			if attached default_builder_name as dft then
-				s.append ("%N  value -> " + dft + ".value%N")
+				s.append (" (note: %"value%" is aliased with  %"" + dft + ":value%")")
 			end
+			s.append_character ('%N')
+			s.append_character ('%N')
+			s.append (sh)
+			s.append_character ('%N')
+			s.append ("Criteria can be combined with %"and%" (the default), %"or%" (aliased with prefix %"+%"), %"not%" (aliased with prefix %"-%").%N")
 			Result := s
 		end
 

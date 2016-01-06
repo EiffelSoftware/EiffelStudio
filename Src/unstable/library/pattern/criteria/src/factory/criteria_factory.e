@@ -257,6 +257,16 @@ feature {NONE} -- Parse
 						p := l_name.index_of ('=', 1)
 					end
 					if p = 0 then
+						if l_name.starts_with ("+") then
+							create tok.make_silent_or_operator
+							l_name := l_name.substring (2, l_name.count)
+
+							if prev_tok = Void and then tok.is_binary_operator then
+							else
+								Result.force (tok)
+								prev_tok := tok
+							end
+						end
 						create tok.make_operator (l_name)
 						if prev_tok = Void and then tok.is_binary_operator then
 						else
@@ -272,6 +282,16 @@ feature {NONE} -- Parse
 
 						l_value := l_name.substring (p + 1, l_name.count)
 						l_name := l_name.head (p - 1)
+						if l_name.starts_with ("+") then
+							create tok.make_silent_or_operator
+							l_name := l_name.substring (2, l_name.count)
+
+							if prev_tok = Void and then tok.is_binary_operator then
+							else
+								Result.force (tok)
+								prev_tok := tok
+							end
+						end
 						if l_value.count > 1 and l_value[1] = '%"' then
 							check l_value[l_value.count] = '%"' end
 							l_value := l_value.substring (2, l_value.count - 1)
@@ -292,33 +312,57 @@ feature {NONE} -- Parse
 				if tok.is_operator_and then
 					Result.forth
 					if
-						not Result.after and prev_tok /= Void and
-						attached Result.item as op_next_tok and then not op_next_tok.is_binary_operator
+						not Result.after and prev_tok /= Void and then
+						attached Result.item as op_next_tok
 					then
-						next_tok := op_next_tok
-						if next_tok.is_operator_not then
-							Result.forth
-							if
-								not Result.after and
-								attached Result.item as not_next_tok and then not not_next_tok.is_binary_operator
-							then
-								create group_tok.make_group (Void, next_tok, not_next_tok)
-								Result.remove -- remove right
-								Result.back
-								next_tok := group_tok
-							else
-								check False end
+						if
+							tok.is_silent_operator_and and
+							op_next_tok.is_operator_or
+						then
+							Result.back
+							Result.remove
+							tok := op_next_tok
+						elseif
+							op_next_tok.is_silent_operator_or
+						then
+							Result.remove
+						elseif op_next_tok.is_binary_operator then
+							check and_token_has_non_binary_operator_token: False end
+						else
+							next_tok := op_next_tok
+							if next_tok.is_operator_not then
+								Result.forth
+								if
+									not Result.after and
+									attached Result.item as not_next_tok and then not not_next_tok.is_binary_operator
+								then
+									create group_tok.make_group (Void, next_tok, not_next_tok)
+									Result.remove -- remove right
+									Result.back
+									next_tok := group_tok
+								else
+									check not_token_has_non_binary_operator_token: False end
+								end
 							end
+							create group_tok.make_group (prev_tok, tok, next_tok)
+							Result.remove -- remove right
+							Result.back
+							Result.remove -- remove op
+							Result.back
+							Result.replace (group_tok) -- replace left
+							tok := group_tok
 						end
-						create group_tok.make_group (prev_tok, tok, next_tok)
-						Result.remove -- remove right
-						Result.back
-						Result.remove -- remove op
-						Result.back
-						Result.replace (group_tok) -- replace left
-						tok := group_tok
 					else
-						check False end
+						check and_token_has_tokens_on_left_and_right: False end
+					end
+				elseif tok.is_operator_or then
+					Result.forth
+					if
+						not Result.after and
+						attached Result.item as l_next_tok and then
+						l_next_tok.is_silent_operator_or
+					then
+						Result.remove
 					end
 				elseif tok.is_operator_not then
 					Result.forth
@@ -332,7 +376,7 @@ feature {NONE} -- Parse
 						Result.replace (group_tok) -- replace not
 						tok := group_tok
 					else
-						check False end
+						check not_token_has_non_binary_operator_token: False end
 					end
 				end
 				prev_tok := tok
@@ -382,7 +426,7 @@ feature -- Access
 				]")
 
 			if attached default_builder_name as dft then
-				s.append ("  value -> " + dft+ ".value%N")
+				s.append ("%N  value -> " + dft + ".value%N")
 			end
 			Result := s
 		end
@@ -439,7 +483,7 @@ invariant
 	builders /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -129,9 +129,19 @@ feature -- Test routines
 			lst.force (new_entry ("d", 4, False))
 			lst.force (new_entry ("e", 5, True))
 
+
 			impl_test_criteria_match (ff, lst, "state:on", [3, "ace"])
 			impl_test_criteria_match (ff, lst, "b or c", [2, "bc"])
 			impl_test_criteria_match (ff, lst, "is:b or is:c", [2, "bc"])
+			impl_test_criteria_match (ff, lst, "is:b +is:c", [2, "bc"])
+			impl_test_criteria_match (ff, lst, "is:b   +is:c", [2, "bc"]) -- With spaces
+			impl_test_criteria_match (ff, lst, "+is:b +is:c", [2, "bc"])  -- with leading + token
+			impl_test_criteria_match (ff, lst, "-is:b +is:c", [4, "acde"])  -- with leading - token
+			impl_test_criteria_match (ff, lst, "is:b or +is:c", [2, "bc"]) -- Flexible syntax			
+			impl_test_criteria_match (ff, lst, "is:b and +is:c", [0, ""]) -- Flexible syntax
+			impl_test_criteria_match (ff, lst, "-is:b and +is:c", [1, "c"])
+
+
 			impl_test_criteria_match (ff, lst, "gt:4", [1, "e"])
 			impl_test_criteria_match (ff, lst, "-state:on and (gt:3 OR is:b)", [2, "bd"])
 			impl_test_criteria_match (ff, lst, "not state:on and (gt:3 OR is:b)", [2, "bd"])

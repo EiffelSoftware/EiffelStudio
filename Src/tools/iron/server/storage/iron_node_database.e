@@ -349,9 +349,25 @@ feature -- Version Package: Criteria
 					do
 						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
 							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
+								local
+									kmp: KMP_WILD
 								do
-									Result := attached obj.tags as l_tags and then
-										across l_tags as ic some ic.item.is_case_insensitive_equal_general (s) end
+									if attached obj.tags as l_tags and then not l_tags.is_empty then
+										if s.has ('*') or s.has ('?') then
+											create kmp.make (s, l_tags.first)
+											kmp.disable_case_sensitive
+											across
+												l_tags as ic
+											until
+												Result
+											loop
+												kmp.set_text (ic.item)
+												Result := kmp.pattern_matches
+											end
+										else
+											Result := across l_tags as ic some ic.item.is_case_insensitive_equal_general (s) end
+										end
+									end
 								end(?, v)
 							)
 					end)
@@ -379,7 +395,6 @@ feature -- Version Package: Criteria
 								)
 						end
 					end)
-
 			Result.register_builder ("text", agent (n,v: READABLE_STRING_GENERAL; a_names: ITERABLE [READABLE_STRING_GENERAL]; fac: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
 						across
@@ -389,23 +404,29 @@ feature -- Version Package: Criteria
 								if Result = Void then
 									Result := crit
 								else
-									create {CRITERIA_OR [IRON_NODE_VERSION_PACKAGE]} Result.make (Result, crit)
+									Result := Result or crit
 								end
 							end
 						end
 					end(?,?, <<"name", "title", "tag">>, Result))
 
 			Result.register_default_builder ("text")
-			Result.set_builder_description ("text", "search in 'name', 'title', and 'tag' (wildcard supported)")
+			Result.set_builder_description ("text", "text:abc - equivalent to %"name:abc or title:abc or tag:abc%"")
 
-			Result.set_builder_description ("name", "package name (i.e short name) has searched pattern (wildcard supported)")
-			Result.set_builder_description ("title", "package title (i.e full human name) has searched pattern (wildcard supported)")
-			Result.set_builder_description ("description", "package description has searched pattern (wildcard supported)")
-			Result.set_builder_description ("tag", "package has related tag")
-			Result.set_builder_description ("owner", "package is published by username (with username=searched pattern)")
-			Result.set_builder_description ("downloads", "package has at least N downloads (with N=searched pattern)")
-
+			Result.set_builder_description ("name", "name:foo* - packages of short name matching %"foo*%" pattern")
+			Result.set_builder_description ("title", "title:base - packages of title %"base%"")
+			Result.set_builder_description ("description", "description:%"advanced usage%" - packages with phrase %"advanced usage%" in their description")
+			Result.set_builder_description ("tag", "tag:web - packages tagged %"web%"")
+			Result.set_builder_description ("owner", "owner:*Caesar - packages published by users with the user names matching %"*Caesar%"")
+			Result.set_builder_description ("downloads", "downloads:10 - packages with at least 10 downloads")
 		end
+
+	version_package_criteria_factory_description: STRING_32
+		once
+			Result := version_package_criteria_factory.description
+				+ "Criteria %"name%", %"title%", %"tag%" and %"description%" supports wildcards (*,?).%N"
+		end
+
 
 feature -- Version Package: change		
 

@@ -37,9 +37,7 @@
 	({$package.archive_file_size/} octets -- {$package.archive_last_modified/} {$package.archive_hash/})
 </div>
 <div class="well">
-<strong>Associated URIs
-{if isset="$edit_uri_url"}<a href="{$edit_uri_url/}"> (manage)</a>{/if}
-</strong>
+<strong>Associated URIs</strong>
 <ul class="uri-list">
 {foreach key="uri" item="url" from="$uris" }<li class="uri">/{$package.version.value/}{$uri/}</li>
 {/foreach}

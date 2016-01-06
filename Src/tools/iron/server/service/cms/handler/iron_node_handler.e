@@ -330,6 +330,13 @@ feature -- Package form
 			f_tags.set_size (50)
 			f.extend (f_tags)
 
+			if vp /= Void then
+				create f_fieldset.make
+				f_fieldset.set_legend ("Associated URIs")
+				f.extend (f_fieldset)
+				f_fieldset.extend_html_text ("<a href=%""+ iron.package_version_map_web_page (vp, Void) +"%">Manage associated URIs</a>")
+			end
+
 			create f_fieldset.make
 			f_fieldset.set_legend ("Associated Archive")
 
@@ -584,16 +591,39 @@ feature -- Factory
 			end
 		end
 
-	new_not_permitted_response_message (req: WSF_REQUEST): IRON_NODE_HTML_RESPONSE
+	new_not_permitted_response_message (a_package: detachable IRON_NODE_VERSION_PACKAGE; req: WSF_REQUEST): IRON_NODE_HTML_RESPONSE
+		local
+			s: STRING
 		do
 			Result := new_response_message (req)
-			Result.set_body ("Operation not permitted.")
+			create s.make_from_string ("<p class=%"error%">Operation not permitted.</p>%N")
+			if a_package /= Void then
+				s.append ("<p><a href=%"")
+				s.append (iron.package_version_view_web_page (a_package))
+				s.append ("%">Back to package page %"")
+				s.append (html_encoder.encoded_string (a_package.human_identifier))
+				s.append ("%"</a>.</p>%N")
+			end
+			if attached req.http_referer as l_referer then
+				s.append ("<p><a href=%"")
+				s.append (l_referer)
+				s.append ("%">Back to previous page</a>.</p>%N")
+			end
+			Result.set_body (s)
 		end
 
 	new_not_found_response_message (req: WSF_REQUEST): IRON_NODE_HTML_RESPONSE
+		local
+			s: STRING
 		do
 			Result := new_response_message (req)
-			Result.set_body ("Resource not found.")
+			create s.make_from_string ("<p class=%"error%">Resource not found.</p>%N")
+			if attached req.http_referer as l_referer then
+				s.append ("<p><a href=%"")
+				s.append (l_referer)
+				s.append ("%">Back to previous page</a>.</p>%N")
+			end
+			Result.set_body (s)
 		end
 
 feature {NONE} -- Implementation
@@ -604,7 +634,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

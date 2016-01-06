@@ -13,6 +13,7 @@ inherit
 create
 	make_operator,
 	make_silent_and_operator,
+	make_silent_or_operator,
 	make_embedded,
 	make_name_value,
 	make_group
@@ -33,6 +34,11 @@ feature {NONE} -- Initialization
 	make_silent_and_operator
 		do
 			make_operator (silent_and_operator)
+		end
+
+	make_silent_or_operator
+		do
+			make_operator (silent_or_operator)
 		end
 
 	make_operator (n: READABLE_STRING_GENERAL)
@@ -94,14 +100,24 @@ feature -- Status report
 
 	is_operator_and: BOOLEAN
 		do
-			Result := is_single and (name.is_case_insensitive_equal_general ("and") or else name.same_string (silent_and_operator))
+			Result := is_single and (name.is_case_insensitive_equal_general ("and") or else is_silent_operator_and)
 		ensure
 			Result implies is_binary_operator
 		end
 
+	is_silent_operator_and: BOOLEAN
+		do
+			Result := name.is_case_insensitive_equal (silent_and_operator) or else name.is_whitespace
+		end
+
+	is_silent_operator_or: BOOLEAN
+		do
+			Result := name.is_case_insensitive_equal (silent_or_operator)
+		end
+
 	is_operator_or: BOOLEAN
 		do
-			Result := is_single and (name.is_case_insensitive_equal_general ("or"))
+			Result := is_single and (name.is_case_insensitive_equal_general ("or") or is_silent_operator_or)
 		ensure
 			Result implies is_binary_operator
 		end
@@ -114,6 +130,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	silent_and_operator: STRING_32 = " "
+	silent_or_operator: STRING_32 = "+"
 	silent_embedded_name: STRING_32 = "()"
 	silent_group_name: IMMUTABLE_STRING_32
 		once
@@ -127,11 +144,21 @@ feature -- Status report
 		do
 			create Result.make_empty
 			Result.append (name)
+			if attached value as v then
+				Result.append_character (':')
+				if v.has (' ') or v.has ('%T') then
+					Result.append_character ('"')
+					Result.append (v)
+					Result.append_character ('"')
+				else
+					Result.append (v)
+				end
+			end
 		end
 
 invariant
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -5,11 +5,17 @@ project
 	criteria = "criteria.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
-
+	title: Eiffel criteria
+	description: "[
+		Implementation of Filter|Criteria pattern.
+		Useful to filter a list.
+		Via a Criteria factory, it provides expression evaluation based on
+		binary operators and labels, such as "name:foo or tag:test" which
+		keeps items satisfying criteria "name=foo" and has tag "test".
+	]"
+	tags: criteria, filter, pattern, search
+	copyright: Jocelyn Fiat, and Eiffel Software.
+	license: Eiffel Forum License v2
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/pattern/criteria
 end

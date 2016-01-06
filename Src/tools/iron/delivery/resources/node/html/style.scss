@@ -113,10 +113,14 @@ ul {
 	}
 }
 .error {
-	background-color: red;
+	width: 80%;
+	background-color: #fcc;
+	padding: 20px;
 }
 .warning {
-	background-color: orange;
+	width: 80%;
+	background-color: #fda;
+	padding: 20px;
 }
 .dialog.message {
 	border: solid 1px #aa6;

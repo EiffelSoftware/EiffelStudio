@@ -45,44 +45,48 @@ feature -- Execution
 			fi: WSF_FORM_TEXT_INPUT
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package	then
-				r := new_response_message (req)
-				r.set_iron_version_package (l_package)
-				r.add_menu ("View", iron.package_version_view_web_page (l_package))
-				create s.make_empty
-				s.append ("<strong>[")
-				s.append (r.html_encoded_string (l_package.human_identifier))
-				s.append ("] maps:</strong>")
-				if attached iron.database.path_associated_with_package (l_package) as lst then
-					s.append ("<ul>%N")
-					v := iron_version (req).value
-					across
-						lst as c
-					loop
-						s.append ("<li>")
-						i := c.item.last_index_of ('/', c.item.count)
-						s.append ("<a href=%"" + "/" + v + "%">/" + v + "</a> ")
-						if i > 0 then
-							l_parent := c.item.substring (1, i)
-							s.append ("<a href=%"" + "/" + v + l_parent + "%">" + l_parent + "</a>")
-							s.append ("<a href=%"" + "/" + v + c.item + "%">" + c.item.substring ( i+1, c.item.count) + "</a>")
-						else
-							s.append ("<a href=%"" + "/" + v + c.item + "%"> " + c.item + " </a>")
+				if has_permission_to_modify_package_version (req, l_package) then
+					r := new_response_message (req)
+					r.set_iron_version_package (l_package)
+					r.add_menu ("View", iron.package_version_view_web_page (l_package))
+					create s.make_empty
+					s.append ("<strong>[")
+					s.append (r.html_encoded_string (l_package.human_identifier))
+					s.append ("] maps:</strong>")
+					if attached iron.database.path_associated_with_package (l_package) as lst then
+						s.append ("<ul>%N")
+						v := iron_version (req).value
+						across
+							lst as c
+						loop
+							s.append ("<li>")
+							i := c.item.last_index_of ('/', c.item.count)
+							s.append ("<a href=%"" + "/" + v + "%">/" + v + "</a> ")
+							if i > 0 then
+								l_parent := c.item.substring (1, i)
+								s.append ("<a href=%"" + "/" + v + l_parent + "%">" + l_parent + "</a>")
+								s.append ("<a href=%"" + "/" + v + c.item + "%">" + c.item.substring ( i+1, c.item.count) + "</a>")
+							else
+								s.append ("<a href=%"" + "/" + v + c.item + "%"> " + c.item + " </a>")
+							end
+							s.append (" <a style=%"color: red;%" href=%"" + iron.package_version_map_web_page (l_package, c.item) + "?" + Method_query_parameter + "=DELETE%">DEL</a>")
+							s.append ("</li>%N")
 						end
-						s.append (" <a style=%"color: red;%" href=%"" + iron.package_version_map_web_page (l_package, c.item) + "?" + Method_query_parameter + "=DELETE%">DEL</a>")
-						s.append ("</li>%N")
+						s.append ("</ul>")
 					end
-					s.append ("</ul>")
-				end
-				create f.make (iron.package_version_map_web_page (l_package, Void), "new_map")
-				create fi.make ("map")
-				fi.set_label ("Path association")
-				fi.set_description ("Associate the path with current package.")
-				f.extend (fi)
-				f.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("op", "ADD"))
+					create f.make (iron.package_version_map_web_page (l_package, Void), "new_map")
+					create fi.make ("map")
+					fi.set_label ("Path association")
+					fi.set_description ("Associate the path with current package.")
+					f.extend (fi)
+					f.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("op", "ADD"))
 
-				f.append_to_html (create {WSF_REQUEST_THEME}.make_with_request (req), s)
-				r.set_body (s)
-				res.send (r)
+					f.append_to_html (create {WSF_REQUEST_THEME}.make_with_request (req), s)
+					r.set_body (s)
+					res.send (r)
+				else
+					res.send (new_not_permitted_response_message (l_package, req))
+				end
 			else
 				res.send (new_not_found_response_message (req))
 			end
@@ -160,7 +164,7 @@ feature -- Execution
 
 					res.send (m)
 				else
-					res.send (new_not_permitted_response_message (req))
+					res.send (new_not_permitted_response_message (l_package, req))
 				end
 			else
 				res.send (new_not_found_response_message (req))
@@ -174,7 +178,6 @@ feature -- Execution
 			s: STRING
 		do
 			if attached package_version_from_id_path_parameter (req, "id") as l_package then
-
 				if has_permission_to_modify_package_version (req, l_package) then
 					m := new_response_message (req)
 					m.set_iron_version_package (l_package)
@@ -214,7 +217,7 @@ feature -- Execution
 
 					res.send (m)
 				else
-					res.send (new_not_permitted_response_message (req))
+					res.send (new_not_permitted_response_message (l_package, req))
 				end
 			else
 				res.send (new_not_found_response_message (req))
@@ -232,7 +235,7 @@ feature -- Documentation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

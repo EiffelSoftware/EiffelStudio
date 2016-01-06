@@ -134,15 +134,14 @@ feature -- Execution
 				end
 				s.append ("</ul>")
 			end
-			l_search_help := iron.database.version_package_criteria_factory.description
-
+			l_search_help := iron.database.version_package_criteria_factory_description
 			if
 				l_search_query /= Void
 			then
 				html.add_parameter (l_search_query, "search_query_text")
 				html.add_parameter (l_search_help, "search_query_description")
 				html.add_parameter (iron.database.version_package_criteria_factory.short_description, "search_query_short_description")
-				l_title := {STRING_32} "Search for query=%"" + l_search_query + "%""
+				l_title := {STRING_32} "Results for %"" + l_search_query + "%""
 				l_total_count := iron.database.version_packages_count (iron_version (req))
 				coll := iron.database.query_version_packages (l_search_query, iron_version (req), 1, 0)
 				l_found_count := coll.count
@@ -155,7 +154,7 @@ feature -- Execution
 			end
 
 			s.append ("<div>Found " + l_found_count.out + " out of " + l_total_count.out + " items.</div>")
-			
+
 			if coll /= Void and then coll.count > 0 then
 				if
 					l_sort_by /= Void and then

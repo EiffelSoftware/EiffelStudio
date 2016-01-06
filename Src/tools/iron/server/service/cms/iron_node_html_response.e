@@ -393,7 +393,7 @@ feature {NONE} -- HTML Generation
 	append_html_body_footer_code (s: STRING)
 		do
 			s.append ("-- IRON package repository (")
-			s.append ("<a href=%"" + request.script_url (iron.cms_page ("/api/")) + "%">API</a>")
+			s.append ("<a href=%"" + request.script_url (iron.api_resource ("/api/")) + "%">API</a>")
 			if iron.is_documentation_available then
 				s.append (" | ")
 				s.append ("<a href=%"" + request.script_url (iron.cms_page ("/doc/")) + "%">Documentation</a>")

@@ -87,18 +87,17 @@ feature -- Access
 		local
 			s32: STRING_32
 		do
-			if attached title as l_title then
-				create s32.make_from_string (l_title)
+			if attached name as l_name then
+				create s32.make_from_string (l_name)
 			else
 				create s32.make_empty
 			end
-			if attached name as l_name then
+			if attached title as l_title then
 				if s32.is_empty then
-					s32.append (l_name)
+					s32.append (l_title)
 				else
-					s32.append (" (")
-					s32.append (l_name)
-					s32.append (")")
+					s32.append (": ")
+					s32.append (l_title)
 				end
 			elseif s32.is_empty then
 				create s32.make_from_string_general (id)
@@ -297,7 +296,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

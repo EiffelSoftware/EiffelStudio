@@ -293,7 +293,6 @@ feature -- Hooks
 					e.add_header_line ("MIME-Version:1.0")
 					e.add_header_line ("Content-Type: text/html; charset=utf-8")
 					api.process_email (e)
---					es.send_internal_email (um)
 
 					if not api.has_error then
 

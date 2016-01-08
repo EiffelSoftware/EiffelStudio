@@ -323,7 +323,9 @@ feature -- Emails
 	process_email (e: CMS_EMAIL)
 			-- Process email `e'.
 		do
+			log ("mailer", "Send email %"" + e.subject + "%"%N" + e.header, {CMS_LOG}.level_notice, Void)
 			reset_error
+			prepare_email (e)
 			setup.mailer.safe_process_email (e)
 			if setup.mailer.has_error then
 				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing email.")
@@ -333,10 +335,33 @@ feature -- Emails
 	process_emails (lst: ITERABLE [CMS_EMAIL])
 			-- Process collection of email `lst'.	
 		do
-			reset_error
-			setup.mailer.process_emails (lst)
-			if setup.mailer.has_error then
-				error_handler.add_custom_error (0, "Mailer error", "Error occurred while processing emails.")
+			across
+				lst as ic
+			loop
+				process_email (ic.item)
+			end
+		end
+
+feature {NONE} -- Emails implementation
+
+	prepare_email (e: CMS_EMAIL)
+			-- Prepare email `e', and update parameters if needed.
+		local
+			l_sender, l_from: READABLE_STRING_8
+		do
+			l_sender := setup.site_email
+			l_from := e.from_address
+			if not l_sender.is_case_insensitive_equal_general (l_from) then
+				e.set_from_address (l_sender)
+				if not e.has_header ("Return-Path") then
+					e.add_header_line ("Return-path: " + l_from)
+				end
+				if e.reply_to_address = Void then
+					e.set_reply_to_address (l_from)
+				else
+						--| As a Reply-To address is already set,
+						--| ignore previous from address.
+				end
 			end
 		end
 
@@ -548,7 +573,7 @@ feature -- Element Change: Error
 			error_handler.reset
 		end
 
-feature {NONE}-- Implemenation
+feature {NONE}-- Implementation
 
 	error_handler: ERROR_HANDLER
 			-- Error handler.
@@ -834,7 +859,7 @@ feature -- Hook
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

@@ -6,9 +6,6 @@ note
 class
 	CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS
 
-inherit
-	EMAIL_SERVICE_PARAMETERS
-
 create
 	make
 
@@ -23,19 +20,15 @@ feature {NONE} -- Initialization
 		do
 			cms_api := a_cms_api
 				-- Use global smtp setting if any, otherwise "localhost"
-			smtp_server := utf.escaped_utf_32_string_to_utf_8_string_8 (a_cms_api.setup.text_item_or_default ("smtp", "localhost"))
 			l_site_name := utf.escaped_utf_32_string_to_utf_8_string_8 (a_cms_api.setup.site_name)
-			admin_email := a_cms_api.setup.site_email
+			notif_email_address := a_cms_api.setup.site_notification_email
+			sender_email_address := a_cms_api.setup.site_email
 
-			if not admin_email.has ('<') then
-				admin_email := l_site_name + " <" + admin_email +">"
+			if not notif_email_address.has ('<') then
+				notif_email_address := l_site_name + " <" + notif_email_address + ">"
 			end
 
-			if attached {CONFIG_READER} a_cms_api.module_configuration_by_name ({CMS_AUTHENTICATION_MODULE}.name, Void) as cfg then
-				if attached cfg.text_item ("smtp") as l_smtp then
-						-- Overwrite global smtp setting if any.
-					smtp_server := utf.utf_32_string_to_utf_8_string_8 (l_smtp)
-				end
+			if attached a_cms_api.module_configuration_by_name ({CMS_AUTHENTICATION_MODULE}.name, Void) as cfg then
 				s := cfg.text_item ("email")
 				if s /= Void then
 					l_contact_email := utf.utf_32_string_to_utf_8_string_8 (s)
@@ -56,15 +49,14 @@ feature {NONE} -- Initialization
 				if s /= Void then
 					l_subject_oauth := utf.utf_32_string_to_utf_8_string_8 (s)
 				end
-
 			end
 			if l_contact_email /= Void then
 				if not l_contact_email.has ('<') then
 					l_contact_email := l_site_name + " <" + l_contact_email + ">"
 				end
-				contact_email := l_contact_email
+				contact_email_address := l_contact_email
 			else
-				contact_email := admin_email
+				contact_email_address := notif_email_address
 			end
 			if l_subject_register /= Void then
 				contact_subject_register := l_subject_register
@@ -87,18 +79,17 @@ feature {NONE} -- Initialization
 			else
 				contact_subject_oauth := "Welcome."
 			end
-
 		end
 
 feature	-- Access
 
 	cms_api: CMS_API
 
-	smtp_server: IMMUTABLE_STRING_8
+	notif_email_address: IMMUTABLE_STRING_8
 
-	admin_email: IMMUTABLE_STRING_8
+	sender_email_address: IMMUTABLE_STRING_8
 
-	contact_email: IMMUTABLE_STRING_8
+	contact_email_address: IMMUTABLE_STRING_8
 			-- Contact email.
 
 	contact_subject_register: IMMUTABLE_STRING_8

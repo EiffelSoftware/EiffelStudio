@@ -430,7 +430,7 @@ feature -- OAuth2 Login with Provider
 			l_user: CMS_USER
 			l_roles: LIST [CMS_USER_ROLE]
 			l_cookie: WSF_COOKIE
-			es: CMS_AUTHENTICATON_EMAIL_SERVICE
+			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
 			if  attached {WSF_STRING} req.path_parameter ({CMS_OAUTH_20_CONSTANTS}.oauth_callback) as l_callback and then
 			    attached {CMS_OAUTH_20_CONSUMER} a_user_oauth_api.oauth_consumer_by_callback (l_callback.value) as l_consumer and then

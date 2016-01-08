@@ -184,7 +184,7 @@ feature -- Handler
 			l_user_api: CMS_USER_API
 			u: CMS_USER
 			l_exist: BOOLEAN
-			es: CMS_AUTHENTICATON_EMAIL_SERVICE
+			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_url: STRING
 			l_token: STRING
 		do
@@ -273,7 +273,7 @@ feature -- Handler
 	handle_reactivation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			es: CMS_AUTHENTICATON_EMAIL_SERVICE
+			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_user_api: CMS_USER_API
 			l_token: STRING
 			l_url: STRING
@@ -313,7 +313,7 @@ feature -- Handler
 	handle_new_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			es: CMS_AUTHENTICATON_EMAIL_SERVICE
+			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_user_api: CMS_USER_API
 			l_token: STRING
 			l_url: STRING

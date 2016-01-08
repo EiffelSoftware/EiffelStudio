@@ -16,11 +16,12 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			l_url: like site_url
+			l_email: detachable READABLE_STRING_8
 		do
 			site_location := environment.path
 
 				--| Site id, used to identified a site, this could be set to a uuid, or else
-			site_id := text_item_or_default ("site.id", "_EWF_CMS_NO_ID_")
+			site_id := string_8_item_or_default ("site.id", "_ROC_CMS_NO_ID_")
 
 				-- Site url: optional, but ending with a slash
 			l_url := string_8_item ("site_url")
@@ -32,11 +33,26 @@ feature {NONE} -- Initialization
 			site_url := l_url
 
 				-- Site name
-			site_name := text_item_or_default ("site.name", "EWF::CMS")
+			site_name := text_item_or_default ("site.name", "Another Eiffel ROC Website")
 
-				-- Site email for any internal notification
-				-- Can be also used to precise the "From:" value for email.
-			site_email := text_item_or_default ("site.email", "webmaster")
+				-- Website email used to send email.
+				-- used as real "From:" email.
+				-- Any "From:" header passed to the CMS email sender will appear as "Reply-To:"
+				-- or ignored if a reply-to header is already set.
+			l_email := string_8_item ("site.email")
+			if l_email = Void then
+					-- FIXME: find better default value!
+					-- Or handler configuration error (missing value)!!!
+				l_email := string_8_item_or_default ("mailer.from", "webmaster")
+			end
+			if l_email.has ('<') then
+				l_email := site_name + " <" + l_email + ">"
+			end
+			site_email := l_email
+
+				-- Email address for current web site
+				--| Also known
+			site_notification_email := string_8_item_or_default ("notification.email", site_email)
 
 
 				-- Location for public files
@@ -181,8 +197,12 @@ feature -- Access: Site
 			-- Name of the site.
 
 	site_email: READABLE_STRING_8
-			-- Admin email address for the site.
-			-- Mainly used for internal notification.
+			-- Website email address.
+			-- Used as "From:" address when the site is sending emails
+			-- cf: `CMS_SETUP.mailer'.
+
+	site_notification_email: READABLE_STRING_8
+			-- Email address receiving internal notification.
 
 	site_url: detachable READABLE_STRING_8
 			-- Optional url of current CMS site.
@@ -221,6 +241,16 @@ feature -- Query
 	string_8_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
 			-- Configuration value associated with `a_name', if any.
 		deferred
+		end
+
+	string_8_item_or_default (a_name: READABLE_STRING_GENERAL; a_default_value: READABLE_STRING_8): READABLE_STRING_8
+			-- `string_8_item' associated with `a_name' or if none, `a_default_value'.
+		do
+			if attached string_8_item (a_name) as v then
+				Result := v
+			else
+				Result := a_default_value
+			end
 		end
 
 feature -- Access: Theme
@@ -333,6 +363,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

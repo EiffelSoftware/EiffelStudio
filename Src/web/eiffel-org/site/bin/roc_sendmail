@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import sys
+import smtplib
+import string;
+import re;
+from email.mime.text import MIMEText
+
+# Define to/from
+username="noreply@eiffel.org"
+password='ENTER PASSWORD HERE!!!'
+smtp_host = "smtp.zoho.com"
+smtp_port = 465
+sender = 'Eiffel Community <noreply@eiffel.org>'
+recipient = 'webmaster@eiffel.org'
+
+mesg=""
+for line in sys.stdin:
+        if line[:3] == "To:":
+                recipient = string.strip(line[4:])
+                if recipient[-1] == ';':
+                        recipient = recipient[:-1]
+        mesg = "%s%s" % (mesg, line)
+
+if len(mesg) > 0:
+        if False:
+                print "sender=%s" % (sender)
+                print "recipient=%s" % (recipient)
+                print ""
+                print mesg
+
+        # Create server object with SSL option
+        server = smtplib.SMTP_SSL(smtp_host, smtp_port)
+
+        # Perform operations via server
+        server.login(username, password)
+        recipients = re.split(';', recipient)
+        server.sendmail(sender, recipients, mesg)
+        server.quit()

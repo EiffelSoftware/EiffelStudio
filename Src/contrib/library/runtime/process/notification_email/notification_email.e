@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		require
 			well_formed_from_address: is_valid_address (a_from)
-			well_formed_to_address: a_to_address.has ('@')
+			well_formed_to_address: is_valid_address (a_to_address)
 		do
 			initialize
 			from_address := a_from
@@ -91,14 +91,21 @@ feature -- Change
 
 	set_from_address (add: READABLE_STRING_8)
 		require
-			well_formed_address: add.has ('@')
+			well_formed_address: is_valid_address (add)
 		do
 			from_address := add
 		end
 
+	set_reply_to_address (add: like reply_to_address)
+		require
+			well_formed_address: add = Void or else is_valid_address (add)
+		do
+			reply_to_address := add
+		end
+
 	add_cc_address (add: READABLE_STRING_8)
 		require
-			well_formed_address: add.has ('@')
+			well_formed_address: is_valid_address (add)
 		local
 			lst: like cc_addresses
 		do
@@ -112,7 +119,7 @@ feature -- Change
 
 	add_bcc_address (add: READABLE_STRING_8)
 		require
-			well_formed_address: add.has ('@')
+			well_formed_address: is_valid_address (add)
 		local
 			lst: like bcc_addresses
 		do
@@ -123,6 +130,20 @@ feature -- Change
 			end
 			lst.force (add)
 		end
+
+	reset_cc_addresses
+			-- Clear Cc: addresses.
+		do
+			cc_addresses := Void
+		end
+
+	reset_bcc_addresses
+			-- Clear Bcc: addresses.
+		do
+			bcc_addresses := Void
+		end
+
+feature -- Header manipulation		
 
 	add_header_line (a_line: READABLE_STRING_8)
 		require
@@ -136,6 +157,21 @@ feature -- Change
 				additional_header_lines := lst
 			end
 			lst.force (a_line)
+		end
+
+feature -- Status report
+
+	has_header (a_header_name: READABLE_STRING_8): BOOLEAN
+			-- Has additional header `a_header_name'?
+			-- Warning: it checks only `additional_header_lines'!
+		local
+			h_colon: STRING
+		do
+			if attached additional_header_lines as lst then
+				create h_colon.make_from_string (a_header_name)
+				h_colon.append_character (':')
+				Result := across lst as ic some ic.item.starts_with (h_colon) end
+			end
 		end
 
 feature -- Reset

@@ -80,6 +80,8 @@ feature -- Access
 	upper_bar: EV_VERTICAL_BOX
 			-- Room at top of window. (Example use: toolbars.)
 			-- Positioned below menu bar.
+		obsolete
+			"Drop usage as implementation will ignore this setting."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -90,6 +92,8 @@ feature -- Access
 
 	lower_bar: EV_VERTICAL_BOX
 			-- Room at bottom of window. (Example use: statusbar.)
+		obsolete
+			"Drop usage as implementation will ignore this setting."
 		require
 			not_destroyed: not is_destroyed
 		do

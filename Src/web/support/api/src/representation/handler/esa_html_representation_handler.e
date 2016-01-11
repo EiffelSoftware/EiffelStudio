@@ -215,7 +215,7 @@ feature -- View
 			l_hp: HTML_401
 		do
 			if attached req.http_host as l_host then
-				create l_hp.make_with_redirect (absolute_host (req, ""),req.path_info, current_user_name (req) )
+				create l_hp.make_with_redirect (absolute_host (req, ""),req.request_uri, current_user_name (req) )
 				if attached l_hp.representation as l_unauthorized then
 					new_response_access_unauthorized (req, res, l_unauthorized)
 				end

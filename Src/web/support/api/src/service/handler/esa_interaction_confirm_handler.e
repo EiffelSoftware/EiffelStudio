@@ -74,17 +74,17 @@ feature -- HTTP Methods
 			   attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer  then
 				if attached current_media_type (req) as l_type then
 					log.write_information (generator + ".do_get Processing request")
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
 				else
-					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
 					log.write_alert (generator + ".do_get Processing request, not authorized")
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				else
 					log.write_alert (generator + ".do_get Processing request, not accepted")
-					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
@@ -109,18 +109,18 @@ feature -- HTTP Methods
 					api_service.commit_interaction (l_interaction)
 					update_report_problem (l_report_id.integer_value, l_interaction)
 					send_new_interaction_email (l_user, l_report_id.integer_value, l_old_report, absolute_host (req, "") )
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).interaction_form_confirm_redirect (req, res)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				else
 					log.write_alert (generator + ".do_post Processing request, not acceptable")
-					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).interaction_form_confirm_redirect (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).interaction_form_confirm_redirect (req, res)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
 					log.write_alert (generator + ".do_post Processing request, not authorized")
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				else
 					log.write_alert (generator + ".do_post Processing request, not acceptable")
-					l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
@@ -133,14 +133,19 @@ feature {NONE} -- Implementation
 			l_parser: JSON_PARSER
 		do
 			if a_type.same_string ("application/vnd.collection+json") then
-				create l_parser.make_parser (retrieve_data (req))
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+				create l_parser.make_with_string (retrieve_data (req))
+				l_parser.parse_content
+				if
+					attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 					attached {JSON_OBJECT}jv.item ("template") as l_template and then
-					attached {JSON_ARRAY}l_template.item ("data") as l_data then
-					if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-						 l_name.item.same_string ("confirm") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value and then l_value.item.is_integer then
-						Result := l_value.item.to_integer
-					end
+					attached {JSON_ARRAY}l_template.item ("data") as l_data and then
+					attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then
+					attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+					l_name.item.same_string ("confirm") and then
+					attached {JSON_STRING} l_form_data.item ("value") as l_value and then
+					l_value.item.is_integer
+				then
+					Result := l_value.item.to_integer
 				end
 			else
 				if attached {WSF_STRING} req.form_parameter ("confirm") as l_confirm and then l_confirm.is_integer then

@@ -8,13 +8,13 @@ class
 
 feature -- Access
 
-	email: detachable STRING
+	email: detachable STRING_32
 			-- new email.
 
-	check_email: detachable STRING
+	check_email: detachable STRING_32
 			-- Check email.
 
-	token: detachable STRING
+	token: detachable STRING_32
 			-- Token to confirm new email.		
 
 	is_valid_form: BOOLEAN
@@ -52,7 +52,7 @@ feature -- Errors
 
 feature -- Change Element
 
-	set_email (a_email: STRING)
+	set_email (a_email: READABLE_STRING_32)
 			-- Set `email' to `a_email'.
 		do
 			email := a_email
@@ -60,7 +60,7 @@ feature -- Change Element
 			email_set: email = a_email
 		end
 
-	set_check_email (a_check_email: STRING)
+	set_check_email (a_check_email: READABLE_STRING_32)
 			-- Set `email' to `a_check_email'.
 		do
 			check_email := a_check_email
@@ -68,7 +68,7 @@ feature -- Change Element
 			check_email_set: check_email = a_check_email
 		end
 
-	set_token (a_token: STRING)
+	set_token (a_token: READABLE_STRING_32)
 			-- Set `token' to `a_token'.
 		do
 			token := a_token

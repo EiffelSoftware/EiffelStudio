@@ -36,13 +36,13 @@ feature -- Initialization
 				errors_set: errors.is_empty
 			end
 
-		
+
 feature -- Access
 
 	search: INTEGER
 		-- Current search parameter, should be a value greather than 0.
-	
-	acceptable_query_parameters: ARRAY[STRING]
+
+	acceptable_query_parameters: ARRAY [STRING]
 			-- The paramers are optionals, more parameters is a bad request.
 		once
 			Result := <<"search">>
@@ -54,7 +54,7 @@ feature -- Validation
 	validate (a_request: STRING_TABLE [WSF_VALUE])
 			-- <Precursor>
 		local
-			l_current_keys: ARRAY[READABLE_STRING_GENERAL]
+			l_current_keys: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_current_keys := a_request.current_keys
 			l_current_keys.compare_objects
@@ -72,26 +72,25 @@ feature -- Validation
 
 feature {NONE} -- Validations
 
-	validate_search (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_search (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `search' query parameter, if it's present should be greater than 0, update the value to `search'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"search") then
+			if
+				a_current_keys.has ({STRING_32} "search") and then
+				attached {WSF_STRING} a_table_request.at ("search") as l_page
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("search") as l_page
+					not l_page.is_integer or else
+					(l_page.is_integer and then l_page.integer_value <= 0)
 				then
-					if
-						not l_page.is_integer or else
-						(l_page.is_integer and then l_page.integer_value <= 0)
-					then
-						errors.force ("The parameter value for search should be > 0, the value [" + l_page.value + "] is not valid", "page")
-					else
-						set_search (l_page.integer_value)
-					end
+					errors.force ("The parameter value for search should be > 0, the value [" + l_page.value + "] is not valid", "page")
+				else
+					set_search (l_page.integer_value)
 				end
 			end
 		end
-		
+
 feature -- Change Element
 
 	set_search (a_report_number: INTEGER)

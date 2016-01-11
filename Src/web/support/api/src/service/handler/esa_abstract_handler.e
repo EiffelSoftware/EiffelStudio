@@ -40,4 +40,9 @@ feature -- Access
 			Result := esa_config.email_service
 		end
 
+
+feature -- String Helper
+
+	Empty_string:  STRING_32 = ""
+			-- Empty manifest string.
 end

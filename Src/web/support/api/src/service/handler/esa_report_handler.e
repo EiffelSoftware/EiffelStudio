@@ -101,7 +101,7 @@ feature -- HTTP Methods
 				end
 			else
 					-- List of reports visisble for Guest Users
-				user_reports (req, res, "")
+				user_reports (req, res, Empty_string)
 			end
 		end
 
@@ -130,7 +130,7 @@ feature -- HTTP Methods
 				else
 					create l_rhf
 					log.write_alert (generator + ".do_get Processing Repor request via the user "+ l_user + " does not have permissions!")
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_authenticate (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_authenticate (req, res)
 				end
 			else
 				to_implement ("Unauthorized")
@@ -200,7 +200,7 @@ feature -- Implementation
 					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).problem_reports_responsible (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string,  media_type_variants (req)).problem_reports_responsible (req, res, Void)
 			end
 		end
 
@@ -208,7 +208,7 @@ feature -- Implementation
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_report_view: ESA_REPORT_VIEW
-			l_list: LIST[REPORT]
+			l_list: LIST [REPORT]
 		do
 			create l_rhf
 			if
@@ -216,7 +216,7 @@ feature -- Implementation
 				attached current_user_name (req) as l_user
 			then
 				if attached api_service.problem_report_details (l_user, a_id) as l_report then
-					create {ARRAYED_LIST[REPORT]} l_list.make (1)
+					create {ARRAYED_LIST [REPORT]} l_list.make (1)
 					l_list.force (l_report)
 					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user)
 					l_report_view.set_id (a_id.out)
@@ -260,7 +260,7 @@ feature -- Implementation
 						l_input_validator.set_page (1)
 					end
 
-					l_row := api_service.problem_reports_guest_2 (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter, l_input_validator.filter_content )
+					l_row := api_service.problem_reports_guest (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter, l_input_validator.filter_content )
 					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
 					l_report_view.set_size (l_input_validator.size)
 					l_report_view.set_selected_category (l_input_validator.category)
@@ -278,7 +278,7 @@ feature -- Implementation
 					l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).problem_reports_guest (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).problem_reports_guest (req, res, Void)
 			end
 		end
 
@@ -296,11 +296,11 @@ feature -- Implementation
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, l_type))
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, ""))
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).update_report_responsible (req, res,build_redirect_uri (req, ""))
 			end
 		end
 
-	set_selected_status (a_status: LIST[REPORT_STATUS]; a_selected_status:  INTEGER)
+	set_selected_status (a_status: LIST [REPORT_STATUS]; a_selected_status: INTEGER)
 			-- Set the current selected status
 		do
 			across a_status as c  loop
@@ -310,7 +310,7 @@ feature -- Implementation
 			end
 		end
 
-	mark_selected_status (a_status: LIST[REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
+	mark_selected_status (a_status: LIST [REPORT_STATUS]; a_status_selected: LIST [INTEGER] )
 			-- Set the current selected status
 		do
 			across a_status_selected as c  loop
@@ -337,15 +337,16 @@ feature {NONE} --Implementation
 		local
 			l_parser: JSON_PARSER
 		do
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			   attached {JSON_ARRAY} l_template.item ("data") as l_data and then
 					--  <"name": "email", "prompt": "Password", "value": "{$form.email/}">,
-				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-					Result := l_value.item
-				end
+			   attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				l_name.item.same_string ("responsible") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value
+			then
+				Result := l_value.item
 			end
 		end
 
@@ -353,7 +354,7 @@ feature {NONE} --Implementation
 			-- Extract request form data and build a object email view.
 			-- email, check_email.
 		do
-			if attached {WSF_STRING}req.form_parameter ("user_responsible") as l_responsible then
+			if attached {WSF_STRING} req.form_parameter ("user_responsible") as l_responsible then
 				Result := l_responsible.value
 			end
 		end

@@ -58,7 +58,7 @@ feature -- HTTP Methods
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).category_page (req, res, api_service.all_categories)
 			else
 				log.write_alert (generator + ".do_get Processing request, not acceptbale")
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).category_page (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).category_page (req, res, Void)
 			end
 		end
 

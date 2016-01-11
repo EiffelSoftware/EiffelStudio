@@ -67,10 +67,10 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_row: LIST[REPORT]
+			l_row: LIST [REPORT]
 			l_view: ESA_REPORT_VIEW
-			list_status: LIST[REPORT_STATUS]
-			l_categories: LIST[REPORT_CATEGORY]
+			list_status: LIST [REPORT_STATUS]
+			l_categories: LIST [REPORT_CATEGORY]
 			l_pages : INTEGER
 			l_input_validator: ESA_REPORT_INPUT_VALIDATOR
 		do
@@ -86,7 +86,7 @@ feature -- HTTP Methods
 						list_status := api_service.status
 
 						l_pages := api_service.row_count_problem_report_user (l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.filter, l_input_validator.filter_content)
-						l_row := api_service.problem_reports_2 (l_input_validator.page, l_input_validator.size, l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.filter, l_input_validator.filter_content)
+						l_row := api_service.problem_reports (l_input_validator.page, l_input_validator.size, l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.filter, l_input_validator.filter_content)
 						create l_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, l_user)
 						l_view.set_selected_category (l_input_validator.category)
 						l_view.set_size (l_input_validator.size)
@@ -101,7 +101,7 @@ feature -- HTTP Methods
 						l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).bad_request_with_errors_page (req, res, l_input_validator.errors)
 					end
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).problem_user_reports (req, res, Void)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).problem_user_reports (req, res, Void)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
@@ -109,7 +109,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				else
 					log.write_alert (generator+".do_get Processing request not acceptable")
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
@@ -117,7 +117,7 @@ feature -- HTTP Methods
 
 feature {NONE} --Implementation
 
-	set_selected_status (a_status: LIST[REPORT_STATUS]; a_selected_status:  INTEGER)
+	set_selected_status (a_status: LIST [REPORT_STATUS]; a_selected_status: INTEGER)
 			-- Set the current selected status.
 		do
 			across a_status as c  loop
@@ -127,7 +127,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	mark_selected_status (a_status: LIST[REPORT_STATUS]; a_status_selected: LIST[ INTEGER] )
+	mark_selected_status (a_status: LIST [REPORT_STATUS]; a_status_selected: LIST[INTEGER] )
 			-- Set the current selected status.
 		do
 			across a_status_selected as c  loop

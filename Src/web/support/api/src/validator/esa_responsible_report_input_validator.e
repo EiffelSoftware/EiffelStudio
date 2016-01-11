@@ -54,14 +54,14 @@ feature -- Access
 	responsible: INTEGER
 		-- Report's responsible, default 0.
 
-	acceptable_query_parameters: ARRAY[STRING]
+	acceptable_query_parameters: ARRAY [STRING]
 			-- The paramers are optionals, more parameters is a bad request.
 		once
 			Result := <<"page", "size", "category", "submitter", "severity", "priority", "responsible", "status", "orderBy", "release", "dir", "filter", "filter_content">>
 			Result.compare_objects
 		end
 
-	accetpable_order_by: ARRAY[STRING]
+	accetpable_order_by: ARRAY [STRING]
 			-- acceptable values to sort the reports.	
 		once
 			Result := <<"number", "statusID", "priorityID", "severityID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
@@ -74,7 +74,7 @@ feature -- Request Input Parameters
 	validate (a_request: STRING_TABLE [WSF_VALUE])
 			-- <Precursor>
 		local
-			l_current_keys: ARRAY[READABLE_STRING_GENERAL]
+			l_current_keys: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_current_keys := a_request.current_keys
 			l_current_keys.compare_objects
@@ -114,79 +114,75 @@ feature -- Request Input Parameters
 
 feature {NONE} -- Validations		
 
-	validate_responsible (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_responsible (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `responsible' query parameter, if it's present should be a value greater than 0, update the value to `responsible'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"responsible") then
+			if
+				a_current_keys.has ({STRING_32} "responsible") and then
+				attached {WSF_STRING} a_table_request.at ("responsible") as l_responsible
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("responsible") as l_responsible
+					not l_responsible.is_integer or else
+					(l_responsible.is_integer and then
+					 l_responsible.integer_value < 0 )
 				then
-					if
-						not l_responsible.is_integer or else
-						(l_responsible.is_integer and then
-						 l_responsible.integer_value < 0 )
-					then
-						errors.force ("The parameter value for responsible should be greater than 0, the vale =[" + l_responsible.value + "] is not valid", "responsible")
-					else
-						set_responsible (l_responsible.integer_value)
-					end
+					errors.force ("The parameter value for responsible should be greater than 0, the vale =[" + l_responsible.value + "] is not valid", "responsible")
+				else
+					set_responsible (l_responsible.integer_value)
 				end
 			end
 		end
 
-	validate_priority (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_priority (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `priority' query parameter, if it's present should be a value between 0..3, update the value to `priority'
 			-- feature, if there is an error, add it to errors.
 		do
 				-- Validate priority, should be a number between 0 and 3
-			if a_current_keys.has ({STRING_32}"priority") then
-				if
-					attached {WSF_STRING} a_table_request.at ("priority") as l_priority
+			if
+				a_current_keys.has ({STRING_32} "priority") and then
+				attached {WSF_STRING} a_table_request.at ("priority") as l_priority
+			then
+				if not l_priority.is_integer then
+					errors.force ("The parameter value for priority=[" + l_priority.value + "] is not valid", "priority")
+				elseif l_priority.is_integer and then
+					( l_priority.integer_value > 3 or else l_priority.integer_value < 0 )
 				then
-					if not l_priority.is_integer then
-						errors.force ("The parameter value for priority=[" + l_priority.value + "] is not valid", "priority")
-					elseif l_priority.is_integer and then
-						   ( l_priority.integer_value > 3 or else l_priority.integer_value < 0 )
-						   then
-						   	errors.force ("The parameter value for priority should be between 0 .. 3 the current value [" + l_priority.value + "] is not valid", "priority")
-					else
-						set_priority (l_priority.integer_value)
-					end
+					errors.force ("The parameter value for priority should be between 0 .. 3 the current value [" + l_priority.value + "] is not valid", "priority")
+				else
+					set_priority (l_priority.integer_value)
 				end
 			end
 		end
 
-	validate_submitter (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_submitter (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `submitter' query parameter, if it's present no validation at the moment, update the value to `submitter'
 			-- feature..
 		do
-			if a_current_keys.has ({STRING_32}"submitter") then
-				if
-					attached {WSF_STRING} a_table_request.at ("submitter") as l_submitter
-				then
-					set_submitter (l_submitter.value)
-				end
+			if
+				a_current_keys.has ({STRING_32} "submitter") and then
+				attached {WSF_STRING} a_table_request.at ("submitter") as l_submitter
+			then
+				set_submitter (l_submitter.value)
 			end
 		end
 
-	validate_severity (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_severity (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `severity' query parameter, if it's present should be a value between 0..3, update the value to `severity'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"severity") then
-				if
-					attached {WSF_STRING} a_table_request.at ("severity") as l_severity
+			if
+				a_current_keys.has ({STRING_32} "severity") and then
+				attached {WSF_STRING} a_table_request.at ("severity") as l_severity
+			then
+				if not l_severity.is_integer then
+					errors.force ("The parameter value for severity=[" + l_severity.value + "] is not valid", "severity")
+				elseif l_severity.is_integer and then
+				   ( l_severity.integer_value > 3 or else l_severity.integer_value < 0 )
 				then
-					if not l_severity.is_integer then
-						errors.force ("The parameter value for severity=[" + l_severity.value + "] is not valid", "severity")
-					elseif l_severity.is_integer and then
-						   ( l_severity.integer_value > 3 or else l_severity.integer_value < 0 )
-						   then
-						   	errors.force ("The parameter value for severity should be between 0 .. 3 the current value [" + l_severity.value + "] is not valid", "severity")
-					else
-						set_severity (l_severity.integer_value)
-					end
+				  	errors.force ("The parameter value for severity should be between 0 .. 3 the current value [" + l_severity.value + "] is not valid", "severity")
+				else
+					set_severity (l_severity.integer_value)
 				end
 			end
 		end

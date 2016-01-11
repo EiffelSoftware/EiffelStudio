@@ -39,10 +39,7 @@ feature -- Status
 	template: TEMPLATE_FILE
 
 	layout: APPLICATION_LAYOUT
-		local
-			l_env: EXECUTION_ENVIRONMENT
 		once
-			create l_env
 			if attached separate_character_option_value ('d') as l_dir  then
 				create Result.make_with_path (create {PATH}.make_from_string (l_dir))
 			else

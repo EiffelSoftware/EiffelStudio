@@ -5847,3 +5847,30 @@ td.visible-print {
 }
 
 /*# sourceMappingURL=bootstrap.css.map */
+
+
+#textarea_17 {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 255px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 400px;
+}
+
+#textarea_7 {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px solid gray;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 105px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 400px;
+}

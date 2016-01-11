@@ -58,10 +58,10 @@ feature {NONE} -- Initialization
 			l_prov: REPORT_DATA_PROVIDER
 		do
 			create l_prov.make (connection)
-			across l_prov.problem_reports ("jvelilla", False, 15, 3) as c loop
-				print (c.item.string_8)
-				io.put_new_line
-			end
+--			across l_prov.problem_reports ("jvelilla", False, 15, 3) as c loop
+--				print (c.item.string_8)
+--				io.put_new_line
+--			end
 		end
 
 
@@ -101,10 +101,10 @@ feature {NONE} -- Initialization
 		do
 			create l_prov.make (connection)
 
-			across l_prov.problem_reports ("jvelilla", False, 0, 0) as c  loop
-				print (c.item)
-				io.put_new_line
-			end
+--			across l_prov.problem_reports ("jvelilla", False, 0, 0) as c  loop
+--				print (c.item)
+--				io.put_new_line
+--			end
 		end
 
 
@@ -328,7 +328,7 @@ feature {NONE} -- Initialization
 		do
 				-- Number, Synopsis, ProblemReportCategories.CategorySynopsis, SubmissionDate, StatusID
 			create l_db.make (connection)
-			across l_db.problem_reports_guest_2 (1, 2, 0, "1,2,3", "CategorySynopsis", 1, "","",0) as c loop
+			across l_db.problem_reports_guest (1, 2, 0, "1,2,3", "CategorySynopsis", 1, "","",0) as c loop
 				print (c.item.string_8)
 			end
 		end
@@ -379,10 +379,9 @@ feature {NONE} -- Initialization
 			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
---			l_db.problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32, a_username: STRING_8, a_category: INTEGER_32, a_status, a_column: READABLE_STRING_32, a_order: INTEGER_32, a_filter: READABLE_STRING_32, a_content: INTEGER_32)
-			across l_db.problem_reports_2 (1, 30,"jvelilla",0,"1,2,3,4","Number", 1,"",1) as c loop
-				print (c.item.string_8)
-			end
+--			across l_db.problem_report (1) as c loop
+--				print (c.item.string_8)
+--			end
 		end
 
 	test_temporary_interaction
@@ -390,7 +389,7 @@ feature {NONE} -- Initialization
 			l_db: REPORT_DATA_PROVIDER
 		do
 			create l_db.make (connection)
-			if attached l_db.temporary_interaction (17745) as l_tuple then
+			if attached l_db.temporary_interaction_2 (17745) as l_tuple then
 				if attached l_tuple.at(1) as l_item1 then
 					print (l_item1); io.put_new_line
 				end

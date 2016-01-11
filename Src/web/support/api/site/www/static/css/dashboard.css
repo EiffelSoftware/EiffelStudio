@@ -355,3 +355,30 @@ pre {
 .private-panel {
 	background-color: #f2eadd !important;
 }
+
+
+#textarea_17 {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px white;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 255px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 100%;
+}
+
+#textarea_7 {
+    -moz-appearance: textfield-multiline;
+    -webkit-appearance: textarea;
+    border: 1px white;;
+    font: medium -moz-fixed;
+    font: -webkit-small-control;
+    height: 105px;
+    overflow: auto;
+    padding: 2px;
+    resize: both;
+    width: 100%;
+}

@@ -33,13 +33,8 @@ feature {NONE} -- Initialization
 feature {NONE} -- Launch operation
 
 	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
-		local
-			l_retry: BOOLEAN
-			l_message: STRING
-			launcher: APPLICATION_LAUNCHER [ESA_SERVICE_EXECUTION]
 		do
-			create launcher
-			launcher.launch (opts)
+			(create {APPLICATION_LAUNCHER [ESA_SERVICE_EXECUTION]}).launch (opts)
 		end
 
 end

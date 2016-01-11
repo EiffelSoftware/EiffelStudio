@@ -218,7 +218,7 @@
 							<a href="{$host/}/reports?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$host/}/static/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"/></a>
 					</td>
 
-					<td itemprop="synopsis">{$item.synopsis/}</td>
+					<td itemprop="synopsis">{htmlentities}{$item.synopsis/}{/htmlentities}</td>
 					<td itemprop="submission_date">{$item.submission_date_output/}</td>
 					<td itemprop="category"> {$item.category.synopsis/}</td> 
 				</tr>

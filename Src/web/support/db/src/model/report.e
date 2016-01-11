@@ -174,8 +174,8 @@ feature -- Element change
 				description := Void
 			else
 				description := v
-				if attached v as l_v then
-					description_encode := json_encode (l_v)
+				if v /= Void then
+					description_encode := json_encode (v)
 				end
 			end
 		end
@@ -187,8 +187,8 @@ feature -- Element change
 				to_reproduce := Void
 			else
 				to_reproduce := v
-				if attached v as l_v then
-					to_reproduce_encode := json_encode (l_v)
+				if v /= Void then
+					to_reproduce_encode := json_encode (v)
 				end
 			end
 		end

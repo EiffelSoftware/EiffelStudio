@@ -58,7 +58,7 @@ feature -- HTTP Methods
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).priority_page (req, res, api_service.priorities)
 			else
 				log.write_information (generator +".do_get Processing Request, not acceptable")
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).priority_page (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).priority_page (req, res, Void)
 			end
 		end
 

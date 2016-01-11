@@ -55,7 +55,7 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_view: ESA_EMAIL_VIEW
-			l_tuple: TUPLE[age:INTEGER; email: detachable STRING]
+			l_tuple: TUPLE [age:INTEGER; email: detachable STRING_32]
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
@@ -68,11 +68,10 @@ feature -- HTTP Methods
 						end
 						if api_service.successful then
 							l_view.set_token (l_token.value)
-							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).confirm_change_email (req, res, l_view)
 						else
 							l_view.add_error ("Confirm New Email Error", api_service.last_error_message)
-							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).confirm_change_email (req, res, l_view)
 						end
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).confirm_change_email (req, res, l_view)
 					else
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 					end
@@ -80,7 +79,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).confirm_change_email (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).confirm_change_email (req, res, Void)
 			end
 		end
 
@@ -97,7 +96,8 @@ feature -- HTTP Methods
 					   	if api_service.successful then
 						 	 l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).post_confirm_email_change_page (req, res)
 						else
-                        	-- l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
+                        	 api_service.set_successful
+                        	 l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 						end
 					else
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
@@ -106,7 +106,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).post_confirm_email_change_page (req, res)
+				l_rhf.new_representation_handler (esa_config,Empty_string, media_type_variants (req)).post_confirm_email_change_page (req, res)
 			end
 		end
 
@@ -128,25 +128,28 @@ feature -- Implementation
 		local
 			l_parser: JSON_PARSER
 		do
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if
+				attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
+			   	attached {JSON_OBJECT} jv.item ("template") as l_template and then
+			  	attached {JSON_ARRAY}l_template.item ("data") as l_data and then
 					--  <"name": "token", "prompt": "Token", "value": "{$form.token/}">,
-				if attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then attached {JSON_STRING} l_form_data.item ("name") as l_name and then
-					l_name.item.same_string ("token") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
-					Result := l_value.item
-				end
+				attached {JSON_OBJECT} l_data.i_th (1) as l_form_data and then
+				attached {JSON_STRING} l_form_data.item ("name") as l_name and then
+				l_name.item.same_string ("token") and then
+				attached {JSON_STRING} l_form_data.item ("value") as l_value
+			then
+				Result := l_value.item
 			end
 		end
 
 	extract_data_from_form (req: WSF_REQUEST): detachable STRING
 			-- Extract token.
 		do
-			if attached {WSF_STRING}req.form_parameter ("token") as l_email then
+			if attached {WSF_STRING} req.form_parameter ("token") as l_email then
 				Result := l_email.value
 			end
-
 		end
 
 end

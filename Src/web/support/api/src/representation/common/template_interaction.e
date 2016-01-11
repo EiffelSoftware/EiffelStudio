@@ -46,8 +46,11 @@ feature -- Status Report
 			-- Has the current user access to change category and status?
 		do
 			Result := a_form.is_responsible_or_admin
-			if attached a_form.report as l_report and then attached l_report.contact as l_contact then
-				Result := Result or else (a_user.same_string (l_contact.name))
+			if
+				attached a_form.report as l_report and then
+				attached l_report.contact as l_contact
+			then
+				Result := Result or else a_user.same_string (l_contact.name)
 			end
 		end
 end

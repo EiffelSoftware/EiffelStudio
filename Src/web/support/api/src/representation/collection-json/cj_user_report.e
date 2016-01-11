@@ -15,7 +15,7 @@ inherit
 create
 	make
 
-feature -- Initializarion
+feature {NONE} -- Initializarion
 
 	make (a_host: READABLE_STRING_GENERAL; a_view: ESA_REPORT_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.

@@ -13,7 +13,7 @@ inherit
 create
 	data_reader, data_writer
 
-feature -- Intialization
+feature {NONE} -- Intialization
 
 	data_reader (a_sp: STRING; a_parameters: HASH_TABLE [ANY, STRING_32])
 			-- SQL data reader for the stored procedure `a_sp' with arguments `a_parameters'.
@@ -93,6 +93,8 @@ feature -- Intialization
 			retry
 		end
 
+
+feature -- Execution
 
 	execute_reader (a_base_selection: DB_SELECTION): detachable LIST [DB_RESULT]
 			-- Execute the Current store procedure.

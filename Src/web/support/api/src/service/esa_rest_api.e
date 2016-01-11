@@ -121,7 +121,9 @@ feature -- Configure Resources Routes
 			create l_report_interaction_handler.make (esa_config)
 			create l_methods
 			l_methods.enable_get
-			router.handle_with_request_methods ("/report_interaction/{id}/{name}", l_report_interaction_handler, l_methods)
+		 	router.handle_with_request_methods ("/report_interaction/{id}/{name}", l_report_interaction_handler, l_methods)
+		 	router.handle_with_request_methods ("/report_interaction/{id}", l_report_interaction_handler, l_methods)
+
 		end
 
 	configure_api_login

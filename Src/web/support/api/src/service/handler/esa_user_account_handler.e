@@ -64,7 +64,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).account_information_page (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).account_information_page (req, res, Void)
 			end
 		end
 
@@ -89,13 +89,9 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).account_information_page (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).account_information_page (req, res, Void)
 			end
 		end
-
-
-
-
 
 feature -- Update User Information
 
@@ -127,10 +123,11 @@ feature -- Implementation
 			l_parser: JSON_PARSER
 		do
 			create Result.make ("TEST")
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			   attached {JSON_ARRAY} l_template.item ("data") as l_data then
 					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
 					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
 					--  <"name": "user_email", "prompt": "Email", "value": "{$form.email/}">,
@@ -183,8 +180,6 @@ feature -- Implementation
 					l_name.item.same_string ("user_fax") and then  attached {JSON_STRING} l_form_data.item ("value") as l_value  then
 					Result.set_fax (l_value.item)
 				end
-
-
 			end
 		end
 
@@ -193,19 +188,19 @@ feature -- Implementation
 			-- first_name, last_name, user_email, country, user_region, user_position, user_city, user_address, user_postal_code, user_phone, user_fax
 		do
 			create Result.make (a_user)
-			if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
+			if attached {WSF_STRING} req.form_parameter ("first_name") as l_first_name then
 				Result.set_first_name (l_first_name.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
+			if attached {WSF_STRING} req.form_parameter ("last_name") as l_last_name then
 				Result.set_last_name (l_last_name.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_email") as l_email then
+			if attached {WSF_STRING} req.form_parameter ("user_email") as l_email then
 				Result.set_email (l_email.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("country") as l_country then
+			if attached {WSF_STRING} req.form_parameter ("country") as l_country then
 				Result.set_country (l_country.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_region") as l_region then
+			if attached {WSF_STRING} req.form_parameter ("user_region") as l_region then
 				Result.set_region (l_region.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("user_position") as l_position then
@@ -214,16 +209,16 @@ feature -- Implementation
 			if  attached {WSF_STRING} req.form_parameter ("user_city") as l_city then
 				Result.set_city (l_city.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_address") as l_address then
+			if attached {WSF_STRING} req.form_parameter ("user_address") as l_address then
 				Result.set_address (l_address.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_postal_code") as l_postal_code  then
+			if attached {WSF_STRING} req.form_parameter ("user_postal_code") as l_postal_code  then
 				Result.set_postal_code (l_postal_code.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_phone") as l_phone  then
+			if attached {WSF_STRING} req.form_parameter ("user_phone") as l_phone  then
 				Result.set_telephone (l_phone.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_fax") as l_fax  then
+			if attached {WSF_STRING} req.form_parameter ("user_fax") as l_fax  then
 				Result.set_fax (l_fax.value)
 			end
 		end

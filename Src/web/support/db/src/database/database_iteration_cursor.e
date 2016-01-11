@@ -15,7 +15,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_handler: DATABASE_HANDLER; a_action: like action)
 			--  Create an iterator and set  `db_handlet' to `a_handler'

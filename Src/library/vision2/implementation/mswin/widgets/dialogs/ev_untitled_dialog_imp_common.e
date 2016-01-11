@@ -12,7 +12,6 @@ inherit
 	EV_DIALOG_IMP_COMMON
 		redefine
 			update_style,
-			extra_minimum_height,
 			interface,
 			other_imp,
 			promote_to_dialog_window,
@@ -36,15 +35,6 @@ feature {NONE} -- Implementation
 			new_style := style
 			new_style := bit_op.clear_flag (new_style, Ws_caption)
 			set_style (new_style)
-		end
-
-	extra_minimum_height: INTEGER
-			-- Compute extra minimum height that does not count `item'.
-		do
-			Result := Precursor {EV_DIALOG_IMP_COMMON} - title_bar_height
-			if not user_can_resize then
-				Result := Result - 2 * dialog_window_frame_height
-			end
 		end
 
 	has_title_bar: BOOLEAN = False
@@ -73,14 +63,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

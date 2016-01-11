@@ -38,7 +38,6 @@ feature -- Access
 			Result := successful
 		end
 
-
 	database: DATABASE_CONNECTION
 			-- Database connection.
 

@@ -9,7 +9,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_id:INTEGER; a_question:READABLE_STRING_32)
 			-- Create an object security question with `a_id'

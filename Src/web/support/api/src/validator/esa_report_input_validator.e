@@ -64,16 +64,16 @@ feature -- Access
 		-- Report's category, default 0
 		-- Integer value.
 
-	status:	LIST[INTEGER]
+	status:	LIST [INTEGER]
 		-- list of status, by default, 0,1,2,3,4.
 		-- Acceptable values 0,1,2,3,4
 
-	orderBy: STRING
+	orderBy: STRING_8
 		-- Report's ordering.
 		-- Default, sort by submissionDate.
 		-- [number, statusID, priorityID, severityID, synopsis, username, submissionDate, categorySynopsis, release ]
 
-	direction: STRING
+	direction: STRING_8
 		-- Report's ordering direction "ASC|DESC".	
 
 	filter: READABLE_STRING_32
@@ -83,14 +83,14 @@ feature -- Access
 		-- Report's filter by content, default value 0
 		-- acceptable values (0,1).	
 
-	acceptable_query_parameters: ARRAY[STRING]
+	acceptable_query_parameters: ARRAY [STRING]
 			-- The paramers are optionals, more parameters is a bad request.
 		once
 			Result := <<"page", "size", "category", "severity", "status", "orderBy", "release", "dir", "filter", "filter_content">>
 			Result.compare_objects
 		end
 
-	accetpable_order_by: ARRAY[STRING]
+	accetpable_order_by: ARRAY [STRING]
 			-- acceptable values to sort the reports.	
 		once
 			Result := <<"number", "statusID", "synopsis", "username", "submissionDate", "categorySynopsis", "release">>
@@ -102,7 +102,7 @@ feature -- Validation
 	validate (a_request: STRING_TABLE [WSF_VALUE])
 			-- <Precursor>
 		local
-			l_current_keys: ARRAY[READABLE_STRING_GENERAL]
+			l_current_keys: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_current_keys := a_request.current_keys
 			l_current_keys.compare_objects
@@ -133,72 +133,69 @@ feature -- Validation
 
 feature {NONE} -- Validations
 
-	validate_page (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_page (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `page' query parameter, if it's present should be greater than 0, update the value to `page'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"page") then
+			if
+				a_current_keys.has ({STRING_32} "page") and then
+				attached {WSF_STRING} a_table_request.at ("page") as l_page
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("page") as l_page
+					not l_page.is_integer or else
+					(l_page.is_integer and then l_page.integer_value <= 0)
 				then
-					if
-						not l_page.is_integer or else
-						(l_page.is_integer and then l_page.integer_value <= 0)
-					then
-						errors.force ("The parameter value for page should be greater then 0, the value " + l_page.value + " is not valid", "page")
-					else
-						set_page (l_page.integer_value)
-					end
+					errors.force ("The parameter value for page should be greater then 0, the value " + l_page.value + " is not valid", "page")
+				else
+					set_page (l_page.integer_value)
 				end
 			end
 		end
 
-	validate_size (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_size (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `size' query parameter, if it's present should be greater than 0, update the value to `size'
 			-- feature, if there is an error, add it to errors.
 		do
 			-- Validate size, should be a number
-			if a_current_keys.has ({STRING_32}"size") then
+			if
+				a_current_keys.has ({STRING_32} "size") and then
+				attached {WSF_STRING} a_table_request.at ("size") as l_size
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("size") as l_size
+					not l_size.is_integer or else
+					(l_size.is_integer and then l_size.integer_value <= 0)
 				then
-					if
-						not l_size.is_integer or else
-						(l_size.is_integer and then l_size.integer_value <= 0)
-					then
-						errors.force ("The parameter value for size should be greater than 0, the value " + l_size.value + " is not valid", "size")
-					else
-						set_size (l_size.integer_value)
-					end
+					errors.force ("The parameter value for size should be greater than 0, the value " + l_size.value + " is not valid", "size")
+				else
+					set_size (l_size.integer_value)
 				end
 			end
 		end
 
-	validate_category (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_category (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `category' query parameter, if it's present should be greater or equal than 0, update the value to `category'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"category") then
+			if
+				a_current_keys.has ({STRING_32} "category") and then
+				attached {WSF_STRING} a_table_request.at ("category") as l_category
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("category") as l_category
+					not l_category.is_integer or else
+					(l_category.is_integer and then l_category.integer_value < 0)
 				then
-					if
-						not l_category.is_integer or else
-						(l_category.is_integer and then l_category.integer_value < 0)
-					then
-						errors.force ("The parameter value for category should be greater than or equal 0, the value " + l_category.value + " is not valid", "category")
-					else
-						set_category (l_category.integer_value)
-					end
+					errors.force ("The parameter value for category should be greater than or equal 0, the value " + l_category.value + " is not valid", "category")
+				else
+					set_category (l_category.integer_value)
 				end
 			end
 		end
 
-	validate_status (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_status (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `status' query parameter, if it's present should be a value between 0..5, update the value to `status'
 			-- feature, if there is an error, add it to errors.
 		local
-			ll_status: LIST[READABLE_STRING_32]
+			ll_status: LIST [READABLE_STRING_32]
 			ll_string_status: STRING_32
 		do
 			if a_current_keys.has ({STRING_32}"status") then
@@ -208,7 +205,7 @@ feature {NONE} -- Validations
 					status.wipe_out
 					across l_status.values as c loop
 				   		if
-				   			(c.item.is_integer) and then
+				   			c.item.is_integer and then
 				   			(c.item.integer_value >= 0 and then c.item.integer_value < 6)
 				   		then
 				   			status.force (c.item.integer_value)
@@ -235,26 +232,22 @@ feature {NONE} -- Validations
 			end
 		end
 
-	validate_orderby (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_orderby (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `orderBy' query parameter, if it's present should be a value present in `accetpable_order_by', update the value to `orderBy'
 			-- feature, if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"orderBy") then
+			if
+				a_current_keys.has ({STRING_32} "orderBy") and then
+				attached {WSF_STRING} a_table_request.at ("orderBy") as l_orderBy and then
+				l_orderBy.is_string and then
+				not l_orderBy.is_empty
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("orderBy") as l_orderBy
+					accetpable_order_by.has (l_orderBy.value)
 				then
-					if
-						l_orderBy.is_string and then
-						not l_orderBy.is_empty
-					then
-						if
-							accetpable_order_by.has (l_orderBy.value)
-						then
-							set_orderby (l_orderBy.value)
-						else
-							errors.force ("The parameter value for orderBy " + l_orderBy.value + " is not valid", "orderBy")
-						end
-					end
+					set_orderby (l_orderBy.value)
+				else
+					errors.force ("The parameter value for orderBy " + l_orderBy.value + " is not valid", "orderBy")
 				end
 			end
 		end
@@ -263,56 +256,50 @@ feature {NONE} -- Validations
 			-- Validate `filter' query parameter, if it's present not validation at the moment, update the value to `filter'
 			-- feature.
 		do
-			if a_current_keys.has ({STRING_32}"filter") then
-				if
-					attached {WSF_STRING} a_table_request.at ("filter") as l_filter
-				then
-					set_filter (l_filter.value)
-				end
+			if
+				a_current_keys.has ({STRING_32} "filter") and then
+				attached {WSF_STRING} a_table_request.at ("filter") as l_filter
+			then
+				set_filter (l_filter.value)
 			end
 		end
 
-	validate_filter_content (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_filter_content (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `filter_content' query parameter, if it's present should be 0 or 1, update the value to `filter_content'
 			-- feature,if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"filter_content") then
-				if
-					attached {WSF_STRING} a_table_request.at ("filter_content") as l_content
+			if
+				a_current_keys.has ({STRING_32} "filter_content") and then
+				attached {WSF_STRING} a_table_request.at ("filter_content") as l_content
+			then
+				if not l_content.is_integer then
+					errors.force ("The parameter value for filter_content=[" + l_content.value + "] is not valid", "content")
+				elseif l_content.is_integer and then
+					( l_content.integer_value > 1 or else l_content.integer_value < 0 )
 				then
-					if not l_content.is_integer then
-						errors.force ("The parameter value for filter_content=[" + l_content.value + "] is not valid", "content")
-					elseif l_content.is_integer and then
-						   ( l_content.integer_value > 1 or else l_content.integer_value < 0 )
-					then
-						   	errors.force ("The parameter value for filter_content should be between 0 and 1 the current value " + l_content.value + " is not valid", "content")
-					else
-						set_filter_content (l_content.integer_value)
-					end
+					errors.force ("The parameter value for filter_content should be between 0 and 1 the current value " + l_content.value + " is not valid", "content")
+				else
+					set_filter_content (l_content.integer_value)
 				end
 			end
 		end
 
-	validate_direction (a_current_keys: ARRAY[READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE[WSF_VALUE])
+	validate_direction (a_current_keys: ARRAY [READABLE_STRING_GENERAL]; a_table_request: STRING_TABLE [WSF_VALUE])
 			-- Validate `direction' query parameter, if it's present should be  `ASC|DESC' update the value to `direction'
 			-- feature,if there is an error, add it to errors.
 		do
-			if a_current_keys.has ({STRING_32}"dir") then
+			if
+				a_current_keys.has ({STRING_32} "dir") and then
+			   	attached {WSF_STRING} a_table_request.at ("dir") as l_dir and then
+				l_dir.is_string and then
+				not l_dir.is_empty
+			then
 				if
-					attached {WSF_STRING} a_table_request.at ("dir") as l_dir
+					l_dir.value.same_string ("ASC") or	l_dir.value.same_string ("DESC")
 				then
-					if
-						l_dir.is_string and then
-					   	not l_dir.is_empty
-					then
-						if
-							l_dir.value.same_string ("ASC") or	l_dir.value.same_string ("DESC")
-						then
-							set_direction (l_dir.value)
-						else
-							errors.force ("The parameter value for dir " + l_dir.value + " is not valid", "dir")
-						end
-					end
+					set_direction (l_dir.value)
+				else
+					errors.force ("The parameter value for dir " + l_dir.value + " is not valid", "dir")
 				end
 			end
 		end
@@ -349,7 +336,7 @@ feature -- Set element
 	default_status
 				-- Set default status available.
 			do
-				create {ARRAYED_LIST[INTEGER]} status.make (3)
+				create {ARRAYED_LIST [INTEGER]} status.make (3)
 				put_status (1)
 				put_status (2)
 				put_status (4)

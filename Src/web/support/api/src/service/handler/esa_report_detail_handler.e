@@ -80,7 +80,7 @@ feature -- HTTP Methods
 
 feature {NONE} -- Implementation
 
-	user_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: STRING)
+	user_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_user: READABLE_STRING_32)
 			-- Retrieve report details for a logged in user `a_user'
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)). problem_report(req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)). problem_report(req, res, Void)
 			end
 		end
 
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	search_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: STRING)
+	search_report (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: READABLE_STRING_32)
 			-- Search a report by a given if from a query, search=?.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_8; a_user: STRING; a_id: INTEGER)
+	retrieve_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: READABLE_STRING_32; a_id: INTEGER)
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)). problem_report(req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)). problem_report(req, res, Void)
 			end
 		end
 
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_guest_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_8; a_id: INTEGER)
+	retrieve_guest_report_details (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_id: INTEGER)
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do

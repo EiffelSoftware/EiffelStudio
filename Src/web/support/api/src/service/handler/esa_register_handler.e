@@ -64,10 +64,10 @@ feature -- HTTP Methods
 			if attached current_media_type (req) as l_type then
 				log.write_information (generator + ".do_get Processing request using media type " + l_type )
                 l_register_view.set_questions (api_service.security_questions)
-				l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register_view)
+				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).register_page (req, res, l_register_view)
 			else
 				log.write_information (generator + ".do_get Processing request unacceptable media type" )
-				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).register_page (req, res, l_register_view)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).register_page (req, res, l_register_view)
 			end
 		end
 
@@ -96,15 +96,15 @@ feature -- HTTP Methods
 						if attached l_register.email as l_email then
 							l_register.add_error ("Email", "Unable to send email to " + l_email + ". Please check email address or contact administrator.")
 						end
-						l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register)
+						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).register_page (req, res, l_register)
 					end
 				else
 					l_register.set_questions (api_service.security_questions)
-					l_rhf.new_representation_handler (esa_config,l_type,media_type_variants (req)).register_page (req, res, l_register)
+					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).register_page (req, res, l_register)
 				end
 			else
 					-- Not acceptable
-				l_rhf.new_representation_handler (esa_config,"",media_type_variants (req)).bad_request_page (req,res)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).bad_request_page (req,res)
 			end
 		end
 
@@ -174,10 +174,11 @@ feature -- HTTP Methods
 			l_parser: JSON_PARSER
 		do
 			create Result
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			   attached {JSON_ARRAY} l_template.item ("data") as l_data then
 					--	<"name": "first_name", "prompt": "Frist Name", "value": "{$form.first_name/}">,
 					-- 	<"name": "last_name", "prompt": "Last Name", "value": "{$form.last_name/}">,
 					--  <"name": "email", "prompt": "Email", "value": "{$form.email/}">,
@@ -226,16 +227,16 @@ feature -- HTTP Methods
 			-- register view.
 		do
 			create Result
-			if attached {WSF_STRING}req.form_parameter ("first_name") as l_first_name then
+			if attached {WSF_STRING} req.form_parameter ("first_name") as l_first_name then
 				Result.set_first_name (l_first_name.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("last_name") as l_last_name then
+			if attached {WSF_STRING} req.form_parameter ("last_name") as l_last_name then
 				Result.set_last_name (l_last_name.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_email") as l_user_email then
+			if attached {WSF_STRING} req.form_parameter ("user_email") as l_user_email then
 				Result.set_email (l_user_email.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("user_name") as l_user_name then
+			if attached {WSF_STRING} req.form_parameter ("user_name") as l_user_name then
 				Result.set_user_name (l_user_name.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("password") as l_password then
@@ -244,11 +245,11 @@ feature -- HTTP Methods
 			if  attached {WSF_STRING} req.form_parameter ("check_password") as l_check_password then
 				Result.set_check_password (l_check_password.value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("question") as l_question and then
+			if attached {WSF_STRING} req.form_parameter ("question") as l_question and then
 			   l_question.is_integer then
 				Result.set_question (l_question.integer_value)
 			end
-			if attached {WSF_STRING}req.form_parameter ("answer_question") as l_answer then
+			if attached {WSF_STRING} req.form_parameter ("answer_question") as l_answer then
 				Result.set_answer (l_answer.value)
 			end
 		end

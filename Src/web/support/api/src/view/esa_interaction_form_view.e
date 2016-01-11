@@ -26,7 +26,7 @@ feature {NONE} -- Intialization
 
 feature -- Access
 
-	status: LIST[REPORT_STATUS]
+	status: LIST [REPORT_STATUS]
 			-- Possible list of status.
 
 	categories:  LIST[REPORT_CATEGORY]
@@ -50,13 +50,13 @@ feature -- Access
 	id: INTEGER
 		-- Current interaction id.		
 
-	uploaded_files: detachable LIST[ESA_FILE_VIEW]
+	uploaded_files: detachable LIST [ESA_FILE_VIEW]
 		-- Uploaded files.
 
-	temporary_files: detachable LIST[ESA_FILE_VIEW]
+	temporary_files: detachable LIST [ESA_FILE_VIEW]
 		-- Temporary files.	
 
-	temporary_files_names: detachable LIST[STRING]
+	temporary_files_names: detachable LIST [STRING]
 		-- Temporary files names.	
 
 	is_responsible_or_admin: BOOLEAN
@@ -191,7 +191,7 @@ feature -- Element Change
 		do
 			l_files := temporary_files_names
 			if l_files = Void then
-				create {ARRAYED_LIST[STRING]}l_files.make (1)
+				create {ARRAYED_LIST [STRING]}l_files.make (1)
 				temporary_files_names := l_files
 			end
 			l_files.force (a_name)

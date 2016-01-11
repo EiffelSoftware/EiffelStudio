@@ -51,19 +51,17 @@ feature -- Access
 		end
 
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): LIST[REPORT]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: READABLE_STRING_8; a_column: READABLE_STRING_8; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:READABLE_STRING_32; a_content:INTEGER): LIST[REPORT]
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_report: REPORT
 			l_list: LIST[REPORT]
 		do
 			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			-- data_provider.connect
-			across data_provider.problem_reports_guest_2 (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
-				l_report := c.item
-				l_list.force (l_report)
+			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
+				l_list.force (c.item)
 			end
 			-- data_provider.disconnect
 			Result := l_list
@@ -75,7 +73,6 @@ feature -- Access
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
 		local
-			l_report: REPORT
 			l_list: LIST[REPORT]
 		do
 			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
@@ -83,47 +80,23 @@ feature -- Access
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
-				l_report := c.item
-				l_list.force (l_report)
+				l_list.force (c.item)
 			end
 			-- data_provider.disconnect
 			Result := l_list
 			post_data_provider_execution
 		end
 
-
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): LIST[REPORT]
-			-- Problem reports for user with username `a_username'
-			-- Open reports only if `a_open_only', all reports otherwise.
-		local
-			l_report: REPORT
-			l_list: LIST[REPORT]
-		do
-			log.write_debug (generator + ".problem_reports Problem reports for username:" + a_username + " open_only:" + a_open_only.out + " category:" + a_category.out  +" status:" + a_status.out )
-
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
-			-- data_provider.connect
-			across data_provider.problem_reports (a_username, a_open_only, a_category, a_status) as c loop
-				l_report := c.item
-				l_list.force (l_report)
-			end
-			-- data_provider.disconnect
-			Result := l_list
-			post_data_provider_execution
-		end
-
-	problem_reports_2 (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[REPORT]
+	problem_reports (a_page_number, a_rows_per_page: INTEGER_32; a_username: STRING_8;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER_32; a_filter: READABLE_STRING_32; a_content: INTEGER): LIST[REPORT]
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_report: REPORT
 			l_list: LIST[REPORT]
 		do
 			create {ARRAYED_LIST[REPORT]} l_list.make (0)
 			-- data_provider.connect
-			across data_provider.problem_reports_2 (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
-				l_report := c.item
-				l_list.force (l_report)
+			across data_provider.problem_reports (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
+				l_list.force (c.item)
 			end
 			-- data_provider.disconnect
 			Result := l_list
@@ -131,16 +104,15 @@ feature -- Access
 		end
 
 
-	problem_report_category_subscribers (a_category: STRING): LIST[STRING]
+	problem_report_category_subscribers (a_category: READABLE_STRING_32): LIST [STRING]
 			-- Possible list of subscriber to category `a_category'	
 		do
 			log.write_debug (generator+".status" )
 			create {ARRAYED_LIST[STRING]} Result.make (0)
-			-- data_provider.connect
+			Result.compare_objects
 			across data_provider.problem_report_category_subscribers (a_category) as c loop
 				Result.force (c.item)
 			end
-			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -168,7 +140,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	problem_report_details (a_username: STRING; a_number: INTEGER): detachable REPORT
+	problem_report_details (a_username: READABLE_STRING_32; a_number: INTEGER): detachable REPORT
 			-- Problem report details for user `a_user_name' (Interactions and Attachments)with number `a_number'.
 		local
 			l_interactions: LIST[REPORT_INTERACTION]
@@ -328,23 +300,6 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	temporary_interaction (a_interaction_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
-															   username: detachable READABLE_STRING_32;
-															   status: detachable READABLE_STRING_32;
-															   private: detachable READABLE_STRING_32
-															   ]
-			-- Temporary problem report interaction
-			--			Content,
-			--			Username,
-			--			Status,
-			--			Private,	
-
-		do
-			log.write_debug (generator+".temporary_interaction interaction_id:" + a_interaction_id.out)
-			Result := data_provider.temporary_interaction (a_interaction_id)
-			post_data_provider_execution
-		end
-
 	temporary_interaction_2 (a_interaction_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
 															   username: detachable READABLE_STRING_32;
 															   status: detachable READABLE_STRING_32;
@@ -450,7 +405,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	question_from_email (a_email: STRING_8): detachable STRING
+	question_from_email (a_email: READABLE_STRING_8): detachable STRING_8
 			-- Security question associated with account with email `a_email' if any
 		do
 			log.write_debug (generator+".question_from_email user email:" + a_email)
@@ -458,7 +413,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	user_from_email (a_email: STRING): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+	user_from_email (a_email: READABLE_STRING_32): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 			-- User with email `a_email' if any.
 		do
 			log.write_debug (generator+".user_from_email user email:" + a_email)
@@ -466,7 +421,7 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	user_account_information (a_username: STRING): USER_INFORMATION
+	user_account_information (a_username: READABLE_STRING_32): USER_INFORMATION
 			-- User information for `a_username' if any.
 		do
 			Result := login_provider.user_information (a_username)
@@ -481,7 +436,6 @@ feature -- Access
 			l_item: ESA_CATEGORY_SUBSCRIBER_VIEW
 		do
 			create  {ARRAYED_LIST[ESA_CATEGORY_SUBSCRIBER_VIEW]} Result.make (0)
-			-- data_provider.connect
 			across data_provider.subscribed_categories (a_username) as c loop
 					create l_item
 					l_item.set_id (c.item.categoryId)
@@ -489,9 +443,19 @@ feature -- Access
 					l_item.set_subscribed (c.item.subscribed)
 					Result.force (l_item)
 			end
-			-- data_provider.disconnect
 			post_data_provider_execution
 		end
+
+
+	interaction_content (a_id: INTEGER): STRING
+				-- 	Retrieve the content given the id of the interaction
+			do
+				create Result.make_empty
+				if attached data_provider.interaction_content (a_id) as l_result then
+					Result := l_result
+				end
+				post_data_provider_execution
+			end
 
 feature -- Basic Operations
 
@@ -503,7 +467,7 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: STRING; a_content:INTEGER ): INTEGER
+	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: READABLE_STRING_32; a_content:INTEGER ): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users
 		do
 
@@ -522,7 +486,7 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	row_count_problem_report_user (a_username: STRING_8;  a_category: INTEGER_32; a_status, a_filter: READABLE_STRING_32; a_content: INTEGER): INTEGER
+	row_count_problem_report_user (a_username: READABLE_STRING_32;  a_category: INTEGER_32; a_status: READABLE_STRING_8; a_filter: READABLE_STRING_32; a_content: INTEGER): INTEGER
 			-- Number of problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status
 		do
@@ -530,8 +494,8 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
-			a_release, a_environment, a_description, a_to_reproduce: STRING)
+	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential: READABLE_STRING_8
+	; a_synopsis, a_release, a_environment, a_description, a_to_reproduce: READABLE_STRING_32)
 			-- Initialize temporary problem report row.
 		require
 			attached_priority: a_priority_id /= Void
@@ -555,7 +519,7 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	new_problem_report_id (a_username: STRING): INTEGER
+	new_problem_report_id (a_username: READABLE_STRING_32): INTEGER
 			-- Initialize new problem report row and returns ReportID.
 		do
 			log.write_debug (generator+".new_problem_report_id username" + a_username )
@@ -582,8 +546,8 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis,
-			a_release, a_environment, a_description, a_to_reproduce: STRING)
+	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential: READABLE_STRING_8; a_synopsis,
+			a_release, a_environment, a_description, a_to_reproduce: READABLE_STRING_32)
 			-- Handle update report problem
 		require
 			valid_pr: a_pr > 0
@@ -624,20 +588,11 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	initialize_interaction (a_interaction_id: INTEGER_32; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
+	initialize_interaction (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		do
 			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
-			data_provider.initialize_interaction (a_interaction_id, a_content, a_new_status, a_private)
-			post_data_provider_execution
-		end
-
-
-	initialize_interaction_2 (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
-			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
-		do
-			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)
-			data_provider.initialize_interaction_2 (a_interaction_id, a_category_id, a_content, a_new_status, a_private)
+			data_provider.initialize_interaction (a_interaction_id, a_category_id, a_content, a_new_status, a_private)
 			post_data_provider_execution
 		end
 
@@ -683,7 +638,7 @@ feature -- Basic Operations
 
 feature -- Element Settings
 
-	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER): BOOLEAN
+	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER): BOOLEAN
 			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
 		require
 			attached_username: a_username /= Void
@@ -709,7 +664,7 @@ feature -- Element Settings
 			end
 		end
 
-	remove_user (a_username: STRING_8)
+	remove_user (a_username: READABLE_STRING_32)
 			-- Remove username `a_username' from database
 		do
 			log.write_debug (generator + ".remove_user username:" + a_username)
@@ -757,7 +712,7 @@ feature -- Element Settings
 		end
 
 
-	update_email_from_user_and_token (a_user: STRING; a_token: STRING)
+	update_email_from_user_and_token (a_user: READABLE_STRING_32; a_token: READABLE_STRING_32)
 		do
 			login_provider.update_email_from_user_and_token (a_token, a_user)
 			post_login_provider_execution
@@ -766,7 +721,7 @@ feature -- Element Settings
 
 feature -- Status Report
 
-	is_active (a_username: STRING): BOOLEAN
+	is_active (a_username: READABLE_STRING_32): BOOLEAN
 			-- Is membership for user with username `a_username' active?
 		do
 			log.write_debug (generator + ".is_active Is Membership for username:" + a_username + " active?")
@@ -775,7 +730,7 @@ feature -- Status Report
 			post_login_provider_execution
 		end
 
-	login_valid (a_username: STRING; a_password: STRING): BOOLEAN
+	login_valid (a_username: READABLE_STRING_32; a_password: READABLE_STRING_32): BOOLEAN
 			-- Does account with username `a_username' and password `a_password' exist?
 		local
 			l_sha_password: STRING
@@ -806,7 +761,7 @@ feature -- Status Report
 		end
 
 
-	activation_valid (a_email, a_token: STRING): BOOLEAN
+	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		do
 			log.write_debug (generator + ".activation_valid Processing user activation with email:" + a_email + " token: " + a_token )
@@ -821,13 +776,11 @@ feature -- Status Report
 		end
 
 
-	user_token_new_email (a_token: STRING; a_user: STRING): TUPLE[age:INTEGER; email:detachable STRING]
+	user_token_new_email (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE[age:INTEGER; email:detachable STRING_32]
 			-- A token `a_token' is valid if it exist for the given user `a_user' and is not expired (24 hours since his request).
 		local
 			l_age: INTEGER
 		do
-				--login_provider.token_email (a_token: STRING; a_user: STRING)
-
 			Result := login_provider.email_token_age (a_token, a_user)
 			l_age := Result.age
 			if

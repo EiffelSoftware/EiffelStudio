@@ -63,7 +63,8 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_authenticate (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).login_page (req, res)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).login_page (req, res)
 			end
 		end
+
 end

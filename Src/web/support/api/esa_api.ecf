@@ -60,6 +60,17 @@
 		<cluster name="launcher" location=".\launcher\any\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
+
+	<target name="esa_api_standalone" extends="common">
+		<root class="ESA_SERVER" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
+		<variable name="httpd_ssl_disabled" value="false"/>
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+		</cluster>
+	</target>
+
 	<target name="esa_api_test" extends="common">
 		<root class="APPLICATION_TEST" feature="make"/>
 		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>

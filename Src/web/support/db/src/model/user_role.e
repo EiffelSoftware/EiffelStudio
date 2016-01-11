@@ -7,7 +7,7 @@ note
 					User	Eiffel Software web site user.
 					Admin	Eiffel Software web site administrator.
 					InternalUser	Internal user, has access to special pr categories but cannot edit web site.
-					Responsible	Eiffel Software developer, responsible for fixing reported problems.				
+					Responsible	Eiffel Software developer, responsible for fixing reported problems.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,9 +18,9 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_synopsis: STRING; a_description: STRING)
+	make (a_synopsis: READABLE_STRING_32; a_description: READABLE_STRING_32)
 			-- Create an object instance
 			-- Set `synopsis' to `a_synopsis'
 			-- Set `description' to `a_description'.
@@ -34,10 +34,10 @@ feature -- Initialization
 
 feature -- Access
 
-	synopsis: STRING
+	synopsis: STRING_32
 			-- Role synopsis.
 
-	description: STRING
+	description: STRING_32
 			-- Role description.
 
 feature -- Status Report

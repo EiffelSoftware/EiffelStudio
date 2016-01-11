@@ -17,7 +17,7 @@ inherit
 create
 	make, make_common, make_basic
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_common
 			-- Create a database handler for ODBC with common settings.

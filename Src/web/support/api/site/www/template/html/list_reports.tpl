@@ -15,7 +15,7 @@
 				<tr>
 					<td itemprop="report_number">{$item.number/}</td>
 					<td itemprop="status">{$item.status.id/}</td>
-					<td itemprop="synopsis">{$item.synopsis/}</td>
+					<td itemprop="synopsis">{htmlentities}{$item.synopsis/}{/htmlentities}</td>
 					<td itemprop="submission_date">{$item.submission_date/}</td>
 					<td itemprop="catgeory">{$item.category.synopsis/}</td>
 				</tr>

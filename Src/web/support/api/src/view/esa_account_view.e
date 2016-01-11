@@ -99,7 +99,7 @@ feature -- Access : Personal Information
 	position: detachable STRING
 			-- Position.
 
-	countries: detachable LIST[COUNTRY]
+	countries: detachable LIST [COUNTRY]
 			-- Countries.
 
 	selected_country: detachable STRING

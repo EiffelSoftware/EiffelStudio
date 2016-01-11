@@ -18,7 +18,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL; a_list: LIST[USER]; a_user: detachable ANY)
+	make (a_host: READABLE_STRING_GENERAL; a_list: LIST [USER]; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: cj_user_responsibe.tpl")

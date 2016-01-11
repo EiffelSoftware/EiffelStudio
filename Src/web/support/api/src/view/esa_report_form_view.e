@@ -6,6 +6,10 @@ note
 class
 	ESA_REPORT_FORM_VIEW
 
+inherit
+
+	SHARED_HTML_ENCODER
+
 create
 	make
 
@@ -32,16 +36,16 @@ feature -- Access
 	id: INTEGER
 		-- Unique id.
 
- 	categories: LIST[REPORT_CATEGORY]
+ 	categories: LIST [REPORT_CATEGORY]
  		-- Possible list of categories.
 
- 	severities: LIST[REPORT_SEVERITY]
+ 	severities: LIST [REPORT_SEVERITY]
  		-- Possible list of severities.
 
-  	classes: LIST[REPORT_CLASS]
+  	classes: LIST [REPORT_CLASS]
   		-- Possible list of classes.
 
-  	priorities: LIST[REPORT_PRIORITY]
+  	priorities: LIST [REPORT_PRIORITY]
   		-- Possible list of priorities.
 
   	category: INTEGER
@@ -68,8 +72,14 @@ feature -- Access
 	synopsis: detachable STRING_32
 		-- Problem summary.
 
+	html_synopsis: detachable STRING_32
+		-- Html encoded value for synopsis.
+
 	description: detachable STRING_32
 		-- Description of the problem.
+
+	html_description: detachable STRING_32
+		-- Html encoded value for description.
 
 	description_json: detachable STRING_32
 		--JSON description encoded.
@@ -77,17 +87,19 @@ feature -- Access
 	to_reproduce: detachable STRING_32
 		-- How to reproduce the problem.
 
+	html_to_reproduce: detachable STRING_32
+		-- HTML encoded value for to_reproduce.
+
 	to_reproduce_json: detachable STRING_32
 		-- How to reproduce the problem.
 
-
-	uploaded_files: detachable LIST[ESA_FILE_VIEW]
+	uploaded_files: detachable LIST [ESA_FILE_VIEW]
 		-- Uploaded files
 
-	temporary_files: detachable LIST[ESA_FILE_VIEW]
+	temporary_files: detachable LIST [ESA_FILE_VIEW]
 		-- Temporary files.
 
-	temporary_files_names: detachable LIST[STRING]
+	temporary_files_names: detachable LIST [STRING]
 		-- Temporary files names.		
 
 
@@ -102,7 +114,7 @@ feature -- Status Report
 			-- priority /= 0
 
 		local
-			l_errors: STRING_TABLE[READABLE_STRING_32]
+			l_errors: STRING_TABLE [READABLE_STRING_32]
 		do
 			create l_errors.make (0)
 			if category = 0 then
@@ -147,7 +159,7 @@ feature -- Status Report
 
 feature -- Errors
 
-	errors: detachable STRING_TABLE[READABLE_STRING_32]
+	errors: detachable STRING_TABLE [READABLE_STRING_32]
 		-- Hash table with errors and descriptions.				
 
 feature -- Element Change
@@ -189,6 +201,7 @@ feature -- Element Change
 		do
 			description := a_description
 			description_json := (create {JSON_ENCODER}).encoded_string (a_description)
+			html_description := html_encoder.encoded_string (a_description)
 		ensure
 			description_set:  attached description as l_description and then l_description.same_string (a_description)
 		end
@@ -198,6 +211,7 @@ feature -- Element Change
 			-- Set `synopsis' with `a_synopsis'.
 		do
 			synopsis := a_synopsis
+			html_synopsis := html_encoder.encoded_string (a_synopsis)
 		ensure
 			synopsis_set:  attached synopsis as l_synopsis and then l_synopsis.same_string (a_synopsis)
 		end
@@ -207,6 +221,7 @@ feature -- Element Change
 		do
 			to_reproduce := a_to_reproduce
 			to_reproduce_json := (create {JSON_ENCODER}).encoded_string (a_to_reproduce)
+			html_to_reproduce := html_encoder.encoded_string (a_to_reproduce)
 		ensure
 			to_reproduce_set:  attached to_reproduce as l_to_reproduce and then l_to_reproduce.same_string (a_to_reproduce)
 		end
@@ -265,7 +280,7 @@ feature -- Element Change
 		do
 			l_files := temporary_files_names
 			if l_files = Void then
-				create {ARRAYED_LIST[STRING]}l_files.make (1)
+				create {ARRAYED_LIST [STRING]}l_files.make (1)
 				temporary_files_names := l_files
 			end
 			l_files.force (a_name)

@@ -15,13 +15,15 @@ inherit
 feature -- Factory
 
 	esa_config (a_dir: detachable STRING): ESA_CONFIG
+			-- Setup ESA_CONFGI from an external configuration at `a_dir' if attached
+			-- or default.
 		local
 			l_layout: APPLICATION_LAYOUT
 			l_email_service: ESA_EMAIL_SERVICE
 			l_database: DATABASE_CONNECTION
 			l_api_service: ESA_API_SERVICE
 			l_retried: BOOLEAN
-		once ("PROCESS")
+		once ("THREAD")
 			if not l_retried then
 				if attached a_dir then
 					create l_layout.make_with_path (create {PATH}.make_from_string (a_dir))

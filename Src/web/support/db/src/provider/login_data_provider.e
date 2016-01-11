@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_connection: DATABASE_CONNECTION)
 			-- Create a data provider.
@@ -91,7 +91,7 @@ feature -- Access
 			post_execution
 		end
 
-	membership_creation_date (a_username: STRING): detachable DATE_TIME
+	membership_creation_date (a_username: READABLE_STRING_32): detachable DATE_TIME
 			-- Creation date of membership of user with username `a_username'.
 		require
 			attached_username: a_username /= Void
@@ -110,7 +110,7 @@ feature -- Access
 			post_execution
 		end
 
-	role (a_username: STRING): detachable STRING
+	role (a_username: READABLE_STRING_32): detachable STRING_32
 			-- Role associated with user with username `a_username'.
 		require
 			attached_username: a_username /= Void
@@ -124,13 +124,13 @@ feature -- Access
 			db_handler.execute_reader
 			if not db_handler.after then
 				db_handler.start
-				Result := db_handler.read_string (1)
+				Result := db_handler.read_string_32 (1)
 				to_implement ("handle error: User not found - Retrieval of user role")
 			end
 			post_execution
 		end
 
-	role_description (a_synopsis: STRING): detachable STRING
+	role_description (a_synopsis: READABLE_STRING_32): detachable STRING_32
 			-- Role description for role with synopsis `a_synopsis'.
 		require
 			attached_synopsis: a_synopsis /= Void
@@ -144,7 +144,7 @@ feature -- Access
 			db_handler.execute_reader
 			if not db_handler.after then
 				db_handler.start
-				Result := db_handler.read_string (1)
+				Result := db_handler.read_string_32 (1)
 				to_implement ("handle error: Role not found -  Retrieval of role description")
 			end
 			post_execution
@@ -163,7 +163,7 @@ feature -- Access
 			post_execution
 		end
 
-	question_from_email (a_email: STRING): detachable STRING
+	question_from_email (a_email: READABLE_STRING_8): detachable STRING_8
 			-- Security question associated with account with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
@@ -218,7 +218,7 @@ feature -- Access
 			post_execution
 		end
 
-	user_from_email (a_email: STRING): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
+	user_from_email (a_email: READABLE_STRING_32): detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 			-- User with email `a_email' if any.
 		require
 			attached_email: a_email /= Void
@@ -237,7 +237,7 @@ feature -- Access
 			post_execution
 		end
 
-	user_from_username (a_username: STRING): detachable USER
+	user_from_username (a_username: READABLE_STRING_32): detachable USER
 			-- User with username `a_username' if any.
 		require
 			attached_username: a_username /= Void
@@ -256,7 +256,7 @@ feature -- Access
 			post_execution
 		end
 
-	user_information (a_username: STRING): USER_INFORMATION
+	user_information (a_username: READABLE_STRING_32): USER_INFORMATION
 			-- Full user information from username.
 		require
 			attached_username: a_username /= Void
@@ -279,7 +279,7 @@ feature -- Access
 
 feature -- Element Settings
 
-	remove_user (a_username: STRING)
+	remove_user (a_username: READABLE_STRING_32)
 			-- Remove user with username `a_username' from database.
 		require
 			attached_username: a_username /= Void
@@ -334,7 +334,7 @@ feature -- Element Settings
 			post_execution
 		end
 
-	update_email_from_user_and_token (a_token: STRING; a_user: STRING)
+	update_email_from_user_and_token (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32)
 			-- Update email of user with email `a_email'.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -551,7 +551,7 @@ feature -- Factories
 
 feature -- Status Report
 
-	is_active (a_username: STRING): BOOLEAN
+	is_active (a_username: READABLE_STRING_32): BOOLEAN
 			-- Is membership for user with username `a_username' active?
 		require
 				attached_username: a_username /= Void
@@ -594,7 +594,7 @@ feature -- Status Report
 
 
 
-	activation_valid (a_email, a_token: STRING): BOOLEAN
+	activation_valid (a_email, a_token: READABLE_STRING_32): BOOLEAN
 			-- Is activation for user with email `a_email' using token `a_token' valid?
 		require
 			attached_email: a_email /= Void
@@ -625,9 +625,9 @@ feature -- Status Report
 			end
 		end
 
-	email_token_age (a_token: STRING; a_user: STRING): TUPLE[age:INTEGER; email: detachable STRING]
+	email_token_age (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE [age:INTEGER; email: detachable STRING_32]
 		local
-			l_parameters: HASH_TABLE[ANY,STRING_32]
+			l_parameters: HASH_TABLE [ANY,STRING_32]
 		do
 			log.write_information (generator + ".email_token_age")
 			create Result.default_create
@@ -640,7 +640,7 @@ feature -- Status Report
 				db_handler.start
 				if db_handler.read_integer_32 (1) /= -1 then
 					Result.age := db_handler.read_integer_32 (1)
-					Result.email :=	db_handler.read_string (2)
+					Result.email :=	db_handler.read_string_32 (2)
 				else
 					Result.age := -1
 				end

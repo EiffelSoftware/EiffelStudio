@@ -1,7 +1,7 @@
 note
 	description: "[
 					This handle it's in charge to show a form to change password.
-					Completed this step also handle the form submission.				
+					Completed this step also handle the form submission.
 					]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,7 +64,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).change_password (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).change_password (req, res, Void)
 			end
 		end
 
@@ -90,7 +90,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).change_password (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).change_password (req, res, Void)
 			end
 		end
 
@@ -114,8 +114,9 @@ feature -- Implementation
 			l_parser: JSON_PARSER
 		do
 			create Result
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
 			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
 					--  <"name": "password", "prompt": "Password", "value": "{$form.password/}">,

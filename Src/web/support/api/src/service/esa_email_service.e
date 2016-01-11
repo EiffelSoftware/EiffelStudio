@@ -19,11 +19,9 @@ feature {NONE} -- Initialization
 			-- Create an instance of {ESA_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using "noreplies@eiffel.com" as admin email.
 		local
-			l_address_factory: INET_ADDRESS_FACTORY
 		do
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create l_address_factory
-			create smtp_protocol.make (a_smtp_server, l_address_factory.create_localhost.host_name)
+			create smtp_protocol.make (a_smtp_server, (create {INET_ADDRESS_FACTORY}).create_localhost.host_name)
 			set_successful
 		end
 
@@ -131,16 +129,12 @@ feature -- Basic Operations
 	send_password_reset (a_to, a_message, a_host: STRING)
 			-- Send password reset email `a_token' to `a_to'.
 		local
-			l_url: URL_ENCODER
- 			l_path: PATH
-			l_html: HTML_ENCODER
+			l_path: PATH
 			l_email: EMAIL
 		do
 			if successful then
 				log.write_information (generator + ".send_password_reset to [" + a_to + "]" )
 				create l_path.make_current
-				create l_url
-				create l_html
 				create l_email.make_with_entry (admin_email, a_to)
 				l_email.set_message (a_message)
 				l_email.set_signature (disclaimer)
@@ -149,7 +143,7 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_report_email (a_name: STRING; a_report: REPORT; a_email: STRING; a_subscribers: LIST[STRING]; a_url: STRING)
+	send_new_report_email (a_name: STRING; a_report: REPORT; a_email: STRING; a_subscribers: LIST [STRING]; a_url: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -161,13 +155,16 @@ feature -- Basic Operations
 				if not a_subscribers.is_empty then
 					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
 				end
+				l_email.add_header_entry ("MIME-Version:", "1.0")
+				l_email.add_header_entry ("Content-Type", "text/plain; charset=UTF-8")
+
 				send_email (l_email)
 			else
 				log.write_error (generator + ".send_new_report_email " + a_report.number.out + " " + last_error_message)
 			end
 		end
 
-	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST[STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE)
+	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST [STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
@@ -314,6 +311,8 @@ feature {NONE} -- Implementation
 
 	new_report_email_message (a_report: REPORT; a_url: STRING): STRING
 			-- New report message
+		local
+			utf: UTF_CONVERTER
 		do
 			create Result.make (4096)
 			Result.append (report_email_subject (a_report, 0))
@@ -349,10 +348,10 @@ feature {NONE} -- Implementation
 			end
 			Result.append ("%N%NDescription:%N")
 			if attached a_report.description as l_description  then
-				Result.append (l_description)
+				utf.escaped_utf_32_string_into_utf_8_string_8 (l_description, Result)
 				if attached a_report.to_reproduce as l_reproduce and then l_reproduce.count > 0 then
 					Result.append ("%N%NTo reproduce:%N")
-					Result.append (l_reproduce)
+					utf.escaped_utf_32_string_into_utf_8_string_8 (l_reproduce, Result)
 				end
 			end
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
@@ -362,8 +361,6 @@ feature {NONE} -- Implementation
 
 	new_interaction_email_message (a_user: USER_INFORMATION; a_report_interaction: REPORT_INTERACTION; a_report: REPORT; a_old_report: REPORT; a_url: STRING): STRING
 			-- New interaction message.
-		local
-			u: UTF_CONVERTER
 		do
 			create Result.make (4096)
 
@@ -391,7 +388,7 @@ feature {NONE} -- Implementation
 			end
 
 			if attached a_report_interaction.content as l_content then
-				u.utf_32_string_into_utf_8_string_8 (l_content, Result)
+				Result.append ((create{UTF8_ENCODER}).decoded_string (l_content))
 				Result.append ("%N%N")
 			end
 

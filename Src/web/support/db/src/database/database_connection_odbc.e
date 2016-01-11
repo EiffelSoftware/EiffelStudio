@@ -12,11 +12,12 @@ inherit
 		redefine
 			db_application
 		end
+	GLOBAL_SETTINGS
 
 create
 	make, make_common, make_basic, login_with_connection_string
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_common
 			-- Create a database handler for ODBC with common settings.
@@ -116,6 +117,7 @@ feature -- Initialization
 				end
 				log.write_debug (generator +".login_with_connection_string, After connect, is_connected? "+ is_connected.out)
 			end
+			set_use_extended_types (True)
 		end
 
 feature -- Databse Connection

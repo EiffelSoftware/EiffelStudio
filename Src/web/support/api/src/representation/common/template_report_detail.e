@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT; a_user: detachable ANY; a_template: READABLE_STRING_32)
 		do

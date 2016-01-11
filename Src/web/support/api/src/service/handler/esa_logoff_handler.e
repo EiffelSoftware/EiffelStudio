@@ -56,7 +56,7 @@ feature -- HTTP Methods
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).logout_page (req, res)
 			else
 				log.write_alert (generator +".do_get Processing not acceptable")
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).logout_page (req, res)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).logout_page (req, res)
 			end
 		end
 

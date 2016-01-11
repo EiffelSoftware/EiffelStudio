@@ -15,7 +15,7 @@ create
 
 feature {NONE} --Initialization
 
-	make (a_host: READABLE_STRING_GENERAL;a_view: ESA_REPORT_VIEW)
+	make (a_host: READABLE_STRING_GENERAL; a_view: ESA_REPORT_VIEW)
 			-- Initialize `Current'.
 		do
 			log.write_information (generator + ".make render template: ch_responsible_reports.tpl")
@@ -72,7 +72,7 @@ feature {NONE} --Initialization
 			process
 		end
 
-	retrieve_status_query (a_status: LIST[REPORT_STATUS]): STRING
+	retrieve_status_query (a_status: LIST [REPORT_STATUS]): STRING
 		do
 			Result := "0&"
 			across a_status as c loop
@@ -86,9 +86,9 @@ feature {NONE} --Initialization
 		end
 
 
-	checked_status_query (a_status: LIST[REPORT_STATUS]): LIST[REPORT_STATUS]
+	checked_status_query (a_status: LIST [REPORT_STATUS]): LIST [REPORT_STATUS]
 		do
-			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
+			create {ARRAYED_LIST [REPORT_STATUS]} Result.make (0)
 			across a_status as c loop
 				if c.item.is_selected then
 					Result.force (c.item)

@@ -74,7 +74,7 @@ feature -- HTTP Methods
 				compute_response_get_txt (req, res, read_log_file)
 			else -- Not an admin user
 				create l_rhf
-				l_rhf.new_representation_handler (esa_config,"text/html",media_type_variants (req)).new_response_unauthorized (req, res)
+				l_rhf.new_representation_handler (esa_config, "text/html", media_type_variants (req)).new_response_unauthorized (req, res)
 			end
 		end
 

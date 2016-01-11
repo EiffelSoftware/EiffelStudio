@@ -1,4 +1,4 @@
-<h1 class="sub-header">PR# {$report.number/} {$report.synopsis/} </h1>
+<h1 class="sub-header">PR# {$report.number/} {htmlentities}{$report.synopsis/}{/htmlentities} </h1>
 <div class="row">
 	<div class="col-xs-12">
 		<div class="panel panel-default">
@@ -56,7 +56,7 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-12">
-									<span class="label label-primary-api-default" itemprop="synopsis">Synopsis:</span> <span>{$report.synopsis/}</span> <br/>
+									<span class="label label-primary-api-default" itemprop="synopsis">Synopsis:</span> <span>{htmlentities}{$report.synopsis/}{/htmlentities}</span> <br/>
 								</div>
 							</div>
 							<div class="row">
@@ -68,8 +68,8 @@
 								<div class="col-xs-12">
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="description"><strong>Description</strong></div>
-										<div class="panel-body">
-											<textarea class="form-control input-xlarge" style="border: none ;background-color:white;" rows="17">{$report.description/}</textarea>
+										<div class="panel-body" id="textarea_17">
+												{htmlentities}{$report.description/}{/htmlentities}
 										</div>
 									</div>
 								</div>
@@ -78,8 +78,8 @@
 								<div class="col-xs-12">
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="to_reproduce"><strong>To Reproduce</strong></div>
-										<div class="panel-body">
-											<textarea class="form-control input-xlarge" style="border: none ;background-color:white;" rows="7">{$report.to_reproduce/}</textarea>
+										<div class="panel-body" id="textarea_7">
+											  	{htmlentities}{$report.to_reproduce/}{/htmlentities}
 										</div>
 									</div>
 								</div>
@@ -91,6 +91,24 @@
 		</div>
 	</div>
 </div>
+
+{if isset="$user"}
+	<div class="row">
+		<div class="col-xs-5">
+			<span class="label label-primary-api-default" itemprop="status"><br/>
+		</div>
+		<div class="col-xs-6">
+				<div class="btn-group">
+						<a href="{$host/}/report_detail/{$report.number/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
+				</div>
+		</div>
+		<div class="col-xs-2">
+			<span class="label label-primary-api-default" itemprop="status"><br/>
+		</div>
+
+	</div>
+{/if}
+
 
 <div class="row">
 	<div class="col-xs-12">
@@ -114,12 +132,13 @@
 									{/unless}
 											<span class="label label-primary-api-interactions" itemprop="submitter">From:</span>{$item.contact.name/}&nbsp;&nbsp;&nbsp;
 											<span class="label label-primary-api-interactions" itemprop="date">Date:</span>{$item.date_output/}&nbsp;&nbsp;&nbsp;
-											{if isset="$item.status"}
-												<span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}&nbsp;&nbsp;&nbsp;
+											{if isset="$item.status"
+}												<span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}&nbsp;&nbsp;&nbsp;
 											{/if}
+											<span class="label-left label-primary-api-interactions" itemprop="download"><a href="{$host/}/report_interaction/{$item.id/}.txt">Download</a>&nbsp;&nbsp;&nbsp;</span>
 										</div>
-										<div class="panel-body">
-											<pre>{$item.content/}</pre>
+										<div class="panel-body" id="textarea_17">
+											<pre>{htmlentities}{$item.content/}{/htmlentities}</pre>
 											<br/>
 											{foreach from="$item.attachments" item="elem"}
 											<div class="row">
@@ -148,7 +167,18 @@
 </div>
 
 {if isset="$user"}
-	<div class="btn-group">
-		<a href="{$host/}/report_detail/{$report.number/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
+		<div class="row">
+		<div class="col-xs-5">
+			<span class="label label-primary-api-default" itemprop="status"><br/>
+		</div>
+		<div class="col-xs-6">
+				<div class="btn-group">
+						<a href="{$host/}/report_detail/{$report.number/}/interaction_form" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Add Interaction</a>
+				</div>
+		</div>
+		<div class="col-xs-2">
+			<span class="label label-primary-api-default" itemprop="status"><br/>
+		</div>
+
 	</div>
 {/if}

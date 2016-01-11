@@ -109,13 +109,13 @@ feature {NONE} -- Edit Report Problem
 					if attached  current_media_type (req) as l_type then
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form (req, res, edit_form (l_id.integer_value))
 					else
-						l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).report_form (req, res, Void)
+						l_rhf.new_representation_handler (esa_config, Empty_string,  media_type_variants (req)).report_form (req, res, Void)
 					end
 				else -- Not a logged in user
 					if attached  current_media_type (req) as l_type then
 						l_rhf.new_representation_handler (esa_config, l_type,  media_type_variants (req)).new_response_unauthorized (req, res)
 					else
-						l_rhf.new_representation_handler (esa_config, "",  media_type_variants (req)).new_response_unauthorized (req, res)
+						l_rhf.new_representation_handler (esa_config, Empty_string,  media_type_variants (req)).new_response_unauthorized (req, res)
 					end
 				end
 			else
@@ -123,7 +123,7 @@ feature {NONE} -- Edit Report Problem
 				if attached current_media_type (req) as l_type then
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).bad_request_page (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).bad_request_page (req, res)
 				end
 			end
 		end
@@ -186,17 +186,16 @@ feature {NONE} -- New Report Problem
 					create l_form.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 					l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form (req, res, l_form)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_variants).report_form (req, res, Void)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_variants).report_form (req, res, Void)
 				end
 			else -- Not a logged in user
 				if attached current_media_type (req) as l_type then
 					l_rhf.new_representation_handler (esa_config, l_type, media_variants).new_response_unauthorized (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_variants).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_variants).new_response_unauthorized (req, res)
 				end
 			end
 		end
-
 
 feature {NONE} -- Update Report Problem
 
@@ -222,13 +221,13 @@ feature {NONE} -- Update Report Problem
 							l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm (req, res, l_form)
 						end
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).report_form_confirm (req, res, Void)
+						l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).report_form_confirm (req, res, Void)
 					end
 				else -- Not a logged in user
 					if attached current_media_type (req) as l_type then
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 					else
-						l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
+						l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_unauthorized (req, res)
 					end
 				end
 			else
@@ -236,7 +235,7 @@ feature {NONE} -- Update Report Problem
 				if attached current_media_type (req) as l_type then
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).bad_request_page (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).bad_request_page (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).bad_request_page (req, res)
 				end
 			end
 		end
@@ -247,7 +246,7 @@ feature {NONE} -- Update Report Problem
 		local
 			l_reproduce: STRING_32
 		do
-			l_reproduce := ""
+			l_reproduce := Empty_string
 			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
 				   attached a_form.environment as l_environment and then attached a_form.description as l_description then
 				   if  attached a_form.to_reproduce as ll_reproduce then
@@ -292,14 +291,14 @@ feature -- Initialize Report Problem
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_error (req, res, l_form)
 					end
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).report_form_confirm (req, res, Void)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).report_form_confirm (req, res, Void)
 				end
 			else
 					-- Not a logged in user
 				if attached current_media_type (req) as l_type then
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				else
-					l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).new_response_unauthorized (req, res)
+					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			end
 		end
@@ -311,7 +310,7 @@ feature -- Initialize Report Problem
 		local
 			l_reproduce: STRING_32
 		do
-		    l_reproduce := ""
+		    l_reproduce := Empty_string
 			if attached a_form.synopsis as l_synopsis and then attached a_form.release as l_release and then
 			   attached a_form.environment as l_environment and then attached a_form.description as l_description then
 
@@ -328,9 +327,8 @@ feature -- Initialize Report Problem
 							api_service.upload_temporary_report_attachment (a_form.id, c.item)
 							a_form.add_temporary_file_name (c.item.name)
 						else
-							-- Not accepted file too big.
+								-- Not accepted file too big.
 							to_implement("Add the name of the file as a list of rejected files.")
-							log.write_alert (generator + ".initialize_report_problem_internal File " + c.item.name + " rejected, too big." )
 						end
 					end
 				end
@@ -370,14 +368,15 @@ feature {NONE} -- Implementation
 		local
 			l_parser: JSON_PARSER
 			l_content: STRING
-			l_list: LIST[ESA_FILE_VIEW]
+			l_list: LIST [ESA_FILE_VIEW]
 			l_test: STRING_8
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
-			   attached {JSON_OBJECT}jv.item ("template") as l_template and then
-			   attached {JSON_ARRAY}l_template.item ("data") as l_data then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
+			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
+			   attached {JSON_ARRAY} l_template.item ("data") as l_data then
 				--		 <"name":  "category", "prompt": "Category", "value": "">,
 				--        <"name": "severity", "prompt": "Severity", "value": "">,
 				--        <"name": "priority", "prompt": "Priority", "value": "">,
@@ -436,7 +435,7 @@ feature {NONE} -- Implementation
 					Result.set_to_reproduce ((create {UTF8_ENCODER}).encoded_string (l_test))
 				end
 				if attached {JSON_OBJECT} l_data.i_th (11) as l_form_data and then attached {JSON_ARRAY} l_form_data.item ("files") as l_files  then
-					create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+					create {ARRAYED_LIST [ESA_FILE_VIEW]} l_list.make (0)
 					across l_files as c  loop
 						if attached {JSON_OBJECT} c.item as jo and then attached {JSON_STRING} jo.item("name") as l_key and then
 							attached {JSON_STRING} jo.item("value") as ll_content then
@@ -484,7 +483,7 @@ feature {NONE} -- Implementation
 			end
 				--Synopsis
 			if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
-				Result.set_synopsis (l_synopsis.url_encoded_value)
+				Result.set_synopsis (l_synopsis.value)
 			end
 				--Environment
 			if attached {WSF_STRING} req.form_parameter ("environment") as l_environment then
@@ -492,14 +491,14 @@ feature {NONE} -- Implementation
 			end
 				--Description
 			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				Result.set_description (l_description.url_encoded_value)
+				Result.set_description (l_description.value)
 			end
 				--To Reproduce (Optional)
 			if attached {WSF_STRING} req.form_parameter ("to_reproduce") as l_to_reproduce then
-				Result.set_to_reproduce (l_to_reproduce.url_encoded_value)
+				Result.set_to_reproduce (l_to_reproduce.value)
 			end
 			if req.has_uploaded_file then
-				create {ARRAYED_LIST[ESA_FILE_VIEW]} l_list.make (0)
+				create {ARRAYED_LIST [ESA_FILE_VIEW]} l_list.make (0)
 				across req.uploaded_files as c loop
 						create l_content.make_empty
 						l_size := c.item.size
@@ -516,7 +515,7 @@ feature {NONE} -- Implementation
 			-- Handle temporary and uploaded files from an CJ template with attachment extensions.
 		local
 			l_found : BOOLEAN
-			l_temporary_files : LIST[ESA_FILE_VIEW]
+			l_temporary_files : LIST [ESA_FILE_VIEW]
 		do
 			l_temporary_files := api_service.temporary_problem_report_attachments (a_form.id)
 				-- Remove not selected files

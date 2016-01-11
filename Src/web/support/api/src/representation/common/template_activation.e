@@ -23,10 +23,11 @@ feature {NONE} -- Initialization
 		do
 			make_user_host (a_host, a_user, a_template)
 			template.add_value (a_form, "form")
-			if attached a_form then
-				if attached a_form.error_message as l_message then
-					template.add_value (l_message, "error")
-				end
+			if
+				attached a_form and then
+				attached a_form.error_message as l_message
+			then
+				template.add_value (l_message, "error")
 			end
 		end
 end

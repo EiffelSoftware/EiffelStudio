@@ -30,7 +30,7 @@ var login = function() {
          
           //Instantiate HTTP Request
           var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-    	    request.open("GET", host.concat(loginURL), true, username, password);
+    	    request.open("GET", host + loginURL, true, username, password);
 	        request.send(null);
     
           //Process Response
@@ -71,7 +71,7 @@ var login = function() {
 
 
 var login_with_redirect = function() {
-    var form = document.forms[2];
+    var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
     var host = form.host.value;
@@ -201,6 +201,11 @@ $("#password").pressEnter( function() {
 
      login();
 }); 
+
+$("#password_redirect").pressEnter( function() {
+     login_with_redirect();
+}); 
+
 
 
 $(document).ready(function() {

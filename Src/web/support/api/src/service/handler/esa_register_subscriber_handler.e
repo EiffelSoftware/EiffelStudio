@@ -73,7 +73,7 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_authenticate (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).subscribe_to_category (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).subscribe_to_category (req, res, Void)
 			end
 		end
 
@@ -81,13 +81,11 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
-			l_categories: LIST[INTEGER]
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				if attached current_user_name (req) as l_user then
-					l_categories := extract_data_from_request (req, l_type)
-					api_service.register_subscriber (l_user, l_categories)
+					api_service.register_subscriber (l_user, extract_data_from_request (req, l_type))
 					if api_service.successful then
 						l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).subscribe_to_category (req, res, api_service.subscribed_categories (l_user))
 					else
@@ -98,13 +96,13 @@ feature -- HTTP Methods
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else
-				l_rhf.new_representation_handler (esa_config, "", media_type_variants (req)).change_email (req, res, Void)
+				l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).change_email (req, res, Void)
 			end
 		end
 
 feature -- Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): LIST[INTEGER]
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): LIST [INTEGER]
 			-- Is the form data populated?
 		do
 
@@ -115,15 +113,16 @@ feature -- Implementation
 			end
 		end
 
-	extract_data_from_cj (req: WSF_REQUEST): LIST[INTEGER]
+	extract_data_from_cj (req: WSF_REQUEST): LIST [INTEGER]
 			-- Extract request form CJ data and build a object
 			-- password view.
 		local
 			l_parser: JSON_PARSER
 		do
 			create {ARRAYED_LIST[INTEGER]} Result.make (5)
-			create l_parser.make_parser (retrieve_data (req))
-			if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			create l_parser.make_with_string (retrieve_data (req))
+			l_parser.parse_content
+			if attached {JSON_OBJECT} l_parser.parsed_json_object as jv and then l_parser.is_parsed and then
 			   attached {JSON_OBJECT} jv.item ("template") as l_template and then
 			   attached {JSON_ARRAY} l_template.item ("data") as l_data and then
 			   l_data.count > 0 and then attached {JSON_OBJECT} l_data.i_th (1) as l_elem and then
@@ -140,7 +139,7 @@ feature -- Implementation
 	extract_data_from_form (req: WSF_REQUEST): LIST [INTEGER]
 			-- Extract request form data and build a list of id.
 		do
-			create {ARRAYED_LIST[INTEGER]}Result.make (5)
+			create {ARRAYED_LIST [INTEGER]}Result.make (5)
 			if attached {WSF_STRING} req.form_parameter ("subscriber_to_category") as l_category then
 				Result.force (l_category.integer_value)
 			elseif attached {WSF_MULTIPLE_STRING} req.form_parameter ("subscriber_to_category") as l_multiple_category then

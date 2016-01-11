@@ -17,7 +17,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_connection: DATABASE_CONNECTION)
 			-- Create a data provider with connection `a_connection'.
@@ -31,28 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	problem_reports (a_username: STRING; a_open_only: BOOLEAN; a_category, a_status: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
-			-- Problem reports for user with username `a_username'
-			-- Open reports only if `a_open_only', all reports otherwise.
-		require
-			non_void_username: a_username /= Void
-		local
-			l_parameters: HASH_TABLE [ANY, STRING_32]
-		do
-			log.write_information (generator + ".problem_reports")
-			create l_parameters.make (4)
-			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.Username_param)
-			l_parameters.put (a_open_only, {DATA_PARAMETERS_NAMES}.Openonly_param)
-			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
-			l_parameters.put (a_status, {DATA_PARAMETERS_NAMES}.Statusid_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReports2", l_parameters))
-			db_handler.execute_reader
-			last_row_count := db_handler.count
-			create Result.make (db_handler, agent new_report)
-			post_execution
-		end
-
-	problem_reports_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER; a_filter: READABLE_STRING_32; a_content: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
+	problem_reports (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_username: STRING;  a_category: INTEGER; a_status, a_column: READABLE_STRING_32; a_order: INTEGER; a_filter: READABLE_STRING_32; a_content: INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
 			-- Problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise.
 		local
@@ -105,7 +84,7 @@ feature -- Access
 			post_execution
 		end
 
-	problem_reports_guest_2 (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: STRING; a_column: READABLE_STRING_32; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:STRING; a_content:INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
+	problem_reports_guest (a_page_number: INTEGER; a_rows_per_page: INTEGER; a_category: INTEGER; a_status: READABLE_STRING_8; a_column: READABLE_STRING_8; a_order: INTEGER; a_username: READABLE_STRING_32; a_filter:READABLE_STRING_32; a_content:INTEGER): DATABASE_ITERATION_CURSOR [REPORT]
 			-- All Problem reports for guest users
 			-- Only not confidential reports
 			-- Filtered category `a_category' and status `a_status'
@@ -304,7 +283,7 @@ feature -- Access
 			post_execution
 		end
 
-	interactions (a_username: STRING; a_report_number: INTEGER; a_report: REPORT): LIST [REPORT_INTERACTION]
+	interactions (a_username: READABLE_STRING_32; a_report_number: INTEGER; a_report: REPORT): LIST [REPORT_INTERACTION]
 			-- Interactions related to problem report with ID `a_report_id'.
 			-- for a user `a_username'.
 		local
@@ -474,25 +453,22 @@ feature -- Access
 	user_password_salt (a_username: READABLE_STRING_32): detachable STRING
 			-- Associated password salt for a username `a_username'.
 		local
-			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_parameters:STRING_TABLE [ANY]
+			l_encoder: DATABASE_SQL_SERVER_ENCODER
 		do
 			log.write_information (generator + ".user_password_salt")
-
 			create l_parameters.make (1)
-			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.username_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserPasswordSalt", l_parameters))
-			db_handler.execute_reader
+			l_parameters.put (l_encoder.encode (string_parameter(a_username,50)), {DATA_PARAMETERS_NAMES}.username_param)
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_password_salt, l_parameters))
+			db_handler.execute_query
 			if not db_handler.after then
 				db_handler.start
-				if attached {DB_TUPLE} db_handler.item as l_item and then attached {STRING} l_item.item (1) as l_item_1 then
-					Result := l_item_1
-				end
+				Result := db_handler.read_string (1)
 			end
-
 			post_execution
 		end
 
-	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: STRING; a_question_id: INTEGER)
+	add_user (a_first_name, a_last_name, a_email, a_username, a_password, a_answer, a_token: READABLE_STRING_32; a_question_id: INTEGER)
 			-- Add user with username `a_username', first name `a_first_name' and last name `a_last_name'.
 		require
 			attached_username: a_username /= Void
@@ -710,36 +686,6 @@ feature -- Access
 			post_execution
 		end
 
-	temporary_interaction (a_id: INTEGER): detachable TUPLE [content: detachable READABLE_STRING_32; username: detachable READABLE_STRING_32; status: detachable READABLE_STRING_32; private: detachable READABLE_STRING_32]
-			-- Temporary problem report interaction
-			--			Content,
-			--			Username,
-			--			Status,
-			--			Private.
-		local
-			l_parameters: HASH_TABLE [ANY, STRING_32]
-		do
-			log.write_information (generator + ".temporary_interaction")
-
-			create l_parameters.make (1)
-			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportTemporaryInteraction", l_parameters))
-			db_handler.execute_reader
-			if not db_handler.after then
-				db_handler.start
-				create Result.default_create
-				across
-					1 |..| 4 as i
-				loop
-					if attached db_handler.read_string (i.item) as l_item then
-						Result [i.item] := l_item.as_string_32
-					end
-				end
-			end
-
-			post_execution
-		end
-
 	temporary_interaction_2 (a_id: INTEGER): detachable TUPLE [content: detachable READABLE_STRING_32; username: detachable READABLE_STRING_32; status: detachable READABLE_STRING_32; private: detachable READABLE_STRING_32; category: detachable READABLE_STRING_32]
 			-- Temporary problem report interaction
 			--			Content,
@@ -858,7 +804,7 @@ feature -- Access
 			post_execution
 		end
 
-	subscribed_categories (a_username: STRING): DATABASE_ITERATION_CURSOR [ TUPLE[categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER] ]
+	subscribed_categories (a_username: STRING): DATABASE_ITERATION_CURSOR [ TUPLE [categoryId:INTEGER; synopsis:STRING; subscribed:INTEGER] ]
 			-- Table associating each category with boolean value specifying whether responsible `a_username'
 			-- is subscribed for receiving email notifications when reports or interactions are created in
 			-- category
@@ -874,9 +820,25 @@ feature -- Access
 			post_execution
 		end
 
+
+	interaction_content (a_id: INTEGER): detachable STRING
+		local
+			l_parameters:STRING_TABLE [ANY]
+		do
+			log.write_information (generator + ".interaction_by_id")
+			create l_parameters.make (1)
+			l_parameters.put (a_id, "id")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_interaction_content, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				db_handler.start
+				Result := db_handler.read_string (1)
+			end
+			post_execution
+		end
 feature -- Basic Operations
 
-	new_problem_report_id (a_username: STRING): INTEGER
+	new_problem_report_id (a_username: READABLE_STRING_32): INTEGER
 			-- Initialize new problem report row and returns ReportID.
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
@@ -921,7 +883,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: STRING; a_content:INTEGER ): INTEGER
+	row_count_problem_reports (a_category: INTEGER; a_status: STRING; a_username: READABLE_STRING_32; a_filter: READABLE_STRING_32; a_content:INTEGER ): INTEGER
 			-- Row count table `PROBLEM_REPORT table' for guest users and
 			-- users with role user.
 		local
@@ -1025,7 +987,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	row_count_problem_report_user (a_username: STRING; a_category:INTEGER; a_status:READABLE_STRING_32; a_filter: READABLE_STRING_32; a_content: INTEGER_32): INTEGER
+	row_count_problem_report_user (a_username: READABLE_STRING_32; a_category:INTEGER; a_status:READABLE_STRING_8; a_filter: READABLE_STRING_32; a_content: INTEGER_32): INTEGER
 			-- Number of problem reports for user with username `a_username'
 			-- Open reports only if `a_open_only', all reports otherwise, filetred by category and status.
 		local
@@ -1115,7 +1077,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce: STRING)
+	initialize_problem_report (a_report_id: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id: READABLE_STRING_8; a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce: READABLE_STRING_32)
 			-- Initialize temporary problem report row.
 		require
 			attached_priority: a_priority_id /= Void
@@ -1135,6 +1097,7 @@ feature -- Basic Operations
 			attached_to_reproduce: a_to_reproduce /= Void
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
+			utf: UTF_CONVERTER
 		do
 			log.write_information (generator + ".initialize_problem_report")
 
@@ -1148,7 +1111,7 @@ feature -- Basic Operations
 			l_parameters.put (string_parameter (a_synopsis, 100), {DATA_PARAMETERS_NAMES}.Synopsis_param)
 			l_parameters.put (string_parameter (a_release, 50), {DATA_PARAMETERS_NAMES}.Release_param)
 			l_parameters.put (string_parameter (a_environment, 200), {DATA_PARAMETERS_NAMES}.Environment_param)
-			l_parameters.put (a_description, {DATA_PARAMETERS_NAMES}.Description_param)
+			l_parameters.put (utf.escaped_utf_32_string_to_utf_8_string_8 (a_description) , {DATA_PARAMETERS_NAMES}.Description_param)
 			l_parameters.put (a_to_reproduce, {DATA_PARAMETERS_NAMES}.Toreproduce_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("InitializeProblemReport", l_parameters))
 			db_handler.execute_reader
@@ -1156,7 +1119,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential, a_synopsis, a_release, a_environment, a_description, a_to_reproduce: STRING)
+	update_problem_report (a_pr: INTEGER; a_priority_id, a_severity_id, a_category_id, a_class_id, a_confidential: READABLE_STRING_8; a_synopsis, a_release, a_environment, a_description, a_to_reproduce: READABLE_STRING_32)
 			-- Handle update report problem
 		require
 			valid_pr: a_pr > 0
@@ -1239,27 +1202,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	initialize_interaction (a_interaction_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
-			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
-		require
-			attached_content: a_content /= Void
-		local
-			l_parameters: HASH_TABLE [ANY, STRING_32]
-		do
-			log.write_information (generator + ".initialize_interaction")
-
-			create l_parameters.make (4)
-			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
-			l_parameters.put (a_content, {DATA_PARAMETERS_NAMES}.Content_param)
-			l_parameters.put (a_new_status, {DATA_PARAMETERS_NAMES}.Statusid_param)
-			l_parameters.put (a_private, {DATA_PARAMETERS_NAMES}.Private_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("InitializeInteraction2", l_parameters))
-			db_handler.execute_writer
-
-			post_execution
-		end
-
-	initialize_interaction_2 (a_interaction_id: INTEGER; a_category_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
+	initialize_interaction (a_interaction_id: INTEGER; a_category_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		require
 			attached_content: a_content /= Void
@@ -1903,11 +1846,11 @@ feature {NONE} -- Implementation
 					Result.set_number (l_item_1.item)
 				end
 					-- Synopsis
-				if attached db_handler.read_string (2) as l_item_2 then
+				if attached db_handler.read_string_32 (2) as l_item_2 then
 					Result.set_synopsis (l_item_2)
 				end
 					-- Category Synopsis
-				if attached db_handler.read_string (3) as l_item_3 then
+				if attached db_handler.read_string_32 (3) as l_item_3 then
 					Result.set_report_category (create {REPORT_CATEGORY}.make (0, l_item_3, True))
 				end
 					-- Submission Date
@@ -1918,12 +1861,12 @@ feature {NONE} -- Implementation
 				if attached db_handler.read_integer_32 (5) as l_item_5 then
 					Result.set_status (create {REPORT_STATUS}.make (l_item_5.item, ""))
 						-- Status Synopsis
-					if attached db_handler.read_string (6) as l_item_6 and then attached Result.status as l_status then
+					if attached db_handler.read_string_32 (6) as l_item_6 and then attached Result.status as l_status then
 						l_status.set_synopsis (l_item_6)
 					end
 				end
 					-- Contact
-				if attached db_handler.read_string (7) as l_item then
+				if attached db_handler.read_string_32 (7) as l_item then
 					Result.set_contact (create {USER}.make (l_item))
 				end
 			end
@@ -1931,6 +1874,8 @@ feature {NONE} -- Implementation
 
 	new_report_detail (a_tuple: DB_TUPLE): REPORT
 			-- Create a new report detail from Database.
+		local
+			utf: UTF_CONVERTER
 		do
 			create Result.make (0, "Null", False)
 
@@ -1960,7 +1905,7 @@ feature {NONE} -- Implementation
 
 				--Description
 			if attached db_handler.read_string (6) as l_item_6 then
-				Result.set_description (l_item_6)
+				Result.set_description (utf.utf_8_string_8_to_string_32 (l_item_6))
 			end
 
 				--To Reproduce
@@ -2475,6 +2420,14 @@ feature -- Queries
 		select DATEDIFF(day,CreatedDate,getdate()) from DownloadExpiration where Token = :Token
 		]"
 
+
+	Select_user_password_salt:  STRING = "[
+		SELECT PasswordSalt FROM Memberships WHERE Username = :Username
+		]"
+
+	Select_interaction_content:  STRING = "[
+		SELECT Content FROM ProblemReportInteractions WHERE InteractionID = :id
+		]"
 
 feature {NONE} -- Implementation
 

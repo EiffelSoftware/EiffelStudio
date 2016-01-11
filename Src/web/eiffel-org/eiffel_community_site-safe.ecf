@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+	<description>Eiffel.org community site.</description>
 	<target name="eiffel_community_site_common">
 		<file_rule>
 			<exclude>/.git$</exclude>
@@ -68,19 +69,9 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="eiffel_community_site_nino" extends="eiffel_community_site_common">
-		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
-		<library name="default_nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\nino-safe.ecf"/>
-		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
-		<cluster name="src" location=".\src\" recursive="true">
-			<file_rule>
-				<exclude>/app$</exclude>
-				<exclude>/web/launcher$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
 	<target name="eiffel_community_site_cgi" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
 		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">
@@ -92,6 +83,7 @@
 	</target>
 	<target name="eiffel_community_site_libfcgi" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
 		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">

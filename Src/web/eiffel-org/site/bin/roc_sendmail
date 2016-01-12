@@ -15,7 +15,16 @@ sender = 'Eiffel Community <noreply@eiffel.org>'
 recipient = 'webmaster@eiffel.org'
 
 mesg=""
-for line in sys.stdin:
+while 1:
+        try:
+                line = sys.stdin.readline()
+        except KeyboardInterrupt:
+                break
+
+        if not line:
+                break
+
+        #log(line)
         if line[:3] == "To:":
                 recipient = string.strip(line[4:])
                 if recipient[-1] == ';':

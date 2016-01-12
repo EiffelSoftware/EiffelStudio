@@ -3,7 +3,6 @@ note
 			Component responsible to send email using an external mailer
 			i.e: an external tool such as sendmail or a script, ...
 			]"
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -103,6 +102,7 @@ feature -- Basic operation
 						if attached stdin_termination_sequence as v then
 							p.put_string (v)
 						end
+						p.put_string ("%N") -- End Of Input file.
 					end
 				else
 					if attached arguments as l_args then

@@ -17,41 +17,41 @@ recipient = 'webmaster@eiffel.org'
 mesg=""
 eol='----'
 while eol != 'N.NN':
-		try:
-				line = sys.stdin.readline()
-		except KeyboardInterrupt:
-				break
+	try:
+		line = sys.stdin.readline()
+	except KeyboardInterrupt:
+		break
 
-		if not line:
-				break
+	if not line:
+		break
 
-		s = len[:-1]
-		if len(s) == 0:
-				eol = "%sN" % (eol[1:])
-		elif s == ".":
-				eol = "%s." % (eol[1:])
+	s = line[:-1]
+	if len(s) == 0:
+		eol = "%sN" % (eol[1:])
+	elif s == ".":
+		eol = "%s." % (eol[1:])
 
-		if line[:3] == "To:":
-				recipient = string.strip(line[4:])
-				if recipient[-1] == ';':
-						recipient = recipient[:-1]
-		mesg = "%s%s" % (mesg, line)
+	if line[:3] == "To:":
+		recipient = string.strip(line[4:])
+		if recipient[-1] == ';':
+			recipient = recipient[:-1]
+	mesg = "%s%s" % (mesg, line)
 
 mesg = mesg[:-4] # Removing '\n.\n\n' 
 
 if len(mesg) > 0:
-		if False:
-				print "sender=%s" % (sender)
-				print "recipient=%s" % (recipient)
-				print ""
-				print mesg
+	if False:
+		print "sender=%s" % (sender)
+		print "recipient=%s" % (recipient)
+		print ""
+		print mesg
 
-		# Create server object with SSL option
-		server = smtplib.SMTP_SSL(smtp_host, smtp_port)
-
-		# Perform operations via server
-		server.login(username, password)
-		recipients = re.split(';', recipient)
-		server.sendmail(sender, recipients, mesg)
-		server.quit()
+	# Create server object with SSL option
+	server = smtplib.SMTP_SSL(smtp_host, smtp_port)
+	
+	# Perform operations via server
+	server.login(username, password)
+	recipients = re.split(';', recipient)
+	server.sendmail(sender, recipients, mesg)
+	server.quit()
 

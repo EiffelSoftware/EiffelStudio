@@ -15,7 +15,8 @@ sender = 'Eiffel Community <noreply@eiffel.org>'
 recipient = 'webmaster@eiffel.org'
 
 mesg=""
-while 1:
+eol='----'
+while eol != 'N.NN':
         try:
                 line = sys.stdin.readline()
         except KeyboardInterrupt:
@@ -24,12 +25,19 @@ while 1:
         if not line:
                 break
 
-        #log(line)
+		s = len[:-1]
+        if len(s) == 0:
+                eol = "%sN" % (eol[1:])
+        elif s == ".":
+                eol = "%s." % (eol[1:])
+
         if line[:3] == "To:":
                 recipient = string.strip(line[4:])
                 if recipient[-1] == ';':
                         recipient = recipient[:-1]
         mesg = "%s%s" % (mesg, line)
+
+mesg = mesg[:-4] # Removing '\n.\n\n' 
 
 if len(mesg) > 0:
         if False:
@@ -46,3 +54,4 @@ if len(mesg) > 0:
         recipients = re.split(';', recipient)
         server.sendmail(sender, recipients, mesg)
         server.quit()
+

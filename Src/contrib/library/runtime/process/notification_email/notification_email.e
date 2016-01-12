@@ -193,12 +193,20 @@ feature -- Reset
 feature -- Conversion
 
 	message: STRING_8
+		local
+			l_content: like content
 		do
 			Result := header
 			Result.append_character ('%N')
-			Result.append (content)
-			Result.append_character ('%N')
-			Result.append_character ('%N')
+			l_content := content
+			if l_content.is_empty then
+				Result.append_character ('%N')
+			else
+				Result.append (l_content)
+				if l_content[l_content.count] /= '%N' then
+					Result.append_character ('%N')
+				end
+			end
 		end
 
 	header: STRING_8

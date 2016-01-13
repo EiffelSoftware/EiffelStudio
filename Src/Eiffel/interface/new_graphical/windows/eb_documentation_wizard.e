@@ -609,21 +609,26 @@ feature {NONE} -- Implementation
 			add_groups_to_cluster_grid (ie, Eiffel_universe.groups, old_exclude, Void, True)
 		end
 
-	add_groups_to_cluster_grid (ie: like cluster_include; cg: LIST [CONF_GROUP]; a_exclusion: LIST [STRING_32]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
+	add_groups_to_cluster_grid (ie: like cluster_include; cgs: ITERABLE [CONF_GROUP]; a_exclusion: LIST [STRING_32]; a_parent: detachable CONF_GROUP; rec: BOOLEAN)
 		local
 			cg_name: STRING_32
 			g: detachable CONF_GROUP
 			p: detachable CONF_GROUP
 			subs: detachable LIST [CONF_GROUP]
 		do
-			from cg.start until cg.after loop
+			across cgs as cg loop
 				g := cg.item
 				p := Void
 				subs := Void
 				if attached {CONF_CLUSTER} g as l_cluster then
 					p := l_cluster.parent
 				elseif rec and then attached {CONF_LIBRARY} g as l_library then
-					subs := l_library.library_target.clusters.linear_representation
+					if attached l_library.library_target as l then
+						subs := l.clusters.linear_representation
+					else
+							-- The library is not enabled.
+						g := Void
+					end
 				elseif attached {CONF_ASSEMBLY} g as l_assembly then
 					g := Void
 				end
@@ -642,7 +647,6 @@ feature {NONE} -- Implementation
 						add_groups_to_cluster_grid (ie, subs, a_exclusion, g, False)
 					end
 				end
-				cg.forth
 			end
 		end
 

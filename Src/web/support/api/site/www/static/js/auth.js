@@ -79,6 +79,12 @@ var login_with_redirect = function() {
 
     var redirectURL = form.redirect && form.redirect.value || "";   
 
+    var reshost = host.split("/");
+    var res = redirectURL.split("/");
+    if (reshost[reshost.length - 1] === res[1]) {
+      redirectURL = redirectURL.replace("/"+res[1], "");
+    }
+
 
     $("#imgProgressRedirect").show();  
 

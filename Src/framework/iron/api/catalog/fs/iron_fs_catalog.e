@@ -537,13 +537,13 @@ feature -- Package operations
 				if {PLATFORM}.is_windows then
 					Result := p.extended ("finish_freezing.exe").name  + {STRING_32} " -library"
 				else
-					Result := p.extended ("finish_freezing.sh").name + {STRING_32} " -library"
+					Result := p.extended ("finish_freezing").name + {STRING_32} " -library"
 				end
 			else
 				if {PLATFORM}.is_windows then
 					Result := {STRING_32} "finish_freezing.bat -library"
 				else
-					Result := {STRING_32} "finish_freezing.sh -library"
+					Result := {STRING_32} "finish_freezing -library"
 				end
 			end
 		end
@@ -610,7 +610,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

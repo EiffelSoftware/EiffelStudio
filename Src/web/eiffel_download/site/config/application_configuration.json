@@ -6,7 +6,7 @@
 		},
 		"environments": {
 			"test": {
-                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=example;Uid=sa;Pwd=Eiffel1405;TrustedConnection=Yes"
+                "connection_string":"Server=JVELILLA;Database=example;Uid=sa;Pwd=eiffel;TrustedConnection=Yes"
 			},
 			"development": {
 				"connection_string":"Server=sql.ise;Database=EiffelDB;Uid=eiffel2;Pwd=eiffel2;"

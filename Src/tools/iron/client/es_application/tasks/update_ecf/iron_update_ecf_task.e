@@ -463,6 +463,9 @@ feature -- Execute
 								cj := l_base[j]
 								if ci.as_lower = cj.as_lower then
 									l_same_char := True
+									if sep = '%U' and (ci = '/' or ci = '\') then
+										sep := ci
+									end
 								elseif (ci = '/' and cj = '\') or (ci = '\' and cj = '/') then
 									l_same_char := True
 									if sep = '%U' then
@@ -907,7 +910,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

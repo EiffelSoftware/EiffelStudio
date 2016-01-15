@@ -10,7 +10,7 @@ feature {NONE} -- Test
 
 	a1: INTEGER
 	a2: INTEGER = 2
-	a3: INTEGER external "C" alias "3" end
+	a3: INTEGER external "C inline" alias "3" end
 	a4: INTEGER deferred end
 
 	b
@@ -24,7 +24,7 @@ feature {NONE} -- Test
 
 	c1: INTEGER
 	c2: INTEGER = 2
-	c3: INTEGER external "C" alias "3" end
+	c3: INTEGER external "C inline" alias "3" end
 	c4: INTEGER deferred end
 
 end

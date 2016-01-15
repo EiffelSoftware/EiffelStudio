@@ -1,3 +1,3 @@
 <div>
-    <p>Thanks for register, check your email to activate your account.</p>
+    <p>Thanks for your application, we will review it to activate your account.</p>
 </div>

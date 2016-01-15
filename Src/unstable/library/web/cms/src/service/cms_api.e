@@ -316,8 +316,16 @@ feature -- Emails
 
 	new_email (a_to_address: READABLE_STRING_8; a_subject: READABLE_STRING_8; a_content: READABLE_STRING_8): CMS_EMAIL
 			-- New email object.
+		local
+			l_subject: READABLE_STRING_8
 		do
-			create Result.make (setup.site_email, a_to_address, a_subject, a_content)
+			l_subject := a_subject
+			if attached setup.site_email_subject_prefix as l_prefix then
+				if not l_subject.starts_with (l_prefix) then
+					l_subject := l_prefix +  l_subject
+				end
+			end
+			create Result.make (setup.site_email, a_to_address, l_subject, a_content)
 		end
 
 	process_email (e: CMS_EMAIL)

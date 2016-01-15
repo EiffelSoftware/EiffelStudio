@@ -131,10 +131,6 @@ feature -- Change: User activation
 		do
 		end
 
-	remove_activation (a_token: READABLE_STRING_32)
-			-- <Precursor>.
-		do
-		end
 
 feature -- Change: User password recovery
 
@@ -148,7 +144,67 @@ feature -- Change: User password recovery
 		do
 		end
 
+feature -- Access: Users
+
+	temp_users_count: INTEGER
+			-- <Precursor>
+		do
+		end
+
+	temp_user_by_id (a_uid: like {CMS_USER}.id; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
+	temp_user_by_name (a_name: like {CMS_USER}.name): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
+	temp_user_by_email (a_email: like {CMS_USER}.email): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
+	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- <Precursor>
+		do
+		end
+
+	temp_recent_users (a_lower: INTEGER; a_count: INTEGER): LIST [CMS_TEMP_USER]
+			-- List of recent `a_count' temporal users with an offset of `lower'.
+		do
+			create {ARRAYED_LIST[CMS_TEMP_USER]} Result.make (0)
+		end
+
+	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
+			-- <Precursor>
+		do
+		end
+
+feature -- Temp Users
+
+	new_user_from_temp_user (a_user: CMS_TEMP_USER)
+			-- <Precursor>
+		do
+  		end
+
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- <Precursor>.
+		do
+		end
+
+	new_temp_user (a_user: CMS_TEMP_USER)
+			-- <Precursor>
+		do
+		end
+
+	delete_temp_user (a_user: CMS_TEMP_USER)
+			-- <Precursor>
+		do
+		end
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

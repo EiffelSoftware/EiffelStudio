@@ -206,7 +206,7 @@ feature -- HTML Output
 		do
 			if attached n.author as l_author then
 				a_output.append ("by ")
-				a_output.append ("<a class=%"blog_user_link%" href=%"/blogs/user/" + l_author.id.out + "%">" + l_author.name + "</a>")
+				a_output.append ("<a class=%"blog_user_link%" href=%"/blogs/user/" + l_author.id.out + "%">" + html_encoded (l_author.name) + "</a>")
 			end
 		end
 

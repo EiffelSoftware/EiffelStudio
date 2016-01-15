@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			context.initialize (a_class, a_class.actual_type)
 			context.set_current_feature (a_feature)
 			context.set_written_class (a_feature.written_class)
-			feature_checker.type_check_only (a_feature, True, a_feature.written_in = a_class.class_id, a_feature.is_replicated)
+			feature_checker.type_check_only (a_feature, True, a_feature.written_in /= a_class.class_id, a_feature.is_replicated)
 		end
 
 feature {NONE} -- Implementation: Data Structures

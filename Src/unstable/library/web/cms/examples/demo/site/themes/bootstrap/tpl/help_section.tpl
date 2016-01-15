@@ -1,1 +1,0 @@
-	<h2>Help Section</h2>

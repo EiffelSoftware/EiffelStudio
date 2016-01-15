@@ -35,63 +35,41 @@ feature -- CMS storage
 		do
 			a_setup.storage_drivers.force (create {CMS_STORAGE_SQLITE3_BUILDER}.make, "sqlite3")
 --			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_MYSQL_BUILDER}.make, "mysql")
-			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
+--			a_setup.storage_drivers.force (create {CMS_STORAGE_STORE_ODBC_BUILDER}.make, "odbc")
 		end
 
 feature -- CMS modules
 
 	setup_modules (a_setup: CMS_SETUP)
 			-- Setup additional modules.
-		local
-			m: CMS_MODULE
 		do
-			create {CMS_ADMIN_MODULE} m.make
-			a_setup.register_module (m)
+				-- Admin
+			a_setup.register_module (create {CMS_ADMIN_MODULE}.make)
 
 				-- Auth
-			create {CMS_AUTHENTICATION_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {CMS_BASIC_AUTH_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {CMS_OAUTH_20_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {CMS_OPENID_MODULE} m.make
-			a_setup.register_module (m)
+			a_setup.register_module (create {CMS_AUTHENTICATION_MODULE}.make)
+			a_setup.register_module (create {CMS_BASIC_AUTH_MODULE}.make)
+			a_setup.register_module (create {CMS_OAUTH_20_MODULE}.make)
+			a_setup.register_module (create {CMS_OPENID_MODULE}.make)
 
 				-- Nodes
-			create {CMS_NODE_MODULE} m.make (a_setup)
-			a_setup.register_module (m)
-
-			create {CMS_BLOG_MODULE} m.make
-			a_setup.register_module (m)
+			a_setup.register_module (create {CMS_NODE_MODULE}.make (a_setup))
+			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 
 				-- Taxonomy
-			create {CMS_TAXONOMY_MODULE} m.make
-			a_setup.register_module (m)
+			a_setup.register_module (create {CMS_TAXONOMY_MODULE}.make)
 
 				-- Recent changes
-			create {CMS_RECENT_CHANGES_MODULE} m.make
-			a_setup.register_module (m)
+			a_setup.register_module (create {CMS_RECENT_CHANGES_MODULE}.make)
 
-				-- Recent changes
-			create {FEED_AGGREGATOR_MODULE} m.make
-			a_setup.register_module (m)
+				-- Feed aggregator
+			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 
 				-- Miscellanious
-			create {CMS_DEBUG_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {CMS_DEMO_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {GOOGLE_CUSTOM_SEARCH_MODULE} m.make
-			a_setup.register_module (m)
-
-			create {CMS_SESSION_AUTH_MODULE} m.make
-			a_setup.register_module (m)
+			a_setup.register_module (create {CMS_DEBUG_MODULE}.make)
+			a_setup.register_module (create {CMS_DEMO_MODULE}.make)
+			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
+			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
 		end
 
 end

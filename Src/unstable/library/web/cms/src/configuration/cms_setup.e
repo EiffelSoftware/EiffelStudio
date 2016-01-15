@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 	initialize
 		local
 			l_url: like site_url
-			l_email: detachable READABLE_STRING_8
+			s, l_email: detachable READABLE_STRING_8
 		do
 			site_location := environment.path
 
@@ -51,27 +51,32 @@ feature {NONE} -- Initialization
 			site_email := l_email
 
 				-- Email address for current web site
-				--| Also known
 			site_notification_email := string_8_item_or_default ("notification.email", site_email)
+				-- Email subject tuning.
+			s := string_8_item ("mailer.subject_prefix")
+			if s /= Void and then not s.ends_with_general (" ") then
+				s := s + " "
+			end
+			site_email_subject_prefix := s
 
 
 				-- Location for public files
-			if attached text_item ("files-dir") as s then
-				create files_location.make_from_string (s)
+			if attached text_item ("files-dir") as l_files_dir then
+				create files_location.make_from_string (l_files_dir)
 			else
 				files_location := site_location.extended ("files")
 			end
 
 				-- Location for modules folders.
-			if attached text_item ("modules-dir") as s then
-				create modules_location.make_from_string (s)
+			if attached text_item ("modules-dir") as l_modules_dir then
+				create modules_location.make_from_string (l_modules_dir)
 			else
 				modules_location := environment.modules_path
 			end
 
 				-- Location for themes folders.
-			if attached text_item ("themes-dir") as s then
-				create themes_location.make_from_string (s)
+			if attached text_item ("themes-dir") as l_themes_dir then
+				create themes_location.make_from_string (l_themes_dir)
 			else
 				themes_location := environment.themes_path
 			end
@@ -196,6 +201,14 @@ feature -- Access: Site
 	site_name: READABLE_STRING_32
 			-- Name of the site.
 
+	utf_8_site_name: READABLE_STRING_8
+			-- `site_name' encoded with UTF-8.
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_32_string_to_utf_8_string_8 (site_name)
+		end
+
 	site_email: READABLE_STRING_8
 			-- Website email address.
 			-- Used as "From:" address when the site is sending emails
@@ -203,6 +216,9 @@ feature -- Access: Site
 
 	site_notification_email: READABLE_STRING_8
 			-- Email address receiving internal notification.
+
+	site_email_subject_prefix: detachable READABLE_STRING_8
+			-- Optional prefix for any email sent by Current site.
 
 	site_url: detachable READABLE_STRING_8
 			-- Optional url of current CMS site.

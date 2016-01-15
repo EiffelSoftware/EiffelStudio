@@ -73,7 +73,7 @@ feature -- Execution
 			s.append ("<div class=%"info%"> ")
 			s.append ("<h4>Account Information</h4>")
 			s.append ("<p>Username: ")
-			s.append (a_user.name)
+			s.append (html_encoded (a_user.name))
 			s.append ("</p>")
 			if attached a_user.email as l_email then
 				s.append ("<p>Email: ")

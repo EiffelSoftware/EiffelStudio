@@ -35,11 +35,13 @@ feature {NONE} -- Initialization
 	parameters: EMAIL_SERVICE_PARAMETERS
 			-- Associated parameters.
 
-	admin_email: IMMUTABLE_STRING_8
-			-- Site admin's email.
-
 	mailer: NOTIFICATION_MAILER
 			-- SMTP protocol.
+
+feature -- Access
+
+	admin_email: IMMUTABLE_STRING_8
+			-- Site admin's email.
 
 feature -- Basic Operations
 

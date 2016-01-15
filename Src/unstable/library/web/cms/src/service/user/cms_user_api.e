@@ -251,7 +251,6 @@ feature -- Change User
 		do
 			reset_error
 			if
-				attached a_user.password as l_password and then
 				attached a_user.email as l_email
 			then
 				storage.new_user (a_user)
@@ -289,12 +288,6 @@ feature -- User Activation
 			storage.save_activation (a_token, a_id)
 		end
 
-	remove_activation (a_token: READABLE_STRING_32)
-			-- Remove activation token `a_token', from the storage.
-		do
-			storage.remove_activation (a_token)
-		end
-
 feature -- User Password Recovery
 
 	new_password (a_token: READABLE_STRING_32; a_id: INTEGER_64)
@@ -320,7 +313,101 @@ feature -- User status
 	Trashed: INTEGER = -1
 			-- The user is trashed (soft delete), ready to be deleted/destroyed from storage.
 
+feature -- Access - Temp User
+
+	temp_users_count: INTEGER
+			-- Number of pending users.
+			--! to be accepted or rehected
+		do
+			Result := storage.temp_users_count
+		end
+
+	temp_user_by_name (a_username: READABLE_STRING_GENERAL): detachable CMS_USER
+			-- User by name `a_user_name', if any.
+		do
+			Result := storage.temp_user_by_name (a_username.as_string_32)
+		end
+
+	temp_user_by_email (a_email: READABLE_STRING_8): detachable CMS_USER
+			-- User by email `a_email', if any.
+		do
+			Result := storage.temp_user_by_email (a_email)
+		end
+
+	temp_user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
+			-- User by activation token `a_token'.
+		do
+			Result := storage.temp_user_by_activation_token (a_token)
+		end
+
+	temp_recent_users (params: CMS_DATA_QUERY_PARAMETERS): ITERABLE [CMS_TEMP_USER]
+			-- List of the `a_rows' most recent users starting from  `a_offset'.
+		do
+			Result := storage.temp_recent_users (params.offset.to_integer_32, params.size.to_integer_32)
+		end
+
+	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
+		do
+			Result := storage.token_by_temp_user_id (a_id)
+		end
+
+feature -- Change Temp User
+
+	new_user_from_temp_user (a_user: CMS_TEMP_USER)
+			-- Add a new user `a_user'.
+		require
+			no_id: not a_user.has_id
+			has_hashed_password: a_user.hashed_password /= Void
+			has_sal: a_user.salt /= Void
+		do
+			reset_error
+			if
+				attached a_user.hashed_password as l_password and then
+				attached a_user.salt as l_salt and then
+				attached a_user.email as l_email
+			then
+				storage.new_user_from_temp_user (a_user)
+				error_handler.append (storage.error_handler)
+			else
+				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
+			end
+		end
+
+	new_temp_user (a_user: CMS_TEMP_USER)
+			-- Add a new user `a_user'.
+		require
+			no_id: not a_user.has_id
+			no_hashed_password: a_user.hashed_password = Void
+		do
+			reset_error
+			if
+				attached a_user.password as l_password and then
+				attached a_user.email as l_email
+			then
+				storage.new_temp_user (a_user)
+				error_handler.append (storage.error_handler)
+			else
+				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
+			end
+		end
+
+	remove_activation (a_token: READABLE_STRING_32)
+			-- Remove activation token `a_token', from the storage.
+		do
+			storage.remove_activation (a_token)
+		end
+
+	delete_temp_user (a_user: CMS_TEMP_USER)
+			-- Delete user `a_user'.
+		require
+			has_id: a_user.has_id
+		do
+			reset_error
+			storage.delete_temp_user (a_user)
+			error_handler.append (storage.error_handler)
+		end
+
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -278,10 +278,10 @@ feature -- Form
 				if attached user as u then
 					api.log ("node",
 							"User %"" + user_html_link (u) + "%" " + s + " node " + node_html_link (l_node, a_type.name + " #" + l_node.id.out),
-							0, node_local_link (l_node, Void)
+							{CMS_LOG}.level_notice, node_local_link (l_node, Void)
 						)
 				else
-					api.log ("node", "Anonymous " + s + " node " + a_type.name +" #" + l_node.id.out, 0, node_local_link (l_node, Void))
+					api.log ("node", "Anonymous " + s + " node " + a_type.name +" #" + l_node.id.out, {CMS_LOG}.level_notice, node_local_link (l_node, Void))
 				end
 				if node_api.has_error then
 					add_error_message ("Node #" + l_node.id.out + " failed to save.")

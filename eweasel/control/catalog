@@ -27,7 +27,7 @@ test	ca-066-001						codeanalysis015 tcf fail code_analysis
 test	ca-079-001						codeanalysis016 tcf fail code_analysis
 test	ca-088-001						codeanalysis017 tcf fail code_analysis
 test	ca-089-001						codeanalysis018 tcf fail code_analysis
-test	ca-unread-variable-leftover				codeanalysis019 tcf fail code_analysis ca020
+test	ca-unread-variable-leftover				codeanalysis019 tcf fail used_to_pass code_analysis ca020
 
 -- EiffelTime tests
 

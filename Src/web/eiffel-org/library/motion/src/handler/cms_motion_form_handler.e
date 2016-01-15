@@ -258,11 +258,11 @@ feature {NONE} -- Form Processing
 			end
 				--Synopsis
 			if attached {WSF_STRING} req.form_parameter ("synopsis") as l_synopsis then
-				Result.set_synopsis (l_synopsis.url_encoded_value)
+				Result.set_synopsis (l_synopsis.value)
 			end
 				--Description
 			if attached {WSF_STRING} req.form_parameter ("description") as l_description then
-				Result.set_description (l_description.url_encoded_value)
+				Result.set_description (l_description.value)
 			end
 			if attached {WSF_STRING} req.form_parameter ("status") as l_status then
 				Result.set_status (l_status.integer_value)

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	CA_CFG_RULE
+		rename
+			is_ready as is_empty
+		end
 
 	CA_CFG_BACKWARD_ITERATOR
 

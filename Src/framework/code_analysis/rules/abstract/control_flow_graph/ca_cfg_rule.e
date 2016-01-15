@@ -12,6 +12,22 @@ inherit
 
 	CA_CFG_ITERATOR
 
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is there no data collected?
+		deferred
+		end
+
+feature -- Status setting
+
+	wipe_out
+			-- Remove any previously collected data.
+		deferred
+		ensure
+			is_empty: is_empty
+		end
+
 feature -- Rule Checking
 
 	check_class (a_class: attached CLASS_C)
@@ -29,6 +45,9 @@ feature {NONE} -- Implementation
 		local
 			l_cfg_builder: CA_CFG_BUILDER
 		do
+				-- Clean any previously collected data.
+			wipe_out
+				-- Check only features with an internal body.
 			if
 				a_feature.ast.body.is_routine and then
 				attached {INTERNAL_AS} a_feature.ast.body.as_routine.routine_body

@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	CA_CFG_ITERATOR
+		rename
+			is_ready as is_empty
+		end
 
 feature -- Iteration
 

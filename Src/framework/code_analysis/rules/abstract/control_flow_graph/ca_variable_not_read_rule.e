@@ -36,6 +36,36 @@ feature {NONE} -- Initialization
 		do
 			make_with_defaults
 			default_severity_score := 70
+			create assignment_nodes.make
+			create lv_entry.make (1)
+			create lv_exit.make (1)
+		ensure
+			is_empty: is_empty
+		end
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				assignment_nodes.is_empty and then
+				lv_entry.is_empty and then
+				lv_exit.is_empty
+		ensure then
+			assignment_nodes_is_empty: Result implies assignment_nodes.is_empty
+			lv_entry_is_empty: Result implies lv_entry.is_empty
+			lv_exit_is_empty: Result implies lv_exit.is_empty
+		end
+
+feature -- Initialization
+
+	wipe_out
+			-- <Precursor>
+		do
+			assignment_nodes.wipe_out
+			lv_entry.wipe_out
+			lv_exit.wipe_out
 		end
 
 feature {NONE} -- From {CA_CFG_RULE}
@@ -82,9 +112,8 @@ feature -- Node Visitor
 		do
 			n := a_cfg.max_label
 
-			create lv_entry.make (n)
-			create lv_exit.make (n)
-			create assignment_nodes.make
+			lv_entry.grow (n)
+			lv_exit.grow (n)
 
 			from j := 1
 			until j > n
@@ -298,7 +327,7 @@ feature {NONE} -- Analysis data
 	lv_entry, lv_exit: ARRAYED_LIST [LINKED_SET [INTEGER]]
 			-- List containing a set of name IDs (live variables) for the CFG labels.
 
-	assignment_nodes: detachable LINKED_SET [CA_CFG_INSTRUCTION]
+	assignment_nodes: LINKED_SET [CA_CFG_INSTRUCTION]
 			-- Set of CFG nodes that represent an assignment or a creation.
 
 feature -- Properties

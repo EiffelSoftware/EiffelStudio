@@ -93,7 +93,7 @@ feature -- Change
 				set_checked_by_value (v)
 				Precursor (v)
 			end
-		end
+		end		
 
 feature {NONE} -- Implementation
 

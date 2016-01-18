@@ -10,10 +10,10 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoder" location="..\..\..\..\..\text\encoder\encoder-safe.ecf"/>
+		<library name="encoder" location="../../../../../text/encoder/encoder-safe.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi-safe.ecf" readonly="false"/>
-		<library name="http" location="..\..\..\..\..\..\..\..\network\protocol\http\http-safe.ecf"/>
-		<library name="nino" location="..\..\..\..\..\..\..\..\network\server\nino\nino-safe.ecf" readonly="false">
+		<library name="http" location="../../../../../../../../network/protocol/http/http-safe.ecf"/>
+		<library name="nino" location="../../../../../../../../network/server/nino/nino-safe.ecf" readonly="false">
 			<renaming old_name="HTTP_CONSTANTS" new_name="NINO_HTTP_CONSTANTS"/>
 		</library>
 		<cluster name="src" location="..\..\..\..\..\ewsgi\connectors\nino\src\" recursive="true">

@@ -339,6 +339,20 @@ feature -- Execution
 		end
 
 	process_file (f: FILE; req: WSF_REQUEST; res: WSF_RESPONSE)
+		do
+			if
+				attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
+				attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
+				attached file_date (f) as f_date and then
+				f_date <= l_if_modified_since_date
+			then
+				process_not_modified (f_date, req, res)
+			else
+				process_transfert (f, req, res)
+			end
+		end
+
+	process_transfert (f: FILE; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			ext: READABLE_STRING_32
 			ct: detachable READABLE_STRING_8
@@ -350,30 +364,21 @@ feature -- Execution
 			if ct = Void then
 				ct := {HTTP_MIME_TYPES}.application_force_download
 			end
-			if
-				attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
-				attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
-				attached file_date (f) as f_date and then
-				f_date <= l_if_modified_since_date
-			then
-				process_not_modified (f_date, req, res)
-			else
-				create fres.make_with_content_type (ct, f.path.name)
-				fres.set_status_code ({HTTP_STATUS_CODE}.ok)
+			create fres.make_with_content_type (ct, f.path.name)
+			fres.set_status_code ({HTTP_STATUS_CODE}.ok)
 
-				-- cache control
-				create dt.make_now_utc
-				fres.header.put_cache_control ("private, max-age=" + max_age.out)
-				fres.header.put_utc_date (dt)
-				if max_age > 0 then
-					dt := dt.twin
-					dt.second_add (max_age)
-				end
-				fres.header.put_expires_date (dt)
-
-				fres.set_answer_head_request_method (req.request_method.same_string ({HTTP_REQUEST_METHODS}.method_head))
-				res.send (fres)
+			-- cache control
+			create dt.make_now_utc
+			fres.header.put_cache_control ("private, max-age=" + max_age.out)
+			fres.header.put_utc_date (dt)
+			if max_age > 0 then
+				dt := dt.twin
+				dt.second_add (max_age)
 			end
+			fres.header.put_expires_date (dt)
+
+			fres.set_answer_head_request_method (req.request_method.same_string ({HTTP_REQUEST_METHODS}.method_head))
+			res.send (fres)
 		end
 
 	process_not_modified (a_utc_date: detachable DATE_TIME; req: WSF_REQUEST; res: WSF_RESPONSE)

@@ -1,10 +1,9 @@
 note
 	description : "[
-			Component representing an email
+			Email message handled by notification mailer.
 			]"
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	NOTIFICATION_EMAIL

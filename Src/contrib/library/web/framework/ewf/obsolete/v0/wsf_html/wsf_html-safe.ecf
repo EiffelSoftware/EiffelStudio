@@ -7,11 +7,11 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_obsolete_routine_type="false" void_safety="all" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoder" location="..\..\..\text\encoder\encoder-safe.ecf"/>
-		<library name="uri_template" location="..\..\..\..\..\..\text\parser\uri_template\uri_template-safe.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder-safe.ecf"/>
+		<library name="uri_template" location="../../../../../../text/parser/uri_template/uri_template-safe.ecf"/>
 		<library name="wsf" location="..\wsf\wsf-safe.ecf"/>
 		<cluster name="api" location="..\..\..\wsf_html\api\" recursive="true"/>
 		<cluster name="css" location="..\..\..\wsf_html\css\" recursive="true"/>

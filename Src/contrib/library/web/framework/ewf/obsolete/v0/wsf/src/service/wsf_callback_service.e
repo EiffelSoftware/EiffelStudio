@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	callback: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]
+	callback: PROCEDURE [WSF_REQUEST, WSF_RESPONSE]
 			-- Procedure called on `execute'
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)

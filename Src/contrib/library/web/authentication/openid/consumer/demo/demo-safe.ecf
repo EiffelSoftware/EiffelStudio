@@ -14,7 +14,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="ewsgi" location="../../../../framework/ewf/ewsgi/ewsgi-safe.ecf" readonly="false"/>
 		<library name="ewsgi_nino_connector" location="../../../../framework/ewf/ewsgi/connectors/nino/nino-safe.ecf" readonly="false"/>
-		<library name="http" location="..\..\..\..\..\network\protocol\http\http-safe.ecf"/>
+		<library name="http" location="../../../../../network/protocol/http/http-safe.ecf"/>
 		<library name="openid" location="..\openid-safe.ecf" readonly="false"/>
 		<library name="wsf" location="../../../../framework/ewf/wsf/wsf-safe.ecf" readonly="false"/>
 		<library name="wsf_nino_connector" location="../../../../framework/ewf/wsf/connector/nino-safe.ecf" readonly="false"/>

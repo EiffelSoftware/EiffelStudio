@@ -5,11 +5,13 @@ project
 	error = "error.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Error framework
+	description: "[
+		Errors and associated handler, to manage errors and also provides a way to synchronize one or many error handlers. 
+		This is convenient to propagate error from a layer to another without adding unwanted dependencies.
+	tags: error
+	license: Eiffel Forum License v2
+	copyright: Jocelyn Fiat, Eiffel Software and others.
+	link[license]: http://www.eiffel.com/licensing/forum.txt
 
 end

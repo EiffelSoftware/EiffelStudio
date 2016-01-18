@@ -10,10 +10,10 @@
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="conneg" location="..\..\..\..\network\protocol\content_negotiation\conneg.ecf"/>
-		<library name="encoder" location="..\text\encoder\encoder.ecf"/>
+		<library name="conneg" location="../../../../network/protocol/content_negotiation/conneg.ecf"/>
+		<library name="encoder" location="../text/encoder/encoder.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
-		<library name="http" location="..\..\..\..\network\protocol\http\http.ecf"/>
+		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="wsf" location="wsf.ecf"/>

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wsf_html_v0" uuid="9D0DC2A2-BE67-4499-B730-87C7DDE25860" library_target="wsf_html_v0">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="wsf_html_v0" uuid="9D0DC2A2-BE67-4499-B730-87C7DDE25860" library_target="wsf_html_v0">
 	<target name="wsf_html_v0">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
+		<option warning="true" full_class_checking="true" is_obsolete_routine_type="false" void_safety="none" syntax="standard">
 		</option>
+
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="encoder" location="..\..\..\text\encoder\encoder.ecf"/>
-		<library name="uri_template" location="..\..\..\..\..\..\text\parser\uri_template\uri_template.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder.ecf"/>
+		<library name="uri_template" location="../../../../../../text/parser/uri_template/uri_template.ecf"/>
 		<library name="wsf" location="..\wsf\wsf.ecf"/>
 		<cluster name="api" location="..\..\..\wsf_html\api\" recursive="true"/>
 		<cluster name="css" location="..\..\..\wsf_html\css\" recursive="true"/>

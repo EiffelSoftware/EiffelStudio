@@ -112,7 +112,7 @@ feature -- Element change
 			-- Remove feed item `a_item' from Current list of feed items.
 		do
 			items.prune (a_item)
-		end
+		end		
 
 	extended alias "+" (a_feed: FEED): FEED
 			-- New feed object made from Current merged with a_feed.

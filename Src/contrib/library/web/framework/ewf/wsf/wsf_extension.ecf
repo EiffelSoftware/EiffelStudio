@@ -10,9 +10,9 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="encoder" location="..\text\encoder\encoder.ecf"/>
+		<library name="encoder" location="../text/encoder/encoder.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
-		<library name="http" location="..\..\..\..\network\protocol\http\http.ecf"/>
+		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
 		<library name="wsf" location="wsf.ecf"/>
 		<library name="wsf_router_context" location="wsf_router_context.ecf" readonly="true"/>
 		<cluster name="extension" location=".\extension\" recursive="true"/>

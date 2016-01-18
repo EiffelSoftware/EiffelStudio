@@ -14,7 +14,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf" readonly="true"/>
 		<library name="http" location="../../../../../../library/network/protocol/http/http-safe.ecf" readonly="true"/>
-		<library name="json" location="../../../../../../library/text/parser/json/library/json-safe.ecf" readonly="true"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf"/>
 		<library name="wsf" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf-safe.ecf" readonly="true"/>
 		<library name="wsf_router_context" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_router_context-safe.ecf" readonly="true"/>
 		<library name="wsf_extension" location="../../../../../../library/web/framework/ewf/obsolete/v0/wsf/wsf_extension-safe.ecf" readonly="true"/>

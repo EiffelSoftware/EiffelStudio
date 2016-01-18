@@ -10,9 +10,9 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="encoder" location="..\..\..\text\encoder\encoder-safe.ecf" readonly="false"/>
-		<library name="error" location="..\..\..\..\..\..\utility\general\error\error-safe.ecf"/>
-		<library name="http" location="..\..\..\..\..\..\network\protocol\http\http-safe.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder-safe.ecf" readonly="false"/>
+		<library name="error" location="../../../../../../utility/general/error/error-safe.ecf"/>
+		<library name="http" location="../../../../../../network/protocol/http/http-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="interface" location="src\" recursive="true"/>
 		<cluster name="specification_connector" location="..\..\..\ewsgi\specification\connector\" recursive="true"/>

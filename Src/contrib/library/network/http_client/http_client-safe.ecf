@@ -15,9 +15,9 @@
 				<custom name="libcurl_http_client_disabled" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="encoder" location="..\..\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
+		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
 		<library name="http" location="..\protocol\http\http-safe.ecf"/>
-		<library name="http_auth" location="..\..\web\authentication\http_authorization\http_authorization-safe.ecf"/>
+		<library name="http_auth" location="../authentication/http_authorization/http_authorization-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl-safe.ecf">
 			<condition>

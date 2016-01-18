@@ -13,14 +13,14 @@
 		<mapping old_name="WSF_URI_HELPER_FOR_ROUTED_SERVICE" new_name="WSF_ROUTED_URI_HELPER"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="conneg" location="..\..\..\..\..\..\network\protocol\content_negotiation\conneg.ecf"/>
-		<library name="encoder" location="..\..\..\text\encoder\encoder.ecf"/>
-		<library name="error" location="..\..\..\..\..\..\utility\general\error\error.ecf"/>
+		<library name="conneg" location="../../../../../../network/protocol/content_negotiation/conneg.ecf"/>
+		<library name="encoder" location="../../../text/encoder/encoder.ecf"/>
+		<library name="error" location="../../../../../../utility/general/error/error.ecf"/>
 		<library name="ewsgi" location="..\ewsgi\ewsgi.ecf"/>
-		<library name="http" location="..\..\..\..\..\..\network\protocol\http\http.ecf"/>
+		<library name="http" location="../../../../../../network/protocol/http/http.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
-		<library name="uri_template" location="..\..\..\..\..\..\text\parser\uri_template\uri_template.ecf"/>
+		<library name="uri_template" location="../../../../../../text/parser/uri_template/uri_template.ecf"/>
 		<cluster name="router" location="..\..\..\wsf\router\" recursive="true">
 			<file_rule>
 				<exclude>/policy_driven$</exclude>

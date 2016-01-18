@@ -62,7 +62,7 @@ feature -- Access
 	hashed_password: detachable READABLE_STRING_8
 			-- Hashed user password.
 
-	email: detachable READABLE_STRING_32
+	email: detachable READABLE_STRING_8
 			-- User email.
 
 	profile: detachable CMS_USER_PROFILE
@@ -79,7 +79,6 @@ feature -- Access
 			-- default:	not_active
 			--			active
 			--			trashed
-
 
 feature -- Access: helper
 
@@ -302,6 +301,6 @@ invariant
 	id_or_name_set: id > 0 or else not name.is_whitespace
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

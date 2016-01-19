@@ -68,6 +68,7 @@ feature {NONE} -- Implementation
 		do
 			if	a_id.is_integer	then
 				if attached motion_api.motion_by_id (a_id.to_integer) as l_wish then
+					l_wish.set_type (motion_api.item)
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 					if attached template_block (get_block_detail, r) as l_tpl_block then
 						if attached current_user (req) as l_user then

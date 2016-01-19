@@ -89,6 +89,7 @@ feature {NONE} --GET Implementation
 						 -- Workaround
 					if attached l_form.wish as l_wish then
 							-- can edit status?
+						l_wish.set_type (motion_api.item)
 						l_wish.mark_wish_status
 						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
 							l_tpl_block.set_value (True, "can_edit_status" )
@@ -133,6 +134,7 @@ feature {NONE} --GET Implementation
 
 					if attached l_form.wish as l_wish then
 							-- can edit status?
+						l_wish.set_type (motion_api.item)
 						l_wish.mark_wish_status
 						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
 							l_tpl_block.set_value (True, "can_edit_status" )

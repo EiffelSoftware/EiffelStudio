@@ -90,8 +90,14 @@ feature -- Router
 		end
 
 	configure_web (a_api: CMS_API; a_router: WSF_ROUTER)
+		local
+			acc: WSF_URI_AGENT_HANDLER
 		do
-			a_router.handle ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account(a_api, ?, ?)), a_router.methods_head_get)
+			create acc.make (agent handle_account (a_api, ?, ?))
+
+			a_router.handle ("/account", acc, a_router.methods_head_get)
+			a_router.handle ("/account/", acc, a_router.methods_head_get)
+
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)

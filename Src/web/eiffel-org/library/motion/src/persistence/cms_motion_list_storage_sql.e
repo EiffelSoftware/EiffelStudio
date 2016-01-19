@@ -733,7 +733,7 @@ feature {NONE} -- Implemenation
 				sql_modify (query_generator (sql_update_motion_interaction), l_parameters)
 			else
 					-- New
-				sql_insert (sql_insert_motion_interaction, l_parameters)
+				sql_insert (query_generator (sql_insert_motion_interaction), l_parameters)
 				if not error_handler.has_error then
 					a_wish_interaction.set_id (last_inserted_motion_interaction_id)
 				end

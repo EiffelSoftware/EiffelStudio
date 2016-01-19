@@ -154,6 +154,14 @@ feature -- Element change
 			vote_set: votes = a_vote
 		end
 
+	set_type (v: like type)
+			-- Set `type' to `v'.
+		do
+			type := v
+		ensure
+			type_set: type = v
+		end
+
 feature -- Filled data
 
 	interactions: detachable LIST [CMS_MOTION_LIST_INTERACTION]

@@ -1314,7 +1314,7 @@ feature {NONE} -- SQL select
 	sql_last_insert_temp_user_id: STRING = "SELECT MAX(uid) FROM auth_temp_users;"
 
 
-	Select_user_auth_temp_by_id: STRING = "SELECT uid, name, password, salt, email, application FROM auth_temp_users as u WHERE uid=:uid;"
+	select_user_auth_temp_by_id: STRING = "SELECT uid, name, password, salt, email, application FROM auth_temp_users as u WHERE uid=:uid;"
 
 
 	sql_insert_temp_user: STRING = "INSERT INTO auth_temp_users (name, password, salt, email, application) VALUES (:name, :password, :salt, :email, :application);"

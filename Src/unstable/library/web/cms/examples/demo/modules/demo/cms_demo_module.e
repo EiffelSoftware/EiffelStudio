@@ -151,7 +151,7 @@ feature -- Mapping helper: uri template
 
 feature -- Mapping helper: uri template agent
 
-	map_uri_template_agent (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; proc: PROCEDURE [TUPLE [req: WSF_REQUEST; res: WSF_RESPONSE]]; rqst_methods: detachable WSF_REQUEST_METHODS)
+	map_uri_template_agent (a_router: WSF_ROUTER; a_tpl: READABLE_STRING_8; proc: PROCEDURE [WSF_REQUEST, WSF_RESPONSE]; rqst_methods: detachable WSF_REQUEST_METHODS)
 			-- Map `proc' as handler for `a_tpl' for request methods `rqst_methods'.
 		require
 			a_tpl_attached: a_tpl /= Void

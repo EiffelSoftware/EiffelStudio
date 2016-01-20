@@ -61,7 +61,11 @@ feature -- Encoder
 						Result.extend (c)
 					when '%"' then Result.append_string ("&quot;")
 					when '&' then Result.append_string ("&amp;")
-					when '%'' then Result.append_string ("&apos;")
+					when '%'' then Result.append_string ("&#39;")
+						-- The named character reference &apos; (the apostrophe, U+0027) 
+						-- was introduced in XML 1.0 but does not appear in HTML. 
+						-- Authors should therefore use &#39; instead of &apos; 
+						-- to work as expected in HTML 4 user agents.
 					when '<' then Result.append_string ("&lt;")
 					when '>' then Result.append_string ("&gt;")
 					else

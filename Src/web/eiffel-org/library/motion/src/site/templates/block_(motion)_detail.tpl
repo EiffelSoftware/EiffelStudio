@@ -48,7 +48,7 @@
 			</div>
 				
 			<section>
-				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6">{$wish.contact.name/}</span> <br>
+				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6"><strong>{$wish.contact.name/}</strong></span> <br>
 				<span  class="class-form-6" itemprop="category">Category:</span>	<span class="class-form-6">{$wish.category.synopsis/}</span> <br>
 				<span  class="class-form-6" itemprop="date">Date:</span>	<span class="class-form-6">{$wish.submission_date_output/}</span> <br>
 				<span  class="class-form-6" itemprop="report_number">Number:</span>	<span class="class-form-6">{$wish.id/}</span><br>
@@ -72,6 +72,13 @@
 							{/foreach}
 				</section>
 	</div>
+
+
+	<div  class="row">
+	 	 <ul class="cms-links">
+			<li><a href="{$site_url/}{$resource_path/}/{$module_name/}" class="btn btn-primary" itemprop="create-interaction-form" rel="create-interaction-form">Go to {$module_item/} list</a></li>
+		  </ul>	
+	 </div>	
 
 <div class="row">
 		<section>

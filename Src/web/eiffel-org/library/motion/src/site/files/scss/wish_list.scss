@@ -63,6 +63,11 @@
 			> input.class-form-6 {
 				@include grid-width(6);
 			}
+			> label.class-header-form-2 {
+				@include grid-width(2);
+				font-size: 200%;
+				font-weight: bold;
+			}
 			textarea.class-form-textarea {
 				width: 95%;
 				border: 3px solid #cccccc;

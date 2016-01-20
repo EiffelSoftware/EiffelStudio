@@ -1,3 +1,5 @@
+<h1>Wishes </h1>
+
 {include file="search_by_wish_id.tpl"/}
 
 <div class="row">
@@ -71,11 +73,11 @@
 					<input type="hidden" name="status" id="status_pe" value="{htmlentities}{$status_query/}{/htmlentities}"/>
 					<input type="hidden" name="filter" id="filter_pe" value="{$view.filter/}"/>
 					<input type="hidden" name="filter_content" id="filter_content_pe" value="{$view.filter_content/}"/>
-						<h2 class="class-form-2 tooltip">Wish List: </h2>
-						<label itemprop="report_number" title="The number of reports you want to see.">Current page {$index/} of {$pages/}
+						<label class="class-header-form-2 tooltip">List: </label>
+						<label class="class-form-4" itemprop="report_number" title="The number of reports you want to see.">Current page {$index/} of {$pages/}
 						</label>	
 						<label class="class-form-2 tooltip" itemprop="report_number" title="The number of reports you want to see.">Size</label>
-						<input type="number" class="class-form-4" min="1" name="size" value="{$size/}"/>
+						<input type="number" class="class-form-2" min="1" name="size" value="{$size/}"/>
 						<button type="submit" class="btn btn-default">Resize</button>
 				</form>
 			</div>			
@@ -193,7 +195,7 @@
 							<a href="{$site_url/}{$resource_path/}/{$module_name/}?category=0&amp;status={$item.status.id/}" rel="filter"><img src="{$site_url/}module/{$module_name/}/files/images/status_{$item.status.id/}.gif" class="img-rounded" title="{$item.status.synopsis/}"/></a>
 					</td>
 
-					<td itemprop="synopsis">{$item.synopsis/}</td>
+					<td itemprop="synopsis"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$item.id/}/detail" itemprop="report_interaction" rel="report_interaction">{$item.synopsis/}</a></td>
 					<td itemprop="submission_date">{$item.submission_date_output/}</td>
 					<td itemprop="category"> {$item.category.synopsis/}</td> 
 					<td itemprop="category"> {$item.votes/}</td> 

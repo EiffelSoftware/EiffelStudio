@@ -8,7 +8,7 @@ class
 	MYSQLI_RESULT
 
 inherit
-	ARRAYED_LIST [attached MYSQLI_ROW]
+	ARRAYED_LIST [MYSQLI_ROW]
 		redefine
 			new_filled_list
 		end
@@ -52,11 +52,11 @@ feature -- Access
 	warning_count: INTEGER
 			-- Number of warnings generated during execution
 
-	info: attached STRING
+	info: STRING
 			-- Information about the query
 			-- http://dev.mysql.com/doc/refman/5.1/en/mysql-info.html
 
-	field_by_name (a_field: attached STRING): attached MYSQLI_FIELD
+	field_by_name (a_field: STRING): MYSQLI_FIELD
 			-- Field at field `a_field'
 		require
 			field_map.has (a_field)
@@ -66,10 +66,10 @@ feature -- Access
 
 feature -- Access
 
-	fields: attached ARRAYED_LIST [attached MYSQLI_FIELD]
+	fields: ARRAYED_LIST [MYSQLI_FIELD]
 			-- The fields of this result set
 
-	field_map: attached HASH_TABLE [INTEGER, attached STRING]
+	field_map: HASH_TABLE [INTEGER, STRING]
 			-- Field names mapped to array offset
 		local
 			i: INTEGER

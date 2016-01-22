@@ -9,7 +9,7 @@ class
 
 feature  -- Creation
 
-	client: attached MYSQLI_CLIENT
+	client: MYSQLI_CLIENT
 				-- Adjust your connection settings here
 		once
 			create Result.make
@@ -54,8 +54,8 @@ feature  -- Creation
 				-- Prepared statements
 		local
 			a_integer: INTEGER
-			a_string: attached STRING
-			a_date: attached DATE
+			a_string: STRING
+			a_date: DATE
 			a_prepared_statement: STRING
 		do
 			io.put_string ("Testing prepared statements:%N")

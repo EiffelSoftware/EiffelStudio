@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "MYSQLI Library AutoTest Class"
 	author: "haroth@student.ethz.ch"
 	date: "$Date$"
@@ -3590,7 +3590,7 @@ feature -- Test Routines (Values)
 
 feature{NONE} -- Helpers
 
-	client: attached MYSQLI_CLIENT
+	client: MYSQLI_CLIENT
 		once
 			create Result.make
 			Result.set_password ("pollo")
@@ -3600,7 +3600,7 @@ feature{NONE} -- Helpers
 			Result.execute_query ("INSERT INTO `test_eiffel_mysql` (`a_primary_key_integer`) VALUES (NULL), (NULL), (NULL), (NULL)")
 		end
 
-	datetime: attached DATE_TIME
+	datetime: DATE_TIME
 	  once
 	    create Result.make_fine (1987, 6, 5, 4, 3, 2.0)
 	  end

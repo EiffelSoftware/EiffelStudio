@@ -18,7 +18,7 @@ create{MYSQLI_EXTERNALS}
 
 feature{NONE} -- Initialization
 
-	make (a_field: attached POINTER)
+	make (a_field: POINTER)
 			-- Initialize field
 		do
 			create name.make_from_c (c_struct_mysql_field_name (a_field))
@@ -45,36 +45,36 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: attached STRING
+	name: STRING
 		-- The name of the field, as a null-terminated string.
 		-- If the field was given an alias with an AS clause, the value of name is the alias.
 
-	org_name: attached STRING
+	org_name: STRING
 		-- The name of the field, as a null-terminated string.
 		-- Aliases are ignored.
 
-	table: attached STRING
+	table: STRING
 		-- The name of the table containing this field, if it isn't a calculated field.
 		-- For calculated fields, the table value is an empty string.
 		-- If the column is selected from a view, table names the view.
 		-- If the table or view was given an alias with an AS clause, the value of table is the alias.
 		-- For a UNION, the value is the empty string.
 
-	org_table: attached STRING
+	org_table: STRING
 		-- The name of the table, as a null-terminated string.
 		-- Aliases are ignored.
 		-- If the column is selected from a view, org_table names the underlying table.
 		-- For a UNION, the value is the empty string.
 
-	db: attached STRING
+	db: STRING
 		-- The name of the database that the field comes from, as a null-terminated string.
 		-- If the field is a calculated field, db is an empty string.
 		-- For a UNION, the value is the empty string.
 
-	catalog: attached STRING
+	catalog: STRING
 		-- The catalog name. This value is always "def".
 
-	def: STRING
+	def: detachable STRING
 		-- The default value of this field, as a null-terminated string.
 		-- This is set only if you use mysql_list_fields().
 
@@ -362,7 +362,7 @@ feature -- Access
 
 feature -- Access
 
-	out: attached STRING
+	out: STRING
 			-- Returns the name and the max_length of this field
 		once ("OBJECT")
 			create Result.make_empty

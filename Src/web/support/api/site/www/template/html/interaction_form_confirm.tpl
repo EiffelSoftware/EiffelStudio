@@ -8,7 +8,7 @@
 				<div class="form-horizontal well">
 					<fieldset>
 						<legend><h1>Interaction Submission Confirmation</h1></legend>
-						<div class="control-group">
+						<!--<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="description">Confidential</label>
 							{if condition="$form.report.confidential"}
 								<div class="controls">Yes</div>
@@ -16,7 +16,7 @@
 							{unless condition="$form.report.confidential"}
 								<div class="controls">No</div>
 							{/unless}
-						</div>
+						</div> -->
 
 						<div class="control-group">
 							<label class="control-label" for="textarea" itemprop="description">Description</label>

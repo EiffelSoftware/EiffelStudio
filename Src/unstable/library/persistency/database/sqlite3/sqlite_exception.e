@@ -146,16 +146,18 @@ feature {NONE} -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-feature {NONE} -- Implementation
+feature -- Access
 
 	tag: IMMUTABLE_STRING_32
 			-- <Precursor>
+
+feature {NONE} -- Implementation
 
 	internal_code: INTEGER
 			-- Actual reported code.
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

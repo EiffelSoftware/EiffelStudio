@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					Tool bar items grouping algorithm. Huffman alogrithm.
-					This class has no relationship with SD_TOOL_BAR_GROUP_INFO.
-					Only SD_TOOL_BAR_GROUP_DIVIDER use this class.
-					]"
+		Tool bar items grouping algorithm. Huffman alogrithm.
+		This class has no relationship with SD_TOOL_BAR_GROUP_INFO.
+		Only SD_TOOL_BAR_GROUP_DIVIDER use this class.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,18 +15,22 @@ class
 create
 	make
 
-feature {NONE} -- Initlization
+feature {NONE} -- Creation
 
-	make (a_max_group_count: INTEGER)
-			-- Creation method
+	make (a_max_group_count: INTEGER; a_items_width: like item_width)
+			-- Create an object with `a_max_group_count' number of groups and `a_items_width' widths of items.
 		require
 			valid: a_max_group_count >= 0
+			not_void: a_items_width /= Void
 		do
 			max_group_count := a_max_group_count
 			group_count := 1
+			item_width := a_items_width
 			create all_best_grouping.make (max_group_count)
+			calculate_all_best_grouping
 		ensure
 			set: max_group_count = a_max_group_count
+			set: item_width = a_items_width
 		end
 
 feature -- Command
@@ -39,17 +43,6 @@ feature -- Command
 			group_count := a_group_count
 		ensure
 			set: a_group_count = group_count
-		end
-
-	set_items_width (a_items_width: like item_width)
-			-- Set `item_width'.
-		require
-			not_void: a_items_width /= Void
-		do
-			item_width := a_items_width
-			calculate_all_best_grouping
-		ensure
-			set: item_width = a_items_width
 		end
 
 feature -- Query
@@ -68,12 +61,12 @@ feature -- Query
 			-- Best grouping when `a_group_count'
 		require
 			valid: a_group_count >= 1 and a_group_count <= max_group_count
-		local
-			l_result: detachable like best_grouping_when
 		do
-			l_result := all_best_grouping.item (a_group_count)
-			check l_result /= Void end -- Implied by precondition `valid'
-			Result := l_result
+			check
+				from_precondition: attached all_best_grouping.item (a_group_count) as r
+			then
+				Result := r
+			end
 		ensure
 			not_void: Result /= Void
 			valid: Result.count = a_group_count
@@ -119,7 +112,6 @@ feature -- Query
 			set: item_width /= Void
 		local
 			l_item_count: INTEGER
-			l_item_width: like item_width
 		do
 			from
 				a_group_info.start
@@ -129,12 +121,10 @@ feature -- Query
 				l_item_count := a_group_info.item.count + l_item_count
 				a_group_info.forth
 			end
-			l_item_width := item_width
-			check l_item_width /= Void end -- Implied by precondition `set'			
-			Result := l_item_count = l_item_width.count
+			Result := l_item_count = item_width.count
 		end
 
-	item_width: detachable ARRAYED_LIST [INTEGER]
+	item_width: ARRAYED_LIST [INTEGER]
 			-- Groups to be calculated. Integer is each group width.
 
 	group_count: INTEGER
@@ -183,8 +173,11 @@ feature {NONE} -- Implementation functions
 				if l_group_count = max_group_count then
 					l_last_best_grouping := start_condition
 				else
-					check l_last_best_grouping /= Void end -- Implied by `next_best_grouping's result not void and `start_condition' not void
-					l_last_best_grouping := next_best_grouping (l_last_best_grouping)
+					check
+						attached l_last_best_grouping -- Implied by `next_best_grouping's result not void and `start_condition' not void
+					then
+						l_last_best_grouping := next_best_grouping (l_last_best_grouping)
+					end
 				end
 
 				check count_right: l_last_best_grouping.count = l_group_count end
@@ -225,26 +218,22 @@ feature {NONE} -- Implementation functions
 		local
 			l_item_count, l_max_count: INTEGER
 			l_item: ARRAYED_LIST [INTEGER]
-			l_item_width: like item_width
 		do
-			l_item_width := item_width
-			check l_item_width /= Void end -- Implied by precondition
-			create Result.make (l_item_width.count)
 			from
 				l_item_count := 1
-				l_max_count := l_item_width.count
+				l_max_count := item_width.count
+				create Result.make (l_max_count)
 			until
 				l_item_count > l_max_count
 			loop
 				create l_item.make (1)
 				l_item.extend (l_item_count)
 				Result.extend (l_item)
-
 				l_item_count := l_item_count + 1
 			end
 		ensure
 			not_void: Result /= Void
-			valid: attached item_width as le_item_width implies Result.count = le_item_width.count
+			valid: attached item_width as l_item_width implies Result.count = l_item_width.count
 		end
 
 	minimum_two_group_index (a_condition: like best_grouping): INTEGER
@@ -322,7 +311,6 @@ feature {NONE} -- Implementation functions
 		do
 			from
 				l_item_width := item_width
-				check l_item_width /= Void end -- Implied by precondition `set'
 				a_group.start
 			until
 				a_group.after
@@ -336,18 +324,18 @@ feature {NONE} -- Implementation functions
 
 invariant
 	valid: group_count >= 1 and group_count <= max_group_count
+	attached_item_width: attached item_width
 
 note
-	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "SmartDocking: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 
 end

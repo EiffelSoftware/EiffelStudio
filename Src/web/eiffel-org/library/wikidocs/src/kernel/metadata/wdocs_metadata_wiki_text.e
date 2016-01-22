@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 		local
 			n: INTEGER
 			l_line: STRING_8
-			i,j,k: INTEGER
+			i,j: INTEGER
 		do
 			is_parsing_done := False
 			from

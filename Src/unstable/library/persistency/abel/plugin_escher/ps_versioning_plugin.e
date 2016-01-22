@@ -1,7 +1,6 @@
-note
+﻿note
 	description: "An ESCHER extension to ABEL. Adds a version attribute to  %
 				% inserted objects, and checks on this version during retrieval."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -103,7 +102,6 @@ feature
 			reflection: INTERNAL
 			current_class_instance: ANY
 			current_version, stored_version, no_of_attr, i: INTEGER
-			result_list: LINKED_LIST [PS_BACKEND_OBJECT]
 			stored_object: PS_BACKEND_OBJECT
 			stored_obj_attr_values: HASH_TABLE [TUPLE [STRING, STRING_8], STRING]
 			set: BOOLEAN
@@ -415,7 +413,6 @@ feature {NONE} -- Schema Evolution helper functions
 		local
 			reflection: INTERNAL
 			exception: EXCEPTIONS
-			test_instance: ANY
 		do
 			create reflection
 				-------------------------INTEGER-------------------------

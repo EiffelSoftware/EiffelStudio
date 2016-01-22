@@ -9,7 +9,7 @@
 			<exclude>/tests$</exclude>
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
-		<option full_class_checking="false" cat_call_detection="none" is_attached_by_default="true" void_safety="transitional" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option void_safety="transitional" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>

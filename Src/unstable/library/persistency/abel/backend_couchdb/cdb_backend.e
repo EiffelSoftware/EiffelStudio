@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Stores objects as json documents in a CouchDB"
 	author: "Pascal Roos"
 	date: "$Date$"
@@ -98,7 +98,6 @@ feature {PS_ABEL_EXPORT} -- Object retrieval operations
 	internal_retrieve_from_keys (type: PS_TYPE_METADATA; primary_keys: LIST [INTEGER]; transaction: PS_INTERNAL_TRANSACTION): LINKED_LIST [PS_BACKEND_OBJECT]
 			-- Retrieve all objects of type `type' and with primary key in `primary_keys'.
 		local
-			all_items: ITERATION_CURSOR [PS_BACKEND_OBJECT]
 			output: STRING
 			result_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
 			current_obj: PS_BACKEND_OBJECT
@@ -248,9 +247,8 @@ feature {PS_REPOSITORY_CONNECTOR} -- Implementation
 			-- Only write the attributes present in {PS_BACKEND_OBJECT}.attributes.
 		local
 			db_name, doc, rev: STRING
-			err, prev: detachable STRING
+			err: detachable STRING
 			prev_attr_list: LINKED_LIST [PS_PAIR [STRING, STRING]]
-			new_primary: PS_PAIR [INTEGER, STRING]
 		do
 
 			across

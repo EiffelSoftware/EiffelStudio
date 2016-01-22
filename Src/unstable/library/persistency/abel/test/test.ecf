@@ -10,7 +10,7 @@
 		<file_rule>
 			<exclude>^/test_classes$</exclude>
 		</file_rule>
-		<option trace="false" warning="true" full_class_checking="false" cat_call_detection="none" is_attached_by_default="true" void_safety="transitional" syntax="provisional" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>

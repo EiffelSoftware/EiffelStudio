@@ -413,7 +413,7 @@
 						<td class="text-center" itemprop="status"><img src="{$host/}/static/images/status_{$item.status.id/}.gif" class="img-rounded" data-original-title="{$item.status.synopsis/}"></td>
 						<td class="text-center" itemprop="priority"><img src="{$host/}/static/images/priority_{$item.priority.synopsis/}.gif" class="img-rounded" data-original-title="{$item.priority.synopsis/}"></td>
 						<td class="text-center" itemprop="severity"><img src="{$host/}/static/images/severity_{$item.severity.synopsis/}.gif" class="img-rounded" data-original-title="{$item.severity.synopsis/}"></td>
-						<td itemprop="synopsis">{$item.synopsis/}</td>
+						<td itemprop="synopsis"><a href="{$host/}/report_detail/{$item.number/}" itemprop="report-interaction" rel="report-interaction">{htmlentities}{$item.synopsis/}{/htmlentities}</a></td>
 						<td itemprop="submitter">{$item.contact.name/}</td>
 						<td itemprop="submission_date">{$item.submission_date_output/}</td>
 						<td itemprop="responsible">

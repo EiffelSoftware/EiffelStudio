@@ -37,9 +37,16 @@
 								<div class="col-xs-4">
 									<span class="label label-primary-api-default" itemprop="release">Release:</span>	<span>{$report.release/}</span> <br/>
 								</div>
-								<div class="col-xs-4">
-									<span class="label label-primary-api-default" itemprop="confidential">Confidential:</span> <span>{$report.confidential/}</span> <br/>
-								</div>
+								{if condition="$report.confidential"}
+									<div class="col-xs-4">
+										<span class="label label-primary-api-default" itemprop="confidential">Confidential:</span> <span>Yes</span> <br/>
+									</div>
+								{/if}
+								{unless condition="$report.confidential"}
+									<div class="col-xs-4">
+										<span class="label label-primary-api-default" itemprop="confidential">Confidential:</span> <span>No</span> <br/>
+									</div>
+								{/unless}
 							</div>
 							<div class="row">
 								<div class="col-xs-4">
@@ -69,7 +76,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="description"><strong>Description</strong></div>
 										<div class="panel-body" id="textarea_17">
-												{htmlentities}{$report.description/}{/htmlentities}
+												<pre>{htmlentities}{$report.description/}{/htmlentities}</pre>
 										</div>
 									</div>
 								</div>
@@ -79,7 +86,7 @@
 									<div class="panel panel-default">
 										<div class="panel-heading" itemprop="to_reproduce"><strong>To Reproduce</strong></div>
 										<div class="panel-body" id="textarea_7">
-											  	{htmlentities}{$report.to_reproduce/}{/htmlentities}
+											  	<pre>{htmlentities}{$report.to_reproduce/}{/htmlentities}</pre>
 										</div>
 									</div>
 								</div>

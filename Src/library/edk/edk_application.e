@@ -1,6 +1,5 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,12 +27,12 @@ feature -- Access
 
 	display: EDK_DISPLAY
 			-- Return the display used for displaying Windows.
-		local
-			l_result: detachable EDK_DISPLAY
 		do
-			l_result := display_cell.item
-			check l_result /= Void end
-			Result := l_result
+			check
+				from_invariant: attached display_cell.item as d
+			then
+				Result := d
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -41,4 +40,17 @@ feature {NONE} -- Implementation
 	display_cell: CELL [detachable EDK_DISPLAY]
 		-- Place holder for cell.
 
+invariant
+	attached_display_cell_item: attached display_cell.item
+
+;note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

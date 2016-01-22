@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "System's root class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,6 @@ feature -- Initialization
 		local
 			l_app_server: EDK_APPLICATION_SERVER
 			app: EDK_APPLICATION
-			message: EDK_MESSAGE
 			n: NATURAL
 			l_thread: WORKER_THREAD
 			i: ANY
@@ -37,23 +36,15 @@ feature -- Initialization
 				l_thread.launch
 				n := n + 1
 			end
-
-
---			l_thread.join_all
 			create_window
-
 		end
 
 		display: EDK_DISPLAY
 
-		window: EDK_WINDOW
-
 		create_window
 			local
 				l_window: NATIVE_WINDOW
-				n: NATURAL
 				message: EDK_MESSAGE
-				native_message: EDK_MESSAGE
 			do
 				create l_window.make_with_style ({WINDOW_ATTRIBUTES}.toplevel_window)
 				create message
@@ -72,4 +63,14 @@ feature -- Initialization
 				end
 			end
 
-end -- class EDK
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+end

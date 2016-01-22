@@ -1,6 +1,5 @@
-note
-	description: "Summary description for {EDK_TYPE_REGISTRATION}."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,24 +27,23 @@ feature {EDK_WINDOW}
 			-- Register type of `Current'
 		local
 			l_current_type_id: INTEGER
-			l_window_type: detachable TYPE [EDK_WINDOW]
 			l_namespace: STRING
 			l_type_registration: EDK_TYPE_REGISTRATION
 		do
-			l_window_type ?= type_of (a_window_type)
-			check l_window_type /= Void end
-			l_current_type_id := dynamic_type (a_window_type)
-			if not registered_window_types.has (l_window_type) then
-				registered_window_types.extend (l_window_type)
+			if attached {TYPE [EDK_WINDOW]} type_of (a_window_type) as l_window_type then
+				l_current_type_id := dynamic_type (a_window_type)
+				if not registered_window_types.has (l_window_type) then
+					registered_window_types.extend (l_window_type)
 
-					-- Create namespace from type
-				l_namespace := a_window_type.generating_type.as_lower
+						-- Create namespace from type
+					l_namespace := a_window_type.generating_type.name.as_lower
 
-				create l_type_registration.make (l_window_type)
-				a_window_type.register_messages (l_type_registration)
-				a_window_type.register_properties (l_type_registration)
+					create l_type_registration.make (l_window_type)
+					a_window_type.register_messages (l_type_registration)
+					a_window_type.register_properties (l_type_registration)
 
-				a_window_type.set_property_structure (l_type_registration.default_data_structure)
+					a_window_type.set_property_structure (l_type_registration.default_data_structure)
+				end
 			end
 		end
 
@@ -70,5 +68,14 @@ feature {EDK_TYPE_REGISTRATION, EDK_PROPERTY_ATTRIBUTES} -- External
 			]"
 		end
 
-
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

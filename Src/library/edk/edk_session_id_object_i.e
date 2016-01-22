@@ -1,6 +1,5 @@
-note
-	description: "Summary description for {EDK_SESSION_ID_OBJECT_I}."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +8,6 @@ deferred class
 
 inherit
 	EDK_MESSAGE_SENDER
-
 
 feature {NONE} -- Implementation
 
@@ -42,9 +40,7 @@ feature {NONE} -- Implementation
 		-- Used for session weak-referencing
 
 	identified_routines: IDENTIFIED_ROUTINES
-		note
-			once_status: global
-		once
+		once ("PROCESS")
 			create Result
 		end
 
@@ -58,4 +54,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

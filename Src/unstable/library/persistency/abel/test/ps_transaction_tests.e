@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tests ABELs transaction capabilities"
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -152,7 +152,6 @@ feature {PS_REPOSITORY_TESTS}
 			-- Test if an object updated within an aborted transaction gets rolled back correctly
 		local
 			some_person: TEST_PERSON
-			t1: PS_INTERNAL_TRANSACTION
 			q1, q2: PS_QUERY [TEST_PERSON]
 
 			transaction: PS_TRANSACTION

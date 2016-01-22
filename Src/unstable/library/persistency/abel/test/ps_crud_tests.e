@@ -188,7 +188,6 @@ feature {PS_REPOSITORY_TESTS} -- Basic and expanded types
 		local
 			test: PS_GENERIC_CRUD_TEST [EXPANDED_PERSON]
 			person: EXPANDED_PERSON
-			anybox: ANY_BOX
 		do
 			repository.wipe_out
 			create test.make (repository)
@@ -334,9 +333,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 	test_update_on_reference
 			-- test if an update on a referenced object works
 		local
-			query: PS_QUERY [DATA_STRUCTURES_CLASS_1]
-			retrieved: DATA_STRUCTURES_CLASS_1
-			testdata_copy: DATA_STRUCTURES_CLASS_1
 
 			test: PS_GENERIC_CRUD_TEST [DATA_STRUCTURES_CLASS_1]
 		do
@@ -359,7 +355,6 @@ feature {PS_REPOSITORY_TESTS} -- Collections
 			a,b: SHARED_SPECIAL
 			special: SPECIAL [INTEGER]
 			query: PS_QUERY [SHARED_SPECIAL]
-			query2: PS_QUERY [SPECIAL [INTEGER]]
 			transaction: PS_TRANSACTION
 		do
 			repository.wipe_out

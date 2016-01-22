@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tests all CRUD operations on generic objects."
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -31,7 +31,7 @@ feature {PS_CRUD_TESTS}
 			-- Tests all the CRUD operations on `object'
 			-- An update on object is done with `update_operation'.
 		local
-			first_count, second_count, third_count: INTEGER
+			first_count, second_count: INTEGER
 		do
 				-- Test successful insert
 			repo_access.insert (object)

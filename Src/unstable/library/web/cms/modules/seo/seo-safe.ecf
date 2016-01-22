@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="seo" uuid="D53D622D-1F5A-4079-82B9-3E9A1605832B" library_target="seo">
+	<target name="seo">
+		<root all_classes="true"/>
+		<option is_obsolete_routine_type="false">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cms" location="..\..\cms-safe.ecf" readonly="false"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error-safe.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

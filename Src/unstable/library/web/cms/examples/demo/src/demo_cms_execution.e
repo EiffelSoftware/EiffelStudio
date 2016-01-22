@@ -51,10 +51,17 @@ feature -- CMS modules
 			a_setup.register_module (create {CMS_BASIC_AUTH_MODULE}.make)
 			a_setup.register_module (create {CMS_OAUTH_20_MODULE}.make)
 			a_setup.register_module (create {CMS_OPENID_MODULE}.make)
+			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
 
 				-- Nodes
 			a_setup.register_module (create {CMS_NODE_MODULE}.make (a_setup))
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
+
+				-- Contact
+			a_setup.register_module (create {CMS_CONTACT_MODULE}.make)
+
+				-- Misc
+			a_setup.register_module (create {CMS_SEO_MODULE}.make)
 
 				-- Taxonomy
 			a_setup.register_module (create {CMS_TAXONOMY_MODULE}.make)
@@ -66,10 +73,9 @@ feature -- CMS modules
 			a_setup.register_module (create {FEED_AGGREGATOR_MODULE}.make)
 
 				-- Miscellanious
+			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
 			a_setup.register_module (create {CMS_DEBUG_MODULE}.make)
 			a_setup.register_module (create {CMS_DEMO_MODULE}.make)
-			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
-			a_setup.register_module (create {CMS_SESSION_AUTH_MODULE}.make)
 		end
 
 end

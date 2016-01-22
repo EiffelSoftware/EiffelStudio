@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="store_mysql" uuid="DC757CBD-D8C4-44D6-A07F-C1148D8D233E" library_target="store_mysql">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="store_mysql" uuid="DC757CBD-D8C4-44D6-A07F-C1148D8D233E" library_target="store_mysql">
+	<description>CMS Eiffel Store MySQL persistence solution</description>
 	<target name="store_mysql">
 		<root all_classes="true"/>
-		<option warning="true" void_safety="all">
+		<option warning="true" is_obsolete_routine_type="false" void_safety="all">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -26,9 +27,9 @@
 		</cluster>
 		<cluster name="persistence_store_mysql" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

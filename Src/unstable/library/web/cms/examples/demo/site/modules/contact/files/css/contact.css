@@ -1,0 +1,124 @@
+.contact-box {
+  background-color: #F2F7F9;
+  width: 465px;
+  padding: 20px;
+  border: 6px solid #8FB5C1;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  position: relative;
+  /* Remove box shadow firefox, chrome and opera put around required fields. 
+   * It looks rubbish. 
+   */
+  /* Normalize placeholder styles */
+  /* chrome, safari */
+  /* mozilla */
+  /* ie (faux placeholder) */
+}
+.contact-box h1 {
+  font-size: 42px;
+}
+.contact-box h2 {
+  margin-bottom: 15px;
+  font-style: italic;
+  font-weight: normal;
+}
+.contact-box label {
+  font-size: 15px;
+  margin-bottom: 2px;
+  display: block;
+}
+.contact-box input, .contact-box select, .contact-box textarea {
+  width: 100%;
+  font-size: 15px;
+  border: 1px solid #CEE1E8;
+  margin-bottom: 20px;
+  padding: 4px;
+}
+.contact-box input:focus, .contact-box select:focus, .contact-box textarea:focus {
+  border: 1px solid #AFCDD8;
+  background-color: #EBF2F4;
+}
+.contact-box textarea {
+  height: 150px;
+  resize: none;
+}
+.contact-box span.required {
+  font-weight: bold;
+  color: #F00;
+}
+.contact-box input[type=submit] {
+  width: 100px;
+  background-color: #333;
+  color: #FFF;
+  border: none;
+  display: block;
+  float: right;
+  margin-bottom: 0px;
+  margin-right: 6px;
+  background-color: #8FB5C1;
+  -moz-border-radius: 8px;
+}
+.contact-box input[type=submit]:hover {
+  background-color: #A6CFDD;
+}
+.contact-box input[type=submit]:active {
+  position: relative;
+  top: 1px;
+}
+.contact-box .message {
+  width: 95%;
+  margin: 25px 0px;
+  padding: 10px;
+  display: block;
+  border: solid 1px #ccc;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+}
+.contact-box .message.hidden {
+  display: none;
+}
+.contact-box .message.error {
+  border-color: #E58E8E;
+  background-color: #FFE6E6;
+}
+.contact-box .message.error li {
+  padding: 2px;
+  list-style: none;
+}
+.contact-box .message.error li:before {
+  content: ' - ';
+}
+.contact-box .message.error #info {
+  font-weight: bold;
+}
+.contact-box .message.error #info:before {
+  content: '';
+}
+.contact-box .message.success {
+  border-color: #83D186;
+  padding-top: 25px;
+  background-color: #D3EDD3;
+}
+.contact-box .req-field-desc {
+  font-style: italic;
+}
+.contact-box input:required, .contact-box textarea:required {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+}
+.contact-box ::-webkit-input-placeholder {
+  color: #CCC;
+  font-style: italic;
+}
+.contact-box input:-moz-placeholder, .contact-box textarea:-moz-placeholder {
+  color: #CCC;
+  font-style: italic;
+}
+.contact-box input.placeholder-text, .contact-box textarea.placeholder-text {
+  color: #CCC;
+  font-style: italic;
+}

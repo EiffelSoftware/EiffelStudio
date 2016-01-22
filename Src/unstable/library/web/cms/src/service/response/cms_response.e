@@ -91,18 +91,32 @@ feature -- Access
 
 	header: WSF_HEADER
 
+	main_content: detachable STRING_8
+
+feature -- Access: metadata
+
 	title: detachable READABLE_STRING_32
 
 	page_title: detachable READABLE_STRING_32
 			-- Page title
 
-	main_content: detachable STRING_8
+	description: detachable READABLE_STRING_32
+
+	keywords: detachable READABLE_STRING_32
+
+	publication_date: detachable DATE_TIME
+			-- Optional publication date.
+
+	modification_date: detachable DATE_TIME
+			-- Optional modification date.
 
 	additional_page_head_lines: detachable LIST [READABLE_STRING_8]
 			-- HTML>head>...extra lines
 
 	redirection: detachable READABLE_STRING_8
 			-- Location for eventual redirection.
+
+feature -- Access: query
 
 	location: STRING_8
 			-- Associated cms local location.
@@ -112,6 +126,7 @@ feature -- Access
 				Result.remove_head (1)
 			end
 		end
+
 
 feature -- API
 
@@ -284,6 +299,32 @@ feature -- Element change
 	set_page_title (t: like page_title)
 		do
 			page_title := t
+		end
+
+	set_description (d: like description)
+		do
+			description := d
+		end
+
+	set_keywords (s: like keywords)
+		do
+			keywords := s
+		end
+
+	set_publication_date (dt: like publication_date)
+		do
+			publication_date := dt
+			if dt /= Void and modification_date = Void then
+				modification_date := dt
+			end
+		end
+
+	set_modification_date (dt: like modification_date)
+		do
+			modification_date := dt
+			if dt /= Void and publication_date = Void then
+				publication_date := dt
+			end
 		end
 
 	set_main_content (s: like main_content)
@@ -1358,6 +1399,6 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

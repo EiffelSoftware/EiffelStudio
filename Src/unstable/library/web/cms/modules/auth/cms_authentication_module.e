@@ -95,7 +95,7 @@ feature -- Router
 		do
 			create m.make_trailing_slash_ignored ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account(a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
-			
+
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
@@ -672,16 +672,19 @@ feature -- Handler
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+		local
+			loc: READABLE_STRING_8
 		do
-			if a_block_id.is_case_insensitive_equal_general ("register") and then a_response.location.starts_with ("account/roc-register") then
+			loc := a_response.location
+			if a_block_id.is_case_insensitive_equal_general ("register") and then loc.starts_with ("account/roc-register") then
 				get_block_view_register (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("reactivate") and then a_response.location.starts_with ("account/reactivate") then
+			elseif a_block_id.is_case_insensitive_equal_general ("reactivate") and then loc.starts_with ("account/reactivate") then
 				get_block_view_reactivate (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("new_password") and then a_response.location.starts_with ("account/new-password") then
+			elseif a_block_id.is_case_insensitive_equal_general ("new_password") and then loc.starts_with ("account/new-password") then
 				get_block_view_new_password (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then a_response.location.starts_with ("account/reset-password") then
+			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with ("account/reset-password") then
 				get_block_view_reset_password (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("registration") and then a_response.location.starts_with ("admin/pending-registrations") then
+			elseif a_block_id.is_case_insensitive_equal_general ("registration") and then loc.starts_with ("admin/pending-registrations") then
 				get_block_view_registration (a_block_id, a_response)
 			end
 		end

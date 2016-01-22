@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Calculate spring force for a particle.
 			force := - center_attraction * (particle_position - center) / distance (particle_position, center)
@@ -113,16 +113,12 @@ feature {NONE} -- Implementation
 
 	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
-		local
-			l_result: detachable like particle_type
 		do
-			check anchor_type_only: False end
-			check l_result /= Void end -- Satisfy void-safe compiler
-			Result := l_result
+			check is_used_as_type_anchor: False then end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -132,8 +128,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_SPRING_PARTICLE
+end
 

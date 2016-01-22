@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Test objects for serialization, filled in with attributes of the following types:
 		ARRAY [FLAT_CLASS_1], ARRAY2 [FLAT_CLASS_1], SPECIAL [FLAT_CLASS_1],
@@ -28,7 +28,6 @@ feature -- Initialization
 			-- Initialization for `Current'.
 		local
 			i: NATURAL
-			s: STRING
 		do
 			create array_1.make_filled (create {FLAT_CLASS_1}.make, 1, 10)
 			create array_2.make_filled (create {FLAT_CLASS_1}.make, 5, 5)

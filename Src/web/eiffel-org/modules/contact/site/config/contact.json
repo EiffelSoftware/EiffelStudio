@@ -1,8 +1,0 @@
-{
-	"email": "webmaster@eiffel.org",
-	"subjet": "Thank you for contacting us",
-    "recaptcha": {
-     		"site_key":"",
-     		"secret_key":""
-     }	
-}

@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					When a SD_FLOATING_TOOL_BAR_ZONE is resizing by user.
-					SD_TOOL_BAR_GROUP_DIVIDER will calculate best grouping.
-					It will get total minmum size.
-																														]"
+		When a SD_FLOATING_TOOL_BAR_ZONE is resizing by user.
+		SD_TOOL_BAR_GROUP_DIVIDER will calculate best grouping.
+		It will get total minmum size.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -26,15 +26,13 @@ feature {NONE} -- Initlization
 			l_group_count: INTEGER
 		do
 			l_group_count := a_content.groups_count (False)
-			create algorithm.make (l_group_count)
 			content := a_content
 			l_items := a_content.items_visible
 
-			algorithm.set_items_width (init_group_width (a_content.items_visible))
+			create algorithm.make (l_group_count, init_group_width (a_content.items_visible))
 			init_grouping_infos
 		ensure
 			set: content = a_content
-			set: algorithm.item_width /= Void
 		end
 
 	init_group_width (a_items: LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
@@ -337,19 +335,14 @@ feature {NONE} -- Implementation
 		local
 			l_row_left: INTEGER
 			l_group: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]
-			l_item_width: detachable ARRAYED_LIST [INTEGER]
 		do
 			if a_group_count >= 1 then
 				if a_group_count > algorithm.max_group_count then
 					l_group := algorithm.best_grouping_when (algorithm.max_group_count)
-					l_item_width := algorithm.item_width
-					check l_item_width /= Void end-- Implied by `make_with_content's postcondition
-					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, l_item_width)
+					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, algorithm.item_width)
 				else
 					l_group := algorithm.best_grouping_when (a_group_count)
-					l_item_width := algorithm.item_width
-					check l_item_width /= Void end-- Implied by `make_with_content's postcondition					
-					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, l_item_width)
+					internal_refined_grouping := convert_arrayed_list_to_group_info (l_group, False, algorithm.item_width)
 				end
 
 				if a_group_count > content.groups_count (False) and a_group_count <= content.item_count_except_sep (False) then
@@ -378,13 +371,12 @@ feature {NONE} -- Implementation
 				Result := l_result
 			else
 				l_sub_group_item_count := content.group_items (a_max_width_group_index, False).count
-				create Result.make (l_sub_group_item_count)
-				Result.set_items_width (group_item_width (content.group_items (a_max_width_group_index, False)))
+				create Result.make (l_sub_group_item_count,
+					group_item_width (content.group_items (a_max_width_group_index, False)))
 				grouping_algorithm.extend (Result, a_max_width_group_index)
 			end
 		ensure
 			not_void: Result /= Void
-			set: Result.item_width /= Void
 		end
 
 	compute_extra_groups (a_extra_group_count: INTEGER)
@@ -398,7 +390,6 @@ feature {NONE} -- Implementation
 			l_reduced: INTEGER
 			l_stop: BOOLEAN
 			l_max_info: TUPLE [max_group_index: INTEGER; max_row_item_count: INTEGER]
-			l_item_width: detachable ARRAYED_LIST [INTEGER]
 			l_refined_grouping: like internal_refined_grouping
 		do
 			from
@@ -432,16 +423,14 @@ feature {NONE} -- Implementation
 								-- `l_temp_algorithm' is maximum width group which only have one item, so we stop here
 								l_stop := True
 							else
-								l_item_width := l_temp_algorithm.item_width
-								check l_item_width /= Void end -- Implied by `grouping_algorithm_factory's postcondition
-								insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (2), l_max_info.max_group_index, l_item_width)
+								insert_arrayed_list_to_group_info_sub_level
+									(l_temp_algorithm.best_grouping_when (2), l_max_info.max_group_index, l_temp_algorithm.item_width)
 							end
 						else
 							-- Is from a sub group info
 							l_max_group_info.start
-							l_item_width := l_temp_algorithm.item_width
-							check l_item_width /= Void end -- Implied by `grouping_algorithm_factory's postcondition							
-							insert_arrayed_list_to_group_info_sub_level (l_temp_algorithm.best_grouping_when (l_max_group_info.group_count + 1), l_max_info.max_group_index, l_item_width)
+							insert_arrayed_list_to_group_info_sub_level
+								(l_temp_algorithm.best_grouping_when (l_max_group_info.group_count + 1), l_max_info.max_group_index, l_temp_algorithm.item_width)
 						end
 					end
 				end
@@ -476,7 +465,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

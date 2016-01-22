@@ -86,7 +86,7 @@ feature -- Element change
 				if l_t.count > 1024 then
 					l_string := l_t.head (1024)
 					l_string.append_string ("%N....%N")
-					l_string.append_string ("Output truncated, Click downlaod to get the full message")
+					l_string.append_string ("Output truncated, Click download to get the full message")
 					content_truncated := l_string
 				end
 			end

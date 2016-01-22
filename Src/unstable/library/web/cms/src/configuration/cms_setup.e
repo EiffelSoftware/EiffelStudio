@@ -209,6 +209,38 @@ feature -- Access: Site
 			Result := utf.utf_32_string_to_utf_8_string_8 (site_name)
 		end
 
+	site_properties: detachable STRING_TABLE [READABLE_STRING_32]
+			-- Optional site properties.
+		do
+			Result := text_table_item ("site.property")
+		end
+
+	site_property (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+		do
+			Result := text_item ({STRING_32} "site." + a_name.as_string_32)
+			if Result = Void and then attached site_properties as props then
+				Result := props.item (a_name)
+			end
+		end
+
+	site_description: detachable READABLE_STRING_32
+			-- Optional site description.
+		do
+			Result := site_property ("description")
+		end
+
+	site_headline: detachable READABLE_STRING_32
+			-- Optional site headline.	
+		do
+			Result := site_property ("headline")
+		end
+
+	site_keywords: detachable READABLE_STRING_32
+			-- Optional site comma separated keywords.
+		do
+			Result := site_property ("keywords")
+		end
+
 	site_email: READABLE_STRING_8
 			-- Website email address.
 			-- Used as "From:" address when the site is sending emails

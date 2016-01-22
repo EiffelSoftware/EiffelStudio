@@ -24,6 +24,7 @@
 		<library name="cms_auth_module" location="..\..\modules\auth\auth-safe.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="..\..\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
 		<library name="cms_blog_module" location="..\..\modules\blog\cms_blog_module-safe.ecf" readonly="false"/>
+		<library name="cms_contact_module" location="..\..\modules\contact\contact-safe.ecf" readonly="false"/>
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 		<library name="cms_email_service" location="..\..\library\email\email-safe.ecf" readonly="false"/>
 		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
@@ -33,6 +34,7 @@
 		<library name="cms_oauth_20_module" location="..\..\modules\oauth20\oauth20-safe.ecf" readonly="false"/>
 		<library name="cms_openid_module" location="..\..\modules\openid\openid-safe.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="..\..\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
+		<library name="cms_seo_module" location="..\..\modules\seo\seo-safe.ecf" readonly="false"/>
 		<library name="cms_session_auth_module" location="..\..\modules\session_auth\cms_session_auth-safe.ecf" readonly="false"/>
 		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy-safe.ecf" readonly="false"/>
 		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false">
@@ -48,7 +50,7 @@
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension-safe.ecf" readonly="false"/>
 	</target>
 	<target name="demo_any" extends="common">
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="any_launcher" location="..\..\launcher\any-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>

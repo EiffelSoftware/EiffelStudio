@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" 
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" 
-		name="abel_backend_couchdb" 
-		uuid="91D6C1B2-5613-4ADE-AB3B-A295F9D252DE" 
-		library_target="abel_backend_couchdb">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="abel_backend_couchdb" uuid="91D6C1B2-5613-4ADE-AB3B-A295F9D252DE" library_target="abel_backend_couchdb">
 	<target name="abel_backend_couchdb">
 		<root all_classes="true"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-<!--		<library name="eiffelstore2" location="../abel/eiffelstore2.ecf"/>
-		<library name="cdb_database" location="../CDB/cdb_database.ecf"/>
-		<library name="persistence_utils" location="../persistence_utils/persistence_utils.ecf"/> -->
 		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf"/>
-		<library name="curl" location="$ISE_LIBRARY/library/cURL/cURL-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL-safe.ecf"/>
 		<cluster name="abel_backend_couchdb" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

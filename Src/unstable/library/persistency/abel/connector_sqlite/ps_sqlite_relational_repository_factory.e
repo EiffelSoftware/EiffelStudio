@@ -32,7 +32,6 @@ feature -- Element change
 	manage (type: TYPE [detachable ANY]; primary_key_attribute: STRING)
 			-- Manage `type' and deal with the primary key stored in `primary_key_attribute'
 		local
-			name: IMMUTABLE_STRING_8
 			type_meta: PS_TYPE_METADATA
 			internal: INTERNAL
 		do

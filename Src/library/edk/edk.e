@@ -18,10 +18,7 @@ feature -- Initialization
 			app: EDK_APPLICATION
 			n: NATURAL
 			l_thread: WORKER_THREAD
-			i: ANY
 		do
-			i := [1, "a", Void]
-			i := {NATURAL_8} 1
 			create l_app_server
 			app := l_app_server.application_from_namespace ("app")
 

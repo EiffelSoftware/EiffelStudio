@@ -13,7 +13,7 @@ inherit
 
 feature{MYSQLI_EXTERNALS} -- Internals
 
-	bind (a_bind: attached POINTER; a_buffer, a_is_null, a_length: attached MANAGED_POINTER)
+	bind (a_bind: POINTER; a_buffer, a_is_null, a_length: MANAGED_POINTER)
 			-- Fill in the BIND struct
 		deferred
 		end
@@ -384,14 +384,14 @@ feature -- Access (Types)
 		deferred
 		end
 
-	as_string_8: attached STRING_8
+	as_string_8: STRING_8
 			-- This value as a STRING_8
 		require
 			is_representable_as_string_8: is_representable_as_string_8
 		deferred
 		end
 
-	as_string_32: attached STRING_32
+	as_string_32: STRING_32
 			-- This value as a STRING_32
 		require
 			is_representable_as_string_32: is_representable_as_string_32
@@ -440,7 +440,7 @@ feature -- Access (Basic Types)
 			Result := as_real_64
 		end
 
-	as_string: attached STRING
+	as_string: STRING
 			-- This value as a STRING
 		require
 			is_representable_as_string: is_representable_as_string
@@ -450,35 +450,35 @@ feature -- Access (Basic Types)
 
 feature -- Access (Date and Time Types)
 
-	as_date_and_time_tuple: attached TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
+	as_date_and_time_tuple: TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
 			-- This value as a TUPLE
 		require
 			is_representable_as_date_and_time_tuple: is_representable_as_date_and_time_tuple
 		deferred
 		end
 
-	as_timestamp: attached DATE_TIME
+	as_timestamp: DATE_TIME
 			-- This value as a DATE_TIME
 		require
 			is_representable_as_timestamp: is_representable_as_timestamp
 		deferred
 		end
 
-	as_date: attached DATE
+	as_date: DATE
 			-- This value as a DATE
 		require
 			is_representable_as_date: is_representable_as_date
 		deferred
 		end
 
-	as_time: attached TIME
+	as_time: TIME
 			-- This value as a TIME
 		require
 			is_representable_as_time: is_representable_as_time
 		deferred
 		end
 
-	as_datetime: attached DATE_TIME
+	as_datetime: DATE_TIME
 			-- This value as a DATE_TIME
 		require
 			is_representable_as_datetime: is_representable_as_datetime
@@ -494,66 +494,66 @@ feature -- Access (Date and Time Types)
 
 feature{MYSQLI_VALUE} -- Access (MySQL Date and Time Converters)
 
-	date_time_tuple_as_date_time (a_tuple: like as_date_and_time_tuple): attached DATE_TIME
+	date_time_tuple_as_date_time (a_tuple: like as_date_and_time_tuple): DATE_TIME
 		do
 			create Result.make (a_tuple.years, a_tuple.months, a_tuple.days, a_tuple.hours, a_tuple.minutes, a_tuple.seconds)
 		end
 
-	date_time_tuple_as_date (a_tuple: like as_date_and_time_tuple): attached DATE
+	date_time_tuple_as_date (a_tuple: like as_date_and_time_tuple): DATE
 		do
 			create Result.make (a_tuple.years, a_tuple.months, a_tuple.days)
 		end
 
-	date_time_tuple_as_time (a_tuple: like as_date_and_time_tuple): attached TIME
+	date_time_tuple_as_time (a_tuple: like as_date_and_time_tuple): TIME
 		do
 			create Result.make (a_tuple.hours, a_tuple.minutes, a_tuple.seconds)
 		end
 
 feature -- Access (MySQL Date and Time Formatters)
 
-	default_timestamp_format_string: attached STRING
+	default_timestamp_format_string: STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			Result := "yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss"
 		end
 
-	default_datetime_format_string: attached STRING
+	default_datetime_format_string: STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			Result := "yyyy-[0]mm-[0]dd [0]hh:[0]mi:[0]ss"
 		end
 
-	default_date_format_string: attached STRING
+	default_date_format_string: STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			Result := "yyyy-[0]mm-[0]dd"
 		end
 
-	default_time_format_string: attached STRING
+	default_time_format_string: STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			Result := "[0]hh:[0]mi:[0]ss"
 		end
 
-	default_timestamp_format_code_string: attached DATE_TIME_CODE_STRING
+	default_timestamp_format_code_string: DATE_TIME_CODE_STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			create Result.make (default_timestamp_format_string)
 		end
 
-	default_datetime_format_code_string: attached DATE_TIME_CODE_STRING
+	default_datetime_format_code_string: DATE_TIME_CODE_STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			create Result.make (default_datetime_format_string)
 		end
 
-	default_date_format_code_string: attached DATE_TIME_CODE_STRING
+	default_date_format_code_string: DATE_TIME_CODE_STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			create Result.make (default_date_format_string)
 		end
 
-	default_time_format_code_string: attached DATE_TIME_CODE_STRING
+	default_time_format_code_string: DATE_TIME_CODE_STRING
 			-- http://dev.mysql.com/doc/refman/5.0/en/datetime.html
 		once
 			create Result.make (default_time_format_string)
@@ -561,7 +561,7 @@ feature -- Access (MySQL Date and Time Formatters)
 
 feature -- Access (Set Type)
 
-	as_set: attached SET [attached STRING]
+	as_set: SET [STRING]
 			-- This value as a SET [STRING]
 		require
 			is_representable_as_set: is_representable_as_set

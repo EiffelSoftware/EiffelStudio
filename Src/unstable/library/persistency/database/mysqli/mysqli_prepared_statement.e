@@ -45,7 +45,7 @@ feature -- Access (Errors)
 			Result := has_client_error or has_server_error
 		end
 
-	last_error_message: attached STRING
+	last_error_message: STRING
 			-- Last occured error, server or client
 		do
 			if has_server_error then
@@ -61,7 +61,7 @@ feature -- Access (Errors)
 			Result := last_server_error_number /= 0
 		end
 
-	last_server_error_message: attached STRING
+	last_server_error_message: STRING
 			-- Last occured server error
 		do
 			create Result.make_from_c (c_mysql_stmt_error (statement.item))
@@ -79,7 +79,7 @@ feature -- Access (Errors)
 			Result := not last_client_error_message.is_empty
 		end
 
-	last_client_error_message: attached STRING
+	last_client_error_message: STRING
 			-- Last occured client error
 
 	last_client_error_number: INTEGER
@@ -142,23 +142,23 @@ feature -- Commands
 
 feature -- Access
 
-	client: attached MYSQLI_CLIENT
+	client: MYSQLI_CLIENT
 			-- Client that created this statement
 
 	parameter_count: INTEGER
 			-- Number of parameters for the current statement
 
-	parameters: attached ARRAYED_LIST [attached MYSQLI_VALUE]
+	parameters: ARRAYED_LIST [MYSQLI_VALUE]
 			-- Parameters for the current statement
 			-- Size must not be changed!
 			-- Items must not be Void!
 
-	last_result: attached MYSQLI_RESULT
+	last_result: MYSQLI_RESULT
 			-- The result set created by the last successfuly call to `execute'
 
 feature{NONE} -- Internal
 
-	statement: attached MYSQLI_INTERNAL_STATEMENT
+	statement: MYSQLI_INTERNAL_STATEMENT
 			-- Wrapper for MYSQL_STMT C Struct
 
 feature{NONE} -- Implementation
@@ -180,15 +180,15 @@ feature{NONE} -- Implementation
 
 			l_field_array: POINTER
 			l_field: MYSQLI_FIELD
-			l_fields: ARRAYED_LIST [attached MYSQLI_FIELD]
+			l_fields: ARRAYED_LIST [MYSQLI_FIELD]
 
 			l_param_array: MYSQLI_INTERNAL_BIND_ARRAY
-			l_param_bind: TUPLE [buffer, length, is_null: attached MANAGED_POINTER]
+			l_param_bind: TUPLE [buffer, length, is_null: MANAGED_POINTER]
 			l_param_binds: ARRAYED_LIST [TUPLE [buffer, length, is_null: MANAGED_POINTER]]
 
 			l_bind_array: MYSQLI_INTERNAL_BIND_ARRAY
-			l_value_bind: attached TUPLE [buffer, length, is_null: attached MANAGED_POINTER]
-			l_value_binds: ARRAYED_LIST [attached TUPLE [buffer, length, is_null: attached MANAGED_POINTER]]
+			l_value_bind: TUPLE [buffer, length, is_null: MANAGED_POINTER]
+			l_value_binds: ARRAYED_LIST [TUPLE [buffer, length, is_null: MANAGED_POINTER]]
 		do
 			-- Ping the server to initiate a re-connect, if necessary
 			-- See: http://dev.mysql.com/doc/refman/5.0/en/auto-reconnect.html
@@ -430,14 +430,14 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	parse_mysql_string (a_value_bind: attached TUPLE [buffer, length, is_null: attached MANAGED_POINTER]): attached STRING
+	parse_mysql_string (a_value_bind: TUPLE [buffer, length, is_null: MANAGED_POINTER]): STRING
 				-- Read string from MYSQL_BIND C Struct
 		do
 			create Result.make (a_value_bind.buffer.read_integer_32 (0))
 			Result.from_c_substring (a_value_bind.buffer.item, 1, a_value_bind.length.read_integer_32 (0))
 		end
 
-	parse_mysql_timestamp (a_pointer: attached POINTER): attached TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
+	parse_mysql_timestamp (a_pointer: POINTER): TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
 				-- Read values from MYSQL_TIME C Struct
 		do
 			create Result.default_create

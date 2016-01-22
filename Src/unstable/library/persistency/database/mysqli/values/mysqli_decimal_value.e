@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_value: attached STRING)
+	make (a_value: STRING)
 			-- Set `value' to `a_value'.
 		do
 			value := a_value
@@ -37,11 +37,11 @@ feature{NONE} -- Initialization
 
 feature -- Access (Value)
 
-	value: attached STRING
+	value: STRING
 
 feature{MYSQLI_EXTERNALS} -- Internals
 
-	bind (a_bind: attached POINTER; a_buffer, a_is_null, a_length: attached MANAGED_POINTER)
+	bind (a_bind: POINTER; a_buffer, a_is_null, a_length: MANAGED_POINTER)
 			-- Fill in the BIND struct
 		do
 			c_struct_mysql_bind_set_buffer_type (a_bind, MYSQL_TYPE_DECIMAL)
@@ -335,13 +335,13 @@ feature -- Access (Types)
 			Result := value.to_double
 		end
 
-	as_string_8: attached STRING_8
+	as_string_8: STRING_8
 			-- This value as a STRING_8
 		do
 			Result := value
 		end
 
-	as_string_32: attached STRING_32
+	as_string_32: STRING_32
 			-- This value as a STRING_32
 		do
 			Result := value
@@ -349,35 +349,35 @@ feature -- Access (Types)
 
 feature -- Access (Date and Time Types)
 
-	as_date_and_time_tuple: attached TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
+	as_date_and_time_tuple: TUPLE [years, months, days, hours, minutes, seconds: INTEGER_32]
 			-- This value as a TUPLE
 		do
 			create Result.default_create
 			raise ("MYSQLI_DECIMAL_VALUE.as_date_and_time_tuple: current 'value' is not representable as a date and time tuple.")
 		end
 
-	as_timestamp: attached DATE_TIME
+	as_timestamp: DATE_TIME
 			-- This value as a DATE_TIME
 		do
 			create Result.make_now
 			raise ("MYSQLI_DECIMAL_VALUE.as_timestamp: current 'value' is not representable as a timestamp.")
 		end
 
-	as_date: attached DATE
+	as_date: DATE
 			-- This value as a DATE
 		do
 			create Result.make_now
 			raise ("MYSQLI_DECIMAL_VALUE.as_date: current 'value' is not representable as a date.")
 		end
 
-	as_time: attached TIME
+	as_time: TIME
 			-- This value as a TIME
 		do
 			create Result.make_now
 			raise ("MYSQLI_DECIMAL_VALUE.as_time: current 'value' is not representable as a time.")
 		end
 
-	as_datetime: attached DATE_TIME
+	as_datetime: DATE_TIME
 			-- This value as a DATE_TIME
 		do
 			create Result.make_now
@@ -392,10 +392,10 @@ feature -- Access (Date and Time Types)
 
 feature -- Access (Set Type)
 
-	as_set: attached SET [attached STRING]
+	as_set: SET [STRING]
 			-- This value as a SET [STRING]
 		local
-			l_linked_set: attached LINKED_SET [attached STRING]
+			l_linked_set: LINKED_SET [STRING]
 		do
 			create l_linked_set.make
 			Result := l_linked_set

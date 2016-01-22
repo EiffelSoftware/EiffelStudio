@@ -8,7 +8,7 @@ class
 	MYSQLI_ROW
 
 inherit
-	ARRAYED_LIST [attached MYSQLI_VALUE]
+	ARRAYED_LIST [MYSQLI_VALUE]
 		redefine
 			out,
 			new_filled_list
@@ -19,7 +19,7 @@ create{MYSQLI_EXTERNALS, MYSQLI_ROW}
 
 feature{NONE} -- Initialization
 
-	make_with_result (n: INTEGER; a_result: attached MYSQLI_RESULT)
+	make_with_result (n: INTEGER; a_result: MYSQLI_RESULT)
 			-- Initialize this row with size `n' and result set `a_result'.
 		do
 			make (n)
@@ -28,7 +28,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	at_field (a_field: attached STRING): attached MYSQLI_VALUE
+	at_field (a_field: STRING): MYSQLI_VALUE
 			-- Value at column `a_column'
 		require
 			mysql_result.field_map.has (a_field)
@@ -36,7 +36,7 @@ feature -- Access
 			Result := at (mysql_result.field_map.at (a_field))
 		end
 
-	as_hash_table: attached HASH_TABLE [attached MYSQLI_VALUE, attached STRING]
+	as_hash_table: HASH_TABLE [MYSQLI_VALUE, STRING]
 			-- This row as a hash table, keys are field names, values are values
 		once ("OBJECT")
 			create Result.make (mysql_result.fields.count)
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Access
 
-	out: attached STRING
+	out: STRING
 			-- Return all the values in this row joined by commas
 		once ("OBJECT")
 			create Result.make_empty
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Access (Result)
 
-	mysql_result: attached MYSQLI_RESULT
+	mysql_result: MYSQLI_RESULT
 			-- Result set this row is contained in
 
 feature {NONE}	-- Implementation

@@ -43,22 +43,22 @@ feature{NONE} -- Initialization
 
 feature -- Connection
 
-	host: STRING
+	host: detachable STRING
 			-- Host name of the database server, default: "127.0.0.1", can be Void.
 
-	username: STRING
+	username: detachable STRING
 			-- User name used to connect to the database server, default: "root", can be Void.
 
-	password: STRING
+	password: detachable STRING
 			-- Password used to connect to the database server, default: empty, can be Void.
 
-	database: STRING
+	database: detachable STRING
 			-- Name of the database, default: "test", can be Void.
 
 	port: INTEGER
 			-- Port of database server, default: 3306.
 
-	unix_socket: STRING
+	unix_socket: detachable STRING
 			-- Name of Unix socket, default: Void, can be Void.
 
 	flags: INTEGER
@@ -211,7 +211,7 @@ feature -- Flags
 
 feature -- Settings
 
-	settings_as_tuple: attached TUPLE [host, username, password, database, unix_socket: STRING; port, flags: INTEGER]
+	settings_as_tuple: TUPLE [host, username, password, database, unix_socket: detachable STRING; port, flags: INTEGER]
 			-- Settings for this client in a convenient tuple.
 		do
 			create Result
@@ -257,7 +257,7 @@ feature -- Access (Errors)
 			Result := has_client_error or has_server_error
 		end
 
-	last_error_message: attached STRING
+	last_error_message: STRING
 			-- Last occured error, server or client
 		do
 			if has_server_error then
@@ -273,7 +273,7 @@ feature -- Access (Errors)
 			Result := last_server_error_number /= 0
 		end
 
-	last_server_error_message: attached STRING
+	last_server_error_message: STRING
 			-- Last occured server error
 		do
 			create Result.make_from_c (c_mysql_error (client.item))
@@ -285,7 +285,7 @@ feature -- Access (Errors)
 			Result := c_mysql_errno (client.item).to_integer_32
 		end
 
-	last_sqlstate: attached STRING
+	last_sqlstate: STRING
 			-- Last SQLState error code
 		do
 			create Result.make_from_c (c_mysql_sqlstate(client.item))
@@ -301,7 +301,7 @@ feature -- Access (Errors)
 			end
 		end
 
-	last_client_error_message: attached STRING
+	last_client_error_message: STRING
 			-- Last occured client error
 
 	last_client_error_number: INTEGER
@@ -309,7 +309,7 @@ feature -- Access (Errors)
 
 feature -- Access (Info)
 
-	server_info: attached STRING
+	server_info: STRING
 			-- Server version number as a string
 		local
 			l_return_pointer: POINTER
@@ -328,7 +328,7 @@ feature -- Access (Info)
 			Result := c_mysql_get_server_version (client.item).to_integer_32
 		end
 
-	client_info: attached STRING
+	client_info: STRING
 			-- Client version number as a string
 		local
 			l_return_pointer: POINTER
@@ -347,7 +347,7 @@ feature -- Access (Info)
 			Result := c_mysql_get_client_version.to_integer_32
 		end
 
-	host_info: attached STRING
+	host_info: STRING
 			-- Server host name and the connection type.
 		local
 			l_return_pointer: POINTER
@@ -366,7 +366,7 @@ feature -- Access (Info)
 			Result := c_mysql_get_proto_info (client.item).to_integer_32
 		end
 
-	status: attached STRING
+	status: STRING
 			-- Information about uptime in seconds and the number of running threads, questions, reloads, and open tables.
 			-- http://dev.mysql.com/doc/refman/5.1/en/mysql-stat.html
 		local
@@ -438,7 +438,7 @@ feature -- Transactions
 
 feature -- Helpers
 
-	to_hex_string (a_string: attached STRING): STRING
+	to_hex_string (a_string: STRING): STRING
 			-- This function is used to create a legal SQL string that you can use in an SQL statement.
 			-- http://dev.mysql.com/doc/refman/5.1/en/mysql-hex-string.html
 		local
@@ -451,7 +451,7 @@ feature -- Helpers
 			Result.from_c_substring (l_return.item, 1, l_return_value.as_integer_32)
 		end
 
-	to_escaped_string (a_string: attached STRING): STRING
+	to_escaped_string (a_string: STRING): STRING
 			-- This function is used to create a legal SQL string that you can use in an SQL statement.
 			-- http://dev.mysql.com/doc/refman/5.1/en/mysql-real-escape-string.html
 		local
@@ -494,7 +494,7 @@ feature -- Commands
 			retry
 		end
 
-	select_database (a_database: attached STRING)
+	select_database (a_database: STRING)
 			-- Causes `a_database' to become the default (current) database for the current connection
 		local
 			l_retried: BOOLEAN
@@ -522,7 +522,7 @@ feature -- Commands
 			retry
 		end
 
-	set_character_set (a_character_set: attached STRING)
+	set_character_set (a_character_set: STRING)
 			-- Set `a_character_set' to become the  default character set for the current connection
 		local
 			l_retried: BOOLEAN
@@ -551,7 +551,7 @@ feature -- Commands
 			retry
 		end
 
-	execute_query (a_query: attached STRING)
+	execute_query (a_query: STRING)
 			-- Executes `a_query'.
 			-- The result set is always available in `last_result'.
 			-- Multiple result sets are made available in `last_results'.
@@ -580,7 +580,7 @@ feature -- Commands
 			retry
 		end
 
-	prepare_statement (a_statement: attached STRING)
+	prepare_statement (a_statement: STRING)
 			-- Prepares the statement in `a_statement'.
 			-- The prepared statement is available in `last_prepared_statement' if the call is successful.
 			-- If an error occurred `has_error' will be True and `last_error_message' will contain the error message.
@@ -616,27 +616,27 @@ feature -- Commands
 
 feature -- Access (Results)
 
-	last_result: attached MYSQLI_RESULT
+	last_result: MYSQLI_RESULT
 			-- The last result set created by the last call to `execute_query'
 
-	last_results: attached LINKED_LIST [attached MYSQLI_RESULT]
+	last_results: LINKED_LIST [MYSQLI_RESULT]
 			-- The result sets created by the last call to `execute_query'
 
-	last_prepared_statement: MYSQLI_PREPARED_STATEMENT
+	last_prepared_statement: detachable MYSQLI_PREPARED_STATEMENT
 			-- The prepared statement created by the last call to `prepare_statement'
 
 feature{MYSQLI_EXTERNALS} -- Internal
 
-	client: attached MYSQLI_INTERNAL_CLIENT
+	client: MYSQLI_INTERNAL_CLIENT
 			-- Memory structure for internal client
 
-	reconnect_bit: attached MANAGED_POINTER
+	reconnect_bit: MANAGED_POINTER
 			-- Holds the True flag for MYSQLI_OPT_RECONNECT
 
 
 feature{NONE} -- Implementation
 
-	internal_execute_query (a_query: attached STRING)
+	internal_execute_query (a_query: STRING)
 			-- Execute `a_query'
 		local
 			l_query_pointer: ANY
@@ -692,7 +692,7 @@ feature{NONE} -- Implementation
 			l_return_pointer: POINTER
 			l_info: STRING
 			l_result: MYSQLI_INTERNAL_RESULT
-			l_columns: ARRAYED_LIST [attached MYSQLI_FIELD]
+			l_columns: ARRAYED_LIST [MYSQLI_FIELD]
 			l_row: MYSQLI_INTERNAL_ROW
 			l_mysql_row: MYSQLI_ROW
 			l_num_rows, l_num_fields: INTEGER
@@ -811,7 +811,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	internal_prepare_statement (a_statement: attached STRING)
+	internal_prepare_statement (a_statement: STRING)
 			-- Prepares the statement in `a_statement'
 		local
 			l_statement_pointer: ANY

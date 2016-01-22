@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Some experiments done during the development of ABEL."
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -76,7 +76,6 @@ feature
 			reflection: REFLECTED_REFERENCE_OBJECT
 			reflection2: REFLECTED_REFERENCE_OBJECT
 			container: EXPANDED_PERSON_CONTAINER
-			person: EXPANDED_PERSON
 			internal: INTERNAL
 			traversal: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
 			box: GENERIC_BOX [TEST_PERSON, EXPANDED_PERSON]
@@ -305,7 +304,7 @@ feature
 			end
 		rescue
 			check attached conn2 as c and then attached c.last_exception as ex then
-				print (ex.meaning)
+				print (ex.tag)
 			end
 			retried:= True
 			retry
@@ -340,7 +339,6 @@ feature
 			string_integer_tuple_2: TUPLE [STRING, INTEGER]
 			tuple: TUPLE
 			det_tuple: detachable TUPLE
-			any: ANY
 			i:INTEGER
 			special: SPECIAL [detachable ANY]
 		do

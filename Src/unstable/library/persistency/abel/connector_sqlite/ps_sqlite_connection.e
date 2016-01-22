@@ -95,7 +95,8 @@ feature {PS_ABEL_EXPORT} -- Database operations
 				-- Information to faciliate error handling
 			if attached internal_connection.last_exception as ex then
 				print ("%N%N" + statement + "%N")
-				print (ex.meaning + "%N")
+				print (ex.tag)
+				print ("%N")
 			end
 		end
 
@@ -247,7 +248,7 @@ feature {NONE} -- Error handling
 				end
 
 				if attached Result then
-					Result.set_backend_error (exception.meaning)
+					Result.set_backend_error (exception.tag)
 					Result.set_backend_error_code (error_number)
 					Result.set_backend_error (exception)
 				end

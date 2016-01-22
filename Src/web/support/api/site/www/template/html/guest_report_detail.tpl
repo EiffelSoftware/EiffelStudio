@@ -145,7 +145,13 @@
 											<span class="label-left label-primary-api-interactions" itemprop="download"><a href="{$host/}/report_interaction/{$item.id/}.txt">Download</a>&nbsp;&nbsp;&nbsp;</span>
 										</div>
 										<div class="panel-body" id="textarea_17">
-											<pre>{htmlentities}{$item.content/}{/htmlentities}</pre>
+                                            {if isset="$item.content_truncated"}
+										 	<pre>{htmlentities}{$item.content_truncated/}{/htmlentities}</pre>
+											{/if}
+											{unless isset="$item.content_truncated"}
+										 	<pre>{htmlentities}{$item.content/}{/htmlentities}</pre>
+											{/unless}
+											
 											<br/>
 											{foreach from="$item.attachments" item="elem"}
 											<div class="row">

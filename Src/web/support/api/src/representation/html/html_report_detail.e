@@ -17,6 +17,7 @@ create
 	make
 
 feature {NONE} -- {Initialization}
+
 	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do

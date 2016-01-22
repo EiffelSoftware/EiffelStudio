@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a two dimensional vector."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -107,24 +107,18 @@ feature -- Basic operations
 
 	product alias "*" (other: like Current): like Current
 			-- Product by `other'
-		local
-			l_result: detachable like product
 		do
-			check
-				implement: False
-			end
-			check l_result /= Void end -- Satisfy void-safe compiler
-			Result := l_result
+			check is_implemented: False then end
+		ensure then
+			is_implemented: False
 		end
 
 	quotient alias "/" (other: like Current): like Current
 			-- Division by `other'
-		local
-			l_result: detachable like quotient
 		do
-			check implement: False end
-			check l_result /= Void end -- Satisfy void-safe compiler
-			Result := l_result
+			check is_implemented: False then end
+		ensure then
+			is_implemented: False
 		end
 
 	identity alias "+": like Current
@@ -146,7 +140,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -156,8 +150,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_VECTOR2D
-
+end

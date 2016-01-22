@@ -5855,11 +5855,11 @@ td.visible-print {
     border: 1px solid gray;
     font: medium -moz-fixed;
     font: -webkit-small-control;
-    height: 255px;
     overflow: auto;
     padding: 2px;
     resize: both;
     width: 400px;
+    display: inline-block;
 }
 
 #textarea_7 {
@@ -5868,9 +5868,9 @@ td.visible-print {
     border: 1px solid gray;
     font: medium -moz-fixed;
     font: -webkit-small-control;
-    height: 105px;
     overflow: auto;
     padding: 2px;
     resize: both;
     width: 400px;
+    display: inline-block;
 }

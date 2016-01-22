@@ -47,6 +47,9 @@ feature -- Access
 	content: detachable READABLE_STRING_32
 			-- Interaction content.
 
+	content_truncated: detachable READABLE_STRING_32
+			-- Truncated content to diplay an output truncated in the view.		
+
 	content_encoded: detachable READABLE_STRING_32
 			--
 
@@ -74,10 +77,18 @@ feature -- Element change
 
 	set_content (t: like content)
 			-- Set `content' to `t'.
+		local
+			l_string: STRING_32
 		do
 			content := t
 			if attached t as l_t then
 				content_encoded := json_encode (l_t)
+				if l_t.count > 1024 then
+					l_string := l_t.head (1024)
+					l_string.append_string ("%N....%N")
+					l_string.append_string ("Output truncated, Click downlaod to get the full message")
+					content_truncated := l_string
+				end
 			end
 		ensure
 			content_set: content = t

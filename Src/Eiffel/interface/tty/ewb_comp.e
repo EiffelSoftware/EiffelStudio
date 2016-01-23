@@ -161,7 +161,7 @@ feature {NONE} -- Update
 					else
 						create file_name.make (s.count)
 						file_name.append_string_general (s)
-						u.copy_file (eiffel_layout.default_config_file_name.name, file_name)
+						u.copy_file (eiffel_layout.default_scoop_config_file_name.name, file_name)
 						Eiffel_ace.set_file_name (file_name.twin)
 						edit (Eiffel_ace.file_name)
 					end

@@ -1192,6 +1192,7 @@ feature -- Label texts
 	l_compile: STRING_32					do Result := locale.translation("Compile")	end
 	l_Compile_first: STRING_32			do Result := locale.translation("Compile to have information")	end
 	l_Compile_project: STRING_32			do Result := locale.translation("Compile project")	end
+	l_concurrency: STRING_32				do Result := locale.translation("Concurrency:")	end
 	l_Condition: STRING_32				do Result := locale.translation("Condition")	end
 	l_confirm_acknowledge_selected_items: STRING_32	do Result := locale.translation ("Acknowledgement is not reversible. Are you sure you want to acknowledge selected items?") end
 	l_Confirm_kill: STRING_32			do Result := locale.translation("Are you sure you want to stop the execution?")	end
@@ -2908,7 +2909,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2939,4 +2940,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERFACE_NAMES
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Handler loading of projects. It also takes care of converting old Project format (.ace and .epr) to new format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1043,8 +1043,11 @@ feature {NONE} -- Implementation
 			l_root := l_factory.new_root (Void, a_root_class_name, a_root_feature_name, False)
 			l_target.set_root (l_root)
 
-				-- Default to console application
+				-- Default to console application.
 			l_target.update_setting ("console_application", "true")
+
+				-- Default to SCOOP application.
+			l_target.update_setting ("concurrency", "scoop")
 
 				-- Add libraries to target
 			if a_libraries /= Void then
@@ -1067,7 +1070,7 @@ feature {NONE} -- Implementation
 
 			if l_target.precompile = Void then
 					-- No precompile is set, add base as precompile
-				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base-safe.ecf", l_target)
+				l_precompile := l_factory.new_precompile ("base_pre", "$ISE_PRECOMP/base-scoop-safe.ecf", l_target)
 				l_target.set_precompile (l_precompile)
 			end
 		ensure
@@ -1137,7 +1140,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

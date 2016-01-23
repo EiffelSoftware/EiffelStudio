@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: PATH)
+	make (a_system_name, a_root_class_name, a_root_cluster_name, a_root_feature_name: STRING; a_project_directory: PATH; a_scoop: BOOLEAN)
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
@@ -40,6 +40,7 @@ feature {NONE} -- Implementation
 			root_cluster_name := a_root_cluster_name
 			root_feature_name := a_root_feature_name
 			project_directory := a_project_directory
+			is_scoop := a_scoop
 
 				-- Create the pathname of the ace file
 			ace_filename := project_directory.extended (system_name.as_lower + "." + {EIFFEL_CONSTANTS}.config_extension)
@@ -66,6 +67,9 @@ feature -- Access
 
 	root_class_filename: PATH
 			-- Filename of the root class file for this project.
+
+	is_scoop: BOOLEAN
+			-- Is project SCOOP-capable?
 
 feature -- Basic operations.
 
@@ -139,7 +143,7 @@ feature {NONE} -- Implementation
 		local
 			a_file: RAW_FILE
 		do
-			create a_file.make_with_path (eiffel_layout.default_config_file_name)
+			create a_file.make_with_path (default_config_file_path)
 			a_file.open_read
 			a_file.read_stream (a_file.count)
 			a_file.close
@@ -147,9 +151,19 @@ feature {NONE} -- Implementation
 		rescue
 			add_error_message (
 				{STRING_32} "Unable to read the template ace file '" +
-				eiffel_layout.default_config_file_name.name +
+				default_config_file_path.name +
 				{STRING_32}"'%N%
 				%Check that the file exists and that you are allowed to read it.")
+		end
+
+	default_config_file_path: PATH
+			-- Path to the default configuration file.
+		do
+			if is_scoop then
+				Result := eiffel_layout.default_scoop_config_file_name
+			else
+				Result := eiffel_layout.default_config_file_name
+			end
 		end
 
 	create_root_class
@@ -212,7 +226,7 @@ feature {NONE} -- Private attributes
 			-- Location of the project to build.
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

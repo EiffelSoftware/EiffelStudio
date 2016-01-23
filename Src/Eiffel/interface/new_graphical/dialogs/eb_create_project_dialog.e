@@ -211,7 +211,7 @@ feature -- Execution
 					raise_exception (Invalid_project_name_exception)
 				end
 
-				create blank_project_builder.make (system_name, cla, clu, f, directory_name)
+				create blank_project_builder.make (system_name, cla, clu, f, directory_name, scoop_check_button.is_selected)
 				ace_file_name := blank_project_builder.ace_filename
 				compile_project := compile_project_check_button.is_selected
 
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			buttons_box: EV_HORIZONTAL_BOX
 			project_directory_frame: EV_FRAME
 			system_name_frame: EV_FRAME
-			clal, clul, snl, fnl: EV_LABEL
+			clal, clul, snl, fnl, scoop_label: EV_LABEL
 			sz: INTEGER
 		do
 				-- Let the user choose the directory
@@ -323,7 +323,12 @@ feature {NONE} -- Implementation
 				create clul.make_with_text (Interface_names.L_root_cluster_name)
 				create snl.make_with_text (Interface_names.L_system_name)
 				create fnl.make_with_text (Interface_names.L_root_feature_name)
-				sz := clal.minimum_width.max (clul.minimum_width).max (snl.minimum_width).max (fnl.minimum_width)
+				create scoop_label.make_with_text (interface_names.l_concurrency)
+				sz := clal.minimum_width.max
+					(clul.minimum_width).max
+					(snl.minimum_width).max
+					(fnl.minimum_width).max
+					(scoop_label.minimum_width)
 				clal.set_minimum_width (sz)
 				clal.align_text_left
 				clul.set_minimum_width (sz)
@@ -332,6 +337,8 @@ feature {NONE} -- Implementation
 				snl.align_text_left
 				fnl.set_minimum_width (sz)
 				fnl.align_text_left
+				scoop_label.set_minimum_width (sz)
+				scoop_label.align_text_left
 					-- System name
 				create system_name_field.make_with_text (Default_project_name)
 				system_name_field.change_actions.extend (agent on_change_project_name)
@@ -361,6 +368,14 @@ feature {NONE} -- Implementation
 				hb.disable_item_expand (fnl)
 				hb.extend (root_feature_field)
 				main_vb.extend (hb)
+					-- SCOOP flag
+				create scoop_check_button.default_create
+				create hb
+				hb.extend (scoop_label)
+				hb.disable_item_expand (scoop_label)
+				hb.extend (scoop_check_button)
+				main_vb.extend (hb)
+				scoop_check_button.enable_select
 
 				system_name_frame.extend (main_vb)
 			else
@@ -602,7 +617,7 @@ feature {NONE} -- Vision2 architechture
 
 	root_feature_field: EV_TEXT_FIELD
 
-	ace_filename_field: EV_TEXT_FIELD
+	scoop_check_button: EV_CHECK_BUTTON
 
 	compile_project_check_button: EV_CHECK_BUTTON
 

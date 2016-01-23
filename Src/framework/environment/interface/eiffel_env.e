@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Environment for bitmaps, help, binaries, scripts...."
@@ -1286,11 +1286,27 @@ feature -- User Directories
 feature -- Files
 
 	default_config_file_name: PATH
-			-- Default Eiffel confiration file name location
+			-- Default Eiffel confiration file name location for non-SCOOP projects.
 		require
 			is_valid_environment: is_valid_environment
 		once
 			Result := default_templates_path.extended (default_config_file)
+			if is_user_files_supported then
+					-- Check user override file.
+				if attached user_priority_file_name (Result, True) as l_user then
+					Result := l_user
+				end
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	default_scoop_config_file_name: PATH
+			-- Default Eiffel confiration file name location for SCOOP projects.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := default_templates_path.extended (default_scoop_config_file)
 			if is_user_files_supported then
 					-- Check user override file.
 				if attached user_priority_file_name (Result, True) as l_user then
@@ -1928,17 +1944,10 @@ feature -- Environment variables
 feature -- File constants
 
 	default_config_file: STRING_8 = "default.ecf"
-			-- Default ECF file name
+			-- Default ECF file name for non-SCOOP projects.
 
-	default_project_location_for_windows: PATH
-			-- Default project location on windows.
-		require
-			is_windows: {PLATFORM}.is_windows
-		once
-			create Result.make_from_string ("C:\projects")
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
+	default_scoop_config_file: STRING_8 = "default-scoop.ecf"
+			-- Default ECF file name for SCOOP projects.
 
 feature -- Directory constants (platform)
 
@@ -2192,7 +2201,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

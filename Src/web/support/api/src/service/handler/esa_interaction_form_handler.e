@@ -288,6 +288,7 @@ feature -- Initialize Report Problem
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_temp_interaction_id: INTEGER
 			l_form: ESA_INTERACTION_FORM_VIEW
+			l_role: USER_ROLE
 		do
 			create l_rhf
 			if attached {STRING_32} current_user_name (req) as l_user then
@@ -296,6 +297,11 @@ feature -- Initialize Report Problem
 				if attached current_media_type (req) as l_type then
 					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
 						l_form := extract_form_data (req, l_type)
+						l_role := api_service.user_role (l_user)
+						if l_role.is_administrator or else l_role.is_responsible then
+								l_form.set_responsible_or_admin (True)
+						end
+
 						l_form.set_id (l_temp_interaction_id)
 						l_form.set_report (l_report)
 						l_form.confirm_changes

@@ -414,7 +414,7 @@ feature {NONE} -- Matching
 			end
 		ensure
 			is_matching: is_matching
-			subject_set: subject = a_subject
+			subject_set: subject.same_string (a_subject)
 		end
 
 	match_start (a_eptr: NATURAL): BOOLEAN

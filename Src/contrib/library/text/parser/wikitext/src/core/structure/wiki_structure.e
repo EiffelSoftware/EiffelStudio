@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {WIKI_STRUCTURE}."
-	author: ""
+	description: "[
+			Wiki tree structure builder.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -101,9 +102,9 @@ feature -- Basic operation
 			--/ *** Plugins *** /--
 			--?	<code lang="text"> ... </code>
 			--? <code>text</code>
-			--? <eiffel>text</eiffel>
+			--? <source>text</source>
 		local
-			i,n,ln,m,tmp: INTEGER
+			i,j,n,ln,m,tmp: INTEGER
 			b: INTEGER --| Beginning of line
 			q: INTEGER
 			l_eol: INTEGER
@@ -118,7 +119,7 @@ feature -- Basic operation
 			w_block: detachable WIKI_PREFORMATTED_TEXT
 			w_indent: detachable WIKI_INDENTATION
 			multiline_level: INTEGER
-			ignore_wiki: BOOLEAN
+			in_tag: BOOLEAN
 			keep_formatting: BOOLEAN
 			mt_ln: INTEGER
 			s: STRING
@@ -336,38 +337,22 @@ feature -- Basic operation
 				when '<' then
 						--| Builtin tags
 						-- nowiki, ref, blockquote, center, pre, ...
-					if ignore_wiki then
-						if next_following_character_matched (a_text, i + 1, "/nowiki>", True) then
-							if is_wiki_item_token_of_kind (l_items, "tag:nowiki") then
-								on_wiki_item_end_token (l_items, i, "tag:nowiki")
-								ignore_wiki := False
-								multiline_level := multiline_level - 1
-								i := i + 8 --| = ("/nowiki>").count
-							else
-								check False end
-							end
-						elseif next_following_character_matched (a_text, i + 1, "/pre>", True) then
-							if is_wiki_item_token_of_kind (l_items, "tag:pre") then
-								on_wiki_item_end_token (l_items, i, "tag:pre")
-								ignore_wiki := False
-								keep_formatting := False
-								multiline_level := multiline_level - 1
-								i := i + 5 --| = ("/pre>").count
-							else
-								check False end
-							end
-						elseif next_following_character_matched (a_text, i + 1, "/code>", True) then
-							if is_wiki_item_token_of_kind (l_items, "tag:code") then
-								on_wiki_item_end_token (l_items, i, "tag:code")
-								ignore_wiki := False
-								keep_formatting := False
-								multiline_level := multiline_level - 1
-								i := i + 6 --| = ("/code>").count
-							else
-								check False end
+					if in_tag then
+						if safe_character (a_text, i + 1) = '/' then
+							j := next_end_of_tag_character (a_text, i + 2)
+							if j > i + 2 then
+								s := a_text.substring (i + 2, j - 1)
+								if is_wiki_item_token_of_kind (l_items, "tag:" + s) then
+									on_wiki_item_end_token (l_items, i, "tag:" + s)
+									in_tag := False
+									keep_formatting := False
+									multiline_level := multiline_level - 1
+									i := j -- after ending '>'
+								else
+									check False end
+								end
 							end
 						end
-
 					elseif safe_character (a_text, i + 1) = '!' then
 						if safe_following_character_count (a_text, i + 2, '-') = 2 then
 							m := a_text.substring_index ("-->", i + 4)
@@ -379,7 +364,6 @@ feature -- Basic operation
 					elseif safe_character (a_text, i + 1) = '/' then
 							-- FIXME: if closing tag does not match previous
 							-- cancel previous, until expected tag is found, if any...
-
 						if
 							l_tag /= Void and then
 							next_following_character_matched (a_text, i + 2, l_tag + ">", True)
@@ -408,20 +392,7 @@ feature -- Basic operation
 								else
 									multiline_level := multiline_level + 1
 									keep_formatting := False
-									if l_tag.is_case_insensitive_equal_general ("nowiki") then
-										ignore_wiki := True
-									elseif l_tag.is_case_insensitive_equal_general ("pre") then
-										keep_formatting := True
-										ignore_wiki := True
-									elseif
-										l_tag.is_case_insensitive_equal_general ("code")
-										or else l_tag.is_case_insensitive_equal_general ("source")
-									then
-										keep_formatting := True
-										ignore_wiki := True
-									else
-										ignore_wiki := False
-									end
+									in_tag := True
 									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
 									if q > 0 then
 										i := q
@@ -559,7 +530,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {WIKI_DEBUG_VISITOR}."
-	author: ""
+	description: "Iterator on WIKI objects."
 	date: "$Date$"
 	revision: "$Revision$"
 

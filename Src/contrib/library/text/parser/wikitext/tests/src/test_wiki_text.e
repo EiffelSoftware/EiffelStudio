@@ -415,14 +415,14 @@ e := "{
 		do
 			create t.make_from_string ("[
 <code lang="eiffel">
-class FOO
+class FOO [BAR]
 feature
 end
 </code>
 			]")
 
 e := "{
-<p><code lang="eiffel">class FOO
+<p><code lang="eiffel">class FOO [BAR]
 feature
 end</code><br/>
 </p>
@@ -512,6 +512,70 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", not o.is_empty)
+		end
+
+	test_custom_code
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+<mycode lang="eiffel">
+class FOO [BAR]
+feature
+end
+</mycode>
+			]")
+
+e := "{
+<p><mycode lang="eiffel">class FOO [BAR]
+feature
+end</mycode><br/>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			gen.code_aliases.force ("mycode")
+
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_tag_div
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+'''Test'''
+<div>
+'''class''' FOO [BAR]
+feature
+end
+</div>
+			]")
+
+e := "{
+<p><strong>Test</strong><div><strong>class</strong> FOO <a href="BAR" class="wiki_ext_link">BAR</a>
+feature
+end</div></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
 	test_br

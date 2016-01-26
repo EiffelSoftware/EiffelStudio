@@ -22,6 +22,7 @@
 		<library name="cms_admin_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\admin\admin-safe.ecf" readonly="false"/>
 		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth-safe.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\basic_auth\basic_auth-safe.ecf" readonly="false"/>
+		<library name="cms_contact_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\contact\contact-safe.ecf" readonly="false"/>
 		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
@@ -32,7 +33,6 @@
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="module_codeboard" location="modules\codeboard\codeboard-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="module_contact" location="modules\contact\contact-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_community" location="modules\eiffel_community\eiffel_community-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_eiffel_download" location="modules\eiffel_download\eiffel_download-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="module_embedded_video" location="modules\embedded_video\video-safe.ecf" readonly="false" use_application_options="true"/>

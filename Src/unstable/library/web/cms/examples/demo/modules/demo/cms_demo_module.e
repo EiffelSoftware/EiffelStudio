@@ -70,8 +70,9 @@ CREATE TABLE tb_demo(
 						api.logger.put_error ("Could not initialize database for demo module", generating_type)
 					end
 				end
-				Precursor {CMS_MODULE}(api)
 			end
+				-- For this demo, be flexible, and do not required sql.
+			Precursor {CMS_MODULE}(api)
 		end
 
 feature -- Access: router

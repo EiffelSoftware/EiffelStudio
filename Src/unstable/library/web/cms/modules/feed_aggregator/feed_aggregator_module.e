@@ -101,8 +101,8 @@ feature -- Handle
 			else
 				nb := -1
 			end
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 			if attached {WSF_STRING} req.path_parameter ("feed_id") as p_feed_id then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 				if attached feed_aggregation (p_feed_id.value) as l_agg then
 					create s.make_empty
 					s.append ("<h1>")
@@ -143,7 +143,9 @@ feature -- Handle
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
 				end
+				r.execute
 			else
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
 				if attached feed_aggregator_api as l_feed_agg_api then
 					create s.make_empty
 					across
@@ -175,8 +177,8 @@ feature -- Handle
 				else
 					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, a_api)
 				end
+				r.execute
 			end
-			r.execute
 		end
 
 feature -- Hooks configuration

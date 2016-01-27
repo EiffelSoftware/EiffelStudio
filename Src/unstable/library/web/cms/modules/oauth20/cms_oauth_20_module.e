@@ -1,5 +1,7 @@
 ﻿note
-	description: "Generic OAuth Module supporting authentication using different providers."
+	description: "[
+			Generic OAuth Module supporting authentication using different providers.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,15 +11,14 @@ class
 inherit
 	CMS_MODULE
 		rename
-			module_api as user_oauth_api
+			module_api as oauth20_api
 		redefine
 			filters,
 			setup_hooks,
 			initialize,
 			install,
-			user_oauth_api
+			oauth20_api
 		end
-
 
 	CMS_HOOK_BLOCK
 
@@ -37,7 +38,6 @@ inherit
 	SHARED_LOGGER
 
 	CMS_REQUEST_UTIL
-
 
 create
 	make
@@ -66,24 +66,24 @@ feature {CMS_API} -- Module Initialization
 	initialize (a_api: CMS_API)
 			-- <Precursor>
 		local
-			l_user_auth_api: like user_oauth_api
-			l_user_auth_storage: CMS_OAUTH_20_STORAGE_I
+			l_oauth20_api: like oauth20_api
+			l_auth_storage: CMS_OAUTH_20_STORAGE_I
 		do
 			Precursor (a_api)
 
 				-- Storage initialization
 			if attached a_api.storage.as_sql_storage as l_storage_sql then
-				create {CMS_OAUTH_20_STORAGE_SQL} l_user_auth_storage.make (l_storage_sql)
+				create {CMS_OAUTH_20_STORAGE_SQL} l_auth_storage.make (l_storage_sql)
 			else
 				-- FIXME: in case of NULL storage, should Current be disabled?
-				create {CMS_OAUTH_20_STORAGE_NULL} l_user_auth_storage
+				create {CMS_OAUTH_20_STORAGE_NULL} l_auth_storage
 			end
 
 				-- API initialization
-			create l_user_auth_api.make_with_storage (a_api, l_user_auth_storage)
-			user_oauth_api := l_user_auth_api
+			create l_oauth20_api.make_with_storage (a_api, l_auth_storage)
+			oauth20_api := l_oauth20_api
 		ensure then
-			user_oauth_api_set: user_oauth_api /= Void
+			user_oauth_api_set: oauth20_api /= Void
 		end
 
 feature {CMS_API} -- Module management
@@ -94,53 +94,57 @@ feature {CMS_API} -- Module management
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
-				if not l_sql_storage.sql_table_exists ("oauth2_consumers") then
 					--| Schema
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers.sql")), Void)
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers.sql")), Void)
 
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for oauth_20 module", generating_type)
-					end
+				if l_sql_storage.has_error then
+					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+				else
 						-- TODO workaround.
 					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_consumers_initialize.sql")), Void)
-				end
+					if l_sql_storage.has_error then
+						api.logger.put_error ("Could not initialize oauth2_consumers for module [" + name + "]", generating_type)
+					else
+							-- TODO workaround, until we have an admin module
+						l_sql_storage.sql_query ("SELECT name FROM oauth2_consumers;", Void)
+						if l_sql_storage.has_error then
+							api.logger.put_error ("Could not initialize database for different consumers", generating_type)
+						else
+							from
+								l_sql_storage.sql_start
+								create {ARRAYED_LIST [STRING]} l_consumers.make (2)
+							until
+								l_sql_storage.sql_after
+							loop
+								if attached l_sql_storage.sql_read_string (1) as l_name then
+									l_consumers.force ("oauth2_" + l_name)
+								end
+								l_sql_storage.sql_forth
+							end
+							l_sql_storage.sql_finalize
 
-					-- TODO workaround, until we have an admin module
-				l_sql_storage.sql_query ("SELECT name FROM oauth2_consumers;", Void)
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for differnent consumers", generating_type)
-				else
-					from
-						l_sql_storage.sql_start
-						create {ARRAYED_LIST [STRING]} l_consumers.make (2)
-					until
-						l_sql_storage.sql_after
-					loop
-						if attached l_sql_storage.sql_read_string (1) as l_name then
-							l_consumers.force ("oauth2_" + l_name)
-						end
-						l_sql_storage.sql_forth
-					end
-					l_sql_storage.sql_finalize
-					across l_consumers as ic  loop
-						if not l_sql_storage.sql_table_exists (ic.item) then
-							if attached l_sql_storage.sql_script_content (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_table.sql.tpl"))) as sql then
-									-- FIXME: shouldn't we use a unique table for all oauth providers? or as it is .. one table per oauth provider?
-								sql.replace_substring_all ("$table_name", ic.item)
-								l_sql_storage.sql_execute_script (sql, Void)
+							across l_consumers as ic  loop
+								if not l_sql_storage.sql_table_exists (ic.item) then
+									if attached l_sql_storage.sql_script_content (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_table.sql.tpl"))) as sql then
+											-- FIXME: shouldn't we use a unique table for all oauth providers? or as it is .. one table per oauth provider?
+										sql.replace_substring_all ("$table_name", ic.item)
+										l_sql_storage.sql_execute_script (sql, Void)
+									end
+								end
 							end
 						end
+						l_sql_storage.sql_finalize
+
+						Precursor {CMS_MODULE}(api) -- Marked as installed.
 					end
 				end
-				l_sql_storage.sql_finalize
-				Precursor {CMS_MODULE}(api)
 			end
 		end
 
 feature {CMS_API} -- Access: API
 
-	user_oauth_api: detachable CMS_OAUTH_20_API
-			-- <Precursor>		
+	oauth20_api: detachable CMS_OAUTH_20_API
+			-- <Precursor>	
 
 feature -- Filters
 
@@ -148,8 +152,8 @@ feature -- Filters
 			-- Possibly list of Filter's module.
 		do
 			create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
-			if attached user_oauth_api as l_user_oauth_api then
-				Result.extend (create {CMS_OAUTH_20_FILTER}.make (a_api, l_user_oauth_api))
+			if attached oauth20_api as l_oauth_api then
+				Result.extend (create {CMS_OAUTH_20_FILTER}.make (a_api, l_oauth_api))
 			end
 		end
 
@@ -173,20 +177,34 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			if attached user_oauth_api as l_user_oauth_api then
-				configure_web (a_api, l_user_oauth_api, a_router)
+			if attached oauth20_api as l_oauth_api then
+				a_router.handle ("/account/roc-oauth-login",
+						create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
+				a_router.handle ("/account/roc-oauth-logout",
+						create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/login-with-oauth/{" + oauth_callback_path_parameter + "}",
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_oauth (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/oauth-callback/{" + oauth_callback_path_parameter + "}",
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_callback_oauth (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/oauth-associate",
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_associate (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_post)
+				a_router.handle ("/account/oauth-un-associate",
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_un_associate (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_post)
 			end
 		end
 
-	configure_web (a_api: CMS_API; a_user_oauth_api: CMS_OAUTH_20_API; a_router: WSF_ROUTER)
-		do
-			a_router.handle ("/account/roc-oauth-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/account/roc-oauth-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/login-with-oauth/{callback}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_oauth (a_api,a_user_oauth_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/oauth-callback/{callback}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_callback_oauth (a_api, a_user_oauth_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/oauth-associate", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_associate (a_api, a_user_oauth_api, ?, ?)), a_router.methods_post)
-			a_router.handle ("/account/oauth-un-associate", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_un_associate (a_api, a_user_oauth_api, ?, ?)), a_router.methods_post)
-		end
+	oauth_callback_path_parameter: STRING = "callback"
+			-- Callback path parameter.	
+
+	oauth_code_query_parameter: STRING = "code"
+			-- Code query parameter, specific to OAuth protocol.
+			-- FIXME: should we have a way to change this value?
+			--      : if a OAuth provider is not using "code" query name.
 
 feature -- Hooks configuration
 
@@ -205,7 +223,8 @@ feature -- Hooks
 		do
 			if
 				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session)
+				attached oauth20_api as l_oauth20_api and then
+				attached a_response.request.cookie (l_oauth20_api.session_token)
 			then
 				a_value.force ("account/roc-oauth-logout", "auth_login_strategy")
 			end
@@ -220,7 +239,8 @@ feature -- Hooks
 		do
 			if
 				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session) as l_roc_auth_session_token
+				attached oauth20_api as l_oauth20_api and then
+				attached {WSF_STRING} a_response.request.cookie (l_oauth20_api.session_token) as l_roc_auth_session_token
 			then
 				across
 					a_menu_system.primary_menu.items as ic
@@ -297,17 +317,17 @@ feature -- Hooks
 			r.execute
 		end
 
-	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_logout (api: CMS_API; a_oauth20_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_cookie: WSF_COOKIE
 		do
 			if
-				attached {WSF_STRING} req.cookie ({CMS_OAUTH_20_CONSTANTS}.oauth_session) as l_cookie_token and then
-				attached {CMS_USER} current_user (req) as l_user
+				attached {CMS_USER} current_user (req) as l_user and then
+				attached {WSF_STRING} req.cookie (a_oauth20_api.session_token) as l_cookie_token
 			then
 					-- Logout OAuth
-				create l_cookie.make ({CMS_OAUTH_20_CONSTANTS}.oauth_session, l_cookie_token.value)
+				create l_cookie.make (a_oauth20_api.session_token, l_cookie_token.value)
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
@@ -329,7 +349,7 @@ feature {NONE} -- Associate
 			l_associated: LIST [STRING]
 			l_not_associated: LIST [STRING]
 		do
-			if attached user_oauth_api as l_oauth_api then
+			if attached oauth20_api as l_oauth_api then
 				create {ARRAYED_LIST [STRING]} l_associated.make (1)
 				create {ARRAYED_LIST [STRING]} l_not_associated.make (1)
 				across l_oauth_api.oauth2_consumers as ic loop
@@ -379,7 +399,7 @@ feature {NONE} -- Block views
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
 				if
-					attached user_oauth_api as l_auth_api and then
+					attached oauth20_api as l_auth_api and then
 					attached l_auth_api.oauth2_consumers as l_list
 				then
 					l_tpl_block.set_value (l_list, "oauth_consumers")
@@ -402,7 +422,7 @@ feature -- OAuth2 Login with Provider
 			l_oauth: CMS_OAUTH_20_WORKFLOW
 		do
 			if
-				attached {WSF_STRING} req.path_parameter ({CMS_OAUTH_20_CONSTANTS}.oauth_callback) as p_consumer and then
+				attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as p_consumer and then
 				attached {CMS_OAUTH_20_CONSUMER} a_oauth_api.oauth_consumer_by_name (p_consumer.value) as l_consumer
 			then
 				create l_oauth.make (req.server_url, l_consumer)
@@ -422,7 +442,7 @@ feature -- OAuth2 Login with Provider
 			end
 		end
 
-	handle_callback_oauth (api: CMS_API; a_user_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_callback_oauth (api: CMS_API; a_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_auth: CMS_OAUTH_20_WORKFLOW
@@ -432,9 +452,9 @@ feature -- OAuth2 Login with Provider
 			l_cookie: WSF_COOKIE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
-			if  attached {WSF_STRING} req.path_parameter ({CMS_OAUTH_20_CONSTANTS}.oauth_callback) as l_callback and then
-			    attached {CMS_OAUTH_20_CONSUMER} a_user_oauth_api.oauth_consumer_by_callback (l_callback.value) as l_consumer and then
-				attached {WSF_STRING} req.query_parameter ({CMS_OAUTH_20_CONSTANTS}.oauth_code) as l_code
+			if  attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as l_callback and then
+			    attached {CMS_OAUTH_20_CONSUMER} a_oauth_api.oauth_consumer_by_callback (l_callback.value) as l_consumer and then
+				attached {WSF_STRING} req.query_parameter (oauth_code_query_parameter) as l_code
 			then
 				create l_auth.make (req.server_url, l_consumer)
 				l_auth.sign_request (l_code.value)
@@ -452,20 +472,20 @@ feature -- OAuth2 Login with Provider
 					then
 						if attached l_user_api.user_by_email (l_email) as p_user then
 								-- User with email exist
-							if	attached a_user_oauth_api.user_oauth2_by_id (p_user.id, l_consumer.name) then
+							if	attached a_oauth_api.user_oauth2_by_id (p_user.id, l_consumer.name) then
 									-- Update oauth entry
-								a_user_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
+								a_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
 							else
 									-- create a oauth entry
-								a_user_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
+								a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
 							end
-							create l_cookie.make ({CMS_OAUTH_20_CONSTANTS}.oauth_session, l_access_token.token)
+							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
 							l_cookie.set_max_age (l_access_token.expires_in)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
-						elseif attached a_user_oauth_api.user_oauth2_by_email (l_email, l_consumer.name) as p_user then
-							a_user_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
-							create l_cookie.make ({CMS_OAUTH_20_CONSTANTS}.oauth_session, l_access_token.token)
+						elseif attached a_oauth_api.user_oauth2_by_email (l_email, l_consumer.name) as p_user then
+							a_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_consumer.name )
+							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
 							l_cookie.set_max_age (l_access_token.expires_in)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
@@ -482,8 +502,8 @@ feature -- OAuth2 Login with Provider
 							l_user_api.new_user (l_user)
 
 								-- Add oauth entry
-							a_user_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, l_user, l_consumer.name )
-							create l_cookie.make ({CMS_OAUTH_20_CONSTANTS}.oauth_session, l_access_token.token)
+							a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, l_user, l_consumer.name )
+							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
 							l_cookie.set_max_age (l_access_token.expires_in)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
@@ -499,9 +519,7 @@ feature -- OAuth2 Login with Provider
 					r.set_redirection (r.front_page_url)
 					r.execute
 				end
-
 			end
-
 		end
 
 	handle_associate (api: CMS_API; a_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -518,13 +536,12 @@ feature -- OAuth2 Login with Provider
 				then
 					l_user.set_email (l_email.value)
 					a_oauth_api.new_user_oauth2 ("none", "none", l_user, l_consumer.value )
-					-- TODO send email?
+						-- TODO send email?
 				end
 			end
 			r.set_redirection (req.absolute_script_url ("/account"))
 			r.execute
 		end
-
 
 	handle_un_associate (api: CMS_API; a_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local

@@ -37,7 +37,7 @@ feature -- Access
 	password_hash (a_password, a_salt: STRING): STRING
 			-- Password hash based on password `a_password' and salt value `a_salt'.
 		do
-			Result := sha1_string (a_password + a_salt )
+			Result := sha1_string (a_password + a_salt)
 		end
 
 feature {NONE} -- Implementation
@@ -76,7 +76,6 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Encoding
-
 
 	base_64 (bytes: SPECIAL [INTEGER_8]): STRING_8
 			-- Encodes a byte array into a STRING doing base64 encoding.

@@ -12,13 +12,13 @@ class
 inherit
 	CMS_MODULE
 		rename
-			module_api as user_session_api
+			module_api as session_api
 		redefine
 			filters,
 			setup_hooks,
 			initialize,
 			install,
-			user_session_api
+			session_api
 		end
 
 
@@ -51,31 +51,29 @@ feature -- Access
 
 	name: STRING = "session_auth"
 
-
-
 feature {CMS_API} -- Module Initialization			
 
 	initialize (a_api: CMS_API)
 			-- <Precursor>
 		local
-			l_session_auth_api: like user_session_api
-			l_user_auth_storage: CMS_SESSION_AUTH_STORAGE_I
+			l_session_auth_api: like session_api
+			l_session_auth_storage: CMS_SESSION_AUTH_STORAGE_I
 		do
 			Precursor (a_api)
 
 					-- Storage initialization
 			if attached a_api.storage.as_sql_storage as l_storage_sql then
-				create {CMS_SESSION_AUTH_STORAGE_SQL} l_user_auth_storage.make (l_storage_sql)
+				create {CMS_SESSION_AUTH_STORAGE_SQL} l_session_auth_storage.make (l_storage_sql)
 			else
 					-- FIXME: in case of NULL storage, should Current be disabled?
-				create {CMS_SESSION_AUTH_STORAGE_NULL} l_user_auth_storage
+				create {CMS_SESSION_AUTH_STORAGE_NULL} l_session_auth_storage
 			end
 
 				-- API initialization
-			create l_session_auth_api.make_with_storage (a_api, l_user_auth_storage)
-			user_session_api := l_session_auth_api
+			create l_session_auth_api.make_with_storage (a_api, l_session_auth_storage)
+			session_api := l_session_auth_api
 		ensure then
-			session_auth_api_set: user_session_api /= Void
+			session_auth_api_set: session_api /= Void
 		end
 
 feature {CMS_API} -- Module management
@@ -84,22 +82,19 @@ feature {CMS_API} -- Module management
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
-				if not l_sql_storage.sql_table_exists ("session_auth") then
-					--| Schema
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("session_auth_table.sql")), Void)
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for session auth module", generating_type)
-					end
+				if l_sql_storage.has_error then
+					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+				else
+					Precursor {CMS_MODULE} (api) -- Mark it as installed.
 				end
-				l_sql_storage.sql_finalize
-				Precursor {CMS_MODULE}(api)
 			end
 		end
 
 feature {CMS_API} -- Access: API
 
-	user_session_api: detachable CMS_SESSION_API
+	session_api: detachable CMS_SESSION_API
 			-- <Precursor>		
 
 feature -- Access: router
@@ -107,9 +102,11 @@ feature -- Access: router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			a_router.handle ("/account/roc-session-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/account/roc-session-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/login-with-session", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_session (a_api,user_session_api, ?, ?)), a_router.methods_get_post)
+			if attached session_api as l_session_api then
+				a_router.handle ("/account/roc-session-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
+				a_router.handle ("/account/roc-session-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_session_api, ?, ?)), a_router.methods_get_post)
+				a_router.handle ("/account/login-with-session", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_session (a_api,session_api, ?, ?)), a_router.methods_get_post)
+			end
 		end
 
 feature -- Access: filter
@@ -118,7 +115,7 @@ feature -- Access: filter
 			-- Possibly list of Filter's module.
 		do
 			create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
-			if attached user_session_api as l_session_api then
+			if attached session_api as l_session_api then
 				Result.extend (create {CMS_SESSION_AUTH_FILTER}.make (a_api, l_session_api))
 			end
 		end
@@ -133,17 +130,19 @@ feature {NONE} -- Implementation: routes
 			r.execute
 		end
 
-	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_logout (api: CMS_API; a_session_api: CMS_SESSION_API ; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_cookie: WSF_COOKIE
+			tok: STRING
 		do
+			tok := a_session_api.session_token
 			if
-				attached {WSF_STRING} req.cookie ({CMS_SESSION_CONSTANTS}.session_auth_token) as l_cookie_token and then
+				attached {WSF_STRING} req.cookie (tok) as l_cookie_token and then
 				attached {CMS_USER} current_user (req) as l_user
 			then
 					-- Logout Session
-				create l_cookie.make ({CMS_SESSION_CONSTANTS}.session_auth_token, l_cookie_token.value)
+				create l_cookie.make (tok, l_cookie_token.value) -- FIXME: unicode issue?
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
@@ -179,8 +178,8 @@ feature {NONE} -- Implementation: routes
 				else
 					l_session_api.new_user_session_auth (l_token, l_user)
 				end
-				create l_cookie.make ({CMS_SESSION_CONSTANTS}.session_auth_token, l_token)
-				l_cookie.set_max_age ({CMS_SESSION_CONSTANTS}.session_max_age)
+				create l_cookie.make (a_session_api.session_token, l_token)
+				l_cookie.set_max_age (a_session_api.session_max_age)
 				l_cookie.set_path ("/")
 				res.add_cookie (l_cookie)
 				set_current_user (req, l_user)
@@ -217,11 +216,11 @@ feature -- Hooks
 		do
 			if
 				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_SESSION_CONSTANTS}.session_auth_token)
+				attached session_api as l_session_api and then
+				attached a_response.request.cookie (l_session_api.session_token)
 			then
 				a_value.force ("account/roc-session-logout", "auth_login_strategy")
 			end
-
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -231,29 +230,32 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 			lnk2: detachable CMS_LINK
 		do
-			if
-				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_SESSION_CONSTANTS}.session_auth_token)
-			then
-				across
-					a_menu_system.primary_menu.items as ic
-				until
-					lnk2 /= Void
-				loop
-					if ic.item.location.same_string ("account/roc-logout") or else ic.item.location.same_string ("basic_auth_logoff")  then
-						lnk2 := ic.item
+			if attached a_response.user as u then
+				if
+					attached session_api as l_session_api and then
+					attached a_response.request.cookie (l_session_api.session_token)
+				then
+					across
+						a_menu_system.primary_menu.items as ic
+					until
+						lnk2 /= Void
+					loop
+						if
+							ic.item.location.same_string ("account/roc-logout")
+						 	or else ic.item.location.same_string ("basic_auth_logoff")
+						 then
+							lnk2 := ic.item
+						end
 					end
+					if lnk2 /= Void then
+						a_menu_system.primary_menu.remove (lnk2)
+					end
+					create lnk.make ("Logout", "account/roc-session-logout" )
+					a_menu_system.primary_menu.extend (lnk)
 				end
-				if lnk2 /= Void then
-					a_menu_system.primary_menu.remove (lnk2)
-				end
-				create lnk.make ("Logout", "account/roc-session-logout" )
-				a_menu_system.primary_menu.extend (lnk)
-			else
-				if a_response.location.starts_with ("account/") then
-					create lnk.make ("Session", "account/roc-session-login")
-					a_response.add_to_primary_tabs (lnk)
-				end
+			elseif a_response.location.starts_with ("account/") then
+				create lnk.make ("Session", "account/roc-session-login")
+				a_response.add_to_primary_tabs (lnk)
 			end
 		end
 
@@ -326,7 +328,6 @@ feature {NONE} -- Block views
 				end
 			end
 		end
-
 
 	generate_token: STRING
 			-- Generate token to use in a Session.

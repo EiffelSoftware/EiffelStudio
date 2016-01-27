@@ -127,8 +127,13 @@ feature {CMS_API} -- Module management
 				-- Schema
 			if attached a_api.storage.as_sql_storage as l_sql_storage then
 				l_sql_storage.sql_execute_file_script (a_api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended (name).appended_with_extension ("sql")), Void)
+
+				if l_sql_storage.has_error then
+					a_api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+				else
+					Precursor {CMS_MODULE} (a_api)
+				end
 			end
-			Precursor {CMS_MODULE}(a_api)
 		end
 
 feature {CMS_API} -- Access: API

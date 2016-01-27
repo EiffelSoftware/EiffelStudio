@@ -11,13 +11,13 @@ class
 inherit
 	CMS_MODULE
 		rename
-			module_api as user_openid_api
+			module_api as openid_api
 		redefine
 			filters,
 			setup_hooks,
 			initialize,
 			install,
-			user_openid_api
+			openid_api
 		end
 
 
@@ -68,7 +68,7 @@ feature {CMS_API} -- Module Initialization
 	initialize (a_api: CMS_API)
 			-- <Precursor>
 		local
-			l_openid_api: like user_openid_api
+			l_openid_api: like openid_api
 			l_openid_storage: CMS_OPENID_STORAGE_I
 		do
 			Precursor (a_api)
@@ -83,9 +83,9 @@ feature {CMS_API} -- Module Initialization
 
 				-- API initialization
 			create l_openid_api.make_with_storage (a_api, l_openid_storage)
-			user_openid_api := l_openid_api
+			openid_api := l_openid_api
 		ensure then
-			user_opend_api_set: user_openid_api /= Void
+			user_opend_api_set: openid_api /= Void
 		end
 
 feature {CMS_API} -- Module management
@@ -94,30 +94,33 @@ feature {CMS_API} -- Module management
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
-				if not l_sql_storage.sql_table_exists ("openid_consumers") then
 					--| Schema
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("openid_consumers.sql")), Void)
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("openid_consumers.sql")), Void)
 
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for openid module", generating_type)
-					end
+				if l_sql_storage.has_error then
+					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+				else
 						-- TODO workaround.
 					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("openid_consumers_initialize.sql")), Void)
-				end
 
-					-- TODO workaround, until we have an admin module
-				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for different consumers", generating_type)
-				else
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("openid_items.sql")),Void)
+						-- TODO workaround, until we have an admin module
+					if l_sql_storage.has_error then
+						api.logger.put_error ("Could not initialize openid consumer table for module [" + name + "]", generating_type)
+					else
+						l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("openid_items.sql")),Void)
+						if l_sql_storage.has_error then
+							api.logger.put_error ("Could not initialize openid items for module [" + name + "]", generating_type)
+						else
+							Precursor {CMS_MODULE}(api) -- Mark it installed.
+						end
+					end
 				end
-				Precursor {CMS_MODULE}(api)
 			end
 		end
 
 feature {CMS_API} -- Access: API
 
-	user_openid_api: detachable CMS_OPENID_API
+	openid_api: detachable CMS_OPENID_API
 			-- <Precursor>		
 
 feature -- Filters
@@ -125,9 +128,9 @@ feature -- Filters
 	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
 			-- Possibly list of Filter's module.
 		do
-			if attached user_openid_api as l_user_openid_api then
+			if attached openid_api as l_openid_api then
 				create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
-				Result.extend (create {CMS_OPENID_FILTER}.make (a_api, l_user_openid_api))
+				Result.extend (create {CMS_OPENID_FILTER}.make (a_api, l_openid_api))
 			end
 		end
 
@@ -151,18 +154,24 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
-			if attached user_openid_api as l_user_openid_api then
-				configure_web (a_api, l_user_openid_api, a_router)
+			if attached openid_api as l_openid_api then
+				a_router.handle ("/account/roc-openid-login",
+						create {WSF_URI_AGENT_HANDLER}.make (agent handle_openid_login (a_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/roc-openid-logout",
+						create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_openid_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/login-with-openid/{" + openid_consumer_path_parameter + "}",
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_openid (a_api, l_openid_api, ?, ?)),
+						a_router.methods_get_post)
+				a_router.handle ("/account/openid-callback",
+						create {WSF_URI_AGENT_HANDLER}.make (agent handle_callback_openid (a_api, l_openid_api, ?, ?)),
+						a_router.methods_get_post)
 			end
 		end
 
-	configure_web (a_api: CMS_API; a_user_openid_api: CMS_OPENID_API; a_router: WSF_ROUTER)
-		do
-			a_router.handle ("/account/roc-openid-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_openid_login (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/roc-openid-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/login-with-openid/{consumer}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_openid (a_api,a_user_openid_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/openid-callback", create {WSF_URI_AGENT_HANDLER}.make (agent handle_callback_openid (a_api, a_user_openid_api, ?, ?)), a_router.methods_get_post)
-		end
+	openid_consumer_path_parameter: STRING = "consumer"
+			-- Consumer path parameter name.
 
 feature -- Hooks configuration
 
@@ -181,7 +190,8 @@ feature -- Hooks
 		do
 			if
 				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session)
+				attached openid_api as l_openid_api and then
+				attached {WSF_STRING} a_response.request.cookie (l_openid_api.session_token)
 			then
 				a_value.force ("account/roc-openid-logout", "auth_login_strategy")
 			end
@@ -196,7 +206,8 @@ feature -- Hooks
 		do
 			if
 				attached a_response.user as u and then
-				attached {WSF_STRING} a_response.request.cookie ({CMS_OPENID_CONSTANTS}.openid_session) as l_roc_auth_session_token
+				attached openid_api as l_openid_api and then
+				attached {WSF_STRING} a_response.request.cookie (l_openid_api.session_token) as l_roc_auth_session_token
 			then
 				across
 					a_menu_system.primary_menu.items as ic
@@ -280,17 +291,17 @@ feature -- Hooks
 			end
 		end
 
-	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_logout (api: CMS_API; a_openid_api: CMS_OPENID_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_cookie: WSF_COOKIE
 		do
 			if
-				attached {WSF_STRING} req.cookie ({CMS_OPENID_CONSTANTS}.openid_session) as l_cookie_token and then
-				attached {CMS_USER} current_user (req) as l_user
+				attached {CMS_USER} current_user (req) as l_user and then
+				attached {WSF_STRING} req.cookie (a_openid_api.session_token) as l_cookie_token
 			then
 					-- Logout OAuth
-				create l_cookie.make ({CMS_OPENID_CONSTANTS}.openid_session, l_cookie_token.value)
+				create l_cookie.make (a_openid_api.session_token, l_cookie_token.value)
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
@@ -339,7 +350,7 @@ feature {NONE} -- Block views
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
 				if
-					attached user_openid_api as l_openid_api and then
+					attached openid_api as l_openid_api and then
 					attached l_openid_api.openid_consumers as l_list
 				then
 					l_tpl_block.set_value (l_list, "openid_consumers")
@@ -356,14 +367,16 @@ feature {NONE} -- Block views
 
 feature -- Openid Login
 
-	handle_login_with_openid (api: CMS_API; a_oauth_api: CMS_OPENID_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_login_with_openid (api: CMS_API; a_openid_api: CMS_OPENID_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			b: STRING
 			o: OPENID_CONSUMER
 		do
-			if attached {WSF_STRING} req.path_parameter ({CMS_OPENID_CONSTANTS}.consumer) as p_openid and then
-				attached {CMS_OPENID_CONSUMER} a_oauth_api.openid_consumer_by_name (p_openid.value) as l_oc then
+			if
+				attached {WSF_STRING} req.path_parameter (openid_consumer_path_parameter) as p_openid and then
+				attached {CMS_OPENID_CONSUMER} a_openid_api.openid_consumer_by_name (p_openid.value) as l_oc
+			then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				create b.make_empty
 				b.append ("Check openID: " + p_openid.value)
@@ -383,7 +396,7 @@ feature -- Openid Login
 			end
 		end
 
-	handle_callback_openid (api: CMS_API; a_user_openid_api: CMS_OPENID_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_callback_openid (api: CMS_API; a_openid_api: CMS_OPENID_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
@@ -410,14 +423,14 @@ feature -- Openid Login
 						l_user_api := api.user_api
 						if attached l_user_api.user_by_email (l_email) as p_user then
 								-- User with email exist
-							if	attached a_user_openid_api.user_openid_by_userid_identity (p_user.id, l_identity)	then
+							if attached a_openid_api.user_openid_by_userid_identity (p_user.id, l_identity)	then
 									-- Update openid entry?
 							else
 									-- create a oauth entry
-								a_user_openid_api.new_user_openid (l_identity,p_user)
+								a_openid_api.new_user_openid (l_identity,p_user)
 							end
-							create l_cookie.make ({CMS_OPENID_CONSTANTS}.openid_session, l_identity)
-							l_cookie.set_max_age (3600)
+							create l_cookie.make (a_openid_api.session_token, l_identity)
+							l_cookie.set_max_age (a_openid_api.session_max_age)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
 						else
@@ -434,9 +447,9 @@ feature -- Openid Login
 							l_user_api.new_user (l_user)
 
 								-- Add oauth entry
-							a_user_openid_api.new_user_openid (l_identity, l_user )
-							create l_cookie.make ({CMS_OPENID_CONSTANTS}.openid_session, l_identity)
-							l_cookie.set_max_age (3600)
+							a_openid_api.new_user_openid (l_identity, l_user )
+							create l_cookie.make (a_openid_api.session_token, l_identity)
+							l_cookie.set_max_age (a_openid_api.session_max_age)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
 
@@ -474,37 +487,6 @@ feature {NONE} -- Token Generation
 			end
 			Result := l_token
 		end
-
-feature {NONE} -- Implementation: date and time
-
-	http_date_format_to_date (s: READABLE_STRING_8): detachable DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_string (s)
-			if not d.has_error then
-				Result := d.date_time
-			end
-		end
-
-	file_date (p: PATH): DATE_TIME
-		require
-			path_exists: (create {FILE_UTILITIES}).file_path_exists (p)
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_path (p)
-			Result := timestamp_to_date (f.date)
-		end
-
-	timestamp_to_date (n: INTEGER): DATE_TIME
-		local
-			d: HTTP_DATE
-		do
-			create d.make_from_timestamp (n)
-			Result := d.date_time
-		end
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

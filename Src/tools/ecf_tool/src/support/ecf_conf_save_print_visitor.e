@@ -1,10 +1,10 @@
 note
-	description: "Summary description for {ECF_RESAVE_PRINT_VISITOR}."
+	description: "Printer visitor used when saving configuration files."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECF_RESAVE_PRINT_VISITOR
+	ECF_CONF_SAVE_PRINT_VISITOR
 
 inherit
 	CONF_PRINT_VISITOR
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

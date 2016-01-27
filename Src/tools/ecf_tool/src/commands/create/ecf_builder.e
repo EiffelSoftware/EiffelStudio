@@ -25,7 +25,6 @@ feature {NONE} -- Initialization
 			vis: ECF_PRINT_VISITOR
 			conf_sys_builder_vis: ECF_SYSTEM_BUILDER_VISITOR
 			ecf: ECF
-			ut: FILE_UTILITIES
 		do
 			create errors.make (0)
 			create warnings.make (0)

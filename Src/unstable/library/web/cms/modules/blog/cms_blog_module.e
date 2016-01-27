@@ -78,27 +78,17 @@ feature {CMS_API} -- Module Initialization
 
 feature {CMS_API} -- Module management
 
-	install (api: CMS_API)
-		local
-			sql: STRING
+	install (a_api: CMS_API)
 		do
 				-- Schema
-			if attached api.storage.as_sql_storage as l_sql_storage then
-				if not l_sql_storage.sql_table_exists ("blog_post_nodes") then
-					sql := "[
-CREATE TABLE blog_post_nodes(
-  `nid` INTEGER NOT NULL CHECK("nid">=0),
-  `revision` INTEGER NOT NULL,
-  `tags` VARCHAR(255),
-  CONSTRAINT PK_nid_revision PRIMARY KEY (nid,revision)
-);
-					]"
-					l_sql_storage.sql_execute_script (sql, Void)
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for blog module", generating_type)
-					end
+			if attached a_api.storage.as_sql_storage as l_sql_storage then
+				l_sql_storage.sql_execute_file_script (a_api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
+
+				if l_sql_storage.has_error then
+					a_api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+				else
+					Precursor {CMS_MODULE} (a_api)
 				end
-				Precursor (api)
 			end
 		end
 

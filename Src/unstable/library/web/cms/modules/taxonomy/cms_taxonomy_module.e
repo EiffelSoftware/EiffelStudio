@@ -70,18 +70,20 @@ feature {CMS_API} -- Module management
 		do
 				-- Schema
 			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
-				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install").appended_with_extension ("sql")), Void)
+				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 				if l_sql_storage.has_error then
 					api.logger.put_error ("Could not install database for taxonomy module", generating_type)
-				end
-				Precursor (api)
+				else
+					Precursor (api)
 
-				create l_taxonomy_api.make (api)
-				create voc.make ("Tags")
-				voc.set_description ("Enter comma separated tags.")
-				l_taxonomy_api.save_vocabulary (voc)
-				voc.set_is_tags (True)
-				l_taxonomy_api.associate_vocabulary_with_type (voc, "page")
+						-- Populate
+					create l_taxonomy_api.make (api)
+					create voc.make ("Tags")
+					voc.set_description ("Enter comma separated tags.")
+					l_taxonomy_api.save_vocabulary (voc)
+					voc.set_is_tags (True)
+					l_taxonomy_api.associate_vocabulary_with_type (voc, "page")
+				end
 			end
 		end
 

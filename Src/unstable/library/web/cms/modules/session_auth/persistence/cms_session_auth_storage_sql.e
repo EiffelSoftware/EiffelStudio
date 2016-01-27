@@ -7,7 +7,6 @@ class
 	CMS_SESSION_AUTH_STORAGE_SQL
 
 inherit
-
 	CMS_SESSION_AUTH_STORAGE_I
 
 	CMS_PROXY_STORAGE_SQL
@@ -27,23 +26,27 @@ feature -- Access User
 			-- Retrieve user by token `a_token', if any.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_by_session_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
-			sql_query (Select_user_by_token, l_parameters)
+			sql_query (Select_user_id_by_token, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check
 						no_more_than_one: False
 					end
-					Result := Void
+					l_uid := 0
 				end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
 
 	has_user_token (a_user: CMS_USER): BOOLEAN
@@ -68,7 +71,7 @@ feature -- Access User
 
 feature -- Change User token
 
-	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: CMS_USER;)
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: CMS_USER)
 			-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -102,54 +105,14 @@ feature -- Change User token
 			sql_finalize
 		end
 
-feature {NONE} -- Implementation
-
-	fetch_user: detachable CMS_USER
-		local
-			l_id: INTEGER_64
-			l_name: detachable READABLE_STRING_32
-		do
-			if attached sql_read_integer_64 (1) as i then
-				l_id := i
-			end
-			if attached sql_read_string_32 (2) as s and then not s.is_whitespace then
-				l_name := s
-			end
-			if l_name /= Void then
-				create Result.make (l_name)
-				if l_id > 0 then
-					Result.set_id (l_id)
-				end
-			elseif l_id > 0 then
-				create Result.make_with_id (l_id)
-			end
-			if Result /= Void then
-				if attached sql_read_string (3) as l_password then
-						-- FIXME: should we return the password here ???
-					Result.set_hashed_password (l_password)
-				end
-				if attached sql_read_string (5) as l_email then
-					Result.set_email (l_email)
-				end
-				if attached sql_read_integer_32 (6) as l_status then
-					Result.set_status (l_status)
-				end
-			else
-				check
-					expected_valid_user: False
-				end
-			end
-		end
-
 feature {NONE} -- SQL statements
 
-	Select_user_by_token: STRING = "SELECT u.* FROM users as u JOIN session_auth as og ON og.uid = u.uid and og.access_token = :token;"
-			--| FIXME: replace the u.* by a list of field names, to avoid breaking `featch_user' if two fieds are swiped.
+	Select_user_id_by_token: STRING = "SELECT u.uid FROM users as u JOIN auth_session as og ON og.uid = u.uid AND og.access_token = :token;"
 
-	Sql_insert_session_auth: STRING = "INSERT INTO session_auth (uid, access_token, created) VALUES (:uid, :token, :utc_date);"
+	sql_insert_session_auth: STRING = "INSERT INTO auth_session (uid, access_token, created) VALUES (:uid, :token, :utc_date);"
 
-	Sql_update_session_auth: STRING = "UPDATE session_auth SET access_token = :token, created = :utc_date WHERE uid =:uid;"
+	sql_update_session_auth: STRING = "UPDATE auth_session SET access_token = :token, created = :utc_date WHERE uid =:uid;"
 
-	Select_user_token: STRING = "SELECT COUNT(*) FROM session_auth where uid = :uid;"
+	select_user_token: STRING = "SELECT COUNT(*) FROM auth_session where uid = :uid;"
 
 end

@@ -13,6 +13,8 @@ class
 inherit
 	ANY
 
+	ECF_SHARED_CONF_HELPERS
+
 	SHARED_EXECUTION_ENVIRONMENT
 
 	LOCALIZED_PRINTER
@@ -38,7 +40,6 @@ feature {NONE} -- Execution
 		local
 			dv: ECF_DIRECTORY_CUSTOM_ITERATOR
 			l_files: ARRAYED_LIST [READABLE_STRING_32]
-			l_eh: like error_handler
 			l_eprinter: ERROR_CUI_PRINTER
 		do
 				-- Add specified files
@@ -80,16 +81,17 @@ feature {NONE} -- Execution
 				resave_config (ic.item)
 			end
 
-			l_eh := error_handler
-			create l_eprinter
-			if l_eh.has_warnings then
-				print ("%N")
-				l_eh.trace_warnings (l_eprinter)
-			end
-			if not l_eh.is_successful then
-				print ("%N")
-				l_eh.trace_errors (l_eprinter)
-				(create {EXCEPTIONS}).die (1)
+			if attached conf_helpers.error_handler as l_eh then
+				create l_eprinter
+				if l_eh.has_warnings then
+					print ("%N")
+					l_eh.trace_warnings (l_eprinter)
+				end
+				if not l_eh.is_successful then
+					print ("%N")
+					l_eh.trace_errors (l_eprinter)
+					(create {EXCEPTIONS}).die (1)
+				end
 			end
 		end
 
@@ -98,14 +100,14 @@ feature {NONE} -- Basic operations
 	resave_config (a_file_name: READABLE_STRING_32)
 			-- Loads and resaves `a_file_name' using the configuration system.
 		do
-			if a_file_name /= Void and then not a_file_name.is_empty and then is_file_readable (a_file_name) then
+			if a_file_name /= Void and then not a_file_name.is_empty and then conf_helpers.is_file_readable (a_file_name) then
 				print ("Loading configuration file '")
 				localized_print (a_file_name)
 				print ("'... ")
-				if attached load_config (a_file_name) as l_cfg then
+				if attached config_system_from (a_file_name) as l_cfg then
 					print ("Done%N")
 					print ("Saving configuration file... ")
-					if save_config (l_cfg, a_file_name) then
+					if save_conf_file (l_cfg, a_file_name) then
 						print ("Done%N")
 					else
 						print ("Failed!%N")
@@ -118,113 +120,8 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	load_config (a_file_name: READABLE_STRING_32): detachable CONF_SYSTEM
-			-- Loads a configuration system from `a_file_name'
-		require
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: is_file_readable (a_file_name)
-		local
-			l_reader: like ecf_reader
-			retried: BOOLEAN
-		do
-			if not retried then
-				l_reader := ecf_reader
-				l_reader.retrieve_configuration (a_file_name)
-				if not l_reader.is_error then
-					Result := l_reader.last_system
-				else
-					if l_reader.is_invalid_xml then
-						error_handler.add_error (create {SCIX}.make (a_file_name, 0, Void), False)
-					else
-						error_handler.add_error (create {SCLF}.make (a_file_name, 0, Void), False)
-					end
-				end
-			else
-				error_handler.add_error (create {SCFE}.make (a_file_name, 0, Void), False)
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	save_config (a_cfg: CONF_SYSTEM; a_file_name: READABLE_STRING_32): BOOLEAN
-			-- Saves the configuration system `a_cfg' to `a_file_name'
-		require
-			a_cfg_attached: a_cfg /= Void
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-			a_file_name_exists: is_file_readable (a_file_name)
-		local
-			l_printer: like ecf_printer
-			l_file: detachable PLAIN_TEXT_FILE
-			retried: BOOLEAN
-		do
-			if not retried then
-				l_printer := ecf_printer
-				a_cfg.process (l_printer)
-				if not l_printer.is_error then
-					create l_file.make_with_name (a_file_name)
-					l_file.open_write
-					l_file.put_string (l_printer.text)
-					l_file.flush
-					Result := True
-				else
-					error_handler.add_error (create {SCPR}.make (a_file_name, 0, Void), False)
-				end
-			else
-				if l_file /= Void then
-					error_handler.add_error (create {SCSF}.make (a_file_name, 0, Void), False)
-				else
-					error_handler.add_error (create {SCFE}.make (a_file_name, 0, Void), False)
-				end
-			end
-
-			if l_file /= Void and then not l_file.is_closed then
-				l_file.close
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	is_file_readable (fn: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is file `fn' readable?
-		local
-			f: RAW_FILE
-		do
-			create f.make_with_name (fn)
-			Result := f.exists and then f.is_access_readable and then not f.is_directory
-		end
-
-feature {NONE} -- Access
-
-	ecf_reader: CONF_LOAD
-			-- Configuration loader
-		once
-			create Result.make (create {CONF_PARSE_FACTORY})
-		ensure
-			result_attached: Result /= Void
-		end
-
-	ecf_printer: ECF_RESAVE_PRINT_VISITOR
-			-- Configuration printer
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
-		end
-
-	error_handler: MULTI_ERROR_MANAGER
-			-- Error handler
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
-		end
-
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

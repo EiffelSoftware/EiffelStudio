@@ -1729,6 +1729,9 @@ feature {NONE} -- Usage
 								end
 								Result.append (l_switch.long_name)
 							else
+								if l_unix_style and not l_switch.has_short_name then
+									Result.append_character (l_prefix)
+								end
 								Result.append (l_switch.name)
 							end
 

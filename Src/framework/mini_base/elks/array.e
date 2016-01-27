@@ -13,6 +13,9 @@ note
 class
 	ARRAY [G]
 
+inherit
+	ITERABLE [G]
+
 create
 	make, make_from_special
 
@@ -33,6 +36,21 @@ feature {NONE} -- Initialization
 		do
 			set_area (a)
 		ensure
+		end
+
+feature
+
+	new_cursor: ITERATION_CURSOR [G]
+			-- Fresh cursor associated with current structure
+		do
+			check False then end
+		end
+
+	make_from_array (a: ARRAY [G])
+			-- Initialize from the items of `a'.
+			-- (Useful in proper descendants of class `ARRAY',
+			-- to initialize an array-like object from a manifest array.)
+		do
 		end
 
 feature -- Access
@@ -81,7 +99,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

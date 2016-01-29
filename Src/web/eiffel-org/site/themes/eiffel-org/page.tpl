@@ -10,7 +10,7 @@
 							{include file="header.tpl"/}
 					</div>
 				</header>
-				<main id="main" role="main">
+				<main id="main">
 					{assign name="doc_page_type" value="doc"/}
 					{assign name="true_value" value="true"/}
 					{assign name="space_value" value=" "/}
@@ -33,7 +33,7 @@
 						{unless isempty="$page.region_sidebar_second"}{assign name="has_second_sidebar" expression="$true_value"/}{/unless}
 					{/if}
 					<div id="content" class="{$l_css_classes/}{if condition="$has_first_sidebar ~ $true_value"} with-first-sidebar{/if}{if condition="$has_second_sidebar ~ $true_value"} with-second-sidebar{/if}" itemtype="http://schema.org/Article" itemscope="">
-						<a name="main-content"><!-- Internal anchor to top content --></a>
+						<a id="main-content"><!-- Internal anchor to top content --></a>
 						<div class="holder">
 						{unless isempty="$page_title"}<h1 id="page-title" class="title">{$page_title/}</h1>{/unless}
 						{if condition="$page.is_front"}

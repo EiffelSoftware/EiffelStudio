@@ -18,7 +18,7 @@
 									</ul>
 								</nav>
 								<form class="search-form" method="GET" action="{$site_url/}gcse"> 
-									<input type="text" name="q" size="25" maxlength="255" value=""placeholder=""/>
+									<input type="text" name="q" size="25" maxlength="255" value="" placeholder=""/>
 								</form>
 							</div>
 						</div>

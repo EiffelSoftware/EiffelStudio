@@ -7621,9 +7621,16 @@ feature {NONE} -- Visitor
 			assign_b: ASSIGN_B
 			access_expr_b: ACCESS_EXPR_B
 			new_cursor_b: NESTED_B
+			l_old_current_target_type: like current_target_type
 		do
 				-- Type check iteration expression.
+				-- We save `current_target_type' and set it to Void before evaluating the
+				-- expression. See eweasel test#valid288.
+			l_old_current_target_type := current_target_type
+			current_target_type := Void
 			l_as.expression.process (Current)
+			current_target_type := l_old_current_target_type
+
 				-- Type check loop local name.
 			local_id := l_as.identifier
 			local_name_id := local_id.name_id

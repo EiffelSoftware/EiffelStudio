@@ -560,6 +560,7 @@ test	missing-vjar-error			valid284 tcf pass validity anchored_type system-validi
 test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-validity
 test	parenthesis-alias-tuple-vuar	valid286 tcf pass validity parenthesis_alias conversion tuple conformance
 test	conversion-on-separate-target	valid287 tcf fail validity conversion scoop
+test	wrong-type-for-manifest-array-in-accross	valid288 tcf pass validity manifest-array
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

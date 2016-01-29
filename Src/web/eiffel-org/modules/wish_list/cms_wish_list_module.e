@@ -211,6 +211,7 @@ feature -- Security
 			Result.force ("delete own wish")
 			Result.force ("delete any wish")
 			Result.force ("update any wish status")
+			Result.force ("update own wish status")
 			Result.force ("update any wish category")
 			Result.force ("update own wish category")
 			Result.force ("admin wish category")

@@ -10,10 +10,8 @@ note
 	tags: math,decimal
 	license: MIT license
 	copyright: "[
-Copyright (c) 2004, Paul G. Crismer and others.
-Copyright (c) 2011, SEL, York University, Toronto and others.
-				]"
-
---	link[doc]: "Documentation" http:// 
+			Copyright (c) 2004, Paul G. Crismer and others.
+			Copyright (c) 2011, SEL, York University, Toronto and others.
+		]"
 
 end

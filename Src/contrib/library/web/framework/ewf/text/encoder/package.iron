@@ -1,0 +1,25 @@
+package encoder
+
+project
+	encoder = "encoder-safe.ecf"
+	encoder = "encoder.ecf"
+
+note
+	title: Text encoders
+	description: "[
+			Text encoders used in web technologies:
+				- HTML encoder
+				- XML encoder
+				- JSON encoder
+				- UTF8
+				- BASE64
+		]"
+	collection: EWF
+	tags: html,xml,percent encoding,web,json,utf
+	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Github" https://github.com/EiffelWebFramework/EWF/library/text/encoder
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/blob/master/library/text/encoder/README.md
+
+end

@@ -3,14 +3,16 @@ package openid
 project
 	openid = "consumer/openid.ecf"
 	openid = "consumer/openid-safe.ecf"
-	demo = "consumer/demo/demo-safe.ecf"
 
 note
 	title: Eiffel OpenID
-	description: OpenID library (for now only consumer)
-	tags: openid,security
+	description: OpenID consumer library 
+	tags: openid,security,web,authentication,sso
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/security/http_authorization
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/tree/master/library/security/http_authorization/README.md
 
 end

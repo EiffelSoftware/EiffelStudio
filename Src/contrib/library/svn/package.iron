@@ -5,11 +5,12 @@ project
 	svn = "svn.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Subversion Client wrapper
+	description: A simple library wrapping subversion command line client.
+	tags: subversion
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 2003-2016, Jocelyn Fiat, Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/svn
+	link[license]: http://www.eiffel.com/licensing/forum.txt
 
 end

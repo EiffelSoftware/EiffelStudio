@@ -5,11 +5,18 @@ project
 	wikitext = "wikitext.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Wikitext
+	description: "[
+			Wikitext parser.
+			Wikitext rendering as HTML.
+			Support for notion of Wikitext book (book structure).
+			See mediawiki for information related to wikitext format.
+		]"
+	tags: wiki,wikitext,mediawiki,book,rendering,html
+	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/text/parser/wikitext
+	link[doc]: "Documentation" https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/text/parser/wikitext/README.md
 
 end

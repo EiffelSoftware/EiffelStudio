@@ -6,11 +6,20 @@ project
 	crypto-tests = "tests/tests.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Eiffel Crypto
+	description: "[
+			Eiffel Encryption facilities written in Eiffel, without
+			dependencies on specific C library.
+			Support for
+				- bcrypt
+				- hashing: md5, sha1, sha256, message_digest
+				- hmac: hmac_md5, hmac_sha1, hmac_sha256
+				- salt, xor_shift_64
+		]"
+	tags: encryption,bcrypt, md5,sha,sha1,sha256,message,digest,hmac,salt
+	copyright: 1984-2016, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/text/encryption/crypto
 
 end

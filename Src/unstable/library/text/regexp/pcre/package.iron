@@ -1,15 +1,16 @@
 package pcre
-
 project
 	pcre = "pcre-safe.ecf"
 	pcre = "pcre.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: PCRE regexp library
+	description: "[
+			PCRE regexp library, also supporting unicode.
+		]"
+	tags: pcre,regexp,match,pattern
+	copyright: "Copyright (c) 2001-2002, Harald Erdbruegger, Eiffel Software and others"
+	license: "MIT License"
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/text/regexp/pcre
 
 end

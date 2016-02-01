@@ -8,11 +8,16 @@ project
 	sqlite = "sqlite.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Eiffel sqlite3 library
+	description: "[
+			Eiffel SQLite wrapper for http://www.sqlite.org/ library.
+			This provides a statically linked sqlite, based in SQLite 3.7.8.
+		]"
+	tags: persistency,database,sqlite,sqlite3
+	copyright: 1984-2016, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/src/unstable/library/persistency/database/sqlite3
+	link[doc]: https://svn.eiffel.com/eiffelstudio/trunk/src/unstable/library/persistency/database/sqlite3/README
 
 end

@@ -8,8 +8,10 @@ note
 	title: Eiffel Net SSL
 	description: Extend Eiffel Net with SSL support (using openSSL)
 	tags: network,net,socket,ssl
+	copyright: 1984-2015, Guus Leeuw jr. (itpassion.com), Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/network/socket/netssl
+	link[doc]: https://svn.eiffel.com/eiffelstudio/trunk/Src/unstable/library/network/socket/netssl/README
 
 end

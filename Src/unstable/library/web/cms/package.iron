@@ -1,14 +1,8 @@
-package ROC
+package cms
 
 project
 	cms = "cms-safe.ecf"
 	cms = "cms.ecf"
-	app_env = "library/app_env/app_env-safe.ecf"
-	app_env = "library/app_env/app_env.ecf"
-	config = "library/configuration/config-safe.ecf"
-	config = "library/configuration/config.ecf"
-	app_env = "library/layout/layout-safe.ecf"
-	app_env = "library/layout/layout.ecf"
 	cms_model = "library/model/cms_model-safe.ecf"
 	cms_model = "library/model/cms_model.ecf"
 	persistence_mysql = "library/persistence/mysql/persistence_mysql-safe.ecf"
@@ -20,13 +14,8 @@ project
 	node = "modules/node/node-safe.ecf"
 	node = "modules/node/node.ecf"
 	demo = "examples/demo/demo-safe.ecf"
-	cms_demo_module = "examples/demo/modules/demo/cms_demo_module-safe.ecf"
-	config_tests = "library/configuration/tests/config_tests-safe.ecf"
-	email_service = "library/email/email-safe.ecf"
-	persistence_sqlite3 = "library/persistence/sqlite3/persistence_sqlite3-safe.ecf"
 	store_mysql = "library/persistence/store_mysql/store_mysql-safe.ecf"
 	persistence_store_odbc = "library/persistence/store_odbc/store_odbc-safe.ecf"
-	tests_store_odbc = "library/persistence/store_odbc/tests/tests-safe.ecf"
 	admin = "modules/admin/admin-safe.ecf"
 	auth_module = "modules/auth/auth-safe.ecf"
 	cms_blog_module = "modules/blog/cms_blog_module-safe.ecf"
@@ -34,14 +23,39 @@ project
 	oauth_module = "modules/oauth20/oauth20-safe.ecf"
 	openid_module = "modules/openid/openid-safe.ecf"
 	recent_changes = "modules/recent_changes/recent_changes-safe.ecf"
+	gcse = "library/gcse/gcse-safe.ecf"
+	gcse = "library/gcse/gcse.ecf"
+	persistence_sqlite3 = "library/persistence/sqlite3/sqlite3-safe.ecf"
+	recaptcha = "library/recaptcha/recaptcha-safe.ecf"
+	recaptcha = "library/recaptcha/recaptcha.ecf"
+	contact = "modules/contact/contact-safe.ecf"
+	google_search = "modules/google_search/google_search-safe.ecf"
+	google_search = "modules/google_search/google_search.ecf"
+	recent_changes = "modules/recent_changes/recent_changes.ecf"
+	seo = "modules/seo/seo-safe.ecf"
+	session_auth = "modules/session_auth/cms_session_auth-safe.ecf"
+	cms_taxonomy_module = "modules/taxonomy/taxonomy-safe.ecf"
+	cms_taxonomy_module = "modules/taxonomy/taxonomy.ecf"
 
 note
 	title: ROC CMS
-	description: CMS written with Eiffel
-	tags: cms, web, rest, api
-	license: Eiffel Forum v2
-	copyright: Jocelyn Fiat, Javier Velilla, Eiffel Software
+	description: "[
+			Eiffel ROC CMS library is build with [EWF](http://eiffelwebframework.github.io/EWF/) and inspired by [Drupal](https://www.drupal.org/).
+
+			The goal of the library is to provide the following features.
+				- content type
+				- user management
+				- node management
+				- module design
+				- theme
+				- API
+				- ...
+		]"
+	tags: cms,user, web, rest, api,node,module,theme,authentication
+	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others
+	license: "Eiffel Forum License v2 (see https://www.eiffel.com/licensing/forum.txt)"
+	link[license]: https://www.eiffel.com/licensing/forum.txt
 	link[source]: "Github" https://github.com/EiffelWebFramework/ROC.git
---	link[doc]: "Documentation" http:// 
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/ROC/blob/master/doc/readme.md
 
 end

@@ -7,12 +7,12 @@ project
 note
 	title: Eiffel criteria
 	description: "[
-		Implementation of Filter|Criteria pattern.
-		Useful to filter a list.
-		Via a Criteria factory, it provides expression evaluation based on
-		binary operators and labels, such as "name:foo or tag:test" which
-		keeps items satisfying criteria "name=foo" and has tag "test".
-	]"
+			Implementation of Filter|Criteria pattern.
+			Useful to filter a list.
+			Via a Criteria factory, it provides expression evaluation based on
+			binary operators and labels, such as "name:foo or tag:test" which
+			keeps items satisfying criteria "name=foo" and has tag "test".
+		]"
 	tags: criteria, filter, pattern, search
 	copyright: Jocelyn Fiat, and Eiffel Software.
 	license: Eiffel Forum License v2

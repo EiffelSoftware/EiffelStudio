@@ -1,4 +1,4 @@
-package cURL
+package curl
 
 setup
 	compile_library = Clib
@@ -10,9 +10,11 @@ project
 note
 	title: Eiffel cURL
 	description: libcURL wrapper library
-	tags: network,curl,wrapper
+	tags: network,client,http,curl,wrapper
 	license: Eiffel Forum v2
 	copyright: Copyright (c), Eiffel Software and others.
---	link[doc]: "Documentation" http:// 
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion"
+	https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL
 
 end

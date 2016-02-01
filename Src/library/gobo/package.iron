@@ -1,4 +1,4 @@
-package gobo
+package ise_gobo
 
 project
 	gobo_argument = "gobo_argument.ecf"
@@ -29,7 +29,6 @@ project
 	gobo_utility = "gobo_utility-safe.ecf"
 	gobo_utility = "gobo_utility.ecf"
 	gobo_xml = "gobo_xml.ecf"
-	gobo = "gobo_all.ecf"
 
 note
 	title: Gobo Eiffel for EiffelSoftware
@@ -44,10 +43,8 @@ note
 		Happy Eiffeling,
 		The EiffelSoftware Team
 				]"
-
-	tags: gobo,ise
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	tags:ise,gobo,argument,lex,yacc,lexical,math,parse,pattern,regexp,string,structure,test,time,utility,tools,xml
+	link[doc]: "Documentation" http://www.gobosoft.com/ 
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/gobo
 
 end

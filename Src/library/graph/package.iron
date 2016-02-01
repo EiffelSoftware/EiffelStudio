@@ -5,11 +5,15 @@ project
 	graph = "graph.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	description: "[
+				EiffelGraph lets you build graph representation which are either static or dynamic. The later is using some clever physics algorithm to automatically position nodes of the graph depending on the repulsion of each nodes and the stiffness of each edge.
+			]"
+
+	title: EiffelGraph Library
+	tags: vision2,graph,physics,algorithm
+	copyright: 1984-2016 Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/graph
 
 end

@@ -3,14 +3,14 @@ package diff
 project
 	diff = "diff-safe.ecf"
 	diff = "diff.ecf"
-	diff-tests = "tests/tests.ecf"
 
 note
-	copyright: 
---	title: 
---	description: 
---	tags: 
---	license: 
---	link[doc]: "Documentation" http:// 
+	title: Diff library
+	description: diff library
+	tags: diff,text
+	copyright: Copyright (c), Eiffel Software and others.
+	license: Eiffel Forum v2
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion"	https://svn.eiffel.com/eiffelstudio/trunk/Src/library/diff
 
 end

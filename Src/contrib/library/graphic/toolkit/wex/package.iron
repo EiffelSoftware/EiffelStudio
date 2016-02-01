@@ -7,11 +7,11 @@ project
 	wex = "library/wex/wex.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: Windows Eiffel Library (WEL) eXtension
+	description: Collection of components extending the WEL library.
+	tags: wel,windows,extension
+	copyright: Copyright (c) 1998  Robin van Ommeren, Andreas Leitner
+	link[license]: https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/graphic/toolkit/wex/Forum.txt
+	link[doc]: "Readme" https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/graphic/toolkit/wex/readme.txt
 
 end

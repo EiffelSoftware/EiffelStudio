@@ -5,11 +5,15 @@ project
 	microdata = "microdata.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: MicroData parser
+	description: "[
+			Solution to extract MicroData from HTML5 content.
+		]"
+	tags:microdata,parser,html5,html,data,machine-readable,schema
+	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/text/parser/microdata/
+	link[doc]: https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/text/parser/microdata/README.txt
 
 end

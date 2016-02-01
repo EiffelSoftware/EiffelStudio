@@ -5,11 +5,19 @@ project
 	uri_template = "uri_template.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: URI Template
+	description: "[
+			Implement URI Template as described at http://tools.ietf.org/rfc/rfc6570.txt
+
+			Support for URI template string expansion
+			But also partial URI Template matching
+		]"
+	collection: EWF
+	tags: uri template,router,generator,url
+	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/text/parser/uri_template
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/tree/master/library/text/parser/uri_template/README.md
 
 end

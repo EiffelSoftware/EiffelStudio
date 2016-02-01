@@ -5,11 +5,15 @@ project
 	http_authorization = "http_authorization.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: HTTP Authorization
+	description: "[
+			Class to manipulate HTTP 'Authorization' header value.
+		]"
+	collection: EWF
+	tags: http,authorization,authentication,web
+	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/server/authentication/http_authorization
 
 end

@@ -5,11 +5,22 @@ project
 	http = "http.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	title: HTTP protocol
+	description: "[
+			Collection of interfaces related to HTTP protocol:
+				- header
+				- status codes, request methods
+				- content type, media type, mime type.
+				- cookie
+				- date used in web protocol
+				- file extension mime mapping
+		]"
+	collection: EWF
+	tags: http,web,header,status,method,type,mime,cookie
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 2011-2016, Jocelyn Fiat, Eiffel Software and others
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/EiffelWebFramework/EWF/tree/master/library/network/protocol/http
+	link[doc]: "Documentation" https://github.com/EiffelWebFramework/EWF/tree/master/library/network/protocol/http/README.md
 
 end

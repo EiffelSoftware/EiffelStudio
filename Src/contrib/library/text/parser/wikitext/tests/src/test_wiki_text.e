@@ -436,6 +436,34 @@ end</code><br/>
 			assert ("as e", o.same_string (e))
 		end
 
+
+	test_code_2
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+		do
+			create t.make_from_string ("[
+The creation procedure 
+<code>
+    make (s, e: G)
+</code>
+takes ...
+			]")
+
+e := "{
+<p>The creation procedure <code>    make (s, e: G)</code><br/>
+takes ...</p>
+
+}"
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 	test_html_code
 		local
 			t: WIKI_CONTENT_TEXT

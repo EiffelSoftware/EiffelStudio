@@ -28,14 +28,14 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor (a_tag, s)
-			set_is_inline (text.is_single_line and not s.has ('%N'))
+			set_is_inline (text.is_single_line and not original_text_has_new_line)
 		end
 
 	make_from_source (s: STRING)
 			-- <Precursor>
 		do
 			Precursor (s)
-			set_is_inline (text.is_single_line and not s.has ('%N'))
+			set_is_inline (text.is_single_line and not original_text_has_new_line)
 		end
 
 	make_from_tag (a_tag: WIKI_TAG)
@@ -97,7 +97,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 		local
 			i,j: INTEGER
 		do
+			original_text_has_new_line := s.has ('%N')
 			tag := a_tag
 			tag_name := tag_name_from (a_tag)
 
@@ -48,6 +49,7 @@ feature {NONE} -- Initialization
 			i,j,e: INTEGER
 			t,l_content: detachable STRING
 		do
+			original_text_has_new_line := s.has ('%N')
 			i := s.index_of ('<', 1)
 			e := s.index_of ('>', i + 1)
 			if i = 0 or e = 0 then
@@ -101,6 +103,10 @@ feature -- Access
 	tag_name: STRING
 
 	text: WIKI_STRING
+
+	original_text_has_new_line: BOOLEAN
+			-- Original tag content had new line?
+			-- Could be used by visitor.
 
 	default_tag_name: STRING
 		do
@@ -161,7 +167,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

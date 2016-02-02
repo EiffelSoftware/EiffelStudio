@@ -120,7 +120,6 @@ feature -- Basic operation
 			w_indent: detachable WIKI_INDENTATION
 			multiline_level: INTEGER
 			in_tag: BOOLEAN
-			keep_formatting: BOOLEAN
 			mt_ln: INTEGER
 			s: STRING
 			l_items: ARRAYED_STACK [TUPLE [pos: INTEGER; kind: STRING]]
@@ -345,7 +344,6 @@ feature -- Basic operation
 								if is_wiki_item_token_of_kind (l_items, "tag:" + s) then
 									on_wiki_item_end_token (l_items, i, "tag:" + s)
 									in_tag := False
-									keep_formatting := False
 									multiline_level := multiline_level - 1
 									i := j -- after ending '>'
 								else
@@ -391,7 +389,6 @@ feature -- Basic operation
 										-- ???
 								else
 									multiline_level := multiline_level + 1
-									keep_formatting := False
 									in_tag := True
 									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
 									if q > 0 then

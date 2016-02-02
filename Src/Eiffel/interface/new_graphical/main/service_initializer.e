@@ -106,8 +106,9 @@ feature {NONE} -- Registeration: Environemtn
 				-- Add the environment variables used for the external URIs
 			a_service.set_environment_variable ("http://dev.eiffel.com", "ISE_WIKI")
 			a_service.set_environment_variable ("http://www.eiffelroom.com", "EIFFELROOM")
-			a_service.set_environment_variable ("http://doc.eiffel.com", "ISE_DOC")
-			a_service.set_environment_variable ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
+			a_service.set_environment_variable ("https://www.eiffel.org", "EIFFELORG")
+			a_service.set_environment_variable ("https://www.eiffel.org/doc", "ISE_DOC")
+			a_service.set_environment_variable ("https://www.eiffel.org/doc/uuid/", "ISE_DOC_UUID")
 		end
 
 feature {NONE} -- Registration: Output
@@ -134,7 +135,7 @@ feature {NONE} -- Registration: Output
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

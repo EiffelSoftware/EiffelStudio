@@ -152,6 +152,23 @@ feature -- Access
 			end
 		end
 
+	avoided_directories: detachable LIST [PATH]
+		once
+			if
+				has_option (avoid_switch) and then
+				attached options_of_name (avoid_switch) as opts and then not opts.is_empty
+			then
+				create {ARRAYED_LIST [PATH]} Result.make (opts.count)
+				across
+					opts as c
+				loop
+					if c.item.has_value then
+						Result.force (create {PATH}.make_from_string (c.item.value))
+					end
+				end
+			end
+		end
+
 	base_name: detachable STRING_32
 		once
 			if has_option (eiffel_library_switch) then
@@ -202,8 +219,9 @@ feature {NONE} -- Switches
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (12)
+			create Result.make (13)
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_switch, "Root directory", True, False, root_switch, "Root directory", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (avoid_switch, "Avoid to select new ecf location from <directory>", True, True, avoid_switch, "directory", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Force execution without any confirmation", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (base_switch, "Base name", True, False, base_switch, "Could be $ISE_LIBRARY", False))
@@ -225,6 +243,7 @@ feature {NONE} -- Switches
 	backup_switch: STRING = "b|backup"
 	simulation_switch: STRING = "n|simulation"
 	root_switch: STRING = "r|root"
+	avoid_switch: STRING = "avoid"
 	force_switch: STRING = "f|force"
 	verbose_switch: STRING = "v|verbose"
 	base_switch: STRING = "base"
@@ -247,7 +266,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

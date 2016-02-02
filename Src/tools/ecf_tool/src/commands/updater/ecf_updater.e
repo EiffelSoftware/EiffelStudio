@@ -29,8 +29,10 @@ feature {NONE} -- Initialization
 			tb: like ecf_table
 			has_processed_node: BOOLEAN
 			confirmed: BOOLEAN
-			s: STRING_32
+			s: READABLE_STRING_GENERAL
 		do
+			create {ARRAYED_LIST [READABLE_STRING_GENERAL]} avoided_directories.make (1)
+
 			create tb.make (50)
 
 			create errors.make (0)
@@ -39,9 +41,20 @@ feature {NONE} -- Initialization
 			ecf_table := tb
 			root_base_name := args.base_name	--"$EIFFEL_LIBRARY"				
 			if attached args.root_directory as l_root_dir then
-				root_directory := l_root_dir	--"c:\_dev\EWF\EWF-dev"
+				root_directory := l_root_dir
 			else
 				root_directory := execution_environment.current_working_path
+			end
+
+			if attached args.avoided_directories as dirs then
+				across
+					dirs as ic
+				loop
+					s := reduced_path (ic.item.name, 0)
+					if not avoided_directories.has (s) then
+						avoided_directories.force (s)
+					end
+				end
 			end
 
 			if attached args.replacements as rep_lst and then not rep_lst.is_empty then
@@ -112,10 +125,14 @@ feature {NONE} -- Initialization
 
 			if confirmed then
 				create dv.make (agent analyze_ecf)
-				if verbose then
-					report_progress ({STRING_32} "Scanning %"" + root_directory.name + {STRING_32} "%" for .ecf files ...")
+				across
+					(<<root_directory>>) as ic --| Later, maybe allow multiple root dirs.
+				loop
+					if verbose then
+						report_progress ({STRING_32} "Scanning %"" + ic.item.name + {STRING_32} "%" for .ecf files ...")
+					end
+					dv.process_directory (absolute_directory_path (ic.item))
 				end
-				dv.process_directory (absolute_directory_path (root_directory))
 				if verbose then
 					report_progress ("Found " + ecf_table.count.out + " .ecf files.")
 				end
@@ -186,6 +203,9 @@ feature -- Access
 	root_directory: PATH
 			-- Root directory of the collection of lib
 			-- or as reference for an environment variable
+
+	avoided_directories: LIST [READABLE_STRING_GENERAL]
+			-- When two or more locations are possible, the Avoided directories are disadvantaged.
 
 	root_base_name: detachable STRING_32
 			-- Optional name/path to replace the `root_directory' in .ecf
@@ -457,6 +477,18 @@ feature -- Basic operation
 			end
 		end
 
+	is_avoided_location (loc: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `loc' inside an avoided dir?
+		do
+			across
+				avoided_directories as ic
+			until
+				Result
+			loop
+				Result := loc.starts_with (ic.item)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	report_warning (m: READABLE_STRING_GENERAL)
@@ -485,21 +517,27 @@ feature {NONE} -- Implementation
 			l_uuid: detachable READABLE_STRING_8
 			n,r: INTEGER
 			lst, i_lst: like segments_from_string
+			l_info: like path_details
+			loc: READABLE_STRING_GENERAL
+			l_possibles: ARRAYED_LIST [TUPLE [location: READABLE_STRING_GENERAL; level: INTEGER]]
 		do
 			l_ecf := reduced_path (a_ecf, 0)
 			if attached path_details (l_ecf) as d then
 				l_uuid := d.uuid
 			end
-			if attached ecf_table.item (l_ecf) as l_info then
+			l_info := ecf_table.item (l_ecf)
+			if l_info /= Void then
 				Result := l_ecf
 			else
-				if attached path_details (l_ecf) as l_info then
+				l_info := path_details (l_ecf)
+				if l_info /= Void then
 					lst := l_info.segments
-					r := 0
+					create l_possibles.make (1)
 					across
 						ecf_table as c
 					loop
 						if c.item.file.same_string (l_info.file) then
+							loc := c.key
 							from
 								n := 1
 								i_lst := c.item.segments
@@ -517,18 +555,42 @@ feature {NONE} -- Implementation
 								i_lst.back
 								lst.back
 							end
-							if n > r then
-								r := n
-								Result := c.key
-							elseif n = r then
-								-- Choose the closest
-								if common_segment_count (l_ecf, Result) < common_segment_count (l_ecf, c.key) then
-									Result := c.key
-								end
+							if n > 0 then
+								l_possibles.force ([loc, n])
 							end
 						end
 					end
-				else
+
+					if l_possibles.count = 1 then
+						Result := l_possibles.first.location
+					else
+						from
+							r := 0
+							l_possibles.start
+						until
+							l_possibles.after
+						loop
+							n := l_possibles.item.level
+							loc := l_possibles.item.location
+
+							if is_avoided_location (loc) then
+									-- Ignore
+							elseif n > r then
+								r := n
+								Result := loc
+							elseif n = r then
+									-- Choose the closest
+								if Result = Void then
+									Result := loc
+								elseif common_segment_count (l_ecf, Result) < common_segment_count (l_ecf, loc) then
+									Result := loc
+								elseif is_avoided_location (Result) then
+									Result := loc
+								end
+							end
+							l_possibles.forth
+						end
+					end
 				end
 			end
 		end
@@ -773,7 +835,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

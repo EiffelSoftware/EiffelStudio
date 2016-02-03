@@ -6,13 +6,13 @@ note
 deferred class
 	CMS_REQUEST_UTIL
 
+obsolete
+	"All CMS_REQUEST_UTIL routines were moved to CMS_API [Jan/2016]"
+
 inherit
 	CMS_ENCODERS
 
 	REFACTORING_HELPER
-
-obsolete
-	"CMS_REQUEST_UTIL routines were moved to CMS_API [Jan/2016]"
 
 note
 	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

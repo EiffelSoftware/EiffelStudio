@@ -26,14 +26,14 @@
 		<library name="cms_google_search_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\google_search\google_search-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
 		<!--
-		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false"/>
 		<library name="cms_persistence_store_odbc" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_odbc\store_odbc-safe.ecf" readonly="false"/>
 		-->
+		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false"/>
 		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql-safe.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes-safe.ecf" readonly="false"/>
+		<library name="cms_seo_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\seo\seo-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_session_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\session_auth\cms_session_auth-safe.ecf" readonly="false"/>
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy-safe.ecf" readonly="false"/>
-		<library name="cms_seo_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\seo\seo-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
 		<library name="module_codeboard" location="modules\codeboard\codeboard-safe.ecf" readonly="false" use_application_options="true"/>

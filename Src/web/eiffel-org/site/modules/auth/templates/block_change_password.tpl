@@ -1,7 +1,7 @@
  <div>
     <form action="{$site_url/}account/change-password" method="post">
         <fieldset>
-            <legend>Change Password Form</legend>
+            <legend>Change Password</legend>
             <div>
                 <input type="password" id="password" name="password" value="" required/>
                 <label for="password">Password</label>

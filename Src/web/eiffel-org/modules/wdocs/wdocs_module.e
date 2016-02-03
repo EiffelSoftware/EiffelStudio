@@ -30,6 +30,9 @@ inherit
 	CMS_HOOK_CACHE
 
 	WDOCS_MODULE_HELPER
+		undefine
+			percent_encoder
+		end
 
 	CMS_TAXONOMY_HOOK
 
@@ -1458,15 +1461,6 @@ feature {NONE} -- Implementation
 				t.append (a_response.html_encoded (v))
 			end
 			t.append ("</li>")
-		end
-
-	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
-		do
-			if s /= Void then
-				Result := html_encoder.general_encoded_string (s)
-			else
-				create Result.make_empty
-			end
 		end
 
 note

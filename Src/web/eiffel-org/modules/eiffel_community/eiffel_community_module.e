@@ -32,8 +32,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	CMS_REQUEST_UTIL
-
 	SHARED_LOGGER
 
 create

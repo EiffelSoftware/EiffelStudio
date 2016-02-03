@@ -27,9 +27,6 @@ inherit
 			new_uri_template_mapping
 		end
 
-	CMS_REQUEST_UTIL
-
-
 feature {NONE} -- Helpers
 
 	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK

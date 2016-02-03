@@ -74,7 +74,7 @@ feature {NONE} --GET Implementation
 			r: CMS_RESPONSE
 			l_form: CMS_MOTION_INTERACTION_FORM_VIEW
 		do
-			if attached current_user_name (req) as l_user then
+			if attached api.user as l_user then
 				create l_form.make (motion_api.status, motion_api.categories)
 				l_form.set_wish (motion_api.motion_by_id (a_wish_id))
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -91,11 +91,11 @@ feature {NONE} --GET Implementation
 							-- can edit status?
 						l_wish.set_type (motion_api.item)
 						l_wish.mark_wish_status
-						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
+						if motion_api.has_permission_for_action_on_motion ("update", l_wish , l_user) then
 							l_tpl_block.set_value (True, "can_edit_status" )
 						end
 						l_wish.mark_motion_category
-						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
+						if motion_api.has_permission_for_action_on_motion ("update", l_wish , l_user) then
 							l_tpl_block.set_value (True, "can_edit_category" )
 						end
 					end
@@ -121,7 +121,7 @@ feature {NONE} --GET Implementation
 			r: CMS_RESPONSE
 			l_form: CMS_MOTION_INTERACTION_FORM_VIEW
 		do
-			if attached current_user_name (req) as l_user then
+			if attached api.user as l_user then
 				create l_form.make (motion_api.status, motion_api.categories)
 				l_form.set_wish (motion_api.motion_by_id (a_wish_id))
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -136,11 +136,11 @@ feature {NONE} --GET Implementation
 							-- can edit status?
 						l_wish.set_type (motion_api.item)
 						l_wish.mark_wish_status
-						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
+						if motion_api.has_permission_for_action_on_motion ("update", l_wish , l_user) then
 							l_tpl_block.set_value (True, "can_edit_status" )
 						end
 						l_wish.mark_motion_category
-						if motion_api.has_permission_for_action_on_motion ("update", l_wish , current_user (req)) then
+						if motion_api.has_permission_for_action_on_motion ("update", l_wish , l_user) then
 							l_tpl_block.set_value (True, "can_edit_category" )
 						end
 					end
@@ -167,7 +167,7 @@ feature {NONE} -- POST Implementation
 			r: CMS_RESPONSE
 			l_interaction: CMS_MOTION_LIST_INTERACTION
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if
 					attached {WSF_STRING} req.path_parameter ("wish_id") as l_wish_id and then l_wish_id.is_integer and then
 					attached  {CMS_MOTION_LIST} motion_api.motion_by_id (l_wish_id.integer_value) as l_wish

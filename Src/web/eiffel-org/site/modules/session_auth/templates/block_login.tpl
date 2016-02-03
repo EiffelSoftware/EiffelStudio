@@ -1,37 +1,23 @@
- 	<div class="primary-tabs">
- 		{unless isset="$user"}
-			<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
-		<div>
-			<div>	
-			    <form name="cms_session_auth" action="{$site_url/}account/login-with-session" method="POST">
-					<div>
-						<input type="text" name="username" id="username" required value="{$username/}">
-						<label>Username</label>
-					</div>
-										
-					<div>
-						<input  type="password" name="password"  id="password" required >
-						<label>Password</label>
-					</div>
-					<button type="submit">Login</button>
-				</form>
-			</div>
-    	</div>
-		<div>
+{unless isset="$user"}
+<div class="login-box">
+	<div class="description">The "Session" is the standard authentication system. (based on cookie)</div>
+	<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
+	<div>
+		<form name="cms_session_auth" action="{$site_url/}account/auth/roc-session-login" method="POST">
 			<div>
-				<p>
-					<a href="{$site_url/}account/new-password">Forgot password?</a>
-				</p>
+				<input type="text" name="username" id="username" required value="{$username/}">
+				<label>Username</label>
 			</div>
-		</div>	
-		{/unless}
-		{if isset=$error}
 			<div>
-			<div>
-				<p>
-					<strong>{$error/}
-				</p>
+				<input  type="password" name="password"  id="password" required >
+				<label>Password</label>
 			</div>
-		</div>	
-		{/if}
+			<button type="submit">Login</button>
+		</form>
 	</div>
+	<div>
+		<a href="{$site_url/}account/new-password">Forgot password?</a>
+	</div>	
+	{if isset="$error"}<div class="error">{$error/}</div>{/if}
+</div>
+{/unless}

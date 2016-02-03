@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 					l_wish.set_type (motion_api.item)
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 					if attached template_block (get_block_detail, r) as l_tpl_block then
-						if attached current_user (req) as l_user then
+						if attached api.user as l_user then
 							if motion_api.has_permission_for_action_on_motion ("edit", l_wish, l_user) then
 								l_tpl_block.set_value (True, "can_edit")
 							end

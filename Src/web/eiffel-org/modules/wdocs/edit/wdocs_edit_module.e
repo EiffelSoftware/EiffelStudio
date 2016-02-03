@@ -20,6 +20,9 @@ inherit
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
 	WDOCS_MODULE_HELPER
+		undefine
+			percent_encoder
+		end
 
 create
 	make

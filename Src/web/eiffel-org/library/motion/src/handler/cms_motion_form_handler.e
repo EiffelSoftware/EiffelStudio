@@ -107,7 +107,7 @@ feature {NONE} --GET Implementation
 			r: CMS_RESPONSE
 			l_form: CMS_MOTION_FORM_VIEW
 		do
-			if attached current_user_name (req) as l_user then
+			if attached api.user_is_authenticated then
 				create l_form.make (motion_api.categories)
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				if attached template_block (get_block_form, r) as l_tpl_block then
@@ -136,7 +136,7 @@ feature {NONE} -- POST Implementation
 			r: CMS_RESPONSE
 			l_wish: CMS_MOTION_LIST
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				l_form := extract_form_data (req)
 				if l_form.is_valid_form then
 					create l_wish.make_empty

@@ -151,13 +151,13 @@ feature -- Error
 	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
 						attached api.user_api.user_by_id (l_id.integer_value) as u_user
 					then
-						api.user_api.delete_user(u_user)
+						api.user_api.delete_user (u_user)
 						res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 					else
 						do_error (req, res, l_id)

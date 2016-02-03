@@ -74,14 +74,33 @@ feature -- Status report
 
 	has_valid_url: BOOLEAN
 			-- Is `url' a valid url for wiki external link?
+			--| simple validation, it should match [a-z0-9]+:[^\s]
+			--| i.e starts with a scheme composed of alpha-numeric char, then a ":"
+			--|     and then a non whitespace char.
+			--|		no further validation for now.
+			--|	Examples of valid urls:
+			--|		https://example.com
+			--|		mailto:foo@bar.com
+			--|		foo:bar
+			--| But "foo: bar", "foo:", ":bar" will return False.
 		local
+			l_url: like url
 			i: INTEGER
 			s: STRING
 		do
-			i := url.index_of (':', 1)
-			if i > 1 then
-				s := url.head (i - 1)
+			l_url := url
+			i := l_url.index_of (':', 1)
+			if i > 1 and i < l_url.count then
+					-- Has ':', and does not ends with it.
+				s := l_url.head (i - 1)
 				Result := across s as ic all ic.item.is_alpha_numeric end
+				if Result then
+						-- This should not be usefull to check, since `make' is extracting 
+						-- the `url', thanks to the first whitespace.
+						-- But in case, someone update the `url' in a different manner.!
+					check l_url.valid_index (i + 1) end
+					Result := not l_url[i + 1].is_space
+				end
 			else
 				Result := False
 			end

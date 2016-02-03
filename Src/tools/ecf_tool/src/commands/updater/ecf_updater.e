@@ -25,14 +25,14 @@ feature {NONE} -- Initialization
 
 	make (args: ECF_UPDATER_APPLICATION_ARGUMENTS)
 		local
-			dv: ECF_DIRECTORY_ITERATOR
+			dv: ECF_DIRECTORY_CUSTOM_ITERATOR
 			tb: like ecf_table
 			has_processed_node: BOOLEAN
 			confirmed: BOOLEAN
 			s: READABLE_STRING_GENERAL
+			dirs: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			lst: ARRAYED_LIST [PATH]
 		do
-			create {ARRAYED_LIST [READABLE_STRING_GENERAL]} avoided_directories.make (1)
-
 			create tb.make (50)
 
 			create errors.make (0)
@@ -46,13 +46,33 @@ feature {NONE} -- Initialization
 				root_directory := execution_environment.current_working_path
 			end
 
-			if attached args.avoided_directories as dirs then
+			if attached args.avoided_directories as l_avoided_dirs then
+				create dirs.make (l_avoided_dirs.count)
+				avoided_directories := dirs
+
 				across
-					dirs as ic
+					l_avoided_dirs as ic
 				loop
 					s := reduced_path (ic.item.name, 0)
-					if not avoided_directories.has (s) then
-						avoided_directories.force (s)
+					if not dirs.has (s) then
+						dirs.force (s)
+					end
+				end
+			end
+
+			if attached args.excluded_directories as l_excluded_dirs then
+				create dirs.make (l_excluded_dirs.count)
+				excluded_directories := dirs
+
+				across
+					l_excluded_dirs as ic
+				loop
+					s := ic.item.absolute_path.canonical_path.name
+					if {PLATFORM}.is_windows then
+						s := s.as_lower -- Case insensitive!
+					end
+					if not dirs.has (s) then
+						dirs.force (s)
 					end
 				end
 			end
@@ -77,9 +97,32 @@ feature {NONE} -- Initialization
 			diff_enabled := args.diff_enabled
 			verbose := args.verbose
 
+			if attached args.included_directories as l_included_dirs and then not l_included_dirs.is_empty then
+				create lst.make (l_included_dirs.count)
+				across
+					l_included_dirs as ic
+				loop
+					if not lst.has (ic.item) then
+						lst.force (ic.item)
+					end
+				end
+			else
+					-- Defaulted to `root_directory'.
+				create lst.make (1)
+				lst.force (root_directory)
+			end
+
 			io.output.put_string ("Root=" )
 			localized_print (root_directory.name)
 			io.output.put_string ("%N")
+			io.output.put_string ("Scan for library in:%N")
+			across
+				lst as ic
+			loop
+				io.output.put_string ("  - ")
+				localized_print (ic.item.name)
+				io.output.put_string ("%N")
+			end
 			if attached root_base_name as l_base then
 				io.output.put_string ("Base=")
 				localized_print (l_base)
@@ -98,6 +141,7 @@ feature {NONE} -- Initialization
 				end
 				io.output.put_string ("%N")
 			end
+
 			io.output.put_string ("Simulation=" + is_simulation.out + "%N")
 			io.output.put_string ("Backup=" + backup_enabled.out + "%N")
 			if diff_enabled then
@@ -125,8 +169,13 @@ feature {NONE} -- Initialization
 
 			if confirmed then
 				create dv.make (agent analyze_ecf)
+				if excluded_directories /= Void then
+					dv.set_process_directory_action (agent record_last_visited_directory)
+					dv.set_directory_excluded_function (agent is_excluded_path)
+				end
+
 				across
-					(<<root_directory>>) as ic --| Later, maybe allow multiple root dirs.
+					lst as ic --| Later, maybe allow multiple root dirs.
 				loop
 					if verbose then
 						report_progress ({STRING_32} "Scanning %"" + ic.item.name + {STRING_32} "%" for .ecf files ...")
@@ -142,15 +191,26 @@ feature {NONE} -- Initialization
 					across
 						l_files as c
 					loop
+						io.output.put_string ("Update ecf file ")
+						localized_print (c.item.name)
+						io.output.put_string (".%N")
 						update_ecf (c.item)
 					end
 				end
 				if attached args.directories as l_dirs and then not l_dirs.is_empty then
 					has_processed_node := True
 					create dv.make (agent update_ecf)
+					if excluded_directories /= Void then
+						dv.set_process_directory_action (agent record_last_visited_directory)
+						dv.set_directory_excluded_function (agent is_excluded_path)
+					end
+
 					across
 						l_dirs as c
 					loop
+						io.output.put_string ("Update ecfs from ")
+						localized_print (c.item.name)
+						io.output.put_string ("... %N")
 						dv.process_directory (absolute_directory_path (c.item))
 					end
 				end
@@ -167,6 +227,10 @@ feature {NONE} -- Initialization
 						if io.last_string.same_string ("y") then
 							has_processed_node := True
 							create dv.make (agent update_ecf)
+							if excluded_directories /= Void then
+								dv.set_process_directory_action (agent record_last_visited_directory)
+								dv.set_directory_excluded_function (agent is_excluded_path)
+							end
 							dv.process_directory (absolute_directory_path (execution_environment.current_working_path))
 						end
 					end
@@ -204,13 +268,16 @@ feature -- Access
 			-- Root directory of the collection of lib
 			-- or as reference for an environment variable
 
-	avoided_directories: LIST [READABLE_STRING_GENERAL]
+	avoided_directories: detachable LIST [READABLE_STRING_GENERAL]
 			-- When two or more locations are possible, the Avoided directories are disadvantaged.
+
+	excluded_directories: detachable LIST [READABLE_STRING_GENERAL]
+			-- Directory paths to exclude from scanning.
 
 	root_base_name: detachable STRING_32
 			-- Optional name/path to replace the `root_directory' in .ecf
 
-	ecf_table: STRING_TABLE [attached like path_details]
+	ecf_table: STRING_TABLE [ECF_UPDATER_PATH_DETAILS]
 			-- Table of existing ecf inside `root_directory'
 
 	is_simulation: BOOLEAN
@@ -317,6 +384,7 @@ feature -- Basic operation
 			p,q: INTEGER
 			l_rn: STRING_32
 			l_ecf: STRING_32
+			l_origin_location: IMMUTABLE_STRING_32
 			l_old_content, l_new_content: STRING_32
 			u: FILE_UTILITIES
 			utf: UTF_CONVERTER
@@ -347,6 +415,7 @@ feature -- Basic operation
 							q := l_line.last_index_of ('"', p)
 							if q > 0 then
 								l_ecf := l_line.substring (q + 1, p + 3)
+								create l_origin_location.make_from_string_32 (l_ecf)
 								if l_line [q + 1] = '$' then
 									if root_base_name /= Void then
 										apply_variable_expansions (l_ecf)
@@ -362,6 +431,9 @@ feature -- Basic operation
 --									l_line.replace_substring_all ("\", "/")
 								else
 									if attached ecf_location (l_ecf) as l_location then
+										if last_ecf_location_had_multiple_solution then
+											report_warning ({STRING_32} "Multiple option to replace %"" + l_ecf.to_string_32 + {STRING_32} "%" in file %"" + fn.name + {STRING_32} "%"")
+										end
 										l_new_path := relative_path (l_location, fn.name, l_rn, root_base_name)
 									else
 										if not u.file_exists (l_ecf) then
@@ -375,8 +447,8 @@ feature -- Basic operation
 										localized_print (l_new_path)
 										print ("%N")
 									end
-									if same_path (l_line.substring (q + 1, p + 3), l_new_path) then
-
+									if same_path (l_origin_location, l_new_path) then
+											-- Do not change value!
 									elseif not l_new_path.is_empty then
 										l_line.replace_substring (l_new_path, q+1, p+3)
 									end
@@ -477,17 +549,50 @@ feature -- Basic operation
 			end
 		end
 
-	is_avoided_location (loc: READABLE_STRING_GENERAL): BOOLEAN
+	is_avoided_location (loc: READABLE_STRING_GENERAL; a_ecf: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `loc' inside an avoided dir?
 		do
-			across
-				avoided_directories as ic
-			until
-				Result
-			loop
-				Result := loc.starts_with (ic.item)
+			if attached avoided_directories as dirs then
+				across
+					dirs as ic
+				until
+					Result
+				loop
+					Result := loc.starts_with (ic.item) and not a_ecf.starts_with (ic.item)
+				end
 			end
 		end
+
+	is_excluded_path (p: PATH): BOOLEAN
+		local
+			loc: STRING_32
+		do
+			if attached excluded_directories as dirs then
+				if attached last_visited_directory as dp then
+					loc := dp.extended_path (p).absolute_path.canonical_path.name
+				else
+					loc := p.absolute_path.canonical_path.name
+				end
+				if {PLATFORM}.is_windows then
+					loc.to_lower
+				end
+				across
+					dirs as ic
+				until
+					Result
+				loop
+					Result := loc.starts_with_general (ic.item)
+				end
+			end
+		end
+
+	record_last_visited_directory (dn: PATH)
+		do
+			last_visited_directory := dn
+		end
+
+	last_visited_directory: detachable PATH
+
 
 feature {NONE} -- Implementation
 
@@ -511,32 +616,39 @@ feature {NONE} -- Implementation
 			io.error.put_new_line
 		end
 
+	last_ecf_location_had_multiple_solution: BOOLEAN
+
 	ecf_location (a_ecf: READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL
+			-- New location for `a_ecf'.
+			-- If multiple location were possible, set `last_ecf_location_had_multiple_solution' to True.
 		local
 			l_ecf: STRING_GENERAL
 			l_uuid: detachable READABLE_STRING_8
 			n,r: INTEGER
-			lst, i_lst: like segments_from_string
+			lst, i_lst: LIST [READABLE_STRING_GENERAL]
 			l_info: like path_details
+			l_item_info: like path_details
 			loc: READABLE_STRING_GENERAL
-			l_possibles: ARRAYED_LIST [TUPLE [location: READABLE_STRING_GENERAL; level: INTEGER]]
+			l_result_info: detachable ECF_UPDATER_PATH_DETAILS
+			l_possibles: ARRAYED_LIST [TUPLE [location: READABLE_STRING_GENERAL; level: INTEGER; info: ECF_UPDATER_PATH_DETAILS]]
+			l_more: BOOLEAN
 		do
+			last_ecf_location_had_multiple_solution := False
 			l_ecf := reduced_path (a_ecf, 0)
-			if attached path_details (l_ecf) as d then
-				l_uuid := d.uuid
-			end
 			l_info := ecf_table.item (l_ecf)
 			if l_info /= Void then
 				Result := l_ecf
 			else
 				l_info := path_details (l_ecf)
 				if l_info /= Void then
+					l_uuid := l_info.uuid
 					lst := l_info.segments
 					create l_possibles.make (1)
 					across
 						ecf_table as c
 					loop
-						if c.item.file.same_string (l_info.file) then
+						l_item_info := c.item
+						if l_item_info.file.same_string (l_info.file) then
 							loc := c.key
 							from
 								n := 1
@@ -556,7 +668,7 @@ feature {NONE} -- Implementation
 								lst.back
 							end
 							if n > 0 then
-								l_possibles.force ([loc, n])
+								l_possibles.force ([loc, n, l_item_info])
 							end
 						end
 					end
@@ -564,28 +676,95 @@ feature {NONE} -- Implementation
 					if l_possibles.count = 1 then
 						Result := l_possibles.first.location
 					else
+						last_ecf_location_had_multiple_solution := True
 						from
 							r := 0
 							l_possibles.start
 						until
 							l_possibles.after
 						loop
+							l_item_info := l_possibles.item.info
 							n := l_possibles.item.level
 							loc := l_possibles.item.location
 
-							if is_avoided_location (loc) then
-									-- Ignore
-							elseif n > r then
+							if Result = Void then
+								l_result_info := l_item_info
 								r := n
 								Result := loc
-							elseif n = r then
-									-- Choose the closest
-								if Result = Void then
-									Result := loc
-								elseif common_segment_count (l_ecf, Result) < common_segment_count (l_ecf, loc) then
-									Result := loc
-								elseif is_avoided_location (Result) then
-									Result := loc
+							else
+								l_more := True
+								if is_avoided_location (Result, l_ecf) then
+									if is_avoided_location (loc, l_ecf) then
+											-- both are avoided location ...
+											-- check more.
+									else
+										l_more := False
+										l_result_info := l_item_info
+										r := n
+										Result := loc
+									end
+								elseif is_avoided_location (loc, l_ecf) then
+										-- Previous result is not an avoided location
+										-- But if it is a redirection ...
+									if l_result_info /= Void and then l_result_info.is_redirection then
+										if l_item_info.is_redirection then
+												-- Keep previous Result (redirection)
+										else
+												-- Better had a avoided loc, than a redirection (usually obsolete location)!
+											l_result_info := l_item_info
+											r := n
+											Result := loc
+										end
+									else
+											-- Keep previous Result, which is not avoided, and not a redirection!
+									end
+									l_more := False
+								end
+								if l_more then
+										--| either both avoided, or both non avoided location.
+										--| Let's check redirection status
+									if l_result_info /= Void and then l_result_info.is_redirection then
+										if l_item_info.is_redirection then
+												-- both redirection!
+												-- Continue checking
+										else
+												-- Previous was a redirection,
+												-- so use the current loc, which is not a redirection.
+											l_more := False
+											l_result_info := l_item_info
+											r := n
+											Result := loc
+										end
+									elseif l_item_info.is_redirection then
+											-- Skip since previous Result is not a redirection, and not an avoided location.
+										l_more := False
+									else
+											-- Both non redirection.
+									end
+									if l_more then
+											--| either both avoided, or both non avoided location.
+											--| either both redirection, or both non redirection.
+											--| so avoided or redirection is not a comparating criterion.
+										if n > r then
+											l_result_info := l_item_info
+											r := n
+											Result := loc
+										elseif n = r then
+												-- Choose the closest
+											if common_segment_count (l_ecf, Result) < common_segment_count (l_ecf, loc) then
+												r := n
+												l_result_info := l_item_info
+												Result := loc
+											else
+													-- Same quality .. so let's use the smallest location path.
+												if Result.count > loc.count then
+													r := n
+													l_result_info := l_item_info
+													Result := loc
+												end
+											end
+										end
+									end
 								end
 							end
 							l_possibles.forth
@@ -664,62 +843,106 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	path_details (fn: READABLE_STRING_GENERAL): detachable TUPLE [uuid: detachable READABLE_STRING_8; segments: like segments_from_string; dir, file: READABLE_STRING_GENERAL]
+	path_details (fn: READABLE_STRING_GENERAL): detachable ECF_UPDATER_PATH_DETAILS
 		local
 			f: RAW_FILE
 			n,p: INTEGER
 			l_uuid: detachable READABLE_STRING_8
 			l_dir: detachable READABLE_STRING_GENERAL
 			l_file: detachable READABLE_STRING_GENERAL
+			l_is_redirection: BOOLEAN
 			c_slash, c_bslash: NATURAL_32
 			c: NATURAL_32
+			err: BOOLEAN
+			conf_loader: CONF_LOAD
+			conf_fac: CONF_PARSE_FACTORY
 		do
-			c_slash := ('/').natural_32_code
-			c_bslash := ('\').natural_32_code
-			from
-				n := fn.count
-			until
-				n = 0 or l_dir /= Void
-			loop
-				c := fn.code (n)
-				if c = c_slash or c = c_bslash then
-					l_file := fn.substring (n + 1, fn.count)
-					l_dir := fn.substring (1, n)
-				else
+			Result := path_details_table.item (fn)
+			if Result /= Void then
+				if Result.is_error then
+					Result := Void
 				end
-				n := n - 1
-			end
-			if l_dir = Void then
-				l_dir := ""
-			end
-			if l_file /= Void then
-				create f.make_with_name (fn)
-				if f.exists and then f.is_readable then
-					f.open_read
-					from
-						f.read_line
-					until
-						f.exhausted or l_uuid /= Void
-					loop
-						if attached f.last_string as l_line then
-							p := l_line.substring_index ("uuid=%"", 1)
-							if p > 0 then
-								n := l_line.index_of ('"', p + 6)
-								if n > p then
-									l_uuid := l_line.substring (p + 6, n - 1)
+			else
+				c_slash := ('/').natural_32_code
+				c_bslash := ('\').natural_32_code
+				from
+					n := fn.count
+				until
+					n = 0 or l_dir /= Void
+				loop
+					c := fn.code (n)
+					if c = c_slash or c = c_bslash then
+						l_file := fn.substring (n + 1, fn.count)
+						l_dir := fn.substring (1, n)
+					else
+					end
+					n := n - 1
+				end
+				if l_dir = Void then
+					l_dir := ""
+				end
+				if l_file /= Void then
+					create f.make_with_name (fn)
+					if f.exists and then f.is_readable then
+						create conf_fac
+						create conf_loader.make (conf_fac)
+						conf_loader.retrieve_configuration (f.path.name)
+						if attached conf_loader.last_redirection as cfg_redirection then
+							if attached cfg_redirection.uuid as redir_uuid then
+								l_uuid := redir_uuid.out
+							end
+							l_is_redirection := True
+						elseif attached conf_loader.last_system as cfg_system then
+							if not cfg_system.is_generated_uuid then
+								l_uuid := cfg_system.uuid.out
+							end
+						else
+							err := True
+							f.open_read
+							from
+								f.read_line
+							until
+								f.exhausted or l_uuid /= Void
+							loop
+								if attached f.last_string as l_line then
+									p := l_line.substring_index ("uuid=%"", 1)
+									if p > 0 then
+										n := l_line.index_of ('"', p + 6)
+										if n > p then
+											l_uuid := l_line.substring (p + 6, n - 1)
+										end
+									end
 								end
+								f.read_line
+							end
+							f.close
+						end
+						if verbose then
+							if err then
+								report_error ({STRING_32} "Invalid configuration file %"" + fn.to_string_32 + "%"")
+							elseif l_uuid = Void then
+		--						check has_uuid: l_uuid /= Void end
+								report_warning ({STRING_32} "No UUID in %"" + fn.to_string_32 + "%"")
 							end
 						end
-						f.read_line
 					end
-					f.close
-					if verbose and l_uuid = Void then
---						check has_uuid: l_uuid /= Void end
-						report_warning ("No UUID in %"" + fn.to_string_8 + "%"")
+					create Result.make (l_uuid, segments_from_string (l_dir), l_dir, l_file)
+					Result.set_is_redirection (l_is_redirection)
+					if err then
+						Result.set_is_error (True)
 					end
 				end
-				Result := [l_uuid, segments_from_string (l_dir), l_dir, l_file]
+				if Result = Void then
+					path_details_table.force (create {ECF_UPDATER_PATH_DETAILS}.make_error, fn)
+				else
+					path_details_table.force (Result, fn)
+				end
 			end
+		end
+
+	path_details_table: STRING_TABLE [ECF_UPDATER_PATH_DETAILS]
+		once
+			create Result.make (10)
 		end
 
 feature {NONE} -- Path manipulation

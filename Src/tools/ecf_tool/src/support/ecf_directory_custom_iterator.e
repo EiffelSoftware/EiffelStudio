@@ -12,21 +12,41 @@ class
 inherit
 	ECF_DIRECTORY_ITERATOR
 		redefine
-			directory_excluded
+			directory_excluded,
+			process_directory
 		end
 
 create
 	make
 
+feature -- Operation
+
+	process_directory (dn: PATH)
+			-- Iterate on directory `dn'
+			-- process files first and then directories recursively.
+		do
+			if attached process_directory_action as act then
+				act.call (dn)
+			end
+			Precursor (dn)
+		end
+
 feature -- Access
 
 	directory_excluded_function: detachable FUNCTION [PATH, BOOLEAN]
+
+	process_directory_action: detachable PROCEDURE [PATH]
 
 feature -- Change
 
 	set_directory_excluded_function (f: like directory_excluded_function)
 		do
 			directory_excluded_function := f
+		end
+
+	set_process_directory_action (act: like process_directory_action)
+		do
+			process_directory_action := act
 		end
 
 feature -- Status
@@ -40,7 +60,7 @@ feature -- Status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -162,7 +162,7 @@ feature {NONE} -- Initialization
 				if
 					l_target /= Void and l_redirection_ecf /= Void
 				then
-					set_redirection (l_target, l_redirection_ecf, has_flag_force)
+					set_redirection (l_target, l_redirection_ecf, Void, has_flag_force)
 				else
 					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
@@ -284,9 +284,9 @@ feature -- Change
 			v: ECF_FINDER
 			dn: READABLE_STRING_32
 			s: STRING_32
-			p: PATH
+			p,pn: PATH
 		do
-			create d.make_with_name (a_target_folder)
+			create d.make_with_name (evaluated_location (a_target_folder))
 			if d.exists then
 				create v.make
 				dn := d.path.canonical_path.name
@@ -302,8 +302,10 @@ feature -- Change
 							s.remove_head (dn.count + 1)
 							create p.make_from_string (a_redirection_folder)
 							p := p.extended (s)
+							create pn.make_from_string (a_target_folder)
+							pn := pn.extended (s)
 							file_utilities.create_directory_path (p.parent)
-							set_redirection (ic.item.name, p.name, a_update)
+							set_redirection (ic.item.name, p.name, pn.name, a_update)
 						end
 					end
 				end
@@ -373,7 +375,7 @@ feature -- Change
 			end
 		end
 
-	set_redirection (a_target_ecf: READABLE_STRING_32; a_redirection: READABLE_STRING_32; a_update: BOOLEAN)
+	set_redirection (a_target_ecf: READABLE_STRING_32; a_redirection: READABLE_STRING_32; a_target_location_text: detachable READABLE_STRING_32; a_update: BOOLEAN)
 			-- Create redirection from `a_redirection' to `a_target'
 			-- if precised use `a_redirection_location' text in redirection location value.
 			-- if `a_redirection' already exists, update only if `a_update' is True.
@@ -405,14 +407,12 @@ feature -- Change
 			end
 
 			if l_continue then
-				l_location := a_target_ecf
 				has_error := False
 				if a_target_ecf /= Void then
 --					l_target := evaluated_location (a_target_ecf)
 					conf_loader.retrieve_configuration (evaluated_location (a_target_ecf))
 					if conf_loader.is_error then
 						io.error.put_string ({STRING_32} "[WARNING] Unable to get data from target <" + a_target_ecf + ">.%N")
-						l_location := a_target_ecf
 					else
 						if attached conf_loader.last_redirection as l_redir then
 							if is_verbose then
@@ -425,7 +425,6 @@ feature -- Change
 								print ("%N")
 							end
 							l_uuid := l_redir.uuid
---							l_location := l_redir.file_name
 						elseif attached conf_loader.last_system as l_system then
 							if is_verbose then
 								print ("= System =%N")
@@ -437,7 +436,6 @@ feature -- Change
 								print ("%N")
 							end
 							l_uuid := l_system.uuid
---							l_location := l_system.file_name
 						else
 							has_error := True
 						end
@@ -448,6 +446,11 @@ feature -- Change
 				end
 
 				if not has_error then
+					l_location := a_target_ecf
+					if a_target_location_text /= Void then
+						l_location := a_target_location_text
+					end
+
 					if l_location /= Void then
 						redir := conf_factory.new_redirection_with_file_name (a_redirection, l_location, l_uuid)
 						if not file_utilities.file_exists (a_redirection) or else a_update then
@@ -609,7 +612,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

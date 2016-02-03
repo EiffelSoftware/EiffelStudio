@@ -152,11 +152,46 @@ feature -- Access
 			end
 		end
 
+	included_directories: detachable LIST [PATH]
+			-- Directories to scan for libraries ecf.
+		once
+			if
+				has_option (include_switch) and then
+				attached options_of_name (include_switch) as opts and then not opts.is_empty
+			then
+				create {ARRAYED_LIST [PATH]} Result.make (opts.count)
+				across
+					opts as c
+				loop
+					if c.item.has_value then
+						Result.force (create {PATH}.make_from_string (c.item.value))
+					end
+				end
+			end
+		end
+
 	avoided_directories: detachable LIST [PATH]
 		once
 			if
 				has_option (avoid_switch) and then
 				attached options_of_name (avoid_switch) as opts and then not opts.is_empty
+			then
+				create {ARRAYED_LIST [PATH]} Result.make (opts.count)
+				across
+					opts as c
+				loop
+					if c.item.has_value then
+						Result.force (create {PATH}.make_from_string (c.item.value))
+					end
+				end
+			end
+		end
+
+	excluded_directories: detachable LIST [PATH]
+		once
+			if
+				has_option (exclude_switch) and then
+				attached options_of_name (exclude_switch) as opts and then not opts.is_empty
 			then
 				create {ARRAYED_LIST [PATH]} Result.make (opts.count)
 				across
@@ -221,7 +256,10 @@ feature {NONE} -- Switches
 		once
 			create Result.make (13)
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (root_switch, "Root directory", True, False, root_switch, "Root directory", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (include_switch, "Include <directory>", True, True, include_switch, "directory", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (exclude_switch, "Exclude <directory>", True, True, exclude_switch, "directory", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (avoid_switch, "Avoid to select new ecf location from <directory>", True, True, avoid_switch, "directory", False))
+
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Force execution without any confirmation", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (base_switch, "Base name", True, False, base_switch, "Could be $ISE_LIBRARY", False))
@@ -244,6 +282,8 @@ feature {NONE} -- Switches
 	simulation_switch: STRING = "n|simulation"
 	root_switch: STRING = "r|root"
 	avoid_switch: STRING = "avoid"
+	include_switch: STRING = "include"
+	exclude_switch: STRING = "exclude"
 	force_switch: STRING = "f|force"
 	verbose_switch: STRING = "v|verbose"
 	base_switch: STRING = "base"

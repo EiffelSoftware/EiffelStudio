@@ -112,6 +112,7 @@ feature -- Basic Operations / Contact
 			l_message.replace_substring_all ("$host", a_host)
 			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
 			l_message.replace_substring_all ("$user", a_user.utf_8_name)
+			l_message.replace_substring_all ("$email", a_to)
 			send_message (contact_email_address, a_to, parameters.contact_subject_register, l_message)
 		end
 
@@ -126,6 +127,7 @@ feature -- Basic Operations / Contact
 			l_message.replace_substring_all ("$host", a_host)
 			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
 			l_message.replace_substring_all ("$link", a_link)
+			l_message.replace_substring_all ("$email", a_to)
 			send_message (contact_email_address, a_to, parameters.contact_subject_activate, l_message)
 		end
 
@@ -137,7 +139,7 @@ feature -- Basic Operations / Contact
 			l_message: STRING
 		do
 			create l_message.make_from_string (parameters.account_activation_confirmation)
-			l_message.replace_substring_all ("$hot", a_host)
+			l_message.replace_substring_all ("$host", a_host)
 			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
 			l_message.replace_substring_all ("$user", a_user.utf_8_name)
 			l_message.replace_substring_all ("$email", a_to)

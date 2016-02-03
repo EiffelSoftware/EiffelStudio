@@ -12,7 +12,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder.ecf"/>
 		<library name="http" location="..\protocol\http\http.ecf"/>
-		<library name="http_auth" location="../authentication/http_authorization/http_authorization.ecf"/>
+		<library name="http_auth" location="../../web/authentication/http_authorization/http_authorization.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
 			<condition>

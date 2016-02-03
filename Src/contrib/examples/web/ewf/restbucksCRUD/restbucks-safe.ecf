@@ -10,11 +10,6 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="connector_standalone" location="../../../../library/web/framework/ewf/ewsgi/connectors/standalone/standalone-safe.ecf" readonly="false">
-			<option debug="true">
-				<debug name="standalone" enabled="true"/>
-			</option>
-		</library>
 		<library name="conneg" location="../../../../library/network/protocol/content_negotiation/conneg-safe.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf" readonly="false"/>
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false"/>

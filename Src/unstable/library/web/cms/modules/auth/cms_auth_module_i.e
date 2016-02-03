@@ -68,9 +68,9 @@ feature -- Hooks
 			l_destination: READABLE_STRING_8
 		do
 			if attached {WSF_STRING} a_response.request.query_parameter ("destination") as p_destination then
-				l_destination := p_destination.url_encoded_value
+				l_destination := p_destination.value
 			else
-				l_destination := percent_encoded (a_response.location)
+				l_destination := a_response.location
 			end
 			if is_authenticating (a_response) then
 

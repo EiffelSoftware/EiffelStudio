@@ -58,6 +58,7 @@ feature -- Processing
 			p,q,r: INTEGER
 			c: CHARACTER
 			w_item: detachable WIKI_STRING_ITEM
+			w_ext_lnk: WIKI_EXTERNAL_LINK
 			t,s: STRING
 			s_last: STRING
 			s_link: detachable STRING
@@ -145,9 +146,13 @@ feature -- Processing
 							--| external link "[href a title for the link]"
 						p := a_text.index_of (']', i + 1)
 						if p > 0 and p <= n then
-							if in_items.is_empty then
+							create w_ext_lnk.make (a_text.substring (i, p))
+							if
+								in_items.is_empty and
+								w_ext_lnk.has_valid_url
+							then
 								flush_buffer (a_parts, s)
-								create {WIKI_EXTERNAL_LINK} w_item.make (a_text.substring (i, p))
+								w_item := w_ext_lnk
 								a_parts.add_element (w_item)
 								w_item.process (Current) -- Check recursion...							
 								w_item := Void

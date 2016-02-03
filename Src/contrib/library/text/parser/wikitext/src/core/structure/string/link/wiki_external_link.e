@@ -72,6 +72,21 @@ feature -- Status report
 			Result := text.is_empty and url.is_empty
 		end
 
+	has_valid_url: BOOLEAN
+			-- Is `url' a valid url for wiki external link?
+		local
+			i: INTEGER
+			s: STRING
+		do
+			i := url.index_of (':', 1)
+			if i > 1 then
+				s := url.head (i - 1)
+				Result := across s as ic all ic.item.is_alpha_numeric end
+			else
+				Result := False
+			end
+		end
+
 feature -- Visitor
 
 	process (a_visitor: WIKI_VISITOR)
@@ -80,7 +95,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

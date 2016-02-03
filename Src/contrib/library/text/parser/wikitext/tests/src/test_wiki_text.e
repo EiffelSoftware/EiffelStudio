@@ -592,9 +592,57 @@ end
 			]")
 
 e := "{
-<p><strong>Test</strong><div><strong>class</strong> FOO <a href="BAR" class="wiki_ext_link">BAR</a>
+<p><strong>Test</strong><div><strong>class</strong> FOO [BAR]
 feature
 end</div></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_external_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+Test [https://eiffel.org Eiffel Community].
+			]")
+
+e := "{
+<p>Test <a href="https://eiffel.org" class="wiki_ext_link">Eiffel Community</a>.</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_bracket_text_without_url
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+Test PROCEDURE [FOO] class.
+			]")
+
+e := "{
+<p>Test PROCEDURE [FOO] class.</p>
 
 }"
 

@@ -130,13 +130,13 @@ feature	-- Access
 	account_re_activation: STRING
 			-- Account re_activation template email message.
 		do
-			Result := template_string ("accunt_re_activation.html", default_template_account_re_activation)
+			Result := template_string ("account_re_activation.html", default_template_account_re_activation)
 		end
 
 	account_rejected: STRING
 			-- Account rejected template email message.
 		do
-			Result := template_string ("accunt_rejected.html", default_template_account_rejected)
+			Result := template_string ("account_rejected.html", default_template_account_rejected)
 		end
 
 	account_password: STRING
@@ -277,7 +277,7 @@ feature {NONE} -- Message email
 		</head>
 
 		<body>
-			<p>You requested has been rejected, your application does not conform our rules <a href="$host">$sitename</a></p>
+			<p>Your account application is rejected, it does not conform our rules <a href="$host">$sitename</a></p>
 		</body>
 		</html>
 	]"
@@ -316,7 +316,7 @@ feature {NONE} -- Message email
 		</head>
 
 		<body>
-			<p>You have required a new password at <a href="$host">$sitename</a></p>
+			<p>You have requested a new password at <a href="$host">$sitename</a></p>
 
 			<p>To complete your request, please click on this link to generate a new password:<p>
 
@@ -337,7 +337,7 @@ feature {NONE} -- Message email
 		</head>
 
 		<body>
-			<p>Welcome to<a href="...">$sitename</a></p>
+			<p>Welcome to <a href="$host">$sitename</a>.</p>
 			<p>Thank you for joining us.</p>
 		</body>
 		</html>

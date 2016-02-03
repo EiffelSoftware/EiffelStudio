@@ -79,6 +79,10 @@ feature -- Access: docs
 
 feature -- Router
 
+	roc_login_location: STRING = "account/roc-login"
+
+	roc_logout_location: STRING = "account/roc-logout"
+
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
@@ -97,8 +101,8 @@ feature -- Router
 			a_router.map (m, a_router.methods_head_get)
 
 
-			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/" + roc_login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/" + roc_logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/activate/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_activation(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/reject/{token}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_reject(a_api, ?, ?)), a_router.methods_head_get)
@@ -128,8 +132,35 @@ feature -- Hooks configuration
 
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
+		local
+			l_destination: detachable READABLE_STRING_GENERAL
+			l_url: STRING
+			l_url_name: READABLE_STRING_GENERAL
 		do
-			a_value.force (a_response.user, "user")
+			if attached {WSF_STRING} a_response.request.query_parameter ("destination") as p_destination then
+				l_destination := p_destination.value
+			else
+				l_destination := a_response.location
+			end
+			if l_destination.starts_with ("account/auth/") then
+				l_destination := Void
+			end
+
+			if attached a_response.user as u then
+				a_value.force (u, "user")
+
+				l_url_name := "site_sign_out_url"
+				l_url := a_response.url (roc_logout_location, Void)
+			else
+				a_value.force (Void, "user")
+
+				l_url_name := "site_sign_in_url"
+				l_url := a_response.url (roc_login_location, Void)
+			end
+			if l_destination /= Void then
+				l_url.append ("?destination=" + percent_encoded (l_destination))
+			end
+			a_value.force (l_url, l_url_name)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -143,14 +174,14 @@ feature -- Hooks configuration
 				lnk.set_weight (97)
 				a_menu_system.primary_menu.extend (lnk)
 
-				create lnk.make ("Logout", "account/roc-logout")
+				create lnk.make ("Logout", roc_logout_location)
 			else
-				create lnk.make ("Login", "account/roc-login")
+				create lnk.make ("Login", roc_login_location)
 			end
 			lnk.set_weight (98)
 			if
 				a_response.location.starts_with_general ("account/auth/")
-				or a_response.location.starts_with_general ("account/roc-log")
+				or a_response.location.starts_with_general ("account/roc-log") -- in ou out
 			then
 					-- ignore destination
 			else
@@ -199,7 +230,7 @@ feature -- Handler
 			r.set_main_content (b)
 
 			if l_user = Void then
-				r.set_redirection ("account/roc-login")
+				r.set_redirection (roc_login_location)
 			end
 			r.execute
 		end

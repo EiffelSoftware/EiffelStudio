@@ -20,8 +20,6 @@ inherit
 			contact_api
 		end
 
-	SHARED_HTML_ENCODER
-
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_BLOCK_HELPER
@@ -287,8 +285,8 @@ feature -- Hooks
 			r.values.force (False, "has_error")
 
 			create vars.make_caseless (5)
-			vars.put (html_encoded (api.setup.site_url), "siteurl")
-			vars.put (html_encoded (api.setup.site_name), "sitename")
+			vars.put (safe_html_encoded (api.setup.site_url), "siteurl")
+			vars.put (safe_html_encoded (api.setup.site_name), "sitename")
 
 			write_debug_log (generator + ".handle_post_contact {Form Parameters:" + form_parameters_as_string (req) + "}")
 			if
@@ -419,17 +417,6 @@ feature {NONE} -- Helpers
 				Result.append_character ('=')
 				Result.append_string (ic.item.string_representation)
 				Result.append_character ('%N')
-			end
-		end
-
-feature {NONE} -- HTML ENCODING.
-
-	html_encoded (s: detachable READABLE_STRING_GENERAL): STRING_8
-		do
-			if s /= Void then
-				Result := html_encoder.general_encoded_string (s)
-			else
-				create Result.make_empty
 			end
 		end
 

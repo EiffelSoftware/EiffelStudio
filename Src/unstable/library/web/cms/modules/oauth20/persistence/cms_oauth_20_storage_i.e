@@ -21,7 +21,7 @@ feature -- Error Handling
 feature -- Access: Users
 
 	user_oauth2_by_id (a_uid: like {CMS_USER}.id; a_consumer_table: READABLE_STRING_GENERAL): detachable CMS_USER
-			-- Retrieve a user by id `a_uid' for the consumer `a_consumer', if aby.
+			-- Retrieve a user by id `a_uid' for the consumer `a_consumer', if any.
 		deferred
 		end
 

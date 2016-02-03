@@ -53,6 +53,7 @@ feature -- Execution
 				then
 					l_manager.append_content_as_html_to_page (l_node, Current)
 				end
+				set_modification_date (l_node.modification_date)
 			elseif revision > 0 then
 				set_main_content ("Missing revision node!")
 			else
@@ -64,8 +65,6 @@ feature -- Execution
 			if l_node /= Void and revision > 0 then
 				set_title ("Revision #" + revision.out + " of " + html_encoded (l_node.title))
 			end
-
-
 		end
 
 end

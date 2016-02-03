@@ -9,7 +9,7 @@ class
 	CMS_OAUTH_20_API
 
 inherit
-	CMS_MODULE_API
+	CMS_AUTH_API_I
 
 	REFACTORING_HELPER
 
@@ -97,7 +97,6 @@ feature -- Access: Consumers OAuth20
 
 feature	-- Change: User OAuth20
 
-
 	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
 			-- Add a new user with oauth20 using the consumer `a_consumer'.
 		require
@@ -123,7 +122,5 @@ feature	-- Change: User OAuth20
 		do
 			oauth_20_storage.remove_user_oauth2 (a_user, a_consumer_table)
 		end
-
-
 
 end

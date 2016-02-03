@@ -9,10 +9,11 @@ class
 	CMS_OAUTH_20_MODULE
 
 inherit
-	CMS_MODULE
+	CMS_AUTH_MODULE_I
 		rename
 			module_api as oauth20_api
 		redefine
+			make,
 			filters,
 			setup_hooks,
 			initialize,
@@ -22,22 +23,12 @@ inherit
 
 	CMS_HOOK_BLOCK
 
-	CMS_HOOK_AUTO_REGISTER
-
-	CMS_HOOK_MENU_SYSTEM_ALTER
-
-	CMS_HOOK_VALUE_TABLE_ALTER
-
 	SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
 
 	REFACTORING_HELPER
-
-	SHARED_LOGGER
-
-	CMS_REQUEST_UTIL
 
 create
 	make
@@ -47,11 +38,9 @@ feature {NONE} -- Initialization
 	make
 			-- Create current module
 		do
+			Precursor
 			version := "1.0"
 			description := "OAuth20 module"
-			package := "authentication"
-
-			add_dependency ({CMS_AUTHENTICATION_MODULE})
 
 			create root_dir.make_current
 			cache_duration := 0
@@ -135,7 +124,7 @@ feature {CMS_API} -- Module management
 						end
 						l_sql_storage.sql_finalize
 
-						Precursor {CMS_MODULE}(api) -- Marked as installed.
+						Precursor {CMS_AUTH_MODULE_I}(api) -- Marked as installed.
 					end
 				end
 			end
@@ -151,8 +140,8 @@ feature -- Filters
 	filters (a_api: CMS_API): detachable LIST [WSF_FILTER]
 			-- Possibly list of Filter's module.
 		do
-			create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
 			if attached oauth20_api as l_oauth_api then
+				create {ARRAYED_LIST [WSF_FILTER]} Result.make (1)
 				Result.extend (create {CMS_OAUTH_20_FILTER}.make (a_api, l_oauth_api))
 			end
 		end
@@ -172,27 +161,48 @@ feature -- Access: docs
 			Result := cache_duration = 0
 		end
 
+feature -- Access: auth strategy	
+
+	login_title: STRING = "OAuth"
+			-- Module specific login title.
+
+	login_location: STRING = "account/auth/roc-oauth-login"
+
+	logout_location: STRING = "account/auth/roc-oauth-logout"
+
+	is_authenticating (a_response: CMS_RESPONSE): BOOLEAN
+			-- <Precursor>
+		do
+			if
+				a_response.is_authenticated and then
+				attached oauth20_api as l_oauth20_api and then
+				attached a_response.request.cookie (l_oauth20_api.session_token)
+			then
+				Result := True
+			end
+		end
+
 feature -- Router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
 			if attached oauth20_api as l_oauth_api then
-				a_router.handle ("/account/roc-oauth-login",
+				a_router.handle ("/" + login_location,
 						create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
-				a_router.handle ("/account/roc-oauth-logout",
+				a_router.handle ("/" + logout_location,
 						create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_get_post)
-				a_router.handle ("/account/login-with-oauth/{" + oauth_callback_path_parameter + "}",
+				a_router.handle ("/account/auth/login-with-oauth/{" + oauth_callback_path_parameter + "}",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_oauth (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_get_post)
-				a_router.handle ("/account/oauth-callback/{" + oauth_callback_path_parameter + "}",
+				a_router.handle ("/account/auth/oauth-callback/{" + oauth_callback_path_parameter + "}",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_callback_oauth (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_get_post)
-				a_router.handle ("/account/oauth-associate",
+				a_router.handle ("/account/auth/oauth-associate",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_associate (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_post)
-				a_router.handle ("/account/oauth-un-associate",
+				a_router.handle ("/account/auth/oauth-un-associate",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_un_associate (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_post)
 			end
@@ -211,84 +221,22 @@ feature -- Hooks configuration
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
-			auto_subscribe_to_hooks (a_hooks)
+			Precursor (a_hooks)
 			a_hooks.subscribe_to_block_hook (Current)
-			a_hooks.subscribe_to_value_table_alter_hook (Current)
 		end
 
 feature -- Hooks
 
-	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
-			-- <Precursor>
-		do
-			if
-				attached a_response.user as u and then
-				attached oauth20_api as l_oauth20_api and then
-				attached a_response.request.cookie (l_oauth20_api.session_token)
-			then
-				a_value.force ("account/roc-oauth-logout", "auth_login_strategy")
-			end
-		end
-
-	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
-			-- Hook execution on collection of menu contained by `a_menu_system'
-			-- for related response `a_response'.
-		local
-			lnk: CMS_LOCAL_LINK
-			lnk2: detachable CMS_LINK
-		do
-			if
-				attached a_response.user as u and then
-				attached oauth20_api as l_oauth20_api and then
-				attached {WSF_STRING} a_response.request.cookie (l_oauth20_api.session_token) as l_roc_auth_session_token
-			then
-				across
-					a_menu_system.primary_menu.items as ic
-				until
-					lnk2 /= Void
-				loop
-					if
-						ic.item.location.same_string ("account/roc-logout") or else
-						ic.item.location.same_string ("basic_auth_logoff")
-					then
-						lnk2 := ic.item
-					end
-				end
-				if lnk2 /= Void then
-					a_menu_system.primary_menu.remove (lnk2)
-				end
-				create lnk.make ("Logout", "account/roc-oauth-logout" )
-				a_menu_system.primary_menu.extend (lnk)
-			else
-				if a_response.location.starts_with ("account/") then
-					create lnk.make ("OAuth", "account/roc-oauth-login")
-					a_response.add_to_primary_tabs (lnk)
-				end
-			end
-		end
-
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
-		local
-			l_string: STRING
 		do
 			Result := <<"login", "account">>
-			debug ("roc")
-				create l_string.make_empty
-				across
-					Result as ic
-				loop
-					l_string.append (ic.item)
-					l_string.append_character (' ')
-				end
-				write_debug_log (generator + ".block_list:" + l_string )
-			end
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if
 				a_block_id.is_case_insensitive_equal_general ("login") and then
-				a_response.location.starts_with ("account/roc-oauth-login")
+				a_response.location.starts_with (login_location)
 			then
 				get_block_view_login (a_block_id, a_response)
 			elseif a_block_id.is_case_insensitive_equal_general ("account") and then
@@ -299,6 +247,7 @@ feature -- Hooks
 					attached a_response.user as l_user
 				then
 					associate_account (l_user, a_response.values)
+					l_tpl_block.set_weight (5)
 					a_response.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")
@@ -313,7 +262,11 @@ feature -- Hooks
 			r: CMS_RESPONSE
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Login", "optional_content_type")
+			if r.is_authenticated then
+				r.add_error_message ("You are already signed in!")
+			else
+				r.set_value ("Login", "optional_content_type")
+			end
 			r.execute
 		end
 
@@ -323,7 +276,7 @@ feature -- Hooks
 			l_cookie: WSF_COOKIE
 		do
 			if
-				attached {CMS_USER} current_user (req) as l_user and then
+				attached api.user as l_user and then
 				attached {WSF_STRING} req.cookie (a_oauth20_api.session_token) as l_cookie_token
 			then
 					-- Logout OAuth
@@ -331,7 +284,7 @@ feature -- Hooks
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (-1)
 				res.add_cookie (l_cookie)
-				unset_current_user (req)
+				api.unset_current_user (req)
 
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				r.set_status_code ({HTTP_CONSTANTS}.found)
@@ -364,25 +317,6 @@ feature {NONE} -- Associate
 			end
 		end
 
-feature {NONE} -- Helpers
-
-	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
-		local
-			p: detachable PATH
-		do
-			create p.make_from_string ("templates")
-			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, p)
-			if p /= Void then
-				if attached p.entry as e then
-					create Result.make (a_block_id, Void, p.parent, e)
-				else
-					create Result.make (a_block_id, Void, p.parent, p)
-				end
-			end
-		end
-
 feature {NONE} -- Block views
 
 	get_block_view_login (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -392,7 +326,7 @@ feature {NONE} -- Block views
 			if attached template_block (a_block_id, a_response) as l_tpl_block then
 				create vals.make (1)
 					-- add the variable to the block
-				value_table_alter (vals, a_response)
+				a_response.api.hooks.invoke_value_table_alter (vals, a_response)
 				across
 					vals as ic
 				loop
@@ -507,10 +441,10 @@ feature -- OAuth2 Login with Provider
 							l_cookie.set_max_age (l_access_token.expires_in)
 							l_cookie.set_path ("/")
 							res.add_cookie (l_cookie)
-							set_current_user (req, l_user)
+							api.set_user (l_user)
+							api.record_user_login (l_user)
 
-
-									-- Send Email
+								-- Send Email
 							create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
 							write_debug_log (generator + ".handle_callback_oauth: send_contact_welcome_email")
 							es.send_contact_welcome_email (l_email, l_user, req.absolute_script_url (""))

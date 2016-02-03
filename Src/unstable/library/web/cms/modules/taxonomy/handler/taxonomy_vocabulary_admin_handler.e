@@ -72,7 +72,7 @@ feature -- HTTP Methods
 			l_typename: READABLE_STRING_GENERAL
 			s: STRING
 		do
-			if not api.user_has_permission (current_user (req), "admin taxonomy") then
+			if not api.has_permission ("admin taxonomy") then
 				send_access_denied (req, res)
 			else
 				if attached {WSF_STRING} req.form_parameter ("op") as p_op then
@@ -161,7 +161,7 @@ feature -- HTTP Methods
 		local
 			tid: INTEGER_64
 		do
-			if not api.user_has_permission (current_user (req), "admin taxonomy") then
+			if not api.has_permission ("admin taxonomy") then
 				send_access_denied (req, res)
 			else
 				if attached {WSF_STRING} req.path_parameter ("vocid") as p_vocid then

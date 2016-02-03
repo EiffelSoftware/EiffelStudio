@@ -206,23 +206,6 @@ feature -- Access
 			sql_finalize
 		end
 
-	node_author (a_node: CMS_NODE): detachable CMS_USER
-			-- Node's author for the given node id.
-		local
-			l_parameters: STRING_TABLE [ANY]
-		do
-			error_handler.reset
-			write_information_log (generator + ".node_author")
-			create l_parameters.make (2)
-			l_parameters.put (a_node.id, "nid")
-			l_parameters.put (a_node.revision, "revision")
-			sql_query (Select_user_author, l_parameters)
-			if not has_error and not sql_after then
-				Result := fetch_author
-			end
-			sql_finalize
-		end
-
 	last_inserted_node_id: INTEGER_64
 			-- Last insert node id.
 		do
@@ -589,11 +572,6 @@ feature {NONE} -- Queries
 	sql_delete_node_revisions: STRING = "DELETE FROM node_revisions WHERE nid=:nid;"
 
 
-feature {NONE} -- Sql Queries: USER_ROLES collaborators, author
-
-	Select_user_author: STRING = "SELECT uid, name, password, salt, email, users.status, users.created, signed FROM nodes INNER JOIN users ON nodes.author=users.uid AND nodes.nid = :nid AND nodes.revision = :revision;"
-
---	Select_node_author: STRING = "SELECT nid, revision, type, title, summary, content, format, author, publish, created, changed FROM users INNER JOIN nodes ON nodes.author=users.uid AND nodes.nid =:nid;"
 
 feature {NONE} -- Implementation
 
@@ -635,25 +613,6 @@ feature {NONE} -- Implementation
 				if attached sql_read_integer_32 (12) as l_status then
 					Result.set_status (l_status)
 				end
-			end
-		end
-
-	fetch_author: detachable CMS_USER
-		do
-			if attached sql_read_string_32 (2) as l_name and then not l_name.is_whitespace then
-				create Result.make (l_name)
-				if attached sql_read_integer_32 (1) as l_id then
-					Result.set_id (l_id)
-				end
-				if attached sql_read_string (3) as l_password then
-						-- FIXME: should we return the password here ???
-					Result.set_hashed_password (l_password)
-				end
-				if attached sql_read_string (5) as l_email then
-					Result.set_email (l_email)
-				end
-			else
-				check expected_valid_user: False end
 			end
 		end
 

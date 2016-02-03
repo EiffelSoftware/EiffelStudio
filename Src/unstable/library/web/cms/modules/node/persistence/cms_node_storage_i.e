@@ -120,13 +120,6 @@ feature -- Access
 		deferred
 		end
 
-	node_author (a_node: CMS_NODE): detachable CMS_USER
-			-- Node's author. if any.
-		require
-			valid_node: a_node.has_id
-		deferred
-		end
-
 	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]
 			-- List of nodes of type `a_node_type'.
 			--| Redefine to optimize!

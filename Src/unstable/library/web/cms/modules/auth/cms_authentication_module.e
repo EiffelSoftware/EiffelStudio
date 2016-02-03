@@ -7,7 +7,6 @@ class
 	CMS_AUTHENTICATION_MODULE
 
 inherit
-
 	CMS_MODULE
 		redefine
 			setup_hooks,
@@ -32,8 +31,6 @@ inherit
 	REFACTORING_HELPER
 
 	SHARED_LOGGER
-
-	CMS_REQUEST_UTIL
 
 create
 	make
@@ -93,8 +90,12 @@ feature -- Router
 		local
 			m: WSF_URI_MAPPING
 		do
-			create m.make_trailing_slash_ignored ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account(a_api, ?, ?)))
+			create m.make_trailing_slash_ignored ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account (a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
+
+			create m.make_trailing_slash_ignored ("/account/edit", create {WSF_URI_AGENT_HANDLER}.make (agent handle_edit_account (a_api, ?, ?)))
+			a_router.map (m, a_router.methods_head_get)
+
 
 			a_router.handle ("/account/roc-login", create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/account/roc-logout", create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
@@ -104,8 +105,7 @@ feature -- Router
 			a_router.handle ("/account/reactivate", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reactivation(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
 			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/change-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_change_password(a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/post-change-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_post_change_password(a_api, ?, ?)), a_router.methods_get)
+			a_router.handle ("/account/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
 		end
 
 
@@ -142,14 +142,22 @@ feature -- Hooks configuration
 				create lnk.make (u.name, "account")
 				lnk.set_weight (97)
 				a_menu_system.primary_menu.extend (lnk)
+
 				create lnk.make ("Logout", "account/roc-logout")
-				lnk.set_weight (98)
-				a_menu_system.primary_menu.extend (lnk)
 			else
 				create lnk.make ("Login", "account/roc-login")
-				lnk.set_weight (98)
-				a_menu_system.primary_menu.extend (lnk)
 			end
+			lnk.set_weight (98)
+			if
+				a_response.location.starts_with_general ("account/auth/")
+				or a_response.location.starts_with_general ("account/roc-log")
+			then
+					-- ignore destination
+			else
+				lnk.add_query_parameter ("destination", percent_encoded (a_response.location))
+			end
+			a_menu_system.primary_menu.extend (lnk)
+
 				 -- Add the link to the taxonomy to the main menu
 			if a_response.has_permission ("admin registration") then
 				create lnk.make ("Registration", "admin/pending-registrations/")
@@ -162,17 +170,77 @@ feature -- Handler
 	handle_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			l_user: detachable CMS_USER
+			b: STRING
+			lnk: CMS_LOCAL_LINK
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create b.make_empty
+			l_user := r.user
 			if attached template_block ("account_info", r) as l_tpl_block then
-				if attached r.user as l_user then
-					r.set_value (api.user_api.user_roles (l_user), "roles")
-				end
+				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
 					r.add_warning_message ("Error with block [resources_page]")
 				end
+			end
+
+			if r.is_authenticated then
+				create lnk.make ("View", "account/")
+				lnk.set_weight (1)
+				r.add_to_primary_tabs (lnk)
+
+				create lnk.make ("Edit", "account/edit")
+				lnk.set_weight (2)
+				r.add_to_primary_tabs (lnk)
+			end
+
+			r.set_main_content (b)
+
+			if l_user = Void then
+				r.set_redirection ("account/roc-login")
+			end
+			r.execute
+		end
+
+	handle_edit_account (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			l_user: detachable CMS_USER
+			b: STRING
+			f: CMS_FORM
+			lnk: CMS_LOCAL_LINK
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			create b.make_empty
+			l_user := r.user
+			if attached template_block ("account_edit", r) as l_tpl_block then
+				l_tpl_block.set_weight (-10)
+				r.add_block (l_tpl_block, "content")
+			else
+				debug ("cms")
+					r.add_warning_message ("Error with block [resources_page]")
+				end
+			end
+			create lnk.make ("View", "account/")
+			lnk.set_weight (1)
+			r.add_to_primary_tabs (lnk)
+
+			create lnk.make ("Edit", "account/edit")
+			lnk.set_weight (2)
+			r.add_to_primary_tabs (lnk)
+
+			f := new_change_password_form (r)
+			f.append_to_html (r.wsf_theme, b)
+
+			f := new_change_email_form (r)
+			f.append_to_html (r.wsf_theme, b)
+
+			r.set_main_content (b)
+
+			if l_user = Void then
+				r.set_redirection ("account")
 			end
 			r.execute
 		end
@@ -181,10 +249,30 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 		do
-			if attached api.module_by_name ("basic_auth") then
+			if api.user_is_authenticated then
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				r.set_redirection ("account")
+				r.execute
+			elseif attached api.module_by_name ("session_auth") then
 					-- FIXME: find better solution to support a default login system.
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				r.set_redirection (r.absolute_url ("/account/roc-basic-auth", Void))
+				if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+					r.set_redirection ("account/auth/roc-session-login?destination=" + l_destination.url_encoded_value)
+				else
+					r.set_redirection ("account/auth/roc-session-login")
+				end
+
+				r.execute
+
+			elseif attached api.module_by_name ("basic_auth") then
+					-- FIXME: find better solution to support a default login system.
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+				if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+					r.set_redirection ("account/auth/roc-basic-login?destination=" + l_destination.url_encoded_value)
+				else
+					r.set_redirection ("account/auth/roc-basic-login")
+				end
+
 				r.execute
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
@@ -195,9 +283,19 @@ feature -- Handler
 	handle_logout (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			loc: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_redirection (r.absolute_url ("", Void))
+			if attached {READABLE_STRING_8} api.execution_variable ("auth_strategy") as l_auth_strategy then
+				loc := l_auth_strategy
+			else
+				loc := ""
+			end
+
+			if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+				loc.append ("?destination=" + l_destination.url_encoded_value)
+			end
+			r.set_redirection (loc)
 			r.execute
 		end
 
@@ -232,7 +330,7 @@ feature -- Handler
 								l_exist := True
 							end
 							if attached l_user_api.user_by_email (l_email) or else attached l_user_api.temp_user_by_email (l_email) then
-									-- Emails already exist.
+									-- Email already exists.
 								r.set_value ("An account is already associated with that email address!", "error_email")
 								l_exist := True
 							end
@@ -524,41 +622,87 @@ feature -- Handler
 			r.execute
 		end
 
-	handle_change_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_change_field (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 			l_user_api: CMS_USER_API
+			f: CMS_FORM
+			l_fieldname: detachable READABLE_STRING_8
+			b: STRING
+			lnk: CMS_LOCAL_LINK
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			l_user_api := api.user_api
-			if req.is_post_request_method then
-				if attached r.user as l_user then
-					r.set_value (api.user_api.user_roles (l_user), "roles")
-					if attached {WSF_STRING} req.form_parameter ("password") as l_password and then attached {WSF_STRING} req.form_parameter ("confirm_password") as l_confirm_password and then l_password.value.same_string (l_confirm_password.value) then
-							-- Does the passwords match?
-						l_user.set_password (l_password.value)
-						l_user_api.update_user (l_user)
-						r.set_redirection (req.absolute_script_url ("/account/post-change-password"))
-					else
-						if attached template_block ("account_info", r) as l_tpl_block then
-								--							r.set_value (l_user, "user")
-							r.set_value ("Passwords Don't Match", "error_password")
-							r.set_status_code ({HTTP_CONSTANTS}.bad_request)
-							r.add_block (l_tpl_block, "content")
+			if attached {WSF_STRING} req.path_parameter ("field") as p_field then
+				l_fieldname := p_field.url_encoded_value
+			end
+			if l_fieldname = Void then
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			else
+				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
+				if r.is_authenticated then
+					create lnk.make ("View", "account/")
+					lnk.set_weight (1)
+					r.add_to_primary_tabs (lnk)
+
+					create lnk.make ("Edit", "account/edit")
+					lnk.set_weight (2)
+					r.add_to_primary_tabs (lnk)
+				end
+
+				l_user_api := api.user_api
+				if req.is_post_request_method then
+					if attached r.user as l_user then
+						if l_fieldname.is_case_insensitive_equal ("password") then
+							if
+								attached {WSF_STRING} req.form_parameter ("password") as l_password and then
+								attached {WSF_STRING} req.form_parameter ("confirm_password") as l_confirm_password and then
+								l_password.value.same_string (l_confirm_password.value)
+							then
+									-- passwords matched?
+								l_user.set_password (l_password.value)
+								l_user_api.update_user (l_user)
+								r.add_success_message ("Password updated.")
+								r.set_redirection ("account/")
+								r.set_redirection_delay (3)
+							else
+								r.add_error_message ("Passwords do not match!")
+								f := new_change_password_form (r)
+								r.set_main_content (f.to_html (r.wsf_theme))
+							end
+						elseif l_fieldname.is_case_insensitive_equal ("email") then
+								-- FIXME: find a safer workflow .. allow multiple emails, and have a primary email?
+							if
+								attached {WSF_STRING} req.form_parameter ("email") as l_email and then
+								attached {WSF_STRING} req.form_parameter ("confirm_email") as l_confirm_email and then
+								l_email.value.same_string (l_confirm_email.value) and then
+								l_email.value.is_valid_as_string_8
+							then
+									-- emails matched?
+								l_user.set_email (l_email.value.to_string_8)
+								l_user_api.update_user (l_user)
+								r.add_success_message ("Email updated.")
+								r.set_redirection ("account/")
+								r.set_redirection_delay (3)
+							else
+								r.add_error_message ("Emails do not match!")
+								f := new_change_email_form (r)
+								r.set_main_content (f.to_html (r.wsf_theme))
+							end
+						else
+							r.add_error_message ("You can not change %"" + l_fieldname + "%" information!")
 						end
 					end
+				else
+					create b.make_empty
+					if l_fieldname.is_case_insensitive_equal_general ("password") then
+						f := new_change_password_form (r)
+						f.append_to_html (r.wsf_theme, b)
+					elseif l_fieldname.is_case_insensitive_equal_general ("email") then
+						f := new_change_email_form (r)
+						f.append_to_html (r.wsf_theme, b)
+					end
+					r.set_main_content (b)
 				end
-			end
-			r.execute
-		end
-
-	handle_post_change_password (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			if attached template_block ("post_change", r) as l_tpl_block then
-				r.add_block (l_tpl_block, "content")
 			end
 			r.execute
 		end
@@ -655,20 +799,8 @@ feature -- Handler
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
-		local
-			l_string: STRING
 		do
 			Result := <<"register", "reactivate", "new_password", "reset_password", "registration">>
-			debug ("roc")
-				create l_string.make_empty
-				across
-					Result as ic
-				loop
-					l_string.append (ic.item)
-					l_string.append_character (' ')
-				end
-				write_debug_log (generator + ".block_list:" + l_string)
-			end
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -687,6 +819,53 @@ feature -- Handler
 			elseif a_block_id.is_case_insensitive_equal_general ("registration") and then loc.starts_with ("admin/pending-registrations") then
 				get_block_view_registration (a_block_id, a_response)
 			end
+		end
+
+	new_change_password_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			pwd: WSF_FORM_PASSWORD_INPUT
+		do
+			create Result.make (a_response.url ("account/change/password", Void), "change-password-form")
+			create fs.make
+			fs.set_legend ("Change password")
+			Result.extend (fs)
+
+			create pwd.make ("password")
+			pwd.set_label ("Password")
+			pwd.enable_required
+			fs.extend (pwd)
+			create pwd.make ("confirm_password")
+			pwd.set_label ("Confirm password")
+			pwd.enable_required
+			fs.extend (pwd)
+
+--			create but.make_with_text ("op", "Confirm")
+--			fs.extend (but)
+
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
+		end
+
+	new_change_email_form (a_response: CMS_RESPONSE): CMS_FORM
+		local
+			fs: WSF_FORM_FIELD_SET
+			tf: WSF_FORM_EMAIL_INPUT
+		do
+			create Result.make (a_response.url ("account/change/email", Void), "change-email-form")
+			create fs.make
+			fs.set_legend ("Change email")
+			Result.extend (fs)
+
+			create tf.make ("email")
+			tf.set_label ("Email")
+			tf.enable_required
+			fs.extend (tf)
+			create tf.make ("confirm_email")
+			tf.set_label ("Confirm email")
+			tf.enable_required
+			fs.extend (tf)
+
+			fs.extend_html_text ("<button type=%"submit%">Confirm</button>")
 		end
 
 feature {NONE} -- Token Generation

@@ -122,7 +122,7 @@ feature -- HTTP Methods
 					if
 						l_node /= Void and then
 						l_rev > 0 and then
-						node_api.has_permission_for_action_on_node ("view revisions", l_node, current_user (req))
+						node_api.has_permission_for_action_on_node ("view revisions", l_node, api.user)
 					then
 						l_node := node_api.revision_node (l_nid, l_rev)
 					end
@@ -137,9 +137,9 @@ feature -- HTTP Methods
 							view_response.set_revision (l_rev)
 							view_response.execute
 						elseif
-							attached current_user (req) as l_user and then
+							attached api.user as l_user and then
 							(	node_api.is_author_of_node (l_user, l_node)
-								or else api.user_api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
+								or else api.user_has_permission (l_user, "view unpublished " + l_node.content_type)
 							)
 						then
 							create view_response.make (req, res, api, node_api)
@@ -208,13 +208,13 @@ feature -- HTTP Methods
 	do_trash (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Trash a node, soft delete.
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("trash", l_node, current_user (req)) then
+						if node_api.has_permission_for_action_on_node ("trash", l_node, l_user) then
 							node_api.trash_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
@@ -245,13 +245,13 @@ feature {NONE} -- Trash:Restore
 		local
 			l_source: STRING
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
 						attached {CMS_NODE} node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("delete", l_node, current_user (req)) then
+						if node_api.has_permission_for_action_on_node ("delete", l_node, l_user) then
 							node_api.delete_node (l_node)
 							l_source := node_api.node_path (l_node)
 							api.unset_path_alias (l_source, api.location_alias (l_source))
@@ -274,13 +274,13 @@ feature {NONE} -- Trash:Restore
 	do_restore (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Restore a node: From {CMS_NODE_API}.trashed to {CMS_NODE_API}.not_published.
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then
 						attached node_api.node (l_id.integer_value) as l_node
 					then
-						if node_api.has_permission_for_action_on_node ("restore", l_node, current_user (req)) then
+						if node_api.has_permission_for_action_on_node ("restore", l_node, l_user) then
 							node_api.restore_node (l_node)
 							res.send (create {CMS_REDIRECTION_RESPONSE_MESSAGE}.make (req.absolute_script_url ("")))
 						else
@@ -310,7 +310,7 @@ feature {NONE} -- Trash:Restore
 					l_id.is_integer and then
 					attached node_api.node (l_id.integer_value) as l_node
 				then
-					if node_api.has_permission_for_action_on_node ("view revisions", l_node, current_user (req)) then
+					if node_api.has_permission_for_action_on_node ("view revisions", l_node, api.user) then
 						create r.make (req, res, api)
 						create b.make_empty
 						b.append ("<ul>")

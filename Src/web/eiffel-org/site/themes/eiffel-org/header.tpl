@@ -12,8 +12,17 @@
 							<div class="header-right">
 								<nav class="add-links">
 									<ul> 
-									{if isempty="$user"}<li><a href="{$site_url/}account">Sign in</a></li>{/if}
-									{unless isempty="$user"}<li><a href="{$site_url/}account">{$user.name/}</a></li>{/unless}
+									{if isempty="$user"}
+										<li>
+										{unless isempty="$site_sign_in_url"}<a href="{$site_sign_in_url/}">Sign in</a>{/unless}
+										{if isempty="$site_sign_in_url"}<a href="{$site_url/}account">Sign in</a>{/if}
+										</li>
+									{/if}
+									{unless isempty="$user"}
+										<li><a href="{$site_url/}account">{$user.name/}</a>
+											{unless isempty="$site_sign_out_url"}<ul><li><a href="{$site_sign_out_url/}">Sign out</a></li></ul>{/unless}
+										</li>
+									{/unless}
 									</ul>
 								</nav>
 								<form class="search-form" method="GET" action="{$site_url/}gcse"> 

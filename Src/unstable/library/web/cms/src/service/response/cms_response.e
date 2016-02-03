@@ -116,6 +116,9 @@ feature -- Access: metadata
 	redirection: detachable READABLE_STRING_8
 			-- Location for eventual redirection.
 
+	redirection_delay: NATURAL
+			-- Optional redirection delay in seconds.
+
 feature -- Access: query
 
 	location: STRING_8
@@ -196,8 +199,23 @@ feature -- User access
 		end
 
 	user: detachable CMS_USER
+			-- Active user if authenticated.
 		do
-			Result := current_user (request)
+			Result := api.user
+		end
+
+	set_user (u: CMS_USER)
+			-- Set active user to `u'.
+		require
+			attached_u: u /= Void
+		do
+			api.set_user (u)
+		end
+
+	unset_user
+			-- Unset active user.
+		do
+			api.unset_user
 		end
 
 feature -- Permission
@@ -354,6 +372,11 @@ feature -- Element change
 			-- Set `redirection' to `a_location'.
 		do
 			redirection := a_location
+		end
+
+	set_redirection_delay (nb_secs: NATURAL)
+		do
+			redirection_delay := nb_secs
 		end
 
 feature -- Logging
@@ -1212,8 +1235,8 @@ feature -- Generation
 			page.register_variable (absolute_url ("", Void), "site_url")
 			page.register_variable (absolute_url ("", Void), "host") -- Same as `site_url'.
 			page.register_variable (request.is_https, "is_https")
-			if attached current_user_name (request) as l_user then
-				page.register_variable (l_user, "user")
+			if attached user as l_user then
+				page.register_variable (l_user.name, "user")
 			end
 			page.register_variable (title, "site_title")
 			page.set_is_front (is_front)
@@ -1326,16 +1349,40 @@ feature -- Helpers: cms link
 			end
 		end
 
-	user_html_link (u: CMS_USER): like link
+feature -- Helpers: html links		
+
+	user_html_link (u: CMS_USER): STRING
 		do
 			Result := link (u.name, "user/" + u.id.out, Void)
+		end
+
+feature -- Helpers: URLs	
+
+	location_absolute_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- Absolute URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := absolute_url (a_location, opts)
+		end
+
+	location_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- URL for `a_location'.
+			--| Options `opts' could be
+			--|  - absolute: True|False	=> return absolute url
+			--|  - query: string		=> append "?query"
+			--|  - fragment: string		=> append "#fragment"
+		do
+			Result := url (a_location, opts)
 		end
 
 	user_url (u: CMS_USER): like url
 		require
 			u_with_id: u.has_id
 		do
-			Result := url ("user/" + u.id.out, Void)
+			Result := location_url ("user/" + u.id.out, Void)
 		end
 
 feature -- Execution
@@ -1363,8 +1410,22 @@ feature {NONE} -- Execution
 			page: CMS_HTML_PAGE_RESPONSE
 			utf: UTF_CONVERTER
 			h: HTTP_HEADER
-			l_new_location: READABLE_STRING_8
+			l_new_location: detachable READABLE_STRING_8
+			l_redirection_delay: like redirection_delay
 		do
+			if attached redirection as l_location then
+					-- FIXME: find out if this is safe or not.
+				if l_location.has_substring ("://") then
+					l_new_location := l_location
+				else
+					l_new_location := location_absolute_url (l_location, Void)
+				end
+				l_redirection_delay := redirection_delay
+				if l_redirection_delay > 0 then
+					add_additional_head_line ("<meta http-equiv=%"refresh%" content=%"" + l_redirection_delay.out + ";url=" + l_new_location + "%" />", True)
+				end
+			end
+
 			if attached {READABLE_STRING_GENERAL} values.item ("optional_content_type") as l_type then
 				create cms_page.make_typed (utf.utf_32_string_to_utf_8_string_8 (l_type))
 			else
@@ -1376,14 +1437,7 @@ feature {NONE} -- Execution
 			h := page.header
 			h.put_content_length (page.html.count)
 			h.put_current_date
-			if attached redirection as l_location then
-					-- FIXME: find out if this is safe or not.
-				if l_location.has_substring ("://") then
-					l_new_location := l_location
-				else
-					l_new_location := absolute_url (l_location, Void)
-				end
---				h.put_location (l_new_location)
+			if l_new_location /= Void and l_redirection_delay = 0 then
 				response.redirect_now (l_new_location)
 			else
 				h.put_header_object (header)

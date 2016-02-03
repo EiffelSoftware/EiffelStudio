@@ -9,22 +9,24 @@ class
 inherit
 	ANY
 
+	CMS_ENCODERS
+
 	CMS_HOOK_EXPORT
 
 	CMS_EXPORT_JSON_UTILITIES
 
 	REFACTORING_HELPER
 
-	CMS_REQUEST_UTIL
-
 create
 	make
 
 feature {NONE} -- Initialize
 
-	make (a_setup: CMS_SETUP)
-			-- Create the API service with a setup  `a_setup'
+	make (a_setup: CMS_SETUP; req: WSF_REQUEST)
+			-- Create the API service with a setup `a_setup'
+			-- and request `req'.
 		do
+			request := req
 			setup := a_setup
 			create error_handler.make
 			create {CMS_ENV_LOGGER} logger.make
@@ -167,6 +169,12 @@ feature -- Access
 
 	storage: CMS_STORAGE
 			-- Default persistence storage.	
+
+feature {NONE} -- Access: request
+
+	request: WSF_REQUEST
+			-- Associated http request.
+			--| note: here for the sole purpose of CMS_API.
 
 feature -- Content
 
@@ -374,6 +382,13 @@ feature {NONE} -- Emails implementation
 		end
 
 feature -- Permissions system
+
+	has_permission (a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Anonymous or user `user' has permission for `a_permission'?
+			--| `a_permission' could be for instance "create page".
+		do
+			Result := user_api.user_has_permission (user, a_permission)
+		end
 
 	user_has_permission (a_user: detachable CMS_USER; a_permission: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Anonymous or user `a_user' has permission for `a_permission'?
@@ -864,6 +879,113 @@ feature -- Hook
 					f.close
 				end
 			end
+		end
+
+feature -- Access: active user
+
+	user_is_authenticated: BOOLEAN
+			-- Is user authenticated?
+		do
+			Result := user /= Void
+		ensure
+			Result implies user /= Void
+		end
+
+	user: detachable CMS_USER
+			-- Current user or Void in case of visitor.
+		note
+			EIS: "eiffel:?class=CMS_BASIC_AUTH_FILTER&feature=execute"
+		do
+			Result := current_user (request)
+		end
+
+	set_user (a_user: CMS_USER)
+			-- Set `a_user' as current `user'.
+		require
+			a_user_attached: a_user /= Void
+		do
+			set_current_user (request, a_user)
+		end
+
+	unset_user
+			-- Unset `user'.
+		do
+			unset_current_user (request)
+		end
+
+	record_user_login (a_user: CMS_USER)
+			-- Record login event for `a_user'.
+		require
+			user_has_id: a_user.has_id
+		do
+			a_user.set_last_login_date_now
+			user_api.update_user (a_user)
+		end
+
+feature -- Request utilities		
+
+	execution_variable (a_name: READABLE_STRING_GENERAL): detachable ANY
+			-- Execution variable related to `a_name'
+		require
+			a_name_valid: a_name /= Void and then not a_name.is_empty
+		do
+			Result := request.execution_variable (a_name)
+		end
+
+	set_execution_variable (a_name: READABLE_STRING_GENERAL; a_value: detachable ANY)
+		do
+			request.set_execution_variable (a_name, a_value)
+		ensure
+			param_set: execution_variable (a_name) = a_value
+		end
+
+	unset_execution_variable (a_name: READABLE_STRING_GENERAL)
+		do
+			request.unset_execution_variable (a_name)
+		ensure
+			param_unset: execution_variable (a_name) = Void
+		end
+
+
+feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities	
+
+	current_user (req: WSF_REQUEST): detachable CMS_USER
+			-- Current user or Void in case of Guest user.
+		do
+			check req = request end
+			if attached {CMS_USER} execution_variable (cms_execution_variable_name ("user")) as l_user then
+				Result := l_user
+			end
+		end
+
+	set_current_user (req: WSF_REQUEST; a_user: CMS_USER)
+			-- Set `a_user' as `current_user'.
+		do
+			check req = request end
+			set_execution_variable (cms_execution_variable_name ("user"), a_user)
+		ensure
+			user_set: current_user (req) ~ a_user
+		end
+
+	unset_current_user (req: WSF_REQUEST)
+			-- Unset current user.
+		do
+			check req = request end
+			req.unset_execution_variable (cms_execution_variable_name ("user"))
+		ensure
+			user_unset: current_user (req) = Void
+		end
+
+feature {NONE} -- Implementation: current user
+
+	cms_execution_variable_name (a_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
+			-- Execution variable name for `a_name'.
+		local
+			s32: STRING_32
+		do
+			create s32.make_from_string_general (once "_roccms_.")
+			s32.append_string_general (a_name)
+			Result := s32
 		end
 
 note

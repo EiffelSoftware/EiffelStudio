@@ -26,45 +26,53 @@ feature -- Access User Outh
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_openid_by_userid_identity")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
 			l_parameters.put (a_identity, "identity")
-			sql_query (Select_user_openid_by_id, l_parameters)
+			sql_query (Select_user_id_openid_by_id, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check no_more_than_one: False end
-					Result := Void
+					l_uid := 0
 				end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
 
 	user_openid_by_identity (a_identity: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_openid_by_identity")
 			create l_parameters.make (1)
 			l_parameters.put (a_identity, "identity")
-			sql_query (Select_user_by_openid_identity, l_parameters)
+			sql_query (Select_user_id_by_openid_identity, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check no_more_than_one: False end
-					Result := Void
+					l_uid := 0
 				end
 			else
 				check no_more_than_one: False end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
 
 feature --Access: Consumers	
@@ -148,52 +156,11 @@ feature {NONE} -- Implementation OAuth Consumer
 			end
 		end
 
-feature {NONE} -- Implementation: User
-
-	fetch_user: detachable CMS_USER
-		local
-			l_id: INTEGER_64
-			l_name: detachable READABLE_STRING_32
-		do
-			if attached sql_read_integer_64 (1) as i then
-				l_id := i
-			end
-			if attached sql_read_string_32 (2) as s and then not s.is_whitespace then
-				l_name := s
-			end
-
-			if l_name /= Void then
-				create Result.make (l_name)
-				if l_id > 0 then
-					Result.set_id (l_id)
-				end
-			elseif l_id > 0 then
-				create Result.make_with_id (l_id)
-			end
-
-			if Result /= Void then
-				if attached sql_read_string (3) as l_password then
-						-- FIXME: should we return the password here ???
-					Result.set_hashed_password (l_password)
-				end
-				if attached sql_read_string (5) as l_email then
-					Result.set_email (l_email)
-				end
-				if attached sql_read_integer_32 (6) as l_status then
-					Result.set_status (l_status)
-				end
-			else
-				check expected_valid_user: False end
-			end
-		end
-
 feature {NONE} -- User OpenID
 
+	Select_user_id_by_openid_identity: STRING = "SELECT uid FROM openid_items WHERE identity = :identity;"
 
-	Select_user_by_openid_identity: STRING = "SELECT u.* FROM users as u JOIN openid_items as og ON og.uid = u.uid and og.identity = :identity;"
-		--| FIXME: replace the u.* by a list of field names, to avoid breaking `featch_user' if two fieds are swiped.
-
-	Select_user_openid_by_id: STRING = "SELECT u.* FROM users as u JOIN openid_items as og ON og.uid = u.uid and og.uid = :uid and og.identity = :identity;"
+	Select_user_id_openid_by_id: STRING = "SELECT uid FROM openid_items WHERE uid = :uid and identity = :identity;"
 
 	Sql_insert_openid: STRING = "INSERT INTO openid_items (uid, identity, created) VALUES (:uid, :identity, :utc_date);"
 

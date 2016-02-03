@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {CMS_URL_UTILITIES}."
-	author: ""
+	description: "Collection of helper routines to manipulate URL for CMS."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,7 +7,7 @@ deferred class
 	CMS_URL_UTILITIES
 
 inherit
-	CMS_REQUEST_UTIL
+	CMS_ENCODERS
 
 feature -- Core
 
@@ -43,12 +42,16 @@ feature -- Core
 feature -- Link
 
 	link (a_text: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- HTML link with title `a_text' and href `a_path'.
+			-- `opts' is used for additional settings.
 		do
 			create Result.make (32)
 			append_link_to_html (a_text, a_path, opts, Result)
 		end
 
 	link_with_raw_text (a_raw_text: detachable READABLE_STRING_8; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+			-- HTML link with title the html code `a_raw_text' and href `a_path'.
+			-- `opts' is used for additional settings.	
 		do
 			create Result.make (32)
 			append_link_with_raw_text_to_html (a_raw_text, a_path, opts, Result)
@@ -180,6 +183,7 @@ feature -- Url
 
 	checked_url (a_url: READABLE_STRING_8): READABLE_STRING_8
 		do
+				-- FIXME: implement a way to check if `a_url' is safe, and does not reveal security issue.
 			Result := a_url
 		end
 
@@ -189,6 +193,6 @@ feature -- Url
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

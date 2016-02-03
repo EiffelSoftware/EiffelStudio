@@ -9,7 +9,7 @@ class
 	CMS_OPENID_API
 
 inherit
-	CMS_MODULE_API
+	CMS_AUTH_API_I
 
 	REFACTORING_HELPER
 
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			make (a_api)
 
 				-- Initialize openid related settings.
-			s := a_api.setup.string_8_item ("auth.openid.token")
+			s := a_api.setup.string_8_item ("auth." + {CMS_OPENID_MODULE}.name + ".token")
 			if s = Void then
 				s := a_api.setup.site_id + default_session_token_suffix
 			end
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 				session_max_age := 3600 --| one hour: *60(min) *60(sec)
 			end
 		ensure
-			openid_storage_set:  openid_storage = a_openid_storage
+			openid_storage_set: openid_storage = a_openid_storage
 		end
 
 feature {CMS_MODULE} -- Access: User openid storage.
@@ -86,7 +86,6 @@ feature -- Access: Consumers OAuth20
 		end
 
 feature	-- Change: User Openid
-
 
 	new_user_openid (a_identity: READABLE_STRING_GENERAL; a_user: CMS_USER)
 			-- Add a new user with openid using the identity `a_identity'.

@@ -290,9 +290,7 @@ feature -- Access: Node
 	is_author_of_node (u: CMS_USER; a_node: CMS_NODE): BOOLEAN
 			-- Is the user `u' owner of the node `n'.
 		do
-			if attached node_storage.node_author (a_node) as l_author then
-				Result := u.same_as (l_author)
-			end
+			Result := u.same_as (a_node.author)
 		end
 
 	nodes_of_type (a_node_type: CMS_CONTENT_TYPE): LIST [CMS_NODE]

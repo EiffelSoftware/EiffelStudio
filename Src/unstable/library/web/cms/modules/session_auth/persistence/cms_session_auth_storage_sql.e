@@ -107,7 +107,7 @@ feature -- Change User token
 
 feature {NONE} -- SQL statements
 
-	Select_user_id_by_token: STRING = "SELECT u.uid FROM users as u JOIN auth_session as og ON og.uid = u.uid AND og.access_token = :token;"
+	Select_user_id_by_token: STRING = "SELECT uid FROM auth_session WHERE access_token = :token;"
 
 	sql_insert_session_auth: STRING = "INSERT INTO auth_session (uid, access_token, created) VALUES (:uid, :token, :utc_date);"
 

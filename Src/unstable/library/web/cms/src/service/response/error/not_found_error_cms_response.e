@@ -33,10 +33,10 @@ feature -- Execution
 		do
 			set_title ("Not Found")
 			set_page_title ("Not Found")
-			set_main_content ("<em>The requested page could not be found.</em>")
+			set_main_content ("<em>The requested page %"" + request.request_uri + "%"could not be found.</em>")
 		end
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

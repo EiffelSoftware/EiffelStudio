@@ -51,11 +51,11 @@ feature -- HTTP Methods
 		do
 			api.logger.put_information (generator + ".do_get Processing basic auth logoff", Void)
 			if attached req.query_parameter ("prompt") as l_prompt then
-				unset_current_user (req)
+				api.unset_current_user (req)
 				send_access_denied_message (res)
 			else
 				create {GENERIC_VIEW_CMS_RESPONSE} l_page.make (req, res, api)
-				unset_current_user (req)
+				api.unset_current_user (req)
 				l_page.set_status_code ({HTTP_STATUS_CODE}.unauthorized) -- Note: can not use {HTTP_STATUS_CODE}.unauthorized for redirection
 				l_url := req.absolute_script_url ("")
 				i := l_url.substring_index ("://", 1)

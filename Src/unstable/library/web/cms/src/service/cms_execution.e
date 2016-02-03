@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			l_setup := initial_cms_setup
 			setup_storage (l_setup)
 			setup_modules (l_setup)
-			create api.make (l_setup)
+			create api.make (l_setup, request)
 			modules := api.enabled_modules
 
 			initialize_cms
@@ -314,7 +314,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

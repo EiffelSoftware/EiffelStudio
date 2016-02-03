@@ -14,7 +14,7 @@ inherit
 create
 	make
 
-feature -- Access
+feature -- Access: user
 
 	user_by_id (a_id: like {CMS_USER}.id): detachable CMS_USER
 			-- User by id `a_id', if any.
@@ -58,6 +58,44 @@ feature -- Access
 			Result := storage.recent_users (params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
+feature -- Change User
+
+	new_user (a_user: CMS_USER)
+			-- Add a new user `a_user'.
+		require
+			no_id: not a_user.has_id
+			no_hashed_password: a_user.hashed_password = Void
+		do
+			reset_error
+			if
+				attached a_user.email as l_email
+			then
+				storage.new_user (a_user)
+				error_handler.append (storage.error_handler)
+			else
+				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
+			end
+		end
+
+	update_user (a_user: CMS_USER)
+			-- Update user `a_user'.
+		require
+			has_id: a_user.has_id
+		do
+			reset_error
+			storage.update_user (a_user)
+			error_handler.append (storage.error_handler)
+		end
+
+	delete_user (a_user: CMS_USER)
+			-- Delete user `a_user'.
+		require
+			has_id: a_user.has_id
+		do
+			reset_error
+			storage.delete_user (a_user)
+			error_handler.append (storage.error_handler)
+		end
 
 feature -- Status report
 
@@ -238,45 +276,6 @@ feature -- Change User role
 		do
 			reset_error
 			storage.delete_role (a_role)
-			error_handler.append (storage.error_handler)
-		end
-
-feature -- Change User
-
-	new_user (a_user: CMS_USER)
-			-- Add a new user `a_user'.
-		require
-			no_id: not a_user.has_id
-			no_hashed_password: a_user.hashed_password = Void
-		do
-			reset_error
-			if
-				attached a_user.email as l_email
-			then
-				storage.new_user (a_user)
-				error_handler.append (storage.error_handler)
-			else
-				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
-			end
-		end
-
-	update_user (a_user: CMS_USER)
-			-- Update user `a_user'.
-		require
-			has_id: a_user.has_id
-		do
-			reset_error
-			storage.update_user (a_user)
-			error_handler.append (storage.error_handler)
-		end
-
-	delete_user (a_user: CMS_USER)
-			-- Delete user `a_user'.
-		require
-			has_id: a_user.has_id
-		do
-			reset_error
-			storage.delete_user (a_user)
 			error_handler.append (storage.error_handler)
 		end
 

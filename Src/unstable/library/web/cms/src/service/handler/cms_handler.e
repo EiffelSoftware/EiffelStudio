@@ -11,7 +11,9 @@ deferred class
 inherit
 	WSF_HANDLER
 
-	CMS_REQUEST_UTIL
+	CMS_API_ACCESS
+
+	CMS_ENCODERS
 
 	REFACTORING_HELPER
 
@@ -93,4 +95,7 @@ feature -- Response helpers
 			r.execute
 		end
 
+note
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

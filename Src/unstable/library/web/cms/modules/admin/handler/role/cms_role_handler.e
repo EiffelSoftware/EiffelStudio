@@ -166,7 +166,7 @@ feature -- Error
 	do_delete (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- <Precursor>
 		do
-			if attached current_user (req) as l_user then
+			if attached api.user as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id then
 					if
 						l_id.is_integer and then

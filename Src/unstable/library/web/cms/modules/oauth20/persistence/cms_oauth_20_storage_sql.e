@@ -45,23 +45,27 @@ feature -- Access User Outh
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_string: STRING
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
-			create l_string.make_from_string (select_user_oauth2_template_by_id)
+			create l_string.make_from_string (select_user_id_oauth2_template_by_id)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
 			sql_query (l_string, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check no_more_than_one: False end
-					Result := Void
+					l_uid := 0
 				end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
 
 	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
@@ -69,23 +73,27 @@ feature -- Access User Outh
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_string: STRING
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_oauth2_by_email")
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
-			create l_string.make_from_string (select_user_oauth2_template_by_email)
+			create l_string.make_from_string (select_user_id_oauth2_template_by_email)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
 			sql_query (l_string, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check no_more_than_one: False end
-					Result := Void
+					l_uid := 0
 				end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
 
 	user_oauth2_by_token (a_token: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
@@ -93,25 +101,28 @@ feature -- Access User Outh
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_string: STRING
+			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_by_oauth2_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
-			create l_string.make_from_string (select_user_by_oauth2_template_token)
+			create l_string.make_from_string (select_user_id_by_oauth2_template_token)
 			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
 			sql_query (l_string, l_parameters)
 			if not has_error and not sql_after then
-				Result := fetch_user
+				l_uid := sql_read_integer_64 (1)
 				sql_forth
 				if not sql_after then
 					check no_more_than_one: False end
-					Result := Void
+					l_uid := 0
 				end
 			end
 			sql_finalize
+			if l_uid > 0 and attached api as l_cms_api then
+				Result := l_cms_api.user_api.user_by_id (l_uid)
+			end
 		end
-
 
 feature --Access: Consumers	
 
@@ -286,45 +297,6 @@ feature {NONE} -- Implementation OAuth Consumer
 			end
 		end
 
-feature {NONE} -- Implementation: User
-
-	fetch_user: detachable CMS_USER
-		local
-			l_id: INTEGER_64
-			l_name: detachable READABLE_STRING_32
-		do
-			if attached sql_read_integer_64 (1) as i then
-				l_id := i
-			end
-			if attached sql_read_string_32 (2) as s and then not s.is_whitespace then
-				l_name := s
-			end
-
-			if l_name /= Void then
-				create Result.make (l_name)
-				if l_id > 0 then
-					Result.set_id (l_id)
-				end
-			elseif l_id > 0 then
-				create Result.make_with_id (l_id)
-			end
-
-			if Result /= Void then
-				if attached sql_read_string (3) as l_password then
-						-- FIXME: should we return the password here ???
-					Result.set_hashed_password (l_password)
-				end
-				if attached sql_read_string (5) as l_email then
-					Result.set_email (l_email)
-				end
-				if attached sql_read_integer_32 (6) as l_status then
-					Result.set_status (l_status)
-				end
-			else
-				check expected_valid_user: False end
-			end
-		end
-
 feature {NONE} -- User OAuth2
 
 	oauth2_sql_table_name (a_consumer: READABLE_STRING_GENERAL): STRING_8
@@ -353,12 +325,20 @@ feature {NONE} -- User OAuth2
 			end
 		end
 
-	Select_user_by_oauth2_template_token: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.access_token = :token;"
-			--| FIXME: replace the u.* by a list of field names, to avoid breaking `featch_user' if two fieds are swiped.
+	Select_user_id_by_oauth2_template_token: STRING = "SELECT uid FROM $table_name WHERE access_token = :token;"
+			--| User id for access token :token
 
-	Select_user_oauth2_template_by_id: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.uid = :uid;"
+	Select_user_id_oauth2_template_by_id: STRING = "SELECT uid FROM $table_name WHERE uid = :uid;"
 
-	Select_user_oauth2_template_by_email: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.email = :email;"
+	Select_user_id_oauth2_template_by_email: STRING = "SELECT uid FROM $table_name WHERE email = :email;"
+
+
+--	Select_user_by_oauth2_template_token: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.access_token = :token;"
+--			--| FIXME: replace the u.* by a list of field names, to avoid breaking `featch_user' if two fieds are swiped.
+
+--	Select_user_oauth2_template_by_id: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.uid = :uid;"
+
+--	Select_user_oauth2_template_by_email: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.email = :email;"
 
 	Sql_insert_oauth2_template: STRING = "INSERT INTO $table_name (uid, access_token, details, created, email) VALUES (:uid, :token, :profile, :utc_date, :email);"
 

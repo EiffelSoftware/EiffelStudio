@@ -49,9 +49,9 @@ feature -- HTTP Methods
 			-- <Precursor>
 		do
 			api.logger.put_information (generator + ".do_get Processing basic auth login", Void)
-			if attached {STRING_32} current_user_name (req) as l_user then
+			if api.user_is_authenticated then
 				if attached {WSF_STRING} req.query_parameter ("destination") as l_uri then
-					 redirect_to (req.absolute_script_url (l_uri.url_encoded_value), res)
+					redirect_to (req.absolute_script_url (l_uri.url_encoded_value), res)
 				else
 					redirect_to (req.absolute_script_url ("/"), res)
 				end

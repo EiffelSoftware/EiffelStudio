@@ -37,6 +37,80 @@ feature -- Access
 	weight: INTEGER
 			-- Optional weight used for order.
 
+	query_string: detachable STRING
+			-- Query string from `location'.
+		local
+			i: INTEGER
+			loc: like location
+		do
+			loc := location
+			i := loc.index_of ('?', 1)
+			if i > 0 then
+				Result := loc.substring (i + 1, loc.count)
+				i := loc.last_index_of ('#', loc.count)
+				if i > 0 then
+					Result.keep_head (i - 1)
+				end
+			end
+		end
+
+	fragment_string: detachable STRING
+			-- Query string from `location'.
+		local
+			i: INTEGER
+			loc: like location
+		do
+			loc := location
+			i := loc.last_index_of ('#', loc.count)
+			if i > 0 then
+				Result := loc.substring (i + 1, loc.count)
+			end
+		end
+
+feature -- Element change
+
+	add_query_parameter (a_encoded_name: READABLE_STRING_8; a_encoded_value: detachable READABLE_STRING_8)
+			-- Add query parameter "$a_encoded_name=$a_encoded_value" to `location'.
+			-- note: the argument must already be url encoded!
+		local
+			q: STRING_8
+			f: detachable READABLE_STRING_8
+			i,j: INTEGER
+			loc: STRING_8
+		do
+			create loc.make_from_string (location)
+
+			j := loc.last_index_of ('#', loc.count)
+			if j > 0 then
+				f := loc.substring (j, loc.count)
+				loc.keep_head (j - 1)
+			end
+			i := loc.index_of ('?', 1)
+			if i > 0 then
+				q := loc.substring (i + 1, loc.count)
+				loc.keep_head (i)
+			else
+				create q.make_empty
+			end
+
+			if not q.is_empty then
+				q.append_character ('&')
+			end
+
+			q.append (a_encoded_name)
+			if a_encoded_value /= Void then
+				q.append_character ('=')
+				q.append (a_encoded_value)
+			end
+
+			loc.append_character ('?')
+			loc.append (q)
+			if f /= Void then
+				loc.append (f)
+			end
+			location := loc
+		end
+
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -134,6 +208,6 @@ feature -- Status report
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -65,9 +65,6 @@ feature -- Access
 	email: detachable READABLE_STRING_8
 			-- User email.
 
-	profile: detachable CMS_USER_PROFILE
-			-- User profile.
-
 	creation_date: DATE_TIME
 			-- Creation date.
 
@@ -189,26 +186,6 @@ feature -- Change element
 			email_set: email = a_email
 		end
 
-	set_profile (prof: like profile)
-			-- Set `profile' with `prof'.
-		do
-			profile := prof
-		ensure
-			profile_set: profile = prof
-		end
-
-	set_profile_item (k: READABLE_STRING_8; v: READABLE_STRING_8)
-		local
-			prof: like profile
-		do
-			prof := profile
-			if prof = Void then
-				create prof.make
-				profile := prof
-			end
-			prof.force (v, k)
-		end
-
 	set_last_login_date (dt: like last_login_date)
 		do
 			last_login_date := dt
@@ -283,7 +260,6 @@ feature -- Status change
 		ensure
 			status_set:  status = a_status
 		end
-
 
 feature -- User status
 

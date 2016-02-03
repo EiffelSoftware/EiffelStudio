@@ -75,17 +75,6 @@ feature -- Access: node
 		do
 		end
 
-	node_author (a_node: CMS_NODE): detachable CMS_USER
-			-- Node's author. if any.
-		do
-		end
-
-	node_collaborators (a_id: like {CMS_NODE}.id): LIST [CMS_USER]
-			-- Possible list of node's collaborator.
-		do
-			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
-		end
-
 feature -- Access: outline		
 
 	children (a_node: CMS_NODE): detachable LIST [CMS_NODE]

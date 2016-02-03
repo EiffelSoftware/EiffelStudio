@@ -76,7 +76,6 @@ feature -- Change: user
 		do
 		end
 
-
 feature -- Access: roles and permissions
 
 	user_role_by_id (a_id: like {CMS_USER_ROLE}.id): detachable CMS_USER_ROLE

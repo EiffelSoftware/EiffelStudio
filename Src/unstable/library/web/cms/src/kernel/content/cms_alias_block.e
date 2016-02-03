@@ -12,6 +12,9 @@ class
 
 inherit
 	CMS_BLOCK
+		redefine
+			append_to_html
+		end
 
 create
 	make_with_block
@@ -47,6 +50,12 @@ feature -- Status report
 
 feature -- Conversion
 
+	append_to_html  (a_theme: CMS_THEME; a_output: STRING_8)
+			-- Append HTML representation of Current block to `a_output'.
+		do
+			origin.append_to_html (a_theme, a_output)
+		end
+
 	to_html (a_theme: CMS_THEME): STRING_8
 			-- HTML representation of Current block.
 		do
@@ -54,6 +63,6 @@ feature -- Conversion
 		end
 
 ;note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

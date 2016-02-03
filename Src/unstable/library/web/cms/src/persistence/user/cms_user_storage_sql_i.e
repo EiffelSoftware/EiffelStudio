@@ -267,13 +267,14 @@ feature -- Change: user
 				sql_begin_transaction
 
 				write_information_log (generator + ".update_user")
-				create l_parameters.make (6)
+				create l_parameters.make (7)
 				l_parameters.put (a_user.id, "uid")
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
 				l_parameters.put (l_email, "email")
 				l_parameters.put (a_user.status, "status")
+				l_parameters.put (a_user.last_login_date, "signed")
 
 				sql_modify (sql_update_user, l_parameters)
 				sql_finalize
@@ -306,6 +307,8 @@ feature -- Change: user
 			sql_commit_transaction
 			sql_finalize
 		end
+
+feature -- Change: roles
 
 	update_user_roles (a_user: CMS_USER)
 			-- Update roles of `a_user'
@@ -847,6 +850,9 @@ feature {NONE} -- Implementation: User
 				if attached sql_read_integer_32 (6) as l_status then
 					Result.set_status (l_status)
 				end
+				if attached sql_read_date_time (8) as l_signed_date then
+					Result.set_last_login_date (l_signed_date)
+				end
 			else
 				check expected_valid_user: False end
 			end
@@ -903,7 +909,7 @@ feature {NONE} -- Sql Queries: USER
 	sql_insert_user: STRING = "INSERT INTO users (name, password, salt, email, created, status) VALUES (:name, :password, :salt, :email, :created, :status);"
 			-- SQL Insert to add a new user.
 
-	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status WHERE uid=:uid;"
+	sql_update_user: STRING = "UPDATE users SET name=:name, password=:password, salt=:salt, email=:email, status=:status, signed=:signed WHERE uid=:uid;"
 			-- SQL update to update an existing user.
 
 	sql_delete_user: STRING = "DELETE FROM users WHERE uid=:uid;"

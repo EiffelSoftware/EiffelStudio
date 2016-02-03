@@ -43,10 +43,23 @@ feature -- Access
 		end
 
 	root_directory: detachable PATH
+			-- Root directory, mainly used to resolve ISE_LIBRARY env variable and similar.
+		deferred
+		end
+
+	included_directories: detachable LIST [PATH]
+			-- Directories to scan for libraries ecf.
 		deferred
 		end
 
 	avoided_directories: detachable LIST [PATH]
+			-- When updater has multiple choice for new ecf location,
+			-- the one inside avoided directories has lower priority.
+		deferred
+		end
+
+	excluded_directories: detachable LIST [PATH]
+			-- Excluded directories from known ecf.
 		deferred
 		end
 

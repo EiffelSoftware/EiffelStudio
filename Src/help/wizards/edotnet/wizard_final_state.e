@@ -1,5 +1,5 @@
 note
-	description	: "Final state of the wizard."
+	description: "Final state of the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			Precursor {BENCH_WIZARD_FINAL_STATE_WINDOW} (an_info)
 		end
 
-feature -- Basic Operations
+feature -- Basic operations
 
 	build
 			-- Special display box for the first and the last state
@@ -82,12 +82,6 @@ feature {NONE} -- Implementation
 			message_and_title_box.extend (message_text_field) -- Expandable item
 			message_and_title_box.extend (message)
 			message_and_title_box.disable_item_expand (message)
-		end
-
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Dotnet Wizard.
-		once
-			 create Result.make_from_string (Wizard_icon_name + pixmap_extension)
 		end
 
 feature {NONE} -- Constants
@@ -144,7 +138,7 @@ feature {NONE} -- Constants
 			-- Space
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

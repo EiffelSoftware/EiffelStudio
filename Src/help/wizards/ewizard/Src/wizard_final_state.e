@@ -1,10 +1,10 @@
-note
-	description	: "Template for the last state of a wizard"
+﻿note
+	description: "Template for the last state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_FINAL_STATE
@@ -23,7 +23,7 @@ inherit
 create
 	make
 
-feature -- Basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 		do
@@ -50,14 +50,8 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Store Wizard.
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

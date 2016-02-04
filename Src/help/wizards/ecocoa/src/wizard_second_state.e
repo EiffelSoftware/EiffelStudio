@@ -1,8 +1,8 @@
-note
-	description	: "Final state of the wizard."
-	author		: "Daniel Furrer <danie.furrer@gmail.com>"
-	date		: "$Date$"
-	revision	: "$Revision$"
+﻿note
+	description: "Final state of the wizard."
+	author: "Daniel Furrer <danie.furrer@gmail.com>", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_SECOND_STATE
@@ -23,7 +23,7 @@ inherit
 create
 	make
 
-feature -- Basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 		do
@@ -51,16 +51,8 @@ feature -- Access
 		do
 		end
 
-feature {NONE} -- Implementation
-
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Wel Wizard
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

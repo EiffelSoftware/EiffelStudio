@@ -1,10 +1,10 @@
-note
-	description	: "This class is inherited by all the application"
+﻿note
+	description: "This class is inherited by all the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	BENCH_WIZARD_SHARED
@@ -110,8 +110,16 @@ feature -- Shared variables
 			retry
 		end
 
+feature {NONE} -- Implementation
+
+	pixmap_icon_location: PATH
+			-- Icon for the Eiffel Wel Wizard.
+		once
+			create Result.make_from_string ("eiffel_wizard_icon" + (create {WIZARD_SHARED}).pixmap_extension)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

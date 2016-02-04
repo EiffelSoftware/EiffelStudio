@@ -1,10 +1,10 @@
-note
-	description	: "Wizard state: Error in the choosen directory"
+﻿note
+	description: "Wizard state: Error in the choosen directory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "David Solal"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "David Solal", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_ERROR_LOCATION
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature -- basic Operations
+feature -- Basic operations
 
 	display_state_text
 			-- Display message text relative to current state.
@@ -29,16 +29,8 @@ feature -- basic Operations
 			message.set_text (Bench_interface_names.m_Location_state)
 		end
 
-feature {WIZARD_STATE_WINDOW}
-
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Wizard.
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

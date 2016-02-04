@@ -1,10 +1,10 @@
-note
-	description	: "Initial State"
+﻿note
+	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "pascalf"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "pascalf", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_INITIAL_STATE
@@ -23,7 +23,7 @@ inherit
 create
 	make
 
-feature -- basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 			-- Process user entries, and perform actions accordingly.
@@ -40,14 +40,8 @@ feature -- basic Operations
 			message.set_text (Interface_names.m_Initial_state)
 		end
 
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Store Wizard.
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

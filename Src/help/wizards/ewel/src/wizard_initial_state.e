@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "davids"
+	author: "davids", "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature -- basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 		do
@@ -35,14 +35,8 @@ feature -- basic Operations
 			message.set_text (interface_names.m_wizard_introduction)
 		end
 
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Wel Wizard.
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

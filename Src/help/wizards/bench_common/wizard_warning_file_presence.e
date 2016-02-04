@@ -1,5 +1,5 @@
-note
-	description	: "Wizard state: Target file(s) exist(s)."
+﻿note
+	description: "Wizard state: Target file(s) exist(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -42,7 +42,7 @@ feature {NONE} -- Access
 	files: TRAVERSABLE [STRING_GENERAL]
 			-- List of files that exist in the target directory
 
-feature -- basic Operations
+feature -- Basic operations
 
 	display_state_text
 			-- Display message text relative to current state.
@@ -71,16 +71,8 @@ feature -- basic Operations
 		do
 		end
 
-feature {WIZARD_STATE_WINDOW}
-
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Wizard.
-		once
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 2009-2012, Eiffel Software"
+	copyright:	"Copyright (c) 2009-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

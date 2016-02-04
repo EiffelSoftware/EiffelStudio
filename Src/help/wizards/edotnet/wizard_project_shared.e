@@ -1,5 +1,5 @@
 note
-	description	: "This class is inherited by all the application"
+	description: "This class is inherited by all the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -19,9 +19,6 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
-
-	Wizard_icon_name: STRING = "eiffel_wizard_icon"
-			-- .NET Wizard icon name
 
 	Interface_names: INTERFACE_NAMES
 			-- Interface names for buttons, label, ...

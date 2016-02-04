@@ -1,5 +1,5 @@
 note
-	description	: "Error: selected root class name is not a valid Eiffel identifier."
+	description: "Error: selected root class name is not a valid Eiffel identifier."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -31,7 +31,7 @@ feature -- Access
 	h_filename: STRING = "index.html"
 			-- Path to HTML help filename
 
-feature -- basic Operations
+feature -- Basic operations
 
 	display_state_text
 		do
@@ -43,16 +43,8 @@ feature -- basic Operations
 		do
 		end
 
-feature {WIZARD_STATE_WINDOW}
-
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Wizard.
-		once
-			create Result.make_from_string (Wizard_icon_name + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

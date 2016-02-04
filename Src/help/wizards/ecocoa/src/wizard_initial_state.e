@@ -1,8 +1,8 @@
-note
-	description	: "Initial State"
-	author		: "Daniel Furrer <danie.furrer@gmail.com>"
-	date		: "$Date$"
-	revision	: "$Revision$"
+﻿note
+	description: "Initial State"
+	author: "Daniel Furrer <danie.furrer@gmail.com>", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_INITIAL_STATE
@@ -18,7 +18,7 @@ inherit
 create
 	make
 
-feature -- basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 		do
@@ -34,13 +34,8 @@ feature -- basic Operations
 			first_window.set_minimum_height (400)
 		end
 
-	pixmap_icon_location: PATH
-		do
-			create Result.make_from_string ("eiffel_wizard_icon" + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

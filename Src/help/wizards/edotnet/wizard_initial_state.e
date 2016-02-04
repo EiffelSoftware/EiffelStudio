@@ -1,10 +1,10 @@
 note
-	description	: "Initial State"
+	description: "Initial State"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_INITIAL_STATE
@@ -35,7 +35,7 @@ feature -- Access
 	h_filename: STRING = "help/wizards/edotnet/docs/reference/01_welcome/index.html"
 			-- Path to HTML help file
 
-feature -- basic Operations
+feature -- Basic operations
 
 	proceed_with_current_info
 		do
@@ -50,14 +50,8 @@ feature -- basic Operations
 			message.set_text (Interface_names.m_Welcome_message)
 		end
 
-	pixmap_icon_location: PATH
-			-- Icon for the Eiffel Dotnet Wizard.
-		once
-			 create Result.make_from_string (Wizard_icon_name + pixmap_extension)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,9 +9,6 @@ class
 
 inherit
 	BENCH_WIZARD_FINAL_STATE_WINDOW
-		redefine
-			proceed_with_current_info
-		end
 
 	EXECUTION_ENVIRONMENT
 		rename
@@ -22,17 +19,6 @@ inherit
 
 create
 	make
-
-feature -- Basic operations
-
-	proceed_with_current_info
-		do
-			project_generator.generate_code
-			write_bench_notification_ok (wizard_information)
-
-
-			Precursor
-		end
 
 feature -- Access
 
@@ -76,11 +62,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

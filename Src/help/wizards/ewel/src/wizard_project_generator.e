@@ -1,21 +1,24 @@
-note
-	description	: "Object to generate a project."
+﻿note
+	description: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_PROJECT_GENERATOR
 
 inherit
 	BENCH_WIZARD_PROJECT_GENERATOR
+		redefine
+			generate_code
+		end
 
 create
 	make
 
-feature -- Basic Operations
+feature -- Basic operations
 
 	generate_code
 			-- Generate code for the project.
@@ -25,6 +28,7 @@ feature -- Basic Operations
 			project_location: PATH
 			source_prefix: STRING
 		do
+			Precursor
 			if wizard_information.dialog_application then
 				map_list := map_for_dialog
 				source_prefix := "dialog"
@@ -106,7 +110,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -130,11 +134,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

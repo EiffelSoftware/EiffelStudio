@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,6 +11,9 @@ class
 
 inherit
 	BENCH_WIZARD_PROJECT_GENERATOR
+		redefine
+			generate_code
+		end
 
 create
 	make
@@ -26,6 +29,7 @@ feature -- Basic Operations
 			a_string: STRING
 			a_string2: STRING
 		do
+			Precursor
 				-- cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
@@ -159,11 +163,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
 end

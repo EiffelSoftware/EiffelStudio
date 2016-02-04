@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "All string constants used in the Bench wizards"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,6 +27,8 @@ feature -- Project name and Location state
 	l_Project_name: STRING_GENERAL do Result := locale.translation ("Project name") end
 
 	l_Project_location: STRING_GENERAL do Result := locale.translation ("Project location") end
+
+	l_support_scoop: STRING_GENERAL do Result := locale.translation ("Enable concurrency") end
 
 	l_Compile_project: STRING_GENERAL do Result := locale.translation ("Compile the generated project") end
 
@@ -86,7 +88,7 @@ feature -- Files warning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -116,4 +118,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class BENCH_WIZARD_INTERFACE_NAMES
+end

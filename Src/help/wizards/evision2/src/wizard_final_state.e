@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Final state of the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,14 +38,17 @@ feature -- Basic Operations
 feature -- Access
 
 	display_state_text
+		local
+			m: READABLE_STRING_32
 		do
 			title.set_text (interface_names.t_completing_wizard)
-			message.set_text (
-				interface_names.m_you_have_specified_the_following_setting (wizard_information.project_name,
-																	wizard_information.project_location.name)
-				+ "%N%N"
-				+ interface_names.m_click_finish_to (wizard_information.compile_project)
-			)
+			m := interface_names.m_you_have_specified_the_following_setting
+				(wizard_information.project_name, wizard_information.project_location.name)
+			if wizard_information.is_scoop_supported then
+				m := m + interface_names.m_is_scoop_enabled (wizard_information.is_scoop)
+			end
+			message.set_text
+				(m + "%N%N" + interface_names.m_click_finish_to (wizard_information.compile_project))
 		end
 
 	final_message: STRING_32
@@ -61,7 +64,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

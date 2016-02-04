@@ -139,13 +139,21 @@ feature {NONE} -- Constants
 	Exe_type: STRING = "exe"
 			-- EXE type
 
+feature {NONE} -- Generation
+
+	project_generator: WIZARD_PROJECT_GENERATOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 invariant
 	non_void_root_class_name: root_class_name /= Void
 	non_void_creation_routine_name: creation_routine_name /= Void
 	non_void_clr_version: clr_version /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -175,4 +183,4 @@ note
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_INFORMATION
+end

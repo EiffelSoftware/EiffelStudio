@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "All information about the wizard ... This class is inherited in each state "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,9 +47,15 @@ feature {NONE} -- Implementation
 		do
 			Result := "my_wizard_application"
 		end
-		
+
+	project_generator: WIZARD_PROJECT_GENERATOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

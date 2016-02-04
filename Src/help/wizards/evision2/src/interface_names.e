@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Names for buttons, labels, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,6 +38,15 @@ feature -- Message
 			), [a_project_name, a_project_location])
 		end
 
+	m_is_scoop_enabled (is_scoop: BOOLEAN): STRING_32
+		do
+			if is_scoop then
+				Result := locale.translation ("Concurrency: %TYes%N")
+			else
+				Result := locale.translation ("Concurrency: %TNo%N")
+			end
+		end
+
 	m_click_finish_to (a_compile: BOOLEAN): STRING_32
 		do
 			if a_compile then
@@ -63,7 +72,7 @@ feature -- Message
 	m_click_checkboxes_to: STRING_32 do Result := locale.translation ("Click the checkboxes to change the appearance.") end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,6 +26,14 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
+
+	is_scoop_supported: BOOLEAN
+			-- Does current wizard support SCOOP-capable projects?
+		local
+			f: FILE_UTILITIES
+		do
+			Result := f.file_path_exists (wizard_resources_path.extended ("template_config-scoop.ecf"))
+		end
 
 	existing_target_files: TRAVERSABLE [STRING_GENERAL]
 			-- Files that exist in the target directory
@@ -151,7 +159,7 @@ feature {NONE} -- Implementation / private attributes
 			-- Information about the project to generate.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

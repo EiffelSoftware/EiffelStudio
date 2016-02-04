@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "All information about the wizard ... This class is inherited in each state "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,6 +50,8 @@ feature {NONE} -- Initialization
 				l_count := l_count + 1
 			end
 			project_location := p.extended (project_name)
+			is_scoop_supported := project_generator.is_scoop_supported
+			is_scoop := is_scoop_supported
 		end
 
 feature -- Setting
@@ -64,6 +66,14 @@ feature -- Setting
 			-- Set the project name to `a_project_name'.
 		do
 			project_name := a_project_name
+		end
+
+	set_is_scoop (value: BOOLEAN)
+			-- Set `is_scoop' to `value'.
+		do
+			is_scoop := value
+		ensure
+			is_scoop_set: is_scoop = value
 		end
 
 	set_compile_project (enable_compilation: BOOLEAN)
@@ -98,6 +108,15 @@ feature -- Access
 	project_name: STRING_32
 			-- Name of the project.
 
+	is_scoop_supported: BOOLEAN
+			-- Can project be compiled in SCOOP mode?
+			--| This attribute can be replaced with a function,
+			--| but then a check whether there is a SCOOP-specific file
+			--| will be performed whenever this function is accessed.
+
+	is_scoop: BOOLEAN
+			-- Is project compiled in SCOOP mode?
+
 	compile_project: BOOLEAN
 			-- Should the project be compiled upon generation?
 
@@ -113,8 +132,15 @@ feature {NONE} -- Implementation
 			valid_result: Result /= Void and then not Result.is_empty
 		end
 
+	project_generator: BENCH_WIZARD_PROJECT_GENERATOR
+			-- A project generator used to set initial values of the information.
+		deferred
+		ensure
+			attached_result: attached Result
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

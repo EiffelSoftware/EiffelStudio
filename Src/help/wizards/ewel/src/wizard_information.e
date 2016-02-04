@@ -57,11 +57,17 @@ feature {NONE} -- Implementation
 			Result := "my_wel_application"
 		end
 
+	project_generator: WIZARD_PROJECT_GENERATOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 invariant
 	freeze_required: freeze_required
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Second state of the wizard wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,6 +42,13 @@ feature -- Basic Operation
 			project_location.enable_directory_browse_button
 			project_location.generate
 
+			create is_scoop.make_with_text (bench_interface_names.l_support_scoop)
+			if wizard_information.is_scoop then
+				is_scoop.enable_select
+			else
+				is_scoop.disable_select
+			end
+
 			create to_compile_b.make_with_text (Bench_interface_names.l_Compile_project)
 			if wizard_information.compile_project then
 				to_compile_b.enable_select
@@ -54,6 +61,11 @@ feature -- Basic Operation
 			choice_box.disable_item_expand (project_name.widget)
 			choice_box.extend (project_location.widget)
 			choice_box.disable_item_expand (project_location.widget)
+			if wizard_information.is_scoop_supported then
+					-- Avoid showing a check box to trigger SCOOP mode when it is not supported by the underlying generator.
+				choice_box.extend (is_scoop)
+				choice_box.disable_item_expand (is_scoop)
+			end
 			choice_box.extend (to_compile_b)
 			choice_box.disable_item_expand (to_compile_b)
 			choice_box.extend (create {EV_CELL}) -- expandable item
@@ -61,6 +73,7 @@ feature -- Basic Operation
 			set_updatable_entries(<<
 				project_name.change_actions,
 				project_location.change_actions,
+				is_scoop.select_actions,
 				to_compile_b.select_actions>>)
 		end
 
@@ -110,6 +123,7 @@ feature -- Basic Operation
 		do
 			wizard_information.set_project_location (validate_directory_string (project_location.text_32))
 			wizard_information.set_project_name (project_name.text_32)
+			wizard_information.set_is_scoop (is_scoop.is_selected)
 			wizard_information.set_compile_project (to_compile_b.is_selected)
 			Precursor
 		end
@@ -176,13 +190,16 @@ feature {NONE} -- Implementation
 			-- Text field to enter the location of the project
 
 	project_name: WIZARD_SMART_TEXT_FIELD
-			-- Text field to enter the name of the wizard
+			-- Text field to enter the name of the wizard.
+
+	is_scoop: EV_CHECK_BUTTON
+			-- A checkbox to indicate whether a project should be SCOOP-capable.
 
 	to_compile_b: EV_CHECK_BUTTON;
-			-- Should compilation be launched?.
+			-- Should compilation be launched?
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

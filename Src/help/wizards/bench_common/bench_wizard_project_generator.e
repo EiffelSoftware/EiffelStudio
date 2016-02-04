@@ -1,16 +1,16 @@
 ﻿note
-	description	: "Object to generate a project."
+	description: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]", "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	BENCH_WIZARD_PROJECT_GENERATOR
 
 inherit
-	ANY
+	BENCH_WIZARD_CONSTANTS
 
 	WIZARD_SHARED
 		export
@@ -57,6 +57,15 @@ feature -- Status report
 			result_attached: Result /= Void
 		end
 
+	has_error: BOOLEAN
+			-- Is there an error when generating a project?
+		do
+			Result := attached error
+		end
+
+	error: detachable TUPLE [title, message: READABLE_STRING_GENERAL]
+			-- An error during generation (if any).
+
 feature {NONE} -- Access
 
 	target_files: TRAVERSABLE [STRING_GENERAL]
@@ -70,7 +79,8 @@ feature -- Basic Operations
 
 	generate_code
 			-- Generate code for the project.
-		deferred
+		do
+			error := Void
 		end
 
 feature {NONE} -- Implementation
@@ -93,29 +103,50 @@ feature {NONE} -- Implementation
 		require
 			is_target_file: target_files.has (resource_name)
 		local
+			p: PATH
 			s: STRING
 			fi: PLAIN_TEXT_FILE
 			u: UTF_CONVERTER
+			is_retried: BOOLEAN
+			was_error: BOOLEAN
 		do
-			create fi.make_with_path (template_path.extended (template_name))
-			fi.open_read
-			fi.read_stream (fi.count)
-			s:= fi.last_string.twin
-			if map_list /= Void then
-				from
-					map_list.start
-				until
-					map_list.after
-				loop
-					s.replace_substring_all (map_list.key_for_iteration, u.string_32_to_utf_8_string_8 (map_list.item_for_iteration))
-					map_list.forth
+			if not is_retried then
+				p := template_path.extended (template_name)
+				if attached error then
+					was_error := True
+				else
+					error := [bench_interface_names.t_file_read_error, bench_interface_names.m_file_read_error (p.name)]
+				end
+				create fi.make_with_path (p)
+				fi.open_read
+				fi.read_stream (fi.count)
+				s:= fi.last_string.twin
+				if map_list /= Void then
+					from
+						map_list.start
+					until
+						map_list.after
+					loop
+						s.replace_substring_all (map_list.key_for_iteration, u.string_32_to_utf_8_string_8 (map_list.item_for_iteration))
+						map_list.forth
+					end
+				end
+				fi.close
+				p := resource_path.extended (resource_name)
+				if not was_error then
+					error := [bench_interface_names.t_file_write_error, bench_interface_names.m_file_write_error (p.name)]
+				end
+				create fi.make_with_path (p)
+				fi.open_write
+				fi.put_string (s)
+				fi.close
+				if not was_error then
+					error := Void
 				end
 			end
-			fi.close
-			create fi.make_with_path (resource_path.extended (resource_name))
-			fi.open_write
-			fi.put_string (s)
-			fi.close
+		rescue
+			is_retried := True
+			retry
 		end
 
 	add_common_parameters (map_list: HASH_TABLE [STRING_32, STRING])
@@ -183,12 +214,10 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
 end

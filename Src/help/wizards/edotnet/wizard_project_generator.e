@@ -1,5 +1,5 @@
 note
-	description	: "Object to generate a project."
+	description: "Object to generate a project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -8,6 +8,9 @@ class
 
 inherit
 	BENCH_WIZARD_PROJECT_GENERATOR
+		redefine
+			generate_code
+		end
 
 	WIZARD_PROJECT_SHARED
 
@@ -25,6 +28,7 @@ feature -- Basic Operations
 			ace_location: PATH
 			root_class_name_lowercase: STRING_32
 		do
+			Precursor
 				-- cached variables
 			project_name_lowercase := wizard_information.project_name.as_lower
 			project_location := wizard_information.project_location
@@ -132,7 +136,7 @@ feature {NONE} -- Constants
 			-- Comma
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -156,11 +160,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

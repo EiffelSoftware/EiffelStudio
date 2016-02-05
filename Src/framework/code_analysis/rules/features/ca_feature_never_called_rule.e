@@ -4,8 +4,12 @@
 			
 			There is no use for a feature that is
 			never called by any class (including the one where it is defined).
+			
+			RULE #19: Attribute never gets assigned
+			
+			An attribute that never gets assigned will always keep its default value.
 		]"
-	author: "Stefan Zurfluh"
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,7 +81,12 @@ feature {NONE} -- Feature Visitor for Violation Check
 			l_violation.set_location (a_feature.ast.start_location)
 			l_violation.long_description_info.extend (a_feature.name_32)
 
-			create l_fix.make_with_feature (current_context.checking_class, a_feature.ast, a_feature.name_32)
+			if a_feature.is_attribute then
+				create l_fix.make_with_attribute (current_context.checking_class, a_feature.ast, a_feature.name_32)
+				l_violation.long_description_info.extend ("is_attribute")
+			else
+				create l_fix.make_with_feature (current_context.checking_class, a_feature.ast, a_feature.name_32)
+			end
 			l_violation.fixes.extend (l_fix)
 
 			violations.extend (l_violation)
@@ -102,12 +111,27 @@ feature -- Properties
 		end
 
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+		local
+			l_is_attribute: BOOLEAN
 		do
-			a_formatter.add (ca_messages.feature_never_called_violation_1)
+			-- If long_description_info count is 2, then we have added "is attribute" to the description.
+			l_is_attribute := a_violation.long_description_info.count = 2
+
+			if l_is_attribute then
+				a_formatter.add (ca_messages.attribute_never_assigned_violation_1)
+			else
+				a_formatter.add (ca_messages.feature_never_called_violation_1)
+			end
+
 			if attached {STRING_32} a_violation.long_description_info.first as l_feat_name then
 				a_formatter.add_feature_name (l_feat_name, a_violation.affected_class)
 			end
-			a_formatter.add (ca_messages.feature_never_called_violation_2)
+
+			if l_is_attribute then
+				a_formatter.add (ca_messages.attribute_never_assigned_violation_2)
+			else
+				a_formatter.add (ca_messages.feature_never_called_violation_2)
+			end
 		end
 
 end

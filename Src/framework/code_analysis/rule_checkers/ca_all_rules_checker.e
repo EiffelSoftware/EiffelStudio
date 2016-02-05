@@ -38,6 +38,7 @@ inherit
 			process_bin_gt_as,
 			process_bin_le_as,
 			process_bin_lt_as,
+			process_bin_ne_as,
 			process_body_as,
 			process_case_as,
 			process_converted_expr_as,
@@ -51,6 +52,7 @@ inherit
 			process_feature_clause_as,
 			process_id_as,
 			process_if_as,
+			process_inline_agent_creation_as,
 			process_inspect_as,
 			process_instr_call_as,
 			process_loop_as,
@@ -59,7 +61,10 @@ inherit
 			process_once_as,
 			process_paran_as,
 			process_routine_as,
-			process_un_not_as
+			process_unary_as,
+			process_un_not_as,
+			process_integer_as,
+			process_real_as
 		end
 
 create
@@ -96,6 +101,8 @@ feature {NONE} -- Initialization
 			create bin_le_post_actions
 			create bin_lt_pre_actions
 			create bin_lt_post_actions
+			create bin_ne_pre_actions
+			create bin_ne_post_actions
 			create body_pre_actions
 			create body_post_actions
 			create case_pre_actions
@@ -140,8 +147,14 @@ feature {NONE} -- Initialization
 			create paran_post_actions
 			create routine_pre_actions
 			create routine_post_actions
+			create unary_pre_actions
+			create unary_post_actions
 			create un_not_pre_actions
 			create un_not_post_actions
+			create integer_pre_actions
+			create integer_post_actions
+			create real_pre_actions
+			create real_post_actions
 		end
 
 feature {CA_STANDARD_RULE} -- Adding agents
@@ -236,8 +249,17 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			bin_lt_post_actions.extend (a_action)
 		end
 
-	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])
+	add_bin_ne_pre_action (a_action: attached PROCEDURE [BIN_NE_AS])
 		do
+			bin_ne_pre_actions.extend (a_action)
+		end
+
+	add_bin_ne_post_action (a_action: attached PROCEDURE [BIN_NE_AS])
+		do
+			bin_ne_post_actions.extend (a_action)
+		end
+
+	add_body_pre_action (a_action: attached PROCEDURE [BODY_AS])		do
 			body_pre_actions.extend (a_action)
 		end
 
@@ -456,6 +478,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			routine_post_actions.extend (a_action)
 		end
 
+	add_unary_pre_action (a_action: attached PROCEDURE [UNARY_AS])
+		do
+			unary_pre_actions.extend (a_action)
+		end
+
+	add_unary_post_action (a_action: attached PROCEDURE [UNARY_AS])
+		do
+			unary_post_actions.extend (a_action)
+		end
+
 	add_un_not_pre_action (a_action: attached PROCEDURE [UN_NOT_AS])
 		do
 			un_not_pre_actions.extend (a_action)
@@ -464,6 +496,26 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_un_not_post_action (a_action: attached PROCEDURE [UN_NOT_AS])
 		do
 			un_not_post_actions.extend (a_action)
+		end
+
+	add_integer_pre_action (a_action: attached PROCEDURE [INTEGER_AS])
+		do
+			integer_pre_actions.extend (a_action)
+		end
+
+	add_integer_post_action (a_action: attached PROCEDURE [INTEGER_AS])
+		do
+			integer_post_actions.extend (a_action)
+		end
+
+	add_real_pre_action (a_action: attached PROCEDURE [REAL_AS])
+		do
+			real_pre_actions.extend (a_action)
+		end
+
+	add_real_post_action (a_action: attached PROCEDURE [REAL_AS])
+		do
+			real_post_actions.extend (a_action)
 		end
 
 feature {NONE} -- Agent lists
@@ -485,6 +537,8 @@ feature {NONE} -- Agent lists
 	bin_le_pre_actions, bin_le_post_actions: ACTION_SEQUENCE [TUPLE [BIN_LE_AS]]
 
 	bin_lt_pre_actions, bin_lt_post_actions: ACTION_SEQUENCE [TUPLE [BIN_LT_AS]]
+
+	bin_ne_pre_actions, bin_ne_post_actions: ACTION_SEQUENCE [TUPLE [BIN_NE_AS]]
 
 	body_pre_actions, body_post_actions: ACTION_SEQUENCE [TUPLE [BODY_AS]]
 
@@ -530,7 +584,13 @@ feature {NONE} -- Agent lists
 
 	routine_pre_actions, routine_post_actions: ACTION_SEQUENCE [TUPLE [ROUTINE_AS]]
 
+	unary_pre_actions, unary_post_actions: ACTION_SEQUENCE [TUPLE [UNARY_AS]]
+
 	un_not_pre_actions, un_not_post_actions: ACTION_SEQUENCE [TUPLE [UN_NOT_AS]]
+
+	integer_pre_actions, integer_post_actions: ACTION_SEQUENCE [TUPLE [INTEGER_AS]]
+
+	real_pre_actions, real_post_actions: ACTION_SEQUENCE [TUPLE [REAL_AS]]
 
 feature {CA_RULE_CHECKING_TASK} -- Execution Commands
 
@@ -541,9 +601,9 @@ feature {CA_RULE_CHECKING_TASK} -- Execution Commands
 		do
 			last_run_successful := False
 			l_ast := a_class_to_check.ast
-			class_pre_actions.call ([l_ast])
+			class_pre_actions.call (l_ast)
 			process_class_as (l_ast)
-			class_post_actions.call ([l_ast])
+			class_post_actions.call (l_ast)
 			last_run_successful := True
 		end
 
@@ -588,28 +648,35 @@ feature {NONE} -- Processing
 		do
 			bin_ge_pre_actions.call ([a_bin_ge])
 			Precursor (a_bin_ge)
-			bin_ge_pre_actions.call ([a_bin_ge])
+			bin_ge_post_actions.call ([a_bin_ge])
 		end
 
 	process_bin_gt_as (a_bin_gt: BIN_GT_AS)
 		do
 			bin_gt_pre_actions.call ([a_bin_gt])
 			Precursor (a_bin_gt)
-			bin_gt_pre_actions.call ([a_bin_gt])
+			bin_gt_post_actions.call ([a_bin_gt])
 		end
 
 	process_bin_le_as (a_bin_le: BIN_LE_AS)
 		do
 			bin_le_pre_actions.call ([a_bin_le])
 			Precursor (a_bin_le)
-			bin_le_pre_actions.call ([a_bin_le])
+			bin_le_post_actions.call ([a_bin_le])
 		end
 
 	process_bin_lt_as (a_bin_lt: BIN_LT_AS)
 		do
 			bin_lt_pre_actions.call ([a_bin_lt])
 			Precursor (a_bin_lt)
-			bin_lt_pre_actions.call ([a_bin_lt])
+			bin_lt_post_actions.call ([a_bin_lt])
+		end
+
+	process_bin_ne_as (a_bin_ne: BIN_NE_AS)
+		do
+			bin_ne_pre_actions.call ([a_bin_ne])
+			Precursor (a_bin_ne)
+			bin_ne_post_actions.call ([a_bin_ne])
 		end
 
 	process_body_as (a_body: BODY_AS)
@@ -703,6 +770,14 @@ feature {NONE} -- Processing
 			if_post_actions.call ([a_if])
 		end
 
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
+		do
+			-- TODO: 2014-09-22 Processing of inline agent body fails due to feature pre and post processing not being
+			-- called. We simply ignore bodies of inline agents for now and do not process them.
+			--safe_process (l_as.body)
+			safe_process (l_as.operands)
+		end
+
 	process_inspect_as (a_inspect: INSPECT_AS)
 		do
 			inspect_pre_actions.call ([a_inspect])
@@ -764,6 +839,27 @@ feature {NONE} -- Processing
 			un_not_pre_actions.call ([a_un_not])
 			Precursor (a_un_not)
 			un_not_post_actions.call ([a_un_not])
+		end
+
+	process_unary_as (a_unary: UNARY_AS)
+		do
+			unary_pre_actions.call ([a_unary])
+			Precursor (a_unary)
+			unary_post_actions.call ([a_unary])
+		end
+
+	process_integer_as (a_integer: INTEGER_AS)
+		do
+			integer_pre_actions.call ([a_integer])
+			Precursor (a_integer)
+			integer_post_actions.call ([a_integer])
+		end
+
+	process_real_as (a_real: REAL_AS)
+		do
+			real_pre_actions.call ([a_real])
+			Precursor (a_real)
+			real_post_actions.call ([a_real])
 		end
 
 feature -- Results

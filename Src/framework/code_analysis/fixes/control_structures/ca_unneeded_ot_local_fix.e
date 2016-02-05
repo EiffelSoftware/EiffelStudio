@@ -47,8 +47,6 @@ feature {NONE} -- Visitor
 	process_object_test_as (a_ot: OBJECT_TEST_AS)
 			-- Remove the object test local from `a_ot'.
 		local
-			l_new_ot: like a_ot
-			l_printer: PRETTY_PRINTER
 			l_new_string: STRING_32
 		do
 			if ot.is_equivalent (a_ot) then
@@ -57,16 +55,12 @@ feature {NONE} -- Visitor
 					-- Let the visitor process all IDs until we have reached the end of the
 					-- current if block.
 				within_ot := True
-					-- Getting rid of the name. Create another object test node without the
-					-- object test local.
-				create l_new_string.make_empty
-				create l_new_ot.make (a_ot.attached_keyword (matchlist), a_ot.type, a_ot.expression, Void, Void)
-				create l_printer.make (create {PRETTY_PRINTER_OUTPUT_STREAM}.make_string (l_new_string))
-				l_printer.set_parsed_class (parsed_class)
-				l_printer.set_match_list (matchlist)
-				l_printer.set_will_process_leading_leaves (False)
-				l_printer.set_will_process_trailing_leaves (False)
-				l_printer.process_object_test_as (l_new_ot)
+
+					-- Getting rid of the name.
+				l_new_string := a_ot.text_32 (matchlist)
+
+				l_new_string.replace_substring_all (a_ot.name.name_32, "")
+				l_new_string.replace_substring_all ("as ", "")
 
 				a_ot.replace_text (l_new_string, matchlist)
 			end

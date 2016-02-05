@@ -74,7 +74,7 @@ feature -- Fixing
 
 						-- Mark the fix as applied so that it may not be applied a second time. Then
 						-- color the rule violation entry in the GUI.
-					fix.set_applied
+					fix.set_applied (True)
 		        	ui_row.set_background_color (l_helper.ca_command.fixed_violation_bgcolor.value)
 
 		        		-- Now compile again, which in all cases should succeed.

@@ -99,6 +99,130 @@ feature -- Messages for both GUI and command line mode
 
 feature -- Rule Violations
 
+	export_can_be_restricted_violation_1: STRING_32
+		do Result := translation_in_context ("The export status of feature '", once "code_analyzer.violation") end
+
+	export_can_be_restricted_violation_2: STRING_32
+		do Result := translation_in_context ("' can be changed to {NONE}.", once "code_analyzer.violation") end
+
+	generic_param_too_long_violation_1: STRING_32
+		do Result := translation_in_context ("The formal generic parameter '", once "code_analyzer.violation") end
+
+	generic_param_too_long_violation_2: STRING_32
+		do Result := translation_in_context ("'%Nhas more than one character in its name.%NIt should only have one.", once "code_analyzer.violation") end
+
+	mergeable_conditionals_violation_1: STRING_32
+		do Result := translation_in_context ("There are two conditionals with semantically equal conditionals.%N%
+									% Thus the conditional instructions can be merged into one", once "code_analyzer.violation") end
+
+	local_used_for_result_violation_1: STRING_32
+		do Result := translation_in_context ("The local variable '", once "code_analyzer.violation") end
+
+	local_used_for_result_violation_2: STRING_32
+		do Result := translation_in_context ("' is only assigned to Result and never used.%NIt can be replaced by Result directly.", once "code_analyzer.violation") end
+
+	real_nan_comparison_violation_1: STRING_32
+		do Result := translation_in_context ("Comparing of a real variable with {REAL}.nan usually does not yield%Nthe intended result.%
+									% You should use the query %".is_nan%"", once "code_analyzer.violation") end
+
+	object_test_succeeds_violation_1: STRING_32
+		do Result := translation_in_context ("The object test for the variable '", once "code_analyzer.violation") end
+
+	object_test_succeeds_violation_2: STRING_32
+		do Result := translation_in_context ("The non-Void test for the variable '", once "code_analyzer.violation") end
+
+	object_test_succeeds_violation_3: STRING_32
+		do Result := translation_in_context ("' will always succeed, therefore%N the test can be removed.", once "code_analyzer.violation") end
+
+	object_test_failing_violation_1: STRING_32
+		do Result := translation_in_context ("This object test will always fail, therefore the corresponding%N block of code can be safely removed.", once "code_analyzer.violation") end
+
+	useless_contract_violation_1: STRING_32
+		do Result := translation_in_context ("Feature '", once "code_analyzer.violation") end
+
+	useless_contract_violation_2: STRING_32
+		do Result := translation_in_context ("' contains a precondition which is not needed and can be removed.", once "code_analyzer.violation") end
+
+	unreachable_code_violation_1: STRING_32
+		do Result := translation_in_context ("Class '", once "code_analyzer.violation") end
+
+	unreachable_code_violation_2: STRING_32
+		do Result := translation_in_context ("' contains unreachable code%Nthat should be considered to be removed. '", once "code_analyzer.violation") end
+
+	loop_invariant_comp_within_loop_violation_1: STRING_32
+		do Result := translation_in_context ("The instruction '", once "code_analyzer.violation") end
+
+	loop_invariant_comp_within_loop_violation_2: STRING_32
+		do Result := translation_in_context ("' is invariant in this loop and can be moved%Nin front or after%
+									% the loop to increase performance.", once "code_analyzer.violation") end
+
+	attribute_can_be_constant_violation_1: STRING_32
+		do Result := translation_in_context ("Attribute '", once "code_analyzer.violation") end
+
+	attribute_can_be_constant_violation_2: STRING_32
+		do Result := translation_in_context ("' is always assigned the same value: ", once "code_analyzer.violation") end
+
+	attribute_can_be_constant_violation_3: STRING_32
+		do Result := translation_in_context (".%N This attribute can be made constant.", once "code_analyzer.violation") end
+
+	attribute_never_assigned_violation_1: STRING_32
+		do Result := translation_in_context ("Attribute '", once "code_analyzer.violation") end
+
+	attribute_never_assigned_violation_2: STRING_32
+		do Result := translation_in_context ("' is never assigned in this class.%NIt will always keep its default value.", once "code_analyzer.violation") end
+
+	comparison_of_object_refs_violation_1: STRING_32
+		do Result := translation_in_context ("You are using '=' to compare object references. This only%Nchecks whether they%
+									% point to the same object.%NIf you wanted to compare their states you%Ncan do so by using%
+									% the '~' operator", once "code_analyzer.violation") end
+
+	void_check_using_is_equal_violation_1: STRING_32
+		do Result := translation_in_context ("The local variable or argument '", once "code_analyzer.violation") end
+
+	void_check_using_is_equal_violation_2: STRING_32
+		do Result := translation_in_context ("' is checked being Void using 'is_equal'.%NThis should be done using the '=' or%
+									% '/=' operators", once "code_analyzer.violation") end
+
+	empty_creation_procedure_violation_1: STRING_32
+		do Result := translation_in_context ("Class '", once "code_analyzer.violation") end
+
+	empty_creation_procedure_violation_2: STRING_32
+		do Result := translation_in_context ("' has an empty creation%Nprocedure. This should be considered%Nto be%
+									% removed. Note that all clients need to call 'create c' instead%Nof 'create c.", once "code_analyzer.violation") end
+
+	empty_creation_procedure_violation_3: STRING_32
+		do Result := translation_in_context ("' where 'c' is an object of the%Nclass '", once "code_analyzer.violation") end
+
+	empty_creation_procedure_violation_4: STRING_32
+		do Result := translation_in_context ("'.", once "code_analyzer.violation") end
+
+	object_creation_within_loop_violation_1: STRING_32
+		do Result := translation_in_context ("Creating objects within a loop may decrease performance.%NCheck%
+									% whether the object creation can be moved outside the loop.", once "code_analyzer.violation") end
+
+	missing_creation_proc_without_args_violation_1: STRING_32
+		do Result := translation_in_context ("Class '", once "code_analyzer.violation") end
+
+	missing_creation_proc_without_args_violation_2: STRING_32
+		do Result := translation_in_context ("' has at least one%N creation procedure with arguments but%
+									% none without arguments.%NNormally, one should be able to create class%
+									% with empty initializing data,%Nwhere the client can set or add the data later.", once "code_analyzer.violation") end
+
+	empty_loop_violation: STRING_32
+		do Result := translation_in_context ("A loop with an empty body should be removed.%NIn most cases%
+									% the loop never exits.", once "code_analyzer.violation") end
+
+	double_negation_violation: STRING_32
+		do Result := translation_in_context ("Double negations in boolean expressions can be safely removed%N%
+									% to increase the readability of the code.", once "code_analyzer.violation") end
+
+	inherit_from_any_violation_1: STRING_32
+		do Result := translation_in_context ("Class '", once "code_analyzer.violation") end
+
+	inherit_from_any_violation_2: STRING_32
+		do Result := translation_in_context ("' contains an explicit%Ninheritance with no adaptation from the ANY class%N%
+									% which doesn't need to be defined.", once "code_analyzer.violation") end
+
 	self_assignment_violation_1: STRING_32
 		do Result := translation_in_context ("Variable '", once "code_analyzer.violation") end
 
@@ -326,6 +450,78 @@ feature -- Rule Violations
 
 	unneeded_parentheses_violation_1: STRING_32
 		do Result := translation_in_context ("These parentheses are not needed and should be removed in order to maintain a consistent coding style.", once "code_analyzer.violation") end
+
+	class_naming_convention_violation_1: STRING_32
+		do Result := locale.translation ("Class '") end
+
+	class_naming_convention_violation_2: STRING_32
+		do Result := locale.translation ("' does not respect the Eiffel naming convention for classes (all uppercase, no trailing or two consecutive underscores).") end
+
+	feature_naming_convention_violation_1: STRING_32
+		do Result := locale.translation ("Feature '") end
+
+	feature_naming_convention_violation_2: STRING_32
+		do Result := locale.translation ("' does not respect the Eiffel naming convention for features (all lowercase, no trailing or two consecutive underscores).") end
+
+	local_naming_convention_violation_1: STRING_32
+		do Result := locale.translation ("Local variable '") end
+
+	local_naming_convention_violation_2: STRING_32
+		do Result := locale.translation ("' does not respect the Eiffel naming convention for local variables (all lowercase, begin with 'l_', no trailing or two consecutive underscores).") end
+
+	argument_naming_convention_violation_1: STRING_32
+		do Result := locale.translation ("Argument '") end
+
+	argument_naming_convention_violation_2: STRING_32
+		do Result := locale.translation ("' does not respect the Eiffel naming convention for arguments (all lowercase, begin with 'a_', no trailing or two consecutive underscores).") end
+
+	unnecessary_sign_operator_violation_1: STRING_32
+		do Result := locale.translation ("Expression ") end
+
+	unnecessary_sign_operator_violation_2: STRING_32
+		do Result := locale.translation (" starts with an unnecessary sign operator. All unary sign operators for numbers are unnecessary, except for a single minus sign. They should be removed or the instruction should be checked for errors.") end
+
+	empty_uncommented_routine_violation_1: STRING_32
+		do Result := locale.translation ("Routine '") end
+
+	empty_uncommented_routine_violation_2: STRING_32
+		do Result := locale.translation ("' has an empty body and no comment. The implementation might be missing.") end
+
+	unneeded_accessor_function_violation_1: STRING_32
+		do Result := locale.translation ("Feature '") end
+
+	unneeded_accessor_function_violation_2: STRING_32
+		do Result := locale.translation ("' seems to be a %"getter%" function of the '") end
+
+	unneeded_accessor_function_violation_3: STRING_32
+		do Result := locale.translation ("' secret attribute. This is not necessary in Eiffel, as it is not allowed to write to an attribute from outside a class. An exported attribute can be used instead.") end
+
+	mergeable_feature_clauses_violation_1: STRING_32
+		do Result := locale.translation ("Feature clause ") end
+
+	mergeable_feature_clauses_violation_2: STRING_32
+		do Result := locale.translation (" has the same comment and export status of a previous feature clause in its class. They could be possibly merged into one, or their comments could be made more specific.") end
+
+	empty_rescue_clause_violation_1: STRING_32
+		do Result := locale.translation ("Feature '") end
+
+	empty_rescue_clause_violation_2: STRING_32
+		do Result := locale.translation ("' has an empty 'rescue' clause. This should be avoided as it can lead to undesirable program behaviour.") end
+
+	inspect_no_when_with_else_violation: STRING_32
+		do Result := locale.translation ("This 'inspect' instruction has no 'when' branch. The 'else' branch will always be executed.") end
+
+	inspect_no_when_no_else_violation: STRING_32
+		do Result := locale.translation ("This 'inspect' instruction is empty.  An exception will always be raised, for there is no matching branch for any value of the inspected variable.") end
+
+	explicit_redundant_inheritance_violation_1: STRING_32
+			do Result := locale.translation ("Class '") end
+
+	explicit_redundant_inheritance_violation_2: STRING_32
+			do Result := locale.translation ("' has a multiple explicit inheritance link to class '") end
+
+	explicit_redundant_inheritance_violation_3: STRING_32
+			do Result := locale.translation ("', with no renaming, redefining or change of export status. This is redundant, and the duplicate links should be removed.") end
 
 	error: STRING_32
 		do Result := translation_in_context ("An error occurred when analyzing this class.", once "code_analyzer.violation") end

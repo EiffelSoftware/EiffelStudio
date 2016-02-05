@@ -21,6 +21,246 @@ feature -- General
 
 feature -- Rules
 
+	export_can_be_restricted_fix: STRING_32
+		do Result := translation_in_context ("Change feature export to {NONE}", once "code_analyzer") end
+
+	export_can_be_restricted_description: STRING_32
+		do Result := translation_in_context ("An exported feature that is used only in unqualified calls may be changed to secret.", once "code_analyzer") end
+
+	export_can_be_restricted_title: STRING_32
+		do Result := translation_in_context ("Feature export can be restricted", once "code_analyzer") end
+
+	generic_param_too_long_fix_1: STRING_32
+		do Result := translation_in_context ("Replace '", once "code_analyzer") end
+
+	generic_param_too_long_fix_2: STRING_32
+		do Result := translation_in_context ("' with ", once "code_analyzer") end
+
+	generic_param_too_long_description: STRING_32
+		do Result := translation_in_context ("Names of formal generic parameters in generic class declarations should%
+							% only have one character.", once "code_analyzer") end
+
+	generic_param_too_long_title: STRING_32
+		do Result := translation_in_context ("Formal generic parameter name too long", once "code_analyzer") end
+
+	mergeable_conditionals_fix: STRING_32
+		do Result := translation_in_context ("Merge conditionals", once "code_analyzer") end
+
+	mergeable_conditionals_title: STRING_32
+		do Result := translation_in_context ("Mergeable conditionals", once "code_analyzer") end
+
+	mergeable_conditionals_description: STRING_32
+		do Result := translation_in_context ("Successive conditional instructions with the same condition can be merged.", once "code_analyzer") end
+
+	local_used_for_result_fix: STRING_32
+		do Result := translation_in_context ("Replace the local with Result and remove it", once "code_analyzer") end
+
+	local_used_for_result_title: STRING_32
+		do Result := translation_in_context ("Local variable only used for Result", once "code_analyzer") end
+
+	local_used_for_result_description: STRING_32
+		do Result := translation_in_context ("In a function, a local variable that is never read and that is not assigned%
+							% to any variable but the Result can be omitted. Instead the Result can be directly used.", once "code_analyzer") end
+
+	real_nan_comparison_title: STRING_32
+		do Result := translation_in_context ("{REAL}.nan comparison", once "code_analyzer") end
+
+	real_nan_comparison_description: STRING_32
+		do Result := translation_in_context ("To check whether a REAL object is %"NaN%" (not a number) a comparison using%
+							% the '=' symbol does not yield the intended result. Instead one must use the query {REAL}.is_nan.", once "code_analyzer") end
+
+	real_nan_comparison_fix: STRING_32
+		do Result := translation_in_context ("Change to comparison with {REAL}.is_nan", once "code_analyzer") end
+
+	useless_contract_title: STRING_32
+		do Result := translation_in_context ("Useless contract with void-safety", once "code_analyzer") end
+
+	useless_contract_fix: STRING_32
+		do Result := translation_in_context ("Remove the useless contract", once "code_analyzer") end
+
+	useless_contract_description: STRING_32
+		do Result := translation_in_context ("If a certain variable is declared as attached, either explicitly or by%
+							% the project setting %"Are types attached by default?%" then a contract declaring this variable%
+							% not to be void is useless. This rule only applies if the project setting for Void safety is set%
+							% to %"Complete%" (?).", once "code_analyzer") end
+
+	object_test_succeeds_fix: STRING_32
+		do Result := translation_in_context ("Replace construct with True", once "code_analyzer") end
+
+	object_test_succeeds_title: STRING_32
+		do Result := translation_in_context ("Object or Non-Void test succeeds", once "code_analyzer") end
+
+	object_test_succeeds_description: STRING_32
+		do Result := translation_in_context ("For an attached variable object tests and non-Void tests always succeed.%N%
+							% Also, objects tests that check if an entity is attached to a supertype always suceed.%NThe%
+							% tests should be removed.", once "code_analyzer") end
+
+	object_test_failing_fix: STRING_32
+		do Result := translation_in_context ("Refactor if block", once "code_analyzer") end
+
+	object_test_failing_title: STRING_32
+		do Result := translation_in_context ("Object test fails", once "code_analyzer") end
+
+	object_test_failing_description: STRING_32
+		do Result := translation_in_context ("An object test will always fail if the type that the variable is tested%
+							% for does not conform to any type that conforms to the static type of the tested variable.%
+							% The whole if block will therefore never be executed and it is redundant.", once "code_analyzer") end
+
+	unreachable_code_title: STRING_32
+		do Result := translation_in_context ("Unreachable code", once "code_analyzer") end
+
+	unreachable_code_description: STRING_32
+		do Result := translation_in_context ("Code that will never be executed should be removed. It may be there%
+							% for debug purposes or due to a programmer's mistake. One example is a series of instructions%
+							% (in the same block) which follows an assertion that always evaluates to false.", once "code_analyzer") end
+
+	unreachable_code_fix: STRING_32
+		do Result := translation_in_context ("Remove unreachable code", once "code_analyzer") end
+
+	loop_invariant_comp_within_loop_title: STRING_32
+		do Result := translation_in_context ("Loop invariant computation within loop", once "code_analyzer") end
+
+	loop_invariant_comp_within_loop_description: STRING_32
+		do Result := translation_in_context ("A loop invariant computation that lies within a loop should be moved outside the loop.", once "code_analyzer") end
+
+	loop_invariant_comp_within_loop_fix: STRING_32
+		do Result := translation_in_context ("Move computation outside of loop", once "code_analyzer") end
+
+	attribute_can_be_constant_title: STRING_32
+		do Result := translation_in_context ("Attribute can be made constant", once "code_analyzer") end
+
+	attribute_can_be_constant_description: STRING_32
+		do Result := translation_in_context ("An attribute that is assigned the same value by every creation%
+							% procedure but not assigned by any other routine can be made constant.", once "code_analyzer") end
+
+	attribute_can_be_constant_fix: STRING_32
+		do Result := translation_in_context ("Make attribute constant", once "code_analyzer") end
+
+	attribute_never_assigned_title: STRING_32
+		do Result := translation_in_context ("Attribute is never assigned", once "code_analyzer") end
+
+	attribute_never_assigned_description: STRING_32
+		do Result := translation_in_context ("An attribute that never gets assigned will always keep its default value.", once "code_analyzer") end
+
+	comparison_of_object_refs_title: STRING_32
+		do Result := translation_in_context ("Comparison of object references", once "code_analyzer") end
+
+	comparison_of_object_refs_description: STRING_32
+		do Result := translation_in_context ("The '=' operator always compares two object references by checking%
+							% whether they point to the same object in memory. In the majority of cases one wants%
+							% to compare the object states, which can be done by the '~' operator.", once "code_analyzer") end
+
+	comparison_of_object_refs_fix: STRING_32
+		do Result := translation_in_context ("Replace with the ~ operator", once "code_analyzer") end
+
+	void_check_using_is_equal_title: STRING_32
+		do Result := translation_in_context ("Void check using 'is_equal'", once "code_analyzer") end
+
+	void_check_using_is_equal_description: STRING_32
+		do Result := translation_in_context ("Checking a local variable or argument to be void should not%
+							% be done by calling 'is_equal' but by the '=' or '/=' operators.", once "code_analyzer") end
+
+	void_check_using_is_equal_fix: STRING_32
+		do Result := translation_in_context ("Replace with %" = Void %"", once "code_analyzer") end
+
+	empty_creation_procedure_title: STRING_32
+		do Result := translation_in_context ("Empty creation procedure", once "code_analyzer") end
+
+	empty_creation_procedure_description: STRING_32
+		do Result := translation_in_context ("If there exists only one creation procedure in a class and%
+							% this procedure takes no arguments and has an empty body then the creation%
+							% procedure should be considered to be removed. Note that in this case all%
+							% the clients of the class need to call 'create c' instead of 'create c.make',%
+							% where 'c' is an object of the relevant class and 'make' is its creation procedure.", once "code_analyzer") end
+
+	empty_creation_procedure_fix: STRING_32
+		do Result := translation_in_context ("Remove empty creation procedure", once "code_analyzer") end
+
+	object_creation_within_loop_title: STRING_32
+		do Result := translation_in_context ("Object creation within loop", once "code_analyzer") end
+
+	object_creation_within_loop_description: STRING_32
+		do Result := translation_in_context ("Creating objects within a loop may decrease performance. On such%
+							% an occurrence it should be checked whether the object creation can be moved outside%
+							% the loop.", once "code_analyzer") end
+
+	move_instruction_within_loop_fix: STRING_32
+		do Result := translation_in_context ("Move instruction outside of the loop", once "code_analyzer") end
+
+	comment_not_well_phrased_title: STRING_32
+		do Result := translation_in_context ("Comment not well phrased", once "code_analyzer") end
+
+	comment_not_well_phrased_description: STRING_32
+		do Result := translation_in_context ("The comment does not end with a period or question mark or isn't capitalized.%
+							% This indicates that the comment is not well phrased. A feature comment should always%
+							% consist of whole sentences.", once "code_analyzer") end
+
+	missing_creation_proc_without_args_title: STRING_32
+		do Result := translation_in_context ("Missing creation procedure with no arguments", once "code_analyzer") end
+
+	missing_creation_proc_without_args_description: STRING_32
+		do Result := translation_in_context ("In most of the cases a class that has at least one creation procedure%
+							% with arguments should also have a creation procedure with no arguments. Arguments of%
+							% creation procedures most often are some initializing data or options. Normally, one%
+							% should be able to create class with empty initializing data, where the client can set%
+							% or add the data later. For options, an argumentless creation procedure may assume%
+							% default values.", once "code_analyzer") end
+
+	empty_loop_title: STRING_32
+		do Result := translation_in_context ("Empty loop", once "code_analyzer") end
+
+	empty_loop_description: STRING_32
+		do Result := translation_in_context ("A loop with an empty body should be removed.%
+							% In most cases the loop never exits.", once "code_analyzer") end
+
+	empty_loop_fix: STRING_32
+		do Result := translation_in_context ("Remove the empty loop", once "code_analyzer") end
+
+	double_negation_title: STRING_32
+		do Result := translation_in_context ("Double negation", once "code_analyzer") end
+
+	double_negation_description: STRING_32
+		do Result := translation_in_context ("A double negation appearing in an expression can be safely removed.%
+							% It is also possible that the developer has intended to put a single negation and the%
+							% instruction is erroneous.", once "code_analyzer") end
+
+	double_negation_fix: STRING_32
+		do Result := translation_in_context ("Remove double negation", once "code_analyzer") end
+
+	undesirable_comment_content_title: STRING_32
+		do Result := translation_in_context ("Undesirable comment content", once "code_analyzer") end
+
+	undesirable_comment_content_description: STRING_32
+		do Result := translation_in_context ("Under some circumstances it might be desirable to keep a certain%
+							% language level. Imaginable cases include source code that will be visible to people%
+							% outside the company or that will even be released publicly.", once "code_analyzer") end
+
+	undesirable_comment_content_fix: STRING_32
+		do Result := translation_in_context ("Replace offending words", once "code_analyzer") end
+
+	case_sensitivity_option: STRING_32
+		do Result := translation_in_context ("Case Sensitivity", once "code_analyezer") end
+
+	case_sensitivity_option_description: STRING_32
+		do Result := translation_in_context ("Sets the case sensitivity of all the words in the word list.", once "code_analyzer") end
+
+	bad_words_list_option: STRING_32
+		do Result := translation_in_context ("List of undesirable words in comments", once "code_analyzer") end
+
+	bad_words_list_option_description: STRING_32
+		do Result := translation_in_context ("List of words to be checked for. Use a semicolon separated string of%
+							% words, e.g.: word1;word2;word3", once "code_analyzer") end
+
+	inherit_from_any_title: STRING_32
+		do Result := translation_in_context ("Explicit inheritance from ANY", once "code_analyzer") end
+
+	inherit_from_any_description: STRING_32
+		do Result := translation_in_context ("Inheritance with no adaptations from the ANY class need not explicitely%
+						 	% be defined. This should be removed.", once "code_analyzer") end
+
+	inherit_from_any_fix: STRING_32
+		do Result := translation_in_context ("Remove unnecessary inheritance", once "code_analyzer") end
+
 	self_assignment_title: STRING_32
 		do Result := translation_in_context ("Self-assignment", once "code_analyzer") end
 
@@ -77,6 +317,9 @@ feature -- Rules
 
 	feature_never_called_fix: STRING_32
 		do Result := translation_in_context ("Remove feature '", once "code_analyzer") end
+
+	attribute_never_called_fix: STRING_32
+		do Result := translation_in_context ("Remove attribute '", once "code_analyzer") end
 
 	cq_separation_title: STRING_32
 		do Result := translation_in_context ("No command-query separation (possible function side effect)", once "code_analyzer") end
@@ -395,6 +638,91 @@ feature -- Rules
 		do Result := translation_in_context ("Parentheses that are not needed should be %
 			%removed. This helps enforcing a consistent coding style.", once "code_analyzer") end
 
+
+	class_naming_convention_title: STRING_32
+		do Result := locale.translation ("Class naming convention violated") end
+
+	class_naming_convention_description: STRING_32
+		do Result := locale.translation ("Class names should respect the Eiffel naming %
+			%convention for classes (all uppercase, no trailing or two consecutive underscores).") end
+
+	feature_naming_convention_title: STRING_32
+		do Result := locale.translation ("Feature naming convention violated") end
+
+	feature_naming_convention_description: STRING_32
+		do Result := locale.translation ("Feature names should respect the Eiffel naming %
+		%convention for features (all lowercase, no trailing or two consecutive underscores).") end
+
+	variable_naming_convention_title: STRING_32
+		do Result := locale.translation ("Local variable naming convention violated") end
+
+	variable_naming_convention_description: STRING_32
+		do Result := locale.translation ("Local variable names should respect the Eiffel naming %
+			%convention for local variables (all lowercase begin with 'l_', no trailing or %
+			% two consecutive underscores).") end
+
+	enforce_local_prefix: STRING_32
+		do Result := locale.translation ("Enforce local prefix %'l_%'") end
+
+	argument_naming_convention_title: STRING_32
+		do Result := locale.translation ("Argument naming convention violated") end
+
+	argument_naming_convention_description: STRING_32
+		do Result := locale.translation ("Argument names should respect the Eiffel naming %
+			%convention for arguments (all lowercase begin with 'a_', no trailing or %
+			%two consecutive underscores).") end
+
+	enforce_argument_prefix: STRING_32
+		do Result := locale.translation ("Enforce argument prefix %'a_%'") end
+
+	unnecessary_sign_operator_title: STRING_32
+		do Result := locale.translation ("Unnecessary sign operator") end
+
+	unnecessary_sign_operator_description: STRING_32
+		do Result := locale.translation ("All unary sign operators for numbers are unnecessary, except for a single minus sign. %
+			%They should be removed or the instruction should be checked for errors.") end
+
+	empty_uncommented_routine_title: STRING_32
+		do Result := locale.translation ("Empty and uncommented routine") end
+
+	empty_uncommented_routine_description: STRING_32
+		do Result := locale.translation ("A routine which does not contain any instructions and has no comment too %
+			%indicates that the implementation might be missing.") end
+
+	unneeded_accessor_function_title: STRING_32
+		do Result := locale.translation ("Unneeded accessor function") end
+
+	unneeded_accessor_function_description: STRING_32
+		do Result := locale.translation ("In Eiffel, it is not necessary to use a secret attribute together with an exported accessor (%"getter%") function. %
+			%Since it is not allowed to write to an attribute from outside a class, an exported attribute can be used instead %
+			%and the accessor may be removed.") end
+
+	mergeable_feature_clauses_title: STRING_32
+		do Result := locale.translation ("Mergeable 'feature' clauses") end
+
+	mergeable_feature_clauses_description: STRING_32
+		do Result := locale.translation ("Feature clauses with the same export status and comment could be possibly merged into one, %
+			%or their comments could be made more specific.") end
+
+	empty_rescue_clause_title: STRING_32
+		do Result := locale.translation ("Empty 'rescue' clause") end
+
+	empty_rescue_clause_description: STRING_32
+		do Result := locale.translation ("An empty rescue clause should be avoided and leads to undesirable program behaviour.") end
+
+	inspect_no_when_title: STRING_32
+		do Result := locale.translation ("Inspect instruction has no 'when' branch") end
+
+	inspect_no_when_description: STRING_32
+		do Result := locale.translation ("An Inspect instruction that has no 'when' branch must be avoided. If there is an 'else' branch then these instructions will always be executed: thus the Multi-branch instruction is not needed. If there is no branch at all then an exception is always raised, for there is no matching branch for any value of the inspected variable.") end
+
+	explicit_redundant_inheritance_title: STRING_32
+		do Result := locale.translation ("Explicit redundant inheritance") end
+
+	explicit_redundant_inheritance_description: STRING_32
+		do Result := locale.translation ("Explicitly duplicated inheritance links are redundant if there is no renaming, redefining, or change of export status. One should be removed.") end
+
+
 feature -- Preferences
 
 	preference_translation_namespace: STRING = "code_analysis.preference"
@@ -459,6 +787,9 @@ feature -- GUI
 
 	rule_id_column: STRING_32
 		do Result := translation_in_context ("Rule ID", once "code_analyzer.column") end
+
+	fixes_column: STRING_32
+		do Result := translation_in_context ("Fix", once "code_analyzer.column") end
 
 	severity_score_column: STRING_32
 		do Result := translation_in_context ("Severity Score", once "code_analyzer.column") end

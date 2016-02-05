@@ -59,8 +59,10 @@ feature -- Access
 
 
 	new_filter (a_name: STRING): TUPLE [name: STRING; filter: detachable REPOSITORY_LOG_FILTER]
+		local
+			f: detachable REPOSITORY_LOG_FILTER
 		do
-			Result := [a_name, Void]
+			Result := [a_name, f]
 		end
 
 	add_filter (a_key: STRING; a_name: STRING)

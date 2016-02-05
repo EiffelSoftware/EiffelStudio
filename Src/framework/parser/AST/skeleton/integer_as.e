@@ -313,6 +313,14 @@ feature -- Status report
 			definition: Result = (types & natural_mask (s) /= 0)
 		end
 
+	is_zero: BOOLEAN
+			-- Is constant equal to 0?
+		do
+			Result := value = 0
+		ensure
+			definition: Result = (value = 0)
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
@@ -702,7 +710,7 @@ invariant
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

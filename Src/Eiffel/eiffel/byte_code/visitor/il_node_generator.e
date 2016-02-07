@@ -2707,7 +2707,11 @@ feature {NONE} -- Visitors
 			l_expr_type := context.real_type (a_node.expr.type)
 			l_type := context.real_type (a_node.type)
 			if not l_type.same_as (l_expr_type) then
-				il_generator.generate_check_cast (l_expr_type, l_type)
+					-- Even in non-verifiable code we are required to do a conversion.
+					-- See eweasel test#dotnet118 where passing a manifest integer `1'
+					-- (of type INTEGER_32) to a routine expecting a NATURAL_64 would
+					-- cause the .NET runtime to fail.
+				il_generator.convert_to (l_type)
 			end
 			is_object_load_required := False
 		end
@@ -4927,7 +4931,7 @@ feature {NONE} -- Convenience
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

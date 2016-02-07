@@ -1573,6 +1573,7 @@ feature -- Class info
 				-- To generate those routines, we first check if they are
 				-- redefined in the current class. If they are, we keep the
 				-- definition given by the user, otherwise we put the Eiffel one.
+				-- We only do the later if the .NET one was not frozen to begin with.
 
 				-- Gets current feature table.
 			l_feat_tbl := class_type.associated_class.feature_table
@@ -1582,7 +1583,7 @@ feature -- Class info
 				-- Process `equals'
 			if l_select_tbl.has_key (equals_rout_id) then
 				l_feat := l_select_tbl.found_item
-				if l_feat.written_in /= l_class_id then
+				if l_feat.written_in /= l_class_id and not l_feat.is_frozen then
 					define_equals_routine (class_type)
 				end
 			else
@@ -1592,7 +1593,7 @@ feature -- Class info
 				-- Process `finalize'
 			if l_select_tbl.has_key (finalize_rout_id) then
 				l_feat := l_select_tbl.found_item
-				if l_feat.written_in /= l_class_id then
+				if l_feat.written_in /= l_class_id and not l_feat.is_frozen then
 					define_finalize_routine (class_type)
 				end
 			else
@@ -1602,7 +1603,7 @@ feature -- Class info
 				-- Process `get_hash_code'
 			if l_select_tbl.has_key (get_hash_code_rout_id) then
 				l_feat := l_select_tbl.found_item
-				if l_feat.written_in /= l_class_id then
+				if l_feat.written_in /= l_class_id and not l_feat.is_frozen then
 					define_get_hash_code_routine (class_type)
 				end
 			else
@@ -1612,7 +1613,7 @@ feature -- Class info
 				-- Process `to_string'
 			if l_select_tbl.has_key (to_string_rout_id) then
 				l_feat := l_select_tbl.found_item
-				if l_feat.written_in /= l_class_id then
+				if l_feat.written_in /= l_class_id and not l_feat.is_frozen then
 					define_to_string_routine (class_type)
 				end
 			else

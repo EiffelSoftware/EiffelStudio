@@ -1,0 +1,21 @@
+test_name	 benchmark-loop-across-code-motion
+test_description Benchmark for across loop invariant code motion.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w 1
+execute_result	ok
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f 1
+execute_result	ok
+
+test_end

@@ -1,0 +1,16 @@
+package cypress
+
+project
+	cypress_consumer = "consumer-safe.ecf"
+	apis = "consumer/apis/apis.ecf"
+
+note
+	title: Cypress the OAuth consumer library
+	description: OAuth consumer library
+	collection: EWF
+	tags: authentication,api,oauth,consumer,web
+	copyright: 2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+
+end

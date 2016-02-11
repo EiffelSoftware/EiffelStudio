@@ -2,18 +2,20 @@ package hal
 
 project
 	hal = "library/hal-safe.ecf"
+	hal = "library/hal.ecf"
 
 note
-	title: HAL 
+	title: HAL
 	description: "[
-			Eiffel HAL is a library to work with  http://stateless.co/hal_specification.html#json  
-			HAL is used for exposing RESTful hypermedia APIs. 
-			Right now the current implementation only support JSON_HAL.
-		]"
+Eiffel HAL is a library to work with  http://stateless.co/hal_specification.html#json
+HAL is used for exposing RESTful hypermedia APIs.
+Right now the current implementation only support JSON_HAL.
+				]"
 	tags: api, rest, hypermedia, media-type
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
 	link[license]: http://www.eiffel.com/licensing/forum.txt
 	link[source]: "svn" https://svn.eiffel.com/eiffelstudio/trunk/Src/contrib/library/web/communication/mediatype/hal/
 	link[doc]: "Documentation" http://tools.ietf.org/html/draft-kelly-json-hal-07
-	link[Api examples]: "Api examples" https://github.com/mikekelly/hal_specification/wiki/APIs 
+	link[examples]: "Api examples" https://github.com/mikekelly/hal_specification/wiki/APIs
+
 end

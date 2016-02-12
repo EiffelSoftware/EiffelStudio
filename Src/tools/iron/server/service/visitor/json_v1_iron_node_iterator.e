@@ -162,7 +162,7 @@ feature -- Visit
 	visit_package (p: IRON_NODE_PACKAGE)
 		local
 			js: JSON_STRING
-			j_object: JSON_OBJECT
+			j_object, j_notes: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
 			create j_object.make
@@ -189,6 +189,25 @@ feature -- Visit
 				end
 				j_object.put (j_array, "tags")
 			end
+			if attached p.items as l_notes then
+				create j_notes.make_with_capacity (l_notes.count)
+				across
+					l_notes as ic_notes
+				loop
+					if
+						attached ic_notes.item as l_note_text and then
+						not (
+							ic_notes.key.is_case_insensitive_equal ("title")
+							or ic_notes.key.is_case_insensitive_equal ("description")
+						)
+					then
+						j_notes.put_string (l_note_text, ic_notes.key)
+					end
+				end
+				if not j_notes.is_empty then
+					j_object.put (j_notes, "notes")
+				end
+			end
 			last_json_value := j_object
 		end
 
@@ -196,7 +215,7 @@ feature -- Visit
 		local
 			js: JSON_STRING
 --			l_size: INTEGER
-			j_object: JSON_OBJECT
+			j_object, j_notes: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
 			check same_version: attached version as v implies v ~ p.version end
@@ -258,6 +277,23 @@ feature -- Visit
 				end
 				j_object.put (j_array, "paths")
 			end
+			if attached p.notes as l_notes then
+				create j_notes.make_with_capacity (l_notes.count)
+				across
+					l_notes as ic_notes
+				loop
+					if
+						attached ic_notes.item as l_note_text and then
+						not (
+							ic_notes.key.is_case_insensitive_equal ("title")
+							or ic_notes.key.is_case_insensitive_equal ("description")
+						)
+					then
+						j_notes.put_string (l_note_text, ic_notes.key)
+					end
+				end
+				j_object.put (j_notes, "notes")
+			end
 			last_json_value := j_object
 		end
 
@@ -313,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

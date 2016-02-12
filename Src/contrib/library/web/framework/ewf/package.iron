@@ -46,15 +46,16 @@ project
 	wsf_html = "wsf_html/wsf_html.ecf"
 
 note
-	title: Eiffel Web Framework
+	title: EiffelWeb framework
 	description: "[
-			Eiffel Web framework.
+			EiffelWeb framework.
 			Include:
 				- wsf and ewsgi: core of the Eiffel Web Framework, used to build web server application.
 				- EWSGI connectors and their WSF integrations.
 				- Various wsf extensions (extension, session, policy driven, ..)
 				- text encoder (html, percent encoding, ...)
 				- wsf html: to generate and handle html widgets such as web forms.
+			]"
 	collection: EWF
 	tags: ewf,server,httpd,request,connector,policy,session,widget,form
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others

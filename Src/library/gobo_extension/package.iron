@@ -1,4 +1,4 @@
-package ise_gobo_extension
+package gobo_extension
 
 project
 	gobo_extension = "gobo_extension-safe.ecf"

@@ -204,11 +204,19 @@ feature -- Execute
 				loop
 					p := ic.item.absolute_path.canonical_path
 
-					if attached library_target_name (p) as l_lib_name then
+					if attached library_target_information (p) as l_lib_info then
 						uri_item := uri_from_path (p)
 						if uri_item.starts_with (uri_root) then
 							uri_item.remove_head (uri_root.count + 1)
-							pif.add_project (l_lib_name, uri_item)
+							pif.add_project (l_lib_info.name, uri_item)
+							if attached l_lib_info.description as desc and then not desc.is_whitespace then
+								if
+									pif.description = Void
+									or else (attached pif.description as pif_desc and then pif_desc.count < desc.count)
+								then
+									pif.set_description (desc)
+								end
+							end
 						else
 							has_error := True
 						end
@@ -244,6 +252,15 @@ feature -- Execute
 	library_target_name (a_ecf: PATH): detachable READABLE_STRING_32
 		require
 			a_ecf.name.ends_with_general (".ecf")
+		do
+			if attached library_target_information (a_ecf) as tu then
+				Result := tu.name
+			end
+		end
+
+	library_target_information (a_ecf: PATH): detachable TUPLE [name: READABLE_STRING_32; description: detachable READABLE_STRING_32]
+		require
+			a_ecf.name.ends_with_general (".ecf")
 		local
 			cfg: CONF_LOAD
 			cfg_factory: CONF_PARSE_FACTORY
@@ -254,13 +271,13 @@ feature -- Execute
 			cfg.retrieve_configuration (a_ecf.name)
 			if attached cfg.last_system as sys then
 				if attached sys.library_target as l_library_target then
-					Result := l_library_target.name
+					Result := [l_library_target.name, l_library_target.description]
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

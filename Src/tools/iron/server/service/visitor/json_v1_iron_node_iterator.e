@@ -162,7 +162,7 @@ feature -- Visit
 	visit_package (p: IRON_NODE_PACKAGE)
 		local
 			js: JSON_STRING
-			j_object, j_notes: JSON_OBJECT
+			j_object, j_notes, j_links: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
 			create j_object.make
@@ -194,19 +194,21 @@ feature -- Visit
 				across
 					l_notes as ic_notes
 				loop
-					if
-						attached ic_notes.item as l_note_text and then
-						not (
-							ic_notes.key.is_case_insensitive_equal ("title")
-							or ic_notes.key.is_case_insensitive_equal ("description")
-						)
-					then
+					if attached ic_notes.item as l_note_text then
 						j_notes.put_string (l_note_text, ic_notes.key)
 					end
 				end
-				if not j_notes.is_empty then
-					j_object.put (j_notes, "notes")
+				j_object.put (j_notes, "notes")
+			end
+			if attached p.links as l_links then
+				create j_links.make_with_capacity (l_links.count)
+				across
+					l_links as ic_links
+				loop
+						-- Ignore the link title for now.
+					j_links.put_string (ic_links.item.url, ic_links.key)
 				end
+				j_object.put (j_links, "links")
 			end
 			last_json_value := j_object
 		end
@@ -215,7 +217,7 @@ feature -- Visit
 		local
 			js: JSON_STRING
 --			l_size: INTEGER
-			j_object, j_notes: JSON_OBJECT
+			j_object, j_notes, j_links: JSON_OBJECT
 			j_array: JSON_ARRAY
 		do
 			check same_version: attached version as v implies v ~ p.version end
@@ -282,17 +284,21 @@ feature -- Visit
 				across
 					l_notes as ic_notes
 				loop
-					if
-						attached ic_notes.item as l_note_text and then
-						not (
-							ic_notes.key.is_case_insensitive_equal ("title")
-							or ic_notes.key.is_case_insensitive_equal ("description")
-						)
-					then
+					if attached ic_notes.item as l_note_text then
 						j_notes.put_string (l_note_text, ic_notes.key)
 					end
 				end
 				j_object.put (j_notes, "notes")
+			end
+			if attached p.links as l_links then
+				create j_links.make_with_capacity (l_links.count)
+				across
+					l_links as ic_links
+				loop
+						-- Ignore the link title for now.
+					j_links.put_string (ic_links.item.url, ic_links.key)
+				end
+				j_object.put (j_links, "links")
 			end
 			last_json_value := j_object
 		end

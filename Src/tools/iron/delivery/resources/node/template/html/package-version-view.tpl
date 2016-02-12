@@ -7,11 +7,10 @@
 </a>
   </div>
   <div class="panel-body">
-<p class="description">
-{unless isempty="$package.description" }{$package.description/}{/unless}
-<div class="well well-sm">
+{unless isempty="$package.description" }<pre class="description">{$package.description/}</pre>{/unless}
 
-{unless isempty="$package.tags" }
+<div class="well well-sm">
+{unless isempty="$package.tags"}
 <p><strong>tags:</strong>
 {foreach item="tag" from="$package.tags" }<span class="badge"><a href="/repository/{$package.version.value/}/package/?query=tag%3A{$tag/}">{$tag/}</a></span> {/foreach}</p>
 {/unless}

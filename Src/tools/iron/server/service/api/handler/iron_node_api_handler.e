@@ -496,6 +496,11 @@ feature -- Package form
 								ic.item.is_valid_as_string_8
 							then
 								p.add_link (k.substring (6, k.count - 1), create {IRON_NODE_LINK}.make (ic.item.to_string_8, Void))
+							elseif
+								k.starts_with ("links[") and then
+								ic.item.is_valid_as_string_8
+							then
+								p.add_link (k.substring (7, k.count - 1), create {IRON_NODE_LINK}.make (ic.item.to_string_8, Void))
 							else
 								p.put (ic.item, k)
 							end
@@ -582,7 +587,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

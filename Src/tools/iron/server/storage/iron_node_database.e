@@ -274,12 +274,14 @@ feature {NONE} -- Version Package: Sorter
 
 	version_package_is_less_than_by_downloads (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
-			Result := version_package_is_less_than_by_value (p1.download_count, p2.download_count, p1, p2)
+				-- Users expect to see packages with more download first.
+			Result := version_package_is_less_than_by_value (p2.download_count, p1.download_count, p1, p2)
 		end
 
 	version_package_is_less_than_by_last_modified (p1, p2: IRON_NODE_VERSION_PACKAGE): BOOLEAN
 		do
-			Result := version_package_is_less_than_by_value (p1.last_modified, p2.last_modified, p1, p2)
+				-- Users expect to see by default, latest changes first.
+			Result := version_package_is_less_than_by_value (p2.last_modified, p1.last_modified, p1, p2)
 		end
 
 feature -- Version Package: Criteria

@@ -16,7 +16,10 @@
 		<exec executable="finish_freezing -library" />
 	</target>
 	
-	<target name="clean" >
+	<target name="clean" >  
+		<echo message="- Clean [C_library/libpng]" />
+		<delete directory="spec/${ISE_PLATFORM}" unless="${is_windows}"/>
+		<delete directory="spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" if="${is_windows}" />
 	</target>
 
 	<target name="clobber" depend="clean" />

@@ -69,9 +69,9 @@ feature -- Visit
 				s.append (p.id)
 				s.append (")</span>")
 				if attached p.description as l_description then
-					s.append ("<div class=%"description%">")
+					s.append ("<pre class=%"description%">")
 					s.append (l_description)
-					s.append ("</div>")
+					s.append ("</pre>")
 				end
 				if attached p.tags as l_tags and then not l_tags.is_empty then
 					s.append ("<div class=%"tags%">")
@@ -209,9 +209,9 @@ feature -- Visit
 					s.append (p.id)
 					s.append (")</span>")
 					if attached p.description as l_description then
-						s.append ("<div class=%"description%">")
+						s.append ("<pre class=%"description%">")
 						s.append (l_description)
-						s.append ("</div>")
+						s.append ("</pre>")
 					end
 					if attached p.tags as l_tags and then not l_tags.is_empty then
 						s.append ("<div class=%"tags%">")
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

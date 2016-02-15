@@ -6,7 +6,7 @@ import shutil;
 from subprocess import call
 
 def debug():
-	return False;
+	return True;
 
 def trim(s):
 	return s.strip()

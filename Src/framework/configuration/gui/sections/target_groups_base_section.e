@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchors
 
-	add_dialog_type: CREATE_GROUP_DIALOG
+	add_dialog_type: ADD_GROUP_DIALOG
 			-- Type of the dialog to create a new item.
 		deferred
 		end

@@ -6,10 +6,10 @@ note
 	revision: "$Revision$"
 
 class
-	CREATE_LIBRARY_DIALOG
+	ADD_LIBRARY_DIALOG
 
 inherit
-	CREATE_GROUP_DIALOG
+	ADD_GROUP_DIALOG
 		redefine
 			initialize,
 			last_group
@@ -334,7 +334,9 @@ feature {NONE} -- Update filter
 			l_style := pointer_style
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 
-			libraries_box.set_filter_text (filter_text)
+			-- FIXME: filter libs!
+--			libraries_box.set_filter_text (filter_text)
+			libraries_box.set_configuration_libraries (all_libraries (filter_text))
 			libraries_box.update_grid
 
 			set_pointer_style (l_style)
@@ -389,7 +391,7 @@ feature {NONE} -- Callback
 	on_iron_packages_changed (a_package: detachable IRON_PACKAGE)
 			-- Called when the iron packages are changed from the IRON_PACKAGE_COLLECTION_BOX.
 		do
-			reset_iron_configuration_libraries_cache
+			reset_iron_configuration_libraries (target)
 			if not repopulate_requested then
 				repopulate_requested := True
 			end
@@ -402,101 +404,9 @@ feature {NONE} -- Libraries cache.
 
 	update_index
 		do
-			cache_data (Void, iron_configuration_libraries_cache_name (target.setting_msil_generation))
-			cache_data (Void, configuration_libraries_cache_name (target.setting_msil_generation))
+			reset_iron_configuration_libraries (target)
+			reset_configuration_libraries (target)
 			populate_libraries
-		end
-
-	reset_iron_configuration_libraries_cache
-		do
-			cache_data (Void, iron_configuration_libraries_cache_name (target.setting_msil_generation))
-		end
-
-	iron_configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
-		do
-			if a_is_dotnet then
-				Result := "iron_configuration_libraries_dotnet.cache"
-			else
-				Result := "iron_configuration_libraries.cache"
-			end
-		end
-
-	configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
-		do
-			if a_is_dotnet then
-				Result := "configuration_libraries_dotnet.cache"
-			else
-				Result := "configuration_libraries.cache"
-			end
-		end
-
-	cached_data (a_name: READABLE_STRING_GENERAL): detachable ANY
-		local
-			p: PATH
-			f: RAW_FILE
-			retried: BOOLEAN
-			sed: SED_STORABLE_FACILITIES
-			sed_rw: SED_MEDIUM_READER_WRITER
-			l_deserializer: detachable SED_RECOVERABLE_DESERIALIZER
-		do
-			if not retried then
-				p := eiffel_layout.temporary_path.extended (a_name)
-				create f.make_with_path (p)
-				if f.exists and then f.is_readable then
-					f.open_read
-					create sed
-					create sed_rw.make_for_reading (f)
-						--| Read only if it is a "recoverable" storable file.
-						--| and thus, avoid trying to load old data stored
-						--| using basic_store ...
-					sed_rw.read_header
-					if sed_rw.read_natural_32 = sed.eiffel_recoverable_store then
-						create l_deserializer.make (sed_rw)
-						l_deserializer.decode (False)
-						if not l_deserializer.has_error then
-							Result := l_deserializer.last_decoded_object
-							sed_rw.read_footer
-						end
-					end
-					f.close
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	cache_data (a_data: ANY; a_name: READABLE_STRING_GENERAL)
-		local
-			p: PATH
-			f: RAW_FILE
-			retried: BOOLEAN
-			sed: SED_STORABLE_FACILITIES
-			sed_rw: SED_MEDIUM_READER_WRITER
-		do
-			if not retried then
-				p := eiffel_layout.temporary_path.extended (a_name)
-				create f.make_with_path (p)
-				if a_data /= Void then
-					if f.exists and then not f.is_writable then
-							-- Ignored but should not occured.
-						check False end
-					else
-						f.create_read_write
-						create sed
-						create sed_rw.make_for_writing (f)
-						sed.store (a_data, sed_rw)
-						f.close
-					end
-				else
-					if f.exists then
-						f.delete
-					end
-				end
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 feature {NONE} -- Configuration settings for libraries
@@ -549,153 +459,23 @@ feature {NONE} -- Configuration settings for libraries
 			dlg.show_modal_to_window (Current)
 		end
 
-feature {NONE} -- Access		
+feature {NONE} -- Access
 
-	libraries: SEARCH_TABLE [STRING_32]
-			-- A set of libraries to display in the dialog
-		require
-			is_eiffel_layout_defined: is_eiffel_layout_defined
-		local
-			l_dirs: like lookup_directories
-			l_libraries: STRING_TABLE [BOOLEAN]
-			l_dir: DIRECTORY
-			l_path: IMMUTABLE_STRING_32
-			l_lib_path: STRING_32
-			l_location: CONF_DIRECTORY_LOCATION
-		do
-			l_dirs := lookup_directories
-			create Result.make (l_dirs.count)
-			across l_dirs as ic loop
-				create l_location.make (ic.item.path, target)
-				l_path := l_location.evaluated_path.name
-				create l_dir.make (l_path)
-				if l_dir.is_readable then
-					create l_libraries.make (10)
-					add_configs_in_directory (l_dir, ic.item.depth, l_libraries)
-					across l_libraries as ic_libs loop
-							-- If the config file was using some environment variable, we just
-							-- replace the computed path with what was specified in the config file
-							-- for the current entry of `ic'.
-						l_lib_path := ic_libs.key.as_string_32.twin
-						l_lib_path.replace_substring (ic.item.path, 1, l_path.count)
-						Result.put (l_lib_path)
-					end
-				end
-			end
-		ensure
-			result_attached: Result /= Void
+	libraries_manager: ES_LIBRARY_MANAGER
+		once
+			create Result.make (2)
+			Result.register (create {ES_LIBRARY_DELIVERY_PROVIDER})
+			Result.register (create {ES_LIBRARY_IRON_PROVIDER})
 		end
 
-	conf_system_list_from (libs: ITERABLE [READABLE_STRING_32]; nb: INTEGER): STRING_TABLE [CONF_SYSTEM_VIEW]
-			-- A set of libraries configurations from `lst' path name.
-		require
-			is_eiffel_layout_defined: is_eiffel_layout_defined
-		local
-			l_location: CONF_DIRECTORY_LOCATION
-			l_cfg_data: CONF_SYSTEM_VIEW
+	reset_configuration_libraries (a_target: CONF_TARGET)
 		do
-			create Result.make (nb)
-
-			across libs as ic loop
-				create l_location.make (ic.item, target)
-
-				create l_cfg_data.make (l_location)
-				if l_cfg_data.has_library_target then
-					Result.force (l_cfg_data, ic.item)
-				end
-			end
-		ensure
-			result_attached: attached Result
+			libraries_manager.reset_provider ({ES_LIBRARY_DELIVERY_PROVIDER}.identifier, a_target)
 		end
 
-	configuration_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
-			-- A set of libraries configurations to display in the dialog
-		require
-			is_eiffel_layout_defined: is_eiffel_layout_defined
-		local
-			l_libs: like libraries
+	reset_iron_configuration_libraries (a_target: CONF_TARGET)
 		do
-			if attached {like configuration_libraries} cached_data (configuration_libraries_cache_name (target.setting_msil_generation)) as cfg_libs then
-				Result := cfg_libs
-			else
-				l_libs := libraries
-				Result := conf_system_list_from (l_libs, l_libs.count)
-				cache_data (Result, configuration_libraries_cache_name (target.setting_msil_generation))
-			end
-		ensure
-			result_attached: attached Result
-		end
-
-	iron_configuration_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
-		local
-			l_installation_api: IRON_INSTALLATION_API
-			lst: ARRAYED_LIST [READABLE_STRING_32]
-			p: PATH
-			l_iron_installation_api_factory: CONF_IRON_INSTALLATION_API_FACTORY
-		do
-			if attached {like configuration_libraries} cached_data (iron_configuration_libraries_cache_name (target.setting_msil_generation)) as cfg_libs then
-				Result := cfg_libs
-			else
-				create l_iron_installation_api_factory
-					--| TODO: improve performance, by caching iron_installation_api in the whole system.
-					--| idea: l_iron_installation_api_factory.enable_caching
-				l_installation_api := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
-				if attached l_installation_api.installed_packages as l_packages then
-					create lst.make (l_packages.count)
-					across
-						l_packages as ic
-					loop
-						p := l_installation_api.package_installation_path (ic.item)
-						if attached l_installation_api.projects_from_installed_package (ic.item) as l_projects then
-							across
-								l_projects as proj_ic
-							loop
-								lst.force ({STRING} "iron:" + ic.item.identifier + {STRING_32} ":" + proj_ic.item.name)
-							end
-						end
-					end
-					Result := conf_system_list_from (lst, lst.count)
-						--| TODO: improve performance, by caching iron_installation_api in the whole system.
-						--| this point would be good location to disable the caching.
-						--| idea: l_iron_installation_api_factory.disable_caching
-				else
-					create Result.make (0)
-				end
-				cache_data (Result, iron_configuration_libraries_cache_name (target.setting_msil_generation))
-			end
-		end
-
-	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
-			-- A list of lookup directories
-		require
-			is_eiffel_layout_defined: is_eiffel_layout_defined
-		local
-			l_filename: detachable PATH
-			l_file: RAW_FILE
-		do
-			create Result.make (10)
-
-			l_filename := eiffel_layout.libraries_config_name
-			create l_file.make_with_path (l_filename)
-			if l_file.exists then
-				add_lookup_directories (l_filename.name, Result)
-			end
-			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
-				if l_filename /= Void then
-					l_file.reset_path (l_filename)
-					if l_file.exists then
-						add_lookup_directories (l_filename.name, Result)
-					end
-				end
-			end
-
-			if Result.is_empty then
-					-- Extend the default library path
-				Result.extend ([eiffel_layout.library_path.name.as_string_32, 4])
-			end
-		ensure
-			not_result_is_empty: not Result.is_empty
+			libraries_manager.reset_provider ({ES_LIBRARY_IRON_PROVIDER}.identifier, a_target)
 		end
 
 feature {NONE} -- Actions
@@ -779,16 +559,13 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
-	all_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
-		local
-			l_libraries: like configuration_libraries
-			l_iron_libraries: like iron_configuration_libraries
+	all_libraries (a_filter: detachable READABLE_STRING_GENERAL): STRING_TABLE [CONF_SYSTEM_VIEW]
 		do
-			l_libraries := configuration_libraries
-			l_iron_libraries := iron_configuration_libraries
-			create Result.make (l_libraries.count + l_iron_libraries.count)
-			Result.merge (l_libraries)
-			Result.merge (l_iron_libraries)
+			if a_filter /= Void then
+				Result := libraries_manager.filtered_libraries (a_filter, target, Void)
+			else
+				Result := libraries_manager.libraries (target, Void)
+			end
 		end
 
 	populate_libraries
@@ -821,8 +598,8 @@ feature {NONE} -- Basic operation
 				popup.refresh_now
 
 				libs_box := libraries_box
-				libs_box.set_configuration_libraries (all_libraries)
-				libs_box.set_filter_text (filter_text)
+				libs_box.set_configuration_libraries (all_libraries (filter_text))
+--				libs_box.set_filter_text (filter_text)
 				libs_box.update_grid
 			end
 			if popup /= Void then
@@ -835,96 +612,6 @@ feature {NONE} -- Basic operation
 		rescue
 			retried := True
 			retry
-		end
-
-	add_configs_in_directory (a_dir: DIRECTORY; a_depth: INTEGER; a_libraries: STRING_TABLE [BOOLEAN])
-			-- Add config files in `a_path' to `a_libraries'.
-			-- if `a_depth' is -1, scan all subdirectories without any depth limits.
-		require
-			a_dir_attached: attached a_dir
-			a_dir_is_readable: a_dir.is_readable
-			a_depth_big_enough: a_depth >= -1
-			a_libraries_attached: attached a_libraries
-		local
-			l_file_name: PATH
-			l_file: RAW_FILE
-			l_entry: PATH
-		do
-			across a_dir.entries as l_entries loop
-				l_entry := l_entries.item
-				if l_entry.is_current_symbol or l_entry.is_parent_symbol then
-					 -- Nothing to do
-				else
-					l_file_name := a_dir.path.extended_path (l_entry)
-					create l_file.make_with_path (l_file_name)
-					if l_file.exists then
-						if l_file.is_directory then
-							if a_depth = -1 or a_depth > 0 then
-									-- Recurse
-								add_configs_in_directory (create {DIRECTORY}.make_with_path (l_file_name), (a_depth - 1).max (-1), a_libraries)
-							end
-						elseif l_file.is_plain and then valid_config_extension (l_entry.name) then
-								-- File is an ECF, we add it to `a_libraries'.
-							a_libraries.put (True, l_file_name.name)
-						end
-					end
-				end
-			end
-		end
-
-	add_lookup_directories (a_path: STRING_32; a_list: ARRAYED_LIST [TUPLE [path: READABLE_STRING_GENERAL; depth: INTEGER]])
-			-- Adds look up directories from a file located at `a_path' into `a_list'
-		require
-			a_path_attached: attached a_path
-			not_a_path_is_empty: not a_path.is_empty
-			a_path_exists: (create {RAW_FILE}.make_with_name (a_path)).exists
-			a_list_attached: attached a_list
-		local
-			l_file: RAW_FILE
-			l_line: STRING
-			l_pos: INTEGER
-			l_location: STRING
-			l_depth_string: STRING
-			l_depth: INTEGER
-		do
-			create l_file.make_with_name (a_path)
-			if l_file.is_readable then
-				from l_file.open_read until l_file.end_of_file loop
-					l_file.read_line
-					l_line := l_file.last_string
-					if l_line.is_empty then
-							-- Ignore
-					elseif l_line.starts_with ("--") then
-							-- Ignore comment
-					else
-						l_line.left_adjust
-						l_line.right_adjust
-						l_pos := l_line.last_index_of ('%T', l_line.count)
-						if l_pos > 1 then
-							l_location := l_line.substring (1, l_pos - 1)
-							l_location.right_adjust
-							if l_pos < l_line.count then
-								l_depth_string := l_line.substring (l_pos + 1, l_line.count)
-								l_depth_string.left_adjust
-								l_depth_string.right_adjust
-							end
-						else
-							l_location := l_line
-						end
-						l_depth := 1 -- Default
-						if l_depth_string /= Void then
-							if l_depth_string.is_integer then
-								l_depth := l_depth_string.to_integer
-							elseif l_depth_string.is_case_insensitive_equal_general ("*") then
-								l_depth := -1
-							end
-						end
-						--| FIXME: Unicode content of the file, does not provide Unicode file name
-						--| unless it is UTF-8 encoded ...
-						a_list.extend ([l_location.as_string_32, l_depth])
-					end
-				end
-			end
 		end
 
 feature {NONE} -- Constants
@@ -942,7 +629,7 @@ invariant
 	target_set_in_boxes: libraries_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

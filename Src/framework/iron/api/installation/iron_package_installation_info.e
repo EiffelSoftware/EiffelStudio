@@ -233,6 +233,24 @@ feature -- Conversion
 						end
 					end
 				end
+				if attached {JSON_OBJECT} j_package.item ("links") as j_links then
+					across
+						j_links as c
+					loop
+						if attached {JSON_STRING} c.item as js then
+							Result.put (js.unescaped_string_32, {STRING_32} "link["+ c.key.unescaped_string_32 +"]")
+						end
+					end
+				end
+				if attached {JSON_OBJECT} j_package.item ("notes") as j_notes then
+					across
+						j_notes as c
+					loop
+						if attached {JSON_STRING} c.item as js then
+							Result.put (js.unescaped_string_32, c.key.unescaped_string_32)
+						end
+					end
+				end
 			end
 		end
 
@@ -287,7 +305,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			-- Create current view from location path `a_path'.
 		do
 			path := a_path
+			create info_items.make (0)
 			analyze
 		end
 
@@ -38,6 +39,9 @@ feature -- Access
 	system_name: READABLE_STRING_32
 			-- System name
 
+	title: detachable READABLE_STRING_32
+			-- Optional title.
+
 	library_target_name: READABLE_STRING_32
 			-- Library target name is any.
 
@@ -46,6 +50,15 @@ feature -- Access
 
 	conf_option: detachable CONF_OPTION
 			-- Eventual configuration options.
+
+	info_items: STRING_TABLE [READABLE_STRING_32]
+			-- Additional information.
+
+	info (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Eventual additional information associated with key `k'.
+		do
+			Result := info_items.item (k)
+		end
 
 feature -- Query
 
@@ -86,8 +99,8 @@ feature -- Basic operation
 	analyze
 			-- Analyze the configuration file located at `path'.
 		local
-			l_system_name: READABLE_STRING_32
-			l_target_name: READABLE_STRING_32
+			l_system_name: detachable READABLE_STRING_32
+			l_target_name: detachable READABLE_STRING_32
 			l_description: detachable READABLE_STRING_32
 		do
 			has_library_target := False
@@ -121,9 +134,28 @@ feature -- Basic operation
 			description := l_description
 		end
 
+	set_title (a_title: detachable READABLE_STRING_32)
+		do
+			title := a_title
+		end
+
+	set_description (a_desc: detachable READABLE_STRING_32)
+		do
+			description := a_desc
+		end
+
+	set_info (a_value: READABLE_STRING_32; a_name: READABLE_STRING_GENERAL)
+		do
+			info_items.force (a_value, a_name)
+		end
+
+	unset_info (a_name: READABLE_STRING_GENERAL)
+		do
+			info_items.remove (a_name)
+		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

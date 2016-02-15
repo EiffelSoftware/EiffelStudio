@@ -6,19 +6,17 @@ note
 	revision: "$Revision$"
 
 class
-	CREATE_PRECOMPILE_DIALOG
+	ADD_PRECOMPILE_DIALOG
 
 inherit
-	CREATE_LIBRARY_DIALOG
+	ADD_LIBRARY_DIALOG
 		redefine
 			make,
 			last_group,
 			on_library_selected,
 			on_ok,
-			lookup_directories,
-			all_libraries,
-			configuration_libraries_cache_name,
-			iron_configuration_libraries_cache_name
+			libraries_manager,
+			all_libraries
 		end
 
 create
@@ -29,7 +27,7 @@ feature {NONE} -- Initialization
 	make (a_target: CONF_TARGET; a_factory: like factory)
 			-- <Precursor>
 		do
-			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
+			Precursor {ADD_LIBRARY_DIALOG} (a_target, a_factory)
 			set_title (conf_interface_names.dialog_create_precompile_title)
 			set_icon_pixmap (conf_pixmaps.new_precompiled_library_icon)
 		end
@@ -39,40 +37,16 @@ feature -- Access
 	last_group: CONF_PRECOMPILE
 			-- <Precursor>
 
-feature {NONE} -- Access
-
-	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
-			-- A list of lookup directories
-		local
-			l_filename: detachable PATH
-			l_file: RAW_FILE
-		do
-			create Result.make (10)
-
-			l_filename := eiffel_layout.precompiles_config_name
-			create l_file.make_with_path (l_filename)
-			if l_file.exists then
-				add_lookup_directories (l_filename.name, Result)
-			end
-			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
-				if l_filename /= Void then
-					l_file.reset_path (l_filename)
-					if l_file.exists then
-						add_lookup_directories (l_filename.name, Result)
-					end
-				end
-			end
-
-			if Result.is_empty then
-					-- Extend the default library path
-				Result.extend ([eiffel_layout.precompilation_path (target.setting_msil_generation).name.as_string_32, 1])
-			end
+	libraries_manager: ES_LIBRARY_MANAGER
+		once
+			create Result.make (2)
+			Result.register (create {ES_PRECOMPILE_LIBRARY_DELIVERY_PROVIDER})
+			Result.register (create {ES_PRECOMPILE_LIBRARY_IRON_PROVIDER})
 		end
 
 feature {NONE} -- Basic operation
 
-	all_libraries: STRING_TABLE [CONF_SYSTEM_VIEW]
+	all_libraries (a_filter: detachable READABLE_STRING_GENERAL): STRING_TABLE [CONF_SYSTEM_VIEW]
 		local
 			libs: like all_libraries
 			l_precompilation: detachable STRING_32
@@ -83,7 +57,7 @@ feature {NONE} -- Basic operation
 			eiffel_layout.set_precompile (target.setting_msil_generation)
 
 				-- Lookup all the ECFs that matches.
-			libs := Precursor
+			libs := Precursor (a_filter)
 			create Result.make_caseless (libs.count)
 			across
 				libs as ic
@@ -98,26 +72,6 @@ feature {NONE} -- Basic operation
 				eiffel_layout.set_environment (l_precompilation, {EIFFEL_CONSTANTS}.ise_precomp_env)
 			else
 				eiffel_layout.set_environment ("", {EIFFEL_CONSTANTS}.ise_precomp_env)
-			end
-		end
-
-feature {NONE} -- Libraries cache.
-
-	iron_configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
-		do
-			if a_is_dotnet then
-				Result := "iron_configuration_precomp_libraries_dotnet.cache"
-			else
-				Result := "iron_configuration_precomp_libraries.cache"
-			end
-		end
-
-	configuration_libraries_cache_name (a_is_dotnet: BOOLEAN): STRING
-		do
-			if a_is_dotnet then
-				Result := "configuration_precomp_libraries_dotnet.cache"
-			else
-				Result := "configuration_precomp_libraries.cache"
 			end
 		end
 
@@ -149,7 +103,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

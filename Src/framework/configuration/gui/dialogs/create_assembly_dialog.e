@@ -9,7 +9,7 @@ class
 	CREATE_ASSEMBLY_DIALOG
 
 inherit
-	CREATE_GROUP_DIALOG
+	ADD_GROUP_DIALOG
 		redefine
 			initialize,
 			last_group

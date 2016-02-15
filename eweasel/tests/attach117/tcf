@@ -1,0 +1,11 @@
+test_name 	 attached-result-validity
+test_description Result of an attached type should be set before feature return.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error A VEVI; TEST VEVI
+
+test_end

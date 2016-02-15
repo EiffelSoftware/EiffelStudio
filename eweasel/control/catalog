@@ -2819,6 +2819,8 @@ test	iteration-loop-target-attachment	attach112 tcf pass void_safe validity acro
 test	conversion-with-wrong-target-type	attach113 tcf pass void_safe conversion
 test	targeted-parenthesis-alias-call		attach114 tcf pass void_safe targeted parenthesis_alias validity
 test	targeted-across-iteration-loop		attach115 tcf pass void_safe targeted across iteration loop validity
+test	attached-locals-as-detachable		attach116 tcf fail attached_types void_safe scope local
+test	attached-result-validity		attach117 tcf fail attached_types void_safe scope local validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

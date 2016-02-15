@@ -1,0 +1,11 @@
+test_name 	 attached-locals-as-detachable
+test_description Locals (including Result) of an attached type are processed as if they are detachable.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

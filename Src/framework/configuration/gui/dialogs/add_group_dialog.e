@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 deferred class
-	CREATE_GROUP_DIALOG
+	ADD_GROUP_DIALOG
 
 inherit
 	EV_DIALOG

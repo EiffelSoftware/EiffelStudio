@@ -69,27 +69,18 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target where we add the group.
 
-	filter_text: detachable STRING_32 assign set_filter_text
-			-- Filter text, if any.
+	configuration_libraries_by_location: detachable STRING_TABLE [CONF_SYSTEM_VIEW] assign set_configuration_libraries
+			-- CONF_SYSTEM_VIEW indexed by path.
 
-	populated_configuration_libraries: detachable STRING_TABLE [CONF_SYSTEM_VIEW] assign set_configuration_libraries
-	libraries_table: detachable STRING_TABLE [READABLE_STRING_GENERAL] 
-	libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL] --assign set_libraries_sorted_keys
+	libraries_location_by_name: detachable STRING_TABLE [READABLE_STRING_GENERAL]
+			-- Path indexed by library target name.
+
+	libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Sorted library target names.
 
 feature -- Change
 
-	set_filter_text	(v: like filter_text)
-		do
-			if v = Void then
-				filter_text := Void
-			elseif v.is_empty then
-				filter_text := Void
-			else
-				filter_text := v
-			end
-		end
-
-	set_configuration_libraries (a_libraries: like populated_configuration_libraries)
+	set_configuration_libraries (a_libraries: like configuration_libraries_by_location)
 		local
 			l_libraries_table: detachable STRING_TABLE [READABLE_STRING_GENERAL] --like libraries_table
 			l_libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL] --like libraries_sorted_keys
@@ -98,10 +89,11 @@ feature -- Change
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 			l_target_name: READABLE_STRING_32
 		do
-			populated_configuration_libraries := a_libraries
+			configuration_libraries_by_location := a_libraries
 			if a_libraries /= Void then
 					-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
 				create l_libraries_table.make (a_libraries.count)
+				create l_libraries_sorted_keys.make (a_libraries.count)
 				from a_libraries.start until a_libraries.after loop
 					l_target_name := a_libraries.item_for_iteration.library_target_name
 
@@ -112,18 +104,18 @@ feature -- Change
 					l_key.append_string_general (l_path)
 					l_libraries_table.force (l_path, l_key)
 
+					l_libraries_sorted_keys.force (l_key)
 					a_libraries.forth
 				end
 
 					-- Sort keys
-				create l_libraries_sorted_keys.make_from_array (l_libraries_table.current_keys)
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_libraries_sorted_keys)
 
-				libraries_table := l_libraries_table
+				libraries_location_by_name := l_libraries_table
 				libraries_sorted_keys := l_libraries_sorted_keys
 			else
-				libraries_table := Void
+				libraries_location_by_name := Void
 				libraries_sorted_keys := Void
 			end
 		end
@@ -166,13 +158,13 @@ feature -- Event
 	update_grid
 			-- Update grid
 		require
-			libraries_table_attached: libraries_table /= Void
+			libraries_table_attached: libraries_location_by_name /= Void
 			libraries_sorted_keys_attached: libraries_sorted_keys /= Void
-			populated_configuration_libraries_attached: populated_configuration_libraries /= Void
+			populated_configuration_libraries_attached: configuration_libraries_by_location /= Void
 		local
 			l_libraries_sorted_keys: like libraries_sorted_keys
-			l_libraries_table: like libraries_table
-			l_libraries: like populated_configuration_libraries
+			l_libraries_table: like libraries_location_by_name
+			l_libraries: like configuration_libraries_by_location
 			l_libraries_grid: like libraries_grid
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
@@ -181,13 +173,11 @@ feature -- Event
 			l_void_safety_width: INTEGER
 			l_path: READABLE_STRING_GENERAL
 			l_description: READABLE_STRING_32
-			l_filter: detachable STRING_32
-			l_filter_engine: detachable KMP_WILD
 		do
 			l_libraries_grid := libraries_grid
 			l_libraries_grid.remove_and_clear_all_rows
 
-			l_libraries_table := libraries_table
+			l_libraries_table := libraries_location_by_name
 			l_libraries_sorted_keys := libraries_sorted_keys
 			if
 				l_libraries_table /= Void and
@@ -195,28 +185,7 @@ feature -- Event
 				l_libraries_sorted_keys.count > 0
 			then
 
-				l_libraries := populated_configuration_libraries
-
-					-- And filter if pattern specified
-				l_filter := filter_text
-				if l_filter /= Void then
-					l_filter.left_adjust
-					l_filter.right_adjust
-					if l_filter.is_empty then
-						l_filter := Void
-					end
-				end
-				if l_filter /= Void then
-					if l_filter.item (1) /= '*' then
-						l_filter.prepend_character ('*')
-					end
-					if l_filter.item (l_filter.count) /= '*' then
-						l_filter.append_character ('*')
-					end
-					create l_filter_engine.make_empty
-					l_filter_engine.set_pattern (l_filter)
-					l_filter_engine.disable_case_sensitive
-				end
+				l_libraries := configuration_libraries_by_location
 
 					-- Build libraries list
 				l_libraries_grid.set_row_count_to (l_libraries_sorted_keys.count)
@@ -236,15 +205,6 @@ feature -- Event
 						l_description := l_cfg_data.description
 						if l_description = Void or else l_description.is_empty then
 							l_description := once "No description available for library"
-						end
-
-						if l_filter_engine /= Void then
-							l_filter_engine.set_text (l_cfg_data.library_target_name)
-							if not l_filter_engine.pattern_matches then
-								l_row.hide
-							end
-						else
-							l_row.show
 						end
 
 							-- Library name
@@ -313,7 +273,7 @@ feature {NONE} -- Constants
 			-- Index of a column with a library location.
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -4,6 +4,7 @@ import os;
 import shutil;
 from subprocess import call
 from upload_version import upload_version, iron_config;
+
 def get_ise_libraries(basedir, br, v):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
@@ -32,6 +33,10 @@ def get_ise_libraries(basedir, br, v):
 		call(["svn", "update", d ])
 	else:
 		call(["svn", "checkout", "%s/Src/contrib" % (branch_dir), d ])
+	shutil.rmtree (os.path.join (d, "examples"))
+	shutil.rmtree (os.path.join (d, "library", "network", "authentication"))
+	shutil.rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
+
 	d = os.path.join (basedir, "unstable")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
@@ -57,6 +62,7 @@ def alter_folder_with (a_source, a_alter):
 					shutil.copy2(srcname, dstname)
 		else:
 			shutil.copytree (a_alter, a_source)
+
 				
 def main():
 	if len(sys.argv) > 1:

@@ -23,6 +23,7 @@
 		<library name="cms_contact_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\contact\contact-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_environment" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env-safe.ecf" readonly="false"/>
 		<library name="cms_feed_aggregator_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
+		<library name="cms_files_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\files\files-safe.ecf" readonly="false"/>
 		<library name="cms_google_search_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\google_search\google_search-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node-safe.ecf" readonly="false"/>
 		<!--

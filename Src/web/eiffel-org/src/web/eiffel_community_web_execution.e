@@ -58,6 +58,9 @@ feature -- CMS setup
 			a_setup.register_module (create {EMBEDDED_VIDEO_MODULE}.make)
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 
+				-- Files
+			a_setup.register_module (create {CMS_FILES_MODULE}.make)
+
 				-- Misc
 			a_setup.register_module (create {CMS_CONTACT_MODULE}.make)
 			a_setup.register_module (create {CMS_TAXONOMY_MODULE}.make)

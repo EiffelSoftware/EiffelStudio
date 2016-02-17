@@ -133,27 +133,29 @@ feature -- Hooks
 		local
 			lnk: CMS_LOCAL_LINK
 		do
-			if
-				a_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) -- Note: admin user has all permissions enabled by default.
-			then
-					-- TODO: we should probably use more side menu and less primary_menu.
-				create lnk.make ("Admin", "admin")
-				lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
+			if a_response.api.user_is_authenticated then
+				if
+					a_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) -- Note: admin user has all permissions enabled by default.
+				then
+						-- TODO: we should probably use more side menu and less primary_menu.
+					create lnk.make ("Admin", "admin")
+					lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
+					a_menu_system.management_menu.extend (lnk)
+
+				end
+
+				create lnk.make ("Module", "admin/modules")
+				lnk.set_permission_arguments (<<"manage module">>)
 				a_menu_system.management_menu.extend (lnk)
 
+					-- Per module cache permission!
+				create lnk.make ("Cache", "admin/cache")
+				a_menu_system.management_menu.extend (lnk)
+
+					-- Per module export permission!
+				create lnk.make ("Export", "admin/export")
+				a_menu_system.management_menu.extend (lnk)
 			end
-
-			create lnk.make ("Module", "admin/modules")
-			lnk.set_permission_arguments (<<"manage module">>)
-			a_menu_system.management_menu.extend (lnk)
-
-				-- Per module cache permission!
-			create lnk.make ("Cache", "admin/cache")
-			a_menu_system.management_menu.extend (lnk)
-
-				-- Per module export permission!
-			create lnk.make ("Export", "admin/export")
-			a_menu_system.management_menu.extend (lnk)
 		end
 
 note

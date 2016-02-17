@@ -18,6 +18,7 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\google_search	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\taxonomy	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module %ROC_CMS_SRC%\modules\seo	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module %ROC_CMS_SRC%\modules\files	--dir %ROC_CMS_DIR%
 
 %ROC_CMD% install --module modules\codeboard	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module modules\eiffel_community	--dir %ROC_CMS_DIR%

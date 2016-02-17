@@ -8,7 +8,7 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option debug="true" warning="true" full_class_checking="false" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option debug="true" warning="true" full_class_checking="false" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="all" syntax="transitional">
 			<debug name="dbglog" enabled="true"/>
 		</option>
 		<setting name="executable_name" value="demo"/>
@@ -28,6 +28,7 @@
 		<library name="cms_demo_module" location="modules\demo\cms_demo_module-safe.ecf" readonly="false"/>
 		<library name="cms_email_service" location="..\..\library\email\email-safe.ecf" readonly="false"/>
 		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator-safe.ecf" readonly="false"/>
+		<library name="cms_files_module" location="..\..\modules\files\files-safe.ecf" readonly="false"/>
 		<library name="cms_google_search_module" location="..\..\modules\google_search\google_search-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_model" location="..\..\library\model\cms_model-safe.ecf" readonly="false"/>
 		<library name="cms_node_module" location="..\..\modules\node\node-safe.ecf" readonly="false"/>
@@ -37,12 +38,9 @@
 		<library name="cms_seo_module" location="..\..\modules\seo\seo-safe.ecf" readonly="false"/>
 		<library name="cms_session_auth_module" location="..\..\modules\session_auth\cms_session_auth-safe.ecf" readonly="false"/>
 		<library name="cms_taxnomy_module" location="..\..\modules\taxonomy\taxonomy-safe.ecf" readonly="false"/>
-		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false">
-			<option>
-				<assertions/>
-			</option>
-		</library>
+		<library name="persistence_sqlite3" location="..\..\library\persistence\sqlite3\sqlite3-safe.ecf" readonly="false"/>
 		<!--
+			 By default, commented, since it depends on specific environment settings.
 		<library name="persistence_store_odbc" location="..\..\library\persistence\store_odbc\store_odbc-safe.ecf"/>
 		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql-safe.ecf" />
 		-->		

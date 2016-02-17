@@ -144,12 +144,17 @@ feature -- Element change
 			title := s
 		end
 
+	add_additional_head_line (s: READABLE_STRING_8)
+		do
+			head_lines.extend (s)
+		end
+
 	add_meta_name_content (a_name: STRING; a_content: STRING)
 		local
 			s: STRING_8
 		do
 			s := "<meta name=%"" + a_name + "%" content=%"" + a_content + "%" />"
-			head_lines.extend (s)
+			add_additional_head_line (s)
 		end
 
 	add_meta_http_equiv (a_http_equiv: STRING; a_content: STRING)
@@ -157,39 +162,56 @@ feature -- Element change
 			s: STRING_8
 		do
 			s := "<meta http-equiv=%"" + a_http_equiv + "%" content=%"" + a_content + "%" />"
-			head_lines.extend (s)
+			add_additional_head_line (s)
 		end
 
 	add_style (a_href: STRING; a_media: detachable STRING)
 		local
 			s: STRING_8
 		do
-			s := "<link rel=%"stylesheet%" href=%""+ a_href + "%" type=%"text/css%""
+			create s.make_from_string ("<link rel=%"stylesheet%" href=%"")
+			s.append (a_href)
+			s.append ("%" type=%"text/css%"")
 			if a_media /= Void then
 				s.append (" media=%""+ a_media + "%"")
 			end
 			s.append ("/>")
-			head_lines.extend (s)
+			add_additional_head_line (s)
+		end
+
+	add_style_content (a_style_content: STRING)
+			-- Add style content `a_style_content' in the head, using <style> tag.
+		local
+			s: STRING_8
+		do
+			create s.make_from_string ("<style>%N")
+			s.append (a_style_content)
+			s.append ("%N</style>")
+			add_additional_head_line (s)
 		end
 
 	add_javascript_url (a_src: STRING)
 		local
 			s: STRING_8
 		do
-			s := "<script type=%"text/javascript%" src=%"" + a_src + "%"></script>"
-			head_lines.extend (s)
+			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
+			s.append (a_src)
+			s.append ("%"></script>")
+			add_additional_head_line (s)
 		end
 
 	add_javascript_content (a_script: STRING)
 		local
 			s: STRING_8
 		do
-			s := "<script type=%"text/javascript%">%N" + a_script + "%N</script>"
-			head_lines.extend (s)
+			create s.make_from_string ("<script type=%"text/javascript%">%N")
+			s.append (a_script)
+			s.append ("%N</script>")
+			add_additional_head_line (s)
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

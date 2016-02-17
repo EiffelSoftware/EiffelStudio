@@ -1,3 +1,4 @@
+@echo off
 setlocal
 set ROC_CMD=call %~dp0..\..\tools\roc.bat
 set ROC_CMS_DIR=%~dp0
@@ -16,3 +17,4 @@ set ROC_CMS_DIR=%~dp0
 %ROC_CMD% install --module ..\..\modules\seo	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module ..\..\modules\session_auth	--dir %ROC_CMS_DIR%
 %ROC_CMD% install --module ..\..\modules\taxonomy	--dir %ROC_CMS_DIR%
+%ROC_CMD% install --module ..\..\modules\files	--dir %ROC_CMS_DIR%

@@ -30,7 +30,7 @@ set ROC_TOOL_PATH=%~dp0
 goto START
 
 :START
-echo Calling %ROC_TOOL_PATH%roc.exe %*
+rem echo Calling %ROC_TOOL_PATH%roc.exe %*
 call %ROC_TOOL_PATH%roc.exe %*
 goto END
 

@@ -282,7 +282,9 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			s := "<link rel=%"stylesheet%" href=%""+ a_href + "%" type=%"text/css%""
+			create s.make_from_string ("<link rel=%"stylesheet%" href=%"")
+			s.append (a_href)
+			s.append ("%" type=%"text/css%"")
 			if a_media /= Void then
 				s.append (" media=%""+ a_media + "%"")
 			end
@@ -290,11 +292,24 @@ feature -- Head customization
 			add_additional_head_line (s, False)
 		end
 
+	add_style_content (a_style_content: STRING)
+			-- Add style content `a_style_content' in the head, using <style> tag.
+		local
+			s: STRING_8
+		do
+			create s.make_from_string ("<style>%N")
+			s.append (a_style_content)
+			s.append ("%N</style>")
+			add_additional_head_line (s, True)
+		end
+
 	add_javascript_url (a_src: STRING)
 		local
 			s: STRING_8
 		do
-			s := "<script type=%"text/javascript%" src=%"" + a_src + "%"></script>"
+			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
+			s.append (a_src)
+			s.append ("%"></script>")
 			add_additional_head_line (s, False)
 		end
 
@@ -302,7 +317,9 @@ feature -- Head customization
 		local
 			s: STRING_8
 		do
-			s := "<script type=%"text/javascript%">%N" + a_script + "%N</script>"
+			create s.make_from_string ("<script type=%"text/javascript%">%N")
+			s.append (a_script)
+			s.append ("%N</script>")
 			add_additional_head_line (s, True)
 		end
 

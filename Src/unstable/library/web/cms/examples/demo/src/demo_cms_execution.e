@@ -57,6 +57,9 @@ feature -- CMS modules
 			a_setup.register_module (create {CMS_NODE_MODULE}.make (a_setup))
 			a_setup.register_module (create {CMS_BLOG_MODULE}.make)
 
+				-- Files
+			a_setup.register_module (create {CMS_FILES_MODULE}.make)
+
 				-- Contact
 			a_setup.register_module (create {CMS_CONTACT_MODULE}.make)
 
@@ -76,6 +79,7 @@ feature -- CMS modules
 			a_setup.register_module (create {GOOGLE_CUSTOM_SEARCH_MODULE}.make)
 			a_setup.register_module (create {CMS_DEBUG_MODULE}.make)
 			a_setup.register_module (create {CMS_DEMO_MODULE}.make)
+
 		end
 
 end

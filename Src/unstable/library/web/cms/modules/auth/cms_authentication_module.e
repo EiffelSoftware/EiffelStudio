@@ -831,7 +831,7 @@ feature -- Handler
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"register", "reactivate", "new_password", "reset_password", "registration">>
+			Result := <<"register", "reactivate", "new_password", "reset_password">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -847,8 +847,6 @@ feature -- Handler
 				get_block_view_new_password (a_block_id, a_response)
 			elseif a_block_id.is_case_insensitive_equal_general ("reset_password") and then loc.starts_with ("account/reset-password") then
 				get_block_view_reset_password (a_block_id, a_response)
-			elseif a_block_id.is_case_insensitive_equal_general ("registration") and then loc.starts_with ("admin/pending-registrations") then
-				get_block_view_registration (a_block_id, a_response)
 			end
 		end
 
@@ -947,8 +945,19 @@ feature {NONE} -- Block views
 	get_block_view_register (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if a_response.has_permission ("account register") then
-				if a_response.request.is_get_request_method then
+				if
+					a_response.request.is_get_request_method
+					or else (
+						a_response.values.has ("error_name")
+						or else a_response.values.has ("error_email")
+					)
+				then
 					if attached template_block (a_block_id, a_response) as l_tpl_block then
+--						l_tpl_block.set_value (a_response.values.item ("error_name"), "error_name")
+--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
+--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
+--						l_tpl_block.set_value (a_response.values.item ("name"), "name")
+						l_tpl_block.set_value (form_registration_application_description (a_response.api), "application_description")
 						if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
@@ -959,28 +968,11 @@ feature {NONE} -- Block views
 						end
 					end
 				elseif a_response.request.is_post_request_method then
-					if a_response.values.has ("error_name") or else a_response.values.has ("error_email") then
-						if attached template_block (a_block_id, a_response) as l_tpl_block then
-								--						l_tpl_block.set_value (a_response.values.item ("error_name"), "error_name")
-								--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
-								--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
-								--						l_tpl_block.set_value (a_response.values.item ("name"), "name")
-							if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
-								l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
-							end
-							a_response.add_block (l_tpl_block, "content")
-						else
-							debug ("cms")
-								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-							end
-						end
+					if attached template_block ("post_register", a_response) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
 					else
-						if attached template_block ("post_register", a_response) as l_tpl_block then
-							a_response.add_block (l_tpl_block, "content")
-						else
-							debug ("cms")
-								a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-							end
+						debug ("cms")
+							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 						end
 					end
 				end
@@ -1092,11 +1084,19 @@ feature {NONE} -- Block views
 			end
 		end
 
-	get_block_view_registration	(a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-		do
-		end
+feature -- Access: configuration
 
-feature -- Recaptcha
+	form_registration_application_description (api: CMS_API): detachable READABLE_STRING_8
+			-- Get recaptcha security key.
+		local
+			utf: UTF_CONVERTER
+		do
+			if attached api.module_configuration (Current, Void) as cfg then
+				if attached cfg.text_item ("forms.registration.application_description") as l_desc and then not l_desc.is_whitespace then
+					Result := utf.utf_32_string_to_utf_8_string_8 (l_desc)
+				end
+			end
+		end
 
 	recaptcha_secret_key (api: CMS_API): detachable READABLE_STRING_8
 			-- Get recaptcha security key.
@@ -1129,6 +1129,7 @@ feature -- Response Alter
 			a_response.add_javascript_url ("https://www.google.com/recaptcha/api.js")
 			a_response.add_style (a_response.url ("/module/" + name + "/files/css/auth.css", Void), Void)
 		end
+
 feature {NONE} -- Implementation
 
 	is_captcha_verified (a_secret, a_response: READABLE_STRING_8): BOOLEAN

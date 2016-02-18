@@ -4,9 +4,10 @@ test_description Result of an attached type should be set before feature return.
 copy_sub	Ace $TEST Ace
 copy_raw	a.e $CLUSTER a.e
 copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error A VEVI VUTA(2); B VEVI VUTA(2); TEST VEVI VEVI
+compile_result	validity_error A VEVI VUTA(2); B VEVI VUTA(2); C VJAR VJAR VEVI; TEST VEVI VEVI
 
 test_end

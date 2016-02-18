@@ -8,7 +8,7 @@ deferred class
 
 feature {NONE} -- Factory	
 
-	template_block (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API): detachable CMS_SMARTY_TEMPLATE_BLOCK
+	smarty_template_block (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API): detachable CMS_SMARTY_TEMPLATE_BLOCK
 			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_cms_api'.
 		local
 			res: PATH
@@ -26,11 +26,11 @@ feature {NONE} -- Factory
 			end
 		end
 
-	template_block_with_values (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API; a_values: STRING_TABLE [ANY]): like template_block
+	smarty_template_block_with_values (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API; a_values: STRING_TABLE [ANY]): like smarty_template_block
 			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_cms_api',
 			-- With additional `a_values'.
 		do
-			Result := template_block (a_module, a_block_id, a_cms_api)
+			Result := smarty_template_block (a_module, a_block_id, a_cms_api)
 			if Result /= Void then
 				across
 					a_values as ic
@@ -38,6 +38,25 @@ feature {NONE} -- Factory
 					Result.set_value (ic.item, ic.key)
 				end
 			end
+		end
+
+feature {NONE} -- Factory: obsolete
+
+	template_block (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
+			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_response'.
+		obsolete
+			"Use smarty_template_block [Feb/2016]"
+		do
+			Result := smarty_template_block (a_module, a_block_id, a_response.api)
+		end
+
+	template_block_with_values (a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE; a_values: STRING_TABLE [ANY]): like smarty_template_block
+			-- Smarty content block for `a_block_id' in the context of `a_module' and `a_response',
+			-- With additional `a_values'.
+		obsolete
+			"Use smarty_template_block_with_values [Feb/2016]"
+		do
+			Result := smarty_template_block_with_values (a_module, a_block_id, a_response.api, a_values)
 		end
 
 note

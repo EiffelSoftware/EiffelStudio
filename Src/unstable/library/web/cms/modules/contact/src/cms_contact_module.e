@@ -181,7 +181,7 @@ feature -- Hooks
 			if a_block_id.is_case_insensitive_equal_general ("contact") then
 					-- "contact", "post_contact"
 				if a_response.request.is_get_request_method then
-					if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						if attached recaptcha_site_key (a_response.api) as l_recaptcha_site_key then
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
@@ -201,7 +201,7 @@ feature -- Hooks
 			f: CMS_FORM
 		do
 			a_response.add_style (a_response.url ("/module/" + name + "/files/css/contact.css", Void), Void)
-			if attached template_block (Current, "contact", api) as l_tpl_block then
+			if attached smarty_template_block (Current, "contact", api) as l_tpl_block then
 				if attached recaptcha_site_key (api) as l_recaptcha_site_key then
 					l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 				end
@@ -339,7 +339,7 @@ feature -- Hooks
 						r.values.force (True, "has_error")
 						vars.put ("True", "has_error")
 					end
-					if attached template_block_with_values (Current, "post_contact", api, vars) as l_tpl_block then
+					if attached smarty_template_block_with_values (Current, "post_contact", api, vars) as l_tpl_block then
 						across
 							r.values as tb
 						loop
@@ -354,7 +354,7 @@ feature -- Hooks
 						-- send a bad request status code and redisplay the form with the previous data loaded.	
 					r.set_value (False, "error")
 					r.set_status_code ({HTTP_STATUS_CODE}.bad_request)
-					if attached template_block_with_values (Current, "contact", api, vars) as l_tpl_block then
+					if attached smarty_template_block_with_values (Current, "contact", api, vars) as l_tpl_block then
 						across
 							r.values as tb
 						loop
@@ -377,7 +377,7 @@ feature -- Hooks
 				write_error_log (generator + ".handle_post_contact:  Internal Server error")
 				r.values.force (True, "has_error")
 				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
-				if attached template_block_with_values (Current, "post_contact", api, vars) as l_tpl_block then
+				if attached smarty_template_block_with_values (Current, "post_contact", api, vars) as l_tpl_block then
 					across
 						r.values as tb
 					loop

@@ -275,7 +275,7 @@ test	empty-array-tuple-wrong-error-line	syntax067 tcf pass syntax
 test	once-followed-by-static-call	syntax068 tcf fail syntax
 test	syntax-obsolete-typed-string	syntax069 tcf pass syntax
 test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
-test	object-test-with-operators	syntax071 tcf fail syntax attached_types void-safe
+test	object-test-with-operators	syntax071 tcf fail syntax attached_types void_safe
 
 
 -- Validity tests
@@ -2223,7 +2223,7 @@ test	storable-removing-attachment-marks	store021 tcf pass storable attached_type
 test	store-expanded-class-type-2	store022 tcf pass storable expanded
 test	store-transient-attributes	store023 tcf pass storable transient
 test	stream-independent-store	store024 tcf pass storable stream special
-test	attached-independent-store	store025 tcf pass storable void-safe
+test	attached-independent-store	store025 tcf pass storable void_safe
 test	storable-formats-63			store026 tcf pass storable
 test	storable-with-special-type	store027 tcf pass storable
 test	storable-with-tuple-type	store028 tcf pass storable

@@ -210,7 +210,7 @@ feature -- Handler
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create b.make_empty
 			l_user := r.user
-			if attached template_block (Current, "account_info", api) as l_tpl_block then
+			if attached smarty_template_block (Current, "account_info", api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
 			else
@@ -248,7 +248,7 @@ feature -- Handler
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			create b.make_empty
 			l_user := r.user
-			if attached template_block (Current, "account_edit", api) as l_tpl_block then
+			if attached smarty_template_block (Current, "account_edit", api) as l_tpl_block then
 				l_tpl_block.set_weight (-10)
 				r.add_block (l_tpl_block, "content")
 			else
@@ -935,7 +935,7 @@ feature {NONE} -- Block views
 						or else a_response.values.has ("error_email")
 					)
 				then
-					if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 --						l_tpl_block.set_value (a_response.values.item ("error_name"), "error_name")
 --						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
 --						l_tpl_block.set_value (a_response.values.item ("email"), "email")
@@ -951,7 +951,7 @@ feature {NONE} -- Block views
 						end
 					end
 				elseif a_response.request.is_post_request_method then
-					if attached template_block (Current, "post_register", a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, "post_register", a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -965,7 +965,7 @@ feature {NONE} -- Block views
 	get_block_view_reactivate (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if a_response.request.is_get_request_method then
-				if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")
@@ -974,7 +974,7 @@ feature {NONE} -- Block views
 				end
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_email") or else a_response.values.has ("is_active") then
-					if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 							--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
 							--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
 							--						l_tpl_block.set_value (a_response.values.item ("is_active"), "is_active")
@@ -985,7 +985,7 @@ feature {NONE} -- Block views
 						end
 					end
 				else
-					if attached template_block (Current, "post_reactivate", a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, "post_reactivate", a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -999,7 +999,7 @@ feature {NONE} -- Block views
 	get_block_view_new_password (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if a_response.request.is_get_request_method then
-				if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")
@@ -1008,7 +1008,7 @@ feature {NONE} -- Block views
 				end
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_email") or else a_response.values.has ("error_username") then
-					if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 							--						l_tpl_block.set_value (a_response.values.item ("error_email"), "error_email")
 							--						l_tpl_block.set_value (a_response.values.item ("email"), "email")
 							--						l_tpl_block.set_value (a_response.values.item ("error_username"), "error_username")
@@ -1020,7 +1020,7 @@ feature {NONE} -- Block views
 						end
 					end
 				else
-					if attached template_block (Current, "post_password", a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, "post_password", a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")
@@ -1034,7 +1034,7 @@ feature {NONE} -- Block views
 	get_block_view_reset_password (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
 			if a_response.request.is_get_request_method then
-				if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						--					l_tpl_block.set_value (a_response.values.item ("token"), "token")
 						--					l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
 					a_response.add_block (l_tpl_block, "content")
@@ -1045,7 +1045,7 @@ feature {NONE} -- Block views
 				end
 			elseif a_response.request.is_post_request_method then
 				if a_response.values.has ("error_token") or else a_response.values.has ("error_password") then
-					if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 							--						l_tpl_block.set_value (a_response.values.item ("error_token"), "error_token")
 							--						l_tpl_block.set_value (a_response.values.item ("error_password"), "error_password")
 							--						l_tpl_block.set_value (a_response.values.item ("token"), "token")
@@ -1056,7 +1056,7 @@ feature {NONE} -- Block views
 						end
 					end
 				else
-					if attached template_block (Current, "post_reset", a_response.api) as l_tpl_block then
+					if attached smarty_template_block (Current, "post_reset", a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 					else
 						debug ("cms")

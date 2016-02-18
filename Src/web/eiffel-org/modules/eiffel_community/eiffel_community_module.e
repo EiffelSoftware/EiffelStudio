@@ -144,45 +144,45 @@ feature -- Hooks
 
 				--"purpose","news","articles","blogs"
 			if a_block_id.is_case_insensitive_equal_general ("front_header_welcome") and then loc.is_empty then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "header")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("welcome_main") and then loc.starts_with ("welcome") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("purpose") and then loc.starts_with ("purpose") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("news") and then loc.starts_with ("news") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("updates") and then loc.starts_with ("updates") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -193,9 +193,9 @@ feature -- Hooks
 					attached {READABLE_STRING_GENERAL} a_response.values.item ("optional_content_type") as l_type and then
 					l_type.same_string ("doc")
 				then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -203,37 +203,37 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("popular_nodes") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "sidebar_second")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("social_area") and then  loc.is_empty then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					-- TODO: double check: Social Header is only included in the home page.
 					a_response.add_block (l_tpl_block, "header")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("eiffel_copyright") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					l_tpl_block.set_is_raw (True)
 					a_response.add_block (l_tpl_block, "footer")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("sidebar_updates") then
 				if a_response.is_front then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -242,9 +242,9 @@ feature -- Hooks
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("libraries") then
 				if a_response.is_front then
-					if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "sidebar_second")
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -252,27 +252,27 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("privacy_policy") and then loc.same_string_general ("privacy_policy") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("terms_of_use") and then loc.same_string_general ("terms_of_use") then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("main") and then loc.is_empty then
-				if attached template_block (Current, a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+					write_debug_log (generator + ".get_block_view with smarty_template_block:" + l_tpl_block.out)
 				else
 					debug ("cms")
 						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
@@ -369,7 +369,7 @@ feature -- Request handling: Contribute
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("resources", "optional_content_type")
 			r.set_main_content ("")
-			if attached template_block (Current, "resources_page", r) as l_tpl_block then
+			if attached smarty_template_block (Current, "resources_page", api) as l_tpl_block then
 				r.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")
@@ -407,7 +407,7 @@ feature -- Request handling: Contribute
 				end
 			end
 
-			if attached template_block (Current, "videos_page", r) as l_tpl_block then
+			if attached smarty_template_block (Current, "videos_page", api) as l_tpl_block then
 				l_tpl_block.set_value (l_videos, "videos")
 				r.add_block (l_tpl_block, "content")
 			else
@@ -426,7 +426,7 @@ feature -- Request handling: Contribute
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("contribute", "optional_content_type")
 			r.set_main_content ("")
-			if attached template_block (Current, "contribute_description", r) as l_tpl_block then
+			if attached smarty_template_block (Current, "contribute_description", api) as l_tpl_block then
 				r.add_block (l_tpl_block, "content")
 			else
 				debug ("cms")

@@ -136,18 +136,23 @@ feature -- Hooks
 		local
 			l_region: detachable READABLE_STRING_8
 			l_cond: CMS_BLOCK_EXPRESSION_CONDITION
+			l_block_pref: STRING
 		do
 			if attached smarty_template_block (Current, a_block_id, a_response.api) as bk then
 				if attached a_response.api.module_configuration (Current, name) as cfg then
+					l_block_pref := "blocks." + a_block_id
 					if
-						attached cfg.text_item ("blocks." + a_block_id + ".region") as s and then
+						attached cfg.text_item (l_block_pref + ".region") as s and then
 						s.is_valid_as_string_8
 					then
 						l_region := s.to_string_8
 					end
-					bk.set_weight (cfg.integer_item ("blocks." + a_block_id + ".weight"))
-					bk.set_title (cfg.text_item ("blocks." + a_block_id + ".title"))
-					if attached cfg.text_list_item ("blocks." + a_block_id + ".conditions") as l_cond_exp_list then
+					bk.set_weight (cfg.integer_item (l_block_pref + ".weight"))
+					bk.set_title (cfg.text_item (l_block_pref + ".title"))
+					if attached cfg.text_item (l_block_pref + ".is_raw") as l_is_raw then
+						bk.set_is_raw (l_is_raw.is_case_insensitive_equal ("yes"))
+					end
+					if attached cfg.text_list_item (l_block_pref + ".conditions") as l_cond_exp_list then
 						across
 							l_cond_exp_list as ic
 						loop

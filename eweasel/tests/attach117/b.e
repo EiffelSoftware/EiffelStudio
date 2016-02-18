@@ -1,4 +1,4 @@
-class A [G]
+class B [reference G]
 
 feature -- Test
 
@@ -8,9 +8,11 @@ feature -- Test
 		local
 			x: G
 		do
+			x := Void
 			if x = Void or else Result = Void then
 				Result := x
 			end
+			Result := Void
 			Result := x
 				-- Error: VEVI for Result.
 		ensure

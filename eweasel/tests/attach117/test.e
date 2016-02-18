@@ -9,11 +9,14 @@ feature {NONE} -- Creation
 			-- Run test.
 		local
 			a: A [TEST]
+			b: B [TEST]
 		do
 			f.do_nothing
 			g.do_nothing
 			create a
 			a.f.do_nothing
+			create b
+			b.f.do_nothing
 		end
 
 feature {NONE} -- Test
@@ -24,11 +27,12 @@ feature {NONE} -- Test
 			x: TEST
 		do
 			x := Void
-			if x = Void and then Result = Void then
+			if x = Void or else Result = Void then
 				Result := x
 			end
 			Result := Void
 			Result := x
+				-- Error: VEVI for Result.
 		ensure
 			result_set: attached Result.out
 		end
@@ -39,6 +43,7 @@ feature {NONE} -- Test
 			if attached Result then
 				Result := Current
 			end
+				-- Error: VEVI for Result.
 		ensure
 			result_set: attached Result.out
 		end

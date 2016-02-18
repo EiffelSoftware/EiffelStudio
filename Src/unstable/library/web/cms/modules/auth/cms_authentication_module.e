@@ -192,7 +192,7 @@ feature -- Hooks configuration
 				 -- Add the link to the taxonomy to the main menu
 			if a_response.has_permission ("admin registration") then
 				create lnk.make ("Registration", "admin/pending-registrations/")
-				a_menu_system.management_menu.extend (lnk)
+				a_menu_system.management_menu.extend_into (lnk, "Admin", "admin")
 			end
 		end
 

@@ -163,6 +163,22 @@ feature -- Security
 
 feature -- Element change
 
+	set_title (a_title: detachable READABLE_STRING_GENERAL)
+			-- Set `title' to `a_title' or `location'.
+		do
+			if a_title /= Void then
+				title := a_title.as_string_32
+			else
+				title := location.as_string_32
+			end
+		end
+
+	set_location (a_loc: READABLE_STRING_8)
+			-- Set `location' to `a_loc'.
+		do
+			location := a_loc
+		end
+
 	set_weight (a_weight: INTEGER)
 			-- Set `weight' to `a_weight'.
 		do

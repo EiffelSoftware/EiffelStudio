@@ -79,16 +79,6 @@ feature -- Security
 
 feature -- Element change
 
-	set_title (a_title: detachable READABLE_STRING_GENERAL)
-			-- Set `title' to `a_title' or `location'.
-		do
-			if a_title /= Void then
-				title := a_title.as_string_32
-			else
-				title := location.as_string_32
-			end
-		end
-
 	add_link (lnk: CMS_LINK)
 			-- <Precursor>
 		local
@@ -194,6 +184,6 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

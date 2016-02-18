@@ -103,7 +103,7 @@ feature -- Security
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("manage admin")
+			Result.force ("access admin")
 			Result.force ("admin users")
 			Result.force ("admin roles")
 			Result.force ("admin modules")
@@ -132,29 +132,34 @@ feature -- Hooks
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 		local
 			lnk: CMS_LOCAL_LINK
+			admin_lnk: CMS_LINK_COMPOSITE
 		do
 			if a_response.api.user_is_authenticated then
-				if
-					a_response.has_permission ("manage " + {CMS_ADMIN_MODULE}.name) -- Note: admin user has all permissions enabled by default.
-				then
-						-- TODO: we should probably use more side menu and less primary_menu.
-					create lnk.make ("Admin", "admin")
-					lnk.set_permission_arguments (<<"manage " + {CMS_ADMIN_MODULE}.name>>)
-					a_menu_system.management_menu.extend (lnk)
-
-				end
+				admin_lnk := a_menu_system.management_menu.new_composite_item ("Admin", "admin")
 
 				create lnk.make ("Module", "admin/modules")
 				lnk.set_permission_arguments (<<"manage module">>)
-				a_menu_system.management_menu.extend (lnk)
+				admin_lnk.extend (lnk)
 
 					-- Per module cache permission!
 				create lnk.make ("Cache", "admin/cache")
-				a_menu_system.management_menu.extend (lnk)
+				admin_lnk.extend (lnk)
 
 					-- Per module export permission!
 				create lnk.make ("Export", "admin/export")
-				a_menu_system.management_menu.extend (lnk)
+				admin_lnk.extend (lnk)
+
+--				if
+--					a_response.has_permission ("access " + {CMS_ADMIN_MODULE}.name) -- Note: admin user has all permissions enabled by default.
+--				then
+--					lnk := admin_lnk
+--					lnk.set_title ("Admin")
+
+--					a_menu_system.management_menu.extend (lnk)
+--				elseif admin_lnk.has_children then
+--					a_menu_system.management_menu.extend (admin_lnk)
+--				end
+--				admin_lnk.set_permission_arguments (<<"access " + {CMS_ADMIN_MODULE}.name>>)
 			end
 		end
 

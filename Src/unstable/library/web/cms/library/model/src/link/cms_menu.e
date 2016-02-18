@@ -73,7 +73,7 @@ feature -- Status report
 			end
 		end
 
-feature -- Element change			
+feature -- Element change
 
 	extend (lnk: CMS_LINK)
 			-- <Precursor>	
@@ -104,6 +104,6 @@ feature -- Access
 invariant
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

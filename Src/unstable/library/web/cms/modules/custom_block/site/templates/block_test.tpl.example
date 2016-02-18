@@ -1,0 +1,3 @@
+<div>
+This is a nice custom block test for site {$sitename/}.
+</div>

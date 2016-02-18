@@ -75,13 +75,21 @@ feature -- Test
 							lst.has ("a") and lst.has ("b") and lst.has ("c") and lst.has ("1") and lst.has ("2") and lst.has ("3")
 						)
 					)
-					
+
 			assert ("has_item (table)", cfg.has_item ("table"))
 			assert ("item (table)",  attached cfg.text_table_item ("table") as tb and then (
-							tb.item ("a") ~ {STRING_32} "1" and 
-							tb.item ("b") ~ {STRING_32} "2" and 
-							tb.item ("c") ~ {STRING_32} "3" and 
-							tb.item ("d") ~ {STRING_32} "test"							
+							tb.item ("a") ~ {STRING_32} "1" and
+							tb.item ("b") ~ {STRING_32} "2" and
+							tb.item ("c") ~ {STRING_32} "3" and
+							tb.item ("d") ~ {STRING_32} "test"
+						)
+					)
+
+			assert ("keys of (table)",  attached cfg.table_keys ("table") as tb and then (
+							tb.i_th (1) ~ {STRING_32} "a" and
+							tb.i_th (2) ~ {STRING_32} "b" and
+							tb.i_th (3) ~ {STRING_32} "c" and
+							tb.i_th (4) ~ {STRING_32} "d"
 						)
 					)
 
@@ -198,13 +206,21 @@ feature -- Test
 							lst.has ("a") and lst.has ("b") and lst.has ("c") and lst.has ("1") and lst.has ("2") and lst.has ("3")
 						)
 					)
-					
+
 			assert ("has_item (table)", cfg.has_item ("table"))
 			assert ("item (table)",  attached cfg.text_table_item ("table") as tb and then (
-							tb.item ("a") ~ {STRING_32} "1" and 
-							tb.item ("b") ~ {STRING_32} "2" and 
-							tb.item ("c") ~ {STRING_32} "3" and 
-							tb.item ("d") ~ {STRING_32} "test"							
+							tb.item ("a") ~ {STRING_32} "1" and
+							tb.item ("b") ~ {STRING_32} "2" and
+							tb.item ("c") ~ {STRING_32} "3" and
+							tb.item ("d") ~ {STRING_32} "test"
+						)
+					)
+
+			assert ("keys of (table)",  attached cfg.table_keys ("table") as tb and then (
+							tb.i_th (1) ~ {STRING_32} "a" and
+							tb.i_th (2) ~ {STRING_32} "b" and
+							tb.i_th (3) ~ {STRING_32} "c" and
+							tb.i_th (4) ~ {STRING_32} "d"
 						)
 					)
 

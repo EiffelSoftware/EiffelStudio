@@ -54,6 +54,7 @@ feature -- Access: router
 
 			l_user_handler: CMS_USER_HANDLER
 			l_role_handler:	CMS_ROLE_HANDLER
+			l_admin_logs_handler: CMS_LOGS_HANDLER
 
 			l_admin_cache_handler: CMS_ADMIN_CACHE_HANDLER
 			l_admin_export_handler: CMS_ADMIN_EXPORT_HANDLER
@@ -75,6 +76,11 @@ feature -- Access: router
 			create l_roles_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/roles", l_roles_handler)
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
+
+			create l_admin_logs_handler.make (a_api)
+			create l_uri_mapping.make_trailing_slash_ignored ("/admin/logs", l_admin_logs_handler)
+			a_router.map (l_uri_mapping, a_router.methods_get)
+
 
 			create l_admin_cache_handler.make (a_api)
 			create l_uri_mapping.make_trailing_slash_ignored ("/admin/cache", l_admin_cache_handler)
@@ -108,6 +114,7 @@ feature -- Security
 			Result.force ("admin roles")
 			Result.force ("admin modules")
 			Result.force ("install modules")
+			Result.force ("view logs")
 			Result.force ("admin core caches")
 			Result.force ("clear blocks cache")
 			Result.force ("admin export")
@@ -148,18 +155,6 @@ feature -- Hooks
 					-- Per module export permission!
 				create lnk.make ("Export", "admin/export")
 				admin_lnk.extend (lnk)
-
---				if
---					a_response.has_permission ("access " + {CMS_ADMIN_MODULE}.name) -- Note: admin user has all permissions enabled by default.
---				then
---					lnk := admin_lnk
---					lnk.set_title ("Admin")
-
---					a_menu_system.management_menu.extend (lnk)
---				elseif admin_lnk.has_children then
---					a_menu_system.management_menu.extend (admin_lnk)
---				end
---				admin_lnk.set_permission_arguments (<<"access " + {CMS_ADMIN_MODULE}.name>>)
 			end
 		end
 

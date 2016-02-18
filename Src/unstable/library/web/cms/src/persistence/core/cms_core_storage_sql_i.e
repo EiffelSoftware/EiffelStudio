@@ -206,7 +206,92 @@ feature -- Logs
 			sql_finalize
 		end
 
+	logs (a_category: detachable READABLE_STRING_GENERAL; a_lower: INTEGER; a_count: INTEGER): ARRAYED_LIST [CMS_LOG]
+			-- <Precursor>.
+		local
+			l_parameters: detachable STRING_TABLE [detachable ANY]
+			l_sql: READABLE_STRING_8
+		do
+			error_handler.reset
+			create l_parameters.make (3)
+			if a_category /= Void then
+				l_parameters.put (a_category, "category")
+				l_sql := sql_select_categorized_logs
+			else
+				l_sql := sql_select_logs
+			end
+			if a_count > 0 then
+				l_parameters.put (a_lower, "offset")
+				l_parameters.put (a_count, "size")
+				check l_sql.ends_with_general (";") end
+				l_sql := l_sql.substring (1, l_sql.count - 1) -- Remove ';'
+							+ "LIMIT :size OFFSET :offset ;"
+			end
+
+			from
+				if a_count > 0 then
+					create Result.make (a_count)
+				else
+					create Result.make (10)
+				end
+				if l_parameters.is_empty then
+					l_parameters := Void
+				end
+				sql_query (l_sql, l_parameters)
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_log as l_log then
+					Result.force (l_log)
+				end
+				sql_forth
+			end
+			sql_finalize
+		end
+
+	fetch_log: detachable CMS_LOG
+			-- SQL: 1:id, 2:category, 3:level, 4:uid, 5:message, 6:info, 7:link, 8:date
+		local
+			l_cat: detachable READABLE_STRING_8
+			l_mesg: detachable READABLE_STRING_8
+			l_level: INTEGER
+			l_date: detachable DATE_TIME
+			i: INTEGER
+			lnk: CMS_LOCAL_LINK
+		do
+			l_cat := sql_read_string (2)
+			l_mesg := sql_read_string (5)
+			l_level := sql_read_integer_32 (3)
+			l_date := sql_read_date_time (8)
+
+			if l_cat = Void then
+				l_cat := "unknown"
+			end
+			if l_mesg = Void then
+				l_mesg := ""
+			end
+
+			create Result.make (l_cat, l_mesg, l_level, l_date)
+			Result.set_id (sql_read_integer_64 (1))
+			Result.set_info (sql_read_string (6))
+			if attached sql_read_string_32 (7) as l_link_text then
+					-- Format:   "[title](location)"
+				i := l_link_text.index_of ('(', 1)
+				if i > 0 then
+					create lnk.make (l_link_text.substring (2, i - 2), l_link_text.substring (i + 1, l_link_text.count - 1))
+					Result.set_link (lnk)
+				end
+			end
+		end
+
 	sql_insert_log: STRING = "INSERT INTO logs (category, level, uid, message, info, link, date) VALUES (:category, :level, :uid, :message, :info, :link, :date);"
+				-- SQL Insert to add a new node.
+
+	sql_select_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs ORDER by date DESC;"
+				-- SQL Insert to add a new node.
+
+	sql_select_categorized_logs: STRING = "SELECT id, category, level, uid, message, info, link, date FROM logs WHERE category=:category ORDER by date DESC;"
 				-- SQL Insert to add a new node.
 
 feature -- Misc
@@ -326,6 +411,6 @@ feature -- Misc
 
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

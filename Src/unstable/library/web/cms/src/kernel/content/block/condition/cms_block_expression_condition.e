@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_exp: READABLE_STRING_8)
+	make (a_exp: READABLE_STRING_GENERAL)
 		do
 			expression := a_exp
 		end
@@ -30,18 +30,18 @@ feature -- Access
 	description: STRING_32
 		do
 			create Result.make_from_string_general ("Expression: %"")
-			Result.append_string_general (expression)
+			Result.append_string_general (expression.as_string_32)
 			Result.append_character ('%"')
 		end
 
-	expression: STRING
+	expression: READABLE_STRING_GENERAL
 
 feature -- Evaluation
 
 	satisfied_for_response (res: CMS_RESPONSE): BOOLEAN
 		local
 			exp: like expression
-			l_path: READABLE_STRING_8
+			l_path: READABLE_STRING_GENERAL
 			kmp: KMP_WILD
 		do
 			exp := expression
@@ -61,12 +61,12 @@ feature -- Evaluation
 						Result := kmp.pattern_matches
 					end
 				else
-					Result := res.location.same_string (l_path)
+					Result := l_path.same_string (res.location)
 				end
 			end
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -1,35 +1,41 @@
 note
 	description: "[
-				Hook providing a way to provide blocks.
+				Hook providing a way to provide blocks,
+				within the context of a response.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	CMS_HOOK_BLOCK
+	CMS_HOOK_RESPONSE_BLOCK
 
 inherit
-	CMS_HOOK
+	CMS_HOOK_BLOCK
+		rename
+			block_identifiers as old_block_identifiers
+		redefine
+			old_block_identifiers
+		end
 
 feature -- Hook
 
-	block_list: detachable ITERABLE [like {CMS_BLOCK}.name]
+	frozen block_list: detachable ITERABLE [like {CMS_BLOCK}.name]
 			-- List of block names, managed by current object.
 			-- If prefixed by "?", condition will be checked
 			-- to determine if it should be displayed (and computed) or not.
-		deferred
+		do
+			Result := block_identifiers (Void)
+		end
+
+	frozen old_block_identifiers (a_response: detachable CMS_RESPONSE): detachable ITERABLE [like {CMS_BLOCK}.name]
+		do
+			Result := block_identifiers (a_response)
 		end
 
 	block_identifiers (a_response: detachable CMS_RESPONSE): detachable ITERABLE [like {CMS_BLOCK}.name]
 			-- List of block names, managed by current object, in the context of `a_response' if set.
 			-- If prefixed by "?", condition will be checked
 			-- to determine if it should be displayed (and computed) or not.
-		do
-			Result := block_list
-		end
-
-	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-			-- Get block object identified by `a_block_id' and associate with `a_response'.
 		deferred
 		end
 

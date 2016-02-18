@@ -20,6 +20,9 @@ feature {NONE} -- Initialization
 		do
 			site_location := environment.path
 
+				-- Debug mode.
+			is_debug := attached string_8_item ("site.debug") as l_debug and then l_debug.is_case_insensitive_equal_general ("yes")
+
 				--| Site id, used to identified a site, this could be set to a uuid, or else
 			site_id := string_8_item_or_default ("site.id", "_ROC_CMS_NO_ID_")
 
@@ -258,6 +261,11 @@ feature -- Access: Site
 	front_page_path: detachable READABLE_STRING_8
 			-- Optional path defining the front page.
 			-- By default "" or "/".
+
+feature -- Settings
+
+	is_debug: BOOLEAN
+			-- Is debug mode enabled?
 
 feature -- Query
 

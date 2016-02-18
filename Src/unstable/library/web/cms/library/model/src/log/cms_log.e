@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: INTEGER
+	id: INTEGER_64
 			-- Unique identifier of Current.
 
 	category: READABLE_STRING_8
@@ -124,4 +124,7 @@ feature -- Constants
 	level_info: INTEGER = 7
 	level_debug: INTEGER = 8
 
+note
+	copyright: "2011-2016, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

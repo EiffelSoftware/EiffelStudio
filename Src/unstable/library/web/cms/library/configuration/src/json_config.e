@@ -105,6 +105,20 @@ feature -- Access: Config Reader
 				end
 			end
 		end
+	
+	table_keys (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- <Precursor>
+		do
+			if attached {JSON_OBJECT} item (k) as obj then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (obj.count)
+				Result.compare_objects
+				across
+					obj as ic
+				loop
+					Result.force (ic.key.item)
+				end
+			end
+		end
 
 	integer_item (k: READABLE_STRING_GENERAL): INTEGER
 			-- Integer item associated with key `k'.

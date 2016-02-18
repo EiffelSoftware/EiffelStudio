@@ -170,6 +170,14 @@ feature -- Access
 	storage: CMS_STORAGE
 			-- Default persistence storage.	
 
+feature -- Settings
+
+	is_debug: BOOLEAN
+			-- Is debug mode enabled?
+		do
+			Result := setup.is_debug
+		end
+
 feature {NONE} -- Access: request
 
 	request: WSF_REQUEST
@@ -260,6 +268,14 @@ feature -- Status Report
 		end
 
 feature -- Logging
+
+	logs (a_category: detachable READABLE_STRING_8; a_lower: INTEGER; a_count: INTEGER): LIST [CMS_LOG]
+			-- List of recent logs from `a_lower' to `a_lower+a_count'.
+			-- If `a_category' is set, filter to return only associated logs.
+			-- If `a_count' <= 0 then, return all logs.
+		do
+			Result := storage.logs (a_category, a_lower, a_count)
+		end
 
 	log	(a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_level: INTEGER; a_link: detachable CMS_LINK)
 		local
@@ -674,11 +690,16 @@ feature -- Environment/ module
 					create {INI_CONFIG} Result.make_from_file (l_path)
 				end
 			end
-			if Result = Void and a_name /= Void then
-					-- Use sub config from default?
-				if attached {CONFIG_READER} module_configuration_by_name_in_location (a_module_name, a_dir, Void) as cfg then
+			if Result = Void then
+				if
+					a_name /= Void and then
+					attached {CONFIG_READER} module_configuration_by_name_in_location (a_module_name, a_dir, Void) as cfg
+				then
+						-- Use sub config from default.
 					Result := cfg.sub_config (a_name)
 				end
+			elseif Result.has_error then
+				log ("modules", "module configuration has error %"" + p.utf_8_name + "%"", {CMS_LOG}.level_error, Void)
 			end
 		end
 

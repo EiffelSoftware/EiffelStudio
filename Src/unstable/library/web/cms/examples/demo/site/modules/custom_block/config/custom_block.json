@@ -1,0 +1,10 @@
+{
+	"blocks": {
+		"test":	{
+			"title": "Custom block test",
+			"region": "footer",
+			"weight": 100,
+			"conditions": ["path:demo/*"]
+		}
+	}
+}

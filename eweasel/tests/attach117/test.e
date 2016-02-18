@@ -10,6 +10,7 @@ feature {NONE} -- Creation
 		local
 			a: A [TEST]
 			b: B [TEST]
+			c: C [TEST]
 		do
 			f.do_nothing
 			g.do_nothing
@@ -17,6 +18,8 @@ feature {NONE} -- Creation
 			a.f.do_nothing
 			create b
 			b.f.do_nothing
+			create c
+			c.f.do_nothing
 		end
 
 feature {NONE} -- Test

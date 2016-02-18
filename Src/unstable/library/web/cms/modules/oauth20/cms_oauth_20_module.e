@@ -243,7 +243,7 @@ feature -- Hooks
 				a_response.location.same_string ("account")
 			then
 				if
-					attached template_block ("account_info", a_response) as l_tpl_block and then
+					attached template_block (Current, "account_info", a_response.api) as l_tpl_block and then
 					attached a_response.user as l_user
 				then
 					associate_account (l_user, a_response.values)
@@ -323,7 +323,7 @@ feature {NONE} -- Block views
 		local
 			vals: CMS_VALUE_TABLE
 		do
-			if attached template_block (a_block_id, a_response) as l_tpl_block then
+			if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (1)
 					-- add the variable to the block
 				a_response.api.hooks.invoke_value_table_alter (vals, a_response)

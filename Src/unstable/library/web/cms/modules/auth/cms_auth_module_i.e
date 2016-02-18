@@ -16,6 +16,8 @@ inherit
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
 
+	CMS_HOOK_BLOCK_HELPER
+
 	SHARED_LOGGER
 
 feature {NONE} -- Initialization
@@ -82,25 +84,6 @@ feature -- Hooks
 					end
 					lnk.set_expandable (True)
 					a_response.add_to_primary_tabs (lnk)
-				end
-			end
-		end
-
-feature {NONE} -- Helpers
-
-	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
-		local
-			p: detachable PATH
-		do
-			create p.make_from_string ("templates")
-			p := p.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, p)
-			if p /= Void then
-				if attached p.entry as e then
-					create Result.make (a_block_id, Void, p.parent, e)
-				else
-					create Result.make (a_block_id, Void, p.parent, p)
 				end
 			end
 		end

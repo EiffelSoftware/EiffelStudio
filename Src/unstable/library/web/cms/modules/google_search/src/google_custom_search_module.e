@@ -114,7 +114,7 @@ feature -- Handler
 						attached l_search.last_result as l_result and then
 					    l_result.status = 200
 					then
-						if attached template_block (Current, "search", r) as l_tpl_block then
+						if attached template_block (Current, "search", api) as l_tpl_block then
 							l_tpl_block.set_value (l_result, "result")
 							r.add_block (l_tpl_block, "content")
 						end

@@ -992,6 +992,13 @@ feature -- Message
 			m.append (a_msg + "</li>")
 		end
 
+	add_debug_message (a_msg: READABLE_STRING_8)
+		do
+			if api.is_debug then
+				add_message (a_msg, "debug")
+			end
+		end
+
 	add_notice_message (a_msg: READABLE_STRING_8)
 		do
 			add_message (a_msg, "notice")

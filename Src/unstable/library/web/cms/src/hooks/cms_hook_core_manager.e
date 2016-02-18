@@ -150,9 +150,12 @@ feature -- Hook: block
 				across
 					lst as c
 				loop
-					if attached {CMS_HOOK_BLOCK} c.item as h then
+					if
+						attached {CMS_HOOK_BLOCK} c.item as h and then
+						attached h.block_identifiers (a_response) as l_names
+					then
 						across
-							h.block_list as blst
+							l_names as blst
 						loop
 							bl := blst.item
 							bl_optional := bl.count > 0 and bl[1] = '?'
@@ -252,6 +255,6 @@ feature -- Hook: export
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

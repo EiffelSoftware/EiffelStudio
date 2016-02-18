@@ -34,7 +34,7 @@ feature -- Query
 		end
 
 	resolved_text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
-			-- List of String item associated with key `k',
+			-- List of String items associated with key `k',
 			-- and expanded values to resolved variables ${varname}.
 		do
 			if attached text_list_item (k) as lst then
@@ -50,7 +50,7 @@ feature -- Query
 		end
 
 	resolved_text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
-			-- Table of String item associated with key `k',
+			-- Table of String items associated with key `k',
 			-- and expanded values to resolved variables ${varname}.
 		do
 			if attached text_table_item (k) as tb then
@@ -71,12 +71,17 @@ feature -- Query
 		end
 
 	text_list_item (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
-			-- List of String item associated with key `k'.
+			-- List of String items associated with key `k'.
 		deferred
 		end
 
 	text_table_item (k: READABLE_STRING_GENERAL): detachable STRING_TABLE [READABLE_STRING_32]
-			-- Table of String item associated with key `k'.
+			-- Table of String items associated with key `k'.
+		deferred
+		end
+
+	table_keys (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- Keys of table associated with key `k'.
 		deferred
 		end
 		

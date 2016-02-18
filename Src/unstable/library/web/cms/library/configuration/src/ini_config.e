@@ -163,6 +163,20 @@ feature -- Access: Config Reader
 			end
 		end
 
+	table_keys (k: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+			-- <Precursor>
+		do
+			if attached {STRING_TABLE [like item]} item (k) as l_list then
+				create {ARRAYED_LIST [READABLE_STRING_32]} Result.make (l_list.count)
+				Result.compare_objects
+				across
+					l_list as ic
+				loop
+					Result.force (ic.key.as_string_32)
+				end
+			end
+		end
+
 	integer_item (k: READABLE_STRING_GENERAL): INTEGER
 			-- Integer item associated with key `k'.
 		do
@@ -442,12 +456,12 @@ feature {NONE} -- Implementation
 							j := k.index_of (']', i + 1)
 							if j = i + 1 then -- ends_with "[]"
 								k.keep_head (i - 1)
-								if 
+								if
 									a_section_prefix /= Void and then
 									attached {LIST [STRING_8]} items.item (a_section_prefix + {STRING_32} "." + k) as l_list
 								then
 									lst := l_list
-								elseif 
+								elseif
 									attached last_section_name as l_section_prefix and then
 									attached {LIST [STRING_8]} items.item (l_section_prefix + {STRING_32} "." + k) as l_list
 								then
@@ -466,12 +480,12 @@ feature {NONE} -- Implementation
 								sk.left_adjust
 								sk.right_adjust
 								k.keep_head (i - 1)
-								if 
+								if
 									a_section_prefix /= Void and then
 									attached {STRING_TABLE [STRING_8]} items.item (a_section_prefix + {STRING_32} "." + k) as l_table
 								then
 									tb := l_table
-								elseif 
+								elseif
 									attached last_section_name as l_section_prefix and then
 									attached {STRING_TABLE [STRING_8]} items.item (l_section_prefix + {STRING_32} "." + k) as l_table
 								then
@@ -522,7 +536,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -9,10 +9,16 @@ feature {NONE} -- Creation
 			-- Run test.
 		local
 			a: A [TEST]
+			b: B [TEST]
+			c: C [TEST]
 		do
 			f.do_nothing
 			create a
 			a.f (Current).do_nothing
+			create b
+			b.f (Current).do_nothing
+			create c
+			c.f (Current).do_nothing
 		end
 
 feature {NONE} -- Test
@@ -24,7 +30,7 @@ feature {NONE} -- Test
 			x: TEST
 		do
 			x := Void
-			if x = Void and then Result = Void then
+			if x = Void or else Result = Void then
 				Result := x
 				x := Current
 			end

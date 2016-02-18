@@ -1,4 +1,4 @@
-class A [G]
+class C [G -> ANY]
 
 feature -- Test
 
@@ -13,6 +13,8 @@ feature -- Test
 				Result := x
 			end
 			Result := x
+		ensure
+			attached_result: attached Result.out
 		end
 
 end

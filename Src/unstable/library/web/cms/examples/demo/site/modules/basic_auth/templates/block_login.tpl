@@ -1,6 +1,6 @@
 {unless isset="$user"}
  	<div class="login-box">
-		<div class="description">The "Basic Auth" relies on the HTTP basic acces authentication.<br/>(see also: <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">https://en.wikipedia.org/wiki/Basic_access_authentication</a> )</div>
+		<div class="description">The "Basic Auth" relies on the HTTP basic access authentication.<br/>(see also: <a href="https://en.wikipedia.org/wiki/Basic_access_authentication">https://en.wikipedia.org/wiki/Basic_access_authentication</a> )</div>
 		<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
 		<div>
 			<form name="cms_basic_auth" action="{$site_url/}roc-basic-login" method="POST">

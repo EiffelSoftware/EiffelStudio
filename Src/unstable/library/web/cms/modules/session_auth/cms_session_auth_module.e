@@ -141,7 +141,7 @@ feature {NONE} -- Implementation: routes
 			if api.user_is_authenticated then
 				r.add_error_message ("You are already signed in!")
 			else
-				if attached template_block ("login", r) as l_tpl_block then
+				if attached template_block (Current, "login", api) as l_tpl_block then
 					create vals.make (1)
 						-- add the variable to the block
 					l_tpl_block.set_value (api.user, "user")
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation: routes
 					end
 				else
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					if attached template_block ("login", r) as l_tpl_block then
+					if attached template_block (Current, "login", api) as l_tpl_block then
 						l_tpl_block.set_value (l_username.value, "username")
 						l_tpl_block.set_value ("Wrong: Username or password ", "error")
 						r.add_block (l_tpl_block, "content")
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation: routes
 				r.execute
 			else
 				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				if attached template_block ("login", r) as l_tpl_block then
+				if attached template_block (Current, "login", api) as l_tpl_block then
 					if attached {WSF_STRING} req.form_parameter ("username") as l_username then
 						l_tpl_block.set_value (l_username.value, "username")
 					end
@@ -272,7 +272,7 @@ feature {NONE} -- Block views
 		local
 			vals: CMS_VALUE_TABLE
 		do
-			if attached template_block (a_block_id, a_response) as l_tpl_block then
+			if attached template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (1)
 					-- add the variable to the block
 				a_response.api.hooks.invoke_value_table_alter (vals, a_response)

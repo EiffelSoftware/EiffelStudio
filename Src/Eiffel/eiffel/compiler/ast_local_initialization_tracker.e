@@ -90,6 +90,25 @@ feature {AST_CONTEXT} -- Element change
 			is_result_set: is_result_set
 		end
 
+	unset_local (position: like local_count)
+			-- Mark that a local with the given `position' is unset.
+		require
+			position_large_enough: position > 0
+			position_small_emough: position <= local_count
+		do
+			keeper.unset (position)
+		ensure
+			is_local_unset: not is_local_set (position)
+		end
+
+	unset_result
+			-- Mark that "Result" is unset.
+		do
+			keeper.unset (result_index)
+		ensure
+			is_result_unset: not is_result_set
+		end
+
 feature {AST_CONTEXT} -- Transformation
 
 	keeper: AST_INITIALIZATION_KEEPER
@@ -115,7 +134,7 @@ invariant
 	keeper_attached: keeper /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "Actual type description."
-	code_review: "http://docs.google.com/Doc?id=dd7kn5vj_93ng9v6cg"
+	EIS: "name=code_review", "src=http://docs.google.com/Doc?id=dd7kn5vj_93ng9v6cg"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -1121,7 +1121,7 @@ feature -- Duplication
 	frozen as_detachable_type: like Current
 			-- Detachable type.
 		do
-			if not has_detachable_mark then
+			if not has_detachable_mark and then not is_expanded then
 				Result := duplicate
 				Result.set_detachable_mark
 			else
@@ -2089,7 +2089,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

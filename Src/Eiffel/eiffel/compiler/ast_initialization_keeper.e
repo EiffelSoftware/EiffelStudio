@@ -52,6 +52,16 @@ feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER}
 			is_set: is_set (index)
 		end
 
+	unset (index: like count)
+			-- Mark that a variable with the given `index' is unset.
+		require
+			index_large_enough: index > 0
+			index_small_enough: index <= count
+		deferred
+		ensure
+			is_unset: not is_set (index)
+		end
+
 	set_all
 			-- Mark all variables as set.
 		deferred
@@ -62,7 +72,7 @@ feature {AST_ATTRIBUTE_INITIALIZATION_TRACKER, AST_LOCAL_INITIALIZATION_TRACKER}
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

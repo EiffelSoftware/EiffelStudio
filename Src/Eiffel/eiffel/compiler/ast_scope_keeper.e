@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Keeper for non-void entity scopes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ inherit
 	AST_INITIALIZATION_KEEPER
 		rename
 			is_set as is_attached,
-			set as start_scope
+			set as start_scope,
+			unset as stop_scope
 		export
-			{AST_ARGUMENT_SCOPE_TRACKER} start_scope
+			{AST_ARGUMENT_SCOPE_TRACKER} start_scope, stop_scope
 		redefine
-			update_sibling,
-			start_scope
+			update_sibling
 		end
 
 feature {AST_CONTEXT} -- Status report
@@ -25,16 +25,6 @@ feature {AST_CONTEXT} -- Status report
 			-- Does variable information of a sibling dominate the previous one (if any)?
 		require
 			is_nested: nesting_level > 0
-		deferred
-		end
-
-feature {AST_ARGUMENT_SCOPE_TRACKER, AST_LOCAL_SCOPE_TRACKER} -- Modification: variables
-
-	stop_scope (index: like count)
-			-- Mark that a variable with the given `index' can be void.
-		require
-			index_large_enough: index > 0
-			index_small_enough: index <= count
 		deferred
 		end
 
@@ -48,7 +38,7 @@ feature {AST_SCOPE_COMBINED_PRECONDITION, AST_CONTEXT, AST_CREATION_PROCEDURE_CH
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

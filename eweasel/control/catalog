@@ -534,7 +534,7 @@ test	select-stable-attribute		valid258 tcf pass validity stable attribute
 test	precompilation-task-failure		valid259 tcf fail validity
 test	manifest_char_type			valid260 tcf pass validity
 test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic agents
-test	conversion_without_binary_operator	valid262 tcf fail used_to_pass validity
+test	conversion_without_binary_operator	valid262 tcf pass used_to_pass validity
 test	manifest-real-to-real-32-conformance	valid263 tcf pass validity ieee
 test	generic-rename-with-alias		valid264 tcf fail validity generic rename
 test	variant-with-anchored-type		valid265 tcf pass validity

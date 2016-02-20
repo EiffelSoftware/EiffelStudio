@@ -8,6 +8,6 @@ copy_raw	c.e $CLUSTER c.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error A VEVI VUTA(2); B VEVI VUTA(2); C VJAR VJAR VEVI; TEST VEVI VEVI
+compile_result	validity_error A VEVI VEVI VEVI VUTA(2) VUTA(2) VUTA(2); B VEVI VEVI VEVI VUTA(2) VUTA(2) VUTA(2); C VJAR VJAR VJAR VJAR VJAR VJAR VEVI VEVI VEVI; TEST VEVI VEVI VEVI VEVI VEVI VEVI
 
 test_end

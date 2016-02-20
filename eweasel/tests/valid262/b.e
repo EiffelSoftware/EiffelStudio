@@ -9,7 +9,10 @@ convert
 
 feature
 
-	to_a: A do end
+	to_a: A
+		do
+			create Result
+		end
 
 	from_a (a_a: A)
 		local
@@ -19,6 +22,9 @@ feature
 			a := a + b
 		end
 
-	infix "+" (b: B): B do end
+	infix "+" (b: B): B
+		do
+			Result := b
+		end
 
 end

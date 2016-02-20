@@ -64,14 +64,14 @@ feature {NONE} -- Tests: assignment attempt
 			a: G
 		do
 			a := c
-			a ?= abc -- VJRV(3), VEEN
-			a.do_nothing -- VUTA(2)
+			a ?= abc -- VEEN
+			a.do_nothing
 		end
 
 	test_result_attempt (c: attached G): G
 		do
 			Result := c
-			Result ?= abc -- VJRV(3), VEEN
+			Result ?= abc -- VEEN
 		end
 
 	test_attribute_attempt_stable (c: attached G)

@@ -31,6 +31,9 @@ feature
 				-- 	lb
 				-- 	lba
 				-- 	lca
+
+			s := ""
+			sa := ""
 		end
 
 	a: NONE
@@ -48,11 +51,11 @@ feature
 	lca: attached like c
 	lcd: detachable like c
 
+	s: STRING
+	sa: attached STRING
+	sd: detachable STRING
+
 	f
-		local
-			s: STRING
-			sa: attached STRING
-			sd: detachable STRING
 		do
 			s := a
 			s := la

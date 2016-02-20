@@ -101,14 +101,14 @@ feature {NONE} -- Tests: assignment attempt
 			a: attached TEST
 		do
 			a := Current
-			a ?= abc -- VJRV(3), VEEN
+			a ?= abc -- VEEN
 			a.do_nothing
 		end
 
 	test_result_attempt_attached: attached TEST
 		do
 			Result := Current
-			Result ?= abc -- VJRV(3), VEEN
+			Result ?= abc -- VEEN
 		end
 
 	test_attribute_attempt_attached
@@ -124,14 +124,14 @@ feature {NONE} -- Tests: assignment attempt
 		do
 			a := Current
 			a ?= abc -- VEEN
-			a.do_nothing -- VUTA(2)
+			a.do_nothing
 		end
 
 	test_result_attempt_detachable: detachable TEST
 		do
 			Result := Current
 			Result ?= abc -- VEEN
-			Result.do_nothing -- VUTA(2)
+			Result.do_nothing
 		end
 
 	test_attribute_attempt_detachable

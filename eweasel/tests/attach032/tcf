@@ -6,7 +6,7 @@ copy_raw	test.e $CLUSTER test.e
 copy_raw	a0.e $CLUSTER a.e
 
 compile_melted
-compile_result	validity_error A VJAR
+compile_result	validity_error A VEVI
 
 copy_raw	a1.e $CLUSTER a.e
 
@@ -16,6 +16,6 @@ compile_result	ok
 copy_raw	a2.e $CLUSTER a.e
 
 compile_melted
-compile_result	validity_error TEST VJAR
+compile_result	ok
 
 test_end

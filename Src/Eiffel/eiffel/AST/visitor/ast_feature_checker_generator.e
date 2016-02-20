@@ -2756,19 +2756,19 @@ feature {NONE} -- Visitor
 							-- it might be still safe to use it in the expression
 							-- before actual reattachment takes place.
 						last_reinitialized_variable := result_name_id
+							-- Treat result type as detachable, then check that it is attached at the end of a feature.
+						l_feat_type := l_feat_type.as_detachable_type
 					elseif context.is_result_attached then
 							-- "Result" is safe to be used as an attached type.
 						l_feat_type := l_feat_type.as_attached_in (context.current_class)
 					elseif
 						l_feat_type.is_initialization_required and then
-						not context.local_initialization.is_result_set and then
-						is_void_safe_initialization (context.current_class)
+						not context.local_initialization.is_result_set
 					then
 							-- Result is not properly initialized.
-						error_handler.insert_error (create {VEVI}.make_result (context, l_as))
-							-- Mark that Result is initialized to avoid repeated errors.
-						context.add_result_instruction_scope
-						context.set_result
+							-- Treat it as if it is of a detachable type.
+						l_feat_type := l_feat_type.as_detachable_type
+
 					end
 					set_type (l_feat_type, l_as)
 				end
@@ -3091,6 +3091,8 @@ feature {NONE} -- Visitor
 							-- it might be still safe to use the local in the expression
 							-- before actual reattachment takes place.
 						last_reinitialized_variable := l_as.feature_name.name_id
+							-- Treat local type as detachable.
+						l_type := l_type.as_detachable_type
 					elseif context.is_local_attached (l_as.feature_name.name_id) then
 							-- Local is safe to be used as of an attached type.
 						l_type := l_type.as_attached_in (context.current_class)
@@ -3098,13 +3100,8 @@ feature {NONE} -- Visitor
 						l_type.is_initialization_required and then
 						not context.local_initialization.is_local_set (l_local_info.position)
 					then
-							-- Local is not properly initialized.
-						if is_void_safe_initialization (context.current_class) then
-							error_handler.insert_error (create {VEVI}.make_local (l_as.feature_name.name, context, l_as.feature_name))
-						end
-							-- Mark that the local is initialized.
-						context.add_local_instruction_scope (l_as.feature_name.name_id)
-						context.set_local (l_as.feature_name.name_id)
+							-- Treat it as if it is of a detachable type.
+						l_type := l_type.as_detachable_type
 					end
 					if not is_inherited then
 							-- set some type attributes of the node
@@ -5918,24 +5915,31 @@ feature {NONE} -- Visitor
 						-- when evaluating source to avoid spurious error.)
 					if l_reinitialized_variable = result_name_id then
 						context.add_result_instruction_scope
+						context.set_result
 					elseif l_reinitialized_variable > 0 then
 						context.add_local_instruction_scope (l_reinitialized_variable)
+						context.set_local (l_reinitialized_variable)
 					else
 						context.add_attribute_instruction_scope (- l_reinitialized_variable)
 					end
-				else
-						-- Local variable might become Void.
+				elseif l_source_type.is_initialization_required then
+						-- Local variable might become Void, but it is set.
 					if l_reinitialized_variable = result_name_id then
 						context.remove_result_scope
+						context.set_result
 					elseif l_reinitialized_variable > 0 then
 						context.remove_local_scope (l_reinitialized_variable)
+						context.set_local (l_reinitialized_variable)
 					end
-				end
-					-- The variable is initialized.
-				if l_reinitialized_variable = result_name_id then
-					context.set_result
-				elseif l_reinitialized_variable > 0 then
-					context.set_local (l_reinitialized_variable)
+				else
+						-- Local variable might become Void, and it is unset.
+					if l_reinitialized_variable = result_name_id then
+						context.remove_result_scope
+						context.unset_result
+					elseif l_reinitialized_variable > 0 then
+						context.remove_local_scope (l_reinitialized_variable)
+						context.unset_local (l_reinitialized_variable)
+					end
 				end
 			end
 		end
@@ -6021,10 +6025,7 @@ feature {NONE} -- Visitor
 					end
 				elseif
 					is_void_safe_conformance (context.current_class) and then
-					(l_target_type.is_attached or else
-					l_target_type.actual_type.is_formal and then
-					attached {FORMAL_A} l_target_type.conformance_type as l_formal and then
-					not l_formal.has_detachable_mark)
+					(l_target_type.is_attached or else l_target_type.is_initialization_required)
 				then
 						-- Allowing assignment attempts on attached entities does not make sense
 						-- since we cannot guarantee that the entity will not be Void after.
@@ -6085,13 +6086,27 @@ feature {NONE} -- Visitor
 						l_reverse.set_info (l_create_info)
 						last_byte_node := l_reverse
 					end
-				end
-				if l_reinitialized_variable /= 0 then
-						-- Local variable might become Void.
+					if l_reinitialized_variable /= 0 then
+							-- Local variable might become Void.
+						if l_reinitialized_variable = result_name_id then
+							context.remove_result_scope
+							context.unset_result
+						elseif l_reinitialized_variable > 0 then
+							context.remove_local_scope (l_reinitialized_variable)
+							context.unset_local (l_reinitialized_variable)
+						end
+					end
+				elseif l_reinitialized_variable /= 0 then
+						-- The was an error evaluating source expression.
+						-- Mark target as attached to avoid spurious errors.
 					if l_reinitialized_variable = result_name_id then
-						context.remove_result_scope
+						context.add_result_instruction_scope
+						context.set_result
 					elseif l_reinitialized_variable > 0 then
-						context.remove_local_scope (l_reinitialized_variable)
+						context.add_local_instruction_scope (l_reinitialized_variable)
+						context.set_local (l_reinitialized_variable)
+					else
+						context.add_attribute_instruction_scope (- l_reinitialized_variable)
 					end
 				end
 			end
@@ -11790,7 +11805,7 @@ feature {NONE} -- Type recording
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Context for third pass"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -474,18 +474,25 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 
 	add_local_instruction_scope (id: INTEGER_32)
 			-- Add a scope for a local identified by `id'.
+		local
+			l: INTEGER
 		do
-			local_scope.start_local_scope (locals.item (id).position)
+			l := locals.item (id).position
+			local_scope.start_local_scope (l)
+			local_initialization.set_local (l)
 		ensure
 			is_local_attached: is_local_attached (id)
+			is_local_set: local_initialization.is_local_set (locals.item (id).position)
 		end
 
 	add_result_instruction_scope
 			-- Add a scope for the special entity "Result".
 		do
 			local_scope.start_result_scope
+			local_initialization.set_result
 		ensure
 			is_result_attached: is_result_attached
+			is_result_set: local_initialization.is_result_set
 		end
 
 	add_attribute_instruction_scope (id: INTEGER_32)
@@ -520,6 +527,18 @@ feature {AST_SCOPE_MATCHER, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modi
 		do
 			local_initialization.set_all
 			attribute_initialization.set_all
+		end
+
+	unset_local (id: INTEGER_32)
+			-- Mark that a local identified by `id' is unset.
+		do
+			local_initialization.unset_local (locals.item (id).position)
+		end
+
+	unset_result
+			-- Mark that "Result" is unset.
+		do
+			local_initialization.unset_result
 		end
 
 feature {AST_SCOPE_MATCHER, SHARED_AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Local scopes: modification
@@ -973,7 +992,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

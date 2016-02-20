@@ -11,7 +11,7 @@ copy_raw 	a.e $CLUSTER a.e
 copy_raw 	b.e $CLUSTER b.e
 
 compile_melted
-compile_result	validity_error TEST VEVI
+compile_result	validity_error TEST VJAR
 
 define CREATE_SOURCE "create source_b"
 copy_sub 	test.e $CLUSTER test.e
@@ -48,7 +48,7 @@ copy_raw 	a_rev1.e $CLUSTER a.e
 copy_raw 	b_rev1.e $CLUSTER b.e
 
 compile_melted
-compile_result	validity_error TEST VEVI
+compile_result	validity_error TEST VJAR
 
 define CREATE_SOURCE "create source_b"
 copy_sub 	test.e $CLUSTER test.e

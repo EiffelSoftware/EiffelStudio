@@ -9,19 +9,19 @@ define	NONE	"detachable NONE"
 copy_sub	a.e $CLUSTER a.e
 
 compile_melted
-compile_result validity_error A VJAR
+compile_result validity_error A VEVI
 
 define	VOID	"x"
 copy_sub	a.e $CLUSTER a.e
 
 resume_compile
-compile_result validity_error A VJAR
+compile_result validity_error A VEVI
 
 define	NONE	"detachable G"
 copy_sub	a.e $CLUSTER a.e
 
 resume_compile
-compile_result validity_error A VJAR
+compile_result validity_error A VEVI
 
 define	NONE	"attached NONE"
 copy_sub	a.e $CLUSTER a.e

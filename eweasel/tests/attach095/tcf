@@ -1,4 +1,3 @@
-
 test_name 	 nested-tuple-undetected-vevi
 test_description A type TUPLE [c: TUPLE [x: EXPANDED_TYPE]] allows a call to c.x when `c' is not guaranteed to be non-Void, but it should be a VEVI error.  This leads to a call on Void target in a void-safe system
 
@@ -8,6 +7,6 @@ copy_raw	test1.e $CLUSTER test1.e
 copy_raw	test2.e $CLUSTER test2.e
 
 compile_melted
-compile_result	validity_error TEST1 VEVI
+compile_result	validity_error TEST1 VJAR
 
 test_end

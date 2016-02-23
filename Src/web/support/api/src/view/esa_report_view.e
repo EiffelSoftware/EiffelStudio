@@ -12,13 +12,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_reports: LIST [REPORT]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST [REPORT_CATEGORY]; a_status: LIST [REPORT_STATUS]; a_user: detachable ANY)
+	make (a_reports: LIST [REPORT]; a_index: INTEGER; a_pages: INTEGER; a_categories: LIST [REPORT_CATEGORY]; a_status: LIST [REPORT_STATUS]; a_user: detachable ANY; a_count_bugs: INTEGER)
 			-- Create a new object with reports `a_reports'
 			-- current page `a_index'
 			-- number of pages `a_pages'
 			-- a possible list of categories `a_categories'
 			-- a possible list of status `a_status'
 			-- an a logged-in user or Guest `a_user'
+			-- total number of bugs `a_count_bugs'
 		do
 			reports := a_reports
 			index := a_index
@@ -26,6 +27,7 @@ feature {NONE} -- Initialization
 			categories := a_categories
 			status := a_status
 			user := a_user
+			count_bugs := a_count_bugs
 		ensure
 			reports_set: reports = a_reports
 			index_set: index = a_index
@@ -33,6 +35,7 @@ feature {NONE} -- Initialization
 			categories_set: categories = a_categories
 			status_set: status = a_status
 			user_set: user = a_user
+			count_bugs_set: count_bugs = a_count_bugs
 		end
 
 feature -- Access
@@ -102,6 +105,9 @@ feature -- Access
 	filter_content: INTEGER
 		-- Is filter by content checked?
 		-- 1: yes, 0: no.
+
+	count_bugs: INTEGER
+		-- Total number of bugs.	
 
 feature -- Change Element
 
@@ -215,6 +221,14 @@ feature -- Change Element
 			filter_content := a_filter_content
 		ensure
 			filter_content_set: filter_content = a_filter_content
+		end
+
+	set_count_bugs (a_count_bugs: INTEGER)
+			-- Set `count_bugs' to `a_count_bugs'.
+		do
+			count_bugs := a_count_bugs
+		ensure
+			count_bugs_set: count_bugs = a_count_bugs
 		end
 
 end

@@ -177,7 +177,7 @@ feature -- Implementation
 
 					l_row :=  api_service.problem_reports_responsibles (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.severity, l_input_validator.priority, l_input_validator.responsible, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.status_selected, l_input_validator.submitter, l_input_validator.filter, l_input_validator.filter_content)
 
-					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
+					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req), l_pages)
 					l_report_view.set_selected_category (l_input_validator.category)
 					l_report_view.set_selected_priority (l_input_validator.priority)
 					l_report_view.set_selected_severity (l_input_validator.severity)
@@ -218,7 +218,7 @@ feature -- Implementation
 				if attached api_service.problem_report_details (l_user, a_id) as l_report then
 					create {ARRAYED_LIST [REPORT]} l_list.make (1)
 					l_list.force (l_report)
-					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user)
+					create l_report_view.make (l_list,0,0, api_service.all_categories,api_service.status, l_user,0)
 					l_report_view.set_id (a_id.out)
 					l_report_view.set_responsibles (api_service.responsibles)
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_responsible (req, res, l_report_view)
@@ -261,7 +261,7 @@ feature -- Implementation
 					end
 
 					l_row := api_service.problem_reports_guest (l_input_validator.page, l_input_validator.size, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, a_user, l_input_validator.filter, l_input_validator.filter_content )
-					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req))
+					create l_report_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, current_user_name (req), l_pages)
 					l_report_view.set_size (l_input_validator.size)
 					l_report_view.set_selected_category (l_input_validator.category)
 					l_report_view.set_order_by (l_input_validator.orderby)

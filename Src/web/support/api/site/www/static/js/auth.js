@@ -272,6 +272,8 @@ var progressive_guest_page_resize = function () {
           var filter_content =  $('#filter_content_pe').val();
           var pages = $('#pages_pe').val();
           var size  = $('#size_pe').val();
+          var count_bugs = $('#count_bugs_pe').val();
+
 
           console.log (host);
           console.log (index);
@@ -314,7 +316,12 @@ var progressive_guest_page_resize = function () {
           elem = elem.concat ('<img src="');
           elem = elem.concat (host);
           elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
-          elem = elem.concat ('</div> </div>' ); 
+          elem = elem.concat ('</div>' ); 
+          elem = elem.concat('<div class="col-xs-1"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see."># of Bugs</label></div>') ; 
+          elem = elem.concat('<div class="col-xs-1">');
+          elem = elem.concat (count_bugs); 
+          elem = elem.concat ('</div></div>' ); 
+ 
           console.log (elem);
 
           $('#guest_reports_page_size').after(elem).remove();
@@ -335,6 +342,7 @@ var progressive_user_page_resize = function () {
           var filter_content =  $('#filter_content_pe').val();
           var pages = $('#pages_pe').val();
           var size  = $('#size_pe').val();
+          var count_bugs = $('#count_bugs_pe').val();
 
           console.log (host);
           console.log (index);
@@ -379,7 +387,12 @@ var progressive_user_page_resize = function () {
           elem = elem.concat ('<img src="');
           elem = elem.concat (host);
           elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
-          elem = elem.concat ('</div> </div>' ); 
+          elem = elem.concat ('</div>' ); 
+          elem = elem.concat('<div class="col-xs-1"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see."># of Bugs</label></div>') ; 
+          elem = elem.concat('<div class="col-xs-1">');
+          elem = elem.concat (count_bugs); 
+          elem = elem.concat ('</div></div>' ); 
+ 
           console.log (elem);
 
           $('#user_reports_page_size').after(elem).remove();
@@ -404,6 +417,7 @@ var progressive_responsible_page_resize = function () {
           var severity  = $('#severity_pe').val();
           var priority  = $('#priority_pe').val();
           var responsible  = $('#responsible_pe').val();
+          var count_bugs = $('#count_bugs_pe').val();
 
           console.log (host);
           console.log (index);
@@ -454,7 +468,12 @@ var progressive_responsible_page_resize = function () {
           elem = elem.concat ('<img src="');
           elem = elem.concat (host);
           elem = elem.concat ('/static/images/ajax-loader.gif" alt="Loading..." style="display: none;" id="pageLoad" /> ');
-          elem = elem.concat ('</div> </div>' ); 
+          elem = elem.concat ('</div>' ); 
+          
+          elem = elem.concat('<div class="col-xs-1"><label class="control-label-api" itemprop="report_number" data-original-title="The number of reports you want to see."># of Bugs</label></div>') ; 
+          elem = elem.concat('<div class="col-xs-1">');
+          elem = elem.concat (count_bugs); 
+          elem = elem.concat ('</div></div>' ); 
           console.log (elem);
 
           $('#responsible_reports_page_size').after(elem).remove();

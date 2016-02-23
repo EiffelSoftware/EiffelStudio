@@ -153,7 +153,7 @@ feature -- Basic Operations
 				l_email.set_message (new_report_email_message (a_report, a_url))
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
-					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
+					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, a_email))
 				end
 				l_email.add_header_entry ("MIME-Version:", "1.0")
 				l_email.add_header_entry ("Content-Type", "text/plain; charset=UTF-8")
@@ -188,7 +188,7 @@ feature -- Basic Operations
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
-						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers))
+						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, ll_email))
 					end
 					send_email (l_email)
 				else
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			Result.append (a_report.synopsis)
 		end
 
-	recipients_to_array (a_recipients: LIST [STRING]): ARRAY [STRING]
+	recipients_to_array (a_recipients: LIST [STRING]; a_email: STRING): ARRAY [STRING]
 			-- Convert list of recipients to 'To' array of strings.
 		require
 			valid_recipients: not a_recipients.is_empty
@@ -276,16 +276,21 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			from
-				create Result.make_filled ("", 1, a_recipients.count)
+				create Result.make_empty
 				a_recipients.start
-				Result.put (a_recipients.item, 1)
-				i := 2
+				i := 1
+				if not a_recipients.item.is_case_insensitive_equal (a_email) then
+					Result.force (a_recipients.item, i)
+					i := 2
+				end
 				a_recipients.forth
 			until
 				a_recipients.after
 			loop
-				Result.put (a_recipients.item, i)
-				i := i + 1
+				if not a_recipients.item.is_case_insensitive_equal (a_email) then
+					Result.force (a_recipients.item, i)
+					i := i + 1
+				end
 				a_recipients.forth
 			end
 		ensure

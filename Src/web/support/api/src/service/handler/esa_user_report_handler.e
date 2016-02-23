@@ -87,7 +87,7 @@ feature -- HTTP Methods
 
 						l_pages := api_service.row_count_problem_report_user (l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.filter, l_input_validator.filter_content)
 						l_row := api_service.problem_reports (l_input_validator.page, l_input_validator.size, l_user, l_input_validator.category, l_input_validator.status_selected, l_input_validator.orderby, l_input_validator.dir_selected, l_input_validator.filter, l_input_validator.filter_content)
-						create l_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, l_user)
+						create l_view.make (l_row, l_input_validator.page, l_pages // l_input_validator.size, l_categories, list_status, l_user, l_pages)
 						l_view.set_selected_category (l_input_validator.category)
 						l_view.set_size (l_input_validator.size)
 						l_view.set_order_by (l_input_validator.orderby)

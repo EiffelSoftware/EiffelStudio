@@ -16,9 +16,9 @@ MKDIR = $mkdir
 LINK = $link32
 DLL_FLAGS = $dll_flags
 DLL_LIBS = $dll_libs
-OBJECTS = esqlite.$obj sqlite3.obj
-MT_OBJECTS = MTesqlite.$obj MTsqlite3.obj
-IL_OBJECTS = ILesqlite.$obj ILsqlite3.obj
+OBJECTS = esqlite.$obj sqlite3.$obj
+MT_OBJECTS = MTesqlite.$obj MTsqlite3.$obj
+IL_OBJECTS = ILesqlite.$obj ILsqlite3.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

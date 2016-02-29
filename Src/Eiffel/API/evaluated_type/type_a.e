@@ -1,6 +1,6 @@
 ﻿note
 	description: "Actual type description."
-	EIS: "name=code_review", "src=http://docs.google.com/Doc?id=dd7kn5vj_93ng9v6cg"
+	EIS: "name=code_review", "src=http://docs.google.com/Doc?id=dd7kn5vj_93ng9v6cg", "tag=review, type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

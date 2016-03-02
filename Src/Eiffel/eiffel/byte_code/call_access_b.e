@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Call and Access"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,6 +34,9 @@ inherit
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Access
+
+	type: TYPE_A
+			-- Result type of the call.
 
 	feature_id: INTEGER
 			-- Feature id of the called feature.
@@ -79,6 +82,14 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 feature -- Setting
 
+	set_type (t: like type)
+			-- Assign `t' to `type'.
+		do
+			type := t
+		ensure
+			type_set: type = t
+		end
+
 	set_precursor_type (p_type : like precursor_type)
 			-- Assign `p_type' to `precursor_type'.
 		require
@@ -96,51 +107,6 @@ feature -- Byte code generation
 			-- Make byte code for special calls.
 		do
 			special_routines.make_byte_code (ba, basic_type)
-		end
-
-	real_feature_id (a_context_type: CL_TYPE_A): INTEGER
-			-- The feature ID in INTEGER is not necessarily the same as
-			-- in the INTEGER_REF class. And likewise for other simple types.
-			-- But also for generic derivation which contains an expanded type
-			-- as a generic parameter.
-		require
-			a_context_type_not_void: a_context_type /= Void
-			a_context_type_has_class: a_context_type.has_associated_class
-		local
-			gen: GEN_TYPE_A
-		do
-			if precursor_type = Void then
-				if a_context_type.is_basic then
-						-- We perform a non-optimized call on a basic type.
-						-- Process the feature id of `feature_name' in the
-						-- associated reference type
-					Result := a_context_type.reference_type.base_class.feature_of_name_id (feature_name_id).feature_id
-				else
-						-- A generic parameter of current class has been derived
-						-- into an expanded type, so we need to find the `feature_id'
-						-- of the feature we want to call in the context of the
-						-- expanded class.
-						-- FIXME: Manu 01/24/2000
-						-- We do the search even for a generic class which do not
-						-- have a generic parameter who has been derived into an expanded type
-						-- We could maybe find a way for not performing the check in the
-						-- above case.
-					gen ?= context.current_type
-					if gen /= Void and then a_context_type.is_true_expanded then
-						Result := a_context_type.base_class.feature_of_rout_id (routine_id).feature_id
-					end
-				end
-			end
-				-- No feature ID was computed, so let's compute it.
-			if Result = 0 then
-				if context.current_type.class_id = a_context_type.class_id then
-						-- Code is processed in the context where it is written
-					Result := feature_id
-				else
-						-- Code is processed in the context different from the one where it is written
-					Result := a_context_type.base_class.feature_of_rout_id (routine_id).feature_id
-				end
-			end
 		end
 
 	basic_register: REGISTRABLE
@@ -290,6 +256,9 @@ feature -- Byte code generation
 				basic_type ?= type_i
 				if is_feature_special (True, basic_type) then
 					generate_special_feature (reg, basic_type)
+				elseif is_attribute then
+						-- The attribute is a value of a basic type.
+					generate_end (reg, basic_type)
 				else
 					buf := buffer
 						-- Generation of metamorphosis is enclosed between (), and
@@ -365,7 +334,7 @@ feature -- Byte code generation
 				buffer.put_character ('*')
 				basic_type.c_type.generate_access_cast (buf)
 			end
-			generate_end (basic_register, class_type)
+			generate_end (gen_reg, class_type)
 		end
 
 feature {NONE} -- C code generation
@@ -637,7 +606,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

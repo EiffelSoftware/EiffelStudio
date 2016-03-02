@@ -26,26 +26,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: FEATURE_I)
+	make (a: ATTRIBUTE_I)
 			-- Initialization
 		require
 			good_argument: a /= Void
-			is_attribute: a.is_attribute
-		local
-			l_attr: ATTRIBUTE_I
 		do
-			l_attr ?= a
-			attribute_name_id := l_attr.feature_name_id
-			routine_id := l_attr.rout_id_set.first
+			attribute_name_id := a.feature_name_id
+			routine_id := a.rout_id_set.first
 			if System.il_generation then
-				attribute_id := l_attr.origin_feature_id
-				written_in := l_attr.origin_class_id
+				attribute_id := a.origin_feature_id
+				written_in := a.origin_class_id
 			else
-				attribute_id := l_attr.feature_id
-				written_in := l_attr.written_in
+				attribute_id := a.feature_id
+				written_in := a.written_in
 			end
-			if l_attr.extension /= Void then
-				need_target := l_attr.extension.need_current (l_attr.extension.type)
+			if attached a.extension as e then
+				need_target := e.need_current (e.type)
 			else
 				need_target := True
 			end
@@ -76,17 +72,8 @@ feature -- Status setting
 
 feature
 
-	type: TYPE_A
-			-- Attribute type
-
 	read_only: BOOLEAN = False
 			-- Is the access only a read-only one ?
-
-	set_type (t: like type)
-			-- Assign `t' to `type'.
-		do
-			type := t
-		end
 
 	need_target: BOOLEAN
 			-- Does current call really need a target to be performed?
@@ -100,11 +87,8 @@ feature
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			attribute_b: ATTRIBUTE_B
 		do
-			attribute_b ?= other
-			if attribute_b /= Void then
+			if attached {ATTRIBUTE_B} other as attribute_b then
 				Result := attribute_id = attribute_b.attribute_id
 			end
 		end
@@ -212,7 +196,6 @@ feature -- Inlining
 
 	pre_inlined_code: ATTRIBUTE_B
 		do
-				-- Adapt type in current context for better results.
 			if parent /= Void then
 				Result := Current
 			else
@@ -221,7 +204,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

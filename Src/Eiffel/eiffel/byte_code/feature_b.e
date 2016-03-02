@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Byte code generation for feature call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -124,9 +124,6 @@ feature -- Visitor
 
 feature -- Access
 
-	type: TYPE_A
-			-- Type of the call
-
 	body_index: INTEGER
 			-- Body Index of the feature
 
@@ -169,12 +166,6 @@ feature -- Access
 			end
 		end
 
-	set_type (t: like type)
-			-- Assign `t' to `type'.
-		do
-			type := t
-		end
-
 	is_any_feature: BOOLEAN
 			-- Is Current an instance of ANY_FEATURE_B?
 		do
@@ -194,11 +185,8 @@ feature -- Access
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			feature_b: FEATURE_B
 		do
-			feature_b ?= other
-			if feature_b /= Void then
+			if attached {FEATURE_B} other as feature_b then
 				Result := feature_id = feature_b.feature_id
 			end
 		end
@@ -213,14 +201,12 @@ feature -- Access
 	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
-			c: CL_TYPE_A
 			l_type: TYPE_A
 			f: FEATURE_I
 		do
 			if not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute if inherited.
-				c ?= type_i
-				if c /= Void then
+				if attached {CL_TYPE_A} type_i as c then
 					f := c.base_class.feature_of_rout_id (routine_id)
 					if not f.is_attribute then
 						f := Void
@@ -370,9 +356,7 @@ feature -- Inlining
 				create inlined_current_b
 				parent.set_target (inlined_current_b)
 				inlined_current_b.set_parent (parent)
-
 				parent.set_message (Current)
-
 				Result := parent
 			end
 			if parameters /= Void then
@@ -721,7 +705,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

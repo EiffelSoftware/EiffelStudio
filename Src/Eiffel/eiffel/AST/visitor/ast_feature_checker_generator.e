@@ -370,12 +370,10 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 						if a_feature.has_arguments then
 							a_feature.check_argument_names (feature_table)
 						end
+						a_feature.check_local_names (a_body)
 					end
 					if error_level = l_error_level then
 						a_body.process (Current)
-						if not is_inherited and then a_is_for_inline_agent then
-							a_feature.check_local_names (a_body)
-						end
 					end
 				end
 			end
@@ -7255,9 +7253,23 @@ feature {NONE} -- Visitor
 			if attached i and then attached iteration_cursor_type then
 					-- Avoid processing iteration exit condition when iteration part has errors.
 					-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
-				local_info.set_type (iteration_cursor_type)
-				i.exit_condition.process (Current)
-				local_info.set_type (local_type)
+				if is_inherited then
+						-- Rely on routine ID computed earlier.
+					i.exit_condition.process (Current)
+				else
+						-- Check the call and compute associated routine ID for the top iteration cursor type.
+					local_info.set_type (iteration_cursor_type)
+					is_byte_node_enabled := False
+					i.exit_condition.process (Current)
+					is_byte_node_enabled := l_needs_byte_node
+					local_info.set_type (local_type)
+						-- If everything is OK, recompute the code using actual local type.
+					if last_type /= Void then
+						is_inherited := True
+						i.exit_condition.process (Current)
+						is_inherited := False
+					end
+				end
 				if last_type /= Void then
 						-- Check if it is a boolean expression.
 					if not last_type.actual_type.is_known then
@@ -7367,9 +7379,23 @@ feature {NONE} -- Visitor
 				if attached iteration_cursor_type then
 						-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
 					e := error_level
-					local_info.set_type (iteration_cursor_type)
-					i.advance.process (Current)
-					local_info.set_type (local_type)
+					if is_inherited then
+							-- Rely on routine ID computed earlier.
+						i.advance.process (Current)
+					else
+							-- Check the call and compute associated routine ID for the top iteration cursor type.
+						local_info.set_type (iteration_cursor_type)
+						is_byte_node_enabled := False
+						i.advance.process (Current)
+						is_byte_node_enabled := l_needs_byte_node
+						local_info.set_type (local_type)
+							-- If everything is OK, recompute the code using actual local type.
+						if error_level = e then
+							is_inherited := True
+							i.advance.process (Current)
+							is_inherited := False
+						end
+					end
 					if error_level = e and then l_needs_byte_node then
 						create l_list.make (1)
 						l_list.extend (last_byte_node)
@@ -7654,19 +7680,27 @@ feature {NONE} -- Visitor
 						-- The local name is an argument name of the
 						-- current analyzed feature.
 					error_handler.insert_error (create {VOIT2}.make (context, local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					reset_types
 				elseif feature_table.has_id (local_name_id) then
 						-- The local name is a feature name of the
 						-- current analyzed class.
 					error_handler.insert_error (create {VOIT2}.make (context, local_id))
+						-- Clear `last_type' to make sure it is not set when there is an error.
+					reset_types
 				end
 			end
 			if context.locals.has (local_name_id) then
 					-- The local name is a name of a feature local variable.
 				error_handler.insert_error (create {VOIT2}.make (context, local_id))
+					-- Clear `last_type' to make sure it is not set when there is an error.
+				reset_types
 			end
 			if context.object_test_local (local_name_id) /= Void then
 					-- The local name is a name of an object test local.
 				error_handler.insert_error (create {VOIT2}.make (context, local_id))
+					-- Clear `last_type' to make sure it is not set when there is an error.
+				reset_types
 			end
 
 			if attached last_type as iteration_type then

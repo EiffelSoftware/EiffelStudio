@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged access to an Eiffel attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,8 +9,8 @@ inherit
 	ATTRIBUTE_B
 		redefine
 			free_register,
-			basic_register,
 			generate_access_on_type,
+			generate_parameters,
 			is_polymorphic,
 			generate_on,
 			generate_access,
@@ -51,9 +51,6 @@ feature
 	register: REGISTRABLE
 			-- In which register the expression is stored
 
-	basic_register: REGISTRABLE
-			-- Register used to store the metamorphosed simple type
-
 	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
@@ -64,9 +61,6 @@ feature
 			-- Free registers
 		do
 			Precursor {ATTRIBUTE_B}
-			if basic_register /= Void then
-				basic_register.free_register
-			end
 		end
 
 	analyze
@@ -86,8 +80,6 @@ end
 
 	analyze_on (reg: REGISTRABLE)
 			-- Analyze access to attribute on `reg'
-		local
-			tmp_register: REGISTER
 		do
 debug
 io.error.put_string ("In attribute_bl [analyze_on]: ")
@@ -100,14 +92,6 @@ end
 				-- Check whether we'll need to compute the dynamic type
 				-- of current or not.
 			check_dt_current (reg)
-			if context_type.is_basic then
-					-- Get a register to store the metamorphosed basic type,
-					-- on which the attribute access is made. The lifetime of
-					-- this temporary is really short: just the time to make
-					-- the call...
-				create tmp_register.make (Reference_c_type)
-				basic_register := tmp_register
-			end
 debug
 io.error.put_string ("Out attribute_bl [analyze_on]: ")
 io.error.put_string (attribute_name)
@@ -151,6 +135,12 @@ end
 			end
 		end
 
+	generate_parameters (reg: REGISTRABLE)
+			-- <Precursor>
+			-- Attributes have no arguments.
+		do
+		end
+
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate attribute in a `typ' context
 		local
@@ -159,62 +149,68 @@ end
 			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			l_attr: ATTR_TABLE [ATTR_ENTRY]
 		do
-			buf := buffer
-			type_i := real_type (type)
-			type_c := type_i.c_type
-				-- No need to use dereferencing if object is an expanded
-				-- or if it is a bit.
-			if not type_i.is_true_expanded then
-					-- For dereferencing, we need a star...
-				buf.put_character ('*')
-					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (buf)
-			end
-			buf.put_character ('(')
-			if context.workbench_mode or reg.is_current then
+			if not reg.c_type.is_reference then
+					-- This is an access on a value of an object of basic type.
 				reg.print_register
 			else
-				buf.put_string ("RTCV(")
-				reg.print_register
-				buf.put_character (')')
-			end
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
-			if array_index >= 0 then
-					-- The access is polymorphic, which means the offset
-					-- is not a constant and has to be computed.
-				table_name := Encoder.attribute_table_name (routine_id)
-
-					-- Generate following dispatch:
-					-- table [Actual_offset - base_offset]
-				buf.put_string (" + ")
-				buf.put_string (table_name)
-				buf.put_character ('[')
-				if reg.is_current then
-					context.generate_current_dtype
+				buf := buffer
+				type_i := real_type (type)
+				type_c := type_i.c_type
+					-- No need to use dereferencing if object is an expanded
+					-- or if it is a bit.
+				if not type_i.is_true_expanded then
+						-- For dereferencing, we need a star...
+					buf.put_character ('*')
+						-- ...followed by the appropriate access cast
+					type_c.generate_access_cast (buf)
+				end
+				buf.put_character ('(')
+				if context.workbench_mode or reg.is_current then
+					reg.print_register
 				else
-					buf.put_string ({C_CONST}.dtype);
-					buf.put_character ('(')
+					buf.put_string ("RTCV(")
 					reg.print_register
 					buf.put_character (')')
 				end
-				buf.put_character ('-')
-				buf.put_integer (array_index)
-				buf.put_character (']')
+				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
+				if array_index >= 0 then
+						-- The access is polymorphic, which means the offset
+						-- is not a constant and has to be computed.
+					table_name := Encoder.attribute_table_name (routine_id)
 
-					-- Mark attribute offset table used.
-				Eiffel_table.mark_used (routine_id)
-					-- Remember external attribute offset declaration
-				Extern_declarations.add_attribute_table (table_name)
-			else
+						-- Generate following dispatch:
+						-- table [Actual_offset - base_offset]
+					buf.put_string (" + ")
+					buf.put_string (table_name)
+					buf.put_character ('[')
+					if reg.is_current then
+						context.generate_current_dtype
+					else
+						buf.put_string ({C_CONST}.dtype);
+						buf.put_character ('(')
+						reg.print_register
+						buf.put_character (')')
+					end
+					buf.put_character ('-')
+					buf.put_integer (array_index)
+					buf.put_character (']')
 
-					-- Hardwire the offset
-				l_attr ?= eiffel_table.poly_table (routine_id)
-				check l_attr_not_void: l_attr /= Void end
-				l_attr.generate_attribute_offset (buf, typ, context.context_class_type)
+						-- Mark attribute offset table used.
+					Eiffel_table.mark_used (routine_id)
+						-- Remember external attribute offset declaration
+					Extern_declarations.add_attribute_table (table_name)
+				else
+
+						-- Hardwire the offset
+					check
+						is_attribute_table: attached {ATTR_TABLE [ATTR_ENTRY]} eiffel_table.poly_table (routine_id) as l_attr
+					then
+						l_attr.generate_attribute_offset (buf, typ, context.context_class_type)
+					end
+				end
+				buf.put_character (')')
 			end
-			buf.put_character (')')
 		end
 
 	fill_from (a: ATTRIBUTE_B)
@@ -285,7 +281,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

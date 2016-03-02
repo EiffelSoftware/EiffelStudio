@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged node for attribute access in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,17 +23,14 @@ feature -- C code generation
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
-		local
-			class_type: CL_TYPE_A
 		do
 				-- Do nothing if `reg' is not the current entity
 			if reg.is_current then
-				class_type ?= context_type;
-				if class_type /= Void then
-					context.add_dt_current;
-				end;
-			end;
-		end;
+				if attached {CL_TYPE_A} context_type as class_type then
+					context.add_dt_current
+				end
+			end
+		end
 
 	is_polymorphic: BOOLEAN = True;
 			-- Is the attribute access polymorphic ?
@@ -46,47 +43,52 @@ feature -- C code generation
 			type_c: TYPE_C;
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-			is_nested := not is_first;
-			type_i := real_type (type);
-			type_c := type_i.c_type;
-			if not type_i.is_true_expanded then
-					-- For dereferencing, we need a star...
-				buf.put_character ('*');
-					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (buf);
-			end;
-			buf.put_character ('(');
-			reg.print_register;
-			if reg.is_predefined or reg.register /= No_register then
-				buf.put_three_character (' ', '+', ' ')
+			if not reg.c_type.is_reference then
+					-- An access on an object of basic type is its value.
+				reg.print_register
 			else
-				buf.put_two_character (' ', '+')
-				buf.put_new_line;
-				buf.indent;
-			end;
-			if is_nested then
-				buf.put_string ("RTVA(");
-			else
-				buf.put_string ("RTWA(");
-			end;
-			buf.put_integer (routine_id)
-			buf.put_string ({C_CONST}.comma_space);
-			if is_nested then
-				buf.put_string_literal (attribute_name)
-				buf.put_string ({C_CONST}.comma_space);
-				reg.print_register;
-			else
-				context.generate_current_dtype;
-			end;
-			buf.put_string ("))");
-			if not (reg.is_predefined or reg.register /= No_register) then
-			  buf.exdent;
-			end;
-		end;
+				buf := buffer
+				is_nested := not is_first
+				type_i := real_type (type)
+				type_c := type_i.c_type
+				if not type_i.is_true_expanded then
+						-- For dereferencing, we need a star...
+					buf.put_character ('*')
+						-- ...followed by the appropriate access cast
+					type_c.generate_access_cast (buf)
+				end
+				buf.put_character ('(')
+				reg.print_register
+				if reg.is_predefined or reg.register /= No_register then
+					buf.put_three_character (' ', '+', ' ')
+				else
+					buf.put_two_character (' ', '+')
+					buf.put_new_line
+					buf.indent
+				end
+				if is_nested then
+					buf.put_string ("RTVA(")
+				else
+					buf.put_string ("RTWA(")
+				end;
+				buf.put_integer (routine_id)
+				buf.put_string ({C_CONST}.comma_space)
+				if is_nested then
+					buf.put_string_literal (attribute_name)
+					buf.put_string ({C_CONST}.comma_space)
+					reg.print_register
+				else
+					context.generate_current_dtype
+				end
+				buf.put_string ("))")
+				if not (reg.is_predefined or reg.register /= No_register) then
+				  buf.exdent
+				end
+			end
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

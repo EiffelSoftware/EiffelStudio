@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Access to a C external."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Access to a C external
 
 class EXTERNAL_B
 
@@ -65,9 +65,6 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_A
-			-- Type of the call
-
 	parameters: BYTE_LIST [PARAMETER_B];
 			-- Feature parameters: can be Void
 
@@ -113,12 +110,9 @@ feature -- Status report
 
 	is_constant_expression: BOOLEAN
 			-- Is constant expression?
-		local
-			l_ext: IL_ENUM_EXTENSION_I
 		do
 				-- For now only a .NET enum type is constant for an external call.
-			l_ext ?= extension
-			Result := l_ext /= Void
+			Result := attached {IL_ENUM_EXTENSION_I} extension
 		end
 
 	has_call: BOOLEAN = True
@@ -172,12 +166,6 @@ feature -- Routines for externals
 				end
 			end
 		end
-
-	set_type (t: like type)
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
 
 	enable_static_call
 			-- Set `is_static_call' to `True'.
@@ -248,14 +236,11 @@ feature -- Status report
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			external_b: EXTERNAL_B;
 		do
-			external_b ?= other;
-			if external_b /= Void then
-				Result := external_name_id = external_b.external_name_id;
-			end;
-		end;
+			if attached {EXTERNAL_B} other as external_b then
+				Result := external_name_id = external_b.external_name_id
+			end
+		end
 
 	enlarged: CALL_ACCESS_B
 			-- Enlarge the tree to get more attributes and return the
@@ -269,14 +254,12 @@ feature -- Status report
 			-- Enlarged byte node evaluated in the context of `a_type_i'.
 		local
 			external_bl: EXTERNAL_BL
-			c: CL_TYPE_A
 			f: FEATURE_I
 		do
 			if not is_static_call and then not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute or internal routine.
 					-- and if redeclared as an external, make sure it is not redeclared differently.
-				c ?= a_type_i
-				if c /= Void then
+				if attached {CL_TYPE_A} a_type_i as c then
 					f := c.base_class.feature_of_rout_id (routine_id)
 					if equal (f.extension, extension) then
 						f := Void
@@ -360,15 +343,12 @@ feature -- Inlining
 			if parent /= Void then
 				Result := Current
 			else
-				create parent;
-
-				create inlined_current_b;
-				parent.set_target (inlined_current_b);
-				inlined_current_b.set_parent (parent);
-
-				parent.set_message (Current);
-
-				Result := parent;
+				create parent
+				create inlined_current_b
+				parent.set_target (inlined_current_b)
+				inlined_current_b.set_parent (parent)
+				parent.set_message (Current)
+				Result := parent
 			end
 			if parameters /= Void then
 				parameters := parameters.pre_inlined_code
@@ -391,7 +371,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

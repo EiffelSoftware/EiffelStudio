@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generation of IL code using a bridge pattern."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8178,26 +8178,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 
 feature {NONE} -- Implementation: Helpers
 
-	insert_static_type_id (an_array: SPECIAL [INTEGER]; a_type: TYPE_A; a_pos: INTEGER; a_context_type: TYPE_A)
-			-- Insert `a_type' static_type_id if not a formal, and the static_type_id of System.Object otherwise
-			-- in `an_array' at position `a_pos'.
-		require
-			an_array_not_void: an_array /= Void
-			a_type_not_void: a_type /= Void
-			a_pos_valid: an_array.valid_index (a_pos)
-			a_context_type_not_void: a_context_type /= Void
-			a_context_type_valid: a_context_type.is_valid
-		local
-			l_type: TYPE_A
-		do
-			l_type := a_type.actual_type
-			if l_type.is_formal or l_type.is_none then
-				an_array.put (system.system_object_class.compiled_class.types.first.static_type_id, a_pos)
-			else
-				an_array.put (l_type.static_type_id (a_context_type), a_pos)
-			end
-		end
-
 	same_signature (a_feat, a_other_feat: FEATURE_I; a_type, a_other_type: CLASS_TYPE): BOOLEAN
 			-- Special treatement to know whether or not `a_other_feat' in `a_other_type' has the same signature
 			-- as `a_feat' defined in `a_type'.
@@ -8320,7 +8300,7 @@ feature -- Inline agents
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

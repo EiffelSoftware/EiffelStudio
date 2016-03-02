@@ -25,10 +25,8 @@ feature {NONE} -- Initialization
 		require
 			valid_bounds: min_index <= max_index + 1
 		do
-			lower_defined := True
-			upper_defined := True
-			lower_internal := min_index
-			upper_internal := max_index
+			lower := min_index
+			upper := max_index
 		ensure
 			lower_defined: lower_defined
 			upper_defined: upper_defined
@@ -47,7 +45,7 @@ feature -- Duplication
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

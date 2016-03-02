@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of TUPLE"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -354,12 +354,6 @@ feature -- Status report
 			-- Is Current empty?
 		do
 			Result := count = 0
-		end
-
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
 		end
 
 feature -- Element change
@@ -1516,7 +1510,7 @@ feature {NONE} -- Externals: Setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

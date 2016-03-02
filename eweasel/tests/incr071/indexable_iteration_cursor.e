@@ -125,9 +125,9 @@ feature -- Cursor movement
 		do
 			Precursor
 			if is_reversed then
-				target_index := index_set.upper
+				target_index := target.upper
 			else
-				target_index := index_set.lower
+				target_index := target.lower
 			end
 		end
 
@@ -168,12 +168,6 @@ feature {NONE} -- Implementation
 
 	target: READABLE_INDEXABLE [G]
 			-- <Precursor>
-
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes for `target'
-		do
-			Result := target.index_set
-		end
 
 invariant
 	step_positive: step > 0

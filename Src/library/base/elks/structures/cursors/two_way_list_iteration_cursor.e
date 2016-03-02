@@ -53,18 +53,16 @@ feature -- Cursor movement
 			-- <Precursor>
 		local
 			l_list: like target
-			l_index_set: like index_set
 		do
-			l_index_set := index_set
+			l_list := target
 			if is_reversed then
-				first_index := l_index_set.upper
-				last_index := l_index_set.lower
+				first_index := l_list.upper
+				last_index := l_list.lower
 			else
-				last_index := l_index_set.upper
-				first_index := l_index_set.lower
+				last_index := l_list.upper
+				first_index := l_list.lower
 			end
 			target_index := first_index
-			l_list := target
 			if is_reversed then
 				active := l_list.last_element
 			else

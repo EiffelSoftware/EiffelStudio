@@ -21,7 +21,7 @@ class ARRAYI [G -> ANY] inherit
 		rename
 			item as item alias "[]"
 		redefine
-			copy, is_equal
+			copy, index_set, is_equal
 		end
 
 	TO_SPECIAL [G]

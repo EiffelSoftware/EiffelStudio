@@ -31,16 +31,22 @@ feature -- Access
 
 feature -- Measurement
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indices.
+	lower: INTEGER
+			-- <Precursor>
 		do
-			Result := structure.index_set
+			Result := structure.lower
+		end
+
+	upper: INTEGER
+			-- <Precursor>
+		do
+			Result := structure.upper
 		end
 
 	count: INTEGER
 			-- Number of items.
 		do
-			Result := index_set.count
+			Result := upper - lower + 1
 		end
 
 feature -- Status report

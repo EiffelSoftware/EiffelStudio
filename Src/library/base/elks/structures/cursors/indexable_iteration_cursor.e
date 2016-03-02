@@ -190,15 +190,15 @@ feature -- Cursor movement
 	start
 			-- Move to first position.
 		local
-			l_index_set: like index_set
+			l_target: like target
 		do
-			l_index_set := index_set
+			l_target := target
 			if is_reversed then
-				first_index := l_index_set.upper
-				last_index := l_index_set.lower
+				first_index := l_target.upper
+				last_index := l_target.lower
 			else
-				last_index := l_index_set.upper
-				first_index := l_index_set.lower
+				last_index := l_target.upper
+				first_index := l_target.lower
 			end
 			target_index := first_index
 		ensure
@@ -222,18 +222,12 @@ feature {ITERABLE, ITERATION_CURSOR} -- Implementation
 	target: READABLE_INDEXABLE [G]
 			-- Associated structure used for iteration.
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes for `target'.
-		do
-			Result := target.index_set
-		end
-
 invariant
-	target_attached: target /= Void
+	target_attached: attached target
 	step_positive: step > 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -242,5 +236,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

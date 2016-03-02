@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Possibly circular sequences of items,
 		without commitment to a particular representation
@@ -138,12 +138,13 @@ feature -- Measurement
 			go_to (pos)
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
+	lower: INTEGER = 1
+			-- <Precursor>
+
+	upper: INTEGER
+			-- <Precursor>
 		do
-			create Result.make (1, count)
-		ensure then
-			count_definition: Result.count = count
+			Result := count
 		end
 
 feature -- Cursor movement
@@ -382,10 +383,9 @@ invariant
 	isfirst_definition: isfirst = ((not is_empty) and (index = 1))
 	islast_definition: islast = ((not is_empty) and (index = count))
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
-	index_set_has_same_count: index_set.count = count
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

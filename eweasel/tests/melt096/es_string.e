@@ -70,6 +70,12 @@ feature -- Status report
 			no_final_blank: item (count) /= ' '
 		end
 
+	upper: INTEGER is   
+                          -- Synonym of count   
+                  do   
+                          Result := count   
+                  end   
+   
 feature -- Element change
 
 	shorten_to (i: INTEGER) is

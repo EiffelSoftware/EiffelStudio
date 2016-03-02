@@ -21,6 +21,8 @@ inherit
 		end
 
 	READABLE_INDEXABLE [detachable separate ANY]
+		rename
+			upper as count
 		redefine
 			is_equal
 		end
@@ -346,8 +348,11 @@ feature -- Status report
 
 	upper: INTEGER
 			-- Upper bound of TUPLE.
+			-- Use `count' instead.
 		do
 			Result := count
+		ensure
+			definition: Result = count
 		end
 
 	is_empty: BOOLEAN

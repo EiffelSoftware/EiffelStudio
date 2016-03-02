@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "List of clickable syntax items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 inherit
 	ARRAYED_LIST [CLICK_AST]
 		export
-			{ANY} area, lower, upper
+			{ANY} area, lower
 		end
 
 create
@@ -55,7 +55,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

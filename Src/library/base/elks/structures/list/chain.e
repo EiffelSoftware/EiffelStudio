@@ -25,9 +25,10 @@ deferred class CHAIN [G] inherit
 
 	INDEXABLE [G, INTEGER]
 		rename
+			bag_put as sequence_put,
 			item as i_th alias "[]",
 			put as put_i_th,
-			bag_put as sequence_put
+			upper as count
 		undefine
 			prune_all, sequence_put
 		redefine
@@ -140,12 +141,6 @@ feature -- Measurement
 
 	lower: INTEGER = 1
 			-- <Precursor>
-
-	upper: INTEGER
-			-- <Precursor>
-		do
-			Result := count
-		end
 
 feature -- Cursor movement
 

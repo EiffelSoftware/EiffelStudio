@@ -111,7 +111,7 @@ feature -- Access
 				Result := 1 + argument_names.index_of (arg_id, a_start_position - 1)
 			end
 		ensure
-			not_found_or_found: Result = 0 or else (Result >= 1 and then Result <= count)
+			not_found_or_found: Result = 0 or else (Result >= a_start_position and then Result <= count)
 		end
 
 	pattern_types: detachable ARRAY [TYPE_A]
@@ -358,7 +358,7 @@ invariant
 	argument_names_not_void: argument_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

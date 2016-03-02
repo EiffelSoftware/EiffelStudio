@@ -1,5 +1,6 @@
-note
+﻿note
 	description: "Tables whose keys are integers in a contiguous interval"
+	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	names: indexable, access;
@@ -16,7 +17,7 @@ inherit
 feature -- Access
 
 	item alias "[]" (i: INTEGER): G
-			-- Entry at position `i'
+			-- Entry at position `i'.
 		require
 			valid_index: valid_index (i)
 		deferred
@@ -26,15 +27,30 @@ feature -- Access
 			-- <Precursor>
 		do
 			create Result.make (Current)
+			Result.start
 		end
 
 feature -- Measurement
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
+	lower: INTEGER
+			-- Minimum index.
 		deferred
+		end
+
+	upper: INTEGER
+			-- Maximum index.
+		deferred
+		end
+
+	index_set: INTEGER_INTERVAL
+			-- Range of acceptable indexes.
+		obsolete "Use `lower' and `upper' instead."
+		do
+			create Result.make (lower, upper)
 		ensure
 			not_void: Result /= Void
+			same_lower: Result.lower = lower
+			same_upper: Result.upper = upper
 		end
 
 feature -- Status report
@@ -43,14 +59,15 @@ feature -- Status report
 			-- Is `i' a valid index?
 		deferred
 		ensure
-			only_if_in_index_set:
-				Result implies ((i >= index_set.lower) and (i <= index_set.upper))
+			only_if_in_index_set: Result implies (lower <= i and i <= upper)
 		end
 
+invariant
+	consistent_boundaries: upper < lower implies upper = lower - 1
+
 note
-	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

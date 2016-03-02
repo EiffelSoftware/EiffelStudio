@@ -1,5 +1,4 @@
 indexing
-	description: "";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -71,15 +70,6 @@ feature -- Status report
 			no_final_blank: item (count) /= ' '
 		end
 
-	lower: INTEGER is 1
-			-- Index of lowest character
-
-	upper: INTEGER is
-			-- Synonym of count
-		do
-			Result := count
-		end
-
 feature -- Element change
 
 	shorten_to (i: INTEGER) is
@@ -110,11 +100,4 @@ feature -- Conversion
 			Result.mirror
 		end
 
-feature -- Access
-
---	new_iterator: ES_STRING_ITERATOR is
---		do
---			!! Result.make (Current)
---		end
-
-end -- class ES_STRING
+end

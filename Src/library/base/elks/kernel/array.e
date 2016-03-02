@@ -1,9 +1,8 @@
-note
+﻿note
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
 		]"
-
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -234,16 +233,6 @@ feature -- Measurement
 			end
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
-		ensure then
-			same_count: Result.count = count
-			same_bounds:
-				((Result.lower = lower) and (Result.upper = upper))
-		end
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
@@ -341,11 +330,6 @@ feature -- Status report
 			-- Can array be resized automatically?
 		do
 			Result := ({G}).has_default
-		end
-
-	valid_index_set: BOOLEAN
-		do
-			Result := index_set.count = count
 		end
 
 feature -- Element change
@@ -872,13 +856,12 @@ invariant
 	area_exists: area /= Void
 	consistent_size: capacity = upper - lower + 1
 	non_negative_count: count >= 0
-	index_set_has_same_count: valid_index_set
 -- Internal discussion haven't reached an agreement on this invariant
 --	index_set_has_same_bounds: ((index_set.lower = lower) and
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

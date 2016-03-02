@@ -137,14 +137,6 @@ feature -- Measurement
 			go_to (pos)
 		end;
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (1, count)
-		ensure then
-			Result.count = count
-		end
-
 feature -- Cursor movement
 
 	start
@@ -333,7 +325,6 @@ invariant
 	isfirst_definition: isfirst = ((not is_empty) and (index = 1));
 	islast_definition: islast = ((not is_empty) and (index = count));
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
-	index_set_has_same_count: index_set.count = count
 
 end -- class CHAIN
 

@@ -12,6 +12,8 @@ inherit
 	PS_BACKEND_ENTITY
 
 	READABLE_INDEXABLE [STRING]
+		rename
+			upper as count
 		undefine
 			is_equal
 		end
@@ -49,11 +51,8 @@ feature {PS_ABEL_EXPORT} -- Access
 	meta_information: HASH_TABLE [STRING, STRING]
 			-- A key-value store for meta-information about a collection, such as its capacity.
 
-	index_set: INTEGER_INTERVAL
+	lower: INTEGER = 1
 			-- <Precursor>
-		do
-			Result := 1 |..| count
-		end
 
 feature {PS_ABEL_EXPORT} -- Status report
 

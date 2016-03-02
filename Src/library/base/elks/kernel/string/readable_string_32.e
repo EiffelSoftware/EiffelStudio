@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range. Read-only interface.
@@ -297,13 +297,13 @@ feature -- Measurement
 					Result = 1 + substring (2, count).occurrences (c)
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
+	lower: INTEGER = 1
+			-- <Precursor>
+
+	upper: INTEGER
+			-- <Precursor>
 		do
-			create Result.make (1, count)
-		ensure then
-			index_set_not_void: Result /= Void
-			index_set_count: Result.count = count
+			Result := count
 		end
 
 feature -- Comparison
@@ -850,7 +850,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Stacks implemented by resizable arrays"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -41,7 +41,7 @@ class ARRAYED_STACK [G] inherit
 			 	make, wipe_out, valid_index, index, off
 			{STACK} before, after, start, finish, forth, back
 			{ARRAYED_STACK} valid_cursor, cursor, go_to, area, area_v2,
-				i_th, upper, lower
+				i_th, lower
 		undefine
 			readable, writable,
 			append, fill
@@ -95,7 +95,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

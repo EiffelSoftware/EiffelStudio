@@ -26,6 +26,8 @@ inherit
 		end
 
 	READABLE_INDEXABLE [CHARACTER_32]
+		rename
+			upper as count
 		redefine
 			copy, is_equal, out
 		end
@@ -299,12 +301,6 @@ feature -- Measurement
 
 	lower: INTEGER = 1
 			-- <Precursor>
-
-	upper: INTEGER
-			-- <Precursor>
-		do
-			Result := count
-		end
 
 feature -- Comparison
 

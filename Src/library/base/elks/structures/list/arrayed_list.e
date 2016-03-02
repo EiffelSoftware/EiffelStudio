@@ -267,7 +267,7 @@ feature -- Iteration
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of items
+			-- Number of items.
 		do
 			Result := area_v2.count
 		end
@@ -275,6 +275,15 @@ feature -- Measurement
 	capacity: INTEGER
 		do
 			Result := area_v2.capacity
+		end
+
+	upper: INTEGER
+			-- Maximum index.
+			-- Use `count' instead.
+		do
+			Result := area_v2.count
+		ensure
+			definition: Result = count
 		end
 
 feature -- Comparison

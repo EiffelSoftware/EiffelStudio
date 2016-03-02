@@ -890,15 +890,15 @@ feature {TYPE_A} -- Helpers
 					end
 					if l_type.actual_type.is_formal or l_type.is_reference then
 						if a_level = 0 then
-								-- We are now comparing the B part in A [B]								
-							l_formal ?= l_other_generics.i_th (i)
-							Result := l_formal /= Void and then l_formal.position = i
+								-- We are now comparing the B part in A [B].
+								-- Do not worry about formal position, because FOO [G, H] and FOO [H, G] share the same class type.
+							Result := l_other_generics [i].is_formal
 						else
 								-- We are now analyzing the X part in A [B [X]]
 								-- which can only happen if B [X] is expanded. In that case
 								-- we just check that for X the corresponding actual in `other' is
 								-- also a reference.
-							Result := l_other_generics.i_th (i).is_reference
+							Result := l_other_generics [i].is_reference
 						end
 					else
 						Result := l_type.internal_same_generic_derivation_as (current_type, l_other_generics.i_th (i), a_level + 1)
@@ -2039,7 +2039,7 @@ invariant
 	generics_not_void: generics /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

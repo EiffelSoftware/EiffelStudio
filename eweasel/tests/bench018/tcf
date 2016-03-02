@@ -2,6 +2,7 @@ test_name	 benchmark-loop-across-code-motion
 test_description Benchmark for across loop invariant code motion.
 
 copy_sub	Ace $TEST Ace
+copy_raw	generator.e $CLUSTER generator.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_frozen

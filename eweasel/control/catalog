@@ -1341,6 +1341,7 @@ test	equation-evaluation-sequence	final119 tcf fail finalizing
 test	comparison-involving-allocation	final120 tcf fail finalizing
 test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
+test	inline-internal-locals			final123 tcf fail finalizing inlining loop iteration object_test scoop
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

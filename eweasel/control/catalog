@@ -1332,7 +1332,7 @@ test	profile-once-per-process-function	final110 tcf pass finalizing
 test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
 test	finalize-keep-once-strings		final112 tcf pass finalizing
 test	finalize-inline-attribute-with-body	final113 tcf fail finalizing inlining attribute
-test	finalize-inline-across-loop		final114 tcf fail finalizing inlining
+test	finalize-inline-across-loop		final114 tcf pass finalizing inlining
 test	finalize-inline-none-generic-derivation	final115 tcf fail finalizing
 test	profile-crash-on-override		final116 tcf pass finalizing profile
 test	tight-loop-integer-constant-infinite-loop final117 tcf pass finalizing manual
@@ -1341,7 +1341,7 @@ test	equation-evaluation-sequence	final119 tcf fail finalizing
 test	comparison-involving-allocation	final120 tcf fail finalizing
 test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
-test	inline-internal-locals			final123 tcf fail finalizing inlining loop iteration object_test scoop
+test	inline-internal-locals			final123 tcf pass finalizing inlining loop iteration object_test scoop
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -3002,8 +3002,8 @@ test	benchmark-scoop-synthetic-winnow			bench014 tcf pass benchmark scoop synthe
 test	benchmark-runtime-slow-allocation			bench015 tcf pass benchmark runtime
 test	benchmark-scoop-memory-stress-test			bench016 tcf pass benchmark scoop multithreaded
 test	benchmark-scoop-passive-memory-stress-test		bench017 tcf pass benchmark scoop multithreaded
-test	benchmark-loop-across-code-motion			bench018 tcf pass benchmark loop across iteration
-test	benchmark-loop-across-expression			bench019 tcf fail benchmark loop across iteration
+test	benchmark-loop-across-code-motion			bench018 tcf pass benchmark loop across iteration inlining
+test	benchmark-loop-across-expression			bench019 tcf fail benchmark loop across iteration inlining
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

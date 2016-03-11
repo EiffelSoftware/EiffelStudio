@@ -53,6 +53,9 @@ feature -- Initialization
 			create once_manifest_string_count_table.make (100)
 			create once_manifest_string_table.make (100)
 			create class_type_stack.make (10)
+			create inlined_feature_stack.make (1)
+			create byte_code_stack.make (1)
+			inline_peek_depth := 0
 			create generated_inlines.make (5)
 			create generic_wrappers.make (0)
 			create precondition_object_test_local_offset.make (0)
@@ -1418,6 +1421,109 @@ feature -- Access
 			initialize_request_chain_macros
 		end
 
+	put_inline_context (f: INLINED_FEAT_B;
+		new_context_class_type: CLASS_TYPE; new_context_cl_type: CL_TYPE_A;
+		new_written_class_type: CLASS_TYPE; new_written_cl_type: CL_TYPE_A)
+			-- Switch current context to inline feature `f'.
+			-- Use `remove_inline_context' to restore context.
+		require
+			has_byte_code: attached byte_code
+		local
+			local_inliner: INLINER
+		do
+			local_inliner := system.remover.inliner
+			inlined_feature_stack.extend (local_inliner.inlined_feature)
+			local_inliner.set_inlined_feature (f)
+			byte_code_stack.extend (byte_code)
+			byte_code := f.byte_code
+			change_class_type_context (new_context_class_type, new_context_cl_type, new_written_class_type, new_written_cl_type)
+		end
+
+	remove_inline_context
+			-- Restore context prio to the previous call to `put_inline_context'.
+		require
+			has_inline_context: has_inline_context
+		do
+			restore_class_type_context
+			byte_code := byte_code_stack.last
+			byte_code_stack.finish
+			byte_code_stack.remove
+			system.remover.inliner.set_inlined_feature (inlined_feature_stack.last)
+			inlined_feature_stack.finish
+			inlined_feature_stack.remove
+		end
+
+	suspend_inline_context
+			-- Stop using current inline context and temporary switch to the calling context.
+			-- Use `resume_inline_context' to restore current inline context.
+		require
+			has_inline_context: has_inline_context
+			is_inline_context_suspendable: is_inline_context_suspendable
+		local
+			caller_context: like context_stack_type
+		do
+			if inline_peek_depth = 0 then
+					-- Store most nested context at the top of the stack.
+				put_inline_context (system.remover.inliner.inlined_feature, context_class_type, context_cl_type, class_type, current_type)
+			end
+				-- Increase peek level.
+			inline_peek_depth := inline_peek_depth + 1
+			byte_code := byte_code_stack [byte_code_stack.count - inline_peek_depth]
+			system.remover.inliner.set_inlined_feature (inlined_feature_stack [inlined_feature_stack.count - inline_peek_depth])
+			caller_context := class_type_stack [class_type_stack.count - inline_peek_depth]
+			context_class_type := caller_context.context_type
+			context_cl_type := caller_context.cl_type
+			set_class_type (caller_context.written_type)
+			current_type := caller_context.written_cl_type
+		ensure
+			has_inline_context: has_inline_context
+		end
+
+	resume_inline_context
+			-- Restore inline context temporary overrriden by `suspend_inline_context'.
+		require
+			has_inline_context: has_inline_context
+		local
+			caller_context: like context_stack_type
+		do
+			inline_peek_depth := inline_peek_depth - 1
+			if inline_peek_depth = 0 then
+				remove_inline_context
+			else
+				byte_code := byte_code_stack [byte_code_stack.count - inline_peek_depth]
+				system.remover.inliner.set_inlined_feature (inlined_feature_stack [inlined_feature_stack.count - inline_peek_depth])
+				caller_context := class_type_stack [class_type_stack.count - inline_peek_depth]
+				context_class_type := caller_context.context_type
+				context_cl_type := caller_context.cl_type
+				set_class_type (caller_context.written_type)
+				current_type := caller_context.written_cl_type
+			end
+		end
+
+	has_inline_context: BOOLEAN
+			-- Is there an inline context?
+		do
+			Result := not byte_code_stack.is_empty
+		ensure
+			definition: Result = not byte_code_stack.is_empty
+		end
+
+	is_inline_context_suspendable: BOOLEAN
+			-- Can current inline context be suspended and replaced with a context of a caller?
+		do
+			Result := inline_peek_depth + 1 <= byte_code_stack.count
+		ensure
+			definition: Result = (inline_peek_depth + 1 <= byte_code_stack.count)
+		end
+
+	is_inline_context_resumable: BOOLEAN
+			-- Can inline context be resumed from a previously suspended one?
+		do
+			Result := inline_peek_depth > 0
+		ensure
+			definition: Result = (inline_peek_depth > 0)
+		end
+
 	init (t: CLASS_TYPE)
 			-- Initialize byte context with `t'.
 		require
@@ -1426,7 +1532,7 @@ feature -- Access
 			f: FEATURE_I
 			feature_table: FEATURE_TABLE
 		do
-			class_type_stack.wipe_out
+			clear_inline_data
 			original_class_type := t
 			context_class_type := t
 			context_cl_type := t.type
@@ -1508,7 +1614,7 @@ feature -- Access
 			class_type_not_void: class_type /= Void
 			is_ancestor: -- new_context_cl_type.type_a.is_conformant_to (new_written_class_type.type.type_a)
 		do
-			class_type_stack.put ([context_class_type, context_cl_type, class_type, current_type])
+			class_type_stack.extend ([context_class_type, context_cl_type, class_type, current_type])
 			context_class_type := new_context_class_type
 			context_cl_type := new_context_cl_type
 			set_class_type (new_written_class_type)
@@ -1528,17 +1634,18 @@ feature -- Access
 			previous_context: like context_stack_type
 		do
 				-- Remove stack item before calling `set_class_type'
-			previous_context := class_type_stack.item
+			previous_context := class_type_stack.last
+			class_type_stack.finish
 			class_type_stack.remove
 			context_class_type := previous_context.context_type
 			context_cl_type := previous_context.cl_type
 			set_class_type (previous_context.written_type)
 			current_type := previous_context.written_cl_type
 		ensure
-			context_class_type_set: context_class_type = old class_type_stack.item.context_type
-			context_cl_type_set: context_cl_type = old class_type_stack.item.cl_type
-			class_type_set: class_type = old class_type_stack.item.written_type
-			current_type_set: current_type = old class_type_stack.item.written_cl_type
+			context_class_type_set: context_class_type = old class_type_stack.last.context_type
+			context_cl_type_set: context_cl_type = old class_type_stack.last.cl_type
+			class_type_set: class_type = old class_type_stack.last.written_type
+			current_type_set: current_type = old class_type_stack.last.written_cl_type
 		end
 
 	set_current_feature (f: FEATURE_I)
@@ -2748,7 +2855,7 @@ feature -- Clearing
 		do
 			class_type := Void
 			byte_code := Void
-			class_type_stack.wipe_out
+			clear_inline_data
 		end
 
 	clear_feature_data
@@ -2794,7 +2901,7 @@ feature -- Clearing
 			end
 				-- Wipe out once manifest strings records.
 			once_manifest_string_table.wipe_out
-			class_type_stack.wipe_out
+			clear_inline_data
 			generated_inlines.wipe_out
 		ensure
 			global_onces_is_empty: workbench_mode implies global_onces.is_empty
@@ -2809,7 +2916,7 @@ feature -- Clearing
 			global_onces.wipe_out
 			onces.wipe_out
 			once_manifest_string_count_table.wipe_out
-			class_type_stack.wipe_out
+			clear_inline_data
 			generic_wrappers.wipe_out
 			expanded_descendants := Void
 		ensure
@@ -2818,6 +2925,17 @@ feature -- Clearing
 			once_manifest_string_count_table_is_empty: once_manifest_string_count_table.is_empty
 			generic_wrappers_is_empty: generic_wrappers.is_empty
 			has_no_expanded_descendants_information: not has_expanded_descendants_information
+		end
+
+feature {NONE} -- Cleanup
+
+	clear_inline_data
+			-- Clean any data used for inlining.
+		do
+			class_type_stack.wipe_out
+			byte_code_stack.wipe_out
+			inlined_feature_stack.wipe_out
+			inline_peek_depth := 0
 		end
 
 feature -- Debugger
@@ -2996,14 +3114,26 @@ feature {NONE} -- Generic code generation
 			-- Set of routine IDs identified by the body index
 			-- for which a wrapper has to be generated
 
-feature {NONE} -- Implementation
+feature {NONE} -- Context storage
 
-	class_type_stack: ARRAYED_STACK [like context_stack_type]
+	class_type_stack: ARRAYED_LIST [like context_stack_type]
 			-- Class types saved due to the context change by `change_class_type_context'
 
 	context_stack_type: TUPLE [context_type: CLASS_TYPE; cl_type: CL_TYPE_A; written_type: CLASS_TYPE; written_cl_type: CL_TYPE_A]
 		do
 		end
+
+	inlined_feature_stack: ARRAYED_LIST [detachable INLINED_FEAT_B]
+			-- Inlined features saved by the calls to `put_inline_context'.
+
+	byte_code_stack: ARRAYED_LIST [BYTE_CODE]
+			-- Byte code saved by the calls to `put_inline_context'.
+
+	inline_peek_depth: INTEGER
+			-- Current "peek" depth in inline context stacks.
+			-- Allows to temporary switch to callers contexts.
+
+feature {NONE} -- Implementation
 
 	expanded_descendants: PACKED_BOOLEANS
 			-- Marks for class types whether they have an expanded descendant or not
@@ -3017,9 +3147,13 @@ invariant
 	class_type_stack_not_void: class_type_stack /= Void
 	precondition_object_test_local_offset_attached: precondition_object_test_local_offset /= Void
 	postconditionobject_test_local_offset_attached: postcondition_object_test_local_offset /= Void
+	attached_byte_code_stack: attached byte_code_stack
+	attached_inlined_feature_stack: attached inlined_feature_stack
+	consistent_inline_stacks: byte_code_stack.count = inlined_feature_stack.count
+	valid_inline_peek_depth: 0 <= inline_peek_depth and inline_peek_depth <= byte_code_stack.count
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

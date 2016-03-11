@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Access to an inlined object-test local in C code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -72,11 +72,12 @@ feature -- C code generation
 
 	print_register
 		do
-			System.remover.inliner.inlined_feature.local_regs.item (position).print_register
+			System.remover.inliner.inlined_feature.local_regs.item
+				(context.object_test_local_position (Current)).print_register
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

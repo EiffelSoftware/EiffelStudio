@@ -176,17 +176,16 @@ feature {NONE} -- Implementation
 						-- inlined features of SPECIAL) so that the creation is done using the proper object.
 						-- We also need to change the context otherwise it fails at execution time
 						-- (see eweasel test#exec147)
-					context.change_class_type_context (system.class_type_of_id (context_type_id), context_cl_type,
+					context.put_inline_context (Current,
+						system.class_type_of_id (context_type_id), context_cl_type,
 						system.class_type_of_id (written_type_id), written_cl_type)
 					context.set_inlined_current_register (gen_reg)
 					l_old_reg := current_reg
 					current_reg := gen_reg
-					inliner.set_inlined_feature (Current)
 					l_exp_class_type.generate_expanded_creation (buf, result_reg.register_name,
 						create {FORMAL_A}.make (False, False, 1), context.context_class_type)
 					current_reg := l_old_reg
-					context.restore_class_type_context
-					inliner.set_inlined_feature (Void)
+					context.remove_inline_context
 					context.set_inlined_current_register (Void)
 
 					buf.put_new_line
@@ -539,7 +538,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

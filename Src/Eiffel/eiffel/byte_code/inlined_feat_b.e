@@ -85,19 +85,15 @@ feature
 		end
 
 	enlarged: INLINED_FEAT_B
-		local
-			local_inliner: INLINER
 		do
 			Result := Current
 			enlarge_parameters
 
-			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current)
-			Context.change_class_type_context
-				(system.class_type_of_id (context_type_id), context_cl_type,
+			Context.put_inline_context (Current,
+				system.class_type_of_id (context_type_id), context_cl_type,
 				system.class_type_of_id (written_type_id), written_cl_type)
 
-			compound := byte_code.compound;
+			compound := byte_code.compound
 			if compound /= Void then
 				compound.enlarge_tree
 				saved_compound := compound.deep_twin
@@ -105,8 +101,7 @@ feature
 				saved_compound := Void
 			end
 
-			Context.restore_class_type_context
-			local_inliner.set_inlined_feature (Void)
+			Context.remove_inline_context
 		end
 
 	free_register
@@ -135,7 +130,6 @@ feature
 			local_is_current_temporary: BOOLEAN
 			a: ATTRIBUTE_BL
 			access: ACCESS_EXPR_B
-			local_inliner: INLINER
 			cl_type_i: CL_TYPE_A
 		do
 				-- First, standard analysis of the call
@@ -143,21 +137,18 @@ feature
 			reg_type := reg.c_type
 
 			cl_type_i ?= context_type
-			Context.change_class_type_context
+			context.change_class_type_context
 				(system.class_type_of_id (context_type_id), context_cl_type,
 				system.class_type_of_id (written_type_id), written_cl_type)
 
 			local_regs := get_inlined_registers (byte_code.locals)
 			argument_regs := get_inlined_param_registers (byte_code.arguments)
 
+				-- Instantiation of the result type (used by INLINED_RESULT_B)
 			r_type := real_type (result_type)
 			if not r_type.is_void then
 				result_reg := get_inline_register (r_type)
 			end
-
-				-- Instantiation of the result type (used by INLINED_RESULT_B)
-			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current)
 
 			local_is_current_temporary := reg.is_temporary or reg.is_predefined
 
@@ -198,6 +189,10 @@ feature
 				create {REGISTER} current_reg.make (reg_type)
 			end
 
+			context.restore_class_type_context
+			context.put_inline_context (Current,
+				system.class_type_of_id (context_type_id), context_cl_type,
+				system.class_type_of_id (written_type_id), written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
 			if compound /= Void then
@@ -216,10 +211,7 @@ feature
 			if not local_is_current_temporary then
 				current_reg.free_register
 			end;
-
-			local_inliner.set_inlined_feature (Void)
-
-			Context.restore_class_type_context
+			context.remove_inline_context
 			Context.set_inlined_current_register (Void)
 		end
 
@@ -239,16 +231,12 @@ feature -- Generation
 			context_class_type: CLASS_TYPE
 			written_class_type: CLASS_TYPE
 			buf: GENERATION_BUFFER
-			local_inliner: INLINER
 			p: like parameters
 			l_area: SPECIAL [EXPR_B]
 			b_area: SPECIAL [BOOLEAN]
 			i, count: INTEGER
 		do
 			Precursor {FEATURE_BL} (gen_reg)
-
-			local_inliner := inliner
-			local_inliner.set_inlined_feature (Current);
 
 			buf := buffer
 			buf.generate_block_open
@@ -287,7 +275,8 @@ feature -- Generation
 			context_class_type := system.class_type_of_id (context_type_id)
 			written_class_type := system.class_type_of_id (written_type_id)
 
-			Context.change_class_type_context (context_class_type, context_cl_type,
+			Context.put_inline_context (Current,
+				context_class_type, context_cl_type,
 				written_class_type, written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
@@ -317,13 +306,13 @@ feature -- Generation
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
 
-				Context.restore_class_type_context
+				context.suspend_inline_context
 				Context.set_inlined_current_register (Void)
 
 				gen_reg.print_register
 				buf.put_character (';')
-				Context.change_class_type_context (context_class_type, context_cl_type,
-					written_class_type, written_cl_type)
+
+				context.resume_inline_context
 				Context.set_inlined_current_register (current_reg)
 			end
 
@@ -338,7 +327,7 @@ feature -- Generation
 					buf.put_string ("inlined_dftype = ")
 					buf.put_string ({C_CONST}.dftype)
 					buf.put_character ('(')
-					current_reg.print_register
+					current_register.print_register
 					buf.put_two_character (')', ';')
 				end
 				if inlined_dt_current > 1 then
@@ -349,7 +338,7 @@ feature -- Generation
 					buf.put_string ("inlined_dtype = ")
 					buf.put_string ({C_CONST}.dtype)
 					buf.put_character ('(')
-					current_reg.print_register
+					current_register.print_register
 					buf.put_two_character (')', ';')
 				end
 			end
@@ -378,10 +367,8 @@ feature -- Generation
 
 			buf.generate_block_close
 
-			Context.restore_class_type_context
+			Context.remove_inline_context
 			Context.set_inlined_current_register (Void)
-
-			local_inliner.set_inlined_feature (Void)
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
@@ -613,7 +600,7 @@ feature -- Code to inline
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

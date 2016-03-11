@@ -584,25 +584,20 @@ feature -- Inlining
 							create inlined_feat_b
 						end
 						inlined_feat_b.fill_from (Current)
-
-							-- Change context type before evaluating inlined feature byte code.
-						Context.change_class_type_context (context_class_type, cl_type, written_class_type, written_cl_type)
-						inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
-
 						bc ?= Byte_server.disk_item (l_body_index)
 						check bc_not_void: bc /= Void end
-
 							-- We set the `byte_code' of `inlined_feat_b' because we need to be set
 							-- when handling in `pre_inlined_code' the type of attributes which relies
 							-- on the type of the arguments of the inlined routine.
 							-- This works because `bc' and `bc.pre_inlined_code' are the same object although
 							-- the content is modified.
 						inlined_feat_b.set_inlined_byte_code (bc)
-						inliner.set_inlined_feature (inlined_feat_b)
+						inlined_feat_b.set_context_type (context_class_type, cl_type, written_class_type, written_cl_type)
+							-- Change context type before evaluating inlined feature byte code.
+						context.put_inline_context (inlined_feat_b, context_class_type, cl_type, written_class_type, written_cl_type)
 						bc := bc.pre_inlined_code
 						check same_bc: bc = inlined_feat_b.byte_code end
-						Context.restore_class_type_context
-
+						context.remove_inline_context
 						Result := inlined_feat_b
 					end
 				else

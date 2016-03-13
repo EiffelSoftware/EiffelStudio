@@ -166,13 +166,7 @@ end
 					type_c.generate_access_cast (buf)
 				end
 				buf.put_character ('(')
-				if context.workbench_mode or reg.is_current then
-					reg.print_register
-				else
-					buf.put_string ("RTCV(")
-					reg.print_register
-					buf.put_character (')')
-				end
+				reg.print_target_register (typ)
 				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
 				if array_index >= 0 then
 						-- The access is polymorphic, which means the offset

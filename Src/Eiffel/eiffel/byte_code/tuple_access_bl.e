@@ -109,9 +109,9 @@ feature -- C Code generation
 					-- Make sure to call RTCV to verify that TUPLE is not Void.				
 				buf.put_new_line
 				real_type (tuple_element_type).c_type.generate_tuple_put (buffer)
-				buf.put_string ("(RTCV(")
-				a_register.print_register
-				buf.put_two_character (')', ',')
+				buf.put_character ('(')
+				a_register.print_target_register (Void)
+				buf.put_character (',')
 				buf.put_integer (position)
 				buf.put_character (',')
 				if context_type.is_separate and then attached s.register as r then
@@ -146,9 +146,8 @@ feature -- C Code generation
 			else
 					-- Make sure to call RTCV to verify that TUPLE is not Void.
 				t.generate_tuple_item (buf)
-				buf.put_string ("(RTCV(")
-				a_register.print_register
-				buf.put_character (')')
+				buf.put_character ('(')
+				a_register.print_target_register (Void)
 			end
 			buf.put_character (',')
 			buf.put_integer (position)
@@ -187,7 +186,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

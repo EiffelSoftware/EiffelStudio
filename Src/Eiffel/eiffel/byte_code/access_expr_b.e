@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Byte code for access to an expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for access to an expression
 
 class ACCESS_EXPR_B
 
@@ -9,19 +9,28 @@ inherit
 
 	ACCESS_B
 		redefine
-			analyze, unanalyze, generate,
-			print_register, propagate,
-			free_register, enlarged, used,
-			has_gcable_variable, has_call,
 			allocates_memory,
-			is_unsafe, is_type_fixed,
+			analyze,
 			calls_special_features,
+			enlarged,
+			free_register,
+			generate,
+			has_call,
+			has_gcable_variable,
+			has_side_effect,
+			is_hector,
+			is_predefined,
+			is_temporary,
+			is_type_fixed,
+			is_unsafe,
 			optimized_byte_node, size,
 			pre_inlined_code,
-			is_temporary, is_predefined,
+			print_register,
+			propagate,
 			register_name,
-			is_hector
-		end;
+			unanalyze,
+			used
+		end
 
 feature -- Visitor
 
@@ -33,7 +42,7 @@ feature -- Visitor
 
 feature
 
-	expr: EXPR_B;
+	expr: EXPR_B
 			-- The expression
 
 feature -- Status report
@@ -57,10 +66,10 @@ feature -- Status
 		end
 
 	set_expr (e: EXPR_B)
-			-- Set `expr' to `e'
+			-- Set `expr' to `e'ю
 		do
-			expr := e;
-		end;
+			expr := e
+		end
 
 	type: TYPE_A
 			-- Expression type
@@ -69,91 +78,93 @@ feature -- Status
 		end;
 
 	enlarged: like Current
-			-- Enlarge the expression
+			-- Enlarge the expressionю
 		do
-			expr := expr.enlarged;
-			Result := Current;
-		end;
+			expr := expr.enlarged
+			Result := Current
+		end
 
 	has_gcable_variable: BOOLEAN
-			-- Is the expression using a GCable variable ?
+			-- Is the expression using a GCable variable?
 		do
-			Result := expr.has_gcable_variable;
-		end;
+			Result := expr.has_gcable_variable
+		end
 
 	has_call: BOOLEAN
-			-- Is the expression using a call ?
+			-- Is the expression using a call?
 		do
-			Result := expr.has_call;
-		end;
+			Result := expr.has_call
+		end
 
 	allocates_memory: BOOLEAN
 		do
 			Result := expr.allocates_memory
-		end;
+		end
 
 	used (r: REGISTRABLE): BOOLEAN
-			-- Is `r' used in the expression ?
+			-- Is `r' used in the expression?
 		do
-			Result := expr.used (r);
-		end;
+			Result := expr.used (r)
+		end
+
+feature -- C code generation
 
 	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
 			if r = No_register or not used (r) then
 				if not context.propagated or r = No_register then
-					expr.propagate (r);
-				end;
-			end;
-		end;
+					expr.propagate (r)
+				end
+			end
+		end
 
 	free_register
-			-- Free register used by expression
+			-- Free register used by expressionю
 		do
-			expr.free_register;
-		end;
+			expr.free_register
+		end
 
 	analyze
-			-- Analyze expression
+			-- Analyze expression.
 		do
-			expr.analyze;
-		end;
+			expr.analyze
+		end
 
 	unanalyze
-			-- Undo the analysis of the expression
+			-- Undo the analysis of the expression.
 		do
-			expr.unanalyze;
-		end;
+			expr.unanalyze
+		end
 
 	generate
-			-- Generate expression
+			-- Generate expression.
 		do
-			expr.generate;
-		end;
+			expr.generate
+		end
 
 	same (other: ACCESS_B): BOOLEAN
-			-- Is other the same access as us ?
+			-- Is other the same access as us?
 		do
-			Result := false;
-		end;
+			Result := false
+		end
 
 	print_register
-			-- Print expression value
+			-- Print expression value.
 		do
 			if
 				(expr.register = Void or expr.register = No_register)
 				and then not expr.is_simple_expr
 			then
-				buffer.put_character ('(');
-				expr.print_register;
-				buffer.put_character (')');
+				buffer.put_character ('(')
+				expr.print_register
+				buffer.put_character (')')
 			else
 					-- No need for parenthesis if expression is held in a
 					-- register (e.g. a semi-strict boolean op).
-				expr.print_register;
-			end;
-		end;
+				expr.print_register
+			end
+		end
 
 feature -- Array optimization
 
@@ -182,7 +193,7 @@ feature -- Inlining
 
 	pre_inlined_code: like Current
 		do
-			Result := Current;
+			Result := Current
 			expr := expr.pre_inlined_code
 		end
 
@@ -190,21 +201,28 @@ feature -- Inlining
 			-- Is register a temporary one ?
 		do
 			Result := expr.is_temporary
-		end;
+		end
 
 	is_predefined: BOOLEAN
 			-- Is register a predefined one ?
 		do
 			Result := expr.is_predefined
-		end;
+		end
+
+	has_side_effect: BOOLEAN
+			-- <Precursor>
+		do
+			Result := expr.has_side_effect
+		end
 
 	register_name: STRING
 			-- The ASCII representation of the register
 		do
 			Result := expr.register_name
 		end
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -217,22 +235,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte code for routine creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,8 +10,12 @@ class ROUTINE_CREATION_BL
 inherit
 	ROUTINE_CREATION_B
 		redefine
-			analyze, generate,
-			register, set_register, free_register,
+			analyze,
+			free_register,
+			generate,
+			has_side_effect,
+			register,
+			set_register,
 			unanalyze
 		end
 
@@ -24,6 +28,12 @@ inherit
 		export
 			{NONE} all
 		end
+
+feature -- Status report
+
+	has_side_effect: BOOLEAN = False
+			-- <Precursor>
+			-- Result is always stored in a register.
 
 feature
 
@@ -345,7 +355,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Various constants for C code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -88,6 +88,7 @@ feature -- Macros
 	dtype: STRING = "Dtype"
 	dftype: STRING = "Dftype"
 	rtcv: STRING = "RTCV"
+	rtcw: STRING = "RTCW"
 	rtnr: STRING = "RTNR"
 	rtar: STRING = "RTAR"
 	rtal: STRING = "RTAL"
@@ -209,7 +210,7 @@ feature -- C language
 	volatile: STRING = "volatile"
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

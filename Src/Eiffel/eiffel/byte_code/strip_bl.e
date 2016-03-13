@@ -11,8 +11,15 @@ inherit
 		redefine
 			analyze, generate,
 			register, set_register,
-			unanalyze, allocates_memory
+			unanalyze, allocates_memory,
+			has_side_effect
 		end;
+
+feature -- Status report
+
+	has_side_effect: BOOLEAN
+			-- <Precursor>
+			-- Result is always stored in a register.
 
 feature
 
@@ -118,7 +125,7 @@ invariant
 	set_exists: feature_ids /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

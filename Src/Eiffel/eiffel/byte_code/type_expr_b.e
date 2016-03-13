@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte code for creating an instance of TYPE [X] type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ inherit
 	EXPR_B
 		redefine
 			register, set_register, analyze, generate,
-			propagate, print_register, unanalyze,
+			propagate, print_register, unanalyze, has_side_effect,
 			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
@@ -66,6 +66,12 @@ feature -- Access
 
 	register: REGISTRABLE
 			-- Where type object is kept to ensure it is GC safe
+
+feature -- Status report
+
+	has_side_effect: BOOLEAN = False
+			-- <Precursor>
+			-- Result is always stored in a register
 
 feature -- Properties
 
@@ -189,7 +195,7 @@ invariant
 	type_data_generics_count: type_data.generics.count = 1
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

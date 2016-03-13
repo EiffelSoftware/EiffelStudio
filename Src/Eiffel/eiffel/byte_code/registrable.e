@@ -1,18 +1,20 @@
-note
+﻿note
+	description: "[
+		Records common properties of Eiffel sub-expressions, which can
+		be put in temporary registers (expression spliting).
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Records common properties of Eiffel sub-expressions, which can
--- be put in temporary registers (expression spliting).
 
-deferred class REGISTRABLE 
-	
-feature 
+deferred class REGISTRABLE
+
+feature
 
 	register: REGISTRABLE
 			-- Where expression is stored.
 		do
 		end;
-	
+
 	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
@@ -42,12 +44,44 @@ feature
 			-- Free register for use by others.
 		do
 		end;
-	
+
 	print_register
 			-- Generates the C representation of `register'
 		do
 			context.buffer.put_string (register_name)
-		end;
+		end
+
+	print_target_register (target_type: detachable CL_TYPE_A)
+			-- Generates the C representation of `register'
+			-- with a check that it is not void and
+			-- can be used as a target of a call.
+		local
+			ctx: BYTE_CONTEXT
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			ctx := context
+			buf := ctx.buffer
+			if
+				ctx.workbench_mode or
+				is_current or
+				attached target_type and then target_type.is_expanded
+			then
+					-- The register is known to be non-void.
+				print_register
+			else
+					-- Add a check that a target is not void.
+				if has_side_effect then
+						-- General case.
+					buf.put_string ({C_CONST}.rtcv)
+				else
+						-- It is safe to use a more efficient macro that recomputes its argument multiple times.
+					buf.put_string ({C_CONST}.rtcw)
+				end
+				buf.put_character ('(')
+				print_register
+				buf.put_character (')')
+			end
+		end
 
 	propagate (r: REGISTRABLE)
 			-- Propagates the target of assignment `r' to avoid
@@ -86,10 +120,12 @@ feature
 			Result := is_local or else is_argument or else is_result or else is_current;
 		end;
 
-	is_special: BOOLEAN
-			-- Is register Result or Current ?
+	has_side_effect: BOOLEAN
+			-- Does Current have a side affect as a result of evaluation?
 		do
-		end;
+				-- To be on the safe side consider an evalution as having a side effect.
+			Result := True
+		end
 
 	is_local: BOOLEAN
 			-- Is register a local entity ?
@@ -108,7 +144,7 @@ feature
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -121,22 +157,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

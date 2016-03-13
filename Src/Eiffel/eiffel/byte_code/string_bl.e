@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Enlarged byte code for Eiffel string (allocated each time)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged byte code for Eiffel string (allocated each time).
 
 class STRING_BL
 
@@ -11,11 +11,19 @@ inherit
 			register, set_register,
 			analyze, generate,
 			propagate, print_register,
-			unanalyze
+			unanalyze, has_side_effect
 		end
 
 create {INTERNAL_COMPILER_STRING_EXPORTER}
 	make
+
+feature -- Status report
+
+	has_side_effect: BOOLEAN
+			-- <Precursor>
+		do
+			Result := register = No_register
+		end
 
 feature
 
@@ -116,7 +124,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,14 +1,14 @@
-note
+﻿note
+	description: "Enlarged byte code for nested call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Enlarged byte code for nested call
 
 class NESTED_BL
 
 inherit
 	NESTED_B
 		redefine
-			print_register, free_register,
+			print_register, free_register, has_side_effect,
 			stored_register, has_call, has_gcable_variable, c_type,
 			set_register, register, set_parent, parent, propagate,
 			unanalyze, generate, analyze, allocates_memory
@@ -62,6 +62,26 @@ feature
 			else
 					-- Propagate the request
 				Result := message.has_gcable_variable
+			end
+		end
+
+	has_side_effect: BOOLEAN
+			-- <Precursor>
+		do
+			if message.target = message then
+					-- We reached the last call
+				if register /= No_register then
+						-- There is a register, hence the call has already
+						-- been generated and the result is in the register.
+					Result := register.has_side_effect
+				else
+						-- There is no register, which means the call has not
+						-- been generated yet.
+					Result := True
+				end
+			else
+					-- Propagate the request.
+				Result := message.has_side_effect
 			end
 		end
 
@@ -226,11 +246,9 @@ feature
 			-- Analyze expression
 		local
 			msg_target: ACCESS_B
-			access_expr_b: ACCESS_EXPR_B
 		do
 			msg_target := message.target
 			if parent = Void then
-				access_expr_b ?= target
 					-- If we are at the top of the tree hierarchy, then
 					-- this has never been analyzed. If the access has
 					-- no parameters, then it will be expanded in-line.
@@ -254,7 +272,7 @@ feature
 						-- The optimization can still be done for calls like t.f:
 						-- E_f (E_t (l[0])) is valid and does not need a register
 						-- Xavier
-					not (target.is_attribute or target.is_polymorphic or access_expr_b /= Void or msg_target.is_polymorphic)
+					not (target.is_attribute or target.is_polymorphic or attached {ACCESS_EXPR_B} target or msg_target.is_polymorphic)
 				then
 					context.init_propagation
 					target.propagate (No_register)
@@ -354,7 +372,7 @@ feature
 	allocates_memory: BOOLEAN = True;
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,9 +9,13 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, is_current,
-			register_name, pre_inlined_code, print_register,
-			is_fast_as_local
+			enlarged,
+			has_side_effect,
+			is_current,
+			is_fast_as_local,
+			pre_inlined_code,
+			print_register,
+			register_name
 		end
 
 feature -- Visitor
@@ -34,6 +38,9 @@ feature
 			Result.set_frozen_mark
 		end
 
+	has_side_effect: BOOLEAN = False
+			-- <Precursor>
+
 	is_current: BOOLEAN
 			-- This is an access to Current
 		do
@@ -42,12 +49,9 @@ feature
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			current_b: CURRENT_B;
 		do
-			current_b ?= other;
-			Result := current_b /= Void
-		end;
+			Result := attached {CURRENT_B} other
+		end
 
 	enlarged: CURRENT_B
 			-- Enlarges the tree to get more attributes and returns the

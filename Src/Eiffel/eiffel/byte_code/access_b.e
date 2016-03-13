@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract class for access: Current, Result, local, argument, feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,16 @@ deferred class ACCESS_B
 inherit
 	CALL_B
 		redefine
-			enlarged, free_register, print_register,
-			has_gcable_variable, propagate, generate, unanalyze,
-			optimized_byte_node, inlined_byte_code
+			enlarged,
+			free_register,
+			generate,
+			has_gcable_variable,
+			has_side_effect,
+			inlined_byte_code,
+			optimized_byte_node,
+			print_register,
+			propagate,
+			unanalyze
 		end
 
 	SHARED_NAMES_HEAP
@@ -207,6 +214,16 @@ feature -- Status
 			-- being called polymorphically?
 		do
 			Result := True
+		end
+
+	has_side_effect: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r and then r /= No_register then
+				Result := r.has_side_effect
+			else
+				Result := True
+			end
 		end
 
 feature -- Element change
@@ -776,7 +793,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

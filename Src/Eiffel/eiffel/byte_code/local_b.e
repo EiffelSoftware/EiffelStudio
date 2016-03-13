@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Info about access to a local variable of a feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, array_descriptor,
 			pre_inlined_code,
-			is_fast_as_local, is_predefined
+			is_fast_as_local, is_predefined, has_side_effect
 		end
 
 feature -- Visitor
@@ -46,6 +46,9 @@ feature
 	is_predefined: BOOLEAN = True
 			-- Is Current a predefined entity?
 
+	has_side_effect: BOOLEAN = False
+			-- <Precursor>
+
 	is_local: BOOLEAN
 			-- Is Current an access to a local variable?
 		do
@@ -61,11 +64,8 @@ feature
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			local_b: LOCAL_B
 		do
-			local_b ?= other
-			if local_b /= Void then
+			if attached {LOCAL_B} other as local_b then
 				Result := position = local_b.position
 			end
 		end
@@ -148,7 +148,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged byte code for manifest tuples"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,10 +10,15 @@ class TUPLE_CONST_BL
 inherit
 	TUPLE_CONST_B
 		redefine
-			analyze, generate,
-			register, set_register,
-			free_register, unanalyze
-		end;
+			analyze,
+			free_register,
+			generate,
+			has_side_effect,
+			register,
+			set_register,
+			unanalyze
+		end
+
 	SHARED_TABLE
 	SHARED_DECLARATIONS
 
@@ -24,6 +29,12 @@ inherit
 
 create
 	make
+
+feature -- Status report
+
+	has_side_effect: BOOLEAN = False
+			-- <Precursor>
+			-- Result is always stored in a register
 
 feature
 
@@ -60,7 +71,7 @@ feature
 			until
 				expressions.after
 			loop
-				expr ?= expressions.item
+				expr := expressions.item
 				expr_type := context.real_type (expr.type)
 
 				if expr_type.is_true_expanded then
@@ -78,8 +89,6 @@ feature
 
 	unanalyze
 			-- Unanalyze expression
-		local
-			expr: EXPR_B
 		do
 			metamorphose_reg := Void
 			set_register (Void)
@@ -88,8 +97,7 @@ feature
 			until
 				expressions.after
 			loop
-				expr ?= expressions.item
-				expr.unanalyze
+				expressions.item.unanalyze
 				expressions.forth
 			end
 		end
@@ -106,10 +114,8 @@ feature
 	generate
 			-- Generate expression
 		local
-			real_ty: TUPLE_TYPE_A
 			workbench_mode: BOOLEAN
 		do
-			real_ty ?= context.real_type (type)
 			workbench_mode := context.workbench_mode
 			generate_tuple_creation (workbench_mode)
 			fill_tuple
@@ -152,7 +158,7 @@ feature {NONE} -- C code generation
 				expressions.after
 			loop
 				metamorphosed := False
-				expr ?= expressions.item
+				expr := expressions.item
 				actual_type := context.real_type (expr.type)
 					-- If `actual_type' is NONE, it means we are handling `Void'
 					-- and therefore nothing has to be done.
@@ -206,7 +212,7 @@ feature {NONE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

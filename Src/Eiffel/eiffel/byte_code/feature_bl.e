@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged access to an Eiffel feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -265,57 +265,81 @@ end
 		local
 			buf: GENERATION_BUFFER
 			l_type_c: TYPE_C
+			has_generated: BOOLEAN
 		do
-			generate_access_on_type (gen_reg, class_type)
 			buf := buffer
-			if not is_deferred.item then
-				if is_direct_once.item then
-					if is_right_parenthesis_needed.item then
-						buf.put_character (')')
+			if
+				System.in_final_mode and then
+				System.inlining_on and then
+				class_type.base_class.is_special and then
+				not is_polymorphic
+			then
+				inspect feature_name_id
+				when
+					{PREDEFINED_NAMES}.item_name_id,
+					{PREDEFINED_NAMES}.infix_at_name_id,
+					{PREDEFINED_NAMES}.at_name_id
+				then
+					if attached class_type.generics.first as parameter_type and then
+						not parameter_type.is_true_expanded
+					then
+						buf.indent
+						buf.put_new_line
+						buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
+						buf.put_new_line
+						buf.put_two_character ('*', '(')
+						parameter_type.c_type.generate_access_cast (buf)
+						gen_reg.print_target_register (class_type)
+						buf.put_string (" + (")
+						parameters [1].print_register
+						buf.put_two_character (')', ')')
+						buf.put_new_line
+						buf.put_string ("/* END INLINED CODE */")
+						buf.exdent
+						has_generated := True
 					end
-					buf.put_character (',')
-					buf.put_character ('(')
-					if context.workbench_mode or gen_reg.is_current then
-						gen_reg.print_register
-					else
-						buf.put_string ("RTCV(")
-						gen_reg.print_register
-						buf.put_character (')')
-					end
-					if parameters /= Void then
-						generate_parameters_list
-					end
-					buf.put_character (')')
-					buf.put_character (')')
 				else
-					buf.put_character ('(')
-					if context.workbench_mode or gen_reg.is_current then
-						gen_reg.print_register
-					else
-						buf.put_string ("RTCV(")
-						gen_reg.print_register
+				end
+			end
+			if not has_generated then
+				generate_access_on_type (gen_reg, class_type)
+				if not is_deferred.item then
+					if is_direct_once.item then
+						if is_right_parenthesis_needed.item then
+							buf.put_character (')')
+						end
+						buf.put_character (',')
+						buf.put_character ('(')
+						gen_reg.print_target_register (class_type)
+						if parameters /= Void then
+							generate_parameters_list
+						end
 						buf.put_character (')')
+						buf.put_character (')')
+					else
+						buf.put_character ('(')
+						gen_reg.print_target_register (class_type)
+						if parameters /= Void then
+							generate_parameters_list
+						end
+						buf.put_character (')')
+						if is_right_parenthesis_needed.item then
+							buf.put_character (')')
+						end
 					end
-					if parameters /= Void then
-						generate_parameters_list
+				else
+						-- The line below can be removed when the RTNR macro
+						-- doesn't take an argument anymore.
+					buf.put_string ("(NULL)")
+					l_type_c := real_type (type).c_type
+					if not l_type_c.is_void then
+						buf.put_two_character (',', ' ')
+						l_type_c.generate_default_value (buf)
 					end
 					buf.put_character (')')
 					if is_right_parenthesis_needed.item then
 						buf.put_character (')')
 					end
-				end
-			else
-					-- The line below can be removed when the RTNR macro
-					-- doesn't take an argument anymore.
-				buf.put_string ("(NULL)")
-				l_type_c := real_type (type).c_type
-				if not l_type_c.is_void then
-					buf.put_two_character (',', ' ')
-					l_type_c.generate_default_value (buf)
-				end
-				buf.put_character (')')
-				if is_right_parenthesis_needed.item then
-					buf.put_character (')')
 				end
 			end
 		end
@@ -545,7 +569,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

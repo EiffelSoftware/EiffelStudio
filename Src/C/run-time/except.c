@@ -1068,6 +1068,10 @@ rt_public EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE Current) {
 	}
 }
 
+rt_public void eif_raise_call_on_void_target (void) {
+	eraise(NULL,EN_VOID);
+}
+
 
 /*
 doc:	<routine name="eif_check_catcall" export="public">

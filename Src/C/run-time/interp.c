@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -2472,7 +2472,7 @@ rt_private void interpret(int flag, int where)
 			}
 			else if (code == BC_TUPLE_ACCESS) {
 					/* Check that this is not an access on void target. */
-				(void) RTCV (target -> it_ref);
+				(void) RTCW (target -> it_ref);
 					/* Proceed normally if the access is not separate. */
 				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
 						/* This is a separate access. */
@@ -2501,7 +2501,7 @@ rt_private void interpret(int flag, int where)
 			}
 			else if (code == BC_TUPLE_ASSIGN) {
 					/* Check that this is not an access on void target. */
-				(void) RTCV (target -> it_ref);
+				(void) RTCW (target -> it_ref);
 					/* Proceed normally if the access is not separate. */
 				if (RTS_OS (icurrent->it_ref, target->it_ref)) {
 						/* This is a separate access. */
@@ -3300,7 +3300,7 @@ rt_private void interpret(int flag, int where)
 
 			l_last = EIF_STACK_TOP_ADDRESS(op_stack);
 			CHECK("last not null", l_last);
-			(void) RTCV(l_last->it_ref); /* Check that TUPLE is not Void. */
+			(void) RTCW(l_last->it_ref); /* Check that TUPLE is not Void. */
 			l_last->type = l_type;         /* Stored type of accessed tuple element. */
 			eif_tuple_access (l_last->it_ref, pos, l_last);
 		}
@@ -3313,7 +3313,7 @@ rt_private void interpret(int flag, int where)
 
 			source = eif_opstack_pop_address(&op_stack);
 			last = eif_opstack_pop_address(&op_stack);
-			(void) RTCV(last->it_ref); /* Check that TUPLE is not Void. */
+			(void) RTCW(last->it_ref); /* Check that TUPLE is not Void. */
 			eif_tuple_assign (last->it_ref, pos, source);
 		}
 

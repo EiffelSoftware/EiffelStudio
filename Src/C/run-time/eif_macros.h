@@ -926,11 +926,15 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTCFDD			EIF_TYPE_INDEX EIF_VOLATILE dftype
 
 /* If call on void target are detected, we use RTCV to perform the check. Unlike the workbench
- * mode, we won't know the message of the call as it would require too much data to be generated. */
+ * mode, we won't know the message of the call as it would require too much data to be generated.
+ * RTCW is a more efficient version of RTCV, but may recompute its argument multiple times.
+ */
 #if defined(WORKBENCH) || !defined(EIF_NO_RTCV)
 #define RTCV(x) eif_check_call_on_void_target(x)
+#define RTCW(x) (((x)? (void) 0: eif_raise_call_on_void_target ()), (x))
 #else
 #define RTCV(x)	(x)
+#define RTCW(x)	(x)
 #endif
 
 /* Detect catcall at runtime for argument 'o' at position 'i' for feature 'f' in dtype 'd'

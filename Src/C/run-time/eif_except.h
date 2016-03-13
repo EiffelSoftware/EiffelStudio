@@ -166,6 +166,7 @@ RT_LNK void enomem(void);										/* Raises "Out of memory" exception */
 #endif
 
 RT_LNK EIF_REFERENCE eif_check_call_on_void_target (EIF_REFERENCE);
+RT_LNK void eif_raise_call_on_void_target (void);
 RT_LNK void eif_check_catcall (EIF_REFERENCE, EIF_TYPE_INDEX, const char *, int, EIF_TYPE, EIF_TYPE_INDEX);
 
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */

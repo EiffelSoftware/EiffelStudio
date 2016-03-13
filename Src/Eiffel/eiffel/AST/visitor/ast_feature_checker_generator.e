@@ -7449,11 +7449,10 @@ feature {NONE} -- Visitor
 			expression_code: detachable EXPR_B
 			advance_code: detachable BYTE_NODE
 			s: INTEGER
-			e: NATURAL
 			l_vwbe4: VWBE4
 			scope_matcher: AST_SCOPE_MATCHER
+			old_is_byte_node_enabled: BOOLEAN
 		do
-			e := error_level
 			iteration_as := l_as.iteration
 				-- Record the state of inner locals before iteration to restore it after the loop.
 			iteration_cursor_scope := context.scope
@@ -7508,10 +7507,24 @@ feature {NONE} -- Visitor
 
 				-- Avoid processing iteration exit condition when iteration part has errors.
 			if attached iteration_cursor_type then
-					-- Type check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
-				local_info.set_type (iteration_cursor_type)
-				iteration_as.exit_condition.process (Current)
-				local_info.set_type (local_type)
+				if is_inherited then
+						-- Rely on routine ID computed earlier.
+					iteration_as.exit_condition.process (Current)
+				else
+						-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
+					local_info.set_type (iteration_cursor_type)
+					old_is_byte_node_enabled := is_byte_node_enabled
+					is_byte_node_enabled := False
+					iteration_as.exit_condition.process (Current)
+					is_byte_node_enabled := old_is_byte_node_enabled
+					local_info.set_type (local_type)
+							-- If everything is OK, recompute the code using actual local type.
+					if attached last_type then
+						is_inherited := True
+						iteration_as.exit_condition.process (Current)
+						is_inherited := False
+					end
+				end
 				if last_type = Void then
 						-- Skip code generation for next parts.
 					iteration_code := Void
@@ -7607,9 +7620,23 @@ feature {NONE} -- Visitor
 				-- Avoid processing iteration advancement when iteration part has errors.
 			if attached iteration_cursor_type then
 					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
-				local_info.set_type (iteration_cursor_type)
-				iteration_as.advance.process (Current)
-				local_info.set_type (local_type)
+				if is_inherited then
+						-- Rely on routine ID computed earlier.
+					iteration_as.advance.process (Current)
+				elseif attached error_level as e then
+						-- Check the call and compute associated routine ID for the top iteration cursor type.
+					local_info.set_type (iteration_cursor_type)
+					is_byte_node_enabled := False
+					iteration_as.advance.process (Current)
+					is_byte_node_enabled := old_is_byte_node_enabled
+					local_info.set_type (local_type)
+						-- If everything is OK, recompute the code using actual local type.
+					if error_level = e then
+						is_inherited := True
+						iteration_as.advance.process (Current)
+						is_inherited := False
+					end
+				end
 				if attached last_byte_node as advance_part then
 					advance_code := advance_part
 				else

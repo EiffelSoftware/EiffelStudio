@@ -109,6 +109,12 @@ feature -- Execution
 					-- FIXME jfiat [2015/12/29] : remove dependency on bootstrap theme!
 					if l_sort_by = Void then
 							-- No specific sort!
+							-- same as in the `else' part.
+						s.append ("<li>")
+						l_sort_uri.add_query_parameter ("sort-by", k)
+						s.append ("<a href=%"" + l_sort_uri.string + "%"")
+						s.append (l_link_attribs)
+						s.append (">")
 					elseif l_sort_by.is_case_insensitive_equal_general (ic.key) then
 						s.append ("<li class=%"active%">")
 						l_sort_uri.add_query_parameter ("sort-by", {STRING_32} "-" + k)
@@ -152,6 +158,9 @@ feature -- Execution
 				if coll /= Void then
 					l_total_count := coll.count
 					l_found_count := coll.count
+				end
+				if l_sort_by = Void then
+					l_sort_by := "name"
 				end
 			end
 

@@ -519,6 +519,22 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+feature -- Access: iron
+
+	library_iron_package_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	library_iron_library_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Access		
+
 	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP
 			-- Return pixmap based on `a_group'.
 		require
@@ -616,7 +632,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

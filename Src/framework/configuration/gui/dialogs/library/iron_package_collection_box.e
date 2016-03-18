@@ -16,8 +16,6 @@ class
 	IRON_PACKAGE_COLLECTION_BOX
 
 inherit
-	EIFFEL_LAYOUT
-
 	CONF_GUI_INTERFACE_CONSTANTS
 
 	SHARED_BENCH_NAMES
@@ -30,9 +28,9 @@ convert
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target)
+	make (a_iron_service: ES_IRON_SERVICE)
 		do
-			target := a_target
+			iron_service := a_iron_service
 			create box
 			build_interface (box)
 		end
@@ -47,8 +45,6 @@ feature {NONE} -- Initialization
 			but: EV_BUTTON
 			l_filter: like filter_text
 		do
-			get_installation_api
-
 				-- Repositoroes
 			create hb
 			hb.set_padding (layout_constants.small_padding_size)
@@ -128,29 +124,16 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (hb.last)
 			hb.extend (create {EV_CELL})
 
-			create but.make_with_text (conf_interface_names.iron_box_install_label)
-			but.set_minimum_size (layout_constants.default_button_width, layout_constants.default_button_height)
-			but.select_actions.extend (agent install_selected_package)
-			but.disable_sensitive
-			install_button := but
-			hb.extend (but)
-
-			create but.make_with_text (conf_interface_names.iron_box_remove_label)
-			but.set_minimum_size (layout_constants.default_button_width, layout_constants.default_button_height)
-			but.select_actions.extend (agent remove_selected_package)
-			but.disable_sensitive
-			remove_button := but
-			hb.extend (but)
-
 			create but.make_with_text (conf_interface_names.iron_box_update_label)
-			but.set_minimum_size (layout_constants.default_button_width, layout_constants.default_button_height)
+			layout_constants.set_default_size_for_button (but)
 			but.select_actions.extend (agent update_iron)
 			update_button := but
 			hb.extend (but)
 
-			create info_box
-			vb.extend (info_box)
-			info_box.set_minimum_height (50)
+			create info_widget.make (iron_service)
+			info_widget.on_install_actions.extend (agent install_selected_package)
+			info_widget.on_uninstall_actions.extend (agent remove_selected_package)
+			vb.extend (info_widget.widget)
 
 			hsp.set_second (vb) -- Set the second part of the split area.
 			hsp.disable_item_expand (vb)
@@ -162,21 +145,7 @@ feature {NONE} -- Initialization
 			create on_iron_packages_changed_actions
 		end
 
-	get_installation_api
-			-- Get updated `installation_api'.
-		local
-			fac: CONF_IRON_INSTALLATION_API_FACTORY
-			l_iron_layout: IRON_LAYOUT
-		do
-			create l_iron_layout.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path)
-			create fac
-			installation_api := fac.iron_installation_api (l_iron_layout, create {IRON_URL_BUILDER})
-		end
-
-	installation_api: IRON_INSTALLATION_API
-
-	target: CONF_TARGET
-			-- Associated target.
+	iron_service: ES_IRON_SERVICE
 
 feature -- Callback	
 
@@ -200,62 +169,8 @@ feature -- Callback
 		end
 
 	on_iron_package_selected (p: detachable IRON_PACKAGE)
-		local
-			l_inst_path: PATH
-			txt: like info_box
 		do
-			txt := info_box
-			txt.remove_text
-			if p = Void then
-				install_button.disable_sensitive
-				remove_button.disable_sensitive
-			else
-				txt.append_text (conf_interface_names.iron_box_package_label)
-				txt.append_text (" ")
-				txt.append_text (p.human_identifier)
-				txt.append_text ("%N")
-				txt.append_text ("%N")
-				if attached p.description as desc and then not desc.is_empty then
-					txt.append_text (desc)
-					txt.append_text ("%N")
-					txt.append_text ("%N")
-				end
-				if attached p.tags as p_tags and then not p_tags.is_empty then
-					txt.append_text (conf_interface_names.iron_box_tags_label)
-					txt.append_text (":")
-					across
-						p_tags as ic
-					loop
-						txt.append_text (" ")
-						txt.append_text (ic.item)
-					end
-					txt.append_text ("%N")
-					txt.append_text ("%N")
-				end
-
-				if installation_api.is_package_installed (p) then
-					install_button.disable_sensitive
-					remove_button.enable_sensitive
-
-					if attached installation_api.projects_from_installed_package (p) as l_projects then
-						l_inst_path := installation_api.package_installation_path (p)
-						txt.append_text (conf_interface_names.iron_box_package_installed_message (l_inst_path, l_projects))
-						txt.append_text ("%N")
-					end
-				else
-					install_button.enable_sensitive
-					remove_button.disable_sensitive
-					if attached installation_api.conflicting_available_package (p) as l_conflict then
-						txt.append_text (conf_interface_names.iron_box_install_conflicting_package_help (p.identifier, p.location.string, l_conflict.location.string))
-						txt.append_text ("%N")
-						txt.append_text ("%N")
-						txt.append_text (conf_interface_names.iron_box_install_package_help (p.location.string))
-					else
-						txt.append_text (conf_interface_names.iron_box_install_package_help (p.identifier))
-					end
-					txt.append_text ("%N")
-				end
-			end
+			info_widget.set_package (p)
 			on_iron_package_selected_actions.call ([p])
 		end
 
@@ -311,26 +226,30 @@ feature {NONE} -- Update filter
 			widget.set_pointer_style (l_style)
 		end
 
-	filter_matcher: detachable KMP_WILD
-		local
-			l_filter: STRING_32
+	filter_string: detachable STRING_32
 		do
-				-- And filter if pattern specified
-			l_filter := filter_text.text
-			if l_filter /= Void then
-				l_filter.left_adjust
-				l_filter.right_adjust
-				if l_filter.is_empty then
-					l_filter := Void
+			Result := filter_text.text
+			if Result /= Void then
+				Result.left_adjust
+				Result.right_adjust
+				if Result.is_empty then
+					Result := Void
 				end
 			end
-			if l_filter /= Void then
-				if l_filter.item (1) /= '*' then
-					l_filter.prepend_character ('*')
+			if Result /= Void then
+				if Result.item (1) /= '*' then
+					Result.prepend_character ('*')
 				end
-				if l_filter.item (l_filter.count) /= '*' then
-					l_filter.append_character ('*')
+				if Result.item (Result.count) /= '*' then
+					Result.append_character ('*')
 				end
+			end
+		end
+
+	filter_matcher: detachable KMP_WILD
+		do
+				-- And filter if pattern specified
+			if attached filter_string as l_filter then
 				create Result.make_empty
 				Result.set_pattern (l_filter)
 				Result.disable_case_sensitive
@@ -348,52 +267,18 @@ feature -- Basic operations
 		end
 
 	update
-		local
-			i,n: INTEGER
-			g: like packages_grid
-			f: like filter_matcher
-			l_row: EV_GRID_ROW
 		do
-			if is_populated then
-				f := filter_matcher
-				from
-					g := packages_grid
-					i := 1
-					n := g.row_count
-				until
-					i > n
-				loop
-					l_row := g.row (i)
-					if f = Void then
-						l_row.show
-					else
-						if attached package_from_row (l_row) as p then
-							f.set_text (p.identifier)
-							if f.pattern_matches then
-								l_row.show
-							else
-								l_row.hide
-							end
-						else
-							l_row.show
-						end
-					end
-					i := i + 1
-				end
-			else
-				populate
-			end
+			reload
 		end
 
 	populate
 		local
-			api: like installation_api
+			api: IRON_INSTALLATION_API
 			i: INTEGER
 			l_package: IRON_PACKAGE
 			l_names: STRING_TABLE [IRON_PACKAGE]
 			g: like packages_grid
 			repos: like repositories_grid
-			f: like filter_matcher
 			l_row: EV_GRID_ROW
 		do
 			if is_populated then
@@ -402,7 +287,7 @@ feature -- Basic operations
 				repos := repositories_grid
 				repos.clear
 
-				api := installation_api
+				api := iron_service.installation_api
 				if attached api.repositories as l_repositories then
 					repos.set_row_count_to (l_repositories.count)
 					i := 0
@@ -418,13 +303,12 @@ feature -- Basic operations
 				g := packages_grid
 				g.clear
 
-				if attached api.available_packages as l_packages then
+				if attached scored_available_packages as l_packages then
 					g.set_row_count_to (g.row_count + l_packages.count)
 					create l_names.make_caseless (l_packages.count)
-					f := filter_matcher
 					i := 0
 					across l_packages as ic loop
-						l_package := ic.item
+						l_package := ic.item.value
 						i := i + 1
 						l_row := g.row (i)
 						l_row.set_data (l_package)
@@ -434,15 +318,10 @@ feature -- Basic operations
 							l_names.put (l_package, l_package.identifier)
 							build_row (l_row, Void)
 						end
-						if f = Void then
-							l_row.show
+						if ic.item.score_is_zero then
+							l_row.hide
 						else
-							f.set_text (l_package.identifier)
-							if f.pattern_matches then
-								l_row.show
-							else
-								l_row.hide
-							end
+							l_row.show
 						end
 					end
 				end
@@ -453,6 +332,25 @@ feature -- Basic operations
 					end
 				end
 				is_populated := True
+			end
+		end
+
+	scored_available_packages: LIST [SCORED_VALUE [IRON_PACKAGE]]
+		local
+			lst: LIST [IRON_PACKAGE]
+			prov: ES_LIBRARY_IRON_PACKAGE_PROVIDER
+		do
+			create prov.make (iron_service)
+			lst := iron_service.installation_api.available_packages
+			if attached filter_string as f then
+				Result := prov.scorer.sorted_scored_list (f, lst, True)
+			else
+				create {ARRAYED_LIST [SCORED_VALUE [IRON_PACKAGE]]} Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					Result.force (create {SCORED_VALUE [IRON_PACKAGE]}.make (ic.item, 1.0))
+				end
 			end
 		end
 
@@ -467,7 +365,9 @@ feature -- Basic operations
 		local
 			i,n: INTEGER
 			g: like packages_grid
+			l_api: IRON_INSTALLATION_API
 		do
+			l_api := iron_service.installation_api
 			from
 				g := packages_grid
 				i := 1
@@ -480,7 +380,7 @@ feature -- Basic operations
 					p.is_same_package (l_package)
 				then
 					clear_row (g.row (i))
-					build_row (g.row (i), installation_api.conflicting_available_package (l_package))
+					build_row (g.row (i), l_api.conflicting_available_package (l_package))
 				end
 				i := i + 1
 			end
@@ -491,14 +391,14 @@ feature -- Basic operations
 			a_row_exists: not a_row.is_destroyed
 			coherent_data: attached {IRON_PACKAGE} a_row.data
 		local
-			api: like installation_api
+			api: IRON_INSTALLATION_API
 			glab: EV_GRID_LABEL_ITEM
 			s,t: STRING_32
 			g: EV_GRID
 			i: INTEGER
 			is_installed: BOOLEAN
 		do
-			api := installation_api
+			api := iron_service.installation_api
 			i := a_row.index
 			g := a_row.parent
 			if attached {IRON_PACKAGE} a_row.data as l_package then
@@ -509,7 +409,7 @@ feature -- Basic operations
 				g.set_item (1, i, glab)
 				g.row (i).set_data (l_package)
 
-				is_installed := installation_api.is_package_installed (l_package)
+				is_installed := api.is_package_installed (l_package)
 
 				if attached l_package.description as desc and then not desc.is_empty then
 					glab.set_tooltip (desc)
@@ -573,6 +473,18 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Iron package management
+
+	install_package (p: IRON_PACKAGE; cb: detachable PROCEDURE [TUPLE [succeed: BOOLEAN]])
+		do
+			iron_service.install_package (p, cb)
+		end
+
+	uninstall_package (p: IRON_PACKAGE; cb: detachable PROCEDURE [TUPLE [succeed: BOOLEAN]])
+		do
+			iron_service.uninstall_package (p, cb)
+		end
+
 feature -- Actions
 
 	selected_package: detachable IRON_PACKAGE
@@ -584,130 +496,43 @@ feature -- Actions
 			end
 		end
 
-	install_selected_package
-		local
-			l_id: READABLE_STRING_32
+	install_selected_package (p: IRON_PACKAGE)
 		do
-			get_installation_api
-			installation_api.refresh
-			if
-				attached selected_package as p and then
-				not installation_api.is_package_installed (p)
-			then
-				if installation_api.conflicting_available_package (p) /= Void then
-					l_id := p.location.string
-				else
-					l_id := p.identifier
-				end
-				launch_iron_command (conf_interface_names.iron_box_package_installation_title (l_id),
-						 <<{STRING_32} "install", {STRING_32} "--batch", l_id>>,
-						 agent (ia_p: IRON_PACKAGE; ia_succeed: BOOLEAN)
-							do
-								get_installation_api
-								installation_api.refresh_installed_packages
-								refresh_row_associated_with_package (ia_p)
-								on_iron_packages_changed_actions.call ([ia_p])
-							end(p, ?)
-					)
-			end
+			install_package (p,
+					agent (ia_p: IRON_PACKAGE; ia_succeed: BOOLEAN)
+								do
+									iron_service.installation_api.refresh_installed_packages
+									refresh_row_associated_with_package (ia_p)
+									on_iron_packages_changed_actions.call ([ia_p])
+								end(p, ?)
+				)
 		end
 
-	remove_selected_package
-		local
-			l_id: READABLE_STRING_32
+	remove_selected_package (p: IRON_PACKAGE)
 		do
-			get_installation_api
-			installation_api.refresh
-			if
-				attached selected_package as p and then
-				installation_api.is_package_installed (p)
-			then
-				if installation_api.conflicting_available_package (p) /= Void then
-					l_id := p.location.string
-				else
-					l_id := p.identifier
-				end
-				launch_iron_command (conf_interface_names.iron_box_package_uninstallation_title (l_id),
-						<<{STRING_32} "remove", {STRING_32} "--batch", l_id>>,
-						agent (ia_p: IRON_PACKAGE; ia_succeed: BOOLEAN)
-							do
-								installation_api.refresh_installed_packages
-								refresh_row_associated_with_package (ia_p)
-								on_iron_packages_changed_actions.call ([ia_p])
-							end(p, ?)
-					)
-			end
+			uninstall_package (p,
+					agent (ia_p: IRON_PACKAGE; ia_succeed: BOOLEAN)
+								do
+									iron_service.installation_api.refresh_installed_packages
+									refresh_row_associated_with_package (ia_p)
+									on_iron_packages_changed_actions.call ([ia_p])
+								end(p, ?)
+				)
 		end
 
 	update_iron
 			-- Install iron package `a_package' and call associated callback `cb'.
 		do
-			launch_iron_command (conf_interface_names.iron_box_updating_title,
-						<<{STRING_32} "update", {STRING_32} "--batch">>,
+			iron_service.update_iron (
 						agent (ia_succeed: BOOLEAN)
 							do
-								get_installation_api
-								installation_api.refresh
+								iron_service.installation_api.refresh
 								if ia_succeed then
 									reload
 								end
 								on_iron_packages_changed_actions.call ([Void])
 							end
 				)
-		end
-
-	launch_iron_command (a_title: READABLE_STRING_32; a_args: ITERABLE [READABLE_STRING_GENERAL]; cb: detachable PROCEDURE [TUPLE [succeed: BOOLEAN]])
-			-- Execute externally iron command with argument `args' and call associated callback `cb'.
-		local
-			l_prc_factory: PROCESS_FACTORY
-			l_prc_launcher: PROCESS
-			l_dialog: IRON_OUTPUT_DIALOG
-			l_done_handler: ROUTINE
-			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
-		do
-			create args.make (3)
-			across
-				a_args as ic
-			loop
-				args.force (ic.item)
-			end
-			create l_prc_factory
-
-				-- Launch the iron command in `eiffel_layout.bin_path' (i.e $ISE_EIFFEL/studio/soec/$ISE_PLATFORM/bin)
-				-- to have access to the required DLLs on Windows (libcurl,...).
-			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.iron_command_name.name, args, eiffel_layout.bin_path.name)
-			l_prc_launcher.set_separate_console (False)
-			l_prc_launcher.set_hidden (True)
-			create l_dialog
-			l_dialog.set_process (l_prc_launcher)
-			l_dialog.set_title (a_title)
-			l_prc_launcher.redirect_input_to_stream
-			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
-			l_prc_launcher.redirect_error_to_same_as_output
-
-			l_done_handler := agent  (ia_dlg: IRON_OUTPUT_DIALOG; ia_prc_launcher: PROCESS)
-					do
-						if ia_prc_launcher.exit_code = 0 then
-							ia_dlg.close_in_gui_thread
-						else
-								-- error occured!
-						end
-					end(l_dialog, l_prc_launcher)
-
-			l_prc_launcher.set_on_exit_handler (l_done_handler)
-			l_prc_launcher.set_on_terminate_handler (l_done_handler)
-			l_prc_launcher.set_on_fail_launch_handler (l_done_handler)
-			l_prc_launcher.launch
-			if l_prc_launcher.launched then
-				if attached parent_window_of (widget) as win then
-					l_dialog.show_modal_to_window (win)
-				else
-					l_dialog.show
-				end
-				if cb /= Void then
-					cb.call ([l_prc_launcher.exit_code = 0])
-				end
-			end
 		end
 
 feature -- Access
@@ -733,10 +558,6 @@ feature -- Access
 
 	filter_text: EV_TEXT_FIELD
 
-	install_button: EV_BUTTON
-
-	remove_button: EV_BUTTON
-
 	update_button: EV_BUTTON
 
 feature -- Widgets		
@@ -747,7 +568,7 @@ feature -- Widgets
 
 	repositories_grid: ES_GRID
 
-	info_box: EV_RICH_TEXT
+	info_widget: IRON_PACKAGE_WIDGET
 
 feature -- Events	
 
@@ -771,7 +592,7 @@ feature -- Events
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

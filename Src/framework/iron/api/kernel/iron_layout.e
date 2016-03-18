@@ -69,6 +69,11 @@ feature -- Access
 			Result := path.extended ("repositories.conf")
 		end
 
+	repositories_revision_file: PATH
+		once
+			Result := packages_path.extended ("local.rev")
+		end
+
 	repositories_path: PATH
 		once
 			Result := path.extended ("repositories")
@@ -266,7 +271,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

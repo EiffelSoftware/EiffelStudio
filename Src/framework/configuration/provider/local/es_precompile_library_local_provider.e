@@ -1,51 +1,62 @@
 note
-	description: "Summary description for {IRON_UPDATE_TASK}."
-	author: ""
+	description: "Summary description for {ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IRON_UPDATE_TASK
+	ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER
 
 inherit
-	IRON_TASK
-
-create
-	make
+	ES_LIBRARY_LOCAL_PROVIDER
+		redefine
+			lookup_directories,
+			library_locations,
+			cache_name
+		end
 
 feature -- Access
 
-	name: STRING = "update"
-			-- Iron client task
-
-feature -- Execute
-
-	process (a_iron: IRON)
-		local
-			args: IRON_UPDATE_ARGUMENT_PARSER
+	cache_name (a_target: CONF_TARGET): STRING
 		do
-			create args.make_with_option (Current, False)
-			args.execute (agent execute (args, a_iron))
+			if is_dotnet (a_target) then
+				Result := "configuration_precomp_libraries_dotnet.cache"
+			else
+				Result := "configuration_precomp_libraries.cache"
+			end
 		end
 
-	execute (args: IRON_UPDATE_ARGUMENTS; a_iron: IRON)
-		do
-			print ("Updating iron data ...%N")
-			if args.is_simulation then
+feature {NONE} -- Access
 
-			else
-				if args.repositories.count > 0 then
-					across
-						args.repositories as ic
-					loop
-						if attached a_iron.catalog_api.repository_at (ic.item) as repo then
-							a_iron.catalog_api.update_repository (repo, False)
-						end
+	library_locations (a_target: CONF_TARGET): SEARCH_TABLE [STRING_32]
+		do
+			Result := Precursor (a_target)
+			if Result.is_empty then
+					-- Extend the default library path
+				scan_library_location_to (a_target, eiffel_layout.precompilation_path (is_dotnet (a_target)).name, 4, Result)
+			end
+		end
+
+	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
+			-- A list of lookup directories
+		local
+			l_filename: detachable PATH
+			l_file: RAW_FILE
+		do
+			create Result.make (10)
+
+			l_filename := eiffel_layout.precompiles_config_name
+			create l_file.make_with_path (l_filename)
+			if l_file.exists then
+				add_lookup_directories (l_filename.name, Result)
+			end
+			if eiffel_layout.is_user_files_supported then
+				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
+				if l_filename /= Void then
+					l_file.reset_path (l_filename)
+					if l_file.exists then
+						add_lookup_directories (l_filename.name, Result)
 					end
-				else
-					a_iron.catalog_api.update
 				end
-				a_iron.installation_api.notify_change
 			end
 		end
 

@@ -547,6 +547,8 @@ feature -- Create library dialog
 	dialog_create_library_defaults: STRING_32 do Result := locale.translation ("Default libraries")	end
 	dialog_create_library_name: STRING_32 do Result := locale.translation ("Name")	end
 	dialog_create_library_void_safety: STRING_32 do Result := locale.translation ("Void safety")	end
+	dialog_create_library_information: STRING_32 do Result := locale.translation ("Information")	end
+	dialog_create_library_status: STRING_32 do Result := locale.translation ("Status")	end
 	dialog_create_library_location: STRING_32 do Result := locale.translation ("Location")	end
 
 	dialog_create_libraries: STRING_32 do Result := locale.translation ("Libraries")	end

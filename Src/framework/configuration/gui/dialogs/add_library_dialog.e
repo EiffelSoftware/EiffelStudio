@@ -55,41 +55,94 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize.
 		local
-			l_btn: EV_BUTTON
-			main, vb, vb2, l_padding: EV_VERTICAL_BOX
-			hb, hbf, hb1, hb2: EV_HORIZONTAL_BOX
-			l_lbl: EV_LABEL
-			l_filter: like filter
-			l_clear_filter_button: EV_BUTTON
-			l_update_index_button: EV_BUTTON
-			nb: EV_NOTEBOOK
-			libs_tab: detachable EV_NOTEBOOK_TAB
-			iron_box: IRON_PACKAGE_COLLECTION_BOX
+			main, vb: EV_VERTICAL_BOX
+			cl: EV_CELL
+			l_service: ES_GUI_IRON_SERVICE
+			hsp: EV_VERTICAL_SPLIT_AREA
 		do
+			create l_service
+			iron_service := l_service
+
 			Precursor
 
 			set_title (conf_interface_names.dialog_create_library_title)
 			set_icon_pixmap (conf_pixmaps.new_library_icon)
 
-				-- notebook
-			create nb
-			extend (nb)
-
-				-- libraries		
+				-- libraries
 			create main
 			main.set_padding (layout_constants.default_padding_size)
 			main.set_border_width (layout_constants.default_border_size)
 
-			nb.extend (main)
-
-			if nb.has (main) then
-				libs_tab := nb.item_tab (main)
-				nb.item_tab (main).set_text (conf_interface_names.dialog_create_libraries)
-			end
-
+			extend (main)
+			create hsp
+			main.extend (hsp)
 			create vb
-			main.extend (vb)
+--			vb.set_padding (layout_constants.default_padding_size)
+--			vb.set_border_width (layout_constants.default_border_size)
 
+			hsp.set_first (vb)
+			build_search_box (vb)
+
+			create cl
+			hsp.set_second (cl)
+--			main.extend (cl)
+--			main.disable_item_expand (cl)
+			selection_cell := cl
+			build_iron_package_box
+			build_library_selection_box
+			cl.extend (library_selection_box)
+			cl.set_minimum_height (library_selection_box.height)
+
+				-- Initial Event
+			show_actions.extend_kamikaze (agent (a_split: EV_VERTICAL_SPLIT_AREA)
+				do
+					a_split.set_proportion (0.9)
+					populate
+					search_results_box.set_focus
+				end (hsp))
+
+			resize_actions.extend (agent (ia_x, ia_y, ia_width, ia_height: INTEGER; a_split: EV_VERTICAL_SPLIT_AREA)
+				do
+					a_split.set_proportion (0.9)
+				end (?, ?, ?, ?, hsp))
+
+			l_service.set_associated_widget (Current)
+		end
+
+	launch_iron_tool
+		local
+			dlg: detachable IRON_PACKAGE_TOOL_DIALOG
+		do
+			dlg := last_launch_iron_tool
+			if dlg /= Void and then dlg.is_destroyed then
+				dlg := Void
+			end
+			if dlg = Void then
+				create dlg.make (iron_service)
+				dlg.set_size (width, height)
+				dlg.set_position (x_position, y_position)
+					--| Whenever an operation is made on iron packages via the current EiffelStudio's dialog
+					--| `on_iron_packages_changed' will be executed.
+				dlg.iron_box.on_iron_packages_changed_actions.extend (agent on_iron_packages_changed)
+				last_launch_iron_tool := dlg
+			end
+			dlg.show_modal_to_window (Current)
+		end
+
+	last_launch_iron_tool: detachable IRON_PACKAGE_TOOL_DIALOG
+
+	build_search_box (vb: EV_VERTICAL_BOX)
+			-- Build the filter + grid + button.
+		local
+			l_btn: EV_BUTTON
+			vb2, l_padding: EV_VERTICAL_BOX
+			hbf, hb1: EV_HORIZONTAL_BOX
+			l_lbl: EV_LABEL
+			l_filter: like filter
+			l_clear_filter_button: EV_BUTTON
+			l_update_index_button: EV_BUTTON
+			cb: EV_CHECK_BUTTON
+		do
 				-- default libraries
 			create vb2
 			vb.extend (vb2)
@@ -100,10 +153,23 @@ feature {NONE} -- Initialization
 			create hb1
 			hb1.set_padding (layout_constants.small_padding_size)
 
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_defaults)
+			create l_lbl.make_with_text ("Include")
 			l_lbl.align_text_left
 			hb1.extend (l_lbl)
 			hb1.disable_item_expand (l_lbl)
+
+			create provider_checkboxes.make (libraries_manager.providers.count)
+			across
+				libraries_manager.providers as ic
+			loop
+				create cb.make_with_text (ic.key)
+				cb.enable_select
+				cb.set_tooltip (ic.item.description) --{STRING_32} "Include items from " + ic.key + " provider.")
+				hb1.extend (cb)
+				hb1.disable_item_expand (cb)
+				provider_checkboxes.put (cb, ic.key)
+				cb.select_actions.extend (agent request_update_filter)
+			end
 
 			hb1.extend (create {EV_CELL})
 			create hbf
@@ -128,15 +194,15 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (hb1)
 
 				-- Create grid
-			create libraries_box.make (target)
-			libraries_box.set_minimum_size (400, 200)
-			libraries_box.on_library_selected_actions.extend (agent on_library_selected)
+			create search_results_box.make (target)
+			search_results_box.set_minimum_size (600, 200)
+			search_results_box.on_item_selected_actions.extend (agent on_search_item_selected)
 
 				-- Create border for the grid
 			create l_padding
 			l_padding.set_border_width (1)
 			l_padding.set_background_color ((create {EV_STOCK_COLORS}).color_3d_shadow)
-			l_padding.extend (libraries_box.widget)
+			l_padding.extend (search_results_box.widget)
 
 			vb2.extend (l_padding)
 
@@ -145,6 +211,14 @@ feature {NONE} -- Initialization
 			hb1.set_padding (layout_constants.small_padding_size)
 			vb2.extend (hb1)
 			vb2.disable_item_expand (hb1)
+
+			create l_btn
+			l_btn.select_actions.extend (agent on_search_item_selected (Void))
+			l_btn.set_text ("Custom")
+			l_btn.enable_sensitive
+			hb1.extend (l_btn)
+			hb1.disable_item_expand (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 
 			hb1.extend (create {EV_CELL})
 
@@ -155,7 +229,8 @@ feature {NONE} -- Initialization
 			l_update_index_button.enable_sensitive
 			hb1.extend (l_update_index_button)
 			hb1.disable_item_expand (l_update_index_button)
-			libraries_update_button := l_update_index_button
+			update_button := l_update_index_button
+			layout_constants.set_default_width_for_button (l_update_index_button)
 
 			create l_btn
 			l_btn.set_pixmap (conf_pixmaps.project_settings_advanced_icon)
@@ -164,135 +239,61 @@ feature {NONE} -- Initialization
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 
-				-- name
-			create vb2
-			vb.extend (vb2)
-			vb.disable_item_expand (vb2)
-			vb2.set_padding (layout_constants.small_padding_size)
-			vb2.set_border_width (layout_constants.small_border_size)
 
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_name)
-			vb2.extend (l_lbl)
-			vb2.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
+			create l_btn.make_with_text_and_action ("Packages", agent launch_iron_tool)
+			l_btn.set_pixmap (conf_pixmaps.library_iron_package_icon)
+			l_btn.set_tooltip ("Manage IRON packages with the associated IRON tool")
+			hb1.extend (l_btn)
+			hb1.disable_item_expand (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
+		end
 
-			create name
-			vb2.extend (name)
-			vb2.disable_item_expand (name)
+	build_iron_package_box
+			-- Build the iron package box.
+		local
+			w: like iron_package_widget
+			vb: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			but: EV_BUTTON
+		do
+			create w.make (iron_service)
+			iron_package_widget := w
 
-				-- location
-			create vb2
-			vb.extend (vb2)
-			vb.disable_item_expand (vb2)
-			vb2.set_padding (layout_constants.small_padding_size)
-			vb2.set_border_width (layout_constants.small_border_size)
+			create vb
+			vb.extend (w.widget)
 
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_location)
-			vb2.extend (l_lbl)
-			vb2.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
-
-			create hb2
-			vb2.extend (hb2)
-			vb2.disable_item_expand (hb2)
-			hb2.set_padding (layout_constants.small_padding_size)
-
-			create location
-			hb2.extend (location)
-
-			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
-			l_btn.set_pixmap (conf_pixmaps.general_open_icon)
-			hb2.extend (l_btn)
-			hb2.disable_item_expand (l_btn)
-
-			-----------------
-			--| [Ok] [Cancel]
 			create hb
-			main.extend (hb)
-			main.disable_item_expand (hb)
+			vb.extend (hb)
+
+			create but.make_with_text_and_action (names.b_cancel, agent on_cancel)
+			layout_constants.set_default_width_for_button (but)
 			hb.extend (create {EV_CELL})
-			hb.set_padding (layout_constants.default_padding_size)
+			hb.extend (but)
+			hb.disable_item_expand (but)
 
-			create l_btn.make_with_text (names.b_ok)
-			hb.extend (l_btn)
-			hb.disable_item_expand (l_btn)
-			set_default_push_button (l_btn)
-			l_btn.select_actions.extend (agent on_ok)
-			layout_constants.set_default_width_for_button (l_btn)
+			iron_package_box := vb
 
-			create l_btn.make_with_text (names.b_cancel)
-			hb.extend (l_btn)
-			hb.disable_item_expand (l_btn)
-			set_default_cancel_button (l_btn)
-			l_btn.select_actions.extend (agent on_cancel)
-			layout_constants.set_default_width_for_button (l_btn)
+			w.on_install_actions.extend (agent (p: IRON_PACKAGE)
+					do
+						iron_service.install_package (p, agent on_iron_package_installed (p, ?))
+					end
+				)
+			w.on_uninstall_actions.extend (agent (p: IRON_PACKAGE)
+					do
+						iron_service.uninstall_package (p, agent on_iron_package_uninstalled (p, ?))
+					end
+				)
+		end
 
-				-- end of notebook tab #1 : Standard libraries
-				-- notebook tab #2: Iron
-
-				-- libraries		
-			create main
-			main.set_padding (layout_constants.default_padding_size)
-			main.set_border_width (layout_constants.default_border_size)
-
-			create vb2
-			main.extend (vb2)
-
-			nb.extend (main)
-			if
-				nb.has (main) and then
-				attached nb.item_tab (main) as iron_tab
-			then
-				iron_tab.set_text (conf_interface_names.dialog_create_iron_packages)
-				create iron_box.make (target)
-					--| Whenever an operation is made on iron packages via the current EiffelStudio's dialog
-					--| `on_iron_packages_changed' will be executed.
-				iron_box.on_iron_packages_changed_actions.extend (agent on_iron_packages_changed)
-				vb2.extend (iron_box.widget)
-
-				-----------------
-				--| [Back to libraries]
-				create hb
-				main.extend (hb)
-				main.disable_item_expand (hb)
-				hb.extend (create {EV_CELL})
-				hb.set_padding (layout_constants.default_padding_size)
-
-				create l_btn.make_with_text (conf_interface_names.dialog_create_back_to_previous_tab)
-				hb.extend (l_btn)
-				hb.disable_item_expand (l_btn)
-				if libs_tab /= Void then
-					l_btn.select_actions.extend (agent libs_tab.enable_select)
-				else
-					l_btn.select_actions.extend (agent nb.select_item (nb.first))
-				end
-				layout_constants.set_default_width_for_button (l_btn)
-
-				nb.selection_actions.extend (agent (ia_libs, ia_nb: detachable EV_NOTEBOOK_TAB; ia_iron_box: IRON_PACKAGE_COLLECTION_BOX)
-						do
-							if ia_nb /= Void and then ia_nb.is_selected then
-									--| the "IRON Packages" tab is selected
-									--| then populate the associated grid to display iron packages
-								ev_application.add_idle_action_kamikaze (agent ia_iron_box.populate)
-							elseif ia_libs /= Void and then ia_libs.is_selected then
-									--| the "Libraries" tab is selected
-								if repopulate_requested then
-										--| a command requested the re-population of the libraries grid
-										--| most likely due to recent IRON changes from the related dialog
-										--| that resetted the cache of iron libraries data.
-									ev_application.add_idle_action_kamikaze (agent populate_libraries)
-								end
-							end
-						end (libs_tab, iron_tab, iron_box)
-					)
-			end
-
-				-- Initial Event
-			show_actions.extend_kamikaze (agent
-				do
-					populate_libraries
-					libraries_box.set_focus
-				end)
+	build_library_selection_box
+			-- Build the name + location + browse button.
+		local
+			w: like library_widget
+		do
+			create w.make (target)
+			library_widget := w
+			w.on_ok_actions.extend (agent on_ok)
+			w.on_cancel_actions.extend (agent on_cancel)
 		end
 
 feature {NONE} -- Update filter
@@ -324,7 +325,9 @@ feature {NONE} -- Update filter
 	delayed_update_filter
 		do
 			cancel_delayed_update_filter
-			update_filter
+			if not is_destroyed then
+				update_filter
+			end
 		end
 
 	update_filter
@@ -334,18 +337,29 @@ feature {NONE} -- Update filter
 			l_style := pointer_style
 			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 
-			-- FIXME: filter libs!
---			libraries_box.set_filter_text (filter_text)
-			libraries_box.set_configuration_libraries (all_libraries (filter_text))
-			libraries_box.update_grid
+			search_results_box.set_items (all_search_results (filter_text, provider_ids))
+			search_results_box.update_grid
 
 			set_pointer_style (l_style)
 		end
 
 feature {NONE} -- GUI elements
 
-	libraries_box: EIFFEL_LIBRARY_COLLECTION_BOX
-			-- Libraries collection box.
+	selection_cell: EV_CELL
+
+	iron_package_box: EV_WIDGET
+
+	iron_package_widget: IRON_PACKAGE_WIDGET
+
+	library_selection_box: EV_WIDGET
+		do
+			Result := library_widget.widget
+		end
+
+	library_widget: ADD_LIBRARY_WIDGET
+
+	search_results_box: EIFFEL_SEARCH_ITEMS_BOX [ES_LIBRARY_PROVIDER_ITEM]
+			-- Search results box.
 
 	filter: EV_TEXT_FIELD
 			-- Filter.
@@ -356,29 +370,26 @@ feature {NONE} -- GUI elements
 			Result := filter.text
 		end
 
-	name: EV_TEXT_FIELD
-			-- Name of the library.
+	provider_checkboxes: STRING_TABLE [EV_CHECK_BUTTON]
 
-	location: EV_TEXT_FIELD
-			-- Location of the library configuration file, choosen by the user.
-
-	browse_dialog: EV_FILE_OPEN_DIALOG
-			-- Dialog to browse to a library
-		local
-			l_dir: DIRECTORY
-		once
-			create Result
-			create l_dir.make_with_path (target.system.directory)
-			if l_dir.is_readable then
-				Result.set_start_path (l_dir.path)
+	provider_ids: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+		do
+			if attached provider_checkboxes as tb then
+				create Result.make (tb.count)
+				across
+					tb as ic
+				loop
+					if ic.item.is_selected then
+						Result.extend (ic.key)
+					end
+				end
+				if Result.is_empty then
+					Result := Void
+				end
 			end
-			Result.filters.extend ([config_files_filter, config_files_description])
-			Result.filters.extend ([all_files_filter, all_files_description])
-		ensure
-			Result_not_void: Result /= Void
 		end
 
-	libraries_update_button: EV_BUTTON
+	update_button: EV_BUTTON
 			-- Update libraries cache.
 
 feature -- Access
@@ -393,20 +404,47 @@ feature {NONE} -- Callback
 		do
 			reset_iron_configuration_libraries (target)
 			if not repopulate_requested then
-				repopulate_requested := True
+				populate
 			end
 		end
 
 	repopulate_requested: BOOLEAN
-			-- Any pending request to call `populate_libraries'?
+			-- Any pending request to call `populate'?
+
+	on_iron_package_installed (p: IRON_PACKAGE; a_succeed: BOOLEAN)
+		do
+			if a_succeed then
+				on_iron_packages_changed (p)
+				search_results_box.select_row_by_value (p)
+			end
+		end
+
+	on_iron_package_uninstalled (p: IRON_PACKAGE; a_succeed: BOOLEAN)
+		do
+			if a_succeed then
+				on_iron_packages_changed (p)
+				search_results_box.select_row_by_value (p)
+			end
+		end
 
 feature {NONE} -- Libraries cache.
 
 	update_index
+		local
+			nb: INTEGER
 		do
-			reset_iron_configuration_libraries (target)
-			reset_configuration_libraries (target)
-			populate_libraries
+			across
+				provider_checkboxes as ic
+			loop
+				if ic.item.is_selected then
+					libraries_manager.reset_provider (ic.key, target)
+					nb := nb + 1
+				end
+			end
+			if nb = 0 then
+				libraries_manager.reset_all (target)
+			end
+			populate
 		end
 
 feature {NONE} -- Configuration settings for libraries
@@ -461,90 +499,100 @@ feature {NONE} -- Configuration settings for libraries
 
 feature {NONE} -- Access
 
-	libraries_manager: ES_LIBRARY_MANAGER
+	libraries_manager: ES_LIBRARY_PROVIDER_SERVICE
 		once
-			create Result.make (2)
-			Result.register (create {ES_LIBRARY_DELIVERY_PROVIDER})
+			create Result.make (3)
+			Result.register (create {ES_LIBRARY_LOCAL_PROVIDER})
 			Result.register (create {ES_LIBRARY_IRON_PROVIDER})
+			Result.register (create {ES_LIBRARY_IRON_PACKAGE_PROVIDER}.make (create {ES_IRON_SERVICE}))
 		end
 
 	reset_configuration_libraries (a_target: CONF_TARGET)
 		do
-			libraries_manager.reset_provider ({ES_LIBRARY_DELIVERY_PROVIDER}.identifier, a_target)
+			libraries_manager.reset_provider ({ES_LIBRARY_LOCAL_PROVIDER}.identifier, a_target)
 		end
 
 	reset_iron_configuration_libraries (a_target: CONF_TARGET)
 		do
 			libraries_manager.reset_provider ({ES_LIBRARY_IRON_PROVIDER}.identifier, a_target)
-		end
-
-feature {NONE} -- Actions
-
-	browse
-			-- Browse for a location.
-		local
-			l_loc: CONF_FILE_LOCATION
-			l_dir: DIRECTORY
-			l_cfg_data: CONF_SYSTEM_VIEW
-		do
-			if not location.text.is_empty then
-				create l_loc.make (location.text, target)
-				create l_dir.make_with_path (l_loc.evaluated_directory)
-			end
-			if l_dir /= Void and then l_dir.exists then
-				browse_dialog.set_start_path (l_dir.path)
-			end
-
-			browse_dialog.show_modal_to_window (Current)
-			if attached browse_dialog.file_name as l_fn and then not l_fn.is_empty then
-				create l_cfg_data.make_from_path (create {PATH}.make_from_string (l_fn))
-				if l_cfg_data.has_library_target then
-					if
-						attached l_cfg_data.conf_option as l_options and then
-						l_options.is_void_safety_sufficient (target.options)
-					then
-						on_library_selected (l_cfg_data, l_fn)
-					else
-						prompts.show_question_prompt (conf_interface_names.add_non_void_safe_library, Current, agent on_library_selected (l_cfg_data, l_fn), Void)
-					end
-				else
-					prompts.show_error_prompt (conf_interface_names.file_is_not_a_library, Current, Void)
-				end
-			end
+			libraries_manager.reset_provider ({ES_LIBRARY_IRON_PACKAGE_PROVIDER}.identifier, a_target)
 		end
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
+	on_library_selected (a_library: detachable CONF_SYSTEM_VIEW)
 			-- Called when a library is selected
 		require
-			is_library_target: a_library.has_library_target
+			is_library_target: a_library /= Void implies a_library.has_library_target
 		do
-			name.set_text (a_library.library_target_name)
-			location.set_text (a_location)
+			library_widget.set_library (a_library)
 		end
 
-	on_ok
+	on_iron_package_selected (a_iron_package: IRON_PACKAGE)
+		require
+			a_iron_package_set: a_iron_package /= Void
+		do
+			iron_package_widget.set_package (a_iron_package)
+		end
+
+	on_search_item_selected (a_search_item: detachable ES_LIBRARY_PROVIDER_ITEM)
+		local
+			cl_item: detachable EV_WIDGET
+			w: EV_WIDGET
+		do
+			if not selection_cell.is_empty then
+				cl_item := selection_cell.item
+			else
+				w := library_selection_box
+			end
+
+			if a_search_item = Void then
+				w := library_selection_box
+				on_library_selected (Void)
+			elseif attached {CONF_SYSTEM_VIEW} a_search_item.value as cfg then
+				w := library_selection_box
+				on_library_selected (cfg)
+			elseif attached {IRON_PACKAGE} a_search_item.value as l_iron_package then
+				w := iron_package_box
+				on_iron_package_selected (l_iron_package)
+			else
+				w := library_selection_box
+			end
+			if cl_item /= w then
+				selection_cell.wipe_out
+				selection_cell.extend (w)
+			end
+		end
+
+	on_ok (w: ADD_LIBRARY_WIDGET)
 			-- Add library and close the dialog.
 		local
 			l_sys: CONF_SYSTEM
+			l_name: READABLE_STRING_32
+			l_location: READABLE_STRING_32
 		do
 				-- library choosen?
-			if not location.text.is_empty and not name.text.is_empty then
-				if not is_valid_group_name (name.text) then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.invalid_library_name, Current, Void)
-				elseif group_exists (name.text, target) then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
-				else
-					last_group := factory.new_library (name.text, location.text, target)
-						-- add an empty classes list that it get's displayed in the classes tree
-					last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-					l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy")
-					l_sys.set_application_target (target)
-					last_group.set_library_target (factory.new_target ("dummy", l_sys))
-					target.add_library (last_group)
-					is_ok := True
-					destroy
+			if filter.has_focus then
+					-- Ignore global Ok.
+			else
+				l_name := w.name
+				l_location := w.location
+				if not l_location.is_empty and not l_name.is_empty then
+					if not is_valid_group_name (l_name) then
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.invalid_library_name, Current, Void)
+					elseif group_exists (l_name, target) then
+						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.group_already_exists (l_name), Current, Void)
+					else
+						last_group := factory.new_library (l_name, l_location, target)
+							-- add an empty classes list that it get's displayed in the classes tree
+						last_group.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
+						l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy")
+						l_sys.set_application_target (target)
+						last_group.set_library_target (factory.new_target ("dummy", l_sys))
+						target.add_library (last_group)
+						is_ok := True
+						destroy
+					end
 				end
 			end
 		ensure
@@ -559,20 +607,28 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Basic operation
 
-	all_libraries (a_filter: detachable READABLE_STRING_GENERAL): STRING_TABLE [CONF_SYSTEM_VIEW]
+	all_search_results (a_filter: detachable READABLE_STRING_GENERAL; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
+		require
+			provider_ids_void_or_not_empty: a_provider_ids /= Void implies not a_provider_ids.is_empty
+		local
+			libs: LIST [ES_LIBRARY_PROVIDER_ITEM]
 		do
-			if a_filter /= Void then
-				Result := libraries_manager.filtered_libraries (a_filter, target, Void)
-			else
-				Result := libraries_manager.libraries (target, Void)
+			libs := libraries_manager.libraries (a_filter, target, provider_ids)
+
+			create {ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]} Result.make (libs.count)
+			across
+				libs as ic
+			loop
+				Result.force (ic.item)
 			end
+			sort_search_items (Result)
 		end
 
-	populate_libraries
-			-- Populates the list of libraries in the UI
+	populate
+			-- Populates items in the UI
 		local
 			l_style: detachable EV_POINTER_STYLE
-			libs_box: like libraries_box
+			l_box: like search_results_box
 			retried: BOOLEAN
 			popup: detachable EV_POPUP_WINDOW
 			bb,vb: EV_VERTICAL_BOX
@@ -597,10 +653,10 @@ feature {NONE} -- Basic operation
 				popup.show_relative_to_window (Current)
 				popup.refresh_now
 
-				libs_box := libraries_box
-				libs_box.set_configuration_libraries (all_libraries (filter_text))
---				libs_box.set_filter_text (filter_text)
-				libs_box.update_grid
+
+				l_box := search_results_box
+				l_box.set_items (all_search_results (filter_text, provider_ids))
+				l_box.update_grid
 			end
 			if popup /= Void then
 				popup.destroy
@@ -614,19 +670,19 @@ feature {NONE} -- Basic operation
 			retry
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Implementation: iron api
 
-	name_column: INTEGER = 1
-			-- Index of a column with a library name.
+	iron_service: ES_IRON_SERVICE
 
-	void_safety_column: INTEGER = 2
-			-- Index of a column with void-safety status.
+feature {NONE} -- Implementation
 
-	location_column: INTEGER = 3
-			-- Index of a column with a library location.
+	sort_search_items (lst: LIST [ES_LIBRARY_PROVIDER_ITEM])
+		do
+			libraries_manager.sort_list (lst)
+		end
 
 invariant
-	target_set_in_boxes: libraries_box.target = target
+	target_set_in_boxes: search_results_box.target = target
 
 ;note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

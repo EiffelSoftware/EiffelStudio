@@ -854,7 +854,9 @@ feature {NONE} -- Implementation
 				if k = 0 then
 					k := n
 				end
-				if l_prefix = Void then
+				if k = i then
+						-- Ignore
+				elseif l_prefix = Void then
 					from
 						j := i
 					until
@@ -896,7 +898,7 @@ feature {NONE} -- Implementation
 invariant
 	buffer_index <= buffer.count + 1
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

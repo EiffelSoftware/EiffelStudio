@@ -7,9 +7,7 @@ class
 	ES_LIBRARY_IRON_PROVIDER
 
 inherit
-	ES_LIBRARY_PROVIDER
-
-	ES_CACHE_UTILITIES
+	ES_LIBRARY_CACHING_CONF_SYSTEM_VIEW_PROVIDER
 
 	CONF_VALIDITY
 
@@ -24,19 +22,15 @@ feature -- Access
 			Result := {STRING_32} "Libraries available from installed IRON packages."
 		end
 
-	no_cached_libraries (a_target: CONF_TARGET): STRING_TABLE [CONF_SYSTEM_VIEW]
+	no_cached_libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): LIST [CONF_SYSTEM_VIEW]
 		local
 			l_installation_api: IRON_INSTALLATION_API
-			l_iron_installation_api_factory: CONF_IRON_INSTALLATION_API_FACTORY
 			loc: STRING_32
 			pk: IRON_PACKAGE
 		do
-			create l_iron_installation_api_factory
-				--| TODO: improve performance, by caching iron_installation_api in the whole system.
-				--| idea: l_iron_installation_api_factory.enable_caching
-			l_installation_api := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
+			l_installation_api := iron_installation_api
 			if attached l_installation_api.installed_packages as l_packages then
-				create Result.make (l_packages.count)
+				create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (l_packages.count)
 				across
 					l_packages as ic
 				loop
@@ -47,7 +41,7 @@ feature -- Access
 						loop
 							loc := {STRING} "iron:" + ic.item.identifier + {STRING_32} ":" + proj_ic.item.name
 							if attached conf_system_from (a_target, loc, False) as cfg then
-								Result.force (cfg, loc)
+								Result.force (cfg)
 								if attached pk.items as l_pk_items then
 									across
 										l_pk_items as pk_items_ic
@@ -71,7 +65,7 @@ feature -- Access
 					--| this point would be good location to disable the caching.
 					--| idea: l_iron_installation_api_factory.disable_caching
 			else
-				create Result.make (0)
+				create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (0)
 			end
 		end
 
@@ -83,6 +77,32 @@ feature -- Access
 				Result := "iron_configuration_libraries.cache"
 			end
 		end
+
+	iron_installation_api: IRON_INSTALLATION_API
+		local
+			l_iron_installation_api_factory: CONF_IRON_INSTALLATION_API_FACTORY
+			l_api: detachable IRON_INSTALLATION_API
+		do
+			l_api := internal_iron_installation_api
+			if l_api /= Void and then not l_api.is_up_to_date then
+				l_api := Void
+			end
+			if l_api = Void then
+				create l_iron_installation_api_factory
+					--| TODO: improve performance, by caching iron_installation_api in the whole system.
+					--| idea: l_iron_installation_api_factory.enable_caching
+
+				l_api := l_iron_installation_api_factory.iron_installation_api (create {IRON_LAYOUT}.make_with_path (eiffel_layout.iron_path, eiffel_layout.installation_iron_path), create {IRON_URL_BUILDER})
+				internal_iron_installation_api := l_api
+			end
+			Result := l_api
+		end
+
+feature {NONE} -- Implementation		
+
+	internal_iron_installation_api: detachable IRON_INSTALLATION_API
+
+invariant
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

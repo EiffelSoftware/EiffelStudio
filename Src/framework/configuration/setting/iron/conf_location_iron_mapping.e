@@ -82,7 +82,11 @@ feature -- Change
 
 	refresh
 		do
-			internal_iron_api := Void
+			if attached internal_iron_api as api then
+				if not api.is_up_to_date then
+					internal_iron_api := Void
+				end
+			end
 		end
 
 feature -- Access		
@@ -93,6 +97,9 @@ feature -- Access
 			fac: CONF_IRON_INSTALLATION_API_FACTORY
 		do
 			l_iron_api := internal_iron_api
+			if l_iron_api /= Void and then not l_iron_api.is_up_to_date then
+				l_iron_api := Void
+			end
 			if l_iron_api = Void then
 				create fac
 				l_iron_api := fac.iron_installation_api (iron_layout, iron_urls)
@@ -115,7 +122,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

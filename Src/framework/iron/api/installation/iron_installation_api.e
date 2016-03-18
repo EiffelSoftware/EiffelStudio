@@ -28,13 +28,34 @@ feature {IRON_EXPORTER} -- Storage
 
 	db: IRON_CLIENT_DB
 
-feature {NONE} -- Internal	
+	db_revision: INTEGER
+			-- revision of the database.
+			-- (incremented for any install or uninstall operation).
+
+	increment_db_revision
+			-- Increment revision.
+			-- note: usually after an installation or uninstallation operation.
+			-- could also be used to request refresh for any installation api.
+		do
+			db.increment_revision
+		ensure
+			db.revision > old db.revision
+		end
+
+feature {NONE} -- Internal
 
 	internal_installed_packages: detachable like installed_packages
 
 	internal_available_packages: detachable like available_packages
 
 feature -- Access
+
+	is_up_to_date: BOOLEAN
+			-- Does current has up-to-date data?
+			-- If not, it will need to be refreshed.
+		do
+			Result := db_revision = db.revision
+		end
 
 	installed_packages_count: INTEGER
 			-- Number of installed packages.
@@ -66,9 +87,14 @@ feature -- Access
 		local
 			res: like internal_installed_packages
 		do
+			if not is_up_to_date then
+				internal_installed_packages := Void
+				internal_available_packages := Void
+			end
 			res := internal_installed_packages
 			if res = Void then
 				res := db.installed_packages
+				db_revision := db.revision
 				internal_installed_packages := res
 			end
 			Result := res
@@ -102,9 +128,14 @@ feature -- Access
 		local
 			res: like internal_available_packages
 		do
+			if not is_up_to_date then
+				internal_installed_packages := Void
+				internal_available_packages := Void
+			end
 			res := internal_available_packages
 			if res = Void then
 				res := db.available_packages
+				db_revision := db.revision
 				internal_available_packages := res
 			end
 			Result := res
@@ -118,6 +149,16 @@ feature -- Access
 
 feature -- Change
 
+	notify_change
+			-- Notify an operation changed the client database.
+			-- note: usually after an installation or uninstallation operation.
+			-- could also be used to request refresh for any installation api.
+		do
+			increment_db_revision
+		ensure
+			need_refresh: not is_up_to_date
+		end
+
 	refresh
 			-- Refresh associated data.
 		do
@@ -126,15 +167,34 @@ feature -- Change
 		end
 
 	refresh_installed_packages
-			-- Refresh associated data.
 		do
-			internal_installed_packages := Void
+			reset_installed_packages
 		end
 
 	refresh_available_packages
+		do
+			reset_available_packages
+		end
+
+	reset
+			-- Reset associated cached data.
+		do
+			reset_installed_packages
+			reset_available_packages
+		end
+
+	reset_installed_packages
+			-- Refresh associated data.
+		do
+			internal_installed_packages := Void
+			db_revision := 0
+		end
+
+	reset_available_packages
 			-- Refresh associated data.
 		do
 			internal_available_packages := Void
+			db_revision := 0
 		end
 
 feature -- Query		
@@ -513,7 +573,7 @@ invariant
 	available_packages /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

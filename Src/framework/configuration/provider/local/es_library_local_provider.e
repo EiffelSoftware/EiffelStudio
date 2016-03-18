@@ -1,39 +1,40 @@
 note
-	description: "Summary description for {ES_LIBRARY_DELIVERY_PROVIDER}."
+	description: "Summary description for {ES_LIBRARY_LOCAL_PROVIDER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_LIBRARY_DELIVERY_PROVIDER
+	ES_LIBRARY_LOCAL_PROVIDER
 
 inherit
-	ES_LIBRARY_PROVIDER
+	ES_LIBRARY_CACHING_CONF_SYSTEM_VIEW_PROVIDER
 
 	CONF_VALIDITY
 
 feature -- Access
 
-	identifier: STRING = "delivery"
+	identifier: STRING = "local"
 			-- Provider identifier.
 
 	description: detachable READABLE_STRING_32
 			-- Optional description
 		do
-			Result := {STRING_32} "Libraries installed with the Eiffel Studio delivery."
+			Result := {STRING_32} "Libraries installed locally with Eiffel Studio."
 		end
 
-	no_cached_libraries (a_target: CONF_TARGET): STRING_TABLE [CONF_SYSTEM_VIEW]
+	no_cached_libraries (a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): LIST [CONF_SYSTEM_VIEW]
 			-- A set of libraries configurations to display in the dialog.
+			-- Indexed by location.
 		local
 			l_libs: like library_locations
 		do
 			l_libs := library_locations (a_target)
-			create Result.make (l_libs.count)
+			create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (l_libs.count)
 			across
 				l_libs as ic
 			loop
 				if attached conf_system_from (a_target, ic.item, True) as cfg then
-					Result.force (cfg, ic.item)
+					Result.force (cfg)
 				end
 			end
 		end
@@ -50,7 +51,7 @@ feature -- Access
 feature {NONE} -- Access
 
 	library_locations (a_target: CONF_TARGET): SEARCH_TABLE [STRING_32]
-			-- A set of libraries to display in the dialog
+			-- A set of libraries.
 		require
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		local

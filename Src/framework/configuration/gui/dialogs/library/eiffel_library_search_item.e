@@ -1,64 +1,61 @@
 note
-	description: "Summary description for {ES_LIBRARY_DELIVERY_PROVIDER}."
+	description: "[
+			Search results item.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_PRECOMPILE_LIBRARY_DELIVERY_PROVIDER
+deferred class
+	EIFFEL_LIBRARY_SEARCH_ITEM [G]
 
 inherit
-	ES_LIBRARY_DELIVERY_PROVIDER
-		redefine
-			lookup_directories,
-			library_locations,
-			cache_name
+	COMPARABLE
+
+	DEBUG_OUTPUT
+		undefine
+			is_equal
 		end
 
 feature -- Access
 
-	cache_name (a_target: CONF_TARGET): STRING
+	score: REAL
+		deferred
+		end
+
+	object: G
+		deferred
+		end
+
+	identifier: READABLE_STRING_GENERAL
+		deferred
+		end
+
+feature -- Status report	
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- <Precursor>
 		do
-			if is_dotnet (a_target) then
-				Result := "configuration_precomp_libraries_dotnet.cache"
+			if score = other.score then
+				Result := identifier.as_string_32 < other.identifier.as_string_32
 			else
-				Result := "configuration_precomp_libraries.cache"
+				Result := score <= other.score
 			end
 		end
 
-feature {NONE} -- Access
-
-	library_locations (a_target: CONF_TARGET): SEARCH_TABLE [STRING_32]
+	debug_output: STRING_32
+			-- <Precursor>.
 		do
-			Result := Precursor (a_target)
-			if Result.is_empty then
-					-- Extend the default library path
-				scan_library_location_to (a_target, eiffel_layout.precompilation_path (is_dotnet (a_target)).name, 4, Result)
+			create Result.make (5)
+			Result.append_character ('[')
+			Result.append (score.out)
+			Result.append_character (']')
+			if attached {DEBUG_OUTPUT} object as dbg then
+				Result.append_string_general (dbg.debug_output)
 			end
 		end
 
-	lookup_directories: ARRAYED_LIST [TUPLE [path: STRING_32; depth: INTEGER]]
-			-- A list of lookup directories
-		local
-			l_filename: detachable PATH
-			l_file: RAW_FILE
-		do
-			create Result.make (10)
-
-			l_filename := eiffel_layout.precompiles_config_name
-			create l_file.make_with_path (l_filename)
-			if l_file.exists then
-				add_lookup_directories (l_filename.name, Result)
-			end
-			if eiffel_layout.is_user_files_supported then
-				l_filename := eiffel_layout.user_priority_file_name (l_filename, True)
-				if l_filename /= Void then
-					l_file.reset_path (l_filename)
-					if l_file.exists then
-						add_lookup_directories (l_filename.name, Result)
-					end
-				end
-			end
-		end
+invariant
+	valid_score: score >= 0
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

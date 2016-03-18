@@ -2442,6 +2442,46 @@ feature -- Icons
 			tool_terminal_icon_buffer_attached: Result /= Void
 		end
 
+	frozen library_iron_package_icon: EV_PIXMAP
+			-- Access to 'iron package' pixmap.
+		require
+			has_named_icon: has_named_icon (library_iron_package_name)
+		once
+			Result := named_icon (library_iron_package_name)
+		ensure
+			library_iron_package_icon_attached: Result /= Void
+		end
+
+	frozen library_iron_package_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'iron package' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (library_iron_package_name)
+		once
+			Result := named_icon_buffer (library_iron_package_name)
+		ensure
+			library_iron_package_icon_buffer_attached: Result /= Void
+		end
+
+	frozen library_iron_library_icon: EV_PIXMAP
+			-- Access to 'iron library' pixmap.
+		require
+			has_named_icon: has_named_icon (library_iron_library_name)
+		once
+			Result := named_icon (library_iron_library_name)
+		ensure
+			library_iron_library_icon_attached: Result /= Void
+		end
+
+	frozen library_iron_library_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'iron library' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (library_iron_library_name)
+		once
+			Result := named_icon_buffer (library_iron_library_name)
+		ensure
+			library_iron_library_icon_buffer_attached: Result /= Void
+		end
+
 	frozen project_melt_icon: EV_PIXMAP
 			-- Access to 'melt' pixmap.
 		require
@@ -8824,6 +8864,8 @@ feature -- Constants: Icon names
 	tool_errors_list_with_warnings_name: STRING = "tool errors list with warnings"
 	tool_contract_editor_name: STRING = "tool contract editor"
 	tool_terminal_name: STRING = "tool terminal"
+	library_iron_package_name: STRING = "library iron package"
+	library_iron_library_name: STRING = "library iron library"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -9260,6 +9302,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 31, {NATURAL_8} 5], tool_errors_list_with_warnings_name)
 			a_table.put ([{NATURAL_8} 32, {NATURAL_8} 5], tool_contract_editor_name)
 			a_table.put ([{NATURAL_8} 33, {NATURAL_8} 5], tool_terminal_name)
+			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 6], library_iron_package_name)
+			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 6], library_iron_library_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 7], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 7], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 7], project_freeze_name)

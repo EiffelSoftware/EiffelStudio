@@ -286,131 +286,154 @@ feature {NONE} -- Version Package: Sorter
 
 feature -- Version Package: Criteria
 
-	version_package_criteria_factory: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]
+	meet_text (a_text: detachable READABLE_STRING_GENERAL; s: READABLE_STRING_GENERAL): BOOLEAN
+		local
+			kmp: KMP_WILD
+			tok: READABLE_STRING_GENERAL
+			tok_len: INTEGER
+			l_lower_text: READABLE_STRING_GENERAL
+			c: CHARACTER_32
+			i: INTEGER
+		do
+			if a_text /= Void then
+				if s.has ('*') or s.has ('?') then
+					create kmp.make (s, a_text)
+					kmp.disable_case_sensitive
+					Result := kmp.pattern_matches
+				else
+					from
+						l_lower_text := a_text.as_lower
+						tok := s.as_lower
+						tok_len := tok.count
+						i := 1
+					until
+						i = 0 or Result
+					loop
+						i := l_lower_text.substring_index (tok, i)
+						if i > 0 then
+							Result := True
+							if i > 1 then
+									-- Check lower boundary
+								c := l_lower_text [i - 1]
+								if c.is_alpha_numeric then
+									Result := False
+								end
+							end
+							if Result and i + tok_len <= l_lower_text.count then
+									-- Check lower boundary
+								c := l_lower_text [i + tok_len]
+								if c.is_alpha_numeric then
+									Result := False
+								end
+							end
+							if not Result then
+								i := i + 1
+							end
+						end
+					end
+				end
+			end
+		end
+
+	score_for_name (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			Result := if meet_text (obj.identifier, s) then 1.0 else 0.0 end
+		end
+
+	score_for_title (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			Result := if meet_text (obj.title, s) then 1.0 else 0.0 end
+		end
+
+	score_for_description (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			Result := if meet_text (obj.description, s) then 1.0 else 0.0 end
+		end
+
+	score_for_tag (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			if attached obj.tags as l_tags then
+				if across l_tags as ic some meet_text (ic.item, s) end then
+					Result := 1.0
+				end
+			end
+		end
+
+	score_for_owner (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			if attached obj.owner as o then
+				Result := if meet_text (o.name, s) then 1.0 else 0.0 end
+			end
+		end
+
+	score_for_downloads (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		local
+			i: INTEGER
+		do
+			if s.is_integer then
+				i := s.to_integer
+				Result := if obj.download_count >= i then 1.0 else 0.0 end
+			end
+		end
+
+	score_for_text (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): REAL
+		do
+			Result :=  score_for_name (obj, s) * score_weight_for_name
+					+ score_for_title (obj, s) * score_weight_for_title
+					+ score_for_tag (obj, s) * score_weight_for_tag
+--					+ score_for_description (obj, s) * score_weight_for_description
+		end
+
+	score_weight_for_name: REAL = 0.25
+	score_weight_for_title: REAL = 0.2
+	score_weight_for_tag: REAL = 0.20
+	score_weight_for_description: REAL = 0.15
+	score_weight_for_owner: REAL = 0.1
+	score_weight_for_downloads: REAL = 0.1
+	score_weight_for_text: REAL
+		do
+			Result := score_weight_for_name + score_weight_for_title + score_weight_for_tag --+ score_weight_for_description
+		end
+
+	version_package_criteria_factory: SCORER_CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]
 		once
 			create Result.make
 
-			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+			Result.register_builder ("name", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
-								local
-									kmp: KMP_WILD
-								do
-									if attached obj.name as l_name then
-										if s.has ('*') or s.has ('?') then
-											create kmp.make (s, l_name)
-											kmp.disable_case_sensitive
-											Result := kmp.pattern_matches
-										else
-											Result := l_name.as_lower.has_substring (s.as_lower)
-										end
-									end
-								end(?, v)
-							)
-					end)
-			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_name, agent score_for_name (?, v))
+					end
+				)
+			Result.register_builder ("title", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
-								local
-									kmp: KMP_WILD
-								do
-									if attached obj.title as l_title then
-										if s.has ('*') or s.has ('?') then
-											create kmp.make (s, l_title)
-											kmp.disable_case_sensitive
-											Result := kmp.pattern_matches
-										else
-											Result := l_title.as_lower.has_substring (s.as_lower)
-										end
-									end
-								end(?, v)
-							)
-					end)
-			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_title, agent score_for_title (?, v))
+					end
+				)
+			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
-								local
-									kmp: KMP_WILD
-								do
-									if attached obj.description as l_description then
-										if s.has ('*') or s.has ('?') then
-											create kmp.make (s, l_description)
-											kmp.disable_case_sensitive
-											Result := kmp.pattern_matches
-										else
-											Result := l_description.as_lower.has_substring (s.as_lower)
-										end
-									end
-								end(?, v)
-							)
-					end)
-			Result.register_builder ("tag", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_tag, agent score_for_tag (?, v))
+					end
+				)
+			Result.register_builder ("description", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
-								local
-									kmp: KMP_WILD
-								do
-									if attached obj.tags as l_tags and then not l_tags.is_empty then
-										if s.has ('*') or s.has ('?') then
-											create kmp.make (s, l_tags.first)
-											kmp.disable_case_sensitive
-											across
-												l_tags as ic
-											until
-												Result
-											loop
-												kmp.set_text (ic.item)
-												Result := kmp.pattern_matches
-											end
-										else
-											Result := across l_tags as ic some ic.item.is_case_insensitive_equal_general (s) end
-										end
-									end
-								end(?, v)
-							)
-					end)
-			Result.register_builder ("owner", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_description, agent score_for_description (?, v))
+					end
+				)
+			Result.register_builder ("owner", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-							agent (obj: IRON_NODE_VERSION_PACKAGE; s: READABLE_STRING_GENERAL): BOOLEAN
-								do
-									Result := attached obj.owner as l_owner and then
-										l_owner.name.is_case_insensitive_equal_general (s)
-								end(?, v)
-							)
-					end)
-			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_GENERAL): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
-					local
-						i: INTEGER
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_owner, agent score_for_owner (?, v))
+					end
+				)
+			Result.register_builder ("downloads", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						if v.is_integer then
-							i := v.to_integer
-							create {CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v,
-								agent (obj: IRON_NODE_VERSION_PACKAGE; nb: INTEGER): BOOLEAN
-									do
-										Result := obj.download_count >= nb
-									end(?, i)
-								)
-						end
-					end)
-			Result.register_builder ("text", agent (n,v: READABLE_STRING_GENERAL; a_names: ITERABLE [READABLE_STRING_GENERAL]; fac: CRITERIA_FACTORY [IRON_NODE_VERSION_PACKAGE]): detachable CRITERIA [IRON_NODE_VERSION_PACKAGE]
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_downloads, agent score_for_downloads (?, v))
+					end
+				)
+			Result.register_builder ("text", agent (n,v: READABLE_STRING_GENERAL): detachable SCORER_CRITERIA [IRON_NODE_VERSION_PACKAGE]
 					do
-						across
-							a_names as ic
-						loop
-							if attached fac.criteria (ic.item, v) as crit then
-								if Result = Void then
-									Result := crit
-								else
-									Result := Result or crit
-								end
-							end
-						end
-					end(?,?, <<"name", "title", "tag">>, Result))
+						create {SCORER_CRITERIA_AGENT [IRON_NODE_VERSION_PACKAGE]} Result.make (n + ":" + v, score_weight_for_text, agent score_for_text (?, v))
+					end
+				)
 
 			Result.register_default_builder ("text")
 			Result.set_builder_description ("text", "text:abc - equivalent to %"name:abc or title:abc or tag:abc%"")
@@ -428,7 +451,6 @@ feature -- Version Package: Criteria
 			Result := version_package_criteria_factory.description
 				+ "Criteria %"name%", %"title%", %"tag%" and %"description%" supports wildcards (*,?).%N"
 		end
-
 
 feature -- Version Package: change		
 

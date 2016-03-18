@@ -341,7 +341,7 @@ feature -- Event
 					l_item.align_text_top
 					a_row.set_item (name_column, l_item)
 				end
-				a_row.item (1).set_tooltip (l_data.score.out)
+--DEBUG				a_row.item (1).set_tooltip (l_data.score.out)
 				if attached a_row.item (name_column) as i then
 					a_max_widths[name_column] := (a_max_widths[name_column]).max (i.required_width + 10)
 				end

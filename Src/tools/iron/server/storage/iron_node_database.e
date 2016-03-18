@@ -198,7 +198,7 @@ feature -- Version Package: Access
 					end
 				end
 			end
-			Result.sort
+--			Result.sort
 		end
 
 feature -- Version Package: Sorter
@@ -208,7 +208,8 @@ feature -- Version Package: Sorter
 			l_sorter: SORTER [IRON_NODE_VERSION_PACKAGE]
 			eq: detachable AGENT_EQUALITY_TESTER [IRON_NODE_VERSION_PACKAGE]
 		once
-			create Result.make (3)
+			create Result.make (4)
+
 				-- by name
 			create eq.make (agent version_package_is_less_than_by_name)
 			create {QUICK_SORTER [IRON_NODE_VERSION_PACKAGE]} l_sorter.make (eq)

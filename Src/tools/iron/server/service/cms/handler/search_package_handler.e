@@ -60,9 +60,9 @@ feature -- Execution
 					html.add_parameter (l_sort_by, "search_sort_by")
 				end
 			end
-			if l_sort_by = Void then
-				l_sort_by := "name"
-			end
+--			if l_sort_by = Void then
+--				l_sort_by := "name"
+--			end
 			l_search_query := req.string_item ("query")
 			if l_search_query /= Void and then l_search_query.is_whitespace then
 				l_search_query := Void
@@ -90,7 +90,7 @@ feature -- Execution
 			then
 				s.append ("<ul class=%"sorters%">")
 				s.append ("<strong>Sort by</strong>: ")
-				check sort_by_is_attached: l_sort_by /= Void end
+--				check sort_by_is_attached: l_sort_by /= Void end
 				across
 					l_sorter_factory as ic
 				loop
@@ -107,7 +107,9 @@ feature -- Execution
 					k := url_encoder.general_encoded_string (ic.key)
 					create l_sort_uri.make_from_uri (l_uri)
 					-- FIXME jfiat [2015/12/29] : remove dependency on bootstrap theme!
-					if l_sort_by.is_case_insensitive_equal_general (ic.key) then
+					if l_sort_by = Void then
+							-- No specific sort!
+					elseif l_sort_by.is_case_insensitive_equal_general (ic.key) then
 						s.append ("<li class=%"active%">")
 						l_sort_uri.add_query_parameter ("sort-by", {STRING_32} "-" + k)
 						s.append ("<a href=%"" + l_sort_uri.string + "%"")

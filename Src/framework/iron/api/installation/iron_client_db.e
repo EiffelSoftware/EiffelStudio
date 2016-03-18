@@ -21,6 +21,30 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	revision: INTEGER
+			-- Revision for the client database.
+			-- Note: It is incremented for each install or uninstall operations.
+			--| See `increment_revision' for format.
+		local
+			f: RAW_FILE
+			s: READABLE_STRING_8
+		do
+			create f.make_with_path (layout.repositories_revision_file)
+			if f.exists and then f.is_readable then
+				f.open_read
+				f.read_line_thread_aware
+				s := f.last_string
+				if s.is_integer then
+					Result := s.to_integer
+				else
+					Result := -1
+				end
+				f.close
+			else
+				Result := -1
+			end
+		end
+
 	repositories: ARRAYED_LIST [IRON_REPOSITORY]
 		local
 			repo_conf: IRON_REPOSITORY_CONFIGURATION_FILE
@@ -37,6 +61,9 @@ feature -- Access
 			l_inst_info: IRON_PACKAGE_INSTALLATION_INFO
 			l_unordered_result: like installed_packages
 		do
+			debug ("iron_api")
+				print ("DEBUG:[" + revision.out + "] Scan for installed packages!!%N")
+			end
 				-- FIXME: repository order !!
 			create l_unordered_result.make (0)
 			l_unordered_result.compare_objects
@@ -92,8 +119,10 @@ feature -- Access
 					Result.force (ic.item)
 				end
 			end
+			debug ("iron_api")
+				print ("DEBUG:[" + revision.out + "] Scan for installed packages: COMPLETED!!%N")
+			end
 		end
-
 
 	quick_installed_package (a_package_name: READABLE_STRING_GENERAL): detachable IRON_PACKAGE
 			-- Installed package `a_package_name' if any.
@@ -222,6 +251,22 @@ feature -- Access
 
 feature -- Change
 
+	increment_revision
+			-- Increment db revision
+		local
+			rev: INTEGER
+			f: RAW_FILE
+		do
+			rev := revision + 1
+			create f.make_with_path (layout.repositories_revision_file)
+			if not f.exists or else f.is_access_writable then
+				f.open_write
+				f.put_string (rev.out)
+				f.put_new_line
+				f.close
+			end
+		end
+
 	save_repository (a_repo: IRON_REPOSITORY)
 			-- Save repository `a_repo' into current db.
 		local
@@ -327,7 +372,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,25 +1,35 @@
 note
-	description: "Summary description for {IRON_INSTALLATION_API_FACTORY}."
+	description: "Summary description for {EIFFEL_LIBRARY_SEARCH_SCORED_VALUE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_IRON_INSTALLATION_API_FACTORY
+	EIFFEL_LIBRARY_SEARCH_SCORED_VALUE [G]
 
-feature -- Factory
+inherit
+	EIFFEL_LIBRARY_SEARCH_ITEM [G]
 
-	iron_installation_api (a_iron_layout: IRON_LAYOUT; a_iron_urls_builder: IRON_URL_BUILDER): IRON_INSTALLATION_API
-			-- Iron installation API object.
-			--| This single factory will allow to optimize the integration of IRON with EiffelStudio
-			--| by using caching or similar.
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_scored_value: SCORED_VALUE [G]; a_identifier: READABLE_STRING_GENERAL)
 		do
-			debug ("iron_api")
-				print ("DEBUG: new Iron Installation API !!%N")
-			end
-			create Result.make_with_layout (a_iron_layout, a_iron_urls_builder)
+			score := a_scored_value.score
+			identifier := a_identifier
+			object := a_scored_value.value
 		end
 
-note
+feature -- Access
+
+	score: REAL
+
+	identifier: READABLE_STRING_GENERAL
+
+	object: G
+
+;note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

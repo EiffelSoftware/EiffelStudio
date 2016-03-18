@@ -13,6 +13,7 @@
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer-safe.ecf"/>
 		<library name="configuration_parser" location="configuration_parser-safe.ecf" readonly="true"/>
 		<library name="configuration_provider" location="configuration_provider-safe.ecf" readonly="true"/>
+		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria-safe.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking-safe.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier-safe.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>

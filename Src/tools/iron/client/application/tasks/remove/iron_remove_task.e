@@ -128,6 +128,7 @@ feature -- Execute
 					else
 						a_iron.catalog_api.uninstall_package (l_package)
 						print (" -> ")
+						a_iron.installation_api.notify_change
 						a_iron.installation_api.refresh_installed_packages
 						if a_iron.installation_api.is_package_installed (l_package) then
 							print (tk_failed)
@@ -141,7 +142,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

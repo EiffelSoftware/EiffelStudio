@@ -128,6 +128,7 @@ feature {NONE} -- Implementation
 	json_object_to_package (j_package: JSON_OBJECT; repo: IRON_REPOSITORY; a_version: detachable READABLE_STRING_8): detachable IRON_PACKAGE
 		local
 			s: READABLE_STRING_GENERAL
+			k: READABLE_STRING_32
 		do
 			if
 				attached {JSON_STRING} j_package.item ("id") as j_id and
@@ -140,10 +141,10 @@ feature {NONE} -- Implementation
 				Result.put_json_item (j_package.representation)
 				Result.set_name (j_name.item)
 				if attached {JSON_STRING} j_package.item ("title") as j_title then
-					Result.set_title (j_title.item)
+					Result.set_title (j_title.unescaped_string_32)
 				end
 				if attached {JSON_STRING} j_package.item ("description") as j_description then
-					Result.set_description (j_description.item)
+					Result.set_description (j_description.unescaped_string_32)
 				end
 				if attached {JSON_STRING} j_package.item ("archive") as j_archive then
 					Result.set_archive_uri (j_archive.item)
@@ -182,7 +183,19 @@ feature {NONE} -- Implementation
 						j_tags.array_representation as c
 					loop
 						if attached {JSON_STRING} c.item as js then
-							Result.tags.force (js.item)
+							Result.tags.force (js.unescaped_string_32)
+						end
+					end
+				end
+				if attached {JSON_OBJECT} j_package.item ("notes") as j_notes then
+					across
+						j_notes as ic
+					loop
+						k := ic.key.unescaped_string_32
+						if attached {JSON_STRING} ic.item as js then
+							Result.put (js.unescaped_string_32, k)
+						else
+								-- FIXME: should we also include links (represented as JSON objects)?
 						end
 					end
 				end
@@ -190,7 +203,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

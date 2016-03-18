@@ -16,7 +16,7 @@ inherit
 			on_library_selected,
 			on_ok,
 			libraries_manager,
-			all_libraries
+			all_search_results
 		end
 
 create
@@ -37,18 +37,18 @@ feature -- Access
 	last_group: CONF_PRECOMPILE
 			-- <Precursor>
 
-	libraries_manager: ES_LIBRARY_MANAGER
+	libraries_manager: ES_LIBRARY_PROVIDER_SERVICE
 		once
 			create Result.make (2)
-			Result.register (create {ES_PRECOMPILE_LIBRARY_DELIVERY_PROVIDER})
+			Result.register (create {ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER})
 			Result.register (create {ES_PRECOMPILE_LIBRARY_IRON_PROVIDER})
 		end
 
 feature {NONE} -- Basic operation
 
-	all_libraries (a_filter: detachable READABLE_STRING_GENERAL): STRING_TABLE [CONF_SYSTEM_VIEW]
+	all_search_results (a_filter: detachable READABLE_STRING_GENERAL; a_provider_ids: detachable LIST [READABLE_STRING_GENERAL]): LIST [ES_LIBRARY_PROVIDER_ITEM]
 		local
-			libs: like all_libraries
+			libs: like all_search_results
 			l_precompilation: detachable STRING_32
 		do
 				-- We store the ISE_PRECOMP environment variable because when editing an ECF, it can
@@ -57,13 +57,13 @@ feature {NONE} -- Basic operation
 			eiffel_layout.set_precompile (target.setting_msil_generation)
 
 				-- Lookup all the ECFs that matches.
-			libs := Precursor (a_filter)
-			create Result.make_caseless (libs.count)
+			libs := Precursor (a_filter, a_provider_ids)
+			create {ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]} Result.make (libs.count)
 			across
 				libs as ic
 			loop
-				if ic.item.system_name.starts_with ("precomp_") then
-					Result.force (ic.item, ic.key)
+				if attached {CONF_SYSTEM_VIEW} ic.item.value as cfg and then cfg.system_name.starts_with ("precomp_") then
+					Result.force (ic.item)
 				end
 			end
 
@@ -77,24 +77,28 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Action handlers
 
-	on_library_selected (a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
+	on_library_selected (a_library: CONF_SYSTEM_VIEW)
 			-- <Precursor>
 		do
-			name.set_text (a_library.library_target_name + "_precompile")
-			location.set_text (a_location)
+			library_widget.set_library (a_library)
+			library_widget.set_name (a_library.library_target_name + "_precompile")
 		end
 
-	on_ok
+	on_ok (w: ADD_LIBRARY_WIDGET)
 			-- <Precursor>
+		local
+			l_name, l_location: READABLE_STRING_32
 		do
 				-- library choosen?
-			if not location.text.is_empty and not name.text.is_empty then
-				if not is_valid_group_name (name.text) then
+			l_name := w.name
+			l_location := w.location
+			if not l_location.is_empty and not l_name.is_empty then
+				if not is_valid_group_name (l_name) then
 					prompts.show_error_prompt (conf_interface_names.invalid_precompile_name, Current, Void)
-				elseif group_exists (name.text, target) then
-					prompts.show_error_prompt (conf_interface_names.group_already_exists (name.text), Current, Void)
+				elseif group_exists (l_name, target) then
+					prompts.show_error_prompt (conf_interface_names.group_already_exists (l_name), Current, Void)
 				else
-					last_group := factory.new_precompile (name.text, location.text, target)
+					last_group := factory.new_precompile (l_name, l_location, target)
 					target.set_precompile (last_group)
 					is_ok := True
 					destroy

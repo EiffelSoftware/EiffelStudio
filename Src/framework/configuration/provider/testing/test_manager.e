@@ -14,9 +14,13 @@ feature -- Access
 
 	test_manager
 		local
-			m: ES_LIBRARY_MANAGER
+			m: ES_LIBRARY_PROVIDER_SERVICE
 			iron_prov: ES_LIBRARY_IRON_PROVIDER
-			deliv_prov: ES_LIBRARY_DELIVERY_PROVIDER
+			deliv_prov: ES_LIBRARY_LOCAL_PROVIDER
+			iron_packages_prov: ES_LIBRARY_IRON_PACKAGE_PROVIDER
+
+			precomp_local_prov: ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER
+			precomp_iron_prov: ES_PRECOMPILE_LIBRARY_IRON_PROVIDER
 			tgt: CONF_TARGET
 		do
 			create m.make (2)
@@ -27,22 +31,18 @@ feature -- Access
 
 			tgt := new_test_target ("all")
 
-			iron_prov.clear_cache (tgt)
-			deliv_prov.clear_cache (tgt)
+			iron_prov.reset (tgt)
+			deliv_prov.reset (tgt)
 
-			if attached m.libraries (tgt, Void) as lst then
-
-			end
-
-			if attached m.filtered_libraries ("web", tgt, Void) as lst then
+			if attached m.libraries (Void, tgt, Void) as lst then
 
 			end
 		end
 
 	test_deliv
 		local
-			m: ES_LIBRARY_MANAGER
-			deliv_prov: ES_LIBRARY_DELIVERY_PROVIDER
+			m: ES_LIBRARY_PROVIDER_SERVICE
+			deliv_prov: ES_LIBRARY_LOCAL_PROVIDER
 			tgt: CONF_TARGET
 		do
 			create m.make (2)
@@ -51,19 +51,15 @@ feature -- Access
 
 			tgt := new_test_target ("deliv")
 
-			deliv_prov.clear_cache (tgt)
-			if attached m.libraries (tgt, Void) as lst then
-
-			end
-
-			if attached m.filtered_libraries ("web", tgt, Void) as lst then
+			deliv_prov.reset (tgt)
+			if attached m.libraries (Void, tgt, Void) as lst then
 
 			end
 		end
 
 	test_iron
 		local
-			m: ES_LIBRARY_MANAGER
+			m: ES_LIBRARY_PROVIDER_SERVICE
 			iron_prov: ES_LIBRARY_IRON_PROVIDER
 			tgt: CONF_TARGET
 		do
@@ -73,13 +69,9 @@ feature -- Access
 
 			tgt := new_test_target ("iron")
 
-			iron_prov.clear_cache (tgt)
+			iron_prov.reset (tgt)
 
-			if attached m.libraries (tgt, Void) as lst then
-
-			end
-
-			if attached m.filtered_libraries ("web", tgt, Void) as lst then
+			if attached m.libraries (Void, tgt, Void) as lst then
 
 			end
 		end

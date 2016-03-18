@@ -192,10 +192,10 @@ feature -- Conversion
 				Result.put_json_item (j_package.representation)
 				Result.set_name (j_name.item)
 				if attached {JSON_STRING} j_package.item ("title") as j_title then
-					Result.set_title (j_title.item)
+					Result.set_title (j_title.unescaped_string_32)
 				end
 				if attached {JSON_STRING} j_package.item ("description") as j_description then
-					Result.set_description (j_description.item)
+					Result.set_description (j_description.unescaped_string_32)
 				end
 				if attached {JSON_NUMBER} j_package.item ("archive_revision") as j_rev then
 					s := j_rev.item
@@ -229,7 +229,7 @@ feature -- Conversion
 						j_tags.array_representation as c
 					loop
 						if attached {JSON_STRING} c.item as js then
-							Result.tags.force (js.item)
+							Result.tags.force (js.unescaped_string_32)
 						end
 					end
 				end

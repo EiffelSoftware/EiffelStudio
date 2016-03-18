@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			create on_library_selected_actions
+			create on_library_deselected_actions
 			create box
 			build_interface (box)
 		end
@@ -37,10 +38,9 @@ feature {NONE} -- Initialization
 		do
 			create g
 			libraries_grid := g
---			g.set_minimum_size (400, 200)
 			g.enable_always_selected
 			g.enable_single_row_selection
-			g.set_column_count_to (location_column)
+			g.set_column_count_to (4)
 			l_col := g.column (name_column)
 			l_col.set_title (conf_interface_names.dialog_create_library_name)
 			l_col.set_width (100)
@@ -69,60 +69,19 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target where we add the group.
 
-	configuration_libraries_by_location: detachable STRING_TABLE [CONF_SYSTEM_VIEW] assign set_configuration_libraries
+	configuration_libraries: detachable LIST [CONF_SYSTEM_VIEW] assign set_configuration_libraries
 			-- CONF_SYSTEM_VIEW indexed by path.
-
-	libraries_location_by_name: detachable STRING_TABLE [READABLE_STRING_GENERAL]
-			-- Path indexed by library target name.
-
-	libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
-			-- Sorted library target names.
 
 feature -- Change
 
-	set_configuration_libraries (a_libraries: like configuration_libraries_by_location)
-		local
-			l_libraries_table: detachable STRING_TABLE [READABLE_STRING_GENERAL] --like libraries_table
-			l_libraries_sorted_keys: detachable ARRAYED_LIST [READABLE_STRING_GENERAL] --like libraries_sorted_keys
-			l_path: READABLE_STRING_GENERAL
-			l_key: STRING_32
-			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
-			l_target_name: READABLE_STRING_32
+	set_configuration_libraries (a_libraries: like configuration_libraries)
 		do
-			configuration_libraries_by_location := a_libraries
-			if a_libraries /= Void then
-					-- Create a table of path names indexed by target_name#library_path, used to effectively sort.
-				create l_libraries_table.make (a_libraries.count)
-				create l_libraries_sorted_keys.make (a_libraries.count)
-				from a_libraries.start until a_libraries.after loop
-					l_target_name := a_libraries.item_for_iteration.library_target_name
-
-					l_path := a_libraries.key_for_iteration
-					create l_key.make (256)
-					l_key.append_string_general (l_target_name)
-					l_key.append_string_general (once " # ")
-					l_key.append_string_general (l_path)
-					l_libraries_table.force (l_path, l_key)
-
-					l_libraries_sorted_keys.force (l_key)
-					a_libraries.forth
-				end
-
-					-- Sort keys
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
-				l_sorter.sort (l_libraries_sorted_keys)
-
-				libraries_location_by_name := l_libraries_table
-				libraries_sorted_keys := l_libraries_sorted_keys
-			else
-				libraries_location_by_name := Void
-				libraries_sorted_keys := Void
-			end
+			configuration_libraries := a_libraries
 		end
 
 feature -- Callback
 
-	on_library_selected (a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
+	on_library_selected (a_row: EV_GRID_ROW; a_library: CONF_SYSTEM_VIEW; a_location: READABLE_STRING_GENERAL)
 			-- Called when a library is selected
 		require
 			has_library_target: a_library.has_library_target
@@ -130,8 +89,17 @@ feature -- Callback
 			on_library_selected_actions.call ([a_library, a_location])
 		end
 
+	on_library_deselected (a_row: EV_GRID_ROW; a_library: CONF_SYSTEM_VIEW)
+			-- Called when a library is deselected.
+		do
+			on_library_deselected_actions.call ([a_library])
+		end
+
 	on_library_selected_actions: ACTION_SEQUENCE [TUPLE [lib: CONF_SYSTEM_VIEW; location: READABLE_STRING_GENERAL]]
 			-- Actions to be triggered when a package is selected.		
+
+	on_library_deselected_actions: ACTION_SEQUENCE [TUPLE [lib: CONF_SYSTEM_VIEW]]
+			-- Actions to be triggered when a package is deselected.		
 
 feature -- Event
 
@@ -158,13 +126,9 @@ feature -- Event
 	update_grid
 			-- Update grid
 		require
-			libraries_table_attached: libraries_location_by_name /= Void
-			libraries_sorted_keys_attached: libraries_sorted_keys /= Void
-			populated_configuration_libraries_attached: configuration_libraries_by_location /= Void
+			populated_configuration_libraries_attached: configuration_libraries /= Void
 		local
-			l_libraries_sorted_keys: like libraries_sorted_keys
-			l_libraries_table: like libraries_location_by_name
-			l_libraries: like configuration_libraries_by_location
+			l_libraries: like configuration_libraries
 			l_libraries_grid: like libraries_grid
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_LABEL_ITEM
@@ -173,33 +137,29 @@ feature -- Event
 			l_void_safety_width: INTEGER
 			l_path: READABLE_STRING_GENERAL
 			l_description: READABLE_STRING_32
+			i: INTEGER
 		do
 			l_libraries_grid := libraries_grid
 			l_libraries_grid.remove_and_clear_all_rows
 
-			l_libraries_table := libraries_location_by_name
-			l_libraries_sorted_keys := libraries_sorted_keys
+			l_libraries := configuration_libraries
 			if
-				l_libraries_table /= Void and
-				l_libraries_sorted_keys /= Void and then
-				l_libraries_sorted_keys.count > 0
+				l_libraries.count > 0
 			then
-
-				l_libraries := configuration_libraries_by_location
-
 					-- Build libraries list
-				l_libraries_grid.set_row_count_to (l_libraries_sorted_keys.count)
-				from l_libraries_sorted_keys.start until l_libraries_sorted_keys.after loop
-					l_row := l_libraries_grid.row (l_libraries_sorted_keys.index)
+				l_libraries_grid.set_row_count_to (l_libraries.count)
+				from
+					i := 0
+					l_libraries.start
+				until
+					l_libraries.after
+				loop
+					i := i + 1
+					check same_index: i = l_libraries.index end
+					l_row := l_libraries_grid.row (i)
 
-						-- Fetch path from sortable key name
-					l_path :=  l_libraries_table.item (l_libraries_sorted_keys.item_for_iteration)
-					check
-						l_path_attached: l_path /= Void
-						l_libraries_has_l_path: l_libraries.has (l_path)
-					end
-
-					if attached l_libraries.item (l_path) as l_cfg_data then
+					if attached l_libraries.item as l_cfg_data then
+						l_path := l_cfg_data.original_location
 
 							-- Extract description
 						l_description := l_cfg_data.description
@@ -208,7 +168,6 @@ feature -- Event
 						end
 
 							-- Library name
---						create l_item.make_with_text (l_cfg_data.library_target_name)
 						create l_item.make_with_text (l_cfg_data.system_name)
 						l_item.set_tooltip (l_description)
 						l_row.set_item (name_column, l_item)
@@ -239,13 +198,23 @@ feature -- Event
 						l_item.set_tooltip (l_path)
 						l_row.set_item (location_column, l_item)
 
-						l_row.select_actions.extend (agent on_library_selected (l_cfg_data, l_path))
+							-- Information
+						if attached l_cfg_data.info ("tags") as l_tags then
+							create l_item.make_with_text (l_tags)
+						else
+							create l_item.make_with_text ("")
+						end
+
+						l_row.set_item (info_column, l_item)
+
+						l_row.select_actions.extend (agent on_library_selected (l_row, l_cfg_data, l_path))
+						l_row.deselect_actions.extend (agent on_library_deselected (l_row, l_cfg_data))
 						l_row.set_data (l_cfg_data)
 					else
 						check has_library_target: False end
 					end
 
-					l_libraries_sorted_keys.forth
+					l_libraries.forth
 				end
 
 				l_col := l_libraries_grid.column (name_column)
@@ -271,6 +240,10 @@ feature {NONE} -- Constants
 
 	location_column: INTEGER = 3
 			-- Index of a column with a library location.
+
+	info_column: INTEGER = 4
+			-- Index of a column with a information.
+
 
 ;note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

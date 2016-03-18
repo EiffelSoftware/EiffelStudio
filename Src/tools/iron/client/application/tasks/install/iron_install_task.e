@@ -170,8 +170,9 @@ feature -- Operation: ecf dependency
 				else
 					a_iron.catalog_api.install_package (a_package.repository, a_package, ignoring_cache)
 					print (" -> ")
+					a_iron.installation_api.notify_change
+					a_iron.installation_api.refresh_installed_packages
 					if a_iron.catalog_api.is_package_installed (a_package) then
-						a_iron.installation_api.refresh_installed_packages
 						print (tk_successfully_installed)
 						io.put_new_line
 -- Maybe too verbose.						
@@ -388,7 +389,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

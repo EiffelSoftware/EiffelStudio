@@ -11,27 +11,34 @@ note
 class
 	CONF_SYSTEM_VIEW
 
+inherit
+	COMPARABLE
+
+	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
 create
-	make,
-	make_from_path
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_loc: CONF_LOCATION)
-			-- Create current view from location `a_loc'.
+	make (a_path: PATH; a_original_location: READABLE_STRING_32)
+			-- Create current view from real path `a_path',
+			-- and `a_original_location'.
 		do
-			make_from_path (a_loc.evaluated_path)
-		end
-
-	make_from_path (a_path: PATH)
-			-- Create current view from location path `a_path'.
-		do
+			original_location := a_original_location
 			path := a_path
 			create info_items.make (0)
 			analyze
 		end
 
 feature -- Access
+
+	original_location: READABLE_STRING_32
+			-- Original location, before any environment variable evaluation.
+			-- (i.e: keep $ISE_LIBRARY for instance).
 
 	path: PATH
 			-- Path associated with related configuration file.
@@ -58,6 +65,24 @@ feature -- Access
 			-- Eventual additional information associated with key `k'.
 		do
 			Result := info_items.item (k)
+		end
+
+feature -- Status report
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := system_name < other.system_name
+		end
+
+	debug_output: STRING_32
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make (25)
+			Result.append (system_name)
+			Result.append (" (")
+			Result.append (path.name)
+			Result.append (")")
 		end
 
 feature -- Query

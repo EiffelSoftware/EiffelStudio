@@ -1,22 +1,43 @@
 note
-	description: "Summary description for {IRON_INSTALLATION_API_FACTORY}."
+	description: "[
+		Eiffel tests that can be executed by testing tool.
+	]"
+	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
+	testing: "type/manual"
 
 class
-	CONF_IRON_INSTALLATION_API_FACTORY
+	TEST_REMOTE_IRON_PROVIDER
 
-feature -- Factory
+inherit
+	EQA_TEST_SET
 
-	iron_installation_api (a_iron_layout: IRON_LAYOUT; a_iron_urls_builder: IRON_URL_BUILDER): IRON_INSTALLATION_API
-			-- Iron installation API object.
-			--| This single factory will allow to optimize the integration of IRON with EiffelStudio
-			--| by using caching or similar.
+feature -- Test routines
+
+	test_remote_iron
+			-- New test routine
+		local
+			iron_prov: ES_LIBRARY_IRON_PROVIDER
+			deliv_prov: ES_LIBRARY_LOCAL_PROVIDER
+			prov: ES_LIBRARY_PROVIDER
+			target: detachable CONF_TARGET
 		do
-			debug ("iron_api")
-				print ("DEBUG: new Iron Installation API !!%N")
+			target := new_conf_target ("test_remote_iron_provider")
+			create iron_prov
+			prov := iron_prov
+			if attached prov.libraries (Void, target) as libs then
 			end
-			create Result.make_with_layout (a_iron_layout, a_iron_urls_builder)
+		end
+
+	new_conf_target (a_name: READABLE_STRING_8): CONF_TARGET
+		local
+			fac: CONF_PARSE_FACTORY
+			sys: CONF_SYSTEM
+		do
+			create fac
+			sys := fac.new_system_generate_uuid_with_file_name (a_name, a_name)
+			Result := fac.new_target (a_name, sys)
 		end
 
 note
@@ -51,3 +72,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 end
+
+

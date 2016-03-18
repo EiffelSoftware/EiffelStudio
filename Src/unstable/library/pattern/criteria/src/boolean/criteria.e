@@ -12,14 +12,9 @@ inherit
 feature -- Status report
 
 	meet (d: G): BOOLEAN
-			-- Is `d' meeting Current criteria?
+			-- Does `b' meet Current criteria?
 		deferred
 		end
-
---	string: READABLE_STRING_32
---			-- Text representation of Current criteria.
---		deferred
---		end
 
 feature -- Functions to build a criterion tree.
 
@@ -99,7 +94,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

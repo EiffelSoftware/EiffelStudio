@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 
 	make (a_string: READABLE_STRING_GENERAL; fct: like meet_function)
 		do
+			weight := 1
 			meet_function := fct
 			create string.make_from_string_general (a_string)
 		end
@@ -32,6 +33,8 @@ feature -- Status report
 
 	string: IMMUTABLE_STRING_32
 
+	weight: REAL
+
 feature -- Visitor
 
 	accept (a_visitor: CRITERIA_VISITOR [G])
@@ -44,7 +47,7 @@ invariant
 	string /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

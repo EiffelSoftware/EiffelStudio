@@ -1,13 +1,13 @@
 note
-	description: "Summary description for {CRITERIA_MANIFEST_VALUE}."
+	description: "Summary description for {SCORE_MANIFEST_VALUE}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CRITERIA_MANIFEST_VALUE [G]
+	SCORER_CRITERIA_MANIFEST_VALUE [G]
 
 inherit
-	CRITERIA [G]
+	SCORER_CRITERIA [G]
 
 create
 	make_true, make_false,
@@ -35,9 +35,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	meet (d: G): BOOLEAN
+	score (d: G): REAL
 		do
-			Result := True
+			if is_not then
+				Result := 0.0
+			else
+				Result := 1.0
+			end
 		end
 
 feature -- Access
@@ -46,9 +50,13 @@ feature -- Access
 
 	name,value: detachable IMMUTABLE_STRING_32
 
+	weight: REAL = 0.0
+			-- <Precursor>.
+			-- Very low weight, because manifest score value should not impact the result.
+
 feature -- Visitor
 
-	accept (a_visitor: CRITERIA_VISITOR [G])
+	accept (a_visitor: SCORE_VISITOR [G])
 			-- <Precursor>
 		do
 			a_visitor.visit_manifest_value (Current)
@@ -58,7 +66,7 @@ invariant
 	name /= Void implies value /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

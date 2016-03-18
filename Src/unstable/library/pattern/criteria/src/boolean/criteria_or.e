@@ -1,10 +1,10 @@
 note
-	description : "Objects that represent a AND criteria"
+	description: "Objects that represent a OR criteria"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CRITERIA_AND [G]
+	CRITERIA_OR [G]
 
 inherit
 	CRITERIA_BINARY_OPERATION [G]
@@ -16,7 +16,7 @@ feature -- Status
 
 	meet (d: G): BOOLEAN
 		do
-			Result := criteria.meet (d) and other_criteria.meet (d)
+			Result := criteria.meet (d) or other_criteria.meet (d)
 		end
 
 feature -- Visitor
@@ -24,11 +24,11 @@ feature -- Visitor
 	accept (a_visitor: CRITERIA_VISITOR [G])
 			-- <Precursor>
 		do
-			a_visitor.visit_and (Current)
+			a_visitor.visit_or (Current)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

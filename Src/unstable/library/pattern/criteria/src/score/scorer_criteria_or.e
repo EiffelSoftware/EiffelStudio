@@ -4,31 +4,48 @@ note
 	revision: "$Revision$"
 
 class
-	CRITERIA_OR [G]
+	SCORER_CRITERIA_OR [G]
 
 inherit
-	CRITERIA_BINARY_OPERATION [G]
+	SCORER_CRITERIA_BINARY_OPERATION [G]
+		redefine
+			score
+		end
 
 create
 	make
 
 feature -- Status
 
-	meet (d: G): BOOLEAN
+	score (d: G): REAL
+		local
+			w, r1, r2: REAL
+			w1,w2: REAL_32
 		do
-			Result := criteria.meet (d) or other_criteria.meet (d)
+			w := weight
+			r1 := left.score (d)
+			w1 := left.weight
+			r2 := right.score (d)
+			w2 := right.weight
+			if score_is_zero (r1) then
+				Result := r2
+			elseif score_is_zero (r2) then
+				Result := r1
+			else
+				Result := (r1 * w1 + r2 * w2) / (w1 + w2)
+			end
 		end
 
 feature -- Visitor
 
-	accept (a_visitor: CRITERIA_VISITOR [G])
+	accept (a_visitor: SCORE_VISITOR [G])
 			-- <Precursor>
 		do
 			a_visitor.visit_or (Current)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

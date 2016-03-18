@@ -5,32 +5,40 @@ note
 	revision    : "$Revision$"
 
 class
-	CRITERIA_NOT [G]
+	SCORER_CRITERIA_NOT [G]
 
 inherit
-	CRITERIA [G]
+	SCORER_CRITERIA [G]
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_criteria: CRITERIA [G])
+	make (a_criteria: SCORER_CRITERIA [G])
 			-- Initialize `Current'.
 		do
 			criteria := a_criteria
+			weight := a_criteria.weight
 		end
 
 feature -- Status
 
-	meet (d: G): BOOLEAN
+	score (d: G): REAL
 		do
-			Result := not criteria.meet (d)
+			Result := criteria.score (d)
+			if score_is_zero (Result) then
+				Result := weight
+			else
+				Result := 0
+			end
 		end
+
+	weight: REAL
 
 feature -- Access
 
-	criteria: CRITERIA [G]
+	criteria: SCORER_CRITERIA [G]
 
 feature -- Change
 
@@ -41,14 +49,14 @@ feature -- Change
 
 feature -- Visitor
 
-	accept (a_visitor: CRITERIA_VISITOR [G])
+	accept (a_visitor: SCORE_VISITOR [G])
 			-- <Precursor>
 		do
 			a_visitor.visit_not (Current)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

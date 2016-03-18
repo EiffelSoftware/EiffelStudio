@@ -16,15 +16,10 @@ feature {NONE} -- Initialization
 		do
 			criteria := a_criteria
 			other_criteria := a_other_criteria
+			weight := 1
 		ensure
 			criteria_set: criteria = a_criteria
 			other_criteria_set: other_criteria = a_other_criteria
-		end
-
-feature -- Status
-
-	meet (d: G): BOOLEAN
-		deferred
 		end
 
 feature -- Access
@@ -33,6 +28,8 @@ feature -- Access
 	other_criteria: CRITERIA [G]
 
 	operator_string: detachable READABLE_STRING_32
+
+	weight: REAL
 
 feature -- Change
 
@@ -64,7 +61,7 @@ feature -- Change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

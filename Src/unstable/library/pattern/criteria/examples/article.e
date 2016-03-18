@@ -6,6 +6,9 @@ note
 
 class ARTICLE
 
+inherit
+	DEBUG_OUTPUT
+
 create
 	make
 
@@ -18,13 +21,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-  title: STRING
+	title: STRING
 
-  page_count: INTEGER
+	description: detachable STRING
 
-  published: BOOLEAN
+	content: detachable STRING
+
+	page_count: INTEGER
+
+	published: BOOLEAN
 
 feature -- Element change
+
+	set_description (s: detachable STRING)
+		do
+			description := s
+		end
+
+	set_content (s: detachable STRING)
+		do
+			content := s
+		end
 
 	set_page_count (nb: INTEGER)
 		do
@@ -34,6 +51,15 @@ feature -- Element change
 	mark_published
 		do
 			published := True
+		end
+
+feature -- Status report
+
+	debug_output: STRING
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			create Result.make (10)
+			Result.append (title)
 		end
 
 end

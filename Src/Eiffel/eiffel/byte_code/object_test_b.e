@@ -140,7 +140,11 @@ feature -- Inlining
 
 	size: INTEGER_32
 		do
-			Result := 0
+				-- Ideally, it should be `expression.size' unfortunately doing so
+				-- has a major compiler impact (about 25% slow down for just a little
+				-- bit less than 1% speed-up in the speed of generated code).
+				-- Until we can improve our inlining mechanism, we are disabling it.
+			Result := 101
 		end
 
 	pre_inlined_code: like Current

@@ -166,7 +166,7 @@ end
 					type_c.generate_access_cast (buf)
 				end
 				buf.put_character ('(')
-				reg.print_target_register (typ)
+				reg.print_target_register
 				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
 				if array_index >= 0 then
 						-- The access is polymorphic, which means the offset

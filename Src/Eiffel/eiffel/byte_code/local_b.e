@@ -13,11 +13,11 @@ inherit
 		redefine
 			enlarged, read_only, is_local, is_creatable,
 			register_name,
-			print_register,
+			print_register, print_checked_target_register,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, array_descriptor,
 			pre_inlined_code,
-			is_fast_as_local, is_predefined, has_side_effect
+			is_fast_as_local, is_predefined
 		end
 
 feature -- Visitor
@@ -45,9 +45,6 @@ feature
 
 	is_predefined: BOOLEAN = True
 			-- Is Current a predefined entity?
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
 
 	is_local: BOOLEAN
 			-- Is Current an access to a local variable?
@@ -88,6 +85,19 @@ feature
 			-- Print local
 		do
 			buffer.put_string (register_name)
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			buf := context.buffer
+			buf.put_string ({C_CONST}.rtcw_loc)
+			buf.put_integer (position)
+			buf.put_character (')')
 		end
 
 feature -- IL code generation

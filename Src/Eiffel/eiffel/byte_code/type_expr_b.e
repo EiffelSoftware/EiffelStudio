@@ -9,9 +9,11 @@ class TYPE_EXPR_B
 
 inherit
 	EXPR_B
+		rename
+			print_checked_target_register as print_register
 		redefine
 			register, set_register, analyze, generate,
-			propagate, print_register, unanalyze, has_side_effect,
+			propagate, print_register, unanalyze,
 			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
@@ -66,12 +68,6 @@ feature -- Access
 
 	register: REGISTRABLE
 			-- Where type object is kept to ensure it is GC safe
-
-feature -- Status report
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
-			-- Result is always stored in a register
 
 feature -- Properties
 

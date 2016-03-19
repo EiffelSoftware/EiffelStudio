@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarged, propagate, analyze, generate,
 			free_register, print_register, type,
-			current_register, is_argument
+			current_register, is_argument, print_checked_target_register
 		end
 
 feature -- Access
@@ -80,6 +80,31 @@ feature -- Register and code generation
 			context.set_inlined_current_register (Void)
 
 			inlined_feature.argument_regs.item (position).print_register
+
+			context.resume_inline_context
+			context.set_inlined_current_register (current_reg)
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			inlined_feature: INLINED_FEAT_B
+			current_reg: REGISTRABLE
+		do
+				-- We need to go back to the caller's context to
+				-- generate the argument as, if no temporary register
+				-- is needed, calling `print_register' may have to
+				-- evaluate types.
+
+			inlined_feature := System.remover.inliner.inlined_feature
+
+			current_reg := Context.inlined_current_register
+			context.suspend_inline_context
+			context.set_inlined_current_register (Void)
+
+			inlined_feature.argument_regs.item (position).print_checked_target_register
 
 			context.resume_inline_context
 			context.set_inlined_current_register (current_reg)

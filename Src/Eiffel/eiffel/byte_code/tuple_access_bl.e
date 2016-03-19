@@ -110,7 +110,7 @@ feature -- C Code generation
 				buf.put_new_line
 				real_type (tuple_element_type).c_type.generate_tuple_put (buffer)
 				buf.put_character ('(')
-				a_register.print_target_register (Void)
+				a_register.print_target_register
 				buf.put_character (',')
 				buf.put_integer (position)
 				buf.put_character (',')
@@ -147,7 +147,7 @@ feature -- C Code generation
 					-- Make sure to call RTCV to verify that TUPLE is not Void.
 				t.generate_tuple_item (buf)
 				buf.put_character ('(')
-				a_register.print_target_register (Void)
+				a_register.print_target_register
 			end
 			buf.put_character (',')
 			buf.put_integer (position)

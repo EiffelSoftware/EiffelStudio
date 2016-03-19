@@ -19,7 +19,7 @@ inherit
 			register_name,
 			same
 		redefine
-			print_register, enlarged, type
+			print_register, enlarged, type, print_checked_target_register
 		end
 
 	OBJECT_TEST_LOCAL_B
@@ -34,7 +34,7 @@ inherit
 			set_parent,
 			used
 		redefine
-			print_register, enlarged, type
+			print_register, enlarged, type, print_checked_target_register
 		end
 
 create
@@ -74,6 +74,15 @@ feature -- C code generation
 		do
 			System.remover.inliner.inlined_feature.local_regs.item
 				(context.object_test_local_position (Current)).print_register
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			System.remover.inliner.inlined_feature.local_regs.item
+				(context.object_test_local_position (Current)).print_checked_target_register
 		end
 
 note

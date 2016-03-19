@@ -13,7 +13,7 @@ inherit
 			analyze,
 			free_register,
 			generate,
-			has_side_effect,
+			print_checked_target_register,
 			register,
 			set_register,
 			unanalyze
@@ -28,12 +28,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-feature -- Status report
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
-			-- Result is always stored in a register.
 
 feature
 
@@ -354,6 +348,14 @@ feature
 			end
 		end
 
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			print_register
+		end
+
 note
 	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -386,5 +388,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ROUTINE_CREATION_BL
+end
 

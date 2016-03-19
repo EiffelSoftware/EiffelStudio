@@ -17,7 +17,6 @@ inherit
 			generate,
 			has_call,
 			has_gcable_variable,
-			has_side_effect,
 			is_hector,
 			is_predefined,
 			is_temporary,
@@ -25,6 +24,7 @@ inherit
 			is_unsafe,
 			optimized_byte_node, size,
 			pre_inlined_code,
+			print_checked_target_register,
 			print_register,
 			propagate,
 			register_name,
@@ -209,16 +209,18 @@ feature -- Inlining
 			Result := expr.is_predefined
 		end
 
-	has_side_effect: BOOLEAN
-			-- <Precursor>
-		do
-			Result := expr.has_side_effect
-		end
-
 	register_name: STRING
 			-- The ASCII representation of the register
 		do
 			Result := expr.register_name
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			expr.print_checked_target_register
 		end
 
 note

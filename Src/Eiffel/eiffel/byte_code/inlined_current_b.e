@@ -7,7 +7,7 @@ inherit
 
 	CURRENT_B
 		redefine
-			enlarged, propagate, analyze, generate,
+			enlarged, propagate, analyze, generate, print_checked_target_register,
 			free_register, print_register, Current_register,
 			register_name, is_current, is_inlined_current, used
 		end
@@ -82,6 +82,26 @@ feature -- Register and code generation
 		do
 			--Result := Context.current_register.register_name
 			Result := System.remover.inliner.inlined_feature.current_reg.register_name
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			inlined_feature: INLINED_FEAT_B
+			current_reg: REGISTRABLE
+		do
+			inlined_feature := System.remover.inliner.inlined_feature
+
+			current_reg := Context.inlined_current_register
+			context.suspend_inline_context
+			Context.set_inlined_current_register (Void)
+
+			inlined_feature.current_reg.print_checked_target_register
+
+			context.resume_inline_context
+			Context.set_inlined_current_register (current_reg)
 		end
 
 note

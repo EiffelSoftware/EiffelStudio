@@ -51,36 +51,35 @@ feature
 			context.buffer.put_string (register_name)
 		end
 
-	print_target_register (target_type: detachable CL_TYPE_A)
+	print_target_register
 			-- Generates the C representation of `register'
+			-- without any checks in workbench mode and
 			-- with a check that it is not void and
-			-- can be used as a target of a call.
-		local
-			ctx: BYTE_CONTEXT
-			buf: like {BYTE_CONTEXT}.buffer
+			-- can be used as a target of a call
+			-- in finalized mode.
 		do
-			ctx := context
-			buf := ctx.buffer
-			if
-				ctx.workbench_mode or
-				is_current or
-				attached target_type and then target_type.is_expanded
-			then
+			if context.workbench_mode then
 					-- The register is known to be non-void.
 				print_register
 			else
 					-- Add a check that a target is not void.
-				if has_side_effect then
-						-- General case.
-					buf.put_string ({C_CONST}.rtcv)
-				else
-						-- It is safe to use a more efficient macro that recomputes its argument multiple times.
-					buf.put_string ({C_CONST}.rtcw)
-				end
-				buf.put_character ('(')
-				print_register
-				buf.put_character (')')
+				print_checked_target_register
 			end
+		end
+
+	print_checked_target_register
+			-- Generates the C representation of `register'
+			-- with a check that it is not void and
+			-- can be used as a target of a call.
+		local
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			buf := context.buffer
+				-- Add a check that a target is not void.
+				-- General case.
+			buf.put_string ({C_CONST}.rtcv_open)
+			print_register
+			buf.put_character (')')
 		end
 
 	propagate (r: REGISTRABLE)

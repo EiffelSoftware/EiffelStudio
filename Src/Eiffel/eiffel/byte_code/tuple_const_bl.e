@@ -13,7 +13,7 @@ inherit
 			analyze,
 			free_register,
 			generate,
-			has_side_effect,
+			print_checked_target_register,
 			register,
 			set_register,
 			unanalyze
@@ -29,12 +29,6 @@ inherit
 
 create
 	make
-
-feature -- Status report
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
-			-- Result is always stored in a register
 
 feature
 
@@ -209,6 +203,14 @@ feature {NONE} -- C code generation
 				expressions.forth
 				i := i + 1
 			end
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			print_register
 		end
 
 note

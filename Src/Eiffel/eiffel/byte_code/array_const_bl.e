@@ -12,7 +12,8 @@ inherit
 		redefine
 			analyze, generate,
 			register, set_register,
-			free_register, unanalyze
+			free_register, unanalyze,
+			print_checked_target_register
 		end
 	SHARED_TABLE
 	SHARED_DECLARATIONS
@@ -412,8 +413,17 @@ feature {NONE} -- C code generation
 			end
 		end
 
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+				-- Result is always attached.
+			register.print_register
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

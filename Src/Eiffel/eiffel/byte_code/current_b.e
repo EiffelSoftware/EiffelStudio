@@ -10,10 +10,10 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged,
-			has_side_effect,
 			is_current,
 			is_fast_as_local,
 			pre_inlined_code,
+			print_checked_target_register,
 			print_register,
 			register_name
 		end
@@ -38,9 +38,6 @@ feature
 			Result.set_frozen_mark
 		end
 
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
-
 	is_current: BOOLEAN
 			-- This is an access to Current
 		do
@@ -64,13 +61,22 @@ feature
 	register_name: STRING
 			-- The "Current" string
 		once
-			Result := "Current";
-		end;
+			Result := {C_CONST}.current_name
+		end
 
 	print_register
 			-- Print "Current" register
 		do
-			context.buffer.put_string (register_name)
+			context.buffer.put_string ({C_CONST}.current_name)
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+				-- Current is always attached, no need to check for void.
+			context.buffer.put_string ({C_CONST}.current_name)
 		end
 
 feature -- IL code generation

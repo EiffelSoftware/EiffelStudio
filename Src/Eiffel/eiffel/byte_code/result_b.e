@@ -13,7 +13,7 @@ inherit
 			register_name,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, pre_inlined_code,
-			is_fast_as_local, is_predefined, has_side_effect
+			is_fast_as_local, is_predefined
 		end
 
 feature -- Visitor
@@ -37,9 +37,6 @@ feature
 
 	is_predefined: BOOLEAN = True
 			-- Predefined as results is store in a register.
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
 
 	is_result: BOOLEAN
 			-- Access is result

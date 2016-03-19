@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Byte code for strip expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for strip expression
 
 class STRIP_BL
 
@@ -10,16 +10,9 @@ inherit
 	STRIP_B
 		redefine
 			analyze, generate,
-			register, set_register,
-			unanalyze, allocates_memory,
-			has_side_effect
-		end;
-
-feature -- Status report
-
-	has_side_effect: BOOLEAN
-			-- <Precursor>
-			-- Result is always stored in a register.
+			register, set_register, print_checked_target_register,
+			unanalyze, allocates_memory
+		end
 
 feature
 
@@ -119,6 +112,14 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Generation
 			end
 			buf.put_new_line;
 		end;
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			print_register
+		end
 
 invariant
 

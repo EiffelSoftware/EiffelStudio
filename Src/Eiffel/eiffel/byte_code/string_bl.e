@@ -7,23 +7,17 @@ class STRING_BL
 
 inherit
 	STRING_B
+		rename
+			print_checked_target_register as print_register
 		redefine
 			register, set_register,
 			analyze, generate,
 			propagate, print_register,
-			unanalyze, has_side_effect
+			unanalyze
 		end
 
 create {INTERNAL_COMPILER_STRING_EXPORTER}
 	make
-
-feature -- Status report
-
-	has_side_effect: BOOLEAN
-			-- <Precursor>
-		do
-			Result := register = No_register
-		end
 
 feature
 

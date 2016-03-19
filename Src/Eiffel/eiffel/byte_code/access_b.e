@@ -14,9 +14,9 @@ inherit
 			free_register,
 			generate,
 			has_gcable_variable,
-			has_side_effect,
 			inlined_byte_code,
 			optimized_byte_node,
+			print_checked_target_register,
 			print_register,
 			propagate,
 			unanalyze
@@ -216,16 +216,6 @@ feature -- Status
 			Result := True
 		end
 
-	has_side_effect: BOOLEAN
-			-- <Precursor>
-		do
-			if attached register as r and then r /= No_register then
-				Result := r.has_side_effect
-			else
-				Result := True
-			end
-		end
-
 feature -- Element change
 
 	propagate (r: REGISTRABLE)
@@ -389,6 +379,19 @@ feature -- C generation
 	generate_on (reg: REGISTRABLE)
 			-- Generate access using `reg' as "Current"
 		do
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			if register /= no_register then
+				register.print_checked_target_register
+			else
+					-- General case.
+				Precursor
+			end
 		end
 
 feature {ACCESS_B} -- C code generation: separate call

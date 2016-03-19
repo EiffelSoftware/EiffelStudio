@@ -13,9 +13,9 @@ inherit
 		redefine
 			free_register,
 			get_register,
-			has_side_effect,
 			is_predefined,
 			is_temporary,
+			print_checked_target_register,
 			print_register
 		end
 
@@ -79,8 +79,11 @@ feature
 
 	print_register
 			-- Generates the C representation of `register'
+		local
+			ctx: BYTE_CONTEXT
 		do
-			context.put_register_name (level, regnum, context.buffer)
+			ctx := context
+			ctx.put_register_name (level, regnum, ctx.buffer)
 		end
 
 	register_name: STRING
@@ -96,8 +99,20 @@ feature
 			-- It is a predefined register, since it stores temporarly
 			-- object.
 
-	has_side_effect: BOOLEAN = False
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
 			-- <Precursor>
+		local
+			ctx: BYTE_CONTEXT
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			ctx := context
+			buf := ctx.buffer
+			buf.put_string ({C_CONST}.rtcw_open)
+			ctx.put_register_name (level, regnum, buf)
+			buf.put_character (')')
+		end
 
 feature {BYTE_CONTEXT} -- Implementation
 

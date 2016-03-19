@@ -8,7 +8,7 @@ class NESTED_BL
 inherit
 	NESTED_B
 		redefine
-			print_register, free_register, has_side_effect,
+			print_register, free_register, print_checked_target_register,
 			stored_register, has_call, has_gcable_variable, c_type,
 			set_register, register, set_parent, parent, propagate,
 			unanalyze, generate, analyze, allocates_memory
@@ -62,26 +62,6 @@ feature
 			else
 					-- Propagate the request
 				Result := message.has_gcable_variable
-			end
-		end
-
-	has_side_effect: BOOLEAN
-			-- <Precursor>
-		do
-			if message.target = message then
-					-- We reached the last call
-				if register /= No_register then
-						-- There is a register, hence the call has already
-						-- been generated and the result is in the register.
-					Result := register.has_side_effect
-				else
-						-- There is no register, which means the call has not
-						-- been generated yet.
-					Result := True
-				end
-			else
-					-- Propagate the request.
-				Result := message.has_side_effect
 			end
 		end
 
@@ -161,6 +141,7 @@ feature
 			-- register is No_register, the call is not meant to be put in
 			-- a temporary register, which means we have to expand the call
 			-- itself.
+			-- See  also `print_checked_target_register'.
 		do
 			if message.target = message then
 					-- We reached the last call
@@ -370,6 +351,31 @@ feature
 			-- The expression has at least one call
 
 	allocates_memory: BOOLEAN = True;
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			if message.target = message then
+					-- We reached the last call
+				if register /= No_register then
+						-- There is a register, hence the call has already
+						-- been generated and the result is in the register.
+					register.print_checked_target_register
+				else
+						-- There is no register, which means the call has not
+						-- been generated yet.
+						-- General case.
+					Precursor
+				end
+			else
+					-- Simply propagate the request (it is impossible for a
+					-- call which is part of a multidot expression to have
+					-- its register set to No_register).
+				message.print_checked_target_register
+			end
+		end
 
 note
 	copyright:	"Copyright (c) 1984-2016, Eiffel Software"

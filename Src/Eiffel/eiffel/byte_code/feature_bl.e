@@ -289,7 +289,7 @@ end
 						buf.put_new_line
 						buf.put_two_character ('*', '(')
 						parameter_type.c_type.generate_access_cast (buf)
-						gen_reg.print_target_register (class_type)
+						gen_reg.print_target_register
 						buf.put_string (" + (")
 						parameters [1].print_register
 						buf.put_two_character (')', ')')
@@ -310,7 +310,7 @@ end
 						end
 						buf.put_character (',')
 						buf.put_character ('(')
-						gen_reg.print_target_register (class_type)
+						gen_reg.print_target_register
 						if parameters /= Void then
 							generate_parameters_list
 						end
@@ -318,7 +318,7 @@ end
 						buf.put_character (')')
 					else
 						buf.put_character ('(')
-						gen_reg.print_target_register (class_type)
+						gen_reg.print_target_register
 						if parameters /= Void then
 							generate_parameters_list
 						end

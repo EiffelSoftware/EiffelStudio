@@ -14,7 +14,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			is_constant_expression
+			is_constant_expression, print_checked_target_register
 		end
 
 create
@@ -143,6 +143,28 @@ feature
 			end;
 		end;
 
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			buf: GENERATION_BUFFER
+		do
+			if
+				(expr.register = Void or expr.register = No_register)
+				and not expr.is_simple_expr
+			then
+				buf := buffer
+				buf.put_character ('(')
+				expr.print_checked_target_register
+				buf.put_character (')')
+			else
+					-- No need for parenthesis if expression is held in a
+					-- register (e.g. a semi-strict boolean op).
+				expr.print_checked_target_register
+			end
+		end
+
 feature -- Array optimization
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN
@@ -184,7 +206,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -197,22 +219,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

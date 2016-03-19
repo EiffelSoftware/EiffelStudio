@@ -11,8 +11,8 @@ inherit
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
 			register_name, array_descriptor,
-			pre_inlined_code, print_register,
-			is_fast_as_local, is_predefined, has_side_effect
+			pre_inlined_code, print_register, print_checked_target_register,
+			is_fast_as_local, is_predefined
 		end;
 
 feature -- Visitor
@@ -42,9 +42,6 @@ feature
 
 	is_predefined: BOOLEAN = True
 			-- Is Current a predefined entity ?
-
-	has_side_effect: BOOLEAN = False
-			-- <Precursor>
 
 	is_argument: BOOLEAN
 			-- Is Current an access to an argument ?
@@ -93,6 +90,25 @@ feature
 			-- Print argument
 		do
 			buffer.put_string (register_name)
+		end
+
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			buf := context.buffer
+			if context.real_type (type).is_true_expanded then
+					-- Expanded argument are copied into
+					-- a local variable `earg'.
+				buf.put_string ({C_CONST}.rtcw_earg)
+			else
+				buf.put_string ({C_CONST}.rtcw_arg)
+			end
+			buf.put_integer (position)
+			buf.put_character (')')
 		end
 
 feature -- IL code generation

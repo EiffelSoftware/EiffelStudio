@@ -18,6 +18,7 @@ inherit
 			enlarged,
 			is_creatable,
 			pre_inlined_code,
+			print_checked_target_register,
 			process,
 			register_name,
 			same,
@@ -37,6 +38,7 @@ inherit
 		redefine
 			analyze,
 			parent,
+			print_checked_target_register,
 			used,
 			type
 		end
@@ -96,8 +98,23 @@ feature -- Code generation
 			end
 		end
 
+feature {REGISTRABLE} -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		local
+			ctx: BYTE_CONTEXT
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+			ctx := context
+			buf := ctx.buffer
+			buf.put_string ({C_CONST}.rtcw_loc)
+			buf.put_integer (ctx.object_test_local_position (Current))
+			buf.put_character (')')
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

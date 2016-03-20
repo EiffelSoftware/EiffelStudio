@@ -151,7 +151,7 @@ feature -- Inlining
 		do
 			Result := Current
 			expression := expression.pre_inlined_code
-			target ?= target.pre_inlined_code
+			target := target.pre_inlined_code
 		end
 
 	inlined_byte_code: like Current

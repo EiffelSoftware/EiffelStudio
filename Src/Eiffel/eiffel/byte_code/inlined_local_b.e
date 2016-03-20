@@ -79,7 +79,7 @@ feature {REGISTRABLE} -- C code generation
 	print_checked_target_register
 			-- <Precursor>
 		do
-			System.remover.inliner.inlined_feature.local_regs.item (position).print_target_register
+			System.remover.inliner.inlined_feature.local_regs.item (position).print_checked_target_register
 		end
 
 note

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte code for constants (hardwired in final mode)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -131,16 +131,14 @@ feature -- Comparison
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access to constant ?
 		local
-			constant_b: CONSTANT_B;
 			o_value: like value
 		do
-			constant_b ?= other;
-			if constant_b /= Void then
+			if attached {CONSTANT_B} other as constant_b then
 				o_value := constant_b.value
 				Result := value.same_type (o_value) and then
 					value.is_equivalent (o_value)
 			end
-		end;
+		end
 
 	has_gcable_variable: BOOLEAN
 			-- Does current access makes use of a GC-able variable
@@ -292,7 +290,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

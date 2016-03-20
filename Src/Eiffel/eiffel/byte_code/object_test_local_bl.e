@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Access to an object-test local in C code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ inherit
 
 	LOCAL_BL
 		rename
-			make as make_local
+			make as make_local,
+			print_checked_target_register as print_register -- Object test locals are always attached.
 		undefine
 			array_descriptor,
 			assigns_to,
 			enlarged,
 			is_creatable,
 			pre_inlined_code,
-			print_checked_target_register,
 			process,
 			register_name,
 			same,
@@ -26,10 +26,13 @@ inherit
 		redefine
 			analyze,
 			parent,
+			print_register,
 			type
 		end
 
 	OBJECT_TEST_LOCAL_B
+		rename
+			print_checked_target_register as print_register -- Object test locals are always attached.
 		undefine
 			free_register,
 			generate,
@@ -38,7 +41,7 @@ inherit
 		redefine
 			analyze,
 			parent,
-			print_checked_target_register,
+			print_register,
 			used,
 			type
 		end
@@ -100,7 +103,7 @@ feature -- Code generation
 
 feature {REGISTRABLE} -- C code generation
 
-	print_checked_target_register
+	print_register
 			-- <Precursor>
 		local
 			ctx: BYTE_CONTEXT
@@ -108,9 +111,8 @@ feature {REGISTRABLE} -- C code generation
 		do
 			ctx := context
 			buf := ctx.buffer
-			buf.put_string ({C_CONST}.rtcw_loc)
+			buf.put_string ({C_CONST}.local_name)
 			buf.put_integer (ctx.object_test_local_position (Current))
-			buf.put_character (')')
 		end
 
 note

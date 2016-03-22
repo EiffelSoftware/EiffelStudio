@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="library_indexer" uuid="B4D3E2FA-94D8-48B9-8DC2-209E79399170">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="library_indexer" uuid="B4D3E2FA-94D8-48B9-8DC2-209E79399170">
 	<target name="library_analyzer">
 		<root class="LIBRARY_INDEXER_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
+		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" void_safety="none" syntax="provisional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>
-		<library name="arg_parsernew" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>

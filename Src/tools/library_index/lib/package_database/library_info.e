@@ -30,6 +30,9 @@ feature {NONE} -- Initialization
 				attached t.root as l_root_info
 			then
 				is_application := not l_root_info.is_all_root
+				void_safety_option := t.options.void_safety.out
+			else
+				void_safety_option := Void
 			end
 		end
 
@@ -40,6 +43,8 @@ feature -- Access
 	uuid: UUID
 
 	location: PATH
+
+	void_safety_option: detachable READABLE_STRING_8
 
 	dependencies: ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; location: READABLE_STRING_32; evaluated_location: PATH]]
 

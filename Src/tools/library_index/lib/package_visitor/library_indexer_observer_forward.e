@@ -17,6 +17,7 @@ inherit
 			on_ecf_file_leave,
 			on_system_enter,
 			on_system_leave,
+			on_application_system,
 			on_target,
 			on_library,
 			on_cluster,
@@ -81,6 +82,13 @@ feature -- Visit
 		do
 			across observers as o loop
 				o.item.on_system_leave (a_cfg)
+			end
+		end
+
+	frozen on_application_system (a_cfg: CONF_SYSTEM)
+		do
+			across observers as o loop
+				o.item.on_application_system (a_cfg)
 			end
 		end
 

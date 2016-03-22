@@ -63,16 +63,23 @@ feature {NONE} -- Execution
 			db: like saved_database
 			l_db_manager: LIBRARY_DATABASE_MANAGER
 			is_updating: BOOLEAN
-			l_file_path: PATH
 			ctx: LIBRARY_DATABASE_CONTEXT
 		do
 			is_verbose := a_options.is_verbose
 
-			create ctx.make
-			ctx.platform := a_options.platform
-			ctx.concurrency := a_options.concurrency
+			variables := a_options.variable_definitions
 
-			db := saved_database (ctx)
+			create ctx.make
+			ctx.set_platform (a_options.platform)
+			ctx.set_concurrency (a_options.concurrency)
+			ctx.set_void_safety (a_options.void_safety)
+			ctx.set_is_il_generation (a_options.is_dotnet)
+			ctx.set_build (a_options.build)
+			ctx.use_any_settings (a_options.is_any)
+
+			if not a_options.reset_requested then
+				db := saved_database (ctx)
+			end
 			if db = Void or a_options.reset_requested or a_options.update_requested then
 				if db /= Void then
 					if a_options.reset_requested then
@@ -95,7 +102,15 @@ feature {NONE} -- Execution
 				end
 
 				create l_db_manager.make_with_database (db)
+				l_db_manager.set_is_stopping_at_library (a_options.is_only_libs)
+				l_db_manager.set_is_verbose (a_options.is_verbose)
+
+				reset_counters
 				index_all (l_db_manager, a_options, is_updating)
+				if is_verbose then
+					print ("- ecf files: " + ecf_counter.out + "%N")
+					print ("- classes  : " + class_counter.out + "%N")
+				end
 				check l_db_manager.database = db end
 				save_database (db, ctx)
 			else
@@ -107,50 +122,20 @@ feature {NONE} -- Execution
 			end
 
 			if attached a_options.searching_term as t then
-				execute_class_query (t, db)
+				execute_query (t, db)
 			end
 		end
 
---	deep_visit (a_options: LIBRARY_INDEXER_ARGUMENTS)
---		require
---			a_options_attached: a_options /= Void
---			a_options_is_successful: a_options.is_successful
---		local
---			l_arg_dirs: LIST [PATH]
---			vvv: PACKAGE_CONF_VISITOR
---			l_limit: INTEGER
---		do
---			l_limit := a_options.recursion_limit
+	reset_counters
+		do
+			ecf_counter := 0
+			class_counter := 0
+		end
 
---			create vvv.make
---			across
---				a_options.files as ic
---			loop
---				vvv.visit_ecf_file (ic.item)
---			end
+	variables: detachable STRING_TABLE [READABLE_STRING_32]
 
---			l_arg_dirs := a_options.directories
---			if l_arg_dirs.is_empty then
---				if a_options.files.is_empty then
---						-- No files or directories, use current directory
---					if l_limit > 0 then
---						vvv.visit_folder_with_depth (execution_environment.current_working_path, l_limit)
---					else
---						vvv.visit_folder (execution_environment.current_working_path)
---					end
---				end
---			else
---				across
---					l_arg_dirs as ic
---				loop
---					if l_limit > 0 then
---						vvv.visit_folder_with_depth (ic.item, l_limit)
---					else
---						vvv.visit_folder (ic.item)
---					end
---				end
---			end
---		end
+	ecf_counter: INTEGER
+	class_counter: INTEGER
 
 	index_all (a_dbm: LIBRARY_DATABASE_MANAGER; a_options: LIBRARY_INDEXER_ARGUMENTS; is_updating: BOOLEAN)
 		require
@@ -162,15 +147,9 @@ feature {NONE} -- Execution
 			l_arg_dirs: LIST [PATH]
 			l_lib_indexer: LIBRARY_INDEXER
 			lst: ARRAYED_LIST [PATH]
-			ht: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
-			create ht.make_caseless (3)
-			ht.force (a_options.platform , "platform")
-			ht.force (a_options.concurrency , "concurrency")
-			ht.force (a_options.build , "build")
-
-			create l_lib_indexer.make (ht)
-
+			l_lib_indexer := a_dbm.library_indexer
+--			l_lib_indexer.set_is_any_setting (a_options.is_any) -- Should be set last, if True.
 			l_lib_indexer.register_observer (Current)
 
 			across
@@ -215,15 +194,58 @@ feature {NONE} -- Execution
 					lst.remove
 				end
 			end
---			l_lib_indexer.execute
-			a_dbm.import_files (l_lib_indexer.files)
+			l_lib_indexer.execute
+			l_lib_indexer.unregister_observer (Current)
+		end
+
+	execute_query (a_pattern: READABLE_STRING_8; db: LIBRARY_DATABASE)
+		local
+			p: INTEGER
+		do
+			p := a_pattern.index_of ('=', 1)
+			if p > 0 then
+				if a_pattern.starts_with_general ("lib=") then
+					execute_library_query (a_pattern.substring (p + 1, a_pattern.count), db)
+				elseif a_pattern.starts_with_general ("library=") then
+					execute_library_query (a_pattern.substring (p + 1, a_pattern.count), db)
+				else
+					execute_class_query (a_pattern.substring (p + 1, a_pattern.count), db)
+				end
+			else
+				execute_class_query (a_pattern, db)
+			end
+		end
+
+	execute_library_query (a_libname: READABLE_STRING_8; db: LIBRARY_DATABASE)
+		local
+			q: LIBRARY_DATABASE_LIB_QUERY
+		do
+			print ("Libraries matching {" + a_libname + "} -> ")
+			create q.make (db, a_libname)
+			q.execute
+			if attached q.items as lst then
+				if lst.is_empty then
+					print (" none.%N")
+				else
+					if lst.count = 1 then
+						print ("%N")
+					else
+						print ("found " + lst.count.out + "%N")
+					end
+					across
+						lst as ic
+					loop
+						browse_library_info (ic.key, db)
+					end
+				end
+			end
 		end
 
 	execute_class_query (a_classname: READABLE_STRING_8; db: LIBRARY_DATABASE)
 		local
-			q: LIBRARY_DATABASE_QUERY
+			q: LIBRARY_DATABASE_CLASS_QUERY
 		do
-			print ("Libraries containing {" + a_classname + "} -> ")
+			print ("Search libraries with class name matching %"" + a_classname + "%" -> ")
 			create q.make (db, a_classname)
 			q.execute
 			if attached q.items as lst then
@@ -241,7 +263,7 @@ feature {NONE} -- Execution
 						print ("  ")
 						print (ic.key.name)
 						print (" @ ")
-						localized_print (ic.key.location.name)
+						print_library_location (ic.key.location)
 						print ("%N")
 						if q.pattern_has_wildchar then
 							across
@@ -263,11 +285,74 @@ feature {NONE} -- Execution
 			print ("NOT YET IMPLEMENTED!%N")
 		end
 
+	browse_library_info (a_lib: LIBRARY_INFO; db: LIBRARY_DATABASE)
+		do
+			print ("  ")
+			print (a_lib.name)
+			print (" @ ")
+			print_library_location (a_lib.location)
+			print ("%N")
+			if is_verbose then
+				if attached a_lib.void_safety_option as l_void_safety_option then
+					print ("    - void-safe=" + l_void_safety_option + "%N")
+				end
+				if attached a_lib.dependencies as l_deps then
+					across
+						l_deps as ic
+					loop
+						if attached db.item_by_location (ic.item.evaluated_location) as l_dep then
+							localized_print ("    -> ")
+							localized_print (l_dep.name)
+							if attached l_dep.void_safety_option as l_void_safety_option then
+								print (" (void-safe=" + l_void_safety_option + ")")
+							end
+							localized_print ("%N")
+						else
+							localized_print ("    -> ")
+							localized_print (ic.item.name)
+							localized_print ("%N")
+						end
+					end
+				end
+			end
+		end
+
+	print_library_location (p: PATH)
+		local
+			s: STRING_32
+			l_done: BOOLEAN
+		do
+			s := p.name
+			if attached variables as vars then
+				across
+					vars as ic
+				until
+					l_done
+				loop
+					if s.starts_with (ic.item) then
+						l_done := True
+						localized_print ("$")
+						localized_print (ic.key)
+						localized_print (s.tail (s.count - ic.item.count))
+					end
+				end
+				if not l_done then
+					localized_print (s)
+				end
+			else
+				localized_print (s)
+			end
+		end
+
 feature -- Storage
 
 	database_location (ctx: LIBRARY_DATABASE_CONTEXT): PATH
 		do
-			Result := execution_environment.current_working_path.extended ("library-" + ctx.platform + ".db")
+			if ctx.is_any_settings then
+				Result := execution_environment.current_working_path.extended ("library-any.db")
+			else
+				Result := execution_environment.current_working_path.extended ("library-" + ctx.platform + ".db")
+			end
 		end
 
 	save_database (db: detachable LIBRARY_DATABASE; ctx: LIBRARY_DATABASE_CONTEXT)
@@ -324,6 +409,7 @@ feature -- Visit
 
 	on_ecf_file_found (p: PATH)
 		do
+			ecf_counter := ecf_counter + 1
 		end
 
 	on_folder_enter (p: PATH)
@@ -351,18 +437,38 @@ feature -- Visit
 		end
 
 	on_target (a_target: CONF_TARGET)
+		local
+			l_options: CONF_OPTION
 		do
 			if is_verbose then
 				print ("+ Target %"")
 				print (a_target.name)
-				print ("%"%N")
+				print ("%"")
+				l_options := a_target.options
+				if l_options.void_safety.is_set then
+					print (" void-safe=%"")
+					print (l_options.void_safety.out)
+					print ("%"")
+				end
+				if l_options.is_attached_by_default then
+					print (" attached-by-default")
+				end
+				print ("%N")
 			end
 		end
 
 	on_library (a_library: CONF_LIBRARY)
+		local
+			l_options: CONF_OPTION
 		do
 			if is_verbose then
 				print (" - library: " + a_library.name)
+				l_options := a_library.options
+				if l_options.void_safety.is_set then
+					print (" (void-safe=%"")
+					print (l_options.void_safety.out)
+					print ("%")")
+				end
 				print ("%N")
 			end
 		end
@@ -377,6 +483,8 @@ feature -- Visit
 
 	on_class (a_class: CONF_CLASS)
 		do
+			class_counter := class_counter + 1
+
 			if is_verbose then
 				print (" - class: " + a_class.name)
 				print ("%N")
@@ -384,7 +492,7 @@ feature -- Visit
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

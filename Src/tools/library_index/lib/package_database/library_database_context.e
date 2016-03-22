@@ -29,25 +29,55 @@ feature {NONE} -- Initialization
 
 	initialize_defaults
 		do
+			any_settings := False
 			set_platform (Void)
 			set_concurrency (Void)
+			set_void_safety (Void)
 			build := {CONF_CONSTANTS}.build_finalize_name
 		end
 
 feature -- Access
 
-	platform: READABLE_STRING_8 assign set_platform
+	any_settings: BOOLEAN
+			-- Any setting.
 
-	concurrency: READABLE_STRING_8 assign set_concurrency
+	platform: READABLE_STRING_8 -- assign set_platform
+
+	concurrency: READABLE_STRING_8 -- assign set_concurrency
 
 	is_il_generation: BOOLEAN
 
 	build: READABLE_STRING_8
 
+	void_safety: READABLE_STRING_8
+
+feature -- Setting
+
+	is_any_settings: BOOLEAN
+		do
+			Result := any_settings or not (is_platform_set and is_concurrency_set and is_void_safety_set)
+		end
+
+	is_platform_set: BOOLEAN
+
+	is_concurrency_set: BOOLEAN
+
+	is_void_safety_set: BOOLEAN
+
+	is_build_set: BOOLEAN
+
 feature -- Change
+
+	use_any_settings (b: BOOLEAN)
+			-- Set `is_any_settings' to `b'.
+		do
+			any_settings := b
+		end
 
 	set_platform (a_platform: detachable like platform)
 		do
+			is_platform_set := a_platform /= Void
+
 			is_il_generation := False
 			if a_platform = Void then
 				is_il_generation := False
@@ -74,10 +104,31 @@ feature -- Change
 
 	set_concurrency (a_concurrency: detachable like concurrency)
 		do
+			is_concurrency_set := a_concurrency /= Void
 			if a_concurrency = Void then
 				concurrency := {CONF_CONSTANTS}.concurrency_none_name
 			else
 				concurrency := a_concurrency
+			end
+		end
+
+	set_void_safety (v: detachable like void_safety)
+		do
+			is_void_safety_set := v /= Void
+			if v = Void then
+				void_safety := "none"
+			else
+				void_safety := v
+			end
+		end
+
+	set_build (v: detachable like build)
+		do
+			is_build_set := v /= Void
+			if v = Void then
+				build := {CONF_CONSTANTS}.build_finalize_name
+			else
+				build := v
 			end
 		end
 
@@ -90,10 +141,12 @@ feature -- Conversion
 
 	to_table: STRING_TABLE [READABLE_STRING_8]
 		do
-			create Result.make (3)
+			create Result.make (6)
+			Result.force (is_any_settings.out, "is_any")
 			Result.force (platform, "platform")
 			Result.force (concurrency, "concurrency")
 			Result.force (is_il_generation.out, "is_il_generation")
+			Result.force (void_safety.out, "void_safety")
 			Result.force (build, "build")
 		end
 

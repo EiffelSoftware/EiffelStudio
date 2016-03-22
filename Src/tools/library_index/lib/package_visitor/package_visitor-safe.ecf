@@ -7,13 +7,13 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_obsolete_routine_type="true" void_safety="none" syntax="standard">
+		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="all" syntax="standard">
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false" use_application_options="true"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false" use_application_options="true"/>
-		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
 		<cluster name="src" location=".\">
 			<cluster name="implementation" location="$|implementation\" recursive="true" hidden="true"/>
 		</cluster>

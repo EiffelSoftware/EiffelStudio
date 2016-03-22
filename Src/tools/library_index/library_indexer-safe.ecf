@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="library_indexer" uuid="B4D3E2FA-94D8-48B9-8DC2-209E79399170">
+	<target name="library_analyzer">
+		<root class="LIBRARY_INDEXER_APPLICATION" feature="make"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="false" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="all" syntax="provisional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="inlining" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension-safe.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding-safe.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment-safe.ecf"/>
+		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher-safe.ecf"/>
+		<library name="package_database" location="lib\package_database\package_database-safe.ecf" readonly="false"/>
+		<library name="package_visitor" location="lib\package_visitor\package_visitor-safe.ecf" readonly="false"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid-safe.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

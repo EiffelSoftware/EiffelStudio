@@ -1,6 +1,7 @@
 note
-	description: "Summary description for {LIBRARY_DATABASE_MANAGER}."
-	author: ""
+	description: "[
+				Manager to build {LIBRARY_DATABASE}
+			]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,6 +22,7 @@ inherit
 			on_ecf_file_leave,
 			on_system_enter,
 			on_system_leave,
+			on_application_system,
 			on_target,
 			on_library,
 			on_cluster,
@@ -44,15 +46,17 @@ feature {NONE} -- Initialization
 	make_with_database (db: like database)
 		local
 			l_lib_indexer: LIBRARY_INDEXER
-			ht: STRING_TABLE [detachable READABLE_STRING_GENERAL]
 		do
 			database := db
-
-			is_verbose := True
-
-			create l_lib_indexer.make (db.context.to_table)
+			if attached db.context as ctx then
+				create l_lib_indexer.make (ctx.to_table)
+			else
+				create l_lib_indexer.make (Void)
+			end
 			library_indexer := l_lib_indexer
 			l_lib_indexer.register_observer (Current)
+
+			is_verbose := True
 		end
 
 feature -- Access
@@ -61,9 +65,21 @@ feature -- Access
 
 feature -- Settings
 
+	is_stopping_at_library: BOOLEAN
+
 	is_verbose: BOOLEAN
 
 feature -- Change
+
+	set_is_stopping_at_library (b: BOOLEAN)
+		do
+			is_stopping_at_library := b
+		end
+
+	set_is_verbose (b: BOOLEAN)
+		do
+			is_verbose := b
+		end
 
 	import_folders (a_folders: ITERABLE [PATH]; flag_is_recursive: BOOLEAN)
 			-- Import ecf from folder `a_folder'.
@@ -73,15 +89,9 @@ feature -- Change
 		do
 			l_lib_indexer := library_indexer
 			l_lib_indexer.reset
+			l_lib_indexer.set_is_stopping_at_library (is_stopping_at_library)
 			l_lib_indexer.scan (a_folders, flag_is_recursive)
 			l_lib_indexer.execute
-		end
-
-	import_folder (a_folder: PATH; flag_is_recursive: BOOLEAN)
-			-- Import ecf from folder `a_folder'.
-			-- If `flag_is_recursive' then is recursive.
-		do
-			import_folders (<<a_folder>>, flag_is_recursive)
 		end
 
 	import_files (a_files: ITERABLE [PATH])
@@ -90,12 +100,20 @@ feature -- Change
 		do
 			l_lib_indexer := library_indexer
 			l_lib_indexer.reset
+			l_lib_indexer.set_is_stopping_at_library (is_stopping_at_library)
 			across
 				a_files as ic
 			loop
 				l_lib_indexer.add_file (ic.item)
 			end
 			l_lib_indexer.execute
+		end
+
+	import_folder (a_folder: PATH; flag_is_recursive: BOOLEAN)
+			-- Import ecf from folder `a_folder'.
+			-- If `flag_is_recursive' then is recursive.
+		do
+			import_folders (<<a_folder>>, flag_is_recursive)
 		end
 
 	import_file (a_file: PATH)
@@ -108,7 +126,7 @@ feature -- Change
 			import_file (create {PATH}.make_from_string (a_file_name))
 		end
 
-feature {NONE} -- Implementation
+feature -- Indexer
 
 	library_indexer: LIBRARY_INDEXER
 
@@ -135,25 +153,26 @@ feature -- Visit
 
 	on_ecf_file_enter (p: PATH)
 		do
-			if is_verbose then
-				print ("# ")
-				localized_print (p.name)
-				print ("%N")
-			end
+--			if is_verbose then
+--				print ("# ")
+--				localized_print (p.name)
+--				print ("%N")
+--			end
 		end
 
 	on_ecf_file_leave (p: PATH)
 		do
-			if is_verbose then
-				print ("%N")
-			end
+--			if is_verbose then
+--				print ("%N")
+--			end
 		end
 
 	on_system_enter (a_cfg: CONF_SYSTEM)
 		do
 			check last_indexed_data = Void end
 			create last_indexed_data.make (a_cfg)
-			check last_indexed_data /= Void end
+		ensure then
+			has_last_indexed_data: last_indexed_data /= Void
 		end
 
 	on_system_leave (a_cfg: CONF_SYSTEM)
@@ -168,7 +187,7 @@ feature -- Visit
 				not d.is_testing_project
 			then
 				db := database
-				if db.has (d.uuid.out) then
+				if db.has (d) then
 --					check already_recorded: False end
 					db.force (d)
 				else
@@ -176,24 +195,66 @@ feature -- Visit
 				end
 			end
 			last_indexed_data := Void
-			check last_indexed_data = Void end
+		ensure then
+			no_last_indexed_data: last_indexed_data = Void
+		end
+
+	on_application_system  (a_cfg: CONF_SYSTEM)
+		local
+			t: CONF_TARGET
+		do
+			if is_verbose then
+				print ("  This is not a library.%N")
+				across
+					a_cfg.targets as ic
+				loop
+					t := ic.item
+					on_target (t)
+					across
+						t.libraries as lib_ic
+					loop
+						on_library (lib_ic.item)
+					end
+
+				end
+			end
 		end
 
 	on_target (a_target: CONF_TARGET)
+		local
+--			l_options: CONF_OPTION
 		do
-			if is_verbose then
-				print ("+ Target %"")
-				print (a_target.name)
-				print ("%"%N")
-			end
+--			if is_verbose then
+--				print ("+ Target %"")
+--				print (a_target.name)
+--				print ("%"")
+--				l_options := a_target.options
+--				if l_options.void_safety.is_set then
+--					print (" void-safe=%"")
+--					print (l_options.void_safety.out)
+--					print ("%"")
+--				end
+--				if l_options.is_attached_by_default then
+--					print (" attached-by-default")
+--				end
+--				print ("%N")
+--			end
 		end
 
 	on_library (a_library: CONF_LIBRARY)
+		local
+--			l_options: CONF_OPTION
 		do
-			if is_verbose then
-				print (" - library: " + a_library.name)
-				print ("%N")
-			end
+--			if is_verbose then
+--				print (" - library: " + a_library.name)
+--				l_options := a_library.options
+--				if l_options.void_safety.is_set then
+--					print (" (void-safe=%"")
+--					print (l_options.void_safety.out)
+--					print ("%")")
+--				end
+--				print ("%N")
+--			end
 			if attached last_indexed_data as d then
 				d.add_dependency (a_library)
 			end
@@ -201,18 +262,18 @@ feature -- Visit
 
 	on_cluster (a_cluster: CONF_CLUSTER)
 		do
-			if is_verbose then
-				print (" - cluster: " + a_cluster.name)
-				print ("%N")
-			end
+--			if is_verbose then
+--				print (" - cluster: " + a_cluster.name)
+--				print ("%N")
+--			end
 		end
 
 	on_class (a_class: CONF_CLASS)
 		do
-			if is_verbose then
-				print (" - class: " + a_class.name)
-				print ("%N")
-			end
+--			if is_verbose then
+--				print (" - class: " + a_class.name)
+--				print ("%N")
+--			end
 			if attached last_indexed_data as d then
 				d.classes.force (a_class.name)
 			end

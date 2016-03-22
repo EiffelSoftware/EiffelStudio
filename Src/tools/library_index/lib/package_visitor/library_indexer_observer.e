@@ -10,7 +10,10 @@ class
 feature -- Visit
 
 	on_ecf_file_found (p: PATH)
+		local
+			s32: READABLE_STRING_32
 		do
+			s32 := "aa" + p.name
 		end
 
 	on_folder_enter (p: PATH)
@@ -36,6 +39,10 @@ feature -- Visit
 		end
 
 	on_system_leave (a_cfg: CONF_SYSTEM)
+		do
+		end
+
+	on_application_system (a_cfg: CONF_SYSTEM)
 		do
 		end
 

@@ -30,6 +30,19 @@ feature -- Access
 	ecf_files: ARRAYED_LIST [PATH]
 			-- Indexed ecf files
 
+	item_by_location (a_ecf: PATH): detachable LIBRARY_INFO
+		do
+			across
+				items as ic
+			until
+				Result /= Void
+			loop
+				if ic.item.location.is_same_file_as (a_ecf) then
+					Result := ic.item
+				end
+			end
+		end
+
 feature -- Change
 
 	wipe_out
@@ -40,9 +53,9 @@ feature -- Change
 
 feature -- Status report
 
-	has (a_uuid: READABLE_STRING_GENERAL): BOOLEAN
+	has (i: LIBRARY_INFO): BOOLEAN
 		do
-			Result := items.has (a_uuid)
+			Result := items.has (key (i))
 		end
 
 	has_ecf_file (p: PATH): BOOLEAN
@@ -54,14 +67,25 @@ feature -- Change
 
 	put (i: LIBRARY_INFO)
 		do
-			items.put (i, i.uuid.out)
+			items.put (i, key (i))
 			ecf_files.force (i.location)
 		end
 
 	force (i: LIBRARY_INFO)
 		do
-			items.force (i, i.uuid.out)
+			items.force (i, key (i))
 			ecf_files.force (i.location)
+		end
+
+feature {NONE} -- Key
+
+	key (i: LIBRARY_INFO): STRING
+		do
+			Result := i.uuid.out
+			if attached i.void_safety_option as vs then
+				Result.append_character ('-')
+				Result.append (vs)
+			end
 		end
 
 note

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	copyright: STRING = "Copyright Eiffel Software 2011-2013"
+	copyright: STRING = "Copyright Eiffel Software 2011-2016"
 			-- Copyright information.
 			-- Not used if empty.
 
@@ -76,7 +76,6 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			reuslt_contains_attached_items: not Result.has (Void)
 		end
 
 	directories: ARRAYED_LIST [PATH]
@@ -99,7 +98,6 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			reuslt_contains_attached_items: not Result.has (Void)
 		end
 
 	is_verbose: BOOLEAN
@@ -108,6 +106,14 @@ feature -- Access
 			is_successful: is_successful
 		once
 			Result := has_option (verbose_switch)
+		end
+
+	is_only_libs: BOOLEAN
+			-- Only libraries, i.e ignore clusters and classes?
+		require
+			is_successful: is_successful
+		once
+			Result := has_option (only_libs_switch)
 		end
 
 	use_directory_recursion: BOOLEAN
@@ -137,6 +143,12 @@ feature -- Access
 			Result := attached option_of_name (il_generation_switch)
 		end
 
+	is_any: BOOLEAN
+			-- Any setting.
+		once
+			Result := attached option_of_name (any_switch)
+		end
+
 	platform: detachable READABLE_STRING_8
 			-- Platform setting.
 		local
@@ -160,6 +172,22 @@ feature -- Access
 		once
 			if
 				attached option_of_name (concurrency_switch) as opt and then
+				opt.has_value
+			then
+				s := opt.value
+				if s.is_valid_as_string_8 then
+					Result := s.as_string_8
+				end
+			end
+		end
+
+	void_safety: detachable READABLE_STRING_8
+			-- Concurrency setting.
+		local
+			s: READABLE_STRING_32
+		once
+			if
+				attached option_of_name (void_safety_switch) as opt and then
 				opt.has_value
 			then
 				s := opt.value
@@ -220,6 +248,31 @@ feature -- Access
 			Result := has_option (update_switch)
 		end
 
+	variable_definitions: detachable STRING_TABLE [READABLE_STRING_32]
+			-- variable definitiations, values indexed by name.
+		local
+			s: READABLE_STRING_32
+			i: INTEGER
+		once
+			if
+				attached options_values_of_name (define_switch) as l_values and then
+				not l_values.is_empty
+			then
+				create Result.make (l_values.count)
+				across
+					l_values as ic
+				loop
+					s := ic.item
+					i := s.index_of ('=', 1)
+					if i > 0 then
+						Result.force (s.substring (i + 1, s.count), s.head (i - 1))
+					else
+						check bad_var_definition: False end
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Usage
 
 	non_switched_argument_name: STRING = "path"
@@ -255,14 +308,20 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (search_switch, "Search library including class_name", True, False, "class_name", "A class name", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (browse_switch, "Browse library", True, False, "Package_name", "A package/project name", True))
 
+			Result.extend (create {ARGUMENT_SWITCH}.make (any_switch, "Any platform, any concurrency, any setting...", True, False))
+
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (platform_switch, "Platform", True, False, platform_switch, "Platform: Windows, Dotnet, Unix, Mac, ...", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (concurrency_switch, "Concurrency", True, False, concurrency_switch, "Concurrency: none, thread, SCOOP", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (void_safety_switch, "Void-safety", True, False, void_safety_switch, "Void-safety: none, ... , complete", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (build_switch, "Build", True, False, build_switch, "Build: workbench, finalize", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (il_generation_switch, "Is Dotnet?", True, False))
 --			Result.extend (create {ARGUMENT_SWITCH}.make (dynamic_runtime_switch, "Dynamic runtime?", True, False))
 
 			Result.extend (create {ARGUMENT_SWITCH}.make (recursive_switch, "Recursive scan any directories for *.ecf (default=True)", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (limit_switch, "Limit depth when scanning directories for *.ecf", True, False, "depth", "Depth in folder (default=1)", True))
+			Result.extend (create {ARGUMENT_SWITCH}.make (only_libs_switch, "Record only library related info (ignore cluster and classes) (default=False)", True, False))
+
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (define_switch, "Define variables (such as ISE_LIBRARY, ...), that could be used to output paths", True, True, "value", "variable value", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Verbose output?", True, False))
 		end
 
@@ -273,8 +332,11 @@ feature {NONE} -- Switches
 	search_switch: STRING = "s|search"
 	browse_switch: STRING = "browse"
 
+	any_switch: STRING = "a|any"
+
 	platform_switch: STRING = "platform"
 	concurrency_switch: STRING = "concurrency"
+	void_safety_switch: STRING = "void-safety"
 	build_switch: STRING = "build"
 	il_generation_switch: STRING = "dotnet"
 --	dynamic_runtime_switch: STRING = "dynamic_runtime"
@@ -282,10 +344,14 @@ feature {NONE} -- Switches
 	recursive_switch: STRING = "r|recursive"
 	limit_switch: STRING = "limit"
 
+	only_libs_switch: STRING = "only_libs"
+
+	define_switch: STRING = "D|variable"
+
 	verbose_switch: STRING = "v|verbose"
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

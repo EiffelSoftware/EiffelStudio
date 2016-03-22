@@ -218,7 +218,10 @@ feature -- Access
 				l_path.is_empty
 			loop
 				Result.extend (l_path)
-				l_ptr := l_ptr + (l_count + 1) * character_size
+					-- New pointer value is the old one plus buffer length
+					-- in bytes of the previous string plus the null terminating
+					-- character.
+				l_ptr := l_ptr + l_count + character_size
 				create l_path.make_from_pointer (l_ptr)
 				l_count := buffer_length (l_ptr)
 			end

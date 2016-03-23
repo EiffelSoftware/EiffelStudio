@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Special objects: homogeneous sequences of values, 
 		used to represent arrays and strings
@@ -156,12 +156,6 @@ feature -- Access
 			to_array_upper_set: Result.upper = count
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- <Precursor>
-		do
-			create Result.make (lower, upper)
-		end
-
 feature -- Measurement
 
 	lower: INTEGER = 0
@@ -171,8 +165,6 @@ feature -- Measurement
 			-- Maximum index of Current
 		do
 			Result := count - 1
-		ensure
-			definition: lower <= Result + 1
 		end
 
 	count: INTEGER
@@ -836,7 +828,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -846,4 +838,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SPECIAL
+end

@@ -346,31 +346,38 @@ feature {NONE} -- Execution
 
 feature -- Storage
 
-	database_location (ctx: LIBRARY_DATABASE_CONTEXT): PATH
+	database_location (a_name: detachable READABLE_STRING_GENERAL; ctx: LIBRARY_DATABASE_CONTEXT): PATH
+		local
+			l_name: READABLE_STRING_GENERAL
 		do
-			if ctx.is_any_settings then
-				Result := execution_environment.current_working_path.extended ("library-any.db")
+			if a_name /= Void then
+				l_name := a_name
 			else
-				Result := execution_environment.current_working_path.extended ("library-" + ctx.platform + ".db")
+				l_name := "library"
 			end
+			Result := execution_environment.current_working_path.extended (l_name).appended ("-")
+			if ctx.is_any_settings then
+				if ctx.is_platform_set then
+					Result := Result.appended (ctx.platform + "-")
+				end
+				Result := Result.appended ("any")
+			else
+				Result := Result.appended (ctx.platform)
+			end
+			Result := Result.appended_with_extension ("db")
 		end
 
 	save_database (db: detachable LIBRARY_DATABASE; ctx: LIBRARY_DATABASE_CONTEXT)
 		local
-			sed: SED_STORABLE_FACILITIES
-			w: SED_MEDIUM_READER_WRITER
 			f: RAW_FILE
+			loc: PATH
 		do
+			loc := database_location (Void, ctx)
 			if db /= Void then
 				check db.context ~ ctx end
-				create f.make_with_path (database_location (ctx))
-				f.open_write
-				create w.make_for_writing (f)
-				create sed
-				sed.basic_store (db, w, True)
-				f.close
+				(create {LIBRARY_DATABASE_WRITER}).store (db, loc)
 			else
-				create f.make_with_path (database_location (ctx))
+				create f.make_with_path (loc)
 				if f.exists then
 					f.delete
 				end
@@ -381,27 +388,24 @@ feature -- Storage
 		local
 			f: RAW_FILE
 		do
-			create f.make_with_path (database_location (ctx))
+			create f.make_with_path (database_location (Void, ctx))
 			Result := f.exists and then f.is_access_readable
 		end
 
 	saved_database (ctx: LIBRARY_DATABASE_CONTEXT): detachable LIBRARY_DATABASE
 		local
-			sed: SED_STORABLE_FACILITIES
-			r: SED_MEDIUM_READER_WRITER
-			f: RAW_FILE
+			l_reader: LIBRARY_DATABASE_READER
 		do
-			create f.make_with_path (database_location (ctx))
-			if f.exists and then f.is_access_readable then
-				f.open_read
-				create r.make_for_reading (f)
-				if r.is_ready_for_reading then
-					create sed
-					if attached {like saved_database} sed.retrieved (r, False) as res then
-						Result := res
-					end
+			create l_reader
+			l_reader.read (database_location (Void, ctx), ctx)
+			Result := l_reader.last_database
+			l_reader.reset
+
+				-- DEBUG !!!
+			debug
+				if Result /= Void then
+					(create {LIBRARY_DATABASE_WRITER}).store (Result, database_location ("test", ctx))
 				end
-				f.close
 			end
 		end
 

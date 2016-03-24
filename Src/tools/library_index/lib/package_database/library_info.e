@@ -13,17 +13,14 @@ inherit
 	DEBUG_OUTPUT
 
 create
+	make_from_conf_system,
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_system: CONF_SYSTEM)
+	make_from_conf_system (a_system: CONF_SYSTEM)
 		do
-			name := a_system.name
-			uuid := a_system.uuid
-			location := a_system.file_path
-			create dependencies.make (1)
-			create classes.make (5)
+			make (a_system.name, a_system.uuid, a_system.file_path)
 
 			if
 				attached a_system.library_target as t and then
@@ -34,6 +31,17 @@ feature {NONE} -- Initialization
 			else
 				void_safety_option := Void
 			end
+		end
+
+	make (a_name: like name; a_uuid: like uuid; a_location: like location)
+		do
+			name := a_name
+			uuid := a_uuid
+			location := a_location
+
+			create dependencies.make (1)
+			create classes.make (5)
+			is_application := False
 		end
 
 feature -- Access
@@ -62,12 +70,30 @@ feature -- Status report
 
 	is_testing_project: BOOLEAN
 		do
-			Result := across dependencies as ic some
+			Result := 	across
+							dependencies as ic
+						some
 							ic.item.location.starts_with ({STRING_32} "$ISE_LIBRARY\library\testing\testing")
 						end
 		end
 
 feature -- Change
+
+	set_is_application (b: BOOLEAN)
+		do
+			is_application := b
+		end
+
+	set_void_safety_option (v: detachable READABLE_STRING_GENERAL)
+		do
+			if v = Void then
+				void_safety_option := Void
+			elseif v.is_valid_as_string_8 then
+				void_safety_option := v.as_string_8
+			else
+				void_safety_option := Void
+			end
+		end
 
 	add_dependency (a_lib: CONF_LIBRARY)
 		do

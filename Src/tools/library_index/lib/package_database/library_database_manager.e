@@ -170,7 +170,7 @@ feature -- Visit
 	on_system_enter (a_cfg: CONF_SYSTEM)
 		do
 			check last_indexed_data = Void end
-			create last_indexed_data.make (a_cfg)
+			create last_indexed_data.make_from_conf_system (a_cfg)
 		ensure then
 			has_last_indexed_data: last_indexed_data /= Void
 		end

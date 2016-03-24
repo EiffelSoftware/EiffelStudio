@@ -45,6 +45,11 @@ feature -- Access
 
 feature -- Change
 
+	update_context (ctx: like context)
+		do
+			context := ctx
+		end
+
 	wipe_out
 		do
 			items.wipe_out

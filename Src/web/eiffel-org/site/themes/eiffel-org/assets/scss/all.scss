@@ -886,7 +886,7 @@
 		@extend %listreset;
 		margin: 0 0 0 -70px;
 		>li{
-			@include grid-width(5.5);
+			@include grid-width(3.8);
 			&:not(:last-child) {	border-right: dotted 1px $green-light; }
 			float: left;
 			margin: 0 0 54px 33px;

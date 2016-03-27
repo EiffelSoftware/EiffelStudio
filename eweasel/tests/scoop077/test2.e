@@ -9,28 +9,30 @@ feature {NONE} -- Creation
 	make
 			-- Run application.
 		local
-			s: separate ITERABLE [TEST]
+			s: separate ITERABLE [separate TEST]
 			i: INTEGER
 		do
 			separate (create {separate TEST}) as t do
 				s := t.data
 			end
-			across
-				s as c            -- VUTA(3) for `s.new_cursor'
-			loop                      -- VUTA(3) for `c.after'
-				i := i + 1
-				c.item.report (i) -- VUTA(3) for `c.item'; VUTA(3) for `report'
-			end                       -- VUTA(3) for `c.forth'
+			separate s as ss do
+				across
+					ss as c
+				loop
+					i := i + 1
+					c.item.report (i) -- VUTA(3) for `report'
+				end
+			end
 			io.put_integer (0)
 			io.put_new_line
 		end
 
 feature -- Access
 
-	data: ITERABLE [TEST]
+	data: ITERABLE [separate TEST]
 			-- Some iterable data.
 		do
-			create {ARRAY [TEST]} Result.make_filled (Current, 1, 5)
+			create {ARRAY [separate TEST]} Result.make_filled (create {separate TEST}, 1, 5)
 		end
 
 feature -- Output

@@ -7690,6 +7690,8 @@ feature {NONE} -- Visitor
 			access_expr_b: ACCESS_EXPR_B
 			new_cursor_b: NESTED_B
 			l_old_current_target_type: like current_target_type
+			old_error_level: like error_level
+			is_expression_controlled: BOOLEAN
 		do
 				-- Type check iteration expression.
 				-- We save `current_target_type' and set it to Void before evaluating the
@@ -7698,6 +7700,7 @@ feature {NONE} -- Visitor
 			current_target_type := Void
 			l_as.expression.process (Current)
 			current_target_type := l_old_current_target_type
+			is_expression_controlled := is_controlled
 
 				-- Type check loop local name.
 			local_id := l_as.identifier
@@ -7731,6 +7734,10 @@ feature {NONE} -- Visitor
 			end
 
 			if attached last_type as iteration_type then
+					-- Check the target of a separate feature call.
+				if iteration_type.is_separate then
+					validate_separate_target (l_as.expression)
+				end
 					-- Calculate the type of an iteration local.
 				context.find_iteration_classes (context.written_class)
 				if not attached context.iterable_class as i then
@@ -7771,9 +7778,13 @@ feature {NONE} -- Visitor
 						if not is_inherited then
 							context.supplier_ids.extend_depend_unit_with_level (iteration_base_type.class_id, f, depend_unit_level)
 						end
+							-- Record current error level to avoid unnecessary errors for separate cursors.
+						old_error_level := error_level
 							-- Use an attached variant of a cursor type if required.
 						unattached_local_type := f.type.actual_type.instantiated_in (iteration_base_type)
 						local_type := unattached_local_type.as_attached_in (context.current_class)
+						adapt_type_to_target (local_type, iteration_type, n, is_expression_controlled, local_id, old_error_level, local_id)
+						local_type := last_type
 						if not local_type.base_class.conform_to (c) then
 								-- Type of a cursor does not conform to ITERATION_CURSOR.
 							error_handler.insert_error
@@ -7786,6 +7797,8 @@ feature {NONE} -- Visitor
 								-- Evaluate a type of a cursor.
 							iteration_cursor_type := c.actual_type.evaluated_type_in_descendant
 								(i, iteration_base_type.base_class, Void).instantiated_in (iteration_base_type)
+							adapt_type_to_target (iteration_cursor_type, iteration_type, f, is_expression_controlled, local_id, old_error_level, local_id)
+							iteration_cursor_type := last_type
 						end
 						if current_feature.written_in = context.current_class.class_id then
 							instantiator.dispatch (local_type, context.current_class)
@@ -7801,6 +7814,7 @@ feature {NONE} -- Visitor
 							local_info.set_position (context.next_object_test_local_position)
 							context.add_object_test_local (local_info, local_id)
 							local_info.set_is_used (True)
+							local_info.set_is_controlled (is_controlled)
 						end
 							-- Generate cursor creation code.
 						if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then

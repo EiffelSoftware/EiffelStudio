@@ -1466,7 +1466,7 @@ test	scoop-locking-expanded-argument			scoop073 tcf pass scoop multithreaded exe
 test	scoop-controlled-object-test			scoop074 tcf pass scoop multithreaded object_test validity execution
 test	scoop-temporary-pointer-variable		scoop075 tcf pass scoop multithreaded execution
 test	scoop-callback-region-adoption			scoop076 tcf pass scoop multithreaded execution
-test	scoop-across-iteration-loop			scoop077 tcf fail scoop multithreaded execution across iteration loop validity
+test	scoop-across-iteration-loop			scoop077 tcf pass scoop multithreaded execution across iteration loop validity
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

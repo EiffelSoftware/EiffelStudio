@@ -15,12 +15,18 @@ feature {NONE} -- Creation
 			separate (create {separate TEST}) as t do
 				s := t.data
 			end
-			across
-				s as c            -- VUTA(3) for `s.new_cursor'
-			loop                      -- VUTA(3) for `c.after'
-				i := i + 1
-				c.item.report (i) -- VUTA(3) for `c.item'; VUTA(3) for `report'
-			end                       -- VUTA(3) for `c.forth'
+			separate s as ss do
+				across
+					ss as c
+				loop
+					i := i + 1
+					c.item.report (i)
+				end
+			end
+				-- This is going to be printed after the loop
+				-- because `t.report (i)' above is executed on
+				-- a controlled target that is used in expressions
+				-- in the loop and therefore is synchronous.
 			io.put_integer (0)
 			io.put_new_line
 		end

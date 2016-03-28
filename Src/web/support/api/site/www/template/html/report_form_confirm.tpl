@@ -104,7 +104,9 @@
 							</div>
 							<div class="row">
 								<div class="col-xs-12" id="textarea_7">
-									{htmlentities}{$to_reproduce/}{/htmlentities}
+								    <pre>
+										{htmlentities}{$to_reproduce/}{/htmlentities}
+									</pre>
 								</div>
 							</div>
 							{/if}

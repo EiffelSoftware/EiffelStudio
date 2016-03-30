@@ -550,6 +550,20 @@ feature -- Create library dialog
 	dialog_create_library_information: STRING_32 do Result := locale.translation ("Information")	end
 	dialog_create_library_status: STRING_32 do Result := locale.translation ("Status")	end
 	dialog_create_library_location: STRING_32 do Result := locale.translation ("Location")	end
+	dialog_create_library_custom_location: STRING_32 do Result := locale.translation ("Custom")	end
+
+	dialog_search_library_iron_package_manage_button_label: STRING_32 do Result := locale.translation ("Packages") end
+	dialog_search_library_iron_package_manage_button_tooltip: STRING_32 do Result := locale.translation ("Manage IRON packages with the associated IRON tool") end
+
+	dialog_search_library_in: STRING_32 do Result := locale.translation ("Search in")	end
+	dialog_search_library_in_tooltip: STRING_32 do Result := locale.translation ("Search library using criteria on metadata (name, description, tags, ...)")	end
+	dialog_search_library_by_class: STRING_32 do Result := locale.translation ("Search class")	end
+	dialog_search_library_by_class_tooltip: STRING_32 do Result := locale.translation ("Search library by class name (wildchar supported).")	end
+
+	dialog_search_classes: STRING_32 do Result := locale.translation ("Classes")	end
+	dialog_search_found_n_classes (nb: INTEGER): STRING_32 do
+			Result := locale.formatted_string (locale.plural_translation ("found one class", "found $1 classes", nb), [nb])
+		end
 
 	dialog_create_libraries: STRING_32 do Result := locale.translation ("Libraries")	end
 	dialog_create_iron_packages: STRING_32 do Result := locale.translation ("IRON packages")	end
@@ -619,6 +633,9 @@ feature -- Iron packages box
 	iron_box_update_label: STRING_32 do Result := locale.translation ("Update") end
 
 	iron_box_tags_label: STRING_32 do Result := locale.translation ("Tags") end
+
+	iron_box_package_installed_label: STRING_32 do Result := locale.translation ("Is installed") end
+	iron_box_package_not_yet_installed_label: STRING_32 do Result := locale.translation ("Not yet installed") end
 
 	iron_box_missing_package_error_message: STRING_32 do Result := locale.translation ("Error: missing package.") end
 
@@ -1086,7 +1103,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

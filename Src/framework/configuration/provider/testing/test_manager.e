@@ -18,6 +18,7 @@ feature -- Access
 			iron_prov: ES_LIBRARY_IRON_PROVIDER
 			deliv_prov: ES_LIBRARY_LOCAL_PROVIDER
 			iron_packages_prov: ES_LIBRARY_IRON_PACKAGE_PROVIDER
+			index_prov: ES_LIBRARY_INDEX_PROVIDER
 
 			precomp_local_prov: ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER
 			precomp_iron_prov: ES_PRECOMPILE_LIBRARY_IRON_PROVIDER
@@ -26,13 +27,16 @@ feature -- Access
 			create m.make (2)
 			create iron_prov
 			create deliv_prov
+			create index_prov
 			m.register (deliv_prov)
 			m.register (iron_prov)
+			m.register (index_prov)
 
 			tgt := new_test_target ("all")
 
 			iron_prov.reset (tgt)
 			deliv_prov.reset (tgt)
+			index_prov.reset (tgt)
 
 			if attached m.libraries (Void, tgt, Void) as lst then
 

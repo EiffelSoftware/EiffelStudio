@@ -14,9 +14,6 @@ inherit
 		export
 			{NONE} all
 			{ANY} is_eiffel_layout_defined
---		undefine
---			default_create,
---			copy
 		end
 
 feature -- Helper		

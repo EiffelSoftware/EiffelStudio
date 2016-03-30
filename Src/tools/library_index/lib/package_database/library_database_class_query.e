@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 feature -- Execution
 
 	execute
+			-- Execute Current query `pattern' on `database', and store results into `items'.
 		local
 			l_pattern: READABLE_STRING_8
 			l_info: detachable LIBRARY_INFO

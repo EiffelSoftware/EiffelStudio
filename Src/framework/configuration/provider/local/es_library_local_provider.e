@@ -28,14 +28,18 @@ feature -- Access
 		local
 			l_libs: like library_locations
 		do
-			l_libs := library_locations (a_target)
-			create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (l_libs.count)
-			across
-				l_libs as ic
-			loop
-				if attached conf_system_from (a_target, ic.item, True) as cfg then
-					Result.force (cfg)
+			if is_eiffel_layout_defined then
+				l_libs := library_locations (a_target)
+				create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (l_libs.count)
+				across
+					l_libs as ic
+				loop
+					if attached conf_system_from (a_target, ic.item, True) as cfg then
+						Result.force (cfg)
+					end
 				end
+			else
+				create {ARRAYED_LIST [CONF_SYSTEM_VIEW]} Result.make (0)
 			end
 		end
 

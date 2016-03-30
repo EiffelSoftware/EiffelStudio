@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			l_col := g.column (name_column)
 			l_col.set_title (conf_interface_names.dialog_create_library_name)
 			l_col.set_width (100)
-			l_col := g.column (void_safety_column)
+			l_col := g.column (status_column)
 			l_col.set_title (conf_interface_names.dialog_create_library_status)
 			l_col.set_width (100)
 			l_col := g.column (info_column)
@@ -211,133 +211,18 @@ feature -- Event
 	compute_grid_row (a_row: EV_GRID_ROW; a_max_widths: ARRAY [INTEGER])
 		local
 			l_item: EV_GRID_LABEL_ITEM
-			l_path: READABLE_STRING_GENERAL
-			l_description: READABLE_STRING_32
-			l_name_item: EV_GRID_LABEL_ITEM
-			s: STRING_32
-			l_is_installed: BOOLEAN
-			l_information: STRING_32
-			nb_lines, l_row_font_height: INTEGER
 		do
 			if attached {G} a_row.data as l_data then
 				if
 					attached {CONF_SYSTEM_VIEW} l_data.value as l_cfg_data
 				then
-					l_path := l_cfg_data.original_location
-
-						-- Extract description
-					l_description := l_cfg_data.description
-					if l_description = Void or else l_description.is_empty then
-						l_description := once "No description available"
-					end
-
-						-- Library name
-					create l_name_item.make_with_text (l_cfg_data.system_name)
-					if l_path.starts_with ("iron:") then
-						l_name_item.set_pixmap (conf_pixmaps.library_iron_library_icon)
-					else
-						l_name_item.set_pixmap (conf_pixmaps.new_library_icon)
-					end
-					l_name_item.set_tooltip (l_description)
-					l_name_item.align_text_top
-					a_row.set_item (name_column, l_name_item)
-
-						-- Void safety status.
-					if attached l_cfg_data.conf_option as l_options then
-						create l_item.make_with_text (conf_interface_names.option_void_safety_value [l_options.void_safety.index] + {STRING_32} " void-safety")
-						l_item.set_tooltip (conf_interface_names.option_void_safety_value_description [l_options.void_safety.index])
-						if l_options.is_void_safety_supported (target.options) then
-								-- Library void-safety setting perfectly matches the one used by the target.
-							l_item.set_pixmap (conf_pixmaps.general_tick_icon)
-						elseif l_options.is_void_safety_sufficient (target.options) then
-								-- Library void-safety setting is usable by the target with a warning.
-							l_item.set_pixmap (conf_pixmaps.general_warning_icon)
-						else
-								-- Library void-safety setting is too weak for the target.
-							a_row.hide
-						end
-						a_row.set_item (void_safety_column, l_item)
-						l_item.align_text_top
-					else
-						a_row.set_item (void_safety_column, create {EV_GRID_LABEL_ITEM})
-					end
-
-						-- Information
-					create l_information.make_empty
-					l_information.append ("Location=")
-					l_information.append_string_general (l_path)
-					if attached l_cfg_data.info ("tags") as l_tags then
-						l_information.append_character ('%N')
-						l_information.append ("Tags=")
-						l_information.append (l_tags)
-					end
-
-					create l_item.make_with_text (l_information)
-					l_item.align_text_top
-					a_row.set_item (info_column, l_item)
-
-					nb_lines := l_information.occurrences ('%N') + 1
-					if nb_lines > 1 then
-						a_row.set_height (nb_lines * a_row.height)
-					end
-
+					compute_conf_system_grid_row (l_data, l_cfg_data, a_row, a_max_widths)
 				elseif attached {IRON_PACKAGE} l_data.value as l_iron_package then
-					l_path := l_iron_package.location.string
-
-						-- Extract description
-					l_description := l_iron_package.description
-					if l_description = Void or else l_description.is_empty then
-						l_description := once "No description available"
-					end
-
-					l_is_installed := attached {BOOLEAN} l_data.info ("is_installed") as b and then b
-
-						-- Library name
-					create l_name_item.make_with_text (l_iron_package.identifier)
-					l_name_item.set_pixmap (conf_pixmaps.library_iron_package_icon)
-					l_name_item.set_tooltip (l_description)
-					l_name_item.align_text_top
-					a_row.set_item (name_column, l_name_item)
-
-						-- Void safety status.
-					if l_is_installed then
-						create l_item.make_with_text ("Is installed")
-					else
-						create l_item.make_with_text ("Not yet installed")
-						l_item.set_pixmap (conf_pixmaps.general_add_icon)
-					end
-					a_row.set_item (void_safety_column, l_item)
-					l_item.align_text_top
-
-						-- Information
-					create l_information.make_empty
-					l_information.append ("Location=" + l_path)
-					if attached l_iron_package.tags as l_tags and then not l_tags.is_empty then
-						l_information.append_character ('%N')
-						create s.make_empty
-						across
-							l_tags as ic
-						loop
-							if not s.is_empty then
-								s.append_character (',')
-								s.append_character (' ')
-							end
-							s.append (ic.item)
-						end
-						l_information.append ("Tags=")
-						l_information.append (s)
-					end
-
-					create l_item.make_with_text (l_information)
-					l_item.align_text_top
-					a_row.set_item (info_column, l_item)
-					nb_lines := l_information.occurrences ('%N') + 1
-					if nb_lines > 1 then
-						a_row.set_height (nb_lines * a_row.height)
-					end
-					l_item.align_text_top
+					compute_iron_package_grid_row (l_data, l_iron_package, a_row, a_max_widths)
+				elseif attached {LIBRARY_INFO} l_data.value as l_info then
+					compute_library_info_grid_row (l_data, l_info, a_row, a_max_widths)
 				else
-					create l_item.make_with_text ("Score=" + l_data.score.out)
+					create l_item.make_with_text ("Score is " + l_data.score.out)
 					l_item.align_text_top
 					a_row.set_item (name_column, l_item)
 				end
@@ -346,6 +231,213 @@ feature -- Event
 					a_max_widths[name_column] := (a_max_widths[name_column]).max (i.required_width + 10)
 				end
 			end
+		end
+
+	compute_conf_system_grid_row (a_data: G; a_cfg_data: CONF_SYSTEM_VIEW; a_row: EV_GRID_ROW; a_max_widths: ARRAY [INTEGER_32])
+		local
+			l_item: EV_GRID_LABEL_ITEM
+			l_path: READABLE_STRING_GENERAL
+			l_description: READABLE_STRING_32
+			l_name_item: EV_GRID_LABEL_ITEM
+			l_information: STRING_32
+			nb_lines: INTEGER
+		do
+			l_path := a_cfg_data.original_location
+
+				-- Extract description
+			l_description := a_cfg_data.description
+			if l_description = Void or else l_description.is_empty then
+				l_description := once "No description available"
+			end
+
+				-- Library name
+			create l_name_item.make_with_text (a_cfg_data.system_name)
+			if l_path.starts_with ("iron:") then
+				l_name_item.set_pixmap (conf_pixmaps.library_iron_library_icon)
+			else
+				l_name_item.set_pixmap (conf_pixmaps.new_library_icon)
+			end
+			l_name_item.set_tooltip (l_description)
+			l_name_item.align_text_top
+			a_row.set_item (name_column, l_name_item)
+
+				-- Void safety status.
+			if attached a_cfg_data.conf_option as l_options then
+				create l_item.make_with_text (conf_interface_names.option_void_safety_value [l_options.void_safety.index] + {STRING_32} " " + conf_interface_names.option_void_safety_name)
+				l_item.set_tooltip (conf_interface_names.option_void_safety_value_description [l_options.void_safety.index])
+				if l_options.is_void_safety_supported (target.options) then
+						-- Library void-safety setting perfectly matches the one used by the target.
+					l_item.set_pixmap (conf_pixmaps.general_tick_icon)
+				elseif l_options.is_void_safety_sufficient (target.options) then
+						-- Library void-safety setting is usable by the target with a warning.
+					l_item.set_pixmap (conf_pixmaps.general_warning_icon)
+				else
+						-- Library void-safety setting is too weak for the target.
+					a_row.hide
+				end
+				a_row.set_item (status_column, l_item)
+				l_item.align_text_top
+			else
+				a_row.set_item (status_column, create {EV_GRID_LABEL_ITEM})
+			end
+
+				-- Information
+			create l_information.make_empty
+			l_information.append (conf_interface_names.dialog_create_library_location)
+			l_information.append_character ('=')
+			l_information.append_string_general (l_path)
+			if attached a_cfg_data.info ("tags") as l_tags then
+				l_information.append_character ('%N')
+				l_information.append (conf_interface_names.iron_box_tags_label)
+				l_information.append_character ('=')
+				l_information.append (l_tags)
+			end
+
+			create l_item.make_with_text (l_information)
+			l_item.align_text_top
+			a_row.set_item (info_column, l_item)
+
+			nb_lines := l_information.occurrences ('%N') + 1
+			if nb_lines > 1 then
+				a_row.set_height (nb_lines * a_row.height)
+			end
+		end
+
+	compute_iron_package_grid_row (a_data: G; a_iron_package: IRON_PACKAGE; a_row: EV_GRID_ROW; a_max_widths: ARRAY [INTEGER_32])
+		local
+			l_item: EV_GRID_LABEL_ITEM
+			l_path: READABLE_STRING_GENERAL
+			l_description: READABLE_STRING_32
+			l_name_item: EV_GRID_LABEL_ITEM
+			s: STRING_32
+			l_is_installed: BOOLEAN
+			l_information: STRING_32
+			nb_lines: INTEGER
+		do
+			l_path := a_iron_package.location.string
+
+				-- Extract description
+			l_description := a_iron_package.description
+			if l_description = Void or else l_description.is_empty then
+				l_description := once "No description available"
+			end
+
+			l_is_installed := attached {BOOLEAN} a_data.info ("is_installed") as b and then b
+
+				-- Library name
+			create l_name_item.make_with_text (a_iron_package.identifier)
+			l_name_item.set_pixmap (conf_pixmaps.library_iron_package_icon)
+			l_name_item.set_tooltip (l_description)
+			l_name_item.align_text_top
+			a_row.set_item (name_column, l_name_item)
+
+				-- Void safety status.
+			if l_is_installed then
+				create l_item.make_with_text (conf_interface_names.iron_box_package_installed_label)
+			else
+				create l_item.make_with_text (conf_interface_names.iron_box_package_not_yet_installed_label)
+				l_item.set_pixmap (conf_pixmaps.general_add_icon)
+			end
+			a_row.set_item (status_column, l_item)
+			l_item.align_text_top
+
+				-- Information
+			create l_information.make_empty
+			l_information.append (conf_interface_names.dialog_create_library_location)
+			l_information.append_character ('=')
+			l_information.append_string_general (l_path)
+			if attached a_iron_package.tags as l_tags and then not l_tags.is_empty then
+				l_information.append_character ('%N')
+				create s.make_empty
+				across
+					l_tags as ic
+				loop
+					if not s.is_empty then
+						s.append_character (',')
+						s.append_character (' ')
+					end
+					s.append (ic.item)
+				end
+				l_information.append (conf_interface_names.iron_box_tags_label)
+				l_information.append_character ('=')
+				l_information.append (s)
+			end
+
+			create l_item.make_with_text (l_information)
+			l_item.align_text_top
+			a_row.set_item (info_column, l_item)
+			nb_lines := l_information.occurrences ('%N') + 1
+			if nb_lines > 1 then
+				a_row.set_height (nb_lines * a_row.height)
+			end
+			l_item.align_text_top
+		end
+
+	compute_library_info_grid_row (a_data: G; a_lib_info: LIBRARY_INFO; a_row: EV_GRID_ROW; a_max_widths: ARRAY [INTEGER_32])
+		local
+			l_item: EV_GRID_LABEL_ITEM
+			l_path: READABLE_STRING_GENERAL
+			l_description: READABLE_STRING_32
+			l_name_item: EV_GRID_LABEL_ITEM
+			s: STRING_32
+			nb: INTEGER
+			l_is_installed: BOOLEAN
+			l_information: STRING_32
+			nb_lines: INTEGER
+			l_classes_txt: detachable STRING_32
+		do
+			l_path := a_lib_info.location.name
+
+				-- Extract description
+			l_description := "Library info"
+
+				-- Library name
+			create l_name_item.make_with_text (a_lib_info.name)
+			l_name_item.set_pixmap (conf_pixmaps.new_library_icon)
+			l_name_item.set_tooltip (l_description)
+			l_name_item.align_text_top
+			a_row.set_item (name_column, l_name_item)
+
+				-- Status.
+			nb := 0
+			if attached {ITERABLE [READABLE_STRING_GENERAL]} a_data.info ("classes") as l_classes then
+				create s.make_empty
+				across
+					l_classes as ic
+				loop
+					nb := nb + 1
+					if not s.is_empty then
+						s.append_character (',')
+						s.append_character (' ')
+					end
+					s.append_string_general (ic.item)
+				end
+				create l_classes_txt.make_from_string (conf_interface_names.dialog_search_classes)
+				l_classes_txt.append_character ('=')
+				l_classes_txt.append (s)
+			end
+			create l_item.make_with_text (conf_interface_names.dialog_search_found_n_classes (nb))
+			a_row.set_item (status_column, l_item)
+			l_item.align_text_top
+
+				-- Information
+			create l_information.make_empty
+			l_information.append (conf_interface_names.dialog_create_library_location)
+			l_information.append_character ('=')
+			l_information.append_string_general (l_path)
+			if l_classes_txt /= Void and then not l_classes_txt.is_whitespace then
+				l_information.append ("%N")
+				l_information.append (l_classes_txt)
+			end
+
+			create l_item.make_with_text (l_information)
+			l_item.align_text_top
+			a_row.set_item (info_column, l_item)
+			nb_lines := l_information.occurrences ('%N') + 1
+			if nb_lines > 1 then
+				a_row.set_height (nb_lines * a_row.height)
+			end
+			l_item.align_text_top
 		end
 
 feature -- Widgets		
@@ -359,14 +451,11 @@ feature {NONE} -- Constants
 	name_column: INTEGER = 1
 			-- Index of a column with name.
 
-	void_safety_column: INTEGER = 2
+	status_column: INTEGER = 2
 			-- Index of a column with void-safety status.
 
 	info_column: INTEGER = 3
 			-- Index of a column with a information.
-
---	location_column: INTEGER = 4
---			-- Index of a column with location.
 
 	last_column: INTEGER = 3
 

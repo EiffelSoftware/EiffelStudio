@@ -21,6 +21,7 @@ feature -- Access
 	pattern_has_wildchar: BOOLEAN
 
 	items: HASH_TABLE [ITERABLE [READABLE_STRING_8], LIBRARY_INFO]
+			-- Class names indexed by library information object.
 
 	new_cursor: TABLE_ITERATION_CURSOR [ITERABLE [READABLE_STRING_8], LIBRARY_INFO]
 			-- Fresh cursor associated with current structure

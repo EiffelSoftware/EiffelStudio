@@ -15,7 +15,7 @@ inherit
 			last_group,
 			on_library_selected,
 			on_ok,
-			libraries_manager,
+			search_in_manager, search_by_class_manager,
 			all_search_results
 		end
 
@@ -37,11 +37,16 @@ feature -- Access
 	last_group: CONF_PRECOMPILE
 			-- <Precursor>
 
-	libraries_manager: ES_LIBRARY_PROVIDER_SERVICE
+	search_in_manager: ES_LIBRARY_PROVIDER_SERVICE
 		once
 			create Result.make (2)
 			Result.register (create {ES_PRECOMPILE_LIBRARY_LOCAL_PROVIDER})
 			Result.register (create {ES_PRECOMPILE_LIBRARY_IRON_PROVIDER})
+		end
+
+	search_by_class_manager:  ES_LIBRARY_PROVIDER_SERVICE
+		once
+			create Result.make (0)
 		end
 
 feature {NONE} -- Basic operation

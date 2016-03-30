@@ -371,11 +371,20 @@ feature -- Storage
 		local
 			f: RAW_FILE
 			loc: PATH
+			l_writer: LIBRARY_DATABASE_WRITER
 		do
 			loc := database_location (Void, ctx)
 			if db /= Void then
 				check db.context ~ ctx end
-				(create {LIBRARY_DATABASE_WRITER}).store (db, loc)
+				create l_writer
+				if attached variables as vars then
+					across
+						vars as ic
+					loop
+						l_writer.set_variable (ic.item, ic.key.as_string_32)
+					end
+				end
+				l_writer.store (db, loc)
 			else
 				create f.make_with_path (loc)
 				if f.exists then
@@ -397,6 +406,14 @@ feature -- Storage
 			l_reader: LIBRARY_DATABASE_READER
 		do
 			create l_reader
+			if attached variables as vars then
+				across
+					vars as ic
+				loop
+					l_reader.set_variable (ic.item, ic.key.as_string_32)
+				end
+			end
+
 			l_reader.read (database_location (Void, ctx), ctx)
 			Result := l_reader.last_database
 			l_reader.reset

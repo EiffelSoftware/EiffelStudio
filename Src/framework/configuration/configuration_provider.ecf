@@ -12,6 +12,7 @@
 		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf" readonly="false"/>
 		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf" readonly="false"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
+		<library name="library_index_database" location="$EIFFEL_SRC\tools\library_index\lib\package_database\package_database.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="src" location=".\provider\" recursive="true">

@@ -598,7 +598,7 @@ feature -- Query
 		end
 
 	docs_path: PATH
-			-- Folder contains Eiffel documention.
+			-- Folder contains Eiffel documentation.
 		require
 			is_valid_environment: is_valid_environment
 		once

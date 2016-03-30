@@ -17,6 +17,8 @@ feature {NONE} -- Initialization
 	make (a_count: INTEGER)
 		do
 			create providers.make (a_count)
+			create on_provider_execution_begin_actions
+			create on_provider_execution_end_actions
 		end
 
 feature -- Access
@@ -33,7 +35,7 @@ feature -- Access
 					a_provider_ids as ic
 				loop
 					if attached provider (ic.item) as prov then
-						libs := prov.libraries (a_query, a_target)
+						libs := provider_libraries (prov, a_query, a_target)
 						Result.append (libs)
 					end
 				end
@@ -41,7 +43,7 @@ feature -- Access
 				across
 					providers as ic
 				loop
-					libs := ic.item.libraries (a_query, a_target)
+					libs := provider_libraries (ic.item, a_query, a_target)
 					Result.append (libs)
 				end
 			end
@@ -62,6 +64,34 @@ feature -- Access
 			-- Item sorter.
 		once
 			create Result.make (create {ES_LIBRARY_PROVIDER_ITEM_COMPARATOR})
+		end
+
+feature -- Actions
+
+	on_provider_execution_begin_actions: ACTION_SEQUENCE [TUPLE [ES_LIBRARY_PROVIDER]]
+			-- Actions triggered when entering `libraries' function from the given provider.
+
+	on_provider_execution_end_actions: ACTION_SEQUENCE [TUPLE [ES_LIBRARY_PROVIDER]]
+			-- Actions triggered when exiting `libraries' function from the given provider.	
+
+feature {NONE} -- Implementation
+
+	provider_libraries (a_provider: ES_LIBRARY_PROVIDER; a_query: detachable READABLE_STRING_GENERAL; a_target: CONF_TARGET): LIST [ES_LIBRARY_PROVIDER_ITEM]
+			-- Libraries from `a_provider'.
+		do
+			on_provider_execution_begin (a_provider)
+			Result := a_provider.libraries (a_query, a_target)
+			on_provider_execution_end (a_provider)
+		end
+
+	on_provider_execution_begin (a_provider: ES_LIBRARY_PROVIDER)
+		do
+			on_provider_execution_begin_actions.call ([a_provider])
+		end
+
+	on_provider_execution_end (a_provider: ES_LIBRARY_PROVIDER)
+		do
+			on_provider_execution_end_actions.call ([a_provider])
 		end
 
 feature -- Access

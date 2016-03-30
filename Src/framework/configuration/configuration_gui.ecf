@@ -13,7 +13,7 @@
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf"/>
 		<library name="configuration_parser" location="configuration_parser.ecf" readonly="true"/>
 		<library name="configuration_provider" location="configuration_provider.ecf" readonly="true"/>
-		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria-safe.ecf"/>
+		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\framework\eiffel_identifier\eiffel_identifier.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
@@ -30,6 +30,7 @@
 		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
 		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
+		<library name="package_database" location="$EIFFEL_SRC\tools\library_index\lib\package_database\package_database.ecf" readonly="true"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

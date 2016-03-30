@@ -204,7 +204,9 @@ feature -- Visit
 			t: CONF_TARGET
 		do
 			if is_verbose then
-				print ("  This is not a library.%N")
+				debug
+					print ("  This is not a library.%N")
+				end
 				across
 					a_cfg.targets as ic
 				loop

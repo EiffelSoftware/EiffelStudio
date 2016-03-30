@@ -77,16 +77,12 @@ feature {NONE} -- Initialization
 			create hsp
 			main.extend (hsp)
 			create vb
---			vb.set_padding (layout_constants.default_padding_size)
---			vb.set_border_width (layout_constants.default_border_size)
 
 			hsp.set_first (vb)
 			build_search_box (vb)
 
 			create cl
 			hsp.set_second (cl)
---			main.extend (cl)
---			main.disable_item_expand (cl)
 			selection_cell := cl
 			build_iron_package_box
 			build_library_selection_box
@@ -135,13 +131,14 @@ feature {NONE} -- Initialization
 			-- Build the filter + grid + button.
 		local
 			l_btn: EV_BUTTON
-			vb2, l_padding: EV_VERTICAL_BOX
-			hbf, hb1: EV_HORIZONTAL_BOX
-			l_lbl: EV_LABEL
+			l_opts_vb, vbf, vb2, l_padding: EV_VERTICAL_BOX
+			l_search_hb, hbf, hb1,hb2,hb1cb,hb2cb: EV_HORIZONTAL_BOX
+			l_radio1, l_radio2: EV_RADIO_BUTTON
 			l_filter: like filter
 			l_clear_filter_button: EV_BUTTON
 			l_update_index_button: EV_BUTTON
 			cb: EV_CHECK_BUTTON
+			l_checkboxes: like provider_checkboxes
 		do
 				-- default libraries
 			create vb2
@@ -150,48 +147,9 @@ feature {NONE} -- Initialization
 			vb2.set_padding (layout_constants.small_padding_size)
 			vb2.set_border_width (layout_constants.small_border_size)
 
-			create hb1
-			hb1.set_padding (layout_constants.small_padding_size)
+				-- Search container
+			build_search_options_bar (vb2)
 
-			create l_lbl.make_with_text ("Include")
-			l_lbl.align_text_left
-			hb1.extend (l_lbl)
-			hb1.disable_item_expand (l_lbl)
-
-			create provider_checkboxes.make (libraries_manager.providers.count)
-			across
-				libraries_manager.providers as ic
-			loop
-				create cb.make_with_text (ic.key)
-				cb.enable_select
-				cb.set_tooltip (ic.item.description) --{STRING_32} "Include items from " + ic.key + " provider.")
-				hb1.extend (cb)
-				hb1.disable_item_expand (cb)
-				provider_checkboxes.put (cb, ic.key)
-				cb.select_actions.extend (agent request_update_filter)
-			end
-
-			hb1.extend (create {EV_CELL})
-			create hbf
-			hb1.extend (hbf)
-
-			hbf.extend (create {EV_LABEL}.make_with_text (Names.l_filter))
-			hbf.disable_item_expand (hbf.last)
-			create l_filter
-			filter := l_filter
-			hbf.extend (l_filter)
-			l_filter.change_actions.extend (agent request_update_filter)
-
-			create l_clear_filter_button
-			l_clear_filter_button.select_actions.extend (agent l_filter.remove_text)
-			l_clear_filter_button.set_pixmap (conf_pixmaps.general_remove_icon)
-			l_clear_filter_button.set_tooltip (names.b_reset)
-			hbf.extend (l_clear_filter_button)
-			hbf.disable_item_expand (l_clear_filter_button)
-
-
-			vb2.extend (hb1)
-			vb2.disable_item_expand (hb1)
 
 				-- Create grid
 			create search_results_box.make (target)
@@ -214,7 +172,7 @@ feature {NONE} -- Initialization
 
 			create l_btn
 			l_btn.select_actions.extend (agent on_search_item_selected (Void))
-			l_btn.set_text ("Custom")
+			l_btn.set_text (conf_interface_names.dialog_create_library_custom_location)
 			l_btn.enable_sensitive
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
@@ -240,12 +198,138 @@ feature {NONE} -- Initialization
 			hb1.disable_item_expand (l_btn)
 
 
-			create l_btn.make_with_text_and_action ("Packages", agent launch_iron_tool)
+			create l_btn.make_with_text_and_action (conf_interface_names.dialog_search_library_iron_package_manage_button_label, agent launch_iron_tool)
 			l_btn.set_pixmap (conf_pixmaps.library_iron_package_icon)
-			l_btn.set_tooltip ("Manage IRON packages with the associated IRON tool")
+			l_btn.set_tooltip (conf_interface_names.dialog_search_library_iron_package_manage_button_tooltip)
 			hb1.extend (l_btn)
 			hb1.disable_item_expand (l_btn)
 			layout_constants.set_default_width_for_button (l_btn)
+		end
+
+	build_search_options_bar (a_vertical_container: EV_VERTICAL_BOX)
+			-- Search options bar
+			-- |[ Search in       (*)  abc [x] def [x]  ]| CE |                   |
+			-- |[ Search by class ( )  index [x]        ]| LL |[[ search ][Reset]]|
+
+		local
+			l_btn: EV_BUTTON
+			l_opts_vb, vbf, vb2, l_padding: EV_VERTICAL_BOX
+			l_search_hb, hbf, hb1,hb2,hb1cb,hb2cb: EV_HORIZONTAL_BOX
+			l_radio1, l_radio2: EV_RADIO_BUTTON
+			l_filter: like filter
+			l_clear_filter_button: EV_BUTTON
+			l_update_index_button: EV_BUTTON
+			cb: EV_CHECK_BUTTON
+			l_checkboxes: like provider_checkboxes
+		do
+			create l_search_hb
+			a_vertical_container.extend (l_search_hb)
+			a_vertical_container.disable_item_expand (l_search_hb)
+
+				-- Opts
+			create l_opts_vb
+			l_search_hb.extend (l_opts_vb)
+
+				-- hbf: filter + reset
+			create hbf
+			hbf.extend (create {EV_LABEL}.make_with_text (Names.l_filter))
+			hbf.disable_item_expand (hbf.last)
+			create l_filter
+			filter := l_filter
+			hbf.extend (l_filter)
+			l_filter.change_actions.extend (agent request_update_filter)
+			create l_clear_filter_button
+			l_clear_filter_button.select_actions.extend (agent l_filter.remove_text)
+			l_clear_filter_button.set_pixmap (conf_pixmaps.general_remove_icon)
+			l_clear_filter_button.set_tooltip (names.b_reset)
+			hbf.extend (l_clear_filter_button)
+			hbf.disable_item_expand (l_clear_filter_button)
+
+
+				-- Vertical: filter text field + reset button
+			create vbf
+			vbf.extend (create {EV_CELL})
+			vbf.extend (hbf)
+			vbf.disable_item_expand (hbf)
+
+			l_search_hb.extend (vbf)
+--			l_search_hb.disable_item_expand (vbf)
+
+				-- 2 lines, for search in, and search by class options.
+			create hb1
+			l_opts_vb.extend (hb1)
+			l_opts_vb.disable_item_expand (hb1)
+			create hb2
+			l_opts_vb.extend (hb2)
+			l_opts_vb.disable_item_expand (hb2)
+
+				-- lib providers checkbox list.
+			create l_checkboxes.make (search_in_manager.providers.count + search_by_class_manager.providers.count)
+			provider_checkboxes := l_checkboxes
+
+				-- hb1: Search in
+			if search_in_manager.providers.is_empty then
+				hb1.hide
+			else
+				hb1.set_padding (layout_constants.small_padding_size)
+				create l_radio1.make_with_text (conf_interface_names.dialog_search_library_in)
+				l_radio1.set_tooltip (conf_interface_names.dialog_search_library_in_tooltip)
+				l_radio1.align_text_left
+				hb1.extend (l_radio1)
+				hb1.disable_item_expand (l_radio1)
+				create hb1cb
+				across
+					search_in_manager.providers as ic
+				loop
+					create cb.make_with_text (ic.key)
+					cb.enable_select
+					cb.set_tooltip (ic.item.description)
+					hb1cb.extend (cb)
+					hb1cb.disable_item_expand (cb)
+					l_checkboxes.put (cb, ic.key)
+					cb.select_actions.extend (agent request_update_filter)
+				end
+				hb1.extend (hb1cb)
+			end
+
+				-- hb2: Search by class
+			if search_by_class_manager.providers.is_empty then
+				hb2.hide
+			else
+				hb2.set_padding (layout_constants.small_padding_size)
+				create l_radio2.make_with_text (conf_interface_names.dialog_search_library_by_class)
+				l_radio1.set_tooltip (conf_interface_names.dialog_search_library_by_class_tooltip)
+				l_radio2.align_text_left
+				hb2.extend (l_radio2)
+				hb2.disable_item_expand (l_radio2)
+				create hb2cb
+				across
+					search_by_class_manager.providers as ic
+				loop
+					create cb.make_with_text (ic.key)
+					cb.enable_select
+					cb.set_tooltip (ic.item.description)
+					hb2cb.extend (cb)
+					hb2cb.disable_item_expand (cb)
+					l_checkboxes.put (cb, ic.key)
+					cb.select_actions.extend (agent request_update_filter)
+				end
+				hb2.extend (hb2cb)
+			end
+
+				-- make the 2 radio buttons works together  (in same radio group).
+			hb2.merge_radio_button_groups (hb1)
+
+				-- Enable/disable sensitive on collection of checkboxes, according to selected radio buttons.
+			l_radio1.select_actions.extend (agent enable_search_in_mode)
+			l_radio1.select_actions.extend (agent hb1cb.enable_sensitive)
+			l_radio1.select_actions.extend (agent hb2cb.disable_sensitive)
+			l_radio2.select_actions.extend (agent enable_search_by_class_mode)
+			l_radio2.select_actions.extend (agent hb1cb.disable_sensitive)
+			l_radio2.select_actions.extend (agent hb2cb.enable_sensitive)
+
+				-- Default is "search in .."
+			l_radio1.enable_select
 		end
 
 	build_iron_package_box
@@ -298,6 +382,31 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Update filter
 
+	search_mode: INTEGER
+
+	is_search_in_mode: BOOLEAN
+		do
+			Result := search_mode = search_in_mode
+		end
+
+	is_search_by_class_mode: BOOLEAN
+		do
+			Result := search_mode = search_by_class_mode
+		end
+
+	search_in_mode: INTEGER = 1
+	search_by_class_mode: INTEGER = 2
+
+	enable_search_in_mode
+		do
+			search_mode := search_in_mode
+		end
+
+	enable_search_by_class_mode
+		do
+			search_mode := search_by_class_mode
+		end
+
 	update_filter_timeout: detachable EV_TIMEOUT
 
 	request_update_filter
@@ -331,16 +440,8 @@ feature {NONE} -- Update filter
 		end
 
 	update_filter
-		local
-			l_style: EV_POINTER_STYLE
 		do
-			l_style := pointer_style
-			set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
-
-			search_results_box.set_items (all_search_results (filter_text, provider_ids))
-			search_results_box.update_grid
-
-			set_pointer_style (l_style)
+			populate
 		end
 
 feature {NONE} -- GUI elements
@@ -364,7 +465,7 @@ feature {NONE} -- GUI elements
 	filter: EV_TEXT_FIELD
 			-- Filter.
 
-	filter_text: detachable STRING_32
+	filter_text: STRING_32
 			-- Filter text.
 		do
 			Result := filter.text
@@ -379,7 +480,7 @@ feature {NONE} -- GUI elements
 				across
 					tb as ic
 				loop
-					if ic.item.is_selected then
+					if ic.item.is_sensitive and then ic.item.is_selected then
 						Result.extend (ic.key)
 					end
 				end
@@ -433,16 +534,18 @@ feature {NONE} -- Libraries cache.
 		local
 			nb: INTEGER
 		do
-			across
-				provider_checkboxes as ic
-			loop
-				if ic.item.is_selected then
-					libraries_manager.reset_provider (ic.key, target)
-					nb := nb + 1
+			if attached lib_manager as m then
+				across
+					provider_checkboxes as ic
+				loop
+					if ic.item.is_sensitive and then ic.item.is_selected then
+						m.reset_provider (ic.key, target)
+						nb := nb + 1
+					end
 				end
-			end
-			if nb = 0 then
-				libraries_manager.reset_all (target)
+				if nb = 0 then
+					m.reset_all (target)
+				end
 			end
 			populate
 		end
@@ -499,7 +602,16 @@ feature {NONE} -- Configuration settings for libraries
 
 feature {NONE} -- Access
 
-	libraries_manager: ES_LIBRARY_PROVIDER_SERVICE
+	lib_manager: detachable ES_LIBRARY_PROVIDER_SERVICE
+		do
+			if is_search_by_class_mode then
+				Result := search_by_class_manager
+			elseif is_search_in_mode then
+				Result := search_in_manager
+			end
+		end
+
+	search_in_manager: ES_LIBRARY_PROVIDER_SERVICE
 		once
 			create Result.make (3)
 			Result.register (create {ES_LIBRARY_LOCAL_PROVIDER})
@@ -507,15 +619,21 @@ feature {NONE} -- Access
 			Result.register (create {ES_LIBRARY_IRON_PACKAGE_PROVIDER}.make (create {ES_IRON_SERVICE}))
 		end
 
+	search_by_class_manager: ES_LIBRARY_PROVIDER_SERVICE
+		once
+			create Result.make (1)
+			Result.register (create {ES_LIBRARY_INDEX_PROVIDER})
+		end
+
 	reset_configuration_libraries (a_target: CONF_TARGET)
 		do
-			libraries_manager.reset_provider ({ES_LIBRARY_LOCAL_PROVIDER}.identifier, a_target)
+			search_in_manager.reset_provider ({ES_LIBRARY_LOCAL_PROVIDER}.identifier, a_target)
 		end
 
 	reset_iron_configuration_libraries (a_target: CONF_TARGET)
 		do
-			libraries_manager.reset_provider ({ES_LIBRARY_IRON_PROVIDER}.identifier, a_target)
-			libraries_manager.reset_provider ({ES_LIBRARY_IRON_PACKAGE_PROVIDER}.identifier, a_target)
+			search_in_manager.reset_provider ({ES_LIBRARY_IRON_PROVIDER}.identifier, a_target)
+			search_in_manager.reset_provider ({ES_LIBRARY_IRON_PACKAGE_PROVIDER}.identifier, a_target)
 		end
 
 feature {NONE} -- Action handlers
@@ -555,6 +673,11 @@ feature {NONE} -- Action handlers
 			elseif attached {IRON_PACKAGE} a_search_item.value as l_iron_package then
 				w := iron_package_box
 				on_iron_package_selected (l_iron_package)
+			elseif attached {LIBRARY_INFO} a_search_item.value as l_lib_info then
+				w := library_selection_box
+				on_library_selected (Void)
+				library_widget.set_name (l_lib_info.name)
+				library_widget.set_location (l_lib_info.location.name)
 			else
 				w := library_selection_box
 			end
@@ -611,17 +734,22 @@ feature {NONE} -- Basic operation
 		require
 			provider_ids_void_or_not_empty: a_provider_ids /= Void implies not a_provider_ids.is_empty
 		local
-			libs: LIST [ES_LIBRARY_PROVIDER_ITEM]
+			libs: detachable LIST [ES_LIBRARY_PROVIDER_ITEM]
 		do
-			libs := libraries_manager.libraries (a_filter, target, provider_ids)
-
-			create {ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]} Result.make (libs.count)
-			across
-				libs as ic
-			loop
-				Result.force (ic.item)
+			if attached lib_manager as m then
+				libs := m.libraries (a_filter, target, provider_ids)
 			end
-			sort_search_items (Result)
+			if libs /= Void then
+				create {ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]} Result.make (libs.count)
+				across
+					libs as ic
+				loop
+					Result.force (ic.item)
+				end
+				sort_search_items (Result)
+			else
+				create {ARRAYED_LIST [ES_LIBRARY_PROVIDER_ITEM]} Result.make (0)
+			end
 		end
 
 	populate
@@ -632,9 +760,10 @@ feature {NONE} -- Basic operation
 			retried: BOOLEAN
 			popup: detachable EV_POPUP_WINDOW
 			bb,vb: EV_VERTICAL_BOX
+			lab: EV_LABEL
 		do
 			repopulate_requested := False
-			if not retried then
+			if not retried and attached lib_manager as l_lib_manager then
 				l_style := pointer_style
 				set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 				create popup.make_with_shadow
@@ -645,6 +774,9 @@ feature {NONE} -- Basic operation
 				vb.set_border_width (3 * layout_constants.default_border_size)
 				vb.extend (create {EV_LABEL}.make_with_text (conf_interface_names.dialog_create_searching_please_wait_message))
 
+				create lab.make_with_text ("...")
+				vb.extend (lab)
+
 				popup.extend (bb)
 				popup.set_background_color ((create {EV_STOCK_COLORS}).white)
 				popup.propagate_background_color
@@ -654,9 +786,25 @@ feature {NONE} -- Basic operation
 				popup.refresh_now
 
 
+				l_lib_manager.on_provider_execution_begin_actions.extend (agent (ia_prov: ES_LIBRARY_PROVIDER; ia_lab: EV_LABEL)
+						do
+							ia_lab.set_text ("Process " + ia_prov.identifier + " ...")
+							ia_lab.refresh_now
+						end(?, lab)
+					)
+				l_lib_manager.on_provider_execution_end_actions.extend (agent (ia_prov: ES_LIBRARY_PROVIDER; ia_lab: EV_LABEL)
+						do
+							ia_lab.set_text ("...")
+							ia_lab.refresh_now
+						end(?, lab)
+					)
+
 				l_box := search_results_box
 				l_box.set_items (all_search_results (filter_text, provider_ids))
+
 				l_box.update_grid
+				l_lib_manager.on_provider_execution_begin_actions.wipe_out
+				l_lib_manager.on_provider_execution_end_actions.wipe_out
 			end
 			if popup /= Void then
 				popup.destroy
@@ -678,7 +826,9 @@ feature {NONE} -- Implementation
 
 	sort_search_items (lst: LIST [ES_LIBRARY_PROVIDER_ITEM])
 		do
-			libraries_manager.sort_list (lst)
+			if attached lib_manager as m then
+				m.sort_list (lst)
+			end
 		end
 
 invariant

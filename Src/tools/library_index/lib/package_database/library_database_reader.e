@@ -7,6 +7,52 @@ note
 class
 	LIBRARY_DATABASE_READER
 
+feature -- Access
+
+	set_variable (a_value, a_name: READABLE_STRING_32)
+		local
+			vars: like variables
+		do
+			vars := variables
+			if vars = Void then
+				create vars.make_caseless (1)
+				variables := vars
+			end
+			vars.force (a_value, a_name)
+		end
+
+	variables: detachable STRING_TABLE [READABLE_STRING_32]
+
+	resolved_location (p: PATH): PATH
+			-- Location `p' resolved with `variables'.
+		local
+			s,k: STRING_32
+			i,j,n: INTEGER
+		do
+			Result := p
+			if attached variables as vars then
+				s := p.name
+				i := s.index_of ('$', 1)
+				if i > 1 then
+					from
+						j := i + 1
+						n := s.count
+					until
+						j > n or not (s [j].is_alpha_numeric or s [j] = '_')
+					loop
+						j := j + 1
+					end
+					if j > i then
+						k := s.substring (i + 1 , j - 1)
+						if attached vars.item (k) as l_new then
+							s.replace_substring (l_new, i, j - 1)
+							create Result.make_from_string (s)
+						end
+					end
+				end
+			end
+		end
+
 feature -- Store
 
 	reset
@@ -85,7 +131,6 @@ feature -- Store
 
 	read_context (f: FILE)
 		local
-			i: INTEGER
 			l_line,k,v: STRING
 			done,err: BOOLEAN
 			ctx: LIBRARY_DATABASE_CONTEXT

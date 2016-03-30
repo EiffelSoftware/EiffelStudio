@@ -7,6 +7,45 @@ note
 class
 	LIBRARY_DATABASE_WRITER
 
+feature -- Access
+
+	set_variable (a_value, a_name: READABLE_STRING_32)
+		local
+			vars: like variables
+		do
+			vars := variables
+			if vars = Void then
+				create vars.make_caseless (1)
+				variables := vars
+			end
+			vars.force (a_value, a_name)
+		end
+
+	variables: detachable STRING_TABLE [READABLE_STRING_32]
+
+	adapted_location (p: PATH): PATH
+			-- Location `p' adapted according to `variables'.
+		local
+			s: STRING_32
+			l_done: BOOLEAN
+		do
+			Result := p
+			s := p.name
+			if attached variables as vars then
+				across
+					vars as ic
+				until
+					l_done
+				loop
+					if s.starts_with (ic.item) then
+						l_done := True
+						create Result.make_from_string ({STRING_32} "$" + ic.key)
+						Result := Result.extended (s.tail (s.count - ic.item.count))
+					end
+				end
+			end
+		end
+
 feature -- Store
 
 	store (db: LIBRARY_DATABASE; fn: PATH)
@@ -64,7 +103,7 @@ feature -- Store
 			across
 				db.ecf_files as ic
 			loop
-				f.put_string (ic.item.utf_8_name)
+				f.put_string (adapted_location (ic.item).utf_8_name)
 				f.put_new_line
 			end
 
@@ -85,7 +124,7 @@ feature -- Store
 				f.put_new_line
 
 				f.put_string ("location:")
-				f.put_string (l_info.location.utf_8_name)
+				f.put_string (adapted_location (l_info.location).utf_8_name)
 				f.put_new_line
 
 				f.put_string ("is_application:")

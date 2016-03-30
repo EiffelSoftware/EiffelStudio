@@ -475,7 +475,7 @@ feature -- Form
 			tf.set_label ("Content")
 			if pg /= Void then
 				if attached wdocs_api.wiki_text (pg) as l_wiki_text then
-					tf.set_text_value (l_wiki_text)
+					tf.set_text_value (utf_32_string (l_wiki_text))
 				else
 					add_error_message ("Unable to retrieve related wiki text.")
 				end
@@ -527,6 +527,13 @@ feature -- Form
 			utf: UTF_CONVERTER
 		do
 			Result := utf.utf_32_string_to_utf_8_string_8 (s)
+		end
+
+	utf_32_string (s8: READABLE_STRING_8): STRING_32
+		local
+			utf: UTF_CONVERTER
+		do
+			Result := utf.utf_8_string_8_to_string_32 (s8)
 		end
 
 

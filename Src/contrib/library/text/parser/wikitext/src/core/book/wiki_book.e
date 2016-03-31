@@ -181,13 +181,20 @@ feature -- Access
 			loop
 				Result := ic.item
 				if attached Result.metadata (a_metadata_name) as md then
-					if is_caseless and a_metadata_value.same_string (md) then
-							-- Found
-					elseif not is_caseless and a_metadata_value.is_case_insensitive_equal (md) then
+					if is_caseless then
+						if a_metadata_value.is_case_insensitive_equal (md) then
 							-- Found caseless
+						else
+							Result := Void
+						end
 					else
-						Result := Void
-					end
+						check is_not_caseless: not is_caseless end
+						if a_metadata_value.same_string (md) then
+							-- Found case sensitive.
+						else
+							Result := Void
+						end
+					end					
 				else
 					Result := Void
 				end

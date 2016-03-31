@@ -223,7 +223,8 @@ feature -- Access
 		do
 			Result := storage.page_by_metadata (a_metadataname, a_metadata_value, a_bookid, is_caseless)
 			if Result = Void and a_bookid /= Void then
-				Result := page_by_metadata (a_metadataname, a_metadata_value, Void, True)
+					-- Check in all books.
+				Result := page_by_metadata (a_metadataname, a_metadata_value, Void, is_caseless)
 			end
 		end
 

@@ -425,6 +425,62 @@ feature -- Factory
 			Result := manager (Void).new_wiki_page (utf.utf_32_string_to_utf_8_string_8 (a_title), a_parent_key)
 		end
 
+	delete_wiki_page (a_page: like new_wiki_page; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
+			-- Delete page `a_page' located at `a_path' or inside folder `a_path' if `a_path' is a folder.
+		local
+			p,p_data: detachable PATH
+			fn: STRING
+			wut: WSF_FILE_UTILITIES [RAW_FILE]
+			l_changelist: SVN_CHANGELIST
+		do
+			reset_error
+			p := a_path
+			if p = Void then
+				p := a_page.path
+			else
+				if attached p.extension as ext and then ext.is_case_insensitive_equal_general ("wiki") then
+						-- Wiki file location.
+				else
+						-- A folder location.
+					create wut
+					fn := wut.safe_filename (a_page.title)
+					p := p.extended (fn).appended_with_extension ("wiki")
+				end
+			end
+			if p /= Void then
+				if (create {FILE_UTILITIES}).file_path_exists (p) then
+					create l_changelist.make_with_path (p)
+					svn_delete (p)
+					if not has_error then
+						p_data := p.appended_with_extension ("data")
+						if (create {FILE_UTILITIES}).file_path_exists (p_data) then
+							l_changelist.extend_path (p_data)
+							svn_delete (p_data)
+						end
+					end
+
+				end
+				if not has_error and l_changelist /= Void then
+					if a_context /= Void then
+						svn_commit (l_changelist, a_context.username, a_context.log)
+					else
+						svn_commit (l_changelist, Void, "Delete wiki page %"" + a_page.title + "%".")
+					end
+					if not has_error then
+						svn_update (documentation_dir.extended (a_manager.version_id))
+						cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, a_page).delete
+						cache_for_book_cms_menu (a_manager.version_id, a_book_id).delete
+						if
+							attached a_manager.book (a_book_id) as wb and then
+							attached wb.page_by_key (a_page.parent_key) as l_parent_page
+						then
+							cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, l_parent_page).delete
+						end
+					end
+				end
+			end
+		end
+
 	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
@@ -667,6 +723,23 @@ feature -- Subversion helpers
 			if attached svn.update (p, Void, opts) as res then
 				if res.failed then
 					error_handler.add_custom_error (1, "svn update failed", res.message)
+				end
+			end
+		end
+
+	svn_delete (p: PATH)
+			-- Svn delete node at `p'.
+		local
+			svn: SVN
+			opts: detachable SVN_OPTIONS
+		do
+			error_handler.reset
+			svn := new_svn
+			create opts
+			opts.set_parameters ("--force")
+			if attached svn.delete (p, opts) as res then
+				if res.failed then
+					error_handler.add_custom_error (1, "svn delete failed", res.message)
 				end
 			end
 		end

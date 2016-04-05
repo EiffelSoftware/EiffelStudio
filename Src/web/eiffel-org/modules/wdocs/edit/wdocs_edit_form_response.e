@@ -44,11 +44,7 @@ feature -- Execution
 
 	wiki_page_from_request: detachable WIKI_BOOK_PAGE
 		do
-			if
-				attached wiki_page_info_from_request as pg_info
-			then
-				Result := pg_info.page
-			end
+			Result := wdocs_module.wikipage_from_request (request)
 		end
 
 	process
@@ -80,7 +76,7 @@ feature -- Execution
 			end
 			if
 				location.ends_with_general ("/edit") and then
-				has_permission ("edit wdocs page")
+				has_permission ({WDOCS_EDIT_MODULE}.perm_edit_wdocs_page)
 			then
 				if pg /= Void then
 					set_title (formatted_string (translation ("Edit %"$1%"", Void), [pg.title]))
@@ -128,7 +124,7 @@ feature -- Execution
 				end
 			elseif
 				location.ends_with_general ("/add-child") and then
-				has_permission ("create wdocs page") and then
+				has_permission ({WDOCS_EDIT_MODULE}.perm_create_wdocs_page) and then
 				l_bookid /= Void and then not l_bookid.is_empty -- FIXME: remove and handle the new Book creation.
 			then
 --				if l_bookid = Void or else l_bookid.is_empty then

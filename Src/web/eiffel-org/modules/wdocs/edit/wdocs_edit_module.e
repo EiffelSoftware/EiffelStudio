@@ -65,7 +65,11 @@ feature -- Router
 --			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 
-			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
+			create h.make (agent handle_wikipage_deletion (a_api, ?, ?))
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
+
+--			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
 --			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 
@@ -81,9 +85,9 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.force ("admin wdocs")
-			Result.force ("edit wdocs page")
-			Result.force ("create wdocs page")
-			Result.force ("delete wdocs page")
+			Result.force (perm_edit_wdocs_page)
+			Result.force (perm_create_wdocs_page)
+			Result.force (perm_delete_wdocs_page)
 
 			Result.force ("edit any wdocs page")
 			Result.force ("delete any wdocs page")
@@ -92,6 +96,10 @@ feature -- Access
 
 			Result.force ("clear wdocs cache")
 		end
+
+	perm_edit_wdocs_page: STRING = "edit wdocs page"
+	perm_create_wdocs_page: STRING = "create wdocs page"
+	perm_delete_wdocs_page: STRING = "delete wdocs page"
 
 feature -- Helper
 
@@ -141,6 +149,62 @@ feature -- Handlers
 			else
 				check has_wdocs_api: False end
 				create {INTERNAL_SERVER_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.execute
+		end
+
+	handle_wikipage_deletion (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			pg: detachable WIKI_BOOK_PAGE
+			r: CMS_RESPONSE
+			f: CMS_FORM
+			but: WSF_FORM_SUBMIT_INPUT
+		do
+			if api.has_permission (perm_delete_wdocs_page) then
+				if attached wdocs_module.wikipage_data_from_request (req) as l_info then
+					if attached wdocs_api as l_api then
+						pg := l_info.page
+
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						create f.make (req.percent_encoded_path_info, "wdocs_page_delete_form")
+						create but.make ("confirm")
+						but.set_label ("You are about to delete page " + pg.title + " ... (no undo!)")
+						but.set_text_value ("DELETE")
+						f.extend (but)
+						f.set_method_post
+
+						if req.is_get_request_method then
+							r.set_main_content (f.to_html (r.wsf_theme))
+						elseif req.is_post_request_method then
+							f.process (r)
+							if
+								attached f.last_data as fd and then
+								fd.is_valid
+							then
+								l_api.delete_wiki_page (pg, pg.path, l_info.bookid, l_info.manager, Void)
+								if l_api.has_error then
+									r.add_error_message ("Page %"" + pg.title + "%" was NOT deleted due to error!!!")
+									r.set_main_content (f.to_html (r.wsf_theme))
+								else
+									r.add_notice_message ("Page %"" + pg.title + "%" was deleted successfully!")
+									r.set_redirection ("documentation") -- FIXME
+								end
+							else
+								r.set_main_content (f.to_html (r.wsf_theme))
+							end
+						else
+							create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+						end
+					else
+						check has_wdocs_api: False end
+						create {INTERNAL_SERVER_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					end
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+
+				end
+			else
+				create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 			r.execute
 		end
@@ -204,11 +268,14 @@ feature -- Hooks configuration
 					loc := l_wdocs_response.location
 				end
 
-				if l_wdocs_response.has_permission ("edit wdocs page") then
+				if l_wdocs_response.has_permission (perm_edit_wdocs_page) then
 					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", loc + "/edit"))
 					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", loc + "/source"))
 				end
-				if l_wdocs_response.has_permission ("create wdocs page") then
+				if l_wdocs_response.has_permission (perm_delete_wdocs_page) then
+					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Delete", loc + "/delete"))
+				end
+				if l_wdocs_response.has_permission (perm_create_wdocs_page) then
 					if l_wdocs_response.book_name.is_empty then
 							-- FIXME: add a link to create new book!
 --						if l_wdocs_response.has_permission ("create wdocs book") then

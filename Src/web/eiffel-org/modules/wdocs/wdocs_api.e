@@ -431,7 +431,7 @@ feature -- Factory
 			p,p_data: detachable PATH
 			fn: STRING
 			wut: WSF_FILE_UTILITIES [RAW_FILE]
-			l_changelist: SVN_CHANGELIST
+			l_changelist: detachable SVN_CHANGELIST
 		do
 			reset_error
 			p := a_path

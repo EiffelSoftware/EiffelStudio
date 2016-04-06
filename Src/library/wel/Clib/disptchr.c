@@ -1,14 +1,14 @@
 /*
 indexing
 	description: "Functions used by the class WEL_DISPATCHER."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -197,14 +197,37 @@ void wel_release_dispatcher_object()
 
 void wel_set_dispatcher_pointer(EIF_POINTER _addr_)
 {
-	WGTCX
-	dispatcher = (EIF_OBJECT) _addr_;	
+	if (_addr_) {
+		WGTCX
+		dispatcher = (EIF_OBJECT) _addr_;
+	}
+	else {
+		/*
+		 * Avoid allocating new thread context when it does not exist and _addr_ is 0.
+		 * It is possible that the context has been freed when the corresponding thread has been terminated
+		 * and the current call is from a dispose routine when allocating a new context is pointless.
+		 */
+		wel_global_context_t *wel_globals = wel_thr_context_opt ();
+		if (wel_globals) {
+			dispatcher = (EIF_OBJECT) _addr_;
+		}
+	}
 }
 
 EIF_POINTER wel_dispatcher_pointer()
 {
-	WGTCX
-	return (EIF_POINTER) dispatcher;
+	/*
+	 * Avoid allocating new thread context when it does not exist.
+	 * It is possible that the context has been freed when the corresponding thread has been terminated
+	 * and the current call is from a dispose routine when allocating a new context is pointless.
+	 */
+	wel_global_context_t *wel_globals = wel_thr_context_opt ();
+	if (wel_globals) {
+		return (EIF_POINTER) dispatcher;
+	}
+	else {
+		return (EIF_POINTER) 0;
+	}
 }
 
 void wel_set_stddlg_dispatcher_object(EIF_OBJECT _addr_)

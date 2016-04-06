@@ -2,7 +2,7 @@
 	description:	"SCOOP constants and features needed by the runtime."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 2010-2015, Eiffel Software."
+	copyright:	"Copyright (c) 2010-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -52,6 +52,18 @@ extern "C" {
 /* Setup and teardown of the SCOOP subsystem. */
 rt_shared void rt_scoop_setup (int is_scoop_enabled);
 rt_shared void rt_scoop_reclaim (void);
+
+#ifdef EIF_WINDOWS
+/*
+doc:	<routine name="rt_scoop_set_wel_per_thread_data" return_type="void" export="shared">
+doc:		<summary>Set 'stored_wel_per_thread_data' associated with the processor of ID 'pid' to the specified value. </summary>
+doc:		<param name="data" type="void*">The new value of 'stored_wel_per_thread_data'</param>
+doc:		<param name="pid" type="EIF_SCP_PID">The processor to update the data.</param>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:	</routine>
+*/
+rt_shared void rt_scoop_set_wel_per_thread_data (void * data, EIF_SCP_PID pid);
+#endif
 
 #ifdef __cplusplus
 }

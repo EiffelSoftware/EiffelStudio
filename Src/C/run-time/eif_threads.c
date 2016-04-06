@@ -2,7 +2,7 @@
 	description: "Thread management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,6 +65,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_cecil.h"
 #include "rt_debug.h"
 #include "rt_main.h"
+#include "rt_scoop.h"
 #include "eif_error.h"
 #ifdef BOEHM_GC
 #include "rt_boehm.h"
@@ -1827,6 +1828,31 @@ rt_public EIF_POINTER eif_thr_last_thread(void) {
 	return (EIF_POINTER) last_child;
 }
 
+#ifdef EIF_WINDOWS
+/*
+ * Support for Windows GUI that requires that all GUI operations are performed in the same thread.
+ *
+ * Allocate new structure of the given size `size', assign it to `wel_per_thread_data' and
+ * to the corresponding field of SCOOP run-time part.
+ *
+ * Return newly allocated memory block. It will be freed automatically on thread termination.
+ */
+rt_public void* eif_thr_create_wel_per_thread_data (size_t size) {
+	
+	void * result;
+
+	EIF_GET_CONTEXT
+
+	result = eif_calloc(1, size);
+	if (!result) {
+		eif_thr_panic("No more memory for thread context");
+	}
+	eif_globals->wel_per_thread_data = result;
+	rt_scoop_set_wel_per_thread_data (result, eif_globals -> scoop_processor_id);
+
+	return result;
+}
+#endif
 
 /*
  * Functions for mutex management:

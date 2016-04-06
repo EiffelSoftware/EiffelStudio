@@ -65,13 +65,13 @@ feature -- Router
 --			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 
-			create h.make (agent handle_wikipage_deletion (a_api, ?, ?))
---			a_router.handle ("/doc/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
-			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
-
 --			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
 --			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
+
+			create h.make (agent handle_wikipage_deletion (a_api, ?, ?))
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
+			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
 
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
 --			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
@@ -254,6 +254,7 @@ feature -- Hooks configuration
 		local
 			loc: STRING
 			l_version: detachable READABLE_STRING_GENERAL
+			lnk: CMS_LOCAL_LINK
 		do
 			if
 				attached {WDOCS_PAGE_CMS_RESPONSE} a_response as l_wdocs_response
@@ -269,11 +270,17 @@ feature -- Hooks configuration
 				end
 
 				if l_wdocs_response.has_permission (perm_edit_wdocs_page) then
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Edit", loc + "/edit"))
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Source", loc + "/source"))
+					create lnk.make ("Edit", loc + "/edit")
+					lnk.set_weight (5)
+					a_menu_system.primary_tabs.extend (lnk)
+					create lnk.make ("Source", loc + "/source")
+					lnk.set_weight (4)
+					a_menu_system.primary_tabs.extend (lnk)
 				end
 				if l_wdocs_response.has_permission (perm_delete_wdocs_page) then
-					a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Delete", loc + "/delete"))
+					create lnk.make ("Delete", loc + "/delete")
+					lnk.set_weight (10)
+					a_menu_system.primary_tabs.extend (lnk)
 				end
 				if l_wdocs_response.has_permission (perm_create_wdocs_page) then
 					if l_wdocs_response.book_name.is_empty then
@@ -282,7 +289,9 @@ feature -- Hooks configuration
 --							a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Create Book", loc + "/add-child"))
 --						end
 					else
-						a_menu_system.primary_tabs.extend (create {CMS_LOCAL_LINK}.make ("Add Child", loc + "/add-child"))
+						create lnk.make ("Add Child", loc + "/add-child")
+						lnk.set_weight (6)
+						a_menu_system.primary_tabs.extend (lnk)
 					end
 				end
 			end

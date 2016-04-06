@@ -91,7 +91,7 @@ feature {NONE} -- Creation
 		end
 
 	make_15_11
-			-- Initialize options to the defaults of 14.05.
+			-- Initialize options to the defaults of 15.11.
 		do
 			create syntax.make (syntax_name, syntax_index_standard)
 			create void_safety.make (void_safety_name, void_safety_index_all)
@@ -769,7 +769,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

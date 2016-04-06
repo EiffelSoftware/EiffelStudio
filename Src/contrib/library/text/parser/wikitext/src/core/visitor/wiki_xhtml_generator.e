@@ -727,10 +727,19 @@ feature -- Tag
 				a_code.text.process (Current)
 				set_html_encoded_output (b)
 				output ("</" + a_code.tag_name + ">")
-				if not l_is_inline then
+				if not l_is_inline and is_newline_required_after_code_block then
 					set_next_output_require_newline
 				end
 			end
+		end
+
+	is_newline_required_after_code_block: BOOLEAN
+			-- Is newline required after a code block?
+			--		True by default (for backward compatibility),
+			--		but as this can be done via css style, 
+			-- 		one can redefine this function.
+		do
+			Result := True
 		end
 
 	visit_tag (a_tag: WIKI_TAG)

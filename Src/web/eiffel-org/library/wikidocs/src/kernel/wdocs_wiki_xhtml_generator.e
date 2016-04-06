@@ -14,7 +14,8 @@ inherit
 			page_title,
 			visit_structure,
 			visit_link,
-			visit_missing_link
+			visit_missing_link,
+			is_newline_required_after_code_block
 		end
 
 create
@@ -112,6 +113,12 @@ feature -- Page processing
 		do
 			Precursor (a_link)
 		end
+
+feature -- Settings
+
+	is_newline_required_after_code_block: BOOLEAN = False
+		-- <Precursor>
+		-- should be handled by css style.
 
 feature -- Helper
 

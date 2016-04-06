@@ -51,6 +51,8 @@ feature -- Access URI
 			utf: UTF_CONVERTER
 			wvis: WDOCS_WIKI_XHTML_GENERATOR
 			l_title, l_parent_key: detachable READABLE_STRING_8
+			l_source: READABLE_STRING_8
+			s: STRING
 			l_map: STRING
 			vid: STRING
 		do
@@ -68,10 +70,12 @@ feature -- Access URI
 			end
 			l_preview_pg := a_manager.new_wiki_page (l_title, l_parent_key)
 			if attached {READABLE_STRING_8} a_source as l_utf_8_src then
-				l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_utf_8_src))
+				l_source := l_utf_8_src
 			else
-				l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (utf.utf_32_string_to_utf_8_string_8 (a_source)))
+				l_source := utf.utf_32_string_to_utf_8_string_8 (a_source)
 			end
+			l_preview_pg.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (l_source))
+			
 			create l_xhtml.make_empty
 			create wvis.make (l_xhtml)
 			wvis.set_link_resolver (a_manager)

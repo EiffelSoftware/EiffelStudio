@@ -276,7 +276,7 @@ feature -- Book processing
 		do
 			current_page := a_page
 			if attached a_page.structure as st then
-				output ("<div>")
+				output ("<div class=%"wikipage%">")
 				if is_auto_toc_enabled then
 					output_toc (Void, True)
 				end

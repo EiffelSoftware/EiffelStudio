@@ -232,6 +232,7 @@ feature -- Form
 			l_title: detachable READABLE_STRING_32
 			l_source: detachable READABLE_STRING_32
 			l_xhtml: READABLE_STRING_8
+			s: STRING
 		do
 --			if fd.item ("bookid") = Void then
 --				fd.report_error ("Missing book name information!")
@@ -250,6 +251,10 @@ feature -- Form
 				l_title := fd.string_item ("title")
 				l_source := fd.string_item ("source")
 				if l_title /= Void and l_source /= Void then
+						-- FIXME: workaround to handle CRNL as NL, as we had such issue.
+					create s.make_from_string (l_source)
+					s.prune_all ('%R')
+					l_source := s
 					l_xhtml := wiki_to_xhtml (wdocs_api, l_title, l_source, pg, a_manager)
 					b.append ("<strong>Title:</strong><div class=%"title%">" + html_encoded (l_title) + "</div>")
 
@@ -292,6 +297,13 @@ feature -- Form
 				l_title_value := safe_utf_8_string (fd.string_item ("title"))
 				l_link_title_value := safe_utf_8_string (fd.string_item ("link_title"))
 				l_source_value := safe_utf_8_string (fd.string_item ("source"))
+				if l_source_value /= Void then
+					create s.make_from_string (l_source_value)
+					s.prune_all ('%R')
+					l_source_value := s
+				else
+					l_source_value := Void
+				end
 
 				if location.ends_with_general ("/add-child") then
 					if l_title_value /= Void and a_bookid /= Void then

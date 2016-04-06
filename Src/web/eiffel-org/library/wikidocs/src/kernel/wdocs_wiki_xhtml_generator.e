@@ -63,7 +63,7 @@ feature -- Page processing
 				attached current_page as pg and then
 				attached pg.metadata ("uuid") as l_uuid
 			then
-				output ("<div class%"uuid%">")
+				output ("<div class=%"uuid%">")
 				output (utf.utf_32_string_to_utf_8_string_8 (l_uuid))
 				output ("</div>")
 			end

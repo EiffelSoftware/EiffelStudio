@@ -3,7 +3,7 @@
 			  <header class="head">
 			  <div id="breadcrumb">
 					<span class="ico"><img src="{$site_url/}theme/images/ico-document.png" width="21" height="21" alt="Documentation"></span>
-					<a href="{$site_url/}/book/{$wiki_book_name/}">{$wiki_book_name/}</a>
+					<a href="{$site_url/}doc/{$wiki_book_name/}">{$wiki_book_name/}</a>
 					{if isset="$wiki_page_name"}:: {$wiki_page_name/}{/if}
 			  </div>
 			  </header>

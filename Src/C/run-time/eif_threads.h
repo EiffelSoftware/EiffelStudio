@@ -1,8 +1,8 @@
 /*
-	description: "Thread management routines."
+	description:	"Thread management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -195,6 +195,10 @@ RT_LNK EIF_INTEGER eif_thr_min_priority(void);
 RT_LNK EIF_INTEGER eif_thr_max_priority(void);
 RT_LNK EIF_POINTER eif_thr_thread_id(void);
 RT_LNK EIF_POINTER eif_thr_last_thread(void);
+
+#ifdef EIF_WINDOWS
+RT_LNK void* eif_thr_create_wel_per_thread_data (size_t);
+#endif
 
 /*--------------------------*/
 /*---  Mutex operations  ---*/

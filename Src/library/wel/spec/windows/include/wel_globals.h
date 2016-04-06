@@ -1,14 +1,14 @@
 /*
 indexing
 description: "WEL: library of reusable components for Windows."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -99,19 +99,20 @@ typedef struct tag_wel_globals
 } wel_global_context_t;
 
 	/*
-	 * Definition of the macros WEL_GET_CONTEXT and WEL_END_GET_CONTEXT
+	 * Definition of the macros WGTCX and WEDCX
 	 *
-	 * WEL_GET_CONTEXT used to contain an opening curly brace `{'. It is
+	 * WGTCX used to contain an opening curly brace `{'. It is
 	 * now changed in order not to need it anymore: it is part of the local
 	 * variables declarations.
-	 * WEL_END_GET_CONTEXT is now empty
+	 * WEDCX is now empty
+	 *
 	 */
 
 extern wel_global_context_t * wel_thr_context(void);
+extern wel_global_context_t * wel_thr_context_opt (void);
 
 #define WGTCX wel_global_context_t *wel_globals = wel_thr_context();
-#define WEDCX 
-
+#define WEDCX
 
 /* disptchr.c */
 

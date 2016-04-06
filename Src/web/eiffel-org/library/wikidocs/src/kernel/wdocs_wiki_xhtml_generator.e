@@ -12,7 +12,7 @@ inherit
 		redefine
 			make,
 			page_title,
-			visit_structure,
+			visit_page,
 			visit_link,
 			visit_missing_link,
 			is_newline_required_after_code_block
@@ -54,19 +54,28 @@ feature -- Page processing
 			overridden_title := Void
 		end
 
-	visit_structure (a_structure: WIKI_STRUCTURE)
+	visit_page (a_page: WIKI_PAGE)
 		local
 			utf: UTF_CONVERTER
 		do
-			Precursor (a_structure)
-			if 
-				attached current_page as pg and then
-				attached pg.metadata ("uuid") as l_uuid
-			then
-				output ("<div class=%"uuid%">")
-				output (utf.utf_32_string_to_utf_8_string_8 (l_uuid))
-				output ("</div>")
+			current_page := a_page
+			if attached a_page.structure as st then
+				output ("<div class=%"wikipage%">")
+				if is_auto_toc_enabled then
+					output_toc (Void, True)
+				end
+				st.process (Current)
+
+				if 
+					attached a_page.metadata ("uuid") as l_uuid
+				then
+					output ("<div class=%"uuid%">")
+					output (utf.utf_32_string_to_utf_8_string_8 (l_uuid))
+					output ("</div>")
+				end
+				output ("</div>%N")
 			end
+			current_page := Void
 		end		
 
 	visit_link (a_link: WIKI_LINK)

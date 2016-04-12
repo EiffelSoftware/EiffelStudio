@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Visitor Pattern"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +9,7 @@ class
 	DP_VISITOR [G -> detachable ANY]
 
 inherit
-	DP_HELPER
+	ANY
 		redefine
 			default_create
 		end
@@ -147,22 +146,20 @@ feature{NONE} -- Implementation
 			a_action_attached: a_action /= Void
 			a_action_valid: a_action.open_count = 1
 		local
+			t: TYPE [detachable ANY]
 			l_type_id: INTEGER
 			l_item_type_id: INTEGER
-			l_arg_type_code: INTEGER
-			l_type_code_str: STRING
 			l_internal: INTERNAL
 			l_type_ids: like action_type_table
 		do
-			l_type_code_str := eif_gen_typecode_str ($a_action)
-			l_arg_type_code := l_type_code_str.item (2).code
+			t := a_action.generating_type.generic_parameter_type (1)
 
-			if l_arg_type_code /= {TUPLE}.reference_code then
+			if t.is_expanded then
 				expanded_items.force_last (a_action)
-			elseif l_arg_type_code = {TUPLE}.reference_code then
+			else
 					-- Retrieve type information.				
 				create l_internal
-				l_type_id := l_internal.generic_dynamic_type_of_type (l_internal.generic_dynamic_type (a_action, 2), 1)
+				l_type_id := t.type_id
 				sorter.force (a_action)
 				l_type_ids := action_type_table
 
@@ -223,9 +220,9 @@ invariant
 	catch_all_agent_attached: catch_all_agent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -236,22 +233,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

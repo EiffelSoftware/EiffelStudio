@@ -451,14 +451,11 @@ feature{NONE} -- Implementation/Actions
 		local
 			l_row: EV_GRID_ROW
 			l_coefficient_item: EV_GRID_EDITABLE_ITEM
-			l_uuid: UUID
 		do
 			l_row := a_item.row
 			l_coefficient_item ?= l_row.item (1)
-			l_uuid ?= a_item.data
 			check
 				l_coefficient_item /= Void
-				l_uuid /= Void
 			end
 			load_metric_in_row (a_item.text, l_coefficient_item.text, l_row)
 			metric_grid.remove_selection

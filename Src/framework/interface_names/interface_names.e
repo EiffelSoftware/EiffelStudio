@@ -147,7 +147,7 @@ feature -- Button texts
 	b_Redo: STRING_32							do Result := locale.translation("Redo")	end
 	b_Create_new_cluster: STRING_32				do Result := locale.translation("Add Cluster")	end
 	b_Create_new_library: STRING_32				do Result := locale.translation("Add Library")	end
-	b_Create_new_assembly: STRING_32				do Result := locale.translation("Add Assembly")	end
+	b_Create_new_assembly: STRING_32			do Result := locale.translation("Add Assembly")	end
 	b_Create_new_precompile: STRING_32			do Result := locale.translation("Add Precompile")	end
 	b_Create_new_class: STRING_32				do Result := locale.translation("New Class")	end
 	b_Create_new_feature: STRING_32				do Result := locale.translation("New Feature")	end
@@ -447,7 +447,7 @@ feature -- Accelerator, focus label and menu name
 
 	f_Create_new_cluster: STRING_32		do Result := locale.translation("Add a cluster")	end
 	f_Create_new_library: STRING_32		do Result := locale.translation("Add a library")	end
-	f_Create_new_assembly: STRING_32		do Result := locale.translation("Add an assembly")	end
+	f_Create_new_assembly: STRING_32	do Result := locale.translation("Add an assembly")	end
 	f_Create_new_precompile: STRING_32 	do Result := locale.translation("Add a precompile")	end
 	f_Create_new_class: STRING_32		do Result := locale.translation("Add a new class")	end
 	f_Create_new_feature: STRING_32		do Result := locale.translation("Add a new feature")	end
@@ -673,6 +673,8 @@ feature -- Accelerator, focus label and menu name
 	l_replace_comments: STRING_32		do Result := locale.translation("Replace Name in Comments")	end
 	l_replace_strings: STRING_32			do Result := locale.translation("Replace Name in Strings")	end
 	l_allow_duplicate_name: STRING_32	do Result := locale.translation ("Reuse existing name") end
+	f_allow_duplicate_feature_name: STRING_32	do Result := locale.translation ("Allow two or more features with same name during refactoring%N(this option could be used to help merging two features).") end
+	f_allow_duplicate_class_name: STRING_32		do Result := locale.translation ("Allow two or more classes with same name during refactoring%N(this option could be used to help merging two classes).") end
 	m_Recent_project: STRING_32			do Result := locale.translation("&Recent Projects")	end
 	m_Redo: STRING_32					do Result := locale.translation("Re&do%TCtrl+Y")	end
 	f_Redo: STRING_32					do Result := locale.translation("Redo (Ctrl+Y)")	end
@@ -908,7 +910,7 @@ feature -- Toggles
 	f_show_assigner: STRING_32		do Result := locale.translation("Show Assigner Command Name")	end
 	f_show_signature: STRING_32		do Result := locale.translation("Show Signature")	end
 	l_toggle_alias: STRING_32		do Result := locale.translation("Toggle visibility of feature alias name")	end
-	l_toggle_assigner: STRING_32		do Result := locale.translation("Toggle visibility of assigner command name")	end
+	l_toggle_assigner: STRING_32	do Result := locale.translation("Toggle visibility of assigner command name")	end
 	l_toggle_signature: STRING_32	do Result := locale.translation("Toggle visibility of feature signature")	end
 
 feature -- Menu mnenomics
@@ -922,13 +924,13 @@ feature -- Menu mnenomics
 	m_Create_new_cluster: STRING_32		do Result := locale.translation("Add C&luster...")	end
 	m_Create_new_library: STRING_32		do Result := locale.translation("Add L&ibrary...")	end
 	m_Create_new_precompile: STRING_32	do Result := locale.translation("Add &Precompile")	end
-	m_Create_new_assembly: STRING_32		do Result := locale.translation("Add &Assembly...")	end
+	m_Create_new_assembly: STRING_32	do Result := locale.translation("Add &Assembly...")	end
 	m_Create_new_class: STRING_32		do Result := locale.translation("&New Class...")	end
 	m_Create_new_feature: STRING_32		do Result := locale.translation("New Fea&ture...")	end
 	m_Debug: STRING_32					do Result := locale.translation("E&xecution")	end
 	m_Disable_this_bkpt: STRING_32		do Result := locale.translation("&Disable This Breakpoint")	end
 	m_Display_error_help: STRING_32		do Result := locale.translation("Compilation Error &Wizard...")	end
-	m_Display_system_info: STRING_32		do Result := locale.translation("S&ystem Info")	end
+	m_Display_system_info: STRING_32	do Result := locale.translation("S&ystem Info")	end
 	m_Edit: STRING_32					do Result := locale.translation("&Edit")	end
 	m_Edit_condition: STRING_32			do Result := locale.translation("E&dit Condition")	end
 	m_Edit_exported_feature: STRING_32	do Result := locale.translation("&Edit...")	end
@@ -937,7 +939,7 @@ feature -- Menu mnenomics
 	m_Favorites: STRING_32				do Result := locale.translation("Fav&orites")	end
 	m_Feature_info: STRING_32			do Result := locale.translation("Feat&ure Views")	end
 	m_File: STRING_32					do Result := locale.translation("&File")	end
-	m_Formats: STRING_32					do Result := locale.translation("F&ormat")	end
+	m_Formats: STRING_32				do Result := locale.translation("F&ormat")	end
 	m_Formatter_separators: ARRAY [STRING_32]
 		do
 			Result := << locale.translation("Text Generators"), locale.translation("Class Relations"),

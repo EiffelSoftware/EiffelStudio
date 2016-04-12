@@ -95,6 +95,7 @@ feature {NONE} -- Initialization
 			fvb.extend (strings_button)
 			fvb.disable_item_expand (strings_button)
 			create allow_duplicate_button.make_with_text (interface_names.l_allow_duplicate_name)
+			allow_duplicate_button.set_tooltip (interface_names.f_allow_duplicate_feature_name)
 			fvb.extend (allow_duplicate_button)
 			fvb.disable_item_expand (allow_duplicate_button)
 			fvb.extend (create {EV_CELL})
@@ -224,7 +225,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

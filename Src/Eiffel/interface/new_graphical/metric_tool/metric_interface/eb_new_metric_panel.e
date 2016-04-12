@@ -420,54 +420,34 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implemetation
 			l_submenu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 			l_unit_list: LIST [TUPLE [l_unit: QL_METRIC_UNIT; l_pixmap: EV_PIXMAP]]
-			l_type: INTEGER_REF
-			l_new_menu: like new_metric_menu
 		do
 			if new_metric_menu_internal = Void or a_context_menu then
+				create Result
 				l_unit_list := unit_list (False)
 
-				create l_new_menu
 				create l_submenu.make_with_text (displayed_name (metric_names.l_basic_metric))
-				l_submenu.set_data (basic_metric_type)
 				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_basic_icon)
-				l_new_menu.extend (l_submenu)
+				populate_from_unit_list (l_unit_list, a_context_menu, basic_metric_type, l_submenu)
+				Result.extend (l_submenu)
 
 				create l_submenu.make_with_text (displayed_name (metric_names.l_linear_metric))
-				l_submenu.set_data (linear_metric_type)
 				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_linear_icon)
-				l_new_menu.extend (l_submenu)
+				populate_from_unit_list (l_unit_list, a_context_menu, linear_metric_type, l_submenu)
+				Result.extend (l_submenu)
 
-				from
-					l_new_menu.start
-				until
-					l_new_menu.index > 2
-				loop
-					l_type ?= l_new_menu.item.data
-					from
-						l_unit_list.start
-					until
-						l_unit_list.after
-					loop
-						l_submenu ?= l_new_menu.item
-						create l_menu_item.make_with_text_and_action (unit_name_table.item (l_unit_list.item.l_unit), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
-						if a_context_menu then
-							l_menu_item.select_actions.extend (agent (metric_tool.metric_notebook).select_item (metric_tool.new_metric_panel))
-						end
-						l_menu_item.set_pixmap (l_unit_list.item.l_pixmap)
-						l_submenu.extend (l_menu_item)
-						l_unit_list.forth
-					end
-					l_new_menu.forth
-				end
 				create l_menu_item.make_with_text_and_action (displayed_name (metric_names.l_ratio_metric), agent on_create_new_metric (ratio_metric_type, ratio_unit))
 				if a_context_menu then
 					l_menu_item.select_actions.extend (agent (metric_tool.metric_notebook).select_item (metric_tool.new_metric_panel))
 				end
 				l_menu_item.set_pixmap (pixmaps.icon_pixmaps.metric_ratio_icon)
-				l_new_menu.extend (l_menu_item)
-				new_metric_menu_internal := l_new_menu
+				Result.extend (l_menu_item)
+				if not a_context_menu then
+						-- Remember menu for future uses unless it is a submenu of a context menu.
+					new_metric_menu_internal := Result
+				end
+			else
+				Result := new_metric_menu_internal
 			end
-			Result := new_metric_menu_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -484,6 +464,30 @@ feature {EB_CONTEXT_MENU_FACTORY} -- Implemetation
 			create l_question.make_standard (metric_names.t_remove_metric (a_metric.name), metric_names.t_discard_remove_prompt, create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_remove_metric_preference, True))
 			l_question.set_button_action (l_question.dialog_buttons.yes_button, agent remove_metric (a_metric))
 			l_question.show (metric_tool_window)
+		end
+
+feature {NONE} -- Initialization
+
+	populate_from_unit_list
+		(a_unit_list: LIST [TUPLE [l_unit: QL_METRIC_UNIT; l_pixmap: EV_PIXMAP]];
+		a_context_menu: BOOLEAN; a_metric_type: like basic_metric_type; a_menu: EV_MENU)
+			-- Populate menu `a_menu' from unit list `a_unit_list' for metric type `a_metric_type'.
+			-- Extend actions to switch to the new metric panel if this is a submenu of a context menu,
+			-- indicated by `a_context_menu'.
+		local
+			l_menu_item: EV_MENU_ITEM
+		do
+			a_menu.set_data (a_metric_type)
+			across
+				a_unit_list as u
+			loop
+				create l_menu_item.make_with_text_and_action (unit_name_table.item (u.item.l_unit), agent on_create_new_metric (a_metric_type, u.item.l_unit))
+				if a_context_menu then
+					l_menu_item.select_actions.extend (agent (metric_tool.metric_notebook).select_item (metric_tool.new_metric_panel))
+				end
+				l_menu_item.set_pixmap (u.item.l_pixmap)
+				a_menu.extend (l_menu_item)
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -724,7 +728,7 @@ invariant
 	metric_editor_table_attached: metric_editor_table /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2016, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

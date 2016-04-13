@@ -69,8 +69,8 @@ feature -- Hooks
 			lnk: CMS_LOCAL_LINK
 			l_destination: READABLE_STRING_8
 		do
-			if attached {WSF_STRING} a_response.request.query_parameter ("destination") as p_destination then
-				l_destination := p_destination.value
+			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
+				l_destination := p_destination.url_encoded_value
 			else
 				l_destination := a_response.location
 			end
@@ -84,6 +84,25 @@ feature -- Hooks
 					end
 					lnk.set_expandable (True)
 					a_response.add_to_primary_tabs (lnk)
+				end
+			end
+		end
+
+feature {NONE} -- Template		
+
+	smarty_template_login_block (a_request: WSF_REQUEST; a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API): like smarty_template_block
+		local
+			l_destination: detachable READABLE_STRING_32
+		do
+			Result := smarty_template_block (a_module, a_block_id, a_cms_api)
+			if Result /= Void then
+				if attached {WSF_STRING} a_request.query_parameter ("destination") as p_destination then
+					l_destination := p_destination.value
+				elseif attached {WSF_STRING} a_request.form_parameter ("destination") as p_destination then
+					l_destination := p_destination.value
+				end
+				if l_destination /= Void then
+					Result.set_value (l_destination, "site_destination")
 				end
 			end
 		end

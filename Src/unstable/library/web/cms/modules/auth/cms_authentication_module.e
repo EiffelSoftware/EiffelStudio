@@ -324,10 +324,10 @@ feature -- Handler
 			else
 				loc := ""
 			end
-
-			if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
-				loc.append ("?destination=" + l_destination.url_encoded_value)
-			end
+				-- Do not try to redirect to previous page or destination!
+--			if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+--				loc.append ("?destination=" + l_destination.url_encoded_value)
+--			end
 			r.set_redirection (loc)
 			r.execute
 		end

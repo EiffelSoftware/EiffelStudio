@@ -159,7 +159,7 @@ feature -- Hooks configuration
 				l_url_name := "site_sign_in_url"
 				l_url := a_response.url (roc_login_location, Void)
 			end
-			if l_destination /= Void then
+			if l_destination /= Void and then not l_url.has_substring ("?destination") then
 				l_url.append ("?destination=" + percent_encoded (l_destination))
 			end
 			a_value.force (l_url, l_url_name)

@@ -115,7 +115,7 @@ feature -- Access: router
 			if attached session_api as l_session_api then
 				a_router.handle ("/" + login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login (a_api, ?, ?)), a_router.methods_head_get)
 				a_router.handle ("/" + logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout (a_api, l_session_api, ?, ?)), a_router.methods_get_post)
-				a_router.handle ("/account/auth/roc-session-login", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_login_with_session (a_api,session_api, ?, ?)), a_router.methods_get_post)
+				a_router.handle ("/" + login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login_with_session (a_api,session_api, ?, ?)), a_router.methods_post)
 			end
 		end
 

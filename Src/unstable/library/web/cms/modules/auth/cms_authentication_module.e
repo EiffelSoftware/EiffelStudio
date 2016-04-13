@@ -139,7 +139,7 @@ feature -- Hooks configuration
 			l_url: STRING
 			l_url_name: READABLE_STRING_GENERAL
 		do
-			if attached {WSF_STRING} a_response.request.query_parameter ("destination") as p_destination then
+			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
 				l_destination := p_destination.value
 			else
 				l_destination := a_response.location
@@ -289,7 +289,7 @@ feature -- Handler
 			elseif attached api.module_by_name ("session_auth") then
 					-- FIXME: find better solution to support a default login system.
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+				if attached {WSF_STRING} req.item ("destination") as l_destination then
 					r.set_redirection ("account/auth/roc-session-login?destination=" + l_destination.url_encoded_value)
 				else
 					r.set_redirection ("account/auth/roc-session-login")
@@ -300,7 +300,7 @@ feature -- Handler
 			elseif attached api.module_by_name ("basic_auth") then
 					-- FIXME: find better solution to support a default login system.
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-				if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
+				if attached {WSF_STRING} req.item ("destination") as l_destination then
 					r.set_redirection ("account/auth/roc-basic-login?destination=" + l_destination.url_encoded_value)
 				else
 					r.set_redirection ("account/auth/roc-basic-login")

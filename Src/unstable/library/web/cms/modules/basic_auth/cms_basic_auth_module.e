@@ -118,7 +118,7 @@ feature {NONE} -- Implementation: routes
 				r.add_error_message ("You are already signed in!")
 				r.set_main_content (r.link ("Logout", "account/roc-logout", Void))
 			else
-				if attached smarty_template_block (Current, "login", api) as l_tpl_block then
+				if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 					r.add_javascript_url (r.url ("module/" + name + "/files/js/roc_basic_auth.js", Void))
 
 					create vals.make (1)
@@ -170,7 +170,7 @@ feature {NONE} -- Block views
 		local
 			vals: CMS_VALUE_TABLE
 		do
-			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+			if attached smarty_template_login_block (a_response.request, Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (1)
 					-- add the variable to the block
 				a_response.api.hooks.invoke_value_table_alter (vals, a_response)

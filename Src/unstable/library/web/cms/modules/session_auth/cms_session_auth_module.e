@@ -141,7 +141,7 @@ feature {NONE} -- Implementation: routes
 			if api.user_is_authenticated then
 				r.add_error_message ("You are already signed in!")
 			else
-				if attached smarty_template_block (Current, "login", api) as l_tpl_block then
+				if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 					create vals.make (1)
 						-- add the variable to the block
 					l_tpl_block.set_value (api.user, "user")
@@ -216,14 +216,14 @@ feature {NONE} -- Implementation: routes
 					api.record_user_login (l_user)
 
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					if attached {WSF_STRING} req.query_parameter ("destination") as p_destination then
+					if attached {WSF_STRING} req.item ("destination") as p_destination then
 						r.set_redirection (p_destination.url_encoded_value)
 					else
 						r.set_redirection ("")
 					end
 				else
 					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-					if attached smarty_template_block (Current, "login", api) as l_tpl_block then
+					if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 						l_tpl_block.set_value (l_username.value, "username")
 						l_tpl_block.set_value ("Wrong: Username or password ", "error")
 						r.add_block (l_tpl_block, "content")
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation: routes
 				r.execute
 			else
 				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
-				if attached smarty_template_block (Current, "login", api) as l_tpl_block then
+				if attached smarty_template_login_block (req, Current, "login", api) as l_tpl_block then
 					if attached {WSF_STRING} req.form_parameter ("username") as l_username then
 						l_tpl_block.set_value (l_username.value, "username")
 					end
@@ -272,7 +272,7 @@ feature {NONE} -- Block views
 		local
 			vals: CMS_VALUE_TABLE
 		do
-			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+			if attached smarty_template_login_block (a_response.request, Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (1)
 					-- add the variable to the block
 				a_response.api.hooks.invoke_value_table_alter (vals, a_response)

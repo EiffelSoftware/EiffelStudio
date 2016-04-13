@@ -43,7 +43,10 @@ inherit
 		rename
 			upper as count
 		undefine
-			copy, is_equal, out
+			copy,
+			is_equal,
+			new_cursor,
+			out
 		redefine
 			prune_all,
 			changeable_comparison_criterion

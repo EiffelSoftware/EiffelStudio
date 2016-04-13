@@ -19,6 +19,9 @@ inherit
 		end
 
 	READABLE_INDEXABLE [T]
+		redefine
+			new_cursor
+		end
 
 create
 	make_empty,
@@ -141,6 +144,12 @@ feature -- Access
 			to_array_attached: Result /= Void
 			to_array_lower_set: Result.lower = 1
 			to_array_upper_set: Result.upper = count
+		end
+
+	new_cursor: SPECIAL_ITERATION_CURSOR [T]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Measurement

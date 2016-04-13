@@ -20,7 +20,9 @@ class ARRAY [G] inherit
 		rename
 			item as item alias "[]"
 		redefine
-			copy, is_equal
+			copy,
+			is_equal,
+			new_cursor
 		end
 
 	TO_SPECIAL [G]
@@ -185,6 +187,12 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		end
+
+	new_cursor: ARRAY_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Measurement

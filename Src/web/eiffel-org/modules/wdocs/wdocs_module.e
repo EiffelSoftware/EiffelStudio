@@ -293,9 +293,13 @@ feature -- Hooks
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
 			-- Hook execution on collection of menu contained by `a_menu_system'
 			-- for related response `a_response'.
+		local
+			lnk: CMS_LOCAL_LINK
 		do
 			if a_response.has_permissions (<<"admin wdocs", "clear wdocs cache">>) then
-				a_menu_system.management_menu.extend (create {CMS_LOCAL_LINK}.make ("Clear Doc cache", "admin/module/" + name + "/clear-cache?destination=" + percent_encoder.percent_encoded_string (a_response.location)))
+				create lnk.make ("Clear Doc cache", "admin/module/" + name + "/clear-cache")
+				lnk.add_query_parameter (a_response.location, "destination")
+				a_menu_system.management_menu.extend (lnk)
 			end
 		end
 

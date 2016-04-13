@@ -34,7 +34,10 @@ inherit
 		rename
 			upper as count
 		redefine
-			copy, is_equal, out
+			copy,
+			is_equal,
+			new_cursor,
+			out
 		end
 
 convert
@@ -271,6 +274,12 @@ feature -- Access
 			-- <Precursor>
 		do
 			Result := string_searcher.fuzzy_index (Current, other, start, count, fuzz)
+		end
+
+	new_cursor: STRING_8_ITERATION_CURSOR
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -812,7 +821,8 @@ feature
 	STRING_8_SEARCHER, STRING_32_SEARCHER,
 	HEXADECIMAL_STRING_TO_INTEGER_CONVERTER,
 	STRING_TO_INTEGER_CONVERTOR,
-	STRING_TO_REAL_CONVERTOR} -- Implementation
+	STRING_TO_REAL_CONVERTOR,
+	STRING_8_ITERATION_CURSOR} -- Implementation
 
 	area: SPECIAL [CHARACTER_8]
 			-- Storage for characters

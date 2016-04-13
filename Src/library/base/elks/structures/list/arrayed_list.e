@@ -36,7 +36,7 @@ class ARRAYED_LIST [G] inherit
 		redefine
 			first, last, swap, wipe_out, i_th, at,
 			go_i_th, move, prunable, start, finish,
-			count, prune, remove,
+			count, prune, remove, new_cursor,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
 			append, valid_index, is_equal, copy,
@@ -179,6 +179,12 @@ feature -- Access
 			array_lower_set: Result.lower = 1
 			array_upper_set: Result.upper = count
 			shared_area: Result.area = area
+		end
+
+	new_cursor: ARRAYED_LIST_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Iteration

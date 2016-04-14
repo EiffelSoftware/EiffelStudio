@@ -26,7 +26,7 @@ feature -- Access
 	new_cursor: INDEXABLE_ITERATION_CURSOR [G]
 			-- <Precursor>
 		do
-			create Result.make (Current)
+			create {READABLE_INDEXABLE_ITERATION_CURSOR [G]} Result.make (Current)
 			Result.start
 		end
 

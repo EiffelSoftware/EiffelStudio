@@ -30,6 +30,7 @@
 		<cluster name="elks_exceptions" location="$ISE_LIBRARY\library\base\elks\kernel\exceptions\"/>
 		<cluster name="exceptions" location="$ISE_LIBRARY\library\base\ise\kernel\exceptions\"/>
 		<cluster name="kernel" location="$ISE_LIBRARY\library\base\elks\kernel\"/>
+		<cluster name="cursors" location="$ISE_LIBRARY\library\base\elks\structures\cursors\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		<cluster name="string" location="$ISE_LIBRARY\library\base\elks\kernel\string\"/>
 		<override name="root_cluster" location="$CLUSTER\"/>

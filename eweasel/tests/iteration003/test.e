@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			create array.make_filled (0, 5, 10)
-			create cursor.make (array)
+			create {READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER]} cursor.make (array)
 			i := cursor.cursor_index
 		end
 
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- FIXED
 		local
 			array: ARRAY [INTEGER]
-			cursor: INDEXABLE_ITERATION_CURSOR [INTEGER]
+			cursor: READABLE_INDEXABLE_ITERATION_CURSOR [INTEGER]
 		do
 			create array.make_filled (0, 5, 10)
 			create cursor.make (array)

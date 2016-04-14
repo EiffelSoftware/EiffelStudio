@@ -1,175 +1,146 @@
-note
-	description: "Concrete version of an external iteration cursor for {INDEXABLE}."
+﻿note
+	description: "External iteration cursor for {READABLE_INDEXABLE}."
 	library: "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	status: "See notice at end of class."
+	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	INDEXABLE_ITERATION_CURSOR [G]
 
 inherit
 	ITERATION_CURSOR [G]
-		redefine
-			make,
-			target,
-			start,
-			forth
-		end
 
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (s: like target)
-			-- <Precursor>
-		do
-			Precursor (s)
-			step := 1
-			is_reversed := False
-		ensure then
-			default_step: step = 1
-			ascending_traversal: not is_reversed
-		end
-
-feature -- Status setting
-
-	reverse
-			-- Flip traversal order.
-		require
-			not_set: not is_set
-		do
-			is_reversed := not is_reversed
-		ensure
-			is_reversed: is_reversed = not old is_reversed
-		end
-
-	set_step (v: like step)
-			-- Set increment step to `v'.
-		require
-			not_set: not is_set
-			v_positive: v > 0
-		do
-			step := v
-		ensure
-			step_set: step = v
-		end
+	ITERABLE [G]
 
 feature -- Access
 
-	item: G
-			-- <Precursor>
-		do
-			Result := target.item (target_index)
+	cursor_index: INTEGER
+			-- Index position of cursor in the iteration.
+		require
+			is_valid: is_valid
+		deferred
+		ensure
+			positive_index: Result >= 0
 		end
 
 	target_index: INTEGER
-			-- Index position of `target' for current iteration
+			-- Index position of target structure for current iteration.
+		deferred
+		end
+
+	first_index: INTEGER
+			-- First valid index of target structure for current iteration.
+			-- Note that if `is_reversed', `first_index' might be greater than `last_index'.
+		deferred
+		end
+
+	last_index: INTEGER
+			-- Last valid index of target structure for current iteration.
+			-- Note that if `is_reversed', `first_index' might be greater than `last_index'.
+		deferred
+		end
 
 	step: INTEGER
-			-- Distance between successive iteration elements
+			-- Distance between successive iteration elements.
+		deferred
+		end
 
-	reversed alias "-": like Current
-			-- Reversed copy of Current
-		require
-			not_set: not is_set
-		do
-			Result := twin
-			Result.reverse
+	new_cursor: INDEXABLE_ITERATION_CURSOR [G]
+			-- Restarted cursor of the iteration.
+		deferred
+		end
+
+	reversed alias "-": INDEXABLE_ITERATION_CURSOR [G]
+			-- Reversed cursor of the iteration.
+		deferred
 		ensure
 			is_reversed: Result.is_reversed = not is_reversed
+			same_step: Result.step = step
 		end
 
-	incremented alias "+" (n: like step): like Current
-			-- Copy of Current with step increased by `n'
+	incremented alias "+" (n: like step): INDEXABLE_ITERATION_CURSOR [G]
+			-- Cursor for the iteration with step increased by `n'.
 		require
-			not_set: not is_set
 			n_valid: step + n > 0
-		do
-			Result := twin
-			Result.set_step (step + n)
+		deferred
 		ensure
 			is_incremented: Result.step = step + n
+			same_direction: Result.is_reversed = is_reversed
 		end
 
-	decremented alias "-" (n: like step): like Current
-			-- Copy of Current with step decreased by `n'
+	decremented alias "-" (n: like step): INDEXABLE_ITERATION_CURSOR [G]
+			-- Cursor for the iteration with step decreased by `n'.
 		require
-			not_set: not is_set
 			n_valid: step > n
-		do
-			Result := twin
-			Result.set_step (step - n)
+		deferred
 		ensure
 			is_incremented: Result.step = step - n
+			same_direction: Result.is_reversed = is_reversed
 		end
 
-	with_step (n: like step): like Current
-			-- Copy of Current with step set to `n'
+	with_step (n: like step): INDEXABLE_ITERATION_CURSOR [G]
+			-- Cursor for the iteration with step set to `n'.
 		require
-			not_set: not is_set
 			n_positive: n > 0
-		do
-			Result := twin
-			Result.set_step (n)
+		deferred
 		ensure
 			step_set: Result.step = n
+			same_direction: Result.is_reversed = is_reversed
+		end
+
+feature -- Status report
+
+	is_reversed: BOOLEAN
+			-- Are we traversing target structure backwards?
+		deferred
+		end
+
+	is_valid: BOOLEAN
+			-- Is the cursor still compatible with the associated underlying object?
+		deferred
+		end
+
+	is_first: BOOLEAN
+			-- Is cursor at first position?
+		deferred
+		end
+
+	is_last: BOOLEAN
+			-- Is cursor at last position?
+		deferred
 		end
 
 feature -- Cursor movement
 
 	start
-			-- <Precursor>
-		do
-			Precursor
-			if is_reversed then
-				target_index := target.upper
-			else
-				target_index := target.lower
-			end
+			-- Move to first position.
+		deferred
+		ensure
+			cursor_index_set_to_one: cursor_index = 1
+			target_index_set_to_first: target_index = first_index
+			is_first: is_first
 		end
 
 	forth
 			-- <Precursor>
-		do
-			Precursor
-			if is_reversed then
-				target_index := target_index - step
-			else
-				target_index := target_index + step
-			end
+		deferred
+		ensure then
+			cursor_index_advanced: cursor_index = old cursor_index + 1
 		end
-
-feature -- Status report
-
-	off: BOOLEAN
-			-- <Precursor>
-		do
-			Result := not target.valid_index (target_index)
-		end
-
-	is_reversed: BOOLEAN
-			-- Are we traversing `target' backwards?
-
-	is_last: BOOLEAN
-			-- Is cursor at last position?
-		do
-		end
-
-	is_first: BOOLEAN
-			-- Is cursor at first position?
-		do
-		end
-
-
-feature {NONE} -- Implementation
-
-	target: READABLE_INDEXABLE [G]
-			-- <Precursor>
 
 invariant
 	step_positive: step > 0
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

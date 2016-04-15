@@ -99,14 +99,12 @@
 							{if isset="$to_reproduce"}
 							<div class="row">
 								<div class="col-xs-4">
-									<label class="control-label" itemprop="to_reproduce">To Reproduce:</label>
+									<label class="label label-primary-api-default" itemprop="to_reproduce">To Reproduce:</label>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-xs-12" id="textarea_7">
-								    <pre>
-										{htmlentities}{$to_reproduce/}{/htmlentities}
-									</pre>
+								<div class="col-xs-12" id="textarea_17">
+								    <pre>{htmlentities}{$to_reproduce/}{/htmlentities}</pre>
 								</div>
 							</div>
 							{/if}

@@ -181,10 +181,12 @@ feature {NONE} -- Implementation
 				attached api_service.problem_report_details (a_user, a_report_id ) as l_report and then
 				attached l_report.category as l_category and then
 				attached a_old_report and then
+				attached {USER} a_old_report.contact as l_submitter and then
+				attached api_service.user_account_information (l_submitter.name).email as l_submitter_email and then
 				attached l_category.synopsis as l_synopsis
 			then
 				l_subscribers := api_service.problem_report_category_subscribers (l_synopsis)
-				email_service.send_new_interaction_email (api_service.user_account_information (a_user), l_report, l_subscribers, a_old_report, a_url, api_service.role (a_user))
+				email_service.send_new_interaction_email (api_service.user_account_information (a_user), l_report, l_subscribers, a_old_report, a_url, api_service.role (a_user), l_submitter_email)
 			else
 					-- Not expected.
 				log.write_critical (generator + ".send_new_interaction_email Unexpected behavior user [" + a_user +"]" + "does not has email, or the report does not exist or does not has synopsis")

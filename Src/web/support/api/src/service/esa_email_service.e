@@ -153,7 +153,7 @@ feature -- Basic Operations
 				l_email.set_message (new_report_email_message (a_report, a_url))
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
-					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, a_email))
+					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, <<a_email>>))
 				end
 				l_email.add_header_entry ("MIME-Version:", "1.0")
 				l_email.add_header_entry ("Content-Type", "text/plain; charset=UTF-8")
@@ -164,12 +164,12 @@ feature -- Basic Operations
 			end
 		end
 
-	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST [STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE)
+	send_new_interaction_email (a_user: USER_INFORMATION; a_report: REPORT; a_subscribers: LIST [STRING]; a_old_report: REPORT; a_url: STRING; a_user_role: USER_ROLE; a_submitter_email: STRING)
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
 			l_message: STRING
-
+			l_array: ARRAY [STRING]
 		do
 			if
 				attached a_report.interactions as l_interactions and then
@@ -188,7 +188,9 @@ feature -- Basic Operations
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
-						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, ll_email))
+						l_array := recipients_to_array (a_subscribers, <<ll_email, a_submitter_email>>)
+						l_array.force (a_submitter_email, l_array.count + 1)
+						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, l_array)
 					end
 					send_email (l_email)
 				else
@@ -268,18 +270,19 @@ feature {NONE} -- Implementation
 			Result.append (a_report.synopsis)
 		end
 
-	recipients_to_array (a_recipients: LIST [STRING]; a_email: STRING): ARRAY [STRING]
+	recipients_to_array (a_recipients: LIST [STRING]; a_emails: ARRAY[STRING]): ARRAY [STRING]
 			-- Convert list of recipients to 'To' array of strings.
 		require
 			valid_recipients: not a_recipients.is_empty
 		local
 			i: INTEGER
 		do
+			a_emails.compare_objects
 			from
 				create Result.make_empty
 				a_recipients.start
 				i := 1
-				if not a_recipients.item.is_case_insensitive_equal (a_email) then
+				if not a_emails.has (a_recipients.item) then
 					Result.force (a_recipients.item, i)
 					i := 2
 				end
@@ -287,7 +290,7 @@ feature {NONE} -- Implementation
 			until
 				a_recipients.after
 			loop
-				if not a_recipients.item.is_case_insensitive_equal (a_email) then
+				if not a_emails.has (a_recipients.item) then
 					Result.force (a_recipients.item, i)
 					i := i + 1
 				end
@@ -296,7 +299,6 @@ feature {NONE} -- Implementation
 		ensure
 			attached_string: Result /= Void
 		end
-
 
 	report_email_links (a_url:STRING; a_report_number: INTEGER): STRING
 			-- Links to report with number `a_report_number'

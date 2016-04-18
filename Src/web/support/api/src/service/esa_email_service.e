@@ -154,7 +154,7 @@ feature -- Basic Operations
 				l_email.set_message (new_report_email_message (a_report, a_url))
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
-					create l_etable.make (1)
+					create l_etable.make_caseless (1)
 					l_etable.force ("", a_email)
 					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, l_etable))
 				end
@@ -192,7 +192,7 @@ feature -- Basic Operations
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
-						create  l_etable.make (0)
+						create  l_etable.make_caseless (2)
 						l_etable.force ("", a_submitter_email)
 						l_etable.force ("", ll_email )
 						l_array := recipients_to_array (a_subscribers, l_etable)

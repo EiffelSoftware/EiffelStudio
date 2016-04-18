@@ -7,8 +7,9 @@ var login = function() {
     var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
-	var host = form.host.value;
-  	var _login = function(){
+  	var host = form.host.value;
+  	var path_name = window.location.pathname;
+    var _login = function(){
 
  
     $("#imgProgress").show();  
@@ -37,7 +38,7 @@ var login = function() {
           request.onreadystatechange = function(){
              if (request.readyState == 4) {
                  if (request.status==200) {
-                           window.location=host.concat("/");
+                           window.location=host.concat(path_name);
                 }
                 else{
                   if (navigator.userAgent.toLowerCase().indexOf("firefox") != -1){                       

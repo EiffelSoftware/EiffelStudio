@@ -147,13 +147,16 @@ feature -- Basic Operations
 			-- Send report creation confirmation email to interested parties.
 		local
 			l_email: EMAIL
+			l_etable: STRING_TABLE [STRING]
 		do
 			if successful then
 				create l_email.make_with_entry (user_mail (a_name), a_email)
 				l_email.set_message (new_report_email_message (a_report, a_url))
 				l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, 0))
 				if not a_subscribers.is_empty then
-					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, <<a_email>>))
+					create l_etable.make (1)
+					l_etable.force ("", a_email)
+					l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, recipients_to_array (a_subscribers, l_etable))
 				end
 				l_email.add_header_entry ("MIME-Version:", "1.0")
 				l_email.add_header_entry ("Content-Type", "text/plain; charset=UTF-8")
@@ -169,6 +172,7 @@ feature -- Basic Operations
 		local
 			l_email: EMAIL
 			l_message: STRING
+			l_etable: STRING_TABLE [STRING]
 			l_array: ARRAY [STRING]
 		do
 			if
@@ -188,9 +192,12 @@ feature -- Basic Operations
 					l_email.set_message (l_message)
 					l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, report_email_subject (a_report, l_interactions.count))
 					if not a_subscribers.is_empty then
-						l_array := recipients_to_array (a_subscribers, <<ll_email, a_submitter_email>>)
+						create  l_etable.make (0)
+						l_etable.force ("", a_submitter_email)
+						l_etable.force ("", ll_email )
+						l_array := recipients_to_array (a_subscribers, l_etable)
 						l_array.force (a_submitter_email, l_array.count + 1)
-						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, l_array)
+						l_email.add_header_entries ({EMAIL_CONSTANTS}.h_bcc, l_array )
 					end
 					send_email (l_email)
 				else
@@ -270,7 +277,7 @@ feature {NONE} -- Implementation
 			Result.append (a_report.synopsis)
 		end
 
-	recipients_to_array (a_recipients: LIST [STRING]; a_emails: ARRAY[STRING]): ARRAY [STRING]
+	recipients_to_array (a_recipients: LIST [STRING]; a_emails: STRING_TABLE[STRING]): ARRAY [STRING]
 			-- Convert list of recipients to 'To' array of strings.
 		require
 			valid_recipients: not a_recipients.is_empty

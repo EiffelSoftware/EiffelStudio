@@ -718,7 +718,7 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
-			error_handler.reset
+			reset_error
 			svn := new_svn
 			if attached svn.update (p, Void, opts) as res then
 				if res.failed then
@@ -733,7 +733,7 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
-			error_handler.reset
+			reset_error
 			svn := new_svn
 			create opts
 			opts.set_parameters ("--force")
@@ -749,7 +749,7 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
-			error_handler.reset
+			reset_error
 			svn := new_svn
 			create opts
 			opts.set_parameters ("--parents")
@@ -766,7 +766,7 @@ feature -- Subversion helpers
 			svn: SVN
 			opts: detachable SVN_OPTIONS
 		do
-			error_handler.reset
+			reset_error
 			svn := new_svn
 			create opts
 			opts.set_parameters ("--parents")
@@ -784,7 +784,7 @@ feature -- Subversion helpers
 			s: STRING
 			utf: UTF_CONVERTER
 		do
-			error_handler.reset
+			reset_error
 			svn := new_svn
 			if
 				attached cms_api.setup.text_item ("tools.subversion.username") as l_svn_username and

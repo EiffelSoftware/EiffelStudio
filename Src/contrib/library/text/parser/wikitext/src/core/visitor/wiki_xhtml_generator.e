@@ -736,7 +736,7 @@ feature -- Tag
 	is_newline_required_after_code_block: BOOLEAN
 			-- Is newline required after a code block?
 			--		True by default (for backward compatibility),
-			--		but as this can be done via css style, 
+			--		but as this can be done via css style,
 			-- 		one can redefine this function.
 		do
 			Result := True
@@ -794,7 +794,16 @@ feature -- Links
 			l_url: STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
-			if
+			if a_link.name.is_whitespace then
+				if attached a_link.fragment as l_fragment then
+					l_url := "#" + l_fragment
+				else
+					l_url := ""
+				end
+				output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
+				a_link.text.process (Current)
+				output ("</a>")
+			elseif
 				attached link_resolver as r and then
 				attached r.wiki_url (a_link, current_page) as u
 			then
@@ -813,11 +822,15 @@ feature -- Links
 
 	visit_missing_link (a_link: WIKI_LINK)
 		local
-			l_url: detachable READABLE_STRING_8
+			l_url: detachable STRING_8
 			l_css_class: STRING
 		do
 			create l_css_class.make_from_string ("wiki_link")
-			l_url := a_link.name
+			create l_url.make_from_string (a_link.name)
+			if attached a_link.fragment as l_fragment then
+				l_url.append_character ('#')
+				l_url.append (l_fragment)
+			end
 			l_css_class.append (" wiki_notfound")
 			output ("<a href=%"" + l_url + "%" class=%"" + l_css_class + "%">")
 			a_link.text.process (Current)

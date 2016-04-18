@@ -105,7 +105,7 @@ __NOTOC__
 end
 }")
 			l_expected_output := "{
-<div><p>begin</p>
+<div class="wikipage"><p>begin</p>
 
 <a name="One"></a><h1>One</h1>
 
@@ -166,7 +166,7 @@ __TOC__
 end
 }")
 			l_expected_output := "{
-<div><p>begin
+<div class="wikipage"><p>begin
 <ol class="wiki-toc"><a name="toc"></a><span class="title">Contents</span>
 	<li><a href="#One">One</a></li>
 	<ol>
@@ -670,6 +670,30 @@ Any existing breakpoint can be referenced by an implicit tag with the form: ''"'
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", not o.is_empty)
+		end
+
+	test_anchor_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+test [[#anchor|anchor link]]
+			]")
+
+e := "{
+<p>test <a href="#anchor" class="wiki_link">anchor link</a></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
 feature {NONE} -- Implementation

@@ -184,6 +184,8 @@ feature -- Handlers
 								l_api.delete_wiki_page (pg, pg.path, l_info.bookid, l_info.manager, Void)
 								if l_api.has_error then
 									r.add_error_message ("Page %"" + pg.title + "%" was NOT deleted due to error!!!")
+									r.add_error_message (l_api.error_handler.as_string_representation)
+									l_api.reset_error
 									r.set_main_content (f.to_html (r.wsf_theme))
 								else
 									r.add_notice_message ("Page %"" + pg.title + "%" was deleted successfully!")

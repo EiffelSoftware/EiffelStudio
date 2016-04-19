@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that specify visibility of classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,6 @@ feature -- Basic commands
 		require
 			a_added_classes_not_void: a_added_classes /= Void
 		local
-			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING_32; features: detachable STRING_TABLE [STRING_32]]]
 			l_class: detachable CONF_CLASS
 			l_error: BOOLEAN
 			l_map: like mapping
@@ -42,8 +41,7 @@ feature -- Basic commands
 					if l_class = Void then
 						l_last_warnings.force (create {CONF_ERROR_VISI}.make (l_name))
 					else
-						l_vis := l_visible.item_for_iteration.item
-						l_class.add_visible (l_vis)
+						l_class.add_visible (l_visible.item_for_iteration)
 						if attached l_class.last_error as l_class_error then
 							l_error := True
 							set_error (l_class_error)
@@ -158,7 +156,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

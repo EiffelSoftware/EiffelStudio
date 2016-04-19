@@ -177,23 +177,23 @@ feature -- Constants access
 	iron_executable_name: IMMUTABLE_STRING_32
 			-- Associated executable name.
 		once
-			Result := (create {IRON_CONSTANTS}).copyright
+			create Result.make_from_string_general ((create {IRON_CONSTANTS}).executable_name)
 		end
 
 	iron_copyright: IMMUTABLE_STRING_32
 			-- Associated copyright.
 		once
-			Result := (create {IRON_CONSTANTS}).copyright
+			create Result.make_from_string_general ((create {IRON_CONSTANTS}).copyright)
 		end
 
 	iron_version: IMMUTABLE_STRING_32
 			-- Associated version.
 		once
-			Result := (create {IRON_CONSTANTS}).version
+			create Result.make_from_string_general ((create {IRON_CONSTANTS}).version)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

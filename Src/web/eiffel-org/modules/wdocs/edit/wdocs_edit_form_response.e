@@ -399,9 +399,9 @@ feature -- Form
 							add_success_message ("Wiki doc saved.")
 
 							if l_content /= Void then
-								e := api.new_email (api.setup.site_email, "Updated wiki page", s + l_content)
+								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s + l_content)
 							else
-								e := api.new_email (api.setup.site_email, "Updated wiki page", s)
+								e := api.new_email (api.setup.site_email, "Updated wiki page %"" + l_page.title + "%"", s)
 							end
 							b.append (s)
 							b.append_character ('%N')

@@ -236,6 +236,46 @@ feature -- Access
 			end
 		end
 
+	file_path (a_filename: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
+		local
+			l_common_book_name: STRING
+			p: PATH
+			ut: FILE_UTILITIES
+		do
+			l_common_book_name := {WDOCS_PAGES_DATA}.common_book_name
+			if a_book_name /= Void then
+				if a_book_name.same_string (l_common_book_name) then
+					p := wiki_database_path.extended ("_files").extended (a_filename)
+					if ut.file_path_exists (p) then
+						Result := p
+					end
+				else
+					p := wiki_database_path.extended (a_book_name).extended ("_files").extended (a_filename)
+					if ut.file_path_exists (p) then
+						Result := p
+					end
+					if Result = Void then
+							-- Try with common resource
+						Result := file_path (a_filename, l_common_book_name)
+					end
+				end
+			elseif attached file_path (a_filename, l_common_book_name) as l_path then
+					-- Try with common book resources.
+				Result := l_path
+			else
+					-- Try with others books resources.
+				across
+					book_names as ic
+				until
+					Result /= Void
+				loop
+					if attached file_path (a_filename, ic.item) as l_path then
+						Result := l_path
+					end
+				end
+			end
+		end
+
 	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
 		local
 			l_common_book_name: STRING

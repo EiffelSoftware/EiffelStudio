@@ -92,6 +92,11 @@ feature -- Persistency
 
 feature -- Data access
 
+	file_path (a_filename: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
+		do
+			Result := storage.file_path (a_filename, a_book_name)
+		end
+
 	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
 		do
 			Result := storage.image_path (a_title, a_book_name)
@@ -407,8 +412,14 @@ feature -- Access: File
 			if not is_default_version then
 				Result.prepend ("/version/" + percent_encoder.percent_encoded_string (version_id))
 			end
+			Result.append_character ('/')
 			if a_page /= Void and then attached book_name (a_page) as l_book_name then
-				Result.append ("/" + l_book_name)
+				Result.append (l_book_name)
+			elseif
+				attached file_path (a_file.name, Void) as p and then
+				attached p.parent.parent.entry as l_book_entry
+			then
+				Result.append (l_book_entry.utf_8_name)
 			end
 			Result.append ("/" + a_file.name)
 		end

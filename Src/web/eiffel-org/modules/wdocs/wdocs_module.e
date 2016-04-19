@@ -939,13 +939,9 @@ feature -- Handler
 			l_filename := text_path_parameter (req, "filename", Void)
 			if l_filename /= Void then
 				mnger := manager (l_version_id)
-				if l_bookid /= Void then
-					p := mnger.wiki_database_path.extended (l_bookid).extended ("_files").extended (l_filename)
-				end
-				if p = Void or else not ut.file_path_exists (p) then
-					p := mnger.wiki_database_path.extended ("_files").extended (l_filename)
-				end
-				if ut.file_path_exists (p) then
+				p := mnger.file_path (l_filename, l_bookid)
+
+				if p /= Void and then ut.file_path_exists (p) then
 					if
 						attached req.meta_string_variable ("HTTP_IF_MODIFIED_SINCE") as s_if_modified_since and then
 						attached http_date_format_to_date (s_if_modified_since) as l_if_modified_since_date and then
@@ -1249,6 +1245,9 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 	book_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
 		do
 			Result := wiki_name_text_path_parameter (req, "bookid", a_default)
+			if Result /= Void and then Result.is_whitespace then
+				Result := Void
+			end
 		end
 
 	wikipage_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32

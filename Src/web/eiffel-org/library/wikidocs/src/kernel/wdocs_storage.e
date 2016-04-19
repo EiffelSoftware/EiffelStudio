@@ -72,6 +72,11 @@ feature -- Access
 			result_attached_implies_exists: Result /= Void implies not attached {WDOCS_METADATA_FILE} Result as mdf or else mdf.exists
 		end
 
+	file_path (a_filename: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
+			-- Path associated with `a_filename' and `a_book_name' if exists.
+		deferred
+		end
+
 	image_path (a_title: READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL): detachable PATH
 		deferred
 		end

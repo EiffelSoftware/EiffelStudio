@@ -1,0 +1,12 @@
+test_name 	 attachment-of-conversion
+test_description Attachment status of source type should be preserved by conversion.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

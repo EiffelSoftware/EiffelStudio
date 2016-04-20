@@ -11,6 +11,7 @@
 				<form data-rel="login" itemprop="login">
 					<p itemprop="user_name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required/></p>
 					<p itemprop="password"><input type="password" class="span3" id="password" name="password" placeholder="Enter Password" required/></p>
+					<p itemprop="remember_me"><input type="checkbox" name="remember_me" value="remember me"> Remember me<br>
 					<input type="hidden" name="host" value="{$host/}"/>
 					<div class="controls">
 						<button type="button" class="btn btn-primary" onclick="login();">Sign In</button>

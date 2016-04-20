@@ -37,6 +37,79 @@ feature -- Status Report
 			Result := db_handler.successful
 		end
 
+feature -- Access: Auth Session
+
+	user_by_session_token (a_token: READABLE_STRING_8): detachable USER
+			-- Retrieve user by token `a_token', if any.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_debug (generator + ".user_by_session_token for a_token:" + a_token )
+			create l_parameters.make (1)
+			l_parameters.put (a_token, "Token")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_by_session_token, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				create Result.make ("")
+				if attached db_handler.read_string (1) as l_item_name then
+					create Result.make (l_item_name)
+				end
+			end
+			post_execution
+		end
+
+	has_user_token (a_user: USER): BOOLEAN
+			-- Has the user `a_user' and associated session token?
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_debug (generator + ".has_user_token for a_user:" + a_user.name )
+			create l_parameters.make (1)
+			l_parameters.put (a_user.id, "uid")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_has_user_token, l_parameters))
+			db_handler.execute_query
+			if not db_handler.after then
+				if attached db_handler.read_integer_32 (1) as l_count and then
+				   l_count > 0
+				then
+					Result := True
+				end
+			end
+			post_execution
+		end
+
+feature -- Change Auth Session
+
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER)
+			-- New user session for user `a_user' with token `a_token'.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_debug (generator + ".new_user_session_auth for a_user:" + a_user.name )
+			create l_parameters.make (3)
+			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_token, "token")
+			l_parameters.put (create {DATE_TIME}.make_now_utc, "date")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (SQL_insert_session_auth, l_parameters))
+			db_handler.execute_query
+			post_execution
+		end
+
+	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER)
+			-- Update user session for user `a_user' with token `a_token'.
+		local
+			l_parameters: STRING_TABLE [ANY]
+		do
+			log.write_debug (generator + ".update_user_session_auth for a_user:" + a_user.name )
+			create l_parameters.make (3)
+			l_parameters.put (a_user.id, "uid")
+			l_parameters.put (a_token, "token")
+			l_parameters.put (create {DATE_TIME}.make_now_utc, "date")
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (SQL_update_session_auth, l_parameters))
+			db_handler.execute_query
+			post_execution
+		end
+
 feature -- Access
 
 	countries: DATABASE_ITERATION_CURSOR [COUNTRY]
@@ -242,16 +315,18 @@ feature -- Access
 		require
 			attached_username: a_username /= Void
 		local
-			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_parameters: STRING_TABLE[ANY]
 		do
 			log.write_information (generator + ".user_from_username")
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
-			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUser", l_parameters))
-			db_handler.execute_reader
+			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_from_username, l_parameters))
+			db_handler.execute_query
 			if not db_handler.after then
-				db_handler.start
-				Result := new_user_username
+				if attached db_handler.read_integer_32 (1) as l_contactid then
+					create Result.make (a_username)
+					Result.set_id (l_contactid)
+				end
 			end
 			post_execution
 		end
@@ -674,6 +749,27 @@ feature -- Queries
 
 	tuple_user: detachable TUPLE [first_name: STRING; last_name: STRING; user_name: STRING]
 		-- User row with first name, last name and user name.
+
+
+	Select_user_by_session_token: STRING = "[
+		SELECT Memberships.Username
+		FROM Auth_Session
+		INNER JOIN Memberships ON Auth_Session.ContactID = Memberships.ContactID
+		WHERE Access_token = :Token;
+		]"
+
+	Select_has_user_token: STRING = "SELECT Count(*) FROM Auth_Session WHERE ContactID = :uid;"
+
+	SQL_insert_session_auth: STRING = "INSERT INTO Auth_Session (ContactId, access_token, created) VALUES (:uid, :token, :date);"
+
+	SQL_update_session_auth: STRING = "UPDATE Auth_Session SET access_token = :token, created = :date WHERE ContactId =:uid;"
+
+
+	Select_user_from_username: STRING = "[
+		SELECT ContactID FROM Memberships WHERE Username = :Username;
+		]"
+
+
 
 feature {NONE} -- Implementation
 

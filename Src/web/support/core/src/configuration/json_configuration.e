@@ -8,6 +8,36 @@ class
 
 feature -- Application Configuration
 
+	cookie_session_default (a_path: PATH): INTEGER_64
+			-- Build a new database configuration.
+		local
+			l_parser: JSON_PARSER
+		do
+			if attached json_file_from (a_path) as json_file then
+			 l_parser := new_json_parser (json_file)
+			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			     attached {JSON_OBJECT} jv.item ("cookie_session") as l_cookie_session and then
+			     attached {JSON_NUMBER} l_cookie_session.item ("default") as l_item then
+			     Result := l_item.integer_64_item
+			 end
+			end
+		end
+
+	cookie_session_remember_me (a_path: PATH): INTEGER_64
+			-- Build a new database configuration.
+		local
+			l_parser: JSON_PARSER
+		do
+			if attached json_file_from (a_path) as json_file then
+			 l_parser := new_json_parser (json_file)
+			 if  attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			     attached {JSON_OBJECT} jv.item ("cookie_session") as l_cookie_session and then
+			     attached {JSON_NUMBER} l_cookie_session.item ("remember_me") as l_item then
+			     Result := l_item.integer_64_item
+			 end
+			end
+		end
+
 	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
 			-- Build a new database configuration.
 		local

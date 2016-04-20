@@ -53,7 +53,6 @@ feature -- Factory
 					create l_layout.make_default
 				end
 				create l_email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
-
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
 				create Result.make (l_database, l_api_service, l_email_service, l_layout)

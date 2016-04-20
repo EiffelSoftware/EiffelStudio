@@ -49,6 +49,8 @@ feature -- Initialization
 			configure_api_user_email
 			configure_api_user_confirm_email
 			configure_api_subscribe_to_category
+			configure_api_login_session
+			configure_api_logoff_session
 
 			create fhdl.make_hidden_with_path (layout.www_path)
 			fhdl.disable_index
@@ -146,6 +148,28 @@ feature -- Configure Resources Routes
 			create l_methods
 			l_methods.enable_get
 			router.handle_with_request_methods ("/logoff", l_logoff_handler, l_methods)
+		end
+
+	configure_api_login_session
+		local
+			l_logoff_handler: ESA_LOGIN_SESSION_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_logoff_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_post
+			router.handle_with_request_methods ("/login_session", l_logoff_handler, l_methods)
+		end
+
+	configure_api_logoff_session
+		local
+			l_logoff_handler: ESA_LOGOFF_SESSION_HANDLER
+			l_methods: WSF_REQUEST_METHODS
+		do
+			create l_logoff_handler.make (esa_config)
+			create l_methods
+			l_methods.enable_get
+			router.handle_with_request_methods ("/logoff_session", l_logoff_handler, l_methods)
 		end
 
 	configure_api_report_form

@@ -22,6 +22,10 @@
 	"logger": { 
 			"level":"debug",
 			"backup_count":"4"
-		}
+		},
+	"cookie_session": {
+		"remember_me":31536000,
+		"default":1200
+	}		
 }
 

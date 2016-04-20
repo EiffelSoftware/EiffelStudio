@@ -1,0 +1,25 @@
+We need to add the following table to enable Login with Cookies
+in Support Site.
+
+The implementation follows the following ideas described here.
+http://stackoverflow.com/questions/244882/what-is-the-best-way-to-implement-remember-me-for-a-website 
+
+"Improved Persistent Login Cookie Best Practice"
+
+When the user successfully logs in with Remember Me checked, a login cookie is issued in addition to the standard session management cookie.
+The login cookie contains a series identifier and a token. The series and token are unguessable random numbers from a suitably large space. Both are stored together in a database table, the token is hashed (sha256 is fine).
+When a non-logged-in user visits the site and presents a login cookie, the series identifier is looked up in the database.
+If the series identifier is present and the hash of the token matches the hash for that series identifier, the user is considered authenticated. A new token is generated, a new hash for the token is stored over the old record, and a new login cookie is issued to the user (it's okay to re-use the series identifier).
+
+
+
+CREATE TABLE [dbo].[Auth_Session](
+    [ContactID] [int] NOT NULL,
+    [Access_token] [varchar](64) NOT NULL,
+    [Created] [datetime] NOT NULL,
+ CONSTRAINT [PK_ContactID] PRIMARY KEY CLUSTERED 
+(
+    [ContactID] ASC
+)
+) ON [PRIMARY]
+

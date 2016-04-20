@@ -1,5 +1,6 @@
-var loginURL = "/login";
-var logoutURL = "/logoff";
+var loginURL = "/login_session";
+var logoutURL = "/logoff_session";
+var logout = "logoff"
 var userAgent = navigator.userAgent.toLowerCase();
 var firstLogIn = true;
  
@@ -7,6 +8,7 @@ var login = function() {
     var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
+    var remember_me = form.remember_me.checked;
   	var host = form.host.value;
   	var path_name = window.location.pathname;
     var _login = function(){
@@ -31,12 +33,15 @@ var login = function() {
          
           //Instantiate HTTP Request
           var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-    	    request.open("GET", host + loginURL, true, username, password);
-	        request.send(null);
+    	    //request.open("GET", host + loginURL, true, username, password);
+	        //request.send(null);
+          request.open("POST", host + loginURL, true);
+          request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          request.send("username="+username+"&password="+password+"&remember_me="+remember_me);
     
           //Process Response
           request.onreadystatechange = function(){
-             if (request.readyState == 4) {
+             if (request.readyState == 2) {
                  if (request.status==200) {
                            window.location=host.concat(path_name);
                 }
@@ -75,6 +80,8 @@ var login_with_redirect = function() {
     var form = document.forms[0];
     var username = form.username.value;
     var password = form.password.value;
+    var remember_me = form.remember_me.checked;
+
     var host = form.host.value;
     var _login = function(){
 
@@ -106,12 +113,16 @@ var login_with_redirect = function() {
          
           //Instantiate HTTP Request
           var request = ((window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP"));
-            request.open("GET", host.concat(loginURL), true, username, password);
-            request.send(null);
+          //request.open("GET", host.concat(loginURL), true, username, password);
+          //request.send(null);
+    
+          request.open("POST", host + loginURL, true);
+          request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          request.send("username="+username+"&password="+password+"&remember_me="+remember_me);
     
           //Process Response
           request.onreadystatechange = function(){
-             if (request.readyState == 4) {
+             if (request.readyState == 2) {
                  if (request.status==200) {
                      if (redirectURL === "") {   
                         window.location=host.concat("/");
@@ -150,8 +161,7 @@ var login_with_redirect = function() {
     if (firstLogIn) firstLogIn = false;
 };
 
- 
- 
+
 var logoff = function(callback){
 	   var form = document.forms[0];
      var host = form.host.value;

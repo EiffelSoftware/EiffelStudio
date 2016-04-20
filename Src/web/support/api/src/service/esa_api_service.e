@@ -664,11 +664,20 @@ feature -- Element Settings
 			end
 		end
 
+	user_from_username (a_username: READABLE_STRING_32): detachable USER
+			-- User from username `a_username', if any.
+		do
+			log.write_debug (generator + ".user_from_username:" + a_username)
+			Result := login_provider.user_from_username (a_username)
+			post_login_provider_execution
+		end
+
 	remove_user (a_username: READABLE_STRING_32)
 			-- Remove username `a_username' from database
 		do
 			log.write_debug (generator + ".remove_user username:" + a_username)
 			login_provider.remove_user (a_username)
+			post_login_provider_execution
 		end
 
 	update_password (a_email: STRING; a_password: STRING)
@@ -715,6 +724,46 @@ feature -- Element Settings
 	update_email_from_user_and_token (a_user: READABLE_STRING_32; a_token: READABLE_STRING_32)
 		do
 			login_provider.update_email_from_user_and_token (a_token, a_user)
+			post_login_provider_execution
+		end
+
+
+feature -- Access: Auth Session
+
+	user_by_session_token (a_token: READABLE_STRING_8): detachable USER
+			-- Retrieve user by token `a_token', if any.
+		do
+			log.write_debug (generator + ".user_by_session_token for a_token:" + a_token )
+			if attached login_provider.user_by_session_token (a_token) as l_user then
+				Result := l_user
+			end
+			post_login_provider_execution
+		end
+
+	has_user_token (a_user: USER): BOOLEAN
+			-- Has the user `a_user' and associated session token?
+		do
+			log.write_debug (generator + ".has_user_token for user:" + a_user.name )
+			Result := login_provider.has_user_token (a_user)
+			post_login_provider_execution
+		end
+
+feature -- Change: Auth Session
+
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER;)
+			-- New user session for user `a_user' with token `a_token'.
+		do
+			log.write_debug (generator + ".new_user_session_auth for user:" + a_user.name )
+			login_provider.new_user_session_auth (a_token, a_user)
+			post_login_provider_execution
+		end
+
+
+	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER )
+			-- Update user session for user `a_user' with token `a_token'.
+		do
+			log.write_debug (generator + ".update_user_session_auth for user:" + a_user.name )
+			login_provider.update_user_session_auth (a_token, a_user)
 			post_login_provider_execution
 		end
 

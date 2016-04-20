@@ -51,6 +51,7 @@
 								<p>The page you requested could not be served because you don't have access to it. Either contact your webmaster or try again. Use your browser's <b>Back</b> button to navigate to the page you came from.</p>
 								<p itemprop="user_name"><input type="text" class="span3" name="username" id="username" placeholder="Enter Username" value="" required></p>
 								<p itemprop="password"><input type="password" class="span3" id="password_redirect" name="password" placeholder="Enter Password" required></p>
+								<p itemprop="remember_me"><input type="checkbox" name="remember_me" value="remember me"> Remember me<br>
 								<input type="hidden" name="redirect" value="{$redirect/}"/>
 								<input type="hidden" name="host" value="{$host/}"/>
 								<div class="controls">

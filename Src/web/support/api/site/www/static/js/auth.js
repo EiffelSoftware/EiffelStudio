@@ -11,6 +11,13 @@ var login = function() {
     var remember_me = form.remember_me.checked;
   	var host = form.host.value;
   	var path_name = window.location.pathname;
+    
+    var reshost = host.split("/");
+    var res = path_name.split("/");
+    if (reshost[reshost.length - 1] === res[1]) {
+      path_name = path_name.replace("/"+res[1], "");
+    }
+
     var _login = function(){
 
  

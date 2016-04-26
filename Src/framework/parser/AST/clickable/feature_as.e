@@ -118,7 +118,7 @@ feature -- Roundtrip/Break token inclusion
 	break_included: BOOLEAN
 			-- Is trailing break included when `last_token' is computed?
 			-- This will affect result of `last_token' and `comment' if
-			-- curernt feature is a constant or an attribute.
+			-- current feature is a constant or an attribute.
 
 	set_break_included (b: BOOLEAN)
 			-- Set `break_included' with `b'.
@@ -143,7 +143,11 @@ feature -- Roundtrip/Comment
 		do
 			if not l_retried then
 				if is_constant or is_attribute then
-					l_region := token_region (a_list)
+					if attached first_token (a_list) and then attached last_token (a_list) then
+						l_region := token_region (a_list)
+					else
+						create Result.make
+					end
 				elseif attached {ROUTINE_AS} body.content as l_routine then
 					if attached {LEAF_AS} first_token (a_list) as l_first_token then
 						l_routine_first_token := l_routine.first_token (a_list)
@@ -474,7 +478,7 @@ invariant
 	next_position_non_negative: next_position >= 0
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

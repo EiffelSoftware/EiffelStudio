@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision Application.%N%
 		%To start an Eiffel Vision application: create exactly one%
@@ -368,6 +368,31 @@ feature -- Event handling
 			implementation.remove_idle_action (a_idle_action)
 		end
 
+feature {EV_WINDOW} -- Window registry
+
+	register_window (w: EV_WINDOW)
+			-- Register a window to prevent it from being garbage-collected.
+		do
+			if not registered_windows.has (w) then
+				registered_windows.extend (w)
+			end
+		ensure
+			is_registered: registered_windows.has (w)
+		end
+
+	unregister_window (w: EV_WINDOW)
+			-- Unregister a window to allow it for being garbage-collected.
+		do
+			registered_windows.prune (w)
+		ensure
+			is_unregistered: not registered_windows.has (w)
+		end
+
+feature {NONE} -- Window registry
+
+	registered_windows: ARRAYED_LIST [EV_WINDOW]
+			-- A list of registered windows.
+
 feature {EV_ANY, EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I, EXCEPTIONS, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_APPLICATION_I
@@ -389,6 +414,7 @@ feature {NONE} -- Implementation
 				-- Set the application implementation object from the shared one in EV_ENVIRONMENT.
 			create l_environment
 			implementation := l_environment.implementation.application_i
+			create registered_windows.make (1)
 		end
 
 	internal_launch_application (a_handler: separate EV_APPLICATION_HANDLER)
@@ -407,7 +433,7 @@ invariant
 	tooltip_delay_not_negative: tooltip_delay >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

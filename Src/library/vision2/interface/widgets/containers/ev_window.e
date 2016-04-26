@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Top level window. Contains a single widget.
@@ -26,15 +26,19 @@ inherit
 		undefine
 			create_implementation
 		redefine
+			destroy,
+			has,
+			hide,
+			identifier_path_separator,
 			implementation,
 			initialize,
 			is_in_default_state,
-			has,
-			identifier_path_separator
+			show
 		end
 
 	EV_POSITIONABLE
 		redefine
+			destroy,
 			implementation,
 			initialize,
 			is_in_default_state
@@ -187,6 +191,13 @@ feature -- Status report
 		end
 
 feature -- Command
+
+	destroy
+			-- <Precursor>
+		do
+			Precursor
+			unregister
+		end
 
 	destroy_and_exit_if_last
 			-- Destroy current window and destroy instance of EV_APPLICATION if
@@ -367,6 +378,13 @@ feature -- Status setting
 			no_locked_window: ev_application.locked_window = Void
 		end
 
+	show
+			-- <Precursor>
+		do
+			Precursor
+			register
+		end
+
 	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Show `Current' with respect to `a_parent'.
 		require
@@ -376,6 +394,56 @@ feature -- Status setting
 			a_window_not_current: a_parent /= Current
 		do
 			implementation.show_relative_to_window (a_parent)
+			register
+		end
+
+	hide
+			-- <Precursor>
+		do
+			Precursor
+			unregister
+		end
+
+feature {NONE} -- GC protection
+
+	register
+			-- Protect `Current' from GC in case there is no reference to it in the system
+			-- but the application is running, is on the current processor and
+			-- the associated window is visible.
+			-- Because of the last condition the recommended way to use the feature is
+			-- to call it after the window is shown using `show' or similar feature
+			-- to make sure after the call to it the window is still open.
+			-- (The window may become closed as a result of processing of user interaction,
+			-- e.g. this may happen with dialogs).
+			-- See also: `unregister'.
+		do
+			if
+				not is_destroyed and then
+				is_show_requested and then
+				attached Shared_environment.application and then
+				Shared_environment.is_application_processor
+			then
+				ev_application.register_window (Current)
+			end
+		end
+
+	unregister
+			-- Unprotect `Current' from GC
+			-- if the application is running on the current processor
+			-- and the corresponding window is hidden.
+			-- Because of the last condition the recommended way to use the feature is
+			-- to call it after the window is hidden using `hide' or similar feature
+			-- to make sure after the call to it the window is closed.
+			-- (The window may stay open as a result of processing of user interaction.)
+			-- See also: `register'.
+		do
+			if
+				(is_destroyed or else not is_show_requested) and then
+				attached Shared_environment.application and then
+				Shared_environment.is_application_processor
+			then
+				ev_application.unregister_window (Current)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
@@ -431,7 +499,7 @@ invariant
 	lower_bar_not_void: is_usable implies lower_bar /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -441,17 +509,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_WINDOW
-
-
-
-
-
-
-
-
-
-
+end

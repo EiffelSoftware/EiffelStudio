@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Window intended for transient user interaction.%N%
 		%Optionally modal. A modal dialog blocks the rest of the application%
@@ -134,7 +134,6 @@ feature -- Status Setting
 				default_cancel_button = a_button
 		end
 
-
 	remove_default_cancel_button
 			-- Remove `default_cancel_button'.
 		require
@@ -158,6 +157,7 @@ feature -- Basic operations
 			a_window_not_current: a_window /= Current
 		do
 			implementation.show_modal_to_window (a_window)
+			register
 		ensure
 				-- When a dialog is displayed modally, execution of code is
 				-- halted until the dialog is closed or destroyed. Therefore,
@@ -171,6 +171,7 @@ feature -- Basic operations
 			-- Show `Current' with respect to `a_window'.
 		do
 			implementation.show_relative_to_window (a_window)
+			register
 		ensure then
 			is_relative_to_window: show_actions.is_empty implies is_relative
 			blocking_window_set: show_actions.is_empty implies blocking_window = a_window
@@ -216,9 +217,8 @@ invariant
 	no_blocking_window_correct: is_usable implies (not is_modal and not is_relative implies blocking_window = Void)
 	no_blocking_window_when_hidden: is_usable implies (not is_show_requested implies blocking_window = Void)
 
-
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -228,18 +228,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_DIALOG
-
-
-
-
-
-
-
-
-
-
-
+end

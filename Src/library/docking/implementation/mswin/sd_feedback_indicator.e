@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objecs that use layered windows to feedback display indicators"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,6 +66,7 @@ feature -- Command
 			-- Show current with fading effect if possible
 		do
 			implementation.show
+			register
 		end
 
 	set_pixel_buffer (a_pixel_buffer: like pixel_buffer)
@@ -88,6 +89,7 @@ feature -- Command
 			exists: exists
 		do
 			implementation.clear
+			unregister
 		end
 
 feature -- Query
@@ -117,7 +119,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

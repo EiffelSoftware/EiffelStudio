@@ -167,6 +167,32 @@ feature -- Element change
 			parent := v
 		end
 
+	set_environment_variable (a_value: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
+			-- Add an environment variable "a_name=a_value".
+		local
+			tb: like environment_variables
+		do
+			tb := environment_variables
+			if tb = Void then
+				create tb.make (1)
+				environment_variables := tb
+			end
+			tb.force (a_value.as_string_32, a_name.as_string_32)
+		end
+
+	unset_environment_variable (a_name: READABLE_STRING_GENERAL)
+			-- Unset the environment variable "a_name".	
+		local
+			tb: like environment_variables
+		do
+			tb := environment_variables
+			if tb = Void then
+				create tb.make (1)
+				environment_variables := tb
+			end
+			tb.force ("", {DEBUGGER_CONTROLLER}.environment_variable_unset_prefix + a_name.as_string_32)
+		end
+
 feature -- debug output
 
 	debug_output: STRING
@@ -180,7 +206,7 @@ invariant
 	arguments_attached: arguments /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

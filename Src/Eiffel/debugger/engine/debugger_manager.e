@@ -402,6 +402,38 @@ feature -- Debugger data change
 			retry
 		end
 
+	export_profiles_data_to (a_path: PATH)
+			-- Save profiles into `a_path'.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				dbg_storage.profiles_data_to_file (profiles, a_path)
+			else
+				set_error_message ("Unable to save debugger's profiles%N")
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	import_profiles_data_from (a_path: PATH)
+			-- Save profiles into `a_path'.
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				if attached dbg_storage.profiles_data_from_file (a_path) as profs then
+					profiles.merge (profs)
+				end
+			else
+				set_error_message ("Unable to save debugger's profiles%N")
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	restore_debugger_data
 			-- Restore debugger data
 		do
@@ -1761,7 +1793,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -54,8 +54,20 @@ feature -- Write
 		deferred
 		end
 
+feature -- File access.		
+
+	profiles_data_to_file (a_data: like profiles_data_from_storage; a_path: PATH)
+			-- Profiles `a_data'  saved into `a_path'.
+		deferred
+		end
+
+	profiles_data_from_file (a_path: PATH): like profiles_data_from_storage
+			-- Profiles data from file `a_path', if any.
+		deferred
+		end
+
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

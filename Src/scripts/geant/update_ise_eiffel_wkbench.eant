@@ -108,9 +108,6 @@
 		<set name="EIFFEL_SRC_LIBRARY" value="${EIFFEL_SRC}${path_separator}library" />
 		<set name="ISE_EIFFEL_WB_LIBRARY" value="${ISE_EIFFEL}_workbench${path_separator}library" />
 		<geant target="copy_from_library" if="${tmp0_available}=true" />
-		<set name="EIFFEL_SRC_LIBRARY" value="${EIFFEL_SRC}${path_separator}compatible${path_separator}library" />
-		<set name="ISE_EIFFEL_WB_LIBRARY" value="${ISE_EIFFEL}_workbench${path_separator}compatible${path_separator}library" />
-		<geant target="copy_from_library" if="${tmp0_available}=true" />
 		<unset name="EIFFEL_SRC_LIBRARY" />
 		<unset name="ISE_EIFFEL_WB_LIBRARY" />
 		<echo message="! Unavailable: EIFFEL_SRC/library folder= ${EIFFEL_SRC}${path_separator}library" unless="${tmp0_available}=true" />

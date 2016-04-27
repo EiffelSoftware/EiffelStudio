@@ -44,8 +44,7 @@ feature {NONE} -- Initialization
 	initialize_storage
 			-- <Precursor>
 		do
---			create {DEBUGGER_STORAGE_SED} dbg_storage.make (Current)
-			create {ES_DEBUGGER_STORAGE_CELL_SESSION} dbg_storage.make (Current)
+			create {ES_DEBUGGER_FS_STORAGE} dbg_storage.make (Current)
 		end
 
 feature -- Preferences
@@ -162,8 +161,8 @@ feature -- Logger
 			l_logger: like logger_service
 		do
 			l_logger := logger_service
-			if l_logger.is_service_available then
-				l_logger.service.put_message_with_severity (s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
+			if attached l_logger.service as srv then
+				srv.put_message_with_severity (s, {ENVIRONMENT_CATEGORIES}.debugger, {PRIORITY_LEVELS}.normal)
 			end
 		end
 
@@ -185,7 +184,7 @@ feature {NONE} -- Logger
 			-- Note: Do not use directly!	
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

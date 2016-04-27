@@ -12,6 +12,8 @@ class
 inherit
 	DEBUGGER_STORABLE_DATA_I
 
+	ITERABLE [DEBUGGER_EXECUTION_PROFILE]
+
 create
 	make
 
@@ -22,6 +24,14 @@ feature {NONE} -- Initialization
 			n_non_negative: n >= 0
 		do
 			create internal_storage.make (n)
+		end
+
+feature -- Access
+
+	new_cursor: ITERATION_CURSOR [DEBUGGER_EXECUTION_PROFILE]
+			-- Fresh cursor associated with current structure
+		do
+			Result := internal_storage.new_cursor
 		end
 
 feature -- Access
@@ -71,7 +81,6 @@ feature -- Access
 			internal_storage.go_to (cursor)
 		end
 
-
 	profile_by_title (a_title: STRING_32): like profile
 			-- Profile indexed by `a_title'
 		require
@@ -112,6 +121,22 @@ feature -- Element change
 				internal_storage.replace (a_value)
 			else
 				internal_storage.force (a_value)
+			end
+		end
+
+	merge (a_profiles: like Current)
+			-- Merge Current with `a_profiles'.
+			-- Ignore new profile with same uuid as existing profile!
+		local
+			l_uuid: UUID
+		do
+			across
+				a_profiles as ic
+			loop
+				l_uuid := ic.item.uuid
+				if not has (l_uuid) then
+					add (ic.item)
+				end
 			end
 		end
 
@@ -218,14 +243,14 @@ feature -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	internal_storage: ARRAYED_LIST [like profile]
+	internal_storage: ARRAYED_LIST [attached like profile]
 			-- Storage for the profiles.
 
 invariant
 	internal_storage_not_void: internal_storage /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

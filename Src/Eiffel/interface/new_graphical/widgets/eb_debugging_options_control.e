@@ -260,6 +260,7 @@ feature {NONE} -- Display profiles impl
 			g: ES_GRID
 			l_border_box,vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
+			but: EV_BUTTON
 		do
 			create display_profiles_box
 			display_profiles_box.set_padding_width ({ES_UI_CONSTANTS}.vertical_padding)
@@ -295,9 +296,30 @@ feature {NONE} -- Display profiles impl
 				apply_button.disable_sensitive
 --			end
 
-			create reset_button.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
-			layout_constants.set_default_width_for_button (reset_button)
-			reset_button.disable_sensitive
+			create but
+			but.set_pixmap (mini_stock_pixmaps.toolbar_dropdown_icon)
+			but.select_actions.extend (agent (w: EV_WIDGET)
+					local
+						m: EV_MENU
+						mi: EV_MENU_ITEM
+					do
+						create m.make_with_text ("...")
+						create mi.make_with_text_and_action (interface_names.b_reset, agent reset_changes)
+						if has_changed then
+							mi.enable_sensitive
+						else
+							mi.disable_sensitive
+						end
+						m.extend (mi)
+						m.extend (create {EV_MENU_SEPARATOR})
+						create mi.make_with_text_and_action (interface_names.m_import_debugger_profiles, agent do_import_from)
+						m.extend (mi)
+						create mi.make_with_text_and_action (interface_names.m_export_debugger_profiles, agent do_export_to)
+						m.extend (mi)
+
+						m.show_at (w, 5, 5)
+					end(but)
+				)
 
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
@@ -310,8 +332,8 @@ feature {NONE} -- Display profiles impl
 				hb.extend (apply_button)
 				hb.disable_item_expand (apply_button)
 			end
-			hb.extend (reset_button)
-			hb.disable_item_expand (reset_button)
+			hb.extend (but)
+			hb.disable_item_expand (but)
 
 				--| Grid
 			create g
@@ -364,7 +386,7 @@ feature {NONE} -- GUI Properties
 			-- Widget containing profile settings.
 
 	add_button, dup_button, remove_button: EV_BUTTON
-	apply_button, reset_button: EV_BUTTON
+	apply_button: EV_BUTTON
 
 feature {NONE} -- Grid events
 
@@ -533,12 +555,10 @@ feature -- Status Setting
 					if apply_button /= Void then
 						apply_button.enable_sensitive
 					end
-					reset_button.enable_sensitive
 				else
 					if apply_button /= Void then
 						apply_button.disable_sensitive
 					end
-					reset_button.disable_sensitive
 				end
 			end
 		end
@@ -620,8 +640,6 @@ feature -- Data change
 
 	same_string_value (s1, s2: READABLE_STRING_GENERAL): BOOLEAN
 			-- is `s1' and `s2' the same text ?
-		require
-			same_type: (s1 /= Void and s2 /= Void) implies s1.same_type (s2)
 		do
 			if s1 = Void and s2 = Void then
 				Result := True
@@ -724,8 +742,73 @@ feature -- Data change
 
 feature {EB_ARGUMENT_DIALOG} -- Status change
 
+	import_export_file_location_suggestion: detachable PATH
+		local
+			dn: PATH
+			sys_name, tgt_name: READABLE_STRING_GENERAL
+			l_uuid: READABLE_STRING_GENERAL
+			l_name: STRING_32
+		do
+			if workbench.system_defined then
+				l_uuid := workbench.lace.conf_system.uuid.out
+				sys_name := workbench.lace.system.name
+				tgt_name := workbench.lace.target_name
+
+				create dn.make_from_string (workbench.lace.directory_name)
+				create l_name.make_from_string_general (sys_name)
+				l_name.append_character ('.')
+				if not tgt_name.same_string (sys_name) then
+					l_name.append_string_general (tgt_name)
+					l_name.append_character ('.')
+				end
+				l_name.append ("dbg")
+				l_name.append_character ('.')
+				l_name.append ("profiles.xml")
+				Result := dn.extended (l_name)
+			end
+		end
+
+	do_import_from
+			-- Import profiles from file ...
+		local
+			dlg: EV_FILE_OPEN_DIALOG
+		do
+			create dlg.make_with_title (interface_names.t_import_debugger_profiles_from_file)
+			if attached import_export_file_location_suggestion as l_suggested_path then
+				dlg.set_full_file_path (l_suggested_path)
+			end
+			dlg.open_actions.extend (agent (i_dlg: EV_FILE_OPEN_DIALOG)
+				do
+					if attached	i_dlg.full_file_path as p then
+						debugger_manager.import_profiles_data_from (p)
+						load_dbg_options
+					end
+					i_dlg.destroy
+				end(dlg))
+			dlg.show_modal_to_window (window)
+		end
+
+	do_export_to
+			-- Export profiles to file ...
+		local
+			dlg: EV_FILE_SAVE_DIALOG
+		do
+			create dlg.make_with_title (interface_names.t_export_debugger_profiles_to_file)
+			if attached import_export_file_location_suggestion as l_suggested_path then
+				dlg.set_full_file_path (l_suggested_path)
+			end
+			dlg.save_actions.extend (agent (i_dlg: EV_FILE_SAVE_DIALOG)
+				do
+					if attached	i_dlg.full_file_path as p then
+						debugger_manager.export_profiles_data_to (p)
+					end
+					i_dlg.destroy
+				end(dlg))
+			dlg.show_modal_to_window (window)
+		end
+
 	apply_changes
-			--
+			-- Apply change, and thus save parameters.
 		require
 			has_changed: has_changed
 		do
@@ -735,7 +818,7 @@ feature {EB_ARGUMENT_DIALOG} -- Status change
 		end
 
 	reset_changes
-			--
+			-- Reload changes from stored data, and reset any pending change.
 		require
 			has_changed: has_changed
 		do
@@ -1707,7 +1790,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

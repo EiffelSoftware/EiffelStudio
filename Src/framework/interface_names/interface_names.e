@@ -459,6 +459,12 @@ feature -- Accelerator, focus label and menu name
 	f_expand_all: STRING_32				do Result := locale.translation ("Expand all rows in grid") end
 	f_export_watch_tool_expressions_to_file: STRING_32	do Result := locale.translation ("Export Expressions To File") end
 	f_import_watch_tool_expressions_from_file: STRING_32	do Result := locale.translation ("Import Expressions From File") end
+	m_import_debugger_profiles: STRING_32	do Result := locale.translation ("Import from ..") end
+	m_export_debugger_profiles: STRING_32	do Result := locale.translation ("Export to ..") end
+
+	t_import_debugger_profiles_from_file: STRING_32	do Result := locale.translation ("Import parameters from file ..") end
+	t_export_debugger_profiles_to_file: STRING_32	do Result := locale.translation ("Export parameters into file ..") end
+
 
 	m_Dbg_assertion_checking_disable: STRING_32	do Result := locale.translation("Disable Assertion Checking")	end
 	m_Dbg_assertion_checking_restore: STRING_32	do Result := locale.translation("Restore Assertion Checking")	end

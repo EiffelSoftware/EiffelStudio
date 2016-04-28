@@ -321,15 +321,20 @@ feature {NONE} -- Initialization
 			hb2.merge_radio_button_groups (hb1)
 
 				-- Enable/disable sensitive on collection of checkboxes, according to selected radio buttons.
-			l_radio1.select_actions.extend (agent enable_search_in_mode)
-			l_radio1.select_actions.extend (agent hb1cb.enable_sensitive)
-			l_radio1.select_actions.extend (agent hb2cb.disable_sensitive)
-			l_radio2.select_actions.extend (agent enable_search_by_class_mode)
-			l_radio2.select_actions.extend (agent hb1cb.disable_sensitive)
-			l_radio2.select_actions.extend (agent hb2cb.enable_sensitive)
+			if l_radio1 /= Void then
+				l_radio1.select_actions.extend (agent enable_search_in_mode)
+				l_radio1.select_actions.extend (agent hb1cb.enable_sensitive)
+				l_radio1.select_actions.extend (agent hb2cb.disable_sensitive)
 
-				-- Default is "search in .."
-			l_radio1.enable_select
+					-- Default is "search in .."
+				l_radio1.enable_select
+			end
+			if l_radio2 /= Void then
+				l_radio2.select_actions.extend (agent enable_search_by_class_mode)
+				l_radio2.select_actions.extend (agent hb1cb.disable_sensitive)
+				l_radio2.select_actions.extend (agent hb2cb.enable_sensitive)
+			end
+
 		end
 
 	build_iron_package_box

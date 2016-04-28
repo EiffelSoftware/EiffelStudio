@@ -11,9 +11,6 @@ note
 
 class TEST
 
-inherit
-	ANY
-
 create
 	default_create,
 	make

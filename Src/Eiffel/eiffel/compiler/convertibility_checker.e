@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Initialize and check validity of convert clauses in instances of CLASS_C."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -392,8 +392,13 @@ feature -- Initialization/Checking
 						l_success := l_target_class.creator_of_name_id (l_feat.feature_name_id).valid_for (
 							a_context_class)
 						if l_success then
+								-- Because this conversion is performed by creating a new object,
+								-- it is always attached.
+								-- Attachment status of the target type is important in descendants
+								-- that rely solely on conversion information.
+								-- (See test#attach118.)
 							create {FEATURE_CONVERSION_INFO} last_conversion_info.
-								make_from (a_source_type, a_target_type, l_target_class, l_feat)
+								make_from (a_source_type, a_target_type.as_attached_type, l_target_class, l_feat)
 						end
 					end
 				end
@@ -452,8 +457,18 @@ feature -- Initialization/Checking
 							end
 							l_success := l_feat.is_exported_for (a_context_class)
 							if l_success then
-								create {FEATURE_CONVERSION_INFO} last_conversion_info.
-									make_to (a_source_type, a_target_type, l_source_class, l_feat)
+									-- Restore attachment status of the target type
+									-- to match attachment status of the conversion feature.
+									-- Attachment status of the target type is important in descendants
+									-- that rely solely on conversion information.
+									-- (See test#attach118.)
+								if attached l_cl_type then
+									l_conversion_type := l_feat.type.instantiated_in (l_cl_type)
+								else
+									l_conversion_type := l_feat.type
+								end
+								create {FEATURE_CONVERSION_INFO} last_conversion_info.make_to
+									(a_source_type, a_target_type.to_other_attachment (l_conversion_type), l_source_class, l_feat)
 							end
 						end
 					end
@@ -763,7 +778,7 @@ feature {NONE} -- Implementation: access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -794,4 +809,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CONVERTIBILITY_CHECKER
+end

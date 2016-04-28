@@ -348,6 +348,7 @@ feature {NONE} -- Initialization
 
 			create hb
 			vb.extend (hb)
+			vb.disable_item_expand (hb)
 
 			create but.make_with_text_and_action (names.b_cancel, agent on_cancel)
 			layout_constants.set_default_width_for_button (but)

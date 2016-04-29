@@ -237,17 +237,21 @@ feature -- Event
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			l_path: READABLE_STRING_GENERAL
-			l_description: READABLE_STRING_32
+			l_description: detachable READABLE_STRING_32
 			l_name_item: EV_GRID_LABEL_ITEM
 			l_information: STRING_32
+			l_tags_text: detachable STRING_32
 			nb_lines: INTEGER
 		do
 			l_path := a_cfg_data.original_location
 
 				-- Extract description
 			l_description := a_cfg_data.description
-			if l_description = Void or else l_description.is_empty then
-				l_description := once "No description available"
+			if
+				(l_description = Void or else l_description.is_empty) and then
+				attached {READABLE_STRING_GENERAL} a_cfg_data.info ("description") as l_info_description
+			then
+				l_description := l_info_description.as_string_32
 			end
 
 				-- Library name
@@ -257,7 +261,11 @@ feature -- Event
 			else
 				l_name_item.set_pixmap (conf_pixmaps.new_library_icon)
 			end
-			l_name_item.set_tooltip (l_description)
+			if l_description = Void or else l_description.is_empty then
+				l_name_item.set_tooltip (once "No description available")
+			else
+				l_name_item.set_tooltip (l_description)
+			end
 			l_name_item.align_text_top
 			a_row.set_item (name_column, l_name_item)
 
@@ -283,23 +291,58 @@ feature -- Event
 
 				-- Information
 			create l_information.make_empty
-			l_information.append (conf_interface_names.dialog_create_library_location)
-			l_information.append_character ('=')
-			l_information.append_string_general (l_path)
+			if attached one_line_description (l_description) as desc then
+				l_information.append_string_general (desc)
+			end
+--			l_information.append (conf_interface_names.dialog_create_library_location)
+--			l_information.append_character (':')
+--			l_information.append_character (' ')
+--			l_information.append_string_general (l_path)
 			if attached a_cfg_data.info ("tags") as l_tags then
-				l_information.append_character ('%N')
-				l_information.append (conf_interface_names.iron_box_tags_label)
-				l_information.append_character ('=')
-				l_information.append (l_tags)
+				create l_tags_text.make (30)
+				l_tags_text.append (conf_interface_names.iron_box_tags_label)
+				l_tags_text.append_character (':')
+				l_tags_text.append_character (' ')
+				l_tags_text.append (l_tags)
+--				if not l_information.is_empty then
+--					l_information.append_character ('%N')
+--				end
+--				l_information.append_character (l_tags_text)
 			end
 
 			create l_item.make_with_text (l_information)
+			if l_tags_text /= Void then
+				l_item.set_tooltip (l_tags_text)
+			end
 			l_item.align_text_top
 			a_row.set_item (info_column, l_item)
 
 			nb_lines := l_information.occurrences ('%N') + 1
 			if nb_lines > 1 then
 				a_row.set_height (nb_lines * a_row.height)
+			end
+		end
+
+	one_line_description (a_desc: detachable READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL
+		local
+			s: STRING_32
+			i: INTEGER
+		do
+			if a_desc /= Void then
+				create s.make_from_string_general (a_desc)
+				s.left_adjust
+				s.right_adjust
+				if not s.is_empty then
+					i := a_desc.index_of ('%N', 1)
+					if i > 0 then
+						s.keep_head (i - 1)
+						s.right_adjust
+						s.append ("...")
+						Result := s
+					else
+						Result := s
+					end
+				end
 			end
 		end
 
@@ -310,6 +353,7 @@ feature -- Event
 			l_description: READABLE_STRING_32
 			l_name_item: EV_GRID_LABEL_ITEM
 			s: STRING_32
+			l_tags_text: STRING_32
 			l_is_installed: BOOLEAN
 			l_information: STRING_32
 			nb_lines: INTEGER
@@ -318,16 +362,18 @@ feature -- Event
 
 				-- Extract description
 			l_description := a_iron_package.description
-			if l_description = Void or else l_description.is_empty then
-				l_description := once "No description available"
-			end
 
 			l_is_installed := attached {BOOLEAN} a_data.info ("is_installed") as b and then b
 
 				-- Library name
 			create l_name_item.make_with_text (a_iron_package.identifier)
 			l_name_item.set_pixmap (conf_pixmaps.library_iron_package_icon)
-			l_name_item.set_tooltip (l_description)
+			if l_description = Void or else l_description.is_empty then
+				l_name_item.set_tooltip ("No description available")
+			else
+				l_name_item.set_tooltip (l_description)
+			end
+
 			l_name_item.align_text_top
 			a_row.set_item (name_column, l_name_item)
 
@@ -343,11 +389,15 @@ feature -- Event
 
 				-- Information
 			create l_information.make_empty
-			l_information.append (conf_interface_names.dialog_create_library_location)
-			l_information.append_character ('=')
-			l_information.append_string_general (l_path)
+			if attached one_line_description (l_description) as desc then
+				l_information.append_string_general (desc)
+			end
+
+--			l_information.append (conf_interface_names.dialog_create_library_location)
+--			l_information.append_character (':')
+--			l_information.append_character (' ')
+--			l_information.append_string_general (l_path)
 			if attached a_iron_package.tags as l_tags and then not l_tags.is_empty then
-				l_information.append_character ('%N')
 				create s.make_empty
 				across
 					l_tags as ic
@@ -358,12 +408,22 @@ feature -- Event
 					end
 					s.append (ic.item)
 				end
-				l_information.append (conf_interface_names.iron_box_tags_label)
-				l_information.append_character ('=')
-				l_information.append (s)
+				create l_tags_text.make (30)
+				l_tags_text.append (conf_interface_names.iron_box_tags_label)
+				l_tags_text.append_character (':')
+				l_tags_text.append_character (' ')
+				l_tags_text.append (s)
+
+--				if not l_information.is_empty then
+--					l_information.append_character ('%N')
+--				end
+--				l_information.append (l_tags_text)
 			end
 
 			create l_item.make_with_text (l_information)
+			if l_tags_text /= Void then
+				l_item.set_tooltip (l_tags_text)
+			end
 			l_item.align_text_top
 			a_row.set_item (info_column, l_item)
 			nb_lines := l_information.occurrences ('%N') + 1
@@ -381,7 +441,6 @@ feature -- Event
 			l_name_item: EV_GRID_LABEL_ITEM
 			s: STRING_32
 			nb: INTEGER
-			l_is_installed: BOOLEAN
 			l_information: STRING_32
 			nb_lines: INTEGER
 			l_classes_txt: detachable STRING_32
@@ -389,12 +448,19 @@ feature -- Event
 			l_path := a_lib_info.location.name
 
 				-- Extract description
-			l_description := "Library info"
+--			l_description := "Library info"
+			if attached {READABLE_STRING_GENERAL} a_data.info ("description") as d then
+				l_description := d.as_string_32
+			end
 
 				-- Library name
 			create l_name_item.make_with_text (a_lib_info.name)
 			l_name_item.set_pixmap (conf_pixmaps.new_library_icon)
-			l_name_item.set_tooltip (l_description)
+			if l_description = Void or else l_description.is_empty then
+				l_name_item.set_tooltip ("No description available")
+			else
+				l_name_item.set_tooltip (l_description)
+			end
 			l_name_item.align_text_top
 			a_row.set_item (name_column, l_name_item)
 
@@ -413,8 +479,12 @@ feature -- Event
 					s.append_string_general (ic.item)
 				end
 				create l_classes_txt.make_from_string (conf_interface_names.dialog_search_classes)
-				l_classes_txt.append_character ('=')
+				l_classes_txt.append_character (':')
+				l_classes_txt.append_character (' ')
 				l_classes_txt.append (s)
+				if l_classes_txt.is_whitespace then
+					l_classes_txt := Void
+				end
 			end
 			create l_item.make_with_text (conf_interface_names.dialog_search_found_n_classes (nb))
 			a_row.set_item (status_column, l_item)
@@ -422,11 +492,18 @@ feature -- Event
 
 				-- Information
 			create l_information.make_empty
-			l_information.append (conf_interface_names.dialog_create_library_location)
-			l_information.append_character ('=')
-			l_information.append_string_general (l_path)
-			if l_classes_txt /= Void and then not l_classes_txt.is_whitespace then
-				l_information.append ("%N")
+			if attached one_line_description (l_description) as desc then
+				l_information.append_string_general (desc)
+			elseif l_classes_txt = Void then
+				l_information.append (conf_interface_names.dialog_create_library_location)
+				l_information.append_character (':')
+				l_information.append_character (' ')
+				l_information.append_string_general (l_path)
+			end
+			if l_classes_txt /= Void then
+				if not l_information.is_empty then
+					l_information.append_character ('%N')
+				end
 				l_information.append (l_classes_txt)
 			end
 

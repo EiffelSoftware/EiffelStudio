@@ -131,14 +131,9 @@ feature {NONE} -- Initialization
 			-- Build the filter + grid + button.
 		local
 			l_btn: EV_BUTTON
-			l_opts_vb, vbf, vb2, l_padding: EV_VERTICAL_BOX
-			l_search_hb, hbf, hb1,hb2,hb1cb,hb2cb: EV_HORIZONTAL_BOX
-			l_radio1, l_radio2: EV_RADIO_BUTTON
-			l_filter: like filter
-			l_clear_filter_button: EV_BUTTON
+			vb2, l_padding: EV_VERTICAL_BOX
+			hb1: EV_HORIZONTAL_BOX
 			l_update_index_button: EV_BUTTON
-			cb: EV_CHECK_BUTTON
-			l_checkboxes: like provider_checkboxes
 		do
 				-- default libraries
 			create vb2
@@ -212,13 +207,11 @@ feature {NONE} -- Initialization
 			-- |[ Search by class ( )  index [x]        ]| LL |[[ search ][Reset]]|
 
 		local
-			l_btn: EV_BUTTON
-			l_opts_vb, vbf, vb2, l_padding: EV_VERTICAL_BOX
+			l_opts_vb, vbf: EV_VERTICAL_BOX
 			l_search_hb, hbf, hb1,hb2,hb1cb,hb2cb: EV_HORIZONTAL_BOX
 			l_radio1, l_radio2: EV_RADIO_BUTTON
 			l_filter: like filter
 			l_clear_filter_button: EV_BUTTON
-			l_update_index_button: EV_BUTTON
 			cb: EV_CHECK_BUTTON
 			l_checkboxes: like provider_checkboxes
 		do
@@ -426,7 +419,7 @@ feature {NONE} -- Update filter
 				update_filter_timeout := l_update_filter_timeout
 				l_update_filter_timeout.actions.extend_kamikaze (agent delayed_update_filter)
 			end
-			l_update_filter_timeout.set_interval (700)
+			l_update_filter_timeout.set_interval (1_000) -- 1 second is enough.
 		end
 
 	cancel_delayed_update_filter
@@ -680,6 +673,7 @@ feature {NONE} -- Action handlers
 				w := iron_package_box
 				on_iron_package_selected (l_iron_package)
 			elseif attached {LIBRARY_INFO} a_search_item.value as l_lib_info then
+					-- FIXME: try to get more information from the associated library!
 				w := library_selection_box
 				on_library_selected (Void)
 				library_widget.set_name (l_lib_info.name)

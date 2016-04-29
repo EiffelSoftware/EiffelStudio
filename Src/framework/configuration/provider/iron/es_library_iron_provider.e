@@ -26,6 +26,8 @@ feature -- Access
 		local
 			l_installation_api: IRON_INSTALLATION_API
 			loc: STRING_32
+			s: STRING_32
+			k: READABLE_STRING_GENERAL
 			pk: IRON_PACKAGE
 		do
 			l_installation_api := iron_installation_api
@@ -42,20 +44,39 @@ feature -- Access
 							loc := {STRING} "iron:" + ic.item.identifier + {STRING_32} ":" + proj_ic.item.name
 							if attached conf_system_from (a_target, loc, False) as cfg then
 								Result.force (cfg)
-								if attached pk.items as l_pk_items then
-									across
-										l_pk_items as pk_items_ic
-									loop
-										if attached pk_items_ic.item as l_text then
-											cfg.set_info (l_text, pk_items_ic.key)
-										end
-									end
-								end
 								if attached pk.title as pk_title then
 									cfg.set_info (pk_title, "title")
 								end
 								if attached pk.description as pk_desc then
 									cfg.set_info (pk_desc, "description")
+								end
+								if attached pk.tags as l_tags then
+									create s.make_empty
+									across
+										l_tags as tags_ic
+									loop
+										if not s.is_empty then
+											s.append_string (", ")
+										end
+										s.append_string (tags_ic.item)
+									end
+									cfg.set_info (s, "tags")
+								end
+								if attached pk.items as l_pk_items then
+									across
+										l_pk_items as pk_items_ic
+									loop
+										k := pk_items_ic.key
+										if 
+											k.is_case_insensitive_equal ("title")
+											or k.is_case_insensitive_equal ("description")
+											or k.is_case_insensitive_equal ("tags")
+										then
+												-- Already set
+										elseif attached pk_items_ic.item as l_text then
+											cfg.set_info (l_text, pk_items_ic.key)
+										end
+									end
 								end
 							end
 						end

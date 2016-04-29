@@ -22,40 +22,56 @@ feature {NONE} -- Initialization
 	make (a_target: CONF_TARGET)
 			-- Build the name + location + browse button.
 		local
-			vb2: EV_VERTICAL_BOX
+			vb,vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_btn: EV_BUTTON
-			l_lbl: EV_LABEL
+			l_name_label,l_location_label,l_info_label: EV_LABEL
+			w: INTEGER
 		do
 			target := a_target
 			create on_ok_actions
 			create on_cancel_actions
 
-				-- name
 			create vb2
 			widget := vb2
 			vb2.set_padding (layout_constants.small_padding_size)
 			vb2.set_border_width (layout_constants.small_border_size)
 
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_name)
-			vb2.extend (l_lbl)
-			vb2.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
+			create vb
+			vb.set_padding (layout_constants.tiny_padding_size)
+			vb2.extend (vb)
+
+				-- name
+			create hb
+			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+
+			create l_name_label.make_with_text (conf_interface_names.dialog_create_library_name)
+			hb.extend (l_name_label)
+			hb.disable_item_expand (l_name_label)
+			l_name_label.align_text_right
 
 			create field_name
-			vb2.extend (field_name)
-			vb2.disable_item_expand (field_name)
+			hb.extend (field_name)
+--			hb.disable_item_expand (field_name)
 
 				-- location
-			create l_lbl.make_with_text (conf_interface_names.dialog_create_library_location)
-			vb2.extend (l_lbl)
-			vb2.disable_item_expand (l_lbl)
-			l_lbl.align_text_left
+			create hb
+			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
 
-			create hb2
-			vb2.extend (hb2)
-			vb2.disable_item_expand (hb2)
-			hb2.set_padding (layout_constants.small_padding_size)
+			create l_location_label.make_with_text (conf_interface_names.dialog_create_library_location)
+			hb.extend (l_location_label)
+			hb.disable_item_expand (l_location_label)
+			l_location_label.align_text_right
+
+			hb2 := hb
+--			create hb2
+--			vb2.extend (hb2)
+--			vb2.disable_item_expand (hb2)
+--			hb2.set_padding (layout_constants.small_padding_size)
 
 			create field_location
 			hb2.extend (field_location)
@@ -64,6 +80,30 @@ feature {NONE} -- Initialization
 			l_btn.set_pixmap (conf_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
+			button_location_browse := l_btn
+
+				-- Information
+			create hb
+			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+--			vb.disable_item_expand (hb)
+
+			create l_info_label.make_with_text (conf_interface_names.dialog_create_library_information)
+			hb.extend (l_info_label)
+			hb.disable_item_expand (l_info_label)
+			l_info_label.align_text_right
+
+			create field_info
+			field_info.disable_edit
+			field_info.set_minimum_height (60)
+			hb.extend (field_info)
+
+
+				-- Harmony...
+			w := l_name_label.minimum_width.max (l_location_label.minimum_width).max (l_info_label.minimum_width)
+			l_name_label.set_minimum_width (w + 3)
+			l_location_label.set_minimum_width (w + 3)
+			l_info_label.set_minimum_width (w + 3)
 
 			-----------------
 			--| [Ok] [Cancel]
@@ -108,6 +148,9 @@ feature -- Access
 
 	widget: EV_WIDGET
 
+	field_info: EV_RICH_TEXT
+			-- Information text area.
+
 	name: STRING_32
 			-- Name of the library.
 		do
@@ -127,6 +170,9 @@ feature {NONE} -- Widgets
 
 	field_location: EV_TEXT_FIELD
 			-- Field for the location of the library configuration file, choosen by the user.
+
+	button_location_browse: EV_BUTTON
+			-- Button "browse" associated with `field_location'.
 
 	browse_dialog: EV_FILE_OPEN_DIALOG
 			-- Dialog to browse to a library
@@ -148,12 +194,14 @@ feature -- Element change
 
 	set_library (cfg: detachable CONF_SYSTEM_VIEW)
 		do
-			if cfg = Void then
-				field_name.remove_text
-				field_location.remove_text
-			else
+			field_name.remove_text
+			field_location.remove_text
+			if cfg /= Void then
 				field_name.set_text (cfg.library_target_name)
-				field_location.set_text (cfg.original_location)
+				set_location (cfg.original_location)
+				set_info_from (cfg)
+			else
+				set_info_from (Void)
 			end
 		end
 
@@ -165,6 +213,150 @@ feature -- Element change
 	set_location (a_location: READABLE_STRING_GENERAL)
 		do
 			field_location.set_text (a_location)
+			if a_location.starts_with ("iron:") then
+				button_location_browse.hide
+			else
+				button_location_browse.show
+			end
+		end
+
+	set_info_from (cfg: detachable CONF_SYSTEM_VIEW)
+		local
+			l_description: detachable READABLE_STRING_GENERAL
+			i,j: INTEGER
+			txt: like field_info
+		do
+			txt := field_info
+			txt.enable_edit
+			txt.remove_text
+
+			if cfg /= Void then
+				l_description := cfg.description
+				if
+					(l_description = Void or else l_description.is_whitespace) and then
+					attached {READABLE_STRING_GENERAL} cfg.info ("description") as d
+				then
+					l_description := d
+				end
+				if l_description /= Void then
+					i := txt.text_length
+					txt.append_text (l_description)
+					if not l_description.ends_with ("%N") then
+						txt.append_text ("%N")
+					end
+					j := txt.text_length + 1
+					txt.format_region (i, j, description_text_format)
+					txt.append_text ("%N")
+				end
+				if attached cfg.info_items as l_items then
+					across
+						l_items as ic
+					loop
+						if ic.key.starts_with ("_") then
+								-- Ignore.
+						elseif ic.key.same_string ("description") then
+								-- Already processed.
+						else
+							i := txt.text_length
+							txt.append_text (ic.key)
+							j := txt.text_length + 1
+							txt.format_region (i, j, keyword_text_format)
+
+							txt.append_text (":")
+							i := txt.text_length
+							txt.append_text (ic.item)
+							txt.append_text ("%N")
+							j := txt.text_length + 1
+							txt.format_region (i, j, description_text_format)
+						end
+					end
+				end
+			end
+			txt.disable_edit
+		end
+
+feature {NONE} -- UI
+
+	normal_text_format: EV_CHARACTER_FORMAT
+		once
+			create Result.make_with_font (normal_font)
+			Result.set_color (normal_fg_color)
+		end
+
+	keyword_text_format: EV_CHARACTER_FORMAT
+		once
+			create Result.make_with_font (keyword_font)
+			Result.set_color (normal_fg_color)
+		end
+
+	name_text_format: EV_CHARACTER_FORMAT
+		once
+			create Result.make_with_font (name_font)
+			Result.set_color (name_fg_color)
+		end
+
+	description_text_format: EV_CHARACTER_FORMAT
+		once
+			create Result.make_with_font (description_font)
+			Result.set_color (normal_fg_color)
+		end
+
+	tags_text_format: EV_CHARACTER_FORMAT
+		once
+			create Result.make_with_font (tags_font)
+			Result.set_color (tags_fg_color)
+		end
+
+	normal_font: EV_FONT
+		once
+			create Result
+		end
+
+	keyword_font: EV_FONT
+		local
+			ft: EV_FONT
+		once
+			ft := normal_font
+			create Result.make_with_values (ft.family, {EV_FONT_CONSTANTS}.Weight_bold, ft.shape, ft.height)
+		end
+
+	name_font: EV_FONT
+		local
+			ft: EV_FONT
+		once
+			ft := normal_font
+			create Result.make_with_values ({EV_FONT_CONSTANTS}.family_typewriter, {EV_FONT_CONSTANTS}.Weight_bold, ft.shape, ft.height)
+		end
+
+	description_font: EV_FONT
+		local
+			ft: EV_FONT
+		once
+			ft := normal_font
+			create Result.make_with_values (ft.family, ft.weight, {EV_FONT_CONSTANTS}.shape_italic, ft.height)
+		end
+
+	tags_font: EV_FONT
+		local
+			ft: EV_FONT
+		once
+			ft := normal_font
+			create Result.make_with_values (ft.family, ft.weight, {EV_FONT_CONSTANTS}.shape_italic, ft.height)
+		end
+
+	name_fg_color: EV_COLOR
+		once
+			create Result.make_with_8_bit_rgb (210, 0, 0)
+		end
+
+	normal_fg_color: EV_COLOR
+		once
+			create Result.make_with_8_bit_rgb (0, 0, 0)
+		end
+
+	tags_fg_color: EV_COLOR
+		once
+			create Result.make_with_8_bit_rgb (0, 0, 210)
 		end
 
 feature {NONE} -- Actions

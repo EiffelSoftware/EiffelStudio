@@ -22,10 +22,12 @@ feature {NONE} -- Initialization
 	make (a_iron_service: ES_IRON_SERVICE)
 			-- Build the iron package box.
 		local
-			vb2,vb3: EV_VERTICAL_BOX
+			vb, vb2,vb3: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			txt: EV_RICH_TEXT
 			l_btn: EV_BUTTON
+			l_package_name_label, l_info_label, l_location_label: EV_LABEL
+			w: INTEGER
 		do
 			create on_install_actions
 			create on_uninstall_actions
@@ -40,12 +42,48 @@ feature {NONE} -- Initialization
 			vb2.set_border_width (layout_constants.small_border_size)
 
 			-----------------
-			--| [ Text  ] [Install]
-			--| [       ] [Remove]
+			--| [ Package  ]
+			--| [ Location ]
+			--| [ Text     ] [Install]
+			--| [          ] [Remove]
+
+			create vb
+			vb.set_padding_width (layout_constants.tiny_padding_size)
+			vb2.extend (vb)
+
 			create hb
 			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
 
-			vb2.extend (hb)
+			create l_package_name_label.make_with_text (conf_interface_names.iron_box_package_label)
+			l_package_name_label.align_text_right
+			hb.extend (l_package_name_label)
+			hb.disable_item_expand (l_package_name_label)
+			create field_package_name
+			hb.extend (field_package_name)
+
+			create hb
+			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
+
+			create l_location_label.make_with_text (conf_interface_names.iron_box_location_label)
+			l_location_label.align_text_right
+			hb.extend (l_location_label)
+			hb.disable_item_expand (l_location_label)
+			create field_location
+			hb.extend (field_location)
+
+			create hb
+			hb.set_padding (layout_constants.small_padding_size)
+			vb.extend (hb)
+
+
+			create l_info_label.make_with_text (conf_interface_names.iron_box_information_label)
+			l_info_label.align_text_right
+			hb.extend (l_info_label)
+			hb.disable_item_expand (l_info_label)
 
 			create txt
 			field_text := txt
@@ -72,6 +110,11 @@ feature {NONE} -- Initialization
 			vb3.disable_item_expand (l_btn)
 			l_btn.select_actions.extend (agent on_uninstall)
 			layout_constants.set_default_width_for_button (l_btn)
+
+			w := l_package_name_label.minimum_width.max (l_location_label.minimum_width).max (l_info_label.minimum_width)
+			l_package_name_label.set_minimum_width (w + 3)
+			l_location_label.set_minimum_width (w + 3)
+			l_info_label.set_minimum_width (w + 3)
 		end
 
 	iron_service: ES_IRON_SERVICE
@@ -109,6 +152,12 @@ feature -- Access
 
 feature {NONE} -- Widgets		
 
+	field_package_name: EV_TEXT_FIELD
+			-- Package name field.
+
+	field_location: EV_TEXT_FIELD
+			-- Location/uri field.
+
 	field_text: EV_RICH_TEXT
 			-- Overview of the iron package.
 
@@ -135,8 +184,16 @@ feature -- Element change
 			txt := field_text
 			txt.enable_edit
 			txt.remove_text
+			field_location.enable_edit
+			field_package_name.enable_edit
+
+			field_location.remove_text
+			field_package_name.remove_text
 
 			if p /= Void then
+				field_package_name.set_text (p.human_identifier)
+				field_location.set_text (p.location.string)
+
 				l_api := iron_service.installation_api
 				is_installed := l_api.is_package_installed (p)
 				if is_installed then
@@ -145,21 +202,33 @@ feature -- Element change
 					button_install.enable_sensitive
 				end
 
-				txt.set_current_format (normal_text_format)
-				i := txt.text_length
-				txt.append_text (conf_interface_names.iron_box_package_label)
-				j := txt.text_length + 1
-				txt.format_region (i, j, keyword_text_format)
-				txt.append_text (" ")
+--				txt.set_current_format (normal_text_format)
+--				i := txt.text_length
+--				txt.append_text (conf_interface_names.iron_box_package_label)
+--				j := txt.text_length + 1
+--				txt.format_region (i, j, keyword_text_format)
+--				txt.append_text (" ")
 
-				i := txt.text_length
-				txt.append_text (p.human_identifier)
-				j := txt.text_length + 1
-				txt.format_region (i, j, name_text_format)
-				txt.append_text ("%N")
+--				i := txt.text_length
+--				txt.append_text (p.human_identifier)
+--				j := txt.text_length + 1
+--				txt.format_region (i, j, name_text_format)
+--				txt.append_text ("%N")
 
+				if attached p.description as desc and then not desc.is_empty then
+					i := txt.text_length
+					txt.append_text (desc)
+					if not desc.ends_with_general ("%N") then
+						txt.append_text ("%N")
+					end
+
+					j := txt.text_length + 1
+					txt.format_region (i, j, description_text_format)
+					txt.append_text ("%N")
+				end
 				if attached p.tags as p_tags and then not p_tags.is_empty then
 					i := txt.text_length
+
 					txt.append_text (conf_interface_names.iron_box_tags_label)
 					j := txt.text_length + 1
 					txt.format_region (i, j, keyword_text_format)
@@ -178,15 +247,6 @@ feature -- Element change
 					txt.append_text ("%N")
 				end
 
-				txt.append_text ("%N")
-				if attached p.description as desc and then not desc.is_empty then
-					i := txt.text_length
-					txt.append_text (desc)
-					txt.append_text ("%N")
-					j := txt.text_length + 1
-					txt.format_region (i, j, description_text_format)
-					txt.append_text ("%N")
-				end
 				if attached p.items as p_items then
 					across
 						p_items as ic
@@ -234,6 +294,8 @@ feature -- Element change
 			end
 
 			txt.disable_edit
+			field_location.disable_edit
+			field_package_name.disable_edit
 		end
 
 	normal_text_format: EV_CHARACTER_FORMAT

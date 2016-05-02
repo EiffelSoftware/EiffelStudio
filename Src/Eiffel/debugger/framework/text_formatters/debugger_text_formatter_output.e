@@ -331,11 +331,9 @@ feature -- Call stack
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 			args_list: LIST [ABSTRACT_DEBUG_VALUE]
 		do
-			ecse ?= cse
-			if ecse /= Void then
+			if attached {EIFFEL_CALL_STACK_ELEMENT} cse as ecse then
 				args_list := ecse.arguments
 				if args_list /= Void then
 					from
@@ -358,15 +356,13 @@ feature -- Call stack
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
 			resval: ABSTRACT_DEBUG_VALUE
 
 			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
 			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
 			locals_list: LIST [ABSTRACT_DEBUG_VALUE]
 		do
-			ecse ?= cse
-			if ecse /= Void then
+			if attached {EIFFEL_CALL_STACK_ELEMENT} cse as ecse then
 				locals_list := ecse.locals
 				resval := ecse.result_value
 
@@ -411,17 +407,17 @@ feature -- Call stack
 	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display information about associated routine.
 		local
-			ecse: EIFFEL_CALL_STACK_ELEMENT
-			c, oc	: CLASS_C
+			ecse: detachable EIFFEL_CALL_STACK_ELEMENT
+			c, oc: CLASS_C
 			last_pos: INTEGER
 			oaddr: STRING
 			s: STRING
 		do
 			oaddr := cse.object_address_to_string
-			ecse ?= cse
-			if ecse /= Void then
-				c := ecse.dynamic_class
-				oc := ecse.written_class
+			if attached {EIFFEL_CALL_STACK_ELEMENT} cse as l_ecse then
+				ecse := l_ecse
+				c := l_ecse.dynamic_class
+				oc := l_ecse.written_class
 			end
 
 				-- Print object address (14 characters)
@@ -446,9 +442,9 @@ feature -- Call stack
 				c.append_name (st)
 				st.add_string (" ")
 				last_pos := c.name.count + 14
-			elseif cse.class_name /= Void then
-				st.add_string (cse.class_name)
-				last_pos := cse.class_name.count + 14
+			elseif attached cse.class_name as l_class_name then
+				st.add_string (l_class_name)
+				last_pos := l_class_name.count + 14
 			else
 				st.add_string ("NOT FOUND ")
 				last_pos := 9 + 14
@@ -754,34 +750,42 @@ feature {NONE} -- Conversion
 		do
 			Result ?= v
 		end
+
 	expanded_value (v: ABSTRACT_DEBUG_VALUE): EXPANDED_VALUE
 		do
 			Result ?= v
 		end
+
 	abstract_special_value (v: ABSTRACT_DEBUG_VALUE): ABSTRACT_SPECIAL_VALUE
 		do
 			Result ?= v
 		end
+
 	character_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_VALUE
 		do
 			Result ?= v
 		end
+
 	character_32_value (v: ABSTRACT_DEBUG_VALUE): CHARACTER_32_VALUE
 		do
 			Result ?= v
 		end
+
 	dummy_message_debug_value (v: ABSTRACT_DEBUG_VALUE): DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			Result ?= v
 		end
+
 	exception_debug_value (v: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE
 		do
 			Result ?= v
 		end
+
 	eifnet_debug_unknown_type_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_UNKNOWN_TYPE_VALUE
 		do
 			Result ?= v
 		end
+		
 	eifnet_debug_native_array_value (v: ABSTRACT_DEBUG_VALUE): EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 		do
 			Result ?= v
@@ -817,7 +821,7 @@ feature {NONE} -- Constants
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

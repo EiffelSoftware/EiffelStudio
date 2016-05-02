@@ -72,6 +72,8 @@ feature -- Output
 
 			a_formatter.process_keyword_text (locale_formatter.translation (lb_system), Void)
 			a_formatter.add_new_line
+
+				-- System name.			
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_name)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -83,6 +85,7 @@ feature -- Output
 			a_formatter.process_basic_text (l_lace.conf_system.name)
 			a_formatter.add_new_line
 
+				-- Target
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_target)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -93,6 +96,7 @@ feature -- Output
 			a_formatter.process_basic_text (l_lace.target_name)
 			a_formatter.add_new_line
 
+				-- Configuration file location
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_configuration)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -110,10 +114,12 @@ feature -- Output
 			if l_count < l_max_len then
 				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
 			end
+				-- Project directory
 			l_project_location := eiffel_project.project_location
 			a_formatter.process_basic_text (l_project_location.location.name)
 			a_formatter.add_new_line
 
+				-- Compilation directory.
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_compilation)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -124,6 +130,7 @@ feature -- Output
 			a_formatter.process_basic_text (l_project_location.target_path.name)
 			a_formatter.add_new_line
 
+				-- Concurrency
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_concurrency)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -147,6 +154,7 @@ feature -- Output
 			a_formatter.process_basic_text (locale_formatter.translation (concurrency_name))
 			a_formatter.add_new_line
 
+				--| Console or Graphical mode?
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_console_application)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -165,6 +173,7 @@ feature -- Output
 			end
 			a_formatter.add_new_line
 
+				-- Others information
 			if l_compiled then
 						-- Display if we are in experimental or compatible mode, otherwise nothing.
 				if eiffel_ace.system.compiler_profile.is_experimental_mode then
@@ -262,7 +271,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -330,32 +330,34 @@ feature {NONE} -- Persistence
 			doc := new_xml_document (exceptions_handler_data_name, "debugger-exception-handler-1-0-0")
 
 			rt := doc.root_element
-			if a_data.enabled then
-				rt.add_unqualified_attribute ("enabled", "True")
-			end
-			if a_data.catcall_console_warning_disabled then
-				create elt.make (rt, "catcall_console_warning", rt.namespace)
-				elt.add_unqualified_attribute ("disabled", "True")
-			end
-			if a_data.catcall_debugger_warning_disabled then
-				create elt.make (rt, "catcall_debugger_warning", rt.namespace)
-				elt.add_unqualified_attribute ("disabled", "True")
-			end
-			across
-				a_data.handled_exceptions_by_name as ic
-			loop
-				create elt.make (rt, "exception", rt.namespace)
-				elt.add_unqualified_attribute ("name", ic.item.name)
-				inspect ic.item.role
-				when {DBG_EXCEPTION_HANDLER}.role_disabled then
-					elt.add_unqualified_attribute ("role", "disabled")
-				when {DBG_EXCEPTION_HANDLER}.role_continue then
-					elt.add_unqualified_attribute ("role", "continue")
-				when {DBG_EXCEPTION_HANDLER}.role_stop then
-					elt.add_unqualified_attribute ("role", "stop")
-				else
+			if a_data /= Void then
+				if a_data.enabled then
+					rt.add_unqualified_attribute ("enabled", "True")
 				end
-				rt.force_last (elt)
+				if a_data.catcall_console_warning_disabled then
+					create elt.make (rt, "catcall_console_warning", rt.namespace)
+					elt.add_unqualified_attribute ("disabled", "True")
+				end
+				if a_data.catcall_debugger_warning_disabled then
+					create elt.make (rt, "catcall_debugger_warning", rt.namespace)
+					elt.add_unqualified_attribute ("disabled", "True")
+				end
+				across
+					a_data.handled_exceptions_by_name as ic
+				loop
+					create elt.make (rt, "exception", rt.namespace)
+					elt.add_unqualified_attribute ("name", ic.item.name)
+					inspect ic.item.role
+					when {DBG_EXCEPTION_HANDLER}.role_disabled then
+						elt.add_unqualified_attribute ("role", "disabled")
+					when {DBG_EXCEPTION_HANDLER}.role_continue then
+						elt.add_unqualified_attribute ("role", "continue")
+					when {DBG_EXCEPTION_HANDLER}.role_stop then
+						elt.add_unqualified_attribute ("role", "stop")
+					else
+					end
+					rt.force_last (elt)
+				end
 			end
 
 			save_xml_document_to (doc, a_path)

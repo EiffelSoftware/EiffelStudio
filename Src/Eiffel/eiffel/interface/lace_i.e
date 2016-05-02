@@ -201,13 +201,20 @@ feature -- Status setting
 			reset_iron_packages_to_install
 			if attached target as tgt then
 				if attached tgt.precompile as pre then
-					if attached conf_location_mapper.expected_action (pre.location.original_path) as l_map_action then
-						print ("Manual op?%N")
-					end
 					s := pre.location.original_path
 					p := pre.location.evaluated_path
 					fn := pre.path
+
+					if attached conf_location_mapper.expected_action (s) as l_action_info then
+						check attached {CONF_LOCATION_IRON_MAPPING} l_action_info.mapping end
+						if l_action_info.is_action ("iron install") then
+							if attached l_action_info.parameter ("package_name") as l_package_name then
+								suggest_iron_package_installation (l_package_name)
+							end
+						end
+					end
 				end
+
 				across
 					tgt.libraries as ic
 				loop
@@ -215,7 +222,7 @@ feature -- Status setting
 					p := ic.item.location.evaluated_path
 					fn := ic.item.path
 
-					if attached conf_location_mapper.expected_action (ic.item.location.original_path) as l_action_info then
+					if attached conf_location_mapper.expected_action (s) as l_action_info then
 						check attached {CONF_LOCATION_IRON_MAPPING} l_action_info.mapping end
 						if l_action_info.is_action ("iron install") then
 							if attached l_action_info.parameter ("package_name") as l_package_name then

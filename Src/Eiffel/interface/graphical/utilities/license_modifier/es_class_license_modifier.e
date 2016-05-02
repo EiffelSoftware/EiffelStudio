@@ -107,8 +107,7 @@ feature {NONE} -- Access
 		local
 			l_ast: detachable like ast
 		do
-			l_ast := ast
-			Result := l_ast.internal_bottom_indexes
+			Result := ast.internal_bottom_indexes
 		end
 
 feature -- Element change
@@ -318,8 +317,6 @@ feature {NONE} -- Basic operations: Modifications
 			a_license_is_valid_license: is_valid_license (a_license)
 		local
 			l_wrapper: like eiffel_parser_wrapper
-			l_indexing: detachable INDEXING_CLAUSE_AS
-			l_match_list: detachable LEAF_AS_LIST
 			l_index: INDEX_AS
 			l_old_index: detachable INDEX_AS
 			l_tag_name: STRING_GENERAL
@@ -328,23 +325,25 @@ feature {NONE} -- Basic operations: Modifications
 			l_wrapper := eiffel_parser_wrapper
 			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license, context_class.options, True, Void)
 			if not l_wrapper.has_error then
-				l_indexing ?= l_wrapper.ast_node
-				l_match_list := l_wrapper.ast_match_list
-				if l_indexing /= Void and not l_indexing.is_empty then
-					check l_match_list_attached: l_match_list /= Void end
-					from l_indexing.start until l_indexing.after loop
-						l_index := l_indexing.item_for_iteration
-						l_tag_name := l_index.tag.name
-						l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
-						if l_old_index /= Void then
-							l_atoms := l_old_index.index_list
-							replace_code (l_atoms.complete_character_start_position (a_match_list),
-										l_atoms.complete_character_end_position (a_match_list),
-										l_index.index_list.text (l_match_list))
-						else
-							insert_code (a_ast.complete_character_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
+				if 
+					attached {INDEXING_CLAUSE_AS} l_wrapper.ast_node as l_indexing and then 
+					not l_indexing.is_empty 
+				then
+					check attached {LEAF_AS_LIST} l_wrapper.ast_match_list as l_match_list then
+						from l_indexing.start until l_indexing.after loop
+							l_index := l_indexing.item_for_iteration
+							l_tag_name := l_index.tag.name
+							l_old_index := a_ast.index_as_of_tag_name (l_tag_name)
+							if l_old_index /= Void then
+								l_atoms := l_old_index.index_list
+								replace_code (l_atoms.complete_character_start_position (a_match_list),
+											l_atoms.complete_character_end_position (a_match_list),
+											l_index.index_list.text (l_match_list))
+							else
+								insert_code (a_ast.complete_character_end_position (a_match_list) + 1, "%N%T" + l_index.text (l_match_list))
+							end
+							l_indexing.forth
 						end
-						l_indexing.forth
 					end
 				end
 			end

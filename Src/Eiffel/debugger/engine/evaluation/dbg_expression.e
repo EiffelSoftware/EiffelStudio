@@ -342,7 +342,7 @@ feature {DBG_EXPRESSION, DBG_EXPRESSION_EVALUATION, DBG_EXPRESSION_EVALUATOR, AS
 					if not has_syntax_error then
 						en := p.expression_node
 						if en /= Void then
-							ast ?= p.expression_node
+							ast := p.expression_node
 							check
 								ast /= Void
 							end
@@ -420,7 +420,7 @@ invariant
 	valid_context: context.is_coherent
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

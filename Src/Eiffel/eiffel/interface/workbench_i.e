@@ -287,7 +287,7 @@ feature -- Commands
 			l_prc_factory:  PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_success: BOOLEAN
-			l_wd: IMMUTABLE_STRING_32
+			l_wd: detachable IMMUTABLE_STRING_32
 			l_cmd: STRING_32
 			l_args: ARRAYED_LIST [STRING_8]
 			l_state: CONF_STATE
@@ -301,8 +301,10 @@ feature -- Commands
 			loop
 				l_action := an_actions.item
 				if l_action.is_enabled (l_state) then
-					if l_action.working_directory /= Void then
-						l_wd := l_action.working_directory.evaluated_path.name
+					if attached l_action.working_directory as l_working_directory then
+						l_wd := l_working_directory.evaluated_path.name
+					else
+						l_wd := Void
 					end
 					if platform_constants.is_windows then
 						l_cmd := l_action.command
@@ -311,7 +313,7 @@ feature -- Commands
 						l_cmd := {STRING_32} "/bin/sh"
 						create l_args.make (2)
 						l_args.extend ("-c")
-						l_args.extend ("%'%'"+l_action.command+"%'%'")
+						l_args.extend ("%'%'" + l_action.command + "%'%'")
 						l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
 					end
 					l_prc_launcher.set_separate_console (is_gui)

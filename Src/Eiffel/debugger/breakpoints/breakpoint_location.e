@@ -170,7 +170,7 @@ feature -- Properties
 			-- status of this breakpoint location from the application point of view
 			--
 			-- See the private constants at the end of the class to see the
-			-- different possible values taken.			
+			-- different possible values taken `Application_breakpoint_set' and `Application_breakpoint_not_set'.			
 
 feature {NONE} -- Storage
 
@@ -323,7 +323,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

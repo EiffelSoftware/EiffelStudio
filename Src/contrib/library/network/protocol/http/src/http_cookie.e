@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			set_name (a_name)
 			set_value(a_value)
-			set_max_age (-1)
+			unset_max_age
 		ensure
 			name_set: name = a_name
 			value_set: value = a_value
@@ -101,15 +101,6 @@ feature -- Access
 			end
 		end
 
-	include_max_age: BOOLEAN
-			-- Does the Set-Cookie header include Max-Age attribute?
-			--|By default will include both.
-
-	include_expires: BOOLEAN
-			-- Does the Set-Cookie header include Expires attribute?
-			--|By default will include both.	
-
-
 	is_valid_rfc1123_date (a_string: READABLE_STRING_8): BOOLEAN
 			-- Is the date represented by `a_string' a valid rfc1123 date?
 		local
@@ -119,10 +110,56 @@ feature -- Access
 			Result := not d.has_error and then d.rfc1123_string.same_string (a_string)
 		end
 
+feature -- Obsolete query		
+
+	include_max_age: BOOLEAN
+		obsolete
+			"Use `max_age > 0' [April-2016]"
+		do
+			Result := max_age > 0
+		end
+
+	include_expires: BOOLEAN
+		obsolete
+			"Use `expires /= Void' [April-2016]"
+		do
+			Result := expiration /= Void
+		end
+
+feature -- Obsolete element change		
+
+	mark_max_age
+ 			-- Set `max_age > 0'
+ 			-- Set `expires to void'
+ 			-- Set-Cookie will include only Max-Age attribute and not Expires.
+  		obsolete
+  			"Uset `set_max_age' and `unset_*' features to add or remove the attributes from the response header [April-2016]"
+  		do
+ 			max_age := 1
+ 			expiration := Void
+  		ensure
+ 			max_age_true: include_max_age
+ 			expire_false: not include_expires
+  		end
+
+	mark_expires
+ 			-- Set `mark_age' to -1.
+ 			-- Set `expiration to a default date'
+  			-- Set-Cookie will include only Expires attribute and not Max_Age.
+  		obsolete
+  			"Use `set_expiration' and `unset_*' features to add or remove the attribute from the response header [April-2016]"
+  		do
+ 			max_age := -1
+ 			set_expiration_date (create {DATE_TIME}.make_now_utc)
+  		ensure
+ 			expires_true: include_expires
+ 			max_age_false: not include_max_age
+  		end
+
 feature -- Change Element
 
 	set_name (a_name: READABLE_STRING_8)
-			-- Set `name' with `a_name'.
+			-- Set `name' to `a_name'.
 		require
 			a_name_not_blank: a_name /= Void and then not a_name.is_whitespace
 			a_name_has_valid_characters: a_name /= Void and then has_valid_characters (a_name)
@@ -133,7 +170,7 @@ feature -- Change Element
 		end
 
 	set_value (a_value: READABLE_STRING_8)
-			-- Set `value' with `a_value'.
+			-- Set `value' to `a_value'.
 		require
 			a_value_has_valid_characters: a_value /= Void and then has_valid_characters (a_value)
 		do
@@ -143,7 +180,7 @@ feature -- Change Element
 		end
 
 	set_expiration (a_date: READABLE_STRING_8)
-			-- Set `expiration' with `a_date'
+			-- Set `expiration' to RFC1123 date string `a_date'.
 		require
 			rfc1133_date: a_date /= Void and then is_valid_rfc1123_date (a_date)
 		do
@@ -153,7 +190,7 @@ feature -- Change Element
 		end
 
 	set_expiration_date (a_date: DATE_TIME)
-			-- Set `expiration' with `a_date'
+			-- Set `expiration' to `a_date'.
 		do
 			set_expiration (date_to_rfc1123_http_date_format (a_date))
 		ensure
@@ -161,7 +198,7 @@ feature -- Change Element
 		end
 
 	set_path (a_path: READABLE_STRING_8)
-			-- Set `path' with `a_path'
+			-- Set `path' to `a_path'.
 		do
 			path := a_path
 		ensure
@@ -169,7 +206,7 @@ feature -- Change Element
 		end
 
 	set_domain (a_domain: READABLE_STRING_8)
-			-- Set `domain' with `a_domain'
+			-- Set `domain' to `a_domain'.
 			-- Note: you should avoid using "localhost" as `domain' for local cookies
 			--       since they are not always handled by browser (for instance Chrome)
 		require
@@ -181,7 +218,7 @@ feature -- Change Element
 		end
 
 	set_secure (a_secure: BOOLEAN)
-			-- Set `secure' with `a_secure'
+			-- Set `secure' to `a_secure'.
 		do
 			secure := a_secure
 		ensure
@@ -189,7 +226,7 @@ feature -- Change Element
 		end
 
 	set_http_only (a_http_only: BOOLEAN)
-			-- Set `http_only' with `a_http_only'
+			-- Set `http_only' to `a_http_only'.
 		do
 			http_only := a_http_only
 		ensure
@@ -197,48 +234,29 @@ feature -- Change Element
 		end
 
 	set_max_age (a_max_age: INTEGER)
-			-- Set `max_age' with `a_max_age'
+			-- Set `max_age' to `a_max_age'.
+		require
+			valid_max_age: a_max_age >= 0
 		do
 			max_age := a_max_age
 		ensure
 			max_age_set: max_age = a_max_age
 		end
 
-
-	mark_max_age
-			-- Set `include_max_age' to True.
-			-- Set `include_expires' to False.
-			-- Set-Cookie will include only Max-Age attribute and not Expires.
+	unset_max_age
+			-- Set `max_age' to -1.
 		do
-			include_max_age := True
-			include_expires := False
+			max_age := -1
 		ensure
-			max_age_true: include_max_age
-			expire_false: not include_expires
+			max_age_unset: max_age = -1
 		end
 
-	mark_expires
-			-- Set `include_expires' to True.
-			-- Set `include_max_age' to False
- 			-- Set-Cookie will include only Expires attribute and not Max_Age.
+	unset_expiration
+			-- Set `expiration' to Void.
 		do
-			include_expires := True
-			include_max_age := False
+			expiration := Void
 		ensure
-			expires_true: include_expires
-			max_age_false: not include_max_age
-		end
-
-	set_default_expires_max_age
-			-- Set `include_expires' to False.
-			-- Set `include_max_age' to False
-	 		-- Set-Cookie will include both Max-Age, Expires attributes.
-		do
-			include_expires := False
-			include_max_age := False
-		ensure
-			expires_false: not include_expires
-			max_age_false: not include_max_age
+			expiration_void: expiration = Void
 		end
 
 feature {NONE} -- Date Utils
@@ -270,28 +288,14 @@ feature -- Output
 				s.append ("; Path=")
 				s.append (l_path)
 			end
-				-- Expire
-			if include_expires then
-				if attached expiration as l_expires then
-					s.append ("; Expires=")
-					s.append (l_expires)
-				end
-				-- Max-Age
-			elseif include_max_age then
-				s.append ("; Max-Age=")
-				s.append_integer (max_age)
-			else
-				-- Default
-				check
-						-- By default the attributes include_expires and include_max_age are False.
-						-- Meaning that Expires and Max-Age headers are included in the response.
-					default: (not include_expires) and (not include_max_age)
-				end
-				if attached expiration as l_expires then
-					s.append ("; Expires=")
-					s.append (l_expires)
-				end
 
+				-- Expires
+			if attached expiration as l_expires then
+				s.append ("; Expires=")
+				s.append (l_expires)
+			end
+				--	Max-age
+			if max_age >= 0 then
 				s.append ("; Max-Age=")
 				s.append_integer (max_age)
 			end
@@ -339,7 +343,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

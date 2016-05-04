@@ -20,7 +20,7 @@ feature -- Test routines
 			l_cookie: HTTP_COOKIE
 		do
 			create l_cookie.make ("user_id", "u12345")
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Max-Age=-1"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345"))
 		end
 
 	test_cookie_value_with_illegal_characters
@@ -42,7 +42,7 @@ feature -- Test routines
 			l_cookie: HTTP_COOKIE
 		do
 			create l_cookie.make ("user_id", "")
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=; Max-Age=-1"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id="))
 		end
 
 	test_cookie_full_attributes
@@ -55,7 +55,8 @@ feature -- Test routines
 			l_cookie.set_path ("/")
 			l_cookie.set_secure (True)
 			l_cookie.set_http_only (True)
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Expires=Sat, 18 Apr 2015 21:22:05 GMT; Max-Age=-1; Secure; HttpOnly"))
+			l_cookie.set_max_age (1)
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Expires=Sat, 18 Apr 2015 21:22:05 GMT; Max-Age=1; Secure; HttpOnly"))
 		end
 
 	test_cookie_include_expires
@@ -68,7 +69,6 @@ feature -- Test routines
 			l_cookie.set_path ("/")
 			l_cookie.set_secure (True)
 			l_cookie.set_http_only (True)
-			l_cookie.mark_expires
 			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Expires=Sat, 18 Apr 2015 21:22:05 GMT; Secure; HttpOnly"))
 		end
 
@@ -82,8 +82,8 @@ feature -- Test routines
 			l_cookie.set_path ("/")
 			l_cookie.set_secure (True)
 			l_cookie.set_http_only (True)
-			l_cookie.mark_max_age
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Max-Age=-1; Secure; HttpOnly"))
+			l_cookie.set_max_age (1)
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Expires=Sat, 18 Apr 2015 21:22:05 GMT; Max-Age=1; Secure; HttpOnly"))
 		end
 
 	test_cookie_defaults_and_http_only
@@ -92,7 +92,7 @@ feature -- Test routines
 		do
 			create l_cookie.make ("user_id", "u12345")
 			l_cookie.set_http_only (True)
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Max-Age=-1; HttpOnly"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; HttpOnly"))
 		end
 
 	test_cookie_defaults_and_secure
@@ -101,7 +101,7 @@ feature -- Test routines
 		do
 			create l_cookie.make ("user_id", "u12345")
 			l_cookie.set_secure (True)
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Max-Age=-1; Secure"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Secure"))
 		end
 
 
@@ -111,7 +111,7 @@ feature -- Test routines
 		do
 			create l_cookie.make ("user_id", "u12345")
 			l_cookie.set_domain ("www.example.com")
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Max-Age=-1"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com"))
 		end
 
 
@@ -121,7 +121,7 @@ feature -- Test routines
 		do
 			create l_cookie.make ("user_id", "u12345")
 			l_cookie.set_path ("/")
-			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Path=/; Max-Age=-1"))
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Path=/"))
 		end
 
 	test_cookie_default_and_custom_max_age
@@ -147,6 +147,18 @@ feature -- Test routines
 		do
 			create l_cookie.make ("user_id", "u12345")
 			assert ("Invalid RFC1123", not l_cookie.is_valid_rfc1123_date ("Thuesday, 19 Mar 2015 16:14:03 GMT"))
+		end
+
+	test_cookie_without_max_age_and_expires
+		local
+			l_cookie: HTTP_COOKIE
+		do
+			create l_cookie.make ("user_id", "u12345")
+			l_cookie.set_domain ("www.example.com")
+			l_cookie.set_path ("/")
+			l_cookie.set_secure (True)
+			l_cookie.set_http_only (True)
+			assert("Expected", l_cookie.header_line.same_string ("Set-Cookie: user_id=u12345; Domain=www.example.com; Path=/; Secure; HttpOnly"))
 		end
 
 

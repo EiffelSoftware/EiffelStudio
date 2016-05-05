@@ -9,7 +9,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -616,7 +616,7 @@ rt_private int update_entry (struct rt_type *type_entry)
 			} else {
 				l_result = T_INVALID_ANNOTATIONS;
 			}
-		} else if ((l_count >= 8) && (strncmp ("separate", l_str, 10) == 0)) {
+		} else if ((l_count >= 8) && (strncmp ("separate", l_str, 8) == 0)) {
 			if (!RT_CONF_IS_SEPARATE_FLAG(type_entry->annotations)) {
 				memset(type_entry->type_name, (int) ' ', 8);
 				eif_remove_surrounding_white_spaces (type_entry->type_name);

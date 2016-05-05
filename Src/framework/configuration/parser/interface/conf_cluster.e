@@ -106,7 +106,7 @@ feature -- Access queries
 				if r.is_enabled (a_state) then
 					Result.merge (r)
 					if attached Result.error as e then
-						set_error (create {CONF_ERROR_REGEXP}.make_with_description ("", e))
+						set_error (create {CONF_ERROR_REGEXP}.make ("", e, 0))
 					end
 				end
 				l_rules.forth
@@ -586,7 +586,7 @@ invariant
 	parent_child_relationship: attached parent as p implies (attached p.children as p_children and then p_children.has (Current))
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

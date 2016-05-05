@@ -22,28 +22,20 @@ inherit
 		end
 
 create
-	make,
-	make_with_description
+	make
 
 feature {NONE} -- Initialization
 
-	make (a_regexp: READABLE_STRING_GENERAL)
-			-- Create an error for regular expression `a_regexp'.
-		do
-			regexp := a_regexp
-		ensure
-			regexp_set: regexp = a_regexp
-			message_set: message = Void
-		end
-
-	make_with_description (a_regexp: READABLE_STRING_GENERAL; d: READABLE_STRING_GENERAL)
-			-- Create an error for regular expression `a_regexp' with description `d'.
+	make (a_regexp: READABLE_STRING_GENERAL; d: READABLE_STRING_GENERAL; p: INTEGER)
+			-- Create an error for a regular expression `a_regexp' with description `d' and position `p'.
 		do
 			regexp := a_regexp
 			message := d
+			position := p
 		ensure
 			regexp_set: regexp = a_regexp
 			message_set: message = d
+			position_set: position = p
 		end
 
 feature -- Access
@@ -51,16 +43,19 @@ feature -- Access
 	text: STRING_32
 			-- Error text.
 		do
-			Result := conf_interface_names.e_parse_invalid_regexp (regexp, file, message)
+			Result := conf_interface_names.e_parse_invalid_regexp (regexp, file, message, position)
 		end
 
 feature {NONE} -- Implementation
 
 	regexp: READABLE_STRING_GENERAL
-		-- Incorrect regular expression.
+			-- Incorrect regular expression.
+
+	position: INTEGER
+			-- Error position.
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

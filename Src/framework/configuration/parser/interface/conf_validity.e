@@ -63,7 +63,7 @@ feature -- Basic validity queries
 		end
 
 	valid_regexp (a_regexp: READABLE_STRING_GENERAL): BOOLEAN
-			-- is `a_regexp' a valid regular expression?
+			-- Is `a_regexp' a valid regular expression?
 		local
 			l_regexp: REGULAR_EXPRESSION
 			u: UTF_CONVERTER
@@ -74,6 +74,25 @@ feature -- Basic validity queries
 				l_regexp.compile (u.utf_32_string_to_utf_8_string_8 (a_regexp))
 				Result := l_regexp.is_compiled
 			end
+		end
+
+	regexp_error (a_regexp: READABLE_STRING_GENERAL):
+			detachable TUPLE [message: READABLE_STRING_GENERAL; position: INTEGER]
+			-- Is `a_regexp' a valid regular expression?
+		local
+			r: REGULAR_EXPRESSION
+			u: UTF_CONVERTER
+		do
+			if a_regexp /= Void then
+				create r
+					-- FIXME: We currently perform the match on the UTF-8 version of the string.
+				r.compile (u.utf_32_string_to_utf_8_string_8 (a_regexp))
+				if not r.is_compiled then
+					Result := [r.error_message, r.error_position]
+				end
+			end
+		ensure
+			valid_regexp: not attached Result implies valid_regexp (a_regexp)
 		end
 
 	valid_setting (a_setting: READABLE_STRING_GENERAL): BOOLEAN
@@ -415,7 +434,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

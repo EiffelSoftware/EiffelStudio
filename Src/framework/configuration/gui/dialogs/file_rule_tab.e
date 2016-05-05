@@ -218,8 +218,13 @@ feature {NONE} -- Actions
 		do
 			l_pattern := new_exclude.text
 			if not l_pattern.is_empty and (data.exclude = Void or else not data.exclude.has (l_pattern)) then
-				data.add_exclude (l_pattern)
-				exclude_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
+				if attached data.regexp_error (l_pattern) as e then
+					prompts.show_error_prompt (conf_interface_names.e_parse_invalid_regexp
+						(l_pattern, Void, e.message, e.position), Void, Void)
+				else
+					data.add_exclude (l_pattern)
+					exclude_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
+				end
 			end
 		end
 
@@ -230,8 +235,13 @@ feature {NONE} -- Actions
 		do
 			l_pattern := new_include.text
 			if not l_pattern.is_empty and (data.include = Void or else not data.include.has (l_pattern)) then
-				data.add_include (l_pattern)
-				include_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
+				if attached data.regexp_error (l_pattern) as e then
+					prompts.show_error_prompt (conf_interface_names.e_parse_invalid_regexp
+						(l_pattern, Void, e.message, e.position), Void, Void)
+				else
+					data.add_include (l_pattern)
+					include_pattern.force (create {EV_LIST_ITEM}.make_with_text (l_pattern))
+				end
 			end
 		end
 
@@ -286,7 +296,7 @@ invariant
 	gui_elements_created: is_initialized implies exclude_pattern /= Void and new_exclude /= Void and include_pattern /= Void and new_include /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

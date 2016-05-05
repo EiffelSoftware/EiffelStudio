@@ -2170,18 +2170,16 @@ feature {NONE} -- Implementation content processing
 		require
 			file_rule: current_file_rule /= Void
 		do
-			if valid_regexp (current_content) then
-				if attached current_file_rule as l_current_file_rule then
-					l_current_file_rule.add_exclude (current_content)
-					if attached l_current_file_rule.error as e then
-						set_error (create {CONF_ERROR_REGEXP}.make_with_description (current_content, e))
-					end
-				else
-					check file_rule: False end
-					set_internal_error
+			if attached regexp_error (current_content) as e then
+				set_error (create {CONF_ERROR_REGEXP}.make (current_content, e.message, e.position))
+			elseif attached current_file_rule as l_current_file_rule then
+				l_current_file_rule.add_exclude (current_content)
+				if attached l_current_file_rule.error as e then
+					set_error (create {CONF_ERROR_REGEXP}.make (current_content, e, 0))
 				end
 			else
-				set_error (create {CONF_ERROR_REGEXP}.make (current_content))
+				check file_rule: False end
+				set_internal_error
 			end
 		end
 
@@ -2190,18 +2188,16 @@ feature {NONE} -- Implementation content processing
 		require
 			file_rule: current_file_rule /= Void
 		do
-			if valid_regexp (current_content) then
-				if attached current_file_rule as l_current_file_rule then
-					l_current_file_rule.add_include (current_content)
-					if attached l_current_file_rule.error as e then
-						set_error (create {CONF_ERROR_REGEXP}.make_with_description (current_content, e))
-					end
-				else
-					check file_rule: False end
-					set_internal_error
+			if attached regexp_error (current_content) as e then
+				set_error (create {CONF_ERROR_REGEXP}.make (current_content, e.message, e.position))
+			elseif attached current_file_rule as l_current_file_rule then
+				l_current_file_rule.add_include (current_content)
+				if attached l_current_file_rule.error as e then
+					set_error (create {CONF_ERROR_REGEXP}.make (current_content, e, 0))
 				end
 			else
-				set_error (create {CONF_ERROR_REGEXP}.make (current_content))
+				check file_rule: False end
+				set_internal_error
 			end
 		end
 
@@ -3056,7 +3052,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

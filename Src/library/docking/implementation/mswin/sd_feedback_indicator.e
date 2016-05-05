@@ -66,7 +66,9 @@ feature -- Command
 			-- Show current with fading effect if possible
 		do
 			implementation.show
-			register
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
 		end
 
 	set_pixel_buffer (a_pixel_buffer: like pixel_buffer)
@@ -89,7 +91,9 @@ feature -- Command
 			exists: exists
 		do
 			implementation.clear
-			unregister
+			if attached shared_environment.application as application then
+				application.unregister_window (Current)
+			end
 		end
 
 feature -- Query

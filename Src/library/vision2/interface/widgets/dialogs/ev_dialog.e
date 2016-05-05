@@ -157,7 +157,9 @@ feature -- Basic operations
 			a_window_not_current: a_window /= Current
 		do
 			implementation.show_modal_to_window (a_window)
-			register
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
 		ensure
 				-- When a dialog is displayed modally, execution of code is
 				-- halted until the dialog is closed or destroyed. Therefore,
@@ -171,7 +173,9 @@ feature -- Basic operations
 			-- Show `Current' with respect to `a_window'.
 		do
 			implementation.show_relative_to_window (a_window)
-			register
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
 		ensure then
 			is_relative_to_window: show_actions.is_empty implies is_relative
 			blocking_window_set: show_actions.is_empty implies blocking_window = a_window

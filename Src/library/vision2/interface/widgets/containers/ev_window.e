@@ -196,7 +196,9 @@ feature -- Command
 			-- <Precursor>
 		do
 			Precursor
-			unregister
+			if attached shared_environment.application as application then
+				application.unregister_window (Current)
+			end
 		end
 
 	destroy_and_exit_if_last
@@ -382,7 +384,9 @@ feature -- Status setting
 			-- <Precursor>
 		do
 			Precursor
-			register
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
 		end
 
 	show_relative_to_window (a_parent: EV_WINDOW)
@@ -394,55 +398,17 @@ feature -- Status setting
 			a_window_not_current: a_parent /= Current
 		do
 			implementation.show_relative_to_window (a_parent)
-			register
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
 		end
 
 	hide
 			-- <Precursor>
 		do
 			Precursor
-			unregister
-		end
-
-feature {NONE} -- GC protection
-
-	register
-			-- Protect `Current' from GC in case there is no reference to it in the system
-			-- but the application is running, is on the current processor and
-			-- the associated window is visible.
-			-- Because of the last condition the recommended way to use the feature is
-			-- to call it after the window is shown using `show' or similar feature
-			-- to make sure after the call to it the window is still open.
-			-- (The window may become closed as a result of processing of user interaction,
-			-- e.g. this may happen with dialogs).
-			-- See also: `unregister'.
-		do
-			if
-				not is_destroyed and then
-				is_show_requested and then
-				attached Shared_environment.application and then
-				Shared_environment.is_application_processor
-			then
-				ev_application.register_window (Current)
-			end
-		end
-
-	unregister
-			-- Unprotect `Current' from GC
-			-- if the application is running on the current processor
-			-- and the corresponding window is hidden.
-			-- Because of the last condition the recommended way to use the feature is
-			-- to call it after the window is hidden using `hide' or similar feature
-			-- to make sure after the call to it the window is closed.
-			-- (The window may stay open as a result of processing of user interaction.)
-			-- See also: `register'.
-		do
-			if
-				(is_destroyed or else not is_show_requested) and then
-				attached Shared_environment.application and then
-				Shared_environment.is_application_processor
-			then
-				ev_application.unregister_window (Current)
+			if attached shared_environment.application as application then
+				application.unregister_window (Current)
 			end
 		end
 

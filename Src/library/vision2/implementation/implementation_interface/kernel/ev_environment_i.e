@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision Environment. Implementation interface.%N%
 		%See ev_environment.e"
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		require
 			not_destroyed: not is_destroyed
 		once ("PROCESS")
-			create Result.put (Void)
+			create <NONE> Result.put (Void)
 		end
 
 	application_interface (a_separate_application: separate EV_APPLICATION_I): detachable separate EV_APPLICATION
@@ -166,7 +166,7 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -176,14 +176,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_ENVIRONMENT_I
-
-
-
-
-
-
-
-
-
-
+end

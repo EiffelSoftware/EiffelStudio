@@ -34,7 +34,6 @@ mtstandard:: mtcom_runtime.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 com_runtime.lib: $(OBJECTS)
 	$alib_line

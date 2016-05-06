@@ -25,7 +25,6 @@ mtstandard:: ole_ie.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 ole_ie.lib: $(OBJECTS)
 	$alib_line

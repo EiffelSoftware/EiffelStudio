@@ -17,7 +17,7 @@ OBJECTS = odbc.$obj
 IL_OBJECTS = ILodbc.$obj
 
 .c.$obj:
-	$(CC) -c $(JCFLAGS) $<
+	$(CC) -c $(JCFLAGS) -Od -Zi $<
 
 all:: standard
 	$(MAKE) clean
@@ -27,7 +27,6 @@ standard:: odbc_store.lib il_odbc_store.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 odbc_store.lib: $(OBJECTS)
 	$alib_line

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EIS list of a given class."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -406,7 +406,6 @@ feature {NONE} -- Target token
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
 			l_classc: CLASS_C
 			l_written_in_features: LIST [E_FEATURE]
-			l_class: CLASS_I
 			l_feature: E_FEATURE
 		do
 			if a_editable then
@@ -425,8 +424,7 @@ feature {NONE} -- Target token
 				create l_item_item.make (create {ARRAYED_LIST [ES_GRID_ITEM_COMPONENT]}.make_from_array (<<class_pixmap_component (class_i), l_e_com>>))
 				l_item_item.set_data (class_i)
 				l_list.extend (l_item_item)
-				l_class ?= a_item
-				if l_class /= Void and then l_class.is_equal (class_i) then
+				if attached {CLASS_I} a_item as l_class and then l_class.is_equal (class_i) then
 					l_editable_item.set_list_item (l_item_item)
 				else
 					l_feature ?= a_item
@@ -454,7 +452,7 @@ feature {NONE} -- Target token
 				l_editable_item.set_item_components (l_list)
 
 				Result := l_editable_item
-				if l_editable_item.item_components /= Void and then l_editable_item.item_components.index_set.count > 1 then
+				if attached l_editable_item.item_components as c and then c.upper > c.lower then
 					l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 					l_editable_item.set_selection_changing_action (agent on_target_changed (?, l_editable_item))
 				end
@@ -860,8 +858,7 @@ feature {NONE} -- Callbacks
 			a_item_not_void: a_item /= Void
 			a_item_not_void: a_grid_item /= Void
 		local
-			l_classi: CLASS_I
-			l_current_feature, l_feature: E_FEATURE
+			l_current_feature: E_FEATURE
 			l_current_class: CLASS_I
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
@@ -870,18 +867,15 @@ feature {NONE} -- Callbacks
 		do
 			if attached {EIS_ENTRY} a_grid_item.row.data as lt_entry then
 				l_eis_entry := lt_entry
-				l_classi ?= a_item.data
-				l_feature ?= a_item.data
-				if l_classi /= Void and then l_classi.is_equal (class_i) then
+				if attached {CLASS_I} a_item.data as l_classi and then l_classi.is_equal (class_i) then
 					create l_class_modifier.make (class_i)
 					if l_class_modifier.is_modifiable then
 						l_class_modifier.prepare
 						if l_class_modifier.is_ast_available then
-							l_grid_item := a_grid_item.selected_item
-							if l_grid_item /= Void then
-								l_current_feature ?= l_grid_item.data
-							end
-							if attached {E_FEATURE} l_current_feature as lt_current_feature then
+							if
+								attached a_grid_item.selected_item as si and then
+								attached {E_FEATURE} si.data as lt_current_feature
+							then
 								l_class_modifier.write_class_entry (l_eis_entry)
 								l_class_modifier.commit
 								Result := True
@@ -898,7 +892,7 @@ feature {NONE} -- Callbacks
 					else
 						prompts.show_error_prompt (interface_names.l_class_is_not_editable, Void, Void)
 					end
-				elseif attached {E_FEATURE} l_feature as lt_feature and then lt_feature.written_class.lace_class.is_equal (class_i) then
+				elseif attached {E_FEATURE} a_item.data as lt_feature and then lt_feature.written_class.lace_class.is_equal (class_i) then
 					create l_feature_modifier.make (lt_feature, class_i)
 					l_feature_modifier.prepare
 					if l_feature_modifier.is_modifiable then
@@ -947,7 +941,7 @@ feature {NONE} -- Callbacks
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -977,8 +971,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

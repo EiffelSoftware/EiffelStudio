@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Editable: no
 		Scroll bars: yes
@@ -205,7 +205,8 @@ feature {NONE} -- Scroll Management
 			if attached current_mouse_coordinates as l_coordinates then
 				check
 						-- array has indexes 1 to 4
-					l_coordinates.index_set.is_equal (create {INTEGER_INTERVAL}.make (1, 4))
+					valid_current_mouse_coordinates_lower: l_coordinates.lower = 1
+					valid_current_mouse_coordinates_upper: l_coordinates.upper = 4
 				end
 					-- call on_mouse_move back to handle selection.
 				on_mouse_move (l_coordinates [1], l_coordinates [2], 0, 0, 0, l_coordinates [3], l_coordinates [4])
@@ -780,7 +781,7 @@ feature {NONE} -- Memory Management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -790,7 +791,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class INTERACTIVE_TEXT_PANEL
+end

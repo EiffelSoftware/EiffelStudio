@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 				This class iterates over asts of classes, extracts the arguments to the translation functions from the i18n 
 				library, generates appropriate PO_ENTRYs for them and adds them to a PO_FILE.
@@ -7,7 +7,6 @@ note
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "leof@student.ethz.ch"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -166,21 +165,31 @@ feature {NONE} -- Implementation
 				end
 			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_feature) then
 				if node.parameters /= Void then
-					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_plural then
+					if
+						attached {STRING_AS} node.parameters.first as l_singular and then
+						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_plural
+					then
 						add_plural_entry (l_singular, l_plural, Void)
 						last_analysis_found_entry := True
 					end
 				end
 			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_in_context_feature) then
 				if node.parameters /= Void then
-					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_context then
+					if
+						attached {STRING_AS} node.parameters.first as l_singular and then
+						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_context
+					then
 						add_singular_entry (l_singular, l_context)
 						last_analysis_found_entry := True
 					end
 				end
 			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_in_context_feature) then
 				if node.parameters /= Void then
-					if attached {STRING_AS} node.parameters.first as l_singular and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+1) as l_plural and then attached {STRING_AS} node.parameters.i_th (node.parameters.index_set.lower+2) as l_context then
+					if
+						attached {STRING_AS} node.parameters.first as l_singular and then
+						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_plural and then
+						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+2) as l_context
+					then
 						add_plural_entry (l_singular, l_plural, l_context)
 						last_analysis_found_entry := True
 					end
@@ -490,7 +499,7 @@ feature {NONE} -- Implementation
 			-- Did last analysis find an entry?
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

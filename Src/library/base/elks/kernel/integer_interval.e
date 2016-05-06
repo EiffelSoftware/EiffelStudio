@@ -443,7 +443,6 @@ feature {NONE} -- Inapplicable
 
 invariant
 	count_definition: upper_defined and lower_defined implies count = upper - lower + 1
-	index_set_is_range: index_set ~ Current
 	not_infinite: upper_defined and lower_defined
 
 note

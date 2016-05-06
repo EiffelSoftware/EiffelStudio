@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents a collection in the database."
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -78,12 +78,12 @@ feature {PS_ABEL_EXPORT} -- Status report
 			Result := True
 			if not attached {TYPE [detachable TUPLE]} type.type then
 				across
-					index_set as cursor
+					type_store as cursor
 				from
 					create reflection
 					collection_item_type := type.actual_generic_parameter (1).type.type_id
 				loop
-					runtime_type := reflection.dynamic_type_from_string (item_type (cursor.item))
+					runtime_type := reflection.dynamic_type_from_string (cursor.item)
 
 					if runtime_type >= 0 then
 						-- Check if runtime type conforms to collection type
@@ -93,7 +93,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 						Result := Result
 							and runtime_type = reflection.none_type -- Runtime type set to "NONE"
 							and not reflection.is_attached_type (collection_item_type) -- Collection type allowed to be detachable
-							and item (cursor.item).is_empty -- Value is an empty string
+							and item (cursor.target_index).is_empty -- Value is an empty string
 					end
 				end
 			end
@@ -215,9 +215,9 @@ feature {NONE} -- Implementation
 		do
 			Result :=
 				across
-					index_set as index
+					type_store as c
 				all
-					item_type (index.item) ~ "NONE" implies item (index.item).is_empty
+					c.item ~ "NONE" implies item (c.target_index).is_empty
 				end
 		end
 

@@ -37,9 +37,6 @@ mtstandard:: mtwel.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
-	$(RM) *.tds
-	$(RM) *.exp
 
 wel.lib: $(OBJECTS)
 	$alib_line

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			EV_GRID Text label whose content may be interactively chosen by the user via a list.
@@ -54,7 +54,7 @@ feature -- Element change
 			if attached choice_list as l_choice_list and then not l_choice_list.is_destroyed then
 				set_strings
 			end
-			if a_string_array.index_set.count > 1 then
+			if a_string_array.upper > a_string_array.lower then
 				set_pixmap (drop_down_pixmap)
 			else
 				remove_pixmap
@@ -127,7 +127,6 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			i, j, nb: INTEGER
-			l_interval: INTEGER_INTERVAL
 			l_text, l_selected_text: READABLE_STRING_GENERAL
 			l_font, l_selected_font: detachable EV_FONT
 			l_choice_list: like choice_list
@@ -143,18 +142,14 @@ feature {NONE} -- Implementation
 
 			l_font := font
 			if attached item_strings as l_item_strings then
+				across
+					l_item_strings as c
 				from
-					l_interval := l_item_strings.index_set
 					j := 1
-					i := l_interval.lower
-					nb := l_interval.upper
 					l_selected_text := text
-				until
-					i > nb
 				loop
-					l_text := l_item_strings.item (i)
+					l_text := c.item
 					create l_item.make_with_text (l_text)
-					i := i + 1
 					l_choice_list.set_item (1, j, l_item)
 					j := j + 1
 					if l_selected_font = Void and then l_text.same_string (l_selected_text) then
@@ -555,7 +550,7 @@ invariant
 	choice_list_parented_during_activation: attached choice_list as l_choice_list implies l_choice_list.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

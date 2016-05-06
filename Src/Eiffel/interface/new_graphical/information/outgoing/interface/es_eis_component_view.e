@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "View of list of EIS details"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -868,7 +868,7 @@ feature {NONE} -- Grid items
 
 				l_editable_item.set_item_components (l_list)
 				Result := l_editable_item
-				if l_editable_item.item_components /= Void and then l_editable_item.item_components.index_set.count > 1 then
+				if attached l_editable_item.item_components as c and then c.upper > c.lower then
 					l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
 					l_editable_item.set_selection_changing_action (agent on_protocol_changed (?, l_editable_item))
 				end
@@ -1264,7 +1264,7 @@ invariant
 	eis_grid_not_void: eis_grid /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -1294,8 +1294,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

@@ -17,7 +17,7 @@ OBJECTS = odbc.$obj
 IL_OBJECTS = ILodbc.$obj
 
 .c.$obj:
-	$(CC) -c $(JCFLAGS) -Od -Zi $<
+	$(CC) -c $(JCFLAGS) $<
 
 all:: standard
 	$(MAKE) clean

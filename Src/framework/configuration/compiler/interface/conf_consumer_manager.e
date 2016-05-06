@@ -105,7 +105,7 @@ feature -- Observers
 
 feature -- Commands
 
-	build_assemblies (a_new_assemblies: like new_assemblies; an_old_assemblies: STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE])
+	build_assemblies (a_new_assemblies: like new_assemblies; an_old_assemblies: detachable STRING_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE])
 			-- Build information about `a_new_assemblies' from the metadata cache and `an_old_assemblies' and store them in `assemblies'.
 		require
 			a_new_assemblies_not_void: a_new_assemblies /= Void
@@ -896,7 +896,7 @@ invariant
 	consume_assembly_observer_not_void: consume_assembly_observer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

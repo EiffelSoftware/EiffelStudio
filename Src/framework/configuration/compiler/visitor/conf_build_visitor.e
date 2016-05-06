@@ -969,7 +969,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_with_old (a_new_groups, an_old_groups: STRING_TABLE [CONF_GROUP])
+	process_with_old (a_new_groups: STRING_TABLE [CONF_GROUP]; an_old_groups: detachable STRING_TABLE [CONF_GROUP])
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
 		require
 			old_group_void: old_group = Void
@@ -1148,7 +1148,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Widget to open an existing project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1152,7 +1152,7 @@ feature {NONE} -- Actions
 			a_item_not_void: a_item /= Void
 			a_item_not_destroyed: not a_item.is_destroyed
 		do
-			if a_item.item_strings /= Void and then a_item.item_strings.index_set.count > 1 then
+			if attached a_item.item_strings as c and then c.upper > c.lower then
 				a_item.activate
 			end
 		end
@@ -1270,7 +1270,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Editable editor token grid item."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -24,9 +24,6 @@ inherit
 			default_create,
 			copy
 		end
-
-create
-	default_create
 
 feature -- Element change
 
@@ -96,7 +93,7 @@ feature -- Element change
 feature -- Access
 
 	item_components: INDEXABLE [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM, INTEGER]
-		-- Item tokens used to make up the list.
+			-- Item tokens used to make up the list.
 
 	selected_item: detachable EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			-- Selected item.
@@ -122,8 +119,8 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	choice_list: ES_GRID
-		-- Text field used to edit `Current' on `activate'
-		-- Void when `Current' isn't being activated.
+			-- Text field used to edit `Current' on `activate'.
+			-- `Void' when `Current' isn't being activated.
 
 	set_tokens
 			-- Update `choice_list' with `item_components'.
@@ -132,22 +129,18 @@ feature {NONE} -- Implementation
 			choice_list_not_destroyed: not choice_list.is_destroyed
 		local
 			l_item: ES_GRID_LIST_ITEM
-			i, j, nb: INTEGER
-			l_interval: INTEGER_INTERVAL
+			j: INTEGER
 			l_text, l_selected_text: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 		do
 			choice_list.wipe_out
-			if item_components /= Void then
+			if attached item_components as ic then
+				across
+					ic as c
 				from
-					l_interval := item_components.index_set
 					j := 1
-					i := l_interval.lower
-					nb := l_interval.upper
 					l_selected_text := selected_item
-				until
-					i > nb
 				loop
-					l_text := item_components.item (i)
+					l_text := c.item
 					create l_item
 					l_item.set_component_padding (component_padding)
 					l_item.set_data (l_text)
@@ -157,7 +150,6 @@ feature {NONE} -- Implementation
 								aa_component.set_grid_item (Void)
 								aa_item.append_component (aa_component)
 							end (?, l_item))
-					i := i + 1
 					choice_list.set_item (1, j, l_item)
 					j := j + 1
 					if l_text.is_equal (l_selected_text) then
@@ -169,7 +161,7 @@ feature {NONE} -- Implementation
 		end
 
 	has_user_selected_item: BOOLEAN
-		-- Did the user select an entry in the list?
+			-- Did the user select an entry in the list?
 
 	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
@@ -192,7 +184,6 @@ feature {NONE} -- Implementation
 			l_support.enable_grid_item_pnd_support
 			l_support.enable_ctrl_right_click_to_open_new_window
 			l_support.synchronize_scroll_behavior_with_editor
---			l_support.synchronize_color_or_font_change_with_editor
 			if context_menu_factory /= Void then
 				l_support.set_context_menu_factory_function (agent context_menu_factory)
 			end
@@ -308,24 +299,18 @@ feature {NONE} -- Implementation
 
 	deactivate
 			-- Cleanup from previous call to activate.
-		local
-			l_item: ES_GRID_LIST_ITEM
 		do
 			if choice_list /= Void and then not choice_list.is_destroyed then
 				choice_list.focus_out_actions.wipe_out
-				if has_user_selected_item and then choice_list.has_selected_row then
-					l_item ?= choice_list.selected_rows.first.item (1)
-					if l_item /= Void then
-						if attached {EB_GRID_LISTABLE_CHOICE_ITEM_ITEM} l_item.data as lt_selected_item and then lt_selected_item /= selected_item then
-							if selection_changing_action /= Void then
-								if selection_changing_action.item ([lt_selected_item]) then
-									set_list_item (lt_selected_item)
-								end
-							else
-								set_list_item (lt_selected_item)
-							end
-						end
-					end
+				if
+					has_user_selected_item and then
+					choice_list.has_selected_row and then
+					attached {ES_GRID_LIST_ITEM} choice_list.selected_rows.first.item (1) as l_item and then
+					attached {EB_GRID_LISTABLE_CHOICE_ITEM_ITEM} l_item.data as lt_selected_item and then
+					lt_selected_item /= selected_item and then
+					(not attached selection_changing_action as a or else a.item ([lt_selected_item]))
+				then
+					set_list_item (lt_selected_item)
 				end
 				choice_list := Void
 			end
@@ -335,7 +320,7 @@ feature {NONE} -- Implementation
 	safe_redraw
 			-- Redraw Current if parented
 		do
-			if item_components /= Void and then item_components.index_set.count > 1 then
+			if attached item_components as c and then c.upper > c.lower then
 				set_required_width (required_dimension_for_items.width + drop_down_pixmap.width + component_padding)
 			else
 				set_required_width (required_dimension_for_items.width)
@@ -364,7 +349,7 @@ feature {NONE} -- Implementation
 			l_dropdown: BOOLEAN
 		do
 			l_padding := component_padding
-			if item_components /= Void and then item_components.index_set.count > 1 then
+			if attached item_components as c and then c.upper > c.lower then
 				l_dropdown := True
 			end
 			prepare_background_area (a_drawable, 0, 0, width, height)
@@ -459,7 +444,7 @@ invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

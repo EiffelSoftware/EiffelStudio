@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 		do
 			factory := a_factory
 
+			is_following_redirection := True
+
 				-- Initialize configuration lib setup, this is done once.
 			initialize_conf_setting
 
@@ -44,6 +46,10 @@ feature -- Status
 
 	is_invalid_xml: BOOLEAN
 			-- Is the file not even valid xml?
+
+	is_following_redirection: BOOLEAN
+			-- Is loader following redirection?
+			--| True by default
 
 	last_error: detachable CONF_ERROR
 			-- The last error message.
@@ -100,6 +106,12 @@ feature -- Basic operation
 			recursive_retrieve_uuid (a_file, Void)
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
+		end
+
+	set_is_following_redirection (b: BOOLEAN)
+			-- Set `is_following_redirection' to `b'.
+		do
+			is_following_redirection := b
 		end
 
 feature {NONE} -- Implementation
@@ -177,7 +189,7 @@ feature {NONE} -- Implementation
 							--| then do not record the file and uuid.
 						l_previous := Void
 					end
-					if not is_error then
+					if not is_error and is_following_redirection then
 							--| `a_file' is a redirection, then follow the redirection and check the ecf at the new location
 							--| this will either end with a concrete ecf file, i.e not a redirection, or with an error.
 						retrieve_redirected_configuration (a_file, l_redirection.evaluated_redirection_location, l_previous, redir)
@@ -251,7 +263,9 @@ feature {NONE} -- Implementation
 						if redir = Void then
 							create redir.make (1)
 						end
-						retrieve_redirected_uuid (a_file, l_new_location, redir)
+						if is_following_redirection then
+							retrieve_redirected_uuid (a_file, l_new_location, redir)
+						end
 					else
 							--| No UUID found
 						is_error := True
@@ -429,7 +443,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

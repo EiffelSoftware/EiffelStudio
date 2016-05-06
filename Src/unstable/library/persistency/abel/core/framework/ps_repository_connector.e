@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Provides an abstraction to the actual database."
 	author: "Roman Schmocker"
 	date: "$Date$"
@@ -153,7 +153,7 @@ feature {NONE} -- Contract support
 			primaries.extend (object.primary_key)
 			types.extend (object.type)
 			retrieved := internal_specific_retrieve (primaries, types, transaction)
-			Result := retrieved.index_set.count = 1 and then object.is_subset_of (retrieved.item (retrieved.index_set.lower))
+			Result := retrieved.lower = retrieved.upper and then object.is_subset_of (retrieved.item (retrieved.lower))
 		end
 
 	check_delete (object: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
@@ -169,7 +169,7 @@ feature {NONE} -- Contract support
 			types.extend (object.type)
 
 			retrieved := internal_specific_retrieve (primaries, types, transaction)
-			Result := retrieved.index_set.count = 0
+			Result := retrieved.upper < retrieved.lower
 		end
 
 	check_collection_write (collection: PS_BACKEND_COLLECTION; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
@@ -186,8 +186,8 @@ feature {NONE} -- Contract support
 
 			retrieved := specific_collection_retrieve (primaries, types, transaction)
 
-			Result := retrieved.index_set.count = 1 and then
-				((collection.is_update_delta and collection.is_subset_of (retrieved.item (retrieved.index_set.lower))) or collection ~ retrieved.item (retrieved.index_set.lower))
+			Result := retrieved.lower = retrieved.upper and then
+				((collection.is_update_delta and collection.is_subset_of (retrieved.item (retrieved.lower))) or collection ~ retrieved.item (retrieved.lower))
 		end
 
 	check_collection_delete (collection: PS_BACKEND_ENTITY; transaction: PS_INTERNAL_TRANSACTION): BOOLEAN
@@ -203,7 +203,7 @@ feature {NONE} -- Contract support
 			types.extend (collection.type)
 
 			retrieved := specific_collection_retrieve (primaries, types, transaction)
-			Result := retrieved.index_set.count = 0
+			Result := retrieved.upper < retrieved.lower
 		end
 
 end

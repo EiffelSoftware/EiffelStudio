@@ -395,11 +395,11 @@ feature {NONE} -- Implementation of data retrieval
 					until
 						l_excludes.after
 					loop
-						l_str := "/"+l_excludes.item.file__name+"$"
-						if valid_regexp (l_str) then
-							l_fr.add_exclude (l_str)
+						l_str := "/" + l_excludes.item.file__name + "$"
+						if attached regexp_error (l_str) as e then
+							set_error (create {CONF_ERROR_REGEXP}.make (l_str, e.message, e.position))
 						else
-							set_error (create {CONF_ERROR_REGEXP}.make (l_str))
+							l_fr.add_exclude (l_str)
 						end
 						l_excludes.forth
 					end
@@ -923,7 +923,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

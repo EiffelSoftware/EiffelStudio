@@ -1,6 +1,5 @@
 # General tools
 RM=del
-SYNTAX_UPDATER="$(ISE_EIFFEL)/tools/spec/$(ISE_PLATFORM)/bin/syntax_updater"
 
 # Gobo flag for gelex
 GOBO_LEX_FLAGS=-z --pragma=noline

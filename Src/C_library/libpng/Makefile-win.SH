@@ -26,7 +26,6 @@ all:: libpng.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 libpng.lib: $(OBJECTS)
 	$alib_line

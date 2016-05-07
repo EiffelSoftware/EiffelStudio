@@ -25,7 +25,6 @@ all:: zlib.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 zlib.lib: $(OBJECTS)
 	$alib_line

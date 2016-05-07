@@ -1,4 +1,4 @@
-rd /Q /S %TEMP%\vision2_precompile
+if exist %TEMP%\vision2_precompile rd /Q /S %TEMP%\vision2_precompile
 mkdir %TEMP%\vision2_precompile
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ecb -config vision2.ecf -local -project_path %TEMP%\vision2_precompile
 

@@ -5,7 +5,7 @@ echo -----------------------------------------------------------------
 pushd
 mkdir %DELIVERY%\studio\wizards\%1\%2\spec
 mkdir %DELIVERY%\studio\wizards\%1\%2\spec\%ISE_PLATFORM%
-rd /Q /S %TEMP%\%3
+if exist %TEMP%\%3 rd /Q /S %TEMP%\%3
 mkdir %TEMP%\%3
 echo -----------------------------------------------------------------
 echo ----------------- Retrieving last sources -----------------------

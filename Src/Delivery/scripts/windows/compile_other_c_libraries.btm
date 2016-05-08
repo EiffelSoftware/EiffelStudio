@@ -1,0 +1,28 @@
+@echo off
+
+call %INIT_DIR%\set_simple_aliases.btm
+
+remtrace Compiling C code of other libraries for C compiler %2
+
+rem arg1 = Root of EiffelStudio installation
+rem arg2 = Name of C compiler used
+
+iff not defined NO_COMPILE then
+	cdd %1
+
+	remtrace SQLite3
+	cdd %1\unstable\library\persistency\database\sqlite3\Clib
+	specific_make %2
+	fullrf %1\unstable\library\persistency\database\sqlite3\Clib\make.log
+
+	remtrace Compile examples
+	iff exist %1\examples\base\beep\Clib then
+		cd %1\examples\base\beep\Clib
+		specific_make %2
+	endiff
+
+	cd %1\C_library\zlib
+	specific_make %2
+	cd %1\C_library\libpng
+	specific_make %2
+endiff

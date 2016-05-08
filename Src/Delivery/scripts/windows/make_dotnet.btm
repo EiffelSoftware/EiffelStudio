@@ -4,7 +4,7 @@ cdd %EIFFEL_SRC
 
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
-call nmake msbuild_20
+espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake msbuild_20"
 copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
 copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin

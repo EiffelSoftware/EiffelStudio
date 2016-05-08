@@ -9,13 +9,6 @@ exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/README.txt README.t
 remtrace library
 exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/unstable/library library
 
-iff not defined NO_COMPILE then
-	remtrace SQLite3
-	cdd %1\unstable\library\persistency\database\sqlite3\Clib
-	all_makes
-	fullrf %1\unstable\library\persistency\database\sqlite3\Clib\make.log
-endiff
-
 remtrace Retrieve contrib libraries and examples
 cdd %1
 md contrib

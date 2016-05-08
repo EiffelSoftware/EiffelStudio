@@ -1,3 +1,7 @@
+@echo off
+
+call %INIT_DIR%\set_simple_aliases.btm
+
 iff not defined INSTALL_DIR then 
 	echo INSTALL_DIR not defined
 	CANCEL

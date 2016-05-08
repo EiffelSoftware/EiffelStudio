@@ -1,0 +1,71 @@
+@echo off
+
+call %INIT_DIR%\set_simple_aliases.btm
+
+remtrace Compiling C code of libraries for C compiler %2
+
+rem arg1 = Root of EiffelStudio installation
+rem arg2 = Name of C compiler used
+
+iff not defined NO_COMPILE then
+	remtrace Retrieve the header files
+	cdd %EIFFEL_SRC
+	safe_md headers
+	REM "We keep a copy of vendors specific header files at EiffelSoftware as they cannot be"
+	REM "redistributed freely."
+	exprtfile %DEFAULT_ISE_SVN/Src/library/headers.tar.gz  > headers\headers.tar.gz
+	cd headers
+	tar xvfz headers.tar.gz
+	iff not isdir apps then
+		remtrace Couldnt retrieve the header files.
+	endiff
+	set JDK_HOME=%EIFFEL_SRC\headers\apps\jdk1.1.8
+	set ORACLE_HOME=%EIFFEL_SRC\headers\apps\oracle
+
+	cdd %1
+	remtrace Compile the C code, and remove extra clib's
+	iff isdir %1\library\com then
+		remtrace com
+		cd %1\library\com\Clib
+		specific_make %2
+		cd %1\library\com\Clib_runtime
+		specific_make %2
+		cd %1\library\com
+	endiff
+	remtrace cURL
+	cd %1\library\cURL\Clib
+	specific_make %2
+	remtrace net
+	cd %1\library\net\Clib
+	specific_make %2
+	remtrace obsolete\net
+	cd %1\library\obsolete\net\Clib
+	specific_make %2
+	remtrace store
+	cd %1\library\store\dbms\rdbms\odbc\clib
+	specific_make %2
+	cd %1\library\store\dbms\rdbms\mysql\clib
+	specific_make %2
+	cd %1\library\store\dbms\rdbms\oracle\clib
+	specific_make %2
+	remtrace vision2
+	cd %1\library\vision2\Clib
+	specific_make %2
+	remtrace web_browser
+	cd %1\library\web_browser\Clib
+	specific_make %2
+	remtrace wel
+	cd %1\library\wel\clib
+	specific_make %2
+	fullrf %1\library\wel\clib\make.log
+else
+	cdd %1
+	quick_move /s library\com\spec
+	fullrd %1\library\com\Clib
+	fullrd %1\library\com\Clib_runtime
+	quick_move /s library\net\spec
+	quick_move /s library\obsolete\net\spec
+	quick_move /s library\store\spec
+	quick_move /s library\vision2\spec
+	quick_move /s library\wel\spec
+endiff

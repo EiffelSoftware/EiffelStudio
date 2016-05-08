@@ -35,57 +35,22 @@ else
 	copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 endiff
 
-remtrace Compile a dynamic run-time for Microsoft
-cd %EIFFEL_SRC\C
-call configure clean >>& %INSTALL_LOG
-iff defined WIN64 then
-	call configure win64 m dll >>& %INSTALL_LOG
-else
-	iff defined MSC6 then
-		call configure win32 m6 dll >>& %INSTALL_LOG
-	else
-		call configure win32 m dll >>& %INSTALL_LOG
-	endiff
-endiff
-cd %EIFFEL_SRC
-fullrf C\run-time\LIB\*.exp
-copy C\run-time\LIB\*dll* %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
-cd %EIFFEL_SRC
-
-remtrace Compile a run-time for Microsoft
-cd %EIFFEL_SRC\C
-call configure clean >>& %INSTALL_LOG
-iff defined WIN64 then
-	call configure win64 m >>& %INSTALL_LOG
-else
-	iff defined MSC6 then
-		call configure win32 m6 >>& %INSTALL_LOG
-	else
-		call configure win32 m >>& %INSTALL_LOG
-	endiff
-endiff
-cd %EIFFEL_SRC
-copy C\run-time\LIB\*.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+remtrace Copy the configuration file
 iff not defined WIN64 then
-	copy C\desc\ise_desc.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
-	copy C\desc\ise_desc.lib %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
+else
+	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
 endiff
 
+remtrace Compile a dynamic run-time for Microsoft
+espawn -u:VC140 "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc15"
+espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc"
 
 remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\run-time\eif_stack.decl %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 copy %EIFFEL_SRC\C\run-time\eif_stack.interface %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
-
-remtrace Copy the configuration file
-iff not defined WIN64 then
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
-else
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\msc\config.sh
-	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
-endiff
 
 remtrace Copy the MSYS part
 copy %EIFFEL_SRC\C\shell\bin\rt_converter.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\
@@ -295,10 +260,10 @@ call make_vision2_demo.btm
 remtrace Recompile Legacy++
 cdd %EIFFEL_SRC\tools\legacy\PCCTS
 safe_md bin
-nmake /f makefile.win
+espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
 cd ..
 cd legacy
-nmake -f makefile.win
+espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
 iff not exist legacy.exe then
 	remtrace Couldnt generate legacy.exe
 	CANCEL

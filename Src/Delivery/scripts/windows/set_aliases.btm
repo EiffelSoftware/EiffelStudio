@@ -1,4 +1,11 @@
-REM Define some user parameters here
+REM Define some user parameters here if not yet defined.
+
+iff defined _SET_ALIAS_SET_ then
+	remtrace Script set_alias.btm was already called.
+	goto :eof
+endiff
+
+set _SET_ALIAS_SET_=1
 
 REM The file where all output is stored
 set INSTALL_LOG=c:\work\16.05_deliv\install.log
@@ -25,50 +32,4 @@ iff "%ISE_PLATFORM%" == "win64" then
 endiff
 
 REM OK The rest is private, no need for you to see it :)
-
-REM File management
-REM Copy also hidden files, keep attributes, overwrite automatically
-alias copy *copy /hkz
-REM Remove completely a directory
-alias fullrd del /syeqxz >>& %INSTALL_LOG
-REM Remove a file
-alias fullrf del /yqze
-REM Retrieve a file from the old delivery and put it in the new one
-alias quick_move `iff "%2" == "" then & copy %ISE_EIFFEL\%1 %STUDIO_DIR\%1 >>& %INSTALL_LOG & else & copy %1 %ISE_EIFFEL\%2 %STUDIO_DIR\%2 >>& %INSTALL_LOG & endiff`
-REM Create a directory if it doesn't exist already
-alias safe_md `iff not isdir %1 then & iff exist %1 then & fullrf %1 & endiff & md %1 & endiff`
-REM Save current path into TMP_PATH
-alias save_path `set TMP_PATH=%@EXECSTR[cd]`
-
-REM Helpers for the script
-REM Give some info on what's happening, both in the log and on the screen
-alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG & echo %$ >>& %INSTALL_LOG`
-REM Give info concerning the elapsed time
-alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
-REM Clean exit
-alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & set ISE_LIBRARY=%OLD_ISE_LIBRARY & set ISE_SRC=%OLD_ISE_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
-
-REM CVS Commands: checkout, export
-alias co `call  %INIT_DIR\svn_command.bat co %$ >>& %INSTALL_LOG`
-alias exprt `call %INIT_DIR\svn_command.bat --force export %$ >>& %INSTALL_LOG`
-alias exprtfile `call %INIT_DIR\svn_command.bat cat %$` 
-
-REM C Compilation
-alias default_make `save_path & call compile_library.bat msc >>& %INSTALL_LOG & cd %TMP_PATH`
-alias all_makes `save_path & call compile_library.bat msc >>& %INSTALL_LOG & cd %TMP_PATH & call compile_library.bat mingw >>& %INSTALL_LOG & cd %TMP_PATH`
-
-REM Eiffel Compilation
-REM Remove a project from the current directory, if any
-alias clean_project `iff exist EIFGENs .or. isdir EIFGENs then & fullrd EIFGENs & endiff`
-REM Finalize at the Eiffel level only
-alias finalize `iff "%2" == "" then & ecb -finalize -c_compile -config %$ >>& %INSTALL_LOG & else & ecb -finalize -c_compile -config %1 -target %2 >>& %INSTALL_LOG & endiff`
-REM Melt at the Eiffel level only
-alias melt `ecb -config %$ >>& %INSTALL_LOG`
-alias freeze `ecb -freeze -c_compile -config %$ >>& %INSTALL_LOG`
-REM Move up the generated finalized exe (its name is the parameter) and delete the compiled files
-alias cleanup_dotnet_eiffel `if exist EIFGENs\%1\F_code\%2 move EIFGENs\%1\F_code\%2 .  & if exist EIFGENs\%1\F_code\lib*.dll move EIFGENs\%1\F_code\lib*.dll . & if exist EIFGENs\%1\F_code\Assemblies move EIFGENs\%1\F_code\Assemblies\*.dll . &  clean_project`
-alias cleanup_eiffel `if exist EIFGENs\%1\F_code\%2 move EIFGENs\%1\F_code\%2 . & clean_project`
-
-REM Tests....
-alias testpar `if %@INDEX[%$,no_compile] ge 0 echo true`
-
+call %INIT_DIR%\set_simple_aliases.btm

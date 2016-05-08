@@ -52,11 +52,8 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
-if yy_act <= 13 then
-if yy_act <= 7 then
-if yy_act <= 4 then
-if yy_act <= 2 then
-if yy_act = 1 then
+			inspect yy_act
+when 1 then
 --|#line 41 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 41")
@@ -68,7 +65,7 @@ end
 							output_file.put_new_line
 						end
 					
-else
+when 2 then
 --|#line 48 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 48")
@@ -80,9 +77,7 @@ end
 							output_file.put_new_line
 						end
 					
-end
-else
-if yy_act = 3 then
+when 3 then
 --|#line 55 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 55")
@@ -94,7 +89,7 @@ end
 							output_file.put_new_line
 						end
 					
-else
+when 4 then
 --|#line 62 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 62")
@@ -106,11 +101,7 @@ end
 							output_file.put_new_line
 						end
 					
-end
-end
-else
-if yy_act <= 6 then
-if yy_act = 5 then
+when 5 then
 --|#line 69 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 69")
@@ -122,7 +113,7 @@ end
 							output_file.put_new_line
 						end
 					
-else
+when 6 then
 --|#line 76 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 76")
@@ -134,8 +125,7 @@ end
 							output_file.put_new_line
 						end
 					
-end
-else
+when 7 then
 --|#line 83 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 83")
@@ -147,12 +137,7 @@ end
 							output_file.put_new_line
 						end
 					
-end
-end
-else
-if yy_act <= 10 then
-if yy_act <= 9 then
-if yy_act = 8 then
+when 8 then
 --|#line 90 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 90")
@@ -164,7 +149,7 @@ end
 							output_file.put_new_line
 						end
 					
-else
+when 9 then
 --|#line 97 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 97")
@@ -173,8 +158,7 @@ end
 						echo
 						set_start_condition (S_READLINE)
 					
-end
-else
+when 10, 11 then
 --|#line 101 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 101")
@@ -183,19 +167,7 @@ end
 						echo
 						line_nb := line_nb + 1
 					
-end
-else
-if yy_act <= 12 then
-if yy_act = 11 then
---|#line 102 "gepp_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 102")
-end
-
-						echo
-						line_nb := line_nb + 1
-					
-else
+when 12 then
 --|#line 106 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 106")
@@ -203,8 +175,7 @@ end
 
 						echo
 					
-end
-else
+when 13 then
 --|#line 112 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 112")
@@ -214,14 +185,7 @@ end
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					
-end
-end
-end
-else
-if yy_act <= 19 then
-if yy_act <= 16 then
-if yy_act <= 15 then
-if yy_act = 14 then
+when 14 then
 --|#line 117 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 117")
@@ -230,7 +194,7 @@ end
 						echo
 						set_start_condition (INITIAL)
 					
-else
+when 15 then
 --|#line 124 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 124")
@@ -239,8 +203,7 @@ end
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					
-end
-else
+when 16 then
 --|#line 128 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 128")
@@ -248,16 +211,13 @@ end
 
 						set_start_condition (INITIAL)
 					
-end
-else
-if yy_act <= 18 then
-if yy_act = 17 then
+when 17 then
 --|#line 134 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 134")
 end
 -- Separator.
-else
+when 18 then
 --|#line 135 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 135")
@@ -266,8 +226,7 @@ end
 						last_token := P_STRING
 						last_string_value := text_substring (2, text_count - 1)
 					
-end
-else
+when 19 then
 --|#line 139 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 139")
@@ -276,25 +235,19 @@ end
 						last_token := P_NAME
 						last_string_value := text
 					
-end
-end
-else
-if yy_act <= 22 then
-if yy_act <= 21 then
-if yy_act = 20 then
+when 20 then
 --|#line 143 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 143")
 end
 last_token := P_AND
-else
+when 21 then
 --|#line 144 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 144")
 end
 last_token := P_OR
-end
-else
+when 22 then
 --|#line 145 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 145")
@@ -304,33 +257,29 @@ end
 						line_nb := line_nb + 1
 						set_start_condition (INITIAL)
 					
-end
-else
-if yy_act <= 24 then
-if yy_act = 23 then
+when 23 then
 --|#line 154 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 154")
 end
 last_token := text_item (1).code
-else
+when 24 then
 --|#line 157 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 157")
 end
 last_token := text_item (1).code
-end
-else
+when 25 then
 --|#line 0 "gepp_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'gepp_scanner.l' at line 0")
 end
 last_token := yyError_token
 fatal_error ("scanner jammed")
-end
-end
-end
-end
+			else
+				last_token := yyError_token
+				fatal_error ("fatal scanner internal error: no action found")
+			end
 			yy_set_beginning_of_line
 		end
 
@@ -428,8 +377,19 @@ feature {NONE} -- Table templates
 
 	yy_ec_template: SPECIAL [INTEGER]
 			-- Template for `yy_ec'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make_filled (0, 0, 256)
+			yy_ec_template_1 (an_array)
+			yy_ec_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_ec_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yy_ec'.
+		do
+			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
 			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -450,14 +410,21 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
+			1, 200, 0)
+		end
 
+	yy_ec_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yy_ec'.
+		do
+			yy_array_subcopy (an_array, <<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
+			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
+			1, 57, 200)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]

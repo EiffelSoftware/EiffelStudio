@@ -1,0 +1,101 @@
+note
+
+	description:
+
+		"Eiffel tagged assertions"
+
+	library: "Gobo Eiffel Tools Library"
+	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class ET_TAGGED_ASSERTION
+
+inherit
+
+	ET_ASSERTION
+		redefine
+			reset
+		end
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_tag: like tag)
+			-- Create a new assertion.
+		require
+			a_tag_not_void: a_tag /= Void
+		do
+			tag := a_tag
+		ensure
+			tag_set: tag = a_tag
+		end
+
+feature -- Initialization
+
+	reset
+			-- Reset assertion as it was when it was last parsed.
+		do
+			if attached expression as l_expression then
+				l_expression.reset
+			end
+		end
+
+feature -- Access
+
+	tag: ET_TAG
+			-- Tag
+
+	expression: detachable ET_EXPRESSION
+			-- Expression
+
+	position: ET_POSITION
+			-- Position of first character of
+			-- current node in source code
+		do
+			Result := tag.position
+		end
+
+	first_leaf: ET_AST_LEAF
+			-- First leaf node in current node
+		do
+			Result := tag.first_leaf
+		end
+
+	last_leaf: ET_AST_LEAF
+			-- Last leaf node in current node
+		do
+			if attached expression as l_expression then
+				Result := l_expression.last_leaf
+			else
+				Result := tag.last_leaf
+			end
+		end
+
+feature -- Setting
+
+	set_expression (an_expression: like expression)
+			-- Set `expression' to `an_expression'.
+		do
+			expression := an_expression
+		ensure
+			expression_set: expression = an_expression
+		end
+
+feature -- Processing
+
+	process (a_processor: ET_AST_PROCESSOR)
+			-- Process current node.
+		do
+			a_processor.process_tagged_assertion (Current)
+		end
+
+invariant
+
+	tag_not_void: tag /= Void
+
+end

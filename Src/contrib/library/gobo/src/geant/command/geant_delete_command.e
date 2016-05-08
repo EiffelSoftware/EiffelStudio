@@ -5,7 +5,7 @@ note
 		"Delete commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2001, Sven Ehrke and others"
+	copyright: "Copyright (c) 2001-2016, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,9 @@ class GEANT_DELETE_COMMAND
 inherit
 
 	GEANT_COMMAND
+		redefine
+			make
+		end
 
 	KL_IMPORTED_BOOLEAN_ROUTINES
 		export {NONE} all end
@@ -22,6 +25,15 @@ inherit
 create
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_project: GEANT_PROJECT)
+			-- Initialize command by setting `project' to `a_project'.
+		do
+			Precursor (a_project)
+			fail_on_error := True
+		end
 
 feature -- Status report
 
@@ -68,6 +80,10 @@ feature -- Status report
 			exclusive: Result implies BOOLEAN_.nxor (<<is_file_executable,
 				is_directory_executable, (is_fileset_executable or is_directoryset_executable)>>)
 		end
+
+	fail_on_error: BOOLEAN
+			-- Should the exit code be non-zero when the file or directory
+			-- still exists after executing the delete command?
 
 feature -- Access
 
@@ -127,6 +143,14 @@ feature -- Setting
 			directoryset_set: directoryset = a_directoryset
 		end
 
+	set_fail_on_error (b: BOOLEAN)
+			-- Set `fail_on_error' to `b'.
+		do
+			fail_on_error := b
+		ensure
+			fail_on_error_set: fail_on_error = b
+		end
+
 feature -- Execution
 
 	execute
@@ -146,10 +170,12 @@ feature -- Execution
 							-- file or directory is deleted and the time it is shown as deleted.
 						from
 							i := 1
+							Execution_environment.sleep (500_000_000)
 							file_system.recursive_delete_directory (a_name)
 						until
-							i > 1000 or else not file_system.directory_exists (a_name)
+							i > 20 or else not file_system.directory_exists (a_name)
 						loop
+							Execution_environment.sleep (500_000_000)
 							file_system.recursive_delete_directory (a_name)
 							i := i + 1
 						end
@@ -169,10 +195,12 @@ feature -- Execution
 							-- file or directory is deleted and the time it is shown as deleted.
 						from
 							i := 1
+							Execution_environment.sleep (500_000_000)
 							file_system.delete_file (a_name)
 						until
-							i > 1000 or else not file_system.file_exists (a_name)
+							i > 20 or else not file_system.file_exists (a_name)
 						loop
+							Execution_environment.sleep (500_000_000)
 							file_system.delete_file (a_name)
 							i := i + 1
 						end
@@ -214,10 +242,12 @@ feature -- Execution
 										-- file or directory is deleted and the time it is shown as deleted.
 									from
 										i := 1
+										Execution_environment.sleep (500_000_000)
 										file_system.delete_file (a_name)
 									until
-										i > 1000 or else not file_system.file_exists (a_name)
+										i > 20 or else not file_system.file_exists (a_name)
 									loop
+										Execution_environment.sleep (500_000_000)
 										file_system.delete_file (a_name)
 										i := i + 1
 									end
@@ -253,10 +283,12 @@ feature -- Execution
 										-- file or directory is deleted and the time it is shown as deleted.
 									from
 										i := 1
+										Execution_environment.sleep (500_000_000)
 										file_system.recursive_delete_directory (a_name)
 									until
-										i > 1000 or else not file_system.directory_exists (a_name)
+										i > 20 or else not file_system.directory_exists (a_name)
 									loop
+										Execution_environment.sleep (500_000_000)
 										file_system.recursive_delete_directory (a_name)
 										i := i + 1
 									end
@@ -270,6 +302,9 @@ feature -- Execution
 						end
 					end
 				end
+			end
+			if not fail_on_error then
+				exit_code := 0
 			end
 		end
 

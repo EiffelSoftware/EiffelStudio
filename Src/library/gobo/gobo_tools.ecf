@@ -31,7 +31,7 @@
 		<library name="gobo_xml" location="gobo_xml.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="override_generated" location="override\generated\library\tools\" recursive="true"/>
-		<cluster name="tools" location="$ISE_LIBRARY\contrib\library\gobo\library\tools\" recursive="true">
+		<cluster name="tools" location="$ISE_LIBRARY\contrib\library\gobo\library\tools\src\" recursive="true">
 			<option namespace="Tools">
 			</option>
 		</cluster>

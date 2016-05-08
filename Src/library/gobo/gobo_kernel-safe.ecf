@@ -21,7 +21,7 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\" recursive="true">
+		<cluster name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\src\" recursive="true">
 			<option namespace="Kernel">
 			</option>
 		</cluster>

@@ -28,7 +28,7 @@
 		<library name="gobo_structure" location="gobo_structure-safe.ecf"/>
 		<library name="gobo_utility" location="gobo_utility-safe.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="lexical" location="$ISE_LIBRARY\contrib\library\gobo\library\lexical\" recursive="true">
+		<cluster name="lexical" location="$ISE_LIBRARY\contrib\library\gobo\library\lexical\src\" recursive="true">
 			<option namespace="Lexical">
 			</option>
 			<file_rule>

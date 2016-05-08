@@ -25,7 +25,7 @@
 		<library name="gobo_structure" location="gobo_structure.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="argument" location="$ISE_LIBRARY\contrib\library\gobo\library\argument\" recursive="true">
+		<cluster name="argument" location="$ISE_LIBRARY\contrib\library\gobo\library\argument\src" recursive="true">
 			<option namespace="Argument">
 			</option>
 		</cluster>

@@ -1,0 +1,122 @@
+note
+
+	description:
+
+		"Objects that implement the XPath index-of() function"
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2005-2015, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_INDEX_OF
+
+inherit
+
+	XM_XPATH_SYSTEM_FUNCTION
+		undefine
+			pre_evaluate, check_static_type
+		redefine
+			create_iterator
+		end
+
+	XM_XPATH_COLLATING_FUNCTION
+		undefine
+			create_iterator
+		end
+
+create
+
+	make
+
+feature {NONE} -- Initialization
+
+	make
+			-- Establish invariant
+		do
+			name := "index-of"; namespace_uri := Xpath_standard_functions_uri
+			fingerprint := Index_of_function_type_code
+			minimum_argument_count := 2
+			maximum_argument_count := 3
+			create arguments.make (3)
+			arguments.set_equality_tester (expression_tester)
+			initialized := True
+		end
+
+feature -- Access
+
+	item_type: XM_XPATH_ITEM_TYPE
+			-- Data type of the expression, where known
+		do
+			Result := type_factory.integer_type
+			if Result /= Void then
+				-- Bug in SE 1.0 and 1.1: Make sure that
+				-- that `Result' is not optimized away.
+			end
+		end
+
+feature -- Status report
+
+	required_type (argument_number: INTEGER): XM_XPATH_SEQUENCE_TYPE
+			-- Type of argument number `argument_number'
+		do
+			inspect
+				argument_number
+			when 1 then
+				create Result.make_atomic_sequence
+			when 2 then
+				create Result.make_single_atomic
+			when 3 then
+				create Result.make_single_string
+			end
+		end
+
+feature -- Evaluation
+
+	create_iterator (a_context: XM_XPATH_CONTEXT)
+			-- An iterator over the values of a sequence
+		local
+			l_atomic_comparer: detachable XM_XPATH_ATOMIC_COMPARER
+			l_sequence: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_ITEM]
+			l_result: DS_CELL [detachable XM_XPATH_ITEM]
+		do
+			l_atomic_comparer := atomic_comparer (3, a_context)
+			if l_atomic_comparer = Void then
+				create {XM_XPATH_INVALID_ITERATOR} last_iterator.make_from_string ("Unsupported collation", Xpath_errors_uri, "FOCH0002", Dynamic_error)
+			else
+				arguments.item (1).create_iterator (a_context)
+				check postcondition_of_create_iterator: attached arguments.item (1).last_iterator as l_last_iterator then
+					l_sequence := l_last_iterator
+					if l_sequence.is_error then
+						last_iterator := l_sequence
+					else
+						create l_result.make (Void)
+						arguments.item (2).evaluate_item (l_result, a_context)
+						check
+							attached l_result.item as l_result_item
+							search_parameter_present: l_result_item.is_error or else l_result_item.is_atomic_value
+							-- static typing
+						then
+							if attached l_result_item.error_value as l_error_value then
+								check is_error: l_result_item.is_error end
+								create {XM_XPATH_INVALID_ITERATOR} last_iterator.make (l_error_value)
+							else
+								create {XM_XPATH_INDEX_ITERATOR} last_iterator.make (l_sequence, l_result_item.as_atomic_value, l_atomic_comparer)
+							end
+						end
+					end
+				end
+			end
+		end
+
+feature {XM_XPATH_EXPRESSION} -- Restricted
+
+	compute_cardinality
+			-- Compute cardinality.
+		do
+			set_cardinality_zero_or_more
+		end
+
+end
+

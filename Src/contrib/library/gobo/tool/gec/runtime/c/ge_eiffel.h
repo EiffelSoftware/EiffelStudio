@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2010, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,9 @@
 
 #ifndef GE_EIFFEL_H
 #define GE_EIFFEL_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
 #if defined(__USE_POSIX) || defined(__unix__) || defined(_POSIX_C_SOURCE)
 #include <unistd.h>
@@ -138,6 +141,9 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define EIF_TRUE ((EIF_BOOLEAN)'\1')
 #define EIF_TEST(x) ((x) ? EIF_TRUE : EIF_FALSE)
 
+#define EIF_IS_WORKBENCH EIF_FALSE
+#define EIF_POINTER_DISPLAY "lX"
+
 /* For INTEGER and NATURAL manifest constants */
 #define GE_int8(x) x
 #define GE_nat8(x) x
@@ -157,6 +163,9 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define GE_nat64(x) x##ULL
 #endif
 #endif
+
+extern EIF_REFERENCE GE_ms8(const char *s, EIF_INTEGER_32 c);
+#define GE_str8(s) GE_ms8((s),strlen(s))
 
 #ifdef _MSC_VER /* MSVC */
 /* MSVC does not support ISO C 99's 'snprintf' from stdio.h */
@@ -178,14 +187,15 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */
 #define FUNCTION_CAST(r_type,arg_types) (r_type (*) arg_types)
 #define FUNCTION_CAST_TYPE(r_type,call_type,arg_types) (r_type (call_type *) arg_types)
+#define SIGBLOCK
+#define SIGRESUME
 #define rt_public				/* default C scope */
 #define rt_private static		/* static outside a block means private */
 #define rt_shared				/* data shared between modules, but not public */
 typedef int32_t EIF_TYPE_ID;
 #define EIF_NO_TYPE (EIF_TYPE_ID)(-1)
 typedef uint16_t EIF_TYPE_INDEX;
-extern EIF_REFERENCE GE_ms8(char* s, EIF_INTEGER_32 c);
-#define RTMS(s) GE_ms8((s),strlen(s))
+#define RTMS(s) GE_str8(s)
 #define RTMS_EX(s,c) GE_ms8((s),(c))
 
 #ifdef __cplusplus

@@ -31,6 +31,8 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
+		<library name="gobo_xpath" location="$ISE_LIBRARY\library\gobo\gobo_xpath.ecf"/>
+		<library name="gobo_xslt" location="$ISE_LIBRARY\library\gobo\gobo_xslt.ecf"/>
 		<cluster name="gexslt" location="$ISE_LIBRARY\contrib\library\gobo\src\gexslt\" recursive="true"/>
 	</target>
 </system>

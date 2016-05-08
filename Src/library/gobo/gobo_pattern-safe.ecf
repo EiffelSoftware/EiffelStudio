@@ -22,7 +22,7 @@
 		<library name="gobo_kernel" location="gobo_kernel-safe.ecf"/>
 		<library name="gobo_structure" location="gobo_structure-safe.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="pattern" location="$ISE_LIBRARY\contrib\library\gobo\library\pattern\" recursive="true">
+		<cluster name="pattern" location="$ISE_LIBRARY\contrib\library\gobo\library\pattern\src\" recursive="true">
 			<option namespace="Pattern">
 			</option>
 		</cluster>

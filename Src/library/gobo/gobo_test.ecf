@@ -30,7 +30,7 @@
 		<library name="gobo_test" location="$ISE_LIBRARY\library\gobo\gobo_test.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="test" location="$ISE_LIBRARY\contrib\library\gobo\library\test\" recursive="true">
+		<cluster name="test" location="$ISE_LIBRARY\contrib\library\gobo\library\test\src\" recursive="true">
 			<option namespace="Test">
 			</option>
 		</cluster>

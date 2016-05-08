@@ -1,0 +1,178 @@
+note
+
+	description:
+
+	"Objects that take as input an iteration of nodes in any order, and%
+	%return as output an iteration of the same nodes in document order,%
+	%eliminating any duplicates.."
+
+	library: "Gobo Eiffel XPath Library"
+	copyright: "Copyright (c) 2004-2014, Colin Adams and others"
+	license: "MIT License"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class XM_XPATH_DOCUMENT_ORDER_ITERATOR
+
+inherit
+
+	XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+		redefine
+			start, is_node_iterator, as_node_iterator
+		end
+
+create
+
+	make
+
+create {XM_XPATH_DOCUMENT_ORDER_ITERATOR}
+
+	make_another
+
+feature {NONE} -- Initialization
+
+	make (an_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]; a_comparer: XM_XPATH_NODE_ORDER_COMPARER)
+			-- Establish invariant.
+		require
+			comparer_not_void: a_comparer /= Void
+			iterator_before: an_iterator /= Void and then not an_iterator.is_error and then an_iterator.before
+		local
+			a_sorter: DS_QUICK_SORTER [XM_XPATH_NODE]
+		do
+			comparer := a_comparer
+			create sequence.make_default
+			from
+				an_iterator.start
+			until
+				an_iterator.is_error or else an_iterator.after
+			loop
+				if not sequence.extendible (1) then
+					sequence.resize (2 * sequence.count)
+				end
+				sequence.put_last (an_iterator.item)
+				an_iterator.forth
+			end
+			create a_sorter.make (a_comparer)
+			sequence.sort (a_sorter)
+			if attached an_iterator.error_value as l_error_value then
+				check is_error: an_iterator.is_error end
+				set_last_error (l_error_value)
+			end
+		ensure
+			comparer_set: comparer = a_comparer
+		end
+
+	make_another (a_sequence: like sequence; a_comparer: XM_XPATH_NODE_ORDER_COMPARER)
+			-- Create another document order iterator (used by `another').
+		require
+			comparer_not_void: a_comparer /= Void
+			sequence_not_void: a_sequence /= Void
+		do
+
+			-- No need to repeat the sort
+
+			create sequence.make_from_linear (a_sequence)
+			comparer := a_comparer
+		ensure
+			comparer_set: comparer = a_comparer
+		end
+
+feature -- Access
+
+	item: XM_XPATH_NODE
+			-- Value or node at the current position
+		do
+			check precondition_not_off: attached current_node as l_current_node then
+				Result := l_current_node
+			end
+		end
+
+	is_node_iterator: BOOLEAN
+			-- Does `Current' yield a node_sequence?
+		do
+			Result := True
+		end
+
+	as_node_iterator: XM_XPATH_SEQUENCE_ITERATOR [XM_XPATH_NODE]
+			-- `Current' seen as a node iterator
+		do
+			Result := Current
+		end
+
+feature -- Status report
+
+	after: BOOLEAN
+			-- Are there any more items in the sequence?
+		do
+			Result := sequence.after
+		end
+
+feature -- Cursor movement
+
+	start
+			-- Move to first position
+		do
+			sequence.start
+			index := 1
+			if not sequence.after then
+				current_node := sequence.item (1)
+			end
+		end
+
+feature -- Cursor movement
+
+	forth
+			-- Move to next position, skipping over duplicates
+		local
+			finished: BOOLEAN
+			a_node: XM_XPATH_NODE
+			l_current_node: like current_node
+		do
+			from
+			until
+				finished
+			loop
+				a_node := sequence.item_for_iteration
+				sequence.forth
+				if not sequence.after then
+					l_current_node := sequence.item_for_iteration
+					current_node := l_current_node
+					if attached a_node.error_value as l_error_value then
+						check is_error: a_node.is_error end
+						finished := True
+						set_last_error (l_error_value)
+					elseif not a_node.is_same_node (l_current_node) then
+						finished := True
+					end
+				else
+					finished := True
+				end
+			end
+			index := index + 1 -- to satisfy the interface
+		end
+
+feature -- Duplication
+
+	another: like Current
+			-- Another iterator that iterates over the same items as the original
+		do
+			create Result.make_another (sequence, comparer)
+		end
+
+feature {NONE} -- Implementation
+
+	comparer: XM_XPATH_NODE_ORDER_COMPARER
+			-- Comparer
+
+	current_node: detachable XM_XPATH_NODE
+			-- used by `forth' and `item'
+
+	sequence: DS_ARRAYED_LIST [XM_XPATH_NODE]
+			-- Sequence of nodes to be sorted
+
+invariant
+
+	comparer_not_void: comparer /= Void
+	sequence_extent_not_void: sequence /= Void
+
+end

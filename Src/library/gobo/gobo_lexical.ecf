@@ -21,7 +21,7 @@
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
-		<cluster name="lexical" location="$ISE_LIBRARY\contrib\library\gobo\library\lexical\skeleton" recursive="true">
+		<cluster name="lexical" location="$ISE_LIBRARY\contrib\library\gobo\library\lexical\src\skeleton\" recursive="true">
 			<option namespace="Lexical.Skeleton">
 			</option>
 		</cluster>

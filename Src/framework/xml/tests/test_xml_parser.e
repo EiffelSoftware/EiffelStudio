@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 			when tree_mode then
 				create tree.make_null
 				tree.set_source_parser (parser)
-				create resolver.set_next (tree)
+				create resolver.make_next (tree)
 				resolver.set_forward_xmlns (True)
 				parser.set_callbacks (resolver)
 			when xml_tree_mode, xml_tree_vis_mode then
 				create xml_tree.make_null
 				xml_tree.set_source_parser (parser)
-				create resolver.set_next (xml_tree)
+				create resolver.make_next (xml_tree)
 				resolver.set_forward_xmlns (True)
 				parser.set_callbacks (resolver)
 			when null_mode then
@@ -131,7 +131,7 @@ feature {NONE} -- Initialization
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -15,21 +15,21 @@ inherit
 
 create
 	make_null,
+	make_next,
 	set_next
 
 feature {NONE} -- Initialization
 
-	make_null
-		do
-			set_next (create {XML_CALLBACKS_NULL}.make)
-		end
-
-	set_next (a_next: like next)
+	make_next (a_next: like next)
 		require
 			a_next_attached: a_next /= Void
 		do
-			next := a_next
-			initialize
+			set_next (a_next)
+		end
+
+	make_null
+		do
+			make_next (create {XML_CALLBACKS_NULL}.make)
 		end
 
 	initialize
@@ -49,6 +49,14 @@ feature {NONE} -- Initialization
 	next: XML_CALLBACKS
 
 feature -- Next
+
+	set_next (a_next: like next)
+		require
+			a_next_attached: a_next /= Void
+		do
+			next := a_next
+			initialize
+		end
 
 	on_xml_declaration (a_version: STRING; an_encoding: STRING; a_standalone: BOOLEAN)
 		do
@@ -325,7 +333,7 @@ feature {NONE} -- Error
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

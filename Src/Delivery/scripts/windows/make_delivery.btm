@@ -83,7 +83,7 @@ endiff
 cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
 cdd %STUDIO_DIR\studio\config\%ISE_PLATFORM%\
-xcopy msc msc15 /E
+xcopy msc msc15 /E /I
 
 safe_md %STUDIO_DIR\tools
 cdd %STUDIO_DIR\tools

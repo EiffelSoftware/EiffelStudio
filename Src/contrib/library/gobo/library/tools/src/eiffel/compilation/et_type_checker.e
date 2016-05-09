@@ -23,8 +23,6 @@ inherit
 		undefine
 			make
 		redefine
-			process_bit_feature,
-			process_bit_n,
 			process_class,
 			process_class_type,
 			process_like_current,
@@ -58,9 +56,8 @@ feature -- Validity checking
 	check_type_validity (a_type: ET_TYPE; a_current_feature_impl: ET_CLOSURE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT)
 			-- Check validity of `a_type' written in `a_current_feature_impl' in
 			-- `a_current_class_impl' viewed from `a_current_context'. Resolve
-			-- identifiers (such as 'like identifier', 'BIT identifier',
-			-- 'like {A}.identifier or 'like a.identifier') in type `a_type'
-			-- if not already done.
+			-- identifiers (such as 'like identifier', 'like {A}.identifier
+			-- or 'like a.identifier') in type `a_type' if not already done.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		require
 			a_type_not_void: a_type /= Void
@@ -192,7 +189,9 @@ feature -- Validity checking
 											if not has_formal_type_error and a_formal_parameter /= Void then
 												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
 													set_fatal_error
-													error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+													if not class_interface_error_only then
+														error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+													end
 												end
 											end
 										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class) then
@@ -266,7 +265,9 @@ feature -- Validity checking
 												-- at run-time (we may end up creating instances of deferred classes).
 											else
 												set_fatal_error
-												error_handler.report_vtcg4a_error (current_class, current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+												if not class_interface_error_only then
+													error_handler.report_vtcg4a_error (current_class, current_class_impl, a_position, i, a_name, a_base_class, a_type_class)
+												end
 											end
 										end
 										j := j + 1
@@ -350,110 +351,6 @@ feature -- Type conversion
 
 feature {NONE} -- Validity checking
 
-	check_bit_feature_validity (a_type: ET_BIT_FEATURE)
-			-- Check validity of `a_type'.
-			-- Resolve identifier in 'BIT identifier' if not already done.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
--- TODO: should we check whether class BIT is in the universe or not?
-			if a_type.constant = Void then
-					-- Not resolved yet.
-				current_class_impl.process (current_system.interface_checker)
-				if not current_class_impl.interface_checked or else current_class_impl.has_interface_error then
-					set_fatal_error
-				elseif attached current_class_impl.named_query (a_type.name) as a_query then
-					if attached {ET_CONSTANT_ATTRIBUTE} a_query as a_constant_attribute and then attached {ET_INTEGER_CONSTANT} a_constant_attribute.constant as a_constant then
-						a_type.resolve_identifier_type (a_query.first_seed, a_constant)
-						check_bit_type_validity (a_type)
-					else
-							-- VTBT error (ETL2 page 210): The identifier
-							-- in Bit_type must be the final name of a
-							-- constant attribute of type INTEGER.
-						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vtbt0a_error (current_class, a_type)
-						else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-							error_handler.report_vtbt0a_error (current_class_impl, a_type)
-						end
-					end
-				elseif attached current_class_impl.named_procedure (a_type.name) as a_procedure then
-						-- VTBT error (ETL2 page 210): The identifier
-						-- in Bit_type must be the final name of a
-						-- constant attribute of type INTEGER.
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0a_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0a_error (current_class_impl, a_type)
-					end
-				else
-						-- VTBT error (ETL2 page 210): The identifier
-						-- in Bit_type must be the final name of a feature.
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0b_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0b_error (current_class_impl, a_type)
-					end
-				end
-			end
-		end
-
-	check_bit_n_validity (a_type: ET_BIT_N)
-			-- Check validity of `a_type'.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
--- TODO: should we check whether class BIT is in the universe or not?
-			-- The validity of the integer constant has
-			-- already been checked during the parsing.
-		end
-
-	check_bit_type_validity (a_type: ET_BIT_TYPE)
-			-- Check validity of the integer constant.
-			-- Set `has_fatal_error' if a fatal error occurred.
-		require
-			a_type_not_void: a_type /= Void
-			constant_not_void: a_type.constant /= Void
-			-- no_cycle: no cycle in anchored types involved.
-		do
-			has_fatal_error := False
-			if not attached a_type.constant as l_type_constant then
-					-- The precondition says it's attached.
-				set_fatal_error
-				error_handler.report_giaaa_error
-			else
-				a_type.compute_size
-				if a_type.has_size_error then
-					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0c_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0c_error (current_class_impl, a_type)
-					end
-				elseif a_type.size = 0 and l_type_constant.is_negative then
-						-- Not considered as a fatal error by gelint.
-					if current_class = current_class_impl then
-						error_handler.report_vtbt0d_error (current_class, a_type)
-					else
--- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtbt0d_error (current_class_impl, a_type)
-					end
-				end
-			end
-		end
-
 	check_class_type_validity (a_type: ET_CLASS_TYPE)
 			-- Check validity of `a_type'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -475,20 +372,24 @@ feature {NONE} -- Validity checking
 			if a_class.is_none then
 				if a_type.is_generic then
 					set_fatal_error
-					if current_class = current_class_impl then
-						error_handler.report_vtug1a_error (current_class, a_type)
-					else
+					if not class_interface_error_only then
+						if current_class = current_class_impl then
+							error_handler.report_vtug1a_error (current_class, a_type)
+						else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-						error_handler.report_vtug1a_error (current_class_impl, a_type)
+							error_handler.report_vtug1a_error (current_class_impl, a_type)
+						end
 					end
 				end
 			elseif a_class.is_unknown then
 				set_fatal_error
-				if current_class = current_class_impl then
-					error_handler.report_vtct0a_error (current_class, a_type)
-				else
+				if not class_interface_error_only then
+					if current_class = current_class_impl then
+						error_handler.report_vtct0a_error (current_class, a_type)
+					else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-					error_handler.report_vtct0a_error (current_class_impl, a_type)
+						error_handler.report_vtct0a_error (current_class_impl, a_type)
+					end
 				end
 			else
 				a_class.process (current_system.interface_checker)
@@ -501,11 +402,13 @@ feature {NONE} -- Validity checking
 				elseif not a_class.is_generic then
 					if a_type.is_generic then
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vtug1a_error (current_class, a_type)
-						else
+						if not class_interface_error_only then
+							if current_class = current_class_impl then
+								error_handler.report_vtug1a_error (current_class, a_type)
+							else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-							error_handler.report_vtug1a_error (current_class_impl, a_type)
+								error_handler.report_vtug1a_error (current_class_impl, a_type)
+							end
 						end
 					end
 				else
@@ -515,11 +418,13 @@ feature {NONE} -- Validity checking
 					l_actuals := a_type.actual_parameters
 					if not a_type.is_generic then
 						set_fatal_error
-						if current_class = current_class_impl then
-							error_handler.report_vtug2a_error (current_class, a_type)
-						else
+						if not class_interface_error_only then
+							if current_class = current_class_impl then
+								error_handler.report_vtug2a_error (current_class, a_type)
+							else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-							error_handler.report_vtug2a_error (current_class_impl, a_type)
+								error_handler.report_vtug2a_error (current_class_impl, a_type)
+							end
 						end
 					elseif not attached a_class.formal_parameters as a_formals then
 							-- Internal error: `a_class' is generic.
@@ -532,11 +437,13 @@ feature {NONE} -- Validity checking
 					else
 						if l_actuals.count /= a_formals.count then
 							set_fatal_error
-							if current_class = current_class_impl then
-								error_handler.report_vtug2a_error (current_class, a_type)
-							else
+							if not class_interface_error_only then
+								if current_class = current_class_impl then
+									error_handler.report_vtug2a_error (current_class, a_type)
+								else
 -- TODO: this error should have already been reported when processing `current_class_impl'.
-								error_handler.report_vtug2a_error (current_class_impl, a_type)
+									error_handler.report_vtug2a_error (current_class_impl, a_type)
+								end
 							end
 						else
 							nb := l_actuals.count
@@ -572,12 +479,16 @@ feature {NONE} -- Validity checking
 								if a_formal.is_expanded then
 									if not an_actual.is_type_expanded (current_context) then
 										set_fatal_error
-										error_handler.report_gvtcg5b_error (current_class, current_class_impl, a_type, an_actual, a_formal)
+										if not class_interface_error_only then
+											error_handler.report_gvtcg5b_error (current_class, current_class_impl, a_type, an_actual, a_formal)
+										end
 									end
 								elseif a_formal.is_reference then
 									if not an_actual.is_type_reference (current_context) then
 										set_fatal_error
-										error_handler.report_gvtcg5a_error (current_class, current_class_impl, a_type, an_actual, a_formal)
+										if not class_interface_error_only then
+											error_handler.report_gvtcg5a_error (current_class, current_class_impl, a_type, an_actual, a_formal)
+										end
 									end
 								end
 								a_constraint := a_formal.constraint
@@ -637,7 +548,9 @@ feature {NONE} -- Validity checking
 										-- In class B the actual generic parameter 'X [A]' does not conform
 										-- to its constraint 'X [like Current]'.
 									set_fatal_error
-									error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
+									if not class_interface_error_only then
+										error_handler.report_vtcg3a_error (current_class, current_class_impl, a_type, an_actual, a_constraint)
+									end
 								end
 								i := i + 1
 							end
@@ -698,7 +611,9 @@ feature {NONE} -- Validity checking
 											-- anchored type should not depend on a qualified anchored type.
 											-- This is a way to avoid cycles in qualified anchored types.
 										set_fatal_error
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										if not class_interface_error_only then
+											error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										end
 									end
 								end
 							end
@@ -723,7 +638,9 @@ feature {NONE} -- Validity checking
 															-- anchored type should not depend on a qualified anchored type.
 															-- This is a way to avoid cycles in qualified anchored types.
 														set_fatal_error
-														error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+														if not class_interface_error_only then
+															error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+														end
 													end
 												end
 											end
@@ -732,12 +649,16 @@ feature {NONE} -- Validity checking
 								end
 								if not resolved then
 									set_fatal_error
-									error_handler.report_vtat1b_error (current_class, l_feature, a_type)
+									if not class_interface_error_only then
+										error_handler.report_vtat1b_error (current_class, l_feature, a_type)
+									end
 								end
 							else
 									-- 'like argument' not valid in inline agents and invariants.
 								set_fatal_error
-								error_handler.report_vtat1a_error (current_class, a_type)
+								if not class_interface_error_only then
+									error_handler.report_vtat1a_error (current_class, a_type)
+								end
 							end
 						end
 					end
@@ -756,7 +677,9 @@ feature {NONE} -- Validity checking
 											-- anchored type should not depend on a qualified anchored type.
 											-- This is a way to avoid cycles in qualified anchored types.
 										set_fatal_error
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										if not class_interface_error_only then
+											error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										end
 									end
 								end
 							else
@@ -780,7 +703,9 @@ feature {NONE} -- Validity checking
 										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
-									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+									if not class_interface_error_only then
+										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+									end
 								end
 							end
 						else
@@ -842,13 +767,17 @@ feature {NONE} -- Validity checking
 											-- anchored type should not depend on a qualified anchored type.
 											-- This is a way to avoid cycles in qualified anchored types.
 										set_fatal_error
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										if not class_interface_error_only then
+											error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+										end
 									end
 								end
 							else
 									-- Error: there is no query with this final name.
 								set_fatal_error
-								error_handler.report_vtat1c_error (current_class, a_type, l_class)
+								if not class_interface_error_only then
+									error_handler.report_vtat1c_error (current_class, a_type, l_class)
+								end
 							end
 						end
 					end
@@ -866,7 +795,9 @@ feature {NONE} -- Validity checking
 										-- anchored type should not depend on a qualified anchored type.
 										-- This is a way to avoid cycles in qualified anchored types.
 									set_fatal_error
-									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+									if not class_interface_error_only then
+										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+									end
 								end
 							end
 						else
@@ -905,6 +836,19 @@ feature {NONE} -- Validity checking
 			reset_fatal_error (had_error)
 		end
 
+feature -- Error reporting
+
+	class_interface_error_only: BOOLEAN
+			-- Should only the errors found when checking class interface (and before) be reported?
+
+	set_class_interface_error_only (b: BOOLEAN)
+			-- Set `class_interface_error_only' to `b'.
+		do
+			class_interface_error_only := b
+		ensure
+			class_interface_error_only_set: class_interface_error_only = b
+		end
+
 feature -- Client/Supplier relationship
 
 	supplier_handler: detachable ET_SUPPLIER_HANDLER
@@ -936,18 +880,6 @@ feature {NONE} -- Client/Supplier relationship
 		end
 
 feature {ET_AST_NODE} -- Type processing
-
-	process_bit_feature (a_type: ET_BIT_FEATURE)
-			-- Process `a_type'.
-		do
-			check_bit_feature_validity (a_type)
-		end
-
-	process_bit_n (a_type: ET_BIT_N)
-			-- Process `a_type'.
-		do
-			check_bit_n_validity (a_type)
-		end
 
 	process_class (a_type: ET_CLASS)
 			-- Process `a_type'.

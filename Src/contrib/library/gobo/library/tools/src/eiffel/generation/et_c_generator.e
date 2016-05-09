@@ -25,7 +25,6 @@ inherit
 			process_assignment_attempt,
 			process_attribute,
 			process_bang_instruction,
-			process_bit_constant,
 			process_binary_integer_constant,
 			process_bracket_expression,
 			process_c1_character_constant,
@@ -6950,6 +6949,49 @@ print ("ET_C_GENERATOR.print_inspect_instruction - range%N")
 			current_file.put_character (';')
 			current_file.put_new_line
 			print_indentation
+			current_file.put_string (c_if)
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_tr)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('0')
+			current_file.put_character (')')
+			current_file.put_character (' ')
+			current_file.put_character ('{')
+			current_file.put_new_line
+			indent
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_exception_code)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
+			print_indentation
+			current_file.put_string (c_ac)
+			current_file.put_string (c_arrow)
+			current_file.put_string (c_exception_tag)
+			current_file.put_character (' ')
+			current_file.put_character ('=')
+			current_file.put_character (' ')
+			current_file.put_character ('(')
+			current_file.put_string (c_char)
+			current_file.put_character ('*')
+			current_file.put_character (')')
+			current_file.put_character ('0')
+			current_file.put_character (';')
+			current_file.put_new_line
+			dedent
+			print_indentation
+			current_file.put_character ('}')
+			current_file.put_new_line
+			print_indentation
 			current_file.put_string (c_goto)
 			current_file.put_character (' ')
 			current_file.put_string (c_ge_retry)
@@ -8115,15 +8157,6 @@ feature {NONE} -- Expression generation
 			a_constant_not_void: a_constant /= Void
 		do
 			print_integer_constant (a_constant)
-		end
-
-	print_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Print `a_constant'.
-		require
-			a_constant_not_void: a_constant /= Void
-		do
--- TODO.
-print ("ET_C_GENERATOR.print_bit_constant%N")
 		end
 
 	print_boxed_attribute_access (an_attribute: ET_DYNAMIC_FEATURE; a_target: ET_EXPRESSION; a_target_type: ET_DYNAMIC_TYPE; a_check_void_target: BOOLEAN)
@@ -30410,12 +30443,6 @@ feature {ET_AST_NODE} -- Processing
 			print_binary_integer_constant (a_constant)
 		end
 
-	process_bit_constant (a_constant: ET_BIT_CONSTANT)
-			-- Process `a_constant'.
-		do
-			print_bit_constant (a_constant)
-		end
-
 	process_bracket_expression (an_expression: ET_BRACKET_EXPRESSION)
 			-- Process `an_expression'.
 		do
@@ -31965,7 +31992,9 @@ feature {NONE} -- Constants
 	c_else: STRING = "else"
 	c_endif: STRING = "#endif"
 	c_equal: STRING = "=="
+	c_exception_code: STRING = "exception_code"
 	c_exception_manager: STRING = "exception_manager"
+	c_exception_tag: STRING = "exception_tag"
 	c_extern: STRING = "extern"
 	c_find_referers: STRING = "find_referers"
 	c_float: STRING = "float"

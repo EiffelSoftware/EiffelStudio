@@ -120,7 +120,7 @@ feature {NONE} -- Basic operations
 				create l_filter.make_null
 				l_filter.set_output_stream (l_output_file)
 
-				create l_generator.set_next (l_filter)
+				create l_generator.make_next (l_filter)
 				a_doc.process_to_events (l_generator)
 			else
 				error_handler.add_error (create {RWEO}.make (a_file_name), False)
@@ -146,7 +146,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly.
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -151,7 +151,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
 			an_object: GB_OBJECT
-			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			cursor: DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE]
 			a_display_object: GB_DISPLAY_OBJECT
 		do
 			an_object := components.object_handler.add_root_window (window.attribute_by_name (type_string).value)
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			element_info: ELEMENT_INFORMATION
 			all_constants: ARRAYED_LIST [STRING]
 			an_element: XM_ELEMENT
-			cursor, cursor1: DS_LINKED_LIST_CURSOR [XM_NODE]
+			cursor, cursor1: DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE]
 			previous_directory: STRING
 		do
 				-- Initialize all data structures for recording names in both systems.
@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 			current_name: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			cursor: DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE]
 		do
 			from
 				element.start
@@ -753,7 +753,7 @@ feature {NONE} -- Implementation
 		local
 			current_element: XM_ELEMENT
 			current_name : STRING
-			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			cursor: DS_LINKED_LIST_CURSOR [XM_ELEMENT_NODE]
 		do
 			from
 				element.start

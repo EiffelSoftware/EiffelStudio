@@ -9,6 +9,13 @@ class
 inherit
 	XML_CALLBACKS
 
+feature {NONE} -- Initialization
+
+	initialize
+			-- <Precursor>.
+		do
+		end
+		
 feature -- Document
 
 	on_start
@@ -148,7 +155,7 @@ feature -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

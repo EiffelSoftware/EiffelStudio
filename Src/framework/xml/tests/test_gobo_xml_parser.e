@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			xml_resolver: detachable XM_NAMESPACE_RESOLVER
 
 			resolver: detachable XM_NAMESPACE_RESOLVER
-			tree: detachable XM_CALLBACKS_TO_TREE_FILTER
+			tree: XM_CALLBACKS_TO_TREE_FILTER
 		do
 			create parser.make
 			parser.set_string_mode_mixed
@@ -34,13 +34,13 @@ feature {NONE} -- Initialization
 			when debug_mode then
 				parser.set_callbacks (create {XML_CALLBACKS_DEBUG})
 			when tree_mode then
-				tree :=  new_tree_builder
-				create resolver.set_next (tree)
+				tree := new_tree_builder
+				create resolver.make_next (tree)
 				resolver.set_forward_xmlns (True)
 				parser.set_callbacks (resolver)
 			when xml_tree_mode, xml_tree_vis_mode then
 				create xml_tree.make_null
-				create xml_resolver.set_next (xml_tree)
+				create xml_resolver.make_next (xml_tree)
 				xml_resolver.set_forward_xmlns (True)
 				parser.set_callbacks (xml_resolver)
 			when null_mode then
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			print ("End%N")
 			l_xml_file.close
 
-			if parser.last_error > 0 then
+			if not parser.is_correct then
 				last_error_position := parser.position
 				last_error_message := parser.last_error_description
 			end
@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

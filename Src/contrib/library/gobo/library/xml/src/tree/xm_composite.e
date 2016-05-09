@@ -63,6 +63,14 @@ feature -- Status report
 			definition: Result = (0 <= i and i <= (count + 1))
 		end
 
+	valid_cursor (a_cursor: like new_cursor): BOOLEAN
+			-- Is `a_cursor' a valid cursor?
+		require
+			a_cursor_not_void: a_cursor /= Void
+		do
+			Result := children.valid_cursor (a_cursor)
+		end
+
 feature -- Access
 
 	count: INTEGER
@@ -224,7 +232,7 @@ feature -- Cursor movement
 		end
 
 	finish
-			-- Move internal cursor to last position.
+			-- Move internal cursor to last child.
 		do
 			children.finish
 		ensure
@@ -246,7 +254,7 @@ feature -- Cursor movement
 			-- Move internal cursor to `a_cursor''s position.
 		require
 			cursor_not_void: a_cursor /= Void
-			--valid_cursor: valid_cursor (a_cursor)
+			valid_cursor: valid_cursor (a_cursor)
 		do
 			children.go_to (a_cursor)
 		ensure
@@ -284,22 +292,25 @@ feature -- Element change
 		end
 
 	put_right (a_node: like last)
-			-- Add `v' to right of internal cursor position.
+			-- Add `a_node' to right of internal cursor position in the list of children.
 			-- Do not move cursors.
 		require
 			not_after: not after
 		do
+			before_addition (a_node)
 			children.put_right (a_node)
 		ensure
 			one_more: count = old count + 1
 		end
 
-	replace (v: like last; i: INTEGER)
-			-- replace with parent processing.
+	replace (a_node: like last; i: INTEGER)
+			-- Replace child at index `i' by `a_node'.
+			-- Do not move cursors.
 		require
 			valid_index: 1 <= i and i <= count
 		do
-			children.replace (v, i)
+			before_addition (a_node)
+			children.replace (a_node, i)
 		ensure
 			same_count: count = old count
 		end
@@ -307,9 +318,8 @@ feature -- Element change
 feature -- Removal
 
 	remove (i: INTEGER)
-			-- Remove item at `i'-th position.
+			-- Remove node at `i'-th position.
 			-- Move any cursors at this position forth.
-			-- (Performance: O(i).)
 		require
 			not_empty: not is_empty
 			valid_index: 1 <= i and i <= count
@@ -331,9 +341,8 @@ feature -- Removal
 		end
 
 	remove_last
-			-- Remove item at end of list.
-			-- Move any cursors at this position forth.
-			-- (Performance: O(count).)
+			-- Remove node at end of list of children.
+			-- Move any cursors at this position `forth'.
 		require
 			not_empty: not is_empty
 		do

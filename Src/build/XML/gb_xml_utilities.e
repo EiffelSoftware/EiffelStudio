@@ -281,7 +281,7 @@ feature -- Access
 			create output_stream.make ("")
 			create pretty_print.make_null
 			pretty_print.set_output_stream (output_stream)
-			create xmlns_generator.set_next (pretty_print)
+			create xmlns_generator.make_next (pretty_print)
 			a_document.process_to_events (xmlns_generator)
 			Result := output_stream.string
 		ensure

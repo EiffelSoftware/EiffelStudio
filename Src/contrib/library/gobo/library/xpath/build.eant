@@ -56,7 +56,6 @@
 		<argument name="target"/>
 
 		<geant file="build.eant" target="${target}" dir="doc"/>
-		<geant file="build.eant" target="${target}" dir="test"/>
 	</target>
 
 </project>

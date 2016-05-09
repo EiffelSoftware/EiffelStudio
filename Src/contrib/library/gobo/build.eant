@@ -29,7 +29,6 @@
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="src"/>
 		<geant file="build.eant" target="install" dir="example"/>
-		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>
 	</target>
 
@@ -41,7 +40,6 @@
 		<geant file="build.eant" target="clean" dir="library"/>
 		<geant file="build.eant" target="clean" dir="src"/>
 		<geant file="build.eant" target="clean" dir="example"/>
-		<geant file="build.eant" target="clean" dir="test"/>
 		<geant file="build.eant" target="clean" dir="doc"/>
 	</target>
 
@@ -53,7 +51,6 @@
 		<geant file="build.eant" target="clobber" dir="library"/>
 		<geant file="build.eant" target="clobber" dir="src"/>
 		<geant file="build.eant" target="clobber" dir="example"/>
-		<geant file="build.eant" target="clobber" dir="test"/>
 		<geant file="build.eant" target="clobber" dir="doc"/>
 	</target>
 
@@ -120,7 +117,6 @@
 		<geant file="../src/gexslt/build.eant" target="clean" dir="bin"/>
 		<geant file="build.eant" target="install" dir="library"/>
 		<geant file="build.eant" target="install" dir="example"/>
-		<geant file="build.eant" target="install" dir="test"/>
 		<geant file="build.eant" target="install" dir="doc"/>
 		<geant target="clean"/>
 	</target>

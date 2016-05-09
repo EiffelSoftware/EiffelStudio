@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			choice_list_not_destroyed: attached choice_list as l_c_list and then not l_c_list.is_destroyed
 		local
 			l_item: EV_GRID_LABEL_ITEM
-			i, j, nb: INTEGER
+			j: INTEGER
 			l_text, l_selected_text: READABLE_STRING_GENERAL
 			l_font, l_selected_font: detachable EV_FONT
 			l_choice_list: like choice_list

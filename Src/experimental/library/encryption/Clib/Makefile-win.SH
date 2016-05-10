@@ -29,7 +29,6 @@ mtstandard:: mtdes.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 des.lib: $(OBJECTS)
 	$alib_line

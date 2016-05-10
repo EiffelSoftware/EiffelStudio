@@ -13,10 +13,10 @@ note
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
+	PROCEDURE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
-	ROUTINE [BASE_TYPE, OPEN_ARGS]
+	ROUTINE [OPEN_ARGS]
 
 create {NONE}
 	set_rout_disp

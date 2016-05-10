@@ -10,16 +10,16 @@ note
 	revision: "$Revision$"
 
 class
-	PREDICATE [BASE_TYPE -> detachable ANY, OPEN_ARGS -> detachable TUPLE create default_create end]
+	PREDICATE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
-	FUNCTION [BASE_TYPE, OPEN_ARGS, BOOLEAN]
+	FUNCTION [OPEN_ARGS, BOOLEAN]
 
 create {NONE}
 	set_rout_disp
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

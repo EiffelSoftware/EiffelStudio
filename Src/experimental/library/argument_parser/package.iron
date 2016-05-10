@@ -6,10 +6,11 @@ project
 
 note
 	title: Obsolete Eiffel Argument Parser
-	description: Please use the new 'arg_parser' library
-	tags: obsolete,argument
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	description: Obsolete, please use the new 'arg_parser' library
+	tags: obsolete,argument,parser,command line,cli
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	copyright: 1984-2016 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/argument_parser
 
 end

@@ -216,7 +216,7 @@ feature -- Importation
 		local
 			vals: like session_values
 			k: READABLE_STRING_GENERAL
-			v: STRING_32
+			v: READABLE_STRING_32
 			p: detachable PREFERENCE
 		do
 			a_storage.initialize_with_preferences (Current)
@@ -227,7 +227,7 @@ feature -- Importation
 				vals.after
 			loop
 				k := vals.key_for_iteration
-				v := vals.item_for_iteration.string
+				v := vals.item_for_iteration
 				session_values.force (v, k)
 				p := preferences.item (k)
 				if p /= Void then
@@ -383,7 +383,7 @@ feature -- Preference
 			Result := get_preference (a_name)
 		end
 
-	get_preference_value_direct (a_name: READABLE_STRING_GENERAL): detachable STRING_32
+	get_preference_value_direct (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- Fetch the preference string value with `a_name' directly from the underlying datastore.
 			-- Ignore values currently in `session_values' and `preferences'.  Use this if the
 			-- preference value has been changed externally and you need the updated value.
@@ -497,10 +497,10 @@ feature -- Storage access
 
 feature {PREFERENCE_EXPORTER} -- Implementation
 
-	default_values: STRING_TABLE [TUPLE [description: detachable STRING_32; value: detachable STRING_32; hidden: BOOLEAN; restart: BOOLEAN]]
+	default_values: STRING_TABLE [TUPLE [description: detachable READABLE_STRING_32; value: detachable READABLE_STRING_32; hidden: BOOLEAN; restart: BOOLEAN]]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 
-	session_values: STRING_TABLE [STRING_32]
+	session_values: STRING_TABLE [READABLE_STRING_32]
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 
@@ -684,7 +684,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

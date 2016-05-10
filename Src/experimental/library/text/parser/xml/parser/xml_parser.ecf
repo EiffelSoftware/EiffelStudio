@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-6-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="xml_parser" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" library_target="xml_parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xml_parser" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" library_target="xml_parser">
 	<target name="xml_parser">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" syntax="provisional">
+		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="provisional">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="xml_parser" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/utility$</exclude>
 			</file_rule>
-			<cluster name="xml_utility" location=".\utility" recursive="true">
+			<cluster name="xml_utility" location=".\utility\" recursive="true">
 				<file_rule>
 					<exclude>/implementation$</exclude>
 				</file_rule>
-				<cluster name="xml_utility_implementation" location="$\implementation" recursive="true" hidden="true"/>
+				<cluster name="xml_utility_implementation" location="$|implementation\" recursive="true" hidden="true"/>
 			</cluster>
 		</cluster>
 	</target>

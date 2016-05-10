@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	register_figure (a_figure: EV_MODEL; a_routine: PROCEDURE [ANY, TUPLE [EV_MODEL]])
+	register_figure (a_figure: EV_MODEL; a_routine: PROCEDURE [EV_MODEL])
 			-- Assign `a_routine' for drawing of `a_figure'.
 		obsolete
 			"Redefine `project' from your EV_MODEL descendant to perform the projection."
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	draw_routines: ARRAY [detachable PROCEDURE [ANY, TUPLE [EV_MODEL]]]
+	draw_routines: ARRAY [detachable PROCEDURE [EV_MODEL]]
 			-- Routine registration.
 
 	register_basic_figures

@@ -95,7 +95,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	check_query (q: FUNCTION[TRANSACTION, TUPLE, BOOLEAN]): BOOLEAN
+	check_query (q: FUNCTION[BOOLEAN]): BOOLEAN
 			-- Is query `q' true for all transactions?
 		require
 			query_exists: q /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			index_unchanged: index = old index
 		end
 
-	execute_command (cmd: PROCEDURE[TRANSACTION_CONTAINER[G], TUPLE])
+	execute_command (cmd: PROCEDURE)
 			-- Execute command `cmd' for all transactions.
 		require
 			command_exists: cmd /= Void

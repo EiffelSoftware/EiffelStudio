@@ -457,7 +457,7 @@ feature -- Implementation
 	temp_pebble: detachable ANY
 			-- Temporary pebble holder used for PND implementation with nodes.
 
-	temp_pebble_function: detachable FUNCTION [ANY, TUPLE [], detachable ANY]
+	temp_pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by PND mechanism.
 
 	temp_accept_cursor, temp_deny_cursor: detachable EV_POINTER_STYLE

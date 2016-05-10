@@ -22,7 +22,7 @@
 		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="time" location="$ISE_LIBRARY\contrib\library\gobo\library\time\" recursive="true">
+		<cluster name="time" location="$ISE_LIBRARY\contrib\library\gobo\library\time\src\" recursive="true">
 			<option namespace="Time">
 			</option>
 		</cluster>

@@ -46,7 +46,7 @@ feature -- Access
 			io.putstring (message)
 		end
 
-	basic_confirmation_handler (message: STRING; action_to_confirm: PROCEDURE [ANY, TUPLE])
+	basic_confirmation_handler (message: STRING; action_to_confirm: PROCEDURE)
 			-- Execute `action_to_confirm' without confirmation.
 		do
 			action_to_confirm.call ([])

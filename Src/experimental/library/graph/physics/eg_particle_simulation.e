@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		In an EG_PARTICLE_SIMULATION any number of EG_PARTICLEs are interacting with each
 		other in a way that is defined by the implementer of `n_body_force'. The force
@@ -99,13 +99,13 @@ feature {NONE}
 feature {NONE} -- Implementation
 
 	particle_type: EG_PARTICLE
-			-- Type of particles
-		local
-			l_result: detachable like particle_type
+			-- Type of particles.
+		require
+			is_used_as_type_anchor: False
 		do
-			check anchor_type_only: False end
-			check l_result /= Void end -- Satisfy void safe compiler
-			Result := l_result
+			check is_used_as_type_anchor: False then end
+		ensure
+			is_used_as_type_anchor: False
 		end
 
 invariant
@@ -113,7 +113,7 @@ invariant
 	particles_not_empty: not particles.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -122,9 +122,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-end -- class EG_PARTICLE_SIMULATION
-
+end

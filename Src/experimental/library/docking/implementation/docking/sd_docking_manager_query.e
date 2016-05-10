@@ -128,7 +128,7 @@ feature -- Querys
 			a_unique_title_not_void: a_unique_title /= Void
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_callback: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], SD_CONTENT]
+			l_callback: detachable FUNCTION [READABLE_STRING_GENERAL, SD_CONTENT]
 		do
 			from
 				l_contents := docking_manager.contents

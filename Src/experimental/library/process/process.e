@@ -120,7 +120,7 @@ feature -- IO redirection
 			output_handler_void: output_handler = Void
 		end
 
-	redirect_output_to_agent (a_output_handler: PROCEDURE [ANY, TUPLE [STRING]])
+	redirect_output_to_agent (a_output_handler: PROCEDURE [STRING])
 			-- Redirect output stream of process to an agent
 			-- so whenever some output data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -172,7 +172,7 @@ feature -- IO redirection
 			error_handler_void: error_handler = Void
 		end
 
-	redirect_error_to_agent (a_error_handler: PROCEDURE [ANY, TUPLE [STRING]])
+	redirect_error_to_agent (a_error_handler: PROCEDURE [STRING])
 			-- Redirect error stream of process to an agent
 			-- so whenever some error data comes out of process,
 			-- the agent will be called with it's parameter assigned to
@@ -685,7 +685,7 @@ feature -- Status report
 			-- Will process be launched without any console ?
 			-- Has effects on Windows.
 
-	are_agents_valid (handler: detachable PROCEDURE [ANY, TUPLE [STRING]]; is_error: BOOLEAN): BOOLEAN
+	are_agents_valid (handler: detachable PROCEDURE [STRING]; is_error: BOOLEAN): BOOLEAN
 			-- Are output redirection agent and error redirection agent valid?
 			-- If you redirect both output and error to one agent,
 			-- they are not valid. You must redirect output and error to
@@ -750,27 +750,27 @@ feature -- Validation checking
 
 feature {PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
 
-	output_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	output_handler: detachable PROCEDURE [STRING]
 			-- Handler called when output from process arrives
 
-	error_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	error_handler: detachable PROCEDURE [STRING]
 			-- Handler called when error from process arrives
 
 feature {NONE} -- Implementation
 
-	on_start_handler: detachable ROUTINE [ANY, TUPLE]
+	on_start_handler: detachable ROUTINE
 			-- Agent called when process starts
 
-	on_exit_handler: detachable ROUTINE [ANY, TUPLE]
+	on_exit_handler: detachable ROUTINE
 			-- Agent called when process exits
 
-	on_terminate_handler: detachable ROUTINE [ANY, TUPLE]
+	on_terminate_handler: detachable ROUTINE
 			-- Agent called when process has been terminated
 
-	on_fail_launch_handler: detachable ROUTINE [ANY, TUPLE]
+	on_fail_launch_handler: detachable ROUTINE
 			-- Agent called when process launch failed
 
-	on_successful_launch_handler: detachable ROUTINE [ANY, TUPLE]
+	on_successful_launch_handler: detachable ROUTINE
 			-- Agent called when process launch is successful
 
 	arguments: detachable LIST [READABLE_STRING_GENERAL]

@@ -27,7 +27,7 @@
 		<library name="gobo_structure" location="gobo_structure-safe.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="override_generated" location="override\generated\library\utility\" recursive="true"/>
-		<cluster name="utility" location="$ISE_LIBRARY\contrib\library\gobo\library\utility\" recursive="true">
+		<cluster name="utility" location="$ISE_LIBRARY\contrib\library\gobo\library\utility\src\" recursive="true">
 			<option namespace="Utility">
 			</option>
 		</cluster>

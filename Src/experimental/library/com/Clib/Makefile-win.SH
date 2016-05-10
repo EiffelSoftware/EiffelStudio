@@ -40,7 +40,6 @@ mtstandard:: mtcom.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 com.lib: $(OBJECTS)
 	$alib_line

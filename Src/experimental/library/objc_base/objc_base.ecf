@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="objective_c" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_c">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="objective_c" uuid="876E123E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="objective_c">
 	<target name="objective_c">
 		<description>Objective-C Base Library. Wrapper classes for Objective C .
 &#9;&#9;&#9;Copyright (c) 2009, Daniel Furrer and others.</description>
@@ -18,8 +18,8 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<cluster name="objective_c" location=".\" recursive="true">
 			<file_rule>
-				<exclude>tests</exclude>
 				<exclude>/\.svn$</exclude>
+				<exclude>tests</exclude>
 			</file_rule>
 		</cluster>
 	</target>

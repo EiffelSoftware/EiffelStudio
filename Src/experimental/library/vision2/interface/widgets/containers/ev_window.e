@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Top level window. Contains a single widget.
@@ -26,15 +26,19 @@ inherit
 		undefine
 			create_implementation
 		redefine
+			destroy,
+			has,
+			hide,
+			identifier_path_separator,
 			implementation,
 			initialize,
 			is_in_default_state,
-			has,
-			identifier_path_separator
+			show
 		end
 
 	EV_POSITIONABLE
 		redefine
+			destroy,
 			implementation,
 			initialize,
 			is_in_default_state
@@ -80,6 +84,8 @@ feature -- Access
 	upper_bar: EV_VERTICAL_BOX
 			-- Room at top of window. (Example use: toolbars.)
 			-- Positioned below menu bar.
+		obsolete
+			"Drop usage as implementation will ignore this setting."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -90,6 +96,8 @@ feature -- Access
 
 	lower_bar: EV_VERTICAL_BOX
 			-- Room at bottom of window. (Example use: statusbar.)
+		obsolete
+			"Drop usage as implementation will ignore this setting."
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -183,6 +191,15 @@ feature -- Status report
 		end
 
 feature -- Command
+
+	destroy
+			-- <Precursor>
+		do
+			Precursor
+			if attached shared_environment.application as application then
+				application.unregister_window (Current)
+			end
+		end
 
 	destroy_and_exit_if_last
 			-- Destroy current window and destroy instance of EV_APPLICATION if
@@ -363,6 +380,15 @@ feature -- Status setting
 			no_locked_window: ev_application.locked_window = Void
 		end
 
+	show
+			-- <Precursor>
+		do
+			Precursor
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
+		end
+
 	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Show `Current' with respect to `a_parent'.
 		require
@@ -372,6 +398,18 @@ feature -- Status setting
 			a_window_not_current: a_parent /= Current
 		do
 			implementation.show_relative_to_window (a_parent)
+			if attached shared_environment.application as application then
+				application.register_window (Current)
+			end
+		end
+
+	hide
+			-- <Precursor>
+		do
+			Precursor
+			if attached shared_environment.application as application then
+				application.unregister_window (Current)
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
@@ -427,7 +465,7 @@ invariant
 	lower_bar_not_void: is_usable implies lower_bar /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -437,17 +475,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_WINDOW
-
-
-
-
-
-
-
-
-
-
+end

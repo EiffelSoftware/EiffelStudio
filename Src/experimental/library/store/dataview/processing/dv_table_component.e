@@ -226,7 +226,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	set_warning_handler (w_handler: PROCEDURE [ANY, TUPLE [STRING]])
+	set_warning_handler (w_handler: PROCEDURE [STRING])
 			-- Set `w_handler' to `warning_handler'
 		require
 			not_activated: not is_activated
@@ -235,7 +235,7 @@ feature -- Basic operations
 			warning_handler := w_handler
 		end
 
-	set_status_handler (s_handler: PROCEDURE [ANY, TUPLE [STRING]])
+	set_status_handler (s_handler: PROCEDURE [STRING])
 			-- Set `s_handler' to `status_handler'
 		require
 			not_activated: not is_activated
@@ -244,7 +244,7 @@ feature -- Basic operations
 			status_handler := s_handler
 		end
 
-	set_confirmation_handler (c_handler: PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]])
+	set_confirmation_handler (c_handler: PROCEDURE [STRING, PROCEDURE])
 			-- Set `c_handler' to `confirmation_handler'
 		require
 			not_activated: not is_activated
@@ -410,13 +410,13 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Access
 
-	warning_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	warning_handler: detachable PROCEDURE [STRING]
 			-- Warning handler.
 
-	status_handler: detachable PROCEDURE [ANY, TUPLE [STRING]]
+	status_handler: detachable PROCEDURE [STRING]
 			-- Status information handler.
 
-	confirmation_handler: detachable PROCEDURE [ANY, TUPLE [STRING, PROCEDURE [ANY, TUPLE]]]
+	confirmation_handler: detachable PROCEDURE [STRING, PROCEDURE]
 			-- Confirmation handler.
 
 	parent: detachable DV_TABLE_COMPONENT

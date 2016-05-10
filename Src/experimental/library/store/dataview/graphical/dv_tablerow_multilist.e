@@ -45,14 +45,14 @@ feature -- Status report
 			Result := table_code /= No_code
 		end
 
-	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	has_select_action (action: PROCEDURE): BOOLEAN
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		do
 			Result := select_actions.has (agent select_actions.wrapper (?, action))
 		end
 
-	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
+	has_deselect_action (action: PROCEDURE): BOOLEAN
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		do
@@ -159,13 +159,13 @@ feature -- Basic operations
 			end
 		end
 
-	extend_select_actions (action: PROCEDURE [ANY, TUPLE])
+	extend_select_actions (action: PROCEDURE)
 			-- Extend list of actions executed when an item is selected.
 		do
 			select_actions.force_extend (action)
 		end
 
-	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE])
+	extend_deselect_actions (action: PROCEDURE)
 			-- Extend list of actions executed when an item is deselected.
 		do
 			deselect_actions.force_extend (action)

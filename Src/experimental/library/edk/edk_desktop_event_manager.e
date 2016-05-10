@@ -1,6 +1,5 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -203,12 +202,12 @@ feature {EDK_OBJECT_I} -- Implementation
 			l_object_id := window_list.item (a_native_window_handle)
 			window_list_read_write_lock.unlock
 
-			if l_object_id > 0 then
-				Result ?= eif_id_object (l_object_id)
+			if l_object_id > 0 and then attached {NATIVE_WINDOW} eif_id_object (l_object_id) as w then
+				Result := w
 			end
 		end
 
-	eif_id_object (an_id: INTEGER): IDENTIFIED is
+	eif_id_object (an_id: INTEGER): IDENTIFIED
 			-- Object associated with `an_id'
 		external
 			"C | %"eif_object_id.h%""
@@ -247,16 +246,10 @@ feature {NONE} -- Implementation
 			-- Callback used by the toolkit to interact with marshal object.
 		local
 			l_native_window: detachable NATIVE_WINDOW
-			l_native_rectangle: NATIVE_RECTANGLE
-			l_native_brush: NATIVE_BRUSH
-			l_native_pen: NATIVE_PEN
 			l_graphics_context: NATIVE_DRAWABLE_CONTEXT
-			l_drawable_routines: DRAWABLE_ROUTINES
-			l_paint_lock: BOOLEAN
 			l_current_clock_tick: NATURAL_32
 			l_integer_16_1, l_integer_16_2: INTEGER_16
 			l_edk_event_type: NATURAL_16
-			l_native_message: EDK_MESSAGE
 			l_pass_to_native_toolkit: BOOLEAN
 			l_adjusted_message: NATURAL_16
 			l_user_message: BOOLEAN
@@ -550,7 +543,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	native_default_window_procedure (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): POINTER is
+	native_default_window_procedure (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): POINTER
 		external
 			"C inline use <edk.h>"
 		alias
@@ -572,7 +565,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_x_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_x_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -583,7 +576,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_y_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_y_position (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -594,7 +587,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_width (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_width (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -605,7 +598,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_height (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_height (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -616,7 +609,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	frozen native_window_flags (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16 is
+	frozen native_window_flags (window_handle: POINTER; message_type: NATURAL; message_parameter_1, message_parameter_2: POINTER): INTEGER_16
 		external
 			"C inline use <edk.h>"
 		alias
@@ -662,4 +655,14 @@ feature {NONE} -- Implementation
 			]"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

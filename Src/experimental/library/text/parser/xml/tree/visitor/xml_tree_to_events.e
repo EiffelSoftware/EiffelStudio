@@ -34,6 +34,9 @@ feature -- Node processor
 	process_document (a_document: XML_DOCUMENT)
 		do
 			events.on_start
+			if attached a_document.xml_declaration as decl then
+				process_xml_declaration (decl)
+			end
 			a_document.process_children (Current)
 			events.on_finish
 		end
@@ -108,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

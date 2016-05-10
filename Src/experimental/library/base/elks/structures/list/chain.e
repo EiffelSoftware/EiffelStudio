@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Possibly circular sequences of items,
 		without commitment to a particular representation
@@ -25,9 +25,10 @@ deferred class CHAIN [G] inherit
 
 	INDEXABLE [G, INTEGER]
 		rename
+			bag_put as sequence_put,
 			item as i_th alias "[]",
 			put as put_i_th,
-			bag_put as sequence_put
+			upper as count
 		undefine
 			prune_all, sequence_put
 		redefine
@@ -138,13 +139,8 @@ feature -- Measurement
 			go_to (pos)
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (1, count)
-		ensure then
-			count_definition: Result.count = count
-		end
+	lower: INTEGER = 1
+			-- <Precursor>
 
 feature -- Cursor movement
 
@@ -382,10 +378,9 @@ invariant
 	isfirst_definition: isfirst = ((not is_empty) and (index = 1))
 	islast_definition: islast = ((not is_empty) and (index = count))
 	item_corresponds_to_index: (not off) implies (item = i_th (index))
-	index_set_has_same_count: index_set.count = count
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

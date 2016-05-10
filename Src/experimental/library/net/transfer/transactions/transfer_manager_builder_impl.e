@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_reference (s: SET [STRING]; r: DATA_RESOURCE;
-				f: FUNCTION [DATA_RESOURCE, TUPLE, BOOLEAN]): BOOLEAN
+				f: FUNCTION [BOOLEAN]): BOOLEAN
 			-- Add `r' into `s' if `f' is true.
 		require
 			set_exists: s /= Void

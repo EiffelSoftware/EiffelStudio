@@ -56,6 +56,7 @@ feature {NONE}-- Initialization
 			set_tabulation_size (editor_preferences.tabulation_spaces)
 			finish_reading_string_agent := agent finish_reading_string
 			create current_string.make_empty
+			current_pos := 1
 		end
 
 feature -- Content Change
@@ -99,7 +100,7 @@ feature -- Reinitialization
 			text_being_processed := True
 			reading_text_finished := False
 			create current_string.make_empty
-			current_pos := 0
+			current_pos := 1
 			if not is_notifying then
 				on_text_reset
 			end
@@ -572,7 +573,7 @@ feature {NONE} -- Text Loading
 			on_text_fully_loaded
 		end
 
-	finish_reading_string_agent: PROCEDURE [like Current, TUPLE]
+	finish_reading_string_agent: PROCEDURE
 			-- Agent for function `finish_reading_string'
 
 feature {NONE} -- Implementation
@@ -617,9 +618,10 @@ feature -- Memory management
 
 invariant
 	current_line_valid: attached current_line as l_line implies l_line.is_valid
+	positive_current_pos: current_pos > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -629,7 +631,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEXT
+end

@@ -63,7 +63,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: Access
 
-	exception_callback: detachable PROCEDURE [ANY, TUPLE [EXCEPTION]]
+	exception_callback: detachable PROCEDURE [EXCEPTION]
 			-- Action being executed when an exception occurs during
 
 feature {NONE} -- Implementation

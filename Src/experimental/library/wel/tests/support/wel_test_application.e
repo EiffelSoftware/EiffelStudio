@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	set_uncaught_exceptions (a_agent: PROCEDURE [ANY, TUPLE [EXCEPTION]])
+	set_uncaught_exceptions (a_agent: PROCEDURE [EXCEPTION])
 			-- Make sure to handle uncaught exceptions.
 		do
 			dispatcher.set_exception_callback (a_agent)

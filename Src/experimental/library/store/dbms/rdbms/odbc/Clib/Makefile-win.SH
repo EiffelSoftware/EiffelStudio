@@ -27,7 +27,6 @@ standard:: odbc_store.lib il_odbc_store.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 odbc_store.lib: $(OBJECTS)
 	$alib_line

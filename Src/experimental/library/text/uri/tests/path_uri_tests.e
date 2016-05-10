@@ -142,11 +142,13 @@ feature -- Test routines
 		local
 			uri: PATH_URI
 		do
-			create uri.make_from_path (create {PATH}.make_from_string ("\foo\bar"))
-			assert ("\foo\bar", uri.string.same_string ("file:///foo/bar"))
+			if {PLATFORM}.is_windows then
+				create uri.make_from_path (create {PATH}.make_from_string ("\foo\bar"))
+				assert ("\foo\bar", uri.string.same_string ("file:///foo/bar"))
 
-			create uri.make_from_path (create {PATH}.make_from_string ("\\server\share\My Documents"))
-			assert ("\\server\share\My Documents", uri.string.same_string ("file://server/share/My%%20Documents"))
+				create uri.make_from_path (create {PATH}.make_from_string ("\\server\share\My Documents"))
+				assert ("\\server\share\My Documents", uri.string.same_string ("file://server/share/My%%20Documents"))
+			end
 		end
 
 end

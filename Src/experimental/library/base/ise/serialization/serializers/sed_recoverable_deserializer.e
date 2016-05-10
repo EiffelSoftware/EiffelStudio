@@ -133,11 +133,11 @@ feature {NONE} -- Implementation: access
 			end
 		end
 
-	class_type_translator: detachable FUNCTION [ANY, TUPLE [STRING], STRING]
+	class_type_translator: detachable FUNCTION [STRING, STRING]
 			-- Provide a mapping between a class type from the storable to a class type
 			-- in the retrieving system.
 
-	attribute_name_translator: detachable FUNCTION [ANY, TUPLE [STRING, INTEGER], STRING]
+	attribute_name_translator: detachable FUNCTION [STRING, INTEGER, STRING]
 			-- Provide a mapping for an attribute name for a give type ID.
 
 	mismatches: HASH_TABLE [SED_TYPE_MISMATCH, INTEGER]

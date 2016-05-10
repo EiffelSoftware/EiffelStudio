@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	veto_dock_function: detachable FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
+	veto_dock_function: detachable FUNCTION [EV_DOCKABLE_SOURCE, BOOLEAN]
 		-- Function used to veto transport.
 
 	is_docking_enabled: BOOLEAN
@@ -57,7 +57,7 @@ feature -- Status setting
 			id_not_stored_in_application:  attached (create {EV_ENVIRONMENT}).application as l_application and then not l_application.implementation.dockable_targets.has (attached_interface.object_id)
 		end
 
-	set_veto_dock_function (a_function: detachable FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
+	set_veto_dock_function (a_function: detachable FUNCTION [EV_DOCKABLE_SOURCE, BOOLEAN])
 			-- Assign `a_function' to `veto_dock_function'.
 		require
 			a_function_not_void: a_function /= Void

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Common ancestor for EV_LIST and EV_COMBO_BOX."
 	legal: "See notice at end of class."
@@ -128,20 +128,12 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_string_array_not_void: a_string_array /= Void
-		local
-			i, nb: INTEGER
-			l_set: INTEGER_INTERVAL
 		do
 			wipe_out
-			l_set := a_string_array.index_set
-			from
-				i := l_set.lower
-				nb := l_set.upper
-			until
-				i > nb
+			across
+				a_string_array as c
 			loop
-				extend (create {EV_LIST_ITEM}.make_with_text (a_string_array [i]))
-				i := i + 1
+				extend (create {EV_LIST_ITEM}.make_with_text (c.item))
 			end
 		ensure
 			items_created: count = strings.count
@@ -171,28 +163,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics toolkit.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_LIST_ITEM_LIST
-
-
-
-
-
-
-
-
-
-
-
+end

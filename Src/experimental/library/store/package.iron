@@ -23,12 +23,12 @@ project
 note
 	title: Eiffel Store
 	description: "[
-EiffelStore: Relational database mapping for Eiffel.
-				]"
-
-	tags: store,database,mysql,oracle,odbc
+			EiffelStore: Relational database mapping for Eiffel.
+		]"
+	tags: store,database,mysql,oracle,odbc,sybase,sql,relationaļ,dbms,rdbms
+	copyright: Copyright (c) 1984-2016, Eiffel Software and others.
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
-	copyright: Copyright (c) 1984-2006, Eiffel Software and others.
---	link[doc]: "Documentation" http:// 
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/store
 
 end

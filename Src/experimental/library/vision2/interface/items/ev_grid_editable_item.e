@@ -52,7 +52,7 @@ feature {EV_ANY} -- Initialization
 
 feature -- Element change
 
-	set_text_validation_agent (a_validation_agent: FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN])
+	set_text_validation_agent (a_validation_agent: FUNCTION [STRING_32, BOOLEAN])
 			-- Set the agent that validates the text of `text_field' on `deactivate'.
 			-- If `a_validation_agent' is Void then no validation is performed before setting `text'.
 		do
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Access
 
-	validation_agent: detachable FUNCTION [ANY, TUPLE [STRING_32], BOOLEAN]
+	validation_agent: detachable FUNCTION [STRING_32, BOOLEAN]
 		-- Agent used to validate `text_field' text.
 
 	text_field: detachable EV_TEXT_FIELD

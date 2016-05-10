@@ -225,7 +225,7 @@ feature -- Access (table row values)
 			not_void: Result /= Void
 		end
 
-	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING]
+	mapped_list (action: FUNCTION [STRING, STRING]): ARRAYED_LIST [STRING]
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
 		require

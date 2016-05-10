@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 			docking_manager.command.resize (True)
 		end
 
-	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+	application_right_click_agent: PROCEDURE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]
 			-- Pointer button right click hander instance.
 
 	internal_shared: SD_SHARED

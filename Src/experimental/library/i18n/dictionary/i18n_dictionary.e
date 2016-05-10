@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			well_formed_result: Result < 4 and Result >= 0
 		end
 
-	reduction_agent: FUNCTION [ANY, TUPLE [INTEGER], INTEGER]
+	reduction_agent: FUNCTION [INTEGER, INTEGER]
 			-- Agent used to reduce plural forms
 
 	nplural_max: INTEGER

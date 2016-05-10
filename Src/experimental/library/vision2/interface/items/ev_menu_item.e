@@ -59,7 +59,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_text_and_action
-		(a_text: READABLE_STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE])
+		(a_text: READABLE_STRING_GENERAL; an_action: PROCEDURE)
 			-- Create with 'a_text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void

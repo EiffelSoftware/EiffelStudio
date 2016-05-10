@@ -12,7 +12,7 @@ inherit
 	EV_DIALOG
 
 create
-	make, make_with_hidden
+	make, make_with_hidden, make_with_control
 
 feature {NONE} -- Initialization
 
@@ -24,7 +24,13 @@ feature {NONE} -- Initialization
 
 	make_with_hidden (a_preferences: PREFERENCES; a_show_hidden_flag: BOOLEAN)
 		do
-			create pref_control.make_with_hidden (a_preferences, a_show_hidden_flag)
+			make_with_control (create {like pref_control}.make_with_hidden (a_preferences, a_show_hidden_flag))
+		end
+
+	make_with_control (c: like pref_control)
+			-- Initialize preferences dialog with preferences control `c'.
+		do
+			pref_control := c
 			default_create
 			pref_control.set_parent_window (Current)
 			extend (pref_control.widget)
@@ -33,6 +39,8 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (pref_control.apply_or_close_button)
 			set_size (640, 460)
 			set_title (pref_control.preferences_title)
+		ensure
+			pref_control_set: pref_control = c
 		end
 
 feature -- Access
@@ -87,14 +95,13 @@ feature {NONE} -- Implementation
 	pref_control: PREFERENCES_GRID_CONTROL
 			-- Preferences grid control.
 
-
 	on_close
 		do
 			destroy
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

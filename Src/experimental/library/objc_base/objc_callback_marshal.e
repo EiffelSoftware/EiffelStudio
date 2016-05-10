@@ -48,9 +48,9 @@ feature {NONE} -- Initialization
 
 feature {OBJC_CLASS} -- Eiffel interaction
 
-	store_mapping (a_class: POINTER; a_selector: POINTER; a_agent: ROUTINE [ANY, TUPLE])
+	store_mapping (a_class: POINTER; a_selector: POINTER; a_agent: ROUTINE)
 		local
-			object_table: HASH_TABLE [ROUTINE [ANY, TUPLE], POINTER]
+			object_table: HASH_TABLE [ROUTINE, POINTER]
 		do
 			selector_to_agent_map.search (a_class)
 			if selector_to_agent_map.found and then attached selector_to_agent_map.found_item as l_item then
@@ -62,7 +62,7 @@ feature {OBJC_CLASS} -- Eiffel interaction
 			end
 		end
 
-	get_agent (a_object: POINTER; a_selector: POINTER): detachable ROUTINE [ANY, TUPLE]
+	get_agent (a_object: POINTER; a_selector: POINTER): detachable ROUTINE
 		local
 			l_class: detachable OBJC_CLASS
 		do
@@ -126,7 +126,7 @@ feature {NONE}
 
 	callback_void (a_object: POINTER; a_selector: POINTER): BOOLEAN
 		do
-			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+			if attached {FUNCTION [BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
 				Result := l_agent.item (Void)
 			end
 		end
@@ -137,14 +137,14 @@ feature {NONE}
 		do
 --			create c_string.make_by_pointer ({NS_OBJC_RUNTIME}.object_get_class_name (a_object))
 --			io.put_string ("B Callback with object and selector: " + a_object.out + "  " + a_selector.out + "    type: " + c_string.string + "%N")
-			if attached {FUNCTION [ANY, TUPLE, BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
+			if attached {FUNCTION [BOOLEAN]} get_agent (a_object, a_selector) as l_agent then
 				Result := l_agent.item (Void)
 			end
 		end
 
 	callback_void_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
 		do
-			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+			if attached {ROUTINE [POINTER]} get_agent (a_object, a_selector) as l_agent then
 				if attached get_eiffel_object (a_object) as obj then
 					l_agent.set_target (obj)
 				end
@@ -154,7 +154,7 @@ feature {NONE}
 
 	callback_void_ptr_ptr (a_object: POINTER; a_selector: POINTER; arg1: POINTER; arg2: POINTER): BOOLEAN
 		do
-			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+			if attached {ROUTINE [POINTER]} get_agent (a_object, a_selector) as l_agent then
 				l_agent.call ([arg1, arg2])
 			end
 		end
@@ -162,7 +162,7 @@ feature {NONE}
 	callback_void_rect (a_object: POINTER; a_selector: POINTER; arg1: POINTER): BOOLEAN
 			-- FIXME: how should a NSRect be transfered/copied?
 		do
-			if attached {ROUTINE [ANY, TUPLE [POINTER]]} get_agent (a_object, a_selector) as l_agent then
+			if attached {ROUTINE [POINTER]} get_agent (a_object, a_selector) as l_agent then
 				l_agent.call ([arg1])
 			end
 		end
@@ -176,7 +176,7 @@ feature {NONE}
 			debug ("callbacks")
 				io.put_string ("Callback '" + (create {OBJC_SELECTOR}.make_from_pointer (a_selector)).name + "'%N")
 			end
-			if attached {ROUTINE [ANY, TUPLE]} get_agent (a_object, a_selector) as l_agent then
+			if attached {ROUTINE} get_agent (a_object, a_selector) as l_agent then
 				if attached get_eiffel_object (a_object) as target then
 					if attached target.class_.instance_method (a_selector) as method then
 						debug ("callbacks")
@@ -251,7 +251,7 @@ feature {NONE}
 
 feature -- Contract Support
 
-	types_match (a_agent: PROCEDURE [ANY, TUPLE]; type_encoding: STRING): BOOLEAN
+	types_match (a_agent: PROCEDURE; type_encoding: STRING): BOOLEAN
 			-- Check if a_agent m
 		do
 
@@ -259,7 +259,7 @@ feature -- Contract Support
 
 feature {NONE} -- Implementation
 
-	selector_to_agent_map: HASH_TABLE [HASH_TABLE [ROUTINE [ANY, TUPLE], POINTER], POINTER]
+	selector_to_agent_map: HASH_TABLE [HASH_TABLE [ROUTINE, POINTER], POINTER]
 			-- Maps to store an eiffel agent per selector for a class
 		once ("PROCESS")
 			create Result.make (10000)

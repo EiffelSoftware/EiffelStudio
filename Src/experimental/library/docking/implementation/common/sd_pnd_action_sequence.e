@@ -40,7 +40,7 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [ANY]]]
+			snapshot: ARRAYED_LIST [PROCEDURE [ANY]]
 			l_veto_pebble_function: like veto_pebble_function
 		do
 			create snapshot.make (count)
@@ -88,7 +88,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN])
+	set_veto_pebble_function (a_function: FUNCTION [ANY, SD_CONTENT, BOOLEAN])
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -127,7 +127,7 @@ feature -- Status report
 
 		end
 
-	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
+	veto_pebble_function: detachable FUNCTION [ANY, SD_CONTENT, BOOLEAN]
 			-- User function to determine whether dropping is allowed.
 			-- Argument {SD_CONTENT} means which {SD_CONTENT} stone will be dropped to
 
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: READABLE_STRING_GENERAL)
+	set_item_name (an_item: PROCEDURE [ANY]; a_name: READABLE_STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		require
 			set: names_set
@@ -153,7 +153,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	names: detachable HASH_TABLE [READABLE_STRING_GENERAL, PROCEDURE [ANY, TUPLE]]
+	names: detachable HASH_TABLE [READABLE_STRING_GENERAL, PROCEDURE]
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -145,7 +145,7 @@ feature -- Menu
 			l_items: SD_ZONE_MANAGEMENT_MENU
 			l_shared: SD_SHARED
 			l_content: detachable SD_CONTENT
-			l_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
+			l_agent: detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]
 		do
 			create Result
 

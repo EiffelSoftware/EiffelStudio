@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sort_data (a_update_action: PROCEDURE [ANY, TUPLE])
+	sort_data (a_update_action: PROCEDURE)
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 			-- If sorting occurs, call `a_update_action'.
 		require

@@ -1,6 +1,5 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,10 +42,8 @@ feature -- Access
 		local
 			l_native_rectangle: NATIVE_RECTANGLE
 			l_native_brush: NATIVE_BRUSH
-			l_native_pen: NATIVE_PEN
 			l_graphics_context: NATIVE_DRAWABLE_CONTEXT
 			l_drawable_routines: DRAWABLE_ROUTINES
-			n: NATURAL_8
 		do
 			l_graphics_context := drawable_context
 			create l_native_rectangle
@@ -64,11 +61,8 @@ feature -- Access
 --				n := n + 1
 --			end
 
-
 			l_drawable_routines.draw_text (l_graphics_context, l_native_rectangle, "Hello World!")
 		end
-
-
 
 feature {EDK_OBJECT_I, EDK_DESKTOP_EVENT_MANAGER} -- Implementation
 
@@ -97,4 +91,14 @@ feature {EDK_DESKTOP_EVENT_MANAGER} -- Implementation
 			]"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

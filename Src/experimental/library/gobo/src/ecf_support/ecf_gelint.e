@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gobo Eiffel Lint modified for support of ECF."
 	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
 	license: "MIT License"
@@ -25,7 +25,7 @@ create
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start 'gelint' execution.
 		local
 			a_filename: STRING
@@ -142,7 +142,7 @@ feature -- Access
 
 feature {NONE} -- Eiffel config file parsing
 
-	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM) is
+	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
 			-- Put result in `last_system' if no error occurred.
 		local
@@ -161,14 +161,14 @@ feature {NONE} -- Eiffel config file parsing
 			end
 		end
 
-	Usage_message: UT_USAGE_MESSAGE is
+	Usage_message: UT_USAGE_MESSAGE
 			-- Gelint usage message.
 		once
 			create Result.make ("[--ecma][--ise[=major[.minor[.revision[.build]]]]][--define=variables]%N%
 				%%T[--flat][--noflatdbc][--cat][--void][--silent][--verbose][--target=ecf-target] ace_filename")
 		end
 
-	application_name: STRING is "ec"
+	application_name: STRING = "ec"
 			-- Application name of estudio (for EIFFEL_ENV),
 			-- to find right right keys in the registry
 

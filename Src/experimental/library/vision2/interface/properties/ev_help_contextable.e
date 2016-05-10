@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	help_context: detachable FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
+	help_context: detachable FUNCTION [EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		require
 			not_destroyed: not is_destroyed
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_help_context (an_help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT])
+	set_help_context (an_help_context: FUNCTION [EV_HELP_CONTEXT])
 			-- Assign `an_help_context' to `help_context'.
 		require
 			not_destroyed: not is_destroyed

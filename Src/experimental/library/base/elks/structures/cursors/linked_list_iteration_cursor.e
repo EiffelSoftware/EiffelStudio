@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Concrete of an external iteration cursor for {LINKED_LIST}. Reversed traversal has a `(n (n + 1)) / 2' operations cost."
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
@@ -12,12 +12,12 @@ class
 	LINKED_LIST_ITERATION_CURSOR [G]
 
 inherit
-	INDEXABLE_ITERATION_CURSOR [G]
+	READABLE_INDEXABLE_ITERATION_CURSOR [G]
 		redefine
-			start,
-			item,
 			after,
 			forth,
+			item,
+			start,
 			target
 		end
 
@@ -92,7 +92,7 @@ feature {NONE} -- Access
 			-- Currrently active linkable node for ascending traversal
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

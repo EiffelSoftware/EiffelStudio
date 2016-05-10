@@ -571,8 +571,8 @@ feature -- Removal
 		end
 
 	delete_content_with_action (
-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [LIST [READABLE_STRING_GENERAL]]
+			is_cancel_requested: detachable FUNCTION [BOOLEAN]
 			file_number: INTEGER)
 			-- Delete all files located in current directory and its
 			-- subdirectories.
@@ -659,8 +659,8 @@ feature -- Removal
 		end
 
 	recursive_delete_with_action (
-			action: detachable PROCEDURE [ANY, TUPLE [LIST [READABLE_STRING_GENERAL]]]
-			is_cancel_requested: detachable FUNCTION [ANY, TUPLE, BOOLEAN]
+			action: detachable PROCEDURE [LIST [READABLE_STRING_GENERAL]]
+			is_cancel_requested: detachable FUNCTION [BOOLEAN]
 			file_number: INTEGER)
 
 			-- Delete directory, its files and its subdirectories.

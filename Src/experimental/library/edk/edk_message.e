@@ -1,6 +1,5 @@
-note
-	description: "Class for representing EDK Messages"
-	author: ""
+﻿note
+	description: "Class for representing EDK Messages."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,14 +48,13 @@ feature -- Access
 			-- Window for which message is associated with.
 		local
 			l_native_window: POINTER
-			l_desktop_message_manager: detachable EDK_DESKTOP_EVENT_MANAGER
 		do
 			l_native_window := c_native_window_handle (native_message_handle)
-			if l_native_window /= default_pointer then
-				l_desktop_message_manager ?= message_manager_cell.item
-				if l_desktop_message_manager /= Void then
-					Result := l_desktop_message_manager.window_from_window_handle (l_native_window)
-				end
+			if
+				l_native_window /= default_pointer and then
+				attached {EDK_DESKTOP_EVENT_MANAGER} message_manager_cell.item as l_desktop_message_manager
+			then
+				Result := l_desktop_message_manager.window_from_window_handle (l_native_window)
 			end
 		end
 
@@ -364,4 +362,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

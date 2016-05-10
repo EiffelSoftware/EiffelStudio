@@ -30,7 +30,7 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: ARRAYED_LIST [PROCEDURE [ANY, detachable TUPLE [ANY]]]
+			snapshot: ARRAYED_LIST [PROCEDURE [detachable TUPLE [ANY]]]
 			l_tuple: TUPLE [ANY]
 		do
 			if attached a_pebble_tuple then
@@ -73,7 +73,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN])
+	set_veto_pebble_function (a_function: detachable FUNCTION [ANY, BOOLEAN])
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -104,12 +104,12 @@ feature -- Status report
 			end
 		end
 
-	veto_pebble_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+	veto_pebble_function: detachable FUNCTION [ANY, BOOLEAN]
 			-- User function to determine whether dropping is allowed.
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: READABLE_STRING_GENERAL)
+	set_item_name (an_item: PROCEDURE [ANY]; a_name: READABLE_STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		obsolete
 			"Removed because did nothing useful."

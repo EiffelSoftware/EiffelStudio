@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This class stores information deliverd%
 					 %with notifactions to header controls"
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 inherit
 	WEL_STRUCTURE
-	
+
 	WEL_BIT_OPERATIONS
 		undefine
 			copy, is_equal
@@ -35,8 +35,8 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	nmhdr: WEL_NMHDR
-			-- Specifies a NMHDR structure. 
-			-- The code member of this object identifies the notification 
+			-- Specifies a NMHDR structure.
+			-- The code member of this object identifies the notification
 			-- message being sent.
 		require
 			exists: exists
@@ -53,14 +53,14 @@ feature -- Access
 		end
 
 	button_index: INTEGER
-			-- Specifies the index of the mouse button involved in 
-			-- generating the notification message. 
-			-- This member can be one of these values: 
+			-- Specifies the index of the mouse button involved in
+			-- generating the notification message.
+			-- This member can be one of these values:
 			--
-			-- Value			Meaning 
-			-- 0				Left button 
-			-- 1				Right button 
-			-- 2				Middle button 
+			-- Value			Meaning
+			-- 0				Left button
+			-- 1				Right button
+			-- 2				Middle button
 		require
 			exists: exists
 		do
@@ -68,14 +68,14 @@ feature -- Access
 		end
 
 	header_item: WEL_HD_ITEM
-			-- a WEL_HD_ITEM object that contains information about 
-			-- the header item associated with the notification message. 
+			-- a WEL_HD_ITEM object that contains information about
+			-- the header item associated with the notification message.
 		require
 			exists: exists
 		do
 			create Result.make_by_pointer (cwel_hd_notify_get_p_item (item))
 		end
-		
+
 feature -- Element change
 
 	set_item_index (value: INTEGER)
@@ -88,14 +88,14 @@ feature -- Element change
 		end
 
 	set_button_index (value: INTEGER)
-			-- Sets the index of the mouse button involved in 
-			-- generating the notification message. 
-			-- This member can be one of these values: 
+			-- Sets the index of the mouse button involved in
+			-- generating the notification message.
+			-- This member can be one of these values:
 			--
-			-- Value			Meaning 
-			-- 0				Left button 
-			-- 1				Right button 
-			-- 2				Middle button 
+			-- Value			Meaning
+			-- 0				Left button
+			-- 1				Right button
+			-- 2				Middle button
 			-- (Usually set by the OS)
 		require
 			exists: exists
@@ -105,8 +105,8 @@ feature -- Element change
 		end
 
 	set_header_item (hd_item: WEL_HD_ITEM)
-			-- Sets the WEL_HD_ITEM object that contains information about 
-			-- the header item associated with the notification message. 
+			-- Sets the WEL_HD_ITEM object that contains information about
+			-- the header item associated with the notification message.
 			-- (Usually set by the OS)
 		require
 			exists: exists
@@ -114,7 +114,7 @@ feature -- Element change
 		do
 			cwel_hd_notify_set_p_item (item, hd_item.item)
 		end
-		
+
 feature -- Measurement
 
 	structure_size: INTEGER
@@ -159,7 +159,7 @@ feature {NONE} -- Externals
 
 	cwel_hd_notify_get_p_item (ptr: POINTER): POINTER
 		external
-			"C [macro %"hd_notify.h%"] (HD_NOTIFY*): EIF_INTEGER"
+			"C [macro %"hd_notify.h%"] (HD_NOTIFY*): EIF_POINTER"
 		end
 
 	cwel_hd_notify_set_p_item (ptr: POINTER; value: POINTER)
@@ -168,14 +168,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

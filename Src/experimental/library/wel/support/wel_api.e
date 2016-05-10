@@ -149,6 +149,14 @@ feature -- Windows
 			"return FindWindowEx((HWND) $a_parent, (HWND) $a_child_after, (LPCTSTR) $a_class_name, (LPCTSTR) $a_window_name);"
 		end
 
+	adjust_window_rect_ex (a_rect: POINTER; a_style, a_ex_style: INTEGER; a_is_menu: BOOLEAN): BOOLEAN
+			-- Wrapper for AdjustWindowRectEx.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(AdjustWindowRectEx((LPRECT) $a_rect, (DWORD) $a_style, (DWORD) $a_ex_style, (BOOL) $a_is_menu));"
+		end
+
 feature -- Data Operations
 
 	loword (value: POINTER): INTEGER
@@ -738,7 +746,7 @@ feature -- API
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

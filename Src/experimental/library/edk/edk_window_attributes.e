@@ -22,15 +22,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	property_setter: detachable PROCEDURE [ANY, TUPLE [NATURAL_8]]
+	property_setter: detachable PROCEDURE [NATURAL_8]
 		-- Agent used for setting properties for instantiated windows of `type_name'.
 		-- If detached the a generic setter is used.
 
-	property_getter: detachable FUNCTION [ANY, TUPLE [NATURAL_8], ANY]
+	property_getter: detachable FUNCTION [NATURAL_8, ANY]
 		-- Agent used for getting properties for instiantiated windows of `type_name'.
 		-- If detached the a generic getter is used.
 
-	subwindow_compositor: detachable PROCEDURE [ANY, TUPLE [LINEAR [NATIVE_WINDOW]]];
+	subwindow_compositor: detachable PROCEDURE [LINEAR [NATIVE_WINDOW]];
 		-- Agent used for positioning subwindows if present
 		-- If detached then a default fair share compositor will be used.
 

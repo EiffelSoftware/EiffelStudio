@@ -111,7 +111,7 @@ feature -- Query
 			Result := l_drop_actions
 		end
 
-	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
+	pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism
 
 	accept_cursor: detachable EV_POINTER_STYLE

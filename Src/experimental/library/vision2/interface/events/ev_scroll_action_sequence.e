@@ -23,13 +23,13 @@ create {EV_SCROLL_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, ?, action))
 		end
 
-	wrapper (a_action_type: INTEGER; a_position: INTEGER; action: PROCEDURE [ANY, TUPLE])
+	wrapper (a_action_type: INTEGER; a_position: INTEGER; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

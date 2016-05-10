@@ -357,7 +357,7 @@ feature {NONE}  -- Implementation functions
 	on_veto_drop_action (a_any: ANY): BOOLEAN
 			-- Handle veto drop action
 		local
-			l_veto_function: detachable FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
+			l_veto_function: detachable FUNCTION [ANY, BOOLEAN]
 		do
 			if attached internal_docking_manager.tab_drop_actions as l_actions then
 				l_veto_function := l_actions.veto_pebble_function

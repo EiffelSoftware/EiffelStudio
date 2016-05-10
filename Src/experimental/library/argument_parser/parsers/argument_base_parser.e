@@ -683,7 +683,7 @@ feature {NONE} -- Helpers
 
 feature -- Basic Operations
 
-	execute (a_action: PROCEDURE [ANY, detachable TUPLE])
+	execute (a_action: PROCEDURE [detachable TUPLE])
 			-- Main entry point, which parses the supplied command line arguments and then executes the
 			-- supplied action if parsing an argument validation was successful.
 			--
@@ -733,7 +733,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_action: PROCEDURE [ANY, detachable TUPLE])
+	execute_noop (a_action: PROCEDURE [detachable TUPLE])
 			-- Executes an action when no arguments of any worth are passed.
 			--
 			-- `a_action': The action to call once the current parser has validated it can accept no

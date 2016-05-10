@@ -78,7 +78,7 @@ feature -- nplurals constants
 
 feature -- Reduction
 
-	get_reduction_agent(quantity: INTEGER): FUNCTION[ANY, TUPLE[INTEGER], INTEGER]
+	get_reduction_agent(quantity: INTEGER): FUNCTION[INTEGER, INTEGER]
 			-- get from `quantity'  the appropriate reduction function
 		do
 			inspect

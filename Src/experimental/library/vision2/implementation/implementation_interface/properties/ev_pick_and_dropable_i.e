@@ -31,7 +31,7 @@ feature -- Access
 	pebble: detachable ANY
 			-- Data to be transported by pick and drop mechanism.
 
-	pebble_function: detachable FUNCTION [ANY, TUPLE, detachable ANY]
+	pebble_function: detachable FUNCTION [detachable ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 
 	pebble_positioning_enabled: BOOLEAN
@@ -43,7 +43,7 @@ feature -- Access
 			Result := internal_pebble_positioning_enabled
 		end
 
-	configurable_target_menu_handler: detachable PROCEDURE [ANY, TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: detachable ANY]]
+	configurable_target_menu_handler: detachable PROCEDURE [TUPLE [menu: EV_MENU; target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; source: EV_PICK_AND_DROPABLE; source_pebble: detachable ANY]]
 
 	accept_cursor: detachable EV_POINTER_STYLE
 			-- Accept cursor set by user.
@@ -101,7 +101,7 @@ feature -- Status setting
 			is_transport_enabled: is_transport_enabled
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, detachable ANY])
+	set_pebble_function (a_function: FUNCTION [detachable ANY])
 			-- Assign `a_function' to `pebble_function'.
 		require
 			a_function_not_void: a_function /= Void
@@ -340,7 +340,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			rpt: like real_pointed_target
 			widget_target: detachable EV_WIDGET
-			a: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
+			a: detachable FUNCTION [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			widget_x, widget_y: INTEGER
 		do
 			rpt := real_pointed_target

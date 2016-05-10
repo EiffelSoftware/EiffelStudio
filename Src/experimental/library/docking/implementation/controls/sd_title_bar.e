@@ -706,7 +706,7 @@ feature {NONE} -- Implementation
 			set: last_color_setting_agent = a_agent
 		end
 
-	last_color_setting_agent: detachable PROCEDURE [SD_TITLE_BAR, TUPLE]
+	last_color_setting_agent: detachable PROCEDURE
 			--	Last agent, possibly one of `enable_focus_color_imp', `enable_non_focus_active_color_imp' and `disable_focus_color_imp'
 
 	application: EV_APPLICATION
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 			created: title_bar_refresh_agent /= Void
 		end
 
-	title_bar_refresh_agent: detachable PROCEDURE [SD_TITLE_BAR, TUPLE]
+	title_bar_refresh_agent: detachable PROCEDURE
 			-- Agent for refresh title bar
 
 	refresh_title_bar

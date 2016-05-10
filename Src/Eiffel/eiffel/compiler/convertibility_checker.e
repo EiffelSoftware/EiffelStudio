@@ -398,7 +398,7 @@ feature -- Initialization/Checking
 								-- that rely solely on conversion information.
 								-- (See test#attach118.)
 							create {FEATURE_CONVERSION_INFO} last_conversion_info.
-								make_from (a_source_type, a_target_type.as_attached_type, l_target_class, l_feat)
+								make_from (a_source_type, a_target_type.as_attached_in (a_context_class), l_target_class, l_feat)
 						end
 					end
 				end

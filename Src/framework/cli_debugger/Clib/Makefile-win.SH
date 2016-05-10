@@ -34,7 +34,6 @@ all:: cli_debugger.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 cli_debugger.lib: $(OBJECTS)
 	$alib_line

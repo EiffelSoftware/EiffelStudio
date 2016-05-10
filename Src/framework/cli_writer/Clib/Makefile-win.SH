@@ -34,7 +34,6 @@ all:: cli_writer.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 cli_writer.lib: $(OBJECTS)
 	$alib_line

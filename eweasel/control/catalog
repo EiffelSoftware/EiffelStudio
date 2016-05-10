@@ -2826,6 +2826,7 @@ test	attached-locals-as-detachable		attach116 tcf pass attached_types void_safe 
 test	attached-result-validity		attach117 tcf pass attached_types void_safe scope local validity
 test	attachment-of-conversion		attach118 tcf pass void_safe attached_types conversion validity
 test	attachment-of-expanded-conversion	attach119 tcf pass void_safe attached_types expanded conversion
+test	unsafe-attached-locals-as-detachable	attach120 tcf fail attached_types void_safe scope local
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

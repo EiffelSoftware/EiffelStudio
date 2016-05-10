@@ -5,7 +5,7 @@ copy_sub	AceI.ecf $TEST Ace
 copy_raw	testC.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VJAR
+compile_result	validity_error TEST VEVI VJAR VJAR
 
 copy_sub	AceC.ecf $TEST Ace
 
@@ -15,7 +15,7 @@ compile_result	ok
 copy_sub	AceI.ecf $TEST Ace
 
 compile_melted
-compile_result	validity_error TEST VJAR
+compile_result	validity_error TEST VEVI VJAR VJAR
 
 copy_raw	testI.e $CLUSTER test.e
 

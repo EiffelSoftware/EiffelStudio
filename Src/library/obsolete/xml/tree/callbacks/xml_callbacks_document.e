@@ -25,6 +25,11 @@ feature {NONE} -- Initialization
 			create default_namespace.make_default
 		end
 
+	initialize
+			-- <Precursor>.
+		do
+		end
+
 feature -- Element change
 
 	set_source_parser (a_parser: XML_PARSER)
@@ -257,7 +262,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

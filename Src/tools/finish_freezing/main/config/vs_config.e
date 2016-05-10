@@ -16,15 +16,13 @@ create
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING_32
+	batch_file_name: PATH
 			-- <Precursor>
 		do
-			create Result.make (256)
-			Result.append (install_path)
 			if use_32bit then
-				Result.append_string ({STRING_32} "bin\vcvars32.bat")
+				Result := install_path.extended ("bin\vcvars32.bat")
 			else
-				Result.append_string ({STRING_32} "bin\amd64\vcvarsamd64.bat")
+				Result := install_path.extended ("bin\amd64\vcvarsamd64.bat")
 			end
 		end
 
@@ -43,7 +41,7 @@ feature {NONE} -- Access
 			-- Key value name for install location
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		require
 			a_batch_file_attached: a_batch_file /= Void
 			not_a_batch_file_is_empty: not a_batch_file.is_empty
-			a_batch_file_exists: (create {PLAIN_TEXT_FILE}.make_with_name (a_batch_file)).exists
+			a_batch_file_exists: (create {PLAIN_TEXT_FILE}.make_with_path (a_batch_file)).exists
 			not_a_args_is_empty: a_args /= Void implies not a_args.is_empty
 			a_options_not_void: a_options /= Void
 		do
@@ -67,7 +67,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING_32
+	batch_file_name: PATH
 			-- Location of a configuration batch script.
 
 	batch_arguments: detachable STRING_32
@@ -113,7 +113,8 @@ feature {NONE} -- Basic operations
 			l_file: detachable PLAIN_TEXT_FILE
 			l_com_spec: detachable STRING_32
 			l_cmd: STRING_32
-			l_launcher: WEL_PROCESS_LAUNCHER
+			l_process_factory: PROCESS_FACTORY
+			l_launcher: PROCESS
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
 			retry_count: INTEGER
@@ -146,11 +147,14 @@ feature {NONE} -- Basic operations
 						l_cmd.append ({STRING_32} " /c ")
 						l_cmd.append (save_variables_command (l_eval_file_name))
 
-						create l_launcher
-						l_launcher.run_hidden
-						l_launcher.launch (l_cmd, Void, Void)
+						create l_process_factory
+						l_launcher := l_process_factory.process_launcher_with_command_line (l_cmd, Void)
+						l_launcher.set_hidden (True)
+						l_launcher.set_separate_console (True)
+						l_launcher.launch
+						l_launcher.wait_for_exit
 
-						if l_launcher.last_process_result = 0 then
+						if l_launcher.exit_code = 0 then
 							create l_file.make_with_name (l_eval_file_name)
 							if l_file.exists then
 								l_file.open_read
@@ -248,7 +252,7 @@ feature {NONE} -- Basic operations
 		do
 			create Result.make (256)
 			Result.append ({STRING_32} "%"CALL %"")
-			Result.append (batch_file_name)
+			Result.append (batch_file_name.name)
 			Result.append ({STRING_32} "%" ")
 			if attached batch_arguments as l_args then
 				Result.append (l_args)
@@ -393,12 +397,12 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	batch_file_name_attached: batch_file_name /= Void
 	not_batch_file_name_is_empty: not batch_file_name.is_empty
-	batch_file_name_exists: (create {RAW_FILE}.make_with_name (batch_file_name)).exists
+	batch_file_name_exists: (create {RAW_FILE}.make_with_path (batch_file_name)).exists
 	not_batch_arguments_is_empty: attached batch_arguments as l_args implies not l_args.is_empty
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

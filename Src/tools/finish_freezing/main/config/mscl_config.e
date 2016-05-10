@@ -57,7 +57,7 @@ feature {NONE} -- Initalization
 			open_key
 			if exists then
 				l_file_name := batch_file_name
-				if u.file_exists (l_file_name) then
+				if u.file_path_exists (l_file_name) then
 					create l_parser.make (l_file_name, batch_file_arguments, batch_file_options)
 					extend_variable (path_var_name, l_parser.path)
 					extend_variable (include_var_name, l_parser.include)
@@ -98,26 +98,23 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING_32
+	install_path: PATH
 			-- <Precursor>
 		local
 			l_value: detachable WEL_REGISTRY_KEY_VALUE
-			l_result: detachable STRING_32
+			l_str: STRING_32
 		do
 			initialize
 			l_value := registry.key_value (internal_reg_key, install_path_value_name)
 			if l_value /= Void and then l_value.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz then
-				l_result := l_value.string_value
-				if not l_result.is_empty then
-					if l_result.item (l_result.count) /= operating_environment.directory_separator then
-						l_result.append_character (operating_environment.directory_separator)
-					end
+				l_str := l_value.string_value
+				if l_str.is_empty then
+					create Result.make_current
+				else
+					create Result.make_from_string (l_str)
 				end
-			end
-			if l_result = Void or else l_result.is_empty then
-				Result := {STRING_32} ".\"
 			else
-				Result := l_result
+				create Result.make_current
 			end
 		end
 
@@ -129,7 +126,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING_32
+	batch_file_name: PATH
 			-- Absolute path to an environment configuration batch script
 		require
 			exists: exists
@@ -220,7 +217,7 @@ invariant
 	internal_reg_key_not_null: exists implies internal_reg_key /= default_pointer
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

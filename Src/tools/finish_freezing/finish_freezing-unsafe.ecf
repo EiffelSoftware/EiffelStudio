@@ -13,6 +13,7 @@
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="c_config_library" location="main\config\" recursive="true"/>
 	</target>
@@ -28,7 +29,6 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
 		<cluster name="spec" location="$EIFFEL_SRC\tools\finish_freezing\spec\windows\"/>

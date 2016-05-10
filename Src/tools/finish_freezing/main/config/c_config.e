@@ -91,7 +91,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	install_path: STRING_32
+	install_path: PATH
 			-- Location of Visual Studio install base
 		require
 			exists: exists
@@ -99,7 +99,6 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_ends_with_dir_separator: Result.item (Result.count) = operating_environment.directory_separator
 		end
 
 	path_var: READABLE_STRING_32
@@ -237,7 +236,7 @@ invariant
 	variable_table_attached: variable_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

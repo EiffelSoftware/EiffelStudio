@@ -18,4 +18,10 @@ feature -- Access
 
 	item: TEST
 
+	value: TEST
+		do
+			Result := Current
+			item := Result
+		end
+
 end

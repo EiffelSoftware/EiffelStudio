@@ -17,4 +17,9 @@ feature -- Access
 
 	item: TEST
 
+	value: TEST
+		do
+			item := Result
+		end
+
 end

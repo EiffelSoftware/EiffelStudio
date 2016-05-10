@@ -14,6 +14,7 @@ class
 inherit
 	XML_CALLBACKS_FILTER
 		undefine
+			initialize,
 			on_start,
 			on_finish,
 			on_xml_declaration,
@@ -48,7 +49,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

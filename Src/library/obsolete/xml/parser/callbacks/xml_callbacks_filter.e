@@ -33,13 +33,31 @@ inherit
 
 create
     make_null,
-	set_next
+	make_next
+
+feature {NONE} -- Initialization
+
+	make_next (a_next: like next)
+			-- Create a new event filter with `a_next' as next filter.
+		require
+			a_next_not_void: a_next /= Void
+		do
+			initialize
+			set_next (a_next)
+		ensure
+			next_set: next = a_next
+		end
+
+	initialize
+			-- Initialize current callbacks filter.
+		do
+		end		
 
 invariant
 	next_not_void: next /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

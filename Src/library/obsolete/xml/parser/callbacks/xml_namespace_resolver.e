@@ -12,7 +12,8 @@ class XML_NAMESPACE_RESOLVER
 inherit
 	XML_CALLBACKS_FILTER
 		redefine
-			set_next,
+			initialize,
+			make_null,
 			on_finish,
 			on_start,
 			on_start_tag,
@@ -23,18 +24,20 @@ inherit
 
 create
 	make_null,
-	set_next
+	make_next
 
 feature {NONE} -- Initialization
 
-	set_next (a_next: like next)
+	make_null
+			-- <Precursor>
 		do
-			Precursor (a_next)
 			initialize
+			Precursor
 		end
 
 	initialize
 		do
+			Precursor
 			create context.make
 			attributes_make
 		end
@@ -300,7 +303,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

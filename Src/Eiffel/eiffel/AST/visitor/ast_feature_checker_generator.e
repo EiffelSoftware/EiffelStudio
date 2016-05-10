@@ -2761,12 +2761,17 @@ feature {NONE} -- Visitor
 						l_feat_type := l_feat_type.as_attached_in (context.current_class)
 					elseif
 						l_feat_type.is_initialization_required and then
-						not context.local_initialization.is_result_set
+						not context.local_initialization.is_result_set and then
+						is_void_safe_initialization (context.current_class)
 					then
 							-- Result is not properly initialized.
 							-- Treat it as if it is of a detachable type.
+							-- The void-safety level should be "initialization" or higher
+							-- because otherwise errors may be reported for cases
+							-- when local is of an attached type but is uninitialized
+							-- and initialization errors are not reported at this level.
+							-- (See test#attach120).
 						l_feat_type := l_feat_type.as_detachable_type
-
 					end
 					set_type (l_feat_type, l_as)
 				end
@@ -3096,9 +3101,15 @@ feature {NONE} -- Visitor
 						l_type := l_type.as_attached_in (context.current_class)
 					elseif
 						l_type.is_initialization_required and then
-						not context.local_initialization.is_local_set (l_local_info.position)
+						not context.local_initialization.is_local_set (l_local_info.position) and then
+						is_void_safe_initialization (context.current_class)
 					then
 							-- Treat it as if it is of a detachable type.
+							-- The void-safety level should be "initialization" or higher
+							-- because otherwise errors may be reported for cases
+							-- when local is of an attached type but is uninitialized
+							-- and initialization errors are not reported at this level.
+							-- (See test#attach120).
 						l_type := l_type.as_detachable_type
 					end
 					if not is_inherited then

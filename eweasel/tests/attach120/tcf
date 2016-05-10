@@ -1,0 +1,25 @@
+test_name 	 unsafe-attached-locals-as-detachable
+test_description Attached locals may be considered detachable only when initialization rules are taken into account.
+
+copy_sub	AceI.ecf $TEST Ace
+copy_raw	testC.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_error TEST VJAR
+
+copy_sub	AceC.ecf $TEST Ace
+
+resume_compile
+compile_result	ok
+
+copy_sub	AceI.ecf $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VJAR
+
+copy_raw	testI.e $CLUSTER test.e
+
+resume_compile
+compile_result	ok
+
+test_end

@@ -1,0 +1,16 @@
+test_name	 inline-attribute-with-body
+test_description Inlining a routine involving an access to an attached attribute with a body causes a call on void target.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare	exec_output_f output
+
+test_end

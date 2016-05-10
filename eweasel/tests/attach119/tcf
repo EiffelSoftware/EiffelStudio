@@ -1,0 +1,11 @@
+test_name 	 attachment-of-expanded-conversion
+test_description Conversion performed to an attached type should not trigger an assertion violation.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

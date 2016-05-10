@@ -1,15 +1,15 @@
 note
-	description: "Specialize configuration for VS 2010, 2012 and 2013"
+	description: "Specialize configuration for VS 2015"
 	date: "$Date$"
-	revision: "$Revision: $"
+	revision: "$Revision$"
 
 class
-	VS_NEW_CONFIG
+	VS_2015_CONFIG
 
 inherit
-	VS_CONFIG
+	VS_NEW_CONFIG
 		redefine
-			batch_file_name, batch_file_arguments
+			batch_file_arguments
 		end
 
 create
@@ -17,20 +17,37 @@ create
 
 feature {NONE} -- Access
 
-	batch_file_name: PATH
-			-- <Precursor>
-		do
-			Result := install_path.extended ("vcvarsall.bat")
-		end
-
 	batch_file_arguments: STRING_32
 			-- <Precursor>
 		do
 			if use_32bit then
-				Result := {STRING_32} "x86"
+				if is_vs_installed ({STRING_32} "x86") then
+					Result := {STRING_32} "x86"
+				else
+						-- Even if not installed we will default to the cross compiler.
+					Result := {STRING_32} "amd64_x86"
+				end
 			else
-				Result := {STRING_32} "x86_amd64"
+				if is_vs_installed ({STRING_32} "amd64") then
+					Result := {STRING_32} "amd64"
+				else
+						-- Even if not installed we will default to the cross compiler.					
+					Result := {STRING_32} "x86_amd64"
+				end
 			end
+		end
+
+	is_vs_installed (arch: STRING_32): BOOLEAN
+			-- Is the C compiler available for architecture `arch'?
+		local
+			l_path: PATH
+			u: FILE_UTILITIES
+		do
+			l_path := install_path.extended ("bin").extended (arch)
+				-- Check that the basic tools are installed.
+			Result := u.file_path_exists (l_path.extended ("cl.exe")) and then
+				u.file_path_exists (l_path.extended ("lib.exe")) and then
+				u.file_path_exists (l_path.extended ("link.exe"))
 		end
 
 note

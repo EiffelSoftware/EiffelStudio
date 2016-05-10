@@ -289,9 +289,8 @@ feature {NONE} -- Access
 			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
 			create Result.make (11)
 
-				-- Entry to be checked when this is actually released.
-				-- VS 13.0 (aka VS 2014???)
-			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\13.0\Setup\VC", a_use_32bit, "VC130", "Microsoft Visual Studio 2014 VC++ (13.0)", "2014-VS", False))
+				-- VS 14.0 (aka VS 2015 all editions)
+			Result.extend (create {VS_2015_CONFIG}.make ("Microsoft\VisualStudio\14.0\Setup\VC", a_use_32bit, "VC140", "Microsoft Visual Studio 2015 VC++ (14.0)", "2015-VS", False))
 
 				-- VS 12.0 (aka VS 2013)
 			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\12.0\Setup\VC", a_use_32bit, "VC120", "Microsoft Visual Studio 2013 VC++ (12.0)", "2013-VS", False))
@@ -301,7 +300,6 @@ feature {NONE} -- Access
 
 				-- Windows SDKs
 			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.1", a_use_32bit, {WSDK_CONFIG}.wsdk_71, "Microsoft Windows SDK 7.1 (Windows 7)", "2010-WSDK", False))
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
 
 				-- VS 10.0 (aka VS 2010)
 			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
@@ -309,24 +307,8 @@ feature {NONE} -- Access
 				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
 			end
 
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
-
-				-- VS 9.0
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
-			if l_32_bits then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC", False))
-			end
-
-				-- VS 8.0
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, {WSDK_CONFIG}.wsdk_60, "Microsoft Windows SDK 6.0 (Windows Vista)", "2006-WSDK", False))
-			Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS", False))
-
-			if l_32_bits then
-					-- VS Other
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS", True))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS", True))
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
-			end
+				-- If old releases are required, uncomment the following line:
+--			extend_old_configs (Result, a_use_32bit, l_32_bits)
 		ensure
 			result_attached: Result /= Void
 			ordered_deprecation: Result.for_all (agent (ia_item: attached C_CONFIG; ia_dep: attached CELL [BOOLEAN]): BOOLEAN
@@ -338,6 +320,31 @@ feature {NONE} -- Access
 						Result := not ia_dep.item
 					end
 				end (?, create {CELL [BOOLEAN]}.put (False)))
+		end
+
+	extend_old_configs (a_list: ARRAYED_LIST [C_CONFIG]; a_use_32bit, is_32_bits: BOOLEAN)
+			-- Extend `a_list' with old configs that are not officially supported anymore.
+		do
+				-- Old Windows SDKs
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
+
+				-- VS 9.0
+			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
+			if is_32_bits then
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC", False))
+			end
+
+				-- VS 8.0
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, {WSDK_CONFIG}.wsdk_60, "Microsoft Windows SDK 6.0 (Windows Vista)", "2006-WSDK", False))
+			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS", False))
+
+			if is_32_bits then
+					-- VS Other
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS", True))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS", True))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
+			end
 		end
 
 feature {NONE} -- Internal implementation cache
@@ -363,7 +370,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -29,37 +29,30 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	batch_file_name: STRING_32
+	batch_file_name: PATH
 			-- <Precursor>
-		local
-			l_result: detachable STRING_32
 		do
 			if is_eiffel_layout_defined and then attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout and then l_layout.is_valid_environment then
-				create l_result.make (256)
-				l_result.append (l_layout.config_eif_path.name)
 				if code.is_equal (wsdk_60) then
-					l_result.append ({STRING_32} "\windows_sdk_v6.0.cmd")
+					Result := l_layout.config_eif_path.extended ("\windows_sdk_v6.0.cmd")
 				elseif code.is_equal (wsdk_61) then
-					l_result.append ({STRING_32} "\windows_sdk_v6.1.cmd")
+					Result := l_layout.config_eif_path.extended ("\windows_sdk_v6.1.cmd")
 				elseif code.is_equal (wsdk_70) then
-					l_result.append ({STRING_32} "\windows_sdk_v7.0.cmd")
+					Result := l_layout.config_eif_path.extended ("\windows_sdk_v7.0.cmd")
 				elseif code.is_equal (wsdk_71) then
-					l_result.append ({STRING_32} "\windows_sdk_v7.1.cmd")
+					Result := l_layout.config_eif_path.extended ("\windows_sdk_v7.1.cmd")
 				else
-						-- We will use the default batch file.
-					l_result := Void
+						-- Default to using one found in SDK, typically happens for
+						-- library consumers that are used in install application or are used
+						-- with no product install base
+					Result := install_path.extended ("Bin\SetEnv.cmd")
 				end
-			end
-
-			if l_result = Void then
+			else
 					-- Default to using one found in SDK, typically happens for
-					-- library consumers that   are used in install application or are used
+					-- library consumers that are used in install application or are used
 					-- with no product install base
-				create l_result.make (256)
-				l_result.append (install_path)
-				l_result.append ({STRING_32} "Bin\SetEnv.cmd")
+				Result := install_path.extended ("Bin\SetEnv.cmd")
 			end
-			Result := l_result
 		end
 
 	batch_file_arguments: STRING_32
@@ -78,7 +71,7 @@ feature {NONE} -- Access
 						-- not pass the install path as an argument when we are using the config library
 						-- in an environment that has no install-base (like an installation program)
 					Result.append_character ({CHARACTER_32} '"')
-					Result.append_string (install_path)
+					Result.append_string (install_path.name)
 					Result.append_character ({CHARACTER_32} '"')
 					Result.append_character ({CHARACTER_32} ' ')
 				end
@@ -112,7 +105,7 @@ feature {NONE} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -311,7 +311,7 @@ feature -- C compiler
 							l_ver := l_code.substring (5, l_code.count)
 							Result := l_ver.to_integer >= 70
 							if Result then
-								on_output ("Using " + l_code + "installed at: " + l_config.install_path + "%N", False)
+								on_output ("Using " + l_code + "installed at: " + l_config.install_path.name + "%N", False)
 							end
 						end
 					end
@@ -321,7 +321,7 @@ feature -- C compiler
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

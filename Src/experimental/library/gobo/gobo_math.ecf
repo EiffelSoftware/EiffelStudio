@@ -24,7 +24,7 @@
 		<library name="gobo_pattern" location="gobo_pattern.ecf"/>
 		<library name="gobo_structure" location="gobo_structure.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="math" location="$ISE_LIBRARY\contrib\library\gobo\library\math\" recursive="true">
+		<cluster name="math" location="$ISE_LIBRARY\contrib\library\gobo\library\math\src\" recursive="true">
 			<option namespace="Math">
 			</option>
 		</cluster>

@@ -1,6 +1,5 @@
-note
-	description: "Summary description for {EDK_WINDOW}."
-	author: ""
+﻿note
+	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,13 +41,11 @@ feature {NONE} -- Properties
 	get_property (a_property_data: EDK_PROPERTY_DATA)
 			-- Get the property associated with `a_property_data'
 		do
-
 		end
 
 	set_property (a_property_data: EDK_PROPERTY_DATA)
 			-- Set the property data associated with `a_property_data'
 		do
-
 		end
 
 feature {NONE} -- Events
@@ -56,7 +53,6 @@ feature {NONE} -- Events
 	message_handler (a_event: EDK_MESSAGE)
 			-- Message handler for `Current'
 		do
-
 		end
 
 feature {EDK_TYPE_MANAGER} -- Registration
@@ -71,12 +67,12 @@ feature {EDK_TYPE_MANAGER} -- Registration
 	property_structure: SPECIAL [detachable SPECIAL [detachable ANY]]
 		require
 			property_structure_set: attached property_structure_internal
-		local
-			l_result: like property_structure_internal
 		do
-			l_result := property_structure_internal
-			check attached l_result end
-			Result := l_result
+			check
+				from_precondition: attached property_structure_internal as s
+			then
+				Result := s
+			end
 		end
 
 	property_structure_internal: detachable like property_structure
@@ -144,4 +140,14 @@ feature {NONE} -- Default Property Strings
 	child: STRING_8 = "child"
 	child_count: STRING_8 = "child_count"
 
+note
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

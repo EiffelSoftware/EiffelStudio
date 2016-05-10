@@ -16,7 +16,7 @@ create
 
 feature -- Managing Notification Observers
 
-	add_observer (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]; a_notification_name: detachable NS_STRING_BASE; a_notification_sender: detachable NS_OBJECT)
+	add_observer (a_callback: PROCEDURE [NS_OBJECT]; a_notification_name: detachable NS_STRING_BASE; a_notification_sender: detachable NS_OBJECT)
 			-- Adds an entry to the receiver's dispatch table with an observer, a notification selector and optional criteria: notification name and sender.
 			-- `a_notification_name' is the name of the notification for which to register the observer; that is, only notifications with this
 			-- name are delivered to the observer. When `Void', the notification center doesn't use a notification's name

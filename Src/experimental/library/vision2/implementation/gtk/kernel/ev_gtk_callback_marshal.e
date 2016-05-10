@@ -51,8 +51,8 @@ feature {NONE} -- Initialization
 feature {EV_ANY_IMP} -- Access
 
 	translate_and_call (
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		an_agent: PROCEDURE;
+		translate: FUNCTION [INTEGER, POINTER, TUPLE];
 	)
 			-- Call `an_agent' using `translate' to convert `args' and `n_args'
 		require
@@ -86,12 +86,12 @@ feature -- Implementation
 	signal_connect (
 		a_c_object: POINTER;
 		a_signal_name: EV_GTK_C_STRING;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		an_agent: PROCEDURE;
+		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 		invoke_after_handler: BOOLEAN)
 				--
 		local
-			l_agent: PROCEDURE [ANY, TUPLE]
+			l_agent: PROCEDURE
 		do
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
@@ -113,7 +113,7 @@ feature -- Implementation
 
 feature -- Agent functions.
 
-	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	set_focus_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for set-focus events
 		once
 			Result :=
@@ -124,7 +124,7 @@ feature -- Agent functions.
 				end
 		end
 
-	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	configure_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -142,7 +142,7 @@ feature -- Agent functions.
 			end
 		end
 
-	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	size_allocate_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -160,7 +160,7 @@ feature -- Agent functions.
 				end
 		end
 
-	expose_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	expose_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -215,7 +215,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER)
+	marshal (action: PROCEDURE; n_args: INTEGER; args: POINTER)
 			-- Call `action' with GTK+ event data from `args'.
 			-- There are `n_args' GtkArg*s in `args'.
 			-- Called by C function `c_ev_gtk_callback_marshal'.
@@ -325,7 +325,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]; invoke_after_handler: BOOLEAN): INTEGER
+		an_agent: PROCEDURE; invoke_after_handler: BOOLEAN): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
 			"C (GtkObject*, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
@@ -334,7 +334,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
+		an_agent: PROCEDURE): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
 			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
@@ -345,7 +345,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_timeout_connect
-		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
+		(a_delay: INTEGER; an_agent: PROCEDURE): INTEGER
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""

@@ -29,8 +29,8 @@ feature -- Commands
 			value_not_void: a_fallback_value /= Void
 		local
 			l_fullname: STRING_8
-			l_value: detachable STRING_32
-			l_desc: detachable STRING_32
+			l_value: detachable READABLE_STRING_32
+			l_desc: detachable READABLE_STRING_32
 		do
 			l_fullname := a_name
 			l_value := preferences.session_values.item (l_fullname)
@@ -83,7 +83,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

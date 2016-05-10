@@ -18,7 +18,7 @@ create
 
 feature -- Creation
 
-	make_with_agent (a_callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]])
+	make_with_agent (a_callback: PROCEDURE [NS_OBJECT])
 		do
 				-- Creates an invalid object here.
 			create instance.make_from_pointer (default_pointer + 1)
@@ -51,7 +51,7 @@ feature -- Implementation
 			callback.call ([create {NS_NOTIFICATION}.share_from_pointer (a_object.item)])
 		end
 
-	callback: PROCEDURE [ANY, TUPLE[NS_OBJECT]]
+	callback: PROCEDURE [NS_OBJECT]
 
 	instance: NS_OBJECT
 

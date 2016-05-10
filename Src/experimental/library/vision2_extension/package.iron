@@ -5,11 +5,14 @@ project
 	vision2_extension = "vision2_extension.ecf"
 
 note
---	title: 
---	description: 
---	tags: 
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	description: "[
+			Extensions to the EiffelVision2 library.
+		]"
+	title: EiffelVision2 extension
+	tags: vision2,extension,container,thread
+	copyright: 1984-2016 Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/vision2_extension
 
 end

@@ -279,8 +279,8 @@ feature {NONE} -- Implementation attributes
 	internal_pointer_pressed: BOOLEAN
 			-- If pointer pressed?
 
-	on_pointer_motion_agent : PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
-	on_pointer_release_agent: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]];
+	on_pointer_motion_agent : PROCEDURE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+	on_pointer_release_agent: PROCEDURE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER];
 			-- Agents registered into tool bar actions
 
 invariant

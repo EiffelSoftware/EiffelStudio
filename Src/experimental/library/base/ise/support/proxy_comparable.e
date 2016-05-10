@@ -18,7 +18,7 @@ create
 
 feature
 
-	make (a_item: like item; a_less_than_comparator: PREDICATE [ANY, TUPLE [first_item: like item; second_item: like item]])
+	make (a_item: like item; a_less_than_comparator: PREDICATE [TUPLE [first_item: like item; second_item: like item]])
 			-- Make comparable object for `a_item' using '<' comparator agent `a_less_than_comparator'
 			-- Comparator predicate returns True if `first_item' is deemed less than `second_item'.
 		require
@@ -37,7 +37,7 @@ feature -- Access
 	item: G
 		-- Item used for comparison.
 
-	less_than_comparator: PREDICATE [ANY, TUPLE [first_item: like item; second_item: like item]]
+	less_than_comparator: PREDICATE [TUPLE [first_item: like item; second_item: like item]]
 		-- Comparator agent used for '<' comparison of 'item' with other objects of type G
 		-- Function returns True of 'first_item' is deemed to be less than 'second_item'.
 

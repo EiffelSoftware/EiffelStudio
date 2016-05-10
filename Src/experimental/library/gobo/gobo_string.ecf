@@ -25,7 +25,7 @@
 		<library name="gobo_time" location="gobo_time.ecf"/>
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="string" location="$ISE_LIBRARY\contrib\library\gobo\library\string\" recursive="true">
+		<cluster name="string" location="$ISE_LIBRARY\contrib\library\gobo\library\string\src\" recursive="true">
 			<option namespace="String">
 			</option>
 		</cluster>

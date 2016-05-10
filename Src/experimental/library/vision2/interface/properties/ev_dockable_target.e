@@ -36,7 +36,7 @@ inherit
 
 feature -- Access
 
-	veto_dock_function: detachable FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
+	veto_dock_function: detachable FUNCTION [EV_DOCKABLE_SOURCE, BOOLEAN]
 			-- Function to determine whether current dock is allowed.
 			-- If `Result' is `True', dock will be disallowed.
 		require
@@ -82,7 +82,7 @@ feature -- Status setting
 			not_dockable: not is_docking_enabled
 		end
 
-	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
+	set_veto_dock_function (a_function: FUNCTION [EV_DOCKABLE_SOURCE, BOOLEAN])
 			-- Assign `a_function' to `veto_dock_function'.
 		require
 			not_destroyed: not is_destroyed

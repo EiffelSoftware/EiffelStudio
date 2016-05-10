@@ -32,7 +32,7 @@ feature -- Array
 			end
 		end
 
-	array_contains_valid_items (a_array: ARRAY [ANY]; a_predicate: PREDICATE [ANY, TUPLE [arg: ANY]]; a_expected: BOOLEAN): BOOLEAN
+	array_contains_valid_items (a_array: ARRAY [ANY]; a_predicate: PREDICATE [TUPLE [arg: ANY]]; a_expected: BOOLEAN): BOOLEAN
 		require
 			a_array_attached: a_array /= Void
 			a_predicate_attached: a_predicate /= Void
@@ -78,7 +78,7 @@ feature -- Array
 			end
 		end
 
-	sequence_contains_valid_items (a_sequence: SEQUENCE [ANY]; a_predicate: PREDICATE [ANY, TUPLE [arg: ANY]]; a_expected: BOOLEAN): BOOLEAN
+	sequence_contains_valid_items (a_sequence: SEQUENCE [ANY]; a_predicate: PREDICATE [TUPLE [arg: ANY]]; a_expected: BOOLEAN): BOOLEAN
 		require
 			a_sequence_attached: a_sequence /= Void
 			a_predicate_attached: a_predicate /= Void

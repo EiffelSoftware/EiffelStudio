@@ -94,7 +94,10 @@ feature {NONE} -- Query
 			cr_code: NATURAL_32
 		do
 			buf.read_character_code
-			if carriage_return_character_ignored then
+			if buf.end_of_input then
+				end_of_input := True
+				c := 0 -- '%U'
+			elseif carriage_return_character_ignored then
 				c := buf.last_character_code
 				cr_code := carriage_return_character_code
 				if c = cr_code then
@@ -104,6 +107,10 @@ feature {NONE} -- Query
 					loop
 						buf.read_character_code
 						c := buf.last_character_code
+					end
+					if buf.end_of_input then
+						end_of_input := buf.end_of_input
+						c := 0 -- '%U'
 					end
 				end
 			end

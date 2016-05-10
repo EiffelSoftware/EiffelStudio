@@ -26,7 +26,6 @@ standard:: mysql_store.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 mysql_store.lib: $(OBJECTS)
 	$alib_line

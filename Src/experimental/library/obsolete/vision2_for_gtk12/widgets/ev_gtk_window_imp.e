@@ -20,13 +20,13 @@ inherit
 
 feature {NONE} -- Agent functions.
 
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	key_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for key events
 		once
 			Result := agent (App_implementation.gtk_marshal).key_event_translate
 		end
 
-	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
+	set_focus_event_translate_agent: FUNCTION [INTEGER, POINTER, TUPLE]
 			-- Translation agent used for set-focus events
 		once
 			Result := agent (App_implementation.gtk_marshal).set_focus_event_translate

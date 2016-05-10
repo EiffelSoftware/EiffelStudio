@@ -20,13 +20,13 @@ create {EV_WEL_MESSAGE_ACTION_SEQUENCE}
 	
 feature
 	
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, ?, ?, ?, action))
 		end
 
-	wrapper (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; action: PROCEDURE [ANY, TUPLE])
+	wrapper (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

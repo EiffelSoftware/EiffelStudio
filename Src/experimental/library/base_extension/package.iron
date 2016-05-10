@@ -3,14 +3,14 @@ package base_extension
 project
 	base_extension = "base_extension-safe.ecf"
 	base_extension = "base_extension.ecf"
-	base_extension-tests = "tests/tests.ecf"
 
 note
 	title: Eiffel Base Extension
 	description: Extension to Eiffel Base
-	tags: base,structure,support
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
-
+	tags: base,structure,support,extension
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	copyright: 1984-2016 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/base_extension
+	
 end

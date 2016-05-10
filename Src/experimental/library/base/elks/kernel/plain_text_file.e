@@ -189,6 +189,16 @@ feature -- Input
 			last_double := file_gd (file_pointer)
 		end
 
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
+			-- Fill `a_string', starting at position `pos' with at
+			-- most `nb' characters read from current file.
+			-- Return the number of characters actually read.
+		do
+			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
+				-- `a_string' was externally modified, we need to reset its `hash_code'.
+			a_string.set_internal_hash_code (0)
+		end
+
 feature {NONE} -- Implementation
 
 	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
@@ -243,16 +253,6 @@ feature {NONE} -- Implementation
 				back
 			end
 			back
-		end
-
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
-			-- Fill `a_string', starting at position `pos' with at
-			-- most `nb' characters read from current file.
-			-- Return the number of characters actually read.
-		do
-			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
-				-- `a_string' was externally modified, we need to reset its `hash_code'.
-			a_string.set_internal_hash_code (0)
 		end
 
 	file_gi (file: POINTER): INTEGER

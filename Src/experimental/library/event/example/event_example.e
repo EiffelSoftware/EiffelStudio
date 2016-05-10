@@ -75,7 +75,7 @@ feature -- Nesting test
 
 	loopy_actions:  ACTION_SEQUENCE [TUPLE [INTEGER]]
 
-	loopy_wrapper (i: INTEGER; p: PROCEDURE [ANY, TUPLE])
+	loopy_wrapper (i: INTEGER; p: PROCEDURE)
 		do
 			p.call ([i])
 		end 

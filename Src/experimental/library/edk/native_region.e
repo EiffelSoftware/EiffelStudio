@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make_from_rectangle, make_from_native_rectangle, default_create
 
 feature {NONE} -- Creation

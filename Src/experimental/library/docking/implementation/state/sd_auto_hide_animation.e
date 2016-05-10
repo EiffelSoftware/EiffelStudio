@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 	pointer_outside: BOOLEAN
 			-- If pointer outside tab stub and zone?
 
-	internal_motion_procedure: detachable PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
+	internal_motion_procedure: detachable PROCEDURE [EV_WIDGET, INTEGER, INTEGER]
 			-- Motion procedure for animation
 
 	internal_show_step: INTEGER = 20

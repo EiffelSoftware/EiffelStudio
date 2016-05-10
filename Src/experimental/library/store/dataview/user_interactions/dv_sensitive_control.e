@@ -21,7 +21,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	set_action (action: PROCEDURE [ANY, TUPLE])
+	set_action (action: PROCEDURE)
 			-- Set action performed by control.
 		deferred
 		end

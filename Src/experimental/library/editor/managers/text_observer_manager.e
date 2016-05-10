@@ -140,7 +140,7 @@ feature -- Operations
 			end
 		end
 
-	post_notify_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE]]
+	post_notify_actions: ARRAYED_LIST [ROUTINE]
 			-- Actions to call after other notifications
 
 	execute_post_notify_actions

@@ -19,7 +19,6 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
 		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
 		<library name="gobo_math" location="gobo_math.ecf"/>
@@ -31,7 +30,7 @@
 		<library name="gobo_utility" location="gobo_utility.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<cluster name="override_generated" location="override\generated\library\xml\" recursive="true"/>
-		<cluster name="xml" location="$ISE_LIBRARY\contrib\library\gobo\library\xml\" recursive="true">
+		<cluster name="xml" location="$ISE_LIBRARY\contrib\library\gobo\library\xml\src\" recursive="true">
 			<option namespace="Xml">
 			</option>
 			<file_rule>

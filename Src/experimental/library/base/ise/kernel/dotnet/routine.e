@@ -9,7 +9,7 @@
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> detachable TUPLE create default_create end]
+	ROUTINE [OPEN_ARGS -> detachable TUPLE create default_create end]
 
 inherit
 	HASHABLE

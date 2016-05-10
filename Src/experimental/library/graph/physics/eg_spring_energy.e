@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Calculating the energy on a particle depending on dt of the particle.
 
@@ -95,16 +95,12 @@ feature {NONE} -- Implementation
 
 	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
-		local
-			l_result: detachable like particle_type
 		do
-			check anchor_type_only: False end
-			check l_result /= Void end -- Satisfy void-safe compiler
-			Result := l_result
+			check is_used_as_type_anchor: False then end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -114,8 +110,5 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_SPRING_ENERGY
+end
 

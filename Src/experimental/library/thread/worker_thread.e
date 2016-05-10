@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action: PROCEDURE [ANY, TUPLE])
+	make (a_action: PROCEDURE)
 			-- Create worker thread for `a_action'.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			thread_procedure := a_action
 		end
 
-	make_with_procedure (a_action: PROCEDURE [ANY, TUPLE])
+	make_with_procedure (a_action: PROCEDURE)
 			-- Create worker thread for `a_action'.
 		obsolete
 			"[2010-01-26] Use `make' instead."
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	thread_procedure: PROCEDURE [ANY, TUPLE];
+	thread_procedure: PROCEDURE;
 			-- Action executed when thread starts its execution.
 
 note

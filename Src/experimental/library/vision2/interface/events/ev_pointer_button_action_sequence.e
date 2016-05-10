@@ -21,13 +21,13 @@ create {EV_POINTER_BUTTON_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE])
+	force_extend (action: PROCEDURE)
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, ?, ?, ?, ?, ?, ?, ?, action))
 		end
 
-	wrapper (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; action: PROCEDURE [ANY, TUPLE])
+	wrapper (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; action: PROCEDURE)
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

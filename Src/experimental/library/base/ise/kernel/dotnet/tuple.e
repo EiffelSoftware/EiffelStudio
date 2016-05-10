@@ -430,12 +430,6 @@ feature -- Status report
 			Result := native_array.count <= 1
 		end
 
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
-		end
-
 feature -- Element change
 
 	put (v: detachable SYSTEM_OBJECT; k: INTEGER)
@@ -1363,7 +1357,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1373,4 +1367,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TUPLE
+end

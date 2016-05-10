@@ -298,7 +298,7 @@ feature -- Status Setting
 			alignment_set: is_bottom_aligned
 		end
 
-	set_layout_procedure (a_layout_procedure: PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]])
+	set_layout_procedure (a_layout_procedure: PROCEDURE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT])
 			-- Assign `a_layout_procedure' to `layout_procedure'.
 		do
 			layout_procedure := a_layout_procedure
@@ -445,7 +445,7 @@ feature -- Status report
 			Result := boolean_flags.bit_test (6) = True
 		end
 
-	layout_procedure: detachable PROCEDURE [ANY, TUPLE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]]
+	layout_procedure: detachable PROCEDURE [EV_GRID_LABEL_ITEM, EV_GRID_LABEL_ITEM_LAYOUT]
 			-- Procedure which may be used to calculate the position of `text' and `pixmap' relative to `Current',
 			-- ready for the drawing implementation.
 			-- This procedure is fired each time that `Current' must be re-drawn and by filling the passed EV_GRID_LABEL_ITEM_LAYOUT object, the

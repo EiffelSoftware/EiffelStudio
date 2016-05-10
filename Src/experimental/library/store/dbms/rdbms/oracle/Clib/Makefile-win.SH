@@ -27,7 +27,6 @@ standard:: oracle_store.lib il_oracle_store.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 oracle_store.lib: $(OBJECTS)
 	$alib_line

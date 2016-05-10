@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -24,7 +24,7 @@ feature {NONE} -- Creation
 
 feature -- Status Setting
 
-	set_left_top_right_bottom_coordinates (a_left, a_top, a_right, a_bottom: INTEGER) is
+	set_left_top_right_bottom_coordinates (a_left, a_top, a_right, a_bottom: INTEGER)
 			--
 		do
 			native_set_left_top_right_bottom (native_rectangle_handle, a_left, a_top, a_right, a_bottom)

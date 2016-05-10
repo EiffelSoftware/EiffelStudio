@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Basic Operations
 
-	execute_noop (a_action: PROCEDURE [ANY, detachable TUPLE])
+	execute_noop (a_action: PROCEDURE [detachable TUPLE])
 			-- <Precursor>
 		do
 			a_action.call (Void)

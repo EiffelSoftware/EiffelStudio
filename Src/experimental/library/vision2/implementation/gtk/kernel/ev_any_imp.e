@@ -95,7 +95,7 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	signal_connect_true (
 		a_signal_name: EV_GTK_C_STRING;
-		an_agent: PROCEDURE [ANY, TUPLE]
+		an_agent: PROCEDURE
 		)
 			-- Connect `an_agent' to `a_signal_name'.
 		require
@@ -114,8 +114,8 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	real_signal_connect (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		an_agent: PROCEDURE;
+		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 		require
@@ -133,8 +133,8 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 	real_signal_connect_after (
 		a_c_object: like c_object;
 		a_signal_name: STRING_8;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: detachable FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		an_agent: PROCEDURE;
+		translate: detachable FUNCTION [INTEGER, POINTER, TUPLE];
 		)
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'

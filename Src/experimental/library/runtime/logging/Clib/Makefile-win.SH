@@ -28,7 +28,6 @@ clean:
 	$(RM) *.lib
 	$(RM) *.dll
 	$(RM) *.RES
-	$(RM) *.BAK
 	$(RM) *.bin
 
 eif_eventlog_messages.dll: eif_eventlog_messages.mc

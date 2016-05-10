@@ -460,7 +460,7 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes.
 
-	focus_out_agent: detachable PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET]]
+	focus_out_agent: detachable PROCEDURE [EV_WIDGET]
 			-- Focus out agent
 
 	ignore_focus_out_actions: BOOLEAN
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation attributes.
 			Result := not ev_application.ctrl_pressed
 		end
 
-	internal_key_press_actions, internal_key_release_actions: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET, EV_KEY]]
+	internal_key_press_actions, internal_key_release_actions: PROCEDURE [EV_WIDGET, EV_KEY]
 			-- Golbal key press/release action, so we can prune it after dragging
 
 	internal_shared: SD_SHARED

@@ -8,8 +8,9 @@ note
 	title: API wrapper
 	description: library used to wrap external libraries.
 	tags: api,wrapper,external
---	license: 
---	copyright: 
---	link[doc]: "Documentation" http:// 
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 1984-2016 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/api_wrapper
+	link[license]: http://www.eiffel.com/licensing/forum.txt
 
 end

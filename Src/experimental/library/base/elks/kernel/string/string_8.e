@@ -45,8 +45,13 @@ inherit
 		end
 
 	INDEXABLE [CHARACTER_8, INTEGER]
+		rename
+			upper as count
 		undefine
-			copy, is_equal, out
+			copy,
+			is_equal,
+			new_cursor,
+			out
 		redefine
 			prune_all,
 			changeable_comparison_criterion
@@ -1796,7 +1801,7 @@ invariant
 	compare_character: not object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

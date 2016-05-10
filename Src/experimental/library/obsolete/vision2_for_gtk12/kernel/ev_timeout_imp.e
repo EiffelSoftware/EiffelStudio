@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
 
-	timeout_agent_internal: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE]
+	timeout_agent_internal: PROCEDURE
 		-- Reusable agent used for connecting timeout to gtk implementation.
 
 feature {EV_ANY_I} -- Implementation

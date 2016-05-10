@@ -248,7 +248,7 @@ feature -- Update features
 	update_menu (a_menu: EV_MENU_ITEM)
 			-- update the menu
 		do
-			if attached {FUNCTION [ANY, TUPLE, STRING_32]} a_menu.data as l_func then
+			if attached {FUNCTION [STRING_32]} a_menu.data as l_func then
 				a_menu.set_text (l_func.item([]))
 			end
 			if attached {EV_MENU} a_menu as l_menu then

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of TUPLE"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -21,6 +21,8 @@ inherit
 		end
 
 	READABLE_INDEXABLE [detachable separate ANY]
+		rename
+			upper as count
 		redefine
 			is_equal
 		end
@@ -297,6 +299,7 @@ feature -- Status report
 			valid_index: valid_index (index)
 		local
 			l_reflector: REFLECTOR
+			l_type_id: INTEGER
 		do
 			if v = Void then
 					-- A Void entry is valid only for references and as long as the expected type
@@ -324,7 +327,12 @@ feature -- Status report
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
 					create l_reflector
-					Result := l_reflector.field_conforms_to (v.generating_type.type_id, generating_type.generic_parameter_type (index).type_id)
+						--| FIXME
+						--| Replace this line with the commented line once we solve the nature
+						--| of type instances in a SCOOP context.
+					l_type_id := {ISE_RUNTIME}.dynamic_type (v)
+--					l_type_id := v.generating_type.type_id
+					Result := l_reflector.field_conforms_to (l_type_id, generating_type.generic_parameter_type (index).type_id)
 				end
 			end
 		end
@@ -340,20 +348,17 @@ feature -- Status report
 
 	upper: INTEGER
 			-- Upper bound of TUPLE.
+			-- Use `count' instead.
 		do
 			Result := count
+		ensure
+			definition: Result = count
 		end
 
 	is_empty: BOOLEAN
 			-- Is Current empty?
 		do
 			Result := count = 0
-		end
-
-	index_set: INTEGER_INTERVAL
-			-- Range of acceptable indexes
-		do
-			create Result.make (lower, upper)
 		end
 
 feature -- Element change
@@ -1510,7 +1515,7 @@ feature {NONE} -- Externals: Setting
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

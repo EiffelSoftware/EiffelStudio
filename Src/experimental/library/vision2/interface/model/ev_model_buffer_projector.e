@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 				area_y + l_area.height < drawable_position.y + drawable.height
 		end
 
-	recenter_agent: detachable PROCEDURE [ANY, TUPLE] note option: stable attribute end
+	recenter_agent: detachable PROCEDURE note option: stable attribute end
 			-- Agent for recentering on idle.
 
 	area_centered: BOOLEAN

@@ -30,8 +30,8 @@ feature -- Interface
 feature -- Do the work through the power of agents
 
 	translate_picture_string(in:STRING_32;
-							is_code_character: FUNCTION[ANY, TUPLE[CHARACTER_32], BOOLEAN];
-							process_code: FUNCTION[ANY, TUPLE[STRING_32], STRING_32]
+							is_code_character: FUNCTION[CHARACTER_32, BOOLEAN];
+							process_code: FUNCTION[STRING_32, STRING_32]
 										): STRING_32
 		-- Transforms an NLS "date format picture string" into somthing suitable for I18N_FORMAT_STRING
 		-- An NLS format string is a sequence of format codes, spaces and user strings

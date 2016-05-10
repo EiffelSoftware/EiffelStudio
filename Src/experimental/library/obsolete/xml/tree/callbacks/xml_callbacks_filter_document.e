@@ -11,6 +11,7 @@ inherit
 		undefine
 			has_resolved_namespaces
 		redefine
+			initialize,
 			set_next,
 			on_start,
 			on_finish,
@@ -29,6 +30,7 @@ inherit
 		rename
 			make_null as document_make_null
 		redefine
+			initialize,
 			on_start,
 			on_finish,
 			on_xml_declaration,
@@ -52,6 +54,13 @@ feature {NONE} -- Initialization
 		do
 			document_make_null
 			Precursor {XML_CALLBACKS_FILTER} (a_next)
+		end
+
+	initialize
+			-- Called when parsing starts.
+		do
+			Precursor {XML_CALLBACKS_DOCUMENT}
+			Precursor {XML_CALLBACKS_FILTER}
 		end
 
 feature -- Document
@@ -143,7 +152,7 @@ feature -- Content
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -181,7 +181,7 @@ feature -- Query
 
 feature -- Validation		
 
-	validation_agent: detachable FUNCTION [ANY, TUPLE [READABLE_STRING_GENERAL], BOOLEAN]
+	validation_agent: detachable FUNCTION [READABLE_STRING_GENERAL, BOOLEAN]
 			-- Validation agent to test if a READABLE_STRING_GENERAL is a valid text value for Current
 			--| This can be used to validate only existing path, or existing directory, ...
 

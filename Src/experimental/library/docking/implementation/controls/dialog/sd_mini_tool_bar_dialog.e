@@ -47,7 +47,7 @@ feature {NONE}  -- Initlization
 			end
 		end
 
-	app_focus_in_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET]]
+	app_focus_in_agent: PROCEDURE [EV_WIDGET]
 			-- Agent for destroy Current
 
 	app_focus_in (a_widget: EV_WIDGET)

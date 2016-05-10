@@ -27,7 +27,6 @@ standard:: sybase_store.lib il_sybase_store.lib
 clean:
 	$(RM) *.$obj
 	$(RM) *.lib
-	$(RM) *.BAK
 
 sybase_store.lib: $(OBJECTS)
 	$alib_line

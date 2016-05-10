@@ -440,7 +440,7 @@ feature -- Implementation
 	temp_pebble: ANY
 			-- Temporary pebble holder used for PND implementation with nodes.
 
-	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	temp_pebble_function: FUNCTION [ANY]
 			-- Returns data to be transported by PND mechanism.
 
 	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE

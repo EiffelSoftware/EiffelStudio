@@ -156,7 +156,7 @@ feature -- Right click menu items
 			set: notebook_tab_area_menu_items_agent = a_agent
 		end
 
-	notebook_tab_area_menu_items_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
+	notebook_tab_area_menu_items_agent: detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]
 			-- Menu items shown at notebook tab area
 			-- Client programmers can customize the menu items here
 			-- Same as `notebook_tab_area_menu_items' but has higer priority than `notebook_tab_area_menu_items'
@@ -181,7 +181,7 @@ feature -- Right click menu items
 			set: title_bar_area_menu_items_agent = a_agent
 		end
 
-	title_bar_area_menu_items_agent: detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]
+	title_bar_area_menu_items_agent: detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]
 			-- Menu items shown at {SD_CONTENT}'s title bar.
 			-- Client programmers can customize the menu items here.	
 			-- Same as `title_bar_area_menu_items' but has higer priority than `title_bar_area_menu_items
@@ -781,13 +781,13 @@ feature {NONE} -- Implementation
 			create Result.put (False)
 		end
 
-	title_bar_area_menu_items_agent_cell: CELL [detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
+	title_bar_area_menu_items_agent_cell: CELL [detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `title_bar_area_menu_items_agent'
 		once
 			create Result.put (Void)
 		end
 
-	notebook_tab_area_menu_items_agent_cell: CELL [detachable FUNCTION [ANY, TUPLE [SD_CONTENT], ARRAYED_LIST [EV_MENU_ITEM]]]
+	notebook_tab_area_menu_items_agent_cell: CELL [detachable FUNCTION [SD_CONTENT, ARRAYED_LIST [EV_MENU_ITEM]]]
 			-- Singleton cell for `notebook_tab_area_menu_items_agent'
 		once
 			create Result.put (Void)

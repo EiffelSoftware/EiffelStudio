@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_raising_action (raising_action: PROCEDURE [ANY, TUPLE])
+	set_raising_action (raising_action: PROCEDURE)
 			-- Set `raising_action' to raise navigation component to
 			-- select table row.
 		require
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	selecting_control: detachable DV_SENSITIVE_CONTROL
 			-- Control to select a database table row.
 
-	raise_action: detachable PROCEDURE [ANY, TUPLE]
+	raise_action: detachable PROCEDURE
 			-- Action to perform to raise the navigator.
 
 	update_controls_sensitiveness

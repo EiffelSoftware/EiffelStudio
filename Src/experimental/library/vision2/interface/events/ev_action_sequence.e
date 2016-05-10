@@ -18,7 +18,7 @@ inherit
 
 feature -- Element change
 
-	force_extend (an_item: PROCEDURE [ANY, TUPLE])
+	force_extend (an_item: PROCEDURE)
 			-- Extend without checking type of `an_item'.
 		deferred
 		end

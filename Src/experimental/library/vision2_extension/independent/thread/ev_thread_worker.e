@@ -46,7 +46,7 @@ feature -- Status Report
 
 feature -- Basic Operation
 
-	do_work (a_job: attached like job; a_event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]])
+	do_work (a_job: attached like job; a_event_handler: ROUTINE [EV_THREAD_EVENT])
 			-- Start `a_job' in a new thread, synchronize with GUI thread when thread
 			-- post events and call `a_event_handler' to handle these events.
 			-- Note: this feature is blocking although the GUI will still be responsive.
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	job: detachable PROCEDURE [ANY, TUPLE [ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]]] note option: stable attribute end
+	job: detachable PROCEDURE [ROUTINE [EV_THREAD_EVENT]] note option: stable attribute end
 			-- Job to be executed
 			-- Routine's argument is used to call back GUI thread for event processing.
 

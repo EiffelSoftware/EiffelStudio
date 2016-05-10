@@ -88,7 +88,7 @@ feature -- Access
 			end
 		end
 
-	actual_drop_target_agent: detachable FUNCTION [ANY, TUPLE [INTEGER, INTEGER], detachable EV_ABSTRACT_PICK_AND_DROPABLE]
+	actual_drop_target_agent: detachable FUNCTION [INTEGER, INTEGER, detachable EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.
 			-- If `Void', will use the default drop target.
 			-- Always void if `Current' is not a widget.
@@ -97,7 +97,7 @@ feature -- Access
 			-- `Result' is target used during a dockable transport if
 			-- mouse pointer is above `Current'.
 
-	default_key_processing_handler: detachable PREDICATE [ANY, TUPLE [EV_KEY]]
+	default_key_processing_handler: detachable PREDICATE [EV_KEY]
 			-- Agent used to determine whether the default key processing should occur for `Current'.
 			-- If agent returns `True' then default key processing continues as normal, False prevents
 			-- default key processing from occurring.

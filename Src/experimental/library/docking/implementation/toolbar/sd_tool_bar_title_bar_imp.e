@@ -183,18 +183,18 @@ feature {NONE} -- Constant setting
 			set_attributes_using_color_constants
 		end
 
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [READABLE_STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, READABLE_STRING_GENERAL]]
-	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
-	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
-	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
-	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_PIXMAP]]
-	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, INTEGER]]
-	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER_INTERVAL]]]
-	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_FONT]]]
-	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_FONT]]
-	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
-	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE, EV_COLOR]]
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [READABLE_STRING_GENERAL]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [READABLE_STRING_GENERAL]]
+	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER]]
+	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
+	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_PIXMAP]]
+	pixmap_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_PIXMAP]]
+	integer_interval_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [INTEGER]]
+	integer_interval_constant_set_procedures: ARRAYED_LIST [PROCEDURE [INTEGER_INTERVAL]]
+	font_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_FONT]]
+	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_FONT]]
+	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [EV_COLOR]]
+	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [EV_COLOR]]
 
 	integer_from_integer (an_integer: INTEGER): INTEGER
 			-- Return `an_integer', used for creation of

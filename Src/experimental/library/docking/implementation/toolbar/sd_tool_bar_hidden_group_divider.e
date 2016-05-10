@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG,
-					We use this class to make sure items grouping looks nice.
-																						]"
+		When show hidden SD_TOOL_BAR_ITEMs by SD_TOOL_BAR_HIDDEN_ITEM_DIALOG,
+		We use this class to make sure items grouping looks nice.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -20,18 +20,6 @@ feature {NONE} -- Initlization
 			-- Creation method
 		require
 			not_void: a_items /= Void
-		do
-			create algorithm.make (a_items.count)
-			internal_items := a_items
-			init_item_width (a_items)
-		ensure
-			set: internal_items = a_items
-		end
-
-	init_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
-			-- Initlization items width
-		require
-			not_void: a_items /= Void
 		local
 			l_widths: ARRAYED_LIST [INTEGER]
 		do
@@ -44,9 +32,10 @@ feature {NONE} -- Initlization
 				l_widths.put_i_th (a_items.item.width, a_items.index)
 				a_items.forth
 			end
-			algorithm.set_items_width (l_widths)
+			create algorithm.make (a_items.count, l_widths)
+			internal_items := a_items
 		ensure
-			set: algorithm.item_width /= Void
+			set: internal_items = a_items
 		end
 
 feature -- Properties
@@ -116,14 +105,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

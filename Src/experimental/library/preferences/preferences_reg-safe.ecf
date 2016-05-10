@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="preferences_reg" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences_reg">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="preferences_reg" uuid="9647AA82-399B-486F-9E41-5373590095B7" library_target="preferences_reg">
 	<target name="preferences_reg">
 		<description>Preferences library.
       Copyright (c) 1984-2012, Eiffel Software and others.
@@ -41,9 +41,9 @@
 			<option namespace="Preferences.Interface">
 			</option>
 			<file_rule>
-				<exclude>/shortcut_management$</exclude>
-				<exclude>/graphical$</exclude>
 				<exclude>/build_project$</exclude>
+				<exclude>/graphical$</exclude>
+				<exclude>/shortcut_management$</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="preference" location="preference\" recursive="true">

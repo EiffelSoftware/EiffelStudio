@@ -768,7 +768,7 @@ feature -- Implementation
 
 	temp_pebble: ANY
 
-	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+	temp_pebble_function: FUNCTION [ANY]
 			-- Returns data to be transported by PND mechanism.
 
 	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
@@ -1204,7 +1204,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST
 
-	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
+	update_children_agent: PROCEDURE
 			-- Agent object for update_children
 
 feature {EV_ANY_I} -- External

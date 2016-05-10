@@ -6,9 +6,10 @@ project
 note
 	title: Eiffel Drawing Kit (EDK)
 	description: Multiplatform drawing kit
-	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
-	copyright: Copyright (c) 1984-2009, Eiffel Software and others
---	tags: 
---	link[doc]: "Documentation" http:// 
+	tags: vision2,drawing
+	copyright: 1984-2016 Eiffel Software and others
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/edk
 
 end

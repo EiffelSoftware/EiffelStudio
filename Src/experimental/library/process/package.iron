@@ -3,17 +3,17 @@ package process
 project
 	process = "process-safe.ecf"
 	process = "process.ecf"
-	process-tests = "tests/tests-safe.ecf"
-	process-tests = "tests/tests.ecf"
 
 note
-	title: Eiffel Process
-	description: Process execution, output capture, ...
-	tags: process
-	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	title: EiffelProcess
+	description: "[
+			Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
+			note: it requires SCOOP or EiffelThread concurrent capabilities.
+		]"
+	tags: process,runtime
 	copyright: 1984-2013 Eiffel Software and others
-	links[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/process
-	links[license]: http://www.eiffel.com/licensing/forum.txt
---	link[doc]: "Documentation" http:// 
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/process
 
 end

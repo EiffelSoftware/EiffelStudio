@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_expose_action_agent (an_agent: PROCEDURE [ANY, TUPLE [EV_DRAWABLE]])
+	make_with_expose_action_agent (an_agent: PROCEDURE [EV_DRAWABLE])
 			-- Create `Current' and add `an_agent' to `expose_actions'.
 		require
 			an_agent_not_void: an_agent /= Void

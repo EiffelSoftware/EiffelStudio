@@ -586,16 +586,11 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 		local
 			mw: INTEGER
 		do
-			mw := 2 * frame_width
-
+			mw := extra_minimum_rect.width
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mw := mw + l_item_imp.minimum_width
 			end
-			mw := mw.max (upper_bar.minimum_width).max
-				(lower_bar.minimum_width)
-			ev_set_minimum_width (
-				mw.max (upper_bar.minimum_width).max
-					(lower_bar.minimum_width), a_is_size_forced)
+			ev_set_minimum_width (mw, a_is_size_forced)
 		end
 
 	compute_minimum_height (a_is_size_forced: BOOLEAN)
@@ -603,18 +598,9 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 		local
 			mh: INTEGER
 		do
-			mh := 2 * frame_height
-			if has_menu then
-				mh := mh + menu_bar_height
-			end
-			if not upper_bar.is_empty then
-				mh := mh + upper_bar.minimum_height + 1
-			end
+			mh := extra_minimum_rect.height
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mh := mh + l_item_imp.minimum_height
-			end
-			if not lower_bar.is_empty then
-				mh := mh + lower_bar.minimum_height + 1
 			end
 			ev_set_minimum_height (mh, a_is_size_forced)
 		end
@@ -623,32 +609,29 @@ feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 			-- Recompute the minimum size of `Current'.
 		local
 			mw, mh: INTEGER
+			l_rect: WEL_RECT
 		do
-			mw := 2 * frame_width
+			l_rect := extra_minimum_rect
+			mw := l_rect.width
+			mh := l_rect.height
 
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mw := mw + l_item_imp.minimum_width
-			end
-			mw := mw.max (upper_bar.minimum_width).max
-				(lower_bar.minimum_width)
-
-			mh := 2 * frame_height
-
-			if has_menu then
-				mh := mh + menu_bar_height
-			end
-			if not upper_bar.is_empty then
-				mh := mh + upper_bar.minimum_height + 1
-			end
-			if attached item_imp as l_item_imp then
 				mh := mh + l_item_imp.minimum_height
 			end
-			if not lower_bar.is_empty then
-				mh := mh + lower_bar.minimum_height + 1
-			end
-			ev_set_minimum_size (
-				mw.max (upper_bar.minimum_width).max
-				(lower_bar.minimum_width), mh, a_is_size_forced)
+			ev_set_minimum_size (mw, mh, a_is_size_forced)
+		end
+
+	extra_minimum_rect: WEL_RECT
+			-- Extra width and height between the client rect and the window rect.
+		require
+			exists: exists
+		local
+			l_client_rect: WEL_RECT
+		do
+			l_client_rect := client_rect
+			Result := window_rect
+			Result.set_rect (0, 0, Result.width - l_client_rect.width, Result.height - l_client_rect.height)
 		end
 
 feature {NONE} -- Inapplicable

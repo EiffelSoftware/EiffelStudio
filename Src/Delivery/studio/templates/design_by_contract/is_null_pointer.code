@@ -15,9 +15,9 @@
    </metadata>
    
    <declarations>
-      <literal id="pointer" editable="true" conforms_to="POINTER">
+      <object id="pointer" editable="true" conforms_to="POINTER">
          <description>A entity representing a pointer</description>
-      </literal>
+      </object>
    </declarations>
    
    <templates>

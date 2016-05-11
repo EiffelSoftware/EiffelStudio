@@ -14,7 +14,7 @@
    </metadata>
    
    <declarations>
-      <literal id="feature_name" editable="True">
+      <literal id="feature_name" editable="true">
          <description>The name of the function who's result should remain consistent</description>
       </literal>
    </declarations>

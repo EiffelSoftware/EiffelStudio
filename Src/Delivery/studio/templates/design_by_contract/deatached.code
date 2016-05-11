@@ -15,7 +15,7 @@
    </metadata>
    
    <declarations>
-      <object id="var" editable="True" conforms_to="ANY">
+      <object id="var" editable="true" conforms_to="ANY">
          <description>An entity that should be detached</description>
       </object>
    </declarations>

@@ -14,7 +14,7 @@
    </metadata>
    
    <declarations>
-      <object id="var" editable="True" conforms_to="ANY">
+      <object id="var" editable="true" conforms_to="ANY">
          <description>A class attribute that should differ after execution</description>
       </object>
    </declarations>

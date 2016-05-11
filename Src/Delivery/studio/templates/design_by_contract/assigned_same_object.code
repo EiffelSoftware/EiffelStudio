@@ -14,10 +14,10 @@
    </metadata>
    
    <declarations>
-      <object id="target" editable="True" conforms_to="ANY">
+      <object id="target" editable="true" conforms_to="ANY">
          <description>A class attribute that should be assigned</description>
       </object >
-      <object id="source" editable="True" conforms_to="ANY">
+      <object id="source" editable="true" conforms_to="ANY">
          <description>A source entity, most likely a routine argument, that should have been used to assign to a class attribute</description>
       </object>
    </declarations>

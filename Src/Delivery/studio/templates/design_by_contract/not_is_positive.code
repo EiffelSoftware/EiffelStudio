@@ -16,7 +16,7 @@
    </metadata>
    
    <declarations>
-      <object id="numeric" editable="True" conforms_to="NUMERIC">
+      <object id="numeric" editable="true" conforms_to="NUMERIC">
          <description>An numeric entity</description>
       </object>
    </declarations>

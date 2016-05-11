@@ -18,7 +18,6 @@ dotnet_20: $(RUNTIME_SRC) Makefile
 msbuild_20: $(RUNTIME_SRC) Makefile
 	$(CP) $(ISE_KEY_PATH) $(ISE_KEY_NAME)
 	msbuild runtime.sln /p:TargetFrameworkVersion=v2.0;ToolsVersion=2.0
-	$(CP) obj\Release\$(OUTPUT_NAME) $(OUTPUT_NAME)
 	$(RMDIR) obj
 	$(RM) runtime.sln.cache
 	$(RM)  $(ISE_KEY_NAME)

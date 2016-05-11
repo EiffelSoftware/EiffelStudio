@@ -16,10 +16,10 @@
    </metadata>
    
    <declarations>
-      <object id="array" editable="True" conforms_to="ARRAY [ANY]">
+      <object id="array" editable="true" conforms_to="ARRAY [ANY]">
          <description>An attached array entity</description>
       </object>
-      <object id="index" editable="True" conforms_to="NUMERIC">
+      <object id="index" editable="true" conforms_to="NUMERIC">
          <description>An index to the specified array item</description>
       </object>
    </declarations>

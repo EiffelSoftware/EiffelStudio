@@ -14,7 +14,7 @@
    </metadata>
    
    <declarations>
-      <literal id="structure" editable="True" conforms_to="CURSOR_STRUCTURE">
+      <literal id="structure" editable="true" conforms_to="CURSOR_STRUCTURE">
          <description>A entity representing an attached cursor structure</description>
       </literal>
    </declarations>

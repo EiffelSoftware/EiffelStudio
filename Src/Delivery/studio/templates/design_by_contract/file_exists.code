@@ -16,7 +16,7 @@
    </metadata>
    
    <declarations>
-      <object id="file" editable="True" conforms_to="STRING_GENERAL">
+      <object id="file" editable="true" conforms_to="STRING_GENERAL">
          <description>A string variable containing a path to a file</description>
       </object>
    </declarations>

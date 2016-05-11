@@ -71,7 +71,23 @@ feature -- Access
 
 	private byte has_formal_flags;
 		// Does current generic type has formals?
-	
+
+	public override int GetHashCode()
+		// Hash code computation
+	{
+		int Result = base.GetHashCode();
+		RT_TYPE [] l_generics = generics;
+		int i, nb;
+		if (l_generics != null) {
+			nb = count;
+			for (i = 0; i < nb; i++) {
+				Result = (Result * 397) ^ l_generics[i].GetHashCode();
+			}
+		}
+
+		return Result;
+	}
+			
 /*
 feature -- Conformance
 */

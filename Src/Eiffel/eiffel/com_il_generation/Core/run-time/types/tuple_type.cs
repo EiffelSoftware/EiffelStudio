@@ -59,6 +59,16 @@ feature -- Initialization
 	}
 
 /*
+feature -- Access
+*/
+
+	public override int GetHashCode()
+		// <Precursor>
+	{
+		return base.GetHashCode();
+	}
+
+/*
 feature -- Conformance
 */
 	public override bool conform_to (RT_TYPE other)

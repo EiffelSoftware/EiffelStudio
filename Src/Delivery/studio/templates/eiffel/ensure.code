@@ -11,6 +11,7 @@
 	
     <declarations>	
       <literal id="then" editable="false">
+        <description>Optional "then" keyword that is added by the tool when working with a feature redeclaration. The literal is empty by default and is substituted with " then" programmatically.</description>
         <default/>
       </literal>
     </declarations>

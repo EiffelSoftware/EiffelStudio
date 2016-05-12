@@ -11,6 +11,7 @@
 	
     <declarations>	
       <literal id="else" editable="false">
+        <description>Optional "else" keyword that is added by the tool when working with a feature redeclaration. The literal is empty by default and is substituted with " else" programmatically.</description>
         <default/>
       </literal>
     </declarations>

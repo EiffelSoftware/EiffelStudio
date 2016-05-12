@@ -14,7 +14,8 @@ class
 inherit
 	CODE_DECLARATION
 		redefine
-			initialize_nodes
+			initialize_nodes,
+			make
 		end
 
 create
@@ -22,12 +23,20 @@ create
 
 feature {NONE} -- Initialization
 
+	make (a_id: READABLE_STRING_GENERAL; a_parent: like parent)
+			-- <Precursor>
+			-- Initialize `default_value' with `a_id'.
+		do
+			Precursor (a_id, a_parent)
+			set_default_value (id)
+		ensure then
+			default_value_set: a_id.same_string (default_value)
+		end
+
 	initialize_nodes (a_factory: like code_factory)
 			-- <Precursor>
 		do
-			create default_value.make_empty
 			is_editable := True
-
 			Precursor (a_factory)
 		end
 
@@ -79,7 +88,7 @@ invariant
 	default_value_attached: is_initialized implies attached default_value
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

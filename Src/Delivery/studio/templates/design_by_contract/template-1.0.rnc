@@ -1,0 +1,34 @@
+﻿default namespace = ""
+
+start =
+  element code_template {
+    attribute format { xsd:NMTOKEN },
+    element metadata {
+      element title { text },
+      description,
+      element author { text },
+      element shortcut { xsd:NCName },
+      element categories {
+        element category { xsd:NCName }+
+      }
+    },
+    element declarations {
+      (
+          element literal { placeholder }
+        | element object { placeholder, attribute conforms_to { text } }
+      )+
+    },
+    element templates {
+      element template {
+        attribute version { xsd:NMTOKEN }?,
+        text
+      }
+    }
+  }
+
+placeholder =
+        attribute id { xsd:NCName },
+        attribute editable { xsd:boolean },
+        description
+
+description = element description { text }

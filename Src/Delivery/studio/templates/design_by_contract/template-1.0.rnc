@@ -1,34 +1,64 @@
 ﻿default namespace = ""
 
 start =
+    ## Root element.
   element code_template {
+      ## Format of the template file (to be replaced by a namespace).
     attribute format { xsd:NMTOKEN },
+      ## General information about template.
     element metadata {
+        ## Short description.
       element title { text },
+        ## Long description.
       description,
+        ## Authorship.
       element author { text },
+        ## A name in completion list.
       element shortcut { xsd:NCName },
+        ## Categories of the template.
       element categories {
+          ## Categories are used by tools:
+          ## - Contract editor: "contract" with at least one of "precondition", "postcondition", "invariant".
         element category { xsd:NCName }+
       }
     },
+      ## Variable parts of the template.
     element declarations {
       (
-          element literal { placeholder }
-        | element object { placeholder, attribute conforms_to { text } }
+          ## A variable part without any type-based restrictions.
+        element literal { placeholder }
+      |
+          ## A variable part with type-based restrictions.
+        element object {
+          placeholder,
+            ## A type the variable needs to conform.
+          attribute conforms_to { text }
+        }
       )+
     },
+      ## Code snippets.
     element templates {
+        ## Code snippet.
       element template {
+          ## Optional version that indicates compatible tool (e.g. EiffelStudio) version (to be dropped in favor of namespaces).
         attribute version { xsd:NMTOKEN }?,
+          ## Template code.
         text
       }
     }
   }
 
+  ## Common structure of a variable part of a template.
 placeholder =
-        attribute id { xsd:NCName },
-        attribute editable { xsd:boolean },
-        description
+    ## A name that serves as a reference in the template code in the form "${name}".
+    ## It should be uqniue within a template.
+  attribute id { xsd:NCName },
+    ## A flag that indicates if a variable name can be changed by user.
+  attribute editable { xsd:boolean },
+    ## Description of the variable, such as purpose, use, etc.
+  description
 
-description = element description { text }
+  ## Verbose description of the containing element.
+description =
+    ## Long description of associated outer element to be presented to user as accompanying documentation for it in a user agent.
+  element description { text }

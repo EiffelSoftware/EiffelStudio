@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A dictionary of code template definition file XML tag, attribute and value names.
 	]"
@@ -26,8 +26,6 @@ feature -- Access
 	code_templates_tag: STRING = "code_templates"
 
 	declarations_tag: STRING = "declarations"
-
-	default_tag: STRING = "default"
 
 	description_tag: STRING = "description"
 
@@ -78,7 +76,7 @@ feature -- Delimiters
 	template_end_delimiter: STRING = "#~"
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

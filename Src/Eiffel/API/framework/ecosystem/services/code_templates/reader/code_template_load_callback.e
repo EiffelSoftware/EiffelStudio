@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		XML parser callbacks for creating a in-memory model of a code template.
 		
@@ -538,18 +538,14 @@ feature {NONE} -- Factory
 
 				-- literal
 				-- => description
-				-- => default
-			create l_trans.make (2)
+			create l_trans.make (1)
 			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
-			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
 			Result.force (l_trans, t_literal)
 
 				-- object
 				-- => description
-				-- => default
-			create l_trans.make (2)
+			create l_trans.make (1)
 			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
-			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
 			Result.force (l_trans, t_object)
 
 				-- templates
@@ -612,7 +608,6 @@ feature {NONE} -- Tag states
 	t_declarations: NATURAL_8        = 0x09
 	t_literal: NATURAL_8             = 0x0A
 	t_object:  NATURAL_8             = 0x0B
-	t_default: NATURAL_8             = 0x0C
 
 	t_templates: NATURAL_8           = 0x0D
 	t_template: NATURAL_8            = 0x0E
@@ -632,7 +627,7 @@ invariant
 	last_code_template_definition_attached: attached last_declaration implies attached last_code_template_definition
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

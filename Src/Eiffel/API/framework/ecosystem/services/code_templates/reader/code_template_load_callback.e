@@ -180,9 +180,13 @@ feature {NONE} -- Process
 				process_metadata_shortcut
 			when t_category then
 				process_metadata_category
-			when t_literal then
-					-- Clear last literal declaration
+			when t_literal, t_object then
+					-- Clear last literal or object declaration.
 				last_declaration := Void
+			when t_default then
+				if attached {CODE_LITERAL_DECLARATION} last_declaration as literal then
+					process_declaration_literal_default (literal)
+				end
 			when t_template then
 				process_templates_template
 			else
@@ -419,16 +423,12 @@ feature {NONE} -- Production processing
 			end
 		end
 
-	process_declaration_literal_default
-			-- Processes a declaration literal's default value.
+	process_declaration_literal_default (literal: CODE_LITERAL_DECLARATION)
+			-- Processes a default value element of a declaration `literal'.
 		require
 			last_code_template_definition_attached: attached last_code_template_definition
-			last_declaration_attached: last_declaration /= Void
-			last_declaration_is_literal: attached {CODE_LITERAL_DECLARATION} last_declaration
 		do
-			if not current_content.is_empty and then (attached {CODE_LITERAL_DECLARATION} last_declaration as l_literal) then
-				l_literal.default_value := current_content
-			end
+			literal.default_value := current_content
 		end
 
 	process_templates
@@ -538,14 +538,18 @@ feature {NONE} -- Factory
 
 				-- literal
 				-- => description
-			create l_trans.make (1)
+				-- => default
+			create l_trans.make (2)
 			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
 			Result.force (l_trans, t_literal)
 
 				-- object
 				-- => description
-			create l_trans.make (1)
+				-- => default
+			create l_trans.make (2)
 			l_trans.force (t_description, {CODE_TEMPLATE_ENTITY_NAMES}.description_tag)
+			l_trans.force (t_default, {CODE_TEMPLATE_ENTITY_NAMES}.default_tag)
 			Result.force (l_trans, t_object)
 
 				-- templates
@@ -608,6 +612,7 @@ feature {NONE} -- Tag states
 	t_declarations: NATURAL_8        = 0x09
 	t_literal: NATURAL_8             = 0x0A
 	t_object:  NATURAL_8             = 0x0B
+	t_default: NATURAL_8             = 0x0C
 
 	t_templates: NATURAL_8           = 0x0D
 	t_template: NATURAL_8            = 0x0E

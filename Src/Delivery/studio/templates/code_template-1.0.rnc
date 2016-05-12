@@ -35,7 +35,7 @@ start =
           attribute conforms_to { text }
         }
       )+
-    },
+    }?,
       ## Code snippets.
     element templates {
         ## Code snippet.
@@ -54,9 +54,13 @@ placeholder =
     ## It should be uqniue within a template.
   attribute id { xsd:NCName },
     ## A flag that indicates if a variable name can be changed by user.
+    ## The variable that is not editable may also be substituted programmatically by a tool.
   attribute editable { xsd:boolean },
     ## Description of the variable, such as purpose, use, etc.
-  description
+  description,
+    ## Optional default value.
+    ## When absent the value of the attribute "id" is unsed instead.
+  element default { text }?
 
   ## Verbose description of the containing element.
 description =

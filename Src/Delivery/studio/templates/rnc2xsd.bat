@@ -9,5 +9,5 @@ if not defined TRANG (
 	)
 	set TRANG="!JAVA!" -jar "!TRANG_JAR!"
 )
-!TRANG! template-1.0.rnc template-1.0.xsd
+!TRANG! code_template-1.0.rnc code_template-1.0.xsd
 endlocal

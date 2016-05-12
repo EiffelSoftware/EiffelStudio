@@ -9,5 +9,5 @@ if not defined JING (
 	)
 	set JING="!JAVA!" -jar "!JING_JAR!"
 )
-!JING! -c template-1.0.rnc *.code
+!JING! -c code_template-1.0.rnc design_by_contract\*.code eiffel\*.code
 endlocal

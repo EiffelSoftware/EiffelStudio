@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A dialog use to receive user inputs in order to populate a specified code template.
 	]"
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 				l_text := a_declaration.id.as_string_32 + interface_names.l_code_declarations_value.twin
 				l_text.prune_all_trailing ('.')
 			else
-				l_text ?= l_text.twin
+				l_text := l_text.twin
 			end
 			if attached {CODE_OBJECT_DECLARATION} a_declaration as l_object then
 				l_text.append_character (' ')
@@ -152,9 +152,6 @@ feature {NONE} -- Initialization
 
 				-- Create field
 			l_text := a_declaration.default_value
-			if l_text.is_empty then
-				l_text := a_declaration.id
-			end
 			l_edit := create_declaration_text_widget (a_declaration)
 			l_edit.set_text (l_text)
 			l_edit.set_font (preferences.editor_data.editor_font_preference.value)
@@ -479,7 +476,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,6 +27,8 @@ feature -- Access
 
 	declarations_tag: STRING = "declarations"
 
+	default_tag: STRING = "default"
+
 	description_tag: STRING = "description"
 
 	literal_tag: STRING = "literal"

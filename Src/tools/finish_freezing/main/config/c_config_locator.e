@@ -70,6 +70,14 @@ feature -- Status report
 			internal_c_configuration_error_attached: not Result implies internal_c_configuration_error /= Void
 		end
 
+	is_msc15_configuration: BOOLEAN
+			-- Is this VS 2015?
+		require
+			has_checked: has_checked
+		do
+			Result := attached {VS_2015_CONFIG} internal_c_configuration
+		end
+
 feature -- Status setting
 
 	set_error (a_error: READABLE_STRING_GENERAL; a_args: detachable ARRAY [READABLE_STRING_GENERAL])
@@ -259,7 +267,7 @@ feature {NONE} -- Localization
 	e_compiler_deprecated_1: STRING_32 = "The located Microsoft C/C++ compiler at '$1' has been deprecated and cannot be used. Please upgrade to one of the supported C/C++ compilers."
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

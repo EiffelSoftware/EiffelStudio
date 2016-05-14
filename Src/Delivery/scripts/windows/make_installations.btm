@@ -1,7 +1,5 @@
 @echo off
 
-call %INIT_DIR%\set_simple_aliases.btm
-
 iff not defined INSTALL_DIR then 
 	echo INSTALL_DIR not defined
 	CANCEL
@@ -9,6 +7,11 @@ endiff
 iff not defined INIT_DIR then
 	set INIT_DIR=%@EXECSTR[cd]
 endiff
+iff not defined INSTALL_LOG then
+	set INSTALL_LOG=%INIT_DIR%\install.log
+endiff
+
+call %INIT_DIR%\set_simple_aliases.btm
 
 set SVN_VERSION=%@EXECSTR[bash -o igncr set_version.sh %EIFFEL_SRC]
 

@@ -11,8 +11,7 @@ the case of multiple installations please read the following:
 
 There are a number of variables that *have* to be set to install successfully. These are detailed below:
 
-    - C_CONFIG_NAME       : Either "msc", for using a preinstalled Microsoft C/C++ compiler or "mingw" to install and use GCC.
-                            NOTE: GCC can only be used for the x86 version of EiffelStudio.
+    - C_CONFIG_NAME       : Either "msc" or "msc_vc140", for using a preinstalled Microsoft C/C++ compiler or "mingw" to install and use GCC.
 
     - PID                 : For Enterprise editions of any installer a personal identifier is require, which is in the form of a CD-KEY for the
                             installing application. For GPL/Free Trial installations this information is not required.

@@ -5,7 +5,8 @@
     <UI Id="UI.dialog_select_c_compiler">
       <RadioButtonGroup Property="C_CONFIG_NAME">
         <RadioButton Value="mingw" X="5" Y="5" Width="213" Height="14" Text="Install and use Min&amp;GW (GCC)" />
-        <RadioButton Value="msc" X="5" Y="19" Width="213" Height="14" Text="Use a &amp;Microsoft C/C++ compiler (Recommended)"/>
+        <RadioButton Value="msc" X="5" Y="19" Width="213" Height="14" Text="Use a &amp;Microsoft C/C++ compiler pre-VS 2015"/>
+        <RadioButton Value="msc_vc140" X="5" Y="19" Width="213" Height="14" Text="Use a &amp;Microsoft C/C++ compiler VS 2015 and beyond (Recommended)"/>
       </RadioButtonGroup>
 
       <Dialog Id="DialogSelectCCompiler" Width="375" Height="220" Title="[ProductName]">

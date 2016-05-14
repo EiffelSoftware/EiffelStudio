@@ -17,6 +17,7 @@ feature -- Initialization
 			-- Initializes configuration manager given `for_32bit'
 		do
 			for_32bit := a_for_32bit
+			initialize_configs (a_for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
 		ensure
 			for_32bit_set: for_32bit = a_for_32bit
 		end
@@ -26,7 +27,7 @@ feature -- Access
 	for_32bit: BOOLEAN
 			-- Indicates if manager is to be used in a 32bit environment
 
-	config_codes: LIST [STRING]
+	config_codes: ARRAYED_LIST [STRING]
 			-- List of available configuration codes
 		local
 			l_codes: ARRAYED_LIST [STRING]
@@ -59,105 +60,23 @@ feature -- Access
 			result_consistent: Result = config_codes
 		end
 
-	configs: LIST [C_CONFIG]
+	configs: ARRAYED_LIST [C_CONFIG]
 			-- List of C compiler configurations.
-		local
-			l_result: like internal_configs
-		do
-			l_result := internal_configs
-			if l_result /= Void then
-				Result := l_result
-			else
-				Result := create_configs (for_32bit or not {PLATFORM_CONSTANTS}.is_64_bits)
-				internal_configs := Result
-			end
-		ensure
-			not_result_is_empty: not Result.is_empty
-			ordered_deprecation: Result.for_all (agent (ia_item: C_CONFIG; ia_dep: CELL [BOOLEAN]): BOOLEAN
-				do
-					if ia_item.is_deprecated then
-						ia_dep.put (True)
-						Result := True
-					else
-						Result := not ia_dep.item
-					end
-				end (?, create {CELL [BOOLEAN]}.put (False)))
-			result_consistent: Result = configs
-		end
 
-	ordered_configs: LIST [C_CONFIG]
-			-- List of sorted configurations, by description.
-		local
-			l_result: like internal_ordered_configs
-			l_configs: like configs
-			l_cursor: CURSOR
-			l_item: C_CONFIG
-			l_ordered_list: ARRAYED_LIST [C_CONFIG]
-		do
-			l_result := internal_ordered_configs
-			if l_result /= Void then
-				Result := l_result
-			else
-				l_configs := configs
-				l_cursor := l_configs.cursor
-				create l_ordered_list.make (l_configs.count)
-				from l_configs.start until l_configs.after loop
-					l_item := l_configs.item
-					if l_ordered_list.is_empty then
-						l_ordered_list.put_front (l_item)
-					else
-						from
-							l_ordered_list.start
-						until
-							l_ordered_list.after or else
-							l_ordered_list.item.version < l_item.version
-						loop
-							l_ordered_list.forth
-						end
-						l_ordered_list.put_left (l_item)
-					end
-					l_configs.forth
-				end
-				l_configs.go_to (l_cursor)
-				Result := l_ordered_list
-				internal_ordered_configs := Result
-			end
-		ensure
-			configs_unmoved: configs.cursor ~ old configs.cursor
-			not_result_is_empty: not Result.is_empty
-			result_count_matches_config_count: Result.count = configs.count
-			result_consistent: Result = ordered_configs
-		end
-
-	applicable_config_codes: LIST [STRING]
+	applicable_config_codes: ARRAYED_LIST [STRING]
 			-- List of available and applicable configuration codes.
 		local
-			l_result: like internal_applicable_config_codes
-			l_list: ARRAYED_LIST [STRING]
 			l_configs: like applicable_configs
-			l_config: detachable C_CONFIG
-			l_cursor: CURSOR
-			l_code: STRING
 		do
-			l_result := internal_applicable_config_codes
-			if l_result /= Void then
-				Result := l_result
-			else
+			Result := internal_applicable_config_codes
+			if Result = Void then
 				l_configs := applicable_configs
-				create l_list.make (l_configs.count)
-				l_list.compare_objects
-				l_cursor := l_configs.cursor
-				from l_configs.start until l_configs.after loop
-					l_config := l_configs.item_for_iteration
-					check l_config_attached: l_config /= Void end
-					if l_config /= Void then
-						check l_config_exists: l_config.exists end
-						l_code := l_config.code
-						l_list.extend (l_code)
-					end
+				create Result.make (l_configs.count)
+				Result.compare_objects
+				across l_configs as l_config loop
+					Result.extend (l_config.item.code)
 					l_configs.forth
 				end
-				Result := l_list
 				internal_applicable_config_codes := Result
 			end
 		ensure
@@ -201,149 +120,142 @@ feature -- Access
 
 feature -- Status report
 
-	has_applicable_config: BOOLEAN
-			-- Determines if a compatible C compiler was found on the user's machine
-		local
-			l_configs: like configs
-			l_config: C_CONFIG
-			l_cursor: CURSOR
+	is_config_code_valid (a_config_code: STRING): BOOLEAN
+			-- Is `a_config_code' a known code?
 		do
-			l_configs := configs
-			l_cursor := l_configs.cursor
-			from l_configs.start until l_configs.after or Result loop
-				l_config := l_configs.item
-				Result := l_config.exists
-				if not Result then
-					l_configs.forth
-				end
-			end
-			l_configs.go_to (l_cursor)
-		ensure
-			configs_unmoved: configs.cursor ~ old configs.cursor
+			Result := compatibility_configs.has (a_config_code)
 		end
 
-	best_configuration: detachable C_CONFIG
-			-- Retrieve's the best C compiler configuration given the state of a user's system
+	best_configuration (a_compatible_config: detachable STRING): detachable C_CONFIG
+			-- If `a_compatible_config' is not set, retrieves the best C compiler configuration overall.
+			-- Otherwise, the best C compiler configuration compatible with `a_compatible_config'.
 		require
-			has_applicable_config: has_applicable_config
+			compatible_config_not_empty_if_set: a_compatible_config /= Void implies not a_compatible_config.is_empty
+			valid_config: a_compatible_config /= Void and then is_config_code_valid (a_compatible_config)
 		local
 			l_configs: like configs
-			l_config: C_CONFIG
-			l_cursor: CURSOR
 		do
-			l_configs := configs
-			l_cursor := l_configs.cursor
-			from l_configs.start until l_configs.after or Result /= Void loop
-				l_config := l_configs.item
-				if l_config.exists then
-					Result := l_config
-				else
-					l_configs.forth
-				end
+			if a_compatible_config /= Void then
+				l_configs := compatibility_configs.item (a_compatible_config)
+					-- Per precondition, we should have a list.
+				check l_configs_found: l_configs /= Void end
+			else
+					-- We use all our known configs
+				l_configs := configs
 			end
-			l_configs.go_to (l_cursor)
-		ensure
-			result_attached: Result /= Void
-			configs_unmoved: configs.cursor ~ old configs.cursor
-		end
-
-	config_from_code (a_code: STRING; a_applicable_only: BOOLEAN): detachable C_CONFIG
-			-- Retrieves a config from the code `a_code'. If `a_applicable_only' is set to True
-			-- the located configuration must exists in order to return a result
-		require
-			a_code_attached: a_code /= Void
-			not_a_code_is_empty: not a_code.is_empty
-		local
-			l_configs: like configs
-			l_config: C_CONFIG
-			l_cursor: CURSOR
-		do
-			l_configs := configs
-			l_cursor := l_configs.cursor
-			from l_configs.start until l_configs.after or Result /= Void loop
-				l_config := l_configs.item
-				if l_config.code.is_case_insensitive_equal (a_code) then
-					Result := l_config
-					if a_applicable_only and not l_config.exists then
-						Result := Void
+			if attached l_configs then
+				across l_configs as l_config until Result /= Void loop
+					if l_config.item.exists then
+						Result := l_config.item
 					end
 				end
-				l_configs.forth
 			end
-			l_configs.go_to (l_cursor)
 		ensure
-			result_exists: a_applicable_only implies (Result = Void or else Result.exists)
+			configs_unmoved: configs.cursor ~ old configs.cursor
+		end
+
+	config_from_code (a_code: STRING; a_check_for_existence: BOOLEAN): detachable C_CONFIG
+			-- Retrieves a config from the code `a_code'. If `a_check_for_existence' is set to True
+			-- the located configuration must exists in order to return a result
+		require
+			not_a_code_is_empty: not a_code.is_empty
+			a_code_valid: is_config_code_valid (a_code)
+		do
+			across configs as l_config until Result /= Void loop
+				if
+					l_config.item.code.is_case_insensitive_equal (a_code) and then
+					(not a_check_for_existence or else l_config.item.exists)
+				then
+					Result := l_config.item
+				end
+			end
+		ensure
+			result_exists: a_check_for_existence implies (Result = Void or else Result.exists)
 			configs_unmoved: configs.cursor ~ old configs.cursor
 		end
 
 feature {NONE} -- Access
 
-	create_configs (a_use_32bit: BOOLEAN): ARRAYED_LIST [C_CONFIG]
+	initialize_configs (a_use_32bit: BOOLEAN)
 			-- Visual Studio configuration for x64/x86 platforms.
 			--|Be sure to place deprecated configurations after all valid configurations!
 		require
 			a_use_32bit_for_x86: not a_use_32bit implies {PLATFORM_CONSTANTS}.is_64_bits
 		local
 			l_32_bits: BOOLEAN
+			l_configs: ARRAYED_LIST [C_CONFIG]
+			l_c_config: C_CONFIG
 		do
 			l_32_bits := not {PLATFORM_CONSTANTS}.is_64_bits or else a_use_32bit
-			create Result.make (11)
 
+			create compatibility_configs.make_caseless (2)
+			create configs.make (10)
+
+				-- Group of compatible C compilers.
+			create l_configs.make (1)
 				-- VS 14.0 (aka VS 2015 all editions)
-			Result.extend (create {VS_2015_CONFIG}.make ("Microsoft\VisualStudio\14.0\Setup\VC", a_use_32bit, "VC140", "Microsoft Visual Studio 2015 VC++ (14.0)", "2015-VS", False))
+			create {VS_2015_CONFIG} l_c_config.make ("Microsoft\VisualStudio\14.0\Setup\VC", a_use_32bit, "VC140", "Microsoft Visual Studio 2015 VC++ (14.0)", "2015-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
 
+				-- Update `configs' with group.
+			configs.append (l_configs)
+
+
+				-- Group of compatible C compilers.
+			create l_configs.make (1)
 				-- VS 12.0 (aka VS 2013)
-			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\12.0\Setup\VC", a_use_32bit, "VC120", "Microsoft Visual Studio 2013 VC++ (12.0)", "2013-VS", False))
+			create {VS_NEW_CONFIG} l_c_config.make ("Microsoft\VisualStudio\12.0\Setup\VC", a_use_32bit, "VC120", "Microsoft Visual Studio 2013 VC++ (12.0)", "2013-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- VS 11.0 (aka VS 2012)
-			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\11.0\Setup\VC", a_use_32bit, "VC110", "Microsoft Visual Studio 2012 VC++ (11.0)", "2012-VS", False))
+			create {VS_NEW_CONFIG} l_c_config.make ("Microsoft\VisualStudio\11.0\Setup\VC", a_use_32bit, "VC110", "Microsoft Visual Studio 2012 VC++ (11.0)", "2012-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- Windows SDKs
-			Result.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.1", a_use_32bit, {WSDK_CONFIG}.wsdk_71, "Microsoft Windows SDK 7.1 (Windows 7)", "2010-WSDK", False))
+			create {WSDK_CONFIG} l_c_config.make ("Microsoft\Microsoft SDKs\Windows\v7.1", a_use_32bit, {WSDK_CONFIG}.wsdk_71, "Microsoft Windows SDK 7.1 (Windows 7)", "2010-WSDK")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
 
 				-- VS 10.0 (aka VS 2010)
-			Result.extend (create {VS_NEW_CONFIG}.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS", False))
+			create {VS_NEW_CONFIG} l_c_config.make ("Microsoft\VisualStudio\10.0\Setup\VC", a_use_32bit, "VC100", "Microsoft Visual Studio 2010 VC++ (10.0)", "2010-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
 			if l_32_bits then
-				Result.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC", False))
+				create {VS_CONFIG} l_c_config.make ("Microsoft\VCExpress\10.0\Setup\VC", True, "VC100X", "Microsoft Visual C++ 2010 Express (10.0)", "2010-VC")
+				l_configs.extend (l_c_config)
+				compatibility_configs.put (l_configs, l_c_config.code)
 			end
 
-				-- If old releases are required, uncomment the following line:
---			extend_old_configs (Result, a_use_32bit, l_32_bits)
-		ensure
-			result_attached: Result /= Void
-			ordered_deprecation: Result.for_all (agent (ia_item: attached C_CONFIG; ia_dep: attached CELL [BOOLEAN]): BOOLEAN
-				do
-					if ia_item.is_deprecated then
-						ia_dep.put (True)
-						Result := True
-					else
-						Result := not ia_dep.item
-					end
-				end (?, create {CELL [BOOLEAN]}.put (False)))
+				-- Update `configs' with group.
+			configs.append (l_configs)
 		end
 
 	extend_old_configs (a_list: ARRAYED_LIST [C_CONFIG]; a_use_32bit, is_32_bits: BOOLEAN)
 			-- Extend `a_list' with old configs that are not officially supported anymore.
+			--| We keep this code for reference only.
 		do
 				-- Old Windows SDKs
-			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK", False))
-			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK", False))
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v7.0", a_use_32bit, {WSDK_CONFIG}.wsdk_70, "Microsoft Windows SDK 7.0 (Windows 7)", "2009-WSDK"))
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.1", a_use_32bit, {WSDK_CONFIG}.wsdk_61, "Microsoft Windows SDK 6.1 (Windows Vista)", "2008-WSDK"))
 
 				-- VS 9.0
-			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS", False))
+			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\9.0\Setup\VC", a_use_32bit, "VC90", "Microsoft Visual Studio 2008 VC++ (9.0)", "2008-VS"))
 			if is_32_bits then
-				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC", False))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VCExpress\9.0\Setup\VC", True, "VC90X", "Microsoft Visual C++ 2008 Express (9.0)", "2008-VC"))
 			end
 
 				-- VS 8.0
-			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, {WSDK_CONFIG}.wsdk_60, "Microsoft Windows SDK 6.0 (Windows Vista)", "2006-WSDK", False))
-			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS", False))
+			a_list.extend (create {WSDK_CONFIG}.make ("Microsoft\Microsoft SDKs\Windows\v6.0\WinSDKCompiler", a_use_32bit, {WSDK_CONFIG}.wsdk_60, "Microsoft Windows SDK 6.0 (Windows Vista)", "2006-WSDK"))
+			a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\8.0\Setup\VC", a_use_32bit, "VC80", "Microsoft Visual Studio 2005 VC++ (8.0)", "2005-VS"))
 
 			if is_32_bits then
 					-- VS Other
-				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS", True))
-				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS", True))
-				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS", True))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.1\Setup\VC", True, "VC71", "Microsoft Visual Studio .NET 2003 VC++ (7.1)", "2001-VS"))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\7.0\Setup\VC", True, "VC70", "Microsoft Visual Studio .NET 2002 VC++ (7.0)", "2002-VS"))
+				a_list.extend (create {VS_CONFIG}.make ("Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++", True, "VC60", "Microsoft Visual Studio VC++ (6.0)", "199x-VS"))
 			end
 		end
 
@@ -357,10 +269,6 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `configs'
 			-- Note: Do not use directly
 
-	internal_ordered_configs: detachable like ordered_configs
-			-- Cached version of `ordered_configs'
-			-- Note: Do not use directly
-
 	internal_applicable_config_codes: detachable like applicable_config_codes
 			-- Cached version of `applicable_config_codes'
 			-- Note: Do not use directly
@@ -368,6 +276,9 @@ feature {NONE} -- Internal implementation cache
 	internal_applicable_configs: detachable like applicable_configs
 			-- Cached version of `applicable_configs'
 			-- Note: Do not use directly
+
+	compatibility_configs: STRING_TABLE [like configs]
+			-- Map C configs code to the list of compatible C configs.
 
 ;note
 	copyright:	"Copyright (c) 1984-2016, Eiffel Software"

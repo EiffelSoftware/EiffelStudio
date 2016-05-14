@@ -26,30 +26,32 @@ create
 
 feature -- Initialization
 
-	make (a_preferred_config: detachable STRING; a_force_32bit_generation: BOOLEAN)
+	make (a_preferred_config: detachable STRING; a_compatible_config: detachable STRING; a_force_32bit_generation: BOOLEAN)
 			-- Create and setup environment variables for currently installed
-			-- version of Visual Studio using `a_preferred_config' if present.
+			-- version of Visual Studio using `a_preferred_config' if present, otherwise
+			-- use the most recent version of Visual Studio compatible with `a_compatible_config' if present.
 		require
 			a_preferred_config_valid: a_preferred_config /= Void implies not a_preferred_config.is_empty
+			a_compatible_config_valid: a_compatible_config /= Void implies not a_compatible_config.is_empty
+			choices_exclusive: (a_preferred_config = Void) or (a_compatible_config = Void)
 		local
 			l_man: C_CONFIG_MANAGER
 			l_config: detachable C_CONFIG
 		do
 			create l_man.make (a_force_32bit_generation)
-			if l_man.has_applicable_config then
-				if a_preferred_config /= Void then
-						-- `a_preferred_config' is not empty per precondition
-					l_config := l_man.config_from_code (a_preferred_config, True)
-				end
-				if l_config = Void then
-						-- Synchronize with configuration
-					l_config := l_man.best_configuration
-					check l_config_attached: l_config /= Void end
-				end
+			if a_preferred_config /= Void and then l_man.is_config_code_valid (a_preferred_config) then
+					-- `a_preferred_config' is not empty per precondition
+				l_config := l_man.config_from_code (a_preferred_config, True)
+			end
+			if l_config = Void and then (a_compatible_config = Void or else l_man.is_config_code_valid (a_compatible_config)) then
+					-- Find a configuration compatible with `a_compatible_config', or any configuration if not set.
+				l_config := l_man.best_configuration (a_compatible_config)
+			end
+			if l_config /= Void then
 				synchronize_variable (path_var_name, l_config.path_var)
 				synchronize_variable (include_var_name, l_config.include_var)
 				synchronize_variable (lib_var_name, l_config.lib_var)
-				successful := True
+				found_config := l_config
 			end
 		end
 
@@ -57,6 +59,12 @@ feature -- Status report
 
 	successful: BOOLEAN
 			-- Indicates if a version of Visual Studio was found and the environment configured
+		do
+			Result := found_config /= Void
+		end
+
+	found_config: detachable C_CONFIG
+			-- Found C configuration if any.
 
 feature -- Implementation
 
@@ -124,7 +132,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

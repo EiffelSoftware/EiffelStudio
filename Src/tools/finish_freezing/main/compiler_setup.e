@@ -25,20 +25,43 @@ feature {NONE} -- Initialize
 			options_not_void: options /= Void
 		local
 			l_vs_setup: VS_SETUP
+			l_c_chosen_compiler: STRING
 		do
+			l_c_chosen_compiler := eiffel_layout.eiffel_c_compiler
 				-- Check if a smart checking should be done.
-			if eiffel_layout.eiffel_c_compiler.same_string ("msc") and options.get_boolean ("smart_checking", True) then
+			if l_c_chosen_compiler.starts_with ("msc") and options.get_boolean ("smart_checking", True) then
 				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
-					create l_vs_setup.make (l_version, a_force_32bit)
+					create l_vs_setup.make (l_version, Void, a_force_32bit)
 				else
 						-- Visual Studio C compiler.
-					create l_vs_setup.make (Void, a_force_32bit)
+					if l_c_chosen_compiler.starts_with ("msc_") then
+						if l_c_chosen_compiler.count > 4 then
+								-- We have chosen a specific version of the Microsoft C++ compiler as minimum version
+							create l_vs_setup.make (Void, l_c_chosen_compiler.substring (5, l_c_chosen_compiler.count), a_force_32bit)
+						else
+								-- The ISE_C_COMPILER environment is improperly set. We default to latest version.
+							create l_vs_setup.make (Void, Void, a_force_32bit)
+						end
+					else
+							-- We are just handling msc so choose the Microsoft C++ compiler compatible with "VC100"
+						create l_vs_setup.make (Void, "VC100", a_force_32bit)
+					end
+				end
+				if l_vs_setup.successful then
+					found_c_config := l_vs_setup.found_config
 				end
 			end
 		end
 
+feature -- Access
+
+	found_c_config: detachable C_CONFIG
+			-- Found C configuration if any.
+
+invariant
+
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

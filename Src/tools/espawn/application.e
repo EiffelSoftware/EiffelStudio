@@ -76,26 +76,24 @@ feature -- Basic operations
 			if not a_options.manual then
 					-- Configure environment
 				create l_manager.make (a_options.for_32bit)
-				if l_manager.has_applicable_config then
-					if a_options.use_specific_compiler then
-						l_config := l_manager.config_from_code (a_options.specific_compiler_code, True)
-					else
-						l_config := l_manager.best_configuration
-					end
-					if l_config = Void then
-						print ("Warning: No environment were set up, no C/C++ compiler found!%N")
-					else
-						print ("Using C/C++ compiler from " + l_config.description + "%N")
-						merge_variable (path_var_name, l_config.path_var, a_env)
-						merge_variable (include_var_name, l_config.include_var, a_env)
-						merge_variable (lib_var_name, l_config.lib_var, a_env)
+				if a_options.use_specific_compiler then
+					l_config := l_manager.config_from_code (a_options.specific_compiler_code, True)
+				else
+					l_config := l_manager.best_configuration (Void)
+				end
+				if l_config = Void then
+					print ("Warning: No environment were set up, no C/C++ compiler found!%N")
+				else
+					print ("Using C/C++ compiler from " + l_config.description + "%N")
+					merge_variable (path_var_name, l_config.path_var, a_env)
+					merge_variable (include_var_name, l_config.include_var, a_env)
+					merge_variable (lib_var_name, l_config.lib_var, a_env)
 
-							-- Set platform name
-						if not {PLATFORM_CONSTANTS}.is_64_bits or else a_options.for_32bit then
-							a_env.set_environment ("windows", ise_platform_var_name)
-						else
-							a_env.set_environment ("win64", ise_platform_var_name)
-						end
+						-- Set platform name
+					if not {PLATFORM_CONSTANTS}.is_64_bits or else a_options.for_32bit then
+						a_env.set_environment ("windows", ise_platform_var_name)
+					else
+						a_env.set_environment ("win64", ise_platform_var_name)
 					end
 				end
 			end

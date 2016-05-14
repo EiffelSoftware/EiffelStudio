@@ -155,11 +155,6 @@ feature -- Status report
 		deferred
 		end
 
-	is_deprecated: BOOLEAN
-			-- Indicates if the product is deprecated.
-		deferred
-		end
-
 feature {NONE} -- Status report
 
 	is_initialized: BOOLEAN

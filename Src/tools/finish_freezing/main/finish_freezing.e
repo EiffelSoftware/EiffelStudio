@@ -92,6 +92,13 @@ feature -- Initialization
 				read_options_in (l_options)
 				if a_parser.is_for_library then
 					create l_c_setup.initialize (l_options, a_parser.force_32bit_code_generation)
+					if attached l_c_setup.found_c_config as l_config then
+						io.put_string ("Preparing C compilation using " + l_config.description + "...%N")
+					else
+						io.put_string ("Preparing C compilation using already configured " + eiffel_layout.eiffel_c_compiler + " C compiler...%N")
+					end
+					io.standard_default.flush
+
 						-- Simply execute our batch script to compile the C code of libraries.
 					create l_library_cmd.make (256)
 						-- The double quote twice are there because the command is executed through COMSPEC.
@@ -235,7 +242,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

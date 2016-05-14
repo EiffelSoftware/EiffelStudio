@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initalization
 
-	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version; a_deprecated: like is_deprecated)
+	make (a_key: like product_reg_path; a_use_32bit: like use_32bit; a_code: like code; a_desc: like description; a_version: like version)
 			-- Initialize a config from a relative HKLM\SOFTWARE registry key `a_key'.
 		require
 			a_key_attached: a_key /= Void
@@ -39,12 +39,10 @@ feature {NONE} -- Initalization
 		do
 			make_c_config (a_use_32bit, a_code, a_desc, a_version)
 			product_reg_path := a_key
-			is_deprecated := a_deprecated
 		ensure
 			product_reg_path_set: product_reg_path = a_key
 			use_32bit_set: use_32bit = a_use_32bit
 			code_set: code = a_code
-			is_deprecated_set: is_deprecated = a_deprecated
 		end
 
 	on_initialize
@@ -54,8 +52,8 @@ feature {NONE} -- Initalization
 			l_parser: ENV_PARSER
 			u: FILE_UTILITIES
 		do
-			open_key
-			if exists then
+			internal_reg_key := registry.open_key_with_access (full_product_reg_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
+			if internal_reg_key /= Void then
 				l_file_name := batch_file_name
 				if u.file_path_exists (l_file_name) then
 					create l_parser.make (l_file_name, batch_file_arguments, batch_file_options)
@@ -181,21 +179,6 @@ feature -- Status report
 		do
 			initialize
 			Result := internal_reg_key /= default_pointer
-		end
-
-	is_deprecated: BOOLEAN
-			-- <Precursor>
-
-feature {NONE} -- Basic operations
-
-	open_key
-			-- Attempts to open the specified registery key.
-		require
-			not_is_initialized: not is_initialized
-			not_exists: not exists
-		do
-			check internal_reg_key_is_null: internal_reg_key = default_pointer end
-			internal_reg_key := registry.open_key_with_access (full_product_reg_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 		end
 
 feature {NONE} -- Helpers

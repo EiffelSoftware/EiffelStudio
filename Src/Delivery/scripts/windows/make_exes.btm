@@ -42,8 +42,8 @@ else
 	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-mingw %STUDIO_DIR\studio\config\%ISE_PLATFORM\mingw\config.sh
 endiff
 
-remtrace Compile a dynamic run-time for Microsoft
-espawn -u:VC140 "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc15"
+remtrace Compile the run-time for Microsoft
+espawn -u:VC140 "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc_vc140"
 espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c %INIT_DIR%\make_runtimes.btm msc"
 
 remtrace Copy the header files

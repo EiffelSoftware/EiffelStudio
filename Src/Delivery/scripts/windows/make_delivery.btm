@@ -83,7 +83,7 @@ endiff
 cdd %STUDIO_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" ren windows %ISE_PLATFORM
 cdd %STUDIO_DIR\studio\config\%ISE_PLATFORM%\
-xcopy msc msc15 /E /I
+xcopy msc msc_vc140 /E /I
 
 safe_md %STUDIO_DIR\tools
 cdd %STUDIO_DIR\tools
@@ -199,7 +199,7 @@ safe_md %STUDIO_DIR\wizards\com\config
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\include
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc
-safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc15
+safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\msc_vc140
 safe_md %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib\mingw
 safe_md %STUDIO_DIR\rb
 
@@ -215,14 +215,14 @@ call make_other_libraries.btm %STUDIO_DIR
 
 remtrace Compile C code of Eiffel Software C libraries
 cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc15"
+espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc_vc140"
 cdd %INIT_DIR
 espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc"
 cdd %INIT_DIR
 call compile_c_libraries.btm %STUDIO_DIR mingw
 
 cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc15"
+espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc_vc140"
 cdd %INIT_DIR
 espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc"
 cdd %INIT_DIR
@@ -231,7 +231,7 @@ call compile_c_libraries.btm %STUDIO_DIR\experimental mingw
 
 remtrace Build the C libraries of non-Eiffel Software C libraries
 cdd %INIT_DIR
-espawn -u:VC140 "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc15"
+espawn -u:VC140 "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
 cdd %INIT_DIR
 espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc"
 cdd %INIT_DIR

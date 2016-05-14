@@ -53,7 +53,7 @@ feature {NONE} -- Initalization
 			u: FILE_UTILITIES
 		do
 			internal_reg_key := registry.open_key_with_access (full_product_reg_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
-			if internal_reg_key /= Void then
+			if internal_reg_key /= default_pointer then
 				l_file_name := batch_file_name
 				if u.file_path_exists (l_file_name) then
 					create l_parser.make (l_file_name, batch_file_arguments, batch_file_options)

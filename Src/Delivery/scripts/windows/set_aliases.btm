@@ -22,7 +22,12 @@ iff not defined ORIGO_SVN_REVISION then
 	set ORIGO_SVN_REVISION=HEAD
 endiff
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
+REM
+iff "%ISE_PLATFORM%" == "win64" then
 set INSTALL_DIR=c:\work\InstalledEiffel_16.05
+else
+set INSTALL_DIR=c:\work\InstalledEiffel_16.05_32
+endiff
 set STUDIO_DIR=%INSTALL_DIR\EiffelStudio
 set STUDIO_NAME=Eiffel_16.05
 

@@ -46,5 +46,3 @@ iff not defined WIN64 then
 else
 	copy %EIFFEL_SRC\C\CONFIGS\windows-x86-64-msc %STUDIO_DIR\studio\config\%ISE_PLATFORM\%1\config.sh
 endiff
-
-

@@ -8,11 +8,11 @@ set _SET_SIMPLE_ALIAS_SET_=1
 
 REM File management
 REM Copy also hidden files, keep attributes, overwrite automatically
-alias copy *copy /hkz
+alias copy *copy /hkz >>& %INSTALL_LOG
 REM Remove completely a directory
 alias fullrd del /syeqxz >>& %INSTALL_LOG
 REM Remove a file
-alias fullrf del /yqze
+alias fullrf del /yqze >>& %INSTALL_LOG
 REM Retrieve a file from the old delivery and put it in the new one
 alias quick_move `iff "%2" == "" then & copy %ISE_EIFFEL\%1 %STUDIO_DIR\%1 >>& %INSTALL_LOG & else & copy %1 %ISE_EIFFEL\%2 %STUDIO_DIR\%2 >>& %INSTALL_LOG & endiff`
 REM Create a directory if it doesn't exist already
@@ -31,6 +31,7 @@ alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PA
 REM CVS Commands: checkout, export
 alias co `call  %INIT_DIR\svn_command.bat co %$ >>& %INSTALL_LOG`
 alias exprt `call %INIT_DIR\svn_command.bat --force export %$ >>& %INSTALL_LOG`
+REM We cannot redirect the output here, since the output is redirected to a file
 alias exprtfile `call %INIT_DIR\svn_command.bat cat %$` 
 
 REM C Compilation

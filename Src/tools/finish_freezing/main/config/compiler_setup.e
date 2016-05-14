@@ -19,17 +19,15 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize (options: RESOURCE_TABLE; a_force_32bit: BOOLEAN)
+	initialize (is_smart_checking: BOOLEAN; a_force_32bit: BOOLEAN)
 			-- Properly configure the C compiler.
-		require
-			options_not_void: options /= Void
 		local
 			l_vs_setup: VS_SETUP
 			l_c_chosen_compiler: STRING
 		do
 			l_c_chosen_compiler := eiffel_layout.eiffel_c_compiler
 				-- Check if a smart checking should be done.
-			if l_c_chosen_compiler.starts_with ("msc") and options.get_boolean ("smart_checking", True) then
+			if l_c_chosen_compiler.starts_with ("msc") and is_smart_checking then
 				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
 					create l_vs_setup.make (l_version, Void, a_force_32bit)
 				else

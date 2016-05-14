@@ -91,7 +91,7 @@ feature -- Initialization
 				create l_options.make (20)
 				read_options_in (l_options)
 				if a_parser.is_for_library then
-					create l_c_setup.initialize (l_options, a_parser.force_32bit_code_generation)
+					create l_c_setup.initialize (l_options.get_boolean ("smart_checking", True), a_parser.force_32bit_code_generation)
 					if attached l_c_setup.found_c_config as l_config then
 						io.put_string ("Preparing C compilation using " + l_config.description + "...%N")
 					else

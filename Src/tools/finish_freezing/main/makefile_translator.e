@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			lib_extension.prepend_character ('.')
 
 				-- Initialize the C compiler environment.
-			create l_c_setup.initialize (options, a_force_32bit)
+			create l_c_setup.initialize (options.get_boolean ("smart_checking", True), a_force_32bit)
 			if attached l_c_setup.found_c_config as l_config then
 				io.put_string ("Preparing C compilation using " + l_config.description + "...%N")
 			else

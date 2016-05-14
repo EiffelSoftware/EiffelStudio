@@ -151,24 +151,18 @@ feature {NONE} -- Implementation
 	setup_environment
 			-- Setup environment variables for compilation
 		local
-			l_vs_setup: VS_SETUP
-			l_path, l_platform: STRING_32
+			l_setup: COMPILER_SETUP
+			l_path: STRING_32
 		do
 			l_path := env.item ("PATH")
 			l_path.append (";")
 			l_path.append (eiffel_layout.bin_path.name)
 			env.put (l_path, "PATH")
-			if smart_checking then
-				if attached eiffel_layout.eiffel_c_compiler_version as l_version and then not l_version.is_empty then
-					create l_vs_setup.make (l_version, False)
-				else
-					create l_vs_setup.make (Void, False)
-				end
+			create l_setup.initialize (smart_checking, not {PLATFORM_CONSTANTS}.is_64_bits)
+			if l_setup.found_c_config = Void then
 					-- patrickr 09/25/2006 Don't abort as they user may have setup the path already,
 					-- a warning would be nice
---				if not l_vs_setup.valid_vcvars then
---					Environment.set_abort (No_c_compiler)
---				end
+--				Environment.set_abort (No_c_compiler)
 			end
 		end
 
@@ -208,7 +202,7 @@ feature {NONE} -- Implementation
 			-- Agent used to raise events
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -708,6 +708,7 @@ feature {NONE} -- C compilation
 			l_cmd := {STRING_32} "%""
 			l_cmd.append_string (eiffel_layout.freeze_command_name.name)
 			l_cmd.append_character ('"')
+			l_cmd.append (" -nologo")
 			if comp_system.il_generation and (not {PLATFORM_CONSTANTS}.is_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append_string ({STRING_32} " -x86")
@@ -1045,7 +1046,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

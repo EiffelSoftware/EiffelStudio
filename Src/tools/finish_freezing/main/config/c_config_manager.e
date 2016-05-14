@@ -131,7 +131,7 @@ feature -- Status report
 			-- Otherwise, the best C compiler configuration compatible with `a_compatible_config'.
 		require
 			compatible_config_not_empty_if_set: a_compatible_config /= Void implies not a_compatible_config.is_empty
-			valid_config: a_compatible_config /= Void and then is_config_code_valid (a_compatible_config)
+			valid_config: a_compatible_config /= Void implies is_config_code_valid (a_compatible_config)
 		local
 			l_configs: like configs
 		do

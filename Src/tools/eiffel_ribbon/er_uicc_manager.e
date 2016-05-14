@@ -21,7 +21,7 @@ feature -- Command
 		local
 			l_setup: COMPILER_SETUP
 			l_layout: ER_ENVIRONMENT_LAYOUT
-		do
+		once
 			create l_layout
 			set_eiffel_layout (l_layout)
 

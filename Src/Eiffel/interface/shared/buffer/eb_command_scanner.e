@@ -12,15 +12,17 @@ class EB_COMMAND_SCANNER
 inherit
 	EB_COMMAND_SCANNER_SKELETON
 
+
 create
 	make
+
 
 feature -- Status report
 
 	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
-			Result := sc = INITIAL
+			Result := (sc = INITIAL)
 		end
 
 feature {NONE} -- Implementation
@@ -52,7 +54,7 @@ end
 								set_last_text_fragment (factory.new_class_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_BUFFER
-
+				
 when 2 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -64,7 +66,7 @@ end
 								set_last_text_fragment (factory.new_class_buffer_selected (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_BUFFER_SELECTED
-
+				
 when 3 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -76,7 +78,7 @@ end
 								set_last_text_fragment (factory.new_feature_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FEATURE_BUFFER
-
+						
 when 4 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -88,7 +90,7 @@ end
 								set_last_text_fragment (factory.new_tool_buffer (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TOOL_BUFFER
-
+						
 when 5 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
@@ -100,7 +102,7 @@ end
 								set_last_text_fragment (factory.new_tool_buffer_selected (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TOOL_BUFFER_SELECTED
-
+						
 when 6 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
@@ -112,7 +114,7 @@ end
 								set_last_text_fragment (factory.new_file_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FILE_NAME
-
+						
 when 7 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
@@ -124,7 +126,7 @@ end
 								set_last_text_fragment (factory.new_class_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_CLASS_NAME
-
+						
 when 8 then
 	yy_column := yy_column + 15
 	yy_position := yy_position + 15
@@ -136,7 +138,7 @@ end
 								set_last_text_fragment (factory.new_directory_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_DIRECTORY_NAME
-
+						
 when 9 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -148,7 +150,7 @@ end
 								set_last_text_fragment (factory.new_w_code (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_W_CODE
-
+						
 when 10 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
@@ -160,7 +162,7 @@ end
 								set_last_text_fragment (factory.new_f_code (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_F_CODE
-
+						
 when 11 then
 	yy_column := yy_column + 16
 	yy_position := yy_position + 16
@@ -172,7 +174,7 @@ end
 								set_last_text_fragment (factory.new_group_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_GROUP_DIRECTORY
-
+						
 when 12 then
 	yy_column := yy_column + 11
 	yy_position := yy_position + 11
@@ -184,7 +186,7 @@ end
 								set_last_text_fragment (factory.new_group_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_GROUP_NAME
-
+						
 when 13 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -197,7 +199,7 @@ end
 								set_last_text_fragment (factory.new_line (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_LINE
-
+						
 when 14 then
 	yy_column := yy_column + 18
 	yy_position := yy_position + 18
@@ -209,7 +211,7 @@ end
 								set_last_text_fragment (factory.new_project_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_PROJECT_DIRECTORY
-
+						
 when 15 then
 	yy_column := yy_column + 17
 	yy_position := yy_position + 17
@@ -221,7 +223,7 @@ end
 								set_last_text_fragment (factory.new_target_directory (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TARGET_DIRECTORY
-
+						
 when 16 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -233,7 +235,7 @@ end
 								set_last_text_fragment (factory.new_file (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_FILE
-
+						
 when 17 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
@@ -245,7 +247,7 @@ end
 								set_last_text_fragment (factory.new_path (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_PATH
-
+							
 when 18 then
 	yy_column := yy_column + 12
 	yy_position := yy_position + 12
@@ -257,7 +259,7 @@ end
 								set_last_text_fragment (factory.new_target_name (Current))
 								register_text_fragment (last_text_fragment)
 								last_token := T_TARGET_NAME
-
+							
 when 19 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
@@ -267,7 +269,7 @@ debug ("GELEX")
 end
 
 								last_token := T_UNRECOGNIZED
-
+			
 when 20 then
 yy_set_line_column
 	yy_position := yy_position + 1
@@ -292,8 +294,19 @@ feature {NONE} -- Table templates
 
 	yy_nxt_template: SPECIAL [INTEGER]
 			-- Template for `yy_nxt'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make_filled (0, 0, 296)
+			yy_nxt_template_1 (an_array)
+			yy_nxt_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_nxt_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yy_nxt'.
+		do
+			yy_array_subcopy (an_array, <<
 			    0,  129,    5,    6,    5,    6,    7,   59,    7,   28,
 			   30,   20,   21,   59,   36,   23,   24,   22,   27,   38,
 			   39,   40,   26,   37,   29,   41,   42,   43,    8,   18,
@@ -314,8 +327,14 @@ feature {NONE} -- Table templates
 			   90,   91,   99,  101,  102,  103,  104,  105,  106,  107,
 			  108,  109,  110,  111,  112,   89,   92,   93,   94,   95,
 			  113,   96,   97,   98,   90,  114,   99,  101,  102,  103,
-			  104,  105,  106,  107,  108,  109,  110,  111,  112,  115,
+			  104,  105,  106,  107,  108,  109,  110,  111,  112,  115, yy_Dummy>>,
+			1, 200, 0)
+		end
 
+	yy_nxt_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yy_nxt'.
+		do
+			yy_array_subcopy (an_array, <<
 			  116,  117,  118,  119,  113,  120,  121,  122,  123,  114,
 			  124,  125,  126,  127,  128,    4,    4,   32,   21,   20,
 			  100,   88,   82,  115,  116,  117,  118,  119,   72,  120,
@@ -325,13 +344,25 @@ feature {NONE} -- Table templates
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
-			  129,  129,  129,  129,  129,  129,  129, yy_Dummy>>)
+			  129,  129,  129,  129,  129,  129,  129, yy_Dummy>>,
+			1, 97, 200)
 		end
 
 	yy_chk_template: SPECIAL [INTEGER]
 			-- Template for `yy_chk'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make_filled (0, 0, 296)
+			yy_chk_template_1 (an_array)
+			yy_chk_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_chk_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yy_chk'.
+		do
+			yy_array_subcopy (an_array, <<
 			    0,    0,    1,    1,    2,    2,    1,   59,    2,   15,
 			   16,   20,   21,  135,   22,   11,   12,   10,   14,   24,
 			   25,   26,   13,   23,   15,   27,   28,   29,    1,    7,
@@ -352,8 +383,14 @@ feature {NONE} -- Table templates
 			   82,   83,   91,   94,   95,   96,   97,   98,  100,  101,
 			  103,  104,  105,  106,  107,   82,   84,   85,   86,   87,
 			  108,   88,   89,   90,   82,  109,   91,   94,   95,   96,
-			   97,   98,  100,  101,  103,  104,  105,  106,  107,  111,
+			   97,   98,  100,  101,  103,  104,  105,  106,  107,  111, yy_Dummy>>,
+			1, 200, 0)
+		end
 
+	yy_chk_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yy_chk'.
+		do
+			yy_array_subcopy (an_array, <<
 			  112,  113,  114,  115,  108,  116,  117,  118,  120,  109,
 			  121,  122,  124,  125,  126,  130,  130,  133,  132,  131,
 			   92,   81,   74,  111,  112,  113,  114,  115,   64,  116,
@@ -363,7 +400,8 @@ feature {NONE} -- Table templates
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
 			  129,  129,  129,  129,  129,  129,  129,  129,  129,  129,
-			  129,  129,  129,  129,  129,  129,  129, yy_Dummy>>)
+			  129,  129,  129,  129,  129,  129,  129, yy_Dummy>>,
+			1, 97, 200)
 		end
 
 	yy_base_template: SPECIAL [INTEGER]
@@ -410,8 +448,19 @@ feature {NONE} -- Table templates
 
 	yy_ec_template: SPECIAL [INTEGER]
 			-- Template for `yy_ec'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yy_fixed_array (<<
+			create an_array.make_filled (0, 0, 256)
+			yy_ec_template_1 (an_array)
+			yy_ec_template_2 (an_array)
+			Result := yy_fixed_array (an_array)
+		end
+
+	yy_ec_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yy_ec'.
+		do
+			yy_array_subcopy (an_array, <<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    2,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -432,14 +481,21 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
+			1, 200, 0)
+		end
 
+	yy_ec_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yy_ec'.
+		do
+			yy_array_subcopy (an_array, <<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
+			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
+			1, 57, 200)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
@@ -522,7 +578,7 @@ feature -- User-defined features
 
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -535,22 +591,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
+			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
+			See the	GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
 		]"
 
 end

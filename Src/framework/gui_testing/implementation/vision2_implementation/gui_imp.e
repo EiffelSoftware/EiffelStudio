@@ -213,10 +213,8 @@ feature {NONE} -- Implementation
 				if l_window.menu_bar /= Void then
 					l_list.extend (l_window.menu_bar)
 				end
-				l_list.extend (l_window.upper_bar)
 				l_linear := l_window.linear_representation
 				l_linear.do_all (agent l_list.extend (?))
-				l_list.extend (l_window.lower_bar)
 				Result := l_list
 			end
 		ensure
@@ -431,7 +429,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	source: "[
 			Eiffel Software

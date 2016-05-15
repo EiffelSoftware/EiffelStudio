@@ -39,9 +39,10 @@ ${FL_MENUBAR_CREATE}${FL_TOOLBAR_CREATE}${FL_STATUSBAR_CREATE}
 			-- Build the interface for this window.
 		do
 			Precursor {EV_TITLED_WINDOW}
-${FL_MENUBAR_ADD}${FL_TOOLBAR_ADD}${FL_STATUSBAR_ADD}
+${FL_MENUBAR_ADD}${FL_TOOLBAR_ADD}
 			build_main_container
 			extend (main_container)
+${FL_STATUSBAR_ADD}
 
 				-- Execute `request_close_window' when the user clicks
 				-- on the cross in the title bar.

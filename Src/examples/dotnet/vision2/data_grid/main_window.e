@@ -38,14 +38,17 @@ feature {NONE} -- Initialization
 			set_menu_bar (standard_menu_bar)
 
 				-- Create and add the toolbar.
-			upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
-
-				-- Create and add the status bar.
-			build_standard_status_bar
-			lower_bar.extend (standard_status_bar)
+			main_container.extend (create {EV_HORIZONTAL_SEPARATOR})
+			main_container.disable_item_expand (main_container.first)
 
 			build_main_container
 			extend (main_container)
+
+				-- Create and add the status bar.
+			build_standard_status_bar
+			main_container.extend (standard_status_bar)
+			main_container.disable_item_expand (standard_status_bar)
+
 
 				-- Set the title of the window
 			set_title (Window_title)

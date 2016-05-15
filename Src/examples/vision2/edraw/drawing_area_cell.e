@@ -780,19 +780,18 @@ feature {NONE} -- Implementation
 			-- Window `Current' is part of.
 		local
 			cursor: detachable EV_CONTAINER
-			l_window: detachable EV_WINDOW
 		do
 			from
 				cursor := Current
 			until
-				attached {EV_WINDOW} cursor
+				Result /= Void
 			loop
 				check cursor /= Void end
 				cursor := cursor.parent
+				if attached {EV_WINDOW} cursor as l_window then
+					Result := l_window
+				end
 			end
-			l_window ?= cursor
-			check l_window /= Void end
-			Result := l_window
 		end
 
 note

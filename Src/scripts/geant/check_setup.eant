@@ -10,8 +10,8 @@
 	</description>
 	
 	<target name="init" once="true">
-		<set name="ec_version_string" value="15.01" />
-		<set name="ec_dev_version_string" value="15.05" />
+		<set name="ec_version_string" value="16.05" />
+		<set name="ec_dev_version_string" value="16.11" />
 	</target>
 
 	<target name="check_setup" depend="init,header,check_tools,check_environment_variables,check_resources,check_dependencies">

@@ -2583,8 +2583,19 @@ feature {NONE} -- Table templates
 
 	yytranslate_template: SPECIAL [INTEGER]
 			-- Template for `yytranslate'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yyfixed_array (<<
+			create an_array.make_filled (0, 0, 299)
+			yytranslate_template_1 (an_array)
+			yytranslate_template_2 (an_array)
+			Result := yyfixed_array (an_array)
+		end
+
+	yytranslate_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yytranslate'.
+		do
+			yyarray_subcopy (an_array, <<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -2605,8 +2616,14 @@ feature {NONE} -- Table templates
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
+			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2, yyDummy>>,
+			1, 200, 0)
+		end
 
+	yytranslate_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yytranslate'.
+		do
+			yyarray_subcopy (an_array, <<
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
 			    2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -2616,7 +2633,8 @@ feature {NONE} -- Table templates
 			    5,    6,    7,    8,    9,   10,   11,   12,   13,   14,
 			   15,   16,   17,   18,   19,   20,   21,   22,   23,   24,
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
-			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44, yyDummy>>)
+			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44, yyDummy>>,
+			1, 100, 200)
 		end
 
 	yyr1_template: SPECIAL [INTEGER]
@@ -2746,8 +2764,19 @@ feature {NONE} -- Table templates
 
 	yytable_template: SPECIAL [INTEGER]
 			-- Template for `yytable'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yyfixed_array (<<
+			create an_array.make_filled (0, 0, 209)
+			yytable_template_1 (an_array)
+			yytable_template_2 (an_array)
+			Result := yyfixed_array (an_array)
+		end
+
+	yytable_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yytable'.
+		do
+			yyarray_subcopy (an_array, <<
 			   82,   42,  193,  119,  123,  192,  122,   65,  126,   90,
 			  128,  156,   84,  155,   85,  170,  171,  164,  163,   78,
 			  175,  176,  162,  161,   74,   75,  177,   77,  147,  148,
@@ -2768,15 +2797,33 @@ feature {NONE} -- Table templates
 			   20,   19,   18,   17,   16,   15,  183,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,  117,  118,    0,  120,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0, yyDummy>>,
+			1, 200, 0)
+		end
 
-			    0,    0,    0,    0,    0,    0,    0,    0,  145,  146, yyDummy>>)
+	yytable_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yytable'.
+		do
+			yyarray_subcopy (an_array, <<
+			    0,    0,    0,    0,    0,    0,    0,    0,  145,  146, yyDummy>>,
+			1, 10, 200)
 		end
 
 	yycheck_template: SPECIAL [INTEGER]
 			-- Template for `yycheck'
+		local
+			an_array: ARRAY [INTEGER]
 		once
-			Result := yyfixed_array (<<
+			create an_array.make_filled (0, 0, 209)
+			yycheck_template_1 (an_array)
+			yycheck_template_2 (an_array)
+			Result := yyfixed_array (an_array)
+		end
+
+	yycheck_template_1 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #1 of template for `yycheck'.
+		do
+			yyarray_subcopy (an_array, <<
 			   43,   12,    0,   76,   11,    0,   13,   13,   81,   52,
 			   83,    8,   45,   10,   47,  147,  148,   43,   44,   42,
 			  152,  153,   43,   44,   35,   36,   38,   38,  108,  109,
@@ -2797,9 +2844,16 @@ feature {NONE} -- Table templates
 			   31,   32,   33,   34,   35,   36,  165,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   74,   75,   -1,   77,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1, yyDummy>>,
+			1, 200, 0)
+		end
 
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  106,  107, yyDummy>>)
+	yycheck_template_2 (an_array: ARRAY [INTEGER])
+			-- Fill chunk #2 of template for `yycheck'.
+		do
+			yyarray_subcopy (an_array, <<
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  106,  107, yyDummy>>,
+			1, 10, 200)
 		end
 
 feature {NONE} -- Semantic value stacks

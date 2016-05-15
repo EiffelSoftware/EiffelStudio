@@ -233,7 +233,11 @@ feature -- Status report
 		require
 			a_type_non_negative: a_type_id >= 0
 		do
-			Result := {ISE_RUNTIME}.is_attached_type (a_type_id)
+			if type_of_type (a_type_id).is_expanded then
+				Result := True
+			else
+				Result := {ISE_RUNTIME}.is_attached_type (a_type_id)
+			end
 		end
 
 	is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -281,7 +285,11 @@ feature -- Access
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := {ISE_RUNTIME}.attached_type (type_id)
+			if type_of_type (type_id).is_expanded then
+				Result := type_id
+			else
+				Result := {ISE_RUNTIME}.attached_type (type_id)
+			end
 		ensure
 			unchanged_if_attached: is_attached_type (type_id) implies type_id = Result
 		end
@@ -451,7 +459,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

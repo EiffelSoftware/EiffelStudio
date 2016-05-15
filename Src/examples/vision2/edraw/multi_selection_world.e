@@ -91,18 +91,19 @@ feature -- Element change
 		require
 			figure_exists: figure /= Void
 			figure_selected: selected_figures.has (figure)
-		local
-			sg: detachable SELECTION_GROUP
-			l_item: detachable EV_MODEL
 		do
-			sg ?= figure.group
-			check sg /= Void end
-			prune_all (sg)
+			if attached {SELECTION_GROUP} figure.group as sg then
+				prune_all (sg)
 
-			l_item := sg.selected_item
-			check l_item /= Void end
-			extend (l_item)
-			selected_figures.prune_all (figure)
+				if attached sg.selected_item as l_item then
+					extend (l_item)
+					selected_figures.prune_all (figure)
+				else
+					check has_selected_item: False end
+				end
+			else
+				check figure_selected: False end
+			end
 		ensure
 			removed: old selected_figures.count - 1 = selected_figures.count
 		end
@@ -172,7 +173,6 @@ feature -- Element change
 		local
 			figures_to_select: ARRAYED_LIST [EV_MODEL]
 			figure: EV_MODEL
-			sg: detachable SELECTION_GROUP
 		do
 			from
 				start
@@ -181,8 +181,7 @@ feature -- Element change
 				after
 			loop
 				figure := item
-				sg ?= figure
-				if sg = Void and then not selected_figures.has (figure) then
+				if not attached {SELECTION_GROUP} figure and then not selected_figures.has (figure) then
 					figures_to_select.extend (figure)
 				end
 				forth
@@ -301,7 +300,7 @@ feature {NONE} -- Implementation
 				capture_figure = Void and then
 				(ev_application.ctrl_pressed or else is_selection_enabled)
 			then
-				l_selected_figure ?= root_figure (figure)
+				l_selected_figure := root_figure (figure)
 				check l_selected_figure /= Void end
 				if attached {SELECTION_GROUP} l_selected_figure as sg and then attached sg.selected_item as l_item then
 					check

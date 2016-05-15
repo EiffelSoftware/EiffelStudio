@@ -24,6 +24,11 @@ inherit
 			default_create, copy
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+
 feature {NONE} -- Initialization
 
 	create_interface_objects
@@ -39,12 +44,10 @@ feature {NONE} -- Initialization
 
 	initialize
 			-- Build the interface for this window.
+		local
+			l_bar: EV_HORIZONTAL_SEPARATOR
 		do
 			Precursor {EV_TITLED_WINDOW}
-
-			build_main_container
-			extend (main_container)
-
 
 				-- Create and add the menu bar.
 			build_standard_menu_bar
@@ -52,11 +55,21 @@ feature {NONE} -- Initialization
 
 				-- Create and add the toolbar.
 			build_standard_toolbar
-			upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
-			upper_bar.extend (standard_toolbar)
+			create l_bar
+			main_container.extend (l_bar)
+			main_container.disable_item_expand (l_bar)
+			main_container.extend (standard_toolbar)
+			main_container.disable_item_expand (standard_toolbar)
+			create l_bar
+			main_container.extend (l_bar)
+			main_container.disable_item_expand (l_bar)
+
+			build_main_container
+			extend (main_container)
 
 				-- Create and add the status bar.
-			lower_bar.extend (standard_status_bar)
+			main_container.extend (standard_status_bar)
+			main_container.disable_item_expand (standard_status_bar)
 
 				-- Execute `request_close_window' when the user clicks
 				-- on the cross in the title bar.
@@ -233,21 +246,18 @@ feature {NONE} -- Implementation, Close event
 			-- The user wants to close the window
 		local
 			question_dialog: EV_CONFIRMATION_DIALOG
-			l_app: detachable EV_APPLICATION
 		do
 			create question_dialog.make_with_text (Label_confirm_close_window)
 			question_dialog.show_modal_to_window (Current)
 
 			if equal ((create {EV_DIALOG_CONSTANTS}).ev_ok.to_string_32, question_dialog.selected_button) then
 					-- Destroy the window
-				destroy;
+				destroy
 
 					-- End the application
 					--| TODO: Remove this line if you don't want the application
 					--|       to end when the first window is closed..
-				l_app ?= (create {EV_ENVIRONMENT}).application
-				check l_app /= Void end
-				l_app.destroy
+				ev_application.destroy
 			end
 		end
 

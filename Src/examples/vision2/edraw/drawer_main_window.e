@@ -530,7 +530,7 @@ feature {NONE} -- File menu Events
 					last_file_type := 2
 				end
 				last_file_name := file_name
-				save (create {FILE_NAME}.make_from_string (file_name), last_file_type)
+				save (create {PATH}.make_from_string (file_name), last_file_type)
 			end
 		end
 
@@ -544,13 +544,13 @@ feature {NONE} -- File menu Events
 			-- Save using last_file_name or call save_as if last_file_name is void.
 		do
 			if attached last_file_name as file_name then
-				save (create {FILE_NAME}.make_from_string (file_name), last_file_type)
+				save (create {PATH}.make_from_string (file_name), last_file_type)
 			else
 				on_save_as
 			end
 		end
 
-	save (file: FILE_NAME; type: INTEGER)
+	save (file: PATH; type: INTEGER)
 			-- Save `buffer' to `file'.
 			-- type = 1 -> png
 			-- type = 2 -> ps
@@ -571,10 +571,10 @@ feature {NONE} -- File menu Events
 					create dialog.make_with_text ("Image is too large, not enough video memory")
 					dialog.show_modal_to_window (Current)
 				else
-					pixmap.save_to_named_file (create {EV_PNG_FORMAT}, file)
+					pixmap.save_to_named_path (create {EV_PNG_FORMAT}, file)
 				end
 			elseif type = 2 then
-				create postscript_projector.make_with_filename (world, file)
+				create postscript_projector.make_with_path (world, file)
 				world.full_redraw
 				postscript_projector.project
 			end

@@ -74,28 +74,18 @@ feature -- Access
 
 	line_width: INTEGER
 			-- Selected line width.
-		local
-			item_data: detachable TUPLE [INTEGER, BOOLEAN]
-			l_item: like selected_item
 		do
-			l_item := selected_item
-			check l_item /= Void end
-			item_data ?= l_item.data
-			check item_data /= Void end
-			Result := item_data.integer_item (1)
+			if attached selected_item as l_item and then attached {TUPLE [width: INTEGER; is_dashed_line: BOOLEAN]} l_item.data as l_data then
+				Result := l_data.width
+			end
 		end
 
 	is_dashed_line_style: BOOLEAN
 			-- Is dashed line style selected?
-		local
-			item_data: detachable TUPLE [INTEGER, BOOLEAN]
-			l_item: like selected_item
 		do
-			l_item := selected_item
-			check l_item /= Void end
-			item_data ?= l_item.data
-			check item_data /= Void end
-			Result := item_data.boolean_item (2)
+			if attached selected_item as l_item and then attached {TUPLE [width: INTEGER; is_dashed_line: BOOLEAN]} l_item.data as l_data then
+				Result := l_data.is_dashed_line
+			end
 		end
 
 note

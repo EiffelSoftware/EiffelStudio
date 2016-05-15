@@ -41,6 +41,7 @@ feature -- Initialization
 			a_menu: EV_MENU
 			a_menu_item: EV_MENU_ITEM
 			a_menu_separator: EV_MENU_SEPARATOR
+			l_sep: EV_HORIZONTAL_SEPARATOR
 		do
 				-- create Menus & menu items
 			create a_menu_bar
@@ -63,15 +64,20 @@ feature -- Initialization
 			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
 
+			create my_container
+
 				-- create the toolbar
 			create my_toolbar
 			add_toolbar_button (my_toolbar, "new.png", agent on_file_new)
 			add_toolbar_button (my_toolbar, "open.png", agent on_file_open)
 			add_toolbar_button (my_toolbar, "save.png", agent on_file_save)
 
-			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
-			first_window.upper_bar.extend (my_toolbar)
-			first_window.upper_bar.extend (create {EV_HORIZONTAL_SEPARATOR})
+			create l_sep
+			my_container.extend (l_sep)
+			my_container.disable_item_expand (l_sep)
+			my_container.extend (my_toolbar)
+			my_container.extend (l_sep)
+			my_container.disable_item_expand (l_sep)
 
 				-- Create the pixmap
 			create my_pixmap
@@ -80,7 +86,6 @@ feature -- Initialization
 			my_pixmap.clear
 
 				-- Create the pixmap
-			create my_container
 			my_container.extend (my_pixmap)
 
 				-- Add widgets to our window

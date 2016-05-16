@@ -288,9 +288,9 @@ feature {NONE} -- Disposal
 			"[
 #ifndef EIF_IL_DLL
 				if ($type == 1) {
-					printf ("\nEntering dispose of %s with item value 0x" EIF_POINTER_DISPLAY "\n", eif_typename_id(Dftype($an_obj)), (rt_uint_ptr) $a_ptr);
+					printf ("\nEntering dispose of %s with item value 0x%" EIF_POINTER_DISPLAY "\n", eif_typename_id(Dftype($an_obj)), (rt_uint_ptr) $a_ptr);
 				} else {
-					printf ("Quitting dispose with item value 0x" EIF_POINTER_DISPLAY " nb_ref[%d]\n", (rt_uint_ptr) $a_ptr, $a_nb_ref);
+					printf ("Quitting dispose with item value 0x%" EIF_POINTER_DISPLAY " nb_ref[%d]\n", (rt_uint_ptr) $a_ptr, $a_nb_ref);
 				}
 #endif
 			]"

@@ -23,19 +23,20 @@ feature -- Basic operations
 		do
 			check is_windows: {PLATFORM}.is_windows end
 
-				-- Return values greater than 32 represent a success, see MS documentation on ShellExecute.
+				-- Return value can be cast only to a 32-bit integer and a value greater than
+				-- 32 represent a success, see MS documentation on ShellExecute.
 			create l_uri.make (a_uri)
-			Result := cwin_shell_execute (l_null, l_null, l_uri.item, l_null, l_null, cwin_sw_shownormal) > 32
+			Result := cwin_shell_execute (l_null, l_null, l_uri.item, l_null, l_null, cwin_sw_shownormal).to_integer_32 > 32
 		end
 
 feature {NONE} -- Externals
 
-	cwin_shell_execute (a_hwnd: POINTER; a_operation: POINTER; a_file: POINTER; a_params: POINTER; a_directory: POINTER; a_show_cmd: INTEGER): INTEGER
+	cwin_shell_execute (a_hwnd: POINTER; a_operation: POINTER; a_file: POINTER; a_params: POINTER; a_directory: POINTER; a_show_cmd: INTEGER): POINTER
 			-- Performs an operation on a specified file.
 		external
 			"C inline use <shellapi.h>"
 		alias
-			"return (EIF_INTEGER) ShellExecuteW ((HWND) $a_hwnd, (LPCWSTR) $a_operation, (LPCWSTR) $a_file, (LPCWSTR) $a_params, (LPCWSTR) $a_directory, (int) $a_show_cmd);"
+			"return ShellExecuteW ((HWND) $a_hwnd, (LPCWSTR) $a_operation, (LPCWSTR) $a_file, (LPCWSTR) $a_params, (LPCWSTR) $a_directory, (int) $a_show_cmd);"
 		end
 
 	cwin_sw_shownormal: INTEGER

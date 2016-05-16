@@ -1704,12 +1704,12 @@ feature {WEL_WINDOW} -- Implementation
 				create a_wel_string2.make (a_name)
 				item := cwin_create_window_ex (default_ex_style,
 					a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
-					parent_item, an_id,
+					parent_item, cwel_integer_to_pointer (an_id),
 					main_args.current_instance.item, data)
 			else
 				item := cwin_create_window_ex (default_ex_style,
 					a_wel_string1.item, default_pointer, a_style, a_x, a_y, a_w, a_h,
-					parent_item, an_id,
+					parent_item, cwel_integer_to_pointer (an_id),
 					main_args.current_instance.item, data)
 			end
 			if item /= default_pointer then
@@ -2333,7 +2333,7 @@ feature {NONE} -- Externals
 	cwin_create_window_ex (a_ex_stlyle: INTEGER; a_class_name,
 				a_name: POINTER; a_style, a_x, a_y, a_w,
 				a_h: INTEGER; a_parent_hwnd: POINTER;
-				an_id: INTEGER; a_hinstance,
+				an_id: POINTER; a_hinstance,
 				param: POINTER): POINTER
 			-- SDK CreateWindowEx
 		external
@@ -2419,11 +2419,10 @@ feature {NONE} -- Externals
 			"SetFocus"
 		end
 
-	cwin_set_timer (hwnd: POINTER; timer_id, time_out: INTEGER;
-				proc: POINTER)
+	cwin_set_timer (hwnd: POINTER; timer_id, time_out: INTEGER; proc: POINTER)
 			-- SDK SetTimer
 		external
-			"C [macro %"wel.h%"] (HWND, UINT, UINT, TIMERPROC)"
+			"C [macro %"wel.h%"] (HWND, UINT_PTR, UINT, TIMERPROC)"
 		alias
 			"SetTimer"
 		end
@@ -2431,7 +2430,7 @@ feature {NONE} -- Externals
 	cwin_kill_timer (hwnd: POINTER; timer_id: INTEGER)
 			-- SDK KillTimer
 		external
-			"C [macro %"wel.h%"] (HWND, UINT)"
+			"C [macro %"wel.h%"] (HWND, UINT_PTR)"
 		alias
 			"KillTimer"
 		end
@@ -2773,7 +2772,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -11,10 +11,10 @@
 		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="true"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf" readonly="true"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="true"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf" readonly="false"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
 			</condition>

@@ -119,13 +119,13 @@ feature {NONE}
 				switch ($type) {
 					case 1:
 						extern char *eif_typename(int16);
-						printf ("\nEntering clean_on_dispose of %s with item value 0x" EIF_POINTER_DISPLAY "\n", eif_typename((int16)Dftype($an_obj)), (rt_uint_ptr) $a_ptr);
+						printf ("\nEntering clean_on_dispose of %s with item value 0x%" EIF_POINTER_DISPLAY "\n", eif_typename((int16)Dftype($an_obj)), (rt_uint_ptr) $a_ptr);
 						break;
 					case 2:
-						printf ("Quitting clean_on_dispose with item value 0x" EIF_POINTER_DISPLAY " nb_ref[%d]\n", (rt_uint_ptr) $a_ptr, $a_nb_ref);
+						printf ("Quitting clean_on_dispose with item value 0x%" EIF_POINTER_DISPLAY " nb_ref[%d]\n", (rt_uint_ptr) $a_ptr, $a_nb_ref);
 						break;
 					case 3:
-						printf ("Error during clean_on_dispose with item value 0x" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) $a_ptr);
+						printf ("Error during clean_on_dispose with item value 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) $a_ptr);
 						break;
 					default:
 						break;

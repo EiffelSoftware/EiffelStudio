@@ -14,7 +14,7 @@ feature -- Access
 	eagain: INTEGER
 			-- Value of EAGAIN constant.
 		external
-			"C inline use <errno.h>"
+			"C inline use %"zmq.h%""
 		alias
 			"return EAGAIN;"
 		end
@@ -22,7 +22,7 @@ feature -- Access
 	efault: INTEGER
 			-- Value of EFAULT constant.
 		external
-			"C inline use <errno.h>"
+			"C inline use %"zmq.h%""
 		alias
 			"return EFAULT;"
 		end
@@ -30,7 +30,7 @@ feature -- Access
 	eintr: INTEGER
 			-- Value of EINTR constant.
 		external
-			"C inline use <errno.h>"
+			"C inline use %"zmq.h%""
 		alias
 			"return EINTR;"
 		end
@@ -38,7 +38,7 @@ feature -- Access
 	enotsock: INTEGER
 			-- Value of ENOTSOCK constant.
 		external
-			"C inline use <errno.h>"
+			"C inline use %"zmq.h%""
 		alias
 			"return ENOTSOCK;"
 		end
@@ -46,7 +46,7 @@ feature -- Access
 	eterm: INTEGER
 			-- Value of ETERM constant.
 		external
-			"C inline use <errno.h>"
+			"C inline use %"zmq.h%""
 		alias
 			"return ETERM;"
 		end

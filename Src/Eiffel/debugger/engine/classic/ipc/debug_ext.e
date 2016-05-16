@@ -231,7 +231,7 @@ feature {APPLICATION_EXECUTION} -- IPC communication implementation
 		external
 			"C inline use %"eif_eiffel.h%""
 		alias
-			"(EIF_POINTER) $i"
+			"return (EIF_POINTER) (rt_uint_ptr) $i;"
 		end
 
 feature {NONE} -- Status report
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

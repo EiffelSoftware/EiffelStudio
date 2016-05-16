@@ -32,9 +32,9 @@ feature -- Basic operations
 	cwin_make_long (low, high: INTEGER): POINTER
 			-- SDK MAKELONG
 		external
-			"C macro use <windows.h>"
+			"C inline use <windows.h>"
 		alias
-			"MAKELONG"
+			"return (EIF_POINTER) (rt_uint_ptr) MAKELONG($low, $high);"
 		end
 
 	cwin_make_lparam (low, high: INTEGER): POINTER

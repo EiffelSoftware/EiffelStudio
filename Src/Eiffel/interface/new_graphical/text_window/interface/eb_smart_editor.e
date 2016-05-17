@@ -6,7 +6,6 @@ note
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "Etienne Amodeo"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +38,8 @@ inherit
 			on_text_saved,
 			on_text_fully_loaded,
 			make,
-			create_token_handler
+			create_token_handler,
+			select_current_token
 		end
 
 	EB_TAB_CODE_COMPLETABLE
@@ -621,7 +621,126 @@ feature {NONE} -- Process Vision2 Events
 			auto_point := auto_point xor switch_auto_point
 		end
 
+feature {NONE} -- Handle mouse clicks
+
+	select_current_token (is_for_word: BOOLEAN)
+		local
+			txt: like text_displayed
+			ctrl_pressed: BOOLEAN
+			pos: INTEGER
+		do
+			ctrl_pressed := ev_application.ctrl_pressed
+			txt := text_displayed
+			pos := txt.cursor.pos_in_text
+
+			empty_word_selection := False
+			Precursor (is_for_word)
+			if
+				preferences.editor_data.is_linked_editing_enabled and then
+				ctrl_pressed -- FIXME: preference for shortcut?
+			then
+				activate_linked_edit (pos, Void)
+			end
+		end
+
+	activate_linked_edit (a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+			-- Activate linked edit at position `a_pos_in_text' if set, otherwise at cursor.
+			-- And if `a_regions' is not empty, limit the impact token in those regions.
+		do
+			if attached text_displayed as txt then
+				if has_selection and then
+					is_word (wide_string_selection)
+	--| Alternative code using cursor.
+	--				attached txt.cursor as l_cursor and then
+	--				attached l_cursor.token as tok and then
+	--				tok.is_text and then is_word (tok.wide_image)
+				then
+					if a_regions = Void then
+						txt.enable_linked_editing (Current, a_pos_in_text, current_feature_scope_as_regions (txt))
+					else
+						txt.enable_linked_editing (Current, a_pos_in_text, a_regions)
+					end
+				else
+					txt.disable_linked_editing
+				end
+				if
+					attached txt.linked_editing as e and then
+					e.is_active
+				then
+					e.prepare
+				end
+			end
+		end
+
 feature {NONE} -- Handle keystrokes
+
+	current_feature_scope_as_regions (txt: SMART_TEXT): ARRAYED_LIST [TUPLE [start_pos: INTEGER; end_pos: INTEGER]]
+		local
+			tok: detachable EDITOR_TOKEN
+			l_line: detachable EDITOR_LINE
+			l_curr_line: EDITOR_LINE
+			l_curr_token: EDITOR_TOKEN
+			l_start_pos, l_end_pos: INTEGER
+		do
+			l_curr_line := txt.cursor.line
+			l_curr_token := txt.cursor.token
+			l_start_pos := l_curr_token.pos_in_text
+			l_end_pos := l_start_pos + l_curr_token.length
+			from
+				l_line := l_curr_line
+				tok := l_curr_token
+			until
+				tok = Void or l_line = Void--or attached {EDITOR_TOKEN_EOL} t
+			loop
+				if attached {EDITOR_TOKEN_FEATURE_START} tok then
+					l_end_pos := tok.pos_in_text
+					tok := Void
+				else
+					l_end_pos := tok.pos_in_text + tok.length
+					tok := tok.next
+					if tok = Void then
+						if l_line /= Void then
+							l_line := l_line.next
+							if l_line /= Void then
+								tok := l_line.first_token
+							end
+						end
+					end
+				end
+			end
+			from
+				tok := l_curr_token.previous
+				l_line := l_curr_line
+			until
+				tok = Void or l_line = Void
+			loop
+				if attached {EDITOR_TOKEN_FEATURE_START} tok then
+					l_start_pos := tok.pos_in_text + tok.length
+					tok := Void
+				else
+					l_start_pos := tok.pos_in_text
+					tok := tok.previous
+					if tok = Void then
+						if l_line /= Void then
+							l_line := l_line.previous
+							if l_line /= Void then
+								from
+									tok := l_line.first_token
+								until
+									attached {EDITOR_TOKEN_EOL} tok or tok = Void
+								loop
+									if tok /= Void then
+										tok := tok.next
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+			create Result.make (1)
+			Result.force ([l_start_pos, l_end_pos])
+		end
 
 	completion_bckp: INTEGER
 
@@ -1241,6 +1360,9 @@ feature -- Update
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
 			setup_eis_links
+			if attached text_displayed as txt then
+				txt.disable_linked_editing
+			end
 		end
 
 feature {NONE} -- Memory management
@@ -1848,7 +1970,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

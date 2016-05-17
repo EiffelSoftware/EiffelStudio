@@ -173,7 +173,10 @@ feature -- Basic operations
 			Precursor
 			if attached widget_table as l_table then
 				across l_table as l_cursor loop
-					if attached l_cursor.item as l_widget then
+					if
+						attached l_cursor.item as l_widget and then
+						l_widget.is_interface_usable
+					then
 						l_widget.clear
 					end
 				end
@@ -252,7 +255,7 @@ invariant
 	not_name_is_empty: not name.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

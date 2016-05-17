@@ -76,7 +76,7 @@ feature -- Access: profiles
 		local
 			prof: DEBUGGER_EXECUTION_PROFILE
 			l_uuid: UUID
-			e: XML_ELEMENT
+			l_root, e: XML_ELEMENT
 			att: detachable XML_ATTRIBUTE
 			k,v: detachable STRING_32
 		do
@@ -85,7 +85,8 @@ feature -- Access: profiles
 				attached xml_document_from (a_path) as doc and then
 				doc.root_element.name.same_string_general (profiles_data_name)
 			then
-				if attached doc.root_element.elements_by_name ("profile") as l_profile_list then
+				l_root := doc.root_element
+				if attached l_root.elements_by_name ("profile") as l_profile_list then
 					create Result.make (l_profile_list.count)
 					across
 						l_profile_list as ic
@@ -145,6 +146,9 @@ feature -- Access: profiles
 							end
 						end
 					end
+				end
+				if attached l_root.attribute_by_name ("last_profile") as l_att_last_prof then
+					Result.set_last_profile_by_uuid (create {UUID}.make_from_string (l_att_last_prof.value))
 				end
 			end
 		end
@@ -269,11 +273,16 @@ feature {NONE} -- Persistence
 			p: DEBUGGER_EXECUTION_PROFILE
 		do
 			doc := new_xml_document (profiles_data_name, "execution-parameters-1-0-0")
-			across
-				a_data as ic
-			loop
-				p := ic.item
-				append_profile_to_xml_element (p, doc.root_element)
+			if attached doc.root_element as rt then
+				if attached a_data.last_profile as l_last_profile then
+					rt.add_unqualified_attribute ("last_profile", l_last_profile.uuid.out)
+				end
+				across
+					a_data as ic
+				loop
+					p := ic.item
+					append_profile_to_xml_element (p, rt)
+				end
 			end
 			save_xml_document_to (doc, a_path)
 		end

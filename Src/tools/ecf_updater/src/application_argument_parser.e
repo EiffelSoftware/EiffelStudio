@@ -33,7 +33,7 @@ feature -- Access
 	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2012. All Rights Reserved.")
+			create Result.make_from_string_general ("Copyright Eiffel Software 2011-2016. All Rights Reserved.")
 		end
 
 	files: LIST [PATH]

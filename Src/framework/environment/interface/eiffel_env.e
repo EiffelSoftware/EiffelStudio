@@ -91,7 +91,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	copyright_year: STRING = "2015"
+	copyright_year: STRING = "2016"
 			-- Copyright year
 
 feature -- Access

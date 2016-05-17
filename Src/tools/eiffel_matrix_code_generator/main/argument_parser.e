@@ -121,7 +121,7 @@ feature {NONE} -- Usage
 	version: STRING = "1.4.1"
 			-- <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 1996-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1996-2016. All Rights Reserved."
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "cfg_file"

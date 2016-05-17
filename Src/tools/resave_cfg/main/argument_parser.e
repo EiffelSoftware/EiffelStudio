@@ -102,7 +102,7 @@ feature {NONE} -- Usage
 	non_switched_argument_type: STRING = "Eiffel configuration file/directory"
 			--  <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2016. All Rights Reserved."
 			-- <Precursor>
 
 	name: STRING = "savecfg"

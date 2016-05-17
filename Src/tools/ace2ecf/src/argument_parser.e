@@ -65,7 +65,7 @@ feature -- Access
 
 feature {NONE} -- Usage
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2016. All Rights Reserved."
 			-- <Precursor>
 
 	name: STRING = "Ace file to ECF convertor tool utility"

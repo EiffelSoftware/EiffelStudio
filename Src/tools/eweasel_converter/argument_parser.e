@@ -47,7 +47,7 @@ feature {NONE} -- Usage
 	version: STRING = "1.0.1"
 			-- <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 2009-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2009-2016. All Rights Reserved."
 			-- <Precursor>
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]

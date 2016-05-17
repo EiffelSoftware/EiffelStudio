@@ -213,7 +213,7 @@ feature {NONE} -- Usage
 			Result := version_number
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 1984-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1984-2016. All Rights Reserved."
 			-- <Precursor>
 
 	non_switched_argument_name: attached STRING_8

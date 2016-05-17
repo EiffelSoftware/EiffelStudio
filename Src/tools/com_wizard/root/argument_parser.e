@@ -306,7 +306,7 @@ feature {NONE} -- Usage
 			Result.append_integer (svn_revision \\ (9999 + 1))
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 2005-2011. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 2005-2016. All Rights Reserved."
 			-- <Precursor>
 
 	svn_revision: INTEGER

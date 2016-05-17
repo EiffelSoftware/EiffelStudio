@@ -234,6 +234,13 @@ feature -- Value
 			Result := highlight_matching_braces_preference.value
 		end
 
+	is_linked_editing_enabled: BOOLEAN
+			-- Linked tokens editing enabled?
+			-- (for instance to rename local variables inside the editor).
+		do
+			Result := is_linked_editing_enabled_preference.value
+		end
+
 	show_completion_signature: BOOLEAN
 			-- Should feature signature be shown in completion list?
 		do
@@ -412,6 +419,9 @@ feature -- Preference
 	highlight_matching_braces_preference: BOOLEAN_PREFERENCE
 			-- Should matching braces be highlighted at the carets position?
 
+	is_linked_editing_enabled_preference: BOOLEAN_PREFERENCE
+			-- Is linked editing enabled?
+
 	show_completion_signature_preference: BOOLEAN_PREFERENCE
 			-- Should feature signature be shown in completion list?
 
@@ -544,6 +554,9 @@ feature {NONE} -- Preference Strings
 	highlight_matching_braces_string: STRING = "editor.eiffel.highlight_matching_braces"
 			-- Should matching braces be highlighted at the carets position?
 
+	is_linked_editing_enabled_string: STRING = "editor.eiffel.linked_token_editing_enabled"
+			-- Is linked editing enabled?
+
 	auto_show_feature_contract_tooltips_string: STRING = "editor.eiffel.auto_show_feature_contract_tooltip"
 			-- Should feature contract tool tips be automatically shown
 
@@ -673,6 +686,8 @@ feature {NONE} -- Initialization
 			customized_strings.extend (customized_string_3_preference)
 			new_tab_at_left_preference := l_manager.new_boolean_preference_value (l_manager, new_tab_at_left_string, False)
 			auto_show_feature_contract_tooltips_preference := l_manager.new_boolean_preference_value (l_manager, auto_show_feature_contract_tooltips_string, True)
+			is_linked_editing_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_linked_editing_enabled_string, True)
+
 
 				-- Auto colors
 			generic_background_color_preference.set_auto_preference (normal_background_color_preference)
@@ -1288,10 +1303,11 @@ invariant
 	argument_background_color_preference_attached: argument_background_color_preference /= Void
 	highlight_matching_braces_preference_attached: highlight_matching_braces_preference /= Void
 	auto_show_feature_contract_tooltips_preference_attached: auto_show_feature_contract_tooltips_preference /= Void
+	is_linked_editing_enabled_preference_attached: is_linked_editing_enabled_preference /= Void
 
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

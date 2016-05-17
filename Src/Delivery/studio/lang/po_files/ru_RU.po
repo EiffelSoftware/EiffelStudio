@@ -1,5 +1,5 @@
 # description: "EiffelStudio translation into Russian."
-# copyright:   "Copyright (c) 2007-2015, Eiffel Software."
+# copyright:   "Copyright (c) 2007-2016, Eiffel Software."
 # license:     "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 # licensing_options: "Commercial license is available at http://www.eiffel.com/licensing"
 msgid ""

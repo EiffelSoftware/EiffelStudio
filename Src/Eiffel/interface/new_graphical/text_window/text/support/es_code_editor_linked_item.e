@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ES_CODE_EDITOR_LINKED_ITEM}."
+	description: "Item representing the information for a token in a linked token chain."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,6 +17,7 @@ feature {NONE} -- Initialization
 	make (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_start_pos, a_end_pos: INTEGER)
 		do
 			text := a_token.wide_image
+			background_color := a_token.background_color
 			line := a_line
 			token := a_token
 			start_pos := a_start_pos
@@ -26,14 +27,22 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: READABLE_STRING_32 assign set_text
+			-- Text in [start_pos:end_pos].
 
 	line: EDITOR_LINE assign set_line
+			-- Associated editor line.
 
-	token: EDITOR_TOKEN assign set_token
+	token: EDITOR_TOKEN --assign set_token
+			-- Associated token, mainly used to restore color.
+
+	background_color: detachable EV_COLOR
+			-- Original background color, used to restore later.
 
 	start_pos: INTEGER assign set_start_pos
+			-- Start position of current token region.
 
 	end_pos: INTEGER assign set_end_pos
+			-- End position of current token region.
 
 feature -- Element change
 
@@ -45,11 +54,6 @@ feature -- Element change
 	set_line (a_line: EDITOR_LINE)
 		do
 			line := a_line
-		end
-
-	set_token (a_token: EDITOR_TOKEN)
-		do
-			token := a_token
 		end
 
 	set_start_pos (a_pos: INTEGER)

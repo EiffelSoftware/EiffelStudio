@@ -79,17 +79,17 @@ feature -- Execute
 	prepare
 			-- <Precursor>
 		local
-			tok: EDITOR_TOKEN
 			bgcol: detachable EV_COLOR
 			txt: like text
 			pos: INTEGER
+			l_item: detachable ES_CODE_EDITOR_LINKED_ITEM
 		do
 			if
 				attached linked_tokens as lst and
 				attached editing_token as l_editing_token
 			then
 				debug ("editor")
-					dbg_print ("Begin linked editing [nb tokens:" + lst.count.out +", token=%"" + l_editing_token.token.wide_image + "%"].%N")
+					dbg_print ("Begin linked editing [nb tokens:" + lst.count.out +", token=%"" + l_editing_token.text + "%"].%N")
 				end
 
 				bgcol := background_color
@@ -104,11 +104,11 @@ feature -- Execute
 				across
 					lst as ic
 				loop
-					tok := ic.item.token
+					l_item := ic.item
 					debug ("editor")
-						dbg_print (" - " + ic.item.debug_output + " -> %"" + tok.wide_image + "%"%N")
+						dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.text + "%"%N")
 					end
-					tok.set_background_color (bgcol)
+					l_item.token.set_background_color (bgcol)
 				end
 				refresh_related_lines (True)
 				txt.cursor.go_to_position (pos)
@@ -118,8 +118,8 @@ feature -- Execute
 	terminate
 			-- <Precursor>
 		local
-			tok: EDITOR_TOKEN
 			pos: INTEGER
+			l_item: detachable ES_CODE_EDITOR_LINKED_ITEM
 		do
 			if attached linked_tokens as lst and then attached text as txt then
 				debug ("editor")
@@ -130,17 +130,45 @@ feature -- Execute
 					across
 						lst as ic
 					loop
-						tok := ic.item.token
+						l_item := ic.item
 						debug ("editor")
-							dbg_print (" - " + ic.item.debug_output + " -> %"" + tok.wide_image + "%"%N")
+							dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.text + "%"%N")
 						end
-						tok.set_background_color (Void)
+						l_item.token.set_background_color (l_item.background_color)
 					end
 					refresh_related_lines (False)
 					curs.go_to_position (pos)
 				end
 			end
 			editing_token := Void
+		end
+
+	dbg_print_linked_token_infos
+			-- Display info about linked tokens.
+		local
+			pos: INTEGER
+			l_item: detachable ES_CODE_EDITOR_LINKED_ITEM
+		do
+			debug ("editor")
+				if attached linked_tokens as lst and then attached text as txt then
+					dbg_print ("Linked tokens info [nb tokens:" + lst.count.out + "].%N")
+					if attached txt.cursor as curs then
+						pos := curs.pos_in_text
+						dbg_print (" - cursor position:" + pos.out + "%N")
+						across
+							lst as ic
+						loop
+							l_item := ic.item
+							if l_item = editing_token then
+								dbg_print (" > ")
+							else
+								dbg_print (" - ")
+							end
+							dbg_print (l_item.debug_output + " -> %"" + l_item.text + "%"%N")
+						end
+					end
+				end
+			end
 		end
 
 	on_insertion (a_size_diff: INTEGER)
@@ -164,6 +192,7 @@ feature {NONE} -- Execution
 			txt: like text
 			s,cs: STRING_32
 			pos,l_old_editing_start_pos,l_old_editing_end_pos,k: INTEGER
+			l_item: ES_CODE_EDITOR_LINKED_ITEM
 		do
 			if
 				attached linked_tokens as lst and
@@ -175,10 +204,19 @@ feature {NONE} -- Execution
 				l_editing_token.end_pos := l_editing_token.end_pos + a_size_diff
 
 				pos := txt.cursor.pos_in_text
-				if is_valid_editing_position (txt.cursor.pos_in_text) then
+
+				debug ("editor")
+					dbg_print ("%NEnter-> Cursor at position " + txt.cursor.pos_in_text.out + "%N")
+				end
+
+
+				tok := txt.cursor.token.previous
+				update_pos_in_text (tok)
+				if
+					tok.pos_in_text <= 0 or else
+					not is_valid_editing_position (tok.pos_in_text)
+				then
 					tok := txt.cursor.token
-				else
-					tok := txt.cursor.token.previous
 					update_pos_in_text (tok)
 					if
 						tok.pos_in_text <= 0 or else
@@ -187,6 +225,19 @@ feature {NONE} -- Execution
 						tok := Void
 					end
 				end
+
+--				if is_valid_editing_position (txt.cursor.pos_in_text) then
+--					tok := txt.cursor.token
+--				else
+--					tok := txt.cursor.token.previous
+--					update_pos_in_text (tok)
+--					if
+--						tok.pos_in_text <= 0 or else
+--						not is_valid_editing_position (tok.pos_in_text)
+--					then
+--						tok := Void
+--					end
+--				end
 				if tok /= Void then
 					cs := tok.wide_image
 					k := tok.pos_in_text
@@ -194,9 +245,11 @@ feature {NONE} -- Execution
 						k := l_editing_token.start_pos
 					end
 
-					l_editing_token.start_pos := k
-					l_editing_token.end_pos := l_editing_token.start_pos + tok.length
-					e_diff := (l_editing_token.end_pos - l_editing_token.start_pos) - (l_old_editing_end_pos - l_old_editing_start_pos)
+--					l_editing_token.start_pos := k
+--					l_editing_token.end_pos := l_editing_token.start_pos + tok.length
+					e_diff := tok.length - (l_old_editing_end_pos - l_old_editing_start_pos)
+					check e_diff = a_size_diff end
+					diff := a_size_diff
 					s := cs
 
 					debug ("editor")
@@ -208,36 +261,71 @@ feature {NONE} -- Execution
 					across
 						lst as ic
 					loop
-						tok := ic.item.token
-						if is_editing_token (ic.item) then
+						l_item := ic.item
+--						tok := l_item.token
+						if is_editing_token (l_item) then
+--							diff := e_diff
 							debug ("editor")
-								dbg_print ("%N!" + ic.item.debug_output + " [off=" + off.out + ",diff="+diff.out+"] Editing !!!%N")
+								dbg_print ("!" + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+",pos="+pos.out+"] Editing !!!%N")
 							end
-							off := off + e_diff
-						else
-							ic.item.start_pos := ic.item.start_pos + off
-							ic.item.end_pos := ic.item.end_pos + off
-							diff := s.count - (ic.item.end_pos - ic.item.start_pos)
+								-- l_editing_token already updated with diff, but now offset
+							if pos > l_item.end_pos then -- previous `end_pos'!
+								pos := pos + diff
+							end
 
-							debug ("editor")
-								dbg_print ("%N " + ic.item.debug_output + " [off=" + off.out + ",diff="+diff.out+"] %"" + ic.item.text + "%" replaced with %""+ s +"%".%N")
-							end
-							txt.replace_for_replace_all (ic.item.start_pos, ic.item.end_pos, s)
-							ic.item.text := s
+--							l_item.start_pos := l_item.start_pos + off
+--							l_item.end_pos := l_item.end_pos + off
+							l_item.text := s
 
 							off := off + diff
-							ic.item.end_pos := ic.item.end_pos + diff
-							ic.item.line.update_token_information
+
+							debug ("editor")
+								dbg_print (" " + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+",pos="+pos.out+"] %"" + l_item.text + "%" updated.%N")
+							end
+						else
+							l_item.start_pos := l_item.start_pos + off
+							l_item.end_pos := l_item.end_pos + off
+
+							check same_diff: diff = s.count - (l_item.end_pos - l_item.start_pos) end
+
+							debug ("editor")
+								dbg_print (" " + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+",pos="+pos.out+"] %"" + l_item.text + "%" replaced with %""+ s +"%".%N")
+							end
+							txt.replace_for_replace_all (l_item.start_pos, l_item.end_pos, s)
+							l_item.text := s
+
+							off := off + diff
+							if pos > l_item.end_pos then -- previous `end_pos'!
+								pos := pos + diff
+							end
+							l_item.end_pos := l_item.end_pos + diff
+							debug ("editor")
+								dbg_print (" " + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+"] %"" + l_item.text + "%" updated.%N")
+							end
+
+							if l_editing_token.start_pos > l_item.start_pos then
+								l_editing_token.start_pos := l_editing_token.start_pos + diff
+								l_editing_token.end_pos := l_editing_token.end_pos + diff
+							end
+
+							l_item.line.update_token_information
 						end
 					end
 					refresh_related_lines (True)
 					txt.cursor.go_to_position (pos)
+
+					debug ("editor")
+						dbg_print ("Exit-> Cursor at position " + txt.cursor.pos_in_text.out + "%N")
+					end
 				else
 					debug ("editor")
 						dbg_print ("Execute linked editing outside editing token %"" + txt.cursor.token.wide_image + "%"!!!%N")
 					end
 					terminate
 				end
+			end
+			debug ("editor")
+				dbg_print_linked_token_infos
 			end
 		end
 
@@ -301,7 +389,8 @@ feature {NONE} -- Implementation
 			-- Is `a_item' the token being edited in the linked token collection?
 		do
 			if a_item /= Void and attached editing_token as l_editing_token then
-				Result := a_item.start_pos = l_editing_token.start_pos --and l_editing_token.end_pos <= a_item.end_pos
+				Result := a_item.start_pos = l_editing_token.start_pos
+						--and l_editing_token.end_pos <= a_item.end_pos
 				debug ("editor")
 					dbg_print (" " + l_editing_token.debug_output + " Check is_editing_token (" + a_item.debug_output + ") ? : " + Result.out + " .%N")
 				end
@@ -312,9 +401,10 @@ feature {NONE} -- Implementation
 			-- Is position `a_pos_in_text' inside the token being edited?
 		do
 			if a_pos_in_text > 0 and attached editing_token as l_editing_token then
-				Result := l_editing_token.start_pos <= a_pos_in_text and a_pos_in_text < l_editing_token.end_pos
+				Result := l_editing_token.start_pos <= a_pos_in_text and
+							a_pos_in_text <= l_editing_token.end_pos
 				debug ("editor")
-					dbg_print (" " + l_editing_token.debug_output + " Check is_valid_editing_position (" + a_pos_in_text.out + ") ? : " + Result.out + " .%N")
+					dbg_print (" " + l_editing_token.debug_output + " Check is_valid_editing_position (" + a_pos_in_text.out + ") in ["+ l_editing_token.start_pos.out + "-" + l_editing_token.end_pos.out +"] ? : " + Result.out + " .%N")
 				end
 			end
 		end
@@ -350,15 +440,16 @@ feature {NONE} -- Implementation
 			then
 				create l_editing_token.make (l_curr_line, l_curr_token, l_curr_token.pos_in_text, l_curr_token.pos_in_text + l_curr_token.length)
 				editing_token := l_editing_token
+				l_linked_tokens.force (l_editing_token)
 
 				debug ("editor")
 					dbg_print ("%NGet tokens %"" + l_varname + "%":%N")
-					dbg_print (" -!" + l_editing_token.debug_output + " -> %"" + l_editing_token.token.wide_image + "%"%N")
+					dbg_print (" -!" + l_editing_token.debug_output + " -> %"" + l_editing_token.text + "%"%N")
 				end
 
 				from
 					l_line := l_curr_line
-					tok := l_curr_token
+					tok := l_curr_token.next
 				until
 					tok = Void or l_line = Void--or attached {EDITOR_TOKEN_EOL} t
 				loop
@@ -416,6 +507,12 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+			if attached l_linked_tokens.first as e and then e /= l_editing_token then
+					-- Allow editing only from first token for now!
+				editing_token := e
+				txt.cursor.go_to_position (e.end_pos)
+				txt.select_region (e.start_pos, e.end_pos)
 			end
 		end
 

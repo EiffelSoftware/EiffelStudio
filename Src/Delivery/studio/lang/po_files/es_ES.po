@@ -114,7 +114,7 @@ msgstr ""
 "\n"
 "No se puede abrir el proyecto '$1'.\n"
 "\n"
-"Asegúrese de tener un directorio completo de EIFGEN  en'$ 2'."
+"Asegúrese de tener un directorio completo de EIFGEN en `$2'."
 
 #. Source code: do Result := translation_in_context ("%NIn class '", once "code_analyzer.command") end
 #: ca_messages.e:532
@@ -835,7 +835,7 @@ msgstr ""
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1:  Not yet available."), [a.generator]) end
 #: debugger_names.e:464
 msgid "$1:  Not yet available."
-msgstr ""
+msgstr "$1:  Aún no disponible."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1: File does not exist!%N%N"), [a_file])
 #: ewb_names.e:262
@@ -843,6 +843,8 @@ msgid ""
 "$1: File does not exist!\n"
 "\n"
 msgstr ""
+"$1: El archivo no existe!\n"
+"\n"
 
 #. Source code: m_filter_statistics: STRING = "$2 of $1 tests shown ($3 executed, $5 failing, $6 unresolved)"
 #: ewb_test_cmd.e:149

@@ -108,6 +108,16 @@ feature -- HTTP Methods
 						s.append ("%">")
 						s.append (html_encoded (u.name))
 						s.append ("</a>")
+						if attached user_api.user_roles (u) as l_roles and then not l_roles.is_empty then
+							s.append (" <span class=%"cms_roles%">(")
+							across
+								l_roles as ic_roles
+							loop
+								s.append (html_encoded (ic_roles.item.name))
+								s.append (" ")
+							end
+							s.append (")</span>")
+						end
 						s.append ("</li>%N")
 					end
 					s.append ("</ul>%N")

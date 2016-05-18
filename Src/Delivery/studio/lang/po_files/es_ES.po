@@ -23,6 +23,8 @@ msgid ""
 "\tdefault (no option): quick melt the system.\n"
 "\n"
 msgstr ""
+"\tpor defecto (sin opción): rápido derretimiento del sistema.\n"
+"\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + Module = $1"), [a_module])
 #: interface_names.e:1867
@@ -30,6 +32,8 @@ msgid ""
 "\n"
 "   + Module = $1"
 msgstr ""
+"\n"
+"  + Módulo  = $1"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + address     = <$1>"), [a_address])
 #: interface_names.e:1881
@@ -37,6 +41,8 @@ msgid ""
 "\n"
 "   + address     = <$1>"
 msgstr ""
+"\n"
+"  + dirección = <$1>"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N   + break index = $1"), [a_index])
 #: interface_names.e:1874
@@ -44,6 +50,8 @@ msgid ""
 "\n"
 "   + break index = $1"
 msgstr ""
+"\n"
+"  + Índice de ruptura = $1"
 
 #. Source code: l_compilation_equal_melted: STRING_32 do Result := locale.translation ("%N   + compilation = melted") end
 #: interface_names.e:1993
@@ -51,6 +59,8 @@ msgid ""
 "\n"
 "   + compilation = melted"
 msgstr ""
+"\n"
+"  + compilación = fundido"
 
 #. Source code: Result := locale.translation ("%N   + feature has a rescue clause")
 #: interface_names.e:1860
@@ -58,6 +68,8 @@ msgid ""
 "\n"
 "   + feature has a rescue clause"
 msgstr ""
+"\n"
+"  + característica tiene una cláusula de rescate"
 
 #. Source code: w_Folder_name_cannot_contain: STRING_32 do Result := locale.translation ("%N A favorite folder name cannot contain any of the following characters: %N ( ) * ") end
 #: warning_messages.e:973
@@ -66,6 +78,10 @@ msgid ""
 " A favorite folder name cannot contain any of the following characters: \n"
 " ( ) * "
 msgstr ""
+"\n"
+" Un nombre de carpeta de favoritos no puede contener ninguno de los "
+"siguientes caracteres: \n"
+"( ) *"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%N$1 is not writable.%NPlease check permissions."), [file_name])
 #: warning_messages.e:220
@@ -74,6 +90,9 @@ msgid ""
 "$1 is not writable.\n"
 "Please check permissions."
 msgstr ""
+"\n"
+"$1 no se puede escribir.\n"
+"Por favor verifique los permisos."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%NCONTEXT: $1%N"), [a_context])
 #: interface_names.e:1888
@@ -81,6 +100,8 @@ msgid ""
 "\n"
 "CONTEXT: $1\n"
 msgstr ""
+"\n"
+"CONTEXTO: $1\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%NCannot open project `$1'.%N%NMake sure you have a complete EIFGEN directory in `$2'."), [file_name, dir_name])
 #: warning_messages.e:41
@@ -90,6 +111,10 @@ msgid ""
 "\n"
 "Make sure you have a complete EIFGEN directory in `$2'."
 msgstr ""
+"\n"
+"No se puede abrir el proyecto '$1'.\n"
+"\n"
+"Asegúrese de tener un directorio completo de EIFGEN  en'$ 2'."
 
 #. Source code: do Result := translation_in_context ("%NIn class '", once "code_analyzer.command") end
 #: ca_messages.e:532
@@ -98,6 +123,8 @@ msgid ""
 "\n"
 "In class '"
 msgstr ""
+"\n"
+"En la clase '"
 
 #. Source code: options: STRING_32									do Result := locale.translation ("%NOptions:%N") end
 #: ewb_names.e:44
@@ -105,6 +132,8 @@ msgid ""
 "\n"
 "Options:\n"
 msgstr ""
+"\n"
+"Opciones:\n"
 
 #. Source code: the_total_active_query: STRING_32					do Result := locale.translation ("%NThe total active query:%N") end
 #: ewb_names.e:70
@@ -112,174 +141,176 @@ msgid ""
 "\n"
 "The total active query:\n"
 msgstr ""
+"\n"
+"La consulta activa total:\n"
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("   $1 replaced in $2 class", "   $1 replaced in $2 classes", a_class_num), [a_item_num, a_class_num])
 #: interface_names.e:1981
 msgid "   $1 replaced in $2 class"
 msgid_plural "   $1 replaced in $2 classes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$1 sustituido en la clase $2 "
+msgstr[1] "$1 sustituido en las clases $2 "
 
 #. Source code: l_precompiled: STRING_32 do Result := locale.translation ("  (precompiled)") end
 #: interface_names.e:2020
 msgid "  (precompiled)"
-msgstr ""
+msgstr " (precompilado)"
 
 #. Source code: entry_disabled: STRING_32							do Result := locale.translation ("  -> Entry disabled %N") end
 #: ewb_names.e:71
 msgid "  -> Entry disabled \n"
-msgstr ""
+msgstr " -> Entrada deshabilitada \n"
 
 #. Source code: do Result := locale.translation (" (!) Do you want to delete this entry ?") end
 #: debugger_names.e:216
 msgid " (!) Do you want to delete this entry ?"
-msgstr ""
+msgstr " (!) ¿Quiere eliminar esta entrada?"
 
 #. Source code: do Result := locale.translation (" (!) Do you want to overwrite the value ?") end
 #: debugger_names.e:218
 msgid " (!) Do you want to overwrite the value ?"
-msgstr ""
+msgstr " (!) ¿Quiere sobrescribir el valor?"
 
 #. Source code: Result := locale.translation (" (!) Invalid value !")
 #: debugger_names.e:227
 msgid " (!) Invalid value !"
-msgstr ""
+msgstr " (!) Valor invalido !"
 
 #. Source code: Result := locale.formatted_string (locale.translation (" (!) Please enter a valid value [$1]"), [a_s])
 #: debugger_names.e:225
 msgid " (!) Please enter a valid value [$1]"
-msgstr ""
+msgstr " (!) Por favor ingrese un valor válido [$1]"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" (!) This variable already has a value [$1=$2].%N"), [a_vn, a_vv]) end
 #: debugger_names.e:213
 msgid " (!) This variable already has a value [$1=$2].\n"
-msgstr ""
+msgstr " (!) Esta variable ya tiene un valor [$1=$2].\n"
 
 #. Source code: l_request_restart: STRING_32			do Result := locale.translation (" (REQUIRES RESTART)") end
 #: interface_names.e:1595
 msgid " (REQUIRES RESTART)"
-msgstr ""
+msgstr " (REQUIERE REINICIAR)"
 
 #. Source code: do Result := translation_in_context (" (already running)", once "code_analyzer") end
 #: ca_messages.e:33
 msgctxt "code_analyzer"
 msgid " (already running)"
-msgstr ""
+msgstr " (ya está en ejecución)"
 
 #. Source code: Result := locale.formatted_string (locale.translation (" (from $1)"), [a_class])
 #: interface_names.e:1847
 msgid " (from $1)"
-msgstr ""
+msgstr " (de $1)"
 
 #. Source code: do Result := locale.translation (" (ignoring breakpoints)") end
 #: debugger_names.e:22
 msgid " (ignoring breakpoints)"
-msgstr ""
+msgstr " (ignorando los puntos de interrupción)"
 
 #. Source code: l_version_from_message: STRING_32 do Result := locale.translation(" (version from)")	end
 #: interface_names.e:2036
 msgid " (version from)"
-msgstr ""
+msgstr " (versión de)"
 
 #. Source code: Result := locale.translation (" -- Readonly (Changes will not be saved.)")
 #: conf_interface_names.e:28
 msgid " -- Readonly (Changes will not be saved.)"
-msgstr ""
+msgstr " -- Solo lectura (No se guardarán los cambios.)"
 
 #. Source code: do Result := locale.translation (" --> Expression: ") end
 #: debugger_names.e:138
 msgid " --> Expression: "
-msgstr ""
+msgstr " --> Expresión: "
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" -> Current condition: %"$1%" %N"), [a_s]) end
 #: debugger_names.e:160
 msgid " -> Current condition: \"$1\" \n"
-msgstr ""
+msgstr " -> Condición actual: \"$1\" \n"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" -> Current message: %"$1%" %N"), [a_s]) end
 #: debugger_names.e:162
 msgid " -> Current message: \"$1\" \n"
-msgstr ""
+msgstr " -> Mensaje actual: \"$1\"\n"
 
 #. Source code: do Result := locale.translation (" -> Enter name: ") end
 #: debugger_names.e:209
 msgid " -> Enter name: "
-msgstr ""
+msgstr " -> Introducir nombre: "
 
 #. Source code: do Result := locale.translation (" -> Enter new condition (empty to cancel) :") end
 #: debugger_names.e:164
 msgid " -> Enter new condition (empty to cancel) :"
-msgstr ""
+msgstr " -> Ingresar una nueva condición (Vacío para cancelar) :"
 
 #. Source code: Result := locale.formatted_string (locale.translation (" -> Enter port number to attach debuggee [$1]:"), [a_dft])
 #: debugger_names.e:234
 msgid " -> Enter port number to attach debuggee [$1]:"
-msgstr ""
+msgstr " -> Ingrese el número de puerto para conectar el depurador [$1]:"
 
 #. Source code: Result := locale.translation (" -> Enter port number to attach debuggee:")
 #: debugger_names.e:236
 msgid " -> Enter port number to attach debuggee:"
-msgstr ""
+msgstr " -> Ingrese el número de puerto para conectar el depurador"
 
 #. Source code: do Result := locale.translation (" -> Enter value: ") end
 #: debugger_names.e:211
 msgid " -> Enter value: "
-msgstr ""
+msgstr " -> Ingrese un valor"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" -> Use this directory [$1] ?"), [a_d.name]) end
 #: debugger_names.e:220
 msgid " -> Use this directory [$1] ?"
-msgstr ""
+msgstr " -> ¿ Utilizar este directorio [$1]?"
 
 #. Source code: do Result := locale.translation (" -> break index: ") end
 #: debugger_names.e:152
 msgid " -> break index: "
-msgstr ""
+msgstr " -> Índice de ruptura: "
 
 #. Source code: do Result := locale.translation (" -> class name: ") end
 #: debugger_names.e:142
 msgid " -> class name: "
-msgstr ""
+msgstr " -> Nombre de la Clase: "
 
 #. Source code: do Result := locale.translation (" -> feature name: (*=all feature)") end
 #: debugger_names.e:146
 msgid " -> feature name: (*=all feature)"
-msgstr ""
+msgstr " -> Nombre de característica: (* = todas las características)"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" => Added breakpoint {$1}.$2@$3 %N"), [a_c, a_f, a_index]) end
 #: debugger_names.e:154
 msgid " => Added breakpoint {$1}.$2@$3 \n"
-msgstr ""
+msgstr " => Punto de interrupción añadido {$1}.$2@$3 \n"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" => Could not find class {$1}. %N"), [a_c]) end
 #: debugger_names.e:144
 msgid " => Could not find class {$1}. \n"
-msgstr ""
+msgstr " => No se puedo encontrar la clase {$1}.\n"
 
 #. Source code: do Result := locale.formatted_string (locale.translation (" => Could not find feature {$1}.$2 %N"), [a_c, a_f]) end
 #: debugger_names.e:150
 msgid " => Could not find feature {$1}.$2 \n"
-msgstr ""
+msgstr " => No pudo encontrar la característica {$1}. $2 \n"
 
 #. Source code: do Result := locale.translation (" => New condition applied. %N") end
 #: debugger_names.e:182
 msgid " => New condition applied. \n"
-msgstr ""
+msgstr " => Nueva condición aplicada. \n"
 
 #. Source code: do Result := locale.translation (" => No breakpoint addition%N") end
 #: debugger_names.e:156
 msgid " => No breakpoint addition\n"
-msgstr ""
+msgstr " => Sin adición de punto de interrupción \n"
 
 #. Source code: do Result := locale.translation (" => This is not a valid boolean condition. %N") end
 #: debugger_names.e:178
 msgid " => This is not a valid boolean condition. \n"
-msgstr ""
+msgstr " => Esto no es una condición booleana válida. \n"
 
 #. Source code: do Result := locale.translation (" => This is not a valid condition. %N") end
 #: debugger_names.e:180
 msgid " => This is not a valid condition. \n"
-msgstr ""
+msgstr " => Esto no es una condición válida. \n"
 
 #. Source code: do Result := translation_in_context (" Here, since it is the loop stop condition the loop will not terminate.", once "code_analyzer.violation") end
 #: ca_messages.e:393
@@ -290,72 +321,72 @@ msgstr ""
 #. Source code: l_str.append (locale.translation (" Try again?"))
 #: warning_messages.e:259
 msgid " Try again?"
-msgstr ""
+msgstr " ¿Deseas intentarlo de nuevo?"
 
 #. Source code: do Result := locale.translation (" [0] Cancel %N") end
 #: debugger_names.e:136
 msgid " [0] Cancel \n"
-msgstr ""
+msgstr " [0]Cancelar \n"
 
 #. Source code: do Result := translation_in_context (" and ", once "code_analyzer.violation") end
 #: ca_messages.e:344
 msgctxt "code_analyzer.violation"
 msgid " and "
-msgstr ""
+msgstr " y "
 
 #. Source code: t_contract_syntax_error_2: STRING_32 			do Result := locale.translation (" because it contains syntax errors") end
 #: interface_names.e:2596
 msgid " because it contains syntax errors"
-msgstr ""
+msgstr " porque contiene errores de sintaxis"
 
 #. Source code: do Result := translation_in_context (" characters, which is above the defined maximum of ", once "code_analyzer.violation") end
 #: ca_messages.e:380
 msgctxt "code_analyzer.violation"
 msgid " characters, which is above the defined maximum of "
-msgstr ""
+msgstr " caracteres, que es superior al máximo definido de "
 
 #. Source code: do Result := translation_in_context (" characters, which is below the defined minimum of ", once "code_analyzer.violation") end
 #: ca_messages.e:371
 msgctxt "code_analyzer.violation"
 msgid " characters, which is below the defined minimum of "
-msgstr ""
+msgstr " caracteres, que está por debajo del mínimo definido de "
 
 #. Source code: t_days: STRING_32 do Result := locale.translation (" days old.") end
 #: eb_metric_names.e:147
 msgid " days old."
-msgstr ""
+msgstr " días de edad."
 
 #. Source code: l_space_disabled: STRING_32 			do Result := locale.translation(" disabled")	end
 #: interface_names.e:1639
 msgid " disabled"
-msgstr ""
+msgstr " inhabilitado"
 
 #. Source code: l_space_enabled: STRING_32 			do Result := locale.translation(" enabled")	end
 #: interface_names.e:1640
 msgid " enabled"
-msgstr ""
+msgstr " habilitado"
 
 #. Source code: l_space_error: STRING_32 			do Result := locale.translation(" error")	end
 #: interface_names.e:1641
 msgid " error"
-msgstr ""
+msgstr "error"
 
 #. Source code: do Result := translation_in_context (" features and ", once "code_analyzer.violation") end
 #: ca_messages.e:338
 msgctxt "code_analyzer.violation"
 msgid " features and "
-msgstr ""
+msgstr " características y "
 
 #. Source code: l_from_padded: STRING_32 do Result := locale.translation (" from ") end
 #: interface_names.e:2070
 msgid " from "
-msgstr ""
+msgstr " de "
 
 #. Source code: do Result := translation_in_context (" from routine '", once "code_analyzer.violation") end
 #: ca_messages.e:239
 msgctxt "code_analyzer.violation"
 msgid " from routine '"
-msgstr ""
+msgstr " de la rutina '"
 
 #. Source code: do Result := locale.translation (" has the same comment and export status of a previous feature clause in its class. They could be possibly merged into one, or their comments could be made more specific.") end
 #: ca_messages.e:503
@@ -455,12 +486,12 @@ msgstr ""
 #. Source code: l_Number_of_state2: STRING_GENERAL do Result := locale.translation (" states.") end
 #: wizard_wizard_interface_names.e:31
 msgid " states."
-msgstr ""
+msgstr " estados."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("%"$1%" is not a compiled class."), [cl_name])
 #: warning_messages.e:666
 msgid "\"$1\" is not a compiled class."
-msgstr ""
+msgstr "\"$1\" no es una clase compilada."
 
 #. Source code: l_formatter_placeholder: STRING_32 do Result := locale.translation ("%"$target%" serves as a placeholder which will be replaced by the input to current formatter.") end
 #: interface_names.e:888
@@ -475,6 +506,8 @@ msgid ""
 "$1\n"
 "$2"
 msgstr ""
+"$1\n"
+" $2"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1%Nis not a directory."), [dir_name])
 #: warning_messages.e:242
@@ -482,6 +515,8 @@ msgid ""
 "$1\n"
 "is not a directory."
 msgstr ""
+"$1\n"
+" no es un directorio."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1%Nis not a plain file."), [file_name])
 #: warning_messages.e:199
@@ -489,6 +524,8 @@ msgid ""
 "$1\n"
 "is not a plain file."
 msgstr ""
+"$1\n"
+" no es un archivo plano."
 
 #. Source code: e_file_not_valid: STRING = "$1%Nis not a valid test result file"
 #: es_test_comparison_widget.e:797
@@ -500,22 +537,22 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 $2 $3 is active"), [a_column, a_operator, a_value])
 #: ewb_names.e:158
 msgid "$1 $2 $3 is active"
-msgstr ""
+msgstr "$1 $2 $3 está activo"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 $2 $3 is inactive"), [a_column, a_operator, a_value])
 #: ewb_names.e:160
 msgid "$1 $2 $3 is inactive"
-msgstr ""
+msgstr "$1 $2 $3 está inactivo"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 (from $2)"), [a_one, a_two])
 #: interface_names.e:1855
 msgid "$1 (from $2)"
-msgstr ""
+msgstr "$1 (de $2)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - Empty Development Tool"), [l_system_and_target (a_system_name, a_target_name)])
 #: interface_names.e:1896
 msgid "$1 - Empty Development Tool"
-msgstr ""
+msgstr "$1 - Herramienta de Desarrollo Vacía"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - [$2] $3"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 #: interface_names.e:1941
@@ -530,7 +567,7 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - [$2] $3 (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 #: interface_names.e:1952
 msgid "$1 - [$2] $3 (precompiled)"
-msgstr ""
+msgstr "$1 - [$2] $3 (precompilado)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - [$2] ($3)"), [l_system_and_target (a_system_name, a_target_name), a_sig, a_file_name])
 #: interface_names.e:1962
@@ -545,22 +582,22 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (not in system, $4)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig, a_file_name])
 #: interface_names.e:1907
 msgid "$1 - [$2] {$3} (not in system, $4)"
-msgstr ""
+msgstr "$1 - [$2] {$3} (no en el sistema, $4)"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 - [$2] {$3} (precompiled)"), [l_system_and_target (a_system_name, a_target_name), a_group_name, a_sig])
 #: interface_names.e:1928
 msgid "$1 - [$2] {$3} (precompiled)"
-msgstr ""
+msgstr "$1 - [$2] $3 (precompilado)"
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of call : `$2'"), [a.generator, fname]) end
 #: debugger_names.e:433
 msgid "$1 => An error occurred during the evaluation of call : `$2'"
-msgstr ""
+msgstr "$1 => un error ocurrió durante la evaluación de la llamada: `$2'"
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1 => An error occurred during the evaluation of parameter(s)"), [a.generator]) end
 #: debugger_names.e:422
 msgid "$1 => An error occurred during the evaluation of parameter(s)"
-msgstr ""
+msgstr "$1 => Un error ocurrió durante la evaluación de el (los) parámetro(s)"
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1 => ERROR : other than function, constant and once : not available."), [a.generator]) end
 #: debugger_names.e:474
@@ -570,44 +607,44 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 => ERROR : please report to support."), [s])
 #: debugger_names.e:468
 msgid "$1 => ERROR : please report to support."
-msgstr ""
+msgstr "$1 => ERROR: por favor informe a soporte."
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1 => this should not occur during expression evaluation."), [a.generator]) end
 #: debugger_names.e:406
 msgid "$1 => this should not occur during expression evaluation."
-msgstr ""
+msgstr "$1 => esto no debe ocurrir durante la evaluación de la expresión ."
 
 #. Source code: do Result := plural_translation_in_context (once "$1 Error", once "$1 Errors", once "code_analyzer.toolbar.selector", n) end
 #: ca_names.e:750
 msgctxt "code_analyzer.toolbar.selector"
 msgid "$1 Error"
 msgid_plural "$1 Errors"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$1 Error"
+msgstr[1] "$1 Errores"
 
 #. Source code: do Result := plural_translation_in_context (once "$1 Hint", once "$1 Hints", once "code_analyzer.toolbar.selector", n) end
 #: ca_names.e:762
 msgctxt "code_analyzer.toolbar.selector"
 msgid "$1 Hint"
 msgid_plural "$1 Hints"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$1 Pista"
+msgstr[1] "$1 Pistas"
 
 #. Source code: do Result := plural_translation_in_context (once "$1 Suggestion", once "$1 Suggestions", once "code_analyzer.toolbar.selector", n) end
 #: ca_names.e:758
 msgctxt "code_analyzer.toolbar.selector"
 msgid "$1 Suggestion"
 msgid_plural "$1 Suggestions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$1 Sugerencia"
+msgstr[1] "$1 Sugerencias"
 
 #. Source code: do Result := plural_translation_in_context (once "$1 Warning", once "$1 Warnings", once "code_analyzer.toolbar.selector", n) end
 #: ca_names.e:754
 msgctxt "code_analyzer.toolbar.selector"
 msgid "$1 Warning"
 msgid_plural "$1 Warnings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "$1 Advertencia"
+msgstr[1] "$1 Advertencias"
 
 #. Source code: e_bad_test_name: STRING = "$1 can not be used as a new test routine name since it already exists in one of the ancestor classes."
 #: es_test_manual_wizard_page_panel.e:176
@@ -682,7 +719,7 @@ msgstr ""
 #. Source code: e_class_not_compiled: STRING = "$1 is not a compiled type"
 #: es_test_generation_wizard_page_panel.e:574
 msgid "$1 is not a compiled type"
-msgstr ""
+msgstr "$1 no es un tipo compilado"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 is not a feature of $2"), [a_f, a_class])
 #: ewb_names.e:257
@@ -692,42 +729,42 @@ msgstr ""
 #. Source code: e_invalid_class_name: STRING = "$1 is not a valid Eiffel class name."
 #: es_class_name_validator.e:55
 msgid "$1 is not a valid Eiffel class name."
-msgstr ""
+msgstr "$1 no es un nombre de  clase válido en Eiffel"
 
 #. Source code: e_invalid_feature_name: STRING = "$1 is not a valid Eiffel feature name."
 #: es_feature_name_validator.e:84
 msgid "$1 is not a valid Eiffel feature name."
-msgstr ""
+msgstr "$1 no es un nombre de característica válido de Eiffel."
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 is not a valid class name%N"), [a_class])
 #: ewb_names.e:217
 msgid "$1 is not a valid class name\n"
-msgstr ""
+msgstr "$1 no es un nombre de clase válido\n"
 
 #. Source code: e_invalid_type_definition: STRING = "$1 is not a valid type expression for AutoTest"
 #: es_test_generation_wizard_page_panel.e:577
 msgid "$1 is not a valid type expression for AutoTest"
-msgstr ""
+msgstr "$1 no es una expresión de tipo válida para AutoTest"
 
 #. Source code: e_no_valid_type_name: STRING = "$1 is not a valid type name"
 #: es_test_generation_wizard_page_panel.e:572
 msgid "$1 is not a valid type name"
-msgstr ""
+msgstr "$1 no es un nombre de tipo válido"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 is not in cluster."), [a_class])
 #: ewb_names.e:227
 msgid "$1 is not in cluster."
-msgstr ""
+msgstr "$1 no esta en el clúster"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 is not in the system%N"), [a_class])
 #: ewb_names.e:232
 msgid "$1 is not in the system\n"
-msgstr ""
+msgstr "$1 no está en el sistema\n"
 
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 is not in the universe%N"), [a_class])
 #: ewb_names.e:212
 msgid "$1 is not in the universe\n"
-msgstr ""
+msgstr "$1 no está en el universo\n"
 
 #. Source code: Result := locale.formatted_string (locale.plural_translation ("$1 match", "$1 matches", n), [n])
 #: interface_names.e:1520
@@ -761,7 +798,7 @@ msgstr ""
 #. Source code: Result := locale.formatted_string (locale.translation ("$1 preferences"), [a_count])
 #: interface_names.e:1480
 msgid "$1 preferences"
-msgstr ""
+msgstr "$1 preferencias"
 
 #. Source code: m_statistics: STRING = "$1 tests total ($3 executed, $5 failing, $6 unresolved)"
 #: ewb_test_cmd.e:148
@@ -772,8 +809,8 @@ msgstr ""
 #: interface_names.e:1747
 msgid "$1 variable"
 msgid_plural "$1 variables"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "variable $1"
+msgstr[1] "$1 variables"
 
 #. Source code: do Result := locale.formatted_string (locale.translation ("$1$2 : sorry not yet ready for `$3'."), [a.generator, s, f]) end
 #: debugger_names.e:398
@@ -38196,27 +38233,27 @@ msgstr ""
 #. Source code: lb_more_info_on_compile: STRING = "More information available after a compilation!"
 #: es_output_routines.e:270
 msgid "no"
-msgstr ""
+msgstr "no"
 
 #. Source code: l_no_limit: STRING_32				do Result := locale.translation ("no limit") end
 #: interface_names.e:1343
 msgid "no limit"
-msgstr ""
+msgstr "sin límite"
 
 #. Source code: l_aborted: STRING = "no response"
 #: es_test_tag_tree_grid_layout.e:294
 msgid "no response"
-msgstr ""
+msgstr "sin respuesta"
 
 #. Source code: l_normal_referenced: STRING_32 do Result := locale.translation ("normal") end
 #: eb_metric_names.e:229
 msgid "normal"
-msgstr ""
+msgstr "normal"
 
 #. Source code: do Result := locale.translation ("not compiled") end
 #: debugger_names.e:507
 msgid "not compiled"
-msgstr ""
+msgstr "no compilado"
 
 #. Source code: l_not_tested: STRING = "not tested"
 #: es_test_tag_tree_grid_layout.e:292
@@ -38256,12 +38293,12 @@ msgstr ""
 #. Source code: l_profile: STRING_32					do Result := locale.translation("profile")	end
 #: interface_names.e:1572
 msgid "profile"
-msgstr ""
+msgstr "perfil"
 
 #. Source code: l_profile_no: STRING_32				do Result := locale.translation("profile #")	end
 #: interface_names.e:1573
 msgid "profile #"
-msgstr ""
+msgstr "perfil#"
 
 #. Source code: quick_melt_help: STRING_GENERAL do Result := locale.translation ("quick melt the system") end
 #: shared_ewb_help.e:157
@@ -38286,7 +38323,7 @@ msgstr ""
 #. Source code: l_All: STRING_32						do Result := locale.translation("recursive")	end
 #: interface_names.e:1115
 msgid "recursive"
-msgstr ""
+msgstr "recursiva"
 
 #. Source code: defaults_help: STRING_GENERAL do Result := locale.translation ("reset all values to their defaults") end
 #: shared_ewb_help.e:63
@@ -38296,7 +38333,7 @@ msgstr ""
 #. Source code:
 #: eb_metric_names.e:178
 msgid "row"
-msgstr ""
+msgstr "fila"
 
 #. Source code: loop_help: STRING_GENERAL do Result := locale.translation ("run ec as a command loop") end
 #: shared_ewb_help.e:123
@@ -38306,7 +38343,7 @@ msgstr ""
 #. Source code: h_run_tests: STRING = "run tests"
 #: ewb_test_execution.e:55
 msgid "run tests"
-msgstr ""
+msgstr "ejecutar las pruebas"
 
 #. Source code: run_prof_help: STRING_GENERAL do Result := locale.translation ("run the query") end
 #: shared_ewb_help.e:177
@@ -38351,12 +38388,12 @@ msgstr ""
 #. Source code: loop_help_help: STRING_GENERAL do Result := locale.translation ("show list of commands") end
 #: shared_ewb_help.e:125
 msgid "show list of commands"
-msgstr ""
+msgstr "mostrar lista de comandos"
 
 #. Source code: statistics_help: STRING_GENERAL do Result := locale.translation ("show system statistics") end
 #: shared_ewb_help.e:187
 msgid "show system statistics"
-msgstr ""
+msgstr "mostrar estadísticas de sistema"
 
 #. Source code: aversions_help: STRING_GENERAL do Result := locale.translation ("show the ancestor versions of a feature") end
 #: shared_ewb_help.e:27
@@ -38371,7 +38408,7 @@ msgstr ""
 #. Source code: attributes_help: STRING_GENERAL do Result := locale.translation ("show the attributes of a class") end
 #: shared_ewb_help.e:29
 msgid "show the attributes of a class"
-msgstr ""
+msgstr "mostrar los atributos de una clase"
 
 #. Source code: callees_help: STRING_GENERAL do Result := locale.translation ("show the callees of a feature") end
 #: shared_ewb_help.e:37
@@ -38386,47 +38423,47 @@ msgstr ""
 #. Source code: implementers_help: STRING_GENERAL do Result := locale.translation ("show the classes implementing a feature") end
 #: shared_ewb_help.e:113
 msgid "show the classes implementing a feature"
-msgstr ""
+msgstr "mostrar las clases que implementan una característica"
 
 #. Source code: class_list_help: STRING_GENERAL do Result := locale.translation ("show the classes in alphabetic order") end
 #: shared_ewb_help.e:43
 msgid "show the classes in alphabetic order"
-msgstr ""
+msgstr "mostrar las clases en orden alfabético"
 
 #. Source code: clients_help: STRING_GENERAL do Result := locale.translation ("show the clients of a class") end
 #: shared_ewb_help.e:47
 msgid "show the clients of a class"
-msgstr ""
+msgstr "mostrar a los clientes de una clase"
 
 #. Source code: ace_loop_help: STRING_GENERAL do Result := locale.translation ("show the config file") end
 #: shared_ewb_help.e:19
 msgid "show the config file"
-msgstr ""
+msgstr "mostrar el archivo de configuración"
 
 #. Source code: creators_help: STRING_GENERAL do Result := locale.translation ("show the creation procedures of a class") end
 #: shared_ewb_help.e:173
 msgid "show the creation procedures of a class"
-msgstr ""
+msgstr "mostrar los procedimientos de creación de una clase"
 
 #. Source code: deferred_help: STRING_GENERAL do Result := locale.translation ("show the deferred features of a class") end
 #: shared_ewb_help.e:65
 msgid "show the deferred features of a class"
-msgstr ""
+msgstr "mostrar las características diferidas de una clase"
 
 #. Source code: dversions_help: STRING_GENERAL do Result := locale.translation ("show the descendant versions of a feature") end
 #: shared_ewb_help.e:73
 msgid "show the descendant versions of a feature"
-msgstr ""
+msgstr "mostrar las versiones descendiente de una característica"
 
 #. Source code: descendants_help: STRING_GENERAL do Result := locale.translation ("show the descendants of a class") end
 #: shared_ewb_help.e:67
 msgid "show the descendants of a class"
-msgstr ""
+msgstr "mostrar a los descendientes de una clase"
 
 #. Source code: exported_help: STRING_GENERAL do Result := locale.translation ("show the exported features of a class") end
 #: shared_ewb_help.e:81
 msgid "show the exported features of a class"
-msgstr ""
+msgstr "mostrar las características exportadas de una clase"
 
 #. Source code: externals_help: STRING_GENERAL do Result := locale.translation ("show the external features of a class") end
 #: shared_ewb_help.e:83
@@ -38451,12 +38488,12 @@ msgstr ""
 #. Source code: invariants_help: STRING_GENERAL do Result := locale.translation ("show the invariants of a class") end
 #: shared_ewb_help.e:171
 msgid "show the invariants of a class"
-msgstr ""
+msgstr "mostrar los invariantes de una clase"
 
 #. Source code: show_subqueries_help: STRING_GENERAL do Result := locale.translation ("show the list of queries") end
 #: shared_ewb_help.e:185
 msgid "show the list of queries"
-msgstr ""
+msgstr "mostrar la lista de consultas"
 
 #. Source code: once_help: STRING_GENERAL do Result := locale.translation ("show the once & constant features of a class") end
 #: shared_ewb_help.e:137
@@ -38471,7 +38508,7 @@ msgstr ""
 #. Source code: path_help: STRING_GENERAL do Result := locale.translation ("show the path of a class") end
 #: shared_ewb_help.e:201
 msgid "show the path of a class"
-msgstr ""
+msgstr "mostrar la ruta de acceso de una clase"
 
 #. Source code: pretty_help: STRING_GENERAL do Result := locale.translation ("show the pretty form of a class") end
 #: shared_ewb_help.e:145
@@ -38481,7 +38518,7 @@ msgstr ""
 #. Source code: routines_help: STRING_GENERAL do Result := locale.translation ("show the routines of a class") end
 #: shared_ewb_help.e:169
 msgid "show the routines of a class"
-msgstr ""
+msgstr "mostrar las rutinas de una clase"
 
 #. Source code: short_help: STRING_GENERAL do Result := locale.translation ("show the short form of a class") end
 #: shared_ewb_help.e:183
@@ -38491,7 +38528,7 @@ msgstr ""
 #. Source code: suppliers_help: STRING_GENERAL do Result := locale.translation ("show the suppliers of a class") end
 #: shared_ewb_help.e:193
 msgid "show the suppliers of a class"
-msgstr ""
+msgstr "muestran los proveedores de una clase"
 
 #. Source code: clusters_help: STRING_GENERAL do Result := locale.translation ("show the system's classes, cluster by cluster") end
 #: shared_ewb_help.e:51
@@ -38501,17 +38538,17 @@ msgstr ""
 #. Source code: text_help: STRING_GENERAL do Result := locale.translation ("show the text of a class") end
 #: shared_ewb_help.e:199
 msgid "show the text of a class"
-msgstr ""
+msgstr "mostrar el texto de una clase"
 
 #. Source code: r_text_help: STRING_GENERAL do Result := locale.translation ("show the text of a feature") end
 #: shared_ewb_help.e:163
 msgid "show the text of a feature"
-msgstr ""
+msgstr "mostrar el texto de una característica"
 
 #. Source code: help_help: STRING_GENERAL do Result := locale.translation ("show this help message") end
 #: shared_ewb_help.e:109
 msgid "show this help message"
-msgstr ""
+msgstr "mostrar este mensaje de ayuda"
 
 #. Source code: homonyms_help: STRING_GENERAL do Result := locale.translation ("shown the homonyms of a feature") end
 #: shared_ewb_help.e:111
@@ -38566,22 +38603,22 @@ msgstr ""
 #. Source code: gui_help: STRING_GENERAL do Result := locale.translation ("start the graphical environment") end
 #: shared_ewb_help.e:107
 msgid "start the graphical environment"
-msgstr ""
+msgstr "iniciar el entorno gráfico"
 
 #. Source code: stop_help: STRING_GENERAL do Result := locale.translation ("stop on error") end
 #: shared_ewb_help.e:189
 msgid "stop on error"
-msgstr ""
+msgstr "parar en case de error"
 
 #. Source code: storage_help: STRING_GENERAL do Result := locale.translation ("store in EiffelCase format") end
 #: shared_ewb_help.e:191
 msgid "store in EiffelCase format"
-msgstr ""
+msgstr "almacenar en formato de EiffelCase"
 
 #. Source code: l_syntactical_referenced: STRING_32 do Result := locale.translation ("syntactical") end
 #: eb_metric_names.e:230
 msgid "syntactical"
-msgstr ""
+msgstr "sintáctica"
 
 #. Source code: lb_concurrency: STRING = "tag_concurrency"
 #: es_output_routines.e:258
@@ -38621,7 +38658,7 @@ msgstr ""
 #. Source code: quit_help: STRING_GENERAL do Result := locale.translation ("terminate session") end
 #: shared_ewb_help.e:159
 msgid "terminate session"
-msgstr ""
+msgstr "terminar sesión"
 
 #. Source code: l_tests_cluster: STRING_32        do Result := locale.translation ("test cluster") end
 #: interface_names.e:1116
@@ -38636,17 +38673,17 @@ msgstr ""
 #. Source code: t_type: STRING_32 do Result := locale.translation ("type") end
 #: eb_metric_names.e:38
 msgid "type"
-msgstr ""
+msgstr "tipo"
 
 #. Source code: internal_error := locale_formatter.translation ("unable to add class to system")
 #: es_test_project_helper.e:158
 msgid "unable to add class to system"
-msgstr ""
+msgstr "no se puede agregar clase al sistema "
 
 #. Source code: internal_error := locale_formatter.translation ("unknown error occurred")
 #: es_test_project_helper.e:171
 msgid "unknown error occurred"
-msgstr ""
+msgstr "Ha ocurrido un error desconocido"
 
 #. Source code: l_use_external_delayed_domain: STRING_32 do Result := locale.translation ("use external delayed domain") end
 #: eb_metric_names.e:232
@@ -38686,7 +38723,7 @@ msgstr ""
 #. Source code: l_wrap: STRING_32 do Result := locale.translation("wrap")	end
 #: interface_names.e:2054
 msgid "wrap"
-msgstr ""
+msgstr "envolver"
 
 #. Source code: yank_help: STRING_GENERAL do Result := locale.translation ("yank (save) output of last command to a file") end
 #: shared_ewb_help.e:211
@@ -38696,20 +38733,20 @@ msgstr ""
 #. Source code: lb_no: STRING = "no"
 #: es_output_routines.e:269
 msgid "yes"
-msgstr ""
+msgstr "sí"
 
 #. Source code: e_feature_already_exists: STRING = "{$1} already contains a feature named $2."
 #: es_feature_name_validator.e:85
 msgid "{$1} already contains a feature named $2."
-msgstr ""
+msgstr "{$1} ya contiene una característica denominada $2."
 
 #. Source code: do Result := translation_in_context ("{REAL}.nan comparison", once "code_analyzer") end
 #: ca_names.e:66
 msgctxt "code_analyzer"
 msgid "{REAL}.nan comparison"
-msgstr ""
+msgstr "{REAL}.nan comparación"
 
 #. Source code: do Result := locale.translation ("{SPECIAL} is not yet supported") end
 #: debugger_names.e:501
 msgid "{SPECIAL} is not yet supported"
-msgstr ""
+msgstr "No se admite aún {SPECIAL}"

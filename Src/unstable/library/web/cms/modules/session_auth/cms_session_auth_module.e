@@ -172,9 +172,10 @@ feature {NONE} -- Implementation: routes
 				attached api.user as l_user
 			then
 					-- Logout Session
-				create l_cookie.make (tok, l_cookie_token.value) -- FIXME: unicode issue?
+				create l_cookie.make (tok, "") -- l_cookie_token.value) -- FIXME: unicode issue?
 				l_cookie.set_path ("/")
-				l_cookie.set_max_age (-1)
+				l_cookie.unset_max_age
+				l_cookie.set_expiration_date (create {DATE_TIME}.make_from_epoch (0))
 				res.add_cookie (l_cookie)
 				api.unset_user
 

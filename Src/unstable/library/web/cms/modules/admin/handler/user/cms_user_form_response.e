@@ -386,6 +386,9 @@ feature -- Form
 			-- Update node `a_node' with form_data `a_form_data' for the given content type `a_content_type'.
 		local
 			l_uroles: LIST [CMS_USER_ROLE]
+			l_new_roles: ARRAYED_LIST [CMS_USER_ROLE]
+			r: detachable CMS_USER_ROLE
+			rid: INTEGER
 		do
 			if attached a_form_data.string_item ("op") as f_op then
 				if f_op.is_case_insensitive_equal_general ("Update user role") then
@@ -394,23 +397,53 @@ feature -- Form
 					then
 						l_uroles := api.user_api.user_roles (l_user)
 						l_uroles.compare_objects
-						if attached {WSF_STRING} a_form_data.item ("cms_roles") as l_role then
-							if attached api.user_api.user_role_by_id (l_role.integer_value) as role then
-								if not l_uroles.has (role) then
-									api.user_api.assign_role_to_user (role, a_user)
+
+						if attached {WSF_STRING} a_form_data.item ("cms_roles") as p_role_id then
+							rid := p_role_id.integer_value
+							r := api.user_api.user_role_by_id (rid)
+							if r /= Void then
+								create l_new_roles.make (0)
+								l_new_roles.force (r)
+							end
+						elseif attached {WSF_MULTIPLE_STRING} a_form_data.item ("cms_roles") as p_roles_ids then
+							create l_new_roles.make (p_roles_ids.values.count)
+							across
+								p_roles_ids as ic
+							loop
+								rid := ic.item.integer_value
+								r := api.user_api.user_role_by_id (rid)
+								if r /= Void then
+									l_new_roles.force (r)
 								end
 							end
-						elseif attached {WSF_MULTIPLE_STRING} a_form_data.item ("cms_roles") as l_roles then
-							across l_roles as ic loop
-								if attached api.user_api.user_role_by_id (ic.item.integer_value) as role then
-									if not l_uroles.has (role) then
-										api.user_api.assign_role_to_user (role, a_user)
-									end
-								end
+						end
+						if l_new_roles = Void or else l_new_roles.is_empty then
+							across
+								l_uroles as ic
+							loop
+								r := ic.item
+								api.user_api.unassign_role_from_user (r, a_user)
 							end
 						else
-							across api.user_api.roles as ic  loop
-								api.user_api.unassign_role_from_user (ic.item, a_user)
+							across
+								l_new_roles as ic
+							loop
+								r := ic.item
+								if l_uroles.has (r) then
+										-- Already assigned to that role.
+								else
+									api.user_api.assign_role_to_user (ic.item, a_user)
+								end
+							end
+								-- Remove other roles for `a_user'.
+							l_new_roles.compare_objects
+							across
+								l_uroles as ic
+							loop
+								r := ic.item
+								if not l_new_roles.has (r) then
+									api.user_api.unassign_role_from_user (r, a_user)
+								end
 							end
 						end
 						add_success_message ("Roles updated")

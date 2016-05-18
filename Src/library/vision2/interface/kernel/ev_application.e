@@ -402,6 +402,7 @@ feature {EV_WINDOW} -- Window registry
 			-- See also: `register_window'.
 		do
 			if w.is_destroyed or else not w.is_show_requested then
+				registered_windows.start
 				registered_windows.prune (w)
 			end
 		ensure
@@ -463,4 +464,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_APPLICATION
+end

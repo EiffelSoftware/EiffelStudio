@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Edit linking mode
 
-	enable_linked_editing (a_editor: EB_EDITOR; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+	enable_linked_editing (a_editor: EDITABLE_TEXT_PANEL; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
 			-- Activate linked edit at position `a_pos_in_text' if set, otherwise at cursor.
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
 		local
@@ -79,6 +79,7 @@ feature -- Edit linking mode
 				disable_linked_editing
 			end
 			create l_linking.make (Current, a_editor, a_pos_in_text, a_regions)
+			l_linking.set_background_color (preferences.editor_data.linked_token_background_color)
 			linked_editing := l_linking
 		end
 
@@ -91,7 +92,7 @@ feature -- Edit linking mode
 		end
 
 	linked_editing: detachable ES_CODE_EDITOR_LINKING
-			-- Active linked tokens editing, if enabled.
+			-- Active linked tokens editing, if enabled.			
 
 feature -- Element Change
 

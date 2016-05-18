@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: EDITABLE_TEXT; a_editor: EB_EDITOR; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+	make (a_text: EDITABLE_TEXT; a_editor: like editor; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
 			-- Handle linked edit at position `a_pos_in_text' if set, otherwise at editor cursor.
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
 		do
@@ -29,21 +29,42 @@ feature {NONE} -- Initialization
 			get_tokens (a_pos_in_text, a_regions)
 		end
 
-	editor: EB_EDITOR
+feature {NONE} -- Internal Access
+
+	editor: EDITABLE_TEXT_PANEL
+			-- Associated editor component.
+			--| (Mainly used to force the refresh of editor lines).
 
 	text: EDITABLE_TEXT
+			-- Associated text component.
 
-feature -- Access
+feature -- Access: UI
+
+	background_color: detachable EV_COLOR
+			-- Optional background color to highlight the linked tokens.
+
+feature -- Access: Tokens			
 
 	editing_token: detachable ES_CODE_EDITOR_LINKED_ITEM
+			-- Token being edited.
 
 	linked_tokens: detachable ARRAYED_LIST [ES_CODE_EDITOR_LINKED_ITEM]
-			-- tokens and their positions.
+			-- Linked tokens and associated data (positions, ...).
+
+feature -- Status report			
 
 	is_active: BOOLEAN
 			-- Is linked editing?
 		do
 			Result := editing_token /= Void and then attached linked_tokens as lst and then not lst.is_empty
+		end
+
+feature -- Element change
+
+	set_background_color (a_col: detachable EV_COLOR)
+			-- Set `background_color' to `a_col'.
+		do
+			background_color := a_col
 		end
 
 feature -- Execute
@@ -56,9 +77,10 @@ feature -- Execute
 		end
 
 	prepare
+			-- <Precursor>
 		local
 			tok: EDITOR_TOKEN
-			bgcol: EV_COLOR
+			bgcol: detachable EV_COLOR
 			txt: like text
 			pos: INTEGER
 		do
@@ -70,7 +92,12 @@ feature -- Execute
 					dbg_print ("Begin linked editing [nb tokens:" + lst.count.out +", token=%"" + l_editing_token.token.wide_image + "%"].%N")
 				end
 
-				create bgcol.make_with_8_bit_rgb (210, 255, 210)
+				bgcol := background_color
+				if bgcol = Void then
+						-- Default background-color.
+					create bgcol.make_with_8_bit_rgb (210, 255, 210)
+					background_color := bgcol
+				end
 
 				txt := text
 				pos := txt.cursor.pos_in_text
@@ -89,9 +116,9 @@ feature -- Execute
 		end
 
 	terminate
+			-- <Precursor>
 		local
 			tok: EDITOR_TOKEN
-			bgcol: detachable EV_COLOR
 			pos: INTEGER
 		do
 			if attached linked_tokens as lst and then attached text as txt then
@@ -100,7 +127,6 @@ feature -- Execute
 				end
 				if attached txt.cursor as curs then
 					pos := curs.pos_in_text
-					create bgcol.make_with_8_bit_rgb (0,0,0)
 					across
 						lst as ic
 					loop
@@ -117,20 +143,21 @@ feature -- Execute
 			editing_token := Void
 		end
 
-	insert_char_id: STRING = "InsChar"
-	delete_char_id: STRING = "DelChar"
-
 	on_insertion (a_size_diff: INTEGER)
+			-- <Precursor>
 		do
-			execute	(insert_char_id, a_size_diff)
+			execute	(insert_char_op, a_size_diff)
 		end
 
 	on_deletion (a_size_diff: INTEGER)
+			-- <Precursor>
 		do
-			execute	(delete_char_id, a_size_diff)
+			execute	(delete_char_op, a_size_diff)
 		end
 
-	execute (op: detachable READABLE_STRING_8; a_size_diff: INTEGER)
+feature {NONE} -- Execution		
+
+	execute (op: INTEGER; a_size_diff: INTEGER)
 		local
 			tok: detachable EDITOR_TOKEN
 			e_diff, diff,off: INTEGER
@@ -228,6 +255,9 @@ feature -- Execute
 		end
 
 	refresh_related_lines (l_is_editing: BOOLEAN)
+			-- Refresh related lines.
+			-- If `l_is_editing' is True, the linked behavior is active,
+			-- otherwise it is discarded or being discard.
 		local
 			txt: like text
 			pos: INTEGER
@@ -235,9 +265,9 @@ feature -- Execute
 		do
 			if attached linked_tokens as lst then
 				if l_is_editing then
+					bgcolor := background_color
 					create bgcolor.make_with_8_bit_rgb (210, 255, 210)
 				else
-					create bgcolor.make_with_8_bit_rgb (255, 255, 255)
 					bgcolor := Void
 				end
 				txt := text
@@ -260,9 +290,15 @@ feature -- Execute
 			end
 		end
 
+feature {NONE} -- Implementation: constants
+
+	insert_char_op: INTEGER = 1
+	delete_char_op: INTEGER = 2
+
 feature {NONE} -- Implementation
 
 	is_editing_token (a_item: like editing_token): BOOLEAN
+			-- Is `a_item' the token being edited in the linked token collection?
 		do
 			if a_item /= Void and attached editing_token as l_editing_token then
 				Result := a_item.start_pos = l_editing_token.start_pos --and l_editing_token.end_pos <= a_item.end_pos
@@ -273,6 +309,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_valid_editing_position (a_pos_in_text: INTEGER): BOOLEAN
+			-- Is position `a_pos_in_text' inside the token being edited?
 		do
 			if a_pos_in_text > 0 and attached editing_token as l_editing_token then
 				Result := l_editing_token.start_pos <= a_pos_in_text and a_pos_in_text < l_editing_token.end_pos
@@ -383,6 +420,8 @@ feature {NONE} -- Implementation
 		end
 
 	is_token_inside_regions (tok: EDITOR_TOKEN; a_regions: detachable ITERABLE [TUPLE [start_pos,end_pos: INTEGER]]): BOOLEAN
+			-- Is token `tok' inside the given regions `a_regions'?
+			-- If `a_regions' is Void, the scope is the entire class.
 		local
 			tok_start_pos, tok_end_pos: INTEGER
 		do

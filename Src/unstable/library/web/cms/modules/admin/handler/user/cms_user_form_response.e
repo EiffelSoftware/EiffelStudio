@@ -386,7 +386,7 @@ feature -- Form
 			-- Update node `a_node' with form_data `a_form_data' for the given content type `a_content_type'.
 		local
 			l_uroles: LIST [CMS_USER_ROLE]
-			l_new_roles: ARRAYED_LIST [CMS_USER_ROLE]
+			l_new_roles: detachable ARRAYED_LIST [CMS_USER_ROLE]
 			r: detachable CMS_USER_ROLE
 			rid: INTEGER
 		do

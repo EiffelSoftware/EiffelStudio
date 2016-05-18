@@ -686,7 +686,7 @@ feature {NONE} -- Initialization
 			customized_strings.extend (customized_string_3_preference)
 			new_tab_at_left_preference := l_manager.new_boolean_preference_value (l_manager, new_tab_at_left_string, False)
 			auto_show_feature_contract_tooltips_preference := l_manager.new_boolean_preference_value (l_manager, auto_show_feature_contract_tooltips_string, True)
-			is_linked_editing_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_linked_editing_enabled_string, True)
+			is_linked_editing_enabled_preference := l_manager.new_boolean_preference_value (l_manager, is_linked_editing_enabled_string, False)
 
 
 				-- Auto colors

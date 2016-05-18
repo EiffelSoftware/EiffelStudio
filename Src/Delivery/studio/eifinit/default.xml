@@ -286,8 +286,6 @@
 	<PREF NAME="editor.eiffel.highlight_matching_braces" DESCRIPTION="Should the editor highlight matching braces when the caret is placed next to a (, ), {, }, [, ], &lt;&lt; or &gt;&gt;?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_show_feature_contract_tooltip" DESCRIPTION="Should a feature's contract tool tip be automatically popped up in the editor when the mouse cursor is over the feature name?"><BOOLEAN>True</BOOLEAN></PREF>
 
-	<PREF NAME="editor.eiffel.linked_token_editing_enabled" DESCRIPTION="(Experimental) Is linked editing possible from editor? (Activated by Ctrl+DoubleClick on text token)."><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.colors.linked_token_background_color" DESCRIPTION="Background color for linked tokens (if related experimental function is enabled)."><COLOR>210;255;210</COLOR></PREF>
 
 	<PREF NAME="editor.eiffel.colors.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
@@ -673,6 +671,9 @@
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.general.smart_home" DESCRIPTION="Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.new_tab_at_left" DESCRIPTION="Place new editor tab at left side of editor's area?"><BOOLEAN>False</BOOLEAN></PREF>
+
+	<PREF NAME="editor.eiffel.linked_token_editing_enabled" DESCRIPTION="(Experimental) Is linked editing possible from editor? (Activated by Ctrl+DoubleClick on text token)." HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.colors.linked_token_background_color" DESCRIPTION="Background color for linked tokens (if related experimental function is enabled)." HIDDEN="True"><COLOR>210;255;210</COLOR></PREF>
 
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>iexplore.exe $url</STRING></PREF>

@@ -13,9 +13,9 @@ REM NB: The following directory is where a new version of ec.exe will be finaliz
 set FINALIZATION_DIR=c:\work\16.05_deliv
 REM NB: The following directory must contain document.exe
 REM Tag to export files in SVN at ETHZ
-set DEFAULT_ORIGO_SVN=https://svn.eiffel.com/eiffelstudio/branches/Eiffel_16.05
+set DEFAULT_ORIGO_SVN=https://svn.eiffel.com/eiffelstudio/trunk
 REM Tag to export files in SVN at ISE
-set DEFAULT_ISE_SVN=svn://%USERNAME%@svn.ise/ise_svn/tags/Eiffel_16.05
+set DEFAULT_ISE_SVN=svn://%USERNAME%@svn.ise/ise_svn/trunk
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=c:\work\tmpdev
 iff not defined ORIGO_SVN_REVISION then

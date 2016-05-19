@@ -77,7 +77,6 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 
 #ifdef EIF_WINDOWS
 #include <io.h>		/* %%ss added for read */
-#include <winsock.h>
 #endif
 
 #ifdef RECOVERABLE_DEBUG

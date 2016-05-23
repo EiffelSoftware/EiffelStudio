@@ -7,7 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-		<library name="bzip2" location="..\bzip2.ecf" readonly="false"/>
+		<library name="bzip2" location="..\bzip2-safe.ecf" readonly="false"/>
 		<cluster name="testing-bzip2" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

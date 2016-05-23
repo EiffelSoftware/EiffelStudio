@@ -885,26 +885,30 @@ feature -- Execute
 			pif: IRON_PACKAGE_FILE
 		do
 			create d.make_with_path (p)
-			create Result.make (0)
-			create pif_fac
-			across
-				d.entries as ic
-			loop
-				if ic.item.is_current_symbol or ic.item.is_parent_symbol then
-				else
-					ip := p.extended_path (ic.item)
-					if attached ip.extension as ext and then ext.is_case_insensitive_equal ("iron") then
-						create f.make_with_path (ip)
-						if f.exists then
-							pif := pif_fac.new_package_file (ip)
-							if not pif.has_error then
-								Result.force (pif)
+			if d.exists then
+				create Result.make (0)
+				create pif_fac
+				across
+					d.entries as ic
+				loop
+					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
+					else
+						ip := p.extended_path (ic.item)
+						if attached ip.extension as ext and then ext.is_case_insensitive_equal ("iron") then
+							create f.make_with_path (ip)
+							if f.exists then
+								pif := pif_fac.new_package_file (ip)
+								if not pif.has_error then
+									Result.force (pif)
+								end
 							end
 						end
 					end
 				end
-			end
-			if Result.is_empty then
+				if Result.is_empty then
+					Result := Void
+				end
+			else
 				Result := Void
 			end
 		end

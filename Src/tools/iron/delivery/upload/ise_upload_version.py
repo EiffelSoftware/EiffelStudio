@@ -37,6 +37,13 @@ def get_ise_libraries(basedir, br, v):
 	shutil.rmtree (os.path.join (d, "library", "network", "authentication"))
 	shutil.rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
 
+            # Do not include sub packages.
+	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "libfcgi", "package.iron"))
+	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "text", "encoder", "package.iron"))
+	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "wsf_html", "package.iron"))
+	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "ewsgi", "package.iron"))
+	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "wsf", "package.iron"))
+
 	d = os.path.join (basedir, "unstable")
 	if os.path.exists (d):
 		call(["svn", "update", d ])

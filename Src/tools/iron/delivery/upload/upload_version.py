@@ -207,13 +207,17 @@ def upload_version(a_sources_dir, a_cfg_location):
 		os.environ['IRON_PATH'] = l_iron_path
 		if os.path.exists (l_iron_path):
 			shutil.rmtree (l_iron_path)
-		call([iron_command_name(), "repository", "--add", repo])
-#		call([iron_command_name(), "repository", "--remove", repo])
+
+		cmd = "%s repository --add %s" % (iron_command_name(), repo)
+		#cmd = "%s repository --remove %s" % (iron_command_name(), repo)
+		cmd_call (cmd)
 
 		if debug():
 			pause ("Press [ENTER] to start updating ecf files..,")
 		print "Updating the ecf files for iron packaging ..."
-		call([iron_command_name(), "update_ecf", "--save", "-D", "ISE_LIBRARY=%s" % (a_sources_dir), a_sources_dir])
+		cmd = "%s update_ecf --save -D ISE_LIBRARY=%s %s" % (iron_command_name(), a_sources_dir, a_sources_dir)
+		cmd_call (cmd)
+		#call([iron_command_name(), "update_ecf", "--save", "-D", "ISE_LIBRARY=%s" % (a_sources_dir), a_sources_dir])
 
 		if debug():
 			pause ("Press [ENTER] to start uploading..,")

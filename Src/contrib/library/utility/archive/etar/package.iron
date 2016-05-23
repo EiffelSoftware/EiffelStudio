@@ -1,0 +1,17 @@
+package etar
+
+project
+	tar = "tar-safe.ecf"
+	tar = "tar.ecf"
+
+note
+	title: TAR archive library
+	description: "[
+		]"
+	tags: archive,tar,file
+	license: Eiffel Forum License v2
+	copyright: Nicolas Truessel, Jocelyn Fiat, Eiffel Software and others.
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+	link[source]: "github" https://github.com/eiffelhub/etar
+
+end

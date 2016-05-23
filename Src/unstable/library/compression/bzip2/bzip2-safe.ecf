@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="bzip2" uuid="1EA72614-87F8-49B8-B985-F828900161AA" library_target="bzip2">
 	<target name="bzip2">
 		<root all_classes="true"/>
-		<option warning="true" void_safety="none">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -21,7 +21,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="bzip2" location="library\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

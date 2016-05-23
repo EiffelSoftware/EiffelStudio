@@ -6,7 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<library name="bzip2" location="..\bzip2.ecf"/>
+		<library name="bzip2" location="..\bzip2-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="example" location=".\" recursive="true">
 			<file_rule>

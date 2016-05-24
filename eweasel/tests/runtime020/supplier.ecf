@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="supplier">
+	<target name="supplier">
+		<root class="SUPPLIER" feature="make"/>
+		<setting name="console_application" value="$CONSOLE_APPLICATION"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="client" location="$CLUSTER\"/>
+	</target>
+</system>

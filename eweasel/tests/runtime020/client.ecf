@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="client">
+	<target name="client">
+		<root class="CLIENT" feature="make"/>
+		<setting name="console_application" value="false"/>
+		<setting name="concurrency" value="scoop"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<cluster name="client" location="$CLUSTER\"/>
+	</target>
+</system>

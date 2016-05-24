@@ -1,0 +1,48 @@
+test_name 	 standard-stream-redirection
+test_description A non-console application should allocate a new console when reading/writing from non-redirected handles, but use redirected handles otherwise.
+
+copy_raw	client.e $CLUSTER client.e
+copy_raw	shared.e $CLUSTER shared.e
+copy_raw	supplier.e $CLUSTER supplier.e
+
+define CONSOLE_APPLICATION "true"
+copy_sub	supplier.ecf $TEST supplier.ecf
+config		supplier.ecf supplier
+system		supplier
+	-- Unfortunately $EXEC_WORK does not work (uses "test" as a target name).
+define_file	SUPPLIER $TEST EIFGENs supplier W_code supplier
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+copy_sub	client.ecf $TEST client.ecf
+config		client.ecf client
+system		client
+compile_frozen
+compile_result ok
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output_w $SUPPLIER
+execute_result 	ok
+
+if     WINDOWS compare		exec_output_w output_windows
+if not WINDOWS compare		exec_output_w output
+
+if WINDOWS define CONSOLE_APPLICATION "false"
+if WINDOWS copy_sub	supplier.ecf $TEST supplier.ecf
+if WINDOWS config		supplier.ecf supplier
+if WINDOWS system		supplier
+if WINDOWS compile_frozen
+if WINDOWS compile_result ok
+if WINDOWS c_compile_work
+if WINDOWS c_compile_result	ok
+
+if WINDOWS config		client.ecf client
+if WINDOWS system		client
+if WINDOWS execute_work 	NONE 	exec_output_windows_w $SUPPLIER
+if WINDOWS execute_result 	ok
+if WINDOWS compare		exec_output_windows_w output_windows
+
+test_end

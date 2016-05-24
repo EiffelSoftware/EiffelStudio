@@ -1,0 +1,49 @@
+Supplier's message to standard output.Supplier's message to standard error.Test 1Ioe: OK
+Supplier's message to standard output.Supplier's message to standard error.Test 1oIe: OK
+Supplier's message to standard output.Supplier's message to standard error.Test 1oeI: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 1Ieo: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 1eIo: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 1eoI: OK
+Supplier's message to standard output.Test 2Ioe: OK
+Supplier's message to standard output.Test 2oIe: OK
+Supplier's message to standard output.Test 2oeI: OK
+Supplier's message to standard output.Test 2Ieo: OK
+Supplier's message to standard output.Test 2eIo: OK
+Supplier's message to standard output.Test 2eoI: OK
+Supplier's message to standard error.Test 3Ioe: OK
+Supplier's message to standard error.Test 3oIe: OK
+Supplier's message to standard error.Test 3oeI: OK
+Supplier's message to standard error.Test 3Ieo: OK
+Supplier's message to standard error.Test 3eIo: OK
+Supplier's message to standard error.Test 3eoI: OK
+Test 4Ioe: OK
+Test 4oIe: OK
+Test 4oeI: OK
+Test 4Ieo: OK
+Test 4eIo: OK
+Test 4eoI: OK
+Supplier's message to standard output.Supplier's message to standard error.Test 5ioe: OK
+Supplier's message to standard output.Supplier's message to standard error.Test 5oie: OK
+Supplier's message to standard output.Supplier's message to standard error.Test 5oei: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 5ieo: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 5eio: OK
+Supplier's message to standard error.Supplier's message to standard output.Test 5eoi: OK
+Supplier's message to standard output.Test 6ioe: OK
+Supplier's message to standard output.Test 6oie: OK
+Supplier's message to standard output.Test 6oei: OK
+Supplier's message to standard output.Test 6ieo: OK
+Supplier's message to standard output.Test 6eio: OK
+Supplier's message to standard output.Test 6eoi: OK
+Supplier's message to standard error.Test 7ioe: OK
+Supplier's message to standard error.Test 7oie: OK
+Supplier's message to standard error.Test 7oei: OK
+Supplier's message to standard error.Test 7ieo: OK
+Supplier's message to standard error.Test 7eio: OK
+Supplier's message to standard error.Test 7eoi: OK
+Test 8ioe: OK
+Test 8oie: OK
+Test 8oei: OK
+Test 8ieo: OK
+Test 8eio: OK
+Test 8eoi: OK
+Execution completed

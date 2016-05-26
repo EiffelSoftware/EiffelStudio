@@ -39,10 +39,9 @@ feature {NONE} -- Tests
 			p: PROCESS
 			supplier: READABLE_STRING_32
 		do
-			if command_line.argument_count = 1 then
+			supplier := "supplier"
+			if command_line.argument_count > 0 then
 				supplier := command_line.argument (1)
-			else
-				supplier := "supplier"
 			end
 			create pf
 			across
@@ -67,7 +66,7 @@ feature {NONE} -- Tests
 					report (input, output, error, name + c.item)
 				else
 					io.put_string ("Test ")
-					io.put_string (name)
+					io.put_string (name + c.item)
 					io.put_string (": Failed to launch %"")
 					io.put_string (supplier)
 					io.put_character ('"')

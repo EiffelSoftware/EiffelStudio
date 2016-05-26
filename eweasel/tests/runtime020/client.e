@@ -105,14 +105,18 @@ feature {NONE} -- Tests
 			end
 		end
 
-feature {NONE} -- Input/output
+feature {NONE} -- Reporting
 
 	report (i, o, e: BOOLEAN; name: STRING)
 			-- Report results for a test of name `name'.
 		do
 			io.put_string ("Test ")
 			io.put_string (name)
-			if i = (attached actual_input) and o = (attached actual_output) and e = (attached actual_error) then
+			if
+				is_actual_value_valid (actual_input, client_message, i) and then
+				is_actual_value_valid (actual_output, output_message, o) and then
+				is_actual_value_valid (actual_error, error_message, e)
+			then
 				io.put_string (": OK")
 			else
 				io.put_string (": Failed")
@@ -127,10 +131,7 @@ feature {NONE} -- Input/output
 	report_actual_value (actual_message: detachable STRING_8; expected_message: STRING_8; is_active: BOOLEAN; name: STRING)
 			-- Report an issue with a data for stream `name' if it is enabled by `is_active' by comparing `actual_message' with `expected_message'.
 		do
-			if
-				is_active and then
-				(attached actual_message implies not actual_message.same_string (expected_message))
-			then
+			if not is_actual_value_valid (actual_message, expected_message, is_active) then
 				io.put_string ("%N%T")
 				io.put_string (name)
 				if attached actual_message then
@@ -144,6 +145,18 @@ feature {NONE} -- Input/output
 				end
 			end
 		end
+
+	is_actual_value_valid (actual_message: detachable STRING_8; expected_message: STRING_8; is_active: BOOLEAN): BOOLEAN
+			-- Does `actual_value' match `expected_message' if testing is enabled according to `is_active'?
+		do
+			if is_active then
+				Result := attached actual_message and then actual_message.same_string (expected_message)
+			else
+				Result := True
+			end
+		end
+
+feature {NONE} -- Removal
 
 	clear
 			-- Reset data to initial state.
@@ -182,6 +195,8 @@ feature {NONE} -- Input/output
 			attempt := attempt + 1
 			retry
 		end
+
+feature {NONE} -- Input/output
 
 	actual_input, actual_output, actual_error: detachable STRING_8
 			-- Actual data read from redirected input, output and error streams.

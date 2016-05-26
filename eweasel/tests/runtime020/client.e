@@ -80,7 +80,11 @@ feature {NONE} -- Tests
 			-- An agent that records output produced by the supplier.
 		do
 			Result := agent (s: STRING_8) do
-				actual_output := s.twin
+				if attached actual_output as a then
+					a.append (s)
+				else
+					create actual_output.make_from_string (s)
+				end
 			end
 		end
 
@@ -88,7 +92,11 @@ feature {NONE} -- Tests
 			-- An agent that records error produced by the supplier.
 		do
 			Result := agent (s: STRING_8) do
-				actual_error := s.twin
+				if attached actual_error as a then
+					a.append (s)
+				else
+					create actual_error.make_from_string (s)
+				end
 			end
 		end
 

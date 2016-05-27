@@ -246,7 +246,6 @@ feature {NONE} -- Implementation
 			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"Unselected">>)
 			locale_id_preference.set_is_choice (True)
 			init_locale
-
 				-- Set the exact value, otherwise the preference detected default will be removed.
 			locale_id_preference.set_default_value ("de_DE;[en_US];es_ES;fr_FR;ru_RU;zh_CN;Unselected")
 
@@ -322,9 +321,6 @@ feature {NONE} -- Implementation
 						end
 						l_str := l_available_locales.item.name.as_string_8
 						if not l_added_pre.has (l_str) then
-							if not l_added_pre.is_empty then
-								l_available_lang.extend (';')
-							end
 							l_added_pre.force (l_str, l_str)
 							if l_available_locales.item.is_equal (l_id) and then not l_is_unselected then
 									-- Set this item selected.
@@ -334,12 +330,10 @@ feature {NONE} -- Implementation
 								l_found := True
 							end
 							l_available_lang.append (l_str)
+							l_available_lang.extend (';')
 						end
 					end
 					l_available_locales.forth
-				end
-				if not l_available_lang.is_empty then
-					l_available_lang.extend (';')
 				end
 				if not l_found then
 						-- If previous selected locale is not found anymore,

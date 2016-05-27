@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Miscellaneous preferences.  Please remove this class and put the preferences in the sensible places."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -249,7 +248,7 @@ feature {NONE} -- Implementation
 			init_locale
 
 				-- Set the exact value, otherwise the preference detected default will be removed.
-			locale_id_preference.set_default_value ("de_DE;[en_US];fr_FR;ru_RU;zh_CN;Unselected")
+			locale_id_preference.set_default_value ("de_DE;[en_US];es_ES;fr_FR;ru_RU;zh_CN;Unselected")
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
@@ -395,9 +394,8 @@ invariant
 	use_postscript_preference_not_void: use_postscript_preference /= Void
 	support_url_preference_not_void:  support_url_preference /= Void
 
-
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -428,4 +426,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_MISC_DATA
+end

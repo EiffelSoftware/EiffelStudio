@@ -748,16 +748,26 @@ feature -- Merging
 					is_full_class_checking := other.is_full_class_checking
 				end
 				catcall_detection.set_safely (other.catcall_detection)
-				if not is_attached_by_default_configured then
-					is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
-					is_attached_by_default := other.is_attached_by_default
-				end
 				if not is_obsolete_routine_type_configured then
 					is_obsolete_routine_type_configured := other.is_obsolete_routine_type_configured or else is_obsolete_routine_type /~ other.is_obsolete_routine_type
 					is_obsolete_routine_type := other.is_obsolete_routine_type
 				end
-				void_safety.set_safely (other.void_safety)
 				syntax.set_safely (other.syntax)
+				void_safety.set_safely (other.void_safety)
+					-- The merge for `is_attached_by_default' should happen after merging `void_safety'
+					-- because the latter is used to default to `True' if the resulting project is not Void-safe.
+				if not is_attached_by_default_configured then
+					if not other.is_attached_by_default_configured and then void_safety.index = void_safety_index_none then
+							-- Default attached-by-default to True, so that if a user decides to switch the option,
+							-- it get's attached-by-default automatically.
+						is_attached_by_default_configured := not other.is_attached_by_default
+						is_attached_by_default := True
+					else
+							-- Use general merging scheme.
+						is_attached_by_default_configured := other.is_attached_by_default_configured or else is_attached_by_default /~ other.is_attached_by_default
+						is_attached_by_default := other.is_attached_by_default
+					end
+				end
 			end
 		end
 

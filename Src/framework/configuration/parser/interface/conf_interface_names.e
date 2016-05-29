@@ -353,9 +353,6 @@ feature -- Option names and descriptions
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_all)
 		end
 
-	option_is_attached_by_default_name: STRING_32 do Result := locale.translation ("Are types attached by default?") end
-	option_is_attached_by_default_description: STRING_32 do Result := locale.translation ("Are types without explicit attachment mark considered attached?") end
-
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
 	option_void_safety_description: STRING_32 once
 			Result := locale.translation ("Void safety level the source code provides.") +

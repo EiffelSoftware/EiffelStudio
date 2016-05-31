@@ -279,7 +279,12 @@ feature -- Parsing
 		do
 			create txt.make (64)
 			request_header := txt
-			if a_socket.is_readable and then attached next_line (a_socket) as l_request_line and then not l_request_line.is_empty then
+			if 	
+				not has_error and then
+				a_socket.is_readable and then
+				attached next_line (a_socket) as l_request_line and then
+				not l_request_line.is_empty 
+			then
 				txt.append (l_request_line)
 				txt.append_character ('%N')
 				analyze_request_line (l_request_line)
@@ -292,7 +297,7 @@ feature -- Parsing
 				from
 					line := next_line (a_socket)
 				until
-					line = Void or end_of_stream
+					line = Void or end_of_stream or has_error
 				loop
 					n := line.count
 					if l_is_verbose then
@@ -362,15 +367,31 @@ feature -- Parsing
 	next_line (a_socket: HTTPD_STREAM_SOCKET): detachable STRING
 			-- Next line fetched from `a_socket' is available.
 		require
+			not_has_error: not has_error
 			is_readable: a_socket.is_open_read
 		local
 			retried: BOOLEAN
 		do
 			if retried then
+				has_error := True
 				Result := Void
-			elseif a_socket.socket_ok then
+			elseif a_socket.readable then
 				a_socket.read_line_thread_aware
 				Result := a_socket.last_string
+					-- Do no check `socket_ok' before socket operation, 
+					-- otherwise it may be False, due to error during other socket operation in same thread.
+				if not a_socket.socket_ok then
+					has_error := True
+					if is_verbose then
+						log ("%N## Socket is not ok! ##")
+					end
+				end
+			else
+					-- Error with socket...
+				has_error := True
+				if is_verbose then
+					log ("%N## Socket is not readable! ##")
+				end
 			end
 		rescue
 			retried := True

@@ -1,6 +1,93 @@
 {
     "mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
     "products": [
+      {
+            "id": "eiffelstudio",
+            "name": "EiffelStudio",
+            "version": "16.05 GPL",
+            "number": "16.05",
+            "build": "Build_98814",
+            "download": [
+                {
+                    "platform": "freebsd-x86-64",
+                    "filename": "Eiffel_16.05_gpl_98814-freebsd-x86-64.tar.bz2",
+                    "size": "96760146",
+                    "hash": "40dbc5616c20d226d2fa3e51a590f916ea8b3acb5dd2a988391f05578f7c6e02"
+                },
+                {
+                    "platform": "freebsd-x86",
+                    "filename": "Eiffel_16.05_gpl_98814-freebsd-x86.tar.bz2",
+                    "size": "88348983",
+                    "hash": "e50cf91244ae3beac300b8ab6f4cd01bd634a911c4da91752228cec140b65908"
+                },
+                {
+                    "platform": "linux-armv6",
+                    "filename": "Eiffel_16.05_gpl_98814-linux-armv6.tar.bz2",
+                    "size": "94955198",
+                    "hash": "642ffad31b6dd2357385997c2985d187359f44faadfa5cbfe78313a8491a267d"
+                },
+                {
+                    "platform": "linux-x86-64",
+                    "filename": "Eiffel_16.05_gpl_98814-linux-x86-64.tar.bz2",
+                    "size": "104136133",
+                    "hash": "a7c3971e579df61a767b6a92a62874da346fc16314c8f61a3847d72c9eca5d13"
+                },
+                {
+                    "platform": "linux-x86",
+                    "filename": "Eiffel_16.05_gpl_98814-linux-x86.tar.bz2",
+                    "size": "91462020",
+                    "hash": "e13fc4b64a385e92ebd9438e30325a9145849f37f976bfdc4136702a43ec7c5c"
+                },
+                {
+                    "platform": "macosx-x86-64",
+                    "filename": "Eiffel_16.05_gpl_98814-macosx-x86-64.tar.bz2",
+                    "size": "89936360",
+                    "hash": "c8644b93fc1ba8512da71388178b3a8d1a7bcf4599b3d848a5ca4aec71206010"
+                },
+                {
+                    "platform": "openbsd-x86-64",
+                    "filename": "Eiffel_16.05_gpl_98814-openbsd-x86-64.tar.bz2",
+                    "size": "100954548",
+                    "hash": "dfc448633d013b21cf09c7d94934a632c964cd455b6a02f66fd8987f490c9b81"
+                },
+                {
+                    "platform": "solaris-sparc-64",
+                    "filename": "Eiffel_16.05_gpl_98814-solaris-sparc-64.tar.bz2",
+                    "size": "110912794",
+                    "hash": "9a6e6f07fb98cd28f943536db695113af6fcc2bce6a5295e39768ca073c0c3c9"
+                },
+                {
+                    "platform": "solaris-sparc",
+                    "filename": "Eiffel_16.05_gpl_98814-solaris-sparc.tar.bz2",
+                    "size": "109192961",
+                    "hash": "341b7e1a573e7fab800b523fc8ece534f3f9a68c1d69024939d065bac4ba72a1"
+                },
+                {
+                    "platform": "solaris-x86-64",
+                    "filename": "Eiffel_16.05_gpl_98814-solaris-x86-64.tar.bz2",
+                    "size": "94639070",
+                    "hash": "869293d497b1a6ad4c05943d3f4f81d0c6003696769adc3ab530118aa02e9ac3"
+                },
+                {
+                    "platform": "solaris-x86",
+                    "filename": "Eiffel_16.05_gpl_98814-solaris-x86.tar.bz2",
+                    "size": "85509841",
+                    "hash": "0ca9ea1f549b2f0f15ea153e9a09011b5be634b13d862d647bf8391858c58296"
+                },
+                {
+                    "platform": "win64",
+                    "filename": "Eiffel_16.05_gpl_98814-win64.msi",
+                    "size": "145876363",
+                    "hash": "1597fa467cd5d4dfcbfe238d8b4a68ee78a8cd995c154366db50f840157caad4"
+                },
+                {
+                    "platform": "windows",
+                    "filename": "Eiffel_16.05_gpl_98814-windows.msi",
+                    "size": "132763696",
+                    "hash": "5a45c1f113972ff5fc33149a52a98534c55c8920e16824a07a861249182e35ee"
+                }
+            ]
+        },
          {
             "id": "eiffelstudio",
             "name": "EiffelStudio",

@@ -10,7 +10,7 @@ class
 inherit
 	WSF_REQUEST
 
-create {WSF_TO_WGI_SERVICE, WSF_SERVICE}
+create {WSF_SERVICE}
 	make_from_wgi
 
 end

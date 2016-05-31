@@ -62,6 +62,9 @@ feature {NONE} -- Implementation
 						a_handler.append_resource (req, res)
 						-- 200 or 204 or 303 or 500 (add support for this?)
 						-- FIXME: more support, such as includes_response_entity
+						if not a_handler.response_ok (req) then
+							write_error_response (req, res)
+						end
 					end
 				end
 			end

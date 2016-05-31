@@ -24,11 +24,11 @@
 				<platform value="windows"/>
 			</condition>
 		</external_library>
-		<external_library location="/usr/lib/libfcgi.so">
+		<external_linker_flag value="-lfcgi">
 			<condition>
 				<platform value="unix"/>
 			</condition>
-		</external_library>
+		</external_linker_flag>
 		<external_library location="/opt/local/lib/libfcgi.dylib">
 			<condition>
 				<platform value="macintosh"/>

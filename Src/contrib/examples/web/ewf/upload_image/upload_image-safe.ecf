@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="upload_image" uuid="F2400BE8-D8EB-48EB-B4E4-5D4377062A7F" library_target="upload_image">
-	<target name="upload_image">
-		<root class="IMAGE_UPLOADER" feature="make"/>
+	<target name="upload_image_common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
@@ -11,14 +10,26 @@
 			<debug name="standalone" enabled="true"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false" use_application_options="true"/>
 		<library name="encoder" location="../../../../library/web/framework/ewf/text/encoder/encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<library name="uri_template" location="../../../../library/text/parser/uri_template/uri_template-safe.ecf" readonly="false"/>
 		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false" use_application_options="true"/>
+	</target>
+	<target name="upload_image_standalone" extends="upload_image_common">
+		<root class="IMAGE_UPLOADER" feature="make"/>
+		<setting name="concurrency" value="thread"/>
+		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+	<target name="upload_image_libfcgi" extends="upload_image_common">
+		<root class="IMAGE_UPLOADER" feature="make"/>
+		<setting name="concurrency" value="none"/>
+		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf" readonly="false" use_application_options="true"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+	<target name="upload_image" extends="upload_image_standalone">
 	</target>
 </system>

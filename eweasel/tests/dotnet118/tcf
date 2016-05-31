@@ -1,0 +1,14 @@
+test_name dotnet-invalid-code
+test_description If a routine argument of type NATURAL_64 is given an integer manifest constant, the code should generate a cast to satisfy the rules about verifiable code and thus perform a cast to the proper type.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

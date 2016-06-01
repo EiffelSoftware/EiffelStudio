@@ -539,7 +539,22 @@ end
 			create o.make_empty
 
 			t.structure.process (new_xhtml_generator (o))
-			assert ("o", not o.is_empty)
+			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+		end
+
+	test_code_backtik
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+begin `FOO.bar` end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end</p>%N"))
 		end
 
 	test_custom_code

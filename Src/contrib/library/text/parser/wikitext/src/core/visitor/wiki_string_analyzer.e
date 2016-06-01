@@ -194,7 +194,32 @@ feature -- Processing
 							s.extend (c)
 						end
 					else
-						s.extend (c)
+						p := a_text.substring_index ("`", i + 1)
+						if p > 0 then
+							q := a_text.index_of ('%N', i + 1)
+							if q <= p then
+								q := 0
+							end
+						else
+							q := 0
+						end
+						if p > 0 and then q = 0 then --| q = 0 means no new line between the two backtik `..`
+							r := p 
+
+							flush_buffer (a_parts, s)
+							if in_items.is_empty then
+								create {WIKI_CODE} w_item.make_from_backtick_source (a_text.substring (i, p))
+								a_parts.add_element (w_item)
+								w_item.process (Current) -- Check recursion...
+								w_item := Void
+								create s.make_empty
+							else
+								s.append (a_text.substring (i, r))
+							end
+							i := r
+						else
+							s.extend (c)
+						end
 					end
 				when '<' then
 					if

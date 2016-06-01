@@ -152,6 +152,7 @@ feature -- Access node
 			a_term_exists: a_term.has_id
 		do
 			Result := taxonomy_storage.entities_associated_with_term (a_term)
+			error_handler.append (taxonomy_storage.error_handler)
 		end
 
 feature -- Write

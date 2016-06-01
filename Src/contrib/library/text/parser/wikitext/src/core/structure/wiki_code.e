@@ -20,6 +20,7 @@ create
 	make,
 	make_from_source,
 	make_from_3backticks_source,
+	make_from_backtick_source,
 	make_from_tag
 
 feature {NONE} -- Initialization
@@ -60,7 +61,7 @@ feature {NONE} -- Initialization
 				l_lang.left_adjust
 				l_lang.right_adjust
 				create l_source.make (s.count + 15) -- = (14 - 3) + (7 - 3)
-				create l_source.make_from_string ("<code lang=%"" + l_lang + "%">%N")
+				l_source.append ("<code lang=%"" + l_lang + "%">%N")
 				i := j + 1
 			else
 				create l_source.make (s.count + 4) -- = 7 - 3
@@ -68,6 +69,24 @@ feature {NONE} -- Initialization
 			l_source.append_substring (s, i, s.count - 3)
 			l_source.append ("</code>")
 			make_from_source (l_source)
+		end
+
+	make_from_backtick_source (s: STRING)
+			-- Create wiki code from `s' using the single backtick syntax.
+			-- ie: "`....`%N"
+		require
+			has_expected_backticks: s.starts_with_general ("`") and s.ends_with_general ("`")
+			is_inline: not s.has ('%N')
+		local
+			i,j: INTEGER
+			l_lang: STRING
+			l_source: STRING
+		do
+			create l_source.make_from_string ("<code>")
+			l_source.append_substring (s, 2, s.count - 1)
+			l_source.append ("</code>")
+			make_from_source (l_source)
+			set_is_inline (True)
 		end
 
 feature -- Access

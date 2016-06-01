@@ -45,8 +45,11 @@ feature -- Router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
+		local
+			m: WSF_URI_MAPPING
 		do
-			a_router.handle ("/gcse", create {WSF_URI_AGENT_HANDLER}.make (agent handle_search (a_api, ?, ?)), a_router.methods_head_get)
+			create m.make_trailing_slash_ignored ("/gcse", create {WSF_URI_AGENT_HANDLER}.make (agent handle_search (a_api, ?, ?)))
+			a_router.map (m, a_router.methods_head_get)
 		end
 
 feature -- Recaptcha

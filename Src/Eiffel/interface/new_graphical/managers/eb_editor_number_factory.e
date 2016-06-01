@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Produce editor internal names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,13 +69,10 @@ feature -- Access
 			Result := editor_numbers_internal.twin
 		end
 
-	editor_number_from_title (a_title: STRING_GENERAL): INTEGER
+	editor_number_from_title (a_title: READABLE_STRING_GENERAL): INTEGER
 			-- Editor number from title.
-		local
-			l_str: STRING_GENERAL
 		do
-			l_str := a_title.substring (editor_name_prefix.count + 1, a_title.count)
-			Result := l_str.as_string_8.to_integer_32
+			Result := a_title.substring (editor_name_prefix.count + 1, a_title.count).to_integer_32
 		end
 
 feature -- Change elements
@@ -88,7 +85,7 @@ feature -- Change elements
 			editor_numbers_attached: editor_numbers_internal /= Void
 		end
 
-	remove_editor_name (a_name: STRING_GENERAL)
+	remove_editor_name (a_name: READABLE_STRING_GENERAL)
 			-- Remove `a_name' from factory.
 		require
 			a_name_attached: a_name /= Void
@@ -124,7 +121,7 @@ feature {NONE} -- Implementation
 	editor_name_prefix: STRING = "Editor_";
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@
 	description: "C-Eiffel Call-In Library."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -26,11 +26,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -142,7 +142,7 @@ rt_public void eifuvisex (void) {
  */
 
 rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID ftype)
-	/* Return type of `routine' defined in class of type `ftype' */
+	/* Type of `attr_name' defined in class of type `ftype'. */
 {
 	const struct cnode *sk;	/* Skeleton entry in system */
 	const char **n;	/* Pointer in cn_names array */
@@ -170,22 +170,22 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID ftype)
 
 			field_type = sk->cn_types[i];
 			switch (field_type & SK_HEAD) {
-				case SK_REF: l_result = EIF_REFERENCE_TYPE;
-				case SK_CHAR8: l_result = EIF_CHARACTER_8_TYPE;
-				case SK_CHAR32: l_result = EIF_CHARACTER_32_TYPE;
-				case SK_BOOL: l_result = EIF_BOOLEAN_TYPE;
-				case SK_UINT8: l_result = EIF_NATURAL_8_TYPE;
-				case SK_UINT16: l_result = EIF_NATURAL_16_TYPE;
-				case SK_UINT32: l_result = EIF_NATURAL_32_TYPE;
-				case SK_UINT64: l_result = EIF_NATURAL_64_TYPE;
-				case SK_INT8: l_result = EIF_INTEGER_8_TYPE;
-				case SK_INT16: l_result = EIF_INTEGER_16_TYPE;
-				case SK_INT32: l_result = EIF_INTEGER_32_TYPE;
-				case SK_INT64: l_result = EIF_INTEGER_64_TYPE;
-				case SK_REAL32: l_result = EIF_REAL_32_TYPE;
-				case SK_REAL64: l_result = EIF_REAL_64_TYPE;
-				case SK_EXP: l_result = EIF_EXPANDED_TYPE;
-				case SK_POINTER: l_result = EIF_POINTER_TYPE;
+				case SK_REF:     l_result = EIF_REFERENCE_TYPE;    break;
+				case SK_CHAR8:   l_result = EIF_CHARACTER_8_TYPE;  break;
+				case SK_CHAR32:  l_result = EIF_CHARACTER_32_TYPE; break;
+				case SK_BOOL:    l_result = EIF_BOOLEAN_TYPE;      break;
+				case SK_UINT8:   l_result = EIF_NATURAL_8_TYPE;    break;
+				case SK_UINT16:  l_result = EIF_NATURAL_16_TYPE;   break;
+				case SK_UINT32:  l_result = EIF_NATURAL_32_TYPE;   break;
+				case SK_UINT64:  l_result = EIF_NATURAL_64_TYPE;   break;
+				case SK_INT8:    l_result = EIF_INTEGER_8_TYPE;    break;
+				case SK_INT16:   l_result = EIF_INTEGER_16_TYPE;   break;
+				case SK_INT32:   l_result = EIF_INTEGER_32_TYPE;   break;
+				case SK_INT64:   l_result = EIF_INTEGER_64_TYPE;   break;
+				case SK_REAL32:  l_result = EIF_REAL_32_TYPE;      break;
+				case SK_REAL64:  l_result = EIF_REAL_64_TYPE;      break;
+				case SK_EXP:     l_result = EIF_EXPANDED_TYPE;     break;
+				case SK_POINTER: l_result = EIF_POINTER_TYPE;      break;
 			}
 		}
 	}

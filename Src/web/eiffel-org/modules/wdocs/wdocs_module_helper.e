@@ -104,7 +104,8 @@ feature -- Access URI
 				end
 			end
 
-			wvis.code_aliases.force ("eiffel") -- Support <eiffel>..</eiffel> as <code lang=eiffel>
+			wvis.code_aliases.force ("eiffel") 	-- Support <eiffel>..</eiffel> as <code lang=eiffel>
+			wvis.code_aliases.force ("e") 		-- Support <e>..</e> as <code lang=eiffel>
 
 			wvis.visit_page_with_title (l_preview_pg, l_title)
 

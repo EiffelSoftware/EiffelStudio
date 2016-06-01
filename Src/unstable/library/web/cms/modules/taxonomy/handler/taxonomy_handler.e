@@ -137,6 +137,9 @@ feature -- HTTP Methods
 							s.append ("</ul>%N")
 						end
 					else
+						if taxonomy_api.error_handler.has_error then
+							l_page.add_error_message ({STRING_32} "Query error: " + taxonomy_api.error_handler.as_string_representation)
+						end
 						s.append ("No entity found.")
 					end
 					l_page.set_main_content (s)

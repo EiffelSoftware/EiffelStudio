@@ -20,7 +20,8 @@ create
 	make,
 	make_from_source,
 	make_from_3backticks_source,
-	make_from_backtick_source,
+	make_from_single_backtick_source,
+	make_from_double_backtick_source,
 	make_from_tag
 
 feature {NONE} -- Initialization
@@ -71,7 +72,7 @@ feature {NONE} -- Initialization
 			make_from_source (l_source)
 		end
 
-	make_from_backtick_source (s: STRING)
+	make_from_single_backtick_source (s: STRING)
 			-- Create wiki code from `s' using the single backtick syntax.
 			-- ie: "`....`%N"
 		require
@@ -86,6 +87,23 @@ feature {NONE} -- Initialization
 			make_from_source (l_source)
 			set_is_inline (True)
 		end
+
+	make_from_double_backtick_source (s: STRING)
+			-- Create wiki code from `s' using the single backtick syntax.
+			-- ie: "`` ....``%N", usually this is to escape single backtick.
+		require
+			has_expected_backticks: s.starts_with_general ("``") and s.ends_with_general ("``")
+			is_inline: not s.has ('%N')
+		local
+			l_source: STRING
+		do
+			create l_source.make_from_string ("<code>")
+			l_source.append_substring (s, 3, s.count - 2)
+			l_source.append ("</code>")
+			make_from_source (l_source)
+			set_is_inline (True)
+		end
+
 
 feature -- Access
 

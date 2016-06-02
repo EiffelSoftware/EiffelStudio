@@ -78,8 +78,6 @@ feature {NONE} -- Initialization
 			has_expected_backticks: s.starts_with_general ("`") and s.ends_with_general ("`")
 			is_inline: not s.has ('%N')
 		local
-			i,j: INTEGER
-			l_lang: STRING
 			l_source: STRING
 		do
 			create l_source.make_from_string ("<code>")

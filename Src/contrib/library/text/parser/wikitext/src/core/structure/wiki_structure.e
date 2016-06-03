@@ -325,13 +325,16 @@ feature -- Basic operation
 						if multiline_level = 0 then
 							on_wiki_item_begin_token (l_items, i, "```")
 							multiline_level := multiline_level + 1
+							in_tag := True
+							i := i + 2
 						else
 							i := i + 2
-							on_wiki_item_end_token (l_items, i, "```")
-							multiline_level := multiline_level - 1
+							if is_wiki_item_token_of_kind (l_items, "```") then
+								on_wiki_item_end_token (l_items, i, "```")
+								in_tag := False
+								multiline_level := multiline_level - 1
+							end
 						end
-					else
-
 					end
 				when '<' then
 						--| Builtin tags

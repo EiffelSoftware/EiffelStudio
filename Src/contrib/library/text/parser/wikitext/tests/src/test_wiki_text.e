@@ -521,11 +521,106 @@ end</code><br/>
 			assert ("o", not o.is_empty)
 		end
 
+	test_nowiki
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+begin/
+<nowiki>this is a ''test'' with link as [[Foobar|FooBar link]]</nowiki>
+/end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin/this is a ''test'' with link as [[Foobar|FooBar link]]/end</p>%N"))
+
+			create t.make_from_string ("[
+begin/
+<nowiki>
+this is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]
+this is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]
+this is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]
+</nowiki>
+/end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin/%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%Nthis is a ''test'' with multiple lines and links as [[Foobar|FooBar link]]%N/end</p>%N"))
+
+			create t.make_from_string ("[
+begin/
+<nowiki>this is an inline <code>foo.bar + test</code></nowiki>
+/end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin/this is an inline &lt;code&gt;foo.bar + test&lt;/code&gt;/end</p>%N"))
+
+			create t.make_from_string ("[
+begin/
+<nowiki>this is a block
+<code>
+	class FOO
+	feature
+	end
+</code>
+</nowiki>
+/end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin/this is a block%N&lt;code&gt;%N	class FOO%N	feature%N	end%N&lt;/code&gt;%N/end</p>%N"))
+
+			create t.make_from_string ("[
+begin/
+<nowiki>this is a block
+```
+	class FOO
+	feature
+	end
+```
+</nowiki>
+/end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin/this is a block%N```%N	class FOO%N	feature%N	end%N```%N/end</p>%N"))
+
+		end
+
 	test_code_3backtiks
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
 		do
+			create t.make_from_string ("[
+begin
+```text
+class FOO
+feature
+end
+```
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin<code lang=%"text%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+
+
+
 			create t.make_from_string ("[
 begin
 ```eiffel
@@ -540,6 +635,37 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO%Nfeature%Nend</code><br/>%Nend</p>%N"))
+
+			create t.make_from_string ("[
+begin
+```eiffel
+class FOO <foo></bar>
+feature
+end
+```
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin<code lang=%"eiffel%">class FOO &lt;foo&gt;&lt;/bar&gt;%Nfeature%Nend</code><br/>%Nend</p>%N"))
+
+			create t.make_from_string ("[
+begin
+```xml
+<code lang="eiffel">
+	class FOOBAR
+</code>
+```
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin<code lang=%"xml%">&lt;code lang=%"eiffel%"&gt;%N%Tclass FOOBAR%N&lt;/code&gt;</code><br/>%Nend</p>%N"))
+
 		end
 
 	test_code_single_backtik

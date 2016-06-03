@@ -27,3 +27,75 @@
 .wiki-toc.horizontal li::before {
   content: "| ";
 }
+
+.wikipage p.tpl, .wikipage div.tpl {
+  margin: 10px 50px 10px 10px;
+  padding: 8px;
+  border: solid 1px;
+}
+.wikipage p.tpl.header-message, .wikipage div.tpl.header-message {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  width: 350px;
+}
+.wikipage span.tpl {
+  padding: 1px 3px 1px 3px;
+}
+.wikipage .tpl {
+  color: black;
+}
+.wikipage .tpl.header-message {
+  background-color: #FFEEBF;
+  border-color: #FFB55F;
+}
+.wikipage .tpl.definition-message {
+  background-color: #EFFFF0;
+  border-color: #0A7D19;
+}
+.wikipage .tpl.note-message {
+  color: #00529B;
+  background-color: #eef7fb;
+}
+.wikipage .tpl.recommended-message {
+  background-color: #EEEEFF;
+}
+.wikipage .tpl.rule-message {
+  background-color: #f3eada;
+}
+.wikipage .tpl.sample-message {
+  background-color: #eef7fb;
+}
+.wikipage .tpl.seealso-message {
+  background-color: #eef7fb;
+}
+.wikipage .tpl.tip-message {
+  background-color: #eef7fb;
+}
+.wikipage .tpl.key-message {
+  color: black;
+  background-color: #fafafa;
+  border: solid 1px;
+  white-space: nowrap;
+}
+.wikipage .tpl.info-message {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+.wikipage .tpl.success-message {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.wikipage .tpl.warning-message {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.wikipage .tpl.error-message {
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+.wikipage div.tpl i {
+  margin: 10px 22px;
+  font-size: 2em;
+  vertical-align: middle;
+}

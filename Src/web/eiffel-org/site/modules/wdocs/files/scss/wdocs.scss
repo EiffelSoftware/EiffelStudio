@@ -28,4 +28,79 @@
 		}
 	}
 }
+.wikipage {
+	p.tpl, div.tpl {
+		margin: 10px 50px 10px 10px;
+		padding: 8px;
+		border: solid 1px;
+		&.header-message {
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
+			width: 350px;
+		}
+	}
+	span.tpl {
+		padding: 1px 3px 1px 3px;
+	}
+	.tpl {
+		color: black;
+		&.header-message {
+			background-color: #FFEEBF;
+			border-color: #FFB55F;
+		}
+		&.definition-message {
+			background-color: #EFFFF0;
+			border-color: #0A7D19;
+		}
+		&.note-message {
+			color: #00529B;
+			background-color: #eef7fb;
+		}
+		&.recommended-message {
+			background-color: #EEEEFF;
+		}
+		&.rule-message {
+			background-color: #f3eada;
+		}
+		&.sample-message {
+			background-color: #eef7fb;
+		}
+		&.seealso-message {
+			background-color: #eef7fb;
+		}
+		&.tip-message {
+			background-color: #eef7fb;
+		}
+		&.key-message {
+			color: black;
+			background-color: #fafafa;
+			border: solid 1px;
+			white-space:nowrap;
+		}
+
+		&.info-message {
+			color: #00529B;
+			background-color: #BDE5F8;
+		}
+		&.success-message {
+			color: #4F8A10;
+			background-color: #DFF2BF;
+		}
+		&.warning-message {
+			color: #9F6000;
+			background-color: #FEEFB3;
+		}
+		&.error-message {
+			color: #D8000C;
+			background-color: #FFBABA;
+		}
+	}
+
+	div.tpl i {
+		margin:10px 22px;
+		font-size:2em;
+		vertical-align:middle;
+	}
+}
 

@@ -22,6 +22,7 @@ feature -- Access
 			l_title: detachable READABLE_STRING_GENERAL
 			l_locations: detachable STRING_TABLE [READABLE_STRING_8]
 			utf: UTF_CONVERTER
+			l_utf8_loc: STRING
 			l_table: like internal_aggregations
 		do
 			l_table := internal_aggregations
@@ -79,10 +80,24 @@ feature -- Access
 								across
 									l_locations as loc_ic
 								loop
-									agg.locations.force (utf.utf_32_string_to_utf_8_string_8 (loc_ic.item))
+									l_utf8_loc := utf.utf_32_string_to_utf_8_string_8 (loc_ic.item)
+									agg.locations.force (l_utf8_loc)
+									if attached cfg.text_list_item ({STRING_32} "feeds." + l_feed_id + {STRING_32} ".categories." + loc_ic.key) as l_cats then
+										across
+											l_cats as cats_ic
+										loop
+											agg.include_category_per_feed (cats_ic.item, l_utf8_loc)
+										end
+									end
 								end
 								Result.force (agg, l_feed_id)
 								if attached cfg.text_list_item ({STRING_32} "feeds." + l_feed_id + ".categories") as l_cats then
+									across
+										l_cats as cats_ic
+									loop
+										agg.include_category (cats_ic.item)
+									end
+								elseif attached cfg.text_list_item ({STRING_32}"feeds." + l_feed_id + {STRING_32}".categories.*") as l_cats then
 									across
 										l_cats as cats_ic
 									loop
@@ -125,11 +140,27 @@ feature -- Operation
 
 	aggregation_feed (agg: FEED_AGGREGATION): detachable FEED
 			-- Feed from aggregation `agg'.
+		local
+			loc: READABLE_STRING_8
 		do
 			across
 				agg.locations as ic
 			loop
-				if attached feed (ic.item) as f then
+				loc := ic.item
+				if attached feed (loc) as f then
+					if agg.has_category_filter_for_location (loc) and then attached f.items as lst then
+						from
+							lst.start
+						until
+							lst.after
+						loop
+							if agg.is_included_for_location (lst.item_for_iteration, loc) then
+								lst.forth
+							else
+								lst.remove
+							end
+						end
+					end
 					if Result /= Void then
 						if f /= Void then
 							Result := Result + f

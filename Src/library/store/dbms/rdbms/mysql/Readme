@@ -1,2 +1,26 @@
-The MYSQL class is the database specification file. An instance of 
-this class is used as generic parameter in EiffelStore.
+The MYSQL class is the database specification file. 
+An instance of this class is used as generic parameter in EiffelStore.
+
+
+On Windows
+----------
+You need to have $(MYSQL) in your environment, set to the directory where the MySQL C Connector is installed.
+(i.e, directory containing the mysql "include" folder).
+
+On Linux
+--------
+You need to have in your environment:
+$(MYSQLINC) set to the directory where mysql.h is located.
+$(MYSQLLIB) set to the directory where libmysqlclient.a is location.
+
+For instance, on debian:
+- To install the needed MySQL packages:
+	apt-get install libmysqlclient-dev
+
+- And then, set the variables:
+	export MYSQLINC=/usr/include/mysql
+	export MYSQLLIB=/usr/lib/mysql
+	export MYSQLLIB=/usr/lib/i386-linux-gnu
+
+Note: If you use an old libmysqlclient (before MySQL 5.5, back at the end of 2009), you may need to
+edit the .ecf, to use libmysqlclient_r instead of libmysqlclient in multi-threaded applications.

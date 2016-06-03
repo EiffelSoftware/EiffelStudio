@@ -22,6 +22,11 @@ inherit
 
 	SHARED_DECLARATIONS
 
+	SHARED_INCLUDE
+		export
+			{NONE} all
+		end
+
 	SHARED_TYPE_I
 		export
 			{NONE} all
@@ -275,29 +280,75 @@ end
 				not is_polymorphic
 			then
 				inspect feature_name_id
+				when {PREDEFINED_NAMES}.base_address_name_id then
+					buf.indent
+					generate_special_base_address (Void, gen_reg)
+					buf.exdent
+					has_generated := True
+				when {PREDEFINED_NAMES}.clear_all_name_id then
+					if
+						attached class_type.generics.first as parameter_type and then
+						not parameter_type.is_true_expanded
+					then
+						generate_special_clear_all (gen_reg, parameter_type)
+						has_generated := True
+					end
+				when {PREDEFINED_NAMES}.copy_data_name_id then
+					if
+						attached class_type.generics.first as parameter_type and then
+						not is_special_actual_expanded_with_references (parameter_type)
+					then
+						generate_special_copy_data (gen_reg, parameter_type)
+						has_generated := True
+					end
+				when {PREDEFINED_NAMES}.count_name_id then
+					buf.indent
+					generate_special_count (Void, gen_reg)
+					buf.exdent
+					has_generated := True
 				when
 					{PREDEFINED_NAMES}.item_name_id,
 					{PREDEFINED_NAMES}.infix_at_name_id,
 					{PREDEFINED_NAMES}.at_name_id
 				then
-					if attached class_type.generics.first as parameter_type and then
-						not parameter_type.is_true_expanded
+					if attached class_type.generics.first as parameter_type then
+						if not parameter_type.is_true_expanded then
+							buf.indent
+							generate_special_item_basic (Void, gen_reg, parameter_type)
+							buf.exdent
+							has_generated := True
+						elseif
+							attached parameter_type.associated_class_type (context.context_class_type.type) as argument_class_type and then
+							argument_class_type.skeleton.has_references
+						then
+							buf.indent
+							generate_special_item_with_references (Void, gen_reg, argument_class_type)
+							buf.exdent
+							has_generated := True
+						end
+					end
+				when
+					{PREDEFINED_NAMES}.move_data_name_id,
+					{PREDEFINED_NAMES}.overlapping_move_name_id
+				then
+					if
+						attached class_type.generics.first as parameter_type and then
+						not is_special_actual_expanded_with_references (parameter_type)
 					then
-						buf.indent
-						buf.put_new_line
-						buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
-						buf.put_new_line
-						buf.put_two_character ('*', '(')
-						parameter_type.c_type.generate_access_cast (buf)
-						gen_reg.print_target_register
-						buf.put_string (" + (")
-						parameters [1].print_register
-						buf.put_two_character (')', ')')
-						buf.put_new_line
-						buf.put_string ("/* END INLINED CODE */")
-						buf.exdent
+						generate_special_move (gen_reg, parameter_type, True)
 						has_generated := True
 					end
+				when {PREDEFINED_NAMES}.non_overlapping_move_name_id then
+					if
+						attached class_type.generics.first as parameter_type and then
+						not is_special_actual_expanded_with_references (parameter_type)
+					then
+						generate_special_move (gen_reg, parameter_type, False)
+						has_generated := True
+					end
+				when {PREDEFINED_NAMES}.put_name_id then
+					generate_special_put (gen_reg, class_type.generics.first)
+					has_generated := True
 				else
 				end
 			end
@@ -566,6 +617,405 @@ feature {NONE} -- Implementation
 			create Result.put (False)
 		ensure
 			is_right_parenthesis_needed_not_void: Result /= Void
+		end
+
+feature {NONE} -- Inlining of calls to features from SPECIAL
+
+	is_special_actual_expanded_with_references (actual_generic: TYPE_A): BOOLEAN
+			-- Is actual generic parameter `actual_generic' of current type SPECIAL [G] is
+			-- expanded with references?
+		require
+			is_special_context_class_type: context.context_cl_type.base_class.is_special
+		do
+			if actual_generic.is_true_expanded then
+				Result := actual_generic.associated_class_type (context.context_cl_type).skeleton.has_references
+			end
+		end
+
+	generate_special_base_address (result_register: detachable REGISTER; target_register: REGISTRABLE)
+			-- Generate code for "{SPECIAL}.base_address" with target stored in `target_register'.
+			-- Generate an instruction that stores result in `result_register' if it is attached.
+			-- Generate an expression otherwise.
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.base_address) */")
+			buf.put_new_line
+			if attached result_register then
+				result_register.print_register
+				buf.put_three_character (' ', '=', ' ')
+			end
+			target_register.print_target_register
+			if attached result_register then
+				buf.put_character (';')
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_clear_all (target_register: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.clear_all" with target stored in `target_register' and actual generic `actual_generic'.
+			-- The actual generic should not be user-defined expanded because it may require initialization.
+		require
+			actual_generic_is_basic: not actual_generic.is_true_expanded
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+				-- New line has been added earlier.
+			buf.put_string ("/* INLINED CODE (SPECIAL.clear_all) */")
+			buf.put_new_line
+			buf.put_string ("memset (")
+			target_register.print_target_register
+			buf.put_string (", 0, RT_SPECIAL_VISIBLE_SIZE(")
+			target_register.print_target_register
+			buf.put_three_character (')', ')', ';')
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_copy_data (target_register: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.copy_data" with target stored in `target_register' and actual generic `actual_generic'.
+		require
+			actual_generic_not_expanded_with_references: not is_special_actual_expanded_with_references (actual_generic)
+		local
+			buf: GENERATION_BUFFER
+			type_c: TYPE_C
+			skeleton: SKELETON
+		do
+			buf := buffer
+				-- New line has been added earlier.
+			buf.put_string ("/* INLINED CODE (SPECIAL.copy_data) */")
+			buf.put_new_line
+			if actual_generic.is_true_expanded then
+				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
+				buf.put_string ("memmove((char *)")
+				target_register.print_target_register
+				buf.put_string (" + (rt_uint_ptr)")
+				parameters [3].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+				buf.put_string (", (char *) ")
+				parameters [1].print_register
+				buf.put_string (" + (rt_uint_ptr)")
+				parameters [2].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+				buf.put_string (", (rt_uint_ptr)")
+				parameters [4].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+			else
+				type_c := actual_generic.c_type
+				if type_c.level = C_ref then
+						-- Because we need to do the aging test in case `source' and `target' are
+						-- not the same SPECIAL, we call the run-time helper function `sp_copy_data'.
+					buf.put_string ("sp_copy_data(")
+					target_register.print_target_register
+					buf.put_character (',')
+					parameters [1].print_register
+					buf.put_character (',')
+					parameters [2].print_register
+					buf.put_character (',')
+					parameters [3].print_register
+					buf.put_character (',')
+					parameters [4].print_register
+				else
+					buf.put_string ("memmove(")
+					type_c.generate_access_cast (buf)
+					target_register.print_target_register
+					buf.put_string (" + (")
+					parameters [3].print_register
+					buf.put_string ("),")
+					type_c.generate_access_cast (buf)
+					parameters [1].print_register
+					buf.put_string (" + ")
+					parameters [2].print_register
+					buf.put_string (", (rt_uint_ptr)")
+					type_c.generate_size (buf)
+					buf.put_string (" * (rt_uint_ptr)")
+					parameters [4].print_register
+				end
+			end
+			buf.put_two_character (')', ';')
+				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			buf.put_new_line
+			buf.put_string("RT_SPECIAL_COUNT(");
+			target_register.print_register
+			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
+			target_register.print_register
+			buf.put_three_character (')', ',', ' ')
+			parameters [3].print_register
+			buf.put_three_character (' ', '+', ' ')
+			parameters [4].print_register
+			buf.put_two_character (')', ';')
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_count (result_register: detachable REGISTER; target_register: REGISTRABLE)
+			-- Generate code for "{SPECIAL}.count" with target stored in `target_register'.
+			-- Generate an instruction that stores result in `result_register' if it is attached.
+			-- Generate an expression otherwise.
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.count) */")
+			buf.put_new_line
+			if attached result_register then
+				result_register.print_register
+				buf.put_three_character (' ', '=', ' ')
+			end
+			buf.put_string ("RT_SPECIAL_COUNT(")
+			target_register.print_target_register
+			buf.put_character (')')
+			if attached result_register then
+				buf.put_character (';')
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_item_basic (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.item" with target stored in `target_register' and actual generic `actual_generic'.
+			-- Generate an instruction that stores result in `result_register' if it is attached.
+			-- Generate an expression otherwise.
+		require
+			actual_generic_is_basic: not actual_generic.is_true_expanded
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
+			buf.put_new_line
+			if attached result_register then
+				result_register.print_register
+				buf.put_three_character (' ', '=', ' ')
+			end
+			buf.put_two_character ('*', '(')
+			actual_generic.c_type.generate_access_cast (buf)
+			target_register.print_target_register
+			buf.put_string (" + (")
+			parameters [1].print_register
+			buf.put_two_character (')', ')')
+			if attached result_register then
+				buf.put_character (';')
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_item_with_references (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic_class_type: CLASS_TYPE)
+			-- Generate code for "{SPECIAL}.item" with target stored in `target_register' and result type `actual_generic_class_type'.
+			-- Generate an instruction that stores result in `result_register' if it is attached.
+			-- Generate an expression otherwise.
+		require
+			actual_generic_class_type_has_references: actual_generic_class_type.skeleton.has_references
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
+			buf.put_new_line
+			if attached result_register then
+				result_register.print_register
+				buf.put_three_character (' ', '=', ' ')
+			end
+			buf.put_string ("RTCL(")
+			target_register.print_target_register
+			buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
+			parameters [1].print_register
+			buf.put_string (" * (rt_uint_ptr)(")
+			actual_generic_class_type.skeleton.generate_size (buf, True)
+			buf.put_string (" + OVERHEAD))")
+			if attached result_register then
+				buf.put_character (';')
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_item_address (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.item_address" with target stored in `target_register' and actual generic `actual_generic'.
+			-- Generate an instruction that stores result in `result_register' if it is attached.
+			-- Generate an expression otherwise.
+		local
+			buf: GENERATION_BUFFER
+			skeleton: SKELETON
+		do
+			buf := buffer
+			buf.put_new_line
+			buf.put_string ("/* INLINED CODE (SPECIAL.item_address) */")
+			buf.put_new_line
+			if attached result_register then
+				result_register.print_register
+				buf.put_three_character (' ', '=', ' ')
+			end
+			target_register.print_target_register
+			if actual_generic.is_true_expanded then
+				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
+				if skeleton.has_references then
+					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
+					parameters [1].print_register
+					buf.put_string (" * (rt_uint_ptr)(")
+					skeleton.generate_size (buf, True)
+					buf.put_string (" + OVERHEAD)")
+				else
+					buf.put_string (" + (rt_uint_ptr)")
+					parameters [1].print_register
+					buf.put_string (" * (rt_uint_ptr)")
+					skeleton.generate_size (buf, True)
+				end
+			else
+				buf.put_string (" + (rt_uint_ptr)")
+				parameters [1].print_register
+				buf.put_three_character (' ', '*', ' ')
+				actual_generic.c_type.generate_size (buffer)
+			end
+			if attached result_register then
+				buf.put_character (';')
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_move (target_register: REGISTRABLE; actual_generic: TYPE_A; is_overlapping: BOOLEAN)
+			-- Generate code for "{SPECIAL}.move_data" or "{SPECIAL}.overlapping_move" depending on `is_overlapping'
+			-- with target stored in `target_register' and argument of type `argument_type'.
+		require
+			actual_generic_not_expanded_with_references: not is_special_actual_expanded_with_references (actual_generic)
+		local
+			buf: GENERATION_BUFFER
+			type_c: TYPE_C
+			skeleton: SKELETON
+		do
+			buf := buffer
+				-- New line has been added earlier.
+			if is_overlapping then
+				buf.put_string ("/* INLINED CODE (SPECIAL.overlapping_move) */")
+				buf.put_new_line
+				buf.put_string ("memmove")
+			else
+				buf.put_string ("/* INLINED CODE (SPECIAL.move_data) */")
+				buf.put_new_line
+				buf.put_string ("memcpy")
+			end
+			if actual_generic.is_true_expanded then
+				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
+				buf.put_string ("((char *)")
+				target_register.print_target_register
+				buf.put_string (" + (rt_uint_ptr)")
+				parameters [2].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+				buf.put_string (", (char *) ")
+				target_register.print_target_register
+				buf.put_string (" + (rt_uint_ptr)")
+				parameters [1].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+				buf.put_string (", (rt_uint_ptr)")
+				parameters [3].print_register
+				buf.put_string (" * (rt_uint_ptr)")
+				skeleton.generate_size (buf, True)
+			else
+				type_c := actual_generic.c_type
+				buf.put_character ('(')
+				type_c.generate_access_cast (buf)
+				target_register.print_target_register
+				buf.put_string (" + (")
+				parameters [2].print_register
+				buf.put_two_character (')', ',')
+				type_c.generate_access_cast (buf)
+				target_register.print_target_register
+				buf.put_three_character (' ', '+', ' ')
+				parameters [1].print_register
+				buf.put_string (", (rt_uint_ptr)")
+				type_c.generate_size (buf)
+				buf.put_string (" * (rt_uint_ptr)")
+				parameters [3].print_register
+			end
+			buf.put_two_character (')', ';')
+				-- Add `eif_helpers.h' for C compilation where `eif_max_int32' function is declared.
+			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			buf.put_new_line
+			buf.put_string ("RT_SPECIAL_COUNT(")
+			target_register.print_register
+			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
+			target_register.print_register
+			buf.put_three_character (')', ',', ' ')
+			parameters [2].print_register
+			buf.put_three_character (' ', '+', ' ')
+			parameters [3].print_register
+			buf.put_two_character (')', ';')
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
+		end
+
+	generate_special_put (target_register: REGISTRABLE; argument_type: TYPE_A)
+			-- Generate code for "{SPECIAL}.put" with target stored in `target_register' and argument of type `argument_type'.
+		local
+			buf: GENERATION_BUFFER
+			skeleton: SKELETON
+			type_c: TYPE_C
+		do
+			buf := buffer
+				-- New line has been added earlier.
+			buf.put_string ("/* INLINED CODE (SPECIAL.put) */")
+			buf.put_new_line
+			if argument_type.is_true_expanded then
+				skeleton := argument_type.associated_class_type (context.context_class_type.type).skeleton
+				if skeleton.has_references then
+					buf.put_string ("ecopy(")
+					parameters [1].print_register
+					buf.put_two_character (',', ' ')
+					target_register.print_target_register
+					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
+					parameters [2].print_register
+					buf.put_string (" * (rt_uint_ptr)(")
+					skeleton.generate_size (buf, True)
+					buf.put_string (" + OVERHEAD));")
+				else
+					buf.put_string ("memcpy(")
+					target_register.print_target_register
+					buf.put_string (" + (rt_uint_ptr)")
+					parameters [2].print_register
+					buf.put_string (" * (rt_uint_ptr)")
+					skeleton.generate_size (buf, True)
+					buf.put_character (',')
+					parameters [1].print_register
+					buf.put_two_character (',', ' ')
+					skeleton.generate_size (buf, True)
+					buf.put_two_character (')', ';')
+				end
+			else
+				type_c := argument_type.c_type
+				buf.put_two_character ('*', '(')
+				type_c.generate_access_cast (buf)
+				target_register.print_target_register
+				buf.put_string (" + (")
+				parameters [2].print_register
+				buf.put_string (")) = ")
+				parameters [1].print_register
+				buf.put_character (';')
+				if type_c.level = C_ref then
+					buf.put_new_line
+					buf.put_string ("RTAR(")
+					target_register.print_register
+					buf.put_character (',')
+					parameters [1].print_register
+					buf.put_two_character (')', ';')
+				end
+			end
+			buf.put_new_line
+			buf.put_string ("/* END INLINED CODE */")
 		end
 
 note

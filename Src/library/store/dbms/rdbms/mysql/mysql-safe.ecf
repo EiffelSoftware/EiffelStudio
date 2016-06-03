@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="mysql">
+	<description>MySQL access library for EiffelStore.</description>
 	<target name="mysql">
 		<description>MySQL access library for EiffelStore.
       Copyright (c) 2008-2010, ITPassion Ltd and others
@@ -46,7 +47,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="-lmysqlclient_r">
+		<external_object location="-lmysqlclient">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

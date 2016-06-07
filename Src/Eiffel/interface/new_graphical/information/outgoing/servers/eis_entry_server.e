@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Server to hold and manage eis entries"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -53,7 +53,7 @@ feature {EIS_STORAGE} -- Element change
 			l_entries := entries
 			l_entries.search (a_id)
 			if l_entries.found then
-				l_entry_list := l_entries.found_item.as_attached
+				l_entry_list := l_entries.found_item
 				l_entry_list.search (a_entry)
 				if not l_entry_list.found then
 					l_entry_list.force (a_entry)
@@ -81,7 +81,7 @@ feature {EIS_STORAGE} -- Element change
 				l_entries := entries
 				l_entries.search (a_id)
 				if l_entries.found then
-					l_entry_list := l_entries.found_item.as_attached
+					l_entry_list := l_entries.found_item
 					l_entry_list.search (a_entry)
 					if l_entry_list.found then
 						l_entry_list.remove (a_entry)
@@ -160,7 +160,7 @@ invariant
 	entries_not_void: entries /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -190,8 +190,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

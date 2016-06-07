@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information tree. Class tree + tag tree + affected tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -174,7 +174,7 @@ feature {NONE} -- Initialization
 				l_tags.after
 			loop
 				if not l_tags.key_for_iteration.is_empty then
-					l_managed_tags.extend (l_tags.key_for_iteration.as_attached)
+					l_managed_tags.extend (l_tags.key_for_iteration)
 				end
 				l_tags.forth
 			end
@@ -524,7 +524,7 @@ invariant
 	only_first_item_is_off_mapping: (tag_header /= Void and not is_recycled) implies managed_tags.count = tag_header.count - 1
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

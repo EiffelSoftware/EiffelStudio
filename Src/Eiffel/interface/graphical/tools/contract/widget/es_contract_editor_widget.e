@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A widget used to view and edit (when not the class is not read-only) contracts, given a context {ES_CONTRACT_EDITOR_CONTEXT} object.
 	]"
@@ -674,7 +674,7 @@ feature {NONE} -- Population
 		local
 			l_grid: like edit_contract_grid
 			l_editable: BOOLEAN
-			l_mod_contract: TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+			l_mod_contract: TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: detachable ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			l_contracts: attached DS_LIST [TAGGED_AS]
 			l_tagged: TAGGED_AS
 			l_decorator: TEXT_FORMATTER_DECORATOR
@@ -715,7 +715,11 @@ feature {NONE} -- Population
 
 				-- Populate contracts, if any
 			l_contracts := l_mod_contract.contracts
-			if not l_contracts.is_empty and then (not l_editable or else l_mod_contract.modifier.is_ast_available) then
+			if
+				not l_contracts.is_empty and then
+				attached l_mod_contract.modifier as m and then
+				(not l_editable or else m.is_ast_available)
+			then
 				a_row.insert_subrows (l_contracts.count, 1)
 				if not l_editable then
 						-- Create token generator for use later.
@@ -736,10 +740,10 @@ feature {NONE} -- Population
 						if l_editable then
 							check
 								l_scanner_attached: l_scanner /= Void
-								ast_match_list_attached: l_mod_contract.modifier.ast_match_list /= Void
+								ast_match_list_attached: m.ast_match_list /= Void
 							end
 
-							l_tagged_text := l_tagged.text_32 (l_mod_contract.modifier.ast_match_list)
+							l_tagged_text := l_tagged.text_32 (m.ast_match_list)
 								-- Because the tagged text is coming from an AST node the initial tabbing is missing.
 							if attached {ES_INVARIANT_CONTRACT_EDITOR_CONTEXT} context as l_inv then
 								l_tagged_text.prepend ("%T")
@@ -748,11 +752,11 @@ feature {NONE} -- Population
 							end
 								-- Call will set row data!
 							check l_row_not_void: l_row /= Void end
-							populate_editable_contract_row (l_tagged_text.as_attached, l_contract_source, l_row)
+							populate_editable_contract_row (l_tagged_text, l_contract_source, l_row)
 						else
 								-- Perform formatting with decorator, enabling clickable text.
-							l_class_c := l_mod_contract.modifier.context_class.compiled_class
-							if attached {ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} l_mod_contract.modifier as l_fmodifier then
+							l_class_c := m.context_class.compiled_class
+							if attached {ES_FEATURE_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} m as l_fmodifier then
 								l_feature_i := l_class_c.feature_of_feature_id (l_fmodifier.context_feature.feature_id)
 								create l_feat_decorator.make (l_class_c, l_token_generator)
 								l_feat_decorator.init_feature_context (l_feature_i, l_feature_i, l_fmodifier.context_feature.ast)
@@ -778,7 +782,7 @@ feature {NONE} -- Population
 							l_token_generator.wipe_out_lines
 
 								-- Set contract line data
-							create l_contract_line.make_from_string (l_tagged_text.as_string_32.as_attached, l_contract_source)
+							create l_contract_line.make_from_string (l_tagged_text.as_string_32, l_contract_source)
 							l_row.set_data (l_contract_line)
 						end
 
@@ -1132,7 +1136,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

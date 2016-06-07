@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		An ESF standard file dialog for choosing a location to save a file.
 		Functionalities include existing file checking and sticky paths.
@@ -34,7 +34,7 @@ feature -- Access
 	buttons: attached DS_SET [INTEGER]
 			-- <Precursor>
 		once
-			Result := dialog_buttons.save_cancel_buttons.as_attached
+			Result := dialog_buttons.save_cancel_buttons
 		end
 
 feature {NONE} -- Query
@@ -91,7 +91,7 @@ feature {NONE} -- Internationalization
 	q_file_already_exists: STRING = "The selected file '$1' already exists.%NDo you want to contiue and overwrite this file?"
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

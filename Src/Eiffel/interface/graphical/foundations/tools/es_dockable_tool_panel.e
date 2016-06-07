@@ -1,4 +1,4 @@
-note
+﻿note
     description: "[
         An EiffelStudio dockable tool window base implementation for EiffelStudio tools.
         
@@ -7,8 +7,8 @@ note
     wiki: "http://dev.eiffel.com/Tool_Integration_Development"
     legal: "See notice at end of class."
     status: "See notice at end of class.";
-    date: "$date$";
-    revision: "$revision$"
+    date: "$Date$";
+    revision: "$Revision$"
 
 deferred class
     ES_DOCKABLE_TOOL_PANEL [G -> EV_WIDGET]
@@ -396,7 +396,7 @@ feature {NONE} -- Helpers
 				l_menus_attached: l_menus /= Void
 				l_menus_is_interface_usable: l_menus.is_interface_usable
 			end
-			Result := l_menus.context_menu_factory.as_attached
+			Result := l_menus.context_menu_factory
 		end
 
 feature -- Element change
@@ -1116,7 +1116,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

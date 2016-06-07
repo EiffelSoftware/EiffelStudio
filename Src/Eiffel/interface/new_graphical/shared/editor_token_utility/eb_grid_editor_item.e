@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Selectable editor token grid item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			editor.set_auto_scroll (False)
 			editor.disable_line_numbers
 
-			editor_token_text.display_on_editor (editor.as_attached)
+			editor_token_text.display_on_editor (editor)
 			editor.set_read_only (True)
 
 			create viewport
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			viewport.set_item_size (popup_window.client_width, popup_window.client_height)
 
 				-- Change `popup_window' to suit `Current'.
-			update_popup_dimensions (popup_window.as_attached)
+			update_popup_dimensions (popup_window)
 
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
@@ -164,7 +164,7 @@ feature {NONE} -- Work around
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

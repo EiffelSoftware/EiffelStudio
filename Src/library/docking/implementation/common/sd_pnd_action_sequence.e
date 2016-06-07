@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Action sequence for PND drop events."
 	legal: "See notice at end of class."
@@ -15,7 +15,8 @@ inherit
 	ACTION_SEQUENCE [TUPLE [ANY, SD_CONTENT]]
 		redefine
 			default_create,
-			call
+			call,
+			make_filled
 		end
 
 create
@@ -29,7 +30,14 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create a ready to use action sequence.
 		do
-			Precursor {ACTION_SEQUENCE}
+			Precursor
+			create names.make (0)
+		end
+
+	make_filled (n: INTEGER)
+			-- <Precursor>
+		do
+			Precursor (n)
 			create names.make (0)
 		end
 
@@ -131,45 +139,28 @@ feature -- Status report
 			-- User function to determine whether dropping is allowed.
 			-- Argument {SD_CONTENT} means which {SD_CONTENT} stone will be dropped to
 
-	names_set: BOOLEAN
-			-- If `names' has been set?
-		do
-			Result := names /= Void
-		end
-
 feature -- Element change
 
 	set_item_name (an_item: PROCEDURE [ANY]; a_name: READABLE_STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
-		require
-			set: names_set
-		local
-			l_names: like names
 		do
-			l_names := names
-			check l_names /= Void end -- Implied by precondition `set'
-			l_names.force (a_name, an_item)
+			names.force (a_name, an_item)
 		end
 
 feature {NONE} -- Implementation
 
-	names: detachable HASH_TABLE [READABLE_STRING_GENERAL, PROCEDURE]
+	names: HASH_TABLE [READABLE_STRING_GENERAL, PROCEDURE]
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

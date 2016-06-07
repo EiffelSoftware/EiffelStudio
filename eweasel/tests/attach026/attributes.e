@@ -49,7 +49,7 @@ feature -- Access
 			l_result: ?STRING
 		attribute
 			l_result := "D"
-			Result := l_result.as_attached
+			Result := l_result
 		end
 
 	test_e: !STRING

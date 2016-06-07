@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Argument parser for pixmap matix code generator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -95,7 +95,7 @@ feature -- Access
 			if has_option (pngs_switch) then
 				Result := option_of_name (pngs_switch).value
 			else
-				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory.as_attached
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		ensure
 			png_slices_locations_not_void: Result /= Void
@@ -171,7 +171,7 @@ feature {NONE} -- Option Names
 		-- Location where sliced pngs will be stored
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -202,4 +202,4 @@ feature {NONE} -- Option Names
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_PARSER}
+end

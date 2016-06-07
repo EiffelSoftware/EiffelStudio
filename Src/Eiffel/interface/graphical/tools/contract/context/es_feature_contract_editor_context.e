@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A base contract editor ({ES_CONTRACT_EDITOR_WIDGET}) context for class feature-level contracts.
 	]"
@@ -24,17 +24,16 @@ feature -- Access
 			is_interface_usable: is_interface_usable
 			has_stone: has_stone
 		do
-			Result := context_stone.e_feature.as_attached
+			Result := context_stone.e_feature
 		end
 
 feature -- Contracts
 
-	contracts_for_class (a_class: attached CLASS_I; a_live: BOOLEAN): attached TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
+	contracts_for_class (a_class: attached CLASS_I; a_live: BOOLEAN): TUPLE [contracts: attached DS_LIST [TAGGED_AS]; modifier: detachable ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]]
 			-- <Precursor>
 		local
 			l_modifier: like create_text_modifier
 			l_e_feature: detachable like context_feature
-			l_class_c: CLASS_C
 			l_feature_as: detachable FEATURE_AS
 			l_assertions: detachable EIFFEL_LIST [TAGGED_AS]
 			l_cursor: CURSOR
@@ -45,16 +44,11 @@ feature -- Contracts
 			if a_class = context_class then
 				l_modifier := text_modifier
 				l_e_feature := context_feature
-			else
+			elseif attached a_class.compiled_class as l_class_c then
 					-- Create a temporary context object to fetch a text modifier.
-				if a_class.is_compiled then
-					l_class_c ?= a_class.compiled_class
-					if l_class_c /= Void then
-						check has_feature_table: l_class_c.has_feature_table end
-						l_modifier := create_parent_text_modifier (l_class_c)
-						l_e_feature ?= l_modifier.context_feature
-					end
-				end
+				check has_feature_table: l_class_c.has_feature_table end
+				l_modifier := create_parent_text_modifier (l_class_c)
+				l_e_feature := l_modifier.context_feature
 			end
 
 			if a_live then
@@ -90,7 +84,7 @@ feature -- Contracts
 				end
 			end
 
-			Result := [l_result, (({attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]}) #? l_modifier).as_attached]
+			Result := [l_result, {attached ES_CONTRACT_TEXT_MODIFIER [AST_EIFFEL]} / l_modifier]
 		end
 
 feature {NONE} -- Contracts
@@ -158,7 +152,7 @@ feature {NONE} -- Factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -182,11 +176,11 @@ feature {NONE} -- Factory
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

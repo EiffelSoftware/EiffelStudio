@@ -1,9 +1,9 @@
-note
-	description	: "Tool to view the favorites"
+﻿note
+	description: "Tool to view the favorites"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_FAVORITES_TOOL_PANEL
@@ -36,7 +36,7 @@ feature {NONE} -- Access
 	favorites_manager: attached EB_FAVORITES_MANAGER
 			-- Associated favorites manager.
 		do
-			Result := develop_window.favorites_manager.as_attached
+			Result := develop_window.favorites_manager
 		end
 
 feature {NONE} -- Access: User interface
@@ -77,7 +77,7 @@ feature {NONE} -- Factory
     create_widget: attached EB_FAVORITES_TREE
     		-- <Precursor>
 		do
-			Result := favorites_manager.widget.as_attached
+			Result := favorites_manager.widget
 		end
 
     create_mini_tool_bar_items: detachable ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -104,7 +104,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

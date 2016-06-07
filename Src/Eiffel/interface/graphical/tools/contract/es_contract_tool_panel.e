@@ -1,7 +1,5 @@
-note
-	description: "[
-		The contract editor tool graphical panel.
-	]"
+﻿note
+	description: "The contract editor tool graphical panel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -99,7 +97,7 @@ feature {NONE} -- Initialization
 								ia_item.row.enable_select
 								contract_editor.widget.enable_selection_on_click
 							end
-							on_row_selected_in_contract_editor (ia_item.row.as_attached, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
+							on_row_selected_in_contract_editor (ia_item.row, ia_x, ia_y + contract_editor.widget.header.height, ia_button)
 						end
 					end
 				end)
@@ -213,7 +211,7 @@ feature {NONE} -- Access
 			has_stone: has_stone
 		do
 			check contract_editor_has_context: contract_editor.has_context end
-			Result := contract_editor.context.as_attached
+			Result := contract_editor.context
 		end
 
 	contract_code_templates: attached DS_BILINEAR [attached CODE_TEMPLATE_DEFINITION]
@@ -1078,18 +1076,18 @@ feature {NONE} -- Action handlers
 				if attached {ES_FEATURE_CONTRACT_EDITOR_CONTEXT} context as l_fc then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (feature_name_symbol_id)
-						l_value.set_value (l_fc.context_feature.name_32.as_attached)
+						l_value.set_value (l_fc.context_feature.name_32)
 					else
-						create l_value.make (l_fc.context_feature.name_32.as_attached)
+						create l_value.make (l_fc.context_feature.name_32)
 						l_symbol_table.put (l_value, feature_name_symbol_id)
 					end
 				end
 				if attached {ES_CLASS_CONTRACT_EDITOR_CONTEXT} context as l_cc then
 					if l_symbol_table.has_id (feature_name_symbol_id) then
 						l_value := l_symbol_table.item (class_name_symbol_id)
-						l_value.set_value (l_cc.context_class.name.as_string_32.as_attached)
+						l_value.set_value (l_cc.context_class.name.as_string_32)
 					else
-						create l_value.make (l_cc.context_class.name.as_string_32.as_attached)
+						create l_value.make (l_cc.context_class.name.as_string_32)
 						l_symbol_table.put (l_value, class_name_symbol_id)
 					end
 				end
@@ -1588,7 +1586,7 @@ invariant
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

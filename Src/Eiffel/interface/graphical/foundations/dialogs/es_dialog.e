@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A base dialog implementation for all dialogs resident in EiffelStudio.
 		
@@ -232,7 +232,7 @@ feature -- Access
 		do
 			l_result := internal_dialog
 			if l_result = Void then
-				Result := create_dialog.as_attached
+				Result := create_dialog
 				internal_dialog := Result
 			else
 				Result := l_result
@@ -1111,7 +1111,7 @@ invariant
 	button_actions_attached: button_actions /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 					if not l_result.current_frame.is_empty then
 						l_locals := l_result.current_frame.all_locals
 						from l_locals.start until l_locals.after loop
-							l_name := l_locals.key_for_iteration.as_attached
+							l_name := l_locals.key_for_iteration
 							l_type := l_locals.item_for_iteration
 							if l_type /= Void and then l_type.is_valid_for_class (l_class) then
 									-- The type is valid for the given class
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 				until
 					l_locals.after
 				loop
-					l_name := l_locals.key_for_iteration.as_attached
+					l_name := l_locals.key_for_iteration
 					l_type := l_locals.item_for_iteration
 					if l_type /= Void and then l_type.is_valid_for_class (a_class) then
 							-- The type is valid for the given class
@@ -1573,7 +1573,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,5 @@
-note
-	description: "[
-		Common ESF helpers.
-	]"
+﻿note
+	description: "Common ESF helpers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -43,17 +41,17 @@ feature {NONE} -- Helpers: User interface
 	frozen stock_pixmaps: attached ES_PIXMAPS_16X16
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps.as_attached
+			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
 	frozen mini_stock_pixmaps: attached ES_PIXMAPS_10X10
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
-			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps.as_attached
+			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

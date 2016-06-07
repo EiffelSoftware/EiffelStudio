@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A widget wrapper to give text fields ({EV_TEXT_FIELD}/{EV_COMBO_BOX}) validation capabilities.
 	]"
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			not_a_text_field_is_destroyed: not a_text_field.is_destroyed
 			not_a_text_field_is_parented: not a_text_field.has_parent
 		do
-			original_foreground_color := a_text_field.foreground_color.as_attached
+			original_foreground_color := a_text_field.foreground_color
 			text_field := a_text_field
 			entry_error_function := a_function
 			make_widget
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization: User interface
 			a_widget.extend (text_field)
 			register_action (text_field.change_actions, agent on_text_field_changed)
 
-			validation_pixmap := stock_pixmaps.general_error_icon.twin.as_attached
+			validation_pixmap := stock_pixmaps.general_error_icon.twin
 			validation_pixmap.set_minimum_size (16, 16)
 			a_widget.extend (validation_pixmap)
 			a_widget.disable_item_expand (validation_pixmap)
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

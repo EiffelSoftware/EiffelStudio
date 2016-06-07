@@ -1,8 +1,5 @@
-note
-	description: "[
-		Manages EiffelStudio tool and tool bar layouts
-	]"
-	author: ""
+﻿note
+	description: "Manages EiffelStudio tool and tool bar layouts"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,7 +74,7 @@ feature {NONE} -- Access
 		require
 			is_interface_usable: is_interface_usable
 		do
-			Result := development_window.docking_manager.as_attached
+			Result := development_window.docking_manager
 		end
 
 	editors_configuration_file: PATH
@@ -294,7 +291,7 @@ feature -- Basic operations: Editor configuration
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

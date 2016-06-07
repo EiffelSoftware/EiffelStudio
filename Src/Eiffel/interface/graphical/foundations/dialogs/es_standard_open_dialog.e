@@ -34,7 +34,7 @@ feature -- Access
 	buttons: attached DS_SET [INTEGER]
 			-- <Precursor>
 		once
-			Result := dialog_buttons.open_cancel_buttons.as_attached
+			Result := dialog_buttons.open_cancel_buttons
 		end
 
 feature {NONE} -- Query
@@ -86,7 +86,7 @@ feature {NONE} -- Internationalization
 	e_file_does_not_exist: STRING = "The selected file '$1' does not exist."
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Editor extension for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -189,7 +189,7 @@ feature {NONE} -- Actions
 								l_classes.forth
 							end
 						end
-					end (?, l_window.as_attached)
+					end (?, l_window)
 
 				l_clusters := l_target.clusters
 				l_clusters.linear_representation.do_all (l_classes_in_cluster)
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

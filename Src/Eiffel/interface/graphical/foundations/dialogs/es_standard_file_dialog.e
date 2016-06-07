@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		ESF base dialog implemention for all standard file dialogs.
 	]"
@@ -206,7 +206,7 @@ feature -- Basic operations
 			if {PLATFORM}.is_windows then
 				l_extension := l_extension.as_lower
 			end
-			filters.force_last ([l_extension.as_attached, a_description.as_string_32.as_attached])
+			filters.force_last ([l_extension, a_description.as_string_32])
 			if a_set then
 				filter_index := filters.count.to_natural_16
 			end
@@ -234,7 +234,7 @@ feature {NONE} -- Action handlers
 			l_filters := filters.twin
 			if is_all_files_filter_supported or else l_filters.is_empty then
 					-- Add the all files filters.
-				l_filters.force_last ([all_files_filter.as_string_32.as_attached, locale_formatter.translation (all_files_filter_description)])
+				l_filters.force_last ([all_files_filter.as_string_32, locale_formatter.translation (all_files_filter_description)])
 			end
 			if not l_filters.is_empty then
 				from l_filters.start until l_filters.after loop
@@ -294,7 +294,7 @@ invariant
 	filter_index_is_valid: filter_index = 0 or else filters.valid_index (filter_index)
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -4,8 +4,8 @@ note
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ES_TOOL_UTILITIES
@@ -116,7 +116,7 @@ feature -- Query
 			a_tool_is_interface_usable: a_tool.is_interface_usable
 		do
 			Result := a_tool.generating_type
-			Result := Result.as_lower.as_attached
+			Result := Result.as_lower
 			if Result.substring (1, (3).min (Result.count)).is_equal (once "es_") then
 					-- Remove ES_ prefix
 				Result.keep_tail (Result.count - 3)
@@ -156,7 +156,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

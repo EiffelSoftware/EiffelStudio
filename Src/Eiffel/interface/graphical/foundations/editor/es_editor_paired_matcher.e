@@ -1,7 +1,5 @@
-note
-	description: "[
-			Supports brace match scanning functionality in the editor.
-		]"
+﻿note
+	description: "Supports brace match scanning functionality in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -62,7 +60,7 @@ feature -- Status report
 				end
 			end
 		ensure
-			token_image_is_opening_brace: Result implies opening_brace_map.has (a_token.wide_image.as_attached)
+			token_image_is_opening_brace: Result implies opening_brace_map.has (a_token.wide_image)
 		end
 
 	is_opening_match_exception (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
@@ -103,7 +101,7 @@ feature -- Status report
 				end
 			end
 		ensure
-			token_image_is_opening_brace: Result implies closing_brace_map.has (a_token.wide_image.as_attached)
+			token_image_is_opening_brace: Result implies closing_brace_map.has (a_token.wide_image)
 		end
 
 	is_closing_match_exception (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN
@@ -236,7 +234,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_closing_brace: Result /= Void implies is_closing_brace (Result.token)
 			result_is_correct_match: Result /= Void implies opening_brace_map.item
-				(a_start_token.wide_image.as_attached).is_equal (Result.token.wide_image.as_attached)
+				(a_start_token.wide_image).is_equal (Result.token.wide_image)
 		end
 
 	match_closing_brace (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: detachable EDITOR_TOKEN): detachable TUPLE [token: EDITOR_TOKEN; line: EDITOR_LINE]
@@ -318,7 +316,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 			result_is_opening_brace: Result /= Void implies is_opening_brace (Result.token)
 			result_is_correct_match: Result /= Void implies closing_brace_map.item
-				(a_start_token.wide_image.as_attached).has (Result.token.wide_image.as_attached)
+				(a_start_token.wide_image).has (Result.token.wide_image)
 		end
 
 feature {NONE} -- Query
@@ -340,11 +338,10 @@ feature {NONE} -- Query
 			if not a_map.is_empty then
 				l_cursor := a_map.cursor
 				from a_map.start until a_map.after loop
-					l_key := a_map.key_for_iteration.as_attached
-					l_value := a_map.item_for_iteration.as_attached
-					if Result.has (l_value) then
-						l_list := Result.item (l_value).as_attached
-					else
+					l_key := a_map.key_for_iteration
+					l_value := a_map.item_for_iteration
+					l_list := Result [l_value]
+					if not attached l_list then
 						create l_list.make (1)
 						l_list.compare_objects
 						Result.put (l_list, l_value)
@@ -366,7 +363,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

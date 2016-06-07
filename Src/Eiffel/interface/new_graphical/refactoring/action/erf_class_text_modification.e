@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "This allows undoable modification of a class text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 		do
 			if not l_retried then
 				l_option := class_i.options
-				l_parser := heavy_eiffel_parser.as_attached
+				l_parser := heavy_eiffel_parser
 				check
 					l_parser_attached: l_parser /= Void
 					l_option_attached: l_option /= Void
@@ -482,7 +482,7 @@ invariant
 	associated_to_class: class_i /= void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

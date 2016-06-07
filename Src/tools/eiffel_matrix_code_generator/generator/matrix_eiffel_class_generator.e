@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A generator for creating Eiffel classes from a matrix INI file.
 	]"
@@ -63,7 +63,7 @@ feature -- Basic Operations
 			reset
 
 			class_name := a_class_name
-			if successful then
+			if is_successful then
 					-- If successful
 				create l_buffer.make (1024) -- 1mb should be big enough
 				l_buffer.append (a_frame)
@@ -75,7 +75,7 @@ feature -- Basic Operations
 						end
 					end, Void)
 
-				if successful then
+				if is_successful then
 					check
 						class_name_attached: class_name /= Void
 					end
@@ -194,7 +194,7 @@ feature -- Basic Operations
 				end
 			end
 		ensure
-			generated_file_name_attached: successful implies generated_file_name /= Void
+			generated_file_name_attached: is_successful implies generated_file_name /= Void
 		end
 
 feature {NONE} -- Basic Operations
@@ -537,7 +537,7 @@ invariant
 	class_name_not_empty: class_name /= Void implies not class_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -568,4 +568,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {MATRIX_EIFFEL_CLASS_GENERATOR}
+end

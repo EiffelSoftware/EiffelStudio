@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Windows SD_TOOL_BAR_DRAWER implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,11 +40,11 @@ feature{NONE} -- Initlization
 			-- Creation method
 		do
 			init_theme
-			ev_application.theme_changed_actions.extend (agent init_theme)
-
 			create internal_shared
 
 			create child_cell -- Only for making void safe compiler happy
+
+			ev_application.theme_changed_actions.extend (agent init_theme)
 		end
 
 	init_theme
@@ -97,44 +97,46 @@ feature -- Redefine
 			l_brush: WEL_BRUSH
 			l_buffered_dc: like internal_buffered_dc
 			l_client_dc: like internal_client_dc
-			l_tool_bar: like tool_bar
 		do
-			l_tool_bar := tool_bar
-			check l_tool_bar /= Void end -- Implied by precondition `not_void'
-			internal_rectangle := a_rectangle
-			check not_void: attached {WEL_WINDOW} l_tool_bar.implementation as l_imp then
+			if attached tool_bar as l_tool_bar then
+				internal_rectangle := a_rectangle
+				check not_void: attached {WEL_WINDOW} l_tool_bar.implementation as l_imp then
 
-				if l_imp.exists then
-					create {WEL_CLIENT_DC} l_client_dc.make (l_imp)
-					internal_client_dc := l_client_dc
-					l_client_dc.get
+					if l_imp.exists then
+						create {WEL_CLIENT_DC} l_client_dc.make (l_imp)
+						internal_client_dc := l_client_dc
+						l_client_dc.get
 
-					create {WEL_MEMORY_DC} l_buffered_dc.make_by_dc (l_client_dc)
-					internal_buffered_dc := l_buffered_dc
+						create {WEL_MEMORY_DC} l_buffered_dc.make_by_dc (l_client_dc)
+						internal_buffered_dc := l_buffered_dc
 
-					create l_wel_bitmap.make_compatible (l_client_dc, l_tool_bar.width, l_tool_bar.height)
-					l_buffered_dc.select_bitmap (l_wel_bitmap)
-					l_wel_bitmap.dispose
+						create l_wel_bitmap.make_compatible (l_client_dc, l_tool_bar.width, l_tool_bar.height)
+						l_buffered_dc.select_bitmap (l_wel_bitmap)
+						l_wel_bitmap.dispose
 
-					if attached {EV_COLOR_IMP} l_tool_bar.background_color.implementation as l_color_imp then
-						l_buffered_dc.set_background_color (l_color_imp)
+						if attached {EV_COLOR_IMP} l_tool_bar.background_color.implementation as l_color_imp then
+							l_buffered_dc.set_background_color (l_color_imp)
 
-						-- If we draw background like this, when non-32bits color depth, color will broken.
-			--			create l_background_pixmap.make_with_size (l_tool_bar.width, l_tool_bar.height)
-			--			l_background_pixmap.set_background_color (l_tool_bar.background_color)
-			--			l_background_pixmap.clear
-			--			if attached {EV_PIXMAP_IMP} l_background_pixmap.implementation as l_background_pixmap_state then
-			--				l_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, a_rectangle.left, a_rectangle.top, a_rectangle.width, a_rectangle.height)
-			--			end
+							-- If we draw background like this, when non-32bits color depth, color will broken.
+				--			create l_background_pixmap.make_with_size (l_tool_bar.width, l_tool_bar.height)
+				--			l_background_pixmap.set_background_color (l_tool_bar.background_color)
+				--			l_background_pixmap.clear
+				--			if attached {EV_PIXMAP_IMP} l_background_pixmap.implementation as l_background_pixmap_state then
+				--				l_buffered_dc.draw_bitmap (l_background_pixmap_state.get_bitmap, a_rectangle.left, a_rectangle.top, a_rectangle.width, a_rectangle.height)
+				--			end
 
-						-- So we draw background color like this.
-						create l_brush.make_solid (l_color_imp)
-						l_buffered_dc.fill_rect (create {WEL_RECT}.make (a_rectangle.left, a_rectangle.top, a_rectangle.right, a_rectangle.bottom), l_brush)
-						l_brush.delete
+							-- So we draw background color like this.
+							create l_brush.make_solid (l_color_imp)
+							l_buffered_dc.fill_rect (create {WEL_RECT}.make (a_rectangle.left, a_rectangle.top, a_rectangle.right, a_rectangle.bottom), l_brush)
+							l_brush.delete
+						end
 					end
 				end
+			else
+				check
+					from_precondition_tool_bar_attached: False
+				end
 			end
-
 			is_start_draw_called := True
 		ensure then
 			set: internal_rectangle = a_rectangle
@@ -143,22 +145,20 @@ feature -- Redefine
 
 	end_draw
 			-- <Precursor>
-		local
-			l_rect: like internal_rectangle
 		do
 			if attached internal_buffered_dc as l_buffered_dc and then
-				attached internal_client_dc as l_client_dc then
-				l_rect := internal_rectangle
-				check l_rect /= Void end -- Implied by postcondition of `start_draw'
-				l_client_dc.bit_blt (l_rect.left,
-											l_rect.top,
-											l_rect.width,
-											l_rect.height,
-											l_buffered_dc,
-											l_rect.left,
-											l_rect.top,
-											{WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
-
+				attached internal_client_dc as l_client_dc
+			then
+				if attached internal_rectangle as l_rect then
+					l_client_dc.bit_blt (l_rect.left,
+												l_rect.top,
+												l_rect.width,
+												l_rect.height,
+												l_buffered_dc,
+												l_rect.left,
+												l_rect.top,
+												{WEL_RASTER_OPERATIONS_CONSTANTS}.srccopy)
+				end
 				l_buffered_dc.unselect_all
 				l_buffered_dc.delete
 				l_client_dc.unselect_all
@@ -737,7 +737,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -746,6 +746,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Container looks like a spliter area which have a gap between childs, but it can't be dragged by end users.
 					It's be used when a zone is minimized.
@@ -129,20 +129,17 @@ feature {NONE} -- Query
 
 	last: EV_WIDGET
 			-- <Precursor>
-		local
-			l_result: detachable like last
 		do
-			if l_result = Void and count = 1 then
-				l_result := fake_spliter
-			else
+			if count /= 1 then
 				if second_was_void then
-					l_result := first
+					Result := first
 				else
-					l_result := second
+					Result := second
 				end
 			end
-			check l_result /= Void end
-			Result := l_result -- Implied by previous if clause
+			if not attached Result then
+				Result := fake_spliter
+			end
 		end
 
 	spliter_width: INTEGER = 4
@@ -212,14 +209,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

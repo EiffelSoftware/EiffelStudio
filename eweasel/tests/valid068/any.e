@@ -7,7 +7,7 @@ note
 		]"
 
 	library: "Free implementation of ELKS library"
-	copyright: "Copyright (c) 1986-2008, Eiffel Software and others"
+	copyright: "Copyright (c) 1986-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -363,6 +363,7 @@ feature -- Basic operations
 			-- Attached version of Current
 			-- (Can be used during transitional period to convert
 			-- non-void-safe classes to void-safe ones.)
+		obsolete "Remove calls to this feature as soon as its client is void-safe."
 		do
 			Result := Current
 		end

@@ -8,7 +8,7 @@ feature
 
 	make (v: G) is
 		do
-			item := v.as_attached
+			item := v
 			io.put_string (out_item (item))
 			io.put_new_line
 		end

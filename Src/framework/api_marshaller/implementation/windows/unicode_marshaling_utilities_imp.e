@@ -32,7 +32,7 @@ feature {UNICODE_MARSHALING_UTILITIES} -- Query
 	string (a_obj: WEL_STRING): STRING_32
 			-- <Precursor>
 		do
-			Result := a_obj.string.as_attached
+			Result := a_obj.string
 		end
 
 feature {UNICODE_MARSHALING_UTILITIES} -- Factory
@@ -73,7 +73,7 @@ invariant
 	is_windows: {PLATFORM}.is_windows
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

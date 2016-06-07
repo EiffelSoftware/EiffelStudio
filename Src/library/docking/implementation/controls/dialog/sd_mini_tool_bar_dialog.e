@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog that contain mini tool bar when not enough space shown in SD_TITLE_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,6 +10,9 @@ class
 
 inherit
 	EV_POPUP_WINDOW
+		redefine
+			create_implementation
+		end
 
 create
 	make
@@ -25,9 +28,8 @@ feature {NONE}  -- Initlization
 		do
 			create internal_shared
 			create {EV_VERTICAL_BOX} top_box
-			app_focus_in_agent := agent app_focus_in
-
 			make_with_shadow
+
 			disable_user_resize
 
 			top_box.set_border_width (internal_shared.border_width)
@@ -38,13 +40,19 @@ feature {NONE}  -- Initlization
 				l_parent.prune (a_widget)
 			end
 			top_box.extend (a_widget)
-			
+
 			create l_env
 			if attached l_env.application as l_app then
 				l_app.focus_in_actions.extend (app_focus_in_agent)
 			else
 				check False end -- Implied by application is running
 			end
+		end
+
+	create_implementation
+		do
+			Precursor
+			app_focus_in_agent := agent app_focus_in
 		end
 
 	app_focus_in_agent: PROCEDURE [EV_WIDGET]
@@ -74,7 +82,7 @@ feature {NONE}  -- Initlization
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -83,10 +91,5 @@ feature {NONE}  -- Initlization
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

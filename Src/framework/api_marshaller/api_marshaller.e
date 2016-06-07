@@ -117,10 +117,10 @@ feature -- Conversion: From pointer
 			l_str: WEL_STRING
 		do
 			if is_pointer_managed (a_ptr) and attached {READABLE_STRING_GENERAL} multi_threader.retrieve (agent marshalled_data.item (a_ptr)) as l_result then
-				Result := l_result.as_string_32.as_attached
+				Result := l_result.as_string_32
 			else
 				create l_str.make_by_pointer (a_ptr)
-				Result := l_str.string.as_attached
+				Result := l_str.string
 			end
 		ensure
 			result_attached: Result /= Void
@@ -139,10 +139,10 @@ feature -- Conversion: From pointer
 			l_str: attached C_STRING
 		do
 			if is_pointer_managed (a_ptr) and attached {READABLE_STRING_GENERAL} multi_threader.retrieve (agent marshalled_data.item (a_ptr)) as l_result then
-				Result := l_result.as_string_8.as_attached
+				Result := l_result.as_string_8
 			else
 				create l_str.make_by_pointer (a_ptr)
-				Result := l_str.string.as_attached
+				Result := l_str.string
 			end
 		ensure
 			result_attached: Result /= Void
@@ -159,7 +159,7 @@ feature -- Conversion: From pointer
 			not_a_ptr_is_null: a_ptr /= default_pointer
 		do
 			if is_unicode then
-				Result := unicode_to_string (a_ptr).as_string_8.as_attached
+				Result := unicode_to_string (a_ptr).as_string_8
 			else
 				Result := ansi_to_string (a_ptr)
 			end
@@ -180,7 +180,7 @@ feature -- Conversion: From pointer
 			if is_unicode then
 				Result := unicode_to_string (a_ptr)
 			else
-				Result := ansi_to_string (a_ptr).as_string_32.as_attached
+				Result := ansi_to_string (a_ptr).as_string_32
 			end
 		ensure
 			result_attached: Result /= Void
@@ -319,7 +319,7 @@ invariant
 		not l_list.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

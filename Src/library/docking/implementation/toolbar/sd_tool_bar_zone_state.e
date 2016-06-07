@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Store tool bar zone state."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -161,7 +161,7 @@ feature -- Items layout
 			set: items_layout = a_layout
 		end
 
-	items_layout: detachable ARRAYED_LIST [TUPLE [READABLE_STRING_GENERAL, BOOLEAN]]
+	items_layout: detachable ARRAYED_LIST [TUPLE [name: READABLE_STRING_GENERAL; is_displayed: BOOLEAN]]
 			-- Items layout, first is item name, second is whether item `is_displayed'
 			-- Order of this list, it's order items displayed
 
@@ -217,14 +217,14 @@ feature {NONE} -- Implementation
 			-- If already setted `internal_screen_x' and `internal_screen_y'?
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

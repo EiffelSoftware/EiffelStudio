@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Responsible for maitain all colors used by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,11 +24,12 @@ feature {NONE} -- Initialization
 	make
 			-- Creation method
 		do
+			create internal_shared
 			ev_application.theme_changed_actions.put_front (agent init_colors)
 			ev_application.theme_changed_actions.put_right (agent update_all_tool_bars)
 			init_colors
-
-			create internal_shared
+		ensure
+			is_initialized: is_initialized
 		end
 
 	init_colors
@@ -58,7 +59,7 @@ feature {NONE} -- Initialization
 			create l_text_box
 			tool_tip_color_cell.put (l_text_box.background_color)
 		ensure
-			set: is_initialized = True
+			is_initialized: is_initialized
 		end
 
 feature -- Query
@@ -67,12 +68,8 @@ feature -- Query
 			-- Non focuse color. Used by SD_TITLE_BAR
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := non_focused_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := non_focused_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -81,12 +78,8 @@ feature -- Query
 			-- Non focused color of window title bar
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := non_focused_title_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := non_focused_title_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -95,12 +88,8 @@ feature -- Query
 			-- Title bar text color when non focused
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := non_focused_title_text_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := non_focused_title_text_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -109,12 +98,8 @@ feature -- Query
 			-- Lighter `non_focused_color'
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := non_focused_color_lightness_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := non_focused_color_lightness_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -123,12 +108,8 @@ feature -- Query
 			-- Focused color. Used by SD_TITLE_BAR...
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := focused_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := focused_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -137,12 +118,8 @@ feature -- Query
 			-- Focused title bar text color. Used bt SD_TITLE_BAR
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := focused_title_text_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := focused_title_text_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -151,12 +128,8 @@ feature -- Query
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := active_border_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := active_border_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -165,12 +138,8 @@ feature -- Query
 			-- Text color
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := tab_text_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := tab_text_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -179,12 +148,8 @@ feature -- Query
 			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := tool_tip_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := tool_tip_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -208,12 +173,8 @@ feature -- Query
 			-- Default background color
 		require
 			initialized: is_initialized
-		local
-			l_result: detachable EV_COLOR
 		do
-			l_result := default_background_color_cell.item
-			check l_result /= Void end -- Implied by precondition `initialized'
-			Result := l_result
+			Result := default_background_color_cell.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -252,64 +213,64 @@ feature -- Implementation
 			end
 		end
 
-	non_focused_color_cell: CELL [detachable EV_COLOR]
-			-- Singelton cell for `non_focus_color'
+	non_focused_color_cell: CELL [EV_COLOR]
+			-- Singelton cell for `non_focus_color'.
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	non_focused_title_color_cell: CELL [detachable EV_COLOR]
+	non_focused_title_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_title_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	non_focused_title_text_color_cell: CELL [detachable EV_COLOR]
+	non_focused_title_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_title_text_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	non_focused_color_lightness_cell: CELL [detachable EV_COLOR]
+	non_focused_color_lightness_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_color_lightness'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	focused_color_cell: CELL [detachable EV_COLOR]
+	focused_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `focused_color_cell'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	focused_title_text_color_cell: CELL [detachable EV_COLOR]
+	focused_title_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `focused_title_text_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	active_border_color_cell: CELL [detachable EV_COLOR]
+	active_border_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `active_border_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	tab_text_color_cell: CELL [detachable EV_COLOR]
+	tab_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `tab_text_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	tool_tip_color_cell:CELL [detachable EV_COLOR]
+	tool_tip_color_cell:CELL [EV_COLOR]
 			-- Singleton cell for `tool_tip_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
-	default_background_color_cell: CELL [detachable EV_COLOR]
+	default_background_color_cell: CELL [EV_COLOR]
 			-- Singletone cell for `default_background_color'
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_COLOR})
 		end
 
 	internal_shared: SD_SHARED
@@ -320,14 +281,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

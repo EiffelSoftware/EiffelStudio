@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "GTK SD_TOOL_BAR_DRAWER implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,28 +44,29 @@ feature -- Redefine
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			l_item_rect, l_rect: EV_RECTANGLE
-			l_tool_bar: like tool_bar
 		do
 			is_start_draw_called := True
 
-			from
-				l_tool_bar := tool_bar
-				check l_tool_bar /= Void end -- Implied by precondition `not_void'
-				l_items := l_tool_bar.items
-				l_rect := a_rectangle.twin
-				l_items.start
-			until
-				l_items.after
-			loop
-				l_item_rect := l_items.item.rectangle
-				if l_item_rect.intersects (a_rectangle) then
-					-- We find the maximum area we should clear.
-					l_rect.merge (l_item_rect)
+			if attached tool_bar as l_tool_bar then
+				from
+					l_items := l_tool_bar.items
+					l_rect := a_rectangle.twin
+					l_items.start
+				until
+					l_items.after
+				loop
+					l_item_rect := l_items.item.rectangle
+					if l_item_rect.intersects (a_rectangle) then
+						-- We find the maximum area we should clear.
+						l_rect.merge (l_item_rect)
+					end
+					l_items.forth
 				end
-				l_items.forth
-			end
-			if not l_tool_bar.is_destroyed then
-				internal_shared.setter.clear_background_for_theme (l_tool_bar, l_rect)
+				if not l_tool_bar.is_destroyed then
+					internal_shared.setter.clear_background_for_theme (l_tool_bar, l_rect)
+				end
+			else
+				check from_precondition: False end
 			end
 		end
 
@@ -245,9 +246,12 @@ feature {NONE} -- Implementation
 					l_pixmap := l_pixel_buffer.to_pixmap
 				else
 					l_pixmap := l_button.pixmap
+					if not attached l_pixmap then
+						create l_pixmap
+					else
+						check from_condition_above: False end
+					end
 				end
-
-				check l_pixmap_not_void: l_pixmap /= Void end
 
 				l_position := l_button.pixmap_position
 
@@ -477,7 +481,7 @@ feature {NONE} -- Externals
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -486,6 +490,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

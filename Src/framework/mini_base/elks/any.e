@@ -263,6 +263,7 @@ feature -- Basic operations
 			-- Attached version of Current
 			-- (Can be used during transitional period to convert
 			-- non-void-safe classes to void-safe ones.)
+		obsolete "Remove calls to this feature as soon as its client is void-safe."
 		do
 			Result := Current
 		end
@@ -272,7 +273,7 @@ invariant
 	reflexive_conformance: conforms_to (Current)
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

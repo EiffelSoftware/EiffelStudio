@@ -18,7 +18,7 @@ if [ ! -f PorterPackage_all.tar ]; then
 	echo $* > tmpin$$.tmp
 	awk 'index($0, "all") != 0 { exit 54 }' tmpin$$.tmp
 	if [ $? -ne 54 ] ;  then
-		scp PorterPackage_all.tar manus@eiffel.com:builds/nightly/PorterPackage_16.05_$ORIGO_SVN_REVISION.tar
+		scp PorterPackage_all.tar manus@eiffel.com:builds/nightly/PorterPackage_16.11_$ORIGO_SVN_REVISION.tar
 	fi
 	rm -f tmpin$$.tmp
 fi

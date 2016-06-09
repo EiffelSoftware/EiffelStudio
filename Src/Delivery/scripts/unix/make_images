@@ -48,8 +48,8 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ecb
 
 remtrace Building GPL CD image
-pax -w -f Eiffel_16.05_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_16.05
-bzip2 Eiffel_16.05_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+pax -w -f Eiffel_16.11_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_16.11
+bzip2 Eiffel_16.11_gpl_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
@@ -68,8 +68,8 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 	remtrace Building Enterprise CD image
-	pax -w -f Eiffel_16.05_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_16.05 
-	bzip2 Eiffel_16.05_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
+	pax -w -f Eiffel_16.11_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar Eiffel_16.11 
+	bzip2 Eiffel_16.11_ent_$FILE_SVN_REVISION-$ISE_PLATFORM.tar
 fi
 
 

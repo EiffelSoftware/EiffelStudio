@@ -24,7 +24,7 @@ make_unix_layout platform source destination
 
 e.g. under Delivery/scripts/unix where a linux-x86-64 delivery has been generated
 
-./make_unix_layout linux-x86-64 PorterPackage/Eiffel_16.05 unix_layout
+./make_unix_layout linux-x86-64 PorterPackage/Eiffel_16.11 unix_layout
 
 will generate a delivery in the unix_layout directory.
 

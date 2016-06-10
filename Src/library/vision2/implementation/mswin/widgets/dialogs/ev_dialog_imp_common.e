@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,8 +17,6 @@ inherit
 			unlock_update
 		redefine
 			interface
-		select
-			show
 		end
 
 	EV_TITLED_WINDOW_IMP
@@ -58,9 +56,15 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			has_capture as wel_has_capture,
-			cwin_dialog_box_indirect as wel_cwin_dialog_box_indirect
+			cwin_dialog_box_indirect as wel_cwin_dialog_box_indirect,
+				 -- Modal dialogs are always shown relative to another window,
+				 -- so a regular `show' is not applicable in this class and is never called.
+				 -- We just need to make sure the feature is not replicated
+				 -- (this also avoids potential infinite recursion in the flat version of
+				 -- `{EV_WINDOW_IMP}.show` in current class).
+			show as show_internal
 		undefine
-			has_focus, on_middle_button_up, show, on_right_button_down,
+			has_focus, on_middle_button_up, show_internal, on_right_button_down,
 			on_move, on_size, default_ex_style, on_sys_key_down, on_key_up,
 			window_process_message, on_middle_button_down, on_kill_focus,
 			on_right_button_up, on_accelerator_command, on_menu_command,
@@ -659,7 +663,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -669,18 +673,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_DIALOG_IMP_COMMON
-
-
-
-
-
-
-
-
-
-
-
+end

@@ -75,7 +75,6 @@ feature -- Access
 				Result.compare_objects
 				across l_configs as l_config loop
 					Result.extend (l_config.item.code)
-					l_configs.forth
 				end
 				internal_applicable_config_codes := Result
 			end
@@ -193,6 +192,11 @@ feature {NONE} -- Access
 
 				-- Group of compatible C compilers.
 			create l_configs.make (1)
+				-- VS 15.0 (aka VS 15 all editions)
+			create {VS_2015_CONFIG} l_c_config.make ("Microsoft\VisualStudio\15.0\Setup\VC", a_use_32bit, "VC150", "Microsoft Visual Studio 15 VC++ (15.0)", "15-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
+
 				-- VS 14.0 (aka VS 2015 all editions)
 			create {VS_2015_CONFIG} l_c_config.make ("Microsoft\VisualStudio\14.0\Setup\VC", a_use_32bit, "VC140", "Microsoft Visual Studio 2015 VC++ (14.0)", "2015-VS")
 			l_configs.extend (l_c_config)

@@ -11,15 +11,15 @@ class
 
 inherit
 {unless condition="$WIZ.routers.use_router ~ $WIZ_YES"}
-  {unless condition="$WIZ.routers.use_filter ~ $WIZ_YES"}
+  {unless condition="$WIZ.filters.use_filter ~ $WIZ_YES"}
 	WSF_EXECUTION{/unless}
-  {if condition="$WIZ.routers.use_filter ~ $WIZ_YES"}
+  {if condition="$WIZ.filters.use_filter ~ $WIZ_YES"}
 	WSF_FILTERED_EXECUTION{/if}
 {/unless}
 {if condition="$WIZ.routers.use_router ~ $WIZ_YES"}
-  {unless condition="$WIZ.routers.use_filter ~ $WIZ_YES"}
+  {unless condition="$WIZ.filters.use_filter ~ $WIZ_YES"}
 	WSF_ROUTED_EXECUTION{/unless}
-  {if condition="$WIZ.routers.use_filter ~ $WIZ_YES"}
+  {if condition="$WIZ.filters.use_filter ~ $WIZ_YES"}
 	WSF_FILTERED_ROUTED_EXECUTION{/if}
 {/if}
 
@@ -44,7 +44,7 @@ feature -- Execution
 			response.send (mesg)
 		end{/literal}{/unless}
 
-{if condition="$WIZ.routers.use_filter ~ $WIZ_YES"}{literal}
+{if condition="$WIZ.filters.use_filter ~ $WIZ_YES"}{literal}
 feature -- Filter
 
 	create_filter
@@ -56,11 +56,13 @@ feature -- Filter
 
 	setup_filter
 			-- Setup `filter'
+		local
+			l_filters: ARRAYED_LIST [WSF_FILTER]
 		do
-			append_filters (<<
-							create {WSF_CORS_FILTER},
-							create {WSF_LOGGING_FILTER}
-							>>)
+			create l_filters.make (2)
+			l_filters.put (create {WSF_CORS_FILTER})
+			l_filters.put (create {WSF_LOGGING_FILTER})
+			append_filters (l_filters)			
 				--| Chain more filters like {WSF_CUSTOM_HEADER_FILTER}, ...
 				--| and your owns filters.
 		end{/literal}{/if}
@@ -78,12 +80,12 @@ feature -- Router
 				--|   /* are dispatched to serve files/directories contained in "www" directory
 
 				--| Self documentation
-			router.handle_with_request_methods ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
+			router.handle ("/doc", create {WSF_ROUTER_SELF_DOCUMENTATION_HANDLER}.make (router), router.methods_GET)
 
 				--| Files publisher
 			create fhdl.make_hidden ("www")
 			fhdl.set_directory_index (<<"index.html">>)
-			router.handle_with_request_methods ("", fhdl, router.methods_GET)
+			router.handle ("", fhdl, router.methods_GET)
 		end{/literal}{/if}
 
 end

@@ -17,4 +17,4 @@ goto end
 
 :end
 endlocal
-exit 0
+exit /B 0

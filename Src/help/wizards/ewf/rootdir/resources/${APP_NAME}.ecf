@@ -19,7 +19,7 @@
 		{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>{/if}
 		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>{/if}
 		{if condition="$WIZ.connectors.use_nino ~ $WIZ_YES"}<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino-safe.ecf"/>{/if}
-		<cluster name="launcher" location=".\launcher\" recursive="true">
+		<cluster name="launcher" location=".\launcher\">
 			<cluster name="any_launcher" location="$|any"/>
 		</cluster>
 		<cluster name="src" location=".\src\" recursive="true"/>

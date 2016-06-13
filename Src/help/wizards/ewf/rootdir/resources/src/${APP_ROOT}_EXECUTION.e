@@ -42,7 +42,7 @@ feature -- Execution
 				--| To send back easily a simple plaintext message.
 			create mesg.make_with_body ("Hello Eiffel Web")
 			response.send (mesg)
-		end{/unless}
+		end{/literal}{/unless}
 
 {if condition="$WIZ.routers.use_filter ~ $WIZ_YES"}{literal}
 feature -- Filter
@@ -63,7 +63,7 @@ feature -- Filter
 							>>)
 				--| Chain more filters like {WSF_CUSTOM_HEADER_FILTER}, ...
 				--| and your owns filters.
-		end{/if}
+		end{/literal}{/if}
 
 {if condition="$WIZ.routers.use_router ~ $WIZ_YES"}{literal}
 feature -- Router

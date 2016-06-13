@@ -1,0 +1,3 @@
+${NOTE_KEYWORD}
+	copyright: "2016-${YEAR}, Jocelyn Fiat and Eiffel Software"
+	license: "Eiffel Forum License v2 (see https://www.eiffel.com/licensing/forum.txt)"

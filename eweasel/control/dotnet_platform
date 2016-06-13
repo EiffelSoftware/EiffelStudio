@@ -12,4 +12,4 @@ define	KERNEL_DOTNET_NO_EXCEPTION "<override name="kernel_dotnet" location="$ISE
 -- Dotnet specific options
 define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/><setting name="console_application" value="true"/>"
 -- If you need to specify a runtime version:
--- define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/><setting name="console_application" value="true"/><setting name="msil_clr_version" value="v2.0.50727"/>"
+-- define	EWEASEL_DOTNET_SETTING	"<setting name="msil_generation" value="True"/><setting name="console_application" value="true"/><setting name="msil_clr_version" value="v2.0.50727"/><setting name="metadata_cache_path" value="$ISE_EIFFEL"/>"

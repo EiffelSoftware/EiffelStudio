@@ -858,6 +858,8 @@ feature {NONE} -- Implementation
 
 			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
 				l_tt_text := l_completion_feature.tooltip_text
+			elseif attached {EB_TEMPLATE_FOR_COMPLETION} a_row.data as l_completion_template then
+				l_tt_text := l_completion_template.tooltip_text
 			elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
 				l_tt_text := l_completion_class.tooltip_text
 			end
@@ -1050,25 +1052,32 @@ feature {NONE} -- Implementation
 				check
 					l_name_item_not_void: l_name_item /= Void
 				end
-				if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
-					if l_name_item.has_dot then
-						local_name := l_name_item.full_insert_name
-					else
-						local_name := (" ").as_string_32 + l_name_item.full_insert_name
-					end
+				if attached {EB_TEMPLATE_FOR_COMPLETION} l_name_item as l_code_complete then
+						-- Complete template
+
+					code_completable.complete_code_template_from_window (l_code_complete)
 				else
-					if l_name_item.has_dot then
-						local_name := l_name_item.insert_name
+					-- Complete feature
+					if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
+						if l_name_item.has_dot then
+							local_name := l_name_item.full_insert_name
+						else
+							local_name := (" ").as_string_32 + l_name_item.full_insert_name
+						end
 					else
-						local_name := (" ").as_string_32 + l_name_item.insert_name
+						if l_name_item.has_dot then
+							local_name := l_name_item.insert_name
+						else
+							local_name := (" ").as_string_32 + l_name_item.insert_name
+						end
 					end
-				end
-				code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
-				local_feature ?= l_name_item
-				if local_feature /= Void then
-					last_completed_feature_had_arguments := local_feature.has_arguments
-				else
-					last_completed_feature_had_arguments := False
+					code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
+					local_feature ?= l_name_item
+					if local_feature /= Void then
+						last_completed_feature_had_arguments := local_feature.has_arguments
+					else
+						last_completed_feature_had_arguments := False
+					end
 				end
 			end
 		end
@@ -1132,7 +1141,7 @@ feature {NONE} -- Implementation
 			-- Timer to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -967,9 +967,11 @@ feature {NONE}-- Implementation
 
 	feature_part_at (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER
 			-- find in which part of the feature body `a_token' is
+		require
+			a_line_attached: a_line /= Void
 		local
 			done: BOOLEAN
-			token: EDITOR_TOKEN
+			token: detachable EDITOR_TOKEN
 			line: EDITOR_LINE
 		do
 			Result := no_interesting_part
@@ -996,11 +998,11 @@ feature {NONE}-- Implementation
 					end
 				end
 				if token = line.first_token then
-					if line.previous = Void then
-						token := Void
-					else
-						line := line.previous
+					if attached line.previous as prev_line then
+						line := prev_line
 						token := line.eol_token
+					else
+						token := Void
 					end
 				else
 					token := token.previous
@@ -1995,42 +1997,44 @@ feature {NONE} -- Implementation
 		require
 			is_ok_for_completion: is_ok_for_completion
 		local
-			class_c: CLASS_C
-			l_classi: CLASS_I
+			l_class_c: detachable CLASS_C
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
-			if current_class_i /= Void then
-				if current_class_i.is_compiled then
+			if attached current_class_i as cl_i then
+				if cl_i.is_compiled then
 						-- If current_class_i is an overriden class,
 						-- we do not try analysing its compiling infomation.
-					if current_class_i.config_class.is_overriden then
-						class_c := Void
+					if cl_i.config_class.is_overriden then
+						l_class_c := Void
 					else
-						class_c := current_class_i.compiled_class
+						l_class_c := cl_i.compiled_class
 					end
-				elseif current_class_i.config_class.does_override then
+				elseif cl_i.config_class.does_override then
 						-- If a class is an overriding class, we take its overrides and
 						-- try analysing one of them compiled.
 					from
-						l_overrides := current_class_i.config_class.overrides
+						l_overrides := cl_i.config_class.overrides
 						l_overrides.start
 					until
-						class_c /= Void or l_overrides.after
+						l_class_c /= Void or l_overrides.after
 					loop
 						if l_overrides.item.is_compiled then
-							l_classi ?= l_overrides.item
-							check
-								class_i: l_classi /= Void
+							if attached {CLASS_I} l_overrides.item as l_classi then
+								l_class_c := l_classi.compiled_class
+							else
+								check override_is_class_i: False end
+								l_class_c := Void
 							end
-							class_c := l_classi.compiled_class
 						end
 						l_overrides.forth
 					end
 				else
-					class_c := Void
+					l_class_c := Void
 				end
-				if class_c /= Void then
-					current_class_c := class_c
+				if l_class_c /= Void then
+					current_class_c := l_class_c
+				else
+						-- Keep previous current_class_c .
 				end
 			end
 		end
@@ -2042,13 +2046,13 @@ feature {NONE} -- Implementation
 			-- Current class_c
 			-- Temp class_c, it could be an overriding class_c, while `current_class_i' is not compiled.
 
-	current_feature_i: FEATURE_I
+	current_feature_i: detachable FEATURE_I
 			-- Current feature_i
 		local
-			l_current_class_c: CLASS_C
+			l_current_class_c: detachable CLASS_C
 		do
-			if current_class_c /= Void then
-				l_current_class_c := current_class_c
+			l_current_class_c := current_class_c
+			if l_current_class_c /= Void then
 				if l_current_class_c.has_feature_table then
 					if current_feature_as /= Void then
 						Result := l_current_class_c.feature_of_name_id (current_feature_as.name.internal_name.name_id)
@@ -2217,7 +2221,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

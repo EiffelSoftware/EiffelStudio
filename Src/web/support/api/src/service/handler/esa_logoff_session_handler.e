@@ -60,7 +60,7 @@ feature -- HTTP Methods
 					attached current_user (req) as l_user
 				then
 						-- Logout Session
-					create l_cookie.make (esa_session_token, l_cookie_token.value) -- FIXME: unicode issue?
+					create l_cookie.make (esa_session_token, "") -- FIXME: unicode issue?
 					l_cookie.set_path ("/")
 					l_cookie.set_max_age (0)
 					create l_time.make_from_epoch (0)

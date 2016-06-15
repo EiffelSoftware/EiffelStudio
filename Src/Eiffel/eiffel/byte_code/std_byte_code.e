@@ -1364,7 +1364,8 @@ end
 					end
 					if profile_enabled then
 						buf.put_new_line
-						buf.put_string ("RTPI;")
+						buf.put_string ({C_CONST}.rtpi)
+						buf.put_character (';')
 					end
 				end
 				buf.put_new_line
@@ -1459,7 +1460,8 @@ end
 						end
 						if profile_enabled then
 							buf.put_new_line
-							buf.put_string ("RTLP;")
+							buf.put_string ({C_CONST}.rtlp)
+							buf.put_character (';')
 						end
 					end
 				end
@@ -2115,7 +2117,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

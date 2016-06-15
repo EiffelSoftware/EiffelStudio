@@ -3,8 +3,10 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 <!--		<setting name="concurrency" value="scoop"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SCOOP_SAFE"/> -->
 		<setting name="inlining_size" value="100"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

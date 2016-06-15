@@ -4,6 +4,7 @@
 		<root class="TEST" feature="make"/>
 		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard">
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

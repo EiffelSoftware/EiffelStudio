@@ -4,6 +4,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_void_safe="true" syntax_level="2">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="false"/>

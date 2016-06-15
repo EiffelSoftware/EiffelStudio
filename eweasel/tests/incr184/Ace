@@ -12,6 +12,7 @@
 			<warning name="syntax" enabled="false"/>
 		</option>
 		$SETTING
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

@@ -2,6 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

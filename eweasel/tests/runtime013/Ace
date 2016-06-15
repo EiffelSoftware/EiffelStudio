@@ -6,6 +6,7 @@
 		</option>
 		<setting name="inlining" value="$VALUE"/>
 		<setting name="inlining_size" value="4"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

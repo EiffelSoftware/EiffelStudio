@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="AD474295-3E32-4f1b-A354-EAF47ED63449">
 	<target name="test">
 		<root cluster="root_cluster" class="test" feature="make"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER"/>

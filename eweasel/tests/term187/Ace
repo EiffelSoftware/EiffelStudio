@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option warning="true" syntax="standard" full_class_checking="true" is_attached_by_default="true" void_safety="all"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

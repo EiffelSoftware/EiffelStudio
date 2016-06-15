@@ -10,6 +10,7 @@
                         <assertions precondition="true"/>
                 </option>
 		$EWEASEL_DOTNET_SETTING
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

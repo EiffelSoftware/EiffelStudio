@@ -2,6 +2,7 @@
 	<target name="test">
 		$EWEASEL_DOTNET_SETTING
 		<root class="TEST" feature="make"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<library name="base" location="$EIFFEL_SRC\library\base\base-safe.ecf"/>
 		<override name="root_cluster" location="$CLUSTER\"/>

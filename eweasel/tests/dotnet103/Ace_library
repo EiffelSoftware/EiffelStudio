@@ -4,6 +4,7 @@
 		<root class="A" feature="make"/>
 		<setting name="msil_generation_type" value="dll"/>
 		<setting name="executable_name" value="library"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>

@@ -7,6 +7,7 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING

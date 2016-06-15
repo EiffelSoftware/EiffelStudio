@@ -8,6 +8,7 @@
 		<setting name="use_cluster_name_as_namespace" value="false"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

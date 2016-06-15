@@ -49,7 +49,7 @@ feature -- Access
   		-- Possible list of priorities.
 
   	category: INTEGER
-		-- Current selected severity, 0 by defaukt.
+		-- Current selected severity, 0 by default.
 
   	severity: INTEGER
 		-- Current selected severity, 0 by default.

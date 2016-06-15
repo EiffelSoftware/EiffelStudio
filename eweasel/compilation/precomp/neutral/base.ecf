@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="precomp_base" uuid="365C35FB-5C60-4B6E-A523-B5A163C5DCF8" library_target="base">
+	<target name="base">
+		<root class="ANY"/>
+		<option>
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+	</target>
+</system>

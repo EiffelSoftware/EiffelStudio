@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="precomp_dotnet_base" uuid="FBDC60E2-A9D3-4724-A03F-BB9C72D2733C" library_target="base-safe">
+	<target name="base-safe">
+		<description>Base library</description>
+		<root class="ANY"/>
+		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
+			<assertions precondition="true" postcondition="true" check="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="executable_name" value="EiffelSoftware.Library.Base"/>
+		<setting name="msil_generation" value="true"/>
+		<setting name="msil_generation_type" value="dll"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+	</target>
+</system>

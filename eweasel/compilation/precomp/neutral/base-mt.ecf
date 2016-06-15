@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="precomp_base-mt" uuid="FBDC60E2-A9D3-4724-A03F-BB9C72D2733C" library_target="base-mt">
+	<target name="base-mt">
+		<root class="ANY"/>
+		<option>
+			<assertions precondition="true"/>
+		</option>
+		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+	</target>
+</system>

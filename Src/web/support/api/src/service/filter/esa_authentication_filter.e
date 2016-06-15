@@ -26,8 +26,6 @@ feature -- Basic operations
 			-- Execute the filter
 		local
 			l_auth: HTTP_AUTHORIZATION
-			l_token: STRING
-			l_cookie: WSF_COOKIE
 		do
 				-- Basic Authentication
 			if attached req.http_authorization then

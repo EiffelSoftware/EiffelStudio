@@ -6,7 +6,7 @@
 		},
 		"environments": {
 			"test": {
-                "connection_string":"Server=JVELILLA\\SQLEXPRESS;Database=example;Uid=sa;Pwd=Eiffel1405;TrustedConnection=Yes"
+                "connection_string":"Server=JVELILLA;Database=support;Uid=jv;Pwd=test;TrustedConnection=Yes"
 			},
 			"development": {
 				"connection_string":"Server=sql.ise;Database=ESA_DB_TEST;Uid=eiffel2;Pwd=eiffel2;"
@@ -24,8 +24,7 @@
 			"backup_count":"4"
 		},
 	"cookie_session": {
-		"remember_me":31536000,
-		"default":1200
+		"remember_me":604800
 	}		
 }
 

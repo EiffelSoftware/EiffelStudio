@@ -9,6 +9,7 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="inlining" value="false"/>
 		<setting name="inlining_size" value="100"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

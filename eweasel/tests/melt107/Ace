@@ -5,7 +5,8 @@
 		<option void_safety="all">
 			<assertions precondition="true"/>
 		</option>
-		<!--<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>-->
+		<!--<setting name="console_application" value="true"/>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>-->
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

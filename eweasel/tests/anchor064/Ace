@@ -5,6 +5,7 @@
 		<option warning="false" full_class_checking="true" is_attached_by_default="false" void_safety="none"/>
 		<setting name="exception_trace" value="true"/>
 		<setting name="check_for_void_target" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

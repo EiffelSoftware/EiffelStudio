@@ -10,6 +10,7 @@
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		<warning name="syntax" enabled="false"/></option>
 		<setting name="dead_code_removal" value="False"/>
+		<setting name="console_application" value="true"/>
 		<cluster name="access" location="$ACCESS\"/>
 		<cluster name="cursor_tree" location="$CURSOR_TREE\"/>
 		<cluster name="cursors" location="$CURSORS\"/>

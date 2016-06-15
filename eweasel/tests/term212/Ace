@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="test" uuid="92aafad4-ee0c-4a63-8b78-5ed2e389c6b8">
 	<target name="test">
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<root all_classes="true"/>
 		<library name="base" location="$EIFFEL_SRC\framework\mini_base\base.ecf"/>

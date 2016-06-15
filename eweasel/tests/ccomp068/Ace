@@ -2,6 +2,7 @@
 	<target name="test">
 		<root class="test" feature="make"/>
 		<setting name="multithreaded" value="true" />
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

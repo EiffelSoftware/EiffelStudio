@@ -6,6 +6,7 @@
 			<warning name="syntax" enabled="false"/>
 		</option>
 		$EWEASEL_DOTNET_SETTING
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
 		<override name="root_cluster" location="$CLUSTER\"/>

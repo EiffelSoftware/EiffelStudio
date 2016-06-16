@@ -10,10 +10,6 @@ cd $EWEASEL/..
 cd $ISE_EIFFEL/library
 svn up base time thread store 
 
-if [ -z "$ISE_PRECOMP" ]; then
-	export ISE_PRECOMP=$EWEASEL/../eweasel_precomp/$ISE_PLATFORM
-	mkdir -p $ISE_PRECOMP
-fi
 cp -rf $EWEASEL/compilation/precomp/neutral/*.ecf $ISE_PRECOMP
 
 #Performing non-void safe precompilations

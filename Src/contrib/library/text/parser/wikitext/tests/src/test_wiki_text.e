@@ -681,6 +681,78 @@ begin `FOO.bar` end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("<p>begin <code class=%"inline%">FOO.bar</code> end</p>%N"))
+
+			create t.make_from_string ("[
+begin `FOO.bar and not ending backtick end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("<p>begin `FOO.bar and not ending backtick end</p>%N"))
+		end
+
+	test_code_single_backtik_with_lt_char
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+begin
+`foobar` operations `<` or `>` or `<=>` `blabla` .
+
+`foo bar`
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("{
+<p>begin<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .
+
+<code class="inline">foo bar</code>
+end</p>
+
+}"
+						)
+					)
+		end
+
+	test_code_single_backtik_escape
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+		do
+			create t.make_from_string ("[
+begin
+Test \`abc' a\`n\`d.
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("{
+<p>beginTest `abc' a`n`d.end</p>
+
+}")
+				)
+
+			create t.make_from_string ("[
+begin
+Test \`abc' and `\` and a\b\c.
+end
+			]")
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", o.same_string ("{
+<p>beginTest `abc' and <code class="inline">\</code> and a\b\c.end</p>
+
+}")
+				)
 		end
 
 	test_code_double_backtik

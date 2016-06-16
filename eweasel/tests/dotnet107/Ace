@@ -10,6 +10,6 @@
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll" prefix="MSCORE_"/>
-		<cluster name="root_cluster" location="$CLUSTER\" recursive="False"/>
+		<cluster name="root_cluster" location="$CLUSTER\" recursive="false"/>
 	</target>
 </system>

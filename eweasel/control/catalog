@@ -131,6 +131,7 @@ test	hash-table-is-equal		table012 tcf fail table
 test	string-table-duplicate-caseless-insertion table013 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
+test	directory-multibyte-delete	directory002 tcf pass directory library unicode
 
 test	basic-iterations		iteration001 tcf pass iteration
 test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generic

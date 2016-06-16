@@ -3,7 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option void_safety="all">
-			<assertions precondition="false" postcondition="False" check="false" invariant="false" loop="false"/>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>

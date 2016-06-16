@@ -11,8 +11,8 @@
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<cluster name="root_cluster" location="$CLUSTER\" recursive="False"/>
-		<cluster name="cluster" location="$CLUSTER\cluster" recursive="False"/>
-		<override name="override" location="$CLUSTER\override" recursive="False"/>
+		<cluster name="root_cluster" location="$CLUSTER\" recursive="false"/>
+		<cluster name="cluster" location="$CLUSTER\cluster" recursive="false"/>
+		<override name="override" location="$CLUSTER\override" recursive="false"/>
 	</target>
 </system>

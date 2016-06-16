@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 			create on_launched_actions
 
 				-- Server
-			create fac
+			create <NONE> fac
+			request_handler_factory := fac
 			create server.make (fac)
-			create observer
+			create <NONE> observer
 			configuration := server_configuration (server)
 			controller := server_controller (server)
-			set_factory_connector (Current, fac)
 			initialize_server (server)
 		end
 
@@ -51,9 +51,9 @@ feature {NONE} -- Separate helper
 			a_server.set_observer (observer)
 		end
 
-	set_factory_connector (conn: detachable separate WGI_STANDALONE_CONNECTOR [G]; fac: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G])
+	update_factory (conn: detachable separate WGI_STANDALONE_CONNECTOR [G]; fac: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G]; a_conf: separate HTTPD_CONFIGURATION)
 		do
-			fac.set_connector (conn)
+			fac.update_with (conn, a_conf)
 		end
 
 	server_configuration (a_server: like server): like configuration
@@ -73,6 +73,9 @@ feature -- Access
 
 	server: separate HTTPD_SERVER
 			-- HTTPd server object.
+
+	request_handler_factory: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G]
+			-- Factory for request handlers.
 
 	controller: separate HTTPD_CONTROLLER
 			-- Controller used to shutdown server.
@@ -96,9 +99,6 @@ feature -- Status report
 	port: INTEGER
 			-- Listening port.
 			--| 0: not launched
-
-	is_verbose: BOOLEAN
-			-- Is verbose?
 
 feature -- Callbacks
 
@@ -190,18 +190,22 @@ feature {NONE} -- Implementation
 			Result := a_server.controller
 		end
 
-	configure_server (a_configuration: like configuration)
+	apply_configuration (a_configuration: like configuration)
+		local
+			v: BOOLEAN
 		do
-			if a_configuration.is_verbose then
-				if attached base as l_base then
+			v := a_configuration.is_verbose
+			if v then
+				if attached base as l_base and then not l_base.is_whitespace then
 					io.error.put_string ("Base=" + l_base + "%N")
 				end
 			end
+			update_factory (Current, request_handler_factory, a_configuration)
 		end
 
 	launch_server (a_server: like server)
 		do
-			configure_server (a_server.configuration)
+			apply_configuration (a_server.configuration)
 			a_server.launch
 		end
 
@@ -229,7 +233,6 @@ feature {NONE} -- Implementation: element change
 
 	set_is_verbose_on_configuration (b: BOOLEAN; cfg: like configuration)
 		do
-			is_verbose := b
 			cfg.set_is_verbose (b)
 		end
 

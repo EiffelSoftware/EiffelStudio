@@ -108,7 +108,6 @@ feature -- Header output operation
 					l_connection := s.substring (i + 12, j - 1)
 					l_connection.adjust
 					if
-						not is_http_version_1_0 and
 						not l_connection.is_case_insensitive_equal_general ("close")
 					then
 						s.replace_substring ("Connection: close", i + 1, j - 1)

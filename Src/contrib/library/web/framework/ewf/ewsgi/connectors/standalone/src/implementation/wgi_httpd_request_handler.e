@@ -24,13 +24,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_connector (conn: like connector)
+	make_with_connector (a_request_settings: HTTPD_REQUEST_SETTINGS; conn: like connector)
 		do
-			make
+			make (a_request_settings)
 			connector := conn
---			if conn /= Void then
---				set_is_verbose (is_connector_verbose (conn))
---			end
 		end
 
 feature -- Access		
@@ -54,11 +51,6 @@ feature -- SCOOP helpers
 			-- Rool url based from a connector `conn'.
 		do
 			Result := conn.base
-		end
-
-	is_connector_verbose (conn: separate WGI_STANDALONE_CONNECTOR [G]): BOOLEAN
-		do
-			Result := conn.is_verbose
 		end
 
 feature -- Request processing
@@ -87,7 +79,7 @@ feature -- Request processing
 				else
 					l_output.set_http_version (version)
 				end
-				res.set_is_persistent_connection_supported ({HTTPD_SERVER}.is_persistent_connection_supported)
+				res.set_is_persistent_connection_supported (is_persistent_connection_supported and is_next_persistent_connection_supported)
 				res.set_is_persistent_connection_requested (is_persistent_connection_requested)
 
 				req.set_meta_string_variable ("RAW_HEADER_DATA", request_header)

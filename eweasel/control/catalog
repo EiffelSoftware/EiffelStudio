@@ -42,7 +42,7 @@ test	date-time-with-epoch	time003 tcf pass time
 test	date-make-by-days		time004 tcf pass time
 test	date-make-by-days-min-value		time005 tcf fail time
 test	mt-date-time-duration-failure	time006 tcf pass time
-test	mt-cdate-bogus			time007 tcf fail time
+test	mt-cdate-bogus			time007 tcf pass time
 
 -- EiffelBase tests
 
@@ -532,7 +532,7 @@ test	missing-vhpr-with-different-generic-derivation	valid255 tcf fail used_to_pa
 test	wrong-vdpr-errors			valid256 tcf fail used_to_pass validity
 test	wrong-manifest-array-attached-type	valid257 tcf pass validity
 test	select-stable-attribute		valid258 tcf pass validity stable attribute
-test	precompilation-task-failure		valid259 tcf fail validity
+test	precompilation-task-failure		valid259 tcf pass validity
 test	manifest_char_type			valid260 tcf pass validity
 test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic agents
 test	conversion_without_binary_operator	valid262 tcf pass used_to_pass validity
@@ -1365,7 +1365,7 @@ if not DOTNET test	special-copy-data	runtime016	tcf pass runtime special memory
 test	weak-reference					runtime017	tcf pass runtime weak_reference
 test	memory-leak-with-dynamic-dispatch	runtime018	tcf pass runtime
 test	special-expanded-referring-new-object	runtime019	tcf fail used_to_pass runtime special
-test	standard-stream-redirection		runtime020	tcf fail runtime console file input output library
+test	standard-stream-redirection		runtime020	tcf pass runtime console file input output library
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded
@@ -1387,7 +1387,7 @@ test	multithreaded-bogus-catcall			thread016	tcf pass multithreaded
 test	main-thread-terminates-before-child	thread017	tcf pass multithreaded
 test    shared-mutex-hang		thread018	tcf pass multithreaded
 test	thread-join-crash			thread019	tcf pass multithreaded
-test	thread-profiling-crash		thread020	tcf fail used_to_pass multithreaded profile
+test	thread-profiling-crash		thread020	tcf pass multithreaded profile
 test	thread-crashes-on-die		thread021	tcf pass multithreaded
 if UNIX test	thread-hangs-on-fork	thread022	tcf pass multithreaded
 test	root-thread-exit-continues		thread023	tcf pass multithreaded
@@ -2094,7 +2094,7 @@ test	config-variables-with-same-name			config035 tcf fail used_to_pass config
 test	config-library-with-uppercase	config036 tcf pass config
 test	config-cycled-library-dependency	config037 tcf pass config
 test	config-unexistent-cluster-with-changes	config038 tcf pass config
-test	config-too-many-excludes		config039 tcf fail config
+test	config-too-many-excludes		config039 tcf pass config
 
 -- Lace
 

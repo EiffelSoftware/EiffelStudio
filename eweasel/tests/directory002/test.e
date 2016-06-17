@@ -10,23 +10,63 @@ feature {NONE} -- Creation
 		do
 			create directory.make ({STRING_32} "Тестовая директория")
 				-- Delete contents of a directory with output.
-			create_entries ({STRING_32} "Вложенная директория", {STRING_32} "Вложенный файл.текст", 1)
-			directory.delete_content_with_action (agent process_entries, Void, 1)
+			create_entries (
+				{STRING_32} "Вложенная директория",
+				{STRING_32} "Вложенный файл.текст",
+				1)
+			directory.delete_content_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 1)
+			report (<<
+				directory.path.extended ({STRING_32} "Вложенная директория"),
+				directory.path.extended ({STRING_32} "Вложенный файл.текст")
+			>>)
 				-- Delete a directory completely with output.
-			create_entries ({STRING_32} "Другая директория", {STRING_32} "Другой файл.текст", 2)
-			directory.recursive_delete_with_action (agent process_entries, Void, 1)
+			create_entries (
+				{STRING_32} "Другая директория",
+				{STRING_32} "Другой файл.текст",
+				2)
+			directory.recursive_delete_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 1)
+			report (<<
+				directory.path.extended ({STRING_32} "Другая директория"),
+				directory.path.extended ({STRING_32} "Другой файл.текст"),
+				directory.path
+			>>)
 				-- Delete contents of a directory without output.
-			create_entries ({STRING_32} "Вложенная директория", {STRING_32} "Вложенный файл.текст", 3)
-			directory.delete_content_with_action (agent process_entries, Void, 0)
+			create_entries (
+				{STRING_32} "Вложенная директория",
+				{STRING_32} "Вложенный файл.текст",
+				3)
+			directory.delete_content_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 0)
+			report (<<>>)
 				-- Delete a directory completely without output.
-			create_entries ({STRING_32} "Другая директория", {STRING_32} "Другой файл.текст", 4)
-			directory.recursive_delete_with_action (agent process_entries, Void, 0)
+			create_entries (
+				{STRING_32} "Другая директория",
+				{STRING_32} "Другой файл.текст",
+				4)
+			directory.recursive_delete_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 0)
+			report (<<>>)
+				-- Delete contents of a directory without output.
+			create_entries (
+				{STRING_32} "Вложенная директория",
+				{STRING_32} "Вложенный файл.текст",
+				5)
+			directory.delete_content
+			report (<<>>)
+				-- Delete a directory completely without output.
+			create_entries (
+				{STRING_32} "Другая директория",
+				{STRING_32} "Другой файл.текст",
+				6)
+			directory.recursive_delete
+			report (<<>>)
 		end
 
 feature {NONE} -- Access
 
 	directory: DIRECTORY
 			-- A directory to perform tests.
+
+	actual_entries: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Directory entries obtained by running a directory operation.
 
 feature {NONE} -- Basic operations
 
@@ -38,22 +78,64 @@ feature {NONE} -- Basic operations
 		do
 			io.put_string ("Test ")
 			io.put_natural (test_number)
-			io.put_character (':')
-			io.put_new_line
+			io.put_string (": ")
 				-- Create directory structure.
 			u.create_directory_path (directory.path.extended (directory_name))
 			create f.make_with_path (directory.path.extended (file_name))
 			f.create_read_write
 			f.close
+				-- Initialize storage to record enties.
+			create actual_entries.make (0)
 		end
 
-	process_entries (entries: LIST [READABLE_STRING_GENERAL])
+feature {NONE} -- Output
+
+	report (expected_entries: ARRAY [PATH])
+			-- Report if `actual_entries' match `expected_entries'.
+		local
+			u: UTF_CONVERTER
+			has_error: BOOLEAN
 		do
-			across
-				entries as c
-			loop
-				io.put_character ('%T')
-				io.put_string ((create {PATH}.make_from_string (c.item)).components.last.utf_8_name)
+			if expected_entries.count = actual_entries.count then
+				across
+					expected_entries as c
+				from
+					actual_entries.start
+				until
+					has_error
+				loop
+					check same_count: not actual_entries.after then
+						has_error := c.item /~ create {PATH}.make_from_string (actual_entries.item)
+						actual_entries.forth
+					end
+				end
+			else
+				io.put_string ("Different number of entries")
+				has_error := True
+			end
+			if has_error then
+				io.put_string ("Failed")
+				io.put_new_line
+				io.put_string ("%TExpected:")
+				io.put_new_line
+				across
+					expected_entries as c
+				loop
+					io.put_string ("%T%T")
+					io.put_string (c.item.utf_8_name)
+					io.put_new_line
+				end
+				io.put_string ("%TActual:")
+				io.put_new_line
+				across
+					actual_entries as c
+				loop
+					io.put_string ("%T%T")
+					io.put_string ((create {PATH}.make_from_string (c.item)).utf_8_name)
+					io.put_new_line
+				end
+			else
+				io.put_string ("OK")
 				io.put_new_line
 			end
 		end

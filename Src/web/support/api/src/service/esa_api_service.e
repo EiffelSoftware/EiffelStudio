@@ -749,20 +749,20 @@ feature -- Access: Auth Session
 
 feature -- Change: Auth Session
 
-	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER;)
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- New user session for user `a_user' with token `a_token'.
 		do
 			log.write_debug (generator + ".new_user_session_auth for user:" + a_user.name )
-			login_provider.new_user_session_auth (a_token, a_user)
+			login_provider.new_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
 
 
-	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER )
+	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- Update user session for user `a_user' with token `a_token'.
 		do
 			log.write_debug (generator + ".update_user_session_auth for user:" + a_user.name )
-			login_provider.update_user_session_auth (a_token, a_user)
+			login_provider.update_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
 

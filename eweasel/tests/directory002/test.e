@@ -16,8 +16,11 @@ feature {NONE} -- Creation
 				1)
 			directory.delete_content_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 1)
 			report (<<
-				directory.path.extended ({STRING_32} "Вложенная директория"),
-				directory.path.extended ({STRING_32} "Вложенный файл.текст")
+				<<directory.path.extended ({STRING_32} "Вложенная директория")>>,
+				<<
+					directory.path.extended ({STRING_32} "Вложенный файл.текст"),
+					directory.path.extended ({STRING_32} "Вложенный файл.текст")
+				>>
 			>>)
 				-- Delete a directory completely with output.
 			create_entries (
@@ -26,9 +29,12 @@ feature {NONE} -- Creation
 				2)
 			directory.recursive_delete_with_action (agent actual_entries.append ({LIST [READABLE_STRING_GENERAL]} ?), Void, 1)
 			report (<<
-				directory.path.extended ({STRING_32} "Другая директория"),
-				directory.path.extended ({STRING_32} "Другой файл.текст"),
-				directory.path
+				<<directory.path.extended ({STRING_32} "Другая директория")>>,
+				<<
+					directory.path.extended ({STRING_32} "Другой файл.текст"),
+					directory.path.extended ({STRING_32} "Другой файл.текст")
+				>>,
+				<<directory.path>>
 			>>)
 				-- Delete contents of a directory without output.
 			create_entries (
@@ -90,24 +96,27 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Output
 
-	report (expected_entries: ARRAY [PATH])
+	report (expected_entries: ARRAY [ARRAY [PATH]])
 			-- Report if `actual_entries' match `expected_entries'.
+			-- Every item in `expected_entries' correspond to one element of `actual_entries'.
+			-- However because of possible Unicode normalization, `actual_enties' may contain
+			-- one of several forms provided in one element of `actual_entries'.
 		local
 			u: UTF_CONVERTER
 			has_error: BOOLEAN
 		do
 			if expected_entries.count = actual_entries.count then
 				across
-					expected_entries as c
-				from
-					actual_entries.start
+					expected_entries as expected_forms
 				until
 					has_error
 				loop
-					check same_count: not actual_entries.after then
-						has_error := c.item /~ create {PATH}.make_from_string (actual_entries.item)
-						actual_entries.forth
-					end
+					has_error :=
+						across expected_forms.item as expected_form all
+							across actual_entries as actual_entry all
+								expected_form.item /~ create {PATH}.make_from_string (actual_entry.item)
+							end
+						end
 				end
 			else
 				io.put_string ("Different number of entries")
@@ -119,10 +128,19 @@ feature {NONE} -- Output
 				io.put_string ("%TExpected:")
 				io.put_new_line
 				across
-					expected_entries as c
+					expected_entries as expeted_forms
 				loop
 					io.put_string ("%T%T")
-					io.put_string (c.item.utf_8_name)
+					across
+						expeted_forms.item as expeted_form
+					loop
+						if not expeted_form.is_first then
+							io.put_character (' ')
+						end
+						io.put_character ('"')
+						io.put_string (expeted_form.item.utf_8_name)
+						io.put_character ('"')
+					end
 					io.put_new_line
 				end
 				io.put_string ("%TActual:")
@@ -131,7 +149,9 @@ feature {NONE} -- Output
 					actual_entries as c
 				loop
 					io.put_string ("%T%T")
+					io.put_character ('"')
 					io.put_string ((create {PATH}.make_from_string (c.item)).utf_8_name)
+					io.put_character ('"')
 					io.put_new_line
 				end
 			else

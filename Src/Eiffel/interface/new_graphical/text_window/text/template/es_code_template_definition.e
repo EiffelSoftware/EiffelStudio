@@ -16,6 +16,7 @@ inherit
 
 	AST_ITERATOR
 		redefine
+			process_class_as,
 			process_feature_as,
 			process_index_as,
 			process_formal_generic_list_as,
@@ -90,7 +91,17 @@ feature -- Access
 	items: detachable LIST [ES_CODE_TEMPLATE_DEFINITION_ITEM]
 			-- Collection of availables templates.
 
+	top_notes: detachable STRING_TABLE [STRING_32]
+			-- Indexing clause at top of class.
+
 feature -- Visitor
+
+	 process_class_as (l_as: CLASS_AS)
+				do
+					process_top_notes (l_as.top_indexes)
+					Precursor (l_as)
+				end
+
 
 	process_feature_as (l_as: FEATURE_AS)
 		do
@@ -433,6 +444,35 @@ feature -- Visitor
 		end
 
 feature {NONE} -- Change element
+
+	process_top_notes (l_as: INDEXING_CLAUSE_AS)
+			-- Process top notes
+		local
+			l_cursor: INTEGER
+		do
+			create top_notes.make_caseless (1)
+			from
+				l_cursor := l_as.index
+				l_as.start
+			until
+				l_as.after
+			loop
+				if
+					attached {INDEX_AS} l_as.item as l_item and then
+					attached {ID_AS} l_item.tag as l_tag
+				then
+					if
+						attached l_item.index_list as l_index_list and then
+						not l_index_list.is_empty and then
+						attached {STRING_AS} l_index_list.at (1) as l_string
+					then
+						top_notes.force (l_string.value_32, l_tag.name_32)
+					end
+				end
+				l_as.forth
+			end
+			l_as.go_i_th (l_cursor)
+		end
 
 	set_text (a_text: READABLE_STRING_32)
 			-- set `text' with `a_text'.

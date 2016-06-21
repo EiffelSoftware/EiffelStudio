@@ -118,7 +118,7 @@ feature {NONE} -- Access
 			if attached internal_editor_context_cookie as l_cookie then
 				Result := l_cookie
 			else
-				Result := (create {UUID_GENERATOR}).generate_uuid.as_attached
+				Result := (create {UUID_GENERATOR}).generate_uuid
 				internal_editor_context_cookie := Result
 			end
 		end

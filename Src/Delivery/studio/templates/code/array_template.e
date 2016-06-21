@@ -1,3 +1,8 @@
+note
+    description: "[
+        Code templates for Arrays of COMPARABLES.
+    ]"
+    
 class ARRAY_TEMPLATE [T -> COMPARABLE]
 
 inherit

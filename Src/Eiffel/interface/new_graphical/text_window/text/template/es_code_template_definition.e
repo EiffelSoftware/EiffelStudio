@@ -24,13 +24,15 @@ inherit
 			process_formal_as,
 			process_class_type_as,
 			process_generic_class_type_as,
-			process_routine_as,
 			process_body_as,
 			process_do_as,
 			process_local_dec_list_as,
 			process_list_dec_as,
 			process_type_dec_list_as,
-			process_type_dec_as
+			process_type_dec_as,
+			process_parent_list_as,
+			process_routine_as,
+			process_list_dec_list_as
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -96,11 +98,20 @@ feature -- Access
 
 feature -- Visitor
 
-	 process_class_as (l_as: CLASS_AS)
-				do
-					process_top_notes (l_as.top_indexes)
-					Precursor (l_as)
-				end
+	process_class_as (l_as: CLASS_AS)
+		do
+			is_generic_argument := True
+			process_top_notes (l_as.top_indexes)
+			Precursor (l_as)
+		end
+
+
+	process_routine_as (l_as: ROUTINE_AS)
+		do
+			create local_variables.make_caseless (1)
+			is_local := True
+			Precursor (l_as)
+		end
 
 
 	process_feature_as (l_as: FEATURE_AS)
@@ -119,12 +130,6 @@ feature -- Visitor
 				set_valid_template (False)
 					-- Not a query or command.
 			end
-			Precursor (l_as)
-		end
-
-	process_routine_as (l_as: ROUTINE_AS)
-			-- <Precursor>
-		do
 			Precursor (l_as)
 		end
 
@@ -169,13 +174,19 @@ feature -- Visitor
 	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
 			-- Process `l_as'.
 		do
-			create local_variables.make_caseless (1)
-			is_local := True
 			Precursor (l_as)
 			is_local := False
+			is_local_dec_list := False
 			if attached item as l_item then
 				l_item.set_locals (local_variables)
 			end
+		end
+
+	 process_list_dec_list_as (l_as: LIST_DEC_LIST_AS)
+					-- Process `l_as'.
+		do
+			is_local_dec_list := True
+			Precursor (l_as)
 		end
 
 	process_list_dec_as (l_as: LIST_DEC_AS)
@@ -202,6 +213,14 @@ feature -- Visitor
 			end
 		end
 
+	process_parent_list_as (l_as: PARENT_LIST_AS)
+			-- Process `l_as'.
+		do
+			reset_constraining_type
+			is_generic_argument := False
+			Precursor (l_as)
+		end
+
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 					-- Process `l_as'.
 		do
@@ -225,9 +244,17 @@ feature -- Visitor
 			l_name: STRING_32
 		do
 			l_id_list := l_as.id_list
-			create argument_type.make_empty
+			if is_argument then
+				create argument_type.make_empty
+			end
+			if is_local_dec_list then
+				create local_type.make_empty
+			end
 			Precursor (l_as)
-			if attached arguments as l_arguments then
+			if
+				is_argument and then
+				attached arguments as l_arguments
+			then
 				if l_id_list.count > 0 then
 					from
 						j := 1
@@ -237,6 +264,22 @@ feature -- Visitor
 						l_name := l_as.item_name (j)
 						j := j + 1
 						l_arguments.force (argument_type, l_name)
+					end
+				end
+			end
+			if
+				is_local and then is_local_dec_list and then
+				attached local_variables as l_variables
+			then
+				if l_id_list.count > 0 then
+					from
+						j := 1
+					until
+						j > l_id_list.count
+					loop
+						l_name := l_as.item_name (j)
+						j := j + 1
+						l_variables.force (local_type, l_name)
 					end
 				end
 			end
@@ -250,7 +293,7 @@ feature -- Visitor
 				attached item as l_item and then
 				attached {ID_AS} l_as.tag as l_tag
 			then
-				if l_tag.name_32.is_case_insensitive_equal ("title") then
+				if l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.title) then
 					if
 					 	attached l_as.index_list as l_index_list and then
 					 	not l_index_list.is_empty and then
@@ -258,7 +301,7 @@ feature -- Visitor
 					then
 						l_item.set_title (l_string.value_32)
 					end
-				elseif l_tag.name_32.is_case_insensitive_equal ("description") then
+				elseif l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.description) then
 					if
 					 	attached l_as.index_list as l_index_list and then
 					 	not l_index_list.is_empty and then
@@ -266,7 +309,7 @@ feature -- Visitor
 					then
 						l_item.set_description (l_string.value_32)
 					end
-				elseif l_tag.name_32.is_case_insensitive_equal ("tags") then
+				elseif l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.tags) then
 					if
 					 	attached l_as.index_list as l_index_list and then
 					 	not l_index_list.is_empty and then
@@ -393,13 +436,19 @@ feature -- Visitor
 
 			Precursor (l_as)
 			if attached context as l_context and not is_context_set then
-				l_context.append ("]")
+				if l_context.has ('[') then
+					l_context.append ("]")
+				end
 			end
 			if is_argument and then attached argument_type as l_argument_type then
-				l_argument_type.append ("]")
+				if l_argument_type.has ('[') then
+					l_argument_type.append ("]")
+				end
 			end
 			if is_local and then attached local_type as l_local_type then
-				l_local_type.append ("]")
+				if l_local_type.has ('[') then
+					l_local_type.append ("]")
+				end
 			end
 		end
 
@@ -407,6 +456,7 @@ feature -- Visitor
 			-- <Precursor>
 		do
 			if
+				is_generic_argument and then
 				attached generic_constraints as l_generic_constraints
 			then
 				if last_constraining_type = Void then
@@ -417,6 +467,12 @@ feature -- Visitor
 						-- Multiple Constraints Not Supported.
 				end
 			end
+			if
+				is_local_dec_list and then
+				attached local_type as l_local_type
+			then
+				l_local_type.append (l_as.class_name.name_32)
+			end
 			Precursor (l_as)
 		end
 
@@ -425,7 +481,7 @@ feature -- Visitor
 		do
 			if not is_context_set then
 				if
-					l_as.class_name.name_32.is_case_insensitive_equal ("TEMPLATE")
+					l_as.class_name.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.template)
 				then
 					reset_formal
 					create context.make_empty
@@ -450,28 +506,30 @@ feature {NONE} -- Change element
 		local
 			l_cursor: INTEGER
 		do
-			create top_notes.make_caseless (1)
-			from
-				l_cursor := l_as.index
-				l_as.start
-			until
-				l_as.after
-			loop
-				if
-					attached {INDEX_AS} l_as.item as l_item and then
-					attached {ID_AS} l_item.tag as l_tag
-				then
+			if attached l_as then
+				create top_notes.make_caseless (1)
+				from
+					l_cursor := l_as.index
+					l_as.start
+				until
+					l_as.after
+				loop
 					if
-						attached l_item.index_list as l_index_list and then
-						not l_index_list.is_empty and then
-						attached {STRING_AS} l_index_list.at (1) as l_string
+						attached {INDEX_AS} l_as.item as l_item and then
+						attached {ID_AS} l_item.tag as l_tag
 					then
-						top_notes.force (l_string.value_32, l_tag.name_32)
+						if
+							attached l_item.index_list as l_index_list and then
+							not l_index_list.is_empty and then
+							attached {STRING_AS} l_index_list.at (1) as l_string
+						then
+							top_notes.force (l_string.value_32, l_tag.name_32)
+						end
 					end
+					l_as.forth
 				end
-				l_as.forth
+				l_as.go_i_th (l_cursor)
 			end
-			l_as.go_i_th (l_cursor)
 		end
 
 	set_text (a_text: READABLE_STRING_32)
@@ -536,8 +594,14 @@ feature {NONE} -- Implementation
 	is_local: BOOLEAN
 			-- Visiting local variables?
 
+	is_local_dec_list: BOOLEAN
+			-- Visiting local dec list variables?		
+
 	is_argument: BOOLEAN
-			-- Visiting argument variables?		
+			-- Visiting argument variables?
+
+	is_generic_argument: BOOLEAN
+			-- Visiting generic constraint?				
 
 	local_type: detachable STRING_32
 			-- Local variable type.

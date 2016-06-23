@@ -8,7 +8,7 @@
 			]"
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -32,11 +32,11 @@
 			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 */
 
@@ -168,44 +168,48 @@ rt_public void eif_show_console(void)
 {
 	if (!eif_console_allocated) {
 		HANDLE eif_conin, eif_conout, eif_conerr;
+		HANDLE initial_conin, initial_conout, initial_conerr;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
 		BOOL bLaunched;
 		int hCrt;
-		STARTUPINFO l_info;
 #ifndef EIF_BORLAND
 		FILE *hf;
 #endif
 		RT_GET_CONTEXT
 
-			/* Find out if the calling process has initialized the HANDLEs. */
-		memset(&l_info, 0, sizeof(STARTUPINFO));
-		GetStartupInfo(&l_info);
-		if ((l_info.dwFlags & STARTF_USESTDHANDLES) != STARTF_USESTDHANDLES) {
-			AllocConsole();
-		}
-
 			/* Get all default standard handles */
-		eif_conin = GetStdHandle (STD_INPUT_HANDLE);
-		eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
-		eif_conerr = GetStdHandle (STD_ERROR_HANDLE);
+		initial_conin = GetStdHandle (STD_INPUT_HANDLE);
+		initial_conout = GetStdHandle (STD_OUTPUT_HANDLE);
+		initial_conerr = GetStdHandle (STD_ERROR_HANDLE);
 
-			/* Check if handles are available, allocate console if not */
-			/* Raise an I/O exception if we cannot get a valid handle */
+			/* Check if handles are available, allocate console if not. */
+			/* Raise an I/O exception if we cannot get a valid handle. */
+		eif_conin = GetStdHandle (STD_INPUT_HANDLE);
 		if ((eif_conin == 0) || (eif_conin == INVALID_HANDLE_VALUE)) {
+				/* There is no handle for standard input.
+				   Allocate a console for it. */
 			AllocConsole ();
 			eif_conin = GetStdHandle (STD_INPUT_HANDLE);
 		}
 		if (eif_conin == INVALID_HANDLE_VALUE) {
 			eio ();
 		}
+
+		eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
 		if ((eif_conout == 0) || (eif_conout == INVALID_HANDLE_VALUE)){
+				/* There is no handle for standard output.
+				   Allocate a console for it. */
 			AllocConsole ();
 			eif_conout = GetStdHandle (STD_OUTPUT_HANDLE);
 		}
 		if (eif_conout == INVALID_HANDLE_VALUE) {
 			eio ();
 		}
+
+		eif_conerr = GetStdHandle (STD_ERROR_HANDLE);
 		if ((eif_conerr == 0) || (eif_conerr == INVALID_HANDLE_VALUE)) {
+				/* There is no handle for standard error.
+				   Allocate a console for it. */
 			AllocConsole ();
 			eif_conerr = GetStdHandle (STD_ERROR_HANDLE);
 		}
@@ -228,18 +232,39 @@ rt_public void eif_show_console(void)
 			 */
 		EIF_CONSOLE_LOCK;
 		if (!eif_console_allocated) {
-			if (_get_osfhandle (_fileno (stdout)) != (intptr_t) eif_conout) {
+			if (eif_conout != initial_conout) {
+					/* Use console for standard output. */
+				if (!freopen("CONOUT$", "w", stdout)) {
+					EIF_CONSOLE_UNLOCK;
+					eraise("Cannot reopen stdout", EN_IO);
+				}
+			}
+			else if (_get_osfhandle (_fileno (stdout)) != (intptr_t) eif_conout) {
+					/* We are most probably in a DLL that did not initialize standard handles.
+					   Use redirected handle for standard output. */
 				hCrt = _open_osfhandle ((intptr_t) eif_conout, _O_TEXT);
 #ifdef EIF_BORLAND
-				dup2 (hCrt, _fileno(stdout));
+                                dup2 (hCrt, _fileno(stdout));
 #else
 				hf = _fdopen (hCrt, "w");
 				*stdout = *hf;
 #endif
-			  	setvbuf(stdout, NULL, _IONBF, 0);
+					/* According to specification, buffer size should be > 2
+					   even when the buffer is not used. */
+			  	setvbuf(stdout, NULL, _IONBF, 2);
 			}
 
-			if (_get_osfhandle (_fileno (stderr)) != (intptr_t) eif_conerr) {
+			if (eif_conerr != initial_conerr) {
+					/* Use console for standard error. */
+					/* There is no "CONERR$", only "CONOUT$". */
+				if (!freopen("CONOUT$", "w", stderr)) {
+					EIF_CONSOLE_UNLOCK;
+					eraise("Cannot reopen stdout", EN_IO);
+				}
+			}
+			else if (_get_osfhandle (_fileno (stderr)) != (intptr_t) eif_conerr) {
+					/* We are most probably in a DLL that did not initialize standard handles.
+					   Use redirected handle for standard error. */
 				hCrt = _open_osfhandle ((intptr_t) eif_conerr, _O_TEXT);
 #ifdef EIF_BORLAND
 				dup2 (hCrt, _fileno(stderr));
@@ -247,10 +272,21 @@ rt_public void eif_show_console(void)
 				hf = _fdopen (hCrt, "w");
 				*stderr = *hf;
 #endif
-			  	setvbuf(stderr, NULL, _IONBF, 0);
+					/* According to specification, buffer size should be > 2
+					   even when the buffer is not used. */
+			  	setvbuf(stderr, NULL, _IONBF, 2);
 			}
 
-			if (_get_osfhandle (_fileno (stdin)) != (intptr_t) eif_conin) {
+			if (eif_conin != initial_conin) {
+					/* Use console for standard input. */
+				if (!freopen("CONIN$", "r", stdin)) {
+					EIF_CONSOLE_UNLOCK;
+					eraise("Cannot reopen stdin", EN_IO);
+				}
+			}
+			else if (_get_osfhandle (_fileno (stdin)) != (intptr_t) eif_conin) {
+					/* We are most probably in a DLL that did not initialize standard handles.
+					   Use redirected handle for standard input. */
 				hCrt = _open_osfhandle ((intptr_t) eif_conin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
 				dup2 (hCrt, _fileno(stdin));

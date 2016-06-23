@@ -8,24 +8,64 @@ feature {NONE} -- Creation
 	make
 			-- Run test.
 		local
+			command: STRING_32
 			f: RAW_FILE
+			report_file: PLAIN_TEXT_FILE
 		do
-				-- Prepare a file for input redirection.
-			create f.make_create_read_write (input_file_name)
-			f.put_string (client_message)
-			f.close
+				-- Set supplier path.
+			supplier := "supplier"
+			if attached command_line.separate_word_option_value ("supplier") as s and then not s.is_empty then
+				supplier := s
+			end
+			if command_line.index_of_word_option ("detach") > 0 then
+					-- Relaunch the application to get rid of standard handles that it always sets.
+					-- {EXECUTION_ENVIRONMENT} has to be used because
+					-- {PROCESS_FACTORY} always causes handles to be inherited.
+				create command.make_empty
+				across
+					command_line.argument_array as argument
+				loop
+					if not argument.is_first then
+						command.append_character (' ')
+					end
+					if not argument.item.same_string ("-detach") then
+						command.append (argument.item)
+					end
+				end
+				(create {EXECUTION_ENVIRONMENT}).system (command)
+			else
+					-- Allocate console if needed.
+				if command_line.index_of_word_option ("console") > 0 then
+						-- Allocation will happen by initializing standard file handles.
+					io.error.end_of_file.do_nothing
+				end
+					-- Redirect output if needed.
+				if attached command_line.separate_word_option_value ("output") as o and then not o.is_empty then
+					create report_file.make_create_read_write (o)
+					io.set_file_default (report_file)
+				end
+					-- Prepare a file for input redirection.
+				create f.make_create_read_write (input_file_name)
+				f.put_string (client_message)
+				f.close
 
-			test_redirection (False, False, False, no_input_arguments, "1")
-			test_redirection (False, False, True, no_input_arguments, "2")
-			test_redirection (False, True, False, no_input_arguments, "3")
-			test_redirection (False, True, True, no_input_arguments, "4")
+				test_redirection (False, False, False, no_input_arguments, "1")
+				test_redirection (False, False, True, no_input_arguments, "2")
+				test_redirection (False, True, False, no_input_arguments, "3")
+				test_redirection (False, True, True, no_input_arguments, "4")
 
-			test_redirection (True, False, False, input_arguments, "5")
-			test_redirection (True, False, True, input_arguments, "6")
-			test_redirection (True, True, False, input_arguments, "7")
-			test_redirection (True, True, True, input_arguments, "8")
+				test_redirection (True, False, False, input_arguments, "5")
+				test_redirection (True, False, True, input_arguments, "6")
+				test_redirection (True, True, False, input_arguments, "7")
+				test_redirection (True, True, True, input_arguments, "8")
 
-			wipe_file (input_file_name)
+				wipe_file (input_file_name)
+				io.put_string ("Done.")
+				io.put_new_line
+				if attached report_file then
+					report_file.close
+				end
+			end
 		end
 
 feature {NONE} -- Tests
@@ -37,12 +77,7 @@ feature {NONE} -- Tests
 		local
 			pf: PROCESS_FACTORY
 			p: PROCESS
-			supplier: READABLE_STRING_32
 		do
-			supplier := "supplier"
-			if command_line.argument_count > 0 then
-				supplier := command_line.argument (1)
-			end
 			create pf
 			across
 				arguments as c
@@ -222,6 +257,9 @@ feature {NONE} -- Input/output
 		end
 
 feature {NONE} -- Environment
+
+	supplier: READABLE_STRING_32
+			-- Supplier program path.
 
 	command_line: ARGUMENTS_32
 			-- Access to command-line arguments.

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Project configuration window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -211,14 +211,12 @@ feature {NONE}-- Initialization
 				-- add accelerator for opening the context menu
 			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_menu), False, False, False)
 			l_accel.actions.extend (agent
-				local
-					l_section: CONFIGURATION_SECTION
 				do
-					l_section ?= section_tree.selected_item
-					check
-						configuration_section: l_section /= Void
+					if attached {CONFIGURATION_SECTION} section_tree.selected_item as l_section then
+						l_section.show_context_menu
+					else
+						check expected_selected_item_type: False end
 					end
-					l_section.show_context_menu
 				end)
 			accelerators.extend (l_accel)
 		end
@@ -509,7 +507,7 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			l_target_externals: TARGET_EXTERNALS_SECTION
 			l_target_advanced: TARGET_ADVANCED_SECTION
 			l_target_groups: TARGET_GROUPS_SECTION
-			l_node: EV_TREE_NODE
+			l_list: EV_TREE_NODE_LIST
 		do
 				-- target
 			create l_target.make (a_target, Current)
@@ -563,12 +561,12 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 				-- expand if this is the selected target
 			if a_target.name.is_equal (selected_target) then
 				from
-					l_node := l_target
+					l_list := l_target
 				until
-					l_node = Void
+					not attached {EV_TREE_NODE} l_list as l_node
 				loop
 					l_node.expand
-					l_node ?= l_node.parent
+					l_list := l_node.parent
 				end
 			end
 
@@ -1001,23 +999,14 @@ feature {NONE} -- Implementation
 
 	handle_value_changes (a_has_group_changed: BOOLEAN)
 			-- Store changes to disk.
-		local
-			l_section: CONFIGURATION_SECTION
-			l_lib_grp: GROUP_SECTION
 		do
 				-- check if the name of the current selected section has changed and update
-			if section_tree.selected_item /= Void then
-				l_section ?= section_tree.selected_item
-				check
-					section: l_section /= Void
-				end
+			if attached {CONFIGURATION_SECTION} section_tree.selected_item as l_section then
 				if not l_section.name.as_string_32.is_equal (l_section.text.as_string_32) then
 					l_section.set_text (l_section.name)
 				end
-
 					-- for groups, update the pixmap
-				l_lib_grp ?= l_section
-				if l_lib_grp /= Void then
+				if attached {GROUP_SECTION} l_section as l_lib_grp then
 					l_lib_grp.update_pixmap
 				end
 			end
@@ -1027,7 +1016,6 @@ feature {NONE} -- Implementation
 			-- Open editor to edit the configuration file by hand.
 		local
 			l_cmd_string: like external_editor_command.item
-			l_env: EXECUTION_ENVIRONMENT
 		do
 			l_cmd_string := external_editor_command.item ([conf_system.file_name, 1])
 			if l_cmd_string /= Void and then not l_cmd_string.is_empty then
@@ -1035,8 +1023,7 @@ feature {NONE} -- Implementation
 				if conf_system /= Void then
 					commit_changes
 				end
-				create l_env
-				l_env.launch (l_cmd_string)
+				(create {EXECUTION_ENVIRONMENT}).launch (l_cmd_string)
 			end
 		end
 
@@ -1333,16 +1320,16 @@ feature {NONE} -- Configuration setting
 		require
 			current_target: current_target /= Void
 			variables: grid /= Void
-		local
-			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
 			if grid.has_selected_row then
-				l_item ?= grid.selected_rows.first.item (1)
-				check
-					valid_item: l_item /= Void
-					valid_value: l_item.value /= Void
+				if attached {TEXT_PROPERTY [STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+					check
+						valid_value: l_item.value /= Void
+					end
+					current_target.remove_variable (l_item.value.as_string_8)
+				else
+					check expected_selected_row_item_type: False end
 				end
-				current_target.remove_variable (l_item.value.as_string_8)
 				show_properties_target_variables (current_target)
 			end
 		end
@@ -1389,15 +1376,13 @@ feature {NONE} -- Configuration setting
 		require
 			current_target: current_target /= Void
 			variables: grid /= Void
-		local
-			l_item: TEXT_PROPERTY [STRING_GENERAL]
 		do
 			if grid.has_selected_row then
-				l_item ?= grid.selected_rows.first.item (1)
-				check
-					valid_item: l_item /= Void
+				if attached {TEXT_PROPERTY [STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+					current_target.remove_mapping (l_item.text)
+				else
+					check expected_selected_row_item_type: False end
 				end
-				current_target.remove_mapping (l_item.text)
 				show_properties_target_mapping (current_target)
 			end
 		end
@@ -1474,7 +1459,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

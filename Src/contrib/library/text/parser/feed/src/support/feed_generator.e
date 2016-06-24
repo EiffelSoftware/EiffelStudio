@@ -66,7 +66,7 @@ feature {NONE} -- Helpers
 					end
 				end
 				if a_content = Void then
-					a_output.append ("/>")
+					a_output.append ("/>%N")
 				else
 					a_output.append (">")
 					a_output.append (escaped_unicode_xml (a_content.as_string_32))

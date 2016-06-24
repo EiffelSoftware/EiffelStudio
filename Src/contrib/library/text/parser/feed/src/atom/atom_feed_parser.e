@@ -81,6 +81,7 @@ feature -- Access
 							if attached x_entry.element_by_name ("content") as x_content then
 								e.set_content (xml_element_code (x_content), xml_attribute_text (x_content, "type"))
 							end
+
 							if attached x_entry.element_by_name ("author") as x_author then
 								if attached x_author.element_by_name ("name") as x_name and then
 									attached x_name.text as l_author_name
@@ -90,6 +91,17 @@ feature -- Access
 										l_author.set_email (x_email.text)
 									end
 									e.set_author (l_author)
+								end
+							end
+
+								-- Optional "category"
+							if attached x_entry.elements_by_name ("category") as x_categories then
+								across
+									x_categories as cats_ic
+								loop
+									if attached xml_attribute_text (cats_ic.item, "term") as l_term then
+										e.set_category (l_term)
+									end
 								end
 							end
 							Result.extend (e)

@@ -72,6 +72,13 @@ feature -- Visitor
 			if attached a_entry.date as dt then
 				append_content_tag_to ("updated", Void, date_to_string (dt), buffer)
 			end
+			if attached a_entry.categories as cats then
+				across
+					cats as ic
+				loop
+					append_content_tag_to ("category", <<["term", ic.item]>>, Void, buffer)
+				end
+			end
 
 			append_content_tag_to ("summary", Void, a_entry.description, buffer)
 			if attached a_entry.content as l_content then

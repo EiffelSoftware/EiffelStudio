@@ -65,6 +65,7 @@ feature {NONE} -- Data
 			<name>John Doe</name>
 			<email>johndoe@example.com</email>
 		</author>
+		<category term="foo"/><category term="bar"/>
 	</entry>
 
 </feed>

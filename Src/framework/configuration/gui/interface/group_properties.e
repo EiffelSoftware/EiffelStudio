@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate properties for groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,6 @@ feature {NONE} -- Implementation
 			l_library: CONF_LIBRARY
 			l_file_rule_prop: FILE_RULE_PROPERTY
 			l_list_prop: LIST_PROPERTY
-			l_deps: SEARCH_TABLE [CONF_GROUP]
 			l_deps_list: ARRAYED_LIST [STRING_32]
 			l_dep_dialog: GROUPS_LIST_DIALOG
 			l_over: ARRAYED_LIST [CONF_GROUP]
@@ -48,36 +47,36 @@ feature {NONE} -- Implementation
 			l_vis_dial: VISIBLE_DIALOG
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
-			l_virtual_group: CONF_VIRTUAL_GROUP
 			l_load: CONF_LOAD
 		do
 			properties.reset
 
+				-- General section.
 			properties.add_section (conf_interface_names.section_general)
 
-				-- type
+				-- Type.
 			create l_text_prop.make (conf_interface_names.group_type_name)
 			l_text_prop.set_description (conf_interface_names.group_type_description)
-			if a_group.is_override then
+			if attached {CONF_OVERRIDE} a_group as o then
 				l_text_prop.set_value (conf_interface_names.group_override)
-				l_override ?= a_group
-				l_cluster := l_override
-				l_visible := l_cluster
-			elseif a_group.is_cluster then
+				l_override := o
+				l_cluster := o
+				l_visible := o
+			elseif attached {CONF_CLUSTER} a_group as c then
 				l_text_prop.set_value (conf_interface_names.group_cluster)
-				l_cluster ?= a_group
-				l_visible := l_cluster
-			elseif a_group.is_precompile then
+				l_cluster := c
+				l_visible := c
+			elseif attached {CONF_PRECOMPILE} a_group as p then
 				l_text_prop.set_value (conf_interface_names.group_precompile)
-				l_precompile ?= a_group
-				l_library := l_precompile
-				l_visible := l_library
-			elseif a_group.is_library then
+				l_precompile := p
+				l_library := p
+				l_visible := p
+			elseif attached {CONF_LIBRARY} a_group as l then
 				l_text_prop.set_value (conf_interface_names.group_library)
-				l_library ?= a_group
-				l_visible := l_library
-					-- if `a_group' is a library without a library target we need to parse the file and set the library target
-					-- as options are inherited from there
+				l_library := l
+				l_visible := l
+					-- If `a_group' is a library without a library target we need to parse the file and set the library target
+					-- as options are inherited from there.
 				if l_library.library_target = Void then
 					create l_load.make (create {CONF_PARSE_FACTORY})
 					l_load.retrieve_configuration (l_library.path)
@@ -86,16 +85,19 @@ feature {NONE} -- Implementation
 						l_library.set_library_target (l_load.last_system.library_target)
 					end
 				end
-			elseif a_group.is_assembly or a_group.is_physical_assembly then
+			elseif attached {CONF_ASSEMBLY} a_group as a then
 				l_text_prop.set_value (conf_interface_names.group_assembly)
-				l_assembly ?= a_group
+				l_assembly := A
+			elseif a_group.is_physical_assembly then
+				l_text_prop.set_value (conf_interface_names.group_assembly)
 			else
 				check should_not_reach: False end
 			end
 			l_text_prop.enable_readonly
-			properties.add_property (l_text_prop)
+				--Type of the group is known from the treeview, no need to add a specific property.
+			-- properties.add_property (l_text_prop)
 
-				-- name
+				-- Name.
 			create l_text_prop.make (conf_interface_names.group_name_name)
 			l_text_prop.set_description (conf_interface_names.group_name_description)
 			l_text_prop.set_value (a_group.name)
@@ -104,7 +106,7 @@ feature {NONE} -- Implementation
 			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
 			properties.add_property (l_text_prop)
 
-				-- description
+				-- Description.
 			create l_mls_prop.make (conf_interface_names.group_description_name)
 			l_mls_prop.set_description (conf_interface_names.group_description_description)
 			l_mls_prop.enable_text_editing
@@ -115,40 +117,7 @@ feature {NONE} -- Implementation
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
 
-				-- readonly
-			l_bool_prop := new_boolean_property (conf_interface_names.group_readonly_name, a_group.internal_read_only)
-			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
-			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			properties.add_property (l_bool_prop)
-
-			if l_library /= Void then
-					-- use application options
-				l_bool_prop := new_boolean_property (conf_interface_names.library_use_application_options_name, l_library.use_application_options)
-				l_bool_prop.set_description (conf_interface_names.library_use_application_options_description)
-				l_bool_prop.change_value_actions.extend (agent l_library.set_use_application_options)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
-				properties.add_property (l_bool_prop)
-			end
-
-			if l_cluster /= Void then
-					-- recursive
-				l_bool_prop := new_boolean_property (conf_interface_names.cluster_recursive_name, l_cluster.is_recursive)
-				l_bool_prop.set_description (conf_interface_names.cluster_recursive_description)
-				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
-				properties.add_property (l_bool_prop)
-
-					-- hidden
-				l_bool_prop := new_boolean_property (conf_interface_names.cluster_hidden_name, l_cluster.is_hidden)
-				l_bool_prop.set_description (conf_interface_names.cluster_hidden_description)
-				l_bool_prop.change_value_actions.extend (agent l_cluster.set_hidden)
-				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
-				properties.add_property (l_bool_prop)
-			end
-
-				-- location
+				-- Location.
 			if a_group.is_cluster then
 				create l_dir_prop.make (conf_interface_names.group_location_name)
 				l_dir_prop.set_target (a_target)
@@ -176,57 +145,27 @@ feature {NONE} -- Implementation
 				properties.add_property (l_file_prop)
 			end
 
-				-- options
-			if not a_group.is_assembly then
-				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
-				add_dotnet_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation, a_group.is_library)
-				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
-				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
-				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
-			end
-
-			properties.current_section.expand
-			properties.add_section (conf_interface_names.section_advanced)
-
-				-- condition
-			create l_dial.make_with_dialog (conf_interface_names.group_condition_name, create {CONDITION_DIALOG})
-			l_dial.set_description (conf_interface_names.group_condition_description)
-			l_dial.set_display_agent (agent {CONF_CONDITION_LIST}.text)
-			l_dial.set_value (a_group.internal_conditions)
-			l_dial.disable_text_editing
-			l_dial.change_value_actions.extend (agent a_group.set_conditions)
-			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
-			properties.add_property (l_dial)
-
-			l_virtual_group ?= a_group
-			if l_virtual_group /= Void then
-					-- prefix
-				create l_text_prop.make (conf_interface_names.group_prefix_name)
-				l_text_prop.set_description (conf_interface_names.group_prefix_description)
-				l_text_prop.set_value (l_virtual_group.name_prefix)
-				l_text_prop.validate_value_actions.extend (agent (a_name: STRING_32): BOOLEAN
-					require
-						a_name_not_void: a_name /= Void
-					do
-						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
-					end)
-				l_text_prop.change_value_actions.extend (agent l_virtual_group.set_name_prefix)
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
-				properties.add_property (l_text_prop)
-
-					-- renaming
-				create l_rename_prop.make_with_dialog (conf_interface_names.group_renaming_name, create {RENAMING_DIALOG})
-				l_rename_prop.set_description (conf_interface_names.group_renaming_description)
-				l_rename_prop.set_display_agent (agent output_renaming)
-				if l_virtual_group.renaming /= Void then
-					l_rename_prop.set_value (l_virtual_group.renaming)
+				-- EIFGENs location for precompile.
+			if l_precompile /= Void then
+				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name)
+				l_dir_prop.set_target (a_target)
+				l_dir_prop.set_description (conf_interface_names.group_eifgens_location_description)
+				if l_precompile.eifgens_location /= Void then
+					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
 				end
-				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming)
-				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
-				properties.add_property (l_rename_prop)
+				l_dir_prop.change_value_actions.extend (agent update_eifgens_location (l_precompile, ?, a_target))
+				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
+				properties.add_property (l_dir_prop)
 			end
 
-				-- class options
+				-- Readonly.
+			l_bool_prop := new_boolean_property (conf_interface_names.group_readonly_name, a_group.internal_read_only)
+			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
+			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			properties.add_property (l_bool_prop)
+
+				-- Class options.
 			if not a_group.is_assembly then
 				create l_class_opt_dial.make (conf_factory)
 				l_class_opt_dial.set_group_options (a_group.options)
@@ -242,8 +181,85 @@ feature {NONE} -- Implementation
 				properties.add_property (l_class_opt_prop)
 			end
 
+				-- Use application options.
+			if l_library /= Void then
+				l_bool_prop := new_boolean_property (conf_interface_names.library_use_application_options_name, l_library.use_application_options)
+				l_bool_prop.set_description (conf_interface_names.library_use_application_options_description)
+				l_bool_prop.change_value_actions.extend (agent l_library.set_use_application_options)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+				properties.add_property (l_bool_prop)
+			end
+
+				-- Assembly properties.
+			if l_assembly /= Void then
+					-- Assembly name.
+				create l_text_prop.make (conf_interface_names.assembly_name_name)
+				l_text_prop.set_description (conf_interface_names.assembly_name_description)
+				l_text_prop.set_value (l_assembly.assembly_name)
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name ({STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				properties.add_property (l_text_prop)
+					-- Assembly culture.
+				create l_text_prop.make (conf_interface_names.assembly_culture_name)
+				l_text_prop.set_description (conf_interface_names.assembly_culture_description)
+				l_text_prop.set_value (l_assembly.assembly_culture)
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture ({STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				properties.add_property (l_text_prop)
+					-- Assembly version.
+				create l_text_prop.make (conf_interface_names.assembly_version_name)
+				l_text_prop.set_description (conf_interface_names.assembly_version_description)
+				l_text_prop.set_value (l_assembly.assembly_version)
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version ({STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				properties.add_property (l_text_prop)
+					-- Assembly public key token.
+				create l_text_prop.make (conf_interface_names.assembly_public_key_token_name)
+				l_text_prop.set_description (conf_interface_names.assembly_public_key_token_description)
+				l_text_prop.set_value (l_assembly.assembly_public_key_token)
+				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key ({STRING_32} ?))
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
+				properties.add_property (l_text_prop)
+			end
+
+			properties.current_section.expand
+
+				-- Rules section.
+			properties.add_section (conf_interface_names.section_rules)
+				-- Condition.
+			create l_dial.make_with_dialog (conf_interface_names.group_condition_name, create {CONDITION_DIALOG})
+			l_dial.set_description (conf_interface_names.group_condition_description)
+			l_dial.set_display_agent (agent {CONF_CONDITION_LIST}.text)
+			l_dial.set_value (a_group.internal_conditions)
+			l_dial.disable_text_editing
+			l_dial.change_value_actions.extend (agent a_group.set_conditions)
+			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
+			properties.add_property (l_dial)
+				-- Dependencies.
+			if attached l_cluster then
+				if attached l_cluster.dependencies as l_deps then
+					from
+						create l_deps_list.make (l_deps.count)
+						l_deps.start
+					until
+						l_deps.after
+					loop
+						l_deps_list.force (l_deps.item_for_iteration.name)
+						l_deps.forth
+					end
+				end
+				create l_dep_dialog
+				l_dep_dialog.set_conf_target (a_target)
+				create l_list_prop.make_with_dialog (conf_interface_names.cluster_dependencies_name, l_dep_dialog)
+				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
+				l_list_prop.set_value (l_deps_list)
+				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
+				properties.add_property (l_list_prop)
+			end
+				-- Overrides.
 			if l_override /= Void then
-					-- overrides
 				l_over := l_override.override
 				if l_over /= Void then
 					from
@@ -266,8 +282,47 @@ feature {NONE} -- Implementation
 				properties.add_property (l_list_prop)
 			end
 
+				-- Language section.
+			if not a_group.is_assembly then
+				properties.add_section (conf_interface_names.section_language)
+					-- Void safety.
+				add_void_safety_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Cat calls.
+				add_cat_call_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Full class checking.
+				add_full_checking_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Syntax.
+				add_syntax_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				if attached l_cluster then
+						-- Type mapping.
+					create l_mapping_prop.make_with_dialog (conf_interface_names.cluster_mapping_name, create {RENAMING_DIALOG})
+					l_mapping_prop.set_description (conf_interface_names.cluster_mapping_description)
+					l_mapping_prop.set_display_agent (agent output_renaming)
+					if l_cluster.mapping /= Void then
+						l_mapping_prop.set_value (l_cluster.mapping)
+					end
+					l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
+					l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
+					properties.add_property (l_mapping_prop)
+				end
+			end
+
+				-- Sources section.
 			if l_cluster /= Void then
-					-- file rules
+				properties.add_section (conf_interface_names.section_sources)
+					-- Is recursive?
+				l_bool_prop := new_boolean_property (conf_interface_names.cluster_recursive_name, l_cluster.is_recursive)
+				l_bool_prop.set_description (conf_interface_names.cluster_recursive_description)
+				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
+				properties.add_property (l_bool_prop)
+					-- Is hidden?
+				l_bool_prop := new_boolean_property (conf_interface_names.cluster_hidden_name, l_cluster.is_hidden)
+				l_bool_prop.set_description (conf_interface_names.cluster_hidden_description)
+				l_bool_prop.change_value_actions.extend (agent l_cluster.set_hidden)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
+				properties.add_property (l_bool_prop)
+					-- File rules.
 				create l_file_rule_prop.make (conf_interface_names.file_rule_name)
 				l_file_rule_prop.set_description (conf_interface_names.file_rule_description)
 				l_file_rule_prop.set_refresh_action (agent l_cluster.internal_file_rule)
@@ -280,75 +335,46 @@ feature {NONE} -- Implementation
 				l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 				update_inheritance_file_rule_cluster (Void, l_file_rule_prop, a_group)
 				properties.add_property (l_file_rule_prop)
+			end
+			if attached {CONF_VIRTUAL_GROUP} a_group as l_virtual_group then
+				properties.add_section (conf_interface_names.section_sources)
+					-- Prefix.
+				create l_text_prop.make (conf_interface_names.group_prefix_name)
+				l_text_prop.set_description (conf_interface_names.group_prefix_description)
+				l_text_prop.set_value (l_virtual_group.name_prefix)
+				l_text_prop.validate_value_actions.extend (agent (a_name: STRING_32): BOOLEAN
+					require
+						a_name_not_void: a_name /= Void
+					do
+						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
+					end)
+				l_text_prop.change_value_actions.extend (agent l_virtual_group.set_name_prefix)
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (True)))
+				properties.add_property (l_text_prop)
 
-					-- dependencies
-				l_deps := l_cluster.dependencies
-				if l_deps /= Void then
-					from
-						create l_deps_list.make (l_deps.count)
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						l_deps_list.force (l_deps.item_for_iteration.name)
-						l_deps.forth
-					end
+					-- Renaming.
+				create l_rename_prop.make_with_dialog (conf_interface_names.group_renaming_name, create {RENAMING_DIALOG})
+				l_rename_prop.set_description (conf_interface_names.group_renaming_description)
+				l_rename_prop.set_display_agent (agent output_renaming)
+				if l_virtual_group.renaming /= Void then
+					l_rename_prop.set_value (l_virtual_group.renaming)
 				end
-				create l_dep_dialog
-				l_dep_dialog.set_conf_target (a_target)
-				create l_list_prop.make_with_dialog (conf_interface_names.cluster_dependencies_name, l_dep_dialog)
-				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
-				l_list_prop.set_value (l_deps_list)
-				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
-				properties.add_property (l_list_prop)
-
-					-- mapping
-				create l_mapping_prop.make_with_dialog (conf_interface_names.cluster_mapping_name, create {RENAMING_DIALOG})
-				l_mapping_prop.set_description (conf_interface_names.cluster_mapping_description)
-				l_mapping_prop.set_display_agent (agent output_renaming)
-				if l_cluster.mapping /= Void then
-					l_mapping_prop.set_value (l_cluster.mapping)
-				end
-				l_mapping_prop.change_value_actions.extend (agent l_cluster.set_mapping)
-				l_mapping_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
-				properties.add_property (l_mapping_prop)
-			elseif l_assembly /= Void then
-					-- assembly culture
-				create l_text_prop.make (conf_interface_names.assembly_name_name)
-				l_text_prop.set_description (conf_interface_names.assembly_name_description)
-				l_text_prop.set_value (l_assembly.assembly_name)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_name ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
-				properties.add_property (l_text_prop)
-
-					-- assembly culture
-				create l_text_prop.make (conf_interface_names.assembly_culture_name)
-				l_text_prop.set_description (conf_interface_names.assembly_culture_description)
-				l_text_prop.set_value (l_assembly.assembly_culture)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_culture ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
-				properties.add_property (l_text_prop)
-
-					-- assembly version
-				create l_text_prop.make (conf_interface_names.assembly_version_name)
-				l_text_prop.set_description (conf_interface_names.assembly_version_description)
-				l_text_prop.set_value (l_assembly.assembly_version)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_version ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
-				properties.add_property (l_text_prop)
-
-					-- assembly public key token
-				create l_text_prop.make (conf_interface_names.assembly_public_key_token_name)
-				l_text_prop.set_description (conf_interface_names.assembly_public_key_token_description)
-				l_text_prop.set_value (l_assembly.assembly_public_key_token)
-				l_text_prop.change_value_actions.extend (agent l_assembly.set_assembly_public_key ({STRING_32} ?))
-				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32} ?, agent handle_value_changes (False)))
-				properties.add_property (l_text_prop)
+				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming)
+				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
+				properties.add_property (l_rename_prop)
 			end
 
-			if l_visible /= Void then
-					-- visible
+				-- Execution section.
+			if not a_group.is_assembly then
+				properties.add_section (conf_interface_names.section_execution)
+					-- Trace.
+				add_trace_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Profile.
+				add_profile_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+			end
+				-- Visible classes.
+			if attached l_visible then
+				properties.add_section (conf_interface_names.section_execution)
 				create l_vis_dial
 				create l_vis_prop.make_with_dialog (conf_interface_names.cluster_visible_name, l_vis_dial)
 				l_vis_prop.set_description (conf_interface_names.cluster_visible_description)
@@ -359,19 +385,13 @@ feature {NONE} -- Implementation
 				properties.add_property (l_vis_prop)
 			end
 
-			if l_precompile /= Void then
-					-- eifgens_location for precompiles
-				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name)
-				l_dir_prop.set_target (a_target)
-				l_dir_prop.set_description (conf_interface_names.group_eifgens_location_description)
-				if l_precompile.eifgens_location /= Void then
-					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
-				end
-				l_dir_prop.change_value_actions.extend (agent update_eifgens_location (l_precompile, ?, a_target))
-				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
-				properties.add_property (l_dir_prop)
+				-- Other options.
+			if not a_group.is_assembly then
+				add_dotnet_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation, a_group.is_library)
+				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 			end
-			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -553,19 +573,20 @@ feature {NONE} -- Inheritance handling
 		require
 			a_property_not_void: a_property /= Void
 			a_group_ok: a_group /= Void and then a_group.is_cluster
-		local
-			l_cluster: CONF_CLUSTER
 		do
-			l_cluster ?= a_group
-			if not l_cluster.internal_file_rule.is_empty then
-				a_property.enable_overriden
+			if attached {CONF_CLUSTER} a_group as l_cluster then
+				if not l_cluster.internal_file_rule.is_empty then
+					a_property.enable_overriden
+				else
+					a_property.enable_inherited
+				end
 			else
-				a_property.enable_inherited
+				check is_cluster: False end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

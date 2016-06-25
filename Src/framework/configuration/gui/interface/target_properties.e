@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate properties for targets."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,18 +31,16 @@ feature {NONE} -- Implementation
 			l_choice_prop: STRING_CHOICE_PROPERTY
 			l_root_prop: DIALOG_PROPERTY [CONF_ROOT]
 			l_version_prop: DIALOG_PROPERTY [CONF_VERSION]
-			l_file_rule_prop: FILE_RULE_PROPERTY
 			l_root_dial: ROOT_DIALOG
 			l_extends: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
 		do
-				-- does `current_target' extend something?
+				-- Does `current_target' extend something?
 			l_extends := current_target.extends /= Void
 
-				-- general section
+				-- General section.
 			properties.add_section (conf_interface_names.section_general)
-
-				-- name
+				-- Name.
 			create l_string_prop.make (conf_interface_names.target_name_name)
 			l_string_prop.set_description (conf_interface_names.target_name_description)
 			l_string_prop.set_value (current_target.name)
@@ -50,8 +48,7 @@ feature {NONE} -- Implementation
 			l_string_prop.change_value_actions.extend (agent current_target.set_name)
 			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_string_prop)
-
-				-- description
+				-- Description.
 			create l_mls_prop.make (conf_interface_names.target_description_name)
 			l_mls_prop.set_description (conf_interface_names.target_description_description)
 			l_mls_prop.enable_text_editing
@@ -61,15 +58,52 @@ feature {NONE} -- Implementation
 			l_mls_prop.change_value_actions.extend (agent current_target.set_description)
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_mls_prop)
-
-				-- abstract target
+				-- Abstract target.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_abstract_name, current_target.is_abstract)
 			l_bool_prop.set_description (conf_interface_names.target_abstract_description)
 			l_bool_prop.change_value_actions.extend (agent current_target.set_abstract)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
+				-- Root.
+			create l_root_dial
+			l_root_dial.set_target (current_target)
+			create l_root_prop.make_with_dialog (conf_interface_names.target_root_name, l_root_dial)
+			l_root_prop.set_description (conf_interface_names.target_root_description)
+			l_root_prop.set_refresh_action (agent current_target.root)
+			l_root_prop.set_display_agent (agent {CONF_ROOT}.text)
+			l_root_prop.refresh
+			l_root_prop.change_value_actions.extend (agent current_target.set_root)
+			l_root_prop.change_value_actions.extend (agent update_inheritance_root (?, l_root_prop))
+			l_root_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_ROOT}?, agent handle_value_changes (True)))
+			l_root_prop.use_inherited_actions.extend (agent current_target.set_root (Void))
+			l_root_prop.use_inherited_actions.extend (agent update_inheritance_root (Void, l_root_prop))
+			l_root_prop.use_inherited_actions.extend (agent handle_value_changes (True))
+			update_inheritance_root (Void, l_root_prop)
+			properties.add_property (l_root_prop)
+			properties.current_section.expand
 
-				-- compilation type
+				-- Language section.
+			properties.add_section (conf_interface_names.section_language)
+				-- Void safety.
+			add_void_safety_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Cat call detection.
+			add_cat_call_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Concurrency.
+			add_choice_property (
+				conf_interface_names.target_concurrency_name,
+				conf_interface_names.target_concurrency_description,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.target_concurrency_none_name,
+					conf_interface_names.target_concurrency_thread_name,
+					conf_interface_names.target_concurrency_scoop_name>>),
+				current_target.immediate_setting_concurrency,
+				Void
+			)
+			properties.current_section.expand
+
+				-- Execution section.
+			properties.add_section (conf_interface_names.section_execution)
+				-- Compilation type.
 			create l_choice_prop.make_with_choices (conf_interface_names.target_compilation_type_name,
 				create {ARRAYED_LIST [STRING_32]}.make_from_array (
 				<<conf_interface_names.target_compilation_type_standard, conf_interface_names.target_compilation_type_dotnet>>))
@@ -88,31 +122,12 @@ feature {NONE} -- Implementation
 			l_choice_prop.use_inherited_actions.extend (agent refresh)
 			l_choice_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 			properties.add_property (l_choice_prop)
-
-				-- output name
+				-- Output name.
 			create l_string_prop.make (conf_interface_names.target_executable_name)
 			l_string_prop.set_description (conf_interface_names.target_executable_description)
 			add_string_setting_actions (l_string_prop, s_executable_name, "")
 			properties.add_property (l_string_prop)
-
-				-- root
-			create l_root_dial
-			l_root_dial.set_target (current_target)
-			create l_root_prop.make_with_dialog (conf_interface_names.target_root_name, l_root_dial)
-			l_root_prop.set_description (conf_interface_names.target_root_description)
-			l_root_prop.set_refresh_action (agent current_target.root)
-			l_root_prop.set_display_agent (agent {CONF_ROOT}.text)
-			l_root_prop.refresh
-			l_root_prop.change_value_actions.extend (agent current_target.set_root)
-			l_root_prop.change_value_actions.extend (agent update_inheritance_root (?, l_root_prop))
-			l_root_prop.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_ROOT}?, agent handle_value_changes (True)))
-			l_root_prop.use_inherited_actions.extend (agent current_target.set_root (Void))
-			l_root_prop.use_inherited_actions.extend (agent update_inheritance_root (Void, l_root_prop))
-			l_root_prop.use_inherited_actions.extend (agent handle_value_changes (True))
-			update_inheritance_root (Void, l_root_prop)
-			properties.add_property (l_root_prop)
-
-				-- version
+				-- Version.
 			create l_version_prop.make_with_dialog (conf_interface_names.target_version_name, create {VERSION_DIALOG})
 			l_version_prop.set_description (conf_interface_names.target_version_description)
 			l_version_prop.set_refresh_action (agent current_target.version)
@@ -126,46 +141,7 @@ feature {NONE} -- Implementation
 			l_version_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 			update_inheritance_version (Void, l_version_prop)
 			properties.add_property (l_version_prop)
-
-				-- file rules
-			create l_file_rule_prop.make (conf_interface_names.file_rule_name)
-			l_file_rule_prop.set_description (conf_interface_names.file_rule_description)
-			l_file_rule_prop.set_refresh_action (agent current_target.file_rule)
-			l_file_rule_prop.refresh
-			l_file_rule_prop.change_value_actions.extend (agent current_target.set_file_rules)
-			l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule (?, l_file_rule_prop))
-			l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes (True)))
-			l_file_rule_prop.use_inherited_actions.extend (agent current_target.set_file_rules (create {ARRAYED_LIST [CONF_FILE_RULE]}.make (0)))
-			l_file_rule_prop.use_inherited_actions.extend (agent update_inheritance_file_rule (Void, l_file_rule_prop))
-			l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
-			update_inheritance_file_rule (Void, l_file_rule_prop)
-			properties.add_property (l_file_rule_prop)
-
 			properties.current_section.expand
-
-			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
-
-				-- Concurrency setting.
-			add_choice_property (
-				conf_interface_names.target_concurrency_name,
-				conf_interface_names.target_concurrency_description,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (
-					<<conf_interface_names.target_concurrency_none_name,
-					conf_interface_names.target_concurrency_thread_name,
-					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.immediate_setting_concurrency,
-				Void
-			)
-
-				-- Line generation
-			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
-			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
-			add_boolean_setting_actions (l_bool_prop, s_line_generation)
-			properties.add_property (l_bool_prop)
-
-				-- Dotnet options
-			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation, False)
-
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -189,6 +165,7 @@ feature {NONE} -- Implementation
 			l_il_env: IL_ENVIRONMENT
 			l_il_choices: ARRAYED_LIST [STRING_32]
 			l_il_version: STRING_32
+			l_file_rule_prop: FILE_RULE_PROPERTY
 		do
 				-- does `current_target' extend something?
 			l_extends := current_target.extends /= Void
@@ -196,33 +173,66 @@ feature {NONE} -- Implementation
 				-- il generation?
 			l_il_generation := current_target.setting_msil_generation
 
-			properties.add_section (conf_interface_names.section_advanced)
-
+				-- Language section.
+			properties.add_section (conf_interface_names.section_language)
+				-- Syntax.			
+			add_syntax_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Full class checking.
+			add_full_checking_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Address expression.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
 			l_bool_prop.set_description (conf_interface_names.target_address_expression_description)
 			add_boolean_setting_actions (l_bool_prop, s_address_expression)
 			properties.add_property (l_bool_prop)
+				-- Check VAPE.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
+			l_bool_prop.set_description (conf_interface_names.target_check_vape_description)
+			add_boolean_setting_actions (l_bool_prop, s_check_vape)
+			properties.add_property (l_bool_prop)
+				-- Enforce unique class names.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
+			l_bool_prop.set_description (conf_interface_names.target_enforce_unique_class_names_description)
+			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names)
+			properties.add_property (l_bool_prop)
+				-- Total order on REALs.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_total_order_on_reals, current_target.setting_total_order_on_reals)
+			l_bool_prop.set_description (conf_interface_names.target_total_order_on_reals)
+			add_boolean_setting_actions (l_bool_prop, s_total_order_on_reals)
+			if l_il_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+			properties.current_section.expand
 
+				-- Sources section.
+			properties.add_section (conf_interface_names.section_sources)
+				-- Library root.
+			create l_dir_prop.make (conf_interface_names.target_library_root_name)
+			l_dir_prop.set_description (conf_interface_names.target_library_root_description)
+			add_string_setting_actions (l_dir_prop, s_library_root, "")
+			properties.add_property (l_dir_prop)
+				-- File rules.
+			create l_file_rule_prop.make (conf_interface_names.file_rule_name)
+			l_file_rule_prop.set_description (conf_interface_names.file_rule_description)
+			l_file_rule_prop.set_refresh_action (agent current_target.file_rule)
+			l_file_rule_prop.refresh
+			l_file_rule_prop.change_value_actions.extend (agent current_target.set_file_rules)
+			l_file_rule_prop.change_value_actions.extend (agent update_inheritance_file_rule (?, l_file_rule_prop))
+			l_file_rule_prop.change_value_actions.extend (agent change_no_argument_wrapper ({ARRAYED_LIST [CONF_FILE_RULE]}?, agent handle_value_changes (True)))
+			l_file_rule_prop.use_inherited_actions.extend (agent current_target.set_file_rules (create {ARRAYED_LIST [CONF_FILE_RULE]}.make (0)))
+			l_file_rule_prop.use_inherited_actions.extend (agent update_inheritance_file_rule (Void, l_file_rule_prop))
+			l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
+			update_inheritance_file_rule (Void, l_file_rule_prop)
+			properties.add_property (l_file_rule_prop)
+				--Automatic backup.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_automatic_backup_name, current_target.setting_automatic_backup)
 			l_bool_prop.set_description (conf_interface_names.target_automatic_backup_description)
 			add_boolean_setting_actions (l_bool_prop, s_automatic_backup)
 			properties.add_property (l_bool_prop)
 
-			l_bool_prop := new_boolean_property (conf_interface_names.target_check_vape_name, current_target.setting_check_vape)
-			l_bool_prop.set_description (conf_interface_names.target_check_vape_description)
-			add_boolean_setting_actions (l_bool_prop, s_check_vape)
-			properties.add_property (l_bool_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_check_for_void_target_name, current_target.setting_check_for_void_target)
-			l_bool_prop.set_description (conf_interface_names.target_check_for_void_target_description)
-			add_boolean_setting_actions (l_bool_prop, s_check_for_void_target)
-			properties.add_property (l_bool_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_console_application_name, current_target.setting_console_application)
-			l_bool_prop.set_description (conf_interface_names.target_console_application_description)
-			add_boolean_setting_actions (l_bool_prop, s_console_application)
-			properties.add_property (l_bool_prop)
-
+				-- Optimization section.
+			properties.add_section (conf_interface_names.section_optimization)
+				-- Dead code removal.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (conf_interface_names.target_dead_code_removal_description)
 			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal)
@@ -230,28 +240,7 @@ feature {NONE} -- Implementation
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
-			l_bool_prop.set_description (conf_interface_names.target_dynamic_runtime_description)
-			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime)
-			if l_il_generation then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
-			l_bool_prop.set_description (conf_interface_names.target_enforce_unique_class_names_description)
-			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names)
-			properties.add_property (l_bool_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
-			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
-			add_boolean_setting_actions (l_bool_prop, s_exception_trace)
-			if l_il_generation then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
-
+				-- Inlining.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
 			add_boolean_setting_actions (l_bool_prop, s_inlining)
@@ -259,7 +248,7 @@ feature {NONE} -- Implementation
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
-
+				-- Inlining size.
 			create l_string_prop.make (conf_interface_names.target_inlining_size_name)
 			l_string_prop.set_description (conf_interface_names.target_inlining_size_description)
 			add_string_setting_actions (l_string_prop, s_inlining_size, "")
@@ -268,7 +257,57 @@ feature {NONE} -- Implementation
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)
+				-- .NET optimization.
+			add_dotnet_optimization_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 
+				-- Execution section.
+			properties.add_section (conf_interface_names.section_execution)
+				-- Console application.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_console_application_name, current_target.setting_console_application)
+			l_bool_prop.set_description (conf_interface_names.target_console_application_description)
+			add_boolean_setting_actions (l_bool_prop, s_console_application)
+			properties.add_property (l_bool_prop)
+				-- Check for void target.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_check_for_void_target_name, current_target.setting_check_for_void_target)
+			l_bool_prop.set_description (conf_interface_names.target_check_for_void_target_description)
+			add_boolean_setting_actions (l_bool_prop, s_check_for_void_target)
+			properties.add_property (l_bool_prop)
+				-- Line generation.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
+			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
+			add_boolean_setting_actions (l_bool_prop, s_line_generation)
+			properties.add_property (l_bool_prop)
+				-- Profile.
+			add_profile_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Trace.
+			add_trace_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Exception trace.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
+			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
+			add_boolean_setting_actions (l_bool_prop, s_exception_trace)
+			if l_il_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+				-- Dynamic runtime.
+			l_bool_prop := new_boolean_property (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
+			l_bool_prop.set_description (conf_interface_names.target_dynamic_runtime_description)
+			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime)
+			if l_il_generation then
+				l_bool_prop.enable_readonly
+			end
+			properties.add_property (l_bool_prop)
+				-- Shared library definition.
+			create l_file_prop.make (conf_interface_names.target_shared_library_definition_name)
+			l_file_prop.set_description (conf_interface_names.target_shared_library_definition_description)
+			add_string_setting_actions (l_file_prop, s_shared_library_definition, "")
+			if l_il_generation then
+				l_file_prop.enable_readonly
+			end
+			l_file_prop.add_filters (definition_files_filter, definition_files_description)
+			l_file_prop.add_filters (all_files_filter, all_files_description)
+			properties.add_property (l_file_prop)
+				-- Platform.
 			create l_pf_choices.make (platform_names.count + 1)
 			l_pf_choices.extend ("")
 			from
@@ -285,33 +324,10 @@ feature {NONE} -- Implementation
 			add_string_setting_actions (l_choice_prop, s_platform, "")
 			properties.add_property (l_choice_prop)
 
-			create l_file_prop.make (conf_interface_names.target_shared_library_definition_name)
-			l_file_prop.set_description (conf_interface_names.target_shared_library_definition_description)
-			add_string_setting_actions (l_file_prop, s_shared_library_definition, "")
-			if l_il_generation then
-				l_file_prop.enable_readonly
-			end
-			l_file_prop.add_filters (definition_files_filter, definition_files_description)
-			l_file_prop.add_filters (all_files_filter, all_files_description)
-			properties.add_property (l_file_prop)
-
-			l_bool_prop := new_boolean_property (conf_interface_names.target_total_order_on_reals, current_target.setting_total_order_on_reals)
-			l_bool_prop.set_description (conf_interface_names.target_total_order_on_reals)
-			add_boolean_setting_actions (l_bool_prop, s_total_order_on_reals)
-			if l_il_generation then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
-
-			create l_dir_prop.make (conf_interface_names.target_library_root_name)
-			l_dir_prop.set_description (conf_interface_names.target_library_root_description)
-			add_string_setting_actions (l_dir_prop, s_library_root, "")
-			properties.add_property (l_dir_prop)
-
-			properties.current_section.expand
-
 				-- .NET section
 			properties.add_section (conf_interface_names.section_dotnet)
+				-- Namespace
+			add_dotnet_namespace_property (current_target.changeable_internal_options, current_target.options, l_extends, l_il_generation, False)
 
 			l_bool_prop := new_boolean_property (conf_interface_names.target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
 			l_bool_prop.set_description (conf_interface_names.target_msil_use_optimized_precompile_description)
@@ -430,8 +446,6 @@ feature {NONE} -- Implementation
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
-
-			properties.current_section.expand
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -632,7 +646,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -45,7 +45,13 @@ feature -- Section names
 	section_tasks: STRING_32 do Result := locale.translation ("Tasks")	end
 	section_variables: STRING_32 do Result := locale.translation ("Variables")	end
 	section_mapping: STRING_32 do Result := locale.translation ("Type Mapping")	end
+
 	section_general: STRING_32 do Result := locale.translation ("General")	end
+	section_language: STRING_32 do Result := locale.translation ("Language")	end
+	section_execution: STRING_32 do Result := locale.translation ("Execution")	end
+	section_optimization: STRING_32 do Result := locale.translation ("Optimization")	end
+	section_sources: STRING_32 do Result := locale.translation ("Sources")	end
+	section_rules: STRING_32 do Result := locale.translation ("Rules")	end
 	section_dotnet: STRING_32 do Result := locale.translation (".NET")	end
 	section_advanced: STRING_32 do Result := locale.translation ("Advanced")	end
 
@@ -320,8 +326,8 @@ feature -- Option names and descriptions
 	option_full_class_checking_name: STRING_32 do Result := locale.translation ("Full Class Checking")	end
 	option_full_class_checking_description: STRING_32 do Result := locale.translation ("Are features of parent classes rechecked in current class?")	end
 
-	option_msil_application_optimize_name: STRING_32 do Result := locale.translation ("Apply Application Optimizations")	end
-	option_msil_application_optimize_description: STRING_32 do Result := locale.translation ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
+	option_msil_application_optimize_name: STRING_32 do Result := locale.translation ("Apply .NET Application Optimizations")	end
+	option_msil_application_optimize_description: STRING_32 do Result := locale.translation ("Specifies if any applicable .NET application-oriented optimizations should be applied to a finalized compilation.")	end
 
 	option_namespace_name: STRING_32 do Result := locale.translation (".NET Namespace")	end
 	option_namespace_description: STRING_32 do Result := locale.translation ("Namespace for .NET")	end
@@ -1075,18 +1081,18 @@ feature -- Parse errors
 	e_parse_invalid_regexp (regexp: READABLE_STRING_GENERAL; file, description: detachable READABLE_STRING_GENERAL; position: INTEGER): STRING_32
 		do
 			if attached file and attached description then
-				if position /= 0 then
-					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
-				else
+				if position = 0 then
 					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%": $3."), [regexp, file, description])
+				else
+					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
 				end
 			elseif attached file then
 				Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%"."), [regexp, file])
 			elseif attached description then
-				if position /= 0 then
-					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
-				else
+				if position = 0 then
 					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%": $2."), [regexp, description])
+				else
+					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
 				end
 			else
 				Result := locale.formatted_string (locale.translation ("Invalid regular expression: %"$1%"."), [regexp])

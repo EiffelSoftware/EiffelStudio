@@ -1,9 +1,9 @@
-note
-	description	: "Tool to view the properties of a system/cluster/class"
+﻿note
+	description: "Tool to view the properties of a system/cluster/class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_PROPERTIES_TOOL_PANEL
@@ -129,9 +129,6 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			-- Add `a_stone'.
 			--|FIXME: Unicode handling.
 		local
-			l_gs: CLUSTER_STONE
-			l_cs: CLASSI_STONE
-			l_ts: TARGET_STONE
 			l_group: CONF_GROUP
 			l_lib_use: ARRAYED_LIST [CONF_LIBRARY]
 			l_writable: BOOLEAN
@@ -166,13 +163,26 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 				properties: properties /= Void
 			end
 			properties.lock_update
-
 			stone := a_stone
-			l_gs ?= a_stone
-			l_cs ?= a_stone
-			l_ts ?= a_stone
-			if l_gs /= Void or l_cs /= Void then
-				if l_gs /= Void then
+			if attached {TARGET_STONE} a_stone as l_ts then
+				properties.reset
+				properties.add_section (conf_interface_names.section_general)
+				create l_name_prop.make (conf_interface_names.group_type_name)
+				l_name_prop.set_value (conf_interface_names.properties_target_name)
+				l_name_prop.enable_readonly
+				properties.add_property (l_name_prop)
+				current_target := l_ts.target
+				current_system := current_target.system
+				l_extends := current_target.extends /= Void
+				add_general_properties
+				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				add_advanced_properties
+
+				properties.set_expanded_section_store (target_section_expanded_status)
+			else
+				if attached {CLUSTER_STONE} a_stone as l_gs then
 					l_group := l_gs.group
 					if l_group.is_cluster and l_group.is_used_in_library then
 						l_group := l_group.target.system.lowest_used_in_library
@@ -182,7 +192,8 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					add_group_properties (l_group, l_group.target)
 					properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
 					properties.set_expanded_section_store (group_section_expanded_status)
-				elseif l_cs /= Void then
+					l_lib_use := l_group.target.system.used_in_libraries
+				elseif attached {CLASSI_STONE} a_stone as l_cs then
 					l_group := l_cs.class_i.group
 					if l_group.is_used_in_library then
 						l_group := l_group.target.system.lowest_used_in_library
@@ -204,7 +215,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 						l_name_prop.enable_readonly
 						properties.add_property (l_name_prop)
 						create l_name_prop.make (conf_interface_names.class_option_file_name)
-						l_name_prop.set_value (l_cs.file_name.as_string_32)
+						l_name_prop.set_value (l_cs.file_name)
 						l_name_prop.enable_readonly
 						properties.add_property (l_name_prop)
 						add_misc_option_properties (l_class_options, l_inh_options, True, False)
@@ -213,12 +224,10 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 						add_warning_option_properties (l_class_options, l_inh_options, True, False)
 						add_debug_option_properties (l_class_options, l_inh_options, True, False)
 						properties.set_expanded_section_store (class_section_expanded_status)
+						l_lib_use := l_group.target.system.used_in_libraries
 					end
-				else
-					check should_not_reach: False end
 				end
-				l_lib_use := l_group.target.system.used_in_libraries
-				if l_lib_use /= Void then
+				if attached l_lib_use then
 					l_app_sys := l_group.target.system.application_target.system
 					l_writable := l_group.target.system = l_group.target.system.application_target.system
 					from
@@ -234,25 +243,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 						properties.mark_all_readonly
 					end
 				end
-			elseif l_ts /= Void then
-				properties.reset
-				properties.add_section (conf_interface_names.section_general)
-				create l_name_prop.make (conf_interface_names.group_type_name)
-				l_name_prop.set_value (conf_interface_names.properties_target_name)
-				l_name_prop.enable_readonly
-				properties.add_property (l_name_prop)
-				current_target := l_ts.target
-				current_system := current_target.system
-				l_extends := current_target.extends /= Void
-				add_general_properties
-				add_assertion_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
-				add_warning_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
-				add_debug_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, False)
-				add_advanced_properties
-
-				properties.set_expanded_section_store (target_section_expanded_status)
 			end
-
 			properties.unlock_update
 		ensure then
 			stone_set: stone = a_stone
@@ -262,15 +253,8 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			-- Can user drop `a_pebble' on `Current'?
 		require
 			a_pebble_not_void: a_pebble /= Void
-		local
-			l_gs: CLUSTER_STONE
-			l_cs: CLASSI_STONE
-			l_ts: TARGET_STONE
 		do
-			l_gs ?= a_pebble
-			l_cs ?= a_pebble
-			l_ts ?= a_pebble
-			Result := l_gs /= Void or l_cs /= Void or l_ts /= Void
+			Result := attached {CLUSTER_STONE} a_pebble or attached {CLASSI_STONE} a_pebble or attached {TARGET_STONE} a_pebble
 		end
 
 feature {NONE} -- Implementation
@@ -348,7 +332,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

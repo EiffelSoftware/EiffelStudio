@@ -144,6 +144,7 @@ feature {NONE} -- Tests
 				f.open_read
 				f.read_stream (maximum_message_count)
 				actual_input := f.last_string.twin
+				f.close
 			end
 		end
 

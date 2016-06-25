@@ -48,6 +48,10 @@ doc:<file name="console.c" header="eif_console.h" version="$Id$" summary="Extern
 
 rt_public EIF_POINTER console_def (EIF_INTEGER file)
 {
+#ifdef EIF_WINDOWS
+	eif_show_console();
+#endif
+
 	/* Convert the integer `i' into the corresponding
 	 * inpout output standard file :
 	 *       0 : standard input file descriptor

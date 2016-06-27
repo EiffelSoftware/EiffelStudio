@@ -59,6 +59,11 @@ feature -- Status report
 			Result := editing_token /= Void and then attached linked_tokens as lst and then not lst.is_empty
 		end
 
+	is_always_linked_editing_from_first_occurrence: BOOLEAN = True
+			-- Always start linked editing from the first occurence of the token.
+			--| For now, always True while waiting to fix behavior when linked-editing
+			--| 	from others tokens.
+
 feature -- Element change
 
 	set_background_color (a_col: detachable EV_COLOR)
@@ -455,13 +460,17 @@ feature {NONE} -- Implementation
 				loop
 					if
 						is_token_inside_regions (tok, a_regions) and then
-						tok.wide_image.is_case_insensitive_equal (l_varname)
+						tok.wide_image.same_string (l_varname) -- case sensitive to exclude class name!
 					then
-						create l_item.make (l_line, tok, tok.pos_in_text, tok.pos_in_text + tok.length)
-						debug ("editor")
-							dbg_print (" - " + l_item.debug_output + " -> %"" + tok.wide_image + "%"%N")
+						if tok.previous.wide_image.same_string (".") then
+								-- Avoid case such as `foo.foo`
+						else
+							create l_item.make (l_line, tok, tok.pos_in_text, tok.pos_in_text + tok.length)
+							debug ("editor")
+								dbg_print (" - " + l_item.debug_output + " -> %"" + tok.wide_image + "%"%N")
+							end
+							l_linked_tokens.force (l_item)
 						end
-						l_linked_tokens.force (l_item)
 					end
 					tok := tok.next
 					if tok = Void then
@@ -481,7 +490,7 @@ feature {NONE} -- Implementation
 				loop
 					if
 						is_token_inside_regions (tok, a_regions) and then
-						tok.wide_image.is_case_insensitive_equal (l_varname)
+						tok.wide_image.same_string (l_varname) -- case sensitive to exclude class name!
 					then
 						create l_item.make (l_line, tok, tok.pos_in_text, tok.pos_in_text + tok.length)
 						debug ("editor")
@@ -508,7 +517,10 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if attached l_linked_tokens.first as e and then e /= l_editing_token then
+			if
+				is_always_linked_editing_from_first_occurrence and then
+				attached l_linked_tokens.first as e and then e /= l_editing_token 
+			then
 					-- Allow editing only from first token for now!
 				editing_token := e
 				txt.cursor.go_to_position (e.end_pos)

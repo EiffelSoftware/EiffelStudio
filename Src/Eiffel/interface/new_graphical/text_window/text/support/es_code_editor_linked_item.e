@@ -84,6 +84,11 @@ feature -- Status report
 			Result.append_character ('-')
 			Result.append_integer (end_pos)
 			Result.append_character (']')
+			Result.append_character (' ')
+			Result.append ("tok=#")
+			Result.append (token.pos_in_text.out)
+			Result.append ("+")
+			Result.append (token.length.out)
 		end
 
 ;note

@@ -224,7 +224,23 @@ feature {NONE} -- Implementation
 			l_file_rule_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 			update_inheritance_file_rule (Void, l_file_rule_prop)
 			properties.add_property (l_file_rule_prop)
-				--Automatic backup.
+				-- Platform.
+			create l_pf_choices.make (platform_names.count + 1)
+			l_pf_choices.extend ("")
+			from
+				platform_names.start
+			until
+				platform_names.after
+			loop
+				l_pf_choices.extend (platform_names.item_for_iteration.as_lower)
+				platform_names.forth
+			end
+			create l_choice_prop.make_with_choices (conf_interface_names.target_platform_name, l_pf_choices)
+			l_choice_prop.set_description (conf_interface_names.target_platform_description)
+			l_choice_prop.set_value (current_target.setting_platform)
+			add_string_setting_actions (l_choice_prop, s_platform, "")
+			properties.add_property (l_choice_prop)
+				-- Automatic backup.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_automatic_backup_name, current_target.setting_automatic_backup)
 			l_bool_prop.set_description (conf_interface_names.target_automatic_backup_description)
 			add_boolean_setting_actions (l_bool_prop, s_automatic_backup)
@@ -307,22 +323,6 @@ feature {NONE} -- Implementation
 			l_file_prop.add_filters (definition_files_filter, definition_files_description)
 			l_file_prop.add_filters (all_files_filter, all_files_description)
 			properties.add_property (l_file_prop)
-				-- Platform.
-			create l_pf_choices.make (platform_names.count + 1)
-			l_pf_choices.extend ("")
-			from
-				platform_names.start
-			until
-				platform_names.after
-			loop
-				l_pf_choices.extend (platform_names.item_for_iteration.as_lower)
-				platform_names.forth
-			end
-			create l_choice_prop.make_with_choices (conf_interface_names.target_platform_name, l_pf_choices)
-			l_choice_prop.set_description (conf_interface_names.target_platform_description)
-			l_choice_prop.set_value (current_target.setting_platform)
-			add_string_setting_actions (l_choice_prop, s_platform, "")
-			properties.add_property (l_choice_prop)
 
 				-- .NET section
 			properties.add_section (conf_interface_names.section_dotnet)

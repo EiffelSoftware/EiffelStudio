@@ -51,7 +51,6 @@ feature -- Section names
 	section_execution: STRING_32 do Result := locale.translation ("Execution")	end
 	section_optimization: STRING_32 do Result := locale.translation ("Optimization")	end
 	section_sources: STRING_32 do Result := locale.translation ("Sources")	end
-	section_rules: STRING_32 do Result := locale.translation ("Rules")	end
 	section_dotnet: STRING_32 do Result := locale.translation (".NET")	end
 	section_advanced: STRING_32 do Result := locale.translation ("Advanced")	end
 

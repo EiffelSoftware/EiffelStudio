@@ -158,6 +158,30 @@ feature {NONE} -- Implementation
 				properties.add_property (l_dir_prop)
 			end
 
+				-- Overrides.
+			if l_override /= Void then
+				l_over := l_override.override
+				if l_over /= Void then
+					from
+						create l_over_list.make (l_over.count)
+						l_over.start
+					until
+						l_over.after
+					loop
+						l_over_list.force (l_over.item.name)
+						l_over.forth
+					end
+				end
+				create l_over_dialog
+				l_over_dialog.set_conf_target (a_target)
+				create l_list_prop.make_with_dialog (conf_interface_names.override_override_name, l_over_dialog)
+				l_list_prop.set_description (conf_interface_names.override_override_description)
+				l_list_prop.set_value (l_over_list)
+				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?, a_target))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (False)))
+				properties.add_property (l_list_prop)
+			end
+
 				-- Readonly.
 			l_bool_prop := new_boolean_property (conf_interface_names.group_readonly_name, a_group.internal_read_only)
 			l_bool_prop.set_description (conf_interface_names.group_readonly_description)
@@ -223,10 +247,6 @@ feature {NONE} -- Implementation
 				properties.add_property (l_text_prop)
 			end
 
-			properties.current_section.expand
-
-				-- Rules section.
-			properties.add_section (conf_interface_names.section_rules)
 				-- Condition.
 			create l_dial.make_with_dialog (conf_interface_names.group_condition_name, create {CONDITION_DIALOG})
 			l_dial.set_description (conf_interface_names.group_condition_description)
@@ -236,51 +256,7 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
 			properties.add_property (l_dial)
-				-- Dependencies.
-			if attached l_cluster then
-				if attached l_cluster.dependencies as l_deps then
-					from
-						create l_deps_list.make (l_deps.count)
-						l_deps.start
-					until
-						l_deps.after
-					loop
-						l_deps_list.force (l_deps.item_for_iteration.name)
-						l_deps.forth
-					end
-				end
-				create l_dep_dialog
-				l_dep_dialog.set_conf_target (a_target)
-				create l_list_prop.make_with_dialog (conf_interface_names.cluster_dependencies_name, l_dep_dialog)
-				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
-				l_list_prop.set_value (l_deps_list)
-				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
-				properties.add_property (l_list_prop)
-			end
-				-- Overrides.
-			if l_override /= Void then
-				l_over := l_override.override
-				if l_over /= Void then
-					from
-						create l_over_list.make (l_over.count)
-						l_over.start
-					until
-						l_over.after
-					loop
-						l_over_list.force (l_over.item.name)
-						l_over.forth
-					end
-				end
-				create l_over_dialog
-				l_over_dialog.set_conf_target (a_target)
-				create l_list_prop.make_with_dialog (conf_interface_names.override_override_name, l_over_dialog)
-				l_list_prop.set_description (conf_interface_names.override_override_description)
-				l_list_prop.set_value (l_over_list)
-				l_list_prop.change_value_actions.extend (agent update_overrides (l_override, ?, a_target))
-				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (False)))
-				properties.add_property (l_list_prop)
-			end
+			properties.current_section.expand
 
 				-- Language section.
 			if not a_group.is_assembly then
@@ -362,6 +338,29 @@ feature {NONE} -- Implementation
 				l_rename_prop.change_value_actions.extend (agent l_virtual_group.set_renaming)
 				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_TABLE [STRING_32]}?, agent handle_value_changes (True)))
 				properties.add_property (l_rename_prop)
+			end
+			if attached l_cluster then
+				properties.add_section (conf_interface_names.section_sources)
+					-- Dependencies.
+				if attached l_cluster.dependencies as l_deps then
+					from
+						create l_deps_list.make (l_deps.count)
+						l_deps.start
+					until
+						l_deps.after
+					loop
+						l_deps_list.force (l_deps.item_for_iteration.name)
+						l_deps.forth
+					end
+				end
+				create l_dep_dialog
+				l_dep_dialog.set_conf_target (a_target)
+				create l_list_prop.make_with_dialog (conf_interface_names.cluster_dependencies_name, l_dep_dialog)
+				l_list_prop.set_description (conf_interface_names.cluster_dependencies_description)
+				l_list_prop.set_value (l_deps_list)
+				l_list_prop.change_value_actions.extend (agent update_dependencies (l_cluster, ?, a_target))
+				l_list_prop.change_value_actions.extend (agent change_no_argument_wrapper ({LIST [STRING_32]}?, agent handle_value_changes (True)))
+				properties.add_property (l_list_prop)
 			end
 
 				-- Execution section.

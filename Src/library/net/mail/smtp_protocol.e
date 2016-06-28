@@ -103,11 +103,8 @@ feature -- Basic operations.
 			-- Terminate the connection.
 		require else
 			connection_exists: is_connected
-		local
-			l_socket: like socket
 		do
-			l_socket := socket
-			check socket_attached: l_socket /= Void then
+			if attached socket as l_socket then
 				send_command (Quit, Ack_end_connection)
 				l_socket.cleanup
 				disable_initiated
@@ -167,20 +164,17 @@ feature {NONE} -- Basic operations
 		require
 			s_not_void: s /= Void
 			socket_not_void: socket /= Void
-		local
-			l_smtp_reply: like smtp_reply
-			l_socket: like socket
 		do
-			l_socket := socket
-			check socket_attached: l_socket /= Void then
+			if attached socket as l_socket then
 				l_socket.put_string (s + "%R%N")
 				decode (l_socket)
 				if (smtp_code_number /= expected_code) then
 					enable_transfer_error
-					l_smtp_reply := smtp_reply
-						-- Per postcondition of `decode'.
-					check l_smtp_reply_attached: l_smtp_reply /= Void then
+					if attached smtp_reply as l_smtp_reply then
 						set_transfer_error_message (l_smtp_reply)
+					else
+							-- Per postcondition of `decode'.
+						check has_reply: False end
 					end
 				end
 			end
@@ -200,13 +194,15 @@ feature {NONE} -- Basic operations
 		local
 			l_header_from: STRING
 		do
-				-- Implied by precondition.
-			check header_attached: attached memory_resource.header (H_from) as l_header then
+			if attached memory_resource.header (H_from) as l_header then
 				l_header_from := extracted_email (l_header.unique_entry)
 				sub_header.wipe_out
 				set_recipients
 				build_sub_header
 				send_all (l_header_from)
+			else
+				-- Implied by precondition.
+				check has_from_header: False end
 			end
 		end
 
@@ -216,45 +212,30 @@ feature {NONE} -- Basic operations
 		require
 			has_header_to: memory_resource.headers.has (H_to)
 		local
-			l_header: detachable HEADER
 			l_recipients: like recipients
-			l_recipients_cc: like recipients_cc
-			l_recipients_bcc: like recipients_bcc
 		do
-			l_header:= memory_resource.header (H_to)
+			create l_recipients.make (5)
+			recipients := l_recipients
+			if attached memory_resource.header (H_to) as l_header then
+				across l_header.entries as ic loop
+					l_recipients.extend (extracted_email (ic.item))
+				end
+			else
 				-- Per precondition of `set_recipients'
-			check header_to_attached: l_header /= Void then
-			create l_recipients.make (l_header.entries.count)
-				across l_header.entries as ic
-				loop
+				check has_recipients: False end
+			end
+				-- CC
+			if attached memory_resource.header (H_cc) as l_header then
+				across l_header.entries as ic loop
 					l_recipients.extend (extracted_email (ic.item))
 				end
 			end
-				-- CC
-			l_header := memory_resource.header (H_cc)
-			if l_header /= Void then
-				create l_recipients_cc.make (l_header.entries.count)
-				if l_header /= Void then
-					across l_header.entries as ic
-					loop
-						l_recipients_cc.extend (extracted_email (ic.item))
-					end
-				end
-			end
 				-- BCC
-			l_header := memory_resource.header (H_bcc)
-			if l_header /= Void then
-				create l_recipients_bcc.make (l_header.entries.count)
-				if l_header /= Void then
-					across l_header.entries as ic
-					loop
-						l_recipients_bcc.extend (extracted_email (ic.item))
-					end
+			if attached memory_resource.header (H_bcc) as l_header then
+				across l_header.entries as ic loop
+					l_recipients.extend (extracted_email (ic.item))
 				end
 			end
-			recipients := l_recipients
-			recipients_cc := l_recipients_cc
-			recipients_bcc := l_recipients_bcc
 		end
 
 	build_sub_header
@@ -302,7 +283,7 @@ feature {NONE} -- Basic operations
 							l_entry.append_character (',')
 						end
 					end
-					sub_header.append (sub_header_key + " : " + l_entry + "%R%N")
+					sub_header.append (sub_header_key + ": " + l_entry + "%R%N")
 				end
 			end
 		end
@@ -323,33 +304,15 @@ feature {NONE} -- Basic operations
 			send_command (Mail_from + "<" + a_header_from + ">", Ok)
 			if not error then
 					-- TO
-				check recipients_attached: attached recipients as l_recipients then
-					across l_recipients as ic
-					loop
+				if attached recipients as l_recipients then
+					across l_recipients as ic loop
 						if not error then
 							send_command (Mail_to + "<" + ic.item + ">", Ok)
 						end
 					end
-				end
-
-					-- CC
-				if attached recipients_cc as l_recipients_cc then
-					across l_recipients_cc as ic
-					loop
-						if not error then
-							send_command (Mail_to + "<" + ic.item + ">", Ok)
-						end
-					end
-				end
-
-					-- BCC
-				if attached recipients_bcc as l_recipients_bcc then
-					across l_recipients_bcc as ic
-					loop
-						if not error then
-							send_command (Mail_to + "<" + ic.item + ">", Ok)
-						end
-					end
+				else
+					-- Per precondition `recipients_attached`
+					check has_recipients: False end
 				end
 
 				if not error then
@@ -371,13 +334,7 @@ feature {NONE} -- Basic operations
 feature {NONE} -- Access
 
 	recipients: detachable ARRAYED_LIST [STRING]
-		-- Header to use with the command 'Mail_to'.
-
-	recipients_cc: detachable ARRAYED_LIST [STRING]
-		-- Header to use with the command 'Mail_to'.	
-
-	recipients_bcc: detachable ARRAYED_LIST [STRING]
-		-- Header to use with the command 'Mail_to'.
+		-- Header to use with the command 'Mail_to', it contains the "TO", "CC" and "BCC" fields.
 
 	sub_header: STRING
 		-- Sub_header: data before the message.

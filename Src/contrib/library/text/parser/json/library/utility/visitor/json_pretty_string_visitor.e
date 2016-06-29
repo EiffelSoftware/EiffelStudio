@@ -143,7 +143,11 @@ feature -- Visitor Pattern
 	visit_json_boolean (a_json_boolean: JSON_BOOLEAN)
 			-- Visit `a_json_boolean'.
 		do
-			output.append (a_json_boolean.item.out)
+			if a_json_boolean.item then
+				output.append ("true")
+			else
+				output.append ("false")
+			end
 		end
 
 	visit_json_null (a_json_null: JSON_NULL)

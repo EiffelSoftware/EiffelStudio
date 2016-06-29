@@ -1,5 +1,5 @@
-note
-	description: "Objects that represents a label with word wrapping."
+﻿note
+	description: "Objects that represents a label with word wrapping preserving original line breaks."
 	upgrade: "It might be good to use EVS_LABEL instead, but they are not really compatible."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,44 +11,76 @@ class
 
 inherit
 	EV_LABEL
+		redefine
+			create_interface_objects,
+			initialize
+		end
 
 	EV_SHARED_APPLICATION
 		undefine
-			default_create,
-			copy
+			copy,
+			default_create
 		end
 
 create
-	default_create
+	default_create,
+	make
 
-feature -- Element change
+feature {NONE} -- Initialization
 
-	set_and_wrap_text (a_text: STRING_GENERAL)
-			-- Set `text' to `a_text' and enable word wrapping.
-		local
-			l_no_width: BOOLEAN
+	create_interface_objects
+			-- <Precursor>
 		do
-			if not minimum_width_set_by_user then
-				set_minimum_width (0)
-				l_no_width := True
-			end
-			set_text (a_text)
-			if not l_no_width then
-				refresh_wrapped_text
-			end
+			create {STRING_32} original_text.make_empty
+			Precursor
+		end
+
+	make (t: READABLE_STRING_GENERAL)
+			-- Initialize label with text `t'.
+		require
+			valid_t: not t.has ('%R')
+		do
+			default_create
+			set_and_wrap_text (t)
+		end
+
+	initialize
+			-- <Precursor>
+		do
+			Precursor
 			resize_actions.force_extend (agent refresh_wrapped_text)
 		end
 
-feature {NONE} -- Implementation
+feature -- Element change
+
+	set_and_wrap_text (a_text: READABLE_STRING_GENERAL)
+			-- Set `text' to `a_text' and enable word wrapping.
+		require
+			valid_a_text: not a_text.has ('%R')
+		do
+			if not minimum_width_set_by_user then
+				set_minimum_width (0)
+			end
+				-- Record original text to keep new lines.
+			original_text := a_text
+				-- Update text visualization.
+			refresh_wrapped_text
+		end
+
+feature {NONE} -- Access
+
+	original_text: READABLE_STRING_GENERAL
+			-- Original text set for this label.
+			-- It is used to preserve new lines of the original text.
+
+feature -- Implementation
 
 	previous_lines: detachable ARRAYED_LIST [STRING_32]
 			-- Previously generated lines for word wrapping.
 
 	refresh_wrapped_text
 			-- Display `text' as a wrapped text.
-			-- Replace all '%N' characters as spaces.
-		require
-			width_big_enough: width > 0
+			-- Preserve line breaks in `original_text'.
 		local
 			l_previous_lines: like previous_lines
 			l_counter, l_last_counter: INTEGER
@@ -63,13 +95,13 @@ feature {NONE} -- Implementation
 			l_lines_changed: BOOLEAN
 			l_all_space_indexes: ARRAYED_LIST [INTEGER]
 			l_font: detachable like font
+			n: INTEGER
 		do
 			create l_all_space_indexes.make (20)
 			create l_lines.make (4)
-			l_modified_text := text.twin
-			l_modified_text.replace_substring_all ("%N", " ")
+			create l_modified_text.make_from_string_general (original_text)
 			l_modified_text.append_character (' ')
-			l_maximum_string_width := width - 10
+			l_maximum_string_width := width
 			if l_maximum_string_width < 0 then
 				 l_maximum_string_width := 0
 			end
@@ -79,12 +111,18 @@ feature {NONE} -- Implementation
 				-- Note that if a word is contained that is longer than the width of the label,
 				-- this will probable lead to problems. No attempt to prevent this is made in the code.
 			from
-				l_counter := l_modified_text.index_of (' ', 1)
+				l_counter := 1
+				n := l_modified_text.count
 			until
-				l_counter = 0
+				l_counter > n
 			loop
-				l_all_space_indexes.extend (l_counter)
-				l_counter := l_modified_text.index_of (' ', l_counter + 1)
+				inspect l_modified_text [l_counter]
+				when ' ', '%N' then
+						-- Words can also be separated by new lines.
+					l_all_space_indexes.extend (l_counter)
+				else
+				end
+				l_counter := l_counter + 1
 			end
 
 				-- Perform calculations to determine where wrapping must occur.
@@ -98,8 +136,11 @@ feature {NONE} -- Implementation
 			loop
 				from
 					l_current_width := 0
+					l_last_string := {STRING_32} ""
 				until
+						-- Wrap at long strings.
 					l_current_width > l_maximum_string_width or
+						-- Stop at end.
 					l_counter > l_all_space_indexes.count
 				loop
 					l_temp_string := l_modified_text.substring (l_start_pos, l_all_space_indexes.i_th (l_counter) - 1)
@@ -108,9 +149,23 @@ feature {NONE} -- Implementation
 					end
 					l_current_width := l_font.string_width (l_temp_string)
 					if l_current_width <= l_maximum_string_width then
+							-- The string is still short enough.
+							-- Record it.
 						l_last_string := l_temp_string
-						l_counter := l_counter + 1
+							-- Look for new lines.
+						if l_modified_text [l_all_space_indexes [l_counter]] = '%N' then
+								-- Wrap at new lines.
+								-- Pretend that a text is long enough to exit from the loop.
+							l_current_width := l_maximum_string_width + 1
+						else
+								-- Attempt to add some more words.
+							l_counter := l_counter + 1
+						end
+					elseif l_last_string.is_empty then
+							-- The string starts with just one long word, no way to wrap it, so use it.
+						l_last_string := l_temp_string
 					else
+							-- The string is longer than visible area and has more than one word, wrap it.
 						l_counter := l_counter - 1
 					end
 				end
@@ -123,12 +178,10 @@ feature {NONE} -- Implementation
 					l_counter := l_counter + 1
 				end
 
-				if l_last_string /= Void then
-					l_lines.extend (l_last_string)
-				end
+				l_lines.extend (l_last_string)
 			end
 
-				-- to small? => increase width
+				-- Too small?  => Increase width.
 			if l_counter <= l_all_space_indexes.count then
 				set_minimum_width (width + 10)
 			else
@@ -177,8 +230,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -201,11 +254,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -122,12 +122,12 @@ feature -- Target names and descriptions
 	target_cls_compliant_name: STRING_32 do Result := locale.translation ("CLS Compliant")	end
 	target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
 	target_concurrency_name: STRING_32 do Result := locale.translation ("Concurrency")	end
-	target_concurrency_description: STRING_32 do Result := locale.translation (
-			"[
+	target_concurrency_description: STRING_32 do Result := locale.translation
+			({STRING_32} "[
 				Concurrency mode of the target application:
-					- No concurrency - mono-threaded;
-					- EiffelThread - based on EiffelThread library;
-					- SCOOP - controlled by SCOOP rules.
+				 • No concurrency - mono-threaded;
+				 • EiffelThread - based on EiffelThread library;
+				 • SCOOP - controlled by SCOOP rules.
 			]")
 		end
 	target_concurrency_none_name: STRING_32 do Result := locale.translation ("No concurrency") end
@@ -341,10 +341,12 @@ feature -- Option names and descriptions
 	option_warnings_description: STRING_32 do Result := locale.translation ("Are warnings enabled?")	end
 
 	option_catcall_detection_name: STRING_32 do Result := locale.translation ("Catcall detection") end
-	option_catcall_detection_description: STRING_32 do Result := locale.translation ("Catcall detection level the source code provides:%N%
-		%No - Catcall detection is disabled, frozen and variant annotations are not taken into account for conformance.%N%
-		%Conformance - Catcall detection is disabled but frozen and variant annotations are respected in type conformance checks.%N%
-		%Complete - Catcall detection is enabled and frozen and variant annotations are respected in type conformance checks.") end
+	option_catcall_detection_description: STRING_32 do Result := locale.translation ({STRING_32} "[
+			Catcall detection level the source code provides:
+			 • No - Catcall detection is disabled, frozen and variant annotations are not taken into account for conformance;
+			 • Conformance - Catcall detection is disabled but frozen and variant annotations are respected in type conformance checks;
+			 • Complete - Catcall detection is enabled and frozen and variant annotations are respected in type conformance checks.
+			]") end
 	option_catcall_detection_value: ARRAYED_LIST [STRING_32]
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
@@ -362,12 +364,12 @@ feature -- Option names and descriptions
 
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
 	option_void_safety_description: STRING_32 once
-			Result := locale.translation ("Void safety level the source code provides.") +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_none] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_none] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_conformance] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_conformance] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_initialization] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_initialization] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_transitional] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_transitional] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_all] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_all] + "."
+			Result := locale.translation ("Void safety level the source code provides:%N") +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_none] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_none] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_conformance] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_conformance] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_initialization] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_initialization] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_transitional] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_transitional] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_all] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_all] + "."
 		end
 	option_void_safety_value: ARRAYED_LIST [STRING_32]
 			-- Name of a void safety option value indexed by the corresponding option index.
@@ -408,7 +410,13 @@ feature -- Option names and descriptions
 
 
 	option_syntax_name: STRING_32 do Result := locale.translation ("Syntax") end
-	option_syntax_description: STRING_32 do Result := locale.translation ("Variant of syntax used in source code") end
+	option_syntax_description: STRING_32 do Result := locale.translation ({STRING_32} "[
+			Variant of syntax used in source code:
+			 • Obsolete syntax - Favor obsolete syntax over standard with more recent keywords treated as identifiers;
+			 • Transitional syntax - Favor standard syntax, but allow obsolete syntax when determinable by context;
+			 • Standard syntax - Enforce current standard syntax;
+			 • Provisional syntax - Allow not-yet-approved constructs.
+		]") end
 	option_syntax_obsolete_name: STRING_32 do Result := locale.translation ("Obsolete syntax") end
 	option_syntax_transitional_name: STRING_32 do Result := locale.translation ("Transitional syntax") end
 	option_syntax_standard_name: STRING_32 do Result := locale.translation ("Standard syntax") end

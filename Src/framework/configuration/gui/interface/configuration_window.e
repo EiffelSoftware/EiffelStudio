@@ -340,8 +340,7 @@ feature {NONE} -- Element initialization
 			not_properties_and_grid: properties = Void or grid = Void
 		local
 			l_frame: EV_FRAME
-			l_vbox: EV_VERTICAL_BOX
-			l_text: ES_LABEL
+			l_description_area: ES_SCROLLABLE_LABEL
 		do
 			if properties = Void then
 				configuration_space.wipe_out
@@ -366,22 +365,15 @@ feature {NONE} -- Element initialization
 				configuration_space.extend (l_frame)
 				configuration_space.disable_item_expand (l_frame)
 				l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+					-- Set padding.
+				l_frame.set_border_width (4)
 
-				create l_text
-				properties.set_description_field (l_text)
-				l_text.set_minimum_width (100)
-				l_text.set_and_wrap_text ("")
-				l_text.align_text_left
-
-					-- Create description container and padding
-				create l_vbox
-				l_vbox.set_border_width (4)
-				l_vbox.extend (l_text)
-				l_vbox.disable_item_expand (l_text)
-				l_vbox.extend (create {EV_CELL})
-				l_vbox.set_minimum_height (description_height)
-
-				l_frame.extend (l_vbox)
+					-- Create description container.
+				create l_description_area
+				properties.set_description_field (l_description_area)
+				l_description_area.set_minimum_height (description_height)
+				l_description_area.set_minimum_width (100)
+				l_frame.extend (l_description_area)
 
 					-- remove grid
 				if grid /= Void then
@@ -589,11 +581,9 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			if a_message /= Void and then not a_message.is_empty then
 				configuration_space.extend (create {EV_CELL})
 
-				create l_label
-
+				create l_label.make (a_message)
 				configuration_space.extend (l_label)
 				configuration_space.disable_item_expand (l_label)
-				l_label.set_and_wrap_text (a_message)
 
 				configuration_space.extend (create {EV_CELL})
 			end

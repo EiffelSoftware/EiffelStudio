@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Dialog for class options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			vb, vb2: EV_VERTICAL_BOX
 			l_btn: EV_BUTTON
 			l_label: ES_LABEL
+			l_description: ES_SCROLLABLE_LABEL
 			l_frame: EV_FRAME
 		do
 			Precursor {PROPERTY_DIALOG}
@@ -68,7 +69,6 @@ feature {NONE} -- Initialization
 			vb.extend (class_list)
 
 			create l_label
-			l_label.set_and_wrap_text (conf_interface_names.dialog_class_option_class_name)
 			l_label.align_text_left
 			vb.extend (l_label)
 			vb.disable_item_expand (l_label)
@@ -103,17 +103,13 @@ feature {NONE} -- Initialization
 			create properties
 			vb2.extend (properties)
 
-			create l_label
-			properties.set_description_field (l_label)
-			l_label.align_text_left
-			create vb
-			vb.set_minimum_height (50)
-			vb.extend (l_label)
-			vb.disable_item_expand (l_label)
-			vb.extend (create {EV_CELL})
+			create l_description
+			properties.set_description_field (l_description)
+			l_description.set_minimum_height (50)
 			create l_frame
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
-			l_frame.extend (vb)
+			l_frame.set_border_width (4)
+			l_frame.extend (l_description)
 			vb2.extend (l_frame)
 			vb2.disable_item_expand (l_frame)
 
@@ -277,7 +273,7 @@ invariant
 	elements: is_initialized implies class_list /= Void and new_class /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

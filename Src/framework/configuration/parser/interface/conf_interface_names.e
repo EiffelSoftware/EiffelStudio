@@ -123,10 +123,12 @@ feature -- Target names and descriptions
 	target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
 	target_concurrency_name: STRING_32 do Result := locale.translation ("Concurrency")	end
 	target_concurrency_description: STRING_32 do Result := locale.translation (
-			"Concurrency mode of the target application:%
-			% No concurrency - mono-threaded;%
-			% EiffelThread - based on EiffelThread library;%
-			% SCOOP - controlled by SCOOP rules.")
+			"[
+				Concurrency mode of the target application:
+					- No concurrency - mono-threaded;
+					- EiffelThread - based on EiffelThread library;
+					- SCOOP - controlled by SCOOP rules.
+			]")
 		end
 	target_concurrency_none_name: STRING_32 do Result := locale.translation ("No concurrency") end
 	target_concurrency_thread_name: STRING_32 do Result := locale.translation ("EiffelThread") end

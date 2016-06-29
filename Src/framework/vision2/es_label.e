@@ -73,10 +73,12 @@ feature {NONE} -- Access
 			-- Original text set for this label.
 			-- It is used to preserve new lines of the original text.
 
-feature -- Implementation
+feature {NONE} -- State
 
 	previous_lines: detachable ARRAYED_LIST [STRING_32]
 			-- Previously generated lines for word wrapping.
+
+feature {ES_SCROLLABLE_LABEL} -- Update
 
 	refresh_wrapped_text
 			-- Display `text' as a wrapped text.

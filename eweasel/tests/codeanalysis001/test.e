@@ -1,13 +1,5 @@
-note
-	description : "project2 application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
-
 class
 	TEST
-
-inherit
-	ARGUMENTS
 
 create
 	make
@@ -15,14 +7,14 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization
+			-- Initialize object.
 		do
-			-- TODO: this should trigger a violation for a TODO.
+				-- TODO: this should trigger a violation for a TODO.
 			call_back
 		end
 		
 	call_back
-			-- Calls `make' back, so that we don't get a "Feature never called" warning.
+			-- Call `make' back, so that we don't get a "Feature never called" warning.
 		do
 			if not already_called_back then
 				already_called_back := True

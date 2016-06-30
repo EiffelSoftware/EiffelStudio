@@ -4,7 +4,7 @@
 
 			Explicitly duplicated inheritance links are redundant if there is no renaming, 
 			redefining, or change of export status. One should be removed.
-	]"
+		]"
 	author: "Paolo Antonucci"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -111,9 +111,9 @@ feature -- Properties
 			a_formatter.add_class (a_violation.affected_class.original_class)
 			a_formatter.add (ca_messages.explicit_redundant_inheritance_violation_2)
 			check
-				attached {STRING} a_violation.long_description_info.first
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
 			end
-			if attached {STRING} a_violation.long_description_info.first as l_class_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_class_name then
 				a_formatter.add_quoted_text (l_class_name)
 			end
 			a_formatter.add (ca_messages.explicit_redundant_inheritance_violation_3)

@@ -118,17 +118,17 @@ feature -- Properties
 			a_formatter.add (ca_messages.unneeded_accessor_function_violation_1)
 			a_violation.long_description_info.start
 			check
-				attached {STRING_32} a_violation.long_description_info.item
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.item
 			end
-			if attached {STRING_32} a_violation.long_description_info.item as l_feature_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.item as l_feature_name then
 				a_formatter.add (l_feature_name)
 				a_violation.long_description_info.forth
 			end
 			a_formatter.add (ca_messages.unneeded_accessor_function_violation_2)
 			check
-				attached {STRING_32} a_violation.long_description_info.item
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.item
 			end
-			if attached {STRING_32} a_violation.long_description_info.item as l_attribute_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.item as l_attribute_name then
 				a_formatter.add (l_attribute_name)
 			end
 			a_formatter.add (ca_messages.unneeded_accessor_function_violation_3)

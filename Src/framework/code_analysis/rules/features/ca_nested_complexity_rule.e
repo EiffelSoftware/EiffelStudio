@@ -78,7 +78,7 @@ feature -- Properties
 		do
 			l_info := a_violation.long_description_info
 			a_formatter.add (ca_messages.nested_complexity_violation_1)
-			if attached {STRING_32} l_info.first as l_feature_name then
+			if attached {READABLE_STRING_GENERAL} l_info.first as l_feature_name then
 				a_formatter.add_feature_name (l_feature_name, a_violation.affected_class)
 			end
 			a_formatter.add (ca_messages.nested_complexity_violation_2)

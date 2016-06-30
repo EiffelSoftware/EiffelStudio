@@ -39,7 +39,7 @@ feature {NONE} -- Visitor
 
 	execute (a_class: attached CLASS_AS)
 		do
-			attribute_to_change.body.append_text(" = " + constant_value, matchlist)
+			attribute_to_change.body.append_text({STRING_32} " = " + constant_value, matchlist)
 			process_ast_node (a_class)
 		end
 

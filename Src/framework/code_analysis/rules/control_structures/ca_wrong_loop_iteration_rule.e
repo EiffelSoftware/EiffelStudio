@@ -178,7 +178,7 @@ feature -- Properties
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
 			-- Generates a formatted rule violation description for `a_formatter' based on `a_violation'.
 		do
-			if attached {STRING_32} a_violation.long_description_info.first as l_msg then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_msg then
 				a_formatter.add (l_msg)
 			end
 		end

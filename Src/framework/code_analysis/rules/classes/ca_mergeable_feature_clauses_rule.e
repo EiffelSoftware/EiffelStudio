@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-					RULE #88: Mergeable feature clauses
-		
-					Feature clauses with the same export status and comment could possibly
-					be merged into one, or their comments could be made more specific.
-	]"
+			RULE #88: Mergeable feature clauses
+			
+			Feature clauses with the same export status and comment could possibly
+			be merged into one, or their comments could be made more specific.
+		]"
 	author: "Paolo Antonucci"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,8 +56,8 @@ feature {NONE} -- Rule checking
 			-- Process `a_feature_clause_as'.
 		local
 			l_viol: CA_RULE_VIOLATION
-			l_key: STRING
-			l_comment_text: STRING
+			l_key: STRING_32
+			l_comment_text: STRING_32
 		do
 				-- Sample violation
 				--
@@ -97,11 +97,11 @@ feature {NONE} -- Rule checking
 			-- Contains the features that have been met so far. The key is a combination
 			-- of the feature comment and the exports.
 
-	stringify_comments (a_comments: EIFFEL_COMMENTS): STRING
+	stringify_comments (a_comments: EIFFEL_COMMENTS): STRING_32
 			-- Convert `a_comments' to a string representation, ignoring
 			-- whitespace at the beginning and the end of each line.
 		local
-			l_adjusted_comment: STRING
+			l_adjusted_comment: STRING_32
 		do
 			create Result.make (512) -- Should be more space than enough
 			across
@@ -175,9 +175,9 @@ feature -- Properties
 		do
 			a_formatter.add (ca_messages.mergeable_feature_clauses_violation_1)
 			check
-				attached {STRING} a_violation.long_description_info.first
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
 			end
-			if attached {STRING} a_violation.long_description_info.first as l_comment_text then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_comment_text then
 				a_formatter.add_quoted_text (l_comment_text)
 			end
 			a_formatter.add (ca_messages.mergeable_feature_clauses_violation_2)

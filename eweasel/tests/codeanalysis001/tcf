@@ -1,15 +1,10 @@
+test_name        ca-simple-violation
+test_description Testing a simple violation, in this case using rule CA080 (TODO in code)
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
---| All rights reserved.
---| Your use of this work is governed under the terms of the GNU General
---| Public License version 2.
-
--- This is a test control file
-
-test_name ca-simple-violation
-test_description Testing a simple violation, in this case using rule CA080 (TODO in code_
-copy_sub Ace $TEST Ace
+copy_sub Ace    $TEST    Ace
 copy_raw test.e $CLUSTER test.e
+
 analyze_code
 analyze_code_result violation "TEST CA080:20"
+
 test_end

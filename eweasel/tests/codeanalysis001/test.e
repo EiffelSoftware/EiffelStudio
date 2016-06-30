@@ -9,7 +9,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize object.
 		do
-				-- TODO: this should trigger a violation for a TODO.
+				-- TODO: Observe an analysis message for this TODO item.
 			call_back
 		end
 		

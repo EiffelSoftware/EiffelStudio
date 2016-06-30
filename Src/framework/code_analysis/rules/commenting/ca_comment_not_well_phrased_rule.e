@@ -40,36 +40,56 @@ feature {NONE} -- Implementation
 	check_feature_comments (a_feature: attached FEATURE_AS)
 		-- Checks for not well phrased feature comments in `a_feature'.
 		local
-			l_violation_found, l_first, l_done: BOOLEAN
+			l_violation_found, l_done: BOOLEAN
 			l_comments: EIFFEL_COMMENTS
+			current_comment: EIFFEL_COMMENT_LINE
+			current_comment_value: READABLE_STRING_32
+			first_comment: EIFFEL_COMMENT_LINE
 		do
 			l_comments := a_feature.comment (current_context.matchlist)
 
 			from
 				l_comments.start
 				l_violation_found := False
-				l_first := True
 				l_done := l_comments.is_empty
 			until
 				l_comments.after or l_violation_found or l_done
 			loop
-				if not is_empty_comment (l_comments.item.content_32) and l_first then
-					l_first := False
-					l_violation_found := not starts_with_upper (l_comments.item.content_32)
-				else
-					if is_empty_comment (l_comments.item.content_32) then
+				current_comment := l_comments.item
+				current_comment_value := current_comment.content_32
+				if not attached first_comment then
+						-- There is no content before this comment
+					if not is_empty_comment (current_comment_value) then
+							-- Some content is found.
+						first_comment := l_comments.item
+						if not starts_with_upper (current_comment_value) then
+							create_violation (first_comment)
+							l_violation_found := True
+						end
+					end
+				end
+				if attached first_comment and then not l_violation_found then
+					if is_empty_comment (current_comment_value) then
 							-- The line above the empty line did not end with punctuation -> violation.
+						create_violation (first_comment)
 						l_violation_found := True
 					else
 							-- We only check until we found the first sentence.
-						l_done := ends_with_punctuation (l_comments.item.content_32)
+						l_done := ends_with_punctuation (current_comment_value)
 					end
 				end
 				l_comments.forth
 			end
 
-			if l_violation_found or not l_done then
-				create_violation (l_comments.first)
+			if not l_violation_found and then not l_done then
+					-- The comment did not end well.
+				if attached first_comment then
+						-- There is a non-empty comment.
+					create_violation (first_comment)
+				else
+						-- All comment lines are empty.
+					create_violation (l_comments.first)
+				end
 			end
 		end
 
@@ -125,6 +145,8 @@ feature {NONE} -- Implementation
 		end
 
 	starts_with_upper (a_comment: STRING): BOOLEAN
+		require
+			not_is_empty: not is_empty_comment (a_comment)
 		local
 			i: INTEGER
 		do
@@ -140,6 +162,8 @@ feature {NONE} -- Implementation
 		end
 
 	ends_with_punctuation (a_comment: STRING): BOOLEAN
+		require
+			not_is_empty: not is_empty_comment (a_comment)
 		local
 			i: INTEGER
 		do

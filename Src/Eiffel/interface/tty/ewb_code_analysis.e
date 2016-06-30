@@ -258,7 +258,8 @@ feature -- Execution (declared in EWB_CMD)
 			-- Execute the Code Analysis command-line tool
 		local
 			l_code_analyzer: CA_CODE_ANALYZER
-			l_rule_name, l_rule_id, l_line, l_col: STRING
+			l_rule_name, l_rule_id: STRING_32
+			l_line, l_col: STRING
 			l_has_violations: BOOLEAN
 		do
 			create l_code_analyzer.make
@@ -299,16 +300,14 @@ feature -- Execution (declared in EWB_CMD)
 						l_rule_name := ic.item.rule.title
 						l_rule_id := ic.item.rule.id
 						if attached ic.item.location as l_loc then
-							l_line := ic.item.location.line.out
-							l_col := ic.item.location.column.out
-
-							output_window.add (" [" + l_line + ":" + l_col + "] " + ic.item.rule.severity.short_form + ": "
-								+ l_rule_id + " - " + l_rule_name + ": ")
-						else -- No location attached. Print without location.
-							output_window.add ("  "	+ l_rule_name + " (" + l_rule_id + "): ")
+							output_window.add ({STRING_32} " [" + ic.item.location.line.out + ":" + ic.item.location.column.out + "] "
+								+ ic.item.rule.severity.short_form + ": " + l_rule_id + " - " + l_rule_name + ": ")
+						else
+								-- No location attached. Print without location.
+							output_window.add ({STRING_32} "  "	+ l_rule_name + " (" + l_rule_id + "): ")
 						end
 						ic.item.format_violation_description (output_window)
-						output_window.add ("%N")
+						output_window.add_new_line
 					end
 				end
 			end
@@ -332,7 +331,7 @@ feature -- Execution (declared in EWB_CMD)
 			output_window.add (a_string + "%N")
 		end
 
-	try_add_class_with_name (a_analyzer: CA_CODE_ANALYZER; a_class_name: STRING)
+	try_add_class_with_name (a_analyzer: CA_CODE_ANALYZER; a_class_name: READABLE_STRING_GENERAL)
 			-- Adds class with name `a_class_name' if it is found amongst the compiled
 			-- classes to `a_analyzer'.
 		do

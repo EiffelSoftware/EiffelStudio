@@ -1,10 +1,10 @@
 test_name        ca-simple-violation
-test_description Testing a simple violation, in this case using rule CA080 (TODO in code)
+test_description Testing a simple violation, in this case using rule CA080 (TODO in code).
 
 copy_sub Ace    $TEST    Ace
 copy_raw test.e $CLUSTER test.e
 
 analyze_code
-analyze_code_result violation "TEST CA080:20"
+analyze_code_result violation "TEST CA080:12"
 
 test_end

@@ -86,7 +86,7 @@ feature -- Properties
 			-- Generates a formatted rule violation description for `a_formatter' based on `a_violation'.
 		do
 			a_formatter.add (ca_messages.empty_effective_routine_violation_1)
-			if attached {STRING_32} a_violation.long_description_info.first as l_feature then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_feature then
 				a_formatter.add_feature_name (l_feature, a_violation.affected_class)
 			end
 			a_formatter.add (ca_messages.empty_effective_routine_violation_2)

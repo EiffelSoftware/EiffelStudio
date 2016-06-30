@@ -7,7 +7,6 @@
 			is attached to a supertype always suceed. The tests should
 			be removed.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -126,7 +125,7 @@ feature {NONE} -- Implementation
 				a_formatter.add (ca_messages.object_test_succeeds_violation_2)
 			end
 
-			if attached {STRING} a_violation.long_description_info.first as l_variable_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_variable_name then
 				a_formatter.add (l_variable_name)
 			end
 

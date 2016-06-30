@@ -223,7 +223,7 @@ feature -- Properties
 
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
 		do
-			if attached {STRING} a_violation.long_description_info.first as l_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_name then
 
 				a_formatter.add (ca_messages.very_short_identifier_violation_1)
 				a_formatter.add_local (l_name)

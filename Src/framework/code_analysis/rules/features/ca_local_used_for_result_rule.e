@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 		do
 			a_formatter.add (ca_messages.local_used_for_result_violation_1)
 
-			if attached {STRING_32} a_violation.long_description_info.first as l_feature_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_feature_name then
 				a_formatter.add (l_feature_name)
 			end
 

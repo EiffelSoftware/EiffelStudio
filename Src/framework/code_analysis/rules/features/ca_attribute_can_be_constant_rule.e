@@ -61,13 +61,13 @@ feature -- Properties
 		do
 			a_formatter.add (ca_messages.attribute_can_be_constant_violation_1)
 
-			if attached {STRING_32} a_violation.long_description_info.first as l_attribute then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_attribute then
 				a_formatter.add (l_attribute)
 			end
 
 			a_formatter.add (ca_messages.attribute_can_be_constant_violation_2)
 
-			if attached {STRING_32} a_violation.long_description_info.at(2) as l_value then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.at(2) as l_value then
 				a_formatter.add (l_value)
 			end
 

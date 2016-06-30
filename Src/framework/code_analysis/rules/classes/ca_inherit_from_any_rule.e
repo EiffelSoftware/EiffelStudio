@@ -154,9 +154,9 @@ feature -- Properties
 		do
 			a_formatter.add (ca_messages.inherit_from_any_violation_1)
 			check
-				attached {STRING} a_violation.long_description_info.first
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
 			end
-			if attached {STRING} a_violation.long_description_info.first as l_class_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_class_name then
 				a_formatter.add (l_class_name)
 			end
 			a_formatter.add (ca_messages.inherit_from_any_violation_2)

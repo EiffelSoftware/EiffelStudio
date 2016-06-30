@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		do
 			a_formatter.add (ca_messages.generic_param_too_long_violation_1)
 
-			if attached {STRING} a_violation.long_description_info.first as l_param_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_param_name then
 				a_formatter.add (l_param_name)
 			end
 

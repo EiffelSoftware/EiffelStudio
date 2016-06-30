@@ -39,6 +39,41 @@ feature {NONE} -- Activation
 			a_checker.add_class_post_action (agent check_attributes)
 		end
 
+feature -- Properties
+
+	name: STRING = "fixed_attribute_value"
+			-- <Precursor>
+
+	title: STRING_32
+		do
+			Result := ca_names.attribute_can_be_constant_title
+		end
+
+	id: STRING_32 = "CA048"
+			-- <Precursor>
+
+	description: STRING_32
+		do
+			Result :=  ca_names.attribute_can_be_constant_description
+		end
+
+	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+		do
+			a_formatter.add (ca_messages.attribute_can_be_constant_violation_1)
+
+			if attached {STRING_32} a_violation.long_description_info.first as l_attribute then
+				a_formatter.add (l_attribute)
+			end
+
+			a_formatter.add (ca_messages.attribute_can_be_constant_violation_2)
+
+			if attached {STRING_32} a_violation.long_description_info.at(2) as l_value then
+				a_formatter.add (l_value)
+			end
+
+			a_formatter.add (ca_messages.attribute_can_be_constant_violation_3)
+		end
+
 feature {NONE} -- Feature Visitor for Violation Check
 
 	check_class (a_class: CLASS_AS)
@@ -57,7 +92,7 @@ feature {NONE} -- Feature Visitor for Violation Check
 	check_assign (a_assign: ASSIGN_AS)
 			-- Checks `a_assign' for attributes that are assigned a value.
 		local
-			l_key: STRING
+			l_key: STRING_32
 		do
 			l_key := a_assign.target.access_name_32
 
@@ -99,16 +134,43 @@ feature {NONE} -- Feature Visitor for Violation Check
 						end
 					end
 				else
-					-- This is the first assignment of this attribute, store the value, if it's a constant, otherwise remove the attribute.
+						-- This is the first explicit assignment to this attribute.
 					if attached {ATOMIC_AS} a_assign.source as l_atomic then
-						attributes.replace (l_atomic, l_key)
+						register_first_assignment (l_atomic, l_key)
 					elseif attached {CONVERTED_EXPR_AS} a_assign.source as l_converted and then attached {ATOMIC_AS} l_converted.expr as l_atomic then
-						attributes.replace (l_atomic, l_key)
+						register_first_assignment (l_atomic, l_key)
 					else
-						-- The assignment source is not a constant value, hence we cannot make the attriute constant
+							-- The assignment source is not a constant value, hence we cannot make the attriute constant.
 						attributes.remove (l_key)
 					end
 				end
+			end
+		end
+
+	register_first_assignment (value: ATOMIC_AS; attribute_name: STRING_32)
+			-- Register first explicit assignment of value `value' to attribute `attribute_name'.
+		local
+			is_default: BOOLEAN
+		do
+				-- Unfortunately the attribute might have been used with a default value earlier.
+				-- A deeper analysis may figure out if that was the case.
+				-- For the time being ignore all assignments with non-default values.
+			if attached {BOOL_AS} value as boolean_constant then
+				is_default := not boolean_constant.value
+			elseif attached {CHAR_AS} value as character_constant then
+				is_default := character_constant.value = '%U'
+			elseif attached {INTEGER_AS} value as integer_constant then
+				is_default := integer_constant.is_zero
+			elseif attached {REAL_AS} value as real_constant then
+					-- There are different representations, the value may need to be normalized before comparison.
+				is_default := real_constant.value ~ "0" or else real_constant.value ~ "0.0"
+			end
+			if is_default then
+					-- The default value is assigned, keep the attribute.
+				attributes.replace (value, attribute_name)
+			else
+					-- A non-default value is assigned, remove the attribute.
+				attributes.remove (attribute_name)
 			end
 		end
 
@@ -122,7 +184,7 @@ feature {NONE} -- Feature Visitor for Violation Check
 				end
 			end
 
-			-- Reset the tables for the next class.
+				-- Reset the tables for the next class.
 			attributes.wipe_out
 			unassigned_attributes.wipe_out
 		end
@@ -144,45 +206,12 @@ feature {NONE} -- Feature Visitor for Violation Check
 			violations.extend (l_violation)
 		end
 
-feature -- Properties
+feature {NONE} -- Rule checking
 
-	attributes: HASH_TABLE [ATOMIC_AS, STRING]
+	attributes: HASH_TABLE [ATOMIC_AS, STRING_32]
 			-- Table of all attributes which are not constant but always assigned the same value.
 
-	unassigned_attributes: LINKED_LIST [STRING]
+	unassigned_attributes: LINKED_LIST [STRING_32]
 			-- List of attributes that have never been assigned any values.
-
-	name: STRING = "fixed_attribute_value"
-			-- <Precursor>
-
-	title: STRING_32
-		do
-			Result := ca_names.attribute_can_be_constant_title
-		end
-
-	id: STRING_32 = "CA048"
-			-- <Precursor>
-
-	description: STRING_32
-		do
-			Result :=  ca_names.attribute_can_be_constant_description
-		end
-
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
-		do
-			a_formatter.add (ca_messages.attribute_can_be_constant_violation_1)
-
-			if attached {STRING_32} a_violation.long_description_info.first as l_attribute then
-				a_formatter.add (l_attribute)
-			end
-
-			a_formatter.add (ca_messages.attribute_can_be_constant_violation_2)
-
-			if attached {STRING_32} a_violation.long_description_info.at(2) as l_value then
-				a_formatter.add (l_value)
-			end
-
-			a_formatter.add (ca_messages.attribute_can_be_constant_violation_3)
-		end
 
 end

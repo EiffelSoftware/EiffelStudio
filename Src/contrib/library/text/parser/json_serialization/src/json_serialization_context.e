@@ -14,12 +14,14 @@ class
 inherit
 	JSON_SERIALIZER_CONTEXT
 		redefine
-			default_create
+			default_create,
+			reset
 		end
 
 	JSON_DESERIALIZER_CONTEXT
 		redefine
-			default_create
+			default_create,
+			reset
 		end
 
 create
@@ -32,6 +34,15 @@ feature {NONE} -- Initialization
 			Precursor {JSON_SERIALIZER_CONTEXT}
 			Precursor {JSON_DESERIALIZER_CONTEXT}
 			set_default (create {JSON_REFLECTOR_SERIALIZATION})
+		end
+
+feature -- Cleaning
+
+	reset
+			-- Clean temporary data if relevant.
+		do
+			Precursor {JSON_SERIALIZER_CONTEXT}
+			Precursor {JSON_DESERIALIZER_CONTEXT}
 		end
 
 feature -- Element change

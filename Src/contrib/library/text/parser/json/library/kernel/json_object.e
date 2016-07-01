@@ -313,8 +313,15 @@ feature -- Status report
 
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
+		local
+			n: INTEGER
 		do
-			Result := count.out + "item(s)"
+			n := count
+			if n <= 1 then
+				Result := n.out + " item"
+			else
+				Result := n.out + " items"
+			end
 		end
 
 feature {NONE} -- Implementation

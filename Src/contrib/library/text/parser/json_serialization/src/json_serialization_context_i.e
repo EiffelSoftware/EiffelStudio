@@ -1,17 +1,16 @@
 note
-	description: "Common ancestor for {JSON_SERIALIZER and JSON_DESERIALIZER}."
+	description: "Common ancestor for {JSON_SERIALIZER_CONTEXT and JSON_DESERIALIZER_CONTEXT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	JSON_SERIALIZATION_I
+	JSON_SERIALIZATION_CONTEXT_I
 
 feature -- Cleaning
 
 	reset
 			-- Clean any temporary data.
-			--| Redefine in descendants.
-		do
+		deferred
 		end
 
 note

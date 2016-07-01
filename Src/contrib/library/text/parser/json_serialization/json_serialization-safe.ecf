@@ -3,6 +3,8 @@
 	<description>Eiffel to JSON serialization, and deserialization.</description>
 	<target name="json_serialization">
 		<root all_classes="true"/>
+		<option warning="true">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="json" location="..\json\library\json-safe.ecf"/>
 		<cluster name="src" location=".\src\" recursive="true"/>

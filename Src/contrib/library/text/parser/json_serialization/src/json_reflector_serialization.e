@@ -11,12 +11,14 @@ class
 inherit
 	JSON_REFLECTOR_SERIALIZER
 		redefine
-			default_create
+			default_create,
+			reset
 		end
 
 	JSON_REFLECTOR_DESERIALIZER
 		redefine
-			default_create
+			default_create,
+			reset
 		end
 
 create
@@ -25,6 +27,14 @@ create
 feature {NONE} -- Initialization
 
 	default_create
+		do
+			Precursor {JSON_REFLECTOR_SERIALIZER}
+			Precursor {JSON_REFLECTOR_DESERIALIZER}
+		end
+
+feature -- Cleaning
+
+	reset
 		do
 			Precursor {JSON_REFLECTOR_SERIALIZER}
 			Precursor {JSON_REFLECTOR_DESERIALIZER}

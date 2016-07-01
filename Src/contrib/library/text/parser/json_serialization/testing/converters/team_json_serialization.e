@@ -10,6 +10,21 @@ class
 
 inherit
 	TEAM_JSON_SERIALIZER
+		redefine
+			reset
+		end
 	TEAM_JSON_DESERIALIZER
+		redefine
+			reset
+		end
+
+feature -- Cleaning
+
+	reset
+			-- <Precursor>
+		do
+			Precursor {TEAM_JSON_SERIALIZER}
+			Precursor {TEAM_JSON_DESERIALIZER}
+		end
 
 end

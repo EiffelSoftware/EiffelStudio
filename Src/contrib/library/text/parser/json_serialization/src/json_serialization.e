@@ -65,14 +65,24 @@ feature -- Element change
 			end
 		end
 
+feature -- Cleaning
+
+	reset
+			-- Clean temporary data if relevant.
+		do
+			context.reset
+		end
+
 feature -- Conversion
 
 	to_json (obj: detachable ANY): JSON_VALUE
 		do
-			if attached context.serializer (obj) as s then
-				Result := s.to_json (obj, context)
-			else
+			if obj = Void then
 				create {JSON_NULL} Result
+			elseif attached context.to_json (obj, Void) as j then
+				Result := j
+			else
+				create {JSON_NULL} Result -- FIXME
 			end
 		end
 
@@ -89,8 +99,9 @@ feature -- Conversion
 
 	from_json (a_json: detachable JSON_VALUE; a_type: TYPE [detachable ANY]): detachable ANY
 		do
-			if attached context.deserializer (a_type) as d then
-				Result := d.from_json (a_json, context)
+			Result := context.value_from_json (a_json, a_type)
+			if context.has_error then
+				Result := Void
 			end
 		end
 

@@ -11,12 +11,12 @@ inherit
 
 feature -- Conversion
 
-	from_json (a_json: detachable JSON_VALUE; ctx: detachable JSON_DESERIALIZER_CONTEXT): detachable ANY
+	from_json (a_json: detachable JSON_VALUE; ctx: JSON_DESERIALIZER_CONTEXT; a_type: detachable TYPE [detachable ANY]): detachable ANY
 			-- Eiffel value deserialized from `a_json' value, in the eventual context `ctx'.
 		deferred
 		end
 
-	from_json_string (a_json_string: READABLE_STRING_8; ctx: detachable JSON_DESERIALIZER_CONTEXT): detachable ANY
+	from_json_string (a_json_string: READABLE_STRING_8; ctx: JSON_DESERIALIZER_CONTEXT; a_type: detachable TYPE [detachable ANY]): detachable ANY
 			-- Eiffel value deserialized from `a_json' content string, in the eventual context `ctx'.	
 		local
 			p: JSON_PARSER
@@ -26,7 +26,7 @@ feature -- Conversion
 			if
 				p.is_parsed and then p.is_valid
 			then
-				Result := from_json (p.parsed_json_value, ctx)
+				Result := from_json (p.parsed_json_value, ctx, a_type)
 			end
 		end
 

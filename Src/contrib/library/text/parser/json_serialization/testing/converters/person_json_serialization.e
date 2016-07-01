@@ -10,6 +10,24 @@ class
 
 inherit
 	PERSON_JSON_SERIALIZER
+		redefine
+			reset
+		end
+
 	PERSON_JSON_DESERIALIZER
+		redefine
+			reset
+		end
+
+feature -- Cleaning
+
+	reset
+			-- <Precursor>
+		do
+			Precursor {PERSON_JSON_SERIALIZER}
+			Precursor {PERSON_JSON_DESERIALIZER}
+		end
+
+
 
 end

@@ -30,7 +30,6 @@ feature -- Cleaning
 			-- Clean any temporary data, to release memory or reset computation.
 		do
 			deserializer_location.wipe_out
-			deserialized_references := Void
 			deserializers_cache := Void
 			across
 				deserializers as ic
@@ -55,20 +54,6 @@ feature -- Live status
 			-- String representing the current location in the serialization.
 			--| Empty location string represents the root object.
 			--| using a.b.c  representation corresponding to `{ "a": { "b": { "c": ... } } }'
-
---	is_at_root_location: BOOLEAN
---		do
---			Result := deserializer_location.is_empty
---		end
-
---feature -- Helpers
-
---	from_json (a_json: detachable JSON_VALUE; a_type: TYPE [detachable ANY]): detachable ANY
---		do
---			if attached deserializer (a_type) as conv then
---				Result := conv.from_json (a_json, Current, a_type)
---			end
---		end
 
 feature -- Access
 
@@ -121,59 +106,37 @@ feature -- Access
 
 feature -- Factory
 
-	value_from_json (a_json: detachable JSON_VALUE; a_type: TYPE [detachable ANY]): detachable ANY
+	value_from_json (a_json: detachable JSON_VALUE; a_type: detachable TYPE [detachable ANY]): detachable ANY
+		local
+			conv: like deserializer
 		do
-			if
-				attached {JSON_OBJECT} a_json as j_object and then
-				j_object.count = 1 and then
-				attached {JSON_STRING} j_object.item ("$REF") as j_ref
-			then
-					-- Is a reference, since a JSON_OBJECT with a unique field named "$REF"!
-				Result := recorded_deserialized_reference (j_ref.unescaped_string_32)
+			if a_type = Void then
+				conv := default_deserializer
 			else
-					-- Not a reference, i.e does not have "$REF" as field name !
-				if attached deserializer (a_type) as conv then
-					Result := conv.from_json (a_json, Current, a_type)
-					if Result /= Void and attached {JSON_OBJECT} a_json as j_object then
-						on_object (Result, j_object)
-					end
+				conv := deserializer (a_type)
+			end
+			if conv /= Void then
+				Result := conv.from_json (a_json, Current, a_type)
+				if Result /= Void and attached {JSON_OBJECT} a_json as j_object then
+					on_object (Result, j_object)
 				end
 			end
 		end
 
 feature -- Callback event
 
---	on_root_object_referenced (obj: ANY)
---			-- Event trigger when root object `obj' is created.
---		do
---			record_deserialized_reference (obj, deserializer_location.string)
---		end
-
 	on_object (obj: ANY; a_json_object: JSON_OBJECT)
 			-- Event triggered when object `obj' is just instantiated or fully deserialized from `a_json_object'.
 		do
-				-- If it has a "$REF#" field, another value is referencing this `obj'
-				-- thus record it for later access by the other value.
-			if attached {JSON_STRING} a_json_object.item ("$REF#") as j_str then
-				record_deserialized_reference (obj, j_str.unescaped_string_32)
-			end
 		end
 
 	on_object_referenced (obj: ANY; a_ref_id: READABLE_STRING_GENERAL)
 			-- Event trigger when an object `obj' is associated with an identifier `a_ref_id'.
 		do
-			record_deserialized_reference (obj, a_ref_id)
 		end
 
-	on_array_skipped (a_json: JSON_ARRAY; a_type: detachable TYPE [detachable ANY])
-		do
-			if a_type /= Void and then a_type.is_attached then
-				has_error := True
-			end
-		end
-
-	on_object_skipped (a_json: JSON_OBJECT; a_type: detachable TYPE [detachable ANY])
-			-- Object skipped!
+	on_value_skipped (a_json: JSON_VALUE; a_type: detachable TYPE [detachable ANY])
+			-- Value skipped!
 			-- This may be dangerous and break void-safety!
 		do
 			if a_type /= Void then --and then a_type.is_attached then
@@ -201,53 +164,6 @@ feature -- Callback event
 			s := deserializer_location
 			check s.ends_with_general (a_field_name) end
 			s.remove_tail (a_field_name.count + 1) -- Include the '.'
-		end
-
-feature -- References record
-
---	set_root_reference (obj: detachable ANY)
---		do
---			if obj /= Void then
---				record_deserialized_reference (obj, "|")
---			else
---				discard_deserialized_reference ("|")
---			end
---		end
-
---	root_reference: detachable ANY
---		do
---			Result := recorded_deserialized_reference ("|")
---		end
-
-	deserialized_references: detachable STRING_TABLE [detachable ANY]
-
-	record_deserialized_reference (obj: ANY; a_ref_id: READABLE_STRING_GENERAL)
-		local
-			refs: like deserialized_references
-		do
-			refs := deserialized_references
-			if refs = Void then
-				create refs.make (1)
-				deserialized_references := refs
-			end
-			refs.force (obj, a_ref_id)
-		end
-
-	discard_deserialized_reference (a_ref_id: READABLE_STRING_GENERAL)
-		local
-			refs: like deserialized_references
-		do
-			refs := deserialized_references
-			if refs /= Void then
-				refs.remove (a_ref_id)
-			end
-		end
-
-	recorded_deserialized_reference (a_ref: READABLE_STRING_GENERAL): detachable ANY
-		do
-			if attached deserialized_references as refs then
-				Result := refs.item (a_ref)
-			end
 		end
 
 feature -- Element change

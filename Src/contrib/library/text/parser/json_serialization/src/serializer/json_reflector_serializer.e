@@ -79,23 +79,22 @@ feature {NONE} -- Implementation
 					-- Never reuse string value ... as reference.
 					-- CHECK: or maybe for big string ?
 				create {JSON_STRING} Result.make_from_string_general (str)
-			elseif attached ctx.json_value_for_recorded_reference (obj) as j_ref then
-				Result := j_ref
+--			elseif attached ctx.recorded_json_value (obj) as j_ref then
+--				Result := j_ref
 			else
 				check
 					is_accepted_object: ctx.is_accepted_object (obj)
 				end
-
 				if attached ctx.to_json (obj, Current) as j then
 					Result := j
 				else
-					ctx.on_reference_object_start (obj) -- To declare this object is being processed.
+					ctx.on_object_serialization_start (obj) -- To declare this object is being processed.
 					if attached {HASH_TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as tb then
 						create j_object.make_with_capacity (tb.count)
 						across
 							tb as ic
 						loop
-							ctx.on_reference_field_start (ic.key)
+							ctx.on_field_start (ic.key)
 							if not attached ic.item as l_item then
 								create {JSON_NULL} j_value
 							elseif attached ctx.to_json (l_item, Void) as j then
@@ -105,7 +104,7 @@ feature {NONE} -- Implementation
 							end
 
 							j_object.put (j_value, create {JSON_STRING}.make_from_string_general (ic.key))
-							ctx.on_reference_field_end (ic.key)
+							ctx.on_field_end (ic.key)
 						end
 						Result := j_object
 	--				elseif attached {ITERABLE [detachable ANY]} obj as arr then
@@ -139,9 +138,9 @@ feature {NONE} -- Implementation
 									l_special as ic
 								loop
 									fn := i.out
-									ctx.on_reference_field_start (fn)
+									ctx.on_field_start (fn)
 									j_array.add (to_json (ic.item, ctx))
-									ctx.on_reference_field_end (fn)
+									ctx.on_field_end (fn)
 									i := i + 1
 								end
 							else
@@ -174,7 +173,7 @@ feature {NONE} -- Implementation
 							Result := j_object
 						end
 					end
-					ctx.on_reference_object_end (Result, obj)
+					ctx.on_object_serialization_end (Result, obj)
 				end
 			end
 		end
@@ -222,15 +221,15 @@ feature {NONE} -- Implementation
 
 			when {REFLECTOR_CONSTANTS}.reference_type then
 				l_field_value := a_reflected_object.reference_field (i)
-				ctx.on_reference_field_start (a_field_name)
+				ctx.on_field_start (a_field_name)
 				Result := reference_to_json (l_field_value, ctx)
-				ctx.on_reference_field_end (a_field_name)
+				ctx.on_field_end (a_field_name)
 			when {REFLECTOR_CONSTANTS}.expanded_type then
 				if attached a_reflected_object.expanded_field (i) as exp_ref_object then
-					ctx.on_reference_field_start (a_field_name)
+					ctx.on_field_start (a_field_name)
 						-- FIXME: check how to best handle expanded!
 					Result := reference_to_json (exp_ref_object.object, ctx)
-					ctx.on_reference_field_end (a_field_name)
+					ctx.on_field_end (a_field_name)
 				else
 					check is_exoanded: False end
 					create {JSON_NULL} Result

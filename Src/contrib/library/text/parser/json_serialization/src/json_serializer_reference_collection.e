@@ -95,7 +95,7 @@ feature -- Element change
 				i := counter + 1
 				counter := i
 				s := i.out
-				debug
+				debug ("json_serialization")
 					create s.make_empty
 					s.append_integer (i)
 					s.append_character (':')

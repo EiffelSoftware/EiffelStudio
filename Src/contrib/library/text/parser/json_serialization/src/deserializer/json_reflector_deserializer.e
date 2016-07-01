@@ -52,6 +52,7 @@ feature {NONE} -- Helpers
 			l_special: SPECIAL [detachable ANY]
 			fn: STRING
 			i: INTEGER
+			obj: detachable ANY
 		do
 			if
 				a_type /= Void and then
@@ -69,13 +70,24 @@ feature {NONE} -- Helpers
 					loop
 						fn := i.out
 						ctx.on_deserialization_field_start (fn)
-						l_special.extend (from_json (ic.item, ctx, l_item_type))
+						obj := ctx.value_from_json (ic.item, l_item_type)
+						if obj = Void then
+							if l_item_type.is_attached then
+								ctx.on_value_skipped (ic.item, l_item_type)
+							else
+								l_special.extend (Void)
+							end
+						elseif attached l_item_type.attempted (obj) as o then
+							l_special.extend (o)
+						else
+							ctx.on_value_skipped (ic.item, l_item_type)
+						end
 						ctx.on_deserialization_field_end (fn)
 						i := i + 1
 					end
 				end
 			else
-				ctx.on_array_skipped (a_json, a_type)
+				ctx.on_value_skipped (a_json, a_type)
 --			elseif a_type /= Void then
 --				Result := new_instance_of (a_type.type_id)
 --				across
@@ -94,20 +106,14 @@ feature {NONE} -- Helpers
 			l_json_item: detachable JSON_VALUE
 			l_field_static_types: like fields_infos
 		do
-			if attached {JSON_STRING} a_json_object.item ("$REF") as s_ref then
-					-- If the json object has a string item "$REF" with a reference identifier,
-					-- check if it was already recorded.
-				Result := ctx.recorded_deserialized_reference (s_ref.unescaped_string_32)
-			end
-
 			if Result = Void then
 				l_type_id := type_id_from_json_object (a_json_object, a_type)
 				if l_type_id < 0 then
-					ctx.on_object_skipped (a_json_object, a_type)
+					ctx.on_value_skipped (a_json_object, a_type)
 				else
 					Result := maybe_new_instance_of (l_type_id)
 					if Result = Void then
-						ctx.on_object_skipped (a_json_object, a_type)
+						ctx.on_value_skipped (a_json_object, a_type)
 					else
 						ctx.on_object (Result, a_json_object)
 						create ref.make (Result)
@@ -128,7 +134,8 @@ feature {NONE} -- Helpers
 									if attached {JSON_STRING} l_json_item as j_string then
 										ref.set_reference_field (i, string_from_json (j_string, l_field_info.static_type))
 									else
-										ref.set_reference_field (i, from_json (l_json_item, ctx, l_field_info.static_type))
+--										ref.set_reference_field (i, from_json (l_json_item, ctx, l_field_info.static_type))
+										ref.set_reference_field (i, ctx.value_from_json (l_json_item, l_field_info.static_type))
 									end
 								when character_8_type then
 									ref.set_character_8_field (i, '%U')

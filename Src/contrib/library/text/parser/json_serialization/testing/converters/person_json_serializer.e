@@ -21,7 +21,7 @@ feature -- Conversion
 			if attached {PERSON} obj as per then
 				create j_object.make_with_capacity (3)
 
-				ctx.on_reference_object_start (per)
+				ctx.on_object_serialization_start (per)
 					-- "first_name"
 				j_object.put_string (per.first_name, "first_name")
 					-- "last_name"
@@ -29,14 +29,14 @@ feature -- Conversion
 
 					-- "details"
 				if attached per.details as d then
-					ctx.on_reference_field_start ("details")
+					ctx.on_field_start ("details")
 					j_value := ctx.to_json (d, Current)
 					if j_value = Void then
 						check type_serializable: False end
 						j_value := create {JSON_NULL}
 					end
 					j_object.put (j_value, "details")
-					ctx.on_reference_field_end ("details")
+					ctx.on_field_end ("details")
 				end
 					-- "co_workers"
 
@@ -45,19 +45,19 @@ feature -- Conversion
 				across
 					per.co_workers as ic
 				loop
-					ctx.on_reference_field_start (i.out)
+					ctx.on_field_start (i.out)
 					j_value := ctx.to_json (ic.item, Current)
 					if j_value = Void then
 						check type_serializable: False end
 						j_value := create {JSON_NULL}
 					end
 					j_array.extend (j_value)
-					ctx.on_reference_field_end (i.out)
+					ctx.on_field_end (i.out)
 					i := i + 1
 				end
 				j_object.put (j_array, "co_workers")
 				Result := j_object
-				ctx.on_reference_object_end (j_object, per)
+				ctx.on_object_serialization_end (j_object, per)
 			else
 				create {JSON_NULL} Result
 			end

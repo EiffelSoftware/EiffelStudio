@@ -21,7 +21,7 @@ feature -- Conversion
 			if attached {PERSON_DETAILS} obj as details then
 				create j_object.make_with_capacity (3)
 
-				ctx.on_reference_object_start (details)
+				ctx.on_object_serialization_start (details)
 					-- "city_name"
 				if attached details.city_name as l_city_name then
 					j_object.put_string (l_city_name, "city_name")
@@ -34,7 +34,7 @@ feature -- Conversion
 					j_object.put_string (l_country, "country")
 				end
 				Result := j_object
-				ctx.on_reference_object_end (j_object, details)
+				ctx.on_object_serialization_end (j_object, details)
 			else
 				create {JSON_NULL} Result
 			end

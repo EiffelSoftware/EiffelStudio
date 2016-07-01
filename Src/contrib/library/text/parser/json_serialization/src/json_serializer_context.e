@@ -35,16 +35,6 @@ feature -- Settings / output
 
 feature -- Settings / behavior		
 
-	is_reference_reused: BOOLEAN
-		do
-			Result := serialized_references /= Void
-		end
-
-	is_cycle_checked: BOOLEAN
-		do
-			Result := serialized_references /= Void
-		end
-
 	is_type_name_included: BOOLEAN assign set_is_type_name_included
 			-- Is JSON output includes type name when possible?
 
@@ -54,11 +44,7 @@ feature -- Status
 			-- Is `obj' accepted for serialization?
 			-- ie: when cycle are forbidden, it should be recursively expanded.
 		do
-			if serialized_references = Void then
-				Result := is_recursively_expanded (obj)
-			else
-				Result := True
-			end
+			Result := is_recursively_expanded (obj)
 		end
 
 	is_recursively_expanded (obj: detachable ANY): BOOLEAN
@@ -132,32 +118,12 @@ feature -- Settings change
 			is_pretty_printing := False
 		end
 
-	set_is_reference_reused (b: BOOLEAN)
-			-- if `b' then accepts cycle in the object structure.
-			-- It removes a constraint, but make processing a bit heavier with memory.
-		do
-			if b then
-				if serialized_references = Void then
-					create serialized_references.make
-				end
-			else
-				serialized_references := Void
-			end
-		ensure
-			is_cycle_handled: is_reference_reused
-		end
-
 feature -- Cleaning
 
 	reset
 			-- Clean any temporary data, to release memory or reset computation.
 		do
 			serializer_location.wipe_out
-			if attached serialized_references as refs then
-				refs.reset
-			else
-				serialized_references := Void
-			end
 			serializers_cache := Void
 
 			across
@@ -176,7 +142,7 @@ feature -- Live status
 
 feature -- Callback events		
 
-	on_reference_field_start (a_field_name: READABLE_STRING_GENERAL)
+	on_field_start (a_field_name: READABLE_STRING_GENERAL)
 			-- Event triggered just before processing a reference field `a_field_name' on Current object.
 		local
 			s: like serializer_location
@@ -188,7 +154,7 @@ feature -- Callback events
 			s.append_string_general (a_field_name)
 		end
 
-	on_reference_field_end (a_field_name: READABLE_STRING_GENERAL)
+	on_field_end (a_field_name: READABLE_STRING_GENERAL)
 			-- Event triggered just after reference field `a_field_name' on Current object was processed.
 		local
 			s: like serializer_location
@@ -198,76 +164,41 @@ feature -- Callback events
 			s.remove_tail (a_field_name.count + 1) -- Include the '.'
 		end
 
-	on_reference_object_start (a_obj: ANY)
+	on_object_serialization_start (a_obj: ANY)
 			-- Event triggered just before processing object `a_obj'.
 		do
-			if attached {READABLE_STRING_GENERAL} a_obj then
-					-- Do not record string value!
-			else
-				record_reference (Void, a_obj)
-			end
 		end
 
---	on_reference_object_created (j_value: JSON_VALUE; a_obj: ANY)
---			-- Event triggered just before processing object `a_obj'.
---		do
---			record_reference (Void, a_obj)
---		end
-
-	on_reference_object_end (j_value: JSON_VALUE; a_obj: ANY)
+	on_object_serialization_end (j_value: JSON_VALUE; a_obj: ANY)
 			-- Event triggered just after having object `a_obj' processed with associated `j_value' json value..
 			--| `j_value' is either JSON_STRING, JSON_OBJECT or JSON_ARRAY.
 		do
-			record_reference (j_value, a_obj)
-		end
-
-feature -- References		
-
-	record_reference (j_value: detachable JSON_VALUE; a_obj: ANY)
-			-- Record json value `j_value' for object `a_obj'
-			-- and associate with a reference identifier computed internally.
-		do
-			if attached serialized_references as refs then
-				refs.record (a_obj, j_value, Current)
-			end
-		end
-
-	json_value_for_recorded_reference (obj: ANY): detachable JSON_OBJECT
-			-- JSON value representing the reference `obj' if any.
-		do
-			if
-				attached serialized_references as refs and then
-				attached refs.item (obj) as s_ref
-			then
-				create Result.make_with_capacity (1)
-				Result.put_string (s_ref, "$REF")
-			end
 		end
 
 feature -- Helpers
 
 	to_json (obj: ANY; a_caller_serializer: detachable JSON_SERIALIZER): detachable JSON_VALUE
+			-- JSON value from `obj'.
+			-- To avoid infinite recursion, be sure to not reuse the same serializer as `a_caller_serializer'.			
 		do
-			if attached json_value_for_recorded_reference (obj) as j then
-				Result := j
-			else
-				check is_accepted_object: is_accepted_object (obj) end
-				if
-					attached serializer (obj) as conv and then
-					a_caller_serializer /= conv
-				then
-					on_reference_object_start (obj) -- To declare this object is being processed.
-					Result := conv.to_json (obj, Current)
-					on_reference_object_end (Result, obj) -- To declare this object is being processed.
-				end
+			check is_accepted_object: is_accepted_object (obj) end
+			if
+				attached serializer (obj) as conv and then
+				a_caller_serializer /= conv
+			then
+				on_object_serialization_start (obj) -- To declare this object is being processed.
+				Result := conv.to_json (obj, Current)
+				on_object_serialization_end (Result, obj) -- To declare this object is being processed.
 			end
 		end
 
 feature -- Access
 
 	default_serializer: like serializer assign set_default_serializer
+			-- If set, use this default serializer when no other are available for a specific type.
 
 	serializer (obj: ANY): detachable JSON_SERIALIZER
+			-- Serializer register for type of `obj'.
 		local
 			o_type, k_type: TYPE [detachable ANY]
 			tb: like serializers_cache
@@ -324,10 +255,6 @@ feature -- Element change
 		do
 			default_serializer := conv
 		end
-
-feature {NONE} -- Implementation: cycle
-
-	serialized_references: detachable JSON_SERIALIZER_REFERENCE_COLLECTION
 
 feature {NONE} -- Implementation
 

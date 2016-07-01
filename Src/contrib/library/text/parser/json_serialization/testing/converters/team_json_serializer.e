@@ -25,19 +25,19 @@ feature -- Conversion
 
 					-- "owner"
 				if attached grp.owner as p then
-					ctx.on_reference_field_start ("owner")
+					ctx.on_field_start ("owner")
 					j_value := ctx.to_json (p, Current)
 					if j_value /= Void then
 						j_object.put (j_value, "owner")
 					else
 						check type_serializable: False end
 					end
-					ctx.on_reference_field_end ("owner")
+					ctx.on_field_end ("owner")
 				end
 
 					-- "persons"
 				if attached grp.persons as lst then
-					ctx.on_reference_field_start ("persons")
+					ctx.on_field_start ("persons")
 					create j_array.make (lst.count)
 					across
 						lst as ic
@@ -50,27 +50,27 @@ feature -- Conversion
 						j_array.extend (j_value)
 					end
 					j_object.put (j_array, "persons")
-					ctx.on_reference_field_end ("persons")
+					ctx.on_field_end ("persons")
 				end
 
 					-- "vectors"
 				create j_array.make (grp.vectors.count)
-				ctx.on_reference_field_start ("vectors")
+				ctx.on_field_start ("vectors")
 				i := 1
 				across
 					grp.vectors as ic
 				loop
-					ctx.on_reference_field_start (i.out)
+					ctx.on_field_start (i.out)
 					j_value := ctx.to_json (ic.item, Current)
 					if j_value = Void then
 						check type_serializable: False end
 						create {JSON_NULL} j_value
 					end
 					j_array.extend (j_value)
-					ctx.on_reference_field_end (i.out)
+					ctx.on_field_end (i.out)
 					i := i + 1
 				end
-				ctx.on_reference_field_end ("owner")
+				ctx.on_field_end ("owner")
 				j_object.put (j_array, "vectors")
 
 				Result := j_object

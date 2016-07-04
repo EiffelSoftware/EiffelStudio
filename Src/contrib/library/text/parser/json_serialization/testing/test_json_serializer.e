@@ -35,6 +35,8 @@ feature -- Tests
 			create conv_from
 			if attached conv_from.from_json_string (s, d_ctx, {TEAM}) as o then
 				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))
+			else
+				assert ("deserialized reported error and returned Void", d_ctx.has_error)
 			end
 			assert ("not empty", not s.is_empty)
 		end
@@ -63,6 +65,8 @@ feature -- Tests
 			d_ctx.set_default_deserializer (conv_from)
 			if attached conv_from.from_json_string (s, d_ctx, {TEAM}) as o then
 				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))
+			else
+				assert ("deserialized reported error and returned Void", d_ctx.has_error)
 			end
 			assert ("not empty", not s.is_empty)
 		end
@@ -79,7 +83,7 @@ feature -- Tests
 			create js
 			js.register (create {TEAM_JSON_SERIALIZATION}, {TEAM})
 			js.register (create {PERSON_JSON_SERIALIZATION}, {PERSON})
-			js.register (create {JSON_REFLECTOR_SERIALIZATION}, Void)
+			js.register_default (create {JSON_REFLECTOR_SERIALIZATION})
 
 			js.set_pretty_printing
 
@@ -89,6 +93,8 @@ feature -- Tests
 
 			if attached js.from_json_string (s, {TEAM}) as o then
 				assert ("deserialized ok", recursively_same_objects (obj, o, Void))
+			else
+				assert ("deserialized reported error and returned Void", js.context.has_deserialization_error)
 			end
 		end
 

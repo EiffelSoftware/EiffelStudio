@@ -25,12 +25,57 @@ feature {NONE} -- Initialization
 	default_create
 		do
 			Precursor
-			create serialized_references.make
+			reference_target_field_name := "$REF"
+			create serialized_references.make ("$REF#")
+			debug ("json_serialization")
+				serialized_references.use_verbose_reference_identifier
+			end
 		end
 
-feature -- Settings / behavior		
+feature -- Settings
 
-	is_reference_reused: BOOLEAN = True
+	using_verbose_reference_identifier: BOOLEAN
+			-- Using verbose longer identifier for the reference values.
+			-- Default: False
+		do
+			Result := serialized_references.using_verbose_reference_identifier
+		end
+
+	reference_target_field_name: READABLE_STRING_8 assign set_reference_target_field_name
+			-- Field name related to reference.
+			-- Default: $REF
+
+	reference_source_field_name: READABLE_STRING_8 assign set_reference_source_field_name
+			-- Field name related to reference identifier.
+			-- Default: $REF#	
+		do
+			Result := serialized_references.reference_source_field_name
+		end
+
+feature -- Settings change
+
+	use_verbose_reference_identifier
+			-- Use long verbose identifier for reference.
+			-- Useful for debugging.
+		do
+			serialized_references.use_verbose_reference_identifier
+		end
+
+	use_shortest_reference_identifier
+			-- Use shortest identifier for reference (based on an integer counter).
+		do
+			serialized_references.use_shortest_reference_identifier
+		end
+
+	set_reference_target_field_name (a_name: READABLE_STRING_8)
+		do
+			reference_target_field_name := a_name
+		end
+
+	set_reference_source_field_name (a_name: READABLE_STRING_8)
+		do
+			serialized_references.reference_source_field_name := a_name
+		end
 
 feature -- Status
 
@@ -81,11 +126,11 @@ feature -- References
 		end
 
 	recorded_json_value (obj: ANY): detachable JSON_OBJECT
-			-- JSON value representing the reference `obj' if any.
+			-- JSON value representing the reference `obj' if already recorded.
 		do
 			if attached serialized_references.item (obj) as s_ref then
 				create Result.make_with_capacity (1)
-				Result.put_string (s_ref, "$REF")
+				Result.put_string (s_ref, reference_target_field_name)
 			end
 		end
 

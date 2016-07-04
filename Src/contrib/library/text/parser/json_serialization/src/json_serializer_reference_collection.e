@@ -11,10 +11,39 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_ref_id_field_name: READABLE_STRING_8)
 		do
 			create json_values.make_caseless (1)
 			create references.make (1)
+			reference_source_field_name := a_ref_id_field_name
+		end
+
+feature -- Settings
+
+	using_verbose_reference_identifier: BOOLEAN
+
+	reference_source_field_name: READABLE_STRING_8 assign set_reference_source_field_name
+			-- Field name for reference source.
+			-- Default: $REF#
+
+feature -- Settings change
+
+	use_verbose_reference_identifier
+			-- Use long verbose identifier for reference.
+			-- Useful for debugging.
+		do
+			using_verbose_reference_identifier := True
+		end
+
+	use_shortest_reference_identifier
+			-- Use shortest identifier for reference (based on an integer counter).
+		do
+			using_verbose_reference_identifier := False
+		end
+
+	set_reference_source_field_name (a_name: READABLE_STRING_8)
+		do
+			reference_source_field_name := a_name
 		end
 
 feature -- Cleaning
@@ -60,10 +89,10 @@ feature {NONE} -- Implementation
 	update_reference (a_json_value: detachable JSON_VALUE; a_ref: READABLE_STRING_GENERAL)
 		do
 			if attached {JSON_OBJECT} a_json_value as j then
-				if attached {JSON_STRING} j.item ("$REF#") as j_ref_id then
+				if attached {JSON_STRING} j.item (reference_source_field_name) as j_ref_id then
 					check same_ref: a_ref.same_string (j_ref_id.unescaped_string_32) end
 				else
-					j.put_string (a_ref, "$REF#")
+					j.put_string (a_ref, reference_source_field_name)
 				end
 			else
 					-- Ignore for String
@@ -94,12 +123,17 @@ feature -- Element change
 			else
 				i := counter + 1
 				counter := i
-				s := i.out
-				debug ("json_serialization")
+				if using_verbose_reference_identifier then
 					create s.make_empty
 					s.append_integer (i)
 					s.append_character (':')
+					s.append_character ('{')
+					s.append_string_general (obj.generating_type.name)
+					s.append_character ('}')
+					s.append_character (':')
 					s.append_string_general (ctx.serializer_location)
+				else
+					s := i.out
 				end
 				json_values.force (a_json_value, s)
 				references.force ([s, obj, 0])

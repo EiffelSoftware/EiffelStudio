@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			create serializers.make (1)
 			create serializer_location.make_empty
+			is_type_name_included := True
 		end
 
 feature -- Settings / output
@@ -37,6 +38,7 @@ feature -- Settings / behavior
 
 	is_type_name_included: BOOLEAN assign set_is_type_name_included
 			-- Is JSON output includes type name when possible?
+			-- Default: True
 
 feature -- Status
 
@@ -102,6 +104,7 @@ feature -- Status
 feature -- Settings change
 
 	set_is_type_name_included (b: BOOLEAN)
+			-- Set `is_type_name_included' to `b'.
 		do
 			is_type_name_included := b
 		end
@@ -186,9 +189,9 @@ feature -- Helpers
 				attached serializer (obj) as conv and then
 				a_caller_serializer /= conv
 			then
-				on_object_serialization_start (obj) -- To declare this object is being processed.
+--				on_object_serialization_start (obj) -- To declare this object is being processed.
 				Result := conv.to_json (obj, Current)
-				on_object_serialization_end (Result, obj) -- To declare this object is being processed.
+--				on_object_serialization_end (Result, obj) -- To declare this object is being processed.
 			end
 		end
 

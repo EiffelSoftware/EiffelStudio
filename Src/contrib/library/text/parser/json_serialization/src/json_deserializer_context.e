@@ -39,16 +39,38 @@ feature -- Cleaning
 			reset_error
 		end
 
+feature -- Error		
+
 	reset_error
 			-- Reset `has_error' value.
 		do
-			has_error := False
+			error := Void
+		ensure
+			has_no_error: not has_error
 		end
 
-feature -- Live status		
+	report_error (e: JSON_DESERIALIZER_ERROR)
+		local
+			l_err: like error
+		do
+			l_err := error
+			if l_err /= Void then
+				e.set_previous (l_err)
+			end
+			error := e
+		ensure
+			has_error: has_error
+		end
 
 	has_error: BOOLEAN
 			-- Error occurred?
+		do
+			Result := error /= Void
+		end
+
+	error: detachable JSON_DESERIALIZER_ERROR
+
+feature -- Live status		
 
 	deserializer_location: STRING_32
 			-- String representing the current location in the serialization.
@@ -82,7 +104,7 @@ feature -- Access
 					elseif
 							-- Hack: use conformance of type, and reverse conformance of type of type.
 --						(is_strict implies attached k_type.attempted (o_type)) and then
-						attached k_type.attempted (o_type) and then
+						attached k_type.conforms_to (o_type) and then
 						attached o_type.generating_type.attempted (k_type)
 					then
 							-- Found
@@ -135,12 +157,12 @@ feature -- Callback event
 		do
 		end
 
-	on_value_skipped (a_json: JSON_VALUE; a_type: detachable TYPE [detachable ANY])
+	on_value_skipped (a_json: JSON_VALUE; a_type: detachable TYPE [detachable ANY]; a_message: READABLE_STRING_GENERAL)
 			-- Value skipped!
 			-- This may be dangerous and break void-safety!
 		do
 			if a_type /= Void then --and then a_type.is_attached then
-				has_error := True
+				report_error (a_message)
 			end
 		end
 

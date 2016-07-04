@@ -54,12 +54,11 @@ feature {NONE} -- Helpers
 			i: INTEGER
 			obj: detachable ANY
 		do
-			if
-				a_type /= Void and then
-				attached ctx.deserializer (a_type) as d and then d /= Current
-			then
+			if a_type = Void then
+				ctx.on_value_skipped (a_json, a_type, "Unable to deserialize array without type information!")
+			elseif attached ctx.deserializer (a_type) as d and then d /= Current then
 				Result := d.from_json (a_json, ctx, a_type)
-			elseif a_type /= Void and then a_type.conforms_to ({detachable SPECIAL [detachable ANY]}) then
+			elseif a_type.conforms_to ({detachable SPECIAL [detachable ANY]}) then
 				l_special := new_special_any_instance (a_type.type_id, a_json.count)
 				Result := l_special
 				if a_type.generic_parameter_count = 1 then
@@ -67,33 +66,38 @@ feature {NONE} -- Helpers
 					i := 1
 					across
 						a_json as ic
+					until
+						ctx.has_error
 					loop
 						fn := i.out
 						ctx.on_deserialization_field_start (fn)
 						obj := ctx.value_from_json (ic.item, l_item_type)
 						if obj = Void then
 							if l_item_type.is_attached then
-								ctx.on_value_skipped (ic.item, l_item_type)
+								ctx.on_value_skipped (ic.item, l_item_type, "Issue when deserializing array {" + a_type.name + "} at index " + fn)
 							else
 								l_special.extend (Void)
 							end
 						elseif attached l_item_type.attempted (obj) as o then
 							l_special.extend (o)
 						else
-							ctx.on_value_skipped (ic.item, l_item_type)
+							ctx.on_value_skipped (ic.item, l_item_type, "Deserialized Array item {" + obj.generating_type.name + "} mismatch with {" + l_item_type.name + "}")
 						end
 						ctx.on_deserialization_field_end (fn)
 						i := i + 1
 					end
 				end
 			else
-				ctx.on_value_skipped (a_json, a_type)
+				ctx.on_value_skipped (a_json, a_type, "Unable to deserialize array {" + a_type.name + "}!")
 --			elseif a_type /= Void then
 --				Result := new_instance_of (a_type.type_id)
 --				across
 --					j_array as ic
 --				loop
 --				end
+			end
+			if ctx.has_error then
+				Result := Void
 			end
 		end
 
@@ -109,11 +113,15 @@ feature {NONE} -- Helpers
 			if Result = Void then
 				l_type_id := type_id_from_json_object (a_json_object, a_type)
 				if l_type_id < 0 then
-					ctx.on_value_skipped (a_json_object, a_type)
+					ctx.on_value_skipped (a_json_object, a_type, {STRING_32} "Can not find type id [" + ctx.deserializer_location + "]")
 				else
 					Result := maybe_new_instance_of (l_type_id)
 					if Result = Void then
-						ctx.on_value_skipped (a_json_object, a_type)
+						if a_type /= Void then
+							ctx.on_value_skipped (a_json_object, a_type, "Unable to instantiate type id [" + l_type_id.out + "] or type {" + a_type.name + "}")
+						else
+							ctx.on_value_skipped (a_json_object, a_type, "Unable to instantiate type [" + l_type_id.out + "]")
+						end
 					else
 						ctx.on_object (Result, a_json_object)
 						create ref.make (Result)
@@ -121,6 +129,8 @@ feature {NONE} -- Helpers
 						across
 								-- Follow the order from JSON, in case of reference usage.
 							a_json_object as ic
+						until
+							ctx.has_error
 						loop
 							fn := ic.key.unescaped_string_32
 ----							if not fn.starts_with ("$") then
@@ -171,6 +181,9 @@ feature {NONE} -- Helpers
 						end
 					end
 				end
+			end
+			if ctx.has_error then
+				Result := Void
 			end
 		end
 
@@ -270,7 +283,7 @@ feature {NONE} -- Implementation
 			-- Type id extracted from `a_json_object', or from `a_type' if attached.
 			-- Return -1 if none is found.
 		do
-			if attached {JSON_STRING} a_json_object.item ("_type") as s_type_name then
+			if attached {JSON_STRING} a_json_object.item ({JSON_REFLECTOR_SERIALIZER}.type_field_name) as s_type_name then
 				Result := dynamic_type_from_string (s_type_name.item)
 			elseif a_type /= Void then
 				Result := a_type.type_id

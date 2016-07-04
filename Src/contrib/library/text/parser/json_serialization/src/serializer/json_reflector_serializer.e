@@ -60,6 +60,11 @@ feature -- Conversion
 			end
 		end
 
+feature -- Constants
+
+	type_field_name: STRING = "$TYPE"
+			-- Field name related to type name information.
+
 feature {NONE} -- Implementation		
 
 	reference_to_json (obj: detachable ANY; ctx: JSON_SERIALIZER_CONTEXT): JSON_VALUE
@@ -151,7 +156,7 @@ feature {NONE} -- Implementation
 
 							if ctx.is_type_name_included then
 								create j_object.make_with_capacity (1 + l_fields_count)
-								j_object.put_string (l_type_name, "_type")
+								j_object.put_string (l_type_name, type_field_name)
 							else
 								create j_object.make_with_capacity (l_fields_count)
 							end

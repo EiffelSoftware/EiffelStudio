@@ -2,7 +2,7 @@ JSON serialization library
 
 ## WARNING
 	- the default reflection serializer is requiring to have recursively expanded object (i.e no cycle in references).
-	- the default reflection deserializer is not fully implemented, not support for array and table.
+	- the default reflection deserializer does not support array and table, unless a specific deserializer is provided.
 
 ## Simple out of the box serialization:
 

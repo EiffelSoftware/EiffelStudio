@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create deserialized_references.make (1)
+			reference_target_field_name := "$REF"
+			reference_source_field_name := "$REF#"
 		end
 
 feature -- Cleaning
@@ -43,7 +45,7 @@ feature -- Factory
 			if
 				attached {JSON_OBJECT} a_json as j_object and then
 				j_object.count = 1 and then
-				attached {JSON_STRING} j_object.item ("$REF") as j_ref
+				attached {JSON_STRING} j_object.item (reference_target_field_name) as j_ref
 			then
 					-- Is a reference, since a JSON_OBJECT with a unique field named "$REF"!
 				Result := recorded_deserialized_reference (j_ref.unescaped_string_32)
@@ -51,6 +53,28 @@ feature -- Factory
 					-- Not a reference, i.e does not have "$REF" as field name !
 				Result := Precursor (a_json, a_type)
 			end
+		end
+
+feature -- Field names
+
+	reference_target_field_name: READABLE_STRING_8 assign set_reference_target_field_name
+			-- Field name related to reference.
+			-- Default: $REF
+
+	reference_source_field_name: READABLE_STRING_8 assign set_reference_source_field_name
+			-- Field name related to reference identifier.
+			-- Default: $REF#
+
+feature -- Field name changes
+
+	set_reference_target_field_name (a_name: READABLE_STRING_8)
+		do
+			reference_target_field_name := a_name
+		end
+
+	set_reference_source_field_name (a_name: READABLE_STRING_8)
+		do
+			reference_source_field_name := a_name
 		end
 
 feature -- Callback event
@@ -62,7 +86,7 @@ feature -- Callback event
 
 				-- If it has a "$REF#" field, another value is referencing this `obj'
 				-- thus record it for later access by the other value.
-			if attached {JSON_STRING} a_json_object.item ("$REF#") as j_str then
+			if attached {JSON_STRING} a_json_object.item (reference_source_field_name) as j_str then
 				record_deserialized_reference (obj, j_str.unescaped_string_32)
 			end
 		end
@@ -90,7 +114,7 @@ feature -- References record
 
 	reference_identifier_from (a_json_object: JSON_OBJECT): detachable READABLE_STRING_GENERAL
 		do
-			if attached {JSON_STRING} a_json_object.item ("$REF") as s_ref then
+			if attached {JSON_STRING} a_json_object.item (reference_target_field_name) as s_ref then
 				Result := s_ref.unescaped_string_32
 			end
 		end

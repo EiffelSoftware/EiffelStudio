@@ -25,7 +25,7 @@ feature -- Tests
 			create conv_to
 			create {JSON_SERIALIZER_CONTEXT_WITH_REFERENCE} ctx
 			ctx.set_pretty_printing
-			ctx.is_type_name_included := False
+			ctx.is_type_name_included := False -- Do not include the type name info.
 
 			s := conv_to.to_json_string (obj, ctx)
 
@@ -34,7 +34,9 @@ feature -- Tests
 			ctx_deser.set_default_deserializer (create {JSON_REFLECTOR_DESERIALIZER})
 
 			if attached conv_from.from_json_string (s, ctx_deser, {TEAM}) as o then
-				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))
+				assert ("deserialized error", False)
+			else
+				assert ("deserialized reported error and returned Void", ctx_deser.has_error)
 			end
 		end
 
@@ -52,7 +54,6 @@ feature -- Tests
 			create conv_to
 			create {JSON_SERIALIZER_CONTEXT_WITH_REFERENCE} ctx
 			ctx.set_pretty_printing
-			ctx.is_type_name_included := True
 			s := conv_to.to_json_string (obj, ctx)
 
 			create conv_from
@@ -61,6 +62,8 @@ feature -- Tests
 
 			if attached conv_from.from_json_string (s, ctx_deser, {TEAM}) as o then
 				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))
+			else
+				assert ("deserialized ok", False)
 			end
 		end
 
@@ -69,16 +72,16 @@ feature -- Tests
 			obj: TEAM
 			conv_to: JSON_REFLECTOR_SERIALIZER
 			conv_from: JSON_REFLECTOR_DESERIALIZER
-			ctx: detachable JSON_SERIALIZER_CONTEXT
+			ctx: detachable JSON_SERIALIZER_CONTEXT_WITH_REFERENCE
 			ctx_deser: detachable JSON_DESERIALIZER_CONTEXT
 			s: STRING
 		do
 			obj := new_cycling_full_team
 
 			create conv_to
-			create {JSON_SERIALIZER_CONTEXT_WITH_REFERENCE} ctx
+			create ctx
+			ctx.use_verbose_reference_identifier
 			ctx.set_pretty_printing
-			ctx.is_type_name_included := True
 			ctx.register_serializer (create {TEAM_JSON_SERIALIZER}, {TEAM})
 			ctx.register_serializer (create {PERSON_JSON_SERIALIZER}, {PERSON})
 			ctx.register_serializer (create {PERSON_DETAILS_JSON_SERIALIZER}, {PERSON_DETAILS})
@@ -96,35 +99,37 @@ feature -- Tests
 
 			if attached conv_from.from_json_string (s, ctx_deser, {TEAM}) as o then
 				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))
+			else
+				assert ("deserialized ok", False)
 			end
-
-			assert ("not empty", not s.is_empty)
 		end
 
---	test_serialization
---		local
---			obj: TEAM
---			js: JSON_SERIALIZATION
---			l_deserializer: JSON_DESERIALIZER
---			s: STRING
---		do
---			obj := new_group
+	test_serialization_with_reference
+		local
+			obj: TEAM
+			js: JSON_SERIALIZATION
+			l_deserializer: JSON_DESERIALIZER
+			s: STRING
+		do
+			obj := new_cycling_full_team
 
---			create js
+			create js.make_with_context (create {JSON_SERIALIZATION_CONTEXT_WITH_REFERENCE})
 --			js.register (create {TEAM_JSON_SERIALIZATION}, {TEAM})
 --			js.register (create {PERSON_JSON_SERIALIZATION}, {PERSON})
---			js.register (create {JSON_REFLECTOR_SERIALIZATION}, Void)
+			js.register_default (create {JSON_REFLECTOR_SERIALIZATION})
 
---			js.set_pretty_printing
+			js.set_pretty_printing
 
 
---			s := js.to_json_string (obj)
---			assert ("not empty", not s.is_empty)
+			s := js.to_json_string (obj)
+			assert ("not empty", not s.is_empty)
 
---			if attached js.from_json_string (s, {TEAM}) as o then
---				assert ("deserialized ok", recursively_same_objects (obj, o, Void))
---			end
---		end
+			if attached js.from_json_string (s, {TEAM}) as o then
+				assert ("deserialized ok", recursively_same_objects (obj, o, Void))
+			else
+				assert ("deserialized failed", js.context.has_deserialization_error)
+			end
+		end
 
 feature -- Factory
 

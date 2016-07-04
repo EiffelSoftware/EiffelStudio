@@ -3,7 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
+class
 	JSON_SERIALIZATION
 
 inherit
@@ -33,6 +33,14 @@ feature -- Access
 	context: JSON_SERIALIZATION_CONTEXT
 			-- Context related to serialization and deserialization.
 
+feature -- Status
+
+	has_deserialization_error: BOOLEAN
+			-- Error occurred during deserialization?
+		do
+			Result := context.has_deserialization_error
+		end
+
 feature -- Element change
 
 	set_pretty_printing
@@ -47,23 +55,26 @@ feature -- Element change
 			context.set_compact_printing
 		end
 
-	register (a_serialization: JSON_SERIALIZATION_I; a_type: detachable TYPE [detachable ANY])
+	register (a_serialization: JSON_SERIALIZATION_I; a_type: TYPE [detachable ANY])
 		do
 			if attached {JSON_SERIALIZER} a_serialization as s then
-				if a_type = Void then
-					context.set_default_serializer (s)
-				else
-					context.register_serializer (s, a_type)
-				end
+				context.register_serializer (s, a_type)
 			end
 			if attached {JSON_DESERIALIZER} a_serialization as d then
-				if a_type = Void then
-					context.set_default_deserializer (d)
-				else
-					context.register_deserializer (d, a_type)
-				end
+				context.register_deserializer (d, a_type)
 			end
 		end
+
+	register_default (a_serialization: JSON_SERIALIZATION_I)
+		do
+			if attached {JSON_SERIALIZER} a_serialization as s then
+				context.set_default_serializer (s)
+			end
+			if attached {JSON_DESERIALIZER} a_serialization as d then
+				context.set_default_deserializer (d)
+			end
+		end
+
 
 feature -- Cleaning
 
@@ -73,7 +84,7 @@ feature -- Cleaning
 			context.reset
 		end
 
-feature -- Conversion
+feature -- Conversion to JSON
 
 	to_json (obj: detachable ANY): JSON_VALUE
 		do
@@ -97,10 +108,12 @@ feature -- Conversion
 			append_to_json_string (obj, Result)
 		end
 
+feature -- Conversion from JSON		
+
 	from_json (a_json: detachable JSON_VALUE; a_type: TYPE [detachable ANY]): detachable ANY
 		do
 			Result := context.value_from_json (a_json, a_type)
-			if context.has_error then
+			if context.has_deserialization_error then
 				Result := Void
 			end
 		end

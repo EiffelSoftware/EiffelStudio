@@ -208,12 +208,12 @@ feature -- Socket API
 			"return zmq_recv ((void *)$a_s, (void *) $a_msg, (size_t) $a_msg_length, (int)$a_flags);"
 		end
 
-	recvmsg (a_s: POINTER; a_msg: POINTER; a_flags: INTEGER_32): INTEGER_32
-			-- ZMQ_EXPORT int zmq_recvmsg (void *s, zmq_msg_t *msg, int flags);
+	msg_recv (a_msg: POINTER; a_s: POINTER; a_flags: INTEGER_32 ): INTEGER_32
+			-- ZMQ_EXPORT int zmq_msg_recv (zmq_msg_t *msg, void *s, int flags);
 		external
 			"C inline use <zmq.h>"
 		alias
-			"return zmq_recvmsg ((void *)$a_s,(zmq_msg_t *)$a_msg, (int)$a_flags);"
+			"return zmq_msg_recv ((zmq_msg_t *)$a_msg, (void *)$a_s, (int)$a_flags);"
 		end
 
 	stopwatch_start: POINTER
@@ -249,7 +249,7 @@ feature -- Socket API
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

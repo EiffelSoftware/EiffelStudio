@@ -21,7 +21,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="libzmq-v110-mt-3_2_3.lib">
+		<external_object location="libzmq-v110-mt-4_0_4.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

@@ -125,6 +125,17 @@ feature -- Status report
 			Result := True
 		end
 
+	is_deferred: BOOLEAN
+			-- Is current type a deferred type?
+		do
+			if
+				attached internal.pure_implementation_type (type_id) as l_rt_type and then
+				attached {SYSTEM_TYPE}.get_type_from_handle (l_rt_type.type) as l_type
+			then
+				Result := l_type.is_value_type or l_type.is_interface
+			end
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current type an expanded type?
 		do

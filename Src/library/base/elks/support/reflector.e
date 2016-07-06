@@ -79,6 +79,7 @@ feature -- Creation
 		require
 			type_id_nonnegative: type_id >= 0
 			not_special_type: not is_special_type (type_id)
+			not_deferred: not type_of_type (type_id).is_deferred
 		do
 			Result := c_new_instance_of (type_id)
 		ensure
@@ -451,7 +452,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

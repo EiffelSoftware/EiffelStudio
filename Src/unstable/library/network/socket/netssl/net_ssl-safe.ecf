@@ -11,7 +11,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="EiffelSoftware.Library.NetSSL">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="/usr/include">
+		<external_include location="$(ISE_LIBRARY)/unstable/library/network/socket/netssl/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

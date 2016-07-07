@@ -290,12 +290,12 @@ feature {PROCESS_IMP} -- Process management
                 ee.change_working_path (l_working_directory)
             end
             l_debug_state := debug_state
-            discard_debug
+            disable_debug
 
             process_id := fork_process
             inspect process_id
             when -1 then --| Error
-                restore_debug_state (l_debug_state)
+                set_debug_state (l_debug_state)
                 -- Error ... no fork allowed
                 if cur_dir /= Void then
                     ee.change_working_path (cur_dir)
@@ -311,7 +311,7 @@ feature {PROCESS_IMP} -- Process management
                 setup_child_process_files
                 exec_process (program_file_name, l_arguments, close_nonstandard_files, environment_table_as_pointer (envs))
             else --| Parent process
-				restore_debug_state (l_debug_state)
+				set_debug_state (l_debug_state)
                 setup_parent_process_files
                 arguments_for_exec := Void
                 set_is_executing (True)
@@ -324,7 +324,7 @@ feature {PROCESS_IMP} -- Process management
                 create exceptions
                 exceptions.die (1)
             end
-			restore_debug_state (l_debug_state)
+			set_debug_state (l_debug_state)
         end
 
 	terminate_hard (is_tree: BOOLEAN)

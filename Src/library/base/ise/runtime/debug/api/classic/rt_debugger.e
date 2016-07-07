@@ -33,7 +33,7 @@ feature {NONE} -- Status settings
 		alias
 			"[
 			#ifdef WORKBENCH
-				set_debug_mode ($a_mode ? 1 : 0);
+				set_debug_mode ($a_state ? 1 : 0);
 			#endif
 			]"
 		ensure

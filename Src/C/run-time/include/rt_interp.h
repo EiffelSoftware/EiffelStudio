@@ -213,6 +213,9 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_BUILTIN_TYPE__RUNTIME_NAME	(unsigned char) 5
 #define BC_BUILTIN_TYPE__GENERIC_PARAMETER_TYPE	(unsigned char) 6
 #define BC_BUILTIN_TYPE__GENERIC_PARAMETER_COUNT	(unsigned char) 7
+#define BC_BUILTIN_TYPE__IS_ATTACHED	(unsigned char) 8
+#define BC_BUILTIN_TYPE__IS_DEFERRED	(unsigned char) 9
+#define BC_BUILTIN_TYPE__IS_EXPANDED	(unsigned char) 10
 
 /* Byte code for expression creation */
 #define BC_CAST_CHAR32		(unsigned char) 135

@@ -136,6 +136,12 @@ feature -- Byte code generation
 						ba.append (bc_builtin_type__generic_parameter_type)
 					when {PREDEFINED_NAMES}.generic_parameter_count_name_id then
 						ba.append (bc_builtin_type__generic_parameter_count)
+					when {PREDEFINED_NAMES}.is_attached_name_id then
+						ba.append (bc_builtin_type__is_attached)
+					when {PREDEFINED_NAMES}.is_deferred_name_id then
+						ba.append (bc_builtin_type__is_deferred)
+					when {PREDEFINED_NAMES}.is_expanded_name_id then
+						ba.append (bc_builtin_type__is_expanded)
 
 					else
 						ba.append (bc_builtin_unknown)
@@ -402,7 +408,7 @@ invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

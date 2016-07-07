@@ -157,6 +157,9 @@ feature -- Access
 	bc_builtin_type__runtime_name: CHARACTER = '%/005/'
 	bc_builtin_type__generic_parameter_type: CHARACTER = '%/006/'
 	bc_builtin_type__generic_parameter_count: CHARACTER = '%/007/'
+	bc_builtin_type__is_attached: CHARACTER = '%/008/'
+	bc_builtin_type__is_deferred: CHARACTER = '%/009/'
+	bc_builtin_type__is_expanded: CHARACTER = '%/010/'
 
 
 	Bc_cast_char32:		CHARACTER = '%/135/';
@@ -268,7 +271,7 @@ feature -- Access
 	Bc_postfail: CHARACTER = '%/177/';
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

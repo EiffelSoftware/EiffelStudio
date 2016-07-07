@@ -409,6 +409,9 @@ feature {NONE} -- Implementation: access
 			put ("()") check found_item = parentheses_symbol_id end
 			put ("new_cursor") check found_item = new_cursor_name_id end
 			put ("hash_code_64") check found_item = hash_code_64_name_id end
+			put ("is_attached") check found_item = is_attached_name_id end
+			put ("is_deferred") check found_item = is_deferred_name_id end
+			put ("is_expanded") check found_item = is_expanded_name_id end
 		end
 
 invariant
@@ -417,7 +420,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -36,8 +36,6 @@ feature {NONE} -- Status settings
 				set_debug_mode ($a_state ? 1 : 0);
 			#endif
 			]"
-		ensure
-			debug_mode_set: debug_state = a_state
 		end
 
 feature {NONE} -- Status report

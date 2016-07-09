@@ -42,7 +42,7 @@ test	date-time-with-epoch	time003 tcf pass time
 test	date-make-by-days		time004 tcf pass time
 test	date-make-by-days-min-value		time005 tcf fail time
 test	mt-date-time-duration-failure	time006 tcf pass time
-test	mt-cdate-bogus			time007 tcf pass time
+test	mt-cdate-bogus			time007 tcf fail used_to_pass time
 
 -- EiffelBase tests
 

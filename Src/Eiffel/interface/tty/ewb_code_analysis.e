@@ -259,7 +259,6 @@ feature -- Execution (declared in EWB_CMD)
 		local
 			l_code_analyzer: CA_CODE_ANALYZER
 			l_rule_name, l_rule_id: STRING_32
-			l_line, l_col: STRING
 			l_has_violations: BOOLEAN
 		do
 			create l_code_analyzer.make

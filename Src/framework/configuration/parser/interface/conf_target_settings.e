@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			create immediate_setting_concurrency.make (setting_concurrency_name, setting_concurrency_index_scoop)
 		end
 
-feature -- Access queries
+feature -- Access
 
 	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
@@ -43,7 +43,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-feature -- Access queries for settings
+feature -- Access: settings
 
 	setting_boolean (a_name: STRING): BOOLEAN
 			-- Get value of boolean setting with `a_name'.
@@ -407,6 +407,23 @@ feature {NONE} -- Access: concurrency setting
 			Result := <<concurrency_none_name.as_string_32, concurrency_multithreaded_name.as_string_32, concurrency_scoop_name.as_string_32>>
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Modification
+
+	force (other: CONF_TARGET_SETTINGS)
+			-- Update current settings so that anythin defined in `other' takes precedence.
+		local
+			new_setting_concurrency: like setting_concurrency
+			new_options: like options
+		do
+			settings.merge (other.settings)
+			new_setting_concurrency := other.setting_concurrency.twin
+			new_setting_concurrency.set_safely (setting_concurrency)
+			immediate_setting_concurrency := new_setting_concurrency
+			new_options := other.options.twin
+			new_options.merge (options)
+			internal_options := new_options
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

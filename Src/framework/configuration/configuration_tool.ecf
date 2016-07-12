@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="configuration_tool" uuid="77927207-9BAE-4CE6-BAC7-6C6BA2FD4374" library_target="tool">
+	<target name="tool">
+		<root all_classes="true"/>
+		<option void_safety="none"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="configuration_parser" location="configuration_parser.ecf"/>
+		<cluster name="tool" location="tool" recursive="true"/>
+	</target>
+</system>

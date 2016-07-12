@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects that adopt the test map of an {ETEST_CLASS} corresponding to it's AST stored on disc.
 	]"
@@ -537,11 +537,6 @@ feature {NONE} -- Implementation: AST
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 			-- <Precursor>
-		local
-			l_name: READABLE_STRING_8
-			l_test_class: like test_class
-			l_test: detachable ETEST
-			l_test_suite: TEST_SUITE_S
 		do
 				-- We found a test routine!
 			synchronize_routine (l_as.feature_name.name)
@@ -584,7 +579,6 @@ feature {NONE} -- Implementation: tags
 			-- `a_callback': Routine called once for every tag found in string.
 		local
 			l_start, l_end: INTEGER
-			l_op: TUPLE [STRING]
 			l_char: CHARACTER
 			l_valid_chars: like valid_tag_chars
 		do
@@ -643,7 +637,7 @@ invariant
 		attached old_test_map implies attached test_class
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

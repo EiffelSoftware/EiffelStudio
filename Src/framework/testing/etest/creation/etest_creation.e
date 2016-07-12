@@ -1,7 +1,5 @@
-note
-	description: "[
-		Class providing base implementation for {ETEST} creation sessions.
-	]"
+﻿note
+	description: "Class providing base implementation for {ETEST} creation sessions."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -170,7 +168,6 @@ feature {NONE} -- Basic operations
 			l_filename: STRING
 			l_class_name: STRING
 			l_retry: BOOLEAN
-			u: GOBO_FILE_UTILITIES
 		do
 			l_cluster := cluster
 			if l_cluster = Void then
@@ -294,7 +291,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

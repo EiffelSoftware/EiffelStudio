@@ -8,9 +8,6 @@
 class
 	CONF_CONSTANTS
 
-inherit
-	XML_MARKUP_CONSTANTS
-
 feature -- Platforms
 
 	Pf_windows: INTEGER = 0x0001
@@ -124,25 +121,25 @@ feature -- XML parsing/printing
 	Lt_string: STRING_32
 		once
 			create Result.make (1)
-			Result.append_character (lt_char)
+			Result.append_character ({XML_MARKUP_CONSTANTS}.lt_char)
 		end
 
 	Gt_string: STRING_32
 		once
 			create Result.make (1)
-			Result.append_character (gt_char)
+			Result.append_character ({XML_MARKUP_CONSTANTS}.gt_char)
 		end
 
 	Amp_string: STRING_32
 		once
 			create Result.make (1)
-			Result.append_character (amp_char)
+			Result.append_character ({XML_MARKUP_CONSTANTS}.amp_char)
 		end
 
 	Quot_string: STRING_32
 		once
 			create Result.make (1)
-			Result.append_character (quot_char)
+			Result.append_character ({XML_MARKUP_CONSTANTS}.quot_char)
 		end
 
 feature -- Extension
@@ -150,10 +147,8 @@ feature -- Extension
 	eiffel_file_extension: STRING = "e"
 			-- File extension for an Eiffel source file without the dot
 
-invariant
-
-note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

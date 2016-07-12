@@ -12,7 +12,6 @@ inherit
 	CONF_CONSTANTS
 		export
 			{NONE} all
-			{ANY} prefix_separator
 		end
 
 	CONF_FILE_CONSTANTS

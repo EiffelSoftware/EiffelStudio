@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Create empty settings that may be filled later.
 		do
 			create internal_settings.make (1)
-			create immediate_setting_concurrency.make (setting_concurrency_name, setting_concurrency_index_scoop)
+			create immediate_setting_concurrency.make (setting_concurrency_name, setting_concurrency_index_none)
 		end
 
 feature -- Access

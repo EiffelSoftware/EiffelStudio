@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		do
 			if
 				attached {ACCESS_FEAT_AS} a_nested as l_feat
-				and then l_feat.access_name_32.is_equal (current_feature_name)
+				and then l_feat.access_name_32.same_string (current_feature_name)
 				and then attached current_context.node_type (a_nested.target, current_feature) as l_type
 				and then l_type.name.is_equal (current_context.checking_class.name)
 			then
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	current_feature: FEATURE_I
 		-- Feature currently being checked.
 
-	current_feature_name: STRING
+	current_feature_name: READABLE_STRING_32
 		-- Name of the feature being checked.
 
 	found_qualified_call: BOOLEAN
@@ -143,6 +143,7 @@ feature -- Properties
 			-- <Precursor>
 
 	description: STRING_32
+			-- <Precursor>
 		do
 			Result := ca_names.export_can_be_restricted_description
 		end

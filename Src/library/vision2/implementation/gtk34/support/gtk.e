@@ -2689,20 +2689,6 @@ feature
 			"C signature (GtkViewport*): EIF_POINTER use <ev_gtk.h>"
 		end
 
-	frozen gtk_widget_aux_info_struct_halign (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkWidgetAuxInfo): EIF_INTEGER"
-		alias
-			"halign"
-		end
-
-	frozen gtk_widget_aux_info_struct_valign (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkWidgetAuxInfo): EIF_INTEGER"
-		alias
-			"valign"
-		end
-
 	frozen gtk_widget_get_allocation (a_c_struct, a_allocation: POINTER)
 		external
 			"C signature (GtkWidget*, GtkAllocation*) use <ev_gtk.h>"

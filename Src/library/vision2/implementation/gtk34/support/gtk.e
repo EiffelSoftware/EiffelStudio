@@ -446,6 +446,17 @@ feature
 			]"
 		end
 
+	frozen gdk_pixbuf_fill (a_pixbuf: POINTER; rgba: INTEGER_32)
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION > 1
+						gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);
+				#endif
+			]"
+		end
+
 	frozen gtk_fixed_child_struct_x (a_c_struct: POINTER): INTEGER_32
 		external
 			"C [struct <ev_gtk.h>] (GtkFixedChild): EIF_INTEGER"

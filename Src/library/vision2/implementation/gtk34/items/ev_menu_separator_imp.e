@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_widget_show (c_object)
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
 			{GTK}.gtk_widget_set_size_request (c_object, -1, 8)
-			real_text := ""
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_menu_sep_box
@@ -129,7 +128,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

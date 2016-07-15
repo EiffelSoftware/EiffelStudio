@@ -22,32 +22,10 @@ feature -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER)
 			-- Create with size.
-		local
-			l_x, l_y, l_width, l_height: NATURAL_32
 		do
 			if {GTK}.gtk_maj_ver >= 2 then
-				l_width := a_width.as_natural_32
-				l_height := a_height.as_natural_32
 				set_gdkpixbuf ({GTK}.gdk_pixbuf_new ({GTK}.gdk_colorspace_rgb_enum, True, 8, a_width, a_height))
-					-- Creating managed pointer used for inspecting RGBA data.
-				create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
-				from
-						-- Reset existing data to zero.
-						--| FIXME IEK Optimize
-					l_y := 0
-				until
-					l_y = l_height
-				loop
-					from
-						l_x := 0
-					until
-						l_x = l_width
-					loop
-						set_pixel (l_x, l_y, 0)
-						l_x := l_x + 1
-					end
-					l_y := l_y + 1
-				end
+				{GTK}.gdk_pixbuf_fill (gdk_pixbuf, 0)
 			else
 				create internal_pixmap.make_with_size (a_width, a_height)
 			end
@@ -77,10 +55,8 @@ feature -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			if reusable_managed_pointer = Void then
-					-- Creating managed pointer used for inspecting RGBA data.
-				create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
-			end
+				-- Creating managed pointer used for inspecting RGBA data.
+			create reusable_managed_pointer.share_from_pointer (default_pointer, 0)
 			set_is_initialized (True)
 		end
 
@@ -237,8 +213,8 @@ feature -- Command
 		do
 			create Result
 			l_imp ?= Result.implementation
-			check l_imp /= Void then
-			end
+			check l_imp /= Void then end
+				-- The code below was taken from `{EV_PIXMAP_IMP}.stretch'.
 			if a_width <= 16 and then a_height <= 16 then
 				l_scale_type := {GTK2}.gdk_interp_nearest
 			else
@@ -247,35 +223,33 @@ feature -- Command
 			l_pixbuf := {GTK2}.gdk_pixbuf_scale_simple (gdk_pixbuf, a_width, a_height, l_scale_type)
 				-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
 			l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
-			{GTK2}.g_object_unref (l_pixbuf)
 		end
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
-			l_pixbuf: POINTER
-			l_internal_pixmap: EV_PIXMAP
+			l_subpixbuf, l_pixbuf: POINTER
+			l_rect: EV_RECTANGLE
 		do
-			if {GTK}.gtk_maj_ver >= 2 then
-				create Result
-				l_imp ?= Result.implementation
-				check
-					l_imp /= Void then
-				end
-				l_pixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
+			l_rect := area.intersection (a_rect)
+			l_subpixbuf := {GTK}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
+			if area.contains (a_rect) then
 					-- We need to pass in a copy of the pixbuf as subpixbuf shares the pixels.
-				l_imp.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_pixbuf))
-				{GTK2}.g_object_unref (l_pixbuf)
-			else
 				create Result
-				l_internal_pixmap := sub_pixmap (a_rect)
-				l_imp ?= Result.implementation
-				check
-					l_imp /= Void then
+				Result.actual_implementation.set_gdkpixbuf ({GTK}.gdk_pixbuf_copy (l_subpixbuf))
+			else
+					-- We create a new pixbuf of the right size, copy the subpart of Current in it via
+					-- scaling. We could have used `gdk_pixbuf_copy_area' but it is already a wrapper
+					-- to `gdk_pixbuf_scale'.
+				create Result.make_with_size (a_rect.width, a_rect.height)
+				if l_rect.has_area then
+					l_pixbuf := Result.actual_implementation.gdk_pixbuf
+					{GTK2}.gdk_pixbuf_scale (l_subpixbuf, l_pixbuf, (-a_rect.x).max (0), (-a_rect.y).max (0),
+						l_rect.width, l_rect.height,
+						(-a_rect.x).max (0), (-a_rect.x).max (0), 1.0, 1.0, {GTK2}.gdk_interp_nearest)
 				end
-				l_imp.set_internal_pixmap (l_internal_pixmap)
 			end
+			{GTK2}.g_object_unref (l_subpixbuf)
 		end
 
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
@@ -292,10 +266,8 @@ feature -- Command
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 			l_managed_pointer := reusable_managed_pointer
-			check
-				l_managed_pointer /= Void then
-			end
-			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos)
+				-- Share with a size big enough to read at `byte_pos'.
+			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + {PLATFORM}.natural_32_bytes)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to read big endian.
 			Result := l_managed_pointer.read_natural_32_be (byte_pos)
 		end
@@ -314,9 +286,6 @@ feature -- Command
 			l_row_stride := {GTK}.gdk_pixbuf_get_rowstride (gdk_pixbuf)
 			byte_pos := (a_y * l_row_stride + (a_x * l_n_channels * l_bytes_per_sample)).as_integer_32
 			l_managed_pointer := reusable_managed_pointer
-			check
-				l_managed_pointer /= Void then
-			end
 			l_managed_pointer.set_from_pointer ({GTK}.gdk_pixbuf_get_pixels (gdk_pixbuf), byte_pos + (l_bytes_per_sample * l_n_channels).to_integer_32)
 				-- Data is stored at a byte level of R G B A which is big endian, so we need to set big endian.
 
@@ -487,7 +456,7 @@ feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 feature {EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP, EV_DRAWABLE_IMP} -- Implementation
 
-	reusable_managed_pointer: detachable MANAGED_POINTER
+	reusable_managed_pointer: MANAGED_POINTER
 			-- Managed pointer used for inspecting current.
 
 	internal_pixmap: detachable EV_PIXMAP
@@ -540,7 +509,7 @@ feature {NONE} -- Dispose
 			set_gdkpixbuf (default_pointer)
 		end
 
-feature {NONE} -- Obsolete
+feature -- Obsolete
 
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' to current at `a_rect'.
@@ -557,8 +526,8 @@ feature {NONE} -- Obsolete
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

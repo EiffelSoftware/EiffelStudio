@@ -332,8 +332,6 @@ feature -- Implementation
 				-- It is then re-set in the configure agent.
 			if l_pebble /= Void then
 				l_configure_agent := agent (a_pebble: like pebble; a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
-				local
-					l_cursor: detachable EV_POINTER_STYLE
 				do
 					pebble := a_pebble
 					if a_pebble /= Void then
@@ -341,21 +339,19 @@ feature -- Implementation
 						pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
 						if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
 								-- Set correct accept cursor if `Current' accepts its own pebble.
-							if accept_cursor /= Void then
-								l_cursor := accept_cursor
+							if attached accept_cursor as l_accept_cursor then
+								internal_set_pointer_style (l_accept_cursor)
 							else
-								l_cursor := default_accept_cursor
+								internal_set_pointer_style (default_accept_cursor)
 							end
 						else
 								-- Set correct deny cursor
-							if deny_cursor /= Void then
-								l_cursor := deny_cursor
+							if attached deny_cursor as l_deny_cursor then
+								internal_set_pointer_style (l_deny_cursor)
 							else
-								l_cursor := default_deny_cursor
+								internal_set_pointer_style (default_deny_cursor)
 							end
 						end
-						check l_cursor /= Void end
-						internal_set_pointer_style (l_cursor)
 					end
 
 				end (l_pebble, a_x, a_y, a_screen_x, a_screen_y)
@@ -388,14 +384,23 @@ feature -- Implementation
 			l_pebble_tuple: TUPLE [attached like pebble]
 			app_imp: EV_APPLICATION_IMP
 			l_pebble: like pebble
+			l_window: POINTER
 		do
 			disable_capture
 			app_imp := app_implementation
 			erase_rubber_band
 			modify_widget_appearance (False)
 			if not is_destroyed then
-					-- Reset the cursor.
-				internal_set_pointer_style (pointer_style)
+				if attached pointer_style as l_pointer_style then
+						-- Reset the cursor.
+					internal_set_pointer_style (l_pointer_style)
+				else
+						-- Remove previously set pointer.
+					l_window := {GTK}.gtk_widget_get_window (c_object)
+					if l_window /= default_pointer then
+						{GTK}.gdk_window_set_cursor (l_window, default_pointer)
+					end
+				end
 			end
 
 			l_pebble := pebble
@@ -500,7 +505,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

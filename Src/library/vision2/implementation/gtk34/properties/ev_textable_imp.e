@@ -33,7 +33,7 @@ feature -- Access
 			a_str: POINTER
 		do
 			if attached real_text as l_real_text then
-				Result := l_real_text.string
+				Result := l_real_text.as_string_32.twin
 			else
 				a_str :={GTK2}.gtk_label_get_label (text_label)
 				if a_str /= default_pointer then
@@ -90,9 +90,17 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
+			l_txt: STRING_32
 		do
 			if accelerators_enabled then
-				real_text := a_text
+					-- Make a STRING_32 version of `a_text'. If input
+					-- is already a STRING_32, we make a copy of it.
+				l_txt := a_text.as_string_32
+				if l_txt = a_text then
+					real_text := l_txt.twin
+				else
+					real_text := l_txt
+				end
 				a_cs := App_implementation.c_string_from_eiffel_string (u_lined_filter (a_text))
 				{GTK2}.gtk_label_set_text_with_mnemonic (text_label, a_cs.item)
 			else
@@ -123,48 +131,57 @@ feature {EV_ANY_IMP} -- Implementation
 			Result := False
 		end
 
-	real_text: detachable EV_GTK_C_STRING
+	real_text: detachable STRING_32
 			-- Internal `text'. (with ampersands)
 
-	filter_ampersand (s: STRING_32; char: CHARACTER)
-			-- Replace occurrences of '&' from `s'  by `char' and
-			-- replace occurrences of "&&" with '&'.
+	u_lined_filter (s: READABLE_STRING_GENERAL): STRING_32
+			-- Adapt `s' to the GTK conventions for shortcuts, that is to say:
+			-- 1 - Replace && with &
+			-- 2 - Replace & with _
+			-- 3 - Replace _ with __
 		require
 			s_not_void: s /= Void
-			s_has_at_least_one_ampersand: s.occurrences ('&') > 0
 		local
 			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > s.count
-			loop
-				if s.item (i) = '&' then
-					if s.item (i + 1) /= '&' then
-						s.put (char, i)
-					else
-						i := i + 1
-					end
-				end
-				i := i + 1
-			end
-			s.replace_substring_all (once "&&", once "&")
-		end
-
-	u_lined_filter (s: READABLE_STRING_GENERAL): STRING_32
-			-- Copy of `s' with underscores instead of ampersands.
-			-- (If `s' does not contain ampersands, return `s'.)
-		require
-			s_not_void: s /= Void
+			c: CHARACTER_32
 		do
 			Result := s.as_string_32
-			if s.has_code (('&').natural_32_code) then
-				if Result = s then
-					Result := Result.twin
+			from
+				i := Result.count
+			until
+				i = 0
+			loop
+				c := Result.item (i)
+				if c = '&' then
+					if Result = s then
+							-- Duplicate string since we are modifying it.
+						Result := Result.twin
+					end
+
+					if i > 1 then
+						c := Result.item (i - 1)
+						if c = '&' then
+								-- Two ampersand in a row, we replace it by just one.
+							Result.remove (i)
+							i := i - 1
+						else
+								-- Replace & with _.
+							Result.put ('_', i)
+						end
+					else
+							-- First charater of the string is &, we replace it by _.
+						Result.put ('_', i)
+					end
+				elseif c = '_' then
+					if Result = s then
+							-- Duplicate string since we are modifying it.
+						Result := Result.twin
+					end
+						-- We escape the _ with two _.
+					Result.insert_character ('_', i)
+
 				end
-				Result.replace_substring_all (once  "_", once  "__")
-				filter_ampersand (Result, '_')
+				i := i - 1
 			end
 		end
 
@@ -176,7 +193,7 @@ invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

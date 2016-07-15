@@ -1104,7 +1104,7 @@ feature -- Status setting
 			tooltip_delay := a_delay
 		end
 
-feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
+feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Pick and drop
 
 	set_docking_source (a_source: detachable EV_DOCKABLE_SOURCE_IMP)
 			-- Set `docking_source' to `a_source'.
@@ -1422,7 +1422,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

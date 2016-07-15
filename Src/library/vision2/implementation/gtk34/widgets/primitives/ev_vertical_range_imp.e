@@ -17,7 +17,6 @@ inherit
 	EV_RANGE_IMP
 		redefine
 			interface,
-			old_make,
 			make
 		end
 
@@ -25,12 +24,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create the vertical range.
-		do
-			Precursor {EV_RANGE_IMP} (an_interface)
-		end
 
 	make
 			-- Create and initialize `Current'.
@@ -44,7 +37,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VERTICAL_RANGE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

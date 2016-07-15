@@ -903,8 +903,7 @@ feature -- Implementation
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y]);
 			end
 		end
 
@@ -1167,7 +1166,7 @@ feature {NONE} -- Implementation
 				create a_tree_iter.make
 				item_imp.set_list_iter (a_tree_iter)
 				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-				update_child (item_imp, ev_children.count)
+				update_child (item_imp, i)
 
 				if item_imp.is_transport_enabled then
 					update_pnd_connection (True)
@@ -1240,7 +1239,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

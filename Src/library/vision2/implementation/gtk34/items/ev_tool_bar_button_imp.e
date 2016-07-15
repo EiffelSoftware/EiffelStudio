@@ -169,7 +169,7 @@ feature -- Element change
 		do
 			internal_tooltip := a_text.as_string_32.twin
 			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-			--| FIXME IEK Need implementing
+			--| FIXME IEK Needs proper implementation
 		end
 
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
@@ -187,21 +187,7 @@ feature -- Element change
 		end
 
 	enable_sensitive
-			 -- Enable `Current'.
-		do
-			enabled_before := is_sensitive
-			enable_sensitive_internal
-		end
-
-	disable_sensitive
-			 -- Disable `Current'.
-		do
-			enabled_before := is_sensitive
-			disable_sensitive_internal
-		end
-
-	enable_sensitive_internal
-			-- Allow the object to be sensitive to user input.
+			-- Enable `Current'.
 		local
 			l_gdkwin: POINTER
 			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
@@ -224,8 +210,8 @@ feature -- Element change
 			end
 		end
 
-	disable_sensitive_internal
-			-- Set the object to ignore all user input.
+	disable_sensitive
+			-- Disable `Current'.
 		do
 			{GTK}.gtk_widget_set_sensitive (c_object, False)
 			if {GTK}.gtk_is_event_box (c_object) then
@@ -300,7 +286,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

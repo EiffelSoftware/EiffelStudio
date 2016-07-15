@@ -553,7 +553,7 @@ feature -- Drawing operations
 		do
 			create Result
 			pix_imp ?= Result.implementation
-			check pix_imp /= Void end
+			check pix_imp /= Void then end
 			a_pix := pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height)
 			pix_imp.set_pixmap_from_pixbuf (a_pix)
 			{GTK2}.g_object_unref (a_pix)
@@ -835,36 +835,41 @@ feature {NONE} -- Implementation
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
+		require
+			a_pixbuf_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_pixbuf_ptr)
+			a_mask_ptr_has_alpha: {GTK2}.gdk_pixbuf_get_has_alpha (a_mask_ptr)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"[
-				{
+			{
 				guint32 x, y;
-
+				guint32 l_pix_height,l_pix_width;
+				guint32 l_pix_row_stride;
+				guint32 l_mask_row_stride;
 				GdkPixbuf *pixbuf, *mask;
-
-				pixbuf = (GdkPixbuf*) $a_pixbuf_ptr;
-				mask = (GdkPixbuf*) $a_mask_ptr;
-
-				for (y = 0; y < gdk_pixbuf_get_height (pixbuf); y++)
-				{
+				guchar *l_mask_pixels, *l_pixbuf_pixels;
+				pixbuf = (GdkPixbuf*) arg1;
+				mask = (GdkPixbuf*) arg2;
+				l_pix_height = gdk_pixbuf_get_height (pixbuf);
+				l_pix_width = gdk_pixbuf_get_width (pixbuf);
+				l_pix_row_stride = gdk_pixbuf_get_rowstride(pixbuf);
+				l_mask_row_stride = gdk_pixbuf_get_rowstride(mask);
+				l_mask_pixels = gdk_pixbuf_get_pixels (mask);
+				l_pixbuf_pixels = gdk_pixbuf_get_pixels (pixbuf);
+				for (y = 0; y < l_pix_height; y++) {
 					guchar *src, *dest;
-
-					src = (gdk_pixbuf_get_pixels (mask) + (y * gdk_pixbuf_get_rowstride (mask)));
-					dest = (gdk_pixbuf_get_pixels (pixbuf) + (y * gdk_pixbuf_get_rowstride (pixbuf)));
-
-					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
-					{
-						if (src [0] == (guchar)0)
+					src = (l_mask_pixels + (y * l_mask_row_stride));
+					dest = (l_pixbuf_pixels + (y * l_pix_row_stride));
+					for (x = 0; x < l_pix_width; x++) {
+						if (src [0] == (guchar)0) {
 							dest [3] = (guchar)0;
-
+						}
 						src += 4;
 						dest += 4;
 					}
-
 				}
-				}
+			}
 			]"
 		end
 
@@ -902,7 +907,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

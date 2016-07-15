@@ -1309,6 +1309,11 @@ feature -- Externals
 			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <ev_gtk.h>"
 		end
 
+	frozen gdk_cursor_unref (a_cursor: POINTER)
+		external
+			"C signature (GdkCursor *) use <ev_gtk.h>"
+		end
+
 	frozen gtk_tree_view_get_expander_column (a_tree_view: POINTER): POINTER
 		external
 			"C signature (GtkTreeView*): GtkTreeViewColumn* use <ev_gtk.h>"
@@ -3367,7 +3372,7 @@ feature -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

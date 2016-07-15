@@ -28,7 +28,8 @@ inherit
 			width,
 			height,
 			show,
-			has
+			has,
+			update_for_pick_and_drop
 		redefine
 			interface,
 			make,
@@ -636,7 +637,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

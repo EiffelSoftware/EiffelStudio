@@ -353,7 +353,7 @@ feature -- Status Report
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
 		do
-			Result := paragraph_format (selection_start)
+			Result := paragraph_format (start_selection)
 		end
 
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
@@ -413,7 +413,7 @@ feature -- Status Report
 	selected_character_format: EV_CHARACTER_FORMAT
 			-- Format of the character which starts the selection
 		do
-			Result := character_format (selection_start)
+			Result := character_format (start_selection)
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
@@ -708,8 +708,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			if is_displayed then
 					-- We only want text mark events when rich text is displayable to user.
 				if not (a_text_mark = {GTK2}.gtk_text_buffer_get_insert (text_buffer)) then
-					a_selection_start := selection_start_internal
-					a_selection_end := selection_end_internal
+					a_selection_start := start_selection
+					a_selection_end := end_selection
 					if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
 						selection_change_actions_internal.call (Void)
 					end
@@ -961,7 +961,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

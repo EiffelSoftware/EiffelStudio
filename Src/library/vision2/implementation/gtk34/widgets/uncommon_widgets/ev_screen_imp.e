@@ -52,6 +52,9 @@ feature {NONE} -- Initialization
 		local
 			l_window: POINTER
 		do
+				-- In order to access the screen, the EV_APPLICATION needs to be created
+			app_implementation.do_nothing
+
 			l_window := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
 			drawable := {GTK}.gdk_cairo_create (l_window)
 			init_default_values
@@ -562,7 +565,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

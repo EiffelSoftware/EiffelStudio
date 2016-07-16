@@ -208,10 +208,10 @@ feature {NONE} -- Implementation
 			-- Update `background_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (background_color)
+				-- We reuse the same dialog over and over, so we need to remove the previous actions
+			color_dialog.ok_actions.wipe_out
+			color_dialog.ok_actions.extend (agent do actually_set_background_color (color_dialog.color) end)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
-			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				actually_set_background_color (color_dialog.color)
-			end
 		end
 
 	actually_set_background_color (color: EV_COLOR)
@@ -252,10 +252,10 @@ feature {NONE} -- Implementation
 			-- Update `foreground_color' of objects through an EV_COLOR_DIALOG.
 		do
 			color_dialog.set_color (foreground_color)
+				-- We reuse the same dialog over and over, so we need to remove the previous actions
+			color_dialog.ok_actions.wipe_out
+			color_dialog.ok_actions.extend (agent do actually_set_foreground_color (color_dialog.color) end)
 			color_dialog.show_modal_to_window (parent_window (parent_editor))
-			if color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				actually_set_foreground_color (color_dialog.color)
-			end
 		end
 
 	actually_set_foreground_color (color: EV_COLOR)

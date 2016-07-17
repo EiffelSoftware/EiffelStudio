@@ -156,32 +156,23 @@ feature {NONE} -- Implementation
 			-- Perform a global mouse and keyboard grab.
 		local
 			i: INTEGER
-			l_gdk_window: POINTER
 		do
+				-- We have to disable the debugger before grabing any inputs
+				-- as otherwise if we stop the session it will deadlock. Ideally
+				-- we should only have to do it if the debugger display is different
+				-- from the application display but we cannot detect this.
 			App_implementation.disable_debugger
-			l_gdk_window := {GTK}.gtk_widget_get_window (event_widget)
-			i := {GTK}.gdk_pointer_grab (
-				l_gdk_window,
-				1,
-				{GTK}.gdk_button_release_mask_enum |
-				{GTK}.gdk_button_press_mask_enum |
-				{GTK}.gdk_pointer_motion_mask_enum |
-				{GTK}.gdk_pointer_motion_hint_mask_enum
-				,
-				null,
-				null,
-				0
-			)
---			i := {GTK}.gdk_keyboard_grab (l_gdk_window, True, 0)
+			i := {GTK}.gdk_seat_grab (
+				{GDK_HELPERS}.default_seat,
+				{GTK}.gtk_widget_get_window (event_widget),
+				{GDK_ENUMS}.seat_capability_all,
+				True, null, null, null, null)
 		end
 
 	release_keyboard_and_mouse
 			-- Release mouse and keyboard grab.
 		do
-			{GTK}.gdk_pointer_ungrab (
-				0 -- guint32 time
-			)
---			{GTK}.gdk_keyboard_ungrab (0) -- guint32 time
+			{GTK}.gdk_seat_ungrab ({GDK_HELPERS}.default_seat)
 			app_implementation.enable_debugger
 		end
 
@@ -473,7 +464,7 @@ feature -- Implementation
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
 							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
-						gdkwin := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
+						gdkwin := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (a_wid_imp.c_object), {GDK_HELPERS}.default_device, $a_x, $a_y, null)
 						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
 						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.attached_interface.object_id) then
 							Result := a_pnd_item.interface
@@ -496,7 +487,7 @@ feature -- Implementation
 			x, y, s: INTEGER
 			child: POINTER
 		do
-			child := {GTK}.gdk_window_get_pointer ({GTK}.gtk_widget_get_window (c_object), $x, $y, $s)
+			child := {GDK}.gdk_window_get_device_position ({GTK}.gtk_widget_get_window (c_object), {GDK_HELPERS}.default_device, $x, $y, $s)
 			create Result.set (x, y)
 		end
 

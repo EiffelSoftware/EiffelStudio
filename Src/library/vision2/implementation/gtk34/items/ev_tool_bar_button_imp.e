@@ -199,7 +199,7 @@ feature -- Element change
 			end
 				--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
-				l_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				l_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if l_gdkwin /= default_pointer then
 					if Current = app_implementation.gtk_widget_from_gdk_window (l_gdkwin) then
 						i := {GTK}.gdk_window_get_origin (l_gdkwin, $l_screen_x, $l_screen_y)

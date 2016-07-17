@@ -228,16 +228,14 @@ feature {NONE} -- Implementation
 			if attached item as l_item then
 				item_imp ?= l_item.implementation
 				check item_imp /= Void end
-				--| FIXME IEK
-				--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 			end
 		end
 
 	child_has_resized (item_imp: EV_WIDGET_IMP)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			--| FIXME IEK
-			--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
 	horizontal_adjustment: POINTER

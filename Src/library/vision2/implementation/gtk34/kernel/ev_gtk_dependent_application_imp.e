@@ -32,11 +32,27 @@ feature -- Initialize
 
 	gtk_dependent_initialize
 			-- Gtk dependent code for `initialize'
+		local
+			css_context: POINTER
+			l_style: STRING
+			l_cs: C_STRING
+			l_error: POINTER
 		do
 				-- Initialize custom styles for gtk.
-			initialize_window_style
-			initialize_combo_box_style
-			initialize_tool_bar_style
+			css_context := {GTK_CSS}.gtk_css_provider_get_default
+			l_style := "[
+				* {
+					-GtkWindow-resize-grip-height: 0;
+					-GtkWindow-resize-grip-width: 0;
+					-GtkComboBox-appears-as-list: 1;
+					-GtkToolbar-shadow-type: none;
+				}
+			]"
+
+			create l_cs.make (l_style)
+			if not {GTK_CSS}.gtk_css_provider_load_from_data (css_context, l_cs.item, l_cs.bytes_count, $l_error) then
+				-- Handle error
+			end
 		end
 
 	gtk_dependent_launch_initialize
@@ -340,11 +356,9 @@ feature -- Implementation
 	window_manager_name: STRING
 			-- Name of Window Manager currently running.
 		local
-			l_display, l_screen, l_wm_name: POINTER
+			l_wm_name: POINTER
 		do
-			l_display := {GTK2}.gdk_display_get_default
-			l_screen := {GTK2}.gdk_display_get_default_screen (l_display)
-			l_wm_name := gdk_x11_screen_get_window_manager_name (l_screen)
+			l_wm_name := gdk_x11_screen_get_window_manager_name ({GDK_HELPERS}.default_screen)
 			create Result.make_from_c (l_wm_name)
 		end
 
@@ -363,41 +377,6 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	initialize_window_style
-			-- Set the window style to remove any resize grip.
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				{
-					gtk_rc_parse_string ("style \"default-style\" {\n GtkWindow::resize-grip-height = 0\n GtkWindow::resize-grip-width = 0\n}\n  class \"GtkWidget\" style  \"default-style\" ");
-				}
-			]"
-		end
-
-	initialize_combo_box_style
-			-- Set the combo box style so that they appear as lists and not menus.
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				{
-					gtk_rc_parse_string ("style \"v2-combo-style\" {\n GtkComboBox::appears-as-list = 1\n }\n  widget \"*.v2combobox\" style : highest  \"v2-combo-style\" " );
-				}
-			]"
-		end
-
-	initialize_tool_bar_style
-			-- Remove the default shadow from the toolbar.
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				{
-					gtk_rc_parse_string ("style \"v2-toolbar-style\" {\n GtkToolbar::shadow-type = none\n }\n  widget \"*.v2toolbar\" style : highest  \"v2-toolbar-style\" " );
-				}
-			]"
-		end
 
 	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER])
 			-- Retrieve all available fonts present on the system
@@ -438,7 +417,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

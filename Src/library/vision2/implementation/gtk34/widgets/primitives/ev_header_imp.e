@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
 			l_cs: EV_GTK_C_STRING
 		do
-			gdkwin := {GTK}.gdk_window_at_pointer ($l_pointer_x, $l_pointer_y)
+			gdkwin := {GDK_HELPERS}.window_at ($l_pointer_x, $l_pointer_y)
 			if gdkwin /= default_pointer then
 
 				{GTK2}.gdk_window_get_position (gdkwin, $l_x, $l_y)
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 
 				-- If we are clicking on the Void area then we the item events passing Void items.
 			if a_type = {GTK}.gdk_button_press_enum or a_type = {GTK}.gdk_2button_press_enum then
-				gdkwin := {GTK}.gdk_window_at_pointer ($a_pointer_x, $a_pointer_y)
+				gdkwin := {GDK_HELPERS}.window_at ($a_pointer_x, $a_pointer_y)
 				if gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (gdkwin, $l_widget)
 					l_last_column := {GTK2}.gtk_tree_view_get_column (c_object, count)
@@ -290,7 +290,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

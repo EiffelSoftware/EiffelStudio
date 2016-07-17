@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 --				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
 --			end
 
---			put ("localhost:0", "DISPLAY")
+--			put (":0.0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 
 			if is_html5_backend_enabled then
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 				-- Check whether display supports transparency
 			l_supports_composite_symbol := gdk_display_supports_composite_symbol
 			if l_supports_composite_symbol /= default_pointer then
-				is_display_alpha_capable := gdk_display_supports_composite_call (l_supports_composite_symbol, {GTK2}.gdk_display_get_default)
+				is_display_alpha_capable := gdk_display_supports_composite_call (l_supports_composite_symbol, {GDK}.gdk_display_get_default)
 			end
 
 			screen_monitor_count := {GTK2}.gdk_screen_get_n_monitors ({GTK2}.gdk_screen_get_default)
@@ -1187,12 +1187,14 @@ feature -- Implementation
 			temp_x, temp_y: INTEGER
 			l_screen: POINTER
 			l_stored_display_data: like stored_display_data
+			l_device: POINTER
 		do
 				-- Update coords for physical to logical.
 			l_stored_display_data := stored_display_data
 
-			l_window := {GTK2}.gdk_display_get_window_at_pointer ({GTK2}.gdk_display_get_default, $temp_x, $temp_y)
-			{GTK2}.gdk_display_get_pointer ({GTK2}.gdk_display_get_default, $l_screen, $temp_x, $temp_y, $temp_mask)
+			l_device := {GDK_HELPERS}.default_device
+			l_window := {GDK}.gdk_device_get_window_at_position (l_device, $temp_x, $temp_y)
+			{GDK}.gdk_device_get_position (l_device, $l_screen, $temp_x, $temp_y)
 			l_stored_display_data.window := l_window
 			l_stored_display_data.x := temp_x + screen_virtual_x
 			l_stored_display_data.y := temp_y + screen_virtual_y
@@ -1281,7 +1283,7 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			temp_x, temp_y: INTEGER
 			gdkwin, l_null: POINTER
 		do
-			gdkwin := {GTK2}.gdk_display_get_window_at_pointer ({GTK2}.gdk_display_get_default, $temp_x, $temp_y)
+			gdkwin := {GDK}.gdk_device_get_window_at_position ({GDK_HELPERS}.default_device, $temp_x, $temp_y)
 			if gdkwin /= l_null then
 				Result := gtk_widget_from_gdk_window (gdkwin)
 			end
@@ -1300,8 +1302,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 
 	gtk_is_launchable: BOOLEAN
 		-- Is Gtk launchable?
-
-
 
 	default_gtk_window: POINTER
 			-- Pointer to a default GtkWindow.
@@ -1406,14 +1406,14 @@ feature {NONE} -- External implementation
 		external
 			"C [macro <ev_gtk.h>] | %"eif_argv.h%""
 		alias
-    		"gtk_init (&eif_argc, &eif_argv)"
+			"gtk_init (&eif_argc, &eif_argv)"
 		end
 
 	gtk_init_check: BOOLEAN
 		external
 			"C [macro <ev_gtk.h>] | %"eif_argv.h%""
 		alias
-    		"gtk_init_check (&eif_argc, &eif_argv)"
+			"gtk_init_check (&eif_argc, &eif_argv)"
 		end
 
 feature {NONE} -- Externals
@@ -1422,7 +1422,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

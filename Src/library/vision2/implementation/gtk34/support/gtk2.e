@@ -161,7 +161,6 @@ feature -- Externals
 			"C signature (): GtkStyleContext* use <ev_gtk.h>"
 		end
 
-
 	gtk_style_context_add_provider_for_screen (screen: POINTER; provider: POINTER; priority: NATURAL_32)
 		external
 			"C signature (GdkScreen*, GtkStyleProvider*, guint) use <ev_gtk.h>"
@@ -582,11 +581,6 @@ feature -- Externals
 	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN)
 		external
 			"C signature (GtkWindow*, gboolean) use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_get_default_cursor_size (a_display: POINTER): INTEGER_32
-		external
-			"C signature (GdkDisplay*): EIF_INTEGER use <ev_gtk.h>"
 		end
 
 	frozen events_pending: BOOLEAN
@@ -1256,52 +1250,6 @@ feature -- Externals
 			"C inline use <ev_gtk.h>"
 		alias
 			"gtk_widget_style_get ((GtkWidget*) $a_widget, (gchar*) $a_property, (gint*) $a_int_ptr, NULL);"
-		end
-
-	frozen gdk_display_get_default: POINTER
-		external
-			"C signature (): GdkDisplay* use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_get_name (a_display: POINTER): POINTER
-		external
-			"C signature (GdkDisplay*): gchar** use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_get_default_screen (a_display: POINTER): POINTER
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"gdk_display_get_default_screen ((GdkDisplay*) $a_display)"
-		end
-
-	frozen gdk_display_supports_composite (a_display: POINTER): BOOLEAN
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				return gdk_display_supports_composite ((GdkDisplay*) $a_display);
-			]"
-		end
-
-	frozen gdk_display_supports_cursor_alpha (a_display: POINTER): BOOLEAN
-		external
-			"C signature (GdkDisplay*): gboolean use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_supports_cursor_color (a_display: POINTER): BOOLEAN
-		external
-			"C signature (GdkDisplay*): gboolean use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_get_pointer (a_display: POINTER; a_screen: TYPED_POINTER [POINTER]; a_win_x, a_win_y: TYPED_POINTER [INTEGER_32]; a_mod_mask: TYPED_POINTER [NATURAL_32])
-		external
-			"C signature (GdkDisplay*, GdkScreen**, gint*, gint*, GdkModifierType*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_display_get_window_at_pointer (a_display: POINTER; a_win_x, a_win_y: TYPED_POINTER [INTEGER]): POINTER
-		external
-			"C signature (GdkDisplay*, gint*, gint*): GdkWindow* use <ev_gtk.h>"
 		end
 
 	frozen gdk_cursor_new_from_pixbuf (a_display, a_pixbuf: POINTER; a_x, a_y: INTEGER_32): POINTER

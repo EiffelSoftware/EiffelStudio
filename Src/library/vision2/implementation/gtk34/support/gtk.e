@@ -231,66 +231,35 @@ feature
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gtk_settings_get_default();
-				#endif
-			]"
-		end
-
-	frozen gtk_settings_set_string_property (a_settings, a_property, a_value, a_origin: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gtk_settings_set_string_property ((GtkSettings*) $a_settings, (gchar*) $a_property, (gchar*) $a_value, (gchar*) $a_origin);
-				#endif
-			]"
+			"return gtk_settings_get_default();"
 		end
 
 	frozen gdk_window_process_all_updates
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gdk_window_process_all_updates();
-				#endif
-			]"
+			"gdk_window_process_all_updates();"
 		end
 
 	frozen gtk_window_set_skip_taskbar_hint (a_window: POINTER; a_setting: BOOLEAN)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gtk_window_set_skip_taskbar_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
-				#endif
-			]"
+			"gtk_window_set_skip_taskbar_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);"
 		end
 
 	frozen gtk_window_set_skip_pager_hint (a_window: POINTER; a_setting: BOOLEAN)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);
-				#endif
-			]"
+			"gtk_window_set_skip_pager_hint ((GtkWindow*) $a_window, (gboolean) $a_setting);"
 		end
 
 	frozen gdk_colorspace_rgb_enum: INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return GDK_COLORSPACE_RGB;
-				#endif
-			]"
+			"return GDK_COLORSPACE_RGB;"
 		end
 
 	frozen gdk_pixbuf_get_from_window (a_window: POINTER; a_src_x, a_src_y, a_width, a_height: INTEGER): POINTER
@@ -307,88 +276,56 @@ feature
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_pixels ((GdkPixbuf*) $a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_pixels ((GdkPixbuf*) $a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_copy (a_pixbuf: POINTER): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_copy ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_get_width (a_pixbuf: POINTER): INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_width ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_get_height (a_pixbuf: POINTER): INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_height ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_get_rowstride (a_pixbuf: POINTER): NATURAL_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_rowstride ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_rowstride ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_get_n_channels (a_pixbuf: POINTER): NATURAL_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_n_channels ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_n_channels ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_get_bits_per_sample (a_pixbuf: POINTER): NATURAL_32
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_get_bits_per_sample ((GdkPixbuf*)$a_pixbuf);
-				#endif
-			]"
+			"return gdk_pixbuf_get_bits_per_sample ((GdkPixbuf*)$a_pixbuf);"
 		end
 
 	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_new_from_file ((char*) $a_filename, (GError**) $a_error);
-				#endif
-			]"
+			"return gdk_pixbuf_new_from_file ((char*) $a_filename, (GError**) $a_error);"
 		end
 
 	frozen gdk_pixbuf_new_from_stream (a_input_stream: POINTER; a_cancellable: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER
@@ -403,11 +340,7 @@ feature
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_new_from_xpm_data ((const char**) $a_data);
-				#endif
-			]"
+			"return gdk_pixbuf_new_from_xpm_data ((const char**) $a_data);"
 		end
 
 	frozen gdk_pixbuf_save_to_buffer (a_pixbuf: POINTER; a_buffer: TYPED_POINTER[POINTER]; a_buffer_size: TYPED_POINTER[INTEGER]; a_type: POINTER; a_error: TYPED_POINTER [POINTER]): INTEGER
@@ -428,33 +361,21 @@ feature
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					return gdk_pixbuf_new ((GdkColorspace) $a_colorspace, (gboolean) $a_has_alpha, (int) $a_bits_per_sample, (int) $a_width, (int) $a_height);
-				#endif
-			]"
+			"return gdk_pixbuf_new ((GdkColorspace) $a_colorspace, (gboolean) $a_has_alpha, (int) $a_bits_per_sample, (int) $a_width, (int) $a_height);"
 		end
 
 	frozen gdk_pixbuf_new_subpixbuf (a_pixbuf: POINTER; src_x, src_y, width, height: INTEGER_32): POINTER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-						return gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height);
-				#endif
-			]"
+			"return gdk_pixbuf_new_subpixbuf ((GdkPixbuf*)$a_pixbuf, (int) $src_x, (int) $src_y, (int) $width, (int) $height);"
 		end
 
 	frozen gdk_pixbuf_fill (a_pixbuf: POINTER; rgba: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-						gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);
-				#endif
-			]"
+			"gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);"
 		end
 
 	frozen gtk_fixed_child_struct_x (a_c_struct: POINTER): INTEGER_32
@@ -1017,6 +938,27 @@ feature
 			"GTK_SELECTION_MULTIPLE"
 		end
 
+	frozen gdk_ownership_none_enum: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return GDK_OWNERSHIP_NONE;"
+		end
+
+	frozen gdk_ownership_window_enum: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return GDK_OWNERSHIP_WINDOW;"
+		end
+
+	frozen gdk_ownership_application_enum: INTEGER_32
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return GDK_OWNERSHIP_APPLICATION;"
+		end
+
 	frozen g_free (a_mem: POINTER)
 		external
 			"C (gpointer) | <ev_gtk.h>"
@@ -1107,9 +1049,9 @@ feature
 			"C (GdkAtom): gchar* | <ev_gtk.h>"
 		end
 
-	frozen gdk_cursor_new (a_cursor_type: INTEGER_32): POINTER
+	frozen gdk_cursor_new_for_display (a_display: POINTER; a_cursor_type: INTEGER_32): POINTER
 		external
-			"C (GdkCursorType): GdkCursor* | <ev_gtk.h>"
+			"C (GdkDisplay *, GdkCursorType): GdkCursor* | <ev_gtk.h>"
 		end
 
 	frozen gdk_selection_property_get (a_window: POINTER; a_data: TYPED_POINTER [POINTER]; a_target: POINTER; prop_type: TYPED_POINTER [INTEGER_32]): INTEGER_32
@@ -1177,14 +1119,19 @@ feature
 			"C () | <ev_gtk.h>"
 		end
 
-	frozen gdk_keyboard_grab (a_window: POINTER; a_owner_events: BOOLEAN; a_time: INTEGER_32): INTEGER_32
+	frozen gtk_get_current_event_device: POINTER
 		external
-			"C (GdkWindow*, gboolean, guint32): gint | <ev_gtk.h>"
+			"C signature (): GtkDevice * use <ev_gtk.h>"
 		end
 
-	frozen gdk_keyboard_ungrab (a_time: INTEGER_32)
+	frozen gdk_seat_grab (seat, window: POINTER; capabilities: INTEGER_32; owner_events: BOOLEAN; cursor, event, func, data: POINTER): INTEGER_32
 		external
-			"C (guint32) | <ev_gtk.h>"
+			"C signature (GdkSeat *, GdkWindow *, GdkSeatCapabilities, gboolean, GdkCursor *, const GdkEvent *, GdkSeatGrabPrepareFunc, gpointer): GdkGrabStatus use <ev_gtk.h>"
+		end
+
+	frozen gdk_seat_ungrab (seat: POINTER)
+		external
+			"C signature (GdkSeat *) use <ev_gtk.h>"
 		end
 
 	frozen gdk_keyval_from_name (a_keyval_name: POINTER): INTEGER_32
@@ -1217,16 +1164,6 @@ feature
 			"C (guint): guint | <ev_gtk.h>"
 		end
 
-	frozen gdk_pointer_grab (a_window: POINTER; a_owner_events: INTEGER_32; a_event_mask: INTEGER_32; a_confine_to: POINTER; a_cursor: POINTER; a_time: INTEGER_32): INTEGER_32
-		external
-			"C (GdkWindow*, gint, GdkEventMask, GdkWindow*, GdkCursor*, guint32): gint | <ev_gtk.h>"
-		end
-
-	frozen gdk_pointer_ungrab (a_time: INTEGER_32)
-		external
-			"C (guint32) | <ev_gtk.h>"
-		end
-
 	frozen gdk_screen_height: INTEGER_32
 		external
 			"C (): gint | <ev_gtk.h>"
@@ -1242,19 +1179,9 @@ feature
 			"C (gboolean) | <ev_gtk.h>"
 		end
 
-	frozen gdk_window_at_pointer (a_win_x: POINTER; a_win_y: POINTER): POINTER
-		external
-			"C (gint*, gint*): GdkWindow* | <ev_gtk.h>"
-		end
-
 	frozen gdk_window_get_origin (a_window: POINTER; a_x: POINTER; a_y: POINTER): INTEGER_32
 		external
 			"C (GdkWindow*, gint*, gint*): gint | <ev_gtk.h>"
-		end
-
-	frozen gdk_window_get_pointer (a_window: POINTER; a_x: POINTER; a_y: POINTER; a_mask: POINTER): POINTER
-		external
-			"C (GdkWindow*, gint*, gint*, GdkModifierType*): GdkWindow* | <ev_gtk.h>"
 		end
 
 	frozen gdk_window_get_user_data (a_window: POINTER; a_data: TYPED_POINTER [POINTER])
@@ -1694,11 +1621,7 @@ feature
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"[
-				#if GTK_MAJOR_VERSION > 1
-					gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);
-				#endif
-			]"
+			"gtk_menu_shell_cancel((GtkMenuShell*)$a_menu_shell);"
 		end
 
 	frozen gtk_menu_shell_deactivate (a_menu_shell: POINTER)
@@ -2886,7 +2809,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -336,7 +336,7 @@ feature {NONE} -- Accelerators
 			-- Connect key combination `an_accel' to this window.
 		local
 			acc_imp: detachable EV_ACCELERATOR_IMP
-			a_property, a_origin, a_value: EV_GTK_C_STRING
+			a_property, a_value: EV_GTK_C_STRING
 			l_override_key: detachable STRING
 		do
 			acc_imp ?= an_accel.implementation
@@ -353,9 +353,7 @@ feature {NONE} -- Accelerators
 					-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
 				a_property := once "gtk-menu-bar-accel"
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
-					-- This is a value that is highly unlikely to be used
-				a_origin := once "Vision2"
-				{GTK}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+				{GTK2}.g_object_set_string (app_implementation.default_gtk_settings, a_property.item, a_value.item)
 			end
 		end
 
@@ -637,7 +635,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

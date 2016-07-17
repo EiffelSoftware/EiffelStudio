@@ -221,7 +221,6 @@ feature -- Basic operation
 			-- Set pointer position to (a_x, a_y).
 		local
 			a_success_flag: BOOLEAN
-			l_display, l_screen: POINTER
 			l_gdk_display_warp_pointer_symbol, l_x_test_fake_motion_event_symbol: POINTER
 			l_x, l_y: INTEGER
 		do
@@ -230,9 +229,7 @@ feature -- Basic operation
 			l_y := a_y + device_y_offset
 			l_gdk_display_warp_pointer_symbol := gdk_display_warp_pointer_symbol
 			if l_gdk_display_warp_pointer_symbol /= default_pointer then
-				l_display := {GTK2}.gdk_display_get_default
-				l_screen := {GTK2}.gdk_display_get_default_screen (l_display)
-				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, l_display, l_screen, l_x, l_y)
+				gdk_display_warp_pointer_call (l_gdk_display_warp_pointer_symbol, {GDK_HELPERS}.default_display, {GDK_HELPERS}.default_screen, l_x, l_y)
 			else
 				l_x_test_fake_motion_event_symbol := x_test_fake_motion_event_symbol
 				if l_x_test_fake_motion_event_symbol /= default_pointer then
@@ -256,7 +253,7 @@ feature -- Basic operation
 		do
 			l_p_b_press_symbol := gdk_test_simulate_button_symbol
 			if l_p_b_press_symbol /= default_pointer then
-				l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				a_success_flag := gdk_test_simulate_call (l_p_b_press_symbol, l_window, l_x, l_y, a_button, 0, {EV_GTK_ENUMS}.gdk_button_press_enum)
 			end
 			if not a_success_flag then
@@ -278,7 +275,7 @@ feature -- Basic operation
 		do
 			l_p_b_release_symbol := gdk_test_simulate_button_symbol
 			if l_p_b_release_symbol /= default_pointer then
-				l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				a_success_flag := gdk_test_simulate_call (l_p_b_release_symbol, l_window, l_x, l_y, a_button, 0, {EV_GTK_ENUMS}.gdk_button_release_enum)
 			end
 			if not a_success_flag then
@@ -324,7 +321,7 @@ feature -- Basic operation
 				a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
-					l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+					l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
 					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_press_enum)
 				end
 			end
@@ -351,7 +348,7 @@ feature -- Basic operation
 				a_key_code := key_conversion.key_code_to_gtk (a_key.code).to_integer_32
 				l_gdk_test_simulate_key_symbol := gdk_test_simulate_key_symbol
 				if l_gdk_test_simulate_key_symbol /= default_pointer then
-					l_window := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+					l_window := {GDK_HELPERS}.window_at ($l_x, $l_y)
 					a_success_flag := gdk_test_simulate_call (l_gdk_test_simulate_key_symbol, l_window, l_x, l_y, a_key_code, 0, {GTK}.gdk_key_release_enum)
 				end
 			end
@@ -515,7 +512,7 @@ feature {NONE} -- Implementation
 		do
 			l_symbol := gdk_x11_display_get_xdisplay_symbol
 			if l_symbol /= default_pointer then
-				Result := gdk_x11_display_get_xdisplay_call (l_symbol, {GTK2}.gdk_display_get_default)
+				Result := gdk_x11_display_get_xdisplay_call (l_symbol, {GDK}.gdk_display_get_default)
 			end
 		end
 
@@ -565,7 +562,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

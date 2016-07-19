@@ -42,6 +42,7 @@ feature {NONE} -- Creation
 
 	make_6_3
 			-- Initialize options to the defaults of 6.3.
+			-- First versioned settings.
 		do
 			create syntax.make (syntax_name, syntax_index_obsolete)
 			create void_safety.make (void_safety_name, void_safety_index_none)
@@ -51,53 +52,44 @@ feature {NONE} -- Creation
 
 	make_6_4
 			-- Initialize options to the defaults of 6.4.
+			-- Difference from `make_6_3': transitional syntax.
 		do
+			make_6_3
 			create syntax.make (syntax_name, syntax_index_transitional)
-			create void_safety.make (void_safety_name, void_safety_index_none)
-			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
-			is_obsolete_routine_type := True
 		end
 
 	make_7_0
 			-- Initialize options to the defaults of 7.0.
+			-- Difference from `make_6_4': standard syntax, class types attached by default.
 		do
+			make_6_4
 			create syntax.make (syntax_name, syntax_index_standard)
-			create void_safety.make (void_safety_name, void_safety_index_none)
-			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_attached_by_default := True
-			is_obsolete_routine_type := True
 		end
 
 	make_7_3
 			-- Initialize options to the defaults of 7.3.
+			-- Difference fom `make_7_0': transitional void-safety, full class checking.
 		do
-			create syntax.make (syntax_name, syntax_index_standard)
+			make_7_0
 			create void_safety.make (void_safety_name, void_safety_index_transitional)
-			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
-			is_attached_by_default := True
 			is_full_class_checking := True
-			is_obsolete_routine_type := True
 		end
 
 	make_14_05
 			-- Initialize options to the defaults of 14.05.
+			-- Difference from `make_7_3': complete void-safety.
 		do
-			create syntax.make (syntax_name, syntax_index_standard)
+			make_7_3
 			create void_safety.make (void_safety_name, void_safety_index_all)
-			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
-			is_attached_by_default := True
-			is_full_class_checking := True
-			is_obsolete_routine_type := True
 		end
 
 	make_15_11
 			-- Initialize options to the defaults of 15.11.
+			-- Difference from `make_15_11': routine types without target parameter.
 		do
-			create syntax.make (syntax_name, syntax_index_standard)
-			create void_safety.make (void_safety_name, void_safety_index_all)
-			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
-			is_attached_by_default := True
-			is_full_class_checking := True
+			make_14_05
+			is_obsolete_routine_type := False
 		end
 
 feature -- Status

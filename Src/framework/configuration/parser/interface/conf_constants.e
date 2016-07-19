@@ -8,6 +8,22 @@
 class
 	CONF_CONSTANTS
 
+feature -- Boolean values
+
+	configuration_value_true: STRING_32 = "true"
+			-- String representation of a configuration value "true".
+
+	configuration_value_false: STRING_32 = "false"
+			-- String representation of a configuration value "false".
+
+	configuration_boolean_values: ARRAYED_LIST [READABLE_STRING_32]
+			-- All possible configuration boolean values.
+		do
+			create Result.make (2)
+			Result.extend (configuration_value_false)
+			Result.extend (configuration_value_true)
+		end
+
 feature -- Platforms
 
 	Pf_windows: INTEGER = 0x0001

@@ -285,6 +285,64 @@ feature {NONE} -- Onces
 			Result_not_void: Result /= Void
 		end
 
+	msil_generation_type_values: ARRAYED_LIST [READABLE_STRING_32]
+			-- Valid values for setting named `s_msil_generation_type'.
+		do
+			create Result.make_from_array (<<{STRING_32} "dll", {STRING_32} "exe">>)
+		end
+
+	msil_generation_type_value (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A value of a valid msil_generation_type setting (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		local
+			n: INTEGER
+		do
+			n := end_index + 1 - start_index
+			across
+				msil_generation_type_values as c
+			until
+				attached Result
+			loop
+				if
+					c.item.count = n and then
+					c.item.same_caseless_characters (string, start_index, end_index, 1)
+				then
+					Result := c.item
+				end
+			end
+		ensure
+			valid_value: attached Result implies across msil_generation_type_values as c some c.item.same_caseless_characters (Result, 1, Result.count, 1)  end
+		end
+
+	msil_classes_per_module_value (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A value of a msil_classes_per_module setting (if valid) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		do
+			Result := string.substring (start_index, end_index)
+			if not Result.is_natural_16 or else Result.to_natural_16 = 0 then
+				Result := Void
+			end
+		end
+
+	inlining_size_value (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A value of a inlining_size setting (if valid) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		do
+			Result := string.substring (start_index, end_index)
+			if not Result.is_natural_8 or else Result.to_natural_8 > 100 then
+				Result := Void
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	known_warnings: STRING_TABLE [BOOLEAN]
@@ -385,31 +443,34 @@ feature {NONE} -- Implementation
 	boolean_settings: STRING_TABLE [BOOLEAN]
 			-- Settings that have a boolean value.
 		once
-			create Result.make (23)
-			Result.force (True, s_dead_code_removal)
+			create Result.make (27)
+			Result.force (True, s_address_expression)
 			Result.force (True, s_array_optimization)
-			Result.force (True, s_inlining)
-			Result.force (True, s_check_for_void_target)
+			Result.force (True, s_automatic_backup)
 			Result.force (True, s_check_for_catcall_at_runtime)
+			Result.force (True, s_check_for_void_target)
 			Result.force (True, s_check_generic_creation_constraint)
 			Result.force (True, s_check_vape)
-			Result.force (True, s_enforce_unique_class_names)
-			Result.force (True, s_exception_trace)
-			Result.force (True, s_address_expression)
-			Result.force (True, s_java_generation)
-			Result.force (True, s_msil_generation)
-			Result.force (True, s_msil_use_optimized_precompile)
-			Result.force (True, s_line_generation)
 			Result.force (True, s_cls_compliant)
+			Result.force (True, s_console_application)
+			Result.force (True, s_dead_code_removal)
 			Result.force (True, s_dotnet_naming_convention)
 			Result.force (True, s_dynamic_runtime)
-			Result.force (True, s_old_verbatim_strings)
-			Result.force (True, s_console_application)
+			Result.force (True, s_enforce_unique_class_names)
+			Result.force (True, s_exception_trace)
 			Result.force (True, s_force_32bits)
-			Result.force (True, s_multithreaded)
 			Result.force (True, s_il_verifiable)
-			Result.force (True, s_use_cluster_name_as_namespace)
+			Result.force (True, s_inlining)
+			Result.force (True, s_java_generation)
+			Result.force (True, s_line_generation)
+			Result.force (True, s_msil_generation)
+			Result.force (True, s_msil_use_optimized_precompile)
+			Result.force (True, s_multithreaded)
+			Result.force (True, s_old_feature_replication)
+			Result.force (True, s_old_verbatim_strings)
+			Result.force (True, s_total_order_on_reals)
 			Result.force (True, s_use_all_cluster_name_as_namespace)
+			Result.force (True, s_use_cluster_name_as_namespace)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -430,6 +491,75 @@ feature {NONE} -- Implementation
 			Result.force (s_use_all_cluster_name_as_namespace)
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A name of a valid setting (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		local
+			n: INTEGER
+		do
+			n := end_index + 1 - start_index
+			across
+				valid_settings as c
+			until
+				attached Result
+			loop
+				if
+					c.item.count = n and then
+					c.item.same_characters_general (string, start_index, end_index, 1)
+				then
+					Result := c.item.as_string_32
+				end
+			end
+		ensure
+			valid_setting: attached Result implies attached valid_settings.item (Result)
+		end
+
+	boolean_setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A name of a valid boolean setting (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		local
+			n: INTEGER
+		do
+			n := end_index + 1 - start_index
+			across
+				boolean_settings as c
+			until
+				attached Result
+			loop
+				if
+					c.key.count = n and then
+					c.key.same_characters (string, start_index, end_index, 1)
+				then
+					Result := c.key.as_string_32
+				end
+			end
+		ensure
+			valid_boolean_setting: attached Result implies boolean_settings [Result]
+		end
+
+	concurrency_setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A name of a valid concurrency setting (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		do
+			if
+				s_concurrency.count = end_index + 1 - start_index and then
+				s_concurrency.same_characters_general (string, start_index, end_index, 1)
+			then
+				Result := s_concurrency
+			end
+		ensure
+			valid_concurrency_setting: attached Result implies Result.same_string_general (s_concurrency)
 		end
 
 note

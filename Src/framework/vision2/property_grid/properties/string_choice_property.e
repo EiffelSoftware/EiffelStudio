@@ -7,7 +7,7 @@ class
 	STRING_CHOICE_PROPERTY
 
 inherit
-	CHOICE_PROPERTY [STRING_32]
+	CHOICE_PROPERTY [READABLE_STRING_32]
 		rename
 			set_value as set_string_32_value
 		undefine
@@ -29,7 +29,7 @@ create
 	make_with_choices
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

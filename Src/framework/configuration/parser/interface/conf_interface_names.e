@@ -1108,6 +1108,48 @@ feature -- Parse errors
 			end
 		end
 
+feature -- String parse errors
+
+	e_parse_string_missing_name (option: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a missing configuration name.
+		do
+			Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
+		end
+
+	e_parse_string_missing_value (option: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a missing configuration value.
+		do
+			Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
+		end
+
+	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a unknown configuration name.
+		do
+			Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
+		end
+
+	e_parse_string_invalid_value (option_name, option_value: READABLE_STRING_GENERAL;
+		expected_values: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
+			-- An error for an invalid option value `option_value' of an option `option_name'.
+		local
+			e: STRING_GENERAL
+		do
+			if attached expected_values then
+				create {STRING_32} e.make_empty
+				across
+					expected_values as c
+				loop
+					if not e.is_empty then
+						e.append (", ")
+					end
+					e.append (c.item)
+				end
+				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
+			else
+				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
+			end
+		end
+
 feature -- Boolean values
 
 	boolean_true: STRING_32 do Result := locale.translation ("True") end

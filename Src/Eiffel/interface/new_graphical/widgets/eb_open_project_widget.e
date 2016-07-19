@@ -187,7 +187,8 @@ feature -- Actions
 			l_loader.open_project_file (create {PATH}.make_from_string (l_item.text),
 				selected_target,
 				create {PATH}.make_from_string (location_combo.text),
-				clean_button.is_selected)
+				clean_button.is_selected,
+				Void)
 
 			if not l_loader.has_error then
 					-- No error occurred, we can now perform action selected in `action_combo'.

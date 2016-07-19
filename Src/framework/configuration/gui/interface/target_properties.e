@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_choice_prop)
 
 			create l_choice_prop.make_with_choices (conf_interface_names.target_msil_generation_type_name,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (<<"exe", "dll">>))
+				msil_generation_type_values)
 			l_choice_prop.set_description (conf_interface_names.target_msil_generation_type_description)
 			add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
 			if not l_il_generation then
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation helper
 
-	add_string_setting_actions (a_property: TYPED_PROPERTY [STRING_32]; a_name: STRING; a_default: STRING)
+	add_string_setting_actions (a_property: TYPED_PROPERTY [READABLE_STRING_32]; a_name: STRING; a_default: STRING)
 			-- Add actions that deal with string settings.
 		require
 			a_property_not_void: a_property /= Void

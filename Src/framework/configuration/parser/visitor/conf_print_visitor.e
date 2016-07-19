@@ -178,8 +178,8 @@ feature -- Visit nodes
 			l_variables: like {CONF_TARGET}.internal_variables
 			l_name: ARRAYED_LIST [READABLE_STRING_8]
 			l_val: ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
-			l_sorted_list: ARRAYED_LIST [STRING_32]
-			l_sorter: QUICK_SORTER [STRING_32]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_32]
+			l_sorter: QUICK_SORTER [READABLE_STRING_32]
 		do
 			current_target := a_target
 			append_text_indent ("<target")

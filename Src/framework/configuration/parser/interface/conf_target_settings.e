@@ -35,7 +35,7 @@ feature -- Access
 			end
 		end
 
-	settings: HASH_TABLE [STRING_32, STRING_32]
+	settings: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			-- Settings.
 		do
 			Result := internal_settings
@@ -448,7 +448,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			settings_set: internal_settings = a_settings
 		end
 
-	add_setting (a_name, a_value: STRING_32)
+	add_setting (a_name, a_value: READABLE_STRING_32)
 			-- Add a new setting.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -459,7 +459,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_settings.item (a_name) = a_value
 		end
 
-	update_setting (a_name, a_value: STRING_32)
+	update_setting (a_name, a_value: READABLE_STRING_32)
 			-- Update/add/remove a setting.
 		require
 			a_name_valid: a_name /= Void and then valid_setting (a_name)

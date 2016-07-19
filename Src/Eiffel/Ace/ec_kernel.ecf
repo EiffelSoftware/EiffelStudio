@@ -100,6 +100,7 @@
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf" readonly="false"/>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
+		<library name="configuration_tool" location="$EIFFEL_SRC\framework\configuration\configuration_tool.ecf"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>

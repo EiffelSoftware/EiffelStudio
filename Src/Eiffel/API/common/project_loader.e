@@ -70,8 +70,9 @@ inherit
 
 feature -- Loading
 
-	open_project_file (a_file_name: PATH; a_target_name: STRING_32; a_project_path: PATH; from_scratch: BOOLEAN)
+	open_project_file (a_file_name: PATH; a_target_name: STRING_32; a_project_path: PATH; from_scratch: BOOLEAN; settings: detachable CONF_TARGET_SETTINGS)
 			-- Initialize current project using `a_file_name'.
+			-- Is specified, use `settings' to override options for the selected target.
 		local
 			l_default_file_name: PATH
 			l_load_config: CONF_LOAD
@@ -139,6 +140,8 @@ feature -- Loading
 					find_target_name (a_target_name, l_load_config.last_system)
 					if not has_error then
 						if not is_project_creation_or_opening_not_requested then
+								-- Use specified settings for further processing.
+							lace.set_settings (settings)
 							lace.set_conf_system (l_load_config.last_system)
 							lace.set_target_name (target_name)
 							compiler_project_location.set_target (target_name)
@@ -192,7 +195,7 @@ feature -- Loading
 			end
 		end
 
-	open_single_file_compilation_project (a_class_filename: PATH; a_libraries: ARRAYED_LIST [PATH]; a_project_path: PATH; from_scratch: BOOLEAN)
+	open_single_file_compilation_project (a_class_filename: PATH; a_libraries: ARRAYED_LIST [PATH]; a_project_path: PATH; from_scratch: BOOLEAN; settings: CONF_TARGET_SETTINGS)
 			-- Open project for a single file compilation.
 			--
 			-- `a_class_filename': Filename of Eiffel class which acts as root
@@ -268,7 +271,7 @@ feature -- Loading
 			end
 
 				-- Now that an ecf exists, call the normal project loading with the new ecf.
-			open_project_file (l_config_file_name, l_target_name, a_project_path, from_scratch)
+			open_project_file (l_config_file_name, l_target_name, a_project_path, from_scratch, settings)
 		end
 
 feature -- Access

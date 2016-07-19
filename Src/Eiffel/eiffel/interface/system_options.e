@@ -144,7 +144,7 @@ feature -- Access: IL code generation
 	metadata_cache_path: STRING_32
 			-- Alternative EAC metadata path
 
-	msil_generation_type: STRING_32
+	msil_generation_type: READABLE_STRING_32
 			-- Type of IL generation?
 
 	msil_culture: STRING_32
@@ -611,7 +611,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

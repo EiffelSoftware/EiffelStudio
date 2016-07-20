@@ -1,5 +1,5 @@
-note
-	description: "Eiffel lite compiler application root"
+﻿note
+	description: "Eiffel lite compiler application root."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -218,7 +218,7 @@ feature {NONE} -- Query
 						l_file.close
 
 						l_file_name := l_file.path
-						l_loader.open_project_file (l_file_name, a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
+						l_loader.open_project_file (l_file_name, a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project, Void)
 						if not l_loader.has_error then
 
 								-- Retrieve applicable target.
@@ -256,19 +256,19 @@ feature {NONE} -- Query
 						else
 							l_file.close
 
-								-- Source configuration file was probably not locatable, so let the configuration systen
+								-- Source configuration file was probably not locatable, so let the configuration system
 								-- handle the error.
-							l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
+							l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project, Void)
 						end
 					end
 				else
 						-- Source configuration file was probably not locatable, so let the configuration systen
 						-- handle the error.	
-					l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
+					l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project, Void)
 				end
 			else
 					-- No setting set, use regular configuration file.
-				l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project)
+				l_loader.open_project_file (create {PATH}.make_from_string (a_parser.configuration_file), a_parser.target, create {PATH}.make_from_string (a_parser.project_location), a_parser.clean_project, Void)
 			end
 
 			Result := l_loader

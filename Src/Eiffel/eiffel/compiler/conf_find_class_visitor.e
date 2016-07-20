@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor that looks for a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -113,14 +113,12 @@ feature {NONE} -- Implementation
 			-- Retrieve classes with `name' from `a_group'.
 		require
 			a_group_not_void: a_group /= Void
-		local
-			l_class: CLASS_I
 		do
-			if a_group.classes_set then
-				l_class ?= a_group.classes.item (name)
-				if l_class /= Void then
-					found_classes.force (l_class)
-				end
+			if
+				a_group.classes_set and then
+				attached {CLASS_I} a_group.classes.item (name) as l_class
+			then
+				found_classes.force (l_class)
 			end
 		end
 
@@ -144,7 +142,7 @@ invariant
 	targets_done_not_void: targets_done /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

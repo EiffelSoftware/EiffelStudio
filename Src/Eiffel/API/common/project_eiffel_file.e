@@ -1,9 +1,8 @@
-note
-	description:
-		"project.eif or precompile.eif file for an eiffel project."
+﻿note
+	description: "project.eif or precompile.eif file for an eiffel project."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class PROJECT_EIFFEL_FILE
@@ -43,30 +42,33 @@ feature -- Access
 	name: PATH
 			-- Name of file for `storage'.
 
-	precompilation_id: INTEGER;
-			-- Precompilation id when checking for precompilation validity
+	precompilation_id: INTEGER
+			-- Precompilation id when checking for precompilation validity.
 
-	project_version_number: STRING_32;
-			-- Version number of project eiffel file
+	project_version_number: STRING_32
+			-- Version number of project eiffel file.
 
 feature -- Store/Retrieval
 
-	retrieved_project: E_PROJECT
-			-- Retrieve project
+	retrieved_project: detachable E_PROJECT
+			-- Retrieve project.
 			-- (Note: error cannot be invalid_precompilation)
 		do
-			Result ?= retrieved_object
+			if attached {E_PROJECT} retrieved_object as r then
+				Result := r
+			end
 		ensure
 			valid_result: not has_error implies Result /= Void
 			version_number_exists: project_version_number /= Void
-		end;
+		end
 
-	retrieved_precompile: PRECOMP_INFO
-			-- Retrieve the precompile info of project
+	retrieved_precompile: detachable PRECOMP_INFO
+			-- Retrieve the precompile info of project.
 			-- (Note: error cannot be invalid_precompilation)
 		do
-			Result ?= retrieved_object
-			if Result = Void and then not has_error then
+			if attached {PRECOMP_INFO} retrieved_object as r then
+				Result := r
+			elseif not has_error then
 					-- An error was not detected, that is to say we were able
 					-- to retrieve something which is not of type PRECOMP_INFO.
 					-- Let's generate an error.
@@ -74,7 +76,7 @@ feature -- Store/Retrieval
 			end
 		ensure
 			valid_result: not has_error implies Result /= Void
-		end;
+		end
 
 	store (a_project: ANY; a_precompilation_id: INTEGER)
 			-- Store `a_project' for version `a_version' and `a_precompilation_id'.
@@ -148,7 +150,7 @@ feature -- Status report
 		end
 
 	is_incompatible: BOOLEAN
-			-- Is the project incompatible with the current version ?
+			-- Is the project incompatible with the current version?
 		do
 			Result := error_value = incompatible_value
 		end;
@@ -412,7 +414,7 @@ invariant
 	storage_not_void: storage /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -443,4 +445,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PROJECT_EIFFEL_FILE
+end

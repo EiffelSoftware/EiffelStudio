@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Byte code for assignment."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for assignment
 
 class ASSIGN_B
 
@@ -35,11 +35,8 @@ feature
 			-- Is instruction used to model creation instruction?
 		require
 			source_not_void: source /= Void
-		local
-			c: CREATION_EXPR_B
 		do
-			c ?= source
-			if c /= Void then
+			if attached {CREATION_EXPR_B} source as c then
 				Result := c.is_creation_instruction
 			end
 		end
@@ -119,7 +116,7 @@ invariant
 	is_target_valid: target.is_local or target.is_attribute
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

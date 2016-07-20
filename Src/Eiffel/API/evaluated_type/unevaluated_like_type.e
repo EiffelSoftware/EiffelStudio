@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Like types that have not been evaluated (has not gone past Degree 4)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -130,11 +130,8 @@ feature {NONE} -- Implementation
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
-		local
-			o: UNEVALUATED_LIKE_TYPE
 		do
-			o ?= other
-			Result := o /= Void	and then
+			Result := attached {UNEVALUATED_LIKE_TYPE} other as o and then
 				anchor_name_id = o.anchor_name_id and then
 				has_same_marks (o)
 		end
@@ -165,7 +162,7 @@ invariant
 	non_void_anchor: anchor /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,4 +193,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UNEVALUATED_LIKE_TYPE
+end

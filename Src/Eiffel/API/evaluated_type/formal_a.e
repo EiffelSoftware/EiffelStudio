@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Descripion of a formal generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -331,11 +331,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is `other' the same as Current ?
-		local
-			other_formal: like Current
 		do
-			other_formal ?= other
-			if other_formal /= Void then
+			if attached {like Current} other as other_formal then
 				Result := is_equivalent (other_formal) and then
 					has_same_marks (other_formal)
 			end
@@ -760,7 +757,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -791,4 +788,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FORMAL_A
+end

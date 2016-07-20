@@ -1,10 +1,9 @@
-note
+﻿note
 	description: "[
 						This class maps new feature names onto old feature names.
 						It does this not by using strings but by using the `name_id' of each
 						feature which obtained by using an instance of the NAMES_HEAP class.
 					]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -304,7 +303,6 @@ feature {NONE} -- Implementation
 			a_name_not_void: a_name /= Void
 			a_old_feature_not_void: a_old_feature /= Void
 		local
-			l_infix_prefix: INFIX_PREFIX_AS
 			l_argument_count: INTEGER
 			l_operator: STRING
 			l_vfav: VFAV_SYNTAX
@@ -336,8 +334,7 @@ feature {NONE} -- Implementation
 				(l_argument_count = 1 and then a_name.is_valid_binary_operator (l_operator)))
 			then
 				if l_argument_count = 1 then
-					l_infix_prefix ?= a_name
-					if l_infix_prefix /= Void then
+					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
 						if l_infix_prefix.is_prefix then
 								-- Ok, the feature renamed is not capable to be a prefix, throw an error.
 								-- Invalid operator alias
@@ -350,8 +347,7 @@ feature {NONE} -- Implementation
 						-- Invalid convert mark
 					create {VFAV3_SYNTAX} l_vfav.make (a_name)
 				else
-					l_infix_prefix ?= a_name
-					if l_infix_prefix /= Void then
+					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
 						if l_infix_prefix.is_infix then
 								-- Ok, the feature renamed is not capable to be an infix, throw an error.
 								-- Invalid operator alias
@@ -426,7 +422,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

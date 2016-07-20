@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Information about external feature recently added to system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,12 +36,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
-			-- Associated feature
-		local
-			eiffel_class: EIFFEL_CLASS_C
+			-- Associated feature.
 		do
-			eiffel_class ?= class_c
-			if eiffel_class /= Void then
+			if attached {EIFFEL_CLASS_C} class_c as eiffel_class then
 				Result := eiffel_class.inline_agent_of_name_id (feature_name_id)
 			end
 
@@ -110,7 +107,7 @@ invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

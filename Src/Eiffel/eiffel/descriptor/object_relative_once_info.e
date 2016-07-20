@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			This class contains information for object relative once (once per object)
 			For each object relative once, we add 2 or 3 extra attributes to store 
@@ -142,10 +142,7 @@ feature -- Status report
 
 	debug_output_info (f: FEATURE_I; a_msg: detachable STRING)
 			-- Print debug information related to object relative once's info
-		local
-			l_once: ONCE_PROC_I
 		do
-			l_once ?= f
 			if f.is_object_relative_once then
 				print ("Once per object ")
 			else
@@ -789,7 +786,7 @@ invariant
 	rout_id_set_attached: rout_id_set /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

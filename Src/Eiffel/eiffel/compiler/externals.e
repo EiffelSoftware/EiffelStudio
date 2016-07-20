@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		List of all C external features in IL code generation.
 		For each class ID we have a SEARCH_TABLE [INTEGER] that
@@ -282,7 +282,6 @@ feature {NONE} -- Implementation
 			class_type_not_void: class_type /= Void
 			buffer_not_void: buffer /= Void
 		local
-			ext: EXTERNAL_I
 			feat_tbl: FEATURE_TABLE
 		do
 			from
@@ -292,12 +291,11 @@ feature {NONE} -- Implementation
 			until
 				a_s.after
 			loop
-				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
 					-- Sometime an external disappeared but was not actually removed from Current.
 					-- This happens in eweasel test#fake005 where 2 externals with errors are added
 					-- and then removed in one compilation, they are not removed from EXTERNALS because
 					-- we are always comparing against the original feature table which did not have them.
-				if ext /= Void then
+				if attached {EXTERNAL_I} feat_tbl.item_id (a_s.item_for_iteration) as ext then
 						-- We only generate the code for non-builtin externals,
 						-- the builtin ones are in the runtime.
 					if not ext.extension.is_built_in then
@@ -330,7 +328,7 @@ feature {NONE} -- Previous version
 			-- Old version of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -361,4 +359,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNALS
+end

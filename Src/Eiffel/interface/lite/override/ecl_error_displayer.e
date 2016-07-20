@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A specialized version of {ERROR_DISPLAYER} to display errors in a format readable by external tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -124,14 +124,11 @@ feature {NONE} -- Implementation
 			a_error_attached: a_error /= Void
 			a_window_attached: a_window /= Void
 		local
-			l_se: SYNTAX_ERROR
 			l_code: INTEGER
 			l_file: PLAIN_TEXT_FILE
-			l_parse_error: CONF_ERROR_PARSE
 			l_line: STRING
 			l_pos: INTEGER
 		do
-			l_se ?= a_error
 			a_window.put_new_line
 
 				-- Context
@@ -144,8 +141,7 @@ feature {NONE} -- Implementation
 				a_window.put_string (")")
 			else
 				a_window.put_string (application_name)
-				l_parse_error ?= a_error
-				if l_parse_error /= Void then
+				if attached {CONF_ERROR_PARSE} a_error as l_parse_error then
 					a_window.put_string ("(")
 					a_window.put_string (l_parse_error.column.out)
 					a_window.put_string (", ")
@@ -158,10 +154,10 @@ feature {NONE} -- Implementation
 			a_window.put_string (" : ")
 			a_window.put_string (a_error.error_string)
 			a_window.put_string (" ")
-			if l_se = Void then
-				a_window.put_string (a_error.code.as_upper)
-			else
+			if attached {SYNTAX_ERROR} a_error as l_se then
 				a_window.put_string ("SYNTAX")
+			else
+				a_window.put_string (a_error.code.as_upper)
 			end
 			l_code := a_error.subcode
 			if l_code > 0 then
@@ -287,4 +283,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class {ECL_ERROR_DISPLAYER}
+end

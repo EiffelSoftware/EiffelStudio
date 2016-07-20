@@ -66,13 +66,13 @@ feature -- Access
 			-- Arguments and Locals declarations for the current feature, if any.
 		do
 			if attached arguments as l_arguments then
-				Result := l_arguments
+				Result := l_arguments.twin
 			end
 			if  attached locals as l_locals then
 				if attached Result then
 					Result.merge (l_locals)
 				else
-					Result := l_locals
+					Result := l_locals.twin
 				end
 			end
 			if is_query and then attached return_type as l_return_type then

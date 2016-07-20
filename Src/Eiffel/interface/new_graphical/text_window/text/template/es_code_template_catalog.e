@@ -333,13 +333,6 @@ feature {NONE} -- Helpers
 			result_attached: attached Result
 		end
 
-	xml_parser: XML_STOPPABLE_PARSER
-			-- Xml parser used to parse the code template files.
-		once
-			create Result.make
-		ensure
-			result_attached: attached Result
-		end
 
 feature {NONE} -- Basic operations
 

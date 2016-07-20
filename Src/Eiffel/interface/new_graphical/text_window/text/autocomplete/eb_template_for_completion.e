@@ -401,7 +401,6 @@ feature -- Implementation: Update tokens
 			l_code_tb: CODE_TEMPLATE_BUILDER
 			l_locals: STRING_TABLE [TYPE_AS]
 			l_arguments: STRING_TABLE [TYPE_A]
-			l_read_only_locals_template: STRING_TABLE [STRING]
 			l_rename_table: STRING_TABLE [STRING]
 			l_name: STRING_32
 			i: INTEGER
@@ -412,22 +411,24 @@ feature -- Implementation: Update tokens
 			l_locals := l_code_tb.locals (e_feature)
 			l_arguments := l_code_tb.arguments (e_feature)
 			l_code_tb.process_only_locals_template (feature_template_code (a_code, a_locals))
-			l_read_only_locals_template := l_code_tb.read_only_locals_template
 			create l_rename_table.make_caseless (2)
-			across
-				l_read_only_locals_template as ic
-			loop
-				if l_locals.has (ic.key) or else l_arguments.has (ic.key) then
-					from
-						i := 1
-						l_name := new_name (ic.key.as_string_32, i)
-					until
-						not l_locals.has (l_name) and then not l_arguments.has (l_name)
-					loop
-						i := i + 1
-						l_name := new_name (ic.key.as_string_32, i)
+
+			if attached l_code_tb.read_only_locals_template as l_read_only_locals_template then
+				across
+					l_read_only_locals_template as ic
+				loop
+					if l_locals.has (ic.key) or else l_arguments.has (ic.key) then
+						from
+							i := 1
+							l_name := new_name (ic.key.as_string_32, i)
+						until
+							not l_locals.has (l_name) and then not l_arguments.has (l_name)
+						loop
+							i := i + 1
+							l_name := new_name (ic.key.as_string_32, i)
+						end
+						l_rename_table.force (l_name, ic.key)
 					end
-					l_rename_table.force (l_name, ic.key)
 				end
 			end
 

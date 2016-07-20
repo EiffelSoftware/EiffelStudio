@@ -86,6 +86,7 @@ feature -- Access
 
 	context: detachable STRING
 			-- Code context to apply the template, if any.
+			-- Void means ANY.
 
 	text: detachable STRING_32
 			-- String representation of a code template file.
@@ -104,7 +105,6 @@ feature -- Visitor
 			process_top_notes (l_as.top_indexes)
 			Precursor (l_as)
 		end
-
 
 	process_routine_as (l_as: ROUTINE_AS)
 		do
@@ -228,6 +228,7 @@ feature -- Visitor
 			is_argument := True
 			Precursor (l_as)
 			if attached item as l_item then
+					-- accept one argument for queries and commands
 				l_item.set_arguments (arguments)
 				if arguments.count > 1 then
 					set_valid_template (False)
@@ -466,6 +467,11 @@ feature -- Visitor
 					set_valid_template (False)
 						-- Multiple Constraints Not Supported.
 				end
+			end
+			if is_argument and then
+				attached argument_type as l_argument_type
+			then
+				l_argument_type.append (l_as.class_name.name_32)
 			end
 			if
 				is_local_dec_list and then

@@ -94,7 +94,7 @@ rt_private Signal_t timeout(int);	/* Signal handler for read timeouts */
 
 rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 #ifdef EIF_WINDOWS
-		,BOOL reset
+		, BOOL reset
 #endif
 		)
 			/* The connected socket descriptor */
@@ -153,16 +153,18 @@ rt_public int net_recv(EIF_PSTREAM cs, char *buf, size_t size
 		 */
 		if (size == 0) {
 				/* Wait to get back in sync. */
-			if (WaitForSingleObject (readev(cs), INFINITE) != WAIT_OBJECT_0) {
+			if (WaitForSingleObject (readev(cs), TIMEOUT*1000) != WAIT_OBJECT_0) {
 #ifdef USE_ADD_LOG
 				add_log (8, "network:97 Bad wait");
 #endif
+				return -1;
 			}
 		} else {
 			if (WaitForSingleObject (readev(cs), 0) != WAIT_OBJECT_0) {
 #ifdef USE_ADD_LOG
 				add_log (8, "network:101 Wait on %d failed", size);
 #endif
+				return -1;
 			}
 		}
 	}

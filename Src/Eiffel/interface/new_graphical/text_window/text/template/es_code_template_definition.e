@@ -110,6 +110,8 @@ feature -- Visitor
 		do
 			create local_variables.make_caseless (1)
 			is_local := True
+			local_type := Void
+			last_local_type := Void
 			Precursor (l_as)
 		end
 

@@ -1902,7 +1902,9 @@ feature {NONE} -- Code completable implementation
 			l_locals: READABLE_STRING_GENERAL
 			txt: like text_displayed
 			l_local_pos, l_start_pos, p: INTEGER
-			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32]
+			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
+			l_smart_text: SMART_TEXT
+			l_region: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
 		do
 				-- local varianles and code from template
 			l_code_texts := a_template.code_texts
@@ -1985,8 +1987,13 @@ feature {NONE} -- Code completable implementation
 			end
 			refresh
 			txt.cursor.go_to_position (l_pos + 1)
-			txt.select_region (l_edit_pos, l_pos + 1)
+--			txt.select_region (l_edit_pos, l_pos + 1)
+--			create l_smart_text.make
+--			create l_region.make (2)
+--			l_region.force ([l_edit_pos, l_pos])
+--			l_smart_text.enable_linked_editing (Current, l_edit_pos, l_region)
 			refresh
+
 		end
 
 	select_from_cursor_to_saved

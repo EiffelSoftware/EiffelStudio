@@ -63,12 +63,19 @@ feature {NONE} -- Initialization
 			end
 			internal_stone := a_stone.twin
 			target_name := a_target
+
+				-- Initialize linked tokens
+				-- from local definitions, if any.
+			if attached template.locals as l_locals then
+				linked_tokens := l_locals
+			else
+				create linked_tokens.make_caseless (0)
+			end
+
 		ensure
 			template_set: template = a_template
 			target_set: target_name = a_target
 		end
-
-feature -- Test
 
 feature -- Access
 
@@ -89,24 +96,26 @@ feature -- Access
 	template: ES_CODE_TEMPLATE_DEFINITION_ITEM
 			-- Full template to insert in editor
 
-	code_texts: TUPLE [locals: STRING_32; code: STRING_32]
-			-- Local and code from template.
+	code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_tokens: ARRAY [READABLE_STRING_GENERAL]]
+			-- Local and code from template and linked tokens.
 		local
 			l_tuple: TUPLE [a_locals: STRING_32; a_code: STRING_32]
 			l_code: STRING_32
 			l_locals: STRING_32
+			l_linked_tokens: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_tuple := update_locals_and_code
 			l_code := l_tuple.a_code
 			l_locals := l_tuple.a_locals
 			add_comments (l_code)
+
 			if attached update_tokens (l_code, l_locals) as l_new_code then
-				Result := [l_locals, l_new_code]
+				Result := [l_locals, l_new_code, linked_tokens.current_keys]
 			else
-				Result := [l_locals, l_code]
+				Result := [l_locals, l_code, linked_tokens.current_keys]
 			end
 		end
-
+		
 	template_declarations: STRING_TABLE [STRING_32]
 			-- Formal arguments and Local variables definitions for the given template.
 		do
@@ -209,6 +218,7 @@ feature {NONE} -- Template implementation.
 			l_code_tb.process_read_only_locals (e_feature)
 			l_read_only_locals := l_code_tb.read_only_locals
 
+
 			create l_rename_table.make_caseless (2)
 
 			across
@@ -229,6 +239,11 @@ feature {NONE} -- Template implementation.
 							l_name := new_name (ic.key.as_string_32, i)
 						end
 						l_rename_table.force (l_name, ic.key)
+
+							-- Update linked tokens
+						if linked_tokens.has (ic.key) then
+							linked_tokens.replace_key (l_name, ic.key)
+						end
 					end
 				elseif l_locals /= Void and then l_locals.has (ic.key) then
 						-- the current local variable conforms to the variable in the template
@@ -246,6 +261,11 @@ feature {NONE} -- Template implementation.
 							l_name := new_name (ic.key.as_string_32, i)
 						end
 						l_rename_table.force (l_name, ic.key)
+
+							-- Update linked tokens
+						if linked_tokens.has (ic.key) then
+							linked_tokens.replace_key (l_name, ic.key)
+						end
 					end
 				elseif l_read_only_locals /= Void and then l_read_only_locals.has (ic.key) then
 						-- The current local variable from the template has the same name as a read only variable
@@ -260,6 +280,10 @@ feature {NONE} -- Template implementation.
 						l_name := new_name (ic.key.as_string_32, i)
 					end
 					l_rename_table.force (l_name, ic.key)
+						-- Update linked tokens
+					if linked_tokens.has (ic.key) then
+						linked_tokens.replace_key (l_name, ic.key)
+					end
 				end
 			end
 				-- Is the current template a query?
@@ -274,6 +298,10 @@ feature {NONE} -- Template implementation.
 					l_name := new_name ("l_result", i)
 				end
 				l_rename_table.force (l_name, "Result")
+
+					-- Add a new token to linked tokens
+				linked_tokens.force ("", l_name)
+
 			end
 
 				-- Rename code and declarations if needed
@@ -428,12 +456,16 @@ feature -- Implementation: Update tokens
 							l_name := new_name (ic.key.as_string_32, i)
 						end
 						l_rename_table.force (l_name, ic.key)
+						linked_tokens.force ("", l_name)
+					else
+						-- Add a new token to linked tokens
+						--! (read only local variables.)
+						linked_tokens.force ("", ic.key)
 					end
 				end
 			end
 
 				-- Rename locals if needed
-
 			if not l_rename_table.is_empty then
 				create Result.make_empty
 				create l_scanner.make
@@ -453,11 +485,15 @@ feature -- Implementation: Update tokens
 			end
 		end
 
+
 feature {NONE} -- Implementation: STONE
 
 	internal_stone: FEATURE_STONE
 
 feature {NONE} -- Implementation
+
+	linked_tokens: STRING_TABLE [STRING_32]
+			-- Linked tokens by name.
 
 	add_comments (a_code: STRING_32)
 			-- Add comments to the code `a_code' iff

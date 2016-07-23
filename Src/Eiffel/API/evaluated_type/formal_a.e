@@ -224,18 +224,16 @@ feature -- Access
 			Result := combined_hash_code ({SHARED_GEN_CONF_LEVEL}.formal_type, position)
 		end
 
-	description: GENERIC_DESC
+	description: ATTR_DESC
 			-- Descritpion of type for skeletons.
 		do
-			create Result
-			Result.set_type_i (Current)
+			create {GENERIC_DESC} Result.make (Current)
 		end
 
-	description_with_detachable_type: GENERIC_DESC
+	description_with_detachable_type: ATTR_DESC
 			-- Descritpion of type for skeletons.
 		do
-			create Result
-			Result.set_type_i (as_detachable_type)
+			create {GENERIC_DESC} Result.make (as_detachable_type)
 		end
 
 	constrained_type (a_context_class: CLASS_C): TYPE_A

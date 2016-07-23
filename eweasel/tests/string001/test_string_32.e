@@ -491,7 +491,6 @@ feature {NONE} -- Implementation
 			check_string_equality ("grow", s, "12345")
 		end
 
-
 	test_has is
 		local
 			s: STRING_32
@@ -525,6 +524,22 @@ feature {NONE} -- Implementation
 			check_boolean ("has_substring", ("foobar").has_substring ("oo"))
 			check_boolean ("has_substring", not ("foobar").has_substring ("abo"))
 		end
+
+ 	test_hash_code is
+ 			-- We do not enforce consistent hashcode values, so we only check
+ 			-- that it is updated properly. See bug#19258.
+ 		local
+ 			s: STRING_32
+ 			h1, h2: INTEGER
+ 		do
+ 			s := {STRING_32} "1234c"
+ 			h1 := s.hash_code
+ 			h2 := s.case_insensitive_hash_code
+ 
+ 			s.append_string ({STRING_32} "1234")
+ 			check_boolean ("hash_code", s.hash_code /= h1)
+			check_boolean ("case_insensitive_hash_code", s.case_insensitive_hash_code /= h2)
+  		end
 
 	test_index_of is
 		local

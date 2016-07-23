@@ -1,0 +1,39 @@
+test_name	attribute-removal-addition-execution-crash
+test_description After initial compilation, a class removes a parent from its inheritance, that parent was redefining an attribute used to implement a deferred feature from another parent. This removal causes some other classes using it to fail when execution a creation instruction on it.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+copy_raw	d.e $CLUSTER d.e
+copy_raw	e.e $CLUSTER e.e
+
+compile_melted
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE	exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+copy_raw	e_rev1.e $CLUSTER e.e
+
+compile_melted
+compile_result	ok
+
+execute_work	NONE	exec_output2
+execute_result	ok
+compare		exec_output2 output
+
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE	exec_output3
+execute_result	ok
+compare		exec_output3 output
+
+
+test_end

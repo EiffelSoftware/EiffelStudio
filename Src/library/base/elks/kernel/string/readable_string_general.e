@@ -1253,7 +1253,6 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 	internal_case_insensitive_hash_code: INTEGER;
 			-- Cash for `case_insensitive_hash_code'.
 
-
 feature -- Access: Cursor
 
 	new_character_32_cursor: STRING_ITERATION_CURSOR

@@ -28,7 +28,7 @@ inherit
 			is_class_valid, skeleton_adapted_in, good_generics, has_like_current,
 			set_frozen_mark, initialize_info, annotation_flags,
 			set_is_implicitly_frozen, as_same_variant_bits,
-			as_attachment_mark_free
+			as_attachment_mark_free, is_loose
 		end
 
 create
@@ -209,6 +209,14 @@ feature -- Properties
 	good_generics: BOOLEAN = True
 			--| A current type always has the right number of generic parameter.
 
+	is_loose: BOOLEAN
+			-- <Precursor>
+		do
+				-- If `like Current` appears in an expanded class, then it is only loose
+				-- if the expanded type is itself loose.
+			Result := not is_expanded or else conformance_type.is_loose
+		end
+
 feature -- Access
 
 	hash_code: INTEGER
@@ -244,16 +252,22 @@ feature -- Access
 			end
 		end
 
-	description: GENERIC_DESC
+	description: ATTR_DESC
 		do
-			create Result
-			Result.set_type_i (Current)
+			if is_loose then
+				create {GENERIC_DESC} Result.make (Current)
+			else
+				Result := conformance_type.description
+			end
 		end
 
-	description_with_detachable_type: GENERIC_DESC
+	description_with_detachable_type: ATTR_DESC
 		do
-			create Result
-			Result.set_type_i (as_detachable_type)
+			if is_loose then
+				create {GENERIC_DESC} Result.make (as_detachable_type)
+			else
+				Result := conformance_type.description
+			end
 		end
 
 	c_type: TYPE_C
@@ -765,7 +779,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

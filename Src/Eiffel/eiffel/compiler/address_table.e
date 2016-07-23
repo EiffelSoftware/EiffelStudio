@@ -695,7 +695,7 @@ feature {NONE} -- Generation
 			has_creation: BOOLEAN
 			names: ARRAY [STRING]
 			basic_i: BASIC_A
-			i: INTEGER
+			i, j: INTEGER
 			l_tabbed_open_c_comment_str, l_space_str, l_close_c_comment_str: STRING
 			l_arg_str: STRING
 		do
@@ -884,18 +884,18 @@ feature {NONE} -- Generation
 						from
 							names := agent_arg_names (l_type, args, omap, a_oargs_encapsulated)
 							i := args_count
+							j := reference_arg_count
 						until
 							i <= 0
 						loop
-							buffer.put_new_line
 							if reference_arg [i] then
 									-- Mark for GC.
-								buffer.put_local_registration (reference_arg_count, names [i + 1]);
-								reference_arg_count := reference_arg_count - 1
+								buffer.put_local_registration (j, names [i + 1]);
+								j := j - 1
 							elseif formal_arg [i] then
 									-- Mark for GC.
-								buffer.put_local_registration (reference_arg_count, "arg" + i.out);
-								reference_arg_count := reference_arg_count - 1
+								buffer.put_local_registration (j, "arg" + i.out);
+								j := j - 1
 							end
 							i := i - 1
 						end

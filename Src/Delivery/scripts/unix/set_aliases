@@ -14,10 +14,14 @@ DOCUMENT_DIR=`pwd`
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
-DEFAULT_ORIGO_SVN=https://svn.eiffel.com/eiffelstudio/trunk
+DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
+DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
 if [ ! "$ORIGO_SVN_REVISION" ]; then
-	ORIGO_SVN_REVISION=HEAD
+	mkdir -p /tmp/eiffelstudio_revision
+	svn co $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
+	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
 fi
+
 # Used to create the revision on the package.
 FILE_SVN_REVISION=""
 # Version of GTK

@@ -62,26 +62,6 @@ feature
 			"C signature (GdkWindow*, cairo_content_t, int, int): cairo_surface_t* use <ev_gtk.h>"
 		end
 
-	gdk_cairo_create (a_window: POINTER): POINTER
-		external
-			"C signature (GdkWindow*): cairo_t* use <ev_gtk.h>"
-		end
-
-	gdk_cairo_set_source_rgba (a_context, a_rgba: POINTER)
-		external
-			"C signature (cairo_t*, GdkRGBA*) use <ev_gtk.h>"
-		end
-
-	gdk_cairo_set_source_pixbuf (a_context, a_pixbuf: POINTER; a_pixbuf_x, a_pixbuf_y: REAL_64)
-		external
-			"C signature (cairo_t*, GdkPixbuf*, double, double) use <ev_gtk.h>"
-		end
-
-	gdk_cairo_set_source_window (a_context, a_gdkwindow: POINTER; a_x, a_y: REAL_64)
-		external
-			"C signature (cairo_t*, GdkWindow*, double, double) use <ev_gtk.h>"
-		end
-
 	gtk_layout_new (a_hadjustment, a_vadjustment: POINTER): POINTER
 		external
 			"C signature (GtkAdjustment*, GtkAdjustment*): GtkWidget* use <ev_gtk.h>"

@@ -166,7 +166,7 @@ feature {EV_ANY_I} -- Implementation
 			else
 				l_window := {GTK}.gtk_widget_get_window (c_object)
 				if l_window /= default_pointer then
-					Result := {GTK}.gdk_cairo_create (l_window)
+					Result := {GDK_CAIRO}.create_context (l_window)
 					initialize_drawable (Result)
 				end
 			end
@@ -176,7 +176,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Release resources of drawable `a_drawable'.
 		do
 			if a_drawable /= drawable and then a_drawable /= default_pointer then
-				{CAIRO}.cairo_destroy (a_drawable)
+				{CAIRO}.destroy (a_drawable)
 			end
 		end
 
@@ -194,7 +194,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			drawable := a_cairo_context
 
-			{CAIRO}.cairo_clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+			{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 
 			initialize_drawable (a_cairo_context)
 
@@ -212,14 +212,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_red, l_green, l_blue: REAL_64
 		do
-			{CAIRO}.cairo_set_antialias (a_drawable, {CAIRO}.cairo_antialias_none)
-			{CAIRO}.cairo_set_line_width (a_drawable, line_width)
+			{CAIRO}.set_antialias (a_drawable, {CAIRO}.antialias_none)
+			{CAIRO}.set_line_width (a_drawable, line_width)
 			if attached internal_foreground_color as l_internal_foreground_color then
 				l_red := l_internal_foreground_color.red
 				l_green := l_internal_foreground_color.green
 				l_blue := l_internal_foreground_color.blue
 			end
-			{CAIRO}.cairo_set_source_rgb (a_drawable, l_red, l_green, l_blue)
+			{CAIRO}.set_source_rgb (a_drawable, l_red, l_green, l_blue)
 			internal_set_drawing_mode (a_drawable, drawing_mode)
 		end
 
@@ -258,7 +258,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

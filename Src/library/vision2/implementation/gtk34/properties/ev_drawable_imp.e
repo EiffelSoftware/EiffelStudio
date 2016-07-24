@@ -170,7 +170,7 @@ feature -- Element change
 			-- Assign `a_width' to `line_width'.
 		do
 			if drawable /= default_pointer then
-				{CAIRO}.cairo_set_line_width (drawable, a_width)
+				{CAIRO}.set_line_width (drawable, a_width)
 			end
 			line_width := a_width
 		end
@@ -179,7 +179,7 @@ feature -- Element change
 			-- Turn off anti-aliasing for cairo context.
 		do
 			if drawable /= default_pointer then
-				{CAIRO}.cairo_set_antialias (drawable, {CAIRO}.cairo_antialias_none)
+				{CAIRO}.set_antialias (drawable, {CAIRO}.antialias_none)
 			end
 		end
 
@@ -198,13 +198,13 @@ feature -- Element change
 			inspect
 				a_drawing_mode
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_over)
+				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_over)
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_xor)
+				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_xor)
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_difference)
+				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_difference)
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-				{CAIRO}.cairo_set_operator (a_drawable, {CAIRO}.cairo_operator_add)
+				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_add)
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
 
 			else
@@ -216,22 +216,41 @@ feature -- Element change
 
 	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set an area to clip to.
+		local
+			l_drawable: POINTER
 		do
-			gc_clip_area := an_area.twin
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
+				gc_clip_area := an_area.twin
+				{CAIRO}.rectangle (l_drawable,
+					an_area.x + device_x_offset,
+					an_area.y + device_y_offset,
+					an_area.width,
+					an_area.height)
+				{CAIRO}.clip (l_drawable)
+			else
+				check has_drawable: False end
+			end
 		end
 
 	set_clip_region (a_region: EV_REGION)
 			-- Set a region to clip to.
 		do
-			if attached {EV_REGION_IMP} a_region as l_region_imp then
-
-			end
+			check Implemented: False end
 		end
 
 	remove_clipping
 			-- Do not apply any clipping.
+		local
+			l_drawable: POINTER
 		do
 			gc_clip_area := Void
+			l_drawable := get_drawable
+			if l_drawable /= default_pointer then
+				{CAIRO}.reset_clip (l_drawable)
+			else
+				check has_drawble: False end
+			end
 		end
 
 	set_tile (a_pixmap: EV_PIXMAP)
@@ -286,17 +305,17 @@ feature -- Clearing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
-				{CAIRO}.cairo_save (l_drawable)
+				{CAIRO}.save (l_drawable)
 				l_bg_color := internal_background_color
 				if l_bg_color /= Void then
-					{CAIRO}.cairo_set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
+					{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
 				else
-					{CAIRO}.cairo_set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
+					{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
 				end
-				{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
-				{CAIRO}.cairo_fill (l_drawable)
+				{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+				{CAIRO}.fill (l_drawable)
 
-				{CAIRO}.cairo_restore (l_drawable)
+				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
 			end
 		end
@@ -394,7 +413,7 @@ feature -- Drawing operations
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
 
-				{CAIRO}.cairo_save (l_drawable)
+				{CAIRO}.save (l_drawable)
 
 				l_app_imp := App_implementation
 
@@ -417,7 +436,7 @@ feature -- Drawing operations
 				end
 				l_y := l_y - 0.5
 					-- Cairo adds 0.5 in calculation to account for center pixel coordinates but we want top left.
-				{CAIRO}.cairo_translate (l_drawable, l_x, l_y)
+				{CAIRO}.translate (l_drawable, l_x, l_y)
 
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
@@ -454,7 +473,7 @@ feature -- Drawing operations
 					{GTK2}.pango_matrix_free (a_pango_matrix)
 				end
 
-				{CAIRO}.cairo_restore (l_drawable)
+				{CAIRO}.restore (l_drawable)
 
 				release_drawable (l_drawable)
 			end
@@ -480,9 +499,9 @@ feature -- Drawing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
-				{CAIRO}.cairo_move_to (l_drawable, x1 + device_x_offset, y1 + device_y_offset)
-				{CAIRO}.cairo_line_to (l_drawable, x2 + device_x_offset, y2 + device_y_offset)
-				{CAIRO}.cairo_stroke (l_drawable)
+				{CAIRO}.move_to (l_drawable, x1 + device_x_offset, y1 + device_y_offset)
+				{CAIRO}.line_to (l_drawable, x2 + device_x_offset, y2 + device_y_offset)
+				{CAIRO}.stroke (l_drawable)
 				release_drawable (l_drawable)
 			end
 		end
@@ -504,11 +523,11 @@ feature -- Drawing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer and then attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_pixel_buffer_imp then
-				{CAIRO}.cairo_save (l_drawable)
-				{GTK}.gdk_cairo_set_source_pixbuf (l_drawable, l_pixel_buffer_imp.gdk_pixbuf, area.x, area.y)
-				{CAIRO}.cairo_rectangle (l_drawable, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height)
-				{CAIRO}.cairo_fill (l_drawable)
-				{CAIRO}.cairo_restore (l_drawable)
+				{CAIRO}.save (l_drawable)
+				{GDK_CAIRO}.set_source_pixbuf (l_drawable, l_pixel_buffer_imp.gdk_pixbuf, area.x, area.y)
+				{CAIRO}.rectangle (l_drawable, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height)
+				{CAIRO}.fill (l_drawable)
+				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
 			end
 		end
@@ -533,14 +552,14 @@ feature -- Drawing operations
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
 
-				{CAIRO}.cairo_save (l_drawable)
+				{CAIRO}.save (l_drawable)
 
-				{CAIRO}.cairo_set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
+				{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
 
-				{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
-				{CAIRO}.cairo_fill (l_drawable)
+				{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
+				{CAIRO}.fill (l_drawable)
 
-				{CAIRO}.cairo_restore (l_drawable)
+				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
 			end
 		end
@@ -600,33 +619,33 @@ feature -- Drawing operations
 					l_radius := a_width / 2
 					if a_width /= a_height then
 						l_y_scale := a_height / a_width
-						{CAIRO}.cairo_scale (l_drawable, 1.0, l_y_scale)
+						{CAIRO}.scale (l_drawable, 1.0, l_y_scale)
 						l_yc := (l_yc - device_y_offset) / l_y_scale + device_y_offset
 					end
 
 					if l_close then
-						{CAIRO}.cairo_move_to (l_drawable, l_xc, l_yc)
+						{CAIRO}.move_to (l_drawable, l_xc, l_yc)
 					end
 
-					{CAIRO}.cairo_arc_negative (l_drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
+					{CAIRO}.arc_negative (l_drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
 					if a_fill then
-						{CAIRO}.cairo_save (l_drawable)
+						{CAIRO}.save (l_drawable)
 						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.cairo_set_source_rgb (l_drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
+							{CAIRO}.set_source_rgb (l_drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
 						else
-							{CAIRO}.cairo_set_source_rgb (l_drawable, 0.0, 0.0, 0.0)
+							{CAIRO}.set_source_rgb (l_drawable, 0.0, 0.0, 0.0)
 						end
-						{CAIRO}.cairo_fill (l_drawable)
-						{CAIRO}.cairo_restore (l_drawable)
+						{CAIRO}.fill (l_drawable)
+						{CAIRO}.restore (l_drawable)
 					end
 
 					if l_close then
-						{CAIRO}.cairo_close_path (l_drawable)
+						{CAIRO}.close_path (l_drawable)
 					end
-					{CAIRO}.cairo_stroke (l_drawable)
+					{CAIRO}.stroke (l_drawable)
 
 					if a_width /= a_height then
-						{CAIRO}.cairo_scale (l_drawable, 1.0, 1.0)
+						{CAIRO}.scale (l_drawable, 1.0, 1.0)
 					end
 					release_drawable (l_drawable)
 				end
@@ -654,18 +673,18 @@ feature -- Drawing operations
 				if l_drawable /= default_pointer then
 					from
 						l_count := points.count
-						{CAIRO}.cairo_move_to (l_drawable, points [1].x_precise, points [1].y_precise)
+						{CAIRO}.move_to (l_drawable, points [1].x_precise, points [1].y_precise)
 						i := 2
 					until
 						i > l_count
 					loop
-						{CAIRO}.cairo_line_to (l_drawable, points [i].x_precise, points [i].y_precise)
+						{CAIRO}.line_to (l_drawable, points [i].x_precise, points [i].y_precise)
 						i := i + 1
 					end
 					if is_closed then
-						{CAIRO}.cairo_close_path (l_drawable)
+						{CAIRO}.close_path (l_drawable)
 					end
-					{CAIRO}.cairo_stroke (l_drawable)
+					{CAIRO}.stroke (l_drawable)
 					release_drawable (l_drawable)
 				end
 			end
@@ -698,19 +717,19 @@ feature -- filling operations
 			if l_drawable /= default_pointer then
 				if a_width > 0 and then a_height > 0 then
 						-- If width or height are zero then nothing will be rendered.
-					{CAIRO}.cairo_rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width - line_width, a_height - line_width)
+					{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width - line_width, a_height - line_width)
 					if a_fill then
-						{CAIRO}.cairo_stroke_preserve (l_drawable)
-						{CAIRO}.cairo_save (l_drawable)
+						{CAIRO}.stroke_preserve (l_drawable)
+						{CAIRO}.save (l_drawable)
 						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.cairo_set_source_rgba (l_drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
+							{CAIRO}.set_source_rgba (l_drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
 						else
-							{CAIRO}.cairo_set_source_rgba (l_drawable, 1.0, 1.0, 1.0, 1.0)
+							{CAIRO}.set_source_rgba (l_drawable, 1.0, 1.0, 1.0, 1.0)
 						end
-						{CAIRO}.cairo_fill (l_drawable)
-						{CAIRO}.cairo_restore (l_drawable)
+						{CAIRO}.fill (l_drawable)
+						{CAIRO}.restore (l_drawable)
 					end
-					{CAIRO}.cairo_stroke (l_drawable)
+					{CAIRO}.stroke (l_drawable)
 				end
 				release_drawable (l_drawable)
 			end
@@ -830,7 +849,7 @@ feature {NONE} -- Implementation
 			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.
 		do
 			if drawable /= default_pointer and then a_foreground then
-				{CAIRO}.cairo_set_source_rgb (drawable, a_red, a_green, a_blue)
+				{CAIRO}.set_source_rgb (drawable, a_red, a_green, a_blue)
 			end
 		end
 

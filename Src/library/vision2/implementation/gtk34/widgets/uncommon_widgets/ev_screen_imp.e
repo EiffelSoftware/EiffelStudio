@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			app_implementation.do_nothing
 
 			l_window := {GTK2}.gdk_screen_get_root_window ({GTK2}.gdk_screen_get_default)
-			drawable := {GTK}.gdk_cairo_create (l_window)
+			drawable := {GDK_CAIRO}.create_context (l_window)
 			init_default_values
 
 				-- Set offset values to match Win32 implementation.

@@ -1,501 +1,621 @@
 note
-	description: "Summary description for {CAIRO}."
-	author: ""
+	description: "Wrappers around the Cairo drawing API."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	CAIRO
 
-feature
+feature -- Constants
 
-    CAIRO_FORMAT_INVALID: INTEGER_8 = -1
-    CAIRO_FORMAT_ARGB32: INTEGER_8  = 0
-    CAIRO_FORMAT_RGB24: INTEGER_8   = 1
-    CAIRO_FORMAT_A8: INTEGER_8        = 2
-    CAIRO_FORMAT_A1: INTEGER_8        = 3
-    CAIRO_FORMAT_RGB16_565: INTEGER_8 = 4
-    CAIRO_FORMAT_RGB30: INTEGER_8     = 5
+    FORMAT_INVALID: INTEGER_8 = -1
+    FORMAT_ARGB32: INTEGER_8  = 0
+    FORMAT_RGB24: INTEGER_8   = 1
+    FORMAT_A8: INTEGER_8        = 2
+    FORMAT_A1: INTEGER_8        = 3
+    FORMAT_RGB16_565: INTEGER_8 = 4
+    FORMAT_RGB30: INTEGER_8     = 5
 
-    CAIRO_ANTIALIAS_DEFAULT: INTEGER_8 = 0
-    CAIRO_ANTIALIAS_NONE: INTEGER_8 = 1
-    CAIRO_ANTIALIAS_GRAY: INTEGER_8 = 2
-    CAIRO_ANTIALIAS_SUBPIXEL: INTEGER_8 = 3
-    CAIRO_ANTIALIAS_FAST: INTEGER_8 = 4
-    CAIRO_ANTIALIAS_GOOD: INTEGER_8 = 5
-    CAIRO_ANTIALIAS_BEST: INTEGER_8 = 6
+    ANTIALIAS_DEFAULT: INTEGER_8 = 0
+    ANTIALIAS_NONE: INTEGER_8 = 1
+    ANTIALIAS_GRAY: INTEGER_8 = 2
+    ANTIALIAS_SUBPIXEL: INTEGER_8 = 3
+    ANTIALIAS_FAST: INTEGER_8 = 4
+    ANTIALIAS_GOOD: INTEGER_8 = 5
+    ANTIALIAS_BEST: INTEGER_8 = 6
 
-	CAIRO_OPERATOR_SOURCE: INTEGER_8
+	OPERATOR_SOURCE: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_SOURCE"
 		end
 
-	CAIRO_OPERATOR_OVER: INTEGER_8
+	OPERATOR_OVER: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_OVER"
 		end
 
-	CAIRO_OPERATOR_IN: INTEGER_8
+	OPERATOR_IN: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_IN"
 		end
 
-	CAIRO_OPERATOR_OUT: INTEGER_8
+	OPERATOR_OUT: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_OUT"
 		end
 
-	CAIRO_OPERATOR_XOR: INTEGER_8
+	OPERATOR_XOR: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_XOR"
 		end
 
-	CAIRO_OPERATOR_ADD: INTEGER_8
+	OPERATOR_ADD: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_ADD"
 		end
 
-	CAIRO_OPERATOR_DEST: INTEGER_8
+	OPERATOR_DEST: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DEST"
 		end
 
-	CAIRO_OPERATOR_DEST_OVER: INTEGER_8
+	OPERATOR_DEST_OVER: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DEST_OVER"
 		end
 
-	CAIRO_OPERATOR_DEST_IN: INTEGER_8
+	OPERATOR_DEST_IN: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DEST_IN"
 		end
 
-	CAIRO_OPERATOR_DEST_OUT: INTEGER_8
+	OPERATOR_DEST_OUT: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DEST_OUT"
 		end
 
-	CAIRO_OPERATOR_DEST_ATOP: INTEGER_8
+	OPERATOR_DEST_ATOP: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DEST_ATOP"
 		end
 
-	CAIRO_OPERATOR_DIFFERENCE: INTEGER_8
+	OPERATOR_DIFFERENCE: INTEGER_8
 		external
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DIFFERENCE"
 		end
 
-	cairo_clip_extents (cr: POINTER; x1: TYPED_POINTER [REAL_64]; y1: TYPED_POINTER [REAL_64]; x2: TYPED_POINTER [REAL_64]; y2: TYPED_POINTER [REAL_64])
+feature -- Externals
+
+	clip (cr: POINTER)
+		external
+			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_clip"
+		end
+
+	reset_clip (cr: POINTER)
+		external
+			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_reset_clip"
+		end
+
+	clip_extents (cr: POINTER; a_x1, a_y1, a_x2, a_y2: TYPED_POINTER [REAL_64])
 		external
 			"C signature (cairo_t*, double*, double*, double*, double*) use <cairo.h>"
+		alias
+			"cairo_clip_extents"
 		end
 
-	cairo_copy_clip_rectangle_list (cr: POINTER): POINTER
+	copy_clip_rectangle_list (cr: POINTER): POINTER
 		external
 			"C signature (cairo_t*): cairo_rectangle_list_t* use <cairo.h>"
-		end
-
-	cairo_rectangle_list_t_get_status (a_rectangle_list_t: POINTER): INTEGER
-		external
-			"C [struct <cairo.h>] (cairo_rectangle_list_t): cairo_status_t"
 		alias
-			"status"
+			"cairo_copy_clip_rectangle_list"
 		end
 
-	cairo_rectangle_list_t_get_rectangles (a_rectangle_list_t: POINTER): POINTER
-		external
-			"C [struct <cairo.h>] (cairo_rectangle_list_t): EIF_POINTER"
-		alias
-			"rectangles"
-		end
-
-	cairo_rectangle_list_t_get_num_rectangles (a_rectangle_list_t: POINTER): INTEGER
-		external
-			"C [struct <cairo.h>] (cairo_rectangle_list_t): int"
-		alias
-			"num_rectangles"
-		end
-
-	cairo_region_num_rectangles (a_region: POINTER): INTEGER_32
-		external
-			"C signature (cairo_region_t*): int use <cairo.h>"
-		end
-
-	cairo_region_get_rectangle (a_region: POINTER; nth: INTEGER_32; a_rectangle: POINTER)
-		external
-			"C signature (cairo_region_t*, int, cairo_rectangle_int_t*) use <cairo.h>"
-		end
-
-	cairo_region_get_extents (a_region: POINTER; a_rectangle: POINTER)
+	region_get_extents (a_region: POINTER; a_rectangle: POINTER)
 		external
 			"C signature (cairo_region_t*, cairo_rectangle_int_t*) use <cairo.h>"
+		alias
+			"cairo_region_get_extents"
 		end
 
-	cairo_rectangle_int_t_size: INTEGER
+	rectangle_int_struct_size: INTEGER
 		external
 			"C macro use <cairo.h>"
 		alias
 			"sizeof(cairo_rectangle_int_t)"
 		end
 
-	cairo_rectangle_t_size: INTEGER
+	rectangle_struct_size: INTEGER
 		external
 			"C macro use <cairo.h>"
 		alias
 			"sizeof(cairo_rectangle_t)"
 		end
 
-	cairo_set_source (cr: POINTER; source: POINTER)
+	set_source (cr: POINTER; source: POINTER)
 		external
 			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
+		alias
+			"cairo_set_source"
 		end
 
-	cairo_paint_with_alpha (cr: POINTER; alpha: REAL_64)
+	paint_with_alpha (cr: POINTER; alpha: REAL_64)
 		external
 			"C signature (cairo_t*, double) use <cairo.h>"
+		alias
+			"cairo_paint_with_alpha"
 		end
 
-	cairo_mask (cr: POINTER; pattern: POINTER)
+	mask (cr: POINTER; pattern: POINTER)
 		external
 			"C signature (cairo_t*, cairo_pattern_t*) use <cairo.h>"
+		alias
+			"cairo_mask"
 		end
 
-	cairo_mask_surface (cr: POINTER; surface: POINTER; surface_x: REAL_64; surface_y: REAL_64)
+	mask_surface (cr: POINTER; surface: POINTER; surface_x: REAL_64; surface_y: REAL_64)
 		external
 			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_mask_surface"
 		end
 
-	cairo_set_source_surface (cr: POINTER; surface: POINTER; x: REAL_64; y: REAL_64)
+	set_source_surface (cr: POINTER; surface: POINTER; x: REAL_64; y: REAL_64)
 		external
 			"C signature (cairo_t*, cairo_surface_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_set_source_surface"
 		end
 
-	cairo_create (target: POINTER): POINTER
+	create_context (target: POINTER): POINTER
 		external
 			"C signature (cairo_surface_t*): cairo_t* use <cairo.h>"
+		alias
+			"cairo_create"
 		end
 
-	cairo_reference (cr: POINTER): POINTER
+	add_reference (cr: POINTER): POINTER
 		external
 			"C signature (cairo_t*): cairo_t* use <cairo.h>"
+		alias
+			"cairo_reference"
 		end
 
-	cairo_destroy (cr: POINTER)
+	destroy (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_destroy"
 		end
 
-	cairo_status (cr: POINTER): INTEGER
+	status (cr: POINTER): INTEGER
 		external
 			"C signature (cairo_t*): cairo_status_t use <cairo.h>"
+		alias
+			"cairo_status"
 		end
 
-	cairo_surface_destroy (cr: POINTER)
+	surface_destroy (cr: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"
+		alias
+			"cairo_surface_destroy"
 		end
 
-	cairo_get_reference_count (cr: POINTER): NATURAL_32
+	get_reference_count (cr: POINTER): NATURAL_32
 		external
 			"C signature (cairo_t*): unsigned int use <cairo.h>"
+		alias
+			"cairo_get_reference_count"
 		end
 
-	cairo_surface_flush (surface: POINTER)
+	surface_flush (surface: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"
+		alias
+			"cairo_surface_flush"
 		end
 
-	cairo_surface_mark_dirty (surface: POINTER)
+	surface_mark_dirty (surface: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"
+		alias
+			"cairo_surface_mark_dirty"
 		end
 
-	cairo_surface_mark_dirty_rectangle (surface: POINTER; x: INTEGER_32; y: INTEGER_32; width: INTEGER_32; height: INTEGER_32)
+	surface_mark_dirty_rectangle (surface: POINTER; x: INTEGER_32; y: INTEGER_32; width: INTEGER_32; height: INTEGER_32)
 		external
 			"C signature (cairo_surface_t*, int, int, int, int) use <cairo.h>"
+		alias
+			"cairo_surface_mark_dirty_rectangle"
 		end
 
-	cairo_surface_set_device_offset (surface: POINTER; x_offset: REAL_64; y_offset: REAL_64)
+	surface_set_device_offset (surface: POINTER; x_offset: REAL_64; y_offset: REAL_64)
 		external
 			"C signature (cairo_surface_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_surface_set_device_offset"
 		end
 
-	cairo_surface_get_device_offset (surface: POINTER; x_offset: TYPED_POINTER [REAL_64]; y_offset: TYPED_POINTER [REAL_64])
+	surface_get_device_offset (surface: POINTER; x_offset: TYPED_POINTER [REAL_64]; y_offset: TYPED_POINTER [REAL_64])
 		external
 			"C signature (cairo_surface_t*, double*, double*) use <cairo.h>"
+		alias
+			"cairo_surface_get_device_offset"
 		end
 
-	cairo_surface_set_fallback_resolution (surface: POINTER; x_pixels_per_inch: REAL_64; y_pixels_per_inch: REAL_64)
+	surface_set_fallback_resolution (surface: POINTER; x_pixels_per_inch: REAL_64; y_pixels_per_inch: REAL_64)
 		external
 			"C signature (cairo_surface_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_surface_set_fallback_resolution"
 		end
 
-	cairo_surface_get_fallback_resolution (surface: POINTER; x_pixels_per_inch: TYPED_POINTER [REAL_64]; y_pixels_per_inch: TYPED_POINTER [REAL_64])
+	surface_get_fallback_resolution (surface: POINTER; x_pixels_per_inch: TYPED_POINTER [REAL_64]; y_pixels_per_inch: TYPED_POINTER [REAL_64])
 		external
 			"C signature (cairo_surface_t*, double*, double*) use <cairo.h>"
+		alias
+			"cairo_surface_get_fallback_resolution"
 		end
 
-	cairo_surface_copy_page (surface: POINTER)
+	surface_copy_page (surface: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"
+		alias
+			"cairo_surface_copy_page"
 		end
 
-	cairo_surface_show_page (surface: POINTER)
+	surface_show_page (surface: POINTER)
 		external
 			"C signature (cairo_surface_t*) use <cairo.h>"
+		alias
+			"cairo_surface_show_page"
 		end
 
-	cairo_surface_has_show_text_glyphs (surface: POINTER): BOOLEAN
+	surface_has_show_text_glyphs (surface: POINTER): BOOLEAN
 		external
 			"C signature (cairo_surface_t*): cairo_bool_t use <cairo.h>"
+		alias
+			"cairo_surface_has_show_text_glyphs"
 		end
 
-	cairo_surface_get_type (surface: POINTER): INTEGER_8
+	surface_get_type (surface: POINTER): INTEGER_8
 		external
 			"C signature (cairo_surface_t*): cairo_surface_type_t use <cairo.h>"
+		alias
+			"cairo_surface_get_type"
 		end
 
-	cairo_surface_get_content (surface: POINTER): INTEGER_8
+	surface_get_content (surface: POINTER): INTEGER_8
 		external
 			"C signature (cairo_surface_t*): cairo_content_t use <cairo.h>"
+		alias
+			"cairo_surface_get_content"
 		end
 
-	cairo_surface_write_to_png (surface: POINTER; filename: POINTER): INTEGER_8
+	surface_write_to_png (surface: POINTER; filename: POINTER): INTEGER_8
 		external
 			"C signature (cairo_surface_t*, char*): cairo_status_t use <cairo.h>"
+		alias
+			"cairo_surface_write_to_png"
 		end
 
-	cairo_image_surface_create (format: INTEGER_8; width: INTEGER_32; height: INTEGER_32): POINTER
+	image_surface_create (format: INTEGER_8; width: INTEGER_32; height: INTEGER_32): POINTER
 		external
 			"C signature (cairo_format_t, int, int): cairo_surface_t* use <cairo.h>"
+		alias
+			"cairo_image_surface_create"
 		end
 
-	cairo_format_stride_for_width (format: INTEGER_8; width: INTEGER_32): INTEGER_32
+	format_stride_for_width (format: INTEGER_8; width: INTEGER_32): INTEGER_32
 		external
 			"C signature (cairo_format_t, int): int use <cairo.h>"
+		alias
+			"cairo_format_stride_for_width"
 		end
 
-	cairo_image_surface_create_for_data (data: TYPED_POINTER [NATURAL_8]; format: INTEGER_8; width: INTEGER_32; height: INTEGER_32; stride: INTEGER_32): POINTER
+	image_surface_create_for_data (data: TYPED_POINTER [NATURAL_8]; format: INTEGER_8; width: INTEGER_32; height: INTEGER_32; stride: INTEGER_32): POINTER
 		external
 			"C signature (unsigned char*, cairo_format_t, int, int, int): cairo_surface_t* use <cairo.h>"
+		alias
+			"cairo_image_surface_create_for_data"
 		end
 
-	cairo_image_surface_get_data (surface: POINTER): TYPED_POINTER [NATURAL_8]
+	image_surface_get_data (surface: POINTER): TYPED_POINTER [NATURAL_8]
 		external
 			"C signature (cairo_surface_t*): unsigned char* use <cairo.h>"
+		alias
+			"cairo_image_surface_get_data"
 		end
 
-	cairo_image_surface_get_format (surface: POINTER): INTEGER_8
+	image_surface_get_format (surface: POINTER): INTEGER_8
 		external
 			"C signature (cairo_surface_t*): cairo_format_t use <cairo.h>"
+		alias
+			"cairo_image_surface_get_format"
 		end
 
-	cairo_image_surface_get_width (surface: POINTER): INTEGER_32
+	image_surface_get_width (surface: POINTER): INTEGER_32
 		external
 			"C signature (cairo_surface_t*): int use <cairo.h>"
+		alias
+			"cairo_image_surface_get_width"
 		end
 
-	cairo_image_surface_get_height (surface: POINTER): INTEGER_32
+	image_surface_get_height (surface: POINTER): INTEGER_32
 		external
 			"C signature (cairo_surface_t*): int use <cairo.h>"
+		alias
+			"cairo_image_surface_get_height"
 		end
 
-	cairo_new_path (cr: POINTER)
+	new_path (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_new_path"
 		end
 
-	cairo_save (cr: POINTER)
+	save (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_save"
 		end
 
-	cairo_restore (cr: POINTER)
+	restore (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_restore"
 		end
 
-	cairo_push_group (cr: POINTER)
+	push_group (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_push_group"
 		end
 
-	cairo_push_group_with_content (cr: POINTER; content: INTEGER_8)
+	push_group_with_content (cr: POINTER; content: INTEGER_8)
 		external
 			"C signature (cairo_t*, cairo_content_t) use <cairo.h>"
+		alias
+			"cairo_push_group_with_content"
 		end
 
-	cairo_pop_group (cr: POINTER): POINTER
+	pop_group (cr: POINTER): POINTER
 		external
 			"C signature (cairo_t*): cairo_pattern_t* use <cairo.h>"
+		alias
+			"cairo_pop_group"
 		end
 
-	cairo_pop_group_to_source (cr: POINTER)
+	pop_group_to_source (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_pop_group_to_source"
 		end
 
-	cairo_set_operator (cr: POINTER; op: INTEGER_8)
+	set_operator (cr: POINTER; op: INTEGER_8)
 		external
 			"C signature (cairo_t*, cairo_operator_t) use <cairo.h>"
+		alias
+			"cairo_set_operator"
 		end
 
-	cairo_set_antialias (cr: POINTER; op: INTEGER_8)
+	set_antialias (cr: POINTER; op: INTEGER_8)
 		external
 			"C signature (cairo_t*, cairo_antialias_t) use <cairo.h>"
+		alias
+			"cairo_set_antialias"
 		end
 
-	cairo_font_options_set_antialias (cr: POINTER; op: INTEGER_8)
+	font_options_set_antialias (cr: POINTER; op: INTEGER_8)
 		external
 			"C signature (cairo_font_options_t*, cairo_antialias_t) use <cairo.h>"
+		alias
+			"cairo_font_options_set_antialias"
 		end
 
-	cairo_font_options_get_antialias (cr: POINTER): INTEGER_8
+	font_options_get_antialias (cr: POINTER): INTEGER_8
 		external
 			"C signature (cairo_font_options_t*): cairo_antialias_t use <cairo.h>"
+		alias
+			"cairo_font_options_get_antialias"
 		end
 
-	cairo_fill (cr: POINTER)
+	fill (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_fill"
 		end
 
-	cairo_fill_preserve (cr: POINTER)
+	fill_preserve (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_fill_preserve"
 		end
 
-	cairo_translate (cr: POINTER; tx: REAL_64; ty: REAL_64)
+	translate (cr: POINTER; tx: REAL_64; ty: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_translate"
 		end
 
-	cairo_scale (cr: POINTER; sx: REAL_64; sy: REAL_64)
+	scale (cr: POINTER; sx: REAL_64; sy: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_scale"
 		end
 
-	cairo_rotate (cr: POINTER; angle: REAL_64)
+	rotate (cr: POINTER; angle: REAL_64)
 		external
 			"C signature (cairo_t*, double) use <cairo.h>"
+		alias
+			"cairo_rotate"
 		end
 
-	cairo_paint (cr: POINTER)
+	paint (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_paint"
 		end
 
-	cairo_stroke (cr: POINTER)
+	stroke (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_stroke"
 		end
 
-	cairo_stroke_preserve (cr: POINTER)
+	stroke_preserve (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_stroke_preserve"
 		end
 
-	cairo_move_to (cr: POINTER; x: REAL_64; y: REAL_64)
+	move_to (cr: POINTER; x: REAL_64; y: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_move_to"
 		end
 
-	cairo_line_to (cr: POINTER; x: REAL_64; y: REAL_64)
+	line_to (cr: POINTER; x: REAL_64; y: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_line_to"
 		end
 
-	cairo_rectangle (cr: POINTER; x: REAL_64; y: REAL_64; width: REAL_64; height: REAL_64)
+	rectangle (cr: POINTER; x: REAL_64; y: REAL_64; width: REAL_64; height: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_rectangle"
 		end
 
-	cairo_set_source_rgba (cr: POINTER; red: REAL_64; green: REAL_64; blue: REAL_64; alpha: REAL_64)
+	set_source_rgba (cr: POINTER; red: REAL_64; green: REAL_64; blue: REAL_64; alpha: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_set_source_rgba"
 		end
 
-	cairo_set_source_rgb (cr: POINTER; red: REAL_64; green: REAL_64; blue: REAL_64)
+	set_source_rgb (cr: POINTER; red: REAL_64; green: REAL_64; blue: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double) use <cairo.h>"
+		alias
+			"cairo_set_source_rgb"
 		end
 
-	cairo_curve_to (cr: POINTER; x1: REAL_64; y1: REAL_64; x2: REAL_64; y2: REAL_64; x3: REAL_64; y3: REAL_64)
+	curve_to (cr: POINTER; x1: REAL_64; y1: REAL_64; x2: REAL_64; y2: REAL_64; x3: REAL_64; y3: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_curve_to"
 		end
 
-	cairo_arc (cr: POINTER; xc: REAL_64; yc: REAL_64; radius: REAL_64; angle1: REAL_64; angle2: REAL_64)
+	arc (cr: POINTER; xc: REAL_64; yc: REAL_64; radius: REAL_64; angle1: REAL_64; angle2: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_arc"
 		end
 
-	cairo_arc_negative (cr: POINTER; xc: REAL_64; yc: REAL_64; radius: REAL_64; angle1: REAL_64; angle2: REAL_64)
+	arc_negative (cr: POINTER; xc: REAL_64; yc: REAL_64; radius: REAL_64; angle1: REAL_64; angle2: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_arc_negative"
 		end
 
-	cairo_set_line_width (cr: POINTER; width: REAL_64)
+	set_line_width (cr: POINTER; width: REAL_64)
 		external
 			"C signature (cairo_t*, double) use <cairo.h>"
+		alias
+			"cairo_set_line_width"
 		end
 
-	cairo_set_line_cap (cr: POINTER; line_cap: INTEGER_8)
+	set_line_cap (cr: POINTER; line_cap: INTEGER_8)
 		external
 			"C signature (cairo_t*, cairo_line_cap_t) use <cairo.h>"
+		alias
+			"cairo_set_line_cap"
 		end
 
-	cairo_set_line_join (cr: POINTER; line_join: INTEGER_8)
+	set_line_join (cr: POINTER; line_join: INTEGER_8)
 		external
 			"C signature (cairo_t*, cairo_line_join_t) use <cairo.h>"
+		alias
+			"cairo_set_line_join"
 		end
 
-	cairo_rel_move_to (cr: POINTER; dx: REAL_64; dy: REAL_64)
+	rel_move_to (cr: POINTER; dx: REAL_64; dy: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_rel_move_to"
 		end
 
-	cairo_rel_line_to (cr: POINTER; dx: REAL_64; dy: REAL_64)
+	rel_line_to (cr: POINTER; dx: REAL_64; dy: REAL_64)
 		external
 			"C signature (cairo_t*, double, double) use <cairo.h>"
+		alias
+			"cairo_rel_line_to"
 		end
 
-	cairo_rel_curve_to (cr: POINTER; dx1: REAL_64; dy1: REAL_64; dx2: REAL_64; dy2: REAL_64; dx3: REAL_64; dy3: REAL_64)
+	rel_curve_to (cr: POINTER; dx1: REAL_64; dy1: REAL_64; dx2: REAL_64; dy2: REAL_64; dx3: REAL_64; dy3: REAL_64)
 		external
 			"C signature (cairo_t*, double, double, double, double, double, double) use <cairo.h>"
+		alias
+			"cairo_rel_curve_to"
 		end
 
-	cairo_close_path (cr: POINTER)
+	close_path (cr: POINTER)
 		external
 			"C signature (cairo_t*) use <cairo.h>"
+		alias
+			"cairo_close_path"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

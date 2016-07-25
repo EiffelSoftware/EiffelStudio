@@ -58,20 +58,19 @@ feature -- Inflate
 
 feature	{NONE} -- Inflate Implementation
 
-	read: INTEGER
+	read
 			-- <Precursor>
 		do
 			if attached io_medium as l_input_medium then
-				Result := io_medium_read (l_input_medium)
+				last_read_elements := io_medium_read (l_input_medium)
 			end
 		end
 
-	write (a_amount: INTEGER): INTEGER
-			-- Write the `a_amount' of elements to the user_output_io_medium or
-			-- user_output_buffer.
+	write (a_amount: INTEGER)
+			-- <Precursor>
 		do
 			if attached user_output_io_medium as l_medium then
-				Result :=  io_medium_write (output_buffer,a_amount,l_medium)
+				last_write_elements := io_medium_write (output_buffer,a_amount,l_medium)
 			end
 		end
 

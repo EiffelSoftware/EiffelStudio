@@ -49,19 +49,19 @@ feature -- Access
 
 feature {NONE} -- Deflate implementation		
 
-	read: INTEGER
+	read
 			-- <Precursor>
 		do
 			if attached user_input_string as l_input_string then
-				Result := string_read (l_input_string)
+				last_read_elements := string_read (l_input_string)
 			end
 		end
 
-	write (a_amount: INTEGER): INTEGER
+	write (a_amount: INTEGER)
 			-- <Precursor>
 		do
 			if attached string as l_string then
-				Result := string_write (output_buffer,a_amount, l_string)
+				last_write_elements := string_write (output_buffer,a_amount, l_string)
 			end
 		end
 
@@ -82,7 +82,7 @@ feature {NONE} -- Deflate implementation
 			from
 				l_index := 1
 			until
-				l_index > a_string.count or else l_index > chunk
+				l_index > a_string.count or else l_index > chunk_size
 			loop
 				input_buffer.put_character(a_string.at (l_index), l_index - 1)
 				l_index := l_index + 1

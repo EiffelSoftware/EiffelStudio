@@ -35,7 +35,8 @@ feature -- Measurement
 		end
 
 feature -- Access
-	adler: INTEGER
+
+	adler: INTEGER_64
 		  -- adler32 value of the uncompressed data.
 		do
 			Result := c_adler (item)
@@ -77,13 +78,13 @@ feature -- Access
 			Result := c_next_out (item)
 		end
 
-	total_input: INTEGER
+	total_input: INTEGER_64
 			-- total number of input bytes read so far.
 		do
 			Result := c_total_in (item)
 		end
 
-	total_output: INTEGER
+	total_output: INTEGER_64
 			-- total number of bytes output so far.
 		do
 			Result := c_total_out (item)
@@ -112,7 +113,6 @@ feature -- Change Element
 			c_set_next_out (item, a_val)
 		end
 
-
 feature -- C external Access
 
 	c_next_in (a_item: POINTER): POINTER
@@ -127,10 +127,10 @@ feature -- C external Access
 			"return (EIF_INTEGER)((z_stream *) $a_item)->avail_in;"
 		end
 
-	c_total_in (a_item: POINTER): INTEGER
+	c_total_in (a_item: POINTER): INTEGER_64
 		external "C inline use <zlib.h>"
 		alias
-			"return (EIF_INTEGER)((z_stream *) $a_item)->total_in;"
+			"return (EIF_INTEGER_64)((z_stream *) $a_item)->total_in;"
 		end
 
 	c_next_out (a_item: POINTER): POINTER
@@ -145,10 +145,10 @@ feature -- C external Access
 			"return (EIF_INTEGER)((z_stream *) $a_item)->avail_out;"
 		end
 
-	c_total_out (a_item: POINTER): INTEGER
+	c_total_out (a_item: POINTER): INTEGER_64
 		external "C inline use <zlib.h>"
 		alias
-			"return ((z_stream *) $a_item)->total_out;"
+			"return (EIF_INTEGER_64)((z_stream *) $a_item)->total_out;"
 		end
 
 	c_msg (a_item: POINTER): POINTER
@@ -166,7 +166,7 @@ feature -- C external Access
 	c_adler (a_item: POINTER): INTEGER
 		external "C inline use <zlib.h>"
 		alias
-			"return (EIF_INTEGER)((z_stream *) $a_item)->adler;"
+			"return (EIF_INTEGER_64)((z_stream *) $a_item)->adler;"
 		end
 
 feature -- C external element change

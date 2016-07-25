@@ -22,7 +22,7 @@ feature -- Initialization
 			create zlib
 
 				-- Setup a default chunk size
-			chunk := default_chunk
+			chunk_size := default_chunk
 
 				-- Setup a default compression level
 			compression_level := {ZLIB_CONSTANTS}.Z_default_compression
@@ -31,8 +31,8 @@ feature -- Initialization
 	intialize
 		do
 				-- Initialize buffers
-			create input_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk))
-			create output_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk))
+			create input_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk_size))
+			create output_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk_size))
 		end
 
 feature --Access
@@ -74,21 +74,19 @@ feature --Access
 			Result := string_from_external (zstream.message)
 		end
 
-	total_bytes_compressed: INTEGER
+	total_bytes_compressed: INTEGER_64
 			-- number of bytes compressed.
 		do
 			Result := zstream.total_input
 		end
 
-feature -- Change Element
+	last_read_elements: INTEGER
+			-- Number of elements read by `read'.
 
-	set_chunk (a_chunk: INTEGER)
-			-- Set `a_chunk' to `chunk'
-		do
-			chunk := a_chunk
-		ensure
-			chunk_set: chunk = a_chunk
-		end
+	last_write_elements: INTEGER
+			-- Number of elements written by `write'.
+
+feature -- Change Element
 
 	set_compression_level (a_level: INTEGER)
 			-- Set `compression_level' to `a_compression_level'
@@ -103,7 +101,7 @@ feature -- Change Element
 feature {NONE} -- Deflate implementation
 
 	deflate
-			--		 Compress from `a_source' to `a_dest' until EOF on `a_source'.
+			--	 Compress from `a_source' to `a_dest' until EOF on `a_source'.
 			--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be
 			--   allocated for processing, Z_STREAM_ERROR if an invalid compression
 			--   level is supplied, Z_VERSION_ERROR if the version of zlib.h and the
@@ -121,7 +119,8 @@ feature {NONE} -- Deflate implementation
 				until
 					end_of_input or has_error
 				loop
-					zstream.set_available_input (read)
+					read
+					zstream.set_available_input (last_read_elements)
 					zstream.set_next_input (input_buffer.item)
 					if end_of_input then
 						l_flush := {ZLIB_CONSTANTS}.z_finish
@@ -131,27 +130,29 @@ feature {NONE} -- Deflate implementation
 
 						-- run deflate on input until output buffer not full, finish compression if all of source has been read in
 					from
-						zstream.set_available_output (Chunk)
+						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
 						zlib.deflate (zstream, l_flush)
 						check
 							zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
 						end
-						l_have := Chunk - zstream.available_output
-						if write (l_have) /= l_have then
+						l_have := chunk_size - zstream.available_output
+						write (l_have)
+						if last_write_elements /= l_have then
 							zlib.deflate_end (zstream)
 						end
 					until
 						zstream.available_output /= 0 or has_error
 					loop
-						zstream.set_available_output (Chunk)
+						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
 						zlib.deflate (zstream, l_flush)
 						check
 							l_zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
 						end
-						l_have := Chunk - zstream.available_output
-						if write (l_have) /= l_have then
+						l_have := chunk_size - zstream.available_output
+						write (l_have)
+						if last_write_elements /= l_have then
 							zlib.deflate_end (zstream)
 						end
 					end
@@ -170,15 +171,15 @@ feature {NONE} -- Deflate implementation
 			end
 		end
 
-	read: INTEGER
+	read
 			-- Read the medium by character until end of it or the number of elements (Chunk) was reached.
-			-- Return the number of elements read.
+			-- Make result available in `last_read_elements'.
 		deferred
 		end
 
-	write (a_amount: INTEGER): INTEGER
+	write (a_amount: INTEGER)
 			-- Write the `a_amount' of elements from `output_buffer' to a corresponding medium
-			-- Return the number of elements written.
+			-- Make the result available in `last_write_elements'.
 		deferred
 		end
 
@@ -191,6 +192,7 @@ feature {NONE} -- Deflate implementation
 feature {NONE} -- Implementation
 
 	end_of_input: BOOLEAN
+			-- Has end of input been detected?
 
 	input_buffer: MANAGED_POINTER
 			-- Input buffer.
@@ -198,10 +200,10 @@ feature {NONE} -- Implementation
 	output_buffer: MANAGED_POINTER
 			-- Output buffer
 
-	chunk: INTEGER
+	chunk_size: INTEGER
 			-- the buffer size for feeding data to and pulling data from the zlib routines.
 
-	default_chunk: INTEGER = 2048
+	default_chunk: INTEGER = 16384
 			-- default buffer size
 
 	zlib: ZLIB

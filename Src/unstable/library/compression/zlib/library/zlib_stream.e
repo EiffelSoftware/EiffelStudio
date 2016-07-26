@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Change Element
 
-	set_available_input (a_val: INTEGER)
+	set_available_input (a_val: INTEGER_64)
 		do
 			c_set_avail_in (item, a_val)
 		end
@@ -177,7 +177,7 @@ feature -- C external element change
 			"((z_stream *)($a_item))->next_in = $a_val"
 		end
 
-	c_set_avail_in (a_struct: POINTER; a_val: INTEGER)
+	c_set_avail_in (a_struct: POINTER; a_val: INTEGER_64)
 		external "C [struct %"zlib.h%"] (z_stream, int)"
 		alias "avail_in"
 		end

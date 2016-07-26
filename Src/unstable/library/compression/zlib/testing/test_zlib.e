@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	buffer_to_string (a_buffer: ARRAY[CHARACTER]; a_total: INTEGER) : STRING
+	buffer_to_string (a_buffer: ARRAY[CHARACTER]; a_total: INTEGER_64) : STRING
 		local
 			i: INTEGER
 		do

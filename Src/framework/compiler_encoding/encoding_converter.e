@@ -400,7 +400,7 @@ feature {NONE} -- Buffers
 	Ascii_to_utf8_File_buffer: ASCII_UTF8_CONVERSION_FILE_BUFFER
 			-- On the fly ASCII UTF-8 conversion buffer.
 		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+			create Result.make_with_size (create {KL_STRING_INPUT_STREAM}.make (""), 50000)
 		ensure
 			file_buffer_not_void: Result /= Void
 		end
@@ -408,7 +408,7 @@ feature {NONE} -- Buffers
 	detection_buffer: ENCODING_DETECTION_FILE_BUFFER
 			-- Buffer for encoding detection
 		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
+			create Result.make_with_size (create {KL_STRING_INPUT_STREAM}.make (""), 50000)
 		ensure
 			file_buffer_not_void: Result /= Void
 		end
@@ -417,7 +417,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

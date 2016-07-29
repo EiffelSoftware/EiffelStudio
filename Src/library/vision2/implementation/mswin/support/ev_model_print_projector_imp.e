@@ -18,6 +18,9 @@ inherit
 	EV_MODEL_PROJECTOR
 
 	EV_MODEL_DRAWER
+		undefine
+			default_colors
+		end
 
 	EV_MODEL_PROJECTION_ROUTINES
 
@@ -44,7 +47,7 @@ feature {NONE} -- Initialization
 			create a_printer.make_with_context (print_dc)
 			drawable := a_printer
 
-				-- This is only for letting users who have defined their own figure to still be 
+				-- This is only for letting users who have defined their own figure to still be
 				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
@@ -150,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -71,6 +71,7 @@ when switching from non dll to dll, don't forget to clean
 		<!-- Windows -->
 		<set name="runtime_c_compiler" value="m" if="-${ISE_C_COMPILER}-=--" />
 		<set name="runtime_c_compiler" value="m" if="${ISE_C_COMPILER}=msc" />
+	    <set name="runtime_c_compiler" value="m" if="${ISE_C_COMPILER}=msc_vc140" />
 		<set name="runtime_c_compiler" value="b" if="${ISE_C_COMPILER}=bcb" />
 		<set name="runtime_c_compiler" value="g" if="${ISE_C_COMPILER}=mingw" />
 

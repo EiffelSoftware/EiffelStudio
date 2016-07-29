@@ -95,7 +95,7 @@ feature -- Access
 				logical_y := print_dc.device_caps (logical_pixels_y)
 				set_dc_extents (pixels_per_inch, pixels_per_inch, logical_x, logical_y)
 				if world.grid_enabled and world.grid_visible then
-					draw_grid
+					draw_grid (world)
 				end
 				if world.is_show_requested then
 					project_figure_group (world, clip_rect)

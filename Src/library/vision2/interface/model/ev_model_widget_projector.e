@@ -14,7 +14,10 @@ inherit
 	EV_MODEL_PROJECTOR
 
 	EV_MODEL_DRAWER
-
+		undefine
+			default_colors
+		end
+		
 	EV_MODEL_PROJECTION_ROUTINES
 
 	EV_SHARED_APPLICATION
@@ -156,7 +159,7 @@ feature -- Basic operations
 			drawable.clear_rectangle (u.left, u.top, u.width, u.height)
 
 			if l_world.grid_visible then
-				draw_grid
+				draw_grid (l_world)
 			end
 
 			if l_world.is_show_requested then
@@ -655,7 +658,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

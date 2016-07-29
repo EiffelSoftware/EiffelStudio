@@ -629,8 +629,6 @@ feature -- Properties
 			-- Does type depend on formal generic parameters and/or anchors?
 		do
 			-- Do nothing
-		ensure
-			definition: Result = (has_like or has_formal_generic)
 		end
 
 	is_explicit: BOOLEAN

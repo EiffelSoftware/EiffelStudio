@@ -54,12 +54,7 @@ feature {NONE} -- Initialization
 			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y')
 			-- and `width' `a_width' and `height' `a_height'
 		do
-			default_create
-			center.set (a_x + a_width // 2, a_y + a_height // 2)
-			point_array.item (0).set (a_x, a_y)
-			point_array.item (1).set (a_x + a_width, a_y)
-			point_array.item (2).set (a_x + a_width, a_y + a_height)
-			point_array.item (3).set (a_x, a_y + a_height)
+			Precursor (a_x, a_y, a_width, a_height)
 			set_rounded_points
 		end
 
@@ -325,7 +320,7 @@ invariant
 	radius_non_negative: radius >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	File_buffer: YY_FILE_BUFFER
 			-- Parser input file buffer
 		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 500)
+			create Result.make_with_size (create {KL_STRING_INPUT_STREAM}.make (""), 500)
 		ensure
 			file_buffer_not_void: Result /= Void
 		end
@@ -154,7 +154,7 @@ invariant
 	verbatim_marker_not_void: verbatim_marker /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

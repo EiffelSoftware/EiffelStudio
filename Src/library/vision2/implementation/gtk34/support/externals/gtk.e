@@ -1769,6 +1769,27 @@ feature
 			"C signature (GtkStyleContext*, GtkStateFlags, GdkRGBA*) use <ev_gtk.h>"
 		end
 
+	frozen gtk_style_context_save (a_context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_restore (a_context: POINTER)
+		external
+			"C signature (GtkStyleContext*) use <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_set_state (a_context: POINTER; a_state: INTEGER)
+		external
+			"C signature (GtkStyleContext*, GtkStateFlags) use <ev_gtk.h>"
+		end
+
+	frozen gtk_style_context_get_state (a_context: POINTER): INTEGER
+		external
+			"C signature (GtkStyleContext*): GtkStateFlags use <ev_gtk.h>"
+		end
+
+
 	frozen gtk_scale_set_digits (a_scale: POINTER; a_digits: INTEGER_32)
 		external
 			"C (GtkScale*, gint) | <ev_gtk.h>"

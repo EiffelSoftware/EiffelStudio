@@ -1,5 +1,9 @@
 note
 	description: "EiffelVision drawable. GTK implementation."
+	Implementation_details: "[
+		In Cairo, the coordinate system is not based on square pixels, but on the line
+		between pixels (aka sample points).
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "figures, primitives, drawing, line, point, ellipse"
@@ -228,11 +232,12 @@ feature -- Element change
 			if l_drawable /= default_pointer then
 				gc_clip_area := an_area.twin
 				{CAIRO}.rectangle (l_drawable,
-					an_area.x + device_x_offset,
-					an_area.y + device_y_offset,
+					an_area.x + device_x_offset + 0.5,
+					an_area.y + device_y_offset + 0.5,
 					an_area.width,
 					an_area.height)
 				{CAIRO}.clip (l_drawable)
+				release_drawable (l_drawable)
 			else
 				check has_drawable: False end
 			end
@@ -253,6 +258,7 @@ feature -- Element change
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
 				{CAIRO}.reset_clip (l_drawable)
+				release_drawable (l_drawable)
 			else
 				check has_drawble: False end
 			end
@@ -305,19 +311,18 @@ feature -- Clearing operations
 	clear_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		local
-			l_bg_color: detachable EV_COLOR
 			l_drawable: POINTER
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
 				{CAIRO}.save (l_drawable)
-				l_bg_color := internal_background_color
-				if l_bg_color /= Void then
+				if attached internal_background_color as l_bg_color then
 					{CAIRO}.set_source_rgb (l_drawable, l_bg_color.red, l_bg_color.green, l_bg_color.blue)
 				else
+						-- White
 					{CAIRO}.set_source_rgb (l_drawable, 1.0, 1.0, 1.0)
 				end
-				{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width, a_height)
+				{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width, a_height)
 				{CAIRO}.fill (l_drawable)
 
 				{CAIRO}.restore (l_drawable)
@@ -504,8 +509,8 @@ feature -- Drawing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
-				{CAIRO}.move_to (l_drawable, x1 + device_x_offset, y1 + device_y_offset)
-				{CAIRO}.line_to (l_drawable, x2 + device_x_offset, y2 + device_y_offset)
+				{CAIRO}.move_to (l_drawable, x1 + device_x_offset + 0.5, y1 + device_y_offset + 0.5)
+				{CAIRO}.line_to (l_drawable, x2 + device_x_offset + 0.5, y2 + device_y_offset + 0.5)
 				{CAIRO}.stroke (l_drawable)
 				release_drawable (l_drawable)
 			end
@@ -530,7 +535,7 @@ feature -- Drawing operations
 			if l_drawable /= default_pointer and then attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_pixel_buffer_imp then
 				{CAIRO}.save (l_drawable)
 				{GDK_CAIRO}.set_source_pixbuf (l_drawable, l_pixel_buffer_imp.gdk_pixbuf, area.x, area.y)
-				{CAIRO}.rectangle (l_drawable, a_x + device_x_offset, a_y + device_y_offset, area.width, area.height)
+				{CAIRO}.rectangle (l_drawable, a_x + device_x_offset + 0.5, a_y + device_y_offset + 0.5, area.width, area.height)
 				{CAIRO}.fill (l_drawable)
 				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
@@ -556,14 +561,10 @@ feature -- Drawing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer and then attached {EV_PIXMAP_IMP} a_pixmap.implementation as l_pixmap_imp then
-
 				{CAIRO}.save (l_drawable)
-
 				{CAIRO}.set_source_surface (l_drawable, l_pixmap_imp.cairo_surface, x - x_src, y - y_src)
-
-				{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, src_width, src_height)
+				{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, src_width, src_height)
 				{CAIRO}.fill (l_drawable)
-
 				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
 			end
@@ -678,12 +679,12 @@ feature -- Drawing operations
 				if l_drawable /= default_pointer then
 					from
 						l_count := points.count
-						{CAIRO}.move_to (l_drawable, points [1].x_precise, points [1].y_precise)
+						{CAIRO}.move_to (l_drawable, points [1].x_precise + 0.5, points [1].y_precise + 0.5)
 						i := 2
 					until
 						i > l_count
 					loop
-						{CAIRO}.line_to (l_drawable, points [i].x_precise, points [i].y_precise)
+						{CAIRO}.line_to (l_drawable, points [i].x_precise + 0.5, points [i].y_precise + 0.5)
 						i := i + 1
 					end
 					if is_closed then
@@ -722,17 +723,10 @@ feature -- filling operations
 			if l_drawable /= default_pointer then
 				if a_width > 0 and then a_height > 0 then
 						-- If width or height are zero then nothing will be rendered.
-					{CAIRO}.rectangle (l_drawable, x + device_x_offset, y + device_y_offset, a_width - line_width, a_height - line_width)
+					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width - line_width, a_height - line_width)
 					if a_fill then
 						{CAIRO}.stroke_preserve (l_drawable)
-						{CAIRO}.save (l_drawable)
-						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.set_source_rgba (l_drawable, l_fg_color.red, l_fg_color.green, l_fg_color.blue, 1.0)
-						else
-							{CAIRO}.set_source_rgba (l_drawable, 1.0, 1.0, 1.0, 1.0)
-						end
 						{CAIRO}.fill (l_drawable)
-						{CAIRO}.restore (l_drawable)
 					end
 					{CAIRO}.stroke (l_drawable)
 				end

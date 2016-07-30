@@ -153,7 +153,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		local
 			a_widget: POINTER
 		do
-			a_widget := {GTK}.gtk_entry_new
+			a_widget := {GTK2}.gtk_tree_view_new
 			Result := stock_colors_imp.color_from_state (a_widget, style_type, a_state)
 			{GTK}.gtk_widget_destroy (a_widget)
 		end

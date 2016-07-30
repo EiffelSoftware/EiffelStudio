@@ -234,18 +234,17 @@ feature -- Element change
 				l_description := cfg.description
 				if
 					(l_description = Void or else l_description.is_whitespace) and then
-					attached {READABLE_STRING_GENERAL} cfg.info ("description") as d
+					attached cfg.info ("description") as d
 				then
 					l_description := d
 				end
-				if l_description /= Void then
-					i := txt.text_length
+				if l_description /= Void and then not l_description.is_empty then
 					txt.append_text (l_description)
 					if not l_description.ends_with ("%N") then
 						txt.append_text ("%N")
 					end
 					j := txt.text_length + 1
-					txt.format_region (i, j, description_text_format)
+					txt.format_region (i + 1, j, description_text_format)
 					txt.append_text ("%N")
 				end
 				if attached cfg.info_items as l_items then
@@ -256,18 +255,18 @@ feature -- Element change
 								-- Ignore.
 						elseif ic.key.same_string ("description") then
 								-- Already processed.
-						else
+						elseif not ic.key.is_empty then
 							i := txt.text_length
 							txt.append_text (ic.key)
 							j := txt.text_length + 1
-							txt.format_region (i, j, keyword_text_format)
+							txt.format_region (i + 1, j, keyword_text_format)
 
 							txt.append_text (":")
 							i := txt.text_length
 							txt.append_text (ic.item)
 							txt.append_text ("%N")
 							j := txt.text_length + 1
-							txt.format_region (i, j, description_text_format)
+							txt.format_region (i + 1, j, description_text_format)
 						end
 					end
 				end

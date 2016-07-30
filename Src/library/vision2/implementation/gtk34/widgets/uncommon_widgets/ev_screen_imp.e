@@ -31,7 +31,9 @@ inherit
 		redefine
 			interface,
 			make,
-			supports_pixbuf_alpha
+			supports_pixbuf_alpha,
+			device_x_offset,
+			device_y_offset
 		end
 
 	EV_GTK_DEPENDENT_ROUTINES
@@ -419,6 +421,12 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Externals (XTEST extension)
+
+	device_x_offset: INTEGER
+			-- <Precursor>
+
+	device_y_offset: INTEGER
+			-- <Precursor>
 
 	gdk_test_simulate_button_symbol: POINTER
 			-- Symbol for `gdk_test_simulate_button'

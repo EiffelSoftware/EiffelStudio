@@ -839,11 +839,15 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	device_x_offset: INTEGER_16
+	device_x_offset: INTEGER
 			-- Number of pixels to offset the x coord to get correct device placement
+		do
+		end
 
-	device_y_offset: INTEGER_16
+	device_y_offset: INTEGER
 			-- Number of pixels to offset to y coord to get correct device placement.
+		do
+		end
 
 	internal_set_color (a_foreground: BOOLEAN; a_red, a_green, a_blue: REAL_64)
 			-- Set `gc' color to (a_red, a_green, a_blue), `a_foreground' sets foreground color, otherwise background is set.

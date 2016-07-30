@@ -290,6 +290,7 @@ feature -- Element change
 --			line_style := {GTK}.Gdk_line_on_off_dash_enum
 --			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
 --				line_style, cap_style, join_style)
+			check Implemented: False end
 		end
 
 	disable_dashed_line_style
@@ -298,6 +299,7 @@ feature -- Element change
 --			line_style := {GTK}.Gdk_line_solid_enum
 --			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
 --				line_style, cap_style, join_style)
+			check Implemented: False end
 		end
 
 feature -- Clearing operations

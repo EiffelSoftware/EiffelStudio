@@ -209,18 +209,21 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	initialize_drawable (a_drawable: POINTER)
 			-- Initialize new `drawable' to existing parameters.
-		local
-			l_red, l_green, l_blue: REAL_64
 		do
+				-- No aliasing to get pixel perfect rendering
 			{CAIRO}.set_antialias (a_drawable, {CAIRO}.antialias_none)
+				-- End of line stops where we tells to (no lighter
+				-- rounding or square effects on each ends of the line)
+			{CAIRO}.set_line_cap (a_drawable, {CAIRO}.line_cap_butt)
+				-- Default line width is 1.0
 			{CAIRO}.set_line_width (a_drawable, line_width)
-			if attached internal_foreground_color as l_internal_foreground_color then
-				l_red := l_internal_foreground_color.red
-				l_green := l_internal_foreground_color.green
-				l_blue := l_internal_foreground_color.blue
+			if attached internal_foreground_color as l_color then
+				{CAIRO}.set_source_rgb (a_drawable, l_color.red, l_color.green, l_color.blue)
+			else
+					-- No colors specified, it will be black
+				{CAIRO}.set_source_rgb (a_drawable, 0.0, 0.0, 0.0)
 			end
-			{CAIRO}.set_source_rgb (a_drawable, l_red, l_green, l_blue)
-			internal_set_drawing_mode (a_drawable, drawing_mode)
+			{CAIRO}.set_operator (a_drawable, cairo_drawing_mode (drawing_mode))
 		end
 
 	internal_set_focus

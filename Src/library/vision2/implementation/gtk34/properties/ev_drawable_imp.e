@@ -187,26 +187,31 @@ feature -- Element change
 			-- Set drawing mode to `a_mode'.
 		do
 			if drawable /= default_pointer then
-				internal_set_drawing_mode (drawable, a_mode)
+				{CAIRO}.set_operator (drawable, cairo_drawing_mode (a_mode))
 			end
 				-- Store set drawing mode.
 			drawing_mode := a_mode
 		end
 
-	internal_set_drawing_mode (a_drawable: POINTER; a_drawing_mode: INTEGER)
+	cairo_drawing_mode (a_drawing_mode: INTEGER): INTEGER_8
+			-- Convert a vision drawing mode into the best cairo one.
 		do
+				-- Unfortunately there is no one to one mapping except for
+				-- {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy and
+				-- {EV_DRAWABLE_CONSTANTS}.drawing_mode_and. All the other
+				-- modes are approximation.
 			inspect
 				a_drawing_mode
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_copy then
-				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_over)
-			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
-				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_xor)
-			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
-				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_difference)
+				Result := {CAIRO}.operator_over
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_and then
-				{CAIRO}.set_operator (a_drawable, {CAIRO}.operator_add)
+				Result := {CAIRO}.operator_multiply
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_xor then
+				Result := {CAIRO}.operator_xor
+			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_invert then
+				Result := {CAIRO}.operator_exclusion
 			when {EV_DRAWABLE_CONSTANTS}.drawing_mode_or then
-
+				Result := {CAIRO}.operator_atop
 			else
 				check
 					drawing_mode_exists: False

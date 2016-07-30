@@ -102,10 +102,10 @@ feature {NONE} -- Implementation / Observer pattern
 
 feature {NONE} -- Implementation
 
-	editor: EB_EDITOR
+	editor: detachable EB_EDITOR
 			-- Editor corresponding to Current
 		do
-			if attached target.editors_manager as l_manager then
+			if attached target as l_target and then attached l_target.editors_manager as l_manager then
 				Result := l_manager.current_editor
 			end
 		end
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

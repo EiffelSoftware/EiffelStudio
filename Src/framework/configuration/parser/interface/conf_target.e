@@ -264,7 +264,7 @@ feature -- Access queries
 			end
 		end
 
-	settings: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+	settings: STRING_TABLE [STRING_32]
 			-- Settings.
 		do
 			if attached extends as l_extends then

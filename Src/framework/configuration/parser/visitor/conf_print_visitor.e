@@ -178,8 +178,8 @@ feature -- Visit nodes
 			l_variables: like {CONF_TARGET}.internal_variables
 			l_name: ARRAYED_LIST [READABLE_STRING_8]
 			l_val: ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
-			l_sorted_list: ARRAYED_LIST [READABLE_STRING_32]
-			l_sorter: QUICK_SORTER [READABLE_STRING_32]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			current_target := a_target
 			append_text_indent ("<target")
@@ -242,7 +242,7 @@ feature -- Visit nodes
 				create l_val.make (2)
 				l_settings := a_target.internal_settings
 				create l_sorted_list.make_from_array (l_settings.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING_32]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
 				l_sorted_list.start
 			until

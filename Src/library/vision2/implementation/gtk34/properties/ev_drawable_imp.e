@@ -635,16 +635,10 @@ feature -- Drawing operations
 						{CAIRO}.move_to (l_drawable, l_xc, l_yc)
 					end
 
-					{CAIRO}.arc_negative (l_drawable, l_xc, l_yc, a_height / 2, a_start_angle, - (a_start_angle + an_aperture))
+					{CAIRO}.arc_negative (l_drawable, l_xc, l_yc, a_height / 2, -a_start_angle, - (a_start_angle + an_aperture))
 					if a_fill then
-						{CAIRO}.save (l_drawable)
-						if attached internal_foreground_color as l_fg_color then
-							{CAIRO}.set_source_rgb (l_drawable, l_fg_color.red.to_double, l_fg_color.green.to_double, l_fg_color.blue.to_double)
-						else
-							{CAIRO}.set_source_rgb (l_drawable, 0.0, 0.0, 0.0)
-						end
+						{CAIRO}.stroke_preserve (l_drawable)
 						{CAIRO}.fill (l_drawable)
-						{CAIRO}.restore (l_drawable)
 					end
 
 					if l_close then

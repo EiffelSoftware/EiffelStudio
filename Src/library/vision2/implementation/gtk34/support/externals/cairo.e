@@ -24,6 +24,10 @@ feature -- Constants
     ANTIALIAS_GOOD: INTEGER_8 = 5
     ANTIALIAS_BEST: INTEGER_8 = 6
 
+    LINE_CAP_BUTT: INTEGER_8 = 0
+    LINE_CAP_ROUND: INTEGER_8 = 1
+    LINE_CAP_SQUARE: INTEGER_8 = 2
+
 	OPERATOR_SOURCE: INTEGER_8
 		external
 			"C macro use <cairo.h>"
@@ -66,6 +70,13 @@ feature -- Constants
 			"CAIRO_OPERATOR_ADD"
 		end
 
+	OPERATOR_ATOP: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_ATOP"
+		end
+
 	OPERATOR_DEST: INTEGER_8
 		external
 			"C macro use <cairo.h>"
@@ -106,6 +117,20 @@ feature -- Constants
 			"C macro use <cairo.h>"
 		alias
 			"CAIRO_OPERATOR_DIFFERENCE"
+		end
+
+	OPERATOR_EXCLUSION: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_EXCLUSION"
+		end
+
+	OPERATOR_MULTIPLY: INTEGER_8
+		external
+			"C macro use <cairo.h>"
+		alias
+			"CAIRO_OPERATOR_MULTIPLY"
 		end
 
 feature -- Externals

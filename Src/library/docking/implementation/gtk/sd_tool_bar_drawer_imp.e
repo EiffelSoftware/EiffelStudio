@@ -248,7 +248,6 @@ feature {NONE} -- Implementation
 					l_pixmap := l_button.pixmap
 					if not attached l_pixmap then
 						create l_pixmap
-					else
 						check from_condition_above: False end
 					end
 				end

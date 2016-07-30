@@ -78,10 +78,10 @@ feature {NONE} -- Initialization
 		do
 			set_c_object ({GTK}.gtk_event_box_new)
 				-- Initialize colors from gtk style.
-			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum))
-			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_active_enum))
+			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
+			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
 
 			create_implementation_objects
 
@@ -172,7 +172,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

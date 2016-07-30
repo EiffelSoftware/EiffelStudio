@@ -67,17 +67,23 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 			a_gdk_rgba := {GTK}.c_gdk_rgba_struct_allocate
 
+				-- GTK3 does not recommend using this way, but if we must, the
+				-- recommended way is this: saving the context, setting the state,
+				-- getting our color, and restoring the context to its initial state.
+			{GTK}.gtk_style_context_save(a_style)
+			{GTK}.gtk_style_context_set_state (a_style, a_state)
 			inspect
 				style_type
 			when fg_style then
-				{GTK}.gtk_style_context_get_color (a_style, a_state, a_gdk_rgba)
+				{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
 			when bg_style then
-				{GTK}.gtk_style_context_get_background_color (a_style, a_state, a_gdk_rgba)
+				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
 			when text_style then
-				{GTK}.gtk_style_context_get_color (a_style, a_state, a_gdk_rgba)
+				{GTK}.gtk_style_context_get_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
 			when base_style then
-				{GTK}.gtk_style_context_get_background_color (a_style, a_state, a_gdk_rgba)
+				{GTK}.gtk_style_context_get_background_color (a_style, {GTK}.gtk_style_context_get_state (a_style), a_gdk_rgba)
 			end
+			{GTK}.gtk_style_context_restore (a_style)
 
 			a_r := {GTK}.gdk_rgba_struct_red (a_gdk_rgba).truncated_to_real
 			a_g := {GTK}.gdk_rgba_struct_green (a_gdk_rgba).truncated_to_real
@@ -93,7 +99,7 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 		-- Different coloring styles used in gtk.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

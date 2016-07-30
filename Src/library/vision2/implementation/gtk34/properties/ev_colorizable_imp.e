@@ -44,9 +44,12 @@ feature -- Access
 			if attached foreground_color_imp as l_foreground_color_imp then
 				Result := l_foreground_color_imp.attached_interface.twin
 			else
+
 				l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
 				l_style_context := foreground_color_style_context
-				{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_state_flag_normal_enum, l_rgba_color)
+				{GTK}.gtk_style_context_save (l_style_context)
+				{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
+				{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
 				create Result.make_with_rgb ({GTK}.gdk_rgba_struct_red (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_green (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_blue (l_rgba_color).truncated_to_real)
 				l_rgba_color.memory_free
 			end
@@ -234,7 +237,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLORIZABLE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 
 			enable_word_wrapping
 			set_editable (True)
-			set_background_color ((create {EV_STOCK_COLORS}).white)
 			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
@@ -673,7 +672,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

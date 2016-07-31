@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 					l_c_string := l_app_imp.c_string_from_eiffel_string (l_text_3)
 					l_pango_layout := l_app_imp.pango_layout
 
-					{GTK2}.pango_layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
+					{PANGO}.layout_set_text (l_pango_layout, l_c_string.item, l_c_string.string_length)
 
 					l_text_rect := l_button.text_rectangle
 					if l_button.is_sensitive then

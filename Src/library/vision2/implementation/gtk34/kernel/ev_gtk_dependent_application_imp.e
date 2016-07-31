@@ -86,7 +86,7 @@ feature -- Implementation
 	pango_iter: POINTER
 			-- Retrieve PangoLayoutIter from our default layout object, Result must be freed when not needed
 		do
-			Result := {GTK2}.pango_layout_get_iter (pango_layout)
+			Result := {PANGO}.layout_get_iter (pango_layout)
 		end
 
 	writeable_pixbuf_formats: ARRAYED_LIST [STRING_32]

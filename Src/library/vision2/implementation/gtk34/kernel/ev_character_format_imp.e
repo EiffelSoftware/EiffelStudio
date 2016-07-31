@@ -222,7 +222,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {GTK2}.pango_scale)
+					{GTK2}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {PANGO}.scale)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -372,7 +372,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					{GTK2}.g_object_set_string (Result, family_string.item, propvalue.item)
 				end
 				if applicable_attributes.font_height then
-					{GTK2}.g_object_set_integer (Result, size_string.item, height_in_points * {GTK2}.pango_scale)
+					{GTK2}.g_object_set_integer (Result, size_string.item, height_in_points * {PANGO}.scale)
 				end
 				if applicable_attributes.font_shape then
 					if shape = {EV_FONT_CONSTANTS}.shape_italic then
@@ -431,9 +431,9 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				end
 				if applicable_attributes.effects_underlined then
 					if is_underlined then
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_single_enum)
+						{GTK2}.g_object_set_integer (Result, underline_string.item, {PANGO}.underline_single_enum)
 					else
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {GTK2}.pango_underline_none_enum)
+						{GTK2}.g_object_set_integer (Result, underline_string.item, {PANGO}.underline_none_enum)
 					end
 				end
 				if applicable_attributes.effects_vertical_offset then

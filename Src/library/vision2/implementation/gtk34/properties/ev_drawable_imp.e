@@ -398,19 +398,19 @@ feature -- Drawing operations
 				l_x := x + device_x_offset
 				l_y := y + device_y_offset
 
-				a_pango_layout := {GTK2}.pango_cairo_create_layout (l_drawable)
+				a_pango_layout := {PANGO}.cairo_create_layout (l_drawable)
 
 				a_cs := App_implementation.c_string_from_eiffel_string (a_text)
-				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+				{PANGO}.layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
-					{GTK2}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
+					{PANGO}.layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
 
 				if a_width >= 0 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
-					pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-					{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
+					{PANGO}.layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
+					{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
 				end
 
 				{CAIRO}.translate (l_drawable, l_x, l_y)
@@ -421,19 +421,12 @@ feature -- Drawing operations
 				end
 
 				if draw_from_baseline  then
-					l_pango_iter := {GTK2}.pango_layout_get_iter (a_pango_layout)
-					{CAIRO}.move_to (l_drawable, 0, -({GTK2}.pango_layout_iter_get_baseline (l_pango_iter) / {GTK2}.pango_scale));
-					{GTK2}.pango_layout_iter_free (l_pango_iter)
+					l_pango_iter := {PANGO}.layout_get_iter (a_pango_layout)
+					{CAIRO}.move_to (l_drawable, 0, -({PANGO}.layout_iter_get_baseline (l_pango_iter) / {PANGO}.scale));
+					{PANGO}.layout_iter_free (l_pango_iter)
 				end
 
-				{GTK2}.pango_cairo_show_layout (l_drawable, a_pango_layout)
-
-					-- Reset all changed values.
-				if a_width >= 0 then
-					if l_ellipsize_symbol /= default_pointer then
-						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 0)
-					end
-				end
+				{PANGO}.cairo_show_layout (l_drawable, a_pango_layout)
 
 					-- Free allocated resources
 				{GTK2}.g_object_unref (a_pango_layout)
@@ -448,13 +441,6 @@ feature -- Drawing operations
 			-- Symbol for `pango_layout_set_ellipsize'.
 		once
 			Result := app_implementation.symbol_from_symbol_name ("pango_layout_set_ellipsize")
-		end
-
-	pango_layout_set_ellipsize_call (a_function: POINTER; a_layout: POINTER; a_ellipsize_mode: INTEGER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"(FUNCTION_CAST(void, (PangoLayout*, gint)) $a_function)((PangoLayout*) $a_layout, (gint) $a_ellipsize_mode);"
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER)

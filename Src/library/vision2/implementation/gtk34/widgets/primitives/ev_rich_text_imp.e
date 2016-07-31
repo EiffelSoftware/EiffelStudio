@@ -159,7 +159,6 @@ feature -- Status Report
 			font_family_contiguous: BOOLEAN
 			a_change: BOOLEAN
 			exit_loop: BOOLEAN
-			l_color, l_prev_color: POINTER
 		do
 			from
 				font_family_contiguous := True
@@ -188,30 +187,46 @@ feature -- Status Report
 					previous_font_family := font_family
 				end
 
-				if {PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				end
 
-				if {PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				end
 
-				if {PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 				end
 
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), foreground_rgba_string.item, $l_color)
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), foreground_rgba_string.item, $l_prev_color)
-				if not {GDK}.rgba_equal (l_color, l_prev_color) then
+				if
+					{GDK}.color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes)))
+				then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 				end
 
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), background_rgba_string.item, $l_color)
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), background_rgba_string.item, $l_prev_color)
-				if not {GDK}.rgba_equal (l_color, l_prev_color) then
+				if
+					{GDK}.color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes)))
+				then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 				end
 
@@ -230,7 +245,7 @@ feature -- Status Report
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
 				end
 
-				gtk_text_attributes_free (previous_text_attributes)
+				gtk_text_attributes_unref (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
 
 				a_character_index := a_character_index + 1
@@ -241,7 +256,7 @@ feature -- Status Report
 				end
 			end
 
-			gtk_text_attributes_free (previous_text_attributes)
+			gtk_text_attributes_unref (previous_text_attributes)
 
 			a_text_iter.memory_free
 
@@ -309,13 +324,13 @@ feature -- Status Report
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
 				end
 
-				gtk_text_attributes_free (previous_text_attributes)
+				gtk_text_attributes_unref (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
 
 				a_character_index := a_character_index + 1
 			end
 
-			gtk_text_attributes_free (previous_text_attributes)
+			gtk_text_attributes_unref (previous_text_attributes)
 
 			create Result.make_with_flags ((31).bit_xor (non_contiguous_range_information))
 				-- 31 is the mask value for paragraph format constants
@@ -407,7 +422,7 @@ feature -- Status Report
 			elseif a_justification = {GTK}.gtk_justify_fill_enum then
 				Result.enable_justification
 			end
-			gtk_text_attributes_free (a_text_attributes)
+			gtk_text_attributes_unref (a_text_attributes)
 		end
 
 	selected_character_format: EV_CHARACTER_FORMAT
@@ -484,6 +499,7 @@ feature -- Status report
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes, a_text_appearance: POINTER
 			a_font_description: POINTER
+			a_color: POINTER
 			font_size, font_weight, font_style: INTEGER
 			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
@@ -522,23 +538,23 @@ feature -- Status report
 
 			l_result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 
---			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.foreground_rgba_string.item, $l_color)
---			l_result.set_fcolor (
---				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
---			)
+			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
+			l_result.set_fcolor (
+				{GDK}.color_struct_red (a_color) // 256,
+				{GDK}.color_struct_green (a_color) // 256,
+				{GDK}.color_struct_blue (a_color) // 256
+			)
 
---			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.background_rgba_string.item, $l_color)
---			l_result.set_bcolor (
---				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
---			)
+			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
+			l_result.set_bcolor (
+				{GDK}.color_struct_red (a_color) // 256,
+				{GDK}.color_struct_green (a_color) // 256,
+				{GDK}.color_struct_blue (a_color) // 256
+			)
 
 			l_result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
 
---			gtk_text_attributes_free (a_text_attributes)
+			gtk_text_attributes_unref (a_text_attributes)
 			Result := l_result
 		end
 
@@ -822,12 +838,12 @@ feature {NONE} -- Implementation
 				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
 			end
 
-	gtk_text_attributes_free (a_text_attributes: POINTER)
-			external
-				"C inline use <ev_gtk.h>"
-			alias
-				"free ((GtkTextAttributes*) $a_text_attributes)"
-			end
+ 	gtk_text_attributes_unref (a_text_attributes: POINTER)
+ 			external
+ 				"C inline use <ev_gtk.h>"
+ 			alias
+ 				"gtk_text_attributes_unref((GtkTextAttributes *) $a_text_attributes);"
+ 			end
 
 	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER)
 			external
@@ -943,18 +959,6 @@ feature {NONE} -- Implementation
 
 	append_buffer: POINTER
 		-- Pointer to the GtkTextBuffer used for append buffering.
-
-	foreground_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("foreground-rgba")
-		end
-
-	background_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("background-rgba")
-		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

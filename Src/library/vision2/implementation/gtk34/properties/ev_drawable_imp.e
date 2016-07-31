@@ -386,7 +386,6 @@ feature -- Drawing operations
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout, l_pango_iter: POINTER
 			l_x, l_y: REAL_64
-			a_pango_matrix, a_pango_context: POINTER
 			l_ellipsize_symbol: POINTER
 			l_drawable: POINTER
 		do
@@ -424,6 +423,7 @@ feature -- Drawing operations
 				if draw_from_baseline  then
 					l_pango_iter := {GTK2}.pango_layout_get_iter (a_pango_layout)
 					{CAIRO}.move_to (l_drawable, 0, -({GTK2}.pango_layout_iter_get_baseline (l_pango_iter) / {GTK2}.pango_scale));
+					{GTK2}.pango_layout_iter_free (l_pango_iter)
 				end
 
 				{GTK2}.pango_cairo_show_layout (l_drawable, a_pango_layout)
@@ -435,13 +435,8 @@ feature -- Drawing operations
 					end
 				end
 
-				{GTK2}.pango_layout_set_width (a_pango_layout, -1)
-				{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
-
-				if a_pango_context /= default_pointer then
-					{GTK2}.pango_context_set_matrix (a_pango_context, default_pointer)
-					{GTK2}.pango_matrix_free (a_pango_matrix)
-				end
+					-- Free allocated resources
+				{GTK2}.g_object_unref (a_pango_layout)
 
 				{CAIRO}.restore (l_drawable)
 

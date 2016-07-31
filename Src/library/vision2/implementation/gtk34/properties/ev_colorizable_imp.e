@@ -106,7 +106,7 @@ feature -- Status setting
 				nr := (r * Highlight_scale).rounded
 				ng := (g * Highlight_scale).rounded
 				nb := (b * Highlight_scale).rounded
-				{GDK}.set_rgba_struct_with_8_bit_rgb (color, nr, ng, nb)
+				{GDK}.set_rgba_struct_with_16_bit_rgb (color, nr, ng, nb)
 			end
 			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_active_enum, color)
 
@@ -115,14 +115,14 @@ feature -- Status setting
 				nr := (r * Prelight_scale).rounded.min (m)
 				ng := (g * Prelight_scale).rounded.min (m)
 				nb := (b * Prelight_scale).rounded.min (m)
-				{GDK}.set_rgba_struct_with_8_bit_rgb (color, nr, ng, nb)
+				{GDK}.set_rgba_struct_with_16_bit_rgb (color, nr, ng, nb)
 			end
 			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_prelight_enum, color)
 
 
 			if a_color /= Void then
 					--| Set selected state color to reverse.
-				{GDK}.set_rgba_struct_with_8_bit_rgb (color, m - r, m - g, m - b // 2)
+				{GDK}.set_rgba_struct_with_16_bit_rgb (color, m - r, m - g, m - b // 2)
 			end
 			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_selected_enum, color)
 
@@ -130,7 +130,7 @@ feature -- Status setting
 			if a_color /= Void then
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
-				{GDK}.set_rgba_struct_with_8_bit_rgb (color, mx + ((r - mx)//4), mx + ((g - mx)//4), mx + ((b - mx)//4))
+				{GDK}.set_rgba_struct_with_16_bit_rgb (color, mx + ((r - mx)//4), mx + ((g - mx)//4), mx + ((b - mx)//4))
 			end
 
 			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_insensitive_enum, color)

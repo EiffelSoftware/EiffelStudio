@@ -31,7 +31,10 @@ feature -- Access
 				l_rgba_color := {GTK}.c_gdk_rgba_struct_allocate
 				l_style_context := background_color_style_context
 				{GTK}.gtk_style_context_get_background_color (l_style_context, {GTK}.gtk_state_flag_normal_enum, l_rgba_color)
-				create Result.make_with_rgb ({GTK}.gdk_rgba_struct_red (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_green (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_blue (l_rgba_color).truncated_to_real)
+				create Result.make_with_rgb (
+					{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
+					{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
+					{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real)
 				l_rgba_color.memory_free
 			end
 		end
@@ -50,7 +53,10 @@ feature -- Access
 				{GTK}.gtk_style_context_save (l_style_context)
 				{GTK}.gtk_style_context_set_state (l_style_context, {GTK}.gtk_state_flag_normal_enum)
 				{GTK}.gtk_style_context_get_color (l_style_context, {GTK}.gtk_style_context_get_state (l_style_context), l_rgba_color)
-				create Result.make_with_rgb ({GTK}.gdk_rgba_struct_red (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_green (l_rgba_color).truncated_to_real, {GTK}.gdk_rgba_struct_blue (l_rgba_color).truncated_to_real)
+				create Result.make_with_rgb (
+					{GDK}.rgba_struct_red (l_rgba_color).truncated_to_real,
+					{GDK}.rgba_struct_green (l_rgba_color).truncated_to_real,
+					{GDK}.rgba_struct_blue (l_rgba_color).truncated_to_real)
 				l_rgba_color.memory_free
 			end
 		end
@@ -90,12 +96,9 @@ feature -- Status setting
 				g := a_color.green_16_bit
 				b := a_color.blue_16_bit
 				m := a_color.Max_16_bit
-				{GTK}.set_gdk_rgba_struct_red (color, r)
-				{GTK}.set_gdk_rgba_struct_green (color, g)
-				{GTK}.set_gdk_rgba_struct_blue (color, b)
-				{GTK}.set_gdk_rgba_struct_alpha (color, 1.0)
+				{GDK}.set_rgba_struct_with_rgb24 (color, a_color.rgb_24_bit)
 			end
-			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_NORMAL_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_normal_enum, color)
 
 
 			if a_color /= Void then
@@ -103,45 +106,34 @@ feature -- Status setting
 				nr := (r * Highlight_scale).rounded
 				ng := (g * Highlight_scale).rounded
 				nb := (b * Highlight_scale).rounded
-				if nr < 0 then nr := 0 end
-				if ng < 0 then ng := 0 end
-				if nb < 0 then nb := 0 end
-				{GTK}.set_gdk_rgba_struct_red (color, nr)
-				{GTK}.set_gdk_rgba_struct_green (color, ng)
-				{GTK}.set_gdk_rgba_struct_blue (color, nb)
+				{GDK}.set_rgba_struct_with_8_bit_rgb (color, nr, ng, nb)
 			end
-			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_ACTIVE_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_active_enum, color)
 
 			if a_color /= Void then
 					--| Set prelight state color.
 				nr := (r * Prelight_scale).rounded.min (m)
 				ng := (g * Prelight_scale).rounded.min (m)
 				nb := (b * Prelight_scale).rounded.min (m)
-				{GTK}.set_gdk_rgba_struct_red (color, nr)
-				{GTK}.set_gdk_rgba_struct_green (color, ng)
-				{GTK}.set_gdk_rgba_struct_blue (color, nb)
+				{GDK}.set_rgba_struct_with_8_bit_rgb (color, nr, ng, nb)
 			end
-			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_PRELIGHT_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_prelight_enum, color)
 
 
 			if a_color /= Void then
 					--| Set selected state color to reverse.
-				{GTK}.set_gdk_rgba_struct_red   (color, m - r)
-				{GTK}.set_gdk_rgba_struct_green (color, m - g)
-				{GTK}.set_gdk_rgba_struct_blue  (color, m - b//2)
+				{GDK}.set_rgba_struct_with_8_bit_rgb (color, m - r, m - g, m - b // 2)
 			end
-			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_SELECTED_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_selected_enum, color)
 
 
 			if a_color /= Void then
 					--| Set the insensitive state color.
 				mx := r.max (g).max (b)
-				{GTK}.set_gdk_rgba_struct_red   (color, mx + ((r - mx)//4))
-				{GTK}.set_gdk_rgba_struct_green (color, mx + ((g - mx)//4))
-				{GTK}.set_gdk_rgba_struct_blue  (color, mx + ((b - mx)//4))
+				{GDK}.set_rgba_struct_with_8_bit_rgb (color, mx + ((r - mx)//4), mx + ((g - mx)//4), mx + ((b - mx)//4))
 			end
 
-			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gTK_STATE_FLAG_INSENSITIVE_ENUM, color)
+			{GTK2}.gtk_widget_override_background_color (a_c_object, {GTK}.gtk_state_flag_insensitive_enum, color)
 
 			if color /= l_null then
 				color.memory_free
@@ -170,15 +162,12 @@ feature -- Status setting
 				color := {GTK}.c_gdk_rgba_struct_allocate
 				l_foreground_color_imp := foreground_color_imp
 				check l_foreground_color_imp /= Void then end
-				{GTK}.set_gdk_rgba_struct_red (color, l_foreground_color_imp.red)
-				{GTK}.set_gdk_rgba_struct_green (color, l_foreground_color_imp.green)
-				{GTK}.set_gdk_rgba_struct_blue (color, l_foreground_color_imp.blue)
-				{GTK}.set_gdk_rgba_struct_alpha (color, 1.0)
+				{GDK}.set_rgba_struct_with_rgb24 (color, l_foreground_color_imp.rgb_24_bit)
 			end
 
-			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_NORMAL_ENUM, color)
-			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_ACTIVE_ENUM, color)
-			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.GTK_STATE_FLAG_PRELIGHT_ENUM, color)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.gtk_state_flag_normal_enum, color)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.gtk_state_flag_active_enum, color)
+			{GTK2}.gtk_widget_override_color (a_c_object, {GTK}.gtk_state_flag_prelight_enum, color)
 
 			if color /= l_null  then
 				color.memory_free

@@ -85,9 +85,9 @@ feature {EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 			end
 			{GTK}.gtk_style_context_restore (a_style)
 
-			a_r := {GTK}.gdk_rgba_struct_red (a_gdk_rgba).truncated_to_real
-			a_g := {GTK}.gdk_rgba_struct_green (a_gdk_rgba).truncated_to_real
-			a_b := {GTK}.gdk_rgba_struct_blue (a_gdk_rgba).truncated_to_real
+			a_r := {GDK}.rgba_struct_red (a_gdk_rgba).truncated_to_real
+			a_g := {GDK}.rgba_struct_green (a_gdk_rgba).truncated_to_real
+			a_b := {GDK}.rgba_struct_blue (a_gdk_rgba).truncated_to_real
 			create Result.make_with_rgb (a_r, a_g, a_b)
 			a_gdk_rgba.memory_free
 		end

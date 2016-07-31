@@ -2060,34 +2060,6 @@ feature
 			"C (GtkWindow*, GtkWindow*) | <ev_gtk.h>"
 		end
 
-	frozen gdk_rgba_struct_blue (a_c_struct: POINTER): REAL_64
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
-		alias
-			"blue"
-		end
-
-	frozen gdk_rgba_struct_green (a_c_struct: POINTER): REAL_64
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
-		alias
-			"green"
-		end
-
-	frozen gdk_rgba_struct_red (a_c_struct: POINTER): REAL_64
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
-		alias
-			"red"
-		end
-
-	frozen gdk_rgba_struct_alpha (a_c_struct: POINTER): REAL_64
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
-		alias
-			"red"
-		end
-
 	frozen gdk_event_focus_struct_in (a_c_struct: POINTER): INTEGER_8
 		external
 			"C [struct <ev_gtk.h>] (GdkEventFocus): EIF_INTEGER_8"
@@ -2100,16 +2072,6 @@ feature
 			"C [struct <ev_gtk.h>] (GdkEventAny): EIF_INTEGER_8"
 		alias
 			"send_event"
-		end
-
-	frozen gdk_rgba_free (a_rgba_struct: POINTER)
-		external
-			"C signature (GdkRGBA*) use <ev_gtk.h>"
-		end
-
-	frozen gdk_rgba_equal (a_rgba_struct, a_rgba_struct2: POINTER): BOOLEAN
-		external
-			"C signature (GdkRGBA*,GdkRGBA*): gboolean use <ev_gtk.h>"
 		end
 
 	frozen gdk_event_any_struct_window (a_c_struct: POINTER): POINTER
@@ -2656,34 +2618,6 @@ feature
 	frozen gtk_window_get_transient_for (a_c_struct: POINTER): POINTER
 		external
 			"C signature (GtkWindow*): GtkWindow* use <ev_gtk.h>"
-		end
-
-	frozen set_gdk_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"blue"
-		end
-
-	frozen set_gdk_rgba_struct_green (a_c_struct: POINTER; a_green: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"green"
-		end
-
-	frozen set_gdk_rgba_struct_alpha (a_c_struct: POINTER; a_alpha: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"alpha"
-		end
-
-	frozen set_gdk_rgba_struct_red (a_c_struct: POINTER; a_red: REAL_64)
-		external
-			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
-		alias
-			"red"
 		end
 
 	frozen set_gdk_event_any_struct_window (a_c_struct: POINTER; a_window: POINTER)

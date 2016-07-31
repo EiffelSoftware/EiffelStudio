@@ -205,13 +205,13 @@ feature -- Status Report
 
 				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), foreground_rgba_string.item, $l_color)
 				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), foreground_rgba_string.item, $l_prev_color)
-				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+				if not {GDK}.rgba_equal (l_color, l_prev_color) then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 				end
 
 				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), background_rgba_string.item, $l_color)
 				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), background_rgba_string.item, $l_prev_color)
-				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+				if not {GDK}.rgba_equal (l_color, l_prev_color) then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 				end
 
@@ -961,7 +961,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

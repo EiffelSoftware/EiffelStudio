@@ -72,9 +72,9 @@ feature -- Access
 		do
 			a_color := fcolor
 			create Result
-			Result.set_red_with_8_bit (a_color & 0x000000FF)
-			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
-			Result.set_blue_with_8_bit (a_color |>> 16)
+			Result.set_red_with_8_bit (a_color & 0xFF)
+			Result.set_green_with_8_bit ((a_color |>> 8) & 0xFF)
+			Result.set_blue_with_8_bit ((a_color |>> 16) & 0xFF)
 		end
 
 	background_color: EV_COLOR
@@ -84,9 +84,9 @@ feature -- Access
 		do
 			a_color := bcolor
 			create Result
-			Result.set_red_with_8_bit (a_color & 0x000000FF)
-			Result.set_green_with_8_bit ((a_color & 0x0000FF00) |>> 8)
-			Result.set_blue_with_8_bit (a_color |>> 16)
+			Result.set_red_with_8_bit (a_color & 0xFF)
+			Result.set_green_with_8_bit ((a_color |>> 8) & 0xFF)
+			Result.set_blue_with_8_bit ((a_color |>> 16) & 0xFF)
 		end
 
 	effects: EV_CHARACTER_FORMAT_EFFECTS
@@ -140,9 +140,9 @@ feature -- Status setting
 		do
 			fcolor := a_blue;
 			fcolor := fcolor |<< 8
-			fcolor := fcolor + a_green
+			fcolor := fcolor | a_green
 			fcolor := fcolor |<< 8
-			fcolor := fcolor + a_red
+			fcolor := fcolor | a_red
 		end
 
 	set_bcolor (a_red, a_green, a_blue: INTEGER)
@@ -150,9 +150,9 @@ feature -- Status setting
 		do
 			bcolor := a_blue;
 			bcolor := bcolor |<< 8
-			bcolor := bcolor + a_green
+			bcolor := bcolor | a_green
 			bcolor := bcolor |<< 8
-			bcolor := bcolor + a_red
+			bcolor := bcolor | a_red
 			bcolor_set := True
 		end
 
@@ -286,10 +286,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GTK}.set_gdk_rgba_struct_blue (App_implementation.reusable_rgba_struct, (fcolor |>> 16) * 257)
-					{GTK}.set_gdk_rgba_struct_green (App_implementation.reusable_rgba_struct, ((fcolor |<< 16) |>> 24) * 257)
-					{GTK}.set_gdk_rgba_struct_red (App_implementation.reusable_rgba_struct, ((fcolor |<< 24) |>> 24) * 257)
-					{GTK}.set_gdk_rgba_struct_alpha (App_implementation.reusable_rgba_struct, 1.0)
+					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, fcolor)
 					{GTK2}.g_object_set_pointer (a_text_tag, foreground_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
@@ -302,10 +299,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
-					{GTK}.set_gdk_rgba_struct_blue (App_implementation.reusable_rgba_struct, (bcolor |>> 16) * 257)
-					{GTK}.set_gdk_rgba_struct_green (App_implementation.reusable_rgba_struct, ((bcolor |<< 16) |>> 24) * 257)
-					{GTK}.set_gdk_rgba_struct_red (App_implementation.reusable_rgba_struct, ((bcolor |<< 24) |>> 24) * 257)
-					{GTK}.set_gdk_rgba_struct_alpha (App_implementation.reusable_rgba_struct, 1.0)
+					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, bcolor)
 					{GTK2}.g_object_set_pointer (a_text_tag, background_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
@@ -575,7 +569,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

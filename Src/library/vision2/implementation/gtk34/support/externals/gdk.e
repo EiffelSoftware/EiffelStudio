@@ -71,6 +71,157 @@ feature -- GdkDevice
 			"C signature (GdkDevice *,gint *, gint *): GdkWindow * use <ev_gtk.h>"
 		end
 
+feature -- GdkColor
+
+	frozen color_struct_size: INTEGER_32
+		external
+			"C [macro <ev_gtk.h>]"
+		alias
+			"sizeof(GdkColor)"
+		end
+
+	frozen color_struct_blue (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+		alias
+			"blue"
+		end
+
+	frozen color_struct_green (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+		alias
+			"green"
+		end
+
+	frozen color_struct_pixel (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+		alias
+			"pixel"
+		end
+
+	frozen color_struct_red (a_c_struct: POINTER): INTEGER_32
+		external
+			"C [struct <ev_gtk.h>] (GdkColor): EIF_INTEGER"
+		alias
+			"red"
+		end
+
+feature -- GdkRGBA
+
+	frozen rgba_free (a_rgba_struct: POINTER)
+		external
+			"C signature (GdkRGBA*) use <ev_gtk.h>"
+		alias
+			"gdk_rgba_free"
+		end
+
+	frozen rgba_equal (a_rgba_struct, a_rgba_struct2: POINTER): BOOLEAN
+		external
+			"C signature (GdkRGBA*,GdkRGBA*): gboolean use <ev_gtk.h>"
+		alias
+			"gdk_rgba_equal"
+		end
+
+	frozen set_rgba_struct_with_rgb24 (a_rgba_struct: POINTER; a_rgb24: INTEGER_32)
+			-- Set `a_rgba_struct' with `a_rgb24' and alpha of 1.0.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				GdkRGBA *rgba = (GdkRGBA *) $a_rgba_struct;
+				rgba->blue = ($a_rgb24 & 0xFF) / 255.0;
+				rgba->green = (($a_rgb24 >> 8) & 0xFF) / 255.0;
+				rgba->red = (($a_rgb24 >> 16) & 0xFF) / 255.0;
+				rgba->alpha = 1.0;
+			]"
+		end
+
+	frozen set_rgba_struct_with_bgr24 (a_rgba_struct: POINTER; a_bgr24: INTEGER_32)
+			-- Set `a_rgba_struct' with `a_bgr24' and alpha of 1.0.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				GdkRGBA *rgba = (GdkRGBA *) $a_rgba_struct;
+				rgba->red = ($a_bgr24 & 0xFF) / 255.0;
+				rgba->green = (($a_bgr24 >> 8) & 0xFF) / 255.0;
+				rgba->blue = (($a_bgr24 >> 16) & 0xFF) / 255.0;
+				rgba->alpha = 1.0;
+			]"
+		end
+
+	frozen set_rgba_struct_with_8_bit_rgb (a_rgba_struct: POINTER; r, g, b: INTEGER_32)
+			-- Set `a_rgba_struct' with red `r', green `g' and blue `b' and alpha of 1.0.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				GdkRGBA *rgba = (GdkRGBA *) $a_rgba_struct;
+				rgba->red = $r / 255.0;
+				rgba->green = $g / 255.0;
+				rgba->blue = $b / 255.0;
+				rgba->alpha = 1.0;
+			]"
+		end
+
+	frozen set_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"blue"
+		end
+
+	frozen set_rgba_struct_green (a_c_struct: POINTER; a_green: REAL_64)
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"green"
+		end
+
+	frozen set_rgba_struct_alpha (a_c_struct: POINTER; a_alpha: REAL_64)
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"alpha"
+		end
+
+	frozen set_rgba_struct_red (a_c_struct: POINTER; a_red: REAL_64)
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"
+		alias
+			"red"
+		end
+
+	frozen rgba_struct_blue (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"blue"
+		end
+
+	frozen rgba_struct_green (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"green"
+		end
+
+	frozen rgba_struct_red (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"red"
+		end
+
+	frozen rgba_struct_alpha (a_c_struct: POINTER): REAL_64
+		external
+			"C [struct <ev_gtk.h>] (GdkRGBA): gdouble"
+		alias
+			"red"
+		end
+
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -346,28 +346,14 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
-			draw_text_internal (
-				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				a_text,
-				True,
-				-1,
-				0
-			)
+			draw_text_internal (x, y, a_text, True, -1, 0)
 		end
 
 	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: READABLE_STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
-			draw_text_internal (
-				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				a_text,
-				True,
-				-1,
-				angle
-			)
+			draw_text_internal (x, y, a_text, True, -1, angle)
 		end
 
 	draw_ellipsed_text (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
@@ -375,14 +361,7 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			draw_text_internal (
-				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				a_text,
-				True,
-				clipping_width,
-				0
-			)
+			draw_text_internal (x, y, a_text, True, clipping_width, 0.0)
 		end
 
 	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; clipping_width: INTEGER)
@@ -390,38 +369,24 @@ feature -- Drawing operations
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
 		do
-			draw_text_internal (
-				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				a_text,
-				False,
-				clipping_width,
-				0
-			)
+			draw_text_internal (x, y, a_text, False, clipping_width, 0.0)
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
-			draw_text_internal (
-				x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-				a_text,
-				False,
-				-1,
-				0
-			)
+			draw_text_internal (x, y, a_text, False, -1, 0.0)
 		end
 
 	draw_text_internal (x, y: INTEGER; a_text: READABLE_STRING_GENERAL; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL)
-			-- Draw `a_text' at (`x', `y') using `font'.
+			-- Draw `a_text' at (`x', `y') using `font' at an `a_angle' expressed in radians counter-clockwise from horizontal plane.
+			-- If `draw_from_baseline' then (`x', `y') is the baseline coordinates, otherwise it is the top-left coordinates.
+			-- If `a_width' is non-negative, then `a_text' is clipped at `a_width' units.
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout, l_pango_iter: POINTER
 			l_x, l_y: REAL_64
-			a_clip_area: detachable EV_RECTANGLE
 			a_pango_matrix, a_pango_context: POINTER
-			l_app_imp: like App_implementation
 			l_ellipsize_symbol: POINTER
 			l_drawable: POINTER
 		do
@@ -430,53 +395,43 @@ feature -- Drawing operations
 
 				{CAIRO}.save (l_drawable)
 
-				l_app_imp := App_implementation
-
 					-- Set x_orig and y_orig to be the device translated values which must be used for the rest of the routine.
 				l_x := x + device_x_offset
 				l_y := y + device_y_offset
 
-				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
-
 				a_pango_layout := {GTK2}.pango_cairo_create_layout (l_drawable)
 
+				a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 				{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then
 					{GTK2}.pango_layout_set_font_description (a_pango_layout, internal_font_imp.font_description)
 				end
 
-				if draw_from_baseline then
-					l_pango_iter := {GTK2}.pango_layout_get_iter (a_pango_layout)
-					l_y := l_y - ({GTK2}.pango_layout_iter_get_baseline (l_pango_iter) / {GTK2}.pango_scale)
-				end
-				l_y := l_y - 0.5
-					-- Cairo adds 0.5 in calculation to account for center pixel coordinates but we want top left.
-				{CAIRO}.translate (l_drawable, l_x, l_y)
-
-				if a_width /= -1 then
+				if a_width >= 0 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
 					pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
 					{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
 				end
 
-				if a_angle /= 0 then
-					-- Handle rotation
+				{CAIRO}.translate (l_drawable, l_x, l_y)
+
+				if a_angle /= 0.0 then
+						-- Minus angle because Vision is counter-clockwise, and Cairo clockwise.
+					{CAIRO}.rotate (l_drawable, -a_angle)
+				end
+
+				if draw_from_baseline  then
+					l_pango_iter := {GTK2}.pango_layout_get_iter (a_pango_layout)
+					{CAIRO}.move_to (l_drawable, 0, -({GTK2}.pango_layout_iter_get_baseline (l_pango_iter) / {GTK2}.pango_scale));
 				end
 
 				{GTK2}.pango_cairo_show_layout (l_drawable, a_pango_layout)
 
 					-- Reset all changed values.
-				if a_width /= -1 then
+				if a_width >= 0 then
 					if l_ellipsize_symbol /= default_pointer then
 						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 0)
-					else
-							-- Restore clip area (used for gtk 2.4 implementation)
-						if a_clip_area /= Void then
-							set_clip_area (a_clip_area)
-						else
-							remove_clipping
-						end
 					end
 				end
 

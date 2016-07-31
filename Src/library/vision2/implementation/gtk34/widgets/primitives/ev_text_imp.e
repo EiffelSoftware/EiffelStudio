@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_container_add (c_object, scrolled_window)
 			text_view := {GTK2}.gtk_text_view_new
 			text_buffer := {GTK2}.gtk_text_view_get_buffer (text_view)
+			text_buffer := {GTK2}.g_object_ref (text_buffer)
 			{GTK}.gtk_widget_show (text_view)
 			{GTK}.gtk_container_add (scrolled_window, text_view)
 			{GTK}.gtk_widget_set_size_request (text_view, 1, 1)

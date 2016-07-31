@@ -2693,6 +2693,11 @@ feature -- Externals
 			"C signature (): GtkWidget* use <ev_gtk.h>"
 		end
 
+	frozen gtk_text_view_new_with_buffer (a_buffer: POINTER): POINTER
+		external
+			"C signature (GtkTextBuffer*): GtkWidget* use <ev_gtk.h>"
+		end
+
 	frozen gtk_text_buffer_create_mark (a_text_buffer: POINTER; a_name: POINTER; a_text_iter: POINTER; left_gravity: BOOLEAN): POINTER
 		external
 			"C signature (GtkTextBuffer*, gchar*, GtkTextIter*, gboolean): GtkTextMark* use <ev_gtk.h>"

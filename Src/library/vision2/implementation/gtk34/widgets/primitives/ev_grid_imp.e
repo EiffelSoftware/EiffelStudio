@@ -136,10 +136,10 @@ feature {EV_GRID_ITEM_I} -- Implementation
 					l_app_imp := app_implementation
 					a_pango_layout := l_app_imp.pango_layout
 					a_cs := l_app_imp.c_string_from_eiffel_string (s)
-					{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-					{GTK2}.pango_layout_set_font_description (a_pango_layout, a_font_imp.font_description)
-					{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
-					{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+					{PANGO}.layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+					{PANGO}.layout_set_font_description (a_pango_layout, a_font_imp.font_description)
+					{PANGO}.layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
+					{PANGO}.layout_set_font_description (a_pango_layout, default_pointer)
 					tuple.put_integer (a_width, 1)
 					tuple.put_integer (a_height, 2)
 				end

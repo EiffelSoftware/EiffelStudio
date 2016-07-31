@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 
-			pango_tab_array := {GTK2}.pango_tab_array_new (1, True)
+			pango_tab_array := {PANGO}.tab_array_new (1, True)
 			{GTK2}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 			set_tab_width (96 // 2)
 		end
@@ -169,7 +169,7 @@ feature -- Status Report
 				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
 				a_text_attributes := gtk_text_view_get_default_attributes (text_view)
-				create previous_font_family.make_from_c ({GTK2}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
+				create previous_font_family.make_from_c ({PANGO}.font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
 			until
 				exit_loop or else a_character_index = end_index
 			loop
@@ -179,7 +179,7 @@ feature -- Status Report
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
 
 				if font_family_contiguous then
-					create font_family.make_from_c ({GTK2}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
+					create font_family.make_from_c ({PANGO}.font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
 
 					if font_family.hash_code /= previous_font_family.hash_code then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
@@ -188,18 +188,18 @@ feature -- Status Report
 					previous_font_family := font_family
 				end
 
-				if {GTK2}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if {PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				end
 
-				if {GTK2}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if {PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				end
 
-				if {GTK2}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if {PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 				end
 
@@ -499,9 +499,9 @@ feature -- Status report
 			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.share_from_pointer ({GTK2}.pango_font_description_get_family (a_font_description))
-			font_style := {GTK2}.pango_font_description_get_style (a_font_description)
-			font_weight := {GTK2}.pango_font_description_get_weight (a_font_description)
+			create a_family.share_from_pointer ({PANGO}.font_description_get_family (a_font_description))
+			font_style := {PANGO}.font_description_get_style (a_font_description)
+			font_weight := {PANGO}.font_description_get_weight (a_font_description)
 
 			if font_weight <= {EV_FONT_IMP}.pango_weight_ultra_light then
 				font_weight := {EV_FONT_CONSTANTS}.weight_thin
@@ -512,9 +512,9 @@ feature -- Status report
 			else
 				font_weight := {EV_FONT_CONSTANTS}.weight_black
 			end
-			font_size := {GTK2}.pango_font_description_get_size (a_font_description) // {GTK2}.pango_scale
+			font_size := {PANGO}.font_description_get_size (a_font_description) // {PANGO}.scale
 
-			if {GTK2}.pango_font_description_get_style (a_font_description) > 0 then
+			if {PANGO}.font_description_get_style (a_font_description) > 0 then
 				font_style := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				font_style := {EV_FONT_CONSTANTS}.shape_regular
@@ -919,18 +919,18 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			current_tab_position: INTEGER
 		do
-			{GTK2}.pango_tab_array_resize (pango_tab_array, tab_positions.count + 1)
+			{PANGO}.tab_array_resize (pango_tab_array, tab_positions.count + 1)
 			from
 				i := 1
 			until
 				i > tab_positions.count
 			loop
 				current_tab_position := current_tab_position + tab_positions.i_th (i)
-				{GTK2}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position)
+				{PANGO}.tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position)
 				i := i + 1
 			end
 				-- Set the default tab width
-			{GTK2}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position + tab_width)
+			{PANGO}.tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position + tab_width)
 			{GTK2}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 		end
 

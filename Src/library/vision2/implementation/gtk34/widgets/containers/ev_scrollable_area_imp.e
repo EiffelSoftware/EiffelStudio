@@ -228,7 +228,9 @@ feature {NONE} -- Implementation
 			if attached item as l_item then
 				item_imp ?= l_item.implementation
 				check item_imp /= Void end
-				{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				if item_imp /= Void then
+					{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				end
 			end
 		end
 

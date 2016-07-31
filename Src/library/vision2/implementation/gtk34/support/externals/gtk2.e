@@ -632,61 +632,6 @@ feature -- Externals
 			]"
 		end
 
-	frozen pango_matrix_init (a_pango_matrix: TYPED_POINTER [POINTER])
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				PangoMatrix matrix = PANGO_MATRIX_INIT;
-				*($a_pango_matrix) = (void*) pango_matrix_copy (&matrix);
-			]"
-		end
-
-	frozen pango_matrix_free (a_pango_matrix: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				pango_matrix_free ((PangoMatrix*) $a_pango_matrix);
-			]"
-		end
-
-	frozen pango_matrix_rotate (a_matrix: POINTER; a_degrees: REAL_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				pango_matrix_rotate ((PangoMatrix*) $a_matrix, (double) $a_degrees);
-			]"
-		end
-
-	frozen pango_matrix_translate (a_matrix: POINTER; a_x, a_y: REAL_32)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				pango_matrix_translate ((PangoMatrix*) $a_matrix, (double) $a_x, (double) $a_y);
-			]"
-		end
-
-	frozen pango_context_set_matrix (a_context, a_matrix: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				pango_context_set_matrix ((PangoContext*) $a_context, (PangoMatrix*) $a_matrix);
-			]"
-		end
-
-	frozen set_pango_matrix_struct_xx (a_c_struct: POINTER; a_x: REAL_64)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"[
-				((PangoMatrix*)$a_c_struct)->xx = (gdouble) $a_x;
-			]"
-		end
-
 	frozen gdk_screen_get_resolution (a_screen: POINTER): INTEGER_32
 		external
 			"C inline use <ev_gtk.h>"
@@ -721,51 +666,6 @@ feature -- Externals
 			"[
 				return gdk_screen_is_composited ((GdkScreen*)$a_screen);
 			]"
-		end
-
-	frozen pango_layout_get_line_count (a_pango_layout: POINTER): INTEGER
-		external
-			"C signature (PangoLayout*): int use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_line (a_pango_layout: POINTER; a_line: INTEGER): POINTER
-		external
-			"C signature (PangoLayout*, int): PangoLayoutLine* use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_line_readonly (a_pango_layout: POINTER; a_line: INTEGER): POINTER
-		external
-			"C signature (PangoLayout*, int): PangoLayoutLine* use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_context (a_pango_layout: POINTER): POINTER
-		external
-			"C signature (PangoLayout*): PangoContext* use <ev_gtk.h>"
-		end
-
-	frozen pango_cairo_create_layout (a_cr: POINTER): POINTER
-		external
-			"C signature (cairo_t*): PangoLayout* use <ev_gtk.h>"
-		end
-
-	frozen pango_cairo_update_layout (a_cr, a_layout: POINTER)
-		external
-			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
-		end
-
-	frozen pango_cairo_show_layout (a_cr, a_layout: POINTER)
-		external
-			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
-		end
-
-	frozen pango_cairo_show_layout_line (a_cr, a_layout: POINTER)
-		external
-			"C signature (cairo_t *, PangoLayoutLine*) use <ev_gtk.h>"
-		end
-
-	frozen pango_cairo_layout_path (a_cr, a_layout: POINTER)
-		external
-			"C signature (cairo_t *, PangoLayout*) use <ev_gtk.h>"
 		end
 
 	frozen g_mem_set_vtable (mem_vtable: POINTER)
@@ -975,26 +875,6 @@ feature -- Externals
 			"GTK_TREE_VIEW_COLUMN_FIXED"
 		end
 
-	frozen pango_tab_array_new (a_initial_size: INTEGER_32; a_position_in_pixels: BOOLEAN): POINTER
-		external
-			"C signature (gint, gboolean): PangoTabArray* use <ev_gtk.h>"
-		end
-
-	frozen pango_tab_array_resize (a_tab_array: POINTER; a_size: INTEGER_32)
-		external
-			"C signature (PangoTabArray*, gint) use <ev_gtk.h>"
-		end
-
-	frozen pango_tab_array_set_tab (a_tab_array: POINTER; a_tab_index, a_tab_alignment, a_location: INTEGER_32)
-		external
-			"C signature (PangoTabArray*, gint, PangoTabAlign, gint) use <ev_gtk.h>"
-		end
-
-	frozen pango_tab_array_free (a_tab_array: POINTER)
-		external
-			"C signature (PangoTabArray*) use <ev_gtk.h>"
-		end
-
 	frozen gtk_text_view_set_tabs (a_text_view, a_tab_array: POINTER)
 		external
 			"C signature (GtkTextView*, PangoTabArray*) use <ev_gtk.h>"
@@ -1061,13 +941,6 @@ feature -- Externals
 			"C macro use <ev_gtk.h>"
 		alias
 			"GDK_WINDOW_STATE_BELOW"
-		end
-
-	frozen pango_pixels (a_value: INTEGER_32): INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"PANGO_PIXELS"
 		end
 
 	frozen gtk_widget_set_redraw_on_allocate (a_widget: POINTER; redraw_on_allocate: BOOLEAN)
@@ -1176,61 +1049,6 @@ feature -- Externals
 	frozen gtk_file_chooser_list_filters (a_file_chooser: POINTER): POINTER
 		external
 			"C signature (GtkFileChooser*): GSList use <ev_gtk.h>"
-		end
-
-	frozen c_pango_rectangle_struct_allocate: POINTER
-		external
-			"C [macro <ev_gtk.h>]"
-		alias
-			"calloc (sizeof(PangoRectangle), 1)"
-		end
-
-	frozen pango_rectangle_struct_x (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (PangoRectangle): EIF_INTEGER"
-		alias
-			"x"
-		end
-
-	frozen pango_rectangle_struct_y (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (PangoRectangle): EIF_INTEGER"
-		alias
-			"y"
-		end
-
-	frozen pango_rectangle_struct_width (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (PangoRectangle): EIF_INTEGER"
-		alias
-			"width"
-		end
-
-	frozen pango_rectangle_struct_height (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (PangoRectangle): EIF_INTEGER"
-		alias
-			"height"
-		end
-
-	frozen pango_layout_get_extents (a_layout: POINTER; ink_rect, logical_rect: POINTER)
-		external
-			"C signature (PangoLayout*, PangoRectangle*, PangoRectangle*) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_pixel_extents (a_layout: POINTER; ink_rect, logical_rect: POINTER)
-		external
-			"C signature (PangoLayout*, PangoRectangle*, PangoRectangle*) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER_32])
-		external
-			"C signature (PangoLayout*, gint*, gint*) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_context_changed (a_layout: POINTER)
-		external
-			"C signature (PangoLayout*) use <ev_gtk.h>"
 		end
 
 	frozen gdk_event_scroll_struct_scroll_direction (a_c_struct: POINTER): INTEGER_32
@@ -2338,27 +2156,6 @@ feature -- Externals
 			"gtk_list_store_set ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index, (GdkPixbuf*) $a_pixbuf, -1)"
 		end
 
-	frozen pango_underline_none_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"PANGO_UNDERLINE_NONE"
-		end
-
-	frozen pango_underline_single_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"PANGO_UNDERLINE_SINGLE"
-		end
-
-	frozen pango_underline_double_enum: INTEGER_32
-		external
-			"C macro use <ev_gtk.h>"
-		alias
-			"PANGO_UNDERLINE_DOUBLE"
-		end
-
 	frozen gdk_screen_get_default: POINTER
 		external
 			"C signature (): GdkScreen* use <ev_gtk.h>"
@@ -2771,41 +2568,6 @@ feature -- Externals
 			"C signature (GtkWidget*): PangoContext* use <ev_gtk.h>"
 		end
 
-	frozen pango_layout_set_font_description (a_layout, a_font_desc: POINTER)
-		external
-			"C signature (PangoLayout*, PangoFontDescription*) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_set_width (a_layout: POINTER; a_width: INTEGER_32)
-		external
-			"C signature (PangoLayout*, int) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_pixel_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER_32])
-		external
-			"C signature (PangoLayout*, gint*, gint*) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_get_iter (a_layout: POINTER): POINTER
-		external
-			"C signature (PangoLayout*): PangoLayoutIter* use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_set_text (a_layout: POINTER; a_text: POINTER; a_length: INTEGER_32)
-		external
-			"C signature (PangoLayout*, char*, int) use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_iter_get_baseline (a_iter: POINTER): INTEGER_32
-		external
-			"C signature (PangoLayoutIter*): gint use <ev_gtk.h>"
-		end
-
-	frozen pango_layout_iter_free (a_iter: POINTER)
-		external
-			"C signature (PangoLayoutIter*) use <ev_gtk.h>"
-		end
-
 	frozen gtk_widget_create_pango_layout (a_widget: POINTER; a_text: POINTER): POINTER
 		external
 			"C signature (GtkWidget*, gchar*): PangoLayout* use <ev_gtk.h>"
@@ -2829,78 +2591,6 @@ feature -- Externals
 	frozen gtk_widget_get_mapped (a_widget: POINTER): BOOLEAN
 		external
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
-		end
-
-	frozen pango_scale: INTEGER_32
-		external
-			"C Macro use <ev_gtk.h>"
-		alias
-			"PANGO_SCALE"
-		end
-
-	frozen pango_font_description_new: POINTER
-		external
-			"C signature (): PangoFontDescription* use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_free (a_pango_description: POINTER)
-		external
-			"C signature (PangoFontDescription*) use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_copy (a_pango_description: POINTER): POINTER
-		external
-			"C signature (PangoFontDescription*): PangoFontDescription* use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_to_string (a_pango_description: POINTER): POINTER
-		external
-			"C signature (PangoFontDescription*): char* use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_set_family (a_pango_description: POINTER; a_family: POINTER)
-		external
-			"C signature (PangoFontDescription*, char*) use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_get_family (a_pango_description: POINTER): POINTER
-		external
-			"C signature (PangoFontDescription*): char* use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_set_style (a_pango_description: POINTER; a_pango_style: INTEGER_32)
-		external
-			"C signature (PangoFontDescription*, PangoStyle) use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_get_style (a_pango_description: POINTER): INTEGER_32
-		external
-			"C signature (PangoFontDescription*): PangoStyle use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_set_weight (a_pango_description: POINTER; a_weight: INTEGER_32)
-		external
-			"C signature (PangoFontDescription*, PangoWeight) use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_get_weight (a_pango_description: POINTER): INTEGER_32
-		external
-			"C signature (PangoFontDescription*): PangoWeight use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_set_size (a_pango_description: POINTER; a_size: INTEGER_32)
-		external
-			"C signature (PangoFontDescription*, gint) use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_get_size (a_pango_description: POINTER): INTEGER_32
-		external
-			"C signature (PangoFontDescription*): gint use <ev_gtk.h>"
-		end
-
-	frozen pango_font_description_from_string (a_description: POINTER): POINTER
-		external
-			"C signature (char*): PangoFontDescription* use <ev_gtk.h>"
 		end
 
 	frozen g_object_set_pointer (a_object: POINTER; a_property: POINTER; arg1: POINTER; arg2: POINTER)

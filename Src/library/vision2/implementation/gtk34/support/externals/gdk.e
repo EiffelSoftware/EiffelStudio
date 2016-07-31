@@ -166,6 +166,20 @@ feature -- GdkRGBA
 			]"
 		end
 
+	frozen set_rgba_struct_with_16_bit_rgb (a_rgba_struct: POINTER; r, g, b: INTEGER_32)
+			-- Set `a_rgba_struct' with red `r', green `g' and blue `b' and alpha of 1.0.
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				GdkRGBA *rgba = (GdkRGBA *) $a_rgba_struct;
+				rgba->red = $r / 65535.0;
+				rgba->green = $g / 65535.0;
+				rgba->blue = $b / 65535.0;
+				rgba->alpha = 1.0;
+			]"
+		end
+
 	frozen set_rgba_struct_blue (a_c_struct: POINTER; a_blue: REAL_64)
 		external
 			"C [struct <ev_gtk.h>] (GdkRGBA, gdouble)"

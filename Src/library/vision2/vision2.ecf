@@ -242,4 +242,7 @@
 		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
 	</target>
+	<target name="vision2_gtk34" extends="vision2">
+		<variable name="vision_implementation" value="gtk34"/>
+	</target>
 </system>

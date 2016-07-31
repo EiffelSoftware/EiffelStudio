@@ -413,17 +413,24 @@ feature -- Drawing operations
 					{PANGO}.layout_set_width (a_pango_layout, a_width * {PANGO}.scale)
 				end
 
-				{CAIRO}.translate (l_drawable, l_x, l_y)
-
 				if a_angle /= 0.0 then
+					{CAIRO}.translate (l_drawable, l_x, l_y)
+
 						-- Minus angle because Vision is counter-clockwise, and Cairo clockwise.
 					{CAIRO}.rotate (l_drawable, -a_angle)
-				end
 
-				if draw_from_baseline  then
-					l_pango_iter := {PANGO}.layout_get_iter (a_pango_layout)
-					{CAIRO}.move_to (l_drawable, 0, -({PANGO}.layout_iter_get_baseline (l_pango_iter) / {PANGO}.scale));
-					{PANGO}.layout_iter_free (l_pango_iter)
+					if draw_from_baseline  then
+						l_pango_iter := {PANGO}.layout_get_iter (a_pango_layout)
+						{CAIRO}.move_to (l_drawable, 0, -({PANGO}.layout_iter_get_baseline (l_pango_iter) / {PANGO}.scale))
+						{PANGO}.layout_iter_free (l_pango_iter)
+					end
+				else
+					if draw_from_baseline  then
+						l_pango_iter := {PANGO}.layout_get_iter (a_pango_layout)
+						l_y := l_y -({PANGO}.layout_iter_get_baseline (l_pango_iter) / {PANGO}.scale)
+						{PANGO}.layout_iter_free (l_pango_iter)
+					end
+					{CAIRO}.translate (l_drawable, l_x, l_y)
 				end
 
 				{PANGO}.cairo_show_layout (l_drawable, a_pango_layout)

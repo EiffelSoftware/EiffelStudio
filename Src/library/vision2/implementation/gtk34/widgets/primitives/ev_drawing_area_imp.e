@@ -161,9 +161,14 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_window: POINTER
 		do
-			if drawable /= default_pointer then
+			if in_expose_actions then
+					-- We have been called via an expose event.
+				check drawable_not_null: drawable /= null end
 				Result := drawable
 			else
+					-- User is drawing directly to the window outside
+					-- of an expose event. We need to create a drawable
+					-- context for each draw operations.
 				l_window := {GTK}.gtk_widget_get_window (c_object)
 				if l_window /= default_pointer then
 					Result := {GDK_CAIRO}.create_context (l_window)
@@ -175,7 +180,7 @@ feature {EV_ANY_I} -- Implementation
 	release_drawable (a_drawable: POINTER)
 			-- Release resources of drawable `a_drawable'.
 		do
-			if a_drawable /= drawable and then a_drawable /= default_pointer then
+			if not in_expose_actions and a_drawable /= null then
 				{CAIRO}.destroy (a_drawable)
 			end
 		end
@@ -210,12 +215,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	initialize_drawable (a_drawable: POINTER)
 			-- Initialize new `drawable' to existing parameters.
 		do
-				-- No aliasing to get pixel perfect rendering
-			{CAIRO}.set_antialias (a_drawable, {CAIRO}.antialias_none)
-				-- End of line stops where we tells to (no lighter
-				-- rounding or square effects on each ends of the line)
-			{CAIRO}.set_line_cap (a_drawable, {CAIRO}.line_cap_butt)
-				-- Default line width is 1.0
+			{CAIRO}.set_antialias (a_drawable, aliasing_mode)
+			{CAIRO}.set_line_cap (a_drawable, line_cap_mode)
 			{CAIRO}.set_line_width (a_drawable, line_width)
 			if attached internal_foreground_color as l_color then
 				{CAIRO}.set_source_rgb (a_drawable, l_color.red, l_color.green, l_color.blue)

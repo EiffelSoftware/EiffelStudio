@@ -28,7 +28,12 @@ feature {NONE} -- Initialization
 			disable_dashed_line_style
 			set_drawing_mode (drawing_mode_copy)
 			set_line_width (1)
-			disable_anti_aliasing
+			if drawable /= default_pointer then
+				{CAIRO}.set_antialias (drawable, {CAIRO}.antialias_none)
+				{CAIRO}.set_line_cap (drawable, {CAIRO}.line_cap_butt)
+			end
+			aliasing_mode := {CAIRO}.antialias_none
+			line_cap_mode := {CAIRO}.line_cap_butt
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -106,6 +111,12 @@ feature -- Access
 	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
 
+	aliasing_mode: INTEGER_8
+			-- Aliasing mode. Default: None
+
+	line_cap_mode: INTEGER_8
+			-- Line cap mode. Default: Butt
+
 	clip_area: detachable EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
@@ -177,14 +188,6 @@ feature -- Element change
 				{CAIRO}.set_line_width (drawable, a_width)
 			end
 			line_width := a_width
-		end
-
-	disable_anti_aliasing
-			-- Turn off anti-aliasing for cairo context.
-		do
-			if drawable /= default_pointer then
-				{CAIRO}.set_antialias (drawable, {CAIRO}.antialias_none)
-			end
 		end
 
 	set_drawing_mode (a_mode: INTEGER)
@@ -511,9 +514,11 @@ feature -- Drawing operations
 		do
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
+				{CAIRO}.save (l_drawable)
 				{CAIRO}.move_to (l_drawable, x1 + device_x_offset + 0.5, y1 + device_y_offset + 0.5)
 				{CAIRO}.line_to (l_drawable, x2 + device_x_offset + 0.5, y2 + device_y_offset + 0.5)
 				{CAIRO}.stroke (l_drawable)
+				{CAIRO}.restore (l_drawable)
 				release_drawable (l_drawable)
 			end
 		end
@@ -618,6 +623,7 @@ feature -- Drawing operations
 			l_drawable := get_drawable
 			if l_drawable /= default_pointer then
 				if (a_width > 0 and a_height > 0 ) then
+					{CAIRO}.save (l_drawable)
 
 					l_close := a_close and then an_aperture /= (2 * {DOUBLE_MATH}.Pi)
 
@@ -649,6 +655,8 @@ feature -- Drawing operations
 					if a_width /= a_height then
 						{CAIRO}.scale (l_drawable, 1.0, 1.0)
 					end
+
+					{CAIRO}.restore (l_drawable)
 					release_drawable (l_drawable)
 				end
 			end
@@ -674,6 +682,7 @@ feature -- Drawing operations
 				l_drawable := get_drawable
 				if l_drawable /= default_pointer then
 					from
+						{CAIRO}.save (l_drawable)
 						l_count := points.count
 						{CAIRO}.move_to (l_drawable, points [1].x_precise + 0.5, points [1].y_precise + 0.5)
 						i := 2
@@ -687,6 +696,7 @@ feature -- Drawing operations
 						{CAIRO}.close_path (l_drawable)
 					end
 					{CAIRO}.stroke (l_drawable)
+					{CAIRO}.restore (l_drawable)
 					release_drawable (l_drawable)
 				end
 			end
@@ -715,9 +725,10 @@ feature -- filling operations
 		local
 			l_drawable: POINTER
 		do
-			l_drawable := get_drawable
-			if l_drawable /= default_pointer then
-				if a_width > 0 and then a_height > 0 then
+			if a_width > 0 and then a_height > 0 then
+				l_drawable := get_drawable
+				if l_drawable /= default_pointer then
+					{CAIRO}.save (l_drawable)
 						-- If width or height are zero then nothing will be rendered.
 					{CAIRO}.rectangle (l_drawable, x + device_x_offset + 0.5, y + device_y_offset + 0.5, a_width - line_width, a_height - line_width)
 					if a_fill then
@@ -725,8 +736,9 @@ feature -- filling operations
 						{CAIRO}.fill (l_drawable)
 					end
 					{CAIRO}.stroke (l_drawable)
+					{CAIRO}.restore (l_drawable)
+					release_drawable (l_drawable)
 				end
-				release_drawable (l_drawable)
 			end
 		end
 

@@ -150,8 +150,8 @@ feature -- Tests
 			ctx_deser.set_default_deserializer (create {JSON_REFLECTOR_DESERIALIZER})
 			ctx_deser.register_deserializer (create {TEAM_JSON_DESERIALIZER}, {TEAM})
 			ctx_deser.register_deserializer (create {PERSON_JSON_DESERIALIZER}, {PERSON})
-			ctx_deser.register_deserializer (create {ARRAYED_LIST_JSON_DESERIALIZER [PERSON]}, {ARRAYED_LIST [PERSON]})
-			ctx_deser.register_deserializer (create {ARRAYED_LIST_JSON_DESERIALIZER [ENTITY]}, {ARRAYED_LIST [ENTITY]})
+			ctx_deser.register_deserializer (create {LIST_JSON_DESERIALIZER [PERSON]}, {ARRAYED_LIST [PERSON]})
+			ctx_deser.register_deserializer (create {LIST_JSON_DESERIALIZER [ENTITY]}, {ARRAYED_LIST [ENTITY]})
 
 			if attached conv_from.from_json_string (s, ctx_deser, {TEAM}) as o then
 				assert ("deserialized ok", recursively_one_includes_other (obj, o, Void))

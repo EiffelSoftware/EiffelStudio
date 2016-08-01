@@ -26,9 +26,9 @@ feature -- Conversion
 				if attached {like from_json} inf.object as lst then
 					Result := lst
 				elseif a_type = Void then
-					ctx.on_value_skipped (j_array, a_type, "Could not instantiate array object.")
+					ctx.on_value_skipped (j_array, a_type, "Could not instantiate from array data.")
 				else
-					ctx.on_value_skipped (j_array, a_type, "Could not instantiate array {" + a_type.name + "}.")
+					ctx.on_value_skipped (j_array, a_type, "Could not instantiate {" + a_type.name + "} from array data.")
 				end
 				if Result /= Void and not ctx.has_error then
 					if a_type /= Void and then a_type.generic_parameter_count = 1 then

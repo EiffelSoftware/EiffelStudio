@@ -77,7 +77,7 @@ feature -- Tests Pass
 			else
 				assert ("utf8.nihaoma", False)
  			end
- 		end		
+ 		end
 
 feature -- Tests Failures
     test_json_fail1
@@ -496,7 +496,7 @@ feature -- JSON_FROM_FILE
 			test_dir: PATH
 			i: INTEGER
 		do
-			test_dir := (create {EXECUTION_ENVIRONMENT}).current_working_path
+			test_dir := (create {EXECUTION_ENVIRONMENT}).current_working_path.extended ("data")
 			l_path := test_dir.extended (fn)
 			create f.make_with_path (l_path)
 			if f.exists then

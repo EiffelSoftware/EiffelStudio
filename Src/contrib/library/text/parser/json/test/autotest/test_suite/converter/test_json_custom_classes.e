@@ -33,8 +33,9 @@ feature -- Test
 			create jac.make
 			json.add_converter (jac)
 			jrep := "{%"name%":%"Test collection%",%"books%":[{%"title%":%"eJSON: The Definitive Guide%",%"isbn%":%"123123-413243%",%"author%":{%"name%":%"Foo Bar%"}}]}"
-			create parser.make_parser (jrep)
-			if attached {JSON_OBJECT} parser.parse as l_json_object then
+			create parser.make_with_string (jrep)
+			parser.parse_content
+			if parser.is_valid and then attached parser.parsed_json_object as l_json_object then
 				if attached {BOOK_COLLECTION} json.object (l_json_object, "BOOK_COLLECTION") as l_collection then
 					if attached {JSON_OBJECT} json.value (l_collection) as l_json_object_2 then
 						assert ("JSON representation is correct", l_json_object_2.representation.same_string (jrep))

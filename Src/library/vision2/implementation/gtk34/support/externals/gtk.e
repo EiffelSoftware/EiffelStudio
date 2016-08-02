@@ -358,34 +358,6 @@ feature
 			"gdk_pixbuf_fill ((GdkPixbuf*)$a_pixbuf, (guint32) $rgba);"
 		end
 
-	frozen gtk_fixed_child_struct_x (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkFixedChild): EIF_INTEGER"
-		alias
-			"x"
-		end
-
-	frozen gtk_fixed_child_struct_y (a_c_struct: POINTER): INTEGER_32
-		external
-			"C [struct <ev_gtk.h>] (GtkFixedChild): EIF_INTEGER"
-		alias
-			"y"
-		end
-
-	frozen set_gtk_fixed_child_struct_x (a_c_struct: POINTER; a_x: INTEGER_32)
-		external
-			"C [struct <ev_gtk.h>] (GtkFixedChild, gint)"
-		alias
-			"x"
-		end
-
-	frozen set_gtk_fixed_child_struct_y (a_c_struct: POINTER; a_y: INTEGER_32)
-		external
-			"C [struct <ev_gtk.h>] (GtkFixedChild, gint)"
-		alias
-			"y"
-		end
-
 	frozen gtk_win_pos_mouse_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"

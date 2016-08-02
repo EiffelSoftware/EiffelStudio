@@ -225,6 +225,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				{CAIRO}.set_source_rgb (a_drawable, 0.0, 0.0, 0.0)
 			end
 			{CAIRO}.set_operator (a_drawable, cairo_drawing_mode (drawing_mode))
+			{CAIRO}.set_dashed_line_style (a_drawable, dashed_line_style)
 		end
 
 	internal_set_focus

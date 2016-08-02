@@ -43,9 +43,6 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
-	line_style: INTEGER
-			-- Dash-style used when drawing lines.
-
 	gc_clip_area: detachable EV_RECTANGLE
 			-- Clip area currently used by `gc'.
 
@@ -131,7 +128,7 @@ feature -- Access
 			-- If set to Void, `background_color' is used to fill.
 
 	dashed_line_style: BOOLEAN
-			-- Are lines drawn dashed?
+			-- <Precursor>
 
 feature -- Element change
 
@@ -290,19 +287,19 @@ feature -- Element change
 	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
---			line_style := {GTK}.Gdk_line_on_off_dash_enum
---			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
---				line_style, cap_style, join_style)
-			check Implemented: False end
+			dashed_line_style := True
+			if drawable /= default_pointer then
+				{CAIRO}.set_dashed_line_style (drawable, True)
+			end
 		end
 
 	disable_dashed_line_style
 			-- Draw lines solid.
 		do
---			line_style := {GTK}.Gdk_line_solid_enum
---			{GTK}.gdk_gc_set_line_attributes (gc, line_width,
---				line_style, cap_style, join_style)
-			check Implemented: False end
+			dashed_line_style := False
+			if drawable /= default_pointer then
+				{CAIRO}.set_dashed_line_style (drawable, False)
+			end
 		end
 
 feature -- Clearing operations

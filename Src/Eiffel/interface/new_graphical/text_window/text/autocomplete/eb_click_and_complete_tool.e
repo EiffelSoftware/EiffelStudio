@@ -71,8 +71,6 @@ feature {NONE} -- Access
 			-- Code template definitions for snippets.
 		require
 			code_template_catalog_is_service_available: code_template_catalog.service /= Void
-		local
-			l_categories: DS_ARRAYED_LIST [STRING]
 		do
 			if attached code_template_catalog.service as l_service then
 				Result := l_service.code_templates
@@ -243,8 +241,6 @@ feature -- Analysis preparation
 		local
 			l_templates: DS_BILINEAR [ES_CODE_TEMPLATE_DEFINITION_ITEM]
 			l_template:  EB_TEMPLATE_FOR_COMPLETION
-			l_name: STRING
-			l_pos, p: INTEGER
 		do
 			if
 				a_stone /= Void and then
@@ -292,11 +288,15 @@ feature -- Basic Operations
 				initialize_context
 				if current_class_i /= Void then
 					token := cursor.token
-					line ?= cursor.line
+					if attached {EIFFEL_EDITOR_LINE} cursor.line as l_eiffel_line then
+						line := l_eiffel_line
+					end
 					a_position := token.pos_in_text
 					Result := stone_in_click_ast (a_position)
 					if Result = Void or else token_image_is_same_as_word (token, "precursor") then
-						if a_position >= invariant_index then
+						if line = Void then
+							check is_eiffel_line: False end
+						elseif a_position >= invariant_index then
 							feat := described_feature (token, line, Void)
 						elseif click_possible (token) then
 							l_content := feature_containing (token, line)
@@ -671,8 +671,6 @@ feature {NONE} -- Code template conformance
 
 	has_type_conformance (a_definition: ES_CODE_TEMPLATE_DEFINITION): BOOLEAN
 			-- Is the current `last_type' conforms_to context definition in the template.
-		local
-			l_conform_to_string: STRING_32
 		do
 			if
 				attached a_definition.context as l_context and then

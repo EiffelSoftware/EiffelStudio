@@ -120,18 +120,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
 		end
 
-	width_request_string: EV_GTK_C_STRING
-			-- Once string to pass to gtk.
-		once
-			Result := "width-request"
-		end
-
-	height_request_string: EV_GTK_C_STRING
-			-- Once string to pass to gtk.
-		once
-			Result := "height-request"
-		end
-
 	minimum_width, real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
@@ -146,7 +134,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	width_request: INTEGER
 			-- Requested width of `Current' from gtk.
 		do
-			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
+			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.width_request)
 		end
 
 	preferred_width: INTEGER
@@ -179,7 +167,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	height_request: INTEGER
 			-- Requested height of `Current' from gtk.
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
+			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.height_request)
 		end
 
 	preferred_height: INTEGER
@@ -422,7 +410,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

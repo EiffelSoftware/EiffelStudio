@@ -202,7 +202,6 @@ feature {NONE} -- Implementation
 			gdkwin, gtkwid: POINTER
 			i, l_count, l_x, l_y, l_button_x, l_pointer_x, l_pointer_y: INTEGER
 			a_item_imp: detachable EV_HEADER_ITEM_IMP
-			l_cs: EV_GTK_C_STRING
 		do
 			gdkwin := {GDK_HELPERS}.window_at ($l_pointer_x, $l_pointer_y)
 			if gdkwin /= default_pointer then
@@ -212,7 +211,6 @@ feature {NONE} -- Implementation
 
 				if gtkwid = c_object then
 					from
-						l_cs := app_implementation.c_string_from_eiffel_string ("x-offset")
 						i := 1
 						l_count := count
 					until
@@ -221,7 +219,7 @@ feature {NONE} -- Implementation
 						a_item_imp ?= i_th (i).implementation
 						check a_item_imp /= Void end
 						if a_item_imp /= Void then
-							{GTK2}.g_object_get_integer (a_item_imp.c_object, l_cs.item, $l_button_x)
+							l_button_x := {GTK2}.g_object_get_integer (a_item_imp.c_object, {GTK_PROPERTIES}.x_offset)
 						end
 						if l_button_x < l_x then
 							Result := Result + 1

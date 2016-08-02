@@ -2621,18 +2621,22 @@ feature -- Externals
 			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL)"
 		end
 
-	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER; int_arg: TYPED_POINTER [INTEGER_32])
+	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER): INTEGER
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gint*) $int_arg, NULL)"
+			"[
+				gint v;
+				g_object_get ((gpointer) $a_object, (const gchar *) $a_property, &v, NULL);
+				return (EIF_INTEGER) v;
+			]"
 		end
 
 	frozen g_object_set_integer (a_object: POINTER; a_property: POINTER; int_arg: INTEGER_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $int_arg, NULL)"
+			"g_object_set((gpointer) $a_object, (const gchar *) $a_property, $int_arg, NULL)"
 		end
 
 	frozen g_object_set_double (a_object: POINTER; a_property: POINTER; double_arg: REAL_64)

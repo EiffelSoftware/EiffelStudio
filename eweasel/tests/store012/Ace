@@ -7,6 +7,7 @@
 			<warning name="syntax" enabled="false"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

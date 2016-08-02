@@ -50,8 +50,7 @@ feature -- HTTP Methods
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_cookie: WSF_COOKIE
-			l_token: STRING
-
+			l_time: DATE_TIME
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
@@ -61,9 +60,11 @@ feature -- HTTP Methods
 					attached current_user (req) as l_user
 				then
 						-- Logout Session
-					create l_cookie.make (esa_session_token, l_cookie_token.value) -- FIXME: unicode issue?
+					create l_cookie.make (esa_session_token, "") -- FIXME: unicode issue?
 					l_cookie.set_path ("/")
-					l_cookie.set_max_age (-1)
+					l_cookie.set_max_age (0)
+					create l_time.make_from_epoch (0)
+					l_cookie.set_expiration_date (l_time)
 					res.add_cookie (l_cookie)
 					req.unset_execution_variable ("user")
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).logout_page (req, res)

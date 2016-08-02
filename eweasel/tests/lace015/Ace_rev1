@@ -14,6 +14,7 @@
 		<option>
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

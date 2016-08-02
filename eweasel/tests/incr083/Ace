@@ -5,6 +5,7 @@
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 </description>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 		</option>
@@ -38,12 +39,12 @@
 				$EXCLUDE_SYSTEM_STRING
 			</file_rule>
 		</cluster>
-		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
-		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="True"/>
+		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="true"/>
+		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="true"/>
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
-		<cluster name="set" location="$SET\" recursive="True"/>
+		<cluster name="set" location="$SET\" recursive="true"/>
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>
 		<cluster name="support" location="$SUPPORT\"/>

@@ -2,8 +2,9 @@
 	<target name="test">
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<option warning="true">
-			<assertions precondition="True" postcondition="$ASSERTION" check="$ASSERTION" invariant="$ASSERTION" loop="$ASSERTION"/>
+			<assertions precondition="true" postcondition="$ASSERTION" check="$ASSERTION" invariant="$ASSERTION" loop="$ASSERTION"/>
 		<warning name="syntax" enabled="false"/></option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

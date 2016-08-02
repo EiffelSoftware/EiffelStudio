@@ -11,6 +11,7 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>
 		<mapping old_name="INTEGER" new_name="INTEGER_32"/>
 		<mapping old_name="NATURAL" new_name="NATURAL_32" />
@@ -28,7 +29,7 @@
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="exceptoins_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
+		<cluster name="exceptoins_ise" location="$EXCEPTIONS_ISE\" recursive="true"/>
 		<cluster name="kernel" location="$KERNEL\">
 			<file_rule>
 				$EXCLUDE

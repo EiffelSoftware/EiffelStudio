@@ -3,6 +3,7 @@
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="make"/>
 		<option warning="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="0"/>

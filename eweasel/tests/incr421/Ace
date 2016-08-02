@@ -6,6 +6,7 @@
 			<assertions precondition="$ASSERTION_VALUE" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="$ASSERTION_VALUE"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

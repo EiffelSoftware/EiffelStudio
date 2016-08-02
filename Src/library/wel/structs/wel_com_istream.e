@@ -37,9 +37,11 @@ feature {NONE} -- Initialization
 		end
 
 	create_istream_from_memory (a_pointer: POINTER; a_size: NATURAL_32)
-			-- Creates a memory stream using a similar process to CreateStreamOnHGlobal, but with less functionality.
+			-- Creates a memory stream using a similar process to CreateStreamOnHGlobal,
+			-- but with less functionality. If `a_pointer' is `default_pointer', current
+			-- is initialized without an initial content.
 		require
-			valid: a_pointer /= default_pointer
+			valid_pointer: a_pointer = default_pointer implies a_size = 0
 		do
 			item := c_sh_create_mem_stream (shlwapi_handle, a_pointer, a_size)
 			check success: item /= default_pointer end

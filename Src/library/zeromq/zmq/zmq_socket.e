@@ -145,9 +145,9 @@ feature -- Receiving messages
 		local
 			rc: INTEGER_32
 		do
-			rc := {ZMQ}.recvmsg (item, a_message.item, 0)
-			if rc /= 0 then
-				exceptions.raise ("ZMQ_SOCKET.receive error not handled")
+			rc := {ZMQ}.msg_recv (a_message.item, item, 0)
+			if rc = -1 then
+				exceptions.raise ("ZMQ_SOCKET.message_receive error not handled")
 			end
 		end
 
@@ -162,11 +162,12 @@ feature -- Receiving messages
 		local
 			rc: INTEGER_32
 		do
-			rc := {ZMQ}.recvmsg (item, a_message.item, {ZMQ_CONSTANTS}.noblock)
-			if rc /= 0 then
-				exceptions.raise ("ZMQ_SOCKET.receive error not handled")
+			rc := {ZMQ}.msg_recv (a_message.item, item, {ZMQ_CONSTANTS}.noblock)
+			if rc = -1 then
+				exceptions.raise ("ZMQ_SOCKET.now_receive error not handled")
 			end
 		end
+
 
 feature {ANY} -- Sending
 
@@ -234,7 +235,7 @@ feature {NONE} -- Exceptions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

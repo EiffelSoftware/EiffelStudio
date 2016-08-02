@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Representation of a feature used to represent the type of either a
 		formal generic parameter or an anchored type from the point of view of
@@ -51,11 +51,8 @@ feature -- Status report
 
 	is_formal: BOOLEAN
 			-- Is `type' a formal generic parameter?
-		local
-			l_formal: FORMAL_A
 		do
-			l_formal ?= type
-			Result := l_formal /= Void
+			Result := attached {FORMAL_A} type
 		end
 
 	is_function: BOOLEAN
@@ -78,9 +75,8 @@ feature -- Checking
 			if class_c.class_id = written_in then
 					-- Check validity of an expanded in a formal generic parameter.
 
-					-- `type' has been evaluated and therefore
-					-- the assignment attempt is valid.
-				solved_type ?= type
+					-- `type' has been evaluated.
+				solved_type := type
 				check
 					solved_type_not_void: solved_type /= Void
 				end
@@ -201,7 +197,7 @@ feature {NONE} -- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -232,4 +228,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TYPE_FEATURE_I
+end

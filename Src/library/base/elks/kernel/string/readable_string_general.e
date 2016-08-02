@@ -220,7 +220,7 @@ feature -- Access
 				internal_case_insensitive_hash_code := Result
 			end
 		ensure
-			consistent: Result = as_lower.hash_code
+			consistent: Result = as_lower.case_insensitive_hash_code
 		end
 
 feature -- Status report
@@ -1253,7 +1253,6 @@ feature {READABLE_STRING_GENERAL} -- Implementation
 	internal_case_insensitive_hash_code: INTEGER;
 			-- Cash for `case_insensitive_hash_code'.
 
-
 feature -- Access: Cursor
 
 	new_character_32_cursor: STRING_ITERATION_CURSOR
@@ -1265,7 +1264,7 @@ feature -- Access: Cursor
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

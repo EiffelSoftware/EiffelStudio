@@ -1,5 +1,5 @@
-note
-	description: "Representation of a unique constant"
+﻿note
+	description: "Representation of a unique constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -35,14 +35,11 @@ feature
 
 	equiv (other: FEATURE_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
-		local
-			other_unique: UNIQUE_I
 		do
-			other_unique ?= other;
-			if other_unique /= Void then
+			if attached {UNIQUE_I} other as other_unique then
 				Result := basic_equiv (other_unique)
 					and then value.is_equivalent (other_unique.value)
-			end;
+			end
 			if not Result then
 				System.current_class.insert_changed_feature (feature_name_id)
 			end
@@ -52,11 +49,10 @@ feature
 		require
 			other /= Void
 			other.is_unique
-		local
-			other_unique: UNIQUE_I
 		do
-			other_unique ?= other
-			Result := value.is_equal (other_unique.value)
+			if attached {UNIQUE_I} other as other_unique then
+				Result := value.is_equal (other_unique.value)
+			end
 		end
 
 	do_check_types (feat_tbl: FEATURE_TABLE; is_delayed: BOOLEAN)
@@ -123,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

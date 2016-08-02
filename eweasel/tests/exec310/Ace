@@ -5,7 +5,8 @@
 		<option warning="true" full_class_checking="true" is_void_safe="false" is_attached_by_default="false" cat_call_detection="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
-		<setting name="multithreaded" value="True"/>
+		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-					RULE #66: Argument naming convention violated
+			RULE #66: Argument naming convention violated
 		
-					Argument names should respect the Eiffel naming convention for arguments
-					(all lowercase, begin with 'a_', no trailing or two consecutive underscores).
-	]"
+			Argument names should respect the Eiffel naming convention for arguments
+			(all lowercase, begin with 'a_', no trailing or two consecutive underscores).
+		]"
 	author: "Paolo Antonucci"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,8 +34,9 @@ feature {NONE} -- Initialization
 			l_factory: BASIC_PREFERENCE_FACTORY
 		do
 			create l_factory
-			enforce_argument_prefix := l_factory.new_boolean_preference_value (a_pref_manager, preference_namespace + ca_names.enforce_argument_prefix, default_enforce_argument_prefix)
-			enforce_argument_prefix.set_default_value (default_enforce_argument_prefix.out)
+			enforce_prefix := l_factory.new_boolean_preference_value (a_pref_manager,
+				preference_option_name_enforce_prefix, default_enforce_prefix)
+			enforce_prefix.set_default_value (default_enforce_prefix.out)
 		end
 
 feature {NONE} -- Activation
@@ -46,6 +47,56 @@ feature {NONE} -- Activation
 			a_checker.add_body_pre_action (agent process_body)
 		end
 
+feature -- Properties
+
+	name: STRING = "argument_name"
+			-- <Precursor>
+
+	title: STRING_32
+			-- <Precursor>
+		do
+			Result := ca_names.argument_naming_convention_title
+		end
+
+	id: STRING_32 = "CA066"
+			-- <Precursor>
+
+	description: STRING_32
+			-- <Precursor>
+		do
+			Result := ca_names.argument_naming_convention_description
+		end
+
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			a_formatter.add (ca_messages.argument_naming_convention_violation_1)
+			check
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
+			end
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_arg_name then
+				a_formatter.add (l_arg_name)
+			end
+			a_formatter.add (ca_messages.argument_naming_convention_violation_2)
+		end
+
+feature {NONE} -- Preferences
+
+	preference_option_name_enforce_prefix: STRING
+			-- A name of an option to enforce variable prefix within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_enforce_prefix)
+		end
+
+	option_name_enforce_prefix: STRING = "enforce_prefix"
+			-- A name of an option indicating whether a variable prefix should be enforced.
+
+	enforce_prefix: BOOLEAN_PREFERENCE
+			-- Should the convention of starting variable names with a prefix be enforced?
+
+	default_enforce_prefix: BOOLEAN = False
+			-- Default value of `enforce_prefix'.
+
 feature {NONE} -- Rule checking
 
 	process_body (a_body_as: BODY_AS)
@@ -54,7 +105,7 @@ feature {NONE} -- Rule checking
 			l_viol: CA_RULE_VIOLATION
 			l_construct_list: CONSTRUCT_LIST [INTEGER_32]
 			l_leaf: LEAF_AS
-			l_argument_name: STRING
+			l_argument_name: STRING_32
 		do
 				-- It's a bit more complicated that one would expect, because retrieving the original
 				-- text is the only way for checking the case (otherwise it's always lowercased).
@@ -83,62 +134,25 @@ feature {NONE} -- Rule checking
 			end
 		end
 
-	allowed_names: ARRAY [STRING]
+	allowed_names: ARRAY [STRING_32]
 			-- List of names that are allowed despite breaking the conventions.
 		once
 			Result := << "i", "j", "k", "n" >>
 			Result.compare_objects
 		end
 
-	is_valid_argument_name (a_name: STRING): BOOLEAN
+	is_valid_argument_name (a_name: STRING_32): BOOLEAN
 			-- Does `a_name' respect the naming conventions for arguments?
 		do
 				-- Sample violations:
 				-- a_my__arg, a_argument_, a_ARGUMENT
 				-- argument -- this is fine if the a_-convention is not enforced
-
-			Result := (not a_name.ends_with ("_") and not a_name.has_substring ("__") and (a_name.as_lower ~ a_name) and (not enforce_argument_prefix.value or else a_name.starts_with ("a_"))) or else allowed_names.has (a_name)
-		end
-
-feature -- Options
-
-	enforce_argument_prefix: BOOLEAN_PREFERENCE
-		-- Should the convention of starting argument names with "a_" be enforced?
-
-	default_enforce_argument_prefix: BOOLEAN = True
-		-- Default value of `enforce_argument_prefix'.
-
-feature -- Properties
-
-	name: STRING = "argument_name"
-			-- <Precursor>
-
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := ca_names.argument_naming_convention_title
-		end
-
-	id: STRING_32 = "CA066"
-			-- <Precursor>
-
-	description: STRING_32
-			-- <Precursor>
-		do
-			Result := ca_names.argument_naming_convention_description
-		end
-
-	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			a_formatter.add (ca_messages.argument_naming_convention_violation_1)
-			check
-				attached {STRING} a_violation.long_description_info.first
-			end
-			if attached {STRING} a_violation.long_description_info.first as l_arg_name then
-				a_formatter.add (l_arg_name)
-			end
-			a_formatter.add (ca_messages.argument_naming_convention_violation_2)
+			Result :=
+				not a_name.ends_with ({STRING_32} "_") and
+				not a_name.has_substring ({STRING_32} "__") and
+				a_name.as_lower ~ a_name and
+				(enforce_prefix.value implies a_name.starts_with ({STRING_32} "a_")) or else
+				allowed_names.has (a_name)
 		end
 
 end

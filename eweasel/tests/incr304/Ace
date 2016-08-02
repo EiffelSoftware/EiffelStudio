@@ -6,6 +6,7 @@
 			<assertions precondition="true"/>
 			<warning name="syntax" enabled="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\$LIB_NAME.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

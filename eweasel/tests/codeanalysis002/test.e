@@ -1,13 +1,5 @@
-note
-	description : "project2 application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
-
 class
 	TEST
-
-inherit
-	ARGUMENTS
 
 create
 	make
@@ -15,9 +7,9 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialization
+			-- Run test.
 		do
-			-- TODO: this should trigger a violation for a TODO.
+				-- TODO: this should trigger a violation for a TODO.
 			call_back
 		end
 		

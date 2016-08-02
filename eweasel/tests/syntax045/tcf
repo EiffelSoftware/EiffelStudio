@@ -20,8 +20,6 @@ copy_sub test.e $CLUSTER test.e
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE old_brace_output
 execute_result ok
@@ -51,8 +49,6 @@ copy_sub Ace $TEST Ace
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE new_brace_output
 execute_result ok
@@ -82,8 +78,6 @@ copy_sub Ace $TEST Ace
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE brace_output
 execute_result ok
@@ -122,8 +116,6 @@ copy_sub test.e $CLUSTER test.e
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE old_bracket_output
 execute_result ok
@@ -156,8 +148,6 @@ copy_sub test.e $CLUSTER test.e
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE new_bracket_output
 execute_result ok
@@ -187,8 +177,6 @@ copy_sub Ace $TEST Ace
 
 compile_melted
 compile_result ok
-c_compile_work
-c_compile_result ok
 
 execute_work NONE bracket_output
 execute_result ok

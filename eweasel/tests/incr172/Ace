@@ -15,6 +15,7 @@ $EXTRA<system
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

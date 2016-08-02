@@ -7,7 +7,7 @@ class
 	STRING_PROPERTY
 
 inherit
-	TEXT_PROPERTY [STRING_32]
+	TEXT_PROPERTY [READABLE_STRING_32]
 		rename
 			set_value as set_string_32_value
 		redefine
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

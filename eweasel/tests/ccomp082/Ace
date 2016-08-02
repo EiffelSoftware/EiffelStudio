@@ -5,6 +5,7 @@
 		<option warning="true">
 			<assertions precondition="true" />
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<external_include location="$CLUSTER"/>

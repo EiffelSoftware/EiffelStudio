@@ -80,8 +80,8 @@ feature -- Access: Auth Session
 
 feature -- Change Auth Session
 
-	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER)
-			-- New user session for user `a_user' with token `a_token'.
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
+			-- New user session for user `a_user' with token `a_token' and max_age `a_maxage'.
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
@@ -90,12 +90,13 @@ feature -- Change Auth Session
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "date")
+			l_parameters.put (a_maxage, "max_age")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (SQL_insert_session_auth, l_parameters))
 			db_handler.execute_query
 			post_execution
 		end
 
-	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER)
+	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- Update user session for user `a_user' with token `a_token'.
 		local
 			l_parameters: STRING_TABLE [ANY]
@@ -105,6 +106,7 @@ feature -- Change Auth Session
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "date")
+			l_parameters.put (a_maxage, "max_age")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (SQL_update_session_auth, l_parameters))
 			db_handler.execute_query
 			post_execution
@@ -760,9 +762,9 @@ feature -- Queries
 
 	Select_has_user_token: STRING = "SELECT Count(*) FROM Auth_Session WHERE ContactID = :uid;"
 
-	SQL_insert_session_auth: STRING = "INSERT INTO Auth_Session (ContactId, access_token, created) VALUES (:uid, :token, :date);"
+	SQL_insert_session_auth: STRING = "INSERT INTO Auth_Session (ContactId, access_token, created, maxage) VALUES (:uid, :token, :date, :max_age);"
 
-	SQL_update_session_auth: STRING = "UPDATE Auth_Session SET access_token = :token, created = :date WHERE ContactId =:uid;"
+	SQL_update_session_auth: STRING = "UPDATE Auth_Session SET access_token = :token, created = :date, maxage = :max_age WHERE ContactId =:uid;"
 
 
 	Select_user_from_username: STRING = "[

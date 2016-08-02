@@ -1496,11 +1496,11 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLT		int EIF_VOLATILE current_call_level	/* Declare local trave variable */
 #define RTLP \
 		struct stpchunk * EIF_VOLATILE saved_prof_chunk;	/* Declare local profiler variable */ \
-		struct prof_info * EIF_VOLATILE l_saved_prof_top;
+		struct prof_info * EIF_VOLATILE l_saved_prof_top
 
 #define RTPI \
 		saved_prof_chunk = prof_stack.st_cur;	/* Create local profile stack during rescue clause */ \
-		l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL);
+		l_saved_prof_top = (saved_prof_chunk ? saved_prof_chunk->sk_top : NULL)
 
 #define RTTI		current_call_level = trace_call_level	/* Save the tracer call level */
 #endif

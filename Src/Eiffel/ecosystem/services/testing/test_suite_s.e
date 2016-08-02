@@ -175,7 +175,9 @@ feature -- Element change
 				-- Note: this will instanciate a new session
 				-- Note: We use `False' as argument for `a_is_gui' but that does not matter,
 				-- it is just to show that the type is properly registered.
-			factory_registered: new_session (a_factory.type, False) /= Void
+				--| We cannot instantiate a session now as it relies on other stuff to be initialized.
+				--| TODO: Redoe the service system of EiffelStudio to avoid this kind of situation.
+			-- factory_registered: new_session (a_factory.type, False) /= Void
 		end
 
 feature -- Basic operations
@@ -232,7 +234,7 @@ feature {NONE} -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

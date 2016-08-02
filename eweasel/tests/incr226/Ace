@@ -9,6 +9,7 @@
 			<warning name="vjrv" enabled="false"/>
 		</option>
 		<root class="test" feature="default_create"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

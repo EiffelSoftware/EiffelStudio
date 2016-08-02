@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Binary expression byte code for a comparable expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Binary expression byte code for a comparable expression
 
 deferred class
 	COMP_BINARY_B
@@ -17,13 +17,10 @@ feature
 
 	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one ?
-		local
-			l_char: CHARACTER_A
 		do
 			Result := Precursor {NUM_BINARY_B}
 			if not Result then
-				l_char ?= context.real_type (left.type)
-				Result := l_char /= Void
+				Result := attached {CHARACTER_A} context.real_type (left.type)
 			end
 		end
 
@@ -38,7 +35,7 @@ feature
 			-- <Precursor>
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,5 @@
-note
-	description: "[
-		Objects that write class text to file.
-	]"
+﻿note
+	description: "Objects that write class text to file."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +47,6 @@ feature {NONE} -- Output
 		require
 			stream_valid: is_writing
 		local
-			l_universe: UNIVERSE_I
 			l_target: CONF_TARGET
 		do
 			l_target := (create {SHARED_EIFFEL_PROJECT}).eiffel_universe.target
@@ -131,7 +128,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

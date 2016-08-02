@@ -188,7 +188,8 @@ feature -- Settings
 				end
 				if profile_enabled then
 					buf.put_new_line
-					buf.put_string ("RTPI;")
+					buf.put_string ({C_CONST}.rtpi)
+					buf.put_character (';')
 				end
 				buf.put_new_line
 				buf.put_string ("RTE_T")
@@ -300,7 +301,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

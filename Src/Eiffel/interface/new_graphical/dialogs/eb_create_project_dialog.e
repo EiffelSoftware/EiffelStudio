@@ -1,10 +1,10 @@
-note
-	description	: "Command to create a new project"
+﻿note
+	description: "Command to create a new project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CREATE_PROJECT_DIALOG
@@ -240,7 +240,7 @@ feature -- Execution
 					if l_project_initialized then
 						l_project_loader.enable_project_creation_or_opening_not_requested
 					end
-					l_project_loader.open_project_file (ace_file_name, Void, directory_name, True)
+					l_project_loader.open_project_file (ace_file_name, Void, directory_name, True, Void)
 					if not l_project_loader.has_error then
 						if compile_project then
 							l_project_loader.set_is_compilation_requested (True)
@@ -638,7 +638,7 @@ feature {NONE} -- Constants
 	Invalid_project_name_exception: STRING = "Invalid_project_name";
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

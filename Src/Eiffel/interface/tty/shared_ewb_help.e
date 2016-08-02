@@ -1,7 +1,5 @@
-note
-
-	description:
-		"Help constants for menu entries."
+﻿note
+	description: "Help constants for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -32,6 +30,14 @@ feature {NONE}
 
 	c_compile_help: STRING_GENERAL do Result := locale.translation ("launch C compilation if needed") end
 
+	ca_class_help: READABLE_STRING_GENERAL do Result := locale.translation ("analyze code of a class or of all non-library classes (-all)") end
+
+	ca_default_help: READABLE_STRING_GENERAL do Result := locale.translation ("restore default code analyzer preferences") end
+
+	ca_rule_help: READABLE_STRING_GENERAL do Result := locale.translation ("activate code analyzer rule(s) (with settings)") end
+
+	ca_setting_help: READABLE_STRING_GENERAL do Result := locale.translation ("load code analyzer preferences from a file") end
+
 	callers_help: STRING_GENERAL do Result := locale.translation ("show the callers of a feature") end
 
 	callees_help: STRING_GENERAL do Result := locale.translation ("show the callees of a feature") end
@@ -55,6 +61,8 @@ feature {NONE}
 	compile_help: STRING_GENERAL do Result := locale.translation ("compile or run the system") end
 
 	config_help: STRING_GENERAL do Result := locale.translation ("specify the configuration (ECF) file") end
+
+	config_option_help: STRING_GENERAL do Result := locale.translation ("override configuration options of a target") end
 
 	Convert_profile_help: STRING_GENERAL do Result := locale.translation ("convert profiler output files") end
 
@@ -225,7 +233,7 @@ feature {NONE}
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

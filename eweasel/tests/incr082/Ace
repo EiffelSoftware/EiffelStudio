@@ -10,6 +10,7 @@
 		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<mapping old_name="REAL" new_name="REAL_32"/>
 		<mapping old_name="STRING" new_name="STRING_8"/>

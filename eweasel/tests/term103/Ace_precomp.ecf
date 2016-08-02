@@ -6,6 +6,7 @@
 	 name="pre" uuid="7e02f3ff-c59e-42bb-b5ae-f1c12e0a332c"
 	 library_target="pre">
 	<target name="pre">
+		<setting name="console_application" value="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

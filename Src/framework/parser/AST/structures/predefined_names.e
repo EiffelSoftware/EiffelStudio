@@ -229,6 +229,9 @@ feature -- Constants
 	parentheses_symbol_id: INTEGER = 216
 	new_cursor_name_id: INTEGER = 217
 	hash_code_64_name_id: INTEGER = 218
+	is_attached_name_id: INTEGER = 219
+	is_deferred_name_id: INTEGER = 220
+	is_expanded_name_id: INTEGER = 221
 
 feature -- Classification
 
@@ -250,7 +253,7 @@ feature -- Classification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

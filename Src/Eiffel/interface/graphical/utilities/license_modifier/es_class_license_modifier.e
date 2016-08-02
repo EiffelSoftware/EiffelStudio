@@ -1,10 +1,8 @@
-note
-	description: "[
-		A modifier used to inject a license text into a class.
-	]"
+﻿note
+	description: "A modifier used to inject a license text into a class."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -104,8 +102,6 @@ feature {NONE} -- Access
 			is_interface_usable: is_interface_usable
 			is_prepared: is_prepared
 			is_ast_available: is_ast_available
-		local
-			l_ast: detachable like ast
 		do
 			Result := ast.internal_bottom_indexes
 		end
@@ -325,9 +321,9 @@ feature {NONE} -- Basic operations: Modifications
 			l_wrapper := eiffel_parser_wrapper
 			l_wrapper.parse_with_option_32 (round_trip_indexing_parser, a_license, context_class.options, True, Void)
 			if not l_wrapper.has_error then
-				if 
-					attached {INDEXING_CLAUSE_AS} l_wrapper.ast_node as l_indexing and then 
-					not l_indexing.is_empty 
+				if
+					attached {INDEXING_CLAUSE_AS} l_wrapper.ast_node as l_indexing and then
+					not l_indexing.is_empty
 				then
 					check attached {LEAF_AS_LIST} l_wrapper.ast_match_list as l_match_list then
 						from l_indexing.start until l_indexing.after loop
@@ -384,7 +380,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

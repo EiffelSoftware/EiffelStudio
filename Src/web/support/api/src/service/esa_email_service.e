@@ -368,6 +368,25 @@ feature {NONE} -- Implementation
 					utf.escaped_utf_32_string_into_utf_8_string_8 (l_reproduce, Result)
 				end
 			end
+
+			if attached {LIST [REPORT_INTERACTION]} a_report.interactions as l_interactions then
+				across l_interactions as  ic
+				loop
+					if attached ic.item.attachments as l_attachments then
+					Result.append ("%NAttachments%N")
+						across l_attachments as ic2
+						loop
+							Result.append (a_url)
+							Result.append ("/report_interaction/")
+							Result.append_integer (ic2.item.id)
+							Result.append ("/")
+							Result.append (ic2.item.name)
+							Result.append ("%N")
+						end
+					end
+				end
+			end
+
 			Result.append (report_email_links (a_url + "/report_detail", a_report.number))
 			Result.append ("%N%N")
 			Result.append (signature (Void))

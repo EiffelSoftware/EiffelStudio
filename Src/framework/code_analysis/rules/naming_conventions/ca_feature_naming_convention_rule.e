@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-					RULE #64: Feature naming convention violated
+			RULE #64: Feature naming convention violated
 		
-					Feature names should respect the Eiffel naming convention for features
-					(all lowercase, no trailing or two consecutive underscores).
-	]"
+			Feature names should respect the Eiffel naming convention for features
+			(all lowercase, no trailing or two consecutive underscores).
+		]"
 	author: "Paolo Antonucci"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,9 +86,9 @@ feature -- Properties
 		do
 			a_formatter.add (ca_messages.feature_naming_convention_violation_1)
 			check
-				attached {STRING} a_violation.long_description_info.first
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
 			end
-			if attached {STRING} a_violation.long_description_info.first as l_feature_name then
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_feature_name then
 				a_formatter.add (l_feature_name)
 			end
 			a_formatter.add (ca_messages.feature_naming_convention_violation_2)

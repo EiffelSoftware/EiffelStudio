@@ -21,9 +21,6 @@ inherit
 			reset, report_one_error
 		end
 
-	SHARED_PARSER_FILE_BUFFER
-		export {NONE} all end
-
 	SHARED_ENCODING_CONVERTER
 		export {ANY} encoding_converter end
 
@@ -215,7 +212,7 @@ feature -- Status report
 	is_ignoring_variance_mark: BOOLEAN
 			-- Are frozen/variant annotations kept in the parsed AST?
 		do
-				-- If the syntax is not provisional, we accept the 
+				-- If the syntax is not provisional, we accept the
 				-- frozen/variant annotations but won't record them.
 			Result := syntax_version /= provisional_syntax
 		end
@@ -1112,7 +1109,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2484,6 +2484,19 @@ rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype)
 }
 
 /*------------------------------------------------------------------*/
+/* Compute if `dftype' represents a deferred type                   */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_BOOLEAN eif_gen_is_deferred (EIF_TYPE_INDEX dftype)
+{
+	if (RT_CONF_IS_NONE_TYPE(dftype)) {
+		return EIF_FALSE;
+	} else {
+		return EIF_TEST(EIF_IS_DEFERRED_TYPE(System(eif_cid_map[dftype])));
+	}
+}
+
+/*------------------------------------------------------------------*/
 /* Compute if `dftype' has a default value, i.e. detachable         */
 /* reference type or expanded type.                                 */
 /*------------------------------------------------------------------*/
@@ -2498,8 +2511,7 @@ rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE ftype)
 }
 
 /*------------------------------------------------------------------*/
-/* Compute if `dftype' has a default value, i.e. detachable         */
-/* reference type or expanded type.                                 */
+/* Compute if `dftype' represents an expanded type                  */
 /*------------------------------------------------------------------*/
 
 rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype)

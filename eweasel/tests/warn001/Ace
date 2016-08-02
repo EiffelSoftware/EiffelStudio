@@ -6,6 +6,7 @@
 			<warning name="syntax" enabled="false"/>
 			$ACE_IGNORE_WARNING
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

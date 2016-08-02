@@ -6,6 +6,7 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<cluster name="root_cluster" location="$CLUSTER\"/>

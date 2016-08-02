@@ -8,6 +8,7 @@
 -- Run es3.  Reports syntax error.
 </description>
 		<root cluster="root_cluster" class="test" feature="default_create"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

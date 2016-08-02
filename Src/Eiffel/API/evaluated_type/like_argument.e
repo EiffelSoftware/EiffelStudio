@@ -1,7 +1,5 @@
-note
-
-	description:
-		"Representation of an type anchored on a routine argument."
+﻿note
+	description: "Representation of an type anchored on a routine argument."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -46,11 +44,8 @@ feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
-		local
-			other_like_arg: LIKE_ARGUMENT
 		do
-			other_like_arg ?= other
-			if other_like_arg /= Void then
+			if attached {LIKE_ARGUMENT} other as other_like_arg then
 				Result := other_like_arg.position = position and then
 					has_same_marks (other_like_arg)
 			end
@@ -172,7 +167,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -203,4 +198,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class LIKE_ARGUMENT
+end

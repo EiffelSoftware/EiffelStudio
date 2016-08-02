@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-					RULE #65: Local variable naming convention violated
+			RULE #65: Local variable naming convention violated
 		
-					Local variable names should respect the Eiffel naming convention for local variables
-					(all lowercase, begin with 'l_', no trailing or two consecutive underscores).
-	]"
+			Local variable names should respect the Eiffel naming convention for local variables
+			(all lowercase, begin with 'l_', no trailing or two consecutive underscores).
+		]"
 	author: "Paolo Antonucci"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,21 +21,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pref_manager: attached PREFERENCE_MANAGER)
+	make (a_pref_manager: PREFERENCE_MANAGER)
 			-- Initialization for `Current'.
 		do
 			make_with_defaults
 			initialize_options (a_pref_manager)
 		end
 
-	initialize_options (a_pref_manager: attached PREFERENCE_MANAGER)
+	initialize_options (a_pref_manager: PREFERENCE_MANAGER)
 			-- Initializes rule preferences.
 		local
 			l_factory: BASIC_PREFERENCE_FACTORY
 		do
 			create l_factory
-			enforce_local_prefix := l_factory.new_boolean_preference_value (a_pref_manager, preference_namespace + ca_names.enforce_local_prefix, default_enforce_local_prefix)
-			enforce_local_prefix.set_default_value (default_enforce_local_prefix.out)
+			enforce_prefix := l_factory.new_boolean_preference_value (a_pref_manager,
+				preference_option_name_enforce_prefix, default_enforce_prefix)
+			enforce_prefix.set_default_value (default_enforce_prefix.out)
 		end
 
 feature {NONE} -- Activation
@@ -46,6 +47,56 @@ feature {NONE} -- Activation
 			a_checker.add_routine_pre_action (agent process_routine)
 		end
 
+feature -- Properties
+
+	name: STRING = "local_name"
+			-- <Precursor>
+
+	title: STRING_32
+			-- <Precursor>
+		do
+			Result := ca_names.variable_naming_convention_title
+		end
+
+	id: STRING_32 = "CA065"
+			-- <Precursor>
+
+	description: STRING_32
+			-- <Precursor>
+		do
+			Result := ca_names.variable_naming_convention_description
+		end
+
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			a_formatter.add (ca_messages.local_naming_convention_violation_1)
+			check
+				attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first
+			end
+			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_variable_name then
+				a_formatter.add (l_variable_name)
+			end
+			a_formatter.add (ca_messages.local_naming_convention_violation_2)
+		end
+
+feature {NONE} -- Preferences
+
+	preference_option_name_enforce_prefix: STRING
+			-- A name of an option to enforce variable prefix within the corresponding preference namespace.
+		do
+			Result := full_preference_name (option_name_enforce_prefix)
+		end
+
+	option_name_enforce_prefix: STRING = "enforce_prefix"
+			-- A name of an option indicating whether a variable prefix should be enforced.
+
+	enforce_prefix: BOOLEAN_PREFERENCE
+			-- Should the convention of starting variable names with a prefix be enforced?
+
+	default_enforce_prefix: BOOLEAN = False
+			-- Default value of `enforce_prefix'.
+
 feature {NONE} -- Rule checking
 
 	process_routine (a_routine_as: attached ROUTINE_AS)
@@ -54,7 +105,7 @@ feature {NONE} -- Rule checking
 			l_viol: CA_RULE_VIOLATION
 			l_construct_list: CONSTRUCT_LIST [INTEGER_32]
 			l_leaf: LEAF_AS
-			l_variable_name: STRING
+			l_variable_name: STRING_32
 		do
 				-- It's a bit more complicated that one would expect, because retrieving the original
 				-- text is the only way for checking the case (otherwise it's always lowercased).
@@ -83,63 +134,25 @@ feature {NONE} -- Rule checking
 			end
 		end
 
-	allowed_names: ARRAY [STRING]
+	allowed_names: ARRAY [STRING_32]
 			-- List of names that are allowed despite breaking the conventions.
 		once
-			Result := << "i", "j", "k", "n" >>
+			Result := <<"i", "j", "k", "m", "n">>
 			Result.compare_objects
 		end
 
-	is_valid_local_variable_name (a_name: attached STRING): BOOLEAN
+	is_valid_local_variable_name (a_name: attached STRING_32): BOOLEAN
 			-- Does `a_name' respect the naming conventions for local variables?
 		do
 				-- Sample violations:
 				-- l_my__var, l_variable_, l_VARIABLE
 				-- argument -- this is fine if the l_-convention is not enforced
-
-			Result := (not a_name.ends_with ("_") and not a_name.has_substring ("__") and (a_name.as_lower ~ a_name) and (not enforce_local_prefix.value or else a_name.starts_with ("l_"))) or else allowed_names.has (a_name)
-
-		end
-
-feature -- Options
-
-	enforce_local_prefix: BOOLEAN_PREFERENCE
-		-- Should the convention of starting local variable names with "l_" be enforced?
-
-	default_enforce_local_prefix: BOOLEAN = True
-		-- Default value of `enforce_local_prefix'.
-
-feature -- Properties
-
-	name: STRING = "local_name"
-			-- <Precursor>
-
-	title: STRING_32
-			-- <Precursor>
-		do
-			Result := ca_names.variable_naming_convention_title
-		end
-
-	id: STRING_32 = "CA065"
-			-- <Precursor>
-
-	description: STRING_32
-			-- <Precursor>
-		do
-			Result := ca_names.variable_naming_convention_description
-		end
-
-	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			a_formatter.add (ca_messages.local_naming_convention_violation_1)
-			check
-				attached {STRING} a_violation.long_description_info.first
-			end
-			if attached {STRING} a_violation.long_description_info.first as l_variable_name then
-				a_formatter.add (l_variable_name)
-			end
-			a_formatter.add (ca_messages.local_naming_convention_violation_2)
+			Result :=
+				not a_name.ends_with ({STRING_32} "_") and
+				not a_name.has_substring ({STRING_32} "__") and
+				a_name.as_lower ~ a_name and
+				(enforce_prefix.value implies a_name.starts_with ({STRING_32} "l_")) or else
+				allowed_names.has (a_name)
 		end
 
 end

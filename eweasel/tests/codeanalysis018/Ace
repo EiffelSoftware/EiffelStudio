@@ -6,6 +6,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP/base-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
 		<cluster name="project2" location=".\" recursive="true">

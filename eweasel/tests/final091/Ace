@@ -8,6 +8,7 @@
 		<setting name="check_for_void_target" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

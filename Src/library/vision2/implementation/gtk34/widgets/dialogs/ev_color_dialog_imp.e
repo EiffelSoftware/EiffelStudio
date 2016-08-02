@@ -62,9 +62,9 @@ feature -- Access
 				l_rgba_struct := {GTK}.c_gdk_rgba_struct_allocate
 				{GTK2}.gtk_color_chooser_get_rgba (c_object, l_rgba_struct)
 				create Result.make_with_rgb (
-					{GTK}.gdk_rgba_struct_red (l_rgba_struct).truncated_to_real,
-					{GTK}.gdk_rgba_struct_green (l_rgba_struct).truncated_to_real,
-					{GTK}.gdk_rgba_struct_blue (l_rgba_struct).truncated_to_real
+					{GDK}.rgba_struct_red (l_rgba_struct).truncated_to_real,
+					{GDK}.rgba_struct_green (l_rgba_struct).truncated_to_real,
+					{GDK}.rgba_struct_blue (l_rgba_struct).truncated_to_real
 				)
 				l_rgba_struct.memory_free
 			elseif attached internal_set_color as l_internal_set_color then
@@ -84,9 +84,7 @@ feature -- Element change
 		do
 			internal_set_color := a_color.twin
 			l_rgba_struct := {GTK}.c_gdk_rgba_struct_allocate
-			{GTK}.set_gdk_rgba_struct_red (l_rgba_struct, a_color.red_16_bit)
-			{GTK}.set_gdk_rgba_struct_green (l_rgba_struct, a_color.green_16_bit)
-			{GTK}.set_gdk_rgba_struct_blue (l_rgba_struct, a_color.blue_16_bit)
+			{GDK}.set_rgba_struct_with_rgb24 (l_rgba_struct, a_color.rgb_24_bit)
 			{GTK2}.gtk_color_chooser_set_rgba (c_object, l_rgba_struct)
 			l_rgba_struct.memory_free
 		end
@@ -101,7 +99,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COLOR_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

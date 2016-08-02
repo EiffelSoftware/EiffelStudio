@@ -5,7 +5,7 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 			$OLD_VERBATIM_STRINGS_WARNING
 		<warning name="syntax" enabled="false"/></option>
-		<setting name="console_application" value="True"/>
+		<setting name="console_application" value="true"/>
 		$OLD_VERBATIM_STRINGS
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING

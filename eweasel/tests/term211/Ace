@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="NONE"/>
 		<option warning="false" full_class_checking="true"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

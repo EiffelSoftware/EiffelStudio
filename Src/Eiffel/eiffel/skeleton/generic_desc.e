@@ -10,14 +10,20 @@ class GENERIC_DESC
 inherit
 	ATTR_DESC
 		redefine
-			has_formal, instantiation_in, same_as, default_create
+			has_formal, instantiation_in, same_as
 		end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create
+	make (a_type_i: like type_i)
 		do
 			internal_flags := {SHARED_LEVEL}.reference_level
+			set_type_i (a_type_i)
+		ensure
+			type_i_set: type_i = a_type_i
 		end
 
 feature -- Access
@@ -158,7 +164,7 @@ feature -- Helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

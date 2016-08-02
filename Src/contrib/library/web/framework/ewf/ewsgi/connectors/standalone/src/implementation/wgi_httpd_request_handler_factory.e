@@ -1,5 +1,5 @@
 note
-	description: "Implementation of WGI request handler factory for WGI_STANDALOE_CONNECTOR."
+	description: "Implementation of WGI request handler factory for WGI_STANDALONE_CONNECTOR."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,19 +14,23 @@ feature -- Access
 	connector: detachable separate WGI_STANDALONE_CONNECTOR [G]
 			-- httpd solution.
 
+	request_settings: HTTPD_REQUEST_SETTINGS
+			-- Settings specific to request handling.
+
 feature -- Element change
 
-	set_connector (conn: like connector)
+	update_with (conn: like connector; a_conf: separate HTTPD_CONFIGURATION)
 			-- Set `connector' with `conn'.
 		do
 			connector := conn
+			request_settings := a_conf.request_settings
 		end
 
 feature -- Factory
 
 	new_handler: separate WGI_HTTPD_REQUEST_HANDLER [G]
 		do
-			create Result.make_with_connector (connector)
+			create Result.make_with_connector (request_settings, connector)
 		end
 
 note

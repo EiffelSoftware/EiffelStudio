@@ -1,7 +1,5 @@
-note
-
-	description:
-		"Command names for menu entries."
+﻿note
+	description:	"Command names for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,6 +22,11 @@ feature {NONE}
 	aversions_cmd_name: STRING = "aversions"
 
 	batch_cmd_name: STRING = "batch"
+
+	ca_class_cmd_name: STRING = "ca_class"
+	ca_default_cmd_name: STRING = "ca_default"
+	ca_rule_cmd_name: STRING = "ca_rule"
+	ca_setting_cmd_name: STRING = "ca_setting"
 
 	callers_cmd_name: STRING = "callers"
 
@@ -51,6 +54,8 @@ feature {NONE}
 	compile_cmd_name: STRING = "compile"
 
 	config_cmd_name: STRING = "config"
+
+	config_option_cmd_name: STRING = "config_option"
 
 	Convert_profile_cmd_name: STRING = "convert"
 
@@ -213,7 +218,7 @@ feature {NONE}
 	gc_stats_cmd_name: STRING = "gc_stats";
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

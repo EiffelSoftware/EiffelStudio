@@ -10,9 +10,10 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
-		<setting name="exception_trace" value="True"/>
+		<setting name="exception_trace" value="true"/>
 		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true">

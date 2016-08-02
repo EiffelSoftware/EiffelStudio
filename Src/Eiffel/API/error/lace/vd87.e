@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error if unique class names are enforced and the class names are not unique."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,15 +37,12 @@ feature -- Properties
 feature -- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER)
-		local
-			l_ext: EXTERNAL_CLASS_I
 		do
 			put_cluster_name (a_text_formatter)
 			a_text_formatter.add ("First class: ")
 			a_text_formatter.add_classi (first, first.name)
 			a_text_formatter.add_new_line
-			l_ext ?= first
-			if l_ext /= Void then
+			if attached {EXTERNAL_CLASS_I} first as l_ext then
 				a_text_formatter.add ("In assembly: %"")
 				l_ext.assembly.format (a_text_formatter)
 			else
@@ -57,8 +54,7 @@ feature -- Output
 			a_text_formatter.add ("Second class: ")
 			a_text_formatter.add_classi (second, second.name)
 			a_text_formatter.add_new_line
-			l_ext ?= second
-			if l_ext /= Void then
+			if attached {EXTERNAL_CLASS_I} second as l_ext then
 				a_text_formatter.add ("In assembly: %"")
 				l_ext.assembly.format (a_text_formatter)
 			else
@@ -70,7 +66,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

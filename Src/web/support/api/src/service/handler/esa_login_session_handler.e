@@ -54,6 +54,7 @@ feature -- HTTP Methods
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_token: STRING
 			l_cookie: WSF_COOKIE
+			l_time: DATE_TIME
 		do
 			if
 				attached {WSF_STRING} req.form_parameter ("username") as l_username and then
@@ -66,16 +67,17 @@ feature -- HTTP Methods
 					attached api_service.user_from_username (l_username.value) as l_user
 				then
 					l_token := generate_token
-					if api_service.has_user_token (l_user) then
-						api_service.update_user_session_auth (l_token, l_user)
-					else
-						api_service.new_user_session_auth (l_token, l_user)
-					end
 					create l_cookie.make (esa_session_token, l_token)
 					if l_remember_me.value.to_boolean then
+							-- Set max-age and expiration_date if remember_me
+							-- in other case, set the cookie to session.
 						l_cookie.set_max_age (cookie_service.remember_me_max_age.as_integer_32)
+						create l_time.make_now_utc
+						l_time.second_add (cookie_service.remember_me_max_age.as_integer_32)
+						l_cookie.set_expiration_date (l_time)
+						api_service.new_user_session_auth (l_token, l_user, cookie_service.remember_me_max_age.as_integer_32)
 					else
-						l_cookie.set_max_age (cookie_service.default_max_age.as_integer_32)
+						api_service.new_user_session_auth (l_token, l_user, cookie_service.default_max_age.as_integer_32)
 					end
 					l_cookie.set_path ("/")
 					res.add_cookie (l_cookie)

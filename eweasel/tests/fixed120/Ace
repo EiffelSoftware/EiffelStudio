@@ -23,6 +23,7 @@
 		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF" />
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
@@ -39,7 +40,7 @@
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="refactoring" location="$REFACTORING\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
-		<cluster name="set" location="$SET\" recursive="True"/>
+		<cluster name="set" location="$SET\" recursive="true"/>
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>
 		<cluster name="support" location="$SUPPORT\"/>

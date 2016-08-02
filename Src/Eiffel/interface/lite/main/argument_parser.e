@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Argument parser for lite eiffel compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -148,13 +148,12 @@ feature -- Status report
 
 	configuration_settings: HASH_TABLE [IMMUTABLE_STRING_32, IMMUTABLE_STRING_32]
 			-- Table of override configuration settings
-			-- Key: Setting nane
+			-- Key: Setting name
 			-- Value: Value
 		require
 			successful: is_successful
 		local
 			l_options: LIST [ARGUMENT_OPTION]
-			l_option: ARGUMENT_PROPERTY_OPTION
 			l_cursor: CURSOR
 		once
 			l_options := options_of_name (set_switch)
@@ -162,11 +161,12 @@ feature -- Status report
 			if not l_options.is_empty then
 				l_cursor := l_options.cursor
 				from l_options.start until l_options.after loop
-					l_option ?= l_options.item
-					if l_option /= Void then
-						if l_option.has_property_name and l_option.has_value then
-							Result.force (l_option.property_value, l_option.property_name)
-						end
+					if
+						attached {ARGUMENT_PROPERTY_OPTION} l_options.item as l_option and then
+						l_option.has_property_name and then
+						l_option.has_value
+					then
+						Result.force (l_option.property_value, l_option.property_name)
 					end
 					l_options.forth
 				end
@@ -351,4 +351,4 @@ feature {NONE} -- Option names
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {ARGUMENT_PARSER}
+end

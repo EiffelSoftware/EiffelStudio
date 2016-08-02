@@ -184,7 +184,7 @@ feature -- Display updates
 			drawable.clear_rectangle (u_x - drawable_position.x, u_y - drawable_position.y, u_width, u_height)
 
 			if world.grid_visible then
-				draw_grid
+				draw_grid (world)
 			end
 
 			if world.is_show_requested then
@@ -319,7 +319,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

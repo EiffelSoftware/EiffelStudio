@@ -22,6 +22,7 @@
 		<mapping old_name="WIDE_CHARACTER_REF" new_name="CHARACTER_32_REF" />
 		<mapping old_name="REAL_REF" new_name="REAL_32_REF" />
 		<mapping old_name="DOUBLE_REF" new_name="REAL_64_REF" />
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
@@ -38,16 +39,16 @@
 			$CLUSTER_OPTION
 		</cluster>
 		$KERNEL_DOTNET
-		<cluster name="string" location="$KERNEL_STRING\" recursive="True">
+		<cluster name="string" location="$KERNEL_STRING\" recursive="true">
 			<file_rule>
 				$EXCLUDE_SYSTEM_STRING
 			</file_rule>
 		</cluster>
-		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="True"/>
-		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="True"/>
+		<cluster name="exceptions_ise" location="$EXCEPTIONS_ISE\" recursive="true"/>
+		<cluster name="exceptions_elks" location="$EXCEPTIONS_ELKS\" recursive="true"/>
 		<cluster name="list" location="$LIST\"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
-		<cluster name="set" location="$SET\" recursive="True"/>
+		<cluster name="set" location="$SET\" recursive="true"/>
 		<cluster name="sort" location="$SORT\"/>
 		<cluster name="storage" location="$STORAGE\"/>
 		$SUPPORT_DOTNET

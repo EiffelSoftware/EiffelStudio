@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Informations on creation type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -144,12 +144,8 @@ feature -- Generic conformance
 
 	generate_gen_type_conversion (a_level: NATURAL)
 			-- Generate the conversion of a type array into an id.
-		local
-			gen_type : GEN_TYPE_A
 		do
-			gen_type ?= type_to_create
-
-			if gen_type /= Void then
+			if attached {GEN_TYPE_A} type_to_create as gen_type then
 				context.generate_gen_type_conversion (gen_type, a_level)
 			end
 		end
@@ -242,7 +238,7 @@ feature {NONE} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -273,4 +269,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATE_INFO
+end

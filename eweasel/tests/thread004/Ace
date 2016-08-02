@@ -11,6 +11,7 @@
 		<setting name="inlining_size" value="100"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<cluster name="hamster" location="$CLUSTER\">

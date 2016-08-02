@@ -52,20 +52,19 @@ feature -- Inflate
 
 feature	{NONE} -- Inflate Implementation
 
-	read: INTEGER
+	read
 			-- <Precursor>
 		do
 			if attached string as l_input_string then
-				Result := string_read (l_input_string)
+				last_read_elements := string_read (l_input_string)
 			end
 		end
 
-	write (a_amount: INTEGER): INTEGER
-			-- Write the `a_amount' of elements to the user_output_file or
-			-- user_output_buffer.
+	write (a_amount: INTEGER)
+			-- <Precursor>
 		do
 			if attached user_output_string as l_string then
-				Result := string_write (output_buffer,a_amount, l_string)
+				last_write_elements := string_write (output_buffer,a_amount, l_string)
 			end
 		end
 

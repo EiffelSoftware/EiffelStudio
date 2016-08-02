@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Description of a TUPLE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -247,11 +247,9 @@ feature {TYPE_A} -- Helpers
 			-- Check generic parameters
 		local
 			i, nb: INTEGER
-			l_tuple: TUPLE_TYPE_A
 			l_tuple_generics: like generics
 		do
-			l_tuple ?= type
-			if l_tuple /= Void then
+			if attached {TUPLE_TYPE_A} type as l_tuple then
 				from
 					i := 1
 					l_tuple_generics := l_tuple.generics
@@ -269,7 +267,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -300,4 +298,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TUPLE_TYPE_A
+end

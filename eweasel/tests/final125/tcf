@@ -1,0 +1,18 @@
+test_name	 agent-call-gc-corruption
+test_description When calling an agent whose wrapper in ececil.c would create an instance to wrap a basic types as a reference type for proper polymorphism, the GC only protects parts of the arguments if the arguments are references causing an invalid reference to be used.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	test1.e $CLUSTER test1.e
+copy_raw	test2.e $CLUSTER test2.e
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output_f
+execute_result	ok
+compare	exec_output_f output
+
+test_end

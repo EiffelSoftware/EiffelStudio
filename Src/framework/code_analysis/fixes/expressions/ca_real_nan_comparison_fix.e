@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 
 	execute (a_class: CLASS_AS)
 		local
-			l_new: STRING
+			l_new: STRING_32
 		do
 			if is_on_right_side then
 				l_new := bin_eq_to_change.left.text_32 (matchlist)

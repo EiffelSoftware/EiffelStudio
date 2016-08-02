@@ -7,9 +7,10 @@
 </description>
 		<root cluster="root_cluster" class="test" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="True" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true" postcondition="true" check="false" invariant="false" loop="false"/>
 			<warning name="syntax" enabled="false"/></option>
 		<setting name="total_order_on_reals" value="$TOTAL_ORDER"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

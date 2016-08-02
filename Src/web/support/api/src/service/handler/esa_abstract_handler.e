@@ -42,7 +42,7 @@ feature -- Access
 
 	cookie_service: ESA_COOKIE_SESSION_SERVICE
 		do
-			create Result.make ((create {JSON_CONFIGURATION}).cookie_session_remember_me(esa_config.layout.application_config_path), (create {JSON_CONFIGURATION}).cookie_session_default(esa_config.layout.application_config_path))
+			create Result.make ((create {JSON_CONFIGURATION}).cookie_session_remember_me(esa_config.layout.application_config_path))
 		end
 
 	Esa_session_token: STRING_8 = "_ESA_SESSION_TOKEN_"

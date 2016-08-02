@@ -11,8 +11,9 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
-		<setting name="dead_code_removal" value="False"/>
-		<setting name="inlining" value="True"/>
+		<setting name="dead_code_removal" value="false"/>
+		<setting name="inlining" value="true"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

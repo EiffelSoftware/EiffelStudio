@@ -9,7 +9,8 @@
 		<option warning="true">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		<warning name="syntax" enabled="false"/></option>
-		<setting name="dead_code_removal" value="True"/>
+		<setting name="dead_code_removal" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

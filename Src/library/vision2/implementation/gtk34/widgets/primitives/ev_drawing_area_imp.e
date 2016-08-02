@@ -161,12 +161,17 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_window: POINTER
 		do
-			if drawable /= default_pointer then
+			if in_expose_actions then
+					-- We have been called via an expose event.
+				check drawable_not_null: drawable /= null end
 				Result := drawable
 			else
+					-- User is drawing directly to the window outside
+					-- of an expose event. We need to create a drawable
+					-- context for each draw operations.
 				l_window := {GTK}.gtk_widget_get_window (c_object)
 				if l_window /= default_pointer then
-					Result := {GTK}.gdk_cairo_create (l_window)
+					Result := {GDK_CAIRO}.create_context (l_window)
 					initialize_drawable (Result)
 				end
 			end
@@ -175,8 +180,8 @@ feature {EV_ANY_I} -- Implementation
 	release_drawable (a_drawable: POINTER)
 			-- Release resources of drawable `a_drawable'.
 		do
-			if a_drawable /= drawable and then a_drawable /= default_pointer then
-				{CAIRO}.cairo_destroy (a_drawable)
+			if not in_expose_actions and a_drawable /= null then
+				{CAIRO}.destroy (a_drawable)
 			end
 		end
 
@@ -194,7 +199,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			drawable := a_cairo_context
 
-			{CAIRO}.cairo_clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
+			{CAIRO}.clip_extents (a_cairo_context, $l_x, $l_y, $l_width, $l_height)
 
 			initialize_drawable (a_cairo_context)
 
@@ -209,18 +214,17 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	initialize_drawable (a_drawable: POINTER)
 			-- Initialize new `drawable' to existing parameters.
-		local
-			l_red, l_green, l_blue: REAL_64
 		do
-			{CAIRO}.cairo_set_antialias (a_drawable, {CAIRO}.cairo_antialias_none)
-			{CAIRO}.cairo_set_line_width (a_drawable, line_width)
-			if attached internal_foreground_color as l_internal_foreground_color then
-				l_red := l_internal_foreground_color.red
-				l_green := l_internal_foreground_color.green
-				l_blue := l_internal_foreground_color.blue
+			{CAIRO}.set_antialias (a_drawable, aliasing_mode)
+			{CAIRO}.set_line_cap (a_drawable, line_cap_mode)
+			{CAIRO}.set_line_width (a_drawable, line_width)
+			if attached internal_foreground_color as l_color then
+				{CAIRO}.set_source_rgb (a_drawable, l_color.red, l_color.green, l_color.blue)
+			else
+					-- No colors specified, it will be black
+				{CAIRO}.set_source_rgb (a_drawable, 0.0, 0.0, 0.0)
 			end
-			{CAIRO}.cairo_set_source_rgb (a_drawable, l_red, l_green, l_blue)
-			internal_set_drawing_mode (a_drawable, drawing_mode)
+			{CAIRO}.set_operator (a_drawable, cairo_drawing_mode (drawing_mode))
 		end
 
 	internal_set_focus
@@ -258,7 +262,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

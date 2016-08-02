@@ -10,10 +10,17 @@
 	<PREF NAME="general.enable_suggestions" DESCRIPTION="Report suggestions."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="general.enable_warnings" DESCRIPTION="Report warnings."><BOOLEAN>True</BOOLEAN></PREF>
 
+	<PREF NAME="rule.argument_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.argument_name.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+	<PREF NAME="rule.argument_name.enforce_prefix" DESCRIPTION="Enforce 'a_' prefix."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.attribute_in_single_feature.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.attribute_in_single_feature.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.combinable_nested_conditionals.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.combinable_nested_conditionals.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+	<PREF NAME="rule.comment_content.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.comment_content.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+	<PREF NAME="rule.comment_content.words" DESCRIPTION="List of undesirable words or phrases."><LIST>fuck;shit</LIST></PREF>
+	<PREF NAME="rule.comment_content.case_sensitive" DESCRIPTION="Are words case-sensitive?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.comparison_to_boolean_constant.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.comparison_to_boolean_constant.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="rule.conditional_computes_only_boolean.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
@@ -33,6 +40,9 @@
 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.severity" DESCRIPTION="Severity score."><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="rule.inequality_in_conditional.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.inequality_in_conditional.severity" DESCRIPTION="Severity score."><INTEGER>30</INTEGER></PREF>
+	<PREF NAME="rule.local_name.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="rule.local_name.severity" DESCRIPTION="Severity score."><INTEGER>40</INTEGER></PREF>
+	<PREF NAME="rule.local_name.enforce_prefix" DESCRIPTION="Enforce 'l_' prefix."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="rule.long_class.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="rule.long_class.severity" DESCRIPTION="Severity score."><INTEGER>60</INTEGER></PREF>
 	<PREF NAME="rule.long_class.maximum_feature_count" DESCRIPTION="Maximum allowed number of features in a class."><INTEGER>60</INTEGER></PREF>

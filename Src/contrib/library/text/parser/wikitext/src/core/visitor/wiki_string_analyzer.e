@@ -169,6 +169,13 @@ feature -- Processing
 						check no_link_closure: False end
 					end
 					s.extend (c)
+				when '\' then
+					if safe_character (a_text, i + 1) = '`' then
+						i := i + 1
+						s.extend ('`')
+					else
+						s.extend ('\')
+					end
 				when '`' then
 					if safe_character (a_text, i + 1) = '`' then
 						if
@@ -199,7 +206,7 @@ feature -- Processing
 							if p > 0 then
 									-- Only for inline code, without any new line
 								q := a_text.index_of ('%N', i + 2)
-								if q <= p then
+								if q > p then
 									q := 0
 								end
 							else
@@ -228,7 +235,7 @@ feature -- Processing
 						if p > 0 then
 								-- Only for inline code, without any new line
 							q := a_text.index_of ('%N', i + 1)
-							if q <= p then
+							if q > p then
 								q := 0
 							end
 						else

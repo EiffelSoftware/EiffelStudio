@@ -10,6 +10,7 @@
 		<option warning="true" full_class_checking="true" void_safety="all" is_attached_by_default="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		<warning name="syntax" enabled="false"/></option>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

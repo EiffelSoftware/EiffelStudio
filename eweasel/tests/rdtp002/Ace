@@ -5,11 +5,12 @@
 		<option>
 			<warning name="vjrv" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="True"/>		
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>		
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf"/>
-		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="True" use_application_options="true"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf" readonly="true" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

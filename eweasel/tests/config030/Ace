@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="PRECURSOR"/>
 		<option is_attached_by_default="true" void_safety="all"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 	</target>

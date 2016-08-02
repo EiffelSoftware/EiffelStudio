@@ -66,7 +66,7 @@ feature -- Properties
 		do
 			l_info := a_violation.long_description_info
 			a_formatter.add ("'")
-			if l_info.count >= 1 and then attached {STRING_32} l_info.first as l_name then
+			if l_info.count >= 1 and then attached {READABLE_STRING_GENERAL} l_info.first as l_name then
 				a_formatter.add_local (l_name)
 			end
 			a_formatter.add (ca_messages.self_comparison_violation_1)

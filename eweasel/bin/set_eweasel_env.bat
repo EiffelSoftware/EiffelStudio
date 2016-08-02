@@ -34,3 +34,20 @@ set EWEASEL_COMMAND=%EWEASEL_COMMAND% -init "%EWEASEL%\control\init"
 set EWEASEL_COMMAND=%EWEASEL_COMMAND% -output "%EWEASEL_OUTPUT%"
 
 set ISE_LANG=en_US
+
+rem Create a precompilation folder if no one is specified
+if "%ISE_PRECOMP%" == "" (
+	echo Preparing precompiled libraries
+	call :create_folder "%EWEASEL%\..\eweasel_precomp"
+	call :create_folder "%EWEASEL%\..\eweasel_precomp\%ISE_PLATFORM%"
+	set ISE_PRECOMP=%EWEASEL%\..\eweasel_precomp\%ISE_PLATFORM%
+)
+
+goto :eof
+
+:create_folder
+if not exist %1 (
+	echo Creating %1
+	mkdir %1
+)
+goto :eof

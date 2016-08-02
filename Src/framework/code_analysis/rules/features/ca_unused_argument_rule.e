@@ -69,7 +69,7 @@ feature -- Properties
 			loop
 				if j > 2 then a_formatter.add (", ") end
 				a_formatter.add ("'")
-				if attached {STRING_32} a_violation.long_description_info.at (j) as l_arg then
+				if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.at (j) as l_arg then
 					a_formatter.add_local (l_arg)
 				end
 				a_formatter.add ("'")

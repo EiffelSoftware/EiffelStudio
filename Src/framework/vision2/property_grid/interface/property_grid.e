@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property grid"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_field_not_void: a_field /= Void
 		do
 			default_create
-			description_field := a_field
+			set_description_field (a_field)
 		ensure
 			description_field_set: description_field = a_field
 		end
@@ -108,7 +108,7 @@ feature -- Update
 			-- Clear the description in the `description_field'.
 		do
 			if attached description_field as l_field and then not l_field.is_destroyed then
-				l_field.set_and_wrap_text ("")
+				l_field.set_text ("")
 			end
 		end
 
@@ -405,11 +405,11 @@ feature {NONE} -- Actions
 		do
 			if attached description_field as l_field and then not l_field.is_destroyed then
 				if a_property.name.is_empty then
-					l_field.set_and_wrap_text (a_property.description)
+					l_field.set_text (a_property.description)
 				elseif a_property.description.is_empty then
-					l_field.set_and_wrap_text (a_property.name)
+					l_field.set_text (a_property.name)
 				else
-					l_field.set_and_wrap_text (a_property.name.as_string_32 + ": " + a_property.description)
+					l_field.set_text (a_property.name.as_string_32 + ": " + a_property.description)
 				end
 			end
 		end
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 	sections: HASH_TABLE [EV_GRID_ROW, STRING_GENERAL]
 			-- Property sections.
 
-	description_field: detachable ES_LABEL
+	description_field: detachable ES_SCROLLABLE_LABEL
 			-- Place to put descriptions.
 
 	expanded_section_store: HASH_TABLE [BOOLEAN, STRING_GENERAL]
@@ -457,7 +457,7 @@ invariant
 	expanded_section_store_not_void: expanded_section_store /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make" all_classes="true"/>
 		<setting name="msil_generation_type" value="exe"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

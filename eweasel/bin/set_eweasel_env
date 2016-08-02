@@ -48,3 +48,10 @@ ISE_LANG=en_US; export ISE_LANG
 
 EWEASEL_ARGS="-max_threads $EIF_NBCPUS -define EWEASEL $EWEASEL -define INCLUDE $EWEASEL/control -define ISE_EIFFEL $ISE_EIFFEL -define ISE_PLATFORM $ISE_PLATFORM -define ISE_LIBRARY $ISE_LIBRARY -define UNIX 1 -define PLATFORM_TYPE $EWEASEL_PLATFORM -init $EWEASEL/control/init -output $EWEASEL_OUTPUT"
 export EWEASEL_ARGS
+
+if [ -z "$ISE_PRECOMP" ]; then
+	export ISE_PRECOMP=$EWEASEL/../eweasel_precomp/$ISE_PLATFORM
+	if [ ! -d $ISE_PRECOMP ]; then
+		mkdir -p $ISE_PRECOMP
+	fi
+fi

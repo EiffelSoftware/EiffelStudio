@@ -251,7 +251,7 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Constants
 
-	dll_extension: STRING = ".dll"
+	dll_extension: STRING = "dll"
 			-- DLL file extension
 
 feature {NONE} -- Internal Implementation Cache
@@ -272,7 +272,7 @@ invariant
 	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

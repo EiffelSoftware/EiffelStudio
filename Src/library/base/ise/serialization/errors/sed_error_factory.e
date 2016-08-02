@@ -43,6 +43,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
+	new_unknown_storable_type: SED_ERROR
+			-- Storable format could be read but is unknown.
+		do
+			create Result.make_with_string ("Unknown storable type")
+		end
+
 	new_invalid_object_error (a_obj: ANY): SED_ERROR
 			-- Object `a_obj' was retrieved but is not valid.
 		do
@@ -190,7 +196,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

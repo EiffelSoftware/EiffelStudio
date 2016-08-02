@@ -464,6 +464,20 @@ feature -- Externals
 			"cairo_set_antialias"
 		end
 
+	 set_dashed_line_style (cr: POINTER; is_enabled: BOOLEAN)
+		external
+			"C inline use <cairo.h>"
+		alias
+			"[
+				double len = 2.0;
+				if ($is_enabled) {
+					cairo_set_dash ((cairo_t *) $cr, &len, 1, 0.0);
+				} else {
+					cairo_set_dash ((cairo_t *) $cr, NULL, 0, 0.0);
+				}
+			]"
+		end
+
 	font_options_set_antialias (cr: POINTER; op: INTEGER_8)
 		external
 			"C signature (cairo_font_options_t*, cairo_antialias_t) use <cairo.h>"

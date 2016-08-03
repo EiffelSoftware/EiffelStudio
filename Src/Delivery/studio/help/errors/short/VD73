@@ -1,2 +1,3 @@
 Configuration error: precompile has been removed from a compiled system.
-What to do: recompile the project from scratch or readd the precompile.
+What to do: recompile the project from scratch or add the precompiled
+  library back.

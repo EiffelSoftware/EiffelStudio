@@ -21,6 +21,11 @@ feature -- Access:Metadata
 	Tags: STRING = "tags"
 			-- Code template tags.
 
+
+	Default_value: STRING = "default"
+			-- Code template default.
+
+
 feature -- Access:Template
 
 	Template: STRING = "TEMPLATE"

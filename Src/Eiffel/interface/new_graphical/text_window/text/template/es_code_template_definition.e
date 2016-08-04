@@ -226,15 +226,23 @@ feature -- Visitor
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 					-- Process `l_as'.
 		do
-			create arguments.make_caseless (1)
+--			create arguments.make_caseless (1)
+			create {ARRAYED_LIST [TUPLE [name:STRING_32; type: STRING_32]]} arguments.make (1)
 			is_argument := True
 			Precursor (l_as)
 			if attached item as l_item then
 					-- accept one argument for queries and commands
 				l_item.set_arguments (arguments)
 				if arguments.count > 1 then
-					set_valid_template (False)
-						-- Too many arguments
+--					set_valid_template (False)
+						-- Now we accept multiple arguments
+						--! like (a:T1; b:T2; c:T3)
+						--! where the first argument `a' is the context,
+						--! if the type is ANY, it means the feature is a global
+						--! template, in other case it determine the context where the
+						--! template will be available.
+						--! the others arguments, if any, will be used a input arguments
+						--! where the default values will be filled with defaults if they exist.
 				end
 			end
 			is_argument := False
@@ -266,7 +274,7 @@ feature -- Visitor
 					loop
 						l_name := l_as.item_name (j)
 						j := j + 1
-						l_arguments.force (argument_type, l_name)
+						l_arguments.force ([l_name, argument_type])
 					end
 				end
 			end
@@ -319,6 +327,14 @@ feature -- Visitor
 					 	attached {STRING_AS} l_index_list.at (1) as l_string
 					then
 						l_item.set_tags (l_string.value_32.split (','))
+					end
+				elseif l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.default_value) then
+					if
+						attached l_as.index_list as l_index_list and then
+						not l_index_list.is_empty and then
+						attached {STRING_AS} l_index_list.at (1) as l_string
+					then
+						l_item.set_default_values (l_string.value_32.split (','))
 					end
 				end
 			end
@@ -596,8 +612,10 @@ feature {NONE} -- Implementation
 	local_variables: detachable STRING_TABLE [STRING_32]
 			-- Table with pairs: variable name, variable type.
 
-	arguments: detachable STRING_TABLE [STRING_32]
-			-- Table with pairs: variable name, variable type.	
+--	arguments: detachable STRING_TABLE [STRING_32]
+			-- Table with pairs: variable name, variable type.
+
+	arguments: detachable LIST [TUPLE [name:STRING_32; type: STRING_32]]
 
 	is_local: BOOLEAN
 			-- Visiting local variables?

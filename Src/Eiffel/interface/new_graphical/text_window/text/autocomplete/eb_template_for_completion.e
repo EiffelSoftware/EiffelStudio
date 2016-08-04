@@ -102,7 +102,6 @@ feature -- Access
 			l_tuple: TUPLE [a_locals: STRING_32; a_code: STRING_32]
 			l_code: STRING_32
 			l_locals: STRING_32
-			l_linked_tokens: ARRAY [READABLE_STRING_GENERAL]
 		do
 			l_tuple := update_locals_and_code
 			l_code := l_tuple.a_code
@@ -115,7 +114,7 @@ feature -- Access
 				Result := [l_locals, l_code, linked_tokens.current_keys]
 			end
 		end
-		
+
 	template_declarations: STRING_TABLE [STRING_32]
 			-- Formal arguments and Local variables definitions for the given template.
 		do
@@ -429,7 +428,7 @@ feature -- Implementation: Update tokens
 			l_code_tb: CODE_TEMPLATE_BUILDER
 			l_locals: STRING_TABLE [TYPE_AS]
 			l_arguments: STRING_TABLE [TYPE_A]
-			l_rename_table: STRING_TABLE [STRING]
+			l_rename_table: STRING_TABLE [STRING_32]
 			l_name: STRING_32
 			i: INTEGER
 		do
@@ -463,6 +462,11 @@ feature -- Implementation: Update tokens
 						linked_tokens.force ("", ic.key)
 					end
 				end
+			end
+
+			if attached template.default_input_values as l_input_values then
+				l_rename_table.merge (l_input_values)
+				across l_input_values as ic loop linked_tokens.force ("", ic.item) end
 			end
 
 				-- Rename locals if needed

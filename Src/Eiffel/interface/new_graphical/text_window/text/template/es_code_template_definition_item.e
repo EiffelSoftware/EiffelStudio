@@ -50,6 +50,9 @@ feature -- Access
 	version: detachable STRING
 			-- Version of the Eiffel compiler.
 
+	default_values: detachable LIST [STRING_32]
+			-- Default input values.		
+
 	dependencies: detachable LIST [STRING_32]
 			-- A potential list of required libraries for the current template.
 
@@ -62,10 +65,51 @@ feature -- Access
 	code: detachable STRING_32
 			-- Code template associated.
 
+	default_input_values: detachable STRING_TABLE [STRING_32]
+			-- Table with formal argument name and it's default input value.
+			--!To fill the table we use the order defined in the list of formal arguments and
+			--!their corresponding match in the list of defaults input values.
+		local
+			i: INTEGER
+			l_result: detachable STRING_TABLE [STRING_32]
+			l_tuple: TUPLE [name:STRING_32; type:STRING_32]
+		do
+			if
+				attached default_values as l_values and then
+				attached {LIST [TUPLE [name:STRING_32; type:STRING_32]]} internal_arguments as l_arguments
+			then
+				from
+					i := 1
+					create l_result.make_caseless (1)
+					l_arguments.start
+					l_arguments.forth -- skip first argument (context argument)
+				until
+					i > l_values.count
+				loop
+						-- There is no validation
+						--! maybe we should do a minimal
+						--! validation, the number of input arguments should be
+						--! the same as default input values.
+					if
+						not l_arguments.after and then
+						attached {STRING_32} l_values.at (i) as l_item
+					 then
+					 	l_tuple := l_arguments.item_for_iteration
+						l_result.force (l_item, l_tuple.name)
+					end
+					l_arguments.forth
+					i := i + 1
+				end
+				Result := l_result
+
+			end
+		end
+
 	declarations: detachable STRING_TABLE [STRING_32]
 			-- Arguments and Locals declarations for the current feature, if any.
 		do
 			if attached arguments as l_arguments then
+					-- Only the context argument.
 				Result := l_arguments.twin
 			end
 			if  attached locals as l_locals then
@@ -83,7 +127,12 @@ feature -- Access
 	arguments: detachable STRING_TABLE [STRING_32]
 			-- Argument fo the current feature, if any.
 		do
-			Result := internal_arguments
+			if attached internal_arguments as l_arguments and then
+			   attached l_arguments.at (1) as l_first_argument
+			then
+				create Result.make_caseless (1)
+				Result.force (l_first_argument.type, l_first_argument.name)
+			end
 		end
 
 	locals: detachable STRING_TABLE [STRING_32]
@@ -118,6 +167,7 @@ feature -- Access
 				end
 			end
 		end
+
 feature -- Change Element.
 
 	set_title (a_title: like title)
@@ -150,6 +200,15 @@ feature -- Change Element.
 			tags := a_tags
 		ensure
 			tags_set: tags = a_tags
+		end
+
+
+	set_default_values (a_defaults: LIST [STRING_32])
+			-- Set `default_values' with `a_defaults'
+		do
+			default_values := a_defaults
+		ensure
+			default_values_set: default_values = a_defaults
 		end
 
 	set_name (a_name: STRING_32)
@@ -195,7 +254,7 @@ feature -- Change Element.
 		end
 
 	set_return_type (a_type: like return_type)
-			-- Set `return_type' with `a_type'
+			-- Set `return_type' with `a_type'.
 		do
 			return_type := a_type
 		ensure
@@ -203,7 +262,7 @@ feature -- Change Element.
 		end
 
 	set_code (a_code: STRING_32)
-			-- Set `code' with `a_code'
+			-- Set `code' with `a_code'.
 		do
 			code := a_code
 		ensure
@@ -215,11 +274,12 @@ feature {NONE} -- Internal Representation.
 	internal_feature: FEATURE_AS
 			-- internal feature.
 
-	internal_arguments: detachable STRING_TABLE [STRING_32]
-			-- List (of list) of arguments
+	internal_arguments: detachable LIST [TUPLE [name:STRING_32; type:STRING_32]]
+			-- List (of list) of arguments.
 
 	internal_locals: detachable STRING_TABLE [STRING_32]
-			-- Local declarations
+			-- Local declarations.
+
 
 	ast_match_list: LEAF_AS_LIST
 			-- match list generated of the current templates.		

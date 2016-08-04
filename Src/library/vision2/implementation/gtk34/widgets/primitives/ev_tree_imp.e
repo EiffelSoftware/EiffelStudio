@@ -204,7 +204,7 @@ feature {NONE} -- Initialization
 			l_x, l_y: INTEGER
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			a_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+			a_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 			if a_gdkwin /= default_pointer then
 				{GTK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
 				if a_gtkwid /= tree_view then
@@ -473,8 +473,7 @@ feature -- Implementation
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y]);
 			end
 		end
 
@@ -544,9 +543,6 @@ feature -- Implementation
 	reset_pebble_function
 			-- Reset `pebble_function'.
 		do
-			if attached pebble_function as l_pebble_function then
-				l_pebble_function.clear_last_result
-			end
 			pebble := temp_pebble
 			pebble_function := temp_pebble_function
 			temp_pebble := Void
@@ -782,7 +778,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

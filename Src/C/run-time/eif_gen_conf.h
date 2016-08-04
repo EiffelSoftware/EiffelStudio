@@ -84,6 +84,7 @@ rt_public EIF_TYPE eif_non_attached_type2 (EIF_TYPE ftype);
 rt_public EIF_TYPE eif_attached_type2 (EIF_TYPE ftype);
 rt_public EIF_BOOLEAN eif_is_attached_type2 (EIF_TYPE ftype);
 rt_public EIF_BOOLEAN eif_gen_has_default (EIF_TYPE dftype);
+rt_public EIF_BOOLEAN eif_gen_is_deferred (EIF_TYPE_INDEX dftype);
 rt_public EIF_BOOLEAN eif_gen_is_expanded (EIF_TYPE_INDEX dftype);
 
 /* Compatibility routines. */

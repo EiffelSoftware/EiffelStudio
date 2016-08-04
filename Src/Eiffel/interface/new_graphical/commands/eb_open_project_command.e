@@ -1,9 +1,9 @@
-note
-	description	: "Command to retrieve a stored project."
+﻿note
+	description: "Command to retrieve a stored project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_OPEN_PROJECT_COMMAND
@@ -94,7 +94,7 @@ feature -- Execution
 		do
 			if not Eiffel_project.initialized then
 				create l_project_loader.make (parent_window)
-				l_project_loader.open_project_file (a_project_file_name, target.as_string_8, Void, is_fresh_compilation)
+				l_project_loader.open_project_file (a_project_file_name, target.as_string_8, Void, is_fresh_compilation, Void)
 			else
 				create file.make_with_path (a_project_file_name)
 				if not file.exists or else file.is_directory then
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -172,4 +172,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_OPEN_PROJECT_COMMAND
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tuple access."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -107,11 +107,8 @@ feature -- Comparison
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
-		local
-			l_other: like Current
 		do
-			l_other ?= other
-			Result := l_other /= Void
+			Result := attached {like Current} other
 		end
 
 feature -- IL code generation
@@ -201,7 +198,7 @@ invariant
 	position_positive: position > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

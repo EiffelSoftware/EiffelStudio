@@ -24,25 +24,53 @@ compile_result ok
 c_compile_work
 c_compile_result	ok
 
-execute_work 	NONE 	exec_output_w $SUPPLIER
-execute_result 	ok
+--execute_work 	NONE std_output -supplier $SUPPLIER
+--execute_result 	ok
+--if     WINDOWS compare		std_output output_std_windows
+--if not WINDOWS compare		std_output output_std
 
-if     WINDOWS compare		exec_output_w output_windows
-if not WINDOWS compare		exec_output_w output
+define_file    OUTPUT_FILE $OUTPUT file_output1
+execute_work   NONE std_output1 -supplier $SUPPLIER -output $OUTPUT_FILE
+execute_result ok
+compare        file_output1 output
 
 if WINDOWS define CONSOLE_APPLICATION "false"
-if WINDOWS copy_sub	supplier.ecf $TEST supplier.ecf
+if WINDOWS copy_sub		supplier.ecf $TEST supplier.ecf
 if WINDOWS config		supplier.ecf supplier
 if WINDOWS system		supplier
 if WINDOWS compile_frozen
 if WINDOWS compile_result ok
 if WINDOWS c_compile_work
 if WINDOWS c_compile_result	ok
-
 if WINDOWS config		client.ecf client
 if WINDOWS system		client
-if WINDOWS execute_work 	NONE 	exec_output_windows_w $SUPPLIER
+
+--if WINDOWS execute_work 	NONE std_output2 -supplier $SUPPLIER
+--if WINDOWS execute_result 	ok
+--if WINDOWS compare		std_output2 output_std
+
+if WINDOWS define_file          OUTPUT_FILE $OUTPUT file_output3
+if WINDOWS execute_work 	NONE std_output3 -supplier $SUPPLIER -output $OUTPUT_FILE
 if WINDOWS execute_result 	ok
-if WINDOWS compare		exec_output_windows_w output_windows
+if WINDOWS compare		file_output3 output
+
+if WINDOWS define_file          OUTPUT_FILE $OUTPUT file_output4
+if WINDOWS execute_work 	NONE std_output4 -supplier $SUPPLIER -output $OUTPUT_FILE -detach
+if WINDOWS execute_result 	ok
+if WINDOWS compare		file_output4 output
+
+--if WINDOWS execute_work 	NONE std_output5 -supplier $SUPPLIER -console
+--if WINDOWS execute_result 	ok
+--if WINDOWS compare		std_output5 output_std
+
+if WINDOWS define_file          OUTPUT_FILE $OUTPUT file_output6
+if WINDOWS execute_work 	NONE std_output6 -supplier $SUPPLIER -output $OUTPUT_FILE -console
+if WINDOWS execute_result 	ok
+if WINDOWS compare		file_output6 output
+
+if WINDOWS define_file          OUTPUT_FILE $OUTPUT file_output7
+if WINDOWS execute_work 	NONE std_output7 -supplier $SUPPLIER -output $OUTPUT_FILE -console -detach
+if WINDOWS execute_result 	ok
+if WINDOWS compare		file_output7 output
 
 test_end

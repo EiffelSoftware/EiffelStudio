@@ -16,7 +16,7 @@
 		<library name="encoder" location="../../../text/encoder/encoder-safe.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../../../network/protocol/http/http-safe.ecf"/>
-		<library name="httpd" location="src\httpd\httpd-safe.ecf" readonly="false"/>
+		<library name="httpd" location="lib\httpd\httpd-safe.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\">
 			<cluster name="implementation" location="$|implementation\" hidden="true"/>
 		</cluster>

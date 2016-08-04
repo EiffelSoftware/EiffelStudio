@@ -75,6 +75,16 @@ feature -- Initialization
 				-- Code analysis command state is kept in a separate object
 				-- that accumulates the corresponding requests.
 			create code_analysis_command.make
+				-- A parser to process configutation options specified in the command line.
+			create configuration_option_parser.make
+				(agent: ITERABLE [READABLE_STRING_32]
+					do
+							-- agent eiffel_layout.default_il_environment.installed_runtimes
+							-- would work, but it would cause computation of CLR run-times
+							-- immediately though it might never required.
+							-- Therefore we are using the inline agent instead.
+						Result := eiffel_layout.default_il_environment.installed_runtimes
+					end)
 				-- Check that environment variables
 				-- are properly set.
 			if not is_eiffel_layout_defined then
@@ -177,15 +187,15 @@ feature -- Initialization
 							l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
 							l_loader.set_has_library_conversion (not has_no_library_conversion)
 							if is_single_file_compilation then
-								l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested)
+								l_loader.open_single_file_compilation_project (single_file_compilation_filename, single_file_compilation_libraries, project_path, is_clean_requested, configuration_settings)
 							elseif attached old_project_file as l_old_project_file then
-								l_loader.open_project_file (l_old_project_file, Void, project_path, is_clean_requested)
+								l_loader.open_project_file (l_old_project_file, Void, project_path, is_clean_requested, configuration_settings)
 							elseif attached old_ace_file as l_old_ace_file then
-								l_loader.open_project_file (l_old_ace_file, Void, project_path, is_clean_requested)
+								l_loader.open_project_file (l_old_ace_file, Void, project_path, is_clean_requested, configuration_settings)
 							elseif config_file_name /= Void then
-								l_loader.open_project_file (config_file_name.absolute_path.canonical_path, target_name, project_path, is_clean_requested)
+								l_loader.open_project_file (config_file_name.absolute_path.canonical_path, target_name, project_path, is_clean_requested, configuration_settings)
 							else
-								l_loader.open_project_file (Void, target_name, project_path, is_clean_requested)
+								l_loader.open_project_file (Void, target_name, project_path, is_clean_requested, configuration_settings)
 							end
 
 							if not error_occurred and not l_loader.has_error then
@@ -379,14 +389,14 @@ feature -- Properties
 	is_experimental_flag_set, is_compatible_flag_set: BOOLEAN
 			-- Did use specify one of `-experiment' or `-compat' argument?
 
-	help_messages: HASH_TABLE [STRING_GENERAL, STRING]
+	help_messages: HASH_TABLE [READABLE_STRING_GENERAL, STRING]
 			-- Help message table
 		once
 			create Result.make (35)
-			Result.put (ace_help, ace_cmd_name)
 			Result.put (ancestors_help, ancestors_cmd_name)
 			Result.put (aversions_help, aversions_cmd_name)
 			Result.put (config_help, config_cmd_name)
+			Result.put (config_option_help, config_option_cmd_name)
 			Result.put (callers_help, callers_cmd_name)
 			Result.put (callees_help, callees_cmd_name)
 			Result.put (clients_help, clients_cmd_name)
@@ -422,6 +432,10 @@ feature -- Properties
 			Result.put (compat_help, compat_cmd_name)
 			Result.put (experiment_help, experiment_cmd_name)
 			Result.put (full_help, full_class_checking_cmd_name)
+			Result.put (ca_class_help, ca_class_cmd_name)
+			Result.put (ca_default_help, ca_default_cmd_name)
+			Result.put (ca_rule_help, ca_rule_cmd_name)
+			Result.put (ca_setting_help, ca_setting_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -518,7 +532,7 @@ feature {NONE} -- Output
 				%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%
 				%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
 			io.put_string ("%
-				%%T[[-config config.ecf] [-target target] |%N%
+				%%T[[-config config.ecf] [-target target] [-config_option option]|%N%
 				%%T[class_file.e [-library library_name]] |%N%
 				%%T-stop | -no_library |%N%
 				%%T-project_path Project_directory_path | -file File |%N%
@@ -566,7 +580,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	print_one_help (opt: STRING; txt: STRING_GENERAL)
+	print_one_help (opt: STRING; txt: READABLE_STRING_GENERAL)
 		do
 			io.put_string ("%T-")
 			io.put_string (opt)
@@ -686,6 +700,12 @@ feature {NONE} -- Update
 	code_analysis_command: EWB_CODE_ANALYSIS
 			-- Code analysis command.
 
+	configuration_settings: detachable CONF_TARGET_SETTINGS
+			-- Configuration settings (if any) specified in the command-line.
+
+	configuration_option_parser: CONF_STRING_PARSER
+			-- A parser of configuration options.
+
 	analyze_one_option
 			-- Analyze current option.
 		local
@@ -698,6 +718,7 @@ feature {NONE} -- Update
 			ewb_callees: EWB_CALLEES
 			l_arg: READABLE_STRING_32
 			in_filename, out_filename: STRING_32
+			l_configuration_settings: like configuration_settings
 		do
 			filter_name := ""
 			option := argument (current_option);
@@ -921,20 +942,6 @@ feature {NONE} -- Update
 				else
 					option_error_message := locale.translation ("Missing class and feature name for option -callees")
 				end
---			elseif option.same_string_general ("-dependents") then
---				if current_option < (argument_count - 1) then
---					if command /= Void then
---						option_error := True
---					else
---						current_option := current_option + 1
---						cn := argument (current_option)
---						current_option := current_option + 1
---						fn := argument (current_option)
---						!EWB_DEPEND!command.make (cn, fn, filter_name)
---					end
---				else
---					option_error := True
---				end
 			elseif option.same_string_general ("-c_compile") then
 				is_finish_freezing_called := True
 
@@ -1137,6 +1144,25 @@ feature {NONE} -- Update
 					create config_file_name.make_from_string (argument (current_option))
 				else
 					option_error_message := locale.translation ("Missing config name for option -config.")
+				end
+			elseif option.same_string_general ("-config_option") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					l_configuration_settings := configuration_settings
+					if not attached l_configuration_settings then
+						create l_configuration_settings.make
+						configuration_settings := l_configuration_settings
+					end
+					configuration_option_parser.parse_target_settings (argument (current_option), l_configuration_settings)
+					if attached configuration_option_parser.error as e then
+							-- Add option name to the error message.
+						option_error_message := locale.formatted_string (locale.translation_in_context
+							("Error in command-line option %"-config_option%": $1", once "compiler"), e)
+							-- Reset configuration settings.
+						configuration_settings := Void
+					end
+				else
+					option_error_message := locale.translation ("Missing configuration option for option -config_option.")
 				end
 			elseif option.same_string_general ("-target") then
 				if is_single_file_compilation then

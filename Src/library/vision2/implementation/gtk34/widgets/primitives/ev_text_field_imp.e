@@ -204,7 +204,7 @@ feature -- Status report
 			Result := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of the first character selected.
 		local
 			a_start, a_end: INTEGER
@@ -214,14 +214,14 @@ feature -- Status report
 			Result := a_start + 1
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of the last character selected.
 		local
 			a_start, a_end: INTEGER
 			has_sel: BOOLEAN
 		do
 			has_sel := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
-			Result := a_end
+			Result := a_end + 1
 		end
 
 	clipboard_content: STRING_32
@@ -399,7 +399,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

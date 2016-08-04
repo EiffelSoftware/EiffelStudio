@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Offset table associated to a cache"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -271,7 +271,6 @@ end
 		local
 			info: SERVER_INFO
 			an_id: INTEGER
-			other_cache: like cache
 			l_server_file: SERVER_FILE
 		do
 			flush
@@ -298,8 +297,7 @@ end
 			other.clear_all
 
 				-- Wipe out cache as we are storing to disk
-			other_cache ?= other.cache
-			if other_cache /= Void then
+			if attached {like cache} other.cache as other_cache then
 --				--| Wipe out cache instead of copying to retain system memory and speed up flush to disk.			
 --				cache.copy (other_cache)
 --				other_cache.make
@@ -334,7 +332,7 @@ end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -365,4 +363,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMPILER_SERVER
+end

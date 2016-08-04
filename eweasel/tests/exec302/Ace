@@ -5,6 +5,7 @@
 		<option trace="false" profile="true" syntax_level="1" is_void_safe="true" is_attached_by_default="true">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

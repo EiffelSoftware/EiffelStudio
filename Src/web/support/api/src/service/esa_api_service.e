@@ -55,10 +55,10 @@ feature -- Access
 			-- All Problem reports for guest users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- Only not confidential reports
 		local
-			l_list: LIST[REPORT]
+			l_list: LIST [REPORT]
 		do
 			log.write_information (generator + ".problem_reports_guest_2 All Problem reports for guest users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " status:" + a_status.out +  " column:" + a_column + " order:" + a_order.out)
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} l_list.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_guest (a_page_number, a_rows_per_page, a_category, a_status, a_column, a_order, a_username, a_filter, a_content) as c loop
 				l_list.force (c.item)
@@ -73,11 +73,11 @@ feature -- Access
 			-- All Problem reports for responsible users, filter by page `a_page_numer' and rows per page `a_row_per_page'
 			-- and category `a_category', severity `a_severity', priority, `a_priority', `a_responsible'
 		local
-			l_list: LIST[REPORT]
+			l_list: LIST [REPORT]
 		do
 			log.write_debug (generator + ".problem_reports_responsibles All Problem reports for responsibles users, filter by: page" + a_page_number.out + " rows_per_page:" + a_rows_per_page.out + " category:" + a_category.out + " priority:" + a_priority.out + " serverity:" + a_severity.out + " responsible:" + a_responsible.out +" status:" + a_status.out + " username:" + a_username)
 
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} l_list.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports_responsibles (a_page_number, a_rows_per_page, a_category, a_severity, a_priority, a_responsible, a_column, a_order, a_status, a_username, a_filter, a_content) as c loop
 				l_list.force (c.item)
@@ -91,9 +91,9 @@ feature -- Access
 				-- Problem reports for user with username `a_username'
 				-- Open reports only if `a_open_only', all reports otherwise.
 		local
-			l_list: LIST[REPORT]
+			l_list: LIST [REPORT]
 		do
-			create {ARRAYED_LIST[REPORT]} l_list.make (0)
+			create {ARRAYED_LIST [REPORT]} l_list.make (0)
 			-- data_provider.connect
 			across data_provider.problem_reports (a_page_number, a_rows_per_page, a_username, a_category, a_status, a_column, a_order, a_filter, a_content) as c loop
 				l_list.force (c.item)
@@ -108,7 +108,7 @@ feature -- Access
 			-- Possible list of subscriber to category `a_category'	
 		do
 			log.write_debug (generator+".status" )
-			create {ARRAYED_LIST[STRING]} Result.make (0)
+			create {ARRAYED_LIST [STRING]} Result.make (0)
 			Result.compare_objects
 			across data_provider.problem_report_category_subscribers (a_category) as c loop
 				Result.force (c.item)
@@ -116,11 +116,11 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	status: LIST[REPORT_STATUS]
+	status: LIST [REPORT_STATUS]
 			-- Possible problem report status
 		do
 			log.write_debug (generator+".status" )
-			create {ARRAYED_LIST[REPORT_STATUS]} Result.make (0)
+			create {ARRAYED_LIST [REPORT_STATUS]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.status as c  loop
 				Result.force (c.item)
@@ -129,11 +129,11 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	all_categories: LIST[REPORT_CATEGORY]
+	all_categories: LIST [REPORT_CATEGORY]
 			-- Report Categories
 		do
 			log.write_debug (generator+".all_categories" )
-			create {ARRAYED_LIST[REPORT_CATEGORY]} Result.make (0)
+			create {ARRAYED_LIST [REPORT_CATEGORY]} Result.make (0)
 			-- data_provider.connect
 			across data_provider.all_categories as c  loop Result.force (c.item) end
 			-- data_provider.disconnect
@@ -143,7 +143,7 @@ feature -- Access
 	problem_report_details (a_username: READABLE_STRING_32; a_number: INTEGER): detachable REPORT
 			-- Problem report details for user `a_user_name' (Interactions and Attachments)with number `a_number'.
 		local
-			l_interactions: LIST[REPORT_INTERACTION]
+			l_interactions: LIST [REPORT_INTERACTION]
 		do
 			log.write_debug (generator+".problem_report_details for user:"+ a_username + " interaction and attachments:" + a_number.out )
 			if attached data_provider.problem_report (a_number) as l_report then
@@ -160,7 +160,7 @@ feature -- Access
 	problem_report_details_guest (a_number: INTEGER): detachable REPORT
 			-- Problem report details for Guest user (Interactions and Attachments)with number `a_number'.
 		local
-			l_interactions: LIST[REPORT_INTERACTION]
+			l_interactions: LIST [REPORT_INTERACTION]
 		do
 			log.write_debug (generator+".problem_report_details_guest for guest:  interaction and attachments:" + a_number.out )
 			if attached data_provider.problem_report (a_number) as l_report then
@@ -198,37 +198,45 @@ feature -- Access
 			post_login_provider_execution
 		end
 
-	severities: LIST[REPORT_SEVERITY]
+	severities: LIST [REPORT_SEVERITY]
 			-- Possible problem report severity
+		local
+			l_result: ARRAYED_LIST [REPORT_SEVERITY]
 		do
 			log.write_debug (generator + ".severities")
-			create {ARRAYED_LIST[REPORT_SEVERITY]}Result.make (0)
-			-- data_provider.connect
-			across data_provider.severities as c  loop Result.force (c.item)  end
-			-- data_provider.disconnect
+			create l_result.make (0)
+				-- Put the items (rows) in the reverse order we retrieve from the database
+				-- and we avoid to touch the database's sp.
+				--! this new order will be from `Non-critical' to `Critical'
+			across data_provider.severities as c loop l_result.put_front (c.item)  end
+			Result := l_result
 			post_data_provider_execution
 		end
 
 
-	classes: LIST[REPORT_CLASS]
+	classes: LIST [REPORT_CLASS]
 			-- Possible problem report classes
 		do
 			log.write_debug (generator + ".classes")
-			create {ARRAYED_LIST[REPORT_CLASS]}Result.make (0)
+			create {ARRAYED_LIST [REPORT_CLASS]}Result.make (0)
 			-- data_provider.connect
 			across data_provider.classes as c  loop Result.force (c.item)  end
 			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	priorities: LIST[REPORT_PRIORITY]
+	priorities: LIST [REPORT_PRIORITY]
 			-- Possible problem report priorities.
+		local
+			l_result: ARRAYED_LIST [REPORT_PRIORITY]
 		do
 			log.write_information (generator +".priorities")
-			create {ARRAYED_LIST[REPORT_PRIORITY]}Result.make (0)
-			-- data_provider.connect
-			across data_provider.priorities as c  loop Result.force (c.item)  end
-			-- data_provider.disconnect
+			create l_result.make (0)
+				-- Put the items (rows) in the reverse order we retrieve from the database
+				-- and we avoid to touch the database's sp.
+				--! this new order will be from `Low' to `High'
+			across data_provider.priorities as c  loop l_result.put_front (c.item)  end
+			Result := l_result
 			post_data_provider_execution
 		end
 
@@ -236,10 +244,8 @@ feature -- Access
 			-- List of countries.
 		do
 			log.write_information (generator +".countries")
-			create {ARRAYED_LIST[COUNTRY]}Result.make (0)
---			login_provider.connect
+			create {ARRAYED_LIST [COUNTRY]}Result.make (0)
 			across login_provider.countries as c loop Result.force (c.item)  end
---			login_provider.disconnect
 			post_data_provider_execution
 		end
 
@@ -282,25 +288,23 @@ feature -- Access
 			-- Columns ContactID, Username, Name
 		do
 			log.write_debug (generator + ".responsibles")
-			create {ARRAYED_LIST[USER]}Result.make (0)
+			create {ARRAYED_LIST [USER]}Result.make (0)
 			-- data_provider.connect
 			across data_provider.responsibles as c loop Result.force (c.item)   end
 			-- data_provider.disconnect
 			post_data_provider_execution
 		end
 
-	security_questions: LIST[SECURITY_QUESTION]
+	security_questions: LIST [SECURITY_QUESTION]
 			-- Security questions
 		do
 			log.write_debug (generator+".security_questions")
-			create {ARRAYED_LIST[SECURITY_QUESTION]}Result.make (0)
---			login_provider.connect
+			create {ARRAYED_LIST [SECURITY_QUESTION]}Result.make (0)
 			across login_provider.security_questions as c loop Result.force (c.item)  end
---			login_provider.disconnect
 			post_login_provider_execution
 		end
 
-	temporary_interaction_2 (a_interaction_id: INTEGER): detachable TUPLE[content : detachable READABLE_STRING_32;
+	temporary_interaction_2 (a_interaction_id: INTEGER): detachable TUPLE [content : detachable READABLE_STRING_32;
 															   username: detachable READABLE_STRING_32;
 															   status: detachable READABLE_STRING_32;
 															   private: detachable READABLE_STRING_32;
@@ -321,7 +325,7 @@ feature -- Access
 
 
 
-	temporary_interaction_3 (a_interaction_id: INTEGER): detachable TUPLE[
+	temporary_interaction_3 (a_interaction_id: INTEGER): detachable TUPLE [
 															   status: INTEGER;
 															   category: INTEGER
 															   ]
@@ -335,7 +339,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	temporary_problem_report_attachments (a_report_id: INTEGER): LIST[ESA_FILE_VIEW]
+	temporary_problem_report_attachments (a_report_id: INTEGER): LIST [ESA_FILE_VIEW]
 		local
 			l_file: ESA_FILE_VIEW
 		do
@@ -349,7 +353,7 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	temporary_interation_attachments (a_interaction_id: INTEGER): LIST[ESA_FILE_VIEW]
+	temporary_interation_attachments (a_interaction_id: INTEGER): LIST [ESA_FILE_VIEW]
 			-- Attachments for temporary interaction `a_interaction_id'
 		local
 			l_file: ESA_FILE_VIEW
@@ -371,7 +375,6 @@ feature -- Access
 			data_provider.remove_all_temporary_report_attachments (a_report_id)
 			post_data_provider_execution
 		end
-
 
 	remove_temporary_report_attachment (a_report_id: INTEGER; a_filename: STRING)
 			-- Remove a temporary attachment `a_filename' for the report `a_report_id'
@@ -435,7 +438,7 @@ feature -- Access
 		local
 			l_item: ESA_CATEGORY_SUBSCRIBER_VIEW
 		do
-			create  {ARRAYED_LIST[ESA_CATEGORY_SUBSCRIBER_VIEW]} Result.make (0)
+			create  {ARRAYED_LIST [ESA_CATEGORY_SUBSCRIBER_VIEW]} Result.make (0)
 			across data_provider.subscribed_categories (a_username) as c loop
 					create l_item
 					l_item.set_id (c.item.categoryId)
@@ -445,7 +448,6 @@ feature -- Access
 			end
 			post_data_provider_execution
 		end
-
 
 	interaction_content (a_id: INTEGER): STRING
 				-- 	Retrieve the content given the id of the interaction
@@ -706,7 +708,6 @@ feature -- Element Settings
 			end
 		end
 
-
 	change_user_email (a_user: READABLE_STRING_32; a_new_email: READABLE_STRING_32; a_token: READABLE_STRING_32)
 			-- Change user email.
 		do
@@ -720,13 +721,11 @@ feature -- Element Settings
 			end
 		end
 
-
 	update_email_from_user_and_token (a_user: READABLE_STRING_32; a_token: READABLE_STRING_32)
 		do
 			login_provider.update_email_from_user_and_token (a_token, a_user)
 			post_login_provider_execution
 		end
-
 
 feature -- Access: Auth Session
 
@@ -750,23 +749,22 @@ feature -- Access: Auth Session
 
 feature -- Change: Auth Session
 
-	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER;)
+	new_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- New user session for user `a_user' with token `a_token'.
 		do
 			log.write_debug (generator + ".new_user_session_auth for user:" + a_user.name )
-			login_provider.new_user_session_auth (a_token, a_user)
+			login_provider.new_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
 
 
-	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER )
+	update_user_session_auth (a_token: READABLE_STRING_GENERAL; a_user: USER; a_maxage: INTEGER)
 			-- Update user session for user `a_user' with token `a_token'.
 		do
 			log.write_debug (generator + ".update_user_session_auth for user:" + a_user.name )
-			login_provider.update_user_session_auth (a_token, a_user)
+			login_provider.update_user_session_auth (a_token, a_user, a_maxage)
 			post_login_provider_execution
 		end
-
 
 feature -- Status Report
 
@@ -825,7 +823,7 @@ feature -- Status Report
 		end
 
 
-	user_token_new_email (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE[age:INTEGER; email:detachable STRING_32]
+	user_token_new_email (a_token: READABLE_STRING_32; a_user: READABLE_STRING_32): TUPLE [age:INTEGER; email:detachable STRING_32]
 			-- A token `a_token' is valid if it exist for the given user `a_user' and is not expired (24 hours since his request).
 		local
 			l_age: INTEGER
@@ -852,7 +850,7 @@ feature -- Status Report
 			-- last_interaction_id created.		
 
 
-	register_subscriber (a_user: STRING; a_categories: LIST[INTEGER])
+	register_subscriber (a_user: STRING; a_categories: LIST [INTEGER])
 			-- Subscribe responsible `a_user' to category with category ID in the list of categories'
 		local
 			l_categories: LIST [ESA_CATEGORY_SUBSCRIBER_VIEW]

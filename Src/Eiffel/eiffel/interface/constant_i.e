@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -188,11 +188,8 @@ feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
-		local
-			other_constant: like Current
 		do
-			other_constant ?= other
-			if other_constant /= Void then
+			if attached {like Current} other as other_constant then
 				Result := Precursor {ENCAPSULATED_I} (other_constant)
 						and then value.is_propagation_equivalent (other_constant.value)
 			end
@@ -504,7 +501,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

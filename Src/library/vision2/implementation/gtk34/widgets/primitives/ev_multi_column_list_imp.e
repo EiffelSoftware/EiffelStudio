@@ -224,7 +224,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			if a_type /= {GTK}.gdk_button_release_enum then
-				a_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				a_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if a_gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
 					if a_gtkwid = tree_view then
@@ -903,8 +903,7 @@ feature -- Implementation
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y]);
 			end
 		end
 
@@ -1167,7 +1166,7 @@ feature {NONE} -- Implementation
 				create a_tree_iter.make
 				item_imp.set_list_iter (a_tree_iter)
 				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-				update_child (item_imp, ev_children.count)
+				update_child (item_imp, i)
 
 				if item_imp.is_transport_enabled then
 					update_pnd_connection (True)
@@ -1240,7 +1239,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

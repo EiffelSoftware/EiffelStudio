@@ -34,7 +34,8 @@ inherit
 			set_y_offset,
 			child_has_resized,
 			needs_event_box,
-			make
+			make,
+			gtk_insert_i_th
 		end
 
 create
@@ -64,8 +65,8 @@ feature {NONE} -- Initialization
 			set_vertical_step (10)
 			fixed_widget := {GTK2}.gtk_fixed_new
 			{GTK}.gtk_widget_show (fixed_widget)
-			container_widget := {GTK}.gtk_hbox_new (True, 0)
 			{GTK}.gtk_container_add (viewport, fixed_widget)
+			container_widget := {GTK}.gtk_hbox_new (True, 0)
 			{GTK}.gtk_widget_show (container_widget)
 			{GTK}.gtk_container_add (fixed_widget, container_widget)
 			{GTK2}.gtk_widget_set_minimum_size (scrolled_window, 1, 1)
@@ -227,16 +228,16 @@ feature {NONE} -- Implementation
 			if attached item as l_item then
 				item_imp ?= l_item.implementation
 				check item_imp /= Void end
-				--| FIXME IEK
-				--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				if item_imp /= Void then
+					{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				end
 			end
 		end
 
 	child_has_resized (item_imp: EV_WIDGET_IMP)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			--| FIXME IEK
-			--{GTK}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			{GTK_WINDOW}.move (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
 	horizontal_adjustment: POINTER
@@ -269,6 +270,17 @@ feature {NONE} -- Implementation
 			vertical_policy := vscrollpol
 		end
 
+	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER_32)
+		local
+			l_parent_box: POINTER
+		do
+			l_parent_box := {GTK}.gtk_event_box_new
+			{GTK2}.gtk_event_box_set_visible_window (l_parent_box, False)
+			{GTK}.gtk_widget_show (l_parent_box)
+			{GTK}.gtk_container_add (l_parent_box, a_child)
+			{GTK}.gtk_container_add (container_widget, l_parent_box)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation		
 
 	interface: detachable EV_SCROLLABLE_AREA note option: stable attribute end;
@@ -276,7 +288,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

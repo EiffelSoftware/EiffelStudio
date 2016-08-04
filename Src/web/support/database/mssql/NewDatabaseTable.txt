@@ -17,9 +17,5 @@ CREATE TABLE [dbo].[Auth_Session](
     [ContactID] [int] NOT NULL,
     [Access_token] [varchar](64) NOT NULL,
     [Created] [datetime] NOT NULL,
- CONSTRAINT [PK_ContactID] PRIMARY KEY CLUSTERED 
-(
-    [ContactID] ASC
+    [MaxAge] [int] NOT NULL
 )
-) ON [PRIMARY]
-

@@ -2,6 +2,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<setting name="exception_trace" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

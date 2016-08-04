@@ -10,9 +10,8 @@ cd $EWEASEL/..
 cd $ISE_EIFFEL/library
 svn up base time thread store 
 
-if [ -z "$ISE_PRECOMP" ]; then
-	export ISE_PRECOMP=$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-fi
+cp -rf $EWEASEL/compilation/precomp/neutral/*.ecf $ISE_PRECOMP
+
 #Performing non-void safe precompilations
 cd $ISE_PRECOMP
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -config base.ecf -precompile -c_compile $2

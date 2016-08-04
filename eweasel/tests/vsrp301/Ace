@@ -3,6 +3,7 @@
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="$ROOT_PROC"/>
 		<option warning="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

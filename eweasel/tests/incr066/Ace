@@ -9,6 +9,7 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		<warning name="syntax" enabled="false"/></option>
+		<setting name="console_application" value="true"/>
 		$PRECOMPILED
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

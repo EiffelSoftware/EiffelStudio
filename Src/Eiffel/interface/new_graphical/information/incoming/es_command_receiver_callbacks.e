@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Callbacks for EiffelStudio command receiver"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -287,7 +287,7 @@ feature {NONE} -- EIS implementation
 								l_window := window_manager.last_created_window.window
 								create l_loader.make (l_window)
 								l_loader.set_is_project_location_requested (False)
-								l_loader.open_project_file (lt_project, l_chosen_target, l_project_path, False)
+								l_loader.open_project_file (lt_project, l_chosen_target, l_project_path, False, Void)
 								if not l_loader.has_error then
 									l_loader.set_is_compilation_requested (True)
 									l_loader.compile_project
@@ -637,19 +637,15 @@ feature {NONE} -- EIS implementation
 
 	stone_of_class (a_class: CONF_CLASS): CLASSI_STONE
 			-- Stone of `a_class'
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_class: CLASS_I
 		do
-			l_class ?= a_class
-			check
-				l_class_not_void: l_class /= Void
-			end
-			if l_class.is_compiled then
-				create {CLASSC_STONE} Result.make (l_class.compiled_class)
+			if attached {CLASS_I} a_class as l_class then
+				if l_class.is_compiled then
+					create {CLASSC_STONE} Result.make (l_class.compiled_class)
+				else
+					create Result.make (l_class)
+				end
 			else
-				create Result.make (l_class)
+				check expected_type: False end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -780,7 +776,7 @@ feature {NONE} -- Access
 	action: detachable STRING;
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

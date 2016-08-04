@@ -45,7 +45,12 @@ feature -- Section names
 	section_tasks: STRING_32 do Result := locale.translation ("Tasks")	end
 	section_variables: STRING_32 do Result := locale.translation ("Variables")	end
 	section_mapping: STRING_32 do Result := locale.translation ("Type Mapping")	end
+
 	section_general: STRING_32 do Result := locale.translation ("General")	end
+	section_language: STRING_32 do Result := locale.translation ("Language")	end
+	section_execution: STRING_32 do Result := locale.translation ("Execution")	end
+	section_optimization: STRING_32 do Result := locale.translation ("Optimization")	end
+	section_sources: STRING_32 do Result := locale.translation ("Sources")	end
 	section_dotnet: STRING_32 do Result := locale.translation (".NET")	end
 	section_advanced: STRING_32 do Result := locale.translation ("Advanced")	end
 
@@ -117,11 +122,13 @@ feature -- Target names and descriptions
 	target_cls_compliant_name: STRING_32 do Result := locale.translation ("CLS Compliant")	end
 	target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
 	target_concurrency_name: STRING_32 do Result := locale.translation ("Concurrency")	end
-	target_concurrency_description: STRING_32 do Result := locale.translation (
-			"Concurrency mode of the target application:%
-			% No concurrency - mono-threaded;%
-			% EiffelThread - based on EiffelThread library;%
-			% SCOOP - controlled by SCOOP rules.")
+	target_concurrency_description: STRING_32 do Result := locale.translation
+			({STRING_32} "[
+				Concurrency mode of the target application:
+				 • No concurrency - mono-threaded;
+				 • EiffelThread - based on EiffelThread library;
+				 • SCOOP - controlled by SCOOP rules.
+			]")
 		end
 	target_concurrency_none_name: STRING_32 do Result := locale.translation ("No concurrency") end
 	target_concurrency_thread_name: STRING_32 do Result := locale.translation ("EiffelThread") end
@@ -320,8 +327,8 @@ feature -- Option names and descriptions
 	option_full_class_checking_name: STRING_32 do Result := locale.translation ("Full Class Checking")	end
 	option_full_class_checking_description: STRING_32 do Result := locale.translation ("Are features of parent classes rechecked in current class?")	end
 
-	option_msil_application_optimize_name: STRING_32 do Result := locale.translation ("Apply Application Optimizations")	end
-	option_msil_application_optimize_description: STRING_32 do Result := locale.translation ("Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation.")	end
+	option_msil_application_optimize_name: STRING_32 do Result := locale.translation ("Apply .NET Application Optimizations")	end
+	option_msil_application_optimize_description: STRING_32 do Result := locale.translation ("Specifies if any applicable .NET application-oriented optimizations should be applied to a finalized compilation.")	end
 
 	option_namespace_name: STRING_32 do Result := locale.translation (".NET Namespace")	end
 	option_namespace_description: STRING_32 do Result := locale.translation ("Namespace for .NET")	end
@@ -334,10 +341,12 @@ feature -- Option names and descriptions
 	option_warnings_description: STRING_32 do Result := locale.translation ("Are warnings enabled?")	end
 
 	option_catcall_detection_name: STRING_32 do Result := locale.translation ("Catcall detection") end
-	option_catcall_detection_description: STRING_32 do Result := locale.translation ("Catcall detection level the source code provides:%N%
-		%No - Catcall detection is disabled, frozen and variant annotations are not taken into account for conformance.%N%
-		%Conformance - Catcall detection is disabled but frozen and variant annotations are respected in type conformance checks.%N%
-		%Complete - Catcall detection is enabled and frozen and variant annotations are respected in type conformance checks.") end
+	option_catcall_detection_description: STRING_32 do Result := locale.translation ({STRING_32} "[
+			Catcall detection level the source code provides:
+			 • No - Catcall detection is disabled, frozen and variant annotations are not taken into account for conformance;
+			 • Conformance - Catcall detection is disabled but frozen and variant annotations are respected in type conformance checks;
+			 • Complete - Catcall detection is enabled and frozen and variant annotations are respected in type conformance checks.
+			]") end
 	option_catcall_detection_value: ARRAYED_LIST [STRING_32]
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
@@ -355,12 +364,12 @@ feature -- Option names and descriptions
 
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end
 	option_void_safety_description: STRING_32 once
-			Result := locale.translation ("Void safety level the source code provides.") +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_none] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_none] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_conformance] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_conformance] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_initialization] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_initialization] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_transitional] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_transitional] + ";" +
-				" " + option_void_safety_value [{CONF_OPTION}.void_safety_index_all] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_all] + "."
+			Result := locale.translation ("Void safety level the source code provides:%N") +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_none] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_none] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_conformance] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_conformance] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_initialization] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_initialization] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_transitional] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_transitional] + ";%N" +
+				{STRING_32} " • " + option_void_safety_value [{CONF_OPTION}.void_safety_index_all] + " - " + option_void_safety_value_description [{CONF_OPTION}.void_safety_index_all] + "."
 		end
 	option_void_safety_value: ARRAYED_LIST [STRING_32]
 			-- Name of a void safety option value indexed by the corresponding option index.
@@ -401,7 +410,13 @@ feature -- Option names and descriptions
 
 
 	option_syntax_name: STRING_32 do Result := locale.translation ("Syntax") end
-	option_syntax_description: STRING_32 do Result := locale.translation ("Variant of syntax used in source code") end
+	option_syntax_description: STRING_32 do Result := locale.translation ({STRING_32} "[
+			Variant of syntax used in source code:
+			 • Obsolete syntax - Favor obsolete syntax over standard with more recent keywords treated as identifiers;
+			 • Transitional syntax - Favor standard syntax, but allow obsolete syntax when determinable by context;
+			 • Standard syntax - Enforce current standard syntax;
+			 • Provisional syntax - Allow not-yet-approved constructs.
+		]") end
 	option_syntax_obsolete_name: STRING_32 do Result := locale.translation ("Obsolete syntax") end
 	option_syntax_transitional_name: STRING_32 do Result := locale.translation ("Transitional syntax") end
 	option_syntax_standard_name: STRING_32 do Result := locale.translation ("Standard syntax") end
@@ -1075,21 +1090,63 @@ feature -- Parse errors
 	e_parse_invalid_regexp (regexp: READABLE_STRING_GENERAL; file, description: detachable READABLE_STRING_GENERAL; position: INTEGER): STRING_32
 		do
 			if attached file and attached description then
-				if position /= 0 then
-					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
-				else
+				if position = 0 then
 					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%": $3."), [regexp, file, description])
+				else
+					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $4) in %"$2%": $3."), [regexp, file, description, position])
 				end
 			elseif attached file then
 				Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" in %"$2%"."), [regexp, file])
 			elseif attached description then
-				if position /= 0 then
-					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
-				else
+				if position = 0 then
 					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%": $2."), [regexp, description])
+				else
+					Result := locale.formatted_string (locale.translation ("Invalid regular expression %"$1%" (error position: $3): $2."), [regexp, description, position])
 				end
 			else
 				Result := locale.formatted_string (locale.translation ("Invalid regular expression: %"$1%"."), [regexp])
+			end
+		end
+
+feature -- String parse errors
+
+	e_parse_string_missing_name (option: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a missing configuration name.
+		do
+			Result := locale.formatted_string (locale.translation ("Missing name for configuration option %"$1%""), [option])
+		end
+
+	e_parse_string_missing_value (option: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a missing configuration value.
+		do
+			Result := locale.formatted_string (locale.translation ("Missing value for configuration option %"$1%""), [option])
+		end
+
+	e_parse_string_unknown_name (option_name: READABLE_STRING_GENERAL): READABLE_STRING_32
+			-- An error for a unknown configuration name.
+		do
+			Result := locale.formatted_string (locale.translation ("Unknown configuration option %"$1%""), [option_name])
+		end
+
+	e_parse_string_invalid_value (option_name, option_value: READABLE_STRING_GENERAL;
+		expected_values: detachable ITERABLE [READABLE_STRING_GENERAL]): READABLE_STRING_32
+			-- An error for an invalid option value `option_value' of an option `option_name'.
+		local
+			e: STRING_GENERAL
+		do
+			if attached expected_values then
+				create {STRING_32} e.make_empty
+				across
+					expected_values as c
+				loop
+					if not e.is_empty then
+						e.append (", ")
+					end
+					e.append (c.item)
+				end
+				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%" (Expected values: $3)"), [option_name, option_value, e])
+			else
+				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
 			end
 		end
 

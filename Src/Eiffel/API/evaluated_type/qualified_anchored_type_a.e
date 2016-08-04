@@ -155,13 +155,9 @@ feature -- Code generation
 
 	description: ATTR_DESC
 			-- Descritpion of type for skeletons.
-		local
-			gen_desc: GENERIC_DESC
 		do
 			if qualifier.is_loose then
-				create gen_desc
-				gen_desc.set_type_i (Current)
-				Result := gen_desc
+				create {GENERIC_DESC} Result.make (Current)
 			else
 				Result := Precursor
 			end
@@ -169,13 +165,9 @@ feature -- Code generation
 
 	description_with_detachable_type: ATTR_DESC
 			-- Descritpion of type for skeletons.
-		local
-			gen_desc: GENERIC_DESC
 		do
 			if qualifier.is_loose then
-				create gen_desc
-				gen_desc.set_type_i (as_detachable_type)
-				Result := gen_desc
+				create {GENERIC_DESC} Result.make (as_detachable_type)
 			else
 				Result := Precursor
 			end
@@ -651,7 +643,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

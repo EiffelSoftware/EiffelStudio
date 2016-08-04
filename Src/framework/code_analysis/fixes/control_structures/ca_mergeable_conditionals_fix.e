@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 
 	execute (a_class: attached CLASS_AS)
 		local
-			l_new, l_indent, l_temp: STRING
+			l_new, l_indent, l_temp: STRING_32
 		do
 			create l_new.make_empty
 			create l_indent.make_empty

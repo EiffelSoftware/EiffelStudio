@@ -2,9 +2,10 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="e9a1d24b-01d2-47fd-bae6-f29ae2b0ecf2">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<setting name="inlining" value="True"/>
+		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
-		<setting name="multithreaded" value="True"/>
+		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

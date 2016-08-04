@@ -401,7 +401,7 @@ feature -- Callbacks
 						else
 								-- FIXME: is this safe to use default_namespace?
 								-- maybe: check a_namespace /= Void end
-							set_default_options (l_current_target, default_namespace)
+							set_default_options (l_current_target, {XML_XMLNS_CONSTANTS}.default_namespace)
 						end
 					end
 					l_current_target := Void
@@ -2472,8 +2472,8 @@ feature {NONE} -- Implementation
 		require
 			s_attached: s /= Void
 		do
-			s.replace_substring_all (lt_entity, lt_string)
-			s.replace_substring_all (gt_entity, gt_string)
+			s.replace_substring_all ({XML_MARKUP_CONSTANTS}.lt_entity, lt_string)
+			s.replace_substring_all ({XML_MARKUP_CONSTANTS}.gt_entity, gt_string)
 		end
 
 feature {NONE} -- Implementation state transitions

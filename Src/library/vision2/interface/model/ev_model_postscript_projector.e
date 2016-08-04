@@ -14,6 +14,8 @@ inherit
 	EV_MODEL_PROJECTOR
 
 	EV_MODEL_DRAWER
+		undefine
+			default_colors
 		redefine
 			drawable,
 			draw_grid,
@@ -48,7 +50,7 @@ feature {NONE} -- Initialization
 			a_world_not_void: a_world /= Void
 			a_path_not_void: a_path /= Void
 		do
-				-- This is only for letting users who have defined their own figure to still be 
+				-- This is only for letting users who have defined their own figure to still be
 				-- able to use the `register_figure'.
 			create draw_routines.make_filled (Void, 0, 20)
 			make_with_world (a_world)
@@ -84,7 +86,7 @@ feature -- Basic operations
 				drawable.set_size (bbox.right - wx, bbox.bottom - wy)
 				-- Full projection.
 				if world.grid_visible then
-					draw_grid
+					draw_grid (world)
 				end
 				if world.is_show_requested then
 					project_figure_group_full (world)
@@ -101,7 +103,7 @@ feature {NONE} -- Implementation
 	drawable: EV_POSTSCRIPT_DRAWABLE
 			-- Drawable used to draw the figures.
 
-	draw_grid
+	draw_grid (a_world: EV_MODEL_WORLD)
 			-- Draw grid on canvas.
 		do
 			drawable.add_postscript_line ("%%Drawing PS Grid")
@@ -132,7 +134,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

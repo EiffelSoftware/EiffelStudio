@@ -27,7 +27,6 @@ inherit
 	EV_TREE_IMP
 		redefine
 			interface,
-			old_make,
 			make,
 			initialize_model
 		end
@@ -40,12 +39,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	old_make (an_interface: like interface)
-			-- Create `Current' with interface `an_interface'.
-		do
-			Precursor {EV_TREE_IMP} (an_interface)
-		end
 
 	make
 			-- Setup `Current'
@@ -189,7 +182,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

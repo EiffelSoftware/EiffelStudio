@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="c83c6511-e13b-4e32-aa48-5fb0ab8c4006">
 	<target name="test">
 		<root class="test" feature="make"/>
-		<setting name="inlining" value="True"/>
+		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

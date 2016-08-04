@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Text formatter for all text output formatting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -634,26 +634,19 @@ feature {NONE} -- Implementation
 			-- Add comment `p' and wipe out `p'.
 		require
 			p_not_void: p /= Void
-		local
-			l_s: STRING
-			l_s32: STRING_32
 		do
 			if for_comment then
 				process_comment_text (p.twin, Void)
 			else
 				process_string_text (p.twin, Void)
 			end
-			l_s ?= p
-			if l_s /= Void then
+			if attached {STRING} p as l_s then
 				l_s.wipe_out
+			elseif attached {STRING_32} p as l_s32 then
+				l_s32.wipe_out
 			else
-				l_s32 ?= p
-				if l_s32 /= Void then
-					l_s32.wipe_out
-				else
-					check
-						error: False
-					end
+				check
+					error: False
 				end
 			end
 		end
@@ -668,7 +661,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -699,4 +692,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TEXT_FORMATTER
+end

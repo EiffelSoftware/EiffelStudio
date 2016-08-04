@@ -31,7 +31,7 @@ inherit
 		export
 			{NONE} all
 		redefine
-			make, file_buffer
+			make
 		end
 
 	SHARED_WORKBENCH
@@ -189,15 +189,8 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	File_buffer: YY_FILE_BUFFER
-			-- Parser input file buffer
-			-- Redefined as nested parsing causes assertion violations.
-		once
-			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 4096)
-		end
-
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

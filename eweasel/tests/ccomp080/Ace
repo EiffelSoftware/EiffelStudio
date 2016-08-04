@@ -5,6 +5,7 @@
 			<assertions precondition="true"/>
 		</option>
 		<setting name="inlining" value="false"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<external_include location="$CLUSTER"/>

@@ -73,13 +73,19 @@ feature -- Access
 			Result := string_from_external (zstream.message)
 		end
 
-	total_bytes_uncompressed: INTEGER
+	total_bytes_uncompressed: INTEGER_64
 			-- Number of bytes uncompressed.
 		do
 			if zstream /= Void then
 				Result := zstream.total_output
 			end
 		end
+
+	last_read_elements: INTEGER
+			-- Number of elements read by `read'.
+
+	last_write_elements: INTEGER
+			-- Number of elements written by `write'.
 
 feature -- Change Element
 
@@ -112,11 +118,12 @@ feature {NONE} -- Inflate Implementation
 					-- decompress until deflate stream ends or end of file
 				from
 				until
-					end_of_input or l_break or has_error
+					end_of_input or l_break
 				loop
 						-- run inflate on input until output buffer not full
 					from
-						zstream.set_available_input (read)
+						read
+						zstream.set_available_input (last_read_elements)
 						if zstream.available_input = 0 then
 							l_break := True
 						end
@@ -125,7 +132,8 @@ feature {NONE} -- Inflate Implementation
 						zstream.set_next_output (output_buffer.item)
 						zlib.inflate (zstream, False)
 						l_have := Chunk - zstream.available_output
-						if write (l_have) /= l_have then
+						write (l_have)
+						if last_write_elements /= l_have then
 							zlib.inflate_end (zstream)
 						end
 					until
@@ -134,9 +142,14 @@ feature {NONE} -- Inflate Implementation
 						zstream.set_available_output (Chunk)
 						zstream.set_next_output (output_buffer.item)
 						zlib.inflate (zstream, False)
-						l_have := Chunk - zstream.available_output
-						if write (l_have) /= l_have then
-							zlib.inflate_end (zstream)
+							-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
+							-- Simply continue and provide more input data and more output space for the next inflate() call.
+						if zlib.last_operation /= zlib.z_buf_error then
+							l_have := Chunk - zstream.available_output
+							write (l_have)
+							if last_write_elements /= l_have then
+								zlib.inflate_end (zstream)
+							end
 						end
 					end
 				end
@@ -146,15 +159,15 @@ feature {NONE} -- Inflate Implementation
 		end
 
 
-	read: INTEGER
+	read
 			-- Read data from the medium
-			-- put it into the input_buffer.
+			-- Make result available in `last_read_elements'.
 		deferred
 		end
 
-	write (a_amount: INTEGER): INTEGER
+	write (a_amount: INTEGER)
 			-- Write the `a_amount' of elements to the user_output_file or
-			-- user_output_buffer.
+			-- Make result available in `last_write_elements'.
 		deferred
 		end
 
@@ -175,7 +188,7 @@ feature {NONE} -- Implementation
 	chunk: INTEGER
 		 -- the buffer size for feeding data to and pulling data from the zlib routines.
 
-	default_chunk: INTEGER = 2048
+	default_chunk: INTEGER = 16384
 		 -- default buffer size	
 
 	zlib: ZLIB

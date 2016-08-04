@@ -5,7 +5,8 @@
 		<option warning="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true" />
 		</option>
-		<setting name="console_application" value="True"/>
+		<setting name="console_application" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" />

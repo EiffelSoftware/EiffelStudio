@@ -6,7 +6,7 @@
 	 name="test" uuid="a3647516-f3ef-4cae-990f-69557eb4f616">
 	<target name="test">
 		<root class="test" feature="make"/>
-		<setting name="console_application" value="True"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<cluster name="a" location="$CLUSTER\a\"/>
 	</target>

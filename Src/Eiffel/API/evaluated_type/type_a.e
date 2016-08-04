@@ -629,8 +629,6 @@ feature -- Properties
 			-- Does type depend on formal generic parameters and/or anchors?
 		do
 			-- Do nothing
-		ensure
-			definition: Result = (has_like or has_formal_generic)
 		end
 
 	is_explicit: BOOLEAN
@@ -1546,7 +1544,6 @@ feature -- Access
 			i_non_negative: i > 0
 		local
 			l_vtcg7: VTCG7
-			l_formal_a: FORMAL_A
 			l_target_type: TYPE_A
 		do
 			if a_target_type.is_formal then
@@ -1558,9 +1555,11 @@ feature -- Access
 					-- 			`a_target_type' is H
 					-- Note: We loop over all constraints of `G' an call `check_const_gen_conformance'.
 					-- We replace `H' with `COMPARABLE' and check whether `STRING' conforms to `COMPARABLE'.					
-				l_formal_a ?= a_target_type
-				check indeed_a_formal_a: l_formal_a /= Void end
-				l_target_type := a_gen_type.generics.i_th (l_formal_a.position)
+				if attached {FORMAL_A} a_target_type as l_formal_a then
+					l_target_type := a_gen_type.generics.i_th (l_formal_a.position)
+				else
+					check indeed_a_formal_a: False end
+				end
 			else
 				l_target_type := a_target_type
 			end
@@ -2120,4 +2119,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TYPE_A
+end

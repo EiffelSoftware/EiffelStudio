@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Main abstract class for Graphic mode in EiffelStudio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -218,7 +218,10 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				if path_index /= 0 then
 					l_loader.set_is_project_location_requested (False)
 				end
-				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0)
+				debug ("to_implement")
+					(create {REFACTORING_HELPER}).to_implement ("Handle (multiple) -config_option values and pass them to project loader.")
+				end
+				l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0, Void)
 				if
 					not l_loader.has_error and then
 					not l_loader.is_compilation_requested
@@ -356,7 +359,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -387,4 +390,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_GRAPHIC
+end

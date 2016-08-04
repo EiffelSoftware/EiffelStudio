@@ -243,8 +243,9 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 
 /* TYPE class */
 #define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param(Dftype(obj), 1))	
-#define eif_builtin_TYPE_is_expanded(obj)					eif_gen_is_expanded(eif_gen_param(Dftype(obj), 1).id)
 #define eif_builtin_TYPE_is_attached(obj)					eif_is_attached_type2(eif_gen_param(Dftype(obj), 1))
+#define eif_builtin_TYPE_is_deferred(obj)					eif_gen_is_deferred(eif_gen_param(Dftype(obj), 1).id)
+#define eif_builtin_TYPE_is_expanded(obj)					eif_gen_is_expanded(eif_gen_param(Dftype(obj), 1).id)
 #define eif_builtin_TYPE_type_id(obj)						eif_encoded_type(eif_gen_param(Dftype(obj), 1))
 #define eif_builtin_TYPE_runtime_name(obj)					eif_typename_of_type(eif_gen_param(Dftype(obj), 1))
 /* Second argument is 0, because we use the annotations from the type itself. */

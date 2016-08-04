@@ -175,7 +175,7 @@ feature -- Query
 			if gdk_pixbuf /= default_pointer then
 				Result := {GTK}.gdk_pixbuf_get_width (gdk_pixbuf)
 			else
-				Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
+				Result := {GDK_HELPERS}.default_cursor_size
 			end
 		end
 
@@ -185,7 +185,7 @@ feature -- Query
 			if gdk_pixbuf /= default_pointer then
 				Result := {GTK}.gdk_pixbuf_get_height (gdk_pixbuf)
 			else
-				Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
+				Result := {GDK_HELPERS}.default_cursor_size
 			end
 		end
 
@@ -201,28 +201,30 @@ feature -- Implementation
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
 			a_image: POINTER
+			l_display: POINTER
 		do
+			l_display:= {GDK}.gdk_display_get_default
 			inspect
 				predefined_cursor_code
 					-- Return a predefined cursor if available.
 			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_left_ptr_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_crosshair_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_xterm_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_xterm_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_fleur_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_fleur_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
-				Result := {GTK}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_question_arrow_enum)
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_question_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.hyperlink_cursor then
-				Result := {GTK}.gdk_cursor_new (60) -- GDK_HAND2
+				Result := {GTK}.gdk_cursor_new_for_display (l_display, {EV_GTK_ENUMS}.gdk_hand2_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
@@ -245,7 +247,7 @@ feature -- Implementation
 					a_image_not_null: a_image /= default_pointer
 				end
 				Result := {GTK2}.gdk_cursor_new_from_pixbuf (
-					{GTK2}.gdk_display_get_default,
+					{GDK}.gdk_display_get_default,
 					a_image,
 					attached_interface.x_hotspot,
 					attached_interface.y_hotspot
@@ -303,7 +305,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

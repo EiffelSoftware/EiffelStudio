@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Descritpion of an actual native array type. Only used for IL code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,17 +47,13 @@ feature -- IL code generation
 			-- will return INTEGER.
 		require
 			true_generics_not_void: generics /= Void
-		local
-			l_native: NATIVE_ARRAY_TYPE_A
 		do
-			Result ?= generics.first
-			if Result = Void then
+			if not attached {CL_TYPE_A} generics.first as r then
 				Result := object_type
+			elseif attached {NATIVE_ARRAY_TYPE_A} r as l_native then
+				Result := l_native.deep_il_element_type
 			else
-				l_native ?= Result
-				if l_native /= Void then
-					Result := l_native.deep_il_element_type
-				end
+				Result := r
 			end
 		ensure
 			deep_il_element_type_not_void: Result /= Void
@@ -84,7 +80,7 @@ invariant
 	count_set: generics.count = 1
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

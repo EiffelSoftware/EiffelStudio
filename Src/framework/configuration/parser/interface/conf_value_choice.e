@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Choice option value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 			out
 		end
 
-create {CONF_OPTION, CONF_TARGET}
+create {CONF_OPTION, CONF_TARGET_SETTINGS}
 
 	make
 
@@ -153,7 +153,7 @@ invariant
 	index_in_range: index <= count
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

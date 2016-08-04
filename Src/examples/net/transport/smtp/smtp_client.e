@@ -58,6 +58,7 @@ feature -- Initialization
 
 				-- Create our message.
 			create l_email.make_with_entry (l_sender, l_recipient)
+			l_email.add_header_entry (l_email.h_subject, "Test by the Eiffel SMTP client sample")
 			l_email.set_message (l_message)
 
 				-- Send it.

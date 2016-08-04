@@ -217,7 +217,7 @@ feature -- Attach
 				Eiffel_project.initialized and then
 				Eiffel_project.system_defined and then
 				Eiffel_system.system.il_generation and then
-				Eiffel_system.system.msil_generation_type.same_string ("dll")
+				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
 			elseif (not manager.application_is_executing) then
@@ -335,7 +335,7 @@ feature -- Start Operation
 			elseif
 				Eiffel_system.system /= Void and then
 				Eiffel_system.system.il_generation and then
-				Eiffel_system.system.msil_generation_type.same_string ("dll")
+				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
 			else
@@ -396,7 +396,7 @@ feature -- Start Operation
 			elseif
 				Eiffel_system.system /= Void and then
 				Eiffel_system.system.il_generation and then
-				Eiffel_system.system.msil_generation_type.same_string ("dll")
+				Eiffel_system.system.msil_generation_type.same_string_general ("dll")
 			then
 				warning (debugger_names.m_no_debugging_for_dll_system)
 			else
@@ -677,7 +677,7 @@ invariant
 	manager_not_void: manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

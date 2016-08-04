@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -158,11 +158,24 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	settings: detachable CONF_TARGET_SETTINGS
+			-- Settings that may override those specified in `target'.
+
 	precompile: CONF_PRECOMPILE
 			-- Precompile needed for building our target.
 
 	shared_library_definition_stamp: INTEGER
 			-- Time stamp of a shared library definition file (if any)
+
+feature -- Modification
+
+	set_settings (s: like settings)
+			-- Set `settings' to `s'.
+		do
+			settings := s
+		ensure
+			settings_set: settings = s
+		end
 
 feature -- Update from retrieved object.
 
@@ -178,6 +191,7 @@ feature -- Update from retrieved object.
 			compile_all_classes := other.compile_all_classes
 			successful := True
 		end
+
 feature -- Status setting
 
 	force_new_target
@@ -535,15 +549,20 @@ feature {NONE} -- Implementation
 				Error_handler.raise_error
 			end
 			target_name := l_new_target.name
-			if conf_system.targets.item (target_name).is_abstract then
+			if l_new_target.is_abstract then
 				create vd68.make (target_name)
 				Error_handler.insert_error (vd68)
 				Error_handler.raise_error
 			end
 
+				-- Update found target with `settings'.
+			if attached settings as s then
+				l_new_target.force (s)
+			end
+
 			project_location.set_target (target_name)
 
-				 -- set ISE_PRECOMP
+				 -- Set ISE_PRECOMP.
 			eiffel_layout.set_precompile (target.setting_msil_generation)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
@@ -1201,8 +1220,8 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_msil_generation_type)
 			if l_s /= Void then
-				if l_s.is_case_insensitive_equal_general ("exe") or l_s.is_case_insensitive_equal_general ("dll") then
-					system.set_msil_generation_type (l_s.as_lower)
+				if attached msil_generation_type_value (l_s, 1, l_s.count) as v then
+					system.set_msil_generation_type (v)
 				else
 					create vd15
 					vd15.set_option_name (s_msil_generation_type)
@@ -1478,7 +1497,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

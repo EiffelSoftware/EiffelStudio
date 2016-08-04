@@ -11,18 +11,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_remember_me: INTEGER_64; a_default_max_age: INTEGER_64)
+	make (a_remember_me: INTEGER_64;)
 		do
 			if a_remember_me > 0 then
 				remember_me_max_age := a_remember_me
 			else
 				remember_me_max_age := internal_max_age
 			end
-			if a_default_max_age > 0 then
-				default_max_age :=  a_default_max_age
-			else
-				default_max_age := internal_default_max_age
-			end
+
+			default_max_age := internal_default_max_age
 		end
 
 feature -- Access

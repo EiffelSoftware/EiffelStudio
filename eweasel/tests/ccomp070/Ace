@@ -4,11 +4,12 @@
 		<option warning="true" profile="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		<warning name="syntax" enabled="false"/></option>
-		<setting name="array_optimization" value="True"/>
-		<setting name="exception_trace" value="True"/>
-		<setting name="inlining" value="True"/>
+		<setting name="array_optimization" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
 		<setting name="line_generation" value="true"/>
+		<setting name="console_application" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

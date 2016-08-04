@@ -1,8 +1,7 @@
-note
+﻿note
+	description: "Iterator on features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-
--- Iterator on features
 
 deferred class FEAT_ITERATOR
 
@@ -73,14 +72,12 @@ feature {NONE}
 	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER)
 			-- Mark feature and its redefinitions
 		local
-			table: ROUT_TABLE;
-			old_position: INTEGER;
-			unit: ROUT_ENTRY;
+			old_position: INTEGER
+			unit: ROUT_ENTRY
 		do
 			mark_and_record (body_index, static_class_id, original_class_id);
 
-			table ?= tmp_poly_server.item (rout_id_val)
-			if table /= Void and then table.count > 1 then
+			if attached {ROUT_TABLE} tmp_poly_server.item (rout_id_val) as table and then table.count > 1 then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				from
@@ -209,7 +206,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

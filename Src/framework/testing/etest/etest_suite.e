@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Test suite containing Eiffel tests which are added to {TEST_SUITE_S}.
 
@@ -42,7 +42,6 @@ feature {NONE} -- Initialization
 			a_project_helper_attached: a_project_helper /= Void
 		local
 			l_manager: EB_PROJECT_MANAGER
-			l_test_suite: TEST_SUITE_S
 			l_project_loaded: BOOLEAN
 		do
 			project_helper := a_project_helper
@@ -221,7 +220,6 @@ feature -- Element change
 			-- Called when Eiffel project has finished compilation
 		local
 			l_classes: SEARCH_TABLE [CLASS_C]
-			l_test_suite: TEST_SUITE_S
 		do
 			old_class_map := class_map
 			class_map := new_class_map
@@ -292,7 +290,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

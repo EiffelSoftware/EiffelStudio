@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -263,7 +263,9 @@ feature {NONE} -- Persistence
 	profiles_data_to_storage (a_data: like profiles_data_from_storage)
 			-- <Precursor>
 		do
-			profiles_data_to_file (a_data, profiles_data_location)
+			if attached profiles_data_location as location then
+				profiles_data_to_file (a_data, location)
+			end
 		end
 
 	profiles_data_to_file (a_data: like profiles_data_from_storage; a_path: PATH)
@@ -327,7 +329,9 @@ feature {NONE} -- Persistence
 	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage)
 			-- <Precursor>
 		do
-			save_exceptions_handler_data_to_file (a_data, exceptions_handler_data_location)
+			if attached exceptions_handler_data_location as location then
+				save_exceptions_handler_data_to_file (a_data, location)
+			end
 		end
 
 	save_exceptions_handler_data_to_file (a_data: like exceptions_handler_data_from_storage; a_path: PATH)

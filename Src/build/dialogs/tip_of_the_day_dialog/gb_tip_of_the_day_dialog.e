@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			-- Display `tip' as a wrapped text within `tip_label'.
 			-- Replace all '%N' characters as spaces.
 		local
-			counter: INTEGER
+			counter, initial_counter: INTEGER
 			font: EV_FONT
 			current_width: INTEGER
 			last_string: STRING
@@ -195,18 +195,21 @@ feature {NONE} -- Implementation
 			loop
 				from
 					current_width := 0
+					initial_counter := counter
 				until
 					current_width > maximum_string_width or
 					counter > all_space_indexes.count
 				loop
-
 					temp_string := modified_tip.substring (start_pos, all_space_indexes.i_th (counter) - 1)
 					current_width := font.string_width (temp_string)
 					if current_width <= maximum_string_width then
 						last_string := temp_string
 						counter := counter + 1
-					else
-						counter := counter - 1
+					elseif counter = initial_counter then
+							-- Cannot even fit one word in the given width, we display it and continue
+							-- onto the next one.
+						last_string := temp_string
+						counter := counter + 1
 					end
 				end
 				if all_space_indexes.valid_index (counter) then

@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option warning="false" is_attached_by_default="false" void_safety="initialization"/>
+		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\$BASE_LIBRARY.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

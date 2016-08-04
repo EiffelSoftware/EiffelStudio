@@ -56,19 +56,19 @@ feature -- Access
 
 feature {NONE} -- Deflate implementation		
 
-	read: INTEGER
+	read
 			-- <Precursor>
 		do
 			if attached user_input_io_medium as l_input_medium then
-				Result := io_medium_read (l_input_medium)
+				last_read_elements := io_medium_read (l_input_medium)
 			end
 		end
 
-	write (a_amount: INTEGER): INTEGER
+	write (a_amount: INTEGER)
 			-- <Precursor>
 		do
 			if attached io_medium as l_medium then
-				Result := io_medium_write (output_buffer,a_amount,l_medium)
+				last_write_elements := io_medium_write (output_buffer,a_amount,l_medium)
 			end
 		end
 
@@ -87,7 +87,7 @@ feature {NONE} -- Deflate implementation
 			l_index: INTEGER
 			l_string: STRING
 		do
-			a_medium.read_stream (Chunk)
+			a_medium.read_stream (chunk_size)
 			l_string := a_medium.last_string
 			from
 				l_index := 1
@@ -97,7 +97,7 @@ feature {NONE} -- Deflate implementation
 				input_buffer.put_character (l_string.at (l_index), l_index - 1)
 				l_index := l_index + 1
 			end
-			if l_string.count < Chunk then
+			if l_string.count < chunk_size then
 				end_of_input := True
 			end
 			Result := l_index - 1

@@ -204,7 +204,7 @@ feature -- Access
 	il_generation: BOOLEAN
 			-- Is current project made for IL code generation?
 
-	msil_generation_type: STRING_32
+	msil_generation_type: READABLE_STRING_32
 			-- Type of assembly to generate
 
 	is_precompile_finalized: BOOLEAN
@@ -388,7 +388,7 @@ invariant
 	project_location_not_void: project_location /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

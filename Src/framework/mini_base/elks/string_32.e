@@ -27,6 +27,7 @@ inherit
 
 create
 	make,
+	make_empty,
 	make_from_cil
 
 convert
@@ -40,6 +41,11 @@ feature {NONE} -- Initialization
 			count := 0
 			internal_hash_code := 0
 			create area.make_filled ('%/000/', n + 1)
+		end
+
+	make_empty
+		do
+			make (0)
 		end
 
 	make_from_cil (a_system_string: detachable SYSTEM_STRING)

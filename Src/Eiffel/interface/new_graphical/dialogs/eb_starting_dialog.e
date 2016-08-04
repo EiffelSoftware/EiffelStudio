@@ -1,10 +1,10 @@
-note
-	description	: "Dialog displayed at startup of $EiffelGraphicalCompiler$"
+﻿note
+	description: "Dialog displayed at startup of $EiffelGraphicalCompiler$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_STARTING_DIALOG
@@ -353,12 +353,13 @@ feature {NONE} -- Execution
 		require
 			parent_window_not_void: parent_window /= Void
 		local
-			li: EV_GRID_LABEL_ITEM
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
 		do
 			if wizards_list.has_selected_row then
-				li ?= wizards_list.selected_rows.first.item (1)
-				if li /= Void and then li.text.is_equal (Interface_names.l_basic_application) then
+				if
+					attached {EV_GRID_LABEL_ITEM} wizards_list.selected_rows.first.item (1) as li and then
+					li.text.is_equal (Interface_names.l_basic_application)
+				then
 						-- Create a blank project
 					create_blank_project
 				else
@@ -480,14 +481,11 @@ feature {NONE} -- Implementation
 
 	selected_wizard: EB_NEW_PROJECT_WIZARD
 			-- Currently selected wizard.
-		local
-			selected_item: EV_GRID_LABEL_ITEM
-			l_translated_name: STRING_32
 		do
-			if wizards_list.has_selected_row then
-				selected_item ?= wizards_list.selected_rows.first.item (1)
-			end
-			if selected_item /= Void then
+			if
+				wizards_list.has_selected_row and then
+				attached {EV_GRID_LABEL_ITEM} wizards_list.selected_rows.first.item (1) as selected_item
+			then
 				from
 					available_wizards.start
 				until
@@ -495,8 +493,7 @@ feature {NONE} -- Implementation
 				loop
 						-- Items in wizard list are translated, thus the check has
 						-- to be done on the translated name
-					l_translated_name := try_to_translate_wizard (available_wizards.item.name)
-					if (l_translated_name.is_equal (selected_item.text)) then
+					if try_to_translate_wizard (available_wizards.item.name).same_string (selected_item.text) then
 						Result := available_wizards.item
 					end
 					available_wizards.forth
@@ -521,7 +518,7 @@ feature {NONE} -- Implementation
 			if not Eiffel_project.initialized then
 				create l_loader.make (Current)
 				l_loader.set_is_project_location_requested (False)
-				l_loader.open_project_file (ace_file_name, Void, directory_name, True)
+				l_loader.open_project_file (ace_file_name, Void, directory_name, True, Void)
 				if not l_loader.has_error and then compile_project then
 					l_loader.set_is_compilation_requested (compile_project)
 					if freeze_project then
@@ -649,7 +646,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -680,4 +677,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_STARTING_DIALOG
+end

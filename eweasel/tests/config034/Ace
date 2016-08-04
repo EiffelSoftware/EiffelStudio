@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<option is_attached_by_default="true" void_safety="all"/>
+		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="test" location="$CLUSTER\" recursive="false"/>
 		<cluster name="test1" location="$CLUSTER\test_cluster" readonly="false">

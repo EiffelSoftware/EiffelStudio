@@ -53,20 +53,19 @@ feature -- Inflate
 
 feature	{NONE} -- Inflate Implementation
 
-	read: INTEGER
+	read
 			-- <Precursor>
 		do
 			if attached memory as l_input_memory then
-				Result := memory_read (l_input_memory)
+				last_read_elements := memory_read (l_input_memory)
 			end
 		end
 
-	write (a_amount: INTEGER): INTEGER
-			-- Write the `a_amount' of elements to the user_output_file or
-			-- user_output_buffer.
+	write (a_amount: INTEGER)
+			-- <Precursor>
 		do
 			if attached user_output_memory as l_memory then
-				Result := memory_write (output_buffer,a_amount, l_memory)
+				last_write_elements := memory_write (output_buffer,a_amount, l_memory)
 			end
 		end
 

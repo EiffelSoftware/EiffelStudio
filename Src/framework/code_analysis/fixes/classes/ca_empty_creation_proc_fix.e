@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 
 			across a_create_as.feature_list as l_feature loop
 				if not feature_to_remove.feature_names.has (l_feature.item) then
-					l_new_feature_names.append ("%T" + l_feature.item.visual_name_32 + ",%N")
+					l_new_feature_names.append ({STRING_32} "%T" + l_feature.item.visual_name_32 + ",%N")
 				end
 			end
 

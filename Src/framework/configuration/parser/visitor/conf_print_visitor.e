@@ -104,7 +104,7 @@ feature -- Visit nodes
 				append_text_escaped (l_namespace, False)
 --Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
 			else
-				append_text_escaped (default_namespace, False)
+				append_text_escaped ({XML_XMLNS_CONSTANTS}.default_namespace, False)
 				check has_namespace: False end
 			end
 			append_text ("%"")
@@ -139,7 +139,7 @@ feature -- Visit nodes
 				append_text_escaped (l_namespace, False)
 --Alternative:	append_text (utf.string_32_to_utf_8_string_8 (l_namespace)) -- FIXME: maybe add utf-8 BOM ...
 			else
-				append_text_escaped (default_namespace, False)
+				append_text_escaped ({XML_XMLNS_CONSTANTS}.default_namespace, False)
 				check has_namespace: False end
 			end
 			append_text ("%"")
@@ -178,8 +178,8 @@ feature -- Visit nodes
 			l_variables: like {CONF_TARGET}.internal_variables
 			l_name: ARRAYED_LIST [READABLE_STRING_8]
 			l_val: ARRAYED_LIST [detachable READABLE_STRING_GENERAL]
-			l_sorted_list: ARRAYED_LIST [STRING_32]
-			l_sorter: QUICK_SORTER [STRING_32]
+			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			current_target := a_target
 			append_text_indent ("<target")
@@ -242,7 +242,7 @@ feature -- Visit nodes
 				create l_val.make (2)
 				l_settings := a_target.internal_settings
 				create l_sorted_list.make_from_array (l_settings.current_keys)
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [STRING_32]})
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
 				l_sorted_list.start
 			until
@@ -552,10 +552,10 @@ feature {NONE} -- Implementation
 					-- Replace special markup characters with character entities
 					-- and control or non-ASCII characters with character references.
 				inspect c
-				when '<' then text.append_string_general (lt_entity)
-				when '>' then text.append_string_general (gt_entity)
-				when '&' then text.append_string_general (amp_entity)
-				when '"' then text.append_string_general (quot_entity)
+				when '<' then text.append_string_general ({XML_MARKUP_CONSTANTS}.lt_entity)
+				when '>' then text.append_string_general ({XML_MARKUP_CONSTANTS}.gt_entity)
+				when '&' then text.append_string_general ({XML_MARKUP_CONSTANTS}.amp_entity)
+				when '"' then text.append_string_general ({XML_MARKUP_CONSTANTS}.quot_entity)
 				else
 					if multiline and then c = '%N' then
 						text.append_character ('%N')
@@ -1282,7 +1282,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

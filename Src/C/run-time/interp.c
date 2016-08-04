@@ -4868,6 +4868,23 @@ rt_private void eif_interp_builtins (struct stopchunk *stack_cur, EIF_TYPED_VALU
 			iresult->it_int32 = eif_builtin_TYPE_generic_parameter_count(icurrent->it_ref);
 			break;
 
+		case BC_BUILTIN_TYPE__IS_ATTACHED:
+			iresult->type = SK_BOOL;
+			iresult->it_char = eif_builtin_TYPE_is_attached(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__IS_DEFERRED:
+			iresult->type = SK_BOOL;
+			iresult->it_char = eif_builtin_TYPE_is_deferred(icurrent->it_ref);
+			break;
+
+		case BC_BUILTIN_TYPE__IS_EXPANDED:
+			iresult->type = SK_BOOL;
+			iresult->it_char = eif_builtin_TYPE_is_expanded(icurrent->it_ref);
+			break;
+
+
+
 		default: eif_panic (RT_BOTCHED_MSG);
 	}
 

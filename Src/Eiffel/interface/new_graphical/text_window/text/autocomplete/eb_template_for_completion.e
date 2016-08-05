@@ -202,8 +202,10 @@ feature {NONE} -- Template implementation.
 			l_local_text: STRING_32
 			l_code_text: STRING_32
 			l_template_declarations: STRING_TABLE [STRING_32]
+			l_default_value: STRING_32
+			l_str: STRING_32
 		do
-
+			--| TODO refactor code.
 			l_template_declarations := template_declarations.twin
 
 				-- retrieve locals variables
@@ -317,6 +319,22 @@ feature {NONE} -- Template implementation.
 					end
 				end
 
+					-- update default input values and check if they
+					-- need to be ranamed.
+				if attached template.default_input_values as l_input_values then
+					across l_input_values as ic loop
+						l_default_value := ic.item
+						create l_str.make_empty
+						l_str := l_default_value.substring (1, l_default_value.index_of ('.', 1) - 1)
+						if l_rename_table.has (l_str) and then
+						   attached {STRING_32} l_rename_table.item (l_str) as l_new_src then
+							create l_str.make_from_string (l_new_src)
+							l_str.append (l_default_value.substring (l_default_value.index_of ('.', 1), l_default_value.count))
+							l_rename_table.force (l_str, ic.key)
+						end
+					end
+				end
+
 					-- update declarations
 				across
 					l_rename_table as ic
@@ -325,7 +343,6 @@ feature {NONE} -- Template implementation.
 						l_template_declarations.replace_key (ic.item, ic.key)
 					end
 				end
-
 
 					-- Generate local_text
 				create l_local_text.make_empty
@@ -462,11 +479,6 @@ feature -- Implementation: Update tokens
 						linked_tokens.force ("", ic.key)
 					end
 				end
-			end
-
-			if attached template.default_input_values as l_input_values then
-				l_rename_table.merge (l_input_values)
-				across l_input_values as ic loop linked_tokens.force ("", ic.item) end
 			end
 
 				-- Rename locals if needed

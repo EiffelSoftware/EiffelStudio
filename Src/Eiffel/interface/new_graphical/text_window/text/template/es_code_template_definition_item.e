@@ -211,6 +211,21 @@ feature -- Change Element.
 			default_values_set: default_values = a_defaults
 		end
 
+	add_default_value (a_value: STRING_32)
+			-- Add value `a_value' to the list of default values, `default_values'.
+		local
+			l_values: like default_values
+		do
+			l_values := default_values
+			if L_values /= Void then
+				l_values.force (a_value)
+			else
+				create {ARRAYED_LIST [STRING_32]} l_values.make (2)
+				l_values.force (a_value)
+			end
+			default_values := l_values
+		end
+
 	set_name (a_name: STRING_32)
 			-- Set `name' with `a_name'
 		do

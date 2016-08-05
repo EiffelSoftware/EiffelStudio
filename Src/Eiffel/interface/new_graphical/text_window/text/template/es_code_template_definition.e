@@ -226,7 +226,6 @@ feature -- Visitor
 	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 					-- Process `l_as'.
 		do
---			create arguments.make_caseless (1)
 			create {ARRAYED_LIST [TUPLE [name:STRING_32; type: STRING_32]]} arguments.make (1)
 			is_argument := True
 			Precursor (l_as)
@@ -236,13 +235,13 @@ feature -- Visitor
 				if arguments.count > 1 then
 --					set_valid_template (False)
 						-- Now we accept multiple arguments
-						--! like (a:T1; b:T2; c:T3)
-						--! where the first argument `a' is the context,
-						--! if the type is ANY, it means the feature is a global
-						--! template, in other case it determine the context where the
-						--! template will be available.
-						--! the others arguments, if any, will be used a input arguments
-						--! where the default values will be filled with defaults if they exist.
+						--| like (a:T1; b:T2; c:T3)
+						--| where the first argument `a' is the context,
+						--| if the type is ANY, it means the feature is a global
+						--| template, in other case it determine the context where the
+						--| template will be available.
+						--| the others arguments, if any, will be used a input arguments
+						--| where the default values will be filled with defaults if they exist.
 				end
 			end
 			is_argument := False
@@ -297,6 +296,8 @@ feature -- Visitor
 		end
 
 	process_index_as (l_as: INDEX_AS)
+		local
+			l_str: STRING_32
 		do
 			-- TODO refactor
 			--! Extract hardcoded values into a constant class.
@@ -334,7 +335,13 @@ feature -- Visitor
 						not l_index_list.is_empty and then
 						attached {STRING_AS} l_index_list.at (1) as l_string
 					then
-						l_item.set_default_values (l_string.value_32.split (','))
+							-- remove white spaces if any.
+						across l_string.value_32.split (',') as ic  loop
+							l_str := ic.item
+							l_str.adjust
+							l_item.add_default_value (l_str)
+						end
+
 					end
 				end
 			end

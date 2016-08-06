@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wsf_standalone_websocket" uuid="7C83D4B4-39C9-4D27-941B-0F0AAD45122E" library_target="wsf_standalone_websocket">
+	<target name="wsf_standalone_websocket">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" full_class_checking="true" is_obsolete_routine_type="true" void_safety="none" syntax="provisional">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="connector_standalone" location="..\..\ewsgi\connectors\standalone\standalone.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
+		<library name="encoder" location="../../text/encoder/encoder.ecf" readonly="false"/>
+		<library name="error" location="../../../../../utility/general/error/error.ecf"/>
+		<library name="ewsgi" location="..\..\ewsgi\ewsgi.ecf"/>
+		<library name="http" location="../../../../../network/protocol/http/http.ecf"/>
+		<library name="httpd" location="..\..\ewsgi\connectors\standalone\lib\httpd\httpd.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="wsf" location="..\wsf.ecf"/>
+		<library name="wsf_standalone" location="standalone.ecf"/>
+		<cluster name="wsf_standalone_websocket" location=".\standalone_websocket\" recursive="true"/>
+	</target>
+</system>

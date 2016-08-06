@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			set_source (a_source)
 		end
 
-feature {WGI_STANDALONE_CONNECTOR, WGI_SERVICE} -- Nino
+feature {WGI_STANDALONE_CONNECTOR, WGI_SERVICE, WGI_STANDALONE_CONNECTOR_EXPORTER} -- Standalone
 
 	set_source (i: like source)
 		do

@@ -1,6 +1,6 @@
 note
 	description: "[
-			Standalone Web Server connector
+			Standalone Web Server connector.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create current standalone connector.
 		local
-			fac: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G]
+			fac: like request_handler_factory
 		do
 				-- Callbacks
 			create on_launched_actions
@@ -51,7 +51,7 @@ feature {NONE} -- Separate helper
 			a_server.set_observer (observer)
 		end
 
-	update_factory (conn: detachable separate WGI_STANDALONE_CONNECTOR [G]; fac: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G]; a_conf: separate HTTPD_CONFIGURATION)
+	update_factory (conn: detachable separate WGI_STANDALONE_CONNECTOR [G]; fac: separate WGI_HTTPD_REQUEST_HANDLER_FACTORY [G]; a_conf: like configuration)
 		do
 			fac.update_with (conn, a_conf)
 		end
@@ -63,11 +63,17 @@ feature {NONE} -- Separate helper
 
 feature -- Access
 
-	name: STRING_8 = "httpd"
+	name: STRING_8
 			-- Name of Current connector
+		once
+			Result := "httpd"
+		end
 
-	version: STRING_8 = "0.1"
+	version: STRING_8
 			-- Version of Current connector
+		once
+			Result := "1.0"
+		end
 
 feature -- Access
 
@@ -238,7 +244,7 @@ feature {NONE} -- Implementation: element change
 
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

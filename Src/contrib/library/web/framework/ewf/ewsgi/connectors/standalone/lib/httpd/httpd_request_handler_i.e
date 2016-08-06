@@ -202,6 +202,8 @@ feature -- Execution
 				n := n + 1
 				if n >= m then
 					is_next_persistent_connection_supported := False
+				elseif n > 1 and is_verbose then
+					log ("Reuse connection (" + n.out + ")", information_level)
 				end
 					-- FIXME: it seems to be called one more time, mostly to see this is done.
 				execute_request

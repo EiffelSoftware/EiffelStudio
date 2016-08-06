@@ -1,13 +1,3 @@
-note
-	title: Web Server Foundation
-	description: Core of the Eiffel Web Framework, used to build web server application.
-	tags: ewf,server,httpd,request,connector
-	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
-	link[license]: https://github.com/EiffelWebFramework/EWF/blob/master/LICENSE
-	link[source]: "Github" https://github.com/EiffelWebFramework/EWF
-	link[doc]: "Documentation" http://eiffelwebframework.github.io/EWF/
-
-end
 
 package wsf
 
@@ -36,6 +26,7 @@ project
 	wsf_standalone = "connector/standalone.ecf"
 	default_standalone = "default/standalone-safe.ecf"
 	default_standalone = "default/standalone.ecf"
+
 
 note
 	title: Web Server Foundation

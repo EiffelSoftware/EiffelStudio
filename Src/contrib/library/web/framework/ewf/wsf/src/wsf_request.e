@@ -261,10 +261,12 @@ feature -- Access: Input
 		local
 			l_input: WGI_INPUT_STREAM
 			n: INTEGER
+			buf_initial_size: INTEGER
 		do
 			if raw_input_data_recorded and then attached raw_input_data as d then
 				buf.append (d)
 			else
+				buf_initial_size := buf.count
 				l_input := input
 				if is_chunked_input then
 					from
@@ -286,73 +288,53 @@ feature -- Access: Input
 					end
 				end
 				if raw_input_data_recorded then
-					set_raw_input_data (buf)
+					set_raw_input_data (buf.substring (buf_initial_size + 1, buf.count)) 
+						-- Only the input data! And differente reference.
 				end
 			end
 		end
 
-	read_input_data_into_file (a_file: FILE)
+	read_input_data_into_file (a_medium: IO_MEDIUM)
 			-- retrieve the content from the `input' stream into `s'
 			-- warning: if the input data has already been retrieved
 			--          you might not get anything
 		require
-			a_file_is_open_write: a_file.is_open_write
+			a_medium_is_open_write: a_medium.is_open_write
 		local
 			s: STRING
 			l_input: WGI_INPUT_STREAM
 			l_raw_data: detachable STRING_8
-			len: NATURAL_64
 			nb, l_step: INTEGER
-			l_size: NATURAL_64
 		do
 			if raw_input_data_recorded and then attached raw_input_data as d then
-				a_file.put_string (d)
+				a_medium.put_string (d)
 			else
 				if raw_input_data_recorded then
 					create l_raw_data.make_empty
 				end
 				l_input := input
-				len := content_length_value
-
-				debug ("wsf")
-					io.error.put_string (generator + ".read_input_data_into_file (a_file) content_length=" + len.out + "%N")
-				end
 
 				from
-					l_size := 0
 					l_step := 8_192
 					create s.make (l_step)
 				until
 					l_step = 0 or l_input.end_of_input
 				loop
-					if len < l_step.to_natural_64 then
-						l_step := len.to_integer_32
+					l_input.append_to_string (s, l_step)
+					nb := l_input.last_appended_count
+
+					a_medium.put_string (s)
+					if l_raw_data /= Void then
+						l_raw_data.append (s)
 					end
-					if l_step > 0 then
-						l_input.append_to_string (s, l_step)
-						nb := l_input.last_appended_count
-						l_size := l_size + nb.to_natural_64
-						len := len - nb.to_natural_64
-
-						debug ("wsf")
-							io.error.put_string ("   append (s, " + l_step.out + ") -> " + nb.out + " (" + l_size.out + " / "+ content_length_value.out + ")%N")
-						end
-
-						a_file.put_string (s)
-						if l_raw_data /= Void then
-							l_raw_data.append (s)
-						end
-						s.wipe_out
-						if nb < l_step then
-							l_step := 0
-						end
+					s.wipe_out
+					if nb < l_step then
+						l_step := 0
 					end
 				end
-				a_file.flush
-				debug ("wsf")
-					io.error.put_string ("offset =" + len.out + "%N")
+				if attached {FILE} a_medium as f then
+					f.flush
 				end
-				check got_all_data: len = 0 end
 				if l_raw_data /= Void then
 					set_raw_input_data (l_raw_data)
 				end

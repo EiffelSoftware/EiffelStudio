@@ -14,7 +14,6 @@ inherit
 			make_from_execution as make_from_wgi_execution			
 		redefine
 			make,
-			execute,
 			clean,
 			is_valid_end_of_execution
 		end

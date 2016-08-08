@@ -2,7 +2,7 @@ note
     description: "[
         Code templates for Arrays of COMPARABLES.
     ]"
-    
+
 class ARRAY_TEMPLATE [T -> COMPARABLE]
 
 inherit
@@ -22,6 +22,18 @@ feature
             end
         end
 
+    slice_maximum (a: ARRAY [T]; low, high: INTEGER): T
+        note
+            title: "Slice Maximum of an array"
+            description: "Get the maximum of an array, where the interval is defined by default by array.lower |..| array.upper"
+            tags: "Algorithm, Maximum, ARRAY"
+            default: "a.lower, a.upper"
+        do
+            across low |..| high as i loop
+                Result := Result.max (a [i.item])
+            end
+        end    
+
     minimum (a: ARRAY [T]): T
         note
             title: "Minimum of an array"
@@ -33,5 +45,17 @@ feature
             end
         end
     
+
+    slice_minimum (a: ARRAY [T]; low, high: INTEGER): T
+        note
+            title: "Slice Minimum of an array"
+            description: "Get the minimum of an array, where the interval is defined by default by array.lower |..| array.upper"
+            tags: "Algorithm, Minimum, ARRAY"
+            default: "a.lower, a.upper"
+        do
+            across low |..| high as i loop
+                Result := Result.min (a [i.item])
+            end
+        end
 
 end

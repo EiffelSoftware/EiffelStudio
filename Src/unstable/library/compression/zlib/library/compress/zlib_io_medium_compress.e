@@ -13,9 +13,10 @@ inherit
 	ZLIB_COMPRESS
 
 create
-	io_medium_stream
+	io_medium_stream,
+	io_medium_stream_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	io_medium_stream (a_medium: IO_MEDIUM)
 		require
@@ -24,6 +25,20 @@ feature -- Initialization
 			medium_open_read_write: a_medium.is_open_read and then a_medium.is_open_write
 		do
 			make
+			intialize
+			io_medium := a_medium
+		ensure
+			medium_set: attached io_medium
+		end
+
+	io_medium_stream_size (a_medium: IO_MEDIUM; a_size: INTEGER)
+		require
+			not_connected: not is_connected
+			non_void_medium: a_medium /= Void
+			medium_open_read_write: a_medium.is_open_read and then a_medium.is_open_write
+			valid_size: a_size > 0
+		do
+			make_with_chunk_size (a_size)
 			intialize
 			io_medium := a_medium
 		ensure

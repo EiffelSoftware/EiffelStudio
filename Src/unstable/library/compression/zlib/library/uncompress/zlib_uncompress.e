@@ -12,7 +12,7 @@ inherit
 
 	UTIL_EXTERNALS
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -23,16 +23,31 @@ feature -- Initialization
 			create zlib
 
 			  	-- Setup a default chunk size
-			chunk := default_chunk
+			chunk_size := default_chunk
+		end
+
+	make_with_chunk_size (a_size: INTEGER)
+		require
+			valid_size: a_size > 0
+		do
+				-- Initialize zlib for decompression
+				-- Initialize zstream structure, inflate state
+			create zstream.make
+			zstream.set_available_input (0)
+			create zlib		-- Setup a user defined chunk size
+
+				-- A valid stream can use any chunk size(>0).
+			chunk_size := a_size
+		ensure
+			chunk_size_set: chunk_size = a_size
 		end
 
 	intialize
 		do
 				-- Initialize buffers
-			create input_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
-			create output_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk))
+			create input_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk_size))
+			create output_buffer.make_from_array (create {ARRAY[NATURAL_8]}.make_filled (0, 1, chunk_size))
 		end
-
 
 feature -- Access		
 
@@ -87,17 +102,6 @@ feature -- Access
 	last_write_elements: INTEGER
 			-- Number of elements written by `write'.
 
-feature -- Change Element
-
-	set_chunk (a_chunk: INTEGER)
-			-- Set `a_chunk' to `chunk'
-		do
-			chunk := a_chunk
-		ensure
-			chunk_set: chunk = a_chunk
-		end
-
-
 feature {NONE} -- Inflate Implementation
 
 	inflate
@@ -128,10 +132,10 @@ feature {NONE} -- Inflate Implementation
 							l_break := True
 						end
 						zstream.set_next_input (input_buffer.item)
-						zstream.set_available_output (Chunk)
+						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
 						zlib.inflate (zstream, False)
-						l_have := Chunk - zstream.available_output
+						l_have := chunk_size - zstream.available_output
 						write (l_have)
 						if last_write_elements /= l_have then
 							zlib.inflate_end (zstream)
@@ -139,13 +143,13 @@ feature {NONE} -- Inflate Implementation
 					until
 						zstream.available_output /= 0 or has_error
 					loop
-						zstream.set_available_output (Chunk)
+						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
 						zlib.inflate (zstream, False)
 							-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
 							-- Simply continue and provide more input data and more output space for the next inflate() call.
 						if zlib.last_operation /= zlib.z_buf_error then
-							l_have := Chunk - zstream.available_output
+							l_have := chunk_size - zstream.available_output
 							write (l_have)
 							if last_write_elements /= l_have then
 								zlib.inflate_end (zstream)
@@ -185,7 +189,7 @@ feature {NONE} -- Implementation
 	output_buffer: MANAGED_POINTER
 		-- Output buffer
 
-	chunk: INTEGER
+	chunk_size: INTEGER
 		 -- the buffer size for feeding data to and pulling data from the zlib routines.
 
 	default_chunk: INTEGER = 16384

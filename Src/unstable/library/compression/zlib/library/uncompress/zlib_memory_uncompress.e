@@ -14,7 +14,8 @@ inherit
 	ZLIB_UNCOMPRESS
 
 create
-	memory_stream
+	memory_stream,
+	memory_stream_with_size
 
 feature {NONE} -- Initialization
 
@@ -24,6 +25,19 @@ feature {NONE} -- Initialization
 			non_void_memory: a_memory /= Void
 		do
 			make
+			intialize
+			memory := a_memory
+		ensure
+			memory_set: attached memory
+		end
+
+	memory_stream_with_size (a_memory: MANAGED_POINTER; a_size: INTEGER)
+		require
+			not_connected: not is_connected
+			non_void_memory: a_memory /= Void
+			valid_size: a_size > 0
+		do
+			make_with_chunk_size (a_size)
 			intialize
 			memory := a_memory
 		ensure
@@ -42,7 +56,7 @@ feature -- Inflate
 	to_memory: MANAGED_POINTER
 			--  Inflate the compress data to memory content.
 		do
-			create Result.make (Chunk)
+			create Result.make (chunk_size)
 			create user_output_memory.make_empty
 			inflate
 			if attached user_output_memory as l_buffer then
@@ -86,7 +100,7 @@ feature	{NONE} -- Inflate Implementation
 			from
 				l_index := 1
 			until
-				l_index > a_buffer.count or else l_index > chunk
+				l_index > a_buffer.count or else l_index > chunk_size
 			loop
 				input_buffer.put_character(a_buffer.read_character (l_index - 1), l_index - 1)
 				l_index := l_index + 1

@@ -14,15 +14,28 @@ inherit
 	ZLIB_COMPRESS
 
 create
-	string_stream
+	string_stream,
+	string_stream_with_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	string_stream (a_string: STRING)
 		require
 			not_connected: not is_connected
 		do
 			make
+			intialize
+			string := a_string
+		ensure
+			string_set: attached string
+		end
+
+	string_stream_with_size (a_string: STRING; a_size: INTEGER)
+		require
+			not_connected: not is_connected
+			valid_size: a_size > 0
+		do
+			make_with_chunk_size (a_size)
 			intialize
 			string := a_string
 		ensure

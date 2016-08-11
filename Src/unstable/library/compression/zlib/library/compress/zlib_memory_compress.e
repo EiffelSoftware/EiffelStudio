@@ -14,15 +14,28 @@ inherit
 	ZLIB_COMPRESS
 
 create
-	memory_stream
+	memory_stream,
+	memory_stream_with_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	memory_stream (a_memory: MANAGED_POINTER)
 		require
 			not_connected: not is_connected
 		do
 			make
+			intialize
+			memory := a_memory
+		ensure
+			memory_set: attached memory
+		end
+
+	memory_stream_with_size (a_memory: MANAGED_POINTER; a_size: INTEGER)
+		require
+			not_connected: not is_connected
+			valid_size: a_size > 0
+		do
+			make_with_chunk_size (a_size)
 			intialize
 			memory := a_memory
 		ensure

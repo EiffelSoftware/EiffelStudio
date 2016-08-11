@@ -13,7 +13,7 @@ inherit
 
 	UTIL_EXTERNALS
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		do
@@ -26,6 +26,24 @@ feature -- Initialization
 
 				-- Setup a default compression level
 			compression_level := {ZLIB_CONSTANTS}.Z_default_compression
+		end
+
+	make_with_chunk_size (a_size: INTEGER)
+		require
+			valid_size: a_size > 0
+		do
+				-- Initialize zlib and zstream structure, default state
+			create zstream.make
+			create zlib
+
+				-- Setup a user defined chunk size
+				-- A valid stream can use any chunk size(>0).
+			chunk_size := a_size
+
+				-- Setup a default compression level
+			compression_level := {ZLIB_CONSTANTS}.Z_default_compression
+		ensure
+			chunk_size_set: chunk_size = a_size
 		end
 
 	intialize

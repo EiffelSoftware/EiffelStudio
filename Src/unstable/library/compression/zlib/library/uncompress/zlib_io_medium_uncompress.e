@@ -14,7 +14,8 @@ inherit
 	ZLIB_UNCOMPRESS
 
 create
-	io_medium_stream
+	io_medium_stream,
+	io_medium_stream_with_size
 
 feature {NONE} -- Initialization
 
@@ -25,6 +26,20 @@ feature {NONE} -- Initialization
 			medium_open_read: a_medium.is_open_read
 		do
 			make
+			intialize
+			io_medium := a_medium
+		ensure
+			medium_set: attached io_medium
+		end
+
+	io_medium_stream_with_size (a_medium: IO_MEDIUM; a_size: INTEGER)
+		require
+			not_connected: not is_connected
+			non_void_medium: a_medium /= Void
+			medium_open_read: a_medium.is_open_read
+			valid_size: a_size > 0
+		do
+			make_with_chunk_size (a_size)
 			intialize
 			io_medium := a_medium
 		ensure
@@ -89,7 +104,7 @@ feature	{NONE} -- Inflate Implementation
 			l_index: INTEGER
 			l_string: STRING
 		do
-			a_medium.read_stream (Chunk)
+			a_medium.read_stream (chunk_size)
 			l_string := a_medium.last_string
 			from
 				l_index := 1
@@ -99,7 +114,7 @@ feature	{NONE} -- Inflate Implementation
 				input_buffer.put_character (l_string.at (l_index), l_index - 1)
 				l_index := l_index + 1
 			end
-			if l_string.count < Chunk then
+			if l_string.count < chunk_size then
 				end_of_input := True
 			end
 			Result := l_index - 1

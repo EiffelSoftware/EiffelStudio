@@ -499,24 +499,36 @@ feature {NONE} -- Implementation
 			valid_start_index: string.valid_index (start_index)
 			valid_end_index: string.valid_index (end_index)
 			valid_start_index_end_index: start_index <= end_index
+		do
+			Result := key_name (string, start_index, end_index, valid_settings)
+		ensure
+			valid_setting: attached Result implies valid_settings.has (Result)
+		end
+
+	key_name (string: READABLE_STRING_32; start_index, end_index: INTEGER; keys: ITERABLE [READABLE_STRING_GENERAL]): detachable READABLE_STRING_32
+			-- A key from `keys' (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
 		local
 			n: INTEGER
 		do
 			n := end_index + 1 - start_index
 			across
-				valid_settings as c
+				keys as c
 			until
 				attached Result
 			loop
 				if
 					c.item.count = n and then
-					c.item.same_characters_general (string, start_index, end_index, 1)
+					c.item.same_characters (string, start_index, end_index, 1)
 				then
 					Result := c.item.as_string_32
 				end
 			end
 		ensure
-			valid_setting: attached Result implies attached valid_settings.item (Result)
+			valid_key: attached Result implies across keys as c some c.item.same_string (Result)  end
 		end
 
 	boolean_setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
@@ -560,6 +572,40 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_concurrency_setting: attached Result implies Result.same_string_general (s_concurrency)
+		end
+
+feature {NONE} -- Option names
+
+	boolean_options: SEARCH_TABLE [READABLE_STRING_32]
+			-- Names of options that have a boolean value.
+		once
+			create Result.make (15)
+			Result.force (o_assertions_precondition)
+			Result.force (o_assertions_postcondition)
+			Result.force (o_assertions_check)
+			Result.force (o_assertions_invariant)
+			Result.force (o_assertions_loop)
+			Result.force (o_assertions_supplier_precondition)
+			Result.force (o_is_attached_by_default)
+			Result.force (o_is_debug)
+			Result.force (o_is_full_class_checking)
+			Result.force (o_is_msil_application_optimize)
+			Result.force (o_is_obsolete_routine_type)
+			Result.force (o_is_optimize)
+			Result.force (o_is_profile)
+			Result.force (o_is_trace)
+			Result.force (o_is_warning)
+		end
+
+	valid_options: SEARCH_TABLE [READABLE_STRING_32]
+			-- Names of all known options except for those that are placed in a container (debug and warning).
+		once
+			Result := boolean_options.twin
+			Result.force (o_catcall_detection)
+			Result.force (o_description)
+			Result.force (o_namespace)
+			Result.force (o_syntax)
+			Result.force (o_void_safety)
 		end
 
 note

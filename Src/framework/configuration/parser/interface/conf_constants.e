@@ -123,6 +123,35 @@ feature -- Settings
 	s_use_cluster_name_as_namespace: STRING = "use_cluster_name_as_namespace"
 	s_use_all_cluster_name_as_namespace: STRING = "use_all_cluster_name_as_namespace"
 
+feature -- Option names
+
+	o_assertions: STRING_32 = "assertions"
+	o_assertions_precondition: STRING_32 = "precondition"
+	o_assertions_postcondition: STRING_32 = "postcondition"
+	o_assertions_check: STRING_32 = "check"
+	o_assertions_invariant: STRING_32 = "invariant"
+	o_assertions_loop: STRING_32 = "loop"
+	o_assertions_supplier_precondition: STRING_32 = "supplier_precondition"
+
+	o_catcall_detection: STRING_32 = "cat_call_detection"
+	o_debug_container: STRING_32 = "debug"
+	o_description: STRING_32 = "description"
+
+	o_is_attached_by_default: STRING_32 = "is_attached_by_default"
+	o_is_debug: STRING_32 = "debug"
+	o_is_full_class_checking: STRING_32 = "full_class_checking"
+	o_is_msil_application_optimize: STRING_32 = "msil_application_optimize"
+	o_is_obsolete_routine_type: STRING_32 = "is_obsolete_routine_type"
+	o_is_optimize: STRING_32 = "optimize"
+	o_is_profile: STRING_32 = "profile"
+	o_is_trace: STRING_32 = "trace"
+	o_is_warning: STRING_32 = "warning"
+
+	o_namespace: STRING_32 = "namespace"
+	o_syntax: STRING_32 = "syntax"
+	o_void_safety: STRING_32 = "void_safety"
+	o_warning_container: STRING_32 = "warning"
+
 feature -- Debug
 
 	unnamed_debug: STRING = "__unnamed_debug__"

@@ -73,9 +73,7 @@ feature -- Instruction
 
 	compilation_options (a_test: EW_EIFFEL_EWEASEL_TEST): LIST [STRING]
 			-- Options to be passed to Eiffel compiler,
-			-- if Eiffel compiler is run
-		local
-			l_temp_string: STRING
+			-- if Eiffel compiler is run.
 		do
 			create {ARRAYED_LIST [STRING]} Result.make (16)
 			if load_defaults then
@@ -87,16 +85,13 @@ feature -- Instruction
 			end
 			Result.extend (Specify_classes_ec_option)
 			if attached class_list as l_class_list then
-				l_temp_string := merged_with_separator (l_class_list, " ")
-				l_temp_string.prepend_character ('%"')
-				l_temp_string.append_character ('%"')
-				Result.extend (l_temp_string)
+				Result.extend (merged_with_separator (l_class_list, " "))
 			else
 				Result.extend (all_classes_ec_option)
 			end
 			if attached forced_rules_argument as l_forced_rules_argument then
 				Result.extend (Force_rules_ec_option)
-				Result.extend ("%"" + l_forced_rules_argument + "%"")
+				Result.extend (l_forced_rules_argument)
 			end
 		end
 
@@ -157,28 +152,28 @@ feature {NONE} -- Internal constants
 
 note
 	copyright: "[
-		Copyright (c) 1984-2015, University of Southern California and contributors.
+		Copyright (c) 1984-2016, University of Southern California and contributors.
 		All rights reserved.
 	]"
 	license: "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
-					This file is part of the EiffelWeasel Eiffel Regression Tester.
+		This file is part of the EiffelWeasel Eiffel Regression Tester.
 		
-					The EiffelWeasel Eiffel Regression Tester is free
-					software; you can redistribute it and/or modify it under
-					the terms of the GNU General Public License version 2 as published
-					by the Free Software Foundation.
+		The EiffelWeasel Eiffel Regression Tester is free
+		software; you can redistribute it and/or modify it under
+		the terms of the GNU General Public License version 2 as published
+		by the Free Software Foundation.
 		
-					The EiffelWeasel Eiffel Regression Tester is
-					distributed in the hope that it will be useful, but
-					WITHOUT ANY WARRANTY; without even the implied warranty
-					of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-					See the GNU General Public License version 2 for more details.
+		The EiffelWeasel Eiffel Regression Tester is
+		distributed in the hope that it will be useful, but
+		WITHOUT ANY WARRANTY; without even the implied warranty
+		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License version 2 for more details.
 		
-					You should have received a copy of the GNU General Public
-					License version 2 along with the EiffelWeasel Eiffel Regression Tester
-					if not, write to the Free Software Foundation,
-					Inc., 51 Franklin St, Fifth Floor, Boston, MA
+		You should have received a copy of the GNU General Public
+		License version 2 along with the EiffelWeasel Eiffel Regression Tester
+		if not, write to the Free Software Foundation,
+		Inc., 51 Franklin St, Fifth Floor, Boston, MA
 	]"
 
 end

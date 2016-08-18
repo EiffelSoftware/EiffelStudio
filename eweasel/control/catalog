@@ -1,4 +1,4 @@
---| Copyright (c) 1993-2015 University of Southern California and contributors.
+--| Copyright (c) 1993-2016 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General Public
 --| License version 2.
@@ -9,25 +9,25 @@ source_path	$BUGS
 
 
 -- Code analysis
-test	ca-simple-violation				codeanalysis001 tcf fail used_to_pass code_analysis
-test	ca-load-preferences				codeanalysis002 tcf fail used_to_pass code_analysis
-test	ca-forced-rules-preferences		codeanalysis003 tcf fail used_to_pass code_analysis
-test	ca-various-warnings				codeanalysis004 tcf fail used_to_pass code_analysis
+test	ca-simple-violation				codeanalysis001 tcf pass code_analysis
+test	ca-load-preferences				codeanalysis002 tcf pass code_analysis
+test	ca-forced-rules-preferences			codeanalysis003 tcf pass code_analysis
+test	ca-various-warnings				codeanalysis004 tcf pass code_analysis
 test	ca-024-bug-001					codeanalysis005 tcf fail code_analysis
 test	ca-071-bug-001					codeanalysis006 tcf fail code_analysis
-test	ca-080-bug-001					codeanalysis007 tcf fail used_to_pass code_analysis
-test	ca-030-001						codeanalysis008 tcf fail code_analysis
-test	ca-051-001						codeanalysis009 tcf fail code_analysis
-test	ca-059-001						codeanalysis010 tcf fail code_analysis
-test	ca-060-001						codeanalysis011 tcf fail code_analysis
-test	ca-063-001						codeanalysis012 tcf fail code_analysis
-test	ca-064-001						codeanalysis013 tcf fail code_analysis
-test	ca-065-001						codeanalysis014 tcf fail code_analysis
-test	ca-066-001						codeanalysis015 tcf fail code_analysis
-test	ca-079-001						codeanalysis016 tcf fail code_analysis
-test	ca-088-001						codeanalysis017 tcf fail code_analysis
-test	ca-089-001						codeanalysis018 tcf fail code_analysis
-test	ca-unread-variable-leftover				codeanalysis019 tcf fail used_to_pass code_analysis ca020
+test	ca-080-bug-001					codeanalysis007 tcf pass code_analysis
+test	ca-030-001						codeanalysis008 tcf pass code_analysis
+test	ca-051-001						codeanalysis009 tcf pass code_analysis
+test	ca-059-001						codeanalysis010 tcf pass code_analysis
+test	ca-060-001						codeanalysis011 tcf pass code_analysis
+test	ca-063-001						codeanalysis012 tcf pass code_analysis
+test	ca-064-001						codeanalysis013 tcf pass code_analysis
+test	ca-065-001						codeanalysis014 tcf pass code_analysis
+test	ca-066-001						codeanalysis015 tcf pass code_analysis
+test	ca-079-001						codeanalysis016 tcf pass code_analysis
+test	ca-088-001						codeanalysis017 tcf pass code_analysis
+test	ca-089-001						codeanalysis018 tcf pass code_analysis
+test	ca-unread-variable-leftover				codeanalysis019 tcf pass code_analysis ca020
 
 -- EiffelTime tests
 

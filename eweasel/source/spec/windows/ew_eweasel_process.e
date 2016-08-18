@@ -1,9 +1,10 @@
 note
-	description: "An independent process used by EiffelWeasel"
+	description: "An independent process used by EiffelWeasel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
-	date: "October 14, 1997"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EW_EWEASEL_PROCESS
 
@@ -52,8 +53,6 @@ feature -- Creation
 			arguments_not_void: args /= Void
 		local
 			cmd_line: STRING
-			k: INTEGER
-			l_success: BOOLEAN
 		do
 			debug
 				output.append_new_line
@@ -76,16 +75,11 @@ feature -- Creation
 			set_environment_variables (a_env_vars)
 			create cmd_line.make (1024)
 			cmd_line.append (cmd)
-			cmd_line.append_character (' ')
-			from
-				args.start
-				k := 1
-			until
-				args.after
+			across
+				args as argument
 			loop
-				cmd_line.append (args.item)
 				cmd_line.append_character (' ')
-				args.forth
+				append_command_line_argument (argument.item, cmd_line)
 			end
 			input_file_name := inf
 			output_file_name := outf
@@ -93,8 +87,8 @@ feature -- Creation
 			output_pipe_needed := outf = Void
 			run_hidden
 			spawn_with_console (cmd_line, current_working_path.name)
-			l_success := file_handle.close (child_input)
-			l_success := file_handle.close (child_output)
+			file_handle.close (child_input).do_nothing
+			file_handle.close (child_output).do_nothing
 
 			if savef /= Void then
 				create savefile.make_open_write (savef)
@@ -390,11 +384,82 @@ feature {NONE} -- Implementation
 			file_handle_not_void: Result /= Void
 		end
 
-note
+feature {NONE} -- Command-line
+
+	append_command_line_argument (argument: READABLE_STRING_8; line: STRING)
+			-- Append `argument' to command line `line' using Windows command-line escaping convention
+			-- used by Windows API call "CommandLineToArgvW".
+			-- The feature does not add any space before argument, this has to be done by the caller to separate arguments.
+		note
+			EIS:
+				"name=Everyone quotes command line arguments the wrong way",
+				"protocol=URI",
+				"src=https://blogs.msdn.microsoft.com/twistylittlepassagesallalike/2011/04/23/everyone-quotes-command-line-arguments-the-wrong-way/"
+		local
+			backslask_count: NATURAL
+		do
+			if argument.is_empty or else across argument as c some control_characters.has (c.item) end then
+					-- The argument needs to be escaped.
+					-- Add opening double quotation mark.
+				line.append_character ('"')
+				across
+					argument as c
+				loop
+					from
+						backslask_count := 0
+					until
+						c.after or else c.item /= '\'
+					loop
+						line.append_character ('\')
+						backslask_count := backslask_count + 1
+					end
+					if c.after then
+							-- Escape all backslashes, but let the terminating double quotation mark
+							-- we add below be interpreted as a metacharacter.
+						from
+						until
+							backslask_count > 0
+						loop
+							line.append_character ('\')
+							backslask_count := backslask_count - 1
+						end
+					elseif c.item = '"' then
+							-- Escape all backslashes and the following double quotation mark.
+						from
+							backslask_count := backslask_count + 1
+						until
+							backslask_count > 0
+						loop
+							line.append_character ('\')
+							backslask_count := backslask_count - 1
+						end
+						line.append_character ('"')
+					else
+							-- Backslashes aren't special here.
+						line.append_character (c.item)
+					end
+				end
+					-- Add closing double quotation mark.
+				line.append_character ('"')
+			else
+					-- The argument can be appended "as is"
+				line.append (argument)
+			end
+		end
+
+	control_characters: STRING = " %T%N%/11/%""
+			-- Characters that need escaping:
+			-- - space
+			-- - hotizontal tab
+			-- - new line
+			-- - vertical tab
+			-- - double quote
+
+;note
 	copyright: "[
-			Copyright (c) 1984-2007, University of Southern California and contributors.
+			Copyright (c) 1984-2016, University of Southern California and contributors.
 			All rights reserved.
-			]"
+		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -415,6 +480,5 @@ note
 			if not, write to the Free Software Foundation,
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA
 		]"
-
 
 end

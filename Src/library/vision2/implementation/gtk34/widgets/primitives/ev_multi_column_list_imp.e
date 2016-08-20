@@ -698,7 +698,6 @@ feature -- Element change
 		local
 			alignment: REAL
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
 			i: INTEGER
 		do
 			if an_alignment.is_left_aligned then
@@ -713,12 +712,11 @@ feature -- Element change
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			from
 				i := 0
-				a_gtk_c_str := "xalign"
 			until
 				i = {GTK}.g_list_length (a_cell_rend_list)
 			loop
 				a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, i)
-				{GTK2}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
+				{GTK2}.g_object_set_real_32 (a_cell_rend, {GTK_PROPERTIES}.xalign, alignment)
 				i := i + 1
 			end
 
@@ -730,7 +728,6 @@ feature -- Element change
 			-- Make `value' the new height of all the rows.
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
@@ -738,11 +735,9 @@ feature -- Element change
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 
 				-- Row height setting has to take the vertical spacing of the tree view in to account
-			a_gtk_c_str := "vertical-separator"
-			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{GTK2}.gtk_widget_style_get_integer (tree_view, {GTK_PROPERTIES}.vertical_separator, $a_vert_sep)
 
-			a_gtk_c_str := "height"
-			{GTK2}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{GTK2}.g_object_set_integer (a_cell_rend, {GTK_PROPERTIES}.height, value - a_vert_sep)
 			{GTK}.g_list_free (a_cell_rend_list)
 		end
 

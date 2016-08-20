@@ -336,7 +336,7 @@ feature {NONE} -- Accelerators
 			-- Connect key combination `an_accel' to this window.
 		local
 			acc_imp: detachable EV_ACCELERATOR_IMP
-			a_property, a_value: EV_GTK_C_STRING
+			a_value: EV_GTK_C_STRING
 			l_override_key: detachable STRING
 		do
 			acc_imp ?= an_accel.implementation
@@ -351,9 +351,8 @@ feature {NONE} -- Accelerators
 			end
 			if l_override_key /= Void then
 					-- `l_override_key' is usually used as a default window accelerator key, if we use it in a custom accelerator then we override the default setting
-				a_property := once "gtk-menu-bar-accel"
 				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>" + l_override_key
-				{GTK2}.g_object_set_string (app_implementation.default_gtk_settings, a_property.item, a_value.item)
+				{GTK2}.g_object_set_pointer (app_implementation.default_gtk_settings, {GTK_PROPERTIES}.gtk_menu_bar_accel, a_value.item)
 			end
 		end
 

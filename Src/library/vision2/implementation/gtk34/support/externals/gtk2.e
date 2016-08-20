@@ -2593,32 +2593,22 @@ feature -- Externals
 			"C signature (GtkWidget*): gboolean use <ev_gtk.h>"
 		end
 
-	frozen g_object_set_pointer (a_object: POINTER; a_property: POINTER; arg1: POINTER; arg2: POINTER)
+	frozen g_object_get_pointer (a_object: POINTER; a_property: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"[
+				EIF_POINTER v;
+				g_object_get ((gpointer) $a_object, (const gchar *) $a_property, &v, NULL);
+				return (EIF_POINTER) v;
+			]"
+		end
+
+	frozen g_object_set_pointer (a_object: POINTER; a_property: POINTER; arg1: POINTER)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
 			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gpointer) $arg1, NULL)"
-		end
-
-	frozen g_object_get_pointer (a_object: POINTER; a_property: POINTER; pointer_arg: TYPED_POINTER [POINTER])
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (void**) $pointer_arg, NULL)"
-		end
-
-	frozen g_object_set_string (a_object: POINTER; a_property: POINTER; string_arg: POINTER)
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_set ((gpointer) $a_object, (gchar*) $a_property, (gchar*) $string_arg, NULL)"
-		end
-
-	frozen g_object_get_string (a_object: POINTER; a_property: POINTER; string_arg: TYPED_POINTER [POINTER])
-		external
-			"C inline use <ev_gtk.h>"
-		alias
-			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL)"
 		end
 
 	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER): INTEGER
@@ -2639,18 +2629,18 @@ feature -- Externals
 			"g_object_set((gpointer) $a_object, (const gchar *) $a_property, $int_arg, NULL)"
 		end
 
-	frozen g_object_set_double (a_object: POINTER; a_property: POINTER; double_arg: REAL_64)
+	frozen g_object_set_real_32 (a_object: POINTER; a_property: POINTER; real_arg: REAL_32)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, (gfloat) $double_arg, NULL)"
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, (gfloat) $real_arg, NULL)"
 		end
 
 	frozen g_object_set_boolean (a_object: POINTER; a_property: POINTER; bool_arg: BOOLEAN)
 		external
 			"C inline use <ev_gtk.h>"
 		alias
-			"g_object_set((gpointer) $a_object, (gchar*) $a_property, (gboolean) $bool_arg, NULL)"
+			"g_object_set((gpointer) $a_object, (gchar*) $a_property, $bool_arg ? TRUE : FALSE, NULL)"
 		end
 
 	frozen signal_disconnect (a_object: POINTER; a_handler_id: INTEGER_32)

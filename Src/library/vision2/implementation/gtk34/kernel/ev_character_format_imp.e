@@ -211,7 +211,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_string (a_text_tag, family_string.item, a_text_tag_name.item)
+					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.family, a_text_tag_name.item)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -222,7 +222,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * {PANGO}.scale)
+					{GTK2}.g_object_set_integer (a_text_tag, {GTK_PROPERTIES}.size, height_in_points * {PANGO}.scale)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -239,7 +239,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, style_string.item, prop_value_int)
+					{GTK2}.g_object_set_integer (a_text_tag, {GTK_PROPERTIES}.style, prop_value_int)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -273,7 +273,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, weight_string.item, prop_value_int)
+					{GTK2}.g_object_set_integer (a_text_tag, {GTK_PROPERTIES}.weight, prop_value_int)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -287,7 +287,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
 					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, fcolor)
-					{GTK2}.g_object_set_pointer (a_text_tag, foreground_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
+					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.foreground_rgba, App_implementation.reusable_rgba_struct)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -300,7 +300,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
 
 					{GDK}.set_rgba_struct_with_bgr24 (App_implementation.reusable_rgba_struct, bcolor)
-					{GTK2}.g_object_set_pointer (a_text_tag, background_rgba_string.item, App_implementation.reusable_rgba_struct, default_pointer)
+					{GTK2}.g_object_set_pointer (a_text_tag, {GTK_PROPERTIES}.background_rgba, App_implementation.reusable_rgba_struct)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -315,7 +315,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_boolean (a_text_tag, strikethrough_string.item, is_striked_out)
+					{GTK2}.g_object_set_boolean (a_text_tag, {GTK_PROPERTIES}.strikethrough, is_striked_out)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -330,7 +330,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_boolean (a_text_tag, underline_string.item, is_underlined)
+					{GTK2}.g_object_set_boolean (a_text_tag, {GTK_PROPERTIES}.underline, is_underlined)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -341,7 +341,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag := {GTK2}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := {GTK2}.gtk_text_tag_new (a_text_tag_name.item)
-					{GTK2}.g_object_set_integer (a_text_tag, rise_string.item, vertical_offset)
+					{GTK2}.g_object_set_integer (a_text_tag, {GTK_PROPERTIES}.rise, vertical_offset)
 					{GTK2}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				{GTK2}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -363,16 +363,16 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			if (applicable_attributes.font_family or else applicable_attributes.font_height or else applicable_attributes.font_shape or else applicable_attributes.font_weight) then
 				if applicable_attributes.font_family then
 					propvalue := (name)
-					{GTK2}.g_object_set_string (Result, family_string.item, propvalue.item)
+					{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.family, propvalue.item)
 				end
 				if applicable_attributes.font_height then
-					{GTK2}.g_object_set_integer (Result, size_string.item, height_in_points * {PANGO}.scale)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.size, height_in_points * {PANGO}.scale)
 				end
 				if applicable_attributes.font_shape then
 					if shape = {EV_FONT_CONSTANTS}.shape_italic then
-						{GTK2}.g_object_set_integer (Result, style_string.item, 2)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.style, 2)
 					else
-						{GTK2}.g_object_set_integer (Result, style_string.item, 0)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.style, 0)
 					end
 				end
 				if applicable_attributes.font_weight then
@@ -381,19 +381,19 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					when
 						{EV_FONT_CONSTANTS}.weight_bold
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_bold)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.weight, {EV_FONT_IMP}.pango_weight_bold)
 					when
 						{EV_FONT_CONSTANTS}.weight_regular
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_normal)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.weight, {EV_FONT_IMP}.pango_weight_normal)
 					when
 						{EV_FONT_CONSTANTS}.weight_thin
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_ultra_light)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.weight, {EV_FONT_IMP}.pango_weight_ultra_light)
 					when
 						{EV_FONT_CONSTANTS}.weight_black
 					then
-						{GTK2}.g_object_set_integer (Result, weight_string.item, {EV_FONT_IMP}.pango_weight_heavy)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.weight, {EV_FONT_IMP}.pango_weight_heavy)
 					end
 				end
 			end
@@ -406,7 +406,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
-				{GTK2}.g_object_set_string (Result, foreground_string.item, propvalue.item)
+				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.foreground, propvalue.item)
 			end
 
 			if applicable_attributes.background_color then
@@ -416,90 +416,24 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				temp_string := (a_red + a_green + a_blue).to_hex_string
 				temp_string.keep_tail (6)
 				propvalue := once "#" +  temp_string
-				{GTK2}.g_object_set_string (Result, background_string.item, propvalue.item)
+				{GTK2}.g_object_set_pointer (Result, {GTK_PROPERTIES}.background, propvalue.item)
 			end
 
 			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
-					{GTK2}.g_object_set_boolean (Result, strikethrough_string.item, is_striked_out)
+					{GTK2}.g_object_set_boolean (Result, {GTK_PROPERTIES}.strikethrough, is_striked_out)
 				end
 				if applicable_attributes.effects_underlined then
 					if is_underlined then
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {PANGO}.underline_single_enum)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.underline, {PANGO}.underline_single_enum)
 					else
-						{GTK2}.g_object_set_integer (Result, underline_string.item, {PANGO}.underline_none_enum)
+						{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.underline, {PANGO}.underline_none_enum)
 					end
 				end
 				if applicable_attributes.effects_vertical_offset then
-					{GTK2}.g_object_set_integer (Result, rise_string.item, vertical_offset)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.rise, vertical_offset)
 				end
 			end
-		end
-
-	family_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("family")
-		end
-
-	size_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("size")
-		end
-
-	style_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("style")
-		end
-
-	weight_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("weight")
-		end
-
-	foreground_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("foreground")
-		end
-
-	background_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("background")
-		end
-
-	foreground_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("foreground-rgba")
-		end
-
-	background_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("background-rgba")
-		end
-
-	underline_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("underline")
-		end
-
-	strikethrough_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("strikethrough")
-		end
-
-	rise_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("rise")
 		end
 
 feature {NONE} -- Implementation

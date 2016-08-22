@@ -218,6 +218,7 @@ feature {NONE} -- Access
 						a_list.extend ([l_location.as_string_32, l_depth])
 					end
 				end
+				l_file.close
 			end
 		end
 

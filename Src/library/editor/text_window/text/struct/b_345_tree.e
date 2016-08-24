@@ -128,14 +128,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	root_node: TREE_NODE [like first_data];
+	root_node: TREE_NODE [attached like first_data];
 
 invariant
 	first_data_valid: attached first_data as l_first_data implies l_first_data.is_valid
 	last_data_valid: attached last_data as l_last_data implies l_last_data.is_valid
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

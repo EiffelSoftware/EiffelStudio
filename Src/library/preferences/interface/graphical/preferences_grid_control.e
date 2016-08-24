@@ -508,7 +508,7 @@ feature {NONE} -- Events
 					create vb
 					bb.extend (vb)
 					vb.set_border_width (10)
-					create lab.make_with_text ("Importing ...")
+					create lab.make_with_text (l_importing_preferences)
 					lab.align_text_left
 					vb.extend (lab)
 

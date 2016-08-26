@@ -234,7 +234,10 @@ feature {NONE} -- Template implementation.
 							i := 1
 							l_name := new_name (ic.key.as_string_32, i)
 						until
-							not l_locals.has (l_name) and then not l_arguments.has (l_name) and then not l_read_only_locals.has (l_name) and then not l_rename_table.has (l_name)
+							not l_locals.has (l_name) and then
+							not l_arguments.has (l_name) and then
+							(l_read_only_locals = Void or else not l_read_only_locals.has (l_name)) and then
+							not l_rename_table.has (l_name)
 						loop
 							i := i + 1
 							l_name := new_name (ic.key.as_string_32, i)
@@ -246,7 +249,7 @@ feature {NONE} -- Template implementation.
 							linked_tokens.replace_key (l_name, ic.key)
 						end
 					end
-				elseif l_locals /= Void and then l_locals.has (ic.key) then
+				elseif l_locals.has (ic.key) then
 						-- the current local variable conforms to the variable in the template
 					if not l_code_tb.string_type_as_conformance (ic.item, l_locals.item (ic.key), class_c) then
 							-- the current local variable does not conforms to the variable in the template
@@ -256,7 +259,10 @@ feature {NONE} -- Template implementation.
 							i := 1
 							l_name := new_name (ic.key.as_string_32, i)
 						until
-							not l_locals.has (l_name) and then not l_arguments.has (l_name) and then not l_read_only_locals.has (l_name) and then not l_rename_table.has (l_name)
+							not l_locals.has (l_name) and then
+							not l_arguments.has (l_name) and then
+							(l_read_only_locals = Void or else not l_read_only_locals.has (l_name)) and then
+							not l_rename_table.has (l_name)
 						loop
 							i := i + 1
 							l_name := new_name (ic.key.as_string_32, i)
@@ -275,7 +281,10 @@ feature {NONE} -- Template implementation.
 						i := 1
 						l_name := new_name (ic.key.as_string_32, i)
 					until
-						not l_locals.has (l_name) and then not l_arguments.has (l_name) and then not l_read_only_locals.has (l_name) and then not l_rename_table.has (l_name)
+						not l_locals.has (l_name) and then
+						not l_arguments.has (l_name) and then
+						not l_read_only_locals.has (l_name) and then
+						not l_rename_table.has (l_name)
 					loop
 						i := i + 1
 						l_name := new_name (ic.key.as_string_32, i)
@@ -293,7 +302,10 @@ feature {NONE} -- Template implementation.
 					i := 0
 					l_name := "l_result"
 				until
-					not l_locals.has (l_name) and then not l_arguments.has (l_name) and then not l_read_only_locals.has (l_name) and then not l_rename_table.has (l_name)
+					not l_locals.has (l_name) and then
+					not l_arguments.has (l_name) and then
+					(l_read_only_locals = Void or else not l_read_only_locals.has (l_name)) and then
+					not l_rename_table.has (l_name)
 				loop
 					i := i + 1
 					l_name := new_name ("l_result", i)

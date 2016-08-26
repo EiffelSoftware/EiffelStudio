@@ -56,6 +56,8 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		ensure
+			result_set: Result /= Void
 		end
 
 	locals (e_feature: E_FEATURE): STRING_TABLE [TYPE_AS]
@@ -97,12 +99,14 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		ensure
+			result_set: Result /= Void
 		end
 
-	read_only_locals: STRING_TABLE [STRING]
+	read_only_locals: detachable STRING_TABLE [STRING]
 			-- Last read only locals names.
 
-	read_only_locals_template: STRING_TABLE [STRING]
+	read_only_locals_template: detachable STRING_TABLE [STRING]
 			-- Last read only locals names from code template
 
 feature -- Process
@@ -165,7 +169,6 @@ feature -- AST Iterator
 
 feature -- Conformance
 
-
 	string_type_string_conformance (a_string: STRING_32; a_string2: STRING_32; a_class_c: CLASS_C): BOOLEAN
 			-- Is the type represented by `a_string' conforms_to type `a_string_2'
 		do
@@ -196,7 +199,6 @@ feature -- Conformance
 				Result := l_type_a.conform_to (a_class_c, s_type_a)
 			end
 		end
-
 
 	string_type_as_conformance (a_string: STRING_32; a_type_as: TYPE_AS; a_class_c: CLASS_C): BOOLEAN
 			-- Is the type represented by `a_string' conforms_to type `a_type_as'
@@ -231,7 +233,6 @@ feature -- Conformance
 			end
 		end
 
-
 feature {NONE} -- Template Implementation.
 
 	is_context_local: BOOLEAN
@@ -251,22 +252,25 @@ feature {NONE} -- Template Implementation.
 		end
 
 	set_object_test_local (a_name: READABLE_STRING_GENERAL)
+		local
+			l_read_only_locals: like read_only_locals
+			l_read_only_locals_template: like read_only_locals_template
 		do
 			if is_context_local then
-				if read_only_locals /= Void then
-					read_only_locals.force ("", a_name)
-				else
-					create read_only_locals.make_caseless (2)
-					read_only_locals.force ("", a_name)
+				l_read_only_locals := read_only_locals
+				if l_read_only_locals = Void then
+					create l_read_only_locals.make_caseless (1)
+					read_only_locals := l_read_only_locals
 				end
+				l_read_only_locals.force ("", a_name)
 			else
 				check not is_context_local end
-				if read_only_locals_template /= Void then
-					read_only_locals_template.force ("", a_name)
-				else
-					create read_only_locals_template.make_caseless (2)
-					read_only_locals_template.force ("", a_name)
+				l_read_only_locals_template := read_only_locals_template
+				if l_read_only_locals_template = Void then
+					create l_read_only_locals_template.make_caseless (1)
+					read_only_locals_template := l_read_only_locals_template
 				end
+				l_read_only_locals_template.force ("", a_name)
 			end
 		end
 

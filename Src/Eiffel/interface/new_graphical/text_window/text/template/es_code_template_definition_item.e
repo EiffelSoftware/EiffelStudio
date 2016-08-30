@@ -65,6 +65,8 @@ feature -- Access
 	code: detachable STRING_32
 			-- Code template associated.
 
+	context: detachable STRING
+
 	default_input_values: detachable STRING_TABLE [STRING_32]
 			-- Table with formal argument name and it's default input value.
 			--!To fill the table we use the order defined in the list of formal arguments and
@@ -128,7 +130,8 @@ feature -- Access
 			-- Argument fo the current feature, if any.
 		do
 			if attached internal_arguments as l_arguments and then
-			   attached l_arguments.at (1) as l_first_argument
+			   attached l_arguments.at (1) as l_first_argument and then
+			   attached context
 			then
 				create Result.make_caseless (1)
 				Result.force (l_first_argument.type, l_first_argument.name)
@@ -282,6 +285,14 @@ feature -- Change Element.
 			code := a_code
 		ensure
 			code_set: code = a_code
+		end
+
+	set_context (a_context: like context)
+			-- Set `context' with `a_context'.
+		do
+			context := a_context
+		ensure
+			context_set: context = a_context
 		end
 
 feature {NONE} -- Internal Representation.

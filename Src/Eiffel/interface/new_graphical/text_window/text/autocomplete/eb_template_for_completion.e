@@ -106,7 +106,7 @@ feature -- Access
 			l_tuple := update_locals_and_code
 			l_code := l_tuple.a_code
 			l_locals := l_tuple.a_locals
-			add_comments (l_code)
+--			add_comments (l_code)
 
 			if attached update_tokens (l_code, l_locals) as l_new_code then
 				Result := [l_locals, l_new_code, linked_tokens.current_keys]
@@ -187,6 +187,7 @@ feature {NONE} -- Template implementation.
 			end
 		end
 
+
 	update_locals_and_code: TUPLE [locals: STRING_32; code: STRING_32]
 			-- Update local and code definitions.
 		local
@@ -218,6 +219,7 @@ feature {NONE} -- Template implementation.
 			l_arguments := l_code_tb.arguments (e_feature)
 			l_code_tb.process_read_only_locals (e_feature)
 			l_read_only_locals := l_code_tb.read_only_locals
+
 
 
 			create l_rename_table.make_caseless (2)
@@ -426,6 +428,7 @@ feature -- Setting
 
 feature -- Implementation: Update tokens
 
+
 	update_tokens (a_code: STRING_32; a_locals: STRING_32): STRING_32
 			-- Update tokens: read only locals token found in
 			-- the template.
@@ -450,7 +453,6 @@ feature -- Implementation: Update tokens
 			i: INTEGER
 		do
 				-- Prepare table with renaming read only locals.
-
 			create l_code_tb
 			l_locals := l_code_tb.locals (e_feature)
 			l_arguments := l_code_tb.arguments (e_feature)

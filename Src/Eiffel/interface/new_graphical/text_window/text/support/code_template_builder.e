@@ -115,6 +115,10 @@ feature -- Process
 			if attached {BODY_AS} e_feature.ast.body as l_body then
 				l_body.process (Current)
 			end
+			if read_only_locals = Void then
+					-- Create an empty
+				create read_only_locals.make_caseless (1)
+			end
 		end
 
 	process_only_locals_template (a_code: STRING_32)
@@ -244,7 +248,7 @@ feature {NONE} -- Template Implementation.
 			epw: EIFFEL_PARSER_WRAPPER
 		do
 			create epw
-			epw.parse_with_option_32 (entity_feature_parser,{STRING_32} "feature " + a_code, create {CONF_OPTION}, True, Void)
+			epw.parse_with_option_32 (entity_feature_parser, {STRING_32} "feature " + a_code, create {CONF_OPTION}, True, Void)
 			if attached {FEATURE_AS} epw.ast_node as l_feature_node then
 				Result := l_feature_node
 			end

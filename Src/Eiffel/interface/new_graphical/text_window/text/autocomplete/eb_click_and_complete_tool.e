@@ -219,6 +219,7 @@ feature -- Analysis preparation
 
 			if l_stone /= Void then
 				build_template_list (l_stone)
+				build_global_template_list (l_stone)
 			end
 		ensure
 			same_cursor_position: a_cursor.pos_in_characters = old (a_cursor.pos_in_characters)
@@ -264,6 +265,44 @@ feature -- Analysis preparation
 						create l_template.make (l_code_template, a_stone, prev2.wide_image)
 						l_template.set_class_i (current_class_i)
 						insert_in_completion_possibilities (l_template)
+						l_templates.forth
+					end
+				end
+				completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
+				completion_possibilities.sort
+			end
+		end
+
+
+	build_global_template_list (a_stone: detachable FEATURE_STONE)
+			-- Build feature template completion list
+		local
+			l_templates: DS_BILINEAR [ES_CODE_TEMPLATE_DEFINITION_ITEM]
+			l_template:  EB_TEMPLATE_FOR_COMPLETION
+		do
+			if
+				a_stone /= Void and then
+				last_type = Void and then
+				attached code_template_catalog.service and then -- Is interface useable?
+				attached {SMART_TEXT} content as l_content and then
+				attached l_content.cursor.token.previous as prev and then not prev.wide_image.same_string_general (".")
+			then
+				l_templates := filter_global_templates
+				from
+					l_templates.start
+				until
+					l_templates.after
+				loop
+						-- Add template to the completion possibilities list
+					if
+						attached {ES_CODE_TEMPLATE_DEFINITION_ITEM} l_templates.item_for_iteration as l_code_template and then
+						attached l_code_template.title as l_title 
+					then
+						create l_template.make (l_code_template, a_stone, "")
+						l_template.set_class_i (current_class_i)
+						insert_in_completion_possibilities (l_template)
+						l_templates.forth
+					else
 						l_templates.forth
 					end
 				end
@@ -659,6 +698,36 @@ feature {NONE} -- Code template conformance
 				loop
 						-- Only load templates filter by context.
 					if l_cursor.item.is_valid_template and then has_type_conformance (l_cursor.item) then
+						if attached l_cursor.item.items as l_items then
+							across l_items as ic loop l_result.force_last (ic.item) end
+						end
+					end
+					l_cursor.forth
+				end
+			end
+			Result := l_result
+		end
+
+
+	filter_global_templates: DS_ARRAYED_LIST [ES_CODE_TEMPLATE_DEFINITION_ITEM]
+			-- List of code code templates filtered by conformance.
+		local
+			l_templates: like code_templates
+			l_result: DS_ARRAYED_LIST [ES_CODE_TEMPLATE_DEFINITION_ITEM]
+			l_cursor: DS_BILINEAR_CURSOR [ES_CODE_TEMPLATE_DEFINITION]
+		do
+			create l_result.make_default
+
+			l_templates := code_templates
+			if not l_templates.is_empty then
+				l_cursor := l_templates.new_cursor
+					from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+						-- Only load templates filter by context.
+					if l_cursor.item.is_valid_template  and then l_cursor.item.context = Void then
 						if attached l_cursor.item.items as l_items then
 							across l_items as ic loop l_result.force_last (ic.item) end
 						end

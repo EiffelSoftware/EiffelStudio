@@ -122,6 +122,7 @@ feature -- Visitor
 				-- features if it's a query or command.
 			is_context_set := True
 			create item.make (l_as, ast_match_list)
+			item.set_context (context)
 			if l_as.is_function then
 				item.mark_query
 				items.force (item)

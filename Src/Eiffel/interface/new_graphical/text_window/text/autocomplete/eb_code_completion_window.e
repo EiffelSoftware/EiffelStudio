@@ -34,7 +34,8 @@ inherit
 			show,
 			is_applicable_item,
 			exit,
-			on_scroll
+			on_scroll,
+			initialize_completion_possibilities
 		end
 
 	EB_CONSTANTS
@@ -309,6 +310,11 @@ feature {NONE} -- Initialization
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (remember_size_button))
 			accelerators.extend (l_acc)
+
+				--toggle_show_template
+			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_space), True, False, False)
+			l_acc.actions.extend (agent show_template)
+			accelerators.extend (l_acc)
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
@@ -347,6 +353,50 @@ feature -- Initialization
 			common_initialization (an_editor, class_name, a_remainder, completion_possibilities, True)
 		end
 
+	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
+			-- Initialize `sorted_names'  to completion possiblities
+		do
+			sorted_names := Void
+			template_sorted_names := Void
+			across  a_completion_possibilities as ic loop
+				if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
+					add_template_item (l_item)
+				else
+					add_item (ic.item)
+				end
+			end
+		end
+
+	add_template_item (a_item: EB_TEMPLATE_FOR_COMPLETION)
+			-- Add item `a_item' to the list of template_sorted_names.
+		local
+			l_templates: like template_sorted_names
+		do
+			l_templates := template_sorted_names
+			if l_templates = Void then
+				create l_templates.make_empty
+				l_templates.force (a_item, l_templates.count + 1)
+			else
+				l_templates.force (a_item, l_templates.count + 1)
+			end
+			template_sorted_names := l_templates
+		end
+
+	add_item (a_item: EB_NAME_FOR_COMPLETION)
+			-- Add item `a_item' to the list of sorted_names.
+		local
+			l_sorted_names: like sorted_names
+		do
+			l_sorted_names := sorted_names
+			if l_sorted_names = Void then
+				create l_sorted_names.make_empty
+				l_sorted_names.force (a_item, l_sorted_names.count + 1)
+			else
+				l_sorted_names.force (a_item, l_sorted_names.count + 1)
+			end
+			sorted_names := l_sorted_names
+		end
+
 feature -- Access
 
 	choice_list: EB_COMPLETION_LIST_GRID
@@ -357,6 +407,9 @@ feature -- Access
 
 	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- list of possible feature names sorted alphabetically
+
+	template_sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- list of possible template names sorted alphabetically.	
 
 	name_type: EB_NAME_FOR_COMPLETION
 
@@ -666,6 +719,37 @@ feature {NONE} -- Option behaviour
 			end
 		end
 
+	apply_template_completion_list
+			-- Apply filtering by template completion list.
+		local
+			local_name: like name_type
+			local_index: INTEGER
+			l_list: like choice_list
+		do
+				-- Hide the option bar box when we display the templates.
+			option_bar_box.hide
+			l_list := choice_list
+			build_template_list
+			resize_column_to_window_width
+		end
+
+	build_template_list
+			-- Build template list.
+		local
+			l_names: like template_sorted_names
+			l_list: like full_list
+		do
+			l_list := full_list
+			l_names := template_sorted_names
+			full_list := l_names
+				-- Empty full list if we don't have templates to show.
+			if full_list = Void then
+				create full_list.make_empty
+			end
+		ensure
+			full_list_not_void: full_list /= Void
+		end
+
 feature {NONE} -- Recyclable
 
 	internal_recycle
@@ -973,8 +1057,6 @@ feature {NONE} -- Implementation
 			l_screen: EV_RECTANGLE
 			l_comment_preview: EVS_LABEL
 			l_code_preview: EVS_LABEL
-			l_show_pretty: E_SHOW_PRETTY
-			s: STRING_32
 			l_lines: LIST [STRING_32]
 		do
 			if attached template_widget as l_widget then
@@ -989,9 +1071,11 @@ feature {NONE} -- Implementation
 			if attached {EB_TEMPLATE_FOR_COMPLETION} a_row.data as l_completion_template then
 				l_tt_text := l_completion_template.tooltip_text
 				l_cc_text := l_completion_template.code_texts.code
-				l_cc_text.left_adjust
 				l_cc_text.right_adjust
 
+					-- Workaround to indent the code in the tooltip.
+					--| TODO find a way to do Syntax Highlighting.
+				l_cc_text.prepend_string ("            ")
 				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
 				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
 				l_viewer.set_content (l_cc_text)
@@ -1100,6 +1184,14 @@ feature {NONE} -- Implementation
 			else
 				a_button.enable_select
 			end
+		end
+
+	show_template
+			-- Display code template
+		do
+				-- Render the templates.
+			    --| Should we disable the actions and accelerators?
+			apply_template_completion_list
 		end
 
 	show_tooltip (a_row: EV_GRID_ROW)

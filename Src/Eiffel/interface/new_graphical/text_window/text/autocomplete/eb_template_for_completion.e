@@ -65,12 +65,7 @@ feature {NONE} -- Initialization
 			target_name := a_target
 
 				-- Initialize linked tokens
-				-- from local definitions, if any.
-			if attached template.locals as l_locals then
-				linked_tokens := l_locals
-			else
-				create linked_tokens.make_caseless (0)
-			end
+			create linked_tokens.make_caseless (0)
 
 		ensure
 			template_set: template = a_template
@@ -103,6 +98,10 @@ feature -- Access
 			l_code: STRING_32
 			l_locals: STRING_32
 		do
+				-- Initialize linked token with locals, if any.
+			if attached template.locals then
+				linked_tokens.copy (template.locals)
+			end
 			l_tuple := update_locals_and_code
 			l_code := l_tuple.a_code
 			l_locals := l_tuple.a_locals
@@ -312,7 +311,8 @@ feature {NONE} -- Template implementation.
 			if not l_rename_table.is_empty then
 
 					-- Update template declaration with context variable name
-				if attached template.arguments as ll_arguments then
+					-- iff we have a context.
+				if attached template.context and attached template.arguments as ll_arguments then
 					across ll_arguments as ic loop
 						if l_template_declarations.has (ic.key) and then not ic.key.is_case_insensitive_equal ("Result") then
 							l_template_declarations.remove (ic.key)

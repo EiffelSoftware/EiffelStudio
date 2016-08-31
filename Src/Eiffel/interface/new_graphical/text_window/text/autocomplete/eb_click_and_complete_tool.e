@@ -265,8 +265,8 @@ feature -- Analysis preparation
 						create l_template.make (l_code_template, a_stone, prev2.wide_image)
 						l_template.set_class_i (current_class_i)
 						insert_in_completion_possibilities (l_template)
-						l_templates.forth
 					end
+					l_templates.forth
 				end
 				completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
 				completion_possibilities.sort

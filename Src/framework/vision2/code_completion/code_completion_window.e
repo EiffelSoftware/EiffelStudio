@@ -84,7 +84,7 @@ feature -- Initialization
 		do
 			code_completable := an_editor
 			remainder := a_remainder
-			sorted_names := a_completion_possibilities
+			initialize_completion_possibilities (a_completion_possibilities)
 			user_completion := a_complete_word
 			if a_name /= Void then
 				before_complete := a_name
@@ -112,6 +112,12 @@ feature -- Initialization
 			end
 		end
 
+	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
+			-- Initialize `sorted_names'  to completion possiblities
+		do
+			sorted_names := a_completion_possibilities
+		end
+
 feature -- Access
 
 	code_completable: detachable CODE_COMPLETABLE note option: stable attribute end
@@ -124,7 +130,7 @@ feature -- Access
 			-- Option bar box
 
 	sorted_names: SORTABLE_ARRAY [like name_type]
-			-- list of possible names sorted alphabetically
+			-- list of possible names sorted alphabetically.
 
 	before_complete: detachable STRING_32 note option: stable attribute end
 			-- Insertion string
@@ -808,6 +814,8 @@ feature {NONE} -- Implementation
 			l_names: like sorted_names
 			l_list: like full_list
 		do
+			option_bar_box.show
+				-- Call show, because we hide it to show templates.
 			l_list := full_list
 			l_names := sorted_names
 			if not has_child_node then
@@ -834,6 +842,7 @@ feature {NONE} -- Implementation
 
 	full_list: like sorted_names
 			-- Sorted full list of name.
+
 
 	has_child_node: BOOLEAN
 			-- Any child node?
@@ -1451,7 +1460,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

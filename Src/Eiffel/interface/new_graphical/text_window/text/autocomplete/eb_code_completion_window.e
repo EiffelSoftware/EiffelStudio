@@ -34,7 +34,8 @@ inherit
 			show,
 			is_applicable_item,
 			exit,
-			on_scroll
+			on_scroll,
+			initialize_completion_possibilities
 		end
 
 	EB_CONSTANTS
@@ -189,6 +190,13 @@ feature {NONE} -- Initialization
 				remember_size_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (remember_size_button)
+
+				-- "Options" label
+				--| TODO add tooltip.
+			create l_label.make_with_text (" Press 'Crtl + Space' to show templates")
+			l_hbox.extend (l_label)
+			l_hbox.disable_item_expand (l_label)
+
 		end
 
 	setup_option_buttons
@@ -302,6 +310,11 @@ feature {NONE} -- Initialization
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (remember_size_button))
 			accelerators.extend (l_acc)
+
+				--toggle_show_template
+			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_space), True, False, False)
+			l_acc.actions.extend (agent show_template)
+			accelerators.extend (l_acc)
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
@@ -340,6 +353,50 @@ feature -- Initialization
 			common_initialization (an_editor, class_name, a_remainder, completion_possibilities, True)
 		end
 
+	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
+			-- Initialize `sorted_names'  to completion possiblities
+		do
+			sorted_names := Void
+			template_sorted_names := Void
+			across  a_completion_possibilities as ic loop
+				if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
+					add_template_item (l_item)
+				else
+					add_item (ic.item)
+				end
+			end
+		end
+
+	add_template_item (a_item: EB_TEMPLATE_FOR_COMPLETION)
+			-- Add item `a_item' to the list of template_sorted_names.
+		local
+			l_templates: like template_sorted_names
+		do
+			l_templates := template_sorted_names
+			if l_templates = Void then
+				create l_templates.make_empty
+				l_templates.force (a_item, l_templates.count + 1)
+			else
+				l_templates.force (a_item, l_templates.count + 1)
+			end
+			template_sorted_names := l_templates
+		end
+
+	add_item (a_item: EB_NAME_FOR_COMPLETION)
+			-- Add item `a_item' to the list of sorted_names.
+		local
+			l_sorted_names: like sorted_names
+		do
+			l_sorted_names := sorted_names
+			if l_sorted_names = Void then
+				create l_sorted_names.make_empty
+				l_sorted_names.force (a_item, l_sorted_names.count + 1)
+			else
+				l_sorted_names.force (a_item, l_sorted_names.count + 1)
+			end
+			sorted_names := l_sorted_names
+		end
+
 feature -- Access
 
 	choice_list: EB_COMPLETION_LIST_GRID
@@ -350,6 +407,9 @@ feature -- Access
 
 	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- list of possible feature names sorted alphabetically
+
+	template_sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- list of possible template names sorted alphabetically.	
 
 	name_type: EB_NAME_FOR_COMPLETION
 
@@ -659,6 +719,37 @@ feature {NONE} -- Option behaviour
 			end
 		end
 
+	apply_template_completion_list
+			-- Apply filtering by template completion list.
+		local
+			local_name: like name_type
+			local_index: INTEGER
+			l_list: like choice_list
+		do
+				-- Hide the option bar box when we display the templates.
+			option_bar_box.hide
+			l_list := choice_list
+			build_template_list
+			resize_column_to_window_width
+		end
+
+	build_template_list
+			-- Build template list.
+		local
+			l_names: like template_sorted_names
+			l_list: like full_list
+		do
+			l_list := full_list
+			l_names := template_sorted_names
+			full_list := l_names
+				-- Empty full list if we don't have templates to show.
+			if full_list = Void then
+				create full_list.make_empty
+			end
+		ensure
+			full_list_not_void: full_list /= Void
+		end
+
 feature {NONE} -- Recyclable
 
 	internal_recycle
@@ -706,15 +797,30 @@ feature {NONE} -- Action handlers
 			agent (a_r: EV_GRID_ROW)
 			do
 				if show_completion_tooltip and then a_r.parent /= Void then
-						-- We check for row parent incase it has been subsequently removed from grid.
-					if attached contract_widget_from_row (a_r) as l_widget then
-							-- Tooltip window
-						if tooltip_window = Void then
-							create tooltip_window.make
+						-- We check for row parent incase it has been subsequently removed from grid
+
+					if attached {EB_TEMPLATE_FOR_COMPLETION} a_r.data then
+							-- Template tooltip
+						if attached template_widget_from_row (a_r) as l_widget then
+								-- Tooltip window
+							if tooltip_window = Void then
+								create tooltip_window.make
+							end
+							tooltip_window.set_popup_widget (l_widget.widget)
+							if is_displayed then
+								show_tooltip (a_r)
+							end
 						end
-						tooltip_window.set_popup_widget (l_widget.widget)
-						if is_displayed then
-							show_tooltip (a_r)
+					else
+						if attached contract_widget_from_row (a_r) as l_widget then
+								-- Tooltip window
+							if tooltip_window = Void then
+								create tooltip_window.make
+							end
+							tooltip_window.set_popup_widget (l_widget.widget)
+							if is_displayed then
+								show_tooltip (a_r)
+							end
 						end
 					end
 				end
@@ -765,6 +871,10 @@ feature {NONE} -- Implementation
 
 	contract_widget: TUPLE [widget: EV_WIDGET; comment: EVS_LABEL; viewer: ES_CONTRACT_VIEWER_WIDGET]
 			-- Reference to the tooltip widget.
+
+	template_widget: TUPLE [widget: EV_WIDGET; comment: EVS_LABEL; viewer: ES_TEMPLATE_VIEWER_WIDGET]
+			-- Reference to the tooltip widget.
+
 
 	new_contract_widget: like contract_widget
 			-- Create all the necessary widgets to display the tooltip.
@@ -827,6 +937,64 @@ feature {NONE} -- Implementation
 			Result := [l_v, l_comment_preview, l_viewer]
 		end
 
+
+	new_template_widget: like template_widget
+			-- Create all the necessary widgets to display the tooltip.
+		local
+			l_viewer: ES_TEMPLATE_VIEWER_WIDGET
+			l_v: EV_VERTICAL_BOX
+			l_h: EV_HORIZONTAL_BOX
+			l_padding: EV_CELL
+			l_sep: EV_HORIZONTAL_SEPARATOR
+			l_widget: EV_WIDGET
+			l_comment_preview: EVS_LABEL
+		do
+			create l_v
+
+			create l_padding
+			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_v.extend (l_padding)
+			l_v.disable_item_expand (l_padding)
+
+			create l_h
+			l_v.extend (l_h)
+			l_v.disable_item_expand (l_h)
+
+			create l_padding
+			l_padding.set_minimum_width ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_h.extend (l_padding)
+			l_h.disable_item_expand (l_padding)
+
+			create l_comment_preview
+			l_h.extend (l_comment_preview)
+
+			create l_padding
+			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_background_color (colors.tooltip_color)
+			l_v.extend (l_padding)
+			l_v.disable_item_expand (l_padding)
+			l_padding.set_minimum_width (300)
+
+				-- Separator
+			create l_sep
+			l_sep.set_minimum_height (2)
+			l_v.extend (l_sep)
+			l_v.disable_item_expand (l_sep)
+
+			l_comment_preview.align_text_left
+			l_comment_preview.is_text_wrapped := True
+			l_comment_preview.set_background_color (colors.tooltip_color)
+
+			create l_viewer.make
+			l_widget := l_viewer.widget
+			l_v.extend (l_widget)
+			color_propogator.propagate_colors (l_widget, Void, contract_background_color, Void)
+
+			Result := [l_v, l_comment_preview, l_viewer]
+		end
+
 	contract_widget_from_row (a_row: EV_GRID_ROW): like contract_widget
 			-- Contract widget from a grid row
 		require
@@ -858,9 +1026,61 @@ feature {NONE} -- Implementation
 
 			if attached {EB_FEATURE_FOR_COMPLETION} a_row.data as l_completion_feature then
 				l_tt_text := l_completion_feature.tooltip_text
+			elseif attached {EB_TEMPLATE_FOR_COMPLETION} a_row.data as l_completion_template then
+				l_tt_text := l_completion_template.tooltip_text
 			elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
 				l_tt_text := l_completion_class.tooltip_text
 			end
+			if l_tt_text /= Void and then not l_tt_text.is_empty then
+				l_tt_text.prune_all_trailing ('%N')
+				if l_tt_text.count > 150 then
+					l_tt_text.keep_head (147)
+					l_tt_text.append ("...")
+				end
+				l_comment_preview.set_text (l_tt_text)
+			else
+				l_comment_preview.set_text (interface_names.l_no_comment)
+			end
+		end
+
+
+	template_widget_from_row (a_row: EV_GRID_ROW): like template_widget
+			-- Contract widget from a grid row
+		require
+			a_row_set: a_row /= Void
+		local
+			l_viewer: ES_TEMPLATE_VIEWER_WIDGET
+			l_c: CLASS_C
+			l_f: E_FEATURE
+			l_tt_text: STRING_32
+			l_cc_text: STRING_32
+			l_screen: EV_RECTANGLE
+			l_comment_preview: EVS_LABEL
+			l_code_preview: EVS_LABEL
+			l_lines: LIST [STRING_32]
+		do
+			if attached template_widget as l_widget then
+				Result := l_widget
+			else
+				Result := new_template_widget
+				template_widget := Result
+			end
+			l_comment_preview := Result.comment
+			l_viewer := Result.viewer
+
+			if attached {EB_TEMPLATE_FOR_COMPLETION} a_row.data as l_completion_template then
+				l_tt_text := l_completion_template.tooltip_text
+				l_cc_text := l_completion_template.code_texts.code
+				l_cc_text.right_adjust
+
+					-- Workaround to indent the code in the tooltip.
+					--| TODO find a way to do Syntax Highlighting.
+				l_cc_text.prepend_string ("            ")
+				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
+				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
+				l_viewer.set_content (l_cc_text)
+			end
+
 			if l_tt_text /= Void and then not l_tt_text.is_empty then
 				l_tt_text.prune_all_trailing ('%N')
 				if l_tt_text.count > 150 then
@@ -966,6 +1186,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	show_template
+			-- Display code template
+		do
+				-- Render the templates.
+			    --| Should we disable the actions and accelerators?
+			apply_template_completion_list
+		end
+
 	show_tooltip (a_row: EV_GRID_ROW)
 			-- Show the floating tooltip
 		require
@@ -1050,25 +1278,32 @@ feature {NONE} -- Implementation
 				check
 					l_name_item_not_void: l_name_item /= Void
 				end
-				if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
-					if l_name_item.has_dot then
-						local_name := l_name_item.full_insert_name
-					else
-						local_name := (" ").as_string_32 + l_name_item.full_insert_name
-					end
+				if attached {EB_TEMPLATE_FOR_COMPLETION} l_name_item as l_code_complete then
+						-- Complete template
+
+					code_completable.complete_code_template_from_window (l_code_complete)
 				else
-					if l_name_item.has_dot then
-						local_name := l_name_item.insert_name
+					-- Complete feature
+					if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
+						if l_name_item.has_dot then
+							local_name := l_name_item.full_insert_name
+						else
+							local_name := (" ").as_string_32 + l_name_item.full_insert_name
+						end
 					else
-						local_name := (" ").as_string_32 + l_name_item.insert_name
+						if l_name_item.has_dot then
+							local_name := l_name_item.insert_name
+						else
+							local_name := (" ").as_string_32 + l_name_item.insert_name
+						end
 					end
-				end
-				code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
-				local_feature ?= l_name_item
-				if local_feature /= Void then
-					last_completed_feature_had_arguments := local_feature.has_arguments
-				else
-					last_completed_feature_had_arguments := False
+					code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder, continue_completion)
+					local_feature ?= l_name_item
+					if local_feature /= Void then
+						last_completed_feature_had_arguments := local_feature.has_arguments
+					else
+						last_completed_feature_had_arguments := False
+					end
 				end
 			end
 		end
@@ -1132,7 +1367,7 @@ feature {NONE} -- Implementation
 			-- Timer to show the tooltip
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -61,6 +61,7 @@ inherit
 			exit_complete_mode,
 			handle_tab_action,
 			complete_feature_call,
+			complete_template_call,
 			on_key_pressed,
 			calculate_completion_list_width,
 			prepare_auto_complete,
@@ -1893,6 +1894,108 @@ feature {NONE} -- Code completable implementation
 			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder, not a_continue_completion)
 		end
 
+
+	complete_template_call (a_template: EB_TEMPLATE_FOR_COMPLETION)
+		local
+			l_template: STRING_32
+			l_pos, l_feat_pos, l_edit_pos: INTEGER
+			l_locals: READABLE_STRING_GENERAL
+			txt: like text_displayed
+			l_local_pos, l_start_pos, p: INTEGER
+			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
+			l_smart_text: SMART_TEXT
+			l_region: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
+		do
+				-- local varianles and code from template
+			l_code_texts := a_template.code_texts
+
+			txt := text_displayed
+
+				-- Body
+			l_pos := txt.cursor.pos_in_characters
+			l_template := l_code_texts.code
+
+
+				-- TODO: remove previous token!
+			if
+				attached txt.cursor.token.previous as prev and then prev.wide_image.same_string_general (".") and then
+				attached prev.previous as prev2
+			then
+				p := l_pos - prev2.wide_image.count - 2 + 1
+				txt.select_region (p, l_pos)
+				txt.delete_selection
+				l_pos := p
+				txt.go_to (p)
+				l_pos := p
+			else
+				txt.insert_string ("%N")
+				l_pos := l_pos + 1
+			end
+
+			l_edit_pos := l_pos
+				-- Insert template body
+			txt.insert_string ("%T%T%T") -- identation for the first line.
+			txt.insert_string (l_template)
+			l_pos := l_pos + l_template.count
+			if {PLATFORM}.is_windows then
+				l_pos := l_pos + l_template.occurrences ('%N') -- missing %R ?
+			end
+
+				-- Locals
+			if attached a_template.e_feature as f then
+					-- FIXME: check for inline agent !
+				txt.find_feature_named (f.name_32)
+				if txt.found_feature then
+					l_locals := l_code_texts.locals
+					l_feat_pos := txt.cursor.pos_in_characters
+
+					txt.search_string_from_cursor ("local")
+					if txt.successful_search then
+						l_local_pos := txt.found_string_total_character_position
+					else
+						txt.cursor.go_to_position (l_feat_pos)
+						txt.search_string_from_cursor ("do")
+						if txt.successful_search then
+							l_start_pos := txt.found_string_total_character_position
+						end
+
+						txt.cursor.go_to_position (l_feat_pos)
+						txt.search_string_from_cursor ("once")
+						if txt.successful_search then
+							p := txt.found_string_total_character_position
+							l_start_pos := if l_start_pos = 0 then p else l_start_pos.min (p) end
+						end
+					end
+					if l_local_pos > 0 then
+						txt.cursor.go_to_position (l_local_pos + 5 + 2)  -- "local."
+						txt.insert_string (l_locals)
+						l_pos := l_pos + l_locals.count
+						l_edit_pos := l_edit_pos + l_locals.count
+						if {PLATFORM}.is_windows then
+							l_pos := l_pos + l_locals.occurrences ('%N') -- missing %R ?
+							l_edit_pos := l_edit_pos + l_locals.occurrences ('%N')
+						end
+					elseif l_start_pos > 0 then
+						txt.cursor.go_to_position (l_start_pos)
+						txt.insert_string ("%N%T%Tlocal%N")
+						txt.insert_string (l_locals)
+						txt.insert_string ("%N%T%T")
+						l_pos := l_pos + 9 + l_locals.count + 3
+						l_edit_pos :=  l_edit_pos + 9 + l_locals.count + 3
+					end
+				end
+			end
+			refresh
+			txt.cursor.go_to_position (l_pos + 1)
+--			txt.select_region (l_edit_pos, l_pos + 1)
+--			create l_smart_text.make
+--			create l_region.make (2)
+--			l_region.force ([l_edit_pos, l_pos])
+--			l_smart_text.enable_linked_editing (Current, l_edit_pos, l_region)
+			refresh
+
+		end
+
 	select_from_cursor_to_saved
 			-- Select from cursor position to saved cursor position
 		do
@@ -2001,4 +2104,4 @@ feature {NONE} -- Implementation: Internal cache
 			Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class SMART_EDITOR

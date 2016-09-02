@@ -1218,6 +1218,8 @@ feature {NONE} -- String matching
 		end
 
 	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER
+		require
+			not_empty: not table.is_empty
 		local
 			low, up, mid: INTEGER
 		do
@@ -1358,7 +1360,10 @@ feature {NONE} -- String matching
 			l_index_offset: INTEGER
 		do
 			l_full_list := full_list
-			if a_name /= Void and then not a_name.is_empty then
+			if
+				not l_full_list.is_empty and then
+				a_name /= Void and then not a_name.is_empty
+			then
 				create for_search.make (a_name)
 				if for_search.is_binary_searchable then
 					create Result.make (2, 1)

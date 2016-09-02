@@ -8,18 +8,32 @@ class
 
 inherit
 	DEBUG_OUTPUT
+		undefine
+			is_equal
+		end
+
+	COMPARABLE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN; a_start_pos, a_end_pos: INTEGER)
+	make (a_line: EDITOR_LINE; a_tokens: ITERABLE [EDITOR_TOKEN]; a_start_pos, a_end_pos: INTEGER)
+		local
+			s: STRING_32
 		do
-			text := a_token.wide_image
-			background_color := a_token.background_color
+			create s.make_empty
+			across
+				a_tokens as toks
+			loop
+				s.append (toks.item.wide_image)
+				background_color := toks.item.background_color
+			end
+			text := s
+
 			line := a_line
-			token := a_token
+			tokens := a_tokens
 			start_pos := a_start_pos
 			end_pos := a_end_pos
 		end
@@ -32,8 +46,8 @@ feature -- Access
 	line: EDITOR_LINE assign set_line
 			-- Associated editor line.
 
-	token: EDITOR_TOKEN --assign set_token
-			-- Associated token, mainly used to restore color.
+	tokens: ITERABLE [EDITOR_TOKEN]
+			-- Associated tokens, mainly used to restore color.
 
 	background_color: detachable EV_COLOR
 			-- Original background color, used to restore later.
@@ -43,6 +57,14 @@ feature -- Access
 
 	end_pos: INTEGER assign set_end_pos
 			-- End position of current token region.
+
+feature -- Comparison
+
+	is_less alias "<" (other: like Current): BOOLEAN
+			-- Is current object less than `other'?
+		do
+			Result := start_pos < other.start_pos
+		end
 
 feature -- Element change
 
@@ -68,6 +90,11 @@ feature -- Element change
 
 feature -- Status report
 
+	is_included (a_pos_in_text: INTEGER): BOOLEAN
+		do
+			Result := start_pos <= a_pos_in_text and a_pos_in_text <= end_pos
+		end
+
 	debug_output: STRING_32
 			-- String that should be displayed in debugger to represent `Current'.
 		do
@@ -86,9 +113,11 @@ feature -- Status report
 			Result.append_character (']')
 			Result.append_character (' ')
 			Result.append ("tok=#")
-			Result.append (token.pos_in_text.out)
-			Result.append ("+")
-			Result.append (token.length.out)
+			across
+				tokens as toks
+			loop
+				Result.append (toks.item.pos_in_text.out)
+			end
 		end
 
 ;note

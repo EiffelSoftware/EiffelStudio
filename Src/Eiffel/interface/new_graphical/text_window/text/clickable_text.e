@@ -201,6 +201,66 @@ feature -- Load Text handling
 			new_line
 		end
 
+	update_token_pos_in_text_from (a_pos_in_text: INTEGER)
+			-- Update tokens `{EDITOR_TOKEN}.pos_in_text' value starting from `a_pos_in_text'.
+		local
+			l_old_pos: INTEGER
+			l_line, l_prev_line: detachable EDITOR_LINE
+			l_ref, tok: detachable EDITOR_TOKEN
+			p: INTEGER
+		do
+			l_old_pos := cursor.pos_in_text
+
+			cursor.go_to_position (a_pos_in_text)
+			l_line := cursor.line
+
+			from
+				l_prev_line := l_line
+			until
+				l_prev_line = Void or else l_ref /= Void
+			loop
+				l_line := l_prev_line
+				if l_line.first_token.pos_in_text > 0 then
+					l_ref := l_line.first_token
+				elseif l_line.eol_token.pos_in_text > 0 then
+					l_ref := l_line.eol_token
+				end
+				l_prev_line := l_prev_line.previous
+			end
+
+			if l_ref /= Void then
+				p := l_ref.pos_in_text
+				tok := l_ref
+				from
+				until
+					tok = Void
+				loop
+					tok.set_pos_in_text (p)
+					p := p + tok.length
+					tok := tok.next
+					if attached {EDITOR_TOKEN_EOL} tok then
+						l_line := l_line.next
+						p := p + tok.length + 1 -- 1 for the NL $N
+						if l_line = Void then
+							tok := Void
+						else
+							tok := l_line.first_token
+						end
+					elseif tok = Void then
+						l_line := l_line.next
+						p := p + 1 -- 1 for the NL $N
+						if l_line /= Void then
+							tok := l_line.first_token
+						end
+					elseif attached {EDITOR_TOKEN_MARGIN} tok then
+						tok := tok.next
+					end
+				end
+			end
+
+			cursor.go_to_position (l_old_pos)
+		end
+
 feature -- Initialization
 
 	load_string (a_string: STRING)
@@ -362,8 +422,9 @@ feature {NONE} -- Implementation
 	use_feature_click_tool: BOOLEAN
 			-- Does this text use a feature click tool ?
 
-	current_cursor: CURSOR
-			-- Cursor pointing position where to resume current structured loading.
+-- NOT USED !
+--	current_cursor: CURSOR
+--			-- Cursor pointing position where to resume current structured loading.
 
 	last_processed_line: like line
 			-- last line processed while reading a TEXT_FORMATTER
@@ -486,7 +547,7 @@ feature {NONE} -- Private Constants
 	from_text: INTEGER = 2;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

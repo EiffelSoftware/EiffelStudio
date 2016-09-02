@@ -2038,9 +2038,9 @@ feature {NONE} -- Implementation
 			Result  := ch = ' ' or ch = '%T'
 		end
 
-	begin_line_tokens: detachable LINKED_LIST[EDITOR_TOKEN] note option: stable attribute end
+	begin_line_tokens: detachable LINKED_LIST [EDITOR_TOKEN] note option: stable attribute end
 
-	end_line_tokens: detachable LINKED_LIST[EDITOR_TOKEN] note option: stable attribute end
+	end_line_tokens: detachable LINKED_LIST [EDITOR_TOKEN] note option: stable attribute end
 
 	record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN)
 			-- store token reference before new line with new tokens is created
@@ -2198,7 +2198,7 @@ invariant
 	tabulation_symbol_valid: tabulation_symbol.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

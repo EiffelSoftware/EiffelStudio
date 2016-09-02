@@ -11,25 +11,32 @@ inherit
 		redefine
 			prepare,
 			terminate,
-			on_insertion,
-			on_deletion
+			on_editing,
+			propagate_on_insertion,
+			propagate_on_deletion
 		end
+
+	TEXT_OBSERVER
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_text: EDITABLE_TEXT; a_editor: like editor; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+	make (a_text: EDITABLE_TEXT; a_editor: like editor; a_pos_in_text: INTEGER; a_regions: LIST [TUPLE [start_pos,end_pos: INTEGER]]; a_token_text: detachable READABLE_STRING_GENERAL)
 			-- Handle linked edit at position `a_pos_in_text' if set, otherwise at editor cursor.
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
 		do
 			editor := a_editor
 			text := a_text
-			get_tokens (a_pos_in_text, a_regions)
+			if a_token_text = Void then
+				get_cursor_tokens (a_pos_in_text, a_regions)
+			else
+				get_tokens (a_pos_in_text, a_regions, a_token_text)
+			end
 		end
 
-feature {NONE} -- Internal Access
+feature {ES_CODE_EDITOR_LINKING} -- Internal Access
 
 	editor: EDITABLE_TEXT_PANEL
 			-- Associated editor component.
@@ -37,6 +44,15 @@ feature {NONE} -- Internal Access
 
 	text: EDITABLE_TEXT
 			-- Associated text component.
+
+feature -- Management
+
+	associated_manager: detachable ES_CODE_EDITOR_LINKED_EDITING_MANAGER assign set_associated_manager
+
+	set_associated_manager (m: like associated_manager)
+		do
+			associated_manager := m
+		end
 
 feature -- Access: UI
 
@@ -51,12 +67,36 @@ feature -- Access: Tokens
 	linked_tokens: detachable ARRAYED_LIST [ES_CODE_EDITOR_LINKED_ITEM]
 			-- Linked tokens and associated data (positions, ...).
 
+	sort_linked_tokens
+			-- Sort `linked_tokens' by start location.
+		local
+			l_sorter: QUICK_SORTER [ES_CODE_EDITOR_LINKED_ITEM]
+		do
+			if attached linked_tokens as lst then
+				create l_sorter.make (create {COMPARABLE_COMPARATOR [ES_CODE_EDITOR_LINKED_ITEM]})
+				l_sorter.sort (lst)
+			end
+		end
+
 feature -- Status report			
 
-	is_active: BOOLEAN
-			-- Is linked editing?
+	is_active_at (a_pos_in_text: INTEGER): BOOLEAN
 		do
-			Result := editing_token /= Void and then attached linked_tokens as lst and then not lst.is_empty
+			if attached linked_tokens as lst and then not lst.is_empty then
+				if is_always_linked_editing_from_first_occurrence then
+					Result := attached editing_token as e and then e.is_included (a_pos_in_text)
+				else
+					across
+						lst as ic
+					until
+						Result
+					loop
+						if ic.item.is_included (a_pos_in_text) then
+							Result := True
+						end
+					end
+				end
+			end
 		end
 
 	is_always_linked_editing_from_first_occurrence: BOOLEAN = True
@@ -113,10 +153,15 @@ feature -- Execute
 					debug ("editor")
 						dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.text + "%"%N")
 					end
-					l_item.token.set_background_color (bgcol)
+					across
+						l_item.tokens as toks
+					loop
+						toks.item.set_background_color (bgcol)
+					end
 				end
 				refresh_related_lines (True)
 				txt.cursor.go_to_position (pos)
+				text.add_edition_observer (Current)
 			end
 		end
 
@@ -126,6 +171,7 @@ feature -- Execute
 			pos: INTEGER
 			l_item: detachable ES_CODE_EDITOR_LINKED_ITEM
 		do
+			text.remove_observer (Current)
 			if attached linked_tokens as lst and then attached text as txt then
 				debug ("editor")
 					dbg_print ("Finish linked editing [nb tokens:" + lst.count.out + "].%N")
@@ -139,7 +185,11 @@ feature -- Execute
 						debug ("editor")
 							dbg_print (" - " + l_item.debug_output + " -> %"" + l_item.text + "%"%N")
 						end
-						l_item.token.set_background_color (l_item.background_color)
+						across
+							l_item.tokens as toks
+						loop
+							toks.item.set_background_color (l_item.background_color)
+						end
 					end
 					refresh_related_lines (False)
 					curs.go_to_position (pos)
@@ -176,27 +226,61 @@ feature -- Execute
 			end
 		end
 
-	on_insertion (a_size_diff: INTEGER)
+	propagate_on_insertion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
 			-- <Precursor>
 		do
-			execute	(insert_char_op, a_size_diff)
+			execute	(a_cursor, a_size_diff)
 		end
 
-	on_deletion (a_size_diff: INTEGER)
+	propagate_on_deletion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
 			-- <Precursor>
 		do
-			execute	(delete_char_op, a_size_diff)
+			execute	(a_cursor, a_size_diff)
+		end
+
+	on_editing (a_pos_in_text: INTEGER; a_size_diff: INTEGER)
+			-- <Precursor>
+		local
+			l_item: ES_CODE_EDITOR_LINKED_ITEM
+		do
+			if attached editing_token as e then
+				print ("'")
+				print (e.text)
+				print ("' ")
+				across
+					e.tokens as ic
+				loop
+					ic.item.set_pos_in_text (ic.item.pos_in_text + a_size_diff)
+				end
+			end
+			print ("@" + a_pos_in_text.out + " diff=" + a_size_diff.out + "%N")
+			across
+				linked_tokens as lst
+			loop
+				l_item := lst.item
+				if l_item.end_pos <= a_pos_in_text then
+						-- Ignore
+					print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => KEEP.%N")
+				else
+					print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => ")
+					if l_item.start_pos >= a_pos_in_text then
+						l_item.start_pos := l_item.start_pos + a_size_diff
+					end
+					l_item.end_pos := l_item.end_pos + a_size_diff
+					print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ").%N")
+				end
+			end
 		end
 
 feature {NONE} -- Execution		
 
-	execute (op: INTEGER; a_size_diff: INTEGER)
+	execute (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
 		local
 			tok: detachable EDITOR_TOKEN
 			e_diff, diff,off: INTEGER
 			txt: like text
 			s,cs: STRING_32
-			pos,l_old_editing_start_pos,l_old_editing_end_pos,k: INTEGER
+			pos, l_old_editing_start_pos, l_old_editing_end_pos, k: INTEGER
 			l_item: ES_CODE_EDITOR_LINKED_ITEM
 		do
 			if
@@ -208,20 +292,20 @@ feature {NONE} -- Execution
 				l_old_editing_end_pos := l_editing_token.end_pos
 				l_editing_token.end_pos := l_editing_token.end_pos + a_size_diff
 
-				pos := txt.cursor.pos_in_text
+				pos := a_cursor.pos_in_text
 
 				debug ("editor")
-					dbg_print ("%NEnter-> Cursor at position " + txt.cursor.pos_in_text.out + "%N")
+					dbg_print ("%NEnter-> Cursor at position " + a_cursor.pos_in_text.out + "%N")
 				end
 
 
-				tok := txt.cursor.token.previous
+				tok := a_cursor.token.previous
 				update_pos_in_text (tok)
 				if
 					tok.pos_in_text <= 0 or else
 					not is_valid_editing_position (tok.pos_in_text)
 				then
-					tok := txt.cursor.token
+					tok := a_cursor.token
 					update_pos_in_text (tok)
 					if
 						tok.pos_in_text <= 0 or else
@@ -230,19 +314,10 @@ feature {NONE} -- Execution
 						tok := Void
 					end
 				end
+				if attached associated_manager as mng then
+					mng.on_linked_editing (Current, pos, a_size_diff)
+				end
 
---				if is_valid_editing_position (txt.cursor.pos_in_text) then
---					tok := txt.cursor.token
---				else
---					tok := txt.cursor.token.previous
---					update_pos_in_text (tok)
---					if
---						tok.pos_in_text <= 0 or else
---						not is_valid_editing_position (tok.pos_in_text)
---					then
---						tok := Void
---					end
---				end
 				if tok /= Void then
 					cs := tok.wide_image
 					k := tok.pos_in_text
@@ -250,8 +325,6 @@ feature {NONE} -- Execution
 						k := l_editing_token.start_pos
 					end
 
---					l_editing_token.start_pos := k
---					l_editing_token.end_pos := l_editing_token.start_pos + tok.length
 					e_diff := tok.length - (l_old_editing_end_pos - l_old_editing_start_pos)
 					check e_diff = a_size_diff end
 					diff := a_size_diff
@@ -267,9 +340,7 @@ feature {NONE} -- Execution
 						lst as ic
 					loop
 						l_item := ic.item
---						tok := l_item.token
 						if is_editing_token (l_item) then
---							diff := e_diff
 							debug ("editor")
 								dbg_print ("!" + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+",pos="+pos.out+"] Editing !!!%N")
 							end
@@ -278,8 +349,6 @@ feature {NONE} -- Execution
 								pos := pos + diff
 							end
 
---							l_item.start_pos := l_item.start_pos + off
---							l_item.end_pos := l_item.end_pos + off
 							l_item.text := s
 
 							off := off + diff
@@ -297,6 +366,9 @@ feature {NONE} -- Execution
 								dbg_print (" " + l_item.debug_output + " [off=" + off.out + ",diff="+diff.out+",pos="+pos.out+"] %"" + l_item.text + "%" replaced with %""+ s +"%".%N")
 							end
 							txt.replace_for_replace_all (l_item.start_pos, l_item.end_pos, s)
+							if attached associated_manager as mng then
+								mng.on_linked_editing (Current, l_item.start_pos, diff)
+							end
 							l_item.text := s
 
 							off := off + diff
@@ -317,14 +389,14 @@ feature {NONE} -- Execution
 						end
 					end
 					refresh_related_lines (True)
-					txt.cursor.go_to_position (pos)
+					a_cursor.go_to_position (pos)
 
 					debug ("editor")
-						dbg_print ("Exit-> Cursor at position " + txt.cursor.pos_in_text.out + "%N")
+						dbg_print ("Exit-> Cursor at position " + a_cursor.pos_in_text.out + "%N")
 					end
 				else
 					debug ("editor")
-						dbg_print ("Execute linked editing outside editing token %"" + txt.cursor.token.wide_image + "%"!!!%N")
+						dbg_print ("Execute linked editing outside editing token %"" + a_cursor.token.wide_image + "%"!!!%N")
 					end
 					terminate
 				end
@@ -347,6 +419,8 @@ feature {NONE} -- Execution
 			end
 		end
 
+feature {ES_CODE_EDITOR_LINKED_EDITING} -- Implementation
+
 	refresh_related_lines (l_is_editing: BOOLEAN)
 			-- Refresh related lines.
 			-- If `l_is_editing' is True, the linked behavior is active,
@@ -356,37 +430,40 @@ feature {NONE} -- Execution
 			pos: INTEGER
 			bgcolor: detachable EV_COLOR
 		do
-			if attached linked_tokens as lst then
-				if l_is_editing then
-					bgcolor := background_color
-					create bgcolor.make_with_8_bit_rgb (210, 255, 210)
-				else
-					bgcolor := Void
-				end
-				txt := text
-				pos := txt.cursor.pos_in_text
+			if attached associated_manager as mng then
 				across
-					lst as ic
+					mng.items as lnk
 				loop
-					if ic.item.start_pos > 0 then
-						txt.cursor.go_to_position (ic.item.start_pos)
-						txt.cursor.token.set_background_color (bgcolor)
-						editor.redraw_current_line
-					elseif attached ic.item.line as l_line and then l_line.is_valid then
-						txt.go_i_th (l_line.index)
-						editor.redraw_current_line
-					else
-						editor.redraw_current_screen
+					if attached {ES_CODE_EDITOR_LINKED_EDITING} lnk.item as l_item then
+						if attached l_item.linked_tokens as lst then
+							if l_is_editing then
+								bgcolor := background_color
+								create bgcolor.make_with_8_bit_rgb (210, 255, 210)
+							else
+								bgcolor := Void
+							end
+							txt := l_item.text
+							pos := txt.cursor.pos_in_text
+							across
+								lst as ic
+							loop
+								if ic.item.start_pos > 0 then
+									txt.cursor.go_to_position (ic.item.start_pos)
+									txt.cursor.token.set_background_color (bgcolor)
+									l_item.editor.redraw_current_line
+								elseif attached ic.item.line as l_line and then l_line.is_valid then
+									txt.go_i_th (l_line.index)
+									l_item.editor.redraw_current_line
+								else
+									l_item.editor.redraw_current_screen
+								end
+							end
+							txt.cursor.go_to_position (pos)
+						end
 					end
 				end
-				txt.cursor.go_to_position (pos)
 			end
 		end
-
-feature {NONE} -- Implementation: constants
-
-	insert_char_op: INTEGER = 1
-	delete_char_op: INTEGER = 2
 
 feature {NONE} -- Implementation
 
@@ -414,9 +491,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_tokens (a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+	get_tokens (a_pos_in_text: INTEGER; a_regions: LIST [TUPLE [start_pos,end_pos: INTEGER]]; a_token_text: READABLE_STRING_GENERAL)
 			-- Get linked token from `a_pos_in_text' if set, or from `cursor'.
 			-- If `a_regions' is set and not empty, only take into account token inside those regions.
+		require
+			a_token_text_provided: a_token_text /= Void and then not a_token_text.is_whitespace
+			a_regions /= Void and then not a_regions.is_empty
 		local
 			pos: INTEGER
 			l_curr_line: EDITOR_LINE
@@ -425,7 +505,6 @@ feature {NONE} -- Implementation
 			l_line: EDITOR_LINE
 			l_linked_tokens: like linked_tokens
 			txt: like text
-			l_editing_token: like editing_token
 			l_item: ES_CODE_EDITOR_LINKED_ITEM
 		do
 			create l_linked_tokens.make (1)
@@ -435,40 +514,29 @@ feature {NONE} -- Implementation
 			pos := txt.cursor.pos_in_text
 			l_curr_line := txt.cursor.line
 			l_curr_token := txt.cursor.token
+
 			if l_curr_token.pos_in_text + l_curr_token.length > a_pos_in_text then
 					-- Select previous!
 				l_curr_token := l_curr_token.previous
 			end
-			if
-				l_curr_token.is_text and then
-				attached l_curr_token.wide_image as l_varname
-			then
-				create l_editing_token.make (l_curr_line, l_curr_token, l_curr_token.pos_in_text, l_curr_token.pos_in_text + l_curr_token.length)
-				editing_token := l_editing_token
-				l_linked_tokens.force (l_editing_token)
 
-				debug ("editor")
-					dbg_print ("%NGet tokens %"" + l_varname + "%":%N")
-					dbg_print (" -!" + l_editing_token.debug_output + " -> %"" + l_editing_token.text + "%"%N")
-				end
-
+			across
+				a_regions as ic
+			loop
+				txt.cursor.go_to_position (ic.item.start_pos)
 				from
-					l_line := l_curr_line
-					tok := l_curr_token.next
+					l_line := txt.cursor.line
+					l_line.update_token_information
+					tok := txt.cursor.token
+					update_pos_in_text (tok)
 				until
-					tok = Void or l_line = Void--or attached {EDITOR_TOKEN_EOL} t
+					tok = Void or l_line = Void or else tok.pos_in_text > ic.item.end_pos
 				loop
-					if
-						is_token_inside_regions (tok, a_regions) and then
-						tok.wide_image.same_string (l_varname) -- case sensitive to exclude class name!
-					then
+					if a_token_text.same_string (tok.wide_image) then
 						if tok.previous.wide_image.same_string (".") then
-								-- Avoid case such as `foo.foo`
+								-- Avoid case like "foo.foo"
 						else
-							create l_item.make (l_line, tok, tok.pos_in_text, tok.pos_in_text + tok.length)
-							debug ("editor")
-								dbg_print (" - " + l_item.debug_output + " -> %"" + tok.wide_image + "%"%N")
-							end
+							create l_item.make (l_line, <<tok>>, tok.pos_in_text, tok.pos_in_text + tok.length)
 							l_linked_tokens.force (l_item)
 						end
 					end
@@ -477,55 +545,75 @@ feature {NONE} -- Implementation
 						if l_line /= Void then
 							l_line := l_line.next
 							if l_line /= Void then
+								l_line.update_token_information
 								tok := l_line.first_token
 							end
 						end
 					end
-				end
-				from
-					tok := l_curr_token.previous
-					l_line := l_curr_line
-				until
-					tok = Void or l_line = Void
-				loop
-					if
-						is_token_inside_regions (tok, a_regions) and then
-						tok.wide_image.same_string (l_varname) -- case sensitive to exclude class name!
-					then
-						create l_item.make (l_line, tok, tok.pos_in_text, tok.pos_in_text + tok.length)
-						debug ("editor")
-							dbg_print (" - " + l_item.debug_output + " -> %"" + tok.wide_image + "%"%N")
-						end
-						l_linked_tokens.put_front (l_item)
-					end
-					tok := tok.previous
-					if tok = Void then
-						if l_line /= Void then
-							l_line := l_line.previous
-							if l_line /= Void then
-								from
-									tok := l_line.first_token
-								until
-									attached {EDITOR_TOKEN_EOL} tok or tok = Void
-								loop
-									if tok /= Void then
-										tok := tok.next
-									end
-								end
-							end
-						end
+					if tok /= Void then
+						update_pos_in_text (tok)
 					end
 				end
 			end
+			sort_linked_tokens
+			editing_token := l_linked_tokens.first
+
 			if
 				is_always_linked_editing_from_first_occurrence and then
-				attached l_linked_tokens.first as e and then e /= l_editing_token 
+				not l_linked_tokens.is_empty and then
+				attached l_linked_tokens.first as e
 			then
 					-- Allow editing only from first token for now!
 				editing_token := e
-				txt.cursor.go_to_position (e.end_pos)
-				txt.select_region (e.start_pos, e.end_pos)
+				--				txt.cursor.go_to_position (e.end_pos)
+				--				txt.select_region (e.start_pos, e.end_pos)
+
 			end
+			txt.cursor.go_to_position (pos)
+
+			if attached {SMART_TEXT} txt as stxt then
+--				print (stxt.full_debug_output)
+				across
+					l_linked_tokens as ic
+				loop
+					print ("[")
+					print (a_token_text.out)
+					print ("] ===> ")
+					print (ic.item.debug_output)
+					print ("%N")
+				end
+
+			end
+
+		end
+
+	get_cursor_tokens (a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+			-- Get linked token from `a_pos_in_text' if set, or from `cursor'.
+			-- If `a_regions' is set and not empty, only take into account token inside those regions.
+		local
+			l_curr_token: EDITOR_TOKEN
+		do
+			l_curr_token := text.cursor.token
+			if l_curr_token.pos_in_text + l_curr_token.length > a_pos_in_text then
+					-- Select previous!
+				l_curr_token := l_curr_token.previous
+			end
+			if
+				l_curr_token.is_text and then
+				attached l_curr_token.wide_image as l_varname
+			then
+				get_tokens (a_pos_in_text, a_regions, l_varname)
+			end
+--			if
+--				is_always_linked_editing_from_first_occurrence and then
+--				not l_linked_tokens.is_empty and then
+--				attached l_linked_tokens.first as e and then e /= l_editing_token
+--			then
+--					-- Allow editing only from first token for now!
+--				editing_token := e
+--				txt.cursor.go_to_position (e.end_pos)
+--				txt.select_region (e.start_pos, e.end_pos)
+--			end
 		end
 
 	is_token_inside_regions (tok: EDITOR_TOKEN; a_regions: detachable ITERABLE [TUPLE [start_pos,end_pos: INTEGER]]): BOOLEAN

@@ -649,7 +649,8 @@ feature {NONE} -- Handle mouse clicks
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
 		do
 			if attached text_displayed as txt then
-				if has_selection and then
+				if
+					has_selection and then
 					is_word (wide_string_selection)
 	--| Alternative code using cursor.
 	--				attached txt.cursor as l_cursor and then
@@ -657,18 +658,12 @@ feature {NONE} -- Handle mouse clicks
 	--				tok.is_text and then is_word (tok.wide_image)
 				then
 					if a_regions = Void then
-						txt.enable_linked_editing (Current, a_pos_in_text, current_feature_scope_as_regions (txt))
+						txt.enable_linked_editing (Current, a_pos_in_text, current_feature_scope_as_regions (txt), Void)
 					else
-						txt.enable_linked_editing (Current, a_pos_in_text, a_regions)
+						txt.enable_linked_editing (Current, a_pos_in_text, a_regions, Void)
 					end
 				else
 					txt.disable_linked_editing
-				end
-				if
-					attached txt.linked_editing as e and then
-					e.is_active
-				then
-					e.prepare
 				end
 			end
 		end
@@ -1894,18 +1889,19 @@ feature {NONE} -- Code completable implementation
 			text_displayed.complete_feature_call (completed, is_feature_signature, appended_character, remainder, not a_continue_completion)
 		end
 
-
 	complete_template_call (a_template: EB_TEMPLATE_FOR_COMPLETION)
+			-- Insert code template `a_template'.
 		local
 			l_template: STRING_32
-			l_pos, l_feat_pos, l_edit_pos: INTEGER
 			l_locals: READABLE_STRING_GENERAL
+			l_pos, l_feat_pos: INTEGER
 			txt: like text_displayed
 			l_local_pos, l_start_pos, p: INTEGER
 			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
-			l_smart_text: SMART_TEXT
-			l_region: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
+			l_regions: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
+			l_nb_cr: INTEGER
 		do
+
 				-- local varianles and code from template
 			l_code_texts := a_template.code_texts
 
@@ -1930,70 +1926,102 @@ feature {NONE} -- Code completable implementation
 			else
 				txt.insert_string ("%N")
 				l_pos := l_pos + 1
+				if {PLATFORM}.is_windows then
+					l_pos := l_pos + 1 -- Inserted CR  %R
+				end
 			end
 
-			l_edit_pos := l_pos
+			create l_regions.make (2)
+
 				-- Insert template body
-			txt.insert_string ("%T%T%T") -- identation for the first line.
+			txt.insert_string ("%T%T%T") -- indentation for the first line. FIXME: compute it from existing code.
 			txt.insert_string (l_template)
-			l_pos := l_pos + l_template.count
 			if {PLATFORM}.is_windows then
-				l_pos := l_pos + l_template.occurrences ('%N') -- missing %R ?
+				l_nb_cr := l_template.occurrences ('%N') -- For the missing %R.
+			else
+				l_nb_cr := 0
 			end
+--			l_pos := l_pos + l_template.count + l_nb_cr
+			l_regions.force ([l_pos, l_pos + 3 + l_template.count + l_nb_cr]) -- code region
 
 				-- Locals
 			if attached a_template.e_feature as f then
 					-- FIXME: check for inline agent !
-				txt.find_feature_named (f.name_32)
+				txt.find_feature_named (f.name_32) -- Cursor is moved.
 				if txt.found_feature then
 					l_locals := l_code_texts.locals
+
+					if {PLATFORM}.is_windows then
+						l_nb_cr := l_locals.occurrences ('%N') -- For the missing %R.
+					else
+						l_nb_cr := 0
+					end
+
 					l_feat_pos := txt.cursor.pos_in_characters
 
+					txt.cursor.go_to_position (l_feat_pos)
 					txt.search_string_from_cursor ("local")
 					if txt.successful_search then
 						l_local_pos := txt.found_string_total_character_position
-					else
-						txt.cursor.go_to_position (l_feat_pos)
-						txt.search_string_from_cursor ("do")
-						if txt.successful_search then
-							l_start_pos := txt.found_string_total_character_position
-						end
+					end
 
-						txt.cursor.go_to_position (l_feat_pos)
-						txt.search_string_from_cursor ("once")
-						if txt.successful_search then
-							p := txt.found_string_total_character_position
-							l_start_pos := if l_start_pos = 0 then p else l_start_pos.min (p) end
+					txt.cursor.go_to_position (l_feat_pos)
+					txt.search_string_from_cursor ("do")
+					if txt.successful_search then
+						l_start_pos := txt.found_string_total_character_position
+					end
+
+					txt.cursor.go_to_position (l_feat_pos)
+					txt.search_string_from_cursor ("once")
+					if txt.successful_search then
+						p := txt.found_string_total_character_position
+						if l_start_pos = 0 then
+							l_start_pos := p
+						else
+							l_start_pos := l_start_pos.min (p)
 						end
 					end
-					if l_local_pos > 0 then
-						txt.cursor.go_to_position (l_local_pos + 5 + 2)  -- "local."
-						txt.insert_string (l_locals)
-						l_pos := l_pos + l_locals.count
-						l_edit_pos := l_edit_pos + l_locals.count
-						if {PLATFORM}.is_windows then
-							l_pos := l_pos + l_locals.occurrences ('%N') -- missing %R ?
-							l_edit_pos := l_edit_pos + l_locals.occurrences ('%N')
+
+					if l_start_pos > 0 then
+						if l_local_pos > 0 and l_local_pos < l_start_pos then
+								-- FIXME: insert at the end of locals...
+							txt.cursor.go_to_position (l_local_pos + 5 + 2)  -- "local."
+							txt.insert_string (l_locals)
+							l_pos := l_pos + l_locals.count + l_nb_cr
+							l_regions.force ([l_local_pos + 5 + 2, l_local_pos + 5 + 2 + l_locals.count + l_nb_cr]) -- code region
+						else
+								-- no "local" found!
+							txt.cursor.go_to_position (l_start_pos)
+							txt.insert_string ("%N%T%Tlocal%N") -- 3 + 5 + 1 = 9 characters.
+							l_local_pos := l_start_pos + 3
+							txt.insert_string (l_locals)
+							txt.insert_string ("%N%T%T")
+							if {PLATFORM}.is_windows then
+								l_nb_cr := l_nb_cr + 3 -- See inserted '%N' during the operation.
+							end
+							l_pos := l_pos + 9 + l_locals.count + 3
+
+							l_regions.force ([l_start_pos + 3 + 5 + 1, l_start_pos + 3 + 5 + 1 + l_locals.count + 3 + l_nb_cr]) -- locals region
 						end
-					elseif l_start_pos > 0 then
-						txt.cursor.go_to_position (l_start_pos)
-						txt.insert_string ("%N%T%Tlocal%N")
-						txt.insert_string (l_locals)
-						txt.insert_string ("%N%T%T")
-						l_pos := l_pos + 9 + l_locals.count + 3
-						l_edit_pos :=  l_edit_pos + 9 + l_locals.count + 3
 					end
 				end
 			end
-			refresh
-			txt.cursor.go_to_position (l_pos + 1)
---			txt.select_region (l_edit_pos, l_pos + 1)
---			create l_smart_text.make
---			create l_region.make (2)
---			l_region.force ([l_edit_pos, l_pos])
---			l_smart_text.enable_linked_editing (Current, l_edit_pos, l_region)
-			refresh
 
+			txt.cursor.go_to_position (l_pos + 1)
+			refresh_now
+
+				-- Update pos in text for tokens.
+			across
+				l_regions as ic
+			loop
+				p := p.min (ic.item.start_pos)
+			end
+			txt.update_token_pos_in_text_from (p)
+
+			if True then
+				txt.enable_linked_editing (Current, l_pos, l_regions, l_code_texts.linked_token)
+				refresh_now
+			end
 		end
 
 	select_from_cursor_to_saved

@@ -92,7 +92,7 @@ feature -- Access
 			-- Full template to insert in editor
 
 	code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_tokens: ARRAY [READABLE_STRING_GENERAL]]
-			-- Local and code from template and linked tokens.
+			-- Locals declaration text and code text from template, and also the linked token strings to be linked.
 		local
 			l_tuple: TUPLE [a_locals: STRING_32; a_code: STRING_32]
 			l_code: STRING_32

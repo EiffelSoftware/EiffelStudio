@@ -1092,6 +1092,79 @@ void c_set_number(EIF_POINTER data_obj, EIF_INTEGER num)
 #endif
 }
 
+EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_RCVTIMEO options */
+{
+#ifdef EIF_VMS
+	size_t asize;
+#else
+	socklen_t asize;
+#endif
+
+#ifdef EIF_WINDOWS
+	int arg;
+	asize = sizeof(arg);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (char *) &arg, &asize));
+	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+#else
+	struct timeval tv;
+	asize = sizeof(struct timeval);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (struct timeval *) &tv, &asize));
+	return (EIF_INTEGER) tv.tv_sec;
+#endif
+}
+
+void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
+	/* set socket SO_RCV_TIMEO option to recv_timeout_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) 1000 * recv_timeout_seconds; /* Timeout in milliseconds */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = recv_timeout_seconds;  /* Timeout in seconds */
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
+#endif
+}
+
+EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_SNDTIMEO options */
+{
+#ifdef EIF_VMS
+	size_t asize;
+#else
+	socklen_t asize;
+#endif
+
+#ifdef EIF_WINDOWS
+	int arg;
+	asize = sizeof(arg);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (char *) &arg, &asize));
+	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+#else
+	struct timeval tv;
+	asize = sizeof(struct timeval);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (struct timeval *) &tv, &asize));
+	return (EIF_INTEGER) tv.tv_sec;
+#endif
+}
+
+void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
+	/* set socket SO_RCV_TIMEO option to send_timeout_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) 1000 * send_timeout_seconds; /* Timeout in milliseconds */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = send_timeout_seconds;  /* Timeout in seconds */
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
+#endif
+}
+
+
 void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
 	/*x shut down a socket with `how' modality */
 {
@@ -1111,7 +1184,7 @@ void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
     int     decc$get_sdc(int __descrip_no);
 # endif
 
-#if !defined VMS_MULTINET && defined EIF_VMS_VER && EIF_VMS_VER < 70000000 
+# if !defined VMS_MULTINET && defined EIF_VMS_VER && EIF_VMS_VER < 70000000 
 /* and no ioctl is available... */
 /*  actually, ioctl may be available. We don't know what version the object
     will run on, so must call lib$find_image_symbol...
@@ -1125,8 +1198,8 @@ static int my_ioctl (int sd, int r, void * argp) {
     printf("my_ioctl(%d, %d, %d) called\n", sd, r, *(int*)argp);
     return -1;
 }
-#   endif
 # endif /* VMS_MULTINET || __DECC_VER ( > 5.x) */
+#endif /* EIF_VMS */
 
 #ifdef DEBUG
 int debug_sockopt(s)

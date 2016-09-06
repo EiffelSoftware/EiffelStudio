@@ -486,7 +486,7 @@ feature {NONE} -- Process Vision2 Events
 						token := cur.token
 						if token /= Void then
 							if
-								attached {EDITOR_TOKEN_KEYWORD} token.previous as l_keyword_token 
+								attached {EDITOR_TOKEN_KEYWORD} token.previous as l_keyword_token
 							then
 								tok := l_keyword_token
 								if
@@ -555,7 +555,6 @@ feature {NONE} -- Process Vision2 Events
 	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
-			t: EDITOR_TOKEN_KEYWORD
 			code: INTEGER
 			token: EDITOR_TOKEN
 			syntax_completed: BOOLEAN
@@ -578,15 +577,19 @@ feature {NONE} -- Process Vision2 Events
 						token := text_displayed.cursor.token
 						if token /= Void then
 							if latest_typed_word_is_keyword then
-								t ?= token.previous
-								if t /= Void and then keyword_image (t).is_equal (previous_token_image) then
+								if
+									attached {EDITOR_TOKEN_KEYWORD} token.previous as t and then
+									keyword_image (t).is_equal (previous_token_image)
+								then
 									text_displayed.complete_syntax (previous_token_image, True, True)
 									syntax_completed := text_displayed.syntax_completed
 									latest_typed_word_is_keyword := False
 								end
 							else
-								t ?= token.previous
-								if t /= Void and then text_displayed.cursor.pos_in_token = 1 then
+								if
+									attached {EDITOR_TOKEN_KEYWORD} token.previous as t and then
+									text_displayed.cursor.pos_in_token = 1
+								then
 									text_displayed.complete_syntax (keyword_image (t), False, True)
 									syntax_completed := text_displayed.syntax_completed
 								end
@@ -885,7 +888,7 @@ feature {NONE} -- Brace matching
 			l_token := text_displayed.cursor.token
 			l_line := text_displayed.cursor.line
 			if l_token /= Void and l_line /= Void then
-				l_prev_token ?= l_token.previous
+				l_prev_token := l_token.previous
 				if l_utils.is_closing_brace (l_token) and then position = l_token.pos_in_text
 						and then l_prev_token /= Void and then l_utils.is_closing_brace (l_prev_token) then
 							-- Check the previous token for a closing brace, because it has priority
@@ -922,7 +925,6 @@ feature {NONE} -- Brace matching
 			l_utils: attached like brace_matcher
 			l_token: attached EDITOR_TOKEN
 			l_line: attached EDITOR_LINE
-			l_brace: detachable like brace_match_caret_token
 			l_invalidated_lines: ARRAYED_SET [EDITOR_LINE]
 			l_last_matches: attached like last_highlighted_matched_braces
 			l_invalidated_line: detachable EDITOR_LINE
@@ -934,8 +936,7 @@ feature {NONE} -- Brace matching
 					-- Remove last matches
 				l_last_matches := last_highlighted_matched_braces
 				from l_last_matches.start until l_last_matches.after loop
-					l_brace ?= l_last_matches.item
-					if l_brace /= Void then
+					if attached {like brace_match_caret_token} l_last_matches.item as l_brace then
 						l_brace.token.set_highlighted (False)
 						if not l_invalidated_lines.has (l_brace.line) then
 							l_invalidated_lines.extend (l_brace.line)
@@ -946,16 +947,14 @@ feature {NONE} -- Brace matching
 
 				if not has_selection and then preferences.editor_data.highlight_matching_braces then
 						-- Locate applicable tokens
-					l_brace := brace_match_caret_token
-					if l_brace /= Void then
+					if attached {like brace_match_caret_token} brace_match_caret_token as l_brace then
 						l_token := l_brace.token
 						l_line := l_brace.line
 
 							-- Find matching brace tokens.
 						l_utils := brace_matcher
 						if l_utils.is_brace (l_token) and then l_line.has_token (l_token) then
-							l_brace := l_utils.match_brace (l_token, l_line, Void)
-							if l_brace /= Void then
+							if attached l_utils.match_brace (l_token, l_line, Void) as l_matched_brace then
 									-- There was a match.
 								l_token.set_highlighted (True)
 								if not l_invalidated_lines.has (l_line) then
@@ -963,11 +962,11 @@ feature {NONE} -- Brace matching
 								end
 								l_last_matches.extend ([l_token, l_line])
 
-								l_brace.token.set_highlighted (True)
-								if not l_invalidated_lines.has (l_brace.line) then
-									l_invalidated_lines.extend (l_brace.line)
+								l_matched_brace.token.set_highlighted (True)
+								if not l_invalidated_lines.has (l_matched_brace.line) then
+									l_invalidated_lines.extend (l_matched_brace.line)
 								end
-								l_last_matches.extend ([l_brace.token, l_brace.line])
+								l_last_matches.extend ([l_matched_brace.token, l_matched_brace.line])
 							end
 						end
 					end
@@ -1076,7 +1075,7 @@ feature {NONE} -- Autocomplete implementation
 	switch_auto_point: BOOLEAN
 			-- Should `auto_point' have the opposite value?
 
-	auto_point_token: EDITOR_TOKEN
+	auto_point_token: detachable EDITOR_TOKEN
 			-- Point where autocomplete should add a period.
 
 feature {NONE} -- syntax completion
@@ -1084,15 +1083,13 @@ feature {NONE} -- syntax completion
 	latest_typed_word_is_keyword: BOOLEAN
 			-- Is the preceding token a keyword?
 
-	previous_token_image: STRING_32
+	previous_token_image: detachable STRING_32
 			-- Image of the previous token
 
 	keyword_image (token: EDITOR_TOKEN_KEYWORD): STRING_32
 			-- Image of keyword beginning by `token'.
 		local
 			test: STRING_32
-			kw: like token
-			blnk: EDITOR_TOKEN_BLANK
 			tok: EDITOR_TOKEN
 			is_else, is_then: BOOLEAN
 		do
@@ -1102,15 +1099,12 @@ feature {NONE} -- syntax completion
 			is_then := test.is_case_insensitive_equal ({STRING_32} "then")
 			if is_else or is_then then
 				from
-					blnk ?= token.previous
 				until
-					blnk = Void
+					not attached {EDITOR_TOKEN_BLANK} token.previous as blnk
 				loop
-					tok := blnk.previous
-					blnk ?= tok
+					tok := blnk
 				end
-				kw ?= tok
-				if kw /= Void then
+				if attached {like token} tok as kw then
 					if is_else then
 						test := kw.wide_image.twin
 						if test.is_case_insensitive_equal ({STRING_32} "or") then
@@ -1319,8 +1313,6 @@ feature -- Text Loading
 			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
-			l_scanner: EDITOR_EIFFEL_SCANNER
-			l_stone: CLASSI_STONE
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
@@ -1328,12 +1320,10 @@ feature -- Text Loading
 			else
 				l_d_class := get_class_from_type (once "e")
 				set_current_document_class (l_d_class)
-				l_scanner ?= l_d_class.scanner
-				if l_scanner /= Void then
+				if attached {EDITOR_EIFFEL_SCANNER} l_d_class.scanner as l_scanner then
 					text_displayed.set_lexer (l_scanner)
-					l_stone ?= stone
-					if l_stone /= Void then
-						l_scanner.set_current_class (l_stone.class_i.config_class)
+					if attached {CLASSI_STONE} stone as l_classi_stone then
+						l_scanner.set_current_class (l_classi_stone.class_i.config_class)
 					end
 				end
 				text_displayed.set_current_document_class (get_class_from_type (once "e"))
@@ -1382,8 +1372,8 @@ feature {NONE} -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
-			if completion_timeout /= Void and then not completion_timeout.is_destroyed then
-				completion_timeout.destroy
+			if attached completion_timeout as l_timeout and then not l_timeout.is_destroyed then
+				l_timeout.destroy
 			end
 
 			if event_list.is_service_available then
@@ -1674,7 +1664,6 @@ feature {NONE} -- Code completable implementation
 		local
 			l_current_line: like current_line
 			l_current_token, l_cur_token: EDITOR_TOKEN
-			l_comment: EDITOR_TOKEN_COMMENT
 			l_has_left_brace_ahead,
 			l_has_right_brace_ahead,
 			l_has_right_brace_following,
@@ -1695,8 +1684,7 @@ feature {NONE} -- Code completable implementation
 					l_cur_token := l_cur_token.previous
 				end
 				if l_cur_token /= Void then
-					l_comment ?= l_cur_token
-					l_comment_ahead := (l_comment /= Void)
+					l_comment_ahead := attached {EDITOR_TOKEN_COMMENT} l_cur_token
 				end
 				Result := not l_comment_ahead
 				if Result then
@@ -1896,7 +1884,7 @@ feature {NONE} -- Code completable implementation
 			text_displayed.cursor.set_from_character_pos (saved_cursor.x_in_characters, saved_cursor.y_in_lines, text_displayed)
 		end
 
-	saved_cursor: EDITOR_CURSOR
+	saved_cursor: detachable EDITOR_CURSOR
 
 	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN)
 			--

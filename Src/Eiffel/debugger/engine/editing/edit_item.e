@@ -132,24 +132,13 @@ feature {NONE} -- Implementation
 			value_bool: BOOLEAN
 			value_string: STRING
 			value_string_c: ANY
-
-			type_real: REAL_32_B
-			type_ptr: POINTER_B
-			type_integer: INTEGER_B
-			type_double: REAL_64_B
-			type_char: CHARACTER_B
-			type_bool: BOOLEAN_B
+			l_dyn_class: detachable CLASS_C
 		do
-			type_real ?= item.dynamic_class
-			type_ptr ?= item.dynamic_class
-			type_integer ?= item.dynamic_class
-			type_double ?= item.dynamic_class
-			type_char ?= item.dynamic_class
-			type_bool ?= item.dynamic_class
+			l_dyn_class := item.dynamic_class
 
 			modified := True	-- by default, we will succeed
 
-			if type_integer /= Void then
+			if attached {INTEGER_B} l_dyn_class as type_integer then
 				io.put_string("Enter an INTEGER value: ")
 				io.readline
 				value_integer := io.last_string.to_integer
@@ -157,7 +146,7 @@ feature {NONE} -- Implementation
 				send_integer_value(value_integer)
 				receive_ack
 
-			elseif type_bool /= Void then
+			elseif attached {BOOLEAN_B} l_dyn_class as type_bool then
 				io.put_string("Enter a BOOLEAN value (i.e. 'True' or 'False'): ")
 				io.readline
 				value_bool := io.last_string.to_boolean
@@ -165,7 +154,7 @@ feature {NONE} -- Implementation
 				send_bool_value(value_bool)
 				receive_ack
 
-			elseif type_real /= Void then
+			elseif attached {REAL_32_B} l_dyn_class as type_real then
 				io.put_string("Enter a REAL value: ")
 				io.readline
 				value_real := io.last_string.to_real
@@ -173,7 +162,7 @@ feature {NONE} -- Implementation
 				send_real_value(value_real)
 				receive_ack
 
-			elseif type_double /= Void then
+			elseif attached {REAL_64_B} l_dyn_class as type_double then
 				io.put_string("Enter a DOUBLE value: ")
 				io.readline
 				value_double := io.last_string.to_double
@@ -181,7 +170,7 @@ feature {NONE} -- Implementation
 				send_double_value(value_double)
 				receive_ack
 
-			elseif type_char /= Void then
+			elseif attached {CHARACTER_B} l_dyn_class as type_char then
 				io.put_string("Enter a CHARACTER value: ")
 				io.readline
 				value_char := io.last_string @ 1
@@ -189,7 +178,7 @@ feature {NONE} -- Implementation
 				send_char_value(value_char)
 				receive_ack
 
-			elseif type_ptr /= Void then -- Pointer
+			elseif attached {POINTER_B} l_dyn_class as type_ptr then -- Pointer
 				io.put_string("Enter an hexadecimal POINTER value: ")
 				io.readline
 				value_ptr := default_pointer + hex_to_integer_32 (io.last_string)
@@ -197,7 +186,7 @@ feature {NONE} -- Implementation
 				send_ptr_value(value_ptr)
 				receive_ack
 
-			elseif item.dynamic_class /= Void and then item.dynamic_class.name_in_upper.is_equal("STRING") then
+			elseif l_dyn_class /= Void and then item.dynamic_class.name_in_upper.is_equal ("STRING") then
 				-- this is a String
 				io.put_string("Enter a STRING: ")
 				io.readline
@@ -271,7 +260,7 @@ feature {NONE} -- Implementation: to be implemented
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

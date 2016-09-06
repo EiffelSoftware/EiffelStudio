@@ -222,17 +222,17 @@ feature -- "Save command" related features
 
 feature -- Commands
 
---	open_cmd: EB_OPEN_FILE_COMMAND
+--	open_cmd: detachable EB_OPEN_FILE_COMMAND
 		-- Command to open a file in the tool
 			-- patrickr Tuesday, 29 August 2006:
 			-- at the moment the open command doesn't do anything usefull but it may
 			-- be usefull later, that's why we keep it here
 
-	save_cmd: EB_SAVE_FILE_COMMAND
+	save_cmd: detachable EB_SAVE_FILE_COMMAND
 			-- Command to save current text in the associated file.
 			-- If no file is associated, `save_as_cmd' is executed.
 
-	save_all_cmd: EB_SAVE_ALL_FILE_COMMAND
+	save_all_cmd: detachable EB_SAVE_ALL_FILE_COMMAND
 			-- Command t sava all tabs's text in the associated file.
 
 feature {NONE} -- Execution
@@ -244,8 +244,8 @@ feature {NONE} -- Execution
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			if file_name /= Void then
-				create f.make_with_name (file_name)
+			if attached file_name as fn then
+				create f.make_with_name (fn)
 				if f.exists and then f.date > last_saving_date then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_question_prompt (interface_names.l_file_changed_by_other_tool, Void, agent revert, Void)
 					set_last_saving_date (f.date)
@@ -258,8 +258,13 @@ feature {NONE} -- Execution
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			create f.make_with_name (file_name)
-			show_file (f)
+			if attached file_name as fn then
+				create f.make_with_name (file_name)
+				show_file (f)
+			else
+				check has_filename: False end
+				reset
+			end
 			refresh
 		end
 
@@ -269,7 +274,7 @@ feature {NONE} -- Implementation
 			-- Date of last save
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

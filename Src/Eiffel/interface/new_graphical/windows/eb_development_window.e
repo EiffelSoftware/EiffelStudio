@@ -205,20 +205,20 @@ feature {NONE} -- Clean up
 			l_session: SESSION_I
 		do
 			create l_session_manager
-			if l_session_manager.is_service_available then
+			if attached l_session_manager.service as l_session_service then
 					-- Store and clear all session data related to the window.
-				l_sessions := l_session_manager.service.active_sessions
+				l_sessions := l_session_service.active_sessions
 				from l_sessions.start until l_sessions.after loop
 					l_session := l_sessions.item
 					if l_session.is_interface_usable and then l_session.is_per_window and then l_session.window_id = window_id then
 							-- Closes and stores session data.
-						l_session_manager.service.close_session (l_session)
+						l_session_service.close_session (l_session)
 					end
 					l_sessions.forth
 				end
 
 					-- Store all other session data, that's not tied to the window, incase this is the last window.
-				l_session_manager.service.store_all
+				l_session_service.store_all
 			end
 
 			recycle_formatters
@@ -244,11 +244,13 @@ feature {NONE} -- Clean up
 			if docking_manager /= Void then
 				docking_manager.destroy
 			end
-				managed_class_formatters.wipe_out
-				managed_feature_formatters.wipe_out
-				managed_dependency_formatters.wipe_out
-				managed_main_formatters.wipe_out
---				commands.toolbarable_commands.wipe_out
+
+			managed_class_formatters.wipe_out
+			managed_feature_formatters.wipe_out
+			managed_dependency_formatters.wipe_out
+			managed_main_formatters.wipe_out
+--			commands.toolbarable_commands.wipe_out
+
 			Precursor {EB_TOOL_MANAGER}
 		end
 
@@ -324,13 +326,13 @@ feature -- Access
 			Result := internal_session_data
 			if Result = Void then
 				create l_consumer
-				if l_consumer.is_service_available then
-					Result := l_consumer.service.retrieve_per_window (Current, False)
+				if attached l_consumer.service as l_service then
+					Result := l_service.retrieve_per_window (Current, False)
 					internal_session_data := Result
 				end
 			end
 		ensure
-			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).is_service_available implies Result /= Void
+			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).service /= Void implies Result /= Void
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 			result_consistent: Result = session_data
 		end
@@ -347,13 +349,13 @@ feature -- Access
 			Result := internal_project_session_data
 			if Result = Void then
 				create l_consumer
-				if l_consumer.is_service_available then
-					Result := l_consumer.service.retrieve_per_window (Current, True)
+				if attached l_consumer.service as l_service then
+					Result := l_service.retrieve_per_window (Current, True)
 					internal_project_session_data := Result
 				end
 			end
 		ensure
-			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).is_service_available implies Result /= Void
+			result_attached: (create {SERVICE_CONSUMER [SESSION_MANAGER_S]}).service /= Void implies Result /= Void
 			result_is_interface_usable: Result.is_interface_usable
 			result_consistent: Result = project_session_data
 		end
@@ -920,8 +922,8 @@ feature -- Stone process
 			until
 				l_external_command.after
 			loop
-				if l_external_command.item_for_iteration /= Void then
-					l_external_command.item_for_iteration.update (window)
+				if attached l_external_command.item_for_iteration as l_cmd then
+					l_cmd.update (window)
 				end
 				l_external_command.forth
 			end
@@ -931,18 +933,18 @@ feature -- Stone process
 	quick_refresh_editors
 			-- Redraw editors' drawing area.
 		local
-			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_service_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 			l_outputs: DS_LINEAR [OUTPUT_I]
 		do
 				-- Refresh main editor.
-			if editors_manager.current_editor /= Void then
-				editors_manager.current_editor.refresh
+			if attached editors_manager.current_editor as l_current_editor then
+				l_current_editor.refresh
 			end
 
 				-- Refresh margins from all outputs.
-			create l_service
-			if l_service.is_service_available then
-				l_outputs := l_service.service.active_outputs
+			create l_service_consumer
+			if attached l_service_consumer.service as l_service then
+				l_outputs := l_service.active_outputs
 				from l_outputs.start until l_outputs.after loop
 					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
 						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
@@ -962,18 +964,18 @@ feature -- Stone process
 	quick_refresh_margins
 			-- Redraw the main editor's drawing area.
 		local
-			l_service: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
+			l_service_consumer: SERVICE_CONSUMER [OUTPUT_MANAGER_S]
 			l_outputs: DS_LINEAR [OUTPUT_I]
 		do
 				-- Refresh main editor.
-			if editors_manager.current_editor /= Void then
-				editors_manager.current_editor.margin.refresh
+			if attached editors_manager.current_editor as l_current_editor then
+				l_current_editor.margin.refresh
 			end
 
 				-- Refresh margins from all outputs.
-			create l_service
-			if l_service.is_service_available then
-				l_outputs := l_service.service.active_outputs
+			create l_service_consumer
+			if attached l_service_consumer.service as l_service then
+				l_outputs := l_service.active_outputs
 				from l_outputs.start until l_outputs.after loop
 					if attached {ES_OUTPUT_PANE_I} l_outputs.item_for_iteration as l_output then
 						if attached {ES_EDITOR_WIDGET} l_output.widget_from_window (Current) as l_editor_widget then
@@ -1059,8 +1061,8 @@ feature -- Resource Update
 	syntax_is_correct: BOOLEAN
 			-- Current editor was successfully parsed?
 		do
-			if editors_manager.current_editor /= Void then
-				Result := editors_manager.current_editor.syntax_is_correct
+			if attached editors_manager.current_editor as l_current_editor then
+				Result := l_current_editor.syntax_is_correct
 			else
 				Result := True
 			end
@@ -1118,17 +1120,13 @@ feature -- Resource Update
 
 	process
 			-- process the user entry in the address bar
-		local
-			l_class_stone: CLASSI_STONE
-			l_multi_search_tool: ES_MULTI_SEARCH_TOOL_PANEL
 		do
 			save_canceled := False
-			l_class_stone ?= stone
-			if l_class_stone /= Void then
-				l_multi_search_tool ?= tools.search_tool
-				if l_multi_search_tool /= Void then
-					l_multi_search_tool.class_changed (l_class_stone.class_i)
-				end
+			if
+				attached {CLASSI_STONE} stone as l_class_stone and
+				attached {ES_MULTI_SEARCH_TOOL_PANEL} tools.search_tool as l_multi_search_tool
+			then
+				l_multi_search_tool.class_changed (l_class_stone.class_i)
 			end
 		end
 
@@ -1260,31 +1258,29 @@ feature -- Window management
 			-- Save session data of `Current' to session object `a_session'.
 			-- This is project data session, not for all projects.
 		local
-			a_class_stone: CLASSI_STONE
-			a_cluster_stone: CLUSTER_STONE
 			l_class_id, l_feature_id: STRING
-			l_feature_stone: FEATURE_STONE
-			l_class_stone: CLASSI_STONE
+			l_is_group_stone: BOOLEAN
 		do
 			save_window_state
 			save_size
 			save_position
 			create Result.make_from_window_data (preferences.development_window_data)
 
-			a_class_stone ?= stone
-			a_cluster_stone ?= stone
-			if a_class_stone /= Void then
-				Result.save_current_target (id_of_class (a_class_stone.class_i.config_class), False)
-			elseif a_cluster_stone /= Void then
-				Result.save_current_target (id_of_group (a_cluster_stone.group), True)
+			if attached {CLASSI_STONE} stone as l_class_stone then
+				l_is_group_stone := True
+				Result.save_current_target (id_of_class (l_class_stone.class_i.config_class), False)
+			elseif attached {CLUSTER_STONE} stone as l_cluster_stone then
+				l_is_group_stone := True
+				Result.save_current_target (id_of_group (l_cluster_stone.group), True)
 			else
 				Result.save_current_target (Void, False)
 			end
-			if a_class_stone /= Void or else a_cluster_stone /= Void then
-				if editors_manager.current_editor /= Void then
-					if not editors_manager.current_editor.text_displayed.is_empty then
+			if l_is_group_stone then
+					-- CLASSI or CLUSTER stone
+				if attached editors_manager.current_editor as l_current_editor then
+					if not l_current_editor.text_displayed.is_empty then
 						Result.save_editor_position (
-							editors_manager.current_editor.text_displayed.current_line_number)
+							l_current_editor.text_displayed.current_line_number)
 					else
 						Result.save_editor_position (1)
 					end
@@ -1299,15 +1295,13 @@ feature -- Window management
 
 			layout_manager.store_editors_layout
 
-			if tools.features_relation_tool /= Void then
-				l_feature_stone ?= tools.features_relation_tool.stone
-				if l_feature_stone /= Void then
+			if attached tools.features_relation_tool as l_features_relation_tool then
+				if attached {FEATURE_STONE} l_features_relation_tool.stone as l_feature_stone then
 					l_feature_id := id_of_feature (l_feature_stone.e_feature)
 				end
 			end
-			if tools.class_tool /= Void then
-				l_class_stone ?= tools.class_tool.stone
-				if l_class_stone /= Void then
+			if attached tools.class_tool as l_class_tool then
+				if attached {CLASSI_STONE} l_class_tool.stone as l_class_stone then
 					check
 						class_not_void: l_class_stone.class_i.config_class /= Void
 					end
@@ -1408,13 +1402,13 @@ feature -- Help system
 	show_help
 			-- <Precursor>
 		do
-			if help_providers.is_service_available then
+			if attached help_providers.service as l_service then
 				if attached help_context as l_help_context and then l_help_context.is_help_available then
-					help_providers.service.show_help (l_help_context)
+					l_service.show_help (l_help_context)
 				elseif attached editors_manager.current_editor as l_editor and then l_editor.has_focus then
 					l_editor.show_help
 				elseif is_help_available then
-					help_providers.service.show_help (Current)
+					l_service.show_help (Current)
 				end
 			end
 		end
@@ -1579,12 +1573,9 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 
 	 save_window_state
 	 		-- Save window state information to preference data.
-	 	local
-	 		l_debugger_manager: EB_DEBUGGER_MANAGER
 	 	do
 			development_window_data.save_window_state (window.is_minimized, window.is_maximized)
-			l_debugger_manager ?= debugger_manager
-			if l_debugger_manager /= Void then
+			if attached {EB_DEBUGGER_MANAGER} debugger_manager as l_debugger_manager then
 				development_window_data.save_force_debug_mode (l_debugger_manager.debug_mode_forced)
 			end
 	 	end
@@ -1673,15 +1664,17 @@ feature {EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with E
 	update_formatters
 			-- Give a correct sensitivity to formatters.
 		local
-			cist: CLASSI_STONE
+			cist: detachable CLASSI_STONE
 			type_changed: BOOLEAN
-			cluster_st: CLUSTER_STONE
 		do
-			cist ?= stone
-			-- Check to if formatting context has changed.
+			if attached {CLASSI_STONE} stone as l_classi_stone then
+				cist := l_classi_stone
+			end
+
+				-- Check to if formatting context has changed.
 			if cist /= Void then
-				type_changed := (cist.is_dotnet_class and not is_stone_external) or
-					(not cist.is_dotnet_class and is_stone_external)
+				type_changed := (cist.is_dotnet_class and not is_stone_external)
+							or	(not cist.is_dotnet_class and is_stone_external)
 			end
 
 			if type_changed then
@@ -1712,8 +1705,10 @@ feature {EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with E
 				end
 			else
 				address_manager.disable_formatters
-				cluster_st ?= stone
-				if cist /= stone and cluster_st = Void then
+				if
+					cist /= stone and
+					not attached {CLUSTER_STONE} stone -- not a cluster stone!
+				then
 					managed_main_formatters.first.execute
 				end
 			end
@@ -1944,16 +1939,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialized by EB_DEVELOPMENT_WINDOW_
 			-- Used by `send_stone_to_context_cmd'.
 		local
 			l_feature_text: STRING_32
-			l_class_stone: CLASSI_STONE
 			l_feature_stone: FEATURE_STONE
-			l_class_c: CLASS_C
+			l_class_c: detachable CLASS_C
 			l_feature: E_FEATURE
 		do
 			if address_manager /= Void then
 				l_feature_text := address_manager.feature_address.text
 			end
-			l_class_stone ?= stone
-			if l_class_stone /= Void then
+			if attached {CLASSI_STONE} stone as l_class_stone then
 				l_class_c := l_class_stone.class_i.compiled_representation
 				if l_class_c /= Void then
 					if l_feature_text /= Void and then not l_feature_text.is_empty and then l_class_c.has_feature_table then
@@ -1996,7 +1989,6 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			-- where in the code the cursor is located.
 		local
 			l_feature: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
-			l_classc_stone: CLASSC_STONE
 			ed: EB_SMART_EDITOR
 		do
 				-- we may have been called from a timer and have to deactivate the timer
@@ -2005,8 +1997,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 			if managed_main_formatters.first.selected then
 					-- We only do that for the clickable view
-				l_classc_stone ?= stone
-				if l_classc_stone /= Void then
+				if attached {CLASSC_STONE} stone as l_classc_stone then
 					ed := editors_manager.current_editor
 					if
 						ed /= Void
@@ -2029,7 +2020,6 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			l_efeature: E_FEATURE
 			l_class_i: CLASS_I
 			l_classc: CLASS_C
-			l_commander: ES_FEATURES_TOOL_COMMANDER_I
 		do
 			if a_feature_name /= Void then
 				address_manager.set_feature_text_simply (a_feature_name.internal_name.name_32)
@@ -2048,10 +2038,12 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 				if l_efeature /= Void then
 					seek_item_in_feature_tool (l_efeature)
 				else
-					l_commander ?= shell_tools.tool ({ES_FEATURES_TOOL})
-					check l_commander_attached: l_commander /= Void end
-					if l_commander /= Void and attached a_feature_name.internal_name.name_32 as l_name then
-						l_commander.select_feature_item_by_name (l_name)
+					if attached {ES_FEATURES_TOOL_COMMANDER_I} shell_tools.tool ({ES_FEATURES_TOOL}) as l_commander then
+						if attached a_feature_name.internal_name.name_32 as l_name then
+							l_commander.select_feature_item_by_name (l_name)
+						end
+					else
+						check feature_tool_is_available: False end
 					end
 				end
 			else
@@ -2104,12 +2096,9 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 
 	find_next
 			-- Find the next occurrence of the search text.
-		local
-			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= ui.current_editor
-				if cv_ced /= Void then
+				if attached ui.current_editor as cv_ced then
 					cv_ced.find_next
 				end
 			else
@@ -2119,12 +2108,9 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 
 	find_previous
 			-- Find the previous occurrence of the search text.
-		local
-			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= ui.current_editor
-				if cv_ced /= Void then
+				if attached ui.current_editor as cv_ced then
 					cv_ced.find_previous
 				end
 			else
@@ -2134,22 +2120,16 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 
 	find_next_selection
 			-- Find the next occurrence of the selection.
-		local
-			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced := ui.current_editor
-			if cv_ced /= Void then
+			if attached ui.current_editor as cv_ced then
 				cv_ced.find_next_selection
 			end
 		end
 
 	find_previous_selection
 			-- Find the next occurrence of the selection.
-		local
-			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced := ui.current_editor
-			if cv_ced /= Void then
+			if attached ui.current_editor as cv_ced then
 				cv_ced.find_previous_selection
 			end
 		end
@@ -2176,7 +2156,7 @@ feature -- Implementation: Editor commands
 	select_all
 			-- Select the whole text in the focused editor.
 		local
-			l_editor: EB_EDITOR
+			l_editor: detachable EB_EDITOR
 		do
 			l_editor := ui.current_editor
 			if l_editor /= Void and then not l_editor.is_empty then
@@ -2189,7 +2169,7 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 	cut_selection
 			-- Cut the selection in the current editor.
 		local
-			l_editor: EB_CLICKABLE_EDITOR
+			l_editor: detachable EB_CLICKABLE_EDITOR
 		do
 			l_editor := ui.current_editor
 			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then
@@ -2200,7 +2180,7 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 	copy_selection
 			-- Cut the selection in the current editor.
 		local
-			l_editor: EB_CLICKABLE_EDITOR
+			l_editor: detachable EB_CLICKABLE_EDITOR
 		do
 			l_editor := ui.current_editor
 			if l_editor /= Void and then not l_editor.is_recycled and then l_editor.number_of_lines /= 0 then

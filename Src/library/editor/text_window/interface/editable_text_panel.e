@@ -191,21 +191,19 @@ feature -- Indirect observer / manager pattern.
 	add_edition_observer (txt_observer: TEXT_OBSERVER)
 			-- Add observer of `text_displayed' for global content changes.
 		do
-			if text_displayed /= Void then
-				text_displayed.add_edition_observer (txt_observer)
-			end
+			text_displayed.add_edition_observer (txt_observer)
 		end
 
 	add_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Add observer of `history'.
 		do
-			text_displayed.attached_history.add_observer (history_observer)
+			text_displayed.history.add_observer (history_observer)
 		end
 
 	remove_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Remove observer of `history'.
 		do
-			text_displayed.attached_history.remove_observer (history_observer)
+			text_displayed.history.remove_observer (history_observer)
 		end
 
 feature -- Private Status
@@ -743,15 +741,13 @@ feature -- Edition Operations on text
 			wm: STRING_32
 		do
 			wm := "Current text is not editable"
-			if text_displayed /= Void then
-				if is_read_only then
-					if attached not_editable_warning_wide_message as l_msg and then not l_msg.is_empty then
-						wm := l_msg
-					end
-					show_warning_message (wm)
-				else
-					show_warning_message (wm)
+			if is_read_only then
+				if attached not_editable_warning_wide_message as l_msg and then not l_msg.is_empty then
+					wm := l_msg
 				end
+				show_warning_message (wm)
+			else
+				show_warning_message (wm)
 			end
 		end
 
@@ -767,11 +763,11 @@ feature {NONE} -- Mouse copy cut
 				former_mouse_y := a_screen_y
 				mouse_copy_cut := True
 				mouse_left_button_down := True
-				if cursors /= Void then
+				if attached cursors as l_cursors then
 					if ctrled_key then
-						editor_drawing_area.set_pointer_style (Cursors.Cur_copy_selection)
+						editor_drawing_area.set_pointer_style (l_cursors.Cur_copy_selection)
 					else
-						editor_drawing_area.set_pointer_style (Cursors.Cur_cut_selection)
+						editor_drawing_area.set_pointer_style (l_cursors.Cur_cut_selection)
 					end
 				end
 			else
@@ -1075,7 +1071,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

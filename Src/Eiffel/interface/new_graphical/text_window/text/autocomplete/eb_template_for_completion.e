@@ -345,6 +345,8 @@ feature {NONE} -- Template implementation.
 							create l_str.make_from_string (l_new_src)
 							l_str.append (l_default_value.substring (l_default_value.index_of ('.', 1), l_default_value.count))
 							l_rename_table.force (l_str, ic.key)
+								-- Add the new read only local name to the linked tokens.
+							linked_tokens.force ("", l_str)
 						end
 					end
 				end

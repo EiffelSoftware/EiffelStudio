@@ -468,8 +468,7 @@ feature {NONE} -- Process Vision2 Events
 	handle_character (c: CHARACTER_32)
  			-- Process the push on a character key.
 		local
-			t: EDITOR_TOKEN_KEYWORD
-			token: EDITOR_TOKEN
+			tok, token: detachable EDITOR_TOKEN
 			look_for_keyword: BOOLEAN
 			insert: CHARACTER_32
 			syntax_completed: BOOLEAN
@@ -486,13 +485,19 @@ feature {NONE} -- Process Vision2 Events
 						cur.go_left_char
 						token := cur.token
 						if token /= Void then
-							t ?= token.previous
-							if t /= Void and then keyword_image(t).is_equal (previous_token_image) then
-								text_displayed.back_delete_char
-								text_displayed.complete_syntax (previous_token_image, True, False)
-								syntax_completed := text_displayed.syntax_completed
-								look_for_keyword := False
-								latest_typed_word_is_keyword := False
+							if
+								attached {EDITOR_TOKEN_KEYWORD} token.previous as l_keyword_token 
+							then
+								tok := l_keyword_token
+								if
+									keyword_image (l_keyword_token).is_equal (previous_token_image)
+								then
+									text_displayed.back_delete_char
+									text_displayed.complete_syntax (previous_token_image, True, False)
+									syntax_completed := text_displayed.syntax_completed
+									look_for_keyword := False
+									latest_typed_word_is_keyword := False
+								end
 							end
 						end
 					else
@@ -500,18 +505,18 @@ feature {NONE} -- Process Vision2 Events
 						if text_displayed.cursor.line.eol_token = token then
 								-- case: keyword|space|eol
 							if token.previous /= Void and then token.previous.length = 1 then
-								t ?= token.previous.previous
+								tok := token.previous.previous
 							end
 						elseif token /= Void then
 								-- case: keyword|space|space|...
 							if text_displayed.cursor.pos_in_token = 2 then
-								t ?= token.previous
+								tok := token.previous
 							end
 						end
-						if t /= Void then
+						if attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token then
 							text_displayed.back_delete_char
 							look_for_keyword := False
-							text_displayed.complete_syntax (keyword_image (t), False, False)
+							text_displayed.complete_syntax (keyword_image (l_keyword_token), False, False)
 							syntax_completed := text_displayed.syntax_completed
 							look_for_keyword := False
 						end
@@ -529,12 +534,17 @@ feature {NONE} -- Process Vision2 Events
 				end
 				if look_for_keyword then
 					if text_displayed.cursor.token /= Void then
-						t ?= text_displayed.cursor.token.previous
+						tok := text_displayed.cursor.token.previous
 					end
-					latest_typed_word_is_keyword := (t /= Void) and then text_displayed.cursor.pos_in_token = 1
-					if latest_typed_word_is_keyword then
-						previous_token_image := keyword_image (t)
-					end
+					if
+						attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token and then
+						text_displayed.cursor.pos_in_token = 1
+					then
+						latest_typed_word_is_keyword := True
+						previous_token_image := keyword_image (l_keyword_token)
+					else
+						latest_typed_word_is_keyword := False
+ 					end
 				end
 			else
 				display_not_editable_warning_message
@@ -1418,10 +1428,9 @@ feature {NONE} -- Code completable implementation
 			-- We don't need signature when completing outside a feature.
 		local
 			l_line: EIFFEL_EDITOR_LINE
-			l_kt: EDITOR_TOKEN_KEYWORD
 			l_end_loop, l_quit: BOOLEAN
 			l_cursor: EDITOR_CURSOR
-			l_token: EDITOR_TOKEN
+			l_token: detachable EDITOR_TOKEN
 			l_found_blank: BOOLEAN
 		do
 			set_discard_feature_signature (False)
@@ -1442,8 +1451,7 @@ feature {NONE} -- Code completable implementation
 						l_line.after or l_end_loop
 					loop
 						if l_line.item.wide_image.is_case_insensitive_equal ({STRING_32} "feature") then
-							l_kt ?= l_line.item
-							if l_kt /= Void then
+							if attached {EDITOR_TOKEN_KEYWORD} l_line.item as l_kt then
 								l_end_loop := True
 								check l_line_valid: l_line.is_valid end
 								create l_cursor.make_from_relative_pos (l_line, l_kt, 1, text_displayed)
@@ -1485,7 +1493,7 @@ feature {NONE} -- Code completable implementation
 									l_end_loop := True
 								end
 							end
-							-- We do not need feature signature when it is a pointer reference. case2: "$feature"
+								-- We do not need feature signature when it is a pointer reference. case2: "$feature"
 							if not l_found_blank and then not l_quit and then not l_end_loop then
 								if token_equal (l_token, "$") then
 									l_end_loop := True
@@ -1528,11 +1536,14 @@ feature {NONE} -- Code completable implementation
 	current_line: EIFFEL_EDITOR_LINE
 			-- Line of current cursor.
 			-- Every query is not guarenteed the same object.
+		local
+			l_line: detachable EIFFEL_EDITOR_LINE
 		do
-			Result := text_displayed.cursor.line
-			if Result = Void then
-				create Result.make (is_windows_file)
+			l_line := text_displayed.cursor.line
+			if l_line = Void then
+				create l_line.make (is_windows_file)
 			end
+			Result := l_line
 		end
 
 	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN

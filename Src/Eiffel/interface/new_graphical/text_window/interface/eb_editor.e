@@ -264,18 +264,17 @@ feature -- Text Loading
 			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
-			l_stone: CLASSI_STONE
 			l_s8: STRING_8
 			l_s: STRING_GENERAL
 		do
 			l_d_class := get_class_from_type (once "e")
 			set_current_document_class (l_d_class)
-			if attached {EDITOR_EIFFEL_SCANNER} l_d_class.scanner as l_scanner then
-				l_stone ?= stone
-				if l_stone /= Void then
-					l_scanner.set_current_class (l_stone.class_i.config_class)
-				end
-			end
+			if
+				attached {EDITOR_EIFFEL_SCANNER} l_d_class.scanner as l_scanner and then
+				attached {CLASSI_STONE} stone as l_classi_stone
+			then
+				l_scanner.set_current_class (l_classi_stone.class_i.config_class)
+ 			end
 				-- Remove the BOM before parsing in the editor.
 				-- Otherwise, positions from the compiler parser does not match those from the editor scanner.
 			l_s := s
@@ -293,15 +292,13 @@ feature -- Text Loading
 			-- Check if current stone is changed and reload.
 		local
 			l_question: ES_QUESTION_PROMPT
-			l_class_stone: CLASSI_STONE
 			l_class_name: STRING_8
 		do
 			is_checking_modifications := True
 
 				-- After refactoring, the stone is possibly changed,
 				-- and file name is possibly changed.
-			l_class_stone ?= stone
-			if l_class_stone /= Void then
+			if attached {CLASSI_STONE} stone as l_class_stone then
 				if not file_path.is_equal (l_class_stone.class_i.file_name) then
 					file_path := l_class_stone.class_i.file_name
 				end
@@ -413,9 +410,11 @@ feature {NONE} -- Prettify implementation
 		local
 			l_save_request: ES_DISCARDABLE_QUESTION_PROMPT
 		do
-			create l_save_request.make_standard (warning_messages.w_Must_save_before_prettifying (stone.stone_name),
-				interface_names.l_Discard_save_before_prettifying_dialog,
-				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_save_before_prettifying_preference, True))
+			create l_save_request.make_standard (
+					warning_messages.w_Must_save_before_prettifying (stone.stone_name),
+					interface_names.l_Discard_save_before_prettifying_dialog,
+					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_save_before_prettifying_preference, True)
+				)
 
 			l_save_request.set_title (interface_names.t_debugger_question)
 			l_save_request.set_button_action (dialog_buttons.yes_button, agent dev_window.save_text)
@@ -493,7 +492,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

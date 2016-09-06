@@ -931,7 +931,6 @@ feature {NONE}-- click information update
 			tok: EDITOR_TOKEN
 			tfs: EDITOR_TOKEN_FEATURE_START
 			stop: BOOLEAN
-			tc: EDITOR_TOKEN_COMMENT
 		do
 			from
 				tok := begin_line.first_token
@@ -941,17 +940,16 @@ feature {NONE}-- click information update
 			loop
 				if begin_line_tokens.item.wide_image.is_equal (tok.wide_image) then
 					tok.set_is_fake (begin_line_tokens.item.is_fake)
-					tc ?= tok
 						-- skip token if commented
-					if tc = Void then
+					if not attached {EDITOR_TOKEN_COMMENT} tok then
 						if begin_line_tokens.item.is_feature_start then
 							tfs ?= begin_line_tokens.item.twin
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
 							tfs.update_position
-							if tok.next /= Void then
-								tfs.set_next_token (tok.next)
+							if attached tok.next as l_next_tok then
+								tfs.set_next_token (l_next_tok)
 								tok.next.set_previous_token (tfs)
 							end
 							tok := tfs
@@ -976,17 +974,17 @@ feature {NONE}-- click information update
 			loop
 				if end_line_tokens.item.wide_image.is_equal (tok.wide_image) then
 					tok.set_is_fake (end_line_tokens.item.is_fake)
-					tc ?= tok
+
 						-- skip token if commented
-					if tc = Void then
+					if not attached {EDITOR_TOKEN_COMMENT} tok then
 						if end_line_tokens.item.is_feature_start then
 							tfs ?= end_line_tokens.item.twin
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
 							tfs.update_position
-							if tok.next /= Void then
-								tfs.set_next_token (tok.next)
+							if attached tok.next as l_next_tok then
+								tfs.set_next_token (l_next_tok)
 								tok.next.set_previous_token (tfs)
 							end
 							tok := tfs

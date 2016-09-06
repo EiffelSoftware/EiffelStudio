@@ -534,25 +534,26 @@ feature {NONE} -- Implementation functions
 			l_selection: TUPLE [pos_start, pos_end: INTEGER]
 		do
 			if class_text_exists or else dotnet_class then
-				if feature_stone /= Void and not develop_window.feature_stone_already_processed then  -- and not same_class then
-					conv_ferrst ?= feature_stone
-					if conv_ferrst /= Void then
-						error_line := conv_ferrst.line_number
+				if attached feature_stone as l_feature_stone and not develop_window.feature_stone_already_processed then  -- and not same_class then
+					if attached {like conv_ferrst} l_feature_stone as l_conv_ferrst then
+						conv_ferrst := l_conv_ferrst
+ 						error_line := conv_ferrst.line_number
 					else
+						conv_ferrst := Void
 							-- if a feature_stone has been dropped
 							-- scroll to the corresponding feature in the basic text format
 						if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
-							develop_window.scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
+							develop_window.scroll_to_feature (l_feature_stone.e_feature, new_class_stone.class_i)
 						end
 					end
-				elseif ast_stone /= Void then
+				elseif attached ast_stone as l_ast_stone then
 					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
 						if not develop_window.managed_main_formatters.first.selected then
 							select_basic_main_formatter
 						end
-						develop_window.scroll_to_ast (ast_stone.ast, ast_stone.class_i, ast_stone.is_for_feature_invocation)
+						develop_window.scroll_to_ast (l_ast_stone.ast, l_ast_stone.class_i, l_ast_stone.is_for_feature_invocation)
 					end
-				elseif line_stone /= Void then
+				elseif attached line_stone as l_line_stone then
 					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
 						if not develop_window.managed_main_formatters.first.selected then
 							select_basic_main_formatter
@@ -561,14 +562,16 @@ feature {NONE} -- Implementation functions
 						if l_selection /= Void then
 							develop_window.scroll_to_selection (l_selection, True)
 						else
-							develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (line_stone.line_number, line_stone.column_number, line_stone.should_line_be_selected)
+							develop_window.editors_manager.current_editor.scroll_to_start_of_line_when_ready (l_line_stone.line_number, l_line_stone.column_number, l_line_stone.should_line_be_selected)
 						end
 					end
 				else
-					cl_syntax_stone ?= a_stone
-					if cl_syntax_stone /= Void then
+					if attached {like cl_syntax_stone} a_stone as l_cl_syntax_stone then
+						cl_syntax_stone := l_cl_syntax_stone
 						error_line := cl_syntax_stone.line
-					end
+					else
+						cl_syntax_stone := Void
+ 					end
 				end
 				if not text_loaded and then error_line > 0 then
 						-- Scroll to the line of the error.
@@ -582,8 +585,8 @@ feature {NONE} -- Implementation functions
 								 current_editor.set_read_only (True)
 							end
 						end
-						if current_editor /= Void then
-							current_editor.display_line_when_ready (error_line, 0, True)
+						if attached current_editor as l_current_editor then
+							l_current_editor.display_line_when_ready (error_line, 0, True)
 						end
 					end
 				end
@@ -593,11 +596,13 @@ feature {NONE} -- Implementation functions
 	set_class_text_if_possible
 			-- Call `set_class_text_for_class_stone' if possible.
 		do
-			if conv_classc = Void or else
-				conv_classc.e_class.is_external or else
-				feature_stone /= Void and not
-				develop_window.feature_stone_already_processed and not
-				same_class then
+			if
+				conv_classc = Void
+				or else conv_classc.e_class.is_external
+					or else	feature_stone /= Void and
+					not	develop_window.feature_stone_already_processed and
+					not	same_class
+			then
 					-- If a classi_stone or a feature_stone or a external call
 					-- has been dropped, check to see if a .NET class.
 				set_class_text_for_class_stone
@@ -617,39 +622,40 @@ feature {NONE} -- Implementation functions
 					if external_cons /= Void then
 						-- A .NET class.
 						dotnet_class := True
-						short_formatter ?= managed_main_formatters.i_th (4)
-						flat_formatter ?= managed_main_formatters.i_th (5)
-						if short_formatter /= Void then
-							short_formatter.set_dotnet_mode (True)
+						if attached {like short_formatter} managed_main_formatters.i_th (4) as l_short_formatter then
+							short_formatter := l_short_formatter
+							l_short_formatter.set_dotnet_mode (True)
+						else
+							short_formatter := Void
 						end
-						if flat_formatter /= Void then
-							flat_formatter.set_dotnet_mode (True)
-						end
+						if attached {like flat_formatter} managed_main_formatters.i_th (5) as l_flat_formatter then
+							flat_formatter := l_flat_formatter
+							l_flat_formatter.set_dotnet_mode (True)
+						else
+							flat_formatter := Void
+ 						end
 					end
 				elseif feature_stone /= Void then
 					if not text_loaded then
-						from
-							managed_main_formatters.start
-						until
-							managed_main_formatters.after
+						across
+							managed_main_formatters as ic
 						loop
 								--| Ted: Text might change here
-							managed_main_formatters.item.set_stone (new_class_stone)
-							managed_main_formatters.forth
+							ic.item.set_stone (new_class_stone)
 						end
 					end
 				else
-					if not text_loaded then
+					if not text_loaded and not managed_main_formatters.is_empty then
 						managed_main_formatters.first.set_stone (new_class_stone)
 						managed_main_formatters.first.execute
 					end
 				end
 			else
-				if current_editor /= Void then
-					current_editor.clear_window
-					current_editor.display_message (
-						develop_window.Warning_messages.w_file_not_exist (
-							new_class_stone.class_i.file_name.name))
+				if attached current_editor as l_current_editor then
+					l_current_editor.clear_window
+					l_current_editor.display_message (
+							develop_window.Warning_messages.w_file_not_exist (new_class_stone.class_i.file_name.name)
+						)
 				end
 			end
 		end
@@ -665,6 +671,7 @@ feature {NONE} -- Implementation functions
 					--| The dropped class is not compiled.
 					--| Display only the textual formatter.
 				if dotnet_class and not text_loaded then
+						-- FIXME: it should not use fixed index like 4 or 5! use constant declared in a specific interface. (TODO)
 					managed_main_formatters.i_th (4).set_stone (new_class_stone)
 					managed_main_formatters.i_th (5).set_stone (new_class_stone)
 					managed_main_formatters.i_th (4).execute
@@ -685,20 +692,19 @@ feature {NONE} -- Implementation functions
 				managed_main_formatters.first.disable_sensitive
 				if not same_class then
 					if not text_loaded then
-						from
-							managed_main_formatters.start
-						until
-							managed_main_formatters.after
+						across
+							managed_main_formatters as ic
 						loop
 								--| Ted: Text might be changed
-							managed_main_formatters.item.set_stone (new_class_stone)
-							managed_main_formatters.forth
+							ic.item.set_stone (new_class_stone)
 						end
 						if not dotnet_class then
+							check managed_main_formatters.count >= 2 end
 							managed_main_formatters.i_th (2).execute
 						end
 					else
 						if not dotnet_class then
+							check managed_main_formatters.count >= 2 end
 							managed_main_formatters.i_th (2).enable_select
 						end
 					end
@@ -712,28 +718,22 @@ feature {NONE} -- Implementation functions
 						feature_stone = Void
 					then
 						if not text_loaded then
-							from
-								managed_main_formatters.start
-							until
-								managed_main_formatters.after
+							across
+								managed_main_formatters as ic
 							loop
 									--| Ted: Text might be changed
-								managed_main_formatters.item.set_stone (new_class_stone)
-								managed_main_formatters.forth
+								ic.item.set_stone (new_class_stone)
 							end
 						end
 					end
 				else
 					if not develop_window.feature_stone_already_processed then
 						develop_window.address_manager.disable_formatters
-						from
-							managed_main_formatters.start
-						until
-							managed_main_formatters.after
+						across
+							managed_main_formatters as ic
 						loop
 								--| Ted: Text might be changed
-							managed_main_formatters.item.set_stone (new_class_stone)
-							managed_main_formatters.forth
+							ic.item.set_stone (new_class_stone)
 						end
 					end
 				end
@@ -1385,7 +1385,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

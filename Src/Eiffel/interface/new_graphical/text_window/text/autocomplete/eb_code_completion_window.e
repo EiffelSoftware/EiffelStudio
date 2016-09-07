@@ -193,6 +193,7 @@ feature {NONE} -- Initialization
 
 				-- "Options" label
 				--| TODO add tooltip.
+				--| Remove hardcoded string
 			create l_label.make_with_text (" Press 'Crtl + Space' to show templates")
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
@@ -1072,10 +1073,6 @@ feature {NONE} -- Implementation
 				l_tt_text := l_completion_template.tooltip_text
 				l_cc_text := l_completion_template.code_texts.code
 				l_cc_text.right_adjust
-
-					-- Workaround to indent the code in the tooltip.
-					--| TODO find a way to do Syntax Highlighting.
-				l_cc_text.prepend_string ("            ")
 				l_screen := (create {EV_SCREEN}).monitor_area_from_position (screen_x, screen_y)
 				l_viewer.set_maximum_widget_width (l_screen.width - {ES_UI_CONSTANTS}.horizontal_padding * 2)
 				l_viewer.set_content (l_cc_text)

@@ -107,6 +107,31 @@ feature -- Access
 			end
 		end
 
+	input_values: detachable STRING_TABLE [STRING_32]
+			-- Table with formal argument name and type
+			-- without default values.
+		local
+			i: INTEGER
+			l_result: detachable STRING_TABLE [STRING_32]
+			l_tuple: TUPLE [name:STRING_32; type:STRING_32]
+		do
+			if
+				attached {LIST [TUPLE [name:STRING_32; type:STRING_32]]} internal_arguments as l_arguments
+			then
+				from
+					l_arguments.start
+					l_arguments.forth -- skip first argument (context argument)
+				until
+					l_arguments.after
+				loop
+					l_tuple := l_arguments.item_for_iteration
+					l_result.force (l_tuple.type, l_tuple.name)
+					l_arguments.forth
+				end
+				Result := l_result
+			end
+		end
+
 	declarations: detachable STRING_TABLE [STRING_32]
 			-- Arguments and Locals declarations for the current feature, if any.
 		do

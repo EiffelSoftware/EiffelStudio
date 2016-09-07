@@ -2016,12 +2016,14 @@ feature {NONE} -- Code completable implementation
 			loop
 				p := p.min (ic.item.start_pos)
 			end
+			dev_window.save_text
 			txt.update_token_pos_in_text_from (p)
 
 			if True then
 				txt.enable_linked_editing (Current, l_pos, l_regions, l_code_texts.linked_token)
 				refresh_now
 			end
+
 		end
 
 	select_from_cursor_to_saved

@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 				l_hbox.disable_item_expand (l_auto_show_check)
 				auto_recycle (auto_show_check)
 			end
-
 		end
 
 feature {NONE} -- Access
@@ -68,9 +67,6 @@ feature {NONE} -- Access
 
 	content: STRING_32
 			-- Content to display
-
-	content_style: detachable LIST [EDITOR_TOKEN]
-			-- Content to display.
 
 	maximum_widget_width: INTEGER
 			-- Max widget width
@@ -88,17 +84,6 @@ feature -- Element change
 		ensure
 			content_set: content = a_content
 		end
-
-
-	set_content_style (a_content: LIST [EDITOR_TOKEN])
-			-- Set's the content widget's view context
-		do
-			content_style := a_content
-			update_context_style
-		ensure
-			content_style_set: content_style = a_content
-		end
-
 
 feature -- Status report
 
@@ -142,6 +127,7 @@ feature {NONE} -- Basic operation
 			l_grid.lock_update
 			l_grid.wipe_out
 
+
 			if attached content as l_text then
 
 				create l_editor_item
@@ -150,9 +136,9 @@ feature {NONE} -- Basic operation
 				l_row.set_item (1, l_editor_item)
 				l_row.hide
 
-				-- Format preconditions
 				create l_editor_item
-				l_editor_item.set_text (l_text)
+				l_editor_item.set_text_with_tokens (template_tokens (l_text))
+--				l_editor_item.set_text_with_tokens (template_tokens_normalize (l_text))
 
 					-- Set row
 				l_grid.set_row_count_to (l_grid.row_count + 1)
@@ -178,66 +164,6 @@ feature {NONE} -- Basic operation
 			l_grid.unlock_update
 		end
 
-
-	update_context_style
-		require
-			is_interface_usable: is_interface_usable
-			is_initialized: is_initialized
-		local
-			l_decorator: TEXT_FORMATTER_DECORATOR
-			l_generator: attached EB_EDITOR_TOKEN_GENERATOR
-			l_feature_i: FEATURE_I
-			l_feature_as: FEATURE_AS
-			l_editor_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_grid: like template_grid
-			l_height: INTEGER
-			l_token_text: EB_EDITOR_TOKEN_TEXT
-			l_row: EV_GRID_ROW
-			l_width: INTEGER
-			l_no_comment: STRING_32
-			l_grid_width: INTEGER
-		do
-				-- Clear the contract grid
-			l_grid := template_grid
-			l_grid.lock_update
-			l_grid.wipe_out
-
-			if attached content_style as l_content_style then
-
-				create l_token_text
-
-					-- Create editor signature
-				create l_generator.make
-				l_generator.enable_multiline
-
-				create l_editor_item
-				l_grid.set_row_count_to (l_grid.row_count + 1)
-				l_row := l_grid.row (l_grid.row_count)
-				l_row.set_item (1, l_editor_item)
-				l_row.hide
-
-				l_editor_item.set_text_with_tokens (l_content_style)
-				l_generator.wipe_out_lines
-
-				l_token_text.set_tokens (l_content_style)
-				l_row.set_height (l_token_text.required_height)
-				l_row.show
-
-					-- Grid dimension adjustments
-				l_height := l_height + l_row.height
-				l_width := l_width.max (l_token_text.required_width)
-
-				if maximum_widget_width > 0 then
-					l_grid_width := (l_width + 20).min (maximum_widget_width)
-				else
-					l_grid_width := l_width + 20
-				end
-
-			end
-
-			l_grid.unlock_update
-		end
-
 feature -- User interface elements
 
 	template_grid: attached ES_GRID
@@ -257,6 +183,139 @@ feature {NONE} -- Factory
 		do
 			create Result
 		end
+
+feature {NONE} -- Tokens
+
+	template_tokens (a_code: STRING): LIST [EDITOR_TOKEN]
+			-- Generate tokens for the given code `a_code'
+			-- normalize whitespces based on the next line
+			-- to the first line indentation.
+		local
+			l_scanner: EDITOR_EIFFEL_SCANNER
+			l_token: EDITOR_TOKEN
+			l_new_line: BOOLEAN
+			l_first_new_line: BOOLEAN
+			i: INTEGER
+			l_token_space: EDITOR_TOKEN_SPACE
+		do
+			create {ARRAYED_LIST [EDITOR_TOKEN]}Result.make (0)
+			create l_scanner.make
+			from
+				l_scanner.execute (a_code)
+				l_token := l_scanner.first_token
+				l_new_line := False
+				l_first_new_line := True
+			until
+				l_token = Void
+			loop
+				if attached {EDITOR_TOKEN_EOL} l_token then
+					l_new_line := True
+				end
+				if
+					l_new_line and then
+					attached {EDITOR_TOKEN_SPACE} l_token and then
+					l_first_new_line
+				then
+					i := l_token.wide_image.count
+					if attached {EDITOR_TOKEN_KEYWORD} l_token.previous.previous then
+						create l_token_space.make (l_token.wide_image.count - (i - 4) )
+					else
+						create l_token_space.make (l_token.wide_image.count - i )
+					end
+					Result.force (l_token_space)
+					l_new_line := False
+					l_first_new_line := False
+				elseif
+					l_new_line and then
+					attached {EDITOR_TOKEN_SPACE} l_token
+				then
+					l_new_line := False
+					if i > l_token.wide_image.count then
+						create l_token_space.make (0)
+					else
+						create l_token_space.make (l_token.wide_image.count - i )
+					end
+					Result.force (l_token_space)
+				else
+					Result.force (l_token)
+				end
+					l_token := l_token.next
+			end
+		end
+
+	template_tokens_normalize (a_code: STRING): LIST [EDITOR_TOKEN]
+		local
+			l_scanner: EDITOR_EIFFEL_SCANNER
+			l_token: EDITOR_TOKEN
+			l_string: STRING
+		do
+			create {ARRAYED_LIST [EDITOR_TOKEN]}Result.make (0)
+			create l_scanner.make
+			from
+				create l_string.make_from_string (a_code)
+				l_string.prepend ("            ")
+				normalize_multiline (l_string)
+				l_scanner.execute (l_string)
+				l_token := l_scanner.first_token
+			until
+				l_token = Void
+			loop
+				Result.force (l_token)
+				l_token := l_token.next
+			end
+		end
+
+
+	normalize_multiline (s: STRING_32)
+        local
+            i,j,k,m,n: INTEGER
+            l_prefix: detachable STRING_32
+        do
+            from
+                i := 1
+                j := i
+                n := s.count
+            until
+                i > n
+            loop
+                k := s.index_of ('%N', i)
+                if k = 0 then
+                    k := n
+                end
+                if k = i then
+                        -- Ignore
+                elseif l_prefix = Void then
+                    from
+                        j := i
+                    until
+                        not s[j].is_space
+                    loop
+                        j := j + 1
+                    end
+                    l_prefix := s.substring (i, j - 1)
+                else
+                    from
+                        j := i
+                        m := 1
+                    until
+                        m > l_prefix.count or l_prefix[m] /= s[j] or j > k
+                    loop
+                        m := m + 1
+                        j := j + 1
+                    end
+                    if m <= l_prefix.count and l_prefix[m] /= s[j] then
+                        l_prefix.keep_head (m - 1)
+                    end
+                end
+                i := k + 1
+            end
+            if l_prefix /= Void and then l_prefix.count > 0 then
+                if s.starts_with (l_prefix) then
+                    s.remove_head (l_prefix.count)
+                end
+                s.replace_substring_all ({STRING_32} "%N" + l_prefix, {STRING_32} "%N")
+            end
+        end
 
 invariant
 	template_grid_set: template_grid /= Void

@@ -839,6 +839,10 @@ feature {NONE} -- Implementation
 		end
 
 	normalize_multiline	(s: STRING_32)
+			-- Remove common heading spaces sequence from every line.
+			--| first the code identifies the common heading spaces sequence as `l_prefix'
+			--| then it removes this prefix from the beginning of all lines.
+			--| For instance, if every line starts with "%T%T", this sequence will be removed.
 		local
 			i,j,k,m,n: INTEGER
 			l_prefix: detachable STRING_32
@@ -855,8 +859,9 @@ feature {NONE} -- Implementation
 					k := n
 				end
 				if k = i then
-						-- Ignore
+						-- Ignore empty line.
 				elseif l_prefix = Void then
+						-- No prefix identified for now, so let's compute it with the header spaces.
 					from
 						j := i
 					until
@@ -866,6 +871,7 @@ feature {NONE} -- Implementation
 					end
 					l_prefix := s.substring (i, j - 1)
 				else
+						-- Check if the current line starts with `l_prefix'
 					from
 						j := i
 						m := 1
@@ -876,12 +882,17 @@ feature {NONE} -- Implementation
 						j := j + 1
 					end
 					if m <= l_prefix.count and l_prefix[m] /= s[j] then
+							-- the current line does not start with the full `l_prefix'
+							-- so keep only the common part as the new `l_prefix'.
 						l_prefix.keep_head (m - 1)
 					end
 				end
 				i := k + 1
 			end
 			if l_prefix /= Void and then l_prefix.count > 0 then
+					-- A common spaces sequence prefix was found
+					-- so remove this prefix from each line.
+					-- With a special case for first line.
 				if s.starts_with (l_prefix) then
 					s.remove_head (l_prefix.count)
 				end

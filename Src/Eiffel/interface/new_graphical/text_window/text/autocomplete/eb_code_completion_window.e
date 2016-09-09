@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			Precursor {CODE_COMPLETION_WINDOW}
 
 			build_option_bar
+			build_option_bar_template
 			choice_list.enable_tree
 			choice_list.set_configurable_target_menu_mode
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
@@ -197,7 +198,44 @@ feature {NONE} -- Initialization
 			create l_label.make_with_text (" Press 'Crtl + Space' to show templates")
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
+		end
 
+	build_option_bar_template
+			-- Build option bar
+		local
+			l_hbox: EV_HORIZONTAL_BOX
+			l_sep: EV_HORIZONTAL_SEPARATOR
+			l_label: EV_LABEL
+			l_tooltip: STRING_32
+		do
+				-- Separator
+			create l_sep
+			l_sep.set_minimum_height (2)
+			option_bar_box_tpl.extend (l_sep)
+
+			create l_hbox
+			l_hbox.set_padding_width (layout_constants.small_padding_size)
+			l_hbox.set_border_width (1)
+			option_bar_box_tpl.extend (l_hbox)
+			option_bar_box_tpl.disable_item_expand (l_hbox)
+
+				-- "Options" label
+			create l_label.make_with_text (interface_names.l_Options_colon)
+			l_hbox.extend (l_label)
+			l_hbox.disable_item_expand (l_label)
+
+			create option_bar
+			l_hbox.extend (option_bar)
+			l_hbox.disable_item_expand (option_bar)
+
+
+				-- "Options" label
+				--| TODO add tooltip.
+				--| Remove hardcoded string
+			create l_label.make_with_text (" Press 'Crtl + Space' to show features")
+			l_hbox.extend (l_label)
+			l_hbox.disable_item_expand (l_label)
+			option_bar_box_tpl.hide
 		end
 
 	setup_option_buttons
@@ -727,8 +765,6 @@ feature {NONE} -- Option behaviour
 			local_index: INTEGER
 			l_list: like choice_list
 		do
-				-- Hide the option bar box when we display the templates.
-			option_bar_box.hide
 			l_list := choice_list
 			build_template_list
 			resize_column_to_window_width
@@ -747,6 +783,7 @@ feature {NONE} -- Option behaviour
 			if full_list = Void then
 				create full_list.make_empty
 			end
+
 		ensure
 			full_list_not_void: full_list /= Void
 		end
@@ -869,6 +906,9 @@ feature {NONE} -- Action handlers
 		end
 
 feature {NONE} -- Implementation
+
+	mode_template: BOOLEAN
+		-- True if we are displaying templates, False in other case.
 
 	contract_widget: TUPLE [widget: EV_WIDGET; comment: EVS_LABEL; viewer: ES_CONTRACT_VIEWER_WIDGET]
 			-- Reference to the tooltip widget.
@@ -1188,7 +1228,18 @@ feature {NONE} -- Implementation
 		do
 				-- Render the templates.
 			    --| Should we disable the actions and accelerators?
-			apply_template_completion_list
+			if not mode_template then
+				mode_template := True
+				option_bar_box.hide
+				option_bar_box_tpl.show
+				apply_template_completion_list
+			else
+				mode_template := False
+				option_bar_box.show
+				option_bar_box_tpl.hide
+				build_full_list
+				resize_column_to_window_width
+			end
 		end
 
 	show_tooltip (a_row: EV_GRID_ROW)

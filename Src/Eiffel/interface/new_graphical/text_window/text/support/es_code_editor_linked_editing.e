@@ -289,7 +289,10 @@ feature -- Execute
 				linked_items as lst
 			loop
 				l_item := lst.item
-				if l_item.end_pos < a_pos_in_text then
+				if l_item.end_pos + a_size_diff = a_pos_in_text then
+						-- Add a char to the wanted token.
+					l_item.end_pos := l_item.end_pos + a_size_diff
+				elseif l_item.end_pos < a_pos_in_text then
 						-- Ignore
 					dbg_print ("%%(" + l_item.start_pos.out + "," + l_item.end_pos.out + ") => KEEP.%N")
 				else
@@ -363,20 +366,6 @@ feature {NONE} -- Execution
 						dbg_print ("Execute linked editing [pos=" + pos.out + "].%N")
 						dbg_print (" editing item " + l_editing_item.debug_output + " %"" + cs + "%".%N")
 						dbg_print (" cursor token:%"" + cs + "%".%N")
-					end
-					if attached l_editing_item.token_i_th (idx) as l_modified_tok then
-						create l_new_item_text.make_empty
-						across
-							l_editing_item.tokens as l_editing_tokens
-						loop
-							if l_editing_tokens.item = l_modified_tok then
-								l_new_item_text.append (cs)
-							else
-								l_new_item_text.append (l_editing_tokens.item.wide_image)
-							end
-						end
-					else
-						l_new_item_text := cs
 					end
 					l_new_item_text := txt.string_between_pos_in_text (l_editing_item.start_pos, l_editing_item.end_pos)
 
@@ -542,7 +531,7 @@ feature {NONE} -- Implementation
 				a_pos_in_text > 0 and then
 				attached editing_item (a_pos_in_text) as i
 			then
-				Result := i.start_pos <= a_pos_in_text and a_pos_in_text <= i.end_pos
+				Result := i.start_pos <= a_pos_in_text and a_pos_in_text <= i.end_pos + 1 -- +1 to allow cursor to be just after the wanted token.
 			end
 		end
 
@@ -705,7 +694,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-;note
+note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

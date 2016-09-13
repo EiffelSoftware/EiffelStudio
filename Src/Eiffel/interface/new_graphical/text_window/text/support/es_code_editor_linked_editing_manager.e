@@ -109,13 +109,21 @@ feature -- Operation
 					a_token_texts as ic
 				loop
 					create l_linking.make (text, a_editor, a_pos_in_text, a_regions, ic.item)
-					lst.force (l_linking)
-					prepare_linking (l_linking)
+					if l_linking.linked_items.count <= 1 then
+						l_linking.terminate
+					else
+						lst.force (l_linking)
+						prepare_linking (l_linking)
+					end
 				end
 			else
 				create l_linking.make (text, a_editor, a_pos_in_text, a_regions, Void)
-				lst.force (l_linking)
-				prepare_linking (l_linking)
+				if l_linking.linked_items.count <= 1 then
+					l_linking.terminate
+				else
+					lst.force (l_linking)
+					prepare_linking (l_linking)
+				end
 			end
 		end
 

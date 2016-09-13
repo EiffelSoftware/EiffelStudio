@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make (a_line: EDITOR_LINE; a_tokens: ITERABLE [EDITOR_TOKEN]; a_start_pos, a_end_pos: INTEGER)
 		local
 			s: STRING_32
+			n: INTEGER
 		do
 			create s.make_empty
 			across
@@ -36,6 +37,12 @@ feature {NONE} -- Initialization
 			tokens := a_tokens
 			start_pos := a_start_pos
 			end_pos := a_end_pos
+			across
+				a_tokens as ic
+			loop
+				n := n + 1
+			end
+			tokens_count := n
 		end
 
 feature -- Access
@@ -48,6 +55,9 @@ feature -- Access
 
 	tokens: ITERABLE [EDITOR_TOKEN]
 			-- Associated tokens, mainly used to restore color.
+
+	tokens_count: INTEGER
+			-- Number of `tokens'.
 
 	background_color: detachable EV_COLOR
 			-- Original background color, used to restore later.
@@ -65,8 +75,11 @@ feature -- Query
 		local
 			i: INTEGER
 			tok: detachable EDITOR_TOKEN
+			l_tok_end_pos_in_text: INTEGER
+			n: INTEGER
 		do
 			i := 0
+
 			across
 				tokens as ic
 			until
@@ -74,12 +87,20 @@ feature -- Query
 			loop
 				i := i + 1
 				tok := ic.item
-				if a_pos_in_text < tok.pos_in_text or tok.pos_in_text + tok.length < a_pos_in_text then
+				l_tok_end_pos_in_text := tok.pos_in_text + tok.length
+				if a_pos_in_text < tok.pos_in_text then
 					tok := Void
+				elseif l_tok_end_pos_in_text < a_pos_in_text then
+					if i = n and l_tok_end_pos_in_text + 1 = a_pos_in_text then -- Last
+							-- Accept the position right after the `tokens'.
+					else
+						tok := Void
+					end
 				end
 			end
 			if tok /= Void then
 				Result := i
+			else
 			end
 		ensure
 			Result > 0 implies token_i_th (Result) /= Void
@@ -132,7 +153,7 @@ feature -- Status report
 
 	is_included (a_pos_in_text: INTEGER): BOOLEAN
 		do
-			Result := start_pos <= a_pos_in_text and a_pos_in_text <= end_pos
+			Result := start_pos <= a_pos_in_text and a_pos_in_text <= end_pos + 1 -- Include position right after the tokens
 		end
 
 	debug_output: STRING_32

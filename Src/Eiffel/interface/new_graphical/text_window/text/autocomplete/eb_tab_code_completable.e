@@ -542,6 +542,16 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
+	complete_code_template_from_window (a_template: EB_TEMPLATE_FOR_COMPLETION)
+			-- Insert template `a_template' and locals variables `a_locals' if any in the editor.
+		do
+			complete_template_call (a_template)
+		end
+
+	complete_template_call (a_template: EB_TEMPLATE_FOR_COMPLETION)
+		do
+		end
+
 	post_focus_back
 			-- Preparation before focus is set back.
 		do
@@ -753,7 +763,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

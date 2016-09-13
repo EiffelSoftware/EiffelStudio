@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 		do
 			create sorted_names.make_empty
 			create option_bar_box
+			create option_bar_box_tpl
 			create choice_list
 			create full_list.make_empty
 			create matches.make_empty
@@ -68,6 +69,8 @@ feature {NONE} -- Initialization
 			vbox.extend (choice_list)
 			vbox.extend (option_bar_box)
 			vbox.disable_item_expand (option_bar_box)
+			vbox.extend (option_bar_box_tpl)
+			vbox.disable_item_expand (option_bar_box_tpl)
 			extend (vbox)
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
 			focus_out_actions.extend (agent on_lose_focus)
@@ -84,7 +87,7 @@ feature -- Initialization
 		do
 			code_completable := an_editor
 			remainder := a_remainder
-			sorted_names := a_completion_possibilities
+			initialize_completion_possibilities (a_completion_possibilities)
 			user_completion := a_complete_word
 			if a_name /= Void then
 				before_complete := a_name
@@ -112,6 +115,12 @@ feature -- Initialization
 			end
 		end
 
+	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
+			-- Initialize `sorted_names'  to completion possiblities
+		do
+			sorted_names := a_completion_possibilities
+		end
+
 feature -- Access
 
 	code_completable: detachable CODE_COMPLETABLE note option: stable attribute end
@@ -123,8 +132,11 @@ feature -- Access
 	option_bar_box: EV_VERTICAL_BOX
 			-- Option bar box
 
+	option_bar_box_tpl: EV_VERTICAL_BOX
+			-- Option bar box for templates
+
 	sorted_names: SORTABLE_ARRAY [like name_type]
-			-- list of possible names sorted alphabetically
+			-- list of possible names sorted alphabetically.
 
 	before_complete: detachable STRING_32 note option: stable attribute end
 			-- Insertion string
@@ -808,6 +820,9 @@ feature {NONE} -- Implementation
 			l_names: like sorted_names
 			l_list: like full_list
 		do
+				-- Ensure we show the option_bar_box in full_list
+			option_bar_box_tpl.hide
+			option_bar_box.show
 			l_list := full_list
 			l_names := sorted_names
 			if not has_child_node then
@@ -834,6 +849,7 @@ feature {NONE} -- Implementation
 
 	full_list: like sorted_names
 			-- Sorted full list of name.
+
 
 	has_child_node: BOOLEAN
 			-- Any child node?
@@ -1209,6 +1225,8 @@ feature {NONE} -- String matching
 		end
 
 	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER
+		require
+			not_empty: not table.is_empty
 		local
 			low, up, mid: INTEGER
 		do
@@ -1349,7 +1367,10 @@ feature {NONE} -- String matching
 			l_index_offset: INTEGER
 		do
 			l_full_list := full_list
-			if a_name /= Void and then not a_name.is_empty then
+			if
+				not l_full_list.is_empty and then
+				a_name /= Void and then not a_name.is_empty
+			then
 				create for_search.make (a_name)
 				if for_search.is_binary_searchable then
 					create Result.make (2, 1)
@@ -1451,7 +1472,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

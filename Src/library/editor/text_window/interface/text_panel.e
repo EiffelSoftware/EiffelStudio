@@ -673,8 +673,8 @@ feature -- Basic Operations
 			-- Update display without waiting for next idle
 		do
 			refresh
-			if margin /= Void and then margin.is_show_requested then
-				margin.margin_area.flush
+			if attached margin as m and then m.is_show_requested then
+				m.margin_area.flush
 			end
 			editor_drawing_area.flush
 			in_scroll := False
@@ -1955,7 +1955,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,55 +1,30 @@
 note
-	description: "Linked token behavior, used for linked editing."
+	description: "[
+		An observer for events implemented on a {ES_CODE_TEMPLATE_CATALOG_S} service interface.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_CODE_EDITOR_LINKING
+class
+	ES_CODE_TEMPLATE_CATALOG_OBSERVER
 
-feature -- Access
+inherit
 
-	is_active_at (a_pos_in_text: INTEGER): BOOLEAN
-		deferred
-		end
+	EVENT_OBSERVER_I
 
-feature -- Execution
+feature {ES_CODE_TEMPLATE_CATALOG_S} -- Event handlers
 
-	prepare
-			-- Prepare linking mode.
-		do
-		end
-
-	terminate
-			-- Terminate linking mode.
-		do
-		end
-
-	propagate_on_insertion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
-			-- On char, string insertion event,
-			-- resulting into a size difference of `a_size_diff'.
-		do
-		end
-
-	propagate_on_deletion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
-			-- On char, string (or selection) deleted event,
-			-- resulting into a size difference of `a_size_diff'.
+	on_catalog_changed
+			-- Called when the code template catalog is updated in any respect.
 		require
-			a_size_diff < 0
+			is_interface_usable: attached {USABLE_I} Current as l_usable implies l_usable.is_interface_usable
 		do
 		end
 
-	on_editing  (a_pos_in_text: INTEGER; a_size_diff: INTEGER)
-			-- On char, string insertion event,
-			-- resulting into a size difference of `a_size_diff'.
-		require
-			valid_pos_in_text: a_pos_in_text > 0
-		deferred
-		end
-
-note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options: "http://www.eiffel.com/licensing"
+;note
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -77,4 +52,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

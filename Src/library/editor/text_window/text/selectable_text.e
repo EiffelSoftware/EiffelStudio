@@ -138,6 +138,71 @@ feature -- Access
 			Result := attached_cursor.wide_item
 		end
 
+feature -- String
+
+	string_between_pos_in_text (a_start_pos, a_end_pos: INTEGER): STRING_32
+			-- String between pos_in_text `a_start_pos' and `a_end_pos'.	
+		require
+			pos_valid: a_start_pos > 0 and a_end_pos > 0
+			right_order: a_start_pos <= a_end_pos
+		local
+			l_start_cursor, l_end_cursor: like cursor
+		do
+			create l_start_cursor.make_from_integer (a_start_pos, Current)
+			create l_end_cursor.make_from_integer (a_end_pos, Current)
+			Result := string_between_cursor (l_start_cursor, l_end_cursor)
+		end
+
+	string_between_cursor (a_start_cursor, a_end_cursor: like cursor): STRING_32
+			-- String between cursors `a_start_cursor' and `a_end_cursor'.
+		require
+			attached_cursors: a_start_cursor /= Void and then a_end_cursor /= Void
+			right_order: a_start_cursor <= a_end_cursor
+		local
+			ln: like current_line
+			t, t2 : detachable EDITOR_TOKEN
+		do
+				-- Retrieving line after `start_selection'.
+			t := a_start_cursor.token
+			t2 := a_end_cursor.token
+			if t = t2 then
+				if a_start_cursor.pos_in_token = a_end_cursor.pos_in_token then
+					Result := ""
+				else
+					Result := t.wide_image.substring (a_start_cursor.pos_in_token, a_end_cursor.pos_in_token -1)
+				end
+			else
+				ln := a_start_cursor.line
+				from
+					if t = ln.eol_token then
+						Result := "%N"
+						ln := ln.next
+						check ln /= Void end -- Never, otherwise a bug.
+						t := ln.first_token
+					else
+						Result := t.wide_image.substring (a_start_cursor.pos_in_token, t.wide_image.count)
+						t := t.next
+					end
+					until
+						t = t2 or t = a_end_cursor.line.eol_token
+					loop
+						if t = Void or else t = ln.eol_token then
+							Result.extend ('%N')
+							ln := ln.next
+							check ln /= Void end -- Never, otherwise a bug.
+							t := ln.first_token
+						else
+							Result.append (t.wide_image)
+							t := t.next
+						end
+					end
+					check
+						good_line: ln = a_end_cursor.line
+					end
+					Result.append (t2.wide_image.substring (1, a_end_cursor.pos_in_token -1))
+				end
+			end
+
 feature -- Status report
 
 	has_selection: BOOLEAN
@@ -355,50 +420,9 @@ feature {NONE} -- Implementation
 		require
 			attached_cursors: start_sel /= Void and then end_sel /= Void
 			right_order: start_sel <= end_sel
-		local
-			ln: like current_line
-			t, t2 : detachable EDITOR_TOKEN
 		do
-				-- Retrieving line after `start_selection'.
-			t := start_sel.token
-			t2 := end_sel.token
-			if t = t2 then
-				if start_sel.pos_in_token = end_sel.pos_in_token then
-					Result := ""
-				else
-					Result := t.wide_image.substring (start_sel.pos_in_token, end_sel.pos_in_token -1)
-				end
-			else
-				ln := start_sel.line
-				from
-					if t = ln.eol_token then
-						Result := "%N"
-						ln := ln.next
-						check ln /= Void end -- Never, otherwise a bug.
-						t := ln.first_token
-					else
-						Result := t.wide_image.substring (start_sel.pos_in_token, t.wide_image.count)
-						t := t.next
-					end
-					until
-						t = t2 or t = end_sel.line.eol_token
-					loop
-						if t = Void or else t = ln.eol_token then
-							Result.extend ('%N')
-							ln := ln.next
-							check ln /= Void end -- Never, otherwise a bug.
-							t := ln.first_token
-						else
-							Result.append (t.wide_image)
-							t := t.next
-						end
-					end
-					check
-						good_line: ln = end_sel.line
-					end
-					Result.append (t2.wide_image.substring (1, end_sel.pos_in_token -1))
-				end
-			end
+			Result := string_between_cursor (start_sel, end_sel)
+		end
 
 invariant
 	valid_selection: has_selection implies selection_cursor /= Void

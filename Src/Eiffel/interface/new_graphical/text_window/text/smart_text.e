@@ -69,30 +69,34 @@ feature -- Access
 
 feature -- Edit linking mode
 
-	enable_linked_editing (a_editor: EDITABLE_TEXT_PANEL; a_pos_in_text: INTEGER; a_regions: detachable LIST [TUPLE [start_pos,end_pos: INTEGER]])
+	enable_linked_editing (a_editor: EDITABLE_TEXT_PANEL; a_pos_in_text: INTEGER; a_regions: LIST [TUPLE [start_pos,end_pos: INTEGER]]; a_token_texts: detachable ITERABLE [READABLE_STRING_GENERAL])
 			-- Activate linked edit at position `a_pos_in_text' if set, otherwise at cursor.
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
+		require
+			a_regions /= Void and then not a_regions.is_empty
 		local
-			l_linking: ES_CODE_EDITOR_LINKED_EDITING
+			lst: like linked_editing
 		do
-			if attached linked_editing as e then
-				disable_linked_editing
+			disable_linked_editing
+			lst := linked_editing
+			if lst = Void then
+				create lst.make (Current)
+				linked_editing := lst
 			end
-			create l_linking.make (Current, a_editor, a_pos_in_text, a_regions)
-			l_linking.set_background_color (preferences.editor_data.linked_token_background_color)
-			linked_editing := l_linking
+			lst.prepare (a_editor, a_pos_in_text, a_regions, a_token_texts)
 		end
 
 	disable_linked_editing
+			-- Disable any active linked editing session.
 		do
-			if attached linked_editing as e then
-				e.terminate
+			if attached linked_editing as m then
+				m.clean
 				linked_editing := Void
 			end
 		end
 
-	linked_editing: detachable ES_CODE_EDITOR_LINKING
-			-- Active linked tokens editing, if enabled.			
+	linked_editing: detachable ES_CODE_EDITOR_LINKED_EDITING_MANAGER
+			-- Active linked tokens editing sessions.
 
 feature -- Element Change
 
@@ -753,8 +757,7 @@ feature -- Syntax completion
 			l_diff: INTEGER
 		do
 			if
-				attached linked_editing as lnk and then
-				lnk.is_active
+				attached linked_editing as lnk
 			then
 				if is_word (txt) then
 					l_diff := txt.count
@@ -762,7 +765,7 @@ feature -- Syntax completion
 						l_diff := l_diff - (selected_wide_string.count)
 					end
 					Precursor (txt)
-					lnk.on_insertion (l_diff)
+					lnk.on_editor_insertion (cursor, l_diff)
 				else
 					disable_linked_editing
 					Precursor (txt)
@@ -778,8 +781,7 @@ feature -- Syntax completion
 			l_diff: INTEGER
 		do
 			if
-				attached linked_editing as lnk and then
-				lnk.is_active
+				attached linked_editing as lnk
 			then
 				inspect c
 				when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
@@ -788,7 +790,7 @@ feature -- Syntax completion
 						l_diff := l_diff - (selected_wide_string.count)
 					end
 					Precursor (c)
-					lnk.on_insertion (l_diff)
+					lnk.on_editor_insertion (cursor, l_diff)
 				else
 					disable_linked_editing
 					Precursor (c)
@@ -804,8 +806,7 @@ feature -- Syntax completion
 			l_diff: INTEGER
 		do
 			if
-				attached linked_editing as lnk and then
-				lnk.is_active
+				attached linked_editing as lnk
 			then
 				if selection_is_empty then
 					l_diff := -1
@@ -813,7 +814,7 @@ feature -- Syntax completion
 					l_diff := l_diff - (selected_wide_string.count)
 				end
 				Precursor
-				lnk.on_deletion (l_diff)
+				lnk.on_editor_deletion (cursor, l_diff)
 			else
 				Precursor
 			end
@@ -825,8 +826,7 @@ feature -- Syntax completion
 			l_diff: INTEGER
 		do
 			if
-				attached linked_editing as lnk and then
-				lnk.is_active
+				attached linked_editing as lnk
 			then
 				if selection_is_empty then
 					l_diff := -1
@@ -834,7 +834,7 @@ feature -- Syntax completion
 					l_diff := l_diff - (selected_wide_string.count)
 				end
 				Precursor
-				lnk.on_deletion (l_diff)
+				lnk.on_editor_deletion (cursor, l_diff)
 			else
 				Precursor
 			end
@@ -922,7 +922,7 @@ feature {NONE} -- Possiblilities provider
 			end
 		end
 
-feature {NONE}-- click information update
+feature {NONE} -- click information update
 
 	restore_tokens_properties (begin_line, end_line: like line)
 			-- Restore some token properties (position, beginning of a feature)
@@ -930,6 +930,7 @@ feature {NONE}-- click information update
 		local
 			tok: EDITOR_TOKEN
 			tfs: EDITOR_TOKEN_FEATURE_START
+			l_begin_line_token, l_end_line_token: EDITOR_TOKEN
 			stop: BOOLEAN
 		do
 			from
@@ -938,29 +939,34 @@ feature {NONE}-- click information update
 			until
 				begin_line_tokens.after or else tok = Void or else stop
 			loop
-				if begin_line_tokens.item.wide_image.is_equal (tok.wide_image) then
-					tok.set_is_fake (begin_line_tokens.item.is_fake)
+				l_begin_line_token := begin_line_tokens.item
+				if l_begin_line_token.wide_image.is_equal (tok.wide_image) then
+					tok.set_is_fake (l_begin_line_token.is_fake)
 						-- skip token if commented
 					if not attached {EDITOR_TOKEN_COMMENT} tok then
-						if begin_line_tokens.item.is_feature_start then
-							tfs ?= begin_line_tokens.item.twin
+						if
+							l_begin_line_token.is_feature_start and then
+							attached {EDITOR_TOKEN_FEATURE_START} l_begin_line_token as l_feat_tok
+						then
+							tfs := l_feat_tok.twin
+
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
 							tfs.update_position
 							if attached tok.next as l_next_tok then
 								tfs.set_next_token (l_next_tok)
-								tok.next.set_previous_token (tfs)
+								l_next_tok.set_previous_token (tfs)
 							end
 							tok := tfs
 						end
-						tok.set_pos_in_text (begin_line_tokens.item.pos_in_text)
+						tok.set_pos_in_text (l_begin_line_token.pos_in_text)
 					end
 					tok := tok.next
 					begin_line_tokens.forth
 				else
-					if begin_line_tokens.item.is_blank and then tok.is_blank then
-						tok.set_is_fake (begin_line_tokens.item.is_fake)
+					if l_begin_line_token.is_blank and then tok.is_blank then
+						tok.set_is_fake (l_begin_line_token.is_fake)
 					end
 					stop := True
 				end
@@ -972,30 +978,33 @@ feature {NONE}-- click information update
 			until
 				end_line_tokens.after or else tok = Void or else stop
 			loop
-				if end_line_tokens.item.wide_image.is_equal (tok.wide_image) then
-					tok.set_is_fake (end_line_tokens.item.is_fake)
-
+				l_end_line_token := end_line_tokens.item
+				if l_end_line_token.wide_image.is_equal (tok.wide_image) then
+					tok.set_is_fake (l_end_line_token.is_fake)
 						-- skip token if commented
 					if not attached {EDITOR_TOKEN_COMMENT} tok then
-						if end_line_tokens.item.is_feature_start then
-							tfs ?= end_line_tokens.item.twin
+						if
+							l_end_line_token.is_feature_start and then
+							attached {EDITOR_TOKEN_FEATURE_START} l_end_line_token as l_feat_tok
+						then
+							tfs := l_feat_tok.twin
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
 							tfs.update_position
 							if attached tok.next as l_next_tok then
 								tfs.set_next_token (l_next_tok)
-								tok.next.set_previous_token (tfs)
+								l_next_tok.set_previous_token (tfs)
 							end
 							tok := tfs
 						end
-						tok.set_pos_in_text (end_line_tokens.item.pos_in_text)
+						tok.set_pos_in_text (l_end_line_token.pos_in_text)
 					end
 					tok := tok.previous
 					end_line_tokens.forth
 				else
-					if end_line_tokens.item.is_blank and then tok.is_blank then
-						tok.set_is_fake (end_line_tokens.item.is_fake)
+					if l_end_line_token.is_blank and then tok.is_blank then
+						tok.set_is_fake (l_end_line_token.is_fake)
 					end
 					stop := True
 				end

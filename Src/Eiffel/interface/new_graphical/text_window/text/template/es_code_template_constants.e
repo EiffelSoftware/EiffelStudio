@@ -1,50 +1,35 @@
 note
-	description: "Linked token behavior, used for linked editing."
+	description: "[
+		Constants class providing most common constants used in code templates
+		title, description, tags, etc.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	ES_CODE_EDITOR_LINKING
+class
+	ES_CODE_TEMPLATE_CONSTANTS
 
-feature -- Access
 
-	is_active_at (a_pos_in_text: INTEGER): BOOLEAN
-		deferred
-		end
+feature -- Access:Metadata
 
-feature -- Execution
+	Title: STRING = "title"
+			-- Code template title.
 
-	prepare
-			-- Prepare linking mode.
-		do
-		end
+	Description: STRING = "description"
+			-- Code template description.
 
-	terminate
-			-- Terminate linking mode.
-		do
-		end
+	Tags: STRING = "tags"
+			-- Code template tags.
 
-	propagate_on_insertion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
-			-- On char, string insertion event,
-			-- resulting into a size difference of `a_size_diff'.
-		do
-		end
 
-	propagate_on_deletion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
-			-- On char, string (or selection) deleted event,
-			-- resulting into a size difference of `a_size_diff'.
-		require
-			a_size_diff < 0
-		do
-		end
+	Default_value: STRING = "default"
+			-- Code template default.
 
-	on_editing  (a_pos_in_text: INTEGER; a_size_diff: INTEGER)
-			-- On char, string insertion event,
-			-- resulting into a size difference of `a_size_diff'.
-		require
-			valid_pos_in_text: a_pos_in_text > 0
-		deferred
-		end
+
+feature -- Access:Template
+
+	Template: STRING = "TEMPLATE"
+			-- All templates should inherit from a fictitious `TEMPLATE' class.
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

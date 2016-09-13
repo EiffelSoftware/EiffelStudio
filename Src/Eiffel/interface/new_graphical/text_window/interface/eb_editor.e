@@ -416,7 +416,7 @@ feature {NONE} -- Prettify implementation
 					create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_save_before_prettifying_preference, True)
 				)
 
-			l_save_request.set_title (interface_names.t_debugger_question)
+			l_save_request.set_title (interface_names.t_eiffelstudio_question)
 			l_save_request.set_button_action (dialog_buttons.yes_button, agent dev_window.save_text)
 			l_save_request.show_on_active_window
 

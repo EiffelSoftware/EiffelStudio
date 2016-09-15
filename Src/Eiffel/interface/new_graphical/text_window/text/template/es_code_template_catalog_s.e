@@ -34,7 +34,7 @@ feature -- Access
 feature -- Status report
 
 	is_cataloged (a_folder: PATH): BOOLEAN
-			-- Determines if a folder is currently cataloged
+			-- Determines if a folder is currently cataloged.
 		require
 			is_interface_usable: is_interface_usable
 			a_folder_attached: attached a_folder
@@ -61,7 +61,7 @@ feature -- Events
 
 	catalog_changed_event: EVENT_TYPE_I [TUPLE]
 			-- Events called when the catalog is modified in some way; templates added, templates removed
-			-- or a rescan was performed
+			-- or a rescan was performed.
 		require
 			is_interface_usable: is_interface_usable
 		deferred
@@ -75,7 +75,7 @@ feature -- Basic operations
 	rescan (a_folder: PATH)
 			-- Rescans an existing catalog and update the templates associated with the cataloged folder.
 			--
-			-- `a_folder': The cataloged folder to rescan and update the templates
+			-- `a_folder': The cataloged folder to rescan and update the templates.
 		require
 			is_interface_usable: is_interface_usable
 			a_folder_attached: attached a_folder
@@ -92,34 +92,6 @@ feature -- Basic operations
 			is_interface_usable: is_interface_usable
 		deferred
 		end
-
-feature {NONE} -- Basic operation
-
-	sort_templates_by_title (a_list: DS_INDEXABLE [ES_CODE_TEMPLATE_DEFINITION])
-			-- Sorts a template list by title.
-			--
-			-- `a_list': A template list to sort by title.
-		require
-			is_interface_usable: is_interface_usable
-			a_list_attached: attached a_list
-			a_list_contains_attached_items:
-				(attached {DS_INDEXABLE [detachable ANY]} a_list as l_list) and then
-				not l_list.has (Void)
-		local
-			l_comparer: AGENT_BASED_EQUALITY_TESTER [ES_CODE_TEMPLATE_DEFINITION]
-			l_sorter: DS_QUICK_SORTER [ES_CODE_TEMPLATE_DEFINITION]
-		do
---			create l_comparer.make (agent (ia_template: ES_CODE_TEMPLATE_DEFINITION; ia_other_template: ES_CODE_TEMPLATE_DEFINITION): BOOLEAN
---				require
---					ia_template_attached: attached ia_template
---					ia_other_template_attached: attached ia_other_template
---				do
---					Result := ia_template.metadata.title < ia_other_template.metadata.title
---				end)
---			create l_sorter.make (l_comparer)
---			l_sorter.sort (a_list)
-		end
-
 feature -- Extension
 
 	extend_catalog (a_folder: PATH)

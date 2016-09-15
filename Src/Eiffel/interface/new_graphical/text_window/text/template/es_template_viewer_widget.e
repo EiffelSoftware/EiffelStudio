@@ -60,21 +60,21 @@ feature {NONE} -- Initialization
 feature {NONE} -- Access
 
 	context_feature: E_FEATURE
-			-- Last viewed feature
+			-- Last viewed feature.
 
 	context_class: CLASS_C
-			-- Last viewed class
+			-- Last viewed class.
 
 	content: STRING_32
-			-- Content to display
+			-- Content to display.
 
 	maximum_widget_width: INTEGER
-			-- Max widget width
+			-- Max widget width.
 
 feature -- Element change
 
 	set_content (a_content: STRING_32)
-			-- Set's the content widget's view context
+			-- Set's the content widget's view context with `a_content'.
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
@@ -94,7 +94,7 @@ feature -- Status setting
 
 
 	set_maximum_widget_width (a_w: INTEGER)
-			-- Set `maximum_widget_width' with `a_w'.
+			-- Set `maximum_widget_width' to `a_w'.
 		require
 			a_w_not_negative: a_w >= 0
 		do
@@ -138,7 +138,6 @@ feature {NONE} -- Basic operation
 
 				create l_editor_item
 				l_editor_item.set_text_with_tokens (template_tokens (l_text))
---				l_editor_item.set_text_with_tokens (template_tokens_normalize (l_text))
 
 					-- Set row
 				l_grid.set_row_count_to (l_grid.row_count + 1)
@@ -242,80 +241,6 @@ feature {NONE} -- Tokens
 					l_token := l_token.next
 			end
 		end
-
-	template_tokens_normalize (a_code: STRING): LIST [EDITOR_TOKEN]
-		local
-			l_scanner: EDITOR_EIFFEL_SCANNER
-			l_token: EDITOR_TOKEN
-			l_string: STRING
-		do
-			create {ARRAYED_LIST [EDITOR_TOKEN]}Result.make (0)
-			create l_scanner.make
-			from
-				create l_string.make_from_string (a_code)
-				l_string.prepend ("            ")
-				normalize_multiline (l_string)
-				l_scanner.execute (l_string)
-				l_token := l_scanner.first_token
-			until
-				l_token = Void
-			loop
-				Result.force (l_token)
-				l_token := l_token.next
-			end
-		end
-
-
-	normalize_multiline (s: STRING_32)
-        local
-            i,j,k,m,n: INTEGER
-            l_prefix: detachable STRING_32
-        do
-            from
-                i := 1
-                j := i
-                n := s.count
-            until
-                i > n
-            loop
-                k := s.index_of ('%N', i)
-                if k = 0 then
-                    k := n
-                end
-                if k = i then
-                        -- Ignore
-                elseif l_prefix = Void then
-                    from
-                        j := i
-                    until
-                        not s[j].is_space
-                    loop
-                        j := j + 1
-                    end
-                    l_prefix := s.substring (i, j - 1)
-                else
-                    from
-                        j := i
-                        m := 1
-                    until
-                        m > l_prefix.count or l_prefix[m] /= s[j] or j > k
-                    loop
-                        m := m + 1
-                        j := j + 1
-                    end
-                    if m <= l_prefix.count and l_prefix[m] /= s[j] then
-                        l_prefix.keep_head (m - 1)
-                    end
-                end
-                i := k + 1
-            end
-            if l_prefix /= Void and then l_prefix.count > 0 then
-                if s.starts_with (l_prefix) then
-                    s.remove_head (l_prefix.count)
-                end
-                s.replace_substring_all ({STRING_32} "%N" + l_prefix, {STRING_32} "%N")
-            end
-        end
 
 invariant
 	template_grid_set: template_grid /= Void

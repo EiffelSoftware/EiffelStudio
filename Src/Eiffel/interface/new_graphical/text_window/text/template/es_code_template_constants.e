@@ -1,6 +1,6 @@
 note
 	description: "[
-		Constants class providing most common constants used in code templates
+		Constants class providing most common metadate used in code templates
 		title, description, tags, etc.
 	]"
 	date: "$Date$"
@@ -21,10 +21,8 @@ feature -- Access:Metadata
 	Tags: STRING = "tags"
 			-- Code template tags.
 
-
 	Default_value: STRING = "default"
 			-- Code template default.
-
 
 feature -- Access:Template
 

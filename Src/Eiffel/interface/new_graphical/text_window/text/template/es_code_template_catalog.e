@@ -36,10 +36,11 @@ feature {NONE} -- Clean up
 	safe_dispose (a_explicit: BOOLEAN)
 			-- <Precursor>
 		do
-			if a_explicit then
-				if attached internal_code_templates as l_templates then
-					l_templates.wipe_out
-				end
+			if
+				a_explicit and then
+				attached internal_code_templates as l_templates
+			then
+				l_templates.wipe_out
 			end
 		ensure then
 			internal_code_templates_is_empty:
@@ -350,21 +351,17 @@ feature {NONE} -- Basic operations
 			l_parser: like eiffel_parser_wrapper
 			retried: BOOLEAN
 			l_file: RAW_FILE
-			l_size: INTEGER
 		do
 			if not retried then
 				create l_file.make_with_path (a_file_name)
 				l_file.open_read
-				l_size := l_file.count
-				if l_file.is_empty then
-					-- DO NOTHING
-				else
+				if not l_file.is_empty then
 					l_file.read_stream (l_file.count)
 					l_parser := eiffel_parser_wrapper
 					l_parser.parse_with_option_32 (Heavy_eiffel_parser, l_file.last_string, create {CONF_OPTION}, True, Void)
 					if
-						attached {AST_EIFFEL} l_parser.ast_node as l_ast_node and then
-						attached {LEAF_AS_LIST} l_parser.ast_match_list as l_ast_match_list
+						attached l_parser.ast_node as l_ast_node and then
+						attached l_parser.ast_match_list as l_ast_match_list
 					then
 						create Result.make (l_ast_node, l_ast_match_list)
 					else

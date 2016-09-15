@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: detachable STRING_32
-		-- template name
+		-- template name.
 
 	title: detachable STRING_32
 			-- Code template title.
@@ -45,7 +45,7 @@ feature -- Access
 
 	tags: detachable LIST [STRING_32]
 			-- A potential list of tags to classify a code template.
-			--! example: Algorithm, ARRAY, Maximun.
+			--| example: Algorithm, ARRAY, Maximun.
 
 	version: detachable STRING
 			-- Version of the Eiffel compiler.
@@ -66,11 +66,12 @@ feature -- Access
 			-- Code template associated.
 
 	context: detachable STRING
+			-- Template context name, void if
 
 	default_input_values: detachable STRING_TABLE [STRING_32]
 			-- Table with formal argument name and it's default input value.
-			--!To fill the table we use the order defined in the list of formal arguments and
-			--!their corresponding match in the list of defaults input values.
+			--|To fill the table we use the order defined in the list of formal arguments and
+			--|their corresponding match in the list of defaults input values.
 		local
 			i: INTEGER
 			l_result: detachable STRING_TABLE [STRING_32]
@@ -89,12 +90,12 @@ feature -- Access
 					i > l_values.count
 				loop
 						-- There is no validation
-						--! maybe we should do a minimal
-						--! validation, the number of input arguments should be
-						--! the same as default input values.
+						--| maybe we should do a minimal
+						--| validation, the number of input arguments should be
+						--| the same as default input values.
 					if
 						not l_arguments.after and then
-						attached {STRING_32} l_values.at (i) as l_item
+						attached l_values.at (i) as l_item
 					 then
 					 	l_tuple := l_arguments.item_for_iteration
 						l_result.force (l_item, l_tuple.name)
@@ -172,29 +173,28 @@ feature -- Access
 	return_type: detachable STRING_32
 			-- Return type of the current template, iff it's a query.
 
-
-	string_from_type (a_type: TYPE_AS): detachable STRING_32
-		local
-			l_token_region: ERT_TOKEN_REGION
-		do
-			if attached {LIST_DEC_AS} a_type as l_type then
-				if
-					attached l_type.type.first_token (ast_match_list) as l_first and then
-					attached l_type.type.last_token (ast_match_list) as l_last
-				then
-					create l_token_region.make (l_first.index, l_last.index)
-					Result := ast_match_list.text_32 (l_token_region)
-				end
-			elseif attached {TYPE_DEC_AS} a_type as l_type then
-				if
-					attached l_type.type.first_token (ast_match_list) as l_first and then
-					attached l_type.type.last_token (ast_match_list) as l_last
-				then
-					create l_token_region.make (l_first.index, l_last.index)
-					Result := ast_match_list.text_32 (l_token_region)
-				end
-			end
-		end
+--	string_from_type (a_type: TYPE_AS): detachable STRING_32
+--		local
+--			l_token_region: ERT_TOKEN_REGION
+--		do
+--			if attached {LIST_DEC_AS} a_type as l_type then
+--				if
+--					attached l_type.type.first_token (ast_match_list) as l_first and then
+--					attached l_type.type.last_token (ast_match_list) as l_last
+--				then
+--					create l_token_region.make (l_first.index, l_last.index)
+--					Result := ast_match_list.text_32 (l_token_region)
+--				end
+--			elseif attached {TYPE_DEC_AS} a_type as l_type then
+--				if
+--					attached l_type.type.first_token (ast_match_list) as l_first and then
+--					attached l_type.type.last_token (ast_match_list) as l_last
+--				then
+--					create l_token_region.make (l_first.index, l_last.index)
+--					Result := ast_match_list.text_32 (l_token_region)
+--				end
+--			end
+--		end
 
 feature -- Change Element.
 
@@ -230,7 +230,6 @@ feature -- Change Element.
 			tags_set: tags = a_tags
 		end
 
-
 	set_default_values (a_defaults: LIST [STRING_32])
 			-- Set `default_values' with `a_defaults'
 		do
@@ -255,7 +254,7 @@ feature -- Change Element.
 		end
 
 	set_name (a_name: STRING_32)
-			-- Set `name' with `a_name'
+			-- Set `name' with `a_name'.
 		do
 			name := a_name
 		ensure
@@ -264,7 +263,7 @@ feature -- Change Element.
 
 	mark_query
 			-- Set `is_query' to `True'
-			-- and `is_command' to `False'
+			-- and `is_command' to `False'.
 		do
 			is_query := True
 			is_command := False
@@ -275,7 +274,7 @@ feature -- Change Element.
 
 	mark_command
 			-- Set `is_query' to `False'
-			-- and `is_command' to `True'
+			-- and `is_command' to `True'.
 		do
 			is_query := False
 			is_command := True
@@ -330,7 +329,6 @@ feature {NONE} -- Internal Representation.
 
 	internal_locals: detachable STRING_TABLE [STRING_32]
 			-- Local declarations.
-
 
 	ast_match_list: LEAF_AS_LIST
 			-- match list generated of the current templates.		

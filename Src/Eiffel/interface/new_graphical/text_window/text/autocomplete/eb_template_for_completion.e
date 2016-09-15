@@ -195,7 +195,7 @@ feature {NONE} -- Template implementation.
 			l_locals: STRING_TABLE [TYPE_AS]
 			l_arguments: STRING_TABLE [TYPE_A]
 			l_read_only_locals: STRING_TABLE [STRING]
-			l_code_tb: CODE_TEMPLATE_BUILDER
+			l_code_tb: ES_CODE_TEMPLATE_BUILDER
 			l_name: STRING_32
 			i: INTEGER
 			l_rename_table: STRING_TABLE [STRING_32]
@@ -462,7 +462,7 @@ feature -- Implementation: Update tokens
 		local
 			l_scanner: EDITOR_EIFFEL_SCANNER
 			l_token: EDITOR_TOKEN
-			l_code_tb: CODE_TEMPLATE_BUILDER
+			l_code_tb: ES_CODE_TEMPLATE_BUILDER
 			l_locals: STRING_TABLE [TYPE_AS]
 			l_arguments: STRING_TABLE [TYPE_A]
 			l_rename_table: STRING_TABLE [STRING_32]

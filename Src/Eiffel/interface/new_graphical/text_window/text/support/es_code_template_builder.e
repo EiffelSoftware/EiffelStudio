@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	CODE_TEMPLATE_BUILDER
+	ES_CODE_TEMPLATE_BUILDER
 
 inherit
 
@@ -20,7 +20,7 @@ inherit
 			process_named_expression_as
 		end
 
-feature -- Reset
+feature {NONE} -- Reset
 
 	reset_locals
 		do
@@ -107,7 +107,7 @@ feature -- Access
 			-- Last read only locals names.
 
 	read_only_locals_template: detachable STRING_TABLE [STRING]
-			-- Last read only locals names from code template
+			-- Last read only locals names from code template.
 
 feature -- Process
 
@@ -116,7 +116,7 @@ feature -- Process
 			-- `across', `object test locals'.
 		do
 			reset_locals
-			if attached {BODY_AS} e_feature.ast.body as l_body then
+			if attached e_feature.ast.body as l_body then
 				l_body.process (Current)
 			end
 			if read_only_locals = Void then
@@ -131,8 +131,8 @@ feature -- Process
 		do
 			reset_locals_template
 			if
-				attached {FEATURE_AS} feature_template_ast (a_code) as l_feature_ast and then
-				attached {BODY_AS} l_feature_ast.body as l_body
+				attached feature_template_ast (a_code) as l_feature_ast and then
+				attached l_feature_ast.body as l_body
 			then
 				l_body.process (Current)
 			end
@@ -141,7 +141,7 @@ feature -- Process
 feature -- AST Iterator
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
-			-- Process `l_as'.
+			-- <Precursor>
 		local
 			l_name: detachable ID_AS
 		do
@@ -153,10 +153,11 @@ feature -- AST Iterator
 		end
 
 	process_loop_as (l_as: LOOP_AS)
+			-- <Precursor>
 		do
 			if
-				attached {ITERATION_AS} l_as.iteration as l_iteration and then
-				attached {ID_AS} l_iteration.identifier as l_id
+				attached l_as.iteration as l_iteration and then
+				attached l_iteration.identifier as l_id
 			then
 				set_object_test_local (l_id.name_32)
 			end
@@ -164,6 +165,7 @@ feature -- AST Iterator
 		end
 
 	process_named_expression_as (a_as: NAMED_EXPRESSION_AS)
+			-- <Precursor>
 		do
 			if attached a_as.name as l_name then
 				set_object_test_local (l_name.name_32)
@@ -174,26 +176,25 @@ feature -- AST Iterator
 feature -- Conformance
 
 	string_type_string_conformance (a_string: STRING_32; a_string2: STRING_32; a_class_c: CLASS_C): BOOLEAN
-			-- Is the type represented by `a_string' conforms_to type `a_string_2'
+			-- Is the type represented by `a_string' conforms_to type `a_string_2'.-
 		do
 			if not a_string.is_empty then
 				type_parser.parse_from_string_32 ({STRING_32} "type " + a_string, Void)
 				if attached type_parser.type_node as l_class_type_as then
 					type_parser.parse_from_string_32 ({STRING_32} "type " + a_string2, Void)
-					if attached type_parser.type_node as l_class_type_as_2 then
-						if
-							attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as l_type_a and then
-							attached type_a_generator.evaluate_type (l_class_type_as_2, a_class_c) as l_type_a_2
-						then
-							Result := l_type_a.conform_to (a_class_c, l_type_a_2)
-						end
+					if
+						attached type_parser.type_node as l_class_type_as_2 and then
+						attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as l_type_a and then
+						attached type_a_generator.evaluate_type (l_class_type_as_2, a_class_c) as l_type_a_2
+					then
+						Result := l_type_a.conform_to (a_class_c, l_type_a_2)
 					end
 				end
 			end
 		end
 
 	type_as_to_type_as_conformance (a_type_as_a: TYPE_AS; a_type_as_b: TYPE_AS; a_class_c: CLASS_C): BOOLEAN
-			-- Is the type_as represented by `a_type_as_a' conforms_to type `a_type_as_b'
+			-- Is the type_as represented by `a_type_as_a' conforms_to type `a_type_as_b'.
 		do
 				-- Convert TYPE_AS into TYPE_A.
 			if
@@ -205,34 +206,30 @@ feature -- Conformance
 		end
 
 	string_type_as_conformance (a_string: STRING_32; a_type_as: TYPE_AS; a_class_c: CLASS_C): BOOLEAN
-			-- Is the type represented by `a_string' conforms_to type `a_type_as'
+			-- Is the type represented by `a_string' conforms_to type `a_type_as'.
 		do
 			if not a_string.is_empty then
 				type_parser.parse_from_string_32 ({STRING_32} "type " + a_string, Void)
-				if attached type_parser.type_node as l_class_type_as then
-						-- Convert TYPE_AS into TYPE_A.
-					if
-						attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as s_type_a and then
-						attached type_a_generator.evaluate_type (a_type_as, a_class_c) as l_type_a
-					then
-						Result := l_type_a.conform_to (a_class_c, s_type_a)
-					end
+				if
+					attached type_parser.type_node as l_class_type_as and then
+					attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as s_type_a and then
+					attached type_a_generator.evaluate_type (a_type_as, a_class_c) as l_type_a
+				then
+					Result := l_type_a.conform_to (a_class_c, s_type_a)
 				end
 			end
 		end
 
 	string_type_a_conformance (a_string: STRING_32; a_type_a: TYPE_A; a_class_c: CLASS_C): BOOLEAN
-			-- Is the type represented by `a_string' conforms_to type `a_type_a'
+			-- Is the type represented by `a_string' conforms_to type `a_type_a'.
 		do
 			if not a_string.is_empty then
 				type_parser.parse_from_string_32 ({STRING_32} "type " + a_string, Void)
-				if attached type_parser.type_node as l_class_type_as then
-						-- Convert TYPE_AS into TYPE_A.
-					if
-						attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as s_type_a
-					then
-						Result := a_type_a.conform_to (a_class_c, s_type_a)
-					end
+				if
+					attached type_parser.type_node as l_class_type_as and then
+					attached type_a_generator.evaluate_type (l_class_type_as, a_class_c) as s_type_a
+				then
+					Result := a_type_a.conform_to (a_class_c, s_type_a)
 				end
 			end
 		end

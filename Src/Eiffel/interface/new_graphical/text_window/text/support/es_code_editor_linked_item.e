@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			loop
 				s.append (toks.item.wide_image)
 				background_color := toks.item.background_color
+				text_color := toks.item.text_color
 			end
 			initial_text := s
 
@@ -61,6 +62,9 @@ feature -- Access
 
 	background_color: detachable EV_COLOR
 			-- Original background color, used to restore later.
+
+	text_color: detachable EV_COLOR
+			-- Original text color, used to restore later.			
 
 	start_pos: INTEGER assign set_start_pos
 			-- Start position of current token region.

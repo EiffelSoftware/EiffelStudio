@@ -365,10 +365,11 @@ feature {NONE} -- Template implementation.
 				across
 					l_template_declarations as ic
 				loop
-					l_local_text.append_string_general ("%N%T%T%T")
+					l_local_text.append_string_general ("%T%T%T")
 					l_local_text.append_string_general (ic.key)
 					l_local_text.append (": ")
 					l_local_text.append_string_general (ic.item)
+					l_local_text.append_character ('%N')
 				end
 
 					-- Generate new code
@@ -387,10 +388,12 @@ feature {NONE} -- Template implementation.
 					end
 					l_token := l_token.next
 				end
-				Result := [l_local_text, l_code_text]
 			else
-				Result := [local_text, code]
+				l_local_text := local_text
+				l_code_text := code
 			end
+
+			Result := [l_local_text, l_code_text]
 		end
 
 feature -- Feature

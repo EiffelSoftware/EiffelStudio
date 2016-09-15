@@ -66,6 +66,14 @@ feature -- Access: Tokens
 	linked_items: detachable ARRAYED_LIST [ES_CODE_EDITOR_LINKED_ITEM]
 			-- Linked tokens and associated data (positions, ...).
 
+	linked_items_count: INTEGER
+			-- Number of linked tokens if any.
+		do
+			if attached linked_items as lst then
+				Result := lst.count
+			end
+		end
+
 	sort_linked_items
 			-- Sort `linked_items' by start location.
 		local
@@ -190,6 +198,7 @@ feature -- Execute
 							l_item.tokens as toks
 						loop
 							toks.item.set_background_color (l_item.background_color)
+							toks.item.set_text_color (l_item.text_color)
 						end
 					end
 					refresh_related_lines (False)
@@ -673,26 +682,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_token_inside_regions (tok: EDITOR_TOKEN; a_regions: detachable ITERABLE [TUPLE [start_pos,end_pos: INTEGER]]): BOOLEAN
-			-- Is token `tok' inside the given regions `a_regions'?
-			-- If `a_regions' is Void, the scope is the entire class.
-		local
-			tok_start_pos, tok_end_pos: INTEGER
-		do
-			if a_regions = Void then
-				Result := True
-			else
-				tok_start_pos := tok.pos_in_text
-				tok_end_pos := tok.pos_in_text + tok.length
-				across
-					a_regions as ic
-				until
-					Result
-				loop
-					Result := ic.item.start_pos <= tok_start_pos and tok_end_pos <= ic.item.end_pos
-				end
-			end
-		end
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

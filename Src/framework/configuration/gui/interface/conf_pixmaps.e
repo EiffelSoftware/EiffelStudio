@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Pixmaps for configuration objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -466,6 +465,20 @@ feature -- Access
 		end
 
 	project_settings_make_file_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	project_settings_default_highlighted_icon: EV_PIXMAP
+			-- An icon for a highlighted default option/setting.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	project_settings_default_icon: EV_PIXMAP
+			-- An icon for a default option/setting.
 		deferred
 		ensure
 			Result_not_void: Result /= Void

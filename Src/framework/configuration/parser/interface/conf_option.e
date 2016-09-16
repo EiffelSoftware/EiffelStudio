@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that specify configuration options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_6_3': transitional syntax.
 		do
 			make_6_3
-			create syntax.make (syntax_name, syntax_index_transitional)
+			syntax.put_default_index (syntax_index_transitional)
 		end
 
 	make_7_0
@@ -63,7 +63,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_6_4': standard syntax, class types attached by default.
 		do
 			make_6_4
-			create syntax.make (syntax_name, syntax_index_standard)
+			syntax.put_default_index (syntax_index_standard)
 			is_attached_by_default := True
 		end
 
@@ -72,7 +72,7 @@ feature {NONE} -- Creation
 			-- Difference fom `make_7_0': transitional void-safety, full class checking.
 		do
 			make_7_0
-			create void_safety.make (void_safety_name, void_safety_index_transitional)
+			void_safety.put_default_index (void_safety_index_transitional)
 			is_full_class_checking := True
 		end
 
@@ -81,7 +81,7 @@ feature {NONE} -- Creation
 			-- Difference from `make_7_3': complete void-safety.
 		do
 			make_7_3
-			create void_safety.make (void_safety_name, void_safety_index_all)
+			void_safety.put_default_index (void_safety_index_all)
 		end
 
 	make_15_11
@@ -751,7 +751,7 @@ feature -- Merging
 				if not is_attached_by_default_configured then
 					if not other.is_attached_by_default_configured and then void_safety.index = void_safety_index_none then
 							-- Default attached-by-default to True, so that if a user decides to switch the option,
-							-- it get's attached-by-default automatically.
+							-- he get's attached-by-default automatically.
 						is_attached_by_default_configured := not other.is_attached_by_default
 						is_attached_by_default := True
 					else

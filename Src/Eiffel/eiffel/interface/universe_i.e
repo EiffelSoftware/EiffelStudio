@@ -97,9 +97,9 @@ feature -- Properties
 		do
 			inspect
 				system.concurrency_index
-			when {CONF_TARGET}.setting_concurrency_index_thread then
+			when {CONF_TARGET_OPTION}.concurrency_index_thread then
 				Result := concurrency_multithreaded
-			when {CONF_TARGET}.setting_concurrency_index_scoop then
+			when {CONF_TARGET_OPTION}.concurrency_index_scoop then
 				Result := concurrency_scoop
 			else
 					-- Default to no concurrency if none is specified.
@@ -924,7 +924,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

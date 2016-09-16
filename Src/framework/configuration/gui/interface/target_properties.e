@@ -34,6 +34,7 @@ feature {NONE} -- Implementation
 			l_root_dial: ROOT_DIALOG
 			l_extends: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
+			inherited_choice: CONF_VALUE_CHOICE
 		do
 				-- Does `current_target' extend something?
 			l_extends := current_target.extends /= Void
@@ -89,15 +90,15 @@ feature {NONE} -- Implementation
 				-- Cat call detection.
 			add_cat_call_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				-- Concurrency.
+			if l_extends then
+				inherited_choice := current_target.options.concurrency
+			end
 			add_choice_property (
-				conf_interface_names.target_concurrency_name,
-				conf_interface_names.target_concurrency_description,
-				create {ARRAYED_LIST [STRING_32]}.make_from_array (
-					<<conf_interface_names.target_concurrency_none_name,
-					conf_interface_names.target_concurrency_thread_name,
-					conf_interface_names.target_concurrency_scoop_name>>),
-				current_target.immediate_setting_concurrency,
-				Void
+				conf_interface_names.option_concurrency_name,
+				conf_interface_names.option_concurrency_description,
+				conf_interface_names.option_concurrency_value,
+				current_target.changeable_internal_options.concurrency,
+				inherited_choice
 			)
 			properties.current_section.expand
 

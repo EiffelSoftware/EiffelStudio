@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		EiffelStudio output routines, used to display various predefined output structures.
 	]"
@@ -12,6 +12,11 @@ class
 
 inherit
 	ANY
+
+	CONF_INTERFACE_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	ES_SHARED_LOCALE_FORMATTER
 		export
@@ -53,7 +58,7 @@ feature -- Output
 			l_lace: LACE_I
 			l_count: INTEGER
 			l_max_len: INTEGER
-			concurrency_index: like {CONF_TARGET}.setting_concurrency_index_none
+			concurrency_index: like {CONF_TARGET_OPTION}.concurrency_index_none
 			concurrency_name: READABLE_STRING_GENERAL
 		do
 			l_name := locale_formatter.translation (lb_name)
@@ -61,7 +66,7 @@ feature -- Output
 			l_configuration := locale_formatter.translation (lb_configuration)
 			l_location := locale_formatter.translation (lb_location)
 			l_compilation := locale_formatter.translation (lb_compilation)
-			l_concurrency := locale_formatter.translation (lb_concurrency)
+			l_concurrency := conf_interface_names.option_concurrency_name
 			l_console_application := locale_formatter.translation (lb_console_application)
 			l_experimental_mode := locale_formatter.translation (lb_experimental_mode)
 			l_compatible_mode := locale_formatter.translation (lb_compatible_mode)
@@ -138,20 +143,17 @@ feature -- Output
 			if l_count < l_max_len then
 				a_formatter.process_basic_text (create {STRING}.make_filled (' ', l_max_len - l_count))
 			end
-
 			if l_compiled then
 				concurrency_index := eiffel_ace.system.concurrency_index
+				if l_lace.target.options.concurrency_capability.is_valid_index (concurrency_index) then
+					concurrency_name := conf_interface_names.option_concurrency_value [concurrency_index]
+				else
+					concurrency_name := locale_formatter.translation (lb_concurrency_unknown)
+				end
 			else
-				concurrency_index := l_lace.target.setting_concurrency.index
+				concurrency_name := conf_interface_names.option_concurrency_value [l_lace.target.options.concurrency_capability.root_index]
 			end
-			inspect concurrency_index
-			when {CONF_TARGET}.setting_concurrency_index_none then concurrency_name := lb_concurrency_none
-			when {CONF_TARGET}.setting_concurrency_index_thread then concurrency_name := lb_concurrency_thread
-			when {CONF_TARGET}.setting_concurrency_index_scoop then concurrency_name := lb_concurrency_scoop
-			else
-				concurrency_name := lb_concurrency_unknown
-			end
-			a_formatter.process_basic_text (locale_formatter.translation (concurrency_name))
+			a_formatter.process_basic_text (concurrency_name)
 			a_formatter.add_new_line
 
 				--| Console or Graphical mode?
@@ -256,9 +258,6 @@ feature {NONE} -- Internationalization
 	lb_location: STRING = "location"
 	lb_compilation: STRING = "compilation"
 	lb_concurrency: STRING = "tag_concurrency"
-	lb_concurrency_none: STRING = "tag_concurrency_none"
-	lb_concurrency_thread: STRING = "tag_concurrency_thread"
-	lb_concurrency_scoop: STRING = "tag_concurrency_scoop"
 	lb_concurrency_unknown: STRING = "tag_concurrency_unknown"
 	lb_console_application: STRING = "console"
 	lb_experimental_mode: STRING = "experimental"
@@ -271,7 +270,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

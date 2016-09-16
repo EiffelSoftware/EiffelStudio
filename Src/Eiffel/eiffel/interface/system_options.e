@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Options of the system as there are specified in the ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -44,7 +44,7 @@ feature -- Access
 	automatic_backup: BOOLEAN
 			-- Automatic backup generation?
 
-	concurrency_index: like {CONF_TARGET}.setting_concurrency_index_none
+	concurrency_index: like {CONF_TARGET_OPTION}.concurrency_index_none
 			-- Current concurrency index.
 
 	has_multithreaded: BOOLEAN
@@ -54,8 +54,8 @@ feature -- Access
 			if not il_generation then
 				inspect concurrency_index
 				when
-					{CONF_TARGET}.setting_concurrency_index_thread,
-					{CONF_TARGET}.setting_concurrency_index_scoop
+					{CONF_TARGET_OPTION}.concurrency_index_thread,
+					{CONF_TARGET_OPTION}.concurrency_index_scoop
 				then
 					Result := True
 				else
@@ -67,7 +67,7 @@ feature -- Access
 	is_scoop: BOOLEAN
 			-- Does the system follow SCOOP model?
 		do
-			Result := concurrency_index = {CONF_TARGET}.setting_concurrency_index_scoop
+			Result := concurrency_index = {CONF_TARGET_OPTION}.concurrency_index_scoop
 		end
 
 	has_old_verbatim_strings: BOOLEAN
@@ -642,4 +642,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SYSTEM_OPTIONS
+end

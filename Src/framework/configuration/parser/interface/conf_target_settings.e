@@ -20,12 +20,11 @@ feature {NONE} -- Initialization
 			-- Create empty settings that may be filled later.
 		do
 			create internal_settings.make (1)
-			create immediate_setting_concurrency.make (setting_concurrency_name, setting_concurrency_index_none)
 		end
 
 feature -- Access
 
-	options: CONF_OPTION
+	options: CONF_TARGET_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
 			if attached internal_options as l_internal_options then
@@ -351,76 +350,14 @@ feature -- Access: settings
 			Result := setting_boolean (s_automatic_backup)
 		end
 
-feature -- Access: concurrency setting
-
-	setting_concurrency: CONF_VALUE_CHOICE
-			-- Value of the "concurrency" setting from the immediate data.
-		do
-			Result := immediate_setting_concurrency
-		ensure
-			result_attached: attached Result
-		end
-
-	concurrency_mode: like {CONF_STATE}.concurrency
-			-- Concurrency mode corresponding to `setting_concurrency'.
-		do
-			inspect setting_concurrency.index
-			when setting_concurrency_index_none   then Result := concurrency_none
-			when setting_concurrency_index_thread then Result := concurrency_multithreaded
-			when setting_concurrency_index_scoop  then Result := concurrency_scoop
-			end
-		ensure
-			definition:
-				setting_concurrency.index = setting_concurrency_index_none   and then Result = concurrency_none or else
-				setting_concurrency.index = setting_concurrency_index_thread and then Result = concurrency_multithreaded or else
-				setting_concurrency.index = setting_concurrency_index_scoop  and then Result = concurrency_scoop
-		end
-
-	setting_concurrency_index_none: NATURAL_8 = 1
-			-- Option index for no concurrency
-
-	setting_concurrency_index_thread: NATURAL_8 = 2
-			-- Option index for thread-based concurrency
-
-	setting_concurrency_index_scoop: NATURAL_8 = 3
-			-- Option index for SCOOP concurrency
-
-	immediate_setting_concurrency: like setting_concurrency
-			-- Value of the "concurrency" setting specified for this target.
-
-	set_immediate_setting_concurrency (v: like setting_concurrency)
-			-- Set value of the "concurrency" setting specified for this target.
-			-- Inherited setting (if any) overrides this one.
-		require
-			v_attached: attached v
-		do
-			immediate_setting_concurrency := v
-		ensure
-			immediate_setting_concurrency_set: immediate_setting_concurrency = v
-		end
-
-feature {NONE} -- Access: concurrency setting
-
-	setting_concurrency_name: ARRAY [READABLE_STRING_32]
-			-- Available values for `setting_concurrency'.
-		once
-			Result := <<concurrency_none_name.as_string_32, concurrency_multithreaded_name.as_string_32, concurrency_scoop_name.as_string_32>>
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Modification
 
 	force (other: CONF_TARGET_SETTINGS)
 			-- Update current settings so that anythin defined in `other' takes precedence.
 		local
-			new_setting_concurrency: like setting_concurrency
 			new_options: like options
 		do
 			settings.merge (other.settings)
-			new_setting_concurrency := other.setting_concurrency.twin
-			new_setting_concurrency.set_safely (setting_concurrency)
-			immediate_setting_concurrency := new_setting_concurrency
 			new_options := other.options.twin
 			new_options.merge (options)
 			internal_options := new_options
@@ -496,7 +433,6 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 invariant
 	internal_settings_attached: attached internal_settings
-	internal_setting_concurrency_attached: attached immediate_setting_concurrency
 
 note
 	copyright:	"Copyright (c) 1984-2016, Eiffel Software"

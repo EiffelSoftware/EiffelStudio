@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Recompute options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,7 +61,6 @@ feature -- Visit nodes
 				a_target.system.set_description (l_new_target.system.description)
 				a_target.set_version (l_new_target.internal_version)
 				a_target.set_settings (l_new_target.internal_settings)
-				a_target.set_immediate_setting_concurrency (l_new_target.immediate_setting_concurrency)
 				if attached l_new_target.internal_options as l_new_internal_options then
 					a_target.set_options (l_new_internal_options)
 				end
@@ -167,7 +166,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

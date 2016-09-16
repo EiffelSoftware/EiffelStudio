@@ -152,6 +152,10 @@ feature {NONE} -- Implementation constants
 	at_void_safety: INTEGER = 1063
 	at_syntax_level: INTEGER = 1064
 	at_syntax: INTEGER = 1065
+	at_concurrency: INTEGER = 1066
+	at_root_catcall_detection: INTEGER = 1067
+	at_root_concurrency: INTEGER = 1068
+	at_root_void_safety: INTEGER = 1069
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000
@@ -160,7 +164,7 @@ feature {NONE} -- Implementation constants
 			-- Name of the attribute "enabled".
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

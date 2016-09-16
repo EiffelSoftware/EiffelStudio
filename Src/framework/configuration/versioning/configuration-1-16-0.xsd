@@ -128,17 +128,7 @@
 		<xs:attribute name="cat_call_detection" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_attached_by_default" type="xs:boolean" use="optional" default="true"/>
 		<xs:attribute name="is_obsolete_routine_type" type="xs:boolean" use="optional" default="false"/>
-		<xs:attribute name="void_safety" use="optional" default="all">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="none"/>
-					<xs:enumeration value="conformance"/>
-					<xs:enumeration value="initialization"/>
-					<xs:enumeration value="transitional"/>
-					<xs:enumeration value="all"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="void_safety" type="void_safety_value" use="optional" default="all"/>
 		<xs:attribute name="syntax" use="optional" default="standard">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -163,6 +153,20 @@
 	<xs:complexType name="target_option">
 	  <xs:complexContent>
 	    <xs:extension base="option">
+	      <xs:attribute name="root_void_safety" type="void_safety_value" use="optional">
+	        <xs:annotation>
+	          <xs:documentation>
+	            A void safety level to be used when an associated target is used as a root.
+	          </xs:documentation>
+	        </xs:annotation>
+	      </xs:attribute>
+	      <xs:attribute name="root_catcall_detection" type="catcall_detection_value" use="optional">
+	        <xs:annotation>
+	          <xs:documentation>
+	            A CAT-call detection level to be used when an associated target is used as a root.
+	          </xs:documentation>
+	        </xs:annotation>
+	      </xs:attribute>
 	      <xs:attribute name="concurrency" type="concurrency_value" use="optional" default="scoop">
 	        <xs:annotation>
 	          <xs:documentation>
@@ -170,6 +174,13 @@
 	            - thread - unstructured multithreading, least safe, least restrictions
 	            - none - single-threaded applications
 	            - scoop - SCOOP, most restrictions
+	          </xs:documentation>
+	        </xs:annotation>
+	      </xs:attribute>
+	      <xs:attribute name="root_concurrency" type="concurrency_value" use="optional" default="scoop">
+	        <xs:annotation>
+	          <xs:documentation>
+	            Concurrency value to be used when an associated target is used as a root.
 	          </xs:documentation>
 	        </xs:annotation>
 	      </xs:attribute>
@@ -181,6 +192,13 @@
 	          </xs:documentation>
 	        </xs:annotation>
 	      </xs:attribute>
+	      <xs:attribute name="root_platform" type="platform_list" use="optional">
+	        <xs:annotation>
+	          <xs:documentation>
+	            A platform to be used when an associated target is used as a root.
+	          </xs:documentation>
+	        </xs:annotation>
+	      </xs:attribute>
 	      <xs:attribute name="code" type="code_list" use="optional" default="standard">
 	        <xs:annotation>
 	          <xs:documentation>
@@ -189,12 +207,10 @@
 	          </xs:documentation>
 	        </xs:annotation>
 	      </xs:attribute>
-	      <xs:attribute name="is_data_race_possible" type="xs:boolean" use="optional" default="true">
+	      <xs:attribute name="root_code" type="code_value" use="optional">
 	        <xs:annotation>
 	          <xs:documentation>
-              Is data race possible so that values of attributes accessed by one thread can be changed by a different thread concurrently?
-              It can be set to "false" for single-threaded and SCOOP applications as soon as no external mechanisms to create threads are involved.
-              It can also be set to "false" if an application allowing for creation of threads using library or external mechanisms ensures absence of data races (e.g., with synchronization primitives).
+	            A code kind to be used when an associated target is used as a root.
 	          </xs:documentation>
 	        </xs:annotation>
 	      </xs:attribute>
@@ -346,6 +362,14 @@
 	    </xs:restriction>
 	</xs:simpleType>
 
+	<xs:simpleType name="catcall_detection_value">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="conformance"/>
+			<xs:enumeration value="all"/>
+		</xs:restriction>
+	</xs:simpleType>
+
 	<xs:complexType name="concurrency">
 		<xs:attribute name="value"          type="concurrency_list"/>
 		<xs:attribute name="excluded_value" type="concurrency_list"/>
@@ -360,6 +384,26 @@
 			  <xs:enumeration value="none"/>
 			  <xs:enumeration value="thread"/>
 			  <xs:enumeration value="scoop"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="void_safety_value">
+		<xs:annotation>
+			<xs:documentation>
+				Void-safety rules to be checked:
+				- none - no rules are checked, this is the only mode without  attachment marks at run-time
+				- conformance - attachment status is taken into account in conformance tests
+				- initialization - rules about attribute initialization are checked
+				- transitional - all rules except for object creation with incompletely initialized objects
+				- complete - all rules
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none"/>
+			<xs:enumeration value="conformance"/>
+			<xs:enumeration value="initialization"/>
+			<xs:enumeration value="transitional"/>
+			<xs:enumeration value="all"/>
 		</xs:restriction>
 	</xs:simpleType>
 

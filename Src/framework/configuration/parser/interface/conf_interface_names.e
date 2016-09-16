@@ -121,18 +121,6 @@ feature -- Target names and descriptions
 	target_console_application_description: STRING_32 do Result := locale.translation ("Is the project a console application?")	end
 	target_cls_compliant_name: STRING_32 do Result := locale.translation ("CLS Compliant")	end
 	target_cls_compliant_description: STRING_32 do Result := locale.translation ("Should generated assemblies be marked as CLS compliant?")	end
-	target_concurrency_name: STRING_32 do Result := locale.translation ("Concurrency")	end
-	target_concurrency_description: STRING_32 do Result := locale.translation
-			({STRING_32} "[
-				Concurrency mode of the target application:
-				 • No concurrency - mono-threaded;
-				 • EiffelThread - based on EiffelThread library;
-				 • SCOOP - controlled by SCOOP rules.
-			]")
-		end
-	target_concurrency_none_name: STRING_32 do Result := locale.translation ("No concurrency") end
-	target_concurrency_thread_name: STRING_32 do Result := locale.translation ("EiffelThread") end
-	target_concurrency_scoop_name: STRING_32 do Result := locale.translation ("SCOOP") end
 	target_dead_code_removal_name: STRING_32 do Result := locale.translation ("Dead Code Removal")	end
 	target_dead_code_removal_description: STRING_32 do Result := locale.translation ("Should unused code be removed?")	end
 	target_dotnet_naming_convention_name: STRING_32 do Result := locale.translation (".NET Naming Convention")	end
@@ -305,6 +293,13 @@ feature -- Target names and descriptions
 	properties_class_name: STRING_32 do Result := locale.translation ("Class")	end
 	properties_target_name: STRING_32 do Result := locale.translation ("Target")	end
 
+feature -- Capability names and descriptions
+
+	capability_header_capable_of_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Capable of", "configuration.capability") end
+	capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("If is a root", "configuration.capability") end
+	capability_toggle_default_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Default", "configuration.capability") end
+	capability_toggle_inherited_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Inherited", "configuration.capability") end
+
 feature -- Option names and descriptions
 
 	option_require_name: STRING_32 do Result := locale.translation ("Require")	end
@@ -360,6 +355,28 @@ feature -- Option names and descriptions
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_none) and
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_conformance) and
 				Result.valid_index ({CONF_OPTION}.catcall_detection_index_all)
+		end
+
+	option_concurrency_name: STRING_32 do Result := locale.translation_in_context ("Concurrency", "configuration") end
+	option_concurrency_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
+				Concurrency mode:
+				 • Unstructured - multithreading based on EiffelThread library or built-in (in .NET);
+				 • None - no concurrency, mono-threaded;
+				 • SCOOP - controlled by SCOOP rules.
+			]", "configuration") end
+	option_concurrency_value: ARRAYED_LIST [STRING_32]
+			-- Name of a catcall detection option value indexed by the corresponding option index.
+		once
+			create Result.make_from_array (<<
+				locale.translation_in_context ("Unstructured", "configuration"),
+				locale.translation_in_context ("None", "configuration"),
+				locale.translation_in_context ("SCOOP", "configuration")
+			>>)
+		ensure
+			valid_index:
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_thread) and
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_none) and
+				Result.valid_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
 		end
 
 	option_void_safety_name: STRING_32 do Result := locale.translation ("Void safety") end

@@ -27,7 +27,6 @@ inherit
 			make as make_settings
 		redefine
 			options,
-			setting_concurrency,
 			settings
 		end
 
@@ -255,7 +254,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	options: CONF_OPTION
+	options: CONF_TARGET_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
 			Result := Precursor.twin
@@ -412,20 +411,6 @@ feature -- Access queries
 			end
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-feature -- Access: concurrency setting
-
-	setting_concurrency: CONF_VALUE_CHOICE
-			-- Value of the "concurrency" setting
-			-- calculated using both immediate and inherited data.
-		do
-			if attached extends as e then
-				Result := Precursor.twin
-				Result.set_safely (e.setting_concurrency)
-			else
-				Result := Precursor
-			end
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

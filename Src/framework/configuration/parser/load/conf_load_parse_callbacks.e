@@ -845,9 +845,9 @@ feature {NONE} -- Implementation attribute processing
 									if l_value.is_boolean then
 											-- SCOOP is not supported in old projects.
 										if l_value.to_boolean then
-											l_current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
+											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 										else
-											l_current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
+											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 										end
 									else
 											-- Boolean value is expected.
@@ -861,9 +861,9 @@ feature {NONE} -- Implementation attribute processing
 									-- Process "concurrency" setting.
 								if includes_this_or_after (namespace_1_7_0) then
 										-- The setting is allowed.
-									if l_current_target.immediate_setting_concurrency.is_valid_item (l_value) then
+									if l_current_target.changeable_internal_options.concurrency_capability.is_valid_item (l_value) then
 											-- Update setting with this value.
-										l_current_target.immediate_setting_concurrency.put (l_value)
+										l_current_target.changeable_internal_options.concurrency_capability.put_root (l_value)
 									else
 											-- The value is invalid.
 										set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
@@ -1496,42 +1496,52 @@ feature {NONE} -- Implementation attribute processing
 			target_set: current_target /= Void
 		local
 			l_current_option: like current_option
+			l_target_option: CONF_TARGET_OPTION
 		do
-			l_current_option := factory.new_option
+			if
+				not a_class_option and then
+				not attached current_group as l_current_group and then
+				attached current_target
+			then
+				l_target_option := factory.new_target_option
+				l_current_option := l_target_option
+			else
+				l_current_option := factory.new_option
+			end
 			current_option := l_current_option
 			if attached current_attributes.item (at_trace) as l_trace then
 				if l_trace.is_boolean then
 					l_current_option.set_trace (l_trace.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("trace"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_trace))
 				end
 			end
 			if attached current_attributes.item (at_profile) as l_profile then
 				if l_profile.is_boolean then
 					l_current_option.set_profile (l_profile.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("profile"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_profile))
 				end
 			end
 			if attached current_attributes.item (at_optimize) as l_optimize then
 				if l_optimize.is_boolean then
 					l_current_option.set_optimize (l_optimize.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("optimize"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_optimize))
 				end
 			end
 			if attached current_attributes.item (at_debug) as l_debug then
 				if l_debug.is_boolean then
 					l_current_option.set_debug (l_debug.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("debug"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_debug))
 				end
 			end
 			if attached current_attributes.item (at_warning) as l_warning then
 				if l_warning.is_boolean then
 					l_current_option.set_warning (l_warning.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("warning"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_warning))
 				end
 			end
 			if
@@ -1547,15 +1557,16 @@ feature {NONE} -- Implementation attribute processing
 				if l_full_class_checking.is_boolean then
 					l_current_option.set_full_class_checking (l_full_class_checking.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("full_class_checking"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_full_class_checking))
 				end
 			end
+				-- Capability: CAT-call detection.
 			if attached current_attributes.item (at_catcall_detection) as l_catcall_detection then
 				if includes_this_or_after (namespace_1_14_0) then
 					if l_current_option.catcall_detection.is_valid_item (l_catcall_detection) then
 						l_current_option.catcall_detection.put (l_catcall_detection)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_catcall_detection))
 					end
 				else
 					if l_catcall_detection.is_boolean then
@@ -1565,28 +1576,65 @@ feature {NONE} -- Implementation attribute processing
 							l_current_option.catcall_detection.put_index ({CONF_OPTION}.catcall_detection_index_none)
 						end
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("cat_call_detection"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_catcall_detection))
 					end
 				end
 			end
+			if attached current_attributes.item (at_root_catcall_detection) as l_root_catcall_detection then
+				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
+					if l_target_option.catcall_safety_capability.is_valid_item (l_root_catcall_detection) then
+						l_target_option.catcall_safety_capability.put_root (l_root_catcall_detection)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_catcall_detection))
+					end
+				else
+					report_unknown_attribute (o_root_catcall_detection)
+				end
+			end
+				-- Capability: concurrency.
+			if attached current_attributes.item (at_concurrency) as l_concurrency then
+				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
+					if l_target_option.concurrency.is_valid_item (l_concurrency) then
+						l_target_option.concurrency.put (l_concurrency)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_concurrency))
+					end
+				else
+					report_unknown_attribute (o_concurrency)
+				end
+			end
+			if attached current_attributes.item (at_root_concurrency) as l_root_concurrency then
+				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
+					if l_target_option.concurrency_capability.is_valid_item (l_root_concurrency) then
+						l_target_option.concurrency_capability.put_root (l_root_concurrency)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_concurrency))
+					end
+				else
+					report_unknown_attribute (o_root_concurrency)
+				end
+			end
+				-- Are class types attached by default?
 			if attached current_attributes.item (at_is_attached_by_default) as l_is_attached_by_default then
 				if l_is_attached_by_default.is_boolean then
 					l_current_option.set_is_attached_by_default (l_is_attached_by_default.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_attached_by_default"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_attached_by_default))
 				end
 			end
+				-- Should obsolete routine types be used?
 			if attached current_attributes.item (at_is_obsolete_routine_type) as l_is_obsolete_routine_type then
 				if includes_this_or_after (namespace_1_15_0) then
 					if l_is_obsolete_routine_type.is_boolean then
 						l_current_option.set_is_obsolete_routine_type (l_is_obsolete_routine_type.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("is_obsolete_routine_type"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_obsolete_routine_type))
 					end
 				else
-					report_unknown_attribute ("is_obsolete_routine_type")
+					report_unknown_attribute (o_is_obsolete_routine_type)
 				end
 			end
+				-- Capability: Void safety.
 			if attached current_attributes.item (at_void_safety) as l_void_safety then
 				if includes_this_or_after (namespace_1_5_0) then
 					if l_current_option.void_safety.is_valid_item (l_void_safety) then
@@ -1605,14 +1653,14 @@ feature {NONE} -- Implementation attribute processing
 								l_current_option.void_safety.put_index ({CONF_OPTION}.void_safety_index_transitional)
 							else
 									-- Report unknown value.
-								set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+								set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
 							end
 						end
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("void_safety"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_void_safety))
 					end
 				else
-					report_unknown_attribute ("void_safety")
+					report_unknown_attribute (o_void_safety)
 				end
 			end
 			if attached current_attributes.item (at_is_void_safe) as l_is_void_safe then
@@ -1638,6 +1686,18 @@ feature {NONE} -- Implementation attribute processing
 					report_unknown_attribute ("is_void_safe")
 				end
 			end
+			if attached current_attributes.item (at_root_void_safety) as l_root_void_safety then
+				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
+					if l_target_option.void_safety_capability.is_valid_item (l_root_void_safety) then
+						l_target_option.void_safety_capability.put_root (l_root_void_safety)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_void_safety))
+					end
+				else
+					report_unknown_attribute (o_root_void_safety)
+				end
+			end
+				-- Syntax variants.
 			if attached current_attributes.item (at_syntax_level) as l_syntax_level then
 				if includes_this_or_before (namespace_1_4_0) then
 					if l_syntax_level.is_natural_8 then
@@ -1663,10 +1723,10 @@ feature {NONE} -- Implementation attribute processing
 					if l_current_option.syntax.is_valid_item (l_syntax) then
 						l_current_option.syntax.put (l_syntax)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("syntax"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_syntax))
 					end
 				else
-					report_unknown_attribute ("syntax")
+					report_unknown_attribute (o_syntax)
 				end
 			end
 
@@ -1684,7 +1744,11 @@ feature {NONE} -- Implementation attribute processing
 				if attached current_group as l_current_group then
 					l_current_group.set_options (l_current_option)
 				elseif attached current_target as l_target then
-					l_target.set_options (l_current_option)
+					if attached l_target_option then
+						l_target.set_options (l_target_option)
+					else
+						check attached_target_option: False end
+					end
 				else
 					check precondition__target_set: False end
 				end
@@ -2209,15 +2273,20 @@ feature {NONE} -- Processing of options
 			t_attached: t /= Void
 			a_namespace_attached: a_namespace /= Void
 		local
-			o: detachable CONF_OPTION
+			o: CONF_TARGET_OPTION
 		do
 			if not a_namespace.same_string (latest_namespace) then
 					-- Option settings are different from the current defauls, we need to set them if they are not set yet.
 				o := t.options
 				if o = Void then
-					o := factory.new_option
+					o := factory.new_target_option
 				end
 				if
+					a_namespace.same_string (namespace_1_16_0)
+				then
+						-- Use the defaults of ES 16.11.
+					o.merge (default_options_16_11)
+				elseif
 					a_namespace.same_string (namespace_1_15_0)
 				then
 						-- Use the defaults of ES 15.11.
@@ -2778,13 +2847,20 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_msil_application_optimize, o_is_msil_application_optimize)
 			l_attr.force (at_namespace, o_namespace)
 			l_attr.force (at_full_class_checking, o_is_full_class_checking)
-			l_attr.force (at_catcall_detection, o_catcall_detection)
 			l_attr.force (at_is_attached_by_default, o_is_attached_by_default)
 			l_attr.force (at_is_obsolete_routine_type, o_is_obsolete_routine_type)
-			l_attr.force (at_is_void_safe, "is_void_safe")
-			l_attr.force (at_void_safety, o_void_safety)
 			l_attr.force (at_syntax_level, "syntax_level")
 			l_attr.force (at_syntax, o_syntax)
+				-- Capabilities: CAT-call detection.
+			l_attr.force (at_catcall_detection, o_catcall_detection)
+			l_attr.force (at_root_catcall_detection, o_root_catcall_detection)
+				-- Capabilities: concurrency.
+			l_attr.force (at_concurrency, o_concurrency)
+			l_attr.force (at_root_concurrency, o_root_concurrency)
+				-- Capabilities: void safety.
+			l_attr.force (at_void_safety, o_void_safety)
+			l_attr.force (at_root_void_safety, o_root_void_safety)
+			l_attr.force (at_is_void_safe, "is_void_safe")
 			Result.force (l_attr, t_option)
 
 				-- class_option
@@ -2990,7 +3066,15 @@ feature {NONE} -- Implementation state transitions
 
 feature {NONE} -- Default options
 
-	default_options_15_11: CONF_OPTION
+	default_options_16_11: CONF_TARGET_OPTION
+			-- Default options of 16.11.
+		once
+			create Result.make_16_11
+		ensure
+			result_attached: Result /= Void
+		end
+
+	default_options_15_11: CONF_TARGET_OPTION
 			-- Default options of 15.11.
 		once
 			create Result.make_15_11
@@ -2998,7 +3082,7 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-	default_options_14_05: CONF_OPTION
+	default_options_14_05: CONF_TARGET_OPTION
 			-- Default options of 14.05.
 		once
 			create Result.make_14_05
@@ -3006,7 +3090,7 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-	default_options_7_3: CONF_OPTION
+	default_options_7_3: CONF_TARGET_OPTION
 			-- Default options of 7.3.
 		once
 			create Result.make_7_3
@@ -3014,7 +3098,7 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-	default_options_7_0: CONF_OPTION
+	default_options_7_0: CONF_TARGET_OPTION
 			-- Default options of 7.0.
 		once
 			create Result.make_7_0
@@ -3022,7 +3106,7 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-	default_options_6_4: CONF_OPTION
+	default_options_6_4: CONF_TARGET_OPTION
 			-- Default options of 6.4.
 		once
 			create Result.make_6_4
@@ -3030,7 +3114,7 @@ feature {NONE} -- Default options
 			result_attached: Result /= Void
 		end
 
-	default_options_6_3: CONF_OPTION
+	default_options_6_3: CONF_TARGET_OPTION
 			-- Default options of 6.3.
 		once
 			create Result.make_6_3

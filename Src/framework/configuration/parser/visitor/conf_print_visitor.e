@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate a text representation of the configuration in xml."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -234,7 +234,7 @@ feature -- Visit nodes
 				append_tag ("version", Void, l_name, l_val)
 			end
 			append_file_rule (a_target.internal_file_rule)
-			append_options (a_target.internal_options, Void)
+			append_target_options (a_target.internal_options)
 			from
 				create l_name.make (2)
 				l_name.force ("name")
@@ -257,25 +257,33 @@ feature -- Visit nodes
 				append_tag ("setting", Void, l_name, l_val)
 				l_sorted_list.forth
 			end
-			if a_target.immediate_setting_concurrency.is_set then
-				if includes_this_or_after (namespace_1_7_0) then
-						-- Use "concurrency" setting.
-					l_val.wipe_out
-					l_val.force (s_concurrency)
-					l_val.force (a_target.immediate_setting_concurrency.item)
-				else
-						-- Use "multithreaded" setting.
-					l_val.wipe_out
-					l_val.force (s_multithreaded)
-					if a_target.immediate_setting_concurrency.index = {CONF_TARGET}.setting_concurrency_index_none then
-						l_val.force ("false")
+			if
+				attached a_target.internal_options as o and then
+				attached o.concurrency_capability as concurrency_capability and then
+				concurrency_capability.is_root_set
+			then
+					-- Before `namespace_1_15_0' inclusively this was a setting.
+					-- In `namespace_1_16_0' and above this is a capaility that is handled elsewhere.
+				if includes_this_or_before (namespace_1_15_0) then
+					if includes_this_or_after (namespace_1_7_0) then
+							-- Use "concurrency" setting.
+						l_val.wipe_out
+						l_val.force (s_concurrency)
+						l_val.force (concurrency_capability.custom_root)
 					else
-							-- There is no way to specify all concurrent variants,
-							-- so only multithreaded variant is used.
-						l_val.force ("true")
+							-- Use "multithreaded" setting.
+						l_val.wipe_out
+						l_val.force (s_multithreaded)
+						if concurrency_capability.custom_root_index = {CONF_TARGET_OPTION}.concurrency_index_none then
+							l_val.force ("false")
+						else
+								-- There is no way to specify all concurrent variants,
+								-- so only multithreaded variant is used.
+							l_val.force ("true")
+						end
 					end
+					append_tag ("setting", Void, l_name, l_val)
 				end
-				append_tag ("setting", Void, l_name, l_val)
 			end
 			append_mapping (a_target.internal_mapping)
 			append_externals (a_target.internal_external_include, "include", "location")
@@ -862,8 +870,53 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_options (an_options: detachable CONF_OPTION; a_class: detachable READABLE_STRING_GENERAL)
-			-- Append `an_options', optionally for `a_class'.
+	append_target_options (o: detachable CONF_TARGET_OPTION)
+			-- Append target options `o' (if any).
+		do
+			if attached o and then not o.is_empty then
+				append_text_indent ("<option")
+					-- Versions before `namespace_1_16_0' do not support capabilities.
+				if is_after_or_equal (namespace, namespace_1_16_0) then
+					if o.concurrency.is_set then
+						append_text_attribute (o_concurrency, o.concurrency.item)
+					end
+					if o.catcall_safety_capability.is_root_set then
+						append_text_attribute (o_root_catcall_detection, o.catcall_safety_capability.custom_root)
+					end
+					if o.concurrency_capability.is_root_set then
+						append_text_attribute (o_root_concurrency, o.concurrency_capability.custom_root)
+					end
+					if o.void_safety_capability.is_root_set then
+						append_text_attribute (o_root_void_safety, o.void_safety_capability.custom_root)
+					end
+				end
+				append_general_options (o)
+				append_text_indent ("</option>%N")
+			end
+		end
+
+	append_class_options (o: detachable CONF_OPTION; c: READABLE_STRING_GENERAL)
+			-- Append class options `o' (if any) for a calss `c'.
+		do
+			if attached o and then not o.is_empty then
+				append_text_indent ("<class_option")
+				append_general_options (o)
+				append_text_indent ("</class_option>%N")
+			end
+		end
+
+	append_group_options (o: detachable CONF_OPTION)
+			-- Append group options `o' (if any).
+		do
+			if attached o and then not o.is_empty then
+				append_text_indent ("<option")
+				append_general_options (o)
+				append_text_indent ("</option>%N")
+			end
+		end
+
+	append_general_options (an_options: CONF_OPTION)
+			-- Append `an_options' in an already open option element.
 		local
 			l_str: detachable STRING_32
 			l_debugs, l_warnings: detachable STRING_TABLE [BOOLEAN]
@@ -874,13 +927,6 @@ feature {NONE} -- Implementation
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			if an_options /= Void and then not an_options.is_empty then
-				if a_class /= Void and then not a_class.is_empty then
-					append_text_indent ("<class_option")
-					append_text_attribute ("class", a_class)
-				else
-					append_text_indent ("<option")
-				end
-
 				if an_options.is_trace_configured then
 					append_text (" trace=%""+an_options.is_trace.out.as_lower+"%"")
 				end
@@ -1017,12 +1063,6 @@ feature {NONE} -- Implementation
 				end
 
 				indent := indent - 1
-				if a_class /= Void and then not a_class.is_empty then
-					append_text_indent ("</class_option>%N")
-				else
-					append_text_indent ("</option>%N")
-				end
-
 			end
 		end
 
@@ -1125,7 +1165,7 @@ feature {NONE} -- Implementation
 			append_note_tag (a_group)
 			append_description_tag (a_group.description)
 			append_conditionals (a_group.internal_conditions, a_group.is_assembly)
-			append_options (a_group.internal_options, Void)
+			append_group_options (a_group.internal_options)
 			if
 				attached {CONF_VIRTUAL_GROUP} a_group as l_vg and then
 				attached l_vg.renaming as l_renaming
@@ -1148,7 +1188,7 @@ feature {NONE} -- Implementation
 				until
 					l_c_opt.after
 				loop
-					append_options (l_c_opt.item_for_iteration, l_c_opt.key_for_iteration)
+					append_class_options (l_c_opt.item_for_iteration, l_c_opt.key_for_iteration)
 					l_c_opt.forth
 				end
 			end

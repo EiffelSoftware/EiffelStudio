@@ -1,0 +1,23 @@
+test_name 	 melted-basic-conversion-assignment
+test_description Assignment involving implicit conversion for constants of INTEGER type to variables of NATURAL type should preserve type of the target. In 16.05_99053 and earlier an assigment of 1 to a local of type NATURAL_8 makes this local to have type INTEGER_8 (and similar with other NATURAL types).
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work   NONE exec_output_m
+execute_result ok
+compare        exec_output_m output
+
+compile_frozen
+compile_result   ok
+c_compile_work
+c_compile_result ok
+
+execute_work   NONE exec_output_w
+execute_result ok
+compare        exec_output_w output
+
+test_end

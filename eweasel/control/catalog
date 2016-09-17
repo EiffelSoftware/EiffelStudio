@@ -1188,8 +1188,8 @@ test	melted-address-expression	melt104  tcf pass melting execution
 test	melted-address-current	melt105  tcf pass melting execution
 test	object-test-on-expanded-crash melt106  tcf fail melting execution object_test expanded
 test	type-invalid-in-melted-mode		melt107 tcf pass execution melting
-test	melted-natural-8-interval-conversion	melt108 tcf fail executon melting conversion
-test	melted-basic-conversion-assignment	melt109 tcf fail executon melting conversion
+test	melted-natural-8-interval-conversion	melt108 tcf pass executon melting conversion
+test	melted-basic-conversion-assignment	melt109 tcf pass executon melting conversion
 
 -- Freezing
 

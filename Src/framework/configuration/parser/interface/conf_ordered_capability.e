@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			A capability option that can be ordered by level.
 			It includes 2 related settings:
@@ -10,6 +10,9 @@ note
 
 class
 	CONF_ORDERED_CAPABILITY
+
+inherit
+	DEBUG_OUTPUT
 
 create {CONF_TARGET_OPTION}
 	make
@@ -194,6 +197,28 @@ feature -- Modification
 			new_root_value:
 				(not old is_root_set and then old custom_root_index /= other.custom_root_index) implies
 					(is_root_set and custom_root_index = other.custom_root_index)
+		end
+
+feature -- Output
+
+	debug_output: STRING_32
+			-- <Precursor>
+		do
+			Result := {STRING_32} "capability: "
+			Result.append (value.debug_output)
+			Result.append_string_general ("; root: ")
+			if is_root_set then
+				Result.append (root)
+				if root_index /= custom_root_index then
+					Result.append_string_general ("(custom: ")
+					Result.append (custom_root)
+					Result.append_character (')')
+				end
+			else
+				Result.append_string_general ("default (")
+				Result.append (value [default_root_index])
+				Result.append_character (')')
+			end
 		end
 
 invariant

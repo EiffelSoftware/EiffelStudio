@@ -544,7 +544,7 @@ feature {AST_EIFFEL} -- Visitor: Agents
 			then
 					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
-				use_current (a.feature_name)
+				use_current (a.start_location)
 			end
 		end
 
@@ -1017,9 +1017,9 @@ feature {NONE} -- Access
 			-- Bodies that are being processed
 
 note
-	date: "$Date: 2012-02-01 23:20:47 +0400$"
+	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

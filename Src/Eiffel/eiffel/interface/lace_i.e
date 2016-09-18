@@ -1251,53 +1251,27 @@ feature {NONE} -- Implementation
 				system.set_msil_use_optimized_precompile (False)
 			end
 
-				-- Check if "concurrency" setting is specified explicitly.
-			if a_target.options.concurrency_capability.is_root_set then
-					-- IL generation has no multithreaded, but is affected by SCOOP setting.
-				if
-					not system.il_generation or else
-					a_target.options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop or else
-					system.concurrency_index = {CONF_TARGET_OPTION}.concurrency_index_scoop
-				then
-						-- Value can't change from a precompile or in a compiled system.
-					if workbench.has_compilation_started then
-							-- It's not obvious from the code, but at this point `system.concurrency_index' should be set
-							-- because the system is compiled.
-						check
-							concurrency_index_set: a_target.options.concurrency_capability.is_valid_index (system.concurrency_index)
-						end
-						if
-							a_target.options.concurrency_capability.root_index /= system.concurrency_index and then
-							not is_force_new_target
-						then
-							create vd83.make (s_concurrency,
-								a_target.options.concurrency_capability.value [system.concurrency_index],
-								a_target.options.concurrency_capability.root)
-							Error_handler.insert_warning (vd83)
-						end
-					elseif
-						attached a_target.precompile as p and then
-						attached p.library_target as pt and then
-						a_target.options.concurrency_capability.root_index /= pt.options.concurrency_capability.root_index
-					then
-						if not is_force_new_target then
-							create vd83.make (s_concurrency,
-								a_target.precompile.library_target.options.concurrency_capability.root,
-								a_target.options.concurrency_capability.root)
-							Error_handler.insert_warning (vd83)
-						end
-					else
-							-- Update current system setting.
-						system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
-					end
-				end
-			elseif
-				system.concurrency_index = 0 and then
-				a_target.precompile = Void and then
-				not workbench.has_compilation_started
-			then
-					-- Use the default value of the setting if it is not set in any way.
+			if not workbench.has_compilation_started and then not attached a_target.precompile then
+					-- Update concurrency setting on first compilation.
 				system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
+			elseif
+				(not system.il_generation or else
+				a_target.options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop or else
+				system.concurrency_index = {CONF_TARGET_OPTION}.concurrency_index_scoop) and then
+				(attached a_target.precompile implies a_target.options.concurrency_capability.is_root_set) and then
+				a_target.options.concurrency_capability.root_index /= system.concurrency_index and then
+				not is_force_new_target
+			then
+					-- Value can't change from a precompile or in a compiled system.
+					-- IL generation has no multithreaded, but is affected by SCOOP setting.
+					-- If there is a precompile, an error is reported only when concurrency is set explicitly, otherwise it is taken from the precompile.
+					-- If there is no precompile, an error is reported because of concurrency change (explicit or not).
+					-- At this point `system.concurrency_index' should be set because the system is compiled or has a precompile.
+					-- Its value is retrieved from a disk.
+				create vd83.make (s_concurrency,
+					a_target.options.concurrency_capability.value [system.concurrency_index],
+					a_target.options.concurrency_capability.root)
+				Error_handler.insert_warning (vd83)
 			end
 
 			l_s := l_settings.item (s_old_feature_replication)

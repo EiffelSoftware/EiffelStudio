@@ -12,6 +12,7 @@ inherit
 	CONF_OPTION
 		redefine
 			default_create,
+			is_empty,
 			make_6_3,
 			merge
 		end
@@ -50,6 +51,18 @@ feature {NONE} -- Creation
 		do
 			make_15_11
 			concurrency.put_default_index (concurrency_index_scoop)
+		end
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- <Precursor>
+		do
+			Result := Precursor and then
+				not catcall_safety_capability.is_root_set and then
+				not concurrency.is_set and then
+				not concurrency_capability.is_root_set and then
+				not void_safety_capability.is_root_set
 		end
 
 feature -- Capability

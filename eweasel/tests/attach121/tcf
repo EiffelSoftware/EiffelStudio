@@ -1,0 +1,10 @@
+test_name 	 uninitialized-agent-with-wrong-creation
+test_description An attempt to pass an agent to a creation procedure that uses a wrong name and not all attributes are initialized should not cause compiler crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+
+test_end

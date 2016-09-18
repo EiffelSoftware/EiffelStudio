@@ -192,15 +192,15 @@ feature -- Output
 			Result := item.out
 		end
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- <Precursor>
 		do
 			if is_set then
 				Result := item
 			else
-				Result := "default ("
-				Result.append_string_general (content [default_index])
-				Result.append_character (')')
+				Result := {STRING_32} "default ("
+				Result.append (content [default_index])
+				Result.append_character ({CHARACTER_32} ')')
 			end
 		end
 

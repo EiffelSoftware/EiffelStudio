@@ -38,14 +38,16 @@ compare		exec_output2 output
 define SETTING "<setting name="shared_library_definition" value="/foo/bar"/>"
 copy_sub 	Ace $TEST Ace
 compile_frozen
-compile_result 	ok
+if not DOTNET compile_result validity_warning NONE VD83	
+if DOTNET compile_result ok
 
 c_compile_work
 
 define SETTING ""
 copy_sub 	Ace $TEST Ace
 compile_frozen
-compile_result 	ok
+if not DOTNET compile_result validity_warning NONE VD83	
+if DOTNET compile_result ok
 
 c_compile_work
 c_compile_result ok

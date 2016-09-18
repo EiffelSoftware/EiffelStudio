@@ -859,9 +859,11 @@ feature {NONE} -- Implementation attribute processing
 								end
 							elseif l_name.same_string (s_concurrency) then
 									-- Process "concurrency" setting.
-								if includes_this_or_after (namespace_1_7_0) then
+								if includes_this_or_after (namespace_1_7_0) and then includes_this_or_before (namespace_1_15_0) then
 										-- The setting is allowed.
 									if l_current_target.changeable_internal_options.concurrency_capability.is_valid_item (l_value) then
+											-- Enable associated capability.
+										l_current_target.changeable_internal_options.concurrency_capability.value.put (l_value)
 											-- Update setting with this value.
 										l_current_target.changeable_internal_options.concurrency_capability.put_root (l_value)
 									else

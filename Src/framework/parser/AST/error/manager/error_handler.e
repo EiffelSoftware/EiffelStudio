@@ -230,16 +230,16 @@ feature {COMPILER_EXPORTER} -- Output
 	clear_display
 			-- Clears any error handler display
 		do
-			if error_displayer /= Void then
-				error_displayer.clear_display
+			if attached error_displayer as err_disp then
+				err_disp.clear_display
 			end
 		end
 
 	trace
 			-- Trace the output of the errors if there are any.
 		do
-			if error_displayer /= Void then
-				error_displayer.trace (Current)
+			if attached error_displayer as err_disp then
+				err_disp.trace (Current)
 			end
 			if has_error then
 				error_list.wipe_out
@@ -256,8 +256,8 @@ feature {COMPILER_EXPORTER} -- Output
 			-- Trace the output of the warnings if there are any.
 		do
 			if has_warning then
-				if error_displayer /= Void then
-					error_displayer.trace_warnings (Current)
+				if attached error_displayer as err_disp then
+					err_disp.trace_warnings (Current)
 				end
 				warning_list.wipe_out
 			end
@@ -287,7 +287,7 @@ invariant
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

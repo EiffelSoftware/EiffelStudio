@@ -378,14 +378,19 @@ feature -- History operation
 
 feature -- Pick and drop
 
-	stone_at (cursr: like cursor): STONE
+	stone_at (cursr: like cursor): detachable STONE
 			-- Stone corresponding to word at `cursor' position.
 		do
 			if not Workbench.is_compiling then
+				-- CHECK: almost same code as Precursor!!
 				if click_and_complete_is_active and then click_tool.is_ready then
 					Result := click_tool.stone_at_position (cursr)
-					if Result = Void and then cursr.token /= Void and then cursr.token.pebble /= Void then
-						Result ?= cursr.token.pebble.twin
+					if
+						Result = Void and then
+					 	attached cursr.token as tok and then
+					 	attached {like stone_at} tok.pebble as l_pebble_stone
+					 then
+						Result := l_pebble_stone.twin
 					end
 				else
 					Result := Precursor {CLICKABLE_TEXT}(cursr)

@@ -260,13 +260,11 @@ feature -- dragging
 			-- Clone of `Current' after a recompilation
 			-- (May be Void if not valid anymore)
 		local
-			new_e_feature: like e_feature
 			fok: BOOLEAN
 		do
 			if e_class /= Void then
 				if e_feature /= Void and then e_feature.is_valid then
-					new_e_feature := e_feature.updated_version
-					if new_e_feature /= Void then
+					if attached e_feature.updated_version as new_e_feature then
 						create {FEATURE_STONE} Result.make (new_e_feature)
 						fok := Result.is_valid
 					end
@@ -300,7 +298,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

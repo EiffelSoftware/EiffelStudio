@@ -175,7 +175,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 				if a_ignore_errors then
 					error_handler.save
 				else
-					check not_error_handler_has_error: error_handler.has_error end
+					check not_error_handler_has_error: not error_handler.has_error end
 				end
 
 					-- Perform parse
@@ -242,7 +242,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

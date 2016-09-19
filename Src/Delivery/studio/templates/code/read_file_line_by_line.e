@@ -1,16 +1,16 @@
 class  TEMPLATE_READ_FILE_GLOBAL
 
 inherit
-    
-    TEMPLATE 
+	
+	TEMPLATE 
 	
 feature
 
 	read_file_line_by_line (a: ANY)
 		note
 			title: "Read a file line by line"
-	        description: "Show how to read a file line by line., for binary files you can use {RAW_FILE}"
-	        tags: "Algorithm, Read, Files, Path"
+			description: "Show how to read a file line by line., for binary files you can use {RAW_FILE}"
+			tags: "Algorithm, Read, Files, Path"
 		local
 			l_file: FILE
 			l_path: PATH

@@ -86,13 +86,13 @@ feature -- Access: profiles
 				doc.root_element.name.same_string_general (profiles_data_name)
 			then
 				l_root := doc.root_element
-				if attached l_root.elements_by_name ("profile") as l_profile_list then
+				if attached l_root.elements_by_name (xml_profile_id) as l_profile_list then
 					create Result.make (l_profile_list.count)
 					across
 						l_profile_list as ic
 					loop
 						e := ic.item
-						att := e.attribute_by_name ("uuid")
+						att := e.attribute_by_name (xml_uuid_id)
 						if att /= Void then
 							create l_uuid
 							if l_uuid.is_valid_uuid (att.value) then
@@ -106,37 +106,37 @@ feature -- Access: profiles
 						end
 						Result.add (prof)
 
-						att := e.attribute_by_name ("title")
+						att := e.attribute_by_name (xml_title_id)
 						if att /= Void then
 							prof.set_title (att.value)
 						end
-						att := e.attribute_by_name ("arguments")
+						att := e.attribute_by_name (xml_arguments_id)
 						if att /= Void then
 							prof.set_arguments (att.value)
 						end
-						att := e.attribute_by_name ("working_copy")
+						att := e.attribute_by_name (xml_working_directory_id)
 						if att /= Void then
 							prof.set_working_directory (create {PATH}.make_from_string (att.value))
 						end
-						if attached e.element_by_name ("variables") as l_variables then
+						if attached e.element_by_name (xml_variables_id) as l_variables then
 							across
 								l_variables as var_ic
 							loop
 								if attached {XML_ELEMENT} var_ic.item as e2 then
 									k := Void
 									v := Void
-									att := e2.attribute_by_name ("name")
+									att := e2.attribute_by_name (xml_name_id)
 									if att /= Void then
 										k := att.value
-										att := e2.attribute_by_name ("value")
+										att := e2.attribute_by_name (xml_value_id)
 										if att /= Void then
 											v := att.value
 										end
 									end
 									if k /= Void then
-										if e2.name.is_case_insensitive_equal_general ("unset") then
+										if e2.name.is_case_insensitive_equal_general (xml_unset_id) then
 											prof.unset_environment_variable (k)
-										elseif e2.name.is_case_insensitive_equal_general ("set") then
+										elseif e2.name.is_case_insensitive_equal_general (xml_set_id) then
 											prof.set_environment_variable (v, k)
 										else
 											-- Ignore
@@ -147,7 +147,7 @@ feature -- Access: profiles
 						end
 					end
 				end
-				if attached l_root.attribute_by_name ("last_profile") as l_att_last_prof then
+				if attached l_root.attribute_by_name (xml_last_profile_id) as l_att_last_prof then
 					Result.set_last_profile_by_uuid (create {UUID}.make_from_string (l_att_last_prof.value))
 				end
 			end
@@ -277,7 +277,7 @@ feature {NONE} -- Persistence
 			doc := new_xml_document (profiles_data_name, "execution-parameters-1-0-0")
 			if attached doc.root_element as rt then
 				if attached a_data.last_profile as l_last_profile then
-					rt.add_unqualified_attribute ("last_profile", l_last_profile.uuid.out)
+					rt.add_unqualified_attribute (xml_last_profile_id, l_last_profile.uuid.out)
 				end
 				across
 					a_data as ic
@@ -294,18 +294,18 @@ feature {NONE} -- Persistence
 			elt,vars_elt,var_elt: XML_ELEMENT
 			k: STRING_32
 		do
-			create elt.make (a_parent, "profile", a_parent.namespace)
+			create elt.make (a_parent, xml_profile_id, a_parent.namespace)
 			a_parent.force_last (elt)
-			elt.add_unqualified_attribute ("uuid", a_profile.uuid.out)
+			elt.add_unqualified_attribute (xml_uuid_id, a_profile.uuid.out)
 			if attached a_profile.title as l_title then
-				elt.add_unqualified_attribute ("title", l_title)
+				elt.add_unqualified_attribute (xml_title_id, l_title)
 			end
-			elt.add_unqualified_attribute ("arguments", a_profile.arguments)
+			elt.add_unqualified_attribute (xml_arguments_id, a_profile.arguments)
 			if attached a_profile.working_directory as l_path then
-				elt.add_unqualified_attribute ("working_directory", l_path.name)
+				elt.add_unqualified_attribute (xml_working_directory_id, l_path.name)
 			end
 			if attached a_profile.environment_variables as l_vars then
-				create vars_elt.make (elt, "variables", elt.namespace)
+				create vars_elt.make (elt, xml_variables_id, elt.namespace)
 				elt.force_last (vars_elt)
 				across
 					l_vars as ic
@@ -313,12 +313,12 @@ feature {NONE} -- Persistence
 					k := ic.key
 					if k.starts_with ("&-") then
 						k.remove_head (2)
-						create var_elt.make (vars_elt, "unset", elt.namespace)
-						var_elt.add_unqualified_attribute ("name", k)
+						create var_elt.make (vars_elt, xml_unset_id, elt.namespace)
+						var_elt.add_unqualified_attribute (xml_name_id, k)
 					else
-						create var_elt.make (vars_elt, "set", elt.namespace)
-						var_elt.add_unqualified_attribute ("name", k)
-						var_elt.add_unqualified_attribute ("value", ic.item)
+						create var_elt.make (vars_elt, xml_set_id, elt.namespace)
+						var_elt.add_unqualified_attribute (xml_name_id, k)
+						var_elt.add_unqualified_attribute (xml_value_id, ic.item)
 					end
 					vars_elt.force_last (var_elt)
 				end
@@ -377,6 +377,18 @@ feature {NONE} -- Persistence
 		end
 
 feature {NONE} -- Implementation: xml
+
+	xml_last_profile_id: STRING = "last_profile"
+	xml_profile_id: STRING = "profile"
+	xml_uuid_id: STRING = "uuid"
+	xml_title_id: STRING = "title"
+	xml_arguments_id: STRING = "arguments"
+	xml_working_directory_id: STRING = "working_directory"
+	xml_variables_id: STRING = "variables"
+	xml_set_id: STRING = "set"
+	xml_unset_id: STRING = "unset"
+	xml_name_id: STRING = "name"
+	xml_value_id: STRING = "value"
 
 	new_xml_document (a_root_name: READABLE_STRING_GENERAL; a_xmlns_name_version: detachable READABLE_STRING_GENERAL): XML_DOCUMENT
 			-- New XML_DOCUMENT with predefined declaration and information.

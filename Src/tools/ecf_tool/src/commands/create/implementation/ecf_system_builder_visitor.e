@@ -117,13 +117,13 @@ feature -- Visitor
 
 				if attached v.concurrency as s then
 					if s.is_case_insensitive_equal_general ("thread") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_thread)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 					elseif s.is_case_insensitive_equal_general ("scoop") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_scoop)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_scoop)
 					elseif s.is_case_insensitive_equal_general ("none") then
-						l_target.setting_concurrency.put_index (l_target.setting_concurrency_index_none)
-					else
-						l_target.setting_concurrency.put (s)
+						l_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
+					elseif l_target.changeable_internal_options.concurrency_capability.is_valid_item (s) then
+						l_target.changeable_internal_options.concurrency_capability.value.put (s)
 					end
 				end
 			end
@@ -233,7 +233,7 @@ feature -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

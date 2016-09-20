@@ -413,6 +413,22 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	concurrency_mode: like {CONF_STATE}.concurrency
+			-- Concurrency mode to set `{CONF_STATE}.concurrency'
+			-- in the tools that process ECF.
+		do
+			inspect options.concurrency_capability.root_index
+			when {CONF_TARGET_OPTION}.concurrency_index_none then Result := concurrency_none
+			when {CONF_TARGET_OPTION}.concurrency_index_thread then Result := concurrency_multithreaded
+			when {CONF_TARGET_OPTION}.concurrency_index_scoop then Result := concurrency_scoop
+			end
+		ensure
+			definition:
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_none  and then Result = concurrency_none or else
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_thread and then Result = concurrency_multithreaded or else
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop and then Result = concurrency_scoop
+		end
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_name (a_name: like name)

@@ -376,8 +376,11 @@ feature -- Basic operation
 					else
 						q := next_end_of_tag_character (a_text, i + 1)
 						if q > 0 then
-							if a_text[q-1] = '/' then
-								l_tag := tag_name_from (a_text.substring (i, q))
+							l_tag := tag_name_from (a_text.substring (i, q))
+							if l_tag = Void or else l_tag.is_empty then
+									-- Invalid tag name!
+									-- Ignore...
+							elseif a_text[q-1] = '/' then
 								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
 								on_wiki_item_end_token (l_items, i + 1, "tag:" + l_tag)
 								if q > 0 then
@@ -387,23 +390,18 @@ feature -- Basic operation
 									i := i + (l_tag).count + 1 + 1
 								end
 							else
-								l_tag := tag_name_from (a_text.substring (i, q))
-								if l_tag.is_empty then
-										-- ???
+								multiline_level := multiline_level + 1
+								in_tag := True
+								on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
+								if q > 0 then
+									i := q
 								else
-									multiline_level := multiline_level + 1
-									in_tag := True
-									on_wiki_item_begin_token (l_items, i + 1, "tag:" + l_tag)
-									if q > 0 then
-										i := q
-									else
-										check has_end_of_tag_character: False end
-										i := i + (l_tag).count + 1
-									end
+									check has_end_of_tag_character: False end
+									i := i + (l_tag).count + 1
 								end
 							end
 						else
-							l_tag := ""
+							l_tag := Void
 						end
 					end
 				else

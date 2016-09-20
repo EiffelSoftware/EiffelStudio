@@ -709,10 +709,8 @@ end
 
 			t.structure.process (new_xhtml_generator (o))
 			assert ("o", o.same_string ("{
-<p>begin<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .
-
-<code class="inline">foo bar</code>
-end</p>
+<p>begin<code class="inline">foobar</code> operations <code class="inline">&lt;</code> or <code class="inline">&gt;</code> or <code class="inline">&lt;=&gt;</code> <code class="inline">blabla</code> .</p>
+<p><code class="inline">foo bar</code>end</p>
 
 }"
 						)

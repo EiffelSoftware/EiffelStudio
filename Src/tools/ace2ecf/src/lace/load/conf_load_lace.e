@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Load configuration from the old lace format."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation of data retrieval
 
 	current_cluster: CONF_CLUSTER
 
-	current_options: CONF_OPTION
+	current_options: CONF_TARGET_OPTION
 
 	current_overrides: SEARCH_TABLE [STRING]
 
@@ -734,9 +734,9 @@ feature {NONE} -- Implementation of data retrieval
 								-- Use "concurrency" setting instead.
 							l_str := l_value.value.as_lower
 							if l_str ~ "true" or else l_str ~ "yes" then
-								current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_thread)
+								current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 							elseif l_str ~ "false" or else l_str ~ "no" then
-								current_target.immediate_setting_concurrency.put_index ({CONF_TARGET}.setting_concurrency_index_none)
+								current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 							end
 						elseif valid_setting (l_name) and l_value /= Void then
 							current_target.add_setting (l_name, l_value.value.as_string_32)

@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		Application to generate void-safe and non void-safe version of ECFs 
 		using the configuration library.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ECF_VOIDSAFE
@@ -256,7 +256,7 @@ feature {NONE} -- Basic operations
 
 	update_config_to_voidsafe_all (cfg: CONF_SYSTEM)
 		local
-			opts: CONF_OPTION
+			opts: CONF_TARGET_OPTION
 			tgt: CONF_TARGET
 		do
 			across
@@ -279,7 +279,7 @@ feature {NONE} -- Basic operations
 
 	update_config_to_voidsafe_none (cfg: CONF_SYSTEM)
 		local
-			opts: CONF_OPTION
+			opts: CONF_TARGET_OPTION
 			tgt: CONF_TARGET
 		do
 			across

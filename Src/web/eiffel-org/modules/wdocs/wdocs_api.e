@@ -241,6 +241,13 @@ feature -- Query: wiki
 			end
 		end
 
+	page_references (a_wp: WIKI_PAGE; a_book_id, a_version_id: detachable READABLE_STRING_GENERAL): LIST [like new_wiki_page]
+			-- Page referencing `a_wp' if any.
+			-- TODO: to implement!
+		do
+			create {ARRAYED_LIST [like new_wiki_page]} Result.make (0)
+		end
+
 feature -- Recent changes	
 
 	recent_changes_before (params: CMS_DATA_QUERY_PARAMETERS; a_date: DATE_TIME; a_version_id: detachable READABLE_STRING_GENERAL): LIST [TUPLE [time: DATE_TIME; author: READABLE_STRING_32; bookid: READABLE_STRING_GENERAL; page: like new_wiki_page; log: READABLE_STRING_8]]

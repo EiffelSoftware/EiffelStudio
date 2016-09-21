@@ -138,6 +138,10 @@ feature -- Router
 			a_router.handle ("/doc/uuid/{wikipage_uuid}", h, a_router.methods_get)
 			a_router.handle ("/doc/version/{version_id}/uuid/{wikipage_uuid}", h, a_router.methods_get)
 
+			create h.make (agent handle_wikipage_by_eis_id (a_api, ?, ?))
+			a_router.handle ("/doc/eis/{eis_id}", h, a_router.methods_get)
+			a_router.handle ("/doc/version/{version_id}/eis/{eis_id}", h, a_router.methods_get)
+
 			create h.make (agent handle_documentation (a_api, ?, ?))
 			a_router.handle ("/documentation", h, a_router.methods_get)
 			a_router.handle ("/doc/", h, a_router.methods_get)
@@ -148,6 +152,12 @@ feature -- Router
 			create h.make (agent handle_wikipage (a_api, ?, ?))
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}", h, a_router.methods_get)
 			a_router.handle ("/doc/{bookid}/{wikipageid}", h, a_router.methods_get)
+
+-- TO COMPLETE before enabling it.
+--			create h.make (agent handle_wikipage_references (a_api, ?, ?))
+--			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/whatlinkshere", h, a_router.methods_get)
+--			a_router.handle ("/doc/{bookid}/{wikipageid}/whatlinkshere", h, a_router.methods_get)
+
 
 			create h.make (agent handle_wiki_image (a_api, ?, ?))
 			a_router.handle ("/doc-image/{image_id}", h, a_router.methods_get)
@@ -723,7 +733,7 @@ feature {NONE} -- Implementation
 
 feature -- Hook
 
-	populate_content_associated_with_term (t: CMS_TERM; a_contents: CMS_TAXONOMY_ENTITY_CONTAINER)
+	populate_content_associated_with_term (a_term: CMS_TERM; a_contents: CMS_TAXONOMY_ENTITY_CONTAINER)
 			-- Populate `a_contents' with taxonomy entity associated with term `t'.
 		local
 			c: CMS_WDOCS_CONTENT
@@ -740,7 +750,7 @@ feature -- Hook
 				loop
 					if
 						attached ic.item.typename as l_typename and then
-						l_typename.is_case_insensitive_equal ({CMS_WDOCS_CONTENT_TYPE}.name)
+						l_typename.is_case_insensitive_equal_general ({CMS_WDOCS_CONTENT_TYPE}.name)
 					then
 						l_uuid := ic.item.entity
 						if attached l_wdocs_api.wiki_page_by_uuid (l_uuid, Void, Void) as pg then
@@ -878,6 +888,101 @@ feature -- Handler
 			end
 		end
 
+	handle_wikipage_by_eis_id (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+			-- Resolve the EIS url into wdoc page, if possible.
+			-- ex: /doc/eis/78D80981-EF3C-42EC-8919-EF7D7BB61701%40time%40time%40DATE_TIME
+		local
+			r: CMS_RESPONSE
+			l_version_id, l_eis_id: detachable READABLE_STRING_GENERAL
+			l_uuid, l_library, l_cluster, l_class: detachable READABLE_STRING_GENERAL
+			s: detachable READABLE_STRING_32
+			lst: LIST [READABLE_STRING_GENERAL]
+			utf: UTF_CONVERTER
+		do
+			if req.is_get_request_method then
+				l_version_id := version_id (req, Void)
+				if attached {WSF_STRING} req.path_parameter ("eis_id") as p_eis_id then
+					l_eis_id := p_eis_id.value
+					lst := l_eis_id.split ('@')
+					if lst.is_empty then
+							-- Bad request !
+					else
+						l_uuid := lst.first
+						lst.start
+						lst.remove
+						if lst.count >= 3 then
+							lst.start
+							l_library := lst.item
+							lst.remove
+						end
+						if lst.count >= 2 then
+							lst.start
+							l_cluster := lst.item
+							lst.remove
+						end
+						if lst.count >= 1 then
+							lst.start
+							l_class := lst.first
+							lst.remove
+						end
+					end
+				end
+				if l_eis_id = Void or l_uuid = Void then
+					create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				else
+					if attached api.module_configuration (Current, "eis") as cfg then
+						s := cfg.text_item (eis_query_config_key (l_uuid, l_library, l_cluster, l_class))
+						if s = Void and l_library /= Void then
+							s := cfg.text_item (eis_query_config_key (l_uuid, Void, l_cluster, l_class))
+						end
+						if s = Void and l_cluster /= Void then
+							s := cfg.text_item (eis_query_config_key (l_uuid, Void, Void, l_class))
+						end
+						if s = Void and l_class /= Void then
+							s := cfg.text_item (eis_query_config_key (l_uuid, Void, Void, Void))
+						end
+					end
+					if s /= Void then
+						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+						r.set_redirection (wdocs_page_uuid_link_location (l_version_id, utf.utf_32_string_to_utf_8_string_8 (s)))
+						r.set_main_content ({STRING_32} "UUID associated with %"" + l_eis_id.as_string_32 + "%" is " + s)
+					else
+						create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+						r.set_main_content ("Page not found")
+						r.set_title ("Wiki page not found!")
+							-- FIXME: Provide a form, to add a new EIS mapping!
+						fixme ("Provide a form, to add a new EIS mapping!")
+					end
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
+			r.execute
+		end
+
+	eis_query_config_key (a_uuid: READABLE_STRING_GENERAL; a_lib, a_clu, a_cl: detachable READABLE_STRING_GENERAL): STRING_32
+		do
+			create Result.make_from_string_general (a_uuid)
+			Result.append_character ('.')
+			if a_lib /= Void then
+				Result.append_string_general (a_lib)
+			else
+				Result.append_character ('*')
+			end
+			Result.append_character ('.')
+			if a_clu /= Void then
+				Result.append_string_general (a_clu)
+			else
+				Result.append_character ('*')
+			end
+			Result.append_character ('.')
+			if a_cl /= Void then
+				Result.append_string_general (a_cl)
+			else
+				Result.append_character ('*')
+			end
+		end
+
 	handle_wikipage_by_uuid	(api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
@@ -908,6 +1013,33 @@ feature -- Handler
 			if req.is_get_request_method then
 				if attached wikipage_data_from_request (req) as pg_info then
 					send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
+				else
+					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
+					r.set_main_content ("Page not found")
+					r.set_title ("Wiki page not found!")
+					r.execute
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				r.execute
+			end
+		end
+
+	handle_wikipage_references (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			if req.is_get_request_method then
+				if attached wikipage_data_from_request (req) as pg_info then
+					if attached wdocs_api as l_wdocs_api then
+						if attached l_wdocs_api.page_references (pg_info.page, pg_info.bookid, pg_info.manager.version_id) as lst then
+						end
+						create {NOT_IMPLEMENTED_ERROR_CMS_RESPONSE} r.make (req, res, api)
+						r.execute
+					else
+						create {INTERNAL_SERVER_ERROR_CMS_RESPONSE} r.make (req, res, api)
+						r.execute
+					end
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.set_main_content ("Page not found")
@@ -1218,6 +1350,8 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 					mng := manager (ids.version_id)
 					if l_book_id = Void then
 						l_book_id := mng.book_name (pg)
+					elseif not mng.has_book_named (l_book_id) then
+						l_book_id := Void
 					end
 					if l_book_id /= Void then
 						Result := [pg, l_book_id, mng]
@@ -1444,6 +1578,18 @@ feature {NONE} -- implementation: wiki docs
 			Result.append ("/")
 				-- Encode twice, to avoid issue with / or %2F issue with apache.
 			Result.append (wiki_name_to_url_encoded_string (a_page_name))
+		end
+
+	wdocs_page_uuid_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_uuid: READABLE_STRING_8): STRING
+		do
+			create Result.make_from_string ("doc/")
+			if a_version_id /= Void and then not  a_version_id.same_string (default_version_id) then
+				Result.append ("version/")
+				Result.append (percent_encoder.percent_encoded_string (a_version_id))
+				Result.append_character ('/')
+			end
+			Result.append ("uuid/")
+			Result.append (a_uuid)
 		end
 
 feature {NONE} -- Implementation		

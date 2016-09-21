@@ -119,6 +119,8 @@ feature -- Visitor
 			is_context_set := True
 			create item.make (a_as, ast_match_list)
 			item.set_context (context)
+			set_top_notes (item)
+			set_name_and_comment (item, a_as)
 			if a_as.is_function then
 				item.mark_query
 				items.force (item)
@@ -226,17 +228,10 @@ feature -- Visitor
 			Precursor (a_as)
 			if attached item as l_item then
 				l_item.set_arguments (arguments)
---				if arguments.count > 1 then
---						--					set_valid_template (False)
---						-- Now we accept multiple arguments
---						--| like (a:T1; b:T2; c:T3)
---						--| where the first argument `a' is the context,
---						--| if the type is ANY, it means the feature is a global
---						--| template, in other case it determine the context where the
---						--| template will be available.
---						--| the others arguments, if any, will be used a input arguments
---						--| where the default values will be filled with defaults if they exist.
---				end
+						--| We accept multiple arguments
+						--| like (a:T1; b:T2; c:T3)
+						--| the arguments, if any, will be used a input arguments
+						--| where the default values will be filled with defaults if they exist.
 			end
 			is_argument := False
 		end
@@ -301,10 +296,6 @@ feature -- Visitor
 				if l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.title) then
 					if attached a_as.index_list as l_index_list and then not l_index_list.is_empty and then attached {STRING_AS} l_index_list.at (1) as l_string then
 						l_item.set_title (l_string.value_32)
-					end
-				elseif l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.description) then
-					if attached a_as.index_list as l_index_list and then not l_index_list.is_empty and then attached {STRING_AS} l_index_list.at (1) as l_string then
-						l_item.set_description (l_string.value_32)
 					end
 				elseif l_tag.name_32.is_case_insensitive_equal ({ES_CODE_TEMPLATE_CONSTANTS}.tags) then
 					if attached a_as.index_list as l_index_list and then not l_index_list.is_empty and then attached {STRING_AS} l_index_list.at (1) as l_string then
@@ -442,12 +433,31 @@ feature {NONE} -- Change element
 			end
 		end
 
+	set_name_and_comment (a_item: ES_CODE_TEMPLATE_DEFINITION_ITEM;  a_as: FEATURE_AS)
+			-- Set feature name `title' and comment `description'
+		local
+			l_description: STRING
+		do
+			a_item.set_title (a_as.feature_name.name_32)
+			create l_description.make_empty
+			across a_as.comment (ast_match_list) as ic  loop
+				l_description.append (ic.item.content_32)
+			end
+			a_item.set_description (l_description)
+		end
+
 	set_text (a_text: READABLE_STRING_32)
 			-- set `text' with `a_text'.
 		do
 			text := a_text
 		ensure
 			text_set: text.same_string_general (a_text)
+		end
+
+	set_top_notes (a_item: ES_CODE_TEMPLATE_DEFINITION_ITEM)
+			-- Set `top_notes' to item `a_item',if any.
+		do
+			a_item.set_top_notes (top_notes)
 		end
 
 feature -- Status report

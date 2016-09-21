@@ -6,10 +6,10 @@ inherit
 
 feature
 
-	entries (a: ANY)
+	entries 
+			-- Show entires for the current directory.
 		note
 			title: "Entries for a directory"
-			description: "Show entires for the current directory"
 			tags: "Algorithm, entries , DIRECTORY"
 		local
 			l_path: PATH

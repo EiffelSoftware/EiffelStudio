@@ -1,61 +1,61 @@
 note
-	description: "[
-		Code templates for Array of COMPARABLE item.
-	]"
+    description: "[
+        Code templates for Arrays of COMPARABLES.
+    ]"
+    template_version: "1.0"
 
 class ARRAY_TEMPLATE [T -> COMPARABLE]
 
 inherit
-	
-	TEMPLATE [ARRAY [T]]
+    
+    TEMPLATE [ARRAY [T]]
 
-feature
+feature -- Templates
 
-	maximum (a: ARRAY [T]): T
-		note
-			title: "Maximum of an array"
-			description: "Get the maximum of an array"
-			tags: "Algorithm, Maximum, ARRAY"
-		do
-			across a as element loop
-				Result := Result.max (element.item)
-			end
-		end
+    maximum: T
+            -- Get the maximum of an array.
+        note
+            tags: "Algorithm, Maximum, ARRAY"
+        do
+			across target as element loop
+                Result := Result.max (element.item)
+            end
+        end
 
-	slice_maximum (a: ARRAY [T]; low, high: INTEGER): T
+	slice_maximum (low, high: INTEGER): T
+			-- Get the maximum of an array, where the interval is defined by default by array.lower |..| array.upper.
 		note
 			title: "Slice Maximum of an array"
-			description: "Get the maximum of an array, where the interval is defined by default by array.lower |..| array.upper"
 			tags: "Algorithm, Maximum, ARRAY"
-			default: "a.lower, a.upper"
+			default: "target.lower, target.upper"
 		do
 			across low |..| high as i loop
-				Result := Result.max (a [i.item])
+				Result := Result.max (target [i.item])
 			end
 		end	
 
-	minimum (a: ARRAY [T]): T
+	minimum: T
+			-- Get the minimum of an array.
 		note
 			title: "Minimum of an array"
-			description: "Get the minimum of an array"
 			tags: "Algorithm, Minimum, ARRAY"
 		do
-			across a as element loop
+			across target as element loop
 				Result := Result.min (element.item)
 			end
 		end
 	
 
-	slice_minimum (a: ARRAY [T]; low, high: INTEGER): T
+	slice_minimum (low, high: INTEGER): T
+			-- Get the minimum of an array, where the interval is defined by default by array.lower |..| array.upper.
 		note
 			title: "Slice Minimum of an array"
-			description: "Get the minimum of an array, where the interval is defined by default by array.lower |..| array.upper"
 			tags: "Algorithm, Minimum, ARRAY"
-			default: "a.lower, a.upper"
+			default: "target.lower, target.upper"
 		do
 			across low |..| high as i loop
-				Result := Result.min (a [i.item])
+				Result := Result.min (target [i.item])
 			end
-		end
+		end    
 
 end

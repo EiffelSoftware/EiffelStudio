@@ -358,7 +358,7 @@ feature {NONE} -- Basic operations
 				if not l_file.is_empty then
 					l_file.read_stream (l_file.count)
 					l_parser := eiffel_parser_wrapper
-					l_parser.parse_with_option_32 (Heavy_eiffel_parser, l_file.last_string, create {CONF_OPTION}, True, Void)
+					l_parser.parse_with_option_32 (Heavy_eiffel_parser, l_file.last_string, create {CONF_OPTION}, False, Void)
 					if
 						attached l_parser.ast_node as l_ast_node and then
 						attached l_parser.ast_match_list as l_ast_match_list

@@ -1095,10 +1095,11 @@ feature {NONE} -- syntax completion
 			is_then := test.is_case_insensitive_equal ({STRING_32} "then")
 			if is_else or is_then then
 				from
+					tok := token.previous
 				until
-					not attached {EDITOR_TOKEN_BLANK} token.previous as blnk
+					not attached {EDITOR_TOKEN_BLANK} tok as blnk
 				loop
-					tok := blnk
+					tok := blnk.previous
 				end
 				if attached {like token} tok as kw then
 					if is_else then

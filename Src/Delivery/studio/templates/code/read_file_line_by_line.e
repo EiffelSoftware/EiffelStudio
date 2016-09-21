@@ -6,16 +6,16 @@ inherit
 	
 feature
 
-	read_file_line_by_line (a: ANY)
+	read_file_line_by_line
+			-- Show how to read a file line by line., for binary files you can use {RAW_FILE}. 
 		note
 			title: "Read a file line by line"
-			description: "Show how to read a file line by line., for binary files you can use {RAW_FILE}"
 			tags: "Algorithm, Read, Files, Path"
 		local
 			l_file: FILE
 			l_path: PATH
 		do
-			create L_path.make_current
+			create l_path.make_current
 			create {PLAIN_TEXT_FILE} l_file.make_with_path (L_path)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read

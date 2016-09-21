@@ -8,14 +8,13 @@ inherit
 
 feature 
 
-	sum (a: ARRAY [T]): T
+	sum: T
+			-- Sum of an array.
 		note
-			title:"Sum array"
-			description:"Sum of the items of the array"
 			tags: "Algorithm, Array"
 		do
-			across a.lower |..| a.upper as c loop
-				Result := Result + a [c.item]
+			across target.lower |..| target.upper as c loop
+				Result := Result + target [c.item]
 			end
 		end
 end	

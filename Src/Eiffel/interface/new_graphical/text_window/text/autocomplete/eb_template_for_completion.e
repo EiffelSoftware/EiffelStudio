@@ -138,6 +138,9 @@ feature -- Access
 			if attached template.description as l_description then
 				Result.append_string_general (l_description)
 			end
+			if Result.is_empty then
+				Result.append_string_general ("Template with empty description.")
+			end
 		end
 
 	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -392,7 +395,7 @@ feature {NONE} -- Template implementation.
 				l_local_text := local_text
 				l_code_text := code
 			end
-
+			l_local_text.adjust
 			Result := [l_local_text, l_code_text]
 		end
 

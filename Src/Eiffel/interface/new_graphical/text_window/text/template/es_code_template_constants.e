@@ -15,9 +15,6 @@ feature -- Access:Metadata
 	Title: STRING = "title"
 			-- Code template title.
 
-	Description: STRING = "description"
-			-- Code template description.
-
 	Tags: STRING = "tags"
 			-- Code template tags.
 
@@ -28,6 +25,25 @@ feature -- Access:Template
 
 	Template: STRING = "TEMPLATE"
 			-- All templates should inherit from a fictitious `TEMPLATE' class.
+
+
+	Feature_target: STRING = "target"
+			-- feature target of class TEMPLATE
+			-- The feature will be available iff TEMPLATE has a GENERIC PARAMETER
+			--| Example
+            --|
+			--| class ARRAY_TEMPLATE [T -> COMPARABLE]
+			--| inherit
+  			--|      TEMPLATE [ARRAY [T]]
+		    --| in this case the target feature of the class TEMPLATE will be
+		    --| target:  ARRAY [COMPARABLE]
+		    --|
+		    --| class MY_TEMPLATE
+			--| inherit
+  			--|       TEMPLATE
+
+
+  	Template_version: STRING = "template_version"
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

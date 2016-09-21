@@ -66,7 +66,18 @@ feature -- Access
 			-- Code template associated.
 
 	context: detachable STRING
-			-- Template context name, void if
+			-- Template context name, void if.
+
+	template_version: detachable STRING_32
+			-- Template version if any
+		do
+			if attached top_notes as l_notes then
+				Result := l_notes.at ({ES_CODE_TEMPLATE_CONSTANTS}.template_version)
+			end
+		end
+
+	top_notes: detachable STRING_TABLE [STRING_32]
+			-- Indexing/note clause at top of class.		
 
 	default_input_values: detachable STRING_TABLE [STRING_32]
 			-- Table with formal argument name and it's default input value.
@@ -85,7 +96,6 @@ feature -- Access
 					i := 1
 					create l_result.make_caseless (1)
 					l_arguments.start
-					l_arguments.forth -- skip first argument (context argument)
 				until
 					i > l_values.count
 				loop
@@ -121,7 +131,6 @@ feature -- Access
 			then
 				from
 					l_arguments.start
-					l_arguments.forth -- skip first argument (context argument)
 				until
 					l_arguments.after
 				loop
@@ -155,12 +164,9 @@ feature -- Access
 	arguments: detachable STRING_TABLE [STRING_32]
 			-- Argument fo the current feature, if any.
 		do
-			if attached internal_arguments as l_arguments and then
-			   attached l_arguments.at (1) as l_first_argument and then
-			   attached context
-			then
+			if attached context as l_context then
 				create Result.make_caseless (1)
-				Result.force (l_first_argument.type, l_first_argument.name)
+				Result.force (l_context, {ES_CODE_TEMPLATE_CONSTANTS}.feature_target)
 			end
 		end
 
@@ -172,29 +178,6 @@ feature -- Access
 
 	return_type: detachable STRING_32
 			-- Return type of the current template, iff it's a query.
-
---	string_from_type (a_type: TYPE_AS): detachable STRING_32
---		local
---			l_token_region: ERT_TOKEN_REGION
---		do
---			if attached {LIST_DEC_AS} a_type as l_type then
---				if
---					attached l_type.type.first_token (ast_match_list) as l_first and then
---					attached l_type.type.last_token (ast_match_list) as l_last
---				then
---					create l_token_region.make (l_first.index, l_last.index)
---					Result := ast_match_list.text_32 (l_token_region)
---				end
---			elseif attached {TYPE_DEC_AS} a_type as l_type then
---				if
---					attached l_type.type.first_token (ast_match_list) as l_first and then
---					attached l_type.type.last_token (ast_match_list) as l_last
---				then
---					create l_token_region.make (l_first.index, l_last.index)
---					Result := ast_match_list.text_32 (l_token_region)
---				end
---			end
---		end
 
 feature -- Change Element.
 
@@ -317,6 +300,14 @@ feature -- Change Element.
 			context := a_context
 		ensure
 			context_set: context = a_context
+		end
+
+	set_top_notes (a_top_notes: like top_notes)
+			-- Set `top_notes' to `a_top_notes'
+		do
+			if attached a_top_notes as l_top_notes then
+				top_notes := l_top_notes.twin
+			end
 		end
 
 feature {NONE} -- Internal Representation.

@@ -137,6 +137,18 @@ feature -- Access
 			Result := storage.books_with_root_page
 		end
 
+	has_book_named (a_bookid: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has book named `a_bookid' ?
+		do
+			across
+				book_names as ic
+			until
+				Result
+			loop
+				Result := a_bookid.same_string (ic.item)
+			end
+		end
+
 	book (a_bookid: READABLE_STRING_GENERAL): detachable WIKI_BOOK
 			-- Book named `a_bookid' if any.
 		do

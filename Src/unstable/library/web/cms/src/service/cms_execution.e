@@ -14,6 +14,7 @@ inherit
 		undefine
 			requires_proxy
 		redefine
+			execute,
 			create_router, router,
 			execute_default,
 			filter_execute,
@@ -25,6 +26,8 @@ inherit
 	WSF_ROUTED_URI_HELPER
 
 	WSF_ROUTED_URI_TEMPLATE_HELPER
+
+	WSF_REQUEST_EXPORTER
 
 	REFACTORING_HELPER
 
@@ -193,7 +196,20 @@ feature -- Settings: router
 			a_router.handle ("/", fhdl, router.methods_GET)
 		end
 
-feature -- Execute Filter
+feature -- Request execution
+
+	initialize_execution
+			-- Initialize CMS execution.
+		do
+			request.set_uploaded_file_path (api.temp_location)
+		end
+
+	execute
+			-- <Precursor>.
+		do
+			initialize_execution
+			Precursor
+		end
 
 	filter_execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute the filter.

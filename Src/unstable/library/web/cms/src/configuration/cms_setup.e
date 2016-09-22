@@ -70,6 +70,13 @@ feature {NONE} -- Initialization
 				files_location := site_location.extended ("files")
 			end
 
+				-- Location for temp files
+			if attached text_item ("temp-dir") as l_temp_dir then
+				create temp_location.make_from_string (l_temp_dir)
+			else
+				temp_location := site_location.extended ("temp")
+			end
+
 				-- Location for modules folders.
 			if attached text_item ("modules-dir") as l_modules_dir then
 				create modules_location.make_from_string (l_modules_dir)
@@ -313,6 +320,10 @@ feature -- Access: Theme
 
 	site_location: PATH
 			-- Path to CMS site root dir.
+
+	temp_location: PATH
+			-- Path to folder used as temporary dir.
+			-- (Mainly for uploaded file).
 
 	files_location: PATH
 			-- Path to public "files" dir.			

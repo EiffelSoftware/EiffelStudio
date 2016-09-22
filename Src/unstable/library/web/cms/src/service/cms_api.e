@@ -628,6 +628,12 @@ feature -- Environment/ theme
 			Result := setup.site_location
 		end
 
+	temp_location: PATH
+			-- CMS temp folder location.
+		do
+			Result := setup.temp_location
+		end
+
 	files_location: PATH
 			-- CMS public files location.
 		do

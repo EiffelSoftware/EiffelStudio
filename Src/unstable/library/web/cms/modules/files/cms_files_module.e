@@ -238,21 +238,37 @@ feature -- Handler
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 
 					-- set style
-				r.add_style (r.url ("/module/" + name + "/files/css/files.css", void), void)
+				r.add_style (r.url ("/module/" + name + "/files/css/files.css", Void), Void)
 
-					-- add JS for dropzone
-				r.add_javascript_url (r.url ("/module/" + name + "/files/js/dropzone.js", void))
-				r.add_style (r.url ("/module/" + name + "/files/js/dropzone.css", void), void)
 
 				if api.has_permission (upload_files_permission) then
-						-- create body
-					body.append ("<p>Please choose some file(s) to upload.</p>")
-
+					body.append ("<p>Please choose file(s) to upload.</p>")
 						-- create form to choose files and upload them
 					body.append ("<div class=%"upload-files%">")
-					body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
-					body.append ("</form>%N")
-					body.append ("<div class=%"center%"><a class=%"button%" href=%""+ r.url (uploads_location, Void) +"%">Upload Files</a></div>")
+
+					if attached {WSF_STRING} req.item ("basic_upload") as p and then p.is_case_insensitive_equal ("yes") then
+							-- No dropzone
+						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" method=%"post%" enctype=%"multipart/form-data%">")
+						body.append ("<input type=%"hidden%" name=%"basic_upload%" value=%"yes%"/>%N")
+						body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+						body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+						body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+						body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+						body.append ("<input type=%"file%" name=%"filenames[]%" id=%"filenames[]%" size=%"60%"/><br/>%N")
+						body.append ("<br/><input type=%"submit%" value=%"Upload File(s)%"/>")
+						body.append ("</form>%N")
+						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=no%">Use advanced file uploading.</a>%N")
+					else
+							-- add JS for dropzone
+						r.add_javascript_url (r.url ("/module/" + name + "/files/js/dropzone.js", Void))
+						r.add_style (r.url ("/module/" + name + "/files/js/dropzone.css", Void), Void)
+
+							-- create form to choose files and upload them
+						body.append ("<form action=%"" + r.url (uploads_location, Void) + "%" class=%"dropzone%">")
+						body.append ("</form>%N")
+
+						body.append ("<a href=%""+ r.url (uploads_location, Void) +"?basic_upload=yes%">Use basic file uploading.</a>%N")
+					end
 					body.append ("</div>")
 					if req.is_post_request_method then
 						process_uploaded_files (req, api, body)
@@ -263,6 +279,8 @@ feature -- Handler
 
 					-- Build the response.
 				if r.has_permission (browse_files_permission) then
+					body.append ("<br/><div class=%"center%"><a class=%"button%" href=%""+ r.url (uploads_location, Void) +"%">Refresh uploaded</a></div>")
+
 					append_uploaded_file_album_to (req, api, body)
 				else
 					r.add_warning_message ("You are not allowed to browse files!")

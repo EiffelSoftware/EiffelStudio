@@ -181,14 +181,14 @@ feature {NONE} -- Template implementation.
 				across
 					l_locals as ic
 				loop
-					Result.append_string_general ("%N%T%T%T")
+					Result.append_string_general ("%T%T%T")
 					Result.append_string_general (ic.key)
 					Result.append (": ")
 					Result.append_string_general (ic.item)
+					Result.append_character ('%N')
 				end
 			end
 		end
-
 
 	update_locals_and_code: TUPLE [locals: STRING_32; code: STRING_32]
 			-- Update local and code definitions.
@@ -395,7 +395,6 @@ feature {NONE} -- Template implementation.
 				l_local_text := local_text
 				l_code_text := code
 			end
-			l_local_text.adjust
 			Result := [l_local_text, l_code_text]
 		end
 

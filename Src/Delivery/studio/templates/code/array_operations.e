@@ -6,10 +6,10 @@ inherit
 	TEMPLATE [ARRAY[T]]
 	
 
-feature 
+feature -- Templates
 
 	sum: T
-			-- Sum of an array.
+			-- Sum of `target' array.
 		note
 			tags: "Algorithm, Array"
 		do

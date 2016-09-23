@@ -372,7 +372,7 @@ feature {NONE} -- Template implementation.
 					l_local_text.append_string_general (ic.key)
 					l_local_text.append (": ")
 					l_local_text.append_string_general (ic.item)
-					l_local_text.append_character ('%N')
+					l_local_text.append_string_general ("%N")
 				end
 
 					-- Generate new code

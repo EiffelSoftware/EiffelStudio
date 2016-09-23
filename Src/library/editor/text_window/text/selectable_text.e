@@ -167,9 +167,10 @@ feature -- String
 			t2 := a_end_cursor.token
 			if t = t2 then
 				if a_start_cursor.pos_in_token = a_end_cursor.pos_in_token then
-					Result := ""
+					create Result.make_empty
 				else
-					Result := t.wide_image.substring (a_start_cursor.pos_in_token, a_end_cursor.pos_in_token -1)
+					create Result.make (t.wide_image.count)
+					Result.append_substring (t.wide_image, a_start_cursor.pos_in_token, a_end_cursor.pos_in_token - 1)
 				end
 			else
 				ln := a_start_cursor.line
@@ -180,28 +181,29 @@ feature -- String
 						check ln /= Void end -- Never, otherwise a bug.
 						t := ln.first_token
 					else
-						Result := t.wide_image.substring (a_start_cursor.pos_in_token, t.wide_image.count)
+						create Result.make (t.wide_image.count)
+						Result.append_substring (t.wide_image, a_start_cursor.pos_in_token, t.wide_image.count)
 						t := t.next
 					end
-					until
-						t = t2 or t = a_end_cursor.line.eol_token
-					loop
-						if t = Void or else t = ln.eol_token then
-							Result.extend ('%N')
-							ln := ln.next
-							check ln /= Void end -- Never, otherwise a bug.
-							t := ln.first_token
-						else
-							Result.append (t.wide_image)
-							t := t.next
-						end
+				until
+					t = t2 or t = a_end_cursor.line.eol_token
+				loop
+					if t = Void or else t = ln.eol_token then
+						Result.extend ('%N')
+						ln := ln.next
+						check ln /= Void end -- Never, otherwise a bug.
+						t := ln.first_token
+					else
+						Result.append (t.wide_image)
+						t := t.next
 					end
-					check
-						good_line: ln = a_end_cursor.line
-					end
-					Result.append (t2.wide_image.substring (1, a_end_cursor.pos_in_token -1))
 				end
+				check
+					good_line: ln = a_end_cursor.line
+				end
+				Result.append_substring (t2.wide_image, 1, a_end_cursor.pos_in_token - 1)
 			end
+		end
 
 feature -- Status report
 

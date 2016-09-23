@@ -13,7 +13,7 @@ inherit
 feature -- Templates
 
     maximum: T
-            -- Get the maximum of an array.
+            -- Maximun of `target' array.
         note
             tags: "Algorithm, Maximum, ARRAY"
         do
@@ -23,7 +23,7 @@ feature -- Templates
         end
 
 	slice_maximum (low, high: INTEGER): T
-			-- Get the maximum of an array, where the interval is defined by default by array.lower |..| array.upper.
+			-- Maximum of `target' array, where the interval is defined by default by target.lower |..| target.upper.
 		note
 			title: "Slice Maximum of an array"
 			tags: "Algorithm, Maximum, ARRAY"
@@ -35,7 +35,7 @@ feature -- Templates
 		end	
 
 	minimum: T
-			-- Get the minimum of an array.
+			-- -- Maximun of `target' array.
 		note
 			title: "Minimum of an array"
 			tags: "Algorithm, Minimum, ARRAY"
@@ -47,7 +47,7 @@ feature -- Templates
 	
 
 	slice_minimum (low, high: INTEGER): T
-			-- Get the minimum of an array, where the interval is defined by default by array.lower |..| array.upper.
+			-- Minimum of `target' array, where the interval is defined by default by target.lower |..| target.upper.
 		note
 			title: "Slice Minimum of an array"
 			tags: "Algorithm, Minimum, ARRAY"

@@ -760,12 +760,7 @@ feature {NONE} -- Option behaviour
 
 	apply_template_completion_list
 			-- Apply filtering by template completion list.
-		local
-			local_name: like name_type
-			local_index: INTEGER
-			l_list: like choice_list
 		do
-			l_list := choice_list
 			build_template_list
 			resize_column_to_window_width
 		end
@@ -783,7 +778,6 @@ feature {NONE} -- Option behaviour
 			if full_list = Void then
 				create full_list.make_empty
 			end
-
 		ensure
 			full_list_not_void: full_list /= Void
 		end
@@ -1233,6 +1227,7 @@ feature {NONE} -- Implementation
 				option_bar_box.hide
 				option_bar_box_tpl.show
 				apply_template_completion_list
+				show
 			else
 				mode_template := False
 				option_bar_box.show

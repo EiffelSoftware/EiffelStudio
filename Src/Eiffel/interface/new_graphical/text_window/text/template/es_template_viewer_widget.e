@@ -196,6 +196,7 @@ feature {NONE} -- Tokens
 			l_first_new_line: BOOLEAN
 			i: INTEGER
 			l_token_space: EDITOR_TOKEN_SPACE
+			l_token_tabulation: EDITOR_TOKEN_TABULATION
 		do
 			create {ARRAYED_LIST [EDITOR_TOKEN]}Result.make (0)
 			create l_scanner.make
@@ -235,10 +236,20 @@ feature {NONE} -- Tokens
 						create l_token_space.make (l_token.wide_image.count - i )
 					end
 					Result.force (l_token_space)
+				elseif
+					l_new_line and then attached {EDITOR_TOKEN_TABULATION} l_token
+				then
+					l_new_line := False
+					if l_token.length > 2 then
+						create l_token_tabulation.make (l_token.length - 2)
+						Result.force (l_token_tabulation)
+					else
+						Result.force (l_token)
+					end
 				else
 					Result.force (l_token)
 				end
-					l_token := l_token.next
+				l_token := l_token.next
 			end
 		end
 

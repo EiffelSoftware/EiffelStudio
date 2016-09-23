@@ -162,7 +162,7 @@ feature -- Visitor
 				attached a_as.first_token (ast_match_list) as l_first and then
 				attached a_as.last_token (ast_match_list) as l_last
 			then
-				create l_token_region.make (l_first.index + 2, l_last.index)
+				create l_token_region.make (l_first.index + 1, l_last.index)
 				item.set_code (ast_match_list.text_32 (l_token_region))
 			end
 			Precursor (a_as)

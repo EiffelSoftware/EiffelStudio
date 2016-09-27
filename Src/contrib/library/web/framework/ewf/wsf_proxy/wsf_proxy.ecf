@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wsf_proxy" uuid="A39CCC27-BF63-4959-B881-7D0713F4C84A" library_target="wsf_proxy">
+	<target name="wsf_proxy">
+		<root all_classes="true"/>
+		<option void_safety="none">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="../../../../network/protocol/http/http.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
+			<condition>
+				<custom name="ssl_supported" value="true"/>
+			</condition>
+		</library>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<library name="wsf" location="..\wsf\wsf.ecf"/>
+		<cluster name="network" location=".\network\" recursive="true">
+			<file_rule>
+				<exclude>no_ssl</exclude>
+				<exclude>ssl</exclude>
+			</file_rule>
+			<cluster name="network_ssl" location="$|ssl\">
+				<condition>
+					<custom name="ssl_supported" value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="network_no_ssl" location="$|no_ssl\">
+				<condition>
+					<custom name="ssl_supported" excluded_value="true"/>
+				</condition>
+			</cluster>
+		</cluster>
+		<cluster name="reverse_proxy" location=".\reverse_proxy\" recursive="true"/>
+		<cluster name="rewriter" location=".\rewriter\" recursive="true"/>
+	</target>
+</system>

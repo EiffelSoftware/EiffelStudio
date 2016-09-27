@@ -17,58 +17,66 @@ inherit
 			ready_for_writing,
 			ready_for_reading,
 			try_ready_for_reading,
-			put_readable_string_8
+			put_readable_string_8,
+			make_empty
 		end
 
 create
 	make_ssl_server_by_address_and_port, make_ssl_server_by_port,
 	make_server_by_address_and_port, make_server_by_port,
 	make_ssl_client_by_address_and_port, make_ssl_client_by_port,
-	make_client_by_address_and_port, make_client_by_port
+	make_client_by_address_and_port, make_client_by_port,
+	make_empty
 
 create {HTTPD_STREAM_SOCKET}
 	make
 
 feature {NONE} -- Initialization
 
-	make_ssl_server_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt: STRING; a_key: STRING)
+	make_ssl_server_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt_fn, a_key_fn: detachable READABLE_STRING_GENERAL)
 		local
 			l_socket: SSL_TCP_STREAM_SOCKET
 		do
 			create l_socket.make_server_by_address_and_port (an_address, a_port)
 			l_socket.set_tls_protocol (a_ssl_protocol)
 			socket := l_socket
-			set_certificates (a_crt, a_key)
+			set_certificates (a_crt_fn, a_key_fn)
 		end
 
-	make_ssl_server_by_port (a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt: STRING; a_key: STRING)
+	make_ssl_server_by_port (a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt_fn, a_key_fn: detachable READABLE_STRING_GENERAL)
 		local
 			l_socket: SSL_TCP_STREAM_SOCKET
 		do
 			create  l_socket.make_server_by_port (a_port)
 			l_socket.set_tls_protocol (a_ssl_protocol)
 			socket := l_socket
-			set_certificates (a_crt, a_key)
+			set_certificates (a_crt_fn, a_key_fn)
 		end
 
-	make_ssl_client_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt: STRING; a_key: STRING)
+	make_ssl_client_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER; a_ssl_protocol: NATURAL; a_crt_fn, a_key_fn: detachable READABLE_STRING_GENERAL)
 		local
 			l_socket: SSL_TCP_STREAM_SOCKET
 		do
 			create l_socket.make_client_by_address_and_port (an_address, a_port)
 			l_socket.set_tls_protocol (a_ssl_protocol)
 			socket := l_socket
-			set_certificates (a_crt, a_key)
+			set_certificates (a_crt_fn, a_key_fn)
 		end
 
-	make_ssl_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING; a_ssl_protocol: NATURAL; a_crt: STRING; a_key: STRING)
+	make_ssl_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING; a_ssl_protocol: NATURAL; a_crt_fn, a_key_fn: detachable READABLE_STRING_GENERAL)
 		local
 			l_socket: SSL_TCP_STREAM_SOCKET
 		do
 			create  l_socket.make_client_by_port (a_peer_port, a_peer_host)
 			l_socket.set_tls_protocol (a_ssl_protocol)
 			socket := l_socket
-			set_certificates (a_crt, a_key)
+			set_certificates (a_crt_fn, a_key_fn)
+		end
+
+	make_empty
+			-- <Precursor>.
+		do
+			create {SSL_TCP_STREAM_SOCKET} socket.make_empty
 		end
 
 feature -- Output
@@ -136,15 +144,15 @@ feature -- Status Report
 
 feature {HTTPD_STREAM_SOCKET} -- Implementation
 
-	set_certificates (a_crt: STRING; a_key: STRING)
-		local
-			a_file_name: FILE_NAME
+	set_certificates (a_crt_filename, a_key_filename: detachable READABLE_STRING_GENERAL)
 		do
 			if attached {SSL_NETWORK_STREAM_SOCKET} socket as l_socket then
-				create a_file_name.make_from_string (a_crt)
-				l_socket.set_certificate_file_name (a_file_name)
-				create a_file_name.make_from_string (a_key)
-				l_socket.set_key_file_name (a_file_name)
+				if a_crt_filename /= Void then
+					l_socket.set_certificate_file_name (a_crt_filename)
+				end
+				if a_key_filename /= Void then
+					l_socket.set_key_file_name (a_key_filename)
+				end
 			end
 		end
 

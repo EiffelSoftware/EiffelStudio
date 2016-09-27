@@ -155,6 +155,12 @@ feature -- Element change
 			set_is_verbose_on_configuration (b, configuration)
 		end
 
+	set_is_secure (b: BOOLEAN)
+			-- Set is_secure connection mode.
+			-- i.e: using SSL.
+		do
+			set_is_secure_on_configuration (b, configuration)
+		end
 
 feature -- Server
 
@@ -240,6 +246,11 @@ feature {NONE} -- Implementation: element change
 	set_is_verbose_on_configuration (b: BOOLEAN; cfg: like configuration)
 		do
 			cfg.set_is_verbose (b)
+		end
+
+	set_is_secure_on_configuration (b: BOOLEAN; cfg: like configuration)
+		do
+			cfg.set_is_secure (b)
 		end
 
 

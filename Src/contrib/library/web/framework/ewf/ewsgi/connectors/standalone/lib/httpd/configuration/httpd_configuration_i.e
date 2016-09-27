@@ -6,6 +6,11 @@ note
 deferred class
 	HTTPD_CONFIGURATION_I
 
+inherit
+	ANY
+
+	HTTPD_CONSTANTS
+
 feature {NONE} -- Initialization
 
 	make
@@ -14,21 +19,13 @@ feature {NONE} -- Initialization
 			max_concurrent_connections := default_max_concurrent_connections
 			max_tcp_clients := default_max_tcp_clients
 			socket_timeout := default_socket_timeout
+			socket_recv_timeout := default_socket_recv_timeout
 			keep_alive_timeout := default_keep_alive_timeout
 			max_keep_alive_requests := default_max_keep_alive_requests
 			is_secure := False
 			create ca_crt.make_empty
 			create ca_key.make_empty
 		end
-
-feature -- Defaults
-
-	default_http_server_port: INTEGER = 80
-	default_max_concurrent_connections: INTEGER = 100
-	default_max_tcp_clients: INTEGER = 100
-	default_socket_timeout: INTEGER = 300 -- seconds
-	default_keep_alive_timeout: INTEGER = 15 -- seconds
-	default_max_keep_alive_requests: INTEGER = 100
 
 feature -- Access
 
@@ -45,7 +42,12 @@ feature -- Access
 	socket_timeout: INTEGER assign set_socket_timeout
 			-- Amount of seconds that the server waits for receipts and transmissions during communications.
 			-- note: with timeout of 0, socket can wait for ever.
-			-- By default: 300 seconds, which is appropriate for most situations.
+			-- By default: 60 seconds, which is appropriate for most situations.
+
+	socket_recv_timeout: INTEGER assign set_socket_recv_timeout
+			-- Amount of seconds that the server waits for receiving data during communications.
+			-- note: with timeout of 0, socket can wait for ever.
+			-- By default: 5 seconds.
 
 	max_concurrent_connections: INTEGER assign set_max_concurrent_connections
 			-- Max number of concurrent connections.
@@ -83,8 +85,10 @@ feature -- Access
 			Result.is_verbose := is_verbose
 			Result.verbose_level := verbose_level
 			Result.timeout := socket_timeout
+			Result.socket_recv_timeout := socket_recv_timeout
 			Result.keep_alive_timeout := keep_alive_timeout
 			Result.max_keep_alive_requests := max_keep_alive_requests
+			Result.is_secure := is_secure
 		end
 
 feature -- Access: SSL
@@ -92,16 +96,32 @@ feature -- Access: SSL
 	is_secure: BOOLEAN
 			 -- Is SSL/TLS session?.
 
-	ca_crt: IMMUTABLE_STRING_8
+	ca_crt: detachable IMMUTABLE_STRING_32
 			-- the signed certificate.
 
-	ca_key: IMMUTABLE_STRING_8
+	ca_key: detachable IMMUTABLE_STRING_32
 			-- private key to the certificate.
 
 	ssl_protocol: NATURAL
 			-- By default protocol is tls 1.2.
 
 feature -- Element change
+
+	set_ssl_settings (v: detachable separate TUPLE [protocol: separate READABLE_STRING_GENERAL; ca_crt, ca_key: detachable separate READABLE_STRING_GENERAL])
+		local
+			prot: STRING_32
+		do
+			is_secure := False
+			ca_crt := Void
+			ca_key := Void
+			if v /= Void then
+				is_secure := True
+				create prot.make_from_separate (v.protocol)
+				set_ssl_protocol_from_string (prot)
+				set_ca_crt (v.ca_crt)
+				set_ca_key (v.ca_key)
+			end
+		end
 
 	set_http_server_name (v: detachable separate READABLE_STRING_8)
 		do
@@ -152,6 +172,14 @@ feature -- Element change
 			socket_timeout_set: socket_timeout = a_nb_seconds
 		end
 
+	set_socket_recv_timeout (a_nb_seconds: like socket_recv_timeout)
+			-- Set `socket_recv_timeout' with `a_nb_seconds'
+		do
+			socket_recv_timeout := a_nb_seconds
+		ensure
+			socket_recv_timeout_set: socket_recv_timeout = a_nb_seconds
+		end
+
 	set_keep_alive_timeout (a_seconds: like keep_alive_timeout)
 			-- Set `keep_alive_timeout' with `a_seconds'
 		do
@@ -198,17 +226,33 @@ feature -- Element change
 			verbose_level_set: verbose_level = lev
 		end
 
-	mark_secure
-			-- Set is_secure in True
+	set_is_secure (b: BOOLEAN)
+			-- Set `is_secure' to `b'.
 		do
-			if has_ssl_support then
+			if b and has_ssl_support then
 				is_secure := True
-				if http_server_port = 80 then
+				if
+					http_server_port = 80
+				then
 					set_http_server_port (443)
 				end
 			else
 				is_secure := False
+				if
+					http_server_port = 443
+				then
+					set_http_server_port (80)
+				end
 			end
+		ensure
+			is_secure_set: has_ssl_support implies is_secure
+			is_not_secure: not has_ssl_support implies not is_secure
+		end
+
+	mark_secure
+			-- Set is_secure in True
+		do
+			set_is_secure (True)
 		ensure
 			is_secure_set: has_ssl_support implies is_secure
 			-- http_server_port_set: has_ssl_support implies http_server_port = 443
@@ -218,16 +262,24 @@ feature -- Element change
 
 feature -- Element change
 
-	set_ca_crt (a_value: separate READABLE_STRING_8)
+	set_ca_crt (a_value: detachable separate READABLE_STRING_GENERAL)
 			-- Set `ca_crt' from `a_value'.
 		do
-			create ca_crt.make_from_separate (a_value)
+			if a_value /= Void then
+				create ca_crt.make_from_separate (a_value)
+			else
+				ca_crt := Void
+			end
 		end
 
-	set_ca_key (a_value: separate READABLE_STRING_8)
+	set_ca_key (a_value: detachable separate READABLE_STRING_GENERAL)
 			-- Set `ca_key' with `a_value'.
 		do
-			create ca_key.make_from_separate (a_value)
+			if a_value /= Void then
+				create ca_key.make_from_separate (a_value)
+			else
+				ca_key := Void
+			end
 		end
 
 	set_ssl_protocol  (a_version: NATURAL)
@@ -236,6 +288,24 @@ feature -- Element change
 			ssl_protocol := a_version
 		ensure
 			ssl_protocol_set: ssl_protocol = a_version
+		end
+
+	set_ssl_protocol_from_string (a_ssl_version: READABLE_STRING_GENERAL)
+			-- Set `ssl_protocol' with `a_ssl_version'
+		do
+			if a_ssl_version.is_case_insensitive_equal ("ssl_2_3") then
+				set_ssl_protocol_to_ssl_2_or_3
+			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_0") then
+				set_ssl_protocol_to_tls_1_0
+			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_1") then
+				set_ssl_protocol_to_tls_1_1
+			elseif a_ssl_version.is_case_insensitive_equal ("tls_1_2") then
+				set_ssl_protocol_to_tls_1_2
+			elseif a_ssl_version.is_case_insensitive_equal ("dtls_1_0") then
+				set_ssl_protocol_to_dtls_1_0
+			else -- Default
+				set_ssl_protocol_to_tls_1_2
+			end
 		end
 
 feature -- SSL Helpers

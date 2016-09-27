@@ -108,6 +108,7 @@ feature -- Execution
 				log ("  - max_tcp_clients = " + configuration.max_tcp_clients.out)
 				log ("  - max_concurrent_connections = " + configuration.max_concurrent_connections.out)
 				log ("  - socket_timeout = " + configuration.socket_timeout.out + " seconds")
+				log ("  - socket_recv_timeout = " + configuration.socket_recv_timeout.out + " seconds")
 				log ("  - keep_alive_timeout = " + configuration.keep_alive_timeout.out + " seconds")
 				log ("  - max_keep_alive_requests = " + configuration.max_keep_alive_requests.out)
 				if configuration.verbose_level > 0 then

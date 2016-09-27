@@ -25,20 +25,27 @@ feature {CONCURRENT_POOL, HTTPD_CONNECTION_HANDLER_I} -- Basic operation
 	release
 			-- <Precursor>
 		local
-			d: STRING
+			d: detachable STRING
 		do
-			if attached internal_client_socket as l_socket then
-				d := l_socket.descriptor.out
-			else
-				d := "N/A"
-			end
 			debug ("dbglog")
+				if 
+					attached internal_client_socket as l_socket and then
+					l_socket.descriptor_available
+				then
+					d := l_socket.descriptor.out
+				else
+					d := "N/A"
+				end
 				dbglog (generator + ".release: ENTER {" + d + "}")
 			end
 			Precursor {HTTPD_REQUEST_HANDLER_I}
 			release_pool_item
 			debug ("dbglog")
-				dbglog (generator + ".release: LEAVE {" + d + "}")
+				if d /= Void then
+					dbglog (generator + ".release: LEAVE {" + d + "}")
+				else
+					dbglog (generator + ".release: LEAVE {N/A}")
+				end
 			end
 		end
 

@@ -230,6 +230,9 @@ feature -- Request processing
 			set_environment_variable (l_server_port, "SERVER_PORT", Result)
 			set_environment_variable (version, "SERVER_PROTOCOL", Result)
 			set_environment_variable ({HTTPD_CONFIGURATION}.Server_details, "SERVER_SOFTWARE", Result)
+			if is_secure then
+				set_environment_variable ("on", "HTTPS", Result)
+			end
 
 				--| Apply `base' value
 			l_base := base

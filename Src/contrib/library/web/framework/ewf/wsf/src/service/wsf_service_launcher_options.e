@@ -85,6 +85,12 @@ feature -- Access
 
 feature -- Helpers
 
+	has_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is there any value associated to option name `a_opt_name'?
+		do
+			Result := attached option (a_opt_name)
+		end
+
 	has_integer_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is there any INTEGER value associated to option name `a_opt_name'?
 		local
@@ -100,6 +106,29 @@ feature -- Helpers
 			end			
 		end
 
+	has_string_32_option (a_opt_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is there any string 32 value associated to option name `a_opt_name'?
+		do
+			if attached option (a_opt_name) as opt then
+				Result := attached {READABLE_STRING_GENERAL} opt
+			end			
+		end
+
+	option_string_32_value (a_opt_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_GENERAL): detachable IMMUTABLE_STRING_32
+			-- Unicode String value associated to option name `a_opt_name', other return `a_default'.
+		do
+			if attached option (a_opt_name) as opt then
+				if attached {READABLE_STRING_32} opt as s32 then
+					create Result.make_from_string (s32)
+				elseif attached {READABLE_STRING_GENERAL} opt as s then
+					create Result.make_from_string_general (s)
+				end
+			end			
+			if Result = Void and a_default /= Void then
+				create Result.make_from_string_general (a_default)
+			end
+		end
+	
 	option_integer_value (a_opt_name: READABLE_STRING_GENERAL; a_default: INTEGER): INTEGER
 			-- INTEGER value associated to option name `a_opt_name', other return `a_default'.
 		local

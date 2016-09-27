@@ -33,8 +33,6 @@ inherit
 
 	EV_GTK_TREE_VIEW
 
-	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
-
 create
 	make
 

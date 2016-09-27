@@ -33,8 +33,6 @@ inherit
 			interface
 		end
 
-	EV_NOTEBOOK_ACTION_SEQUENCES_IMP
-
 create
 	make
 

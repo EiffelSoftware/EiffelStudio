@@ -25,8 +25,6 @@ inherit
 			interface
 		end
 
-	EV_ITEM_ACTION_SEQUENCES_IMP
-
 feature {NONE} -- Initialization
 
 	call_button_event_actions (
@@ -98,7 +96,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

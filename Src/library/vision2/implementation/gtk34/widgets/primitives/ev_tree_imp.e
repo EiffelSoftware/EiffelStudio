@@ -24,7 +24,6 @@ inherit
 			interface,
 			make,
 			call_button_event_actions,
-			create_pointer_motion_actions,
 			set_to_drag_and_drop,
 			able_to_transport,
 			ready_for_pnd_menu,
@@ -48,8 +47,6 @@ inherit
 			append,
 			make
 		end
-
-	EV_TREE_ACTION_SEQUENCES_IMP
 
 	EV_PND_DEFERRED_ITEM_PARENT
 		redefine
@@ -176,12 +173,6 @@ feature {NONE} -- Initialization
 			{GTK2}.gtk_tree_view_set_enable_search (tree_view, False)
 
 			initialize_pixmaps
-		end
-
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
 		end
 
 	call_button_event_actions (

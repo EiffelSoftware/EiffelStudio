@@ -35,8 +35,6 @@ inherit
 			make
 		end
 
-	EV_HEADER_ACTION_SEQUENCES_IMP
-
 create
 	make
 

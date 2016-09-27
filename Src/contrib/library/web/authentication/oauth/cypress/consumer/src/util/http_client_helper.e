@@ -12,10 +12,10 @@ feature -- Access
 
 	get_http_session
 		local
-			h: LIBCURL_HTTP_CLIENT
+			h: DEFAULT_HTTP_CLIENT
 			b: like base_url
 		do
-			create h.make
+			create h
 			b := base_url
 			if b = Void then
 				b := ""

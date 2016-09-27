@@ -17,8 +17,6 @@ inherit
 			copy
 		end
 
-	EV_APPLICATION_ACTION_SEQUENCES_IMP
-
 	EXECUTION_ENVIRONMENT
 		rename
 			launch as ee_launch

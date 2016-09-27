@@ -24,11 +24,6 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-		redefine
-			create_drop_actions
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	button_actions_handled_by_signals: BOOLEAN
@@ -472,13 +467,6 @@ feature -- Implementation
 					end
 				end
 			end
-		end
-
-	create_drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Create and initialize `drop_actions' for `Current'
-		do
-			create Result
-			attached_interface.init_drop_actions (Result)
 		end
 
 	pointer_position: EV_COORDINATE

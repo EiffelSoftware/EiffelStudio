@@ -10,8 +10,11 @@ class
 
 inherit
 	EV_TEXT_FIELD_I
+		export
+			{EV_INTERMEDIARY_ROUTINES} return_actions_internal
 		redefine
 			interface,
+			return_actions,
 			hide_border
 		end
 
@@ -19,7 +22,6 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			create_change_actions,
 			needs_event_box,
 			on_key_event,
 			set_minimum_width_in_characters,
@@ -30,14 +32,6 @@ inherit
 		redefine
 			interface,
 			visual_widget
-		end
-
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES}
-				return_actions_internal
-		redefine
-			create_return_actions
 		end
 
 create
@@ -181,11 +175,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create an initialize return actions for `Current'.
+	return_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- <Precursor>
 		do
-			create Result
-			real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+			if attached return_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+				return_actions_internal := Result
+			end
 		end
 
 feature -- Status report
@@ -343,11 +342,6 @@ feature -- Basic operation
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-		do
-			create Result
-		end
 
 	stored_text: detachable STRING_32
 			-- Value of 'text' prior to a change action, used to compare

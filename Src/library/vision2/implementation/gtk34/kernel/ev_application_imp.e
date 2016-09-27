@@ -13,12 +13,11 @@ class
 inherit
 	EV_APPLICATION_I
 		export
-			{EV_INTERMEDIARY_ROUTINES}
+			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
 				pointer_motion_actions_internal,
 				pointer_button_press_actions_internal,
 				pointer_double_press_actions_internal,
-				pointer_button_release_actions_internal
-			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
+				pointer_button_release_actions_internal,
 				is_destroyed
 		undefine
 			dispose

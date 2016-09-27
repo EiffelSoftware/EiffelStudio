@@ -57,8 +57,6 @@ inherit
 			hide
 		end
 
-	EV_WINDOW_ACTION_SEQUENCES_IMP
-
 create
 	make
 

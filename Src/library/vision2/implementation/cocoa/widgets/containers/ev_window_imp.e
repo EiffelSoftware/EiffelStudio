@@ -354,8 +354,7 @@ feature -- Layout implementation
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mw := mw + l_item_imp.minimum_width
 			end
-			mw := mw.max (attached_interface.upper_bar.minimum_width).max
-				(attached_interface.lower_bar.minimum_width)
+			mw := mw.max (upper_bar.minimum_width).max (lower_bar.minimum_width)
 			internal_set_minimum_width (mw)
 			set_min_size (mw, minimum_height)
 		end
@@ -366,14 +365,14 @@ feature -- Layout implementation
 			mh: INTEGER
 		do
 			mh := 0
-			if not attached_interface.upper_bar.is_empty then
-				mh := mh + attached_interface.upper_bar.minimum_height + 1
+			if not upper_bar.is_empty then
+				mh := mh + upper_bar.minimum_height + 1
 			end
 			if attached item_imp as l_item_imp and then l_item_imp.is_show_requested then
 				mh := mh + l_item_imp.minimum_height
 			end
-			if not attached_interface.lower_bar.is_empty then
-				mh := mh + attached_interface.lower_bar.minimum_height + 1
+			if not lower_bar.is_empty then
+				mh := mh + lower_bar.minimum_height + 1
 			end
 			internal_set_minimum_height (mh)
 			set_min_size (minimum_width, mh)
@@ -617,7 +616,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

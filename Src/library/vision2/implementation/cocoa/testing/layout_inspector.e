@@ -291,13 +291,9 @@ feature {NONE} -- Graphical view
 			if a_widget = Void then
 				-- Do nothing. no children to add to a_node
 			elseif attached {EV_WINDOW} a_widget as l_window then
-				node := add_element (l_window.upper_bar, a_node)
-				add_recursive (node, l_window.upper_bar, a_depth+1)
 				node := add_element (l_window.item, a_node)
 				add_recursive (node, l_window.item, a_depth+1)
 --			elseif attached {EV_ITEM_LIST} a_widget as l_list then
---				node := add_element (l_window.upper_bar, a_node)
---				add_recursive (node, l_window.upper_bar)
 --				node := add_element (l_window.item, a_node)
 --				add_recursive (node, l_window.item)
 			elseif attached {EV_GRID} a_widget as l_grid then

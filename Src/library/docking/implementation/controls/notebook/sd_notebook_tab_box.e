@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_enter_actions.extend (agent on_pointer_enter)
 			pointer_leave_actions.extend (agent on_pointer_leave)
-			pointer_double_press_actions.force_extend (agent clear_pressed_flag)
+			pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do clear_pressed_flag end)
 
 			update_size
 
@@ -555,7 +555,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

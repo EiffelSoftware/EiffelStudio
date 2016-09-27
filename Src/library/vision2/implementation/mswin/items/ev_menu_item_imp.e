@@ -38,8 +38,6 @@ inherit
 
 	EV_ID_IMP
 
-	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all

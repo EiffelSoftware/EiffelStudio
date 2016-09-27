@@ -24,7 +24,6 @@ inherit
 			interface,
 			insert_text,
 			make,
-			create_change_actions,
 			dispose,
 			text_length,
 			visual_widget,
@@ -67,12 +66,6 @@ feature {NONE} -- Initialization
 			set_background_color ((create {EV_STOCK_COLORS}).white)
 			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
-		end
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Hook up the change actions for the text widget
-		do
-			Result := Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	initialize_buffer_events

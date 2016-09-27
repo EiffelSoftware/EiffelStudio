@@ -32,11 +32,6 @@ inherit
 		end
 
 	EV_NOTEBOOK_ACTION_SEQUENCES
-		undefine
-			is_equal
-		redefine
-			implementation
-		end
 
 	EV_FONTABLE
 		undefine

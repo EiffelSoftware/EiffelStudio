@@ -9,22 +9,18 @@ deferred class
 	EV_GAUGE_IMP
 
 inherit
+	EV_GAUGE_I
+		export
+			{EV_CONTAINER_IMP, EV_INTERNAL_SILLY_WINDOW_IMP} change_actions_internal
+		redefine
+			interface
+		end
+
 	EV_PRIMITIVE_IMP
 		redefine
 			on_key_down,
 			interface,
 			make
-		end
-
-	EV_GAUGE_I
-		redefine
-			interface
-		end
-
-	EV_GAUGE_ACTION_SEQUENCES_IMP
-		export
-			{EV_CONTAINER_IMP, EV_INTERNAL_SILLY_WINDOW_IMP}
-				change_actions_internal
 		end
 
 feature {NONE} -- Initialization
@@ -191,7 +187,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_GAUGE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -25,9 +25,6 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Access
 

@@ -47,11 +47,6 @@ inherit
 			replace
 		end
 
-	EV_WINDOW_ACTION_SEQUENCES_IMP
-		redefine
-			interface
-		end
-
 	EV_NS_WINDOW
 		undefine
 			key_down,
@@ -622,7 +617,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -11,17 +11,13 @@ deferred class
 	 EV_GRID_ITEM_ACTION_SEQUENCES
 
 inherit
-	ANY
-		export
-			{EV_ANY_HANDLER} default_create
-		undefine
-			default_create,
-			copy
-		end
+	EV_ACTION_SEQUENCES
 
 feature {NONE} -- Implementation
 
 	implementation: EV_GRID_ITEM_ACTION_SEQUENCES_I
+		deferred
+		end
 
 feature -- Event handling
 
@@ -142,7 +138,7 @@ feature -- Event handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

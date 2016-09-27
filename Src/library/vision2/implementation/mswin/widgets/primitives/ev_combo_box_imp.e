@@ -156,16 +156,6 @@ inherit
 			{NONE} all
 		end
 
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
-		export
-			{NONE} all
-		end
-
-	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
-		export
-			{NONE} all
-		end
-
 create
 	make
 

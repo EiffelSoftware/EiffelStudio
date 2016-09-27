@@ -27,9 +27,6 @@ inherit
 		end
 
 	EV_GRID_ITEM_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 create
 	default_create
@@ -364,7 +361,7 @@ invariant
 		attached parent as l_parent and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

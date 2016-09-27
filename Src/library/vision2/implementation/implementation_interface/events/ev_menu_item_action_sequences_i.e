@@ -16,21 +16,17 @@ feature -- Event handling
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selected.
 		do
-			if select_actions_internal = Void then
-				select_actions_internal :=
-					 create_select_actions
+			if attached select_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				select_actions_internal := Result
 			end
-			Result := select_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-		deferred
-		end
 
 	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
@@ -50,18 +46,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-
-
-
-
-
-
-
-
-
-
-

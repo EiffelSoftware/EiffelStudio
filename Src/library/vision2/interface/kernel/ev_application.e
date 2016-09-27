@@ -21,9 +21,6 @@ inherit
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature {NONE} -- Initialization is
 

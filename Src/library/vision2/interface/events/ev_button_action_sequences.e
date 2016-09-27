@@ -11,19 +11,15 @@ deferred class
 	 EV_BUTTON_ACTION_SEQUENCES
 
 inherit
-	ANY
-		export
-			{EV_ANY_HANDLER} default_create
-		undefine
-			default_create, copy
-		end
+	EV_ACTION_SEQUENCES
 
 feature {NONE} -- Implementation
 
 	implementation: EV_BUTTON_ACTION_SEQUENCES_I
+		deferred
+		end
 
 feature -- Event handling
-
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed then released.
@@ -34,14 +30,14 @@ feature -- Event handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

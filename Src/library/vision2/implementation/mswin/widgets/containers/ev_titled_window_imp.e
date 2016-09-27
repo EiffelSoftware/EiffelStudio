@@ -40,8 +40,6 @@ inherit
 			title_name
 		end
 
-	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
-
 	EV_ID_IMP
 
 create

@@ -15,21 +15,17 @@ feature -- Event handling
 	maximize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is maximized.
 		do
-			if maximize_actions_internal = Void then
-				maximize_actions_internal :=
-					 create_maximize_actions
+			if attached maximize_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				maximize_actions_internal := Result
 			end
-			Result := maximize_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_maximize_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a maximized action sequence.
-		deferred
-		end
 
 	maximize_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `maximize_actions'.
@@ -43,21 +39,17 @@ feature -- Event handling
 	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is minimized.
 		do
-			if minimize_actions_internal = Void then
-				minimize_actions_internal :=
-					 create_minimize_actions
+			if attached minimize_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				minimize_actions_internal := Result
 			end
-			Result := minimize_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a minimized action sequence.
-		deferred
-		end
 
 	minimize_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `minimize_actions'.
@@ -72,21 +64,17 @@ feature -- Event handling
 			-- Actions to be performed when window is leaves `minimized'
 			-- or `maximized' state.
 		do
-			if restore_actions_internal = Void then
-				restore_actions_internal :=
-					 create_restore_actions
+			if attached restore_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				restore_actions_internal := Result
 			end
-			Result := restore_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_restore_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a minimized action sequence.
-		deferred
-		end
 
 	restore_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `minimize_actions'.

@@ -23,9 +23,6 @@ inherit
 		end
 
 	EV_DOCKABLE_SOURCE_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Status report
 
@@ -249,7 +246,7 @@ invariant
 	parent_permits_docking: is_dockable implies parent_of_source_allows_docking
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

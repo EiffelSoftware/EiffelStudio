@@ -454,7 +454,7 @@ feature {NONE} -- Implementation functions
 			internal_tool_bar.extend (l_tab_indicator)
 
 			items_and_tabs.extend ([l_tab_indicator, a_tab])
-			l_tab_indicator.pointer_button_press_actions.force_extend (agent on_label_selected (items_and_tabs.count))
+			l_tab_indicator.pointer_button_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_label_selected (items_and_tabs.count) end)
 		ensure
 --			extended: old internal_label_box.count = internal_label_box.count - 1
 		end
@@ -604,7 +604,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -22,11 +22,11 @@ note
 				For instance, you can use
 				create s.make_and_launch_and_options (agent execute, <<["port", 8099]>>)
 
-				And if Nino is the default connector it will support:
+				And if the connector is the Standalone connector, 
+				check {WSF_STANDALONE_SERVICE_LAUNCHER} for options description, such as:
 					port: numeric such as 8099 (or equivalent string as "8099")
 					base: base_url (very specific to standalone server)
-					force_single_threaded: use only one thread, useful for Nino
-					verbose: to display verbose output, useful for Nino
+					verbose: to display verbose output.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

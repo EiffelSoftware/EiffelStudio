@@ -2,14 +2,27 @@ note
 	description: "[
 			Component to launch the service using the default connector
 
-				Eiffel Web httpd for this class
+				EiffelWeb httpd for this class
 
+			The httpd default connector support options:
+				verbose: to display verbose output
+				port: numeric such as 8099 (or equivalent string as "8099")
+				base: base_url (very specific to standalone server)
+				
+				max_concurrent_connections: set one, for single threaded behavior
+				max_tcp_clients: max number of open tcp connection
+				
+				socket_timeout: connection timeout
+				socket_recv_timeout: read data timeout
 
-				The httpd default connector support options:
-					port: numeric such as 8099 (or equivalent string as "8099")
-					base: base_url (very specific to standalone server)
-					verbose: to display verbose output, useful for standalone connector
-					force_single_threaded: use only one thread, useful for standalone connector
+				keep_alive_timeout: amount of time the server will wait for subsequent
+									requests on a persistent connection,
+				max_keep_alive_requests: number of requests allowed on a persistent connection,
+
+				ssl_enabled: set to True for https support.
+				ssl_ca_crt: path to the certificat crt file (relevant when ssl_enabled is True)
+				ssl_ca_key: path to the certificat key file (relevant when ssl_enabled is True)
+
 
 			check WSF_SERVICE_LAUNCHER for more documentation
 		]"
@@ -41,12 +54,13 @@ feature {NONE} -- Initialization
 			create on_launched_actions
 			create on_stopped_actions
 
-			port_number := 80 --| Default, but quite often, this port is already used ...
-			max_concurrent_connections := 100
-			max_tcp_clients := 100
-			socket_timeout := 300 -- 300 seconds
-			keep_alive_timeout := 15 -- 15 seconds.
-			max_keep_alive_requests := 100
+			port_number := {WGI_STANDALONE_CONSTANTS}.default_http_server_port --| Default, but quite often, this port is already used ...
+			max_concurrent_connections := {WGI_STANDALONE_CONSTANTS}.default_max_concurrent_connections
+			max_tcp_clients := {WGI_STANDALONE_CONSTANTS}.default_max_tcp_clients
+			socket_timeout := {WGI_STANDALONE_CONSTANTS}.default_socket_timeout -- seconds
+			socket_recv_timeout := {WGI_STANDALONE_CONSTANTS}.default_socket_recv_timeout -- seconds
+			keep_alive_timeout := {WGI_STANDALONE_CONSTANTS}.default_keep_alive_timeout -- seconds.
+			max_keep_alive_requests := {WGI_STANDALONE_CONSTANTS}.default_max_keep_alive_requests
 			verbose := False
 			verbose_level := notice_level
 
@@ -59,6 +73,7 @@ feature {NONE} -- Initialization
 				if attached {READABLE_STRING_GENERAL} opts.option ("base") as l_base_str then
 					base_url := l_base_str.as_string_8
 				end
+
 				verbose := opts.option_boolean_value ("verbose", verbose)
 					-- See `{HTTPD_REQUEST_HANDLER_I}.*_verbose_level`
 					
@@ -96,8 +111,16 @@ feature {NONE} -- Initialization
 				max_concurrent_connections := opts.option_integer_value ("max_concurrent_connections", max_concurrent_connections)
 				max_tcp_clients := opts.option_integer_value ("max_tcp_clients", max_tcp_clients)
 				socket_timeout := opts.option_integer_value ("socket_timeout", socket_timeout)
+				socket_recv_timeout := opts.option_integer_value ("socket_recv_timeout", socket_recv_timeout)
 				keep_alive_timeout := opts.option_integer_value ("keep_alive_timeout", keep_alive_timeout)
 				max_keep_alive_requests := opts.option_integer_value ("max_keep_alive_requests", max_keep_alive_requests)
+
+				if 
+					opts.option_boolean_value ("ssl_enabled", ssl_enabled) and then
+					attached opts.option_string_32_value ("ssl_protocol", "tls_1_2") as ssl_prot
+				then
+					ssl_settings := [ssl_prot, opts.option_string_32_value ("ssl_ca_crt", Void), opts.option_string_32_value ("ssl_ca_key", Void)]
+				end
 			end
 
 			create conn.make
@@ -120,11 +143,13 @@ feature -- Execution
 		do
 			cfg.set_is_verbose (verbose)
 			cfg.set_verbose_level (verbose_level)
+			cfg.set_ssl_settings (ssl_settings)
 			cfg.set_http_server_name (server_name)
 			cfg.http_server_port := port_number
 			cfg.set_max_concurrent_connections (max_concurrent_connections)
 			cfg.set_max_tcp_clients (max_tcp_clients)
 			cfg.set_socket_timeout (socket_timeout)
+			cfg.set_socket_recv_timeout (socket_recv_timeout)
 			cfg.set_keep_alive_timeout (keep_alive_timeout)
 			cfg.set_max_keep_alive_requests (max_keep_alive_requests)
 		end
@@ -140,11 +165,17 @@ feature -- Execution
 			debug ("ew_standalone")
 				if verbose then
 					io.error.put_string ("Launching standalone web server on port " + port_number.out)
-					if attached server_name as l_name then
-						io.error.put_string ("%N http://" + l_name + ":" + port_number.out + "/" + base_url + "%N")
+					if ssl_enabled then
+						io.error.put_string ("%N https://")
 					else
-						io.error.put_string ("%N http://localhost:" + port_number.out + "/" + base_url + "%N")
+						io.error.put_string ("%N http://")
 					end
+					if attached server_name as l_name then
+						io.error.put_string (l_name)
+					else
+						io.error.put_string ("localhost")
+					end
+					io.error.put_string (":" + port_number.out + "/" + base_url + "%N")
 				end
 			end
 			update_configuration (conn.configuration)
@@ -177,9 +208,18 @@ feature {NONE} -- Implementation
 			-- Help defining the verbosity.
 			-- The higher, the more output.
 
+	ssl_settings: detachable TUPLE [protocol: READABLE_STRING_GENERAL; ca_crt, ca_key: detachable READABLE_STRING_GENERAL]
+
+	ssl_enabled: BOOLEAN
+			-- Is secure server? i.e using SSL?
+		do
+			Result := attached ssl_settings as ssl and then attached ssl.protocol as prot and then not prot.is_whitespace
+		end
+
 	max_concurrent_connections: INTEGER
 	max_tcp_clients: INTEGER
 	socket_timeout: INTEGER
+	socket_recv_timeout: INTEGER
 	keep_alive_timeout: INTEGER	
 	max_keep_alive_requests: INTEGER
 

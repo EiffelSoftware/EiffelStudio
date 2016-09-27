@@ -11,6 +11,8 @@ inherit
 
 	HTTPD_LOGGER_CONSTANTS
 
+	HTTPD_SOCKET_FACTORY
+
 feature {NONE} -- Initialization
 
 	make (a_request_settings: HTTPD_REQUEST_SETTINGS)
@@ -18,11 +20,13 @@ feature {NONE} -- Initialization
 			reset
 				-- Import global request settings.
 			timeout := a_request_settings.timeout -- seconds
+			socket_recv_timeout := a_request_settings.socket_recv_timeout -- seconds
 			keep_alive_timeout := a_request_settings.keep_alive_timeout -- seconds
 			max_keep_alive_requests := a_request_settings.max_keep_alive_requests
 
 			is_verbose := a_request_settings.is_verbose
 			verbose_level := a_request_settings.verbose_level
+			is_secure := a_request_settings.is_secure
 		end
 
 	reset
@@ -68,7 +72,7 @@ feature -- Access
 		do
 			s := internal_client_socket
 			if s = Void then
-				create s.make_empty
+				s := new_client_socket (is_secure)
 				internal_client_socket := s
 			end
 			Result := s
@@ -121,6 +125,10 @@ feature -- Settings
 	verbose_level: INTEGER
 			-- Output verbosity.
 
+	is_secure: BOOLEAN
+			-- Is secure socket?
+			-- i.e: SSL?			
+
 	is_persistent_connection_supported: BOOLEAN
 			-- Is persistent connection supported?
 		do
@@ -133,6 +141,9 @@ feature -- Settings
 
 	timeout: INTEGER -- seconds
 			-- Amount of seconds that the server waits for receipts and transmissions during communications.
+
+	socket_recv_timeout: INTEGER -- seconds
+			-- Amount of seconds that the server waits for receiving data on socket during communications.
 
 	max_keep_alive_requests: INTEGER
 			-- Maximum number of requests allowed per persistent connection.
@@ -187,6 +198,7 @@ feature -- Execution
 			n,m: INTEGER
 		do
 			l_socket := client_socket
+			l_socket.set_recv_timeout (socket_recv_timeout)
 			check
 				socket_attached: l_socket /= Void
 				socket_valid: l_socket.is_open_read and then l_socket.is_open_write
@@ -206,18 +218,24 @@ feature -- Execution
 					log ("Reuse connection (" + n.out + ")", information_level)
 				end
 					-- FIXME: it seems to be called one more time, mostly to see this is done.
-				execute_request
+				execute_request (n > 1)
 				l_exit := not is_persistent_connection_supported
 						or not is_next_persistent_connection_supported -- related to `max_keep_alive_requests'
 						or not is_persistent_connection_requested
 						or has_error or l_socket.is_closed or not l_socket.is_open_read
 				reset_request
 			end
+			if l_exit and has_error and not l_socket.is_closed then
+				l_socket.close
+			end
 		end
 
-	execute_request
+	execute_request (a_is_reusing_connection: BOOLEAN)
+			-- Execute http request, and if `a_is_reusing_connection' is True
+			-- the execution is reusing the persistent connection.
 		require
 			is_connected: is_connected
+			reuse_connection_when_possible: a_is_reusing_connection implies is_persistent_connection_supported
 		local
 			l_remote_info: detachable like remote_info
 			l_socket: like client_socket
@@ -237,13 +255,16 @@ feature -- Execution
 					dbglog (generator + ".execute_request  socket=" + l_socket.descriptor.out + " ENTER")
 				end
 
-					--| TODO: add configuration options for socket timeout.
-					--| set by default 5 seconds.
-				l_socket.set_timeout (keep_alive_timeout) -- 5 seconds!
-				l_is_ready := l_socket.ready_for_reading
+				if a_is_reusing_connection then
+						--| set by default 5 seconds.
+					l_socket.set_recv_timeout (keep_alive_timeout) -- in seconds!
+					l_is_ready := l_socket.ready_for_reading
+				else
+					l_is_ready := True
+				end
 
 				if l_is_ready then
-					l_socket.set_timeout (timeout) -- FIXME: return a 408 Request Timeout response ..
+					l_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
 					create l_remote_info
 					if attached l_socket.peer_address as l_addr then
 						l_remote_info.addr := l_addr.host_address.host_address
@@ -326,8 +347,7 @@ feature -- Parsing
 				has_error := True
 			end
 			l_is_verbose := is_verbose
-			if not has_error or l_is_verbose then
-					-- if `is_verbose' we can try to print the request, even if it is a bad HTTP request
+			if not has_error then
 				from
 					line := next_line (a_socket)
 				until

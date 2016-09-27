@@ -12,6 +12,8 @@ inherit
 			make
 		end
 
+	TCP_STREAM_SOCKET_EXT
+
 create
 	make_server_by_address_and_port,
 	make_server_by_port,

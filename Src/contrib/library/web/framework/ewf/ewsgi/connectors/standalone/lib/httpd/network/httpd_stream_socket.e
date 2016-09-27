@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 feature -- Change
 
 	set_timeout (n: INTEGER)
+			-- Set timeout to `n' seconds.
 		do
 			if attached {NETWORK_STREAM_SOCKET} socket as l_socket then
 				l_socket.set_timeout (n)
@@ -79,6 +80,22 @@ feature -- Change
 		do
 			if attached {NETWORK_STREAM_SOCKET} socket as l_socket then
 				l_socket.set_accept_timeout (n)
+			end
+		end
+
+    set_recv_timeout (a_timeout_seconds: INTEGER)
+ 		    -- Set the receive timeout in seconds on Current socket.
+		do
+			if attached {TCP_STREAM_SOCKET} socket as l_socket then
+				l_socket.set_recv_timeout (a_timeout_seconds)
+			end
+		end
+
+    set_send_timeout (a_timeout_seconds: INTEGER)
+ 		    -- Set the send timeout in seconds on Current socket.
+		do
+			if attached {TCP_STREAM_SOCKET} socket as l_socket then
+				l_socket.set_send_timeout (a_timeout_seconds)
 			end
 		end
 

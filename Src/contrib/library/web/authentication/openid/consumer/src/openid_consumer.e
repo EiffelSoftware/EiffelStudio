@@ -508,9 +508,9 @@ feature -- Helper
 
 	new_session (a_uri: READABLE_STRING_8): HTTP_CLIENT_SESSION
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 		do
-			create cl.make
+			create cl
 			Result := cl.new_session (a_uri)
 			Result.set_is_insecure (True)
 			Result.set_max_redirects (5)

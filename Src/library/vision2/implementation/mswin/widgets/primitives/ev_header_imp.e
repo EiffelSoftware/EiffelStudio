@@ -101,11 +101,6 @@ inherit
 			default_style
 		end
 
-	EV_HEADER_ACTION_SEQUENCES_IMP
-		export
-			{NONE} all
-		end
-
 	EV_SHARED_IMAGE_LIST_IMP
 		export
 			{NONE} all
@@ -565,7 +560,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

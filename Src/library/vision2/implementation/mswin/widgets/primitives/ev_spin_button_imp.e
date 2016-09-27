@@ -409,21 +409,9 @@ feature -- action sequences
 			Result := internal_text_field.change_actions
 		end
 
-	create_text_change_actions:  EV_NOTIFY_ACTION_SEQUENCE
-				-- Create a change action sequence.
-		do
-			Result := internal_text_field.create_change_actions
-		end
-
 	return_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Result := internal_text_field.return_actions
-		end
-
-	create_return_actions:  EV_NOTIFY_ACTION_SEQUENCE
-				-- Create a return action sequence.
-		do
-			Result := internal_text_field.create_return_actions
 		end
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE

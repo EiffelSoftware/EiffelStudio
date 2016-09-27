@@ -1,19 +1,20 @@
 note
-	status: "Should probably be refactored."
-	author: "Daniel Furrer"
+	description: "Abstract ancestor to all EV_*_ACTION_SEQUENCES classes."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
-	EV_PND_DEFERRED_ITEM
+	EV_ACTION_SEQUENCES
 
 inherit
-	EV_ANY_I
-		redefine
-			interface
+	ANY
+		export
+			{EV_ANY_HANDLER} default_create
+		undefine
+			default_create,
+			copy,
+			is_equal
 		end
-
-feature {EV_ANY, EV_ANY_I} -- Implementation
-
-	interface: detachable EV_PICK_AND_DROPABLE note option: stable attribute end;
 
 note
 	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"

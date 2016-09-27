@@ -11,22 +11,9 @@ deferred class
 inherit
 	EV_PICK_AND_DROPABLE_I
 
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
-		redefine
-			create_drop_actions
-		end
-
 	EV_SHARED_TRANSPORT_IMP
 
 	WEL_WINDOWS_ROUTINES
-
-feature {NONE} -- Initialization
-
-	create_drop_actions: EV_PND_ACTION_SEQUENCE
-			-- Create a drop action sequence.
-		do
-			Result := Precursor
-		end
 
 feature -- Access
 

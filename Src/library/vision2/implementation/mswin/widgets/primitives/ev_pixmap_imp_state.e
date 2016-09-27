@@ -10,19 +10,19 @@ deferred class
 	EV_PIXMAP_IMP_STATE
 
 inherit
-	EV_WIDGET_ACTION_SEQUENCES_IMP
+	EV_WIDGET_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				all
 		end
 
-	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
+	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				all
 		end
 
-	EV_PIXMAP_ACTION_SEQUENCES_IMP
+	EV_DRAWABLE_ACTION_SEQUENCES_I
 		export
 			{EV_PIXMAP_IMP_STATE}
 				expose_actions_internal
@@ -496,7 +496,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

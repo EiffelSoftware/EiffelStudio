@@ -55,24 +55,6 @@ feature {NONE} -- Initialization
 		do
 		end
 
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a caret move action sequence.
-		do
-			check False then end
-		end
-
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a selection change action sequence.
-		do
-			check False then end
-		end
-
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a file access action sequence.
-		do
-			check False then end
-		end
-
 feature {NONE} -- Implementation
 
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER
@@ -341,7 +323,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

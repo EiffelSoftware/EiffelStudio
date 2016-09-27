@@ -24,9 +24,6 @@ inherit
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature {NONE} -- Initialization
 

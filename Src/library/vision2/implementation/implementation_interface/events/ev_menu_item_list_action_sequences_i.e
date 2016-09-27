@@ -16,21 +16,17 @@ feature -- Event handling
 	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when a menu item is selected.
 		do
-			if item_select_actions_internal = Void then
-				item_select_actions_internal :=
-					 create_item_select_actions
+			if attached item_select_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_select_actions_internal := Result
 			end
-			Result := item_select_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
-			-- Create a item_select action sequence.
-		deferred
-		end
 
 	item_select_actions_internal: detachable EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
 			-- Implementation of once per object `item_select_actions'.

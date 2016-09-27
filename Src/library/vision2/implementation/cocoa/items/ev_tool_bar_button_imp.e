@@ -176,20 +176,6 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 	in_select_actions_call: BOOLEAN
 		-- Is `Current' in the process of having its select actions called
 
-feature {EV_ANY_I} -- Implementation
-
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-		do
-			create Result
-		end
-
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- 	Create a drop down action sequence.
-		do
-			create Result
-		end
-
 feature {NONE} -- Implementation
 
 	is_show_requested: BOOLEAN = True
@@ -222,7 +208,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

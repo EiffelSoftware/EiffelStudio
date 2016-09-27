@@ -13,7 +13,8 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-				column_widths, update_column_width
+				column_widths, update_column_width, column_resized_actions_internal,
+				column_title_click_actions_internal
 		redefine
 			interface,
 			make,
@@ -37,7 +38,6 @@ inherit
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
 			call_button_event_actions,
-			create_pointer_motion_actions,
 			visual_widget,
 			on_pointer_motion,
 			pebble_source,
@@ -54,12 +54,6 @@ inherit
 			interface,
 			wipe_out,
 			make
-		end
-
-	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
-		export
-				{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-					all
 		end
 
 	EV_PND_DEFERRED_ITEM_PARENT
@@ -199,12 +193,6 @@ feature {NONE} -- Implementation
 
 	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		-- Previous selection of `Current'
-
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
-		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 

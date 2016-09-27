@@ -20,11 +20,6 @@ inherit
 		end
 
 	EV_GRID_COLUMN_ACTION_SEQUENCES
-		undefine
-			default_create, copy, is_equal
-		redefine
-			implementation
-		end
 
 create
 	{EV_GRID, EV_GRID_I} default_create
@@ -519,7 +514,7 @@ invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -78,10 +78,10 @@ feature {NONE} -- Initialization
 		do
 			set_c_object ({GTK}.gtk_event_box_new)
 				-- Initialize colors from gtk style.
-			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_active_enum))
-			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
 			set_non_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_active_enum))
+			set_focused_selection_color (color_from_state ({EV_STOCK_COLORS_IMP}.base_style, {GTK}.gtk_state_flag_selected_enum))
+			set_focused_selection_text_color (color_from_state ({EV_STOCK_COLORS_IMP}.text_style, {GTK}.gtk_state_flag_selected_enum))
 
 			create_implementation_objects
 
@@ -136,10 +136,10 @@ feature {EV_GRID_ITEM_I} -- Implementation
 					l_app_imp := app_implementation
 					a_pango_layout := l_app_imp.pango_layout
 					a_cs := l_app_imp.c_string_from_eiffel_string (s)
-					{GTK2}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
-					{GTK2}.pango_layout_set_font_description (a_pango_layout, a_font_imp.font_description)
-					{GTK2}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
-					{GTK2}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+					{PANGO}.layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+					{PANGO}.layout_set_font_description (a_pango_layout, a_font_imp.font_description)
+					{PANGO}.layout_get_pixel_size (a_pango_layout, $a_width, $a_height)
+					{PANGO}.layout_set_font_description (a_pango_layout, default_pointer)
 					tuple.put_integer (a_width, 1)
 					tuple.put_integer (a_height, 2)
 				end
@@ -153,7 +153,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		local
 			a_widget: POINTER
 		do
-			a_widget := {GTK}.gtk_entry_new
+			a_widget := {GTK2}.gtk_tree_view_new
 			Result := stock_colors_imp.color_from_state (a_widget, style_type, a_state)
 			{GTK}.gtk_widget_destroy (a_widget)
 		end
@@ -172,7 +172,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

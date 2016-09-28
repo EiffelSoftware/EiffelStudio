@@ -33,8 +33,6 @@ inherit
 			default_process_message
 		end
 
-	EV_CONTAINER_ACTION_SEQUENCES_IMP
-
 	EV_SHARED_GDI_OBJECTS
 
 	WEL_HWND_CONSTANTS
@@ -853,7 +851,7 @@ invariant
 	remove_item_actions_not_void: is_usable implies remove_item_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -41,6 +41,7 @@ feature -- Access
 	l_tree_or_flat_view: STRING_32		do Result := "Tree/Flat View" end
 	l_restore_defaults: STRING_32 		do Result := "Restore Defaults" end
 	l_import_preferences: STRING_32 	do Result := "Import ..." end
+	l_importing_preferences: STRING_32 	do Result := "Importing ..." end
 	l_export_preferences: STRING_32 	do Result := "Export ..." end
 	l_display_hidden_preferences: STRING_32 	do Result := "Display Hidden Entries" end
 	l_restore_default: STRING_32		do Result := "Restore Default" end
@@ -92,7 +93,7 @@ feature -- Access
 		-- Base name of the file that contains the icon of the preferences window.
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

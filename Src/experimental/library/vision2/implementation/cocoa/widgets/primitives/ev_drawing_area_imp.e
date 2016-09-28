@@ -38,11 +38,6 @@ inherit
 			dispose
 		end
 
-	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
-		redefine
-			interface
-		end
-
 	NS_VIEW
 		rename
 			make as make_cocoa,
@@ -77,7 +72,6 @@ feature {NONE} -- Initialization
 			make_with_drawing_cocoa
 			cocoa_view := current
 			Precursor {EV_PRIMITIVE_IMP}
-			initialize_events
 			disable_tabable_from
 		end
 
@@ -278,7 +272,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWING_AREA note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Class responsible for managing the observers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 feature -- Initialization
 
 	make
-		-- Initialize.
+			-- Initialize.
 		do
 			create data_observer_list.make
 		end
@@ -23,7 +23,7 @@ feature -- Initialization
 feature -- Operations
 
 	add_observer (d: ANY; w: OBSERVER)
-			-- Add an observer w to the list of d.
+			-- Add an observer `w' to the list of `d'.
 		require
 			data_exists: d /= Void
 			observer_exists: w /= Void
@@ -41,7 +41,7 @@ feature -- Operations
 		end
 
 	remove_observer (d: ANY; w: OBSERVER)
-		-- Remove the observer 'd' from the list of observed data.
+			-- Remove the observer `w' from the list of observed data `d'.
 		require
 			data_exists: d /= Void
 			observer_exists: w /= Void
@@ -69,7 +69,7 @@ feature -- Operations
 		end
 
 	clear_observer (o: OBSERVER)
-		-- Remove the observer o from the list of all the subjects.
+			-- Remove the observer o from the list of all the subjects.
 		require
 			observer_exists: o /= Void
 		local
@@ -91,9 +91,8 @@ feature -- Operations
 			end
 		end
 
-
 	update_observer (d: ANY)
-			-- Update the observer of data 'd'
+			-- Update the observer of data 'd'.
 		require
 			data_exists: d /= Void
 		local
@@ -101,16 +100,16 @@ feature -- Operations
 		do
 			data_observer := get_data_observer (d)
 			if data_observer /= Void then
-				-- The data is observed.
+					-- The data is observed.
 				data_observer.update
 			end
 		end
 
 feature -- Access
 
-	get_data_observer (d: ANY) : DATA_OBSERVER
+	get_data_observer (d: ANY): detachable DATA_OBSERVER
 			-- Return the observer of the data 'd', if any.
-			-- If none, return Void
+			-- If none, return Void.
 		require
 			data_exists: d /= Void
 		local
@@ -124,18 +123,15 @@ feature -- Access
 				data_observer_list.after or found
 			loop
 				data_observer := data_observer_list.item
-				if data_observer /= Void
-				then
-					if data_observer.data = d
-					then
+				if data_observer /= Void then
+					if data_observer.data = d then
 						found := true
 						Result := data_observer
 					end
 				end
 				data_observer_list.forth
 			end
-			if not found
-			then
+			if not found then
 				Result := Void
 			end
 		end
@@ -143,14 +139,14 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	data_observer_list: LINKED_LIST [DATA_OBSERVER]
-		-- List of data observers.
+			-- List of data observers.
 
 invariant
 	OBSERVER_MANAGEMENT_data_observer_list_exists: data_observer_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -159,9 +155,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class OBSERVER_MANAGMENT
-
-
+end

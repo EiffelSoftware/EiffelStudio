@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A EV_NOTEBOOK with it's own tabs, not use native Windows tab control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,18 +66,18 @@ feature {NONE}  -- Initlization
 			create internal_tabs.make (1)
 
 			create internal_tab_box.make (docking_manager)
-			internal_tab_box.right_side_double_click_actions.extend (agent on_tab_box_right_double_click)
 			create l_helper
 
---			internal_tab_box.set_background_color (internal_shared.non_focused_color_lightness)
 			create internal_border_for_tab_area.make
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			create internal_cell
-			-- Make sure tab bar shown when not enough height
-			-- See bug#16786
+				-- Make sure tab bar shown when not enough height
+				-- See bug#16786
 			internal_cell.set_minimum_height (0)
 
 			default_create
+
+			internal_tab_box.right_side_double_click_actions.extend (agent on_tab_box_right_double_click)
 
 			internal_border_for_tab_area.set_border_width (internal_shared.border_width)
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
@@ -101,7 +101,7 @@ feature {NONE}  -- Initlization
 			add_notebook (Current)
 			internal_tab_box.set_notebook (Current)
 		ensure
-			set: internal_docking_manager = a_docking_manager
+			set: docking_manager = a_docking_manager
 			set: internal_tab_box.notebook = Current
 		end
 
@@ -816,7 +816,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -825,10 +825,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

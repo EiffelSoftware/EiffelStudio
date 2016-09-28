@@ -225,7 +225,7 @@ feature -- Input
 		do
 			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
 				-- `a_string' was externally modified, we need to reset its `hash_code'.
-			a_string.set_internal_hash_code (0)
+			a_string.reset_hash_codes
 		end
 
 feature {NONE} -- Implementation

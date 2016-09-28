@@ -20,9 +20,6 @@ inherit
 		end
 
 	EV_RICH_TEXT_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Access
 
@@ -545,7 +542,7 @@ invariant
 	buffer_locked_in_a_single_mode: not (buffer_locked_in_append_mode and buffer_locked_in_format_mode)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

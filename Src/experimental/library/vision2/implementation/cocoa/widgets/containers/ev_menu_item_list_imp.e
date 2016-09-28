@@ -16,8 +16,6 @@ inherit
 			interface
 		end
 
-	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
-
 feature {NONE} -- Implementation
 
 	radio_group: detachable LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
@@ -193,7 +191,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

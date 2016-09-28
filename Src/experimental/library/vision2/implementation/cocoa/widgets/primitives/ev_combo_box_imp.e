@@ -20,8 +20,6 @@ inherit
 		rename
 			text_field as combo_box
 		undefine
-			create_focus_in_actions,
-			create_focus_out_actions,
 			pre_pick_steps,
 			call_pebble_function,
 			enable_transport,
@@ -50,8 +48,6 @@ inherit
 			interface,
 			cocoa_set_size
 		end
-
-	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
 
 	EV_KEY_CONSTANTS
 
@@ -196,7 +192,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

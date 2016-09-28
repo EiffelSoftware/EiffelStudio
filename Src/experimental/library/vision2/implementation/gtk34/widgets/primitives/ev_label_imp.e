@@ -48,14 +48,12 @@ feature {NONE} -- Initialization
 	make
 			-- Create and initialize label.
 		local
-			a_cs: EV_GTK_C_STRING
 			int_value: INTEGER
 		do
 			textable_imp_initialize
 			set_c_object (text_label)
 			align_text_center
-			a_cs := app_implementation.c_string_from_eiffel_string (once "justify")
-			{GTK2}.g_object_get_integer (text_label, a_cs.item, $int_value)
+			int_value := {GTK2}.g_object_get_integer (text_label, {GTK_PROPERTIES}.justify)
 			Precursor
 			set_is_initialized (True)
 		end
@@ -102,14 +100,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LABEL note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end --class LABEL_IMP

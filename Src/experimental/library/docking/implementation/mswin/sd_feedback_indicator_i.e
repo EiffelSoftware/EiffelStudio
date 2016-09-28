@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {SD_FEEDBACK_INDICATOR_I}."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -57,7 +57,7 @@ feature -- Query
 		end
 
 	pixel_buffer: detachable EV_PIXEL_BUFFER
-			-- Pixmap to show
+			-- Pixmap to show.
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
@@ -66,7 +66,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -75,4 +75,5 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

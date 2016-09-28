@@ -110,16 +110,16 @@ feature {EV_PIXEL_BUFFER_PIXEL} -- Implementation
 	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Get the platform dependent pixel value at `a_x', `a_y' (zero based for speed)
 		require
-			a_x_valid: a_x >= 0 and then a_x < width.as_natural_32
-			a_y_valid: a_y >=0 and then a_y <= height.as_natural_32
+			a_x_valid: a_x < width.as_natural_32
+			a_y_valid: a_y <= height.as_natural_32
 		deferred
 		end
 
 	set_pixel (a_x, a_y, rgba: NATURAL_32)
 			-- Set the platform dependent pixel value at `a_x', `a_y' (zero based for speed) to `rgba'.
 		require
-			a_x_valid: a_x >= 0 and then a_x < width.as_natural_32
-			a_y_valid: a_y >=0 and then a_y <= height.as_natural_32
+			a_x_valid: a_x < width.as_natural_32
+			a_y_valid: a_y <= height.as_natural_32
 		deferred
 		ensure
 			pixel_set: get_pixel (a_x, a_y) = rgba
@@ -177,7 +177,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

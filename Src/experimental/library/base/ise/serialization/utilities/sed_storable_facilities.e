@@ -103,6 +103,7 @@ feature -- Serialization routines
 			a_reader_ready: a_reader.is_ready_for_reading
 		local
 			l_deserializer: detachable SED_SESSION_DESERIALIZER
+			l_retrieved_errors: like retrieved_errors
 		do
 			a_reader.read_header
 			inspect
@@ -112,7 +113,10 @@ feature -- Serialization routines
 			when eiffel_independent_store then l_deserializer := independent_deserializer (a_reader)
 			when eiffel_recoverable_store then l_deserializer := recoverable_deserializer (a_reader)
 			else
-				-- Incorrect type
+					-- Unknown type
+				create l_retrieved_errors.make (1)
+				l_retrieved_errors.extend ((create {SED_ERROR_FACTORY}).new_unknown_storable_type)
+				retrieved_errors := l_retrieved_errors
 			end
 
 			if l_deserializer /= Void then
@@ -322,7 +326,7 @@ feature {NONE} -- Data
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

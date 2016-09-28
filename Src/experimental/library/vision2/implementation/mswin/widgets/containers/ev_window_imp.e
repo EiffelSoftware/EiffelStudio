@@ -128,8 +128,6 @@ inherit
 			{NONE} all
 		end
 
-	EV_WINDOW_ACTION_SEQUENCES_IMP
-
 create
 	make
 

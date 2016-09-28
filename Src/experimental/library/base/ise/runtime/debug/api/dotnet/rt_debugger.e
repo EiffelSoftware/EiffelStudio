@@ -3,8 +3,6 @@ note
 		Set of features to access ISE debugger functionality from debuggee.	
 		
 		Note: do not try to evaluate the following feature in watch tool!
-		
-		TO BE USED AT YOUR OWN RISK.
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -16,18 +14,18 @@ class
 
 feature {NONE} -- Status settings
 
-	discard_debug
-			-- Discard debugger activity	
-		do
-		end
-
 	enable_debug
-			-- Enable debugger activity (if workbench)
+			-- Enable debugger (if workbench)
 		do
 		end
 
-	restore_debug_state (a_state: like debug_state)
-			-- Restore debugger activity to `a_state'
+	disable_debug
+			-- Disable debugger
+		do
+		end
+
+	set_debug_state (a_state: like debug_state)
+			-- Set debugger state to `a_state'
 		do
 		end
 
@@ -41,7 +39,7 @@ feature {NONE} -- Status report
 
 feature -- Debugger: interaction with run-time
 
-    frozen rt_workbench_wait_for_debugger (a_port_number: INTEGER): BOOLEAN
+    frozen wait_for_debugger (a_port_number: INTEGER): BOOLEAN
             -- Initialize workbench debugging using socket connection
 			-- used to launch the application, and then attach the debugger.
 			-- if `a_port_number' <= 0 then check for ISE_DBG_PORTNUM environment variable.

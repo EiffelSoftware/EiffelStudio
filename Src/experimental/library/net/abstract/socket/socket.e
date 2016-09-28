@@ -1037,9 +1037,44 @@ feature {NONE} -- Implementation
 			c_put_stream (descriptor, a_pointer + a_offset, a_byte_count)
 		end
 
-
 	shutdown
 		deferred
+		end
+
+feature -- Socket Recv and Send timeout.
+
+	recv_timeout: INTEGER
+			-- Receive timeout in seconds on Current socket.
+		do
+			Result := c_get_sock_recv_timeout (descriptor, level_sol_socket)
+		ensure
+			result_not_negative: Result >= 0
+		end
+
+	send_timeout: INTEGER
+			-- Send timeout in seconds on Current socket.
+		do
+			Result := c_get_sock_send_timeout (descriptor, level_sol_socket)
+		ensure
+			result_not_negative: Result >= 0
+		end
+
+	set_recv_timeout (a_timeout_seconds: INTEGER)
+			-- Set the receive timeout in seconds on Current socket.
+			-- if `0' the related operations will never timeout.
+		require
+			positive_timeout: a_timeout_seconds >= 0
+		do
+			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+		end
+
+	set_send_timeout (a_timeout_seconds: INTEGER)
+			-- Set the send timeout in milliseconds on Current socket.
+			-- if `0' the related operations will never timeout.
+		require
+			positive_timeout: a_timeout_seconds >= 0
+		do
+			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
 		end
 
 feature {NONE} -- Externals
@@ -1109,6 +1144,30 @@ feature {NONE} -- Externals
 			"C"
 		end
 
+	c_set_sock_recv_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
+			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
+		external
+			"C"
+		end
+
+	c_get_sock_recv_timeout (fd, level: INTEGER): INTEGER
+			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
+		external
+			"C"
+		end
+
+	c_set_sock_send_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
+			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
+		external
+			"C"
+		end
+
+	c_get_sock_send_timeout (fd, level: INTEGER): INTEGER
+			-- C routine to get socket option SO_SNDTIMEO of timeout value in seconds.
+		external
+			"C"
+		end
+
 	c_fcntl (fd, cmd, arg: INTEGER): INTEGER
 			-- C wrapper to fcntl() routine
 		external
@@ -1170,7 +1229,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1180,8 +1239,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- Class SOCKET
-

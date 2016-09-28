@@ -37,18 +37,6 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES}
-				focus_in_actions_internal,
-				focus_out_actions_internal,
-				pointer_motion_actions_internal,
-				pointer_button_release_actions,
-				pointer_leave_actions,
-				pointer_leave_actions_internal,
-				pointer_enter_actions_internal
-		redefine
-			interface
-		end
 
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
@@ -301,7 +289,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

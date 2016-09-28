@@ -120,18 +120,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			Result ?= app_implementation.gtk_widget_imp_at_pointer_position
 		end
 
-	width_request_string: EV_GTK_C_STRING
-			-- Once string to pass to gtk.
-		once
-			Result := "width-request"
-		end
-
-	height_request_string: EV_GTK_C_STRING
-			-- Once string to pass to gtk.
-		once
-			Result := "height-request"
-		end
-
 	minimum_width, real_minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
@@ -146,7 +134,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	width_request: INTEGER
 			-- Requested width of `Current' from gtk.
 		do
-			{GTK2}.g_object_get_integer (c_object, width_request_string.item, $Result)
+			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.width_request)
 		end
 
 	preferred_width: INTEGER
@@ -179,7 +167,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	height_request: INTEGER
 			-- Requested height of `Current' from gtk.
 		do
-			{GTK2}.g_object_get_integer (c_object, height_request_string.item, $Result)
+			Result := {GTK2}.g_object_get_integer (c_object, {GTK_PROPERTIES}.height_request)
 		end
 
 	preferred_height: INTEGER
@@ -217,7 +205,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	internal_set_pointer_style (a_cursor: detachable EV_POINTER_STYLE)
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
@@ -225,17 +213,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_cursor_imp: detachable EV_POINTER_STYLE_IMP
 		do
 			if a_cursor /= previously_set_pointer_style then
-				if a_cursor /= Void then
-					a_cursor_imp ?= a_cursor.implementation
-					check a_cursor_imp /= Void then end
-					a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
-				end
+				a_cursor_imp ?= a_cursor.implementation
+				check a_cursor_imp /= Void then end
+				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
 				a_window := {GTK}.gtk_widget_get_window (c_object)
 				if a_window /= default_pointer then
 					{GTK}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+					{GTK2}.gdk_cursor_unref (a_cursor_ptr)
 				end
+				previously_set_pointer_style := a_cursor
 			end
-			previously_set_pointer_style := a_cursor
 		end
 
 	previously_set_pointer_style: detachable EV_POINTER_STYLE
@@ -423,7 +410,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

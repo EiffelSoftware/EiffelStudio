@@ -12,8 +12,6 @@ deferred class
 inherit
 	EV_STANDARD_DIALOG_I
 
-	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
-
 feature -- Access
 
 	blocking_window: detachable EV_WINDOW

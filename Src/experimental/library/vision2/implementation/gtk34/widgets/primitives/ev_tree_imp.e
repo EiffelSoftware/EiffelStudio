@@ -24,7 +24,6 @@ inherit
 			interface,
 			make,
 			call_button_event_actions,
-			create_pointer_motion_actions,
 			set_to_drag_and_drop,
 			able_to_transport,
 			ready_for_pnd_menu,
@@ -48,8 +47,6 @@ inherit
 			append,
 			make
 		end
-
-	EV_TREE_ACTION_SEQUENCES_IMP
 
 	EV_PND_DEFERRED_ITEM_PARENT
 		redefine
@@ -178,12 +175,6 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
-		end
-
 	call_button_event_actions (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -204,7 +195,7 @@ feature {NONE} -- Initialization
 			l_x, l_y: INTEGER
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			a_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+			a_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 			if a_gdkwin /= default_pointer then
 				{GTK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
 				if a_gtkwid /= tree_view then
@@ -473,8 +464,7 @@ feature -- Implementation
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y]);
 			end
 		end
 
@@ -544,9 +534,6 @@ feature -- Implementation
 	reset_pebble_function
 			-- Reset `pebble_function'.
 		do
-			if attached pebble_function as l_pebble_function then
-				l_pebble_function.clear_last_result
-			end
 			pebble := temp_pebble
 			pebble_function := temp_pebble_function
 			temp_pebble := Void
@@ -725,18 +712,15 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Make `value' the new height of all the rows.
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 
-			a_gtk_c_str := "vertical-separator"
-			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{GTK2}.gtk_widget_style_get_integer (tree_view, {GTK_PROPERTIES}.vertical_separator, $a_vert_sep)
 
-			a_gtk_c_str := "height"
-			{GTK2}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{GTK2}.g_object_set_integer (a_cell_rend, {GTK_PROPERTIES}.height, value - a_vert_sep)
 			{GTK}.g_list_free (a_cell_rend_list)
 		end
 
@@ -782,7 +766,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

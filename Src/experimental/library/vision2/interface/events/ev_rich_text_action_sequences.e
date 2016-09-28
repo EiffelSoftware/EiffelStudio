@@ -11,16 +11,13 @@ deferred class
 	 EV_RICH_TEXT_ACTION_SEQUENCES
 
 inherit
-	ANY
-		export
-			{EV_ANY_HANDLER} default_create
-		undefine
-			default_create, copy
-		end
+	EV_ACTION_SEQUENCES
 
 feature {NONE} -- Implementation
 
 	implementation: EV_RICH_TEXT_ACTION_SEQUENCES_I
+		deferred
+		end
 
 feature -- Event handling
 
@@ -32,7 +29,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selection changes.
 		do
@@ -40,7 +37,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed while loading or saving.
 			-- Event data is percentage of file written in the range (0-100).
@@ -51,14 +48,14 @@ feature -- Event handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

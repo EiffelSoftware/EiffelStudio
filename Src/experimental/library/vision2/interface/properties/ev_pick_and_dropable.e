@@ -49,9 +49,6 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 feature -- Access
 

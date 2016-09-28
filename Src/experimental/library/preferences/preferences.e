@@ -209,7 +209,7 @@ feature {NONE} -- Initialization
 
 feature -- Importation
 
-	import_from_storage (a_storage: PREFERENCES_STORAGE_I)
+	import_from_storage_with_callback (a_storage: PREFERENCES_STORAGE_I; a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_32]])
 			-- Import preferences values from `a_storage'
 		require
 			a_storage_not_void: a_storage /= Void
@@ -218,16 +218,23 @@ feature -- Importation
 			k: READABLE_STRING_GENERAL
 			v: READABLE_STRING_32
 			p: detachable PREFERENCE
+			i,n: INTEGER
 		do
 			a_storage.initialize_with_preferences (Current)
 			vals := a_storage.session_values
 			from
+				i := 0
+				n := vals.count
 				vals.start
 			until
 				vals.after
 			loop
+				i := i + 1
 				k := vals.key_for_iteration
 				v := vals.item_for_iteration
+				if a_callback /= Void then
+					a_callback.call ([i,n,k, v])
+				end
 				session_values.force (v, k)
 				p := preferences.item (k)
 				if p /= Void then
@@ -236,6 +243,14 @@ feature -- Importation
 				end
 				vals.forth
 			end
+		end
+
+	import_from_storage (a_storage: PREFERENCES_STORAGE_I)
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			import_from_storage_with_callback (a_storage, Void)
 		end
 
 	export_to_storage (a_storage: PREFERENCES_STORAGE_I; a_save_modified_values_only: BOOLEAN)
@@ -684,7 +699,7 @@ invariant
 	has_preferences_storage: preferences_storage /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

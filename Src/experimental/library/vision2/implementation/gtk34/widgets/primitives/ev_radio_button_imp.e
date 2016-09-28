@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_RADIO_BUTTON_I
+		undefine
+			init_select_actions
 		redefine
 			interface
 		end
@@ -96,7 +98,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RADIO_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

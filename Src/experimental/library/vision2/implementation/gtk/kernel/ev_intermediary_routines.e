@@ -132,11 +132,11 @@ feature -- Button intermediary agent routines
 			if l_rad_imp /= Void and then not l_rad_imp.is_selected then
 				-- Do nothing as we shouldn't call the select actions of a radio button if it isn't selected
 			elseif
-					l_button_imp /= Void and then
-					attached l_button_imp.select_actions_internal as l_button_imp_select_actions and then
-					l_button_imp.parent_imp /= Void
-				then
-					l_button_imp_select_actions.call (Void)
+				l_button_imp /= Void and then
+				attached l_button_imp.select_actions_internal as l_button_imp_select_actions and then
+				l_button_imp.parent_imp /= Void
+			then
+				l_button_imp_select_actions.call (Void)
 			end
 		end
 
@@ -238,7 +238,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

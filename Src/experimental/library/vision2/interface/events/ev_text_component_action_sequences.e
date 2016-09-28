@@ -11,16 +11,13 @@ deferred class
 	 EV_TEXT_COMPONENT_ACTION_SEQUENCES
 
 inherit
-	ANY
-		export
-			{EV_ANY_HANDLER} default_create
-		undefine
-			default_create, copy
-		end
+	EV_ACTION_SEQUENCES
 
 feature {NONE} -- Implementation
 
 	implementation: EV_TEXT_COMPONENT_ACTION_SEQUENCES_I
+		deferred
+		end
 
 feature -- Event handling
 

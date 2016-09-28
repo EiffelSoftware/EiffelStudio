@@ -43,27 +43,24 @@ feature {NONE} -- Initialization
 			end
 			create symboled_lines.make (10)
 			create unsymboled_lines.make (10)
-			create history.make (Current)
 		end
 
 feature -- Access
 
-	history: detachable UNDO_REDO_STACK
+	history: UNDO_REDO_STACK
 			-- Set of undo and redoable commands on text
 			--| This should be attached type. Due to the old design non-void safty,
 			--| we have to mark it detachable to please `create history.make (Current)'
 			--| in `make' routine. See invariant.
-
-	attached_history: attached like history
-			-- Attached `history'
 		local
-			l_history: like history
+			h: like internal_history
 		do
-			l_history := history
-			if l_history = Void then
-				check l_history /= Void end
+			h := internal_history
+			if h = Void then
+				create h.make (Current)
+				internal_history := h
 			end
-			Result := l_history
+			Result := h
 		end
 
 	cursor: detachable EDITOR_CURSOR
@@ -73,6 +70,12 @@ feature -- Access
 			-- String representing a tab.
 			-- Is '%T' or as many blank spaces as defined in
 			-- the preferences
+
+
+feature {NONE} -- Access: internal
+
+	internal_history: detachable like history
+			-- Value for `history' to simulate once per object.
 
 feature -- Cursor creation
 
@@ -99,13 +102,13 @@ feature -- Status Report
 	redo_is_possible: BOOLEAN
 			-- is there anything in the redo stack ?
 		do
-			Result := (not is_empty) and then attached_history.redo_is_possible
+			Result := (not is_empty) and then history.redo_is_possible
 		end
 
 	undo_is_possible: BOOLEAN
 			-- is there anything in the undo stack ?
 		do
-			Result := (not is_empty) and then attached_history.undo_is_possible
+			Result := (not is_empty) and then history.undo_is_possible
 		end
 
 feature -- Status setting
@@ -114,10 +117,10 @@ feature -- Status setting
 			-- Assign `value' to `changed'
 		do
 			if value then
-				attached_history.disable_mark
+				history.disable_mark
 			else
-				attached_history.enable_mark
-				attached_history.set_mark
+				history.enable_mark
+				history.set_mark
 			end
 			Precursor (value, directly_edited)
 		end
@@ -132,7 +135,7 @@ feature -- Basic Operations
 			if has_selection then
 				disable_selection
 			end
-			attached_history.undo
+			history.undo
 			ignore_cursor_moves := False
 		end
 
@@ -144,7 +147,7 @@ feature -- Basic Operations
 			if has_selection then
 				disable_selection
 			end
-			attached_history.redo
+			history.redo
 			ignore_cursor_moves := False
 		end
 
@@ -166,7 +169,7 @@ feature -- Basic Operations
 					removed := string_selected (begin_sel, end_sel)
 					remove_selection (begin_sel, end_sel)
 					attached_cursor.set_from_character_pos (char_num, line_number, Current)
-					attached_history.record_delete_selection (removed)
+					history.record_delete_selection (removed)
 					set_selection_cursor (attached_cursor)
 				end
 				disable_selection
@@ -193,7 +196,7 @@ feature -- Basic Operations
 			removed := string_selected (begin_sel, end_sel)
 			remove_selection (begin_sel, end_sel)
 			attached_cursor.set_from_character_pos (char_num, line_number, Current)
-			attached_history.record_replace_selection (removed, a_word)
+			history.record_replace_selection (removed, a_word)
 			if not a_word.is_empty then
 				insert_string_at_cursor_pos (a_word)
 			end
@@ -240,7 +243,7 @@ feature -- Basic Operations
 			symbol_selection(selection_start, selection_end, "--")
 			if symboled_lines.count > 0 then
 					-- Some was done.
-				attached_history.record_symbol (symboled_lines, "--")
+				history.record_symbol (symboled_lines, "--")
 			end
 			ignore_cursor_moves := False
 		end
@@ -255,7 +258,7 @@ feature -- Basic Operations
 			start_pos, end_pos, start_line, end_line: INTEGER
 			start_selection, end_selection: like attached_cursor
 			l_offset: INTEGER
-			l_history: like attached_history
+			l_history: like history
 		do
 			ignore_cursor_moves := True
 
@@ -274,7 +277,7 @@ feature -- Basic Operations
 
 			from
 				ln := start_selection.line
-				l_history := attached_history
+				l_history := history
 			until
 				ln = Void or else ln.index > end_line
 			loop
@@ -346,7 +349,7 @@ feature -- Basic Operations
 			symbol_selection(selection_start, selection_end, tabulation_symbol)
 			if symboled_lines.count > 0 then
 					-- something was done
-				attached_history.record_symbol (symboled_lines, tabulation_symbol)
+				history.record_symbol (symboled_lines, tabulation_symbol)
 			end
 			ignore_cursor_moves := False
 		end
@@ -363,7 +366,7 @@ feature -- Basic Operations
 			unsymbol_selection(selection_start, selection_end, tabulation_symbol)
 			if unsymboled_lines.count > 0 then
 					-- something was done
-				attached_history.record_unsymbol (unsymboled_lines, tabulation_symbol)
+				history.record_unsymbol (unsymboled_lines, tabulation_symbol)
 			end
 			ignore_cursor_moves := False
 		end
@@ -414,7 +417,7 @@ feature -- Basic Operations
 								end
 								l_next_token.set_previous_token (l_token.previous)
 								create cursor.make_from_relative_pos (l_current_line, l_next_token, 1, Current)
-								attached_history.record_remove_trailing_blank (l_token.wide_image)
+								history.record_remove_trailing_blank (l_token.wide_image)
 							end
 						else
 							end_loop := true
@@ -474,7 +477,7 @@ feature -- Basic Operations
 								end
 								l_next_token.set_previous_token (l_token.previous)
 								create cursor.make_from_relative_pos (l_cur_line, l_next_token, 1, Current)
-								attached_history.record_remove_trailing_blank (l_token.wide_image)
+								history.record_remove_trailing_blank (l_token.wide_image)
 							else
 								end_loop := true
 							end
@@ -500,10 +503,10 @@ feature -- Basic Operations
 		do
 			if not selection_is_empty then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			end
 			ignore_cursor_moves := True
-			attached_history.record_insert (c)
+			history.record_insert (c)
 			insert_char_at_cursor_pos (c)
 			ignore_cursor_moves := False
 			if has_selection then
@@ -519,10 +522,10 @@ feature -- Basic Operations
 		do
 			if not selection_is_empty then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			end
 			ignore_cursor_moves := True
-			attached_history.record_paste (txt)
+			history.record_paste (txt)
 			if not txt.is_empty then
 				insert_string_at_cursor_pos (txt)
 			end
@@ -542,7 +545,7 @@ feature -- Basic Operations
 		do
 			if not selection_is_empty then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			end
 			ignore_cursor_moves := True
 			if use_smart_indentation then
@@ -550,14 +553,14 @@ feature -- Basic Operations
 				if attached_cursor.x_in_characters <= indent.count then
 					indent.keep_head (attached_cursor.x_in_characters - 1)
 				end
-				attached_history.record_insert_eol (indent)
+				history.record_insert_eol (indent)
 			else
-				attached_history.record_insert_eol ("")
+				history.record_insert_eol ("")
 			end
 			insert_eol_at_cursor_pos
 			mark_fake_trailing_blank (attached_cursor.line, 1)
 			ignore_cursor_moves := False
-			attached_history.record_move
+			history.record_move
 			if has_selection then
 				disable_selection
 			end
@@ -570,10 +573,10 @@ feature -- Basic Operations
 		do
 			if not selection_is_empty then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			end
 			ignore_cursor_moves := True
-			attached_history.record_paste (txt)
+			history.record_paste (txt)
 			insert_string_as_selectable_at_cursor_pos (txt)
 			ignore_cursor_moves := False
 			if has_selection then
@@ -589,13 +592,13 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if selection_is_empty then
-				attached_history.record_replace (attached_cursor.wide_item, c)
+				history.record_replace (attached_cursor.wide_item, c)
 				replace_char_at_cursor_pos (c)
 			else
 				delete_selection
 				ignore_cursor_moves := True
-				attached_history.bind_current_item_to_next
-				attached_history.record_replace ('%N', c)
+				history.bind_current_item_to_next
+				history.record_replace ('%N', c)
 						--| This is a trick to consider
 						--| the insertion as a replace.
 				insert_char_at_cursor_pos (c)
@@ -613,7 +616,7 @@ feature -- Basic Operations
 			text_not_empty: not is_empty
 		do
 			insert_string (create {STRING_32}.make_filled (c, 1))
-			attached_history.bind_current_item_to_next
+			history.bind_current_item_to_next
 			delete_char
 		end
 
@@ -625,7 +628,7 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if selection_is_empty then
-				attached_history.record_delete (attached_cursor.wide_item)
+				history.record_delete (attached_cursor.wide_item)
 				delete_char_at_cursor_pos
 			else
 				delete_selection
@@ -664,9 +667,9 @@ feature -- Basic Operations
 				then
 					l_cursor.go_start_line
 					remove_white_spaces
-					attached_history.record_move
+					history.record_move
 				end
-				attached_history.record_back_delete (l_cursor.wide_item)
+				history.record_back_delete (l_cursor.wide_item)
 				delete_char_at_cursor_pos
 				ignore_cursor_moves := False
 			end
@@ -707,7 +710,7 @@ feature -- Basic Operations
 			offset := selection_end.pos_in_text
 			if has_selection and then not attached_cursor.is_equal (attached_selection_cursor) then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			end
 			if i >= offset then
 				attached_cursor.set_from_integer (i - local_clipboard.count, Current)
@@ -827,10 +830,10 @@ feature -- Basic Operations
 						i > l_indent_count
 					loop
 						if l_leading_tabs < l_cursor_tabs then
-							attached_history.bind_current_item_to_next
+							history.bind_current_item_to_next
 							indent_selection
 						else
-							attached_history.bind_current_item_to_next
+							history.bind_current_item_to_next
 							unindent_selection
 						end
 						i := i + 1
@@ -865,7 +868,7 @@ feature -- for search only
 			removed := string_selected (l_sel, cursor)
 			remove_selection (l_sel, cursor)
 			attached_cursor.set_from_character_pos (char_num, line_number, Current)
-			attached_history.record_replace_all (removed, a_word)
+			history.record_replace_all (removed, a_word)
 			if not a_word.is_empty then
 				insert_string_at_cursor_pos (a_word)
 			end
@@ -879,15 +882,15 @@ feature -- Reinitialization
 			-- put Current back in its original state
 		do
 			Precursor {SELECTABLE_TEXT}
-			attached_history.initialize
+			history.initialize
 		end
 
 	on_text_loaded
 			-- reinitialize text after loading.
 		do
 				-- Initialize undo-redo history
-			attached_history.reset
-			attached_history.set_mark
+			history.reset
+			history.set_mark
 
 			Precursor {SELECTABLE_TEXT}
 		end
@@ -2026,7 +2029,7 @@ feature {NONE} -- Implementation
 			end
 			if not selection_is_empty then
 				delete_selection
-				attached_history.bind_current_item_to_next
+				history.bind_current_item_to_next
 			else
 --				has_selection := False
 			end
@@ -2038,9 +2041,9 @@ feature {NONE} -- Implementation
 			Result  := ch = ' ' or ch = '%T'
 		end
 
-	begin_line_tokens: detachable LINKED_LIST[EDITOR_TOKEN] note option: stable attribute end
+	begin_line_tokens: detachable LINKED_LIST [EDITOR_TOKEN] note option: stable attribute end
 
-	end_line_tokens: detachable LINKED_LIST[EDITOR_TOKEN] note option: stable attribute end
+	end_line_tokens: detachable LINKED_LIST [EDITOR_TOKEN] note option: stable attribute end
 
 	record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN)
 			-- store token reference before new line with new tokens is created
@@ -2183,7 +2186,7 @@ feature {TEXT_CURSOR}
 		do
 			if cur = attached_cursor then
 				if not ignore_cursor_moves then
-					attached_history.record_move
+					history.record_move
 				end
 					-- Notify observers.
 				on_cursor_moved
@@ -2198,7 +2201,7 @@ invariant
 	tabulation_symbol_valid: tabulation_symbol.count > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

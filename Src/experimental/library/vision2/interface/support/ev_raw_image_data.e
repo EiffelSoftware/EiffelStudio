@@ -208,9 +208,9 @@ feature -- Contract support
 				a_y >= 1 and then a_y <= height)
 		end
 
-feature {EV_PIXMAP_ACTION_SEQUENCES_IMP} -- Implementation
+feature {EV_DRAWABLE_ACTION_SEQUENCES_I} -- Implementation
 
-	Set_originating_pixmap (a_pixmap: EV_PIXMAP)
+	set_originating_pixmap (a_pixmap: EV_PIXMAP)
 			-- Sets `originating_pixmap' to `a_pixmap'.
 		do
 			originating_pixmap := a_pixmap
@@ -255,14 +255,14 @@ invariant
 	items_number: count = width * height * 4
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

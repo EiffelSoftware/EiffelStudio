@@ -15,7 +15,8 @@ inherit
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface
+			interface,
+			init_select_actions
 		end
 
 	EV_ITEM_IMP
@@ -51,8 +52,6 @@ inherit
 		end
 
 	EV_PND_DEFERRED_ITEM
-		undefine
-			create_drop_actions
 		redefine
 			interface
 		end
@@ -272,18 +271,10 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-			-- Attach to GTK "clicked" signal.
+	init_select_actions (a_select_actions: EV_NOTIFY_ACTION_SEQUENCE)
+			-- <Precursor>
 		do
-			create Result
 			real_signal_connect (c_object, once "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
-		end
-
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- 	Create a drop down action sequence.
-		do
-			create Result
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

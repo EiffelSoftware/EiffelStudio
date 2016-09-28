@@ -120,7 +120,7 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			create l_tool_bar.make
 			create l_button.make
 			l_button.set_text (internal_shared.interface_names.editor_area)
-			l_button.pointer_button_press_actions.force_extend (agent (docking_manager.command).restore_editor_area_for_minimized)
+			l_button.pointer_button_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do docking_manager.command.restore_editor_area_for_minimized end)
 			l_button.set_pixel_buffer (internal_shared.icons.editor_area)
 			l_tool_bar.extend (l_button)
 			create l_border.make
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

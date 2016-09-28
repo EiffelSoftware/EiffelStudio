@@ -49,18 +49,15 @@ feature -- Query
 			-- Calculation include sub level items
 		local
 			l_maximum_index: INTEGER
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			l_maximum_index := maximum_width_group_index.max_index
 			go_group_i_th (l_maximum_index)
-			if not has_sub_info then
-			-- This function is calculate inlclude sub level
-			-- But it's not calculate "sub sub" level, so we pass True here
-				Result := group_maximum_width (l_maximum_index).max_width
-			else
-				l_item := sub_grouping.item (l_maximum_index)
-				check l_item /= Void end -- Implied by `has_sub_info'
+			if attached sub_grouping.item (l_maximum_index) as l_item then
 				Result := l_item.maximum_width_sub
+			else
+					-- This function is calculate inlclude sub level
+					-- But it's not calculate "sub sub" level, so we pass True here
+				Result := group_maximum_width (l_maximum_index).max_width
 			end
 		end
 
@@ -164,17 +161,14 @@ feature -- Query
 			-- The maximum width calculation inlucde sub level group items width calculation
 		local
 			l_result_index: INTEGER
-			l_result: detachable like maximum_width_top_group
 		do
 			l_result_index := maximum_width_top_group_index
 			create Result.make
 			go_i_th (l_result_index)
-			if not has_sub_info then
-				Result.extend (item, True)
-			else
-				l_result := sub_grouping.item (l_result_index)
-				check l_result /= Void end -- Implied by `has_sub_info'
+			if attached sub_grouping.item (l_result_index) as l_result then
 				Result := l_result
+			else
+				Result.extend (item, True)
 			end
 		end
 
@@ -214,7 +208,6 @@ feature -- Query
 			l_index_count, l_index_max: INTEGER
 			l_temp_result: INTEGER
 			l_temp_max_info: detachable TUPLE [max_width: INTEGER_32; item_count: INTEGER_32]
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			from
 				Result := [0, 0]
@@ -230,26 +223,23 @@ feature -- Query
 				end
 				if l_group_count = a_group_index then
 					go_i_th (l_index_count)
-					if not has_sub_info then
-						l_temp_result := row_width (l_index_count)
-					else
-						l_item := sub_grouping.item (l_index_count)
-						check l_item /= Void end -- Implied by `has_sub_info'
+					if attached sub_grouping.item (l_index_count) as l_item then
 						l_temp_max_info := l_item.maximum_width_only_top_level
 						l_temp_result := l_temp_max_info.max_width
-					end
-					if l_temp_result > Result.max_width then
-						Result.max_width := l_temp_result
-						if not has_sub_info then
-							-- Result.item_count := internal_group_info.i_th (l_index_count).count is not correct,
-							-- because this value is group count, not item count.
-							-- We don't know how many items in this group.
-							-- This `item_count' is used for stop calculation grouping infos.
-							-- We don't want it stop here, so we assign a value which larger than 1.
-							Result.item_count := {INTEGER}.max_value
-						else
-							check l_temp_max_info /= Void end -- Implied by `l_temp_max_info' is attached in previous if clause if `not has_sub_info'
+						if l_temp_result > Result.max_width then
+							Result.max_width := l_temp_result
 							Result.item_count := l_temp_max_info.item_count
+						end
+					else
+						l_temp_result := row_width (l_index_count)
+						if l_temp_result > Result.max_width then
+							Result.max_width := l_temp_result
+								-- Result.item_count := internal_group_info.i_th (l_index_count).count is not correct,
+								-- because this value is group count, not item count.
+								-- We don't know how many items in this group.
+								-- This `item_count' is used for stop calculation grouping infos.
+								-- We don't want it stop here, so we assign a value which larger than 1.
+							Result.item_count := {INTEGER}.max_value
 						end
 					end
 				end
@@ -287,17 +277,13 @@ feature -- Query
 
 	row_total_count: INTEGER
 			-- Total row count
-		local
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			from
 				start
 			until
 				after
 			loop
-				if has_sub_info then
-					l_item := sub_grouping.item (index)
-					check l_item /= Void end -- Implied by `has_sub_info'
+				if attached sub_grouping.item (index) as l_item then
 					Result := l_item.count + Result
 				else
 					Result := Result + 1
@@ -329,8 +315,6 @@ feature -- Query
 
 	total_group_count: INTEGER
 			-- Total group count, include sub group count
-		local
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			Result := 1
 			from
@@ -341,10 +325,8 @@ feature -- Query
 				if is_new_group and not has_sub_info then
 					Result := Result + 1
 				end
-				if has_sub_info then
+				if attached sub_grouping.item (index) as l_item then
 					check sub_group_must_new_group: index /= 1 implies is_new_group end
-					l_item := sub_grouping.item (index)
-					check l_item /= Void end -- Implied by `has_sub_info'
 					Result := Result + l_item.total_group_count
 					if index = 1 then
 						-- We alreay plus 1 when index = 1
@@ -412,8 +394,6 @@ feature -- Command
 
 	out: STRING
 			-- <Precursor>
-		local
-			l_item: detachable SD_TOOL_BAR_GROUP_INFO
 		do
 			Result := "%NSD_TOOL_BAR_GROUP_INFO:"
 			Result := Result + "%N                   group count: " + group_count.out
@@ -428,10 +408,8 @@ feature -- Command
 				Result := Result + "%N                   is_new_group? " + is_new_group.out
 				Result := Result + "%N                   has_sub_group?" + has_sub_info.out
 				Result := Result + "%N                   -------------------------------------------"
-				if has_sub_info then
+				if attached sub_grouping.item (index) as l_item then
 					Result := Result + "%N                   <<<<<<<<<<<<< sub info start >>>>>>>>>>>>>> "
-					l_item := sub_grouping.item (index)
-					check l_item /= Void end -- Implied by `has_sub_info'
 					Result := Result + l_item.out
 					Result := Result + "%N                   <<<<<<<<<<<<< sub info end >>>>>>>>>>>>>> "
 				end
@@ -595,7 +573,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

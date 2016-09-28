@@ -12,8 +12,11 @@ class
 
 inherit
 	EV_BUTTON_I
+		export
+			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface
+			interface,
+			init_select_actions
 		end
 
 	EV_PRIMITIVE_IMP
@@ -48,11 +51,6 @@ inherit
 			interface,
 			make,
 			fontable_widget
-		end
-
-	EV_BUTTON_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES} select_actions_internal
 		end
 
 create
@@ -220,6 +218,15 @@ feature {NONE} -- implementation
 			Result := {GTK}.gtk_bin_struct_child (visual_widget)
 		end
 
+	init_select_actions (a_select_actions: like select_actions)
+			-- <Precursor>
+		local
+			l_app_imp: EV_APPLICATION_IMP
+		do
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (visual_widget, l_app_imp.clicked_event_string, agent (l_app_imp.gtk_marshal).button_select_intermediary (c_object), Void, False)
+		end
+
 feature {EV_ANY, EV_ANY_I} -- implementation
 
 	interface: detachable EV_BUTTON note option: stable attribute end;
@@ -230,14 +237,14 @@ invariant
 	button_box_not_null: is_usable implies button_box /= NULL
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_BUTTON_IMP

@@ -130,44 +130,37 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 
 	new_paragraph_tag_from_applicable_attributes (applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION): POINTER
 			--
-		local
-			propname: EV_GTK_C_STRING
 		do
 			Result := {GTK2}.gtk_text_tag_new (default_pointer)
 
 			if applicable_attributes.alignment then
-				propname := "justification"
 				inspect
 					alignment
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_left then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_left_enum)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.justification, {GTK}.gtk_justify_left_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_center then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_center_enum)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.justification, {GTK}.gtk_justify_center_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_right then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_right_enum)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.justification, {GTK}.gtk_justify_right_enum)
 				when {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
-					{GTK2}.g_object_set_integer (Result, propname.item, {GTK}.gtk_justify_fill_enum)
+					{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.justification, {GTK}.gtk_justify_fill_enum)
 				end
 			end
 
 			if applicable_attributes.left_margin then
-				propname := "left-margin"
-				{GTK2}.g_object_set_integer (Result, propname.item, left_margin)
+				{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.left_margin, left_margin)
 			end
 
 			if applicable_attributes.right_margin then
-				propname := "right-margin"
-				{GTK2}.g_object_set_integer (Result, propname.item, right_margin)
+				{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.right_margin, right_margin)
 			end
 
 			if applicable_attributes.top_spacing then
-				propname := "pixels-above-lines"
-				{GTK2}.g_object_set_integer (Result, propname.item, top_spacing)
+				{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.pixels_above_lines, top_spacing)
 			end
 
 			if applicable_attributes.bottom_spacing then
-				propname := "pixels-below-lines"
-				{GTK2}.g_object_set_integer (Result, propname.item, bottom_spacing)
+				{GTK2}.g_object_set_integer (Result, {GTK_PROPERTIES}.pixels_below_lines, bottom_spacing)
 			end
 		end
 
@@ -192,14 +185,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

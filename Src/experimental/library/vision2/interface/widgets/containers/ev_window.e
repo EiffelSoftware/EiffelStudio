@@ -45,9 +45,6 @@ inherit
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
 
 	EV_SHARED_APPLICATION
 		undefine

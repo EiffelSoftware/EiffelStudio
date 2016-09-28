@@ -86,7 +86,7 @@ feature {NONE} -- Initlization
 			normal_max.select_actions.extend (agent on_normal_max)
 			close.select_actions.extend (agent on_close)
 
-			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
+			internal_title.pointer_double_press_actions.extend (agent (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) do on_normal_max end)
 
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
@@ -236,7 +236,7 @@ feature -- Command
 			internal_update_fixed_size
 
 			-- `a_widget' will not have resize actions since it was in EV_FIXED
-			--	a_widget.resize_actions.force_extend (agent update_fixed_size)
+			--	a_widget.resize_actions.extend (agent (x, y, w, h: INTEGER) do update_fixed_size end)
 		ensure
 			set: internal_custom_widget = a_widget
 		end
@@ -767,14 +767,14 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

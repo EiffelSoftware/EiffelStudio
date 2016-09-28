@@ -27,7 +27,7 @@ inherit
 			interface,
 			set_default_colors,
 			refresh_now,
-			create_file_drop_actions
+			init_file_drop_actions
 		end
 
 	EV_SIZEABLE_IMP
@@ -45,15 +45,15 @@ inherit
 			interface
 		end
 
+	EV_WIDGET_ACTION_SEQUENCES_I
+		redefine
+			init_file_drop_actions
+		end
+
 	EV_WEL_KEY_CONVERSION
 		rename
 			Key_down as Key_down_arrow,
 			Key_up as Key_up_arrow
-		end
-
-	EV_WIDGET_ACTION_SEQUENCES_IMP
-		redefine
-			create_file_drop_actions
 		end
 
 	WEL_WINDOWS_ROUTINES
@@ -479,6 +479,19 @@ feature -- Element change
 					invalidate
 				end
 			end
+		end
+
+feature -- Event handling
+
+	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
+			-- Create and initialize
+		do
+			a_file_drop_actions.not_empty_actions.extend (agent enable_drag_accept_files)
+			a_file_drop_actions.empty_actions.extend (agent disable_drag_accept_files)
+		end
+
+	init_resize_actions (a_resize_actions: like resize_actions)
+		do
 		end
 
 feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP, EV_WIDGET_IMP} -- Implementation
@@ -1557,14 +1570,6 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	create_file_drop_actions: like file_drop_actions
-			-- Create and initialize
-		do
-			create Result
-			Result.not_empty_actions.extend (agent enable_drag_accept_files)
-			Result.empty_actions.extend (agent disable_drag_accept_files)
-		end
-
 	enable_drag_accept_files
 			-- Allow `Current' to be a file drag and drop target.
 		deferred
@@ -1609,6 +1614,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	convert_from_wel_constant (a_wel_constant: INTEGER): INTEGER
+			-- Convert from {WEL_SB_CONSTANTS} `a_wel_constant' to {EV_SCROLL_CONSTANTS}
+		require
+			valid_constant: True
+		do
+			inspect
+				a_wel_constant
+			when {WEL_SB_CONSTANTS}.Sb_bottom then
+				Result := {EV_SCROLL_CONSTANTS}.bottom
+			when {WEL_SB_CONSTANTS}.Sb_endscroll then
+				Result := {EV_SCROLL_CONSTANTS}.end_scroll
+			when {WEL_SB_CONSTANTS}.Sb_linedown then
+				Result := {EV_SCROLL_CONSTANTS}.line_down
+			when {WEL_SB_CONSTANTS}.Sb_lineup then
+				Result := {EV_SCROLL_CONSTANTS}.line_up
+			when {WEL_SB_CONSTANTS}.Sb_pagedown then
+				Result := {EV_SCROLL_CONSTANTS}.page_down
+			when {WEL_SB_CONSTANTS}.Sb_pageup then
+				Result := {EV_SCROLL_CONSTANTS}.page_up
+			when {WEL_SB_CONSTANTS}.Sb_thumbposition then
+				Result := {EV_SCROLL_CONSTANTS}.thumb_position
+			when {WEL_SB_CONSTANTS}.Sb_thumbtrack then
+				Result := {EV_SCROLL_CONSTANTS}.thumb_track
+			when {WEL_SB_CONSTANTS}.Sb_top then
+				Result := {EV_SCROLL_CONSTANTS}.top
+			else
+				check invalid: False end
+			end
+		ensure
+			valid: (create {EV_SCROLL_CONSTANTS}).is_valid (Result)
+		end
+
 feature -- Feature that should be directly implemented by externals
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER)
@@ -1628,7 +1667,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

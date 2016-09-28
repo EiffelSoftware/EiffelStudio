@@ -16,21 +16,17 @@ feature -- Event handling
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when a tree item is selected.
 		do
-			if select_actions_internal = Void then
-				select_actions_internal :=
-					 create_select_actions
+			if attached select_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				select_actions_internal := Result
 			end
-			Result := select_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-		deferred
-		end
 
 	select_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `select_actions'.
@@ -44,21 +40,17 @@ feature -- Event handling
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when a tree item is deselected.
 		do
-			if deselect_actions_internal = Void then
-				deselect_actions_internal :=
-					 create_deselect_actions
+			if attached deselect_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				deselect_actions_internal := Result
 			end
-			Result := deselect_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a deselect action sequence.
-		deferred
-		end
 
 	deselect_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `deselect_actions'.

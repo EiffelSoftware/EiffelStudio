@@ -33,8 +33,6 @@ inherit
 			accelerators_enabled
 		end
 
-	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
-
 create
 	make
 

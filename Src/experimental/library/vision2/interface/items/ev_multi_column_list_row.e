@@ -41,11 +41,6 @@ inherit
 		end
 
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES
-		undefine
-			copy, is_equal
-		redefine
-			implementation
-		end
 
 create
 	default_create

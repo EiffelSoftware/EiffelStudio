@@ -24,7 +24,6 @@ inherit
 			interface,
 			insert_text,
 			make,
-			create_change_actions,
 			dispose,
 			text_length,
 			visual_widget,
@@ -57,6 +56,7 @@ feature {NONE} -- Initialization
 			{GTK}.gtk_container_add (c_object, scrolled_window)
 			text_view := {GTK2}.gtk_text_view_new
 			text_buffer := {GTK2}.gtk_text_view_get_buffer (text_view)
+			text_buffer := {GTK2}.g_object_ref (text_buffer)
 			{GTK}.gtk_widget_show (text_view)
 			{GTK}.gtk_container_add (scrolled_window, text_view)
 			{GTK}.gtk_widget_set_size_request (text_view, 1, 1)
@@ -64,15 +64,8 @@ feature {NONE} -- Initialization
 
 			enable_word_wrapping
 			set_editable (True)
-			set_background_color ((create {EV_STOCK_COLORS}).white)
 			initialize_buffer_events
 			Precursor {EV_TEXT_COMPONENT_IMP}
-		end
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Hook up the change actions for the text widget
-		do
-			Result := Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	initialize_buffer_events
@@ -107,29 +100,29 @@ feature -- Status report
 			Result := Result.max (1)
 		end
 
-        first_visible_line: INTEGER
-                        -- <Precursor>
-                local
-                        l_buffer_x, l_buffer_y: INTEGER
-                        l_iter: EV_GTK_TEXT_ITER_STRUCT
-                do
-                                -- Convert coordinates from the top left of the text view window to the portion of the
-                                -- text buffer it represents.
-                        {GTK2}.gtk_text_view_window_to_buffer_coords (text_view, 1, 0, 0, $l_buffer_x, $l_buffer_y)
+	first_visible_line: INTEGER
+			-- <Precursor>
+		local
+			l_buffer_x, l_buffer_y: INTEGER
+			l_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+				-- Convert coordinates from the top left of the text view window to the portion of the
+				-- text buffer it represents.
+			{GTK2}.gtk_text_view_window_to_buffer_coords (text_view, 1, 0, 0, $l_buffer_x, $l_buffer_y)
 
-                                -- Retrieve the GtkTextIter corresponding to the buffer location.
-                        create l_iter.make
-                        {GTK2}.gtk_text_view_get_iter_at_location (text_view, l_iter.item, l_buffer_x, l_buffer_y)
-                        from
-                                        -- Iterate from the GtkTextIter and count the number of display lines until the start of
-                                        -- the document is reached (ie: if word wrapped then the visible number of lines)
-                                Result := 1
-                        until
-                                not {GTK2}.gtk_text_view_backward_display_line (text_view, l_iter.item)
-                        loop
-                                Result := Result + 1
-                        end
-                end
+				-- Retrieve the GtkTextIter corresponding to the buffer location.
+			create l_iter.make
+			{GTK2}.gtk_text_view_get_iter_at_location (text_view, l_iter.item, l_buffer_x, l_buffer_y)
+			from
+					-- Iterate from the GtkTextIter and count the number of display lines until the start of
+					-- the document is reached (ie: if word wrapped then the visible number of lines)
+				Result := 1
+			until
+				not {GTK2}.gtk_text_view_backward_display_line (text_view, l_iter.item)
+			loop
+				Result := Result + 1
+			end
+		end
 
 	is_editable: BOOLEAN
 			-- Is the text editable by the user?
@@ -140,16 +133,42 @@ feature -- Status report
 			Result := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
 		end
 
-	selection_start: INTEGER
-			-- Index of the first character selected.
+	start_selection: INTEGER
+			-- <Precursor>
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
 		do
-			Result := selection_start_internal
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.min (a_end_offset) + 1
+			else
+				Result := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item) + 1
+			end
 		end
 
-	selection_end: INTEGER
-			-- Index of the last character selected.
+	end_selection: INTEGER
+			-- <Precursor>
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
 		do
-			Result := selection_end_internal
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.max (a_end_offset) + 1
+			else
+				Result := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item) + 1
+			end
 		end
 
 	selected_text: STRING_32
@@ -158,6 +177,7 @@ feature -- Status report
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_selected: BOOLEAN
 			l_char: POINTER
+			l_str: EV_GTK_C_STRING
 		do
 			create a_start_iter.make
 			create a_end_iter.make
@@ -165,7 +185,8 @@ feature -- Status report
 			if a_selected then
 				l_char := {GTK2}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
 				if l_char /= default_pointer then
-					create Result.make_from_c (l_char)
+					create l_str.share_from_pointer (l_char)
+					Result := l_str.string
 				else
 					Result := ""
 				end
@@ -591,40 +612,6 @@ feature {NONE} -- Implementation
 			Result := text_view
 		end
 
-	selection_start_internal: INTEGER
-			-- Index of the first character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
-		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.min (a_end_offset) + 1
-			end
-		end
-
-	selection_end_internal: INTEGER
-			-- Index of the last character selected.
-		local
-			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER
-		do
-			create a_start_iter.make
-			create a_end_iter.make
-			a_selected := {GTK2}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
-			if a_selected then
-				a_start_offset := {GTK2}.gtk_text_iter_get_offset (a_start_iter.item)
-				a_end_offset := {GTK2}.gtk_text_iter_get_offset (a_end_iter.item)
-				Result := a_start_offset.max (a_end_offset)
-			end
-		end
-
 	dispose
 			-- Clean up `Current'
 		do
@@ -679,7 +666,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -34,11 +34,6 @@ inherit
 		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES
-		undefine
-			is_equal
-		redefine
-			implementation
-		end
 
 feature {NONE} -- Initialization
 

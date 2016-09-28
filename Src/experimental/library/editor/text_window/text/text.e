@@ -75,7 +75,7 @@ feature -- Content Change
 			read_enough_lines: number_of_lines >= first_read_block_size or else reading_text_finished
 		end
 
-feature {TEXT_PANEL} -- Content Change		
+feature  {TEXT_PANEL} -- Content Change		
 
 	flush
 			-- Load texts immediately
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 		end
 
 	execute_lexer_with_wide_string (a_string: READABLE_STRING_GENERAL)
-			-- Excute the lexer with wide string.
+			-- Execute the lexer with wide string.
 			-- Convert the string back to `lexer.current_encoding' first.
 		require
 			a_string_not_void: a_string /= Void
@@ -621,7 +621,7 @@ invariant
 	positive_current_pos: current_pos > 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

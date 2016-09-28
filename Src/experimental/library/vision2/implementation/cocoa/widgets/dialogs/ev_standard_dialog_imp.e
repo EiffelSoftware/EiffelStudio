@@ -17,8 +17,6 @@ inherit
 --			make
 		end
 
-	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
-
 	EV_ANY_IMP
 		undefine
 			dispose,

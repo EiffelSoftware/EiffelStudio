@@ -27,8 +27,6 @@ inherit
 			interface
 		end
 
-	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
-
 create
 	make
 
@@ -72,7 +70,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_CHECKABLE_TREE note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

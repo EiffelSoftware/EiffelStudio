@@ -261,15 +261,15 @@ feature -- Drawing operations
 			implementation.draw_text (x, y, a_text)
 		end
 
---	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: READABLE_STRING_GENERAL) is
---			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
---			-- Rotation is number of `angle' radians counter-clockwise from horizontal plane.
---		require
---			not_destroyed: not is_destroyed
---			a_text_not_void: a_text /= Void
---		do
---			implementation.draw_rotated_text (x, y, angle, a_text)
---		end
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: READABLE_STRING_GENERAL)
+			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Rotation is number of `angle' radians counter-clockwise from horizontal plane.
+		require
+			not_destroyed: not is_destroyed
+			a_text_not_void: a_text /= Void
+		do
+			implementation.draw_rotated_text (x, y, angle, a_text)
+		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: READABLE_STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
@@ -552,14 +552,14 @@ invariant
 	drawing_mode_valid: is_usable implies valid_drawing_mode (drawing_mode)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EV_DRAWABLE

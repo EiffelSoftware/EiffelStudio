@@ -169,7 +169,7 @@ feature -- Status report
 			else
 				create Result.make_empty
 			end
-			Result.append_string (" pos_in_text=")
+			Result.append_string (" @")
 			Result.append_integer (pos_in_text)
 		end
 
@@ -660,7 +660,7 @@ invariant
 	previous = Void implies position = 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

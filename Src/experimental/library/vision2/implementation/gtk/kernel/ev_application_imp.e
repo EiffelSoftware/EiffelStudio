@@ -13,12 +13,11 @@ class
 inherit
 	EV_APPLICATION_I
 		export
-			{EV_INTERMEDIARY_ROUTINES}
+			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
 				pointer_motion_actions_internal,
 				pointer_button_press_actions_internal,
 				pointer_double_press_actions_internal,
-				pointer_button_release_actions_internal
-			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
+				pointer_button_release_actions_internal,
 				is_destroyed
 		undefine
 			dispose
@@ -1250,7 +1249,7 @@ feature -- Implementation
 		do
 			if debugger_is_disabled then
 				debugger_is_disabled := False
-				restore_debug_state (saved_debug_state)
+				set_debug_state (saved_debug_state)
 			end
 		end
 
@@ -1260,7 +1259,7 @@ feature -- Implementation
 			if not debugger_is_disabled then
 				debugger_is_disabled := True
 				saved_debug_state := debug_state
-				discard_debug
+				disable_debug
 			end
 		end
 

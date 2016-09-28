@@ -21,8 +21,6 @@ inherit
 			remove_i_th
 		end
 
-	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
-
 feature {EV_MENU_ITEM_IMP} -- implementation
 
 	list_widget: POINTER
@@ -265,7 +263,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MENU_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

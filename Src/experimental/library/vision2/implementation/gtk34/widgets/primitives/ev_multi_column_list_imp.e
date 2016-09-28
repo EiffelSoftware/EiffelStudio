@@ -13,7 +13,8 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-				column_widths, update_column_width
+				column_widths, update_column_width, column_resized_actions_internal,
+				column_title_click_actions_internal
 		redefine
 			interface,
 			make,
@@ -37,7 +38,6 @@ inherit
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
 			call_button_event_actions,
-			create_pointer_motion_actions,
 			visual_widget,
 			on_pointer_motion,
 			pebble_source,
@@ -54,12 +54,6 @@ inherit
 			interface,
 			wipe_out,
 			make
-		end
-
-	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
-		export
-				{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-					all
 		end
 
 	EV_PND_DEFERRED_ITEM_PARENT
@@ -200,12 +194,6 @@ feature {NONE} -- Implementation
 	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		-- Previous selection of `Current'
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		do
-			create Result
-		end
-
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	call_button_event_actions (
@@ -224,7 +212,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			if a_type /= {GTK}.gdk_button_release_enum then
-				a_gdkwin := {GTK}.gdk_window_at_pointer ($l_x, $l_y)
+				a_gdkwin := {GDK_HELPERS}.window_at ($l_x, $l_y)
 				if a_gdkwin /= default_pointer then
 					{GTK}.gdk_window_get_user_data (a_gdkwin, $a_gtkwid)
 					if a_gtkwid = tree_view then
@@ -698,7 +686,6 @@ feature -- Element change
 		local
 			alignment: REAL
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
 			i: INTEGER
 		do
 			if an_alignment.is_left_aligned then
@@ -713,12 +700,11 @@ feature -- Element change
 			a_cell_rend_list := {GTK}.gtk_cell_layout_get_cells (a_column_ptr)
 			from
 				i := 0
-				a_gtk_c_str := "xalign"
 			until
 				i = {GTK}.g_list_length (a_cell_rend_list)
 			loop
 				a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, i)
-				{GTK2}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
+				{GTK2}.g_object_set_real_32 (a_cell_rend, {GTK_PROPERTIES}.xalign, alignment)
 				i := i + 1
 			end
 
@@ -730,7 +716,6 @@ feature -- Element change
 			-- Make `value' the new height of all the rows.
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
-			a_gtk_c_str: EV_GTK_C_STRING
 			a_vert_sep: INTEGER
 		do
 			a_column_ptr := {GTK2}.gtk_tree_view_get_column (tree_view, 0)
@@ -738,11 +723,9 @@ feature -- Element change
 			a_cell_rend := {GTK}.g_list_nth_data (a_cell_rend_list, 0)
 
 				-- Row height setting has to take the vertical spacing of the tree view in to account
-			a_gtk_c_str := "vertical-separator"
-			{GTK2}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			{GTK2}.gtk_widget_style_get_integer (tree_view, {GTK_PROPERTIES}.vertical_separator, $a_vert_sep)
 
-			a_gtk_c_str := "height"
-			{GTK2}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{GTK2}.g_object_set_integer (a_cell_rend, {GTK_PROPERTIES}.height, value - a_vert_sep)
 			{GTK}.g_list_free (a_cell_rend_list)
 		end
 
@@ -903,8 +886,7 @@ feature -- Implementation
 			end
 
 			if attached pebble_function as l_pebble_function then
-				l_pebble_function.call ([a_x, a_y]);
-				pebble := l_pebble_function.last_result
+				pebble := l_pebble_function.item ([a_x, a_y]);
 			end
 		end
 
@@ -1167,7 +1149,7 @@ feature {NONE} -- Implementation
 				create a_tree_iter.make
 				item_imp.set_list_iter (a_tree_iter)
 				{GTK2}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
-				update_child (item_imp, ev_children.count)
+				update_child (item_imp, i)
 
 				if item_imp.is_transport_enabled then
 					update_pnd_connection (True)
@@ -1240,7 +1222,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

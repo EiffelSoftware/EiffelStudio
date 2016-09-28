@@ -59,9 +59,6 @@ feature -- Basic operations
 			else
 				create l_header.make (header_entry)
 				headers.put (l_header, header_key)
-				if Default_headers.has (header_key) then
-					l_header.enable_contains_addresses
-				end
 			end
 		end
 
@@ -76,9 +73,6 @@ feature -- Basic operations
 			else
 				create l_header.make_with_entries (header_entries)
 				headers.put (l_header, header_key)
-				if Default_headers.has (header_key) then
-					l_header.enable_contains_addresses
-				end
 			end
 		end
 

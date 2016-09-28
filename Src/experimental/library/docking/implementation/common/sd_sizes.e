@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Singleton which has all sizes used in Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -161,10 +161,10 @@ feature {NONE} -- Implementation
 
 feature -- Singleton slots realted with tool bar font.
 
-	Tool_bar_font_cell: CELL [detachable EV_FONT]
+	Tool_bar_font_cell: CELL [EV_FONT]
 			-- Tool bar font singleton cell.
 		once
-			create Result.put (Void)
+			create Result.put (create {EV_FONT})
 		ensure
 			not_void: Result /= Void
 		end
@@ -249,7 +249,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

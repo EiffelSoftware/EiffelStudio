@@ -10,8 +10,11 @@ class
 
 inherit
 	EV_TEXT_FIELD_I
+		export
+			{EV_INTERMEDIARY_ROUTINES} return_actions_internal
 		redefine
 			interface,
+			return_actions,
 			hide_border
 		end
 
@@ -19,7 +22,6 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			create_change_actions,
 			needs_event_box,
 			on_key_event,
 			set_minimum_width_in_characters,
@@ -30,14 +32,6 @@ inherit
 		redefine
 			interface,
 			visual_widget
-		end
-
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES}
-				return_actions_internal
-		redefine
-			create_return_actions
 		end
 
 create
@@ -181,11 +175,16 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create an initialize return actions for `Current'.
+	return_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- <Precursor>
 		do
-			create Result
-			real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+			if attached return_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+				return_actions_internal := Result
+			end
 		end
 
 feature -- Status report
@@ -204,7 +203,7 @@ feature -- Status report
 			Result := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 		end
 
-	selection_start: INTEGER
+	start_selection: INTEGER
 			-- Index of the first character selected.
 		local
 			a_start, a_end: INTEGER
@@ -214,14 +213,14 @@ feature -- Status report
 			Result := a_start + 1
 		end
 
-	selection_end: INTEGER
+	end_selection: INTEGER
 			-- Index of the last character selected.
 		local
 			a_start, a_end: INTEGER
 			has_sel: BOOLEAN
 		do
 			has_sel := {GTK2}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
-			Result := a_end
+			Result := a_end + 1
 		end
 
 	clipboard_content: STRING_32
@@ -344,11 +343,6 @@ feature -- Basic operation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-		do
-			create Result
-		end
-
 	stored_text: detachable STRING_32
 			-- Value of 'text' prior to a change action, used to compare
 			-- between old and new text.
@@ -399,7 +393,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

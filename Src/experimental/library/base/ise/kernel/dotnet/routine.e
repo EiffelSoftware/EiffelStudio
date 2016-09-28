@@ -2,7 +2,7 @@
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -75,9 +75,7 @@ feature -- Access
 	frozen target: detachable ANY
 			-- Target of call.
 		do
-			if attached {ANY} target_object as r then
-				Result := r
-			end
+			Result := target_object
 		end
 
 	hash_code: INTEGER
@@ -157,8 +155,7 @@ feature -- Status report
 	valid_operands (args: detachable TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
-			i, arg_type_code: INTEGER
-			arg: detachable ANY
+			i: INTEGER
 		do
 			if args = Void or open_map = Void then
 					-- Void operands are only allowed
@@ -171,10 +168,8 @@ feature -- Status report
 				until
 					i > l_open_map.count or not Result
 				loop
-					arg_type_code := args.item_code (i)
-					if arg_type_code = {TUPLE}.reference_code then
-						arg := args.item (i)
-						Result := arg = Void or else
+					if args.item_code (i) = {TUPLE}.reference_code then
+						Result := attached args [i] as arg implies
 							arg.generating_type.conforms_to (open_operand_type (i))
 					else
 							-- We provided a closed argument which is expanded, we have to ensure
@@ -483,10 +478,9 @@ feature {NONE} -- Implementation
 				create l_open_types.make_filled (Void, 1, open_count)
 				open_types := l_open_types
 			end
-			if attached l_open_types.item (i) as l_type then
-				Result := l_type
-			else
-				Result := generating_type.generic_parameter_type (2).generic_parameter_type (i)
+			Result := l_open_types [i]
+			if not attached Result then
+				Result := generating_type.generic_parameter_type (1).generic_parameter_type (i)
 				l_open_types.force (Result, i)
 			end
 		end
@@ -516,7 +510,7 @@ feature -- Obsolete
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -526,4 +520,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ROUTINE
+end

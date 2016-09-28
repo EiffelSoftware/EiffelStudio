@@ -16,21 +16,17 @@ feature -- Event handling
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
-			if pointer_motion_actions_internal = Void then
-				pointer_motion_actions_internal :=
-					 create_pointer_motion_actions
+			if attached pointer_motion_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				pointer_motion_actions_internal := Result
 			end
-			Result := pointer_motion_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Create a pointer_motion action sequence.
-		deferred
-		end
 
 	pointer_motion_actions_internal: detachable EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_motion_actions'.
@@ -44,21 +40,17 @@ feature -- Event handling
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
-			if pointer_button_press_actions_internal = Void then
-				pointer_button_press_actions_internal :=
-					 create_pointer_button_press_actions
+			if attached pointer_button_press_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				pointer_button_press_actions_internal := Result
 			end
-			Result := pointer_button_press_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Create a pointer_button_press action sequence.
-		deferred
-		end
 
 	pointer_button_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_button_press_actions'.
@@ -72,21 +64,17 @@ feature -- Event handling
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
-			if pointer_double_press_actions_internal = Void then
-				pointer_double_press_actions_internal :=
-					 create_pointer_double_press_actions
+			if attached pointer_double_press_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				pointer_double_press_actions_internal := Result
 			end
-			Result := pointer_double_press_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
-			-- Create a pointer_double_press action sequence.
-		deferred
-		end
 
 	pointer_double_press_actions_internal: detachable EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_double_press_actions'.

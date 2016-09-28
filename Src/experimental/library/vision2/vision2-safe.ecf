@@ -133,12 +133,12 @@
 			<condition>
 				<platform value="windows"/>
 			</condition>
-		</library>		
+		</library>
 		<library name="c_library_zlib" location="$ISE_LIBRARY\C_library\zlib\clibs_zlib-safe.ecf">
 			<condition>
 				<platform value="windows"/>
 			</condition>
-		</library>		
+		</library>
 		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa-safe.ecf" readonly="false">
 			<condition>
 				<platform value="macintosh"/>
@@ -240,5 +240,8 @@
 	<target name="vision2_cocoa" extends="vision2">
 		<setting name="platform" value="macintosh"/>
 		<variable name="vision_implementation" value="cocoa"/>
+	</target>
+	<target name="vision2_gtk34" extends="vision2">
+		<variable name="vision_implementation" value="gtk34"/>
 	</target>
 </system>

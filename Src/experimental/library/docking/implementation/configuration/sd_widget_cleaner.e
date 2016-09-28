@@ -1,7 +1,5 @@
-note
-	description: "[
-					Cleaner to reset widgets, then the widgets will be useable again
-																						]"
+﻿note
+	description: "Cleaner to reset widgets, then the widgets will be useable again."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -78,7 +76,7 @@ feature -- Command
 				l_floating_zones.after
 			loop
 				l_item := l_floating_zones.item
-				
+
 				internal_docking_manager.inner_containers.start
 				internal_docking_manager.inner_containers.prune (l_item.inner_container)
 
@@ -124,10 +122,6 @@ feature -- Command
 				l_all_main_containers.after
 			loop
 				l_all_main_containers.item.wipe_out
-
-				if l_all_main_containers.index = 1 then
-					l_all_main_containers.item.wipe_out
-				end
 				l_all_main_containers.forth
 			end
 
@@ -287,14 +281,14 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

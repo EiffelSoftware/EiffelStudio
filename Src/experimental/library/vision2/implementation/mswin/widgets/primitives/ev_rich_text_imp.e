@@ -188,11 +188,6 @@ inherit
 			{NONE} all
 		end
 
-	EV_RICH_TEXT_ACTION_SEQUENCES_IMP
-		export
-			{NONE} all
-		end
-
 	EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		export
 			{NONE} all

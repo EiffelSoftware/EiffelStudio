@@ -13,21 +13,17 @@ feature -- Event handling
 	check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when an item is checked.
 		do
-			if check_actions_internal = Void then
-				check_actions_internal :=
-					 create_check_actions
+			if attached check_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				check_actions_internal := Result
 			end
-			Result := check_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_check_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
-			-- Create a check action sequence.
-		deferred
-		end
 
 	check_actions_internal: detachable EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Implementation of once per object `check_actions'.
@@ -41,21 +37,17 @@ feature -- Event handling
 	uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Actions to be performed when an item is unchecked.
 		do
-			if uncheck_actions_internal = Void then
-				uncheck_actions_internal :=
-					 create_uncheck_actions
+			if attached uncheck_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				uncheck_actions_internal := Result
 			end
-			Result := uncheck_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_uncheck_actions: EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
-			-- Create a uncheck action sequence.
-		deferred
-		end
 
 	uncheck_actions_internal: detachable EV_TREE_ITEM_CHECK_ACTION_SEQUENCE
 			-- Implementation of once per object `uncheck_actions'.

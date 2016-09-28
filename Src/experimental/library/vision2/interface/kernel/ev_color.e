@@ -152,7 +152,7 @@ feature -- Access
 		end
 
 	hue: REAL
-			-- Hue of the color
+			-- Hue of the color in radiant. Multiply by 60 to get in degree.
 		require
 			not_destroyed: not is_destroyed
 		local

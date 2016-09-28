@@ -14,10 +14,12 @@ feature -- Access
 	item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when resizing begins on a header item.
 		do
-			if item_resize_start_actions_internal = Void then
-				item_resize_start_actions_internal := create_item_resize_start_actions
+			if attached item_resize_start_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_resize_start_actions_internal := Result
 			end
-			Result := item_resize_start_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -25,10 +27,12 @@ feature -- Access
 	item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed as a header item is resized.
 		do
-			if item_resize_actions_internal = Void then
-				item_resize_actions_internal := create_item_resize_actions
+			if attached item_resize_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_resize_actions_internal := Result
 			end
-			Result := item_resize_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -36,10 +40,12 @@ feature -- Access
 	item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Actions to be performed when resizing completes on a header item.
 		do
-			if item_resize_end_actions_internal = Void then
-				item_resize_end_actions_internal := create_item_resize_end_actions
+			if attached item_resize_end_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_resize_end_actions_internal := Result
 			end
-			Result := item_resize_end_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -52,10 +58,12 @@ feature -- Access
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- button_number: INTEGER -- The mouse button number.
 		do
-			if item_pointer_double_press_actions_internal = Void then
-				item_pointer_double_press_actions_internal := create_item_pointer_double_press_actions
+			if attached item_pointer_double_press_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_pointer_double_press_actions_internal := Result
 			end
-			Result := item_pointer_double_press_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -68,10 +76,12 @@ feature -- Access
 			-- y_pos: INTEGER -- The y position of the motion in grid virtual coordinates.
 			-- button_number: INTEGER -- The mouse button number.
 		do
-			if item_pointer_button_press_actions_internal = Void then
-				item_pointer_button_press_actions_internal := create_item_pointer_button_press_actions
+			if attached item_pointer_button_press_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				item_pointer_button_press_actions_internal := Result
 			end
-			Result := item_pointer_button_press_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
@@ -111,33 +121,6 @@ feature {EV_ANY_I} -- Implementation
 		note
 			option: stable
 		attribute
-		end
-
-	create_item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
-			-- Create an item resize actions.
-		deferred
-		end
-
-	create_item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
-			-- Create an item resize start actions.
-		deferred
-		end
-
-	create_item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
-			-- Create an item resize end actions.
-		deferred
-		end
-
-	create_item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
-			-- Create an item button press actions.
-		do
-			create Result
-		end
-
-	create_item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [detachable EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
-			-- Create an item double press actions.
-		do
-			create Result
 		end
 
 note

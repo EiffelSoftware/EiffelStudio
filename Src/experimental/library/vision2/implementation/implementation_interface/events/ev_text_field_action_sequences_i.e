@@ -16,21 +16,17 @@ feature -- Event handling
 	return_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when return key is pressed.
 		do
-			if return_actions_internal = Void then
-				return_actions_internal :=
-					 create_return_actions
+			if attached return_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				return_actions_internal := Result
 			end
-			Result := return_actions_internal
 		ensure
 			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a return action sequence.
-		deferred
-		end
 
 	return_actions_internal: detachable EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `return_actions'.

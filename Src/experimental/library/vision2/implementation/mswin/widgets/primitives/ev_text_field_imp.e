@@ -19,7 +19,7 @@ inherit
 		end
 
 	EV_TEXT_COMPONENT_IMP
-		
+
 		redefine
 			on_key_down,
 			interface,
@@ -108,8 +108,6 @@ inherit
 			disable,
 			text
 		end
-
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
 
 create
 	make

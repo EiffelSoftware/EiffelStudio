@@ -13,6 +13,7 @@ class
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
 		redefine
+			init_select_actions,
 			interface
 		end
 
@@ -20,7 +21,7 @@ inherit
 		redefine
 			interface,
 			set_item_parent_imp,
-			create_select_actions,
+			init_select_actions,
 			new_tool_bar_button
 		end
 
@@ -60,11 +61,9 @@ feature -- Status report
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a select action sequence.
-			-- Attach to GTK "clicked" signal.
+	init_select_actions (a_select_actions: EV_NOTIFY_ACTION_SEQUENCE)
+			-- <Precursor>
 		do
-			create Result
 			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
@@ -101,7 +100,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface of `Current'
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

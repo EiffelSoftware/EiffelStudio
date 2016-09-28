@@ -60,13 +60,13 @@ feature -- Access
 	default_pointer_style_width: INTEGER
 			-- Default pointer style width.
 		do
-			Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
+			Result := {GDK_HELPERS}.default_cursor_size
 		end
 
 	default_pointer_style_height: INTEGER
 			-- Default pointer style height.
 		do
-			Result := {GTK2}.gdk_display_get_default_cursor_size ({GTK2}.gdk_display_get_default)
+			Result := {GDK_HELPERS}.default_cursor_size
 		end
 
 	has_printer: BOOLEAN
@@ -89,7 +89,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

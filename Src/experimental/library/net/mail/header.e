@@ -60,8 +60,9 @@ feature -- Status setting
 		end
 
 	enable_contains_addresses
+		obsolete
+			"Implementation was never used, so no need to call this routine."
 		do
-			contains_addresses:= True
 		end
 
 feature -- Basic operations
@@ -106,9 +107,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-
-	contains_addresses: BOOLEAN
-			-- Does header contain addresses?
 
 	from_array_to_entries (src: ARRAY [STRING])
 			-- Convert 'array' into entries.

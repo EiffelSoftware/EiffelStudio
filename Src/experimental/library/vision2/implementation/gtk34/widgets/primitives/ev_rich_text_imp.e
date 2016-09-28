@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			tab_positions.internal_add_actions.extend (agent update_tab_positions)
 			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 
-			pango_tab_array := {GTK2}.pango_tab_array_new (1, True)
+			pango_tab_array := {PANGO}.tab_array_new (1, True)
 			{GTK2}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 			set_tab_width (96 // 2)
 		end
@@ -53,24 +53,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TEXT_IMP}
 			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), Void)
-		end
-
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a caret move action sequence.
-		do
-			create Result
-		end
-
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create a selection change action sequence.
-		do
-			create Result
-		end
-
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
-			-- Create a file access action sequence.
-		do
-			create Result
 		end
 
 feature {NONE} -- Implementation
@@ -159,7 +141,6 @@ feature -- Status Report
 			font_family_contiguous: BOOLEAN
 			a_change: BOOLEAN
 			exit_loop: BOOLEAN
-			l_color, l_prev_color: POINTER
 		do
 			from
 				font_family_contiguous := True
@@ -169,7 +150,7 @@ feature -- Status Report
 				previous_text_attributes := gtk_text_view_get_default_attributes (text_view)
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, previous_text_attributes)
 				a_text_attributes := gtk_text_view_get_default_attributes (text_view)
-				create previous_font_family.make_from_c ({GTK2}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
+				create previous_font_family.make_from_c ({PANGO}.font_description_get_family (gtk_text_attributes_struct_font_description (previous_text_attributes)))
 			until
 				exit_loop or else a_character_index = end_index
 			loop
@@ -179,7 +160,7 @@ feature -- Status Report
 				a_change := gtk_text_iter_get_attributes (a_text_iter.item, a_text_attributes)
 
 				if font_family_contiguous then
-					create font_family.make_from_c ({GTK2}.pango_font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
+					create font_family.make_from_c ({PANGO}.font_description_get_family (gtk_text_attributes_struct_font_description (a_text_attributes)))
 
 					if font_family.hash_code /= previous_font_family.hash_code then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
@@ -188,30 +169,46 @@ feature -- Status Report
 					previous_font_family := font_family
 				end
 
-				if {GTK2}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_style (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				end
 
-				if {GTK2}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_weight (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				end
 
-				if {GTK2}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
-					{GTK2}.pango_font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes)) then
+				if
+					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (a_text_attributes)) /=
+					{PANGO}.font_description_get_size (gtk_text_attributes_struct_font_description (previous_text_attributes))
+				then
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 				end
 
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), foreground_rgba_string.item, $l_color)
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), foreground_rgba_string.item, $l_prev_color)
-				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+				if
+					{GDK}.color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_red (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_green (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_fg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes)))
+				then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 				end
 
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (a_text_attributes), background_rgba_string.item, $l_color)
-				{GTK2}.g_object_get_pointer (gtk_text_attributes_struct_text_appearance (previous_text_attributes), background_rgba_string.item, $l_prev_color)
-				if not {GTK}.gdk_rgba_equal (l_color, l_prev_color) then
+				if
+					{GDK}.color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_red (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_green (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes))) or else
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (a_text_attributes))) /=
+					{GDK}.color_struct_blue (gtk_text_appearance_struct_bg_color (gtk_text_attributes_struct_text_appearance (previous_text_attributes)))
+				then
 					non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 				end
 
@@ -230,7 +227,7 @@ feature -- Status Report
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
 				end
 
-				gtk_text_attributes_free (previous_text_attributes)
+				gtk_text_attributes_unref (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
 
 				a_character_index := a_character_index + 1
@@ -241,7 +238,7 @@ feature -- Status Report
 				end
 			end
 
-			gtk_text_attributes_free (previous_text_attributes)
+			gtk_text_attributes_unref (previous_text_attributes)
 
 			a_text_iter.memory_free
 
@@ -309,13 +306,13 @@ feature -- Status Report
 						non_contiguous_range_information := non_contiguous_range_information.bit_or ({EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
 				end
 
-				gtk_text_attributes_free (previous_text_attributes)
+				gtk_text_attributes_unref (previous_text_attributes)
 				previous_text_attributes := a_text_attributes
 
 				a_character_index := a_character_index + 1
 			end
 
-			gtk_text_attributes_free (previous_text_attributes)
+			gtk_text_attributes_unref (previous_text_attributes)
 
 			create Result.make_with_flags ((31).bit_xor (non_contiguous_range_information))
 				-- 31 is the mask value for paragraph format constants
@@ -353,7 +350,7 @@ feature -- Status Report
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
 		do
-			Result := paragraph_format (selection_start)
+			Result := paragraph_format (start_selection)
 		end
 
 	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
@@ -407,13 +404,13 @@ feature -- Status Report
 			elseif a_justification = {GTK}.gtk_justify_fill_enum then
 				Result.enable_justification
 			end
-			gtk_text_attributes_free (a_text_attributes)
+			gtk_text_attributes_unref (a_text_attributes)
 		end
 
 	selected_character_format: EV_CHARACTER_FORMAT
 			-- Format of the character which starts the selection
 		do
-			Result := character_format (selection_start)
+			Result := character_format (start_selection)
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
@@ -484,6 +481,7 @@ feature -- Status report
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_text_attributes, a_text_appearance: POINTER
 			a_font_description: POINTER
+			a_color: POINTER
 			font_size, font_weight, font_style: INTEGER
 			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
@@ -499,9 +497,9 @@ feature -- Status report
 			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.share_from_pointer ({GTK2}.pango_font_description_get_family (a_font_description))
-			font_style := {GTK2}.pango_font_description_get_style (a_font_description)
-			font_weight := {GTK2}.pango_font_description_get_weight (a_font_description)
+			create a_family.share_from_pointer ({PANGO}.font_description_get_family (a_font_description))
+			font_style := {PANGO}.font_description_get_style (a_font_description)
+			font_weight := {PANGO}.font_description_get_weight (a_font_description)
 
 			if font_weight <= {EV_FONT_IMP}.pango_weight_ultra_light then
 				font_weight := {EV_FONT_CONSTANTS}.weight_thin
@@ -512,9 +510,9 @@ feature -- Status report
 			else
 				font_weight := {EV_FONT_CONSTANTS}.weight_black
 			end
-			font_size := {GTK2}.pango_font_description_get_size (a_font_description) // {GTK2}.pango_scale
+			font_size := {PANGO}.font_description_get_size (a_font_description) // {PANGO}.scale
 
-			if {GTK2}.pango_font_description_get_style (a_font_description) > 0 then
+			if {PANGO}.font_description_get_style (a_font_description) > 0 then
 				font_style := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				font_style := {EV_FONT_CONSTANTS}.shape_regular
@@ -522,23 +520,23 @@ feature -- Status report
 
 			l_result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 
---			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.foreground_rgba_string.item, $l_color)
---			l_result.set_fcolor (
---				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
---			)
+			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
+			l_result.set_fcolor (
+				{GDK}.color_struct_red (a_color) // 256,
+				{GDK}.color_struct_green (a_color) // 256,
+				{GDK}.color_struct_blue (a_color) // 256
+			)
 
---			{GTK2}.g_object_get_pointer (a_text_appearance, l_result.background_rgba_string.item, $l_color)
---			l_result.set_bcolor (
---				({GTK}.gdk_rgba_struct_red (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_green (l_color) * 256).truncated_to_integer,
---				({GTK}.gdk_rgba_struct_blue (l_color) * 256).truncated_to_integer
---			)
+			a_color := gtk_text_appearance_struct_bg_color (a_text_appearance)
+			l_result.set_bcolor (
+				{GDK}.color_struct_red (a_color) // 256,
+				{GDK}.color_struct_green (a_color) // 256,
+				{GDK}.color_struct_blue (a_color) // 256
+			)
 
 			l_result.set_effects_internal (gtk_text_appearance_struct_underline (a_text_appearance).to_boolean, gtk_text_appearance_struct_strikethrough (a_text_appearance).to_boolean, gtk_text_appearance_struct_rise (a_text_appearance))
 
---			gtk_text_attributes_free (a_text_attributes)
+			gtk_text_attributes_unref (a_text_attributes)
 			Result := l_result
 		end
 
@@ -708,8 +706,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			if is_displayed then
 					-- We only want text mark events when rich text is displayable to user.
 				if not (a_text_mark = {GTK2}.gtk_text_buffer_get_insert (text_buffer)) then
-					a_selection_start := selection_start_internal
-					a_selection_end := selection_end_internal
+					a_selection_start := start_selection
+					a_selection_end := end_selection
 					if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
 						selection_change_actions_internal.call (Void)
 					end
@@ -822,12 +820,12 @@ feature {NONE} -- Implementation
 				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
 			end
 
-	gtk_text_attributes_free (a_text_attributes: POINTER)
-			external
-				"C inline use <ev_gtk.h>"
-			alias
-				"free ((GtkTextAttributes*) $a_text_attributes)"
-			end
+ 	gtk_text_attributes_unref (a_text_attributes: POINTER)
+ 			external
+ 				"C inline use <ev_gtk.h>"
+ 			alias
+ 				"gtk_text_attributes_unref((GtkTextAttributes *) $a_text_attributes);"
+ 			end
 
 	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER)
 			external
@@ -919,18 +917,18 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			current_tab_position: INTEGER
 		do
-			{GTK2}.pango_tab_array_resize (pango_tab_array, tab_positions.count + 1)
+			{PANGO}.tab_array_resize (pango_tab_array, tab_positions.count + 1)
 			from
 				i := 1
 			until
 				i > tab_positions.count
 			loop
 				current_tab_position := current_tab_position + tab_positions.i_th (i)
-				{GTK2}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position)
+				{PANGO}.tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position)
 				i := i + 1
 			end
 				-- Set the default tab width
-			{GTK2}.pango_tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position + tab_width)
+			{PANGO}.tab_array_set_tab (pango_tab_array, i - 1, 0, current_tab_position + tab_width)
 			{GTK2}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 		end
 
@@ -944,24 +942,12 @@ feature {NONE} -- Implementation
 	append_buffer: POINTER
 		-- Pointer to the GtkTextBuffer used for append buffering.
 
-	foreground_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("foreground-rgba")
-		end
-
-	background_rgba_string: EV_GTK_C_STRING
-			-- String optimization
-		once
-			Result := ("background-rgba")
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

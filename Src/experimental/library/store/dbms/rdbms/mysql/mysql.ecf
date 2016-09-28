@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="mysql">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="mysql" uuid="42078327-FFEB-4A2A-94C6-05166F2DDFCD" library_target="mysql">
+	<description>MySQL access library for EiffelStore.</description>
 	<target name="mysql">
-		<description>MySQL access library for EiffelStore.
-      Copyright (c) 2008-2010, ITPassion Ltd and others
-      GNU Public License v3 (see http://www.gnu.org/licenses/licenses.html#GPL).</description>
+		<description>
+			MySQL access library for EiffelStore.
+			Copyright (c) 2008-2010, ITPassion Ltd, EiffelSoftware and others
+			GNU Public License v3 (see http://www.gnu.org/licenses/licenses.html#GPL).
+
+			Notes:
+			On Windows, you need to have in your environment:
+				$(MYSQL) set to the directory where the MySQL C Connector is installed
+			On Unix, you need to have in your environment:
+				$(MYSQLINC) set to the directory where mysql.h is located.
+				$(MYSQLLIB) set to the directory where libmysqlclient.a is location.
+		</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-
-		<!-- Windows specific external stuff -->
-		<!-- You need to have $(MYSQL) in your environment, set to the
-			directory where the MySQL C Connector is installed -->
+		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		</option>
+		<external_include location="$(MYSQL)\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib"/>
+		<external_include location="$(MYSQLINC)">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<external_object location="$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mysql_store.lib">
 			<condition>
 				<platform value="windows"/>
@@ -22,20 +41,6 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_include location="$(MYSQL)\include">
-			<condition>
-				<platform value="windows" />
-			</condition>
-		</external_include>
-
-		<!-- Shared between platforms -->
-		<external_include location="$(ISE_LIBRARY)/library/store/dbms/rdbms/mysql/Clib" />
-
-		<!-- Unix specific external stuff -->
-		<!-- You need to have $(MYSQLINC) in your environment, set to the
-			directory where mysql.h is located -->
-		<!-- You need to have $(MYSQLLIB) in tour environment, set to the
-			directory where libmysqlclient_r.a is location -->
 		<external_object location="-L$(ISE_LIBRARY)/library/store/spec/$(ISE_PLATFORM)/lib">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -51,16 +56,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="-lmysqlclient_r">
+		<external_object location="-lmysqlclient">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_object>
-		<external_include location="$(MYSQLINC)">
-			<condition>
-				<platform excluded_value="windows" />
-			</condition>
-		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

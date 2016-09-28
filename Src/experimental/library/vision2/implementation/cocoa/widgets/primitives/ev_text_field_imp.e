@@ -26,7 +26,6 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
-			create_change_actions,
 			on_key_event,
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
@@ -36,14 +35,6 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface
-		end
-
-	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES}
-				return_actions_internal
-		redefine
-			create_return_actions
 		end
 
 create
@@ -147,12 +138,6 @@ feature -- Status Report
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Create an initialize return actions for `Current'.
-		do
-			create Result
-		end
 
 	set_default_minimum_size
 			-- Called after creation. Set current size and notify parent.
@@ -264,11 +249,6 @@ feature -- Basic operation
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
-		do
-			create Result
-		end
 
 	on_change_actions
 			-- A change action has occurred.

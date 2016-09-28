@@ -201,15 +201,15 @@ feature {NONE} -- Initialization
 
 				-- Initialize agents at end due to void-safety.
 
-			printer_rdo.select_actions.force_extend (agent set_output_to_printer)
-			file_rdo.select_actions.force_extend (agent set_output_to_file)
-			all_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
-			range_rdo.select_actions.force_extend (agent range_spin_buttons_enable_sensitive)
-			from_spn.change_actions.force_extend (agent from_spin_button_value_change)
-			selection_rdo.select_actions.force_extend (agent range_spin_buttons_disable_sensitive)
-			to_spn.change_actions.force_extend (agent to_spin_button_value_change)
+			printer_rdo.select_actions.extend (agent set_output_to_printer)
+			file_rdo.select_actions.extend (agent set_output_to_file)
+			all_rdo.select_actions.extend (agent range_spin_buttons_disable_sensitive)
+			range_rdo.select_actions.extend (agent range_spin_buttons_enable_sensitive)
+			from_spn.change_actions.extend (agent from_spin_button_value_change)
+			selection_rdo.select_actions.extend (agent range_spin_buttons_disable_sensitive)
+			to_spn.change_actions.extend (agent to_spin_button_value_change)
 
-			collate_chk.select_actions.force_extend (agent toggle_collate_pages)
+			collate_chk.select_actions.extend (agent toggle_collate_pages)
 
 			cancel_btn.select_actions.extend (agent on_cancel)
 			print_btn.select_actions.extend (agent on_ok)
@@ -239,7 +239,7 @@ feature {NONE} -- Initialization
 			to_spn.enable_sensitive
 		end
 
-	from_spin_button_value_change
+	from_spin_button_value_change (a_value: INTEGER)
 			-- Reset max and min values of 'to' button when input changes
 		do
 			if from_spn.value > to_spn.value then
@@ -247,7 +247,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	to_spin_button_value_change
+	to_spin_button_value_change (a_value: INTEGER)
 			-- Reset max and min values of 'from' button when input changes
 		do
 			if to_spn.value < from_spn.value then
@@ -558,7 +558,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PRINT_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

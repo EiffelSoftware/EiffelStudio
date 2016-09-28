@@ -15,15 +15,14 @@ inherit
 		undefine
 			wipe_out,
 			call_pebble_function,
-			reset_pebble_function
+			reset_pebble_function,
+			return_actions
 		redefine
 			interface
 		end
 
 	EV_TEXT_FIELD_IMP
 		undefine
-			create_focus_in_actions,
-			create_focus_out_actions,
 			needs_event_box,
 			pre_pick_steps,
 			post_drop_steps,
@@ -62,8 +61,6 @@ inherit
 			insert_i_th,
 			call_selection_action_sequences
 		end
-
-	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
 
 	EV_KEY_CONSTANTS
 
@@ -371,7 +368,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_COMBO_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 		do
 			count := 0
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			create area.make_filled ('%/000/', n + 1)
 		end
 
@@ -77,6 +78,7 @@ feature {NONE} -- Initialization
 			area := s.area
 			count := s.count
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			if Current /= s then
 				create area.make_empty (count + 1)
 				area.copy_data (s.area, s.area_lower, 0, count + 1)
@@ -99,6 +101,7 @@ feature {NONE} -- Initialization
 			create area.make_filled ('%/000/', l_count + 1)
 			count := l_count
 			internal_hash_code := 0
+			internal_case_insensitive_hash_code := 0
 			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
 		end
 
@@ -655,6 +658,7 @@ feature {READABLE_STRING_8} -- Duplication
 					area := old_area
 				end
 				internal_hash_code := 0
+				internal_case_insensitive_hash_code := 0
 			end
 		ensure then
 			new_result_count: count = other.count
@@ -673,6 +677,7 @@ feature {NONE} -- Element change
 				area.fill_with (c, 0, l_cap - 1)
 				count := l_cap
 				internal_hash_code := 0
+				internal_case_insensitive_hash_code := 0
 			end
 		ensure
 			filled: count = capacity

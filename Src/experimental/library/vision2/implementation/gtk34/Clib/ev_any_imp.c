@@ -22,54 +22,46 @@ indexing
 void (*ev_any_imp_c_object_dispose) (EIF_REFERENCE);
 
 EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object)
-        // Retrieve EIF_REFERENCE from object_id in `c_object'.
-        // Returns NULL if Eiffel object has been reaped by the GC.
+	// Retrieve EIF_REFERENCE from object_id in `c_object'.
+	// Returns NULL if Eiffel object has been reaped by the GC.
 {
-            int eif_oid;
-            EIF_REFERENCE eif_reference = NULL;
-            
-	    if ((eif_oid = (int) (rt_int_ptr) g_object_get_data (
-                G_OBJECT (c_object),
-                "eif_oid"
-            ))) {
-	        eif_reference = eif_id_object (eif_oid);
-            }
-            return (eif_reference);
+	int eif_oid;
+	EIF_REFERENCE eif_reference = NULL;
+	
+	if ((eif_oid = (int) (rt_int_ptr) g_object_get_data (G_OBJECT(c_object), "eif_oid"))) {
+		eif_reference = eif_id_object (eif_oid);
+	}
+	return (eif_reference);
 }
 
 void c_ev_any_imp_c_object_dispose (GtkWidget* c_object, int eif_oid)
-        // "destroy" signal handler.
-        // Pass call to Eiffel feature if Eiffel object exists.
+	// "destroy" signal handler.
+	// Pass call to Eiffel feature if Eiffel object exists.
 {
-            EIF_REFERENCE eif_reference;
-            
-	    eif_reference = eif_id_object (eif_oid);
-	    if (eif_reference) {
-                ev_any_imp_c_object_dispose (eif_reference);
-            }
+	EIF_REFERENCE eif_reference;
+	
+	eif_reference = eif_id_object (eif_oid);
+	if (eif_reference) {
+		ev_any_imp_c_object_dispose (eif_reference);
+	}
 }
 
-void c_ev_any_imp_set_eif_oid_in_c_object (
-    GtkWidget* c_object,
-    int eif_oid,
-    void (*c_object_dispose) (EIF_REFERENCE)
-)
-        // Store Eiffel object_id in `g_object'.
-        // Set up signal handlers.
+void c_ev_any_imp_set_eif_oid_in_c_object (GtkWidget* c_object, int eif_oid, void (*c_object_dispose) (EIF_REFERENCE))
+	// Store Eiffel object_id in `g_object'.
+	// Set up signal handlers.
 {
-	    	// Our function pointer is reset every time,
+		// Our function pointer is reset every time,
 		// This could be done with just one setting function.
-            ev_any_imp_c_object_dispose = c_object_dispose;
-            g_object_set_data (
-                G_OBJECT (c_object),
-                "eif_oid",
-                (gpointer) (rt_int_ptr) eif_oid
-            );
-            g_signal_connect (
-                G_OBJECT (c_object),
-                "destroy",
-                (GCallback) c_ev_any_imp_c_object_dispose,
-                (gpointer) (rt_int_ptr) eif_oid
-            );
+	ev_any_imp_c_object_dispose = c_object_dispose;
+	g_object_set_data (
+		G_OBJECT (c_object),
+		"eif_oid",
+		(gpointer) (rt_int_ptr) eif_oid
+	);
+	g_signal_connect (
+		G_OBJECT (c_object),
+		"destroy",
+		(GCallback) c_ev_any_imp_c_object_dispose,
+		(gpointer) (rt_int_ptr) eif_oid
+	);
 }
-

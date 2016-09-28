@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Zone which tab at top common features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,6 @@ feature -- Command
 			l_other: detachable EV_WIDGET
 			l_new_parent: EV_SPLIT_AREA
 			l_first: BOOLEAN
-			l_notebook: like internal_notebook
 		do
 			docking_manager.command.lock_update (Current, True)
 			if is_minimized then
@@ -137,9 +136,11 @@ feature -- Command
 
 				is_minimized := False
 				show_notebook_contents (True)
-				l_notebook := internal_notebook
-				check l_notebook /= Void end -- Implied by precondition `set'
-				l_notebook.set_show_minimized (is_minimized)
+				if attached internal_notebook as l_notebook then
+					l_notebook.set_show_minimized (is_minimized)
+				else
+					check from_precondition_set: False end
+				end
 				if attached {SD_ZONE} Current as lt_zone_3 then
 					docking_manager.query.inner_container (lt_zone_3).update_middle_container
 				else
@@ -202,21 +203,22 @@ feature -- Command
 			not_void: is_expand_stack_set
 		local
 			l_target: EV_SPLIT_AREA
-			l_expand_stack: like expand_stack
 		do
-			from
-				l_expand_stack := expand_stack
-				check l_expand_stack /= Void end -- Implied by precondition `not_void'
-			until
-				l_expand_stack.is_empty
-			loop
-				l_target := l_expand_stack.item.spliter
-				if l_expand_stack.item.is_set_maximum then
-					l_target.set_split_position (l_target.maximum_split_position)
-				else
-					l_target.set_split_position (l_target.minimum_split_position)
+			if attached expand_stack as l_expand_stack then
+				from
+				until
+					l_expand_stack.is_empty
+				loop
+					l_target := l_expand_stack.item.spliter
+					if l_expand_stack.item.is_set_maximum then
+						l_target.set_split_position (l_target.maximum_split_position)
+					else
+						l_target.set_split_position (l_target.minimum_split_position)
+					end
+					l_expand_stack.remove
 				end
-				l_expand_stack.remove
+			else
+				check from_precondition_not_void: False end
 			end
 		end
 
@@ -262,23 +264,29 @@ feature -- Command
 						if attached {SD_ZONE} Current as lt_zone then
 							if l_parent.first = Current then
 								l_other := l_parent.second
-								check l_other /= Void end -- Implied by docking widget structur is full two fork tree
-								docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								if attached l_other then
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								end
 								l_parent.wipe_out
 								l_box := minimized_container (l_parent)
 
 								l_parent_parent.extend (l_box)
 								l_box.extend (Current)
-								l_box.extend (l_other)
+								if attached l_other then
+									l_box.extend (l_other)
+								end
 								l_box.disable_item_expand (Current)
 							else
 								l_other := l_parent.first
-								check l_other /= Void end -- Implied by docking widget structur is full two fork tree
-								docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								if attached l_other then
+									docking_manager.query.inner_container (lt_zone).save_spliter_position (l_other, generating_type + ".minimize")
+								end
 								l_parent.wipe_out
 								l_box := minimized_container (l_parent)
 								l_parent_parent.extend (l_box)
-								l_box.extend (l_other)
+								if attached l_other then
+									l_box.extend (l_other)
+								end
 								l_box.extend (Current)
 								l_box.disable_item_expand (Current)
 							end
@@ -328,14 +336,14 @@ feature -- Command
 			-- Minimize operations for restore docking layout
 		require
 			set: is_notebook_set
-		local
-			l_notebook: like internal_notebook
 		do
 			is_minimized := True
 			show_notebook_contents (False)
-			l_notebook := internal_notebook
-			check l_notebook /= Void end -- Implied by precondition `set'
-			l_notebook.set_show_minimized (is_minimized)
+			if attached internal_notebook as l_notebook then
+				l_notebook.set_show_minimized (is_minimized)
+			else
+				check from_precondition_set: False end
+			end
 		end
 
 	enable_maximize_minimize_buttons
@@ -417,24 +425,19 @@ feature {NONE} -- Implementation
 			-- Otherwise hide all notebook contents
 		require
 			set: is_notebook_set
-		local
-			l_notebook: like internal_notebook
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_notebook := internal_notebook
-			check l_notebook /= Void end -- Implied by precondition `set'
-			l_contents := l_notebook.contents
-			from
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if a_is_show then
-					l_contents.item.user_widget.show
-				else
-					l_contents.item.user_widget.hide
+			if attached internal_notebook as l_notebook then
+				across
+					l_notebook.contents as c
+				loop
+					if a_is_show then
+						c.item.user_widget.show
+					else
+						c.item.user_widget.hide
+					end
 				end
-				l_contents.forth
+			else
+				check from_precondition_set: False end
 			end
 		end
 
@@ -509,7 +512,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -518,9 +521,5 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 
 end

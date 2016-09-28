@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is the zone when docking at a SD_AUTO_HIDE_PANEL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature	{NONE} -- Initlization
 		do
 			create internal_shared
 			set_docking_manager (a_content.docking_manager)
-			create window.make (a_content.type, {SD_ENUMERATION}.auto_hide)
+			create window.make ({SD_WIDGET_FACTORY}.style_different, {SD_ENUMERATION}.auto_hide)
 			internal_direction := a_direction
 			internal_content := a_content
 			create resize_bar.make (a_direction)
@@ -84,7 +84,7 @@ feature	{NONE} -- Initlization
 			-- The minimum width is the width of two buttons on the title bar.
 			content.user_widget.set_minimum_size (internal_shared.icons.stick.width * 3, internal_shared.icons.stick.height)
 		ensure
-			set: internal_docking_manager = a_content.docking_manager
+			set: docking_manager = a_content.docking_manager
 		end
 
 feature {NONE} -- Implementation
@@ -265,7 +265,6 @@ feature -- Command
 				horizontal_box.destroy
 			end
 			pointer_enter_actions.wipe_out
-			internal_pointer_enter_actions := Void
 		end
 
 feature {NONE} -- Implementation
@@ -279,7 +278,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -288,10 +287,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
 
 end

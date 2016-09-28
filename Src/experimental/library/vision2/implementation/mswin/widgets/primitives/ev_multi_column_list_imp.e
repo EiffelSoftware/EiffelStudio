@@ -129,8 +129,6 @@ inherit
 			default_ex_style
 		end
 
-	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
-
 	WEL_COLOR_CONSTANTS
 		export {NONE}
 			all
@@ -1346,7 +1344,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

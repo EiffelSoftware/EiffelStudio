@@ -89,7 +89,7 @@ feature -- View
 	report_form (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		local
-				l_hp: HTML_REPORT_FORM
+			l_hp: HTML_REPORT_FORM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))
@@ -102,7 +102,7 @@ feature -- View
 	report_form_confirm (req: WSF_REQUEST; res: WSF_RESPONSE; a_form: ESA_REPORT_FORM_VIEW)
 			-- <Precursor>
 		local
-				l_hp: HTML_REPORT_FORM_CONFIRM
+			l_hp: HTML_REPORT_FORM_CONFIRM
 		do
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_form, current_user_name (req))

@@ -9,7 +9,7 @@ class
 inherit
 
 	TEMPLATE_SHARED
-	
+
 create
 	make
 
@@ -27,7 +27,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.classes, "classes")
 			template.add_value (a_form.priorities, "priorities")
 			template.add_value (a_form.confidential, "confidential")
-			template.add_value (a_form.description, "description")
+			template.add_value (a_form.description, "description")	
 			template.add_value (a_form.environment, "environment")
 			template.add_value (a_form.to_reproduce,"to_reproduce")
 			template.add_value (a_form.release, "release")
@@ -36,6 +36,7 @@ feature {NONE} --Initialization
 			template.add_value (a_form.category, "category")
 			template.add_value (a_form.severity, "severity")
 			template.add_value (a_form.selected_class, "class")
+			template.add_value (a_form.eiffel_stable_versions, "releases")
 
 			if
 				attached a_form.temporary_files as l_files and then

@@ -102,6 +102,9 @@ feature -- Access
 	temporary_files_names: detachable LIST [STRING]
 		-- Temporary files names.		
 
+	eiffel_stable_versions: detachable LIST [STRING]
+		-- List of eiffel stable versions.	
+
 
 feature -- Status Report
 
@@ -284,6 +287,14 @@ feature -- Element Change
 				temporary_files_names := l_files
 			end
 			l_files.force (a_name)
+		end
+
+	set_stable_version (a_versions: like eiffel_stable_versions )
+			-- Set `eiffel_stable_versions' with `a_versions'.
+		do
+			eiffel_stable_versions := a_versions
+		ensure
+			eiffel_stable_versions_set: eiffel_stable_versions = a_versions
 		end
 
 end

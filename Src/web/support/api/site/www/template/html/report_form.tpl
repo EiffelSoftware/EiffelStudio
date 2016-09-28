@@ -137,8 +137,13 @@
 										<label class="control-label" has-success has-feedback itemprop="release" data-original-title="<p>Release or version number of the Eiffel product. Please be as specific as possible. For example, 5.6.0919 is better than 5.6.</p>">Release</label>
 									</div>
 									<div class="col-xs-4">
-										<input type="text" id="release" name="release" class="form-control" value="{$release/}" placeholder="14.05" required form="report">
+										<input list="releases" type="text" id="release" name="release" class="form-control" value="{$release/}" placeholder="14.05" required form="report">
 									</div>
+									<datalist id="releases">
+										{foreach from="$releases" item="item"}
+											  <option value="{$item/}">
+										{/foreach}	  
+									</datalist>
 								</div>
 							</div>
 						</div>
@@ -174,7 +179,6 @@
 								<input class="form-control input-file" name="uploaded_file[]" id="fileInput" type="file" multiple>
 							</div>
 							<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
-
 						</div>
 						<div class="row" has-error>
 							<label class="control-label" for="description" itemprop="description" data-original-title="<p>Precise description of the problem.</p>">Description</label>

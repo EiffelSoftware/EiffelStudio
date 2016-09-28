@@ -176,14 +176,18 @@ feature {NONE} -- New Report Problem
 			media_variants: HTTP_ACCEPT_MEDIA_TYPE_VARIANTS
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 			l_form: ESA_REPORT_FORM_VIEW
+			l_user_agent: ESA_USER_AGENT
 		do
 			create l_rhf
 			media_variants := media_type_variants (req)
 			if attached {STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
 				to_implement ("Check user roles")
+				create l_user_agent.make_from_string (req.http_user_agent)
 				if attached current_media_type (req) as l_type then
 					create l_form.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
+					l_form.set_environment (l_user_agent.os_family)
+					l_form.set_stable_version (eiffel_versions)
 					l_rhf.new_representation_handler (esa_config, l_type, media_variants).report_form (req, res, l_form)
 				else
 					l_rhf.new_representation_handler (esa_config, Empty_string, media_variants).report_form (req, res, Void)

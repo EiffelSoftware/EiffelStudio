@@ -38,6 +38,29 @@ feature -- Application Configuration
 			end
 		end
 
+	eiffel_stable_versions (a_path: PATH): LIST [STRING]
+			-- List of eiffel stable versions.
+		local
+			l_parser: JSON_PARSER
+		do
+			create {ARRAYED_LIST [STRING]} Result.make (0)
+			if
+				attached json_file_from (a_path) as json_file
+			then
+				 l_parser := new_json_parser (json_file)
+			 	if
+			 		attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed and then
+			     	attached {JSON_ARRAY} jv.item ("versions") as l_versions
+			    then
+					across l_versions as c loop
+						if attached {JSON_STRING} c.item as l_item then
+							Result.force (l_item.item)
+						end
+					end
+			 	end
+			end
+		end
+
 	new_smtp_configuration (a_path: PATH): READABLE_STRING_32
 			-- Build a new database configuration.
 		local

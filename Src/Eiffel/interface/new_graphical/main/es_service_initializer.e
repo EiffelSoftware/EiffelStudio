@@ -174,11 +174,8 @@ feature {NONE} -- Registeration: Environemtn
 	register_environment_variables (a_service: ENVIRONMENT_S)
 			-- <Precursor>
 		do
+			Precursor (a_service)
 				-- Add the environment variables used for the external URIs
-			a_service.set_environment_variable ("http://dev.eiffel.com", "ISE_WIKI")
-			a_service.set_environment_variable ("http://www.eiffelroom.com", "EIFFELROOM")
-			a_service.set_environment_variable ("http://doc.eiffel.com", "ISE_DOC")
-			a_service.set_environment_variable ("http://doc.eiffel.com/isedoc/uuid", "ISE_DOC_UUID")
 		end
 
 feature {NONE} -- Registration: Help

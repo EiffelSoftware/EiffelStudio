@@ -55,6 +55,8 @@ feature -- Access, stored in configuration file
 	uuid: detachable UUID
 			-- Universal unique identifier that identifies this system.
 
+	message: detachable READABLE_STRING_8
+			-- Optional message, reported as warning.
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
@@ -64,6 +66,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			uuid := an_uuid
 		ensure
 			uuid_set: uuid = an_uuid
+		end
+
+	set_message (m: like message)
+			-- Set `message' to `m'.
+		do
+			message := m
 		end
 
 feature -- Visit
@@ -83,7 +91,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

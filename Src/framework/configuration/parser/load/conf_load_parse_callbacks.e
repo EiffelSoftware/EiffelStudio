@@ -599,6 +599,7 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_uuid: like current_attributes.item
 			l_uu: detachable UUID
+			redir: CONF_REDIRECTION
 		do
 			l_uuid := current_attributes.item (at_uuid)
 
@@ -616,7 +617,13 @@ feature {NONE} -- Implementation attribute processing
 						if l_loc.is_empty then
 							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("location"))
 						else
-							last_redirection := factory.new_redirection_with_file_name (file_name, l_loc, l_uu)
+							redir := factory.new_redirection_with_file_name (file_name, l_loc, l_uu)
+							if includes_this_or_after (namespace_1_16_0) then
+								if attached current_attributes.item (at_message) as l_msg then
+									redir.set_message (l_msg)
+								end
+							end
+							last_redirection := redir
 						end
 					else
 						report_unknown_attribute ("location")
@@ -2758,6 +2765,7 @@ feature {NONE} -- Implementation state transitions
 			create l_attr.make (2)
 			l_attr.force (at_uuid, "uuid")
 			l_attr.force (at_location, "location")
+			l_attr.force (at_message, "message")
 			Result.force (l_attr, t_redirection)
 
 

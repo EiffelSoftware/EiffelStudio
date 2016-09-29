@@ -156,6 +156,7 @@ feature {NONE} -- Implementation constants
 	at_root_catcall_detection: INTEGER = 1067
 	at_root_concurrency: INTEGER = 1068
 	at_root_void_safety: INTEGER = 1069
+	at_message: INTEGER = 1070
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

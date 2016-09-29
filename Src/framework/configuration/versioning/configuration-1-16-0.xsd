@@ -7,6 +7,7 @@
 		<xs:complexType>
 			<xs:attribute name="uuid" type="uuid" use="optional"/>
 			<xs:attribute name="location" type="location" use="required"/>
+			<xs:attribute name="message" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
 

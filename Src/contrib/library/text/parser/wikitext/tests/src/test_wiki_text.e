@@ -923,6 +923,30 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
+	test_image
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+See [[Image:http://abs.path.to/image.png]]
+			]")
+
+e := "{
+<p>See <img src="http://abs.path.to/image.png" border="0"/></p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 feature {NONE} -- Implementation
 
 	same_output (s1, s2: READABLE_STRING_8): BOOLEAN

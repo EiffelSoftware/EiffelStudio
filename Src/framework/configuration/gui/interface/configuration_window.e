@@ -965,10 +965,15 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 				remove_button := Void
 			end
 
-				-- remove properties
+				-- Remove properties.
 			if properties /= Void then
 				properties.destroy
 				properties := Void
+			end
+				-- Remove tabs.
+			if attached tabs as t then
+				t.destroy
+				tabs := Void
 			end
 
 			unlock_update

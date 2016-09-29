@@ -516,57 +516,64 @@ feature {NONE} -- Element initialization
 				create language_tab
 				notebook.extend (language_tab)
 				notebook.set_item_text (language_tab, "Language")
-
-				options := t.options
-				if attached t.extends as inherited_target then
-					inherited_options := inherited_target.options
-					inherited_void_safety := inherited_options.void_safety_capability
-					inherited_catcall_detection := inherited_options.catcall_safety_capability
-					inherited_concurrency := inherited_options.concurrency_capability
-				end
-
-				create description_field
-
-				add_choice_value (
-					conf_interface_names.option_void_safety_name,
-					conf_interface_names.option_void_safety_description,
-					conf_interface_names.option_void_safety_value,
-					options.void_safety_capability,
-					inherited_void_safety,
-					description_field,
-					language_tab
-				)
-
-				add_choice_value (
-					conf_interface_names.option_catcall_detection_name,
-					conf_interface_names.option_catcall_detection_description,
-					conf_interface_names.option_catcall_detection_value,
-					options.catcall_safety_capability,
-					inherited_catcall_detection,
-					description_field,
-					language_tab
-				)
-
-				add_choice_value (
-					conf_interface_names.option_concurrency_name,
-					conf_interface_names.option_concurrency_description,
-					conf_interface_names.option_concurrency_value,
-					options.concurrency_capability,
-					inherited_concurrency,
-					description_field,
-					language_tab
-				)
-
-				create description_frame
-				language_tab.extend (description_frame)
-				description_frame.extend (description_field)
-				description_field.set_minimum_height (description_height)
-				description_field.set_minimum_width (100)
-				description_field.set_minimum_height (80)
-
 			else
-					-- Update target.
+				check
+					is_initialized_language_tab: attached {EV_VERTICAL_BOX} notebook.i_th (2) as l
+				then
+					language_tab := l
+					l.wipe_out
+				end
 			end
+
+			debug ("to_implement")
+				(create {REFACTORING_HELPER}).to_implement ("Avoid creation of the property page from scratch")
+			end
+			options := t.changeable_internal_options
+			if attached t.extends as inherited_target then
+				inherited_options := inherited_target.options
+				inherited_void_safety := inherited_options.void_safety_capability
+				inherited_catcall_detection := inherited_options.catcall_safety_capability
+				inherited_concurrency := inherited_options.concurrency_capability
+			end
+
+			create description_field
+
+			add_choice_value (
+				conf_interface_names.option_void_safety_name,
+				conf_interface_names.option_void_safety_description,
+				conf_interface_names.option_void_safety_value,
+				options.void_safety_capability,
+				inherited_void_safety,
+				description_field,
+				language_tab
+			)
+
+			add_choice_value (
+				conf_interface_names.option_catcall_detection_name,
+				conf_interface_names.option_catcall_detection_description,
+				conf_interface_names.option_catcall_detection_value,
+				options.catcall_safety_capability,
+				inherited_catcall_detection,
+				description_field,
+				language_tab
+			)
+
+			add_choice_value (
+				conf_interface_names.option_concurrency_name,
+				conf_interface_names.option_concurrency_description,
+				conf_interface_names.option_concurrency_value,
+				options.concurrency_capability,
+				inherited_concurrency,
+				description_field,
+				language_tab
+			)
+
+			create description_frame
+			language_tab.extend (description_frame)
+			description_frame.extend (description_field)
+			description_field.set_minimum_height (description_height)
+			description_field.set_minimum_width (100)
+			description_field.set_minimum_height (80)
 		end
 
 	initialize_section_tree
@@ -586,6 +593,9 @@ feature {NONE} -- Element initialization
 		end
 
 feature {NONE} -- Choice options
+
+	heading_rows: INTEGER = 2
+			-- Number of rows before buttons to set non-default option values.
 
 	add_choice_value	(
 			name, description: STRING_32;
@@ -624,7 +634,7 @@ feature {NONE} -- Choice options
 			create property_group
 			property_frame.extend (property_group)
 				-- In addition to `items' there are header and default value.
-			property_group.resize (4, items.count + 2)
+			property_group.resize (4, items.count + heading_rows)
 			property_group.disable_homogeneous
 			create column_name.make_with_text (conf_interface_names.capability_header_capable_of_name)
 			column_name.align_text_left
@@ -640,110 +650,40 @@ feature {NONE} -- Choice options
 				create default_capability.make_with_text (conf_interface_names.capability_toggle_inherited_name)
 			else
 				create default_capability.make_with_text (conf_interface_names.capability_toggle_default_name)
-				default_capability.select_actions.extend
-					(agent (o: CONF_VALUE_CHOICE; default_button: EV_CHECK_BUTTON; group: EV_TABLE)
-						local
-							r: INTEGER
-							index: NATURAL_8
-						do
-							if default_button.is_selected then
-								o.unset
-							else
-								from
-										-- Last item is always selected, skip it.
-									r := group.rows - 1
-										-- `index' corresponds to a knowingly selected item.
-									index := 1
-								until
-									r <= 2 or else
-									index >= o.count or else
-									not attached {EV_CHECK_BUTTON} group.item_at_position (2, r) as b or else
-									not b.is_selected
-								loop
-									index := index + 1
-									r := r - 1
-								variant
-									r
-								end
-								o.put_index (index)
-							end
-						end (option, default_capability, property_group))
 			end
+				-- Make sure default capability button is properly initialized before registering any actions.
+			if option.is_set then
+				default_capability.disable_select
+			else
+				default_capability.enable_select
+			end
+			on_toggle (agent option.unset, agent set_capability (option, property_group), default_capability)
 			default_capability.focus_in_actions.extend (update_description)
 			property_group.put_at_position (default_capability, 1, 2, 2, 1)
 			if attached inherited_option then
 				create default_preference.make_with_text (conf_interface_names.capability_toggle_inherited_name)
-					-- TODO: provide implementation
-				update_preferred_buttons := agent do_nothing
+					-- TODO: provide implementation.
 			else
 				create default_preference.make_with_text (conf_interface_names.capability_toggle_default_name)
-				update_preferred_buttons :=
-					agent (o: CONF_ORDERED_CAPABILITY; default_button: EV_CHECK_BUTTON; group: EV_TABLE)
-						local
-							r: INTEGER
-							index: NATURAL_8
-							default_row: INTEGER
-							is_enabled: BOOLEAN
-						do
-								-- Check if option values should be enabled.
-							if not default_button.is_selected then
-								is_enabled := True
-									-- Update current root index if required.
-								if o.is_root_set and then not o.is_capable (o.custom_root_index) then
-										-- Custom root index is no longer valid, update it.
-									o.put_root_index (o.root_index)
-								end
-							end
-								-- Compute a row that becomes a default one.
-							default_row := group.rows - o.default_root_index + 1
-							from
-								index := o.value.count
-								r := group.rows - o.value.count + 1
-							until
-								index <= 0
-							loop
-									-- Remove default mark (if any) if it does not match a default index.
-								if attached group.item_at_position (3, r) as m then
-									if r /= default_row then
-											-- Remove only non-default mark.
-											-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
-										group.prune (m)
-									end
-								else
-									if r = default_row then
-											-- Put a default mark.
-											-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
-										group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 3, r, 1, 1)
-									end
-								end
-								if attached {EV_RADIO_BUTTON} group.item_at_position (4, r) as b then
-									if is_enabled and then o.is_capable (index) then
-											-- Enable allowed option value.
-										b.enable_sensitive
-										if o.root_index = index then
-												-- Mark currently selected option value.
-											b.enable_select
-										end
-									else
-											-- Disable non-supported option value.
-										b.disable_sensitive
-									end
-								end
-								r := r + 1
-								index := index - 1
-							variant
-								index.as_integer_32
-							end
-						end (capability, default_preference, property_group)
 			end
-			default_preference.select_actions.extend (update_preferred_buttons)
+				-- Make sure default preference button is properly initialized before registering any actions.
+			if capability.is_root_set then
+				default_preference.disable_select
+			else
+				default_preference.enable_select
+			end
+			on_toggle
+				(agent disable_custom_root_option (capability, property_group),
+				agent enable_custom_root_option (capability, property_group),
+				default_preference)
+			update_preferred_buttons := agent (default_preference.select_actions).call ([])
 			default_preference.focus_in_actions.extend (update_description)
 			property_group.put_at_position (default_preference, 3, 2, 2, 1)
 			default_capability.select_actions.extend (update_preferred_buttons)
 			across
 				items.new_cursor.reversed as i
 			from
-				row := 3
+				row := heading_rows + 1
 			loop
 					-- Test if option index has reached inherited index or default index.
 					-- After that it will have a check mark.
@@ -773,60 +713,16 @@ feature {NONE} -- Choice options
 				if i.is_last then
 					check_button.disable_sensitive
 				else
-					default_capability.select_actions.extend
-						(agent (current_button, default_button: EV_CHECK_BUTTON)
-							do
-								if default_button.is_selected then
-									current_button.disable_sensitive
-								else
-									current_button.enable_sensitive
-								end
-							end (check_button, default_capability))
-					check_button.select_actions.extend
-						(agent (o: CONF_VALUE_CHOICE; index: like {CONF_VALUE_CHOICE}.index; current_button: EV_CHECK_BUTTON; line: INTEGER; group: EV_TABLE; update_action: PROCEDURE)
-							do
-								if current_button.is_selected then
-										-- Select all smaller capabilities.
-										-- It is sufficient to toggle only a next one, it will trigger the rest.
-									if
-										line < group.rows and then
-										attached {EV_CHECK_BUTTON}  group.item_at_position (2, line + 1) as b
-									then
-										b.enable_select
-									end
-										-- Avoid setting a lower index.
-									if o.index < index then
-										o.put_index (index)
-									end
-								else
-										-- Unselect all larger capabilities.
-										-- It is sufficient to toggle only a next one, it will trigger the rest.
-									if
-										line > 3 and then
-										attached {EV_CHECK_BUTTON}  group.item_at_position (2, line - 1) as b
-									then
-										b.disable_select
-									end
-										-- Avoid setting a higher index.
-									if o.index >= index then
-										o.put_index (index - 1)
-									end
-								end
-								update_action.call
-							end
-							(option, i.target_index.as_natural_8, check_button, row, property_group, update_preferred_buttons))
+						-- Enable or disable current button depending on the state of a default button.
+					on_toggle (agent check_button.disable_sensitive, agent check_button.enable_sensitive, default_capability)
+						-- Enable or disable other capabilities and preferred buttons depending on the state of the current button.
+					on_toggle
+						(agent select_smaller_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						agent unselect_larger_capabilities (option, i.target_index.as_natural_8, row, property_group, update_preferred_buttons),
+						check_button)
 				end
 				check_button.focus_in_actions.extend (update_description)
 				check_button.set_tooltip (description)
-					-- Test if option index has reached inherited index or default index.
-					-- After that it will have a check mark.
-				if attached inherited_option then
-						-- TODO.
---					is_default_preference := inherited_option.index = i.target_index
-				else
-						-- TODO.
---					is_default_preference := option.default_index = i.target_index
-				end
 				create radio_button -- .make_with_text (i.item)
 				property_group.put_at_position (radio_button, 4, row, 1, 1)
 				radio_button.focus_in_actions.extend (update_description)
@@ -838,20 +734,188 @@ feature {NONE} -- Choice options
 			if attached {EV_CHECK_BUTTON} property_group.item_at_position (2, property_group.rows - option.index + 1) as b then
 				b.enable_select
 			end
-				-- Update default capability button.
-			if option.is_set then
-				default_capability.disable_select
-			else
-				default_capability.enable_select
-			end
-				-- Update default preference button.
---			if option.is_set then
---				default_preference.disable_select
---			else
-				default_preference.enable_select
---			end
+				-- Refresh all capability-dependent buttons.
+			default_capability.select_actions.call
+				-- Refresh all preference-dependent buttons.
+			default_preference.select_actions.call
 		end
 
+	on_toggle (select_action, unselect_action: PROCEDURE; button: EV_CHECK_BUTTON)
+			-- Register actions `select_action' and `unselect_action' to be performed
+			-- when `button' becomes selected and unselected respectively.
+		do
+			button.select_actions.extend
+				(agent (s, u: PROCEDURE; b: EV_CHECK_BUTTON)
+					do
+						if b.is_selected then
+							s.call
+						else
+							u.call
+						end
+					end
+				(select_action, unselect_action, button))
+		end
+
+	set_capability (o: CONF_VALUE_CHOICE; group: EV_TABLE)
+			-- Set capability option `o' from the current state of associated group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+		do
+			from
+					-- Last item is always selected, skip it.
+				r := group.rows - 1
+					-- `index' corresponds to a knowingly selected item.
+				index := 1
+			until
+				r <= heading_rows or else
+				index >= o.count or else
+				not attached {EV_CHECK_BUTTON} group.item_at_position (2, r) as b or else
+				not b.is_selected
+			loop
+				index := index + 1
+				r := r - 1
+			variant
+				r
+			end
+			o.put_index (index)
+		end
+
+	enable_custom_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Enable custom root option for `o' associated with group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+		do
+				-- Update current root index if required.
+			if o.is_root_set and then not o.is_capable (o.custom_root_index) then
+					-- Custom root index is no longer valid, update it.
+				o.put_root_index (o.root_index)
+			end
+				-- Update default marks.
+			show_default_root_option (o, group)
+				-- Enable or disable radio buttons depending on whether the corresponding capability is supported.
+				-- Mark a current root option.
+			from
+				index := o.value.count
+				r := group.rows - o.value.count + 1
+			until
+				index <= 0
+			loop
+				if attached {EV_RADIO_BUTTON} group.item_at_position (4, r) as b then
+					if o.is_capable (index) then
+							-- Enable allowed option value.
+						b.enable_sensitive
+						if o.root_index = index then
+								-- Mark currently selected option value.
+							b.enable_select
+						end
+					else
+							-- Disable non-supported option value.
+						b.disable_sensitive
+					end
+				end
+				r := r + 1
+				index := index - 1
+			variant
+				index.as_integer_32
+			end
+		end
+
+	disable_custom_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Disable custom root option for `o' associated with group `group'.
+		local
+			r: INTEGER
+		do
+				-- Update current root index.
+			o.unset_root
+				-- Update default marks.
+			show_default_root_option (o, group)
+				-- Disable all radio-buttons.
+			from
+				r := group.rows
+			until
+				r <= heading_rows
+			loop
+				if attached {EV_RADIO_BUTTON} group.item_at_position (4, r) as b then
+						-- Disable non-supported option value.
+					b.disable_sensitive
+				end
+				r := r - 1
+			variant
+				r
+			end
+		end
+
+	show_default_root_option (o: CONF_ORDERED_CAPABILITY; group: EV_TABLE)
+			-- Update a mark that indicates a default root option of `o' in associated group `group'.
+		local
+			r: INTEGER
+			index: NATURAL_8
+			default_row: INTEGER
+		do
+				-- Compute a row that is a default one.
+			default_row := group.rows - o.default_root_index + 1
+			from
+				index := o.value.count
+				r := group.rows - o.value.count + 1
+			until
+				index <= 0
+			loop
+					-- We cannot put anything to a cell if it contains an item.
+				if attached group.item_at_position (3, r) as m then
+					if r /= default_row then
+							-- Remove only non-default mark.
+							-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+						group.prune (m)
+					end
+				else
+					if r = default_row then
+							-- Put a default mark.
+							-- TODO: replace pixmap with pixel buffer and use drawable to avoid cloning.
+						group.put_at_position (conf_pixmaps.project_settings_default_icon.twin, 3, r, 1, 1)
+					end
+				end
+				r := r + 1
+				index := index - 1
+			variant
+				index.as_integer_32
+			end
+		end
+
+	select_smaller_capabilities (o: CONF_VALUE_CHOICE; index: like {CONF_VALUE_CHOICE}.index; line: INTEGER; group: EV_TABLE; update_action: PROCEDURE)
+			-- Select all capabilities smaller than this one.
+		do
+				-- Update options, but avoid setting a lower index.
+			if o.index < index then
+				o.put_index (index)
+			end
+				-- It is sufficient to toggle only a next button, it will trigger the rest.
+			if
+				line < group.rows and then
+				attached {EV_CHECK_BUTTON}  group.item_at_position (2, line + 1) as b
+			then
+				b.enable_select
+			end
+			update_action.call
+		end
+
+	unselect_larger_capabilities (o: CONF_VALUE_CHOICE; index: like {CONF_VALUE_CHOICE}.index; line: INTEGER; group: EV_TABLE; update_action: PROCEDURE)
+			-- Unselect all capabilities larger than this one.
+			-- It is sufficient to toggle only a next one, it will trigger the rest.
+		do
+				-- Update options, but avoid setting a higher index.
+			if o.index >= index then
+				o.put_index (index - 1)
+			end
+			if
+				line > heading_rows + 1 and then
+				attached {EV_CHECK_BUTTON} group.item_at_position (2, line - 1) as b
+			then
+				b.disable_select
+			end
+			update_action.call
+		end
 
 feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 

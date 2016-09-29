@@ -296,10 +296,10 @@ feature -- Query
 			Result := Precursor {HELP_CONTEXT_I} and then eis_grid.has_selected_row
 		end
 
-	same_view (a_view: like Current): BOOLEAN
+	same_view (a_view: ES_EIS_COMPONENT_VIEW [detachable ANY]): BOOLEAN
 			-- Is current view focusing the same component as `a_view'?
 		do
-			if attached a_view then
+			if a_view /= Void then
 				Result := component ~ a_view.component
 			end
 		end

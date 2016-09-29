@@ -1115,7 +1115,7 @@ EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 }
 
 void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
-	/* set socket SO_RCV_TIMEO option to recv_timeout_seconds */
+	/* set socket SO_RCVTIMEO option to recv_timeout_seconds */
 {
 #ifdef EIF_WINDOWS
 	int arg = (int) 1000 * recv_timeout_seconds; /* Timeout in milliseconds */
@@ -1151,7 +1151,7 @@ EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 }
 
 void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
-	/* set socket SO_RCV_TIMEO option to send_timeout_seconds */
+	/* set socket SO_SNDTIMEO option to send_timeout_seconds */
 {
 #ifdef EIF_WINDOWS
 	int arg = (int) 1000 * send_timeout_seconds; /* Timeout in milliseconds */

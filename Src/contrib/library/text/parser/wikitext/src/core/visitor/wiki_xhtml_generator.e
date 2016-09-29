@@ -840,21 +840,22 @@ feature -- Links
 	visit_image_link (a_link: WIKI_IMAGE_LINK)
 		local
 			l_wiki_url, l_url: detachable READABLE_STRING_8
+			l_lnk_name: READABLE_STRING_8
 		do
+			l_lnk_name := a_link.name
 			if attached image_resolver as r then
 				l_url := r.url (a_link, current_page)
 				l_wiki_url := r.wiki_url (a_link, current_page)
 			end
-			if l_wiki_url = Void then
-				l_wiki_url := a_link.name
-			end
 			if l_url = Void then
-				l_url := l_wiki_url
+				l_url := l_lnk_name
 			end
 			if attached a_link.location_parameter as l_location then
 				output ("<div style=%"text-align: "+ l_location +"%">")
 			end
-			output ("<a href=%"" + l_wiki_url + "%">")
+			if l_wiki_url /= Void then
+				output ("<a href=%"" + l_wiki_url + "%">")
+			end
 			output ("<img src=%"" + l_url + "%" border=%"0%"")
 			if attached a_link.width_parameter as w then
 				output (" width=%"")
@@ -867,7 +868,9 @@ feature -- Links
 				output ("%"")
 			end
 			output ("/>")
-			output ("</a>")
+			if l_wiki_url /= Void then
+				output ("</a>")
+			end
 			if not a_link.inlined then
 				output ("<br/>")
 			end

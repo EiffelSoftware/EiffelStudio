@@ -116,6 +116,10 @@ feature -- Visit nodes
 			if attached a_redirection.uuid as l_uuid then
 				append_text (" uuid=%"" + l_uuid.out + "%"")
 			end
+			if attached a_redirection.message as msg then
+				append_text_attribute ("message", msg)
+			end
+
 			append_text_attribute ("location", a_redirection.redirection_location)
 			append_text (">%N")
 			Precursor (a_redirection)

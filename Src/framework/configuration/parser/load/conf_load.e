@@ -92,6 +92,8 @@ feature -- Basic operation
 		do
 			last_system := Void
 			last_redirection := Void
+			last_warnings := Void
+			last_error := Void
 			recursive_retrieve_configuration (a_file, Void, Void)
 		ensure
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
@@ -103,6 +105,8 @@ feature -- Basic operation
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
 			last_uuid := Void
+			last_warnings := Void
+			last_error := Void
 			recursive_retrieve_uuid (a_file, Void)
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
@@ -112,6 +116,21 @@ feature -- Basic operation
 			-- Set `is_following_redirection' to `b'.
 		do
 			is_following_redirection := b
+		end
+
+	add_warning (a_warning: CONF_ERROR)
+			-- Add `a_warning'.
+		require
+			a_warning_not_void: a_warning /= Void
+		local
+			l_last_warnings: like last_warnings
+		do
+			l_last_warnings := last_warnings
+			if l_last_warnings = Void then
+				create l_last_warnings.make (1)
+				last_warnings := l_last_warnings
+			end
+			l_last_warnings.extend (a_warning)
 		end
 
 feature {NONE} -- Implementation
@@ -192,7 +211,15 @@ feature {NONE} -- Implementation
 					if not is_error and is_following_redirection then
 							--| `a_file' is a redirection, then follow the redirection and check the ecf at the new location
 							--| this will either end with a concrete ecf file, i.e not a redirection, or with an error.
-						retrieve_redirected_configuration (a_file, l_redirection.evaluated_redirection_location, l_previous, redir)
+						if attached l_redirection.message as msg then
+							retrieve_redirected_configuration (a_file, l_redirection.evaluated_redirection_location, l_previous, redir)
+
+							is_warning := True
+							add_warning (create {CONF_ERROR_MESSAGE_IN_REDIRECTION}.make (a_file, l_redirection.redirection_location, msg))
+						else
+							retrieve_redirected_configuration (a_file, l_redirection.evaluated_redirection_location, l_previous, redir)
+
+						end
 					end
 				elseif attached last_system as l_last_system then
 						--| found <system ... />
@@ -432,8 +459,17 @@ feature {NONE} -- Implementation
 				end
 			end
 				-- add warnings
-			is_warning := a_callback.is_warning
-			last_warnings := a_callback.last_warning
+			is_warning := is_warning or a_callback.is_warning
+			if attached last_warnings as l_curr_last_warnings then
+				if 
+					attached a_callback.last_warning as l_last_warnings and then 
+					not l_last_warnings.is_empty 
+				then
+					l_curr_last_warnings.append (l_last_warnings)
+				end
+			else
+				last_warnings := a_callback.last_warning
+			end
 		rescue
 			l_retried := True
 			retry

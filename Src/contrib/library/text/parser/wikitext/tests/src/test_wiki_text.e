@@ -802,6 +802,248 @@ end</mycode><br/>
 			assert ("as e", o.same_string (e))
 		end
 
+	test_list
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+'''List'''
+* this 
+* is
+* a
+* list
+* with
+** sub item
+** sub item
+* end
+			]")
+
+e := "{
+<p><strong>List</strong></p>
+<ul><li> this </li>
+<li> is</li>
+<li> a</li>
+<li> list</li>
+<li> with<ul><li> sub item</li>
+<li> sub item</li>
+</ul></li>
+<li> end</li>
+</ul>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+		
+	test_list_number
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+'''Numbered lists'''
+# list
+# with
+## sub item
+## sub item
+# end
+			]")
+
+e := "{
+<p><strong>Numbered lists</strong></p>
+<ol><li> list</li>
+<li> with<ol><li> sub item</li>
+<li> sub item</li>
+</ol></li>
+<li> end</li>
+</ol>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+		
+	test_list_definition
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			-- FIXME: does not support yet:
+			--	; Term
+			--	: description line 1
+			--	: description line 2
+			--
+			-- or even with a single line.
+			create t.make_from_string ("[
+'''Definitions'''
+; abc: first letters
+; pi: Pi number
+; Term: description
+			]")
+
+e := "{
+<p><strong>Definitions</strong></p>
+<dl><dt> abc</dt>
+<dd> first letters</dd>
+<dt> pi</dt>
+<dd> Pi number</dd>
+<dt> Term</dt>
+<dd> description</dd>
+</dl>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+		
+	test_list_definition_2
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			-- FIXME: does not support yet:
+			--	; Term
+			--	: description line 1
+			--	: description line 2
+
+			create t.make_from_string ("[
+'''Definitions'''
+; Term
+: description line 1
+: description line 2
+			]")
+
+e := "{
+<p><strong>Definitions</strong></p>
+<dl><dt> Term</dt>
+<dd> description line 1</dd>
+<dd> description line 2</dd>
+</dl>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e)) -- FIXME: failure!
+		end
+
+	test_list_mixed
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+'''Mixed list'''
+# Letters
+#* a
+#* b
+#* c
+# Misc
+## sub item 1
+##* bullet 1
+##* bullet 2
+## sub item 2
+##* bullet 1
+##** sub bullet 1.1
+##* bullet 2
+##*# sub item ..
+# end
+			]")
+
+e := "{
+<p><strong>Mixed list</strong></p>
+<ol><li> Letters<ul><li> a</li>
+<li> b</li>
+<li> c</li>
+</ul></li>
+<li> Misc<ol><li> sub item 1<ul><li> bullet 1</li>
+<li> bullet 2</li>
+</ul></li>
+<li> sub item 2<ul><li> bullet 1<ul><li> sub bullet 1.1</li>
+</ul></li>
+<li> bullet 2<ul><li> sub item ..</li>
+</ul></li>
+</ul></li>
+</ol></li>
+<li> end</li>
+</ol>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_list_mixed_def
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+'''Mixed list and def'''
+* Def
+*; Term: description 1
+*; Term2: description 2
+* end
+			]")
+
+e := "{
+<p><strong>Mixed list and def</strong></p>
+<ul><li> Def</li>
+<dl><dt> Term</dt>
+<dd> description 1</dd>
+<dt> Term</dt>
+<dd> description 1</dd>
+</dl>
+<li> end</li>
+</ul>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e)) -- FAILURE !!!
+		end
+
+
 	test_tag_div
 		local
 			t: WIKI_CONTENT_TEXT

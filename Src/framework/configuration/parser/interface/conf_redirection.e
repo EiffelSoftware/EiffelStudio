@@ -55,8 +55,20 @@ feature -- Access, stored in configuration file
 	uuid: detachable UUID
 			-- Universal unique identifier that identifies this system.
 
-	message: detachable READABLE_STRING_8
+	message: detachable READABLE_STRING_32
 			-- Optional message, reported as warning.
+
+feature -- Element change
+
+	set_message (m: detachable READABLE_STRING_GENERAL)
+			-- Set `message' to `m'.
+		do
+			if m = Void then
+				message := Void
+			else
+				create {STRING_32} message.make_from_string_general (m)
+			end
+		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
@@ -66,12 +78,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			uuid := an_uuid
 		ensure
 			uuid_set: uuid = an_uuid
-		end
-
-	set_message (m: like message)
-			-- Set `message' to `m'.
-		do
-			message := m
 		end
 
 feature -- Visit

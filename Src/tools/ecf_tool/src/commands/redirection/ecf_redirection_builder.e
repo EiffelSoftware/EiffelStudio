@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		local
 			l_target, l_redirection_ecf: detachable READABLE_STRING_32
-			l_target_folder, l_redirection_folder: detachable READABLE_STRING_32
+			l_message, l_target_folder, l_redirection_folder: detachable READABLE_STRING_32
 			has_cleanup: BOOLEAN
 			n: INTEGER
 			op: detachable READABLE_STRING_32
@@ -65,6 +65,13 @@ feature {NONE} -- Initialization
 							is_verbose := False
 						elseif v.is_case_insensitive_equal_general ("-f") or v.is_case_insensitive_equal_general ("--force") then
 							has_flag_force := True
+						elseif v.is_case_insensitive_equal_general ("-m") or v.is_case_insensitive_equal_general ("--message") then
+							if not args.after then
+								args.forth
+								l_message := args.item
+							else
+								l_message := ""
+							end
 						elseif v.is_case_insensitive_equal_general ("--cleanup") then
 							has_cleanup := True
 						elseif v.is_case_insensitive_equal_general ("-h") or v.is_case_insensitive_equal_general ("--help") then
@@ -144,7 +151,7 @@ feature {NONE} -- Initialization
 				if
 					l_target_folder /= Void and l_redirection_folder /= Void
 				then
-					shadow_redirection (l_target_folder, l_redirection_folder, has_flag_force)
+					shadow_redirection (l_target_folder, l_redirection_folder, l_message, has_flag_force)
 				else
 					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
@@ -162,7 +169,7 @@ feature {NONE} -- Initialization
 				if
 					l_target /= Void and l_redirection_ecf /= Void
 				then
-					set_redirection (l_target, l_redirection_ecf, Void, has_flag_force)
+					set_redirection (l_target, l_redirection_ecf, Void, l_message, has_flag_force)
 				else
 					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
@@ -240,6 +247,7 @@ feature -- Change
 				localized_print ("Create a redirection from <redirection_ecf> to <target_ecf>.%N")
 				localized_print ("%NOptions:%N")
 				localized_print ("   -f|--force: force operation%N")
+				localized_print ("   -m|--message: define a message that may be display during compilation.%N")
 			elseif op.is_case_insensitive_equal_general ("delete") then
 				localized_print ("usage: " + l_redirection_command + " delete [options] <redirection_ecf>%N")
 				localized_print ("   <redirection_ecf> : redirection ecf file%N")
@@ -256,6 +264,7 @@ feature -- Change
 				localized_print ("Recursively create redirection from ecf file under <redirection_folder> to <target_folder>.%N")
 				localized_print ("%NOptions:%N")
 				localized_print ("   -f|--force: force operation%N")
+				localized_print ("   -m|--message: define a message that may be display during compilation.%N")
 			elseif op.is_case_insensitive_equal_general ("unshadow") then
 				localized_print ("usage: " + l_redirection_command + " unshadow [options] <redirection_folder> <target_folder>%N")
 				localized_print ("   <redirection_folder> : redirection folder%N")
@@ -273,8 +282,9 @@ feature -- Change
 			(create {EXCEPTIONS}).die (-1)
 		end
 
-	shadow_redirection (a_target_folder: READABLE_STRING_32; a_redirection_folder: READABLE_STRING_32; a_update: BOOLEAN)
-			-- For each ecf file in `a_target_folder' create a redirection to the expected location in `a_redirection_folder'.
+	shadow_redirection (a_target_folder: READABLE_STRING_32; a_redirection_folder: READABLE_STRING_32; a_message: detachable READABLE_STRING_GENERAL; a_update: BOOLEAN)
+			-- For each ecf file in `a_target_folder' create a redirection to the expected location in `a_redirection_folder'
+			-- with optional `a_message'.
 		require
 			no_error: not has_error
 			valid_redirection: not a_redirection_folder.is_empty
@@ -305,7 +315,7 @@ feature -- Change
 							create pn.make_from_string (a_target_folder)
 							pn := pn.extended (s)
 							file_utilities.create_directory_path (p.parent)
-							set_redirection (ic.item.name, p.name, pn.name, a_update)
+							set_redirection (ic.item.name, p.name, pn.name, a_message, a_update)
 						end
 					end
 				end
@@ -375,7 +385,7 @@ feature -- Change
 			end
 		end
 
-	set_redirection (a_target_ecf: READABLE_STRING_32; a_redirection: READABLE_STRING_32; a_target_location_text: detachable READABLE_STRING_32; a_update: BOOLEAN)
+	set_redirection (a_target_ecf: READABLE_STRING_32; a_redirection: READABLE_STRING_32; a_target_location_text: detachable READABLE_STRING_32; a_message: detachable READABLE_STRING_GENERAL; a_update: BOOLEAN)
 			-- Create redirection from `a_redirection' to `a_target'
 			-- if precised use `a_redirection_location' text in redirection location value.
 			-- if `a_redirection' already exists, update only if `a_update' is True.
@@ -453,6 +463,9 @@ feature -- Change
 
 					if l_location /= Void then
 						redir := conf_factory.new_redirection_with_file_name (a_redirection, l_location, l_uuid)
+						if a_message /= Void and then not a_message.is_whitespace then
+							redir.set_message (a_message)
+						end
 						if not file_utilities.file_exists (a_redirection) or else a_update then
 							if redir.is_storable then
 								redir.store
@@ -543,7 +556,7 @@ feature -- Change
 						Result := True
 					else
 						if attached conf_system (evaluated_location (a_target_ecf)) as l_target_system then
-							Result := same_strings (l_redirection_ecf_system.file_name , l_target_system.file_name)
+							Result := same_paths (l_redirection_ecf_system.file_name , l_target_system.file_name)
 						else
 							Result := False
 						end
@@ -591,6 +604,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	same_paths (s1,s2: detachable READABLE_STRING_GENERAL): BOOLEAN
+		local
+			p1, p2: READABLE_STRING_GENERAL
+		do
+			if s1 /= Void and then (s1.starts_with ("./") or s1.starts_with (".\")) then
+				p1 := s1.substring (3, s1.count)
+			else
+				p1 := s1
+			end
+			if s2 /= Void and then (s2.starts_with ("./") or s2.starts_with (".\")) then
+				p2 := s2.substring (3, s2.count)
+			else
+				p2 := s2
+			end
+			Result := same_strings (p1, p2)
+		end
+
 	file_utilities: FILE_UTILITIES
 		once
 			create Result
@@ -612,7 +642,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -498,6 +498,7 @@ feature -- Processing
 		local
 			l_level: like {WIKI_LIST}.level
 			l_item_tag, l_tag: READABLE_STRING_8
+			l_is_def: BOOLEAN
 		do
 			l_level := a_list_item.level
 			list_level := l_level
@@ -508,11 +509,13 @@ feature -- Processing
 				l_tag := "ul"
 				l_item_tag := "li"
 			elseif a_list_item.is_definition_term_kind then
-				l_tag := "dl"
+				l_is_def := True
+				l_tag := ""
 				l_item_tag := "dt"
 			elseif a_list_item.is_definition_description_kind then
-				l_tag := "dl"
-				l_item_tag := "div"
+				l_is_def := True
+				l_tag := ""
+				l_item_tag := "dd"
 			else
 				l_tag := "ul"
 				l_item_tag := "li"
@@ -523,19 +526,23 @@ feature -- Processing
 			if attached a_list_item.text as t then
 				t.process (Current)
 			end
+			if not l_is_def and a_list_item.count > 0 then
+				if not l_tag.is_empty then
+					output ("<" + l_tag + ">")
+				end
+				visit_composite (a_list_item)
+				if not l_tag.is_empty then
+					output ("</" + l_tag + ">")
+				end
+			end
+			unset_next_output_require_newline
+			output ("</" + l_item_tag + ">%N")
 			if a_list_item.is_definition_term_kind and then
 				attached {WIKI_DEFINITION_TERM} a_list_item as l_term and then
 				attached l_term.definition_description as l_def
 			then
 				l_def.process (Current)
 			end
-			if a_list_item.count > 0 then
-				output ("<" + l_tag + ">")
-				visit_composite (a_list_item)
-				output ("</" + l_tag + ">")
-			end
-			unset_next_output_require_newline
-			output ("</" + l_item_tag + ">%N")
 		end
 
 	visit_preformatted_text (a_block: WIKI_PREFORMATTED_TEXT)

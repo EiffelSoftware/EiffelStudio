@@ -584,25 +584,33 @@ table {
   margin: 2px 0 2px 0;
   overflow: auto;
 }
-/* line 170, ../scss/site/docs.scss */
+/* line 169, ../scss/site/docs.scss */
+.wikipage dt {
+  font-weight: bold;
+}
+/* line 172, ../scss/site/docs.scss */
+.wikipage dd {
+  font-style: italic;
+}
+/* line 176, ../scss/site/docs.scss */
 .wikipage .wdocs-nav {
   border-top: solid 1px #999;
   color: #5082D9;
   background-color: rgba(220, 220, 220, 0.7);
 }
-/* line 176, ../scss/site/docs.scss */
+/* line 182, ../scss/site/docs.scss */
 .wikipage .cache-info, .wikipage .uuid {
   color: #999;
   font-size: smaller;
   text-align: right;
 }
 
-/* line 184, ../scss/site/docs.scss */
+/* line 190, ../scss/site/docs.scss */
 #content .bookcards {
   padding: 0;
   margin: 0;
 }
-/* line 189, ../scss/site/docs.scss */
+/* line 195, ../scss/site/docs.scss */
 #content .bookcards ul li {
   display: inline-block;
   display: inline;
@@ -613,7 +621,7 @@ table {
   height: 140px;
   margin: 0 10px 5px 0px;
 }
-/* line 194, ../scss/site/docs.scss */
+/* line 200, ../scss/site/docs.scss */
 #content .bookcards ul li a {
   border: solid 1px #ddd;
   margin: 10px;
@@ -624,23 +632,23 @@ table {
   -webkit-border-radius: 7px;
   border-radius: 7px;
 }
-/* line 202, ../scss/site/docs.scss */
+/* line 208, ../scss/site/docs.scss */
 #content .bookcards ul li a:hover {
   background: #e3e7e8;
 }
-/* line 206, ../scss/site/docs.scss */
+/* line 212, ../scss/site/docs.scss */
 #content .bookcards ul li img {
   float: left;
   opacity: 0.4;
 }
-/* line 210, ../scss/site/docs.scss */
+/* line 216, ../scss/site/docs.scss */
 #content .bookcards ul li h2 {
   font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif;
   padding: 0;
   margin-top: 5px;
   margin-bottom: 10px;
 }
-/* line 216, ../scss/site/docs.scss */
+/* line 222, ../scss/site/docs.scss */
 #content .bookcards ul li p {
   font-size: smaller;
   line-height: 1.2em;
@@ -652,7 +660,7 @@ table {
   overflow: auto;
 }
 
-/* line 230, ../scss/site/docs.scss */
+/* line 236, ../scss/site/docs.scss */
 #wdocs_edit textarea {
   width: 98%;
 }

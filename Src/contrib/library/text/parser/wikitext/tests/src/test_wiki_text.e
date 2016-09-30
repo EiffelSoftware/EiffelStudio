@@ -951,7 +951,7 @@ e := "{
 			gen := new_xhtml_generator (o)
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FIXME: failure!
+			assert ("as e", o.same_string (e)) -- FIXME: failure! see https://en.wikipedia.org/wiki/Help:List
 		end
 
 	test_list_mixed
@@ -1008,6 +1008,7 @@ e := "{
 		end
 
 	test_list_mixed_def
+			-- See https://en.wikipedia.org/wiki/Help:List
 		local
 			t: WIKI_CONTENT_TEXT
 			o: STRING
@@ -1040,7 +1041,7 @@ e := "{
 			gen := new_xhtml_generator (o)
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
-			assert ("as e", o.same_string (e)) -- FAILURE !!!
+			assert ("as e", o.same_string (e)) -- FAILURE !!! see https://en.wikipedia.org/wiki/Help:List
 		end
 
 

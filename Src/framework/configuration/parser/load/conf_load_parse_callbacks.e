@@ -2282,42 +2282,39 @@ feature {NONE} -- Processing of options
 			t_attached: t /= Void
 			a_namespace_attached: a_namespace /= Void
 		local
-			o: CONF_TARGET_OPTION
+			default_options: CONF_TARGET_OPTION
+			new_options: CONF_TARGET_OPTION
 		do
 			if not a_namespace.same_string (latest_namespace) then
 					-- Option settings are different from the current defauls, we need to set them if they are not set yet.
-				o := t.options
-				if o = Void then
-					o := factory.new_target_option
-				end
 				if
 					a_namespace.same_string (namespace_1_16_0)
 				then
 						-- Use the defaults of ES 16.11.
-					o.merge (default_options_16_11)
+					default_options := default_options_16_11
 				elseif
 					a_namespace.same_string (namespace_1_15_0)
 				then
 						-- Use the defaults of ES 15.11.
-					o.merge (default_options_15_11)
+					default_options := default_options_15_11
 				elseif
-					a_namespace.same_string (namespace_1_14_0) or
+					a_namespace.same_string (namespace_1_14_0) or else
 					a_namespace.same_string (namespace_1_13_0)
 				then
 						-- Use the defaults of ES 14.05.
-					o.merge (default_options_14_05)
+					default_options := default_options_14_05
 				elseif
-					a_namespace.same_string (namespace_1_12_0) or
+					a_namespace.same_string (namespace_1_12_0) or else
 					a_namespace.same_string (namespace_1_11_0)
 				then
 						-- Use the defaults of ES 7.3.
-					o.merge (default_options_7_3)
+					default_options := default_options_7_3
 				elseif
 					a_namespace.same_string (namespace_1_10_0) or else
 					a_namespace.same_string (namespace_1_9_0)
 				then
 						-- Use the defaults of ES 7.0.
-					o.merge (default_options_7_0)
+					default_options := default_options_7_0
 				elseif
 					a_namespace.same_string (namespace_1_8_0) or else
 					a_namespace.same_string (namespace_1_7_0) or else
@@ -2325,7 +2322,7 @@ feature {NONE} -- Processing of options
 					a_namespace.same_string (namespace_1_5_0)
 				then
 						-- Use the defaults of ES 6.4.
-					o.merge (default_options_6_4)
+					default_options := default_options_6_4
 				elseif
 					a_namespace.same_string (namespace_1_4_0) or else
 					a_namespace.same_string (namespace_1_3_0) or else
@@ -2333,13 +2330,15 @@ feature {NONE} -- Processing of options
 					a_namespace.same_string (namespace_1_0_0)
 				then
 						-- Use the defaults of ES 6.3 and below.
-					o.merge (default_options_6_3)
+					default_options := default_options_6_3
 				else
 						-- Unknown version, do not change anything just in case it is above the current one.
-					o := Void
+					-- default_options := Void
 				end
-				if o /= Void then
-					t.set_options (o)
+				if attached default_options then
+					new_options := t.options
+					new_options.merge (default_options)
+					t.set_options (new_options)
 				end
 			end
 		end

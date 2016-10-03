@@ -21,6 +21,7 @@ feature
       i, j: INTEGER
     do
       file_name := separate_character_option_value ('i')
+      check attached file_name then end
       is_bench := index_of_word_option ("bench") > 0
 
       create in.make_open_read (file_name)      

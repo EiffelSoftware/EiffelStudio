@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="test">
 	<target name="test">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" void_safety="none"/>
+		<option warning="true" void_safety="conformance"/>
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="scoop"/>
 		<setting name="console_application" value="true"/>

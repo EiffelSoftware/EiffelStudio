@@ -104,7 +104,7 @@ feature
   
   
 feature {NONE}
-  vector: ARRAYED_LIST [VALUE3]
+  vector: detachable ARRAYED_LIST [VALUE3]
 
   start, final: INTEGER
   nelts: INTEGER

@@ -28,7 +28,9 @@ feature
 			vector: ARRAY [DOUBLE]
 			n_str: STRING
 		do
-			create in.make_open_read (separate_character_option_value ('i'))
+			check attached separate_character_option_value ('i') as o then
+				create in.make_open_read (o)
+			end
 			n_str := separate_character_option_value ('x')
 			if n_str /= Void then
 				num_workers := n_str.to_integer

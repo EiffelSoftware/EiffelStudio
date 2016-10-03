@@ -13,16 +13,27 @@ inherit
 		redefine
 			file_name,
 			has_associated_file,
-			build_explain,
-			trace_primary_context
-		end;
+			build_explain
+		end
+
+create
+	default_create,
+	make
+
+feature {NONE} -- Creation
+
+	make (e: CONF_ERROR)
+			-- Associate error object with confoguration error `e'.
+		do
+			set_error (e)
+		end
 
 feature -- Properties
 
 	error: CONF_ERROR
 			-- Error from configuration system.
 
-	file_name: like {ERROR}.file_name
+	file_name: detachable like {ERROR}.file_name
 			-- <Precursor>
 		do
 			if attached {CONF_ERROR_PARSE} error as l_parse_error then
@@ -50,16 +61,6 @@ feature -- Output
 				st.add ("Unkown Error.")
 			end
 			st.add_new_line
-		end;
-
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			if has_associated_file then
-				a_text_formatter.add_string (file_name)
-			else
-				Precursor (a_text_formatter)
-			end
 		end
 
 feature -- Setting
@@ -80,7 +81,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

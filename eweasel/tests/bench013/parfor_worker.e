@@ -79,7 +79,7 @@ feature
   
 feature {NONE}
   ncols: INTEGER
-  to_array: ARRAY2 [INTEGER]
+  to_array: detachable ARRAY2 [INTEGER]
 
   from_array: separate ARRAY2[INTEGER]
   threshold: INTEGER

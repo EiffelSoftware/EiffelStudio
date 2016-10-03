@@ -108,8 +108,8 @@ feature
       Result := {DOUBLE_MATH}.sqrt(sqr(a.x - b.x) + sqr(a.y - b.y));
     end
 
-  matrix: ARRAY2[DOUBLE]
-  vector: ARRAY [DOUBLE]
+  matrix: detachable ARRAY2[DOUBLE]
+  vector: detachable ARRAY [DOUBLE]
   start, final, nelts: INTEGER
   
 feature {NONE}

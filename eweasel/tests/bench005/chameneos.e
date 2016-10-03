@@ -66,11 +66,11 @@ feature
 
 	-- These are basically just to communicate between `contact_broker'
 	-- and `request_meeting'
-	other_cham: separate CHAMENEOS
+	other_cham: detachable separate CHAMENEOS
 	other_c: INTEGER
 	n: INTEGER
 
-	meet_other(a_other_cham: separate CHAMENEOS)
+	meet_other(a_other_cham: detachable separate CHAMENEOS)
 		do
 			a_other_cham.meet_with(c, n, True)
 		end

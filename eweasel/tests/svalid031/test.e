@@ -15,7 +15,7 @@ feature {NONE}
 		end
 feature
 
-	value alias "[]" (n: like Current): like Current
+	value alias "[]" (n: like Current): detachable  like Current
 		do
 			print ("In value%N")
 		end
@@ -25,5 +25,5 @@ feature
 			create y.make
 		end
 
-	y: TEST1
+	y: detachable TEST1
 end

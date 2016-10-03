@@ -10,7 +10,7 @@ create
 	make
 
 feature
-	weasel alias "+" (n: like Current): like Current
+	weasel alias "+" (n: like Current): detachable like Current
 		do
 			print ("In weasel%N")
 		end

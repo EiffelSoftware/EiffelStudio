@@ -26,6 +26,23 @@ feature -- Project
 
 	e_must_open_project: STRING_32 do Result := locale.translation ("This function can only be performed once a project has been opened.%NPlease open a project and try again.") end
 
+feature -- Project configuration
+
+	e_precompile_catcall_detection_mismatch (target_value, precompile_value, none_value: READABLE_STRING_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Selected target CAT-call detection setting %"$1%" does not match the setting %"$2%" of precompile. They should be the same if one of them is %"$3%".", "compiler"), target_value, precompile_value, none_value)
+		end
+
+	e_precompile_concurrency_mismatch (target_value, precompile_value: READABLE_STRING_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Selected target concurrency setting %"$1%" does not match the setting %"$2%" of precompile. They should be the same.", "compiler"), target_value, precompile_value)
+		end
+
+	e_precompile_void_safety_mismatch (target_value, precompile_value, none_value: READABLE_STRING_32): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context ("Selected target void safety setting %"$1%" does not match the setting %"$2%" of precompile. They should be the same if one of them is %"$3%".", "compiler"), target_value, precompile_value, none_value)
+		end
+
 feature -- Code template
 
 	e_code_template_parse (a_error: READABLE_STRING_GENERAL; a_file_name: READABLE_STRING_GENERAL): attached STRING_32 do Result := locale.formatted_string ("Unable to parse the code template  '$1'. Error: $2.", [a_file_name, a_error]) end
@@ -46,7 +63,7 @@ feature -- Prompts
 	e_save_session_data_failed: attached STRING_32 do Result := locale.translation ("There was an error when trying to store the EiffelStudio session data.") end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

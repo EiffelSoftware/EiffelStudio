@@ -346,9 +346,9 @@ feature -- Option names and descriptions
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation ("No"),
-				locale.translation ("Conformance"),
-				locale.translation ("Complete")
+				locale.translation_in_context ("None", "configuration.catcall_detection"),
+				locale.translation_in_context ("Conformance", "configuration.catcall_detection"),
+				locale.translation_in_context ("Complete", "configuration.catcall_detection")
 			>>)
 		ensure
 			valid_index:
@@ -368,9 +368,9 @@ feature -- Option names and descriptions
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation_in_context ("Unstructured", "configuration"),
-				locale.translation_in_context ("None", "configuration"),
-				locale.translation_in_context ("SCOOP", "configuration")
+				locale.translation_in_context ("Unstructured", "configuration.concurrency"),
+				locale.translation_in_context ("None", "configuration.concurrency"),
+				locale.translation_in_context ("SCOOP", "configuration.concurrency")
 			>>)
 		ensure
 			valid_index:
@@ -392,11 +392,11 @@ feature -- Option names and descriptions
 			-- Name of a void safety option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation ("No"),
-				locale.translation ("Conformance"),
-				locale.translation ("Initialization"),
-				locale.translation ("Transitional"),
-				locale.translation ("Complete")
+				locale.translation_in_context ("None", "configuration.void_safety"),
+				locale.translation_in_context ("Conformance", "configuration.void_safety"),
+				locale.translation_in_context ("Initialization", "configuration.void_safety"),
+				locale.translation_in_context ("Transitional", "configuration.void_safety"),
+				locale.translation_in_context ("Complete", "configuration.void_safety")
 			>>)
 		ensure
 			valid_index:
@@ -1165,6 +1165,62 @@ feature -- String parse errors
 			else
 				Result := locale.formatted_string (locale.translation ("Invalid value for configuration option %"$1%": %"$2%""), [option_name, option_value])
 			end
+		end
+
+feature -- Capability errors
+
+	e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster_name, target, system: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("Option %"$1%" for class %"$3%" has value %"$2%"%
+				% incompatible with value %"$4%" specified for its cluster %"$5%" (system: $7, target: $6).", "configuration"),
+				capability, -- 1
+				class_value, -- 2
+				class_name, -- 3
+				cluster_value, -- 4
+				cluster_name, -- 5
+				target, -- 6
+				system) -- 7
+		end
+
+	e_incompatible_group_capability (capability, group_value, group_name, group_target, group_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("Option %"$1%" for group %"$3%" (system: $5, target: $4) has value %"$2%"%
+				% incompatible with value %"$6%" specified for target %"$7%" (system: $8) containing this group.", "configuration"),
+				capability, -- 1
+				group_value, -- 2
+				group_name, -- 3
+				group_target, -- 4
+				group_system, -- 5
+				target_value, -- 6
+				target_name, -- 7
+				target_system) -- 8
+		end
+
+	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("Option %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
+				% incompatible with value %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
+				capability, -- 1
+				parent_value, -- 2
+				parent_name, -- 3
+				parent_system, -- 4
+				target_value, -- 5
+				target_name, -- 6
+				target_system) -- 7
+		end
+
+	e_incompatible_root_option (capability, root_value, capability_value, target_name, system: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("Root option %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
+				capability, -- 1
+				root_value, -- 2
+				capability_value, -- 3
+				target_name, -- 4
+				system) -- 5
 		end
 
 feature -- Boolean values

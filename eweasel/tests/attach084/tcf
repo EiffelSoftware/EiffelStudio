@@ -1,17 +1,18 @@
 test_name 	 manifest-string-type
 test_description In on-demand void-safety the type of manifest strings is incorrectly computed to be STRING_32 instead of STRING_8 and it causes the compiler to crash at degree -1. Note this happens when using non-safe EiffelBase.
 
-define	BASE_LIBRARY	"base"
 copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_frozen
-compile_result validity_error TEST VD88; TEST VEVI
+compile_result validity_error NONE VD00 VD46
 
-define	BASE_LIBRARY	"base-safe"
-copy_sub	Ace $TEST Ace
+abort_compile
+cleanup_compile
 
-resume_compile
+copy_sub	Ace_safe $TEST Ace
+
+compile_frozen
 compile_result ok
 c_compile_work
 c_compile_result	ok

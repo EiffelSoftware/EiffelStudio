@@ -377,13 +377,23 @@ feature -- Element change
 			new_size := new_upper - new_lower + 1
 			l_increased_by_one := (i = upper + 1) or (i = lower - 1)
 			if empty_area then
-					-- List is empty. First we create an empty SPECIAL of the right capacity.
+					-- The array is empty. First we create an empty SPECIAL of the right capacity.
 				make_empty_area (new_size.max (additional_space))
-				if not l_increased_by_one then
-						-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
-					area.fill_with (({G}).default, 0, new_size - 2)
+				if new_lower < lower then
+						-- The array is extended below lower.
+					area.extend (v)
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `1' to `new_size - 1' with the default value.
+						area.fill_with (({G}).default, 1, new_size - 1)
+					end
+				else
+						-- The array is extended above upper.
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
+						area.fill_with (({G}).default, 0, new_size - 2)
+					end
+					area.extend (v)
 				end
-				area.extend (v)
 			else
 				old_size := area.capacity
 				if new_size > old_size then
@@ -620,7 +630,7 @@ feature -- Removal
 			n_non_negative: n >= 0
 		do
 			if n > count then
-				upper := lower - 1
+				lower := upper + 1
 				area := area.aliased_resized_area (0)
 			else
 				keep_tail (count - n)

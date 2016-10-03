@@ -7,7 +7,7 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" syntax="standard" namespace="EiffelSoftware.Library">
+		<option warning="true" syntax="standard" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

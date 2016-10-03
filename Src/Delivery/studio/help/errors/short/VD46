@@ -1,0 +1,5 @@
+Configuration error: incompatible precompiled library.
+What to do:
+	- remove reference to the precompile from the system
+	- change target options to be compatible with the precompile
+	- replace precompile with a compatible one

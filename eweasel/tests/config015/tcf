@@ -1,5 +1,5 @@
 test_name	config-library-options-redefinition
-test_description Some options should be taken from the library unchanged, som other can be overridden.
+test_description Some options should be taken from the library unchanged, some other can be overridden.
 
 define_directory LIB_A	$CLUSTER	A
 copy_raw	test.e	$CLUSTER	test.e

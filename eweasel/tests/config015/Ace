@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test">
 	<target name="test">                                                                                                                                                                                                                                                                	
 		<root class="TEST" feature="make"/>
-		<option warning="true" syntax="obsolete" debug="true">
+		<option warning="true" syntax="obsolete" debug="true" void_safety="all">
 			<warning name="syntax" enabled="false"/>
 			<debug name="a" enabled="true"/>
 		</option>

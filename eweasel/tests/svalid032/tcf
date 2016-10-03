@@ -1,5 +1,5 @@
 test_name 	svalid-inherit-like-argument
-test_description A feature using a like argument in its body in a generic class whose formal generic parameterG is transformed in descendant class into LIST [G] triggers some spurious system validity errors when none should be reported.
+test_description A feature using a like argument in its body in a generic class whose formal generic parameter G is transformed in descendant class into LIST [G] triggers some spurious system validity errors when none should be reported.
 
 copy_sub 	Ace $TEST Ace
 copy_sub 	test.e $CLUSTER test.e

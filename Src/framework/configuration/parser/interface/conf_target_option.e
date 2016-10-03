@@ -11,6 +11,7 @@ class
 inherit
 	CONF_OPTION
 		redefine
+			copy,
 			default_create,
 			is_empty,
 			make_6_3,
@@ -105,6 +106,23 @@ feature -- Merging
 			void_safety_capability.set_safely_root (other.void_safety_capability)
 		end
 
+feature -- Duplication
+
+	copy (other: like Current)
+			-- <Precursor>
+		do
+			if other /= Current then
+				Precursor (other)
+					-- Make copies of capabilities with appropriate values and update root values.
+				create catcall_safety_capability.make (catcall_detection)
+				catcall_safety_capability.put_root_index (other.catcall_safety_capability.custom_root_index)
+				create concurrency_capability.make (concurrency)
+				concurrency_capability.put_root_index (other.concurrency_capability.custom_root_index)
+				create void_safety_capability.make (void_safety)
+				void_safety_capability.put_root_index (other.void_safety_capability.custom_root_index)
+			end
+		end
+
 feature {NONE} -- Access: concurrency
 
 	concurrency_name: ARRAY [READABLE_STRING_32]
@@ -118,6 +136,11 @@ feature {NONE} -- Access: concurrency
 		ensure
 			result_attached: Result /= Void
 		end
+
+invariant
+	consistent_catcall_detection: catcall_safety_capability.value = catcall_detection
+	consistent_concurrency: concurrency_capability.value = concurrency
+	consistent_void_safety: void_safety_capability.value = void_safety
 
 note
 	copyright:	"Copyright (c) 1984-2016, Eiffel Software"

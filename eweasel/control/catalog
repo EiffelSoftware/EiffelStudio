@@ -57,7 +57,7 @@ test	array2-basics			array008 tcf pass array array2
 test	array-force-precondition	array009 tcf pass array
 test	array-binary-search-overflow	array010 tcf fail array
 test	array-force2				array011 tcf fail array
-test	array-operation-violations				array012 tcf fail array
+test	array-operation-violations		array012 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list
@@ -657,15 +657,15 @@ test	simple-catcall-generic		catcall002 tcf fail used_to_pass catcall
 test	catcall-check-failure-recursive-generic	catcall003 tcf fail used_to_pass catcall
 test	catcall-generic				catcall004 tcf fail used_to_pass catcall
 test	catcall-generic-numeric		catcall005 tcf fail used_to_pass catcall
-test	catcall-at-runtime-detection	catcall006 tcf pass catcall
+test	catcall-at-runtime-detection	catcall006 tcf fail used_to_pass catcall
 test	wrong-catcall-reported-on-generic-expanded	catcall007 tcf fail used_to_pass catcall
 test	wrong-catcall-on-function-tuple	catcall008 tcf fail catcall
-test	catcall-on-tuple-insertion	catcall009 tcf pass catcall tuple
+test	catcall-on-tuple-insertion	catcall009 tcf fail used_to_pass catcall tuple
 test	simple-catcall-2			catcall010 tcf fail catcall
 test	catcall-on-tuple-insertion-2	catcall011 tcf fail catcall
 test	spurious-catcall-errors		catcall012 tcf fail catcall
-test	catcall-crash-with-conversion	catcall013 tcf pass catcall
-test	catcall-crash-at-runtime	catcall014 tcf pass catcall
+test	catcall-crash-with-conversion	catcall013 tcf fail used_to_pass catcall
+test	catcall-crash-at-runtime	catcall014 tcf fail used_to_pass catcall
 
 -- Incrementality tests
 
@@ -2005,7 +2005,7 @@ test	crash-when-calling-out-on-a-formal	term162 tcf pass termination dotnet
 test    bad_formal_types                        term163 tcf pass validity
 test    crash-in-conversion-clause 	term164 tcf pass validity
 test    crash-in-checking-inherited-code	term165 tcf pass validity
-test    catcall-and-full-class-checking	term166 tcf pass termination system-validity
+test    catcall-and-full-class-checking	term166 tcf fail used_to_pass termination system-validity
 test	single-constraint-with-renaming-crash	term167	tcf pass termination attribute
 test	inline-agent-with-attribute-body	term168	tcf pass termination agents attribute
 test	self-init-attribute-returning-current	term169	tcf pass termination self_init void_safe attribute

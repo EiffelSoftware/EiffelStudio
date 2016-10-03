@@ -257,9 +257,16 @@ feature -- Access queries
 	options: CONF_TARGET_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-			Result := Precursor.twin
-			if attached extends as l_extends then
+			if not attached extends as l_extends then
+					-- Top-level target: use its options directly.
+				Result := Precursor.twin
+			elseif attached internal_options as o then
+					-- A parented target with its own options: update options from parent.
+				Result := Precursor.twin
 				Result.merge (l_extends.options)
+			else
+					-- A parented target without its own options: take options from parent.
+				Result := l_extends.options
 			end
 		end
 

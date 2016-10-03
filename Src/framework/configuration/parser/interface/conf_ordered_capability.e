@@ -62,6 +62,15 @@ feature -- Status report
 			definition: Result = (0 < custom_root_index and custom_root_index <= value.count)
 		end
 
+	is_custom_root_valid: BOOLEAN
+			-- Is expclicitly selected value compatible with supported capabilities?
+		do
+			Result := not is_root_set or else is_capable (custom_root_index)
+		ensure
+			true_if_unset: not is_root_set implies Result
+			definition_if_set: is_root_set implies Result = is_capable (custom_root_index)
+		end
+
 feature -- Comparison
 
 	same_kind (other: CONF_ORDERED_CAPABILITY): BOOLEAN
@@ -169,16 +178,16 @@ feature -- Modification
 		require
 			other_attached: attached other
 		do
-			if not is_root_set and then (other.is_root_set or else custom_root_index /= other.custom_root_index) then
-				put_root_index (other.custom_root_index)
+			if not is_root_set and then not value.is_set and then root_index /= other.root_index then
+				put_root_index (other.root_index)
 			end
 		ensure
 			old_value:
-				(old is_root_set or else old custom_root_index = other.custom_root_index) implies
+				(old is_root_set or else value.is_set or else old root_index = other.root_index) implies
 					custom_root_index = old custom_root_index
 			new_value:
-				(not old is_root_set and then old custom_root_index /= other.custom_root_index) implies
-					(is_root_set and custom_root_index = other.custom_root_index)
+				(not old is_root_set and then not value.is_set and then old root_index /= other.root_index) implies
+					(is_root_set and custom_root_index = other.root_index)
 		end
 
 	set_safely (other: like Current)

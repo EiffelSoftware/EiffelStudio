@@ -1122,9 +1122,10 @@ void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv
 	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
 #else
 	struct timeval tv;
-	tv.tv_sec = recv_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_sec = (int) recv_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_usec = 0;
 
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, &tv, sizeof(struct timeval)));
 #endif
 }
 
@@ -1158,7 +1159,8 @@ void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send
 	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
 #else
 	struct timeval tv;
-	tv.tv_sec = send_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_sec = (int) send_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_usec = 0;
 
 	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
 #endif

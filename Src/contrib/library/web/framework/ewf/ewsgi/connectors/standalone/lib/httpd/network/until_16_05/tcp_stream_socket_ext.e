@@ -56,15 +56,6 @@ feature {NONE} -- Externals
 		deferred
 		end
 
---	set_so_rcvtimeo (a_timeout_seconds: INTEGER)
---			-- Set the receive timeout in seconds on Current socket.
---			-- if `0' the related operations will never timeout.
---		require
---			positive_timeout: a_timeout_seconds >= 0
---		do
---			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
---		end
-
 	c_set_sock_recv_timeout (a_fd, a_level: INTEGER; a_timeout_seconds: INTEGER)
 			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
 		external

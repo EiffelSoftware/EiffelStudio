@@ -141,6 +141,15 @@ feature -- Input
 			socket.read_character
 		end
 
+	peek_stream (nb_char: INTEGER)
+		require
+			nb_char_positive: nb_char > 0
+		do
+			if attached {TCP_STREAM_SOCKET} socket as l_socket then
+				l_socket.peek_stream (nb_char)
+			end
+		end
+
 	bytes_read: INTEGER
 		do
 			Result := socket.bytes_read
@@ -306,6 +315,15 @@ feature -- Status Report
 	readable: BOOLEAN
 		do
 			Result := socket.readable
+		end
+
+	has_incoming_data: BOOLEAN
+			-- Check if Current has available data to be read.
+			-- note: no data will not be removed from the queue.
+		do
+			if attached {TCP_STREAM_SOCKET} socket as l_socket then
+				Result := l_socket.has_incoming_data
+			end
 		end
 
 	ready_for_reading: BOOLEAN

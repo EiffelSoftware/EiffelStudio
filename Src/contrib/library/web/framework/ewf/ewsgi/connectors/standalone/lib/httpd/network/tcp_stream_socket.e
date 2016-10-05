@@ -55,6 +55,38 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
+	peek_stream (nb_char: INTEGER)
+			-- Read a string of at most `nb_char' characters without removing the data from the queue.
+			-- Make result available in last_string.
+		require
+			readable: readable
+			socket_exists: exists
+		local
+			ext: C_STRING
+			retval: INTEGER
+			l: like last_string
+		do
+			create ext.make_empty (nb_char + 1)
+			retval := clib_recv (descriptor, ext.item, nb_char, c_peekmsg)
+			if retval = 0 then
+				last_string.wipe_out
+				socket_error := Void
+			elseif retval > 0 then
+				ext.set_count (retval)
+				l := last_string
+				l.wipe_out
+				l.grow (retval)
+				l.set_count (retval)
+				ext.read_substring_into (l, 1, retval)
+				socket_error := Void
+			else
+				last_string.wipe_out
+				socket_error := "Socket error (MSG_PEEK)"
+			end
+		ensure
+			last_string_not_void: last_string /= Void
+		end
+
 	send_message (a_msg: STRING)
 		do
 			put_string (a_msg)
@@ -73,6 +105,16 @@ feature -- Output
 
 feature -- Status report
 
+	has_incoming_data: BOOLEAN
+			-- Check if Current has available data to be read.
+			-- note: no data will not be removed from the queue.
+		require
+			socket_exists: exists
+		do
+			peek_stream (1)
+			Result := last_string.count = 1
+		end
+
 	try_ready_for_reading: BOOLEAN
 			-- Is data available for reading from the socket right now?
 		require
@@ -82,6 +124,19 @@ feature -- Status report
 		do
 			retval := c_select_poll_with_timeout (descriptor, True, 0)
 			Result := (retval > 0)
+		end
+
+feature {NONE} -- C implementation
+
+	clib_recv (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+			-- External routine to receive at most `len' number of
+			-- bytes into buffer `buf' from socket `fd' with `flags' options.
+		external
+			"C inline"
+		alias
+			"[
+			return (EIF_INTEGER) recv ((int) $a_fd, (char *) $buf, (int) $len, (int) $flags);
+			]"
 		end
 
 note

@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 		do
 			reset_request
 
-			has_error := False
+			reset_error
 			if attached internal_client_socket as l_sock then
 				l_sock.cleanup
 			end
@@ -156,6 +156,20 @@ feature -- Status report
 	has_error: BOOLEAN
 			-- Error occurred during `analyze_request_message'
 
+feature -- Status change
+
+	report_error (m: detachable READABLE_STRING_GENERAL)
+			-- Report error occurred, with optional message `m'.
+		do
+			has_error := True
+		end
+
+	reset_error
+			-- Reset previous error for current request handler.
+		do
+			has_error := False
+		end
+
 feature -- Change
 
 	set_is_verbose (b: BOOLEAN)
@@ -236,11 +250,18 @@ feature -- Execution
 		require
 			is_connected: is_connected
 			reuse_connection_when_possible: a_is_reusing_connection implies is_persistent_connection_supported
+			no_error: not has_error
 		local
 			l_remote_info: detachable like remote_info
 			l_socket: like client_socket
 			l_is_ready: BOOLEAN
 		do
+			debug ("dbglog")
+				if a_is_reusing_connection then
+					dbglog ("execute_request: wait on persistent connection.")
+				end
+			end
+			reset_error
 			l_socket := client_socket
 			check
 				socket_attached: l_socket /= Void
@@ -248,17 +269,17 @@ feature -- Execution
 			end
 			if l_socket.is_closed then
 				debug ("dbglog")
-					dbglog (generator + ".execute_request {socket is Closed!}")
+					dbglog ("execute_request {socket is Closed!}")
 				end
 			else
 				debug ("dbglog")
-					dbglog (generator + ".execute_request  socket=" + l_socket.descriptor.out + " ENTER")
+					dbglog ("execute_request  socket=" + l_socket.descriptor.out + " ENTER")
 				end
 
 				if a_is_reusing_connection then
 						--| set by default 5 seconds.
 					l_socket.set_recv_timeout (keep_alive_timeout) -- in seconds!
-					l_is_ready := l_socket.ready_for_reading
+					l_is_ready := socket_has_incoming_data (l_socket)
 				else
 					l_is_ready := True
 				end
@@ -273,28 +294,31 @@ feature -- Execution
 						remote_info := l_remote_info
 					end
             		analyze_request_message (l_socket)
-            	else
-					has_error := True
-					debug ("dbglog")
-						dbglog (generator + ".execute_request socket=" + l_socket.descriptor.out + "} timeout!")
-	            	end
-				end
 
-	            if has_error then
-					if l_is_ready then
+            		if has_error then
 	--					check catch_bad_incoming_connection: False end
 						if is_verbose then
 							log (request_header + "%NWARNING: invalid HTTP incoming request", warning_level)
 						end
-					end
-				else
-					if is_verbose then
-						log (request_header, information_level)
-					end
-					process_request (l_socket)
-	            end
+						process_bad_request (l_socket)
+						is_persistent_connection_requested := False
+					else
+						if is_verbose then
+							log (request_header, information_level)
+						end
+						process_request (l_socket)
+		            end
+            	else
+            		check is_reusing_connection: a_is_reusing_connection end
+            			-- Close persistent connection, since no new connection occurred in the delay `keep_alive_timeout'.
+            		is_persistent_connection_requested := False
+					debug ("dbglog")
+						dbglog ("execute_request socket=" + l_socket.descriptor.out + "} close persistent connection.")
+	            	end
+				end
+
 	            debug ("dbglog")
-		            dbglog (generator + ".execute_request {" + l_socket.descriptor.out + "} LEAVE")
+		            dbglog ("execute_request {" + l_socket.descriptor.out + "} LEAVE")
 	            end
 			end
 		end
@@ -307,7 +331,7 @@ feature -- Execution
 feature -- Request processing
 
 	process_request (a_socket: HTTPD_STREAM_SOCKET)
-			-- Process request ...
+			-- Process request on socket `a_socket'.
 		require
 			no_error: not has_error
 			a_uri_attached: uri /= Void
@@ -316,6 +340,39 @@ feature -- Request processing
 			a_header_text_attached: request_header /= Void
 			a_socket_attached: a_socket /= Void
 		deferred
+		end
+
+	process_bad_request (a_socket: HTTPD_STREAM_SOCKET)
+			-- Process bad request catched on `a_socket'.
+		require
+			has_error: has_error
+			a_socket_attached: a_socket /= Void
+		local
+--			h: STRING
+--			s: STRING
+		do
+				-- NOTE: this is experiment code, and not ready yet.
+
+--			if a_socket.ready_for_writing then
+--				s := "{
+--<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+--<html><head>
+--<title>400 Bad Request</title>
+--</head><body>
+--<h1>Bad Request</h1>
+--</body></html>
+--				}"
+--				create h.make (1_024)
+--				h.append ("HTTP/1.1 400 Bad Request%R%N")
+--				h.append ("Content-Length: " + s.count.out + "%R%N")
+--				h.append ("Connection: close%R%N")
+--				h.append ("Content-Type: text/html; charset=iso-8859-1%R%N")
+--				h.append ("%R%N")
+--				a_socket.put_string (h)
+--				if a_socket.ready_for_writing then
+--					a_socket.put_string (s)
+--				end
+--			end
 		end
 
 feature -- Parsing
@@ -336,15 +393,20 @@ feature -- Parsing
 			request_header := txt
 			if
 				not has_error and then
-				a_socket.is_readable and then
-				attached next_line (a_socket) as l_request_line and then
-				not l_request_line.is_empty
+				a_socket.readable
 			then
-				txt.append (l_request_line)
-				txt.append_character ('%N')
-				analyze_request_line (l_request_line)
+				if
+					attached next_line (a_socket) as l_request_line and then
+					not l_request_line.is_empty
+				then
+					txt.append (l_request_line)
+					txt.append_character ('%N')
+					analyze_request_line (l_request_line)
+				else
+					report_error ("Bad header line (empty)")
+				end
 			else
-				has_error := True
+				report_error ("Socket is not readable")
 			end
 			l_is_verbose := is_verbose
 			if not has_error then
@@ -419,7 +481,9 @@ feature -- Parsing
 				n := n - 1
 			end
 			version := line.substring (next_pos + 1, n)
-			has_error := method.is_empty
+			if method.is_empty then
+				report_error ("Missing request method data")
+			end
 		end
 
 	next_line (a_socket: HTTPD_STREAM_SOCKET): detachable STRING
@@ -431,22 +495,26 @@ feature -- Parsing
 			retried: BOOLEAN
 		do
 			if retried then
-				has_error := True
+				report_error ("Rescue in next_line")
 				Result := Void
-			elseif a_socket.readable then
+			elseif
+				a_socket.readable and then
+				socket_has_incoming_data (a_socket)
+			then
+
 				a_socket.read_line_thread_aware
 				Result := a_socket.last_string
 					-- Do no check `socket_ok' before socket operation,
 					-- otherwise it may be False, due to error during other socket operation in same thread.
 				if not a_socket.socket_ok then
-					has_error := True
+					report_error ("Socket error")
 					if is_verbose then
 						log (request_header +"%N" + Result + "%N## socket_ok=False! ##", debug_level)
 					end
 				end
 			else
 					-- Error with socket...
-				has_error := True
+				report_error ("Socket error: not readable")
 				if is_verbose then
 					log (request_header + "%N## Socket is not readable! ##", debug_level)
 				end
@@ -480,6 +548,17 @@ feature -- Output
 					io.put_string (m + "%N")
 				end
 			end
+		end
+
+feature {NONE} -- Helpers
+
+	socket_has_incoming_data (a_socket: HTTPD_STREAM_SOCKET): BOOLEAN
+			-- Is there any data to read on `a_socket' ?
+		require
+			a_socket.readable
+		do
+				-- FIXME: check if both are really needed.			
+			Result := a_socket.ready_for_reading and then a_socket.has_incoming_data
 		end
 
 invariant

@@ -111,6 +111,15 @@ feature -- Execution
 				log ("  - socket_recv_timeout = " + configuration.socket_recv_timeout.out + " seconds")
 				log ("  - keep_alive_timeout = " + configuration.keep_alive_timeout.out + " seconds")
 				log ("  - max_keep_alive_requests = " + configuration.max_keep_alive_requests.out)
+				if configuration.has_ssl_support then
+					if configuration.is_secure then
+						log ("  - SSL = enabled")
+					else
+						log ("  - SSL = disabled")
+					end
+				else
+					log ("  - SSL = not supported")
+				end
 				if configuration.verbose_level > 0 then
 					log ("  - verbose_level = " + configuration.verbose_level.out)
 				end

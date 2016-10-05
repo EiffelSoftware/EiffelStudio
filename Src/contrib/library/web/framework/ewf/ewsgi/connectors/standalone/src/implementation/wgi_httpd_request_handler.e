@@ -97,7 +97,9 @@ feature -- Request processing
 				end
 			end
 		rescue
-			has_error := l_output = Void or else not l_output.is_available
+			if l_output = Void or else not l_output.is_available then
+				report_error ("Missing WGI output")
+			end
 			if not retried then
 				retried := True
 				retry

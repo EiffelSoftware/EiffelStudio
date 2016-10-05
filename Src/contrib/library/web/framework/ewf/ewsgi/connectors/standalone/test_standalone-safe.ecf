@@ -26,4 +26,10 @@
 	</target>
 	<target name="test_connector_standalone" extends="test_standalone_scoop">
 	</target>
+	<target name="test_standalone_scoop_ssl" extends="test_standalone_scoop">
+		<variable name="httpd_ssl_enabled" value="true"/>
+		<variable name="libcurl_http_client_disabled" value="true"/>
+		<variable name="net_http_client_disabled" value="false"/>
+		<variable name="netssl_http_client_enabled" value="true"/>
+	</target>
 </system>

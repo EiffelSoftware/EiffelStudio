@@ -1,0 +1,29 @@
+test_name	storable-formal-generic-constraint-changed
+test_description Trying to retrieve an object whose graph contains an instance of a generic class that has a different constraint on one of its formal generic parameter should fail but succeeds.
+ 
+define CONSTRAINT "STRING_8"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+copy_sub 	storable_test.e $CLUSTER storable_test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define CONSTRAINT "STRING_32"
+copy_sub 	test2.e $CLUSTER test2.e
+copy_sub 	storable_test.e $CLUSTER storable_test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE exec_output2 not_storing
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

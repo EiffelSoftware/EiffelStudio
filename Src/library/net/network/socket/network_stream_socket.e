@@ -5,8 +5,8 @@ note
 	legal: "See notice at end of class.";
 
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2015-04-09 15:18:27 +0200 (jeu., 09 avr. 2015) $";
+	revision: "$Revision: 97049 $"
 
 class
 
@@ -33,7 +33,9 @@ inherit
 		end
 
 create
-	make, make_empty, make_client_by_port, make_client_by_address_and_port, make_server_by_port, make_loopback_server_by_port
+	make, make_empty, 
+	make_client_by_port, make_client_by_address_and_port, 
+	make_server_by_port, make_server_by_address_and_port, make_loopback_server_by_port
 
 create {NETWORK_STREAM_SOCKET}
 	make_from_descriptor_and_address, create_from_descriptor
@@ -79,30 +81,30 @@ feature -- Initialization
 			end
 		end
 
+	make_server_by_address_and_port (a_address: INET_ADDRESS; a_port: INTEGER)
+			-- Create server socket on `a_address' and `a_port'.
+		require
+			valid_port: a_port >= 0
+		do
+			make
+			create address.make_from_address_and_port (a_address, a_port)
+			bind
+		end
+
 	make_server_by_port (a_port: INTEGER)
 			-- Create server socket on `a_port' and on any incoming address.
 		require
 			valid_port: a_port >= 0
-		local
-			addr: INET_ADDRESS
 		do
-			make;
-			addr := create_any_local
-			create address.make_from_address_and_port (addr, a_port)
-			bind
+			make_server_by_address_and_port (create_any_local, a_port)
 		end
 
 	make_loopback_server_by_port (a_port: INTEGER)
 			-- Create server socket on `a_port' that listen only for loopback interface peer.
 		require
 			valid_port: a_port >= 0
-		local
-			addr: INET_ADDRESS
 		do
-			make;
-			addr := create_loopback
-			create address.make_from_address_and_port (addr, a_port)
-			bind
+			make_server_by_address_and_port (create_loopback, a_port)
 		end
 
 	make_client_by_address_and_port (a_peer_address: INET_ADDRESS; a_peer_port: INTEGER)

@@ -1043,7 +1043,7 @@ feature {NONE} -- Implementation
 
 feature -- No-Exception Input
 
-	ne_read_stream (nb_char: INTEGER)
+	read_stream_noexception (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' characters.
 			-- Make result available in `last_string'.
 		local
@@ -1051,7 +1051,7 @@ feature -- No-Exception Input
 			return_val: INTEGER
 		do
 			create ext.make_empty (nb_char + 1)
-			return_val := c_noexception_read_stream (descriptor, nb_char, ext.item)
+			return_val := c_read_stream_noexception (descriptor, nb_char, ext.item)
 			bytes_read := return_val
 			if return_val >= 0 then
 				ext.set_count (return_val)
@@ -1062,30 +1062,30 @@ feature -- No-Exception Input
 			end
 		end
 
-	ne_read_line
+	read_line_noexception
 			-- Read a line of characters (ended by a new_line).
 			-- No exception raised!
 		local
 			l_last_string: like last_string
 		do
 			create l_last_string.make (512)
-			ne_read_character
+			read_character_noexception
 			from
 			until
 				last_character = '%N' or else was_error
 			loop
 				l_last_string.extend (last_character)
-				ne_read_character
+				read_character_noexception
 			end
 			last_string := l_last_string
 		end
 
-	ne_read_character
+	read_character_noexception
 			-- Read a new character.
 			-- Make result available in `last_character'.
 			-- No exception raised!
 		do
-			ne_read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
+			read_to_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
 			if bytes_read /= character_8_bytes then
 				socket_error := "Peer closed connection"
 			else
@@ -1094,15 +1094,15 @@ feature -- No-Exception Input
 			end
 		end
 
-	ne_read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
+	read_to_managed_pointer_noexception (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
 			-- No exception raised!
 		do
-			ne_read_into_pointer (p.item, start_pos, nb_bytes)
+			read_into_pointer_noexception (p.item, start_pos, nb_bytes)
 		end
 
-	ne_read_into_pointer (p: POINTER; start_pos, nb_bytes: INTEGER_32)
+	read_into_pointer_noexception (p: POINTER; start_pos, nb_bytes: INTEGER_32)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
 			-- No exception raised!
@@ -1119,7 +1119,7 @@ feature -- No-Exception Input
 			until
 				l_read = nb_bytes or l_last_read <= 0
 			loop
-				l_last_read := c_noexception_read_stream (descriptor, nb_bytes - l_read, p + start_pos + l_read)
+				l_last_read := c_read_stream_noexception (descriptor, nb_bytes - l_read, p + start_pos + l_read)
 				if l_last_read >= 0 then
 					l_read := l_read + l_last_read
 				end
@@ -1131,7 +1131,7 @@ feature -- No-Exception Input
 
 feature {NONE} -- Externals without exception
 
-	c_noexception_read_stream (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
+	c_read_stream_noexception (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
 			-- External routine to read a `len' number of characters
 			-- into buffer `buf' from socket `a_fd'.
 			-- Note: does not raise exception on error, but return error value as Result.
@@ -1139,7 +1139,7 @@ feature {NONE} -- Externals without exception
 			"C blocking"
 		end
 
-	c_noexception_recv (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+	c_recv_noexception (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
 			-- External routine to read a `len' number of characters
 			-- into buffer `buf' from socket `a_fd' with `flags' options that could be MSG_OOB, MSG_PEEK, MSD_DONTROUTE,...
 			-- Note: does not raise exception on error, but return error value as Result.

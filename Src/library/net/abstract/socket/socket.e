@@ -514,6 +514,20 @@ feature -- Input
 			end
 		end
 
+	read_character_noexception
+			-- Read a new character.
+			-- Make result available in `last_character'.
+			-- No exception raised!
+		do
+			read_to_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
+			if bytes_read /= character_8_bytes then
+				socket_error := "Peer closed connection"
+			else
+				last_character := socket_buffer.read_character (0)
+				socket_error := Void
+			end
+		end
+
 	read_character, readchar
 			-- Read a new character.
 			-- Make result available in `last_character'.
@@ -648,6 +662,25 @@ feature -- Input
 			end
 		end
 
+	read_stream_noexception (nb_char: INTEGER)
+			-- Read a string of at most `nb_char' characters.
+			-- Make result available in `last_string'.
+		local
+			ext: C_STRING
+			return_val: INTEGER
+		do
+			create ext.make_empty (nb_char + 1)
+			return_val := c_read_stream_noexception (descriptor, nb_char, ext.item)
+			bytes_read := return_val
+			if return_val >= 0 then
+				ext.set_count (return_val)
+				last_string := ext.substring (1, return_val)
+			else
+				socket_error := "Peer error [0x" + return_val.to_hex_string + "]"
+				last_string.wipe_out
+			end
+		end
+
 	read_stream, readstream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' characters.
 			-- Make result available in `last_string'.
@@ -664,6 +697,14 @@ feature -- Input
 			else
 				last_string.wipe_out
 			end
+		end
+
+	read_to_managed_pointer_noexception (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+			-- No exception raised!
+		do
+			read_into_pointer_noexception (p.item, start_pos, nb_bytes)
 		end
 
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
@@ -687,6 +728,23 @@ feature -- Input
 			bytes_read_updated: 0 <= bytes_read and bytes_read <= a_byte_count
 		end
 
+	read_line_noexception
+			-- Read a line of characters (ended by a new_line).
+			-- No exception raised!
+		local
+			l_last_string: like last_string
+		do
+			create l_last_string.make (512)
+			read_character_noexception
+			from
+			until
+				last_character = '%N' or else was_error
+			loop
+				l_last_string.extend (last_character)
+				read_character_noexception
+			end
+			last_string := l_last_string
+		end
 
 	read_line, readline
 			-- Read a line of characters (ended by a new_line).
@@ -1000,6 +1058,33 @@ feature {NONE} -- Implementation
 	socket_error: detachable STRING
 			-- Error description in case of an error.
 
+	read_into_pointer_noexception (p: POINTER; start_pos, nb_bytes: INTEGER_32)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+			-- No exception raised!
+		require
+			p_not_void: p /= default_pointer
+			nb_bytes_non_negative: nb_bytes >= 0
+			is_readable: readable
+		local
+			l_read: INTEGER_32
+			l_last_read: INTEGER_32
+		do
+			from
+				l_last_read := 1
+			until
+				l_read = nb_bytes or l_last_read <= 0
+			loop
+				l_last_read := c_read_stream_noexception (descriptor, nb_bytes - l_read, p + start_pos + l_read)
+				if l_last_read >= 0 then
+					l_read := l_read + l_last_read
+				end
+			end
+			bytes_read := l_read
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= nb_bytes
+		end
+
 	read_into_pointer (p: POINTER; start_pos, nb_bytes: INTEGER_32)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
@@ -1041,112 +1126,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-feature -- No-Exception Input
-
-	read_stream_noexception (nb_char: INTEGER)
-			-- Read a string of at most `nb_char' characters.
-			-- Make result available in `last_string'.
-		local
-			ext: C_STRING
-			return_val: INTEGER
-		do
-			create ext.make_empty (nb_char + 1)
-			return_val := c_read_stream_noexception (descriptor, nb_char, ext.item)
-			bytes_read := return_val
-			if return_val >= 0 then
-				ext.set_count (return_val)
-				last_string := ext.substring (1, return_val)
-			else
-				socket_error := "Peer error [0x" + return_val.to_hex_string + "]"
-				last_string.wipe_out
-			end
-		end
-
-	read_line_noexception
-			-- Read a line of characters (ended by a new_line).
-			-- No exception raised!
-		local
-			l_last_string: like last_string
-		do
-			create l_last_string.make (512)
-			read_character_noexception
-			from
-			until
-				last_character = '%N' or else was_error
-			loop
-				l_last_string.extend (last_character)
-				read_character_noexception
-			end
-			last_string := l_last_string
-		end
-
-	read_character_noexception
-			-- Read a new character.
-			-- Make result available in `last_character'.
-			-- No exception raised!
-		do
-			read_to_managed_pointer_noexception (socket_buffer, 0, character_8_bytes)
-			if bytes_read /= character_8_bytes then
-				socket_error := "Peer closed connection"
-			else
-				last_character := socket_buffer.read_character (0)
-				socket_error := Void
-			end
-		end
-
-	read_to_managed_pointer_noexception (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
-			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p' at position `start_pos'.
-			-- No exception raised!
-		do
-			read_into_pointer_noexception (p.item, start_pos, nb_bytes)
-		end
-
-	read_into_pointer_noexception (p: POINTER; start_pos, nb_bytes: INTEGER_32)
-			-- Read at most `nb_bytes' bound bytes and make result
-			-- available in `p' at position `start_pos'.
-			-- No exception raised!
-		require
-			p_not_void: p /= default_pointer
-			nb_bytes_non_negative: nb_bytes >= 0
-			is_readable: readable
-		local
-			l_read: INTEGER_32
-			l_last_read: INTEGER_32
-		do
-			from
-				l_last_read := 1
-			until
-				l_read = nb_bytes or l_last_read <= 0
-			loop
-				l_last_read := c_read_stream_noexception (descriptor, nb_bytes - l_read, p + start_pos + l_read)
-				if l_last_read >= 0 then
-					l_read := l_read + l_last_read
-				end
-			end
-			bytes_read := l_read
-		ensure
-			bytes_read_updated: 0 <= bytes_read and bytes_read <= nb_bytes
-		end
-
-feature {NONE} -- Externals without exception
-
-	c_read_stream_noexception (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
-			-- External routine to read a `len' number of characters
-			-- into buffer `buf' from socket `a_fd'.
-			-- Note: does not raise exception on error, but return error value as Result.
-		external
-			"C blocking"
-		end
-
-	c_recv_noexception (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
-			-- External routine to read a `len' number of characters
-			-- into buffer `buf' from socket `a_fd' with `flags' options that could be MSG_OOB, MSG_PEEK, MSD_DONTROUTE,...
-			-- Note: does not raise exception on error, but return error value as Result.
-		external
-			"C blocking"
-		end
-
 feature {NONE} -- Externals
 
 	socket_buffer: MANAGED_POINTER
@@ -1172,6 +1151,14 @@ feature {NONE} -- Externals
 			"C blocking"
 		end
 
+	c_read_stream_noexception (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd'.
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
+		end
+
 	c_read_stream (fd: INTEGER; l: INTEGER; buf: POINTER): INTEGER
 			-- External routine to read a `l' number of characters
 			-- into buffer `buf' from socket `fd'
@@ -1182,6 +1169,14 @@ feature {NONE} -- Externals
 	c_write (fd: INTEGER; buf: POINTER; l: INTEGER): INTEGER
 			-- External routine to write `l' length of data
 			-- on socket `fd'.
+		external
+			"C blocking"
+		end
+
+	c_recv_noexception (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd' with `flags' options that could be MSG_OOB, MSG_PEEK, MSD_DONTROUTE,...
+			-- Note: does not raise exception on error, but return error value as Result.
 		external
 			"C blocking"
 		end

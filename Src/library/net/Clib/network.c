@@ -726,26 +726,36 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 /*x basic types receiving (macro) */
 #define CREADX(bytes_read, descriptor, element_pointer, sizeofelement, flags) \
-	eif_net_check (bytes_read = recv((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags));
+	bytes_read = recv((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags)
 
 /*x basic types sending (macro) */
+#define CSENDX(bytes_sent, descriptor, element_pointer, sizeofelement, flags) \
+	bytes_sent = send((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags)
+
 #define CPUTX(descriptor,element_pointer,sizeofelement) \
-	eif_net_check (send ((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) 0));
+	eif_net_check (send((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) 0));
 
 /*x basic types sending TO (macro) */
 #define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
 	eif_net_check (sendto ((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, \
 		(int) sizeofelement, (int) flags, (struct sockaddr *) addr_pointer, (int) sizeofaddr));
 
+
+/******************************************************/
+/* send to operations                                 */
+/******************************************************/
+
 void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of character c through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	CSENDXTO(fd,&c,sizeof(char),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
 void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/* transmission of Eiffel integer i through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	unsigned long ti;
 	ti = htonl((unsigned long) i);
 	CSENDXTO(fd,(char *) &ti,sizeof(ti),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
@@ -758,6 +768,7 @@ void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_POINTER 
 	   the caller,an automatic conversion from float to double will occur.
 	   We need to explicitly convert the argument to a float before safely
 	   sending it on the socket. Xavier */
+	/* Unused (!) by EiffelNet */
 
 	float tf;
 	tf = f;
@@ -767,10 +778,12 @@ void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_POINTER 
 void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of double d through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	double dbl;
 	dbl = d;
 	CSENDXTO(fd,(char *) &dbl,sizeof(dbl),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
+
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of string s of size size trought socket fd */
@@ -778,18 +791,21 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 	CSENDXTO(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
-
-
+/******************************************************/
+/* put operations                                 */
+/******************************************************/
 
 void c_put_char(EIF_INTEGER fd, EIF_CHARACTER c)
 	/*x transmission of character c through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	CPUTX(fd,&c,sizeof(char))
 }
 
 void c_put_int(EIF_INTEGER fd, EIF_INTEGER i)
 	/* transmission of Eiffel integer i through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	unsigned long ti;
 	ti = htonl ((unsigned long) i);
 	CPUTX(fd,(char *) &ti,sizeof(ti))
@@ -802,6 +818,7 @@ void c_put_float(EIF_INTEGER fd, EIF_REAL f)
 	   caller,an automatic conversion from float to double will occur.
 	   We need to explicitly convert the argument to a float before safely
 	   sending it on the socket. Xavier */
+	/* Unused (!) by EiffelNet */
 
 	float tf;
 	tf = f;
@@ -812,9 +829,20 @@ void c_put_float(EIF_INTEGER fd, EIF_REAL f)
 void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
 	/*x transmission of double d through socket fd */
 {
+	/* Unused (!) by EiffelNet */
 	double dbl;
 	dbl = ise_htond(d);
 	CPUTX(fd,(char *) &dbl,sizeof(dbl))
+}
+
+EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
+	/* transmission of string s of size size trought socket fd.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int res;
+	CSENDX(res, fd, stream_pointer, length, 0);
+	return (EIF_INTEGER) res;
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
@@ -823,10 +851,73 @@ void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length
 	CPUTX(fd, (char *) stream_pointer,length)
 }
 
+/******************************************************/
+/* read operations        (unused!)                   */
+/******************************************************/
+
+EIF_REAL c_read_float(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read a real from socket fd */
+{
+	/* Unused (!) by EiffelNet */
+	float f=0.0;
+	CREADX(*l_bytes,fd,&f,sizeof(float), 0);
+	eif_net_check (*l_bytes);
+	return (EIF_REAL) ise_ntohf(f);
+}
+
+EIF_DOUBLE c_read_double(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read a double from socket fd */
+{
+	/* Unused (!) by EiffelNet */
+	double d=0.0;
+	CREADX(*l_bytes,fd,&d,sizeof(double), 0);
+	eif_net_check(*l_bytes);
+	return (EIF_DOUBLE) ise_ntohd(d);
+}
+
+EIF_CHARACTER c_read_char(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read a character from socket fd */
+{
+	/* Unused (!) by EiffelNet */
+	char c=0;
+	CREADX(*l_bytes,fd,&c,sizeof(char), 0);
+	eif_net_check(*l_bytes);
+	return (EIF_CHARACTER) c;
+}
+
+EIF_INTEGER c_read_int(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read an integer from socket fd */
+{
+	/* Unused (!) by EiffelNet */
+	EIF_INTEGER i=0L;
+	CREADX(*l_bytes,fd,&i,sizeof(EIF_INTEGER), 0);
+	eif_net_check(*l_bytes);
+	return (EIF_INTEGER) ntohl((unsigned long) i);
+}
 
 /******************************************************/
 /* read operations                                    */
 /******************************************************/
+
+EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
+	/* read a stream of character from socket fd into buffer buf of length len.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int nr;
+	CREADX(nr,fd,buf,len, 0);
+	return (EIF_INTEGER) nr;
+}
+
+EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
+	/*x read a stream of character from socket fd into buffer buf
+	    of length len */
+{
+	EIF_INTEGER res;
+	res = c_read_stream_noexception(fd, len, buf);
+	eif_net_check(res);
+	return res;
+}
 
 EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/* receive at most len bytes from socket fd into buffer buf
@@ -835,102 +926,8 @@ EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len,
 	 */
 {
 	int res;
-	res = recv((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
+	CREADX(res, fd, buf, len, flags);
 	return (EIF_INTEGER) res;
-}
-
-
-EIF_REAL c_read_float_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a real from socket fd 
-	 *	NO exception is raised, and eventual error is return as result!
-	 */
-{
-	float f=0.0;
-	*l_bytes = c_recv_noexception(fd, &f, sizeof(float), 0);
-	return (EIF_REAL) ise_ntohf(f);
-}
-
-
-EIF_REAL c_read_float (EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a real from socket fd */
-{
-	EIF_REAL f;
-	f = c_read_float_noexception(fd, l_bytes);
-	eif_net_check(*l_bytes);
-	return f;
-}
-
-EIF_DOUBLE c_read_double_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a double from socket fd 
-	 *	NO exception is raised, and eventual error is return as result!
-	 */
-
-{
-	double d=0.0;
-	*l_bytes = c_recv_noexception(fd, &d, sizeof(double), 0);
-	return (EIF_DOUBLE) ise_ntohd(d);
-}
-
-EIF_DOUBLE c_read_double(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a double from socket fd */
-{
-	EIF_DOUBLE d;
-	d = c_read_double_noexception(fd, l_bytes);
-	eif_net_check(*l_bytes);
-	return d;
-}
-
-EIF_CHARACTER c_read_char_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a character from socket fd
-	 *	NO exception is raised, and eventual error is return as result!
-	 */
-{
-	char c=0;
-	*l_bytes = c_recv_noexception(fd, &c, sizeof(char), 0);
-	return (EIF_CHARACTER) c;
-}
-
-EIF_CHARACTER c_read_char(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a character from socket fd */
-{
-	EIF_CHARACTER c;
-	c = c_read_char_noexception(fd, l_bytes);
-	eif_net_check(*l_bytes);
-	return c;
-}
-
-EIF_INTEGER c_read_int_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read an integer from socket fd
-	 *	NO exception is raised, and eventual error is return as result!
-	 */
-{
-	EIF_INTEGER i=0L;
-	*l_bytes = c_recv_noexception(fd, &i, sizeof(EIF_INTEGER), 0);
-	return (EIF_INTEGER) ntohl((unsigned long) i);
-}
-
-EIF_INTEGER c_read_int(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read an integer from socket fd */
-{
-	EIF_INTEGER i;
-	i = c_read_int_noexception(fd, l_bytes);
-	eif_net_check(*l_bytes);
-	return i;
-}
-
-EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
-	/* read a stream of character from socket fd into buffer buf of length len.
-	 *	NO exception is raised, and eventual error is return as result!
-	 */
-{
-	return (EIF_INTEGER) c_recv_noexception(fd, buf, len, 0);
-}
-
-EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
-	/*x read a stream of character from socket fd into buffer buf
-	    of length len */
-{
-	return c_receive(fd, buf, len, (EIF_INTEGER) 0);
 }
 
 EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
@@ -955,7 +952,7 @@ EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER 
 #else
 	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
 #endif
-	res = recvfrom ((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
+	res = recvfrom((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
 	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
 	return (EIF_INTEGER) res;
 }
@@ -982,7 +979,7 @@ EIF_INTEGER c_write_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len
 	 */
 {
 	int result;
-	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, 0);
+	CSENDX(result, fd, buf, len, 0);
 	return (EIF_INTEGER) result;
 }
 
@@ -1005,7 +1002,7 @@ EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len,
 	 */
 {
 	int result;
-	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
+	CSENDX(result, fd, buf, len, flags);
 	return (EIF_INTEGER) result;
 }
 
@@ -1113,10 +1110,6 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 	eif_net_check (result);
 	return (EIF_INTEGER) result;
 }
-
-/********************************************************/
-/* Socket recv and send timeout options 				*/
-/********************************************************/
 
 EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 	/* get socket fd SO_RCVTIMEO options */

@@ -5,8 +5,8 @@ note
 	legal: "See notice at end of class."
 
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2016-09-06 15:22:20 +0200 (mar., 06 sept. 2016) $";
+	revision: "$Revision: 99125 $"
 
 deferred class
 
@@ -1041,40 +1041,110 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-feature -- Socket Recv and Send timeout.
+feature -- No-Exception Input
 
-	recv_timeout: INTEGER
-			-- Receive timeout in seconds on Current socket.
+	ne_read_stream (nb_char: INTEGER)
+			-- Read a string of at most `nb_char' characters.
+			-- Make result available in `last_string'.
+		local
+			ext: C_STRING
+			return_val: INTEGER
 		do
-			Result := c_get_sock_recv_timeout (descriptor, level_sol_socket)
-		ensure
-			result_not_negative: Result >= 0
+			create ext.make_empty (nb_char + 1)
+			return_val := c_noexception_read_stream (descriptor, nb_char, ext.item)
+			bytes_read := return_val
+			if return_val >= 0 then
+				ext.set_count (return_val)
+				last_string := ext.substring (1, return_val)
+			else
+				socket_error := "Peer error [0x" + return_val.to_hex_string + "]"
+				last_string.wipe_out
+			end
 		end
 
-	send_timeout: INTEGER
-			-- Send timeout in seconds on Current socket.
+	ne_read_line
+			-- Read a line of characters (ended by a new_line).
+			-- No exception raised!
+		local
+			l_last_string: like last_string
 		do
-			Result := c_get_sock_send_timeout (descriptor, level_sol_socket)
-		ensure
-			result_not_negative: Result >= 0
+			create l_last_string.make (512)
+			ne_read_character
+			from
+			until
+				last_character = '%N' or else was_error
+			loop
+				l_last_string.extend (last_character)
+				ne_read_character
+			end
+			last_string := l_last_string
 		end
 
-	set_recv_timeout (a_timeout_seconds: INTEGER)
-			-- Set the receive timeout in seconds on Current socket.
-			-- if `0' the related operations will never timeout.
+	ne_read_character
+			-- Read a new character.
+			-- Make result available in `last_character'.
+			-- No exception raised!
+		do
+			ne_read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
+			if bytes_read /= character_8_bytes then
+				socket_error := "Peer closed connection"
+			else
+				last_character := socket_buffer.read_character (0)
+				socket_error := Void
+			end
+		end
+
+	ne_read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+			-- No exception raised!
+		do
+			ne_read_into_pointer (p.item, start_pos, nb_bytes)
+		end
+
+	ne_read_into_pointer (p: POINTER; start_pos, nb_bytes: INTEGER_32)
+			-- Read at most `nb_bytes' bound bytes and make result
+			-- available in `p' at position `start_pos'.
+			-- No exception raised!
 		require
-			positive_timeout: a_timeout_seconds >= 0
+			p_not_void: p /= default_pointer
+			nb_bytes_non_negative: nb_bytes >= 0
+			is_readable: readable
+		local
+			l_read: INTEGER_32
+			l_last_read: INTEGER_32
 		do
-			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+			from
+				l_last_read := 1
+			until
+				l_read = nb_bytes or l_last_read <= 0
+			loop
+				l_last_read := c_noexception_read_stream (descriptor, nb_bytes - l_read, p + start_pos + l_read)
+				if l_last_read >= 0 then
+					l_read := l_read + l_last_read
+				end
+			end
+			bytes_read := l_read
+		ensure
+			bytes_read_updated: 0 <= bytes_read and bytes_read <= nb_bytes
 		end
 
-	set_send_timeout (a_timeout_seconds: INTEGER)
-			-- Set the send timeout in milliseconds on Current socket.
-			-- if `0' the related operations will never timeout.
-		require
-			positive_timeout: a_timeout_seconds >= 0
-		do
-			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+feature {NONE} -- Externals without exception
+
+	c_noexception_read_stream (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd'.
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
+		end
+
+	c_noexception_recv (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd' with `flags' options that could be MSG_OOB, MSG_PEEK, MSD_DONTROUTE,...
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
 		end
 
 feature {NONE} -- Externals
@@ -1140,30 +1210,6 @@ feature {NONE} -- Externals
 
 	c_get_sock_opt_int (fd, level, opt: INTEGER): INTEGER
 			-- C routine to get socket options of integer type
-		external
-			"C"
-		end
-
-	c_set_sock_recv_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
-	c_get_sock_recv_timeout (fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
-		external
-			"C"
-		end
-
-	c_set_sock_send_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
-	c_get_sock_send_timeout (fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_SNDTIMEO of timeout value in seconds.
 		external
 			"C"
 		end

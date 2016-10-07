@@ -823,76 +823,33 @@ void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length
 	CPUTX(fd, (char *) stream_pointer,length)
 }
 
-/**********************************************/
-/* read operations without raising exception  */
-/**********************************************/
+
+/******************************************************/
+/* read operations                                    */
+/******************************************************/
 
 EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/* receive at most len bytes from socket fd into buffer buf
-	    flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE */
+	 *   flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE 
+	 * NO exception is raised, and eventual error is return as result!
+	 */
 {
 	int res;
 	res = recv((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
 	return (EIF_INTEGER) res;
 }
 
-EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
-	/* like c_receive and sender address is stored into socket address
-	    structure addr and address length into *addr_len */
-{
-	int res;
-#ifdef EIF_VMS
-	size_t l_addr_len = (size_t) (*(EIF_INTEGER *) addr_len);
-#else
-	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
-#endif
-	res = recvfrom ((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
-	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
-	return (EIF_INTEGER) res;
-}
 
 EIF_REAL c_read_float_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a real from socket fd */
+	/* read a real from socket fd 
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
 	float f=0.0;
 	*l_bytes = c_recv_noexception(fd, &f, sizeof(float), 0);
 	return (EIF_REAL) ise_ntohf(f);
 }
 
-EIF_DOUBLE c_read_double_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a double from socket fd */
-{
-	double d=0.0;
-	*l_bytes = c_recv_noexception(fd, &d, sizeof(double), 0);
-	return (EIF_DOUBLE) ise_ntohd(d);
-}
-
-EIF_CHARACTER c_read_char_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read a character from socket fd */
-{
-	char c=0;
-	*l_bytes = c_recv_noexception(fd, &c, sizeof(char), 0);
-	return (EIF_CHARACTER) c;
-}
-
-EIF_INTEGER c_read_int_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/* read an integer from socket fd */
-{
-	EIF_INTEGER i=0L;
-	*l_bytes = c_recv_noexception(fd, &i, sizeof(EIF_INTEGER), 0);
-	return (EIF_INTEGER) ntohl((unsigned long) i);
-}
-
-EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
-	/* read a stream of character from socket fd into buffer buf
-	    of length len */
-{
-	return (EIF_INTEGER) c_recv_noexception(fd, buf, len, 0);
-}
-
-/******************************************************/
-/* read operations raising exception on network error */
-/******************************************************/
 
 EIF_REAL c_read_float (EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	/*x read a real from socket fd */
@@ -901,6 +858,17 @@ EIF_REAL c_read_float (EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	f = c_read_float_noexception(fd, l_bytes);
 	eif_net_check(*l_bytes);
 	return f;
+}
+
+EIF_DOUBLE c_read_double_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read a double from socket fd 
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+
+{
+	double d=0.0;
+	*l_bytes = c_recv_noexception(fd, &d, sizeof(double), 0);
+	return (EIF_DOUBLE) ise_ntohd(d);
 }
 
 EIF_DOUBLE c_read_double(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
@@ -912,6 +880,16 @@ EIF_DOUBLE c_read_double(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	return d;
 }
 
+EIF_CHARACTER c_read_char_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read a character from socket fd
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	char c=0;
+	*l_bytes = c_recv_noexception(fd, &c, sizeof(char), 0);
+	return (EIF_CHARACTER) c;
+}
+
 EIF_CHARACTER c_read_char(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	/*x read a character from socket fd */
 {
@@ -921,6 +899,16 @@ EIF_CHARACTER c_read_char(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	return c;
 }
 
+EIF_INTEGER c_read_int_noexception(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
+	/* read an integer from socket fd
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	EIF_INTEGER i=0L;
+	*l_bytes = c_recv_noexception(fd, &i, sizeof(EIF_INTEGER), 0);
+	return (EIF_INTEGER) ntohl((unsigned long) i);
+}
+
 EIF_INTEGER c_read_int(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	/*x read an integer from socket fd */
 {
@@ -928,6 +916,14 @@ EIF_INTEGER c_read_int(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
 	i = c_read_int_noexception(fd, l_bytes);
 	eif_net_check(*l_bytes);
 	return i;
+}
+
+EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
+	/* read a stream of character from socket fd into buffer buf of length len.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	return (EIF_INTEGER) c_recv_noexception(fd, buf, len, 0);
 }
 
 EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
@@ -947,6 +943,23 @@ EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTE
 	return res;
 }
 
+EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
+	/* like c_receive and sender address is stored into socket address
+	 *   structure addr and address length into *addr_len .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int res;
+#ifdef EIF_VMS
+	size_t l_addr_len = (size_t) (*(EIF_INTEGER *) addr_len);
+#else
+	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
+#endif
+	res = recvfrom ((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
+	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
+	return (EIF_INTEGER) res;
+}
+
 EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
 	/*x like c_receive and sender address is stored into socket address
 	    structure addr and address length into *addr_len */
@@ -957,42 +970,21 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	return res;
 }
 
+
 /********************************************************/
-/* write operations without raising exception 			*/
+/* write operations                                     */
 /********************************************************/
 
 EIF_INTEGER c_write_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
 	/* write at most len bytes from buffer buf into socket fd
-	    return number of actually sent bytes */
+	 *   return number of actually sent bytes.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
 	int result;
 	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, 0);
 	return (EIF_INTEGER) result;
 }
-
-EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
-	/* send at most len bytes from buffer buf into socket fd
-	    to connected peer address
-	    flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
-	    return actual number of bytes sent */
-{
-	int result;
-	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
-	return (EIF_INTEGER) result;
-}
-
-EIF_INTEGER c_sendto_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
-	/* like c_send and peer address can be set through socket address
-	    structure addr of length addr_len */
-{
-	int result;
-	result = sendto((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len);
-	return (EIF_INTEGER) result;
-}
-
-/********************************************************/
-/* write operations raising exception on network error  */
-/********************************************************/
 
 EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
 	/*x write at most len bytes from buffer buf into socket fd
@@ -1002,6 +994,19 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
 	res = c_write_noexception(fd, buf, len);
 	eif_net_check (res);
 	return res;
+}
+
+EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
+	/* send at most len bytes from buffer buf into socket fd
+	 *   to connected peer address
+	 *   flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
+	 *   return actual number of bytes sent .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int result;
+	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
+	return (EIF_INTEGER) result;
 }
 
 EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
@@ -1016,6 +1021,17 @@ EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER
 	return res;
 }
 
+EIF_INTEGER c_sendto_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
+	/* like c_send and peer address can be set through socket address
+	 *   structure addr of length addr_len .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int result;
+	result = sendto((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len);
+	return (EIF_INTEGER) result;
+}
+
 EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
 	/*x like c_send and peer address can be set through socket address
 	    structure addr of length addr_len */
@@ -1025,7 +1041,6 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	eif_net_check (res);
 	return res;
 }
-
 
 /********************************************************/
 /* Socket options management                            */
@@ -1176,7 +1191,6 @@ void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send
 	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, &tv, sizeof(struct timeval)));
 #endif
 }
-
 
 
 /********************************************************/

@@ -2251,7 +2251,7 @@ test	storable-with-qualified-anchors	store040 tcf pass storable
 test	storable-with-qualified-anchors-reject	store041 tcf pass storable
 test	storable-failure-unstable-state	store042 tcf pass storable
 test	storable-formal-generic-constraint-changed	store043 tcf fail storable
-test	store-retrieve-different-expanded-id	store044 tcf fail storable
+test	store-retrieve-different-expanded-id	store044 tcf pass storable
 
 -- Library class tests
 

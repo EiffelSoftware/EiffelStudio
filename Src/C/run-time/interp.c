@@ -251,7 +251,8 @@ rt_private void init_registers(void);			/* Intialize registers in callee */
 rt_private void allocate_registers(void);		/* Allocate the register array */
 rt_shared void sync_registers(struct stopchunk *stack_cur, EIF_TYPED_VALUE *stack_top); /* Resynchronize the register array */
 rt_private void pop_registers(void);						/* Remove local vars and arguments */
-rt_private void create_expanded_locals (struct stopchunk * scur, EIF_TYPED_VALUE * stop, int create_result); /* Initialize expanded locals and result (if required) */
+rt_private void create_expanded_locals (struct stopchunk * scur, EIF_TYPED_VALUE * stop); /* Initialize expanded locals */
+rt_private void create_expanded_result (struct stopchunk * scur, EIF_TYPED_VALUE * stop); /* Initialize expanded result */
 
 /* Operational stack handling routines */
 #ifdef DEBUG
@@ -856,6 +857,9 @@ rt_private void interpret(int flag, int where)
 		}
 #endif
 
+			/* Locals need to be allocated before any precondition checks
+			 * in case they are used in the preconditions. */
+		create_expanded_locals (scur, stop);
 		if ((*IC != BC_PRECOND) && (*IC != BC_START_CATCALL)) {
 			goto enter_body; /* Start execution of a routine body. */
 		}
@@ -3986,7 +3990,10 @@ enter_body:
 					MTOE(OResult, RTOC(0));
 
 				}
-				create_expanded_locals (scur, stop, create_result);
+				create_expanded_locals (scur, stop);
+				if (create_result) {
+					create_expanded_result (scur, stop);
+				}
 				if (is_process_or_thread_relative_once) {
 						/* Initialize permanent storage */
 					put_once_result (iresult, rtype, OResult);
@@ -4016,8 +4023,10 @@ enter_body:
 			}
 		}
 	} else {
-			/* Initialize expanded locals */
-		create_expanded_locals (scur, stop, create_result);
+			/* Initialize expanded result */
+		if (create_result) {
+			create_expanded_result (scur, stop);
+		}
 			/* Register rescue handler (if any). */
 		CHECK("exvect not null", exvect);
 		SET_RESCUE(rescue,exenv);
@@ -5959,11 +5968,10 @@ rt_private void pop_registers(void)
 }
 
 
-/* Initialize expanded locals and result (if required) */
+/* Initialize expanded locals */
 rt_private void create_expanded_locals (
 	struct stopchunk * scur,		/* Current chunk (stack context) */
-	EIF_TYPED_VALUE * stop,			/* To save stack context */
-	int create_result		/* Should result be created? */
+	EIF_TYPED_VALUE * stop			/* To save stack context */
 )
 {
 	RT_GET_CONTEXT
@@ -5990,19 +5998,34 @@ rt_private void create_expanded_locals (
 			break;
 		}
 	}
-	if (create_result) {
-		last = iresult;
-		type = last->type;
-		switch (type & SK_HEAD) {
-		case SK_EXP:
-			stagval = tagval;
-			last->type = SK_POINTER;		/* For GC */
-			last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
-			last->type = SK_EXP;
-			if (tagval != stagval)
-				sync_registers(MTC scur, stop);
-			break;
-		}
+}
+
+/* Initialize expanded locals and result (if required) */
+rt_private void create_expanded_result (
+	struct stopchunk * scur,		/* Current chunk (stack context) */
+	EIF_TYPED_VALUE * stop			/* To save stack context */
+)
+{
+	RT_GET_CONTEXT
+	EIF_TYPED_VALUE * last;	/* Last pushed value */
+	uint32 type;
+	unsigned long stagval;
+
+		/* After expanded local entities creation, registers may have
+		 * to be resynchronized because RTLN could call the interpreter
+		 * through creation procedure of expanded attributes.
+		 */
+	last = iresult;
+	type = last->type;
+	switch (type & SK_HEAD) {
+	case SK_EXP:
+		stagval = tagval;
+		last->type = SK_POINTER;		/* For GC */
+		last->it_ref = RTLX((EIF_TYPE_INDEX) (type & SK_DTYPE));
+		last->type = SK_EXP;
+		if (tagval != stagval)
+			sync_registers(MTC scur, stop);
+		break;
 	}
 }
 

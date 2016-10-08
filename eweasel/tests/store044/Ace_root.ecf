@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="test">
 	<target name="test">
-		<root class="ROOT" feature="retrieve"/>
+		<description>Precompile is not used to make sure type IDs of writer and reader are different.</description>
+		<root class="TEST" feature="retrieve"/>
 		<setting name="console_application" value="true"/>
-<!--		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>-->
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

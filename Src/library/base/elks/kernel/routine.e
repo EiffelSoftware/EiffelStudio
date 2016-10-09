@@ -125,7 +125,6 @@ feature -- Status report
 		local
 			i, arg_type_code: INTEGER
 			arg: like {TUPLE}.item
-			open_type_codes: STRING
 			l_type: INTEGER
 		do
 			if args = Void then
@@ -135,16 +134,43 @@ feature -- Status report
 			elseif args.count >= open_count then
 				from
 					Result := True
-					open_type_codes := eif_gen_typecode_str ($Current)
 					i := 1
 				until
 					i > open_count or not Result
 				loop
 					arg_type_code := args.item_code (i)
-					Result := arg_type_code = open_type_codes.item (i).code
-					if Result and then arg_type_code = {TUPLE}.reference_code then
+					l_type := open_operand_type (i)
+					inspect arg_type_code
+					when {TUPLE}.boolean_code then
+						Result := l_type = ({BOOLEAN}).type_id
+					when {TUPLE}.character_8_code then
+						Result := l_type = ({CHARACTER_8}).type_id
+					when {TUPLE}.character_32_code then
+						Result := l_type = ({CHARACTER_32}).type_id
+					when {TUPLE}.integer_8_code then
+						Result := l_type = ({INTEGER_8}).type_id
+					when {TUPLE}.integer_16_code then
+						Result := l_type = ({INTEGER_16}).type_id
+					when {TUPLE}.integer_32_code then
+						Result := l_type = ({INTEGER_32}).type_id
+					when {TUPLE}.integer_64_code then
+						Result := l_type = ({INTEGER_64}).type_id
+					when {TUPLE}.natural_8_code then
+						Result := l_type = ({NATURAL_8}).type_id
+					when {TUPLE}.natural_16_code then
+						Result := l_type = ({NATURAL_16}).type_id
+					when {TUPLE}.natural_32_code then
+						Result := l_type = ({NATURAL_32}).type_id
+					when {TUPLE}.natural_64_code then
+						Result := l_type = ({NATURAL_64}).type_id
+					when {TUPLE}.pointer_code then
+						Result := l_type = ({POINTER}).type_id
+					when {TUPLE}.real_32_code then
+						Result := l_type = ({REAL_32}).type_id
+					when {TUPLE}.real_64_code then
+						Result := l_type = ({REAL_64}).type_id
+					when {TUPLE}.reference_code then
 						arg := args.item (i)
-						l_type := open_operand_type (i)
 							-- If expected type is attached, then we need to verify that the actual
 							-- is indeed attached.
 						if is_attached_type (l_type) then
@@ -154,12 +180,14 @@ feature -- Status report
 							Result := arg = Void or else
 								field_conforms_to ({ISE_RUNTIME}.dynamic_type (arg), l_type)
 						end
+					else
+						Result := False
 					end
 					i := i + 1
 				end
 			end
-			if Result and then not is_target_closed and then args /= Void then
-				Result := args.item (1) /= Void
+			if Result and then not is_target_closed then
+				Result := args /= Void and then not args.is_empty and then args.item (1) /= Void
 			end
 		end
 
@@ -403,14 +431,6 @@ feature {NONE} -- Implementation
 			False
 		do
 			Result := a.generating_type.type_id
-		end
-
-feature {NONE} -- Externals
-
-	eif_gen_typecode_str (obj: POINTER): STRING
-			-- Code name for generic parameter `pos' in `obj'.
-		external
-			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
 		end
 
 feature -- Obsolete

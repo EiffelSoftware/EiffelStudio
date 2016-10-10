@@ -103,7 +103,7 @@ __NOTOC__
 == three.2 ==
 == three.3 ==
 =And the last one=
-== with spaces in text ==
+== with spaces in text héhé==
 end
 }")
 			l_expected_output := "{
@@ -227,6 +227,18 @@ end
 
 			p.process (new_xhtml_generator (o))
 			assert ("o", same_output (o, l_expected_output))
+		end
+
+	test_anchor_name
+		local
+			o: STRING
+			vis: like new_xhtml_generator
+		do
+			create o.make_empty
+			vis := new_xhtml_generator (o)
+			assert ("valid anchor name", same_output (vis.anchor_name ("A text with spaces"), "A_text_with_spaces"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("unexpected # char"), "unexpected_%%23_char"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("summer=été"), "summer=%%C3%%A9t%%C3%%A9"))
 		end
 
 	test_html

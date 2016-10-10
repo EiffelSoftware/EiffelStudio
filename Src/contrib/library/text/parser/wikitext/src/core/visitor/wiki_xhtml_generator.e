@@ -1001,42 +1001,137 @@ feature -- Table
 
 feature -- Helpers
 
-	anchor_name (a_text: READABLE_STRING_GENERAL): STRING_32
+	anchor_name (a_text: READABLE_STRING_GENERAL): STRING_8
 			-- Anchor name for text `a_text'.
 			-- Remove/replace space and unexpected characters.
 		local
 			i,n: INTEGER
-			c: CHARACTER_32
+			curr: CHARACTER_32
+			prev: CHARACTER_8
 		do
 			n := a_text.count
 			create Result.make (a_text.count)
 			from
 				i := 1
-				c := '_' -- Do not start with underscore as replacement.
+				prev := '_' -- Do not start with underscore as replacement.
 			until
 				i > n
 			loop
-				inspect a_text [i]
-				when ' ', '%T', '%N' then
-					if c /= '_' then
-						c := '_'
-						Result.append_character (c)
-					end
-				when 
-					'#', '%%', '<', '>' ,
-					'{' , '}' , '|' , '\' , '^' , '[' , ']' , '`' 
-				then
-					if c /= '-' then
-						c := '-'
-						Result.append_character (c)
-					end
+				curr := a_text [i]
+				if curr.code <= 0x7F and then curr.is_alpha_numeric then
+						-- Valid characters in URL fragment.
+					prev := curr.to_character_8
+					Result.append_character (prev)
 				else
-					c := a_text [i]
-					Result.append_character (c)
+					inspect a_text [i]
+					when
+						'/',  '?', '-', '.', '_',
+						'~', ':', '@', '!', '$', '&', '%'', '(', ')', '*', '+',
+						',', ';', '='
+					then
+							-- Valid characters in URL fragment.
+						prev := curr.to_character_8
+						Result.append_character (prev)
+					when ' ', '%T', '%N' then
+							-- Note: those char should be %-encoded, but for user convenience
+							-- we use '_'.
+						if prev /= '_' then
+							prev := '_'
+							Result.append_character (prev)
+						end
+					else
+							-- %-encode the char
+						prev := '%U'
+						append_percent_encoded_to (curr.natural_32_code, Result)
+					end
 				end
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Implementation: percent encoding		
+
+	append_percent_encoded_to (a_code: NATURAL_32; a_result: STRING_8)
+		do
+			if a_code > 0xFF then
+					-- Unicode
+				append_percent_encoded_unicode_character_code_to (a_code, a_result)
+			elseif a_code > 0x7F then
+					-- Extended ASCII
+					-- This requires percent-encoding on UTF-8 converted character.
+				append_percent_encoded_unicode_character_code_to (a_code, a_result)
+			else
+					-- ASCII
+				append_percent_encoded_ascii_character_code_to (a_code, a_result)
+			end
+		end
+
+	append_percent_encoded_ascii_character_code_to (a_code: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append extended ascii character code `a_code' as percent-encoded content into `a_result'
+			-- Note: it does not UTF-8 convert this extended ASCII.
+		require
+			is_extended_ascii: a_code <= 0xFF
+		local
+			c: INTEGER
+		do
+				-- Extended ASCII
+			c := a_code.to_integer_32
+			a_result.append_code (37) -- 37 '%%'
+ 			a_result.append_code (hex_digit [c |>> 4])
+ 			a_result.append_code (hex_digit [c & 0xF])
+		ensure
+			appended: a_result.count > old a_result.count
+		end
+
+	append_percent_encoded_unicode_character_code_to (a_code: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append Unicode character code `a_code' as UTF-8 and percent-encoded content into `a_result'
+			-- Note: it does include UTF-8 conversion of extended ASCII and Unicode.
+		do
+			if a_code <= 0x7F then
+					-- 0xxxxxxx
+				append_percent_encoded_ascii_character_code_to (a_code, a_result)
+			elseif a_code <= 0x7FF then
+					-- 110xxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 6) | 0xC0, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			elseif a_code <= 0xFFFF then
+					-- 1110xxxx 10xxxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 12) | 0xE0, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 6) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			else
+					-- c <= 1FFFFF - there are no higher code points
+					-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+				append_percent_encoded_ascii_character_code_to ((a_code |>> 18) | 0xF0, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 12) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to (((a_code |>> 6) & 0x3F) | 0x80, a_result)
+				append_percent_encoded_ascii_character_code_to ((a_code & 0x3F) | 0x80, a_result)
+			end
+		ensure
+			appended: a_result.count > old a_result.count
+		end
+
+ 	hex_digit: SPECIAL [NATURAL_32]
+ 			-- Hexadecimal digits.
+ 		once
+ 			create Result.make_filled (0, 16)
+ 			Result [0] := {NATURAL_32} 48 -- 48 '0'
+ 			Result [1] := {NATURAL_32} 49 -- 49 '1'
+ 			Result [2] := {NATURAL_32} 50 -- 50 '2'
+ 			Result [3] := {NATURAL_32} 51 -- 51 '3'
+ 			Result [4] := {NATURAL_32} 52 -- 52 '4'
+ 			Result [5] := {NATURAL_32} 53 -- 53 '5'
+ 			Result [6] := {NATURAL_32} 54 -- 54 '6'
+ 			Result [7] := {NATURAL_32} 55 -- 55 '7'
+ 			Result [8] := {NATURAL_32} 56 -- 56 '8'
+ 			Result [9] := {NATURAL_32} 57 -- 57 '9'
+ 			Result [10] := {NATURAL_32} 65 -- 65 'A'
+ 			Result [11] := {NATURAL_32} 66 -- 66 'B'
+ 			Result [12] := {NATURAL_32} 67 -- 67 'C'
+ 			Result [13] := {NATURAL_32} 68 -- 68 'D'
+ 			Result [14] := {NATURAL_32} 69 -- 69 'E'
+ 			Result [15] := {NATURAL_32} 70 -- 70 'F'
+ 		end
 
 feature -- Implementation
 

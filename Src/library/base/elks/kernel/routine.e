@@ -53,7 +53,7 @@ feature -- Access
 	frozen operands: detachable OPEN_ARGS
 
 	target: detachable ANY
-			-- Target of call
+			-- Target of call, if already known
 		local
 			c: like closed_operands
 		do
@@ -345,8 +345,9 @@ feature {ROUTINE} -- Implementation
 						  a_routine_id: INTEGER; a_open_map: like open_map;
 						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
 						  a_closed_operands: TUPLE; a_open_count: INTEGER)
-			-- Initialize object.
+			-- Initialize object in workbench mode.
 		require
+			a_routine_id_valid: a_routine_id > -1
 			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
 			set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr, a_routine_id,
@@ -356,7 +357,9 @@ feature {ROUTINE} -- Implementation
 
 	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER)
-			-- Initialize object.
+			-- Initialize object in finalized mode.
+		require
+			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
 			rout_disp := a_rout_disp
 			encaps_rout_disp := a_encaps_rout_disp
@@ -370,9 +373,10 @@ feature {ROUTINE} -- Implementation
 						  	  a_routine_id: INTEGER; a_open_map: like open_map;
 	 						  a_is_basic, a_is_target_closed: BOOLEAN; a_written_type_id_inline_agent: INTEGER;
 							  a_closed_operands: TUPLE; a_open_count: INTEGER)
-			-- Initialize object.
+			-- Initialize object in workbench mode.
 		require
 			a_routine_id_valid: a_routine_id > -1
+			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
 			rout_disp := a_rout_disp
 			encaps_rout_disp := a_encaps_rout_disp

@@ -236,9 +236,9 @@ end
 		do
 			create o.make_empty
 			vis := new_xhtml_generator (o)
-			assert ("valid anchor name", same_output (vis.anchor_name ("A text with spaces"), "A_text_with_spaces"))
-			assert ("valid anchor name", same_output (vis.anchor_name ("unexpected # char"), "unexpected_%%23_char"))
-			assert ("valid anchor name", same_output (vis.anchor_name ("summer=été"), "summer=%%C3%%A9t%%C3%%A9"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("A text with spaces", True), "A_text_with_spaces"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("unexpected # char", True), "unexpected_%%23_char"))
+			assert ("valid anchor name", same_output (vis.anchor_name ("summer=été", True), "summer=%%C3%%A9t%%C3%%A9"))
 		end
 
 	test_html

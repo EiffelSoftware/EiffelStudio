@@ -365,7 +365,7 @@ feature -- Processing
 							output_indentation
 							output ("<li>")
 							if attached w_section.text as l_text then
-								output ("<a href=%"#" + l_text.text + "%">")
+								output ("<a href=%"#" + anchor_name (l_text.text, True) + "%">")
 								output (l_text.text)
 								output ("</a>")
 							else
@@ -413,7 +413,7 @@ feature -- Processing
 				output ("%N")
 				if attached a_section.text as l_text then
 					output ("<a name=%"")
-					output (anchor_name (l_text.text))
+					output (anchor_name (l_text.text, True))
 					output ("%"></a>")
 				end
 				output ("<h" + l_level.out + ">")
@@ -1001,7 +1001,7 @@ feature -- Table
 
 feature -- Helpers
 
-	anchor_name (a_text: READABLE_STRING_GENERAL): STRING_8
+	anchor_name (a_text: READABLE_STRING_GENERAL; a_user_friendly_mode: BOOLEAN): STRING_8
 			-- Anchor name for text `a_text'.
 			-- Remove/replace space and unexpected characters.
 		local
@@ -1033,11 +1033,18 @@ feature -- Helpers
 						prev := curr.to_character_8
 						Result.append_character (prev)
 					when ' ', '%T', '%N' then
-							-- Note: those char should be %-encoded, but for user convenience
-							-- we use '_'.
-						if prev /= '_' then
-							prev := '_'
-							Result.append_character (prev)
+						if a_user_friendly_mode then
+
+								-- Note: those char should be %-encoded, but for user convenience
+								-- we use '_'.
+							if prev /= '_' then
+								prev := '_'
+								Result.append_character (prev)
+							end
+						else
+								-- %-encode the char
+							prev := '%U'
+							append_percent_encoded_to (curr.natural_32_code, Result)
 						end
 					else
 							-- %-encode the char

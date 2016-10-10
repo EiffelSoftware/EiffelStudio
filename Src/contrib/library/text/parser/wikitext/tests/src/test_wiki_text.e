@@ -102,6 +102,8 @@ __NOTOC__
 == three.1 ==
 == three.2 ==
 == three.3 ==
+=And the last one=
+== with spaces in text ==
 end
 }")
 			l_expected_output := "{
@@ -128,6 +130,10 @@ end
 <a name="three.2"></a><h2>three.2</h2>
 
 <a name="three.3"></a><h2>three.3</h2>
+
+<a name="And_the_last_one"></a><h1>And the last one</h1>
+
+<a name="with_spaces_in_text"></a><h2>with spaces in text</h2>
 <p>end</p>
 </div>
 
@@ -842,7 +848,7 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-		
+
 	test_list_number
 		local
 			t: WIKI_CONTENT_TEXT
@@ -877,7 +883,7 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-		
+
 	test_list_definition
 		local
 			t: WIKI_CONTENT_TEXT
@@ -917,7 +923,7 @@ e := "{
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
 		end
-		
+
 	test_list_definition_2
 		local
 			t: WIKI_CONTENT_TEXT

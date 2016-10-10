@@ -413,7 +413,7 @@ feature -- Processing
 				output ("%N")
 				if attached a_section.text as l_text then
 					output ("<a name=%"")
-					output (l_text.text)
+					output (anchor_name (l_text.text))
 					output ("%"></a>")
 				end
 				output ("<h" + l_level.out + ">")
@@ -999,99 +999,50 @@ feature -- Table
 			output ("</td>")
 		end
 
+feature -- Helpers
+
+	anchor_name (a_text: READABLE_STRING_GENERAL): STRING_32
+			-- Anchor name for text `a_text'.
+			-- Remove/replace space and unexpected characters.
+		local
+			i,n: INTEGER
+			c: CHARACTER_32
+		do
+			n := a_text.count
+			create Result.make (a_text.count)
+			from
+				i := 1
+				c := '_' -- Do not start with underscore as replacement.
+			until
+				i > n
+			loop
+				inspect a_text [i]
+				when ' ', '%T', '%N' then
+					if c /= '_' then
+						c := '_'
+						Result.append_character (c)
+					end
+				when 
+					'#', '%%', '<', '>' ,
+					'{' , '}' , '|' , '\' , '^' , '[' , ']' , '`' 
+				then
+					if c /= '-' then
+						c := '-'
+						Result.append_character (c)
+					end
+				else
+					c := a_text [i]
+					Result.append_character (c)
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Implementation
-
---	reset_indexes (lst: ARRAY [INTEGER]; a_index: INTEGER)
---		require
---			lst.valid_index (a_index)
---		local
---			i: INTEGER
---		do
---			from
---				i := a_index
---			until
---				i > lst.upper
---			loop
---				lst[i] := 0
---				i := i + 1
---			end
---		end
-
---	section_indexes: ARRAY [INTEGER]
 
 	section_level: INTEGER
 
---	section_index_representation (v: like list_level; a_postfix: BOOLEAN): STRING
---		local
---			l_index: INTEGER
---		do
---			l_index := section_indexes[v]
---			inspect v
---			when 1 then
---				Result := (<<"I", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X">>)[l_index + 1]
---			when 2 then
---				Result := ('A' + l_index - 1).out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			when 3 then
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
-----				Result := section_index_representation (v - 1, False) + "." + l_index.out
---			when 4 then
---				Result := ('a' + l_index - 1).out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			when 5 then
---				Result := section_index_representation (v - 1, False) + "." + l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			else
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string ("/")
---				end
---			end
---		end
-
---	list_indexes: ARRAY [INTEGER]
-
 	list_level: INTEGER
-
---	ordered_list_index_representation (v: like list_level; a_postfix: BOOLEAN): STRING
---		local
---			l_index: INTEGER
---		do
---			l_index := list_indexes[v]
---			inspect v
---			when 1 then
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			when 2 then
---				Result := ('a' + l_index - 1).out
---				if a_postfix then
---					Result.append_string (")")
---				end
---			when 3 then
---				Result := ordered_list_index_representation (v - 1, False) + "." + l_index.out
---				if a_postfix then
---					Result.append_string (")")
---				end
---			when 4 then
---				Result := (<<"i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix", "x">>)[l_index]
---			else
---				Result := l_index.out
---				if a_postfix then
---					Result.append_string (".")
---				end
---			end
---		end
 
 	visit_composite (a_composite: WIKI_COMPOSITE [WIKI_ITEM])
 		local

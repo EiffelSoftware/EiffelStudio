@@ -2844,7 +2844,7 @@ test	formal-conformance		conform002 tcf pass conformance
 test	catcall-checking-conformance	conform003 tcf pass conformance
 test	tuple-conformance-broken	conform004 tcf pass conformance
 test	reverse-assignment-on-attached-target-broken	conform005 tcf pass conformance
-test	manifest-tuple-type-conformance	conform006 tcf fail used_to_pass conformance
+test	manifest-tuple-type-conformance	conform006 tcf pass conformance
 test	attached-agent-procedure-conformance	conform007 tcf pass conformance attached_types agents
 test	attached-formal-creation	conform008 tcf pass conformance attached_types
 test	expanded-formal-conformance	conform009 tcf pass conformance expanded formal generic validity constraint

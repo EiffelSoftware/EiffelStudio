@@ -24,6 +24,8 @@ feature -- Basic operations
  			s := "Hello World!"
 			create dt.make_now_utc
 			s.append (" (UTC time is " + dt.rfc850_string + ").")
+			s.append ("%N")
+			s.append ("Your request: " + request.request_uri + " %N")
 			response.put_header ({HTTP_STATUS_CODE}.ok, <<["Content-Type", "text/html"], ["Content-Length", s.count.out]>>)
 			response.set_status_code ({HTTP_STATUS_CODE}.ok)
 			response.header.put_content_type_text_html

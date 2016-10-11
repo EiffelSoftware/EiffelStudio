@@ -25,7 +25,7 @@ Note: <br/>
 
 RESTBUCKS_SERVER
 ----------------
-This class implement the main entry of our REST CRUD service, we are using a default connector (Nino Connector, 
+This class implement the main entry of our REST CRUD service, we are using a default connector (Standalone Connector, 
 using a WebServer written in Eiffel).
 We are inheriting from URI_TEMPLATE_ROUTED_SERVICE, this allows us to map our service contrat, as is shown in the previous
 table, the mapping is defined in the feature setup_router, this also show that the class ORDER_HANDLER will be encharge
@@ -41,7 +41,7 @@ of to handle different type of request to the ORDER resource.
 		URI_TEMPLATE_ROUTED_SERVICE
 	
 		DEFAULT_SERVICE
-			-- Here we are using a default connector using the default Nino Connector,
+			-- Here we are using a default connector using the default Standalone Connector,
 			-- but it's possible to use other connector (CGI or FCGI).
 	
 	create

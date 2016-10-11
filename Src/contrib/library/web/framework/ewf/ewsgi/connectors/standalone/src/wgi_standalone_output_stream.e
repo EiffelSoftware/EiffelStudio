@@ -75,23 +75,23 @@ feature -- Output
 			-- Send `s' to http client
 		do
 			last_target_call_succeed := False
-			target.put_readable_string_8 (s)
-			last_target_call_succeed := True
+			target.put_readable_string_8_noexception (s)
+			last_target_call_succeed := not target.was_error
 		end
 
 	put_string (s: READABLE_STRING_8)
 			-- Send `s' to http client
 		do
 			last_target_call_succeed := False
-			target.put_readable_string_8 (s)
-			last_target_call_succeed := True
+			target.put_readable_string_8_noexception (s)
+			last_target_call_succeed := not target.was_error
 		end
 
 	put_character (c: CHARACTER_8)
 		do
 			last_target_call_succeed := False
-			target.put_character (c)
-			last_target_call_succeed := True
+			target.put_character_noexception (c)
+			last_target_call_succeed := not target.was_error
 		end
 
 feature -- Status report
@@ -116,7 +116,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

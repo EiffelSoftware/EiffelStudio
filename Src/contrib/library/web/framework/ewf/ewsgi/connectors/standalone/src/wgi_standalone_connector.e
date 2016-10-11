@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 			initialize_server (server)
 		end
 
-	make_with_base (a_base: like base)
+	make_with_base (a_base: detachable separate READABLE_STRING_8)
 			-- Create current standalone connector with base url `a_base'
 		require
-			a_base_starts_with_slash: (a_base /= Void and then not a_base.is_empty) implies a_base.starts_with ("/")
+			a_base_starts_with_slash: (a_base /= Void and then not a_base.is_empty) implies is_valid_base (a_base)
 		do
 			make
 			set_base (a_base)
@@ -109,7 +109,8 @@ feature -- Status report
 feature -- Callbacks
 
 	on_launched_actions: ACTION_SEQUENCE [TUPLE [WGI_STANDALONE_CONNECTOR [WGI_EXECUTION]]]
-			-- Actions triggered when launched
+			-- Actions triggered when launched.
+			-- WARNING: only supported for now with SCOOP concurrency mode. [2016-oct-07]
 
 feature -- Event
 
@@ -123,14 +124,23 @@ feature -- Event
 
 feature -- Element change
 
-	set_base (v: like base)
+	set_base (v: detachable separate READABLE_STRING_8)
 			-- Set base url `base' to `v'.
 		require
-			b_starts_with_slash: (v /= Void and then not v.is_empty) implies v.starts_with ("/")
+			b_starts_with_slash: (v /= Void and then not v.is_empty) implies is_valid_base (v)
 		do
-			base := v
+			if v = Void then
+				base := Void
+			else
+				create {STRING_8} base.make_from_separate (v)
+			end
 		ensure
 			valid_base: (attached base as l_base and then not l_base.is_empty) implies l_base.starts_with ("/")
+		end
+
+	is_valid_base (v: separate READABLE_STRING_8): BOOLEAN
+		do
+			Result := not v.is_whitespace and then v[1] = '/'
 		end
 
 	set_port_number (a_port_number: INTEGER)
@@ -139,6 +149,13 @@ feature -- Element change
 			a_port_number_positive_or_zero: a_port_number >= 0
 		do
 			set_port_on_configuration (a_port_number, configuration)
+		end
+
+	set_socket_recv_timeout (a_nb_seconds: INTEGER)
+		require
+			a_nb_seconds_positive_or_zero: a_nb_seconds >= 0
+		do
+			set_socket_recv_timeout_on_configuration (a_nb_seconds, configuration)
 		end
 
 	set_max_concurrent_connections (nb: INTEGER)
@@ -163,6 +180,13 @@ feature -- Element change
 		end
 
 feature -- Server
+
+	launch_on_port (a_port_number: INTEGER)
+			-- Launch server listening on port `a_port_number'.
+		do
+			set_port_number (a_port_number)
+			launch
+		end
 
 	launch
 			-- Launch web server listening.
@@ -189,11 +213,11 @@ feature -- Events
 		require
 			obs.started -- SCOOP wait condition.
 		do
+				-- FIXME: this works only with SCOOP concurrency mode. [2016-oct-07]
 			if obs.port > 0 then
 				on_launched (obs.port)
 			end
 		end
-
 
 feature {NONE} -- Implementation
 
@@ -236,6 +260,11 @@ feature {NONE} -- Implementation: element change
 	set_port_on_configuration (a_port_number: INTEGER; cfg: like configuration)
 		do
 			cfg.set_http_server_port (a_port_number)
+		end
+
+	set_socket_recv_timeout_on_configuration (a_nb_seconds: INTEGER; cfg: like configuration)
+		do
+			cfg.set_socket_recv_timeout (a_nb_seconds)
 		end
 
 	set_max_concurrent_connections_on_configuration (nb: INTEGER; cfg: like configuration)

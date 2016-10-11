@@ -21,7 +21,6 @@
 		<setting name="concurrency" value="thread"/>
 		<library name="cgi" location="../../../../library/web/framework/ewf/wsf/connector/cgi-safe.ecf" readonly="false"/>
 		<library name="libfcgi" location="../../../../library/web/framework/ewf/wsf/connector/libfcgi-safe.ecf" readonly="false"/>
-		<library name="nino" location="../../../../library/web/framework/ewf/wsf/connector/nino-safe.ecf" readonly="false"/>
 		<library name="standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone-safe.ecf" readonly="false"/>
 		<cluster name="launcher" location=".\launcher\any\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
@@ -30,12 +29,6 @@
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
 		<setting name="concurrency" value="thread"/>
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false"/>
-		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
-		<cluster name="src" location=".\src\" recursive="true"/>
-	</target>
-	<target name="debug_nino" extends="common">
-		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
@@ -51,6 +44,6 @@
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
-	<target name="debug" extends="debug_nino">
+	<target name="debug" extends="debug_standalone">
 	</target>
 </system>

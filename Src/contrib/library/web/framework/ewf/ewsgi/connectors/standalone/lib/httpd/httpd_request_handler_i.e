@@ -154,7 +154,7 @@ feature -- Settings
 feature -- Status report
 
 	has_error: BOOLEAN
-			-- Error occurred during `analyze_request_message'
+			-- Error occurred during `get_request_header'
 
 feature -- Status change
 
@@ -208,11 +208,21 @@ feature -- Execution
 			is_connected: is_connected
 		local
 			l_socket: like client_socket
+			l_remote_info: detachable like remote_info
 			l_exit: BOOLEAN
 			n,m: INTEGER
 		do
 			l_socket := client_socket
-			l_socket.set_recv_timeout (socket_recv_timeout)
+
+				-- Compute remote info once for the persistent connection.			
+			create l_remote_info
+			if attached l_socket.peer_address as l_addr then
+				l_remote_info.addr := l_addr.host_address.host_address
+				l_remote_info.hostname := l_addr.host_address.host_name
+				l_remote_info.port := l_addr.port
+			end
+			remote_info := l_remote_info
+
 			check
 				socket_attached: l_socket /= Void
 				socket_valid: l_socket.is_open_read and then l_socket.is_open_write
@@ -252,9 +262,7 @@ feature -- Execution
 			reuse_connection_when_possible: a_is_reusing_connection implies is_persistent_connection_supported
 			no_error: not has_error
 		local
-			l_remote_info: detachable like remote_info
 			l_socket: like client_socket
-			l_is_ready: BOOLEAN
 		do
 			debug ("dbglog")
 				if a_is_reusing_connection then
@@ -276,50 +284,34 @@ feature -- Execution
 					dbglog ("execute_request  socket=" + l_socket.descriptor.out + " ENTER")
 				end
 
-				if a_is_reusing_connection then
-						--| set by default 5 seconds.
-					l_socket.set_recv_timeout (keep_alive_timeout) -- in seconds!
-					l_is_ready := socket_has_incoming_data (l_socket)
-				else
-					l_is_ready := True
-				end
+					-- Try to get request header.
+					-- If the request is reusing persistent connection, use `keep_alive_timeout',
+					-- otherwise `socket_recv_timeout'.
+				get_request_header (l_socket, a_is_reusing_connection)
 
-				if l_is_ready then
-					l_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
-					create l_remote_info
-					if attached l_socket.peer_address as l_addr then
-						l_remote_info.addr := l_addr.host_address.host_address
-						l_remote_info.hostname := l_addr.host_address.host_name
-						l_remote_info.port := l_addr.port
-						remote_info := l_remote_info
-					end
-            		analyze_request_message (l_socket)
-
-            		if has_error then
-	--					check catch_bad_incoming_connection: False end
+				if has_error then
+					if a_is_reusing_connection and then request_header.is_empty then
+							-- Close persistent connection, since no new connection occurred in the delay `keep_alive_timeout'.
+						debug ("dbglog")
+							dbglog ("execute_request socket=" + l_socket.descriptor.out + "} close persistent connection.")
+						end
+					else
 						if is_verbose then
 							log (request_header + "%NWARNING: invalid HTTP incoming request", warning_level)
 						end
 						process_bad_request (l_socket)
-						is_persistent_connection_requested := False
-					else
-						if is_verbose then
-							log (request_header, information_level)
-						end
-						process_request (l_socket)
-		            end
-            	else
-            		check is_reusing_connection: a_is_reusing_connection end
-            			-- Close persistent connection, since no new connection occurred in the delay `keep_alive_timeout'.
-            		is_persistent_connection_requested := False
-					debug ("dbglog")
-						dbglog ("execute_request socket=" + l_socket.descriptor.out + "} close persistent connection.")
-	            	end
+					end
+					is_persistent_connection_requested := False
+				else
+					if is_verbose then
+						log (request_header, information_level)
+					end
+					process_request (l_socket)
 				end
 
-	            debug ("dbglog")
-		            dbglog ("execute_request {" + l_socket.descriptor.out + "} LEAVE")
-	            end
+				debug ("dbglog")
+					dbglog ("execute_request {" + l_socket.descriptor.out + "} LEAVE")
+				end
 			end
 		end
 
@@ -377,8 +369,11 @@ feature -- Request processing
 
 feature -- Parsing
 
-	analyze_request_message (a_socket: HTTPD_STREAM_SOCKET)
-			-- Analyze message extracted from `a_socket' as HTTP request
+	get_request_header (a_socket: HTTPD_STREAM_SOCKET; a_is_reusing_connection: BOOLEAN)
+			-- Analyze message extracted from `a_socket' as HTTP request.
+			-- If `a_is_reusing_connection' is True, then first use
+			-- Note: it reads from socket.
+			-- Note: it updates `request_header' and `request_header_map', and eventually `is_persistent_connection_requested'.
 		require
 			input_readable: a_socket /= Void and then a_socket.is_open_read
 		local
@@ -391,76 +386,90 @@ feature -- Parsing
 		do
 			create txt.make (64)
 			request_header := txt
+			l_is_verbose := is_verbose
+
 			if
 				not has_error and then
 				a_socket.readable
 			then
+				if a_is_reusing_connection then
+					a_socket.set_recv_timeout (keep_alive_timeout) -- in seconds!
+				else
+					a_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
+				end
+
 				if
 					attached next_line (a_socket) as l_request_line and then
-					not l_request_line.is_empty
+					not l_request_line.is_empty and then
+					not has_error
 				then
 					txt.append (l_request_line)
 					txt.append_character ('%N')
 					analyze_request_line (l_request_line)
+
+					if not has_error then
+						if a_is_reusing_connection then
+								-- Restore normal recv timeout!
+							a_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
+						end
+						from
+							line := next_line (a_socket)
+						until
+							line = Void or end_of_stream or has_error
+						loop
+							n := line.count
+							debug ("ew_standalone")
+								if l_is_verbose then
+									log (line, debug_level)
+								end
+							end
+							pos := line.index_of (':', 1)
+							if pos > 0 then
+								k := line.substring (1, pos - 1)
+								if line [pos + 1].is_space then
+									pos := pos + 1
+								end
+								if line [n] = '%R' then
+									n := n - 1
+								end
+								val := line.substring (pos + 1, n)
+								request_header_map.put (val, k)
+							end
+							txt.append (line)
+							txt.append_character ('%N')
+							if line.is_empty or else line [1] = '%R' then
+								end_of_stream := True
+							else
+								line := next_line (a_socket)
+							end
+						end
+							-- Except for HTTP/1.0, persistent connection is the default.
+						is_persistent_connection_requested := True
+						if is_http_version_1_0 then
+							is_persistent_connection_requested := attached request_header_map.item ("Connection") as l_connection and then
+										l_connection.is_case_insensitive_equal_general ("keep-alive")
+						else
+								-- By default HTTP:1/1 support persistent connection.
+							if attached request_header_map.item ("Connection") as l_connection then
+								if l_connection.is_case_insensitive_equal_general ("close") then
+									is_persistent_connection_requested := False
+								end
+							else
+								is_persistent_connection_requested := True
+							end
+						end
+					end
 				else
 					report_error ("Bad header line (empty)")
 				end
 			else
 				report_error ("Socket is not readable")
 			end
-			l_is_verbose := is_verbose
-			if not has_error then
-				from
-					line := next_line (a_socket)
-				until
-					line = Void or end_of_stream or has_error
-				loop
-					n := line.count
-					debug ("ew_standalone")
-						if l_is_verbose then
-							log (line, debug_level)
-						end
-					end
-					pos := line.index_of (':', 1)
-					if pos > 0 then
-						k := line.substring (1, pos - 1)
-						if line [pos + 1].is_space then
-							pos := pos + 1
-						end
-						if line [n] = '%R' then
-							n := n - 1
-						end
-						val := line.substring (pos + 1, n)
-						request_header_map.put (val, k)
-					end
-					txt.append (line)
-					txt.append_character ('%N')
-					if line.is_empty or else line [1] = '%R' then
-						end_of_stream := True
-					else
-						line := next_line (a_socket)
-					end
-				end
-					-- Except for HTTP/1.0, persistent connection is the default.
-				is_persistent_connection_requested := True
-				if is_http_version_1_0 then
-					is_persistent_connection_requested := attached request_header_map.item ("Connection") as l_connection and then
-								l_connection.is_case_insensitive_equal_general ("keep-alive")
-				else
-						-- By default HTTP:1/1 support persistent connection.
-					if attached request_header_map.item ("Connection") as l_connection then
-						if l_connection.is_case_insensitive_equal_general ("close") then
-							is_persistent_connection_requested := False
-						end
-					else
-						is_persistent_connection_requested := True
-					end
-				end
-			end
 		end
 
 	analyze_request_line (line: STRING)
-			-- Analyze `line' as a HTTP request line
+			-- Analyze `line' as a HTTP request line.
+			-- note: may update `has_error'.
 		require
 			valid_line: line /= Void and then not line.is_empty
 		local
@@ -488,28 +497,26 @@ feature -- Parsing
 
 	next_line (a_socket: HTTPD_STREAM_SOCKET): detachable STRING
 			-- Next line fetched from `a_socket' is available.
+			-- note: may update `has_error'.
 		require
-			not_has_error: not has_error or is_verbose
+			not_has_error: not has_error
 			is_readable: a_socket.is_open_read
 		local
 			retried: BOOLEAN
 		do
 			if retried then
 				report_error ("Rescue in next_line")
+				a_socket.close
 				Result := Void
-			elseif
-				a_socket.readable and then
-				socket_has_incoming_data (a_socket)
-			then
-
-				a_socket.read_line_thread_aware
+			elseif a_socket.readable then
+				a_socket.read_line_noexception
 				Result := a_socket.last_string
-					-- Do no check `socket_ok' before socket operation,
+					-- Do no check `was_error' before socket operation,
 					-- otherwise it may be False, due to error during other socket operation in same thread.
-				if not a_socket.socket_ok then
+				if a_socket.was_error then
 					report_error ("Socket error")
 					if is_verbose then
-						log (request_header +"%N" + Result + "%N## socket_ok=False! ##", debug_level)
+						log (request_header +"%N" + Result + "%N## was_error=False! ##", debug_level)
 					end
 				end
 			else
@@ -520,6 +527,7 @@ feature -- Parsing
 				end
 			end
 		rescue
+				-- In case of network error exception (as EiffelNet reports error raising exception)
 			retried := True
 			retry
 		end
@@ -558,7 +566,9 @@ feature {NONE} -- Helpers
 			a_socket.readable
 		do
 				-- FIXME: check if both are really needed.			
-			Result := a_socket.ready_for_reading and then a_socket.has_incoming_data
+--			Result := a_socket.ready_for_reading --and then a_socket.has_incoming_data
+--			Result := a_socket.has_incoming_data
+			Result := True
 		end
 
 invariant

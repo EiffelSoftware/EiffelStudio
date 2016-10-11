@@ -17,19 +17,21 @@ inherit
 
 feature {NONE} -- Execution
 
-	execute_embedded 
+	execute_embedded
 			-- Execute the request
 			-- See `request.input' for input stream
     		--     `request.meta_variables' for the CGI meta variable
 			-- and `response' for output buffer
 		local
-			filter: WSF_AGENT_FILTER
 			m: WSF_PAGE_RESPONSE
 		do
 			if local_connection_restriction_enabled then
 				if
 					attached request.remote_addr as l_remote_addr and then
-					l_remote_addr.is_case_insensitive_equal_general ("127.0.0.1")
+					(
+						l_remote_addr.is_case_insensitive_equal_general ("127.0.0.1")
+						or else l_remote_addr.is_case_insensitive_equal_general ("localhost")
+					)
 				then
 					execute
 				else
@@ -41,7 +43,7 @@ feature {NONE} -- Execution
 				execute
 			end
 		end
-	
+
 	execute
 		deferred
 		end

@@ -875,7 +875,7 @@ rt_private rt_inline rt_global_context_t* rt_thread_initialize_thread_data (int 
 			failure();
 		}
 #else
-		if (echval = setjmp(exenv)) {
+		if ((echval = setjmp(exenv))) {
 			failure();
 		}
 #endif

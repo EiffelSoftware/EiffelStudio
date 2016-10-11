@@ -20,9 +20,12 @@
 	</target>
 	<target name="upload_image_standalone" extends="upload_image_common">
 		<root class="IMAGE_UPLOADER" feature="make"/>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+	<target name="upload_image_standalone_st" extends="upload_image_standalone">
+		<setting name="concurrency" value="none"/>
 	</target>
 	<target name="upload_image_libfcgi" extends="upload_image_common">
 		<root class="IMAGE_UPLOADER" feature="make"/>

@@ -11,15 +11,16 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="connector_nino" location="..\..\ewsgi\connectors\nino\nino.ecf" readonly="false"/>
 		<library name="connector_null" location="..\..\ewsgi\connectors\null\null.ecf" readonly="false"/>
-		<library name="dft_nino" location="..\default\nino.ecf"/>
+		<library name="connector_standalone" location="..\..\ewsgi\connectors\standalone\standalone.ecf" readonly="false"/>
+		<library name="dft_standalone" location="..\default\standalone.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi\ewsgi.ecf" readonly="false"/>
 		<library name="http" location="../../../../../network/protocol/http/http.ecf" readonly="false"/>
-		<library name="http_client" location="../../../../../network/http_client/http_client.ecf" readonly="false"/>
+		<library name="http_client" location="../../../../../network/http_client/net_http_client.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="..\wsf.ecf" readonly="false"/>
+		<library name="wsf_standalone" location="../connector/standalone.ecf" readonly="false"/>
 		<cluster name="server" location=".\server\" recursive="true"/>
 	</target>
 	<target name="wsf_tests" extends="server">

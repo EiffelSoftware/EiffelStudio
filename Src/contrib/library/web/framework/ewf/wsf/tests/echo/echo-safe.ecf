@@ -11,9 +11,9 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="connector_nino" location="..\..\..\ewsgi\connectors\nino\nino-safe.ecf" readonly="false"/>
+		<library name="connector_standalone" location="..\..\..\ewsgi\connectors\standalone\standalone-safe.ecf" readonly="false"/>
 		<library name="connector_null" location="..\..\..\ewsgi\connectors\null\null-safe.ecf" readonly="false"/>
-		<library name="dft_nino" location="..\..\default\nino-safe.ecf"/>
+		<library name="dft_standalone" location="..\..\default\standalone-safe.ecf"/>
 		<library name="ewsgi" location="..\..\..\ewsgi\ewsgi-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
 		<library name="wsf" location="..\..\wsf-safe.ecf" readonly="false"/>

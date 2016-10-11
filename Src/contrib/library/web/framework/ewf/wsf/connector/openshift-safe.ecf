@@ -12,7 +12,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi\ewsgi-safe.ecf"/>
 		<library name="wsf" location="..\wsf-safe.ecf"/>
-		<library name="wsf_connector_nino" location="nino-safe.ecf"/>
+		<library name="wsf_connector_standalone" location="standalone-safe.ecf"/>
 		<cluster name="wsf_openshift" location=".\openshift\" recursive="true"/>
 	</target>
 </system>

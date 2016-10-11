@@ -11,7 +11,7 @@
 		</option>
 		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="connector_nino" location="..\..\connectors\nino\nino-safe.ecf" readonly="false"/>
+		<library name="connector_standalone" location="..\..\connectors\standalone\standalone-safe.ecf" readonly="false"/>
 		<library name="ewsgi" location="..\..\ewsgi-safe.ecf" readonly="false"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>

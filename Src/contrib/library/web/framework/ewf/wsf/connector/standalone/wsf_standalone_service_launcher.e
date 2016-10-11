@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			verbose := False
 			verbose_level := notice_level
 
-			base_url := ""
+			base_url := Void
 
 			if attached options as opts then
 				if attached {READABLE_STRING_GENERAL} opts.option ("server_name") as l_server_name then
@@ -175,7 +175,12 @@ feature -- Execution
 					else
 						io.error.put_string ("localhost")
 					end
-					io.error.put_string (":" + port_number.out + "/" + base_url + "%N")
+					io.error.put_string (":" + port_number.out)
+					if attached base_url as b and then not b.is_empty then
+						io.error.put_string (b + "%N")
+					else
+						io.error.put_string ("/%N")
+					end
 				end
 			end
 			update_configuration (conn.configuration)
@@ -201,7 +206,7 @@ feature {NONE} -- Implementation
 
 	server_name: detachable READABLE_STRING_8
 
-	base_url: READABLE_STRING_8
+	base_url: detachable READABLE_STRING_8
 
 	verbose: BOOLEAN
 	verbose_level: INTEGER

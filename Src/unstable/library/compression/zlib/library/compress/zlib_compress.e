@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 
 				-- Setup a default compression level
 			compression_level := {ZLIB_CONSTANTS}.Z_default_compression
+			mark_default_flush
 		end
 
 	make_with_chunk_size (a_size: INTEGER)
@@ -42,6 +43,7 @@ feature {NONE} -- Initialization
 
 				-- Setup a default compression level
 			compression_level := {ZLIB_CONSTANTS}.Z_default_compression
+			mark_default_flush
 		ensure
 			chunk_size_set: chunk_size = a_size
 		end
@@ -51,6 +53,55 @@ feature {NONE} -- Initialization
 				-- Initialize buffers
 			create input_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk_size))
 			create output_buffer.make_from_array (create {ARRAY [NATURAL_8]}.make_filled (0, 1, chunk_size))
+		end
+
+
+feature -- Flush Modes
+
+	last_chunk: NATURAL
+			-- Has no more output.
+
+	no_last_chunk: NATURAL
+			-- To indicate we are not yet at the end of the input.
+
+	mark_default_flush
+			-- Default flush mode.
+		note
+			EIS: "name=default flush", "src=http://www.zlib.net/zlib_how.html", "protocol=URI"
+		do
+			last_chunk := {ZLIB_CONSTANTS}.z_finish
+			no_last_chunk:= {ZLIB_CONSTANTS}.z_no_flush
+		ensure
+			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_finish
+			set_not_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.z_no_flush
+		end
+
+	mark_full_flush
+			-- Full flush mode
+			-- Flush mode for PPP protocol.
+		note
+			EIS: "name=Flush modes", "http://www.bolet.org/~pornin/deflate-flush-fr.html", "protocol=uri"
+			EIS: "name=PPP protocol", "https://www.ietf.org/rfc/rfc1979.txt", "protocol=uri"
+		do
+			last_chunk := {ZLIB_CONSTANTS}.z_full_flush
+			no_last_chunk:= {ZLIB_CONSTANTS}.z_full_flush
+		ensure
+			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_full_flush
+			set_no_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.z_full_flush
+		end
+
+	mark_sync_flush
+			-- Default flush mode.
+			-- Flush mode for PPP protocol.
+		note
+			EIS: "name=Flush modes", "http://www.bolet.org/~pornin/deflate-flush-fr.html", "protocol=uri"
+			EIS: "name=PPP protocol", "https://www.ietf.org/rfc/rfc1979.txt", "protocol=uri"
+		do
+			last_chunk := {ZLIB_CONSTANTS}.z_sync_flush
+			no_last_chunk:= {ZLIB_CONSTANTS}.z_sync_flush
+		ensure
+			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_sync_flush
+			set_no_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.z_sync_flush
 		end
 
 feature --Access
@@ -141,9 +192,9 @@ feature {NONE} -- Deflate implementation
 					zstream.set_available_input (last_read_elements)
 					zstream.set_next_input (input_buffer.item)
 					if end_of_input then
-						l_flush := {ZLIB_CONSTANTS}.z_finish
+						l_flush := last_chunk
 					else
-						l_flush := {ZLIB_CONSTANTS}.z_no_flush
+						l_flush := no_last_chunk
 					end
 
 						-- run deflate on input until output buffer not full, finish compression if all of source has been read in
@@ -181,9 +232,8 @@ feature {NONE} -- Deflate implementation
 				end
 					-- -- All input will be completed
 				check
-					stream_end: zlib.last_operation = {ZLIB_CONSTANTS}.z_stream_end
+					stream_end: zlib.last_operation = {ZLIB_CONSTANTS}.z_stream_end or else zlib.last_operation = {ZLIB_CONSTANTS}.z_ok
 				end
-
 					-- clean up and return
 				zlib.deflate_end (zstream)
 			end

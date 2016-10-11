@@ -219,24 +219,6 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define EIF_REAL_32_ITEM eif_real_32_item
 #define EIF_REFERENCE_ITEM eif_reference_item
 
-/* Macro for setting tuple element value from a reference object
- * `val' should not be Void */
-#define eif_put_boolean_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_b = *(EIF_BOOLEAN *)(val)
-#define eif_put_character_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER_8 *)(val)
-#define eif_put_character_32_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_CHARACTER_32 *)(val)
-#define eif_put_real_64_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_r8 = *(EIF_REAL_64 *)(val)
-#define eif_put_natural_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n1 = *(EIF_NATURAL_8 *)(val)
-#define eif_put_natural_16_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n2 = *(EIF_NATURAL_16 *)(val)
-#define eif_put_natural_32_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n4 = *(EIF_NATURAL_32 *)(val)
-#define eif_put_natural_64_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_n8 = *(EIF_NATURAL_64 *)(val)
-#define eif_put_integer_8_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_i1 = *(EIF_INTEGER_8 *)(val)
-#define eif_put_integer_16_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_i2 = *(EIF_INTEGER_16 *)(val)
-#define eif_put_integer_32_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_i4 = *(EIF_INTEGER_32 *)(val)
-#define eif_put_integer_64_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_i8 = *(EIF_INTEGER_64 *)(val)
-#define eif_put_pointer_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_p = *(EIF_POINTER *)(val)
-#define eif_put_real_32_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_r4 = *(EIF_REAL_32 *)(val)
-#define eif_put_reference_item_with_object(tuple,pos,val)	eif_put_reference_item(tuple,pos,val)
-
 /* Macro for setting tuple element value */
 #define eif_put_boolean_item(tuple,pos,val)			((EIF_TYPED_VALUE *) (tuple) + pos)->it_b = (EIF_BOOLEAN)(val)
 #define eif_put_character_8_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER_8)(val)
@@ -261,8 +243,6 @@ RT_LNK char eif_sk_type_to_type_code (uint32 sk_type);
 #define eif_wide_character_item(tuple,pos)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4
 #define EIF_CHARACTER_ITEM eif_character_item
 #define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
-#define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = *(EIF_CHARACTER_8 *)(val)
-#define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = *(EIF_CHARACTER_32 *)(val)
 #define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_VALUE *) (tuple) + pos)->it_c1 = (EIF_CHARACTER_8)(val)
 #define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_VALUE *) (tuple) + pos)->it_c4 = (EIF_CHARACTER_32)(val)
 

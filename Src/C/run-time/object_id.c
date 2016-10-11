@@ -216,7 +216,6 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	struct ostack *st = &object_id_stack;
 	char **top;
 	struct stochunk * current;
-	char **end;
 
 	EIF_OBJECT_ID_LOCK;
 	if (!st->st_cur) {
@@ -228,7 +227,6 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	} 
 	current = st->st_cur;	/* save previous current chunk */
 	top = current->sk_top;		/* save previous top of stack */
-	end = current->sk_end;		/*save previous st_end of stack */ 
 	SIGBLOCK;		/* Critical section */
 	while (--nb_chunks) {
 		if (!eif_ostack_extend(st, eif_stack_chunk)) {

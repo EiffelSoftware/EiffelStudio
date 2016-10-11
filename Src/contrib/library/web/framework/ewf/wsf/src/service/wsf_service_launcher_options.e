@@ -2,11 +2,10 @@ note
 	description: "[
 				Options used by WSF_SERVICE_LAUNCHER
 	
-				For instance options supported by Nino as default connector::
+				For instance options supported by Standalone as default connector::
 					port: numeric such as 8099 (or equivalent string as "8099")
 					base: base_url (very specific to standalone server)
-					force_single_threaded: use only one thread, useful for Nino
-					verbose: to display verbose output, useful for Nino
+					verbose: to display verbose output, useful for Standalone
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

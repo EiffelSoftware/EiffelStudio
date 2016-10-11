@@ -24,18 +24,23 @@ feature {NONE} -- Initialization
 			-- then launch the application.
 		local
 			l_win: like main_window
-			l_embedded_service: APP_EMBEDDED_WEB_SERVICE
+			l_embedded_service: separate APP_EMBEDDED_WEB_SERVICE
 		do
 			default_create
 			create l_win.make
 			main_window := l_win
 			l_win.show
 			create l_embedded_service.make
-			l_embedded_service.set_port_number (0) -- Use first available port number
-
-			l_embedded_service.on_launched_actions.force (agent on_web_service_launched (l_win, l_embedded_service))
-			l_embedded_service.launch
+			setup_and_launch_web_service (l_embedded_service)
 			launch
+		end
+
+
+	setup_and_launch_web_service (a_web_service: separate APP_EMBEDDED_WEB_SERVICE)
+		do
+			a_web_service.set_port_number (0) -- Use first available port number
+			a_web_service.set_on_launched_action (agent on_web_service_launched (a_web_service))
+			a_web_service.launch
 		end
 
 	on_quit
@@ -45,13 +50,15 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	on_web_service_launched (a_win: attached like main_window; s: APP_EMBEDDED_WEB_SERVICE)
+	on_web_service_launched (a_web_service: separate APP_EMBEDDED_WEB_SERVICE)
 		do
-			add_idle_action_kamikaze (agent wait_for_termination (s, Void))
-			add_idle_action_kamikaze (agent a_win.open_link)
+			if attached main_window as win then
+				add_idle_action_kamikaze (agent wait_for_termination (a_web_service, Void))
+				add_idle_action_kamikaze (agent win.open_link)
+			end
 		end
 
-	wait_for_termination (s: APP_EMBEDDED_WEB_SERVICE; a_timeout: detachable EV_TIMEOUT)
+	wait_for_termination (a_web_service: separate APP_EMBEDDED_WEB_SERVICE; a_timeout: detachable EV_TIMEOUT)
 		local
 			t: detachable EV_TIMEOUT
 		do
@@ -60,7 +67,7 @@ feature {NONE} -- Initialization
 				t.set_interval (0)
 			end
 			if
-				attached s.observer as obs and then
+				attached a_web_service.observer as obs and then
 				observer_has_terminaded (obs)
 			then
 				if t /= Void then
@@ -70,7 +77,7 @@ feature {NONE} -- Initialization
 			else
 				if t = Void then
 					create t
-					t.actions.extend (agent wait_for_termination (s, t))
+					t.actions.extend (agent wait_for_termination (a_web_service, t))
 				else
 					t.set_interval (1_000)
 				end

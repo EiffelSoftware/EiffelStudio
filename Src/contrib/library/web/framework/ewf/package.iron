@@ -14,8 +14,11 @@ project
 	connector_libfcgi = "ewsgi/connectors/libfcgi/libfcgi.ecf"
 	connector_standalone = "ewsgi/connectors/standalone/standalone-safe.ecf"
 	connector_standalone = "ewsgi/connectors/standalone/standalone.ecf"
-	httpd = "ewsgi/connectors/standalone/src/httpd/httpd-safe.ecf"
-	httpd = "ewsgi/connectors/standalone/src/httpd/httpd.ecf"
+	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd-safe.ecf"
+	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd.ecf"
+	http_network = "ewsgi/connectors/standalone/lib/httpd/http_network-safe.ecf"
+	http_network = "ewsgi/connectors/standalone/lib/httpd/http_network.ecf"
+	httpd = "ewsgi/connectors/standalone/lib/httpd/httpd.ecf"
 	encoder = "text/encoder/encoder-safe.ecf"
 	encoder = "text/encoder/encoder.ecf"
 	wsf = "wsf/wsf-safe.ecf"
@@ -44,6 +47,8 @@ project
 	default_standalone = "wsf/default/standalone.ecf"
 	wsf_html = "wsf_html/wsf_html-safe.ecf"
 	wsf_html = "wsf_html/wsf_html.ecf"
+	wsf_proxy = "wsf_proxy/wsf_proxy-safe.ecf"
+	wsf_proxy = "wsf_proxy/wsf_proxy.ecf"
 
 note
 	title: EiffelWeb framework
@@ -55,9 +60,10 @@ note
 				- Various wsf extensions (extension, session, policy driven, ..)
 				- text encoder (html, percent encoding, ...)
 				- wsf html: to generate and handle html widgets such as web forms.
+				- wsf proxy: to add reverse proxy behavior.
 			]"
 	collection: EWF
-	tags: ewf,web,server,httpd,request,connector,policy,session,widget,form
+	tags: ewf,web,server,httpd,request,connector,policy,session,widget,form,proxy,network
 	copyright: 2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
 	link[license]: http://www.eiffel.com/licensing/forum.txt

@@ -7,7 +7,6 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option debug="true" warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="transitional" syntax="provisional">
-			<debug name="nino" enabled="true"/>
 			<assertions precondition="true" postcondition="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="thread"/>
@@ -20,11 +19,6 @@
 		<library name="wsf_extension" location="../../../../library/web/framework/ewf/wsf/wsf_extension-safe.ecf" readonly="true"/>
 		<library name="wsf_router_context" location="../../../../library/web/framework/ewf/wsf/wsf_router_context-safe.ecf" readonly="true"/>
 	</target>
-	<target name="filter_nino" extends="common">
-		<root class="FILTER_SERVER" feature="make"/>
-		<library name="default_nino" location="../../../../library/web/framework/ewf/wsf/default/nino-safe.ecf" readonly="true"/>
-		<cluster name="filter" location="src\" recursive="true"/>
-	</target>
 	<target name="filter_standalone" extends="common">
 		<root class="FILTER_SERVER" feature="make"/>
 		<setting name="concurrency" value="thread"/>
@@ -36,6 +30,6 @@
 		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="filter" location="src\" recursive="true"/>
 	</target>
-	<target name="filter" extends="filter_nino">
+	<target name="filter" extends="filter_standalone">
 	</target>
 </system>

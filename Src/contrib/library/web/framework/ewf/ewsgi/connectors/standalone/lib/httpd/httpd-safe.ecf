@@ -11,6 +11,16 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="scoop"/>
+		<external_include location="$ECF_CONFIG_PATH/spec/include">
+			<condition>
+				<version type="compiler" min="16.11.0.0"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH/spec/include_until_16_05">
+			<condition>
+				<version type="compiler" max="16.11.0.0"/>
+			</condition>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl-safe.ecf">
@@ -24,29 +34,12 @@
 			</condition>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<cluster name="network" location=".\network" recursive="false">
-			<cluster name="ssl_network" location="$|ssl" recursive="true">
-				<condition>
-					<custom name="httpd_ssl_enabled" value="true"/>
-				</condition>
-			</cluster>
-			<cluster name="network_until_16_05" location="$|until_16_05\">
-				<condition>
-					<version type="compiler" max="16.11.0.0"/>
-				</condition>
-			</cluster>
-			<cluster name="network_from_16_11" location="$|from_16_11\">
-				<condition>
-					<version type="compiler" min="16.11.0.0"/>
-				</condition>
-			</cluster>
-		</cluster>
 		<cluster name="httpd_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/concurrency$</exclude>
+				<exclude>/network$</exclude>
 				<exclude>/no_ssl$</exclude>
 				<exclude>/ssl$</exclude>
-				<exclude>/network$</exclude>
 			</file_rule>
 			<cluster name="no_ssl" location="$|no_ssl\" recursive="true">
 				<condition>
@@ -71,6 +64,37 @@
 			<cluster name="concurrency_thread" location="$|concurrency\thread\" recursive="true">
 				<condition>
 					<concurrency value="thread"/>
+				</condition>
+			</cluster>
+		</cluster>
+		<cluster name="network" location=".\network\">
+			<file_rule>
+				<exclude>/httpd_stream_socket_ext.e$</exclude>
+				<condition>
+					<version type="compiler" max="16.11.0.0"/>
+				</condition>
+			</file_rule>
+			<cluster name="ssl_network" location="$|ssl\" recursive="true">
+				<condition>
+					<custom name="httpd_ssl_enabled" value="true"/>
+				</condition>
+				<file_rule>
+					<exclude>/httpd_stream_ssl_socket_ext.e$</exclude>
+					<condition>
+						<version type="compiler" max="16.11.0.0"/>
+						<custom name="httpd_ssl_enabled" value="true"/>
+					</condition>
+				</file_rule>
+			</cluster>
+		</cluster>
+		<cluster name="network_until_16_05" location=".\network\until_16_05\" recursive="false">
+			<condition>
+				<version type="compiler" max="16.11.0.0"/>
+			</condition>
+			<cluster name="ssl_network_until_16_05" location="$|ssl\" recursive="true">
+				<condition>
+					<custom name="httpd_ssl_enabled" value="true"/>
+					<version type="compiler" max="16.11.0.0"/>
 				</condition>
 			</cluster>
 		</cluster>

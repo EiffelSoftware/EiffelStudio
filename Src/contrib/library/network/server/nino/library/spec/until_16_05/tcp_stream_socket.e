@@ -1,40 +1,56 @@
 note
-	description: "SSL tcp stream socket."
+	description: "Summary description for {TCP_STREAM_SOCKET}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SSL_TCP_STREAM_SOCKET
+	TCP_STREAM_SOCKET
 
 inherit
-
-	SSL_NETWORK_STREAM_SOCKET
+	NETWORK_STREAM_SOCKET
+		redefine
+			make
+		end
 
 create
-	make_server_by_address_and_port, make_server_by_port,
-	make_client_by_address_and_port, make_client_by_port, 
-	make_empty
+	make_server_by_address_and_port,
+	make_server_by_port
 
-create {SSL_NETWORK_STREAM_SOCKET}
-	make_from_descriptor_and_address
+create {NETWORK_STREAM_SOCKET}
+	make_from_descriptor_and_address,
+	make_empty
 
 feature {NONE} -- Initialization
 
-	make_server_by_address_and_port (an_address: INET_ADDRESS; a_port: INTEGER)
-			-- Create server socket on `an_address' and `a_port'.
+	make_server_by_address_and_port (a_address: INET_ADDRESS; a_port: INTEGER)
+			-- Create server socket on `a_address' and `a_port'.
 		require
 			valid_port: a_port >= 0
 		do
 			make
-			create address.make_from_address_and_port (an_address, a_port)
+			create address.make_from_address_and_port (a_address, a_port)
 			bind
+		end	
+
+	make
+			-- Create a network stream socket.
+		do
+			Precursor
+			set_reuse_address
 		end
 
 feature -- Basic operation
 
 	send_message (a_msg: STRING)
+		local
+			a_package : PACKET
+			a_data : MANAGED_POINTER
+			c_string : C_STRING
 		do
-			put_string (a_msg)
+			create c_string.make (a_msg)
+			create a_data.make_from_pointer (c_string.item, a_msg.count + 1)
+			create a_package.make_from_managed_pointer (a_data)
+			send (a_package, 1)
 		end
 
 feature -- Output
@@ -61,13 +77,7 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 
-feature {NONE}-- Implementation
-
-
-
-
 note
-	copyright: "2011-2013, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2015, Javier Velilla and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-
 end

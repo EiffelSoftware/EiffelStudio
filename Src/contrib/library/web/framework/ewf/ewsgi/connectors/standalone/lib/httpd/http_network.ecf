@@ -19,19 +19,33 @@
 			</condition>
 		</library>
 		<cluster name="network" location=".\network\">
-			<cluster name="ssl_network" location="$|ssl\" recursive="true">
-				<condition>
-					<custom name="net_ssl_enabled" value="true"/>
-				</condition>
-			</cluster>
-			<cluster name="network_until_16_05" location="$|until_16_05\">
+			<file_rule>
+				<exclude>/httpd_stream_socket_ext.e$</exclude>
 				<condition>
 					<version type="compiler" max="16.11.0.0"/>
 				</condition>
-			</cluster>
-			<cluster name="network_from_16_11" location="$|from_16_11\">
+			</file_rule>
+			<cluster name="ssl_network" location="$|ssl\" recursive="true">
 				<condition>
-					<version type="compiler" min="16.11.0.0"/>
+					<custom name="httpd_ssl_enabled" value="true"/>
+				</condition>
+				<file_rule>
+					<exclude>/httpd_stream_ssl_socket_ext.e$</exclude>
+					<condition>
+						<version type="compiler" max="16.11.0.0"/>
+						<custom name="httpd_ssl_enabled" value="true"/>
+					</condition>
+				</file_rule>
+			</cluster>
+		</cluster>
+		<cluster name="network_until_16_05" location=".\network\until_16_05\" recursive="false">
+			<condition>
+				<version type="compiler" max="16.11.0.0"/>
+			</condition>
+			<cluster name="ssl_network_until_16_05" location="$|ssl\" recursive="true">
+				<condition>
+					<custom name="httpd_ssl_enabled" value="true"/>
+					<version type="compiler" max="16.11.0.0"/>
 				</condition>
 			</cluster>
 		</cluster>

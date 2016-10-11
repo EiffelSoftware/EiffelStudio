@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize Current
 		do
-				-- To use particular port number (as 9090) with Nino connector
+				-- To use particular port number (as 9090) with Standalone connector
 				-- Uncomment the following line
 			set_service_option ("port", 9090)
 			make_and_launch

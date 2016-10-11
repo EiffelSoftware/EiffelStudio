@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 	reset
 		do
-			reset_request
+			reset_request (False)
 
 			reset_error
 			if attached internal_client_socket as l_sock then
@@ -40,10 +40,18 @@ feature {NONE} -- Initialization
 			internal_client_socket := Void
 		end
 
-	reset_request
+	reset_request (a_is_reusing_connection: BOOLEAN)
+			-- Reset the request, and `a_is_reusing_connection' says if the peristent connection is
+			-- still alive.
 		do
+			if a_is_reusing_connection then
+					-- Keep `remote_info' as it stays the same for the successive 
+					-- persistent connections.
+			else
+				remote_info := Void
+			end
+
 			version := Void
-			remote_info := Void
 
 				-- FIXME: optimize to just wipe_out if needed
 			create method.make_empty
@@ -247,7 +255,7 @@ feature -- Execution
 						or not is_next_persistent_connection_supported -- related to `max_keep_alive_requests'
 						or not is_persistent_connection_requested
 						or has_error or l_socket.is_closed or not l_socket.is_open_read
-				reset_request
+				reset_request (not l_exit)
 			end
 			if l_exit and has_error and not l_socket.is_closed then
 				l_socket.close
@@ -261,6 +269,7 @@ feature -- Execution
 			is_connected: is_connected
 			reuse_connection_when_possible: a_is_reusing_connection implies is_persistent_connection_supported
 			no_error: not has_error
+			remote_info_set: remote_info /= Void
 		local
 			l_socket: like client_socket
 		do

@@ -118,7 +118,7 @@ feature -- Element change
 
 feature {NONE} -- Convenience
 
-	veto_pebble_function_result (a_pebble: detachable ANY): BOOLEAN
+	veto_pebble_function_result (a_pebble: ANY): BOOLEAN
 			-- Find out the computation of `veto_pebble_function' with `a_pebble'.
 		local
 			l_tuple: TUPLE [pebble: ANY]

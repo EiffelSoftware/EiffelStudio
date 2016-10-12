@@ -164,11 +164,24 @@ feature -- Settings
 			Result := session.ignore_content_length
 		end
 
-	buffer_size: NATURAL
-			-- Set the buffer size for request. This option will
-			-- only be set if buffer_size is positive
+	buffer_size: INTEGER
+			-- Buffer size for request,
+			-- initialized from the session buffer_size value, or default 2_048.
 		do
-			Result := session.buffer_size
+			Result := session.buffer_size.to_integer_32
+			if Result <= 0 then
+				Result := 2_048
+			end
+		end
+
+	chunk_size: INTEGER
+			-- Chunk size for request, when "Transfer-Encoding: chunked"
+			-- initialized from the session buffer_size value, or default 2_048.
+		do
+			Result := session.chunk_size.to_integer_32
+			if Result <= 0 then
+				Result := 2_048
+			end
 		end
 
 	default_response_charset: detachable READABLE_STRING_8
@@ -249,7 +262,7 @@ feature {NONE} -- Utilities: encoding
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

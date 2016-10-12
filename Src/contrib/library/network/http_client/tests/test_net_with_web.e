@@ -64,4 +64,9 @@ feature -- Tests
 			test_get_with_authentication
 		end
 
+	net_test_post_with_file_using_chunked_transfer_encoding
+		do
+			test_post_with_file_using_chunked_transfer_encoding
+		end
+
 end

@@ -51,7 +51,7 @@ feature -- Helper
 			if b = Void then
 				b := ""
 			end
-			Result := "/" + b + a_query_url
+			Result := b + a_query_url
 		end
 
 end

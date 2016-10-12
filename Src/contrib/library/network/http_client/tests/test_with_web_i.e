@@ -253,6 +253,38 @@ feature -- Factory
 			end
 		end
 
+	test_post_with_file_using_chunked_transfer_encoding
+		local
+			sess: HTTP_CLIENT_SESSION
+			h: STRING_8
+			l_ctx: HTTP_CLIENT_REQUEST_CONTEXT
+		do
+			if attached global_requestbin_path as requestbin_path then
+
+					-- POST REQUEST WITH A FILE AND FORM DATA
+					-- check requestbin to ensure the file and form parameters are correctly received
+					-- set filename to a local file
+				sess := new_session ("http://requestb.in")
+				create l_ctx.make
+				l_ctx.add_header ("Transfer-Encoding", "chunked")
+				l_ctx.set_upload_filename ("logo.jpg")
+				create h.make_empty
+				if
+					attached sess.post (requestbin_path, l_ctx, Void) as res and then
+					attached res.headers as hds
+				then
+					across
+						hds as c
+					loop
+						h.append (c.item.name + ": " + c.item.value + "%R%N")
+					end
+				end
+				print (h)
+			else
+				assert ("Has requestbin path", False)
+			end
+		end
+
 	test_get_with_redirection
 		local
 			sess: HTTP_CLIENT_SESSION

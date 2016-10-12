@@ -2860,6 +2860,7 @@ test	field-type-inconsistency		reflection005 tcf pass reflection
 test	storable-version-data			reflection006 tcf pass reflection storable
 test	copy-semantics-reflection		reflection007 tcf fail used_to_pass reflection
 test	type-gc-crash					reflection008 tcf pass reflection runtime
+test	special-tupe-type-reflector		reflection009 tcf pass reflection
 
 -- Tests for anchored types
 test	qat-evaluation-order			anchor001 tcf pass anchored_type

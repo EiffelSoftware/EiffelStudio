@@ -1,0 +1,24 @@
+test_name special-tupe-type-reflector
+test_description If you use {REFLECTOR} to check if some types are either SPECIAL or TUPLE in void-safe mode the underlying queries `is_special_type', `is_special_any_type' and `is_tuple_type' returns False when True is expected.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_m output
+
+test_end

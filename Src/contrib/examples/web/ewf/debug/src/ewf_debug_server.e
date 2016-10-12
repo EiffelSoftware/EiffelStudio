@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 --			set_service_option ("verbose", True)
 			set_service_option ("port", 9090)
 --			set_service_option ("base", "/www-debug/debug_service.fcgi/")
+			import_service_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("debug.ini"))
 		end
 
 --	execute (req: WSF_REQUEST; res: WSF_RESPONSE)

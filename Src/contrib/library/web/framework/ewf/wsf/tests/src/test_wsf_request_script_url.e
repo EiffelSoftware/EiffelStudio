@@ -32,7 +32,7 @@ feature -- Execution
 
 feature -- Tests
 
-	test_script_url
+	test_script_url_1
 		local
 			req: WSF_REQUEST
 			s: READABLE_STRING_8
@@ -48,7 +48,13 @@ feature -- Tests
 				)
 			s := req.script_url ("/new/path/")
 			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/foo/bar/new/path/%"", s.same_string ("/foo/bar/new/path/"))
+		end
 
+	test_script_url_2
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
 			--| Case #2			
 			req := new_request (<<
 						["REQUEST_METHOD", "GET"],
@@ -60,7 +66,13 @@ feature -- Tests
 				)
 			s := req.script_url ("/new/path/")
 			assert ("script_url (/new/path/) = %""+s+"%" but should be %"/foo/bar/new/path/%"", s.same_string ("/foo/bar/new/path/"))
+		end
 
+	test_script_url_3
+		local
+			req: WSF_REQUEST
+			s: READABLE_STRING_8
+		do
 			--| Case #3		
 			req := new_request (<<
 						["REQUEST_METHOD", "GET"],

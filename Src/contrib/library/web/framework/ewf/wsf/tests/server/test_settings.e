@@ -11,6 +11,6 @@ feature -- Access
 
 	port_number: INTEGER = 9091
 
-	base_url: STRING = "" --"/test/"
+	base_url: STRING = "/test/"
 
 end

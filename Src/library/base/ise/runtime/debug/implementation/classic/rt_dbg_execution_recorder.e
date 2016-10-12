@@ -870,14 +870,16 @@ feature -- Replay operation
 	replay_left_to_first
 			-- Replay execution left as many times as needed to be at the entry of the feature
 		local
-			r,n: like replayed_call
+			r,prev: like replayed_call
 		do
 			from
 				r := replayed_call
-				r := n
 			until
-				n = Void or else n /= r or else r = Void or else r.replayed_position_is_first
+				r = Void 
+				or else r.replayed_position_is_first
+				or else prev = r -- In case replayed_call is always the same.
 			loop
+				prev := r
 				replay_left
 				r := replayed_call
 			end

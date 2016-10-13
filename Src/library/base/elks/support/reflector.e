@@ -422,9 +422,9 @@ feature {NONE} -- Implementation
 			-- `type_id' cannot represent a SPECIAL type, use
 			-- `new_special_any_instance' instead.	
 		external
-			"C macro use %"eif_macros.h%""
+			"C inline use %"eif_macros.h%""
 		alias
-			"RTLNSMART"
+			"return RTLNSMART(eif_decoded_type($type_id).id);"
 		end
 
 	c_new_tuple_instance_of (type_id: INTEGER): TUPLE
@@ -432,17 +432,17 @@ feature {NONE} -- Implementation
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
 		external
-			"C macro use %"eif_macros.h%""
+			"C inline use %"eif_macros.h%""
 		alias
-			"RTLNT"
+			"return RTLNT(eif_decoded_type($type_id).id);"
 		end
 
 	c_new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
 			-- New instance of TYPE for object of type `type_id'.
 		external
-			"C macro use %"eif_macros.h%""
+			"C inline use %"eif_macros.h%""
 		alias
-			"RTLNTY"
+			"return eif_type_malloc(eif_decoded_type($type_id), 0);"
 		end
 
 	c_set_dynamic_type (obj: SPECIAL [detachable ANY]; dtype: INTEGER)

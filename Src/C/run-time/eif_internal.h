@@ -107,11 +107,11 @@ rt_private rt_inline void eif_set_dynamic_type (EIF_REFERENCE object, EIF_ENCODE
 	Dtype(object)=To_dtype(ftype.id);
 }
 
-rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
+rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_ENCODED_TYPE dftype)
 	/* Does `dtype' represent a SPECIAL [XX] where XX can be a basic type
 	 * or a reference type? */
 {
-	EIF_TYPE_INDEX dtype = To_dtype(dftype);
+	EIF_TYPE_INDEX dtype = To_dtype(eif_decoded_type(dftype).id);
 	return EIF_TEST(
 		(dtype == egc_sp_bool) ||
 		(dtype == egc_sp_char) ||
@@ -133,9 +133,9 @@ rt_private rt_inline EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 
 #define ei_special(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == EO_SPEC))
 #define ei_tuple(obj)	(EIF_TEST((HEADER(obj)->ov_flags & (EO_SPEC | EO_TUPLE)) == (EO_SPEC | EO_TUPLE)))
-#define eif_is_tuple_type(dftype) (EIF_TEST(To_dtype(dftype) == egc_tup_dtype))
+#define eif_is_tuple_type(dftype) (EIF_TEST(To_dtype(eif_decoded_type(dftype).id) == (uint32) egc_tup_dtype))
 
-#define eif_special_any_type(dftype) (EIF_TEST((uint32) To_dtype(dftype) == (uint32) egc_sp_ref))
+#define eif_special_any_type(dftype) (EIF_TEST((uint32) To_dtype(eif_decoded_type(dftype).id) == (uint32) egc_sp_ref))
 
 #ifdef WORKBENCH
 #define	ei_offset(i,object)		(EIF_INTEGER) ((EIF_REFERENCE) ei_oref(i, (EIF_REFERENCE) (object)) - (EIF_REFERENCE) (object))

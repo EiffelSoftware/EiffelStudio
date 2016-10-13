@@ -17,12 +17,12 @@ feature {NONE} -- Initialization
 
 			check_assert ("is_special_any type on detachable SPECIAL [ANY]", l_reflector.is_special_any_type (({detachable SPECIAL [ANY]}).type_id))
 			check_assert ("is_special_type on detachable SPECIAL [ANY]", l_reflector.is_special_type (({detachable SPECIAL [ANY]}).type_id))
-			check_assert ("is_tuple_type on detachable TUPLE", l_reflector.is_special_any_type (({detachable TUPLE}).type_id))
+			check_assert ("is_tuple_type on detachable TUPLE", l_reflector.is_tuple_type (({detachable TUPLE}).type_id))
 
 
 			check_assert ("is_special_any type on SPECIAL [ANY]", l_reflector.is_special_any_type (({SPECIAL [ANY]}).type_id))
 			check_assert ("is_special_type on SPECIAL [ANY]", l_reflector.is_special_type (({SPECIAL [ANY]}).type_id))
-			check_assert ("is_tuple_type on TUPLE", l_reflector.is_special_any_type (({TUPLE}).type_id))
+			check_assert ("is_tuple_type on TUPLE", l_reflector.is_tuple_type (({TUPLE}).type_id))
 
 		
 			check_assert ("Valid instance of TEST", l_reflector.new_instance_of (({TEST}).type_id).generating_type.type_id = generating_type.type_id)	

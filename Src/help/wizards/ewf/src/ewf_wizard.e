@@ -84,12 +84,10 @@ Web application runs on top of connectors
 Select connectors you want to support:
 	]")
 			Result.add_boolean_question ("Standalone", "use_standalone", "Using the standalone Eiffel Web server")
-			Result.add_boolean_question ("Nino", "use_nino", "Using the Eiffel Web nino server")
 			Result.add_boolean_question ("CGI", "use_cgi", "Require a httpd server")
 			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require a httpd server")
 
 			Result.data.force ("yes", "use_standalone")
-			Result.data.force ("no", "use_nino")
 			Result.data.force ("yes", "use_cgi")
 			Result.data.force ("yes", "use_libfcgi")
 		end
@@ -97,7 +95,7 @@ Select connectors you want to support:
 	standalone_connector_page: WIZARD_PAGE
 		once
 			Result := new_page ("standalone_connector")
-			Result.set_title ("Standalone (or nino) connector")
+			Result.set_title ("Standalone connector")
 			Result.set_subtitle ("Set options .")
 			Result.add_integer_question ("Port number", "port", "It happens port 80 is already taken, thus choose another one.")
 			Result.add_boolean_question ("Verbose", "verbose", "Verbose output")
@@ -175,12 +173,6 @@ Use the filter component:
 						end
 						sv.append ("standalone")
 					end
-					if connectors_page.boolean_field_value ("use_nino") then
-						if not sv.is_empty then
-							sv.append (", ")
-						end
-						sv.append ("nino")
-					end
 					if connectors_page.boolean_field_value ("use_cgi") then
 						if not sv.is_empty then
 							sv.append (", ")
@@ -221,7 +213,6 @@ feature -- Events
 			elseif a_current_page = connectors_page then
 				if
 					connectors_page.boolean_field_value ("use_standalone")
-					or connectors_page.boolean_field_value ("use_nino")
 				then
 					Result := standalone_connector_page
 				else

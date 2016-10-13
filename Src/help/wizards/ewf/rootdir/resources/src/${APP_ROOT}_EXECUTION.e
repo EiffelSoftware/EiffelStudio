@@ -56,13 +56,10 @@ feature -- Filter
 
 	setup_filter
 			-- Setup `filter'
-		local
-			l_filters: ARRAYED_LIST [WSF_FILTER]
 		do
 			create l_filters.make (2)
-			l_filters.put (create {WSF_CORS_FILTER})
-			l_filters.put (create {WSF_LOGGING_FILTER})
-			append_filters (l_filters)			
+			l_filters.extend (create {WSF_CORS_FILTER})
+			l_filters.extend (create {WSF_LOGGING_FILTER})
 				--| Chain more filters like {WSF_CUSTOM_HEADER_FILTER}, ...
 				--| and your owns filters.
 		end{/literal}{/if}

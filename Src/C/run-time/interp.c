@@ -2431,7 +2431,7 @@ rt_private void interpret(int flag, int where)
 	 			/* Variables are not used in non-SCOOP context */
 #ifdef EIF_THREADS
 			EIF_TYPED_VALUE * target;
-	 		uint32 n =
+	 		uint16 n =
 #endif
 	 			get_uint16 (&IC);    /* Number of arguments.  */
 #ifdef EIF_THREADS

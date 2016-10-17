@@ -499,15 +499,31 @@ feature -- Processes
 		end
 
 	wait_object_0: INTEGER
-			-- SDK WAIT_OBJECT_0 constant
+			-- SDK WAIT_OBJECT_0 constant.
 		external
 			"C macro use <windows.h>"
 		alias
 			"WAIT_OBJECT_0"
 		end
 
+	wait_timeout: INTEGER
+			-- SDK WAIT_TIMEOUT constant.
+		external
+			"C macro use <windows.h>"
+		alias
+			"WAIT_TIMEOUT"
+		end
+
+	wait_failed: INTEGER
+			-- SDK WAIT_FAILED constant.
+		external
+			"C macro use <windows.h>"
+		alias
+			"WAIT_FAILED"
+		end
+
 	infinite: INTEGER
-			-- SDK INFINITE constant
+			-- SDK INFINITE constant.
 		external
 			"C macro use <winbase.h>"
 		alias

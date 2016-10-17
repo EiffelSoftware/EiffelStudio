@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "[
 		Objects receiving test results through a socket.
 		
 		Note: although threads and mutexes are used to communicate to the evaluator, the exported
 		      features in this class are not thread safe.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -166,7 +165,6 @@ feature {NONE} -- Status setting
 			a_socket_blocking: a_socket.is_blocking
 		local
 			l_connection: detachable NETWORK_STREAM_SOCKET
-			l_has_lock: BOOLEAN
 		do
 			if not has_connection_died then
 				a_socket.accept
@@ -227,7 +225,7 @@ invariant
 	valid_port: not has_connection_died implies (min_port <= current_port and current_port <= max_port)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

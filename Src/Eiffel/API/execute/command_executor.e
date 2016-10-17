@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Calls commands outside the eiffel environment."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,8 +50,8 @@ feature -- Command Execution
 			working_directory_not_void: working_directory /= Void
 		local
 			command: STRING_32
-			l_prc_factory: PROCESS_FACTORY
-			l_prc_launcher: PROCESS
+			l_prc_factory: BASE_PROCESS_FACTORY
+			l_prc_launcher: BASE_PROCESS
 			wd: detachable READABLE_STRING_GENERAL
 		do
 			create command.make_empty
@@ -116,7 +116,7 @@ feature -- Compiler specific calls
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

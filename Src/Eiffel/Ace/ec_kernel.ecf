@@ -127,7 +127,7 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal representation of the workbench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -284,8 +284,8 @@ feature -- Commands
 			l_action: CONF_ACTION
 			vd84: VD84
 			vd85: VD85
-			l_prc_factory:  PROCESS_FACTORY
-			l_prc_launcher: PROCESS
+			l_prc_factory:  BASE_PROCESS_FACTORY
+			l_prc_launcher: BASE_PROCESS
 			l_success: BOOLEAN
 			l_wd: detachable IMMUTABLE_STRING_32
 			l_cmd: STRING_32
@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

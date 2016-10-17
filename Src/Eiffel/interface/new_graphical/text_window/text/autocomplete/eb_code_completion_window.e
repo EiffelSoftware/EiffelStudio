@@ -1,5 +1,5 @@
-note
-	description: "Window that displays a text area and a list of possible features for automatic completion"
+﻿note
+	description: "Window that displays a text area and a list of possible features for automatic completion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -87,7 +87,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Create
+			-- Initialize completion window.
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
 
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 		end
 
 	build_option_bar
-			-- Build option bar
+			-- Build option bar.
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
@@ -201,12 +201,11 @@ feature {NONE} -- Initialization
 		end
 
 	build_option_bar_template
-			-- Build option bar
+			-- Build option bar.
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
 			l_label: EV_LABEL
-			l_tooltip: STRING_32
 		do
 				-- Separator
 			create l_sep
@@ -357,7 +356,7 @@ feature {NONE} -- Initialization
 		end
 
 	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
-			-- Context menu handler
+			-- Context menu handler.
 		do
 			if context_menu_factory /= Void then
 				context_menu_factory.standard_compiler_item_menu (a_menu, a_target_list, a_source, a_pebble)
@@ -393,7 +392,7 @@ feature -- Initialization
 		end
 
 	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
-			-- Initialize `sorted_names'  to completion possiblities
+			-- Initialize `sorted_names'  to completion possiblities.
 		do
 			sorted_names := Void
 			template_sorted_names := Void
@@ -439,47 +438,45 @@ feature -- Initialization
 feature -- Access
 
 	choice_list: EB_COMPLETION_LIST_GRID
-			-- Choice list
+			-- Choice list.
 
 	code_completable: EB_TAB_CODE_COMPLETABLE
-			-- associated window
+			-- Associated window.
 
 	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
-			-- list of possible feature names sorted alphabetically
+			-- List of possible feature names sorted alphabetically.
 
 	template_sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
-			-- list of possible template names sorted alphabetically.	
-
-	name_type: EB_NAME_FOR_COMPLETION
+			-- List of possible template names sorted alphabetically.
 
 	filter_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Filter option button.
 
 	option_bar: EV_TOOL_BAR
-			-- Option tool bar
+			-- Option tool bar.
 
 	tooltip_window: ES_SMART_TOOLTIP_WINDOW
-			-- Window to show extra info as tooltip
+			-- Window to show extra info as tooltip.
 
 feature -- Widget
 
 	show_return_type_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to show return type
+			-- Button to show return type.
 
 	show_signature_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to show signature
+			-- Button to show signature.
 
 	show_disambiguated_name_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to show disambiguated name
+			-- Button to show disambiguated name.
 
 	show_obsolete_items_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to show obsolete features/classes
+			-- Button to show obsolete features/classes.
 
 	remember_size_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to remember window size
+			-- Button to remember window size.
 
 	show_tooltip_button: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Button to show/hide tool-tips
+			-- Button to show/hide tool-tips.
 
 feature -- Query
 
@@ -862,7 +859,7 @@ feature {NONE} -- Action handlers
 		end
 
 	on_key_released (ev_key: EV_KEY)
-			-- process user input in `choice_list'.
+			-- Process user input in `choice_list'.
 		do
 			if ev_key /= Void then
 				inspect
@@ -879,7 +876,7 @@ feature {NONE} -- Action handlers
 		end
 
 	on_window_resize (a_x, a_y, a_width, a_height: INTEGER)
-			-- Window resized
+			-- React on window resizing.
 		do
 			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
 				if attached choice_list.single_selected_row as l_row then
@@ -889,7 +886,7 @@ feature {NONE} -- Action handlers
 		end
 
 	on_scroll (a_x, a_y: INTEGER)
-			-- Window resized
+			-- React on window scrolling.
 		do
 			Precursor {CODE_COMPLETION_WINDOW}(a_x, a_y)
 			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
@@ -1085,14 +1082,10 @@ feature {NONE} -- Implementation
 			a_row_set: a_row /= Void
 		local
 			l_viewer: ES_TEMPLATE_VIEWER_WIDGET
-			l_c: CLASS_C
-			l_f: E_FEATURE
 			l_tt_text: STRING_32
 			l_cc_text: STRING_32
 			l_screen: EV_RECTANGLE
 			l_comment_preview: EVS_LABEL
-			l_code_preview: EVS_LABEL
-			l_lines: LIST [STRING_32]
 		do
 			if attached template_widget as l_widget then
 				Result := l_widget
@@ -1189,7 +1182,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_key_down (ev_key: EV_KEY)
-			-- process user input in `choice_list'.
+			-- Process user input in `choice_list'.
 		do
 			if ev_key /= Void then
 				inspect
@@ -1270,7 +1263,7 @@ feature {NONE} -- Implementation
 		end
 
 	close_and_complete
-			-- close the window and perform completion with selected item
+			-- Сlose the window and perform completion with selected item.
 		do
 			if choice_list.has_selected_row then
 					-- Delete current token so it is later replaced by the completion text
@@ -1398,16 +1391,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	last_completed_feature_had_arguments: BOOLEAN;
+	last_completed_feature_had_arguments: BOOLEAN
 			-- Did the last inserted completed feature name contain arguments?
-
-	last_row_data: detachable ANY
 
 	clicking_option_button: BOOLEAN
 			-- Clicking option button?
 
-	show_timer: EV_TIMEOUT;
+	show_timer: EV_TIMEOUT
 			-- Timer to show the tooltip
+
+	name_type: EB_NAME_FOR_COMPLETION
+			-- <Precursor>
+		do
+		end
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"
@@ -1441,4 +1437,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_COMPLETION_CHOICE_WINDOW
+end

@@ -241,7 +241,7 @@ feature -- Element change
 			end
 		end
 
-	put_string (a_handle: POINTER; a_string: STRING)
+	put_string (a_handle: POINTER; a_string: READABLE_STRING_8)
 			-- Write `a_string' to `a_handle'.
 			-- Put number of written bytes in `last_written_bytes'.
 		require
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

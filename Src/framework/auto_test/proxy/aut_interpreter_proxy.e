@@ -1,10 +1,5 @@
-note
-	description:
-
-		"Proxy for Erl-G interpreters"
-
-	copyright: "Copyright (c) 2005, Andreas Leitner and others"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+﻿note
+	description: "Proxy for Erl-G interpreters"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -814,7 +809,6 @@ feature -- Socket IPC
 			-- Retrieve response from the interpreter,
 			-- store it in `last_raw_response'.
 		local
-			l_data: TUPLE [output: STRING; error: STRING]
 			l_retried: BOOLEAN
 			l_socket: like socket
 			l_response_flag: NATURAL_32
@@ -823,9 +817,8 @@ feature -- Socket IPC
 				l_socket := socket
 				l_socket.read_natural_32
 				l_response_flag := l_socket.last_natural_32
-				l_data ?= retrieved_from_medium (l_socket)
 				process.set_timeout (0)
-				if l_data /= Void then
+				if attached {TUPLE [output: STRING; error: STRING]} retrieved_from_medium (l_socket) as l_data  then
 					create last_raw_response.make (create {STRING}.make_from_string (l_data.output), create {STRING}.make_from_string (l_data.error), l_response_flag)
 						-- Fixme: This is a walk around for the issue that we cannot launch a process
 						-- only with standard input redirected. Remove the following line when fixed,
@@ -1033,7 +1026,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

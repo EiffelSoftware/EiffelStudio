@@ -89,7 +89,7 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process-safe.ecf"/>
 		<cluster name="libevent" location=".\">
 			<file_rule>
 				<exclude>/Clib$</exclude>

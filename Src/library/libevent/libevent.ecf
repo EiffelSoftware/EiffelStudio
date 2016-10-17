@@ -89,7 +89,7 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf">
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>

@@ -28,11 +28,11 @@ feature {NONE} -- Internal
 	session: NET_HTTP_CLIENT_SESSION
 	net_http_client_version: STRING = "0.1"
 
-	session_socket (a_host: READABLE_STRING_8; a_port: INTEGER; a_is_https: BOOLEAN; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): NETWORK_STREAM_SOCKET
+	session_socket (a_host: READABLE_STRING_8; a_port: INTEGER; a_is_https: BOOLEAN; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): HTTP_STREAM_SOCKET
 			-- Session socket to use for connection.
 			-- Eventually reuse the persistent connection if any.
 		local
-			l_socket: detachable NETWORK_STREAM_SOCKET
+			l_socket: detachable HTTP_STREAM_SOCKET
 		do
 			if
 				attached session.persistent_connection as l_persistent_connection and then
@@ -40,12 +40,12 @@ feature {NONE} -- Internal
 			then
 				l_socket := l_persistent_connection.socket
 				if a_is_https then
-					if attached {SSL_NETWORK_STREAM_SOCKET} l_socket as l_ssl_socket then
+					if attached {HTTP_STREAM_SECURE_SOCKET} l_socket as l_ssl_socket then
 						Result := l_ssl_socket
 					else
 						l_socket := Void
 					end
-				elseif attached {SSL_NETWORK_STREAM_SOCKET} l_socket as l_ssl_socket then
+				elseif attached {HTTP_STREAM_SECURE_SOCKET} l_socket as l_ssl_socket then
 					l_socket := Void
 				end
 				if l_socket /= Void and then not l_socket.is_connected then
@@ -59,7 +59,7 @@ feature {NONE} -- Internal
 			else
 				session.set_persistent_connection (Void)
 				if a_is_https then
-					create {SSL_NETWORK_STREAM_SOCKET} Result.make_client_by_port (a_port, a_host)
+					create {HTTP_STREAM_SECURE_SOCKET} Result.make_client_by_port (a_port, a_host)
 				else
 					create Result.make_client_by_port (a_port, a_host)
 				end
@@ -81,7 +81,7 @@ feature -- Access
 			l_cookie: detachable READABLE_STRING_8
 			l_request_uri: STRING
 			l_url: HTTP_URL
-			l_socket: NETWORK_STREAM_SOCKET
+			l_socket: HTTP_STREAM_SOCKET
 			s: STRING
 			l_message: STRING
 			l_content_length: INTEGER
@@ -438,7 +438,7 @@ feature {NONE} -- Helpers
 			io.error.put_string (m)
 		end
 
-	is_ready_for_reading (a_socket: NETWORK_STREAM_SOCKET): BOOLEAN
+	is_ready_for_reading (a_socket: HTTP_STREAM_SOCKET): BOOLEAN
 			-- Is `a_socket' ready for reading?
 		do
 			Result := a_socket.ready_for_reading
@@ -518,7 +518,7 @@ feature {NONE} -- Helpers
 			Result := utf.utf_32_string_to_utf_8_string_8 (s)
 		end
 
-	put_string_using_chunked_transfer_encoding (a_string: READABLE_STRING_8; a_chunk_size: INTEGER; a_output: NETWORK_STREAM_SOCKET)
+	put_string_using_chunked_transfer_encoding (a_string: READABLE_STRING_8; a_chunk_size: INTEGER; a_output: HTTP_STREAM_SOCKET)
 		local
 			i,n: INTEGER
 		do
@@ -534,7 +534,7 @@ feature {NONE} -- Helpers
 			put_chunk_end (Void, Void, a_output)
 		end
 
-	put_chunk (a_content: READABLE_STRING_8; a_ext: detachable READABLE_STRING_8; a_output: NETWORK_STREAM_SOCKET)
+	put_chunk (a_content: READABLE_STRING_8; a_ext: detachable READABLE_STRING_8; a_output: HTTP_STREAM_SOCKET)
 			-- Write chunk non empty `a_content' to `a_output'
 			-- with optional extension `a_ext': chunk-extension= *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
 			-- Note: that header "Transfer-Encoding: chunked" is required.
@@ -569,7 +569,7 @@ feature {NONE} -- Helpers
 			a_output.put_string (crlf)
 		end
 
-	put_chunk_end (a_ext: detachable READABLE_STRING_8; a_trailer: detachable READABLE_STRING_8; a_output: NETWORK_STREAM_SOCKET)
+	put_chunk_end (a_ext: detachable READABLE_STRING_8; a_trailer: detachable READABLE_STRING_8; a_output: HTTP_STREAM_SOCKET)
 			-- Put end of chunked content,
 			-- with optional extension `a_ext': chunk-extension= *( ";" chunk-ext-name [ "=" chunk-ext-val ] )
 			-- and with optional trailer `a_trailer' : trailer= *(entity-header CRLF)
@@ -595,7 +595,7 @@ feature {NONE} -- Helpers
 			a_output.put_string (crlf)
 		end
 
-	append_file_content_to_socket_using_chunked_transfer_encoding (a_file: FILE; a_len: INTEGER; a_chunk_size: INTEGER; a_output: NETWORK_STREAM_SOCKET)
+	append_file_content_to_socket_using_chunked_transfer_encoding (a_file: FILE; a_len: INTEGER; a_chunk_size: INTEGER; a_output: HTTP_STREAM_SOCKET)
 			-- Append `a_file' content as chunks of `a_chunk_size' length to `a_output'.
 			-- If `a_len' >= 0 then read only `a_len' characters.
 		require
@@ -631,7 +631,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_file_content_to_socket (a_file: FILE; a_len: INTEGER; a_output: NETWORK_STREAM_SOCKET)
+	append_file_content_to_socket (a_file: FILE; a_len: INTEGER; a_output: HTTP_STREAM_SOCKET)
 			-- Append `a_file' content to `a_output'.
 			-- If `a_len' >= 0 then read only `a_len' characters.
 		require
@@ -704,7 +704,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_header_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_output: STRING)
+	append_socket_header_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_output: STRING)
 			-- Get header from `a_socket' into `a_output'.
 		local
 			s: READABLE_STRING_8
@@ -714,7 +714,7 @@ feature {NONE} -- Helpers
 			until
 				s.same_string ("%R") or not a_socket.readable or a_response.error_occurred
 			loop
-				a_socket.read_line_thread_aware
+				a_socket.read_line_noexception
 				s := a_socket.last_string
 				if s.is_empty then
 					if session.is_debug_verbose then
@@ -730,7 +730,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_len: INTEGER; a_output: STRING)
+	append_socket_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_len: INTEGER; a_output: STRING)
 			-- Get content from `a_socket' and append it to `a_output'.
 			-- If `a_len' is negative, try to get as much as possible,
 			-- this is probably HTTP/1.0 without any Content-Length.
@@ -749,7 +749,7 @@ feature {NONE} -- Helpers
 					until
 						r = 0 or else not a_socket.readable or else a_response.error_occurred
 					loop
-						a_socket.read_stream_thread_aware (r)
+						a_socket.read_stream_noexception (r)
 						l_count := l_count + a_socket.bytes_read
 						if session.is_debug_verbose then
 							log ("Debug:   - byte read=" + a_socket.bytes_read.out + "%N")
@@ -772,7 +772,7 @@ feature {NONE} -- Helpers
 					until
 						n < l_chunk_size or not a_socket.readable
 					loop
-						a_socket.read_stream_thread_aware (l_chunk_size)
+						a_socket.read_stream_noexception (l_chunk_size)
 						s := a_socket.last_string
 						n := a_socket.bytes_read
 						l_count := l_count + n
@@ -782,7 +782,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	append_socket_chunked_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: NETWORK_STREAM_SOCKET; a_output: STRING)
+	append_socket_chunked_content_to (a_response: HTTP_CLIENT_RESPONSE; a_socket: HTTP_STREAM_SOCKET; a_output: STRING)
 			-- Get chunked content from `a_socket' and append it to `a_output'.
 		require
 			socket_readable: a_socket.readable
@@ -803,7 +803,7 @@ feature {NONE} -- Helpers
 			until
 				n = 0 or not a_socket.readable
 			loop
-				a_socket.read_line_thread_aware -- Read chunk info
+				a_socket.read_line_noexception
 				s := a_socket.last_string
 				s.right_adjust
 				if session.is_debug_verbose then
@@ -832,7 +832,7 @@ feature {NONE} -- Helpers
 					until
 						r = 0 or else not a_socket.readable or else a_response.error_occurred
 					loop
-						a_socket.read_stream_thread_aware (r)
+						a_socket.read_stream_noexception (r)
 						l_count := l_count + a_socket.bytes_read
 						if session.is_debug_verbose then
 							log ("Debug:   - byte read=" + a_socket.bytes_read.out + "%N")
@@ -842,9 +842,9 @@ feature {NONE} -- Helpers
 						a_output.append (a_socket.last_string)
 					end
 
-					a_socket.read_character
+					a_socket.read_character_noexception
 					check a_socket.last_character = '%R' end
-					a_socket.read_character
+					a_socket.read_character_noexception
 					check a_socket.last_character = '%N' end
 					if session.is_debug_verbose then
 						log ("Debug:   - Found CRNL %N")

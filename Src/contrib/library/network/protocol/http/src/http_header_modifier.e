@@ -544,6 +544,26 @@ feature -- Others
 			put_pragma ("no-cache")
 		end
 
+feature -- Connection		
+
+	put_connection (a_conn: READABLE_STRING_8)
+			-- Put "Connection" header with `a_conn' value.
+		do
+			put_header_key_value ({HTTP_HEADER_NAMES}.header_connection, a_conn)
+		end
+
+	put_connection_keep_alive
+			-- Put "Connection" header with "keep-alive".
+		do
+			put_connection ("keep-alive")
+		end
+
+	put_connection_close
+			-- Put "Connection" header with "close".
+		do
+			put_connection ("close")
+		end
+
 feature -- Redirection
 
 	put_location (a_uri: READABLE_STRING_8)

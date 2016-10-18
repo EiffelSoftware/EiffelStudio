@@ -1200,9 +1200,17 @@ feature -- HTTP_*
 
 	http_connection: detachable READABLE_STRING_8
 			-- Contents of the Connection: header from the current wgi_request, if there is one.
-			-- Example: 'Keep-Alive'.
+			-- Example: 'keep-alive'.
 		do
 			Result := wgi_request.http_connection
+		end
+
+	is_keep_alive_http_connection: BOOLEAN
+			-- Is a keep-alive connection?
+		do
+			if attached http_connection as conn then
+				Result := conn.starts_with ("keep-alive")
+			end
 		end
 
 	http_expect: detachable READABLE_STRING_8

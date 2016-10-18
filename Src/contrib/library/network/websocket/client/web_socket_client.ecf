@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="web_socket_client" uuid="EE010507-597F-4FAD-8EFA-B7251E800911" library_target="web_socket_client">
+	<target name="web_socket_client">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<option warning="true" void_safety="none">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="concurrency" value="thread"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
+		<library name="lib_http_network" location="..\..\http_network\http_network.ecf"/>
+		<library name="lib_web_socket_protocol" location="..\protocol\web_socket_protocol.ecf"/>
+		<cluster name="web_socket_client" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/no_ssl$</exclude>
+				<exclude>/ssl$</exclude>
+				<exclude>/spec$</exclude>
+			</file_rule>
+			<cluster name="ssl" location="$|ssl\" recursive="true">
+				<condition>
+					<custom name="ssl_enabled" value="true"/>
+				</condition>
+				<condition>
+					<custom name="net_ssl_enabled" value="true"/>
+				</condition>
+			</cluster>
+			<cluster name="no_ssl" location="$|no_ssl\" recursive="true">
+				<condition>
+					<custom name="ssl_enabled" excluded_value="true"/>
+					<custom name="net_ssl_enabled" excluded_value="true"/>
+				</condition>
+			</cluster>
+		</cluster>
+	</target>
+</system>

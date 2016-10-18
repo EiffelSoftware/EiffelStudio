@@ -14,7 +14,7 @@ inherit
 			close
 		end
 
-	NET_HTTP_CLIENT_INFO
+	HTTP_SECURE_HELPER
 
 create
 	make
@@ -32,7 +32,7 @@ feature -- Status report
 		do
 			Result := True
 			if base_url.starts_with_general ("https://") then
-				Result := has_https_support
+				Result := is_secure_connection_supported
 			end
 		end
 
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

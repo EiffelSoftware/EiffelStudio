@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="echo_websocket_server" uuid="C9B3DA5F-DF0D-4C0F-924A-130B5C1E6604">
+	<target name="common">
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option debug="true" warning="true" full_class_checking="false" is_attached_by_default="true" is_obsolete_routine_type="true" void_safety="all" syntax="transitional">
+			<debug name="ws" enabled="true"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="scoop"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf">
+			<option>
+				<assertions precondition="true"/>
+			</option>
+		</library>
+		<library name="http_network" location="..\..\..\..\http_network\http_network-safe.ecf" readonly="false"/>
+		<library name="httpd" location="../../../../../web/framework/ewf/httpd/httpd-safe.ecf" readonly="false"/>
+		<library name="standalone_websocket_connector" location="../../../../../web/framework/ewf/wsf/connector/standalone_websocket-safe.ecf" readonly="false"/>
+		<library name="websocket_server" location="..\..\websocket_server-safe.ecf" readonly="false">
+			<option debug="true">
+				<debug name="ws" enabled="true"/>
+			</option>
+		</library>
+		<cluster name="src" location=".\" recursive="true">
+		</cluster>
+	</target>
+	<target name="echo_websocket_server_mt" extends="common">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<setting name="concurrency" value="thread"/>
+	</target>
+	<target name="echo_websocket_server_mt_ssl" extends="echo_websocket_server_mt">
+		<variable name="ssl_enabled" value="true"/>
+	</target>
+	<target name="echo_websocket_server_scoop" extends="common">
+		<root class="APPLICATION" feature="make_and_launch"/>
+		<setting name="concurrency" value="scoop"/>
+	</target>
+	<target name="echo_websocket_server_scoop_ssl" extends="echo_websocket_server_scoop">
+		<variable name="ssl_enabled" value="true"/>
+	</target>
+</system>

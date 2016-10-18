@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<title>WebSocket Image Drop</title>
+<h1>Drop Image Here</h1>
+<script>
+// Initialize WebSocket connection
+var wsUrl = "ws://127.0.0.1:9090";
+var ws = new WebSocket(wsUrl);
+ws.onopen = function() {
+console.log("open");
+}
+// Handle binary image data received on the WebSocket
+ws.onmessage = function(e) {
+var blob = e.data;
+console.log("message: " + blob.size + " bytes");
+// Work with prefixed URL API
+if (window.webkitURL) {
+URL = webkitURL;
+}
+var uri = URL.createObjectURL(blob);
+var img = document.createElement("img");
+img.src = uri;
+document.body.appendChild(img);
+}
+
+// Handle drop event
+document.ondrop = function(e) {
+document.body.style.backgroundColor = "#fff";
+try {
+e.preventDefault();
+handleFileDrop(e.dataTransfer.files[0]);
+return false;
+} catch(err) {
+console.log(err);
+}
+}
+// Provide visual feedback for the drop area
+document.ondragover = function(e) {
+e.preventDefault();
+document.body.style.backgroundColor = "#6fff41";
+}
+document.ondragleave = function() {
+document.body.style.backgroundColor = "#fff";
+}
+// Read binary file contents and send them over WebSocket
+function handleFileDrop(file) {
+var reader = new FileReader();
+reader.readAsArrayBuffer(file);
+reader.onload = function() {
+console.log("sending: " + file.name);
+ws.send(reader.result);
+}
+}
+</script>

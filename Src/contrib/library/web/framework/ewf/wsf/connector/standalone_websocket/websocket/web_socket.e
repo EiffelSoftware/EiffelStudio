@@ -255,31 +255,33 @@ feature -- Response!
 				else
 					l_header_message.append_code (n.as_natural_32)
 				end
-				socket.put_string (l_header_message)
-
-				l_chunk_size := 16_384 -- 16K TODO: see if we should make it customizable.
-				if l_message_count < l_chunk_size then
-					socket.put_string (a_message)
-				else
-					from
-						i := 0
-					until
-						l_chunk_size = 0
-					loop
+				socket.put_string_8_noexception (l_header_message)
+				if not socket.was_error then
+					l_chunk_size := 16_384 -- 16K TODO: see if we should make it customizable.
+					if l_message_count < l_chunk_size then
+						socket.put_string_8_noexception (a_message)
+					else
+						from
+							i := 0
+						until
+							l_chunk_size = 0 or socket.was_error
+						loop
+							debug ("ws")
+								print ("Sending chunk " + (i + 1).out + " -> " + (i + l_chunk_size).out +" / " + l_message_count.out + "%N")
+							end
+							l_chunk := a_message.substring (i + 1, l_message_count.min (i + l_chunk_size))
+							socket.put_string_8_noexception (l_chunk)
+							if l_chunk.count < l_chunk_size then
+								l_chunk_size := 0
+							end
+							i := i + l_chunk_size
+						end
 						debug ("ws")
-							print ("Sending chunk " + (i + 1).out + " -> " + (i + l_chunk_size).out +" / " + l_message_count.out + "%N")
+							print ("Sending chunk done%N")
 						end
-						l_chunk := a_message.substring (i + 1, l_message_count.min (i + l_chunk_size))
-						socket.put_string (l_chunk)
-						if l_chunk.count < l_chunk_size then
-							l_chunk_size := 0
-						end
-						i := i + l_chunk_size
-					end
-					debug ("ws")
-						print ("Sending chunk done%N")
 					end
 				end
+
 			else
 					-- FIXME: what should be done on rescue?
 			end

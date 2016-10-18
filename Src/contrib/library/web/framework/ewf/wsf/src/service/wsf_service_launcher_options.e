@@ -75,6 +75,12 @@ feature -- Merging
 			end
 		end
 
+	import_ini_file_options (a_filename: READABLE_STRING_GENERAL)
+			-- Import options from ini file `a_filename'.
+		do
+			append_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file (a_filename))
+		end
+
 feature -- Access
 
 	option (a_name: READABLE_STRING_GENERAL): detachable ANY
@@ -157,7 +163,7 @@ feature -- Helpers
 					Result := b
 				else
 					s := opt.out
-					Result := s.is_case_insensitive_equal ("true")
+					Result := s.is_case_insensitive_equal ("true") or s.is_case_insensitive_equal ("yes")
 				end
 			end			
 		end
@@ -175,6 +181,34 @@ feature -- Element change
 	set_option (a_name: READABLE_STRING_GENERAL; a_value: detachable ANY)
 		do
 			options.force (a_value, a_name)
+		end
+
+	unset_option (a_name: READABLE_STRING_GENERAL)
+		do
+			options.remove (a_name)
+		end
+
+	set_string_option (a_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL)
+		do
+			if a_value = Void then
+				unset_option (a_name)
+			else
+				set_option (a_name, a_value)
+			end
+		end
+
+	set_numeric_option (a_name: READABLE_STRING_GENERAL; a_value: NUMERIC)
+		do
+			set_option (a_name, a_value)
+		end
+
+	set_boolean_option (a_name: READABLE_STRING_GENERAL; a_value: BOOLEAN)
+		do
+			if a_value then
+				set_option (a_name, "true")
+			else
+				set_option (a_name, "false")
+			end
 		end
 
 	set_verbose (b: BOOLEAN)

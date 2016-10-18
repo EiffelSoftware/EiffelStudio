@@ -18,11 +18,16 @@
 		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder.ecf"/>
 		<library name="http" location="..\protocol\http\http.ecf"/>
 		<library name="http_auth" location="../../web/authentication/http_authorization/http_authorization.ecf"/>
+		<library name="http_network" location="..\http_network\http_network.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
 			<condition>
 				<custom name="net_http_client_disabled" excluded_value="true"/>
 				<custom name="netssl_http_client_enabled" value="true"/>
+			</condition>
+			<condition>
+				<custom name="net_http_client_disabled" excluded_value="true"/>
+				<custom name="ssl_enabled" value="true"/>
 			</condition>
 		</library>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
@@ -35,18 +40,6 @@
 				<cluster name="net_implementation" location="$|implementation\" hidden="true">
 					<condition>
 						<custom name="net_http_client_disabled" excluded_value="true"/>
-					</condition>
-				</cluster>
-				<cluster name="net_ssl_disabled" location="$|no_ssl\">
-					<condition>
-						<custom name="net_http_client_disabled" excluded_value="true"/>
-						<custom name="netssl_http_client_enabled" excluded_value="true"/>
-					</condition>
-				</cluster>
-				<cluster name="net_ssl_enabled" location="$|ssl\">
-					<condition>
-						<custom name="net_http_client_disabled" excluded_value="true"/>
-						<custom name="netssl_http_client_enabled" value="true"/>
 					</condition>
 				</cluster>
 			</cluster>

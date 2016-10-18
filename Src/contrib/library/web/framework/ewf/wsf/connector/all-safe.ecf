@@ -18,13 +18,10 @@
 		<library name="ewsgi" location="..\..\ewsgi\ewsgi-safe.ecf"/>
 		<library name="http" location="../../../../../network/protocol/http/http-safe.ecf"/>
 		<library name="standalone" location="standalone-safe.ecf" readonly="false"/>
-		<library name="nino" location="nino-safe.ecf" readonly="false">
-			<renaming old_name="HTTP_CONSTANTS" new_name="NINO_HTTP_CONSTANTS"/>
-		</library>
+		<library name="standalone_ws" location="standalone_websocket-safe.ecf" readonly="false"/>
+		<library name="openshift" location="openshift-safe.ecf" readonly="false"/>
+		<library name="nino" location="nino-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="..\wsf-safe.ecf"/>
-		<cluster name="wsf_cgi" location=".\cgi\" recursive="true"/>
-		<cluster name="wsf_libfcgi" location=".\libfcgi\" recursive="true"/>
-		<cluster name="wsf_standalone" location=".\standalone\" recursive="true"/>
 	</target>
 </system>

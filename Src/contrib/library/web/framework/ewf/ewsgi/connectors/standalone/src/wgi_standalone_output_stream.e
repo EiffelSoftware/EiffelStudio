@@ -75,7 +75,7 @@ feature -- Output
 			-- Send `s' to http client
 		do
 			last_target_call_succeed := False
-			target.put_readable_string_8_noexception (s)
+			target.put_string_8_noexception (s)
 			last_target_call_succeed := not target.was_error
 		end
 
@@ -83,7 +83,7 @@ feature -- Output
 			-- Send `s' to http client
 		do
 			last_target_call_succeed := False
-			target.put_readable_string_8_noexception (s)
+			target.put_string_8_noexception (s)
 			last_target_call_succeed := not target.was_error
 		end
 

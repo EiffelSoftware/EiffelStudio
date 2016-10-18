@@ -13,8 +13,12 @@
 		<library name="encoder" location="../../web/framework/ewf/text/encoder/encoder-safe.ecf"/>
 		<library name="http" location="..\protocol\http\http-safe.ecf"/>
 		<library name="http_auth" location="../../web/authentication/http_authorization/http_authorization-safe.ecf"/>
+		<library name="http_network" location="..\http_network\http_network-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl-safe.ecf">
+			<condition>
+				<custom name="ssl_enabled" value="true"/>
+			</condition>
 			<condition>
 				<custom name="netssl_http_client_enabled" value="true"/>
 			</condition>
@@ -23,16 +27,6 @@
 		<cluster name="src" location=".\src\">
 			<cluster name="spec_net" location="$|spec\net\">
 				<cluster name="net_implementation" location="$|implementation\" hidden="true"/>
-				<cluster name="net_ssl_disabled" location="$|no_ssl\">
-					<condition>
-						<custom name="netssl_http_client_enabled" excluded_value="true"/>
-					</condition>
-				</cluster>
-				<cluster name="net_ssl_enabled" location="$|ssl\">
-					<condition>
-						<custom name="netssl_http_client_enabled" value="true"/>
-					</condition>
-				</cluster>
 			</cluster>
 			<cluster name="default_net" location="$|default\net\"/>
 		</cluster>

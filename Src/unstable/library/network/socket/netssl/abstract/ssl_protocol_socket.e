@@ -21,7 +21,7 @@ feature -- Access
 feature -- Change Element
 
 	set_tls_protocol (a_protocol: NATURAL)
-			-- Set `tls_protocol' with `a_protoocol'.
+			-- Set `tls_protocol' with `a_protocol'.
 		do
 			tls_protocol := a_protocol
 		ensure

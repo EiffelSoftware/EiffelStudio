@@ -18,4 +18,7 @@
 		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<cluster name="app" location=".\" recursive="true"/>
 	</target>
+	<target name="websocket_app_ssl" extends="websocket_app">
+		<variable name="ssl_enabled" value="true"/>
+	</target>
 </system>

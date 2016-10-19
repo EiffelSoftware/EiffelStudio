@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="simple" uuid="C28C4F53-9963-46C0-A080-8F13E94E7486" library_target="simple">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="simple" uuid="C28C4F53-9963-46C0-A080-8F13E94E7486" library_target="simple_standalone">
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -23,6 +23,12 @@
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>
 	</target>
+	<target name="simple_standalone_mt" extends="simple_standalone">
+		<setting name="concurrency" value="thread"/>
+	</target>
+	<target name="simple_standalone_st" extends="simple_standalone">
+		<setting name="concurrency" value="none"/>
+	</target>
 	<target name="simple_cgi" extends="common">
 		<root class="APPLICATION" feature="make_and_launch"/>
 		<option warning="true" is_attached_by_default="true" void_safety="transitional" syntax="transitional">
@@ -38,7 +44,5 @@
 		</option>
 		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>
-	</target>
-	<target name="simple" extends="simple_standalone">
 	</target>
 </system>

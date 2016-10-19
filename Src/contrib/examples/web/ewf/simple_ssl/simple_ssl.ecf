@@ -13,9 +13,9 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="scoop"/>
-		<variable name="httpd_ssl_enabled" value="true"/>
+		<variable name="ssl_enabled" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf"/>
+		<library name="wsf_standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone-safe.ecf"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf"/>
 		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
 		<cluster name="simple" location=".\" recursive="true"/>

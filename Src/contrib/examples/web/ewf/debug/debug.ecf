@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="debug" uuid="AA458565-7711-4BE1-ADA3-91716EABFA21" library_target="debug">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="debug" uuid="AA458565-7711-4BE1-ADA3-91716EABFA21" library_target="debug_standalone">
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
@@ -18,7 +18,7 @@
 	</target>
 	<target name="debug_any" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="cgi" location="../../../../library/web/framework/ewf/wsf/connector/cgi-safe.ecf" readonly="false"/>
 		<library name="libfcgi" location="../../../../library/web/framework/ewf/wsf/connector/libfcgi-safe.ecf" readonly="false"/>
 		<library name="standalone" location="../../../../library/web/framework/ewf/wsf/connector/standalone-safe.ecf" readonly="false"/>
@@ -27,7 +27,7 @@
 	</target>
 	<target name="debug_standalone" extends="common">
 		<root class="EWF_DEBUG_SERVER" feature="make_and_launch"/>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="default_standalone" location="../../../../library/web/framework/ewf/wsf/default/standalone-safe.ecf" readonly="false"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
@@ -43,7 +43,5 @@
 		<library name="default_libfcgi" location="../../../../library/web/framework/ewf/wsf/default/libfcgi-safe.ecf"/>
 		<cluster name="launcher" location=".\launcher\default\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
-	</target>
-	<target name="debug" extends="debug_standalone">
 	</target>
 </system>

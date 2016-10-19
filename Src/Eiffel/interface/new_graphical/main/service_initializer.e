@@ -108,7 +108,7 @@ feature {NONE} -- Registeration: Environemtn
 				a_service.set_environment_variable ("https://dev.eiffel.com", "ISE_WIKI")
 			end
 			if a_service.variable ("EIFFELROOM") = Void then
-				a_service.set_environment_variable ("https://www.eiffelroom.com", "EIFFELROOM")
+				a_service.set_environment_variable ("https://room.eiffel.com", "EIFFELROOM")
 			end
 			if a_service.variable ("EIFFELORG") = Void then
 				a_service.set_environment_variable ("https://www.eiffel.org", "EIFFELORG")

@@ -30,7 +30,7 @@ CM		([^ \t\r\n\.])
 CS		([^ \t\r\n\.\{\}\[\]`\'])
 EMAIL	{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*
 URL		(((https?|ftp|file|gopher|news|nntp|telnet):\/\/)|(www\.))[a-zA-Z0-9_%;&=?\/.#$:~-]*
-FEATURE	(`[^`']+?\')
+FEATURE	(`[^`']+?[\'\`])
 CLASS	\{{A}{X}*\}
 CLUSTER \[{C}+\]
 

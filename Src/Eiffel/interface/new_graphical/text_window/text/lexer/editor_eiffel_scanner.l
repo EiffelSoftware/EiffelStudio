@@ -509,8 +509,9 @@ UTF8_tail	[\x80-\xBF]
 
 ----------/** Comments enable/disable **/-----------------------------------------
 
-\`([^%\n']|{NON_ASCII})+\'					{
-					curr_token := new_text (text)
+\`([^%\n\`']|{NON_ASCII})+\`					|
+\`([^%\n\`']|{NON_ASCII})+\'					{
+					curr_token := new_text_in_comment (text)
 					update_token_list
 					}
 

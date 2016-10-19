@@ -53,6 +53,7 @@ feature {NONE} -- Access
 			else
 					-- No other variables
 				create Result.make (0)
+				internal_context_variables := Result
 			end
 		end
 
@@ -99,8 +100,6 @@ feature {NONE} -- Helpers
 
 	environment: SERVICE_CONSUMER [ENVIRONMENT_S]
 			-- Access to the environment service
-		require
-			is_sited: is_sited or attached internal_environment
 		do
 			if attached internal_environment as l_result then
 				Result := l_result
@@ -183,17 +182,16 @@ feature {NONE} -- Variable expansion
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_vars: like context_variables
 		do
-			l_vars := context_variables
-			if attached l_vars.item (a_name) as l_result then
+				-- Check the environment service
+				-- then context variables!
+			if
+				attached environment.service as l_service and then l_service.is_interface_usable and then
+				attached l_service.variable (a_name) as l_result
+			then
 				Result := l_result
-			else
-					-- Check the environment service
-				if attached environment.service as l_service and then l_service.is_interface_usable then
-					Result := l_service.variable (a_name)
-				end
+			elseif attached context_variables.item (a_name) as l_result then
+				Result := l_result
 			end
 		end
 
@@ -208,7 +206,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

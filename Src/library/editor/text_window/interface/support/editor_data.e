@@ -608,7 +608,7 @@ feature {NONE} -- Preference Strings
 	mouse_over_link_background_color_string: STRING = "editor.general.colors.mouse_over_link_background_color"
 			-- Mouse over background color for links
 
-	quoted_feature_text_color_string: STRING = "editor.general.colors.quoted_feature_link_color"
+	quoted_feature_text_color_string: STRING = "editor.general.colors.quoted_feature_text_color"
 			-- Quoted feature in comment link color
 
 	quoted_feature_background_color_string: STRING = "editor.general.colors.quoted_feature_background_color"

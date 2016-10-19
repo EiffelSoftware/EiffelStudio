@@ -35,8 +35,8 @@ feature -- Basic operations
 			response.set_status_code ({HTTP_STATUS_CODE}.ok)
 			response.header.put_content_type_text_html
 			response.header.put_content_length (s.count)
-			if attached request.http_connection as l_connection and then l_connection.is_case_insensitive_equal_general ("keep-alive") then
-				response.header.put_header_key_value ("Connection", "keep-alive")
+			if request.is_keep_alive_http_connection then
+				response.header.put_connection_keep_alive
 			end
 			response.put_string (s)
 		end
@@ -88,7 +88,7 @@ feature -- HTML Resource
 <!DOCTYPE html>
 <html>
 <head>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script src="##HTTPSCHEME##://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
 
@@ -96,9 +96,10 @@ $(document).ready(function() {
 
 	function connect(){
 
-			var host = "ws://127.0.0.1:##PORTNUMBER##";
+			var host = "##WSSCHEME##://127.0.0.1:##PORTNUMBER##/app";
 
 			try{
+
 				socket = new WebSocket(host);
 				message('<p class="event">Socket Status: '+socket.readyState);
 				socket.onopen = function(){
@@ -178,6 +179,13 @@ body {font-family:Arial, Helvetica, sans-serif;}
 </html>
 			]"
 			Result.replace_substring_all ("##PORTNUMBER##", a_port.out)
+			if request.is_https then
+				Result.replace_substring_all ("##HTTPSCHEME##", "https")
+				Result.replace_substring_all ("##WSSCHEME##", "wss")
+			else
+				Result.replace_substring_all ("##HTTPSCHEME##", "http")
+				Result.replace_substring_all ("##WSSCHEME##", "ws")
+			end
 		end
 
 

@@ -169,6 +169,16 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
+	new_text_in_comment (a_str: STRING): EDITOR_TOKEN_QUOTED_FEATURE_IN_COMMENT
+		require
+			a_str_not_void: a_str /= Void
+		do
+			create Result.make (utf8_to_utf32 (a_str))
+		ensure
+			result_not_void: Result /= Void
+		end
+
+
 	new_text (a_str: STRING): EDITOR_TOKEN_TEXT
 		require
 			a_str_not_void: a_str /= Void
@@ -253,7 +263,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

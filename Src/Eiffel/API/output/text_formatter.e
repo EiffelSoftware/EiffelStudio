@@ -378,7 +378,7 @@ feature {NONE} -- Implementation
 			create Result.make (text.count + 2)
 			Result.append_character ('`')
 			Result.append_string_general (text)
-			Result.append_character ('%'')
+			Result.append_character ('`')
 		ensure
 			text_quoted_not_void: Result /= Void
 		end

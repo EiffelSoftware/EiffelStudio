@@ -190,7 +190,7 @@ feature -- Text processing
 	process_quoted_text (t: READABLE_STRING_GENERAL)
 			-- Process the quoted `t' within a comment.
 		local
-			tok: EDITOR_TOKEN_COMMENT
+			tok: EDITOR_TOKEN_QUOTED_FEATURE_IN_COMMENT
 		do
 			create tok.make (text_quoted (t).as_string_32)
 			append_token (tok)
@@ -705,7 +705,7 @@ feature {NONE} -- Initialisations and File status
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -807,42 +807,35 @@ feature -- Element change
 
 	show_editors_possible
 			-- Show editors which are possible to show.
-		local
-			l_snapshot: like fake_editors
 		do
-			if fake_editors /= Void then
-				from
-					l_snapshot := fake_editors.twin
-					l_snapshot.start
-				until
-					l_snapshot.after
+			if attached fake_editors as l_fake_editors then
+				across
+					l_fake_editors.twin as ic  -- FIXME: check if the twin is required now with across loop.
 				loop
-					if l_snapshot.item /= Void and then l_snapshot.item.docking_content.user_widget.is_displayed then
-						on_focus (l_snapshot.item)
+					if
+						attached ic.item as l_snapshot_item and then
+						l_snapshot_item.docking_content.user_widget.is_displayed
+					then
+						on_focus (l_snapshot_item)
 					end
-					l_snapshot.forth
 				end
 			end
 			synchronize_with_docking_manager
 		end
 
-	update_content_description (a_stone: STONE; a_content: SD_CONTENT)
+	update_content_description (a_stone: STONE; a_content: detachable SD_CONTENT)
 			-- Update `a_content''s detail and description text which are readed from `a_stone'.
 		local
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
 			l_shared: SD_SHARED
 			l_name: like {FILED_STONE}.file_name
 		do
 			if a_content /= Void then
-				l_class_stone ?= a_stone
-				l_cluster_stone ?= a_stone
-				if l_class_stone /= Void then
+				if attached {CLASSI_STONE} a_stone as l_class_stone then
 					a_content.set_description (interface_names.l_eiffel_class)
 					l_name := l_class_stone.file_name
 					a_content.set_detail (l_name.as_string_32)
 					a_content.set_tab_tooltip (l_name.as_string_32)
-				elseif l_cluster_stone /= Void then
+				elseif attached {CLUSTER_STONE} a_stone as l_cluster_stone then
 					a_content.set_description (interface_names.l_eiffel_cluster)
 
 					if attached l_cluster_stone.group.location.evaluated_path as l_path then
@@ -1677,7 +1670,7 @@ feature {NONE} -- Implementation
 			a_editor_not_void: a_editor /= Void
 		local
 			retried: BOOLEAN
-			tmp_name: PATH
+			tmp_name: detachable PATH
 			tmp_file: RAW_FILE
 			l_encoding: ENCODING
 			l_stream: STRING
@@ -1710,32 +1703,29 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): EB_SMART_EDITOR
-			-- Quey a editor which from `a_editors' has `a_stone'.
+	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): detachable EB_SMART_EDITOR
+			-- Editor from `a_editors' having `a_stone'.
 		require
-			not_void: a_editors /= Void
-		local
-			l_file_stone1, l_file_stone2: FILED_STONE
+			editors_not_void: a_editors /= Void
 		do
-			from
-				a_editors.start
+				-- FIXME: check the implementation about the use of ~ to compare strings [oct/2016]
+			across
+				a_editors as ic
 			until
-				a_editors.after or Result /= Void
+				Result /= Void
 			loop
-				if a_editors.item.stone /= Void and then a_stone ~ a_editors.item.stone then
-					Result := a_editors.item
-				else
-					l_file_stone1 ?= a_stone
-					l_file_stone2 ?= a_editors.item.stone
-					if
-						(l_file_stone1 /= Void and l_file_stone2 /= Void) and then
+				if attached ic.item.stone as l_editor_stone then
+					if a_stone ~ l_editor_stone then
+						Result := ic.item
+					elseif
+						attached {FILED_STONE} a_stone as l_file_stone1 and then
+						attached {FILED_STONE} l_editor_stone as l_file_stone2 and then
 						(l_file_stone1.is_valid and l_file_stone2.is_valid) and then
-						l_file_stone1.file_name ~ l_file_stone2.file_name
+						(l_file_stone1.file_name ~ l_file_stone2.file_name)
 					then
-						Result := a_editors.item
+						Result := ic.item
 					end
 				end
-				a_editors.forth
 			end
 		end
 
@@ -1776,18 +1766,11 @@ feature {NONE} -- Implementation
 
 	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
 			-- Default veto function
-		local
-			l_cluster_stone: CLUSTER_STONE
-			l_filed_stone: FILED_STONE
 		do
-			l_filed_stone ?= a_stone
-			if l_filed_stone /= Void then
+			if attached {FILED_STONE} a_stone then
 				Result := True
-			else
-				l_cluster_stone ?= a_stone
-				if l_cluster_stone /= Void then
-					Result := True
-				end
+			elseif attached {CLUSTER_STONE} a_stone then
+				Result := True
 			end
 		end
 
@@ -1831,7 +1814,7 @@ feature {NONE} -- Implementation
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

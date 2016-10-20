@@ -68,11 +68,7 @@ feature -- Update, in compiled only
 			fp: PATH
 		do
 			is_location_set := True
-			if attached {STRING_32} a_file_name as fn32 then
-				file_name := fn32
-			else
-				create file_name.make_from_string_general (a_file_name)
-			end
+			file_name := a_file_name.as_string_32
 			create fp.make_from_string (a_file_name)
 			directory := fp.parent
 		ensure
@@ -141,7 +137,7 @@ invariant
 	is_location_set: is_location_set implies (attached file_name as fn and then not fn.is_empty and directory /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

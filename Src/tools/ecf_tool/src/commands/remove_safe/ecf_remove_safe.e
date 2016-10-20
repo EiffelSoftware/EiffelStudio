@@ -242,8 +242,6 @@ feature {NONE} -- Basic operations
 		end
 
 	update_libraries_location (cfg: CONF_SYSTEM)
-		local
---			loc: STRING_32
 		do
 			across
 				cfg.targets as ic
@@ -252,12 +250,7 @@ feature {NONE} -- Basic operations
 					ic.item.libraries as libs_ic
 				loop
 					if attached libs_ic.item as lib then
---						print (" - %"")
---						localized_print (lib.location.original_path)
---						print ("%" => %"")
 						update_to_unique_ecf_location (lib.location.original_path)
---						localized_print (lib.location.original_path)
---						print ("%".%N")
 					end
 				end
 			end
@@ -281,7 +274,7 @@ feature {NONE} -- Basic operations
 
 	update_to_unique_ecf_location (a_location: READABLE_STRING_GENERAL)
 		require
-			a_location_writable: attached {STRING_GENERAL} a_location
+			is_writable: attached {STRING_GENERAL} a_location
 		local
 			i: INTEGER
 		do
@@ -289,18 +282,14 @@ feature {NONE} -- Basic operations
 			if i > 0 then
 				if attached {STRING_GENERAL} a_location as loc then
 						-- remove the 5 characters of "-safe".
-					across
-						1 |..| 5 as ic
-					loop
-						loc.remove (i)
-					end
+					loc.keep_head (i - 1)
+					loc.append (".ecf")
 				else
 					check is_writable: False end
 				end
 			else
 					-- Keep as it is.
 			end
-
 		end
 
 	is_file_in (fn: READABLE_STRING_GENERAL; a_container: ITERABLE [READABLE_STRING_GENERAL]): BOOLEAN

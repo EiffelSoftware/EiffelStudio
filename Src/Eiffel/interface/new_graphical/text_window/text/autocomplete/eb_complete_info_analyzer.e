@@ -231,6 +231,7 @@ feature -- Basic operations
 						end
 					end
 						-- Reset and sort matches
+						--| TODO check if we can return completion_possibilities as an empty array.
 					if cp_index = 1 then
 						completion_possibilities := Void
 					else

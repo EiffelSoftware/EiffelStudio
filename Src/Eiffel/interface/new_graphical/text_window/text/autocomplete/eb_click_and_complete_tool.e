@@ -268,8 +268,10 @@ feature -- Analysis preparation
 					end
 					l_templates.forth
 				end
-				completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
-				completion_possibilities.sort
+				if attached completion_possibilities as l_completion_possibilities then
+					completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
+					completion_possibilities.sort
+				end
 			end
 		end
 
@@ -296,7 +298,7 @@ feature -- Analysis preparation
 						-- Add template to the completion possibilities list
 					if
 						attached {ES_CODE_TEMPLATE_DEFINITION_ITEM} l_templates.item_for_iteration as l_code_template and then
-						attached l_code_template.title as l_title 
+						attached l_code_template.title as l_title
 					then
 						create l_template.make (l_code_template, a_stone, "")
 						l_template.set_class_i (current_class_i)

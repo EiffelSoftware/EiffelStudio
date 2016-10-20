@@ -41,6 +41,16 @@ feature -- Access
 			Result := conf_helpers.save_conf_file (a_cfg, a_file_name)
 		end
 
+	save_conf_file_with_namespace_and_schema (a_cfg: CONF_FILE; a_file_name: READABLE_STRING_GENERAL; a_namespace, a_schema: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Saves the configuration system `a_cfg' to `a_file_name'
+		require
+			a_cfg_attached: a_cfg /= Void
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			Result := conf_helpers.save_conf_file_with_namespace_and_schema (a_cfg, a_file_name, a_namespace, a_schema)
+		end
+
 	append_conf_file_to (a_cfg: CONF_FILE; a_output: STRING): BOOLEAN
 			-- Append the configuration system `a_cfg' into `a_output'.
 		require

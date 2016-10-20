@@ -125,7 +125,7 @@ feature -- Access
 			retry
 		end
 
-	save_conf_file (a_cfg: CONF_FILE; a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+	save_conf_file_with_namespace_and_schema (a_cfg: CONF_FILE; a_file_name: READABLE_STRING_GENERAL; a_namespace, a_schema: detachable READABLE_STRING_GENERAL): BOOLEAN
 			-- Saves the configuration system `a_cfg' to `a_file_name'
 		require
 			a_cfg_attached: a_cfg /= Void
@@ -137,7 +137,7 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_printer := ecf_printer
+				l_printer := ecf_printer_with_namespace_and_schema (a_namespace, a_schema)
 				a_cfg.process (l_printer)
 				if not l_printer.is_error then
 					create l_file.make_with_name (a_file_name)
@@ -162,6 +162,16 @@ feature -- Access
 		rescue
 			retried := True
 			retry
+		end
+
+	save_conf_file (a_cfg: CONF_FILE; a_file_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Saves the configuration system `a_cfg' to `a_file_name'
+		require
+			a_cfg_attached: a_cfg /= Void
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		do
+			Result := save_conf_file_with_namespace_and_schema (a_cfg, a_file_name, Void, Void)
 		end
 
 	new_conf_redirection (a_file_name: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID; a_message: detachable READABLE_STRING_GENERAL): detachable CONF_REDIRECTION
@@ -196,7 +206,19 @@ feature {NONE} -- Access
 			-- Configuration loader
 
 	ecf_printer: ECF_CONF_SAVE_PRINT_VISITOR
-			-- Configuration printer
+
+	ecf_printer_with_namespace_and_schema (a_namespace, a_schema: detachable READABLE_STRING_GENERAL): ECF_CONF_SAVE_PRINT_VISITOR
+		do
+			if a_schema /= Void then
+				if a_namespace /= Void then
+					create Result.make_namespace_and_schema (a_namespace.as_string_32, a_schema.as_string_32)
+				else
+					create Result.make_namespace_and_schema (Void, a_schema.as_string_32)
+				end
+			else
+				create Result.make
+			end
+		end
 
 invariant
 	ecf_reader /= Void

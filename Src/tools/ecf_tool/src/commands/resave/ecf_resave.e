@@ -42,6 +42,9 @@ feature {NONE} -- Execution
 			l_files: ARRAYED_LIST [READABLE_STRING_32]
 			l_eprinter: ERROR_CUI_PRINTER
 		do
+			namespace := a_options.namespace
+			schema := a_options.schema
+
 				-- Add specified files
 			create l_files.make (0)
 			across
@@ -95,10 +98,14 @@ feature {NONE} -- Execution
 			end
 		end
 
+	namespace, schema: detachable READABLE_STRING_GENERAL
+
 feature {NONE} -- Basic operations
 
 	resave_config (a_file_name: READABLE_STRING_32)
 			-- Loads and resaves `a_file_name' using the configuration system.
+		local
+			b: BOOLEAN
 		do
 			if a_file_name /= Void and then not a_file_name.is_empty and then conf_helpers.is_file_readable (a_file_name) then
 				print ("Loading configuration file '")
@@ -107,7 +114,8 @@ feature {NONE} -- Basic operations
 				if attached config_system_from (a_file_name) as l_cfg then
 					print ("Done%N")
 					print ("Saving configuration file... ")
-					if save_conf_file (l_cfg, a_file_name) then
+					b := save_conf_file_with_namespace_and_schema (l_cfg, a_file_name, namespace, schema)
+					if b then
 						print ("Done%N")
 					else
 						print ("Failed!%N")

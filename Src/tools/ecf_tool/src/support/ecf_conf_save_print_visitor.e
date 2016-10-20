@@ -10,7 +10,8 @@ inherit
 	CONF_PRINT_VISITOR
 
 create
-	make
+	make,
+	make_namespace_and_schema
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"

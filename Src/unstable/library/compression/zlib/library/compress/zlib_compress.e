@@ -169,6 +169,77 @@ feature -- Change Element
 
 feature {NONE} -- Deflate implementation
 
+	deflate_with_options (a_level, a_window_bits, a_mem_level, a_strategy: INTEGER_32)
+			-- `a_level': The compression level must be Z_DEFAULT_COMPRESSION, or between 0 and 9
+			-- 1 gives best speed, 9 gives best compression, 0 gives no compression at all Compression level 0..9
+			-- `a_windows_bits': Higher values use more memory, but produce smaller output. The default is 15.  It should be in the range 8..15.
+			-- `a_mem_level':Higher values use more memory, but are faster and produce smaller output. The default is 8.
+		local
+			l_flush: NATURAL
+				-- current flushing state deflate.
+			l_have: INTEGER
+			-- amount of data return by deflate.
+		do
+				-- The compression method is Z_DEFLATED for the current version.
+			zlib.deflate_init_2 (zstream, a_level, {ZLIB_CONSTANTS}.z_deflated.to_integer_32, a_window_bits, a_mem_level, a_strategy)
+
+				-- Refactor to deflate_common.
+			if not has_error then
+				from
+				until
+					end_of_input or has_error
+				loop
+					read
+					zstream.set_available_input (last_read_elements)
+					zstream.set_next_input (input_buffer.item)
+					if end_of_input then
+						l_flush := last_chunk
+					else
+						l_flush := no_last_chunk
+					end
+
+						-- run deflate on input until output buffer not full, finish compression if all of source has been read in
+					from
+						zstream.set_available_output (chunk_size)
+						zstream.set_next_output (output_buffer.item)
+						zlib.deflate (zstream, l_flush)
+						check
+							zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
+						end
+						l_have := chunk_size - zstream.available_output
+						write (l_have)
+						if last_write_elements /= l_have then
+							zlib.deflate_end (zstream)
+						end
+					until
+						zstream.available_output /= 0 or has_error
+					loop
+						zstream.set_available_output (chunk_size)
+						zstream.set_next_output (output_buffer.item)
+						zlib.deflate (zstream, l_flush)
+						check
+							l_zlib_ok: zlib.last_operation /= {ZLIB_CONSTANTS}.Z_stream_error
+						end
+						l_have := chunk_size - zstream.available_output
+						write (l_have)
+						if last_write_elements /= l_have then
+							zlib.deflate_end (zstream)
+						end
+					end
+						-- All input will be used
+					check
+						all_input: zstream.available_input = 0
+					end
+				end
+					-- -- All input will be completed
+				check
+					stream_end: zlib.last_operation = {ZLIB_CONSTANTS}.z_stream_end or else zlib.last_operation = {ZLIB_CONSTANTS}.z_ok
+				end
+					-- clean up and return
+				zlib.deflate_end (zstream)
+			end
+		end
+
 	deflate
 			--	 Compress from `a_source' to `a_dest' until EOF on `a_source'.
 			--   set the result in Zlib.last_operation with Z_OK on success, Z_MEM_ERROR if memory could not be

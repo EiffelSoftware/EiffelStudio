@@ -64,6 +64,17 @@ feature -- Inflate
 			close
 		end
 
+	to_string_with_options (a_windows_bits: INTEGER): STRING
+		do
+			create Result.make_empty
+			create user_output_string.make_empty
+			inflate_with_options (a_windows_bits)
+			if attached user_output_string as l_string then
+				Result := l_string
+			end
+			close
+		end
+
 feature	{NONE} -- Inflate Implementation
 
 	read
@@ -107,7 +118,7 @@ feature	{NONE} -- Inflate Implementation
 			if l_index > a_string.count then
 				end_of_input := True
 			else
-				if attached user_output_string as l_string then
+				if attached string as l_string then
 				   string := l_string.substring (l_index, l_string.count)
 				end
 			end

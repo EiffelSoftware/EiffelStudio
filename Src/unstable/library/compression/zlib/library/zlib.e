@@ -431,6 +431,59 @@ feature -- Helper Functions
 			last_operation := c_inflate_init (a_stream.item, z_lib_version, a_stream.structure_size)
 		end
 
+
+	inflate_init_2 (a_stream: ZLIB_STREAM; a_windows_bits: INTEGER)
+			-- 	This is another version of inflateInit with an extra parameter.  The
+			--   fields next_in, avail_in, zalloc, zfree and opaque must be initialized
+			--   before by the caller.
+
+			--     The windowBits parameter is the base two logarithm of the maximum window
+			--   size (the size of the history buffer).  It should be in the range 8..15 for
+			--   this version of the library.  The default value is 15 if inflateInit is used
+			--   instead.  windowBits must be greater than or equal to the windowBits value
+			--   provided to deflateInit2() while compressing, or it must be equal to 15 if
+			--   deflateInit2() was not used.  If a compressed stream with a larger window
+			--   size is given as input, inflate() will return with the error code
+			--   Z_DATA_ERROR instead of trying to allocate a larger window.
+
+			--     windowBits can also be zero to request that inflate use the window size in
+			--   the zlib header of the compressed stream.
+
+			--     windowBits can also be -8..-15 for raw inflate.  In this case, -windowBits
+			--   determines the window size.  inflate() will then process raw deflate data,
+			--   not looking for a zlib or gzip header, not generating a check value, and not
+			--   looking for any check values for comparison at the end of the stream.  This
+			--   is for use with other formats that use the deflate compressed data format
+			--   such as zip.  Those formats provide their own check values.  If a custom
+			--   format is developed using the raw deflate format for compressed data, it is
+			--   recommended that a check value such as an adler32 or a crc32 be applied to
+			--   the uncompressed data as is done in the zlib, gzip, and zip formats.  For
+			--   most applications, the zlib format should be used as is.  Note that comments
+			--   above on the use in deflateInit2() applies to the magnitude of windowBits.
+
+			--     windowBits can also be greater than 15 for optional gzip decoding.  Add
+			--   32 to windowBits to enable zlib and gzip decoding with automatic header
+			--   detection, or add 16 to decode only the gzip format (the zlib format will
+			--   return a Z_DATA_ERROR).  If a gzip stream is being decoded, strm->adler is a
+			--   crc32 instead of an adler32.
+
+			--     inflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough
+			--   memory, Z_VERSION_ERROR if the zlib library version is incompatible with the
+			--   version assumed by the caller, or Z_STREAM_ERROR if the parameters are
+			--   invalid, such as a null pointer to the structure.  msg is set to null if
+			--   there is no error message.  inflateInit2 does not perform any decompression
+			--   apart from possibly reading the zlib header if present: actual decompression
+			--   will be done by inflate().  (So next_in and avail_in may be modified, but
+			--   next_out and avail_out are unused and unchanged.) The current implementation
+			--   of inflateInit2() does not process any header information -- that is
+			--   deferred until inflate() is called.	
+		require
+			non_void_stream: a_stream /= Void
+		do
+			last_operation := c_inflate_init_2 (a_stream.item, a_windows_bits, z_lib_version, a_stream.structure_size)
+		end
+
+
 	deflate_init (a_stream: ZLIB_STREAM; a_level: INTEGER)
 		require
 			non_void_stream: a_stream /= Void
@@ -438,6 +491,70 @@ feature -- Helper Functions
 		do
 			last_operation := c_deflate_init (a_stream.item, a_level, z_lib_version, a_stream.structure_size)
 		end
+
+
+	deflate_init_2 (a_stream: ZLIB_STREAM; a_level: INTEGER; a_method: INTEGER; a_windowBits: INTEGER; a_memLevel: INTEGER; a_strategy: INTEGER )
+			--		     This is another version of deflateInit with more compression options.  The
+			--   fields next_in, zalloc, zfree and opaque must be initialized before by the
+			--   caller.
+
+			--     The method parameter is the compression method.  It must be Z_DEFLATED in
+			--   this version of the library.
+
+			--     The windowBits parameter is the base two logarithm of the window size
+			--   (the size of the history buffer).  It should be in the range 8..15 for this
+			--   version of the library.  Larger values of this parameter result in better
+			--   compression at the expense of memory usage.  The default value is 15 if
+			--   deflateInit is used instead.
+
+			--     windowBits can also be -8..-15 for raw deflate.  In this case, -windowBits
+			--   determines the window size.  deflate() will then generate raw deflate data
+			--   with no zlib header or trailer, and will not compute an adler32 check value.
+
+			--     windowBits can also be greater than 15 for optional gzip encoding.  Add
+			--   16 to windowBits to write a simple gzip header and trailer around the
+			--   compressed data instead of a zlib wrapper.  The gzip header will have no
+			--   file name, no extra data, no comment, no modification time (set to zero), no
+			--   header crc, and the operating system will be set to 255 (unknown).  If a
+			--   gzip stream is being written, strm->adler is a crc32 instead of an adler32.
+
+			--     The memLevel parameter specifies how much memory should be allocated
+			--   for the internal compression state.  memLevel=1 uses minimum memory but is
+			--   slow and reduces compression ratio; memLevel=9 uses maximum memory for
+			--   optimal speed.  The default value is 8.  See zconf.h for total memory usage
+			--   as a function of windowBits and memLevel.
+
+			--     The strategy parameter is used to tune the compression algorithm.  Use the
+			--   value Z_DEFAULT_STRATEGY for normal data, Z_FILTERED for data produced by a
+			--   filter (or predictor), Z_HUFFMAN_ONLY to force Huffman encoding only (no
+			--   string match), or Z_RLE to limit match distances to one (run-length
+			--   encoding).  Filtered data consists mostly of small values with a somewhat
+			--   random distribution.  In this case, the compression algorithm is tuned to
+			--   compress them better.  The effect of Z_FILTERED is to force more Huffman
+			--   coding and less string matching; it is somewhat intermediate between
+			--   Z_DEFAULT_STRATEGY and Z_HUFFMAN_ONLY.  Z_RLE is designed to be almost as
+			--   fast as Z_HUFFMAN_ONLY, but give better compression for PNG image data.  The
+			--   strategy parameter only affects the compression ratio but not the
+			--   correctness of the compressed output even if it is not set appropriately.
+			--   Z_FIXED prevents the use of dynamic Huffman codes, allowing for a simpler
+			--   decoder for special applications.
+
+			--     deflateInit2 returns Z_OK if success, Z_MEM_ERROR if there was not enough
+			--   memory, Z_STREAM_ERROR if any parameter is invalid (such as an invalid
+			--   method), or Z_VERSION_ERROR if the zlib library version (zlib_version) is
+			--   incompatible with the version assumed by the caller (ZLIB_VERSION).  msg is
+			--   set to null if there is no error message.  deflateInit2 does not perform any
+			--   compression: this will be done by deflate().
+			--*/
+		require
+			non_void_stream: a_stream /= Void
+			known_level: a_level >= Z_default_compression and then a_level <= Z_best_compression
+		do
+			last_operation := c_deflate_init_2 (a_stream.item, a_level, a_method, a_windowBits, a_memLevel, a_strategy,  z_lib_version, a_stream.structure_size)
+		end
+
+
+
 
 feature {NONE} -- C externals
 
@@ -476,6 +593,13 @@ feature {NONE} -- C externals
 			"deflateInit_"
 		end
 
+	c_deflate_init_2 (a_stream: POINTER; a_level: INTEGER; a_method: INTEGER; a_windowBits: INTEGER; a_memLevel: INTEGER; a_strategy: INTEGER; a_version: POINTER; a_struct_size: INTEGER): INTEGER
+		external
+			"C use <zlib.h>"
+		alias
+			"deflateInit2_"
+		end
+
 	c_inflate (a_stream: POINTER; a_flush: INTEGER): INTEGER
 		external
 			"C use <zlib.h>"
@@ -495,6 +619,13 @@ feature {NONE} -- C externals
 			"C use <zlib.h>"
 		alias
 			"inflateInit_"
+		end
+
+	c_inflate_init_2 (a_stream: POINTER; a_windows_bits: INTEGER; a_version: POINTER; a_struct_size: INTEGER): INTEGER
+		external
+			"C use <zlib.h>"
+		alias
+			"inflateInit2_"
 		end
 
 	c_uncompress (a_target, a_target_len, a_source: POINTER; a_source_len: INTEGER): INTEGER

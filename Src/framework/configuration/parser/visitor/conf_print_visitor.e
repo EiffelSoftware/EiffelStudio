@@ -46,11 +46,15 @@ feature {NONE} -- Initialization
 			make_namespace_and_schema (namespace_1_0_0, schema_1_0_0)
 		end
 
-	make_namespace_and_schema (a_namespace: like namespace; a_schema: like schema)
+	make_namespace_and_schema (a_namespace: detachable READABLE_STRING_GENERAL; a_schema: READABLE_STRING_GENERAL)
 			-- Create with `a_namespace' and `a_schema'.
 		do
-			namespace := a_namespace
-			schema := a_schema
+			if a_namespace = Void then
+				namespace := Void
+			else
+				namespace := a_namespace.as_string_32
+			end
+			schema := a_schema.as_string_32
 			create text.make_empty
 		end
 
@@ -958,7 +962,7 @@ feature {NONE} -- Implementation
 				if an_options.is_attached_by_default_configured then
 					append_text (" is_attached_by_default=%""+an_options.is_attached_by_default.out.as_lower+"%"")
 				end
-				if an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type and then is_after_or_equal (namespace, namespace_1_15_0) then
+				if (an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type) and then is_after_or_equal (namespace, namespace_1_15_0) then
 					append_text (" is_obsolete_routine_type=%""+an_options.is_obsolete_routine_type.out.as_lower+"%"")
 				end
 				if an_options.void_safety.is_set then

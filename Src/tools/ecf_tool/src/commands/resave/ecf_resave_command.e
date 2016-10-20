@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make (a_name: detachable READABLE_STRING_8)
 		do
-			if a_name = void then
+			if a_name = Void then
 				create name.make_from_string (default_name)
 			else
 				create name.make_from_string (a_name)

@@ -72,6 +72,9 @@ feature {NONE} -- Initialization
 			create {ECF_RESAVE_COMMAND} cmd.make ("resave")
 			cmds.force (cmd, cmd.name)
 
+			create {ECF_REMOVE_SAFE_COMMAND} cmd.make ({ECF_REMOVE_SAFE_COMMAND}.default_name)
+			cmds.force (cmd, cmd.name)
+
 			create {ECF_VOIDSAFE_COMMAND} cmd.make ("voidsafe")
 			cmds.force (cmd, cmd.name)
 

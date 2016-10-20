@@ -60,7 +60,7 @@ feature -- Access, in compiled only
 
 feature -- Update, in compiled only
 
-	set_file_name (a_file_name: like file_name)
+	set_file_name (a_file_name: READABLE_STRING_GENERAL)
 			-- Set `file_name' to `a_file_name' and set `directory'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -68,11 +68,15 @@ feature -- Update, in compiled only
 			fp: PATH
 		do
 			is_location_set := True
-			file_name := a_file_name
+			if attached {STRING_32} a_file_name as fn32 then
+				file_name := fn32
+			else
+				create file_name.make_from_string_general (a_file_name)
+			end
 			create fp.make_from_string (a_file_name)
 			directory := fp.parent
 		ensure
-			name_set: file_name = a_file_name
+			name_set: a_file_name.same_string (file_name)
 			is_location_set: a_file_name /= Void and then (is_location_set and directory /= Void)
 		end
 

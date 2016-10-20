@@ -26,7 +26,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_file_name: like file_name; a_name: like name; a_uuid: UUID)
+	make_with_uuid (a_file_name: READABLE_STRING_GENERAL; a_name: like name; a_uuid: UUID)
 			-- Creation with `a_name' and `a_uuid'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			is_readonly := True
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name.as_lower)
-			file_name_set: file_name ~ a_file_name
+			file_name_set: a_file_name.same_string (file_name)
 			uuid_set: uuid = a_uuid
 			is_readonly: is_readonly
 		end

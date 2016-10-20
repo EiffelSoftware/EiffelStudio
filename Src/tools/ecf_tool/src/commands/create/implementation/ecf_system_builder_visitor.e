@@ -67,19 +67,19 @@ feature -- Visitor
 			l_file_rule.add_exclude ("/.git")
 			l_file_rule.add_exclude ("/.svn")
 			l_target.file_rule.extend (l_file_rule)
-			l_target.options.set_full_class_checking (True)
+			l_target.changeable_internal_options.set_full_class_checking (True)
 
 			if v.is_voidsafe then
-				l_target.options.void_safety.put_index (l_target.options.void_safety_index_all)
-				l_target.options.set_is_attached_by_default (True)
+				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_all)
+				l_target.changeable_internal_options.set_is_attached_by_default (True)
 			else
-				l_target.options.void_safety.put_index (l_target.options.void_safety_index_none)
-				l_target.options.set_is_attached_by_default (False)
+				l_target.changeable_internal_options.void_safety.put_index (l_target.options.void_safety_index_none)
+				l_target.changeable_internal_options.set_is_attached_by_default (False)
 			end
 			if v.syntax.is_case_insensitive_equal_general ("standard") then
-				l_target.options.syntax.put_index (l_target.options.syntax_index_standard)
+				l_target.changeable_internal_options.syntax.put_index (l_target.options.syntax_index_standard)
 			else
-				l_target.options.syntax.put (v.syntax)
+				l_target.changeable_internal_options.syntax.put (v.syntax)
 			end
 
 			l_system.add_target (l_target)

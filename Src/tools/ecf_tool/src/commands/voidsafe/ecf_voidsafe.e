@@ -263,7 +263,7 @@ feature {NONE} -- Basic operations
 				cfg.targets as ic
 			loop
 				tgt := ic.item
-				opts := tgt.options
+				opts := tgt.changeable_internal_options
 				opts.set_is_attached_by_default (True)
 				opts.void_safety.put_index (opts.void_safety_index_all)
 				across
@@ -273,7 +273,6 @@ feature {NONE} -- Basic operations
 						loc.set_full_path (void_safe_location (loc))
 					end
 				end
-				tgt.set_options (opts)
 			end
 		end
 
@@ -286,7 +285,7 @@ feature {NONE} -- Basic operations
 				cfg.targets as ic
 			loop
 				tgt := ic.item
-				opts := tgt.options
+				opts := tgt.changeable_internal_options
 				opts.unset_is_attached_by_default
 				opts.void_safety.put_index (opts.void_safety_index_none)
 				across
@@ -296,7 +295,6 @@ feature {NONE} -- Basic operations
 						loc.set_full_path (non_void_safe_location (loc))
 					end
 				end
-				tgt.set_options (opts)
 			end
 		end
 

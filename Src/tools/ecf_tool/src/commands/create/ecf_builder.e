@@ -120,6 +120,7 @@ feature {NONE} -- Initialization
 
 			create conf_sys_builder_vis.make
 
+			ecf.set_is_voidsafe (False)
 			ecf.process (conf_sys_builder_vis)
 			if attached conf_sys_builder_vis.system as l_system then
 				conf_sys_builder_vis.reset
@@ -441,7 +442,7 @@ feature -- Constants
 	testing_target_type: STRING = "testing"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

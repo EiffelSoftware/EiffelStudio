@@ -269,6 +269,8 @@ feature -- Analysis preparation
 					l_templates.forth
 				end
 				if attached completion_possibilities as l_completion_possibilities then
+						-- Note: this happens when the target object has no exported feature.
+						--		 (should the `completion_possibilities` be empty instead of Void?)
 					completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
 					completion_possibilities.sort
 				end
@@ -318,7 +320,6 @@ feature -- Basic Operations
 	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 		local
-			l_content: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			ft		: FEATURE_AS
 			feat		: E_FEATURE
 			a_position	: INTEGER
@@ -327,7 +328,7 @@ feature -- Basic Operations
 		do
 			if is_ok_for_completion then
 				initialize_context
-				if current_class_i /= Void then
+				if attached current_class_i as curr_class_i then
 					token := cursor.token
 					if attached {EIFFEL_EDITOR_LINE} cursor.line as l_eiffel_line then
 						line := l_eiffel_line
@@ -340,8 +341,7 @@ feature -- Basic Operations
 						elseif a_position >= invariant_index then
 							feat := described_feature (token, line, Void)
 						elseif click_possible (token) then
-							l_content := feature_containing (token, line)
-							if l_content /= Void then
+							if attached feature_containing (token, line) as l_content then
 								ft := l_content.feat_as
 								inspect
 									feature_part_at (token, line)

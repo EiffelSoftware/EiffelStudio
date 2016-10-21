@@ -15,10 +15,10 @@
 	</target>
 	<target name="{$WIZ.project.name/}_any" extends="common">
 		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
+		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>{/if}
 		{if condition="$WIZ.connectors.use_cgi ~ $WIZ_YES"}<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>{/if}
 		{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>{/if}
-		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>{/if}
-		<cluster name="launcher" location=".\launcher\" recursive="false">
+		<cluster name="launcher" location=".\launcher\">
 			<cluster name="any_launcher" location="$|any"/>
 		</cluster>
 		<cluster name="src" location=".\src\" recursive="true"/>

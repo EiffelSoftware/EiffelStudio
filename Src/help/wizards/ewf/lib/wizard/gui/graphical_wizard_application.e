@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- UI change
 
-	set_title (a_title: READABLE_STRING_GENERAL)
+	set_title (a_title: separate READABLE_STRING_GENERAL)
 		deferred
 		end
 

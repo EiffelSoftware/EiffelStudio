@@ -14,8 +14,6 @@ inherit
 		redefine
 			initialize
 		end
-{if condition="$WIZ.routers.use_router ~ $WIZ_YES"}
-	WSF_ROUTED_SERVICE{/if}
 	{if isset="$APP_ROOT"}APPLICATION_LAUNCHER [{$APP_ROOT/}_EXECUTION]{/if}
 	{unless isset="$APP_ROOT"}APPLICATION_LAUNCHER [APPLICATION_EXECUTION]{/unless}
 
@@ -29,7 +27,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_service_option ("port", {$WIZ.standalone_connector.port/})
-			{if condition="$WIZ.standalone_connector.verbose ~ $WIZ_YES"}set_service_option ("verbose", True){/if}		end
+			set_service_option ("verbose", "{$WIZ.standalone_connector.verbose/}")
+		end
 
 
 end

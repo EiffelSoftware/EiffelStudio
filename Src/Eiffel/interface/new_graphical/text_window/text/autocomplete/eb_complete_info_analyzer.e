@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			cp_index := cp_index + 1
 		end
 
-	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME; feat_start_token: detachable EDITOR_TOKEN_FEATURE_START]
+	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
 			a_token_not_void: a_token /= Void

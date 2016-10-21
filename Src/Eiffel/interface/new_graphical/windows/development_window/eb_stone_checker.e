@@ -83,94 +83,91 @@ feature {NONE} -- Implementation functions
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+			l_dev_window_stone: detachable STONE
 			l_editors_manager: EB_EDITORS_MANAGER
 			l_editor_displayer: EB_FORMATTER_EDITOR_DISPLAYER
-			l_feature_stone: FEATURE_STONE
-					-- Feature stone if exist.
-			l_old_class_stone: CLASSI_STONE
-					-- Old class stone if exist.
 			l_test_stone: CLASSI_STONE
 					-- Text stone if exist.
 			l_same_class: BOOLEAN
 					-- If old stone and new stone are same class?
-			l_conv_ferrst: FEATURE_ERROR_STONE
-					-- Feature errror stone if exist.
-			l_cluster_st: CLUSTER_STONE
-					-- Cluster stone if exist.
-			l_new_class_stone: CLASSI_STONE
+			l_new_class_stone: detachable CLASSI_STONE
 					-- New class stone if exist.
-			l_conv_errst: ERROR_STONE
-					-- Error stone if exist.
-			l_conv_brkstone: BREAKABLE_STONE
-					-- Breakable stone if exist.
-			editor: EB_SMART_EDITOR
+			l_editor: detachable EB_SMART_EDITOR
 					-- Editor related if exist.
 			save_needed: BOOLEAN;
 					-- If save file needed?
+			l_text_formatter: EB_CLASS_TEXT_FORMATTER
 		do
-			l_old_class_stone ?= develop_window.stone
-			l_feature_stone ?= a_stone
-			l_new_class_stone ?= a_stone
-			l_cluster_st ?= a_stone
+			l_dev_window_stone := develop_window.stone
 			l_editors_manager := develop_window.editors_manager
-			editor := l_editors_manager.editor_with_stone (a_stone)
+			l_editor := l_editors_manager.editor_with_stone (a_stone)
 
-			if editor /= Void then
+			if l_editor /= Void then
 				l_editors_manager.editor_switched_actions.block
-				if not has_error_when_error_tool_auto_hide and then editor.docking_content.is_docking_manager_attached then
-					editor.docking_content.set_focus_no_maximized (editor.docking_content.user_widget)
+				if
+					not has_error_when_error_tool_auto_hide and then
+					attached l_editor.docking_content as l_docking_content and then
+					l_docking_content.is_docking_manager_attached
+				then
+					l_docking_content.set_focus_no_maximized (l_docking_content.user_widget)
 				end
 				l_editors_manager.editor_switched_actions.resume
 			else
 				if l_editors_manager.editor_count = 0 then
-					-- FIXIT: remove the following line if we reaaly decided we can have void editor
+						-- FIXME: remove the following line if we really decided we can have Void editor
 					l_editors_manager.create_editor
 					l_editors_manager.last_created_editor.docking_content.set_focus
 				end
 			end
 
-			if editor = Void then
+			if l_editor = Void then
 				save_needed := True
 			end
 
-				-- Update the history.
-			l_conv_brkstone ?= a_stone
-			l_conv_errst ?= a_stone
 
+			if attached {CLASSI_STONE} a_stone as st then
+				l_new_class_stone := st
+			else
+				l_new_class_stone := Void
+			end
+
+
+				-- Update the history.
 				-- If it is not cancelled, we set it back in EB_STONE_CHECKER
 			develop_window.set_history_moving_cancelled (True)
-
-			if l_conv_brkstone = Void and l_conv_errst = Void then
+			if
+				not attached {BREAKABLE_STONE} a_stone as l_conv_brkstone and
+				not attached {ERROR_STONE} a_stone as l_conv_errst
+			then
 				if l_new_class_stone /= Void then
 					develop_window.history_manager.extend (l_new_class_stone)
-				elseif l_cluster_st /= Void then
+				elseif attached {CLUSTER_STONE} a_stone as l_cluster_st then
 					develop_window.history_manager.extend (l_cluster_st)
 				end
 			end
 
 				-- Refresh editor in main formatters.			
-			if l_editors_manager.current_editor /= Void then
-				create l_editor_displayer.make (l_editors_manager.current_editor)
-				from
-					l_managed_main_formatters := develop_window.managed_main_formatters
-					l_managed_main_formatters.start
-				until
-					l_managed_main_formatters.after
+			if attached l_editors_manager.current_editor as l_curr_editor then
+				create l_editor_displayer.make (l_curr_editor)
+				across
+					develop_window.managed_main_formatters as ic_managed_main_formatters
 				loop
-					l_managed_main_formatters.item.set_editor_displayer (l_editor_displayer)
-					l_managed_main_formatters.item.set_should_displayer_be_recycled (True)
-					l_managed_main_formatters.forth
+					l_text_formatter := ic_managed_main_formatters.item
+					l_text_formatter.set_editor_displayer (l_editor_displayer)
+					l_text_formatter.set_should_displayer_be_recycled (True)
 				end
 			end
 
-			if l_old_class_stone /= Void then
+			if attached {CLASSI_STONE} l_dev_window_stone as l_old_class_stone then
 				create l_test_stone.make (l_old_class_stone.class_i)
 				l_same_class := l_test_stone.same_as (a_stone)
 					-- We need to compare classes. If `l_old_class_stone' is a FEATURE_STONE
 					-- `same_as' will compare features. Therefore, we need `l_test_stone' to be sure
 					-- we have a CLASSI_STONE.
-				if l_same_class and then l_feature_stone /= Void then
+				if
+					l_same_class and then
+					attached {FEATURE_STONE} a_stone as l_feature_stone
+				then
 					l_same_class := False
 						-- if the stone corresponding to a feature of currently opened class is dropped
 						-- we attempt to scroll to the feature without asking to save the file
@@ -181,11 +178,16 @@ feature {NONE} -- Implementation functions
 					else
 						develop_window.set_feature_stone_already_processed (False)
 					end
-					l_conv_ferrst ?= l_feature_stone
-					if develop_window.feature_stone_already_processed and l_conv_ferrst /= Void then
+					if
+						develop_window.feature_stone_already_processed and
+						attached {FEATURE_ERROR_STONE} l_feature_stone as l_conv_ferrst
+					then
 							-- Scroll to the line of the error.
-						if not develop_window.during_synchronization and then l_editors_manager.current_editor /= Void then
-							l_editors_manager.current_editor.display_line_when_ready (l_conv_ferrst.line_number, 0, True)
+						if
+							not develop_window.during_synchronization and then
+							attached l_editors_manager.current_editor as l_curr_editor
+						then
+							l_curr_editor.display_line_when_ready (l_conv_ferrst.line_number, 0, True)
 						end
 					end
 				end
@@ -193,7 +195,7 @@ feature {NONE} -- Implementation functions
 
 				-- first, let's check if there is already something in this window
 				-- if there's nothing, there's no need to save anything...
-			if develop_window.stone = Void or else not develop_window.changed or else develop_window.feature_stone_already_processed or else l_same_class then
+			if l_dev_window_stone = Void or else not develop_window.changed or else develop_window.feature_stone_already_processed or else l_same_class then
 				set_stone_after_check (a_stone)
 				develop_window.set_feature_stone_already_processed (False)
 			else
@@ -224,13 +226,16 @@ feature {NONE} -- Implementation functions
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_current_window: EV_WIDGET
+			l_current_window: detachable EV_WIDGET
 			l_old_cursor: EV_POINTER_STYLE
 		do
 				-- The text does not change if the text was saved with syntax errors
 			l_current_window := develop_window.window
 				-- Only change the cursor in the event it is a different stone object.
-			if develop_window.stone /= a_stone and then l_current_window /= Void then
+			if
+				l_current_window /= Void and then
+				develop_window.stone /= a_stone
+			then
 				l_old_cursor := l_current_window.pointer_style
 				l_current_window.set_pointer_style ((create {EV_STOCK_PIXMAPS}).Wait_cursor)
 			end
@@ -314,16 +319,16 @@ feature {NONE} -- Implementation functions
 		local
 			bpm: BREAKPOINTS_MANAGER
 		do
-			if conv_brkstone /= Void then
+			if attached conv_brkstone as l_conv_brkstone then
 				bpm := develop_window.Debugger_manager.breakpoints_manager
-				if bpm.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-					bpm.remove_user_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+				if bpm.is_breakpoint_enabled (l_conv_brkstone.routine, l_conv_brkstone.index) then
+					bpm.remove_user_breakpoint (l_conv_brkstone.routine, l_conv_brkstone.index)
 				else
-					bpm.set_user_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+					bpm.set_user_breakpoint (l_conv_brkstone.routine, l_conv_brkstone.index)
 				end
 				bpm.notify_breakpoints_changes
-			elseif target_stone /= Void and then target_stone.is_valid then
-				handle_target_stone (target_stone)
+			elseif attached target_stone as tgt_stone and then tgt_stone.is_valid then
+				handle_target_stone (tgt_stone)
 			else
 				handle_all_class_stones (a_stone)
 			end
@@ -339,23 +344,22 @@ feature {NONE} -- Implementation functions
 				-- Update the title of the window
 			if a_target_stone /= Void then
 				if develop_window.changed then
-					create s.make_from_string (a_target_stone.header.as_string_32)
+					create s.make_from_string_general (a_target_stone.header)
 					s.prepend_character (' ')
 					s.prepend_character ('*')
 					develop_window.set_title (s)
 				else
-					develop_window.set_title (a_target_stone.header.as_string_32)
+					develop_window.set_title (a_target_stone.header)
 				end
 			else
 				develop_window.set_title (develop_window.Interface_names.t_empty_development_window)
 			end
 		end
 
-	handle_all_class_stones (a_stone: STONE)
+	handle_all_class_stones (a_stone: detachable STONE)
 			-- Handle all class stones.
 			-- `a_stone' can be new class stone or exists class stone.
 		local
-			l_stonable: ES_STONABLE_I
 			s: STRING_32
 		do
 			develop_window.commands.new_feature_cmd.disable_sensitive
@@ -386,14 +390,18 @@ feature {NONE} -- Implementation functions
 			end
 
 				-- Refresh the tools.
-			l_stonable ?= develop_window.shell_tools.tool ({ES_FEATURES_TOOL})
-			if l_stonable = Void or else l_stonable.is_stone_usable (a_stone) then
+			if
+				attached {ES_STONABLE_I} develop_window.shell_tools.tool ({ES_FEATURES_TOOL}) as l_stonable and then
+				l_stonable.is_stone_usable (a_stone)
+			then
 				l_stonable.set_stone_with_query (a_stone)
 			end
 
 				-- Use preference here to track editor.
---			l_stonable ?= develop_window.shell_tools.tool ({ES_GROUPS_TOOL})
---			if l_stonable = Void or else l_stonable.is_stone_usable (a_stone) then
+--			if
+--				attached {ES_STONABLE_I} develop_window.shell_tools.tool ({ES_GROUPS_TOOL}) as l_stonable and then
+--				l_stonable.is_stone_usable (a_stone)
+--			then
 --				l_stonable.set_stone_with_query (a_stone)
 --			end
 
@@ -406,26 +414,26 @@ feature {NONE} -- Implementation functions
 	check_new_class_stone (a_stone: STONE)
 			-- Handle `a_stone' which is new class stone.
 		do
-			if new_class_stone /= Void then
+			if attached new_class_stone as l_new_class_stone then
 				if not develop_window.during_synchronization then
-					develop_window.view_points_combo.set_conf_class (new_class_stone.class_i.config_class)
+					develop_window.view_points_combo.set_conf_class (l_new_class_stone.class_i.config_class)
 				end
 					-- Text is now editable.
 				if attached develop_window.editors_manager.current_editor as e then
 					e.set_read_only (False)
 				end
 
-				if new_class_stone.is_valid then
-					develop_window.tools.properties_tool.set_stone (new_class_stone)
+				if l_new_class_stone.is_valid then
+					develop_window.tools.properties_tool.set_stone (l_new_class_stone)
 				end
 
 					-- class stone was dropped
-				create class_file.make_with_path (new_class_stone.class_i.file_name)
+				create class_file.make_with_path (l_new_class_stone.class_i.file_name)
 				class_text_exists := class_file.exists
 				feature_stone ?= a_stone
 					--| We have to create a classi_stone to check whether the stones are really similar.
 					--| Otherwise a redefinition of same_as may be called.
-				create test_stone.make (new_class_stone.class_i)
+				create test_stone.make (l_new_class_stone.class_i)
 				if test_stone.same_as (old_class_stone) then
 					same_class := True
 				end
@@ -445,35 +453,34 @@ feature {NONE} -- Implementation functions
 					end
 				end
 
-				conv_classc ?= new_class_stone
+				conv_classc ?= l_new_class_stone
 
 					-- First choose possible formatter
 				possible_formater
 
 				if text_loaded then
-					from
-						managed_main_formatters.start
-					until
-						managed_main_formatters.after
+					across
+						managed_main_formatters as ic
 					loop
 							--| Ted: Text might be changed
-						managed_main_formatters.item.force_stone (a_stone)
-						managed_main_formatters.item.refresh
-						managed_main_formatters.forth
+						ic.item.force_stone (a_stone)
+						ic.item.refresh
 					end
-					formatter ?= a_stone.pos_container
-					if formatter /= Void then
-						formatter.enable_select
+					if attached {like formatter} a_stone.pos_container as l_formatter then
+						formatter := l_formatter
+						l_formatter.enable_select
+					else
+						formatter := Void
 					end
 				end
 
 				set_class_text_if_possible
 				check_class_stone
-				if current_editor /= Void then
+				if attached current_editor as l_curr_editor then
 					if not managed_main_formatters.first.selected then
-						current_editor.set_read_only (true)
-					elseif new_class_stone /= Void and then new_class_stone.class_i.is_read_only then
-						current_editor.set_read_only (True)
+						l_curr_editor.set_read_only (True)
+					elseif attached new_class_stone as l_n_cl_st and then l_n_cl_st.class_i.is_read_only then
+						l_curr_editor.set_read_only (True)
 					end
 				end
 
@@ -486,22 +493,25 @@ feature {NONE} -- Implementation functions
 			-- Handle cluster stone.
 		do
 				-- not a class text : cannot be edited
-			if current_editor /= Void then
-				current_editor.set_read_only (True)
+			if attached current_editor as curr_ed then
+				curr_ed.set_read_only (True)
 			end
 			develop_window.address_manager.disable_formatters
 
-			if cluster_st /= Void then
-				if cluster_st.is_valid then
-					develop_window.tools.properties_tool.set_stone (cluster_st)
+			if attached cluster_st as l_cluster_st then
+				if l_cluster_st.is_valid then
+					develop_window.tools.properties_tool.set_stone (l_cluster_st)
 				end
 				if not text_loaded then
 					if not develop_window.during_synchronization then
-						develop_window.view_points_combo.set_conf_group (cluster_st.group)
+						develop_window.view_points_combo.set_conf_group (l_cluster_st.group)
 					end
-					formatted_context_for_group (cluster_st.group, cluster_st.path)
-					if cluster_st.position > 0 and then current_editor /= Void then
-						current_editor.display_line_at_top_when_ready (cluster_st.position, 0)
+					formatted_context_for_group (l_cluster_st.group, l_cluster_st.path)
+					if
+						l_cluster_st.position > 0 and then
+						attached current_editor as curr_ed
+					then
+						curr_ed.display_line_at_top_when_ready (l_cluster_st.position, 0)
 					end
 
 				end
@@ -511,20 +521,28 @@ feature {NONE} -- Implementation functions
 	possible_formater
 			-- Do works for formatters.
 		do
-			main_formatter ?= new_class_stone.pos_container
-			if main_formatter /= Void and not develop_window.during_synchronization then
-				if
-					not (conv_classc /= Void and class_text_exists and (not develop_window.changed or not same_class))
-				then
-					main_formatter.enable_select
-				elseif feature_stone = Void then
-					if main_formatter /= develop_window.pos_container then
-						main_formatter.enable_select
-					end
-					if current_editor /= Void and then not text_loaded and then new_class_stone.position > 0 then
-						current_editor.display_line_at_top_when_ready (new_class_stone.position, 0)
+			if attached {like main_formatter} new_class_stone.pos_container as l_main_formatter then
+				main_formatter := l_main_formatter
+				if not develop_window.during_synchronization then
+					if
+						not (conv_classc /= Void and class_text_exists and (not develop_window.changed or not same_class))
+					then
+						l_main_formatter.enable_select
+					elseif feature_stone = Void then
+						if l_main_formatter /= develop_window.pos_container then
+							l_main_formatter.enable_select
+						end
+						if
+							attached current_editor as l_curr_ed and then
+							not text_loaded and then
+							new_class_stone.position > 0
+						then
+							l_curr_ed.display_line_at_top_when_ready (new_class_stone.position, 0)
+						end
 					end
 				end
+			else
+				main_formatter := Void
 			end
 		end
 
@@ -534,7 +552,14 @@ feature {NONE} -- Implementation functions
 			l_selection: TUPLE [pos_start, pos_end: INTEGER]
 		do
 			if class_text_exists or else dotnet_class then
-				if attached feature_stone as l_feature_stone and not develop_window.feature_stone_already_processed then  -- and not same_class then
+				if attached ast_stone as l_ast_stone then
+					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
+						if not develop_window.managed_main_formatters.first.selected then
+							select_basic_main_formatter
+						end
+						develop_window.scroll_to_ast (l_ast_stone.ast, l_ast_stone.class_i, l_ast_stone.is_for_feature_invocation)
+					end
+				elseif attached feature_stone as l_feature_stone and not develop_window.feature_stone_already_processed then  -- and not same_class then
 					if attached {like conv_ferrst} l_feature_stone as l_conv_ferrst then
 						conv_ferrst := l_conv_ferrst
  						error_line := conv_ferrst.line_number
@@ -545,13 +570,6 @@ feature {NONE} -- Implementation functions
 						if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
 							develop_window.scroll_to_feature (l_feature_stone.e_feature, new_class_stone.class_i)
 						end
-					end
-				elseif attached ast_stone as l_ast_stone then
-					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
-						if not develop_window.managed_main_formatters.first.selected then
-							select_basic_main_formatter
-						end
-						develop_window.scroll_to_ast (l_ast_stone.ast, l_ast_stone.class_i, l_ast_stone.is_for_feature_invocation)
 					end
 				elseif attached line_stone as l_line_stone then
 					if (not text_loaded or develop_window.is_dropping_on_editor) and not develop_window.during_synchronization then
@@ -756,7 +774,7 @@ feature {NONE} -- Implementation functions
 			l_in_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_out_classes: DS_ARRAYED_LIST [CLASS_I]
 			l_over_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_cl_i, l_overridden_class: CLASS_I
+			l_cl_i: CLASS_I
 			l_cl_c: CLASS_C
 			l_assert_level: ASSERTION_I
 			l_format_context: TEXT_FORMATTER_DECORATOR
@@ -1160,8 +1178,7 @@ feature {NONE} -- Implementation functions
 
 						l_format_context.put_manifest_string (" - ")
 
-						l_overridden_class ?= l_cl_i.config_class.overriden_by
-						if l_overridden_class /= Void then
+						if attached {CLASS_I} l_cl_i.config_class.overriden_by as l_overridden_class then
 							l_cl_c := l_overridden_class.compiled_representation
 							if l_cl_c /= Void then
 								l_format_context.put_classi (l_cl_c.original_class)
@@ -1249,7 +1266,7 @@ feature {NONE} -- Implementation functions
 		do
 			if a_editor /= Void then
 				create l_factory
-				if a_stone /= Void and then not a_stone.is_equal (a_editor.stone) then
+				if a_stone /= Void and then a_stone /~ a_editor.stone then
 					l_class_stone ?= a_stone
 					l_cluster_stone ?= a_stone
 				else

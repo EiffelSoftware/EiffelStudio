@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			cp_index := cp_index + 1
 		end
 
-	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
+	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME; feat_start_token: detachable EDITOR_TOKEN_FEATURE_START]
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
 			a_token_not_void: a_token /= Void
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 		local
 			token: EDITOR_TOKEN
 			line: EDITOR_LINE
-			tfs, tfs2: EDITOR_TOKEN_FEATURE_START
+			tfs: detachable EDITOR_TOKEN_FEATURE_START
 			index: INTEGER
 			l_done: BOOLEAN
 			l_end_position: INTEGER
@@ -993,18 +993,20 @@ feature {NONE} -- Implementation
 				current_token = Void or l_done
 			loop
 				go_to_previous_token
-				tfs ?= current_token
-				if tfs /= Void then
-					if tfs.start_position < a_token.pos_in_text and a_token.pos_in_text < tfs.end_position then
+				if attached {EDITOR_TOKEN_FEATURE_START} current_token as l_tfs then
+					tfs := l_tfs
+					if l_tfs.start_position < a_token.pos_in_text and a_token.pos_in_text < tfs.end_position then
 						l_done := True
 					else
 						if l_end_position = 0 then
-							l_end_position := tfs.end_position
-						elseif l_end_position /= tfs.end_position then
+							l_end_position := l_tfs.end_position
+						elseif l_end_position /= l_tfs.end_position then
 							l_done := True
 							tfs := Void
 						end
 					end
+				else
+					tfs := Void
 				end
 			end
 
@@ -1018,9 +1020,8 @@ feature {NONE} -- Implementation
 			until
 				(current_token = Void or else current_token.next = Void) or l_done
 			loop
-				if current_token.is_feature_start then
-					tfs2 ?= current_token
-					check tfs2_not_void : tfs2 /= Void end
+				if attached {EDITOR_TOKEN_FEATURE_START} current_token as tfs2 then
+					check token_is_feature_start: current_token.is_feature_start end
 						-- If we are completely out of the current feature start, then no need to look further,
 						-- the `tfs' we found earlier is the right one.
 					l_done := (tfs2.start_position > a_token.pos_in_text or a_token.pos_in_text > tfs2.end_position)

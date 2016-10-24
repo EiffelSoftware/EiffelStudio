@@ -29,12 +29,15 @@ indexing
 #define FD_SETSIZE 256
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <Mswsock.h>
+#include <io.h>
 #endif
 
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
 #include "eif_except.h"  
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
+#include "eif_file.h"    	/* for eio() */
 
 
 #ifdef EIF_WINDOWS
@@ -743,7 +746,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 /******************************************************/
 
 EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*  Transmission of string s of size size trought socket fd
+	/*  Transmission of string s of size size throught socket fd
 	 *  NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -753,7 +756,7 @@ EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_poin
 }
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size size throught socket fd */
 {
 	int res;
 	res = c_send_stream_to_noexception(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer, sizeofaddr);
@@ -765,7 +768,7 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 /******************************************************/
 
 EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/* transmission of string s of size size trought socket fd.
+	/* transmission of string s of size length throught socket fd.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -775,9 +778,106 @@ EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer,
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size length throught socket fd */
 {
 	eif_net_check(c_put_stream_noexception(fd, stream_pointer, length));
+}
+
+EIF_INTEGER c_unoptimized_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length)
+	/* transmission of file content from file `fn` of size length throught socket out_fd.
+	 * if `length` is 0, then send the whole file.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+#define EIFNET_BUFFSIZE 4096
+	int fd;
+	int retval_read, retval_write;
+	int nb_bytes_sent, nb_bytes_remain;
+	int n, l_remain;
+	char buf[EIFNET_BUFFSIZE];
+
+#ifdef EIF_WINDOWS
+	fd = _fileno(f);
+#else
+	fd = fileno(f);
+#endif
+	nb_bytes_sent = 0;
+	nb_bytes_remain = length;
+	do {
+		if (nb_bytes_remain < EIFNET_BUFFSIZE) {
+			n = nb_bytes_remain;
+		} else {
+			n = EIFNET_BUFFSIZE;
+		}
+#ifdef EIF_WINDOWS		
+		retval_read = (int)_read(fd, buf, n);
+#else
+		retval_read = (int) read(fd, buf, n);
+#endif
+		if (retval_read < 0) {
+			return (EIF_INTEGER) retval_read;
+		} else {
+			nb_bytes_remain = nb_bytes_remain - retval_read;
+		}
+		l_remain = retval_read;
+		do {
+			retval_write = (int) c_put_stream_noexception(out_fd, buf, l_remain);
+			if (retval_write < 0) {
+				return (EIF_INTEGER) retval_write;
+			} else {
+				l_remain = l_remain - retval_write;
+				nb_bytes_sent = nb_bytes_sent + retval_write;
+			}
+		} while (l_remain > 0);
+	} while (retval_read || retval_write);
+	return (EIF_INTEGER) nb_bytes_sent;
+#undef EIFNET_BUFFSIZE
+}
+
+EIF_INTEGER c_sendfile_noexception(EIF_INTEGER out_fd, FILE* fd, EIF_INTEGER length)
+	/* transmission of file content from file `fn` of size length throught socket out_fd.
+	 * if `length` is 0, then send the whole file.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+#ifdef EIF_WINDOWS
+	HMODULE dllHandle;
+	//FARPROC _TransmitFile; 
+	BOOL (PASCAL * _TransmitFile)(SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD) = NULL;
+	
+	dllHandle = LoadLibrary("Mswsock.dll");
+	if (dllHandle != NULL) {
+		_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
+	}
+	if (_TransmitFile==NULL) {
+		return (EIF_INTEGER) c_unoptimized_sendfile_noexception(out_fd, fd, length);
+	} else {
+		BOOL retval;
+		//HANDLE hFile = CreateFile(fn, GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
+		HANDLE hFile = (HANDLE)_get_osfhandle(fileno(fd));
+		OVERLAPPED ovlp;
+		memset(&ovlp, 0, sizeof(OVERLAPPED));
+		retval = _TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, (DWORD) length, 
+					(DWORD) 0, (LPOVERLAPPED) &ovlp, (LPTRANSMIT_FILE_BUFFERS) NULL,(DWORD) TF_USE_KERNEL_APC);
+		if (retval) {
+				/* Fix me, find a way to get the number of bytes sent */
+			return (EIF_INTEGER) ovlp.InternalHigh;
+		} else {
+			return (EIF_INTEGER) -1;
+		}
+		FreeLibrary(dllHandle);
+	}
+#else
+	size_t len;
+	ssize_t retval;
+	if (length == 0) {
+		len = (size_t) eif_file_size(fp); /* Maybe an issue with binary file ? */
+	} else {
+		len = (size_t) length;
+	}
+	retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) eif_file_fd (fp), (off_t *) NULL, (size_t) length);
+	return (EIF_INTEGER) retval;
+#endif
 }
 
 /******************************************************/

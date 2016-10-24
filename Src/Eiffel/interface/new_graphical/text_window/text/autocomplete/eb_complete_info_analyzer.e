@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			cp_index := cp_index + 1
 		end
 
-	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
+	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME; feat_start_token: detachable EDITOR_TOKEN_FEATURE_START]
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
 			a_token_not_void: a_token /= Void
@@ -1034,8 +1034,11 @@ feature {NONE} -- Implementation
 
 			if tfs /= Void then
 				index := tfs.feature_index_in_table
-				if features_ast.valid_index (index) then
-					Result := features_ast @ index
+				if
+					features_ast.valid_index (index) and then
+					attached (features_ast @ index) as f_ast
+				then
+					Result := [f_ast.feat_as, f_ast.name, tfs]
 				end
 			end
 			current_token := token
@@ -1573,8 +1576,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2016-10-20 16:16:43 +0200 (jeu., 20 oct. 2016) $"
+	revision: "$Revision: 99321 $"
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

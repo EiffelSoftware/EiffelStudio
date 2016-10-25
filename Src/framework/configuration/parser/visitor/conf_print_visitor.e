@@ -908,6 +908,7 @@ feature {NONE} -- Implementation
 		do
 			if attached o and then not o.is_empty then
 				append_text_indent ("<class_option")
+				append_text_attribute ("class", c)
 				append_general_options (o)
 				append_text_indent ("</class_option>%N")
 			end

@@ -909,7 +909,7 @@ EIF_INTEGER c_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER leng
 
 #else /* not EIF_WINDOWS */
 	ssize_t retval;
-	f (length > 0) {
+	if (length > 0) {
 		size_t l_write_remain;
 		ssize_t nb_bytes_sent;
 		off_t offset = 0;
@@ -918,7 +918,7 @@ EIF_INTEGER c_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER leng
 		l_write_remain = (size_t) length;
 		EIF_BOOLEAN l_continue;
 		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &offset, l_write_remain) > 0) && (l_write_remain > 0)) {
-			if (retval) > 0 {
+			if (retval > 0) {
 				l_write_remain = l_write_remain - retval;
 				nb_bytes_sent = nb_bytes_sent + retval;
 			}

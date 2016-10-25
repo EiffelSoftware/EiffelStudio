@@ -131,6 +131,12 @@ feature -- Output operation
 			wgi_response.put_substring (s, a_begin_index, a_end_index)
 		end
 
+	put_file_content (f: FILE; a_offset: INTEGER; a_count: INTEGER)
+			-- Send `a_count' bytes from the content of file `f' starting at offset `a_offset'.
+		do
+			wgi_response.put_file_content (f, a_offset, a_count)
+		end
+
 	flush
 			-- Flush if it makes sense
 		do

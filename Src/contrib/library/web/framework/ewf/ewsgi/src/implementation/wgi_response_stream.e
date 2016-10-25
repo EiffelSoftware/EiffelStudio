@@ -103,6 +103,12 @@ feature -- Output operation
 			output.put_substring (s, start_index, end_index)
 		end
 
+	put_file_content (f: FILE; a_offset: INTEGER; a_count: INTEGER)
+			-- Send `a_count' bytes from the content of file `f' starting at offset `a_offset'.
+		do
+			output.put_file_content (f, a_offset, a_count)
+		end
+
 	flush
 		do
 			output.flush

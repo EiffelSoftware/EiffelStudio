@@ -13,6 +13,7 @@ inherit
 			put_character,
 			put_string,
 			put_substring,
+			put_file_content,
 			flush,
 			message_writable,
 			message_committed
@@ -106,6 +107,13 @@ feature -- Output operation
 		do
 			process_header
 			Precursor (s, a_begin_index, a_end_index)
+		end
+
+	put_file_content (f: FILE; a_offset: INTEGER; a_count: INTEGER)
+			-- Send `a_count' bytes from the content of file `f' starting at offset `a_offset'.
+		do
+			process_header
+			Precursor (f, a_offset, a_count)
 		end
 
 	flush

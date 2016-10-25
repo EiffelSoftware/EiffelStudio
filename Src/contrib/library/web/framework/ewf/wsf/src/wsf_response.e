@@ -383,6 +383,16 @@ feature -- Body
 			increment_transfered_content_length (a_end_index - a_begin_index + 1)
 		end
 
+	put_file_content (f: FILE; a_offset: INTEGER; a_count: INTEGER)
+			-- Send `a_count' bytes from the content of file `f' starting at offset `a_offset'.
+		require
+			message_writable: message_writable
+			not_too_big: a_offset + a_count <= f.count
+		do
+			wgi_response.put_file_content (f, a_offset, a_count)
+			increment_transfered_content_length (a_count)
+		end
+
 feature -- Chunk body
 
 	put_chunk (a_content: READABLE_STRING_8; a_ext: detachable READABLE_STRING_8)
@@ -572,7 +582,7 @@ feature {NONE} -- Implemenation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

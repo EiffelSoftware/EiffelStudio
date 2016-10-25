@@ -29,7 +29,7 @@ indexing
 #define FD_SETSIZE 256
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <Mswsock.h>
+//#include <MSWSock.h> /* FIXME, remove? */
 #include <io.h>
 #endif
 
@@ -67,6 +67,7 @@ indexing
 
 #ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
+#include <sys/sendfile.h>
 #endif
 
 #include "eif_cecil.h"
@@ -746,7 +747,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 /******************************************************/
 
 EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*  Transmission of string s of size size throught socket fd
+	/*  Transmission of string s of size size through socket fd
 	 *  NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -756,7 +757,7 @@ EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_poin
 }
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of string s of size size throught socket fd */
+	/*x transmission of string s of size size through socket fd */
 {
 	int res;
 	res = c_send_stream_to_noexception(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer, sizeofaddr);
@@ -768,7 +769,7 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 /******************************************************/
 
 EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/* transmission of string s of size length throught socket fd.
+	/* transmission of string s of size length through socket fd.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -778,13 +779,13 @@ EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer,
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/*x transmission of string s of size length throught socket fd */
+	/*x transmission of string s of size length through socket fd */
 {
 	eif_net_check(c_put_stream_noexception(fd, stream_pointer, length));
 }
 
 EIF_INTEGER c_unoptimized_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length)
-	/* transmission of file content from file `fn` of size length throught socket out_fd.
+	/* transmission of file content from file `f` of size length through socket out_fd.
 	 * if `length` is 0, then send the whole file.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
@@ -792,8 +793,8 @@ EIF_INTEGER c_unoptimized_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_
 #define EIFNET_BUFFSIZE 4096
 	int fd;
 	int retval_read, retval_write;
-	int nb_bytes_sent, nb_bytes_remain;
-	int n, l_remain;
+	int nb_bytes_sent, l_read_remain;
+	int n, l_write_remain;
 	char buf[EIFNET_BUFFSIZE];
 
 #ifdef EIF_WINDOWS
@@ -802,10 +803,11 @@ EIF_INTEGER c_unoptimized_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_
 	fd = fileno(f);
 #endif
 	nb_bytes_sent = 0;
-	nb_bytes_remain = length;
+	l_read_remain = length;
 	do {
-		if (nb_bytes_remain < EIFNET_BUFFSIZE) {
-			n = nb_bytes_remain;
+			/* Read chunk of bytes */
+		if (l_read_remain < EIFNET_BUFFSIZE) {
+			n = l_read_remain;
 		} else {
 			n = EIFNET_BUFFSIZE;
 		}
@@ -815,68 +817,121 @@ EIF_INTEGER c_unoptimized_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_
 		retval_read = (int) read(fd, buf, n);
 #endif
 		if (retval_read < 0) {
+				/* error while reading file */
 			return (EIF_INTEGER) retval_read;
 		} else {
-			nb_bytes_remain = nb_bytes_remain - retval_read;
+			l_read_remain = l_read_remain - retval_read;
 		}
-		l_remain = retval_read;
+			/* Send read bytes */
+		l_write_remain = retval_read;
 		do {
-			retval_write = (int) c_put_stream_noexception(out_fd, buf, l_remain);
+			retval_write = (int) c_put_stream_noexception(out_fd, buf, l_write_remain);
 			if (retval_write < 0) {
+					/* error while writing into socket */
 				return (EIF_INTEGER) retval_write;
 			} else {
-				l_remain = l_remain - retval_write;
+				l_write_remain = l_write_remain - retval_write;
 				nb_bytes_sent = nb_bytes_sent + retval_write;
 			}
-		} while (l_remain > 0);
+		} while (l_write_remain > 0);
+
 	} while (retval_read || retval_write);
+
+		/* If this code is reached, no file or network error occurred
+		 * thus return the number of bytes read and sent.
+		 */
 	return (EIF_INTEGER) nb_bytes_sent;
 #undef EIFNET_BUFFSIZE
 }
 
-EIF_INTEGER c_sendfile_noexception(EIF_INTEGER out_fd, FILE* fd, EIF_INTEGER length)
-	/* transmission of file content from file `fn` of size length throught socket out_fd.
+EIF_INTEGER c_sendfile_noexception(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length)
+	/* transmission of file content from file `f` of size length through socket out_fd.
 	 * if `length` is 0, then send the whole file.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
 #ifdef EIF_WINDOWS
-	HMODULE dllHandle;
-	//FARPROC _TransmitFile; 
-	BOOL (PASCAL * _TransmitFile)(SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD) = NULL;
+#	ifndef LPTRANSMIT_FILE_BUFFERS 
+#		define LPTRANSMIT_FILE_BUFFERS  void* 
+#	endif
+#	ifndef TF_WRITE_BEHIND 
+#		define TF_WRITE_BEHIND     0x04
+#	endif
+#	ifndef TF_REUSE_SOCKET 
+#		define TF_REUSE_SOCKET     0x20
+#	endif
 	
-	dllHandle = LoadLibrary("Mswsock.dll");
-	if (dllHandle != NULL) {
-		_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
-	}
-	if (_TransmitFile==NULL) {
-		return (EIF_INTEGER) c_unoptimized_sendfile_noexception(out_fd, fd, length);
-	} else {
+	static BOOL (PASCAL * _TransmitFile)(SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD) = NULL;
+	
+	if (_TransmitFile) {
 		BOOL retval;
-		//HANDLE hFile = CreateFile(fn, GENERIC_READ|GENERIC_WRITE,0,NULL,OPEN_EXISTING,FILE_FLAG_SEQUENTIAL_SCAN,NULL);
-		HANDLE hFile = (HANDLE)_get_osfhandle(fileno(fd));
+		BOOL l_continue;
+		HANDLE hFile = (HANDLE)_get_osfhandle(fileno(f));
 		OVERLAPPED ovlp;
+		DWORD len;
+		len = (DWORD) length;
 		memset(&ovlp, 0, sizeof(OVERLAPPED));
-		retval = _TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, (DWORD) length, 
-					(DWORD) 0, (LPOVERLAPPED) &ovlp, (LPTRANSMIT_FILE_BUFFERS) NULL,(DWORD) TF_USE_KERNEL_APC);
+		do {
+			retval = _TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, len, 
+					(DWORD) 0 /* Use default Windows block size */, (LPOVERLAPPED) &ovlp, (LPTRANSMIT_FILE_BUFFERS) NULL,(DWORD) TF_REUSE_SOCKET | TF_WRITE_BEHIND);
+			l_continue = FALSE;
+			if (retval < 0) {
+				int errcode;
+				errcode = WSAGetLastError();
+				if ((errcode == WSA_IO_PENDING) || (errcode == ERROR_IO_PENDING)) {
+					l_continue = TRUE;
+				} else {
+					l_continue = FALSE;
+				}
+			}
+		} while (l_continue);
 		if (retval) {
 				/* Fix me, find a way to get the number of bytes sent */
 			return (EIF_INTEGER) ovlp.InternalHigh;
 		} else {
 			return (EIF_INTEGER) -1;
 		}
-		FreeLibrary(dllHandle);
-	}
-#else
-	size_t len;
-	ssize_t retval;
-	if (length == 0) {
-		len = (size_t) eif_file_size(fp); /* Maybe an issue with binary file ? */
 	} else {
-		len = (size_t) length;
+		static BOOL _TransmitFile_searched = FALSE;
+		if (_TransmitFile_searched) {
+			return (EIF_INTEGER) c_unoptimized_sendfile_noexception(out_fd, f, length);
+		} else {
+			_TransmitFile_searched = TRUE;
+			HMODULE dllHandle;
+			dllHandle = LoadLibrary("MSWSock.dll");
+			if (dllHandle != NULL) {
+				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
+			}
+			return c_sendfile_noexception(out_fd, f, length);
+		}
 	}
-	retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) eif_file_fd (fp), (off_t *) NULL, (size_t) length);
-	return (EIF_INTEGER) retval;
+#	undef LPTRANSMIT_FILE_BUFFERS
+
+#else /* not EIF_WINDOWS */
+	ssize_t retval;
+	f (length > 0) {
+		size_t l_write_remain;
+		ssize_t nb_bytes_sent;
+		off_t offset = 0;
+		int fd;
+		fd = eif_file_fd(f);
+		l_write_remain = (size_t) length;
+		EIF_BOOLEAN l_continue;
+		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &offset, l_write_remain) > 0) && (l_write_remain > 0)) {
+			if (retval) > 0 {
+				l_write_remain = l_write_remain - retval;
+				nb_bytes_sent = nb_bytes_sent + retval;
+			}
+		} 
+		if (retval < 0) {
+				/* Error occurred */
+			return (EIF_INTEGER) retval;
+		} else {
+			return (EIF_INTEGER) nb_bytes_sent;
+		}
+	} else {
+		return (EIF_INTEGER) 0;
+	}
 #endif
 }
 

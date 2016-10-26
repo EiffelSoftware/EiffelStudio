@@ -1100,8 +1100,6 @@ feature -- Directories (top-level user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		local
-			l_dir: detachable STRING_32
 		once
 				-- Attempt to use home location.
 			if
@@ -1146,8 +1144,6 @@ feature -- Directories (top-level user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		local
-			l_dir: detachable STRING_32
 		do
 			Result := versionless_hidden_files_path (a_create_dir)
 			Result := Result.extended (a_version)
@@ -1260,9 +1256,6 @@ feature -- Directories (top-level user)
 		require
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
-		local
-			l_dir: detachable STRING_32
-			l_needs_suffix: BOOLEAN
 		do
 			Result := versionless_user_files_path (a_create_dir)
 				-- Per version directory structure to avoid clutter.
@@ -2332,7 +2325,7 @@ feature -- Existing installations
 			-- List of version name for existing installations.
 		local
 			s: STRING
-			l_prod_version_name, v, curr_product_version_name: STRING
+			v: STRING
 			l_prod_name: STRING
 			lst: like installed_product_version_names
 		once

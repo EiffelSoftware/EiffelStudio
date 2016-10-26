@@ -47,18 +47,37 @@ feature -- Access
 			result_is_lower_case: Result.as_lower ~ Result
 		end
 
-	product_version_name: STRING_8
-			-- Versioned name of the product.
+	product_name_for_version (a_version_name: READABLE_STRING_GENERAL): STRING_32
+			-- Name of the product for version `a_version` formatted as "MM.mm".
 			-- I.e. Eiffel_MM.mm
-		once
-			create Result.make_from_string (product_name)
+		do
+			create Result.make_from_string_general (product_name)
 			Result.append_character ('_')
-			Result.append_string (two_digit_minimum_major_version)
-			Result.append_character ('.')
-			Result.append_string (two_digit_minimum_minor_version)
+			Result.append_string_general (a_version_name)
 			if is_unix_layout then
 				Result.to_lower
 			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	product_version_name: STRING_32
+			-- Versioned name of the product.
+			-- I.e. Eiffel_MM.mm
+		once
+			Result := product_name_for_version (version_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	version_name: STRING_8
+			-- Version string.
+			-- I.e. MM.mm
+		once
+			create Result.make (5)
+			Result.append_string (two_digit_minimum_major_version)
+			Result.append_character ('.')
+			Result.append_string (two_digit_minimum_minor_version)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end
@@ -145,7 +164,7 @@ feature {NONE} -- Access
 			-- Suffix containing release version which is used for Unix layout
 		once
 			if is_unix_layout then
-				Result := "-" + two_digit_minimum_major_version + "." + two_digit_minimum_minor_version
+				Result := "-" + version_name
 			else
 					-- No suffix in normal mode.
 				Result := ""
@@ -1069,6 +1088,76 @@ feature -- Directories (distribution)
 
 feature -- Directories (top-level user)
 
+	versionless_hidden_files_path (a_create_dir: BOOLEAN): PATH
+			-- Hidden application configuration Eiffel files for version `a_version` (formatted as MM.mm).
+			-- With ISE_APP_DATA defined:
+			--   $ISE_APP_DATA
+			-- When hidden files is available:
+			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Unix & Mac: ~/.es/MM.mm
+			-- Otherwise we use a subdirectory of `user_files_path':
+			--   `user_files_path'\settings
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		local
+			l_dir: detachable STRING_32
+		once
+				-- Attempt to use home location.
+			if
+				operating_environment.home_directory_supported and then
+				attached environment.home_directory_path as l_home
+			then
+				Result := l_home
+				if a_create_dir then
+					safe_create_dir (Result)
+				end
+
+				if {PLATFORM}.is_windows then
+					Result := Result.extended (eiffel_software_name)
+				end
+				Result := Result.extended (hidden_directory_name)
+				if a_create_dir then
+					safe_create_dir (Result)
+				end
+			else
+					-- No user set variable or the home directory is not supported
+				if a_create_dir then
+					safe_create_dir (user_files_path)
+				end
+				Result := versionless_user_files_path (a_create_dir).extended (settings_name)
+				if a_create_dir then
+					safe_create_dir (Result)
+				end
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	hidden_files_path_for_version (a_version: READABLE_STRING_GENERAL; a_create_dir: BOOLEAN): PATH
+			-- Hidden application configuration Eiffel files for version `a_version` (formatted as MM.mm).
+			-- With ISE_APP_DATA defined:
+			--   $ISE_APP_DATA
+			-- When hidden files is available:
+			--   On Windows: C:\Users\manus\AppData\Local\Eiffel Software\.es\MM.mm
+			--   On Unix & Mac: ~/.es/MM.mm
+			-- Otherwise we use a subdirectory of `user_files_path':
+			--   `user_files_path'\settings
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		local
+			l_dir: detachable STRING_32
+		do
+			Result := versionless_hidden_files_path (a_create_dir)
+			Result := Result.extended (a_version)
+			if a_create_dir then
+				safe_create_dir (Result)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	hidden_files_path: PATH
 			-- Hidden application configuration Eiffel files.
 			-- With ISE_APP_DATA defined:
@@ -1086,35 +1175,100 @@ feature -- Directories (top-level user)
 		once
 			l_dir := get_environment_32 ({EIFFEL_CONSTANTS}.ise_app_data_env)
 			if l_dir = Void or else l_dir.is_empty then
-					-- Attempt to use home location.
-				if
-					operating_environment.home_directory_supported and then
-					attached environment.home_directory_path as l_home
-				then
-					Result := l_home
-					safe_create_dir (Result)
-
-					if {PLATFORM}.is_windows then
-						Result := Result.extended (eiffel_software_name)
-					end
-					Result := Result.extended (hidden_directory_name)
-					safe_create_dir (Result)
-
-					create l_dir.make (4)
-					l_dir.append_string (two_digit_minimum_major_version)
-					l_dir.append_character ('.')
-					l_dir.append_string (two_digit_minimum_minor_version)
-					Result := Result.extended (l_dir)
-					safe_create_dir (Result)
-				else
-						-- No user set variable or the home directory is not supported
-					safe_create_dir (user_files_path)
-					Result := user_files_path.extended (settings_name)
-					safe_create_dir (Result)
-				end
+				Result := hidden_files_path_for_version (version_name, True)
 			else
 					-- Use environment variable
 				create Result.make_from_string (l_dir)
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	versionless_user_files_path (a_create_dir: BOOLEAN): PATH
+			-- User based Eiffel files which are generally visible to the users for version `a_version`.
+			-- Create dir only if `a_create_dir` is True.
+			-- With ISE_USER_FILES is defined:
+			--   $ISE_USER_FILES
+			-- Otherwise
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Mac: ~/Eiffel User Files/MM.mm
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm
+			-- When purge the ES stored configuration data, it will not erase the files
+			-- under this path
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		local
+			l_dir: detachable STRING_32
+			l_needs_suffix: BOOLEAN
+		once
+				-- If user have set the ISE_USER_FILES environment variable, use it.
+			check attached user_directory_name as l_user_directory_name then
+					-- On Unix platform only, the files will be located under the hidden directory
+					-- where EiffelStudio stores settings, otherwise it is in the home directory
+					-- of the user (i.e. not hidden).
+				Result := l_user_directory_name
+				if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
+					Result := Result.extended (hidden_directory_name)
+					if a_create_dir then
+						safe_create_dir (Result)
+					end
+					l_needs_suffix := False
+				else
+						-- We need to add a suffix if we are in workbench mode
+						-- as otherwise we would be using the same path as finalized.
+					l_needs_suffix := True
+				end
+
+					-- Now we can freely create our directory structure for `user_files'.
+				create l_dir.make (30)
+					-- On Unix platform only, we use a lower case version of the directory
+					-- without space.
+				if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
+					l_dir.append_string_general (product_name.as_lower)
+					l_dir.append_string_general ("_user_files")
+				else
+					l_dir.append_string_general (product_name)
+					l_dir.append_string_general (" User Files")
+				end
+				if is_workbench and l_needs_suffix then
+					l_dir.append_character (' ')
+					l_dir.append_character ('(')
+					l_dir.append_string_general (wkbench_suffix)
+					l_dir.append_character (')')
+				end
+				Result := Result.extended (l_dir)
+				if a_create_dir then
+					safe_create_dir (Result)
+				end
+			end
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	user_files_path_for_version (a_version: READABLE_STRING_GENERAL; a_create_dir: BOOLEAN): PATH
+			-- User based Eiffel files which are generally visible to the users for version `a_version`.
+			-- Create dir only if `a_create_dir` is True.
+			-- With ISE_USER_FILES is defined:
+			--   $ISE_USER_FILES
+			-- Otherwise
+			--   On Windows: C:\Users\manus\Documents\Eiffel User Files\MM.mm
+			--   On Mac: ~/Eiffel User Files/MM.mm
+			--   On Unix: ~/.es/Eiffel User Files/MM.mm
+			-- When purge the ES stored configuration data, it will not erase the files
+			-- under this path
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		local
+			l_dir: detachable STRING_32
+			l_needs_suffix: BOOLEAN
+		do
+			Result := versionless_user_files_path (a_create_dir)
+				-- Per version directory structure to avoid clutter.
+			Result := Result.extended (a_version)
+			if a_create_dir then
+				safe_create_dir (Result)
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
@@ -1135,54 +1289,11 @@ feature -- Directories (top-level user)
 			is_user_files_supported: is_user_files_supported
 		local
 			l_dir: detachable STRING_32
-			l_needs_suffix: BOOLEAN
 		once
 				-- If user have set the ISE_USER_FILES environment variable, use it.
 			l_dir := get_environment_32 ({EIFFEL_CONSTANTS}.ise_user_files_env)
 			if l_dir = Void or else l_dir.is_empty then
-				check attached user_directory_name as l_user_directory_name then
-						-- On Unix platform only, the files will be located under the hidden directory
-						-- where EiffelStudio stores settings, otherwise it is in the home directory
-						-- of the user (i.e. not hidden).
-					Result := l_user_directory_name
-					if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
-						Result := Result.extended (hidden_directory_name)
-						safe_create_dir (Result)
-						l_needs_suffix := False
-					else
-							-- We need to add a suffix if we are in workbench mode
-							-- as otherwise we would be using the same path as finalized.
-						l_needs_suffix := True
-					end
-
-						-- Now we can freely create our directory structure for `user_files'.
-					create l_dir.make (30)
-						-- On Unix platform only, we use a lower case version of the directory
-						-- without space.
-					if not {PLATFORM}.is_windows and then not {PLATFORM}.is_mac then
-						l_dir.append_string_general (product_name.as_lower)
-						l_dir.append_string_general ("_user_files")
-					else
-						l_dir.append_string_general (product_name)
-						l_dir.append_string_general (" User Files")
-					end
-					if is_workbench and l_needs_suffix then
-						l_dir.append_character (' ')
-						l_dir.append_character ('(')
-						l_dir.append_string_general (wkbench_suffix)
-						l_dir.append_character (')')
-					end
-					Result := Result.extended (l_dir)
-					safe_create_dir (Result)
-
-						-- Per version directory structure to avoid clutter.
-					create l_dir.make (4)
-					l_dir.append_string (two_digit_minimum_major_version)
-					l_dir.append_character ('.')
-					l_dir.append_string (two_digit_minimum_minor_version)
-					Result := Result.extended (l_dir)
-					safe_create_dir (Result)
-				end
+				Result := user_files_path_for_version (version_name, True)
 			else
 					-- Use environment variable
 				create Result.make_from_string (l_dir)
@@ -1800,7 +1911,7 @@ feature -- Environment access
 			a_var_attached: a_var /= Void
 			not_a_var_is_empty: not a_var.is_empty
 		do
-			Result := environment.get_from_application (a_var, application_name)
+			Result := environment.application_item (a_var, application_name, version_name)
 		end
 
 feature -- Environment update
@@ -2140,18 +2251,30 @@ feature -- Preferences
 			-- Preferences location
 		require
 			is_valid_environment: is_valid_environment
+		once
+			Result := eiffel_preferences_for_version (version_name, True)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
+	eiffel_preferences_for_version (a_version_name: READABLE_STRING_GENERAL; a_create_dir: BOOLEAN): STRING_32
+			-- Preferences location for version `a_version_name`.
+		require
+			is_valid_environment: is_valid_environment
 		local
 			p: PATH
-		once
+			l_prod_version_name: like product_name_for_version
+		do
+			l_prod_version_name := product_name_for_version (a_version_name)
 			if {PLATFORM}.is_windows then
-				create Result.make_from_string_general ("HKEY_CURRENT_USER\Software\ISE\" + product_version_name + "\" + application_name + "\Preferences")
+				create Result.make_from_string_general ({STRING_32} "HKEY_CURRENT_USER\SOFTWARE\ISE\" + l_prod_version_name + "\" + application_name + "\Preferences")
 				if is_workbench then
 					Result.append_character ('_')
 					Result.append_string_general (wkbench_suffix)
 				end
 			else
-				p := hidden_files_path
-				p := p.extended (product_version_name + ".rc")
+				p := hidden_files_path_for_version (version_name, a_create_dir)
+				p := p.extended (l_prod_version_name).appended_with_extension ("rc")
 				create Result.make_from_string_general (p.name)
 			end
 		ensure
@@ -2180,6 +2303,53 @@ feature -- Preferences
 			end
 		ensure
 			not_result_is_empty: not Result.is_empty
+		end
+
+feature -- Existing installations
+
+	installed_product_version_names: ARRAYED_LIST [STRING]
+			-- List of product version name for existing installations.
+		local
+			s: READABLE_STRING_GENERAL
+		once
+			if attached environment.installed_product_version_names (Current) as lst then
+				create Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					s := ic.item
+					if s.is_valid_as_string_8 then
+
+					end
+					Result.extend (s.to_string_8)
+				end
+			else
+				create Result.make (0)
+			end
+		end
+
+	installed_version_names: ARRAYED_LIST [STRING]
+			-- List of version name for existing installations.
+		local
+			s: STRING
+			l_prod_version_name, v, curr_product_version_name: STRING
+			l_prod_name: STRING
+			lst: like installed_product_version_names
+		once
+			lst := installed_product_version_names
+			create Result.make (lst.count)
+			l_prod_name := product_name
+			across
+				lst as ic
+			loop
+				s := ic.item
+				if s.starts_with (l_prod_name) then
+					v := s.tail (s.count - l_prod_name.count - 1)
+				else
+					v := s
+				end
+				Result.force (v)
+			end
 		end
 
 feature {NONE} -- Helper

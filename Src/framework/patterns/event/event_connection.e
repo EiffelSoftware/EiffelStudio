@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Default implementation for {EVENT_OBSERVER_CONNECTION_I} for interface implementations.
 	]"
@@ -84,17 +84,12 @@ feature -- Status report
 
 	frozen is_connected (a_observer: G): BOOLEAN
 			-- <Precursor>
-		local
-			l_connections: like internal_connections
 		do
-			Result := is_interface_usable
-			if Result then
-				l_connections := internal_connections
-				if attached l_connections then
-					Result := l_connections.has (a_observer)
-				else
-					Result := False
-				end
+			if
+				is_interface_usable and then
+				attached internal_connections as l_connections
+			then
+				Result := l_connections.has (a_observer)
 			end
 		ensure then
 			connections_has_a_observer: Result implies connections.has (a_observer)
@@ -105,8 +100,8 @@ feature -- Event connection
 	connect_events (a_observer: G)
 			-- <Precursor>
 		local
-			l_event_maps: detachable ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]]
-			l_event_map: detachable TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]
+			l_event_maps: ARRAY [TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]]
+			l_event_map: TUPLE [event: EVENT_TYPE_I [TUPLE]; action: PROCEDURE]
 			l_upper, i: INTEGER
 		do
 				-- Subscribe to events on the observer.
@@ -182,7 +177,7 @@ invariant
 	observer_event_action_map_fetch_action_attached: attached observer_event_action_map_fetch_action
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

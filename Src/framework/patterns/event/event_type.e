@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Represents a notion of an event, supplying means to subscribe and unsubscribe to the event.
 	]"
@@ -54,10 +54,10 @@ feature {NONE} -- Clean up
 
 feature {NONE} -- Access
 
-	frozen subscribers: ARRAYED_SET [detachable PROCEDURE [EVENT_DATA]]
+	frozen subscribers: ARRAYED_SET [PROCEDURE [EVENT_DATA]]
 			-- List of actions currently subscribed to the event.
 
-	frozen suicide_actions: ARRAYED_SET [detachable PROCEDURE [EVENT_DATA]]
+	frozen suicide_actions: ARRAYED_SET [PROCEDURE [EVENT_DATA]]
 			-- List of actions that will be removed after they have been called for the first time.
 			--|This list is a subset of `subscribers'
 
@@ -124,8 +124,8 @@ feature -- Subscription
 	unsubscribe (a_action: PROCEDURE [EVENT_DATA])
 			-- <Precursor>
 		local
-			l_subscribers: LIST [detachable PROCEDURE [EVENT_DATA]]
-			l_actions: LIST [detachable PROCEDURE [EVENT_DATA]]
+			l_subscribers: LIST [PROCEDURE [EVENT_DATA]]
+			l_actions: LIST [PROCEDURE [EVENT_DATA]]
 		do
 				-- Remove subscriber
 			l_subscribers :=  subscribers
@@ -154,13 +154,13 @@ feature -- Subscription
 
 feature -- Publication
 
-	publish (a_args: detachable EVENT_DATA)
+	publish (a_args: EVENT_DATA)
 			-- <Precursor>
 		do
 			publish_internal (a_args, Void)
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
+	publish_if (a_args: EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
 			-- <Precursor>
 		do
 			publish_internal (a_args, a_predicate)
@@ -168,7 +168,7 @@ feature -- Publication
 
 feature {NONE} -- Publication
 
-	publish_internal (a_args: detachable EVENT_DATA; a_predicate: detachable PREDICATE [EVENT_DATA])
+	publish_internal (a_args: EVENT_DATA; a_predicate: detachable PREDICATE [EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -178,7 +178,7 @@ feature {NONE} -- Publication
 			not_is_publishing: not is_publishing
 		local
 			l_actions: like suicide_actions
-			l_action: detachable PROCEDURE [EVENT_DATA]
+			l_action: PROCEDURE [EVENT_DATA]
 			l_subscribers: like subscribers
 			l_suspended: BOOLEAN
 		do
@@ -196,19 +196,13 @@ feature {NONE} -- Publication
 
 					if a_predicate = Void then
 						from l_subscribers.start until l_subscribers.after loop
-							l_action := l_subscribers.item
-							if attached l_action then
-								l_action.call (a_args)
-							end
+							l_subscribers.item.call (a_args)
 							l_subscribers.forth
 						end
 					else
 						from l_subscribers.start until l_subscribers.after loop
 							if a_predicate = Void or else a_predicate.item (a_args) then
-								l_action := l_subscribers.item
-								if attached l_action then
-									l_action.call (a_args)
-								end
+								l_subscribers.item.call (a_args)
 							end
 							l_subscribers.forth
 						end
@@ -224,10 +218,8 @@ feature {NONE} -- Publication
 
 						from l_actions.start until l_actions.after loop
 							l_action := l_actions.item
-							if attached l_action then
-								check is_subscribed: is_subscribed (l_action) end
-								unsubscribe (l_action)
-							end
+							check is_subscribed: is_subscribed (l_action) end
+							unsubscribe (l_action)
 							l_actions.forth
 						end
 					end
@@ -251,14 +243,14 @@ invariant
 	subscribers_compares_object: subscribers.object_comparison
 	suicide_actions_attached: suicide_actions /= Void
 	suicide_actions_compares_object: suicide_actions.object_comparison
-	subscribers_contains_attached_items: not subscribers.has (Void)
-	suicide_actions_contains_attached_items: not suicide_actions.has (Void)
+	subscribers_contains_attached_items: across subscribers as c all c.item /= Void end
+	suicide_actions_contains_attached_items: across suicide_actions as c all c.item /= Void end
 	subscribers_contains_suicide_actions: suicide_actions.is_subset (subscribers)
 	is_suspended_implies_has_suspensions: is_suspended implies suspension_count > 0
 	not_is_suspended_implies_has_no_suspensions: not is_suspended implies suspension_count = 0
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,6 +38,7 @@ feature -- Access
 			d: DIRECTORY
 			i: INTEGER
 			s: STRING_32
+			f: RAW_FILE
 		do
 			create d.make_with_path (env.versionless_hidden_files_path (False))
 			if d.exists then
@@ -49,15 +50,18 @@ feature -- Access
 					if p.is_current_symbol or p.is_parent_symbol then
 							-- Skip
 					else
-						s := p.name
-						i := s.index_of ('.', 1)
-						if
-							i > 1 and then
-							s.head (i - 1).is_integer and then
-							s.tail (s.count - i).is_integer
-						then
-								-- Formatted as "MM.mm"
-							Result.force (s)
+						create f.make_with_path (d.path.extended_path (p))
+						if f.is_directory then
+							s := p.name
+							i := s.index_of ('.', 1)
+							if
+								i > 1 and then
+								s.head (i - 1).is_integer and then
+								s.tail (s.count - i).is_integer
+							then
+									-- Formatted as "MM.mm"
+								Result.force (s)
+							end
 						end
 					end
 				end

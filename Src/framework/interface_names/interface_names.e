@@ -72,6 +72,7 @@ feature -- Button texts
 	b_Down_text: STRING_32 						do Result := locale.translation("Down")	end
 	b_Edit_ace: STRING_32						do Result := locale.translation("Edit")	end
 	b_Edit_command: STRING_32					do Result := locale.translation("Edit...")	end
+	b_Edit_settings: STRING_32					do Result := locale.translation("Edit")	end
 	b_Eiffel_features: STRING_32					do Result := locale.translation("Eiffel Features")	end
 
 	b_Force_execution_mode: STRING_32				do Result := locale.translation("Force Execution Mode")	end
@@ -245,6 +246,7 @@ feature -- Button texts
 	b_Ignore_external_exception: STRING_32		do Result := locale.translation ("Ignore External Exception?") end
 	b_Disable_catcall_console_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Console Warning?") end
 	b_Disable_catcall_debugger_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Debugger Warning?") end
+	b_import_settings: STRING_32	do Result := locale.translation ("Import Settings") end
 
 feature -- Choices
 
@@ -758,6 +760,7 @@ feature -- Accelerator, focus label and menu name
 	m_Zoom_reset: STRING_32 				do Result := locale.translation("Reset")	end
 	m_use_current_environment_variables: STRING_32 		do Result := locale.translation("Use current environment variables")	end
 	m_use_current_environment_value: STRING_32 		do Result := locale.translation("Use current environment value")	end
+	m_update_debugging_profile_title_with_suggestion: STRING_32 do Result := locale.translation("Update title with suggestion") end
 	f_Wizard_precompile: STRING_32		do Result := locale.translation("Wizard to precompile libraries")	end
 	f_go_to_first_occurrence: STRING_32	do Result := locale.translation("Double click to go to first occurrence")	end
 	f_show: STRING_32 do Result := locale.translation ("Show ") end
@@ -2188,6 +2191,10 @@ feature -- Label texts
 		do
 			Result := locale.formatted_string ("(must conform to $1)", [a_type])
 		end
+
+	l_installed_versions: STRING_32 do Result := locale.translation ("Installed Versions") end
+	l_settings_management: STRING_32 do Result := locale.translation ("Settings Management") end
+	l_edit_custom_settings: STRING_32 do Result := locale.translation ("edit to set custom values ...") end
 
 feature -- Label text, no translation (for the editor)
 

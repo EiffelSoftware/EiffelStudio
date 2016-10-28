@@ -136,6 +136,12 @@ feature -- Commands
 			Result.enable_sensitive
 		end
 
+	Show_settings_import_cmd: ES_SETTINGS_IMPORT_CMD
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
+
 	Terminate_c_compilation_cmd: EB_TERMINATE_C_COMPILATION_CMD
 			--
 		once
@@ -150,7 +156,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

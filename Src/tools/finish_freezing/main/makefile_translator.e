@@ -1,6 +1,7 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class
 	MAKEFILE_TRANSLATOR
 
@@ -12,7 +13,7 @@ inherit
 			{NONE} all
 		end
 
-	PROCESS_FACTORY
+	BASE_PROCESS_FACTORY
 		export
 			{NONE} all
 		end
@@ -169,7 +170,7 @@ feature -- Execution
 		local
 			command: STRING
 			l_make_flags: STRING_32
-			l_process: PROCESS
+			l_process: BASE_PROCESS
 			l_success: BOOLEAN
 			l_flags: detachable LIST [STRING_32]
 			l_file: RAW_FILE

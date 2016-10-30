@@ -48,8 +48,7 @@ feature {NONE} -- Initialization
 			else
 				create test_file.make_with_path (eiffel_layout.compiler_configuration)
 				if test_file.exists and test_file.is_readable then
-					create resource_parser
-					resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
+					create resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
 				else
 					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.name)
 				end
@@ -71,7 +70,7 @@ feature -- Status report
 			-- Did an error occur while reading the default preferences file ?
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -102,4 +101,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class TTY_RESOURCES
+end

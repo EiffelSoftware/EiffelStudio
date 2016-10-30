@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="com" uuid="A74DD1D0-3090-490F-99DC-E791CC31CF30" library_target="com">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="com" uuid="A74DD1D0-3090-490F-99DC-E791CC31CF30" library_target="com">
 	<target name="com">
-		<description>Com library: Reusing/Creating COM components in Eiffel.
-      Copyright (c) 1984-2012, Eiffel Software and others.
-      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<description>
+			Com library: Reusing/Creating COM components in Eiffel.
+			Copyright (c) 1984-2016, Eiffel Software and others.
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+		</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="false" syntax="standard">
+		<option warning="true" void_safety="none">
 		</option>
 		<setting name="platform" value="windows"/>
 		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include"/>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com_runtime.lib">
 			<condition>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com.lib">
 			<condition>
-				<multithreaded value="false"/>
+				<concurrency value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom_runtime.lib">
 			<condition>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtcom.lib">
 			<condition>
-				<multithreaded value="true"/>
+				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">

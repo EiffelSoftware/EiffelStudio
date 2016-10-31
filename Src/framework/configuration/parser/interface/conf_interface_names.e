@@ -360,7 +360,7 @@ feature -- Option names and descriptions
 	option_concurrency_name: STRING_32 do Result := locale.translation_in_context ("Concurrency", "configuration") end
 	option_concurrency_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
 				Concurrency mode:
-				 • Unstructured - multithreading based on EiffelThread library or built-in (in .NET);
+				 • Thread - unstructured multithreading based on EiffelThread library or built-in (in .NET);
 				 • None - no concurrency, mono-threaded;
 				 • SCOOP - controlled by SCOOP rules.
 			]", "configuration") end
@@ -368,7 +368,7 @@ feature -- Option names and descriptions
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation_in_context ("Unstructured", "configuration.concurrency"),
+				locale.translation_in_context ("Thread", "configuration.concurrency"),
 				locale.translation_in_context ("None", "configuration.concurrency"),
 				locale.translation_in_context ("SCOOP", "configuration.concurrency")
 			>>)

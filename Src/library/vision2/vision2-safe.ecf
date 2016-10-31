@@ -155,7 +155,6 @@
 				<custom name="vision_implementation" excluded_value="gtk34"/>
 			</condition>
 		</library>
-<!--		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>-->
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
 			<condition>
 				<platform value="windows"/>

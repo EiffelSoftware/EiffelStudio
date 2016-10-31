@@ -36,6 +36,11 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
+		<external_linker_flag value="-lcrypto">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 		<external_linker_flag value="-lssl">
 			<condition>
 				<platform excluded_value="windows"/>

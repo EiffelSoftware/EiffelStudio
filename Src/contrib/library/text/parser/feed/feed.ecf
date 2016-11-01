@@ -4,6 +4,7 @@
 		<root all_classes="true"/>
 		<option void_safety="none">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="encoders" location="../../../web/framework/ewf/text/encoder/encoder.ecf"/>

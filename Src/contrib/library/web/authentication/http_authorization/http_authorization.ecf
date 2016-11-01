@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<library name="encoder" location="../../framework/ewf/text/encoder/encoder.ecf"/>
 		<cluster name="src" location="./src" recursive="true"/>

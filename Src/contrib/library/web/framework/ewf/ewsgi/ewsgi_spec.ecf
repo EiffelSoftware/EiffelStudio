@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="specification" location="specification\" recursive="true"/>

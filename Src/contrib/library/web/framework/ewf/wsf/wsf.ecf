@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<mapping old_name="WSF_URI_TEMPLATE_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_TEMPLATE_HELPER"/>
 		<mapping old_name="WSF_URI_HELPER_FOR_ROUTED_EXECUTION" new_name="WSF_ROUTED_URI_HELPER"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

@@ -14,7 +14,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="encoder" location="../../../../library/web/framework/ewf/text/encoder/encoder-safe.ecf" readonly="false"/>
 		<library name="http" location="../../../../library/network/protocol/http/http-safe.ecf" readonly="false"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<library name="uri_template" location="../../../../library/text/parser/uri_template/uri_template-safe.ecf" readonly="false"/>
 		<library name="wsf" location="../../../../library/web/framework/ewf/wsf/wsf-safe.ecf" readonly="false" use_application_options="true"/>
 	</target>
@@ -34,5 +33,6 @@
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>
 	<target name="upload_image" extends="upload_image_standalone">
+		<setting name="concurrency" value="scoop"/>
 	</target>
 </system>

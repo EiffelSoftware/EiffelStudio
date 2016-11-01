@@ -11,6 +11,7 @@
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="http" location="..\http\http-safe.ecf" readonly="false"/>
 		<cluster name="conneg" location=".\src\" recursive="true">

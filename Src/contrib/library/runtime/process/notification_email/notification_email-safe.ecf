@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-14-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-14-0 http://www.eiffel.com/developers/xml/configuration-1-14-0.xsd" name="notification_email" uuid="99D9A065-CD45-4E20-9C86-579C8AD42E5E" library_target="notification_email">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="notification_email" uuid="99D9A065-CD45-4E20-9C86-579C8AD42E5E" library_target="notification_email">
 	<target name="notification_email">
 		<root all_classes="true"/>
 		<file_rule>
@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="http" location="..\..\..\network\protocol\http\http-safe.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net-safe.ecf">
@@ -16,7 +17,18 @@
 				<custom name="smtp_notification_email_disabled" excluded_value="true"/>
 			</condition>
 		</library>
-		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
+		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process-safe.ecf">
+			<condition>
+				<version type="compiler" min="16.10.9.9999"/>
+			</condition>
+			<renaming old_name="BASE_PROCESS" new_name="PROCESS"/>
+			<renaming old_name="BASE_PROCESS_FACTORY" new_name="PROCESS_FACTORY"/>
+		</library>
+		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf">
+			<condition>
+				<version type="compiler" max="16.10.9.9999"/>
+			</condition>
+		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<cluster name="src" location=".\" >
 			<cluster name="storage" location="$|storage"/>

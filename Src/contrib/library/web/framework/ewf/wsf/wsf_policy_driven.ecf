@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="conneg" location="../../../../network/protocol/content_negotiation/conneg.ecf"/>
 		<library name="encoder" location="../text/encoder/encoder.ecf"/>

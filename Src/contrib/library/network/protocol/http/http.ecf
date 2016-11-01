@@ -10,6 +10,7 @@
 		<option warning="true" full_class_checking="true"  syntax="provisional">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="src" location=".\" recursive="true">

@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wsf" location="../wsf.ecf"/>
 		<library name="wsf_cgi" location="../connector/cgi.ecf"/>

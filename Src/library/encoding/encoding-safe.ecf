@@ -19,6 +19,7 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="vweq" enabled="false"/>
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)/library/encoding/implementation/include">
 			<condition>

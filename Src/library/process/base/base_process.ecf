@@ -12,6 +12,7 @@
 		</file_rule>
 		<option void_safety="none" namespace="EiffelSoftware.Library">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\process\base\platform\windows\include">
 			<condition>

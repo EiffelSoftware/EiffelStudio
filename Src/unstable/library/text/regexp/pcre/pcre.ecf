@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="pcre" uuid="AFC853FF-2C60-4657-A024-8BF3FAA066E8" library_target="pcre">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="pcre" uuid="AFC853FF-2C60-4657-A024-8BF3FAA066E8" library_target="pcre">
 	<target name="pcre">
 		<description>PCRE regexp library</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGEN.{0,1}$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" syntax="provisional"/>
+		<option warning="true" is_obsolete_routine_type="true" void_safety="none" syntax="provisional">
+		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="pcre" location=".\src" recursive="true"/>
+		<cluster name="pcre" location=".\src\" recursive="true"/>
 	</target>
 </system>

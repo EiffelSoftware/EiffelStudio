@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf">
 			<condition>

@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_obsolete_routine_type="true" void_safety="none" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="connector_standalone" location="..\..\ewsgi\connectors\standalone\standalone.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>

@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="ewsgi" location="../../ewsgi/ewsgi.ecf"/>

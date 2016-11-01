@@ -123,11 +123,13 @@ feature -- Basic operation
 					p.launch
 				end
 				if p.launched and not p.has_exited then
-					p.wait_for_exit_with_timeout (1_000_000)
+					execution_environment.sleep (1_000)
+					p.wait_for_exit
 					if not p.has_exited then
 						p.terminate
 						if not p.has_exited then
-							p.wait_for_exit_with_timeout (1_000_000)
+							execution_environment.sleep (1_000)
+							p.wait_for_exit
 						end
 					end
 				end
@@ -135,7 +137,8 @@ feature -- Basic operation
 				if p /= Void and then p.launched and then not p.has_exited then
 					p.terminate
 					if not p.has_exited then
-						p.wait_for_exit_with_timeout (1_000_000)
+						execution_environment.sleep (1_000)
+						p.wait_for_exit
 					end
 				end
 			end
@@ -196,7 +199,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

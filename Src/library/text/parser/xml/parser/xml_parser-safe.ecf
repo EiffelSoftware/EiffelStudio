@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="xml_parser" location=".\" recursive="true">
 			<file_rule>

@@ -33,6 +33,7 @@
 		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard">
 			<assertions/>
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
 			<description>Library required for dynamic loading.</description>
 			<condition>

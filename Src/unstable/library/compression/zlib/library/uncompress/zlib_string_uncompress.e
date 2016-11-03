@@ -51,6 +51,17 @@ feature -- Access
 			Result := attached string
 		end
 
+feature -- Change Element
+
+	set_string (a_string: READABLE_STRING_32)
+		do
+			create string.make_from_string (a_string.as_string_8)
+		ensure
+			string_set: attached string
+		end
+
+
+
 feature -- Inflate
 
 	to_string: STRING

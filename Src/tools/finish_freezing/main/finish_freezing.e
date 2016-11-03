@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Finish freezing's root class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 feature -- Initialization
 
 	make
-			-- Creation
+			-- Creation.
 		local
 			l_parser: ARGUMENT_PARSER
 			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
@@ -56,18 +56,18 @@ feature -- Initialization
 			l_translator: MAKEFILE_TRANSLATOR
 		do
 			if not retried then
-					-- if location has been specified, update it
+					-- If location has been specified, update it.
 				if attached a_parser.location as l_loc then
 					create l_location.make_from_string (l_loc)
 				else
-						-- Location defaults to the current directory
+						-- Location defaults to the current directory.
 					l_location := current_working_path
 				end
 
-					-- if generate_only is specified then only generate makefile
+					-- If generate_only is specified then only generate makefile.
 				l_gen_only := a_parser.generate_only
 
-					-- Map `location' if it is a network path if needed
+					-- Map `location' if it is a network path if needed.
 				if attached l_location.root as l_root and then l_root.name.substring (1, 2).same_string_general ("\\") then
 					create l_unc_mapper.make (l_location.name)
 					if attached l_unc_mapper.access_name as l_access_name then
@@ -76,7 +76,7 @@ feature -- Initialization
 					end
 				end
 
-					-- Change the working directory if needed
+					-- Change the working directory if needed.
 				if not l_location.same_as (current_working_path) then
 					change_working_path (l_location)
 				end
@@ -84,7 +84,7 @@ feature -- Initialization
 				if a_parser.has_max_processors then
 					l_processors := a_parser.max_processors
 				else
-						-- Use default
+						-- Use default.
 					l_processors := 0
 				end
 
@@ -172,7 +172,7 @@ feature -- Initialization
 feature -- Access
 
 	c_compilation_error: BOOLEAN
-			-- check if the c-compilation went ok
+			-- Check if the c-compilation went ok.
 		local
 			completed: PLAIN_TEXT_FILE
 		do
@@ -203,9 +203,8 @@ feature -- Implementation
 		local
 			reader: RESOURCE_PARSER
 		do
-			create reader
 			if attached {FINISH_FREEZING_EIFFEL_LAYOUT} eiffel_layout as l_layout then
-				reader.parse_file (l_layout.config_eif_file_name, a_options)
+				create reader.parse_file (l_layout.config_eif_file_name, a_options)
 			else
 				check not_correctly_initialized: False end
 			end
@@ -273,4 +272,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FINISH_FREEZING
+end

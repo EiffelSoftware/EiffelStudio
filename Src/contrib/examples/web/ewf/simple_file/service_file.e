@@ -21,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			set_service_option ("port", 9090)
+			import_service_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI}.make_from_file ("service.ini"))
 		end
 
 end

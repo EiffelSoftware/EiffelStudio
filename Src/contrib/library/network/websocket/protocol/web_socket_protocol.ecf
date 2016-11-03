@@ -4,6 +4,7 @@
 		<root all_classes="true"/>
 		<option void_safety="none">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>
 	</target>

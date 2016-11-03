@@ -2,7 +2,7 @@
 
 remtrace Should be called by make_delivery
 
-#remtrace Recompile iron
+remtrace Recompile iron
 cd $EIFFEL_SRC/tools/iron/client
 clean_project
 finalize client.ecf es_iron
@@ -14,7 +14,7 @@ fi
 clean_project
 move iron.tar.bz2 $EXPORT_DIR/bin
 
-#remtrace Recompile syntax_updater
+remtrace Recompile syntax_updater
 cd $EIFFEL_SRC/tools/syntax_updater
 clean_project
 finalize syntax_updater.ecf syntax_updater

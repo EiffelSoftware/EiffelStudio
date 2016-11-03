@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="libfcgi" uuid="3F4BCF74-3503-4533-9D74-5A65EC4CA3C4" library_target="libfcgi">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="libfcgi" uuid="3F4BCF74-3503-4533-9D74-5A65EC4CA3C4" library_target="libfcgi">
 	<target name="libfcgi">
 		<root all_classes="true"/>
 		<file_rule>
@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<external_include location="$ECF_CONFIG_PATH/spec/include/libfcgi">
 			<condition>
 				<platform excluded_value="windows"/>

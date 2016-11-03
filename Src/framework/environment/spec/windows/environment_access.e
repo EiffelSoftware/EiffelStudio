@@ -19,40 +19,105 @@ feature -- Access
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
 			a_app_ok: a_app = Void or else not a_app.has ('%U')
 		local
+			l_constants: EIFFEL_CONSTANTS
+			v: STRING
+		do
+			Result := item (a_var)
+			if Result = Void then
+				create l_constants
+				create v.make (5)
+				v.append (l_constants.two_digit_minimum_major_version)
+				v.append_character ('.')
+				v.append (l_constants.two_digit_minimum_minor_version)
+				Result := application_item (a_var, a_app, v)
+			end
+		end
+
+	application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: STRING): detachable STRING_32
+			-- Variable `a_var' as if we were `a_app' for version `a_version` (formatted as MM.mm).
+		require
+			a_var_ok: a_var /= Void and then not a_var.has ('%U')
+			a_app_ok: a_app = Void or else not a_app.has ('%U')
+			a_version_ok: a_version /= Void and then not a_version.is_whitespace
+		do
+			Result := item (a_var)
+			if Result = Void then
+				Result := application_item_from_settings (a_var, a_app, a_version)
+			end
+		end
+
+	application_item_from_settings (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: STRING): detachable STRING_32
+			-- Variable `a_var' as if we were `a_app' for version `a_version` (formatted as MM.mm).
+		require
+			a_var_ok: a_var /= Void and then not a_var.has ('%U')
+			a_app_ok: a_app = Void or else not a_app.has ('%U')
+			a_version_ok: a_version /= Void and then not a_version.is_whitespace
+		local
 			l_reg: WEL_REGISTRY
 			l_key: detachable WEL_REGISTRY_KEY_VALUE
 			l_eiffel: STRING_32
 			l_lowered_var: READABLE_STRING_GENERAL
-			l_constants: EIFFEL_CONSTANTS
 		do
-			Result := item (a_var)
-			if Result = Void then
-				l_lowered_var := a_var.as_lower
-				create l_constants
-				l_eiffel := {STRING_32} "\Software\ISE\Eiffel_" + l_constants.two_digit_minimum_major_version + "." + l_constants.two_digit_minimum_minor_version
-				create l_reg
-				if a_app /= Void then
-						-- Lookup application-specific setting.
-					l_key := l_reg.open_key_value ({STRING_32} "hkey_current_user" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
-					if l_key = Void then
-						l_key := l_reg.open_key_value ({STRING_32} "hkey_local_machine" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
-					end
-				end
+			l_lowered_var := a_var.as_lower
+			l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
+			create l_reg
+			if a_app /= Void then
+					-- Lookup application-specific setting.
+				l_key := l_reg.open_key_value ({STRING_32} "HKEY_CURRENT_USER" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
 				if l_key = Void then
-						-- Lookup general setting.
-					l_key := l_reg.open_key_value ({STRING_32} "hkey_current_user" + l_eiffel, l_lowered_var)
-					if l_key = Void then
-						l_key := l_reg.open_key_value ({STRING_32} "hkey_local_machine" + l_eiffel, l_lowered_var)
-					end
+					l_key := l_reg.open_key_value ({STRING_32} "HKEY_LOCAL_MACHINE" + l_eiffel + {STRING_32} "\" + a_app.to_string_32, l_lowered_var)
 				end
-				if l_key /= Void then
-					Result := l_key.string_value
+			end
+			if l_key = Void then
+					-- Lookup general setting.
+				l_key := l_reg.open_key_value ({STRING_32} "HKEY_CURRENT_USER" + l_eiffel, l_lowered_var)
+				if l_key = Void then
+					l_key := l_reg.open_key_value ({STRING_32} "HKEY_LOCAL_MACHINE" + l_eiffel, l_lowered_var)
+				end
+			end
+			if l_key /= Void then
+				Result := l_key.string_value
+			end
+		end
+
+	installed_product_version_names (env: EIFFEL_ENV): detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
+		local
+			l_reg: WEL_REGISTRY
+			l_es_root_keyname: STRING_32
+			p: POINTER
+			l_key_path: STRING_32
+			i,n: INTEGER
+		do
+			l_es_root_keyname := {STRING_32} "\SOFTWARE\ISE"
+			create l_reg
+			l_key_path := {STRING_32} "HKEY_CURRENT_USER" + l_es_root_keyname
+			p := l_reg.open_key_with_access (l_key_path, l_reg.key_read)
+			if p.is_default_pointer then
+				l_key_path := {STRING_32} "HKEY_LOCAL_MACHINE" + l_es_root_keyname
+				p := l_reg.open_key_with_access (l_key_path, l_reg.key_read)
+			end
+			if p.is_default_pointer then
+					-- Not found!
+			else
+				n := l_reg.number_of_subkeys (p)
+				if n > 0 then
+					create Result.make (n)
+					from
+						i := 1
+					until
+						i > n
+					loop
+						if attached l_reg.enumerate_key (p, i - 1) as k then
+							Result.force (k.name)
+						end
+						i := i + 1
+					end
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

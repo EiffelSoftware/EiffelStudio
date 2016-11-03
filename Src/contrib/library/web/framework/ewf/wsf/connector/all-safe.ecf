@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="connector_cgi" location="..\..\ewsgi\connectors\cgi\cgi-safe.ecf"/>
 		<library name="connector_libfcgi" location="..\..\ewsgi\connectors\libfcgi\libfcgi-safe.ecf"/>
@@ -20,7 +21,6 @@
 		<library name="standalone" location="standalone-safe.ecf" readonly="false"/>
 		<library name="standalone_ws" location="standalone_websocket-safe.ecf" readonly="false"/>
 		<library name="openshift" location="openshift-safe.ecf" readonly="false"/>
-		<library name="nino" location="nino-safe.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
 		<library name="wsf" location="..\wsf-safe.ecf"/>
 	</target>

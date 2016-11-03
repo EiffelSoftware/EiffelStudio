@@ -82,12 +82,13 @@ feature -- Flush Modes
 		note
 			EIS: "name=Flush modes", "http://www.bolet.org/~pornin/deflate-flush-fr.html", "protocol=uri"
 			EIS: "name=PPP protocol", "https://www.ietf.org/rfc/rfc1979.txt", "protocol=uri"
+			EIS: "name=Zlib flush", "https://github.com/madler/zlib/issues/149", "protocol=uri"
 		do
 			last_chunk := {ZLIB_CONSTANTS}.z_full_flush
-			no_last_chunk:= {ZLIB_CONSTANTS}.z_full_flush
+			no_last_chunk:= {ZLIB_CONSTANTS}.Z_block
 		ensure
 			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_full_flush
-			set_no_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.z_full_flush
+			set_no_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.Z_block
 		end
 
 	mark_sync_flush
@@ -97,10 +98,10 @@ feature -- Flush Modes
 			EIS: "name=Flush modes", "http://www.bolet.org/~pornin/deflate-flush-fr.html", "protocol=uri"
 			EIS: "name=PPP protocol", "https://www.ietf.org/rfc/rfc1979.txt", "protocol=uri"
 		do
-			last_chunk := {ZLIB_CONSTANTS}.z_sync_flush
+			last_chunk := {ZLIB_CONSTANTS}.z_finish
 			no_last_chunk:= {ZLIB_CONSTANTS}.z_sync_flush
 		ensure
-			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_sync_flush
+			set_last_chunk : last_chunk = {ZLIB_CONSTANTS}.z_finish
 			set_no_last_chunk: no_last_chunk = {ZLIB_CONSTANTS}.z_sync_flush
 		end
 

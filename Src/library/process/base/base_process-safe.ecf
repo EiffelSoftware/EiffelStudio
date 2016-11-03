@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="base_process" uuid="89096CFA-4BCB-4DC2-9755-9481954E2DCE" library_target="process">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="base_process" uuid="89096CFA-4BCB-4DC2-9755-9481954E2DCE" library_target="process">
 	<target name="process">
-		<description>
-			Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
+		<description>Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
 			Copyright (c) 1984-2016, Eiffel Software and others.
-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
-		</description>
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
@@ -13,7 +11,6 @@
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<setting name="concurrency" value="scoop"/>
 		<external_include location="$(ISE_LIBRARY)\library\process\base\platform\windows\include">
 			<condition>
 				<platform value="windows"/>
@@ -34,6 +31,13 @@
 			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
 		</assembly>
 		<assembly name="system_dll" location="$ISE_DOTNET_FRAMEWORK\system.dll" prefix="SYSTEM_DLL_"/>
+		<cluster name="dotnet" location="platform\dotnet\" recursive="true">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<option namespace="Process">
+			</option>
+		</cluster>
 		<cluster name="mswin" location="platform\windows\" recursive="true">
 			<condition>
 				<platform value="windows"/>
@@ -43,6 +47,7 @@
 				<exclude>^/include</exclude>
 			</file_rule>
 		</cluster>
+		<cluster name="process" location=".\"/>
 		<cluster name="unix" location="platform\unix\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -52,20 +57,10 @@
 				<exclude>^/Clib</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="dotnet" location="platform\dotnet\" recursive="true">
-			<condition>
-				<dotnet value="true"/>
-			</condition>
-			<option namespace="Process">
-			</option>
-		</cluster>
-		<cluster name="process" location=".\"/>
 	</target>
 	<target name="process_dotnet" extends="process">
+		<option concurrency="thread" root_concurrency="thread">
+		</option>
 		<setting name="msil_generation" value="true"/>
-		<setting name="concurrency" value="none"/>
-	</target>
-	<target name="process_unix" extends="process">
-		<setting name="platform" value="unix"/>
 	</target>
 </system>

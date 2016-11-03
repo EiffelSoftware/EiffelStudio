@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent an included assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -114,7 +114,7 @@ feature -- Access, in compiled only
 	cache_path: PATH
 			-- Path to the metadata cache.
 
-	dotnet_classes: STRING_TABLE [like class_type]
+	dotnet_classes: detachable STRING_TABLE [like class_type]
 			-- Same as `classes' but indexed by the dotnet name.
 
 	guid: READABLE_STRING_32
@@ -138,7 +138,7 @@ feature -- Access, in compiled only
 	consumed_assembly: CONSUMED_ASSEMBLY
 			-- Consumed assembly as produced by the consumer.
 
-	dependencies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER];
+	dependencies: detachable HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER];
 			-- Dependencies on other assemblies indexed by their assembly ID.
 
 feature -- Access queries
@@ -307,13 +307,13 @@ feature -- Access queries
 			Result.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
 		end
 
-	class_options: STRING_TABLE [CONF_OPTION]
+	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
 				-- classes in assemblies have no options
 		end
 
-	sub_group_by_name (a_name: READABLE_STRING_GENERAL): CONF_GROUP
+	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
 			-- Return assembly dependency with `a_name' if there is any.
 		do
 			if dependencies /= Void then
@@ -439,7 +439,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

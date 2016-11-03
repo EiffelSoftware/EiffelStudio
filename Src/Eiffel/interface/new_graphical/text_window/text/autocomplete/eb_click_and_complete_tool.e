@@ -339,9 +339,11 @@ feature -- Basic Operations
 						if line = Void then
 							check is_eiffel_line: False end
 						elseif a_position >= invariant_index then
-							feat := described_feature (token, line, Void)
-							if feat /= Void then
+							if attached described_access_id (token, line, ft) as tu then
+								feat := tu.feat
 								create {FEATURE_STONE} Result.make (feat)
+							else
+								feat := Void
 							end
 						elseif click_possible (token) then
 							if attached feature_containing (token, line) as l_content then
@@ -354,11 +356,13 @@ feature -- Basic Operations
 									local_part,
 									signature_part
 								then
-									feat := described_feature (token, line, ft)
-									if feat /= Void then
-										create {FEATURE_STONE} Result.make (feat)
-									elseif attached described_local (token, line, ft, l_content.feat_start_token) as loc then
-										create {LOCAL_STONE} Result.make (loc.feat, loc.ast)
+									if attached described_access_id (token, line, ft) as loc then
+										feat := loc.feat
+										if attached loc.ast as l_ast then
+											create {ACCESS_ID_STONE} Result.make (loc.feat, loc.ast)
+										else
+											create {FEATURE_STONE} Result.make (feat)
+										end
 									end
 								else
 								end

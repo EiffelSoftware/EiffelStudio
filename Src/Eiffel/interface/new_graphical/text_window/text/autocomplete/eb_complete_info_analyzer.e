@@ -971,7 +971,7 @@ feature {NONE} -- Implementation
 			cp_index := cp_index + 1
 		end
 
-	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME; feat_start_token: detachable EDITOR_TOKEN_FEATURE_START]
+	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
 			a_token_not_void: a_token /= Void
@@ -1034,11 +1034,8 @@ feature {NONE} -- Implementation
 
 			if tfs /= Void then
 				index := tfs.feature_index_in_table
-				if
-					features_ast.valid_index (index) and then
-					attached (features_ast @ index) as f_ast
-				then
-					Result := [f_ast.feat_as, f_ast.name, tfs]
+				if features_ast.valid_index (index) then
+					Result := features_ast @ index
 				end
 			end
 			current_token := token

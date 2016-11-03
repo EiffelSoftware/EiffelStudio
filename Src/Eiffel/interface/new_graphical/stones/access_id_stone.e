@@ -1,10 +1,10 @@
 note
-	description	: "Stone representing an eiffel feature local stone."
+	description	: "Stone representing an eiffel feature, local or argument stone."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	LOCAL_STONE
+	ACCESS_ID_STONE
 
 inherit
 	FEATURE_STONE
@@ -80,7 +80,7 @@ feature -- Status report
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same local from same feature?
 		do
-			Result := attached {LOCAL_STONE} other as other_stone and then
+			Result := attached {ACCESS_ID_STONE} other as other_stone and then
 					Precursor {FEATURE_STONE} (other_stone) and then local_name.same_string (other_stone.local_name)
 		end
 
@@ -160,7 +160,7 @@ feature -- dragging
 			if e_class /= Void then
 				if e_feature /= Void and then e_feature.is_valid then
 					if attached e_feature.updated_version as new_e_feature then
-						create {LOCAL_STONE} Result.make (new_e_feature, ast)
+						create {ACCESS_ID_STONE} Result.make (new_e_feature, ast)
 						fok := Result.is_valid
 					end
 				end

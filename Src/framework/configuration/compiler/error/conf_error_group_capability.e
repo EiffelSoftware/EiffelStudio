@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error: Capability group option is not compatible with containing target capability."
 
 class CONF_ERROR_GROUP_CAPABILITY
@@ -19,20 +19,10 @@ feature {NONE} -- Creation
 			-- Initialize error with for a group `group' that has capability value `group_value'
 			-- not satisfying the capability `capability' of target `target' with value `target_value'.
 		local
-			group_system: READABLE_STRING_GENERAL
-			group_target: READABLE_STRING_GENERAL
-			target_system: READABLE_STRING_GENERAL
+			group_target: CONF_TARGET
 		do
-			if attached group.location as gl and then attached gl.target as gt then
-				group_target := gt.name
-				if attached gt.system as gs then
-					group_target := gs.name
-				end
-			end
-			if attached target.system as ts then
-				target_system := ts.name
-			end
-			text := conf_interface_names.e_incompatible_group_capability (capability, group_value, group.name, group_target, group_system, target_value, target.name, target_system)
+			group_target := group.location.target
+			text := conf_interface_names.e_incompatible_group_capability (capability, group_value, group.name, group_target.name, group_target.system.name, target_value, target.name, target.system.name)
 		end
 
 feature -- Access

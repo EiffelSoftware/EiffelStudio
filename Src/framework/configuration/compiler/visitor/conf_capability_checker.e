@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Checker for capability options violations."
 	instruction: "[
 			The following violations are detected:
@@ -37,14 +37,8 @@ feature {NONE} -- Creation
 			observer := o
 			target := Void
 			create targets.make (1)
-			has_error := False
 			process_target (t)
 		end
-
-feature {NONE} -- Status report
-
-	has_error: BOOLEAN
-			-- Has an error been detected?
 
 feature {NONE} -- Access
 
@@ -163,7 +157,6 @@ feature {NONE} -- Traversal
 				loop
 						-- Check rule 1.
 					if option.item.void_safety.index < cluster.options.void_safety.index then
-						has_error := True
 						observer.update (create {CONF_ERROR_CLASS_CAPABILITY}.make
 							(option.key,
 							cluster,
@@ -173,7 +166,6 @@ feature {NONE} -- Traversal
 					end
 						-- Check rule 2.
 					if option.item.catcall_detection.index < cluster.options.catcall_detection.index then
-						has_error := True
 						observer.update (create {CONF_ERROR_CLASS_CAPABILITY}.make
 							(option.key,
 							cluster,
@@ -191,7 +183,6 @@ feature {NONE} -- Traversal
 			if attached group.internal_options as option then
 					-- Check rule 3b: it applies only to CAT-call detection and void safety.
 				if option.catcall_detection.index < t.options.catcall_detection.index then
-					has_error := True
 					observer.update (create {CONF_ERROR_GROUP_CAPABILITY}.make
 						(group,
 						t,
@@ -200,7 +191,6 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_catcall_detection_name))
 				end
 				if option.void_safety.index < t.options.void_safety.index then
-					has_error := True
 					observer.update (create {CONF_ERROR_GROUP_CAPABILITY}.make
 						(group,
 						t,
@@ -217,7 +207,6 @@ feature {NONE} -- Traversal
 			if attached parent.internal_options as option then
 					-- Check rule 3a.
 				if option.catcall_detection.index < t.options.catcall_detection.index then
-					has_error := True
 					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
@@ -226,7 +215,6 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_catcall_detection_name))
 				end
 				if option.concurrency.index < t.options.concurrency.index then
-					has_error := True
 					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
@@ -235,7 +223,6 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_concurrency_name))
 				end
 				if option.void_safety.index < t.options.void_safety.index then
-					has_error := True
 					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,

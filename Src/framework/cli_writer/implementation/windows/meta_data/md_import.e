@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents abstraction of IMetaDataImport.. classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -79,7 +79,7 @@ feature -- Enumerating collections
 			last_call_success := cpp_reset_enum (item, a_enum_hdl, a_pos)
 		end
 
-	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_type_defs (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all TypedDefs within the current scope.
 			-- Note: the collection will contain Classes, Interfaces, etc,
 			-- as well as any TypeDefs added via an extensibility mechanism.
@@ -100,7 +100,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_size: INTEGER): ARRAY [NATURAL_32]
+	enum_interface_impls (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_size: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all interfaces implemented by the specified TypeDef.
 			-- Tokens will be returned in the order the interfaces were specified
 			-- (through DefineTypeDef or SetTypeDefProps).
@@ -122,7 +122,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_members (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all members (fields and methods, but not properties or events)
 			-- defined by the class specified by cl.
 			-- This does not include any members inherited by that class;
@@ -144,7 +144,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_methods (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all methods defined by the specified TypeDef.
 			-- Tokens are returned in the same order they were emitted.
 			-- If you supply a nil token for the cl argument the method will enumerate
@@ -166,7 +166,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_fields (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all fields defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -189,7 +189,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_properties (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_properties (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all properties defined on a specified TypeDef.
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -212,7 +212,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): ARRAY [NATURAL_32]
+	enum_params (a_enum_hdl: TYPED_POINTER [POINTER]; a_typedef: NATURAL_32; a_max_count: INTEGER): detachable ARRAY [NATURAL_32]
 			-- Enumerates all attributed parameters for the method specified by md.
 			-- By attributed parameters, we mean those parameters of a method
 			-- which have been explicitly defined via a call to DefineParam
@@ -465,7 +465,7 @@ feature -- Queries
 		end
 
 	enum_tokens (   a_class_token: NATURAL_32;
-					enum_agent: FUNCTION [TYPED_POINTER [POINTER], NATURAL_32, INTEGER, ARRAY [NATURAL_32]];
+					enum_agent: FUNCTION [TYPED_POINTER [POINTER], NATURAL_32, INTEGER, detachable ARRAY [NATURAL_32]];
 				): detachable ARRAYED_LIST [NATURAL_32]
 		require
 			a_class_token > 0
@@ -919,7 +919,7 @@ feature {NONE} -- Implementation : helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -932,22 +932,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

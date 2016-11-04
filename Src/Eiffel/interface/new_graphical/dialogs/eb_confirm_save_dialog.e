@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "Dialog for confirming a save action"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,14 +31,12 @@ feature {NONE} -- Initialization
 	make_and_launch (a_target: like target; a_caller: EB_CONFIRM_SAVE_CALLBACK)
 			-- Initialize and popup the dialog
 		local
-			clsi_stone: CLASSI_STONE
 			cls_name: STRING
 			l_question: ES_QUESTION_PROMPT
 		do
 			target := a_target
 			caller := a_caller
-			clsi_stone ?= target.stone
-			if clsi_stone /= Void and clsi_stone.is_valid then
+			if attached {CLASSI_STONE} target.stone as clsi_stone and then clsi_stone.is_valid then
 				cls_name := clsi_stone.class_name
 			end
 			create l_question.make_standard_with_cancel (Warning_messages.w_File_changed (cls_name))
@@ -72,7 +70,7 @@ feature -- Execution
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -96,11 +94,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CONFIRM_SAVE_DIALOG
+end

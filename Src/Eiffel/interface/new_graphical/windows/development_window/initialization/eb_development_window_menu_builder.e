@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Builder which build all EB_DEVELOPMENT_WINDOW menus."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_DEVELOPMENT_WINDOW_MENU_BUILDER
@@ -739,13 +739,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 	build_favorites_menu
 			-- Build the favorites menu
 		local
-			l_conv_cst: CLASSI_STONE
 			l_show_favorites_menu_item: EV_MENU_ITEM
 		do
 			develop_window.menus.set_favorites_menu (develop_window.favorites_manager.menu)
-			l_conv_cst ?= develop_window.stone
 				-- We update the state of the `Add to Favorites' command.
-			if l_conv_cst /= Void then
+			if attached {CLASSI_STONE} develop_window.stone then
 				develop_window.menus.favorites_menu.first.enable_sensitive
 			else
 				develop_window.menus.favorites_menu.first.disable_sensitive
@@ -984,13 +982,14 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_ms := develop_window.commands.Edit_external_commands_cmd.menus
 			develop_window.menus.set_number_of_displayed_external_commands (l_ms.count)
 
-			if not l_ms.is_empty and not l_tools_menu.is_empty then
-				l_sep ?= l_tools_menu.last
-				if l_sep = Void then
-					create l_sep
-					l_tools_menu.extend (l_sep)
-					develop_window.menus.set_number_of_displayed_external_commands (develop_window.menus.number_of_displayed_external_commands + 1)
-				end
+			if
+				not l_ms.is_empty and
+				not l_tools_menu.is_empty and then
+				not attached {EV_MENU_SEPARATOR} l_tools_menu.last
+			then
+				create l_sep
+				l_tools_menu.extend (l_sep)
+				develop_window.menus.set_number_of_displayed_external_commands (develop_window.menus.number_of_displayed_external_commands + 1)
 			end
 
 			from

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Formatter displaying class information in a text area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -186,12 +186,9 @@ feature -- Status setting
 
 	force_stone (a_stone: detachable STONE)
 			-- Directly set `stone' with `a_stone'
-		local
-			l_stone: CLASSC_STONE
 		do
 			Precursor (a_stone)
-			l_stone ?= a_stone
-			if l_stone /= Void then
+			if attached {CLASSC_STONE} a_stone as l_stone then
 				set_associated_class (l_stone.e_class)
 			end
 		end
@@ -255,4 +252,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASS_TEXT_FORMATTER
+end

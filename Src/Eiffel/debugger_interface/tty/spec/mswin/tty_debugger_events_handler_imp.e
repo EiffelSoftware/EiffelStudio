@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,15 +65,13 @@ feature {TTY_DEBUGGER_TIMER} -- Timer Access
 
 	on_timer (id: INTEGER): BOOLEAN
 			-- Wm_timer message.
-		local
-			dbg_timer: TTY_DEBUGGER_TIMER
 		do
-			if timers /= Void then
-				dbg_timer ?= eif_id_any_object (timers.item (id))
-				if dbg_timer /= Void then
-					dbg_timer.execute
-					Result := True
-				end
+			if
+				attached timers as t and then
+				attached {TTY_DEBUGGER_TIMER} eif_id_any_object (t.item (id)) as dbg_timer
+			then
+				dbg_timer.execute
+				Result := True
 			end
 		end
 
@@ -248,7 +246,7 @@ feature {NONE} -- Message related externals
 	Pm_qs_postmessage: INTEGER = 0x980000;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -272,11 +270,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

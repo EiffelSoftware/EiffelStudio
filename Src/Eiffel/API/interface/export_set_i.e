@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an export clause which lists to whom a feature%N%
 		%will be exported."
 	legal: "See notice at end of class."
@@ -80,12 +80,10 @@ feature -- Access
 	same_as (other: EXPORT_I): BOOLEAN
 			-- is `other' the same as Current ?
 		local
-			other_set: EXPORT_SET_I
 			one_client: CLIENT_I
 			c1, c2: CURSOR
 		do
-			other_set ?= other
-			if other_set /= Void and then count = other_set.count then
+			if attached {EXPORT_SET_I} other as other_set and then count = other_set.count then
 				c1 := cursor
 				c2 := other_set.cursor
 				from
@@ -109,19 +107,17 @@ feature -- Comparison
 
 	is_less alias "<" (other: EXPORT_I): BOOLEAN
 			-- is Current less restrictive than other
-		local
-			other_set: EXPORT_SET_I
 		do
 			if other.is_none then
 				Result := True
 			elseif other.is_all then
 				Result := not is_all
-			else
-				other_set ?= other
-				check
-					must_be_a_set: other_set /= Void
-				end
+			elseif attached {EXPORT_SET_I} other as other_set then
 				Result := first.less_restrictive_than (other_set.first)
+			else
+				check
+					must_be_a_set: False
+				end
 			end
 		end
 
@@ -131,12 +127,10 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			-- Is 'other' equivalent to Current ?
 			-- [Semantic: old_status.equiv (new_status) ]
 		local
-			other_set: EXPORT_SET_I
 			old_cursor: CURSOR
 			export_client, other_export_client: CLIENT_I
 		do
-			other_set ?= other
-			if other_set /= Void then
+			if attached {EXPORT_SET_I} other as other_set then
 				old_cursor := cursor
 				from
 					Result := True
@@ -173,16 +167,15 @@ feature {COMPILER_EXPORTER} -- Compiler features
 	concatenation (other: EXPORT_I): EXPORT_I
 			-- Concatenation of Current and `other'
 		local
-			other_set, new: EXPORT_SET_I
+			new: EXPORT_SET_I
 		do
 			if other = Current then
 					-- Return same object if identical.
 				Result := other
-			elseif other.is_set then
+			elseif attached {EXPORT_SET_I} other as other_set then
 				if equiv (other) then
 					Result := other
 				else
-					other_set ?= other
 						-- Duplication
 					new := duplicate_internal (count)
 						-- Merge
@@ -203,7 +196,6 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			-- Is Current clients a subset or equal with
 			-- `other' clients?
 		local
-			other_set: EXPORT_SET_I
 			l_client: CLIENT_I
 			l_clients: ID_LIST
 			i, nb: INTEGER
@@ -216,11 +208,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 				Result := False
 			elseif other.is_all then
 				Result := True
-			else
-				other_set ?= other
-				check
-					must_be_a_set: other_set /= Void
-				end
+			elseif attached {EXPORT_SET_I} other as other_set then
 				Result := True
 				from
 					l_names_heap := names_heap
@@ -247,6 +235,10 @@ feature {COMPILER_EXPORTER} -- Compiler features
 					end
 					go_to (l_cursor)
 					forth
+				end
+			else
+				check
+					must_be_a_set: False
 				end
 			end
 		end
@@ -298,7 +290,7 @@ feature {EXPORT_SET_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -329,4 +321,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXPORT_SET_I
+end

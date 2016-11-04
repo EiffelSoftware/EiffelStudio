@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "[
 		EiffelGraphicalCompiler$ tool. Ancestor of all tools in the workbench,
 		providing dragging capabilities (transport). A tool is
@@ -278,11 +278,9 @@ feature {NONE} -- Implementation
 	has_focus_on_widgets_internal (a_widget: EV_WIDGET): BOOLEAN
 			-- Any widget has focus.
 		local
-			l_container: EV_CONTAINER
 			l_linear_representation: LINEAR [EV_WIDGET]
 		do
-			l_container ?= a_widget
-			if l_container /= Void then
+			if attached {EV_CONTAINER} a_widget as l_container then
 				l_linear_representation := l_container.linear_representation
 				if l_linear_representation /= Void and then not l_linear_representation.is_empty then
 					from
@@ -417,7 +415,7 @@ invariant
 	--tool_descriptor_attached: not is_recycled implies tool_descriptor /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -448,4 +446,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_TOOL
+end

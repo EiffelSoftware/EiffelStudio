@@ -14,7 +14,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize current
+			-- Initialize current.
 		do
 			create mutex.make
 			create actions.make (20)

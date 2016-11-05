@@ -16,11 +16,12 @@ EXPORT_DIR=`pwd`/PorterPackage
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
 DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
 DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
-if [ ! "$ORIGO_SVN_REVISION" ]; then
-	mkdir -p /tmp/eiffelstudio_revision
-	svn co $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
-	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
-fi
+# This section is commented out be cause it won't work on non-bash shell
+#if [ ! "$ORIGO_SVN_REVISION" ]; then
+#	mkdir -p /tmp/eiffelstudio_revision
+#	svn co $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
+#	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
+#fi
 
 # Used to create the revision on the package.
 FILE_SVN_REVISION=""

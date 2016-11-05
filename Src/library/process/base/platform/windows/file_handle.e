@@ -226,13 +226,6 @@ feature -- Element change
 			]"
 		end
 
-	flush (a_handle: POINTER)
-			-- Flush buffered data.
-		do
-			if cwin_flush_file_buffers (a_handle) then
-			end
-		end
-
 	put_string (a_handle: POINTER; a_string: READABLE_STRING_8)
 			-- Write `a_string' to `a_handle'.
 			-- Put number of written bytes in `last_written_bytes'.
@@ -288,14 +281,6 @@ feature {NONE} -- Implementation
 			"C blocking macro signature (HANDLE, LPCVOID, DWORD, LPDWORD, LPOVERLAPPED): BOOL use <windows.h>"
 		alias
 			"WriteFile"
-		end
-
-	cwin_flush_file_buffers (a_handle: POINTER): BOOLEAN
-			-- SDK CloseHandle
-		external
-			"C macro signature (HANDLE): BOOL use <windows.h>"
-		alias
-			"CloseHandle"
 		end
 
 	cwin_set_file_pointer (a_handle: POINTER; a_dist_to_move: INTEGER; a_dist_to_move_high: TYPED_POINTER [INTEGER]; a_method: INTEGER)

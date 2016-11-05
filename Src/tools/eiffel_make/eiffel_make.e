@@ -24,14 +24,12 @@ inherit
 
 	EXCEPTIONS
 
-	PROCESS_FACTORY
-
 	LOCALIZED_PRINTER
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Creation procedure.
@@ -94,6 +92,20 @@ feature {NONE} -- Implementation
 					target := (create {EXECUTION_ENVIRONMENT}).current_working_path
 				end
 
+				l_index := index_of_word_option ("make_flags")
+				if l_index > 0 and l_index < argument_count then
+						-- We take the argument following `make_flags' as flags for `make_utility'.
+					l_make_flags := argument (l_index + 1)
+				end
+				if l_index > 0 then
+					if l_make_flags = Void or else l_make_flags.is_empty then
+							-- Error, we expected a number of CPU
+						report_error ("Error: Missing make flags.%N")
+					else
+						make_flags := l_make_flags.split (' ')
+					end
+				end
+
 				l_make := separate_word_option_value ("make")
 				if attached l_make then
 					if l_make.is_empty then
@@ -110,20 +122,6 @@ feature {NONE} -- Implementation
 						end
 					else
 						make_utility := "make"
-					end
-				end
-
-				l_index := index_of_word_option ("make_flags")
-				if l_index > 0 and l_index < argument_count then
-						-- We take the argument following `make_flags' as flags for `make_utility'.
-					l_make_flags := argument (l_index + 1)
-				end
-				if l_index > 0 then
-					if l_make_flags = Void or else l_make_flags.is_empty then
-							-- Error, we expected a number of CPU
-						report_error ("Error: Missing make flags.%N")
-					else
-						make_flags := l_make_flags.split (' ')
 					end
 				end
 
@@ -308,13 +306,18 @@ feature {NONE} -- Implementation
 		local
 			l_process: PROCESS
 		do
-			l_process := process_launcher (make_utility, l_flags, a_dir.name)
+			l_process := process_factory.process_launcher (make_utility, l_flags, a_dir.name)
 			l_process.launch
-			Result := l_process.launched
-			if Result then
+			if l_process.launched then
 				l_process.wait_for_exit
 				Result := l_process.exit_code = 0
 			end
+		end
+
+	process_factory: PROCESS_FACTORY
+			-- A factory to create processes.
+		once
+			create Result
 		end
 
 	insert_directory (a_dir: PATH)

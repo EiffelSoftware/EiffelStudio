@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Safe list of actions for multithreaded system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	extend (an_action: ROUTINE)
+	extend (an_action: FUNCTION [BOOLEAN])
 			-- Extend `an_action' to `actions'.
 		require
 			an_action_not_void: an_action /= Void
@@ -32,7 +32,7 @@ feature -- Element change
 			mutex.unlock
 		end
 
-	removed_element: ROUTINE
+	removed_element: detachable FUNCTION [BOOLEAN]
 			-- Remove and return last element from `actions', if any.
 			-- Otherwise do nothing and return Void.
 			--| Not following CQS principle since it would not be thread safe.
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation: access
 	mutex: MUTEX
 			-- Mutex used for protecting access to `actions'.
 
-	actions: ARRAYED_LIST [ROUTINE]
+	actions: ARRAYED_LIST [FUNCTION [BOOLEAN]]
 			-- List of actions being executed.
 
 invariant
@@ -71,7 +71,7 @@ invariant
 	actions_not_void: actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

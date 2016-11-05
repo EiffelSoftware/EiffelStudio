@@ -277,8 +277,6 @@ feature {NONE} -- Termination
 			pid_not_negative: pid >= 0
 		local
 			handle: POINTER
-			l_file_handle: FILE_HANDLE
-			l_success: BOOLEAN
 		do
 			if debug_privilege_enabled then
 					-- If debug privilege enabled, we try to open process with terminate and query rights.
@@ -289,8 +287,7 @@ feature {NONE} -- Termination
 			end
 			if handle /= default_pointer then
 				try_terminate_process (handle)
-				create l_file_handle
-				l_success := l_file_handle.close (handle)
+				{WEL_API}.close_handle (handle).do_nothing
 			else
 				last_termination_successful := False
 			end

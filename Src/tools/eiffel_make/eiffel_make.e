@@ -42,18 +42,10 @@ feature -- Initialization
 			create {ARRAYED_LIST [IMMUTABLE_STRING_32]} make_flags.make (0)
 
 			parse_arguments
-			if not has_error then
-				process
-			else
-					-- Exit with error code.
-				die (1)
-			end
+			process
 		end
 
 feature -- Status report
-
-	has_error: BOOLEAN
-			-- Did we encountered an error?
 
 	target: PATH
 			-- Directory were processing will be done.
@@ -73,108 +65,93 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	parse_arguments
-			-- Parse arguments and report errors, if any.
+			-- Parse arguments.
+			-- If any error is detected, report it and exit application.
 		local
 			l_nb_cpu, l_make, l_make_flags, l_target: IMMUTABLE_STRING_32
-			l_has_error: BOOLEAN
 			l_dir: DIRECTORY
-			l_help: IMMUTABLE_STRING_32
 			l_index: INTEGER
 		do
-			l_help := separate_word_option_value ("help")
-			if l_help /= Void and then l_help.is_empty then
+			if attached separate_word_option_value ("help") as h and then h.is_empty then
 				print_usage
-					-- Exit now
+					-- Exit now.
 				die (0)
 			else
 				l_target := separate_word_option_value ("target")
-				if l_target /= Void then
+				if attached l_target then
 					if l_target.is_empty then
-						io.error.put_string ("Error: Missing target directory.%N")
-						print_usage
-						l_has_error := True
+						report_error ("Error: Missing target directory.%N")
 					else
 						create target.make_from_string (l_target)
 						create l_dir.make_with_path (target)
 						if not l_dir.exists then
-							io.error.put_string ("Error: '" + l_target + "' directory does not exist.%N")
-							print_usage
-							l_has_error := True
+							report_error ("Error: '" + l_target + "' directory does not exist.%N")
 						elseif not l_dir.is_readable or not l_dir.is_writable then
-							io.error.put_string ("Error: '" + l_target + "' directory is not readable nor writable.%N")
-							print_usage
-							l_has_error := True
+							report_error ("Error: '" + l_target + "' directory is not readable nor writable.%N")
 						end
+					end
+				else
+					target := (create {EXECUTION_ENVIRONMENT}).current_working_path
+				end
+
+				l_make := separate_word_option_value ("make")
+				if attached l_make then
+					if l_make.is_empty then
+						report_error ("Error: Missing make utility command.%N")
+					else
+						make_utility := "%"" + l_make + "%""
+					end
+				else
+					if (create {PLATFORM}).is_windows then
+						make_utility := "nmake.exe"
+						if l_make_flags = Void then
+							make_flags.extend ("-s")
+							make_flags.extend ("-nologo")
+						end
+					else
+						make_utility := "make"
 					end
 				end
 
-				if not l_has_error then
-					l_make := separate_word_option_value ("make")
-					if l_make /= Void then
-						if l_make.is_empty then
-							io.error.put_string ("Error: Missing make utility command.%N")
-							print_usage
-							l_has_error := True
-						else
-							make_utility := "%"" + l_make + "%""
-						end
-					end
-
-					if not l_has_error then
-						l_index := index_of_word_option ("make_flags")
-						if l_index > 0 and l_index < argument_count then
-								-- We take the argument following `make_flags' as flags for `make_utility'.
-							l_make_flags := argument (l_index + 1)
-						end
-						if l_index > 0 then
-							if l_make_flags = Void or else l_make_flags.is_empty then
-									-- Error, we expected a number of CPU
-								io.error.put_string ("Error: Missing make flags.%N")
-								print_usage
-								l_has_error := True
-							else
-								make_flags := l_make_flags.split (' ')
-							end
-						end
-
-						if not l_has_error then
-							l_nb_cpu := separate_word_option_value ("cpu")
-							if l_nb_cpu /= Void then
-								if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
-										-- Error, we expected a number of CPU
-									io.error.put_string ("Error: Missing number of CPU.%N")
-									print_usage
-									l_has_error := True
-								else
-									number_of_cpu := l_nb_cpu.to_integer
-								end
-							end
-						end
+				l_index := index_of_word_option ("make_flags")
+				if l_index > 0 and l_index < argument_count then
+						-- We take the argument following `make_flags' as flags for `make_utility'.
+					l_make_flags := argument (l_index + 1)
+				end
+				if l_index > 0 then
+					if l_make_flags = Void or else l_make_flags.is_empty then
+							-- Error, we expected a number of CPU
+						report_error ("Error: Missing make flags.%N")
+					else
+						make_flags := l_make_flags.split (' ')
 					end
 				end
-				has_error := l_has_error
 
-				if not l_has_error then
-					if l_target = Void then
-						target := (create {EXECUTION_ENVIRONMENT}).current_working_path
+				l_nb_cpu := separate_word_option_value ("cpu")
+				if l_nb_cpu /= Void then
+					if l_nb_cpu.is_empty or not l_nb_cpu.is_integer then
+							-- Error, we expected a number of CPU
+						report_error ("Error: Missing number of CPU.%N")
+					else
+						number_of_cpu := l_nb_cpu.to_integer
 					end
-					if l_make = Void then
-						if (create {PLATFORM}).is_windows then
-							make_utility := "nmake.exe"
-							if l_make_flags = Void then
-								make_flags.extend ("-s")
-								make_flags.extend ("-nologo")
-							end
-						else
-							make_utility := "make"
-						end
-					end
-					if l_nb_cpu = Void then
-							-- No CPU number was specified, get the information from the OS.
-						compute_number_of_cpu ($number_of_cpu)
-					end
+				end
+
+				if l_nb_cpu = Void then
+						-- No CPU number was specified, get the information from the OS.
+					compute_number_of_cpu ($number_of_cpu)
 				end
 			end
+		end
+
+	report_error (message: STRING)
+			-- Report error `message` and exit.
+		do
+			io.error.put_string (message)
+			print_usage
+			die (1)
+		ensure
+			can_return: False
 		end
 
 	print_usage
@@ -204,7 +181,7 @@ feature {NONE} -- Implementation
 		end
 
 	process
-			-- Call make
+			-- Call make.
 		require
 			target_not_void: target /= Void
 			target_not_empty: not target.is_empty
@@ -306,7 +283,7 @@ feature {NONE} -- Implementation
 			l_failure: BOOLEAN
 		do
 			from
-				l_action ?= actions.removed_element
+				l_action := actions.removed_element
 			until
 				l_action = Void or l_failure
 			loop
@@ -314,7 +291,7 @@ feature {NONE} -- Implementation
 				if l_failure then
 					failed_actions.extend (l_action)
 				else
-					l_action ?= actions.removed_element
+					l_action := actions.removed_element
 				end
 			end
 		end
@@ -398,7 +375,7 @@ invariant
 	make_flags_not_void: make_flags /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -428,4 +405,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EIFFEL_MAKE
+end

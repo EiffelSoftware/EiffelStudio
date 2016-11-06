@@ -615,6 +615,6 @@ define PREV	"202"
 copy_sub	test_template.e $CLUSTER test203.e
 
 compile_melted
-compile_result	ok
+compile_result	validity_warning NONE VD00
 
 test_end

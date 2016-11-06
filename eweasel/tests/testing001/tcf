@@ -6,6 +6,6 @@ copy_raw	a.e    $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error TEST VTUG(2)
+compile_result	validity_error NONE VD00; TEST VTUG(2)
 
 test_end

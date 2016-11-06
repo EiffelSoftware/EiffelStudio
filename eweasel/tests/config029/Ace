@@ -2,11 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="test">
 	<target name="test">
 		<root all_classes="true"/>
-		<setting name="console_application" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<option warning="false" is_attached_by_default="true" void_safety="all"/>
+		<setting name="console_application" value="true"/>
+		<setting name="concurrency" value="thread"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
 		$BAD_LIBRARY
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" use_application_options="true"/>
 	</target>

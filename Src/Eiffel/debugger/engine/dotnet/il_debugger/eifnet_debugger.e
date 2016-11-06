@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interface to access dotnet debugger services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,6 @@ class
 	EIFNET_DEBUGGER
 
 inherit
-	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		rename
@@ -2535,7 +2534,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2566,4 +2565,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUGGER
+end

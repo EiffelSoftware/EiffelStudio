@@ -92,6 +92,15 @@ feature -- Control
 			check_exit
 		end
 
+	close
+			-- <Precursor>
+		do
+			if is_launched_in_new_process_group and then is_terminal_control_enabled then
+				attach_terminals (process_id)
+			end
+			child_process.close_pipes
+		end
+
 feature {NONE} -- Control
 
 	platform_launch
@@ -143,10 +152,7 @@ feature {NONE} -- Status update
 	close_process
 			-- <Precursor>
 		do
-			if is_launched_in_new_process_group and then is_terminal_control_enabled then
-				attach_terminals (process_id)
-			end
-			child_process.close_pipes
+			close
 		end
 
 feature {NONE} -- Implementation

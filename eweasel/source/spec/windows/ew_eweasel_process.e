@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "An independent process used by EiffelWeasel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -121,69 +121,39 @@ feature -- Control
 
 	terminate
 			-- Terminate independent process - wait for
-			-- it to exit and get its status
-		local
-			a_boolean: BOOLEAN
-			l_handle: POINTER
+			-- it to exit and get its status.
 		do
 			close
-			a_boolean := {WEL_API}.get_exit_code_process (process_info.process_handle, $last_process_result)
-			if a_boolean and then last_process_result = {WEL_API}.still_active then
-					-- Process is most likely active, we just wait until it has actually finished.
-				from
-				until
-					last_process_result /= {WEL_API}.still_active or not a_boolean
-				loop
-						-- Check every seconds.
-					sleep (1_000_000)
-					a_boolean := {WEL_API}.get_exit_code_process (process_info.process_handle, $last_process_result)
-				end
+				-- Process is most likely active, we just wait until it has actually finished.
+			from
+			until
+				not {WEL_API}.get_exit_code_process (process_handle.item, $last_process_result) or else
+				last_process_result /= {WEL_API}.still_active
+			loop
+					-- Check every second.
+				sleep (1_000_000)
 			end
-			l_handle := process_info.thread_handle
-			if l_handle /= default_pointer then
-				process_info.set_thread_handle (default_pointer)
-				if {WEL_API}.close_handle (l_handle) = 0 then
-					check close_thread_handle_success: False end
-				end
-			end
-			l_handle := process_info.process_handle
-			if l_handle /= default_pointer then
-				process_info.set_process_handle (default_pointer)
-				if {WEL_API}.close_handle (l_handle) = 0 then
-					check close_thread_handle_success: False end
-				end
-			end
+			thread_handle.close
+			process_handle.close
 			suspended := False
 		end
 
 	abort
 			-- Abort independent process, forcibly killing
 			-- it if it is still running
-		local
-			a_boolean: BOOLEAN
-			terminated: BOOLEAN
-			l_handle: POINTER
 		do
 			close
-			if process_info.process_handle /= default_pointer then
-				a_boolean := {WEL_API}.get_exit_code_process (process_info.process_handle, $last_process_result)
-				if a_boolean and then last_process_result = {WEL_API}.still_active then
-					terminated := {WEL_API}.terminate_process (process_info.process_handle, 0)
+			if process_handle.is_open then
+				if
+					{WEL_API}.get_exit_code_process (process_handle.item, $last_process_result) and then
+					last_process_result = {WEL_API}.still_active
+				then
+					{WEL_API}.terminate_process (process_handle.item, 0).do_nothing
 				end
-				l_handle := process_info.thread_handle
-				if l_handle /= default_pointer then
-					process_info.set_thread_handle (default_pointer)
-					if {WEL_API}.close_handle (l_handle) = 0 then
-						check close_thread_handle_success: False end
-					end
+				if thread_handle.is_open then
+					thread_handle.close
 				end
-				l_handle := process_info.process_handle
-				if l_handle /= default_pointer then
-					process_info.set_process_handle (default_pointer)
-					if {WEL_API}.close_handle (l_handle) = 0 then
-						check close_thread_handle_succes: False end
-					end
-				end
+				process_handle.close
 			end
 			suspended := False
 		end

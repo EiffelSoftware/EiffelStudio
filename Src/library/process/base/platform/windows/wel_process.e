@@ -12,8 +12,6 @@ inherit
 	WEL_PROCESS_LAUNCHER
 		rename
 			launch as wel_launch
-		export
-			{ANY} process_info
 		redefine
 			startup_info
 		end
@@ -63,7 +61,7 @@ feature -- Process operations
 		require
 			a_cmd_not_void: a_cmd /= Void
 			a_cmd_not_empty: not a_cmd.is_empty
-			not_launched: process_info = Void
+			not_launched: process_handle = Void
 			input_closed: not is_std_input_open
 			output_closed: not is_std_output_open
 			error_closed: not is_std_error_open
@@ -96,8 +94,8 @@ feature -- Process operations
 		require
 			process_launched: launched
 		do
-			if attached process_info as l_process_info then
-				last_operation_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+			if attached process_handle as h then
+				last_operation_successful := {WEL_API}.get_exit_code_process (h.item, $last_process_result)
 			else
 				last_operation_successful := False
 			end
@@ -304,12 +302,13 @@ feature -- Handle operation
 		require
 			process_launched: launched
 		do
-			if attached process_info as l_process_info then
-				last_operation_successful := {WEL_API}.close_handle (l_process_info.thread_handle) /= 0
-				l_process_info.set_thread_handle (default_pointer)
-					-- Make sure to not reset the value of `last_operation_successful'.
-				last_operation_successful := {WEL_API}.close_handle (l_process_info.process_handle) /= 0 and last_operation_successful
-				l_process_info.set_process_handle (default_pointer)
+			if attached process_handle as h then
+				process_handle := Void
+				last_operation_successful := h.checked_close
+			end
+			if attached thread_handle as h then
+				thread_handle := Void
+				last_operation_successful := h.checked_close and last_operation_successful
 			else
 				last_operation_successful := False
 			end

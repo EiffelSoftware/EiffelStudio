@@ -1201,7 +1201,7 @@ feature -- Capability errors
 	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Option %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
+				("Capability %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
 				% incompatible with value %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
 				capability, -- 1
 				parent_value, -- 2
@@ -1215,7 +1215,7 @@ feature -- Capability errors
 	e_incompatible_root_option (capability, root_value, capability_value, target_name, system: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Compilation option %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
+				("Setting %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
 				capability, -- 1
 				root_value, -- 2
 				capability_value, -- 3
@@ -1226,7 +1226,7 @@ feature -- Capability errors
 	e_incompatible_root_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Compilation option %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
+				("Setting %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
 				% incompatible with capability %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
 				capability, -- 1
 				parent_value, -- 2

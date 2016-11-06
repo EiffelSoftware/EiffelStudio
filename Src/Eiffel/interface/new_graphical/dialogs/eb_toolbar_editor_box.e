@@ -1,11 +1,11 @@
-note
+﻿note
 	description	: "A dialog box that allows the user to customize a toolbar%
 				  %Call `customize' each time a toolbar must be edited"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Xavier Rousselot"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_TOOLBAR_EDITOR_BOX
@@ -256,10 +256,9 @@ feature {NONE} -- Button actions
 
 	generate_toolbar
 			-- Generate a "toolbar" in `final_toolbar' from the user input
-			-- and set `is_text_displayed'
+			-- and set `is_text_displayed'.
 		local
 			cur: EB_CUSTOMIZABLE_LIST_ITEM
-			cmd: EB_TOOLBARABLE_COMMAND
 		do
 			is_text_important := text_combo.text.is_equal (Interface_names.l_Put_text_right_text)
 			is_text_displayed := text_combo.text.is_equal (Interface_names.l_Show_all_text)
@@ -270,35 +269,33 @@ feature {NONE} -- Button actions
 			until
 				current_list.after
 			loop
-					-- Copy the content of current_list to final_toolbar
+					-- Copy the content of current_list to final_toolbar.
 				cur := current_list.customizable_item
-				cmd ?= cur.data
-				if cmd /= Void then
+				if attached {EB_TOOLBARABLE_COMMAND} cur.data as cmd then
 					cmd.enable_displayed
 					final_toolbar.extend (cmd)
 				else
 					final_toolbar.extend (cur.data)
 				end
 				current_list.forth
-			end -- loop
+			end
 
 			from
 				pool_list.start
-				pool_list.forth -- To avoid copying the initial Separator
+				pool_list.forth -- To avoid copying the initial Separator.
 			until
 				pool_list.after
 			loop
-					-- Copy the content of pool_list to final_toolbar
+					-- Copy the content of pool_list to final_toolbar.
 				cur := pool_list.customizable_item
-				cmd ?= cur.data
-				if cmd /= Void then
+				if attached {EB_TOOLBARABLE_COMMAND} cur.data as cmd then
 					cmd.disable_displayed
 					final_toolbar.extend (cmd)
 				else
 					final_toolbar.extend (cur.data)
 				end
 				pool_list.forth
-			end -- loop
+			end
 			valid_data := True
 		end
 
@@ -496,8 +493,6 @@ feature {NONE} -- Internal data
 	drop2 (src, dst: EB_CUSTOMIZABLE_LIST_ITEM)
 			-- `src' was dropped onto `dst'.
 			-- Set up events for `src' if it is a newly created separator. (Eww how ugly...)
-		local
-			conv_cust: EB_CUSTOMIZABLE_LIST_ITEM
 		do
 			if
 				src.is_separator and then
@@ -509,8 +504,7 @@ feature {NONE} -- Internal data
 				dst.parent.start
 				dst.parent.search (dst)
 				dst.parent.forth
-				conv_cust ?= dst.parent.item
-				if conv_cust /= Void then
+				if attached {EB_CUSTOMIZABLE_LIST_ITEM} dst.parent.item as conv_cust then
 					set_up_events (conv_cust)
 				end
 			end
@@ -522,7 +516,6 @@ feature {NONE} -- Internal data
 			toolbar_non_void: toolbar /= Void
 		local
 			n: EB_CUSTOMIZABLE_LIST_ITEM
-			nc: EB_TOOLBARABLE_COMMAND
 		do
 			pool_list.wipe_out
 			current_list.wipe_out
@@ -538,22 +531,19 @@ feature {NONE} -- Internal data
 				set_up_events (n)
 				if n.is_separator then
 					current_list.extend (n)
-				else
-					nc ?= toolbar.item
-					if nc /= Void then
-						if nc.is_displayed then
-							current_list.extend (n)
-						else
-							pool_list.extend (n)
-						end -- if
-					end -- if
-				end -- if
+				elseif attached {EB_TOOLBARABLE_COMMAND} toolbar.item as nc then
+					if nc.is_displayed then
+						current_list.extend (n)
+					else
+						pool_list.extend (n)
+					end
+				end
 				toolbar.forth
-			end -- loop
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-20016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -577,11 +567,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class TOOLBAR_EDITOR_BOX
+end

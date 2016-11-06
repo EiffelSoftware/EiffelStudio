@@ -150,6 +150,12 @@ feature -- Control
 			check_exit
 		end
 
+	close
+			-- <Precursor>
+		do
+			child_process.close
+		end
+
 feature {NONE} -- Control
 
 	platform_launch
@@ -214,7 +220,7 @@ feature {NONE} -- Status update
 			-- <Precursor>
 		do
 			exit_code := child_process.exit_code
-			child_process.close
+			close
 		end
 
 feature {NONE} -- Implementation

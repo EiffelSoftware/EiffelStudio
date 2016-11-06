@@ -67,8 +67,8 @@ feature -- Control
 	terminate
 			-- <Precursor>
 		do
-			if attached child_process.process_info as l_process_info then
-				try_terminate_process (l_process_info.process_handle)
+			if attached child_process.process_handle as h and then h.is_open then
+				try_terminate_process (h.item)
 				force_terminated := last_termination_successful
 			else
 				last_termination_successful := False
@@ -102,9 +102,9 @@ feature -- Control
 			-- <Precursor>
 		do
 			check
-				from_recondition_process_launched: attached child_process.process_info as i
+				from_recondition_process_launched: attached child_process.process_handle as h
 			then
-				{WEL_API}.wait_for_single_object (i.process_handle, {WEL_API}.infinite).do_nothing
+				{WEL_API}.wait_for_single_object (h.item, {WEL_API}.infinite).do_nothing
 			end
 			check_exit
 		end
@@ -119,9 +119,9 @@ feature -- Control
 			w: INTEGER
 		do
 			check
-				from_recondition_process_launched: attached child_process.process_info as i
+				from_recondition_process_launched: attached child_process.process_handle as h
 			then
-				w := {WEL_API}.wait_for_single_object (i.process_handle, timeout)
+				w := {WEL_API}.wait_for_single_object (h.item, timeout)
 				if w = {WEL_API}.wait_object_0 then
 						-- The process has terminated.
 				elseif w = {WEL_API}.wait_timeout then
@@ -142,9 +142,16 @@ feature -- Control
 		require
 			process_launched: launched
 		do
-			if attached child_process.process_info as l_info then
-				{WEL_API}.wait_for_input_idle (l_info.process_handle, {WEL_API}.infinite).do_nothing
+			if attached child_process.process_handle as h then
+				{WEL_API}.wait_for_input_idle (h.item, {WEL_API}.infinite).do_nothing
 			end
+		end
+
+	close
+			-- <Precursor>
+		do
+			child_process.close_process_handle
+			child_process.close_io
 		end
 
 feature {NONE} -- Control
@@ -160,8 +167,8 @@ feature {NONE} -- Control
 	initialize_after_launch
 			-- <Precursor>
 		do
-			if attached child_process.process_info as l_process_info then
-				id := l_process_info.process_id
+			if attached child_process.process_handle then
+				id := child_process.process_id.as_integer_32
 			else
 				last_termination_successful := False
 			end
@@ -219,8 +226,7 @@ feature {NONE} -- Status update
 	close_process
 			-- <Precursor>
 		do
-			child_process.close_process_handle
-			child_process.close_io
+			close
 		end
 
 feature {NONE} -- Implementation

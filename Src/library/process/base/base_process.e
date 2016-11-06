@@ -9,6 +9,8 @@
 			3. Invoke `launch' to launch process.
 			4. You can use `has_exited' to check the status of launched process or use `wait_for_exit'
 			   to wait for launched process.
+			5. To release allocated resources promptly, call `wait_for_exit` (or a version with timeout),
+			   `terminate` (possibly for the whole tree) or `close`.
 		Note: Make sure that launched process has exited before you exit you application.
 		]"
 	status: "See notice at end of class."
@@ -256,6 +258,15 @@ feature -- Control
 		deferred
 		ensure
 			process_exited: has_exited
+		end
+
+	close
+			-- Close handles associated with child process.
+			-- The process may continue running.
+			-- If there is any input/output redirection to/from current process, it will be closed.
+		require
+			launched: launched
+		deferred
 		end
 
 feature {NONE} -- Control

@@ -233,7 +233,7 @@ feature{NONE} -- Implementation
 			-- <Precursor>
 		do
 			Precursor
-			if attached child_process.process_info as l_process_info then
+			if attached child_process.process_handle then
 				start_listening_threads
 			end
 		end

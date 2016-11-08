@@ -2196,6 +2196,16 @@ feature -- Label texts
 	l_settings_management: STRING_32 do Result := locale.translation ("Settings Management") end
 	l_edit_custom_settings: STRING_32 do Result := locale.translation ("edit to set custom values ...") end
 
+	l_first_time_import_settings_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+					You are using EiffelStudio ($1) for the first time.
+					Do you want to import settings from a previous installation?
+					
+					(note: it is always possible to import settings using the menu Tools > Import Settings)
+					]"), [a_version_name])
+		end	
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING = " (version from)"

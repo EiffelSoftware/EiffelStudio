@@ -12,8 +12,8 @@ class
 	ES_SETTINGS_IMPORT_DIALOG
 
 inherit
-	EV_TITLED_WINDOW
-
+	EB_DIALOG
+	
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
@@ -52,6 +52,8 @@ feature {NONE} -- Initialization
 		require
 			a_window_not_void: a_window /= Void
 		do
+			create on_finish_actions
+
 			make_with_title (interface_names.l_settings_management)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			set_size (600, 400)
@@ -227,6 +229,11 @@ feature -- Access
 	import_button: EV_BUTTON
 	back_button: EV_BUTTON
 
+feature -- Actions
+
+	on_finish_actions: ACTION_SEQUENCE
+			-- Actions triggered when import is done or cancelled.
+
 feature -- Event
 
 	on_custom_edit (but: EV_TOGGLE_BUTTON)
@@ -308,7 +315,7 @@ feature -- Event
 						agent (ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
 							do
 								Result := is_excluded_preference (k, v)
-								
+
 								if Result then
 									text_widget.append_text (" [" + ith.out + "/" + total.out + "] ")
 									text_widget.append_text (k)
@@ -580,6 +587,7 @@ feature {NONE} -- Actions
 			main_cell.wipe_out
 			main_cell.put (versions_frame)
 			hide
+			on_finish_actions.call (Void)
 		end
 
 feature {NONE} -- Implementation

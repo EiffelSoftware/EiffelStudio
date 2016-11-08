@@ -367,4 +367,4 @@ remtrace Make some space
 cd $EXPORT_DIR
 fullrd library
 
-CANCEL
+TERMINATE

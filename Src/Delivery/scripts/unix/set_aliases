@@ -107,19 +107,20 @@ echo -------------------------------- >> $INSTALL_LOG
 echo $* >> $INSTALL_LOG
 }
 # Clean exit
-CANCEL ()
+TERMINATE ()
 {
 echo Exiting...
 remtrace final time:
 remtrace `date +%c`
 PATH=$OLD_PATH
 cd $INIT_DIR
+}
+# Exit with an error
+CANCEL()
+{
+TERMINATE
 exit 1
 }                                                                                   
-cancel ()
-{
-CANCEL
-}
  
 # SVN Commands: checkout, export
 co ()

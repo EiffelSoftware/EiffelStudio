@@ -1,0 +1,18 @@
+package obsolete_net
+
+setup
+	compile_library = Clib
+
+project
+	net = "net.ecf"
+
+note
+	description: Net library: Networking library with serialization facilities.
+	title: Obsolete EiffelNet
+	tags: obsolete, net, socket
+	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
+	copyright: 1984-2006 Eiffel Software and others
+	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/obsolete/net
+	link[license]: http://www.eiffel.com/licensing/forum.txt
+
+end

@@ -89,6 +89,7 @@ feature -- Control
 			-- <Precursor>
 		do
 			child_process.wait_for_process (id, True)
+			has_process_exited := not child_process.is_executing
 			check_exit
 		end
 

@@ -357,4 +357,4 @@ remtrace `date +%c`
 
 # Error handling and normal ending
 echo You should now run \'compile_exes\' in $EXPORT_DIR, after modifying set_aliases to update the EXPORT_DIR, if necessary.
-CANCEL
+TERMINATE

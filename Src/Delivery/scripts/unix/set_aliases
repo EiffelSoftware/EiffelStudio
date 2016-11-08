@@ -114,7 +114,7 @@ remtrace final time:
 remtrace `date +%c`
 PATH=$OLD_PATH
 cd $INIT_DIR
-exit
+exit 1
 }                                                                                   
 cancel ()
 {

@@ -1,0 +1,14 @@
+test_name	 benchmark-launch_process
+test_description Benchmark for launching external processes.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w 5
+execute_result	ok
+
+test_end

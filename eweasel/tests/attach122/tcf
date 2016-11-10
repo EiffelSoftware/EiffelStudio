@@ -2,6 +2,11 @@ test_name 	 object-test-on-local-variable
 test_description Local variable should not be considered attached in an object test if it is not set to an object.
 
 copy_sub	Ace $TEST Ace
+copy_raw	child.e $CLUSTER child.e
+copy_raw	expanded_test.e $CLUSTER expanded_test.e
+copy_raw	generic.e $CLUSTER generic.e
+copy_raw	parent.e $CLUSTER parent.e
+copy_raw	report.e $CLUSTER report.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted

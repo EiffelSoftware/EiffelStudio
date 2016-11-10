@@ -1,41 +1,28 @@
 class TEST
 
 create
+	default_create,
 	make
 
 feature
 
 	make
-		local
-			x: ANY
 		do
-			io.put_string ("Test 1: ")
-			if attached x as y then
-				io.put_string ("Failed")
-				io.put_new_line
-				io.put_string (y.out)
-			else
-				io.put_string ("OK")
-			end
+			io.put_string ("Non-generic")
 			io.put_new_line
-			io.put_string ("Test 2: ")
-			if attached x as y then
-				io.put_string ("Failed")
-				io.put_new_line
-				io.put_string (x.out)
-			else
-				io.put_string ("OK")
-			end
+			;(create {CHILD}).g
+
+			io.put_string ("Attached generic")
 			io.put_new_line
-			io.put_string ("Test 3: ")
-			if attached x then
-				io.put_string ("Failed")
-				io.put_new_line
-				io.put_string (x.out)
-			else
-				io.put_string ("OK")
-			end
+			;(create {GENERIC [ANY]}).f (Current, False)
+
+			io.put_string ("Detachable generic")
 			io.put_new_line
+			;(create {GENERIC [detachable ANY]}).f (Current, False)
+
+			io.put_string ("Expanded generic")
+			io.put_new_line
+			;(create {GENERIC [EXPANDED_TEST]}).f (create {EXPANDED_TEST}, True)
 		end
 
 end

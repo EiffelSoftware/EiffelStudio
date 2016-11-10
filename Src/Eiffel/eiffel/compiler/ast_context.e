@@ -773,11 +773,11 @@ feature -- Setting
 		local
 			local_dec: ARRAY [TYPE_A]
 			local_info: LOCAL_INFO
+			total_count: INTEGER
 			local_count: INTEGER
-			argument_count: INTEGER
+			test_count: INTEGER
 			i: INTEGER
 			arguments: FEAT_ARG
-			rout_id: INTEGER
 		do
 				-- Name
 			byte_code.set_feature_name_id (current_feature.feature_name_id)
@@ -786,50 +786,57 @@ feature -- Setting
 				-- Result type if any
 			byte_code.set_result_type (current_feature.type)
 				-- Routine id
-			rout_id := current_feature.rout_id_set.first
-			byte_code.set_rout_id (rout_id)
+			byte_code.set_rout_id (current_feature.rout_id_set.first)
 				-- Written_id
 			byte_code.set_written_class_id (current_class.class_id)
 				-- Pattern id
 			byte_code.set_pattern_id (current_feature.pattern_id)
-				-- Local variable declarations
-			local_count := locals.count + object_test_locals.count
+				-- Local variable declarations.
+			local_dec := Void
+			local_count := locals.count
+			test_count := object_test_locals.count
+			total_count := local_count + test_count
 			if local_count > 0 then
-				create local_dec.make (1, local_count)
+				across
+					locals as l
 				from
-					locals.start
-				until
-					locals.after
+						-- Local variables are treated as detachable.
+					create local_dec.make_filled (l.item.type.as_detachable_type, 1, total_count)
 				loop
-					local_info := locals.item_for_iteration
-					local_dec.put (local_info.type, local_info.position)
-					locals.forth
+					local_info := l.item
+						-- Local variables are treated as detachable.
+					local_dec [local_info.position] := local_info.type.as_detachable_type
 				end
-				from
-					object_test_locals.start
-				until
-					object_test_locals.after
-				loop
-					local_info := object_test_locals.item_for_iteration
-					local_dec.put (local_info.type, locals.count + local_info.position)
-					object_test_locals.forth
-				end
-				byte_code.set_locals (local_dec, locals.count)
 			end
-				-- Arguments declarations
-			argument_count := current_feature.argument_count
-			if argument_count > 0 then
+			if test_count > 0 then
+				across
+					object_test_locals as o
 				from
-					arguments := current_feature.arguments
-					i := 1
-					create local_dec.make (1, argument_count)
-				until
-					i > argument_count
+					if not attached local_dec then
+						create local_dec.make_filled (o.item.type, 1, total_count)
+					end
 				loop
-					local_dec.put (arguments.i_th (i), i)
-					i := i + 1
+					local_info := o.item
+					local_dec [local_count + local_info.position] := local_info.type
 				end
-				byte_code.set_arguments (local_dec)
+			end
+			byte_code.set_locals (local_dec, local_count)
+				-- Arguments declarations.
+			arguments := current_feature.arguments
+			if attached arguments then
+				total_count := arguments.count
+				if total_count > 0 then
+					from
+						i := 2
+						create local_dec.make_filled (arguments [1], 1, total_count)
+					until
+						i > total_count
+					loop
+						local_dec [i] := arguments [i]
+						i := i + 1
+					end
+					byte_code.set_arguments (local_dec)
+				end
 			end
 		end
 
@@ -843,22 +850,20 @@ feature -- Setting
 			l: ARRAY [TYPE_A]
 		do
 			if not object_test_locals.is_empty then
-				from
-					object_test_locals.start
-				until
-					object_test_locals.after
+				across
+					object_test_locals as o
 				loop
-					i := object_test_locals.item_for_iteration
+					i := o.item
 					if i.position >= first_object_test_local_position then
 							-- An object test local is declared inside this assertion.
 							-- It should be recorded to allow code generation when
 							-- assertion is inherited.
-						if l = Void then
-							create l.make (first_object_test_local_position, i.position)
+						if attached l then
+							l.force (i.type, i.position)
+						else
+							create l.make_filled (i.type, first_object_test_local_position, i.position)
 						end
-						l.force (i.type, i.position)
 					end
-					object_test_locals.forth
 				end
 				b.set_object_test_locals (l)
 			end
@@ -871,15 +876,13 @@ feature -- Setting
 			l: ARRAY [TYPE_A]
 		do
 			if not object_test_locals.is_empty then
-				create l.make (1, object_test_locals.count)
+				across
+					object_test_locals as o
 				from
-					object_test_locals.start
-				until
-					object_test_locals.after
+					create l.make_filled (o.item.type, 1, object_test_locals.count)
 				loop
-					i := object_test_locals.item_for_iteration
+					i := o.item
 					l.force (i.type, i.position)
-					object_test_locals.forth
 				end
 				b.set_object_test_locals (l)
 			end

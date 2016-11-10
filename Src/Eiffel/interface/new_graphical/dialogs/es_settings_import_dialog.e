@@ -13,7 +13,7 @@ class
 
 inherit
 	EB_DIALOG
-	
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 			make_with_title (interface_names.l_settings_management)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			set_size (600, 400)
+			set_size (600, 50)
 
 			build_interface
 
@@ -69,10 +69,10 @@ feature {NONE} -- Initialization
 		local
 			cell: EV_CELL
 			vbox,vb: EV_VERTICAL_BOX
+			l_advanced_box: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 			cb: EV_COMBO_BOX
 			fr: EV_FRAME
-			lab: EV_LABEL
 			tf: EV_TEXT_FIELD
 			but_check: EV_CHECK_BUTTON
 			but: EV_BUTTON
@@ -103,10 +103,20 @@ feature {NONE} -- Initialization
 			vb.extend (cb)
 			vb.disable_item_expand (cb)
 
+			create progress_bar
+			progress_bar.set_step (1)
+			progress_bar.reset_with_range (1 |..| 100)
+
+			create l_advanced_box
+			l_advanced_box.set_border_width (layout_constants.default_border_size)
+			l_advanced_box.set_padding_width (layout_constants.default_padding_size)
+			l_advanced_box.hide
+			vb.extend (l_advanced_box)
+			vb.disable_item_expand (l_advanced_box)
 				-- Preferences
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb); vb.disable_item_expand (hb)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Preferences")
 			but_check.set_minimum_width (100)
 			but_check.enable_select
@@ -115,16 +125,12 @@ feature {NONE} -- Initialization
 			create tf; tf.disable_edit; hb.extend (tf)
 			preferences_tf := tf
 
-
 				-- user_files_path ("studio")
-				--		studio\eifinit\
-				--		studio\bitmaps\png\
-				--		studio\tools\testing\icons
-				--		studio\metrics\predefined_metrics.xml
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb); vb.disable_item_expand (hb)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Configuration Files")
+			but_check.set_tooltip ("Overriding files from $ISE_EIFFEL/studio .")
 			but_check.set_minimum_width (100)
 			but_check.enable_select
 			hb.extend (but_check); hb.disable_item_expand (but_check)
@@ -132,12 +138,12 @@ feature {NONE} -- Initialization
 			create tf; tf.disable_edit; hb.extend (tf)
 			studio_config_tf := tf
 
-
 				-- user_templates_path
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb); vb.disable_item_expand (hb)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("Templates")
+			but_check.set_tooltip ("User templates.")
 			but_check.set_minimum_width (100)
 			but_check.enable_select
 			hb.extend (but_check); hb.disable_item_expand (but_check)
@@ -148,8 +154,9 @@ feature {NONE} -- Initialization
 				-- *.ini files under user_files_path
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb); vb.disable_item_expand (hb)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			create but_check.make_with_text ("*.ini files")
+			but_check.set_tooltip (".ini files such as external commands.")
 			but_check.set_minimum_width (100)
 			but_check.enable_select
 			hb.extend (but_check); hb.disable_item_expand (but_check)
@@ -160,18 +167,26 @@ feature {NONE} -- Initialization
 				-- Custom Edit
 			create hb
 			hb.set_padding_width (layout_constants.tiny_padding_size)
-			vb.extend (hb); vb.disable_item_expand (hb)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create lab.make_with_text (interface_names.l_edit_custom_settings)
-			hb.extend (lab); hb.disable_item_expand (lab)
 			create tg_but.make_with_text (interface_names.b_edit_settings)
+			tg_but.set_tooltip (interface_names.l_edit_custom_settings)
 			tg_but.set_minimum_width (100)
 			hb.extend (tg_but); hb.disable_item_expand (tg_but)
 			tg_but.select_actions.extend (agent on_custom_edit (tg_but))
 
+				-- End of l_advanced_box
+			advanced_box := l_advanced_box
+
 			vb.extend (create {EV_CELL})
 
 			create hb
+			create but_check.make_with_text (interface_names.b_advanced)
+			but_check.set_tooltip (interface_names.l_advanced_options)
+			hb.extend (but_check)
+			hb.disable_item_expand (but_check)
+			advanced_button := but_check
+			but_check.select_actions.extend (agent on_advanced_selected)
 			hb.extend (create {EV_CELL})
 
 			create but.make_with_text (interface_names.b_import_settings)
@@ -200,8 +215,6 @@ feature {NONE} -- Initialization
 			vbox.extend (hb)
 			vbox.disable_item_expand (hb)
 
-			create text_widget
-
 			show_actions.extend (agent update)
 		end
 
@@ -209,9 +222,9 @@ feature -- Access
 
 	main_cell: EV_CELL
 
-	versions_frame: EV_FRAME
+	progress_bar: EB_PERCENT_PROGRESS_BAR
 
-	text_widget: EV_TEXT
+	versions_frame: EV_FRAME
 
 	versions_combo: EV_COMBO_BOX
 
@@ -226,6 +239,9 @@ feature -- Access
 	templates_cb,
 	ini_files_cb: EV_CHECK_BUTTON
 
+	advanced_button: EV_CHECK_BUTTON
+	advanced_box: EV_BOX
+
 	import_button: EV_BUTTON
 	back_button: EV_BUTTON
 
@@ -235,6 +251,16 @@ feature -- Actions
 			-- Actions triggered when import is done or cancelled.
 
 feature -- Event
+
+	on_advanced_selected
+		do
+			if advanced_button.is_selected then
+				advanced_box.show
+			else
+				advanced_box.hide
+				set_size (width, 50)
+			end
+		end
 
 	on_custom_edit (but: EV_TOGGLE_BUTTON)
 		do
@@ -275,65 +301,91 @@ feature -- Event
 			is_verbose: BOOLEAN
 			d: DIRECTORY
 			l_prefs_import_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name, value: READABLE_STRING_GENERAL]]
+			text_widget: detachable EV_TEXT
+			vb: EV_VERTICAL_BOX
+			lab: EV_LABEL
 		do
 			import_button.hide
 			back_button.show
 			main_cell.wipe_out
-			main_cell.replace (text_widget)
+			create vb
+			progress_bar.set_value (1)
 
-			text_widget.set_text ("Importing ...%N")
+			vb.extend (progress_bar)
+			vb.disable_item_expand (progress_bar)
+			create lab
+			lab.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32)
+			vb.extend (lab)
+			vb.disable_item_expand (lab)
+
+			if advanced_button.is_selected then
+				create text_widget
+				text_widget.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32 + " ...%N")
+				vb.extend (text_widget)
+			else
+				text_widget := Void
+			end
+			main_cell.replace (vb)
+
 			is_verbose := True
+			lab.refresh_now
 
 			if preferences_cb.is_sensitive and then preferences_cb.is_selected then
-
-				text_widget.append_text ("- Preferences from %"")
-				text_widget.append_text (preferences_tf.text)
-				text_widget.append_text ("%"%N")
+				if text_widget /= Void then
+					text_widget.append_text ("- Preferences from %"")
+					text_widget.append_text (preferences_tf.text)
+					text_widget.append_text ("%"%N")
+				end
 
 				create l_prefs_versions
 				create l_prefs.make_with_location_and_version (preferences_tf.text, l_prefs_versions.version_2_0)
 
---"projects.last_opened_projects"
--- "path"
--- "opened_metric_browse_archive_directory"
--- "opened_project_directory"
-
-
 				if is_verbose then
-					l_prefs_import_callback := agent (ith: INTEGER_32; total: INTEGER_32; name, value: READABLE_STRING_GENERAL)
+					l_prefs_import_callback := agent (itxt: detachable EV_TEXT; ith: INTEGER_32; total: INTEGER_32; name, value: READABLE_STRING_GENERAL)
 								do
-									text_widget.append_text (" [" + ith.out + "/" + total.out + "] ")
-									text_widget.append_text (name)
-									text_widget.append_text (": ")
-									text_widget.append_text (value)
-									text_widget.append_text ("%N")
-								end
+									progress_bar.set_value ((100 * ith) // total)
+									progress_bar.refresh_now
+									if itxt /= Void then
+										itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
+										itxt.append_text (name)
+										itxt.append_text (": ")
+										itxt.append_text (value)
+										itxt.append_text ("%N")
+									end
+								end(text_widget, ?,?,?,?)
 				end
 				preferences.preferences.import_from_storage_with_callback_and_exclusion (l_prefs,
 						True, -- Ignore hidden preferences
 						l_prefs_import_callback,
-						agent (ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
+						agent (itxt: detachable EV_TEXT; ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
 							do
+								progress_bar.set_value ((100 * ith) // total)
+								progress_bar.refresh_now
 								Result := is_excluded_preference (k, v)
-
-								if Result then
-									text_widget.append_text (" [" + ith.out + "/" + total.out + "] ")
-									text_widget.append_text (k)
-									text_widget.append_text (": Excluded!%N")
+								if Result and itxt /= Void then
+									itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
+									itxt.append_text (k)
+									itxt.append_text (": Excluded!%N")
 								end
-							end
+							end(text_widget, ?,?,?,?)
 					)
 			end
 			if studio_config_cb.is_sensitive and then studio_config_cb.is_selected then
-				text_widget.append_text ("- Configuration file.%N")
-				safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), is_verbose)
+				if text_widget /= Void then
+					text_widget.append_text ("- Configuration file.%N")
+				end
+				safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), text_widget)
 			end
 			if templates_cb.is_sensitive and then templates_cb.is_selected then
-				text_widget.append_text ("- Templates.%N")
-				safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, is_verbose)
+				if text_widget /= Void then
+					text_widget.append_text ("- Templates.%N")
+				end
+				safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, text_widget)
 			end
 			if ini_files_cb.is_sensitive and then ini_files_cb.is_selected then
-				text_widget.append_text ("- *.ini files.%N")
+				if text_widget /= Void then
+					text_widget.append_text ("- *.ini files.%N")
+				end
 				create d.make_with_name (ini_files_tf.text)
 				across
 					d.entries as ic
@@ -341,10 +393,15 @@ feature -- Event
 					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
 					elseif attached ic.item.extension as ext and then ext.same_string ("ini") then
 						safe_copy_file_to (create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
-								create {RAW_FILE}.make_with_path (eiffel_layout.user_templates_path.extended_path (ic.item)), is_verbose)
+								create {RAW_FILE}.make_with_path (eiffel_layout.user_templates_path.extended_path (ic.item)), text_widget)
 					end
 				end
 			end
+			progress_bar.set_value (100)
+			progress_bar.refresh_now;
+			(create {EXECUTION_ENVIRONMENT}).sleep (1_000_000_000)
+			lab.set_text ("Importation completed!")
+			lab.refresh_now
 		end
 
 	is_excluded_preference (a_name, a_value: READABLE_STRING_GENERAL): BOOLEAN
@@ -365,23 +422,29 @@ feature -- Event
 		do
 			import_button.show
 			back_button.hide
+			if attached progress_bar.parent as par then
+				par.wipe_out
+			end
 			main_cell.wipe_out
 			main_cell.put (versions_frame)
 
 			selected_version_name := Void
 			if is_eiffel_layout_defined then
 				l_curr_version := eiffel_layout.version_name
+				versions_combo.wipe_out
 				across
 					eiffel_layout.installed_version_names as ic
 				loop
-					create li.make_with_text (eiffel_layout.product_name_for_version (ic.item))
-					li.set_data (ic.item)
-					versions_combo.extend (li)
-					li.select_actions.extend (agent on_version_selected (ic.item))
-					if not l_curr_version.same_string (ic.item) then
+					if l_curr_version.same_string (ic.item) then
+						create li.make_with_text (eiffel_layout.product_name_for_version (ic.item) + " (Current version)")
+					else
+						create li.make_with_text (eiffel_layout.product_name_for_version (ic.item))
 						l_prev_version := ic.item
 						l_prev_version_list_item := li
 					end
+					li.set_data (ic.item)
+					versions_combo.extend (li)
+					li.select_actions.extend (agent on_version_selected (ic.item))
 				end
 				if l_prev_version_list_item /= Void then
 					l_prev_version_list_item.enable_select
@@ -485,7 +548,7 @@ feature -- Event
 
 feature {NONE} -- Implementation
 
-	safe_copy_directory_content_into (a_dirname: PATH; a_target_dirname: PATH; is_verbose: BOOLEAN)
+	safe_copy_directory_content_into (a_dirname: PATH; a_target_dirname: PATH; a_txt: detachable EV_TEXT)
 		local
 			p,tgt: PATH
 			d_src, d_tgt: DIRECTORY
@@ -496,9 +559,11 @@ feature {NONE} -- Implementation
 				create d_tgt.make_with_path (a_target_dirname)
 				if not d_tgt.exists then
 					d_tgt.create_dir
-					text_widget.append_text ("Create directory ")
-					text_widget.append_text (a_target_dirname.name)
-					text_widget.append_text ("%N")
+					if a_txt /= Void then
+						a_txt.append_text ("Create directory ")
+						a_txt.append_text (a_target_dirname.name)
+						a_txt.append_text ("%N")
+					end
 				end
 				if d_tgt.exists then
 					across
@@ -511,9 +576,9 @@ feature {NONE} -- Implementation
 							create f_src.make_with_path (d_src.path.extended_path (p))
 							tgt := a_target_dirname.extended_path (p)
 							if f_src.is_directory then
-								safe_copy_directory_content_into (f_src.path, tgt, is_verbose)
+								safe_copy_directory_content_into (f_src.path, tgt, a_txt)
 							else
-								safe_copy_file_to (f_src, create {RAW_FILE}.make_with_path (tgt), is_verbose)
+								safe_copy_file_to (f_src, create {RAW_FILE}.make_with_path (tgt), a_txt)
 							end
 						end
 					end
@@ -521,7 +586,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_copy_file_to (f_src, f_tgt: FILE; is_verbose: BOOLEAN)
+	safe_copy_file_to (f_src, f_tgt: FILE; a_txt: detachable EV_TEXT)
 		local
 			retried: BOOLEAN
 			l_tgt_existed: BOOLEAN
@@ -534,22 +599,22 @@ feature {NONE} -- Implementation
 					f_tgt.close
 				end
 
-				if is_verbose then
-					text_widget.append_text ("Error while copying file to ")
-					text_widget.append_text (f_tgt.path.name)
-					text_widget.append_text ("%N")
+				if a_txt /= Void then
+					a_txt.append_text ("Error while copying file to ")
+					a_txt.append_text (f_tgt.path.name)
+					a_txt.append_text ("%N")
 				end
 			elseif f_tgt.exists and then not f_tgt.is_access_writable then
-				if is_verbose then
-					text_widget.append_text ("Could not replace file ")
-					text_widget.append_text (f_tgt.path.name)
-					text_widget.append_text ("%N")
+				if a_txt /= Void then
+					a_txt.append_text ("Could not replace file ")
+					a_txt.append_text (f_tgt.path.name)
+					a_txt.append_text ("%N")
 				end
 			elseif f_tgt.exists and then f_src.date < f_tgt.date then
-				if is_verbose then
-					text_widget.append_text ("Keep more recent file ")
-					text_widget.append_text (f_tgt.path.name)
-					text_widget.append_text ("%N")
+				if a_txt /= Void then
+					a_txt.append_text ("Keep more recent file ")
+					a_txt.append_text (f_tgt.path.name)
+					a_txt.append_text ("%N")
 				end
 			else
 				if f_tgt.exists then
@@ -562,14 +627,14 @@ feature {NONE} -- Implementation
 				f_src.copy_to (f_tgt)
 				f_src.close
 				f_tgt.close
-				if is_verbose then
+				if a_txt /= Void then
 					if l_tgt_existed then
-						text_widget.append_text ("Replace file ")
+						a_txt.append_text ("Replace file ")
 					else
-						text_widget.append_text ("Copy to file ")
+						a_txt.append_text ("Copy to file ")
 					end
-					text_widget.append_text (f_tgt.path.name)
-					text_widget.append_text ("%N")
+					a_txt.append_text (f_tgt.path.name)
+					a_txt.append_text ("%N")
 				end
 			end
 		rescue

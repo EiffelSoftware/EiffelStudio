@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			make_question_prompt (s, yes_no_cancel_buttons, cancel_button,
 						yes_button, cancel_button)
 
-			set_title ("Welcome ...")
+			set_title (interface_names.t_welcome)
 		end
 
 feature {NONE} -- User interface initialization
@@ -47,6 +47,10 @@ feature {NONE} -- User interface initialization
 			-- `a_container': The dialog's container where the user interface elements should be extended
 		do
 			Precursor (a_container)
+
+			set_button_text (cancel_button, interface_names.b_remind_me_later)
+			set_button_text (yes_button, interface_names.b_import)
+			set_button_text (no_button, interface_names.b_ignore)
 
 			set_button_action (cancel_button, agent on_next (False))
 			set_button_action (yes_button, agent on_import)

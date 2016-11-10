@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte node for object test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,17 +32,20 @@ feature {NONE} -- Creation
 		require
 			other_attached: other /= Void
 		do
-			make_b (other.target.enlarged, other.expression.enlarged, other.info, other.is_void_check)
+			make_b (other.target.enlarged, other.expression.enlarged, other.is_attached, other.info, other.is_void_check)
+		ensure
+			is_attached_set: is_attached = other.is_attached
+			info_set: info = other.info
+			is_void_check_set: is_void_check = other.is_void_check
 		end
 
 feature -- C code generation
 
 	analyze
-			-- Analyze reverse assignment
+			-- Analyze reverse assignment.
 		local
 			source_type: TYPE_A
 			target_type: TYPE_A
-			gen_type: GEN_TYPE_A
 		do
 				-- The target is always expanded in-line for de-referencing.
 				-- Ensure propagation in any generation mode (the propagation
@@ -76,8 +79,7 @@ feature -- C code generation
 				expression.propagate (no_register)
 			end
 				-- Current needed in the access if target is generic.
-			gen_type ?= target_type
-			if gen_type /= Void then
+			if attached {GEN_TYPE_A} target_type then
 				context.add_dftype_current
 			end
 			expression.analyze
@@ -115,9 +117,6 @@ feature -- C code generation
 			buf: GENERATION_BUFFER
 			target_type: TYPE_A
 			source_type: TYPE_A
-			source_class_type: CL_TYPE_A
-			target_class_type: CL_TYPE_A
-			basic_source_type: BASIC_A
 			l_target_solved_type: TYPE_A
 		do
 			buf := buffer
@@ -134,9 +133,8 @@ feature -- C code generation
 			else
 					-- Prepare source of reattachment if required
 				if source_type.is_expanded and then target_type.is_reference then
-					if source_type.is_basic then
+					if source_type.is_basic and then attached {BASIC_A} context.real_type (expression.type) as basic_source_type then
 							-- Reattachment of basic type to reference.
-						basic_source_type ?= context.real_type (expression.type)
 						basic_source_type.metamorphose (register, expression, buf)
 						buf.put_character (';')
 					else
@@ -176,10 +174,9 @@ feature -- C code generation
 				elseif target_type.is_expanded then
 					if source_type.is_expanded then
 							-- NOP if classes are different or normal assignment otherwise.
-						source_class_type ?= source_type
-						target_class_type ?= target_type
 						if
-							target_class_type /= Void and then source_class_type /= Void and then
+							attached {CL_TYPE_A} source_type as source_class_type and then
+							attached {CL_TYPE_A} target_type as target_class_type and then
 							target_class_type.class_id = source_class_type.class_id
 						then
 								-- Do normal assignment.
@@ -240,10 +237,9 @@ feature -- C code generation
 						result_value := true_constant
 					else
 						if
-							is_void_check or else (
-							not l_target_solved_type.has_like and then
-							(source_type.is_attached and then source_type.conform_to (context.context_class_type.associated_class, l_target_solved_type) or else
-							not source_type.is_attached and then source_type.as_attached_type.conform_to (context.context_class_type.associated_class, l_target_solved_type)) or else
+							is_void_check or else
+							(not l_target_solved_type.has_like and then
+							source_type.as_attached_type.conform_to (context.context_class_type.associated_class, l_target_solved_type) or else
 							l_target_solved_type.same_as (expression.type) or else
 							(l_target_solved_type.is_like and then attached {LIKE_FEATURE} l_target_solved_type as t and then
 							attached {CALL_ACCESS_B} expression as c and then c.feature_name_id = t.feature_name_id))
@@ -252,7 +248,7 @@ feature -- C code generation
 								-- because it always conforms to an object test local type.
 							if target = register then
 									-- Target is already set to the expression value.
-								if source_type.is_attached then
+								if is_attached or else source_type.is_attached then
 									result_value := true_constant
 								else
 									result_value := target_variable
@@ -262,7 +258,7 @@ feature -- C code generation
 									-- Target register is different from expression register.
 								target.print_register
 								buf.put_string (" = ")
-								if source_type.is_attached then
+								if is_attached or else source_type.is_attached then
 									register.print_register
 									result_value := true_constant
 								else
@@ -362,7 +358,7 @@ feature {NONE} -- Object test value
 			-- Expression value is stored in a target register
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

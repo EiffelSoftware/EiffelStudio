@@ -13,6 +13,10 @@
 			   `terminate` (possibly for the whole tree) or `close`.
 		Note: Make sure that launched process has exited before you exit you application.
 		]"
+	performance: "[
+			On windows a pair of calls to `launch` and `wait_for_exit` runs 4.5 times faster
+			than a call to `{EXECUTION_ENVIRONMENT}.system.
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"

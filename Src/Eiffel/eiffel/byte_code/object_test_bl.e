@@ -239,31 +239,35 @@ feature -- C code generation
 						if
 							is_void_check or else
 							(not l_target_solved_type.has_like and then
-							source_type.as_attached_type.conform_to (context.context_class_type.associated_class, l_target_solved_type) or else
+							source_type.as_attached_in (context.context_class_type.associated_class).conform_to (context.context_class_type.associated_class, l_target_solved_type) or else
 							l_target_solved_type.same_as (expression.type) or else
 							(l_target_solved_type.is_like and then attached {LIKE_FEATURE} l_target_solved_type as t and then
 							attached {CALL_ACCESS_B} expression as c and then c.feature_name_id = t.feature_name_id))
 						then
 								-- There is no need to check actual object type,
 								-- because it always conforms to an object test local type.
-							if target = register then
-									-- Target is already set to the expression value.
-								if is_attached or else source_type.is_attached then
-									result_value := true_constant
-								else
-									result_value := target_variable
-								end
+							if
+								source_type.is_expanded or else
+								(is_attached or else source_type.is_attached) and then
+								system.in_final_mode and then
+								not system.is_precompile_finalized and then
+								across system.root_creators as r all r.item.root_class.is_void_safe_construct end
+							then
+									-- The system is finalized in complete void safety and source expression is attached,
+									-- there are no bad surprises.
+								result_value := true_constant
 							else
-								buf.put_new_line
+									-- Plain voidness test.
+								result_value := target_variable
+							end
+							if target /= register then
 									-- Target register is different from expression register.
 								target.print_register
 								buf.put_string (" = ")
-								if is_attached or else source_type.is_attached then
+								if result_value = true_constant then
 									register.print_register
-									result_value := true_constant
 								else
 									expression_print_register
-									result_value := target_variable
 								end
 								buf.put_character (';')
 							end

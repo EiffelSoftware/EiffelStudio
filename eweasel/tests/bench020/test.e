@@ -38,7 +38,7 @@ feature
 			until
 				i <= 0
 			loop
-				e.system (command)
+				e.system (command + " " + arguments.first)
 				if e.return_code /= 0 then
 					exit ("%"" + command + "%" failed")
 				end
@@ -54,7 +54,7 @@ feature
 			until
 				i <= 0
 			loop
-				p := base_factory.process_launcher (command, Void, Void)
+				p := base_factory.process_launcher (command, arguments, Void)
 				p.launch
 				if p.launched then
 					p.wait_for_exit
@@ -76,7 +76,7 @@ feature
 			until
 				i <= 0
 			loop
-				p := factory.process_launcher (command, Void, Void)
+				p := factory.process_launcher (command, arguments, Void)
 				p.launch
 				if p.launched then
 					p.wait_for_exit
@@ -98,7 +98,7 @@ feature
 			until
 				i <= 0
 			loop
-				pp := factory.process_launcher (command, Void, Void)
+				pp := factory.process_launcher (command, arguments, Void)
 				pp.set_timer (create {PROCESS_THREAD_TIMER}.make (0))
 				pp.launch
 				if pp.launched then
@@ -138,7 +138,13 @@ feature
 
 	command: STRING_32
 		once
-			Result := (create {ARGUMENTS_32}).command_name + " 0"
+			Result := (create {ARGUMENTS_32}).command_name
+		end
+
+	arguments: ARRAYED_LIST [STRING_32]
+		once
+			create Result.make (1)
+			Result.extend ({STRING_32} "0")
 		end
 
 end

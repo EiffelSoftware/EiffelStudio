@@ -2211,6 +2211,10 @@ feature -- Label texts
 					]"), [a_version_name])
 		end
 
+
+	l_show_features: STRING_32 	do Result := locale.translation ("Show Features (Ctrl+Space)") end
+	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates (Ctrl+Space)") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING = " (version from)"

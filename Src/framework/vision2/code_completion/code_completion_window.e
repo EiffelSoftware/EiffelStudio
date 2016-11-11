@@ -47,6 +47,9 @@ feature {NONE} -- Initialization
 			create choice_list
 			create full_list.make_empty
 			create matches.make_empty
+			create option_template_feature
+			create code_template_label
+
 			choice_list.set_default_key_processing_handler (agent (a_key: EV_KEY): BOOLEAN
 				do
 					Result := not a_key.is_arrow and not (a_key.code = {EV_KEY_CONSTANTS}.key_tab)
@@ -66,6 +69,8 @@ feature {NONE} -- Initialization
 			docking_make
 
 			create vbox
+			vbox.extend (option_template_feature)
+			vbox.disable_item_expand (option_template_feature)
 			vbox.extend (choice_list)
 			vbox.extend (option_bar_box)
 			vbox.disable_item_expand (option_bar_box)
@@ -135,6 +140,9 @@ feature -- Access
 	option_bar_box_tpl: EV_VERTICAL_BOX
 			-- Option bar box for templates
 
+	option_template_feature: EV_VERTICAL_BOX
+			-- Widget to show template/feature CTRL +SPACE
+
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically.
 
@@ -142,7 +150,10 @@ feature -- Access
 			-- Insertion string
 
 	remainder: INTEGER
-			-- Number chars to remove on completion
+			-- Number chars to remove on completion	
+
+	code_template_label: EVS_LINK_LABEL
+			-- Label code  template.
 
 feature -- Status report
 

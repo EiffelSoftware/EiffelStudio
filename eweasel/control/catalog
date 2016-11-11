@@ -2838,6 +2838,7 @@ test	attachment-of-expanded-conversion	attach119 tcf pass void_safe attached_typ
 test	unsafe-attached-locals-as-detachable	attach120 tcf pass attached_types void_safe scope local validity
 test	uninitialized-agent-with-wrong-creation attach121 tcf pass attached_types void_safe creation attribute validity
 test	object-test-on-local-variable		attach122 tcf fail attached_types void_safe object_test local
+test	object-test-incomplete-void-safety	attach123 tcf fail attached_types void_safe object_test validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance

@@ -1,0 +1,124 @@
+test_name 	 object-test-incomplete-void-safety
+test_description Object test cannot be optimized away in incompletely void-safe code.
+
+copy_raw	library.e $CLUSTER library.e
+copy_raw	test.e $CLUSTER test.e
+
+define	BASE_ECF	base.ecf
+define	BASE_PRECOMPILE	$PRECOMPILED_BASE
+define	LIBRARY_VOID_SAFETY none
+copy_sub	library.ecf $TEST library.ecf
+
+define	VOID_SAFETY none
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE 	exec_output_f
+execute_result ok
+compare exec_output_f output
+
+cleanup_compile
+define	BASE_ECF	base-safe.ecf
+define	BASE_PRECOMPILE	$PRECOMPILED_BASE_SAFE
+define	LIBRARY_VOID_SAFETY all
+copy_sub	library.ecf $TEST library.ecf
+
+define	VOID_SAFETY conformance
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE 	exec_output_f
+execute_result ok
+compare exec_output_f output
+
+define	VOID_SAFETY initialization
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE 	exec_output_f
+execute_result ok
+compare exec_output_f output
+
+define	VOID_SAFETY transitional
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work 	NONE 	exec_output_m
+execute_result 	ok
+compare		exec_output_m output
+
+compile_frozen
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w
+execute_result 	ok
+compare		exec_output_w output
+
+compile_final
+compile_result ok
+c_compile_final
+c_compile_result ok
+execute_final NONE 	exec_output_f
+execute_result ok
+compare exec_output_f output
+
+define	VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_error TEST VEVI
+
+test_end

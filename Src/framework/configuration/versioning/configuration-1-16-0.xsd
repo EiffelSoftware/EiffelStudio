@@ -56,8 +56,13 @@
 			<xs:element name="root" type="root" minOccurs="0"/>
 			<xs:element name="version" type="version" minOccurs="0"/>
 			<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="option" type="target_option" minOccurs="0"/>
+			<xs:element name="option" type="option" minOccurs="0"/>
 			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="capability.catcall_detection" type="capability.catcall_detection" minOccurs="0"/>
+			<xs:element name="capability.code" type="capability.code" minOccurs="0"/>
+			<xs:element name="capability.concurrency" type="capability.concurrency" minOccurs="0"/>
+			<xs:element name="capability.platform" type="capability.platform" minOccurs="0"/>
+			<xs:element name="capability.void_safety" type="capability.void_safety" minOccurs="0"/>
 			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="external_include" type="external_location" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="external_cflag" type="external_value" minOccurs="0" maxOccurs="unbounded"/>
@@ -126,10 +131,8 @@
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
 		<xs:attribute name="msil_application_optimize" type="xs:boolean" use="optional"/>
 		<xs:attribute name="full_class_checking" type="xs:boolean" use="optional" default="true"/>
-		<xs:attribute name="cat_call_detection" type="xs:boolean" use="optional"/>
 		<xs:attribute name="is_attached_by_default" type="xs:boolean" use="optional" default="true"/>
 		<xs:attribute name="is_obsolete_routine_type" type="xs:boolean" use="optional" default="false"/>
-		<xs:attribute name="void_safety" type="void_safety_value" use="optional" default="all"/>
 		<xs:attribute name="syntax" use="optional" default="standard">
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
@@ -140,85 +143,106 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="cat_call_detection" use="optional" default="none">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:enumeration value="none"/>
-					<xs:enumeration value="conformance"/>
-					<xs:enumeration value="all"/>
-				</xs:restriction>
-			</xs:simpleType>
+	</xs:complexType>
+
+	<xs:complexType name="capability.catcall_detection">
+		<xs:attribute name="support" type="catcall_detection_value" use="optional" default="none">
+			<xs:annotation>
+				<xs:documentation>
+					Maximum supported level of cat call detection ordered as follows:
+					- none - no checks;
+					- conformance - conformance checks;
+					- all - complete cat call safety.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use" type="catcall_detection_value" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					A CAT-call detection level to be used when an associated target is used as a root.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="capability.code">
+		<xs:attribute name="support" type="code_list" use="optional" default="standard">
+			<xs:annotation>
+				<xs:documentation>
+					An unordered capability, multiple values can be specified at the same time.
+					If unspecified, any code kind is supported.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use" type="code_value" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					A code kind to be used when an associated target is used as a root.
+				</xs:documentation>
+			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
 
-	<xs:complexType name="target_option">
-	  <xs:complexContent>
-	    <xs:extension base="option">
-	      <xs:attribute name="root_void_safety" type="void_safety_value" use="optional">
-	        <xs:annotation>
-	          <xs:documentation>
-	            A void safety level to be used when an associated target is used as a root.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="root_catcall_detection" type="catcall_detection_value" use="optional">
-	        <xs:annotation>
-	          <xs:documentation>
-	            A CAT-call detection level to be used when an associated target is used as a root.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="concurrency" type="concurrency_value" use="optional" default="scoop">
-	        <xs:annotation>
-	          <xs:documentation>
-	            Concurrency values are ordered as follows:
-	            - thread - unstructured multithreading, least safe, least restrictions
-	            - none - single-threaded applications
-	            - scoop - SCOOP, most restrictions
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="root_concurrency" type="concurrency_value" use="optional" default="scoop">
-	        <xs:annotation>
-	          <xs:documentation>
-	            Concurrency value to be used when an associated target is used as a root.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="platform" type="platform_list" use="optional">
-	        <xs:annotation>
-	          <xs:documentation>
-	            An unordered capability, multiple values can be specified at the same time.
-	            If unspecified, any platform is supported.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="root_platform" type="platform_list" use="optional">
-	        <xs:annotation>
-	          <xs:documentation>
-	            A platform to be used when an associated target is used as a root.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="code" type="code_list" use="optional" default="standard">
-	        <xs:annotation>
-	          <xs:documentation>
-	            An unordered capability, multiple values can be specified at the same time.
-	            If unspecified, any code kind is supported.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	      <xs:attribute name="root_code" type="code_value" use="optional">
-	        <xs:annotation>
-	          <xs:documentation>
-	            A code kind to be used when an associated target is used as a root.
-	          </xs:documentation>
-	        </xs:annotation>
-	      </xs:attribute>
-	    </xs:extension>
-	  </xs:complexContent>
+	<xs:complexType name="capability.concurrency">
+		<xs:attribute name="support" type="concurrency_value" use="optional" default="scoop">
+			<xs:annotation>
+				<xs:documentation>
+					Concurrency values are ordered as follows:
+					- thread - unstructured multithreading, least safe, least restrictions
+					- none - single-threaded applications
+					- scoop - SCOOP, most restrictions
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use" type="concurrency_value" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					Concurrency value to be used when an associated target is used as a root.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 
+	<xs:complexType name="capability.platform">
+		<xs:attribute name="support" type="platform_list" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					An unordered capability, multiple values can be specified at the same time.
+					If unspecified, any platform is supported.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use" type="platform_list" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					A platform to be used when an associated target is used as a root.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="capability.void_safety">
+		<xs:attribute name="support" type="void_safety_value" use="optional" default="all">
+			<xs:annotation>
+				<xs:documentation>
+					Maximum supported level of void-safety ordered as follows:
+					- none - no checks;
+					- conformance - conformance checks;
+					- initialization - checks that variables are initialized before use + conformance;
+					- transitional - calls are only allowed on attached expressions + initialization;
+					- all - complete void-safety.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="use" type="void_safety_value" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					A void safety level to be used when an associated target is used as a root.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
 	<xs:complexType name="setting">
 		<xs:attribute name="name" type="available_settings" use="required"/>
 		<xs:attribute name="value" type="xs:string" use="required"/>

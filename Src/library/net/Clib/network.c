@@ -779,7 +779,7 @@ void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length
 	eif_net_check(c_put_stream_noexception(fd, stream_pointer, length));
 }
 
-EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
 	/* transmission of file content from file `f` of size length through socket out_fd.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
@@ -798,6 +798,9 @@ EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length,
 #endif
 	bytes_sent = 0;
 	bytes_to_read = length;
+	if (offset > 0) {
+		fseek(f, offset, SEEK_SET);
+	}
 	do {
 			/* Read chunk of bytes */
 		if (bytes_to_read < EIFNET_BUFFSIZE) {
@@ -838,7 +841,7 @@ EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length,
 #undef EIFNET_BUFFSIZE
 }
 
-EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
 	/* transmission of file content from file `f` of size length through socket out_fd.
 	 * On Windows, due to asynchronous potential behavior, wait for completion using `a_timeout_ms` value.
 	 *	NO exception is raised, and eventual error is return as result!
@@ -862,7 +865,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTE
 		HANDLE hFile = (HANDLE)_get_osfhandle(fileno(f));
 		OVERLAPPED ovlp;
 		DWORD bytes_to_send, bytes_sent;
-		DWORD curoff=0;
+		DWORD curoff=(DWORD) offset;
 		DWORD dwFlags = 0;
 		memset(&ovlp, 0, sizeof(OVERLAPPED));
 		ovlp.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -926,15 +929,15 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTE
 	} else {
 		static BOOL _TransmitFile_searched = FALSE;
 		if (_TransmitFile_searched) {
-			return (EIF_INTEGER) c_sendfile_fallback(out_fd, f, length, a_timeout_ms);
+			return (EIF_INTEGER) c_sendfile_fallback(out_fd, f, offset, length, a_timeout_ms);
 		} else {
 			_TransmitFile_searched = TRUE;
 			HMODULE dllHandle;
 			dllHandle = LoadLibrary("MSWSock.dll");
 			if (dllHandle != NULL) {
-				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
+				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFil");
 			}
-			return c_sendfile(out_fd, f, length, a_timeout_ms);
+			return c_sendfile(out_fd, f, offset, length, a_timeout_ms);
 		}
 	}
 #	undef LPTRANSMIT_FILE_BUFFERS
@@ -944,7 +947,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTE
 	if (length > 0) {
 		size_t bytes_to_send;
 		ssize_t bytes_sent;
-		off_t offset = 0;
+		off_t curoff = offset;
 		int fd;
 #ifdef EIF_WINDOWS
 		fd = _fileno(f);
@@ -952,7 +955,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER length, EIF_INTE
 		fd = fileno(f);
 #endif
 		bytes_to_send = (size_t) length;
-		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &offset, bytes_to_send) > 0) && (bytes_to_send > 0)) {
+		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &curoff, bytes_to_send) > 0) && (bytes_to_send > 0)) {
 			if (retval > 0) {
 				bytes_to_send = bytes_to_send - retval;
 				bytes_sent = bytes_sent + retval;

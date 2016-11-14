@@ -38,11 +38,7 @@ indexing
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
 
-
-#ifdef EIF_WINDOWS
-
 #include <stdio.h>
-#endif
 
 #ifdef I_SYS_TIME
 #include <sys/time.h>

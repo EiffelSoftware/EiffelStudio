@@ -12,6 +12,9 @@ class
 
 inherit
 	WGI_OUTPUT_STREAM
+		redefine
+			put_file_content
+		end
 
 	HTTP_STATUS_CODE_MESSAGES
 		export
@@ -93,6 +96,15 @@ feature -- Output
 			target.put_character_noexception (c)
 			last_target_call_succeed := not target.was_error
 		end
+
+	put_file_content (a_file: FILE; a_offset: INTEGER; a_byte_count: INTEGER)
+			-- Send `a_byte_count' bytes from the content of file `a_file' starting at offset `a_offset'.
+			--| Could be redefine for optimization.
+		do
+			last_target_call_succeed := False
+			target.put_file_content (a_file, a_offset, a_byte_count)
+			last_target_call_succeed := not target.was_error
+		end		
 
 feature -- Status report
 

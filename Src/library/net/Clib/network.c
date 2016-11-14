@@ -848,6 +848,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 	 */
 {
 #ifdef EIF_WINDOWS
+
 #	ifndef LPTRANSMIT_FILE_BUFFERS 
 #		define LPTRANSMIT_FILE_BUFFERS  void* 
 #	endif
@@ -911,7 +912,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 					} else if (rv == WAIT_TIMEOUT) {
 						return (EIF_INTEGER) -1;
 					} else {
-							/* either WAIT_FAILED or WAIT_ABANDONED */
+							/* either WAIT_FAILED or WAIT_ABANDONED or ... */
 						return (EIF_INTEGER) -1;
 					}
 				}
@@ -935,7 +936,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 			HMODULE dllHandle;
 			dllHandle = LoadLibrary("MSWSock.dll");
 			if (dllHandle != NULL) {
-				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFil");
+				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
 			}
 			return c_sendfile(out_fd, f, offset, length, a_timeout_ms);
 		}
@@ -949,11 +950,8 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 		ssize_t bytes_sent;
 		off_t curoff = offset;
 		int fd;
-#ifdef EIF_WINDOWS
-		fd = _fileno(f);
-#else
+
 		fd = fileno(f);
-#endif
 		bytes_to_send = (size_t) length;
 		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &curoff, bytes_to_send) > 0) && (bytes_to_send > 0)) {
 			if (retval > 0) {

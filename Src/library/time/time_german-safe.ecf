@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="time_german" uuid="DA858819-F6E3-4A4D-9C87-BC4A23384D9D" library_target="time_german">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="time_german" uuid="DA858819-F6E3-4A4D-9C87-BC4A23384D9D" library_target="time_german">
 	<target name="time_german">
 		<note>
 			<eis auto="true" src="$(ISE_DOC_REF)/$(unique_id)"/>
 			<eis src="$(ISE_DOC_UUID)/3d96626f-11f3-67a2-dec6-69f7faf4a8d6" tag="EiffelTime" protocol="" name="EiffelTime"/>
 		</note>
-		<description>EiffelTime: Date/Time abstractions and computations.
-			Copyright (c) 1984-2013, Eiffel Software and others.
-			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<description>
+			EiffelTime: Date/Time abstractions and computations.
+			Copyright (c) 1984-2016, Eiffel Software and others.
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+		</description>
 		<root all_classes="true"/>
-		<option void_safety="all" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
@@ -25,9 +27,9 @@
 			</option>
 			<file_rule>
 				<exclude>/\.svn$</exclude>
-				<exclude>/french$</exclude>
-				<exclude>/english$</exclude>
 				<exclude>/dotnet$</exclude>
+				<exclude>/english$</exclude>
+				<exclude>/french$</exclude>
 				<exclude>/tests$</exclude>
 				<condition>
 					<dotnet value="false"/>
@@ -35,9 +37,9 @@
 			</file_rule>
 			<file_rule>
 				<exclude>/\.svn$</exclude>
-				<exclude>/french$</exclude>
-				<exclude>/english$</exclude>
 				<exclude>/classic$</exclude>
+				<exclude>/english$</exclude>
+				<exclude>/french$</exclude>
 				<exclude>/tests$</exclude>
 				<condition>
 					<dotnet value="true"/>

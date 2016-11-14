@@ -450,6 +450,7 @@ feature {NONE} -- Implementation
 					k := 2
 				loop
 					Result.put (argument.item, k)
+					k := k + 1
 				end
 			else
 				create Result.make_filled (program_file_name, 1, 1)

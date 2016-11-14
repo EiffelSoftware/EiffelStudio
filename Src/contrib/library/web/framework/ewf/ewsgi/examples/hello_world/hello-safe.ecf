@@ -9,7 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
 		</option>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="connector_standalone" location="..\..\connectors\standalone\standalone-safe.ecf" readonly="false"/>
 		<library name="ewsgi" location="..\..\ewsgi-safe.ecf" readonly="false"/>

@@ -1,13 +1,14 @@
-note
+﻿note
 	description: "Checker for capability options violations."
 	instruction: "[
 			The following violations are detected:
 			1. Class void safety level is less than the level of its cluster.
 			2. Class cat-call detected level is less than the level of its cluster.
 			3. Target capability option should be less than capability option of
-				a) a target (if any) it extends
+				a) a target (if any) it extends (reported as warning because 5 will catch actual issues)
 				b) any group it depends on
 			4. Target root option should be less than target capability option.
+			5. Root target root option should be less than any dependent target capability option.
 		]"
 
 class CONF_CAPABILITY_CHECKER
@@ -35,16 +36,11 @@ feature {NONE} -- Creation
 			-- report errors (if any) to observer `o'.
 		do
 			observer := o
+			root_target := t
 			target := Void
 			create targets.make (1)
-			has_error := False
 			process_target (t)
 		end
-
-feature {NONE} -- Status report
-
-	has_error: BOOLEAN
-			-- Has an error been detected?
 
 feature {NONE} -- Access
 
@@ -57,7 +53,7 @@ feature {CONF_VISITABLE} -- Visitor
 			-- <Precursor>
 		local
 			uuid: UUID
-			old_target: detachable CONF_TARGET
+			old_target: CONF_TARGET
 		do
 			uuid := t.system.uuid
 			if not targets.has (t) then
@@ -75,21 +71,21 @@ feature {CONF_VISITABLE} -- Visitor
 				end
 					-- Check rule 4.
 				if not t.options.catcall_safety_capability.is_custom_root_valid then
-					observer.update (create {CONF_ERROR_ROOT_OPTION}.make
+					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
 						(t,
 						conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.custom_root_index],
 						conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.value.index],
 						conf_interface_names.option_catcall_detection_name))
 				end
 				if not t.options.concurrency_capability.is_custom_root_valid then
-					observer.update (create {CONF_ERROR_ROOT_OPTION}.make
+					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
 						(t,
 						conf_interface_names.option_concurrency_value [t.options.concurrency_capability.custom_root_index],
 						conf_interface_names.option_concurrency_value [t.options.concurrency_capability.value.index],
 						conf_interface_names.option_concurrency_name))
 				end
 				if not t.options.void_safety_capability.is_custom_root_valid then
-					observer.update (create {CONF_ERROR_ROOT_OPTION}.make
+					observer.report_error (create {CONF_ERROR_ROOT_OPTION}.make
 						(t,
 						conf_interface_names.option_void_safety_value [t.options.void_safety_capability.custom_root_index],
 						conf_interface_names.option_void_safety_value [t.options.void_safety_capability.value.index],
@@ -148,6 +144,9 @@ feature {CONF_VISITABLE} -- Visitor
 
 feature {NONE} -- Traversal
 
+	root_target: CONF_TARGET
+			-- A target for which all the checks are performed.
+
 	target: detachable CONF_TARGET
 			-- A target being processed.
 
@@ -163,8 +162,7 @@ feature {NONE} -- Traversal
 				loop
 						-- Check rule 1.
 					if option.item.void_safety.index < cluster.options.void_safety.index then
-						has_error := True
-						observer.update (create {CONF_ERROR_CLASS_CAPABILITY}.make
+						observer.report_error (create {CONF_ERROR_CLASS_CAPABILITY}.make
 							(option.key,
 							cluster,
 							conf_interface_names.option_void_safety_value [option.item.void_safety.index],
@@ -173,8 +171,7 @@ feature {NONE} -- Traversal
 					end
 						-- Check rule 2.
 					if option.item.catcall_detection.index < cluster.options.catcall_detection.index then
-						has_error := True
-						observer.update (create {CONF_ERROR_CLASS_CAPABILITY}.make
+						observer.report_error (create {CONF_ERROR_CLASS_CAPABILITY}.make
 							(option.key,
 							cluster,
 							conf_interface_names.option_catcall_detection_value [option.item.catcall_detection.index],
@@ -191,8 +188,7 @@ feature {NONE} -- Traversal
 			if attached group.internal_options as option then
 					-- Check rule 3b: it applies only to CAT-call detection and void safety.
 				if option.catcall_detection.index < t.options.catcall_detection.index then
-					has_error := True
-					observer.update (create {CONF_ERROR_GROUP_CAPABILITY}.make
+					observer.report_error (create {CONF_ERROR_GROUP_CAPABILITY}.make
 						(group,
 						t,
 						conf_interface_names.option_catcall_detection_value [option.catcall_detection.index],
@@ -200,8 +196,7 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_catcall_detection_name))
 				end
 				if option.void_safety.index < t.options.void_safety.index then
-					has_error := True
-					observer.update (create {CONF_ERROR_GROUP_CAPABILITY}.make
+					observer.report_error (create {CONF_ERROR_GROUP_CAPABILITY}.make
 						(group,
 						t,
 						conf_interface_names.option_void_safety_value [option.void_safety.index],
@@ -217,8 +212,7 @@ feature {NONE} -- Traversal
 			if attached parent.internal_options as option then
 					-- Check rule 3a.
 				if option.catcall_detection.index < t.options.catcall_detection.index then
-					has_error := True
-					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
+					observer.report_warning (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
 						conf_interface_names.option_catcall_detection_value [option.catcall_detection.index],
@@ -226,8 +220,7 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_catcall_detection_name))
 				end
 				if option.concurrency.index < t.options.concurrency.index then
-					has_error := True
-					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
+					observer.report_warning (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
 						conf_interface_names.option_concurrency_value [option.concurrency.index],
@@ -235,12 +228,36 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_concurrency_name))
 				end
 				if option.void_safety.index < t.options.void_safety.index then
-					has_error := True
-					observer.update (create {CONF_ERROR_TARGET_CAPABILITY}.make
+					observer.report_warning (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
 						conf_interface_names.option_void_safety_value [option.void_safety.index],
 						conf_interface_names.option_void_safety_value [t.options.void_safety.index],
+						conf_interface_names.option_void_safety_name))
+				end
+					-- Check rule 5.
+				if not option.catcall_safety_capability.is_capable (root_target.options.catcall_safety_capability.root_index) then
+					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
+						(parent,
+						root_target,
+						conf_interface_names.option_catcall_detection_value [option.catcall_safety_capability.value.index],
+						conf_interface_names.option_catcall_detection_value [root_target.options.catcall_safety_capability.root_index],
+						conf_interface_names.option_catcall_detection_name))
+				end
+				if not option.concurrency_capability.is_capable (root_target.options.concurrency_capability.root_index) then
+					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
+						(parent,
+						root_target,
+						conf_interface_names.option_concurrency_value [option.concurrency_capability.value.index],
+						conf_interface_names.option_concurrency_value [root_target.options.concurrency_capability.root_index],
+						conf_interface_names.option_concurrency_name))
+				end
+				if not option.void_safety_capability.is_capable (root_target.options.void_safety_capability.root_index) then
+					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
+						(parent,
+						root_target,
+						conf_interface_names.option_void_safety_value [option.void_safety_capability.value.index],
+						conf_interface_names.option_void_safety_value [root_target.options.void_safety_capability.root_index],
 						conf_interface_names.option_void_safety_name))
 				end
 			end

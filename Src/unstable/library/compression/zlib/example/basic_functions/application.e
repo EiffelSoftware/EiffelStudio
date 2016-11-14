@@ -16,7 +16,7 @@ inherit
 
 	UTIL_EXTERNALS
 
-	PAYLOAD_USE_CASES
+	PAYLOAD_DATA
 
 create
 	make
@@ -37,6 +37,9 @@ feature {NONE} -- Initialization
 --			print ((l_finish_time - l_start_time).duration.out)
 --			stream_example_string_2
 --			stream_example_string_ws
+--			perfomance_8192
+--			io.read_line
+--			perfomance_16384
 			stream_example_string_ws2
 			io.read_line
 		end
@@ -169,13 +172,6 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 			l_byte: SPECIAL [INTEGER_8]
 		do
 			input_string:= "Hello"
---			input_string:= "[
---			zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
---zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
---Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
---Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
---The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
---]"
 			create output_string.make_empty
 			create dc.string_stream (output_string)
 			dc.mark_full_flush
@@ -210,6 +206,7 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 				create dc.string_stream (output_string)
 				dc.mark_full_flush
 				dc.put_string (input_string)
+			
 				l_array := string_to_array (output_string)
 				l_byte := byte_array (l_array)
 
@@ -222,6 +219,76 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 				print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
 			end
 
+
+feature -- Performance
+
+		perfomance_16384
+			local
+				di: ZLIB_STRING_UNCOMPRESS
+				dc: ZLIB_STRING_COMPRESS
+				input_string: STRING
+				output_string: STRING
+				sw: DT_STOPWATCH
+				i: INTEGER
+			do
+				create sw.make
+				sw.start
+				from
+					i := 1
+				until
+					i > 1000
+				loop
+					input_string:= payload_size_16384
+					create output_string.make_empty
+					create dc.string_stream (output_string)
+					dc.mark_full_flush
+					dc.put_string (input_string)
+					create di.string_stream (output_string)
+					check
+						same_string: input_string.same_string (di.to_string)
+					end
+					print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+					print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+					i := i + 1
+				end
+				sw.stop
+
+				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
+			end
+
+		perfomance_8192
+			local
+				di: ZLIB_STRING_UNCOMPRESS
+				dc: ZLIB_STRING_COMPRESS
+				input_string: STRING
+				output_string: STRING
+				sw: DT_STOPWATCH
+				i: INTEGER
+			do
+				create sw.make
+				sw.start
+				from
+					i := 1
+				until
+					i > 1000
+				loop
+					create input_string.make_from_string (payload_size_8192)
+					create output_string.make_empty
+					create dc.string_stream (output_string)
+					dc.mark_full_flush
+					dc.put_string (input_string)
+					create di.string_stream (output_string)
+					check
+						same_string: input_string.same_string (di.to_string)
+					end
+					print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
+					print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+					i := i + 1
+				end
+				sw.stop
+
+				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
+			end
 
 feature -- Custom Deflate Implementation
 
@@ -315,6 +382,8 @@ feature -- Custom Deflate Implementation
 				Result := l_zlib.last_operation
 			end
 		end
+
+
 
 feature -- Custom Inflate Implementation
 

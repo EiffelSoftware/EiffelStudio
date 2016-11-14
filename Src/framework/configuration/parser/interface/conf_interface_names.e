@@ -360,7 +360,7 @@ feature -- Option names and descriptions
 	option_concurrency_name: STRING_32 do Result := locale.translation_in_context ("Concurrency", "configuration") end
 	option_concurrency_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
 				Concurrency mode:
-				 • Unstructured - multithreading based on EiffelThread library or built-in (in .NET);
+				 • Thread - unstructured multithreading based on EiffelThread library or built-in (in .NET);
 				 • None - no concurrency, mono-threaded;
 				 • SCOOP - controlled by SCOOP rules.
 			]", "configuration") end
@@ -368,7 +368,7 @@ feature -- Option names and descriptions
 			-- Name of a catcall detection option value indexed by the corresponding option index.
 		once
 			create Result.make_from_array (<<
-				locale.translation_in_context ("Unstructured", "configuration.concurrency"),
+				locale.translation_in_context ("Thread", "configuration.concurrency"),
 				locale.translation_in_context ("None", "configuration.concurrency"),
 				locale.translation_in_context ("SCOOP", "configuration.concurrency")
 			>>)
@@ -1201,7 +1201,7 @@ feature -- Capability errors
 	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Option %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
+				("Capability %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
 				% incompatible with value %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
 				capability, -- 1
 				parent_value, -- 2
@@ -1215,12 +1215,26 @@ feature -- Capability errors
 	e_incompatible_root_option (capability, root_value, capability_value, target_name, system: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Root option %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
+				("Setting %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
 				capability, -- 1
 				root_value, -- 2
 				capability_value, -- 3
 				target_name, -- 4
 				system) -- 5
+		end
+
+	e_incompatible_root_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+		do
+			Result := locale.formatted_string (locale.translation_in_context
+				("Setting %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
+				% incompatible with capability %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
+				capability, -- 1
+				parent_value, -- 2
+				parent_name, -- 3
+				parent_system, -- 4
+				target_value, -- 5
+				target_name, -- 6
+				target_system) -- 7
 		end
 
 feature -- Boolean values

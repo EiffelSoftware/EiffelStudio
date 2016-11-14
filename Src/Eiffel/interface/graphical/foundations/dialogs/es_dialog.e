@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
     on_after_initialized
             -- <Precursor>
         local
-        	l_sp_info: TUPLE [x, y, width, height: INTEGER]
         	l_titled_window: EV_WINDOW_ACTION_SEQUENCES
         do
 			dialog.set_icon_pixmap (icon)
@@ -102,8 +101,7 @@ feature {NONE} -- Initialization
 	       		if session_manager.is_service_available then
 
 	       				-- Retrieve persisted session data size/position information
-	       			l_sp_info ?= session_data.value (dialog_session_id)
-	       			if l_sp_info /= Void then
+	       			if attached {TUPLE [x, y, width, height: INTEGER]} session_data.value (dialog_session_id) as l_sp_info then
 	       					-- Previous session data is available
 --	       				create l_screen
 -- Currently the saved position is not used because it should be saved relative to the parent window.
@@ -516,8 +514,9 @@ feature {NONE} -- Status setting
 		local
 			l_recycler: EB_RECYCLABLE
 		do
-			l_recycler ?= a_widget
-			if l_recycler = Void then
+			if attached {EB_RECYCLABLE} a_widget as r then
+				l_recycler := r
+			else
 				l_recycler := Current
 			end
 			check l_recycler_attached: l_recycler /= Void end

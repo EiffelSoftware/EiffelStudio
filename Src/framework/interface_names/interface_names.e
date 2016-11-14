@@ -45,6 +45,7 @@ feature -- Button texts
 	b_alphabetical_cluster_list: STRING_32 		do Result := locale.translation("Alphabetical cluster list")	end
 	b_And: STRING_32								do Result := locale.translation("And")	end
 	b_Apply: STRING_32							do Result := locale.translation("Apply")	end
+	b_Advanced: STRING_32							do Result := locale.translation("Advanced")	end
 	b_Browse: STRING_32							do Result := locale.translation("Browse...")	end
 	b_C_functions: STRING_32						do Result := locale.translation("C Functions")	end
 	b_change: STRING_32 							do Result := locale.translation ("Change")	end
@@ -72,6 +73,7 @@ feature -- Button texts
 	b_Down_text: STRING_32 						do Result := locale.translation("Down")	end
 	b_Edit_ace: STRING_32						do Result := locale.translation("Edit")	end
 	b_Edit_command: STRING_32					do Result := locale.translation("Edit...")	end
+	b_Edit_settings: STRING_32					do Result := locale.translation("Edit")	end
 	b_Eiffel_features: STRING_32					do Result := locale.translation("Eiffel Features")	end
 
 	b_Force_execution_mode: STRING_32				do Result := locale.translation("Force Execution Mode")	end
@@ -100,6 +102,7 @@ feature -- Button texts
 	b_put_handle_right: STRING_32				do Result := locale.translation("Put handle right")	end
 	b_put_two_handle_right: STRING_32			do Result := locale.translation("Put two handles right")	end
 	b_put_two_handle_left: STRING_32				do Result := locale.translation("Put two handles left")	end
+	b_remind_me_later: STRING_32				do Result := locale.translation("Remind me later")	end
 
 	b_Replace: STRING_32							do Result := locale.translation("Replace")	end
 	b_Replace_all: STRING_32						do Result := locale.translation("Replace all")	end
@@ -203,6 +206,8 @@ feature -- Button texts
 	b_overwrite: STRING_32						do Result := locale.translation("Overwrite") end
 	b_append: STRING_32							do Result := locale.translation("Append") end
 	b_ignore: STRING_32							do Result := locale.translation("Ignore") end
+	b_import: STRING_32							do Result := locale.translation ("Import") end
+	
 	b_force_exit: STRING_32						do Result := locale.translation("Force Exit") end
 
 	b_error: STRING_32							do Result := locale.translation("Error") end
@@ -245,6 +250,7 @@ feature -- Button texts
 	b_Ignore_external_exception: STRING_32		do Result := locale.translation ("Ignore External Exception?") end
 	b_Disable_catcall_console_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Console Warning?") end
 	b_Disable_catcall_debugger_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Debugger Warning?") end
+	b_import_settings: STRING_32	do Result := locale.translation ("Import Settings") end
 
 feature -- Choices
 
@@ -758,6 +764,7 @@ feature -- Accelerator, focus label and menu name
 	m_Zoom_reset: STRING_32 				do Result := locale.translation("Reset")	end
 	m_use_current_environment_variables: STRING_32 		do Result := locale.translation("Use current environment variables")	end
 	m_use_current_environment_value: STRING_32 		do Result := locale.translation("Use current environment value")	end
+	m_update_debugging_profile_title_with_suggestion: STRING_32 do Result := locale.translation("Update title with suggestion") end
 	f_Wizard_precompile: STRING_32		do Result := locale.translation("Wizard to precompile libraries")	end
 	f_go_to_first_occurrence: STRING_32	do Result := locale.translation("Double click to go to first occurrence")	end
 	f_show: STRING_32 do Result := locale.translation ("Show ") end
@@ -906,6 +913,7 @@ feature -- Formatter displayer names
 	l_remove_stone_handler: STRING_32 do Result := locale.translation ("Remove selected stone handler") end
 	l_stone_handler: STRING_32 do Result := locale.translation ("Stone handler") end
 	l_stone_handler_help: STRING_32 do Result := locale.translation ("Specify default tools for specific stones") end
+	l_advanced_options: STRING_32 do Result := locale.translation ("Advanced options") end
 
 feature -- Toggles
 
@@ -2189,6 +2197,24 @@ feature -- Label texts
 			Result := locale.formatted_string ("(must conform to $1)", [a_type])
 		end
 
+	l_installed_versions: STRING_32 do Result := locale.translation ("Installed Versions") end
+	l_settings_management: STRING_32 do Result := locale.translation ("Settings Management") end
+	l_edit_custom_settings: STRING_32 do Result := locale.translation ("edit to set custom values ...") end
+
+	l_first_time_import_settings_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+					You are using EiffelStudio $1 for the first time.
+					Do you want to import settings from a previous installation?
+					
+					(Note: It is always possible to import settings using the menu Tools > Import Settings)
+					]"), [a_version_name])
+		end
+
+
+	l_show_features: STRING_32 	do Result := locale.translation ("Show Features (Ctrl+Space)") end
+	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates (Ctrl+Space)") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING = " (version from)"
@@ -2535,6 +2561,7 @@ feature -- Title part
 	t_Search_Report_tool: STRING_32				do Result := locale.translation ("Search Report")	end
 	t_See_failure_trace: STRING_32				do Result := locale.translation ("See failure trace")	end
 	t_Windows_tool: STRING_32					do Result := locale.translation ("Windows")	end
+	t_Welcome: STRING_32	do Result := locale.translation ("Welcome")	end
 	t_Welcome_to_new_unit_test_wizard: STRING_32	do Result := locale.translation ("New Unit Test Wizard")	end
 	t_Watch_tool: STRING_32						do Result := locale.translation ("Watch")	end
 	t_watch_tool_error_message: STRING_32		do Result := locale.translation ("Watch tool :: error message")	end

@@ -24,7 +24,7 @@
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf">
 			<condition>
-				<concurrency excluded_value="none"/>
+				<concurrency value="thread"/>
 			</condition>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

@@ -161,6 +161,9 @@ feature {NONE} -- Implementation
 			l_name: detachable STRING
 			u: FILE_UTILITIES
 		do
+			name := ""
+			path := ""
+			file_name := ""
 			if not is_error then
 				create l_lst.make_from_array (partial_classes.current_keys)
 				epc_merger.merge (l_lst)
@@ -170,9 +173,6 @@ feature {NONE} -- Implementation
 					else
 						last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error in merging partial classes.")
 					end
-					name := ""
-					path := ""
-					file_name := ""
 				else
 					path := group.target.system.uuid.out + "/" + group.name
 
@@ -219,7 +219,7 @@ feature {NONE} -- Shared instances
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

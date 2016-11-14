@@ -13,7 +13,7 @@
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="c_config_library" location="main\config\" recursive="true"/>
 	</target>

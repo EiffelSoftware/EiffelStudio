@@ -6,6 +6,7 @@ class LACE_I
 
 inherit
 	SHARED_WORKBENCH
+	SHARED_BATCH_NAMES
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
 	COMPILER_EXPORTER
@@ -49,6 +50,16 @@ inherit
 		end
 
 	SHARED_CONF_SETTING
+		export
+			{NONE} all
+		end
+
+	CONF_ERROR_OBSERVER
+		export
+			{NONE} all
+		end
+
+	CONF_INTERFACE_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -712,6 +723,8 @@ feature {NONE} -- Implementation
 				parse_target (l_new_target)
 			end
 
+			validate_capabilities
+
 				-- Only set the new target when parsing is ok, otherwise we get a failure,
 				-- See eweasel test#config028 and test#config029.
 			universe.set_new_target (l_new_target)
@@ -727,6 +740,59 @@ feature {NONE} -- Implementation
 					-- Reset `Workbench'
 				successful := False
 			end
+		end
+
+	validate_capabilities
+			-- Check if capability validity rules are satisfied.
+		do
+			if attached target as t then
+				(create {CONF_CAPABILITY_CHECKER}.make (t, Current)).do_nothing
+					-- Check compiler-specific rule for precompiled libraries:
+					-- Target root option should be related to precompiled option as
+					-- 	• cat-call: both "none" or both not "none"
+					-- 	• concurrency: equal
+					-- 	• void-safety: both "none" or both not "none"
+				if attached t.precompile as precompiled and then attached precompiled.library_target as p then
+					if
+						(t.options.catcall_safety_capability.root_index = {CONF_TARGET_OPTION}.catcall_detection_index_none) /=
+						(p.options.catcall_safety_capability.root_index = {CONF_TARGET_OPTION}.catcall_detection_index_none)
+					then
+						error_handler.insert_error (create {VD46}.make (messages.e_precompile_catcall_detection_mismatch (
+							conf_interface_names.option_catcall_detection_value [t.options.catcall_safety_capability.root_index],
+							conf_interface_names.option_catcall_detection_value [p.options.catcall_safety_capability.root_index],
+							conf_interface_names.option_catcall_detection_value [{CONF_TARGET_OPTION}.catcall_detection_index_none])))
+					end
+					if t.options.concurrency_capability.root_index /= p.options.concurrency_capability.root_index then
+						error_handler.insert_error (create {VD46}.make (messages.e_precompile_concurrency_mismatch (
+							conf_interface_names.option_concurrency_value [t.options.concurrency_capability.root_index],
+							conf_interface_names.option_concurrency_value [p.options.concurrency_capability.root_index])))
+					end
+					if
+						(t.options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_none) /=
+						(p.options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_none)
+					then
+						error_handler.insert_error (create {VD46}.make (messages.e_precompile_void_safety_mismatch (
+							conf_interface_names.option_void_safety_value [t.options.void_safety_capability.root_index],
+							conf_interface_names.option_void_safety_value [p.options.void_safety_capability.root_index],
+							conf_interface_names.option_void_safety_value [{CONF_TARGET_OPTION}.void_safety_index_none])))
+					end
+				end
+				if error_handler.has_error then
+					error_handler.raise_error
+				end
+			end
+		end
+
+	report_error (e: CONF_ERROR)
+			-- <Precursor>
+		do
+			error_handler.insert_error (create {VD00}.make (e))
+		end
+
+	report_warning (e: CONF_ERROR)
+			-- <Precursor>
+		do
+			error_handler.insert_warning (create {VD00}.make (e))
 		end
 
 	parse_target (a_target: CONF_TARGET)

@@ -17,25 +17,25 @@ create
 feature -- Access
 
 	process_handle: POINTER
-			-- Handle to process
+			-- Handle to process.
 		do
 			Result := cwel_process_info_get_process_handle (item)
 		end
 
 	thread_handle: POINTER
-			-- Handle to thread
+			-- Handle to thread.
 		do
 			Result := cwel_process_info_get_thread_handle (item)
 		end
 
-	process_id: INTEGER
-			-- Process identifier
+	process_id: INTEGER_32
+			-- Process identifier.
 		do
 			Result := cwel_process_info_get_process_id (item)
 		end
 
-	thread_id: INTEGER
-			-- Thread identifier
+	thread_id: INTEGER_32
+			-- Thread identifier.
 		do
 			Result := cwel_process_info_get_thread_id (item)
 		end
@@ -105,12 +105,12 @@ feature {NONE} -- Externals
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): HANDLE"
 		end
 
-	cwel_process_info_get_process_id (ptr: POINTER): INTEGER
+	cwel_process_info_get_process_id (ptr: POINTER): INTEGER_32
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
 
-	cwel_process_info_get_thread_id (ptr: POINTER): INTEGER
+	cwel_process_info_get_thread_id (ptr: POINTER): INTEGER_32
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*): DWORD"
 		end
@@ -125,25 +125,25 @@ feature {NONE} -- Externals
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, HANDLE)"
 		end
 
-	cwel_process_info_set_process_id (ptr: POINTER; a_id: INTEGER)
+	cwel_process_info_set_process_id (ptr: POINTER; a_id: INTEGER_32)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, DWORD)"
 		end
 
-	cwel_process_info_set_thread_id (ptr: POINTER; a_id: INTEGER)
+	cwel_process_info_set_thread_id (ptr: POINTER; a_id: INTEGER_32)
 		external
 			"C [macro %"wel_process_info.h%"] (PROCESS_INFORMATION*, DWORD)"
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

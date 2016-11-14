@@ -166,6 +166,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := acknowledge_not_loaded_preference.value
 		end
 
+	show_first_launching_dialog: BOOLEAN
+			--
+		do
+			Result := show_first_launching_dialog_preference.value
+		end
+
 	show_starting_dialog: BOOLEAN
 			--
 		do
@@ -339,6 +345,7 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 			-- before it is completely loaded?
 
 	show_starting_dialog_preference: BOOLEAN_PREFERENCE
+	show_first_launching_dialog_preference: BOOLEAN_PREFERENCE
 	confirm_change_resource_need_restart_preference: BOOLEAN_PREFERENCE
 	generate_homonyms_preference: BOOLEAN_PREFERENCE
 	stop_execution_when_compiling_preference: BOOLEAN_PREFERENCE
@@ -407,6 +414,7 @@ feature -- Preference strings
 	acknowledge_not_loaded_string: STRING = "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING = "interface.dialogs.confirm_finalize_precompile"
 	show_starting_dialog_string: STRING = "interface.dialogs.show_starting_dialog"
+	show_first_launching_dialog_string: STRING = "interface.dialogs.show_first_launching_dialog"
 	confirm_change_resource_need_restart_string: STRING = "interface.dialogs.confirm_resource_change_needs_restart"
 	generate_homonyms_string: STRING = "interface.dialogs.generate_homonyms"
 	stop_execution_when_compiling_string: STRING = "interface.dialogs.stop_execution_when_compiling"
@@ -478,6 +486,8 @@ feature {NONE} -- Implementation
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
 			confirm_finalize_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_precompile_string, True)
 			show_starting_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_starting_dialog_string, True)
+			show_first_launching_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_first_launching_dialog_string, True)
+			show_first_launching_dialog_preference.set_hidden (True)
 			confirm_change_resource_need_restart_preference := l_manager.new_boolean_preference_value (l_manager, confirm_change_resource_need_restart_string, True)
 			generate_homonyms_preference := l_manager.new_boolean_preference_value (l_manager, generate_homonyms_string, True)
 			stop_execution_when_compiling_preference := l_manager.new_boolean_preference_value (l_manager, stop_execution_when_compiling_string, True)
@@ -541,6 +551,7 @@ invariant
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
 	show_starting_dialog_preference_not_void: show_starting_dialog_preference /= Void
+	show_first_launching_dialog_preference_not_void: show_first_launching_dialog_preference /= Void
 	confirm_change_resource_need_restart_preference_not_void: confirm_change_resource_need_restart_preference /= Void
 	generate_homonyms_preference_not_void: generate_homonyms_preference /= Void
 	stop_execution_when_compiling_preference_not_void: stop_execution_when_compiling_preference /= Void
@@ -559,7 +570,7 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -5665,11 +5665,10 @@ feature {NONE} -- Visitor
 				-- Type check expression
 			l_as.expression.process (Current)
 
-			if last_type /= Void and not l_has_type_error then
+			if attached last_type as expression_type and not l_has_type_error then
 				if l_as.is_attached_keyword and local_type = Void then
 						-- Set `local_type' to the type of the expression and make it attached.
-					local_type := last_type
-					local_type := local_type.as_attached_in (context.current_class)
+					local_type := expression_type.as_attached_in (context.current_class)
 				end
 				check local_type_attached: local_type /= Void end
 				if local_id /= Void or l_as.type /= Void then
@@ -5693,7 +5692,7 @@ feature {NONE} -- Visitor
 					if l_needs_byte_node then
 						expr ?= last_byte_node
 						create local_b.make (local_info.position, current_feature.body_index, local_type)
-						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, local_type.create_info, l_as.type = Void)
+						create {OBJECT_TEST_B} last_byte_node.make (local_b, expr, expression_type.is_implicitly_attached, local_type.create_info, l_as.type = Void)
 					end
 				elseif l_needs_byte_node then
 					create l_bin_ne

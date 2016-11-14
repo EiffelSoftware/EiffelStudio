@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Lexical analysis of the resource."
@@ -7,7 +7,7 @@ note
 	date: "$Date$";
 	revision: "$Revision $"
 
-class RESOURCE_LEX
+deferred class RESOURCE_LEX
 
 inherit
 
@@ -31,15 +31,15 @@ feature -- Parsing
 				last_character /= ' ')
 			loop
 				read_character
-			end;
+			end
 			from
 			until
 				not end_of_line or l_resource_file.end_of_file
 			loop
 				read_line
-			end;
+			end
 			parse_comments
-		end;
+		end
 
 	parse_comments
 			-- Get rid of the comments.
@@ -64,58 +64,53 @@ feature -- Parsing
 					read_line
 				end
 			end
-		end;
+		end
 
 	parse_name
 			-- Parse a name and put it in `last_token'.
 			-- `last_token' is void if a syntax error occurred.
 			-- A name as the same form as an Eiffel identifier.
 		local
-			stop: BOOLEAN
 			l_last_token: like last_token
 		do
-			parse_separators;
+			parse_separators
 			if end_of_file then
 				last_token := Void
 			else
 				from
 					inspect last_character
 					when 'a'..'z', 'A'..'Z' then
-						create l_last_token.make (10);
-						last_token := l_last_token
-						l_last_token.extend (last_character);
+						create l_last_token.make (10)
+						l_last_token.extend (last_character)
 						read_character
-					else
-						stop := true;
-						last_token := Void
 					end
+					last_token := l_last_token
 				until
-					stop or end_of_line
+					not attached l_last_token or end_of_line
 				loop
 					inspect last_character
 					when 'a'..'z', 'A'..'Z', '0'..'9', '_', '.', '-', '+' then
-						check l_last_token /= Void end -- Implied by previsous `l_last_token' creation if clause (for '0'..'9', '_', '.', '-', '+'. `stop' is True)
-						l_last_token.extend (last_character);
+						l_last_token.extend (last_character)
 						read_character
 					else
-						stop := true
+						l_last_token := Void
 					end
 				end
 			end
-		end;
+		end
 
 	parse_colon
 			-- Parse a colon character.
 			-- `last_token' is void if a syntax error occurred.
 		do
-			parse_separators;
+			parse_separators
 			if not end_of_file and then last_character = ':' then
-				create last_token.make (0);
+				create last_token.make (0)
 				read_character
 			else
 				last_token := Void
 			end
-		end;
+		end
 
 	parse_value
 			-- Parse a resource value and put it in `last_token'.
@@ -126,7 +121,7 @@ feature -- Parsing
 			stop: BOOLEAN
 			l_last_token: like last_token
 		do
-			parse_separators;
+			parse_separators
 			if end_of_file then
 				last_token := Void
 			elseif last_character = '%"' then
@@ -138,8 +133,8 @@ feature -- Parsing
 				until
 					stop
 				loop
-					l_last_token.extend (last_character);
-					read_character;
+					l_last_token.extend (last_character)
+					read_character
 					if end_of_line then
 						stop := true
 					elseif last_character = '%T' or last_character = ' ' then
@@ -149,12 +144,12 @@ feature -- Parsing
 						last_character = '-' and
 						(attached line as l_line and then l_line.item (position + 1) = '-') -- implied by not `end_of_line' and this feature only called by `parse_file'
 					then
-						parse_comments;
+						parse_comments
 						stop := true
 					end
 				end
 			end
-		end;
+		end
 
 	parse_string
 			-- Parse a string and put it in `last_token'.
@@ -165,7 +160,7 @@ feature -- Parsing
 			l_last_token: like last_token
 		do
 			from
-				read_character;
+				read_character
 				create l_last_token.make (10)
 				last_token := l_last_token
 			until
@@ -173,9 +168,9 @@ feature -- Parsing
 				last_character = '%"'
 			loop
 				if last_character = '%%' then
-					read_character;
+					read_character
 					if end_of_line then
-						read_line;
+						read_line
 						if
 							not end_of_line and then
 							last_character = '%%'
@@ -232,22 +227,22 @@ feature -- Parsing
 							parse_char_code
 						else
 							last_token := Void
-						end;
+						end
 						read_character
 					end
 				else
-					l_last_token.extend (last_character);
+					l_last_token.extend (last_character)
 					read_character
 				end
 				l_last_token := last_token
-			end;
+			end
 			if last_token /= Void and not end_of_line then
 					-- Read the last ".
 				read_character
 			else
 				last_token := Void
 			end
-		end;
+		end
 
 	parse_char_code
 			-- Parse a special character of the form %/../ and insert
@@ -258,47 +253,48 @@ feature -- Parsing
 			not end_of_line and then last_character = '/'
 		local
 			code: STRING
-			l_last_token: like last_token
 		do
-			l_last_token := last_token
-			check l_last_token /= Void end -- Implied by precondition `last_token_not_void'
-			read_character;
-			if not end_of_line then
-				inspect last_character
-				when '0'..'9' then
-					create code.make (3);
-					code.extend (last_character)
-					read_character;
-					if not end_of_line then
-						inspect last_character
-						when '0'..'9' then
-							code.extend (last_character);
-							read_character;
-							if not end_of_line then
-								inspect last_character
-								when '0'..'9' then
-									code.extend (last_character)
-									read_character;
-									if
-										not end_of_line and then
-										last_character = '/'
-									then
+			if attached last_token as l_last_token then
+				read_character
+				if not end_of_line then
+					inspect last_character
+					when '0'..'9' then
+						create code.make (3)
+						code.extend (last_character)
+						read_character
+						if not end_of_line then
+							inspect last_character
+							when '0'..'9' then
+								code.extend (last_character)
+								read_character
+								if not end_of_line then
+									inspect last_character
+									when '0'..'9' then
+										code.extend (last_character)
+										read_character
+										if
+											not end_of_line and then
+											last_character = '/'
+										then
+											l_last_token.extend (charconv
+																	(code.to_integer))
+										else
+											last_token := Void
+										end
+									when '/' then
 										l_last_token.extend (charconv
-																(code.to_integer))
+																	(code.to_integer))
 									else
 										last_token := Void
 									end
-								when '/' then
-									l_last_token.extend (charconv
-																(code.to_integer))
 								else
 									last_token := Void
 								end
+							when '/' then
+								l_last_token.extend (charconv (code.to_integer))
 							else
 								last_token := Void
 							end
-						when '/' then
-							l_last_token.extend (charconv (code.to_integer))
 						else
 							last_token := Void
 						end
@@ -309,9 +305,11 @@ feature -- Parsing
 					last_token := Void
 				end
 			else
-				last_token := Void
+				check
+					from_precondition_last_token_not_void: False
+				end
 			end
-		end;
+		end
 
 	read_line
 			-- Read the next line in `resource_file' and put it in `line'.
@@ -333,27 +331,30 @@ feature -- Parsing
 			else
 				create l_line.make (0)
 				line := l_line
-			end;
-			line_count := l_line.count;
+			end
+			line_count := l_line.count
 
-			position := 0;
-			line_number := line_number + 1;
+			position := 0
+			line_number := line_number + 1
 			read_character
-		end;
+		end
 
 	read_character
 			-- Read the next character on the `line' and
 			-- put it in last_character.
 		require
 			not_end_of_line: not end_of_line
-		local
-			l_line: like line
 		do
-			position := position + 1;
+			position := position + 1
 			if not end_of_line then
-				l_line := line
-				check attached l_line end -- implied by not `end_of_line'
-				last_character := l_line.item (position)
+				if attached line as l_line then
+					last_character := l_line.item (position)
+				else
+					last_character := '%/0/'
+					check
+						from_precondition_not_end_of_line: False
+					end
+				end
 			end
 		end
 
@@ -363,7 +364,7 @@ feature -- Status report
 			-- Has the end of the current line been reached?
 		do
 			Result := position = line_count + 1
-		end;
+		end
 
 	end_of_file: BOOLEAN
 			-- Has the end of the `resource_file' been reached?
@@ -371,33 +372,33 @@ feature -- Status report
 			resource_file_attached: resource_file /= Void
 		do
 			Result := end_of_line and (attached resource_file as l_resource_file and then l_resource_file.end_of_file)
-		end;
+		end
 
 feature -- Access
 
-	resource_file: detachable PLAIN_TEXT_FILE;
-			-- File being parsed
+	resource_file: PLAIN_TEXT_FILE
+			-- File being parsed.
 
-	last_token: detachable STRING;
-			-- Last token parsed
+	last_token: detachable STRING
+			-- Last token parsed.
 
-	line: detachable STRING;
-			-- Line of `resource_file' being parsed
+	line: STRING
+			-- Line of `resource_file' being parsed.
 
-	line_number: INTEGER;
-			-- Line number of `line'
+	line_number: INTEGER
+			-- Line number of `line'.
 
-	position: INTEGER;
-			-- Position of the current position in the current line
+	position: INTEGER
+			-- Position of the current position in the current line.
 
-	line_count: INTEGER;
-			-- Number of character in the current line
+	line_count: INTEGER
+			-- Number of character in the current line.
 
-	last_character: CHARACTER;
-			-- Character at the current position in the `line'
+	last_character: CHARACTER
+			-- Character at the current position in the `line'.
 
-note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -428,4 +429,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class RESOURCE_LEX
+end

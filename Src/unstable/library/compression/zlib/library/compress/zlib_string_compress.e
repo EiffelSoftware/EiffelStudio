@@ -42,6 +42,15 @@ feature {NONE} -- Initialization
 			string_set: attached string
 		end
 
+feature -- Change element
+
+	set_string (a_string: STRING)
+		do
+			string := a_string
+		ensure
+			string_set: attached string
+		end
+
 feature -- Deflate
 
 	put_string (a_string: READABLE_STRING_GENERAL)

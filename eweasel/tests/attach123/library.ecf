@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" name="library" library_target="library" uuid="36F5EAD4-3D2B-4B3A-A050-6A8C9FCD4335">
+	<target name="library">
+		<root all_classes="true"/>
+		<option void_safety="$LIBRARY_VOID_SAFETY"/>
+		<setting name="console_application" value="true"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\$BASE_ECF"/>
+		<cluster name="root_cluster" location="$CLUSTER\">
+			<file_rule>
+				<exclude>test.*.e</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

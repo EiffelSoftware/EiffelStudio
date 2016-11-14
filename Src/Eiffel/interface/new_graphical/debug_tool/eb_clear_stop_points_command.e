@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Command to clear debugging information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CLEAR_STOP_POINTS_COMMAND
@@ -148,11 +148,9 @@ feature -- Events
 	drop_class (cs: CLASSC_STONE)
 			-- Process class stone.
 		local
-			conv_fst: FEATURE_STONE
 			bpm: BREAKPOINTS_MANAGER
 		do
-			conv_fst ?= cs
-			if conv_fst = Void then
+			if not attached {FEATURE_STONE} cs then
 				bpm := Debugger_manager.breakpoints_manager
 				bpm.remove_user_breakpoints_in_class (cs.e_class)
 				show_message_on_error (bpm)
@@ -222,7 +220,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -253,4 +251,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLEAR_STOP_POINTS_COMMAND
+end

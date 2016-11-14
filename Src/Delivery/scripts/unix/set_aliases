@@ -16,10 +16,15 @@ EXPORT_DIR=`pwd`/PorterPackage
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
 DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
 DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
+# This section is commented out be cause it won't work on non-bash shell
+# we use the other one while waiting for a better solution
+#if [ ! "$ORIGO_SVN_REVISION" ]; then
+#	mkdir -p /tmp/eiffelstudio_revision
+#	svn co $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
+#	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
+#fi
 if [ ! "$ORIGO_SVN_REVISION" ]; then
-	mkdir -p /tmp/eiffelstudio_revision
-	svn co $DEFAULT_ORIGO_SVN_ROOT/revision /tmp/eiffelstudio_revision	
-	ORIGO_SVN_REVISION=$(svnversion /tmp/eiffelstudio_revision)
+	ORIGO_SVN_REVISION=HEAD
 fi
 
 # Used to create the revision on the package.
@@ -102,19 +107,20 @@ echo -------------------------------- >> $INSTALL_LOG
 echo $* >> $INSTALL_LOG
 }
 # Clean exit
-CANCEL ()
+TERMINATE ()
 {
 echo Exiting...
 remtrace final time:
 remtrace `date +%c`
 PATH=$OLD_PATH
 cd $INIT_DIR
-exit
-}                                                                                   
-cancel ()
-{
-CANCEL
 }
+# Exit with an error
+CANCEL()
+{
+TERMINATE
+exit 1
+}                                                                                   
  
 # SVN Commands: checkout, export
 co ()

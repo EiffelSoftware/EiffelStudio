@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Supports system event publication for a {EVENT_TYPE_I} implementation.
 		
@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Publication
 
-	publish (a_args: detachable EVENT_DATA)
+	publish (a_args: EVENT_DATA)
 			-- Publish all not suspended actions from the subscription list.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -38,7 +38,7 @@ feature -- Publication
 			is_publishing_unchanged: is_publishing = old is_publishing
 		end
 
-	publish_if (a_args: detachable EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
+	publish_if (a_args: EVENT_DATA; a_predicate: PREDICATE [EVENT_DATA])
 			-- Publishes the event, if the subscriptions have not been suspended.
 			--
 			-- `a_args': Public context arguments to forward to all subscribers.
@@ -54,7 +54,7 @@ feature -- Publication
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

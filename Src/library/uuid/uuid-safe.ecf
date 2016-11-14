@@ -14,6 +14,7 @@
 		</file_rule>
 		<option void_safety="all" namespace="EiffelSoftware.Library">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>

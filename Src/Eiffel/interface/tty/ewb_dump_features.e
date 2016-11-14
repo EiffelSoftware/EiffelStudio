@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Dumps features of a class that can be referenced by agents to stdout."
@@ -80,7 +80,6 @@ feature {NONE} -- Properties
 			l_tbl: FEATURE_TABLE
 			i: INTEGER
 			s: STRING
-			c: CONSTANT_I
 			l_item: FEATURE_I
 			tl: TYPE_LIST
 		do
@@ -146,9 +145,7 @@ feature {NONE} -- Properties
 								tl.forth
 							end
 						end
-						if l_item.is_constant then
-							c ?= l_item
-							check c /= Void end
+						if attached {CONSTANT_I} l_item as c then
 							print ("constant " + c.value.dump + "%N")
 						end
 					end
@@ -170,7 +167,7 @@ feature {NONE} -- Properties
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -201,4 +198,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_DUMP_FEATURES
+end

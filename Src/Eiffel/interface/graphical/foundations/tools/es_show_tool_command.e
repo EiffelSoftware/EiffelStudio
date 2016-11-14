@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		A command used to show a tool through a tool shim {ES_TOOL} descendants.
 	]"
@@ -141,14 +141,12 @@ feature -- Execution
 			l_x, l_y: INTEGER
 			l_window: EV_WINDOW
 			l_content: SD_CONTENT
-			l_stonable: detachable ES_STONABLE_I
 		do
 			-- We have to check whether docking manager has Current tool's SD_CONTENT since debugger related tools not exist in normal mode.
 			-- They only exist in debug mode. See bug#13826.
 			l_content := tool.docking_content
 			if l_content /= Void and then l_content.is_docking_manager_attached  then
-				l_stonable ?= tool
-				if l_stonable /= Void and then stone /= Void and then not equal (stone, l_stonable.stone) then
+				if attached {ES_STONABLE_I} tool as l_stonable and then stone /= Void and then not equal (stone, l_stonable.stone) then
 						-- We check if the stone is attached to prevent the existing stone from being wiped out.
 					check is_stone_usable: l_stonable.is_stone_usable (stone) end
 					l_stonable.set_stone_with_query (stone)
@@ -243,7 +241,7 @@ invariant
 	tool_attached: not is_recycled implies tool /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

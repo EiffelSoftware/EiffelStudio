@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			-- Initialize completion window.
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
-
+			mode_template := False
 			build_option_bar
 			build_option_bar_template
 			choice_list.enable_tree
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 		local
 			l_hbox: EV_HORIZONTAL_BOX
 			l_sep: EV_HORIZONTAL_SEPARATOR
-			l_label: EV_LABEL
+			l_label: EVS_LINK_LABEL
 			l_tooltip: STRING_32
 		do
 				-- Separator
@@ -192,49 +192,53 @@ feature {NONE} -- Initialization
 			end
 			option_bar.extend (remember_size_button)
 
-				-- "Options" label
-				--| TODO add tooltip.
-				--| Remove hardcoded string
-			create l_label.make_with_text (" Press 'Crtl + Space' to show templates")
-			l_hbox.extend (l_label)
-			l_hbox.disable_item_expand (l_label)
+				-- Show templates Label (code for bottom right label)
+--			create l_label.make_with_text (interface_names.l_show_templates)
+--			l_label.align_text_right
+--			l_hbox.extend (l_label)
+--				-- Callback
+--			register_action (l_label.select_actions, agent on_option_label_selected (l_label))
 		end
 
 	build_option_bar_template
 			-- Build option bar.
 		local
 			l_hbox: EV_HORIZONTAL_BOX
-			l_sep: EV_HORIZONTAL_SEPARATOR
-			l_label: EV_LABEL
+--			l_sep: EV_HORIZONTAL_SEPARATOR
+--			l_label: EVS_LINK_LABEL
 		do
+				--| Code for bottom right label in comments)
 				-- Separator
-			create l_sep
-			l_sep.set_minimum_height (2)
-			option_bar_box_tpl.extend (l_sep)
+--			create l_sep
+--			l_sep.set_minimum_height (2)
+--			option_template_feature.extend (l_sep)
 
 			create l_hbox
 			l_hbox.set_padding_width (layout_constants.small_padding_size)
 			l_hbox.set_border_width (1)
-			option_bar_box_tpl.extend (l_hbox)
-			option_bar_box_tpl.disable_item_expand (l_hbox)
-
-				-- "Options" label
-			create l_label.make_with_text (interface_names.l_Options_colon)
-			l_hbox.extend (l_label)
-			l_hbox.disable_item_expand (l_label)
-
-			create option_bar
-			l_hbox.extend (option_bar)
-			l_hbox.disable_item_expand (option_bar)
+			option_template_feature.extend (l_hbox)
+			option_template_feature.disable_item_expand (l_hbox)
 
 
-				-- "Options" label
-				--| TODO add tooltip.
-				--| Remove hardcoded string
-			create l_label.make_with_text (" Press 'Crtl + Space' to show features")
-			l_hbox.extend (l_label)
-			l_hbox.disable_item_expand (l_label)
-			option_bar_box_tpl.hide
+--			create l_sep
+--			l_sep.set_minimum_height (2)
+--			option_bar_box_tpl.extend (l_sep)
+
+--			create l_hbox
+--			l_hbox.set_padding_width (layout_constants.small_padding_size)
+--			l_hbox.set_border_width (1)
+--			option_bar_box_tpl.extend (l_hbox)
+--			option_bar_box_tpl.disable_item_expand (l_hbox)
+
+
+				-- Show features label
+--			l_label.align_text_right
+			code_template_label.set_text (interface_names.l_show_templates)
+			l_hbox.extend (code_template_label)
+			l_hbox.disable_item_expand (code_template_label)
+--			option_bar_box_tpl.hide
+				-- Callback
+			register_action (code_template_label.select_actions, agent on_option_label_selected (code_template_label))
 		end
 
 	setup_option_buttons
@@ -563,6 +567,15 @@ feature {NONE} -- Option Preferences
 		end
 
 feature {NONE} -- Option behaviour
+
+	on_option_label_selected (a_label: EVS_LINK_LABEL)
+			-- On option button selected
+		require
+			a_label_not_void: a_label /= Void
+		local
+		do
+			show_template
+		end
 
 	on_option_button_selected (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- On option button selected
@@ -1218,15 +1231,18 @@ feature {NONE} -- Implementation
 			if not mode_template then
 				mode_template := True
 				option_bar_box.hide
-				option_bar_box_tpl.show
+--				option_bar_box_tpl.show
+				code_template_label.set_text (interface_names.l_show_features)
 				apply_template_completion_list
 				show
 			else
 				mode_template := False
 				option_bar_box.show
-				option_bar_box_tpl.hide
+--				option_bar_box_tpl.hide
+				code_template_label.set_text (interface_names.l_show_templates)
 				build_full_list
 				resize_column_to_window_width
+				show
 			end
 		end
 

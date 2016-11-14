@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 
 	make_with_path (d: like document_root)
 		do
+			max_age := -1
 			if d.is_empty then
 				document_root := execution_environment.current_working_path
 			else
@@ -87,6 +88,7 @@ feature -- Access
 	document_root: PATH
 
 	max_age: INTEGER
+			-- Max age, initialized at -1 by default.	
 
 	index_disabled: BOOLEAN
 			-- Index disabled?
@@ -367,15 +369,17 @@ feature -- Execution
 			create fres.make_with_content_type (ct, f.path.name)
 			fres.set_status_code ({HTTP_STATUS_CODE}.ok)
 
-			-- cache control
+				-- cache control
 			create dt.make_now_utc
-			fres.header.put_cache_control ("private, max-age=" + max_age.out)
 			fres.header.put_utc_date (dt)
-			if max_age > 0 then
-				dt := dt.twin
-				dt.second_add (max_age)
+			if max_age >= 0 then
+				fres.set_max_age (max_age)
+				if max_age > 0 then
+					dt := dt.twin
+					dt.second_add (max_age)
+				end
+				fres.set_expires_date (dt)
 			end
-			fres.header.put_expires_date (dt)
 
 			fres.set_answer_head_request_method (req.request_method.same_string ({HTTP_REQUEST_METHODS}.method_head))
 			res.send (fres)
@@ -388,14 +392,15 @@ feature -- Execution
 		do
 			create dt.make_now_utc
 			create h.make
-			h.put_cache_control ("private, max-age=" + max_age.out)
 			h.put_utc_date (dt)
-			if max_age > 0 then
-				dt := dt.twin
-				dt.second_add (max_age)
+			if max_age >= 0 then
+				h.put_cache_control ("max-age=" + max_age.out)
+				if max_age > 0 then
+					dt := dt.twin
+					dt.second_add (max_age)
+				end
+				h.put_expires_date (dt)
 			end
-			h.put_expires_date (dt)
-
 			if a_utc_date /= Void then
 				h.put_last_modified (a_utc_date)
 			end
@@ -637,7 +642,7 @@ feature {NONE} -- implementation: date time
 		end
 
 note
-	copyright: "2011-2013, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Colin Adams, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

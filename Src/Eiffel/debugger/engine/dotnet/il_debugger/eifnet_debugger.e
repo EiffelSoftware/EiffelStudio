@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interface to access dotnet debugger services"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,6 @@ class
 	EIFNET_DEBUGGER
 
 inherit
-	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 		rename
@@ -386,7 +385,6 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			not estudio_callback_event_processing
 		local
 			may_stop_on_callback: BOOLEAN
-			app_impl: APPLICATION_EXECUTION_DOTNET
 			s: APPLICATION_STATUS
 			execution_stopped: BOOLEAN
 		do
@@ -443,9 +441,11 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					end
 				end
 				if not next_estudio_notification_disabled then
-					app_impl ?= debugger_manager.application
-					check app_impl /= Void end
-					app_impl.estudio_callback_notify
+					if attached {APPLICATION_EXECUTION_DOTNET} debugger_manager.application as app_impl then
+						app_impl.estudio_callback_notify
+					else
+						check False end
+					end
 				end
 			end
 
@@ -1391,11 +1391,8 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			-- Frame related to current call stack.
 			-- This is a shared instance, so don't release it unless you know
 			-- what you do.
-		local
-			l_cse: CALL_STACK_ELEMENT_DOTNET
 		do
-			l_cse ?= application_status.current_call_stack_element
-			if l_cse /= Void then
+			if attached {CALL_STACK_ELEMENT_DOTNET} application_status.current_call_stack_element as l_cse then
 				Result := l_cse.icd_frame
 			else
 					--| Check if needed |--
@@ -1595,34 +1592,34 @@ feature -- Easy access
 		require
 			a_class_c_not_void: a_class_c /= Void
 		local
-			ai: ASSEMBLY_I
 			n: STRING
 			m: ICOR_DEBUG_MODULE
 			mods: like {EIFNET_DEBUGGER_INFO}.loaded_modules
 		do
-			ai ?= a_class_c.group
-			n := ai.consumed_assembly.name
-			m := ise_runtime_module
-			if m /= Void and then m.has_short_name (n) then
-				Result := m
-			else
-				m := info.mscorlid_module
+			if attached {ASSEMBLY_I} a_class_c.group as ai then
+				n := ai.consumed_assembly.name
+				m := ise_runtime_module
 				if m /= Void and then m.has_short_name (n) then
 					Result := m
-				end
-			end
-			if Result = Void then
-				mods := info.loaded_modules
-				from
-					mods.start
-				until
-					mods.after or Result /= Void
-				loop
-					m := mods.item_for_iteration
-					if m.has_short_name (n) then
+				else
+					m := info.mscorlid_module
+					if m /= Void and then m.has_short_name (n) then
 						Result := m
 					end
-					mods.forth
+				end
+				if Result = Void then
+					mods := info.loaded_modules
+					from
+						mods.start
+					until
+						mods.after or Result /= Void
+					loop
+						m := mods.item_for_iteration
+						if m.has_short_name (n) then
+							Result := m
+						end
+						mods.forth
+					end
 				end
 			end
 		end
@@ -2535,7 +2532,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2566,4 +2563,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUGGER
+end

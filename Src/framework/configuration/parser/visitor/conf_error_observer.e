@@ -1,23 +1,28 @@
-note
+﻿note
 	description: "Observer of configuration errors."
 	instruction: "[
-			A descendant provides a version of `update` to be called.
-			Any detected configuration error is reported by calling this feature.
+			A descendant provides implementations of `report_error` and `report_warning` to be called.
+			Any detected configuration errors and warnings are reported by calling these features.
 		]"
 
 deferred class CONF_ERROR_OBSERVER
 
 feature -- Access
 
-	update (e: CONF_ERROR)
+	report_error (e: CONF_ERROR)
 			-- Report an error `e'.
+		deferred
+		end
+
+	report_warning (e: CONF_ERROR)
+			-- Report a warning `e'.
 		deferred
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

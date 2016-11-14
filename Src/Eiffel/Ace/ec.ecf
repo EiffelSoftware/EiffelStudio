@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option concurrency="none" trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
-		<setting name="concurrency" value="thread"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
@@ -50,11 +49,12 @@
 	</target>
 	<target name="batch" extends="common">
 		<root class="ES" feature="make"/>
+		<option concurrency="none" root_concurrency="none">
+		</option>
 		<setting name="check_for_void_target" value="false"/>
 		<setting name="exception_trace" value="false"/>
 		<setting name="executable_name" value="ecb"/>
 		<setting name="inlining_size" value="8"/>
-		<setting name="concurrency" value="none"/>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
 		<library name="code_analysis" location="$EIFFEL_SRC\framework\code_analysis\code_analysis.ecf" readonly="false" use_application_options="true"/>
@@ -103,7 +103,7 @@
 	<target name="bench" extends="common">
 		<description>Eiffel Studio</description>
 		<root class="EB_KERNEL" feature="make"/>
-		<option>
+		<option concurrency="thread">
 			<warning name="once_in_generic" enabled="false"/>
 		</option>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">

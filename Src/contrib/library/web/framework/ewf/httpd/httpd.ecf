@@ -9,7 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true" void_safety="none" syntax="standard">
 		</option>
-		<setting name="concurrency" value="thread"/>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="http_network" location="../../../../network/http_network/http_network.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
@@ -23,7 +23,7 @@
 		</library>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf">
 			<condition>
-				<concurrency excluded_value="none"/>
+				<concurrency value="thread"/>
 			</condition>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

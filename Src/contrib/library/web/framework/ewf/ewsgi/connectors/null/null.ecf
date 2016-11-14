@@ -9,6 +9,7 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true">
 		</option>
+		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="ewsgi" location="..\..\ewsgi.ecf" readonly="false"/>
 		<library name="http" location="../../../../../../network/protocol/http/http.ecf"/>

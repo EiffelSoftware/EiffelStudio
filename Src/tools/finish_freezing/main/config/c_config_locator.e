@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Attempts to locate the best C configuration possible, respecting corrupt installations.
 	]"
@@ -28,12 +28,12 @@ feature -- Access
 		require
 			has_checked: has_checked
 			has_valid_configuration: has_valid_configuration
-		local
-			l_result: like internal_c_configuration
 		do
-			l_result := internal_c_configuration
-			check l_result_attached: l_result /= Void end
-			Result := l_result
+			Result := internal_c_configuration
+			check
+				from_precondition_has_valid_configuration: attached Result
+			then
+			end
 		ensure
 			result_attached: Result /= Void
 		end

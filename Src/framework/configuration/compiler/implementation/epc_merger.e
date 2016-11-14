@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Merge partial classes into one"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			-- Create.
 		do
 			create class_text.make_empty
+			line_return := Default_line_return
 			error_message := Void
 		end
 
@@ -459,11 +460,11 @@ feature {NONE} -- Private Access
 invariant
 	successful_iff_attached_class_text_and_name: successful = (class_text /= Void)
 	error_message_void_iff_successful: successful = (error_message = Void)
-	valid_line_return: line_return /= Void implies (line_return.is_equal ("%N") or line_return.is_equal ("%R%N"))
+	valid_line_return: line_return.same_string ("%N") or line_return.same_string ("%R%N")
 	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -494,4 +495,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EPC_MERGER
+end

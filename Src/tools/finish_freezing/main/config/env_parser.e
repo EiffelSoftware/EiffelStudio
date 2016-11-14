@@ -1,9 +1,9 @@
 note
 	description: "Used to evaluate environment configuration files that set environment variables."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ENV_PARSER
@@ -22,7 +22,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_batch_file: like batch_file_name; a_args: like batch_arguments; a_options: like batch_options)
-			-- Initialize parser from source batch file `a_batch_file'
+			-- Initialize parser from source batch file `a_batch_file'.
 		require
 			a_batch_file_attached: a_batch_file /= Void
 			not_a_batch_file_is_empty: not a_batch_file.is_empty
@@ -50,7 +50,7 @@ feature -- Access
 		end
 
 	include: STRING_32
-			-- INCLUDE environment variable
+			-- INCLUDE environment variable.
 		do
 			Result := variable_for_name (include_var_name)
 		ensure
@@ -58,7 +58,7 @@ feature -- Access
 		end
 
 	lib: STRING_32
-			-- LIBS environment variable
+			-- LIBS environment variable.
 		do
 			Result := variable_for_name (lib_var_name)
 		ensure
@@ -77,7 +77,7 @@ feature {NONE} -- Access
 			-- Option to the COMSPEC DOS prompt.
 
 	environment: EXECUTION_ENVIRONMENT
-			-- Access to environment information
+			-- Access to environment information.
 		once
 			create Result
 		ensure
@@ -87,17 +87,13 @@ feature {NONE} -- Access
 feature {NONE} -- Basic operations
 
 	variable_for_name (a_name: STRING_32): STRING_32
-			-- Retrieves varaible for name `a_name'
+			-- Retrieves varaible for name `a_name'.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_result: detachable STRING_32
 		do
-			l_result := variables_via_evaluation.item (a_name)
-			if l_result /= Void then
-				Result := l_result
-			else
+			Result := variables_via_evaluation.item (a_name)
+			if not attached Result then
 				create Result.make_empty
 			end
 		ensure
@@ -106,15 +102,15 @@ feature {NONE} -- Basic operations
 
 	variables_via_evaluation: HASH_TABLE [STRING_32, STRING_32]
 			-- Retrieves a list of name/value environment variable pairs from evaluating the current environment
-			-- Using a batch file provided by `vsvars_batch_file'
+			-- Using a batch file provided by `vsvars_batch_file'.
 		local
 			l_result: like internal_variables_via_evaluation
 			l_eval_file_name: STRING
 			l_file: detachable PLAIN_TEXT_FILE
 			l_com_spec: detachable STRING_32
 			l_cmd: STRING_32
-			l_process_factory: PROCESS_FACTORY
-			l_launcher: PROCESS
+			l_process_factory: BASE_PROCESS_FACTORY
+			l_launcher: BASE_PROCESS
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
 			retry_count: INTEGER
@@ -152,49 +148,52 @@ feature {NONE} -- Basic operations
 						l_launcher.set_hidden (True)
 						l_launcher.set_separate_console (True)
 						l_launcher.launch
-						l_launcher.wait_for_exit
-
-						if l_launcher.exit_code = 0 then
-							create l_file.make_with_name (l_eval_file_name)
-							if l_file.exists then
-								l_file.open_read
-								if l_file.count > 0 then
-									l_appliable := applicable_variables
-									from l_file.start until l_file.end_of_file loop
-										debug
-											;(create {REFACTORING_HELPER}).fixme ("Support reading unicode strings from the generated file.")
-										end
-										l_file.read_line
-										if
-											attached l_file.last_string as l_line_8 and then
-											attached l_line_8.as_string_32 as l_line and then
-											is_valid_variable_name_value_pair_string (l_line)
-										then
-											l_pair := parse_variable_name_value_pair (l_line)
+						if l_launcher.launched then
+							l_launcher.wait_for_exit
+							if l_launcher.exit_code = 0 then
+								create l_file.make_with_name (l_eval_file_name)
+								if l_file.exists then
+									l_file.open_read
+									if l_file.count > 0 then
+										l_appliable := applicable_variables
+										from l_file.start until l_file.end_of_file loop
+											debug
+												;(create {REFACTORING_HELPER}).fixme ("Support reading unicode strings from the generated file.")
+											end
+											l_file.read_line
 											if
-												l_pair /= Void and then
-												(
-													l_pair.value /= Void and
-													(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
-												)
+												attached l_file.last_string as l_line_8 and then
+												attached l_line_8.as_string_32 as l_line and then
+												is_valid_variable_name_value_pair_string (l_line)
 											then
-												l_result.extend (l_pair.value, l_pair.name.as_upper)
+												l_pair := parse_variable_name_value_pair (l_line)
+												if
+													l_pair /= Void and then
+													(
+														l_pair.value /= Void and
+														(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+													)
+												then
+													l_result.extend (l_pair.value, l_pair.name.as_upper)
+												end
 											end
 										end
 									end
-								end
 
-								l_file.close
-								l_file.delete
+									l_file.close
+									l_file.delete
+								end
+							else
+								(create {EXCEPTIONS}).raise ("Process has terminated with an error.")
 							end
 						else
-							(create {EXCEPTIONS}).raise ("Unable to launch process")
+							(create {EXCEPTIONS}).raise ("Unable to launch process.")
 						end
 					end
 				end
 
 				if l_file /= Void then
-						-- Resource clean up
+						-- Resource clean up.
 					if l_file.exists then
 						if not l_file.is_closed then
 							l_file.close
@@ -391,7 +390,7 @@ feature {NONE} -- Externals
 feature {NONE} -- Implementation: Internal cache
 
 	internal_variables_via_evaluation: detachable like variables_via_evaluation
-			-- Cached version of `variables_via_evaluation'
+			-- Cached version of `variables_via_evaluation'.
 			-- Note: Do not use directly!
 
 invariant

@@ -954,7 +954,7 @@ test	generic-call-renamed-default-create	incr300	tcf pass incrementality
 test	ececil-undefined-symbol			incr301	tcf fail incrementality attribute
 test	pattern-of-id-crash			incr302	tcf pass incrementality attribute
 test	add-default-create-invalid-vtec		incr303	tcf pass incrementality
-test	change-base-library-to-base-safe	incr304	tcf fail used_to_pass incrementality
+test	change-base-library-to-base-safe	incr304	tcf pass incrementality
 test	add-then-remove-vlec-via-generic	incr305	tcf fail incrementality
 test	attempt-on-expanded-then-reference	incr306	tcf pass incrementality
 test	formal-generic-constraint-rename-crash	incr307	tcf pass incrementality
@@ -2799,7 +2799,7 @@ test	bogus-object-test						attach080 tcf pass attached_types object_test execut
 test	nonconforming-inheritance-bogus-vevi		attach081 tcf pass attached_types non-conforming attribute
 test	repeated-inheritance-bogus-vevi			attach082 tcf pass attached_types attribute
 test	self-initializing-attribute-gc		attach083 tcf pass attached_types void_safe attribute self_init execution
-test	manifest-string-type			attach084 tcf fail used_to_pass attached_types void_safe execution
+test	manifest-string-type			attach084 tcf pass attached_types void_safe execution
 test	initialized-after-unreachable		attach085 tcf pass attached_types void_safe unreachable_code
 test	self-initializing-attribute-gc-2	attach086 tcf pass attached_types void_safe stable attribute self_init execution
 test	like-current-default-attachment		attach087 tcf pass attached_types void_safe attribute validity
@@ -2837,6 +2837,8 @@ test	attachment-of-conversion		attach118 tcf pass void_safe attached_types conve
 test	attachment-of-expanded-conversion	attach119 tcf pass void_safe attached_types expanded conversion
 test	unsafe-attached-locals-as-detachable	attach120 tcf pass attached_types void_safe scope local validity
 test	uninitialized-agent-with-wrong-creation attach121 tcf pass attached_types void_safe creation attribute validity
+test	object-test-on-local-variable		attach122 tcf fail attached_types void_safe object_test local
+test	object-test-incomplete-void-safety	attach123 tcf fail attached_types void_safe object_test validity
 
 -- Tests for conformance in general
 test	basic-conformance		conform001 tcf pass conformance
@@ -3019,6 +3021,7 @@ test	benchmark-scoop-memory-stress-test			bench016 tcf pass benchmark scoop mult
 test	benchmark-scoop-passive-memory-stress-test		bench017 tcf pass benchmark scoop multithreaded
 test	benchmark-loop-across-code-motion			bench018 tcf pass benchmark loop across iteration inlining
 test	benchmark-loop-across-expression			bench019 tcf fail benchmark loop across iteration inlining
+test	benchmark-launch_process				bench020 tcf pass benchmark process launch
 
 -- Testing facility
 test	testing-with-error		testing001 tcf pass testing

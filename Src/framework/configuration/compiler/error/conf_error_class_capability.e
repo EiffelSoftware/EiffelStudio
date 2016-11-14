@@ -19,16 +19,10 @@ feature {NONE} -- Creation
 			-- Initialize error with for a class `class_name' that has capability value `class_value'
 			-- not satisfying the capability `capability' of cluster `cluster' with value `cluster_value'.
 		local
-			target: READABLE_STRING_GENERAL
-			system: READABLE_STRING_GENERAL
+			target: like {CONF_CLUSTER}.target
 		do
-			if attached cluster.target as t then
-				target := t.name
-				if attached t.system as s then
-					system := s.name
-				end
-			end
-			text := conf_interface_names.e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster.name, target, system)
+			target := cluster.target
+			text := conf_interface_names.e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster.name, target.name, target.system.name)
 		end
 
 feature -- Access

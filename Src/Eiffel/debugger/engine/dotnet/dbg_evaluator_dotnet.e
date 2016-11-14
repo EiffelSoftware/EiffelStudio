@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Class used to process evaluation on dotnet system ...
 		]"
@@ -39,13 +39,14 @@ feature -- Concrete initialization
 			-- Retrieve new value for evaluation mecanism.
 		require else
 			is_dotnet_project: dm.is_dotnet_project
-		local
-			app: APPLICATION_EXECUTION_DOTNET
 		do
 			Precursor {DBG_EVALUATOR} (dm)
-			app ?= debugger_manager.application
-			eifnet_debugger := app.eifnet_debugger
-			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+			check
+				attached {APPLICATION_EXECUTION_DOTNET} debugger_manager.application as app
+			then
+				eifnet_debugger := app.eifnet_debugger
+				eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+			end
 		ensure then
 			eifnet_evaluator /= Void
 		end
@@ -807,55 +808,58 @@ feature {NONE} -- Implementation
 		require
 			dmv_not_void: dmv /= Void
 		local
-			dmvb: DUMP_VALUE_BASIC
 			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
 			if Result = Void then
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
-				dmvb ?= dmv
-				inspect dmv.type
-				when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
-					Result := eifnet_evaluator.new_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_16 then
-					Result := eifnet_evaluator.new_i2_evaluation (new_active_icd_frame, dmvb.value_integer_16)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
-					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmvb.value_integer_32)
-				when {DUMP_VALUE_CONSTANTS}.type_integer_64 then
-					Result := eifnet_evaluator.new_i8_evaluation (new_active_icd_frame, dmvb.value_integer_64)
+				if attached {DUMP_VALUE_BASIC} dmv as dmvb then
+					inspect dmv.type
+					when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
+						Result := eifnet_evaluator.new_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_16 then
+						Result := eifnet_evaluator.new_i2_evaluation (new_active_icd_frame, dmvb.value_integer_16)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+						Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmvb.value_integer_32)
+					when {DUMP_VALUE_CONSTANTS}.type_integer_64 then
+						Result := eifnet_evaluator.new_i8_evaluation (new_active_icd_frame, dmvb.value_integer_64)
 
-				when {DUMP_VALUE_CONSTANTS}.type_natural_8 then
-					Result := eifnet_evaluator.new_u1_evaluation (new_active_icd_frame, dmvb.value_natural_8)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_16 then
-					Result := eifnet_evaluator.new_u2_evaluation (new_active_icd_frame, dmvb.value_natural_16)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_32 then
-					Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_natural_32)
-				when {DUMP_VALUE_CONSTANTS}.type_natural_64 then
-					Result := eifnet_evaluator.new_u8_evaluation (new_active_icd_frame, dmvb.value_natural_64)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_8 then
+						Result := eifnet_evaluator.new_u1_evaluation (new_active_icd_frame, dmvb.value_natural_8)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_16 then
+						Result := eifnet_evaluator.new_u2_evaluation (new_active_icd_frame, dmvb.value_natural_16)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_32 then
+						Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_natural_32)
+					when {DUMP_VALUE_CONSTANTS}.type_natural_64 then
+						Result := eifnet_evaluator.new_u8_evaluation (new_active_icd_frame, dmvb.value_natural_64)
 
-				when {DUMP_VALUE_CONSTANTS}.type_boolean then
-					Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmvb.value_boolean )
-				when {DUMP_VALUE_CONSTANTS}.type_character_8 then
-					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmvb.value_character_8)
-				when {DUMP_VALUE_CONSTANTS}.type_character_32 then
-					debug ("refactor_fixme")
-						fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+					when {DUMP_VALUE_CONSTANTS}.type_boolean then
+						Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmvb.value_boolean )
+					when {DUMP_VALUE_CONSTANTS}.type_character_8 then
+						Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmvb.value_character_8)
+					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
+						debug ("refactor_fixme")
+							fixme ("FIXME: when CHARACTER_32 is redesign for dotnet, change that")
+						end
+						Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_character_32.natural_32_code)
+
+					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
+						Result := eifnet_evaluator.new_r4_evaluation (new_active_icd_frame, dmvb.value_real_32)
+					when {DUMP_VALUE_CONSTANTS}.type_real_64 then
+						Result := eifnet_evaluator.new_r8_evaluation (new_active_icd_frame, dmvb.value_real_64)
+					when {DUMP_VALUE_CONSTANTS}.type_pointer then
+						Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
+					else
 					end
-					Result := eifnet_evaluator.new_u4_evaluation (new_active_icd_frame, dmvb.value_character_32.natural_32_code)
-
-				when {DUMP_VALUE_CONSTANTS}.type_real_32 then
-					Result := eifnet_evaluator.new_r4_evaluation (new_active_icd_frame, dmvb.value_real_32)
-				when {DUMP_VALUE_CONSTANTS}.type_real_64 then
-					Result := eifnet_evaluator.new_r8_evaluation (new_active_icd_frame, dmvb.value_real_64)
-				when {DUMP_VALUE_CONSTANTS}.type_pointer then
-					Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
-
-				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
-					Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
-				when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
-					Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string))
 				else
+					inspect dmv.type
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
+						Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
+					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
+						Result := eifnet_evaluator.new_eiffel_string_32_evaluation (new_active_icd_frame, utf.utf_8_string_8_to_string_32 (dmv.value_string))
+					else
+					end
 				end
 
 				if not eifnet_evaluator.last_call_succeed then
@@ -867,7 +871,6 @@ feature {NONE} -- Implementation
 	dump_value_to_reference_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE for reference TYPE Objects
 		local
-			dmvb: DUMP_VALUE_BASIC
 			utf: UTF_CONVERTER
 		do
 			Result := dmv.value_dotnet
@@ -915,12 +918,12 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.icdv_string_32_from_icdv_system_string (new_active_icd_frame, Result)
 					else
 					end
-				else
+				elseif attached {DUMP_VALUE_BASIC} dmv as dmvb then
+
 						--| we have manifest value
 
 						--| This means this value has been created by eStudioDbg
 						--| We need to build the corresponding ICorDebugValue object.
-					dmvb ?= dmv
 					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.type_integer_8 then
 						Result := eifnet_evaluator.new_reference_i1_evaluation (new_active_icd_frame, dmvb.value_integer_8)
@@ -950,6 +953,12 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.new_reference_character_8_evaluation (new_active_icd_frame, dmvb.value_character_8 )
 					when {DUMP_VALUE_CONSTANTS}.type_character_32 then
 						Result := eifnet_evaluator.new_reference_character_32_evaluation (new_active_icd_frame, dmvb.value_character_32 )
+					when {DUMP_VALUE_CONSTANTS}.type_pointer then
+						Result := eifnet_evaluator.new_ptr_evaluation (new_active_icd_frame, dmvb.value_pointer)
+					else
+					end
+				else
+					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string then
 						Result := eifnet_evaluator.new_eiffel_string_8_evaluation (new_active_icd_frame, dmv.value_string )
 					when {DUMP_VALUE_CONSTANTS}.Type_manifest_string_32 then
@@ -969,11 +978,8 @@ feature {NONE} -- Internal Helpers
 			-- ICorDebugValue indexed by `addr' if exists
 		require
 			address_valid: addr /= Void and then not addr.is_void
-		local
-			dv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			dv ?= debug_value_by_address (addr)
-			if dv /= Void then
+			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} debug_value_by_address (addr) as dv then
 				Result := dv.icd_referenced_value
 			else
 				--| FIXME jfiat [2004/02/19] : can't find object by address .. how can this happens ???!!!
@@ -1041,7 +1047,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

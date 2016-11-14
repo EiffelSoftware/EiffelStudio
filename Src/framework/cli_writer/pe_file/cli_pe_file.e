@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "In memory representation of a PE file for CLI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -116,26 +116,26 @@ feature -- Access
 	reloc_section_header: CLI_SECTION_HEADER
 	iat: CLI_IMPORT_ADDRESS_TABLE
 
-	code: MANAGED_POINTER
+	code: detachable MANAGED_POINTER
 			-- CLI code instruction stream.
 
 	debug_directory: CLI_DEBUG_DIRECTORY
 	debug_info: MANAGED_POINTER
 			-- Data for storing debug information in PE files.
 
-	strong_name_directory: CLI_DIRECTORY
-	strong_name_info: MANAGED_POINTER
-	public_key: MD_PUBLIC_KEY
-	signing: MD_STRONG_NAME
+	strong_name_directory: detachable CLI_DIRECTORY
+	strong_name_info: detachable MANAGED_POINTER
+	public_key: detachable MD_PUBLIC_KEY
+	signing: detachable MD_STRONG_NAME
 			-- Hold data for strong name signature.
 
-	resources: CLI_RESOURCES
+	resources: detachable CLI_RESOURCES
 			-- Hold data for resources.
 
 	cli_header: CLI_HEADER
 			-- Header for `meta_data'.
 
-	method_writer: MD_METHOD_WRITER
+	method_writer: detachable MD_METHOD_WRITER
 			-- To hold IL code.
 
 	emitter: MD_EMIT
@@ -284,11 +284,10 @@ feature -- Saving
 				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 			end
 
-			if has_resources then
+			if attached resources as r and then attached r.item as p then
 					-- Store `resources.item' since otherwise no one will be referencing
 					-- it and thus ready for GC.
-				l_padding := resources.item
-				l_pe_file.put_managed_pointer (l_padding, 0, resources_size)
+				l_pe_file.put_managed_pointer (p, 0, resources_size)
  			end
 
 				-- Save the metadata to `l_pe_file'. We cannot use `MD_EMIT.assembly_memory'
@@ -570,7 +569,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -601,4 +600,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLI_PE_FILE
+end

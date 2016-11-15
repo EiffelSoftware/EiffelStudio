@@ -29,7 +29,7 @@ indexing
 #define FD_SETSIZE 256
 #include <winsock2.h>
 #include <ws2tcpip.h>
-//#include <MSWSock.h> /* FIXME, remove? */
+#include <MSWSock.h>
 #include <io.h>
 #endif
 
@@ -859,87 +859,75 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 #		define TF_REUSE_SOCKET     0x20
 #	endif
 	
-	static BOOL (PASCAL * _TransmitFile)(SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD) = NULL;
-	
-	if (_TransmitFile) {
-		BOOL retval;
-		HANDLE hFile = (HANDLE)_get_osfhandle(fileno(f));
-		OVERLAPPED ovlp;
-		DWORD bytes_to_send, bytes_sent;
-		DWORD curoff=(DWORD) offset;
-		DWORD dwFlags = 0;
-		memset(&ovlp, 0, sizeof(OVERLAPPED));
-		ovlp.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	BOOL retval;
+	HANDLE hFile;
+	OVERLAPPED ovlp;
+	DWORD bytes_to_send, bytes_sent;
+	DWORD curoff;
+	DWORD dwFlags;
 
-		bytes_sent = 0;
-		bytes_to_send = (DWORD) length;
-		retval = 0;
+	/*	Initialize locals */
+	hFile = (HANDLE)_get_osfhandle(fileno(f));
+	curoff=(DWORD) offset;
+	dwFlags = 0;
+	memset(&ovlp, 0, sizeof(OVERLAPPED));
+	ovlp.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	bytes_sent = 0;
+	bytes_to_send = (DWORD) length;
+	retval = 0;
 
-		while (bytes_to_send) {
-			DWORD xmitbytes;
-			/*
-			 * If we want to force our own chunk size ...
-			 *  
-			 * if (bytes_to_send > 65536) {
-			 * 		xmitbytes = 65536;
-			 * } else {
-			 * 		// Last call to TransmitFile()
-			 * 		xmitbytes = bytes_to_send;
-			 * 		//dwFlags |= TF_REUSE_SOCKET;
-			 * 		//dwFlags |= TF_WRITE_BEHIND;
-			 * }
-			*/
-			xmitbytes = bytes_to_send;
-			ovlp.Offset = (DWORD)curoff;
-        	/* FIXME: see large file support: ovlp.OffsetHigh = (DWORD)(curoff >> 32); */
-			retval = _TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, xmitbytes, 
-					(DWORD) 0 /* Use default Windows block size */, 
-					(LPOVERLAPPED) &ovlp, 
-					(LPTRANSMIT_FILE_BUFFERS) NULL,
-					(DWORD) dwFlags
-				);
-			if (!retval) {
-				int errcode;
-				errcode = WSAGetLastError();
-				if ((errcode == ERROR_IO_PENDING) | (errcode == WSA_IO_PENDING)) {
-					int rv;
-					rv = WaitForSingleObject(ovlp.hEvent, (DWORD) (a_timeout_ms >= 0 ? a_timeout_ms : INFINITE));
-					if (rv == WAIT_OBJECT_0) {
-						if (!WSAGetOverlappedResult((EIF_SOCKET_TYPE)out_fd, (LPOVERLAPPED) &ovlp, &xmitbytes, FALSE, &dwFlags)) {
-							return -1;
-						}
-						retval = 0; /* for code after the `while` loop. */
-					} else if (rv == WAIT_TIMEOUT) {
-						return (EIF_INTEGER) -1;
-					} else {
-							/* either WAIT_FAILED or WAIT_ABANDONED or ... */
-						return (EIF_INTEGER) -1;
+	/*	Send file content */
+	while (bytes_to_send) {
+		DWORD xmitbytes;
+		/*
+		 * If we want to force our own chunk size ...
+		 *  
+		 * if (bytes_to_send > 65536) {
+		 * 		xmitbytes = 65536;
+		 * } else {
+		 * 		// Last call to TransmitFile()
+		 * 		xmitbytes = bytes_to_send;
+		 * 		//dwFlags |= TF_REUSE_SOCKET;
+		 * 		//dwFlags |= TF_WRITE_BEHIND;
+		 * }
+		*/
+		xmitbytes = bytes_to_send;
+		ovlp.Offset = (DWORD)curoff;
+		/* FIXME: see large file support: ovlp.OffsetHigh = (DWORD)(curoff >> 32); */
+		retval = TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, xmitbytes, 
+				(DWORD) 0 /* Use default Windows block size */, 
+				(LPOVERLAPPED) &ovlp, 
+				(LPTRANSMIT_FILE_BUFFERS) NULL,
+				(DWORD) dwFlags
+			);
+		if (!retval) {
+			int errcode;
+			errcode = WSAGetLastError();
+			if ((errcode == ERROR_IO_PENDING) | (errcode == WSA_IO_PENDING)) {
+				int rv;
+				rv = WaitForSingleObject(ovlp.hEvent, (DWORD) (a_timeout_ms >= 0 ? a_timeout_ms : INFINITE));
+				if (rv == WAIT_OBJECT_0) {
+					if (!WSAGetOverlappedResult((EIF_SOCKET_TYPE)out_fd, (LPOVERLAPPED) &ovlp, &xmitbytes, FALSE, &dwFlags)) {
+						return -1;
 					}
+					retval = 0; /* for code after the `while` loop. */
+				} else if (rv == WAIT_TIMEOUT) {
+					return (EIF_INTEGER) -1;
+				} else {
+						/* either WAIT_FAILED or WAIT_ABANDONED or ... */
+					return (EIF_INTEGER) -1;
 				}
 			}
-			bytes_to_send -= xmitbytes;
-			curoff += xmitbytes;
-			bytes_sent += xmitbytes;
 		}
-		if (retval) {
-			return (EIF_INTEGER) bytes_sent;
-		} else {
-				/* Error occurred */
-			return (EIF_INTEGER) -1;
-		}
+		bytes_to_send -= xmitbytes;
+		curoff += xmitbytes;
+		bytes_sent += xmitbytes;
+	}
+	if (retval) {
+		return (EIF_INTEGER) bytes_sent;
 	} else {
-		static BOOL _TransmitFile_searched = FALSE;
-		if (_TransmitFile_searched) {
-			return (EIF_INTEGER) c_sendfile_fallback(out_fd, f, offset, length, a_timeout_ms);
-		} else {
-			_TransmitFile_searched = TRUE;
-			HMODULE dllHandle;
-			dllHandle = LoadLibrary("MSWSock.dll");
-			if (dllHandle != NULL) {
-				_TransmitFile = (BOOL (PASCAL *) (SOCKET, HANDLE, DWORD, DWORD, LPOVERLAPPED, LPTRANSMIT_FILE_BUFFERS, DWORD))GetProcAddress(dllHandle, "TransmitFile");
-			}
-			return c_sendfile(out_fd, f, offset, length, a_timeout_ms);
-		}
+			/* Error occurred */
+		return (EIF_INTEGER) -1;
 	}
 #	undef LPTRANSMIT_FILE_BUFFERS
 

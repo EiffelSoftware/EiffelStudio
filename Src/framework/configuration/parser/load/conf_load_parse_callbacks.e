@@ -174,10 +174,20 @@ feature -- Callbacks
 					process_root_attributes
 				when t_version then
 					process_version_attributes
-				when t_setting then
-					process_setting_attributes
 				when t_option then
 					process_option_attributes (False)
+				when t_setting then
+					process_setting_attributes
+				when t_capability_catcall_detection then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.catcall_safety_capability, tag_capability_catcall_detection)
+				when t_capability_code then
+					-- TODO: process_unordered_capability (agent {CONF_TARGET_OPTION}.code_capability, tag_capability_code)
+				when t_capability_concurrency then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.concurrency_capability, tag_capability_concurrency)
+				when t_capability_platform then
+					-- TODO: process_unordered_capability (agent {CONF_TARGET_OPTION}.platform_capability, tag_capability_platform)
+				when t_capability_void_safety then
+					process_ordered_capability (agent {CONF_TARGET_OPTION}.void_safety_capability, tag_capability_void_safety)
 				when t_assertions then
 					l_current_option := current_option
 					if l_current_option /= Void then
@@ -893,6 +903,32 @@ feature {NONE} -- Implementation attribute processing
 				end
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
+			end
+		end
+
+	process_ordered_capability (selector: FUNCTION [CONF_TARGET_OPTION, CONF_ORDERED_CAPABILITY]; tag: READABLE_STRING_32)
+			-- Process attributes associated with capability specified in element `tag` associated with `selector`.
+		local
+			c: CONF_ORDERED_CAPABILITY
+		do
+			if includes_this_or_after (namespace_1_16_0) and then attached current_target as t then
+				c := selector (t.changeable_internal_options)
+				if attached current_attributes.item (at_support) as support then
+					if c.is_valid_item (support) then
+						c.value.put (support)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (ca_support))
+					end
+				end
+				if attached current_attributes.item (at_use) as use then
+					if c.is_valid_item (use) then
+						c.put_root (use)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (ca_use))
+					end
+				end
+			else
+				set_parse_error_message (conf_interface_names.e_parse_invalid_tag (tag))
 			end
 		end
 
@@ -2600,14 +2636,15 @@ feature {NONE} -- Implementation state transitions
 				-- => assembly
 				-- => cluster
 				-- => override
-			create l_trans.make (22)
+			create l_trans.make (25)
 			l_trans.force (t_note, "note")
 			l_trans.force (t_description, "description")
 			l_trans.force (t_root, "root")
 			l_trans.force (t_version, "version")
 			l_trans.force (t_file_rule, "file_rule")
-			l_trans.force (t_setting, "setting")
 			l_trans.force (t_option, "option")
+			l_trans.force (t_setting, "setting")
+			l_trans.force (t_capability, tag_capability)
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_external_include, "external_include")
 			l_trans.force (t_external_cflag, "external_cflag")
@@ -2651,6 +2688,20 @@ feature {NONE} -- Implementation state transitions
 			l_trans.force (t_warning, "warning")
 			Result.force (l_trans, t_option)
 			Result.force (l_trans, t_class_option)
+
+				-- capability
+				-- => catcall_detection
+				-- => code
+				-- => concurrency
+				-- => platform
+				-- => void_safety
+			create l_trans.make (5)
+			l_trans.force (t_capability_catcall_detection, tag_capability_catcall_detection)
+			-- TODO: l_trans.force (t_capability_code, tag_capability_code)
+			l_trans.force (t_capability_concurrency, tag_capability_concurrency)
+			-- TODO: l_trans.force (t_capability_platform, tag_capability_platform)
+			l_trans.force (t_capability_void_safety, tag_capability_void_safety)
+			Result.force (l_trans, t_capability)
 
 				-- (pre|post)_compile_action
 				-- => description
@@ -2828,14 +2879,6 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_trademark, "trademark")
 			Result.force (l_attr, t_version)
 
-				-- setting
-				-- * name
-				-- * value
-			create l_attr.make (2)
-			l_attr.force (at_name, "name")
-			l_attr.force (at_value, "value")
-			Result.force (l_attr, t_setting)
-
 				-- option
 				-- * trace
 				-- * profile
@@ -2878,6 +2921,26 @@ feature {NONE} -- Implementation state transitions
 			l_attr := l_attr.twin
 			l_attr.force (at_class, "class")
 			Result.force (l_attr, t_class_option)
+
+				-- setting
+				-- * name
+				-- * value
+			create l_attr.make (2)
+			l_attr.force (at_name, "name")
+			l_attr.force (at_value, "value")
+			Result.force (l_attr, t_setting)
+
+				-- capability
+				-- * support
+				-- * use
+			create l_attr.make (2)
+			l_attr.force (at_support, ca_support)
+			l_attr.force (at_use, ca_use)
+			Result.force (l_attr, t_capability_catcall_detection)
+			Result.force (l_attr, t_capability_code)
+			Result.force (l_attr, t_capability_concurrency)
+			Result.force (l_attr, t_capability_platform)
+			Result.force (l_attr, t_capability_void_safety)
 
 				-- external_(include|object|library|resource|make)
 				-- * location

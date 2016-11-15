@@ -58,11 +58,7 @@
 			<xs:element name="file_rule" type="file_rule" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="option" type="option" minOccurs="0"/>
 			<xs:element name="setting" type="setting" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="capability.catcall_detection" type="capability.catcall_detection" minOccurs="0"/>
-			<xs:element name="capability.code" type="capability.code" minOccurs="0"/>
-			<xs:element name="capability.concurrency" type="capability.concurrency" minOccurs="0"/>
-			<xs:element name="capability.platform" type="capability.platform" minOccurs="0"/>
-			<xs:element name="capability.void_safety" type="capability.void_safety" minOccurs="0"/>
+			<xs:element name="capability" type="capability" minOccurs="0"/>
 			<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="external_include" type="external_location" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="external_cflag" type="external_value" minOccurs="0" maxOccurs="unbounded"/>
@@ -143,6 +139,16 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="capability">
+		<xs:all>
+			<xs:element name="catcall_detection" type="capability.catcall_detection" minOccurs="0"/>
+			<xs:element name="code" type="capability.code" minOccurs="0"/>
+			<xs:element name="concurrency" type="capability.concurrency" minOccurs="0"/>
+			<xs:element name="platform" type="capability.platform" minOccurs="0"/>
+			<xs:element name="void_safety" type="capability.void_safety" minOccurs="0"/>
+		</xs:all>
 	</xs:complexType>
 
 	<xs:complexType name="capability.catcall_detection">

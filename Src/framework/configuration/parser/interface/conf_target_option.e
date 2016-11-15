@@ -66,6 +66,18 @@ feature -- Status report
 				not void_safety_capability.is_root_set
 		end
 
+	has_capability: BOOLEAN
+			-- Are there explicitly set capabilities?
+		do
+			Result :=
+				catcall_detection.is_set or else
+				catcall_safety_capability.is_root_set or else
+				concurrency.is_set or else
+				concurrency_capability.is_root_set or else
+				void_safety.is_set or else
+				void_safety_capability.is_root_set
+		end
+
 feature -- Capability
 
 	void_safety_capability: CONF_ORDERED_CAPABILITY

@@ -156,6 +156,22 @@ feature -- Option names
 	o_void_safety: STRING_32 = "void_safety"
 	o_warning_container: STRING_32 = "warning"
 
+feature -- Capability names
+
+	tag_capability: STRING_32 = "capability"
+			-- A container element name for capabilities.
+
+	tag_capability_catcall_detection: STRING_32 = "catcall_detection"
+	tag_capability_code: STRING_32 = "code"
+	tag_capability_concurrency: STRING_32 = "concurrency"
+	tag_capability_platform: STRING_32 = "platform"
+	tag_capability_void_safety: STRING_32 = "void_safety"
+
+feature -- Capability attribute names
+
+	ca_support: STRING_32 = "support"
+	ca_use: STRING_32 = "use"
+
 feature -- Debug
 
 	unnamed_debug: STRING = "__unnamed_debug__"

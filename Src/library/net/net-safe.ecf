@@ -45,6 +45,11 @@
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+		<external_linker_flag value="Mswsock.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="abstract" location="abstract\" recursive="true"/>
 		<cluster name="local" location="local\" recursive="true">
@@ -66,7 +71,7 @@
 		<option void_safety="all" syntax="standard">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="scoop"/>
+		<setting name="concurrency" value="thread"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
 		<tests name="test" location=".\test\"/>
 	</target>

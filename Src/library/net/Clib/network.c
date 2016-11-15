@@ -29,6 +29,8 @@ indexing
 #define FD_SETSIZE 256
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <MSWSock.h>
+#include <io.h>
 #endif
 
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
@@ -36,11 +38,7 @@ indexing
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
 
-
-#ifdef EIF_WINDOWS
-
 #include <stdio.h>
-#endif
 
 #ifdef I_SYS_TIME
 #include <sys/time.h>
@@ -64,6 +62,7 @@ indexing
 
 #ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
+#include <sys/sendfile.h>
 #endif
 
 #include "eif_cecil.h"
@@ -743,7 +742,7 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 /******************************************************/
 
 EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*  Transmission of string s of size size trought socket fd
+	/*  Transmission of string s of size size through socket fd
 	 *  NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -753,7 +752,7 @@ EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_poin
 }
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size size through socket fd */
 {
 	int res;
 	res = c_send_stream_to_noexception(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer, sizeofaddr);
@@ -765,7 +764,7 @@ void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER le
 /******************************************************/
 
 EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/* transmission of string s of size size trought socket fd.
+	/* transmission of string s of size length through socket fd.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -775,9 +774,189 @@ EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer,
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size length through socket fd */
 {
 	eif_net_check(c_put_stream_noexception(fd, stream_pointer, length));
+}
+
+EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+	/* transmission of file content from file `f` of size length through socket out_fd.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+#define EIFNET_BUFFSIZE 4096
+	int fd;
+	int retval_read, retval_write;
+	int bytes_sent, bytes_to_read;
+	int n, bytes_to_send;
+	char buf[EIFNET_BUFFSIZE];
+
+#ifdef EIF_WINDOWS
+	fd = _fileno(f);
+#else
+	fd = fileno(f);
+#endif
+	bytes_sent = 0;
+	bytes_to_read = length;
+	if (offset > 0) {
+		fseek(f, offset, SEEK_SET);
+	}
+	do {
+			/* Read chunk of bytes */
+		if (bytes_to_read < EIFNET_BUFFSIZE) {
+			n = bytes_to_read;
+		} else {
+			n = EIFNET_BUFFSIZE;
+		}
+#ifdef EIF_WINDOWS		
+		retval_read = (int)_read(fd, buf, n);
+#else
+		retval_read = (int) read(fd, buf, n);
+#endif
+		if (retval_read < 0) {
+				/* error while reading file */
+			return (EIF_INTEGER) retval_read;
+		} else {
+			bytes_to_read = bytes_to_read - retval_read;
+		}
+			/* Send read bytes */
+		bytes_to_send = retval_read;
+		do {
+			retval_write = (int) c_put_stream_noexception(out_fd, buf, bytes_to_send);
+			if (retval_write < 0) {
+					/* error while writing into socket */
+				return (EIF_INTEGER) retval_write;
+			} else {
+				bytes_to_send = bytes_to_send - retval_write;
+				bytes_sent = bytes_sent + retval_write;
+			}
+		} while (bytes_to_send > 0);
+
+	} while (retval_read || retval_write);
+
+		/* If this code is reached, no file or network error occurred
+		 * thus return the number of bytes read and sent.
+		 */
+	return (EIF_INTEGER) bytes_sent;
+#undef EIFNET_BUFFSIZE
+}
+
+EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+	/* transmission of file content from file `f` of size length through socket out_fd.
+	 * On Windows, due to asynchronous potential behavior, wait for completion using `a_timeout_ms` value.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+#ifdef EIF_WINDOWS
+
+#	ifndef LPTRANSMIT_FILE_BUFFERS 
+#		define LPTRANSMIT_FILE_BUFFERS  void* 
+#	endif
+#	ifndef TF_WRITE_BEHIND 
+#		define TF_WRITE_BEHIND     0x04
+#	endif
+#	ifndef TF_REUSE_SOCKET 
+#		define TF_REUSE_SOCKET     0x20
+#	endif
+	
+	BOOL retval;
+	HANDLE hFile;
+	OVERLAPPED ovlp;
+	DWORD bytes_to_send, bytes_sent;
+	DWORD curoff;
+	DWORD dwFlags;
+
+	/*	Initialize locals */
+	hFile = (HANDLE)_get_osfhandle(fileno(f));
+	curoff=(DWORD) offset;
+	dwFlags = 0;
+	memset(&ovlp, 0, sizeof(OVERLAPPED));
+	ovlp.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	bytes_sent = 0;
+	bytes_to_send = (DWORD) length;
+	retval = 0;
+
+	/*	Send file content */
+	while (bytes_to_send) {
+		DWORD xmitbytes;
+		/*
+		 * If we want to force our own chunk size ...
+		 *  
+		 * if (bytes_to_send > 65536) {
+		 * 		xmitbytes = 65536;
+		 * } else {
+		 * 		// Last call to TransmitFile()
+		 * 		xmitbytes = bytes_to_send;
+		 * 		//dwFlags |= TF_REUSE_SOCKET;
+		 * 		//dwFlags |= TF_WRITE_BEHIND;
+		 * }
+		*/
+		xmitbytes = bytes_to_send;
+		ovlp.Offset = (DWORD)curoff;
+		/* FIXME: see large file support: ovlp.OffsetHigh = (DWORD)(curoff >> 32); */
+		retval = TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, xmitbytes, 
+				(DWORD) 0 /* Use default Windows block size */, 
+				(LPOVERLAPPED) &ovlp, 
+				(LPTRANSMIT_FILE_BUFFERS) NULL,
+				(DWORD) dwFlags
+			);
+		if (!retval) {
+			int errcode;
+			errcode = WSAGetLastError();
+			if ((errcode == ERROR_IO_PENDING) | (errcode == WSA_IO_PENDING)) {
+				int rv;
+				rv = WaitForSingleObject(ovlp.hEvent, (DWORD) (a_timeout_ms >= 0 ? a_timeout_ms : INFINITE));
+				if (rv == WAIT_OBJECT_0) {
+					if (!WSAGetOverlappedResult((EIF_SOCKET_TYPE)out_fd, (LPOVERLAPPED) &ovlp, &xmitbytes, FALSE, &dwFlags)) {
+						return -1;
+					}
+					retval = 0; /* for code after the `while` loop. */
+				} else if (rv == WAIT_TIMEOUT) {
+					return (EIF_INTEGER) -1;
+				} else {
+						/* either WAIT_FAILED or WAIT_ABANDONED or ... */
+					return (EIF_INTEGER) -1;
+				}
+			}
+		}
+		bytes_to_send -= xmitbytes;
+		curoff += xmitbytes;
+		bytes_sent += xmitbytes;
+	}
+	if (retval) {
+		return (EIF_INTEGER) bytes_sent;
+	} else {
+			/* Error occurred */
+		return (EIF_INTEGER) -1;
+	}
+#	undef LPTRANSMIT_FILE_BUFFERS
+
+#else /* not EIF_WINDOWS */
+	ssize_t retval;
+	if (length > 0) {
+		size_t bytes_to_send;
+		ssize_t bytes_sent;
+		off_t curoff = offset;
+		int fd;
+
+		fd = fileno(f);
+		bytes_to_send = (size_t) length;
+		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &curoff, bytes_to_send) > 0) && (bytes_to_send > 0)) {
+			if (retval > 0) {
+				bytes_to_send = bytes_to_send - retval;
+				bytes_sent = bytes_sent + retval;
+			}
+		} 
+		if (retval) {
+			return (EIF_INTEGER) bytes_sent;
+		} else {
+				/* Error occurred */
+			return (EIF_INTEGER) retval;
+		}
+	} else {
+		return (EIF_INTEGER) 0;
+	}
+#endif
 }
 
 /******************************************************/

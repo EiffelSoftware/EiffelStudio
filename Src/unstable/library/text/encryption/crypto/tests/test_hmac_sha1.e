@@ -46,8 +46,27 @@ feature -- Test routines
 	test_rfc_4231_2_ascii
 		local
 			hmac: HMAC_SHA1
-			expected: STRING
+			e1, e2, e3, expected: STRING
 		do
+			create hmac.make_ascii_key ("secret-shared-key-goes")
+			hmac.update_from_string ("first and last")
+			e1 := hmac.digest_as_string
+
+			create hmac.make_ascii_key ("secret-shared-key-goes")
+			hmac.update_from_string ("first")
+			hmac.update_from_string (" and last")
+			e2 := hmac.digest_as_string
+
+			create hmac.make_ascii_key ("secret-shared-key-goes")
+			hmac.update_from_string ("first")
+			e3 := hmac.digest_as_string
+
+			hmac.update_from_string (" and last")
+			e3 := hmac.digest_as_string
+
+			assert("e1=e2=e3", e1.same_string (e2) and e2.same_string (e3))
+
+
 			create hmac.make_ascii_key ("Jefe")
 			hmac.update_from_string ("what do ya want for nothing?")
 			expected := "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79"
@@ -99,7 +118,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

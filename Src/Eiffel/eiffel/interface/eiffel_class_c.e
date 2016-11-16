@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represent a compiled eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -2156,8 +2156,7 @@ feature {NONE} -- Backup implementation
 			l_load.retrieve_configuration (l_file_name.name)
 			if not l_load.is_error then
 				l_system := l_load.last_system
-				create l_vis
-				l_vis.set_backup_directory (a_location)
+				create l_vis.make (a_location)
 				l_vis.set_is_il_generation (system.il_generation)
 				l_system.process (l_vis)
 				l_file_name := a_location.extended (a_system.uuid.out).extended (backup_adapted_config_file)
@@ -2175,7 +2174,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

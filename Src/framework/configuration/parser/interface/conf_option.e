@@ -150,7 +150,7 @@ feature -- Status
 				syntax.is_set)
 		end
 
-	is_empty_for (n: like namespace_1_0_0): BOOLEAN
+	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
 			-- Is `Current' empty in a specific namespace `n`?
 		do
 			Result := not (

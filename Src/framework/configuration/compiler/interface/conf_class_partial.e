@@ -44,6 +44,9 @@ feature {NONE} -- Initialization
 				a_partial_classes.forth
 			end
 
+			name := ""
+			path := ""
+			file_name := ""
 			check_changed
 			if is_modified then
 				build_partial
@@ -161,9 +164,6 @@ feature {NONE} -- Implementation
 			l_name: detachable STRING
 			u: FILE_UTILITIES
 		do
-			name := ""
-			path := ""
-			file_name := ""
 			if not is_error then
 				create l_lst.make_from_array (partial_classes.current_keys)
 				epc_merger.merge (l_lst)
@@ -206,7 +206,6 @@ feature {NONE} -- Implementation
 			else
 				last_error := create {CONF_ERROR_PARTIAL}.make ("Unknown error during merging of partial classes.")
 			end
-
 			retry
 		end
 

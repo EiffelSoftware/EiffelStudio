@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor that builds the compiled informations from scratch or from old informations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,13 +40,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory)
+	make_build (a_state: like state; an_application_target: like application_target;
+		a_assembly_cach_location: READABLE_STRING_32; a_il_version: like il_version; a_partial_location: like partial_location; a_factory: like factory)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
 			an_application_target_not_void: an_application_target /= Void
 			a_factory_not_void: a_factory /= Void
 		do
+			create assembly_cache_folder.make_from_string (a_assembly_cach_location)
+			il_version := a_il_version
+			partial_location := a_partial_location
+			create current_classes_by_filename.make (0)
 			application_target := an_application_target
 			factory := a_factory
 			reset_classes
@@ -61,7 +66,8 @@ feature {NONE} -- Initialization
 			application_target_set: application_target = an_application_target
 		end
 
-	make_build_from_old (a_state: like state; an_application_target, an_old_target: CONF_TARGET; a_factory: like factory)
+	make_build_from_old (a_state: like state; an_application_target, an_old_target: CONF_TARGET;
+		a_assembly_cach_location: READABLE_STRING_32; a_version: like il_version; a_partial_location: like partial_location; a_factory: like factory)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
@@ -72,7 +78,7 @@ feature {NONE} -- Initialization
 			application_target := an_application_target
 			factory := a_factory
 			reset_classes
-			make_build (a_state, an_application_target, a_factory)
+			make_build (a_state, an_application_target, a_assembly_cach_location, a_version, a_partial_location, a_factory)
 			old_target := an_old_target
 		ensure
 			application_target_set: application_target = an_application_target
@@ -103,29 +109,6 @@ feature -- Access
 			-- List of assemblies in the current configuration.
 
 feature -- Update
-
-	set_assembly_cach_folder (a_location: STRING_32)
-			-- Set `assembly_cache_folder'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			create assembly_cache_folder.make_from_string (a_location)
-		end
-
-	set_il_version (a_version: like il_version)
-			-- Set `il_version'.
-			-- If `a_version' is `Void', use the latest version.
-		do
-			il_version := a_version
-		end
-
-	set_partial_location (a_location: like partial_location)
-			-- Set `partial_location'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			partial_location := a_location
-		end
 
 	set_is_full_class_name_analyzis (v: like is_full_class_name_analysis)
 			-- Set `is_full_class_name_analysis' with `v'.
@@ -643,7 +626,7 @@ feature {NONE} -- Implementation
 	libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of processed library targets, mapped with their uuid.
 
-	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
+	all_libraries: detachable HASH_TABLE [CONF_TARGET, UUID]
 			-- Mapping of all library targets (processed and unprocessed) that are in the new target, mapped with their uuid.
 
 	old_libraries: detachable HASH_TABLE [CONF_TARGET, UUID]
@@ -891,7 +874,11 @@ feature {NONE} -- Implementation
 								-- although the classes are still there, we have to recheck all clients
 								-- of this class in `current_system' because they no longer
 								-- have access to those classes.
-							if attached l_library.library_target as l_library_target and then all_libraries.has (l_library_target.system.uuid) then
+							if
+								attached l_library.library_target as l_library_target and then
+								attached all_libraries as ls and then
+								ls.has (l_library_target.system.uuid)
+							then
 								l_done := True
 								if attached l_library.classes as l_classes then
 									check classes_set: l_library.classes_set end

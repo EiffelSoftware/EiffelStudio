@@ -982,10 +982,22 @@ end
 					-- let the configuration system build "everything"
 				l_state := universe.conf_state_from_target (l_target)
 				if universe.target /= Void then
-					create l_vis_build.make_build_from_old (l_state,
-						l_target, universe.target, l_factory)
+					create l_vis_build.make_build_from_old
+						(l_state,
+						l_target,
+						universe.target,
+						if il_generation then metadata_cache_path else {STRING_32} "" end,
+						if il_generation then clr_runtime_version else {STRING_32} "" end,
+						l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target),
+						l_factory)
 				else
-					create l_vis_build.make_build (l_state, l_target, l_factory)
+					create l_vis_build.make_build
+						(l_state,
+						l_target,
+						if il_generation then metadata_cache_path else {STRING_32} "" end,
+						if il_generation then clr_runtime_version else {STRING_32} "" end,
+						l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target),
+						l_factory)
 				end
 				if has_potential_class_name_mismatch then
 					has_potential_class_name_mismatch := False
@@ -994,12 +1006,6 @@ end
 					has_potential_class_name_mismatch := True
 					l_vis_build.set_is_full_class_name_analyzis (False)
 				end
-				if il_generation then
-					l_vis_build.set_assembly_cach_folder (metadata_cache_path)
-					l_vis_build.set_il_version (clr_runtime_version)
-				end
-				l_vis_build.set_partial_location (
-					l_factory.new_location_from_path (project_location.partial_generation_path.name, l_target))
 
 					-- set observers
 				l_vis_build.consume_assembly_observer.extend (agent degree_output.put_consume_assemblies)
@@ -6147,7 +6153,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 		require
 			a_window_not_void: a_window /= Void
 		do
+			dev_window := a_window
 			create on_finish_actions
 
 			make_with_title (interface_names.l_settings_management)
@@ -124,6 +125,19 @@ feature {NONE} -- Initialization
 			preferences_cb := but_check
 			create tf; tf.disable_edit; hb.extend (tf)
 			preferences_tf := tf
+
+				-- UI layout (docking)
+			create hb
+			hb.set_padding_width (layout_constants.tiny_padding_size)
+			l_advanced_box.extend (hb); l_advanced_box.disable_item_expand (hb)
+			create but_check.make_with_text ("UI layout settings")
+			but_check.set_tooltip ("UI layout settings (tools configuration, ...)")
+			but_check.set_minimum_width (100)
+			but_check.enable_select
+			hb.extend (but_check); hb.disable_item_expand (but_check)
+			ui_layout_cb := but_check
+			create tf; tf.disable_edit; hb.extend (tf)
+			ui_layout_tf := tf
 
 				-- user_files_path ("studio")
 			create hb
@@ -220,6 +234,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	dev_window: EB_DEVELOPMENT_WINDOW
+
 	main_cell: EV_CELL
 
 	progress_bar: EB_PERCENT_PROGRESS_BAR
@@ -229,12 +245,14 @@ feature -- Access
 	versions_combo: EV_COMBO_BOX
 
 	preferences_tf,
+	ui_layout_tf,
 	templates_tf,
 	studio_config_tf,
 	ini_files_tf: EV_TEXT_FIELD
 
 
 	preferences_cb,
+	ui_layout_cb,
 	studio_config_cb,
 	templates_cb,
 	ini_files_cb: EV_CHECK_BUTTON
@@ -269,6 +287,9 @@ feature -- Event
 				preferences_cb.enable_sensitive
 				preferences_tf.enable_edit
 
+				ui_layout_cb.enable_sensitive
+				ui_layout_tf.enable_edit
+
 				studio_config_cb.enable_sensitive
 				studio_config_tf.enable_edit
 
@@ -282,6 +303,8 @@ feature -- Event
 			else
 				but.set_text (interface_names.b_edit_settings)
 				preferences_tf.disable_edit
+
+				ui_layout_tf.disable_edit
 
 				studio_config_tf.disable_edit
 
@@ -369,6 +392,15 @@ feature -- Event
 								end
 							end(text_widget, ?,?,?,?)
 					)
+					-- Save imported preferences!
+				preferences.preferences.save_preferences
+			end
+			if ui_layout_cb.is_sensitive and then ui_layout_cb.is_selected then
+				if text_widget /= Void then
+					text_widget.append_text ("- UI layout settings.%N")
+				end
+				safe_copy_directory_content_into (create {PATH}.make_from_string (ui_layout_tf.text), eiffel_layout.docking_data_path, text_widget)
+				reload_docking_layout (text_widget)
 			end
 			if studio_config_cb.is_sensitive and then studio_config_cb.is_selected then
 				if text_widget /= Void then
@@ -470,6 +502,13 @@ feature -- Event
 			preferences_cb.set_tooltip ({STRING_32} "Preferences at " + s)
 			preferences_tf.set_text (s)
 
+				-- UI layout
+			p := eiffel_layout.docking_data_path_for_version (v, False)
+			cb := ui_layout_cb
+			tf := ui_layout_tf
+			tf.set_text (p.name)
+			cb.set_tooltip ({STRING_32} "Import directory %"" + p.name + "%"")
+
 				-- Studio
 			p := ufp.extended ("studio")
 			cb := studio_config_cb
@@ -547,6 +586,38 @@ feature -- Event
 		end
 
 feature {NONE} -- Implementation
+
+	reload_docking_layout (text_widget: detachable EV_TEXT)
+		local
+			l_succeed: BOOLEAN
+		do
+			if dev_window.eb_debugger_manager.debug_mode_forced then
+				if text_widget /= Void then
+					text_widget.append_text ("- Loading layout for debug mode ...")
+				end
+				l_succeed := dev_window.docking_manager.open_config_with_path (eiffel_layout.user_docking_debug_file_name (dev_window.window_id))
+			else
+				if text_widget /= Void then
+					text_widget.append_text ("- Loading layout for standard mode ...")
+				end
+				l_succeed := dev_window.docking_manager.open_config_with_path (eiffel_layout.user_docking_standard_file_name (dev_window.window_id))
+			end
+			if l_succeed then
+				if text_widget /= Void then
+					text_widget.append_text ("-> completed.%N")
+				end
+			else
+				if text_widget /= Void then
+					text_widget.append_text ("-> failed!%N")
+					text_widget.append_text ("  -> restoring standard layout...%N")
+				end
+				if dev_window.eb_debugger_manager.debug_mode_forced then
+					dev_window.docking_layout_manager.restore_standard_debug_docking_layout
+				else
+					dev_window.docking_layout_manager.restore_standard_tools_docking_layout
+				end
+			end
+		end
 
 	safe_copy_directory_content_into (a_dirname: PATH; a_target_dirname: PATH; a_txt: detachable EV_TEXT)
 		local

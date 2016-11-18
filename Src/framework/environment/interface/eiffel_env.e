@@ -1311,6 +1311,16 @@ feature -- Private Settings Directories
 			not_result_is_empty: not Result.is_empty
 		end
 
+	docking_data_path_for_version (a_version_name: READABLE_STRING_GENERAL; a_create_dir: BOOLEAN): PATH
+		require
+			is_valid_environment: is_valid_environment
+			is_user_files_supported: is_user_files_supported
+		do
+			Result := hidden_files_path_for_version (a_version_name, a_create_dir).extended (docking_name)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	docking_data_path: PATH
 			-- Path to docking settings for EiffelStudio.
 			--| They are hidden by default to the user.
@@ -1318,7 +1328,7 @@ feature -- Private Settings Directories
 			is_valid_environment: is_valid_environment
 			is_user_files_supported: is_user_files_supported
 		once
-			Result := hidden_files_path.extended (docking_name)
+			Result := docking_data_path_for_version (version_name, True)
 		ensure
 			not_result_is_empty: not Result.is_empty
 		end

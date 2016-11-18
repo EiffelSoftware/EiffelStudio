@@ -244,9 +244,11 @@ feature -- Query
 					l_file.open_read
 					create l_reader.make (l_file)
 					l_reader.set_for_reading
-					create l_facility
-					if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
-						Result := l_result
+					if l_reader.is_ready_for_reading then
+						create l_facility
+						if attached {SD_CONFIG_DATA} l_facility.retrieved (l_reader, True) as l_result then
+							Result := l_result
+						end
 					end
 				end
 			end
@@ -1066,7 +1068,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

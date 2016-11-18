@@ -73,6 +73,7 @@ feature -- Events
 		do
 			if a_do_not_show_again then
 				preferences.dialog_data.show_first_launching_dialog_preference.set_value (False)
+				preferences.preferences.save_preferences -- Save right away!
 			end
 			next_actions.call (Void)
 		end

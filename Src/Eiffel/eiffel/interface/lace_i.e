@@ -786,13 +786,13 @@ feature {NONE} -- Implementation
 	report_error (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			error_handler.insert_error (create {VD00}.make (e))
+			error_handler.insert_error (create {VD01}.make (e))
 		end
 
 	report_warning (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			error_handler.insert_warning (create {VD00}.make (e))
+			error_handler.insert_warning (create {VD01}.make (e))
 		end
 
 	parse_target (a_target: CONF_TARGET)

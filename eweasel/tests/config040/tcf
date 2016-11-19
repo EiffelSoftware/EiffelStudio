@@ -1,0 +1,61 @@
+test_name 	 capability-library-support
+test_description Capabilities should be checked for inclusion: a project/library cannot (conditionally) depend on a library with less capabilities.
+
+-- Library void safety: conformance
+define	LIBRARY_VOID_SAFETY conformance
+copy_sub	library.ecf $TEST library.ecf
+
+define	VOID_SAFETY conformance
+define	USE_VOID_SAFETY $LIBRARY_VOID_SAFETY
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	VOID_SAFETY initialization
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_warning NONE VD00
+
+define	VOID_SAFETY transitional
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_warning NONE VD00
+
+define	VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	validity_warning NONE VD00
+
+-- Library void safety: all
+define	LIBRARY_VOID_SAFETY all
+copy_sub	library.ecf $TEST library.ecf
+
+define	VOID_SAFETY conformance
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	VOID_SAFETY initialization
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	VOID_SAFETY transitional
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+define	VOID_SAFETY all
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+
+test_end

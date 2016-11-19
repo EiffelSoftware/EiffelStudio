@@ -1,11 +1,10 @@
-note
+﻿note
 	description: "the constant pool is an integral part of a jvm class. it is the symbolic link table, the virtual machine needs to %
-	%run and link classes. ie. instead of writing the name and signature of features every time they are accessed directly into %
-   %the code attribute, only an index is written. these index %
-   %reference an entry in the constant pool, that holds the actual information."
+		%run and link classes. ie. instead of writing the name and signature of features every time they are accessed directly into %
+		%the code attribute, only an index is written. these index %
+		%reference an entry in the constant pool, that holds the actual information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,18 +13,18 @@ class
 
 inherit
 	SHARED_JVM_CLASS_REPOSITORY
-			
+
 	JVM_BYTE_CODE_EMITTOR
 		redefine
 			emit,
 			close
 		end
-			
+
 create
 	make
 
 feature {NONE} -- Initialisation
-			
+
 	make
 		do
 			create list.make
@@ -54,17 +53,17 @@ feature -- Access
 			end
 			Precursor
 		end
-			
+
 	class_type_id_to_cpe: HASH_TABLE [INTEGER, INTEGER]
 			-- provides a mapping from system global `type_id's to
 			-- constant pool local entry indizes
-			
+
 	feature_type_id_to_cpe: HASH_TABLE [HASH_TABLE [INTEGER, INTEGER], INTEGER]
 			-- this maps a (class_type_id, feature_type_id) to constant
 			-- pool index
-			
+
 	put_class_by_type_id (a_type_id: INTEGER)
-			-- put information for a class into the constant pool (by 
+			-- put information for a class into the constant pool (by
 			-- type id)
 		require
 			valid_id: repository.valid_id (a_type_id)
@@ -74,7 +73,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
-			
+
 	put_class_by_object (a_class: JVM_CLASS)
 			-- puts a class (CPE_CLASS) and it's name (CPE_UTF8) into
 			-- the pool. Updates the `type_id_to_cpe' mapping.
@@ -87,7 +86,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
-			
+
 	put_class (class_: STRING)
 			-- puts a class (CPE_CLASS) and it's name (CPE_UTF8) into
 			-- the pool. Updates the `type_id_to_cpe' mapping.
@@ -103,7 +102,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_CLASS")
 		end
-			
+
 	put_feature_by_type_id (a_type_id, a_feature_type_id: INTEGER)
 			-- put information about a feature into the constant pool
 		require
@@ -113,37 +112,30 @@ feature -- Access
 			feature_is_written: repository.is_written_feature_by_id (a_type_id, a_feature_type_id)
 		local
 			h: HASH_TABLE [INTEGER, INTEGER]
-			wf: JVM_WRITTEN_FEATURE
 		do
-			wf ?= repository.item (a_type_id).features.item (a_feature_type_id)
-			check
-				wf /= Void
-			end
-			feature_type_id_to_cpe.search (a_type_id)
-			if
-				not feature_type_id_to_cpe.found
-			then
-				put_feature_by_object (wf)
-				create h.make (50)
-				h.put (last_cpe_index, a_feature_type_id)
-				feature_type_id_to_cpe.put (h, a_type_id)
-			else -- type_id found
-				feature_type_id_to_cpe.found_item.search (a_feature_type_id)
-				if
-					not feature_type_id_to_cpe.found_item.found
-				then
+			if attached {JVM_WRITTEN_FEATURE} repository.item (a_type_id).features.item (a_feature_type_id) as wf then
+				feature_type_id_to_cpe.search (a_type_id)
+				if not feature_type_id_to_cpe.found then
 					put_feature_by_object (wf)
-					feature_type_id_to_cpe.found_item.put (last_cpe_index, a_feature_type_id)
-				else
-					last_cpe_index := feature_type_id_to_cpe.found_item.found_item
-				end	
+					create h.make (50)
+					h.put (last_cpe_index, a_feature_type_id)
+					feature_type_id_to_cpe.put (h, a_type_id)
+				else -- type_id found
+					feature_type_id_to_cpe.found_item.search (a_feature_type_id)
+					if not feature_type_id_to_cpe.found_item.found then
+						put_feature_by_object (wf)
+						feature_type_id_to_cpe.found_item.put (last_cpe_index, a_feature_type_id)
+					else
+						last_cpe_index := feature_type_id_to_cpe.found_item.found_item
+					end
+				end
+				check
+					has_key1: feature_type_id_to_cpe.has (a_type_id)
+					has_key2: feature_type_id_to_cpe.item (a_type_id).has (a_feature_type_id)
+				end
+			else
+				check False end
 			end
-							
-			check
-				has_key1: feature_type_id_to_cpe.has (a_type_id)
-				has_key2: feature_type_id_to_cpe.item (a_type_id).has (a_feature_type_id)
-			end
-							
 		end
 
 	put_feature_by_object (f: JVM_WRITTEN_FEATURE)
@@ -171,7 +163,7 @@ feature -- Access
 				end
 			end
 		end
-			
+
 	put_method_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a method into the constant pool
 		require
@@ -192,7 +184,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_METHOD_REF")
 		end
-			
+
 	put_interface_method_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a interface method into the constant pool
 		require
@@ -214,7 +206,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_INTERFACE_METHOD_REF")
 		end
-			
+
 	put_method_ref (method_name, method_signature, written_class: STRING)
 			-- puts a MethodRef entry into the Constant Pool.
 			-- `method_name' is the name of the method the constant
@@ -242,7 +234,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_METHOD_REF")
 		end
-			
+
 	put_field_ref (name, type, class_: STRING)
 			-- put information about a field into the constant pool
 		require
@@ -264,7 +256,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FIELD_REF")
 		end
-			
+
 	put_field_ref_by_object (f: JVM_WRITTEN_FEATURE)
 			-- put information about a field into the constant pool
 		require
@@ -277,7 +269,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FIELD_REF")
 		end
-						
+
 	put_name_and_type_from_object (f: JVM_WRITTEN_FEATURE)
 			-- put name and type entry of a feature into the constant pool
 		require
@@ -289,7 +281,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_NAME_AND_TYPE")
 		end
-			
+
 	put_name_and_type (name, type: STRING)
 			-- put name and type entry of a feature into the constant pool
 		require
@@ -309,7 +301,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_NAME_AND_TYPE")
 		end
-			
+
 	emit (file: RAW_FILE)
 			-- append constant pool to file
 		do
@@ -319,8 +311,8 @@ feature -- Access
 			until
 				list.off
 			loop
-				-- since long and double values take up two places in the 
-				-- constant pool  (one of 
+				-- since long and double values take up two places in the
+				-- constant pool  (one of
 				-- which is left Void) an item may indeed be void.
 				if
 					list.item /= Void
@@ -330,7 +322,7 @@ feature -- Access
 				list.forth
 			end
 		end
-			
+
 	put_double_constant (d: DOUBLE)
 			-- put a double constant into pool
 		local
@@ -343,19 +335,19 @@ feature -- Access
 			then
 				list.force (Void)
 							-- for obscure reasons (citing book "Java Virtual Machine - 
-							-- Jon Meyer, pg. 179) when an entry tagged 
-							-- CONSTANT_Long or CONSTANT_Double appears in the constant 
-							-- pool, the JVM considers this as taking up two entries. 
-							-- For example, if a constant CONSTANT_Long appears at index 
-							-- 3 in the constant pool, then the next constant in the 
-							-- class file will be fiven an index number 5. Index 4 is 
-							-- treated as an invalid index, and must not be referred to 
+							-- Jon Meyer, pg. 179) when an entry tagged
+							-- CONSTANT_Long or CONSTANT_Double appears in the constant
+							-- pool, the JVM considers this as taking up two entries.
+							-- For example, if a constant CONSTANT_Long appears at index
+							-- 3 in the constant pool, then the next constant in the
+							-- class file will be fiven an index number 5. Index 4 is
+							-- treated as an invalid index, and must not be referred to
 							-- by the class file.
 			end
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_DOUBLE")
 		end
-			
+
 	put_float_constant (f: REAL)
 			--	put fload constant into pool
 		local
@@ -366,7 +358,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_FLOAT")
 		end
-			
+
 	put_int_32_constant (i: INTEGER)
 			--	put int 32 (java type int) constant into pool
 		local
@@ -377,7 +369,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_INTEGER")
 		end
-			
+
 	put_int_64_constant_from_int (i: INTEGER)
 			--	put int 64 (java type long) constant into pool
 		local
@@ -390,23 +382,23 @@ feature -- Access
 			then
 				list.force (Void)
 							-- for obscure reasons (citing book "Java Virtual Machine - 
-							-- Jon Meyer, pg. 179) when an entry tagged 
-							-- CONSTANT_Long or CONSTANT_Double appears in the constant 
-							-- pool, the JVM considers this as taking up two entries. 
-							-- For example, if a constant CONSTANT_Long appears at index 
-							-- 3 in the constant pool, then the next constant in the 
-							-- class file will be fiven an index number 5. Index 4 is 
-							-- treated as an invalid index, and must not be referred to 
+							-- Jon Meyer, pg. 179) when an entry tagged
+							-- CONSTANT_Long or CONSTANT_Double appears in the constant
+							-- pool, the JVM considers this as taking up two entries.
+							-- For example, if a constant CONSTANT_Long appears at index
+							-- 3 in the constant pool, then the next constant in the
+							-- class file will be fiven an index number 5. Index 4 is
+							-- treated as an invalid index, and must not be referred to
 							-- by the class file.
 			end
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_LONG")
 		end
-			
+
 	put_utf8_constant (s: STRING)
 			--	put utf8 constant into pool
-			-- note that this cannot directly be used for 
-			-- java.lang.String manifests. they require a 
+			-- note that this cannot directly be used for
+			-- java.lang.String manifests. they require a
 			-- `put_string_constant' call.
 		local
 			cpe: CPE_UTF8
@@ -416,7 +408,7 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_UTF8")
 		end
-			
+
 	put_string_constant (s: STRING)
 			-- put string (java type java.lang.String) constant into pool
 		local
@@ -428,15 +420,15 @@ feature -- Access
 		ensure
 			last_cpe: list.i_th (last_cpe_index).generating_type.out.is_equal ("CPE_STRING")
 		end
-			
-feature {ANY} 
+
+feature {ANY}
 	last_cpe_index: INTEGER
 			-- index of item inserted last
 			-- we use a caching mechanism to avoid duplicate entries.
-			-- if an entry has not been inserted, because a entry with 
-			-- the same data was already present, `last_cpe_index' is 
+			-- if an entry has not been inserted, because a entry with
+			-- the same data was already present, `last_cpe_index' is
 			-- still set to the index of the already present entry.
-	
+
 	put_element (el: CONSTANT_POOL_ELEMENT)
 			-- puts an element into the list.
 			-- the index of the element can be retrieved from `last_cpe_index'.
@@ -474,29 +466,29 @@ feature {ANY}
 			last_put_cached implies list.count = old list.count
 			not last_put_cached implies list.count - 1 = old list.count
 		end
-	
+
 	last_put_cached: BOOLEAN
-			-- this variable tells you wether the last call to 
-			-- `put_element' actually inserted a new element (False) or 
-			-- just set `last_cpe_index' to point to a equal entry 
+			-- this variable tells you wether the last call to
+			-- `put_element' actually inserted a new element (False) or
+			-- just set `last_cpe_index' to point to a equal entry
 			-- already present
 
 feature {NONE} -- Implementation
-			
+
 	list: LINKED_LIST [CONSTANT_POOL_ELEMENT]
 			-- the actual entries are stored in this list
-			
+
 	count_bc: JVM_BYTE_CODE
 			-- information about the length of the constant pool
 
 invariant
-	
+
 	class_type_id_to_cpe_not_void: class_type_id_to_cpe /= Void
 	feature_type_id_to_cpe_not_void: feature_type_id_to_cpe /= Void
 	count_bc_not_void: count_bc /= Void
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -509,22 +501,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

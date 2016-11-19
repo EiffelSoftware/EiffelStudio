@@ -2102,6 +2102,7 @@ test	config-too-many-excludes		config039 tcf pass config
 test	capability-library-support		config040 tcf fail config capability
 test	capability-library-use			config041 tcf fail config capability
 test	capability-target-support		config042 tcf fail config capability
+test	capability-target-use			config043 tcf fail config capability
 
 -- Lace
 

@@ -16,19 +16,19 @@ define	USE_VOID_SAFETY initialization
 copy_sub	Ace $TEST Ace
 
 resume_compile
-compile_result	validity_error NONE VD00
+compile_result	validity_error NONE VD01
 
 define	USE_VOID_SAFETY transitional
 copy_sub	Ace $TEST Ace
 
 resume_compile
-compile_result	validity_error NONE VD00
+compile_result	validity_error NONE VD01
 
 define	USE_VOID_SAFETY all
 copy_sub	Ace $TEST Ace
 
 resume_compile
-compile_result	validity_error NONE VD00
+compile_result	validity_error NONE VD01
 
 -- Parent void safety: all
 define	LIBRARY_VOID_SAFETY all

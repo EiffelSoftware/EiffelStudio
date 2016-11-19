@@ -17,19 +17,19 @@ define	VOID_SAFETY initialization
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_warning NONE VD00
+compile_result	validity_warning NONE VD01
 
 define	VOID_SAFETY transitional
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_warning NONE VD00
+compile_result	validity_warning NONE VD01
 
 define	VOID_SAFETY all
 copy_sub	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_warning NONE VD00
+compile_result	validity_warning NONE VD01
 
 -- Parent void safety: all
 define	LIBRARY_VOID_SAFETY all

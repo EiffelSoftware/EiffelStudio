@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Default implementation for accessing a tool. This uses the last focused development window to query for a tool.
 		
@@ -78,7 +78,7 @@ feature {NONE} -- Access
 			--
 			--| The result type is detachable because of the use of SITE with ESF.
 		do
-			Result ?= window_manager.last_focused_development_window
+			Result := window_manager.last_focused_development_window
 		end
 
 feature -- Status report
@@ -93,7 +93,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

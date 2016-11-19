@@ -2099,6 +2099,7 @@ test	config-library-with-uppercase	config036 tcf pass config
 test	config-cycled-library-dependency	config037 tcf pass config
 test	config-unexistent-cluster-with-changes	config038 tcf pass config
 test	config-too-many-excludes		config039 tcf pass config
+test	capability-library-support		config040 tcf fail config capability
 
 -- Lace
 

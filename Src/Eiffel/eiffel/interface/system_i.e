@@ -951,6 +951,7 @@ end
 			d1, d2: DATE_TIME
 			l_factory: CONF_COMP_FACTORY
 			l_state: CONF_STATE
+			w: ARRAYED_LIST [ERROR]
 		do
 			debug ("timing")
 				print_memory_statistics
@@ -959,6 +960,19 @@ end
 
 			if equal (universe.new_target, universe.target) or else universe.new_target = Void then
 				lace.force_new_target
+					-- Remove previously reported capability warnings.
+				from
+					w := error_handler.warning_list
+					w.start
+				until
+					w.after
+				loop
+					if w.item.generating_type = {VD01} then
+						w.remove
+					else
+						w.forth
+					end
+				end
 				lace.recompile
 			end
 

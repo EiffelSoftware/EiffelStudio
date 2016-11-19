@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 		do
 			observer := o
 			root_target := t
-			target := Void
+			target := t
 			create targets.make (1)
 			process_target (t)
 		end
@@ -60,7 +60,7 @@ feature {CONF_VISITABLE} -- Visitor
 				targets.force (t)
 				old_target := target
 					-- Check usage of a parent target or of a library target in the current target.
-				if attached old_target then
+				if t /= root_target then
 					check_target (t, old_target)
 				end
 					-- Perform checks in the context of supplied target.
@@ -101,9 +101,7 @@ feature {CONF_VISITABLE} -- Visitor
 			-- <Precursor>
 		do
 				-- Check usage of the library in the current target.
-			if attached target as t then
-				check_group (a_library, t)
-			end
+			check_group (a_library, target)
 				-- Check library.
 			if attached a_library.library_target as t then
 				process_target (t)
@@ -120,20 +118,16 @@ feature {CONF_VISITABLE} -- Visitor
 			-- <Precursor>
 		do
 				-- Check usage of the assembly in the current target.
-			if attached target as t then
-				check_group (an_assembly, t)
-			end
+ 			check_group (an_assembly, target)
 		end
 
 	process_cluster (a_cluster: CONF_CLUSTER)
 			-- <Precursor>
 		do
-			if attached target as t then
-					-- Check usage of the cluster in the current target.
-				check_group (a_cluster, t)
-					-- Check cluster.
-				check_cluster (a_cluster, t)
-			end
+				-- Check usage of the cluster in the current target.
+			check_group (a_cluster, target)
+				-- Check cluster.
+			check_cluster (a_cluster, target)
 		end
 
 	process_override (an_override: CONF_OVERRIDE)
@@ -147,7 +141,7 @@ feature {NONE} -- Traversal
 	root_target: CONF_TARGET
 			-- A target for which all the checks are performed.
 
-	target: detachable CONF_TARGET
+	target: CONF_TARGET
 			-- A target being processed.
 
 	targets: SEARCH_TABLE [CONF_TARGET]

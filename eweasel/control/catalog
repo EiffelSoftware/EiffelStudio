@@ -2103,8 +2103,8 @@ test	capability-library-support		config040 tcf pass config capability
 test	capability-library-use			config041 tcf pass config capability
 test	capability-target-support		config042 tcf pass config capability
 test	capability-target-use			config043 tcf pass config capability
-test	capability-condition-support		config044 tcf fail config capability
-test	capability-condition-use		config045 tcf fail config capability
+test	capability-condition-support		config044 tcf pass config capability
+test	capability-condition-use		config045 tcf pass config capability
 
 -- Lace
 

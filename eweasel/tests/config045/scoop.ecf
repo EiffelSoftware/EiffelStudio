@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" name="library" library_target="library" uuid="160600E8-D62D-4BA4-AEEF-1F9939AFFF38">
+	<target name="library">
+		<root all_classes="true"/>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<concurrency support="scoop"/>
+		</capability>
+		$EWEASEL_DOTNET_SETTING
+	</target>
+</system>

@@ -1,5 +1,5 @@
 test_name 	 capability-target-use
-test_description Capabilities should be checked against settings: a target cannot extend a target with less capabilities that do not support specified settings. See also test#config041.
+test_description Capabilities should be checked against settings: a target cannot extend a target with less capabilities that do not support specified settings. See also test#config041, test#config045.
 
 copy_raw	test.e $CLUSTER test.e
 

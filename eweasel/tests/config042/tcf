@@ -1,5 +1,5 @@
 test_name 	 capability-target-support
-test_description Capabilities should be checked for inclusion: one target cannot depend on another target with less capabilities. See also test#config040.
+test_description Capabilities should be checked for inclusion: one target cannot depend on another target with less capabilities. See also test#config040, test#config044.
 
 copy_raw	test.e $CLUSTER test.e
 

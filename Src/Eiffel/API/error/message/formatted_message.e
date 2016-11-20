@@ -32,12 +32,12 @@ feature {NONE} -- Format: lists
 			is_used: False
 		end
 
-	add_list: PROCEDURE [detachable FORMAT_SPECIFICATION, TEXT_FORMATTER, like listable]
+	add_list: PROCEDURE [FORMAT_SPECIFICATION, TEXT_FORMATTER, like listable]
 			-- Agent to add an arbitrary list of items to output using a formatter.
 		do
-			Result := agent (f: detachable FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: like listable)
+			Result := agent (f: FORMAT_SPECIFICATION; t: TEXT_FORMATTER; i: like listable)
 				local
-					delimiter: detachable READABLE_STRING_GENERAL
+					delimiter: READABLE_STRING_GENERAL
 				do
 					across
 						i as c
@@ -45,12 +45,12 @@ feature {NONE} -- Format: lists
 						if attached delimiter then
 								-- This is not a first iteration, add `delimiter' before item.
 							t.add (delimiter)
-						elseif attached f then
-								-- First iteration, set delimiter for subsequent iterations from the format specification.
-							delimiter := f.item
-						else
+						elseif f.is_default then
 								-- First iteration, set delimiter for subsequent iterations to the default  one.
 							delimiter := {STRING_32} ", "
+						else
+								-- First iteration, set delimiter for subsequent iterations from the format specification.
+							delimiter := f.item
 						end
 						c.item (t)
 					end
@@ -112,7 +112,7 @@ feature {NONE} -- Format: message parsing
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

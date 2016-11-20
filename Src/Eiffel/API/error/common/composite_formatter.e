@@ -272,7 +272,7 @@ feature {NONE} -- Format specification
 	default_format_specification: FORMAT_SPECIFICATION
 			-- Format specification used when no explicit format specification is provided.
 		once
-			create Result.make ({STRING_32} "")
+			create Result.make_default
 		end
 
 invariant

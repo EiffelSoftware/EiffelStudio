@@ -1,11 +1,12 @@
-note
+﻿note
 	description: "Specification of a format used to format items specified in a format string of {COMPOSITE_FORMATTER}."
 
 class
 	FORMAT_SPECIFICATION
 
 create {COMPOSITE_FORMATTER}
-	make
+	make,
+	make_default
 
 feature {NONE} -- Creation
 
@@ -13,6 +14,25 @@ feature {NONE} -- Creation
 			-- Create a new object using format specification `s'.
 		do
 			specification := s
+		ensure
+			specification_set: specification = s
+		end
+
+	make_default
+			-- Create a new object with default format specification.
+		do
+			make (default_specification)
+		ensure
+			specification_set: specification = default_specification
+			is_default: is_default
+		end
+
+feature -- Status report
+
+	is_default: BOOLEAN
+			-- Does current describe a default format specification.
+		do
+			Result := specification = default_specification
 		end
 
 feature -- Access
@@ -29,10 +49,15 @@ feature {NONE} -- Access
 	specification: READABLE_STRING_GENERAL
 			-- Format specification.
 
+feature {NONE} -- Default specification
+
+	default_specification: STRING_32 = ""
+			-- Default format specification.
+
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

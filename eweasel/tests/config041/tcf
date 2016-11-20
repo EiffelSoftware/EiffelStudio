@@ -1,5 +1,5 @@
 test_name 	 capability-library-use
-test_description Capabilities should be checked against settings: a project cannot use a library with less capabilities that do not support specified settings. See also test#config043.
+test_description Capabilities should be checked against settings: a project cannot use a library with less capabilities that do not support specified settings. See also test#config043, test#config045.
 
 copy_raw	test.e $CLUSTER test.e
 

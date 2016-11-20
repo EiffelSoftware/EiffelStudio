@@ -105,12 +105,12 @@ compile_melted
 compile_result	validity_warning NONE VD01
 
 define	LIBRARY_CONCURRENCY	"thread scoop"
--- thread:	warning
+-- thread:	ok
 -- none:	ok
 -- scoop:	ok
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_warning NONE VD01
+compile_result	ok
 
 define	LIBRARY_CONCURRENCY	"none scoop"
 -- thread:	ok (unused)
@@ -135,9 +135,9 @@ cleanup_compile
 define	CONCURRENCY scoop
 
 define	LIBRARY_CONCURRENCY	thread
--- thread:	ok (unused)
--- none:	ok (unused)
--- scoop:	ok (unused)
+-- thread:	ok
+-- none:	ok
+-- scoop:	ok
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok
@@ -151,20 +151,20 @@ compile_melted
 compile_result	ok
 
 define	LIBRARY_CONCURRENCY	scoop
--- thread:	warning
--- none:	warning
--- scoop:	ok
-copy_sub	Ace $TEST Ace
-compile_melted
-compile_result	validity_warning NONE VD01 VD01
-
-define	LIBRARY_CONCURRENCY	"thread none"
 -- thread:	ok (unused)
 -- none:	ok (unused)
 -- scoop:	ok (unused)
 copy_sub	Ace $TEST Ace
 compile_melted
 compile_result	ok
+
+define	LIBRARY_CONCURRENCY	"thread none"
+-- thread:	warning
+-- none:	ok
+-- scoop:	ok
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	validity_warning NONE VD01
 
 define	LIBRARY_CONCURRENCY	"thread scoop"
 -- thread:	warning
@@ -175,12 +175,12 @@ compile_melted
 compile_result	validity_warning NONE VD01 VD01
 
 define	LIBRARY_CONCURRENCY	"none scoop"
--- thread:	warning
--- none:	warning
--- scoop:	ok
+-- thread:	ok (unused)
+-- none:	ok (unused)
+-- scoop:	ok (unused)
 copy_sub	Ace $TEST Ace
 compile_melted
-compile_result	validity_warning NONE VD01 VD01
+compile_result	ok
 
 define	LIBRARY_CONCURRENCY	"thread none scoop"
 -- thread:	warning

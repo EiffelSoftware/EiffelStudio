@@ -39,6 +39,7 @@ feature {NONE} -- Creation
 			root_target := t
 			target := t
 			create targets.make (1)
+			condition := Void
 			process_target (t)
 		end
 
@@ -54,6 +55,7 @@ feature {CONF_VISITABLE} -- Visitor
 		local
 			uuid: UUID
 			old_target: CONF_TARGET
+			old_condition: CONF_CONDITION_LIST
 		do
 			uuid := t.system.uuid
 			if not targets.has (t) then
@@ -67,7 +69,10 @@ feature {CONF_VISITABLE} -- Visitor
 				target := t
 				if attached t.extends as parent then
 						-- Recurse to parent.
+					old_condition := condition
+					condition := Void
 					process_target (parent)
+					condition := old_condition
 				end
 					-- Check rule 4.
 				if not t.options.catcall_safety_capability.is_custom_root_valid then
@@ -99,12 +104,17 @@ feature {CONF_VISITABLE} -- Visitor
 
 	process_library (a_library: CONF_LIBRARY)
 			-- <Precursor>
+		local
+			old_condition: like condition
 		do
 				-- Check usage of the library in the current target.
 			check_group (a_library, target)
 				-- Check library.
 			if attached a_library.library_target as t then
+				old_condition := condition
+				condition := a_library.internal_conditions
 				process_target (t)
+				condition := old_condition
 			end
 		end
 
@@ -146,6 +156,9 @@ feature {NONE} -- Traversal
 
 	targets: SEARCH_TABLE [CONF_TARGET]
 			-- Already processed targets.
+
+	condition: detachable CONF_CONDITION_LIST
+			-- Condition associated with the current target `target` (if any).
 
 	check_cluster (cluster: CONF_CLUSTER; t: CONF_TARGET)
 			-- Check that options of classes in `cluster' satisfy validity rules against target `t' and report errors using `o' if not.
@@ -213,7 +226,7 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_catcall_detection_value [t.options.catcall_detection.index],
 						conf_interface_names.option_catcall_detection_name))
 				end
-				if option.concurrency.index < t.options.concurrency.index then
+				if option.concurrency.index < restricted_concurrency (t.options.concurrency.index) then
 					observer.report_warning (create {CONF_ERROR_TARGET_CAPABILITY}.make
 						(parent,
 						t,
@@ -253,6 +266,36 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_void_safety_value [option.void_safety_capability.value.index],
 						conf_interface_names.option_void_safety_value [root_target.options.void_safety_capability.root_index],
 						conf_interface_names.option_void_safety_name))
+				end
+			end
+		end
+
+	restricted_concurrency (index: like {CONF_TARGET_OPTION}.concurrency_index_none): like {CONF_TARGET_OPTION}.concurrency_index_none
+			-- Concurrency index `index` restricted by current condition `condition`.
+		local
+			value: INTEGER
+		do
+			Result := index
+			if attached condition as cs then
+				from
+					inspect Result
+					when {CONF_TARGET_OPTION}.concurrency_index_thread then value := {CONF_CONSTANTS}.concurrency_multithreaded
+					when {CONF_TARGET_OPTION}.concurrency_index_none then value := {CONF_CONSTANTS}.concurrency_none
+					when {CONF_TARGET_OPTION}.concurrency_index_scoop then value := {CONF_CONSTANTS}.concurrency_scoop
+					end
+				until
+					Result = {CONF_TARGET_OPTION}.concurrency_index_thread or else
+					across cs as c some attached c.item.concurrency as s implies (s.item.value.has (value) xor s.item.invert) end
+				loop
+						-- Move to the smaller capability.
+					inspect Result
+					when {CONF_TARGET_OPTION}.concurrency_index_none then
+						Result := {CONF_TARGET_OPTION}.concurrency_index_thread
+						value := {CONF_CONSTANTS}.concurrency_multithreaded
+					when {CONF_TARGET_OPTION}.concurrency_index_scoop then
+						Result := {CONF_TARGET_OPTION}.concurrency_index_none
+						value := {CONF_CONSTANTS}.concurrency_none
+					end
 				end
 			end
 		end

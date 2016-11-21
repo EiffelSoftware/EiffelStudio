@@ -1,0 +1,27 @@
+test_name 	 capability-library-inheritance
+test_description Inherited capability rules should be checked similar to specified or default ones against used libraries.
+
+copy_sub	library.ecf $TEST library.ecf
+copy_raw	test.e $CLUSTER test.e
+
+-- Incompatible capability, compatible use.
+copy_sub	Ace-safe-unsafe.ecf $TEST Ace
+compile_melted
+compile_result	validity_warning NONE VD01
+
+-- Incompatible capability, incompatible use.
+copy_sub	Ace-safe.ecf $TEST Ace
+compile_melted
+compile_result	validity_error NONE VD01 VD01
+
+abort_compile
+cleanup_compile
+
+-- Compatible capability, compatible use.
+copy_sub	Ace-unsafe.ecf $TEST Ace
+compile_melted
+compile_result	ok
+
+cleanup_compile
+
+test_end

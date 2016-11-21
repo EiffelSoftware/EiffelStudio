@@ -44,6 +44,18 @@
 				<dotnet value="true"/>
 			</condition>
 		</external_object>
+		<external_linker_flag value="Mswsock.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="ISE_C_COMPILER" excluded_value="mingw"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="-lmswsock">
+			<condition>
+				<platform value="windows"/>
+				<custom name="ISE_C_COMPILER" value="mingw"/>
+			</condition>
+		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="abstract" location="abstract\" recursive="true"/>
 		<cluster name="local" location="local\" recursive="true">

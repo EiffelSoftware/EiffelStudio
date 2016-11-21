@@ -2106,6 +2106,7 @@ test	capability-target-use			config043 tcf pass config capability
 test	capability-condition-support		config044 tcf pass config capability
 test	capability-condition-use		config045 tcf pass config capability
 test	capability-library-inheritance		config046 tcf pass config capability
+test	capability-precompile-inheritance	config047 tcf pass config capability
 
 -- Lace
 

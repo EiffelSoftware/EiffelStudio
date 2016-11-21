@@ -13,9 +13,15 @@
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="concurrency" value="scoop"/>
-		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="crypto" location=".\" recursive="true"/>
+		<cluster name="crypto" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/support$</exclude>
+				<exclude>/encoder$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="crypto_support" location=".\support" hidden="true"/>
+		<cluster name="crypto_encoder" location=".\encoder" hidden="true"/>
 	</target>
 </system>

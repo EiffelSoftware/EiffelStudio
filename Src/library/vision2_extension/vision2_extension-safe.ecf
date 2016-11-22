@@ -10,9 +10,12 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option concurrency="thread" warning="true" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf" readonly="false"/>

@@ -59,8 +59,9 @@
 		</cluster>
 	</target>
 	<target name="process_dotnet" extends="process">
-		<option concurrency="thread" root_concurrency="thread">
-		</option>
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 	</target>
 </system>

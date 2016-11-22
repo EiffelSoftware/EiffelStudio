@@ -152,8 +152,9 @@
 		</cluster>
 	</target>
 	<target name="base_dotnet" extends="base">
-		<option root_concurrency="thread">
-		</option>
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
 	</target>
 </system>

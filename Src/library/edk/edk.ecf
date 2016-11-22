@@ -10,11 +10,14 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option concurrency="thread" warning="true" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 			<debug name="edk_events" enabled="true"/>
 			<debug name="edk_native_events" enabled="false"/>
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
 		<external_include location="$(ISE_LIBRARY)\library\edk\include"/>
 		<external_object location="$(ISE_LIBRARY)\library\edk\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\edk.lib"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

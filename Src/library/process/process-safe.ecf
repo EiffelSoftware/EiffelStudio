@@ -8,9 +8,12 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option concurrency="thread" warning="true" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="base_process" location="$ISE_LIBRARY\library\process\base\base_process-safe.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>

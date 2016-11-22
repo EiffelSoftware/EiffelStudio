@@ -19,7 +19,7 @@
 	</target>
 	<target name="finish_freezing" extends="c_config_library">
 		<root class="FINISH_FREEZING" feature="make"/>
-		<option root_concurrency="none" warning="true">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="True"/>
@@ -27,6 +27,9 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser-safe.ecf"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources-safe.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>

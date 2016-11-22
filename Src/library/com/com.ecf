@@ -10,9 +10,12 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option warning="true" void_safety="none">
+		<option warning="true">
 		</option>
 		<setting name="platform" value="windows"/>
+		<capability>
+			<void_safety support="none"/>
+		</capability>
 		<external_include location="$(ISE_LIBRARY)\library\com\spec\windows\include"/>
 		<external_object location="$(ISE_LIBRARY)\library\com\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\com_runtime.lib">
 			<condition>

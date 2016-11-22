@@ -37,8 +37,8 @@ feature {NONE} -- Initialization
 		require
 			a_factory_not_void: a_factory /= Void
 		do
-			default_create
 			factory := a_factory
+			default_create
 		ensure
 			factory_set: factory = a_factory
 		end
@@ -47,6 +47,11 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create wizard_page
+			create help_b
+			create cancel_b
+			create next_b
+			create previous_b
+
 			Precursor
 		end
 
@@ -68,6 +73,8 @@ feature {NONE} -- Initialization
 		local
 			h1: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
+			navigation_bar: EV_HORIZONTAL_BOX
+					-- Horizontal box containing navigation buttons
 		do
 			create previous_b.make_with_text_and_action (b_back, agent previous_page)
 			previous_b.align_text_center
@@ -159,9 +166,6 @@ feature {NONE} -- Implementation
 
 	previous_b, next_b, cancel_b, help_b: EV_BUTTON
 			-- Button ensuring the navigation.
-
-	navigation_bar: EV_HORIZONTAL_BOX
-			-- Horizontal box containing navigation buttons
 
 	is_final: BOOLEAN
 			-- Is it the final state?
@@ -259,7 +263,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

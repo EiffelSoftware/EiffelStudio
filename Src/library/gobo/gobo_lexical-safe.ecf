@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="gobo_lexical" uuid="6C83C78B-D8F2-4101-9E3C-EF8E8A7CD816" library_target="gobo_lexical">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gobo_lexical" uuid="6C83C78B-D8F2-4101-9E3C-EF8E8A7CD816" library_target="gobo_lexical">
 	<target name="gobo_lexical">
 		<description>gobo lexical library</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/ge$</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/free_elks$</exclude>
-			<exclude>/cvs$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/base$</exclude>
-			<exclude>/ve$</exclude>
 			<exclude>/Documentation$</exclude>
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn</exclude>
+			<exclude>/base$</exclude>
+			<exclude>/cvs$</exclude>
+			<exclude>/free_elks$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="standard" namespace="Gobo.Library">
+		<option is_obsolete_routine_type="true" namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

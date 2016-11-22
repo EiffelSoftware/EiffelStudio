@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="gobo_utility" uuid="9E2FDCF3-BE40-419F-8347-054F09B17434" library_target="gobo_utility">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gobo_utility" uuid="9E2FDCF3-BE40-419F-8347-054F09B17434" library_target="gobo_utility">
 	<target name="gobo_utility">
 		<description>gobo utility library</description>
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/Documentation$</exclude>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/ve$</exclude>
-			<exclude>/ge$</exclude>
 			<exclude>/base$</exclude>
 			<exclude>/cvs$</exclude>
 			<exclude>/free_elks$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/Documentation$</exclude>
+			<exclude>/ge$</exclude>
+			<exclude>/hact$</exclude>
+			<exclude>/se$</exclude>
+			<exclude>/ve$</exclude>
 		</file_rule>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" namespace="Gobo.Library">
+		<option is_obsolete_routine_type="true" namespace="Gobo.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>

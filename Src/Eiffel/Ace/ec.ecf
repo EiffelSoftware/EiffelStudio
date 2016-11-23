@@ -2,9 +2,11 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
@@ -112,7 +114,8 @@
 			<warning name="once_in_generic" enabled="false"/>
 		</option>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="none" use="none"/>
 		</capability>
 		<external_object location="$(EIFFEL_SRC)/C/ipc/ewb/libmtwewb.a">
 			<condition>
@@ -204,7 +207,6 @@
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" readonly="false" use_application_options="true"/>
 		<library name="tagging-ev" location="$EIFFEL_SRC\framework\tagging\ev\tagging-ev.ecf" readonly="false" use_application_options="true"/>
 		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing_library" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf" use_application_options="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
@@ -276,7 +278,9 @@
 				<exclude>/eb_gui_preferences\.e$</exclude>
 			</file_rule>
 		</cluster>
-		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
+		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true">
+				<option void_safety="all"/>
+		</override>
 		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
 	</target>
 	<target name="bench_cocoa" extends="bench">

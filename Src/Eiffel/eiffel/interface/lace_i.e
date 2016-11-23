@@ -786,13 +786,21 @@ feature {NONE} -- Implementation
 	report_error (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			error_handler.insert_error (create {VD01}.make (e))
+			if system.compiler_profile.is_capability_warning then
+				error_handler.insert_warning (create {VD01}.make (e))
+			else
+				error_handler.insert_error (create {VD01}.make (e))
+			end
 		end
 
 	report_warning (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			error_handler.insert_warning (create {VD01}.make (e))
+			if system.compiler_profile.is_capability_error then
+				error_handler.insert_error (create {VD01}.make (e))
+			else
+				error_handler.insert_warning (create {VD01}.make (e))
+			end
 		end
 
 	parse_target (a_target: CONF_TARGET)

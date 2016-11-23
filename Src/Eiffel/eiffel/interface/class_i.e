@@ -1,4 +1,4 @@
-note
+﻿note
 	description:"[
 				Abstract class that is used for the internal representation
 				of a class. Descendants of `ABSTRACT_CLASS' represent
@@ -6,7 +6,6 @@ note
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -230,22 +229,32 @@ feature -- Access
 			Result := options.is_full_class_checking or else system.compiler_profile.is_full_class_checking_mode
 		end
 
+	catcall_detection_index: like {CONF_OPTION}.catcall_detection_index_none
+			-- CAT-call detection index to be used for capability-specific rule checks.
+		do
+			if system.compiler_profile.is_capability_strict then
+				Result := options.catcall_detection.index
+			else
+				Result := universe.target.options.catcall_safety_capability.root_index
+			end
+		end
+
 	is_catcall_unsafe: BOOLEAN
 			-- Is current class compiled without catcall detection enabled?
 		do
-			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_none
+			Result := catcall_detection_index = {CONF_OPTION}.catcall_detection_index_none
 		end
 
 	is_catcall_conformance: BOOLEAN
 			-- Should frozen/variant annotation be taken into account when checking for conformance.
 		do
-			Result := options.catcall_detection.index /= {CONF_OPTION}.catcall_detection_index_none
+			Result := catcall_detection_index /= {CONF_OPTION}.catcall_detection_index_none
 		end
 
 	is_catcall_safe: BOOLEAN
 			-- Is catcall detection enabled, i.e. all feature calls are checked for potential catcalls?
 		do
-			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_all
+			Result := catcall_detection_index = {CONF_OPTION}.catcall_detection_index_all
 		end
 
 	is_attached_by_default: BOOLEAN
@@ -263,38 +272,48 @@ feature -- Access
 			Result := options.is_obsolete_routine_type
 		end
 
+	void_safety_index: like {CONF_OPTION}.void_safety_index_none
+			-- Void safety  index to be used for capability-specific rule checks.
+		do
+			if system.compiler_profile.is_capability_strict then
+				Result := options.void_safety.index
+			else
+				Result := universe.target.options.void_safety_capability.root_index
+			end
+		end
+
 	is_void_unsafe: BOOLEAN
 			-- Is current class compiled without any void-safety mechanism enabled?
 		do
-			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_none
+			Result := void_safety_index = {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_conformance: BOOLEAN
 			-- Should attachment status be taken into account when checking conformance?
 		do
-			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
+			Result := void_safety_index /= {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_initialization: BOOLEAN
 			-- Should attached entities be property set before use?
 		do
 			Result :=
-				options.void_safety.index /= {CONF_OPTION}.void_safety_index_none and then
-				options.void_safety.index /= {CONF_OPTION}.void_safety_index_conformance
+				void_safety_index /= {CONF_OPTION}.void_safety_index_none and then
+				void_safety_index /= {CONF_OPTION}.void_safety_index_conformance
 		end
 
 	is_void_safe_call: BOOLEAN
 			-- Should feature call target be attached?
 		do
 			Result :=
-				options.void_safety.index = {CONF_OPTION}.void_safety_index_transitional or else
-				options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+				void_safety_index = {CONF_OPTION}.void_safety_index_transitional or else
+				void_safety_index = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safe_construct: BOOLEAN
 			-- Should only mode-independent void-safety constructs be taken into account?
 		do
-			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
+			Result := void_safety_index = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safety_supported (other: CLASS_I): BOOLEAN
@@ -679,7 +698,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -13,7 +13,7 @@
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">

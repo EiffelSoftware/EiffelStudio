@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="eiffelsoftware.codedom.vision2" uuid="3AB3395F-5498-4549-8A8E-1E93CB3C9FD7" library_target="vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffelsoftware.codedom.vision2" uuid="3AB3395F-5498-4549-8A8E-1E93CB3C9FD7" library_target="vision2">
 	<target name="vision2">
 		<description>Codedom provider EiffelVision2</description>
 		<root class="ANY"/>
 		<version major="5" minor="7" release="426" build="0"/>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option full_class_checking="false" syntax="transitional">
 		</option>
 		<setting name="cls_compliant" value="true"/>
 		<setting name="dotnet_naming_convention" value="true"/>
@@ -18,6 +18,10 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<precompile name="precompile" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 	</target>

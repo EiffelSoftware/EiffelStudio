@@ -53,7 +53,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	checked_entities_table: HASHTABLE
+	checked_entities_table: separate HASHTABLE
 			-- Checked entities table containing:
 			-- Key: An entity (an ASSEMBLY, SYSTEM_TYPE, etc.)
 			-- Value: Corresponding checked entity (ASSEMBLY => EC_CHECKED_ASSEMBLY)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

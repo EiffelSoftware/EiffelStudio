@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-10-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-10-0 http://www.eiffel.com/developers/xml/configuration-1-10-0.xsd" name="compile_all" uuid="AC65C561-50E6-4F17-A196-8EFF64A88F9B">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="compile_all" uuid="AC65C561-50E6-4F17-A196-8EFF64A88F9B">
 	<target name="compile_all">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true" is_attached_by_default="false" syntax="provisional">
+		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="provisional">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
@@ -20,9 +23,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
-				<exclude>EIFGENs</exclude>
-				<exclude>CVS</exclude>
 				<exclude>.svn</exclude>
+				<exclude>CVS</exclude>
+				<exclude>EIFGENs</exclude>
 			</file_rule>
 		</cluster>
 	</target>

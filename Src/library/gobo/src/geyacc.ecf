@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="geyacc" uuid="24C23C51-AEA2-4C8A-B454-901AAF40F0FF">
 	<target name="geyacc">
 		<root class="GEYACC" feature="execute"/>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard">
+		<option warning="true" is_obsolete_routine_type="true">
 			<assertions/>
 		</option>
 		<setting name="address_expression" value="false"/>
@@ -19,7 +19,10 @@
 		<setting name="line_generation" value="false"/>
 		<setting name="msil_generation" value="false"/>
 		<setting name="msil_generation_type" value="exe"/>
-		<setting name="concurrency" value="none"/>
+		<capability>
+			<concurrency support="none" use="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_geyacc" location="$ISE_LIBRARY\library\gobo\gobo_geyacc.ecf" readonly="false" use_application_options="true"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>

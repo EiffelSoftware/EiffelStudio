@@ -3,6 +3,8 @@ test_description Different void safety levels produce different results,
 
 copy_raw	a.e $CLUSTER a.e
 
+setenv ISE_EC_FLAGS -capability strict
+
 -- Inheritance checks
 define NA "--"
 define NT ""

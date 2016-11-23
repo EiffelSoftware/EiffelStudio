@@ -1,27 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="crypto" uuid="B5F787F1-5AF3-46D7-8B89-2D27F771022C" library_target="crypto">
-	<description>Message Digest facilities.</description>
-	<target name="crypto">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/CVS$</exclude>
-			<exclude>/tests$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option namespace="EiffelSoftware.Library">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
-		<setting name="concurrency" value="scoop"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<cluster name="crypto" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/support$</exclude>
-				<exclude>/encoder$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="crypto_support" location=".\support" hidden="true"/>
-		<cluster name="crypto_encoder" location=".\encoder" hidden="true"/>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="B5F787F1-5AF3-46D7-8B89-2D27F771022C" message="Obsolete: use crypto.ecf !" location="crypto.ecf">
+</redirection>

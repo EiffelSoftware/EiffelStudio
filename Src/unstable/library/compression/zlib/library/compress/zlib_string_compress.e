@@ -108,7 +108,6 @@ feature {NONE} -- Deflate implementation
 			-- Return the number of elements read.
 		local
 			l_index: INTEGER
-			l_count: INTEGER
 		do
 			from
 				l_index := 1

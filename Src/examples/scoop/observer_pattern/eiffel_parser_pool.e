@@ -44,8 +44,7 @@ feature
 			if l_index <= parsers.count then
 				Result := parsers.i_th (l_index)
 			else
-				parser_creation.apply
-				Result := parser_creation.last_result
+				Result := parser_creation.item (Void)
 				parsers.extend (Result)
 			end
 		ensure

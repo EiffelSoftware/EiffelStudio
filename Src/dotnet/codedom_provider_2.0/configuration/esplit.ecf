@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="esplitter" uuid="F0BDAC07-73F2-4FA7-8644-D30849C54389">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="esplitter" uuid="F0BDAC07-73F2-4FA7-8644-D30849C54389">
 	<target name="esplit_common">
 		<description>eSplitter utility</description>
 		<version major="7" minor="0" release="0" build="0"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+		<option full_class_checking="false" syntax="transitional">
 		</option>
 		<setting name="automatic_backup" value="true"/>
 		<setting name="cls_compliant" value="true"/>
@@ -19,6 +19,10 @@
 		<setting name="msil_use_optimized_precompile" value="true"/>
 		<setting name="use_all_cluster_name_as_namespace" value="true"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cache_browser" location="$EIFFEL_SRC\dotnet\codedom_provider_2.0\configuration\cache_browser_library.ecf" readonly="true"/>
 		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf" readonly="true"/>

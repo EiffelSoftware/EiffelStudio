@@ -1332,6 +1332,27 @@ feature {NONE} -- Update
 					option_error_message := locale.translation ("Platform option requires a platform name.")
 				end
 
+			elseif option.same_string_general (compiler_profile.capabilty_option) then
+					-- This options specifies how capabilities are processed.
+				if current_option < argument_count then
+					current_option := current_option + 1
+					if compiler_profile.is_capability_valid (argument (current_option)) then
+						compiler_profile.set_capability (argument (current_option))
+					else
+						option_error_message :=
+							locale.formatted_string (
+								locale.translation ("Capability option value should be one of %"$1%", %"$2%", %"$3%"."),
+								compiler_profile.capability_value_warning,
+								compiler_profile.capability_value_error,
+								compiler_profile.capability_value_strict
+							)
+
+					end
+				else
+					option_error_message := locale.translation ("Capability option requires a value.")
+				end
+
+
 			elseif option.same_string_general ("-auto_test") then
 					-- FIXME: This only works if `-auto_test' is the last argument, as otherwise it will
 					-- override the compilation option that was previously set.

@@ -50,7 +50,7 @@ feature -- Execution
 
 feature -- Access
 
-	on_launched_action: detachable separate PROCEDURE [ANY, TUPLE]
+	on_launched_action: detachable separate PROCEDURE [TUPLE]
 
 	set_on_launched_action (act: like on_launched_action)
 		do

@@ -22,13 +22,10 @@ create
 feature {NONE} -- Initialization
 
 	initialize
-		local
-			opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS
 		do
 			Precursor
-				--| Uncomment the following 2 lines, to read options from "ewf.ini" configuration file
---			create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} opts.make_from_file ("ewf.ini")
---			import_service_options (opts)
+				--| Uncomment the following line, to read options from "ewf.ini" configuration file
+--			import_service_options (create {WSF_SERVICE_LAUNCHER_OPTIONS_FROM_INI} opts.make_from_file ("ewf.ini"))
 		end
 
 	launch (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)

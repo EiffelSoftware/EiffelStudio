@@ -47,7 +47,7 @@ feature -- Element change
 			has_no_error: not has_error
 		end
 
-	register_error_callback (a_callback: PROCEDURE [ANY, TUPLE [ERROR]])
+	register_error_callback (a_callback: PROCEDURE [TUPLE [ERROR]])
 			-- Register `a_callback' as new target to send error messages to.
 		do
 			error_listeners.force (a_callback)

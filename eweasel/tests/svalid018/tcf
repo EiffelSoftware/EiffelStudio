@@ -7,6 +7,9 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	parent.e $CLUSTER parent.e
 copy_raw 	child.e $CLUSTER child.e
 
+
+setenv ISE_EC_FLAGS -capability strict
+
 compile_melted
 compile_result	validity_error CHILD VD88
 
@@ -15,5 +18,10 @@ copy_sub 	Ace $TEST Ace
 
 resume_compile
 compile_result	validity_error PARENT VUTA(2)
+
+abort_compile
+unsetenv ISE_EC_FLAGS
+compile_melted
+compile_result	ok
 
 test_end

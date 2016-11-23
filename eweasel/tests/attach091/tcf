@@ -3,6 +3,8 @@ test_description Assigner of stable attributes has special treatment for attachm
 
 copy_raw	test.e $CLUSTER test.e
 
+setenv ISE_EC_FLAGS -capability strict
+
 define ATTACHED_BY_DEFAULT "false"
 define VOID_SAFETY "none"
 copy_sub	Ace $TEST Ace

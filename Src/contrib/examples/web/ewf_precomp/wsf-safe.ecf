@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-11-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-11-0 http://www.eiffel.com/developers/xml/configuration-1-11-0.xsd" name="precomp_wsf" uuid="3E534F9D-A25F-4CAF-8AAF-FF95DA8F8B64" library_target="wsf-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="precomp_wsf-safe" uuid="E541289C-4921-4BE3-98B2-4E466FC83AC7" library_target="wsf-safe">
 	<target name="wsf-safe">
 		<root class="ANY"/>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="transitional">
+		<option>
 			<assertions precondition="true"/>
 		</option>
-		<library name="wsf" location="../../../library/web/framework/ewf/wsf/wsf-safe.ecf"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="all"/>
+		</capability>
+		<library name="wsf" location="..\..\..\library\web\framework\ewf\wsf\wsf.ecf"/>
 	</target>
 </system>

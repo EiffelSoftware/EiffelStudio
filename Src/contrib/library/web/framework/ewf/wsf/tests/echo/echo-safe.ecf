@@ -1,22 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-9-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-9-0 http://www.eiffel.com/developers/xml/configuration-1-9-0.xsd" name="echo_server" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648">
-	<target name="echo_server">
-		<root class="ECHO_SERVER" feature="make"/>
-		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/.svn$</exclude>
-		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all" syntax="provisional">
-		</option>
-		<setting name="concurrency" value="thread"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="connector_standalone" location="..\..\..\ewsgi\connectors\standalone\standalone-safe.ecf" readonly="false"/>
-		<library name="connector_null" location="..\..\..\ewsgi\connectors\null\null-safe.ecf" readonly="false"/>
-		<library name="dft_standalone" location="..\..\default\standalone-safe.ecf"/>
-		<library name="ewsgi" location="..\..\..\ewsgi\ewsgi-safe.ecf" readonly="false"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
-		<library name="wsf" location="..\..\wsf-safe.ecf" readonly="false"/>
-		<tests name="src" location=".\src\" recursive="true"/>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648" message="Obsolete: use echo.ecf !" location="echo.ecf">
+</redirection>

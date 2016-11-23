@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="http_network" uuid="7C7AD84D-B7BD-4709-B4B2-9365B86582AE" library_target="http_network">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="http_network" uuid="7C7AD84D-B7BD-4709-B4B2-9365B86582AE" library_target="http_network">
 	<target name="http_network">
 		<root all_classes="true"/>
 		<file_rule>
@@ -7,20 +7,40 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" void_safety="none" syntax="standard">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="scoop"/>
 		<external_include location="$ECF_CONFIG_PATH/spec/include">
 			<condition>
-				<version type="compiler" min="16.09.9.9124"/>
+				<version type="compiler" min="16.9.9.9124"/>
 			</condition>
 		</external_include>
 		<external_include location="$ECF_CONFIG_PATH/spec/include_until_16_05">
 			<condition>
-				<version type="compiler" max="16.09.9.9124"/>
+				<version type="compiler" max="16.9.9.9124"/>
 			</condition>
 		</external_include>
+		<external_include location="$(ISE_LIBRARY)/unstable/library/network/socket/netssl/spec/include">
+			<condition>
+				<platform excluded_value="windows"/>
+				<version type="compiler" max="16.9.9.9124"/>
+				<custom name="ssl_enabled" value="true"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\include">
+			<condition>
+				<platform value="windows"/>
+				<version type="compiler" max="16.9.9.9124"/>
+				<custom name="ssl_enabled" value="true"/>
+			</condition>
+		</external_include>
+		<external_cflag value="-D_WINSOCKAPI_">
+			<condition>
+				<platform value="windows"/>
+				<version type="compiler" max="16.9.9.9124"/>
+				<custom name="ssl_enabled" value="true"/>
+			</condition>
+		</external_cflag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="net_ssl" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
@@ -34,33 +54,11 @@
 				<custom name="httpd_ssl_enabled" value="true"/>
 			</condition>
 		</library>
-
-		<external_include location="$(ISE_LIBRARY)/unstable/library/network/socket/netssl/spec/include">
-			<condition>
-				<platform excluded_value="windows"/>
-				<custom name="ssl_enabled" value="true"/>
-				<version type="compiler" max="16.09.9.9124"/>
-			</condition>
-		</external_include>
-		<external_include location="$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\include">
-			<condition>
-				<platform value="windows"/>
-				<custom name="ssl_enabled" value="true"/>
-				<version type="compiler" max="16.09.9.9124"/>
-			</condition>
-		</external_include>
-		<external_cflag value="-D_WINSOCKAPI_">
-			<condition>
-				<platform value="windows"/>
-				<custom name="ssl_enabled" value="true"/>
-				<version type="compiler" max="16.09.9.9124"/>
-			</condition>
-		</external_cflag>
 		<cluster name="network" location=".\src\">
 			<file_rule>
 				<exclude>/http_stream_socket_ext.e$</exclude>
 				<condition>
-					<version type="compiler" max="16.09.9.9124"/>
+					<version type="compiler" max="16.9.9.9124"/>
 				</condition>
 			</file_rule>
 			<cluster name="disabled_ssl_network" location="$|no_ssl\" recursive="true">
@@ -83,41 +81,41 @@
 				<file_rule>
 					<exclude>/http_stream_secure_socket_ext.e$</exclude>
 					<condition>
-						<version type="compiler" max="16.09.9.9124"/>
+						<version type="compiler" max="16.9.9.9124"/>
 						<custom name="ssl_enabled" value="true"/>
 					</condition>
 					<condition>
-						<version type="compiler" max="16.09.9.9124"/>
+						<version type="compiler" max="16.9.9.9124"/>
 						<custom name="net_ssl_enabled" value="true"/>
 					</condition>
 					<condition>
-						<version type="compiler" max="16.09.9.9124"/>
+						<version type="compiler" max="16.9.9.9124"/>
 						<custom name="httpd_ssl_enabled" value="true"/>
 					</condition>
 				</file_rule>
 			</cluster>
 		</cluster>
-		<cluster name="network_until_16_05" location=".\src\until_16_05\" recursive="false">
+		<cluster name="network_until_16_05" location=".\src\until_16_05\">
 			<condition>
-				<version type="compiler" max="16.09.9.9124"/>
+				<version type="compiler" max="16.9.9.9124"/>
 			</condition>
 			<cluster name="ssl_network_until_16_05" location="$|ssl\" recursive="true">
 				<condition>
+					<version type="compiler" max="16.9.9.9124"/>
 					<custom name="ssl_enabled" value="true"/>
-					<version type="compiler" max="16.09.9.9124"/>
 				</condition>
 				<condition>
+					<version type="compiler" max="16.9.9.9124"/>
 					<custom name="net_ssl_enabled" value="true"/>
-					<version type="compiler" max="16.09.9.9124"/>
 				</condition>
 				<condition>
+					<version type="compiler" max="16.9.9.9124"/>
 					<custom name="httpd_ssl_enabled" value="true"/>
-					<version type="compiler" max="16.09.9.9124"/>
 				</condition>
 			</cluster>
 		</cluster>
 	</target>
 	<target name="http_network_ssl" extends="http_network">
-		<variable name="ssl_enabled" value="true" />
+		<variable name="ssl_enabled" value="true"/>
 	</target>
 </system>

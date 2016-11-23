@@ -30,24 +30,23 @@ feature -- Conversion
 
     from_json (j: like to_json): detachable like object
         local
-            l_id: detachable STRING_32
             l_quantity : NATURAL
             l_price : REAL
         do
-            if attached {STRING_32} json.object (j.item (id_key), Void) as l_ucs then
-            	l_id := l_ucs
+            if attached {STRING_32} json.object (j.item (id_key), Void) as l_id then
+
+	            if attached {NATURAL} json.object (j.item (quantity_key), Void) as l_ucs then
+	            	l_quantity := l_ucs
+	            end
+
+	            if attached {REAL} json.object (j.item (quantity_key), Void) as l_ucs then
+	            	l_price := l_ucs
+				end
+
+            	create Result.make (l_id, l_quantity, l_price)
+            else
+            	check has_id: False end
             end
-
-            if attached {NATURAL} json.object (j.item (quantity_key), Void) as l_ucs then
-            	l_quantity := l_ucs
-            end
-
-            if attached {REAL} json.object (j.item (quantity_key), Void) as l_ucs then
-            	l_price := l_ucs
-			end
-
-            check l_id /= Void end
-            create Result.make (l_id, l_quantity, l_price)
         end
 
     to_json (o: like object): JSON_OBJECT

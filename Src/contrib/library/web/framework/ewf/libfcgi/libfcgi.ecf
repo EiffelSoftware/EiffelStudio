@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="libfcgi" uuid="3F4BCF74-3503-4533-9D74-5A65EC4CA3C4" library_target="libfcgi">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="libfcgi" uuid="3F4BCF74-3503-4533-9D74-5A65EC4CA3C4" library_target="libfcgi">
 	<target name="libfcgi">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
-			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-	
-		<option warning="true" full_class_checking="true" void_safety="none">
+		<option warning="true">
 		</option>
-		<setting name="concurrency" value="scoop"/>
+		
 		<external_include location="$ECF_CONFIG_PATH/spec/include/libfcgi">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -26,43 +25,43 @@
 				<platform value="windows"/>
 			</condition>
 		</external_library>
-		<external_linker_flag value="-lfcgi">
-			<condition>
-				<platform value="unix"/>
-			</condition>
-		</external_linker_flag>
 		<external_library location="/opt/local/lib/libfcgi.dylib">
 			<condition>
 				<platform value="macintosh"/>
 			</condition>
 		</external_library>
+		<external_linker_flag value="-lfcgi">
+			<condition>
+				<platform value="unix"/>
+			</condition>
+		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="interface" location="interface" recursive="true"/>
-		<cluster name="implementation" location="implementation" recursive="true">
+		<cluster name="implementation" location="implementation\" recursive="true">
 			<file_rule>
-				<exclude>/linux$</exclude>
 				<exclude>/fake$</exclude>
+				<exclude>/linux$</exclude>
 				<exclude>/mac$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>
 			</file_rule>
 			<file_rule>
-				<exclude>/windows$</exclude>
 				<exclude>/fake$</exclude>
 				<exclude>/mac$</exclude>
+				<exclude>/windows$</exclude>
 				<condition>
 					<platform value="unix"/>
 				</condition>
 			</file_rule>
 			<file_rule>
 				<exclude>/fake$</exclude>
-				<exclude>/windows$</exclude>
 				<exclude>/linux$</exclude>
+				<exclude>/windows$</exclude>
 				<condition>
 					<platform value="macintosh"/>
 				</condition>
 			</file_rule>
 		</cluster>
+		<cluster name="interface" location="interface\" recursive="true"/>
 	</target>
 </system>

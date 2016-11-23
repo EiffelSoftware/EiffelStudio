@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="nino" uuid="32C1D67D-33DE-4F1E-864B-D45388F2E3E6" library_target="nino">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="nino" uuid="32C1D67D-33DE-4F1E-864B-D45388F2E3E6" library_target="nino">
 	<target name="nino">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.git$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/CVS$</exclude>
 			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" void_safety="none">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="concurrency" value="thread"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
@@ -22,13 +24,13 @@
 			<file_rule>
 				<exclude>tcp_stream_socket.e</exclude>
 				<condition>
-					<version type="compiler" max="16.11"/>
+					<version type="compiler" max="16.11.0.0"/>
 				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="spec_until_16_05" location=".\library\spec\until_16_05\" recursive="true">
 			<condition>
-				<version type="compiler" max="16.11"/>
+				<version type="compiler" max="16.11.0.0"/>
 			</condition>
 		</cluster>
 	</target>

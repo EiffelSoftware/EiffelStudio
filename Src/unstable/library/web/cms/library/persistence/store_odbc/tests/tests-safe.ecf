@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="tests_store_odbc" library_target="tests_store_odbc" uuid="FE27C81D-3F7D-4E46-992B-55F4BBDA4F8B">
-	<target name="tests_store_odbc">
-		<root class="APPLICATION" feature="make"/>
-		<option warning="true" void_safety="conformance">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
-		<setting name="concurrency" value="thread"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="cms" location="..\..\..\..\cms-safe.ecf" readonly="false"/>
-		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>
-		<library name="model" location="..\..\..\model\cms_model-safe.ecf"/>
-		<library name="module_node" location="..\..\..\..\modules\node\node-safe.ecf"/>
-		<library name="persitence_store_odbc" location="..\store_odbc-safe.ecf" readonly="false"/>
-		<library name="process" location="$ISE_LIBRARY\library\process\process-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<cluster name="tests" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/.svn$</exclude>
-				<exclude>/nodes$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="FE27C81D-3F7D-4E46-992B-55F4BBDA4F8B" message="Obsolete: use tests.ecf !" location="tests.ecf">
+</redirection>

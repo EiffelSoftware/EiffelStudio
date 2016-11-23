@@ -8,7 +8,6 @@
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>
-			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time-safe.ecf"/>

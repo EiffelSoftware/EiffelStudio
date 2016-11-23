@@ -92,8 +92,11 @@ feature -- Basic operations
 			if l_left_quicksorter /= Void then
 				-- There is one.
 				-- Populate the result from the sub quicksorter.
-				check l_left_data /= Void end
-				import_data_items (l_left_data, a_data, l_left_position)
+				if l_left_data /= Void then
+					import_data_items (l_left_data, a_data, l_left_position)
+				else
+					check has_left_data: False end
+				end
 			end
 
 			-- Copy the pivot element to the result.
@@ -104,8 +107,11 @@ feature -- Basic operations
 			if l_right_quicksorter /= Void then
 				-- There is one.
 				-- Populate the result from the sub quicksorter.				
-				check l_right_data /= Void end
-				import_data_items (l_right_data, a_data, l_pivot_position + 1)
+				if l_right_data /= Void then
+					import_data_items (l_right_data, a_data, l_pivot_position + 1)
+				else
+					check has_right_data: False end
+				end
 			end
 		end
 

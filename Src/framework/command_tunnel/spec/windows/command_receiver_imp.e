@@ -21,9 +21,9 @@ feature -- Operation
 	destroy
 			-- <precursor>
 		do
-			if message_window /= Void and then message_window.exists then
-				message_window.remove_command ({WEL_WM_CONSTANTS}.WM_COPYDATA)
-				message_window.destroy
+			if attached message_window as win and then win.exists then
+				win.remove_command ({WEL_WM_CONSTANTS}.WM_COPYDATA)
+				win.destroy
 				message_window := Void
 			end
 		end
@@ -41,10 +41,13 @@ feature {NONE} -- Implementation
 
 	setup_callback
 			-- Setup callback to handle WM_COPYDATA message.
+		local
+			win: like message_window
 		do
-			create message_window.make_top (interface.key)
-			message_window.put_command (Current, {WEL_WM_CONSTANTS}.WM_COPYDATA, Void)
-			message_window.enable_commands
+			create win.make_top (interface.key)
+			win.put_command (Current, {WEL_WM_CONSTANTS}.WM_COPYDATA, Void)
+			win.enable_commands
+			message_window := win
 		end
 
 	execute (argument: ANY)
@@ -54,17 +57,21 @@ feature {NONE} -- Implementation
 			l_string: STRING
 			l_result: BOOLEAN
 		do
-			if message_information /= Void and then attached {FUNCTION [STRING, BOOLEAN]} interface.external_command_action as lt_action then
-				l_wel_string := command_string (message_information.l_param)
+			if
+				attached message_window as msg_win and then
+				attached message_information as msg and then
+				attached {FUNCTION [STRING, BOOLEAN]} interface.external_command_action as lt_action
+			then
+				l_wel_string := command_string (msg.l_param)
 					-- |Fixme: Causes information loss doing as_string_8.
 				l_string := l_wel_string.string.as_string_8
 				if not l_string.is_empty and then l_string.starts_with ({COMMAND_CONSTANTS}.ise_command) then
 					l_string.remove_head ({COMMAND_CONSTANTS}.ise_command.count)
 					l_result := lt_action.item ([l_string])
 					if l_result then
-						message_window.set_message_return_value (to_lresult (1))
+						msg_win.set_message_return_value (to_lresult (1))
 					else
-						message_window.set_message_return_value (to_lresult (0))
+						msg_win.set_message_return_value (to_lresult (0))
 					end
 				end
 			end
@@ -108,7 +115,7 @@ feature {NONE} -- Implementation
 	interface: attached COMMAND_RECEIVER;
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -132,11 +139,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

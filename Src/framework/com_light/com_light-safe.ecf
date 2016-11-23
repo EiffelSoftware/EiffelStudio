@@ -1,32 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="com_light" uuid="92617C63-E0EB-4607-AAE5-DE5621F00EC0" library_target="default">
-	<target name="default">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/EIFGEN.*$</exclude>
-			<exclude>/\.svn$</exclude>
-			<exclude>/tests$</exclude>
-		</file_rule>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</library>
-		<cluster name="com_light" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGEN.*$</exclude>
-				<exclude>/unix$</exclude>
-				<condition>
-					<platform value="windows"/>
-				</condition>
-			</file_rule>
-			<file_rule>
-				<exclude>/windows$</exclude>
-				<condition>
-					<platform excluded_value="windows"/>
-				</condition>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="92617C63-E0EB-4607-AAE5-DE5621F00EC0" message="Obsolete: use com_light.ecf !" location="com_light.ecf">
+</redirection>

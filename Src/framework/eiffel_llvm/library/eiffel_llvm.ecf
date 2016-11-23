@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="eiffel_llvm" uuid="2EEC0A09-FC0F-493E-B2F9-78DAC4DF495C" library_target="eiffel_llvm">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffel_llvm" uuid="2EEC0A09-FC0F-493E-B2F9-78DAC4DF495C" library_target="eiffel_llvm">
 	<target name="eiffel_llvm">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional">
+		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<capability>
+			<void_safety support="none"/>
+		</capability>
 		<external_include location="/usr/include/"/>
+		<external_cflag value="-w"/>
+		<external_cflag value="-D__STDC_CONSTANT_MACROS"/>
+		<external_cflag value="-D__STDC_LIMIT_MACROS"/>
 		<external_library location="/usr/lib/libLLVMLinker.a"/>
 		<external_library location="/usr/lib/libLLVMX86Disassembler.a"/>
 		<external_library location="/usr/lib/libLLVMX86AsmParser.a"/>
@@ -74,21 +80,16 @@
 		<external_library location="/usr/lib/libLLVMObject.a"/>
 		<external_library location="/usr/lib/libLLVMCore.a"/>
 		<external_library location="/usr/lib/libLLVMSupport.a"/>
-		
-		<external_cflag value="-w" />
-		<external_cflag value="-D__STDC_CONSTANT_MACROS" />
-		<external_cflag value="-D__STDC_LIMIT_MACROS"/>
 		<external_linker_flag value="-ldl -lcurses"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="eiffel_llvm" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/EIFGENs$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/.svn$</exclude>
-				<exclude>/testing</exclude>
 				<exclude>/.git$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/testing</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>^/debugging$</exclude>

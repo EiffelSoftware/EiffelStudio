@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="configuration_provider" uuid="C030FDC5-DAAB-4027-BDF2-111569B9DB70" library_target="configuration_provider">
-	<target name="configuration_provider">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="provider" uuid="C030FDC5-DAAB-4027-BDF2-111569B9DB70" library_target="provider">
+	<target name="provider">
 		<root all_classes="true"/>
-		<option is_attached_by_default="false" void_safety="none">
-		</option>
+		<capability>
+			<concurrency support="thread"/>
+			<void_safety support="initialization"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="configuration_parser" location="configuration_parser.ecf"/>
@@ -20,5 +22,9 @@
 				<exclude>testing</exclude>
 			</file_rule>
 		</cluster>
+	</target>
+	<target name="testing" extends="provider">
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<cluster name="tests" location="provider\testing\" recursive="true"/>
 	</target>
 </system>

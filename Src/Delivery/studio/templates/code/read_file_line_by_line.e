@@ -24,8 +24,7 @@ feature -- Templates
 					l_file.end_of_file
 				loop
 					l_file.read_line
-					print (l_file.last_string)
-					io.put_new_line
+					-- Use entry `l_file.last_string`  such as `io.put_string (l_file.last_string); io.put_new_line`
 				end
 				l_file.close
 			else

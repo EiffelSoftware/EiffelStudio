@@ -509,13 +509,13 @@ feature {NONE} -- Element initialization
 					-- Fill properties tab.
 				create properties_tab
 				notebook.extend (properties_tab)
-				notebook.set_item_text (properties_tab, "Properties")
+				notebook.set_item_text (properties_tab, conf_interface_names.tab_properties_name)
 				initialize_properties_for (properties_tab)
 
 					-- Fill language tab.
 				create language_tab
 				notebook.extend (language_tab)
-				notebook.set_item_text (language_tab, "Language")
+				notebook.set_item_text (language_tab, conf_interface_names.tab_language_name)
 			else
 				check
 					is_initialized_language_tab: attached {EV_VERTICAL_BOX} notebook.i_th (2) as l
@@ -574,6 +574,9 @@ feature {NONE} -- Element initialization
 			description_field.set_minimum_height (description_height)
 			description_field.set_minimum_width (100)
 			description_field.set_minimum_height (80)
+
+			notebook.selection_actions.wipe_out
+			notebook.selection_actions.extend (refresh_current)
 		end
 
 	initialize_section_tree
@@ -1075,10 +1078,10 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			refresh_current := agent show_properties_target_general (a_target)
 			lock_update
 
---			initialize_properties
 			initialize_tabs (a_target)
 
 			current_target := a_target
+			properties.reset
 			add_general_properties
 
 			unlock_update

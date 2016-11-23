@@ -47,6 +47,7 @@ feature -- Section names
 	section_mapping: STRING_32 do Result := locale.translation ("Type Mapping")	end
 
 	section_general: STRING_32 do Result := locale.translation ("General")	end
+	section_capability: STRING_32 do Result := locale.translation ("Capability")	end
 	section_language: STRING_32 do Result := locale.translation ("Language")	end
 	section_execution: STRING_32 do Result := locale.translation ("Execution")	end
 	section_optimization: STRING_32 do Result := locale.translation ("Optimization")	end
@@ -293,10 +294,15 @@ feature -- Target names and descriptions
 	properties_class_name: STRING_32 do Result := locale.translation ("Class")	end
 	properties_target_name: STRING_32 do Result := locale.translation ("Target")	end
 
+feature -- Tab names
+
+	tab_properties_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Properties", "configuration") end
+	tab_language_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Language", "configuration") end
+
 feature -- Capability names and descriptions
 
-	capability_header_capable_of_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Capable of", "configuration.capability") end
-	capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("If is a root", "configuration.capability") end
+	capability_header_capable_of_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Support", "configuration.capability") end
+	capability_header_if_root_name: READABLE_STRING_32 do Result := locale.translation_in_context ("Use", "configuration.capability") end
 	capability_toggle_default_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Default", "configuration.capability") end
 	capability_toggle_inherited_name: READABLE_STRING_32 do REsult := locale.translation_in_context ("Inherited", "configuration.capability") end
 

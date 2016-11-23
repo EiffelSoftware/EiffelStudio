@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
 	<target name="configuration_compiler">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="provisional" namespace="EiffelSoftware.Framework.Ecf">
+		<option warning="true" namespace="EiffelSoftware.Framework.Ecf">
 		</option>
+		<capability>
+			<void_safety support="initialization"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="base_extension_unstable" location="$ISE_LIBRARY\unstable\library\base_extension\base_extension.ecf" readonly="false"/>

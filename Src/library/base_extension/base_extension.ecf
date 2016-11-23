@@ -9,9 +9,6 @@
 		<option namespace="EiffelSoftware.Library.Base">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<capability>
-			<void_safety support="none"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="base_extension" location=".\" recursive="true">
 			<option namespace="Extension">

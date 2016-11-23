@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-12-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-12-0 http://www.eiffel.com/developers/xml/configuration-1-12-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="curl" uuid="D51EF190-6157-4B47-8E73-FA93DCBB7A71" library_target="curl">
 	<target name="curl">
 		<description>cURL: libcURL wrapper library for Eiffel.
       Copyright (c) 1984-2006, Eiffel Software and others.
@@ -10,9 +10,8 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" void_safety="none" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
-		<setting name="concurrency" value="scoop"/>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\cURL\spec\include">
 			<condition>
@@ -64,8 +63,8 @@
 				<exclude>/spec$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/mac$</exclude>
 				<exclude>/gtk$</exclude>
+				<exclude>/mac$</exclude>
 				<condition>
 					<platform value="windows"/>
 				</condition>

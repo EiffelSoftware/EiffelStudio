@@ -20,8 +20,8 @@
 		</capability>
 		<external_include location="$(ISE_LIBRARY)\library\edk\include"/>
 		<external_object location="$(ISE_LIBRARY)\library\edk\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\edk.lib"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<cluster name="edk" location=".\" recursive="true">
 			<option namespace="edk">
 			</option>

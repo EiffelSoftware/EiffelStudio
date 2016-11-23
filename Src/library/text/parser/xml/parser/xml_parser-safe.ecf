@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="xml_parser" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" library_target="xml_parser">
-	<target name="xml_parser">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/.svn$</exclude>
-			<exclude>/CVS$</exclude>
-			<exclude>/EIFGENs$</exclude>
-		</file_rule>
-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
-		</option>
-		<setting name="concurrency" value="scoop"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<cluster name="xml_parser" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/utility$</exclude>
-			</file_rule>
-			<cluster name="xml_utility" location=".\utility\" recursive="true">
-				<file_rule>
-					<exclude>/implementation$</exclude>
-				</file_rule>
-				<cluster name="xml_utility_implementation" location="$|implementation\" recursive="true" hidden="true"/>
-			</cluster>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="F12ACE7B-3459-46F3-BCEA-A71F3952ED61" message="Obsolete: use xml_parser.ecf !" location="xml_parser.ecf">
+</redirection>

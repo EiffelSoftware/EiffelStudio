@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_store" uuid="345FC7FB-F7D9-4134-A002-2C66BEECEAEF">
+	<target name="common" abstract="true">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="executable_name" value="test_store"/>
+		<capability>
+			<concurrency support="thread" use="thread"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="decimal" location="$ISE_LIBRARY\contrib\library\math\decimal\decimal\decimal.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<cluster name="support" location=".\src\support\"/>
+	</target>
+	<target name="test_mysql" extends="common">
+		<root class="TEST_STORE" feature="make"/>
+		<library name="mysql" location="$ISE_LIBRARY\library\store\dbms\rdbms\mysql\mysql.ecf" readonly="false" use_application_options="true"/>
+		<tests name="autotests" location=".\src\autotests\"/>
+		<cluster name="mysql_spec" location=".\src\spec\mysql\"/>
+		<cluster name="src" location=".\src\"/>
+	</target>
+	<target name="test_odbc" extends="common">
+		<root class="TEST_STORE" feature="make"/>
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf" readonly="false" use_application_options="true"/>
+		<tests name="autotests" location=".\src\autotests\"/>
+		<cluster name="odbc_spec" location=".\src\spec\odbc\"/>
+		<cluster name="src" location=".\src\"/>
+	</target>
+	<target name="test_oracle" extends="common">
+		<root class="TEST_STORE" feature="make"/>
+		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf" readonly="false" use_application_options="true"/>
+		<tests name="autotests" location=".\src\autotests\"/>
+		<cluster name="oracle_spec" location=".\src\spec\oracle\"/>
+		<cluster name="src" location=".\src\"/>
+	</target>
+</system>

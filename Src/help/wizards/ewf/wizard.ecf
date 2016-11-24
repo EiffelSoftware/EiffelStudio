@@ -12,7 +12,6 @@
 		<setting name="console_application" value="false"/>
 		<capability>
 			<concurrency support="none" use="none"/>
-			
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gui_wizard" location="lib\wizard\estudio_gui_wizard.ecf" readonly="false"/>

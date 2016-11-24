@@ -1175,72 +1175,111 @@ feature -- String parse errors
 
 feature -- Capability errors
 
-	e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster_name, target, system: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster_name, target, system, file: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Option %"$1%" for class %"$3%" has value %"$2%"%
-				% incompatible with value %"$4%" specified for its cluster %"$5%" (system: $7, target: $6).", "configuration"),
+				("[
+					Class option "$1" has value "$2" insufficient for its cluster value "$4".
+						Class: $3
+						Cluster: $5
+						Target: $6
+						System: $7
+						File: $8
+				]", "configuration"),
 				capability, -- 1
 				class_value, -- 2
 				class_name, -- 3
 				cluster_value, -- 4
 				cluster_name, -- 5
 				target, -- 6
-				system) -- 7
+				system, --7
+				file) -- 8
 		end
 
-	e_incompatible_group_capability (capability, group_value, group_name, group_target, group_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_incompatible_group_capability (capability, group_value, group_name, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Option %"$1%" for group %"$3%" (system: $5, target: $4) has value %"$2%"%
-				% incompatible with value %"$6%" specified for target %"$7%" (system: $8) containing this group.", "configuration"),
+				("[
+					Group option "$1" has value "$2" insufficient for value "$4" of a target containing this group.
+						Group: $3
+						Target: $5
+						System: $6
+						File: $7
+				]", "configuration"),
 				capability, -- 1
 				group_value, -- 2
 				group_name, -- 3
-				group_target, -- 4
-				group_system, -- 5
-				target_value, -- 6
-				target_name, -- 7
-				target_system) -- 8
+				target_value, -- 4
+				target_name, -- 5
+				target_system, -- 6
+				target_file) -- 7
 		end
 
-	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_incompatible_target_capability (capability, parent_value, parent_name, parent_system, parent_file, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Capability %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
-				% incompatible with value %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
+				("[
+					Capability "$1" of supplier target has value "$2" insuffient for client value "$6".
+					Client/child target
+						Name: $7
+						System: $8
+						File: $9
+					Supplier/parent target					
+						Name: $3
+						System: $4
+						File: $5
+				]", "configuration"),
 				capability, -- 1
 				parent_value, -- 2
 				parent_name, -- 3
 				parent_system, -- 4
-				target_value, -- 5
-				target_name, -- 6
-				target_system) -- 7
+				parent_file, -- 5
+				target_value, -- 6
+				target_name, -- 7
+				target_system, -- 8
+				target_file) -- 9
 		end
 
-	e_incompatible_root_option (capability, root_value, capability_value, target_name, system: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_incompatible_root_option (capability, root_value, capability_value, target_name, system, file: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Setting %"$1%" for target %"$4%" (system: $5) has value %"$2%" incompatible with capability %"$3%".", "configuration"),
+				("[
+					Capability "$1" of current target has value "$3" insufficient for setting "$2".
+						Target: $4
+						System: $5
+						File: $6
+				]", "configuration"),
 				capability, -- 1
 				root_value, -- 2
 				capability_value, -- 3
 				target_name, -- 4
-				system) -- 5
+				system, -- 5
+				file) -- 6
 		end
 
-	e_incompatible_root_capability (capability, parent_value, parent_name, parent_system, target_value, target_name, target_system: READABLE_STRING_GENERAL): READABLE_STRING_32
+	e_incompatible_root_capability (capability, parent_value, parent_name, parent_system, parent_file, target_value, target_name, target_system, target_file: READABLE_STRING_GENERAL): READABLE_STRING_32
 		do
 			Result := locale.formatted_string (locale.translation_in_context
-				("Setting %"$1%" for target %"$3%" (system: $4) has value %"$2%"%
-				% incompatible with capability %"$5%" specified for dependent target %"$6%" (system: $7).", "configuration"),
+				("[
+					Capability "$1" of dependent target has value "$2" insufficient for current target setting "$6".
+					Current target
+						Name: $7
+						System: $8
+						File: $9
+					Dependent target
+						Name: $3
+						System: $4
+						File: $5
+				]", "configuration"),
 				capability, -- 1
 				parent_value, -- 2
 				parent_name, -- 3
 				parent_system, -- 4
-				target_value, -- 5
-				target_name, -- 6
-				target_system) -- 7
+				parent_file, -- 5
+				target_value, -- 6
+				target_name, -- 7
+				target_system, -- 8
+				target_file) -- 9
 		end
 
 feature -- Boolean values

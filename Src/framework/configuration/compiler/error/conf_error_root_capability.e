@@ -19,7 +19,16 @@ feature {NONE} -- Creation
 			-- Initialize error with for a parent `parent' that has capability value `parent_value'
 			-- not satisfying the root option `capability' of target `target' with value `target_value'.
 		do
-			text := conf_interface_names.e_incompatible_root_capability (capability, parent_value, parent.name, parent.system.name, target_value, target.name, target.system.name)
+			text := conf_interface_names.e_incompatible_root_capability
+				(capability,
+				parent_value,
+				parent.name,
+				parent.system.name,
+				parent.system.file_name,
+				target_value,
+				target.name,
+				target.system.name,
+				target.system.file_name)
 		end
 
 feature -- Access

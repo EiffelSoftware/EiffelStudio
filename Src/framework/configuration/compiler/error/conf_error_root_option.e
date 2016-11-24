@@ -19,7 +19,13 @@ feature {NONE} -- Creation
 			-- Initialize error with for a target `target' that has root option value `root_value'
 			-- not satisfying its capability `capability' with value `capability_value'.
 		do
-			text := conf_interface_names.e_incompatible_root_option (capability, root_value, capability_value, target.name, target.system.name)
+			text := conf_interface_names.e_incompatible_root_option
+				(capability,
+				root_value,
+				capability_value,
+				target.name,
+				 target.system.name,
+				 target.system.file_name)
 		end
 
 feature -- Access

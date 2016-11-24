@@ -18,11 +18,15 @@ feature {NONE} -- Creation
 	make (group: CONF_GROUP; target: CONF_TARGET; group_value, target_value, capability: READABLE_STRING_GENERAL)
 			-- Initialize error with for a group `group' that has capability value `group_value'
 			-- not satisfying the capability `capability' of target `target' with value `target_value'.
-		local
-			group_target: CONF_TARGET
 		do
-			group_target := group.location.target
-			text := conf_interface_names.e_incompatible_group_capability (capability, group_value, group.name, group_target.name, group_target.system.name, target_value, target.name, target.system.name)
+			text := conf_interface_names.e_incompatible_group_capability
+				(capability,
+				group_value,
+				group.name,
+				target_value,
+				target.name,
+				target.system.name,
+				target.system.file_name)
 		end
 
 feature -- Access

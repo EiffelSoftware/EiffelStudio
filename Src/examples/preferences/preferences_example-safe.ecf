@@ -1,32 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-6-0 http://www.eiffel.com/developers/xml/configuration-1-6-0.xsd" name="preferences_example" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA">
-	<target name="common" abstract="true">
-		<root class="APPLICATION" feature="make_and_launch"/>
-		<file_rule>
-			<exclude>/EIFGEN.{0,1}$</exclude>
-			<exclude>/\.svn$</exclude>
-			<exclude>/temp$</exclude>
-		</file_rule>
-		<option warning="true" is_attached_by_default="true" void_safety="all">
-			<assertions precondition="true"/>
-			<warning name="export_class_missing" enabled="false"/>
-			<warning name="obsolete_feature" enabled="false"/>
-			<warning name="syntax" enabled="false"/>
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2-safe.ecf"/>
-	</target>
-	<target name="xml" extends="common">
-		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml-safe.ecf"/>
-		<cluster name="root_cluster" location=".\">
-			<cluster name="storage_factory" location="$|spec\xml\"/>
-		</cluster>
-	</target>
-	<target name="registry" extends="common">
-		<setting name="platform" value="windows"/>
-		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg-safe.ecf"/>
-		<cluster name="root_cluster" location=".\">
-			<cluster name="storage_factory" location="$|spec\registry\"/>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA" message="Obsolete: use preferences_example.ecf !" location="preferences_example.ecf">
+</redirection>

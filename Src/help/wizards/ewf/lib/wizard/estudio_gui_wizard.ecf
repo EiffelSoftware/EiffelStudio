@@ -3,7 +3,7 @@
 	<target name="estudio_gui_wizard">
 		<root all_classes="true"/>
 		<capability>
-			<concurrency support="none"/>
+			<concurrency use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>

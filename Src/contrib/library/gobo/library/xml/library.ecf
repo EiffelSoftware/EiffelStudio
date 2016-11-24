@@ -12,12 +12,8 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 		</option>
-		<capability>
-			<concurrency support="none"/>
-			
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>

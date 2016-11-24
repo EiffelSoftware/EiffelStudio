@@ -8,7 +8,7 @@
 		<option warning="true" full_class_checking="false">
 		</option>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -31,7 +31,6 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</library>
-		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<cluster name="code_analysis" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/tests$</exclude>

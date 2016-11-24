@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="math" uuid="2F8DCEC7-FDC5-4D3A-BC1F-ECE957CB453A" library_target="math">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="math" uuid="2F8DCEC7-FDC5-4D3A-BC1F-ECE957CB453A" library_target="math">
 	<target name="math">
 		<root cluster="math" class="MATH_SAMPLE" feature="main"/>
-		<option>
+		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -10,6 +10,10 @@
 		<setting name="executable_name" value="math"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<post_compile_action working_directory=".\" command="CMD /C copy app.config EIFGENs\math\W_code\math.exe.config">
 			<condition>
 				<platform value="windows"/>

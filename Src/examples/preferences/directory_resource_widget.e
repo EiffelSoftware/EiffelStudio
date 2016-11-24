@@ -53,7 +53,7 @@ feature {PREFERENCE_VIEW} -- Commands
 			create l_directory_tool
 			directory_tool := l_directory_tool
 			l_directory_tool.ok_actions.extend (agent update_changes)
-			if caller /= Void and attached caller.parent_window as p then
+			if attached caller as l_caller and then attached l_caller.parent_window as p then
 				l_directory_tool.show_modal_to_window (p)
 			else
 				check caller_has_parent_window: False end

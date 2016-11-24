@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="mstask_modified_idl" uuid="1FDDB4DB-4368-4F5C-B88D-F6006671BAD1" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="mstask_modified_idl" uuid="1FDDB4DB-4368-4F5C-B88D-F6006671BAD1" library_target="default">
 	<target name="default">
 		<root class="ANY"/>
-		<option void_safety="none">
+		<option is_obsolete_routine_type="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Client\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Common\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\Server\Include"/>
@@ -63,9 +67,9 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="client" location="$ISE_LIBRARY\examples\com\wizard\task_scheduler\generated\" recursive="true">
 			<file_rule>
+				<exclude>Clib</exclude>
 				<exclude>EIFGENs</exclude>
 				<exclude>Include</exclude>
-				<exclude>Clib</exclude>
 			</file_rule>
 			<visible class="CTASK_PROXY" feature="make"/>
 			<visible class="CTASK_PROXY" feature="make_from_other"/>

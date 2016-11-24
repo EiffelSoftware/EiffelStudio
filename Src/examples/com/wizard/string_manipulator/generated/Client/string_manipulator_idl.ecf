@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="string_manipulator_idl" uuid="AA1B5239-EF2B-4A36-B58B-1D7F049F2C3D" library_target="default">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="string_manipulator_idl" uuid="AA1B5239-EF2B-4A36-B58B-1D7F049F2C3D" library_target="default">
 	<target name="default">
 		<root class="ANY"/>
-		<option void_safety="none">
+		<option is_obsolete_routine_type="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Client\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Common\Include"/>
 		<external_include location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\Server\Include;"/>
@@ -39,9 +43,9 @@
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="client" location="$ISE_LIBRARY\examples\com\wizard\string_manipulator\generated\" recursive="true">
 			<file_rule>
+				<exclude>Clib</exclude>
 				<exclude>EIFGENs</exclude>
 				<exclude>Include</exclude>
-				<exclude>Clib</exclude>
 			</file_rule>
 			<visible class="STRING_MANIPULATOR_PROXY" feature="make"/>
 			<visible class="STRING_MANIPULATOR_PROXY" feature="make_from_other"/>

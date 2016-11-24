@@ -22,7 +22,15 @@ feature {NONE} -- Creation
 			target: like {CONF_CLUSTER}.target
 		do
 			target := cluster.target
-			text := conf_interface_names.e_incompatible_class_capability (capability, class_value, class_name, cluster_value, cluster.name, target.name, target.system.name)
+			text := conf_interface_names.e_incompatible_class_capability
+				(capability,
+				class_value,
+				class_name,
+				cluster_value,
+				cluster.name,
+				target.name,
+				target.system.name,
+				target.system.file_name)
 		end
 
 feature -- Access

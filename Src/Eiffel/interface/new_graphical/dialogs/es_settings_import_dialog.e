@@ -377,23 +377,25 @@ feature -- Event
 									end
 								end(text_widget, ?,?,?,?)
 				end
-				preferences.preferences.import_from_storage_with_callback_and_exclusion (l_prefs,
-						True, -- Ignore hidden preferences
-						l_prefs_import_callback,
-						agent (itxt: detachable EV_TEXT; ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
-							do
-								progress_bar.set_value ((100 * ith) // total)
-								progress_bar.refresh_now
-								Result := is_excluded_preference (k, v)
-								if Result and itxt /= Void then
-									itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
-									itxt.append_text (k)
-									itxt.append_text (": Excluded!%N")
-								end
-							end(text_widget, ?,?,?,?)
-					)
-					-- Save imported preferences!
-				preferences.preferences.save_preferences
+				if attached preferences as prefs then
+					prefs.preferences.import_from_storage_with_callback_and_exclusion (l_prefs,
+							True, -- Ignore hidden preferences
+							l_prefs_import_callback,
+							agent (itxt: detachable EV_TEXT; ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
+								do
+									progress_bar.set_value ((100 * ith) // total)
+									progress_bar.refresh_now
+									Result := is_excluded_preference (k, v)
+									if Result and itxt /= Void then
+										itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
+										itxt.append_text (k)
+										itxt.append_text (": Excluded!%N")
+									end
+								end(text_widget, ?,?,?,?)
+						)
+						-- Save imported preferences!
+					prefs.preferences.save_preferences
+				end
 			end
 			if ui_layout_cb.is_sensitive and then ui_layout_cb.is_selected then
 				if text_widget /= Void then

@@ -48,7 +48,11 @@ feature -- Access
 				variables.force (html_encoded (l_title), "head_title")
 				variables.force (html_encoded (l_title), "page_title")
 			else
-				variables.force ("CMS", "head_title")
+				if attached variables.item ("site_title") as l_site_title then
+					variables.force (l_site_title, "head_title")
+				else
+					variables.force ("CMS", "head_title")
+				end
 				variables.force ("", "page_title")
 			end
 
@@ -128,7 +132,7 @@ feature -- Registration
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

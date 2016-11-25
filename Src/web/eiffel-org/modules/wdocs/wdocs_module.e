@@ -1262,7 +1262,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				else
 					l_title := pg.title
 				end
-				r.set_title (Void)
+				r.set_title (l_title)
 				r.values.force (l_title, "wiki_page_name")
 				if attached {WSF_STRING} req.query_parameter ("source") as s_source and then not s_source.is_case_insensitive_equal ("no") then
 					if attached pg.path as l_path then

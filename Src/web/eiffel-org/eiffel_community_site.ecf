@@ -53,7 +53,6 @@
 		<variable name="httpd_ssl_disabled" value="true"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi.ecf"/>
-		<library name="nino" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\nino.ecf"/>
 		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\any\" recursive="true"/>
 		<cluster name="src" location=".\src\" recursive="true">

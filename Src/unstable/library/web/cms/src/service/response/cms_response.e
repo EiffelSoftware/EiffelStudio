@@ -1262,7 +1262,11 @@ feature -- Generation
 			if attached user as l_user then
 				page.register_variable (l_user.name, "user")
 			end
-			page.register_variable (title, "site_title")
+			if attached title as l_title then
+				page.register_variable (l_title, "site_title")
+			else
+				page.register_variable (site_name, "site_title")
+			end
 			page.set_is_front (is_front)
 			page.set_is_https (request.is_https)
 

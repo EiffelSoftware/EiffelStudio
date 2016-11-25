@@ -19,6 +19,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -35,6 +42,9 @@ feature -- Execution
 		local
 			l_menu_item: EV_MENU_ITEM
 		do
+			create l_menu_item.make_with_text_and_action ("Save preferences", agent on_save_preferences)
+			a_menu.extend (l_menu_item)
+
 			create l_menu_item.make_with_text_and_action ("Save All Session Data", agent on_save_session_data)
 			a_menu.extend (l_menu_item)
 			if not session_manager.is_service_available then
@@ -57,6 +67,14 @@ feature -- Execution
 		end
 
 feature {NONE} -- Actions
+
+	on_save_preferences
+			-- Immediatly saves all the preferences.
+		do
+			if attached preferences as prefs then
+				prefs.preferences.save_preferences
+			end
+		end
 
 	on_save_session_data
 			-- Immediatly saves all the session data.
@@ -124,7 +142,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

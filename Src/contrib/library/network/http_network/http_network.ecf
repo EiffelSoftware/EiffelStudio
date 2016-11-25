@@ -8,7 +8,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions supplier_condition="true"/>
+			<assertions supplier_precondition="true"/>
 		</option>
 		<external_include location="$ECF_CONFIG_PATH/spec/include">
 			<condition>

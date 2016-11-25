@@ -2,8 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="cgi_launcher" uuid="0FE4F1D0-BB70-4C7F-A66E-B27F1D718109" library_target="cgi_launcher">
 	<target name="common" abstract="true">
 		<root all_classes="true"/>
-		<option is_obsolete_routine_type="true">
-		</option>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

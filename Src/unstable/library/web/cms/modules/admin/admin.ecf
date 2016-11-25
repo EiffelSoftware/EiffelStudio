@@ -7,10 +7,9 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option warning="true" full_class_checking="false" syntax="transitional">
+			<assertions/>
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf"/>
 		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>

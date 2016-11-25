@@ -13,7 +13,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<capability>
-			<concurrency support="thread"/><!-- due to svn.ecf via wdocs -->
+			<concurrency support="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
@@ -50,7 +50,6 @@
 	</target>
 	<target name="eiffel_community_site_any" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
-		
 		<variable name="httpd_ssl_disabled" value="true"/>
 		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi.ecf"/>
 		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi.ecf"/>
@@ -66,7 +65,6 @@
 	</target>
 	<target name="eiffel_community_site_standalone" extends="eiffel_community_site_common">
 		<root class="EIFFEL_COMMUNITY_WEB" feature="make_and_launch"/>
-		
 		<variable name="httpd_ssl_disabled" value="false"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="launcher" location=".\src\web\launcher\default\" recursive="true"/>

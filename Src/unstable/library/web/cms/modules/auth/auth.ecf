@@ -7,7 +7,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" is_obsolete_routine_type="true">
+		<option warning="true">
 		</option>
 		
 		<library name="apis" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\apis\apis.ecf" readonly="false"/>

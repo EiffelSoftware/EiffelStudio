@@ -140,11 +140,16 @@ feature -- Specific custom actions
 	template_custom_actions: HASH_TABLE [like template_custom_action_by_id, STRING]
 
 	template_custom_action_by_id (a_id: STRING): detachable FUNCTION [STRING, STRING_TABLE [STRING], STRING]
+			-- `fct (a_text, a_parameters): generated string`
+		require
+			a_id /= Void
 		do
 			Result := template_custom_actions.item (a_id)
 		end
 
 	is_valid_template_custom_action_id (a_id: STRING): BOOLEAN
+		require
+			a_id /= Void
 		do
 			Result := template_custom_actions.has (a_id)
 		end
@@ -172,7 +177,7 @@ feature -- Caching
 
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2016, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

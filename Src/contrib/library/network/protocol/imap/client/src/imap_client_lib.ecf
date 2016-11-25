@@ -3,7 +3,7 @@
 	<target name="imap_client_lib">
 		<root class="IMAP_CLIENT_LIB" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<assertions supplier_condition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

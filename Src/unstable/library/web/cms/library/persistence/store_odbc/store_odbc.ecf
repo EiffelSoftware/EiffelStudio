@@ -19,7 +19,6 @@
 		<library name="model" location="..\..\model\cms_model.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="false"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="common" location="..\implementation\store\" recursive="true"/>
 		<cluster name="persistence_store_odbc" location=".\src\" recursive="true">

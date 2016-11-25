@@ -98,8 +98,17 @@ feature -- Element change
 feature -- Basic operation
 
 	move_to (p: PATH): BOOLEAN
+		local
+			retried: BOOLEAN
 		do
-			Result := uploaded_file.move_to (p.name)
+			if retried then
+				Result := False
+			else
+				Result := uploaded_file.move_to (p.name)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 end

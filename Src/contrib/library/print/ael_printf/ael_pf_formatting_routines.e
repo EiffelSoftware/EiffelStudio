@@ -35,9 +35,9 @@ feature -- Core formatter
 			--   Or, if no arguments are needed, simply Void
 			--
 			--   N.B.
-			--   There is potential for confusion/ambiguity.  Per policy, 
-			--   when the outermost type of the arg list is an ARRAY, 
-			--   it is interpreted as an argument list and NOT as a 
+			--   There is potential for confusion/ambiguity.  Per policy,
+			--   when the outermost type of the arg list is an ARRAY,
+			--   it is interpreted as an argument list and NOT as a
 			--   single argument that happens to be an ARRAY.
 			--
 			-- A complete description is embedded within the help_message
@@ -55,13 +55,13 @@ feature -- Core formatter
 			tokens: LINKED_LIST [AEL_PF_FORMAT_TOKEN]
 			arg_count: INTEGER
 			arglist: detachable FINITE [detachable ANY]
-			argtuple: detachable TUPLE []
+			argtuple: detachable TUPLE
 			arg: detachable ANY
 			argarray: detachable ARRAY [detachable ANY]
 		do
 			create tokens.make
 			if args /= Void then
-				-- If args is an array, then interpret it as a list of 
+				-- If args is an array, then interpret it as a list of
 				-- args and not as a single arg that happens to be a list
 				argarray := any_to_array (args)
 				if argarray /= Void then
@@ -130,7 +130,7 @@ feature -- Core formatter
 						else
 							--| Bump the argument index
 							idx := idx + 1
-							--| Check the argument index to make sure we didn't 
+							--| Check the argument index to make sure we didn't
 							--| run out of arguments
 							if idx > arg_count then
 								-- Ran out of arguments
@@ -139,8 +139,12 @@ feature -- Core formatter
 							else
 								--| Get the positional argument for the format
 								arg := Void
-								if argtuple /= Void then
-									arg := argtuple.item (idx)
+								if 
+									argtuple /= Void and then 
+									attached {detachable ANY} argtuple.item (idx) as v
+								then
+										-- FIXME: issue with separate item (cf SCOOP concurrency).
+									arg := v
 								else
 									-- To gain access to indexability of arglist
 									tis := any_to_indexable (arglist)
@@ -152,9 +156,9 @@ feature -- Core formatter
 											-- whole string, not the idxth character
 											arg := ts
 										else
-											-- If arg is a container, then it 
-											-- must be interpreted as an arg 
-											-- list and not as a single 
+											-- If arg is a container, then it
+											-- must be interpreted as an arg
+											-- list and not as a single
 											-- container arg
 											arg := tis.item (idx)
 										end
@@ -197,10 +201,10 @@ feature -- Core formatter
 	pf_extracted (buf, fmt: STRING): ARRAY [detachable ANY]
 			-- Values extracted from 'buf', corresponding to the format
 			-- specified in 'fmt'
-			-- For each format specifier in 'fmt', Result will contain 
-			-- an object corresponding to specifier, in relative 
+			-- For each format specifier in 'fmt', Result will contain
+			-- an object corresponding to specifier, in relative
 			-- position.
-			-- Tokens in 'fmt' that are not format specifiers do not 
+			-- Tokens in 'fmt' that are not format specifiers do not
 			-- appear in Result.
 			--
 			-- A complete description is embedded within the help_message
@@ -265,8 +269,8 @@ feature -- Core formatter
 							values.extend (tval)
 							if tval = Void or fc.item = 0 then
 								-- Not a type match
-								-- Could call it quits and fill Result with 
-								-- Voids, or can try to realign with next 
+								-- Could call it quits and fill Result with
+								-- Voids, or can try to realign with next
 								-- token
 								-- Show an error in any case
 
@@ -300,7 +304,7 @@ feature -- Core formatter
 
 	tokens_extracted (
 		fmt: STRING; fc: CELL [INTEGER]): LINKED_LIST [AEL_PF_FORMAT_TOKEN]
-			-- List of tokens, including but not limited to format 
+			-- List of tokens, including but not limited to format
 			-- specifiers, extracted from 'fmt'
 			-- Into 'fc', write the number of format specfiers found
 		require
@@ -356,7 +360,7 @@ feature -- Core formatter
 						-- Not a format token, just a string
 						tok.set_string_value (fp.token)
 					end
-					
+
 					create tok.make (pos+tok_width)
 					Result.extend (tok)
 				end
@@ -709,10 +713,10 @@ feature -- Conversion functions
 				pc := '.'
 			end
 
-			-- At this point (so to speak), we have a string 
-			-- representation of the double value, according to the 
+			-- At this point (so to speak), we have a string
+			-- representation of the double value, according to the
 			-- internal formatting mechanism.
-			-- The next step is to apply the desired formatting to the 
+			-- The next step is to apply the desired formatting to the
 			-- value, but rather than work from the double value itself,
 			-- we work with the already normalized string
 
@@ -842,19 +846,19 @@ end -- class AEL_PF_FORMATTING_ROUTINES
 --|
 --| 010 23-Feb-2013
 --|     Added support for percent, agent and list+agent formats.
---|     Agent format support required addition of the agent flag, '~' 
---|     in place of the decoration flag ('#') (i.e. a single format 
---|     token can have either a decoration flag or an agent flag but 
+--|     Agent format support required addition of the agent flag, '~'
+--|     in place of the decoration flag ('#') (i.e. a single format
+--|     token can have either a decoration flag or an agent flag but
 --|     not both).  Alignment flags are unaffected.
 --|     Tweaked arg parsing to interpret any single list arg as an arg
---|     list.  The alternative (the previous interpretation) would be 
---|     to allow single-arg containers but fail to recognize 
---|     containers for list format when they are alone in a an actual 
+--|     list.  The alternative (the previous interpretation) would be
+--|     to allow single-arg containers but fail to recognize
+--|     containers for list format when they are alone in a an actual
 --|     arg list like an array.
 --| 009 18-May-2011
 --|     Replaced integer_to_hex function with natural_to_hex.
 --| 008 03-Apr-2011
---|     Updated integer_to_binary to use NATURALs instead of INTEGERs 
+--|     Updated integer_to_binary to use NATURALs instead of INTEGERs
 --|     to avoid premature size promotion.
 --| 007 06-Oct-2009
 --|     Fixed issue with floats rendered without fractional parts

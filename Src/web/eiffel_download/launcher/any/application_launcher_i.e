@@ -22,8 +22,8 @@ feature -- Execution
 			nature: like launcher_nature
 		do
 			nature := launcher_nature
-			if nature = Void or else nature = nature_nino then
-				launch_nino (opts)
+			if nature = Void or else nature = nature_standalone then
+				launch_standalone (opts)
 			elseif nature = nature_cgi then
 				launch_cgi (opts)
 			elseif nature = nature_libfcgi then
@@ -38,7 +38,7 @@ feature {NONE} -- Access
 
 	launcher_nature: detachable READABLE_STRING_8
 			-- Initialize the launcher nature
-			-- either cgi, libfcgi, or nino.
+			-- either cgi, libfcgi, or standalone.
 			--| We could extend with more connector if needed.
 			--| and we could use WSF_DEFAULT_SERVICE_LAUNCHER to configure this at compilation time.
 		local
@@ -51,8 +51,8 @@ feature {NONE} -- Access
 				ext := l_entry.extension
 			end
 			if ext /= Void then
-				if ext.same_string (nature_nino) then
-					Result := nature_nino
+				if ext.same_string (nature_standalone) or ext.same_string ("nino") then
+					Result := nature_standalone
 				end
 				if ext.same_string (nature_cgi) then
 					Result := nature_cgi
@@ -63,11 +63,11 @@ feature {NONE} -- Access
 			end
 		end
 
-feature {NONE} -- nino		
+feature {NONE} -- standalone		
 
-	nature_nino: STRING = "nino"
+	nature_standalone: STRING = "standalone"
 
-	launch_nino (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
+	launch_standalone (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
 			launcher: WSF_NINO_SERVICE_LAUNCHER [G]
 		do

@@ -2,8 +2,8 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="persistence_sqlite3" uuid="4E536C92-A09F-4305-8230-2EC5ABC51416" library_target="persistence_sqlite3">
 	<target name="persistence_sqlite3">
 		<root all_classes="true"/>
-		<option warning="true" is_obsolete_routine_type="true">
-			<assertions precondition="true" supplier_precondition="true"/>
+		<option warning="true">
+			<assertions supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		
@@ -18,7 +18,7 @@
 		<library name="model" location="..\..\model\cms_model.ecf"/>
 		<library name="sqlite3" location="$ISE_LIBRARY\unstable\library\persistency\database\sqlite3\sqlite.ecf" readonly="false">
 			<option msil_application_optimize="false">
-				<assertions precondition="true" supplier_precondition="true"/>
+				<assertions supplier_precondition="true"/>
 			</option>
 		</library>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

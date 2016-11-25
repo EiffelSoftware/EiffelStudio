@@ -3,8 +3,8 @@
 	<target name="persistence_store_odbc">
 		<description>CMS Eiffel Store ODBC persistence solution</description>
 		<root all_classes="true"/>
-		<option warning="true" is_obsolete_routine_type="false">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option warning="true">
+			<assertions supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		

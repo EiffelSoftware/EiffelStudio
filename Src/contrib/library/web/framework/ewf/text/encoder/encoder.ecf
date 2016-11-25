@@ -8,7 +8,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions supplier_condition="true"/>
+			<assertions supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="src" location="src\" recursive="true">

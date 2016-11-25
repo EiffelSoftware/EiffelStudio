@@ -6,7 +6,7 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option is_obsolete_routine_type="true" namespace="EiffelSoftware.Library.Base">
+		<option namespace="EiffelSoftware.Library.Base">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>

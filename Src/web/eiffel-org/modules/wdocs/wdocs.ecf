@@ -3,14 +3,14 @@
 	<target name="wdocs_module">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
 		</option>
 		<capability>
-			<concurrency support="thread"/><!-- due to svn.ecf -->
+			<concurrency support="scoop" use="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
@@ -20,7 +20,11 @@
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
-		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf"/>
+		<library name="svn" location="$ISE_LIBRARY\contrib\library\svn\svn.ecf">
+			<condition>
+				<concurrency value="thread"/><!-- svn require process, which is not scoop capable for now -->
+			</condition>
+		</library>
 		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
@@ -30,6 +34,26 @@
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf" readonly="false"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf"/>
-		<cluster name="src" location=".\" recursive="true"/>
+		<cluster name="src" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/fs_storage$</exclude>
+			</file_rule>
+			<cluster name="fs_storage" location="$|fs_storage">
+				<cluster name="fs_svn_layer" location="$|svn">
+					<condition>
+						<concurrency value="thread"/>
+						<custom name="wdocs_fs_storage" excluded_value="no_svn"/>
+					</condition>
+				</cluster>
+				<cluster name="fs_simple_layer" location="$|simple">
+					<condition>
+						<concurrency excluded_value="thread"/>
+					</condition>
+					<condition>
+						<custom name="wdocs_fs_storage" value="no_svn"/>
+					</condition>
+				</cluster>
+			</cluster>
+		</cluster>
 	</target>
 </system>

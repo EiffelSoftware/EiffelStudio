@@ -10,6 +10,7 @@
 		<setting name="platform" value="windows"/>
 		<capability>
 			<concurrency support="thread" use="thread"/>
+			<void_safety support="transitional"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="c_config_library" location="$EIFFEL_SRC\tools\finish_freezing\finish_freezing.ecf"/>

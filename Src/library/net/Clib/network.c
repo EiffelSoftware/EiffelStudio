@@ -24,9 +24,11 @@ indexing
 
 #include "eif_config.h"
 
-#ifndef EIF_HAS_SENDFILE
-#	define EIF_HAS_SENDFILE 1 /* Define to 0 to never use sendfile on unices, 
-							   * or TransmitFile on Windows */
+/* Selector for sendfile or equivalent.
+ * Currently it is supported on Windows/Unix but no macOS.
+ */
+#if EIF_OS != EIF_OS_DARWIN
+#define EIF_HAS_SENDFILE
 #endif
 
 #ifdef EIF_WINDOWS
@@ -64,17 +66,22 @@ indexing
 #define BSD_COMP
 #endif
 
-#ifndef EIF_WINDOWS
-#include <sys/ioctl.h>
-#include <sys/sendfile.h>
-#endif
-
 #include "eif_cecil.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
 #endif
+
+#ifndef EIF_WINDOWS
+#include <sys/ioctl.h>
+#if EIF_OS == EIF_OS_DARWIN
+#include <sys/uio.h>
+#else
+#include <sys/sendfile.h>
+#endif
+#endif
+
 
 #ifdef I_FD_SET_SYS_SELECT
 #include <sys/select.h>
@@ -851,11 +858,9 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
-#if !EIF_HAS_SENDFILE
+#ifndef EIF_HAS_SENDFILE
 	return c_sendfile_fallback (out_fd, f, offset, length, a_timeout_ms);
-#endif
-
-#ifdef EIF_WINDOWS
+#elif defined(EIF_WINDOWS)
 	BOOL retval;
 	HANDLE hFile;
 	OVERLAPPED ovlp;

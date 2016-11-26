@@ -56,6 +56,11 @@
 				<custom name="ISE_C_COMPILER" value="mingw"/>
 			</condition>
 		</external_linker_flag>
+		<external_linker_flag value="`$(ISE_LIBRARY)/library/net/Clib/net-config --library`">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="abstract" location="abstract\" recursive="true"/>
 		<cluster name="local" location="local\" recursive="true">

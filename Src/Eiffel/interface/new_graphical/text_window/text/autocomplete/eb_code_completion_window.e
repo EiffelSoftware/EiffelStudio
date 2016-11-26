@@ -378,6 +378,7 @@ feature -- Initialization
 		local
 			l_string: STRING
 		do
+			option_template_feature.show
 			feature_mode := True
 			l_string := feature_name
 			l_string.prune_all_leading (' ')
@@ -391,6 +392,7 @@ feature -- Initialization
 							completion_possibilities: like sorted_names)
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
+			option_template_feature.hide
 			feature_mode := False
 			common_initialization (an_editor, class_name, a_remainder, completion_possibilities, True)
 		end

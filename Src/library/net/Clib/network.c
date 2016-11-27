@@ -27,7 +27,7 @@ indexing
 /* Selector for sendfile or equivalent.
  * Currently it is supported on Windows/Unix but no macOS.
  */
-#if EIF_OS != EIF_OS_DARWIN
+#if (EIF_OS != EIF_OS_DARWIN) && (EIF_OS != EIF_OS_OPENBSD) && (EIF_OS != EIF_OS_FREEBSD)
 #define EIF_HAS_SENDFILE
 #endif
 
@@ -75,9 +75,10 @@ indexing
 
 #ifndef EIF_WINDOWS
 #include <sys/ioctl.h>
-#if EIF_OS == EIF_OS_DARWIN
-#include <sys/uio.h>
-#else
+#endif
+
+#ifdef EIF_HAS_SENDFILE
+#ifndef EIF_WINDOWS
 #include <sys/sendfile.h>
 #endif
 #endif

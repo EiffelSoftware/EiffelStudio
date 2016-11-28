@@ -19,9 +19,6 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option>
-			<assertions precondition="true"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
 		<cluster name="text_processing" location=".\" recursive="true"/>

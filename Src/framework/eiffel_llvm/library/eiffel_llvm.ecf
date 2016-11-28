@@ -2,9 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffel_llvm" uuid="2EEC0A09-FC0F-493E-B2F9-78DAC4DF495C" library_target="eiffel_llvm">
 	<target name="eiffel_llvm">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
+		<option warning="true"/>
 		<capability>
 			<void_safety support="none"/>
 		</capability>

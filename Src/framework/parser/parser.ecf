@@ -6,9 +6,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.Language">
-			<assertions precondition="true"/>
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="compiler_encoding" location="$EIFFEL_SRC\framework\compiler_encoding\compiler_encoding.ecf" readonly="false"/>

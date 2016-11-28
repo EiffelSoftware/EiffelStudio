@@ -2,9 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="thread_utilities" uuid="F43D41FB-327B-4DD2-B847-549C860F3038" library_target="thread_utilities">
 	<target name="thread_utilities">
 		<root all_classes="true"/>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
 		<capability>
 			<concurrency support="thread"/>
 		</capability>

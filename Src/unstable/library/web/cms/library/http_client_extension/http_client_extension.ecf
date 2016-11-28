@@ -3,7 +3,6 @@
 	<target name="http_client_extension">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		

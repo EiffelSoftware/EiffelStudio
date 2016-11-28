@@ -3,7 +3,6 @@
 	<target name="abel_plugin_escher">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<capability>
 			<concurrency support="none"/>

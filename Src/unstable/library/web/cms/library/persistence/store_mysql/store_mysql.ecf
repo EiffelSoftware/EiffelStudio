@@ -4,10 +4,7 @@
 	<target name="store_mysql">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
-		<setting name="console_application" value="true"/>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\..\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="..\..\app_env\app_env.ecf"/>

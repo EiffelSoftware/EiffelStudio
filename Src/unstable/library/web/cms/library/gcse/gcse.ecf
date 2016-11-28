@@ -9,7 +9,6 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		

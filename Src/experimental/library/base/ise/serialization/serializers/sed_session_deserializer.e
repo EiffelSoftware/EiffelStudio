@@ -538,13 +538,18 @@ feature {NONE} -- Implementation
 							if l_deser.read_boolean then
 									-- Reading a reference to an object with copy semantics. First
 									-- get its dynamic type to create it.
-								l_exp_dtype := l_deser.read_compressed_integer_32
-								create l_exp.make (reflector.new_instance_of (l_exp_dtype))
-								decode_normal_object (l_exp)
-									-- Ideally we want to directly set the reference with copy semantics
-									-- without triggering a copy.
---								{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
-								a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+								l_exp_dtype := new_dynamic_type_id (l_deser.read_compressed_integer_32)
+								if l_exp_dtype < 0 then
+										-- Data is visibly corrupted, stop here.
+									raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
+								else
+									create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+									decode_normal_object (l_exp)
+										-- Ideally we want to directly set the reference with copy semantics
+										-- without triggering a copy.
+									-- {ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+									a_reflected_object.set_reference_field (l_new_offset, l_exp.object)
+								end
 							else
 								a_reflected_object.set_reference_field (l_new_offset, read_reference)
 							end
@@ -1055,13 +1060,18 @@ feature {NONE} -- Implementation
 					if l_deser.read_boolean then
 							-- Reading a reference to an object with copy semantics. First
 							-- get its dynamic type to create it.
-						l_exp_dtype := l_deser.read_compressed_integer_32
-						create l_exp.make (reflector.new_instance_of (l_exp_dtype))
-						decode_normal_object (l_exp)
-							-- Ideally we want to directly set the reference with copy semantics
-							-- without triggering a copy.
---						{ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
-						a_spec.force (l_exp.object, i)
+						l_exp_dtype := new_dynamic_type_id (l_deser.read_compressed_integer_32)
+						if l_exp_dtype < 0 then
+								-- Data is visibly corrupted, stop here.
+							raise_fatal_error (error_factory.new_internal_error ("Cannot read object type. Corrupted data!"))
+						else
+							create l_exp.make (reflector.new_instance_of (l_exp_dtype))
+							decode_normal_object (l_exp)
+								-- Ideally we want to directly set the reference with copy semantics
+								-- without triggering a copy.
+							-- {ISE_RUNTIME}.set_reference_field (l_new_offset, a_reflected_object.object_address, a_reflected_object.physical_offset, l_exp.object_address)
+							a_spec.force (l_exp.object, i)
+						end
 					else
 						a_spec.force (read_reference, i)
 					end
@@ -1086,7 +1096,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

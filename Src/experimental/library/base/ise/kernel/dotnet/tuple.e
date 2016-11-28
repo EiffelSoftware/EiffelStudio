@@ -47,10 +47,10 @@ feature -- Creation
 
 feature -- Access
 
-	item alias "[]", at alias "@" (index: INTEGER): detachable SYSTEM_OBJECT assign put
+	item alias "[]", at alias "@" (index: INTEGER): detachable separate SYSTEM_OBJECT assign put
 			-- Entry of key `index'.
 		local
-			l_result: detachable ANY
+			l_result: detachable separate ANY
 		do
 				-- If it is a basic type, then we need to do a promotion.
 				-- If not, then we simply get the element.
@@ -75,7 +75,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	reference_item (index: INTEGER): detachable ANY
+	reference_item (index: INTEGER): detachable separate ANY
 			-- Reference item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -363,7 +363,7 @@ feature -- Status report
 			loop
 				l_item := native_array.item (i)
 				if is_reference_item (i) then
-					if attached {HASHABLE} l_item as l_key then
+					if attached {separate HASHABLE} l_item as l_key then
 						Result := Result + l_key.hash_code * internal_primes.i_th (i)
 					end
 				else
@@ -384,7 +384,7 @@ feature -- Status report
 			Result := k >= 1 and then k <= count
 		end
 
-	valid_type_for_index (v: detachable SYSTEM_OBJECT; index: INTEGER): BOOLEAN
+	valid_type_for_index (v: detachable separate SYSTEM_OBJECT; index: INTEGER): BOOLEAN
 			-- Is object `v' a valid target for element at position `index'?
 		require
 			valid_index: valid_index (index)
@@ -432,7 +432,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put (v: detachable SYSTEM_OBJECT; k: INTEGER)
+	put (v: detachable separate SYSTEM_OBJECT; k: INTEGER)
 			-- Associate value `v' with key `k'.
 		require
 			valid_index: valid_index (k)
@@ -441,7 +441,7 @@ feature -- Element change
 			native_array.put (k, v)
 		end
 
-	put_reference (v: detachable ANY; index: INTEGER)
+	put_reference (v: detachable separate ANY; index: INTEGER)
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
@@ -985,7 +985,7 @@ feature -- Type conversion queries
 
 feature -- Conversion
 
-	arrayed: ARRAY [detachable ANY]
+	arrayed: ARRAY [detachable separate ANY]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -995,11 +995,11 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (Void, 1, cnt)
 			until
 				i > cnt
 			loop
-				if attached {ANY} native_array.item (i) as a then
+				if attached {separate ANY} native_array.item (i) as a then
 					Result.put (a, i)
 				end
 				i := i + 1
@@ -1160,7 +1160,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	string_arrayed: ARRAY [STRING]
+	string_arrayed: ARRAY [detachable STRING]
 			-- Items of Current as array
 			-- NOTE: Items with a type not cconforming to
 			--       type STRING are set to Void.
@@ -1172,7 +1172,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				create Result.make (1, cnt)
+				create Result.make_filled (Void, 1, cnt)
 			until
 				i > cnt
 			loop
@@ -1186,7 +1186,7 @@ feature -- Conversion
 			same_count: Result.count = count
 		end
 
-	to_cil: NATIVE_ARRAY [SYSTEM_OBJECT]
+	to_cil: NATIVE_ARRAY [detachable SYSTEM_OBJECT]
 			-- A reference to a CIL form of current tuple.
 		local
 			nb: INTEGER
@@ -1239,12 +1239,12 @@ feature -- Access
 
 feature {TUPLE} -- Implementation
 
-	native_array: NATIVE_ARRAY [detachable SYSTEM_OBJECT]
+	native_array: NATIVE_ARRAY [detachable separate SYSTEM_OBJECT]
 			-- Storage where values are kept.
 
 feature {NONE} -- Implementation
 
-	dummy_array: NATIVE_ARRAY [SYSTEM_OBJECT]
+	dummy_array: NATIVE_ARRAY [detachable separate SYSTEM_OBJECT]
 		once
 			create Result.make (0)
 		end

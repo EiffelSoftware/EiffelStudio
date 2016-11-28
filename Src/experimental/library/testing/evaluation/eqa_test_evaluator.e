@@ -51,7 +51,7 @@ feature -- Execution
 			l_prepare, l_test, l_clean: like execute_test_stage
 			l_old: detachable PLAIN_TEXT_FILE
 			l_old_work_dir: PATH
-			l_operands: TUPLE [EQA_TEST_SET]
+			l_operands: TUPLE [test: EQA_TEST_SET]
 		do
 			l_old_work_dir := current_working_path
 			l_old := io.default_output
@@ -69,7 +69,7 @@ feature -- Execution
 					valid_operand_count: l_operands.count = 1
 					valid_operand: l_operands.valid_type_for_index (l_test_set, 1)
 				end
-				l_operands.put (l_test_set, 1)
+				l_operands.test := l_test_set
 				l_test := execute_test_stage (agent a_routine.call (l_operands))
 
 					-- Call {EQA_TEST_SET}.clean
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

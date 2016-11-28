@@ -24,11 +24,19 @@ indexing
 
 #include "eif_config.h"
 
+/* Selector for sendfile or equivalent.
+ * Currently it is supported on Windows/Unix but no macOS.
+ */
+#if (EIF_OS != EIF_OS_DARWIN) && (EIF_OS != EIF_OS_OPENBSD) && (EIF_OS != EIF_OS_FREEBSD)
+#define EIF_HAS_SENDFILE
+#endif
 
 #ifdef EIF_WINDOWS
 #define FD_SETSIZE 256
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <MSWSock.h>
+#include <io.h>
 #endif
 
 #include "eif_portable.h" 	/* required for VMS, recommended for others */
@@ -36,11 +44,7 @@ indexing
 #include "eif_size.h"     	/* for LNGSIZ */
 #include "eif_error.h"    	/* for eio() */
 
-
-#ifdef EIF_WINDOWS
-
 #include <stdio.h>
-#endif
 
 #ifdef I_SYS_TIME
 #include <sys/time.h>
@@ -62,16 +66,23 @@ indexing
 #define BSD_COMP
 #endif
 
-#ifndef EIF_WINDOWS
-#include <sys/ioctl.h>
-#endif
-
 #include "eif_cecil.h"
 
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>
 #endif
+
+#ifndef EIF_WINDOWS
+#include <sys/ioctl.h>
+#endif
+
+#ifdef EIF_HAS_SENDFILE
+#ifndef EIF_WINDOWS
+#include <sys/sendfile.h>
+#endif
+#endif
+
 
 #ifdef I_FD_SET_SYS_SELECT
 #include <sys/select.h>
@@ -726,179 +737,337 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 
 /*x basic types receiving (macro) */
 #define CREADX(bytes_read, descriptor, element_pointer, sizeofelement, flags) \
-	eif_net_check (bytes_read = recv((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags));
+	bytes_read = recv((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags)
 
 /*x basic types sending (macro) */
-#define CPUTX(descriptor,element_pointer,sizeofelement) \
-	eif_net_check (send ((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) 0));
+#define CSENDX(bytes_sent, descriptor, element_pointer, sizeofelement, flags) \
+	bytes_sent = send((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags)
 
 /*x basic types sending TO (macro) */
-#define CSENDXTO(descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
-	eif_net_check (sendto ((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, \
-		(int) sizeofelement, (int) flags, (struct sockaddr *) addr_pointer, (int) sizeofaddr));
+#define CSENDXTO(bytes_sent, descriptor,element_pointer,sizeofelement, flags, addr_pointer, sizeofaddr) \
+	bytes_sent = sendto((EIF_SOCKET_TYPE) descriptor, (char *) element_pointer, (int) sizeofelement, (int) flags, \
+			(struct sockaddr *) addr_pointer, (int) sizeofaddr)
 
-void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of character c through socket fd */
+
+/******************************************************/
+/* send to operations                                 */
+/******************************************************/
+
+EIF_INTEGER c_send_stream_to_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
+	/*  Transmission of string s of size size through socket fd
+	 *  NO exception is raised, and eventual error is return as result!
+	 */
 {
-	CSENDXTO(fd,&c,sizeof(char),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
-}
-
-void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/* transmission of Eiffel integer i through socket fd */
-{
-	unsigned long ti;
-	ti = htonl((unsigned long) i);
-	CSENDXTO(fd,(char *) &ti,sizeof(ti),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
-}
-
-void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of real f through socket fd */
-{
-	/* If no prototype is used for the declaration of c_send_float_to() in
-	   the caller,an automatic conversion from float to double will occur.
-	   We need to explicitly convert the argument to a float before safely
-	   sending it on the socket. Xavier */
-
-	float tf;
-	tf = f;
-	CSENDXTO(fd,(char *)&tf,sizeof(tf),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
-}
-
-void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of double d through socket fd */
-{
-	double dbl;
-	dbl = d;
-	CSENDXTO(fd,(char *) &dbl,sizeof(dbl),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
+	int res;
+	CSENDXTO(res, fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr);
+	return (EIF_INTEGER) res;
 }
 
 void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size size through socket fd */
 {
-	CSENDXTO(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
+	int res;
+	res = c_send_stream_to_noexception(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer, sizeofaddr);
+	eif_net_check(res);
 }
 
+/******************************************************/
+/* put operations                                 */
+/******************************************************/
 
-
-
-void c_put_char(EIF_INTEGER fd, EIF_CHARACTER c)
-	/*x transmission of character c through socket fd */
+EIF_INTEGER c_put_stream_noexception(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
+	/* transmission of string s of size length through socket fd.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
-	CPUTX(fd,&c,sizeof(char))
-}
-
-void c_put_int(EIF_INTEGER fd, EIF_INTEGER i)
-	/* transmission of Eiffel integer i through socket fd */
-{
-	unsigned long ti;
-	ti = htonl ((unsigned long) i);
-	CPUTX(fd,(char *) &ti,sizeof(ti))
-}
-
-void c_put_float(EIF_INTEGER fd, EIF_REAL f)
-	/*x transmission of real f through socket fd */
-{
-	/* If no prototype is used for the declaration of c_put_float() in the
-	   caller,an automatic conversion from float to double will occur.
-	   We need to explicitly convert the argument to a float before safely
-	   sending it on the socket. Xavier */
-
-	float tf;
-	tf = f;
-	tf = ise_htonf(tf);
-	CPUTX(fd, (char *) &tf,sizeof(tf))
-}
-
-void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
-	/*x transmission of double d through socket fd */
-{
-	double dbl;
-	dbl = ise_htond(d);
-	CPUTX(fd,(char *) &dbl,sizeof(dbl))
+	int res;
+	CSENDX(res, fd, stream_pointer, length, 0);
+	return (EIF_INTEGER) res;
 }
 
 void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
-	/*x transmission of string s of size size trought socket fd */
+	/*x transmission of string s of size length through socket fd */
 {
-	CPUTX(fd, (char *) stream_pointer,length)
+	eif_net_check(c_put_stream_noexception(fd, stream_pointer, length));
 }
 
-
-EIF_REAL c_read_float (EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a real from socket fd */
+EIF_INTEGER c_sendfile_fallback(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+	/* transmission of file content from file `f` of size length through socket out_fd.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
-	float f=0.0;
-	CREADX(*l_bytes,fd,&f,sizeof(float), 0)
-	return (EIF_REAL) ise_ntohf(f);
+#define EIFNET_BUFFSIZE 4096
+	int fd;
+	int retval_read, retval_write;
+	int bytes_sent, bytes_to_read;
+	int n, bytes_to_send;
+	char buf[EIFNET_BUFFSIZE];
+
+#ifdef EIF_WINDOWS
+	fd = _fileno(f);
+#else
+	fd = fileno(f);
+#endif
+	bytes_sent = 0;
+	bytes_to_read = length;
+	if (offset > 0) {
+		fseek(f, offset, SEEK_SET);
+	}
+	do {
+			/* Read chunk of bytes */
+		if (bytes_to_read < EIFNET_BUFFSIZE) {
+			n = bytes_to_read;
+		} else {
+			n = EIFNET_BUFFSIZE;
+		}
+#ifdef EIF_WINDOWS		
+		retval_read = (int)_read(fd, buf, n);
+#else
+		retval_read = (int) read(fd, buf, n);
+#endif
+		if (retval_read < 0) {
+				/* error while reading file */
+			return (EIF_INTEGER) retval_read;
+		} else {
+			bytes_to_read = bytes_to_read - retval_read;
+		}
+			/* Send read bytes */
+		bytes_to_send = retval_read;
+		do {
+			retval_write = (int) c_put_stream_noexception(out_fd, buf, bytes_to_send);
+			if (retval_write < 0) {
+					/* error while writing into socket */
+				return (EIF_INTEGER) retval_write;
+			} else {
+				bytes_to_send = bytes_to_send - retval_write;
+				bytes_sent = bytes_sent + retval_write;
+			}
+		} while (bytes_to_send > 0);
+
+	} while (retval_read || retval_write);
+
+		/* If this code is reached, no file or network error occurred
+		 * thus return the number of bytes read and sent.
+		 */
+	return (EIF_INTEGER) bytes_sent;
+#undef EIFNET_BUFFSIZE
 }
 
-EIF_DOUBLE c_read_double(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a double from socket fd */
+EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTEGER length, EIF_INTEGER a_timeout_ms)
+	/* transmission of file content from file `f` of size length through socket out_fd.
+	 * On Windows, due to asynchronous potential behavior, wait for completion using `a_timeout_ms` value.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
-	double d=0.0;
-	CREADX(*l_bytes,fd,&d,sizeof(double), 0)
-	return (EIF_DOUBLE) ise_ntohd(d);
+#ifndef EIF_HAS_SENDFILE
+	return c_sendfile_fallback (out_fd, f, offset, length, a_timeout_ms);
+#elif defined(EIF_WINDOWS)
+	BOOL retval;
+	HANDLE hFile;
+	OVERLAPPED ovlp;
+	DWORD bytes_to_send, bytes_sent;
+	DWORD curoff;
+	DWORD dwFlags;
+
+	/*	Initialize locals */
+	hFile = (HANDLE)_get_osfhandle(fileno(f));
+	curoff=(DWORD) offset;
+	dwFlags = 0;
+	memset(&ovlp, 0, sizeof(OVERLAPPED));
+	ovlp.hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	bytes_sent = 0;
+	bytes_to_send = (DWORD) length;
+	retval = 0;
+
+	/*	Send file content */
+	while (bytes_to_send) {
+		DWORD xmitbytes;
+		/*
+		 * If we want to force our own chunk size ...
+		 *  
+		 * if (bytes_to_send > 65536) {
+		 * 		xmitbytes = 65536;
+		 * } else {
+		 * 		// Last call to TransmitFile()
+		 * 		xmitbytes = bytes_to_send;
+		 * 		//dwFlags |= TF_REUSE_SOCKET;
+		 * 		//dwFlags |= TF_WRITE_BEHIND;
+		 * }
+		*/
+		xmitbytes = bytes_to_send;
+		ovlp.Offset = (DWORD)curoff;
+		/* FIXME: see large file support: ovlp.OffsetHigh = (DWORD)(curoff >> 32); */
+		retval = TransmitFile((EIF_SOCKET_TYPE) out_fd, (HANDLE) hFile, xmitbytes, 
+				(DWORD) 0 /* Use default Windows block size */, 
+				(LPOVERLAPPED) &ovlp, 
+				(LPTRANSMIT_FILE_BUFFERS) NULL,
+				(DWORD) dwFlags
+			);
+		if (!retval) {
+			int errcode;
+			errcode = WSAGetLastError();
+			if ((errcode == ERROR_IO_PENDING) | (errcode == WSA_IO_PENDING)) {
+				int rv;
+				rv = WaitForSingleObject(ovlp.hEvent, (DWORD) (a_timeout_ms >= 0 ? a_timeout_ms : INFINITE));
+				if (rv == WAIT_OBJECT_0) {
+					if (!WSAGetOverlappedResult((EIF_SOCKET_TYPE)out_fd, (LPOVERLAPPED) &ovlp, &xmitbytes, FALSE, &dwFlags)) {
+						return -1;
+					}
+					retval = 0; /* for code after the `while` loop. */
+				} else if (rv == WAIT_TIMEOUT) {
+					return (EIF_INTEGER) -1;
+				} else {
+						/* either WAIT_FAILED or WAIT_ABANDONED or ... */
+					return (EIF_INTEGER) -1;
+				}
+			}
+		}
+		bytes_to_send -= xmitbytes;
+		curoff += xmitbytes;
+		bytes_sent += xmitbytes;
+	}
+	if (retval) {
+		return (EIF_INTEGER) bytes_sent;
+	} else {
+			/* Error occurred */
+		return (EIF_INTEGER) -1;
+	}
+#else /* not EIF_WINDOWS */
+	ssize_t retval;
+	if (length > 0) {
+		size_t bytes_to_send;
+		ssize_t bytes_sent;
+		off_t curoff = offset;
+		int fd;
+
+		fd = fileno(f);
+		bytes_to_send = (size_t) length;
+		while ((retval = sendfile((EIF_SOCKET_TYPE) out_fd, (int) fd, (off_t *) &curoff, bytes_to_send) > 0) && (bytes_to_send > 0)) {
+			if (retval > 0) {
+				bytes_to_send = bytes_to_send - retval;
+				bytes_sent = bytes_sent + retval;
+			}
+		} 
+		if (retval) {
+			return (EIF_INTEGER) bytes_sent;
+		} else {
+				/* Error occurred */
+			return (EIF_INTEGER) retval;
+		}
+	} else {
+		return (EIF_INTEGER) 0;
+	}
+#endif
 }
 
-EIF_CHARACTER c_read_char(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read a character from socket fd */
-{
-	char c=0;
-	CREADX(*l_bytes,fd,&c,sizeof(char), 0)
-	return (EIF_CHARACTER) c;
-}
+/******************************************************/
+/* read operations                                    */
+/******************************************************/
 
-EIF_INTEGER c_read_int(EIF_INTEGER fd, EIF_INTEGER *l_bytes)
-	/*x read an integer from socket fd */
+EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
+	/* read a stream of character from socket fd into buffer buf of length len.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
 {
-	EIF_INTEGER i=0L;
-	CREADX(*l_bytes,fd,&i,sizeof(EIF_INTEGER), 0)
-	return (EIF_INTEGER) ntohl((unsigned long) i);
+	int res;
+	CREADX(res,fd,buf,len, 0);
+	return (EIF_INTEGER) res;
 }
-
 
 EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
 	/*x read a stream of character from socket fd into buffer buf
 	    of length len */
 {
-	int nr;
-	CREADX(nr,fd,buf,len, 0);
-	return (EIF_INTEGER) nr;
+	EIF_INTEGER res;
+	res = c_read_stream_noexception(fd, len, buf);
+	eif_net_check(res);
+	return res;
 }
 
+EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
+	/* receive at most len bytes from socket fd into buffer buf
+	 *   flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE 
+	 * NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int res;
+	CREADX(res, fd, buf, len, flags);
+	return (EIF_INTEGER) res;
+}
 
 EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/*x receive at most len bytes from socket fd into buffer buf
 	    flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE */
 {
-	int result;
-	CREADX(result,fd,buf,len,flags);
-	return (EIF_INTEGER) result;
+	EIF_INTEGER res;
+	res = c_recv_noexception(fd, buf, len, flags);
+	eif_net_check(res);
+	return res;
+}
+
+EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
+	/* like c_receive and sender address is stored into socket address
+	 *   structure addr and address length into *addr_len .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
+	int res;
+#ifdef EIF_VMS
+	size_t l_addr_len = (size_t) (*(EIF_INTEGER *) addr_len);
+#else
+	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
+#endif
+	res = recvfrom((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
+	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
+	return (EIF_INTEGER) res;
 }
 
 EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
 	/*x like c_receive and sender address is stored into socket address
 	    structure addr and address length into *addr_len */
 {
+	EIF_INTEGER res;
+	res = c_recvfrom_noexception(fd, buf, len, flags, addr, addr_len);
+	eif_net_check(res);
+	return res;
+}
+
+
+/********************************************************/
+/* write operations                                     */
+/********************************************************/
+
+EIF_INTEGER c_write_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
+	/* write at most len bytes from buffer buf into socket fd
+	 *   return number of actually sent bytes.
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
 	int result;
-#ifdef EIF_VMS
-	size_t l_addr_len = (size_t) (*(EIF_INTEGER *) addr_len);
-#else
-	socklen_t l_addr_len = (socklen_t) (*(EIF_INTEGER *) addr_len);
-#endif
-	result = recvfrom ((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, &l_addr_len);
-	*(EIF_INTEGER *) addr_len = (EIF_INTEGER) l_addr_len;
-	eif_net_check (result);
+	CSENDX(result, fd, buf, len, 0);
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER l)
-	/*x write at most l bytes from buffer buf into socket fd
+EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
+	/*x write at most len bytes from buffer buf into socket fd
 	    return number of actually sent bytes */
 {
+	EIF_INTEGER res;
+	res = c_write_noexception(fd, buf, len);
+	eif_net_check (res);
+	return res;
+}
+
+EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
+	/* send at most len bytes from buffer buf into socket fd
+	 *   to connected peer address
+	 *   flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
+	 *   return actual number of bytes sent .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
 	int result;
-	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) l, 0);
-	eif_net_check (result);
+	CSENDX(result, fd, buf, len, flags);
 	return (EIF_INTEGER) result;
 }
 
@@ -908,9 +1077,20 @@ EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER
 	    flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
 	    return actual number of bytes sent */
 {
+	EIF_INTEGER res;
+	res = c_send_noexception(fd, buf, len, flags);
+	eif_net_check (res);
+	return res;
+}
+
+EIF_INTEGER c_sendto_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
+	/* like c_send and peer address can be set through socket address
+	 *   structure addr of length addr_len .
+	 *	NO exception is raised, and eventual error is return as result!
+	 */
+{
 	int result;
-	result = send((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags);
-	eif_net_check (result);
+	result = sendto((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len);
 	return (EIF_INTEGER) result;
 }
 
@@ -918,11 +1098,15 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 	/*x like c_send and peer address can be set through socket address
 	    structure addr of length addr_len */
 {
-	int result;
-	result = sendto((EIF_SOCKET_TYPE) fd, (char *) buf, (int) len, (int) flags, (struct sockaddr *) addr, (int) addr_len);
-	eif_net_check (result);
-	return (EIF_INTEGER) result;
+	EIF_INTEGER res;
+	res = c_sendto_noexception(fd, buf, len, flags, addr, addr_len);
+	eif_net_check (res);
+	return res;
 }
+
+/********************************************************/
+/* Socket options management                            */
+/********************************************************/
 
 void c_set_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt, EIF_INTEGER val)
 	/*x set socket fd options */
@@ -991,6 +1175,86 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 	eif_net_check (result);
 	return (EIF_INTEGER) result;
 }
+
+EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_RCVTIMEO options */
+{
+#ifdef EIF_VMS
+	size_t asize;
+#else
+	socklen_t asize;
+#endif
+
+#ifdef EIF_WINDOWS
+	int arg;
+	asize = sizeof(arg);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (char *) &arg, &asize));
+	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+#else
+	struct timeval tv;
+	asize = sizeof(struct timeval);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, &tv, &asize));
+	return (EIF_INTEGER) tv.tv_sec;
+#endif
+}
+
+void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
+	/* set socket SO_RCVTIMEO option to recv_timeout_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) 1000 * recv_timeout_seconds; /* Timeout in milliseconds */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = (int) recv_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_usec = 0;
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, &tv, sizeof(struct timeval)));
+#endif
+}
+
+EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
+	/* get socket fd SO_SNDTIMEO options */
+{
+#ifdef EIF_VMS
+	size_t asize;
+#else
+	socklen_t asize;
+#endif
+
+#ifdef EIF_WINDOWS
+	int arg;
+	asize = sizeof(arg);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (char *) &arg, &asize));
+	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+#else
+	struct timeval tv;
+	asize = sizeof(struct timeval);
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, &tv, &asize));
+	return (EIF_INTEGER) tv.tv_sec;
+#endif
+}
+
+void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
+	/* set socket SO_SNDTIMEO option to send_timeout_seconds */
+{
+#ifdef EIF_WINDOWS
+	int arg = (int) 1000 * send_timeout_seconds; /* Timeout in milliseconds */
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
+#else
+	struct timeval tv;
+	tv.tv_sec = (int) send_timeout_seconds;  /* Timeout in seconds */
+	tv.tv_usec = 0;
+
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, &tv, sizeof(struct timeval)));
+#endif
+}
+
+
+/********************************************************/
+/* Misc													*/
+/********************************************************/
+
 
 EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 	/*x set possibly open fd socket options */
@@ -1089,78 +1353,6 @@ void c_set_number(EIF_POINTER data_obj, EIF_INTEGER num)
 		lower |= 0x80000000;
 	value = htonl((uint32)(lower));
 	memcpy(((char *) data_obj), &value, sizeof(uint32));
-#endif
-}
-
-EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_RCVTIMEO options */
-{
-#ifdef EIF_VMS
-	size_t asize;
-#else
-	socklen_t asize;
-#endif
-
-#ifdef EIF_WINDOWS
-	int arg;
-	asize = sizeof(arg);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
-#else
-	struct timeval tv;
-	asize = sizeof(struct timeval);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (struct timeval *) &tv, &asize));
-	return (EIF_INTEGER) tv.tv_sec;
-#endif
-}
-
-void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
-	/* set socket SO_RCV_TIMEO option to recv_timeout_seconds */
-{
-#ifdef EIF_WINDOWS
-	int arg = (int) 1000 * recv_timeout_seconds; /* Timeout in milliseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = recv_timeout_seconds;  /* Timeout in seconds */
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
-#endif
-}
-
-EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_SNDTIMEO options */
-{
-#ifdef EIF_VMS
-	size_t asize;
-#else
-	socklen_t asize;
-#endif
-
-#ifdef EIF_WINDOWS
-	int arg;
-	asize = sizeof(arg);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
-#else
-	struct timeval tv;
-	asize = sizeof(struct timeval);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (struct timeval *) &tv, &asize));
-	return (EIF_INTEGER) tv.tv_sec;
-#endif
-}
-
-void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
-	/* set socket SO_RCV_TIMEO option to send_timeout_seconds */
-{
-#ifdef EIF_WINDOWS
-	int arg = (int) 1000 * send_timeout_seconds; /* Timeout in milliseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = send_timeout_seconds;  /* Timeout in seconds */
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (struct timeval *)&tv, sizeof(struct timeval)));
 #endif
 }
 

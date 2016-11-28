@@ -49,8 +49,9 @@ feature -- Measurement
 			create Result.make (lower, upper)
 		ensure
 			not_void: Result /= Void
-			same_lower: Result.lower = lower
-			same_upper: Result.upper = upper
+			empty_if_not_in_order: (lower > upper) implies Result.is_empty
+			same_lower_if_not_empty: (lower <= upper) implies Result.lower = lower
+			same_upper_if_not_empty: (lower <= upper) implies Result.upper = upper
 		end
 
 feature -- Status report

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="wel-tests" uuid="6AFD1245-2A75-4122-AEF0-7BDE79A54B25">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="wel-tests" uuid="6AFD1245-2A75-4122-AEF0-7BDE79A54B25">
 	<target name="wel-tests">
 		<root cluster="tests" class="TEST"/>
-		<option warning="true" syntax="standard">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
-		<library name="wel" location="$ISE_LIBRARY\library\wel\wel-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" use_application_options="true"/>
 		<tests name="tests" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

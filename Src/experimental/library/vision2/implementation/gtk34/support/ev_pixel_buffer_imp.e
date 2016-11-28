@@ -109,14 +109,11 @@ feature -- Command
 			l_writeable_formats: ARRAYED_LIST [STRING_32]
 			l_extension: STRING_32
 			l_format: detachable STRING_32
-			l_app_imp: detachable EV_APPLICATION_IMP
+			l_dep: EV_GTK_ENVIRONMENT
 			i: INTEGER
 		do
-			l_app_imp ?= (create {EV_ENVIRONMENT}).implementation.application_i
-			check
-				l_app_imp /= Void then
-			end
-			l_writeable_formats := l_app_imp.writeable_pixbuf_formats
+			create l_dep
+			l_writeable_formats := l_dep.writeable_pixbuf_formats
 			if attached a_file_name.name.split ('.') as l_list and then not l_list.is_empty then
 				l_extension := l_list.last.as_upper
 				if l_extension.is_equal ({STRING_32} "JPEG") then

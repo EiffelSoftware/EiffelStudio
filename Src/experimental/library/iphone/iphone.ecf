@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="iphone" uuid="2D42321E-3B8B-4F5D-90A2-5D8D1E753C4B" readonly="false" library_target="iphone">
 	<target name="iphone">
 		<description>Eiffel Library for iPhone development.Copyright (c), Eiffel Software.</description>
 		<root all_classes="true"/>
-		<option warning="true" void_safety="all" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<external_include location="$(ISE_LIBRARY)/library/iphone/Clib">
 			<description>iPhone Includes</description>
 		</external_include>
@@ -17,8 +20,8 @@
 		<external_linker_flag value="-framework CoreFoundation -framework Foundation -framework UIKit -framework CoreGraphics -framework AddressBookUI -framework AddressBook">
 			<description>Frameworks</description>
 		</external_linker_flag>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" readonly="false"/>
-		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base-safe.ecf" readonly="false" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="iphone" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>

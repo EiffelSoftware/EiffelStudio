@@ -285,7 +285,6 @@ feature -- Event
 				dtrace (", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
-			r := top_callstack_record
 			from
 				r := top_callstack_record
 			until
@@ -340,6 +339,7 @@ feature -- Event
 						--| and thus discard previous recorded data
 					clear_recording_data
 				else
+					n := r
 					if r.depth > dep then
 						debug ("RT_DBG_WARNING")
 							print ("Warning: leave mismatch !!!%N")
@@ -352,7 +352,6 @@ feature -- Event
 							print ("%N")
 						end
 						from
-							n := r
 						until
 							n = Void or else n.depth = dep
 						loop
@@ -363,8 +362,6 @@ feature -- Event
 							r.deep_close_until (n)
 							n.close_call_records
 						end
-					else
-						n := r
 					end
 					if n = Void then
 						debug ("RT_DBG_RECORD")
@@ -873,14 +870,16 @@ feature -- Replay operation
 	replay_left_to_first
 			-- Replay execution left as many times as needed to be at the entry of the feature
 		local
-			r,n: like replayed_call
+			r,prev: like replayed_call
 		do
 			from
 				r := replayed_call
-				r := n
 			until
-				n = Void or else n /= r or else r = Void or else r.replayed_position_is_first
+				r = Void 
+				or else r.replayed_position_is_first
+				or else prev = r -- In case replayed_call is always the same.
 			loop
+				prev := r
 				replay_left
 				r := replayed_call
 			end

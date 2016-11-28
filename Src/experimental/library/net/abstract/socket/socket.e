@@ -687,7 +687,6 @@ feature -- Input
 			bytes_read_updated: 0 <= bytes_read and bytes_read <= a_byte_count
 		end
 
-
 	read_line, readline
 			-- Read a line of characters (ended by a new_line).
 		local
@@ -1041,42 +1040,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-feature -- Socket Recv and Send timeout.
-
-	recv_timeout: INTEGER
-			-- Receive timeout in seconds on Current socket.
-		do
-			Result := c_get_sock_recv_timeout (descriptor, level_sol_socket)
-		ensure
-			result_not_negative: Result >= 0
-		end
-
-	send_timeout: INTEGER
-			-- Send timeout in seconds on Current socket.
-		do
-			Result := c_get_sock_send_timeout (descriptor, level_sol_socket)
-		ensure
-			result_not_negative: Result >= 0
-		end
-
-	set_recv_timeout (a_timeout_seconds: INTEGER)
-			-- Set the receive timeout in seconds on Current socket.
-			-- if `0' the related operations will never timeout.
-		require
-			positive_timeout: a_timeout_seconds >= 0
-		do
-			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
-		end
-
-	set_send_timeout (a_timeout_seconds: INTEGER)
-			-- Set the send timeout in milliseconds on Current socket.
-			-- if `0' the related operations will never timeout.
-		require
-			positive_timeout: a_timeout_seconds >= 0
-		do
-			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
-		end
-
 feature {NONE} -- Externals
 
 	socket_buffer: MANAGED_POINTER
@@ -1095,6 +1058,14 @@ feature {NONE} -- Externals
 	internal_socket_buffer: detachable MANAGED_POINTER
 			-- Internal integer buffer
 
+	c_put_stream_noexception (fd: INTEGER; s: POINTER; length: INTEGER): INTEGER
+			-- External routine to write stream pointed by `s' of
+			-- length `length' to socket `fd'.
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
+		end
+
 	c_put_stream (fd: INTEGER; s: POINTER; length: INTEGER)
 			-- External routine to write stream pointed by `s' of
 			-- length `length' to socket `fd'
@@ -1102,16 +1073,39 @@ feature {NONE} -- Externals
 			"C blocking"
 		end
 
-	c_read_stream (fd: INTEGER; l: INTEGER; buf: POINTER): INTEGER
-			-- External routine to read a `l' number of characters
+	c_read_stream_noexception (a_fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd'.
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
+		end
+
+	c_read_stream (fd: INTEGER; len: INTEGER; buf: POINTER): INTEGER
+			-- External routine to read a `len' number of characters
 			-- into buffer `buf' from socket `fd'
 		external
 			"C blocking"
 		end
 
-	c_write (fd: INTEGER; buf: POINTER; l: INTEGER): INTEGER
-			-- External routine to write `l' length of data
+	c_write_noexception (fd: INTEGER; buf: POINTER; len: INTEGER): INTEGER
+			-- External routine to write `len' length of data on socket `fd'.
+			-- Note: does not raise exception on error, but return error value as Result.
+		external
+			"C blocking"
+		end
+
+	c_write (fd: INTEGER; buf: POINTER; len: INTEGER): INTEGER
+			-- External routine to write `len' length of data
 			-- on socket `fd'.
+		external
+			"C blocking"
+		end
+
+	c_recv_noexception (a_fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+			-- External routine to read a `len' number of characters
+			-- into buffer `buf' from socket `a_fd' with `flags' options that could be MSG_OOB, MSG_PEEK, MSD_DONTROUTE,...
+			-- Note: does not raise exception on error, but return error value as Result.
 		external
 			"C blocking"
 		end
@@ -1120,6 +1114,14 @@ feature {NONE} -- Externals
 			-- External routine to receive at most `len' number of
 			-- bytes into buffer `buf' from socket `fd' with `flags'
 			-- options
+		external
+			"C blocking"
+		end
+
+	c_send_noexception (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
+			-- External routine to send at most `len' number of
+			-- bytes from buffer `buf' on socket `fd' with `flags' options.
+			-- Note: does not raise exception on error, but return error value as Result.
 		external
 			"C blocking"
 		end
@@ -1140,30 +1142,6 @@ feature {NONE} -- Externals
 
 	c_get_sock_opt_int (fd, level, opt: INTEGER): INTEGER
 			-- C routine to get socket options of integer type
-		external
-			"C"
-		end
-
-	c_set_sock_recv_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
-	c_get_sock_recv_timeout (fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
-		external
-			"C"
-		end
-
-	c_set_sock_send_timeout (fd, level: INTEGER; a_timeout_seconds: INTEGER)
-			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
-		external
-			"C"
-		end
-
-	c_get_sock_send_timeout (fd, level: INTEGER): INTEGER
-			-- C routine to get socket option SO_SNDTIMEO of timeout value in seconds.
 		external
 			"C"
 		end

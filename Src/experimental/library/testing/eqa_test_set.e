@@ -216,6 +216,8 @@ feature -- Constants
 	target_path_key: STRING = "TARGET_PATH"
 			-- Key for path in which test of `Current' is executed
 
+	source_path_key: STRING = "SOURCE_PATH"
+
 invariant
 	internal_file_system_valid: file_system.asserter = asserter
 

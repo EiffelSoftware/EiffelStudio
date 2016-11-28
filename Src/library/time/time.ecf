@@ -12,7 +12,7 @@
 		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="$(ISE_LIBRARY)\library\time\spec\include"/>
+		<external_include location="$(ISE_LIBRARY)\library\time\spec\include">
 			<condition>
 				<platform value="windows"/>
 			</condition>

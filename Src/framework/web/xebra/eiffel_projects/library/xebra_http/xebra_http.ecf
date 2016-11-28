@@ -2,9 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="xebra_http" uuid="EA45E132-F421-4BAD-A146-EFCCD25B03E9" library_target="xebra_http">
 	<target name="xebra_http">
 		<root all_classes="true"/>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
 		<capability>
 			<concurrency support="thread"/>
 		</capability>

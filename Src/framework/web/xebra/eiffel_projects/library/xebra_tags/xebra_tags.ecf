@@ -2,9 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="xebra_tags" uuid="BA12B809-23BE-44C5-BFD5-CBD049428DC6" library_target="xebra_tags">
 	<target name="xebra_tags">
 		<root all_classes="true"/>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
-		</option>
 		<capability>
 			<concurrency support="thread"/>
 		</capability>

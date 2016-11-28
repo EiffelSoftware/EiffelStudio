@@ -19,9 +19,6 @@
 				<concurrency excluded_value="thread"/>
 			</condition>
 		</file_rule>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
-		</option>
 		<capability>
 			<concurrency support="scoop" use="thread"/>
 		</capability>

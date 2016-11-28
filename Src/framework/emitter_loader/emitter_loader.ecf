@@ -6,9 +6,7 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions precondition="true"/>
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="cli_writer_clib" location="$EIFFEL_SRC\framework\cli_writer\cli_writer_clib.ecf"/>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf"/>

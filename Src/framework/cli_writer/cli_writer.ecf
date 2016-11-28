@@ -5,9 +5,6 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true"/>
-		</option>
 		<capability>
 			<void_safety support="conformance"/>
 		</capability>

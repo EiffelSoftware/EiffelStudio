@@ -4,7 +4,7 @@
 		<description>Vision2 library Extended</description>
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<file_rule>
 			<exclude>/gtk$</exclude>
@@ -20,9 +20,6 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<option>
-			<assertions precondition="true"/>
-		</option>
 		<capability>
 			<void_safety support="transitional"/>
 		</capability>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_connector_standalone" uuid="BA1C9760-8ECD-4182-8354-5D880F2FC81B" library_target="test_connector_standalone">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test_connector_standalone" uuid="BA1C9760-8ECD-4182-8354-5D880F2FC81B">
 	<target name="test_standalone_scoop">
 		<root class="TEST_STANDALONE_CONNECTOR" feature="make"/>
 		<option debug="true">

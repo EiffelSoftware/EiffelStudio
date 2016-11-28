@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object that represents a launched process"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -12,8 +12,6 @@ inherit
 	WEL_PROCESS_LAUNCHER
 		rename
 			launch as wel_launch
-		export
-			{ANY} process_info
 		redefine
 			startup_info
 		end
@@ -37,9 +35,9 @@ feature{NONE} -- Implementation
 			output_file_name := ""
 			error_file_name := ""
 
-			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			input_direction := {BASE_REDIRECTION}.no_redirection
+			output_direction := {BASE_REDIRECTION}.no_redirection
+			error_direction := {BASE_REDIRECTION}.no_redirection
 			internal_has_exited := True
 		ensure
 			std_input_not_open: not is_std_input_open
@@ -48,9 +46,9 @@ feature{NONE} -- Implementation
 			input_file_name_set: input_file_name.is_empty
 			output_file_name_set: output_file_name.is_empty
 			error_file_name_set: error_file_name.is_empty
-			no_input_redirection: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			no_output_redirection: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			no_error_redirection: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			no_input_redirection: input_direction = {BASE_REDIRECTION}.no_redirection
+			no_output_redirection: output_direction = {BASE_REDIRECTION}.no_redirection
+			no_error_redirection: error_direction = {BASE_REDIRECTION}.no_redirection
 			internal_has_exited: internal_has_exited
 		end
 
@@ -63,13 +61,12 @@ feature -- Process operations
 		require
 			a_cmd_not_void: a_cmd /= Void
 			a_cmd_not_empty: not a_cmd.is_empty
-			not_launched: process_info = Void
+			not_launched: process_handle = Void
 			input_closed: not is_std_input_open
 			output_closed: not is_std_output_open
 			error_closed: not is_std_error_open
 			separate_xor_detached: not (has_separate_console and has_detached_console)
 		local
-			l_success: BOOLEAN
 			l_flag: INTEGER
 		do
 			if has_separate_console then
@@ -78,10 +75,10 @@ feature -- Process operations
 				l_flag := detached_process
 			end
 			spawn_with_flags (a_cmd, a_working_directory, l_flag)
-			l_success := file_handle.close (child_input)
-			l_success := file_handle.close (child_output)
+			{WEL_API}.close_handle (child_input).do_nothing
+			{WEL_API}.close_handle (child_output).do_nothing
 			if not is_error_same_as_output then
-				l_success := file_handle.close (child_error)
+				{WEL_API}.close_handle (child_error).do_nothing
 			end
 			launched := last_launch_successful
 			if launched then
@@ -97,8 +94,8 @@ feature -- Process operations
 		require
 			process_launched: launched
 		do
-			if attached process_info as l_process_info then
-				last_operation_successful := {WEL_API}.get_exit_code_process (l_process_info.process_handle, $last_process_result)
+			if attached process_handle as h then
+				last_operation_successful := {WEL_API}.get_exit_code_process (h.item, $last_process_result)
 			else
 				last_operation_successful := False
 			end
@@ -186,33 +183,34 @@ feature -- Status reporting
 	is_error_same_as_output: BOOLEAN
 			-- Is error redirected to same direction as output?
 		do
-			Result := error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
+			Result := error_direction = {BASE_REDIRECTION}.to_same_as_output
 		end
 
 	input_pipe_needed: BOOLEAN
 			-- Is a pipe needed to write input from current process?
 		do
-			Result := input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
+			Result := input_direction = {BASE_REDIRECTION}.to_stream
 		end
 
 	output_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read output from current process?
 		do
-			Result := output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
+			Result := output_direction = {BASE_REDIRECTION}.to_stream
 		end
 
 	error_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read error from current process?			
 		do
-			Result := error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
+			Result := error_direction = {BASE_REDIRECTION}.to_stream
 		end
 
 	is_io_redirected: BOOLEAN
 			-- Is input, output or error redirected?
 		do
-			Result := input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection or
-					  output_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection or
-					  error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			Result :=
+				input_direction /= {BASE_REDIRECTION}.no_redirection or
+				output_direction /= {BASE_REDIRECTION}.no_redirection or
+				error_direction /= {BASE_REDIRECTION}.no_redirection
 		end
 
 feature -- Access
@@ -254,12 +252,10 @@ feature -- Handle operation
 
 	close_std_output
 			-- Close standard output handle.
-		local
-			l_success: BOOLEAN
 		do
 			if is_std_output_open then
 				if std_output /= default_pointer then
-					l_success := file_handle.close (std_output)
+					{WEL_API}.close_handle (std_output).do_nothing
 				end
 				is_std_output_open := False
 			end
@@ -269,12 +265,10 @@ feature -- Handle operation
 
 	close_std_input
 			-- Close standard input handle.
-		local
-			l_success: BOOLEAN
 		do
 			if is_std_input_open then
 				if std_input /= default_pointer then
-					l_success := file_handle.close (std_input)
+					{WEL_API}.close_handle (std_input).do_nothing
 				end
 				is_std_input_open := False
 			end
@@ -284,15 +278,13 @@ feature -- Handle operation
 
 	close_std_error
 			-- Close standard error handle.
-		local
-			l_success: BOOLEAN
 		do
 			if is_std_error_open then
 				if std_error /= default_pointer then
-					l_success := file_handle.close (std_error)
+					{WEL_API}.close_handle (std_error).do_nothing
 				end
+				is_std_error_open := False
 			end
-			is_std_error_open := False
 		ensure
 			handle_closed: not is_std_error_open
 		end
@@ -310,12 +302,13 @@ feature -- Handle operation
 		require
 			process_launched: launched
 		do
-			if attached process_info as l_process_info then
-				last_operation_successful := file_handle.close (l_process_info.thread_handle)
-				l_process_info.set_thread_handle (default_pointer)
-					-- Make sure to not reset the value of `last_operation_successful'.
-				last_operation_successful := file_handle.close (l_process_info.process_handle) and last_operation_successful
-				l_process_info.set_process_handle (default_pointer)
+			if attached process_handle as h then
+				process_handle := Void
+				last_operation_successful := h.checked_close
+			end
+			if attached thread_handle as h then
+				thread_handle := Void
+				last_operation_successful := h.checked_close and last_operation_successful
 			else
 				last_operation_successful := False
 			end
@@ -332,7 +325,7 @@ feature
 				Result.set_flags (Startf_use_std_handles)
 
 					-- Initialize input of child
-				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+				if input_direction = {BASE_REDIRECTION}.no_redirection then
 					Result.set_std_input (stdin)
 				else
 					if input_pipe_needed then
@@ -353,7 +346,7 @@ feature
 				end
 
 					-- Initialize output of child
-				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+				if output_direction = {BASE_REDIRECTION}.no_redirection then
 					Result.set_std_output (stdout)
 				else
 					if output_pipe_needed then
@@ -372,11 +365,11 @@ feature
 					is_std_output_open := True
 					Result.set_std_output (child_output)
 				end
-				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+				if error_direction = {BASE_REDIRECTION}.no_redirection then
 					Result.set_std_error (stderr)
 				else
 					if is_error_same_as_output then
-						if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+						if output_direction = {BASE_REDIRECTION}.no_redirection then
 							Result.set_std_error (stderr)
 						else
 							child_error := child_output
@@ -449,7 +442,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -170,6 +170,22 @@ feature -- Status report
 	timeout: INTEGER
 			-- Duration of timeout in seconds
 
+	recv_timeout: INTEGER
+			-- Receive timeout in seconds on Current socket.
+		do
+			Result := c_get_sock_recv_timeout (descriptor, level_sol_socket)
+		ensure
+			result_not_negative: Result >= 0
+		end
+
+	send_timeout: INTEGER
+			-- Send timeout in seconds on Current socket.
+		do
+			Result := c_get_sock_send_timeout (descriptor, level_sol_socket)
+		ensure
+			result_not_negative: Result >= 0
+		end
+
 feature -- Status setting
 
 	set_reuse_address
@@ -201,6 +217,24 @@ feature -- Status setting
 		ensure
 			timeout_set: timeout = n or timeout = default_timeout
 		end
+
+	set_recv_timeout (a_timeout_seconds: INTEGER)
+			-- Set the receive timeout in seconds on Current socket.
+			-- if `0' the related operations will never timeout.
+		require
+			positive_timeout: a_timeout_seconds >= 0
+		do
+			c_set_sock_recv_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+		end
+
+	set_send_timeout (a_timeout_seconds: INTEGER)
+			-- Set the send timeout in milliseconds on Current socket.
+			-- if `0' the related operations will never timeout.
+		require
+			positive_timeout: a_timeout_seconds >= 0
+		do
+			c_set_sock_send_timeout (descriptor, level_sol_socket, a_timeout_seconds)
+		end		
 
 	set_non_blocking
 			-- <Precursor>
@@ -281,6 +315,30 @@ feature {NONE} -- Constants
 			-- Default timeout duration in seconds
 
 feature {NONE} -- Externals
+
+	c_set_sock_recv_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
+			-- C routine to set socket option `SO_RCVTIMEO' with `a_timeout_seconds' seconds.
+		external
+			"C"
+		end
+
+	c_get_sock_recv_timeout (a_fd, level: INTEGER): INTEGER
+			-- C routine to get socket option SO_RCVTIMEO of timeout value in seconds.
+		external
+			"C"
+		end
+
+	c_set_sock_send_timeout (a_fd, level: INTEGER; a_timeout_seconds: INTEGER)
+			-- C routine to set socket option `SO_SNDTIMEO' with `a_timeout_seconds' seconds.
+		external
+			"C"
+		end
+
+	c_get_sock_send_timeout (a_fd, level: INTEGER): INTEGER
+			-- C routine to get socket option SO_SNDTIMEO of timeout value in seconds.
+		external
+			"C"
+		end
 
 	c_close (an_fd: INTEGER; an_fd1: INTEGER)
 		external

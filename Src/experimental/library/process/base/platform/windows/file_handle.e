@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Manipulate Windows handle to file"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -73,7 +73,7 @@ feature -- Factory
 		do
 			if cwin_create_pipe ($l_read, $l_temp, default_pointer, 0) then
 				if duplicate_handle (l_temp, $l_write) then
-					if close (l_temp) then
+					if {WEL_API}.close_handle (l_temp) /= 0 then
 						Result := [l_read, l_write]
 					else
 						display_error
@@ -94,7 +94,7 @@ feature -- Factory
 		do
 			if cwin_create_pipe ($l_temp, $l_write, default_pointer, 0) then
 				if duplicate_handle (l_temp, $l_read) then
-					if close (l_temp) then
+					if {WEL_API}.close_handle (l_temp) /= 0 then
 						Result := [l_read, l_write]
 					else
 						display_error
@@ -123,14 +123,6 @@ feature -- Status report
 
 	last_read_bytes: INTEGER
 			-- Last amount of bytes read from pipe
-
-feature -- Status setting
-
-	close (a_handle: POINTER): BOOLEAN
-			-- Close `a_handle'.
-		do
-			Result := cwin_close_handle (a_handle)
-		end
 
 feature -- Input
 
@@ -234,14 +226,7 @@ feature -- Element change
 			]"
 		end
 
-	flush (a_handle: POINTER)
-			-- Flush buffered data.
-		do
-			if cwin_flush_file_buffers (a_handle) then
-			end
-		end
-
-	put_string (a_handle: POINTER; a_string: STRING)
+	put_string (a_handle: POINTER; a_string: READABLE_STRING_8)
 			-- Write `a_string' to `a_handle'.
 			-- Put number of written bytes in `last_written_bytes'.
 		require
@@ -298,22 +283,6 @@ feature {NONE} -- Implementation
 			"WriteFile"
 		end
 
-	cwin_close_handle (a_handle: POINTER): BOOLEAN
-			-- SDK CloseHandle
-		external
-			"C macro signature (HANDLE): BOOL use <windows.h>"
-		alias
-			"CloseHandle"
-		end
-
-	cwin_flush_file_buffers (a_handle: POINTER): BOOLEAN
-			-- SDK CloseHandle
-		external
-			"C macro signature (HANDLE): BOOL use <windows.h>"
-		alias
-			"CloseHandle"
-		end
-
 	cwin_set_file_pointer (a_handle: POINTER; a_dist_to_move: INTEGER; a_dist_to_move_high: TYPED_POINTER [INTEGER]; a_method: INTEGER)
 			-- Move File pointer to given location
 		external
@@ -323,7 +292,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

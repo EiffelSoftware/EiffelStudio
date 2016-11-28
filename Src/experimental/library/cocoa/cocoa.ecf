@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="cocoa" uuid="804E870E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="cocoa">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="cocoa" uuid="804E870E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="cocoa">
 	<target name="cocoa">
 		<description>Cocoa Eiffel Library.
-&#9;&#9;&#9;Copyright (c) 2009, Daniel Furrer.</description>
+			Copyright (c) 2009, Daniel Furrer.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard">
+		<option warning="true">
 		</option>
+		<capability>
+			<concurrency support="thread"/>
+		</capability>
 		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
 		<external_include location="$(ISE_LIBRARY)/library/cocoa/Clib"/>
 		<external_cflag value="-ObjC"/>
@@ -18,7 +21,7 @@
 		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>
 		<external_linker_flag value="-framework Cocoa"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="objc_base" location="$ISE_LIBRARY\library\objc_base\objc_base.ecf" readonly="false"/>
+		<library name="objective_c" location="$ISE_LIBRARY\library\objc_base\objc_base.ecf"/>
 		<cluster name="cocoa" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/\.svn$</exclude>

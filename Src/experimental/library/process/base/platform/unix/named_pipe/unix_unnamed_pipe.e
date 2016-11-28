@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Ojbect that manipulates a UNIX unnamed pipe.
 		All the read_xxx features except read_stream_non_block in this class are block features.
@@ -6,9 +6,7 @@ note
 		While read_stream_non_block will read as much as requested bytes of data and will return with
 		acturally read data if no other data is in the pipe.
 		All the put_xxx features are block features.
-		Note: Always check last_read_successful after a read_xxx feature and check last_write_successful
-				   after a write_xxx feature.
-
+		Note: Always check last_read_successful after a read_xxx feature and check last_write_successful after a write_xxx feature.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,8 +30,6 @@ inherit
 		redefine
 			dispose
 		end
-
-	THREAD_CONTROL
 
 create
 	make
@@ -445,39 +441,13 @@ feature -- Output
 			write_block (write_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 		end
 
-	put_string (s: STRING)
-			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putstring'.
+	put_string, putstring (s: STRING)
+			-- <Precursor>
 		local
 			mp: MANAGED_POINTER
-			i: INTEGER
 		do
 			create mp.make (s.count)
-			from
-				i := 1
-			until
-				i > s.count
-			loop
-				mp.put_character (s.item (i), i - 1)
-				i := i + 1
-			end
-			write_block (write_descriptor, mp.item, s.count)
-		end
-
-	putstring (s: STRING)
-			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `put_string'.
-		local
-			mp: MANAGED_POINTER
-			i: INTEGER
-		do
-			create mp.make (s.count)
-			from
-				i := 1
-			until
-				i > s.count
-			loop
-				mp.put_character (s.item (i), i - 1)
-				i := i + 1
-			end
+			mp.put_special_character_8 (s.area, s.area.lower, 0, s.count)
 			write_block (write_descriptor, mp.item, s.count)
 		end
 
@@ -715,7 +685,7 @@ invariant
 	current_platform_not_void: current_platform /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -724,8 +694,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

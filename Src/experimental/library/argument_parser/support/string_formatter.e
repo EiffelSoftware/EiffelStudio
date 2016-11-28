@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Permits argument-based formatting of {STRING} instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,7 +69,6 @@ feature -- Formatting
 			not_a_args_is_empty: not a_args.is_empty
 		local
 			l_str: STRING_32
-			l_arg: detachable ANY
 			l_count: INTEGER
 			l_arg_count: INTEGER
 			l_match: BOOLEAN
@@ -120,9 +119,10 @@ feature -- Formatting
 						if l_digit.is_integer then
 							l_index := l_digit.to_integer
 							if l_index > 0 and l_index <= l_arg_count then
-								l_arg := a_args[l_index]
-								if l_arg /= Void then
-									Result.append (l_arg.out)
+								if attached a_args [l_index] as separate_argument then
+									separate separate_argument as argument do
+										Result.append (argument.out)
+									end
 								end
 							end
 						end
@@ -265,14 +265,14 @@ feature -- Formatting
 feature {NONE} -- Symbols
 
 	open_char: CHARACTER = '{'
-			-- Index open character
+			-- Index open characterю
 
 	close_char: CHARACTER = '}'
-			-- Index close character
+			-- Index close characterю
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
@@ -302,4 +302,4 @@ feature {NONE} -- Symbols
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {STRING_FORMATTER}
+end

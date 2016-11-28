@@ -1,0 +1,68 @@
+#!/bin/sh
+
+usage()
+{
+	cat <<EOF
+Usage: net-config [OPTIONS]
+Options
+	[--include_path]
+	[--object]
+	[--library]
+	[--threads]
+EOF
+	exit $1
+}
+
+if test $# -eq 0; then
+	usage 1 1>&2
+fi
+
+true_val=1
+false_val=0
+
+needs_include_path=$false_val
+needs_object_path=$false_val
+needs_library_path=$false_val
+needs_threads=$false_val
+
+output=""
+
+#Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
+if [ -z "$ISE_LIBRARY" ]; then
+	ISE_LIBRARY=$ISE_EIFFEL
+fi
+
+while test $# -gt 0; do
+	case $1 in
+		--object)
+		if [ $needs_object_path = $false_val ]; then
+			needs_object_path=$true_val
+		fi
+		;;
+		--library)
+		if [ $needs_library_path = $false_val ]; then
+			needs_library_path=$true_val
+
+			if echo "$ISE_PLATFORM" | grep "solaris" >/dev/null 2>&1; then
+				output="$output -lsendfile "
+			fi
+		fi
+		;;
+		--threads)
+		if [ $needs_threads = $false_val ]; then
+			needs_threads=$true_val
+		fi
+		;;
+		--include_path)
+		if [ $needs_include_path = $false_val ]; then
+			needs_include_path=$true_val
+		fi
+		;;
+		*)
+		usage 1 1>&2
+		;;
+ 	esac
+	shift
+done
+
+echo $output

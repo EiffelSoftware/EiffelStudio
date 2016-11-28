@@ -8,15 +8,19 @@ note
 class
 	PROCESS_REDIRECTION_CONSTANTS
 
+inherit
+	BASE_REDIRECTION
+
 feature -- Access
-	to_stream: INTEGER = 0
-	to_file: INTEGER = 1
-	to_agent: INTEGER = 2
-	no_redirection: INTEGER = 3
-	to_same_as_output: INTEGER = 5;
+
+	to_agent: INTEGER
+		obsolete "Use `to_stream' instead."
+		do
+			Result := to_stream
+		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

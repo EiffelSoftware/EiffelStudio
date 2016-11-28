@@ -137,41 +137,26 @@ feature -- Status report
 
 feature -- Setting
 
-	set_arguments (arg_list: detachable LIST [READABLE_STRING_GENERAL])
-			-- Set `arguments' to `args'.
+	set_arguments (argument_list: detachable LIST [READABLE_STRING_GENERAL])
+			-- Initialize `arguments' from `argument_list'.
 		local
-			count: INTEGER
-			i: INTEGER
 			l_arguments: like arguments
 		do
-			if arg_list /= Void then
-				count := arg_list.count
-				if count = 0 then
-					create l_arguments.make_empty
-				else
-					from
-						arg_list.start
-						create l_arguments.make_filled (arg_list.item.twin, 1, count)
-						arg_list.forth
-						i := 2
-					until
-						arg_list.after
-					loop
-						l_arguments.put (arg_list.item.twin, i)
-						arg_list.forth
-						i := i + 1
-					end
+			if attached argument_list then
+				create l_arguments.make (0)
+				across
+					argument_list as argument
+				loop
+					l_arguments.extend (argument.item.twin)
 				end
-				arguments := l_arguments
-			else
-				arguments := Void
 			end
+			arguments := l_arguments
 		end
 
 	set_close_nonstandard_files (b: BOOLEAN)
 			-- Set `close_nonstandard_files' to `b'
 		do
-			close_nonstandard_files := b;
+			close_nonstandard_files := b
 		ensure
 			value_set: close_nonstandard_files = b
 		end
@@ -182,7 +167,7 @@ feature -- Setting
 			-- the parent process
 		do
 			input_file_name := fname
-			input_piped := (fname = Void)
+			input_piped := fname = Void
 		end
 
 	set_output_file_name (fname: like output_file_name)
@@ -192,7 +177,7 @@ feature -- Setting
 			-- and truncated if it does
 		do
 			output_file_name := fname
-			output_piped := (fname = Void)
+			output_piped := fname = Void
 		end
 
 	set_error_file_name (fname: like error_file_name)
@@ -202,8 +187,8 @@ feature -- Setting
 			-- and truncated if it does
 		do
 			error_file_name := fname
-			error_piped := (fname = Void)
-			error_same_as_output := False;
+			error_piped := fname = Void
+			error_same_as_output := False
 		ensure
 			error_not_output: not error_same_as_output
 		end
@@ -220,7 +205,7 @@ feature -- Setting
 			error_not_file: error_file_name = Void
 		end
 
-feature {PROCESS_IMP} -- Process management
+feature {BASE_PROCESS_IMP} -- Process management
 
 	wait_for_process (pid: INTEGER; is_block: BOOLEAN)
 			-- Wait for any process specified by process
@@ -374,8 +359,14 @@ feature {PROCESS_IMP} -- Process management
 		do
 			if is_executing and then attached shared_input_unnamed_pipe as l_in_pipe then
 				l_in_pipe.put_string (s)
+				has_write_error := not l_in_pipe.last_write_successful
+			else
+				has_write_error := True
 			end
 		end
+
+	has_write_error: BOOLEAN
+			-- Has last write operation to `shared_input_unnamed_pipe' ended with an error?
 
 	last_output: detachable STRING
 			-- Last read data from output pipe
@@ -389,7 +380,7 @@ feature {NONE} -- Properties
 			-- Name of file containing program which will be
 			-- executed when process is spawned
 
-	arguments: detachable ARRAY [READABLE_STRING_GENERAL];
+	arguments: detachable ARRAYED_LIST [READABLE_STRING_GENERAL];
 			-- Arguments to passed to process when it is spawned,
 			-- not including argument 0 (which is conventionally
 			-- the name of the program).  If Void or if count
@@ -449,32 +440,20 @@ feature {NONE} -- Implementation
 			-- Make `process_name' argument 0 and append
 			-- `arguments' as the rest of the arguments
 		local
-			k, count, lower: INTEGER
-			pname: READABLE_STRING_GENERAL
-			l_arguments: like arguments
+			k: INTEGER
 		do
-			l_arguments := arguments
-			if l_arguments /= Void then
-				count := l_arguments.count + 1;
-				lower := l_arguments.lower;
-			else
-				count := 1
-				lower := 1	-- Not applicable
-			end
-			create {STRING_32} pname.make_empty
-			create Result.make_filled (pname, 1, count);
-
-			pname := program_file_name
-			Result.put (pname, 1)
-			if l_arguments /= Void then
+			if attached arguments as a then
+				create Result.make_filled (program_file_name, 1, a.count + 1)
+				across
+					a as argument
 				from
 					k := 2
-				until
-					k > count
 				loop
-					Result.put (l_arguments.item (lower + k - 2), k)
+					Result.put (argument.item, k)
 					k := k + 1
 				end
+			else
+				create Result.make_filled (program_file_name, 1, 1)
 			end
 		end
 
@@ -738,7 +717,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

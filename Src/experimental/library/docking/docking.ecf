@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="docking" uuid="7CD5D682-0880-46FA-85C3-7AADFF14DA11" library_target="docking">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="docking" uuid="7CD5D682-0880-46FA-85C3-7AADFF14DA11" library_target="docking">
 	<target name="docking">
 		<description>Docking: Multiplatform docking library of reusable components for Eiffel.
-      Copyright (c) 1984-2006, Eiffel Software and others.
+      Copyright (c) 1984-2016, Eiffel Software and others.
       Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
@@ -13,9 +13,12 @@
 			<exclude>/temp$</exclude>
 			<exclude>/tmp$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="standard" namespace="EiffelSoftware.Library.Docking">
+		<option warning="true" namespace="EiffelSoftware.Library.Docking">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<capability>
+			<void_safety support="transitional"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="cocoa" location="$ISE_LIBRARY\library\cocoa\cocoa.ecf" readonly="false">
 			<condition>
@@ -25,7 +28,6 @@
 		</library>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
-		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="true">
 			<condition>
 				<platform value="windows"/>

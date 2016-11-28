@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="base" uuid="6D7FF712-BBA5-4AC0-AABF-2D9880493A01" library_target="base">
 	<description>Eiffel Base</description>
 	<target name="base">
 		<description>FreeELKS: Library of reusable components for Eiffel.
-      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional" namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
@@ -36,6 +36,14 @@
 		<cluster name="elks" location="elks\" recursive="true">
 			<option namespace="Base">
 			</option>
+			<file_rule>
+				<exclude>/structures/cursor_tree/compact_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/linked_cursor_tree.e$</exclude>
+				<exclude>/structures/cursor_tree/two_way_cursor_tree.e$</exclude>
+				<exclude>/structures/cursors/compact_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/linked_cursor_tree_cursor.e$</exclude>
+				<exclude>/structures/cursors/two_way_cursor_tree_cursor.e$</exclude>
+			</file_rule>
 			<file_rule>
 				<exclude>/kernel/console.e$</exclude>
 				<exclude>/kernel/directory.e$</exclude>
@@ -145,5 +153,8 @@
 	</target>
 	<target name="base_dotnet" extends="base">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency use="thread"/>
+		</capability>
 	</target>
 </system>

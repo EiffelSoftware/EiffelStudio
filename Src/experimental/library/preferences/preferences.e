@@ -209,8 +209,11 @@ feature {NONE} -- Initialization
 
 feature -- Importation
 
-	import_from_storage_with_callback (a_storage: PREFERENCES_STORAGE_I; a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_32]])
-			-- Import preferences values from `a_storage'
+	import_from_storage_with_callback_and_exclusion (a_storage: PREFERENCES_STORAGE_I; a_ignore_hidden_preference: BOOLEAN;
+				a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]];
+				a_exclude_function: detachable FUNCTION [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL], BOOLEAN])
+			-- Import preferences values from `a_storage', on import call `a_callback` if any.
+			-- If `a_exclude_function` is set, import related preference only if return is False.
 		require
 			a_storage_not_void: a_storage /= Void
 		local
@@ -232,17 +235,34 @@ feature -- Importation
 				i := i + 1
 				k := vals.key_for_iteration
 				v := vals.item_for_iteration
-				if a_callback /= Void then
-					a_callback.call ([i,n,k, v])
-				end
-				session_values.force (v, k)
 				p := preferences.item (k)
-				if p /= Void then
-					check preferences.has (k) end
-					p.set_value_from_string (v)
+				if a_ignore_hidden_preference and (p = Void or else p.is_hidden) then
+						-- Ignored
+				elseif
+					a_exclude_function /= Void and then
+					a_exclude_function.item ([i, n, k, v])
+				then
+						-- Excluded
+				else
+					if a_callback /= Void then
+						a_callback.call ([i,n,k, v])
+					end
+					session_values.force (v, k)
+					if p /= Void then
+						check preferences.has (k) end
+						p.set_value_from_string (v)
+					end
 				end
 				vals.forth
 			end
+		end
+
+	import_from_storage_with_callback (a_storage: PREFERENCES_STORAGE_I; a_callback: detachable PROCEDURE [TUPLE [ith: INTEGER; total: INTEGER; name: READABLE_STRING_GENERAL; value: READABLE_STRING_GENERAL]])
+			-- Import preferences values from `a_storage'
+		require
+			a_storage_not_void: a_storage /= Void
+		do
+			import_from_storage_with_callback_and_exclusion (a_storage, False, a_callback, Void)
 		end
 
 	import_from_storage (a_storage: PREFERENCES_STORAGE_I)

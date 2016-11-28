@@ -264,14 +264,16 @@ feature {NONE} -- Implementation
 			a_index_valid: a_index = 1 or a_index = 2 or a_index = 3
 		do
 			if attached {like a_filter_data} a_item.data as l_filter_data then
-				if a_index /= 2 then
-					l_filter_data [a_index] := a_item.text
-				else
+				inspect a_index
+				when 1 then l_filter_data.class_name := a_item.text
+				when 2 then
 					if attached {MA_GRID_CHECK_BOX_ITEM} a_item as l_check_box then
 						l_filter_data.selected := l_check_box.is_selected
 					else
 						check not_check_box_item: False end
 					end
+				when 3 then l_filter_data.description := a_item.text
+				else
 				end
 			else
 				check not_filter_data: False end
@@ -354,7 +356,7 @@ invariant
 	grid_not_void: grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information)
+	make (an_info: attached like wizard_information)
 			-- Create current object with information
 			-- relative to current state 'an_info'.
 			-- Should be redefined when needed.
@@ -205,7 +205,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

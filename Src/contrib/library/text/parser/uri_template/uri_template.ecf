@@ -3,14 +3,12 @@
 	<target name="uri_template">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoder" location="..\..\..\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

@@ -3,7 +3,6 @@
 	<target name="cms_model">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
 		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

@@ -9,9 +9,6 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true"/>
-		</option>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

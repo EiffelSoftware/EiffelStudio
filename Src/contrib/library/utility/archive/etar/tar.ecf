@@ -3,7 +3,6 @@
 	<target name="tar">
 		<root all_classes="true"/>
 		<option warning="true">
-			<assertions supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="src" location="src\" recursive="true"/>

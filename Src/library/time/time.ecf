@@ -12,6 +12,16 @@
 		<option namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location="$(ISE_LIBRARY)\library\time\spec\include"/>
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)/library/time/spec/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll">
 			<renaming old_name="INTERFACE_TYPE_ATTRIBUTE" new_name="SYSTEM_INTERFACE_TYPE_ATTRIBUTE"/>

@@ -215,7 +215,7 @@ fi
 lintflags=''
 ldflags=""
 ldsharedflags="$ldflags -shared -o"
-libs='-lm -lcompat'
+libs='-lm'
 ln='/bin/ln'
 if [ -n "$MAKE" ]; then
 	make=$MAKE
@@ -234,10 +234,10 @@ ranlib=':'
 shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
-sharedlibs='-lm -lcompat'
-mtsharedlibs='-lm -lcompat -lpthread'
+sharedlibs='-lm'
+mtsharedlibs='-lm -lpthread'
 sharedlibversion='.16.11'
-sharedlink='ld'
+sharedlink="$cc"
 suffix='.a'
 wkeiflib='wkbench'
 

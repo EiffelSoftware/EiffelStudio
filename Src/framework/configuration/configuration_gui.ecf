@@ -33,8 +33,8 @@
 		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
 		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
-		<library name="package_database" location="$EIFFEL_SRC\tools\library_index\lib\package_database\package_database.ecf" readonly="true"/>
-		<library name="package_visitor" location="$EIFFEL_SRC\tools\library_index\lib\package_visitor\package_visitor.ecf" readonly="true"/>
+		<library name="package_database" location="$EIFFEL_SRC\framework\packages\database\package_database.ecf"/>
+		<library name="package_visitor" location="$EIFFEL_SRC\framework\packages\visitor\package_visitor.ecf"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

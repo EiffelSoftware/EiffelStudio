@@ -100,7 +100,8 @@ feature -- Query
 			l_loader.retrieve_configuration (path.name)
 			if
 				not l_loader.is_error and then
-				attached l_loader.last_system as l_system
+				attached l_loader.last_system as l_system and then
+				l_loader.last_redirection = Void -- Exclude redirection!
 			then
 				Result := l_system
 			end

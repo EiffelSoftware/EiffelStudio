@@ -170,6 +170,9 @@ feature -- Status change
 			-- Report error occurred, with optional message `m'.
 		do
 			has_error := True
+			if m /= Void and then is_verbose then
+				log (m.as_string_8, debug_level)
+			end
 		end
 
 	reset_error
@@ -313,7 +316,7 @@ feature -- Execution
 					is_persistent_connection_requested := False
 				else
 					if is_verbose then
-						log (request_header, information_level)
+						log_with_separation_line (request_header, information_level)
 					end
 					process_request (l_socket)
 				end
@@ -588,6 +591,27 @@ feature -- Output
 			logger := a_logger
 		ensure
 			logger_set: logger = a_logger
+		end
+
+
+	log_with_separation_line (m: STRING; a_level: INTEGER)
+			-- Log message `m'.
+		require
+			is_verbose: is_verbose
+		local
+			s: STRING
+		do
+			if is_verbose and (verbose_level & a_level) = a_level then
+				create s.make (m.count + 42)
+				s.append (create {STRING}.make_filled ('-', 40))
+				s.append_character ('%N')
+				s.append (m)
+				if attached logger as l_logger then
+					l_logger.log (s)
+				else
+					io.put_string (s + "%N")
+				end
+			end
 		end
 
 	log (m: STRING; a_level: INTEGER)

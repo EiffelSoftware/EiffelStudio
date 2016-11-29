@@ -683,12 +683,18 @@ feature -- Setting
 			i: INTEGER
 		do
 			current_class := a_class
+			is_void_safe_call := a_class.lace_class.is_void_safe_call
+			is_void_safe_conformance := a_class.lace_class.is_void_safe_conformance
+			is_void_safe_initialization := a_class.lace_class.is_void_safe_initialization
+			is_void_safe_construct := a_class.lace_class.is_void_safe_construct
+			is_void_unsafe := a_class.lace_class.is_void_unsafe
+
 			create current_class_type.make (a_type)
 				-- Current is always attached.
-			if current_class.lace_class.is_void_safe_conformance then
+			if is_void_safe_conformance then
 				current_class_type.set_attached_mark
 			end
-				-- Current is always frozen
+				-- Current is always frozen.
 			if current_class.lace_class.is_catcall_conformance then
 				current_class_type.set_frozen_mark
 			end
@@ -893,6 +899,23 @@ feature -- Setting
 		do
 			current_inline_agent_body := body
 		end
+
+feature -- Settings: void safety
+
+	is_void_unsafe: BOOLEAN
+			-- Is context  class compiled without any void-safety mechanism enabled?
+
+	is_void_safe_conformance: BOOLEAN
+			-- Should attachment status be taken into account when checking conformance?
+
+	is_void_safe_initialization: BOOLEAN
+			-- Should attached entities be property set before use?
+
+	is_void_safe_call: BOOLEAN
+			-- Should feature call target be attached?
+
+	is_void_safe_construct: BOOLEAN
+			-- Should only mode-independent void-safety constructs be taken into account?
 
 feature -- Iteration classes
 

@@ -1876,17 +1876,6 @@ feature -- Supplier checking
 							supplier_class.compiled_class.record_precompiled_class_in_system
 						end
 					end
-					if not supplier_class.is_void_safety_supported (original_class) then
-							-- Report an error that `supplier_class' is less void-safe
-							-- than the class that replies on it.
-						if not supplier_class.is_void_safety_sufficient (original_class) then
-								-- Report error because client expects more void safety.
-							error_handler.insert_error (create {VD88}.make_error (supplier_class, class_name, Current))
-						else
-								-- Report warning because client does not require more void safety.
-							error_handler.insert_warning (create {VD88}.make_warning (supplier_class, class_name, Current))
-						end
-					end
 				end
 				comp_class := supplier_class.compiled_class
 				check

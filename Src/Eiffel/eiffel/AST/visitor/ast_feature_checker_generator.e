@@ -389,7 +389,7 @@ feature {NONE} -- Internal type checking
 		do
 			c := context.current_class
 				-- Optimization: skip deferred classes.
-			if not c.is_deferred and then is_void_safe_initialization (c) then
+			if not c.is_deferred and then is_void_safe_initialization then
 				creators := c.creators
 					-- Check if the current feature is a creation procedure.
 				if
@@ -446,36 +446,28 @@ feature {NONE} -- Implementation: Context
 
 feature {AST_FEATURE_CHECKER_GENERATOR}
 
-	is_void_safe_call (a_class: CLASS_C): BOOLEAN
+	is_void_safe_call: BOOLEAN
 			-- Is code being check for void-safe calls on `a_class'?
-		require
-			a_class_attached: a_class /= Void
 		do
-			Result := a_class.lace_class.is_void_safe_call
+			Result := context.is_void_safe_call
 		end
 
-	is_void_safe_conformance (a_class: CLASS_C): BOOLEAN
+	is_void_safe_conformance: BOOLEAN
 			-- Is code being check for void-safe conformance on `a_class'?
-		require
-			a_class_attached: a_class /= Void
 		do
-			Result := a_class.lace_class.is_void_safe_conformance
+			Result := context.is_void_safe_conformance
 		end
 
-	is_void_safe_initialization (a_class: CLASS_C): BOOLEAN
+	is_void_safe_initialization: BOOLEAN
 			-- Is code being check for void-safe initialization on `a_class'?
-		require
-			a_class_attached: a_class /= Void
 		do
-			Result := a_class.lace_class.is_void_safe_initialization
+			Result := context.is_void_safe_initialization
 		end
 
-	is_void_safe_construct (a_class: CLASS_C): BOOLEAN
+	is_void_safe_construct: BOOLEAN
 			-- Is code being check for void-safe constructs (e.g. no CAP for "check ...end") on `a_class'?
-		require
-			a_class_attached: a_class /= Void
 		do
-			Result := a_class.lace_class.is_void_safe_construct
+			Result := context.is_void_safe_construct
 		end
 
 	is_replicated: BOOLEAN
@@ -1374,7 +1366,7 @@ feature {NONE} -- Implementation
 				l_last_constrained := unknown_type
 			end
 
-			if l_vkcn3 = Void and then not is_static and then not a_type.is_attached and then is_void_safe_call (l_context_current_class) then
+			if l_vkcn3 = Void and then not is_static and then not a_type.is_attached and then is_void_safe_call then
 				error_handler.insert_error (create {VUTA2}.make (context, a_type, l_feature_name))
 			end
 
@@ -2762,7 +2754,7 @@ feature {NONE} -- Visitor
 					elseif
 						l_feat_type.is_initialization_required and then
 						not context.local_initialization.is_result_set and then
-						is_void_safe_initialization (context.current_class)
+						is_void_safe_initialization
 					then
 							-- Result is not properly initialized.
 							-- Treat it as if it is of a detachable type.
@@ -3102,7 +3094,7 @@ feature {NONE} -- Visitor
 					elseif
 						l_type.is_initialization_required and then
 						not context.local_initialization.is_local_set (l_local_info.position) and then
-						is_void_safe_initialization (context.current_class)
+						is_void_safe_initialization
 					then
 							-- Treat it as if it is of a detachable type.
 							-- The void-safety level should be "initialization" or higher
@@ -3620,7 +3612,7 @@ feature {NONE} -- Visitor
 
 					-- Check if some arguments are attached because of an inherited precondition.
 					-- Avoid doing it when there are no inherited preconditions.
-				if context.current_class.lace_class.is_void_safe_conformance and then
+				if is_void_safe_conformance and then
 					not (f.has_precondition and then f.assert_id_set = Void)
 				then
 					create precondition_scope.make (f, context)
@@ -3710,7 +3702,7 @@ feature {NONE} -- Visitor
 							not l_as.is_attribute and then
 							not context.local_initialization.is_result_set and then
 							not f.is_deferred and then
-							is_void_safe_initialization (context.current_class)
+							is_void_safe_initialization
 						then
 								-- Result is not properly initialized.
 							error_handler.insert_error (create {VEVI}.make_result (context, l_as.end_keyword))
@@ -4663,7 +4655,7 @@ feature {NONE} -- Visitor
 				end
 
 				l_error_level := error_level
-				if not last_type.is_attached and then is_void_safe_call (l_context_current_class) then
+				if not last_type.is_attached and then is_void_safe_call then
 					error_handler.insert_error (create {VUTA2}.make (context, last_type, l_as.operator_location))
 				end
 
@@ -5178,7 +5170,7 @@ feature {NONE} -- Visitor
 								l_target_type := l_left_type
 							end
 
-							if not l_target_type.is_attached and then is_void_safe_call (l_context_current_class) then
+							if not l_target_type.is_attached and then is_void_safe_call then
 								error_handler.insert_error (create {VUTA2}.make (context, l_target_type, l_as.operator_location))
 							end
 
@@ -5890,7 +5882,7 @@ feature {NONE} -- Visitor
 					attached target_attribute and then
 					target_attribute.is_stable and then
 					not l_source_type.is_implicitly_attached and then
-					is_void_safe_conformance (context.current_class)
+					is_void_safe_conformance
 				then
 					error_handler.insert_error (create {VBAR2}.make (l_source_type, target_attribute, l_as.start_location, context))
 				else
@@ -6032,7 +6024,7 @@ feature {NONE} -- Visitor
 						error_handler.insert_warning (l_vjrv1)
 					end
 				elseif
-					is_void_safe_conformance (context.current_class) and then
+					is_void_safe_conformance and then
 					(l_target_type.is_attached or else l_target_type.is_initialization_required)
 				then
 						-- Allowing assignment attempts on attached entities does not make sense
@@ -6046,7 +6038,7 @@ feature {NONE} -- Visitor
 				elseif
 					attached target_attribute and then
 					target_attribute.is_stable and then
-					is_void_safe_conformance (context.current_class)
+					is_void_safe_conformance
 				then
 					error_handler.insert_error (create {VBAR2}.make (l_target_type.as_detachable_type, target_attribute, l_as.start_location, context))
 				elseif l_target_type.actual_type.is_formal then
@@ -6130,7 +6122,7 @@ feature {NONE} -- Visitor
 					-- Attachment properties are not propagated outside the check instruction.
 				set_is_checking_check (True)
 				s := context.scope
-				if is_void_safe_construct (context.current_class) then
+				if is_void_safe_construct then
 						-- Strict void safety: no variables change their attachment status because of this assertion.
 					context.enter_realm
 					process_eiffel_list_with_matcher (l_as.check_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
@@ -7778,7 +7770,7 @@ feature {NONE} -- Visitor
 						error_handler.insert_error (create {VOIT1}.make_conformance (context, iteration_type, i.actual_type, local_id))
 							-- Clear `last_type' to make sure it is not set when there is an error.
 						reset_types
-					elseif not iteration_type.is_attached and then is_void_safe_call (context.current_class)  then
+					elseif not iteration_type.is_attached and then is_void_safe_call then
 							-- Iteration expression type does not conform to ITERABLE because it is not attached.
 						error_handler.insert_error (create {VOIT1}.make_attachment (context, iteration_type, i.actual_type, local_id))
 							-- Clear `last_type' to make sure it is not set when there is an error.
@@ -8548,7 +8540,7 @@ feature {NONE} -- Visitor
 					i := context.next_object_test_local_position
 				end
 				s := context.scope
-				if is_void_safe_construct (context.current_class) then
+				if is_void_safe_construct then
 						-- Strict void safety: no variables change their attachment status because of this assertion.
 					context.enter_realm
 					process_eiffel_list_with_matcher (a, create {AST_SCOPE_ASSERTION}.make (context), b)

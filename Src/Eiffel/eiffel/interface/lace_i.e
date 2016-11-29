@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 			-- Check if capability validity rules are satisfied.
 		do
 			if attached target as t then
-				(create {CONF_CAPABILITY_CHECKER}.make (t, Current)).do_nothing
+				(create {CONF_CAPABILITY_CHECKER}.make (t, not system.compiler_profile.is_capability_strict, Current)).do_nothing
 					-- Check compiler-specific rule for precompiled libraries:
 					-- Target root option should be related to precompiled option as
 					-- 	• cat-call: both "none" or both not "none"

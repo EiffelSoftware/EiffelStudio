@@ -520,7 +520,7 @@ feature {AST_EIFFEL} -- Visitor: Agents
 			if
 				error_handler.error_level = e and then
 				not a.has_target and then
-				current_class.lace_class.is_void_safe_construct
+				context.is_void_safe_construct
 			then
 					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
@@ -540,7 +540,7 @@ feature {AST_EIFFEL} -- Visitor: Agents
 			safe_process (a.operands)
 			if
 				error_handler.error_level = e and then
-				current_class.lace_class.is_void_safe_construct
+				context.is_void_safe_construct
 			then
 					-- Strict void safety: the agent implicitly relies on "Current".
 					-- The latter has to be initialized.
@@ -553,7 +553,7 @@ feature {AST_EIFFEL} -- Visitor: Result
 	process_result_as (a: RESULT_AS)
 		do
 			if context.current_feature.is_attribute and then not attribute_initialization.is_attribute_set (result_position) then
-				if not is_attachment and then current_class.lace_class.is_void_safe_initialization then
+				if not is_attachment and then context.is_void_safe_initialization then
 						-- Result is not properly set.
 					error_handler.insert_error (create {VEVI}.make_result (context, a))
 				end
@@ -953,7 +953,7 @@ feature {AST_EIFFEL} -- Visitor: nested call
 				-- Flag construct as using a qualified call.
 			has_qualified_call := True
 				-- Make sure the call is not made when uninitialized Current is used.
-			if current_class.lace_class.is_void_safe_construct then
+			if context.is_void_safe_construct then
 				check_attributes
 			end
 		end

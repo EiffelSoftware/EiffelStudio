@@ -31,14 +31,22 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: CONF_TARGET; o: CONF_ERROR_OBSERVER)
-			-- Check target `t' for validity rules violations and
-			-- report errors (if any) to observer `o'.
+	make (t: CONF_TARGET; f: BOOLEAN; o: CONF_ERROR_OBSERVER)
+			-- Check target `t` for validity rules violations and
+			-- report errors (if any) to observer `o`.
+			-- Force settings on suppliers if `f` is True.
+		local
+			root_options: CONF_TARGET_OPTION
 		do
 			observer := o
+			is_forced_root := f
 			root_target := t
+			root_options := root_target.options
+			root_catcall_detection_index := root_options.catcall_safety_capability.root_index
+			root_concurrency_index := root_options.concurrency_capability.root_index
+			root_void_safety_index := root_options.void_safety_capability.root_index
 			target := t
-			create targets.make (1)
+			create targets.make_map (1)
 			condition := Void
 			process_target (t)
 		end
@@ -98,6 +106,12 @@ feature {CONF_VISITABLE} -- Visitor
 				end
 					-- Check groups.
 				Precursor (t)
+				if is_forced_root then
+						-- Update target options to use the root setting.
+					t.changeable_internal_options.catcall_detection.put_index (root_catcall_detection_index)
+					t.changeable_internal_options.concurrency.put_index (root_concurrency_index)
+					t.changeable_internal_options.void_safety.put_index (root_void_safety_index)
+				end
 				target := old_target
 			end
 		end
@@ -151,6 +165,18 @@ feature {NONE} -- Traversal
 	root_target: CONF_TARGET
 			-- A target for which all the checks are performed.
 
+	root_catcall_detection_index: like {CONF_TARGET_OPTION}.catcall_detection_index_none
+			-- Catcall setting specified for `root_target'.
+
+	root_concurrency_index: like {CONF_TARGET_OPTION}.concurrency_index_none
+			-- Concurrency setting specified for `root_target'.
+
+	root_void_safety_index: like {CONF_TARGET_OPTION}.void_safety_index_none
+			-- Void safety setting specified for `root_target'.
+
+	is_forced_root: BOOLEAN
+			-- Should root settings be forced on all dependent elements?
+
 	target: CONF_TARGET
 			-- A target being processed.
 
@@ -163,7 +189,7 @@ feature {NONE} -- Traversal
 	check_cluster (cluster: CONF_CLUSTER; t: CONF_TARGET)
 			-- Check that options of classes in `cluster' satisfy validity rules against target `t' and report errors using `o' if not.
 		do
-			if attached cluster.class_options as os then
+			if attached cluster.internal_class_options as os then
 				across
 					os as option
 				loop
@@ -184,6 +210,11 @@ feature {NONE} -- Traversal
 							conf_interface_names.option_catcall_detection_value [option.item.catcall_detection.index],
 							conf_interface_names.option_catcall_detection_value [cluster.options.catcall_detection.index],
 							conf_interface_names.option_catcall_detection_name))
+					end
+					if is_forced_root then
+							-- Update class options to use the root setting.
+						option.item.catcall_detection.put_index (root_catcall_detection_index)
+						option.item.void_safety.put_index (root_void_safety_index)
 					end
 				end
 			end
@@ -209,6 +240,11 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_void_safety_value [option.void_safety.index],
 						conf_interface_names.option_void_safety_value [t.options.void_safety.index],
 						conf_interface_names.option_void_safety_name))
+				end
+				if is_forced_root then
+						-- Update group options to use the root setting.
+					option.catcall_detection.put_index (root_catcall_detection_index)
+					option.void_safety.put_index (root_void_safety_index)
 				end
 			end
 		end
@@ -243,29 +279,35 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_void_safety_name))
 				end
 					-- Check rule 5.
-				if not option.catcall_safety_capability.is_capable (root_target.options.catcall_safety_capability.root_index) then
+				if not option.catcall_safety_capability.is_capable (root_catcall_detection_index) then
 					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
 						(parent,
 						root_target,
 						conf_interface_names.option_catcall_detection_value [option.catcall_safety_capability.value.index],
-						conf_interface_names.option_catcall_detection_value [root_target.options.catcall_safety_capability.root_index],
+						conf_interface_names.option_catcall_detection_value [root_catcall_detection_index],
 						conf_interface_names.option_catcall_detection_name))
 				end
-				if not option.concurrency_capability.is_capable (root_target.options.concurrency_capability.root_index) then
+				if not option.concurrency_capability.is_capable (root_concurrency_index) then
 					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
 						(parent,
 						root_target,
 						conf_interface_names.option_concurrency_value [option.concurrency_capability.value.index],
-						conf_interface_names.option_concurrency_value [root_target.options.concurrency_capability.root_index],
+						conf_interface_names.option_concurrency_value [root_concurrency_index],
 						conf_interface_names.option_concurrency_name))
 				end
-				if not option.void_safety_capability.is_capable (root_target.options.void_safety_capability.root_index) then
+				if not option.void_safety_capability.is_capable (root_void_safety_index) then
 					observer.report_error (create {CONF_ERROR_ROOT_CAPABILITY}.make
 						(parent,
 						root_target,
 						conf_interface_names.option_void_safety_value [option.void_safety_capability.value.index],
-						conf_interface_names.option_void_safety_value [root_target.options.void_safety_capability.root_index],
+						conf_interface_names.option_void_safety_value [root_void_safety_index],
 						conf_interface_names.option_void_safety_name))
+				end
+				if is_forced_root then
+						-- Update target options to use the root setting.
+					option.catcall_detection.put_index (root_catcall_detection_index)
+					option.concurrency.put_index (root_concurrency_index)
+					option.void_safety.put_index (root_void_safety_index)
 				end
 			end
 		end

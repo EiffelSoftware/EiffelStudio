@@ -1,2 +1,0 @@
-Configuration error: a class relies on another class with less strict void safety settings.
-What to do: change void safety options so that ancestor or supplier provides higher or equal void safety.

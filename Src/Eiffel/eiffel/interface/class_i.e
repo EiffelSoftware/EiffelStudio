@@ -229,41 +229,22 @@ feature -- Access
 			Result := options.is_full_class_checking or else system.compiler_profile.is_full_class_checking_mode
 		end
 
-	catcall_detection_index: like {CONF_OPTION}.catcall_detection_index_none
-			-- CAT-call detection index to be used for capability-specific rule checks.
-		do
-			if system.compiler_profile.is_capability_strict then
-				Result := options.catcall_detection.index
-			else
-				Result := universe.target.options.catcall_safety_capability.root_index
-			end
-		end
-
 	is_catcall_unsafe: BOOLEAN
 			-- Is current class compiled without catcall detection enabled?
 		do
-			Result := catcall_detection_index = {CONF_OPTION}.catcall_detection_index_none
+			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_none
 		end
 
 	is_catcall_conformance: BOOLEAN
 			-- Should frozen/variant annotation be taken into account when checking for conformance.
 		do
-			Result := catcall_detection_index /= {CONF_OPTION}.catcall_detection_index_none
+			Result := options.catcall_detection.index /= {CONF_OPTION}.catcall_detection_index_none
 		end
 
 	is_catcall_safe: BOOLEAN
 			-- Is catcall detection enabled, i.e. all feature calls are checked for potential catcalls?
 		do
-			Result := catcall_detection_index = {CONF_OPTION}.catcall_detection_index_all
-		end
-
-	is_attached_by_default: BOOLEAN
-			-- Is class type without an explicit attachment mark
-			-- considered as an attached one?
-		do
-				-- It only makes sense if we are in non-void-safe mode regardless
-				-- of the user setting.
-			Result := not is_void_unsafe and options.is_attached_by_default
+			Result := options.catcall_detection.index = {CONF_OPTION}.catcall_detection_index_all
 		end
 
 	is_obsolete_routine_type: BOOLEAN
@@ -272,62 +253,53 @@ feature -- Access
 			Result := options.is_obsolete_routine_type
 		end
 
-	void_safety_index: like {CONF_OPTION}.void_safety_index_none
-			-- Void safety  index to be used for capability-specific rule checks.
-		do
-			if system.compiler_profile.is_capability_strict then
-				Result := options.void_safety.index
-			else
-				Result := universe.target.options.void_safety_capability.root_index
-			end
-		end
-
 	is_void_unsafe: BOOLEAN
 			-- Is current class compiled without any void-safety mechanism enabled?
 		do
-			Result := void_safety_index = {CONF_OPTION}.void_safety_index_none
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_conformance: BOOLEAN
 			-- Should attachment status be taken into account when checking conformance?
 		do
-			Result := void_safety_index /= {CONF_OPTION}.void_safety_index_none
+			Result := options.void_safety.index /= {CONF_OPTION}.void_safety_index_none
 		end
 
 	is_void_safe_initialization: BOOLEAN
 			-- Should attached entities be property set before use?
+		local
+			i: like {CONF_OPTION}.void_safety_index_none
 		do
+			i := options.void_safety.index
 			Result :=
-				void_safety_index /= {CONF_OPTION}.void_safety_index_none and then
-				void_safety_index /= {CONF_OPTION}.void_safety_index_conformance
+				i /= {CONF_OPTION}.void_safety_index_none and then
+				i /= {CONF_OPTION}.void_safety_index_conformance
 		end
 
 	is_void_safe_call: BOOLEAN
 			-- Should feature call target be attached?
+		local
+			i: like {CONF_OPTION}.void_safety_index_none
 		do
+			i := options.void_safety.index
 			Result :=
-				void_safety_index = {CONF_OPTION}.void_safety_index_transitional or else
-				void_safety_index = {CONF_OPTION}.void_safety_index_all
+				i = {CONF_OPTION}.void_safety_index_transitional or else
+				i = {CONF_OPTION}.void_safety_index_all
 		end
 
 	is_void_safe_construct: BOOLEAN
 			-- Should only mode-independent void-safety constructs be taken into account?
 		do
-			Result := void_safety_index = {CONF_OPTION}.void_safety_index_all
+			Result := options.void_safety.index = {CONF_OPTION}.void_safety_index_all
 		end
 
-	is_void_safety_supported (other: CLASS_I): BOOLEAN
-			-- Does class provide the same or better void-safety level than `other'?
+	is_attached_by_default: BOOLEAN
+			-- Is class type without an explicit attachment mark
+			-- considered as an attached one?
 		do
-			Result := options.is_void_safety_supported (other.options)
-		end
-
-	is_void_safety_sufficient (other: CLASS_I): BOOLEAN
-			-- Does class provide the void-safety level than is sufficient to be used by the client `other'?
-		do
-			Result := options.is_void_safety_sufficient (other.options)
-		ensure
-			sufficient_if_supported: is_void_safety_supported (other) implies Result
+				-- It only makes sense if we are in non-void-safe mode regardless
+				-- of the user setting.
+			Result := not is_void_unsafe and then options.is_attached_by_default
 		end
 
 	is_syntax_obsolete: BOOLEAN

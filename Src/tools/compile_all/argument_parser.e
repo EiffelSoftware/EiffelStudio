@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 feature {NONE} -- Factory
 
 	new_argument_source: ARGUMENT_SOURCE
-			-- Creates a new default argument source object for the parser
+			-- Creates a new default argument source object for the parser,
+			-- in order to include value from potential `ISE_COMPILE_ALL_FLAGS` environment variable.
 		local
 			args: COMPILE_ALL_ARGUMENTS
 		do

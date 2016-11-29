@@ -278,9 +278,7 @@
 				<exclude>/eb_gui_preferences\.e$</exclude>
 			</file_rule>
 		</cluster>
-		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true">
-				<option void_safety="all"/>
-		</override>
+		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="graphical_overrides" location="$EIFFEL_SRC\Eiffel\interface\new_graphical\overrides\" recursive="true"/>
 	</target>
 	<target name="bench_cocoa" extends="bench">

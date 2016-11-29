@@ -147,6 +147,7 @@ feature -- Execute
 
 			vis_ecfs: IRON_ECF_SCANNER
 			vis_clibs: IRON_CLIB_SCANNER
+			l_proj_lst_to_remove: ARRAYED_LIST [READABLE_STRING_32]
 		do
 			has_error := False
 			io.error.put_string ("IRON::Updating ")
@@ -204,15 +205,15 @@ feature -- Execute
 				loop
 					p := ic.item.absolute_path.canonical_path
 
-					if attached library_target_information (p) as l_lib_info then
+					if attached library_target_information (p, False) as l_lib_info then
 						uri_item := uri_from_path (p)
 						if uri_item.starts_with (uri_root) then
 							uri_item.remove_head (uri_root.count + 1)
 							pif.add_project (l_lib_info.name, uri_item)
 							if attached l_lib_info.description as desc and then not desc.is_whitespace then
 								if
-									pif.description = Void
-									or else (attached pif.description as pif_desc and then pif_desc.count < desc.count)
+									not attached pif.description as pif_desc
+									or else pif_desc.is_whitespace
 								then
 									pif.set_description (desc)
 								end
@@ -220,6 +221,21 @@ feature -- Execute
 						else
 							has_error := True
 						end
+					end
+				end
+				if attached pif.projects as l_projects and then not l_projects.is_empty then
+					create l_proj_lst_to_remove.make (0)
+					across
+						l_projects as ic
+					loop
+						if library_target_information (a_iron_file.parent.absolute_path.canonical_path.extended (ic.item.relative_iri), False) = Void then
+							l_proj_lst_to_remove.force (ic.item.relative_iri)
+						end
+					end
+					across
+						l_proj_lst_to_remove as ic
+					loop
+						pif.remove_project (Void, ic.item)
 					end
 				end
 
@@ -253,12 +269,12 @@ feature -- Execute
 		require
 			a_ecf.name.ends_with_general (".ecf")
 		do
-			if attached library_target_information (a_ecf) as tu then
+			if attached library_target_information (a_ecf, True) as tu then
 				Result := tu.name
 			end
 		end
 
-	library_target_information (a_ecf: PATH): detachable TUPLE [name: READABLE_STRING_32; description: detachable READABLE_STRING_32]
+	library_target_information (a_ecf: PATH; a_keep_redirection: BOOLEAN): detachable TUPLE [name: READABLE_STRING_32; description: detachable READABLE_STRING_32]
 		require
 			a_ecf.name.ends_with_general (".ecf")
 		local
@@ -269,7 +285,10 @@ feature -- Execute
 			create cfg.make (cfg_factory)
 
 			cfg.retrieve_configuration (a_ecf.name)
-			if attached cfg.last_system as sys then
+			if
+				attached cfg.last_system as sys and
+				(a_keep_redirection or cfg.last_redirection = Void) -- Exclude redirection
+			then
 				if attached sys.library_target as l_library_target then
 					Result := [l_library_target.name, l_library_target.description]
 				end

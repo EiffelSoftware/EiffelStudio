@@ -93,7 +93,7 @@ feature -- Access
 			if a_value = Void then
 				remove (a_name)
 			else
-				notes.put (a_value, a_name)
+				notes.force (a_value, a_name)
 			end
 		end
 

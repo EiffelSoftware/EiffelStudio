@@ -8,10 +8,10 @@
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency use="none"/>
-			
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="config" location="../../library/configuration/config.ecf"/>
 		<cluster name="roc" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

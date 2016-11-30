@@ -214,22 +214,24 @@ feature -- Hook
 			-- List of block names, managed by current object.
 		local
 			res: ARRAYED_LIST [like {CMS_BLOCK}.name]
-			l_aggs: HASH_TABLE [FEED_AGGREGATION, STRING_8]
+			utf_conv: UTF_CONVERTER
 		do
-			if attached feed_aggregator_api as l_feed_api then
-				l_aggs := l_feed_api.aggregations
-				create res.make (l_aggs.count)
+			if
+				attached feed_aggregator_api as l_feed_api and then
+				attached l_feed_api.aggregations_ids as l_aggs
+			then
+				create res.make (1)
 				across
 					l_aggs as ic
 				loop
-					res.force ("?feed." + ic.key)
+					res.force ("?feed." + utf_conv.utf_32_string_to_utf_8_string_8 (ic.item))
 				end
 			else
 				create res.make (0)
 			end
 			Result := res
 		end
-
+		
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 			-- Get block object identified by `a_block_id' and associate with `a_response'.
 		local

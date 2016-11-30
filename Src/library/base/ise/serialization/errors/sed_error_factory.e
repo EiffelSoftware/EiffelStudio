@@ -46,7 +46,14 @@ feature -- Access
 	new_unknown_storable_type: SED_ERROR
 			-- Storable format could be read but is unknown.
 		do
-			create Result.make_with_string ("Unknown storable type")
+			create Result.make_with_string ("Unknown storable type.")
+		end
+
+	new_obsolete_storable_type: SED_ERROR
+			-- Obsolete storable format is used.
+		do
+			create Result.make_with_string
+				("Obsolete storable type, it might be possible to retrieve the data with the obsolete deserializer.")
 		end
 
 	new_invalid_object_error (a_obj: ANY): SED_ERROR

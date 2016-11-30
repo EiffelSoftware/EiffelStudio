@@ -4,6 +4,7 @@
 		<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
 		<div>
 			<form name="cms_basic_auth" action="{$site_url/}roc-basic-login" method="POST">
+				{unless isempty="$site_destination"}<input type="hidden" name="destination" value="{$site_destination/}">{/unless}
 				<input type="hidden" name="host" id="host" value="{$site_url/}">
 				<div>
 					<input type="text" name="username" id="username" required>

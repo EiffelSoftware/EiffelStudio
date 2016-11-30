@@ -11,6 +11,7 @@ feature -- Templates
 	sum: T
 			-- Sum of `target' array.
 		note
+			title: "Array sum"	
 			tags: "Algorithm, Array"
 		do
 			Result := target.lower
@@ -19,3 +20,5 @@ feature -- Templates
 			end
 		end
 end	
+
+

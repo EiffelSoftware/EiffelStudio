@@ -13,8 +13,9 @@ inherit
 feature -- Templates
 
     maximum: T
-            -- Maximun of `target' array.
+            -- Maximum of `target' array.
         note
+        	title: "Array maximum"
             tags: "Algorithm, Maximum, ARRAY"
         do
         	Result := target.lower 
@@ -26,7 +27,7 @@ feature -- Templates
 	slice_maximum (low, high: INTEGER): T
 			-- Maximum of `target' array, where the interval is defined by default by target.lower |..| target.upper.
 		note
-			title: "Slice Maximum of an array"
+			title: "Array slice maximum"
 			tags: "Algorithm, Maximum, ARRAY"
 			default: "target.lower, target.upper"
 		do
@@ -37,9 +38,9 @@ feature -- Templates
 		end	
 
 	minimum: T
-			-- -- Maximun of `target' array.
+			-- Minimum of `target' array.
 		note
-			title: "Minimum of an array"
+			title: "Array minimum"
 			tags: "Algorithm, Minimum, ARRAY"
 		do
 			Result := target.lower 
@@ -52,7 +53,7 @@ feature -- Templates
 	slice_minimum (low, high: INTEGER): T
 			-- Minimum of `target' array, where the interval is defined by default by target.lower |..| target.upper.
 		note
-			title: "Slice Minimum of an array"
+			title: "Array slice minimum"
 			tags: "Algorithm, Minimum, ARRAY"
 			default: "target.lower, target.upper"
 		do

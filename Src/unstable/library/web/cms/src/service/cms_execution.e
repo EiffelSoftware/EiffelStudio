@@ -268,15 +268,7 @@ feature -- Filters
 			f: WSF_FILTER
 		do
 			api.logger.put_debug (generator + ".setup_filter", Void)
-
-			from
-				f := filter
-			until
-				not attached f.next as l_next
-			loop
-				f := l_next
-			end
-			f.set_next (Current)
+			append_filter (Current)
 		end
 
 feature -- Execution
@@ -291,6 +283,7 @@ feature -- Execution
 			p := api.theme_assets_location.extended ("favicon.ico")
 			if ut.file_path_exists (p) then
 				create f.make_with_path (p)
+				f.set_expires_in_seconds (86_400) -- 24h = 60 sec * 60 min * 24 = 86 400 minutes
 				res.send (f)
 			else
 				create r.make (req, res, api)

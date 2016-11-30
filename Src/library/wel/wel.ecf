@@ -50,6 +50,9 @@
 			</condition>
 			<option namespace="Wel">
 			</option>
+			<class_option class="WEL_WINDOW">
+				<warning name="obsolete_feature" enabled="false"/>
+			</class_option>
 			<file_rule>
 				<exclude>/\.svn$</exclude>
 				<exclude>^/tests$</exclude>

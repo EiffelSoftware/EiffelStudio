@@ -6,8 +6,8 @@
 		<setting name="console_application" value="true"/>
 		<setting name="multithreaded" value="true"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

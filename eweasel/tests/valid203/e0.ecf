@@ -4,7 +4,7 @@
 		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
+		<precompile name="base_pre" location="$PRECOMPILED_BASE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<option>

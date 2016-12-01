@@ -606,7 +606,7 @@ feature {NONE} -- Choice options
 			capability: CONF_ORDERED_CAPABILITY;
 			inherited_capability: detachable CONF_ORDERED_CAPABILITY;
 			description_field: ES_SCROLLABLE_LABEL;
-			container: EV_CONTAINER
+			container: EV_BOX
 		)
 			-- Add choice value `option' with specified `name', `description' and item names `items' to the given `container'
 			-- with optionally inherited value `inherited_option'.
@@ -617,6 +617,7 @@ feature {NONE} -- Choice options
 			consistent_inherited_option: attached inherited_capability implies inherited_capability.same_kind (capability)
 		local
 			property_frame: EV_FRAME
+			property_inner_frame: EV_VERTICAL_BOX
 			check_button: EV_CHECK_BUTTON
 			radio_button: EV_RADIO_BUTTON
 			property_group: EV_TABLE
@@ -633,9 +634,16 @@ feature {NONE} -- Choice options
 		do
 			update_description := agent description_field.set_text (description)
 			create property_frame.make_with_text (name)
+			property_frame.set_border_width (layout_constants.default_border_size)
 			container.extend (property_frame)
+			container.disable_item_expand (property_frame)
+			create property_inner_frame
+			property_inner_frame.set_padding_width (layout_constants.default_padding_size)
+			property_frame.extend (property_inner_frame)
+
 			create property_group
-			property_frame.extend (property_group)
+			property_inner_frame.extend (property_group)
+
 				-- In addition to `items' there are header and default value.
 			property_group.resize (4, items.count + heading_rows)
 			property_group.disable_homogeneous

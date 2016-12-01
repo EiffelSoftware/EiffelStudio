@@ -9,8 +9,8 @@
 		<setting name="check_for_void_target" value="false"/>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<catcall_detection support="none"/>
 			<concurrency use="none"/>
+			<void_safety support="none"/>
 		</capability>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

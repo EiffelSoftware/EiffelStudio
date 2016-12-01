@@ -6,7 +6,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" syntax="provisional">
+		<option trace="false" profile="false" debug="false" warning="true">
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
@@ -81,24 +81,12 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="repository_tool_unix" extends="repository_tool">
-		<option>
-		</option>
-		<capability>
-			<catcall_detection support="all"/>
-		</capability>
-	</target>
 	<target name="repository_tool_test_compilation_unix" extends="repository_tool_unix">
 		<description>Compiling UNIX version on other platforms than Unices</description>
 		<setting name="platform" value="unix"/>
 	</target>
 	<target name="repository_tool_test_compilation_windows" extends="repository_tool">
 		<description>Compiling WINDOWS version on other platforms than Unices</description>
-		<option>
-		</option>
 		<setting name="platform" value="windows"/>
-		<capability>
-			<catcall_detection support="all"/>
-		</capability>
 	</target>
 </system>

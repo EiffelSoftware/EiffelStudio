@@ -261,20 +261,14 @@ feature {NONE} -- Implementation
 	compute_grid_display_for_result (cse: like call_stack_element)
 		local
 			dv: ABSTRACT_DEBUG_VALUE
-			glab: EV_GRID_LABEL_ITEM
-			r: INTEGER
 		do
 			if cse /= Void and then cse.has_result and then not cse.is_attribute then
-				glab := parent_grid.folder_label_item (Interface_names.l_result)
-				parent_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.folder_features_all_icon)
-				row.set_item (1, glab)
 				dv := cse.result_value
-				row.show
 				if dv /= Void then
-					row.insert_subrows (1, 1)
-					r := row.index + 1
-					parent_grid.attach_debug_value_to_grid_row (parent_grid.row (r), dv, Void)
+					parent_grid.attach_debug_value_to_grid_row (row, dv, Void)
 					row.ensure_expandable
+				else
+					row.hide
 				end
 			else
 				row.hide
@@ -532,7 +526,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

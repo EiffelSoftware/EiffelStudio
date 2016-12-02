@@ -8,6 +8,7 @@
 		<option namespace="EiffelSoftware.Framework">
 		</option>
 		<capability>
+			<concurrency use="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

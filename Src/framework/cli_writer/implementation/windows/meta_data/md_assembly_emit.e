@@ -10,7 +10,7 @@ class
 
 inherit
 	COM_OBJECT
-	
+
 create
 	make_by_pointer
 
@@ -40,8 +40,8 @@ feature -- Access
 feature -- Definition
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
-			assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
-		
+			assembly_info: MD_ASSEMBLY_INFO; public_key: detachable MD_PUBLIC_KEY): INTEGER
+
 			-- Define a new assembly `assembly_name' with characteristics
 			-- `assembly_flags' and `assembly_info', and if not void with
 			-- a public key `public_key'.
@@ -59,7 +59,7 @@ feature -- Definition
 			else
 				last_call_success := c_define_assembly (item, public_key.item.item,
 					public_key.item.count, {MD_HASH_IDS}.sha1, assembly_name.item,
-					assembly_info.item, assembly_flags, $Result)				
+					assembly_info.item, assembly_flags, $Result)
 			end
 		ensure
 			success: last_call_success = 0
@@ -68,7 +68,7 @@ feature -- Definition
 
 	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-		
+
 				-- Ensure that `type_name' type defined in `implementation_token' with
 				-- `type_def_token' and `type_flags' is exported from Current assembly.
 		require
@@ -83,7 +83,7 @@ feature -- Definition
 
 	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER;
 			file_flags: INTEGER): INTEGER
-		
+
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void
@@ -100,23 +100,23 @@ feature -- Definition
 
 	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER
 			offset, resource_flags: INTEGER): INTEGER
-		
+
 			-- Define a new entry in manifest resource table.
 		require
 		do
 			last_call_success := c_define_manifest_resource (item, resource_name.item,
-				implementation_token, offset, resource_flags, $Result)	
+				implementation_token, offset, resource_flags, $Result)
 		ensure
 			success: last_call_success = 0
 			valid_result: Result > 0
 		end
-			
+
 feature {NONE} -- Implementation
 
 	c_define_assembly (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
 			hash_alg: INTEGER; assembly_name: POINTER; assembly_metadata: POINTER;
 			assembly_flags: INTEGER; assembly_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataAssemblyEmit->DefineAssembly'.
 		external
 			"[
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 
 	c_define_exported_type (an_item: POINTER; type_name: POINTER; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER; exported_type_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataAssemblyEmit->DefineExportedType'.
 		external
 			"[
@@ -142,10 +142,10 @@ feature {NONE} -- Implementation
 		alias
 			"DefineExportedType"
 		end
-		
+
 	c_define_file (an_item: POINTER; file_name: POINTER; hash_value: POINTER; hash_length: INTEGER;
 			file_flags: INTEGER; file_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataAssemblyEmit->DefineFile'.
 		external
 			"[
@@ -156,10 +156,10 @@ feature {NONE} -- Implementation
 		alias
 			"DefineFile"
 		end
-	
+
 	c_define_manifest_resource (an_item: POINTER; resource_name: POINTER;
 			implementation_token, offset, resource_flags: INTEGER; resource_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataAssemblyEmit->DefineManifestResource'.
 		external
 			"[
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	c_define_assembly_ref (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
 			assembly_name: POINTER; assembly_metadata: POINTER; hash_value: POINTER;
 			hash_length: INTEGER; assembly_flags: INTEGER; assembly_token: POINTER): INTEGER
-		
+
 			-- Call `IMetaDataAssemblyEmit->DefineAssemblyRef'.
 		external
 			"[
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -201,22 +201,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class MD_ASSEMBLY_EMIT

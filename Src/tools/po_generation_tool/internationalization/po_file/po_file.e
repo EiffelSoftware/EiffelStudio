@@ -48,14 +48,13 @@ feature -- Access
 	headers: PO_FILE_HEADERS
 			-- Headers of po file
 
-	entry (msgid: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): PO_FILE_ENTRY
+	entry (msgid: READABLE_STRING_GENERAL; a_context: detachable READABLE_STRING_GENERAL): detachable PO_FILE_ENTRY
 			-- File entry for `msgid'
 			--
 			-- `msgid': Message ID which identifies entry
-			-- `Result': File entry for `msgid'
+			-- `Result': File entry for `msgid' if present.
 		require
 			key_not_void: msgid /= Void
-			entry_exists: has_entry (msgid, a_context)
 		local
 			l_gen: PO_FILE_ENTRY_ID_GEN
 		do
@@ -122,7 +121,7 @@ feature {NONE} --Implementation
 			-- Map of file entries identified by their message ID
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

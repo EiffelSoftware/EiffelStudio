@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "System's root class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,6 +23,7 @@ feature -- Initialization
 		do
 			create file_names.make (5)
 			create search_directories.make (5)
+			create po_file.make_empty
 			analyze_options
 			if option_error then
 				print_option_error
@@ -38,16 +39,13 @@ feature -- Access
 	current_option: INTEGER
 			-- Current option position
 
-	option: STRING
-			-- Current option
-
 	file_names: ARRAYED_LIST [STRING_32]
 			-- Files need to generate
 
 	search_directories: ARRAYED_LIST [STRING_32]
 			-- Directories need to search
 
-	output_file_name: STRING_32
+	output_file_name: detachable STRING_32
 			-- Name for output file
 
 feature -- Status report
@@ -198,8 +196,7 @@ feature {NONE} -- Implementation
 				l_file.open_read
 				if l_file.is_readable then
 					l_file.read_stream (l_file.count)
-					create l_generator.make (po_file, l_file.last_string)
-					l_generator.set_source_file_name (a_short_name)
+					create l_generator.make (po_file, l_file.last_string, a_short_name)
 					l_generator.generate
 					if l_generator.has_error then
 						 localized_print ({STRING_32} "Error: parsing failed: entries in %"" + a_name + "%" not generated.%N")
@@ -236,6 +233,7 @@ feature {NONE} -- Implementation
 			-- Analyze one option.
 		local
 			l_name: STRING
+			option: STRING
 		do
 			option := argument (current_option)
 			if option.is_equal ("-h") then
@@ -341,15 +339,15 @@ feature {NONE} -- Implementation
 				end
 			end
 				-- Check output location
-			if output_file_name /= Void then
-				create l_file.make_with_name (output_file_name)
+			if attached output_file_name as o then
+				create l_file.make_with_name (o)
 				if
 					not (
 						(l_file.exists and then l_file.is_writable) or else
 						(not l_file.exists and then l_file.is_creatable)
 					)
 				then
-					print_invalid_output_file
+					print_invalid_output_file (o)
 					Result := False
 				end
 			end
@@ -362,21 +360,23 @@ feature {NONE} -- Implementation
 		local
 			l_file: PLAIN_TEXT_FILE
 			u: UTF_CONVERTER
+			o: like output_file_name
 		do
-			if output_file_name = Void then
-				output_file_name := default_output_name
+			o := output_file_name
+			if not attached o then
+				o := default_output_name
 			end
-			if output_file_name.same_string (output_name_for_standard) then
+			if o.same_string (output_name_for_standard) then
 				localized_print (po_file.to_string)
 				localized_print ("%N")
 			else
-				create l_file.make_with_name (output_file_name)
+				create l_file.make_with_name (o)
 				l_file.open_write
 				if l_file.is_writable then
 					l_file.put_string (u.string_32_to_utf_8_string_8 (po_file.to_string))
-					print_file_generated
+					print_file_generated (o)
 				else
-					print_file_not_writable
+					print_file_not_writable (o)
 				end
 				l_file.close
 			end
@@ -416,24 +416,24 @@ feature {NONE} -- Output
 			localized_print (a_file + ": invalid%N")
 		end
 
-	print_invalid_output_file
-			-- Print error that `output_file_name' is invalid.
+	print_invalid_output_file (n: READABLE_STRING_32)
+			-- Print error that a file of name `n' is invalid.
 		do
-			localized_print ({STRING_32} "%"" + output_file_name + "%" is invalid.%N")
+			localized_print ({STRING_32} "%"" + n + "%" is invalid.%N")
 			localized_print ("File not generated.%N")
 		end
 
-	print_file_not_writable
-			-- Print error that `output_file_name' is not writable.
+	print_file_not_writable (n: READABLE_STRING_32)
+			-- Print error that a file of name `n' is not writable.
 		do
-			localized_print ({STRING_32} "%"" + output_file_name + "%" is not writable.%N")
+			localized_print ({STRING_32} "%"" + n + "%" is not writable.%N")
 			localized_print ("File not generated.%N")
 		end
 
-	print_file_generated
-			-- Print status message that `output_file_name' has been generated.
+	print_file_generated (n: READABLE_STRING_32)
+			-- Print status message that a file of name `n' has been generated.
 		do
-			localized_print ({STRING_32} "%"" + output_file_name + "%" has been generated.%N")
+			localized_print ({STRING_32} "%"" + n + "%" has been generated.%N")
 		end
 
 	print_analyze_file (a_file: STRING_32)
@@ -466,7 +466,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

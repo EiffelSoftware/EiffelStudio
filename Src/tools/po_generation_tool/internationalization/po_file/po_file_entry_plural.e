@@ -22,16 +22,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_msgid: READABLE_STRING_GENERAL)
+	make (source_file_name: READABLE_STRING_32; a_msgid: READABLE_STRING_GENERAL)
 			-- Initialize plural entry with `a_msgid' as message ID.
-			--
-			-- `a_msgid': Message ID for new entry
+			-- <Precursorr>
 		do
-			Precursor {PO_FILE_ENTRY} (a_msgid)
-				-- reasonable default values
-			create msgstr_n_lines.make_filled (Void, 0, 2)
-				-- ensure at least one msgstr. Otherwise some .po editors get fussy.
-			msgstr_n_lines.force (break_line (""),0)
+			Precursor {PO_FILE_ENTRY} (source_file_name, a_msgid)
+				-- Ensure at least one msgstr. Otherwise some .po editors get fussy.
+			create msgstr_n_lines.make_filled (break_line (""), 0, 0)
 			create msgid_plural_lines.make
 		ensure then
 			msgstr_n_lines_created: msgstr_n_lines /= Void
@@ -77,7 +74,7 @@ feature -- Access
  		require
  			n_not_negative:  n >= 0
  		do
- 			Result := (msgstr_n_lines.valid_index (n) and then msgstr_n_lines.item (n) /= Void)
+ 			Result := msgstr_n_lines.valid_index (n)
  		end
 
 	 msgstr_n (n: INTEGER): STRING_32
@@ -127,7 +124,7 @@ feature {NONE} -- Implementation
 			-- List of message ID lines of plural form
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

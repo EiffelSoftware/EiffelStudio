@@ -513,8 +513,9 @@ feature {NONE} -- Impl
 
 	Tag_regexp_sub_expression: REGULAR_EXPRESSION
 				-- "{ $var_name /}"
+				-- Also support "{$var_name.$field_name/}"
 		once
-			Result := compiled_regexp ("^\s*\$([a-zA-Z0-9_]+)([\.a-zA-Z0-9_]+)\s*$", True)
+			Result := compiled_regexp ("^\s*\$([a-zA-Z0-9_]+)(\.\$?[\.a-zA-Z0-9_]+)\s*$", True)
 		end
 
 	Tag_regexp_sub_action: REGULAR_EXPRESSION

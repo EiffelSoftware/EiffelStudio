@@ -25,8 +25,11 @@ compare		exec_output1 output
 define SETTING "<setting name="multithreaded" value="false"/>"
 copy_sub 	Ace $TEST Ace
 compile_frozen
-if not DOTNET compile_result validity_warning NONE VD83	
-if DOTNET compile_result ok
+if not DOTNET compile_result validity_error NONE VD83	
+if not DOTNET define SETTING "<setting name="multithreaded" value="true"/>"
+if not DOTNET copy_sub 	Ace $TEST Ace
+if not DOTNET resume_compile
+compile_result ok
 
 c_compile_work
 c_compile_result ok
@@ -35,19 +38,21 @@ execute_work 	NONE 	exec_output2
 execute_result 	ok
 compare		exec_output2 output
 
-define SETTING "<setting name="shared_library_definition" value="/foo/bar"/>"
+define SETTING "<setting name="shared_library_definition" value="/foo/bar"/><setting name="multithreaded" value="true"/>"
 copy_sub 	Ace $TEST Ace
 compile_frozen
-if not DOTNET compile_result validity_warning NONE VD83	
-if DOTNET compile_result ok
+compile_result ok
 
 c_compile_work
 
 define SETTING ""
 copy_sub 	Ace $TEST Ace
 compile_frozen
-if not DOTNET compile_result validity_warning NONE VD83	
-if DOTNET compile_result ok
+if not DOTNET compile_result validity_error NONE VD83	
+if not DOTNET define SETTING "<setting name="multithreaded" value="true"/>"
+if not DOTNET copy_sub 	Ace $TEST Ace
+if not DOTNET resume_compile
+compile_result ok
 
 c_compile_work
 c_compile_result ok

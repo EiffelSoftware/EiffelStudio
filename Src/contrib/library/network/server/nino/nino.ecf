@@ -11,7 +11,7 @@
 		<option warning="true">
 		</option>
 		<capability>
-			<concurrency support="thread" use="thread"/>
+			<concurrency support="none" use="thread"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>

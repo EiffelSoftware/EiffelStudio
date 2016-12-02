@@ -7,6 +7,7 @@
 		</file_rule>
 		<option full_class_checking="false"/>
 		<capability>
+			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

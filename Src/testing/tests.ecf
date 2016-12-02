@@ -17,7 +17,6 @@
 			<concurrency support="none" use="thread"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="vision2-mt-precomp" location="$ISE_PRECOMP\vision2-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<library name="diff-tests" location="$ISE_LIBRARY\library\diff\tests\tests.ecf" readonly="false" use_application_options="true"/>
 		<library name="editor-tests" location="$ISE_LIBRARY\library\editor\tests\tests.ecf" readonly="false" use_application_options="true"/>

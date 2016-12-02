@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2016-12-02 15:25+0300\n"
+"PO-Revision-Date: 2016-12-02 17:01+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -33853,7 +33853,7 @@ msgstr "Поставщики"
 #: conf_interface_names.e:304
 msgctxt "configuration.capability"
 msgid "Support"
-msgstr "Поддерживаемые"
+msgstr "Поддерживается"
 
 #. Source code: do Result := translation_in_context ("Suspectedly the loop iterates in the wrong direction.", once "code_analyzer.violation") end
 #: ca_messages.e:399
@@ -37871,7 +37871,7 @@ msgstr ""
 #: conf_interface_names.e:305
 msgctxt "configuration.capability"
 msgid "Use"
-msgstr "Используемые"
+msgstr "Используется"
 
 #. Source code: library_use_application_options_name: STRING_32 do Result := locale.translation ("Use Application Options")	end
 #: conf_interface_names.e:267

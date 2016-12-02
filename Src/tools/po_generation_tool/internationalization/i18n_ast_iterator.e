@@ -32,6 +32,43 @@ inherit
 
 	LOCALIZED_PRINTER
 
+create
+	make
+
+feature {NONE} -- Creation
+
+	make
+		(
+		output_file: PO_FILE;
+		translation_f: like translation_feature;
+		plural_translation_f: like plural_translation_feature;
+		translation_in_context_f: like translation_in_context_feature;
+		plural_translation_in_context_f: like plural_translation_in_context_feature;
+		feature_clause: like feature_clause_name;
+		source_name: READABLE_STRING_32;
+		text: READABLE_STRING_32
+		)
+			-- Create a iterator for source file of name `source_name`.
+		do
+			po_file := output_file
+			source_file_name := source_name
+			translation_feature := translation_f
+			plural_translation_feature := plural_translation_f
+			translation_in_context_feature := translation_in_context_f
+			plural_translation_in_context_feature := plural_translation_in_context_f
+			feature_clause_name := feature_clause
+			source_text := text
+		ensure
+			po_file_set: po_file = output_file
+			translation_feature_set: translation_feature = translation_f
+			plural_translation_feature_set: plural_translation_feature = plural_translation_f
+			translation_in_context_feature_set: translation_in_context_feature = translation_in_context_f
+			plural_translation_in_context_feature_set: plural_translation_in_context_feature = plural_translation_in_context_f
+			feature_clause_name_set: feature_clause_name = feature_clause
+			source_file_name_set: source_file_name = source_name
+			source_text_set: source_text = text
+		end
+
 feature -- Access
 
 	po_file: PO_FILE
@@ -58,88 +95,6 @@ feature -- Access
 	source_text: STRING
 		-- Source file text.
 
-feature -- Element change
-
-	set_translation_feature (a: like translation_feature)
-			-- Set translator function name to `a'.
-		require
-			a_not_void: a /= Void
-		do
-			translation_feature := a
-		ensure
-			a_set: a = translation_feature
-		end
-
-	set_plural_translation_feature (a: like plural_translation_feature)
-			-- Set plural translator function name to `a'.
-		require
-			a_not_void: a /= Void
-		do
-			plural_translation_feature := a
-		ensure
-			a_set: a = plural_translation_feature
-		end
-
-	set_translation_in_context_feature (a: like translation_in_context_feature)
-			-- Set translator function name to `a'.
-		require
-			a_not_void: a /= Void
-		do
-			translation_in_context_feature := a
-		ensure
-			a_set: a = translation_in_context_feature
-		end
-
-	set_plural_translation_in_context_feature (a: like plural_translation_in_context_feature)
-			-- Set plural translator function name to `a'.
-		require
-			a_not_void: a /= Void
-		do
-			plural_translation_in_context_feature := a
-		ensure
-			a_set: a = plural_translation_in_context_feature
-		end
-
-	set_feature_clause_name (a: like feature_clause_name)
-			-- Set translator feature clause name to `a'.
-		require
-			a_not_void: a /= Void
-		do
-			feature_clause_name := a
-		ensure
-			a_set: a = feature_clause_name
-		end
-
-	set_po_file (po: PO_FILE)
-			-- Set `po_file' to `po'.
-		require
-			po_not_void: po /= Void
-		do
-			po_file := po
-		ensure
-			po_file_set: po_file = po
-		end
-
-	set_source_file_name (a_str: like source_file_name)
-			-- Set `source_file_name' to `a_str'.
-		require
-			a_str_not_void: a_str /= Void
-		do
-			source_file_name := a_str
-		ensure
-			source_file_name_set: source_file_name = a_str
-		end
-
-	set_source_text (a_file: STRING)
-			-- Set `source_text' to `a_file'.
-		require
-			a_file_not_void: a_file /= Void
-		do
-			source_text := a_file
-		ensure
-			source_text_set: source_text = a_file
-		end
-
 feature {NONE} -- Status report
 
 	is_extracting_strings: BOOLEAN
@@ -155,40 +110,34 @@ feature {NONE} -- Implementation
 			l_feature_name: STRING_32
 		do
 			last_analysis_found_entry := False
-			l_feature_name := node.access_name_32
-			if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_feature) then
-				if node.parameters /= Void then
-					if attached {STRING_AS} node.parameters.first as l_singular then
+			if attached node.parameters as p then
+				l_feature_name := node.access_name_32
+				if l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_feature) then
+					if attached {STRING_AS} p.first as l_singular then
 						add_singular_entry (l_singular, Void)
 						last_analysis_found_entry := True
 					end
-				end
-			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_feature) then
-				if node.parameters /= Void then
+				elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_feature) then
 					if
-						attached {STRING_AS} node.parameters.first as l_singular and then
-						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_plural
+						attached {STRING_AS} p.first as l_singular and then
+						attached {STRING_AS} p.i_th (p.lower+1) as l_plural
 					then
 						add_plural_entry (l_singular, l_plural, Void)
 						last_analysis_found_entry := True
 					end
-				end
-			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_in_context_feature) then
-				if node.parameters /= Void then
+				elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (translation_in_context_feature) then
 					if
-						attached {STRING_AS} node.parameters.first as l_singular and then
-						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_context
+						attached {STRING_AS} p.first as l_singular and then
+						attached {STRING_AS} p.i_th (p.lower+1) as l_context
 					then
 						add_singular_entry (l_singular, l_context)
 						last_analysis_found_entry := True
 					end
-				end
-			elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_in_context_feature) then
-				if node.parameters /= Void then
+				elseif l_feature_name /= Void and then l_feature_name.is_case_insensitive_equal (plural_translation_in_context_feature) then
 					if
-						attached {STRING_AS} node.parameters.first as l_singular and then
-						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+1) as l_plural and then
-						attached {STRING_AS} node.parameters.i_th (node.parameters.lower+2) as l_context
+						attached {STRING_AS} p.first as l_singular and then
+						attached {STRING_AS} p.i_th (p.lower+1) as l_plural and then
+						attached {STRING_AS} p.i_th (p.lower+2) as l_context
 					then
 						add_plural_entry (l_singular, l_plural, l_context)
 						last_analysis_found_entry := True
@@ -395,16 +344,14 @@ feature {NONE} -- Implementation
 			l_line: STRING
 		do
 				-- Extract source code.
-			if source_text /= Void and then a_as.position <= source_text.count then
+			if a_as.position <= source_text.count then
 				l_line := current_line (a_as.position, source_text)
 				l_line.left_adjust
 				l_line.right_adjust
 				a_node.add_automatic_comment ("Source code: " + l_line)
 			end
 				-- Append location.
-			if source_file_name /= Void then
-				a_node.add_reference_comment (source_file_name + ":" + a_as.line.out)
-			end
+			a_node.add_reference_comment (source_file_name + ":" + a_as.line.out)
 		end
 
 	add_singular_entry (l_as: STRING_AS; a_context: detachable STRING_AS)
@@ -421,13 +368,10 @@ feature {NONE} -- Implementation
 				l_msgctxt := l_ctxt.value_32
 				handle_special_chars (l_msgctxt)
 			end
-			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
-				create singular_entry.make (l_msgid)
+			if not po_file.has_entry (l_msgid, l_msgctxt) then
+				create singular_entry.make (source_file_name, l_msgid)
 				singular_entry.set_msgctxt (l_msgctxt)
 				append_comments (l_as, singular_entry)
-				if attached source_file_name as l_name then
-					singular_entry.set_source_name (l_name)
-				end
 				po_file.add_entry (singular_entry)
 			else
 				if attached l_msgctxt as l_c then
@@ -457,16 +401,13 @@ feature {NONE} -- Implementation
 				l_msgctxt := l_ctxt.value_32
 				handle_special_chars (l_msgctxt)
 			end
-			if (not po_file.has_entry (l_msgid, l_msgctxt)) then
-				create plural_entry.make (l_msgid)
+			if not po_file.has_entry (l_msgid, l_msgctxt) then
+				create plural_entry.make (source_file_name, l_msgid)
 				plural_entry.set_msgctxt (l_msgctxt)
 				l_msgid := l_as_2.value_32
 				handle_special_chars (l_msgid)
 				plural_entry.set_msgid_plural (l_msgid)
 				append_comments (l_as_1, plural_entry)
-				if attached source_file_name as l_name then
-					plural_entry.set_source_name (l_name)
-				end
 				po_file.add_entry (plural_entry)
 			else
 				if attached l_msgctxt as l_c then

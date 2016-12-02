@@ -2,14 +2,12 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="po_generation_tool" uuid="4EE327BA-5DF8-4A53-8088-0D2E3F33456E">
 	<target name="po_generation_tool">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option debug="false" warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
-			<debug name="__unnamed_debug__" enabled="false"/>
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
-			<concurrency support="none"/>
-			<void_safety support="none"/>
+			<concurrency support="scoop" use="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf" readonly="true"/>

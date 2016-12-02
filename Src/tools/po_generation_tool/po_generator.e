@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generates po entries from an compilable Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialize
 
-	make (a_file: like file; a_text: like text)
+	make (a_file: like file; a_text: like text; a_source_file_name: like source_file_name)
 			-- Initialize.
 			--
 			-- `a_file': File where parsed messages are added
@@ -21,30 +21,21 @@ feature -- Initialize
 		require
 			a_file_not_void: a_file /= Void
 			a_text_not_void: a_text /= Void
+			a_source_file_name_attached: a_source_file_name /= Void
 		do
 			file := a_file
 			text := a_text
+			source_file_name := a_source_file_name
 		ensure
 			file_set: file = a_file
 			text_set: text = a_text
+			source_file_name_set: source_file_name = a_source_file_name
 		end
 
 feature -- Status report
 
 	has_error: BOOLEAN
 			-- Did an error occur while parsing `text'?
-
-feature -- Element change
-
-	set_source_file_name (a_str: like source_file_name)
-			-- Set `source_file_name' to `a_str'.
-		require
-			a_str_not_void: a_str /= Void
-		do
-			source_file_name := a_str
-		ensure
-			source_file_name_set: source_file_name = a_str
-		end
 
 feature -- Access
 
@@ -93,19 +84,24 @@ feature -- Generation
 						end
 					end
 				end
-				if not has_error then
-					create l_iterator
-					l_iterator.set_parsed_class (eiffel_parser.root_node)
-					l_iterator.set_match_list (eiffel_parser.match_list)
-					l_iterator.set_po_file (file)
-					l_iterator.set_source_file_name (source_file_name)
-					l_iterator.set_source_text (l_string)
-					l_iterator.set_translation_feature (name_of_translation)
-					l_iterator.set_feature_clause_name (name_of_feature_clause)
-					l_iterator.set_plural_translation_feature (name_of_plural_translation)
-					l_iterator.set_translation_in_context_feature (name_of_translation_in_context)
-					l_iterator.set_plural_translation_in_context_feature (name_of_plural_translation_in_context)
-					l_iterator.process_class_as (eiffel_parser.root_node)
+				if
+					not has_error and then
+					attached eiffel_parser.root_node as root_node and then
+					attached eiffel_parser.match_list as match_list
+				then
+					create l_iterator.make
+						(file,
+						name_of_translation,
+						name_of_plural_translation,
+						name_of_translation_in_context,
+						name_of_plural_translation_in_context,
+						name_of_feature_clause,
+						source_file_name,
+						l_string
+						)
+					l_iterator.set_parsed_class (root_node)
+					l_iterator.set_match_list (match_list)
+					l_iterator.process_class_as (root_node)
 				end
 			end
 		end
@@ -145,7 +141,7 @@ invariant
 	file_not_void: file /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2016, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

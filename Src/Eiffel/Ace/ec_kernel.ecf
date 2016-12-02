@@ -9,6 +9,7 @@
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<capability>
+			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
 		<external_include location="$(EIFFEL_SRC)/C/bench">

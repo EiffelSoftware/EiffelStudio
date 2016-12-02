@@ -534,7 +534,7 @@ feature {NONE} -- Impl
 				-- "action_var_name"
 		once
 --			Result := compiled_regexp ("([a-z0-9_]+)=(%"[^%"]*%"|\$[\s^]+)", True)
-			Result := compiled_regexp ("([a-z0-9_]+)=%"([^%"]*)%"", True)
+			Result := compiled_regexp ("\s*([a-z0-9_]+)=%"([^%"]*)%"", True)
 		end
 
 note

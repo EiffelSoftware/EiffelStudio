@@ -21,7 +21,6 @@
 		</library>
 		<library name="http" location="..\..\..\..\..\network\protocol\http\http.ecf" readonly="false"/>
 		<library name="http_client" location="..\..\..\..\..\network\http_client\net_http_client.ecf" readonly="false"/>
-		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="..\wsf.ecf" readonly="false">
 			<option>

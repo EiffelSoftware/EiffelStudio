@@ -10,7 +10,7 @@
 		<option warning="true">
 		</option>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoder" location="..\..\..\..\..\text\encoder\encoder.ecf"/>

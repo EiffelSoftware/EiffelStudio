@@ -6,7 +6,7 @@ copy_raw	test.e $CLUSTER test.e
 -- Compatible capability, incompatible use.
 copy_sub	Ace-scoop-thread.ecf $TEST Ace
 compile_melted
-compile_result	validity_error NONE VD46 VD83
+compile_result	validity_error NONE VD83
 
 -- Incompatible capability, incompatible use.
 copy_sub	Ace-thread.ecf $TEST Ace

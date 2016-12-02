@@ -102,7 +102,14 @@ feature -- Expression
 				until
 					l_sp_exp.after or tmp = Void
 				loop
-					tmp := resolved_nested_message (tmp, l_sp_exp.item)
+					if 	l_sp_exp.item.starts_with ("$") and then
+						attached {READABLE_STRING_GENERAL} resolved_variable (l_sp_exp.item) as vn  and then
+						vn.is_valid_as_string_8
+					then
+						tmp := resolved_nested_message (tmp, vn.to_string_8)
+					else
+						tmp := resolved_nested_message (tmp, l_sp_exp.item)
+					end
 					l_sp_exp.forth
 				end
 			else

@@ -304,8 +304,8 @@ feature -- Basic operations: Input
 			not_a_default_is_empty: attached a_default implies not a_default.is_empty
 		local
 			i_count, i: INTEGER
-			l_default: detachable STRING
-			l_response: detachable STRING
+			l_default: STRING
+			l_response: STRING
 			l_responses: ARRAYED_LIST [STRING]
 		do
 			i_count := a_responses.count
@@ -344,14 +344,13 @@ feature -- Basic operations: Input
 
 				-- Get and parse result
 			l_response := read (Void, True)
-			check attached l_response end
-			if l_response.is_empty then
+			if l_response /= Void and then l_response.is_empty then
 				if attached l_default then
 					l_response := l_default
 				end
 			end
 
-			if l_responses.has (l_response) then
+			if l_response /= Void and then l_responses.has (l_response) then
 				l_responses.start
 				l_responses.search (l_response)
 				if not l_responses.after then

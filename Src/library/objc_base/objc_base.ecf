@@ -11,9 +11,6 @@
 		</file_rule>
 		<option warning="true">
 		</option>
-		<capability>
-			<concurrency support="none"/>
-		</capability>
 		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
 		<external_cflag value="-ObjC"/>
 		<external_object location="$(ISE_LIBRARY)/library/objc_base/spec/$(ISE_PLATFORM)/lib/objc_base_eiffel.o"/>

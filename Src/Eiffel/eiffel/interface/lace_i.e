@@ -1342,10 +1342,10 @@ feature {NONE} -- Implementation
 					-- If there is no precompile, an error is reported because of concurrency change (explicit or not).
 					-- At this point `system.concurrency_index' should be set because the system is compiled or has a precompile.
 					-- Its value is retrieved from a disk.
-				create vd83.make (s_concurrency,
+				create vd83.make_error (s_concurrency,
 					a_target.options.concurrency_capability.value [system.concurrency_index],
 					a_target.options.concurrency_capability.root)
-				Error_handler.insert_warning (vd83)
+				Error_handler.insert_error (vd83)
 			end
 
 			l_s := l_settings.item (s_old_feature_replication)

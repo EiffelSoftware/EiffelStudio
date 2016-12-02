@@ -1625,40 +1625,6 @@ feature {NONE} -- Implementation attribute processing
 					end
 				end
 			end
-			if attached current_attributes.item (at_root_catcall_detection) as l_root_catcall_detection then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.catcall_safety_capability.is_valid_item (l_root_catcall_detection) then
-						l_target_option.catcall_safety_capability.put_root (l_root_catcall_detection)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_catcall_detection))
-					end
-				else
-					report_unknown_attribute (o_root_catcall_detection)
-				end
-			end
-				-- Capability: concurrency.
-			if attached current_attributes.item (at_concurrency) as l_concurrency then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.concurrency.is_valid_item (l_concurrency) then
-						l_target_option.concurrency.put (l_concurrency)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_concurrency))
-					end
-				else
-					report_unknown_attribute (o_concurrency)
-				end
-			end
-			if attached current_attributes.item (at_root_concurrency) as l_root_concurrency then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.concurrency_capability.is_valid_item (l_root_concurrency) then
-						l_target_option.concurrency_capability.put_root (l_root_concurrency)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_concurrency))
-					end
-				else
-					report_unknown_attribute (o_root_concurrency)
-				end
-			end
 				-- Are class types attached by default?
 			if attached current_attributes.item (at_is_attached_by_default) as l_is_attached_by_default then
 				if l_is_attached_by_default.is_boolean then
@@ -1729,17 +1695,6 @@ feature {NONE} -- Implementation attribute processing
 					end
 				else
 					report_unknown_attribute ("is_void_safe")
-				end
-			end
-			if attached current_attributes.item (at_root_void_safety) as l_root_void_safety then
-				if attached l_target_option and then includes_this_or_after (namespace_1_16_0) then
-					if l_target_option.void_safety_capability.is_valid_item (l_root_void_safety) then
-						l_target_option.void_safety_capability.put_root (l_root_void_safety)
-					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_root_void_safety))
-					end
-				else
-					report_unknown_attribute (o_root_void_safety)
 				end
 			end
 				-- Syntax variants.
@@ -2890,7 +2845,7 @@ feature {NONE} -- Implementation state transitions
 				-- * cat_call_detection
 				-- * is_attached_by_default
 				-- * is_void_safe
-			create l_attr.make (11)
+			create l_attr.make (15)
 			l_attr.force (at_trace, o_is_trace)
 			l_attr.force (at_profile, o_is_profile)
 			l_attr.force (at_optimize, o_is_optimize)
@@ -2905,13 +2860,8 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_syntax, o_syntax)
 				-- Capabilities: CAT-call detection.
 			l_attr.force (at_catcall_detection, o_catcall_detection)
-			l_attr.force (at_root_catcall_detection, o_root_catcall_detection)
-				-- Capabilities: concurrency.
-			l_attr.force (at_concurrency, o_concurrency)
-			l_attr.force (at_root_concurrency, o_root_concurrency)
 				-- Capabilities: void safety.
 			l_attr.force (at_void_safety, o_void_safety)
-			l_attr.force (at_root_void_safety, o_root_void_safety)
 			l_attr.force (at_is_void_safe, "is_void_safe")
 			Result.force (l_attr, t_option)
 

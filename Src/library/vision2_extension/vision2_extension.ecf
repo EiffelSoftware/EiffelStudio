@@ -32,7 +32,7 @@
 				<exclude>/mswin$</exclude>
 			</file_rule>
 			<file_rule>
-				<exclude>/thread/ev_thread_worker$</exclude>
+				<exclude>/thread/ev_thread_worker.e$</exclude>
 				<condition>
 					<concurrency excluded_value="thread"/>
 				</condition>

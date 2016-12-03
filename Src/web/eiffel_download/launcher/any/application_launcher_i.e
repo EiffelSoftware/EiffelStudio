@@ -69,7 +69,7 @@ feature {NONE} -- standalone
 
 	launch_standalone (opts: detachable WSF_SERVICE_LAUNCHER_OPTIONS)
 		local
-			launcher: WSF_NINO_SERVICE_LAUNCHER [G]
+			launcher: WSF_STANDALONE_SERVICE_LAUNCHER [G]
 		do
 			create launcher.make_and_launch (opts)
 		end

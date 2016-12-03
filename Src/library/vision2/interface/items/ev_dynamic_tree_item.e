@@ -141,7 +141,6 @@ feature {NONE} -- Implementation
 		local
 			l_previous_time: DATE_TIME
 			l_current_time: DATE_TIME
-			l_duration: DATE_TIME_DURATION
 			l_force: BOOLEAN
 		do
 			if attached subtree_function as l_subtree_function then

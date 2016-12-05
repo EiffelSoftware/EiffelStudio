@@ -23,11 +23,6 @@ inherit
 
 	WEB_SOCKET
 
-	THREAD
-		rename
-			make as thread_make
-		end
-
 feature -- Initialization
 
 	initialize (a_uri: READABLE_STRING_GENERAL; a_protocols: detachable ITERABLE [STRING])
@@ -35,7 +30,6 @@ feature -- Initialization
 		require
 			is_valid_uri: is_valid_uri (a_uri)
 		do
-			thread_make
 			uri := a_uri
 			set_default_port
 			create protocol.make_empty
@@ -50,7 +44,6 @@ feature -- Initialization
 		require
 			is_valid_uri: is_valid_uri (a_uri)
 		do
-			thread_make
 			uri := a_uri
 			port := a_port
 			create protocol.make_empty
@@ -64,11 +57,9 @@ feature -- Initialization
 		require
 			is_valid_uri: is_valid_uri (a_host)
 		do
-			thread_make
 			uri := a_host + ":" + a_port.out + a_path
 			port := a_port
 			create protocol.make_empty
---			set_protocols (a_protocols)
 			create ready_state.make
 			socket := new_socket (port, host)
 			create server_handshake.make
@@ -98,8 +89,10 @@ feature -- Access
 		local
 			l_uri: URI
 		do
-			create l_uri.make_from_string (a_uri.as_string_8)
-			Result := l_uri.is_valid
+			if a_uri.is_valid_as_string_8 then
+				create l_uri.make_from_string (a_uri.to_string_8)
+				Result := l_uri.is_valid
+			end
 		end
 
 	server_handshake: WEB_SOCKET_HANDSHAKE_DATA

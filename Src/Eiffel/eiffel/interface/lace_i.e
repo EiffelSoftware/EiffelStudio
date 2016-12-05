@@ -178,6 +178,9 @@ feature -- Access
 	shared_library_definition_stamp: INTEGER
 			-- Time stamp of a shared library definition file (if any)
 
+	is_void_safe: BOOLEAN
+			-- Is current system void-safe, i.e. preserving types attachment status?
+
 feature -- Modification
 
 	set_settings (s: like settings)
@@ -746,7 +749,7 @@ feature {NONE} -- Implementation
 			-- Check if capability validity rules are satisfied.
 		do
 			if attached target as t then
-				(create {CONF_CAPABILITY_CHECKER}.make (t, not system.compiler_profile.is_capability_strict, Current)).do_nothing
+				(create {CONF_CAPABILITY_CHECKER}.make (t, Current)).do_nothing
 					-- Check compiler-specific rule for precompiled libraries:
 					-- Target root option should be related to precompiled option as
 					-- 	• cat-call: both "none" or both not "none"
@@ -780,6 +783,11 @@ feature {NONE} -- Implementation
 				if error_handler.has_error then
 					error_handler.raise_error
 				end
+				if not system.compiler_profile.is_capability_strict then
+						-- Update options to use target's settings.
+					(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
+				end
+				is_void_safe := t.options.void_safety_capability.root_index /= {CONF_TARGET_OPTION}.void_safety_index_none
 			end
 		end
 

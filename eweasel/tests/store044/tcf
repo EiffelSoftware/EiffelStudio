@@ -19,7 +19,7 @@ cleanup_compile
 copy_sub	Ace_root.ecf $TEST Ace
 
 compile_frozen
-compile_result	validity_warning SED_STORABLE_FACILITIES Obsolete Obsolete
+compile_result	ok
 c_compile_work
 c_compile_result ok
 

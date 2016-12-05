@@ -682,7 +682,7 @@ feature -- Element change
 			prepend_string_general (b.out)
 		end
 
-	prepend_double (d: DOUBLE)
+	prepend_double (d: REAL_64)
 			-- Prepend the string representation of `d' at front.
 		do
 			prepend_string_general (d.out)
@@ -694,7 +694,7 @@ feature -- Element change
 			prepend_string_general (i.out)
 		end
 
-	prepend_real (r: REAL)
+	prepend_real (r: REAL_32)
 			-- Prepend the string representation of `r' at front.
 		do
 			prepend_string_general (r.out)
@@ -1142,13 +1142,13 @@ feature -- Element change
 			end
 		end
 
-	append_real (r: REAL)
+	append_real (r: REAL_32)
 			-- Append the string representation of `r' at end.
 		do
 			append_string_general (r.out)
 		end
 
-	append_double (d: DOUBLE)
+	append_double (d: REAL_64)
 			-- Append the string representation of `d' at end.
 		do
 			append_string_general (d.out)

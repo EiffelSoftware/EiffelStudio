@@ -455,14 +455,14 @@ feature -- Access
 			end
 		end
 
-	real_32_field (i: INTEGER): REAL
+	real_32_field (i: INTEGER): REAL_32
 			-- Real value of `i'-th field of `object'
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count
 			real_32_field: field_type (i) = real_32_type
 		do
-			if attached {REAL} internal_field (i) as v then
+			if attached {REAL_32} internal_field (i) as v then
 				Result := v
 			else
 				check False end
@@ -621,7 +621,7 @@ feature -- Element change
 			internal_set_field (i, value)
 		end
 
-	set_real_32_field, set_real_field (i: INTEGER; value: REAL)
+	set_real_32_field, set_real_field (i: INTEGER; value: REAL_32)
 		require
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count

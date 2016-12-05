@@ -113,7 +113,7 @@ feature -- Status report
 			Result := input.last_natural_64
 		end
 
-	last_real, lastreal: REAL
+	last_real, lastreal: REAL_32
 			-- Last real read by `read_real'
 		do
 			Result := input.last_real
@@ -126,7 +126,7 @@ feature -- Status report
 			Result := input.last_string
 		end
 
-	last_double, lastdouble: DOUBLE
+	last_double, lastdouble: REAL_64
 			-- Last double read by `read_double'
 		do
 			Result := input.last_double
@@ -169,13 +169,13 @@ feature -- Element change
 			standard_default.put_string (s)
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' at end of default output.
 		do
 			standard_default.put_real (r)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' at end of default output.
 		do
 			standard_default.put_double (d)

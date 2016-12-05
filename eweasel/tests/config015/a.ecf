@@ -4,7 +4,7 @@
 		<option syntax="standard" debug="false" void_safety="all">
 			<debug name="a" enabled="false"/>
 		</option>
-		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="base-safe" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="A" location=".\"/>
 	</target>
 </system>

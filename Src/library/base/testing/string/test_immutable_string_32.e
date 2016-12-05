@@ -1142,15 +1142,15 @@ feature -- Test
 
 	test_to_double
 		do
-			check_equality ("to_double", ("0").to_double, {DOUBLE} 0.0)
-			check_equality ("to_double", ("1").to_double, {DOUBLE} 1.0)
-			check_equality ("to_double", ("123").to_double, {DOUBLE} 123.0)
-			check_equality ("to_double", ("0.75").to_double, {DOUBLE} 0.75)
-			check_equality ("to_double", ("-348.75").to_double, {DOUBLE} -348.75)
-			check_equality ("to_double", ("62.5e-3").to_double, {DOUBLE} 62.5e-3)
-			check_equality ("to_double", ("1.e-4").to_double, {DOUBLE} 1.e-4)
-			check_equality ("to_double", ("1.e-4").to_double, {DOUBLE} 0.0001)
-			check_equality ("to_double", ("62.5e-3").to_double, {DOUBLE} 62.5e-3)
+			check_equality ("to_double", ("0").to_double, {REAL_64} 0.0)
+			check_equality ("to_double", ("1").to_double, {REAL_64} 1.0)
+			check_equality ("to_double", ("123").to_double, {REAL_64} 123.0)
+			check_equality ("to_double", ("0.75").to_double, {REAL_64} 0.75)
+			check_equality ("to_double", ("-348.75").to_double, {REAL_64} -348.75)
+			check_equality ("to_double", ("62.5e-3").to_double, {REAL_64} 62.5e-3)
+			check_equality ("to_double", ("1.e-4").to_double, {REAL_64} 1.e-4)
+			check_equality ("to_double", ("1.e-4").to_double, {REAL_64} 0.0001)
+			check_equality ("to_double", ("62.5e-3").to_double, {REAL_64} 62.5e-3)
 		end
 
 	test_to_integer
@@ -1243,12 +1243,12 @@ feature -- Test
 
 	test_to_real
 		do
-			check_equality ("to_real", ("0").to_real, {REAL} 0.0)
-			check_equality ("to_real", ("1").to_real, {REAL} 1.0)
-			check_equality ("to_real", ("123").to_real, {REAL} 123.0)
-			check_equality ("to_real", ("0.75").to_real, {REAL} 0.75)
-			check_equality ("to_real", ("-348.75").to_real, {REAL} -348.75)
-			check_equality ("to_real", ("62.5e-3").to_real, {REAL} 62.5e-3)
+			check_equality ("to_real", ("0").to_real, {REAL_32} 0.0)
+			check_equality ("to_real", ("1").to_real, {REAL_32} 1.0)
+			check_equality ("to_real", ("123").to_real, {REAL_32} 123.0)
+			check_equality ("to_real", ("0.75").to_real, {REAL_32} 0.75)
+			check_equality ("to_real", ("-348.75").to_real, {REAL_32} -348.75)
+			check_equality ("to_real", ("62.5e-3").to_real, {REAL_32} 62.5e-3)
 		end
 
 	test_twin

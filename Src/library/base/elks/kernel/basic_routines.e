@@ -48,7 +48,7 @@ feature -- Basic operations
 			correct_positive: (n > 0) = (Result = +1)
 		end
 
-	rsign (r: REAL): INTEGER
+	rsign (r: REAL_32): INTEGER
 			-- Sign of `r':
 			-- -1 if `r' < 0
 			--  0 if `r' = 0

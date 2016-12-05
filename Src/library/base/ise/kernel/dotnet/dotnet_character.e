@@ -15,7 +15,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen numeric_value (c: CHARACTER): DOUBLE
+	frozen numeric_value (c: CHARACTER): REAL_64
 			-- (Static)
 			-- Converts the specified numeric Unicode character to a
 			-- double-precision floating point number.
@@ -32,7 +32,7 @@ feature -- Statics
 			"GetNumericValue"
 		end
 
-	frozen numeric_value_from_string (s: SYSTEM_STRING; index: INTEGER): DOUBLE
+	frozen numeric_value_from_string (s: SYSTEM_STRING; index: INTEGER): REAL_64
 			-- Converts the numeric Unicode character at the specified
 			-- position in a specified string to a double-precision
 			-- floating point number.

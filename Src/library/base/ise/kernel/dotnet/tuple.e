@@ -123,14 +123,14 @@ feature -- Access
 			end
 		end
 
-	real_64_item, double_item (index: INTEGER): DOUBLE
+	real_64_item, double_item (index: INTEGER): REAL_64
 			-- Double item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_numeric: is_double_item (index)
 		do
 			check
-				from_precondition: attached {DOUBLE} native_array.item (index) as r
+				from_precondition: attached {REAL_64} native_array.item (index) as r
 			then
 				Result := r
 			end
@@ -253,14 +253,14 @@ feature -- Access
 			end
 		end
 
-	real_32_item, real_item (index: INTEGER): REAL
+	real_32_item, real_item (index: INTEGER): REAL_32
 			-- real item at `index'.
 		require
 			valid_index: valid_index (index)
 			is_real_or_integer: is_real_item (index)
 		do
 			check
-				from_precondition: attached {REAL} native_array.item (index) as r
+				from_precondition: attached {REAL_32} native_array.item (index) as r
 			then
 				Result := r
 			end
@@ -1060,7 +1060,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	double_arrayed: ARRAY [DOUBLE]
+	double_arrayed: ARRAY [REAL_64]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1135,7 +1135,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	real_arrayed: ARRAY [REAL]
+	real_arrayed: ARRAY [REAL_32]
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -1312,8 +1312,8 @@ feature {NONE} -- Implementation
 			create Result.make_from_capacity (10)
 			Result.set_item (({BOOLEAN}).to_cil, boolean_code)
 			Result.set_item (({CHARACTER_8}).to_cil, character_8_code)
-			Result.set_item (({DOUBLE}).to_cil, real_64_code)
-			Result.set_item (({REAL}).to_cil, real_32_code)
+			Result.set_item (({REAL_64}).to_cil, real_64_code)
+			Result.set_item (({REAL_32}).to_cil, real_32_code)
 			Result.set_item (({POINTER}).to_cil, pointer_code)
 			Result.set_item (({SYSTEM_OBJECT}).to_cil, reference_code)
 			Result.set_item (({NATURAL_8}).to_cil, natural_8_code)
@@ -1332,8 +1332,8 @@ feature {NONE} -- Implementation
 			create Result.make (128)
 			Result.put (boolean_code, {BOOLEAN})
 			Result.put (character_8_code, {CHARACTER_8})
-			Result.put (real_64_code, {DOUBLE})
-			Result.put (real_32_code, {REAL})
+			Result.put (real_64_code, {REAL_64})
+			Result.put (real_32_code, {REAL_32})
 			Result.put (pointer_code, {POINTER})
 			Result.put (reference_code, {SYSTEM_OBJECT})
 			Result.put (natural_8_code, {NATURAL_8})

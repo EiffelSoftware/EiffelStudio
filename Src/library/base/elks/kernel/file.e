@@ -1025,12 +1025,12 @@ feature -- Element change
 		deferred
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' at current position.
 		deferred
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' at current position.
 		deferred
 		end

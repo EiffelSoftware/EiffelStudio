@@ -261,7 +261,7 @@ feature -- Output
 		do
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' to medium.
 		do
 		end
@@ -311,7 +311,7 @@ feature -- Output
 		do
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' to medium.
 		do
 		end

@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: CONF_TARGET; f: BOOLEAN; o: CONF_ERROR_OBSERVER)
+	make (t: CONF_TARGET; o: CONF_ERROR_OBSERVER)
 			-- Check target `t` for validity rules violations and
 			-- report errors (if any) to observer `o`.
 			-- Force settings on suppliers if `f` is True.
@@ -39,7 +39,6 @@ feature {NONE} -- Creation
 			root_options: CONF_TARGET_OPTION
 		do
 			observer := o
-			is_forced_root := f
 			root_target := t
 			root_options := root_target.options
 			root_catcall_detection_index := root_options.catcall_safety_capability.root_index
@@ -61,11 +60,9 @@ feature {CONF_VISITABLE} -- Visitor
 	process_target (t: CONF_TARGET)
 			-- <Precursor>
 		local
-			uuid: UUID
 			old_target: CONF_TARGET
 			old_condition: CONF_CONDITION_LIST
 		do
-			uuid := t.system.uuid
 			if not targets.has (t) then
 				targets.force (t)
 				old_target := target
@@ -106,12 +103,6 @@ feature {CONF_VISITABLE} -- Visitor
 				end
 					-- Check groups.
 				Precursor (t)
-				if is_forced_root then
-						-- Update target options to use the root setting.
-					t.changeable_internal_options.catcall_detection.put_index (root_catcall_detection_index)
-					t.changeable_internal_options.concurrency.put_index (root_concurrency_index)
-					t.changeable_internal_options.void_safety.put_index (root_void_safety_index)
-				end
 				target := old_target
 			end
 		end
@@ -174,9 +165,6 @@ feature {NONE} -- Traversal
 	root_void_safety_index: like {CONF_TARGET_OPTION}.void_safety_index_none
 			-- Void safety setting specified for `root_target'.
 
-	is_forced_root: BOOLEAN
-			-- Should root settings be forced on all dependent elements?
-
 	target: CONF_TARGET
 			-- A target being processed.
 
@@ -211,11 +199,6 @@ feature {NONE} -- Traversal
 							conf_interface_names.option_catcall_detection_value [cluster.options.catcall_detection.index],
 							conf_interface_names.option_catcall_detection_name))
 					end
-					if is_forced_root then
-							-- Update class options to use the root setting.
-						option.item.catcall_detection.put_index (root_catcall_detection_index)
-						option.item.void_safety.put_index (root_void_safety_index)
-					end
 				end
 			end
 		end
@@ -240,11 +223,6 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_void_safety_value [option.void_safety.index],
 						conf_interface_names.option_void_safety_value [t.options.void_safety.index],
 						conf_interface_names.option_void_safety_name))
-				end
-				if is_forced_root then
-						-- Update group options to use the root setting.
-					option.catcall_detection.put_index (root_catcall_detection_index)
-					option.void_safety.put_index (root_void_safety_index)
 				end
 			end
 		end
@@ -302,12 +280,6 @@ feature {NONE} -- Traversal
 						conf_interface_names.option_void_safety_value [option.void_safety_capability.value.index],
 						conf_interface_names.option_void_safety_value [root_void_safety_index],
 						conf_interface_names.option_void_safety_name))
-				end
-				if is_forced_root then
-						-- Update target options to use the root setting.
-					option.catcall_detection.put_index (root_catcall_detection_index)
-					option.concurrency.put_index (root_concurrency_index)
-					option.void_safety.put_index (root_void_safety_index)
 				end
 			end
 		end

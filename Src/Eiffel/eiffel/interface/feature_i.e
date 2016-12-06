@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Instance of an Eiffel feature: for every inherited feature there is%N%
 		%an instance of FEATURE_I with its final name, the class name where it%N%
 		%is written, the body id of its content and the routine table ids to%N%
@@ -2780,17 +2780,17 @@ end
 		local
 			i, nb: INTEGER
 		do
-			Result := type.is_safe_equivalent (other.type)
-			from
-				nb := argument_count
-				Result := Result and then nb = other.argument_count
-				nb := argument_count
-				i := 1
-			until
-				i > nb or else not Result
-			loop
-				Result := arguments.i_th (i).is_safe_equivalent (other.arguments.i_th (i))
-				i := i + 1
+			if type.is_safe_equivalent (other.type) then
+				from
+					nb := argument_count
+					Result := nb = other.argument_count
+					i := 1
+				until
+					i > nb or else not Result
+				loop
+					Result := arguments.i_th (i).is_safe_equivalent (other.arguments.i_th (i))
+					i := i + 1
+				end
 			end
 		end
 
@@ -3577,7 +3577,7 @@ invariant
 	valid_inline_agent_nr: is_inline_agent implies inline_agent_nr > 0 or is_fake_inline_agent
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

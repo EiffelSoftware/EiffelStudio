@@ -839,6 +839,10 @@ feature -- Parse errors
 		do
 			Result := locale.formatted_string (locale.translation ("Invalid attribute '$1'"), [an_attribute])
 		end
+	e_parse_unsupported_attribute (an_attribute: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Attribute '$1' is no longer supported for this element."), [an_attribute])
+		end
 	e_parse_missing_attribute (an_attribute: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Missing attribute '$1'"), [an_attribute])

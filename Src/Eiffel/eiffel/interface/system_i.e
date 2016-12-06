@@ -960,14 +960,17 @@ end
 
 			if equal (universe.new_target, universe.target) or else universe.new_target = Void then
 				lace.force_new_target
-					-- Remove previously reported capability warnings.
+					-- Remove previously reported configuration  warnings.
 				from
 					w := error_handler.warning_list
 					w.start
 				until
 					w.after
 				loop
-					if w.item.generating_type = {VD01} then
+					if
+						w.item.generating_type = {VD01} or else
+						w.item.generating_type = {VD80}
+					then
 						w.remove
 					else
 						w.forth
